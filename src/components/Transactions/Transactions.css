@@ -1,0 +1,78 @@
+.transactions {
+  --transaction-buttons-border-color: #D0D5DD;
+  --transaction-buttons-selected-background-color: #E0E9FF;
+  --transaction-table-border-color: #EAECF0;
+  --transaction-table-text-color: #101828;
+}
+
+.transactions header {
+  display: flex;
+}
+
+.transactions header h1 {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.transactions header div {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.transactions .transaction-table {
+  display: grid;
+  grid-template-columns: auto repeat(5, 1fr) auto;
+  margin: 3rem;
+  grid-gap: 1px 0px;
+  background-color: var(--transaction-table-border-color);
+  border: 1px solid var(--transaction-table-border-color);
+}
+
+.transactions .transaction-table div {
+  padding: 1rem;
+  background-color: white;
+  color: var(--transaction-table-text-color);
+  font-family: sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.transactions .transaction-table div.header {
+  font-weight: bold;
+}
+
+.transactions .radio-group {
+}
+
+.transactions .radio-group input {
+  position: absolute;
+  opacity: 0;
+}
+
+.transactions .radio-group div {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--transaction-buttons-border-color);
+  border-right: 0;
+  border-radius: 0;
+}
+
+.transactions .radio-group label:first-of-type div {
+  border-start-start-radius: 0.6rem;
+  border-end-start-radius: 0.6rem;
+}
+
+.transactions .radio-group label:last-of-type div {
+  border-right: 1px solid var(--transaction-buttons-border-color);
+  border-start-end-radius: 0.6rem;
+  border-end-end-radius: 0.6rem;
+}
+
+.transactions .radio-group input:checked + div {
+  background: var(--transaction-buttons-selected-background-color);
+}
