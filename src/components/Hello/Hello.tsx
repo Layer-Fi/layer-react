@@ -8,8 +8,8 @@ type Props = {
 
 const fetcher = url => fetch(url).then(res => res.json())
 
-export default ({ user }: Props) => {
-  const { data, error, isLoading } = useSWR(
+export const Hello = ({ user }: Props) => {
+  const { data, isLoading } = useSWR(
     `https://api.github.com/users/${user || 'jyurek'}`,
     fetcher,
   )

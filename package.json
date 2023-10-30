@@ -1,18 +1,19 @@
 {
-  "name": "@layerfi/react",
+  "name": "@layerfi/components",
   "version": "0.0.1",
   "description": "Layer React Components",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "build": "node bin/build.js",
-    "postbuild": "rm -rf ../module && cp -R . ../module && node bin/removeDeps.js"
+    "build": "node bin/build.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Layer-Fi/layer-react.git"
   },
-  "keywords": ["layerfi"],
+  "keywords": [
+    "layerfi"
+  ],
   "author": "Layer Financial",
   "license": "UNLICENSED",
   "bugs": {
@@ -42,6 +43,14 @@
     "semi": false,
     "singleQuote": true,
     "arrowParens": "avoid",
-    "importOrder": ["^react.*", "<THIRD_PARTY_MODULES>", "^src", "^\\."]
+    "plugins": [
+      "@trivago/prettier-plugin-sort-imports"
+    ],
+    "importOrder": [
+      "^react.*",
+      "<THIRD_PARTY_MODULES>",
+      "^src",
+      "^\\.\\./', ^\\./"
+    ]
   }
 }
