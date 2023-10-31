@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 import { LayerContext } from '../../contexts/LayerContext'
+import { LayerExecutionContext } from '../../types'
 import useSWR from 'swr'
 
 const appId = '1pskub33qd9qt19406hi4d1j6f'
@@ -26,14 +27,18 @@ export async function getAccessToken(): Promise<OAuthResponse> {
   return (await (await authRequest).json()) as OAuthResponse
 }
 
-type Props = {}
+type Props = {
+  businessId: string
+}
 
-export const LayerProvider = ({ children }: PropsWithChildren<Props>) => {
-  const { data: authData } = useSWR(
+export const LayerProvider = ({
+  businessId,
+  children,
+}: PropsWithChildren<Props>) => {
+  const { data: auth } = useSWR(
     'https://auth.layerfi.com/oauth2/token',
     getAccessToken,
   )
-  return (
-    <LayerContext.Provider value={authData}>{children}</LayerContext.Provider>
-  )
+  const value: LayerExecutionContext = { auth, businessId }
+  return <LayerContext.Provider value={value}>{children}</LayerContext.Provider>
 }
