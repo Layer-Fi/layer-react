@@ -1,6 +1,6 @@
 import React from 'react'
-import useSWR from 'swr'
 import './Hello.css'
+import useSWR from 'swr'
 
 type Props = {
   user?: string | undefined
@@ -13,7 +13,7 @@ export const Hello = ({ user }: Props) => {
     `https://api.github.com/users/${user || 'jyurek'}`,
     fetcher,
   )
-  const name = isLoading ? '...' : data.name
+  const name = (isLoading ? '...' : data?.name) || 'User'
   return (
     <>
       <div className="hello">Hello, {name}!</div>
