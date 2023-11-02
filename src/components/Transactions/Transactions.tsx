@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { LayerContext } from '../../contexts/LayerContext'
+import { RadioButtonGroup } from '../RadioButtonGroup'
 import { TransactionRow } from './TransactionRow'
 import './Transactions.css'
 import useSWR from 'swr'
@@ -26,8 +27,9 @@ export const Transactions = (props: Props) => {
   )
   const transactions = (!isLoading && data?.data) || []
   const [display, setDisplay] = useState<'review' | 'categorized'>('review')
-  const changeDisplay = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setDisplay(event.currentTarget.value)
+  const onCategorizationDisplayChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => setDisplay(event.target.value)
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({})
   const toggleOpen = (id: string) =>
     setOpenRows({ ...openRows, [id]: !openRows[id] })
@@ -35,28 +37,15 @@ export const Transactions = (props: Props) => {
     <div className="transactions" data-display={display}>
       <header>
         <h1>Transactions</h1>
-        <div className="radio-group">
-          <label>
-            <input
-              type="radio"
-              name="transaction-display"
-              value="review"
-              {...(display === 'review' ? { checked: 'checked' } : {})}
-              onChange={changeDisplay}
-            />
-            <div>To Review</div>
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="transaction-display"
-              value="categorized"
-              {...(display === 'categorized' ? { checked: 'checked' } : {})}
-              onChange={changeDisplay}
-            />
-            <div>Categorized</div>
-          </label>
-        </div>
+        <RadioButtonGroup
+          name="transaction-display"
+          buttons={[
+            { label: 'To Review', value: 'review' },
+            { label: 'Categorized', value: 'categorized' },
+          ]}
+          selected={display}
+          onChange={onCategorizationDisplayChange}
+        />
       </header>
       <div className="transaction-table">
         <div className="header">
