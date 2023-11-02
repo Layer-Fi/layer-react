@@ -1,12 +1,22 @@
 .transactions {
   --transaction-buttons-border-color: #D0D5DD;
   --transaction-buttons-selected-background-color: #E0E9FF;
+  --transaction-table-background-color: white;
   --transaction-table-border-color: #EAECF0;
   --transaction-table-text-color: #101828;
 }
 
+.transactions {
+  margin: 3rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--transaction-table-border-color);
+  background-color: var(--transaction-table-background-color);
+  overflow: hidden;
+}
+
 .transactions header {
   display: flex;
+  padding: 1rem;
 }
 
 .transactions header h1 {
@@ -14,10 +24,16 @@
   align-items: center;
   flex: 1;
   justify-content: flex-start;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2rem;
+  margin: 0;
 }
 
 .transactions header div {
   display: flex;
+  font-size: 1rem;
   align-items: center;
   flex: 1;
   justify-content: flex-end;
@@ -26,15 +42,16 @@
 .transactions .transaction-table {
   display: grid;
   grid-template-columns: auto repeat(5, 1fr) auto;
-  margin: 3rem;
-  grid-gap: 1px 0px;
+  gap: 1px 0px;
   background-color: var(--transaction-table-border-color);
-  border: 1px solid var(--transaction-table-border-color);
+  border-top: 1px solid var(--transaction-table-border-color);
+  border-radius: 0.6rem;
 }
 
 .transactions .transaction-table div {
   padding: 1rem;
   background-color: white;
+  overflow: clip;
   color: var(--transaction-table-text-color);
   font-family: sans-serif;
   font-size: 16px;
@@ -45,6 +62,20 @@
 
 .transactions .transaction-table div.header {
   font-weight: bold;
+}
+
+.transactions .transaction-table div.transaction-expand {
+  cursor: pointer;
+}
+
+.transactions .transaction-table div.expand-area {
+  grid-column: 1 / -1;
+  margin-top: -1px;
+}
+
+.transactions .transaction-table div.expand-content {
+  padding: 1rem;
+  text-align: center;
 }
 
 .transactions .radio-group {
