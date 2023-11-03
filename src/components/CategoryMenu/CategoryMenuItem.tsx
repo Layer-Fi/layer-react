@@ -17,6 +17,7 @@ export const CategoryMenuItem = ({
       <optgroup label={category.display_name}>
         {category.subCategories.map(category => (
           <CategoryMenuItem
+            key={category.category}
             category={category}
             selectedCategory={selectedCategory}
             maxDepth={maxDepth - 1}
@@ -25,14 +26,6 @@ export const CategoryMenuItem = ({
       </optgroup>
     )
   } else {
-    return (
-      <option
-        key={category.category}
-        value={category.category}
-        selected={selectedCategory === category.category}
-      >
-        {category.display_name}
-      </option>
-    )
+    return <option value={category.category}>{category.display_name}</option>
   }
 }

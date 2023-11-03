@@ -41,7 +41,7 @@
 
 .transactions .transaction-table {
   display: grid;
-  grid-template-columns: auto repeat(5, 1fr) auto;
+  grid-template-columns: auto repeat(4, 1fr) repeat(3, auto);
   gap: 1px 0px;
   background-color: var(--transaction-table-border-color);
   border-top: 1px solid var(--transaction-table-border-color);
@@ -58,6 +58,16 @@
   font-style: normal;
   font-weight: 500;
   line-height: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.transactions .transaction-table div select {
+  border: 2px solid var(--transaction-table-border-color);
+  border-radius: 0.6rem;
+  background-color: var(--transaction-table-background-color);
+  padding: 0.6rem 0.8rem;
 }
 
 .transactions .transaction-table div.header {

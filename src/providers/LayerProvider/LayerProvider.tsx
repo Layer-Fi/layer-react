@@ -27,6 +27,15 @@ export async function getAccessToken(): Promise<OAuthResponse> {
   return (await (await authRequest).json()) as OAuthResponse
 }
 
+const getCategories = (accessToken: string) => (url: string) =>
+  fetch(url, {
+    headers: {
+      Authorization: 'Bearer ' + accessToken,
+      'Content-Type': 'application/json',
+    },
+    method: 'GET',
+  }).then(res => res.json())
+
 type Props = {
   businessId: string
 }
@@ -39,6 +48,16 @@ export const LayerProvider = ({
     'https://auth.layerfi.com/oauth2/token',
     getAccessToken,
   )
-  const value: LayerExecutionContext = { auth, businessId }
+  const { data: categories } = useSWR(
+    businessId &&
+      auth?.access_token &&
+      `https://sandbox.layerfi.com/v1/businesses/${businessId}/categories`,
+    getCategories(auth?.access_token),
+  )
+  const value: LayerExecutionContext = {
+    auth,
+    businessId,
+    categories: categories?.data?.categories || [],
+  }
   return <LayerContext.Provider value={value}>{children}</LayerContext.Provider>
 }

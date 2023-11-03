@@ -1,6 +1,7 @@
 import React from 'react'
 import { Money } from '../../models/Money'
 import { Transaction } from '../../types'
+import { CategoryMenu } from '../CategoryMenu'
 import { parseISO, format as formatTime } from 'date-fns'
 
 type Props = {
@@ -24,7 +25,10 @@ export const TransactionRow = ({
     <div>{Money.format(transaction)}</div>
     <div>Business Checking</div>
     <div>{transaction.counterparty_name}</div>
-    <div>{transaction?.category?.display_name || 'Uncategorized'}</div>
+    <div data-selected={transaction?.category?.category}>
+      <CategoryMenu selectedCategory={transaction?.category?.category} />
+    </div>
+    <div></div>
     <div
       className="transaction-expand"
       onClick={() => toggleOpen(transaction.id)}

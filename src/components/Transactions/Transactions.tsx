@@ -8,6 +8,11 @@ import useSWR from 'swr'
 
 const dateFormat = 'MM/dd/yyyy'
 
+enum DisplayState {
+  review = 'review',
+  categorized = 'categorized',
+}
+
 const fetchTransactions = (accessToken: string) => (url: string) =>
   fetch(url, {
     headers: {
@@ -45,7 +50,7 @@ type Props = {}
 
 export const Transactions = (props: Props) => {
   const { auth, businessId } = useContext(LayerContext)
-  const [display, setDisplay] = useState<'review' | 'categorized'>('review')
+  const [display, setDisplay] = useState<DisplayState>(DisplayState.review)
   const { data, isLoading } = useSWR(
     auth?.access_token &&
       `https://sandbox.layerfi.com/v1/businesses/${businessId}/bank-transactions`,
@@ -65,8 +70,8 @@ export const Transactions = (props: Props) => {
         <RadioButtonGroup
           name="transaction-display"
           buttons={[
-            { label: 'To Review', value: 'review' },
-            { label: 'Categorized', value: 'categorized' },
+            { label: 'To Review', value: DisplayState.review },
+            { label: 'Categorized', value: DisplayState.categorized },
           ]}
           selected={display}
           onChange={onCategorizationDisplayChange}
@@ -82,6 +87,7 @@ export const Transactions = (props: Props) => {
         <div className="header">Amount</div>
         <div className="header">Category</div>
         <div className="header">Action</div>
+        <div className="header"></div>
         {transactions.map(transaction => (
           <TransactionRow
             key={transaction.id}

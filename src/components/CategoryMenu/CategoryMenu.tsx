@@ -9,9 +9,10 @@ type Props = {
 export const CategoryMenu = ({ selectedCategory }: Props) => {
   const { categories } = useContext(LayerContext)
   return (
-    <select>
+    <select defaultValue={selectedCategory}>
       {categories.map(category => (
         <CategoryMenuItem
+          key={category.category}
           category={category}
           selectedCategory={selectedCategory}
         />

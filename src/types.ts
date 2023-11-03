@@ -7,6 +7,7 @@ export type OAuthResponse = {
 export type LayerExecutionContext = {
   auth: OAuthResponse | undefined
   businessId: string
+  categories: Category[]
 }
 
 export enum CategorizationStatus {
@@ -24,6 +25,8 @@ export type Direction = 'CREDIT' | 'DEBIT'
 
 export interface Category {
   display_name: string
+  category: string
+  subCategories: Category[]
 }
 
 export interface Transaction {
