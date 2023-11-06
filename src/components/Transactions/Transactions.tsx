@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { LayerContext } from '../../contexts/LayerContext'
+import { Transaction, CategorizationStatus } from '../../types'
 import { RadioButtonGroup } from '../RadioButtonGroup'
 import { TransactionRow } from './TransactionRow'
 import './Transactions.css'
@@ -16,17 +17,41 @@ const fetchTransactions = (accessToken: string) => (url: string) =>
     method: 'GET',
   }).then(res => res.json())
 
+const CategorizedCategories = [
+  CategorizationStatus.CATEGORIZED,
+  CategorizationStatus.JOURNALING,
+  CategorizationStatus.SPLIT,
+]
+const ReviewCategories = [
+  CategorizationStatus.READY_FOR_INPUT,
+  CategorizationStatus.LAYER_REVIEW,
+]
+
+const filterVisibility =
+  (display: DisplayState) => (transaction: Transaction) => {
+    const categorized = CategorizedCategories.includes(
+      transaction.categorization_status,
+    )
+    const inReview = ReviewCategories.includes(
+      transaction.categorization_status,
+    )
+    return (
+      (display === DisplayState.review && inReview) ||
+      (display === DisplayState.categorized && categorized)
+    )
+  }
+
 type Props = {}
 
 export const Transactions = (props: Props) => {
   const { auth, businessId } = useContext(LayerContext)
+  const [display, setDisplay] = useState<'review' | 'categorized'>('review')
   const { data, isLoading } = useSWR(
     auth?.access_token &&
       `https://sandbox.layerfi.com/v1/businesses/${businessId}/bank-transactions`,
     fetchTransactions(auth?.access_token),
   )
-  const transactions = (!isLoading && data?.data) || []
-  const [display, setDisplay] = useState<'review' | 'categorized'>('review')
+  const transactions = (data?.data || []).filter(filterVisibility(display))
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => setDisplay(event.target.value)
