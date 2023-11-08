@@ -1,6 +1,7 @@
 const { build } = require('esbuild')
 const { dependencies, peerDependencies } = require('../package.json')
 const { Generator } = require('npm-dts')
+const { sassPlugin } = require('esbuild-sass-plugin')
 
 new Generator({
   entry: 'src/index.tsx',
@@ -8,8 +9,9 @@ new Generator({
   tsc: '-p ./tsconfig.json',
 }).generate()
 
+const entryPoints = ['src/index.tsx']
 const sharedConfig = {
-  entryPoints: ['src/index.tsx'],
+  entryPoints,
   bundle: true,
   minify: false,
   sourcemap: true,
@@ -18,17 +20,19 @@ const sharedConfig = {
     ...Object.keys(dependencies || {}),
     ...Object.keys(peerDependencies || {}),
   ],
+  plugins: [sassPlugin()],
 }
 
 build({
   ...sharedConfig,
+  entryPoints: [...entryPoints, 'src/styles/index.css'],
   platform: 'node', // for CJS
-  outfile: 'dist/index.js',
+  outdir: 'dist',
 })
 
 build({
   ...sharedConfig,
-  outfile: 'dist/index.esm.js',
+  outdir: 'dist/esm',
   platform: 'neutral', // for ESM
   format: 'esm',
 })

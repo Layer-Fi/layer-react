@@ -1,5 +1,4 @@
 import React from 'react'
-import './Hello.css'
 import useSWR from 'swr'
 
 type Props = {

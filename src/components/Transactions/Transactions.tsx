@@ -3,7 +3,6 @@ import { LayerContext } from '../../contexts/LayerContext'
 import { Transaction, CategorizationStatus } from '../../types'
 import { RadioButtonGroup } from '../RadioButtonGroup'
 import { TransactionRow } from './TransactionRow'
-import './Transactions.css'
 import useSWR from 'swr'
 
 const dateFormat = 'MM/dd/yyyy'

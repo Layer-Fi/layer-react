@@ -1,6 +1,9 @@
+@import 'https://fonts.googleapis.com/css2?family=Inter';
+
 .transactions {
   --transaction-buttons-border-color: #D0D5DD;
   --transaction-buttons-selected-background-color: #E0E9FF;
+  --transaction-table-expanded-background-color: #F9F9F9;
   --transaction-table-background-color: white;
   --transaction-table-border-color: #EAECF0;
   --transaction-table-text-color: #101828;
@@ -12,6 +15,13 @@
   border: 1px solid var(--transaction-table-border-color);
   background-color: var(--transaction-table-background-color);
   overflow: hidden;
+}
+
+.transactions * {
+  font-family: Inter;
+  color: var(--transaction-table-text-color);
+  font-style: normal;
+  font-weight: 500;
 }
 
 .transactions header {
@@ -48,19 +58,17 @@
   border-radius: 0.6rem;
 }
 
-.transactions .transaction-table div {
-  padding: 1rem;
-  background-color: white;
-  overflow: clip;
-  color: var(--transaction-table-text-color);
-  font-family: sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 20px;
-  display: flex;
-  flex-direction: row;
+.transactions .transaction-table > div {
   align-items: center;
+  background-color: white;
+  font-size: 16px;
+  line-height: 20px;
+  overflow: clip;
+  padding: 1rem;
+}
+
+.transactions .transaction-table > div.open-row {
+  background-color: var(--transaction-table-expanded-background-color);
 }
 
 .transactions .transaction-table div select {
@@ -72,6 +80,7 @@
 
 .transactions .transaction-table div.header {
   font-weight: bold;
+  text-align: left;
 }
 
 .transactions .transaction-table div.transaction-expand {
@@ -81,14 +90,70 @@
 .transactions .transaction-table div.expand-area {
   grid-column: 1 / -1;
   margin-top: -1px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--transaction-table-expanded-background-color);
 }
 
-.transactions .transaction-table div.expand-content {
-  padding: 1rem;
+.transactions .transaction-table div.expand-area .purpose {
+  align-self: flex-start;
+}
+
+.transactions .transaction-table div.expand-area .expand-content {
+  padding: 0.75rem 1.5rem;
   text-align: center;
+  display: grid;
+  grid-template-columns: auto auto auto auto 1fr auto;
+  gap: 0;
+  width: 100%;
+}
+
+.transactions .transaction-table div.expand-area .expand-content > div {
+  padding: 0.25rem 0.75rem;
+}
+
+.transactions .transaction-table div.expand-area .expand-content div.split-button-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 5.5rem;
+}
+
+.transactions .transaction-table div.expand-area .expand-content div.split-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+
+.transactions .transaction-table div.expand-area .expand-content div.split-button svg {
+  margin-right: 0.75rem;
+}
+
+.transactions .transaction-table div.expand-area .expand-content div.category-menu-container {
+}
+
+.transactions .transaction-table div.expand-area .expand-content div.category-menu-container select {
+  min-width: 10rem;
+}
+
+.transactions .transaction-table div.expand-area .expand-content div.category-menu-container select:not(:last-child) {
+  margin-right: 0.75rem;
+}
+
+.transactions .transaction-table div.expand-area .expand-content div.category-menu-container input {
+  width: 4rem;
+}
+
+.transactions .transaction-table div.expand-area .expand-content div.category-menu-container input.subzero {
+  font-weight: bold;
+  color: red;
+  border: 2.5px dotted red;
 }
 
 .transactions .radio-group {
+  display: flex;
+  flex-direction: row;
 }
 
 .transactions .radio-group input {
@@ -101,6 +166,10 @@
   border: 1px solid var(--transaction-buttons-border-color);
   border-right: 0;
   border-radius: 0;
+}
+
+.transactions .radio-group.radio-group-small div {
+  padding: 0.25rem 1rem;
 }
 
 .transactions .radio-group label:first-of-type div {
@@ -116,4 +185,9 @@
 
 .transactions .radio-group input:checked + div {
   background: var(--transaction-buttons-selected-background-color);
+}
+
+.transactions select optgroup {
+  font-weight: normal;
+  color: #f00;
 }
