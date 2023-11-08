@@ -1,13 +1,10 @@
-import { Transaction } from '../types'
+export const centsToDollars = (cents: number): string =>
+  (cents / 100).toFixed(2)
 
-type FormatParameters = Pick<Transaction, 'amount'> &
-  Pick<Partial<Transaction>, 'direction'>
-const format = ({ amount, direction }: FormatParameters) =>
-  (direction === 'CREDIT' ? '+' : '-') +
-  Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
-    amount / 100,
-  )
+export const dollarsToCents = (dollars: string): number =>
+  Math.round(parseFloat(dollars) * 100)
 
-export const Money = {
-  format,
+export default {
+  centsToDollars,
+  dollarsToCents,
 }

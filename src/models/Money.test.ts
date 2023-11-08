@@ -1,21 +1,40 @@
-import { Money } from './Money'
+import Money from './Money'
 
-describe(Money.format, () => {
-  it('turns cents into dollar strings', () => {
-    const out = Money.format({ amount: 123450 })
-
-    expect(out).toEqual('-$1,234.50')
+describe(Money.centsToDollars, () => {
+  it('turns cents into decimal', () => {
+    const output = Money.centsToDollars(12345)
+    expect(output).toEqual('123.45')
   })
 
-  it('turns cents into dollar strings precisely', () => {
-    const out = Money.format({ amount: (0.1 + 0.2) * 100 })
-
-    expect(out).toEqual('-$0.30')
+  it('deals with round numbers', () => {
+    const output = Money.centsToDollars(1230)
+    expect(output).toEqual('12.30')
   })
 
-  it('turns CREDITs into plusses', () => {
-    const out = Money.format({ amount: 1234, direction: 'CREDIT' })
+  it('deals with rounder numbers', () => {
+    const output = Money.centsToDollars(1200)
+    expect(output).toEqual('12.00')
+  })
+})
 
-    expect(out).toEqual('+$12.34')
+describe(Money.dollarsToCents, () => {
+  it('takes dollars and returns cents', () => {
+    const output = Money.dollarsToCents('12.34')
+    expect(output).toEqual(1234)
+  })
+
+  it('takes handles round numbers', () => {
+    const output = Money.dollarsToCents('12.30')
+    expect(output).toEqual(1230)
+  })
+
+  it('takes handles small numbers', () => {
+    const output = Money.dollarsToCents('0.01')
+    expect(output).toEqual(1)
+  })
+
+  it('takes handles slightly poorly formatted numbers', () => {
+    const output = Money.dollarsToCents('.1')
+    expect(output).toEqual(10)
   })
 })
