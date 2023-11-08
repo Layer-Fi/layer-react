@@ -11,11 +11,7 @@ export const CategoryMenu = ({ selectedCategory }: Props) => {
   return (
     <select defaultValue={selectedCategory}>
       {categories.map(category => (
-        <CategoryMenuItem
-          key={category.category}
-          category={category}
-          selectedCategory={selectedCategory}
-        />
+        <CategoryMenuItem key={category.category} category={category} />
       ))}
     </select>
   )

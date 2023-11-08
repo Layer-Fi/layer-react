@@ -1,28 +1,30 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Category } from '../../types'
 
 type Props = {
-  selectedCategory: string
   category: Category
   maxDepth?: number
 }
 
-export const CategoryMenuItem = ({
-  selectedCategory,
-  category,
-  maxDepth = 1,
-}: Props) => {
-  if (!!category.subCategories && maxDepth > 0) {
+export const CategoryMenuItem = ({ category, maxDepth = 1 }: Props) => {
+  const hasChildrenAndContinuing = !!category.subCategories && maxDepth > 0
+  const hasNoChildrenAndAlmostDone = !category.subCategories && maxDepth === 1
+  if (hasChildrenAndContinuing) {
     return (
       <optgroup label={category.display_name}>
         {category.subCategories.map(category => (
           <CategoryMenuItem
             key={category.category}
             category={category}
-            selectedCategory={selectedCategory}
             maxDepth={maxDepth - 1}
           />
         ))}
+      </optgroup>
+    )
+  } else if (hasNoChildrenAndAlmostDone) {
+    return (
+      <optgroup label={category.display_name}>
+        <CategoryMenuItem category={category} maxDepth={maxDepth - 1} />
       </optgroup>
     )
   } else {
