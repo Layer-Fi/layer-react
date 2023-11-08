@@ -1,9 +1,10 @@
 import React from 'react'
-import { Money } from '../../models/Money'
 import ChevronDown from '../../icons/ChevronDown'
 import ChevronUp from '../../icons/ChevronUp'
+import { centsToDollars as formatMoney } from '../../models/Money'
 import { Transaction } from '../../types'
 import { CategoryMenu } from '../CategoryMenu'
+import { ExpandedTransactionRow } from '../ExpandedTransactionRow'
 import { parseISO, format as formatTime } from 'date-fns'
 
 type Props = {
@@ -13,6 +14,9 @@ type Props = {
   toggleOpen: (id: string) => void
 }
 
+const isCredit = ({ direction }: Pick<Transaction, 'direction'>) =>
+  direction === 'CREDIT'
+
 export const TransactionRow = ({
   dateFormat,
   transaction,
@@ -20,27 +24,32 @@ export const TransactionRow = ({
   toggleOpen,
 }: Props) => (
   <>
-    <div>
+    <div className={isOpen ? 'open-row' : ''}>
       <input type="checkbox" />
     </div>
-    <div>{formatTime(parseISO(transaction.date), dateFormat)}</div>
-    <div>{Money.format(transaction)}</div>
-    <div>Business Checking</div>
-    <div>{transaction.counterparty_name}</div>
-    <div data-selected={transaction?.category?.category}>
+    <div className={isOpen ? 'open-row' : ''}>
+      {formatTime(parseISO(transaction.date), dateFormat)}
+    </div>
+    <div className={isOpen ? 'open-row' : ''}>
+      {isCredit(transaction) ? '+' : '-'}${formatMoney(transaction.amount)}
+    </div>
+    <div className={isOpen ? 'open-row' : ''}>Business Checking</div>
+    <div className={isOpen ? 'open-row' : ''}>
+      {transaction.counterparty_name}
+    </div>
+    <div
+      className={isOpen ? 'open-row' : ''}
+      data-selected={transaction?.category?.category}
+    >
       <CategoryMenu selectedCategory={transaction?.category?.category} />
     </div>
-    <div></div>
+    <div className={isOpen ? 'open-row' : ''}></div>
     <div
-      className="transaction-expand"
+      className={`transaction-expand ${isOpen ? 'open-row' : ''}`}
       onClick={() => toggleOpen(transaction.id)}
     >
-      &#x1F3AF;
+      {isOpen ? <ChevronUp /> : <ChevronDown />}
     </div>
-    {isOpen && (
-      <div className="expand-area">
-        <div className="expand-content">Hello!</div>
-      </div>
-    )}
+    {isOpen && <ExpandedTransactionRow transaction={transaction} />}
   </>
 )
