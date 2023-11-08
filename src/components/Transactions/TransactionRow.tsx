@@ -1,5 +1,7 @@
 import React from 'react'
 import { Money } from '../../models/Money'
+import ChevronDown from '../../icons/ChevronDown'
+import ChevronUp from '../../icons/ChevronUp'
 import { Transaction } from '../../types'
 import { CategoryMenu } from '../CategoryMenu'
 import { parseISO, format as formatTime } from 'date-fns'
