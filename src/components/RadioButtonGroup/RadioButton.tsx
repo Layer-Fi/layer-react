@@ -6,6 +6,7 @@ type Props = {
   name: string
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   value: string
+  disabled?: boolean
 }
 
 export const RadioButton = ({
@@ -14,6 +15,7 @@ export const RadioButton = ({
   name,
   onChange,
   value,
+  disabled,
 }: Props) => {
   return (
     <label>
@@ -23,6 +25,7 @@ export const RadioButton = ({
         name={name}
         onChange={onChange}
         value={value}
+        disabled={disabled ?? false}
       />
       <div>{label}</div>
     </label>
