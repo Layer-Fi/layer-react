@@ -75,6 +75,9 @@
         }
       ]
     },
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/test/setupAfterEnv.ts"
+    ],
     "moduleNameMapper": {
       "\\.(css|scss)$": "<rootDir>/test/mocks/styleMock.js"
     }
