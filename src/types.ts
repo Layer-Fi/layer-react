@@ -44,7 +44,7 @@ export interface Category {
   subCategories: Category[]
 }
 
-export interface Transaction {
+export interface BankTransaction {
   date: ISODateString
   amount: number
   direction: Direction

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { useTransactions } from '../../hooks/useTransactions'
-import { Transaction, CategorizationStatus } from '../../types'
+import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { BankTransaction, CategorizationStatus } from '../../types'
+import { BankTransactionRow } from '../BankTransactionRow'
 import { RadioButtonGroup } from '../RadioButtonGroup'
-import { TransactionRow } from './TransactionRow'
 
 const dateFormat = 'MM/dd/yyyy'
 
@@ -22,12 +22,12 @@ const ReviewCategories = [
 ]
 
 const filterVisibility =
-  (display: DisplayState) => (transaction: Transaction) => {
+  (display: DisplayState) => (bankTransaction: BankTransaction) => {
     const categorized = CategorizedCategories.includes(
-      transaction.categorization_status,
+      bankTransaction.categorization_status,
     )
     const inReview = ReviewCategories.includes(
-      transaction.categorization_status,
+      bankTransaction.categorization_status,
     )
     return (
       (display === DisplayState.review && inReview) ||
@@ -35,10 +35,10 @@ const filterVisibility =
     )
   }
 
-export const Transactions = () => {
+export const BankTransactions = () => {
   const [display, setDisplay] = useState<DisplayState>(DisplayState.review)
-  const { data } = useTransactions()
-  const transactions = (data?.data || []).filter(filterVisibility(display))
+  const { data } = useBankTransactions()
+  const bankTransactions = (data?.data || []).filter(filterVisibility(display))
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => setDisplay(event.target.value)
@@ -46,11 +46,11 @@ export const Transactions = () => {
   const toggleOpen = (id: string) =>
     setOpenRows({ ...openRows, [id]: !openRows[id] })
   return (
-    <div className="transactions" data-display={display}>
+    <div className="bank-transactions" data-display={display}>
       <header>
         <h1>Transactions</h1>
         <RadioButtonGroup
-          name="transaction-display"
+          name="bank-transaction-display"
           buttons={[
             { label: 'To Review', value: DisplayState.review },
             { label: 'Categorized', value: DisplayState.categorized },
@@ -59,7 +59,7 @@ export const Transactions = () => {
           onChange={onCategorizationDisplayChange}
         />
       </header>
-      <div className="transaction-table">
+      <div className="bank-transaction-table">
         <div className="header">
           <input type="checkbox" />
         </div>
@@ -70,12 +70,12 @@ export const Transactions = () => {
         <div className="header">Category</div>
         <div className="header">Action</div>
         <div className="header"></div>
-        {transactions.map(transaction => (
-          <TransactionRow
-            key={transaction.id}
+        {bankTransactions.map(bankTransaction => (
+          <BankTransactionRow
+            key={bankTransaction.id}
             dateFormat={dateFormat}
-            transaction={transaction}
-            isOpen={openRows[transaction.id]}
+            bankTransaction={bankTransaction}
+            isOpen={openRows[bankTransaction.id]}
             toggleOpen={toggleOpen}
           />
         ))}

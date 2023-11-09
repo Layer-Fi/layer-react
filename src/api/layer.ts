@@ -1,9 +1,9 @@
 import { authenticate } from './layer/authenticate'
+import { getBankTransactions } from './layer/bankTransactions'
 import { getCategories } from './layer/categories'
-import { getTransactions } from './layer/transactions'
 
 export default {
   authenticate,
   getCategories,
-  getTransactions,
+  getBankTransactions,
 }

@@ -5,12 +5,12 @@ import {
   centsToDollars as formatMoney,
   dollarsToCents as parseMoney,
 } from '../../models/Money'
-import { Category, Transaction } from '../../types'
+import { Category, BankTransaction } from '../../types'
 import { CategoryMenu } from '../CategoryMenu'
 import { RadioButtonGroup } from '../RadioButtonGroup'
 
 type Props = {
-  transaction: Transaction
+  bankTransaction: BankTransaction
 }
 
 type Split = {
@@ -25,14 +25,14 @@ type RowState = {
   file: unknown
 }
 
-export const ExpandedTransactionRow = ({ transaction }: Props) => {
+export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
   const [purpose, setPurpose] = useState<'categorize' | 'match'>('categorize')
   const [rowState, updateRowState] = useState<RowState>({
     splits: [
       {
-        amount: transaction.amount,
-        inputValue: formatMoney(transaction.amount),
-        category: transaction.category,
+        amount: bankTransaction.amount,
+        inputValue: formatMoney(bankTransaction.amount),
+        category: bankTransaction.category,
       },
     ],
     description: '',
@@ -62,7 +62,7 @@ export const ExpandedTransactionRow = ({ transaction }: Props) => {
           const amount = index === rowNumber ? newAmount : split.amount
           return sum + amount
         }, 0)
-      const remaining = transaction.amount - splitTotal
+      const remaining = bankTransaction.amount - splitTotal
       rowState.splits[rowNumber].amount = newAmount
       rowState.splits[rowNumber].inputValue = newDisplaying
       rowState.splits[rowState.splits.length - 1].amount = remaining
@@ -95,7 +95,7 @@ export const ExpandedTransactionRow = ({ transaction }: Props) => {
           onChange={onChangePurpose}
         />
       </div>
-      <div className="expand-content" id={`expanded-${transaction.id}`}>
+      <div className="expand-content" id={`expanded-${bankTransaction.id}`}>
         <div className="header"></div>
         <div className="header">Category</div>
         <div className="header">Description</div>
@@ -118,7 +118,7 @@ export const ExpandedTransactionRow = ({ transaction }: Props) => {
           {rowState.splits.map((split, index) => (
             <div key={`split-${index}`}>
               <CategoryMenu
-                selectedCategory={transaction?.category?.category}
+                selectedCategory={bankTransaction?.category?.category}
               />
               {rowState.splits.length > 1 && (
                 <input

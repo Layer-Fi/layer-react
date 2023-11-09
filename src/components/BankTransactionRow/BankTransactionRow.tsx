@@ -2,24 +2,24 @@ import React from 'react'
 import ChevronDown from '../../icons/ChevronDown'
 import ChevronUp from '../../icons/ChevronUp'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { Transaction } from '../../types'
+import { BankTransaction } from '../../types'
 import { CategoryMenu } from '../CategoryMenu'
-import { ExpandedTransactionRow } from '../ExpandedTransactionRow'
+import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { parseISO, format as formatTime } from 'date-fns'
 
 type Props = {
   dateFormat: string
-  transaction: Transaction
+  bankTransaction: BankTransaction
   isOpen: boolean
   toggleOpen: (id: string) => void
 }
 
-const isCredit = ({ direction }: Pick<Transaction, 'direction'>) =>
+const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
   direction === 'CREDIT'
 
-export const TransactionRow = ({
+export const BankTransactionRow = ({
   dateFormat,
-  transaction,
+  bankTransaction,
   isOpen,
   toggleOpen,
 }: Props) => (
@@ -28,28 +28,29 @@ export const TransactionRow = ({
       <input type="checkbox" />
     </div>
     <div className={isOpen ? 'open-row' : ''}>
-      {formatTime(parseISO(transaction.date), dateFormat)}
+      {formatTime(parseISO(bankTransaction.date), dateFormat)}
     </div>
     <div className={isOpen ? 'open-row' : ''}>
-      {isCredit(transaction) ? '+' : '-'}${formatMoney(transaction.amount)}
+      {isCredit(bankTransaction) ? '+' : '-'}$
+      {formatMoney(bankTransaction.amount)}
     </div>
     <div className={isOpen ? 'open-row' : ''}>Business Checking</div>
     <div className={isOpen ? 'open-row' : ''}>
-      {transaction.counterparty_name}
+      {bankTransaction.counterparty_name}
     </div>
     <div
       className={isOpen ? 'open-row' : ''}
-      data-selected={transaction?.category?.category}
+      data-selected={bankTransaction?.category?.category}
     >
-      <CategoryMenu selectedCategory={transaction?.category?.category} />
+      <CategoryMenu selectedCategory={bankTransaction?.category?.category} />
     </div>
     <div className={isOpen ? 'open-row' : ''}></div>
     <div
-      className={`transaction-expand ${isOpen ? 'open-row' : ''}`}
-      onClick={() => toggleOpen(transaction.id)}
+      className={`bank-transaction-expand ${isOpen ? 'open-row' : ''}`}
+      onClick={() => toggleOpen(bankTransaction.id)}
     >
       {isOpen ? <ChevronUp /> : <ChevronDown />}
     </div>
-    {isOpen && <ExpandedTransactionRow transaction={transaction} />}
+    {isOpen && <ExpandedBankTransactionRow bankTransaction={bankTransaction} />}
   </>
 )

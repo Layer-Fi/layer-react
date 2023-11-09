@@ -1,4 +1,4 @@
 export { Hello } from './components/Hello'
-export { Transactions } from './components/Transactions'
+export { BankTransactions } from './components/BankTransactions'
 export { LayerContext } from './contexts/LayerContext'
 export { LayerProvider } from './providers/LayerProvider'
