@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import { useLayerContext } from '../../hooks/useLayerContext'
+import { useTransactions } from '../../hooks/useTransactions'
 import { Transaction, CategorizationStatus } from '../../types'
 import { RadioButtonGroup } from '../RadioButtonGroup'
 import { TransactionRow } from './TransactionRow'
-import useSWR from 'swr'
 
 const dateFormat = 'MM/dd/yyyy'
 
@@ -37,13 +36,8 @@ const filterVisibility =
   }
 
 export const Transactions = () => {
-  const { auth, businessId } = useLayerContext()
   const [display, setDisplay] = useState<DisplayState>(DisplayState.review)
-  const { data, isLoading } = useSWR(
-    auth?.access_token &&
-      `https://sandbox.layerfi.com/v1/businesses/${businessId}/bank-transactions`,
-    fetchTransactions(auth?.access_token),
-  )
+  const { data } = useTransactions()
   const transactions = (data?.data || []).filter(filterVisibility(display))
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
