@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { LayerContext } from '../../contexts/LayerContext'
+import React from 'react'
+import { useLayerContext } from '../../hooks/useLayerContext'
 import { CategoryMenuItem } from './CategoryMenuItem'
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
 }
 
 export const CategoryMenu = ({ selectedCategory }: Props) => {
-  const { categories } = useContext(LayerContext)
+  const { categories } = useLayerContext()
   return (
     <select defaultValue={selectedCategory}>
       {categories.map(category => (

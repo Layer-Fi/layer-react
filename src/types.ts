@@ -4,7 +4,7 @@ export type OAuthResponse = {
   expires_in: number
 }
 
-export type LayerExecutionContext = {
+export type LayerContextValues = {
   auth: OAuthResponse | undefined
   businessId: string
   categories: Category[]

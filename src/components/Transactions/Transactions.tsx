@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react'
-import { LayerContext } from '../../contexts/LayerContext'
+import React, { useState } from 'react'
+import { useLayerContext } from '../../hooks/useLayerContext'
 import { Transaction, CategorizationStatus } from '../../types'
 import { RadioButtonGroup } from '../RadioButtonGroup'
 import { TransactionRow } from './TransactionRow'
@@ -11,15 +11,6 @@ enum DisplayState {
   review = 'review',
   categorized = 'categorized',
 }
-
-const fetchTransactions = (accessToken: string) => (url: string) =>
-  fetch(url, {
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
-      'Content-Type': 'application/json',
-    },
-    method: 'GET',
-  }).then(res => res.json())
 
 const CategorizedCategories = [
   CategorizationStatus.CATEGORIZED,
@@ -45,10 +36,8 @@ const filterVisibility =
     )
   }
 
-type Props = {}
-
-export const Transactions = (props: Props) => {
-  const { auth, businessId } = useContext(LayerContext)
+export const Transactions = () => {
+  const { auth, businessId } = useLayerContext()
   const [display, setDisplay] = useState<DisplayState>(DisplayState.review)
   const { data, isLoading } = useSWR(
     auth?.access_token &&
