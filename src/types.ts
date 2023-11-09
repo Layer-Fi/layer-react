@@ -10,6 +10,21 @@ export type LayerContextValues = {
   categories: Category[]
 }
 
+export enum LayerContextActionName {
+  setAuth = 'LayerContext.setAuth',
+  setCategories = 'LayerContext.setCategories',
+}
+
+export type LayerContextAction =
+  | {
+      type: LayerContextActionName.setAuth
+      payload: { auth: LayerContextValues['auth'] }
+    }
+  | {
+      type: LayerContextActionName.setCategories
+      payload: { categories: LayerContextValues['categories'] }
+    }
+
 export enum CategorizationStatus {
   PENDING = 'PENDING',
   READY_FOR_INPUT = 'READY_FOR_INPUT',
