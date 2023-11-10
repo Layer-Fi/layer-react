@@ -41,7 +41,12 @@ export const BankTransactions = () => {
   const bankTransactions = (data?.data || []).filter(filterVisibility(display))
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-  ) => setDisplay(event.target.value)
+  ) =>
+    setDisplay(
+      event.target.value === DisplayState.categorized
+        ? DisplayState.categorized
+        : DisplayState.review,
+    )
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({})
   const toggleOpen = (id: string) =>
     setOpenRows({ ...openRows, [id]: !openRows[id] })
@@ -70,7 +75,7 @@ export const BankTransactions = () => {
         <div className="header">Category</div>
         <div className="header">Action</div>
         <div className="header"></div>
-        {bankTransactions.map(bankTransaction => (
+        {bankTransactions.map((bankTransaction: BankTransaction) => (
           <BankTransactionRow
             key={bankTransaction.id}
             dateFormat={dateFormat}

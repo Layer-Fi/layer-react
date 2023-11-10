@@ -11,7 +11,7 @@ type Props = {
   name: string
   size?: 'small' | 'large'
   buttons: RadioButtonLabel[]
-  selected?: Pick<RadioButtonLabel, 'value'>
+  selected?: RadioButtonLabel['value']
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 

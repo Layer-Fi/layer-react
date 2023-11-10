@@ -5,7 +5,7 @@ type Props = {
   user?: string | undefined
 }
 
-const fetcher = url => fetch(url).then(res => res.json())
+const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export const Hello = ({ user }: Props) => {
   const { data, isLoading } = useSWR(

@@ -25,8 +25,13 @@ type RowState = {
   file: unknown
 }
 
+enum Purpose {
+  categorize = 'categorize',
+  match = 'match',
+}
+
 export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
-  const [purpose, setPurpose] = useState<'categorize' | 'match'>('categorize')
+  const [purpose, setPurpose] = useState<Purpose>(Purpose.categorize)
   const [rowState, updateRowState] = useState<RowState>({
     splits: [
       {
@@ -80,7 +85,9 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
   }
 
   const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setPurpose(event.target.value)
+    setPurpose(
+      event.target.value === Purpose.match ? Purpose.match : Purpose.categorize,
+    )
   return (
     <div className="expand-area">
       <div className="purpose">

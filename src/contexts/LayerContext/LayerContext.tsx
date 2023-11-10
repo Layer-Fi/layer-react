@@ -1,7 +1,7 @@
 import { createContext } from 'react'
-import { LayerConfig } from '../../types'
+import { LayerContextValues } from '../../types'
 
-export const LayerContext = createContext<LayerConfig>({
+export const LayerContext = createContext<LayerContextValues>({
   auth: undefined,
   businessId: '',
   categories: [],

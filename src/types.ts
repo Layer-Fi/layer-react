@@ -34,8 +34,6 @@ export enum CategorizationStatus {
   JOURNALING = 'JOURNALING',
 }
 
-export type ISODateString = string
-export type UUID = string
 export type Direction = 'CREDIT' | 'DEBIT'
 
 export interface Category {
@@ -45,7 +43,8 @@ export interface Category {
 }
 
 export interface BankTransaction {
-  date: ISODateString
+  id: string
+  date: string
   amount: number
   direction: Direction
   counterparty_name: string
