@@ -18,7 +18,7 @@ export const RadioButton = ({
   disabled,
 }: Props) => {
   return (
-    <label>
+    <label className="radio-button-group__radio-button">
       <input
         type="radio"
         checked={checked}

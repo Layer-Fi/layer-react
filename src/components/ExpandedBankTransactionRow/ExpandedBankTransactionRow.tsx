@@ -134,8 +134,8 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
   }
 
   return (
-    <div className="expand-area">
-      <div className="purpose">
+    <div className="expanded-bank-transactions-row">
+      <div className="expanded-bank-transactions-row__purpose-button">
         <RadioButtonGroup
           name="purpose"
           size="small"
@@ -147,26 +147,43 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
           onChange={onChangePurpose}
         />
       </div>
-      <div className="expand-content" id={`expanded-${bankTransaction.id}`}>
-        <div className="header"></div>
-        <div className="header">Category</div>
-        <div className="header">Description</div>
-        <div className="header">Receipt</div>
-        <div className="header"></div>
-        <div className="header"></div>
+      <div
+        className="expanded-bank-transactions-row__content"
+        id={`expanded-${bankTransaction.id}`}
+      >
+        <div className="expanded-bank-transactions-row__table-cell expanded-bank-transactions-row__table-cell--header"></div>
+        <div className="expanded-bank-transactions-row__table-cell expanded-bank-transactions-row__table-cell--header">
+          Category
+        </div>
+        <div className="expanded-bank-transactions-row__table-cell expanded-bank-transactions-row__table-cell--header">
+          Description
+        </div>
+        <div className="expanded-bank-transactions-row__table-cell expanded-bank-transactions-row__table-cell--header">
+          Receipt
+        </div>
+        <div className="expanded-bank-transactions-row__table-cell expanded-bank-transactions-row__table-cell--header"></div>
+        <div className="expanded-bank-transactions-row__table-cell expanded-bank-transactions-row__table-cell--header"></div>
 
-        <div className="split-button-container">
+        <div className="expanded-bank-transactions-row__table-cell">
           {rowState.splits.length === 1 ? (
-            <div className="split-button" onClick={addSplit}>
-              <Unlink /> Split
+            <div
+              className="expanded-bank-transactions-row__button--split"
+              onClick={addSplit}
+            >
+              <Unlink className="expanded-bank-transactions-row__svg" />
+              Split
             </div>
           ) : (
-            <div className="split-button" onClick={removeSplit}>
-              <Link /> Merge
+            <div
+              className="expanded-bank-transactions-row__button--merge"
+              onClick={removeSplit}
+            >
+              <Link className="expanded-bank-transactions-row__svg" />
+              Merge
             </div>
           )}
         </div>
-        <div className="category-menu-container">
+        <div className="expanded-bank-transactions-row__table-cell">
           {rowState.splits.map((split, index) => (
             <div key={`split-${index}`}>
               <CategoryMenu
@@ -182,21 +199,28 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
                   onChange={updateAmounts(index)}
                   value={split.inputValue}
                   onBlur={onBlur}
-                  className={split.amount < 0 ? 'subzero' : ''}
+                  className={`expanded-bank-transactions-row__split-amount${
+                    split.amount < 0 ? '--negative' : ''
+                  }`}
                 />
               )}
             </div>
           ))}
         </div>
-        <div>
+        <div className="expanded-bank-transactions-row__table-cell">
           <textarea></textarea>
         </div>
-        <div>
+        <div className="expanded-bank-transactions-row__table-cell">
           <input type="file" />
         </div>
-        <div></div>
-        <div>
-          <button onClick={save}>Save</button>
+        <div className="expanded-bank-transactions-row__table-cell"></div>
+        <div className="expanded-bank-transactions-row__table-cell">
+          <button
+            onClick={save}
+            className="expanded-bank-transactions-row__button"
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>

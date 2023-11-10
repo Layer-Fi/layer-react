@@ -25,7 +25,7 @@ const sharedConfig = {
 
 build({
   ...sharedConfig,
-  entryPoints: [...entryPoints, 'src/styles/index.css'],
+  entryPoints: [...entryPoints, 'src/styles/index.scss'],
   platform: 'node', // for CJS
   outdir: 'dist',
 })

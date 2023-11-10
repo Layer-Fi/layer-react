@@ -25,7 +25,7 @@ export const RadioButtonGroup = ({
   const selectedValue = selected || buttons[0].value
   return (
     <div
-      className={`radio-group radio-group-${
+      className={`radio-button-group radio-button-group--size-${
         size === 'small' ? 'small' : 'large'
       }`}
     >

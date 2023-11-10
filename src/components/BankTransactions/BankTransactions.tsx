@@ -52,8 +52,8 @@ export const BankTransactions = () => {
     setOpenRows({ ...openRows, [id]: !openRows[id] })
   return (
     <div className="bank-transactions" data-display={display}>
-      <header>
-        <h1>Transactions</h1>
+      <header className="bank-transactions__header">
+        <h1 className="bank-transactions__title">Transactions</h1>
         <RadioButtonGroup
           name="bank-transaction-display"
           buttons={[
@@ -64,17 +64,29 @@ export const BankTransactions = () => {
           onChange={onCategorizationDisplayChange}
         />
       </header>
-      <div className="bank-transaction-table">
-        <div className="header">
+      <div className="bank-transactions__table">
+        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
           <input type="checkbox" />
         </div>
-        <div className="header">Date</div>
-        <div className="header">Transaction</div>
-        <div className="header">Account</div>
-        <div className="header">Amount</div>
-        <div className="header">Category</div>
-        <div className="header">Action</div>
-        <div className="header"></div>
+        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+          Date
+        </div>
+        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+          Transaction
+        </div>
+        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+          Account
+        </div>
+        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+          Amount
+        </div>
+        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+          Category
+        </div>
+        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+          Action
+        </div>
+        <div className="bank-transactions__table-cell bank-transactions__table-cell--header"></div>
         {bankTransactions.map((bankTransaction: BankTransaction) => (
           <BankTransactionRow
             key={bankTransaction.id}
@@ -82,6 +94,7 @@ export const BankTransactions = () => {
             bankTransaction={bankTransaction}
             isOpen={openRows[bankTransaction.id]}
             toggleOpen={toggleOpen}
+            editable={display === DisplayState.review}
           />
         ))}
       </div>

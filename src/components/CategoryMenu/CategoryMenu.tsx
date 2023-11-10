@@ -12,7 +12,12 @@ type Props = {
 export const CategoryMenu = ({ name, selectedCategory, onChange }: Props) => {
   const { categories } = useLayerContext()
   return (
-    <select name={name} onChange={onChange} defaultValue={selectedCategory}>
+    <select
+      class="category-menu"
+      name={name}
+      onChange={onChange}
+      defaultValue={selectedCategory}
+    >
       {categories.map((category: Category) => (
         <CategoryMenuItem key={category.category} category={category} />
       ))}
