@@ -5,8 +5,10 @@ describe(get, () => {
     const urlMaker = ({ one }: Record<string, string>) => `http://layer/${one}`
     const locationLockedGet = get(urlMaker)
     const primedGet = locationLockedGet('access-token', {
-      one: 'ONE',
-      two: '2',
+      params: {
+        one: 'ONE',
+        two: '2',
+      },
     })
 
     primedGet()

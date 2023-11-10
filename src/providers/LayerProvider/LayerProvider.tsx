@@ -44,7 +44,7 @@ export const LayerProvider = ({
 
   const { data: categories } = useSWR(
     businessId && auth?.access_token && `categories-${businessId}`,
-    Layer.getCategories(auth?.access_token, { businessId }),
+    Layer.getCategories(auth?.access_token, { params: { businessId } }),
   )
   useEffect(() => {
     if (!!categories?.data?.categories?.length) {

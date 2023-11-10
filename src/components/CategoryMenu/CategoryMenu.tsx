@@ -4,13 +4,15 @@ import { Category } from '../../types'
 import { CategoryMenuItem } from './CategoryMenuItem'
 
 type Props = {
+  name?: string
   selectedCategory: string
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
-export const CategoryMenu = ({ selectedCategory }: Props) => {
+export const CategoryMenu = ({ name, selectedCategory, onChange }: Props) => {
   const { categories } = useLayerContext()
   return (
-    <select defaultValue={selectedCategory}>
+    <select name={name} onChange={onChange} defaultValue={selectedCategory}>
       {categories.map((category: Category) => (
         <CategoryMenuItem key={category.category} category={category} />
       ))}

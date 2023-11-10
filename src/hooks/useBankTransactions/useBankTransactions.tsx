@@ -6,6 +6,6 @@ export const useBankTransactions = () => {
   const { auth, businessId } = useLayerContext()
   return useSWR(
     businessId && auth?.access_token && `bank-transactions-${businessId}`,
-    Layer.getBankTransactions(auth?.access_token, { businessId }),
+    Layer.getBankTransactions(auth?.access_token, { params: { businessId } }),
   )
 }
