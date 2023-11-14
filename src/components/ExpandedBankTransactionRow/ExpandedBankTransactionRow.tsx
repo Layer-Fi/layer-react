@@ -33,7 +33,7 @@ enum Purpose {
 }
 
 export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
-  const { accessToken, businessId } = useLayerContext()
+  const { auth, businessId } = useLayerContext()
   const [purpose, setPurpose] = useState<Purpose>(Purpose.categorize)
   const [rowState, updateRowState] = useState<RowState>({
     splits: [
@@ -102,26 +102,27 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
     const payload =
       rowState.splits.length === 1
         ? {
-            type: 'category',
+            type: 'Category',
             category: {
               type: 'StableName',
               stable_name: rowState?.splits[0].category_name,
             },
           }
         : {
-            type: 'split',
+            type: 'Split',
             entries: rowState.splits.map(split => ({
               category: split.category_name,
               amount: formatMoney(split.amount),
             })),
           }
 
-    Layer.categorizeBankTransaction(accessToken, {
+    Layer.categorizeBankTransaction(auth?.access_token, {
       params: { businessId, bankTransactionId: bankTransaction.id },
       body: payload,
     })
   }
 
+  console.log(rowState)
   return (
     <div className="expand-area">
       <div className="purpose">
