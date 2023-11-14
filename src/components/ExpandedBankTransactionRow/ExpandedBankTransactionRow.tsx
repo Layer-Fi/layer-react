@@ -217,7 +217,7 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
         <div className="expanded-bank-transactions-row__table-cell">
           <button
             onClick={save}
-            className="expanded-bank-transactions-row__button"
+            className="expanded-bank-transactions-row__button--save"
           >
             Save
           </button>

@@ -1,4 +1,5 @@
 import React from 'react'
+import CheckedCircle from '../../icons/CheckedCircle'
 import ChevronDown from '../../icons/ChevronDown'
 import ChevronUp from '../../icons/ChevronUp'
 import { centsToDollars as formatMoney } from '../../models/Money'
@@ -37,12 +38,12 @@ export const BankTransactionRow = ({
       <div className={className}>
         {formatTime(parseISO(bankTransaction.date), dateFormat)}
       </div>
+      <div className={className}>{bankTransaction.counterparty_name}</div>
+      <div className={className}>Business Checking</div>
       <div className={className}>
         {isCredit(bankTransaction) ? '+' : '-'}$
         {formatMoney(bankTransaction.amount)}
       </div>
-      <div className={className}>Business Checking</div>
-      <div className={className}>{bankTransaction.counterparty_name}</div>
       <div className={className}>
         {editable ? (
           <CategoryMenu
@@ -52,7 +53,11 @@ export const BankTransactionRow = ({
           <Pill>{bankTransaction?.category?.display_name}</Pill>
         )}
       </div>
-      <div className={className}></div>
+      <div className={className}>
+        <div className="bank-transaction-table__expand-button">
+          <CheckedCircle />
+        </div>
+      </div>
       <div className={className} onClick={() => toggleOpen(bankTransaction.id)}>
         <div className="bank-transaction-table__expand-button">
           {isOpen ? <ChevronUp /> : <ChevronDown />}

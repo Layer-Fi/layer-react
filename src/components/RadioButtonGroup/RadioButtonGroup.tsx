@@ -24,16 +24,13 @@ export const RadioButtonGroup = ({
 }: Props) => {
   const selectedValue = selected || buttons[0].value
   return (
-    <div
-      className={`radio-button-group radio-button-group--size-${
-        size === 'small' ? 'small' : 'large'
-      }`}
-    >
+    <div className="radio-button-group">
       {buttons.map(button => (
         <RadioButton
           {...button}
           key={button.value}
           name={name}
+          size={size}
           checked={selectedValue === button.value}
           onChange={onChange}
           disabled={button.disabled ?? false}

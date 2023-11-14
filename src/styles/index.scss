@@ -4,6 +4,7 @@
   background-color: var(--bank-transaction-buttons-selected-background-color);
   color: var(--bank-transaction-table-text-color);
   border-radius: 1rem;
+  padding: 0.25rem 0.5rem;
 }
 
 .bank-transactions {
@@ -47,7 +48,7 @@
 
 .bank-transactions__table {
   display: grid;
-  grid-template-columns: auto repeat(4, 1fr) repeat(3, auto);
+  grid-template-columns: repeat(2, auto) 1fr repeat(5, auto);
   gap: 1px 0px;
   background-color: var(--bank-transaction-table-border-color);
   border-top: 1px solid var(--bank-transaction-table-border-color);
@@ -93,6 +94,7 @@
 }
 
 .expanded-bank-transactions-row__purpose-button {
+  padding: 0 1.5rem;
   align-self: flex-start;
 }
 
@@ -110,6 +112,11 @@
 
   &:not(:last-child) {
     margin-right: 0.75rem;
+  }
+
+  &:nth-child(6n+1) {
+    margin-left: 0;
+    padding-left: 0;
   }
 }
 
@@ -133,6 +140,13 @@
   padding-top: 0.5rem;
 }
 
+.expanded-bank-transactions-row__button--save {
+  border: 1px solid var(--bank-transaction-buttons-border-color);
+  border-radius: 0.5rem;
+  padding: 0.625rem 1rem;
+  background-color: var(--bank-transaction-buttons-selected-background-color);
+}
+
 .expanded-bank-transactions-row__svg {
   margin-right: 0.75rem;
 }
@@ -151,9 +165,18 @@
   justify-content: flex-end;
 }
 
-.radio-button-group--size-small {
+.radio-button-group--size-large {
   display: flex;
   font-size: 1rem;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+  padding: 0.75rem 1rem;
+}
+
+.radio-button-group--size-small {
+  display: flex;
+  font-size: 0.875rem;
   align-items: center;
   flex: 1;
   justify-content: flex-end;
@@ -166,6 +189,7 @@
   flex-direction: row;
 }
 
+
 .radio-button-group__radio-button input {
   position: absolute;
   opacity: 0;
@@ -177,6 +201,15 @@
   border: 1px solid var(--bank-transaction-buttons-border-color);
   border-right: 0;
   border-radius: 0;
+}
+
+.radio-button-group__radio-button--size-small div {
+  padding: 0.25rem 1rem;
+  font-size: 0.875rem;
+}
+
+.radio-button-group__radio-button--size-large div {
+  padding: 0.6rem 1rem;
 }
 
 .radio-button-group__radio-button label:first-of-type div {

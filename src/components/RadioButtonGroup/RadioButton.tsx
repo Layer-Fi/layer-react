@@ -7,6 +7,7 @@ type Props = {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   value: string
   disabled?: boolean
+  size: 'small' | 'large'
 }
 
 export const RadioButton = ({
@@ -16,9 +17,12 @@ export const RadioButton = ({
   onChange,
   value,
   disabled,
+  size,
 }: Props) => {
   return (
-    <label className="radio-button-group__radio-button">
+    <label
+      className={`radio-button-group__radio-button radio-button-group__radio-button--size-${size}`}
+    >
       <input
         type="radio"
         checked={checked}
