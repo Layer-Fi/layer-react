@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import Layer from '../../api/layer'
+import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useLayerContext } from '../../hooks/useLayerContext'
 import Link from '../../icons/Link'
 import Unlink from '../../icons/LinkBroken'
 import {
   centsToDollars as formatMoney,
   dollarsToCents as parseMoney,
 } from '../../models/Money'
-import { Category, BankTransaction } from '../../types'
+import { BankTransaction } from '../../types'
 import { CategoryMenu } from '../CategoryMenu'
 import { RadioButtonGroup } from '../RadioButtonGroup'
 
@@ -16,7 +19,7 @@ type Props = {
 type Split = {
   amount: number
   inputValue: string
-  category: Category | undefined
+  category_name: string | undefined
 }
 
 type RowState = {
@@ -31,13 +34,18 @@ enum Purpose {
 }
 
 export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
+  const {
+    auth: { access_token },
+    businessId,
+  } = useLayerContext()
+  const { mutateOne: updateBankTransaction } = useBankTransactions()
   const [purpose, setPurpose] = useState<Purpose>(Purpose.categorize)
   const [rowState, updateRowState] = useState<RowState>({
     splits: [
       {
         amount: bankTransaction.amount,
         inputValue: formatMoney(bankTransaction.amount),
-        category: bankTransaction.category,
+        category_name: bankTransaction.category?.category,
       },
     ],
     description: '',
@@ -48,7 +56,7 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
       ...rowState,
       splits: [
         ...rowState.splits,
-        { amount: 0, inputValue: '0.00', category: undefined },
+        { amount: 0, inputValue: '0.00', category_name: undefined },
       ],
     })
   const removeSplit = () =>
@@ -88,6 +96,43 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
     setPurpose(
       event.target.value === Purpose.match ? Purpose.match : Purpose.categorize,
     )
+
+  const changeCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const [_, index] = event.target.name.split('-')
+    rowState.splits[parseInt(index)].category_name = event.target.value
+    updateRowState({ ...rowState })
+  }
+
+  const save = () => {
+    const payload =
+      rowState.splits.length === 1
+        ? {
+            type: 'Category',
+            category: {
+              type: 'StableName',
+              stable_name: rowState?.splits[0].category_name,
+            },
+          }
+        : {
+            type: 'Split',
+            entries: rowState.splits.map(split => ({
+              category: split.category_name,
+              amount: split.amount,
+            })),
+          }
+
+    Layer.categorizeBankTransaction(access_token, {
+      params: { businessId, bankTransactionId: bankTransaction.id },
+      body: payload,
+    }).then(({ data, error }) => {
+      if (error) {
+      }
+      if (data) {
+        updateBankTransaction(data)
+      }
+    })
+  }
+
   return (
     <div className="expand-area">
       <div className="purpose">
@@ -125,7 +170,9 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
           {rowState.splits.map((split, index) => (
             <div key={`split-${index}`}>
               <CategoryMenu
+                name={`category-${index}`}
                 selectedCategory={bankTransaction?.category?.category}
+                onChange={changeCategory}
               />
               {rowState.splits.length > 1 && (
                 <input
@@ -149,7 +196,7 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
         </div>
         <div></div>
         <div>
-          <button>Save</button>
+          <button onClick={save}>Save</button>
         </div>
       </div>
     </div>

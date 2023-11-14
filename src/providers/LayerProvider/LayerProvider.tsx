@@ -6,7 +6,7 @@ import {
   LayerContextAction,
   LayerContextActionName as Action,
 } from '../../types'
-import useSWR from 'swr'
+import useSWR, { SWRConfig } from 'swr'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -29,13 +29,23 @@ export const LayerProvider = ({
   businessId,
   children,
 }: PropsWithChildren<Props>) => {
+  const defaultSWRConfig = {
+    revalidateInterval: 0,
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+  }
+
   const [state, dispatch] = useReducer(reducer, {
     auth: { access_token: '', token_type: '', expires_in: 0 },
     businessId,
     categories: [],
   })
 
-  const { data: auth } = useSWR('authenticate', Layer.authenticate)
+  const { data: auth } = useSWR(
+    'authenticate',
+    Layer.authenticate,
+    defaultSWRConfig,
+  )
   useEffect(() => {
     if (!!auth?.access_token) {
       dispatch({ type: Action.setAuth, payload: { auth } })
@@ -44,7 +54,8 @@ export const LayerProvider = ({
 
   const { data: categories } = useSWR(
     businessId && auth?.access_token && `categories-${businessId}`,
-    Layer.getCategories(auth?.access_token, { businessId }),
+    Layer.getCategories(auth?.access_token, { params: { businessId } }),
+    defaultSWRConfig,
   )
   useEffect(() => {
     if (!!categories?.data?.categories?.length) {
@@ -55,5 +66,9 @@ export const LayerProvider = ({
     }
   }, [categories?.data?.categories?.length])
 
-  return <LayerContext.Provider value={state}>{children}</LayerContext.Provider>
+  return (
+    <SWRConfig value={defaultSWRConfig}>
+      <LayerContext.Provider value={state}>{children}</LayerContext.Provider>
+    </SWRConfig>
+  )
 }
