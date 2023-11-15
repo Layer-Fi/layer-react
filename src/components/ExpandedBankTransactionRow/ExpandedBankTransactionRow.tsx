@@ -170,7 +170,10 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
               className="Layer__expanded-bank-transaction-row__button--split"
               onClick={addSplit}
             >
-              <Unlink className="Layer__expanded-bank-transaction-row__svg" />
+              <Unlink
+                className="Layer__expanded-bank-transaction-row__svg"
+                size={18}
+              />
               Split
             </div>
           ) : (
@@ -178,7 +181,10 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
               className="Layer__expanded-bank-transaction-row__button--merge"
               onClick={removeSplit}
             >
-              <Link className="Layer__expanded-bank-transaction-row__svg" />
+              <Link
+                className="Layer__expanded-bank-transaction-row__svg"
+                size={18}
+              />
               Merge
             </div>
           )}

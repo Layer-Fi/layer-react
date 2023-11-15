@@ -63,7 +63,13 @@ export const BankTransactionRow = ({
         onClick={() => toggleOpen(bankTransaction.id)}
       >
         <div className="Layer__bank-transaction-row__save-button">
-          {editable && !isOpen && <CheckedCircle />}
+          {editable && !isOpen && (
+            <CheckedCircle
+              size={28}
+              strokeColor="#0C48E5"
+              fillColor="#e0e9ff"
+            />
+          )}
         </div>
         <div className="Layer__bank-transaction-row__expand-button">
           {isOpen ? <ChevronUp /> : <ChevronDown />}

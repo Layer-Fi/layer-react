@@ -114,7 +114,12 @@
   }
 }
 
-.Layer__bank-transactions__expand-button {
+.Layer__bank-transaction-row__save-button {
+  cursor: pointer;
+}
+
+.Layer__bank-transaction-row__expand-button {
+  margin-left: 0.5rem;
   cursor: pointer;
 }
 

@@ -1,16 +1,28 @@
 import * as React from 'react'
 import { SVGProps } from 'react'
 
-const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
+type Props = SVGProps<SVGSVGElement> & {
+  size: SVGProps<SVGSVGElement>['width']
+  fillColor: string
+  strokeColor: string
+}
+
+const CheckedCircle = ({
+  fillColor = 'none',
+  strokeColor = '#000',
+  size = 24,
+  ...props
+}: Props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    fill="none"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill={fillColor}
     {...props}
   >
     <path
-      stroke="#000"
+      stroke={strokeColor}
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
@@ -18,4 +30,4 @@ const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
     />
   </svg>
 )
-export default SvgComponent
+export default CheckedCircle

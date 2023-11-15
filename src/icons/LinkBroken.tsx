@@ -1,12 +1,17 @@
 import * as React from 'react'
 import { SVGProps } from 'react'
 
-const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
+type Props = SVGProps<SVGSVGElement> & {
+  size: SVGProps<SVGSVGElement>['width']
+}
+
+const LinkBroken = ({ size = 24, ...props }: Props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
+    width={size}
+    height={size}
     fill="none"
+    viewBox="0 0 24 24"
     {...props}
   >
     <path
@@ -18,4 +23,4 @@ const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
     />
   </svg>
 )
-export default SvgComponent
+export default LinkBroken
