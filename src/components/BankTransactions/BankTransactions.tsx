@@ -83,7 +83,6 @@ export const BankTransactions = () => {
         <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
           Actions
         </div>
-        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header"></div>
         {bankTransactions.map((bankTransaction: BankTransaction) => (
           <BankTransactionRow
             key={bankTransaction.id}

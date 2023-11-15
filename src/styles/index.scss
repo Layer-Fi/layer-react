@@ -51,7 +51,7 @@
 
 .Layer__bank-transactions__table {
   display: grid;
-  grid-template-columns: repeat(3, 1fr) repeat(4, auto);
+  grid-template-columns: repeat(3, 1fr) repeat(3, auto);
   gap: 1px 0px;
   background-color: var(--bank-transaction-table-border-color);
   border-top: 1px solid var(--bank-transaction-table-border-color);
@@ -86,6 +86,10 @@
 
 .Layer__bank-transaction-row__table-cell--expanded {
   background-color: var(--bank-transaction-table-expanded-background-color);
+}
+
+.Layer__bank-transaction-row__table-cell--actions {
+  justify-content: flex-end;
 }
 
 .Layer__bank-transaction-row__table-cell--date {
@@ -123,7 +127,6 @@
 
 .Layer__expanded-bank-transaction-row {
   grid-column: 1 / -1;
-  margin-top: -1px;
   display: flex;
   flex-direction: column;
   background-color: var(--bank-transaction-table-expanded-background-color);
@@ -148,6 +151,21 @@
 
   &:not(:last-child) {
     margin-right: 0.75rem;
+  }
+
+  &:nth-child(6n+1) {
+    padding-left: 0;
+    margin-left: 0;
+  }
+
+  &:nth-child(6n+6) {
+    padding-right: 0;
+    margin-right: 0;
+    padding-bottom: 0;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
 }
 
@@ -175,6 +193,7 @@
   border-radius: 0.5rem;
   padding: 0.625rem 1rem;
   background-color: var(--bank-transaction-buttons-selected-background-color);
+  font-weight: 600;
 }
 
 .Layer__expanded-bank-transaction-row__svg {
@@ -193,24 +212,7 @@
   align-items: center;
   flex: 1;
   justify-content: flex-end;
-}
-
-.Layer__radio-button-group--size-large {
-  display: flex;
-  font-size: 1rem;
-  align-items: center;
-  flex: 1;
-  justify-content: flex-end;
-  padding: 0.75rem 1rem;
-}
-
-.Layer__radio-button-group--size-small {
-  display: flex;
-  font-size: 1rem;
-  align-items: center;
-  flex: 1;
-  justify-content: flex-end;
-  padding: 0.25rem 1rem;
+  padding-top: 0.5rem;
 }
 
 /* BEM does not work for this, since it's tuned for this markup */

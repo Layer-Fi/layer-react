@@ -27,40 +27,44 @@ export const BankTransactionRow = ({
   toggleOpen,
   editable,
 }: Props) => {
-  const className = `Layer__bank-transaction-row__table-cell ${
-    isOpen ? 'Layer__bank-transaction-row__table-cell--expanded' : ''
-  }`
+  const className = 'Layer__bank-transaction-row__table-cell'
+  const openClassName = isOpen ? `${className}--expanded` : ''
   return (
     <>
-      <div
-        className={`${className} Layer__bank-transaction-row__table-cell--date`}
-      >
+      <div className={`${className} ${openClassName} ${className}--date`}>
         {formatTime(parseISO(bankTransaction.date), dateFormat)}
       </div>
-      <div className={className}>{bankTransaction.counterparty_name}</div>
-      <div className={className}>Business Checking</div>
+      <div className={`${className} ${openClassName}`}>
+        {bankTransaction.counterparty_name}
+      </div>
+      <div className={`${className} ${openClassName}`}>Business Checking</div>
       <div
-        className={`${className} Layer__bank-transaction-row__table-cell--amount-${
+        className={`${className} ${openClassName} ${className}--amount-${
           isCredit(bankTransaction) ? 'credit' : 'debit'
         }`}
       >
         {formatMoney(bankTransaction.amount)}
       </div>
-      <div className={className}>
-        {editable ? (
-          <CategoryMenu
-            defaultdCategory={bankTransaction?.category?.category}
-          />
-        ) : (
-          <Pill>{bankTransaction?.category?.display_name}</Pill>
-        )}
-      </div>
-      <div className={className}>
-        <div className="Layer__bank-transaction-row__save-button">
-          <CheckedCircle />
+      {isOpen ? (
+        <div className={`${className} ${openClassName}`}></div>
+      ) : (
+        <div className={`${className} ${openClassName}`}>
+          {editable ? (
+            <CategoryMenu
+              defaultCategory={bankTransaction?.category?.category}
+            />
+          ) : (
+            <Pill>{bankTransaction?.category?.display_name}</Pill>
+          )}
         </div>
-      </div>
-      <div className={className} onClick={() => toggleOpen(bankTransaction.id)}>
+      )}
+      <div
+        className={`${className} ${openClassName} ${className}--actions`}
+        onClick={() => toggleOpen(bankTransaction.id)}
+      >
+        <div className="Layer__bank-transaction-row__save-button">
+          {editable && !isOpen && <CheckedCircle />}
+        </div>
         <div className="Layer__bank-transaction-row__expand-button">
           {isOpen ? <ChevronUp /> : <ChevronDown />}
         </div>
