@@ -27,13 +27,16 @@ export const BankTransactionRow = ({
   toggleOpen,
   editable,
 }: Props) => {
-  const className = `bank-transactions__table-cell ${
-    isOpen ? 'bank-transactions__table-cell--expanded' : ''
+  const className = `Layer__bank-transaction-row__table-cell ${
+    isOpen ? 'Layer__bank-transaction-row__table-cell--expanded' : ''
   }`
   return (
     <>
       <div className={className}>
-        <input classNamw="bank-transactions__checkbox" type="checkbox" />
+        <input
+          classNamw="Layer__bank-transaction-row__checkbox"
+          type="checkbox"
+        />
       </div>
       <div className={className}>
         {formatTime(parseISO(bankTransaction.date), dateFormat)}
@@ -54,12 +57,12 @@ export const BankTransactionRow = ({
         )}
       </div>
       <div className={className}>
-        <div className="bank-transaction-table__expand-button">
+        <div className="Layer__bank-transaction-row__save-button">
           <CheckedCircle />
         </div>
       </div>
       <div className={className} onClick={() => toggleOpen(bankTransaction.id)}>
-        <div className="bank-transaction-table__expand-button">
+        <div className="Layer__bank-transaction-row__expand-button">
           {isOpen ? <ChevronUp /> : <ChevronDown />}
         </div>
       </div>

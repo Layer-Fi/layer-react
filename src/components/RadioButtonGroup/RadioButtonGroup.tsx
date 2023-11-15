@@ -17,14 +17,16 @@ type Props = {
 
 export const RadioButtonGroup = ({
   name,
-  size,
+  size = 'large',
   buttons,
   onChange,
   selected,
 }: Props) => {
   const selectedValue = selected || buttons[0].value
   return (
-    <div className="radio-button-group">
+    <div
+      className={`Layer__radio-button-group Layer__radio-button-group--size-${size}`}
+    >
       {buttons.map(button => (
         <RadioButton
           {...button}

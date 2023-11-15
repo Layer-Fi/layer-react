@@ -21,7 +21,7 @@ export const RadioButton = ({
 }: Props) => {
   return (
     <label
-      className={`radio-button-group__radio-button radio-button-group__radio-button--size-${size}`}
+      className={`Layer__radio-button-group__radio-button Layer__radio-button-group__radio-button--size-${size}`}
     >
       <input
         type="radio"

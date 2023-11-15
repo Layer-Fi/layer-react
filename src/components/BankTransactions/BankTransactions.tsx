@@ -51,9 +51,9 @@ export const BankTransactions = () => {
   const toggleOpen = (id: string) =>
     setOpenRows({ ...openRows, [id]: !openRows[id] })
   return (
-    <div className="bank-transactions" data-display={display}>
-      <header className="bank-transactions__header">
-        <h1 className="bank-transactions__title">Transactions</h1>
+    <div className="Layer__bank-transactions" data-display={display}>
+      <header className="Layer__bank-transactions__header">
+        <h1 className="Layer__bank-transactions__title">Transactions</h1>
         <RadioButtonGroup
           name="bank-transaction-display"
           buttons={[
@@ -64,29 +64,29 @@ export const BankTransactions = () => {
           onChange={onCategorizationDisplayChange}
         />
       </header>
-      <div className="bank-transactions__table">
-        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+      <div className="Layer__bank-transactions__table">
+        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
           <input type="checkbox" />
         </div>
-        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
           Date
         </div>
-        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
           Transaction
         </div>
-        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
           Account
         </div>
-        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
           Amount
         </div>
-        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
           Category
         </div>
-        <div className="bank-transactions__table-cell bank-transactions__table-cell--header">
+        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
           Action
         </div>
-        <div className="bank-transactions__table-cell bank-transactions__table-cell--header"></div>
+        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header"></div>
         {bankTransactions.map((bankTransaction: BankTransaction) => (
           <BankTransactionRow
             key={bankTransaction.id}

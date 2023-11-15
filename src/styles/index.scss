@@ -1,13 +1,13 @@
 @import 'https://fonts.googleapis.com/css2?family=Inter';
 
-.pill {
+.Layer__pill {
   background-color: var(--bank-transaction-buttons-selected-background-color);
   color: var(--bank-transaction-table-text-color);
   border-radius: 1rem;
   padding: 0.25rem 0.5rem;
 }
 
-.bank-transactions {
+.Layer__bank-transactions {
   --bank-transaction-buttons-border-color: #d0d5dd;
   --bank-transaction-buttons-selected-background-color: #e0e9ff;
   --bank-transaction-table-expanded-background-color: #f9f9f9;
@@ -22,19 +22,19 @@
   overflow: hidden;
 }
 
-.bank-transactions * {
+.Layer__bank-transactions * {
   font-family: Inter;
   color: var(--bank-transaction-table-text-color);
   font-style: normal;
   font-weight: 500;
 }
 
-.bank-transactions__header {
+.Layer__bank-transactions__header {
   display: flex;
   padding: 1rem;
 }
 
-.bank-transactions__title {
+.Layer__bank-transactions__title {
   display: flex;
   align-items: center;
   flex: 1;
@@ -46,7 +46,7 @@
   margin: 0;
 }
 
-.bank-transactions__table {
+.Layer__bank-transactions__table {
   display: grid;
   grid-template-columns: repeat(2, auto) 1fr repeat(5, auto);
   gap: 1px 0px;
@@ -55,7 +55,20 @@
   border-radius: 0.6rem;
 }
 
-.bank-transactions__table-cell {
+.Layer__bank-transactions__table-cell--header {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  font-size: 16px;
+  line-height: 20px;
+  overflow: clip;
+  padding: 1rem;
+  font-weight: bold;
+  text-align: left;
+}
+
+
+.Layer__bank-transaction-row__table-cell {
   display: flex;
   align-items: center;
   background-color: white;
@@ -65,27 +78,22 @@
   padding: 1rem;
 }
 
-.bank-transactions__table-cell--header {
-  font-weight: bold;
-  text-align: left;
-}
-
-.bank-transactions__table-cell--expanded {
+.Layer__bank-transaction-row__table-cell--expanded {
   background-color: var(--bank-transaction-table-expanded-background-color);
 }
 
-.bank-transactions__expand-button {
+.Layer__bank-transactions__expand-button {
   cursor: pointer;
 }
 
-.category-menu {
+.Layer__category-menu {
   border: 2px solid var(--bank-transaction-table-border-color);
   border-radius: 0.6rem;
   background-color: var(--bank-transaction-table-background-color);
   padding: 0.6rem 0.8rem;
 }
 
-.expanded-bank-transactions-row {
+.Layer__expanded-bank-transaction-row {
   grid-column: 1 / -1;
   margin-top: -1px;
   display: flex;
@@ -93,12 +101,12 @@
   background-color: var(--bank-transaction-table-expanded-background-color);
 }
 
-.expanded-bank-transactions-row__purpose-button {
+.Layer__expanded-bank-transaction-row__purpose-button {
   padding: 0 1.5rem;
   align-self: flex-start;
 }
 
-.expanded-bank-transactions-row__content {
+.Layer__expanded-bank-transaction-row__content {
   padding: 0.75rem 1.5rem;
   text-align: center;
   display: grid;
@@ -106,7 +114,7 @@
   gap: 0;
 }
 
-.expanded-bank-transactions-row__table-cell {
+.Layer__expanded-bank-transaction-row__table-cell {
   padding: 0.25rem 0.75rem;
   font-size: 0.875rem;
 
@@ -121,43 +129,43 @@
 }
 
 
-.expanded-bank-transactions-row__table-cell--header {
+.Layer__expanded-bank-transaction-row__table-cell--header {
   font-weight: bold;
   text-align: left;
 }
 
-.expanded-bank-transactions-row__button--split {
+.Layer__expanded-bank-transaction-row__button--split {
   display: flex;
   flex-direction: row;
   align-items: center;
   padding-top: 0.5rem;
 }
 
-.expanded-bank-transactions-row__button--merge {
+.Layer__expanded-bank-transaction-row__button--merge {
   display: flex;
   flex-direction: row;
   align-items: center;
   padding-top: 0.5rem;
 }
 
-.expanded-bank-transactions-row__button--save {
+.Layer__expanded-bank-transaction-row__button--save {
   border: 1px solid var(--bank-transaction-buttons-border-color);
   border-radius: 0.5rem;
   padding: 0.625rem 1rem;
   background-color: var(--bank-transaction-buttons-selected-background-color);
 }
 
-.expanded-bank-transactions-row__svg {
+.Layer__expanded-bank-transaction-row__svg {
   margin-right: 0.75rem;
 }
 
-.expanded-bank-transactions-row__split-amount--negative {
+.Layer__expanded-bank-transaction-row__split-amount--negative {
   font-weight: bold;
   color: red;
   border: 2.5px dotted red;
 }
 
-.radio-button-group {
+.Layer__radio-button-group {
   display: flex;
   font-size: 1rem;
   align-items: center;
@@ -165,7 +173,7 @@
   justify-content: flex-end;
 }
 
-.radio-button-group--size-large {
+.Layer__radio-button-group--size-large {
   display: flex;
   font-size: 1rem;
   align-items: center;
@@ -174,7 +182,7 @@
   padding: 0.75rem 1rem;
 }
 
-.radio-button-group--size-small {
+.Layer__radio-button-group--size-small {
   display: flex;
   font-size: 0.875rem;
   align-items: center;
@@ -184,45 +192,45 @@
 }
 
 /* BEM does not work for this, since it's tuned for this markup */
-.radio-button-group__radio-button {
+.Layer__radio-button-group__radio-button {
   display: flex;
   flex-direction: row;
 }
 
 
-.radio-button-group__radio-button input {
+.Layer__radio-button-group__radio-button input {
   position: absolute;
   opacity: 0;
   width: 1px;
 }
 
-.radio-button-group__radio-button div {
+.Layer__radio-button-group__radio-button div {
   padding: 0.6rem 1rem;
   border: 1px solid var(--bank-transaction-buttons-border-color);
   border-right: 0;
   border-radius: 0;
 }
 
-.radio-button-group__radio-button--size-small div {
+.Layer__radio-button-group__radio-button--size-small div {
   padding: 0.25rem 1rem;
   font-size: 0.875rem;
 }
 
-.radio-button-group__radio-button--size-large div {
+.Layer__radio-button-group__radio-button--size-large div {
   padding: 0.6rem 1rem;
 }
 
-.radio-button-group__radio-button label:first-of-type div {
+.Layer__radio-button-group__radio-button label:first-of-type div {
   border-start-start-radius: 0.6rem;
   border-end-start-radius: 0.6rem;
 }
 
-.radio-button-group__radio-button label:last-of-type div {
+.Layer__radio-button-group__radio-button label:last-of-type div {
   border-right: 1px solid var(--bank-transaction-buttons-border-color);
   border-start-end-radius: 0.6rem;
   border-end-end-radius: 0.6rem;
 }
 
-.radio-button-group__radio-button input:checked + div {
+.Layer__radio-button-group__radio-button input:checked + div {
   background: var(--bank-transaction-buttons-selected-background-color);
 }
