@@ -32,19 +32,18 @@ export const BankTransactionRow = ({
   }`
   return (
     <>
-      <div className={className}>
-        <input
-          classNamw="Layer__bank-transaction-row__checkbox"
-          type="checkbox"
-        />
-      </div>
-      <div className={className}>
+      <div
+        className={`${className} Layer__bank-transaction-row__table-cell--date`}
+      >
         {formatTime(parseISO(bankTransaction.date), dateFormat)}
       </div>
       <div className={className}>{bankTransaction.counterparty_name}</div>
       <div className={className}>Business Checking</div>
-      <div className={className}>
-        {isCredit(bankTransaction) ? '+' : '-'}$
+      <div
+        className={`${className} Layer__bank-transaction-row__table-cell--amount-${
+          isCredit(bankTransaction) ? 'credit' : 'debit'
+        }`}
+      >
         {formatMoney(bankTransaction.amount)}
       </div>
       <div className={className}>

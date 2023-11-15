@@ -14,12 +14,15 @@
   --bank-transaction-table-background-color: white;
   --bank-transaction-table-border-color: #eaecf0;
   --bank-transaction-table-text-color: #101828;
+  --bank-transaction-positive-amount-text-color: #039855;
+  --bank-transaction-variable-amount-text-color: #475467;
 
   margin: 3rem;
   border-radius: 0.6rem;
   border: 1px solid var(--bank-transaction-table-border-color);
   background-color: var(--bank-transaction-table-background-color);
   overflow: hidden;
+  width: 100rem;
 }
 
 .Layer__bank-transactions * {
@@ -48,7 +51,7 @@
 
 .Layer__bank-transactions__table {
   display: grid;
-  grid-template-columns: repeat(2, auto) 1fr repeat(5, auto);
+  grid-template-columns: repeat(3, 1fr) repeat(4, auto);
   gap: 1px 0px;
   background-color: var(--bank-transaction-table-border-color);
   border-top: 1px solid var(--bank-transaction-table-border-color);
@@ -67,6 +70,9 @@
   text-align: left;
 }
 
+.Layer__bank-transactions__table-cell--header-amount {
+  justify-content: flex-end;
+}
 
 .Layer__bank-transaction-row__table-cell {
   display: flex;
@@ -80,6 +86,28 @@
 
 .Layer__bank-transaction-row__table-cell--expanded {
   background-color: var(--bank-transaction-table-expanded-background-color);
+}
+
+.Layer__bank-transaction-row__table-cell--date {
+  color: var(--bank-transaction-variable-amount-text-color);
+}
+
+.Layer__bank-transaction-row__table-cell--amount-credit {
+  justify-content: flex-end;
+  color: var(--bank-transaction-positive-amount-text-color);
+
+  &::before {
+    content: '+$';
+  }
+}
+
+.Layer__bank-transaction-row__table-cell--amount-debit {
+  justify-content: flex-end;
+  color: var(--bank-transaction-variable-amount-text-color);
+
+  &::before {
+    content: ' $';
+  }
 }
 
 .Layer__bank-transactions__expand-button {
@@ -121,13 +149,7 @@
   &:not(:last-child) {
     margin-right: 0.75rem;
   }
-
-  &:nth-child(6n+1) {
-    margin-left: 0;
-    padding-left: 0;
-  }
 }
-
 
 .Layer__expanded-bank-transaction-row__table-cell--header {
   font-weight: bold;
@@ -184,7 +206,7 @@
 
 .Layer__radio-button-group--size-small {
   display: flex;
-  font-size: 0.875rem;
+  font-size: 1rem;
   align-items: center;
   flex: 1;
   justify-content: flex-end;
@@ -196,7 +218,6 @@
   display: flex;
   flex-direction: row;
 }
-
 
 .Layer__radio-button-group__radio-button input {
   position: absolute;
