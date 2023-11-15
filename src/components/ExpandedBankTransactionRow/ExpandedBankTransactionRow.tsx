@@ -133,9 +133,10 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
     })
   }
 
+  const className = 'Layer__expanded-bank-transaction-row'
   return (
-    <div className="Layer__expanded-bank-transaction-row">
-      <div className="Layer__expanded-bank-transaction-row__purpose-button">
+    <div className={className}>
+      <div className={`${className}__purpose-button`}>
         <RadioButtonGroup
           name="purpose"
           size="small"
@@ -148,50 +149,56 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
         />
       </div>
       <div
-        className="Layer__expanded-bank-transaction-row__content"
+        className={`${className}__content`}
         id={`expanded-${bankTransaction.id}`}
       >
-        <div className="Layer__expanded-bank-transaction-row__table-cell Layer__expanded-bank-transaction-row__table-cell--header"></div>
-        <div className="Layer__expanded-bank-transaction-row__table-cell Layer__expanded-bank-transaction-row__table-cell--header">
+        <div
+          className={`${className}__table-cell ${className}__table-cell--header`}
+        ></div>
+        <div
+          className={`${className}__table-cell ${className}__table-cell--header`}
+        >
           Category
         </div>
-        <div className="Layer__expanded-bank-transaction-row__table-cell Layer__expanded-bank-transaction-row__table-cell--header">
+        <div
+          className={`${className}__table-cell ${className}__table-cell--header`}
+        >
           Description
         </div>
-        <div className="Layer__expanded-bank-transaction-row__table-cell Layer__expanded-bank-transaction-row__table-cell--header">
+        <div
+          className={`${className}__table-cell ${className}__table-cell--header`}
+        >
           Receipt
         </div>
-        <div className="Layer__expanded-bank-transaction-row__table-cell Layer__expanded-bank-transaction-row__table-cell--header"></div>
-        <div className="Layer__expanded-bank-transaction-row__table-cell Layer__expanded-bank-transaction-row__table-cell--header"></div>
+        <div
+          className={`${className}__table-cell ${className}__table-cell--header`}
+        ></div>
+        <div
+          className={`${className}__table-cell ${className}__table-cell--header`}
+        ></div>
 
-        <div className="Layer__expanded-bank-transaction-row__table-cell">
+        <div className={`${className}__table-cell`}>
           {rowState.splits.length === 1 ? (
-            <div
-              className="Layer__expanded-bank-transaction-row__button--split"
-              onClick={addSplit}
-            >
-              <Unlink
-                className="Layer__expanded-bank-transaction-row__svg"
-                size={18}
-              />
+            <div className={`${className}__button--split`} onClick={addSplit}>
+              <Unlink className={`${className}__svg`} size={18} />
               Split
             </div>
           ) : (
             <div
-              className="Layer__expanded-bank-transaction-row__button--merge"
+              className={`${className}__button--merge`}
               onClick={removeSplit}
             >
-              <Link
-                className="Layer__expanded-bank-transaction-row__svg"
-                size={18}
-              />
+              <Link className={`${className}__svg`} size={18} />
               Merge
             </div>
           )}
         </div>
-        <div className="Layer__expanded-bank-transaction-row__table-cell">
+        <div className={`${className}__table-cell`}>
           {rowState.splits.map((split, index) => (
-            <div key={`split-${index}`}>
+            <div
+              className={`${className}__table-cell--split-entry`}
+              key={`split-${index}`}
+            >
               <CategoryMenu
                 name={`category-${index}`}
                 selectedCategory={bankTransaction?.category?.category}
@@ -205,7 +212,7 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
                   onChange={updateAmounts(index)}
                   value={split.inputValue}
                   onBlur={onBlur}
-                  className={`Layer__expanded-bank-transaction-row__split-amount${
+                  className={`${className}__split-amount${
                     split.amount < 0 ? '--negative' : ''
                   }`}
                 />
@@ -213,18 +220,17 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
             </div>
           ))}
         </div>
-        <div className="Layer__expanded-bank-transaction-row__table-cell">
+        <div
+          className={`${className}__table-cell ${className}__table-cell--description`}
+        >
           <textarea></textarea>
         </div>
-        <div className="Layer__expanded-bank-transaction-row__table-cell">
+        <div className={`${className}__table-cell`}>
           <input type="file" />
         </div>
-        <div className="Layer__expanded-bank-transaction-row__table-cell"></div>
-        <div className="Layer__expanded-bank-transaction-row__table-cell">
-          <button
-            onClick={save}
-            className="Layer__expanded-bank-transaction-row__button--save"
-          >
+        <div className={`${className}__table-cell`}></div>
+        <div className={`${className}__table-cell`}>
+          <button onClick={save} className={`${className}__button--save`}>
             Save
           </button>
         </div>

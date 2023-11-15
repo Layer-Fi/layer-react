@@ -13,7 +13,7 @@ export const CategoryMenu = ({ name, selectedCategory, onChange }: Props) => {
   const { categories } = useLayerContext()
   return (
     <select
-      class="category-menu"
+      class="Layer__category-menu"
       name={name}
       onChange={onChange}
       defaultValue={selectedCategory}
