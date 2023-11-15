@@ -230,6 +230,7 @@
   border: 1px solid var(--bank-transaction-buttons-border-color);
   border-right: 0;
   border-radius: 0;
+  font-weight: 600;
 }
 
 .Layer__radio-button-group__radio-button--size-small div {
@@ -241,12 +242,12 @@
   padding: 0.6rem 1rem;
 }
 
-.Layer__radio-button-group__radio-button label:first-of-type div {
+.Layer__radio-button-group__radio-button:first-of-type div {
   border-start-start-radius: 0.6rem;
   border-end-start-radius: 0.6rem;
 }
 
-.Layer__radio-button-group__radio-button label:last-of-type div {
+.Layer__radio-button-group__radio-button:last-of-type div {
   border-right: 1px solid var(--bank-transaction-buttons-border-color);
   border-start-end-radius: 0.6rem;
   border-end-end-radius: 0.6rem;
