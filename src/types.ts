@@ -5,7 +5,7 @@ export type OAuthResponse = {
 }
 
 export type LayerContextValues = {
-  auth: OAuthResponse | undefined
+  auth: OAuthResponse
   businessId: string
   categories: Category[]
 }

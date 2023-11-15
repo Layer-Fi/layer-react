@@ -2,7 +2,7 @@ import { BankTransaction } from '../../types'
 
 export const makeBankTransaction = (
   options: Partial<BankTransaction> = {},
-) => ({
+): BankTransaction => ({
   type: 'Bank_Transaction',
   id: '096f7da0-45d6-432c-b9d9-29f8474b8aa3',
   business_id: '23b01ed6-b786-4f5f-827c-e23d91a08256',
