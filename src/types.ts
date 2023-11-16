@@ -39,7 +39,25 @@ export type Direction = 'CREDIT' | 'DEBIT'
 export interface Category {
   display_name: string
   category: string
+  stable_name: string
   subCategories: Category[]
+}
+
+export enum CategorizationType {
+  AUTO = 'AUTO',
+  ASK_FROM_SUGGESTIONS = 'ASK_FROM_SUGGESTIONS',
+  MEALS = 'MEALS',
+  BUSINESS_TRAVEL_TRANSPORTATION = 'BUSINESS_TRAVEL_TRANSPORTATION',
+}
+
+export interface AutoCategorization {
+  type: CategorizationType.AUTO
+  category: Category
+}
+
+export interface SuggestedCategorization {
+  type: CategorizationType
+  suggestions: Category[]
 }
 
 export interface BankTransaction {
@@ -50,4 +68,5 @@ export interface BankTransaction {
   counterparty_name: string
   category: Category
   categorization_status: CategorizationStatus
+  categorization_flow: AutoCategorization | SuggestedCategorization
 }

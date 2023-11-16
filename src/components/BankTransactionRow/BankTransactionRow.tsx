@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CheckedCircle from '../../icons/CheckedCircle'
 import ChevronDown from '../../icons/ChevronDown'
 import ChevronUp from '../../icons/ChevronUp'
@@ -27,6 +27,9 @@ export const BankTransactionRow = ({
   toggleOpen,
   editable,
 }: Props) => {
+  const [selectedCategory, setSelectedCategory] = useState(
+    bankTransaction.categorization_flow?.suggestions?.[0],
+  )
   const className = 'Layer__bank-transaction-row__table-cell'
   const openClassName = isOpen ? `${className}--expanded` : ''
   return (
@@ -51,17 +54,16 @@ export const BankTransactionRow = ({
         <div className={`${className} ${openClassName}`}>
           {editable ? (
             <CategoryMenu
-              defaultCategory={bankTransaction?.category?.category}
+              bankTransaction={bankTransaction}
+              name={`category-${bankTransaction.id}`}
+              defaultValue={selectedCategory}
             />
           ) : (
             <Pill>{bankTransaction?.category?.display_name}</Pill>
           )}
         </div>
       )}
-      <div
-        className={`${className} ${openClassName} ${className}--actions`}
-        onClick={() => toggleOpen(bankTransaction.id)}
-      >
+      <div className={`${className} ${openClassName} ${className}--actions`}>
         <div className="Layer__bank-transaction-row__save-button">
           {editable && !isOpen && (
             <CheckedCircle
@@ -71,7 +73,10 @@ export const BankTransactionRow = ({
             />
           )}
         </div>
-        <div className="Layer__bank-transaction-row__expand-button">
+        <div
+          onClick={() => toggleOpen(bankTransaction.id)}
+          className="Layer__bank-transaction-row__expand-button"
+        >
           {isOpen ? <ChevronUp /> : <ChevronDown />}
         </div>
       </div>

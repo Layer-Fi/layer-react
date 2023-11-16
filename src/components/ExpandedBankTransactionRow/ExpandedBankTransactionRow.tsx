@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Layer from '../../api/layer'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useLayerContext } from '../../hooks/useLayerContext'
@@ -8,7 +8,7 @@ import {
   centsToDollars as formatMoney,
   dollarsToCents as parseMoney,
 } from '../../models/Money'
-import { BankTransaction } from '../../types'
+import { BankTransaction, Category } from '../../types'
 import { CategoryMenu } from '../CategoryMenu'
 import { RadioButtonGroup } from '../RadioButtonGroup'
 
@@ -19,7 +19,7 @@ type Props = {
 type Split = {
   amount: number
   inputValue: string
-  category_name: string | undefined
+  category: Category | undefined
 }
 
 type RowState = {
@@ -40,25 +40,31 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
   } = useLayerContext()
   const { mutateOne: updateBankTransaction } = useBankTransactions()
   const [purpose, setPurpose] = useState<Purpose>(Purpose.categorize)
+
+  const defaultCategory = !!bankTransaction.categorization_flow.suggestions
+    ? bankTransaction.categorization_flow?.suggestions?.[0]
+    : bankTransaction.category
   const [rowState, updateRowState] = useState<RowState>({
     splits: [
       {
         amount: bankTransaction.amount,
         inputValue: formatMoney(bankTransaction.amount),
-        category_name: bankTransaction.category?.category,
+        category: defaultCategory,
       },
     ],
     description: '',
     file: undefined,
   })
+
   const addSplit = () =>
     updateRowState({
       ...rowState,
       splits: [
         ...rowState.splits,
-        { amount: 0, inputValue: '0.00', category_name: undefined },
+        { amount: 0, inputValue: '0.00', category: defaultCategory },
       ],
     })
+
   const removeSplit = () =>
     updateRowState({
       ...rowState,
@@ -67,22 +73,31 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
 
   const updateAmounts =
     (rowNumber: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newAmount = parseMoney(event.target.value) || 0
-      const newDisplaying = event.target.value
+      const newAmount = parseMoney(event?.target?.value) || 0
+      const newDisplaying = event?.target?.value
       const splitTotal = rowState.splits
         .slice(0, -1)
         .reduce((sum, split, index) => {
+          // If the index is the rowNumber, this is the entry we're editing.
+          // So, use the value from the event.
           const amount = index === rowNumber ? newAmount : split.amount
           return sum + amount
         }, 0)
       const remaining = bankTransaction.amount - splitTotal
-      rowState.splits[rowNumber].amount = newAmount
-      rowState.splits[rowNumber].inputValue = newDisplaying
+      if (rowState.splits[rowNumber]) {
+        rowState.splits[rowNumber].amount = newAmount
+        rowState.splits[rowNumber].inputValue = newDisplaying
+      }
       rowState.splits[rowState.splits.length - 1].amount = remaining
       rowState.splits[rowState.splits.length - 1].inputValue =
         formatMoney(remaining)
       updateRowState({ ...rowState })
     }
+  const refreshAmounts = () => updateAmounts(-1)()
+
+  useEffect(() => {
+    refreshAmounts()
+  }, [rowState.splits.length])
 
   const onBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     if (event.target.value === '') {
@@ -116,7 +131,7 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
         : {
             type: 'Split',
             entries: rowState.splits.map(split => ({
-              category: split.category_name,
+              category: split.category.category,
               amount: split.amount,
             })),
           }
@@ -200,8 +215,9 @@ export const ExpandedBankTransactionRow = ({ bankTransaction }: Props) => {
               key={`split-${index}`}
             >
               <CategoryMenu
+                bankTransaction={bankTransaction}
                 name={`category-${index}`}
-                selectedCategory={bankTransaction?.category?.category}
+                defaultValue={defaultCategory}
                 onChange={changeCategory}
               />
               {rowState.splits.length > 1 && (

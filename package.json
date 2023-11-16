@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "date-fns": "^2.30.0",
+    "react-select": "^5.8.0",
     "swr": "^2.2.4"
   },
   "prettier": {

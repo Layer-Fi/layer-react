@@ -26,5 +26,6 @@ export const useBankTransactions = () => {
     }
   }
 
+  console.log(data)
   return { data, isLoading, error, mutateOne }
 }

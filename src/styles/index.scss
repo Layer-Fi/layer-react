@@ -5,6 +5,13 @@
   color: var(--bank-transaction-table-text-color);
   border-radius: 1rem;
   padding: 0.25rem 0.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  & svg {
+    margin-right: 0.25rem;
+  }
 }
 
 .Layer__bank-transactions {
@@ -124,10 +131,7 @@
 }
 
 .Layer__category-menu {
-  border: 2px solid var(--bank-transaction-buttons-border-color);
-  border-radius: 0.6rem;
-  background-color: var(--bank-transaction-buttons-background-color);
-  padding: 0.6rem 0.8rem;
+  width: 15rem;
 }
 
 .Layer__expanded-bank-transaction-row {
@@ -144,7 +148,6 @@
 
 .Layer__expanded-bank-transaction-row__content {
   padding: 0.75rem 1.5rem;
-  text-align: center;
   display: grid;
   grid-template-columns: auto auto auto auto 1fr auto;
   gap: 0;
