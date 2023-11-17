@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useReducer, useEffect, Reducer } from 'react'
-import Layer from '../../api/layer'
+import { Layer } from '../../api/layer'
 import { LayerContext } from '../../contexts/LayerContext'
 import {
   LayerContextValues,
@@ -31,8 +31,9 @@ export const LayerProvider = ({
 }: PropsWithChildren<Props>) => {
   const defaultSWRConfig = {
     revalidateInterval: 0,
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false,
   }
 
   const [state, dispatch] = useReducer(reducer, {

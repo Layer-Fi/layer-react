@@ -1,28 +1,33 @@
 export const get =
-  (url: (params: Record<string, string>) => string) =>
-  (
-    accessToken: string | undefined,
-    options?: { params?: Record<string, string> | undefined },
+  <Return = Record<string, string>, Params = Record<string, string>>(
+    url: (params: Params) => string,
   ) =>
-  () =>
-    fetch(url(options?.params || {}), {
+  (accessToken: string | undefined, options?: { params?: Params }) =>
+  (): Promise<Return> =>
+    fetch(url(options?.params || ({} as Params)), {
       headers: {
         Authorization: 'Bearer ' + (accessToken || ''),
         'Content-Type': 'application/json',
       },
       method: 'GET',
-    }).then(res => res.json())
+    }).then(res => res.json() as Promise<Return>)
 
 export const put =
-  (url: (params: Record<string, string>) => string) =>
+  <
+    Body = Record<string, string>,
+    Return = Record<string, string>,
+    Params = Record<string, string>,
+  >(
+    url: (params: Params) => string,
+  ) =>
   (
     accessToken: string | undefined,
     options?: {
-      params?: Record<string, string>
-      body?: Record<string, unknown>
+      params?: Params
+      body?: Body
     },
-  ) =>
-    fetch(url(options?.params || {}), {
+  ): Promise<Return> =>
+    fetch(url(options?.params || ({} as Params)), {
       headers: {
         Authorization: 'Bearer ' + (accessToken || ''),
         'Content-Type': 'application/json',
@@ -30,4 +35,4 @@ export const put =
       },
       method: 'PUT',
       body: JSON.stringify(options?.body),
-    }).then(res => res.json())
+    }).then(res => res.json() as Promise<Return>)

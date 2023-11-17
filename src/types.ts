@@ -70,3 +70,19 @@ export interface BankTransaction {
   categorization_status: CategorizationStatus
   categorization_flow: AutoCategorization | SuggestedCategorization
 }
+
+export type SingleCategoryUpdate = {
+  type: 'Category'
+  category: {
+    type: 'StableName'
+    stable_name: string
+  }
+}
+export type SplitCategoryUpdate = {
+  type: 'Split'
+  entries: {
+    category: string
+    amount: number
+  }[]
+}
+export type CategoryUpdate = SingleCategoryUpdate | SplitCategoryUpdate

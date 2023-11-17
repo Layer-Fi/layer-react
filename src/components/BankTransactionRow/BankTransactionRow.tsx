@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
+import { useBankTransactions } from '../../hooks/useBankTransactions'
 import CheckedCircle from '../../icons/CheckedCircle'
 import ChevronDown from '../../icons/ChevronDown'
 import ChevronUp from '../../icons/ChevronUp'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction } from '../../types'
+import { BankTransaction, SingleCategoryUpdate } from '../../types'
 import { CategoryMenu } from '../CategoryMenu'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { Pill } from '../Pill'
@@ -27,11 +28,22 @@ export const BankTransactionRow = ({
   toggleOpen,
   editable,
 }: Props) => {
+  const { categorize: categorizeBankTransaction } = useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState(
     bankTransaction.categorization_flow?.suggestions?.[0],
   )
   const className = 'Layer__bank-transaction-row__table-cell'
   const openClassName = isOpen ? `${className}--expanded` : ''
+
+  const save = () =>
+    categorizeBankTransaction(bankTransaction.id, {
+      type: 'Category',
+      category: {
+        type: 'StableName',
+        stable_name: selectedCategory.stable_name || selectedCategory.category,
+      },
+    })
+
   return (
     <>
       <div className={`${className} ${openClassName} ${className}--date`}>
@@ -56,7 +68,8 @@ export const BankTransactionRow = ({
             <CategoryMenu
               bankTransaction={bankTransaction}
               name={`category-${bankTransaction.id}`}
-              defaultValue={selectedCategory}
+              value={selectedCategory}
+              onChange={setSelectedCategory}
             />
           ) : (
             <Pill>{bankTransaction?.category?.display_name}</Pill>
@@ -64,7 +77,10 @@ export const BankTransactionRow = ({
         </div>
       )}
       <div className={`${className} ${openClassName} ${className}--actions`}>
-        <div className="Layer__bank-transaction-row__save-button">
+        <div
+          className="Layer__bank-transaction-row__save-button"
+          onClick={() => save()}
+        >
           {editable && !isOpen && (
             <CheckedCircle
               size={28}
@@ -81,7 +97,10 @@ export const BankTransactionRow = ({
         </div>
       </div>
       {isOpen && (
-        <ExpandedBankTransactionRow bankTransaction={bankTransaction} />
+        <ExpandedBankTransactionRow
+          bankTransaction={bankTransaction}
+          close={() => toggleOpen(bankTransaction.id)}
+        />
       )}
     </>
   )

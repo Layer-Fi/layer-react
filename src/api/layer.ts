@@ -5,7 +5,7 @@ import {
 } from './layer/bankTransactions'
 import { getCategories } from './layer/categories'
 
-export default {
+export const Layer = {
   authenticate,
   getCategories,
   getBankTransactions,

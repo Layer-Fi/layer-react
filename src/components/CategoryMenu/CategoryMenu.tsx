@@ -6,18 +6,17 @@ import { BankTransaction, Category, CategorizationType } from '../../types'
 type Props = {
   name?: string
   bankTransaction: BankTransaction
-  defaultValue: Category | undefined
-  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void
+  value: Category | undefined
+  onChange: (newValue: Category) => void
 }
 
 export const CategoryMenu = ({
   bankTransaction,
   name,
-  defaultValue,
+  value,
   onChange,
 }: Props) => {
   const { categories } = useLayerContext()
-  const [selectedValue, setSelectedValue] = useState(defaultValue)
 
   const suggestedOptions = !!bankTransaction?.categorization_flow?.suggestions
     ? [
@@ -54,10 +53,10 @@ export const CategoryMenu = ({
       className="Layer__category-menu"
       options={options}
       isSearchable={true}
-      value={selectedValue}
-      onChange={value => value && setSelectedValue(value)}
+      value={value}
+      onChange={onChange}
       getOptionLabel={category => category.display_name}
-      getOptionValue={category => category.stable_name}
+      getOptionValue={category => category.stable_name || category.category}
       menuPortalTarget={document.body}
       styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
     />

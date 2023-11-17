@@ -1,5 +1,5 @@
-import Layer from '../../api/layer'
-import { BankTransaction } from '../../types'
+import { Layer } from '../../api/layer'
+import { BankTransaction, CategoryUpdate } from '../../types'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
@@ -11,21 +11,31 @@ export const useBankTransactions = () => {
     Layer.getBankTransactions(auth?.access_token, { params: { businessId } }),
   )
 
-  const mutateOne = (
-    updated: { id: BankTransaction['id'] } & Partial<BankTransaction>,
-  ) => {
-    if (data?.data?.length > 0) {
-      const index = data.data.findIndex(
-        (transaction: BankTransaction) => transaction.id === updated.id,
-      )
-      data.data[index] = {
-        ...data.data[index],
-        ...updated,
+  const categorize = (id: BankTransaction['id'], update: CategoryUpdate) =>
+    Layer.categorizeBankTransaction(auth.access_token, {
+      params: { businessId, bankTransactionId: id },
+      body: update,
+    }).then(({ data: transaction, error }) => {
+      if (transaction) {
+        const index = data?.data.findIndex(
+          (transaction: BankTransaction) => transaction.id === transaction.id,
+        )
+        // 0 will ping false if just checked for truth
+        // but it's a valid value, so check typeof
+        if (!!data && typeof index === 'number') {
+          data.data[index] = {
+            ...data.data[index],
+            ...transaction,
+          }
+        }
+        mutate(data)
+        return data
       }
-      mutate(data)
-    }
-  }
+      if (error) {
+        console.error(error)
+        throw error
+      }
+    })
 
-  console.log(data)
-  return { data, isLoading, error, mutateOne }
+  return { data, isLoading, error, categorize }
 }
