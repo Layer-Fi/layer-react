@@ -38,7 +38,7 @@ const filterVisibility =
 export const BankTransactions = () => {
   const [display, setDisplay] = useState<DisplayState>(DisplayState.review)
   const { data } = useBankTransactions()
-  const bankTransactions = (data?.data || []).filter(filterVisibility(display))
+  const bankTransactions = data.filter(filterVisibility(display))
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) =>

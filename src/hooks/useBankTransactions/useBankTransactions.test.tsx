@@ -26,20 +26,29 @@ describe(useBankTransactions, () => {
       Layer,
       'categorizeBankTransaction',
     )
-    categorizeBankTransaction.mockImplementation((_, { body }) =>
-      Promise.resolve({ data: body }),
+    categorizeBankTransaction.mockImplementation((_, params) =>
+      Promise.resolve({ data: params?.body }),
     )
     const { result } = renderHook(() => useBankTransactions())
-    await waitFor(() => expect(result.current.data?.data?.length).toEqual(3))
+    await waitFor(() => expect(result.current.data.length).toEqual(3))
 
-    result.current.categorize({ id: '123', counterparty_name: 'Pat' })
+    result.current.categorize('1234567890', {
+      type: 'Category',
+      category: {
+        type: 'StableName',
+        stable_name: 'FUEL',
+      },
+    })
 
     expect(categorizeBankTransaction).toHaveBeenCalledWith('1234567890', {
-      params: { businessId: 'TRUCK', bankTransactionId: '123' },
-      body: { id: '123', counterparty_name: 'Pat' },
+      params: { businessId: 'TRUCK', bankTransactionId: '1234567890' },
+      body: {
+        type: 'Category',
+        category: {
+          type: 'StableName',
+          stable_name: 'FUEL',
+        },
+      },
     })
-    await waitFor(() =>
-      expect(result.current.data.data[0].counterparty_name).toEqual('Pat'),
-    )
   })
 })

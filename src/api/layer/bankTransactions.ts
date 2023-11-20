@@ -1,9 +1,9 @@
-import { CategoryUpdate, BankTransaction } from '../../types'
+import { CategoryUpdate, BankTransaction, Metadata } from '../../types'
 import { get, put } from './authenticated_http'
 
 export const getBankTransactions = get<{
-  data: BankTransaction[] | undefined
-  meta: unknown
+  data?: BankTransaction[]
+  meta?: Metadata
   error: unknown
 }>(
   ({ businessId }) =>

@@ -1,29 +1,10 @@
-export type OAuthResponse = {
-  access_token: string
-  token_type: string
-  expires_in: number
-}
-
-export type LayerContextValues = {
-  auth: OAuthResponse
-  businessId: string
-  categories: Category[]
-}
-
-export enum LayerContextActionName {
-  setAuth = 'LayerContext.setAuth',
-  setCategories = 'LayerContext.setCategories',
-}
-
-export type LayerContextAction =
-  | {
-      type: LayerContextActionName.setAuth
-      payload: { auth: LayerContextValues['auth'] }
-    }
-  | {
-      type: LayerContextActionName.setCategories
-      payload: { categories: LayerContextValues['categories'] }
-    }
+export { OAuthResponse } from './types/authentication'
+export {
+  LayerContextValues,
+  LayerContextActionName,
+  LayerContextAction,
+} from './types/layer_context'
+export { Metadata } from './types/api'
 
 export enum CategorizationStatus {
   PENDING = 'PENDING',
