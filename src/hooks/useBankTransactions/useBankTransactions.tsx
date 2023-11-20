@@ -3,7 +3,17 @@ import { BankTransaction, CategoryUpdate } from '../../types'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
-export const useBankTransactions = () => {
+type UseBankTransactionsReturn = {
+  data: ReturnType<typeof Layer.getBankTransactions>
+  isLoading: boolean
+  error: unknown
+  categorize: (
+    id: BankTransaction['id'],
+    newCategory: CategoryUpdate,
+  ) => BankTransaction
+}
+
+export const useBankTransactions = (): UseBankTransactionsReturn => {
   const { auth, businessId } = useLayerContext()
 
   const { data, isLoading, error, mutate } = useSWR(
@@ -11,25 +21,13 @@ export const useBankTransactions = () => {
     Layer.getBankTransactions(auth?.access_token, { params: { businessId } }),
   )
 
-  const categorize = (id: BankTransaction['id'], update: CategoryUpdate) =>
+  const categorize = (id: BankTransaction['id'], newCategory: CategoryUpdate) =>
     Layer.categorizeBankTransaction(auth.access_token, {
       params: { businessId, bankTransactionId: id },
-      body: update,
+      body: newCategory,
     }).then(({ data: transaction, error }) => {
       if (transaction) {
-        const index = data?.data.findIndex(
-          (transaction: BankTransaction) => transaction.id === transaction.id,
-        )
-        // 0 will ping false if just checked for truth
-        // but it's a valid value, so check typeof
-        if (!!data && typeof index === 'number') {
-          data.data[index] = {
-            ...data.data[index],
-            ...transaction,
-          }
-        }
-        mutate(data)
-        return data
+        mutate()
       }
       if (error) {
         console.error(error)

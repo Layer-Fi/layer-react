@@ -1,10 +1,10 @@
-import { BankTransactions } from '../../components/BankTransactions'
 import { CategoryUpdate, BankTransaction } from '../../types'
 import { get, put } from './authenticated_http'
 
 export const getBankTransactions = get<{
-  data: BankTransaction[]
+  data: BankTransaction[] | undefined
   meta: unknown
+  error: unknown
 }>(
   ({ businessId }) =>
     `https://sandbox.layerfi.com/v1/businesses/${businessId}/bank-transactions`,
