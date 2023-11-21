@@ -4,7 +4,7 @@ import { get, put } from './authenticated_http'
 export const getBankTransactions = get<{
   data?: BankTransaction[]
   meta?: Metadata
-  error: unknown
+  error?: unknown
 }>(
   ({ businessId }) =>
     `https://sandbox.layerfi.com/v1/businesses/${businessId}/bank-transactions`,

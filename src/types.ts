@@ -5,6 +5,7 @@ export {
   LayerContextAction,
 } from './types/layer_context'
 export { Metadata } from './types/api'
+export { ProfitAndLoss, LineItem } from './types/profit_and_loss'
 
 export enum CategorizationStatus {
   PENDING = 'PENDING',
