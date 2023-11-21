@@ -15,6 +15,11 @@ describe(Money.centsToDollars, () => {
     const output = Money.centsToDollars(1200)
     expect(output).toEqual('12.00')
   })
+
+  it('fully expands 0 cents', () => {
+    const output = Money.centsToDollars(0)
+    expect(output).toEqual('0.00')
+  })
 })
 
 describe(Money.dollarsToCents, () => {

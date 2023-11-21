@@ -1,0 +1,74 @@
+.Layer__profit-and-loss {
+  --border-color: #eaecf0;
+
+  width: 60rem;
+  background-color: white;
+  padding: 0.25rem;
+
+  * {
+    color: #101828;
+    font-family: Inter;
+    font-weight: 500;
+    font-style: normal;
+  }
+}
+
+.Layer__profit-and-loss-table {
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: var(--border-color);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1px 0;
+  font-size: 1rem;
+}
+
+.Layer__profit-and-loss-row {
+  padding: 1em;
+  background-color: white;
+  font-size: 1em;
+}
+
+.Layer__profit-and-loss-row__label {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.Layer__profit-and-loss-row__value {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.Layer__profit-and-loss-row__label--variant-NETPROFIT,
+.Layer__profit-and-loss-row__label--variant-GROSS,
+.Layer__profit-and-loss-row__label--variant-BEFORETAX {
+  font-weight: bold;
+}
+
+.Layer__profit-and-loss-row__label--variant-NETPROFIT,
+.Layer__profit-and-loss-row__label--variant-GROSS,
+.Layer__profit-and-loss-row__value--variant-BEFORETAX {
+  font-weight: bold;
+}
+
+.Layer__profit-and-loss-row__value--amount-positive {
+  &::before {
+    content: '$';
+  }
+}
+
+.Layer__profit-and-loss-row__value--amount-negative {
+  &::before {
+    content: '-$';
+  }
+}
+
+.Layer__profit-and-loss-row__label--depth-1 {
+  padding-right: 2em;
+  padding-left: 2em;
+  font-size: 0.8em;
+}
+
+.Layer__profit-and-loss-row__value--depth-1 {
+  font-size: 0.8em;
+}
