@@ -1,12 +1,15 @@
 .Layer__profit-and-loss {
   --border-color: #eaecf0;
+  --font-color: #101828;
+  --background-color: white;
+  --active: #e0e9ff;
 
   width: 60rem;
   background-color: white;
   padding: 0.25rem;
 
   * {
-    color: #101828;
+    color: var(--font-color);
     font-family: Inter;
     font-weight: 500;
     font-style: normal;
@@ -25,7 +28,7 @@
 
 .Layer__profit-and-loss-row {
   padding: 1em;
-  background-color: white;
+  background-color: var(--background-color);
   font-size: 1em;
 }
 
@@ -71,4 +74,44 @@
 
 .Layer__profit-and-loss-row__value--depth-1 {
   font-size: 0.8em;
+}
+
+.Layer__profit-and-loss-date-picker {
+  width: 20rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0.25rem;
+  margin: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+}
+
+.Layer__profit-and-loss-date-picker__button {
+  padding: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: var(--background-color);
+  border: 0;
+  border-radius: 0.5rem;
+
+  &:active {
+    background-color: var(--active);
+  }
+}
+
+.Layer__profit-and-loss-date-picker__button-icon path {
+  stroke: var(--font-color);
+}
+
+.Layer__profit-and-loss-date-picker__label {
+  flex: 1;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }

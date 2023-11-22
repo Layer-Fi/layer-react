@@ -68,3 +68,9 @@ export type SplitCategoryUpdate = {
   }[]
 }
 export type CategoryUpdate = SingleCategoryUpdate | SplitCategoryUpdate
+
+// Only Date and string (ISO8601 formatted) make sense here
+export type DateRange<T = Date> = {
+  startDate: T
+  endDate: T
+}

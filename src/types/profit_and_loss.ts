@@ -15,7 +15,7 @@ export interface ProfitAndLoss {
 }
 
 export interface LineItem {
-  name: String
+  name?: String
   display_name: string
   value: number
   line_items?: LineItem[]

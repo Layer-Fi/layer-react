@@ -1,14 +1,9 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
-import { ProfitAndLoss } from '../../types'
+import { ProfitAndLoss, DateRange } from '../../types'
 import { useLayerContext } from '../useLayerContext'
 import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
 import useSWR from 'swr'
-
-type DateRange = {
-  startDate: string
-  endDate: string
-}
 
 type UseProfitAndLoss = {
   data: ProfitAndLoss | undefined
@@ -17,10 +12,7 @@ type UseProfitAndLoss = {
   changeDateRange: (dateRange: Partial<DateRange>) => void
 }
 
-type Props = {
-  startDate?: string
-  endDate?: string
-}
+type Props = DateRange
 
 export const useProfitAndLoss = ({
   startDate: initialStartDate,
@@ -28,10 +20,10 @@ export const useProfitAndLoss = ({
 }: Props = {}): UseProfitAndLoss => {
   const { auth, businessId } = useLayerContext()
   const [startDate, setStartDate] = useState(
-    initialStartDate || formatISO(startOfMonth(Date.now())),
+    initialStartDate || startOfMonth(Date.now()),
   )
   const [endDate, setEndDate] = useState(
-    initialEndDate || formatISO(endOfMonth(Date.now())),
+    initialEndDate || endOfMonth(Date.now()),
   )
 
   const {
@@ -43,9 +35,13 @@ export const useProfitAndLoss = ({
       startDate &&
       endDate &&
       auth?.access_token &&
-      `profit-and-loss-${businessId}-${startDate}-${endDate}`,
+      `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}`,
     Layer.getProfitAndLoss(auth?.access_token, {
-      params: { businessId, startDate, endDate },
+      params: {
+        businessId,
+        startDate: formatISO(startDate),
+        endDate: formatISO(endDate),
+      },
     }),
   )
   const { data, error } = rawData || {}
@@ -53,10 +49,7 @@ export const useProfitAndLoss = ({
   const changeDateRange = ({
     startDate: newStartDate,
     endDate: newEndDate,
-  }: {
-    startDate?: string
-    endDate?: string
-  }) => {
+  }: DateRange) => {
     newStartDate && setStartDate(newStartDate)
     newEndDate && setEndDate(newEndDate)
   }
