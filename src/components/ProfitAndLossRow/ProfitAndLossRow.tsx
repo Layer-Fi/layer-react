@@ -1,13 +1,14 @@
 import React from 'react'
 import { centsToDollars } from '../../models/Money'
+import { Direction } from '../../types'
 import { LineItem } from '../../types/profit_and_loss'
-import { ProfitAndLossRow } from '../ProfitAndLossRow'
 
 type Props = {
   variant?: string
   depth?: number
   maxDepth?: number
   lineItem: LineItem
+  direction?: Direction
 }
 
 export const ProfitAndLossRow = ({
@@ -15,6 +16,7 @@ export const ProfitAndLossRow = ({
   lineItem,
   depth = 0,
   maxDepth = 1,
+  direction = Direction.DEBIT,
 }: Props) => {
   if (!lineItem) {
     return null
@@ -32,7 +34,7 @@ export const ProfitAndLossRow = ({
     'Layer__profit-and-loss-row__value',
   ]
   valueClasses.push(
-    amount >= 0
+    direction === Direction.CREDIT
       ? 'Layer__profit-and-loss-row__value--amount-positive'
       : 'Layer__profit-and-loss-row__value--amount-negative',
   )
@@ -55,14 +57,13 @@ export const ProfitAndLossRow = ({
       {depth < maxDepth &&
         (line_items || []).map(line_item => (
           <ProfitAndLossRow
-            key={line_item.name}
+            key={line_item.display_name}
             lineItem={line_item}
             depth={depth + 1}
             maxDepth={maxDepth}
+            direction={direction}
           />
         ))}
     </>
   )
 }
-
-

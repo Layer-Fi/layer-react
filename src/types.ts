@@ -16,7 +16,10 @@ export enum CategorizationStatus {
   JOURNALING = 'JOURNALING',
 }
 
-export type Direction = 'CREDIT' | 'DEBIT'
+export enum Direction {
+  CREDIT = 'CREDIT',
+  DEBIT = 'DEBIT',
+}
 
 export interface Category {
   display_name: string

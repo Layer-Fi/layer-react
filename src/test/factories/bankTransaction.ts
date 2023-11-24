@@ -1,4 +1,4 @@
-import { BankTransaction } from '../../types'
+import { BankTransaction, Direction } from '../../types'
 
 export const makeBankTransaction = (
   options: Partial<BankTransaction> = {},
@@ -11,7 +11,7 @@ export const makeBankTransaction = (
   source_account_id: '9311880',
   imported_at: '2023-10-04T20:05:10.853973Z',
   date: '2023-09-28T20:04:45Z',
-  direction: 'CREDIT',
+  direction: Direction.DEBIT,
   amount: 20090,
   counterparty_name: 'AMERICAN TRANSPORT LLC ',
   description: null,

@@ -4,7 +4,7 @@ import CheckedCircle from '../../icons/CheckedCircle'
 import ChevronDown from '../../icons/ChevronDown'
 import ChevronUp from '../../icons/ChevronUp'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, SingleCategoryUpdate } from '../../types'
+import { BankTransaction, Direction, SingleCategoryUpdate } from '../../types'
 import { CategoryMenu } from '../CategoryMenu'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { Pill } from '../Pill'
@@ -19,7 +19,7 @@ type Props = {
 }
 
 const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
-  direction === 'CREDIT'
+  direction === Direction.CREDIT
 
 export const BankTransactionRow = ({
   dateFormat,

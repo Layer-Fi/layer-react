@@ -1,4 +1,5 @@
 import mockFetch from './mockFetch'
+import '@testing-library/jest-dom'
 
 beforeAll(() => (global.fetch = jest.fn()))
 beforeEach(() => {

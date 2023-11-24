@@ -18,5 +18,5 @@ export interface LineItem {
   name?: String
   display_name: string
   value: number
-  line_items?: LineItem[]
+  line_items?: LineItem[] | null
 }
