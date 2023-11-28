@@ -115,3 +115,19 @@
   align-items: center;
   text-align: center;
 }
+
+.Layer__profit-and-loss-chart__bar--income {
+  fill: #0c48e5;
+}
+
+.Layer__profit-and-loss-chart__bar--expenses {
+  fill: #6d8ee7;
+}
+
+.Layer__profit-and-loss-chart__cell--selected {
+  filter: drop-shadow(0 -0.5rem 0.5rem rgba(0, 196, 196, 0.9));
+}
+
+.Layer__profit-and-loss-chart .recharts-cartesian-axis-tick-value tspan {
+  font-size: 0.75rem;
+}
