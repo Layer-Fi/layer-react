@@ -11,6 +11,7 @@ import {
   SplitCategoryUpdate,
   SingleCategoryUpdate,
   Category,
+  CategorizationType,
 } from '../../types'
 import { CategoryMenu } from '../CategoryMenu'
 import { RadioButtonGroup } from '../RadioButtonGroup'
@@ -46,7 +47,9 @@ export const ExpandedBankTransactionRow = ({
 
   const defaultCategory =
     bankTransaction.category ||
-    bankTransaction.categorization_flow?.suggestions?.[0]
+    (bankTransaction.categorization_flow?.type ===
+      CategorizationType.ASK_FROM_SUGGESTIONS &&
+      bankTransaction.categorization_flow?.suggestions?.[0])
   const [rowState, updateRowState] = useState<RowState>({
     splits: [
       {

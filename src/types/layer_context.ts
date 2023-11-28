@@ -1,4 +1,5 @@
-import { OAuthResponse } from './types/authentication'
+import { Category } from '../types'
+import { OAuthResponse } from './authentication'
 
 export type LayerContextValues = {
   auth: OAuthResponse

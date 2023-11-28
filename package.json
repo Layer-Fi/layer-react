@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
+    "typecheck": "tsc --noEmit",
     "build": "node bin/build.js"
   },
   "repository": {

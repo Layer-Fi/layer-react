@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Select from 'react-select'
 import { useLayerContext } from '../../hooks/useLayerContext'
-import { BankTransaction, Category, CategorizationType } from '../../types'
+import { BankTransaction, CategorizationType, Category } from '../../types'
 
 type Props = {
   name?: string
@@ -18,18 +18,20 @@ export const CategoryMenu = ({
 }: Props) => {
   const { categories } = useLayerContext()
 
-  const suggestedOptions = !!bankTransaction?.categorization_flow?.suggestions
-    ? [
-        {
-          label: 'Suggested',
-          options: bankTransaction.categorization_flow.suggestions,
-        },
-      ]
-    : []
+  const suggestedOptions =
+    bankTransaction?.categorization_flow?.type ===
+    CategorizationType.ASK_FROM_SUGGESTIONS
+      ? [
+          {
+            label: 'Suggested',
+            options: bankTransaction.categorization_flow.suggestions,
+          },
+        ]
+      : []
 
   const categoryOptions = (categories || [])
     .map(category => {
-      if (category?.subCategories?.length > 0) {
+      if (category?.subCategories && category?.subCategories?.length > 0) {
         return {
           label: category.display_name,
           options: category.subCategories,
@@ -54,7 +56,7 @@ export const CategoryMenu = ({
       options={options}
       isSearchable={true}
       value={value}
-      onChange={onChange}
+      onChange={newValue => newValue && onChange(newValue)}
       getOptionLabel={category => category.display_name}
       getOptionValue={category => category.stable_name || category.category}
       menuPortalTarget={document.body}

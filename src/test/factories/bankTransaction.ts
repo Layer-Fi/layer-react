@@ -1,4 +1,9 @@
-import { BankTransaction, Direction } from '../../types'
+import {
+  BankTransaction,
+  CategorizationStatus,
+  CategorizationType,
+  Direction,
+} from '../../types'
 
 export const makeBankTransaction = (
   options: Partial<BankTransaction> = {},
@@ -15,7 +20,7 @@ export const makeBankTransaction = (
   amount: 20090,
   counterparty_name: 'AMERICAN TRANSPORT LLC ',
   description: null,
-  categorization_status: 'CATEGORIZED',
+  categorization_status: 'CATEGORIZED' as CategorizationStatus,
   category: {
     type: 'Account',
     id: 'aea91d00-a662-4711-b7a5-d70e167856a2',
@@ -25,7 +30,7 @@ export const makeBankTransaction = (
   },
   categorization_method: 'LAYER_AUTO',
   categorization_flow: {
-    type: 'AUTO',
+    type: CategorizationType.AUTO,
     category: {
       type: 'Account',
       id: 'aea91d00-a662-4711-b7a5-d70e167856a2',

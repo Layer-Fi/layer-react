@@ -7,7 +7,7 @@ type Props = {
   variant?: string
   depth?: number
   maxDepth?: number
-  lineItem: LineItem
+  lineItem?: LineItem | null
   direction?: Direction
 }
 

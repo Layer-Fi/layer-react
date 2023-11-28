@@ -1,4 +1,10 @@
-import React, { PropsWithChildren, createContext } from 'react'
+import React, {
+  PropsWithChildren,
+  createContext,
+  useRef,
+  useState,
+  useLayoutEffect,
+} from 'react'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 import { useWindowSize } from '../../hooks/useWindowSize/useWindowSize'
 import { ProfitAndLossChart } from '../ProfitAndLossChart'

@@ -12,7 +12,7 @@ export const CategoryMenuItem = ({ category, maxDepth = 1 }: Props) => {
   if (hasChildrenAndContinuing) {
     return (
       <optgroup label={category.display_name}>
-        {category.subCategories.map(category => (
+        {category?.subCategories?.map(category => (
           <CategoryMenuItem
             key={category.category}
             category={category}

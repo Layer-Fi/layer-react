@@ -1,7 +1,6 @@
 import { Layer } from '../../api/layer'
 import { BankTransaction, CategoryUpdate, Metadata } from '../../types'
 import { useLayerContext } from '../useLayerContext'
-import { resetClipboardStubOnView } from '@testing-library/user-event/dist/types/utils'
 import useSWR from 'swr'
 
 type UseBankTransactionsReturn = {

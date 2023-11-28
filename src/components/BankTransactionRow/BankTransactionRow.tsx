@@ -4,7 +4,7 @@ import CheckedCircle from '../../icons/CheckedCircle'
 import ChevronDown from '../../icons/ChevronDown'
 import ChevronUp from '../../icons/ChevronUp'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, Direction, SingleCategoryUpdate } from '../../types'
+import { BankTransaction, CategorizationType, Direction } from '../../types'
 import { CategoryMenu } from '../CategoryMenu'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { Pill } from '../Pill'
@@ -30,7 +30,10 @@ export const BankTransactionRow = ({
 }: Props) => {
   const { categorize: categorizeBankTransaction } = useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState(
-    bankTransaction.categorization_flow?.suggestions?.[0],
+    bankTransaction.categorization_flow.type ===
+      CategorizationType.ASK_FROM_SUGGESTIONS
+      ? bankTransaction.categorization_flow.suggestions[0]
+      : undefined,
   )
   const className = 'Layer__bank-transaction-row__table-cell'
   const openClassName = isOpen ? `${className}--expanded` : ''
@@ -40,7 +43,8 @@ export const BankTransactionRow = ({
       type: 'Category',
       category: {
         type: 'StableName',
-        stable_name: selectedCategory.stable_name || selectedCategory.category,
+        stable_name:
+          selectedCategory?.stable_name || selectedCategory?.category || '',
       },
     })
 
