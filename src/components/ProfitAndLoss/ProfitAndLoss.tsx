@@ -2,11 +2,16 @@ import React, { PropsWithChildren, createContext } from 'react'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { ProfitAndLossTable } from '../ProfitAndLossTable'
+import { endOfMonth, startOfMonth } from 'date-fns'
 
 const PNLContext = createContext<ReturnType<typeof useProfitAndLoss>>({
   data: undefined,
   isLoading: true,
   error: undefined,
+  dateRange: {
+    startDate: startOfMonth(new Date()),
+    endDate: endOfMonth(new Date()),
+  },
   changeDateRange: () => {},
 })
 

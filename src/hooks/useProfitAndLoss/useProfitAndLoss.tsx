@@ -9,15 +9,18 @@ type UseProfitAndLoss = {
   data: ProfitAndLoss | undefined
   isLoading: boolean
   error: unknown
+  dateRange: DateRange
   changeDateRange: (dateRange: Partial<DateRange>) => void
 }
 
 type Props = DateRange
 
-export const useProfitAndLoss = ({
-  startDate: initialStartDate,
-  endDate: initialEndDate,
-}: Props = {}): UseProfitAndLoss => {
+export const useProfitAndLoss = (
+  { startDate: initialStartDate, endDate: initialEndDate }: Props = {
+    startDate: startOfMonth(new Date()),
+    endDate: endOfMonth(new Date()),
+  },
+): UseProfitAndLoss => {
   const { auth, businessId } = useLayerContext()
   const [startDate, setStartDate] = useState(
     initialStartDate || startOfMonth(Date.now()),
@@ -49,10 +52,16 @@ export const useProfitAndLoss = ({
   const changeDateRange = ({
     startDate: newStartDate,
     endDate: newEndDate,
-  }: DateRange) => {
+  }: Partial<DateRange>) => {
     newStartDate && setStartDate(newStartDate)
     newEndDate && setEndDate(newEndDate)
   }
 
-  return { data, isLoading, error: error || rawError, changeDateRange }
+  return {
+    data,
+    isLoading,
+    error: error || rawError,
+    dateRange: { startDate, endDate },
+    changeDateRange,
+  }
 }

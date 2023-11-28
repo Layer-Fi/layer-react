@@ -5,12 +5,11 @@ import { ProfitAndLoss } from '../ProfitAndLoss'
 import { add, endOfMonth, format, startOfMonth, Duration } from 'date-fns'
 
 export const ProfitAndLossDatePicker = () => {
-  const { changeDateRange } = useContext(ProfitAndLoss.Context)
-  const [date, setDate] = useState(startOfMonth(Date.now()))
+  const { changeDateRange, dateRange } = useContext(ProfitAndLoss.Context)
+  const date = dateRange.startDate
   const label = format(date, 'LLLL y')
   const change = (duration: Duration) => {
     const newDate = add(date, duration)
-    setDate(newDate)
     changeDateRange({
       startDate: startOfMonth(newDate),
       endDate: endOfMonth(newDate),
