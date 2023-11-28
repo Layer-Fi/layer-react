@@ -131,3 +131,45 @@
 .Layer__profit-and-loss-chart .recharts-cartesian-axis-tick-value tspan {
   font-size: 0.75rem;
 }
+
+
+.Layer__profit-and-loss-summaries {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.Layer__profit-and-loss-summaries__summary {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-right: 1.5rem;
+
+  &:first-child {
+    margin-left: 1.5rem;
+  }
+}
+
+.Layer__profit-and-loss-summaries__title {
+  font-weight: 600;
+  font-size: 1.375rem;
+  margin-bottom: 0.75rem;
+}
+
+.Layer__profit-and-loss-summaries__month {
+  font-size: 1.125rem;
+  margin-bottom: 0.25rem;
+}
+
+.Layer__profit-and-loss-summaries__amount {
+  font-weight: 600;
+  font-size: 1.5rem;
+
+  &::before {
+    content: "$";
+  }
+}

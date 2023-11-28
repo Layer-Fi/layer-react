@@ -9,6 +9,7 @@ import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 import { useWindowSize } from '../../hooks/useWindowSize/useWindowSize'
 import { ProfitAndLossChart } from '../ProfitAndLossChart'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
+import { ProfitAndLossSummaries } from '../ProfitAndLossSummaries'
 import { ProfitAndLossTable } from '../ProfitAndLossTable'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
@@ -46,8 +47,9 @@ const ProfitAndLoss = ({ children }: PropsWithChildren) => {
   )
 }
 
-ProfitAndLoss.DatePicker = ProfitAndLossDatePicker
-ProfitAndLoss.Table = ProfitAndLossTable
-ProfitAndLoss.Context = PNLContext
 ProfitAndLoss.Chart = ProfitAndLossChart
+ProfitAndLoss.Context = PNLContext
+ProfitAndLoss.DatePicker = ProfitAndLossDatePicker
+ProfitAndLoss.Summaries = ProfitAndLossSummaries
+ProfitAndLoss.Table = ProfitAndLossTable
 export { ProfitAndLoss }
