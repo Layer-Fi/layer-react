@@ -1,17 +1,22 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useMemo, useRef } from 'react'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 import { ProfitAndLoss } from '../../types'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
+import { Indicator } from './Indicator'
+import { endOfMonth, format, parseISO, startOfMonth, sub } from 'date-fns'
 import {
-  endOfMonth,
-  format,
-  parse,
-  parseISO,
-  startOfMonth,
-  sub,
-} from 'date-fns'
-import { BarChart, XAxis, Tooltip, Cell, Bar } from 'recharts'
+  BarChart,
+  XAxis,
+  Cell,
+  Bar,
+  LabelList,
+  CartesianGrid,
+  Legend,
+} from 'recharts'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
+
+const barGap = 4
+const barSize = 20
 
 export const ProfitAndLossChart = () => {
   const { changeDateRange, dateRange, dimensions } = useContext(PNL.Context)
@@ -121,10 +126,21 @@ export const ProfitAndLossChart = () => {
     }
   }
 
+  const incomeBar = useRef(null)
+  const incomeColor = useMemo(
+    () => incomeBar.current?.style?.getPropertyValue('fill'),
+    [!!incomeBar.current],
+  )
+  const expensesBar = useRef(null)
+
   // If net profit doesn't change, we're probably still the same.
   const data = useMemo(
     () => monthData.map(summarizePnL),
-    monthData.map(m => m?.net_profit),
+    [
+      startSelectionMonth,
+      endSelectionMonth,
+      ...monthData.map(m => m?.net_profit),
+    ],
   )
 
   return (
@@ -133,14 +149,29 @@ export const ProfitAndLossChart = () => {
       height={250}
       data={data}
       onClick={onClick}
+      barGap={barGap}
       className="Layer__profit-and-loss-chart"
     >
+      <CartesianGrid vertical={false} />
+      <Legend
+        verticalAlign="top"
+        align="left"
+        payload={[
+          { value: 'Income', type: 'circle', id: 'IncomeLegend' },
+          { value: 'Expenses', type: 'circle', id: 'ExpensesLegend' },
+        ]}
+      />
       <XAxis dataKey="name" tickLine={false} />
       <Bar
+        ref={incomeBar}
+        fill={incomeColor}
         dataKey="revenue"
-        barSize={16}
+        barSize={barSize}
+        isAnimationActive={false}
+        radius={[barSize / 4, barSize / 4, 0, 0]}
         className="Layer__profit-and-loss-chart__bar--income"
       >
+        <LabelList content={Indicator} />
         {data.map(entry => (
           <Cell
             key={entry.name}
@@ -154,10 +185,12 @@ export const ProfitAndLossChart = () => {
       </Bar>
       <Bar
         dataKey="expenses"
-        barSize={16}
+        barSize={barSize}
+        isAnimationActive={false}
+        radius={[barSize / 4, barSize / 4, 0, 0]}
         className="Layer__profit-and-loss-chart__bar--expenses"
       >
-        {data.map((entry, index) => (
+        {data.map(entry => (
           <Cell
             key={entry.name}
             className={

@@ -1,8 +1,11 @@
 .Layer__profit-and-loss {
   --border-color: #eaecf0;
   --font-color: #101828;
+  --indicator-bar-color: #3c3c3c;
   --background-color: white;
   --active: #e0e9ff;
+  --income-bar-color: #0c48e5;
+  --expenses-bar-color: #6d8ee7;
 
   width: 60rem;
   background-color: white;
@@ -14,6 +17,14 @@
     font-weight: 500;
     font-style: normal;
   }
+}
+
+.Layer__profit-and-loss__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
 }
 
 .Layer__profit-and-loss-table {
@@ -45,13 +56,20 @@
 .Layer__profit-and-loss-row__label--variant-NETPROFIT,
 .Layer__profit-and-loss-row__label--variant-GROSS,
 .Layer__profit-and-loss-row__label--variant-BEFORETAX {
-  font-weight: bold;
+  border-top: 3px solid var(--border-color);
+  border-bottom: 3px solid var(--border-color);
+}
+
+.Layer__profit-and-loss-row__value--variant-NETPROFIT,
+.Layer__profit-and-loss-row__value--variant-GROSS,
+.Layer__profit-and-loss-row__value--variant-BEFORETAX {
+  border-top: 3px solid var(--border-color);
+  border-bottom: 3px solid var(--border-color);
 }
 
 .Layer__profit-and-loss-row__label--variant-NETPROFIT,
-.Layer__profit-and-loss-row__label--variant-GROSS,
-.Layer__profit-and-loss-row__value--variant-BEFORETAX {
-  font-weight: bold;
+.Layer__profit-and-loss-row__value--variant-NETPROFIT {
+  border-bottom: 10px solid var(--border-color);
 }
 
 .Layer__profit-and-loss-row__value--amount-positive {
@@ -64,6 +82,14 @@
   &::before {
     content: '-$';
   }
+}
+
+.Layer__profit-and-loss-row__label--depth-0 {
+  font-weight: 700;
+}
+
+.Layer__profit-and-loss-row__value--depth-0 {
+  font-weight: 700;
 }
 
 .Layer__profit-and-loss-row__label--depth-1 {
@@ -117,21 +143,37 @@
 }
 
 .Layer__profit-and-loss-chart__bar--income {
-  fill: #0c48e5;
+  fill: var(--income-bar-color);
 }
 
 .Layer__profit-and-loss-chart__bar--expenses {
-  fill: #6d8ee7;
-}
-
-.Layer__profit-and-loss-chart__cell--selected {
-  filter: drop-shadow(0 -0.5rem 0.5rem rgba(0, 196, 196, 0.9));
+  fill: var(--expenses-bar-color);
 }
 
 .Layer__profit-and-loss-chart .recharts-cartesian-axis-tick-value tspan {
   font-size: 0.75rem;
 }
 
+.Layer__profit-and-loss-chart .recharts-legend-wrapper {
+  margin-top: -1.25rem;
+}
+
+.Layer__profit-and-loss-chart .recharts-legend-item-text {
+  font-size: 1rem;
+}
+
+.Layer__profit-and-loss-chart .legend-item-0 {
+  fill: var(--income-bar-color);
+}
+
+.Layer__profit-and-loss-chart .legend-item-1 {
+  fill: var(--expenses-bar-color);
+}
+
+.Layer__profit-and-loss-chart__selection-indicator {
+  height: 0.25rem;
+  fill: var(--indicator-bar-color);
+}
 
 .Layer__profit-and-loss-summaries {
   display: flex;
@@ -170,6 +212,6 @@
   font-size: 1.5rem;
 
   &::before {
-    content: "$";
+    content: '$';
   }
 }

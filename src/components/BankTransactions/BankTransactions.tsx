@@ -53,7 +53,7 @@ export const BankTransactions = () => {
   return (
     <div className="Layer__bank-transactions" data-display={display}>
       <header className="Layer__bank-transactions__header">
-        <h1 className="Layer__bank-transactions__title">Transactions</h1>
+        <h2 className="Layer__bank-transactions__title">Transactions</h2>
         <RadioButtonGroup
           name="bank-transaction-display"
           buttons={[

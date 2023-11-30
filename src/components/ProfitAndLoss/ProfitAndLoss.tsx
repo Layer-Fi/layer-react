@@ -41,6 +41,7 @@ const ProfitAndLoss = ({ children }: PropsWithChildren) => {
   return (
     <PNLContext.Provider value={{ ...contextData, dimensions }}>
       <div ref={boundsRef} className="Layer__profit-and-loss">
+        <h2 className="Layer__profit-and-loss__title">Profit & Loss</h2>
         {children}
       </div>
     </PNLContext.Provider>

@@ -38,10 +38,8 @@ export const ProfitAndLossRow = ({
       ? 'Layer__profit-and-loss-row__value--amount-positive'
       : 'Layer__profit-and-loss-row__value--amount-negative',
   )
-  depth > 0 &&
-    labelClasses.push(`Layer__profit-and-loss-row__label--depth-${depth}`)
-  depth > 0 &&
-    valueClasses.push(`Layer__profit-and-loss-row__value--depth-${depth}`)
+  labelClasses.push(`Layer__profit-and-loss-row__label--depth-${depth}`)
+  valueClasses.push(`Layer__profit-and-loss-row__value--depth-${depth}`)
   variantName &&
     labelClasses.push(
       `Layer__profit-and-loss-row__label--variant-${variantName}`,
