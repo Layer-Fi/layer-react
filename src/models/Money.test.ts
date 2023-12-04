@@ -20,6 +20,11 @@ describe(Money.centsToDollars, () => {
     const output = Money.centsToDollars(0)
     expect(output).toEqual('0.00')
   })
+
+  it('includes commas for easy reading', () => {
+    const output = Money.centsToDollars(1234567890)
+    expect(output).toEqual('12,345,678.90')
+  })
 })
 
 describe(Money.dollarsToCents, () => {

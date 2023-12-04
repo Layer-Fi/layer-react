@@ -1,5 +1,11 @@
+const formatter = new Intl.NumberFormat('en-US', {
+  minimumIntegerDigits: 1,
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+})
+
 export const centsToDollars = (cents: number): string =>
-  (cents / 100).toFixed(2)
+  formatter.format(cents / 100)
 
 export const dollarsToCents = (dollars: string): number =>
   Math.round(parseFloat(dollars) * 100)
