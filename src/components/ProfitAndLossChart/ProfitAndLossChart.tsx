@@ -12,6 +12,7 @@ import {
   LabelList,
   CartesianGrid,
   Legend,
+  ResponsiveContainer,
 } from 'recharts'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 
@@ -19,7 +20,7 @@ const barGap = 4
 const barSize = 20
 
 export const ProfitAndLossChart = () => {
-  const { changeDateRange, dateRange, dimensions } = useContext(PNL.Context)
+  const { changeDateRange, dateRange } = useContext(PNL.Context)
   const thisMonth = startOfMonth(Date.now())
 
   const startSelectionMonth = dateRange.startDate.getMonth()
@@ -144,63 +145,64 @@ export const ProfitAndLossChart = () => {
   )
 
   return (
-    <BarChart
-      width={dimensions?.width}
-      height={250}
-      data={data}
-      onClick={onClick}
-      barGap={barGap}
-      className="Layer__profit-and-loss-chart"
-    >
-      <CartesianGrid vertical={false} />
-      <Legend
-        verticalAlign="top"
-        align="left"
-        payload={[
-          { value: 'Income', type: 'circle', id: 'IncomeLegend' },
-          { value: 'Expenses', type: 'circle', id: 'ExpensesLegend' },
-        ]}
-      />
-      <XAxis dataKey="name" tickLine={false} />
-      <Bar
-        ref={incomeBar}
-        fill={incomeColor}
-        dataKey="revenue"
-        barSize={barSize}
-        isAnimationActive={false}
-        radius={[barSize / 4, barSize / 4, 0, 0]}
-        className="Layer__profit-and-loss-chart__bar--income"
+    <ResponsiveContainer width="100%" height={250}>
+      <BarChart
+        margin={{ left: 24, right: 24, bottom: 24 }}
+        data={data}
+        onClick={onClick}
+        barGap={barGap}
+        className="Layer__profit-and-loss-chart"
       >
-        <LabelList content={Indicator} />
-        {data.map(entry => (
-          <Cell
-            key={entry.name}
-            className={
-              entry.selected
-                ? 'Layer__profit-and-loss-chart__cell--selected'
-                : ''
-            }
-          />
-        ))}
-      </Bar>
-      <Bar
-        dataKey="expenses"
-        barSize={barSize}
-        isAnimationActive={false}
-        radius={[barSize / 4, barSize / 4, 0, 0]}
-        className="Layer__profit-and-loss-chart__bar--expenses"
-      >
-        {data.map(entry => (
-          <Cell
-            key={entry.name}
-            className={
-              entry.selected
-                ? 'Layer__profit-and-loss-chart__cell--selected'
-                : ''
-            }
-          />
-        ))}
-      </Bar>
-    </BarChart>
+        <CartesianGrid vertical={false} />
+        <Legend
+          verticalAlign="top"
+          align="left"
+          payload={[
+            { value: 'Income', type: 'circle', id: 'IncomeLegend' },
+            { value: 'Expenses', type: 'circle', id: 'ExpensesLegend' },
+          ]}
+        />
+        <XAxis dataKey="name" tickLine={false} />
+        <Bar
+          ref={incomeBar}
+          fill={incomeColor}
+          dataKey="revenue"
+          barSize={barSize}
+          isAnimationActive={false}
+          radius={[barSize / 4, barSize / 4, 0, 0]}
+          className="Layer__profit-and-loss-chart__bar--income"
+        >
+          <LabelList content={Indicator} />
+          {data.map(entry => (
+            <Cell
+              key={entry.name}
+              className={
+                entry.selected
+                  ? 'Layer__profit-and-loss-chart__cell--selected'
+                  : ''
+              }
+            />
+          ))}
+        </Bar>
+        <Bar
+          dataKey="expenses"
+          barSize={barSize}
+          isAnimationActive={false}
+          radius={[barSize / 4, barSize / 4, 0, 0]}
+          className="Layer__profit-and-loss-chart__bar--expenses"
+        >
+          {data.map(entry => (
+            <Cell
+              key={entry.name}
+              className={
+                entry.selected
+                  ? 'Layer__profit-and-loss-chart__cell--selected'
+                  : ''
+              }
+            />
+          ))}
+        </Bar>
+      </BarChart>
+    </ResponsiveContainer>
   )
 }
