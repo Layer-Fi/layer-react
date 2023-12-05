@@ -127,13 +127,6 @@ export const ProfitAndLossChart = () => {
     }
   }
 
-  const incomeBar = useRef(null)
-  const incomeColor = useMemo(
-    () => incomeBar.current?.style?.getPropertyValue('fill'),
-    [!!incomeBar.current],
-  )
-  const expensesBar = useRef(null)
-
   // If net profit doesn't change, we're probably still the same.
   const data = useMemo(
     () => monthData.map(summarizePnL),
@@ -164,8 +157,6 @@ export const ProfitAndLossChart = () => {
         />
         <XAxis dataKey="name" tickLine={false} />
         <Bar
-          ref={incomeBar}
-          fill={incomeColor}
           dataKey="revenue"
           barSize={barSize}
           isAnimationActive={false}

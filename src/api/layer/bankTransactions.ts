@@ -1,13 +1,26 @@
 import { CategoryUpdate, BankTransaction, Metadata } from '../../types'
 import { get, put } from './authenticated_http'
 
-export const getBankTransactions = get<{
+type GetBankTransactionsReturn = {
   data?: BankTransaction[]
   meta?: Metadata
   error?: unknown
-}>(
-  ({ businessId }) =>
-    `https://sandbox.layerfi.com/v1/businesses/${businessId}/bank-transactions`,
+}
+interface GetBankTransactionsParams extends Record<string, string | undefined> {
+  businessId: string
+  sortOrder?: 'ASC' | 'DESC'
+  sortBy?: string
+}
+export const getBankTransactions = get<
+  GetBankTransactionsReturn,
+  GetBankTransactionsParams
+>(
+  ({
+    businessId,
+    sortBy = 'date',
+    sortOrder = 'DESC',
+  }: GetBankTransactionsParams) =>
+    `https://sandbox.layerfi.com/v1/businesses/${businessId}/bank-transactions?sort_by=${sortBy}&sort_order=${sortOrder}`,
 )
 
 export const categorizeBankTransaction = put<

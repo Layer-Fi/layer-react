@@ -1,5 +1,11 @@
 export const get =
-  <Return = Record<string, string>, Params = Record<string, string>>(
+  <
+    Return extends Record<string, unknown> = Record<string, unknown>,
+    Params extends Record<string, string | undefined> = Record<
+      string,
+      string | undefined
+    >,
+  >(
     url: (params: Params) => string,
   ) =>
   (accessToken: string | undefined, options?: { params?: Params }) =>
@@ -14,9 +20,12 @@ export const get =
 
 export const put =
   <
-    Body = Record<string, string>,
-    Return = Record<string, string>,
-    Params = Record<string, string>,
+    Body extends Record<string, unknown> = Record<string, unknown>,
+    Return extends Record<string, unknown> = Record<string, unknown>,
+    Params extends Record<string, string | undefined> = Record<
+      string,
+      string | undefined
+    >,
   >(
     url: (params: Params) => string,
   ) =>

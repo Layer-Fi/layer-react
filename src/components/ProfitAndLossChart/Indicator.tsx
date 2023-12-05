@@ -1,24 +1,18 @@
 import React from 'react'
+import { ContentType } from 'recharts/types/component/Label'
 
-type IndicatorProps = {
-  x: number
-  y: number
-  width: number
-  height: number
-  className: string
-}
-
-export const Indicator = ({
-  x,
-  y,
-  width,
-  height,
-  className,
-}: IndicatorProps) => {
-  const boxWidth = width * 2 + 4 // the bar gap
-  const multiplier = 1.5
-  const xOffset = (boxWidth * multiplier - boxWidth) / 2
-  if (className.match(/selected/)) {
+const emptyViewBox = { x: 0, y: 0, width: 0, height: 0 }
+export const Indicator: ContentType = ({ viewBox = {}, className }) => {
+  const {
+    x = 0,
+    y = 0,
+    width = 0,
+    height = 0,
+  } = 'x' in viewBox ? viewBox : emptyViewBox
+  if (className?.match(/selected/)) {
+    const boxWidth = width * 2 + 4 // the bar gap is 4
+    const multiplier = 1.5
+    const xOffset = (boxWidth * multiplier - boxWidth) / 2
     return (
       <rect
         className="Layer__profit-and-loss-chart__selection-indicator"
