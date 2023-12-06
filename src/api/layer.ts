@@ -1,4 +1,5 @@
 import { authenticate } from './layer/authenticate'
+import { getBalanceSheet } from './layer/balance_sheet'
 import {
   getBankTransactions,
   categorizeBankTransaction,
@@ -8,8 +9,9 @@ import { getProfitAndLoss } from './layer/profit_and_loss'
 
 export const Layer = {
   authenticate,
-  getCategories,
-  getBankTransactions,
-  getProfitAndLoss,
   categorizeBankTransaction,
+  getBalanceSheet,
+  getBankTransactions,
+  getCategories,
+  getProfitAndLoss,
 }

@@ -1,3 +1,5 @@
+import { LineItem } from './line_item'
+
 export interface ProfitAndLoss {
   type: 'Profit_And_Loss'
   business_id: string
@@ -13,11 +15,4 @@ export interface ProfitAndLoss {
   other_outflows?: LineItem | null
   personal_expenses?: LineItem | null
   fully_categorized: boolean
-}
-
-export interface LineItem {
-  name?: String
-  display_name: string
-  value: number
-  line_items?: LineItem[] | null
 }

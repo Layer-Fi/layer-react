@@ -1,7 +1,6 @@
 import React from 'react'
 import { centsToDollars } from '../../models/Money'
-import { Direction } from '../../types'
-import { LineItem } from '../../types/profit_and_loss'
+import { Direction, LineItem } from '../../types'
 
 type Props = {
   variant?: string

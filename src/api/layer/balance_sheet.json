@@ -1,0 +1,138 @@
+{
+  "business_id": "05eb0771-ae7d-4cd1-ae7f-cc8765351afc",
+  "type": "Balance_Sheet",
+  "start_date": "2023-01-01T00:00:00Z",
+  "end_date": "2023-01-31T00:00:00Z",
+  "assets": [
+    {
+      "name": "CURRENT_ASSETS",
+      "display_name": "Current Assets",
+      "value": "100000",
+      "line_items": [
+        {
+          "name": "BANK_ACCOUNTS",
+          "display_name": "Bank Accounts",
+          "value": "100000",
+          "line_items": [
+            {
+              "display_name": "Checking Account 123",
+              "value": "50000",
+              "line_items": []
+            },
+            {
+              "display_name": "Savings Account 456",
+              "value": "50000",
+              "line_items": []
+            }
+          ]
+        },
+        {
+          "name": "ACCOUNTS_RECEIVABLE",
+          "display_name": "Bank Accounts",
+          "value": "100000",
+          "line_items": [
+            {
+              "account_id": "cc7861f7-d8b3-4ab9-b853-6b85838199ef",
+              "display_name": "Accounts Receivable - Customer A",
+              "value": "50000",
+              "line_items": []
+            },
+            {
+              "account_id": "23606d6a-4e78-406b-9283-76bfb750639f",
+              "display_name": "Accounts Receivable - Customer B",
+              "value": "50000",
+              "line_items": []
+            }
+          ]
+        },
+        {
+          "name": "OTHER_ASSETS",
+          "display_name": "Other Assets",
+          "value": "150",
+          "line_items": [
+            {
+              "account_id": "40816f76-1409-4727-b733-c4c126f0a725",
+              "display_name": "Inventory Item A",
+              "value": "50000",
+              "line_items": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "liabilities_and_equity": [
+    {
+      "name": "LIABILITIES",
+      "display_name": "Liabilities",
+      "value": "100000",
+      "line_items": [
+        {
+          "name": "CURRENT_LIABILITIES",
+          "display_name": "Current Liabilities",
+          "value": "100000",
+          "line_items": [
+            {
+              "account_id": "40816f76-1409-4727-b733-c4c126f0a725",
+              "display_name": "ACCOUNTS_PAYABLE",
+              "value": "50000",
+              "line_items": [
+                {
+                  "account_id": "261d0ef4-6d35-4081-8c82-685114fd497d",
+                  "display_name": "Supplier A",
+                  "value": "50000",
+                  "line_items": []
+                }
+              ]
+            },
+            {
+              "account_id": "5123c5eb-28ce-4cce-90bd-389e4befb645",
+              "display_name": "Credit Cards",
+              "value": "50000",
+              "line_items": [
+                {
+                  "account_id": "beb41e99-0539-4d97-8faf-c8464eac60dc",
+                  "display_name": "Visa 5678",
+                  "value": "50000",
+                  "line_items": []
+                }
+              ]
+            },
+            {
+              "account_id": "7261b324-aa1a-4c03-9ac8-0a40980d5886",
+              "display_name": "Other current Liabilities",
+              "value": "2309",
+              "line_items": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "EQUITY",
+      "display_name": "Equity",
+      "value": "100000",
+      "line_items": [
+        {
+          "name": "OPENING_BALANCE_EQUITY",
+          "display_name": "Opening Balance Equity",
+          "value": "50000",
+          "line_items": []
+        },
+        {
+          "name": "RETAINED_EARNINGS",
+          "display_name": "Retained Earnings",
+          "value": "50000",
+          "line_items": []
+        },
+        {
+          "name": "NET_INCOME",
+          "display_name": "Net Income",
+          "value": "50000",
+          "line_items": []
+        }
+      ]
+    }
+  ],
+  "fully_categorized": true
+}
