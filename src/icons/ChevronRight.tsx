@@ -1,16 +1,11 @@
 import * as React from 'react'
 import { SVGProps } from 'react'
 
-type Props = {
-  strokeColor?: string
-  size?: number
+type Props = SVGProps<SVGSVGElement> & {
+  size: SVGProps<SVGSVGElement>['width']
 }
 
-const ChavronRight = ({
-  strokeColor,
-  size,
-  ...props
-}: Props & SVGProps<SVGSVGElement>) => (
+const ChavronRight = ({ strokeColor, size, ...props }: Props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size || 24}

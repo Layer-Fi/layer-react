@@ -1,0 +1,74 @@
+import React, { useState } from 'react'
+import ChevronDown from '../../icons/ChevronDown'
+import ChevronRight from '../../icons/ChevronRight'
+import { centsToDollars } from '../../models/Money'
+import { LineItem } from '../../types'
+
+type Props = {
+  depth?: number
+  maxDepth?: number
+  lineItem?: LineItem | null
+}
+
+export const BalanceSheetRow = ({
+  lineItem,
+  depth = 0,
+  maxDepth = 2,
+}: Props) => {
+  if (!lineItem) {
+    return null
+  }
+  const { value, display_name, line_items } = lineItem
+  const [expanded, setExpanded] = useState(true)
+  const amount = value || 0
+  const isPositive = amount >= 0
+  const amountString = centsToDollars(Math.abs(amount))
+  const labelClasses = [
+    'Layer__balance-sheet-row',
+    'Layer__balance-sheet-row__label',
+  ]
+  const valueClasses = [
+    'Layer__balance-sheet-row',
+    'Layer__balance-sheet-row__value',
+  ]
+  !!value &&
+    valueClasses.push(
+      isPositive
+        ? 'Layer__balance-sheet-row__value--amount-positive'
+        : 'Layer__balance-sheet-row__value--amount-negative',
+    )
+  labelClasses.push(`Layer__balance-sheet-row__label--depth-${depth}`)
+  valueClasses.push(`Layer__balance-sheet-row__value--depth-${depth}`)
+
+  const toggleExpanded = () => setExpanded(!expanded)
+  const canGoDeeper = depth < maxDepth
+  const hasChildren = line_items?.length > 0
+  const displayChildren = hasChildren && canGoDeeper
+  labelClasses.push(
+    `Layer__balance-sheet-row__label--display-children-${displayChildren}`,
+  )
+  valueClasses.push(
+    `Layer__balance-sheet-row__value--display-children-${displayChildren}`,
+  )
+
+  return (
+    <>
+      <div className={labelClasses.join(' ')} onClick={toggleExpanded}>
+        {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+        {display_name}
+      </div>
+      <div className={valueClasses.join(' ')}>{!!value && amountString}</div>
+      {canGoDeeper &&
+        hasChildren &&
+        expanded &&
+        (line_items || []).map(line_item => (
+          <BalanceSheetRow
+            key={line_item.display_name}
+            lineItem={line_item}
+            depth={depth + 1}
+            maxDepth={maxDepth}
+          />
+        ))}
+    </>
+  )
+}

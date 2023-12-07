@@ -1,0 +1,183 @@
+.Layer__balance-sheet {
+  --border-color: #eaecf0;
+  --font-color: #101828;
+  --indicator-bar-color: #3c3c3c;
+  --background-color: white;
+  --active: #e0e9ff;
+  --income-bar-color: #0c48e5;
+  --expenses-bar-color: #6d8ee7;
+
+  width: 60rem;
+  background-color: white;
+  padding: 0.25rem;
+
+  * {
+    color: var(--font-color);
+    stroke: var(--font-color);
+    font-family: Inter;
+    font-weight: 500;
+    font-style: normal;
+  }
+}
+
+.Layer__balance-sheet__table {
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: var(--border-color);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1px 0;
+  font-size: 1rem;
+}
+
+.Layer__balance-sheet__header {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
+.Layer__balance-sheet__title {
+  display: inline;
+  flex: 1;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
+
+.Layer__balance-sheet__download-button {
+  align-self: center;
+}
+
+.Layer__balance-sheet-row {
+  padding: 1em;
+  background-color: var(--background-color);
+  font-size: 1em;
+}
+
+.Layer__balance-sheet-row__label {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  svg {
+    stroke: var(--font-color);
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.25rem;
+  }
+}
+
+.Layer__balance-sheet-row__value {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  svg {
+    stroke: var(--font-color);
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.25rem;
+  }
+}
+
+.Layer__balance-sheet-row__value--amount-positive {
+  &::before {
+    content: '$';
+  }
+}
+
+.Layer__balance-sheet-row__value--amount-negative {
+  &::before {
+    content: '-$';
+  }
+}
+
+.Layer__balance-sheet-row__label--depth-0 {
+  font-weight: 700;
+}
+
+.Layer__balance-sheet-row__value--depth-0 {
+  font-weight: 700;
+}
+
+.Layer__balance-sheet-row__label--depth-1 {
+  padding-right: 2em;
+  padding-left: 2em;
+  font-size: 0.8em;
+}
+
+.Layer__balance-sheet-row__value--depth-1 {
+  font-size: 0.8em;
+}
+
+.Layer__balance-sheet-row__label--depth-2 {
+  padding-right: 2em;
+  padding-left: 4em;
+  font-size: 0.8em;
+}
+
+.Layer__balance-sheet-row__value--depth-2 {
+  font-size: 0.8em;
+}
+
+.Layer__balance-sheet-row__label--display-children-true {
+  font-weight: bold;
+}
+
+.Layer__balance-sheet-row__value--display-children-true {
+  font-weight: bold;
+}
+
+.Layer__balance-sheet-row__label--display-children-false {
+  font-weight: normal;
+  svg {
+    display: none;
+  }
+}
+
+.Layer__balance-sheet-row__label--display-children-false {
+  font-weight: normal;
+  svg {
+    display: none;
+  }
+}
+
+.Layer__balance-sheet-date-picker {
+  width: 20rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0.25rem;
+  margin: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+}
+
+.Layer__balance-sheet-date-picker__button {
+  padding: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: var(--background-color);
+  border: 0;
+  border-radius: 0.5rem;
+
+  &:active {
+    background-color: var(--active);
+  }
+}
+
+.Layer__balance-sheet-date-picker__button-icon path {
+  stroke: var(--font-color);
+}
+
+.Layer__balance-sheet-date-picker__label {
+  flex: 1;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}

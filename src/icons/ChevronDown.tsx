@@ -1,17 +1,19 @@
 import * as React from 'react'
 import { SVGProps } from 'react'
 
-const ChevronDown = (props: SVGProps<SVGSVGElement>) => (
+type Props = SVGProps<SVGSVGElement> & {
+  size: SVGProps<SVGSVGElement>['width']
+}
+const ChevronDown = ({ size = 24, ...props }: Props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
+    width={size}
+    height={size}
     fill="none"
     viewBox="0 0 24 24"
     {...props}
   >
     <path
-      stroke="#000"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
