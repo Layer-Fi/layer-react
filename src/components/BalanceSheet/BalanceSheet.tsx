@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { useBalanceSheet } from '../../hooks/useBalanceSheet'
+import DownloadCloud from '../../icons/DownloadCloud'
 import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker'
 import { BalanceSheetRow } from '../BalanceSheetRow'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 
 export const BalanceSheet = () => {
   const [effectiveDate, setEffectiveDate] = useState(new Date())
-  const { data, isLoading } = useBalanceSheet()
+  const { data, isLoading } = useBalanceSheet(effectiveDate)
   const assets = {
     name: 'Assets',
     display_name: 'Assets',
@@ -19,15 +20,20 @@ export const BalanceSheet = () => {
     line_items: data?.liabilities_and_equity || [],
     value: undefined,
   }
-  const dateString = format(effectiveDate, 'LLL d, yyyy')
+  const dateString = format(effectiveDate, 'LLLL d, yyyy')
   return (
     <div className="Layer__balance-sheet">
       <div className="Layer__balance-sheet__header">
         <h2 className="Layer__balance-sheet__title">
-          Balance Sheet - as of {dateString}
+          Balance Sheet
+          <span className="Layer__balance-sheet__date">{dateString}</span>
         </h2>
-        <BalanceSheetDatePicker onChange={setEffectiveDate} />
+        <BalanceSheetDatePicker
+          value={effectiveDate}
+          onChange={event => setEffectiveDate(parseISO(event.target.value))}
+        />
         <button className="Layer__balance-sheet__download-button">
+          <DownloadCloud />
           Download
         </button>
       </div>
