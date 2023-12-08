@@ -1,22 +1,29 @@
 import { OAuthResponse } from '../../types'
 import { formStringFromObject } from '../util'
 
-// These will be parameters or configurable per-environment in the future
-const appId = '1pskub33qd9qt19406hi4d1j6f'
-const appSecret = '1k7up1ia2m0ino8el6md2l1isq3t7fdj1eq6firmkui8757lk6r6'
-const url = 'https://auth.layerfi.com/oauth2/token'
-const details = {
-  grant_type: 'client_credentials',
-  scope: 'https://sandbox.layerfi.com/sandbox',
-  client_id: 'canaryAppId',
+type AuthenticationArguments = {
+  appId: string
+  appSecret: string
+  authenticationUrl?: string
+  clientId: string
+  scope: string
 }
-
-export const authenticate = (): Promise<OAuthResponse> =>
-  fetch(url, {
+export const authenticate = ({
+  appId,
+  appSecret,
+  authenticationUrl = 'https://auth.layerfi.com/oauth2/token',
+  clientId,
+  scope,
+}: AuthenticationArguments): Promise<OAuthResponse> =>
+  fetch(authenticationUrl, {
     method: 'POST',
     headers: {
       Authorization: 'Basic ' + btoa(appId + ':' + appSecret),
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: formStringFromObject(details),
+    body: formStringFromObject({
+      grant_type: 'client_credentials',
+      scope,
+      client_id: clientId,
+    }),
   }).then(res => res.json() as Promise<OAuthResponse>)

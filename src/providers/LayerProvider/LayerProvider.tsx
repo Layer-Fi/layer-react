@@ -21,13 +21,32 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   }
 }
 
+type LayerEnvironmentConfig = {
+  url: string
+  scope: string
+}
+export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
+  staging: {
+    url: 'https://auth.layerfi.com/oauth2/token',
+    scope: 'https://sandbox.layerfi.com/sandbox',
+  },
+}
+
 type Props = {
   businessId: string
+  appId: string
+  appSecret: string
+  clientId: string
+  environment: keyof typeof LayerEnvironment
 }
 
 export const LayerProvider = ({
+  appId,
+  appSecret,
   businessId,
   children,
+  clientId,
+  environment,
 }: PropsWithChildren<Props>) => {
   const defaultSWRConfig = {
     revalidateInterval: 0,
@@ -36,6 +55,7 @@ export const LayerProvider = ({
     revalidateIfStale: false,
   }
 
+  const { url, scope } = LayerEnvironment[environment]
   const [state, dispatch] = useReducer(reducer, {
     auth: { access_token: '', token_type: '', expires_in: 0 },
     businessId,
@@ -44,7 +64,13 @@ export const LayerProvider = ({
 
   const { data: auth } = useSWR(
     'authenticate',
-    Layer.authenticate,
+    Layer.authenticate({
+      appId,
+      appSecret,
+      authenticationUrl: url,
+      scope,
+      clientId,
+    }),
     defaultSWRConfig,
   )
   useEffect(() => {

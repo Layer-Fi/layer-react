@@ -13,7 +13,7 @@ describe(ProfitAndLossRow, () => {
     render(<ProfitAndLossRow lineItem={lineItem} />)
 
     const label = await screen.findByText('Bob')
-    const value = await screen.findByText('1001.23')
+    const value = await screen.findByText('1,001.23')
     expect(label).toHaveClass('Layer__profit-and-loss-row__label')
     expect(value).toHaveClass('Layer__profit-and-loss-row__value')
   })
@@ -29,7 +29,7 @@ describe(ProfitAndLossRow, () => {
     )
 
     const label = await screen.findByText('Bob')
-    const value = await screen.findByText('1001.23')
+    const value = await screen.findByText('1,001.23')
     expect(label).not.toHaveClass(
       'Layer__profit-and-loss-row__label--amount-positive',
     )
@@ -48,7 +48,7 @@ describe(ProfitAndLossRow, () => {
     render(<ProfitAndLossRow lineItem={lineItem} direction={Direction.DEBIT} />)
 
     const label = await screen.findByText('Bob')
-    const value = await screen.findByText('1001.23')
+    const value = await screen.findByText('1,001.23')
     expect(label).not.toHaveClass(
       'Layer__profit-and-loss-row__label--amount-negative',
     )
