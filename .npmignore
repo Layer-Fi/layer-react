@@ -2,6 +2,8 @@
 .storybook
 .gitignore
 .prettierrc
-rollup.config.js
 tsconfig.json
 node_modules
+src
+test
+bin

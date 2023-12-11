@@ -26,6 +26,10 @@ type LayerEnvironmentConfig = {
   scope: string
 }
 export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
+  production: {
+    url: 'not defined yet',
+    scope: 'not defined yet',
+  },
   staging: {
     url: 'https://auth.layerfi.com/oauth2/token',
     scope: 'https://sandbox.layerfi.com/sandbox',
@@ -37,7 +41,7 @@ type Props = {
   appId: string
   appSecret: string
   clientId: string
-  environment: keyof typeof LayerEnvironment
+  environment?: keyof typeof LayerEnvironment
 }
 
 export const LayerProvider = ({
@@ -46,7 +50,7 @@ export const LayerProvider = ({
   businessId,
   children,
   clientId,
-  environment,
+  environment = 'production',
 }: PropsWithChildren<Props>) => {
   const defaultSWRConfig = {
     revalidateInterval: 0,
