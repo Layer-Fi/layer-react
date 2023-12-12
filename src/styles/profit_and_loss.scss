@@ -173,6 +173,7 @@
 .Layer__profit-and-loss-chart__selection-indicator {
   height: 0.25rem;
   fill: var(--indicator-bar-color);
+  transition: x 0.5s;
 }
 
 .Layer__profit-and-loss-summaries {

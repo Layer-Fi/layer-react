@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useRef } from 'react'
+import React, { useContext, useMemo, useRef, useState } from 'react'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 import { ProfitAndLoss } from '../../types'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
@@ -137,6 +137,8 @@ export const ProfitAndLossChart = () => {
     ],
   )
 
+  const [animateFrom, setAnimateFrom] = useState(-1)
+
   return (
     <ResponsiveContainer width="100%" height={250}>
       <BarChart
@@ -163,7 +165,14 @@ export const ProfitAndLossChart = () => {
           radius={[barSize / 4, barSize / 4, 0, 0]}
           className="Layer__profit-and-loss-chart__bar--income"
         >
-          <LabelList content={Indicator} />
+          <LabelList
+            content={
+              <Indicator
+                animateFrom={animateFrom}
+                setAnimateFrom={setAnimateFrom}
+              />
+            }
+          />
           {data.map(entry => (
             <Cell
               key={entry.name}
