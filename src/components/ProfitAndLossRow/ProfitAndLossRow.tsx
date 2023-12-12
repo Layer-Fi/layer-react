@@ -22,7 +22,7 @@ export const ProfitAndLossRow = ({
   }
   const { value, display_name, line_items, name } = lineItem
   const variantName = variant || name
-  const amount = value || 0
+  const amount = value ?? NaN
   const amountString = centsToDollars(Math.abs(amount))
   const labelClasses = [
     'Layer__profit-and-loss-row',

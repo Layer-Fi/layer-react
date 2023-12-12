@@ -5,7 +5,7 @@ const formatter = new Intl.NumberFormat('en-US', {
 })
 
 export const centsToDollars = (cents: number): string =>
-  formatter.format(cents / 100)
+  isNaN(cents) ? '-.--' : formatter.format(cents / 100)
 
 export const dollarsToCents = (dollars: string): number =>
   Math.round(parseFloat(dollars) * 100)

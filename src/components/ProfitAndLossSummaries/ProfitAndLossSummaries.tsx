@@ -1,15 +1,12 @@
 import React, { useContext } from 'react'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
-import { format as formatDate, parseISO } from 'date-fns'
 
 export const ProfitAndLossSummaries = () => {
-  const { data } = useContext(PNL.Context)
-  if (!data) {
-    return null
-  }
-
-  const monthName = formatDate(parseISO(data?.start_date), 'LLLL')
+  const { data: storedData } = useContext(PNL.Context)
+  const data = !!storedData
+    ? storedData
+    : { income: { value: NaN }, net_profit: { value: NaN } }
 
   return (
     <div className="Layer__profit-and-loss-summaries">

@@ -25,6 +25,11 @@ describe(Money.centsToDollars, () => {
     const output = Money.centsToDollars(1234567890)
     expect(output).toEqual('12,345,678.90')
   })
+
+  it('turns NaN into something useful', () => {
+    const output = Money.centsToDollars(NaN)
+    expect(output).toEqual('-.--')
+  })
 })
 
 describe(Money.dollarsToCents, () => {
