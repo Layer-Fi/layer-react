@@ -6,6 +6,7 @@
   --active: #e0e9ff;
   --income-bar-color: #0c48e5;
   --expenses-bar-color: #6d8ee7;
+  --transition-speed: 0.25s;
 
   width: 60rem;
   background-color: white;
@@ -113,6 +114,30 @@
   padding: 1em;
   background-color: var(--background-color);
   font-size: 1em;
+
+  * {
+    min-height: 0;
+  }
+}
+
+.Layer__balance-sheet-row__children {
+  display: grid;
+  grid-column: span 2;
+  grid-template-columns: subgrid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows var(--transition-speed);
+}
+
+.Layer__balance-sheet-row__children--expanded {
+  grid-template-rows: 1fr;
+}
+
+.Layer__balance-sheet-row__children--content {
+  min-height: 0;
+  display: grid;
+  grid-column: span 2;
+  grid-template-columns: subgrid;
 }
 
 .Layer__balance-sheet-row__label {
@@ -124,6 +149,14 @@
     width: 1.25rem;
     height: 1.25rem;
     margin-right: 0.25rem;
+    transition: transform var(--transition-speed);
+    transform: rotate(-90deg);
+  }
+}
+
+.Layer__balance-sheet-row__label--expanded {
+  svg {
+    transform: rotate(0deg);
   }
 }
 

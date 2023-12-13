@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import ChevronDown from '../../icons/ChevronDown'
-import ChevronRight from '../../icons/ChevronRight'
 import { centsToDollars } from '../../models/Money'
 import { LineItem } from '../../types'
 
@@ -51,24 +50,39 @@ export const BalanceSheetRow = ({
     `Layer__balance-sheet-row__value--display-children-${displayChildren}`,
   )
 
+  displayChildren &&
+    expanded &&
+    labelClasses.push(`Layer__balance-sheet-row__label--expanded`)
+
+  displayChildren &&
+    expanded &&
+    valueClasses.push(`Layer__balance-sheet-row__value--expanded`)
+
   return (
     <>
       <div className={labelClasses.join(' ')} onClick={toggleExpanded}>
-        {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+        <ChevronDown size={16} />
         {display_name}
       </div>
       <div className={valueClasses.join(' ')}>{!!value && amountString}</div>
-      {canGoDeeper &&
-        hasChildren &&
-        expanded &&
-        (line_items || []).map(line_item => (
-          <BalanceSheetRow
-            key={line_item.display_name}
-            lineItem={line_item}
-            depth={depth + 1}
-            maxDepth={maxDepth}
-          />
-        ))}
+      {canGoDeeper && hasChildren && (
+        <div
+          className={`Layer__balance-sheet-row__children ${
+            expanded && 'Layer__balance-sheet-row__children--expanded'
+          }`}
+        >
+          <div className="Layer__balance-sheet-row__children--content">
+            {(line_items || []).map(line_item => (
+              <BalanceSheetRow
+                key={line_item.display_name}
+                lineItem={line_item}
+                depth={depth + 1}
+                maxDepth={maxDepth}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </>
   )
 }
