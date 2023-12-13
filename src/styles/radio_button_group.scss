@@ -1,0 +1,56 @@
+.Layer__radio-button-group {
+
+  --buttons-border-color: #d0d5dd;
+
+  display: flex;
+  font-size: 1rem;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+  padding-top: 0.5rem;
+}
+
+/* BEM does not work for this, since it's tuned for this markup */
+.Layer__radio-button-group__radio-button {
+  display: flex;
+  flex-direction: row;
+}
+
+.Layer__radio-button-group__radio-button input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+}
+
+.Layer__radio-button-group__radio-button div {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--buttons-border-color);
+  border-right: 0;
+  border-radius: 0;
+  font-weight: 600;
+}
+
+.Layer__radio-button-group__radio-button--size-small div {
+  padding: 0.25rem 1rem;
+  font-size: 0.875rem;
+}
+
+.Layer__radio-button-group__radio-button--size-large div {
+  padding: 0.6rem 1rem;
+}
+
+.Layer__radio-button-group__radio-button:first-of-type div {
+  border-start-start-radius: 0.6rem;
+  border-end-start-radius: 0.6rem;
+}
+
+.Layer__radio-button-group__radio-button:last-of-type div {
+  border-right: 1px solid var(--buttons-border-color);
+  border-start-end-radius: 0.6rem;
+  border-end-end-radius: 0.6rem;
+}
+
+.Layer__radio-button-group__radio-button input:checked + div {
+  background: var(--transaction-buttons-selected-background-color);
+}
+

@@ -1,0 +1,217 @@
+.Layer__bank-transactions {
+  --buttons-border-color: #d0d5dd;
+  --buttons-selected-background-color: #e0e9ff;
+  --table-expanded-background-color: #f9f9f9;
+  --table-background-color: white;
+  --table-border-color: #eaecf0;
+  --table-text-color: #101828;
+  --positive-amount-text-color: #039855;
+  --variable-amount-text-color: #475467;
+  --error-color: red;
+
+  margin: 3rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--table-border-color);
+  background-color: var(--table-background-color);
+  overflow: hidden;
+  width: 100rem;
+}
+
+.Layer__bank-transactions * {
+  font-family: Inter;
+  color: var(--table-text-color);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.Layer__bank-transactions__header {
+  display: flex;
+  padding: 1rem;
+}
+
+.Layer__bank-transactions__title {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-start;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2rem;
+  margin: 0;
+}
+
+.Layer__bank-transactions__table {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) repeat(3, auto);
+  gap: 1px 0px;
+  background-color: var(--table-border-color);
+  border-top: 1px solid var(--table-border-color);
+  border-radius: 0.6rem;
+}
+
+.Layer__bank-transactions__table-cell--header {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  font-size: 16px;
+  line-height: 20px;
+  overflow: clip;
+  padding: 1rem;
+  font-weight: bold;
+  text-align: left;
+}
+
+.Layer__bank-transactions__table-cell--header-amount {
+  justify-content: flex-end;
+}
+
+.Layer__bank-transaction-row__table-cell {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  font-size: 16px;
+  line-height: 20px;
+  overflow: clip;
+  padding: 1rem;
+}
+
+.Layer__bank-transaction-row__table-cell--expanded {
+  background-color: var(--table-expanded-background-color);
+}
+
+.Layer__bank-transaction-row__table-cell--actions {
+  justify-content: flex-end;
+}
+
+.Layer__bank-transaction-row__table-cell--date {
+  color: var(--variable-amount-text-color);
+}
+
+.Layer__bank-transaction-row__table-cell--amount-credit {
+  justify-content: flex-end;
+  color: var(--positive-amount-text-color);
+
+  &::before {
+    content: '+$';
+  }
+}
+
+.Layer__bank-transaction-row__table-cell--amount-debit {
+  justify-content: flex-end;
+  color: var(--variable-amount-text-color);
+
+  &::before {
+    content: ' $';
+  }
+}
+
+.Layer__bank-transaction-row__save-button {
+  cursor: pointer;
+}
+
+.Layer__bank-transaction-row__expand-button {
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.Layer__expanded-bank-transaction-row {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--table-expanded-background-color);
+}
+
+.Layer__expanded-bank-transaction-row__purpose-button {
+  padding: 0 1.5rem;
+  align-self: flex-start;
+}
+
+.Layer__expanded-bank-transaction-row__content {
+  padding: 0.75rem 1.5rem;
+  display: grid;
+  grid-template-columns: auto auto auto auto 1fr auto;
+  gap: 0;
+}
+
+.Layer__expanded-bank-transaction-row__table-cell {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+
+  &:not(:last-child) {
+    margin-right: 0.75rem;
+  }
+
+  &:nth-child(6n + 1) {
+    padding-left: 0;
+    margin-left: 0;
+  }
+
+  &:nth-child(6n + 6) {
+    padding-right: 0;
+    margin-right: 0;
+    padding-bottom: 0;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+}
+
+.Layer__expanded-bank-transaction-row__table-cell--description textarea {
+  resize: none;
+  border: 1px solid var(--buttons-border-color);
+  border-radius: 0.5rem;
+}
+
+.Layer__expanded-bank-transaction-row__table-cell--header {
+  font-weight: bold;
+  text-align: left;
+}
+
+.Layer__expanded-bank-transaction-row__button--split {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 0.5rem;
+}
+
+.Layer__expanded-bank-transaction-row__button--merge {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 0.5rem;
+}
+
+.Layer__expanded-bank-transaction-row__button--save {
+  border: 1px solid var(--buttons-border-color);
+  border-radius: 0.5rem;
+  padding: 0.625rem 1rem;
+  background-color: var(--buttons-selected-background-color);
+  font-weight: 600;
+}
+
+.Layer__expanded-bank-transaction-row__svg {
+  margin-right: 0.75rem;
+}
+
+.Layer__expanded-bank-transaction-row__table-cell--split-entry {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 0.5rem;
+
+  & input {
+    justify-content: stretch;
+    margin-left: 0.5rem;
+    border: 1px solid var(--buttons-border-color);
+    border-radius: 0.5rem;
+    padding: 0.25rem;
+    width: 5rem;
+  }
+}
+
+.Layer__expanded-bank-transaction-row__split-amount--negative {
+  font-weight: bold;
+  color: var(--error-color);
+  border: 2.5px dotted var(--error-color);
+}
