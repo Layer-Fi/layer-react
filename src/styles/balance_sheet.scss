@@ -233,3 +233,17 @@
     display: none;
   }
 }
+
+.Layer__balance-sheet-row__label--variant-summation {
+  font-weight: bold;
+}
+.Layer__balance-sheet-row__value--variant-summation {
+  font-weight: bold;
+}
+
+.Layer__balance-sheet-row__label--expanded {
+}
+.Layer__balance-sheet-row__value--expanded {
+  color: transparent;
+  user-select: none;
+}

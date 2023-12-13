@@ -7,12 +7,16 @@ type Props = {
   depth?: number
   maxDepth?: number
   lineItem?: LineItem | null
+  variant?: string
+  summarize?: boolean
 }
 
 export const BalanceSheetRow = ({
   lineItem,
   depth = 0,
   maxDepth = 2,
+  variant,
+  summarize = true,
 }: Props) => {
   if (!lineItem) {
     return null
@@ -38,6 +42,11 @@ export const BalanceSheetRow = ({
     )
   labelClasses.push(`Layer__balance-sheet-row__label--depth-${depth}`)
   valueClasses.push(`Layer__balance-sheet-row__value--depth-${depth}`)
+
+  variant &&
+    labelClasses.push(`Layer__balance-sheet-row__label--variant-${variant}`)
+  variant &&
+    valueClasses.push(`Layer__balance-sheet-row__value--variant-${variant}`)
 
   const toggleExpanded = () => setExpanded(!expanded)
   const canGoDeeper = depth < maxDepth
@@ -80,6 +89,15 @@ export const BalanceSheetRow = ({
                 maxDepth={maxDepth}
               />
             ))}
+            {summarize && (
+              <BalanceSheetRow
+                key={display_name}
+                lineItem={{ value, display_name: `Total of ${display_name}` }}
+                variant="summation"
+                depth={depth + 1}
+                maxDepth={maxDepth}
+              />
+            )}
           </div>
         </div>
       )}

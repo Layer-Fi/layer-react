@@ -41,8 +41,12 @@ export const BalanceSheet = () => {
         <div>Loading</div>
       ) : (
         <div className="Layer__balance-sheet__table">
-          <BalanceSheetRow key={assets.name} lineItem={assets} />
-          <BalanceSheetRow key={lne.name} lineItem={lne} />
+          <BalanceSheetRow
+            key={assets.name}
+            lineItem={assets}
+            summarize={false}
+          />
+          <BalanceSheetRow key={lne.name} lineItem={lne} summarize={false} />
         </div>
       )}
     </div>
