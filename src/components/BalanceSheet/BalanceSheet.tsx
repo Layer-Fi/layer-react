@@ -22,7 +22,7 @@ export const BalanceSheet = () => {
   }
   const dateString = format(effectiveDate, 'LLLL d, yyyy')
   return (
-    <div className="Layer__balance-sheet">
+    <div className="Layer__component Layer__balance-sheet">
       <div className="Layer__balance-sheet__header">
         <h2 className="Layer__balance-sheet__title">
           Balance Sheet

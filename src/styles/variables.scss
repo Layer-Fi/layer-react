@@ -1,0 +1,16 @@
+.Layer__component {
+  --font-color: #101828;
+  --buttons-border-color: #d0d5dd;
+  --buttons-selected-background-color: #e0e9ff;
+  --table-expanded-background-color: #f9f9f9;
+  --table-background-color: white;
+  --table-border-color: #eaecf0;
+  --table-text-color: #101828;
+  --positive-amount-text-color: #039855;
+  --variable-amount-text-color: #475467;
+  --error-color: red;
+  --transition-speed: 0.33s;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}

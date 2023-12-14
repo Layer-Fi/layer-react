@@ -1,0 +1,17 @@
+
+.Layer__chevron {
+  stroke: var(--font-color);
+  transition: transform 0.33s;
+}
+
+.Layer__chevron__down {
+  transform: rotate(0deg);
+}
+
+.Layer__chevron__up {
+  transform: rotate(180deg);
+}
+
+.Layer__chevron__up--counterclockwise {
+  transform: rotate(-180deg);
+}

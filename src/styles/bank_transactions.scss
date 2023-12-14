@@ -8,6 +8,7 @@
   --positive-amount-text-color: #039855;
   --variable-amount-text-color: #475467;
   --error-color: red;
+  --transition-speed: 0.33s;
 
   margin: 3rem;
   border-radius: 0.6rem;
@@ -43,7 +44,7 @@
 
 .Layer__bank-transactions__table {
   display: grid;
-  grid-template-columns: repeat(3, 1fr) repeat(3, auto);
+  grid-template-columns: 1fr 1fr 1fr auto auto auto;
   gap: 1px 0px;
   background-color: var(--table-border-color);
   border-top: 1px solid var(--table-border-color);
@@ -53,7 +54,7 @@
 .Layer__bank-transactions__table-cell--header {
   display: flex;
   align-items: center;
-  background-color: white;
+  background-color: var(--table-background-color);
   font-size: 16px;
   line-height: 20px;
   overflow: clip;
@@ -66,10 +67,31 @@
   justify-content: flex-end;
 }
 
+.Layer__bank-transaction-row__container {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+  transition: grid-template-rows var(--transition-speed);
+}
+
+.Layer__bank-transaction-row__container--removing {
+  grid-template-rows: 0fr;
+}
+
+.Layer__bank-transaction-row__content {
+  min-height: 0;
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+}
+
 .Layer__bank-transaction-row__table-cell {
   display: flex;
   align-items: center;
-  background-color: white;
+  background-color: var(--table-background-color);
+  transition: background-color var(--transition-speed);
   font-size: 16px;
   line-height: 20px;
   overflow: clip;
@@ -106,6 +128,10 @@
   }
 }
 
+.Layer__bank-transaction-row__table-cell--hide-contents * {
+  visibility: hidden;
+}
+
 .Layer__bank-transaction-row__save-button {
   cursor: pointer;
 }
@@ -117,6 +143,18 @@
 
 .Layer__expanded-bank-transaction-row {
   grid-column: 1 / -1;
+  display: grid;
+  grid-template-rows: 0fr;
+  background-color: var(--table-expanded-background-color);
+  transition: grid-template-rows var(--transition-speed);
+}
+
+.Layer__expanded-bank-transaction-row--expanded {
+  grid-template-rows: 1fr;
+}
+
+.Layer__expanded-bank-transaction-row__wrapper {
+  min-height: 0;
   display: flex;
   flex-direction: column;
   background-color: var(--table-expanded-background-color);

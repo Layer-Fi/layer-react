@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import CheckedCircle from '../../icons/CheckedCircle'
 import ChevronDown from '../../icons/ChevronDown'
-import ChevronUp from '../../icons/ChevronUp'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationType, Direction } from '../../types'
 import { CategoryMenu } from '../CategoryMenu'
@@ -49,25 +48,27 @@ export const BankTransactionRow = ({
     })
 
   return (
-    <>
-      <div className={`${className} ${openClassName} ${className}--date`}>
-        {formatTime(parseISO(bankTransaction.date), dateFormat)}
-      </div>
-      <div className={`${className} ${openClassName}`}>
-        {bankTransaction.counterparty_name}
-      </div>
-      <div className={`${className} ${openClassName}`}>Business Checking</div>
-      <div
-        className={`${className} ${openClassName} ${className}--amount-${
-          isCredit(bankTransaction) ? 'credit' : 'debit'
-        }`}
-      >
-        {formatMoney(bankTransaction.amount)}
-      </div>
-      {isOpen ? (
-        <div className={`${className} ${openClassName}`}></div>
-      ) : (
+    <div className="Layer__bank-transaction-row__container">
+      <div className="Layer__bank-transaction-row__content">
+        <div className={`${className} ${openClassName} ${className}--date`}>
+          {formatTime(parseISO(bankTransaction.date), dateFormat)}
+        </div>
         <div className={`${className} ${openClassName}`}>
+          {bankTransaction.counterparty_name}
+        </div>
+        <div className={`${className} ${openClassName}`}>Business Checking</div>
+        <div
+          className={`${className} ${openClassName} ${className}--amount-${
+            isCredit(bankTransaction) ? 'credit' : 'debit'
+          }`}
+        >
+          {formatMoney(bankTransaction.amount)}
+        </div>
+        <div
+          className={`${className} ${openClassName} ${
+            isOpen && 'Layer__bank-transaction-row__table-cell--hide-contents'
+          }`}
+        >
           {editable ? (
             <CategoryMenu
               bankTransaction={bankTransaction}
@@ -79,33 +80,36 @@ export const BankTransactionRow = ({
             <Pill>{bankTransaction?.category?.display_name}</Pill>
           )}
         </div>
-      )}
-      <div className={`${className} ${openClassName} ${className}--actions`}>
-        <div
-          className="Layer__bank-transaction-row__save-button"
-          onClick={() => save()}
-        >
-          {editable && !isOpen && (
-            <CheckedCircle
-              size={28}
-              strokeColor="#0C48E5"
-              fillColor="#e0e9ff"
+        <div className={`${className} ${openClassName} ${className}--actions`}>
+          <div
+            className="Layer__bank-transaction-row__save-button"
+            onClick={() => save()}
+          >
+            {editable && !isOpen && (
+              <CheckedCircle
+                size={28}
+                strokeColor="#0C48E5"
+                fillColor="#e0e9ff"
+              />
+            )}
+          </div>
+          <div
+            onClick={() => toggleOpen(bankTransaction.id)}
+            className="Layer__bank-transaction-row__expand-button"
+          >
+            <ChevronDown
+              className={`Layer__chevron ${
+                isOpen ? 'Layer__chevron__up' : 'Layer__chevron__down'
+              }`}
             />
-          )}
+          </div>
         </div>
-        <div
-          onClick={() => toggleOpen(bankTransaction.id)}
-          className="Layer__bank-transaction-row__expand-button"
-        >
-          {isOpen ? <ChevronUp /> : <ChevronDown />}
-        </div>
-      </div>
-      {isOpen && (
         <ExpandedBankTransactionRow
           bankTransaction={bankTransaction}
           close={() => toggleOpen(bankTransaction.id)}
+          isOpen={isOpen}
         />
-      )}
-    </>
+      </div>
+    </div>
   )
 }

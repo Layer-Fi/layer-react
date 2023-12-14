@@ -51,7 +51,7 @@ export const BankTransactions = () => {
   const toggleOpen = (id: string) =>
     setOpenRows({ ...openRows, [id]: !openRows[id] })
   return (
-    <div className="Layer__bank-transactions" data-display={display}>
+    <div className="Layer__component Layer__bank-transactions">
       <header className="Layer__bank-transactions__header">
         <h2 className="Layer__bank-transactions__title">Transactions</h2>
         <RadioButtonGroup

@@ -22,7 +22,7 @@ const ProfitAndLoss = ({ children }: PropsWithChildren) => {
   const contextData = useProfitAndLoss()
   return (
     <PNLContext.Provider value={contextData}>
-      <div className="Layer__profit-and-loss">
+      <div className="Layer__component Layer__profit-and-loss">
         <h2 className="Layer__profit-and-loss__title">Profit & Loss</h2>
         {children}
       </div>

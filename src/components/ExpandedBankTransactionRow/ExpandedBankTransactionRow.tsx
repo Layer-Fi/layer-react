@@ -19,6 +19,7 @@ import { RadioButtonGroup } from '../RadioButtonGroup'
 type Props = {
   bankTransaction: BankTransaction
   close?: () => void
+  isOpen?: boolean
 }
 
 type Split = {
@@ -41,6 +42,7 @@ enum Purpose {
 export const ExpandedBankTransactionRow = ({
   bankTransaction,
   close,
+  isOpen = false,
 }: Props) => {
   const { categorize: categorizeBankTransaction } = useBankTransactions()
   const [purpose, setPurpose] = useState<Purpose>(Purpose.categorize)
@@ -138,105 +140,111 @@ export const ExpandedBankTransactionRow = ({
 
   const className = 'Layer__expanded-bank-transaction-row'
   return (
-    <div className={className}>
-      <div className={`${className}__purpose-button`}>
-        <RadioButtonGroup
-          name={`purpose-${bankTransaction.id}`}
-          size="small"
-          buttons={[
-            { value: 'categorize', label: 'Categorize' },
-            { value: 'match', label: 'Match', disabled: true },
-          ]}
-          selected={purpose}
-          onChange={onChangePurpose}
-        />
-      </div>
-      <div
-        className={`${className}__content`}
-        id={`expanded-${bankTransaction.id}`}
-      >
-        <div
-          className={`${className}__table-cell ${className}__table-cell--header`}
-        ></div>
-        <div
-          className={`${className}__table-cell ${className}__table-cell--header`}
-        >
-          Category
+    <div
+      className={`${className} ${className}--${
+        isOpen ? 'expanded' : 'collapsed'
+      }`}
+    >
+      <div className={`${className}__wrapper`}>
+        <div className={`${className}__purpose-button`}>
+          <RadioButtonGroup
+            name={`purpose-${bankTransaction.id}`}
+            size="small"
+            buttons={[
+              { value: 'categorize', label: 'Categorize' },
+              { value: 'match', label: 'Match', disabled: true },
+            ]}
+            selected={purpose}
+            onChange={onChangePurpose}
+          />
         </div>
         <div
-          className={`${className}__table-cell ${className}__table-cell--header`}
+          className={`${className}__content`}
+          id={`expanded-${bankTransaction.id}`}
         >
-          Description
-        </div>
-        <div
-          className={`${className}__table-cell ${className}__table-cell--header`}
-        >
-          Receipt
-        </div>
-        <div
-          className={`${className}__table-cell ${className}__table-cell--header`}
-        ></div>
-        <div
-          className={`${className}__table-cell ${className}__table-cell--header`}
-        ></div>
+          <div
+            className={`${className}__table-cell ${className}__table-cell--header`}
+          ></div>
+          <div
+            className={`${className}__table-cell ${className}__table-cell--header`}
+          >
+            Category
+          </div>
+          <div
+            className={`${className}__table-cell ${className}__table-cell--header`}
+          >
+            Description
+          </div>
+          <div
+            className={`${className}__table-cell ${className}__table-cell--header`}
+          >
+            Receipt
+          </div>
+          <div
+            className={`${className}__table-cell ${className}__table-cell--header`}
+          ></div>
+          <div
+            className={`${className}__table-cell ${className}__table-cell--header`}
+          ></div>
 
-        <div className={`${className}__table-cell`}>
-          {rowState.splits.length === 1 ? (
-            <div className={`${className}__button--split`} onClick={addSplit}>
-              <Unlink className={`${className}__svg`} size={18} />
-              Split
-            </div>
-          ) : (
-            <div
-              className={`${className}__button--merge`}
-              onClick={removeSplit}
-            >
-              <Link className={`${className}__svg`} size={18} />
-              Merge
-            </div>
-          )}
-        </div>
-        <div className={`${className}__table-cell`}>
-          {rowState.splits.map((split, index) => (
-            <div
-              className={`${className}__table-cell--split-entry`}
-              key={`split-${index}`}
-            >
-              <CategoryMenu
-                bankTransaction={bankTransaction}
-                name={`category-${index}`}
-                value={split.category}
-                onChange={value => changeCategory(index, value)}
-              />
-              {rowState.splits.length > 1 && (
-                <input
-                  type="text"
-                  name={`split-${index}`}
-                  disabled={index + 1 === rowState.splits.length}
-                  onChange={updateAmounts(index)}
-                  value={split.inputValue}
-                  onBlur={onBlur}
-                  className={`${className}__split-amount${
-                    split.amount < 0 ? '--negative' : ''
-                  }`}
+          <div className={`${className}__table-cell`}>
+            {rowState.splits.length === 1 ? (
+              <div className={`${className}__button--split`} onClick={addSplit}>
+                <Unlink className={`${className}__svg`} size={18} />
+                Split
+              </div>
+            ) : (
+              <div
+                className={`${className}__button--merge`}
+                onClick={removeSplit}
+              >
+                <Link className={`${className}__svg`} size={18} />
+                Merge
+              </div>
+            )}
+          </div>
+          <div className={`${className}__table-cell`}>
+            {rowState.splits.map((split, index) => (
+              <div
+                className={`${className}__table-cell--split-entry`}
+                key={`split-${index}`}
+              >
+                <CategoryMenu
+                  bankTransaction={bankTransaction}
+                  name={`category-${index}`}
+                  value={split.category}
+                  onChange={value => changeCategory(index, value)}
                 />
-              )}
-            </div>
-          ))}
-        </div>
-        <div
-          className={`${className}__table-cell ${className}__table-cell--description`}
-        >
-          <textarea></textarea>
-        </div>
-        <div className={`${className}__table-cell`}>
-          <input type="file" />
-        </div>
-        <div className={`${className}__table-cell`}></div>
-        <div className={`${className}__table-cell`}>
-          <button onClick={save} className={`${className}__button--save`}>
-            Save
-          </button>
+                {rowState.splits.length > 1 && (
+                  <input
+                    type="text"
+                    name={`split-${index}`}
+                    disabled={index + 1 === rowState.splits.length}
+                    onChange={updateAmounts(index)}
+                    value={split.inputValue}
+                    onBlur={onBlur}
+                    className={`${className}__split-amount${
+                      split.amount < 0 ? '--negative' : ''
+                    }`}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+          <div
+            className={`${className}__table-cell ${className}__table-cell--description`}
+          >
+            <textarea></textarea>
+          </div>
+          <div className={`${className}__table-cell`}>
+            <input type="file" />
+          </div>
+          <div className={`${className}__table-cell`}></div>
+          <div className={`${className}__table-cell`}>
+            <button onClick={save} className={`${className}__button--save`}>
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </div>
