@@ -68,16 +68,21 @@
 }
 
 .Layer__bank-transaction-row__container {
+  background-color: var(--table-background-color);
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: subgrid;
   grid-template-rows: 1fr;
   overflow: hidden;
-  transition: grid-template-rows var(--transition-speed);
+  top: 0px; // This only exists so we can tell which transition ended.
+  transition:
+    grid-template-rows var(--transition-speed),
+    top var(--transition-speed);
 }
 
 .Layer__bank-transaction-row__container--removing {
   grid-template-rows: 0fr;
+  top: 1px;
 }
 
 .Layer__bank-transaction-row__content {
@@ -90,7 +95,6 @@
 .Layer__bank-transaction-row__table-cell {
   display: flex;
   align-items: center;
-  background-color: var(--table-background-color);
   transition: background-color var(--transition-speed);
   font-size: 16px;
   line-height: 20px;
@@ -144,13 +148,17 @@
 .Layer__expanded-bank-transaction-row {
   grid-column: 1 / -1;
   display: grid;
+  bottom: 0px; // This only exists so we can tell which transition ended.
   grid-template-rows: 0fr;
   background-color: var(--table-expanded-background-color);
-  transition: grid-template-rows var(--transition-speed);
+  transition:
+    grid-template-rows var(--transition-speed),
+    bottom var(--transition-speed);
 }
 
 .Layer__expanded-bank-transaction-row--expanded {
   grid-template-rows: 1fr;
+  bottom: 1px;
 }
 
 .Layer__expanded-bank-transaction-row__wrapper {

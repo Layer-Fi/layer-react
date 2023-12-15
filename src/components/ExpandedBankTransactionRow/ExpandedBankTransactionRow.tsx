@@ -136,7 +136,7 @@ export const ExpandedBankTransactionRow = ({
               amount: split.amount,
             })),
           } as SplitCategoryUpdate),
-    ).then(close)
+    ).catch(e => console.error(e))
 
   const className = 'Layer__expanded-bank-transaction-row'
   return (

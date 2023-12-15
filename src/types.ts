@@ -54,6 +54,7 @@ export interface SuggestedCategorization {
 export interface BankTransaction extends Record<string, unknown> {
   type: 'Bank_Transaction'
   business_id: string
+  recently_categorized?: boolean
   id: string
   date: string
   source: string

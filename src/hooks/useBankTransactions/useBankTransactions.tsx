@@ -36,15 +36,23 @@ export const useBankTransactions = (): UseBankTransactionsReturn => {
     Layer.categorizeBankTransaction(auth.access_token, {
       params: { businessId, bankTransactionId: id },
       body: newCategory,
-    }).then(({ data: transaction, error }) => {
-      if (transaction) {
-        mutate()
+    }).then(({ data: newBT, errors }) => {
+      if (newBT) {
+        newBT.recently_categorized = true
+        updateOneLocal(newBT)
       }
-      if (error) {
-        console.error(error)
-        throw error
+      if (errors) {
+        console.error(errors)
+        throw errors
       }
     })
 
-  return { data, metadata, isLoading, error, categorize }
+  const updateOneLocal = (newBankTransaction: BankTransaction) => {
+    const updatedData = data.map(bt =>
+      bt.id === newBankTransaction.id ? newBankTransaction : bt,
+    )
+    mutate({ data: updatedData }, { revalidate: false })
+  }
+
+  return { data, metadata, isLoading, error, categorize, updateOneLocal }
 }

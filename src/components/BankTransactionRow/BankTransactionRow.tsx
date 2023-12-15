@@ -27,7 +27,9 @@ export const BankTransactionRow = ({
   toggleOpen,
   editable,
 }: Props) => {
-  const { categorize: categorizeBankTransaction } = useBankTransactions()
+  const [removed, setRemoved] = useState(false)
+  const { categorize: categorizeBankTransaction, updateOneLocal } =
+    useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState(
     bankTransaction.categorization_flow.type ===
       CategorizationType.ASK_FROM_SUGGESTIONS
@@ -47,8 +49,23 @@ export const BankTransactionRow = ({
       },
     })
 
+  if (removed) {
+    return null
+  }
+
   return (
-    <div className="Layer__bank-transaction-row__container">
+    <div
+      className={`Layer__bank-transaction-row__container ${
+        bankTransaction.recently_categorized
+          ? 'Layer__bank-transaction-row__container--removing'
+          : ''
+      }`}
+      onTransitionEnd={({ propertyName }) => {
+        if (propertyName === 'top') {
+          setRemoved(true)
+        }
+      }}
+    >
       <div className="Layer__bank-transaction-row__content">
         <div className={`${className} ${openClassName} ${className}--date`}>
           {formatTime(parseISO(bankTransaction.date), dateFormat)}
