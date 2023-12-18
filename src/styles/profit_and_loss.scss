@@ -162,6 +162,11 @@
   font-size: 1rem;
 }
 
+.Layer__profit-and-loss-chart .recharts-legend-item {
+  fill: var(--income-bar-color);
+  vertical-align: middle;
+}
+
 .Layer__profit-and-loss-chart .legend-item-0 {
   fill: var(--income-bar-color);
 }
