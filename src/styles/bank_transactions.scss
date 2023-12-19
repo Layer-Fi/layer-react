@@ -1,26 +1,15 @@
 .Layer__bank-transactions {
-  --buttons-border-color: #d0d5dd;
-  --buttons-selected-background-color: #e0e9ff;
-  --table-expanded-background-color: #f9f9f9;
-  --table-background-color: white;
-  --table-border-color: #eaecf0;
-  --table-text-color: #101828;
-  --positive-amount-text-color: #039855;
-  --variable-amount-text-color: #475467;
-  --error-color: red;
-  --transition-speed: 0.33s;
-
   margin: 3rem;
   border-radius: 0.6rem;
-  border: 1px solid var(--table-border-color);
-  background-color: var(--table-background-color);
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
   overflow: hidden;
   width: 100rem;
 }
 
 .Layer__bank-transactions * {
   font-family: Inter;
-  color: var(--table-text-color);
+  color: var(--text-color);
   font-style: normal;
   font-weight: 500;
 }
@@ -54,7 +43,7 @@
 .Layer__bank-transactions__table-cell--header {
   display: flex;
   align-items: center;
-  background-color: var(--table-background-color);
+  background-color: var(--background-color);
   font-size: 16px;
   line-height: 20px;
   overflow: clip;
@@ -68,7 +57,7 @@
 }
 
 .Layer__bank-transaction-row__container {
-  background-color: var(--table-background-color);
+  background-color: var(--background-color);
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: subgrid;
@@ -111,12 +100,12 @@
 }
 
 .Layer__bank-transaction-row__table-cell--date {
-  color: var(--variable-amount-text-color);
+  color: var(--text-color-varying-amount);
 }
 
 .Layer__bank-transaction-row__table-cell--amount-credit {
   justify-content: flex-end;
-  color: var(--positive-amount-text-color);
+  color: var(--text-color-transaction-credit);
 
   &::before {
     content: '+$';
@@ -125,7 +114,7 @@
 
 .Layer__bank-transaction-row__table-cell--amount-debit {
   justify-content: flex-end;
-  color: var(--variable-amount-text-color);
+  color: var(--text-color-varying-amount);
 
   &::before {
     content: ' $';
@@ -206,7 +195,7 @@
 
 .Layer__expanded-bank-transaction-row__table-cell--description textarea {
   resize: none;
-  border: 1px solid var(--buttons-border-color);
+  border: 1px solid var(--border-color);
   border-radius: 0.5rem;
 }
 
@@ -230,10 +219,10 @@
 }
 
 .Layer__expanded-bank-transaction-row__button--save {
-  border: 1px solid var(--buttons-border-color);
+  border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   padding: 0.625rem 1rem;
-  background-color: var(--buttons-selected-background-color);
+  background-color: var(--active);
   font-weight: 600;
 }
 
@@ -249,7 +238,7 @@
   & input {
     justify-content: stretch;
     margin-left: 0.5rem;
-    border: 1px solid var(--buttons-border-color);
+    border: 1px solid var(--border-color);
     border-radius: 0.5rem;
     padding: 0.25rem;
     width: 5rem;

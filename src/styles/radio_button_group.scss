@@ -1,7 +1,4 @@
 .Layer__radio-button-group {
-
-  --buttons-border-color: #d0d5dd;
-
   display: flex;
   font-size: 1rem;
   align-items: center;
@@ -51,6 +48,6 @@
 }
 
 .Layer__radio-button-group__radio-button input:checked + div {
-  background: var(--transaction-buttons-selected-background-color);
+  background: var(--active);
 }
 

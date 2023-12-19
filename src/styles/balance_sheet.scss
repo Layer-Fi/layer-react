@@ -1,20 +1,11 @@
 .Layer__balance-sheet {
-  --border-color: #eaecf0;
-  --font-color: #101828;
-  --indicator-bar-color: #3c3c3c;
-  --background-color: white;
-  --active: #e0e9ff;
-  --income-bar-color: #0c48e5;
-  --expenses-bar-color: #6d8ee7;
-  --transition-speed: 0.25s;
-
   width: 60rem;
   background-color: white;
   padding: 0.25rem;
 
   * {
-    color: var(--font-color);
-    stroke: var(--font-color);
+    color: var(--text-color);
+    stroke: var(--text-color);
     font-family: Inter;
     font-weight: 500;
     font-style: normal;
@@ -145,7 +136,7 @@
   justify-content: flex-start;
   align-items: center;
   svg {
-    stroke: var(--font-color);
+    stroke: var(--text-color);
     width: 1.25rem;
     height: 1.25rem;
     margin-right: 0.25rem;
@@ -165,7 +156,7 @@
   justify-content: flex-end;
   align-items: center;
   svg {
-    stroke: var(--font-color);
+    stroke: var(--text-color);
     width: 1.25rem;
     height: 1.25rem;
     margin-right: 0.25rem;

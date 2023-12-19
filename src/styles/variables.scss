@@ -1,15 +1,32 @@
 .Layer__component {
-  --font-color: #101828;
-  --buttons-border-color: #d0d5dd;
-  --buttons-selected-background-color: #e0e9ff;
-  --table-expanded-background-color: #f9f9f9;
-  --table-background-color: white;
-  --table-border-color: #eaecf0;
-  --table-text-color: #101828;
-  --positive-amount-text-color: #039855;
-  --variable-amount-text-color: #475467;
-  --error-color: red;
+  --color-alabaster: #f9f9f9;
+  --color-athens-gray: #eaecf0;
+  --color-blue-ribbon: #0c48e5;
+  --color-cornflower-blue: #6d8ee7;
+  --color-ebony: #101828;
+  --color-fiord: #475467;
+  --color-green-haze: #039855;
+  --color-mine-shaft: #3c3c3c;
+  --color-mischke: #d0d5dd;
+  --color-red: red;
+  --color-white: white;
+  --color-zumthor: #e0e9ff;
+
+  --active: var(--color-zumthor);
+  --background-color: var(--color-white);
+  --bar-color-expenses: var(--color-cornflower-blue);
+  --bar-color-income: var(--color-blue-ribbon);
+  --border-color: var(--color-athens-gray);
+  --buttons-border-color: var(--color-mischke);
+  --error-color: var(--color-red);
+  --indicator-color: var(--color-mine-shaft);
+  --table-border-color: var(--color-athens-gray);
+  --table-expanded-background-color: var(--color-alabaster);
+  --text-color-transaction-credit: var(--color-green-haze);
+  --text-color-varying-amount: var(--color-fiord);
+  --text-color: var(--color-ebony);
   --transition-speed: 0.33s;
+
   border: 0;
   padding: 0;
   margin: 0;

@@ -1,18 +1,10 @@
 .Layer__profit-and-loss {
-  --border-color: #eaecf0;
-  --font-color: #101828;
-  --indicator-bar-color: #3c3c3c;
-  --background-color: white;
-  --active: #e0e9ff;
-  --income-bar-color: #0c48e5;
-  --expenses-bar-color: #6d8ee7;
-
   width: 60rem;
   background-color: white;
   padding: 0.25rem;
 
   * {
-    color: var(--font-color);
+    color: var(--text-color);
     font-family: Inter;
     font-weight: 500;
     font-style: normal;
@@ -130,7 +122,7 @@
 }
 
 .Layer__profit-and-loss-date-picker__button-icon path {
-  stroke: var(--font-color);
+  stroke: var(--text-color);
 }
 
 .Layer__profit-and-loss-date-picker__label {
@@ -143,11 +135,11 @@
 }
 
 .Layer__profit-and-loss-chart__bar--income {
-  fill: var(--income-bar-color);
+  fill: var(--bar-color-income);
 }
 
 .Layer__profit-and-loss-chart__bar--expenses {
-  fill: var(--expenses-bar-color);
+  fill: var(--bar-color-expenses);
 }
 
 .Layer__profit-and-loss-chart .recharts-cartesian-axis-tick-value tspan {
@@ -163,21 +155,21 @@
 }
 
 .Layer__profit-and-loss-chart .recharts-legend-item {
-  fill: var(--income-bar-color);
+  fill: var(--bar-color-income);
   vertical-align: middle;
 }
 
 .Layer__profit-and-loss-chart .legend-item-0 {
-  fill: var(--income-bar-color);
+  fill: var(--bar-color-income);
 }
 
 .Layer__profit-and-loss-chart .legend-item-1 {
-  fill: var(--expenses-bar-color);
+  fill: var(--bar-color-expenses);
 }
 
 .Layer__profit-and-loss-chart__selection-indicator {
   height: 0.25rem;
-  fill: var(--indicator-bar-color);
+  fill: var(--indicator-color);
   transition: x 0.5s;
 }
 
