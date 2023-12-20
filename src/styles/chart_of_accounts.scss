@@ -1,0 +1,145 @@
+.Layer__chart-of-accounts {
+  width: 60rem;
+  background-color: var(--background-color);
+  padding: 0.25rem;
+
+  * {
+    color: var(--text-color);
+    stroke: var(--text-color);
+    font-family: Inter;
+    font-weight: 500;
+    font-style: normal;
+  }
+}
+
+.Layer__chart-of-accounts__table {
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: var(--border-color);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 1px 0;
+  font-size: 1rem;
+}
+
+.Layer__chart-of-accounts__header {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
+.Layer__chart-of-accounts__title {
+  display: inline;
+  flex: 1;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
+
+.Layer__chart-of-accounts__actions {
+  display: flex;
+  flex-direction: row;
+}
+
+.Layer__chart-of-accounts__download-button {
+  align-self: center;
+  border: 2px solid var(--border-color);
+  background-color: var(--background-color);
+  border-radius: 0.5rem;
+  margin-left: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1rem;
+
+  &:active {
+    background-color: var(--active);
+  }
+
+  & svg {
+    margin-right: 0.5rem;
+  }
+}
+.Layer__chart-of-accounts__edit-accounts-button {
+  align-self: center;
+  border: 2px solid var(--button-color-dark);
+  border-radius: 0.5rem;
+  margin-left: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: var(--background-color);
+  background-color: var(--button-color-dark);
+  padding: 0.5rem 1rem;
+
+  & svg {
+    margin-right: 0.5rem;
+  }
+
+  &:active {
+    background-color: var(--active);
+  }
+}
+
+.Layer__chart-of-accounts__table-cell--header {
+  font-weight: 700;
+  background-color: var(--background-color);
+  padding: 1rem 1.5rem;
+}
+
+.Layer__chart-of-accounts-row__table-cell {
+  background-color: var(--background-color);
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.Layer__chart-of-accounts-row__table-cell--amount-positive {
+  &::before {
+    content: '$';
+  }
+}
+
+.Layer__chart-of-accounts-row__table-cell--amount-negative {
+  &::before {
+    content: '-$';
+  }
+}
+
+.Layer__chart-of-accounts-row__table-cell--depth-0 {
+  font-weight: 700;
+}
+
+.Layer__chart-of-accounts-row__table-cell--depth-1.Layer__chart-of-accounts-row__table-cell--name {
+  padding-right: 2em;
+  padding-left: 2em;
+  font-size: 0.8em;
+}
+
+.Layer__chart-of-accounts-row__table-cell--depth-2.Layer__chart-of-accounts-row__table-cell--name {
+  padding-right: 2em;
+  padding-left: 4em;
+  font-size: 0.8em;
+}
+
+.Layer__chart-of-accounts-row__view-entries-button {
+  align-self: center;
+  border: 2px solid var(--border-color);
+  background-color: var(--background-color);
+  border-radius: 0.5rem;
+  margin-left: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1rem;
+
+  &:active {
+    background-color: var(--active);
+  }
+}
