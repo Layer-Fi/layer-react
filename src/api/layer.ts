@@ -5,6 +5,7 @@ import {
   categorizeBankTransaction,
 } from './layer/bankTransactions'
 import { getCategories } from './layer/categories'
+import { getChartOfAccounts } from './layer/chart_of_accounts'
 import { getProfitAndLoss } from './layer/profit_and_loss'
 
 export const Layer = {
@@ -13,5 +14,6 @@ export const Layer = {
   getBalanceSheet,
   getBankTransactions,
   getCategories,
+  getChartOfAccounts,
   getProfitAndLoss,
 }
