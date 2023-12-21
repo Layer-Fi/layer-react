@@ -2,7 +2,7 @@ import * as React from 'react'
 import { SVGProps } from 'react'
 
 type Props = SVGProps<SVGSVGElement> & {
-  size: SVGProps<SVGSVGElement>['width']
+  size?: SVGProps<SVGSVGElement>['width']
 }
 const ChevronDown = ({ size = 24, ...props }: Props) => (
   <svg

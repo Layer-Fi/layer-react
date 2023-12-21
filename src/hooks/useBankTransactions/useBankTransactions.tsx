@@ -3,7 +3,7 @@ import { BankTransaction, CategoryUpdate, Metadata } from '../../types'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
-type UseBankTransactionsReturn = {
+type UseBankTransactions = () => {
   data: BankTransaction[]
   metadata: Metadata
   isLoading: boolean
@@ -12,9 +12,10 @@ type UseBankTransactionsReturn = {
     id: BankTransaction['id'],
     newCategory: CategoryUpdate,
   ) => Promise<void>
+  updateOneLocal: (bankTransaction: BankTransaction) => void
 }
 
-export const useBankTransactions = (): UseBankTransactionsReturn => {
+export const useBankTransactions: UseBankTransactions = () => {
   const { auth, businessId } = useLayerContext()
 
   const {
@@ -54,5 +55,12 @@ export const useBankTransactions = (): UseBankTransactionsReturn => {
     mutate({ data: updatedData }, { revalidate: false })
   }
 
-  return { data, metadata, isLoading, error, categorize, updateOneLocal }
+  return {
+    data,
+    metadata,
+    isLoading,
+    error: responseError || error,
+    categorize,
+    updateOneLocal,
+  }
 }

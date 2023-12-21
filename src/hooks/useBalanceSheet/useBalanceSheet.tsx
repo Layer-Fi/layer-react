@@ -4,13 +4,13 @@ import { useLayerContext } from '../useLayerContext'
 import { format, startOfDay } from 'date-fns'
 import useSWR from 'swr'
 
-type UseBalanceSheetReturn = {
+type UseBalanceSheet = (date?: Date) => {
   data: BalanceSheet | undefined
   isLoading: boolean
   error: unknown
 }
 
-export const useBalanceSheet = (date?: Date): UseBalanceSheetReturn => {
+export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
   const { auth, businessId } = useLayerContext()
   const dateString = format(startOfDay(date), 'yyyy-mm-dd')
 

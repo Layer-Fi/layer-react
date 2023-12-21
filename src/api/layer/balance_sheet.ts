@@ -1,5 +1,6 @@
 // import { BalanceSheet } from '../../types'
 // import { get } from './authenticated_http'
+import { BalanceSheet } from '../../types'
 import Data from './balance_sheet.json'
 
 // export const getBalanceSheet = get<{
@@ -10,4 +11,5 @@ import Data from './balance_sheet.json'
 //     `https://sandbox.layerfi.com/v1/businesses/${businessId}/balances`,
 // )
 
-export const getBalanceSheet = (_token: string, _params: any) => () => Data
+export const getBalanceSheet = (_token: string, _params: any) => () =>
+  Data as unknown as BalanceSheet

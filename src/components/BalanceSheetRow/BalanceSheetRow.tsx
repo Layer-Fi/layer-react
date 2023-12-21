@@ -50,7 +50,7 @@ export const BalanceSheetRow = ({
 
   const toggleExpanded = () => setExpanded(!expanded)
   const canGoDeeper = depth < maxDepth
-  const hasChildren = line_items?.length > 0
+  const hasChildren = (line_items?.length ?? 0) > 0
   const displayChildren = hasChildren && canGoDeeper
   labelClasses.push(
     `Layer__balance-sheet-row__label--display-children-${displayChildren}`,

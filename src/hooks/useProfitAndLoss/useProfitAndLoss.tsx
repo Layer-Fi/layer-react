@@ -5,7 +5,9 @@ import { useLayerContext } from '../useLayerContext'
 import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
 import useSWR from 'swr'
 
-type UseProfitAndLoss = {
+type Props = DateRange
+
+type UseProfitAndLoss = (props?: Props) => {
   data: ProfitAndLoss | undefined
   isLoading: boolean
   error: unknown
@@ -13,14 +15,12 @@ type UseProfitAndLoss = {
   changeDateRange: (dateRange: Partial<DateRange>) => void
 }
 
-type Props = DateRange
-
-export const useProfitAndLoss = (
+export const useProfitAndLoss: UseProfitAndLoss = (
   { startDate: initialStartDate, endDate: initialEndDate }: Props = {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   },
-): UseProfitAndLoss => {
+) => {
   const { auth, businessId } = useLayerContext()
   const [startDate, setStartDate] = useState(
     initialStartDate || startOfMonth(Date.now()),

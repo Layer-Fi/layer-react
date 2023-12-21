@@ -6,7 +6,7 @@ export const ProfitAndLossSummaries = () => {
   const { data: storedData } = useContext(PNL.Context)
   const data = !!storedData
     ? storedData
-    : { income: { value: NaN }, net_profit: { value: NaN } }
+    : { income: { value: NaN }, net_profit: NaN }
 
   return (
     <div className="Layer__profit-and-loss-summaries">
@@ -21,7 +21,7 @@ export const ProfitAndLossSummaries = () => {
           Expenses
         </span>
         <span className="Layer__profit-and-loss-summaries__amount">
-          {formatMoney(Math.abs(data.income.value - data.net_profit))}
+          {formatMoney(Math.abs((data.income.value ?? 0) - data.net_profit))}
         </span>
       </div>
       <div className="Layer__profit-and-loss-summaries__summary Layer__profit-and-loss-summaries__summary--net-profit">

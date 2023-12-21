@@ -3,13 +3,13 @@ import { ChartOfAccounts } from '../../types'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
-type UseChartOfAccountsReturn = {
+type UseChartOfAccounts = () => {
   data: ChartOfAccounts | undefined
   isLoading: boolean
   error: unknown
 }
 
-export const useChartOfAccounts = (): UseChartOfAccountsReturn => {
+export const useChartOfAccounts: UseChartOfAccounts = () => {
   const { auth, businessId } = useLayerContext()
 
   const { data, isLoading, error } = useSWR(

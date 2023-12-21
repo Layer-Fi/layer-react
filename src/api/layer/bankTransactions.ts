@@ -25,7 +25,7 @@ export const getBankTransactions = get<
 
 export const categorizeBankTransaction = put<
   CategoryUpdate,
-  { data: BankTransaction; error: unknown }
+  { data: BankTransaction; errors: unknown }
 >(
   ({ businessId, bankTransactionId }) =>
     `https://sandbox.layerfi.com/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/categorize`,

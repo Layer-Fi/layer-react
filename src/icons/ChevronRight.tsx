@@ -5,7 +5,7 @@ type Props = SVGProps<SVGSVGElement> & {
   size: SVGProps<SVGSVGElement>['width']
 }
 
-const ChavronRight = ({ strokeColor, size, ...props }: Props) => (
+const ChavronRight = ({ size, ...props }: Props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size || 24}
@@ -15,7 +15,7 @@ const ChavronRight = ({ strokeColor, size, ...props }: Props) => (
     {...props}
   >
     <path
-      stroke={strokeColor ?? '#000'}
+      stroke={'#000'}
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}

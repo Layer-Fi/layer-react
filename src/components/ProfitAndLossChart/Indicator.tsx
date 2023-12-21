@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Props as BaseProps } from 'recharts/types/component/Label'
 
 // This component does not always exist. It gets recreated each time the
@@ -46,6 +46,7 @@ export const Indicator = ({
       className="Layer__profit-and-loss-chart__selection-indicator"
       style={{
         width: `${boxWidth * multiplier}px`,
+        // @ts-ignore -- y is fine but x apparently isn't!
         x: actualX - xOffset,
         y: y + height,
       }}
