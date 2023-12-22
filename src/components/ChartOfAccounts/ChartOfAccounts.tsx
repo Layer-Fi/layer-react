@@ -35,7 +35,7 @@ export const ChartOfAccounts = () => {
             <div className="Layer__chart-of-accounts__table-cell Layer__chart-of-accounts__table-cell--header">
               Sub-Type
             </div>
-            <div className="Layer__chart-of-accounts__table-cell Layer__chart-of-accounts__table-cell--header">
+            <div className="Layer__chart-of-accounts__table-cell Layer__chart-of-accounts__table-cell--header Layer__chart-of-accounts__table-cell--header-balance">
               Balance
             </div>
             <div className="Layer__chart-of-accounts__table-cell Layer__chart-of-accounts__table-cell--header"></div>
