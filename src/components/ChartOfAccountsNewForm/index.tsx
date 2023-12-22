@@ -1,0 +1,1 @@
+export { ChartOfAccountsNewForm } from './ChartOfAccountsNewForm'

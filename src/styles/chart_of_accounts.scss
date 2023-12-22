@@ -148,3 +148,25 @@
     background-color: var(--active);
   }
 }
+
+.Layer__chart-of-accounts-new-form {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  border: 1px solid var(--border-color);
+  border-radius: var(--corner-radius);
+  font-size: 1rem;
+}
+
+.Layer__chart-of-accounts-new-form__field {
+  display: grid;
+  grid-column: span 2;
+  grid-template-columns: subgrid;
+
+  padding: 0.5rem;
+  margin: 0.5rem;
+
+  span {
+    padding-right: 0.5rem;
+    align-self: center;
+  }
+}

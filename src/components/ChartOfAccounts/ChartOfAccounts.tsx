@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
 import DownloadCloud from '../../icons/DownloadCloud'
+import { ChartOfAccountsNewForm } from '../ChartOfAccountsNewForm'
 import { ChartOfAccountsRow } from '../ChartOfAccountsRow'
 
 export const ChartOfAccounts = () => {
   const { data, isLoading } = useChartOfAccounts()
+  const [showingForm, setShowingForm] = useState(false)
   return (
     <div className="Layer__component Layer__chart-of-accounts">
       {!data || isLoading ? (
@@ -20,11 +22,15 @@ export const ChartOfAccounts = () => {
                 <DownloadCloud />
                 Download
               </button>
-              <button className="Layer__chart-of-accounts__edit-accounts-button">
+              <button
+                className="Layer__chart-of-accounts__edit-accounts-button"
+                onClick={() => setShowingForm(!showingForm)}
+              >
                 Edit Accounts
               </button>
             </div>
           </div>
+          {showingForm && <ChartOfAccountsNewForm />}
           <div className="Layer__chart-of-accounts__table">
             <div className="Layer__chart-of-accounts__table-cell Layer__chart-of-accounts__table-cell--header">
               Name
