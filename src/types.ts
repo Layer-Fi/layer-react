@@ -19,7 +19,12 @@ export {
   SplitCategoryUpdate,
   CategoryUpdate,
 } from './types/categories'
-export { ChartOfAccounts, Account } from './types/chart_of_accounts'
+export {
+  AccountAlternate,
+  ChartOfAccounts,
+  Account,
+  NewAccount,
+} from './types/chart_of_accounts'
 
 // Only Date and string (ISO8601 formatted) make sense here
 export type DateRange<T = Date> = {

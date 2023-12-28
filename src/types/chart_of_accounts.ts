@@ -23,3 +23,22 @@ export interface Account {
   balance: number
   selfOnlyBalance: number
 }
+
+export interface AccountAlternate {
+  type: 'Ledger_Account'
+  id: string
+  name: string
+  stable_name: string | null
+  normality: Direction
+  pnl_category: string | null
+}
+
+export type NewAccount = {
+  name: string
+  normality: Direction
+  parent_id: {
+    type: 'AccountId'
+    id: string
+  }
+  description: string
+}
