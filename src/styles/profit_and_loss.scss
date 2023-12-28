@@ -25,8 +25,11 @@
   background-color: var(--border-color);
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 1px 0;
   font-size: 1rem;
+}
+
+.Layer__profit-and-loss-table__outflows {
+  margin-top: 1rem;
 }
 
 .Layer__profit-and-loss-row {
@@ -35,33 +38,85 @@
   font-size: 1em;
 }
 
+.Layer__profit-and-loss-row__children {
+  display: grid;
+  grid-column: span 2;
+  grid-template-columns: subgrid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows var(--transition-speed);
+}
+
+.Layer__profit-and-loss-row__children--expanded {
+  grid-template-rows: 1fr;
+}
+
+.Layer__profit-and-loss-row__children--content {
+  min-height: 0;
+  display: grid;
+  grid-column: span 2;
+  grid-template-columns: subgrid;
+}
+
 .Layer__profit-and-loss-row__label {
   display: flex;
   justify-content: flex-start;
+  align-items: center;
+  svg {
+    stroke: var(--text-color);
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.25rem;
+    transition: transform var(--transition-speed);
+    transform: rotate(-90deg);
+  }
+}
+
+.Layer__profit-and-loss-row__label--expanded {
+  svg {
+    transform: rotate(0deg);
+  }
+}
+.Layer__profit-and-loss-row__value--expanded {
+  color: transparent;
+  user-select: none;
 }
 
 .Layer__profit-and-loss-row__value {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 
-.Layer__profit-and-loss-row__label--variant-NETPROFIT,
-.Layer__profit-and-loss-row__label--variant-GROSS,
-.Layer__profit-and-loss-row__label--variant-BEFORETAX {
-  border-top: 3px solid var(--border-color);
-  border-bottom: 3px solid var(--border-color);
+.Layer__profit-and-loss-row__label--display-children-true {
+  font-weight: bold;
 }
 
-.Layer__profit-and-loss-row__value--variant-NETPROFIT,
-.Layer__profit-and-loss-row__value--variant-GROSS,
-.Layer__profit-and-loss-row__value--variant-BEFORETAX {
-  border-top: 3px solid var(--border-color);
-  border-bottom: 3px solid var(--border-color);
+.Layer__profit-and-loss-row__value--display-children-true {
+  font-weight: bold;
 }
 
-.Layer__profit-and-loss-row__label--variant-NETPROFIT,
-.Layer__profit-and-loss-row__value--variant-NETPROFIT {
-  border-bottom: 10px solid var(--border-color);
+.Layer__profit-and-loss-row__label--display-children-false {
+  font-weight: normal;
+  svg {
+    visibility: hidden;
+  }
+}
+
+.Layer__profit-and-loss-row__label--display-children-false {
+  font-weight: normal;
+  svg {
+    visibility: hidden;
+  }
+}
+
+.Layer__profit-and-loss-row__label--variant-summation {
+  font-weight: bold;
+  border-top: 1px solid var(--border-color);
+}
+.Layer__profit-and-loss-row__value--variant-summation {
+  font-weight: bold;
+  border-top: 1px solid var(--border-color);
 }
 
 .Layer__profit-and-loss-row__value--amount-positive {
@@ -87,11 +142,11 @@
 .Layer__profit-and-loss-row__label--depth-1 {
   padding-right: 2em;
   padding-left: 2em;
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 .Layer__profit-and-loss-row__value--depth-1 {
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 .Layer__profit-and-loss-date-picker {
@@ -205,11 +260,18 @@
   margin-bottom: 0.25rem;
 }
 
-.Layer__profit-and-loss-summaries__amount {
+.Layer__profit-and-loss-summaries__amount,
+.Layer__profit-and-loss-summaries__amount--positive {
   font-weight: 600;
   font-size: 1.5rem;
 
   &::before {
     content: '$';
+  }
+}
+
+.Layer__profit-and-loss-summaries__amount--negative {
+  &::before {
+    content: '-$';
   }
 }
