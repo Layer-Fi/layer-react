@@ -14,7 +14,7 @@
 
 .Layer__balance-sheet__table {
   border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
+  border-radius: var(--corner-radius);
   background-color: var(--border-color);
   display: grid;
   grid-template-columns: 1fr auto;
@@ -50,7 +50,7 @@
   border: 2px solid var(--border-color);
   background-color: var(--background-color);
   padding: 0.5rem;
-  border-radius: 0.5rem;
+  border-radius: var(--corner-radius);
   margin-left: 0.5rem;
   display: flex;
   flex-direction: row;
@@ -76,7 +76,7 @@
     border: 2px solid var(--border-color);
     background-color: var(--background-color);
     padding: 0.5rem;
-    border-radius: 0.5rem;
+    border-radius: var(--corner-radius);
     display: flex;
     flex-direction: row;
     justify-content: center;

@@ -1,6 +1,6 @@
 .Layer__bank-transactions {
   margin: 3rem;
-  border-radius: 0.6rem;
+  border-radius: var(--corner-radius);
   border: 1px solid var(--border-color);
   background-color: var(--background-color);
   overflow: hidden;
@@ -37,7 +37,7 @@
   gap: 1px 0px;
   background-color: var(--table-border-color);
   border-top: 1px solid var(--table-border-color);
-  border-radius: 0.6rem;
+  border-radius: var(--corner-radius);
 }
 
 .Layer__bank-transactions__table-cell--header {
@@ -196,7 +196,7 @@
 .Layer__expanded-bank-transaction-row__table-cell--description textarea {
   resize: none;
   border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
+  border-radius: var(--corner-radius);
 }
 
 .Layer__expanded-bank-transaction-row__table-cell--header {
@@ -220,7 +220,7 @@
 
 .Layer__expanded-bank-transaction-row__button--save {
   border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
+  border-radius: var(--corner-radius);
   padding: 0.625rem 1rem;
   background-color: var(--active);
   font-weight: 600;
@@ -239,7 +239,7 @@
     justify-content: stretch;
     margin-left: 0.5rem;
     border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
+    border-radius: var(--corner-radius);
     padding: 0.25rem;
     width: 5rem;
   }

@@ -14,7 +14,7 @@
 
 .Layer__chart-of-accounts__table {
   border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
+  border-radius: var(--corner-radius);
   background-color: var(--border-color);
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr auto;
@@ -47,7 +47,7 @@
   align-self: center;
   border: 2px solid var(--border-color);
   background-color: var(--background-color);
-  border-radius: 0.5rem;
+  border-radius: var(--corner-radius);
   margin-left: 0.5rem;
   display: flex;
   flex-direction: row;
@@ -67,7 +67,7 @@
 .Layer__chart-of-accounts__edit-accounts-button {
   align-self: center;
   border: 2px solid var(--button-color-dark);
-  border-radius: 0.5rem;
+  border-radius: var(--corner-radius);
   margin-left: 0.5rem;
   display: flex;
   flex-direction: row;
@@ -135,7 +135,7 @@
   align-self: center;
   border: 2px solid var(--border-color);
   background-color: var(--background-color);
-  border-radius: 0.5rem;
+  border-radius: var(--corner-radius);
   margin-left: 0.5rem;
   display: flex;
   flex-direction: row;
