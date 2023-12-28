@@ -1,3 +1,5 @@
+export type HTTPVerb = 'get' | 'put' | 'post' | 'patch' | 'options' | 'delete'
+
 export const get =
   <
     Return extends Record<string, unknown> = Record<string, unknown>,
@@ -18,10 +20,11 @@ export const get =
       method: 'GET',
     }).then(res => res.json() as Promise<Return>)
 
-export const put =
+export const request =
+  (verb: HTTPVerb) =>
   <
-    Body extends Record<string, unknown> = Record<string, unknown>,
     Return extends Record<string, unknown> = Record<string, unknown>,
+    Body extends Record<string, unknown> = Record<string, unknown>,
     Params extends Record<string, string | undefined> = Record<
       string,
       string | undefined
@@ -42,6 +45,9 @@ export const put =
         'Content-Type': 'application/json',
         'Cache-Control': 'no-cache',
       },
-      method: 'PUT',
+      method: verb.toUpperCase(),
       body: JSON.stringify(options?.body),
     }).then(res => res.json() as Promise<Return>)
+
+export const post = request('post')
+export const put = request('put')
