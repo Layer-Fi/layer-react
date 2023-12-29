@@ -1,8 +1,8 @@
 import { Category } from '../types'
-import { OAuthResponse } from './authentication'
+import { ExpiringOAuthResponse } from './authentication'
 
 export type LayerContextValues = {
-  auth: OAuthResponse
+  auth: ExpiringOAuthResponse
   businessId: string
   categories: Category[]
 }

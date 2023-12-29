@@ -6,6 +6,7 @@ import {
   LayerContextAction,
   LayerContextActionName as Action,
 } from '../../types'
+import { add, isBefore } from 'date-fns'
 import useSWR, { SWRConfig } from 'swr'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
@@ -61,13 +62,18 @@ export const LayerProvider = ({
 
   const { url, scope } = LayerEnvironment[environment]
   const [state, dispatch] = useReducer(reducer, {
-    auth: { access_token: '', token_type: '', expires_in: 0 },
+    auth: {
+      access_token: '',
+      token_type: '',
+      expires_in: 0,
+      expires_at: new Date(2000, 1, 1),
+    },
     businessId,
     categories: [],
   })
 
   const { data: auth } = useSWR(
-    'authenticate',
+    isBefore(state.auth.expires_at, new Date()) && 'authenticate',
     Layer.authenticate({
       appId,
       appSecret,
@@ -79,7 +85,15 @@ export const LayerProvider = ({
   )
   useEffect(() => {
     if (!!auth?.access_token) {
-      dispatch({ type: Action.setAuth, payload: { auth } })
+      dispatch({
+        type: Action.setAuth,
+        payload: {
+          auth: {
+            ...auth,
+            expires_at: add(new Date(), { seconds: auth.expires_in }),
+          },
+        },
+      })
     }
   }, [auth?.access_token])
 

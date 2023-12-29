@@ -3,3 +3,7 @@ export type OAuthResponse = {
   token_type: string
   expires_in: number
 }
+
+export type ExpiringOAuthResponse = OAuthResponse & {
+  expires_at: Date
+}
