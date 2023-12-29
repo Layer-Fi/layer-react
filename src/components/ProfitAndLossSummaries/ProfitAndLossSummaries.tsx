@@ -30,7 +30,7 @@ export const ProfitAndLossSummaries = () => {
         <span
           className={`Layer__profit-and-loss-summaries__amount ${incomeDirectionClass}`}
         >
-          {formatMoney(Math.abs(data.income.value))}
+          {formatMoney(Math.abs(data?.income?.value ?? NaN))}
         </span>
       </div>
       <div className="Layer__profit-and-loss-summaries__summary Layer__profit-and-loss-summaries__summary--expenses">
