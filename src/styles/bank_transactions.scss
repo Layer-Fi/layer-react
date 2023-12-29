@@ -1,10 +1,8 @@
 .Layer__bank-transactions {
-  margin: 3rem;
   border-radius: var(--corner-radius);
   border: 1px solid var(--border-color);
   background-color: var(--background-color);
   overflow: hidden;
-  width: 100rem;
 }
 
 .Layer__bank-transactions * {

@@ -1,7 +1,7 @@
 .Layer__balance-sheet {
-  width: 60rem;
-  background-color: white;
-  padding: 0.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--corner-radius);
+  background-color: var(--background-color);
 
   * {
     color: var(--text-color);
@@ -13,19 +13,19 @@
 }
 
 .Layer__balance-sheet__table {
-  border: 1px solid var(--border-color);
-  border-radius: var(--corner-radius);
-  background-color: var(--border-color);
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 1px 0;
   font-size: 1rem;
+  background-color: var(--border-color);
 }
 
 .Layer__balance-sheet__header {
   display: flex;
   flex: 1;
   flex-direction: row;
+  background-color: var(--background-color);
+  padding: 0 1rem;
 }
 
 .Layer__balance-sheet__title {
