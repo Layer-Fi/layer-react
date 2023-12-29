@@ -238,3 +238,32 @@
   color: transparent;
   user-select: none;
 }
+
+@keyframes pulse {
+  from {
+    opacity: 100%;
+  }
+  to {
+    opacity: 20%;
+  }
+}
+
+.Layer__balance-sheet-row__skeleton-text {
+  width: 4rem;
+  background-color: var(--text-skeleton-color);
+  height: 1rem;
+  border-radius: var(--corner-radius);
+}
+
+.Layer__balance-sheet-row__children--skeleton {
+  background-color: var(--background-color);
+  padding-left: 1rem;
+}
+
+.Layer__balance-sheet-row__value--skeleton,
+.Layer__balance-sheet-row__label--skeleton {
+  animation: 1s pulse ease-in-out alternate infinite;
+  & svg {
+    stroke: var(--text-skeleton-color);
+  }
+}

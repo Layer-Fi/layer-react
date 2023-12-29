@@ -3,6 +3,7 @@ import { useBalanceSheet } from '../../hooks/useBalanceSheet'
 import DownloadCloud from '../../icons/DownloadCloud'
 import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker'
 import { BalanceSheetRow } from '../BalanceSheetRow'
+import { SkeletonBalanceSheetRow } from '../SkeletonBalanceSheetRow'
 import { format, parseISO } from 'date-fns'
 
 export const BalanceSheet = () => {
@@ -38,7 +39,18 @@ export const BalanceSheet = () => {
         </button>
       </div>
       {!data || isLoading ? (
-        <div>Loading</div>
+        <div className="Layer__balance-sheet__table">
+          <SkeletonBalanceSheetRow>
+            <SkeletonBalanceSheetRow />
+            <SkeletonBalanceSheetRow>
+              <SkeletonBalanceSheetRow />
+              <SkeletonBalanceSheetRow />
+            </SkeletonBalanceSheetRow>
+          </SkeletonBalanceSheetRow>
+          <SkeletonBalanceSheetRow>
+            <SkeletonBalanceSheetRow />
+          </SkeletonBalanceSheetRow>
+        </div>
       ) : (
         <div className="Layer__balance-sheet__table">
           <BalanceSheetRow
