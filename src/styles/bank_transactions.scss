@@ -3,6 +3,7 @@
   border: 1px solid var(--border-color);
   background-color: var(--background-color);
   overflow: hidden;
+  container-type: inline-size;
 }
 
 .Layer__bank-transactions * {
@@ -247,4 +248,18 @@
   font-weight: bold;
   color: var(--error-color);
   border: 2.5px dotted var(--error-color);
+}
+
+@container (max-width: 600px) {
+  .Layer__bank-transactions__header {
+    flex-direction: column;
+  }
+
+  .Layer__bank-transaction-row__table-cell:not(.mobile) {
+    display: none;
+  }
+  
+  .Layer__bank-transactions__table-cell:not(.mobile) {
+    display: none;
+  }
 }

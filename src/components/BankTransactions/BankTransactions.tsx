@@ -66,7 +66,7 @@ export const BankTransactions = () => {
         />
       </header>
       <div className="Layer__bank-transactions__table">
-        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
+        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header mobile">
           Date
         </div>
         <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
@@ -75,13 +75,13 @@ export const BankTransactions = () => {
         <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
           Account
         </div>
-        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header Layer__bank-transactions__table-cell--header-amount">
+        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header Layer__bank-transactions__table-cell--header-amount mobile">
           Amount
         </div>
         <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
           Category
         </div>
-        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header">
+        <div className="Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header mobile">
           Actions
         </div>
         {bankTransactions.map((bankTransaction: BankTransaction) => (

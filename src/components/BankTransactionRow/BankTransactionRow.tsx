@@ -67,7 +67,9 @@ export const BankTransactionRow = ({
       }}
     >
       <div className="Layer__bank-transaction-row__content">
-        <div className={`${className} ${openClassName} ${className}--date`}>
+        <div
+          className={`${className} ${openClassName} ${className}--date mobile`}
+        >
           {formatTime(parseISO(bankTransaction.date), dateFormat)}
         </div>
         <div className={`${className} ${openClassName}`}>
@@ -75,7 +77,7 @@ export const BankTransactionRow = ({
         </div>
         <div className={`${className} ${openClassName}`}>Business Checking</div>
         <div
-          className={`${className} ${openClassName} ${className}--amount-${
+          className={`${className} ${openClassName} mobile ${className}--amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
         >
@@ -97,7 +99,9 @@ export const BankTransactionRow = ({
             <Pill>{bankTransaction?.category?.display_name}</Pill>
           )}
         </div>
-        <div className={`${className} ${openClassName} ${className}--actions`}>
+        <div
+          className={`${className} ${openClassName} ${className}--actions mobile`}
+        >
           <div
             className="Layer__bank-transaction-row__save-button"
             onClick={() => save()}
