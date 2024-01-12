@@ -33,7 +33,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr auto auto auto;
   gap: 1px 0px;
-  background-color: var(--table-border-color);
+  background-color: var(--background-color);
   border-top: 1px solid var(--table-border-color);
   border-radius: var(--corner-radius);
 }
