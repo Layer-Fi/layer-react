@@ -4,7 +4,7 @@ const { Generator } = require('npm-dts')
 const { sassPlugin } = require('esbuild-sass-plugin')
 
 new Generator({
-  entry: 'src/index.tsx',
+  entry: 'index.tsx',
   output: 'dist/index.d.ts',
   tsc: '-p ./tsconfig.json',
 }).generate()
