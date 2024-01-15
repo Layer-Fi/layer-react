@@ -1,12 +1,12 @@
 import { CategoryUpdate, BankTransaction, Metadata } from '../../types'
 import { get, put } from './authenticated_http'
 
-type GetBankTransactionsReturn = {
+export type GetBankTransactionsReturn = {
   data?: BankTransaction[]
   meta?: Metadata
   error?: unknown
 }
-interface GetBankTransactionsParams extends Record<string, string | undefined> {
+export interface GetBankTransactionsParams extends Record<string, string | undefined> {
   businessId: string
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
