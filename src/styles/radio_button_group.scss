@@ -11,6 +11,7 @@
 .Layer__radio-button-group__radio-button {
   display: flex;
   flex-direction: row;
+  position: relative;
 }
 
 .Layer__radio-button-group__radio-button input {
