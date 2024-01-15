@@ -31,7 +31,7 @@ export const BankTransactionRow = ({
   const { categorize: categorizeBankTransaction, updateOneLocal } =
     useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState(
-    bankTransaction.categorization_flow.type ===
+    bankTransaction.categorization_flow?.type ===
       CategorizationType.ASK_FROM_SUGGESTIONS
       ? bankTransaction.categorization_flow.suggestions[0]
       : undefined,
