@@ -41,7 +41,6 @@ enum Purpose {
 
 export const ExpandedBankTransactionRow = ({
   bankTransaction,
-  close,
   isOpen = false,
 }: Props) => {
   const { categorize: categorizeBankTransaction } = useBankTransactions()
@@ -149,7 +148,7 @@ export const ExpandedBankTransactionRow = ({
         <div className={`${className}__purpose-button`}>
           <RadioButtonGroup
             name={`purpose-${bankTransaction.id}`}
-            size="small"
+            size='small'
             buttons={[
               { value: 'categorize', label: 'Categorize' },
               { value: 'match', label: 'Match', disabled: true },
@@ -217,7 +216,7 @@ export const ExpandedBankTransactionRow = ({
                 />
                 {rowState.splits.length > 1 && (
                   <input
-                    type="text"
+                    type='text'
                     name={`split-${index}`}
                     disabled={index + 1 === rowState.splits.length}
                     onChange={updateAmounts(index)}
@@ -237,7 +236,7 @@ export const ExpandedBankTransactionRow = ({
             <textarea></textarea>
           </div>
           <div className={`${className}__table-cell`}>
-            <input type="file" />
+            <input type='file' />
           </div>
           <div className={`${className}__table-cell`}></div>
           <div className={`${className}__table-cell`}>

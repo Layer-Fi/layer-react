@@ -1,5 +1,4 @@
-import React from 'react'
-import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
+// import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 
 // import { ProfitAndLossDatePicker } from './ProfitAndLossDatePicker'
 // import '@testing-library/jest-dom'
@@ -8,9 +7,9 @@ import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 jest.mock('../../hooks/useProfitAndLoss', () => ({
   useProfitAndLoss: jest.fn(),
 }))
-const mockUseProfitAndLoss = useProfitAndLoss as jest.MockedFn<
-  typeof blankUseProfitAndLoss
->
+// const mockUseProfitAndLoss = useProfitAndLoss as jest.MockedFn<
+//   typeof blankUseProfitAndLoss
+// >
 
 // const mockChangeDateRange = jest.fn()
 // const blankUseProfitAndLoss = {

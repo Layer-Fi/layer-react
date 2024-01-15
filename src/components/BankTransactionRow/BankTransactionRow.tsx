@@ -28,8 +28,7 @@ export const BankTransactionRow = ({
   editable,
 }: Props) => {
   const [removed, setRemoved] = useState(false)
-  const { categorize: categorizeBankTransaction, updateOneLocal } =
-    useBankTransactions()
+  const { categorize: categorizeBankTransaction } = useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState(
     bankTransaction.categorization_flow?.type ===
       CategorizationType.ASK_FROM_SUGGESTIONS
@@ -66,7 +65,7 @@ export const BankTransactionRow = ({
         }
       }}
     >
-      <div className="Layer__bank-transaction-row__content">
+      <div className='Layer__bank-transaction-row__content'>
         <div className={`${className} ${openClassName} ${className}--date`}>
           {formatTime(parseISO(bankTransaction.date), dateFormat)}
         </div>
@@ -99,20 +98,20 @@ export const BankTransactionRow = ({
         </div>
         <div className={`${className} ${openClassName} ${className}--actions`}>
           <div
-            className="Layer__bank-transaction-row__save-button"
+            className='Layer__bank-transaction-row__save-button'
             onClick={() => save()}
           >
             {editable && !isOpen && (
               <CheckedCircle
                 size={28}
-                strokeColor="#0C48E5"
-                fillColor="#e0e9ff"
+                strokeColor='#0C48E5'
+                fillColor='#e0e9ff'
               />
             )}
           </div>
           <div
             onClick={() => toggleOpen(bankTransaction.id)}
-            className="Layer__bank-transaction-row__expand-button"
+            className='Layer__bank-transaction-row__expand-button'
           >
             <ChevronDown
               className={`Layer__chevron ${

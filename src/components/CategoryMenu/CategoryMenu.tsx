@@ -52,7 +52,7 @@ export const CategoryMenu = ({
   return (
     <Select<Category>
       name={name}
-      className="Layer__category-menu"
+      className='Layer__category-menu'
       options={options}
       isSearchable={true}
       value={value}

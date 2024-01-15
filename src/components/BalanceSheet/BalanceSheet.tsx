@@ -23,23 +23,23 @@ export const BalanceSheet = () => {
   }
   const dateString = format(effectiveDate, 'LLLL d, yyyy')
   return (
-    <div className="Layer__component Layer__balance-sheet">
-      <div className="Layer__balance-sheet__header">
-        <h2 className="Layer__balance-sheet__title">
+    <div className='Layer__component Layer__balance-sheet'>
+      <div className='Layer__balance-sheet__header'>
+        <h2 className='Layer__balance-sheet__title'>
           Balance Sheet
-          <span className="Layer__balance-sheet__date">{dateString}</span>
+          <span className='Layer__balance-sheet__date'>{dateString}</span>
         </h2>
         <BalanceSheetDatePicker
           value={effectiveDate}
           onChange={event => setEffectiveDate(parseISO(event.target.value))}
         />
-        <button className="Layer__balance-sheet__download-button">
+        <button className='Layer__balance-sheet__download-button'>
           <DownloadCloud />
           Download
         </button>
       </div>
       {!data || isLoading ? (
-        <div className="Layer__balance-sheet__table">
+        <div className='Layer__balance-sheet__table'>
           <SkeletonBalanceSheetRow>
             <SkeletonBalanceSheetRow />
             <SkeletonBalanceSheetRow>
@@ -52,7 +52,7 @@ export const BalanceSheet = () => {
           </SkeletonBalanceSheetRow>
         </div>
       ) : (
-        <div className="Layer__balance-sheet__table">
+        <div className='Layer__balance-sheet__table'>
           <BalanceSheetRow
             key={assets.name}
             lineItem={assets}

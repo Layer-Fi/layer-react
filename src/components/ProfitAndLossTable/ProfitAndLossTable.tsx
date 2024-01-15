@@ -9,7 +9,7 @@ export const ProfitAndLossTable = () => {
   const data = !actualData || isLoading ? emptyPNL : actualData
   return (
     <>
-      <div className="Layer__profit-and-loss-table">
+      <div className='Layer__profit-and-loss-table'>
         <ProfitAndLossRow lineItem={data.income} direction={Direction.CREDIT} />
         <ProfitAndLossRow
           lineItem={data.cost_of_goods_sold}
@@ -20,7 +20,7 @@ export const ProfitAndLossTable = () => {
             value: data.gross_profit,
             display_name: 'Gross Profit',
           }}
-          variant="summation"
+          variant='summation'
           direction={Direction.CREDIT}
         />
         <ProfitAndLossRow
@@ -32,7 +32,7 @@ export const ProfitAndLossTable = () => {
             value: data.profit_before_taxes,
             display_name: 'Profit Before Taxes',
           }}
-          variant="summation"
+          variant='summation'
           direction={Direction.CREDIT}
         />
         <ProfitAndLossRow lineItem={data.taxes} direction={Direction.DEBIT} />
@@ -41,11 +41,11 @@ export const ProfitAndLossTable = () => {
             value: data.net_profit,
             display_name: 'Net Profit',
           }}
-          variant="summation"
+          variant='summation'
           direction={Direction.CREDIT}
         />
       </div>
-      <div className="Layer__profit-and-loss-table Layer__profit-and-loss-table__outflows">
+      <div className='Layer__profit-and-loss-table Layer__profit-and-loss-table__outflows'>
         <ProfitAndLossRow
           lineItem={data.other_outflows}
           direction={Direction.DEBIT}

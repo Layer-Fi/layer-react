@@ -15,7 +15,7 @@ export const Hello = ({ user }: Props) => {
   const name = (isLoading ? '...' : data?.name) || 'User'
   return (
     <>
-      <div className="hello">Hello, {name}!</div>
+      <div className='hello'>Hello, {name}!</div>
     </>
   )
 }

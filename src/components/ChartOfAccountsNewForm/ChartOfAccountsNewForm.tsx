@@ -40,24 +40,24 @@ export const ChartOfAccountsNewForm = () => {
   }
 
   return (
-    <div className="Layer__chart-of-accounts-new-form">
-      <div className="Layer__chart-of-accounts-new-form__field">
+    <div className='Layer__chart-of-accounts-new-form'>
+      <div className='Layer__chart-of-accounts-new-form__field'>
         <span>Name</span>
         <input
-          name="name"
+          name='name'
           value={name}
           onChange={event => setName(event.target.value)}
         ></input>
       </div>
-      <div className="Layer__chart-of-accounts-new-form__field">
+      <div className='Layer__chart-of-accounts-new-form__field'>
         <span>Description</span>
         <input
-          name="description"
+          name='description'
           value={description}
           onChange={event => setDescription(event.target.value)}
         ></input>
       </div>
-      <div className="Layer__chart-of-accounts-new-form__field">
+      <div className='Layer__chart-of-accounts-new-form__field'>
         <span>Normality</span>
         <Select<Option<Direction>>
           isSearchable={false}
@@ -68,7 +68,7 @@ export const ChartOfAccountsNewForm = () => {
           ]}
         />
       </div>
-      <div className="Layer__chart-of-accounts-new-form__field">
+      <div className='Layer__chart-of-accounts-new-form__field'>
         <span>Parent Account</span>
         <Select<Account>
           isSearchable={true}
@@ -79,7 +79,7 @@ export const ChartOfAccountsNewForm = () => {
           options={accountOptions}
         />
       </div>
-      <div className="Layer__chart-of-accounts-new-form__field Layer__chart-of-accounts-new-form__field--actions">
+      <div className='Layer__chart-of-accounts-new-form__field Layer__chart-of-accounts-new-form__field--actions'>
         <button onClick={save}>Save</button>
       </div>
     </div>

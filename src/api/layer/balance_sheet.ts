@@ -11,5 +11,11 @@ import Data from './balance_sheet.json'
 //     `https://sandbox.layerfi.com/v1/businesses/${businessId}/balances`,
 // )
 
-export const getBalanceSheet = (_token: string, _params: any) => () =>
-  Data as unknown as BalanceSheet
+export interface GetBalanceSheetParams {
+  businessId: string
+  date: string
+}
+
+export const getBalanceSheet =
+  (_token: string, _params: { params: GetBalanceSheetParams }) => () =>
+    Data as unknown as BalanceSheet
