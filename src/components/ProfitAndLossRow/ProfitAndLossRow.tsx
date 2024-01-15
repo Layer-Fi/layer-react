@@ -23,7 +23,7 @@ export const ProfitAndLossRow = ({
   if (!lineItem) {
     return null
   }
-  const { value, display_name, line_items, name } = lineItem
+  const { value, display_name, line_items } = lineItem
   const [expanded, setExpanded] = useState(true)
   const amount = value ?? 0
   const amountString = centsToDollars(Math.abs(amount))
@@ -64,11 +64,11 @@ export const ProfitAndLossRow = ({
 
   displayChildren &&
     expanded &&
-    labelClasses.push(`Layer__profit-and-loss-row__label--expanded`)
+    labelClasses.push('Layer__profit-and-loss-row__label--expanded')
 
   displayChildren &&
     expanded &&
-    valueClasses.push(`Layer__profit-and-loss-row__value--expanded`)
+    valueClasses.push('Layer__profit-and-loss-row__value--expanded')
   return (
     <>
       <div className={labelClasses.join(' ')} onClick={toggleExpanded}>
@@ -82,7 +82,7 @@ export const ProfitAndLossRow = ({
             expanded && 'Layer__profit-and-loss-row__children--expanded'
           }`}
         >
-          <div className="Layer__balance-sheet-row__children--content">
+          <div className='Layer__balance-sheet-row__children--content'>
             {(line_items || []).map(line_item => (
               <ProfitAndLossRow
                 key={line_item.display_name}
@@ -96,7 +96,7 @@ export const ProfitAndLossRow = ({
               <ProfitAndLossRow
                 key={display_name}
                 lineItem={{ value, display_name: `Total of ${display_name}` }}
-                variant="summation"
+                variant='summation'
                 depth={depth + 1}
                 maxDepth={maxDepth}
               />

@@ -8,7 +8,7 @@ it('renders a list of buttons (label/value pairs) that can be clicked', async ()
   const onChange = jest.fn()
   render(
     <RadioButtonGroup
-      name="testgroup"
+      name='testgroup'
       buttons={[
         { label: 'First One', value: 'one' },
         { label: 'Second', value: 'two' },

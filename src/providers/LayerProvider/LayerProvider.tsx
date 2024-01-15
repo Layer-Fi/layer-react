@@ -84,7 +84,7 @@ export const LayerProvider = ({
     defaultSWRConfig,
   )
   useEffect(() => {
-    if (!!auth?.access_token) {
+    if (auth?.access_token) {
       dispatch({
         type: Action.setAuth,
         payload: {
@@ -103,7 +103,7 @@ export const LayerProvider = ({
     defaultSWRConfig,
   )
   useEffect(() => {
-    if (!!categories?.data?.categories?.length) {
+    if (categories?.data?.categories?.length) {
       dispatch({
         type: Action.setCategories,
         payload: { categories: categories.data.categories || [] },

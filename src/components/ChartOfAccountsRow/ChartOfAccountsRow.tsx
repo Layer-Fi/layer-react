@@ -45,7 +45,7 @@ export const ChartOfAccountsRow = ({ account, depth = 0 }: Props) => {
       <div
         className={`${className} Layer__chart-of-accounts-row__table-cell--actions`}
       >
-        <button className="Layer__chart-of-accounts-row__view-entries-button">
+        <button className='Layer__chart-of-accounts-row__view-entries-button'>
           View Entries
         </button>
       </div>

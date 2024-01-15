@@ -24,7 +24,7 @@ export const RadioButton = ({
       className={`Layer__radio-button-group__radio-button Layer__radio-button-group__radio-button--size-${size}`}
     >
       <input
-        type="radio"
+        type='radio'
         checked={checked}
         name={name}
         onChange={onChange}

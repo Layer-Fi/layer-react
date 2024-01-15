@@ -43,10 +43,10 @@ export const Indicator = ({
   const actualX = animateFrom === -1 ? animateTo : animateFrom
   return (
     <rect
-      className="Layer__profit-and-loss-chart__selection-indicator"
+      className='Layer__profit-and-loss-chart__selection-indicator'
       style={{
         width: `${boxWidth * multiplier}px`,
-        // @ts-ignore -- y is fine but x apparently isn't!
+        // @ts-expect-error -- y is fine but x apparently isn't!
         x: actualX - xOffset,
         y: y + height,
       }}

@@ -6,7 +6,8 @@ export type GetBankTransactionsReturn = {
   meta?: Metadata
   error?: unknown
 }
-export interface GetBankTransactionsParams extends Record<string, string | undefined> {
+export interface GetBankTransactionsParams
+  extends Record<string, string | undefined> {
   businessId: string
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string

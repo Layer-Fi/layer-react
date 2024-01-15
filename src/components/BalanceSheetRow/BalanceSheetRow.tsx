@@ -61,11 +61,11 @@ export const BalanceSheetRow = ({
 
   displayChildren &&
     expanded &&
-    labelClasses.push(`Layer__balance-sheet-row__label--expanded`)
+    labelClasses.push('Layer__balance-sheet-row__label--expanded')
 
   displayChildren &&
     expanded &&
-    valueClasses.push(`Layer__balance-sheet-row__value--expanded`)
+    valueClasses.push('Layer__balance-sheet-row__value--expanded')
 
   return (
     <>
@@ -80,7 +80,7 @@ export const BalanceSheetRow = ({
             expanded && 'Layer__balance-sheet-row__children--expanded'
           }`}
         >
-          <div className="Layer__balance-sheet-row__children--content">
+          <div className='Layer__balance-sheet-row__children--content'>
             {(line_items || []).map(line_item => (
               <BalanceSheetRow
                 key={line_item.display_name}
@@ -93,7 +93,7 @@ export const BalanceSheetRow = ({
               <BalanceSheetRow
                 key={display_name}
                 lineItem={{ value, display_name: `Total of ${display_name}` }}
-                variant="summation"
+                variant='summation'
                 depth={depth + 1}
                 maxDepth={maxDepth}
               />

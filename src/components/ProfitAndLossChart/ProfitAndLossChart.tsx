@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useRef, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 import { ProfitAndLoss } from '../../types'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
@@ -104,7 +104,7 @@ export const ProfitAndLossChart = () => {
   )
 
   const getMonthName = (pnl: ProfitAndLoss | undefined) =>
-    !!pnl ? format(parseISO(pnl.start_date), 'LLL') : ''
+    pnl ? format(parseISO(pnl.start_date), 'LLL') : ''
 
   const summarizePnL = (pnl: ProfitAndLoss | undefined) => ({
     name: getMonthName(pnl),
@@ -140,30 +140,30 @@ export const ProfitAndLossChart = () => {
   const [animateFrom, setAnimateFrom] = useState(-1)
 
   return (
-    <ResponsiveContainer width="100%" height={250}>
+    <ResponsiveContainer width='100%' height={250}>
       <BarChart
         margin={{ left: 24, right: 24, bottom: 24 }}
         data={data}
         onClick={onClick}
         barGap={barGap}
-        className="Layer__profit-and-loss-chart"
+        className='Layer__profit-and-loss-chart'
       >
         <CartesianGrid vertical={false} />
         <Legend
-          verticalAlign="top"
-          align="left"
+          verticalAlign='top'
+          align='left'
           payload={[
             { value: 'Income', type: 'circle', id: 'IncomeLegend' },
             { value: 'Expenses', type: 'circle', id: 'ExpensesLegend' },
           ]}
         />
-        <XAxis dataKey="name" tickLine={false} />
+        <XAxis dataKey='name' tickLine={false} />
         <Bar
-          dataKey="revenue"
+          dataKey='revenue'
           barSize={barSize}
           isAnimationActive={false}
           radius={[barSize / 4, barSize / 4, 0, 0]}
-          className="Layer__profit-and-loss-chart__bar--income"
+          className='Layer__profit-and-loss-chart__bar--income'
         >
           <LabelList
             content={
@@ -185,11 +185,11 @@ export const ProfitAndLossChart = () => {
           ))}
         </Bar>
         <Bar
-          dataKey="expenses"
+          dataKey='expenses'
           barSize={barSize}
           isAnimationActive={false}
           radius={[barSize / 4, barSize / 4, 0, 0]}
-          className="Layer__profit-and-loss-chart__bar--expenses"
+          className='Layer__profit-and-loss-chart__bar--expenses'
         >
           {data.map(entry => (
             <Cell
