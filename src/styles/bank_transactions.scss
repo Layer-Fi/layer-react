@@ -33,9 +33,15 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr auto auto auto;
   gap: 1px 0px;
-  background-color: var(--table-border-color);
+  background-color: var(--background-color);
   border-top: 1px solid var(--table-border-color);
   border-radius: var(--corner-radius);
+}
+
+.Layer__bank-transactions__table-headers {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
 }
 
 .Layer__bank-transactions__table-cell--header {
@@ -56,7 +62,7 @@
 
 .Layer__bank-transaction-row__container {
   background-color: var(--background-color);
-  display: grid;
+  display: contents;
   grid-column: 1 / -1;
   grid-template-columns: subgrid;
   grid-template-rows: 1fr;
@@ -74,9 +80,10 @@
 
 .Layer__bank-transaction-row__content {
   min-height: 0;
-  display: grid;
+  display: contents;
   grid-column: 1 / -1;
   grid-template-columns: subgrid;
+  overflow: hidden;
 }
 
 .Layer__bank-transaction-row__table-cell {
@@ -153,6 +160,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--table-expanded-background-color);
+  overflow: hidden;
 }
 
 .Layer__expanded-bank-transaction-row__purpose-button {
