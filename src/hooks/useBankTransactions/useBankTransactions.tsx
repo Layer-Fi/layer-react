@@ -16,7 +16,7 @@ type UseBankTransactions = () => {
 }
 
 export const useBankTransactions: UseBankTransactions = () => {
-  const { auth, businessId } = useLayerContext()
+  const { auth, businessId, apiUrl } = useLayerContext()
 
   const {
     data: responseData,
@@ -25,7 +25,20 @@ export const useBankTransactions: UseBankTransactions = () => {
     mutate,
   } = useSWR(
     businessId && auth?.access_token && `bank-transactions-${businessId}`,
-    Layer.getBankTransactions(auth?.access_token, { params: { businessId } }),
+    Layer.getBankTransactions(apiUrl, auth?.access_token, {
+      params: { businessId },
+    }),
+  )
+
+  console.log(
+    responseData,
+    isLoading,
+    responseError,
+    responseError?.name,
+    responseError?.message,
+    responseError?.info,
+    responseError?.code,
+    responseError?.errors,
   )
   const {
     data = [],
@@ -34,7 +47,7 @@ export const useBankTransactions: UseBankTransactions = () => {
   } = responseData || {}
 
   const categorize = (id: BankTransaction['id'], newCategory: CategoryUpdate) =>
-    Layer.categorizeBankTransaction(auth.access_token, {
+    Layer.categorizeBankTransaction(apiUrl, auth.access_token, {
       params: { businessId, bankTransactionId: id },
       body: newCategory,
     }).then(({ data: newBT, errors }) => {

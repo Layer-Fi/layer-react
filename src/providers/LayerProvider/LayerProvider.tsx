@@ -25,15 +25,18 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
 type LayerEnvironmentConfig = {
   url: string
   scope: string
+  api: string
 }
 export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
   production: {
     url: 'not defined yet',
     scope: 'not defined yet',
+    api: 'not defined yet',
   },
   staging: {
     url: 'https://auth.layerfi.com/oauth2/token',
     scope: 'https://sandbox.layerfi.com/sandbox',
+    api: 'https://sandbox.layerfi.com',
   },
 }
 
@@ -60,7 +63,7 @@ export const LayerProvider = ({
     revalidateIfStale: false,
   }
 
-  const { url, scope } = LayerEnvironment[environment]
+  const { url, scope, api } = LayerEnvironment[environment]
   const [state, dispatch] = useReducer(reducer, {
     auth: {
       access_token: '',
@@ -70,6 +73,7 @@ export const LayerProvider = ({
     },
     businessId,
     categories: [],
+    apiUrl: api,
   })
 
   const { data: auth } = useSWR(
@@ -99,7 +103,7 @@ export const LayerProvider = ({
 
   const { data: categories } = useSWR(
     businessId && auth?.access_token && `categories-${businessId}`,
-    Layer.getCategories(auth?.access_token, { params: { businessId } }),
+    Layer.getCategories(api, auth?.access_token, { params: { businessId } }),
     defaultSWRConfig,
   )
   useEffect(() => {
