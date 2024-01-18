@@ -2,11 +2,6 @@ import { APIError } from '../../models/APIError'
 
 export type HTTPVerb = 'get' | 'put' | 'post' | 'patch' | 'options' | 'delete'
 
-export interface ReturnError extends Error {
-  info?: string
-  status?: number
-}
-
 export const get =
   <
     Return extends Record<string, unknown> = Record<string, unknown>,
@@ -62,7 +57,6 @@ export const request =
       method: verb.toUpperCase(),
       body: JSON.stringify(options?.body),
     })
-      // .then(res => res.json() as Promise<Return>)
       .then(res => handleResponse<Return>(res))
       .catch(error => handleException(error))
 
@@ -71,7 +65,7 @@ export const put = request('put')
 
 const handleResponse = async <Return>(res: Response) => {
   if (!res.ok) {
-    const errors = await tryToReadErrorsFromReponse(res)
+    const errors = await tryToReadErrorsFromResponse(res)
     const apiError = new APIError(
       'An error occurred while fetching the data from API.',
       res.status,
@@ -106,7 +100,7 @@ const handleException = async (error: Error) => {
   throw apiError
 }
 
-const tryToReadErrorsFromReponse = async (res?: Response) => {
+const tryToReadErrorsFromResponse = async (res?: Response) => {
   try {
     const data = await res?.json()
     return data?.errors ?? []
