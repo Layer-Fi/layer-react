@@ -30,36 +30,49 @@ export const useBankTransactions: UseBankTransactions = () => {
     }),
   )
 
-  console.log(
-    responseData,
-    isLoading,
-    responseError,
-    responseError?.name,
-    responseError?.message,
-    responseError?.info,
-    responseError?.code,
-    responseError?.errors,
-  )
   const {
     data = [],
     meta: metadata = {},
     error = undefined,
   } = responseData || {}
 
-  const categorize = (id: BankTransaction['id'], newCategory: CategoryUpdate) =>
-    Layer.categorizeBankTransaction(apiUrl, auth.access_token, {
+  const categorize = (
+    id: BankTransaction['id'],
+    newCategory: CategoryUpdate,
+  ) => {
+    const foundBT = data.find(x => x.business_id === businessId && x.id === id)
+    if (foundBT) {
+      updateOneLocal({ ...foundBT, processing: true, error: undefined })
+    }
+
+    return Layer.categorizeBankTransaction(apiUrl, auth.access_token, {
       params: { businessId, bankTransactionId: id },
       body: newCategory,
-    }).then(({ data: newBT, errors }) => {
-      if (newBT) {
-        newBT.recently_categorized = true
-        updateOneLocal(newBT)
-      }
-      if (errors) {
-        console.error(errors)
-        throw errors
-      }
     })
+      .then(({ data: newBT, errors }) => {
+        if (newBT) {
+          newBT.recently_categorized = true
+          updateOneLocal(newBT)
+        }
+        if (errors) {
+          console.error(errors)
+          throw errors
+        }
+      })
+      .catch(err => {
+        const newBT = data.find(
+          x => x.business_id === businessId && x.id === id,
+        )
+
+        if (newBT) {
+          updateOneLocal({
+            ...newBT,
+            error: err.message,
+            processing: false,
+          })
+        }
+      })
+  }
 
   const updateOneLocal = (newBankTransaction: BankTransaction) => {
     const updatedData = data.map(bt =>

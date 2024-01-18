@@ -91,6 +91,7 @@ export const BankTransactionRow = ({
               name={`category-${bankTransaction.id}`}
               value={selectedCategory}
               onChange={setSelectedCategory}
+              disabled={bankTransaction.processing}
             />
           ) : (
             <Pill>{bankTransaction?.category?.display_name}</Pill>
@@ -99,13 +100,18 @@ export const BankTransactionRow = ({
         <div className={`${className} ${openClassName} ${className}--actions`}>
           <div
             className='Layer__bank-transaction-row__save-button'
-            onClick={() => save()}
+            onClick={() => {
+              if (!bankTransaction.processing) {
+                save()
+              }
+            }}
           >
             {editable && !isOpen && (
               <CheckedCircle
                 size={28}
                 strokeColor='#0C48E5'
                 fillColor='#e0e9ff'
+                opacity={bankTransaction.processing ? 0.2 : 1}
               />
             )}
           </div>
@@ -125,6 +131,13 @@ export const BankTransactionRow = ({
           close={() => toggleOpen(bankTransaction.id)}
           isOpen={isOpen}
         />
+        {bankTransaction.error && (
+          <div className='Layer__bank-transaction-row__error-row'>
+            <span className='Layer__bank-transaction-row__error-row__message'>
+              {bankTransaction.error}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )

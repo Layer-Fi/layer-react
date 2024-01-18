@@ -25,4 +25,6 @@ export interface BankTransaction extends Record<string, unknown> {
   categorization_status: CategorizationStatus
   categorization_flow: Categorization
   categorization_method: string
+  error?: string
+  processing?: boolean
 }

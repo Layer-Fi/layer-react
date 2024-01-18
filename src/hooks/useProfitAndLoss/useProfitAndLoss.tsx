@@ -21,7 +21,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     endDate: endOfMonth(new Date()),
   },
 ) => {
-  const { auth, businessId } = useLayerContext()
+  const { auth, businessId, apiUrl } = useLayerContext()
   const [startDate, setStartDate] = useState(
     initialStartDate || startOfMonth(Date.now()),
   )
@@ -39,7 +39,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       endDate &&
       auth?.access_token &&
       `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}`,
-    Layer.getProfitAndLoss(auth?.access_token, {
+    Layer.getProfitAndLoss(apiUrl, auth?.access_token, {
       params: {
         businessId,
         startDate: formatISO(startDate),
