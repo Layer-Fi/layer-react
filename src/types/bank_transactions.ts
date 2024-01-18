@@ -9,6 +9,7 @@ export enum Direction {
 // more than we're using right now.
 export interface BankTransaction extends Record<string, unknown> {
   type: 'Bank_Transaction'
+  account_name?: string
   business_id: string
   recently_categorized?: boolean
   id: string

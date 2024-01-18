@@ -72,7 +72,9 @@ export const BankTransactionRow = ({
         <div className={`${className} ${openClassName}`}>
           {bankTransaction.counterparty_name}
         </div>
-        <div className={`${className} ${openClassName}`}>Business Checking</div>
+        <div className={`${className} ${openClassName}`}>
+          {bankTransaction.account_name ?? ''}
+        </div>
         <div
           className={`${className} ${openClassName} ${className}--amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
