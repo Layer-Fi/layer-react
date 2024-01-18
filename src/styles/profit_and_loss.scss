@@ -25,6 +25,7 @@
   display: grid;
   grid-template-columns: 1fr auto;
   font-size: 1rem;
+  overflow: hidden;
 }
 
 .Layer__profit-and-loss-table__outflows {
