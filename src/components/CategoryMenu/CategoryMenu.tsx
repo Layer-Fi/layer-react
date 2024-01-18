@@ -8,6 +8,7 @@ type Props = {
   bankTransaction: BankTransaction
   value: Category | undefined
   onChange: (newValue: Category) => void
+  disabled?: boolean
 }
 
 export const CategoryMenu = ({
@@ -15,6 +16,7 @@ export const CategoryMenu = ({
   name,
   value,
   onChange,
+  disabled,
 }: Props) => {
   const { categories } = useLayerContext()
 
@@ -61,6 +63,7 @@ export const CategoryMenu = ({
       getOptionValue={category => category.stable_name || category.category}
       menuPortalTarget={document.body}
       styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+      isDisabled={disabled}
     />
   )
 }

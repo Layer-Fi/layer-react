@@ -21,7 +21,7 @@ export const getBankTransactions = get<
     sortBy = 'date',
     sortOrder = 'DESC',
   }: GetBankTransactionsParams) =>
-    `https://sandbox.layerfi.com/v1/businesses/${businessId}/bank-transactions?sort_by=${sortBy}&sort_order=${sortOrder}`,
+    `/v1/businesses/${businessId}/bank-transactions?sort_by=${sortBy}&sort_order=${sortOrder}`,
 )
 
 export const categorizeBankTransaction = put<
@@ -29,5 +29,5 @@ export const categorizeBankTransaction = put<
   CategoryUpdate
 >(
   ({ businessId, bankTransactionId }) =>
-    `https://sandbox.layerfi.com/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/categorize`,
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/categorize`,
 )

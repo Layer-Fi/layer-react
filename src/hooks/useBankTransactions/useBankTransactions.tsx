@@ -16,7 +16,7 @@ type UseBankTransactions = () => {
 }
 
 export const useBankTransactions: UseBankTransactions = () => {
-  const { auth, businessId } = useLayerContext()
+  const { auth, businessId, apiUrl } = useLayerContext()
 
   const {
     data: responseData,
@@ -25,28 +25,54 @@ export const useBankTransactions: UseBankTransactions = () => {
     mutate,
   } = useSWR(
     businessId && auth?.access_token && `bank-transactions-${businessId}`,
-    Layer.getBankTransactions(auth?.access_token, { params: { businessId } }),
+    Layer.getBankTransactions(apiUrl, auth?.access_token, {
+      params: { businessId },
+    }),
   )
+
   const {
     data = [],
     meta: metadata = {},
     error = undefined,
   } = responseData || {}
 
-  const categorize = (id: BankTransaction['id'], newCategory: CategoryUpdate) =>
-    Layer.categorizeBankTransaction(auth.access_token, {
+  const categorize = (
+    id: BankTransaction['id'],
+    newCategory: CategoryUpdate,
+  ) => {
+    const foundBT = data.find(x => x.business_id === businessId && x.id === id)
+    if (foundBT) {
+      updateOneLocal({ ...foundBT, processing: true, error: undefined })
+    }
+
+    return Layer.categorizeBankTransaction(apiUrl, auth.access_token, {
       params: { businessId, bankTransactionId: id },
       body: newCategory,
-    }).then(({ data: newBT, errors }) => {
-      if (newBT) {
-        newBT.recently_categorized = true
-        updateOneLocal(newBT)
-      }
-      if (errors) {
-        console.error(errors)
-        throw errors
-      }
     })
+      .then(({ data: newBT, errors }) => {
+        if (newBT) {
+          newBT.recently_categorized = true
+          updateOneLocal(newBT)
+        }
+        if (errors) {
+          console.error(errors)
+          throw errors
+        }
+      })
+      .catch(err => {
+        const newBT = data.find(
+          x => x.business_id === businessId && x.id === id,
+        )
+
+        if (newBT) {
+          updateOneLocal({
+            ...newBT,
+            error: err.message,
+            processing: false,
+          })
+        }
+      })
+  }
 
   const updateOneLocal = (newBankTransaction: BankTransaction) => {
     const updatedData = data.map(bt =>

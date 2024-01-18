@@ -5,6 +5,7 @@ export type LayerContextValues = {
   auth: ExpiringOAuthResponse
   businessId: string
   categories: Category[]
+  apiUrl: string
 }
 
 export enum LayerContextActionName {

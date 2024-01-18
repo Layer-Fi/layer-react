@@ -10,4 +10,5 @@ export const LayerContext = createContext<LayerContextValues>({
   },
   businessId: '',
   categories: [],
+  apiUrl: '',
 })

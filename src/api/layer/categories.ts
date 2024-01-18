@@ -6,7 +6,4 @@ export const getCategories = get<{
     type: 'Category_List'
     categories: Category[]
   }
-}>(
-  ({ businessId }) =>
-    `https://sandbox.layerfi.com/v1/businesses/${businessId}/categories`,
-)
+}>(({ businessId }) => `/v1/businesses/${businessId}/categories`)

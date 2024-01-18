@@ -1,3 +1,5 @@
+import { APIError } from '../../models/APIError'
+
 export type HTTPVerb = 'get' | 'put' | 'post' | 'patch' | 'options' | 'delete'
 
 export const get =
@@ -10,15 +12,21 @@ export const get =
   >(
     url: (params: Params) => string,
   ) =>
-  (accessToken: string | undefined, options?: { params?: Params }) =>
+  (
+    baseUrl: string,
+    accessToken: string | undefined,
+    options?: { params?: Params },
+  ) =>
   (): Promise<Return> =>
-    fetch(url(options?.params || ({} as Params)), {
+    fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
       headers: {
         Authorization: 'Bearer ' + (accessToken || ''),
         'Content-Type': 'application/json',
       },
       method: 'GET',
-    }).then(res => res.json() as Promise<Return>)
+    })
+      .then(res => handleResponse<Return>(res))
+      .catch(error => handleException(error))
 
 export const request =
   (verb: HTTPVerb) =>
@@ -33,13 +41,14 @@ export const request =
     url: (params: Params) => string,
   ) =>
   (
+    baseUrl: string,
     accessToken: string | undefined,
     options?: {
       params?: Params
       body?: Body
     },
   ): Promise<Return> =>
-    fetch(url(options?.params || ({} as Params)), {
+    fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
       headers: {
         Authorization: 'Bearer ' + (accessToken || ''),
         'Content-Type': 'application/json',
@@ -47,7 +56,55 @@ export const request =
       },
       method: verb.toUpperCase(),
       body: JSON.stringify(options?.body),
-    }).then(res => res.json() as Promise<Return>)
+    })
+      .then(res => handleResponse<Return>(res))
+      .catch(error => handleException(error))
 
 export const post = request('post')
 export const put = request('put')
+
+const handleResponse = async <Return>(res: Response) => {
+  if (!res.ok) {
+    const errors = await tryToReadErrorsFromResponse(res)
+    const apiError = new APIError(
+      'An error occurred while fetching the data from API.',
+      res.status,
+      errors,
+    )
+    throw apiError
+  }
+
+  const parsedResponse = await res.json()
+  if (parsedResponse && 'errors' in parsedResponse) {
+    const apiError = new APIError(
+      'Errors in the API response.',
+      res.status,
+      parsedResponse.errors ?? [],
+    )
+    throw apiError
+  }
+
+  return parsedResponse as Return
+}
+
+const handleException = async (error: Error) => {
+  if (error.name === 'APIError') {
+    throw error
+  }
+
+  const apiError = new APIError(
+    'An error occurred while parsing the data from API.',
+    undefined,
+    [],
+  )
+  throw apiError
+}
+
+const tryToReadErrorsFromResponse = async (res?: Response) => {
+  try {
+    const data = await res?.json()
+    return data?.errors ?? []
+  } catch (_err) {
+    return []
+  }
+}
