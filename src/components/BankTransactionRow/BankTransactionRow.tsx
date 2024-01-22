@@ -66,24 +66,26 @@ export const BankTransactionRow = ({
       }}
     >
       <div className='Layer__bank-transaction-row__content'>
-        <div className={`${className} ${openClassName} ${className}--date`}>
+        <div
+          className={`Layer__table-cell ${className} ${openClassName} ${className}--date`}
+        >
           {formatTime(parseISO(bankTransaction.date), dateFormat)}
         </div>
-        <div className={`${className} ${openClassName}`}>
+        <div className={`Layer__table-cell ${className} ${openClassName}`}>
           {bankTransaction.counterparty_name}
         </div>
-        <div className={`${className} ${openClassName}`}>
+        <div className={`Layer__table-cell ${className} ${openClassName}`}>
           {bankTransaction.account_name ?? ''}
         </div>
         <div
-          className={`${className} ${openClassName} ${className}--amount-${
+          className={`Layer__table-cell ${className} ${openClassName} ${className}--amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
         >
           {formatMoney(bankTransaction.amount)}
         </div>
         <div
-          className={`${className} ${openClassName} ${
+          className={`Layer__table-cell ${className} ${openClassName} ${
             isOpen && 'Layer__bank-transaction-row__table-cell--hide-contents'
           }`}
         >
@@ -99,7 +101,9 @@ export const BankTransactionRow = ({
             <Pill>{bankTransaction?.category?.display_name}</Pill>
           )}
         </div>
-        <div className={`${className} ${openClassName} ${className}--actions`}>
+        <div
+          className={`Layer__table-cell ${className} ${openClassName} ${className}--actions`}
+        >
           <div
             className='Layer__bank-transaction-row__save-button'
             onClick={() => {

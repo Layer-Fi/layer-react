@@ -54,7 +54,9 @@ export const BankTransactions = () => {
   return (
     <div className='Layer__component Layer__bank-transactions'>
       <header className='Layer__bank-transactions__header'>
-        <h2 className='Layer__bank-transactions__title'>Transactions</h2>
+        <h2 className='Layer__heading Layer__bank-transactions__title'>
+          Transactions
+        </h2>
         <RadioButtonGroup
           name='bank-transaction-display'
           buttons={[
@@ -67,22 +69,22 @@ export const BankTransactions = () => {
       </header>
       <div className='Layer__bank-transactions__table'>
         <div className='Layer__bank-transactions__table-headers'>
-          <div className='Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
+          <div className='Layer__table-header Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
             Date
           </div>
-          <div className='Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
+          <div className='Layer__table-header Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
             Transaction
           </div>
-          <div className='Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
+          <div className='Layer__table-header Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
             Account
           </div>
-          <div className='Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header Layer__bank-transactions__table-cell--header-amount'>
+          <div className='Layer__table-header Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header Layer__bank-transactions__table-cell--header-amount'>
             Amount
           </div>
-          <div className='Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
+          <div className='Layer__table-header Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
             Category
           </div>
-          <div className='Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
+          <div className='Layer__table-header Layer__table-header--primary Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
             Actions
           </div>
         </div>

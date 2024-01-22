@@ -1,6 +1,7 @@
-@import 'https://fonts.googleapis.com/css2?family=Inter';
+@import 'https://rsms.me/inter/inter.css';
 @import './variables.scss';
 
+@import './common.scss';
 @import './balance_sheet.scss';
 @import './bank_transactions.scss';
 @import './category_menu.scss';
@@ -9,3 +10,5 @@
 @import './pill.scss';
 @import './profit_and_loss.scss';
 @import './radio_button_group.scss';
+
+
