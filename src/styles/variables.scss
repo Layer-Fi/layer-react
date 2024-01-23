@@ -27,12 +27,17 @@
   --text-sm: 12px;
   --text-md: 14px;
   --text-heading: 24px;
+  --text-heading-sm: 16px;
   --font-weight-normal: 460;
   --font-weight-bold: 580;
   --spacing-sm: 12px;
   --spacing-md: 16px;
+  --spacing-xl: 32px;
   --spacing-2xl: 36px;
+  --bg-color: var(--color-white);
   --border-color: var(--color-neutral-200);
+  --border-radius-sm: 12px;
+  --border-radius: 16px;
 
   // LEGACY (?)
   --color-alabaster: #f9f9f9;
@@ -45,10 +50,8 @@
   --color-green-haze: #039855;
   --color-mine-shaft: #3c3c3c;
   --color-mischke: #d0d5dd;
-  
   --color-zumthor: #e0e9ff;
   --active: var(--color-zumthor);
-  --background-color: var(--color-white);
   --bar-color-expenses: var(--color-cornflower-blue);
   --bar-color-income: var(--color-blue-ribbon);
   --border-color: var(--color-athens-gray);

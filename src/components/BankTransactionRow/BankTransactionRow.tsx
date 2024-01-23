@@ -53,38 +53,38 @@ export const BankTransactionRow = ({
   }
 
   return (
-    <div
-      className={`Layer__bank-transaction-row__container ${
-        bankTransaction.recently_categorized
-          ? 'Layer__bank-transaction-row__container--removing'
-          : ''
-      }`}
-      onTransitionEnd={({ propertyName }) => {
-        if (propertyName === 'top') {
-          setRemoved(true)
-        }
-      }}
-    >
-      <div className='Layer__bank-transaction-row__content'>
-        <div
+    <>
+      <tr
+        className={`Layer__bank-transaction-row__container ${
+          bankTransaction.recently_categorized
+            ? 'Layer__bank-transaction-row__container--removing'
+            : ''
+        }`}
+        onTransitionEnd={({ propertyName }) => {
+          if (propertyName === 'top') {
+            setRemoved(true)
+          }
+        }}
+      >
+        <td
           className={`Layer__table-cell ${className} ${openClassName} ${className}--date`}
         >
           {formatTime(parseISO(bankTransaction.date), dateFormat)}
-        </div>
-        <div className={`Layer__table-cell ${className} ${openClassName}`}>
+        </td>
+        <td className={`Layer__table-cell ${className} ${openClassName}`}>
           {bankTransaction.counterparty_name}
-        </div>
-        <div className={`Layer__table-cell ${className} ${openClassName}`}>
+        </td>
+        <td className={`Layer__table-cell ${className} ${openClassName}`}>
           {bankTransaction.account_name ?? ''}
-        </div>
-        <div
+        </td>
+        <td
           className={`Layer__table-cell ${className} ${openClassName} ${className}--amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
         >
           {formatMoney(bankTransaction.amount)}
-        </div>
-        <div
+        </td>
+        <td
           className={`Layer__table-cell ${className} ${openClassName} ${
             isOpen && 'Layer__bank-transaction-row__table-cell--hide-contents'
           }`}
@@ -100,8 +100,8 @@ export const BankTransactionRow = ({
           ) : (
             <Pill>{bankTransaction?.category?.display_name}</Pill>
           )}
-        </div>
-        <div
+        </td>
+        <td
           className={`Layer__table-cell ${className} ${openClassName} ${className}--actions`}
         >
           <div
@@ -131,12 +131,16 @@ export const BankTransactionRow = ({
               }`}
             />
           </div>
-        </div>
+        </td>
+      </tr>
+      {/* <tr>
         <ExpandedBankTransactionRow
           bankTransaction={bankTransaction}
           close={() => toggleOpen(bankTransaction.id)}
           isOpen={isOpen}
         />
+      </tr> */}
+      <tr>
         {bankTransaction.error && (
           <div className='Layer__bank-transaction-row__error-row'>
             <span className='Layer__bank-transaction-row__error-row__message'>
@@ -144,7 +148,7 @@ export const BankTransactionRow = ({
             </span>
           </div>
         )}
-      </div>
-    </div>
+      </tr>
+    </>
   )
 }

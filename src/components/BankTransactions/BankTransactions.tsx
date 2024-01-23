@@ -2,7 +2,11 @@ import React, { useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { BankTransactionRow } from '../BankTransactionRow'
+import { Container, Header } from '../Container'
 import { RadioButtonGroup } from '../RadioButtonGroup'
+import { Heading } from '../Typography'
+
+const COMPONENT_NAME = 'bank-transactions'
 
 const dateFormat = 'MM/dd/yyyy'
 
@@ -52,11 +56,11 @@ export const BankTransactions = () => {
   const toggleOpen = (id: string) =>
     setOpenRows({ ...openRows, [id]: !openRows[id] })
   return (
-    <div className='Layer__component Layer__bank-transactions'>
-      <header className='Layer__bank-transactions__header'>
-        <h2 className='Layer__heading Layer__bank-transactions__title'>
+    <Container name={COMPONENT_NAME}>
+      <Header className='Layer__bank-transactions__header'>
+        <Heading className='Layer__bank-transactions__title'>
           Transactions
-        </h2>
+        </Heading>
         <RadioButtonGroup
           name='bank-transaction-display'
           buttons={[
@@ -66,39 +70,34 @@ export const BankTransactions = () => {
           selected={display}
           onChange={onCategorizationDisplayChange}
         />
-      </header>
-      <div className='Layer__bank-transactions__table'>
-        <div className='Layer__bank-transactions__table-headers'>
-          <div className='Layer__table-header Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
-            Date
-          </div>
-          <div className='Layer__table-header Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
-            Transaction
-          </div>
-          <div className='Layer__table-header Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
-            Account
-          </div>
-          <div className='Layer__table-header Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header Layer__bank-transactions__table-cell--header-amount'>
-            Amount
-          </div>
-          <div className='Layer__table-header Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
-            Category
-          </div>
-          <div className='Layer__table-header Layer__table-header--primary Layer__bank-transactions__table-cell Layer__bank-transactions__table-cell--header'>
-            Actions
-          </div>
-        </div>
-        {bankTransactions.map((bankTransaction: BankTransaction) => (
-          <BankTransactionRow
-            key={bankTransaction.id}
-            dateFormat={dateFormat}
-            bankTransaction={bankTransaction}
-            isOpen={openRows[bankTransaction.id]}
-            toggleOpen={toggleOpen}
-            editable={display === DisplayState.review}
-          />
-        ))}
-      </div>
-    </div>
+      </Header>
+      <table className='Layer__table Layer__bank-transactions__table'>
+        <thead>
+          <tr>
+            <th className='Layer__table-header'>Date</th>
+            <th className='Layer__table-header'>Transaction</th>
+            <th className='Layer__table-header'>Account</th>
+            <th className='Layer__table-header Layer__table-cell--amount'>
+              Amount
+            </th>
+            <th className='Layer__table-header Layer__table-header--primary'>
+              Categorize
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {bankTransactions.map((bankTransaction: BankTransaction) => (
+            <BankTransactionRow
+              key={bankTransaction.id}
+              dateFormat={dateFormat}
+              bankTransaction={bankTransaction}
+              isOpen={openRows[bankTransaction.id]}
+              toggleOpen={toggleOpen}
+              editable={display === DisplayState.review}
+            />
+          ))}
+        </tbody>
+      </table>
+    </Container>
   )
 }

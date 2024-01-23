@@ -58,6 +58,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "classnames": "^2.5.1",
     "date-fns": "^2.30.0",
     "react-select": "^5.8.0",
     "recharts": "^2.10.1",
