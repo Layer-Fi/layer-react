@@ -11,15 +11,17 @@ type UseChartOfAccounts = () => {
 }
 
 export const useChartOfAccounts: UseChartOfAccounts = () => {
-  const { auth, businessId } = useLayerContext()
+  const { auth, businessId, apiUrl } = useLayerContext()
 
   const { data, isLoading, error, mutate } = useSWR(
     businessId && auth?.access_token && `chart-of-accounts-${businessId}`,
-    Layer.getChartOfAccounts(auth?.access_token, { params: { businessId } }),
+    Layer.getChartOfAccounts(apiUrl, auth?.access_token, {
+      params: { businessId },
+    }),
   )
 
   const create = (newAccount: NewAccount) =>
-    Layer.createAccount(auth?.access_token, {
+    Layer.createAccount(apiUrl, auth?.access_token, {
       params: { businessId },
       body: newAccount,
     }).then(({ data }) => (mutate(), data))

@@ -4,7 +4,10 @@
   --color-white: white;
   --color-neutral: #666666;
   --color-neutral-50: #FAFCFC;
+  --color-neutral-100: #F7F7F7;
   --color-neutral-200: #EEF0EF;
+  --color-neutral-300: #E5EAE9;
+  --color-neutral-500: #999999;
   --color-neutral-700: #636665;
   --color-red: #E46362;
   --color-info-green: #29BC9B;
@@ -30,14 +33,33 @@
   --text-heading-sm: 16px;
   --font-weight-normal: 460;
   --font-weight-bold: 580;
+  --spacing-2xs: 6px;
   --spacing-sm: 12px;
   --spacing-md: 16px;
   --spacing-xl: 32px;
   --spacing-2xl: 36px;
   --bg-color: var(--color-white);
   --border-color: var(--color-neutral-200);
+  --border-radius-2xs: 6px;
   --border-radius-sm: 12px;
   --border-radius: 16px;
+
+  --text-color-transaction-credit: var(--color-info-green);
+  --text-color-varying-amount: var(--color-neutral-700);
+
+  --input-border-radius: var(--border-radius-2xs);
+  --input-font-size: var(--text-md);
+  --input-border-color: var(--color-neutral-300);
+  --input-placeholder-color: var(--color-neutral-500);
+  
+  --label-color: var(--color-neutral-700);
+
+  --btn-font-size: var(--text-md);
+  --btn-border-radius: var(--border-radius-2xs);
+  --btn-color: var(--color-accent);
+  --btn-bg-color: var(--color-primary);
+  --btn-secondary-color: var(--color-black);
+  --btn-secondary-bg-color: var(--color-white);
 
   // LEGACY (?)
   --color-alabaster: #f9f9f9;
@@ -62,8 +84,6 @@
   --indicator-color: var(--color-mine-shaft);
   --table-border-color: var(--color-athens-gray);
   --table-expanded-background-color: var(--color-alabaster);
-  --text-color-transaction-credit: var(--color-green-haze);
-  --text-color-varying-amount: var(--color-fiord);
   --text-color: var(--color-ebony);
   --text-skeleton-color: var(--color-comet);
   --transition-speed: 0.33s;

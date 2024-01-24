@@ -17,14 +17,12 @@
   grid-template-columns: 1fr auto;
   gap: 1px 0;
   font-size: 1rem;
-  background-color: var(--border-color);
 }
 
 .Layer__balance-sheet__header {
   display: flex;
   flex: 1;
   flex-direction: row;
-  background-color: var(--background-color);
   padding: 0 1rem;
 }
 
@@ -97,6 +95,7 @@
       left: 0;
       width: 1px;
       height: 100%;
+      opacity: 0;
     }
   }
 }

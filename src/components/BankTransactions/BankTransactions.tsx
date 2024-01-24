@@ -4,11 +4,12 @@ import { BankTransaction, CategorizationStatus } from '../../types'
 import { BankTransactionRow } from '../BankTransactionRow'
 import { Container, Header } from '../Container'
 import { RadioButtonGroup } from '../RadioButtonGroup'
+import { Toggle } from '../Toggle'
 import { Heading } from '../Typography'
 
 const COMPONENT_NAME = 'bank-transactions'
 
-const dateFormat = 'MM/dd/yyyy'
+const dateFormat = 'LLL d, yyyy'
 
 enum DisplayState {
   review = 'review',
@@ -61,9 +62,9 @@ export const BankTransactions = () => {
         <Heading className='Layer__bank-transactions__title'>
           Transactions
         </Heading>
-        <RadioButtonGroup
+        <Toggle
           name='bank-transaction-display'
-          buttons={[
+          options={[
             { label: 'To Review', value: DisplayState.review },
             { label: 'Categorized', value: DisplayState.categorized },
           ]}

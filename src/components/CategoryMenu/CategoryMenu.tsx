@@ -9,6 +9,7 @@ type Props = {
   value: Category | undefined
   onChange: (newValue: Category) => void
   disabled?: boolean
+  className?: string
 }
 
 export const CategoryMenu = ({
@@ -17,6 +18,7 @@ export const CategoryMenu = ({
   value,
   onChange,
   disabled,
+  className,
 }: Props) => {
   const { categories } = useLayerContext()
 
@@ -54,7 +56,8 @@ export const CategoryMenu = ({
   return (
     <Select<Category>
       name={name}
-      className='Layer__category-menu'
+      className={`Layer__category-menu Layer__select ${className ?? ''}`}
+      classNamePrefix='Layer__select'
       options={options}
       isSearchable={true}
       value={value}

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { HTMLProps, ReactNode } from 'react'
 import classNames from 'classnames'
 
 export enum TextSize {
@@ -17,6 +17,7 @@ export interface TextProps {
   children: ReactNode
   size?: TextSize
   weight?: TextWeight
+  htmlFor?: string
 }
 
 export const Text = ({
@@ -25,11 +26,16 @@ export const Text = ({
   children,
   size = TextSize.md,
   weight = TextWeight.normal,
+  ...props
 }: TextProps) => {
   const baseClassName = classNames(
     `Layer__text Layer__text--${size} Layer__text--${weight}`,
     className,
   )
 
-  return <Component className={baseClassName}>{children}</Component>
+  return (
+    <Component {...props} className={baseClassName}>
+      {children}
+    </Component>
+  )
 }
