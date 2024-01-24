@@ -103,6 +103,7 @@ export const BankTransactionRow = ({
           }`}
         >
           <span className='Layer__table-cell-content'>
+            {isCredit(bankTransaction) ? '+$' : ' $'}
             {formatMoney(bankTransaction.amount)}
           </span>
         </td>

@@ -62,19 +62,11 @@
 .Layer__bank-transaction-row__table-cell--amount-credit {
   justify-content: flex-end;
   color: var(--text-color-transaction-credit);
-
-  &::before {
-    content: '+$';
-  }
 }
 
 .Layer__bank-transaction-row__table-cell--amount-debit {
   justify-content: flex-end;
   color: var(--text-color-varying-amount);
-
-  &::before {
-    content: ' $';
-  }
 }
 
 .Layer__expanded-bank-transaction-row__description {
