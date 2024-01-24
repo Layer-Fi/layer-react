@@ -6,5 +6,7 @@ export const getProfitAndLoss = get<{
   error?: unknown
 }>(
   ({ businessId, startDate, endDate }) =>
-    `/v1/businesses/${businessId}/reports/profit-and-loss?start_date=${startDate}&end_date=${endDate}`,
+    `/v1/businesses/${businessId}/reports/profit-and-loss?start_date=${
+      startDate ? encodeURIComponent(startDate) : ''
+    }&end_date=${endDate ? encodeURIComponent(endDate) : ''}`,
 )
