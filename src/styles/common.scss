@@ -162,6 +162,16 @@
   background: var(--color-neutral-100);
   box-shadow: 0px 0px 0px 1px var(--color-neutral-300);
   cursor: pointer;
+
+  .Layer__toggle-option-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+}
+
+.Layer__toggle-option__icon {
+  line-height: 11px;
 }
 
 .Layer__toggle.Layer__toggle--small {

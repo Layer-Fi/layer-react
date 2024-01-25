@@ -1,7 +1,9 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
+import FolderPlus from '../../icons/FolderPlus'
 import Link from '../../icons/Link'
 import Unlink from '../../icons/LinkBroken'
+import RefreshCcw from '../../icons/RefreshCcw'
 import {
   centsToDollars as formatMoney,
   dollarsToCents as parseMoney,
@@ -166,8 +168,17 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 name={`purpose-${bankTransaction.id}`}
                 size={ToggleSize.small}
                 options={[
-                  { value: 'categorize', label: 'Categorize' },
-                  { value: 'match', label: 'Match', disabled: true },
+                  {
+                    value: 'categorize',
+                    label: 'Categorize',
+                    leftIcon: <FolderPlus size={15} />,
+                  },
+                  {
+                    value: 'match',
+                    label: 'Match',
+                    disabled: true,
+                    leftIcon: <RefreshCcw size={15} />,
+                  },
                 ]}
                 selected={purpose}
                 onChange={onChangePurpose}

@@ -1,24 +1,22 @@
 import * as React from 'react'
-import { SVGProps } from 'react'
+import { IconSvgProps } from './types'
 
-type Props = SVGProps<SVGSVGElement> & {
-  size?: SVGProps<SVGSVGElement>['width']
-}
-const ChevronDown = ({ size = 24, ...props }: Props) => (
+const ChevronDown = ({ size = 18, ...props }: IconSvgProps) => (
   <svg
+    viewBox='0 0 18 18'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
+    {...props}
     width={size}
     height={size}
-    fill='none'
-    viewBox='0 0 24 24'
-    {...props}
   >
     <path
-      strokeLinecap='round'
-      strokeLinejoin='round'
-      strokeWidth={2}
-      d='m6 9 6 6 6-6'
+      d='M4.5 6.75L9 11.25L13.5 6.75'
+      stroke='currentColor'
+      stroke-linecap='round'
+      stroke-linejoin='round'
     />
   </svg>
 )
+
 export default ChevronDown

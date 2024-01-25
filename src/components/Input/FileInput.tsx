@@ -1,4 +1,5 @@
 import React, { useRef, ChangeEvent } from 'react'
+import UploadCloud from '../../icons/UploadCloud'
 import { Button } from '../Button'
 import { ButtonVariant } from '../Button/Button'
 
@@ -25,7 +26,11 @@ export const FileInput = ({ text = 'Upload', onUpload }: FileInputProps) => {
 
   return (
     <>
-      <Button onClick={onClick} variant={ButtonVariant.secondary}>
+      <Button
+        onClick={onClick}
+        variant={ButtonVariant.secondary}
+        leftIcon={<UploadCloud />}
+      >
         {text}
       </Button>
       <input

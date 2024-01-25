@@ -1,10 +1,11 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, ReactNode } from 'react'
 import classNames from 'classnames'
 
 export interface Option {
   label: string
   value: string
   disabled?: boolean
+  leftIcon?: ReactNode
 }
 
 export enum ToggleSize {
@@ -28,6 +29,7 @@ interface ToggleOptionProps {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
   value: string
   disabled?: boolean
+  leftIcon?: ReactNode
 }
 
 export const Toggle = ({
@@ -64,6 +66,7 @@ const ToggleOption = ({
   onChange,
   value,
   size,
+  leftIcon,
   disabled,
 }: ToggleOptionProps) => {
   return (
@@ -76,7 +79,13 @@ const ToggleOption = ({
         value={value}
         disabled={disabled ?? false}
       />
-      <span>{label}</span>
+
+      <span className='Layer__toggle-option-content'>
+        {leftIcon && (
+          <span className='Layer__toggle-option__icon'>{leftIcon}</span>
+        )}
+        <span>{label}</span>
+      </span>
     </label>
   )
 }
