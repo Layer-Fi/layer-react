@@ -15,8 +15,7 @@ import {
   Category,
   CategorizationType,
 } from '../../types'
-import { Button } from '../Button'
-import { ButtonVariant } from '../Button/Button'
+import { Button, SubmitButton, ButtonVariant } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
 import { InputGroup, Input, FileInput } from '../Input'
 import { Textarea } from '../Textarea'
@@ -27,6 +26,7 @@ type Props = {
   bankTransaction: BankTransaction
   close?: () => void
   isOpen?: boolean
+  asListItem?: boolean
 }
 
 type Split = {
@@ -51,7 +51,7 @@ export type SaveHandle = {
 }
 
 export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
-  ({ bankTransaction, isOpen = false }, ref) => {
+  ({ bankTransaction, isOpen = false, asListItem = false }, ref) => {
     const { categorize: categorizeBankTransaction } = useBankTransactions()
     const [purpose, setPurpose] = useState<Purpose>(Purpose.categorize)
 
@@ -156,109 +156,120 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     const className = 'Layer__expanded-bank-transaction-row'
     return (
-      <tr
+      <span
         className={`${className} ${className}--${
           isOpen ? 'expanded' : 'collapsed'
         }`}
       >
-        <td colSpan={5}>
-          <span className={`${className}__wrapper`}>
-            <div className={`${className}__content-toggle`}>
-              <Toggle
-                name={`purpose-${bankTransaction.id}`}
-                size={ToggleSize.small}
-                options={[
-                  {
-                    value: 'categorize',
-                    label: 'Categorize',
-                    leftIcon: <FolderPlus size={15} />,
-                  },
-                  {
-                    value: 'match',
-                    label: 'Match',
-                    disabled: true,
-                    leftIcon: <RefreshCcw size={15} />,
-                  },
-                ]}
-                selected={purpose}
-                onChange={onChangePurpose}
-              />
-            </div>
-            <div
-              className={`${className}__content`}
-              id={`expanded-${bankTransaction.id}`}
-            >
-              <div className={`${className}__splits`}>
-                <div className={`${className}__splits-inputs`}>
-                  {rowState.splits.map((split, index) => (
-                    <div
-                      className={`${className}__table-cell--split-entry`}
-                      key={`split-${index}`}
-                    >
-                      {rowState.splits.length > 1 && (
-                        <Input
-                          type='text'
-                          name={`split-${index}`}
-                          disabled={index + 1 === rowState.splits.length}
-                          onChange={updateAmounts(index)}
-                          value={split.inputValue}
-                          onBlur={onBlur}
-                          className={`${className}__split-amount${
-                            split.amount < 0 ? '--negative' : ''
-                          }`}
-                        />
-                      )}
-                      <CategoryMenu
-                        bankTransaction={bankTransaction}
-                        name={`category-${index}`}
-                        value={split.category}
-                        onChange={value => changeCategory(index, value)}
-                        className='Layer__category-menu--full'
+        <span className={`${className}__wrapper`}>
+          <div className={`${className}__content-toggle`}>
+            <Toggle
+              name={`purpose-${bankTransaction.id}${asListItem ? '-li' : ''}`}
+              size={ToggleSize.small}
+              options={[
+                {
+                  value: 'categorize',
+                  label: 'Categorize',
+                  leftIcon: <FolderPlus size={15} />,
+                },
+                {
+                  value: 'match',
+                  label: 'Match',
+                  disabled: true,
+                  leftIcon: <RefreshCcw size={15} />,
+                },
+              ]}
+              selected={purpose}
+              onChange={onChangePurpose}
+            />
+          </div>
+          <div
+            className={`${className}__content`}
+            id={`expanded-${bankTransaction.id}`}
+          >
+            <div className={`${className}__splits`}>
+              <div className={`${className}__splits-inputs`}>
+                {rowState.splits.map((split, index) => (
+                  <div
+                    className={`${className}__table-cell--split-entry`}
+                    key={`split-${index}`}
+                  >
+                    {rowState.splits.length > 1 && (
+                      <Input
+                        type='text'
+                        name={`split-${index}${asListItem ? '-li' : ''}`}
+                        disabled={index + 1 === rowState.splits.length}
+                        onChange={updateAmounts(index)}
+                        value={split.inputValue}
+                        onBlur={onBlur}
+                        className={`${className}__split-amount${
+                          split.amount < 0 ? '--negative' : ''
+                        }`}
                       />
-                    </div>
-                  ))}
-                </div>
-                <div className={`${className}__splits-buttons`}>
-                  {rowState.splits.length === 1 ? (
-                    <Button
-                      onClick={addSplit}
-                      leftIcon={<Unlink size={14} />}
-                      variant={ButtonVariant.secondary}
-                    >
-                      Split
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={removeSplit}
-                      leftIcon={<Link size={14} />}
-                      variant={ButtonVariant.secondary}
-                    >
-                      Merge
-                    </Button>
-                  )}
-                </div>
+                    )}
+                    <CategoryMenu
+                      bankTransaction={bankTransaction}
+                      name={`category-${index}${asListItem ? '-li' : ''}`}
+                      value={split.category}
+                      onChange={value => changeCategory(index, value)}
+                      className='Layer__category-menu--full'
+                    />
+                  </div>
+                ))}
               </div>
-
-              <InputGroup
-                className={`${className}__description`}
-                name='description'
-                label='Description'
-              >
-                <Textarea name='description' placeholder='Enter description' />
-              </InputGroup>
-
-              <div className={`${className}__file-upload`}>
-                <FileInput text='Upload receipt' />
+              <div className={`${className}__splits-buttons`}>
+                {rowState.splits.length === 1 ? (
+                  <Button
+                    onClick={addSplit}
+                    leftIcon={<Unlink size={14} />}
+                    variant={ButtonVariant.secondary}
+                  >
+                    Split
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={removeSplit}
+                    leftIcon={<Link size={14} />}
+                    variant={ButtonVariant.secondary}
+                  >
+                    Merge
+                  </Button>
+                )}
               </div>
-              {/* <div className={`${className}__table-cell`}>
-              <button onClick={save} className={`${className}__button--save`}>
-                Save
-              </button>
-            </div> */}
             </div>
-          </span>
-        </td>
-      </tr>
+
+            <InputGroup
+              className={`${className}__description`}
+              name='description'
+              label='Description'
+            >
+              <Textarea name='description' placeholder='Enter description' />
+            </InputGroup>
+
+            <div className={`${className}__file-upload`}>
+              <FileInput text='Upload receipt' />
+            </div>
+
+            {asListItem && (
+              <div className={`${className}__submit-btn`}>
+                <SubmitButton
+                  onClick={() => {
+                    if (!bankTransaction.processing) {
+                      save()
+                    }
+                  }}
+                  className='Layer__bank-transaction__submit-btn'
+                  processing={bankTransaction.processing}
+                  error={bankTransaction.error}
+                  active={true}
+                >
+                  Approve
+                </SubmitButton>
+              </div>
+            )}
+          </div>
+        </span>
+      </span>
     )
   },
 )

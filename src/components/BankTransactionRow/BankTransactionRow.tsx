@@ -154,12 +154,16 @@ export const BankTransactionRow = ({
           </span>
         </td>
       </tr>
-      <ExpandedBankTransactionRow
-        ref={expandedRowRef}
-        bankTransaction={bankTransaction}
-        close={() => toggleOpen(bankTransaction.id)}
-        isOpen={isOpen}
-      />
+      <tr>
+        <td colSpan={5}>
+          <ExpandedBankTransactionRow
+            ref={expandedRowRef}
+            bankTransaction={bankTransaction}
+            close={() => toggleOpen(bankTransaction.id)}
+            isOpen={isOpen}
+          />
+        </td>
+      </tr>
     </>
   )
 }

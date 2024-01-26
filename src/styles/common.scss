@@ -10,6 +10,7 @@
   border: 1px solid var(--border-color);
   background-color: var(--bg-color);
   overflow: hidden;
+  container-type: inline-size;
 }
 
 .Layer__component-header {
@@ -47,11 +48,11 @@
 }
 
 .Layer__text--sm {
-  font-size: var(--spacing-sm);
+  font-size: var(--text-sm);
 }
 
 .Layer__text--md {
-  font-size: var(--spacing-md);
+  font-size: var(--text-md);
 }
 
 .Layer__text--bold,
@@ -374,6 +375,7 @@
   align-items: center;
   font-size: var(--btn-font-size);
   line-height: 100%;
+  justify-content: space-between;
 }
 
 .Layer__btn-text {

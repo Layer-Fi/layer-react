@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { BankTransaction, CategorizationStatus } from '../../types'
+import { BankTransactionListItem } from '../BankTransactionListItem'
 import { BankTransactionRow } from '../BankTransactionRow'
 import { Container, Header } from '../Container'
-import { RadioButtonGroup } from '../RadioButtonGroup'
 import { Toggle } from '../Toggle'
 import { Heading } from '../Typography'
 
@@ -99,6 +99,18 @@ export const BankTransactions = () => {
           ))}
         </tbody>
       </table>
+      <ul className='Layer__bank-transactions__list'>
+        {bankTransactions.map((bankTransaction: BankTransaction) => (
+          <BankTransactionListItem
+            key={bankTransaction.id}
+            dateFormat={dateFormat}
+            bankTransaction={bankTransaction}
+            isOpen={openRows[bankTransaction.id]}
+            toggleOpen={toggleOpen}
+            editable={display === DisplayState.review}
+          />
+        ))}
+      </ul>
     </Container>
   )
 }
