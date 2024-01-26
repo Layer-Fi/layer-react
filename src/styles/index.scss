@@ -1,13 +1,17 @@
 @import 'https://rsms.me/inter/inter.css';
 @import './variables.scss';
 
+@import './button.scss';
 @import './common.scss';
+@import './component.scss';
 @import './balance_sheet.scss';
 @import './bank_transactions.scss';
 @import './chart_of_accounts.scss';
 @import './icons.scss';
+@import './inputs.scss';
 @import './pill.scss';
 @import './profit_and_loss.scss';
 @import './radio_button_group.scss';
-
-
+@import './table.scss';
+@import './typography.scss';
+@import './utils.scss';

@@ -1,0 +1,14 @@
+.Layer__component-container {
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-color);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.Layer__component-header {
+  padding: var(--spacing-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

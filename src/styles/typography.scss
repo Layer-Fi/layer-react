@@ -1,0 +1,37 @@
+.Layer__heading {
+  color: var(--text-color-primary);
+  font-size: var(--text-heading);
+  font-variation-settings: 'wght' var(--font-weight-bold);
+  line-height: 140%;
+  letter-spacing: -0.12px;
+  margin: 0;
+  align-self: center;
+}
+
+.Layer__heading--secondary,
+.Layer__heading.Layer__heading--secondary {
+  color: var(--text-color-primary);
+  font-size: var(--text-heading-sm);
+  font-variation-settings: 'wght' var(--font-weight-bold);
+}
+
+.Layer__text {
+  font-family: var(--font-family);
+  font-variation-settings: 'wght' var(--font-weight-normal);
+  font-variant-numeric: lining-nums proportional-nums;
+  font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
+  line-height: 140%;
+}
+
+.Layer__text--sm {
+  font-size: var(--text-sm);
+}
+
+.Layer__text--md {
+  font-size: var(--text-md);
+}
+
+.Layer__text--bold,
+.Layer__text.Layer__text--bold {
+  font-variation-settings: 'wght' var(--font-weight-bold);
+}
