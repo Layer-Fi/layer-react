@@ -29,9 +29,17 @@ export const Button = ({
   return (
     <button {...props} className={baseClassName}>
       <span className='Layer__btn-content'>
-        {leftIcon}
+        {leftIcon && (
+          <span className='Layer__btn-icon Layer__btn-icon--left'>
+            {leftIcon}
+          </span>
+        )}
         <span className='Layer__btn-text'>{children}</span>
-        {rightIcon}
+        {rightIcon && (
+          <span className='Layer__btn-icon Layer__btn-icon--right'>
+            {rightIcon}
+          </span>
+        )}
       </span>
     </button>
   )

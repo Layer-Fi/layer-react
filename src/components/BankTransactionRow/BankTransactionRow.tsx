@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
-import CheckedCircle from '../../icons/CheckedCircle'
 import ChevronDown from '../../icons/ChevronDown'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationType, Direction } from '../../types'
-import { Button } from '../Button'
+import { SubmitButton } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
@@ -129,16 +128,19 @@ export const BankTransactionRow = ({
             {!editable ? (
               <Pill>{bankTransaction?.category?.display_name}</Pill>
             ) : null}
-            <Button
+            <SubmitButton
               onClick={() => {
                 if (!bankTransaction.processing) {
                   save()
                 }
               }}
-              disabled={bankTransaction.processing}
+              className='Layer__bank-transaction__submit-btn'
+              processing={bankTransaction.processing}
+              error={bankTransaction.error}
+              active={isOpen}
             >
               Approve
-            </Button>
+            </SubmitButton>
             <div
               onClick={() => toggleOpen(bankTransaction.id)}
               className='Layer__bank-transaction-row__expand-button'
@@ -158,15 +160,6 @@ export const BankTransactionRow = ({
         close={() => toggleOpen(bankTransaction.id)}
         isOpen={isOpen}
       />
-      {/* <tr>
-        {bankTransaction.error && (
-          <div className='Layer__bank-transaction-row__error-row'>
-            <span className='Layer__bank-transaction-row__error-row__message'>
-              {bankTransaction.error}
-            </span>
-          </div>
-        )}
-      </tr> */}
     </>
   )
 }

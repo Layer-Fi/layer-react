@@ -277,17 +277,66 @@
 /** Buttons */
 
 .Layer__btn {
+  position: relative;
   border-radius: var(--btn-border-radius);
   border-width: 0px;
+  font-family: var(--font-family);
+  font-variation-settings: 'wght' var(--font-weight-normal);
+  font-variant-numeric: lining-nums proportional-nums;
+  font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
   padding: 0;
   cursor: pointer;
   min-height: 36px;
   box-sizing: border-box;
   box-shadow: 0px 0px 0px 1px var(--color-neutral-300), 0px 1px 1px 0px rgba(0, 0, 0, 0.04), 0px 2px 3px 0px rgba(0, 0, 0, 0.04), 0px 3px 4px 0px rgba(0, 0, 0, 0.02), 0px 4px 5px 0px rgba(0, 0, 0, 0.01);
-  transition: all var(--transition-speed) ease-out;
+  transition: all 100ms ease-out;
+
+  .Layer__btn-icon {
+    color: var(--btn-color-icon);
+    background: var(--btn-bg-color-icon);
+    // padding: 10px var(--spacing-md);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    transition: all 150ms ease-out;
+
+    & .Layer__btn-icon--on-active {
+      display: none;
+    }
+  }
+
+  // @TODO - convert into tooltip
+  .Layer__btn-error-message {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 40px;
+    padding: var(--spacing-sm);
+    background: var(--tooltip-bg-color);
+    color: var(--tooltip-color);
+    border-radius: var(--border-radius-sm);
+    font-family: var(--font-family);
+    font-variation-settings: 'wght' var(--font-weight-normal);
+    font-variant-numeric: lining-nums proportional-nums;
+    font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
+    font-size: var(--text-sm);
+    width: 150%;
+  }
 
   &:hover {
     box-shadow: 0px 2px 4px 0px rgba(25, 25, 25, 0.06), 0px 4px 12px 0px var(--neutral-8, rgba(26, 26, 26, 0.08)), 0px 0px 0px 1px rgba(25, 25, 25, 0.06);
+
+    .Layer__btn-error-message {
+      display: block;
+    }
+  }
+
+  &:disabled {
+    box-shadow: none;
   }
 }
 
@@ -299,13 +348,30 @@
 .Layer__btn--primary {
   color: var(--btn-color);
   background: var(--btn-bg-color);
+
+  &:hover:not([disabled]), &.Layer__btn--active:not([disabled]) {
+    color: var(--btn-color-hover);
+    background: var(--btn-bg-color-hover);
+
+    .Layer__btn-icon {
+      color: var(--btn-color-icon-hover);
+      background: var(--btn-bg-color-icon-hover);
+
+      & .Layer__btn-icon--on-active {
+        display: block;
+      }
+      
+      & .Layer__btn-icon--on-inactive {
+        display: none;
+      }
+    }
+  }
 }
 
 .Layer__btn-content {
-  padding: 10px var(--spacing-md);
+  padding: 2px;
   display: flex;
   align-items: center;
-  gap:  var(--spacing-sm);
   font-size: var(--btn-font-size);
   line-height: 100%;
 }
@@ -313,4 +379,39 @@
 .Layer__btn-text {
   font-family: var(--font-family);
   font-size: var(--btn-font-size);
+  padding: 0 14px;
+}
+
+.Layer__btn-icon--left {
+  margin-right: -4px;
+}
+
+.Layer__btn-icon--right {
+  margin-left: -4px;
+}
+
+/** Loader and anims */
+
+@keyframes rotating {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+.Layer__anim--rotating {
+  -webkit-animation: rotating 2s linear infinite;
+  -moz-animation: rotating 2s linear infinite;
+  -ms-animation: rotating 2s linear infinite;
+  -o-animation: rotating 2s linear infinite;
+  animation: rotating 2s linear infinite;
 }

@@ -16,8 +16,26 @@
   transition: background-color var(--transition-speed) ease-out;
 }
 
-.Layer__expanded-bank-transaction-row.Layer__expanded-bank-transaction-row--expanded {
+.Layer__bank-transaction-row:hover, .Layer__expanded-bank-transaction-row.Layer__expanded-bank-transaction-row--expanded {
   background-color: var(--bg-element-focus);
+}
+
+.Layer__bank-transaction-row:hover .Layer__bank-transaction__submit-btn:not([disabled]) {
+  color: var(--btn-color-hover);
+  background: var(--btn-bg-color-hover);
+
+  .Layer__btn-icon {
+    color: var(--btn-color-icon-hover);
+    background: var(--btn-bg-color-icon-hover);
+
+    & .Layer__btn-icon--on-active {
+      display: block;
+    }
+    
+    & .Layer__btn-icon--on-inactive {
+      display: none;
+    }
+  }
 }
 
 .Layer__expanded-bank-transaction-row .Layer__expanded-bank-transaction-row__wrapper {
@@ -55,7 +73,7 @@
 }
 
 .Layer__expanded-bank-transaction-row__splits-buttons button {
-  min-width: 102px;
+  min-width: 114px;
 }
 
 // @TODO

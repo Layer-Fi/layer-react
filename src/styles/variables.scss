@@ -9,6 +9,7 @@
   --color-neutral-300: #E5EAE9;
   --color-neutral-500: #999999;
   --color-neutral-700: #636665;
+  --color-neutral-800: #333333;
   --color-red: #E46362;
   --color-info-green: #29BC9B;
 
@@ -57,8 +58,14 @@
 
   --btn-font-size: var(--text-md);
   --btn-border-radius: var(--border-radius-2xs);
-  --btn-color: var(--color-accent);
-  --btn-bg-color: var(--color-primary);
+  --btn-color: var(--color-black);
+  --btn-bg-color: var(--color-white);
+  --btn-color-hover: var(--color-accent);
+  --btn-bg-color-hover: var(--color-primary);
+  --btn-color-icon: var(--color-black);
+  --btn-bg-color-icon: var(--color-neutral-50);
+  --btn-color-icon-hover: var(--color-black);
+  --btn-bg-color-icon-hover: var(--color-accent);
   --btn-secondary-color: var(--color-black);
   --btn-secondary-bg-color: var(--color-white);
 
@@ -66,6 +73,8 @@
   --badge-bg-color: var(--color-neutral-300);
   --badge-border-radius: var(--border-radius-sm);
 
+  --tooltip-color: var(--color-white);
+  --tooltip-bg-color: var(--color-neutral-800);
 
   // LEGACY (?)
   --color-alabaster: #f9f9f9;
