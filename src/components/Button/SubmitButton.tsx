@@ -12,6 +12,7 @@ export interface SubmitButtonProps
   disabled?: boolean
   error?: boolean | string
   active?: boolean
+  iconOnly?: boolean
 }
 
 const buildRightIcon = ({

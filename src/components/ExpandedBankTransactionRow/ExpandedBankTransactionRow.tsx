@@ -2,8 +2,8 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import FolderPlus from '../../icons/FolderPlus'
 import Link from '../../icons/Link'
-import Unlink from '../../icons/LinkBroken'
 import RefreshCcw from '../../icons/RefreshCcw'
+import ScissorsFullOpen from '../../icons/ScissorsFullOpen'
 import {
   centsToDollars as formatMoney,
   dollarsToCents as parseMoney,
@@ -27,6 +27,7 @@ type Props = {
   close?: () => void
   isOpen?: boolean
   asListItem?: boolean
+  showSubmitButton?: boolean
 }
 
 type Split = {
@@ -51,7 +52,15 @@ export type SaveHandle = {
 }
 
 export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
-  ({ bankTransaction, isOpen = false, asListItem = false }, ref) => {
+  (
+    {
+      bankTransaction,
+      isOpen = false,
+      asListItem = false,
+      showSubmitButton = false,
+    },
+    ref,
+  ) => {
     const { categorize: categorizeBankTransaction } = useBankTransactions()
     const [purpose, setPurpose] = useState<Purpose>(Purpose.categorize)
 
@@ -221,7 +230,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 {rowState.splits.length === 1 ? (
                   <Button
                     onClick={addSplit}
-                    leftIcon={<Unlink size={14} />}
+                    leftIcon={<ScissorsFullOpen size={14} />}
                     variant={ButtonVariant.secondary}
                   >
                     Split
@@ -250,7 +259,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               <FileInput text='Upload receipt' />
             </div>
 
-            {asListItem && (
+            {asListItem || showSubmitButton ? (
               <div className={`${className}__submit-btn`}>
                 <SubmitButton
                   onClick={() => {
@@ -266,7 +275,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   Approve
                 </SubmitButton>
               </div>
-            )}
+            ) : null}
           </div>
         </span>
       </span>

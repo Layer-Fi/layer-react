@@ -4,6 +4,7 @@ import { BankTransaction, CategorizationStatus } from '../../types'
 import { BankTransactionListItem } from '../BankTransactionListItem'
 import { BankTransactionRow } from '../BankTransactionRow'
 import { Container, Header } from '../Container'
+import { Loader } from '../Loader'
 import { Toggle } from '../Toggle'
 import { Heading } from '../Typography'
 
@@ -43,7 +44,7 @@ const filterVisibility =
 
 export const BankTransactions = () => {
   const [display, setDisplay] = useState<DisplayState>(DisplayState.review)
-  const { data } = useBankTransactions()
+  const { data, isLoading } = useBankTransactions()
   const bankTransactions = data.filter(filterVisibility(display))
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -56,6 +57,8 @@ export const BankTransactions = () => {
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({})
   const toggleOpen = (id: string) =>
     setOpenRows({ ...openRows, [id]: !openRows[id] })
+
+  const editable = display === DisplayState.review
   return (
     <Container name={COMPONENT_NAME}>
       <Header className='Layer__bank-transactions__header'>
@@ -72,45 +75,66 @@ export const BankTransactions = () => {
           onChange={onCategorizationDisplayChange}
         />
       </Header>
-      <table className='Layer__table Layer__bank-transactions__table'>
+      <table
+        width='100%'
+        className='Layer__table Layer__bank-transactions__table'
+      >
         <thead>
           <tr>
-            <th className='Layer__table-header'>Date</th>
-            <th className='Layer__table-header'>Transaction</th>
-            <th className='Layer__table-header'>Account</th>
-            <th className='Layer__table-header Layer__table-cell--amount'>
+            <th className='Layer__table-header Layer__bank-transactions__date-col'>
+              Date
+            </th>
+            <th className='Layer__table-header Layer__bank-transactions__tx-col'>
+              Transaction
+            </th>
+            <th className='Layer__table-header Layer__bank-transactions__account-col'>
+              Account
+            </th>
+            <th className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'>
               Amount
             </th>
-            <th className='Layer__table-header Layer__table-header--primary'>
-              Categorize
-            </th>
+            {editable ? (
+              <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
+                Categorize
+              </th>
+            ) : (
+              <th className='Layer__table-header Layer__table-cell__category-col'>
+                Category
+              </th>
+            )}
           </tr>
         </thead>
         <tbody>
+          {!isLoading &&
+            bankTransactions.map((bankTransaction: BankTransaction) => (
+              <BankTransactionRow
+                key={bankTransaction.id}
+                dateFormat={dateFormat}
+                bankTransaction={bankTransaction}
+                isOpen={openRows[bankTransaction.id]}
+                toggleOpen={toggleOpen}
+                editable={editable}
+              />
+            ))}
+        </tbody>
+      </table>
+      {isLoading || !bankTransactions || bankTransactions?.length === 0 ? (
+        <Loader />
+      ) : null}
+      {!isLoading && (
+        <ul className='Layer__bank-transactions__list'>
           {bankTransactions.map((bankTransaction: BankTransaction) => (
-            <BankTransactionRow
+            <BankTransactionListItem
               key={bankTransaction.id}
               dateFormat={dateFormat}
               bankTransaction={bankTransaction}
               isOpen={openRows[bankTransaction.id]}
               toggleOpen={toggleOpen}
-              editable={display === DisplayState.review}
+              editable={editable}
             />
           ))}
-        </tbody>
-      </table>
-      <ul className='Layer__bank-transactions__list'>
-        {bankTransactions.map((bankTransaction: BankTransaction) => (
-          <BankTransactionListItem
-            key={bankTransaction.id}
-            dateFormat={dateFormat}
-            bankTransaction={bankTransaction}
-            isOpen={openRows[bankTransaction.id]}
-            toggleOpen={toggleOpen}
-            editable={display === DisplayState.review}
-          />
-        ))}
-      </ul>
+        </ul>
+      )}
     </Container>
   )
 }

@@ -7,7 +7,7 @@ import { SubmitButton } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { Pill } from '../Pill'
+import { Text } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
@@ -86,18 +86,18 @@ export const BankTransactionRow = ({
             {formatTime(parseISO(bankTransaction.date), dateFormat)}
           </span>
         </td>
-        <td className='Layer__table-cell'>
+        <td className='Layer__table-cell Layer__bank-transactions__tx-col'>
           <span className='Layer__table-cell-content'>
             {bankTransaction.counterparty_name}
           </span>
         </td>
-        <td className='Layer__table-cell'>
+        <td className='Layer__table-cell Layer__bank-transactions__account-col'>
           <span className='Layer__table-cell-content'>
             {bankTransaction.account_name ?? ''}
           </span>
         </td>
         <td
-          className={`Layer__table-cell Layer__table-cell--amount ${className}__table-cell--amount-${
+          className={`Layer__table-cell Layer__table-cell__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
         >
@@ -109,6 +109,7 @@ export const BankTransactionRow = ({
         <td
           className={classNames(
             'Layer__table-cell',
+            'Layer__table-cell__category-col',
             `${className}__actions-cell`,
             `${className}__actions-cell--${isOpen ? 'open' : 'close'}`,
           )}
@@ -126,21 +127,25 @@ export const BankTransactionRow = ({
               />
             ) : null}
             {!editable ? (
-              <Pill>{bankTransaction?.category?.display_name}</Pill>
+              <Text className={`${className}__category-text`}>
+                {bankTransaction?.category?.display_name}
+              </Text>
             ) : null}
-            <SubmitButton
-              onClick={() => {
-                if (!bankTransaction.processing) {
-                  save()
-                }
-              }}
-              className='Layer__bank-transaction__submit-btn'
-              processing={bankTransaction.processing}
-              error={bankTransaction.error}
-              active={isOpen}
-            >
-              Approve
-            </SubmitButton>
+            {editable && (
+              <SubmitButton
+                onClick={() => {
+                  if (!bankTransaction.processing) {
+                    save()
+                  }
+                }}
+                className='Layer__bank-transaction__submit-btn'
+                processing={bankTransaction.processing}
+                error={bankTransaction.error}
+                active={isOpen}
+              >
+                Approve
+              </SubmitButton>
+            )}
             <div
               onClick={() => toggleOpen(bankTransaction.id)}
               className='Layer__bank-transaction-row__expand-button'
@@ -161,6 +166,7 @@ export const BankTransactionRow = ({
             bankTransaction={bankTransaction}
             close={() => toggleOpen(bankTransaction.id)}
             isOpen={isOpen}
+            showSubmitButton={!editable}
           />
         </td>
       </tr>

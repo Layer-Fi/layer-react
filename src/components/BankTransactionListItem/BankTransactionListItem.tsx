@@ -137,6 +137,7 @@ export const BankTransactionListItem = ({
             className='Layer__bank-transaction__submit-btn'
             processing={bankTransaction.processing}
             error={bankTransaction.error}
+            iconOnly={true}
           />
         )}
       </span>

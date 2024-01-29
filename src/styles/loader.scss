@@ -1,0 +1,10 @@
+.Layer__loader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: var(--spacing-md);
+  color: var(--text-color-secondary);
+  font-size: var(--text-sm);
+}

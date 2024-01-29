@@ -31,6 +31,11 @@
   box-shadow: 0px 0px 0px 1px var(--input-border-color);
   font-family: var(--font-family);
   font-size: var(--input-font-size);
+
+  &:focus, &:active, &:focus-visible {
+    box-shadow: 0px 0px 0px 3px rgba(26, 26, 26, 0.08), 0px 0px 0px 1px var(--color-neutral-700);
+    outline: none;
+  }
 }
 
 
@@ -99,6 +104,9 @@
   border-width: 0px;
   font-family: var(--font-family);
   font-size: var(--input-font-size);
+  font-variation-settings: 'wght' var(--font-weight-normal);
+  font-variant-numeric: lining-nums proportional-nums;
+  font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
   line-height: 140%;
 
   & .Layer__select__control {
@@ -106,6 +114,11 @@
     border-radius: var(--input-border-radius);
     box-shadow: 0px 0px 0px 1px var(--color-neutral-300);
     min-height: 36px;
+
+  }
+
+  & .Layer__select__control--is-focused {
+    box-shadow: 0px 0px 0px 3px rgba(26, 26, 26, 0.08), 0px 0px 0px 1px var(--color-neutral-700);
   }
 
   & .Layer__select__indicator-separator {
@@ -114,6 +127,14 @@
 
   & .Layer__select__indicator {
     padding: 7px;
+  }
+
+  & .Layer__select__placeholder {
+    color: var(--color-neutral-500);
+    font-family: var(--font-family);
+    font-variation-settings: 'wght' var(--font-weight-normal);
+    font-variant-numeric: lining-nums proportional-nums;
+    font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
   }
 }
 

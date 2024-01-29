@@ -96,7 +96,6 @@
   align-items: center;
   font-size: var(--btn-font-size);
   line-height: 100%;
-  justify-content: space-between;
 }
 
 .Layer__btn-text {
@@ -111,4 +110,13 @@
 
 .Layer__btn-icon--right {
   margin-left: -4px;
+}
+
+.Layer__btn--icon-only {
+  .Layer__btn-icon--right {
+    margin-left: 0;
+  }
+  .Layer__btn-icon--left {
+    margin-right: 0;
+  }
 }
