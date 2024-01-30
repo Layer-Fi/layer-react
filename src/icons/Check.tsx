@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { IconSvgProps } from './types'
 
-const ChevronDown = ({ size = 18, ...props }: IconSvgProps) => (
+const Check = ({ size = 18, ...props }: IconSvgProps) => (
   <svg
     viewBox='0 0 18 18'
     fill='none'
@@ -11,7 +11,7 @@ const ChevronDown = ({ size = 18, ...props }: IconSvgProps) => (
     height={size}
   >
     <path
-      d='M4.5 6.75L9 11.25L13.5 6.75'
+      d='M15 4.5L6.75 12.75L3 9'
       stroke='currentColor'
       stroke-linecap='round'
       stroke-linejoin='round'
@@ -19,4 +19,4 @@ const ChevronDown = ({ size = 18, ...props }: IconSvgProps) => (
   </svg>
 )
 
-export default ChevronDown
+export default Check

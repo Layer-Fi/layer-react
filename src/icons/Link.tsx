@@ -1,26 +1,28 @@
 import * as React from 'react'
-import { SVGProps } from 'react'
+import { IconSvgProps } from './types'
 
-type Props = SVGProps<SVGSVGElement> & {
-  size: SVGProps<SVGSVGElement>['width']
-}
-
-const Link = ({ size = 24, ...props }: Props) => (
+const Link = ({ size = 18, ...props }: IconSvgProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
+    viewBox='0 0 18 18'
+    fill='none'
+    {...props}
     width={size}
     height={size}
-    fill='none'
-    viewBox='0 0 24 24'
-    {...props}
   >
     <path
-      stroke='#000'
-      strokeLinecap='round'
-      strokeLinejoin='round'
-      strokeWidth={2}
-      d='m12.708 18.364-1.415 1.414a5 5 0 1 1-7.07-7.07l1.413-1.415m12.728 1.414 1.415-1.414a5 5 0 0 0-7.071-7.071l-1.415 1.414M8.5 15.5l7-7'
+      d='M7.5 9.75C7.82209 10.1806 8.23302 10.5369 8.70491 10.7947C9.17681 11.0525 9.69863 11.2058 10.235 11.2442C10.7713 11.2827 11.3097 11.2053 11.8135 11.0173C12.3173 10.8294 12.7748 10.5353 13.155 10.155L15.405 7.905C16.0881 7.19774 16.4661 6.25048 16.4575 5.26724C16.449 4.284 16.0546 3.34346 15.3593 2.64818C14.664 1.9529 13.7235 1.55851 12.7403 1.54997C11.757 1.54143 10.8098 1.9194 10.1025 2.6025L8.8125 3.885'
+      stroke='currentColor'
+      stroke-linecap='round'
+      stroke-linejoin='round'
+    />
+    <path
+      d='M10.5 8.25C10.1779 7.8194 9.76698 7.46311 9.29508 7.2053C8.82319 6.94748 8.30137 6.79416 7.76501 6.75575C7.22865 6.71734 6.69031 6.79473 6.18649 6.98266C5.68267 7.1706 5.22516 7.4647 4.845 7.845L2.595 10.095C1.9119 10.8023 1.53393 11.7495 1.54247 12.7328C1.55101 13.716 1.9454 14.6565 2.64068 15.3518C3.33596 16.0471 4.2765 16.4415 5.25974 16.45C6.24298 16.4586 7.19024 16.0806 7.8975 15.3975L9.18 14.115'
+      stroke='currentColor'
+      stroke-linecap='round'
+      stroke-linejoin='round'
     />
   </svg>
 )
+
 export default Link

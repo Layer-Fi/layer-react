@@ -1,4 +1,84 @@
 .Layer__component {
+  // 1. BASE VARIABLES:
+  --color-black: #1A1A1A;
+  --color-white: white;
+  --color-neutral: #666666;
+  --color-neutral-50: #FAFCFC;
+  --color-neutral-100: #F7F7F7;
+  --color-neutral-200: #EEF0EF;
+  --color-neutral-300: #E5EAE9;
+  --color-neutral-500: #999999;
+  --color-neutral-700: #636665;
+  --color-neutral-800: #333333;
+  --color-red: #E46362;
+  --color-info-green: #29BC9B;
+
+
+  // 2. BASE CUSTOMIZATION
+  --color-primary: var(--color-black);
+  --color-accent: var(--color-white);
+  --color-secondary: var(--color-neutral);
+  --color-success: var(--color-info-green);
+  --color-danger: var(--color-red);
+  --text-color-primary: var(--color-black);
+  --text-color-secondary: var(--color-neutral-700);
+  --bg-element-focus:  var(--color-neutral-50);
+
+
+  // 3. EXTENDED CUSTOMIZATION
+  --font-family: "InterVariable", "Inter", sans-serif;
+  --font-family-numeric: "InterVariable", "Inter", sans-serif;
+  --text-sm: 12px;
+  --text-md: 14px;
+  --text-heading: 24px;
+  --text-heading-sm: 16px;
+  --font-weight-normal: 460;
+  --font-weight-bold: 580;
+  --spacing-2xs: 6px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 36px;
+  --bg-color: var(--color-white);
+  --border-color: var(--color-neutral-200);
+  --border-radius-2xs: 6px;
+  --border-radius-sm: 12px;
+  --border-radius: 16px;
+
+  --text-color-transaction-credit: var(--color-info-green);
+  --text-color-varying-amount: var(--color-neutral-700);
+
+  --input-border-radius: var(--border-radius-2xs);
+  --input-font-size: var(--text-md);
+  --input-border-color: var(--color-neutral-300);
+  --input-placeholder-color: var(--color-neutral-500);
+  
+  --label-color: var(--color-neutral-700);
+
+  --btn-font-size: var(--text-md);
+  --btn-border-radius: var(--border-radius-2xs);
+  --btn-color: var(--color-black);
+  --btn-bg-color: var(--color-white);
+  --btn-color-hover: var(--color-accent);
+  --btn-bg-color-hover: var(--color-primary);
+  --btn-color-icon: var(--color-black);
+  --btn-bg-color-icon: var(--color-neutral-50);
+  --btn-color-icon-hover: var(--color-black);
+  --btn-bg-color-icon-hover: var(--color-accent);
+  --btn-secondary-color: var(--color-black);
+  --btn-secondary-bg-color: var(--color-white);
+
+  --badge-color: var(--text-color-primary);
+  --badge-bg-color: var(--color-neutral-300);
+  --badge-border-radius: var(--border-radius-sm);
+
+  --table-bg: var(--color-white);
+
+  --tooltip-color: var(--color-white);
+  --tooltip-bg-color: var(--color-neutral-800);
+
+  // LEGACY (?)
   --color-alabaster: #f9f9f9;
   --color-athens-gray: #eaecf0;
   --color-blue-ribbon: #0c48e5;
@@ -9,12 +89,8 @@
   --color-green-haze: #039855;
   --color-mine-shaft: #3c3c3c;
   --color-mischke: #d0d5dd;
-  --color-red: red;
-  --color-white: white;
   --color-zumthor: #e0e9ff;
-
   --active: var(--color-zumthor);
-  --background-color: var(--color-white);
   --bar-color-expenses: var(--color-cornflower-blue);
   --bar-color-income: var(--color-blue-ribbon);
   --border-color: var(--color-athens-gray);
@@ -25,13 +101,17 @@
   --indicator-color: var(--color-mine-shaft);
   --table-border-color: var(--color-athens-gray);
   --table-expanded-background-color: var(--color-alabaster);
-  --text-color-transaction-credit: var(--color-green-haze);
-  --text-color-varying-amount: var(--color-fiord);
   --text-color: var(--color-ebony);
   --text-skeleton-color: var(--color-comet);
   --transition-speed: 0.33s;
 
+  // 5. STYLES:
   border: 0;
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
+
+  font-family: var(--font-family);
+  font-variation-settings: 'wght' var(--font-weight-normal);
+  font-feature-settings: 'cv10' on, 'cv01' on, 'cv05' on, 'cv08' on, 'ss03' on;
 }

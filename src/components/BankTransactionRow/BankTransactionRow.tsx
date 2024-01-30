@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
-import CheckedCircle from '../../icons/CheckedCircle'
 import ChevronDown from '../../icons/ChevronDown'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationType, Direction } from '../../types'
+import { SubmitButton } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
-import { Pill } from '../Pill'
+import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { Text } from '../Typography'
+import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
 type Props = {
@@ -27,6 +29,7 @@ export const BankTransactionRow = ({
   toggleOpen,
   editable,
 }: Props) => {
+  const expandedRowRef = useRef<SaveHandle>(null)
   const [removed, setRemoved] = useState(false)
   const { categorize: categorizeBankTransaction } = useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState(
@@ -35,10 +38,15 @@ export const BankTransactionRow = ({
       ? bankTransaction.categorization_flow.suggestions[0]
       : undefined,
   )
-  const className = 'Layer__bank-transaction-row__table-cell'
-  const openClassName = isOpen ? `${className}--expanded` : ''
 
-  const save = () =>
+  const save = () => {
+    // Save using form from expanded row when row is open:
+    if (isOpen && expandedRowRef?.current) {
+      expandedRowRef?.current?.save()
+      toggleOpen(bankTransaction.id)
+      return
+    }
+
     categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: {
@@ -47,100 +55,121 @@ export const BankTransactionRow = ({
           selectedCategory?.stable_name || selectedCategory?.category || '',
       },
     })
+  }
 
   if (removed) {
     return null
   }
 
+  const className = 'Layer__bank-transaction-row'
+  const openClassName = isOpen ? `${className}--expanded` : ''
+  const rowClassName = classNames(
+    className,
+    bankTransaction.recently_categorized
+      ? 'Layer__bank-transaction-row--removing'
+      : '',
+    isOpen ? openClassName : '',
+  )
+
   return (
-    <div
-      className={`Layer__bank-transaction-row__container ${
-        bankTransaction.recently_categorized
-          ? 'Layer__bank-transaction-row__container--removing'
-          : ''
-      }`}
-      onTransitionEnd={({ propertyName }) => {
-        if (propertyName === 'top') {
-          setRemoved(true)
-        }
-      }}
-    >
-      <div className='Layer__bank-transaction-row__content'>
-        <div className={`${className} ${openClassName} ${className}--date`}>
-          {formatTime(parseISO(bankTransaction.date), dateFormat)}
-        </div>
-        <div className={`${className} ${openClassName}`}>
-          {bankTransaction.counterparty_name}
-        </div>
-        <div className={`${className} ${openClassName}`}>
-          {bankTransaction.account_name ?? ''}
-        </div>
-        <div
-          className={`${className} ${openClassName} ${className}--amount-${
+    <>
+      <tr
+        className={rowClassName}
+        onTransitionEnd={({ propertyName }) => {
+          if (propertyName === 'top') {
+            setRemoved(true)
+          }
+        }}
+      >
+        <td className='Layer__table-cell'>
+          <span className='Layer__table-cell-content'>
+            {formatTime(parseISO(bankTransaction.date), dateFormat)}
+          </span>
+        </td>
+        <td className='Layer__table-cell Layer__bank-transactions__tx-col'>
+          <span className='Layer__table-cell-content'>
+            {bankTransaction.counterparty_name}
+          </span>
+        </td>
+        <td className='Layer__table-cell Layer__bank-transactions__account-col'>
+          <span className='Layer__table-cell-content'>
+            {bankTransaction.account_name ?? ''}
+          </span>
+        </td>
+        <td
+          className={`Layer__table-cell Layer__table-cell__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
         >
-          {formatMoney(bankTransaction.amount)}
-        </div>
-        <div
-          className={`${className} ${openClassName} ${
-            isOpen && 'Layer__bank-transaction-row__table-cell--hide-contents'
-          }`}
-        >
-          {editable ? (
-            <CategoryMenu
-              bankTransaction={bankTransaction}
-              name={`category-${bankTransaction.id}`}
-              value={selectedCategory}
-              onChange={setSelectedCategory}
-              disabled={bankTransaction.processing}
-            />
-          ) : (
-            <Pill>{bankTransaction?.category?.display_name}</Pill>
+          <span className='Layer__table-cell-content'>
+            {isCredit(bankTransaction) ? '+$' : ' $'}
+            {formatMoney(bankTransaction.amount)}
+          </span>
+        </td>
+        <td
+          className={classNames(
+            'Layer__table-cell',
+            'Layer__table-cell__category-col',
+            `${className}__actions-cell`,
+            `${className}__actions-cell--${isOpen ? 'open' : 'close'}`,
           )}
-        </div>
-        <div className={`${className} ${openClassName} ${className}--actions`}>
-          <div
-            className='Layer__bank-transaction-row__save-button'
-            onClick={() => {
-              if (!bankTransaction.processing) {
-                save()
-              }
-            }}
+        >
+          <span
+            className={`${className}__actions-container Layer__table-cell-content`}
           >
-            {editable && !isOpen && (
-              <CheckedCircle
-                size={28}
-                strokeColor='#0C48E5'
-                fillColor='#e0e9ff'
-                opacity={bankTransaction.processing ? 0.2 : 1}
+            {editable && !isOpen ? (
+              <CategoryMenu
+                bankTransaction={bankTransaction}
+                name={`category-${bankTransaction.id}`}
+                value={selectedCategory}
+                onChange={setSelectedCategory}
+                disabled={bankTransaction.processing}
               />
+            ) : null}
+            {!editable ? (
+              <Text className={`${className}__category-text`}>
+                {bankTransaction?.category?.display_name}
+              </Text>
+            ) : null}
+            {editable && (
+              <SubmitButton
+                onClick={() => {
+                  if (!bankTransaction.processing) {
+                    save()
+                  }
+                }}
+                className='Layer__bank-transaction__submit-btn'
+                processing={bankTransaction.processing}
+                error={bankTransaction.error}
+                active={isOpen}
+              >
+                Approve
+              </SubmitButton>
             )}
-          </div>
-          <div
-            onClick={() => toggleOpen(bankTransaction.id)}
-            className='Layer__bank-transaction-row__expand-button'
-          >
-            <ChevronDown
-              className={`Layer__chevron ${
-                isOpen ? 'Layer__chevron__up' : 'Layer__chevron__down'
-              }`}
-            />
-          </div>
-        </div>
-        <ExpandedBankTransactionRow
-          bankTransaction={bankTransaction}
-          close={() => toggleOpen(bankTransaction.id)}
-          isOpen={isOpen}
-        />
-        {bankTransaction.error && (
-          <div className='Layer__bank-transaction-row__error-row'>
-            <span className='Layer__bank-transaction-row__error-row__message'>
-              {bankTransaction.error}
-            </span>
-          </div>
-        )}
-      </div>
-    </div>
+            <div
+              onClick={() => toggleOpen(bankTransaction.id)}
+              className='Layer__bank-transaction-row__expand-button'
+            >
+              <ChevronDown
+                className={`Layer__chevron ${
+                  isOpen ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                }`}
+              />
+            </div>
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan={5}>
+          <ExpandedBankTransactionRow
+            ref={expandedRowRef}
+            bankTransaction={bankTransaction}
+            close={() => toggleOpen(bankTransaction.id)}
+            isOpen={isOpen}
+            showSubmitButton={!editable}
+          />
+        </td>
+      </tr>
+    </>
   )
 }

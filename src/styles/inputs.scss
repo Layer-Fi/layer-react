@@ -1,0 +1,179 @@
+::placeholder {
+  color: var(--input-placeholder-color);
+}
+
+.Layer__input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.Layer__input-label {
+  padding: var(--spacing-2xs);
+  color: var(--label-color);
+}
+
+.Layer__input {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--input-border-radius);
+  border-width: 0px;
+  box-shadow: 0px 0px 0px 1px var(--input-border-color);
+  font-family: var(--font-family);
+  font-size: var(--input-font-size);
+  line-height: 140%;
+}
+
+.Layer__textarea {
+  padding: 10px 14px;
+  border-radius: var(--input-border-radius);
+  border-width: 0px;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 0px 1px var(--input-border-color);
+  font-family: var(--font-family);
+  font-size: var(--input-font-size);
+
+  &:focus, &:active, &:focus-visible {
+    box-shadow: 0px 0px 0px 3px rgba(26, 26, 26, 0.08), 0px 0px 0px 1px var(--color-neutral-700);
+    outline: none;
+  }
+}
+
+
+.Layer__toggle {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: 52px;
+  padding: 2px;
+  height: 38px;
+  background: var(--color-neutral-100);
+  box-shadow: 0px 0px 0px 1px var(--color-neutral-300);
+  cursor: pointer;
+
+  .Layer__toggle-option-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+}
+
+.Layer__toggle-option__icon {
+  line-height: 11px;
+}
+
+.Layer__toggle.Layer__toggle--small {
+  height: 36px;
+  border-radius: 6px;
+}
+
+.Layer__toggle-option {
+  position: relative;
+  cursor: pointer;
+
+  & input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+  }
+
+  & input + span {
+    box-sizing: border-box;
+    padding: 8px 16px;
+    height: 36px;
+    border-radius: 52px;
+    font-family: var(--font-family);
+    font-size: var(--btn-font-size);
+    cursor: pointer;
+  }
+
+  & input:checked + span {
+    background: var(--color-white);
+    box-shadow: 0px 0px 0px 1px var(--color-neutral-300), 0px 1px 1px 0px rgba(0, 0, 0, 0.04), 0px 2px 3px 0px rgba(0, 0, 0, 0.04), 0px 3px 4px 0px rgba(0, 0, 0, 0.02), 0px 4px 5px 0px rgba(0, 0, 0, 0.01);
+  }
+}
+
+.Layer__toggle.Layer__toggle--small .Layer__toggle-option {
+  input + span {
+    height: 32px;
+    border-radius: 6px;
+  }
+}
+
+.Layer__select {
+  border-width: 0px;
+  font-family: var(--font-family);
+  font-size: var(--input-font-size);
+  font-variation-settings: 'wght' var(--font-weight-normal);
+  font-variant-numeric: lining-nums proportional-nums;
+  font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
+  line-height: 140%;
+
+  & .Layer__select__control {
+    border-width: 0px;
+    border-radius: var(--input-border-radius);
+    box-shadow: 0px 0px 0px 1px var(--color-neutral-300);
+    min-height: 36px;
+
+  }
+
+  & .Layer__select__control--is-focused {
+    box-shadow: 0px 0px 0px 3px rgba(26, 26, 26, 0.08), 0px 0px 0px 1px var(--color-neutral-700);
+  }
+
+  & .Layer__select__indicator-separator {
+    display: none;
+  }
+
+  & .Layer__select__indicator {
+    padding: 7px;
+  }
+
+  & .Layer__select__placeholder {
+    color: var(--color-neutral-500);
+    font-family: var(--font-family);
+    font-variation-settings: 'wght' var(--font-weight-normal);
+    font-variant-numeric: lining-nums proportional-nums;
+    font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
+  }
+}
+
+.Layer__select__menu-portal {
+  font-family: var(--font-family);
+  font-size: var(--input-font-size);
+  line-height: 140%;
+
+  .Layer__select__option {
+    font-family: var(--font-family);
+    font-size: 12px;
+    color: #636665;
+    cursor: pointer;
+    transition: all 200ms ease-out;
+
+    &.Layer__select__option--is-selected {
+      color: #1A1A1A;
+      background: #FAFCFC;
+    }
+
+    &:hover {
+      color: #1A1A1A;
+      background: #FAFCFC;
+    }
+  }
+
+  .Layer__select__menu-notice {
+    font-family: var(--font-family);
+    font-size: 12px;
+    color: #999999;
+  }
+}
+
+.Layer__category-menu {
+  width: 15rem;
+}
+
+.Layer__category-menu.Layer__category-menu--full {
+  width: 100%;
+  max-width: 100%;
+  flex: 1;
+}

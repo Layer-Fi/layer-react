@@ -1,6 +1,11 @@
 import React from 'react'
-import Select from 'react-select'
+import Select, {
+  DropdownIndicatorProps,
+  GroupBase,
+  components,
+} from 'react-select'
 import { useLayerContext } from '../../hooks/useLayerContext'
+import ChevronDown from '../../icons/ChevronDown'
 import { BankTransaction, CategorizationType, Category } from '../../types'
 
 type Props = {
@@ -9,6 +14,20 @@ type Props = {
   value: Category | undefined
   onChange: (newValue: Category) => void
   disabled?: boolean
+  className?: string
+}
+
+const DropdownIndicator:
+  | React.ComponentType<
+      DropdownIndicatorProps<Category, false, GroupBase<Category>>
+    >
+  | null
+  | undefined = props => {
+  return (
+    <components.DropdownIndicator {...props}>
+      <ChevronDown />
+    </components.DropdownIndicator>
+  )
 }
 
 export const CategoryMenu = ({
@@ -17,6 +36,7 @@ export const CategoryMenu = ({
   value,
   onChange,
   disabled,
+  className,
 }: Props) => {
   const { categories } = useLayerContext()
 
@@ -54,7 +74,8 @@ export const CategoryMenu = ({
   return (
     <Select<Category>
       name={name}
-      className='Layer__category-menu'
+      className={`Layer__category-menu Layer__select ${className ?? ''}`}
+      classNamePrefix='Layer__select'
       options={options}
       isSearchable={true}
       value={value}
@@ -63,6 +84,7 @@ export const CategoryMenu = ({
       getOptionValue={category => category.stable_name || category.category}
       menuPortalTarget={document.body}
       styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+      components={{ DropdownIndicator }}
       isDisabled={disabled}
     />
   )

@@ -1,0 +1,146 @@
+import React, { useRef, useState } from 'react'
+import { useBankTransactions } from '../../hooks/useBankTransactions'
+import ChevronDown from '../../icons/ChevronDown'
+import { centsToDollars as formatMoney } from '../../models/Money'
+import { BankTransaction, CategorizationType, Direction } from '../../types'
+import { SubmitButton } from '../Button'
+import { CategoryMenu } from '../CategoryMenu'
+import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
+import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { Pill } from '../Pill'
+import classNames from 'classnames'
+import { parseISO, format as formatTime } from 'date-fns'
+
+type Props = {
+  dateFormat: string
+  bankTransaction: BankTransaction
+  isOpen: boolean
+  toggleOpen: (id: string) => void
+  editable: boolean
+}
+
+const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
+  direction === Direction.CREDIT
+
+export const BankTransactionListItem = ({
+  dateFormat,
+  bankTransaction,
+  isOpen,
+  toggleOpen,
+  editable,
+}: Props) => {
+  const expandedRowRef = useRef<SaveHandle>(null)
+  const [removed, setRemoved] = useState(false)
+  const { categorize: categorizeBankTransaction } = useBankTransactions()
+  const [selectedCategory, setSelectedCategory] = useState(
+    bankTransaction.categorization_flow?.type ===
+      CategorizationType.ASK_FROM_SUGGESTIONS
+      ? bankTransaction.categorization_flow.suggestions[0]
+      : undefined,
+  )
+
+  const save = () => {
+    // Save using form from expanded row when row is open:
+    if (isOpen && expandedRowRef?.current) {
+      expandedRowRef?.current?.save()
+      toggleOpen(bankTransaction.id)
+      return
+    }
+
+    categorizeBankTransaction(bankTransaction.id, {
+      type: 'Category',
+      category: {
+        type: 'StableName',
+        stable_name:
+          selectedCategory?.stable_name || selectedCategory?.category || '',
+      },
+    })
+  }
+
+  if (removed) {
+    return null
+  }
+
+  const className = 'Layer__bank-transaction-list-item'
+  const openClassName = isOpen ? `${className}--expanded` : ''
+  const rowClassName = classNames(
+    className,
+    bankTransaction.recently_categorized
+      ? 'Layer__bank-transaction-row--removing'
+      : '',
+    isOpen ? openClassName : '',
+  )
+
+  return (
+    <li className={rowClassName}>
+      <span className={`${className}__heading`}>
+        <span className={`${className}__heading-date`}>
+          {formatTime(parseISO(bankTransaction.date), dateFormat)}
+        </span>
+        <span className={`${className}__heading-separator`} />
+        <span className={`${className}__heading-account-name`}>
+          {bankTransaction.account_name ?? ''}
+        </span>
+      </span>
+      <span className={`${className}__body`}>
+        <span className={`${className}__body__name`}>
+          {bankTransaction.counterparty_name}
+        </span>
+        <span
+          className={`${className}__amount-${
+            isCredit(bankTransaction) ? 'credit' : 'debit'
+          }`}
+        >
+          {isCredit(bankTransaction) ? '+$' : ' $'}
+          {formatMoney(bankTransaction.amount)}
+        </span>
+        <div
+          onClick={() => toggleOpen(bankTransaction.id)}
+          className='Layer__bank-transaction-row__expand-button'
+        >
+          <ChevronDown
+            className={`Layer__chevron ${
+              isOpen ? 'Layer__chevron__up' : 'Layer__chevron__down'
+            }`}
+          />
+        </div>
+      </span>
+      <span className={`${className}__expanded-row`}>
+        <ExpandedBankTransactionRow
+          ref={expandedRowRef}
+          bankTransaction={bankTransaction}
+          close={() => toggleOpen(bankTransaction.id)}
+          isOpen={isOpen}
+          asListItem={true}
+        />
+      </span>
+      <span className={`${className}__base-row`}>
+        {editable ? (
+          <CategoryMenu
+            bankTransaction={bankTransaction}
+            name={`category-${bankTransaction.id}`}
+            value={selectedCategory}
+            onChange={setSelectedCategory}
+            disabled={bankTransaction.processing}
+          />
+        ) : null}
+        {!editable ? (
+          <Pill>{bankTransaction?.category?.display_name}</Pill>
+        ) : null}
+        {editable && (
+          <SubmitButton
+            onClick={() => {
+              if (!bankTransaction.processing) {
+                save()
+              }
+            }}
+            className='Layer__bank-transaction__submit-btn'
+            processing={bankTransaction.processing}
+            error={bankTransaction.error}
+            iconOnly={true}
+          />
+        )}
+      </span>
+    </li>
+  )
+}

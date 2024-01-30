@@ -1,11 +1,13 @@
 .Layer__pill {
-  background-color: var(--active);
-  color: var(--text-color);
-  border-radius: 1rem;
-  padding: 0.25rem 0.5rem;
+  background-color: var(--badge-bg-color);
+  color: var(--badge-color);
+  border-radius: var(--badge-border-radius);
+  font-size: var(--text-sm);
+  padding: var(--spacing-2xs) var(--spacing-sm);
   display: flex;
   flex-direction: row;
   align-items: center;
+  white-space: nowrap;
 
   & svg {
     margin-right: 0.25rem;
