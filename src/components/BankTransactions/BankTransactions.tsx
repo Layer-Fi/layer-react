@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useElementSize } from '../../hooks/useElementSize'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { BankTransactionListItem } from '../BankTransactionListItem'
 import { BankTransactionRow } from '../BankTransactionRow'
@@ -57,11 +58,27 @@ export const BankTransactions = () => {
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({})
   const toggleOpen = (id: string) =>
     setOpenRows({ ...openRows, [id]: !openRows[id] })
+  const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
+
+  const headerRef = useElementSize((_el, _en, size) => {
+    if (size?.height && size?.height >= 90) {
+      const newShift = -Math.floor(size.height / 2) + 6
+      if (newShift !== shiftStickyHeader) {
+        setShiftStickyHeader(newShift)
+      }
+    } else if (size?.height > 0 && shiftStickyHeader !== 0) {
+      setShiftStickyHeader(0)
+    }
+  })
 
   const editable = display === DisplayState.review
   return (
     <Container name={COMPONENT_NAME}>
-      <Header className='Layer__bank-transactions__header'>
+      <Header
+        ref={headerRef}
+        className='Layer__bank-transactions__header'
+        style={{ top: shiftStickyHeader }}
+      >
         <Heading className='Layer__bank-transactions__title'>
           Transactions
         </Heading>

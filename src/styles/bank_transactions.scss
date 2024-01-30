@@ -359,6 +359,10 @@
 @container (max-width: 800px) {
   .Layer__bank-transactions__header {
     box-shadow: 0px -1px 0px 0px var(--neutral-8, rgba(23, 51, 45, 0.16)) inset;
+    background-color: var(--table-bg);
+    position: sticky;
+    top: 0px;
+    z-index: 2;
   }
 
   .Layer__table.Layer__bank-transactions__table {
@@ -369,4 +373,3 @@
     display: block;
   }
 }
-

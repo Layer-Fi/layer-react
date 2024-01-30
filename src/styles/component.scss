@@ -2,7 +2,7 @@
   border-radius: var(--border-radius-sm);
   border: 1px solid var(--border-color);
   background-color: var(--bg-color);
-  overflow: hidden;
+  overflow: auto;
   container-type: inline-size;
 
   &::-webkit-scrollbar {
