@@ -97,7 +97,7 @@ export const BankTransactionRow = ({
                 contentClassName: 'Layer__bank-transactions__tx-tooltip',
               }}
             >
-              {bankTransaction.counterparty_name} asl;dkj iapojdassasdas
+              {bankTransaction.counterparty_name}
             </Text>
           </span>
         </td>
