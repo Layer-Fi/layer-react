@@ -92,6 +92,19 @@ export const BankTransactions = () => {
           onChange={onCategorizationDisplayChange}
         />
       </Header>
+      <div className='Layer__test-samples'>
+        <div className='Layer__test-sample c50' />
+        <div className='Layer__test-sample c100' />
+        <div className='Layer__test-sample c200' />
+        <div className='Layer__test-sample c300' />
+        <div className='Layer__test-sample c400' />
+        <div className='Layer__test-sample c500' />
+        <div className='Layer__test-sample c600' />
+        <div className='Layer__test-sample c700' />
+        <div className='Layer__test-sample c800' />
+        <div className='Layer__test-sample c900' />
+        <div className='Layer__test-sample c1000' />
+      </div>
       <table
         width='100%'
         className='Layer__table Layer__bank-transactions__table'

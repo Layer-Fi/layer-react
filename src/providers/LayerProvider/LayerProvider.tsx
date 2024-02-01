@@ -6,6 +6,7 @@ import {
   LayerContextAction,
   LayerContextActionName as Action,
 } from '../../types'
+import { LayerThemeConfig } from '../../types/layer_context'
 import { add, isBefore } from 'date-fns'
 import useSWR, { SWRConfig } from 'swr'
 
@@ -40,12 +41,13 @@ export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
   },
 }
 
-type Props = {
+export type Props = {
   businessId: string
   appId: string
   appSecret: string
   clientId: string
   environment?: keyof typeof LayerEnvironment
+  theme?: LayerThemeConfig
 }
 
 export const LayerProvider = ({
@@ -55,6 +57,7 @@ export const LayerProvider = ({
   children,
   clientId,
   environment = 'production',
+  theme,
 }: PropsWithChildren<Props>) => {
   const defaultSWRConfig = {
     revalidateInterval: 0,
@@ -74,6 +77,7 @@ export const LayerProvider = ({
     businessId,
     categories: [],
     apiUrl,
+    theme,
   })
 
   const { data: auth } = useSWR(

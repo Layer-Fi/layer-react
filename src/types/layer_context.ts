@@ -6,6 +6,32 @@ export type LayerContextValues = {
   businessId: string
   categories: Category[]
   apiUrl: string
+  theme?: LayerThemeConfig
+}
+
+export interface ColorHSLConfig {
+  h: string
+  s: string
+  l: string
+}
+
+export interface ColorRGBConfig {
+  r: string
+  g: string
+  b: string
+}
+
+export interface ColorHexConfig {
+  hex: string
+}
+
+export type ColorConfig = ColorHSLConfig | ColorRGBConfig | ColorHexConfig
+
+export interface LayerThemeConfig {
+  colors?: {
+    dark?: ColorConfig
+    light?: ColorConfig
+  }
 }
 
 export enum LayerContextActionName {
