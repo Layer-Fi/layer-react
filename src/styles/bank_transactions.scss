@@ -28,7 +28,10 @@
   transition: background-color var(--transition-speed) ease-out;
 }
 
-.Layer__bank-transaction-row:hover, .Layer__expanded-bank-transaction-row.Layer__expanded-bank-transaction-row--expanded {
+.Layer__bank-transaction-row:hover,
+.Layer__bank-transaction-row:hover .Layer__table-cell,
+.Layer__bank-transaction-list-item:hover,
+.Layer__expanded-bank-transaction-row.Layer__expanded-bank-transaction-row--expanded {
   background-color: var(--bg-element-focus);
   transition: background-color var(--transition-speed) ease-out;
 }
@@ -306,11 +309,13 @@
 
 .Layer__bank-transactions__tx-col {
   min-width: 105px;
+  max-width: 300px;
   box-sizing: border-box;
 }
 
 .Layer__bank-transactions__account-col {
   min-width: 105px;
+  max-width: 300px;
   box-sizing: border-box;
 }
 
@@ -321,10 +326,14 @@
     max-width: 300px;
   
     .Layer__table-cell-content {
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      .Layer__bank-transactions__account-text,
+      .Layer__bank-transactions__tx-text {
+        display: block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
 }
@@ -372,4 +381,8 @@
   .Layer__bank-transactions__list {
     display: block;
   }
+}
+
+.Layer__tooltip.Layer__bank-transactions__tx-tooltip {
+  max-width: 250px;
 }

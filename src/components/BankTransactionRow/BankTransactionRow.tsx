@@ -8,6 +8,7 @@ import { CategoryMenu } from '../CategoryMenu'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { Text } from '../Typography'
+import { TextUseTooltip } from '../Typography/Text'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
@@ -88,12 +89,27 @@ export const BankTransactionRow = ({
         </td>
         <td className='Layer__table-cell Layer__bank-transactions__tx-col'>
           <span className='Layer__table-cell-content'>
-            {bankTransaction.counterparty_name}
+            <Text
+              as='span'
+              className='Layer__bank-transactions__tx-text'
+              withTooltip={TextUseTooltip.whenTruncated}
+              tooltipOptions={{
+                contentClassName: 'Layer__bank-transactions__tx-tooltip',
+              }}
+            >
+              {bankTransaction.counterparty_name} asl;dkj iapojdassasdas
+            </Text>
           </span>
         </td>
         <td className='Layer__table-cell Layer__bank-transactions__account-col'>
           <span className='Layer__table-cell-content'>
-            {bankTransaction.account_name ?? ''}
+            <Text
+              as='span'
+              className='Layer__bank-transactions__account-text'
+              withTooltip={TextUseTooltip.whenTruncated}
+            >
+              {bankTransaction.account_name ?? ''}
+            </Text>
           </span>
         </td>
         <td
@@ -127,7 +143,7 @@ export const BankTransactionRow = ({
               />
             ) : null}
             {!editable ? (
-              <Text className={`${className}__category-text`}>
+              <Text as='span' className={`${className}__category-text`}>
                 {bankTransaction?.category?.display_name}
               </Text>
             ) : null}

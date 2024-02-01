@@ -31,30 +31,8 @@
     }
   }
 
-  // @TODO - convert into tooltip
-  .Layer__btn-error-message {
-    display: none;
-    position: absolute;
-    right: 0;
-    bottom: 40px;
-    padding: var(--spacing-sm);
-    background: var(--tooltip-bg-color);
-    color: var(--tooltip-color);
-    border-radius: var(--border-radius-sm);
-    font-family: var(--font-family);
-    font-variation-settings: 'wght' var(--font-weight-normal);
-    font-variant-numeric: lining-nums proportional-nums;
-    font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
-    font-size: var(--text-sm);
-    width: 150%;
-  }
-
   &:hover {
     box-shadow: 0px 2px 4px 0px rgba(25, 25, 25, 0.06), 0px 4px 12px 0px var(--neutral-8, rgba(26, 26, 26, 0.08)), 0px 0px 0px 1px rgba(25, 25, 25, 0.06);
-
-    .Layer__btn-error-message {
-      display: block;
-    }
   }
 
   &:disabled {
