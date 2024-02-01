@@ -13,8 +13,8 @@ const ChevronDown = ({ size = 18, ...props }: IconSvgProps) => (
     <path
       d='M4.5 6.75L9 11.25L13.5 6.75'
       stroke='currentColor'
-      stroke-linecap='round'
-      stroke-linejoin='round'
+      strokeLinecap='round'
+      strokeLinejoin='round'
     />
   </svg>
 )

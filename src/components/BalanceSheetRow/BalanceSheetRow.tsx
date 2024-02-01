@@ -81,9 +81,9 @@ export const BalanceSheetRow = ({
           }`}
         >
           <div className='Layer__balance-sheet-row__children--content'>
-            {(line_items || []).map(line_item => (
+            {(line_items || []).map((line_item, idx) => (
               <BalanceSheetRow
-                key={line_item.display_name}
+                key={`${line_item.display_name}_${idx}`}
                 lineItem={line_item}
                 depth={depth + 1}
                 maxDepth={maxDepth}

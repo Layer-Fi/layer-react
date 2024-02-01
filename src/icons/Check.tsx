@@ -13,8 +13,8 @@ const Check = ({ size = 18, ...props }: IconSvgProps) => (
     <path
       d='M15 4.5L6.75 12.75L3 9'
       stroke='currentColor'
-      stroke-linecap='round'
-      stroke-linejoin='round'
+      strokeLinecap='round'
+      strokeLinejoin='round'
     />
   </svg>
 )
