@@ -3,6 +3,7 @@ import AlertCircle from '../../icons/AlertCircle'
 import Check from '../../icons/Check'
 import CheckCircle from '../../icons/CheckCircle'
 import Loader from '../../icons/Loader'
+import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import { Button, ButtonVariant } from './Button'
 import classNames from 'classnames'
 
@@ -27,7 +28,14 @@ const buildRightIcon = ({
   }
 
   if (error) {
-    return <AlertCircle size={14} />
+    return (
+      <Tooltip offset={12}>
+        <TooltipTrigger>
+          <AlertCircle size={14} />
+        </TooltipTrigger>
+        <TooltipContent className='Layer__tooltip'>{error}</TooltipContent>
+      </Tooltip>
+    )
   }
 
   return (
@@ -65,9 +73,6 @@ export const SubmitButton = ({
       rightIcon={buildRightIcon({ processing, error })}
     >
       {children}
-      {error && typeof error === 'string' ? (
-        <span className='Layer__btn-error-message'>{error}</span>
-      ) : null}
     </Button>
   )
 }

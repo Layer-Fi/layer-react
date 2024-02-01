@@ -1,0 +1,15 @@
+.Layer__tooltip {
+  background: #333333;
+  color: #fff;
+  padding: 6px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: calc(100vw - 10px);
+}
+
+.Layer__tooltip-trigger {
+  flex: 1;
+  padding-top: 2px;
+  max-width: 100%;
+}
