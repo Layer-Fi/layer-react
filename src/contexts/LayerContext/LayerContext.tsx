@@ -1,7 +1,10 @@
 import { createContext } from 'react'
 import { LayerContextValues } from '../../types'
+import { LayerThemeConfig } from '../../types/layer_context'
 
-export const LayerContext = createContext<LayerContextValues>({
+export const LayerContext = createContext<
+  LayerContextValues & { setTheme: (theme: LayerThemeConfig) => void }
+>({
   auth: {
     access_token: '',
     expires_at: new Date(2000, 1, 1),
@@ -12,4 +15,5 @@ export const LayerContext = createContext<LayerContextValues>({
   categories: [],
   apiUrl: '',
   theme: undefined,
+  setTheme: () => undefined,
 })

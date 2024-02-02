@@ -17,6 +17,7 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   switch (action.type) {
     case Action.setAuth:
     case Action.setCategories:
+    case Action.setTheme:
       return { ...state, ...action.payload }
     default:
       return state
@@ -28,6 +29,7 @@ type LayerEnvironmentConfig = {
   scope: string
   apiUrl: string
 }
+
 export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
   production: {
     url: 'not defined yet',
@@ -119,9 +121,17 @@ export const LayerProvider = ({
     }
   }, [categories?.data?.categories?.length])
 
+  const setTheme = (theme: LayerThemeConfig) =>
+    dispatch({
+      type: Action.setTheme,
+      payload: { theme },
+    })
+
   return (
     <SWRConfig value={defaultSWRConfig}>
-      <LayerContext.Provider value={state}>{children}</LayerContext.Provider>
+      <LayerContext.Provider value={{ ...state, setTheme }}>
+        {children}
+      </LayerContext.Provider>
     </SWRConfig>
   )
 }

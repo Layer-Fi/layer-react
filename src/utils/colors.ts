@@ -21,7 +21,6 @@ const parseColorFromTheme = (colorName: string, color?: ColorConfig) => {
   }
 
   if ('h' in color && 's' in color && 'l' in color) {
-    console.log('its hsl')
     return {
       [`--color-${colorName}-h`]: color.h,
       [`--color-${colorName}-s`]: color.s,

@@ -37,6 +37,7 @@ export interface LayerThemeConfig {
 export enum LayerContextActionName {
   setAuth = 'LayerContext.setAuth',
   setCategories = 'LayerContext.setCategories',
+  setTheme = 'LayerContext.setTheme',
 }
 
 export type LayerContextAction =
@@ -47,4 +48,8 @@ export type LayerContextAction =
   | {
       type: LayerContextActionName.setCategories
       payload: { categories: LayerContextValues['categories'] }
+    }
+  | {
+      type: LayerContextActionName.setTheme
+      payload: { theme: LayerContextValues['theme'] }
     }

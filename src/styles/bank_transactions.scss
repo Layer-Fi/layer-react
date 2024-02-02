@@ -238,7 +238,7 @@
 .Layer__bank-transaction-list-item__heading {
   display: flex;
   align-items: center;
-  color: var(--color-neutral-700);
+  color: var(--color-base-700);
   font-size: var(--text-sm);
   gap: 4px;
   padding: var(--spacing-md);
@@ -248,7 +248,7 @@
     display: block;
     height: 9px;
     width: 1px;
-    background: var(--color-neutral-200);
+    background: var(--color-base-200);
   }
 }
 
