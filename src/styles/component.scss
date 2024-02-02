@@ -34,7 +34,7 @@
   gap: var(--spacing-md); 
 }
 
-@container (max-width: 800px) {
+@container (max-width: 700px) {
   .Layer__component-header {
     padding: var(--spacing-md);
   }

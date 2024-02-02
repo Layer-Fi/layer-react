@@ -6,6 +6,7 @@ import {
   LayerContextAction,
   LayerContextActionName as Action,
 } from '../../types'
+import { LayerThemeConfig } from '../../types/layer_context'
 import { add, isBefore } from 'date-fns'
 import useSWR, { SWRConfig } from 'swr'
 
@@ -16,6 +17,7 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   switch (action.type) {
     case Action.setAuth:
     case Action.setCategories:
+    case Action.setTheme:
       return { ...state, ...action.payload }
     default:
       return state
@@ -27,6 +29,7 @@ type LayerEnvironmentConfig = {
   scope: string
   apiUrl: string
 }
+
 export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
   production: {
     url: 'not defined yet',
@@ -40,12 +43,13 @@ export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
   },
 }
 
-type Props = {
+export type Props = {
   businessId: string
   appId: string
   appSecret: string
   clientId: string
   environment?: keyof typeof LayerEnvironment
+  theme?: LayerThemeConfig
 }
 
 export const LayerProvider = ({
@@ -55,6 +59,7 @@ export const LayerProvider = ({
   children,
   clientId,
   environment = 'production',
+  theme,
 }: PropsWithChildren<Props>) => {
   const defaultSWRConfig = {
     revalidateInterval: 0,
@@ -74,6 +79,7 @@ export const LayerProvider = ({
     businessId,
     categories: [],
     apiUrl,
+    theme,
   })
 
   const { data: auth } = useSWR(
@@ -115,9 +121,17 @@ export const LayerProvider = ({
     }
   }, [categories?.data?.categories?.length])
 
+  const setTheme = (theme: LayerThemeConfig) =>
+    dispatch({
+      type: Action.setTheme,
+      payload: { theme },
+    })
+
   return (
     <SWRConfig value={defaultSWRConfig}>
-      <LayerContext.Provider value={state}>{children}</LayerContext.Provider>
+      <LayerContext.Provider value={{ ...state, setTheme }}>
+        {children}
+      </LayerContext.Provider>
     </SWRConfig>
   )
 }

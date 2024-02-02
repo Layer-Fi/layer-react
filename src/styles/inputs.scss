@@ -33,7 +33,7 @@
   font-size: var(--input-font-size);
 
   &:focus, &:active, &:focus-visible {
-    box-shadow: 0px 0px 0px 3px rgba(26, 26, 26, 0.08), 0px 0px 0px 1px var(--color-neutral-700);
+    box-shadow: 0px 0px 0px 3px rgba(26, 26, 26, 0.08), 0px 0px 0px 1px var(--color-base-700);
     outline: none;
   }
 }
@@ -47,8 +47,8 @@
   border-radius: 52px;
   padding: 2px;
   height: 38px;
-  background: var(--color-neutral-100);
-  box-shadow: 0px 0px 0px 1px var(--color-neutral-300);
+  background: var(--color-base-100);
+  box-shadow: 0px 0px 0px 1px var(--color-base-300);
   cursor: pointer;
   position: relative;
   isolation: isolate;
@@ -127,7 +127,7 @@
   border-radius: 52px;
 
   background: var(--color-white);
-  box-shadow: 0px 0px 0px 1px var(--color-neutral-300), 0px 1px 1px 0px rgba(0, 0, 0, 0.04), 0px 2px 3px 0px rgba(0, 0, 0, 0.04), 0px 3px 4px 0px rgba(0, 0, 0, 0.02), 0px 4px 5px 0px rgba(0, 0, 0, 0.01);
+  box-shadow: 0px 0px 0px 1px var(--color-base-300), 0px 1px 1px 0px rgba(0, 0, 0, 0.04), 0px 2px 3px 0px rgba(0, 0, 0, 0.04), 0px 3px 4px 0px rgba(0, 0, 0, 0.02), 0px 4px 5px 0px rgba(0, 0, 0, 0.01);
 }
 
 .Layer__toggle.Layer__toggle--small .Layer__toggle__thumb {
@@ -154,13 +154,13 @@
   & .Layer__select__control {
     border-width: 0px;
     border-radius: var(--input-border-radius);
-    box-shadow: 0px 0px 0px 1px var(--color-neutral-300);
+    box-shadow: 0px 0px 0px 1px var(--color-base-300);
     min-height: 36px;
 
   }
 
   & .Layer__select__control--is-focused {
-    box-shadow: 0px 0px 0px 3px rgba(26, 26, 26, 0.08), 0px 0px 0px 1px var(--color-neutral-700);
+    box-shadow: 0px 0px 0px 3px rgba(26, 26, 26, 0.08), 0px 0px 0px 1px var(--color-base-700);
   }
 
   & .Layer__select__indicator-separator {
@@ -172,7 +172,7 @@
   }
 
   & .Layer__select__placeholder {
-    color: var(--color-neutral-500);
+    color: var(--color-base-500);
     font-family: var(--font-family);
     font-variation-settings: 'wght' var(--font-weight-normal);
     font-variant-numeric: lining-nums proportional-nums;
