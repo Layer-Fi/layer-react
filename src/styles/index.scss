@@ -17,29 +17,3 @@
 @import './profit_and_loss.scss';
 @import './radio_button_group.scss';
 @import './tooltip.scss';
-
-.Layer__test-sample {
-  display: block;
-  width: 60px;
-  height: 60px;
-  border: solid 1px #fff;
-  // background: var(--color-base-100);
-  // background: var(--color-dark);
-  // background: var(--color-light);
-
-  &.c50 { background: var(--color-base-50); }
-  &.c100 { background: var(--color-base-100); }
-  &.c200 { background: var(--color-base-200); }
-  &.c300 { background: var(--color-base-300); }
-  &.c400 { background: var(--color-base-400); }
-  &.c500 { background: var(--color-base-500); }
-  &.c600 { background: var(--color-base-600); }
-  &.c700 { background: var(--color-base-700); }
-  &.c800 { background: var(--color-base-800); }
-  &.c900 { background: var(--color-base-900); }
-  &.c1000 { background: var(--color-base-1000); }
-}
-
-.Layer__test-samples {
-  display: flex;
-}
