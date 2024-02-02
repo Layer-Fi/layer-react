@@ -90,7 +90,7 @@ import { BalanceSheet } from "@layerfi/components";
 
 ## Styling
 
-Components can be customized on few ways:
+Components can be customized:
 
 - using `theme` attribute of `LayerProvider`,
 - setting CSS variables,
@@ -117,6 +117,28 @@ Components can be customized on few ways:
 >
   {...}
 </LayerProvider>
+```
+
+The `colors` can be defined in `HSL`, `RGB` or `HEX`:
+
+```
+// HSL:
+colors: {
+  dark: { h: '28', s: '26%', l: '11%' },
+  light: { h: '52', s: '100%', l: '55%' },
+},
+
+// RGB:
+colors: {
+  dark: { r: '36', g: '28', b: '21' },
+  light: { r: '255', g: '224', b: '27' },
+},
+
+// HEX:
+colors: {
+  dark: { hex: '#241C15' },
+  light: { hex: '#FFE01B' },
+},
 ```
 
 <br />
