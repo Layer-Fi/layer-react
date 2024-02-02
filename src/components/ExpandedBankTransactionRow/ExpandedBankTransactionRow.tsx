@@ -3,7 +3,7 @@ import { useBankTransactions } from '../../hooks/useBankTransactions'
 import FolderPlus from '../../icons/FolderPlus'
 import Link from '../../icons/Link'
 import RefreshCcw from '../../icons/RefreshCcw'
-import ScissorsFullOpen from '../../icons/ScissorsFullOpen'
+import Scissors from '../../icons/Scissors'
 import {
   centsToDollars as formatMoney,
   dollarsToCents as parseMoney,
@@ -27,7 +27,7 @@ type Props = {
   close?: () => void
   isOpen?: boolean
   asListItem?: boolean
-  showSubmitButton?: boolean
+  submitBtnText?: string
 }
 
 type Split = {
@@ -57,7 +57,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       bankTransaction,
       isOpen = false,
       asListItem = false,
-      showSubmitButton = false,
+      submitBtnText = 'Save',
     },
     ref,
   ) => {
@@ -230,7 +230,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 {rowState.splits.length === 1 ? (
                   <Button
                     onClick={addSplit}
-                    leftIcon={<ScissorsFullOpen size={14} />}
+                    leftIcon={<Scissors size={14} />}
                     variant={ButtonVariant.secondary}
                   >
                     Split
@@ -259,7 +259,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               <FileInput text='Upload receipt' />
             </div>
 
-            {asListItem || showSubmitButton ? (
+            {asListItem ? (
               <div className={`${className}__submit-btn`}>
                 <SubmitButton
                   onClick={() => {
@@ -272,7 +272,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   error={bankTransaction.error}
                   active={true}
                 >
-                  Approve
+                  {submitBtnText}
                 </SubmitButton>
               </div>
             ) : null}

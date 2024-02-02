@@ -112,6 +112,7 @@ export const BankTransactionListItem = ({
           close={() => toggleOpen(bankTransaction.id)}
           isOpen={isOpen}
           asListItem={true}
+          submitBtnText={editable ? 'Approve' : 'Save'}
         />
       </span>
       <span className={`${className}__base-row`}>
