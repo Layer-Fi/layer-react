@@ -45,9 +45,9 @@ export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
 
 export type Props = {
   businessId: string
-  appId: string
-  appSecret: string
-  clientId: string
+  appId?: string
+  appSecret?: string
+  businessAccessToken?: string
   environment?: keyof typeof LayerEnvironment
   theme?: LayerThemeConfig
 }
@@ -57,7 +57,7 @@ export const LayerProvider = ({
   appSecret,
   businessId,
   children,
-  clientId,
+  businessAccessToken,
   environment = 'production',
   theme,
 }: PropsWithChildren<Props>) => {
@@ -82,19 +82,38 @@ export const LayerProvider = ({
     theme,
   })
 
-  const { data: auth } = useSWR(
-    isBefore(state.auth.expires_at, new Date()) && 'authenticate',
-    Layer.authenticate({
-      appId,
-      appSecret,
-      authenticationUrl: url,
-      scope,
-      clientId,
-    }),
-    defaultSWRConfig,
-  )
+  const { data: auth } =
+    appId !== undefined && appSecret !== undefined
+      ? useSWR(
+          businessAccessToken === undefined &&
+            appId !== undefined &&
+            appSecret !== undefined &&
+            isBefore(state.auth.expires_at, new Date()) &&
+            'authenticate',
+          Layer.authenticate({
+            appId,
+            appSecret,
+            authenticationUrl: url,
+            scope,
+          }),
+          defaultSWRConfig,
+        )
+      : { data: undefined }
+
   useEffect(() => {
-    if (auth?.access_token) {
+    if (businessAccessToken) {
+      dispatch({
+        type: Action.setAuth,
+        payload: {
+          auth: {
+            access_token: businessAccessToken,
+            token_type: 'Bearer',
+            expires_in: 3600,
+            expires_at: add(new Date(), { seconds: 3600.0 }),
+          },
+        },
+      })
+    } else if (auth?.access_token) {
       dispatch({
         type: Action.setAuth,
         payload: {
@@ -105,7 +124,7 @@ export const LayerProvider = ({
         },
       })
     }
-  }, [auth?.access_token])
+  }, [businessAccessToken, auth?.access_token])
 
   const { data: categories } = useSWR(
     businessId && auth?.access_token && `categories-${businessId}`,

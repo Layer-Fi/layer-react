@@ -5,7 +5,6 @@ type AuthenticationArguments = {
   appId: string
   appSecret: string
   authenticationUrl?: string
-  clientId: string
   scope: string
 }
 export const authenticate =
@@ -13,7 +12,6 @@ export const authenticate =
     appId,
     appSecret,
     authenticationUrl = 'https://auth.layerfi.com/oauth2/token',
-    clientId,
     scope,
   }: AuthenticationArguments) =>
   (): Promise<OAuthResponse> =>
@@ -26,6 +24,6 @@ export const authenticate =
       body: formStringFromObject({
         grant_type: 'client_credentials',
         scope,
-        client_id: clientId,
+        client_id: appId,
       }),
     }).then(res => res.json() as Promise<OAuthResponse>)
