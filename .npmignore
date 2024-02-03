@@ -8,3 +8,4 @@ src
 test
 bin
 PUBLISHING.md
+.vim_backups
