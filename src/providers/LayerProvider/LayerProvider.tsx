@@ -85,7 +85,7 @@ export const LayerProvider = ({
   const { data: auth } =
     appId !== undefined && appSecret !== undefined
       ? useSWR(
-          businessId === undefined &&
+          businessAccessToken === undefined &&
             appId !== undefined &&
             appSecret !== undefined &&
             isBefore(state.auth.expires_at, new Date()) &&
