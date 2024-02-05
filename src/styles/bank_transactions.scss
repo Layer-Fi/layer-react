@@ -1,9 +1,22 @@
+.Layer__bank-transactions {
+  max-width: var(--max-component-width);
+}
+
+.Layer__bank-transactions__loader-container {
+  padding: var(--spacing-2xl);
+}
+
 .Layer__bank-transaction-row .Layer__table-cell {
   border-top: 1px solid var(--border-color);
 }
 
+.Layer__bank-transaction-row:first-child .Layer__table-cell  {
+  border-top-width: 0px;
+}
+
 .Layer__bank-transactions__table .Layer__table-header {
   background-color: var(--table-bg);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .Layer__bank-transaction-row .Layer__table-cell {

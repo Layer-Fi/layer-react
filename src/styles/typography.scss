@@ -31,6 +31,10 @@
   font-size: var(--text-md);
 }
 
+.Layer__text--lg {
+  font-size: var(--text-lg);
+}
+
 .Layer__text--bold,
 .Layer__text.Layer__text--bold {
   font-variation-settings: 'wght' var(--font-weight-bold);

@@ -60,6 +60,19 @@
   transition: all var(--transition-speed) ease-out;
 }
 
+.Layer__table-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(100vh - 200px);
+}
+
+.Layer__component--as-widget .Layer__table-state-container  {
+  height: calc(100% - 160px);
+}
+
 .Layer__bank-transaction-row--removing {
   .Layer__table-cell-content {
     max-height: 0px;

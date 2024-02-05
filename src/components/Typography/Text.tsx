@@ -3,6 +3,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import classNames from 'classnames'
 
 export enum TextSize {
+  lg = 'lg',
   md = 'md',
   sm = 'sm',
 }

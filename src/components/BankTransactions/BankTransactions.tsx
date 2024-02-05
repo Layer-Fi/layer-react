@@ -5,6 +5,7 @@ import { BankTransaction, CategorizationStatus } from '../../types'
 import { BankTransactionListItem } from '../BankTransactionListItem'
 import { BankTransactionRow } from '../BankTransactionRow'
 import { Container, Header } from '../Container'
+import { DataState, DataStateStatus } from '../DataState'
 import { Loader } from '../Loader'
 import { Toggle } from '../Toggle'
 import { Heading } from '../Typography'
@@ -28,6 +29,10 @@ const ReviewCategories = [
   CategorizationStatus.LAYER_REVIEW,
 ]
 
+export interface BankTransactionsProps {
+  asWidget?: boolean
+}
+
 const filterVisibility =
   (display: DisplayState) => (bankTransaction: BankTransaction) => {
     const categorized = CategorizedCategories.includes(
@@ -43,10 +48,13 @@ const filterVisibility =
     )
   }
 
-export const BankTransactions = () => {
+export const BankTransactions = ({
+  asWidget = false,
+}: BankTransactionsProps) => {
   const [display, setDisplay] = useState<DisplayState>(DisplayState.review)
-  const { data, isLoading } = useBankTransactions()
-  const bankTransactions = data.filter(filterVisibility(display))
+  const { data, isLoading, error, isValidating, refetch } =
+    useBankTransactions()
+  const bankTransactions = data?.filter(filterVisibility(display))
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) =>
@@ -73,7 +81,7 @@ export const BankTransactions = () => {
 
   const editable = display === DisplayState.review
   return (
-    <Container name={COMPONENT_NAME}>
+    <Container name={COMPONENT_NAME} asWidget={asWidget}>
       <Header
         ref={headerRef}
         className='Layer__bank-transactions__header'
@@ -123,7 +131,7 @@ export const BankTransactions = () => {
         </thead>
         <tbody>
           {!isLoading &&
-            bankTransactions.map((bankTransaction: BankTransaction) => (
+            bankTransactions?.map((bankTransaction: BankTransaction) => (
               <BankTransactionRow
                 key={bankTransaction.id}
                 dateFormat={dateFormat}
@@ -135,12 +143,14 @@ export const BankTransactions = () => {
             ))}
         </tbody>
       </table>
-      {isLoading || !bankTransactions || bankTransactions?.length === 0 ? (
-        <Loader />
+      {isLoading && !bankTransactions ? (
+        <div className='Layer__bank-transactions__loader-container'>
+          <Loader />
+        </div>
       ) : null}
       {!isLoading && (
         <ul className='Layer__bank-transactions__list'>
-          {bankTransactions.map((bankTransaction: BankTransaction) => (
+          {bankTransactions?.map((bankTransaction: BankTransaction) => (
             <BankTransactionListItem
               key={bankTransaction.id}
               dateFormat={dateFormat}
@@ -152,6 +162,30 @@ export const BankTransactions = () => {
           ))}
         </ul>
       )}
+      {!isLoading &&
+      (bankTransactions === undefined ||
+        (bankTransactions !== undefined && bankTransactions.length === 0)) ? (
+        <div className='Layer__table-state-container'>
+          <DataState
+            status={DataStateStatus.allDone}
+            title='You are up to date with transactions!'
+            description='All uncategorized transaction will be displayed here'
+            onRefresh={() => refetch()}
+            isLoading={isValidating}
+          />
+        </div>
+      ) : null}
+      {!isLoading && error ? (
+        <div className='Layer__table-state-container'>
+          <DataState
+            status={DataStateStatus.failed}
+            title='Something went wrong'
+            description='We couldn’t load your data.'
+            onRefresh={() => refetch()}
+            isLoading={isValidating}
+          />
+        </div>
+      ) : null}
     </Container>
   )
 }

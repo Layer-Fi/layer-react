@@ -28,6 +28,8 @@
   --color-base-900: var(--color-dark);
   --color-base-1000: hsl(var(--color-dark-h) 20% 7%);
 
+  --max-component-width: 1408px;
+
 
   // 2. BASE CUSTOMIZATION
   --color-primary: var(--color-dark);
@@ -45,10 +47,12 @@
   --font-family-numeric: "InterVariable", "Inter", sans-serif;
   --text-sm: 12px;
   --text-md: 14px;
+  --text-lg: 16px;
   --text-heading: 24px;
   --text-heading-sm: 16px;
   --font-weight-normal: 460;
   --font-weight-bold: 580;
+  --spacing-3xs: 4px;
   --spacing-2xs: 6px;
   --spacing-xs: 8px;
   --spacing-sm: 12px;
@@ -92,6 +96,8 @@
 
   --tooltip-color: var(--color-white);
   --tooltip-bg-color: var(--color-base-800);
+
+  
 
   // LEGACY (?)
   --color-alabaster: #f9f9f9;
