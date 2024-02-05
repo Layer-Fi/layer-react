@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, ReactNode } from 'react'
+import React, { ButtonHTMLAttributes, ReactNode, useRef } from 'react'
 import classNames from 'classnames'
 
 export enum ButtonVariant {
@@ -22,6 +22,8 @@ export const Button = ({
   iconOnly,
   ...props
 }: ButtonProps) => {
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
   let justify = 'center'
   if (leftIcon && rightIcon) {
     justify = 'space-between'
@@ -38,8 +40,26 @@ export const Button = ({
     className,
   )
 
+  const startAnimation = () =>
+    buttonRef.current &&
+    [...buttonRef.current.getElementsByClassName('animateOnHover')].forEach(
+      el => (el as SVGAnimateElement).beginElement(),
+    )
+
+  const stopAnimation = () =>
+    buttonRef.current &&
+    [...buttonRef.current.getElementsByClassName('animateOnHover')].forEach(
+      el => (el as SVGAnimateElement).endElement(),
+    )
+
   return (
-    <button {...props} className={baseClassName}>
+    <button
+      {...props}
+      className={baseClassName}
+      onMouseEnter={startAnimation}
+      onMouseLeave={stopAnimation}
+      ref={buttonRef}
+    >
       <span className={`Layer__btn-content Layer__justify--${justify}`}>
         {leftIcon && (
           <span className='Layer__btn-icon Layer__btn-icon--left'>

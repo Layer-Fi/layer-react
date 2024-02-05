@@ -4,15 +4,17 @@ import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
 type UseBankTransactions = () => {
-  data: BankTransaction[]
+  data?: BankTransaction[]
   metadata: Metadata
   isLoading: boolean
+  isValidating: boolean
   error: unknown
   categorize: (
     id: BankTransaction['id'],
     newCategory: CategoryUpdate,
   ) => Promise<void>
   updateOneLocal: (bankTransaction: BankTransaction) => void
+  refetch: () => void
 }
 
 export const useBankTransactions: UseBankTransactions = () => {
@@ -21,6 +23,7 @@ export const useBankTransactions: UseBankTransactions = () => {
   const {
     data: responseData,
     isLoading,
+    isValidating,
     error: responseError,
     mutate,
   } = useSWR(
@@ -31,7 +34,7 @@ export const useBankTransactions: UseBankTransactions = () => {
   )
 
   const {
-    data = [],
+    data = undefined,
     meta: metadata = {},
     error = undefined,
   } = responseData || {}
@@ -40,7 +43,7 @@ export const useBankTransactions: UseBankTransactions = () => {
     id: BankTransaction['id'],
     newCategory: CategoryUpdate,
   ) => {
-    const foundBT = data.find(x => x.business_id === businessId && x.id === id)
+    const foundBT = data?.find(x => x.business_id === businessId && x.id === id)
     if (foundBT) {
       updateOneLocal({ ...foundBT, processing: true, error: undefined })
     }
@@ -60,7 +63,7 @@ export const useBankTransactions: UseBankTransactions = () => {
         }
       })
       .catch(err => {
-        const newBT = data.find(
+        const newBT = data?.find(
           x => x.business_id === businessId && x.id === id,
         )
 
@@ -75,16 +78,22 @@ export const useBankTransactions: UseBankTransactions = () => {
   }
 
   const updateOneLocal = (newBankTransaction: BankTransaction) => {
-    const updatedData = data.map(bt =>
+    const updatedData = data?.map(bt =>
       bt.id === newBankTransaction.id ? newBankTransaction : bt,
     )
     mutate({ data: updatedData }, { revalidate: false })
+  }
+
+  const refetch = () => {
+    mutate()
   }
 
   return {
     data,
     metadata,
     isLoading,
+    isValidating,
+    refetch,
     error: responseError || error,
     categorize,
     updateOneLocal,

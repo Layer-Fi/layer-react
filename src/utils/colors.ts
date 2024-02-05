@@ -36,7 +36,6 @@ const parseColorFromTheme = (colorName: string, color?: ColorConfig) => {
 
   try {
     if ('h' in color && 's' in color && 'l' in color) {
-      console.log('its hsl', color)
       return {
         [`--color-${colorName}-h`]: color.h,
         [`--color-${colorName}-s`]: color.s,
@@ -46,7 +45,6 @@ const parseColorFromTheme = (colorName: string, color?: ColorConfig) => {
 
     if ('r' in color && 'g' in color && 'b' in color) {
       const { h, s, l } = rgbToHsl(color)
-      console.log('its rgb', h, s, l)
       return {
         [`--color-${colorName}-h`]: h,
         [`--color-${colorName}-s`]: `${s}%`,
@@ -55,7 +53,6 @@ const parseColorFromTheme = (colorName: string, color?: ColorConfig) => {
     }
 
     if ('hex' in color) {
-      console.log('its hex')
       const rgb = hexToRgb(color.hex)
       if (!rgb) {
         return {}
@@ -65,7 +62,6 @@ const parseColorFromTheme = (colorName: string, color?: ColorConfig) => {
         g: rgb.g.toString(),
         b: rgb.b.toString(),
       })
-      console.log('its hex', h, s, l)
       return {
         [`--color-${colorName}-h`]: h,
         [`--color-${colorName}-s`]: `${s}%`,

@@ -1,0 +1,41 @@
+.Layer__data-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.Layer__data-state__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  box-shadow: 0px 0px 0px 1px var(--color-base-300);
+  border-radius: var(--spacing-3xs);
+  background: transparent;
+  color: var(--text-color-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.Layer__data-state__icon--neutral {
+  box-shadow: 0px 0px 3px 0px rgba(23, 51, 45, 0.04) inset;
+  background: var(--color-base-100);
+  color: var(--text-color-primary);
+}
+
+.Layer__data-state__icon--error {
+  background: transparent;
+  color: var(--color-danger);
+}
+
+.Layer__data-state__title {
+  display: block;
+  margin-bottom: var(--spacing-2xs);
+}
+
+.Layer__data-state__description {
+  display: block;
+  margin-bottom: var(--spacing-xl);
+  color: var(--color-base-700);
+}

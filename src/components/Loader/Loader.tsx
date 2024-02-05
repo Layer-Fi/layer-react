@@ -8,8 +8,8 @@ export interface LoaderProps {
 export const Loader = ({ children }: LoaderProps) => {
   return (
     <span className='Layer__loader'>
-      <LoaderIcon size={14} className='Layer__anim--rotating' />
-      {children ?? 'Loading...'}
+      <LoaderIcon size={28} className='Layer__anim--rotating' />
+      {children}
     </span>
   )
 }

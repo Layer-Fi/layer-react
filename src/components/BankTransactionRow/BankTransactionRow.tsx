@@ -142,12 +142,12 @@ export const BankTransactionRow = ({
                 disabled={bankTransaction.processing}
               />
             ) : null}
-            {!editable ? (
+            {!editable && !isOpen ? (
               <Text as='span' className={`${className}__category-text`}>
                 {bankTransaction?.category?.display_name}
               </Text>
             ) : null}
-            {editable && (
+            {editable || isOpen ? (
               <SubmitButton
                 onClick={() => {
                   if (!bankTransaction.processing) {
@@ -159,9 +159,9 @@ export const BankTransactionRow = ({
                 error={bankTransaction.error}
                 active={isOpen}
               >
-                Approve
+                {editable ? 'Approve' : 'Save'}
               </SubmitButton>
-            )}
+            ) : null}
             <div
               onClick={() => toggleOpen(bankTransaction.id)}
               className='Layer__bank-transaction-row__expand-button'
@@ -182,7 +182,6 @@ export const BankTransactionRow = ({
             bankTransaction={bankTransaction}
             close={() => toggleOpen(bankTransaction.id)}
             isOpen={isOpen}
-            showSubmitButton={!editable}
           />
         </td>
       </tr>
