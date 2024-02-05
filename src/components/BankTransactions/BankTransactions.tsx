@@ -163,6 +163,7 @@ export const BankTransactions = ({
         </ul>
       )}
       {!isLoading &&
+      !error &&
       (bankTransactions === undefined ||
         (bankTransactions !== undefined && bankTransactions.length === 0)) ? (
         <div className='Layer__table-state-container'>
