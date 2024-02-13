@@ -1,13 +1,5 @@
 .Layer__profit-and-loss {
   background-color: white;
-  padding: 0.25rem;
-
-  * {
-    color: var(--text-color);
-    font-family: Inter;
-    font-weight: 500;
-    font-style: normal;
-  }
 }
 
 .Layer__profit-and-loss__title {
@@ -19,8 +11,6 @@
 }
 
 .Layer__profit-and-loss-table {
-  border: 1px solid var(--border-color);
-  border-radius: var(--corner-radius);
   display: grid;
   grid-template-columns: 1fr auto;
   font-size: 1rem;
@@ -149,13 +139,12 @@
 }
 
 .Layer__profit-and-loss-date-picker {
-  width: 20rem;
+  width: 270px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: 0.25rem;
-  margin: 0.5rem;
   border: 1px solid var(--border-color);
   border-radius: var(--corner-radius);
 }
@@ -186,14 +175,6 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-}
-
-.Layer__profit-and-loss-chart__bar--income {
-  fill: var(--bar-color-income);
-}
-
-.Layer__profit-and-loss-chart__bar--expenses {
-  fill: var(--bar-color-expenses);
 }
 
 .Layer__profit-and-loss-chart .recharts-cartesian-axis-tick-value tspan {
@@ -228,42 +209,75 @@
   transition: x 0.5s;
 }
 
+
+
+
+/** ---- */
+.Layer__profit-and-loss__chart_with_summaries {
+  display: flex;
+  align-items: stretch;
+  border-radius: var(--border-radius-sm);
+  box-shadow: 0px 0px 0px 1px rgba(16, 24, 40, 0.04), 0px 2px 4px 0px rgba(16, 24, 40, 0.06), 0px 4px 12px 0px rgba(16, 24, 40, 0.08);
+  margin-left: var(--spacing-xl);
+  margin-right: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.Layer__profit-and-loss__chart_with_summaries__summary-col {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-md);
+  column-gap: var(--spacing-md);
+  row-gap: var(--spacing-md);
+}
+
+.Layer__profit-and-loss__chart_with_summaries__chart-col {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: var(--spacing-md);
+  padding-top: 68px;
+}
+
 .Layer__profit-and-loss-summaries {
   display: flex;
   flex: 1;
   flex-direction: row;
   justify-content: space-evenly;
+  column-gap: var(--spacing-md);
+  row-gap: var(--spacing-md);
+}
+
+.Layer__profit-and-loss-summaries.flex-col {
+  flex-direction: column;
 }
 
 .Layer__profit-and-loss-summaries__summary {
   display: flex;
   flex: 1;
   flex-direction: column;
-  border: 1px solid var(--border-color);
-  border-radius: var(--corner-radius);
-  padding: 1.5rem;
-  margin-right: 1.5rem;
-
-  &:first-child {
-    margin-left: 1.5rem;
-  }
+  justify-content: center;
+  box-shadow: 0px 0px 0px 1px var(--color-base-300);
+  border-radius: var(--border-radius-xs);
+  padding: var(--spacing-md);
 }
 
 .Layer__profit-and-loss-summaries__title {
-  font-weight: 600;
-  font-size: 1.375rem;
-  margin-bottom: 0.75rem;
+  color: var(--text-color-primary);
+  font-size: var(--text-sm);
+  margin-bottom: 2px;
 }
 
 .Layer__profit-and-loss-summaries__month {
   font-size: 1.125rem;
   margin-bottom: 0.25rem;
+  color: red;
 }
 
 .Layer__profit-and-loss-summaries__amount,
 .Layer__profit-and-loss-summaries__amount--positive {
-  font-weight: 600;
-  font-size: 1.5rem;
+  color: var(--text-color-primary);
+  font-size: var(--text-md);
 
   &::before {
     content: '$';
@@ -273,5 +287,143 @@
 .Layer__profit-and-loss-summaries__amount--negative {
   &::before {
     content: '-$';
+  }
+}
+
+.Layer__profit-and-loss-row__children--content {
+  min-height: 0;
+  display: grid;
+  grid-column: span 2;
+  grid-template-columns: subgrid;
+  background-color: var(--color-base-50);
+}
+
+// @TODO - need this in JS(?) and RGB (HSL won't work with svg)
+.Layer__profit-and-loss-chart__bar--income {
+  fill: #6D8DE6;
+}
+
+.Layer__profit-and-loss-chart__bar--expenses {
+  fill: #101828;
+}
+
+/** @TOdo move to char */
+.Layer__component .recharts-responsive-container {
+  padding: 4px;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 0px 1px var(--color-base-300);
+  border-radius: var(--border-radius-xs);
+}
+
+.Layer__chart-container {
+  min-height: 200px;
+}
+
+.Layer__chart__tooltip {
+  background-color: var(--color-base-1000);
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  color: var(--color-base-500);
+  border-radius: var(--border-radius-3xs);
+  font-size: var(--text-sm);
+}
+
+.Layer__chart__tooltip-list {
+  margin: 0;
+  padding: 0;  
+
+  li {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    column-gap: var(--spacing-sm);
+  }
+
+  .Layer__chart__tooltip-label {
+    color: var(--color-base-500);
+  }
+  
+  .Layer__chart__tooltip-value {
+    color: var(--color-base-300);
+  }
+}
+
+// @TODO - wrong shadow - maybe use double rectangles in js?
+.Layer__chart__tooltip-cursor {
+  filter: drop-shadow(0px 0px 1px rgb(108, 108, 108));
+}
+
+// @TODO - adjust responsive rules
+@container (max-width: 1024px) and (min-width: 760px) {
+  .Layer__profit-and-loss-summaries,
+  .Layer__profit-and-loss-summaries.flex-col { 
+    flex-direction: row;
+  }
+
+  .Layer__profit-and-loss__chart_with_summaries {
+    flex-direction: column;
+    margin-left: var(--spacing-md);
+    margin-right: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+  }
+}
+
+@container (max-width: 759px) and (min-width: 500px) {
+  .Layer__profit-and-loss-summaries,
+  .Layer__profit-and-loss-summaries.flex-col { 
+    flex-direction: column;
+  }
+
+  .Layer__profit-and-loss__chart_with_summaries {
+    flex-direction: column;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: var(--spacing-md);
+    box-shadow: none;
+  }
+}
+
+@container (max-width: 500px) {
+  .Layer__profit-and-loss-summaries,
+  .Layer__profit-and-loss-summaries.flex-col { 
+    flex-direction: row;
+    max-width: 100%;
+    overflow: auto;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    padding: 6px 1px;
+  }
+
+  .Layer__profit-and-loss__chart_with_summaries {
+    flex-direction: column;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: var(--spacing-md);
+    box-shadow: none;
+  }
+
+  .Layer__profit-and-loss-summaries__summary {
+    min-width: 150px;
+  }
+}
+
+// @TODO move to global.scss?
+.Layer__component * {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #e2e2e2;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: #999;
   }
 }

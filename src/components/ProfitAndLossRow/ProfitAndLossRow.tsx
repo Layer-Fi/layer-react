@@ -89,7 +89,7 @@ export const ProfitAndLossRow = ({
             expanded && 'Layer__profit-and-loss-row__children--expanded'
           }`}
         >
-          <div className='Layer__balance-sheet-row__children--content'>
+          <div className='Layer__profit-and-loss-row__children--content'>
             {(line_items || []).map(line_item => (
               <ProfitAndLossRow
                 key={line_item.display_name}

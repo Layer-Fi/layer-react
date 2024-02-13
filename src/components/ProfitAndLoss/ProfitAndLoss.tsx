@@ -11,12 +11,14 @@ type PNLContextType = ReturnType<typeof useProfitAndLoss>
 const PNLContext = createContext<PNLContextType>({
   data: undefined,
   isLoading: true,
+  isValidating: false,
   error: undefined,
   dateRange: {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   },
   changeDateRange: () => {},
+  refetch: () => {},
 })
 
 type Props = PropsWithChildren & {
@@ -31,10 +33,7 @@ const ProfitAndLoss = ({ children, tagFilter, reportingBasis }: Props) => {
   const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
   return (
     <PNLContext.Provider value={contextData}>
-      <div className='Layer__component Layer__profit-and-loss'>
-        <h2 className='Layer__profit-and-loss__title'>Profit & Loss</h2>
-        {children}
-      </div>
+      <div className='Layer__component Layer__profit-and-loss'>{children}</div>
     </PNLContext.Provider>
   )
 }

@@ -18,9 +18,11 @@ type Props = {
 type UseProfitAndLoss = (props?: Props) => {
   data: ProfitAndLoss | undefined
   isLoading: boolean
+  isValidating: boolean
   error: unknown
   dateRange: DateRange
   changeDateRange: (dateRange: Partial<DateRange>) => void
+  refetch: () => void
 }
 
 export const useProfitAndLoss: UseProfitAndLoss = (
@@ -45,7 +47,9 @@ export const useProfitAndLoss: UseProfitAndLoss = (
   const {
     data: rawData,
     isLoading,
+    isValidating,
     error: rawError,
+    mutate,
   } = useSWR(
     businessId &&
       startDate &&
@@ -75,11 +79,17 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     newEndDate && setEndDate(newEndDate)
   }
 
+  const refetch = () => {
+    mutate()
+  }
+
   return {
     data,
     isLoading,
+    isValidating,
     error: error || rawError,
     dateRange: { startDate, endDate },
+    refetch,
     changeDateRange,
   }
 }

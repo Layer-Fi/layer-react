@@ -1,13 +1,18 @@
 import React, { useContext } from 'react'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
+import { SkeletonLoader } from '../SkeletonLoader'
 
 type Props = {
   revenueLabel?: string
+  vertical?: boolean
 }
 
-export const ProfitAndLossSummaries = ({ revenueLabel = 'Revenue' }: Props) => {
-  const { data: storedData } = useContext(PNL.Context)
+export const ProfitAndLossSummaries = ({
+  vertical,
+  revenueLabel = 'Revenue',
+}: Props) => {
+  const { data: storedData, isLoading } = useContext(PNL.Context)
   const data = storedData
     ? storedData
     : { income: { value: NaN }, net_profit: NaN }
@@ -28,36 +33,52 @@ export const ProfitAndLossSummaries = ({ revenueLabel = 'Revenue' }: Props) => {
       : 'Layer__profit-and-loss-summaries__amount--pasitive'
 
   return (
-    <div className='Layer__profit-and-loss-summaries'>
+    <div
+      className={`Layer__profit-and-loss-summaries ${
+        vertical ? 'flex-col' : ''
+      }`}
+    >
       <div className='Layer__profit-and-loss-summaries__summary Layer__profit-and-loss-summaries__summary--income'>
         <span className='Layer__profit-and-loss-summaries__title'>
           {revenueLabel}
         </span>
-        <span
-          className={`Layer__profit-and-loss-summaries__amount ${incomeDirectionClass}`}
-        >
-          {formatMoney(Math.abs(data?.income?.value ?? NaN))}
-        </span>
+        {isLoading || storedData === undefined ? (
+          <SkeletonLoader />
+        ) : (
+          <span
+            className={`Layer__profit-and-loss-summaries__amount ${incomeDirectionClass}`}
+          >
+            {formatMoney(Math.abs(data?.income?.value ?? NaN))}
+          </span>
+        )}
       </div>
       <div className='Layer__profit-and-loss-summaries__summary Layer__profit-and-loss-summaries__summary--expenses'>
         <span className='Layer__profit-and-loss-summaries__title'>
           Expenses
         </span>
-        <span
-          className={`Layer__profit-and-loss-summaries__amount ${expensesDirectionClass}`}
-        >
-          {formatMoney(Math.abs((data.income.value ?? 0) - data.net_profit))}
-        </span>
+        {isLoading || storedData === undefined ? (
+          <SkeletonLoader />
+        ) : (
+          <span
+            className={`Layer__profit-and-loss-summaries__amount ${expensesDirectionClass}`}
+          >
+            {formatMoney(Math.abs((data.income.value ?? 0) - data.net_profit))}
+          </span>
+        )}
       </div>
       <div className='Layer__profit-and-loss-summaries__summary Layer__profit-and-loss-summaries__summary--net-profit'>
         <span className='Layer__profit-and-loss-summaries__title'>
           Net Profit
         </span>
-        <span
-          className={`Layer__profit-and-loss-summaries__amount ${netProfitDirectionClass}`}
-        >
-          {formatMoney(Math.abs(data.net_profit))}
-        </span>
+        {isLoading || storedData === undefined ? (
+          <SkeletonLoader />
+        ) : (
+          <span
+            className={`Layer__profit-and-loss-summaries__amount ${netProfitDirectionClass}`}
+          >
+            {formatMoney(Math.abs(data.net_profit))}
+          </span>
+        )}
       </div>
     </div>
   )
