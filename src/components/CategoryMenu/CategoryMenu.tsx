@@ -40,6 +40,8 @@ export const CategoryMenu = ({
 }: Props) => {
   const { categories } = useLayerContext()
 
+  // console.log(categories)
+
   const suggestedOptions =
     bankTransaction?.categorization_flow?.type ===
     CategorizationType.ASK_FROM_SUGGESTIONS

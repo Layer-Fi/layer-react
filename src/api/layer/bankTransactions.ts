@@ -31,3 +31,11 @@ export const categorizeBankTransaction = put<
   ({ businessId, bankTransactionId }) =>
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/categorize`,
 )
+
+export const matchBankTransaction = put<
+  { data: BankTransaction; errors: unknown },
+  { match_id: string; type: string } // @TODO into enum
+>(
+  ({ businessId, bankTransactionId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/categorize`,
+)

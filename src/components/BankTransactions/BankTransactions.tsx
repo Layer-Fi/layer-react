@@ -23,6 +23,7 @@ const CategorizedCategories = [
   CategorizationStatus.CATEGORIZED,
   CategorizationStatus.JOURNALING,
   CategorizationStatus.SPLIT,
+  CategorizationStatus.MATCH,
 ]
 const ReviewCategories = [
   CategorizationStatus.READY_FOR_INPUT,

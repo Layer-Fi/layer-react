@@ -1,8 +1,16 @@
 import React, { useRef, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import ChevronDown from '../../icons/ChevronDown'
+import MinimizeTwo from '../../icons/MinimizeTwo'
+import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, CategorizationType, Direction } from '../../types'
+import {
+  BankTransaction,
+  CategorizationStatus,
+  CategorizationType,
+  Direction,
+} from '../../types'
+import { Badge } from '../Badge'
 import { SubmitButton } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
@@ -134,17 +142,50 @@ export const BankTransactionRow = ({
             className={`${className}__actions-container Layer__table-cell-content`}
           >
             {editable && !isOpen ? (
-              <CategoryMenu
-                bankTransaction={bankTransaction}
-                name={`category-${bankTransaction.id}`}
-                value={selectedCategory}
-                onChange={setSelectedCategory}
-                disabled={bankTransaction.processing}
-              />
+              <>
+                {bankTransaction.suggested_matches?.length > 0 && (
+                  <span>MATCH</span>
+                )}
+                <CategoryMenu
+                  bankTransaction={bankTransaction}
+                  name={`category-${bankTransaction.id}`}
+                  value={selectedCategory}
+                  onChange={setSelectedCategory}
+                  disabled={bankTransaction.processing}
+                />
+              </>
             ) : null}
             {!editable && !isOpen ? (
               <Text as='span' className={`${className}__category-text`}>
-                {bankTransaction?.category?.display_name}
+                {bankTransaction.categorization_status ===
+                  CategorizationStatus.SPLIT && (
+                  <Badge
+                    icon={<Scissors size={11} />}
+                    tooltip={
+                      <span className={`${className}__split-tooltip`}>
+                        Split details
+                      </span>
+                    }
+                  >
+                    Split
+                  </Badge>
+                )}
+                {bankTransaction.categorization_status ===
+                  CategorizationStatus.MATCH && (
+                  <Badge
+                    icon={<MinimizeTwo size={11} />}
+                    tooltip={
+                      <span className={`${className}__split-tooltip`}>
+                        Match details
+                      </span>
+                    }
+                  >
+                    Match
+                  </Badge>
+                )}
+                <span className={`${className}__category-text__text`}>
+                  {bankTransaction?.category?.display_name}
+                </span>
               </Text>
             ) : null}
             {editable || isOpen ? (
@@ -159,7 +200,7 @@ export const BankTransactionRow = ({
                 error={bankTransaction.error}
                 active={isOpen}
               >
-                {editable ? 'Approve' : 'Save'}
+                {editable ? 'Approve' : 'Update'}
               </SubmitButton>
             ) : null}
             <div

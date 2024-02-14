@@ -87,6 +87,17 @@
   max-width: 350px;
   text-overflow: ellipsis;
   overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+
+  .Layer__tooltip-trigger {
+    flex: 0;
+  }
+
+  .Layer__bank-transaction-row__category-text__text {
+    flex: 1;
+  }
 }
 
 .Layer__expanded-bank-transaction-row__content {
@@ -94,6 +105,43 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   max-width: 680px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; 
+}
+
+.Layer__expanded-bank-transaction-row__content-panels {
+  display: flex;
+  flex-direction: row;
+  max-width: 680px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; 
+}
+
+.Layer__expanded-bank-transaction-row__content-panel {
+  max-width: 0;
+  opacity: 0;
+  transition: max-width 150ms ease-out, opacity 300ms ease-out;;
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; 
+  
+
+  .Layer__expanded-bank-transaction-row__content-panel-container {
+    padding: 0 var(--spacing-md);
+    width: calc(680px - var(--spacing-md) * 2);
+  }
+
+  &.Layer__expanded-bank-transaction-row__content-panel--active {
+    max-width: 100%;
+    opacity: 1;
+  }
 }
 
 .Layer__expanded-bank-transaction-row__content-toggle {
@@ -102,16 +150,19 @@
 
 .Layer__expanded-bank-transaction-row__splits {
   display: flex;
-  gap: var(--spacing-md);
-  padding: 0 var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .Layer__expanded-bank-transaction-row__splits-inputs {
   flex: 1;
 }
 
-.Layer__expanded-bank-transaction-row__splits-buttons button {
-  min-width: 114px;
+.Layer__expanded-bank-transaction-row__splits-buttons { 
+  padding-bottom: 2px;
+
+  button {
+    min-width: 114px;
+  }
 }
 
 .Layer__bank-transaction-row__table-cell--amount-credit,
@@ -380,7 +431,7 @@
 
 @container (max-width: 700px) {
   .Layer__bank-transactions__header {
-    box-shadow: 0px -1px 0px 0px var(--neutral-8, rgba(23, 51, 45, 0.16)) inset;
+    box-shadow: 0px -1px 0px 0px rgba(23, 51, 45, 0.16) inset;
     background-color: var(--table-bg);
     position: sticky;
     top: 0px;
@@ -398,4 +449,79 @@
 
 .Layer__tooltip.Layer__bank-transactions__tx-tooltip {
   max-width: 250px;
+}
+
+.Layer__bank-transaction-row__split-tooltip {
+  font-size: 12px;
+}
+
+.Layer__expanded-bank-transaction-row__match-table {
+  margin-bottom: var(--spacing-sm);
+  border-collapse: separate; 
+  border-spacing: 0 var(--spacing-3xs);
+
+  .Layer__table-header {
+    background: transparent;
+    padding: var(--spacing-xs) var(--spacing-2xs);
+  }
+
+  .Layer__table-cell {
+    padding: var(--spacing-xs) var(--spacing-2xs);
+  }
+}
+
+.Layer__expanded-bank-transaction-row__match-row {
+  cursor: pointer;
+
+  & td {
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+
+    &:first-child {
+      border-top-left-radius: var(--border-radius-2xs);
+      border-bottom-left-radius: var(--border-radius-2xs);
+      border-left: 1px solid transparent;
+    }
+
+    &:last-child {
+      border-top-right-radius: var(--border-radius-2xs);
+      border-bottom-right-radius: var(--border-radius-2xs);
+      border-right: 1px solid transparent;
+    }
+  }
+
+
+  &:hover td {
+    background: var(--color-base-0);
+    border-top: 1px solid var(--color-base-300);
+    border-bottom: 1px solid var(--color-base-300);
+
+    &:first-child {
+      border-top-left-radius: var(--border-radius-2xs);
+      border-bottom-left-radius: var(--border-radius-2xs);
+      border-left: 1px solid var(--color-base-300);
+    }
+
+    &:last-child {
+      border-top-right-radius: var(--border-radius-2xs);
+      border-bottom-right-radius: var(--border-radius-2xs);
+      border-right: 1px solid var(--color-base-300);
+    }
+  }
+}
+
+.Layer__expanded-bank-transaction-row__match-row--selected {
+  td {
+    background: var(--color-base-0);
+    border-top: 1px solid var(--color-base-300);
+    border-bottom: 1px solid var(--color-base-300);
+
+    &:first-child {
+      border-left: 1px solid var(--color-base-300);
+    }
+
+    &:last-child {
+      border-right: 1px solid var(--color-base-300);
+    }
+  }
 }

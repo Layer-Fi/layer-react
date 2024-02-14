@@ -28,4 +28,17 @@ export interface BankTransaction extends Record<string, unknown> {
   categorization_method: string
   error?: string
   processing?: boolean
+  suggested_matches?: SuggestedMatch[]
+}
+
+export interface SuggestedMatch {
+  id: string
+  matchType: string // @TODO - turn into enum
+  details: {
+    amount: number
+    date: string
+    description: string
+    id: string
+    type: string
+  }
 }

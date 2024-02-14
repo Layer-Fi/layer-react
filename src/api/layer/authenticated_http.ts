@@ -84,6 +84,8 @@ const handleResponse = async <Return>(res: Response) => {
     throw apiError
   }
 
+  console.log('parsed', parsedResponse)
+
   return parsedResponse as Return
 }
 
