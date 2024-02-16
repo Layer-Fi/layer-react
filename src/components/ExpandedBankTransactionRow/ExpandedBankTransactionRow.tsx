@@ -16,6 +16,8 @@ import {
   CategorizationType,
 } from '../../types'
 import { SuggestedMatch } from '../../types/bank_transactions'
+import { Badge } from '../Badge'
+import { MatchBadge } from '../BankTransactionRow/BankTransactionRow'
 import { Button, SubmitButton, ButtonVariant } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
 import { InputGroup, Input, FileInput } from '../Input'
@@ -56,6 +58,25 @@ export type SaveHandle = {
   save: () => void
 }
 
+const hasMatch = (bankTransaction?: BankTransaction) => {
+  return Boolean(
+    (bankTransaction?.suggested_matches &&
+      bankTransaction?.suggested_matches?.length > 0) ||
+      bankTransaction?.match,
+  )
+}
+
+const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
+  if (bankTransaction?.match) {
+    const foundMatch = bankTransaction.suggested_matches?.find(
+      x => x.details.id === bankTransaction?.match?.details.id,
+    )
+    return foundMatch?.id
+  }
+
+  return undefined
+}
+
 export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
   (
     {
@@ -70,8 +91,12 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       categorize: categorizeBankTransaction,
       match: matchBankTransaction,
     } = useBankTransactions()
-    const [purpose, setPurpose] = useState<Purpose>(Purpose.categorize)
-    const [selectedMatchId, setSelectedMatchId] = useState<string>()
+    const [purpose, setPurpose] = useState<Purpose>(
+      hasMatch(bankTransaction) ? Purpose.match : Purpose.categorize,
+    )
+    const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
+      isAlreadyMatched(bankTransaction),
+    )
 
     const defaultCategory =
       bankTransaction.category ||
@@ -189,7 +214,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         return
       }
       console.log('match', foundMatch)
-      matchBankTransaction(bankTransaction.id, foundMatch.details.id)
+      matchBankTransaction(bankTransaction.id, foundMatch.id)
     }
 
     const className = 'Layer__expanded-bank-transaction-row'
@@ -214,6 +239,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   value: 'match',
                   label: 'Match',
                   leftIcon: <RefreshCcw size={15} />,
+                  disabled: !hasMatch(bankTransaction),
                 },
               ]}
               selected={purpose}
@@ -239,10 +265,12 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                     <thead>
                       <tr>
                         <th className='Layer__table-header'>Date</th>
-                        <th className='Layer__table-header'>Type</th>
-                        <th className='Layer__table-header'>Ref number</th>
-                        <th className='Layer__table-header'>Payee</th>
-                        <th className='Layer__table-header'>Amount</th>
+                        <th className='Layer__table-header'>Description</th>
+                        <th
+                          className={`Layer__table-header ${className}__match-table__amount`}
+                        >
+                          Amount
+                        </th>
                         <th></th>
                       </tr>
                     </thead>
@@ -272,14 +300,23 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               )}
                             </td>
                             <td className='Layer__table-cell'>
-                              {match.details.type}
-                            </td>
-                            <td className='Layer__table-cell'>
                               {match.details.description}
                             </td>
-                            <td className='Layer__table-cell'>-</td>
-                            <td className='Layer__table-cell'>
+                            <td
+                              className={`Layer__table-cell ${className}__match-table__amount`}
+                            >
                               ${formatMoney(match.details.amount)}
+                            </td>
+                            <td className={`${className}__match-table__status`}>
+                              {selectedMatchId ===
+                                isAlreadyMatched(bankTransaction) && (
+                                <MatchBadge
+                                  classNamePrefix={className}
+                                  bankTransaction={bankTransaction}
+                                  dateFormat={dateFormat}
+                                  text='Matched'
+                                />
+                              )}
                             </td>
                           </tr>
                         )
@@ -291,7 +328,10 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                     onClick={() =>
                       selectedMatchId && onMatchClick(selectedMatchId)
                     }
-                    disabled={!selectedMatchId}
+                    disabled={
+                      !selectedMatchId ||
+                      selectedMatchId === isAlreadyMatched(bankTransaction)
+                    }
                   >
                     Match
                   </Button>

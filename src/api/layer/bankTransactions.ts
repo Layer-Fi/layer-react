@@ -37,5 +37,5 @@ export const matchBankTransaction = put<
   { match_id: string; type: string } // @TODO into enum
 >(
   ({ businessId, bankTransactionId }) =>
-    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/categorize`,
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/match`,
 )

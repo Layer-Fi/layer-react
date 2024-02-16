@@ -91,9 +91,14 @@ export const useBankTransactions: UseBankTransactions = () => {
       params: { businessId, bankTransactionId: id },
       body: { match_id: matchId, type: 'Confirm_Match' }, // @TODO is it always the same OR need to read from match.details
     })
-      .then(({ data: newBT, errors }) => {
+      .then(({ data: bt, errors }) => {
+        const newBT = data?.find(
+          x => x.business_id === businessId && x.id === id,
+        )
+
         if (newBT) {
           newBT.recently_categorized = true
+          newBT.match = bt // @TODO - API doesn't return BankTransaction - update TS
           updateOneLocal(newBT)
         }
         if (errors) {

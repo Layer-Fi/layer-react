@@ -80,6 +80,10 @@ export const BankTransactionRow = ({
     isOpen ? openClassName : '',
   )
 
+  if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
+    console.log(bankTransaction, bankTransaction.match)
+  }
+
   return (
     <>
       <tr
@@ -143,9 +147,10 @@ export const BankTransactionRow = ({
           >
             {editable && !isOpen ? (
               <>
-                {bankTransaction.suggested_matches?.length > 0 && (
-                  <span>MATCH</span>
-                )}
+                {bankTransaction.suggested_matches &&
+                  bankTransaction.suggested_matches?.length > 0 && (
+                    <span>*</span>
+                  )}
                 <CategoryMenu
                   bankTransaction={bankTransaction}
                   name={`category-${bankTransaction.id}`}
@@ -170,21 +175,19 @@ export const BankTransactionRow = ({
                     Split
                   </Badge>
                 )}
-                {bankTransaction.categorization_status ===
-                  CategorizationStatus.MATCH && (
-                  <Badge
-                    icon={<MinimizeTwo size={11} />}
-                    tooltip={
-                      <span className={`${className}__split-tooltip`}>
-                        Match details
-                      </span>
-                    }
-                  >
-                    Match
-                  </Badge>
-                )}
+                <MatchBadge
+                  classNamePrefix={className}
+                  bankTransaction={bankTransaction}
+                  dateFormat={dateFormat}
+                />
                 <span className={`${className}__category-text__text`}>
-                  {bankTransaction?.category?.display_name}
+                  {bankTransaction?.categorization_status ===
+                    CategorizationStatus.MATCHED && bankTransaction?.match
+                    ? `${formatTime(
+                        parseISO(bankTransaction.match.bank_transaction.date),
+                        dateFormat,
+                      )}, ${bankTransaction.match.bank_transaction.description}`
+                    : bankTransaction?.category?.display_name}
                 </span>
               </Text>
             ) : null}
@@ -228,4 +231,47 @@ export const BankTransactionRow = ({
       </tr>
     </>
   )
+}
+
+export const MatchBadge = ({
+  bankTransaction,
+  classNamePrefix,
+  dateFormat,
+  text = 'Match',
+}: {
+  bankTransaction: BankTransaction
+  classNamePrefix: string
+  dateFormat: string
+  text?: string
+}) => {
+  if (
+    bankTransaction.categorization_status === CategorizationStatus.MATCHED &&
+    bankTransaction.match
+  ) {
+    const { date, amount, description, direction } =
+      bankTransaction.match.bank_transaction
+
+    return (
+      <Badge
+        icon={<MinimizeTwo size={11} />}
+        tooltip={
+          <span className={`${classNamePrefix}__split-tooltip`}>
+            <div className={`${classNamePrefix}__split-tooltip__date`}>
+              {formatTime(parseISO(date), dateFormat)}
+            </div>
+            <div className={`${classNamePrefix}__split-tooltip__description`}>
+              {description}
+            </div>
+            <div className={`${classNamePrefix}__split-tooltip__amount`}>
+              ${formatMoney(amount)}
+            </div>
+          </span>
+        }
+      >
+        {text}
+      </Badge>
+    )
+  }
+
+  return
 }

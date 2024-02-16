@@ -5,7 +5,7 @@ export enum CategorizationStatus {
   CATEGORIZED = 'CATEGORIZED',
   SPLIT = 'SPLIT',
   JOURNALING = 'JOURNALING',
-  MATCH = 'MATCH',
+  MATCHED = 'MATCHED',
 }
 
 export interface Category {

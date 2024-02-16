@@ -29,11 +29,25 @@ export interface BankTransaction extends Record<string, unknown> {
   error?: string
   processing?: boolean
   suggested_matches?: SuggestedMatch[]
+  match?: BankTransactionMatch
 }
 
 export interface SuggestedMatch {
   id: string
-  matchType: string // @TODO - turn into enum
+  matchType: string // @TODO - turn into enum is it camelcase? if not we can merge wuth next
+  details: {
+    amount: number
+    date: string
+    description: string
+    id: string
+    type: string
+  }
+}
+
+export interface BankTransactionMatch {
+  bank_transaction: BankTransaction
+  id: string
+  match_type?: string
   details: {
     amount: number
     date: string

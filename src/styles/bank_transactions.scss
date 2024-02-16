@@ -453,6 +453,27 @@
 
 .Layer__bank-transaction-row__split-tooltip {
   font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+
+  .Layer__bank-transaction-row__split-tooltip__date {
+    // color: var(--color-base-500);
+    color: #818887;
+  }
+
+  .Layer__bank-transaction-row__split-tooltip__description {
+    // color: var(--color-base-500); // @TODO
+    color: #818887;
+    max-width: 230px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .Layer__bank-transaction-row__split-tooltip__amount {
+    font-size: 14px;
+  }
 }
 
 .Layer__expanded-bank-transaction-row__match-table {
@@ -468,12 +489,21 @@
   .Layer__table-cell {
     padding: var(--spacing-xs) var(--spacing-2xs);
   }
+
+  .Layer__expanded-bank-transaction-row__match-table__amount {
+    text-align: right;
+  }
+
+  .Layer__expanded-bank-transaction-row__match-table__status {
+    text-align: right;
+  }
 }
+
 
 .Layer__expanded-bank-transaction-row__match-row {
   cursor: pointer;
 
-  & td {
+  & td.Layer__table-cell {
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
 
@@ -483,7 +513,7 @@
       border-left: 1px solid transparent;
     }
 
-    &:last-child {
+    &:nth-child(3) {
       border-top-right-radius: var(--border-radius-2xs);
       border-bottom-right-radius: var(--border-radius-2xs);
       border-right: 1px solid transparent;
@@ -491,7 +521,7 @@
   }
 
 
-  &:hover td {
+  &:hover td.Layer__table-cell {
     background: var(--color-base-0);
     border-top: 1px solid var(--color-base-300);
     border-bottom: 1px solid var(--color-base-300);
@@ -502,7 +532,7 @@
       border-left: 1px solid var(--color-base-300);
     }
 
-    &:last-child {
+    &:nth-child(3) {
       border-top-right-radius: var(--border-radius-2xs);
       border-bottom-right-radius: var(--border-radius-2xs);
       border-right: 1px solid var(--color-base-300);
@@ -511,7 +541,7 @@
 }
 
 .Layer__expanded-bank-transaction-row__match-row--selected {
-  td {
+  td.Layer__table-cell {
     background: var(--color-base-0);
     border-top: 1px solid var(--color-base-300);
     border-bottom: 1px solid var(--color-base-300);
@@ -520,7 +550,7 @@
       border-left: 1px solid var(--color-base-300);
     }
 
-    &:last-child {
+    &:nth-child(3) {
       border-right: 1px solid var(--color-base-300);
     }
   }
