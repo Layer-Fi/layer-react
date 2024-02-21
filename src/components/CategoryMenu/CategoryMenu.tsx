@@ -7,6 +7,7 @@ import Select, {
 import { useLayerContext } from '../../hooks/useLayerContext'
 import ChevronDown from '../../icons/ChevronDown'
 import { BankTransaction, CategorizationType, Category } from '../../types'
+import { hasSuggestions } from '../../types/categories'
 
 type Props = {
   name?: string
@@ -40,16 +41,14 @@ export const CategoryMenu = ({
 }: Props) => {
   const { categories } = useLayerContext()
 
-  const suggestedOptions =
-    bankTransaction?.categorization_flow?.type ===
-    CategorizationType.ASK_FROM_SUGGESTIONS
-      ? [
-          {
-            label: 'Suggested',
-            options: bankTransaction.categorization_flow.suggestions,
-          },
-        ]
-      : []
+  const suggestedOptions = hasSuggestions(bankTransaction.categorization_flow)
+    ? [
+        {
+          label: 'Suggested',
+          options: bankTransaction.categorization_flow.suggestions,
+        },
+      ]
+    : []
 
   const categoryOptions = (categories || [])
     .map(category => {
