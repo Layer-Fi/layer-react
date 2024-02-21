@@ -2,7 +2,13 @@ import React, { useRef, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import ChevronDown from '../../icons/ChevronDown'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, CategorizationType, Direction } from '../../types'
+import {
+  BankTransaction,
+  CategorizationType,
+  Direction,
+  SuggestedCategorization,
+} from '../../types'
+import { Categorization, hasSuggestions } from '../../types/categories'
 import { SubmitButton } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
@@ -33,8 +39,7 @@ export const BankTransactionListItem = ({
   const [removed, setRemoved] = useState(false)
   const { categorize: categorizeBankTransaction } = useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState(
-    bankTransaction.categorization_flow?.type ===
-      CategorizationType.ASK_FROM_SUGGESTIONS
+    hasSuggestions(bankTransaction.categorization_flow)
       ? bankTransaction.categorization_flow.suggestions[0]
       : undefined,
   )

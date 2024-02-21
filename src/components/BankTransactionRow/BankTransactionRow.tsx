@@ -3,6 +3,7 @@ import { useBankTransactions } from '../../hooks/useBankTransactions'
 import ChevronDown from '../../icons/ChevronDown'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationType, Direction } from '../../types'
+import { hasSuggestions } from '../../types/categories'
 import { SubmitButton } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
@@ -34,8 +35,7 @@ export const BankTransactionRow = ({
   const [removed, setRemoved] = useState(false)
   const { categorize: categorizeBankTransaction } = useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState(
-    bankTransaction.categorization_flow?.type ===
-      CategorizationType.ASK_FROM_SUGGESTIONS
+    hasSuggestions(bankTransaction.categorization_flow)
       ? bankTransaction.categorization_flow.suggestions[0]
       : undefined,
   )
@@ -97,7 +97,7 @@ export const BankTransactionRow = ({
                 contentClassName: 'Layer__bank-transactions__tx-tooltip',
               }}
             >
-              {bankTransaction.counterparty_name}
+              {bankTransaction.counterparty_name ?? bankTransaction.description}
             </Text>
           </span>
         </td>
