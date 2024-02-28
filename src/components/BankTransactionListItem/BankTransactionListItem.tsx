@@ -55,8 +55,6 @@ export const BankTransactionListItem = ({
       return
     }
 
-    console.log('sele', selectedCategory)
-
     categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: {
