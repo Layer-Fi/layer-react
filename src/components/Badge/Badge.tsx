@@ -4,18 +4,31 @@ import { ButtonProps } from '../Button/Button'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import classNames from 'classnames'
 
+export enum BadgeSize {
+  SMALL = 'small',
+  MEDIUM = 'medium',
+}
+
 export interface BadgeProps {
   children: ReactNode
   icon?: ReactNode
   onClick?: ButtonProps['onClick']
   tooltip?: ReactNode
+  size?: BadgeSize
 }
 
-export const Badge = ({ icon, onClick, children, tooltip }: BadgeProps) => {
+export const Badge = ({
+  icon,
+  onClick,
+  children,
+  tooltip,
+  size = BadgeSize.MEDIUM,
+}: BadgeProps) => {
   const baseProps = {
     className: classNames(
       'Layer__badge',
       onClick || tooltip ? 'Layer__badge--clickable' : '',
+      `Layer__badge--${size}`,
     ),
     onClick,
     children,

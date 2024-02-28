@@ -1,4 +1,5 @@
-.Layer__component {
+.Layer__component,
+.Layer__select__menu-portal  {
   // 1. BASE VARIABLES:
   --color-black: #1A1A1A;
   --color-white: white;
@@ -46,6 +47,7 @@
   // 3. EXTENDED CUSTOMIZATION
   --font-family: "InterVariable", "Inter", sans-serif;
   --font-family-numeric: "InterVariable", "Inter", sans-serif;
+  --text-xs: 11px;
   --text-sm: 12px;
   --text-md: 14px;
   --text-lg: 16px;

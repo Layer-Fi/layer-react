@@ -105,13 +105,21 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         bankTransaction.categorization_flow?.suggestions?.[0])
 
     const [rowState, updateRowState] = useState<RowState>({
-      splits: [
-        {
-          amount: bankTransaction.amount,
-          inputValue: formatMoney(bankTransaction.amount),
-          category: defaultCategory,
-        },
-      ],
+      splits: bankTransaction.category?.entries
+        ? bankTransaction.category?.entries.map(c => {
+            return {
+              amount: c.amount || 0,
+              inputValue: formatMoney(c.amount),
+              category: c.category,
+            }
+          })
+        : [
+            {
+              amount: bankTransaction.amount,
+              inputValue: formatMoney(bankTransaction.amount),
+              category: defaultCategory,
+            },
+          ],
       description: '',
       file: undefined,
     })

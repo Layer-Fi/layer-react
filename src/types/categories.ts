@@ -8,6 +8,11 @@ export enum CategorizationStatus {
   MATCHED = 'MATCHED',
 }
 
+export interface CategoryEntry {
+  amount?: number
+  category: Category
+}
+
 export interface Category {
   id: string
   type: string
@@ -15,6 +20,7 @@ export interface Category {
   category: string
   stable_name?: string
   subCategories?: Category[]
+  entries?: CategoryEntry[]
 }
 
 export enum CategorizationType {
