@@ -2,7 +2,11 @@ import React, { useContext } from 'react'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 
-export const ProfitAndLossSummaries = () => {
+type Props = {
+  revenueLabel?: string
+}
+
+export const ProfitAndLossSummaries = ({ revenueLabel = 'Revenue' }: Props) => {
   const { data: storedData } = useContext(PNL.Context)
   const data = storedData
     ? storedData
@@ -26,7 +30,9 @@ export const ProfitAndLossSummaries = () => {
   return (
     <div className='Layer__profit-and-loss-summaries'>
       <div className='Layer__profit-and-loss-summaries__summary Layer__profit-and-loss-summaries__summary--income'>
-        <span className='Layer__profit-and-loss-summaries__title'>Revenue</span>
+        <span className='Layer__profit-and-loss-summaries__title'>
+          {revenueLabel}
+        </span>
         <span
           className={`Layer__profit-and-loss-summaries__amount ${incomeDirectionClass}`}
         >

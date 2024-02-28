@@ -1,11 +1,19 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
-import { ProfitAndLoss, DateRange } from '../../types'
+import { ProfitAndLoss, DateRange, ReportingBasis } from '../../types'
 import { useLayerContext } from '../useLayerContext'
 import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
 import useSWR from 'swr'
 
-type Props = DateRange
+type Props = {
+  startDate?: Date
+  endDate?: Date
+  tagFilter?: {
+    key: string
+    values: string[]
+  }
+  reportingBasis?: ReportingBasis
+}
 
 type UseProfitAndLoss = (props?: Props) => {
   data: ProfitAndLoss | undefined
@@ -16,7 +24,12 @@ type UseProfitAndLoss = (props?: Props) => {
 }
 
 export const useProfitAndLoss: UseProfitAndLoss = (
-  { startDate: initialStartDate, endDate: initialEndDate }: Props = {
+  {
+    startDate: initialStartDate,
+    endDate: initialEndDate,
+    tagFilter,
+    reportingBasis,
+  }: Props = {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   },
@@ -38,12 +51,17 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       startDate &&
       endDate &&
       auth?.access_token &&
-      `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}`,
+      `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
+        ',',
+      )}-${reportingBasis}`,
     Layer.getProfitAndLoss(apiUrl, auth?.access_token, {
       params: {
         businessId,
         startDate: formatISO(startDate),
         endDate: formatISO(endDate),
+        tagKey: tagFilter?.key,
+        tagValues: tagFilter?.values?.join(','),
+        reportingBasis,
       },
     }),
   )
