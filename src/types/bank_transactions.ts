@@ -5,6 +5,10 @@ export enum Direction {
   DEBIT = 'DEBIT',
 }
 
+export enum BankTransactionMatchType {
+  CONFIRM_MATCH = 'Confirm_Match',
+}
+
 // This isn't my favorite but BankTransaction contains much
 // more than we're using right now.
 export interface BankTransaction extends Record<string, unknown> {
@@ -34,7 +38,7 @@ export interface BankTransaction extends Record<string, unknown> {
 
 export interface SuggestedMatch {
   id: string
-  matchType: string // @TODO - turn into enum is it camelcase? if not we can merge wuth next
+  matchType: string
   details: {
     amount: number
     date: string

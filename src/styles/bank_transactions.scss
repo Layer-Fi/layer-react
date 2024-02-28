@@ -125,7 +125,7 @@
 .Layer__expanded-bank-transaction-row__content-panel {
   max-width: 0;
   opacity: 0;
-  transition: max-width 150ms ease-out, opacity 300ms ease-out;;
+  transition: max-width 150ms ease-out, opacity 300ms ease-out;
   overflow: hidden;
   flex: 1;
   display: flex;
@@ -455,19 +455,18 @@
 }
 
 .Layer__bank-transaction-row__match-tooltip {
-  font-size: 12px;
+  font-size: var(--text-sm);
   display: flex;
   flex-direction: column;
-  row-gap: 6px;
+  row-gap: var(--spacing-2xs);
+  min-width: 200px;
 
   .Layer__bank-transaction-row__match-tooltip__date {
-    // color: var(--color-base-500);
-    color: #828881;
+    color: var(--color-base-500);
   }
 
   .Layer__bank-transaction-row__match-tooltip__description {
-    // color: var(--color-base-500); // @TODO
-    color: #818887;
+    color: var(--color-base-500);
     max-width: 230px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -475,15 +474,16 @@
   }
 
   .Layer__bank-transaction-row__match-tooltip__amount {
-    font-size: 14px;
+    font-size: var(--text-md);
   }
 }
 
 .Layer__bank-transaction-row__split-tooltip {
-  font-size: 12px;
+  font-size: var(--text-sm);
   display: flex;
   flex-direction: column;
-  row-gap: 6px;
+  row-gap: var(--spacing-2xs);
+  min-width: 200px;
 
   ul {
     list-style: none;
@@ -493,18 +493,16 @@
 
   li {
     display: flex;
-    gap: 12px;
+    gap: var(--spacing-sm);
     justify-content: space-between;
   }
 
   .Layer__bank-transaction-row__split-tooltip__label {
-    // color: var(--color-base-500);
-    color: #828881;
+    color: var(--color-base-500);
   }
 
   .Layer__bank-transaction-row__split-tooltip__value {
-    // color: var(--color-base-500); // @TODO
-    color: #f0f0f0;
+    color: var(--color-base-300);
   }
 }
 

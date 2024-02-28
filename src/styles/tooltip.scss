@@ -1,8 +1,8 @@
 .Layer__tooltip {
-  background: #333333;
-  color: #fff;
-  padding: 6px;
-  border-radius: 6px;
+  background: var(--color-base-1000);
+  color: var(--color-base-300);
+  padding: var(--spacing-2xs);
+  border-radius: var(--border-radius-2xs);
   box-sizing: border-box;
   width: max-content;
   max-width: calc(100vw - 10px);

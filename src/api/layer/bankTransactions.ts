@@ -1,4 +1,8 @@
 import { CategoryUpdate, BankTransaction, Metadata } from '../../types'
+import {
+  BankTransactionMatch,
+  BankTransactionMatchType,
+} from '../../types/bank_transactions'
 import { get, put } from './authenticated_http'
 
 export type GetBankTransactionsReturn = {
@@ -33,8 +37,8 @@ export const categorizeBankTransaction = put<
 )
 
 export const matchBankTransaction = put<
-  { data: BankTransaction; errors: unknown },
-  { match_id: string; type: string } // @TODO into enum
+  { data: BankTransactionMatch; errors: unknown },
+  { match_id: string; type: BankTransactionMatchType }
 >(
   ({ businessId, bankTransactionId }) =>
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/match`,

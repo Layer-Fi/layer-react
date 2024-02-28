@@ -3,8 +3,9 @@ import { useBankTransactions } from '../../hooks/useBankTransactions'
 import ChevronDown from '../../icons/ChevronDown'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationType, Direction } from '../../types'
+import { getDefaultSelectedCategory } from '../BankTransactionRow/BankTransactionRow'
 import { SubmitButton } from '../Button'
-import { CategoryMenu } from '../CategoryMenu'
+import { CategorySelect } from '../CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { Pill } from '../Pill'
@@ -31,12 +32,10 @@ export const BankTransactionListItem = ({
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [removed, setRemoved] = useState(false)
-  const { categorize: categorizeBankTransaction } = useBankTransactions()
+  const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
+    useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState(
-    bankTransaction.categorization_flow?.type ===
-      CategorizationType.ASK_FROM_SUGGESTIONS
-      ? bankTransaction.categorization_flow.suggestions[0]
-      : undefined,
+    getDefaultSelectedCategory(bankTransaction),
   )
 
   const save = () => {
@@ -47,12 +46,22 @@ export const BankTransactionListItem = ({
       return
     }
 
+    if (!selectedCategory) {
+      return
+    }
+
+    if (selectedCategory.type === 'match') {
+      matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
+      return
+    }
+
+    console.log('sele', selectedCategory)
+
     categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: {
         type: 'StableName',
-        stable_name:
-          selectedCategory?.stable_name || selectedCategory?.category || '',
+        stable_name: selectedCategory?.payload.stable_name || '',
       },
     })
   }
@@ -117,7 +126,7 @@ export const BankTransactionListItem = ({
       </span>
       <span className={`${className}__base-row`}>
         {editable ? (
-          <CategoryMenu
+          <CategorySelect
             bankTransaction={bankTransaction}
             name={`category-${bankTransaction.id}`}
             value={selectedCategory}

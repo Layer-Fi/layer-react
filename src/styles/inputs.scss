@@ -201,10 +201,6 @@
     margin-left: -30px;
   }
 
-  .Layer__select__group {
-    border-bottom: 1px solid var(--color-base-200);
-  }
-
   .Layer__select__group-heading {
     color: var(--color-base-500);
     font-size: 11px;
@@ -250,6 +246,7 @@
     font-size: 11px;
     color: var(--color-base-700);
     padding: var(--spacing-xs);
+    border-bottom: 1px solid var(--color-base-200);
   }
 
   .Layer__select__option--separator {
@@ -257,6 +254,10 @@
     color: var(--color-base-700);
     padding: var(--spacing-xs);
     padding-top: var(--spacing-md);
+  }
+
+  .Layer__select__option--hidden {
+    display: none;
   }
 
   .Layer__select__option-content__match {

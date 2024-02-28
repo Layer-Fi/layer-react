@@ -1,5 +1,6 @@
 import { Layer } from '../../api/layer'
 import { BankTransaction, CategoryUpdate, Metadata } from '../../types'
+import { BankTransactionMatchType } from '../../types/bank_transactions'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
@@ -89,7 +90,7 @@ export const useBankTransactions: UseBankTransactions = () => {
 
     return Layer.matchBankTransaction(apiUrl, auth.access_token, {
       params: { businessId, bankTransactionId: id },
-      body: { match_id: matchId, type: 'Confirm_Match' }, // @TODO is it always the same OR need to read from match.details
+      body: { match_id: matchId, type: BankTransactionMatchType.CONFIRM_MATCH },
     })
       .then(({ data: bt, errors }) => {
         const newBT = data?.find(
@@ -98,7 +99,7 @@ export const useBankTransactions: UseBankTransactions = () => {
 
         if (newBT) {
           newBT.recently_categorized = true
-          newBT.match = bt // @TODO - API doesn't return BankTransaction - update TS
+          newBT.match = bt
           updateOneLocal(newBT)
         }
         if (errors) {

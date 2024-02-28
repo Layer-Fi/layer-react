@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import ChevronDown from '../../icons/ChevronDown'
-import MinimizeTwo from '../../icons/MinimizeTwo'
 import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import {
@@ -11,14 +10,19 @@ import {
   Category,
   Direction,
 } from '../../types'
-import { BTMenu } from '../BTMenu'
 import { Badge } from '../Badge'
 import { SubmitButton } from '../Button'
-import { CategoryMenu } from '../CategoryMenu'
+import { CategorySelect } from '../CategorySelect'
+import {
+  mapCategoryToOption,
+  mapSuggestedMatchToOption,
+} from '../CategorySelect/CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { Text } from '../Typography'
 import { TextUseTooltip } from '../Typography/Text'
+import { MatchBadge } from './MatchBadge'
+import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
@@ -33,12 +37,23 @@ type Props = {
 const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
   direction === Direction.CREDIT
 
-const extractDescForSplit = (category: Category) => {
+const extractDescriptionForSplit = (category: Category) => {
   if (!category.entries) {
     return ''
   }
 
   return category.entries.map(c => c.category.display_name).join(', ')
+}
+
+export const getDefaultSelectedCategory = (
+  bankTransaction: BankTransaction,
+) => {
+  return bankTransaction.categorization_flow?.type ===
+    CategorizationType.ASK_FROM_SUGGESTIONS
+    ? mapCategoryToOption(bankTransaction.categorization_flow.suggestions[0])
+    : bankTransaction.suggested_matches?.length === 1
+    ? mapSuggestedMatchToOption(bankTransaction.suggested_matches[0])
+    : undefined
 }
 
 export const BankTransactionRow = ({
@@ -50,24 +65,10 @@ export const BankTransactionRow = ({
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [removed, setRemoved] = useState(false)
-  const { categorize: categorizeBankTransaction } = useBankTransactions()
+  const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
+    useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState(
-    bankTransaction.categorization_flow?.type ===
-      CategorizationType.ASK_FROM_SUGGESTIONS
-      ? bankTransaction.categorization_flow.suggestions[0]
-      : bankTransaction.suggested_matches?.length === 1
-      ? // @TODO - refactor below
-        {
-          type: 'match',
-          payload: {
-            id: bankTransaction.suggested_matches[0].id,
-            option_type: 'match',
-            display_name:
-              bankTransaction.suggested_matches[0].details.description,
-            amount: bankTransaction.suggested_matches[0].details.amount,
-          },
-        }
-      : undefined,
+    getDefaultSelectedCategory(bankTransaction),
   )
 
   const save = () => {
@@ -78,14 +79,20 @@ export const BankTransactionRow = ({
       return
     }
 
-    console.log(selectedCategory)
+    if (!selectedCategory) {
+      return
+    }
+
+    if (selectedCategory.type === 'match') {
+      matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
+      return
+    }
 
     categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: {
         type: 'StableName',
-        stable_name:
-          selectedCategory?.stable_name || selectedCategory?.category || '',
+        stable_name: selectedCategory?.payload.stable_name || '',
       },
     })
   }
@@ -103,13 +110,6 @@ export const BankTransactionRow = ({
       : '',
     isOpen ? openClassName : '',
   )
-
-  // if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
-  //   console.log(bankTransaction, bankTransaction.match)
-  // }
-  if (bankTransaction.category && bankTransaction.category?.entries) {
-    console.log(bankTransaction.category)
-  }
 
   return (
     <>
@@ -173,22 +173,13 @@ export const BankTransactionRow = ({
             className={`${className}__actions-container Layer__table-cell-content`}
           >
             {editable && !isOpen ? (
-              <>
-                {/* <CategoryMenu
-                  bankTransaction={bankTransaction}
-                  name={`category-${bankTransaction.id}`}
-                  value={selectedCategory}
-                  onChange={setSelectedCategory}
-                  disabled={bankTransaction.processing}
-                /> */}
-                <BTMenu
-                  bankTransaction={bankTransaction}
-                  name={`category-${bankTransaction.id}`}
-                  value={selectedCategory}
-                  onChange={setSelectedCategory}
-                  disabled={bankTransaction.processing}
-                />
-              </>
+              <CategorySelect
+                bankTransaction={bankTransaction}
+                name={`category-${bankTransaction.id}`}
+                value={selectedCategory}
+                onChange={setSelectedCategory}
+                disabled={bankTransaction.processing}
+              />
             ) : null}
             {!editable && !isOpen ? (
               <Text as='span' className={`${className}__category-text`}>
@@ -207,7 +198,7 @@ export const BankTransactionRow = ({
                       Split
                     </Badge>
                     <span className={`${className}__category-text__text`}>
-                      {extractDescForSplit(bankTransaction.category)}
+                      {extractDescriptionForSplit(bankTransaction.category)}
                     </span>
                   </>
                 )}
@@ -279,77 +270,5 @@ export const BankTransactionRow = ({
         </td>
       </tr>
     </>
-  )
-}
-
-export const MatchBadge = ({
-  bankTransaction,
-  classNamePrefix,
-  dateFormat,
-  text = 'Match',
-}: {
-  bankTransaction: BankTransaction
-  classNamePrefix: string
-  dateFormat: string
-  text?: string
-}) => {
-  if (
-    bankTransaction.categorization_status === CategorizationStatus.MATCHED &&
-    bankTransaction.match
-  ) {
-    const { date, amount, description, direction } =
-      bankTransaction.match.bank_transaction
-
-    return (
-      <Badge
-        icon={<MinimizeTwo size={11} />}
-        tooltip={
-          <span className={`${classNamePrefix}__match-tooltip`}>
-            <div className={`${classNamePrefix}__match-tooltip__date`}>
-              {formatTime(parseISO(date), dateFormat)}
-            </div>
-            <div className={`${classNamePrefix}__match-tooltip__description`}>
-              {description}
-            </div>
-            <div className={`${classNamePrefix}__match-tooltip__amount`}>
-              ${formatMoney(amount)}
-            </div>
-          </span>
-        }
-      >
-        {text}
-      </Badge>
-    )
-  }
-
-  return
-}
-
-const SplitTooltipDetails = ({
-  classNamePrefix,
-  category,
-}: {
-  classNamePrefix: string
-  category: Category
-}) => {
-  if (!category.entries) {
-    return
-  }
-
-  return (
-    <span className={`${classNamePrefix}__split-tooltip`}>
-      <ul>
-        {category.entries.map((entry, idx) => (
-          <li key={idx}>
-            <span className={`${classNamePrefix}__split-tooltip__label`}>
-              {entry.category.display_name}
-            </span>
-            <span className={`${classNamePrefix}__split-tooltip__value`}>
-              ${formatMoney(entry.amount)}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </span>
   )
 }

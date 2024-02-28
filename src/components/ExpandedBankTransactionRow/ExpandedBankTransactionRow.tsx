@@ -15,9 +15,7 @@ import {
   Category,
   CategorizationType,
 } from '../../types'
-import { SuggestedMatch } from '../../types/bank_transactions'
-import { Badge } from '../Badge'
-import { MatchBadge } from '../BankTransactionRow/BankTransactionRow'
+import { MatchBadge } from '../BankTransactionRow/MatchBadge'
 import { Button, SubmitButton, ButtonVariant } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
 import { InputGroup, Input, FileInput } from '../Input'
@@ -221,7 +219,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       if (!foundMatch) {
         return
       }
-      console.log('match', foundMatch)
+
       matchBankTransaction(bankTransaction.id, foundMatch.id)
     }
 

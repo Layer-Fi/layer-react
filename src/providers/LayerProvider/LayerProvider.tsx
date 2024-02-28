@@ -132,9 +132,7 @@ export const LayerProvider = ({
     {
       ...defaultSWRConfig,
       onSuccess: response => {
-        console.log('success', response)
         if (response?.data?.categories?.length) {
-          console.log('set cat', response.data.categories)
           dispatch({
             type: Action.setCategories,
             payload: { categories: response.data.categories || [] },
