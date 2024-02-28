@@ -6,10 +6,10 @@ import { centsToDollars as formatMoney } from '../../models/Money'
 import {
   BankTransaction,
   CategorizationStatus,
-  CategorizationType,
   Category,
   Direction,
 } from '../../types'
+import { hasSuggestions } from '../../types/categories'
 import { Badge } from '../Badge'
 import { SubmitButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
@@ -48,8 +48,7 @@ const extractDescriptionForSplit = (category: Category) => {
 export const getDefaultSelectedCategory = (
   bankTransaction: BankTransaction,
 ) => {
-  return bankTransaction.categorization_flow?.type ===
-    CategorizationType.ASK_FROM_SUGGESTIONS
+  return hasSuggestions(bankTransaction.categorization_flow)
     ? mapCategoryToOption(bankTransaction.categorization_flow.suggestions[0])
     : bankTransaction.suggested_matches?.length === 1
     ? mapSuggestedMatchToOption(bankTransaction.suggested_matches[0])
@@ -136,7 +135,7 @@ export const BankTransactionRow = ({
                 contentClassName: 'Layer__bank-transactions__tx-tooltip',
               }}
             >
-              {bankTransaction.counterparty_name}
+              {bankTransaction.counterparty_name ?? bankTransaction.description}
             </Text>
           </span>
         </td>

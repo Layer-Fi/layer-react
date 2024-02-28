@@ -25,7 +25,7 @@ export const getBankTransactions = get<
     sortBy = 'date',
     sortOrder = 'DESC',
   }: GetBankTransactionsParams) =>
-    `/v1/businesses/${businessId}/bank-transactions?sort_by=${sortBy}&sort_order=${sortOrder}`,
+    `/v1/businesses/${businessId}/bank-transactions?sort_by=${sortBy}&sort_order=${sortOrder}&limit=200`,
 )
 
 export const categorizeBankTransaction = put<

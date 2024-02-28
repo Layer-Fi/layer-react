@@ -15,6 +15,7 @@ import {
   Category,
   CategorizationType,
 } from '../../types'
+import { hasSuggestions } from '../../types/categories'
 import { MatchBadge } from '../BankTransactionRow/MatchBadge'
 import { Button, SubmitButton, ButtonVariant } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
@@ -98,8 +99,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     const defaultCategory =
       bankTransaction.category ||
-      (bankTransaction.categorization_flow?.type ===
-        CategorizationType.ASK_FROM_SUGGESTIONS &&
+      (hasSuggestions(bankTransaction.categorization_flow) &&
         bankTransaction.categorization_flow?.suggestions?.[0])
 
     const [rowState, updateRowState] = useState<RowState>({
