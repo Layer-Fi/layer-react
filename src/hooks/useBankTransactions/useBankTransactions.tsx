@@ -1,5 +1,6 @@
 import { Layer } from '../../api/layer'
 import { BankTransaction, CategoryUpdate, Metadata } from '../../types'
+import { BankTransactionMatchType } from '../../types/bank_transactions'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
@@ -12,6 +13,10 @@ type UseBankTransactions = () => {
   categorize: (
     id: BankTransaction['id'],
     newCategory: CategoryUpdate,
+  ) => Promise<void>
+  match: (
+    id: BankTransaction['id'],
+    matchId: BankTransaction['id'],
   ) => Promise<void>
   updateOneLocal: (bankTransaction: BankTransaction) => void
   refetch: () => void
@@ -77,6 +82,46 @@ export const useBankTransactions: UseBankTransactions = () => {
       })
   }
 
+  const match = (id: BankTransaction['id'], matchId: BankTransaction['id']) => {
+    const foundBT = data?.find(x => x.business_id === businessId && x.id === id)
+    if (foundBT) {
+      updateOneLocal({ ...foundBT, processing: true, error: undefined })
+    }
+
+    return Layer.matchBankTransaction(apiUrl, auth.access_token, {
+      params: { businessId, bankTransactionId: id },
+      body: { match_id: matchId, type: BankTransactionMatchType.CONFIRM_MATCH },
+    })
+      .then(({ data: bt, errors }) => {
+        const newBT = data?.find(
+          x => x.business_id === businessId && x.id === id,
+        )
+
+        if (newBT) {
+          newBT.recently_categorized = true
+          newBT.match = bt
+          updateOneLocal(newBT)
+        }
+        if (errors) {
+          console.error(errors)
+          throw errors
+        }
+      })
+      .catch(err => {
+        const newBT = data?.find(
+          x => x.business_id === businessId && x.id === id,
+        )
+
+        if (newBT) {
+          updateOneLocal({
+            ...newBT,
+            error: err.message,
+            processing: false,
+          })
+        }
+      })
+  }
+
   const updateOneLocal = (newBankTransaction: BankTransaction) => {
     const updatedData = data?.map(bt =>
       bt.id === newBankTransaction.id ? newBankTransaction : bt,
@@ -96,6 +141,7 @@ export const useBankTransactions: UseBankTransactions = () => {
     refetch,
     error: responseError || error,
     categorize,
+    match,
     updateOneLocal,
   }
 }

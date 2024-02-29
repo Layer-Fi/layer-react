@@ -80,6 +80,7 @@
   max-height: 960px;
 }
 
+.Layer__bank-transaction-list-item__category-text,
 .Layer__bank-transaction-row__category-text {
   flex: 1;
   color: var(--text-color-primary);
@@ -87,13 +88,66 @@
   max-width: 350px;
   text-overflow: ellipsis;
   overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+
+  .Layer__tooltip-trigger {
+    flex: 0;
+  }
+
+  .Layer__bank-transaction-list-item__category-text__text,
+  .Layer__bank-transaction-row__category-text__text {
+    flex: 1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
+.Layer__bank-transaction-list-item__content,
 .Layer__expanded-bank-transaction-row__content {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
   max-width: 680px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; 
+}
+
+.Layer__expanded-bank-transaction-row__content-panels {
+  display: flex;
+  flex-direction: row;
+  max-width: 680px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; 
+}
+
+.Layer__expanded-bank-transaction-row__content-panel {
+  max-width: 0;
+  opacity: 0;
+  transition: max-width 150ms ease-out, opacity 300ms ease-out;
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; 
+  
+
+  .Layer__expanded-bank-transaction-row__content-panel-container {
+    padding: 0 var(--spacing-md);
+    width: calc(680px - var(--spacing-md) * 2);
+  }
+
+  &.Layer__expanded-bank-transaction-row__content-panel--active {
+    max-width: 100%;
+    opacity: 1;
+  }
 }
 
 .Layer__expanded-bank-transaction-row__content-toggle {
@@ -102,16 +156,19 @@
 
 .Layer__expanded-bank-transaction-row__splits {
   display: flex;
-  gap: var(--spacing-md);
-  padding: 0 var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .Layer__expanded-bank-transaction-row__splits-inputs {
   flex: 1;
 }
 
-.Layer__expanded-bank-transaction-row__splits-buttons button {
-  min-width: 114px;
+.Layer__expanded-bank-transaction-row__splits-buttons { 
+  padding-bottom: 2px;
+
+  button {
+    min-width: 114px;
+  }
 }
 
 .Layer__bank-transaction-row__table-cell--amount-credit,
@@ -240,11 +297,15 @@
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  gap:  var(--spacing-sm);
+  gap: var(--spacing-sm);
   padding: var(--spacing-md);
 
   .Layer__category-menu {
     width: 100%;
+  }
+
+  .Layer__tooltip-trigger {
+    flex: 0;
   }
 }
 
@@ -380,7 +441,7 @@
 
 @container (max-width: 700px) {
   .Layer__bank-transactions__header {
-    box-shadow: 0px -1px 0px 0px var(--neutral-8, rgba(23, 51, 45, 0.16)) inset;
+    box-shadow: 0px -1px 0px 0px rgba(23, 51, 45, 0.16) inset;
     background-color: var(--table-bg);
     position: sticky;
     top: 0px;
@@ -398,4 +459,143 @@
 
 .Layer__tooltip.Layer__bank-transactions__tx-tooltip {
   max-width: 250px;
+}
+
+.Layer__bank-transaction-list-item__match-tooltip,
+.Layer__bank-transaction-row__match-tooltip {
+  font-size: var(--text-sm);
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--spacing-2xs);
+  min-width: 200px;
+
+  .Layer__bank-transaction-list-item__match-tooltip__date,
+  .Layer__bank-transaction-row__match-tooltip__date {
+    color: var(--color-base-500);
+  }
+
+  .Layer__bank-transaction-list-item__match-tooltip__description,
+  .Layer__bank-transaction-row__match-tooltip__description {
+    color: var(--color-base-500);
+    max-width: 230px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .Layer__bank-transaction-list-item__match-tooltip__amount,
+  .Layer__bank-transaction-row__match-tooltip__amount {
+    font-size: var(--text-md);
+  }
+}
+
+.Layer__bank-transaction-list-item__split-tooltip,
+.Layer__bank-transaction-row__split-tooltip {
+  font-size: var(--text-sm);
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--spacing-2xs);
+  min-width: 200px;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: space-between;
+  }
+
+  .Layer__bank-transaction-list-item__split-tooltip__label,
+  .Layer__bank-transaction-row__split-tooltip__label {
+    color: var(--color-base-500);
+  }
+
+  .Layer__bank-transaction-list-item__split-tooltip__value,
+  .Layer__bank-transaction-row__split-tooltip__value {
+    color: var(--color-base-300);
+  }
+}
+
+.Layer__expanded-bank-transaction-row__match-table {
+  margin-bottom: var(--spacing-sm);
+  border-collapse: separate; 
+  border-spacing: 0 var(--spacing-3xs);
+
+  .Layer__table-header {
+    background: transparent;
+    padding: var(--spacing-xs) var(--spacing-2xs);
+  }
+
+  .Layer__table-cell {
+    padding: var(--spacing-xs) var(--spacing-2xs);
+  }
+
+  .Layer__expanded-bank-transaction-row__match-table__amount {
+    text-align: right;
+  }
+
+  .Layer__expanded-bank-transaction-row__match-table__status {
+    text-align: right;
+  }
+}
+
+
+.Layer__expanded-bank-transaction-row__match-row {
+  cursor: pointer;
+
+  & td.Layer__table-cell {
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+
+    &:first-child {
+      border-top-left-radius: var(--border-radius-2xs);
+      border-bottom-left-radius: var(--border-radius-2xs);
+      border-left: 1px solid transparent;
+    }
+
+    &:nth-child(3) {
+      border-top-right-radius: var(--border-radius-2xs);
+      border-bottom-right-radius: var(--border-radius-2xs);
+      border-right: 1px solid transparent;
+    }
+  }
+
+
+  &:hover td.Layer__table-cell {
+    background: var(--color-base-0);
+    border-top: 1px solid var(--color-base-300);
+    border-bottom: 1px solid var(--color-base-300);
+
+    &:first-child {
+      border-top-left-radius: var(--border-radius-2xs);
+      border-bottom-left-radius: var(--border-radius-2xs);
+      border-left: 1px solid var(--color-base-300);
+    }
+
+    &:nth-child(3) {
+      border-top-right-radius: var(--border-radius-2xs);
+      border-bottom-right-radius: var(--border-radius-2xs);
+      border-right: 1px solid var(--color-base-300);
+    }
+  }
+}
+
+.Layer__expanded-bank-transaction-row__match-row--selected {
+  td.Layer__table-cell {
+    background: var(--color-base-0);
+    border-top: 1px solid var(--color-base-300);
+    border-bottom: 1px solid var(--color-base-300);
+
+    &:first-child {
+      border-left: 1px solid var(--color-base-300);
+    }
+
+    &:nth-child(3) {
+      border-right: 1px solid var(--color-base-300);
+    }
+  }
 }

@@ -2,18 +2,13 @@ import React, { useRef, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import ChevronDown from '../../icons/ChevronDown'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import {
-  BankTransaction,
-  CategorizationType,
-  Direction,
-  SuggestedCategorization,
-} from '../../types'
-import { Categorization, hasSuggestions } from '../../types/categories'
+import { BankTransaction, Direction } from '../../types'
+import { getDefaultSelectedCategory } from '../BankTransactionRow/BankTransactionRow'
 import { SubmitButton } from '../Button'
-import { CategoryMenu } from '../CategoryMenu'
+import { CategorySelect } from '../CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { Pill } from '../Pill'
+import { Assignment } from './Assignment'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
@@ -37,11 +32,10 @@ export const BankTransactionListItem = ({
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [removed, setRemoved] = useState(false)
-  const { categorize: categorizeBankTransaction } = useBankTransactions()
+  const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
+    useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState(
-    hasSuggestions(bankTransaction.categorization_flow)
-      ? bankTransaction.categorization_flow.suggestions[0]
-      : undefined,
+    getDefaultSelectedCategory(bankTransaction),
   )
 
   const save = () => {
@@ -52,12 +46,20 @@ export const BankTransactionListItem = ({
       return
     }
 
+    if (!selectedCategory) {
+      return
+    }
+
+    if (selectedCategory.type === 'match') {
+      matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
+      return
+    }
+
     categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: {
         type: 'StableName',
-        stable_name:
-          selectedCategory?.stable_name || selectedCategory?.category || '',
+        stable_name: selectedCategory?.payload.stable_name || '',
       },
     })
   }
@@ -122,7 +124,7 @@ export const BankTransactionListItem = ({
       </span>
       <span className={`${className}__base-row`}>
         {editable ? (
-          <CategoryMenu
+          <CategorySelect
             bankTransaction={bankTransaction}
             name={`category-${bankTransaction.id}`}
             value={selectedCategory}
@@ -130,9 +132,7 @@ export const BankTransactionListItem = ({
             disabled={bankTransaction.processing}
           />
         ) : null}
-        {!editable ? (
-          <Pill>{bankTransaction?.category?.display_name}</Pill>
-        ) : null}
+        {!editable ? <Assignment bankTransaction={bankTransaction} /> : null}
         {editable && (
           <SubmitButton
             onClick={() => {

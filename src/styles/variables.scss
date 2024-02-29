@@ -1,4 +1,6 @@
-.Layer__component {
+.Layer__component,
+.Layer__select__menu-portal,
+.Layer__tooltip {
   // 1. BASE VARIABLES:
   --color-black: #1A1A1A;
   --color-white: white;
@@ -16,6 +18,7 @@
   --color-light-l: 100%;
   --color-light: hsl(var(--color-light-h) var(--color-light-s) var(--color-light-l));
 
+  --color-base-0: #fff;
   --color-base-50: hsl(var(--color-dark-h) 1% 98%);
   --color-base-100: hsl(var(--color-dark-h) 1% 96%);
   --color-base-200: hsl(var(--color-dark-h) 1% 94%);
@@ -45,6 +48,7 @@
   // 3. EXTENDED CUSTOMIZATION
   --font-family: "InterVariable", "Inter", sans-serif;
   --font-family-numeric: "InterVariable", "Inter", sans-serif;
+  --text-xs: 11px;
   --text-sm: 12px;
   --text-md: 14px;
   --text-lg: 16px;
@@ -64,6 +68,7 @@
   --border-radius-2xs: 6px;
   --border-radius-sm: 12px;
   --border-radius: 16px;
+  --border-radius-5xl: 52px;
 
   --text-color-transaction-credit: var(--color-info-success);
   --text-color-varying-amount: var(--color-base-700);
@@ -89,7 +94,7 @@
   --btn-secondary-bg-color: var(--color-white);
 
   --badge-color: var(--text-color-primary);
-  --badge-bg-color: var(--color-base-300);
+  --badge-bg-color: var(--color-base-400);
   --badge-border-radius: var(--border-radius-sm);
 
   --table-bg: var(--color-white);

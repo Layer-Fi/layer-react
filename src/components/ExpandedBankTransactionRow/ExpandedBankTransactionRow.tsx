@@ -13,15 +13,19 @@ import {
   SplitCategoryUpdate,
   SingleCategoryUpdate,
   Category,
-  CategorizationType,
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
+import { MatchBadge } from '../BankTransactionRow/MatchBadge'
 import { Button, SubmitButton, ButtonVariant } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
 import { InputGroup, Input, FileInput } from '../Input'
 import { Textarea } from '../Textarea'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
+import classNames from 'classnames'
+import { parseISO, format as formatTime } from 'date-fns'
+
+const dateFormat = 'LLL d, yyyy'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -52,6 +56,25 @@ export type SaveHandle = {
   save: () => void
 }
 
+const hasMatch = (bankTransaction?: BankTransaction) => {
+  return Boolean(
+    (bankTransaction?.suggested_matches &&
+      bankTransaction?.suggested_matches?.length > 0) ||
+      bankTransaction?.match,
+  )
+}
+
+const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
+  if (bankTransaction?.match) {
+    const foundMatch = bankTransaction.suggested_matches?.find(
+      x => x.details.id === bankTransaction?.match?.details.id,
+    )
+    return foundMatch?.id
+  }
+
+  return undefined
+}
+
 export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
   (
     {
@@ -62,21 +85,38 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     },
     ref,
   ) => {
-    const { categorize: categorizeBankTransaction } = useBankTransactions()
-    const [purpose, setPurpose] = useState<Purpose>(Purpose.categorize)
+    const {
+      categorize: categorizeBankTransaction,
+      match: matchBankTransaction,
+    } = useBankTransactions()
+    const [purpose, setPurpose] = useState<Purpose>(
+      hasMatch(bankTransaction) ? Purpose.match : Purpose.categorize,
+    )
+    const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
+      isAlreadyMatched(bankTransaction),
+    )
 
     const defaultCategory =
       bankTransaction.category ||
       (hasSuggestions(bankTransaction.categorization_flow) &&
         bankTransaction.categorization_flow?.suggestions?.[0])
+
     const [rowState, updateRowState] = useState<RowState>({
-      splits: [
-        {
-          amount: bankTransaction.amount,
-          inputValue: formatMoney(bankTransaction.amount),
-          category: defaultCategory,
-        },
-      ],
+      splits: bankTransaction.category?.entries
+        ? bankTransaction.category?.entries.map(c => {
+            return {
+              amount: c.amount || 0,
+              inputValue: formatMoney(c.amount),
+              category: c.category,
+            }
+          })
+        : [
+            {
+              amount: bankTransaction.amount,
+              inputValue: formatMoney(bankTransaction.amount),
+              category: defaultCategory,
+            },
+          ],
       description: '',
       file: undefined,
     })
@@ -90,28 +130,36 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         ],
       })
 
-    const removeSplit = () =>
+    const removeSplit = (index: number) => {
+      const newSplits = rowState.splits.filter((_v, idx) => idx !== index)
+      const splitTotal = newSplits.reduce((sum, split, index) => {
+        const amount = index === 0 ? 0 : split.amount
+        return sum + amount
+      }, 0)
+      const remaining = bankTransaction.amount - splitTotal
+      newSplits[0].amount = remaining
+      newSplits[0].inputValue = formatMoney(remaining)
+
       updateRowState({
         ...rowState,
-        splits: rowState.splits.slice(0, -1),
+        splits: newSplits,
       })
+    }
 
     const updateAmounts =
       (rowNumber: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const newAmount = parseMoney(event.target.value) || 0
         const newDisplaying = event.target.value
-        const splitTotal = rowState.splits
-          .slice(0, -1)
-          .reduce((sum, split, index) => {
-            const amount = index === rowNumber ? newAmount : split.amount
-            return sum + amount
-          }, 0)
+        const splitTotal = rowState.splits.reduce((sum, split, index) => {
+          const amount =
+            index === 0 ? 0 : index === rowNumber ? newAmount : split.amount
+          return sum + amount
+        }, 0)
         const remaining = bankTransaction.amount - splitTotal
         rowState.splits[rowNumber].amount = newAmount
         rowState.splits[rowNumber].inputValue = newDisplaying
-        rowState.splits[rowState.splits.length - 1].amount = remaining
-        rowState.splits[rowState.splits.length - 1].inputValue =
-          formatMoney(remaining)
+        rowState.splits[0].amount = remaining
+        rowState.splits[0].inputValue = formatMoney(remaining)
         updateRowState({ ...rowState })
       }
 
@@ -135,7 +183,17 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       updateRowState({ ...rowState })
     }
 
-    const save = () =>
+    const save = () => {
+      if (purpose === Purpose.match) {
+        if (
+          selectedMatchId &&
+          selectedMatchId !== isAlreadyMatched(bankTransaction)
+        ) {
+          onMatchSubmit(selectedMatchId)
+        }
+        return
+      }
+
       categorizeBankTransaction(
         bankTransaction.id,
         rowState.splits.length === 1
@@ -157,11 +215,23 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               })),
             } as SplitCategoryUpdate),
       ).catch(e => console.error(e))
+    }
 
     // Call this save action after clicking save in parent component:
     useImperativeHandle(ref, () => ({
       save,
     }))
+
+    const onMatchSubmit = (matchId: string) => {
+      const foundMatch = bankTransaction.suggested_matches?.find(
+        x => x.id === matchId,
+      )
+      if (!foundMatch) {
+        return
+      }
+
+      matchBankTransaction(bankTransaction.id, foundMatch.id)
+    }
 
     const className = 'Layer__expanded-bank-transaction-row'
     return (
@@ -184,8 +254,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 {
                   value: 'match',
                   label: 'Match',
-                  disabled: true,
                   leftIcon: <RefreshCcw size={15} />,
+                  disabled: !hasMatch(bankTransaction),
                 },
               ]}
               selected={purpose}
@@ -196,54 +266,139 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
             className={`${className}__content`}
             id={`expanded-${bankTransaction.id}`}
           >
-            <div className={`${className}__splits`}>
-              <div className={`${className}__splits-inputs`}>
-                {rowState.splits.map((split, index) => (
-                  <div
-                    className={`${className}__table-cell--split-entry`}
-                    key={`split-${index}`}
-                  >
-                    {rowState.splits.length > 1 && (
-                      <Input
-                        type='text'
-                        name={`split-${index}${asListItem ? '-li' : ''}`}
-                        disabled={index + 1 === rowState.splits.length}
-                        onChange={updateAmounts(index)}
-                        value={split.inputValue}
-                        onBlur={onBlur}
-                        className={`${className}__split-amount${
-                          split.amount < 0 ? '--negative' : ''
-                        }`}
-                      />
-                    )}
-                    <CategoryMenu
-                      bankTransaction={bankTransaction}
-                      name={`category-${index}${asListItem ? '-li' : ''}`}
-                      value={split.category}
-                      onChange={value => changeCategory(index, value)}
-                      className='Layer__category-menu--full'
-                    />
-                  </div>
-                ))}
-              </div>
-              <div className={`${className}__splits-buttons`}>
-                {rowState.splits.length === 1 ? (
-                  <Button
-                    onClick={addSplit}
-                    leftIcon={<Scissors size={14} />}
-                    variant={ButtonVariant.secondary}
-                  >
-                    Split
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={removeSplit}
-                    leftIcon={<Link size={14} />}
-                    variant={ButtonVariant.secondary}
-                  >
-                    Merge
-                  </Button>
+            <div className={`${className}__content-panels`}>
+              <div
+                className={classNames(
+                  `${className}__match`,
+                  `${className}__content-panel`,
+                  purpose === Purpose.match
+                    ? `${className}__content-panel--active`
+                    : '',
                 )}
+              >
+                <div className={`${className}__content-panel-container`}>
+                  <table className={`Layer__table ${className}__match-table`}>
+                    <thead>
+                      <tr>
+                        <th className='Layer__table-header'>Date</th>
+                        <th className='Layer__table-header'>Description</th>
+                        <th
+                          className={`Layer__table-header ${className}__match-table__amount`}
+                        >
+                          Amount
+                        </th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bankTransaction.suggested_matches?.map((match, idx) => {
+                        return (
+                          <tr
+                            key={idx}
+                            className={classNames(
+                              `${className}__match-row`,
+                              match.id === selectedMatchId
+                                ? `${className}__match-row--selected`
+                                : '',
+                            )}
+                            onClick={() => {
+                              if (selectedMatchId === match.id) {
+                                setSelectedMatchId(undefined)
+                                return
+                              }
+                              setSelectedMatchId(match.id)
+                            }}
+                          >
+                            <td className='Layer__table-cell Layer__nowrap'>
+                              {formatTime(
+                                parseISO(match.details.date),
+                                dateFormat,
+                              )}
+                            </td>
+                            <td className='Layer__table-cell'>
+                              {match.details.description}
+                            </td>
+                            <td
+                              className={`Layer__table-cell ${className}__match-table__amount`}
+                            >
+                              ${formatMoney(match.details.amount)}
+                            </td>
+                            <td className={`${className}__match-table__status`}>
+                              {match.details.id ===
+                                bankTransaction.match?.details.id && (
+                                <MatchBadge
+                                  classNamePrefix={className}
+                                  bankTransaction={bankTransaction}
+                                  dateFormat={dateFormat}
+                                  text='Matched'
+                                />
+                              )}
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div
+                className={classNames(
+                  `${className}__splits`,
+                  `${className}__content-panel`,
+                  purpose === Purpose.categorize
+                    ? `${className}__content-panel--active`
+                    : '',
+                )}
+              >
+                <div className={`${className}__content-panel-container`}>
+                  <div className={`${className}__splits-inputs`}>
+                    {rowState.splits.map((split, index) => (
+                      <div
+                        className={`${className}__table-cell--split-entry`}
+                        key={`split-${index}`}
+                      >
+                        <Input
+                          type='text'
+                          name={`split-${index}${asListItem ? '-li' : ''}`}
+                          disabled={index === 0}
+                          onChange={updateAmounts(index)}
+                          value={split.inputValue}
+                          onBlur={onBlur}
+                          className={`${className}__split-amount${
+                            split.amount < 0 ? '--negative' : ''
+                          }`}
+                        />
+                        <CategoryMenu
+                          bankTransaction={bankTransaction}
+                          name={`category-${index}${asListItem ? '-li' : ''}`}
+                          value={split.category}
+                          onChange={value => changeCategory(index, value)}
+                          className='Layer__category-menu--full'
+                        />
+                        {index > 0 && (
+                          <Button
+                            onClick={() => removeSplit(index)}
+                            leftIcon={<Link size={14} />}
+                            variant={ButtonVariant.secondary}
+                          >
+                            Merge
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className={`${className}__splits-buttons`}>
+                    <Button
+                      onClick={addSplit}
+                      leftIcon={<Scissors size={14} />}
+                      variant={ButtonVariant.secondary}
+                      disabled={rowState.splits.length > 5}
+                    >
+                      Split
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
 

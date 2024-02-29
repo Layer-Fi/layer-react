@@ -126,19 +126,21 @@ export const LayerProvider = ({
     }
   }, [businessAccessToken, auth?.access_token])
 
-  const { data: categories } = useSWR(
+  useSWR(
     businessId && auth?.access_token && `categories-${businessId}`,
     Layer.getCategories(apiUrl, auth?.access_token, { params: { businessId } }),
-    defaultSWRConfig,
+    {
+      ...defaultSWRConfig,
+      onSuccess: response => {
+        if (response?.data?.categories?.length) {
+          dispatch({
+            type: Action.setCategories,
+            payload: { categories: response.data.categories || [] },
+          })
+        }
+      },
+    },
   )
-  useEffect(() => {
-    if (categories?.data?.categories?.length) {
-      dispatch({
-        type: Action.setCategories,
-        payload: { categories: categories.data.categories || [] },
-      })
-    }
-  }, [categories?.data?.categories?.length])
 
   const setTheme = (theme: LayerThemeConfig) =>
     dispatch({

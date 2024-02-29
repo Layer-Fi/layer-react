@@ -5,6 +5,10 @@ export enum Direction {
   DEBIT = 'DEBIT',
 }
 
+export enum BankTransactionMatchType {
+  CONFIRM_MATCH = 'Confirm_Match',
+}
+
 // This isn't my favorite but BankTransaction contains much
 // more than we're using right now.
 export interface BankTransaction extends Record<string, unknown> {
@@ -28,4 +32,31 @@ export interface BankTransaction extends Record<string, unknown> {
   categorization_method: string
   error?: string
   processing?: boolean
+  suggested_matches?: SuggestedMatch[]
+  match?: BankTransactionMatch
+}
+
+export interface SuggestedMatch {
+  id: string
+  matchType: string
+  details: {
+    amount: number
+    date: string
+    description: string
+    id: string
+    type: string
+  }
+}
+
+export interface BankTransactionMatch {
+  bank_transaction: BankTransaction
+  id: string
+  match_type?: string
+  details: {
+    amount: number
+    date: string
+    description: string
+    id: string
+    type: string
+  }
 }
