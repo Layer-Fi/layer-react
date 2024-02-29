@@ -22,8 +22,7 @@ export const MatchBadge = ({
     bankTransaction.categorization_status === CategorizationStatus.MATCHED &&
     bankTransaction.match
   ) {
-    const { date, amount, description, direction } =
-      bankTransaction.match.bank_transaction
+    const { date, amount, description } = bankTransaction.match.bank_transaction
 
     return (
       <Badge

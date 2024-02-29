@@ -13,7 +13,6 @@ import {
   SplitCategoryUpdate,
   SingleCategoryUpdate,
   Category,
-  CategorizationType,
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
 import { MatchBadge } from '../BankTransactionRow/MatchBadge'
@@ -184,7 +183,17 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       updateRowState({ ...rowState })
     }
 
-    const save = () =>
+    const save = () => {
+      if (purpose === Purpose.match) {
+        if (
+          selectedMatchId &&
+          selectedMatchId !== isAlreadyMatched(bankTransaction)
+        ) {
+          onMatchSubmit(selectedMatchId)
+        }
+        return
+      }
+
       categorizeBankTransaction(
         bankTransaction.id,
         rowState.splits.length === 1
@@ -206,13 +215,14 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               })),
             } as SplitCategoryUpdate),
       ).catch(e => console.error(e))
+    }
 
     // Call this save action after clicking save in parent component:
     useImperativeHandle(ref, () => ({
       save,
     }))
 
-    const onMatchClick = (matchId: string) => {
+    const onMatchSubmit = (matchId: string) => {
       const foundMatch = bankTransaction.suggested_matches?.find(
         x => x.id === matchId,
       )
@@ -299,7 +309,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               setSelectedMatchId(match.id)
                             }}
                           >
-                            <td className='Layer__table-cell'>
+                            <td className='Layer__table-cell Layer__nowrap'>
                               {formatTime(
                                 parseISO(match.details.date),
                                 dateFormat,
@@ -314,8 +324,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               ${formatMoney(match.details.amount)}
                             </td>
                             <td className={`${className}__match-table__status`}>
-                              {selectedMatchId ===
-                                isAlreadyMatched(bankTransaction) && (
+                              {match.details.id ===
+                                bankTransaction.match?.details.id && (
                                 <MatchBadge
                                   classNamePrefix={className}
                                   bankTransaction={bankTransaction}
@@ -329,18 +339,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       })}
                     </tbody>
                   </table>
-
-                  <Button
-                    onClick={() =>
-                      selectedMatchId && onMatchClick(selectedMatchId)
-                    }
-                    disabled={
-                      !selectedMatchId ||
-                      selectedMatchId === isAlreadyMatched(bankTransaction)
-                    }
-                  >
-                    Match
-                  </Button>
                 </div>
               </div>
 

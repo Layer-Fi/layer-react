@@ -80,6 +80,7 @@
   max-height: 960px;
 }
 
+.Layer__bank-transaction-list-item__category-text,
 .Layer__bank-transaction-row__category-text {
   flex: 1;
   color: var(--text-color-primary);
@@ -95,6 +96,7 @@
     flex: 0;
   }
 
+  .Layer__bank-transaction-list-item__category-text__text,
   .Layer__bank-transaction-row__category-text__text {
     flex: 1;
     max-width: 100%;
@@ -103,6 +105,7 @@
   }
 }
 
+.Layer__bank-transaction-list-item__content,
 .Layer__expanded-bank-transaction-row__content {
   display: flex;
   flex-direction: column;
@@ -294,11 +297,15 @@
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  gap:  var(--spacing-sm);
+  gap: var(--spacing-sm);
   padding: var(--spacing-md);
 
   .Layer__category-menu {
     width: 100%;
+  }
+
+  .Layer__tooltip-trigger {
+    flex: 0;
   }
 }
 
@@ -454,6 +461,7 @@
   max-width: 250px;
 }
 
+.Layer__bank-transaction-list-item__match-tooltip,
 .Layer__bank-transaction-row__match-tooltip {
   font-size: var(--text-sm);
   display: flex;
@@ -461,10 +469,12 @@
   row-gap: var(--spacing-2xs);
   min-width: 200px;
 
+  .Layer__bank-transaction-list-item__match-tooltip__date,
   .Layer__bank-transaction-row__match-tooltip__date {
     color: var(--color-base-500);
   }
 
+  .Layer__bank-transaction-list-item__match-tooltip__description,
   .Layer__bank-transaction-row__match-tooltip__description {
     color: var(--color-base-500);
     max-width: 230px;
@@ -473,11 +483,13 @@
     white-space: nowrap;
   }
 
+  .Layer__bank-transaction-list-item__match-tooltip__amount,
   .Layer__bank-transaction-row__match-tooltip__amount {
     font-size: var(--text-md);
   }
 }
 
+.Layer__bank-transaction-list-item__split-tooltip,
 .Layer__bank-transaction-row__split-tooltip {
   font-size: var(--text-sm);
   display: flex;
@@ -497,10 +509,12 @@
     justify-content: space-between;
   }
 
+  .Layer__bank-transaction-list-item__split-tooltip__label,
   .Layer__bank-transaction-row__split-tooltip__label {
     color: var(--color-base-500);
   }
 
+  .Layer__bank-transaction-list-item__split-tooltip__value,
   .Layer__bank-transaction-row__split-tooltip__value {
     color: var(--color-base-300);
   }

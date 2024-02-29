@@ -8,7 +8,7 @@ import { SubmitButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { Pill } from '../Pill'
+import { Assignment } from './Assignment'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
@@ -132,9 +132,7 @@ export const BankTransactionListItem = ({
             disabled={bankTransaction.processing}
           />
         ) : null}
-        {!editable ? (
-          <Pill>{bankTransaction?.category?.display_name}</Pill>
-        ) : null}
+        {!editable ? <Assignment bankTransaction={bankTransaction} /> : null}
         {editable && (
           <SubmitButton
             onClick={() => {

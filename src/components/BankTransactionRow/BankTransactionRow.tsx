@@ -37,7 +37,7 @@ type Props = {
 const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
   direction === Direction.CREDIT
 
-const extractDescriptionForSplit = (category: Category) => {
+export const extractDescriptionForSplit = (category: Category) => {
   if (!category.entries) {
     return ''
   }

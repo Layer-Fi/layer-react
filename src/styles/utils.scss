@@ -18,6 +18,10 @@
   justify-content: space-between;
 }
 
+.Layer__nowrap {
+  white-space: nowrap;
+}
+
 @keyframes rotating {
   from {
     -ms-transform: rotate(0deg);
