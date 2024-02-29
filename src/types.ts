@@ -31,3 +31,5 @@ export type DateRange<T = Date> = {
   startDate: T
   endDate: T
 }
+
+export type ReportingBasis = 'CASH' | 'ACCRUAL'

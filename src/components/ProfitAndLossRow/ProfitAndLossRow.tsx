@@ -10,6 +10,9 @@ type Props = {
   lineItem?: LineItem | null
   direction?: Direction
   summarize?: boolean
+
+  /* This removes the expand toggle and leaves everything in the expanded state */
+  lockExpanded?: boolean
 }
 
 export const ProfitAndLossRow = ({
@@ -19,6 +22,7 @@ export const ProfitAndLossRow = ({
   maxDepth = 1,
   direction = Direction.DEBIT,
   summarize = true,
+  lockExpanded = false,
 }: Props) => {
   if (!lineItem) {
     return null
@@ -71,8 +75,11 @@ export const ProfitAndLossRow = ({
     valueClasses.push('Layer__profit-and-loss-row__value--expanded')
   return (
     <>
-      <div className={labelClasses.join(' ')} onClick={toggleExpanded}>
-        <ChevronDown size={16} />
+      <div
+        className={labelClasses.join(' ')}
+        onClick={() => !lockExpanded && toggleExpanded()}
+      >
+        {!lockExpanded && <ChevronDown size={16} />}
         {display_name}
       </div>
       <div className={valueClasses.join(' ')}>{amountString}</div>

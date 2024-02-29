@@ -4,16 +4,25 @@ import { ProfitAndLoss } from '../ProfitAndLoss'
 import { ProfitAndLossRow } from '../ProfitAndLossRow'
 import emptyPNL from './empty_profit_and_loss_report'
 
-export const ProfitAndLossTable = () => {
+type Props = {
+  lockExpanded?: boolean
+}
+
+export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
   const { data: actualData, isLoading } = useContext(ProfitAndLoss.Context)
   const data = !actualData || isLoading ? emptyPNL : actualData
   return (
     <>
       <div className='Layer__profit-and-loss-table'>
-        <ProfitAndLossRow lineItem={data.income} direction={Direction.CREDIT} />
+        <ProfitAndLossRow
+          lineItem={data.income}
+          direction={Direction.CREDIT}
+          lockExpanded={lockExpanded}
+        />
         <ProfitAndLossRow
           lineItem={data.cost_of_goods_sold}
           direction={Direction.DEBIT}
+          lockExpanded={lockExpanded}
         />
         <ProfitAndLossRow
           lineItem={{
@@ -22,10 +31,12 @@ export const ProfitAndLossTable = () => {
           }}
           variant='summation'
           direction={Direction.CREDIT}
+          lockExpanded={lockExpanded}
         />
         <ProfitAndLossRow
           lineItem={data.expenses}
           direction={Direction.DEBIT}
+          lockExpanded={lockExpanded}
         />
         <ProfitAndLossRow
           lineItem={{
@@ -34,8 +45,13 @@ export const ProfitAndLossTable = () => {
           }}
           variant='summation'
           direction={Direction.CREDIT}
+          lockExpanded={lockExpanded}
         />
-        <ProfitAndLossRow lineItem={data.taxes} direction={Direction.DEBIT} />
+        <ProfitAndLossRow
+          lineItem={data.taxes}
+          direction={Direction.DEBIT}
+          lockExpanded={lockExpanded}
+        />
         <ProfitAndLossRow
           lineItem={{
             value: data.net_profit,
@@ -43,16 +59,19 @@ export const ProfitAndLossTable = () => {
           }}
           variant='summation'
           direction={Direction.CREDIT}
+          lockExpanded={lockExpanded}
         />
       </div>
       <div className='Layer__profit-and-loss-table Layer__profit-and-loss-table__outflows'>
         <ProfitAndLossRow
           lineItem={data.other_outflows}
           direction={Direction.DEBIT}
+          lockExpanded={lockExpanded}
         />
         <ProfitAndLossRow
           lineItem={data.personal_expenses}
           direction={Direction.DEBIT}
+          lockExpanded={lockExpanded}
         />
       </div>
     </>
