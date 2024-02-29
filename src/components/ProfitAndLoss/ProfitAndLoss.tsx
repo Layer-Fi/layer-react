@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, createContext } from 'react'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
-import { ReportingBasis } from '../../types'
+import { DateRange, ReportingBasis } from '../../types'
 import { ProfitAndLossChart } from '../ProfitAndLossChart'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { ProfitAndLossSummaries } from '../ProfitAndLossSummaries'
@@ -25,16 +25,38 @@ type Props = PropsWithChildren & {
     values: string[]
   }
   reportingBasis?: ReportingBasis
+  hideWrapper?: boolean
+  dateRange?: DateRange
+  businessId?: string
 }
 
-const ProfitAndLoss = ({ children, tagFilter, reportingBasis }: Props) => {
-  const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
+const ProfitAndLoss = ({
+  children,
+  tagFilter,
+  reportingBasis,
+  hideWrapper,
+  dateRange,
+  businessId,
+}: Props) => {
+  const contextData = useProfitAndLoss({
+    tagFilter,
+    reportingBasis,
+    startDate: dateRange?.startDate,
+    endDate: dateRange?.endDate,
+    businessId,
+  })
   return (
     <PNLContext.Provider value={contextData}>
-      <div className='Layer__component Layer__profit-and-loss'>
-        <h2 className='Layer__profit-and-loss__title'>Profit & Loss</h2>
-        {children}
-      </div>
+      {hideWrapper ? (
+        <div className='Layer__component Layer__profit-and-loss--no-wrapper'>
+          {children}
+        </div>
+      ) : (
+        <div className='Layer__component Layer__profit-and-loss'>
+          <h2 className='Layer__profit-and-loss__title'>Profit & Loss</h2>
+          {children}
+        </div>
+      )}
     </PNLContext.Provider>
   )
 }

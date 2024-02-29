@@ -10,6 +10,15 @@
   }
 }
 
+.Layer__profit-and-loss--no-wrapper {
+  * {
+    color: var(--text-color);
+    font-family: Inter;
+    font-weight: 500;
+    font-style: normal;
+  }
+}
+
 .Layer__profit-and-loss__title {
   font-size: 1.5rem;
   font-weight: 600;
@@ -233,6 +242,20 @@
   flex: 1;
   flex-direction: row;
   justify-content: space-evenly;
+}
+
+.Layer__profit-and-loss-summaries--vertical {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 1.5rem;
+
+  .Layer__profit-and-loss-summaries__summary {
+    &:first-child {
+      margin-left: 0;
+    }
+  }
 }
 
 .Layer__profit-and-loss-summaries__summary {

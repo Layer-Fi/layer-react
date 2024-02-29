@@ -4,9 +4,13 @@ import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 
 type Props = {
   revenueLabel?: string
+  vertical?: boolean
 }
 
-export const ProfitAndLossSummaries = ({ revenueLabel = 'Revenue' }: Props) => {
+export const ProfitAndLossSummaries = ({
+  revenueLabel = 'Revenue',
+  vertical,
+}: Props) => {
   const { data: storedData } = useContext(PNL.Context)
   const data = storedData
     ? storedData
@@ -28,7 +32,13 @@ export const ProfitAndLossSummaries = ({ revenueLabel = 'Revenue' }: Props) => {
       : 'Layer__profit-and-loss-summaries__amount--pasitive'
 
   return (
-    <div className='Layer__profit-and-loss-summaries'>
+    <div
+      className={
+        vertical
+          ? 'Layer__profit-and-loss-summaries--vertical'
+          : 'Layer__profit-and-loss-summaries'
+      }
+    >
       <div className='Layer__profit-and-loss-summaries__summary Layer__profit-and-loss-summaries__summary--income'>
         <span className='Layer__profit-and-loss-summaries__title'>
           {revenueLabel}

@@ -13,6 +13,7 @@ type Props = {
     values: string[]
   }
   reportingBasis?: ReportingBasis
+  businessId?: string
 }
 
 type UseProfitAndLoss = (props?: Props) => {
@@ -29,6 +30,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     endDate: initialEndDate,
     tagFilter,
     reportingBasis,
+    businessId: overrideBusinessId,
   }: Props = {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
@@ -51,7 +53,9 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       startDate &&
       endDate &&
       auth?.access_token &&
-      `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
+      `profit-and-loss-${
+        overrideBusinessId || businessId
+      }-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
         ',',
       )}-${reportingBasis}`,
     Layer.getProfitAndLoss(apiUrl, auth?.access_token, {
