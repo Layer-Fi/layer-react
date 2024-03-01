@@ -1,6 +1,9 @@
 import React, { useContext, useMemo, useState } from 'react'
+import { useLayerContext } from '../../hooks/useLayerContext'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
+import { centsToDollars } from '../../models/Money'
 import { ProfitAndLoss } from '../../types'
+import { capitalizeFirstLetter } from '../../utils/format'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { Indicator } from './Indicator'
 import { endOfMonth, format, parseISO, startOfMonth, sub } from 'date-fns'
@@ -13,6 +16,9 @@ import {
   CartesianGrid,
   Legend,
   ResponsiveContainer,
+  Tooltip,
+  TooltipProps,
+  Rectangle,
 } from 'recharts'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 
@@ -20,6 +26,7 @@ const barGap = 4
 const barSize = 20
 
 export const ProfitAndLossChart = () => {
+  const { getColor } = useLayerContext()
   const { changeDateRange, dateRange } = useContext(PNL.Context)
   const thisMonth = startOfMonth(Date.now())
 
@@ -109,7 +116,7 @@ export const ProfitAndLossChart = () => {
   const summarizePnL = (pnl: ProfitAndLoss | undefined) => ({
     name: getMonthName(pnl),
     revenue: pnl?.income.value || 0,
-    expenses: (pnl?.income.value || 0) - (pnl?.net_profit || 0),
+    expenses: Math.abs((pnl?.income.value || 0) - (pnl?.net_profit || 0)),
     selected:
       !!pnl &&
       parseISO(pnl.start_date).getMonth() >= startSelectionMonth &&
@@ -127,6 +134,55 @@ export const ProfitAndLossChart = () => {
     }
   }
 
+  const CustomTooltip = ({
+    active,
+    payload,
+    label,
+  }: TooltipProps<number, string>) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className='Layer__chart__tooltip'>
+          <ul className='Layer__chart__tooltip-list'>
+            <li>
+              <label className='Layer__chart__tooltip-label'>
+                {capitalizeFirstLetter(payload[0].name ?? '')}
+              </label>
+              <span className='Layer__chart__tooltip-value'>
+                ${centsToDollars(Math.abs(payload[0].value ?? 0))}
+              </span>
+            </li>
+            <li>
+              <label className='Layer__chart__tooltip-label'>
+                {capitalizeFirstLetter(payload[1].name ?? '')}
+              </label>
+              <span className='Layer__chart__tooltip-value'>
+                ${centsToDollars(Math.abs(payload[1].value ?? 0))}
+              </span>
+            </li>
+          </ul>
+        </div>
+      )
+    }
+
+    return null
+  }
+
+  const CustomizedCursor = (props: any) => {
+    const { x, y, width, height } = props
+    return (
+      <Rectangle
+        fill={getColor(100)?.hex ?? '#F5F4F3'}
+        stroke='none'
+        x={x}
+        y={y}
+        radius={8}
+        width={width}
+        height={height + 24}
+        className='Layer__chart__tooltip-cursor'
+      />
+    )
+  }
+
   // If net profit doesn't change, we're probably still the same.
   const data = useMemo(
     () => monthData.map(summarizePnL),
@@ -140,21 +196,44 @@ export const ProfitAndLossChart = () => {
   const [animateFrom, setAnimateFrom] = useState(-1)
 
   return (
-    <ResponsiveContainer width='100%' height={250}>
+    <ResponsiveContainer
+      className='Layer__chart-container'
+      width='100%'
+      height='100%'
+      minHeight={200}
+    >
       <BarChart
-        margin={{ left: 24, right: 24, bottom: 24 }}
+        margin={{ left: 12, right: 12, bottom: 12 }}
         data={data}
         onClick={onClick}
         barGap={barGap}
         className='Layer__profit-and-loss-chart'
       >
-        <CartesianGrid vertical={false} />
+        <Tooltip
+          wrapperClassName='Layer__chart__tooltip-wrapper'
+          content={<CustomTooltip />}
+          cursor={<CustomizedCursor />}
+        />
+        <CartesianGrid
+          vertical={false}
+          stroke={getColor(200)?.hex ?? '#fff'}
+          strokeDasharray='5 5'
+        />
         <Legend
           verticalAlign='top'
           align='left'
+          wrapperStyle={{ top: -24 }}
           payload={[
-            { value: 'Income', type: 'circle', id: 'IncomeLegend' },
-            { value: 'Expenses', type: 'circle', id: 'ExpensesLegend' },
+            {
+              value: 'Income',
+              type: 'circle',
+              id: 'IncomeLegend',
+            },
+            {
+              value: 'Expenses',
+              type: 'circle',
+              id: 'ExpensesLegend',
+            },
           ]}
         />
         <XAxis dataKey='name' tickLine={false} />

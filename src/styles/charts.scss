@@ -1,0 +1,38 @@
+.Layer__component .recharts-responsive-container {
+  padding: 4px;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 0px 1px var(--color-base-300);
+  border-radius: var(--border-radius-xs);
+}
+
+.Layer__chart-container {
+  min-height: 200px;
+}
+
+.Layer__chart__tooltip {
+  background-color: var(--color-base-1000);
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  color: var(--color-base-500);
+  border-radius: var(--border-radius-3xs);
+  font-size: var(--text-sm);
+}
+
+.Layer__chart__tooltip-list {
+  margin: 0;
+  padding: 0;  
+
+  li {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    column-gap: var(--spacing-sm);
+  }
+
+  .Layer__chart__tooltip-label {
+    color: var(--color-base-500);
+  }
+  
+  .Layer__chart__tooltip-value {
+    color: var(--color-base-300);
+  }
+}

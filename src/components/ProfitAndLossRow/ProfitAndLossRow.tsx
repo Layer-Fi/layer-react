@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import ChevronDown from '../../icons/ChevronDown'
 import { centsToDollars } from '../../models/Money'
 import { Direction, LineItem } from '../../types'
+import { Text, TextWeight } from '../Typography'
 
 type Props = {
   variant?: string
@@ -9,7 +10,6 @@ type Props = {
   maxDepth?: number
   lineItem?: LineItem | null
   direction?: Direction
-  summarize?: boolean
 
   /* This removes the expand toggle and leaves everything in the expanded state */
   lockExpanded?: boolean
@@ -21,7 +21,6 @@ export const ProfitAndLossRow = ({
   depth = 0,
   maxDepth = 1,
   direction = Direction.DEBIT,
-  summarize = true,
   lockExpanded = false,
 }: Props) => {
   if (!lineItem) {
@@ -80,16 +79,18 @@ export const ProfitAndLossRow = ({
         onClick={() => !lockExpanded && toggleExpanded()}
       >
         {!lockExpanded && <ChevronDown size={16} />}
-        {display_name}
+        <Text>{display_name}</Text>
       </div>
-      <div className={valueClasses.join(' ')}>{amountString}</div>
+      <div className={valueClasses.join(' ')}>
+        <Text>{amountString}</Text>
+      </div>
       {canGoDeeper && hasChildren && (
         <div
           className={`Layer__profit-and-loss-row__children ${
             expanded && 'Layer__profit-and-loss-row__children--expanded'
           }`}
         >
-          <div className='Layer__balance-sheet-row__children--content'>
+          <div className='Layer__profit-and-loss-row__children--content'>
             {(line_items || []).map(line_item => (
               <ProfitAndLossRow
                 key={line_item.display_name}
@@ -99,15 +100,6 @@ export const ProfitAndLossRow = ({
                 direction={direction}
               />
             ))}
-            {summarize && (
-              <ProfitAndLossRow
-                key={display_name}
-                lineItem={{ value, display_name: `Total of ${display_name}` }}
-                variant='summation'
-                depth={depth + 1}
-                maxDepth={maxDepth}
-              />
-            )}
           </div>
         </div>
       )}

@@ -6,7 +6,11 @@ import {
   LayerContextAction,
   LayerContextActionName as Action,
 } from '../../types'
-import { LayerThemeConfig } from '../../types/layer_context'
+import {
+  ColorsPaletteOption,
+  LayerThemeConfig,
+} from '../../types/layer_context'
+import { buildColorsPalette } from '../../utils/colors'
 import { add, isBefore } from 'date-fns'
 import useSWR, { SWRConfig } from 'swr'
 
@@ -68,6 +72,8 @@ export const LayerProvider = ({
     revalidateIfStale: false,
   }
 
+  const colors = buildColorsPalette(theme)
+
   const { url, scope, apiUrl } = LayerEnvironment[environment]
   const [state, dispatch] = useReducer(reducer, {
     auth: {
@@ -80,6 +86,7 @@ export const LayerProvider = ({
     categories: [],
     apiUrl,
     theme,
+    colors,
   })
 
   const { data: auth } =
@@ -148,9 +155,17 @@ export const LayerProvider = ({
       payload: { theme },
     })
 
+  const getColor = (shade: number): ColorsPaletteOption | undefined => {
+    if (colors && shade in colors) {
+      return colors[shade]
+    }
+
+    return
+  }
+
   return (
     <SWRConfig value={defaultSWRConfig}>
-      <LayerContext.Provider value={{ ...state, setTheme }}>
+      <LayerContext.Provider value={{ ...state, setTheme, getColor }}>
         {children}
       </LayerContext.Provider>
     </SWRConfig>

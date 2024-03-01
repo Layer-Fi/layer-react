@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { Direction } from '../../types'
+import { Loader } from '../Loader'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { ProfitAndLossRow } from '../ProfitAndLossRow'
 import emptyPNL from './empty_profit_and_loss_report'
@@ -11,6 +12,15 @@ type Props = {
 export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
   const { data: actualData, isLoading } = useContext(ProfitAndLoss.Context)
   const data = !actualData || isLoading ? emptyPNL : actualData
+
+  if (isLoading || actualData === undefined) {
+    return (
+      <div className='Layer__bank-transactions__loader-container'>
+        <Loader />
+      </div>
+    )
+  }
+
   return (
     <>
       <div className='Layer__profit-and-loss-table'>

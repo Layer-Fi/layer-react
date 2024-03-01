@@ -1,9 +1,13 @@
 import { createContext } from 'react'
 import { LayerContextValues } from '../../types'
-import { LayerThemeConfig } from '../../types/layer_context'
+import {
+  LayerContextHelpers,
+  LayerThemeConfig,
+} from '../../types/layer_context'
 
 export const LayerContext = createContext<
-  LayerContextValues & { setTheme: (theme: LayerThemeConfig) => void }
+  LayerContextValues &
+    LayerContextHelpers & { setTheme: (theme: LayerThemeConfig) => void }
 >({
   auth: {
     access_token: '',
@@ -15,5 +19,7 @@ export const LayerContext = createContext<
   categories: [],
   apiUrl: '',
   theme: undefined,
+  colors: {},
   setTheme: () => undefined,
+  getColor: _shade => undefined,
 })

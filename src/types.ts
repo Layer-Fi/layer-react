@@ -3,6 +3,7 @@ export {
   LayerContextValues,
   LayerContextActionName,
   LayerContextAction,
+  LayerContextHelpers,
 } from './types/layer_context'
 export { Metadata } from './types/api'
 export { ProfitAndLoss } from './types/profit_and_loss'
