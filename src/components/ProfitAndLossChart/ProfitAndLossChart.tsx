@@ -1,4 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react'
+import { useLayerContext } from '../../hooks/useLayerContext'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 import { centsToDollars } from '../../models/Money'
 import { ProfitAndLoss } from '../../types'
@@ -25,6 +26,7 @@ const barGap = 4
 const barSize = 20
 
 export const ProfitAndLossChart = () => {
+  const { getColor } = useLayerContext()
   const { changeDateRange, dateRange } = useContext(PNL.Context)
   const thisMonth = startOfMonth(Date.now())
 
@@ -114,7 +116,7 @@ export const ProfitAndLossChart = () => {
   const summarizePnL = (pnl: ProfitAndLoss | undefined) => ({
     name: getMonthName(pnl),
     revenue: pnl?.income.value || 0,
-    expenses: (pnl?.income.value || 0) - (pnl?.net_profit || 0),
+    expenses: Math.abs((pnl?.income.value || 0) - (pnl?.net_profit || 0)),
     selected:
       !!pnl &&
       parseISO(pnl.start_date).getMonth() >= startSelectionMonth &&
@@ -167,11 +169,10 @@ export const ProfitAndLossChart = () => {
 
   const CustomizedCursor = (props: any) => {
     const { x, y, width, height } = props
-    // @TODO use theme colors
     return (
       <Rectangle
-        fill='none'
-        stroke='#222'
+        fill={getColor(100)?.hex ?? '#F5F4F3'}
+        stroke='none'
         x={x}
         y={y}
         radius={8}
@@ -202,15 +203,20 @@ export const ProfitAndLossChart = () => {
       minHeight={200}
     >
       <BarChart
-        margin={{ left: 24, right: 24, bottom: 24 }}
+        margin={{ left: 12, right: 12, bottom: 12 }}
         data={data}
         onClick={onClick}
         barGap={barGap}
         className='Layer__profit-and-loss-chart'
       >
+        <Tooltip
+          wrapperClassName='Layer__chart__tooltip-wrapper'
+          content={<CustomTooltip />}
+          cursor={<CustomizedCursor />}
+        />
         <CartesianGrid
           vertical={false}
-          stroke='#EBEDF0'
+          stroke={getColor(200)?.hex ?? '#fff'}
           strokeDasharray='5 5'
         />
         <Legend
@@ -218,8 +224,16 @@ export const ProfitAndLossChart = () => {
           align='left'
           wrapperStyle={{ top: -24 }}
           payload={[
-            { value: 'Income', type: 'circle', id: 'IncomeLegend' },
-            { value: 'Expenses', type: 'circle', id: 'ExpensesLegend' },
+            {
+              value: 'Income',
+              type: 'circle',
+              id: 'IncomeLegend',
+            },
+            {
+              value: 'Expenses',
+              type: 'circle',
+              id: 'ExpensesLegend',
+            },
           ]}
         />
         <XAxis dataKey='name' tickLine={false} />
@@ -267,11 +281,6 @@ export const ProfitAndLossChart = () => {
             />
           ))}
         </Bar>
-        <Tooltip
-          wrapperClassName='Layer__chart__tooltip-wrapper'
-          content={<CustomTooltip />}
-          cursor={<CustomizedCursor />}
-        />
       </BarChart>
     </ResponsiveContainer>
   )

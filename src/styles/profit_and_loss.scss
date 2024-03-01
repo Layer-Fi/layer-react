@@ -67,7 +67,6 @@
   }
 }
 .Layer__profit-and-loss-row__value--expanded {
-  color: transparent;
   user-select: none;
 }
 
@@ -78,11 +77,11 @@
 }
 
 .Layer__profit-and-loss-row__label--display-children-true {
-  font-weight: bold;
-}
-
-.Layer__profit-and-loss-row__value--display-children-true {
-  font-weight: bold;
+  cursor: pointer;
+  transition: opacity var(--transition-speed);
+  &:hover {
+    opacity: 0.82;
+  }
 }
 
 .Layer__profit-and-loss-row__label--display-children-false {
@@ -100,42 +99,58 @@
 }
 
 .Layer__profit-and-loss-row__label--variant-summation {
-  font-weight: bold;
   border-top: 1px solid var(--border-color);
 }
 .Layer__profit-and-loss-row__value--variant-summation {
-  font-weight: bold;
   border-top: 1px solid var(--border-color);
 }
 
 .Layer__profit-and-loss-row__value--amount-positive {
-  &::before {
+  .Layer__text::before {
     content: '$';
   }
 }
 
 .Layer__profit-and-loss-row__value--amount-negative {
-  &::before {
+  .Layer__text::before {
     content: '-$';
   }
 }
 
 .Layer__profit-and-loss-row__label--depth-0 {
-  font-weight: 700;
+  .Layer__text {
+    color: var(--color-base-800);
+    font-variation-settings: 'wght' var(--font-weight-bold);
+    margin: 0;
+  }
 }
 
 .Layer__profit-and-loss-row__value--depth-0 {
-  font-weight: 700;
+  .Layer__text {
+    color: var(--color-base-800);
+    font-variation-settings: 'wght' var(--font-weight-bold);
+    margin: 0;
+  }
 }
 
 .Layer__profit-and-loss-row__label--depth-1 {
-  padding-right: 2em;
-  padding-left: 2em;
-  font-size: 0.9em;
+  padding-right: var(--spacing-md);
+  padding-left: var(--spacing-5xl);
+  padding-top: var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
+  .Layer__text {
+    color: var(--color-base-700);
+    font-variation-settings: 'wght' var(--font-weight-normal);
+    margin: 0;
+  }
 }
 
 .Layer__profit-and-loss-row__value--depth-1 {
-  font-size: 0.9em;
+  .Layer__text {
+    color: var(--color-base-700);
+    font-variation-settings: 'wght' var(--font-weight-normal);
+    margin: 0;
+  }
 }
 
 .Layer__profit-and-loss-date-picker {
@@ -204,12 +219,10 @@
 }
 
 .Layer__profit-and-loss-chart__selection-indicator {
-  height: 0.25rem;
-  fill: var(--indicator-color);
+  stroke: var(--indicator-color);
+  fill: none;
   transition: x 0.5s;
 }
-
-
 
 
 /** ---- */
@@ -298,59 +311,14 @@
   background-color: var(--color-base-50);
 }
 
-// @TODO - need this in JS(?) and RGB (HSL won't work with svg)
 .Layer__profit-and-loss-chart__bar--income {
-  fill: #6D8DE6;
+  fill: var(--bar-color-income);
 }
 
 .Layer__profit-and-loss-chart__bar--expenses {
-  fill: #101828;
+  fill: var(--bar-color-expenses);
 }
 
-/** @TOdo move to char */
-.Layer__component .recharts-responsive-container {
-  padding: 4px;
-  box-sizing: border-box;
-  box-shadow: 0px 0px 0px 1px var(--color-base-300);
-  border-radius: var(--border-radius-xs);
-}
-
-.Layer__chart-container {
-  min-height: 200px;
-}
-
-.Layer__chart__tooltip {
-  background-color: var(--color-base-1000);
-  padding: var(--spacing-2xs) var(--spacing-sm);
-  color: var(--color-base-500);
-  border-radius: var(--border-radius-3xs);
-  font-size: var(--text-sm);
-}
-
-.Layer__chart__tooltip-list {
-  margin: 0;
-  padding: 0;  
-
-  li {
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    column-gap: var(--spacing-sm);
-  }
-
-  .Layer__chart__tooltip-label {
-    color: var(--color-base-500);
-  }
-  
-  .Layer__chart__tooltip-value {
-    color: var(--color-base-300);
-  }
-}
-
-// @TODO - wrong shadow - maybe use double rectangles in js?
-.Layer__chart__tooltip-cursor {
-  filter: drop-shadow(0px 0px 1px rgb(108, 108, 108));
-}
 
 // @TODO - adjust responsive rules
 @container (max-width: 1024px) and (min-width: 760px) {
@@ -403,27 +371,5 @@
 
   .Layer__profit-and-loss-summaries__summary {
     min-width: 150px;
-  }
-}
-
-// @TODO move to global.scss?
-.Layer__component * {
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: #e2e2e2;
-    border-radius: 4px;
-  }
-  
-  &::-webkit-scrollbar-thumb:hover {
-    background: #999;
   }
 }

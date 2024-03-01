@@ -1,7 +1,12 @@
+import { COLORS, SHADES } from '../config/theme'
 import {
   LayerThemeConfig,
   ColorConfig,
   ColorRGBConfig,
+  ColorRGBNumberConfig,
+  ColorHSLNumberConfig,
+  ColorsPalette,
+  ColorHexConfig,
 } from '../types/layer_context'
 
 /**
@@ -76,6 +81,59 @@ const parseColorFromTheme = (colorName: string, color?: ColorConfig) => {
 }
 
 /**
+ * Parse the color from theme config into a CSS variables.
+ * @param {string} colorName
+ * @param {ColorConfig} color
+ */
+const parseColorFromThemeToHsl = (
+  color?: ColorConfig,
+): ColorHSLNumberConfig | undefined => {
+  if (!color) {
+    return
+  }
+
+  try {
+    if ('h' in color && 's' in color && 'l' in color) {
+      return {
+        h: Number(color.h),
+        s: Number(color.s),
+        l: Number(color.l),
+      }
+    }
+
+    if ('r' in color && 'g' in color && 'b' in color) {
+      const { h, s, l } = rgbToHsl(color)
+      return {
+        h: h,
+        s: s,
+        l: l,
+      }
+    }
+
+    if ('hex' in color) {
+      const rgb = hexToRgb(color.hex)
+      if (!rgb) {
+        return undefined
+      }
+      const { h, s, l } = rgbToHsl({
+        r: rgb.r.toString(),
+        g: rgb.g.toString(),
+        b: rgb.b.toString(),
+      })
+      return {
+        h: h,
+        s: s,
+        l: l,
+      }
+    }
+
+    return
+  } catch (_err) {
+    return
+  }
+}
+
+/**
  * Convert RGB to HSL
  */
 const rgbToHsl = (color: ColorRGBConfig) => {
@@ -123,4 +181,88 @@ const hexToRgb = (hex: string) => {
     g: values[1],
     b: values[2],
   }
+}
+
+export const buildColorsPalette = (theme?: LayerThemeConfig): ColorsPalette => {
+  const darkColor = parseColorFromThemeToHsl(theme?.colors?.dark) ?? COLORS.dark
+  const lightColor =
+    parseColorFromThemeToHsl(theme?.colors?.light) ?? COLORS.light
+
+  return {
+    50: buildColorShade(50, darkColor),
+    100: buildColorShade(100, darkColor),
+    200: buildColorShade(200, darkColor),
+    300: buildColorShade(300, darkColor),
+    400: {
+      hsl: lightColor,
+      rgb: hslToRgb(lightColor),
+      hex: hslToHex(lightColor),
+    },
+    500: buildColorShade(500, darkColor),
+    600: buildColorShade(600, darkColor),
+    700: buildColorShade(700, darkColor),
+    800: buildColorShade(800, darkColor),
+    900: {
+      hsl: darkColor,
+      rgb: hslToRgb(darkColor),
+      hex: hslToHex(darkColor),
+    },
+    1000: buildColorShade(1000, darkColor),
+  }
+}
+
+const buildColorShade = (
+  shade: keyof typeof SHADES,
+  darkColorHsl: ColorHSLNumberConfig,
+) => {
+  const hsl = { h: darkColorHsl.h, ...SHADES[shade] }
+  const rgb = hslToRgb(hsl)
+  const hex = hslToHex(hsl)
+
+  return { hsl, rgb, hex }
+}
+
+const hueToRgb = (p: number, q: number, t: number) => {
+  if (t < 0) t += 1
+  if (t > 1) t -= 1
+  if (t < 1.0 / 6.0) return p + (q - p) * 6 * t
+  if (t < 1.0 / 2.0) return q
+  if (t < 2.0 / 3.0) return p + (q - p) * (2.0 / 3.0 - t) * 6
+  return p
+}
+
+const hslToRgb = (hsl: ColorHSLNumberConfig): ColorRGBNumberConfig => {
+  let r, g, b
+  let l = hsl.l / 100
+  let s = hsl.s / 100
+
+  if (hsl.s === 0) {
+    r = g = b = l
+  } else {
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+    const p = 2 * l - q
+    r = hueToRgb(p, q, hsl.h + 1.0 / 3.0)
+    g = hueToRgb(p, q, hsl.h)
+    b = hueToRgb(p, q, hsl.h - 1.0 / 3.0)
+  }
+
+  return {
+    r: Math.round(r * 255),
+    g: Math.round(g * 255),
+    b: Math.round(b * 255),
+  }
+}
+
+const hslToHex = (hsl: ColorHSLNumberConfig): string => {
+  const l = hsl.l / 100
+  const s = hsl.s
+  const a = (s * Math.min(l, 1 - l)) / 100
+  const f = (n: number) => {
+    const k = (n + hsl.h / 30) % 12
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)
+    return Math.round(255 * color)
+      .toString(16)
+      .padStart(2, '0')
+  }
+  return `#${f(0)}${f(8)}${f(4)}`
 }
