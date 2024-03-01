@@ -6,7 +6,6 @@ import {
   ColorRGBNumberConfig,
   ColorHSLNumberConfig,
   ColorsPalette,
-  ColorHexConfig,
 } from '../types/layer_context'
 
 /**
@@ -183,6 +182,9 @@ const hexToRgb = (hex: string) => {
   }
 }
 
+/**
+ * Build same color palette in RGB, HSL and HEX as CSS variables.
+ */
 export const buildColorsPalette = (theme?: LayerThemeConfig): ColorsPalette => {
   const darkColor = parseColorFromThemeToHsl(theme?.colors?.dark) ?? COLORS.dark
   const lightColor =
@@ -211,6 +213,10 @@ export const buildColorsPalette = (theme?: LayerThemeConfig): ColorsPalette => {
   }
 }
 
+/**
+ * Build color shade based on the dark color (HSL)
+ * and config values for S and L.
+ */
 const buildColorShade = (
   shade: keyof typeof SHADES,
   darkColorHsl: ColorHSLNumberConfig,
@@ -221,7 +227,9 @@ const buildColorShade = (
 
   return { hsl, rgb, hex }
 }
-
+/**
+ * Convert Hue into RGB
+ */
 const hueToRgb = (p: number, q: number, t: number) => {
   if (t < 0) t += 1
   if (t > 1) t -= 1
@@ -231,6 +239,9 @@ const hueToRgb = (p: number, q: number, t: number) => {
   return p
 }
 
+/**
+ * Convert HSL to RGB
+ */
 const hslToRgb = (hsl: ColorHSLNumberConfig): ColorRGBNumberConfig => {
   let r, g, b
   let l = hsl.l / 100
@@ -253,6 +264,9 @@ const hslToRgb = (hsl: ColorHSLNumberConfig): ColorRGBNumberConfig => {
   }
 }
 
+/**
+ * Convert HSL to HEX
+ */
 const hslToHex = (hsl: ColorHSLNumberConfig): string => {
   const l = hsl.l / 100
   const s = hsl.s
