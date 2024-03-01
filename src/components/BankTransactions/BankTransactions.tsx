@@ -64,9 +64,7 @@ export const BankTransactions = ({
         ? DisplayState.categorized
         : DisplayState.review,
     )
-  const [openRows, setOpenRows] = useState<Record<string, boolean>>({})
-  const toggleOpen = (id: string) =>
-    setOpenRows({ ...openRows, [id]: !openRows[id] })
+
   const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
 
   const headerRef = useElementSize((_el, _en, size) => {
@@ -79,6 +77,8 @@ export const BankTransactions = ({
       setShiftStickyHeader(0)
     }
   })
+
+  console.log('rerender')
 
   const editable = display === DisplayState.review
   return (
@@ -137,8 +137,6 @@ export const BankTransactions = ({
                 key={bankTransaction.id}
                 dateFormat={dateFormat}
                 bankTransaction={bankTransaction}
-                isOpen={openRows[bankTransaction.id]}
-                toggleOpen={toggleOpen}
                 editable={editable}
               />
             ))}
@@ -156,8 +154,6 @@ export const BankTransactions = ({
               key={bankTransaction.id}
               dateFormat={dateFormat}
               bankTransaction={bankTransaction}
-              isOpen={openRows[bankTransaction.id]}
-              toggleOpen={toggleOpen}
               editable={editable}
             />
           ))}

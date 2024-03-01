@@ -15,8 +15,6 @@ import { parseISO, format as formatTime } from 'date-fns'
 type Props = {
   dateFormat: string
   bankTransaction: BankTransaction
-  isOpen: boolean
-  toggleOpen: (id: string) => void
   editable: boolean
 }
 
@@ -26,8 +24,6 @@ const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
 export const BankTransactionListItem = ({
   dateFormat,
   bankTransaction,
-  isOpen,
-  toggleOpen,
   editable,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
@@ -37,12 +33,16 @@ export const BankTransactionListItem = ({
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )
+  console.log('rerender inner 2')
+
+  const [open, setOpen] = useState(false)
+  const toggleOpen = () => setOpen(!open)
 
   const save = () => {
     // Save using form from expanded row when row is open:
-    if (isOpen && expandedRowRef?.current) {
+    if (open && expandedRowRef?.current) {
       expandedRowRef?.current?.save()
-      toggleOpen(bankTransaction.id)
+      setOpen(false)
       return
     }
 
@@ -69,13 +69,13 @@ export const BankTransactionListItem = ({
   }
 
   const className = 'Layer__bank-transaction-list-item'
-  const openClassName = isOpen ? `${className}--expanded` : ''
+  const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
     bankTransaction.recently_categorized
       ? 'Layer__bank-transaction-row--removing'
       : '',
-    isOpen ? openClassName : '',
+    open ? openClassName : '',
   )
 
   return (
@@ -102,12 +102,12 @@ export const BankTransactionListItem = ({
           {formatMoney(bankTransaction.amount)}
         </span>
         <div
-          onClick={() => toggleOpen(bankTransaction.id)}
+          onClick={toggleOpen}
           className='Layer__bank-transaction-row__expand-button'
         >
           <ChevronDown
             className={`Layer__chevron ${
-              isOpen ? 'Layer__chevron__up' : 'Layer__chevron__down'
+              open ? 'Layer__chevron__up' : 'Layer__chevron__down'
             }`}
           />
         </div>
@@ -116,8 +116,8 @@ export const BankTransactionListItem = ({
         <ExpandedBankTransactionRow
           ref={expandedRowRef}
           bankTransaction={bankTransaction}
-          close={() => toggleOpen(bankTransaction.id)}
-          isOpen={isOpen}
+          close={toggleOpen}
+          isOpen={open}
           asListItem={true}
           submitBtnText={editable ? 'Approve' : 'Save'}
         />

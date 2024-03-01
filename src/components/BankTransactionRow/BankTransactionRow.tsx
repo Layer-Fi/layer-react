@@ -29,8 +29,6 @@ import { parseISO, format as formatTime } from 'date-fns'
 type Props = {
   dateFormat: string
   bankTransaction: BankTransaction
-  isOpen: boolean
-  toggleOpen: (id: string) => void
   editable: boolean
 }
 
@@ -58,8 +56,6 @@ export const getDefaultSelectedCategory = (
 export const BankTransactionRow = ({
   dateFormat,
   bankTransaction,
-  isOpen,
-  toggleOpen,
   editable,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
@@ -69,12 +65,15 @@ export const BankTransactionRow = ({
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )
+  const [open, setOpen] = useState(false)
+  const toggleOpen = () => setOpen(!open)
+  console.log('rerender inner 1')
 
   const save = () => {
     // Save using form from expanded row when row is open:
-    if (isOpen && expandedRowRef?.current) {
+    if (open && expandedRowRef?.current) {
       expandedRowRef?.current?.save()
-      toggleOpen(bankTransaction.id)
+      setOpen(false)
       return
     }
 
@@ -101,13 +100,13 @@ export const BankTransactionRow = ({
   }
 
   const className = 'Layer__bank-transaction-row'
-  const openClassName = isOpen ? `${className}--expanded` : ''
+  const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
     bankTransaction.recently_categorized
       ? 'Layer__bank-transaction-row--removing'
       : '',
-    isOpen ? openClassName : '',
+    open ? openClassName : '',
   )
 
   return (
@@ -165,13 +164,13 @@ export const BankTransactionRow = ({
             'Layer__table-cell',
             'Layer__table-cell__category-col',
             `${className}__actions-cell`,
-            `${className}__actions-cell--${isOpen ? 'open' : 'close'}`,
+            `${className}__actions-cell--${open ? 'open' : 'close'}`,
           )}
         >
           <span
             className={`${className}__actions-container Layer__table-cell-content`}
           >
-            {editable && !isOpen ? (
+            {editable && !open ? (
               <CategorySelect
                 bankTransaction={bankTransaction}
                 name={`category-${bankTransaction.id}`}
@@ -180,7 +179,7 @@ export const BankTransactionRow = ({
                 disabled={bankTransaction.processing}
               />
             ) : null}
-            {!editable && !isOpen ? (
+            {!editable && !open ? (
               <Text as='span' className={`${className}__category-text`}>
                 {bankTransaction.categorization_status ===
                   CategorizationStatus.SPLIT && (
@@ -230,7 +229,7 @@ export const BankTransactionRow = ({
                   )}
               </Text>
             ) : null}
-            {editable || isOpen ? (
+            {editable || open ? (
               <SubmitButton
                 onClick={() => {
                   if (!bankTransaction.processing) {
@@ -240,18 +239,18 @@ export const BankTransactionRow = ({
                 className='Layer__bank-transaction__submit-btn'
                 processing={bankTransaction.processing}
                 error={bankTransaction.error}
-                active={isOpen}
+                active={open}
               >
                 {editable ? 'Approve' : 'Update'}
               </SubmitButton>
             ) : null}
             <div
-              onClick={() => toggleOpen(bankTransaction.id)}
+              onClick={toggleOpen}
               className='Layer__bank-transaction-row__expand-button'
             >
               <ChevronDown
                 className={`Layer__chevron ${
-                  isOpen ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                  open ? 'Layer__chevron__up' : 'Layer__chevron__down'
                 }`}
               />
             </div>
@@ -263,8 +262,8 @@ export const BankTransactionRow = ({
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}
-            close={() => toggleOpen(bankTransaction.id)}
-            isOpen={isOpen}
+            close={toggleOpen}
+            isOpen={open}
           />
         </td>
       </tr>
