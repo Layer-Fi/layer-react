@@ -6,12 +6,25 @@
   padding: var(--spacing-2xl);
 }
 
+.Layer__bank-transaction-row {
+  transition: top var(--transition-speed) ease-out;
+  top: 1px;
+
+  &.Layer__bank-transaction-row--removing {
+    top: 0;
+  }
+}
+
 .Layer__bank-transaction-row .Layer__table-cell {
   border-top: 1px solid var(--border-color);
 }
 
 .Layer__bank-transaction-row:first-child .Layer__table-cell  {
   border-top-width: 0px;
+}
+
+.Layer__bank-transactions__table  {
+  border-bottom: 1px solid var(--border-color);
 }
 
 .Layer__bank-transactions__table .Layer__table-header {
@@ -248,7 +261,6 @@
 }
 
 .Layer__bank-transactions__list {
-  // display: none;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -411,6 +423,12 @@
   td {
     vertical-align: top;
   }
+}
+
+.Layer__bank-transactions__pagination {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-md) var(--spacing-lg);
 }
 
 @container (max-width: 1000px) and (min-width: 801px) {

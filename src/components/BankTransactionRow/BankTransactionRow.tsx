@@ -261,7 +261,6 @@ export const BankTransactionRow = ({
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}
-            close={toggleOpen}
             isOpen={open}
           />
         </td>

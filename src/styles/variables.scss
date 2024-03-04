@@ -33,6 +33,8 @@
 
   --max-component-width: 1408px;
 
+  --base-transparent-6: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.06);
+
 
   // 2. BASE CUSTOMIZATION
   --color-primary: var(--color-dark);
@@ -56,11 +58,13 @@
   --text-heading-sm: 16px;
   --font-weight-normal: 460;
   --font-weight-bold: 580;
+  --spacing-4xs: 2px;
   --spacing-3xs: 4px;
   --spacing-2xs: 6px;
   --spacing-xs: 8px;
   --spacing-sm: 12px;
   --spacing-md: 16px;
+  --spacing-lg: 24px;
   --spacing-xl: 32px;
   --spacing-2xl: 36px;
   --spacing-5xl: 52px;
