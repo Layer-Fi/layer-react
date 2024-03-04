@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
 import { BankTransaction, CategorizationStatus } from '../../types'
@@ -7,6 +7,7 @@ import { BankTransactionRow } from '../BankTransactionRow'
 import { Container, Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
 import { Loader } from '../Loader'
+import { Pagination } from '../Pagination'
 import { Toggle } from '../Toggle'
 import { Heading } from '../Typography'
 
@@ -32,6 +33,7 @@ const ReviewCategories = [
 
 export interface BankTransactionsProps {
   asWidget?: boolean
+  pageSize?: number
 }
 
 const filterVisibility =
@@ -51,11 +53,21 @@ const filterVisibility =
 
 export const BankTransactions = ({
   asWidget = false,
+  pageSize = 15,
 }: BankTransactionsProps) => {
   const [display, setDisplay] = useState<DisplayState>(DisplayState.review)
+  const [currentPage, setCurrentPage] = useState(1)
   const { data, isLoading, error, isValidating, refetch } =
     useBankTransactions()
-  const bankTransactions = data?.filter(filterVisibility(display))
+
+  const bankTransactionsByFilter = data?.filter(filterVisibility(display))
+
+  const bankTransactions = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * pageSize
+    const lastPageIndex = firstPageIndex + pageSize
+    return bankTransactionsByFilter?.slice(firstPageIndex, lastPageIndex)
+  }, [currentPage, bankTransactionsByFilter])
+
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) =>
@@ -64,12 +76,11 @@ export const BankTransactions = ({
         ? DisplayState.categorized
         : DisplayState.review,
     )
-  const [openRows, setOpenRows] = useState<Record<string, boolean>>({})
-  const toggleOpen = (id: string) =>
-    setOpenRows({ ...openRows, [id]: !openRows[id] })
-  const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
 
-  const headerRef = useElementSize((_el, _en, size) => {
+  const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
+  const [listView, setListView] = useState(false)
+
+  const containerRef = useElementSize<HTMLDivElement>((_el, _en, size) => {
     if (size?.height && size?.height >= 90) {
       const newShift = -Math.floor(size.height / 2) + 6
       if (newShift !== shiftStickyHeader) {
@@ -78,13 +89,18 @@ export const BankTransactions = ({
     } else if (size?.height > 0 && shiftStickyHeader !== 0) {
       setShiftStickyHeader(0)
     }
+
+    if (size.width > 700 && listView) {
+      setListView(false)
+    } else if (size.width <= 700 && !listView) {
+      setListView(true)
+    }
   })
 
   const editable = display === DisplayState.review
   return (
-    <Container name={COMPONENT_NAME} asWidget={asWidget}>
+    <Container name={COMPONENT_NAME} asWidget={asWidget} ref={containerRef}>
       <Header
-        ref={headerRef}
         className='Layer__bank-transactions__header'
         style={{ top: shiftStickyHeader }}
       >
@@ -101,68 +117,69 @@ export const BankTransactions = ({
           onChange={onCategorizationDisplayChange}
         />
       </Header>
-      <table
-        width='100%'
-        className='Layer__table Layer__bank-transactions__table'
-      >
-        <thead>
-          <tr>
-            <th className='Layer__table-header Layer__bank-transactions__date-col'>
-              Date
-            </th>
-            <th className='Layer__table-header Layer__bank-transactions__tx-col'>
-              Transaction
-            </th>
-            <th className='Layer__table-header Layer__bank-transactions__account-col'>
-              Account
-            </th>
-            <th className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'>
-              Amount
-            </th>
-            {editable ? (
-              <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
-                Categorize
+      {!listView && (
+        <table
+          width='100%'
+          className='Layer__table Layer__bank-transactions__table'
+        >
+          <thead>
+            <tr>
+              <th className='Layer__table-header Layer__bank-transactions__date-col'>
+                Date
               </th>
-            ) : (
-              <th className='Layer__table-header Layer__table-cell__category-col'>
-                Category
+              <th className='Layer__table-header Layer__bank-transactions__tx-col'>
+                Transaction
               </th>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {!isLoading &&
-            bankTransactions?.map((bankTransaction: BankTransaction) => (
-              <BankTransactionRow
-                key={bankTransaction.id}
-                dateFormat={dateFormat}
-                bankTransaction={bankTransaction}
-                isOpen={openRows[bankTransaction.id]}
-                toggleOpen={toggleOpen}
-                editable={editable}
-              />
-            ))}
-        </tbody>
-      </table>
+              <th className='Layer__table-header Layer__bank-transactions__account-col'>
+                Account
+              </th>
+              <th className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'>
+                Amount
+              </th>
+              {editable ? (
+                <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
+                  Categorize
+                </th>
+              ) : (
+                <th className='Layer__table-header Layer__table-cell__category-col'>
+                  Category
+                </th>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {!isLoading &&
+              bankTransactions?.map((bankTransaction: BankTransaction) => (
+                <BankTransactionRow
+                  key={bankTransaction.id}
+                  dateFormat={dateFormat}
+                  bankTransaction={bankTransaction}
+                  editable={editable}
+                />
+              ))}
+          </tbody>
+        </table>
+      )}
+
       {isLoading && !bankTransactions ? (
         <div className='Layer__bank-transactions__loader-container'>
           <Loader />
         </div>
       ) : null}
-      {!isLoading && (
+
+      {!isLoading && listView ? (
         <ul className='Layer__bank-transactions__list'>
           {bankTransactions?.map((bankTransaction: BankTransaction) => (
             <BankTransactionListItem
               key={bankTransaction.id}
               dateFormat={dateFormat}
               bankTransaction={bankTransaction}
-              isOpen={openRows[bankTransaction.id]}
-              toggleOpen={toggleOpen}
               editable={editable}
             />
           ))}
         </ul>
-      )}
+      ) : null}
+
       {!isLoading &&
       !error &&
       (bankTransactions === undefined ||
@@ -177,6 +194,7 @@ export const BankTransactions = ({
           />
         </div>
       ) : null}
+
       {!isLoading && error ? (
         <div className='Layer__table-state-container'>
           <DataState
@@ -188,6 +206,15 @@ export const BankTransactions = ({
           />
         </div>
       ) : null}
+
+      <div className='Layer__bank-transactions__pagination'>
+        <Pagination
+          currentPage={currentPage}
+          totalCount={bankTransactionsByFilter?.length || 0}
+          pageSize={pageSize}
+          onPageChange={page => setCurrentPage(page)}
+        />
+      </div>
     </Container>
   )
 }
