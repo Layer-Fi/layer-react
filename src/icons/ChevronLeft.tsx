@@ -1,30 +1,20 @@
 import * as React from 'react'
-import { SVGProps } from 'react'
+import { IconSvgProps } from './types'
 
-type Props = {
-  strokeColor?: string
-  size?: number
-}
-
-const ChevronLeft = ({
-  strokeColor,
-  size,
-  ...props
-}: Props & SVGProps<SVGSVGElement>) => (
+const ChevronLeft = ({ size = 18, ...props }: IconSvgProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
-    width={size || 24}
-    height={size || 24}
+    width='18'
+    height='18'
+    viewBox='0 0 18 18'
     fill='none'
-    viewBox='0 0 24 24'
     {...props}
   >
     <path
-      stroke={strokeColor ?? '#000'}
+      d='M11.25 13.5L6.75 9L11.25 4.5'
+      stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'
-      strokeWidth={2}
-      d='m15 18-6-6 6-6'
     />
   </svg>
 )

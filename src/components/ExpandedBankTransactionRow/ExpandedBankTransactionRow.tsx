@@ -37,7 +37,6 @@ const dateFormat = 'LLL d, yyyy'
 
 type Props = {
   bankTransaction: BankTransaction
-  close?: () => void
   isOpen?: boolean
   asListItem?: boolean
   submitBtnText?: string
@@ -106,6 +105,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [height, setHeight] = useState<string | number>(0)
     const [isOver, setOver] = useState(false)
     const bodyRef = useRef<HTMLSpanElement>(null)
+    const [isLoaded, setIsLoaded] = useState(false)
 
     const defaultCategory =
       bankTransaction.category ||
@@ -265,10 +265,12 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     )
 
     useEffect(() => {
-      if (isOpen) {
-        setHeight(getDivHeight())
-        setOver(false)
+      if (!isLoaded) {
+        return
       }
+
+      setHeight(getDivHeight())
+      setOver(false)
 
       if (!isOpen) {
         requestAnimationFrame(() => {
@@ -276,6 +278,11 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         })
       }
     }, [getDivHeight, isOpen])
+
+    useEffect(() => {
+      setIsLoaded(true)
+      setOver(true)
+    }, [])
 
     const className = 'Layer__expanded-bank-transaction-row'
     const shouldHide = !isOpen && isOver

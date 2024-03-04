@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
 import { BankTransaction, CategorizationStatus } from '../../types'
@@ -7,6 +7,7 @@ import { BankTransactionRow } from '../BankTransactionRow'
 import { Container, Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
 import { Loader } from '../Loader'
+import { Pagination } from '../Pagination'
 import { Toggle } from '../Toggle'
 import { Heading } from '../Typography'
 
@@ -32,6 +33,7 @@ const ReviewCategories = [
 
 export interface BankTransactionsProps {
   asWidget?: boolean
+  pageSize?: number
 }
 
 const filterVisibility =
@@ -51,11 +53,21 @@ const filterVisibility =
 
 export const BankTransactions = ({
   asWidget = false,
+  pageSize = 15,
 }: BankTransactionsProps) => {
   const [display, setDisplay] = useState<DisplayState>(DisplayState.review)
+  const [currentPage, setCurrentPage] = useState(1)
   const { data, isLoading, error, isValidating, refetch } =
     useBankTransactions()
-  const bankTransactions = data?.filter(filterVisibility(display))
+
+  const bankTransactionsByFilter = data?.filter(filterVisibility(display))
+
+  const bankTransactions = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * pageSize
+    const lastPageIndex = firstPageIndex + pageSize
+    return bankTransactionsByFilter?.slice(firstPageIndex, lastPageIndex)
+  }, [currentPage, bankTransactionsByFilter])
+
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) =>
@@ -148,11 +160,13 @@ export const BankTransactions = ({
           </tbody>
         </table>
       )}
+
       {isLoading && !bankTransactions ? (
         <div className='Layer__bank-transactions__loader-container'>
           <Loader />
         </div>
       ) : null}
+
       {!isLoading && listView ? (
         <ul className='Layer__bank-transactions__list'>
           {bankTransactions?.map((bankTransaction: BankTransaction) => (
@@ -165,6 +179,7 @@ export const BankTransactions = ({
           ))}
         </ul>
       ) : null}
+
       {!isLoading &&
       !error &&
       (bankTransactions === undefined ||
@@ -179,6 +194,7 @@ export const BankTransactions = ({
           />
         </div>
       ) : null}
+
       {!isLoading && error ? (
         <div className='Layer__table-state-container'>
           <DataState
@@ -190,6 +206,15 @@ export const BankTransactions = ({
           />
         </div>
       ) : null}
+
+      <div className='Layer__bank-transactions__pagination'>
+        <Pagination
+          currentPage={currentPage}
+          totalCount={bankTransactionsByFilter?.length || 0}
+          pageSize={pageSize}
+          onPageChange={page => setCurrentPage(page)}
+        />
+      </div>
     </Container>
   )
 }
