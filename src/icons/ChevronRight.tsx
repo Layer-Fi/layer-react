@@ -18,5 +18,4 @@ const ChavronRight = ({ size = 18, ...props }: IconSvgProps) => (
     />
   </svg>
 )
-
 export default ChavronRight

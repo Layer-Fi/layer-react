@@ -1,6 +1,7 @@
 import React from 'react'
 import { usePagination, DOTS } from '../../hooks/usePagination'
 import ChevronLeft from '../../icons/ChevronLeft'
+import ChevronRight from '../../icons/ChevronRight'
 import classnames from 'classnames'
 
 export interface PaginationProps {
@@ -81,7 +82,7 @@ export const Pagination = ({
         )}
         onClick={() => onPageChange(currentPage + 1)}
       >
-        <ChevronLeft size={12} />
+        <ChevronRight size={12} />
       </li>
     </ul>
   )
