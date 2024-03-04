@@ -1,4 +1,12 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react'
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  TransitionEvent,
+} from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import FolderPlus from '../../icons/FolderPlus'
 import Link from '../../icons/Link'
@@ -95,6 +103,9 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
       isAlreadyMatched(bankTransaction),
     )
+    const [height, setHeight] = useState<string | number>(0)
+    const [isOver, setOver] = useState(false)
+    const bodyRef = useRef<HTMLSpanElement>(null)
 
     const defaultCategory =
       bankTransaction.category ||
@@ -233,206 +244,249 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       matchBankTransaction(bankTransaction.id, foundMatch.id)
     }
 
+    const getDivHeight = useCallback(() => {
+      const { height } = bodyRef.current
+        ? bodyRef.current.getBoundingClientRect()
+        : { height: undefined }
+
+      return height || 0
+    }, [])
+
+    const handleTransitionEnd = useCallback(
+      (e: TransitionEvent<HTMLSpanElement>) => {
+        if (e.propertyName === 'height') {
+          setHeight(isOpen ? 'auto' : 0)
+          if (!isOpen) {
+            setOver(true)
+          }
+        }
+      },
+      [isOpen],
+    )
+
+    useEffect(() => {
+      if (isOpen) {
+        setHeight(getDivHeight())
+        setOver(false)
+      }
+
+      if (!isOpen) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => setHeight(0))
+        })
+      }
+    }, [getDivHeight, isOpen])
+
     const className = 'Layer__expanded-bank-transaction-row'
+    const shouldHide = !isOpen && isOver
+
     return (
       <span
         className={`${className} ${className}--${
           isOpen ? 'expanded' : 'collapsed'
         }`}
+        style={{ height }}
+        onTransitionEnd={handleTransitionEnd}
       >
-        <span className={`${className}__wrapper`}>
-          <div className={`${className}__content-toggle`}>
-            <Toggle
-              name={`purpose-${bankTransaction.id}${asListItem ? '-li' : ''}`}
-              size={ToggleSize.small}
-              options={[
-                {
-                  value: 'categorize',
-                  label: 'Categorize',
-                  leftIcon: <FolderPlus size={15} />,
-                },
-                {
-                  value: 'match',
-                  label: 'Match',
-                  leftIcon: <RefreshCcw size={15} />,
-                  disabled: !hasMatch(bankTransaction),
-                },
-              ]}
-              selected={purpose}
-              onChange={onChangePurpose}
-            />
-          </div>
-          <div
-            className={`${className}__content`}
-            id={`expanded-${bankTransaction.id}`}
-          >
-            <div className={`${className}__content-panels`}>
-              <div
-                className={classNames(
-                  `${className}__match`,
-                  `${className}__content-panel`,
-                  purpose === Purpose.match
-                    ? `${className}__content-panel--active`
-                    : '',
-                )}
-              >
-                <div className={`${className}__content-panel-container`}>
-                  <table className={`Layer__table ${className}__match-table`}>
-                    <thead>
-                      <tr>
-                        <th className='Layer__table-header'>Date</th>
-                        <th className='Layer__table-header'>Description</th>
-                        <th
-                          className={`Layer__table-header ${className}__match-table__amount`}
-                        >
-                          Amount
-                        </th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {bankTransaction.suggested_matches?.map((match, idx) => {
-                        return (
-                          <tr
-                            key={idx}
-                            className={classNames(
-                              `${className}__match-row`,
-                              match.id === selectedMatchId
-                                ? `${className}__match-row--selected`
-                                : '',
-                            )}
-                            onClick={() => {
-                              if (selectedMatchId === match.id) {
-                                setSelectedMatchId(undefined)
-                                return
-                              }
-                              setSelectedMatchId(match.id)
-                            }}
-                          >
-                            <td className='Layer__table-cell Layer__nowrap'>
-                              {formatTime(
-                                parseISO(match.details.date),
-                                dateFormat,
-                              )}
-                            </td>
-                            <td className='Layer__table-cell'>
-                              {match.details.description}
-                            </td>
-                            <td
-                              className={`Layer__table-cell ${className}__match-table__amount`}
-                            >
-                              ${formatMoney(match.details.amount)}
-                            </td>
-                            <td className={`${className}__match-table__status`}>
-                              {match.details.id ===
-                                bankTransaction.match?.details.id && (
-                                <MatchBadge
-                                  classNamePrefix={className}
-                                  bankTransaction={bankTransaction}
-                                  dateFormat={dateFormat}
-                                  text='Matched'
-                                />
-                              )}
-                            </td>
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div
-                className={classNames(
-                  `${className}__splits`,
-                  `${className}__content-panel`,
-                  purpose === Purpose.categorize
-                    ? `${className}__content-panel--active`
-                    : '',
-                )}
-              >
-                <div className={`${className}__content-panel-container`}>
-                  <div className={`${className}__splits-inputs`}>
-                    {rowState.splits.map((split, index) => (
-                      <div
-                        className={`${className}__table-cell--split-entry`}
-                        key={`split-${index}`}
-                      >
-                        <Input
-                          type='text'
-                          name={`split-${index}${asListItem ? '-li' : ''}`}
-                          disabled={index === 0}
-                          onChange={updateAmounts(index)}
-                          value={split.inputValue}
-                          onBlur={onBlur}
-                          className={`${className}__split-amount${
-                            split.amount < 0 ? '--negative' : ''
-                          }`}
-                        />
-                        <CategoryMenu
-                          bankTransaction={bankTransaction}
-                          name={`category-${index}${asListItem ? '-li' : ''}`}
-                          value={split.category}
-                          onChange={value => changeCategory(index, value)}
-                          className='Layer__category-menu--full'
-                        />
-                        {index > 0 && (
-                          <Button
-                            onClick={() => removeSplit(index)}
-                            leftIcon={<Link size={14} />}
-                            variant={ButtonVariant.secondary}
-                          >
-                            Merge
-                          </Button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <div className={`${className}__splits-buttons`}>
-                    <Button
-                      onClick={addSplit}
-                      leftIcon={<Scissors size={14} />}
-                      variant={ButtonVariant.secondary}
-                      disabled={rowState.splits.length > 5}
-                    >
-                      Split
-                    </Button>
-                  </div>
-                </div>
-              </div>
+        {shouldHide ? null : (
+          <span className={`${className}__wrapper`} ref={bodyRef}>
+            <div className={`${className}__content-toggle`}>
+              <Toggle
+                name={`purpose-${bankTransaction.id}${asListItem ? '-li' : ''}`}
+                size={ToggleSize.small}
+                options={[
+                  {
+                    value: 'categorize',
+                    label: 'Categorize',
+                    leftIcon: <FolderPlus size={15} />,
+                  },
+                  {
+                    value: 'match',
+                    label: 'Match',
+                    leftIcon: <RefreshCcw size={15} />,
+                    disabled: !hasMatch(bankTransaction),
+                  },
+                ]}
+                selected={purpose}
+                onChange={onChangePurpose}
+              />
             </div>
-
-            <InputGroup
-              className={`${className}__description`}
-              name='description'
-              label='Description'
+            <div
+              className={`${className}__content`}
+              id={`expanded-${bankTransaction.id}`}
             >
-              <Textarea name='description' placeholder='Enter description' />
-            </InputGroup>
-
-            <div className={`${className}__file-upload`}>
-              <FileInput text='Upload receipt' />
-            </div>
-
-            {asListItem ? (
-              <div className={`${className}__submit-btn`}>
-                <SubmitButton
-                  onClick={() => {
-                    if (!bankTransaction.processing) {
-                      save()
-                    }
-                  }}
-                  className='Layer__bank-transaction__submit-btn'
-                  processing={bankTransaction.processing}
-                  error={bankTransaction.error}
-                  active={true}
+              <div className={`${className}__content-panels`}>
+                <div
+                  className={classNames(
+                    `${className}__match`,
+                    `${className}__content-panel`,
+                    purpose === Purpose.match
+                      ? `${className}__content-panel--active`
+                      : '',
+                  )}
                 >
-                  {submitBtnText}
-                </SubmitButton>
+                  <div className={`${className}__content-panel-container`}>
+                    <table className={`Layer__table ${className}__match-table`}>
+                      <thead>
+                        <tr>
+                          <th className='Layer__table-header'>Date</th>
+                          <th className='Layer__table-header'>Description</th>
+                          <th
+                            className={`Layer__table-header ${className}__match-table__amount`}
+                          >
+                            Amount
+                          </th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {bankTransaction.suggested_matches?.map(
+                          (match, idx) => {
+                            return (
+                              <tr
+                                key={idx}
+                                className={classNames(
+                                  `${className}__match-row`,
+                                  match.id === selectedMatchId
+                                    ? `${className}__match-row--selected`
+                                    : '',
+                                )}
+                                onClick={() => {
+                                  if (selectedMatchId === match.id) {
+                                    setSelectedMatchId(undefined)
+                                    return
+                                  }
+                                  setSelectedMatchId(match.id)
+                                }}
+                              >
+                                <td className='Layer__table-cell Layer__nowrap'>
+                                  {formatTime(
+                                    parseISO(match.details.date),
+                                    dateFormat,
+                                  )}
+                                </td>
+                                <td className='Layer__table-cell'>
+                                  {match.details.description}
+                                </td>
+                                <td
+                                  className={`Layer__table-cell ${className}__match-table__amount`}
+                                >
+                                  ${formatMoney(match.details.amount)}
+                                </td>
+                                <td
+                                  className={`${className}__match-table__status`}
+                                >
+                                  {match.details.id ===
+                                    bankTransaction.match?.details.id && (
+                                    <MatchBadge
+                                      classNamePrefix={className}
+                                      bankTransaction={bankTransaction}
+                                      dateFormat={dateFormat}
+                                      text='Matched'
+                                    />
+                                  )}
+                                </td>
+                              </tr>
+                            )
+                          },
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div
+                  className={classNames(
+                    `${className}__splits`,
+                    `${className}__content-panel`,
+                    purpose === Purpose.categorize
+                      ? `${className}__content-panel--active`
+                      : '',
+                  )}
+                >
+                  <div className={`${className}__content-panel-container`}>
+                    <div className={`${className}__splits-inputs`}>
+                      {rowState.splits.map((split, index) => (
+                        <div
+                          className={`${className}__table-cell--split-entry`}
+                          key={`split-${index}`}
+                        >
+                          <Input
+                            type='text'
+                            name={`split-${index}${asListItem ? '-li' : ''}`}
+                            disabled={index === 0}
+                            onChange={updateAmounts(index)}
+                            value={split.inputValue}
+                            onBlur={onBlur}
+                            className={`${className}__split-amount${
+                              split.amount < 0 ? '--negative' : ''
+                            }`}
+                          />
+                          <CategoryMenu
+                            bankTransaction={bankTransaction}
+                            name={`category-${index}${asListItem ? '-li' : ''}`}
+                            value={split.category}
+                            onChange={value => changeCategory(index, value)}
+                            className='Layer__category-menu--full'
+                          />
+                          {index > 0 && (
+                            <Button
+                              onClick={() => removeSplit(index)}
+                              leftIcon={<Link size={14} />}
+                              variant={ButtonVariant.secondary}
+                            >
+                              Merge
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <div className={`${className}__splits-buttons`}>
+                      <Button
+                        onClick={addSplit}
+                        leftIcon={<Scissors size={14} />}
+                        variant={ButtonVariant.secondary}
+                        disabled={rowState.splits.length > 5}
+                      >
+                        Split
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            ) : null}
-          </div>
-        </span>
+
+              <InputGroup
+                className={`${className}__description`}
+                name='description'
+                label='Description'
+              >
+                <Textarea name='description' placeholder='Enter description' />
+              </InputGroup>
+
+              <div className={`${className}__file-upload`}>
+                <FileInput text='Upload receipt' />
+              </div>
+
+              {asListItem ? (
+                <div className={`${className}__submit-btn`}>
+                  <SubmitButton
+                    onClick={() => {
+                      if (!bankTransaction.processing) {
+                        save()
+                      }
+                    }}
+                    className='Layer__bank-transaction__submit-btn'
+                    processing={bankTransaction.processing}
+                    error={bankTransaction.error}
+                    active={true}
+                  >
+                    {submitBtnText}
+                  </SubmitButton>
+                </div>
+              ) : null}
+            </div>
+          </span>
+        )}
       </span>
     )
   },

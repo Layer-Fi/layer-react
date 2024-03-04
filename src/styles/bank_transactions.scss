@@ -37,16 +37,16 @@
 
 .Layer__expanded-bank-transaction-row {
   display: block;
-  background-color: transparent;
-  transition: background-color var(--transition-speed) ease-out;
+  overflow: hidden;
+  background-color:  var(--bg-element-focus);
+  transition: background-color var(--transition-speed) ease-in-out, height var(--transition-speed) ease-in-out;
 }
 
 .Layer__bank-transaction-row:hover,
 .Layer__bank-transaction-row:hover .Layer__table-cell,
-.Layer__bank-transaction-list-item:hover,
-.Layer__expanded-bank-transaction-row.Layer__expanded-bank-transaction-row--expanded {
+.Layer__bank-transaction-list-item:hover {
   background-color: var(--bg-element-focus);
-  transition: background-color var(--transition-speed) ease-out;
+  transition: background-color var(--transition-speed) ease-in-out;
 }
 
 .Layer__bank-transaction-row:hover .Layer__bank-transaction__submit-btn:not([disabled]) {
@@ -72,12 +72,7 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   overflow: hidden;
-  max-height: 0px;
-  transition: max-height var(--transition-speed) ease-out;
-}
-
-.Layer__expanded-bank-transaction-row--expanded .Layer__expanded-bank-transaction-row__wrapper {
-  max-height: 960px;
+  transition: height var(--transition-speed) ease-in-out;
 }
 
 .Layer__bank-transaction-list-item__category-text,
@@ -253,7 +248,7 @@
 }
 
 .Layer__bank-transactions__list {
-  display: none;
+  // display: none;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -419,10 +414,6 @@
 }
 
 @container (max-width: 1000px) and (min-width: 801px) {
-  .Layer__table.Layer__table.Layer__bank-transactions__table {
-    display: block;
-  }
-
   .Layer__table.Layer__bank-transactions__table .Layer__table-cell__amount-col {
     border-left: 1px solid var(--border-color);
     
@@ -446,14 +437,6 @@
     position: sticky;
     top: 0px;
     z-index: 2;
-  }
-
-  .Layer__table.Layer__bank-transactions__table {
-    display: none;
-  }
-
-  .Layer__bank-transactions__list {
-    display: block;
   }
 }
 

@@ -66,8 +66,9 @@ export const BankTransactions = ({
     )
 
   const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
+  const [listView, setListView] = useState(false)
 
-  const headerRef = useElementSize((_el, _en, size) => {
+  const containerRef = useElementSize<HTMLDivElement>((_el, _en, size) => {
     if (size?.height && size?.height >= 90) {
       const newShift = -Math.floor(size.height / 2) + 6
       if (newShift !== shiftStickyHeader) {
@@ -76,15 +77,18 @@ export const BankTransactions = ({
     } else if (size?.height > 0 && shiftStickyHeader !== 0) {
       setShiftStickyHeader(0)
     }
-  })
 
-  console.log('rerender')
+    if (size.width > 700 && listView) {
+      setListView(false)
+    } else if (size.width <= 700 && !listView) {
+      setListView(true)
+    }
+  })
 
   const editable = display === DisplayState.review
   return (
-    <Container name={COMPONENT_NAME} asWidget={asWidget}>
+    <Container name={COMPONENT_NAME} asWidget={asWidget} ref={containerRef}>
       <Header
-        ref={headerRef}
         className='Layer__bank-transactions__header'
         style={{ top: shiftStickyHeader }}
       >
@@ -101,53 +105,55 @@ export const BankTransactions = ({
           onChange={onCategorizationDisplayChange}
         />
       </Header>
-      <table
-        width='100%'
-        className='Layer__table Layer__bank-transactions__table'
-      >
-        <thead>
-          <tr>
-            <th className='Layer__table-header Layer__bank-transactions__date-col'>
-              Date
-            </th>
-            <th className='Layer__table-header Layer__bank-transactions__tx-col'>
-              Transaction
-            </th>
-            <th className='Layer__table-header Layer__bank-transactions__account-col'>
-              Account
-            </th>
-            <th className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'>
-              Amount
-            </th>
-            {editable ? (
-              <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
-                Categorize
+      {!listView && (
+        <table
+          width='100%'
+          className='Layer__table Layer__bank-transactions__table'
+        >
+          <thead>
+            <tr>
+              <th className='Layer__table-header Layer__bank-transactions__date-col'>
+                Date
               </th>
-            ) : (
-              <th className='Layer__table-header Layer__table-cell__category-col'>
-                Category
+              <th className='Layer__table-header Layer__bank-transactions__tx-col'>
+                Transaction
               </th>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {!isLoading &&
-            bankTransactions?.map((bankTransaction: BankTransaction) => (
-              <BankTransactionRow
-                key={bankTransaction.id}
-                dateFormat={dateFormat}
-                bankTransaction={bankTransaction}
-                editable={editable}
-              />
-            ))}
-        </tbody>
-      </table>
+              <th className='Layer__table-header Layer__bank-transactions__account-col'>
+                Account
+              </th>
+              <th className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'>
+                Amount
+              </th>
+              {editable ? (
+                <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
+                  Categorize
+                </th>
+              ) : (
+                <th className='Layer__table-header Layer__table-cell__category-col'>
+                  Category
+                </th>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {!isLoading &&
+              bankTransactions?.map((bankTransaction: BankTransaction) => (
+                <BankTransactionRow
+                  key={bankTransaction.id}
+                  dateFormat={dateFormat}
+                  bankTransaction={bankTransaction}
+                  editable={editable}
+                />
+              ))}
+          </tbody>
+        </table>
+      )}
       {isLoading && !bankTransactions ? (
         <div className='Layer__bank-transactions__loader-container'>
           <Loader />
         </div>
       ) : null}
-      {!isLoading && (
+      {!isLoading && listView ? (
         <ul className='Layer__bank-transactions__list'>
           {bankTransactions?.map((bankTransaction: BankTransaction) => (
             <BankTransactionListItem
@@ -158,7 +164,7 @@ export const BankTransactions = ({
             />
           ))}
         </ul>
-      )}
+      ) : null}
       {!isLoading &&
       !error &&
       (bankTransactions === undefined ||

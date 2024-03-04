@@ -67,7 +67,6 @@ export const BankTransactionRow = ({
   )
   const [open, setOpen] = useState(false)
   const toggleOpen = () => setOpen(!open)
-  console.log('rerender inner 1')
 
   const save = () => {
     // Save using form from expanded row when row is open:

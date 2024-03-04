@@ -33,7 +33,6 @@ export const BankTransactionListItem = ({
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )
-  console.log('rerender inner 2')
 
   const [open, setOpen] = useState(false)
   const toggleOpen = () => setOpen(!open)
