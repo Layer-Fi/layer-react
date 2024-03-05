@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import ChevronDown from '../../icons/ChevronDown'
 import Scissors from '../../icons/Scissors'
+import X from '../../icons/X'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import {
   BankTransaction,
@@ -11,7 +12,8 @@ import {
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
 import { Badge } from '../Badge'
-import { SubmitButton } from '../Button'
+import { SubmitButton, IconButton } from '../Button'
+import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect'
 import {
   mapCategoryToOption,
@@ -239,25 +241,28 @@ export const BankTransactionRow = ({
                 processing={bankTransaction.processing}
                 error={bankTransaction.error}
                 active={open}
+                action={editable ? SubmitAction.SAVE : SubmitAction.UPDATE}
               >
                 {editable ? 'Approve' : 'Update'}
               </SubmitButton>
             ) : null}
-            <div
+            <IconButton
               onClick={toggleOpen}
               className='Layer__bank-transaction-row__expand-button'
-            >
-              <ChevronDown
-                className={`Layer__chevron ${
-                  open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                }`}
-              />
-            </div>
+              active={open}
+              icon={
+                open ? (
+                  <X />
+                ) : (
+                  <ChevronDown className='Layer__chevron Layer__chevron__down' />
+                )
+              }
+            />
           </span>
         </td>
       </tr>
       <tr>
-        <td colSpan={5}>
+        <td colSpan={5} className='Layer__bank-transaction-row__expanded-td'>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}

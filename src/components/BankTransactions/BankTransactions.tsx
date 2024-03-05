@@ -70,12 +70,14 @@ export const BankTransactions = ({
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-  ) =>
+  ) => {
     setDisplay(
       event.target.value === DisplayState.categorized
         ? DisplayState.categorized
         : DisplayState.review,
     )
+    setCurrentPage(1)
+  }
 
   const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
   const [listView, setListView] = useState(false)

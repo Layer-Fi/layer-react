@@ -1,11 +1,16 @@
 .Layer__tooltip {
-  background: var(--color-base-1000);
-  color: var(--color-base-300);
-  padding: var(--spacing-2xs);
-  border-radius: var(--border-radius-2xs);
   box-sizing: border-box;
   width: max-content;
   max-width: calc(100vw - 10px);
+}
+
+.Layer__tooltip .Layer__tooltip-content {
+  background: var(--color-base-1000);
+  color: var(--color-base-300);
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  border-radius: var(--border-radius-2xs);
+  box-sizing: border-box;
+  font-size: var(--text-sm);
 }
 
 .Layer__tooltip-trigger {

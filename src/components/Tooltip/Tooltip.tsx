@@ -80,12 +80,14 @@ export const TooltipContent = forwardRef<
         ref={ref}
         className={className}
         style={{
-          ...context.styles,
           ...context.floatingStyles,
-          ...style,
         }}
         {...context.getFloatingProps(props)}
-      />
+      >
+        <div className='Layer__tooltip-content ' style={{ ...context.styles }}>
+          {props.children}
+        </div>
+      </div>
     </FloatingPortal>
   )
 })

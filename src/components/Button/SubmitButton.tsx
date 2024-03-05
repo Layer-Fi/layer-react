@@ -3,6 +3,7 @@ import AlertCircle from '../../icons/AlertCircle'
 import Check from '../../icons/Check'
 import CheckCircle from '../../icons/CheckCircle'
 import Loader from '../../icons/Loader'
+import Save from '../../icons/Save'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import { Button, ButtonVariant } from './Button'
 import classNames from 'classnames'
@@ -14,14 +15,22 @@ export interface SubmitButtonProps
   error?: boolean | string
   active?: boolean
   iconOnly?: boolean
+  action?: SubmitAction
+}
+
+export enum SubmitAction {
+  SAVE = 'save',
+  UPDATE = 'update',
 }
 
 const buildRightIcon = ({
   processing,
   error,
+  action,
 }: {
   processing?: boolean
   error?: boolean | string
+  action: SubmitAction
 }) => {
   if (processing) {
     return <Loader size={14} className='Layer__anim--rotating' />
@@ -35,6 +44,14 @@ const buildRightIcon = ({
         </TooltipTrigger>
         <TooltipContent className='Layer__tooltip'>{error}</TooltipContent>
       </Tooltip>
+    )
+  }
+
+  if (action === SubmitAction.UPDATE) {
+    return (
+      <span className='Layer__pt-2'>
+        <Save size={14} />
+      </span>
     )
   }
 
@@ -57,6 +74,7 @@ export const SubmitButton = ({
   disabled,
   error,
   children,
+  action = SubmitAction.SAVE,
   ...props
 }: SubmitButtonProps) => {
   const baseClassName = classNames(
@@ -70,7 +88,7 @@ export const SubmitButton = ({
       className={baseClassName}
       variant={ButtonVariant.primary}
       disabled={processing || disabled}
-      rightIcon={buildRightIcon({ processing, error })}
+      rightIcon={buildRightIcon({ processing, error, action })}
     >
       {children}
     </Button>

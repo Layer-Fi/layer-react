@@ -305,12 +305,10 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   {
                     value: 'categorize',
                     label: 'Categorize',
-                    leftIcon: <FolderPlus size={15} />,
                   },
                   {
                     value: 'match',
                     label: 'Match',
-                    leftIcon: <RefreshCcw size={15} />,
                     disabled: !hasMatch(bankTransaction),
                   },
                 ]}

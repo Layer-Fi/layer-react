@@ -92,7 +92,8 @@
     font-family: var(--font-family);
     font-size: var(--btn-font-size);
     cursor: pointer;
-    transition: color var(--transition-speed) ease-in-out;
+    transition: color var(--transition-speed) ease-in-out, background-color 150ms ease-in-out;
+    justify-content: center;
 
     &:hover {
       color: var(--text-color-primary);
@@ -106,7 +107,16 @@
   & input:disabled + span {
     cursor: not-allowed;
     color: var(--text-color-secondary);
- }
+  }
+
+  &:hover input + span {
+    background-color: var(--color-base-200);
+  }
+
+  &:hover input:disabled + span,
+  &:hover input:checked + span {
+    background-color: transparent;
+  }
 }
 
 .Layer__toggle.Layer__toggle--small .Layer__toggle-option {
@@ -117,7 +127,6 @@
 }
 
 .Layer__toggle__thumb {
-  background: red;
   position: absolute;
   width: 100px;
   left: 0;

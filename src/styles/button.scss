@@ -16,7 +16,6 @@
   .Layer__btn-icon {
     color: var(--btn-color-icon);
     background: var(--btn-bg-color-icon);
-    // padding: 10px var(--spacing-md);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -32,11 +31,22 @@
   }
 
   &:hover {
-    box-shadow: 0px 2px 4px 0px rgba(25, 25, 25, 0.06), 0px 4px 12px 0px var(--neutral-8, rgba(26, 26, 26, 0.08)), 0px 0px 0px 1px rgba(25, 25, 25, 0.06);
+    box-shadow: 0px 0px 0px 1px var(--color-base-300), 0px 1px 2px 0px var(--base-transparent-6, rgba(17, 17, 17, 0.06));
+  }
+
+  &:visited, &:active {
+    box-shadow: 0px 0px 0px 1px var(--color-base-800), 0px 0px 0px 3px var(--color-base-300);
   }
 
   &:disabled {
     box-shadow: none;
+    background-color: var(--color-base-200);
+    color: var(--color-base-500);
+
+    .Layer__btn-icon {
+      background-color: transparent;
+      color: var(--color-base-500);
+    }
   }
 }
 
@@ -96,5 +106,39 @@
   }
   .Layer__btn-icon--left {
     margin-right: 0;
+  }
+}
+
+.Layer__icon-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--color-base-500);
+  border-radius: var(--btn-border-radius);
+  border-width: 0px;
+  font-family: var(--font-family);
+  font-variation-settings: 'wght' var(--font-weight-normal);
+  font-variant-numeric: lining-nums proportional-nums;
+  font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
+  padding: 0;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 100ms ease-out;
+
+  &:hover {
+    background-color: var(--color-base-300);
+    color: var(--color-base-1000);
+  }
+
+  &.Layer__icon-btn--active {
+    background-color: var(--color-base-200);
+    color: var(--color-base-1000);
+
+    &:hover {
+      background-color: var(--color-base-300);
+    }
   }
 }

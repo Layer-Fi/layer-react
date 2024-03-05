@@ -38,7 +38,7 @@
 }
 
 .Layer__bank-transaction-row .Layer__table-cell-content {
-  min-height: 63px;
+  min-height: 64px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -60,6 +60,15 @@
 .Layer__bank-transaction-list-item:hover {
   background-color: var(--bg-element-focus);
   transition: background-color var(--transition-speed) ease-in-out;
+}
+
+.Layer__bank-transaction-row:hover .Layer__bank-transaction-row__expand-button {
+  background-color: var(--color-base-200);
+  color: var(--color-base-1000);
+
+  &:hover {
+    background-color: var(--color-base-300);
+  }
 }
 
 .Layer__bank-transaction-row:hover .Layer__bank-transaction__submit-btn:not([disabled]) {
@@ -160,6 +169,10 @@
 
 .Layer__expanded-bank-transaction-row__content-toggle {
   padding: var(--spacing-sm) var(--spacing-md);
+
+  .Layer__toggle-option {
+    width: 110px;
+  }
 }
 
 .Layer__expanded-bank-transaction-row__splits {
@@ -231,20 +244,6 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-}
-
-.Layer__bank-transaction-row__actions-cell .Layer__bank-transaction-row__expand-button {
-  padding-top: 5px;
-}
-
-.Layer__bank-transaction-row__expand-button .Layer__chevron {
-  cursor: pointer;
-}
-
-.Layer__bank-transaction-row__expand-button:hover {
-  .Layer__chevron {
-    color: var(--text-color-primary);
-  }
 }
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry {
@@ -425,10 +424,22 @@
   }
 }
 
+.Layer__bank-transaction-row__expanded-td {
+  padding: 0;
+}
+
 .Layer__bank-transactions__pagination {
   display: flex;
   justify-content: flex-end;
-  padding: var(--spacing-md) var(--spacing-lg);
+  padding: var(--spacing-md);
+}
+
+@container (min-width: 1400px) {
+  .Layer__bank-transactions__pagination {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--spacing-md) var(--spacing-xl);
+  }
 }
 
 @container (max-width: 1000px) and (min-width: 801px) {
@@ -508,6 +519,7 @@
     display: flex;
     gap: var(--spacing-sm);
     justify-content: space-between;
+    padding-bottom: var(--spacing-4xs);
   }
 
   .Layer__bank-transaction-list-item__split-tooltip__label,

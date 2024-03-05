@@ -89,7 +89,7 @@ export const Toggle = ({
       }
     })
 
-    shift = shift + (size === ToggleSize.medium ? 2 : 1)
+    shift = shift + (size === ToggleSize.medium ? 2 : 1.5)
 
     setThumbPos({ left: shift, width })
   }
