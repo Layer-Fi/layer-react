@@ -6,6 +6,7 @@ import Select, {
   OptionProps,
   components,
 } from 'react-select'
+import { DATE_FORMAT } from '../../config/general'
 import { useLayerContext } from '../../hooks/useLayerContext'
 import Check from '../../icons/Check'
 import ChevronDown from '../../icons/ChevronDown'
@@ -18,8 +19,6 @@ import { Badge } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
-
-const dateFormat = 'LLL d, yyyy'
 
 type Props = {
   name?: string
@@ -128,7 +127,7 @@ const Option = (
         <div className='Layer__select__option-content__match__main-row'>
           <span className='Layer__select__option-content__match__date'>
             {props.data.payload.date &&
-              formatTime(parseISO(props.data.payload.date), dateFormat)}
+              formatTime(parseISO(props.data.payload.date), DATE_FORMAT)}
           </span>
           <span className='Layer__select__option-content__match__description'>
             {props.data.payload.display_name}

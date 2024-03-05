@@ -14,14 +14,24 @@
 
 .Layer__input {
   padding: 8px;
+  box-sizing: border-box;
   border: 1px solid var(--border-color);
   border-radius: var(--input-border-radius);
   border-width: 0px;
-  box-shadow: 0px 0px 0px 1px var(--input-border-color);
+  box-shadow: 0px 0px 0px 1px var(--input-border-color), 0px 0px 0px 2px rgba(0,0,0,0);
   margin: 1px;
   font-family: var(--font-family);
   font-size: var(--input-font-size);
   line-height: 140%;
+
+  &.Layer__input--error {
+    color: var(--color-danger);
+    box-shadow: 0px 0px 0px 1px var(--color-base-300), 0px 0px 0px 2px var(--color-danger);
+  }
+}
+
+.Layer__input-tooltip {
+  flex: 0;
 }
 
 .Layer__textarea {

@@ -182,6 +182,7 @@
 
 .Layer__expanded-bank-transaction-row__splits-inputs {
   flex: 1;
+  padding-top: 2px;
 }
 
 .Layer__expanded-bank-transaction-row__splits-buttons { 
@@ -251,12 +252,6 @@
   flex-direction: row;
   margin-bottom: 0.5rem;
   gap: var(--spacing-md);
-}
-
-.Layer__expanded-bank-transaction-row__split-amount--negative {
-  font-weight: bold;
-  color: var(--error-color);
-  border: 2.5px dotted var(--error-color);
 }
 
 .Layer__bank-transactions__list {

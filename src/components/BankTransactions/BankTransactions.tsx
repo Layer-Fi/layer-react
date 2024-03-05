@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react'
+import { DATE_FORMAT } from '../../config/general'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
 import { BankTransaction, CategorizationStatus } from '../../types'
@@ -12,8 +13,6 @@ import { Toggle } from '../Toggle'
 import { Heading } from '../Typography'
 
 const COMPONENT_NAME = 'bank-transactions'
-
-const dateFormat = 'LLL d, yyyy'
 
 enum DisplayState {
   review = 'review',
@@ -154,7 +153,7 @@ export const BankTransactions = ({
               bankTransactions?.map((bankTransaction: BankTransaction) => (
                 <BankTransactionRow
                   key={bankTransaction.id}
-                  dateFormat={dateFormat}
+                  dateFormat={DATE_FORMAT}
                   bankTransaction={bankTransaction}
                   editable={editable}
                 />
@@ -174,7 +173,7 @@ export const BankTransactions = ({
           {bankTransactions?.map((bankTransaction: BankTransaction) => (
             <BankTransactionListItem
               key={bankTransaction.id}
-              dateFormat={dateFormat}
+              dateFormat={DATE_FORMAT}
               bankTransaction={bankTransaction}
               editable={editable}
             />

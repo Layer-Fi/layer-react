@@ -7,10 +7,9 @@ import React, {
   useRef,
   TransitionEvent,
 } from 'react'
+import { DATE_FORMAT } from '../../config/general'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
-import FolderPlus from '../../icons/FolderPlus'
 import Link from '../../icons/Link'
-import RefreshCcw from '../../icons/RefreshCcw'
 import Scissors from '../../icons/Scissors'
 import {
   centsToDollars as formatMoney,
@@ -32,8 +31,6 @@ import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
-
-const dateFormat = 'LLL d, yyyy'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -367,7 +364,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                                 <td className='Layer__table-cell Layer__nowrap'>
                                   {formatTime(
                                     parseISO(match.details.date),
-                                    dateFormat,
+                                    DATE_FORMAT,
                                   )}
                                 </td>
                                 <td className='Layer__table-cell'>
@@ -386,7 +383,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                                     <MatchBadge
                                       classNamePrefix={className}
                                       bankTransaction={bankTransaction}
-                                      dateFormat={dateFormat}
+                                      dateFormat={DATE_FORMAT}
                                       text='Matched'
                                     />
                                   )}
@@ -423,9 +420,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                             onChange={updateAmounts(index)}
                             value={split.inputValue}
                             onBlur={onBlur}
-                            className={`${className}__split-amount${
-                              split.amount < 0 ? '--negative' : ''
-                            }`}
+                            isInvalid={split.amount < 0}
+                            errorMessage='Negative values are not allowed'
                           />
                           <CategoryMenu
                             bankTransaction={bankTransaction}
@@ -463,9 +459,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               <InputGroup
                 className={`${className}__description`}
                 name='description'
-                label='Description'
               >
-                <Textarea name='description' placeholder='Enter description' />
+                <Textarea name='description' placeholder='Add description' />
               </InputGroup>
 
               <div className={`${className}__file-upload`}>
