@@ -121,7 +121,7 @@ export const BankTransactions = ({
       {!listView && (
         <table
           width='100%'
-          className='Layer__table Layer__bank-transactions__table'
+          className='Layer__table Layer__bank-transactions__table with-cell-separators'
         >
           <thead>
             <tr>

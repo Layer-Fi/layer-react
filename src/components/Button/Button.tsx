@@ -11,6 +11,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   leftIcon?: ReactNode
   rightIcon?: ReactNode
   iconOnly?: ReactNode
+  iconAsPrimary?: boolean
 }
 
 export const Button = ({
@@ -20,6 +21,7 @@ export const Button = ({
   leftIcon,
   rightIcon,
   iconOnly,
+  iconAsPrimary = false,
   ...props
 }: ButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -37,6 +39,7 @@ export const Button = ({
     'Layer__btn',
     `Layer__btn--${variant}`,
     iconOnly ? 'Layer__btn--icon-only' : '',
+    iconAsPrimary && 'Layer__btn--with-primary-icon',
     className,
   )
 
@@ -62,13 +65,23 @@ export const Button = ({
     >
       <span className={`Layer__btn-content Layer__justify--${justify}`}>
         {leftIcon && (
-          <span className='Layer__btn-icon Layer__btn-icon--left'>
+          <span
+            className={classNames(
+              'Layer__btn-icon Layer__btn-icon--left',
+              iconAsPrimary && 'Layer__btn-icon--primary',
+            )}
+          >
             {leftIcon}
           </span>
         )}
         {!iconOnly && <span className='Layer__btn-text'>{children}</span>}
         {rightIcon && (
-          <span className='Layer__btn-icon Layer__btn-icon--right'>
+          <span
+            className={classNames(
+              'Layer__btn-icon Layer__btn-icon--right',
+              iconAsPrimary && 'Layer__btn-icon--primary',
+            )}
+          >
             {rightIcon}
           </span>
         )}

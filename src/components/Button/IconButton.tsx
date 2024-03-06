@@ -14,8 +14,6 @@ export const IconButton = ({
   active,
   ...props
 }: IconButtonProps) => {
-  const buttonRef = useRef<HTMLButtonElement>(null)
-
   const baseClassName = classNames(
     'Layer__icon-btn',
     `Layer__icon-btn--${active ? 'active' : 'inactive'}`,
@@ -23,7 +21,7 @@ export const IconButton = ({
   )
 
   return (
-    <button {...props} className={baseClassName} ref={buttonRef}>
+    <button {...props} className={baseClassName}>
       {icon}
     </button>
   )

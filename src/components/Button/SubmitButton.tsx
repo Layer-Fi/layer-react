@@ -89,6 +89,7 @@ export const SubmitButton = ({
       variant={ButtonVariant.primary}
       disabled={processing || disabled}
       rightIcon={buildRightIcon({ processing, error, action })}
+      iconAsPrimary={true}
     >
       {children}
     </Button>

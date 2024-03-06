@@ -23,12 +23,14 @@ import {
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
 import { MatchBadge } from '../BankTransactionRow/MatchBadge'
-import { Button, SubmitButton, ButtonVariant } from '../Button'
+import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
 import { InputGroup, Input, FileInput } from '../Input'
 import { Textarea } from '../Textarea'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
+import { Text } from '../Typography'
+import { TextSize, TextUseTooltip } from '../Typography/Text'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
@@ -94,7 +96,11 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       match: matchBankTransaction,
     } = useBankTransactions()
     const [purpose, setPurpose] = useState<Purpose>(
-      hasMatch(bankTransaction) ? Purpose.match : Purpose.categorize,
+      bankTransaction.category
+        ? Purpose.categorize
+        : hasMatch(bankTransaction)
+        ? Purpose.match
+        : Purpose.categorize,
     )
     const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
       isAlreadyMatched(bankTransaction),
@@ -328,72 +334,86 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   )}
                 >
                   <div className={`${className}__content-panel-container`}>
-                    <table className={`Layer__table ${className}__match-table`}>
-                      <thead>
-                        <tr>
-                          <th className='Layer__table-header'>Date</th>
-                          <th className='Layer__table-header'>Description</th>
-                          <th
-                            className={`Layer__table-header ${className}__match-table__amount`}
-                          >
-                            Amount
-                          </th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {bankTransaction.suggested_matches?.map(
-                          (match, idx) => {
-                            return (
-                              <tr
-                                key={idx}
-                                className={classNames(
-                                  `${className}__match-row`,
-                                  match.id === selectedMatchId
-                                    ? `${className}__match-row--selected`
-                                    : '',
-                                )}
-                                onClick={() => {
-                                  if (selectedMatchId === match.id) {
-                                    setSelectedMatchId(undefined)
-                                    return
-                                  }
-                                  setSelectedMatchId(match.id)
-                                }}
-                              >
-                                <td className='Layer__table-cell Layer__nowrap'>
-                                  {formatTime(
-                                    parseISO(match.details.date),
-                                    DATE_FORMAT,
+                    <div className={`${className}__match-table-wrapper`}>
+                      <table
+                        className={`Layer__table ${className}__match-table`}
+                      >
+                        <thead>
+                          <tr>
+                            <th className='Layer__table-header'>Date</th>
+                            <th className='Layer__table-header'>Description</th>
+                            <th
+                              className={`Layer__table-header ${className}__match-table__amount`}
+                            >
+                              Amount
+                            </th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {bankTransaction.suggested_matches?.map(
+                            (match, idx) => {
+                              return (
+                                <tr
+                                  key={idx}
+                                  className={classNames(
+                                    `${className}__match-row`,
+                                    match.id === selectedMatchId
+                                      ? `${className}__match-row--selected`
+                                      : '',
                                   )}
-                                </td>
-                                <td className='Layer__table-cell'>
-                                  {match.details.description}
-                                </td>
-                                <td
-                                  className={`Layer__table-cell ${className}__match-table__amount`}
+                                  onClick={() => {
+                                    if (selectedMatchId === match.id) {
+                                      setSelectedMatchId(undefined)
+                                      return
+                                    }
+                                    setSelectedMatchId(match.id)
+                                  }}
                                 >
-                                  ${formatMoney(match.details.amount)}
-                                </td>
-                                <td
-                                  className={`${className}__match-table__status`}
-                                >
-                                  {match.details.id ===
-                                    bankTransaction.match?.details.id && (
-                                    <MatchBadge
-                                      classNamePrefix={className}
-                                      bankTransaction={bankTransaction}
-                                      dateFormat={DATE_FORMAT}
-                                      text='Matched'
-                                    />
-                                  )}
-                                </td>
-                              </tr>
-                            )
-                          },
-                        )}
-                      </tbody>
-                    </table>
+                                  <td
+                                    className={`Layer__table-cell Layer__nowrap ${className}__match-table__date`}
+                                  >
+                                    {formatTime(
+                                      parseISO(match.details.date),
+                                      DATE_FORMAT,
+                                    )}
+                                  </td>
+                                  <td
+                                    className={`Layer__table-cell ${className}__match-table__desc`}
+                                  >
+                                    <Text
+                                      className={`${className}__match-table__desc-tooltip`}
+                                      withTooltip={TextUseTooltip.whenTruncated}
+                                      as='span'
+                                    >
+                                      {match.details.description}
+                                    </Text>
+                                  </td>
+                                  <td
+                                    className={`Layer__table-cell ${className}__match-table__amount`}
+                                  >
+                                    ${formatMoney(match.details.amount)}
+                                  </td>
+                                  <td
+                                    className={`${className}__match-table__status`}
+                                  >
+                                    {match.details.id ===
+                                      bankTransaction.match?.details.id && (
+                                      <MatchBadge
+                                        classNamePrefix={className}
+                                        bankTransaction={bankTransaction}
+                                        dateFormat={DATE_FORMAT}
+                                        text='Matched'
+                                      />
+                                    )}
+                                  </td>
+                                </tr>
+                              )
+                            },
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
 
@@ -433,7 +453,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                           {index > 0 && (
                             <Button
                               onClick={() => removeSplit(index)}
-                              leftIcon={<Link size={14} />}
+                              rightIcon={<Link size={14} />}
                               variant={ButtonVariant.secondary}
                             >
                               Merge
@@ -443,15 +463,38 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       ))}
                     </div>
                     <div className={`${className}__splits-buttons`}>
-                      <Button
-                        onClick={addSplit}
-                        leftIcon={<Scissors size={14} />}
-                        variant={ButtonVariant.secondary}
-                        disabled={rowState.splits.length > 5}
-                      >
-                        Split
-                      </Button>
+                      {rowState.splits.length > 1 ? (
+                        <TextButton
+                          onClick={addSplit}
+                          disabled={rowState.splits.length > 5}
+                        >
+                          Add new split
+                        </TextButton>
+                      ) : (
+                        <Button
+                          onClick={addSplit}
+                          rightIcon={<Scissors size={14} />}
+                          variant={ButtonVariant.secondary}
+                          disabled={rowState.splits.length > 5}
+                        >
+                          Split
+                        </Button>
+                      )}
                     </div>
+                    {rowState.splits.length > 1 && (
+                      <Text
+                        size={TextSize.sm}
+                        className={`${className}__splits-total`}
+                      >
+                        Total: $
+                        {formatMoney(
+                          rowState.splits.reduce(
+                            (x, { amount }) => x + amount,
+                            0,
+                          ),
+                        )}
+                      </Text>
+                    )}
                   </div>
                 </div>
               </div>

@@ -62,8 +62,8 @@
   position: relative;
 }
 
-.Layer__table tr td .Layer__table-cell-content::after,
-.Layer__table tr th.Layer__table-header::after {
+.Layer__table.with-cell-separators > tbody > tr > td .Layer__table-cell-content::after,
+.Layer__table.with-cell-separators > tbody > tr > th.Layer__table-header::after {
   content: '';
   position: absolute;
   left: 0;
@@ -74,10 +74,10 @@
   margin-top: -10px;
 }
 
-.Layer__table tr td:first-child .Layer__table-cell-content::after,
-.Layer__table tr td:last-child .Layer__table-cell-content::after,
-.Layer__table tr th:first-child.Layer__table-header::after,
-.Layer__table tr th:last-child.Layer__table-header::after {
+.Layer__table.with-cell-separators > tbody > tr > td:first-child .Layer__table-cell-content::after,
+.Layer__table.with-cell-separators > tbody > tr > td:last-child .Layer__table-cell-content::after,
+.Layer__table.with-cell-separators > thead > tr > th:first-child.Layer__table-header::after,
+.Layer__table.with-cell-separators > thead > tr > th:last-child.Layer__table-header::after {
   display: none;
 }
 
