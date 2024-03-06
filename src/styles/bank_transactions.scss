@@ -158,8 +158,9 @@
 
   .Layer__expanded-bank-transaction-row__content-panel-container {
     padding: 0 var(--spacing-md);
-    width: calc(680px - var(--spacing-md) * 2);
-    max-width: calc(100% - var(--spacing-md) * 2);;
+    // width: calc(680px - var(--spacing-md) * 2);
+    // max-width: calc(100% - var(--spacing-md) * 2);
+    box-sizing: border-box;
   }
 
   &.Layer__expanded-bank-transaction-row__content-panel--active {
@@ -168,12 +169,12 @@
   }
 }
 
-.Layer__expanded-bank-transaction-row__match-table-wrapper {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  overflow: auto;
-  white-space: normal;
-}
+// .Layer__expanded-bank-transaction-row__match-table-wrapper {
+//   display: grid;
+//   grid-template-columns: repeat(1, minmax(0, 1fr));
+//   overflow: auto;
+//   white-space: normal;
+// }
 
 .Layer__expanded-bank-transaction-row__content-toggle {
   padding: var(--spacing-sm) var(--spacing-md);
@@ -544,33 +545,44 @@
 
 .Layer__expanded-bank-transaction-row__match-table {
   margin-bottom: var(--spacing-sm);
-  border-collapse: separate; 
-  border-spacing: 0 var(--spacing-3xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
 
-  .Layer__table-header {
+  .Layer__expanded-bank-transaction-row__match-table__header {
+    display: flex;
     background: transparent;
-    padding: var(--spacing-xs) var(--spacing-sm);
-  }
+    width: 100%;
 
-  .Layer__table-cell {
-    padding: var(--spacing-xs) var(--spacing-sm);
+    & > div {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      color: var(--color-base-500);
+      font-size: var(--text-sm);
+    }
   }
 
   .Layer__expanded-bank-transaction-row__match-table__date {
-    max-width: 90px;
+    width: 120px;
     box-sizing: border-box;
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 
   .Layer__expanded-bank-transaction-row__match-table__amount {
     text-align: right;
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 
   .Layer__expanded-bank-transaction-row__match-table__status {
     text-align: right;
+    width: 90px;
   }
 
   .Layer__expanded-bank-transaction-row__match-table__desc {
-    max-width: 300px;
+    flex: 1;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     .Layer__tooltip-trigger {
       display: flex;
@@ -585,11 +597,24 @@
   }
 }
 
-
 .Layer__expanded-bank-transaction-row__match-row {
   cursor: pointer;
+  display: flex;
+  align-items: stretch;
 
-  & td.Layer__table-cell {
+  .Layer__tooltip-trigger {
+    padding-top: 0;
+  }
+
+  & > div {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    color: var(--color-base-500);
+    font-size: var(--text-md);
+    display: flex;
+    align-items: center;
+  }
+
+  & > div {
     border-top: 1px solid var(--color-base-300);
     border-bottom: 1px solid var(--color-base-300);
 
@@ -606,11 +631,22 @@
     }
   }
 
+  & > div:last-child,
+  &:hover > div:last-child {
+    border-color: transparent;
+    background-color: transparent;
+  }
 
-  &:hover td.Layer__table-cell {
+
+  &:hover > div {
     background: var(--color-base-0);
     border-top: 1px solid var(--color-base-300);
     border-bottom: 1px solid var(--color-base-300);
+    color: var(--color-base-700);
+
+    &.Layer__expanded-bank-transaction-row__match-table__amount {
+      color: var(--color-base-1000);
+    }
 
     &:first-child {
       border-top-left-radius: var(--border-radius-2xs);
@@ -627,33 +663,98 @@
 }
 
 .Layer__expanded-bank-transaction-row__match-row--selected {
-  td.Layer__table-cell {
+  & > div {
     background: var(--color-base-0);
     border-top: 1px solid var(--color-base-800);
     border-bottom: 1px solid var(--color-base-800);
+    color: var(--color-base-700);
 
-    &:first-child {
-      border-left: 1px solid var(--color-base-800);
+    &.Layer__expanded-bank-transaction-row__match-table__amount {
+      color: var(--color-base-1000);
     }
+  }
 
-    &:nth-child(3) {
-      border-right: 1px solid var(--color-base-800);
-    }
+  & > div:first-child {
+    border-left: 1px solid var(--color-base-800);
+  }
+
+  & > div:nth-child(3) {
+    border-right: 1px solid var(--color-base-800);
+  }
+
+  & > div:last-child {
+    border-color: transparent;
+    background-color: transparent;
   }
 }
 
 .Layer__expanded-bank-transaction-row__match-row--selected:hover {
-  td.Layer__table-cell {
+  & > div {
     background: var(--color-base-0);
+    color: var(--color-base-700);
     border-top: 1px solid var(--color-base-500);
     border-bottom: 1px solid var(--color-base-500);
+  }
 
-    &:first-child {
-      border-left: 1px solid var(--color-base-500);
+  & > div:first-child {
+    border-left: 1px solid var(--color-base-500);
+  }
+
+  & > div:nth-child(3) {
+    border-right: 1px solid var(--color-base-500);
+  }
+
+  & > div:last-child {
+    border-color: transparent;
+    background-color: transparent;
+  }
+}
+
+@container (max-width: 700px) {
+  .Layer__expanded-bank-transaction-row__match-table .Layer__expanded-bank-transaction-row__match-table__header {
+    display: none;
+  }
+
+  .Layer__expanded-bank-transaction-row__match-row {
+    flex-direction: column;
+  }
+
+  .Layer__expanded-bank-transaction-row__match-row {
+    border-radius: var(--border-radius-2xs);
+    border: 1px solid transparent;
+    border: 1px solid var(--color-base-300);
+
+    & > div,
+    & > div:first-child,
+    & > div:nth-child(3),
+    &:hover > div,
+    &:hover > div:first-child,
+    &:hover > div:nth-child(3) {
+      border-width: 0;
     }
 
-    &:nth-child(3) {
-      border-right: 1px solid var(--color-base-500);
+    &:hover {
+      border: 1px solid var(--color-base-500);
+      background: var(--color-base-0);
+      color: var(--color-base-700);
+    }
+  }
+  
+  .Layer__expanded-bank-transaction-row__match-row--selected {
+    background: var(--color-base-0);
+    color: var(--color-base-700);
+    border: 1px solid var(--color-base-800);
+
+    & > div {
+      border-width: 0;
+    }
+  }
+  
+  .Layer__expanded-bank-transaction-row__match-row--selected:hover {
+    border: 1px solid (--var-color-base-800);
+
+    & > div {
+      border-width: 0;
     }
   }
 }

@@ -7,7 +7,6 @@ import React, {
   useRef,
   TransitionEvent,
 } from 'react'
-import { DATE_FORMAT } from '../../config/general'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import Link from '../../icons/Link'
 import Scissors from '../../icons/Scissors'
@@ -22,17 +21,16 @@ import {
   Category,
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
-import { MatchBadge } from '../BankTransactionRow/MatchBadge'
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { CategoryMenu } from '../CategoryMenu'
 import { InputGroup, Input, FileInput } from '../Input'
+import { MatchForm } from '../MatchForm'
 import { Textarea } from '../Textarea'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
 import { Text } from '../Typography'
-import { TextSize, TextUseTooltip } from '../Typography/Text'
+import { TextSize } from '../Typography/Text'
 import classNames from 'classnames'
-import { parseISO, format as formatTime } from 'date-fns'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -334,86 +332,12 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   )}
                 >
                   <div className={`${className}__content-panel-container`}>
-                    <div className={`${className}__match-table-wrapper`}>
-                      <table
-                        className={`Layer__table ${className}__match-table`}
-                      >
-                        <thead>
-                          <tr>
-                            <th className='Layer__table-header'>Date</th>
-                            <th className='Layer__table-header'>Description</th>
-                            <th
-                              className={`Layer__table-header ${className}__match-table__amount`}
-                            >
-                              Amount
-                            </th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {bankTransaction.suggested_matches?.map(
-                            (match, idx) => {
-                              return (
-                                <tr
-                                  key={idx}
-                                  className={classNames(
-                                    `${className}__match-row`,
-                                    match.id === selectedMatchId
-                                      ? `${className}__match-row--selected`
-                                      : '',
-                                  )}
-                                  onClick={() => {
-                                    if (selectedMatchId === match.id) {
-                                      setSelectedMatchId(undefined)
-                                      return
-                                    }
-                                    setSelectedMatchId(match.id)
-                                  }}
-                                >
-                                  <td
-                                    className={`Layer__table-cell Layer__nowrap ${className}__match-table__date`}
-                                  >
-                                    {formatTime(
-                                      parseISO(match.details.date),
-                                      DATE_FORMAT,
-                                    )}
-                                  </td>
-                                  <td
-                                    className={`Layer__table-cell ${className}__match-table__desc`}
-                                  >
-                                    <Text
-                                      className={`${className}__match-table__desc-tooltip`}
-                                      withTooltip={TextUseTooltip.whenTruncated}
-                                      as='span'
-                                    >
-                                      {match.details.description}
-                                    </Text>
-                                  </td>
-                                  <td
-                                    className={`Layer__table-cell ${className}__match-table__amount`}
-                                  >
-                                    ${formatMoney(match.details.amount)}
-                                  </td>
-                                  <td
-                                    className={`${className}__match-table__status`}
-                                  >
-                                    {match.details.id ===
-                                      bankTransaction.match?.details.id && (
-                                      <MatchBadge
-                                        classNamePrefix={className}
-                                        bankTransaction={bankTransaction}
-                                        dateFormat={DATE_FORMAT}
-                                        text='Matched'
-                                      />
-                                    )}
-                                  </td>
-                                </tr>
-                              )
-                            },
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
+                    <MatchForm
+                      classNamePrefix={className}
+                      bankTransaction={bankTransaction}
+                      selectedMatchId={selectedMatchId}
+                      setSelectedMatchId={setSelectedMatchId}
+                    />
                   </div>
                 </div>
 
