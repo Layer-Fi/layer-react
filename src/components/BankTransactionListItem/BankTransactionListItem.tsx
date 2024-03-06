@@ -8,6 +8,8 @@ import { SubmitButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { Text } from '../Typography'
+import { TextUseTooltip } from '../Typography/Text'
 import { Assignment } from './Assignment'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
@@ -80,26 +82,15 @@ export const BankTransactionListItem = ({
   return (
     <li className={rowClassName}>
       <span className={`${className}__heading`}>
-        <span className={`${className}__heading-date`}>
-          {formatTime(parseISO(bankTransaction.date), dateFormat)}
-        </span>
-        <span className={`${className}__heading-separator`} />
-        <span className={`${className}__heading-account-name`}>
-          {bankTransaction.account_name ?? ''}
-        </span>
-      </span>
-      <span className={`${className}__body`}>
-        <span className={`${className}__body__name`}>
-          {bankTransaction.counterparty_name}
-        </span>
-        <span
-          className={`${className}__amount-${
-            isCredit(bankTransaction) ? 'credit' : 'debit'
-          }`}
-        >
-          {isCredit(bankTransaction) ? '+$' : ' $'}
-          {formatMoney(bankTransaction.amount)}
-        </span>
+        <div className={`${className}__heading__main`}>
+          <span className={`${className}__heading-date`}>
+            {formatTime(parseISO(bankTransaction.date), dateFormat)}
+          </span>
+          <span className={`${className}__heading-separator`} />
+          <span className={`${className}__heading-account-name`}>
+            {bankTransaction.account_name ?? ''}
+          </span>
+        </div>
         <div
           onClick={toggleOpen}
           className='Layer__bank-transaction-row__expand-button'
@@ -111,11 +102,25 @@ export const BankTransactionListItem = ({
           />
         </div>
       </span>
+      <span className={`${className}__body`}>
+        <span className={`${className}__body__name`}>
+          <Text as='span' withTooltip={TextUseTooltip.whenTruncated}>
+            {bankTransaction.counterparty_name ?? bankTransaction.description}
+          </Text>
+        </span>
+        <span
+          className={`${className}__amount-${
+            isCredit(bankTransaction) ? 'credit' : 'debit'
+          }`}
+        >
+          {isCredit(bankTransaction) ? '+$' : ' $'}
+          {formatMoney(bankTransaction.amount)}
+        </span>
+      </span>
       <span className={`${className}__expanded-row`}>
         <ExpandedBankTransactionRow
           ref={expandedRowRef}
           bankTransaction={bankTransaction}
-          close={toggleOpen}
           isOpen={open}
           asListItem={true}
           submitBtnText={editable ? 'Approve' : 'Save'}

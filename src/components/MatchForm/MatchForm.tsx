@@ -28,7 +28,12 @@ export const MatchForm = ({
           Description
         </div>
         <div className={`${classNamePrefix}__match-table__amount`}>Amount</div>
-        <div className={`${classNamePrefix}__match-table__status`}></div>
+
+        <div
+          className={`${classNamePrefix}__match-table__status ${
+            bankTransaction.match ? '' : 'no-match'
+          }`}
+        ></div>
       </div>
 
       {bankTransaction.suggested_matches?.map((match, idx) => {
@@ -52,7 +57,12 @@ export const MatchForm = ({
             <div
               className={`Layer__nowrap ${classNamePrefix}__match-table__date`}
             >
-              {formatTime(parseISO(match.details.date), DATE_FORMAT)}
+              <span>
+                {formatTime(parseISO(match.details.date), DATE_FORMAT)}
+              </span>
+              <span className='amount-next-to-date'>
+                ${formatMoney(match.details.amount)}
+              </span>
             </div>
             <div className={`${classNamePrefix}__match-table__desc`}>
               <Text
@@ -62,11 +72,26 @@ export const MatchForm = ({
               >
                 {match.details.description}
               </Text>
+              {match.details.id === bankTransaction.match?.details.id && (
+                <span className='match-badge'>
+                  <MatchBadge
+                    classNamePrefix={classNamePrefix}
+                    bankTransaction={bankTransaction}
+                    dateFormat={DATE_FORMAT}
+                    text='Matched'
+                  />
+                </span>
+              )}
             </div>
             <div className={`${classNamePrefix}__match-table__amount`}>
               ${formatMoney(match.details.amount)}
             </div>
-            <div className={`${classNamePrefix}__match-table__status`}>
+
+            <div
+              className={`${classNamePrefix}__match-table__status ${
+                bankTransaction.match ? '' : 'no-match'
+              }`}
+            >
               {match.details.id === bankTransaction.match?.details.id && (
                 <MatchBadge
                   classNamePrefix={classNamePrefix}
