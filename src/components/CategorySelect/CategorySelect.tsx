@@ -174,6 +174,30 @@ const allCategoriesDivider: GroupBase<CategoryOption>[] = [
   },
 ]
 
+function flattenCategories(
+  categories: Category[],
+): GroupBase<CategoryOption>[] {
+  const categoryOptions = (categories || []).flatMap(category => {
+    if (category?.subCategories && category?.subCategories?.length > 0) {
+      if (category?.subCategories?.every(c => c.subCategories === undefined)) {
+        return [
+          {
+            label: category.display_name,
+            options: category.subCategories.map(x => mapCategoryToOption(x)),
+          },
+        ]
+      }
+      return flattenCategories(category.subCategories)
+    }
+    const resultOption = {
+      label: category.display_name,
+      options: [mapCategoryToOption(category)],
+    } satisfies GroupBase<CategoryOption>
+    return [resultOption]
+  })
+  return categoryOptions
+}
+
 export const CategorySelect = ({
   bankTransaction,
   name,
@@ -217,18 +241,7 @@ export const CategorySelect = ({
         ]
       : []
 
-  const categoryOptions = (categories || []).map(category => {
-    if (category?.subCategories && category?.subCategories?.length > 0) {
-      return {
-        label: category.display_name,
-        options: category.subCategories.map(x => mapCategoryToOption(x)),
-      } satisfies GroupBase<CategoryOption>
-    }
-    return {
-      label: category.display_name,
-      options: [mapCategoryToOption(category)],
-    } satisfies GroupBase<CategoryOption>
-  })
+  const categoryOptions = flattenCategories(categories)
 
   const options = [
     ...matchOptions,
