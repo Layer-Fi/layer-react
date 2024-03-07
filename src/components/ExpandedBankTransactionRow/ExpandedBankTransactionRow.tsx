@@ -37,6 +37,7 @@ type Props = {
   isOpen?: boolean
   asListItem?: boolean
   submitBtnText?: string
+  close?: () => void
 }
 
 type Split = {
