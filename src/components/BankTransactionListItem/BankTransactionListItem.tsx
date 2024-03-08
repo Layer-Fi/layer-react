@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
-import ChevronDown from '../../icons/ChevronDown'
+import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, Direction } from '../../types'
 import { getDefaultSelectedCategory } from '../BankTransactionRow/BankTransactionRow'
@@ -108,7 +108,7 @@ export const BankTransactionListItem = ({
           onClick={toggleOpen}
           className='Layer__bank-transaction-row__expand-button'
         >
-          <ChevronDown
+          <ChevronDownFill
             className={`Layer__chevron ${
               open ? 'Layer__chevron__up' : 'Layer__chevron__down'
             }`}

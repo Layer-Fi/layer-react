@@ -1026,3 +1026,26 @@
   padding: var(--spacing-2xs) 0;
   padding-bottom: var(--spacing-md);
 }
+
+.Layer__bank-transaction-table__date-col,
+.Layer__bank-transactions__account-col {
+  color: var(--color-base-500);
+}
+
+.Layer__bank-transactions__tx-col {
+  color: var(--color-base-1000);
+}
+
+
+.Layer__bank-transaction-row:hover,
+.Layer__bank-transaction-row--expanded {
+  .Layer__bank-transaction-table__date-col,
+  .Layer__bank-transactions__account-col {
+    color: var(--color-base-1000);
+  }
+
+  .Layer__bank-transactions__tx-col,
+  .Layer__bank-transactions__amount-col {
+    font-variation-settings: 'wght' var(--font-weight-bold);
+  }
+}

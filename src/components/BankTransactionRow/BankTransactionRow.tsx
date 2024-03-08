@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import AlertCircle from '../../icons/AlertCircle'
-import ChevronDown from '../../icons/ChevronDown'
+import ChevronDownFill from '../../icons/ChevronDownFill'
 import Scissors from '../../icons/Scissors'
-import X from '../../icons/X'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import {
   BankTransaction,
@@ -138,7 +137,7 @@ export const BankTransactionRow = ({
         }}
       >
         <td className='Layer__table-cell'>
-          <span className='Layer__table-cell-content'>
+          <span className='Layer__table-cell-content Layer__bank-transaction-table__date-col'>
             {formatTime(parseISO(bankTransaction.date), dateFormat)}
           </span>
         </td>
@@ -168,7 +167,7 @@ export const BankTransactionRow = ({
           </span>
         </td>
         <td
-          className={`Layer__table-cell Layer__table-cell__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${
+          className={`Layer__table-cell Layer__table-cell__amount-col Layer__bank-transactions__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
         >
@@ -297,11 +296,11 @@ export const BankTransactionRow = ({
               className='Layer__bank-transaction-row__expand-button'
               active={open}
               icon={
-                open ? (
-                  <X />
-                ) : (
-                  <ChevronDown className='Layer__chevron Layer__chevron__down' />
-                )
+                <ChevronDownFill
+                  className={`Layer__chevron ${
+                    open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                  }`}
+                />
               }
             />
           </span>

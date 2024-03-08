@@ -57,12 +57,7 @@ const buildRightIcon = ({
 
   return (
     <span>
-      <Check className='Layer__btn-icon--on-active' size={14} />
-      <CheckCircle
-        className='Layer__btn-icon--on-inactive'
-        size={14}
-        style={{ paddingTop: 4 }}
-      />
+      <CheckCircle size={14} style={{ paddingTop: 4 }} />
     </span>
   )
 }
