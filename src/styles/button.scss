@@ -179,9 +179,42 @@
   text-decoration: underline;
   color: var(--color-base-700);
   background: transparent;
+  padding: 0;
   cursor: pointer;
 
   &:hover {
     color: var(--color-base-1000);
   }
+}
+
+.Layer__retry-btn {
+  color: var(--color-danger);
+
+  .Layer__btn-icon {
+    color: var(--color-danger);
+    transition: all 300ms ease-in-out;
+  }
+
+  &:hover {
+    .Layer__btn-icon {
+      transform: rotate(-30deg);
+    }
+  }
+
+  &.Layer__btn--processing {
+    .Layer__btn-icon {
+      -webkit-animation: rotating-ccw 2s linear infinite;
+      -moz-animation: rotating-ccw 2s linear infinite;
+      -ms-animation: rotating-ccw 2s linear infinite;
+      -o-animation: rotating-ccw 2s linear infinite;
+      animation: rotating-ccw 2s linear infinite;
+    }
+  }
+}
+
+.Layer__unsaved-info {
+  color: var(--color-danger);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4xs);
 }

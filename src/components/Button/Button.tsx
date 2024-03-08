@@ -6,12 +6,15 @@ export enum ButtonVariant {
   secondary = 'secondary',
 }
 
+export type ButtonJustify = 'center' | 'space-between' | 'start'
+
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
   leftIcon?: ReactNode
   rightIcon?: ReactNode
   iconOnly?: ReactNode
   iconAsPrimary?: boolean
+  justify?: ButtonJustify
 }
 
 export const Button = ({
@@ -22,17 +25,20 @@ export const Button = ({
   rightIcon,
   iconOnly,
   iconAsPrimary = false,
+  justify = 'center',
   ...props
 }: ButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null)
 
-  let justify = 'center'
-  if (leftIcon && rightIcon) {
-    justify = 'space-between'
+  let justifyContent = 'center'
+  if (justify) {
+    justifyContent = justify
+  } else if (leftIcon && rightIcon) {
+    justifyContent = 'space-between'
   } else if (rightIcon) {
-    justify = 'space-between'
+    justifyContent = 'space-between'
   } else if (leftIcon) {
-    justify = 'start'
+    justifyContent = 'start'
   }
 
   const baseClassName = classNames(
@@ -63,7 +69,7 @@ export const Button = ({
       onMouseLeave={stopAnimation}
       ref={buttonRef}
     >
-      <span className={`Layer__btn-content Layer__justify--${justify}`}>
+      <span className={`Layer__btn-content Layer__justify--${justifyContent}`}>
         {leftIcon && (
           <span
             className={classNames(

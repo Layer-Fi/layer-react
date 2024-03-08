@@ -3,7 +3,7 @@ import { DATE_FORMAT } from '../../config/general'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types'
 import { MatchBadge } from '../BankTransactionRow/MatchBadge'
-import { Text, TextUseTooltip } from '../Typography/Text'
+import { Text, TextUseTooltip, ErrorText } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
@@ -12,6 +12,7 @@ export interface MatchFormProps {
   bankTransaction: BankTransaction
   selectedMatchId?: string
   setSelectedMatchId: (val?: string) => void
+  matchFormError?: string
 }
 
 export const MatchForm = ({
@@ -19,6 +20,7 @@ export const MatchForm = ({
   bankTransaction,
   selectedMatchId,
   setSelectedMatchId,
+  matchFormError,
 }: MatchFormProps) => {
   return (
     <div className={`${classNamePrefix}__match-table`}>
@@ -104,6 +106,7 @@ export const MatchForm = ({
           </div>
         )
       })}
+      {matchFormError && <ErrorText>{matchFormError}</ErrorText>}
     </div>
   )
 }

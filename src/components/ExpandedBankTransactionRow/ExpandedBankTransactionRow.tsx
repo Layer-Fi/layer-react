@@ -8,6 +8,7 @@ import React, {
   TransitionEvent,
 } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
+import AlertCircle from '../../icons/AlertCircle'
 import Link from '../../icons/Link'
 import Scissors from '../../icons/Scissors'
 import {
@@ -22,14 +23,15 @@ import {
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
+import { SubmitAction } from '../Button/SubmitButton'
 import { CategoryMenu } from '../CategoryMenu'
 import { InputGroup, Input, FileInput } from '../Input'
 import { MatchForm } from '../MatchForm'
 import { Textarea } from '../Textarea'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
-import { Text } from '../Typography'
-import { TextSize } from '../Typography/Text'
+import { Text, ErrorText, TextSize } from '../Typography'
+import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
 
 type Props = {
@@ -37,6 +39,8 @@ type Props = {
   isOpen?: boolean
   asListItem?: boolean
   submitBtnText?: string
+  containerWidth?: number
+  editable?: boolean
 }
 
 type Split = {
@@ -79,13 +83,29 @@ const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
   return undefined
 }
 
+const validateSplit = (splitData: RowState) => {
+  let valid = true
+
+  splitData.splits.forEach(split => {
+    if (split.amount <= 0) {
+      valid = false
+    } else if (!split.category) {
+      valid = false
+    }
+  })
+
+  return valid
+}
+
 export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
   (
     {
       bankTransaction,
       isOpen = false,
+      editable,
       asListItem = false,
       submitBtnText = 'Save',
+      containerWidth,
     },
     ref,
   ) => {
@@ -103,6 +123,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
       isAlreadyMatched(bankTransaction),
     )
+    const [matchFormError, setMatchFormError] = useState<string | undefined>()
+    const [splitFormError, setSplitFormError] = useState<string | undefined>()
     const [height, setHeight] = useState<string | number>(0)
     const [isOver, setOver] = useState(false)
     const bodyRef = useRef<HTMLSpanElement>(null)
@@ -133,7 +155,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       file: undefined,
     })
 
-    const addSplit = () =>
+    const addSplit = () => {
       updateRowState({
         ...rowState,
         splits: [
@@ -141,6 +163,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
           { amount: 0, inputValue: '0.00', category: defaultCategory },
         ],
       })
+      setSplitFormError(undefined)
+    }
 
     const removeSplit = (index: number) => {
       const newSplits = rowState.splits.filter((_v, idx) => idx !== index)
@@ -156,6 +180,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         ...rowState,
         splits: newSplits,
       })
+      setSplitFormError(undefined)
     }
 
     const updateAmounts =
@@ -173,6 +198,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         rowState.splits[0].amount = remaining
         rowState.splits[0].inputValue = formatMoney(remaining)
         updateRowState({ ...rowState })
+        setSplitFormError(undefined)
       }
 
     const onBlur = (event: React.FocusEvent<HTMLInputElement>) => {
@@ -180,28 +206,46 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         const [_, index] = event.target.name.split('-')
         rowState.splits[parseInt(index)].inputValue = '0.00'
         updateRowState({ ...rowState })
+        setSplitFormError(undefined)
       }
     }
 
-    const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) =>
+    const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
       setPurpose(
         event.target.value === Purpose.match
           ? Purpose.match
           : Purpose.categorize,
       )
+      setSplitFormError(undefined)
+      setMatchFormError(undefined)
+    }
 
     const changeCategory = (index: number, newValue: Category) => {
       rowState.splits[index].category = newValue
       updateRowState({ ...rowState })
+      setSplitFormError(undefined)
     }
 
     const save = () => {
       if (purpose === Purpose.match) {
-        if (
+        if (!selectedMatchId) {
+          setMatchFormError('Select an option to match the transaction')
+        } else if (
           selectedMatchId &&
           selectedMatchId !== isAlreadyMatched(bankTransaction)
         ) {
           onMatchSubmit(selectedMatchId)
+        }
+        return
+      }
+
+      if (!validateSplit(rowState)) {
+        if (rowState.splits.length > 1) {
+          setSplitFormError(
+            'Use only positive amounts and select category for each entry',
+          )
+        } else {
+          setSplitFormError('Category is required')
         }
         return
       }
@@ -226,7 +270,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 amount: split.amount,
               })),
             } as SplitCategoryUpdate),
-      ).catch(e => console.error(e))
+      )
     }
 
     // Call this save action after clicking save in parent component:
@@ -336,7 +380,11 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       classNamePrefix={className}
                       bankTransaction={bankTransaction}
                       selectedMatchId={selectedMatchId}
-                      setSelectedMatchId={setSelectedMatchId}
+                      setSelectedMatchId={id => {
+                        setMatchFormError(undefined)
+                        setSelectedMatchId(id)
+                      }}
+                      matchFormError={matchFormError}
                     />
                   </div>
                 </div>
@@ -386,6 +434,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                         </div>
                       ))}
                     </div>
+                    {splitFormError && <ErrorText>{splitFormError}</ErrorText>}
                     <div className={`${className}__splits-buttons`}>
                       {rowState.splits.length > 1 ? (
                         <TextButton
@@ -436,6 +485,16 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
               {asListItem ? (
                 <div className={`${className}__submit-btn`}>
+                  {bankTransaction.error ? (
+                    <Text
+                      as='span'
+                      size={TextSize.md}
+                      className='Layer__unsaved-info'
+                    >
+                      <span>Unsaved</span>
+                      <AlertCircle size={12} />
+                    </Text>
+                  ) : null}
                   <SubmitButton
                     onClick={() => {
                       if (!bankTransaction.processing) {
@@ -444,14 +503,18 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                     }}
                     className='Layer__bank-transaction__submit-btn'
                     processing={bankTransaction.processing}
-                    error={bankTransaction.error}
                     active={true}
+                    action={editable ? SubmitAction.SAVE : SubmitAction.UPDATE}
                   >
                     {submitBtnText}
                   </SubmitButton>
                 </div>
               ) : null}
             </div>
+            <APIErrorNotifications
+              bankTransaction={bankTransaction}
+              containerWidth={containerWidth}
+            />
           </span>
         )}
       </span>

@@ -7,11 +7,17 @@
 }
 
 .Layer__bank-transaction-row {
-  transition: top var(--transition-speed) ease-out;
+  transition: top var(--transition-speed) ease-in-out;
   top: 1px;
 
   &.Layer__bank-transaction-row--removing {
     top: 0;
+
+    .Layer__table-cell-content {
+      padding: 0 var(--spacing-md);
+      overflow: hidden;
+      min-height: 0;
+    }
   }
 }
 
@@ -51,6 +57,7 @@
 .Layer__expanded-bank-transaction-row {
   display: block;
   overflow: hidden;
+  position: relative;
   background-color:  var(--bg-element-focus);
   transition: background-color var(--transition-speed) ease-in-out, height var(--transition-speed) ease-in-out;
 }
@@ -289,6 +296,13 @@
   width: 0%;
 }
 
+.Layer__bank-transactions--to-review .Layer__bank-transactions__table {
+  .Layer__bank-transaction__submit-btn,
+  .Layer__bank-transaction__retry-btn {
+    min-width: 122px;
+  }
+}
+
 .Layer__bank-transaction-row__actions-cell--open {
   border-left: 1px solid transparent;
 }
@@ -331,6 +345,13 @@
     overflow: hidden;
     transition: all var(--transition-speed) ease-out;
   }
+
+  & > .Layer__text--error {
+    padding: var(--spacing-md);
+    padding-top: 0;
+    margin: 0;
+    font-size: var(--text-xs);
+  }
 }
 
 .Layer__bank-transaction-list-item.Layer__bank-transaction-list-item--expanded {
@@ -340,6 +361,7 @@
     max-height: 0;
     padding: 0;
     opacity: 0;
+    z-index: -1;
   }
 
   .Layer__bank-transaction-list-item__expanded-row {
@@ -420,10 +442,8 @@
   box-sizing: border-box;
   padding: var(--spacing-md);
   padding-top: var(--spacing-sm);
-
-  .Layer__bank-transaction__submit-btn {
-    width: 100%;
-  }
+  display: flex;
+  gap: var(--spacing-md);
 }
 
 .Layer__table.Layer__bank-transactions__table {
@@ -892,4 +912,117 @@
       width: 100%;
     }
   }
+}
+
+.Layer__bank-transactions__notifications {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  bottom: var(--spacing-2xs);
+  left: calc(100% - 340px - var(--spacing-2xs));
+  transition: all var(--transition-speed) ease-in-out;
+  z-index: 1;
+  min-width: 300px;
+
+  .Layer__bank-transactions__notification {
+    transition: all var(--transition-speed) ease-in-out;
+    overflow: hidden;
+    padding: 12px;
+    margin: 0;
+    margin-top: -12px;
+    height: 56px;
+    cursor: pointer;
+
+    &:hover .Layer__bank-transactions__notification-content {
+      box-shadow: 0px 0px 3px 0px var(--base-transparent-12), 0px 0px 0px 1px var(--color-base-200);
+    }
+  }
+
+  .Layer__bank-transactions__notification-content {
+    padding: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-xs);
+    padding-right: var(--spacing-md);
+    gap: var(--spacing-sm);
+    border-radius: var(--border-radius-3xs);
+    background: var(--color-base-0);
+    box-shadow: 0px 0px 12px 0px var(--base-transparent-12), 0px 0px 0px 1px var(--color-base-200);
+  }
+
+  .Layer__bank-transactions__notification-icon {
+    width: var(--spacing-3xl);
+    height: var(--spacing-3xl);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--border-radius-3xs);
+    background: var(--color-base-0);
+    color: var(--color-danger);
+    box-shadow: 0px 1px 2px 0px var(--base-transparent-6), 0px 0px 0px 1px var(--color-base-300);
+  }
+
+  .Layer__bank-transactions__notification-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .Layer__bank-transactions__notification-title {
+    font-size: var(--text-md);
+    color: var(--color-base-1000);
+  }
+
+  .Layer__bank-transactions__notification-message {
+    font-size: var(--text-sm);
+    color: var(--color-base-700);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    height: 56px;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+    padding-top: 6px;
+    padding-bottom: 6px;
+    height: 0;
+  }
+}
+
+.notification-enter {
+  animation: fadeIn var(--transition-speed) forwards;
+}
+
+.notification-exit {
+  animation: fadeOut var(--transition-speed) forwards;
+}
+
+.Layer__expanded-bank-transaction-row__splits-inputs + .Layer__text--error {
+  margin: 0;
+  padding: var(--spacing-2xs) 0;
+  padding-bottom: var(--spacing-md);
+}
+
+.Layer__expanded-bank-transaction-row__match-table .Layer__text--error {
+  margin: 0;
+  padding: var(--spacing-2xs) 0;
+  padding-bottom: var(--spacing-md);
 }

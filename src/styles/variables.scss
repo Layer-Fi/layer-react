@@ -35,6 +35,7 @@
 
   --base-transparent-5: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.05);
   --base-transparent-6: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.06);
+  --base-transparent-12: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.12);
 
 
   // 2. BASE CUSTOMIZATION
@@ -68,6 +69,7 @@
   --spacing-lg: 24px;
   --spacing-xl: 32px;
   --spacing-2xl: 36px;
+  --spacing-3xl: 40px;
   --spacing-5xl: 52px;
   --bg-color: var(--color-white);
   --border-color: var(--color-base-200);

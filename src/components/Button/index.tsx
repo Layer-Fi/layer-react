@@ -1,4 +1,5 @@
 export { Button, ButtonVariant } from './Button'
-export { SubmitButton } from './SubmitButton'
 export { IconButton } from './IconButton'
+export { RetryButton } from './RetryButton'
+export { SubmitButton } from './SubmitButton'
 export { TextButton } from './TextButton'
