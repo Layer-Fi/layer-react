@@ -176,16 +176,19 @@ export const BankTransactions = ({
           </thead>
           <tbody>
             {!isLoading &&
-              bankTransactions?.map((bankTransaction: BankTransaction) => (
-                <BankTransactionRow
-                  key={bankTransaction.id}
-                  dateFormat={DATE_FORMAT}
-                  bankTransaction={bankTransaction}
-                  editable={editable}
-                  removeTransaction={removeTransaction}
-                  containerWidth={containerWidth}
-                />
-              ))}
+              bankTransactions?.map(
+                (bankTransaction: BankTransaction, index: number) => (
+                  <BankTransactionRow
+                    index={index}
+                    key={bankTransaction.id}
+                    dateFormat={DATE_FORMAT}
+                    bankTransaction={bankTransaction}
+                    editable={editable}
+                    removeTransaction={removeTransaction}
+                    containerWidth={containerWidth}
+                  />
+                ),
+              )}
           </tbody>
         </table>
       )}
@@ -198,16 +201,19 @@ export const BankTransactions = ({
 
       {!isLoading && listView ? (
         <ul className='Layer__bank-transactions__list'>
-          {bankTransactions?.map((bankTransaction: BankTransaction) => (
-            <BankTransactionListItem
-              key={bankTransaction.id}
-              dateFormat={DATE_FORMAT}
-              bankTransaction={bankTransaction}
-              editable={editable}
-              removeTransaction={removeTransaction}
-              containerWidth={containerWidth}
-            />
-          ))}
+          {bankTransactions?.map(
+            (bankTransaction: BankTransaction, index: number) => (
+              <BankTransactionListItem
+                index={index}
+                key={bankTransaction.id}
+                dateFormat={DATE_FORMAT}
+                bankTransaction={bankTransaction}
+                editable={editable}
+                removeTransaction={removeTransaction}
+                containerWidth={containerWidth}
+              />
+            ),
+          )}
         </ul>
       ) : null}
 

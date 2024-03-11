@@ -29,6 +29,7 @@ import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
 type Props = {
+  index: number
   dateFormat: string
   bankTransaction: BankTransaction
   editable: boolean
@@ -60,6 +61,7 @@ export const getDefaultSelectedCategory = (
 }
 
 export const BankTransactionRow = ({
+  index = 0,
   dateFormat,
   bankTransaction,
   editable,
@@ -79,6 +81,16 @@ export const BankTransactionRow = ({
     setShowRetry(false)
     setOpen(!open)
   }
+
+  const [showComponent, setShowComponent] = useState(false)
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowComponent(true)
+    }, index * 80)
+
+    return () => clearTimeout(timeoutId)
+  }, [])
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -123,6 +135,7 @@ export const BankTransactionRow = ({
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
+    showComponent ? 'show' : '',
   )
 
   return (
