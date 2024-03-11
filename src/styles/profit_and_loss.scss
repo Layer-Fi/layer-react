@@ -152,7 +152,7 @@
 
 .Layer__profit-and-loss-row__label--depth-1 {
   padding-right: var(--spacing-md);
-  padding-left: var(--spacing-5xl);
+  padding-left: calc(var(--spacing-5xl) + var(--spacing-md));
   padding-top: var(--spacing-sm);
   padding-bottom: var(--spacing-sm);
   .Layer__text {
