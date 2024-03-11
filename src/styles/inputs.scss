@@ -15,6 +15,7 @@
 .Layer__input {
   padding: 8px;
   box-sizing: border-box;
+  position: relative;
   border: 1px solid var(--border-color);
   border-radius: var(--input-border-radius);
   border-width: 0px;
@@ -28,10 +29,35 @@
     color: var(--color-danger);
     box-shadow: 0px 0px 0px 1px var(--color-base-300), 0px 0px 0px 2px var(--color-danger);
   }
+
+  &:disabled {
+    background-color: var(--color-base-100);
+    color: var(--color-base-800);
+  }
+}
+
+.Layer__input--with-left-text {
+  padding-left: 60px;
+}
+
+.Layer__input-left-text {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  left: 0;
+  top: 0;
+  padding: var(--spacing-xs);
+  padding-right: var(--spacing-sm);
+  box-sizing: border-box;
+  border-right: 1px solid var(--input-border-color);
+  color: var(--color-base-700);
+  font-size: var(--text-sm);
 }
 
 .Layer__input-tooltip {
   flex: 0;
+  position: relative;
 }
 
 .Layer__textarea {
@@ -322,4 +348,10 @@
   width: 100%;
   max-width: 100%;
   flex: 1;
+}
+
+@media screen and (max-width: 400px) {
+  .Layer__select__menu-portal .Layer__select__option {
+    font-size: var(--text-sm) !important;
+  }
 }

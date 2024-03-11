@@ -202,6 +202,18 @@
   }
 }
 
+.Layer__expanded-bank-transaction-row__table-cell--split-entry__right-col {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.Layer__expanded-bank-transaction-row__table-cell--split-entry__merge-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+
 @container (min-width: 701px) {
   .Layer__expanded-bank-transaction-row__content-panel {  
     &.Layer__expanded-bank-transaction-row__content-panel--active {
@@ -241,6 +253,9 @@
 .Layer__expanded-bank-transaction-row__splits-inputs {
   flex: 1;
   padding-top: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
 .Layer__expanded-bank-transaction-row__splits-total {
@@ -251,6 +266,13 @@
 
 .Layer__expanded-bank-transaction-row__splits-buttons { 
   padding-bottom: 2px;
+}
+
+.Layer__expanded-bank-transaction-row__total-and-btns { 
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
 }
 
 .Layer__bank-transaction-row__table-cell--amount-credit,
@@ -317,7 +339,6 @@
 .Layer__expanded-bank-transaction-row__table-cell--split-entry {
   display: flex;
   flex-direction: row;
-  margin-bottom: 0.5rem;
   gap: var(--spacing-md);
 }
 
@@ -897,19 +918,86 @@
   .Layer__expanded-bank-transaction-row__splits-inputs {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
-    gap: 0;
+    flex: 1;
+    width: 100%;
+    gap: var(--spacing-sm);
   }
 
   .Layer__expanded-bank-transaction-row__table-cell--split-entry {
-    flex-direction: column;
-    padding: var(--spacing-sm) 0;
-    border-bottom: 1px solid var(--color-base-300);
-    gap: var(--spacing-2xs);
-    margin-bottom: 0;
+    gap: var(--spacing-sm);
+    width: 100%;
 
     input {
       width: 100%;
+    }
+
+    .Layer__input-tooltip {
+      flex: 1;
+      max-width: 42%;
+      position: relative;
+    }
+  }
+
+  .Layer__expanded-bank-transaction-row__total-and-btns {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+
+    .Layer__input-tooltip {
+      flex: 1;
+      width: 100%;
+      max-width: 42%;
+      position: relative;
+    }
+
+    .Layer__input {
+      max-width: 100%;
+    }
+  }
+}
+
+@container (max-width: 500px) {
+  .Layer__expanded-bank-transaction-row__content-toggle .Layer__toggle-option input + span {
+    font-size: var(--text-xs);
+  }
+
+  .Layer__bank-transaction-list-item__expanded-row {
+    input,
+    .Layer__category-menu {
+      font-size: var(--text-xs);
+    }
+    .Layer__select .Layer__select__control {
+      min-height: 32px;
+    }
+    .Layer__select__indicator {
+      padding: var(--spacing-3xs);
+    }
+
+    .Layer__expanded-bank-transaction-row__table-cell--split-entry__merge-btn {
+      width: 32px;
+      height: 32px;
+      min-height: 32px;
+
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    .Layer__expanded-bank-transaction-row__file-upload,
+    .Layer__expanded-bank-transaction-row__total-and-btns {
+      .Layer__btn {
+        min-height: 32px;
+      }
+
+      .Layer__btn-text {
+        font-size: var(--text-xs);
+      }
+      .Layer__btn-icon {
+        width: 12px;
+        height: 12px;
+      }
     }
   }
 }
@@ -1047,5 +1135,40 @@
   .Layer__bank-transactions__tx-col,
   .Layer__bank-transactions__amount-col {
     font-variation-settings: 'wght' var(--font-weight-bold);
+  }
+}
+
+.Layer__expanded-bank-transaction-row__splits-inputs .Layer__input {
+  text-align: right;
+}
+
+.Layer__expanded-bank-transaction-row__total-and-btns .Layer__input {
+  max-width: 100%;
+  text-align: right;
+}
+
+@container (min-width: 401px) {
+  .Layer__expanded-bank-transaction-row__total-and-btns .Layer__input-tooltip,
+  .Layer__expanded-bank-transaction-row__table-cell--split-entry .Layer__input-tooltip {
+    max-width: 200px;
+    flex: 1;
+
+    .Layer__input {
+      width: 100%;
+    }
+  }
+}
+
+@container (max-width: 480px) {
+  .Layer__expanded-bank-transaction-row__total-and-btns {
+    & > .Layer__input-tooltip > .Layer__input:disabled {
+      background-color: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    & > .Layer__input-tooltip > .Layer__input-left-text {
+      border-right-color: transparent;
+    }
   }
 }

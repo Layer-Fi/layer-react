@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react'
 import { useElementSize } from '../../hooks/useElementSize'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import classNames from 'classnames'
 
 export interface Option {
@@ -149,6 +150,35 @@ const ToggleOption = ({
   disabled,
   index,
 }: ToggleOptionProps) => {
+  if (disabled) {
+    return (
+      <Tooltip>
+        <TooltipTrigger>
+          <label className={`Layer__toggle-option`} data-checked={checked}>
+            <input
+              type='radio'
+              checked={checked}
+              name={name}
+              onChange={onChange}
+              value={value}
+              disabled={disabled ?? false}
+              data-idx={index}
+            />
+            <span className='Layer__toggle-option-content'>
+              {leftIcon && (
+                <span className='Layer__toggle-option__icon'>{leftIcon}</span>
+              )}
+              <span>{label}</span>
+            </span>
+          </label>
+        </TooltipTrigger>
+        <TooltipContent className='Layer__tooltip'>
+          We could not find matching transactions
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
+
   return (
     <label className={`Layer__toggle-option`} data-checked={checked}>
       <input
@@ -160,7 +190,6 @@ const ToggleOption = ({
         disabled={disabled ?? false}
         data-idx={index}
       />
-
       <span className='Layer__toggle-option-content'>
         {leftIcon && (
           <span className='Layer__toggle-option__icon'>{leftIcon}</span>

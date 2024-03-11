@@ -9,8 +9,8 @@ import React, {
 } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import AlertCircle from '../../icons/AlertCircle'
-import Link from '../../icons/Link'
 import Scissors from '../../icons/Scissors'
+import Trash from '../../icons/Trash'
 import {
   centsToDollars as formatMoney,
   dollarsToCents as parseMoney,
@@ -415,59 +415,65 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                             isInvalid={split.amount < 0}
                             errorMessage='Negative values are not allowed'
                           />
-                          <CategoryMenu
-                            bankTransaction={bankTransaction}
-                            name={`category-${index}${asListItem ? '-li' : ''}`}
-                            value={split.category}
-                            onChange={value => changeCategory(index, value)}
-                            className='Layer__category-menu--full'
-                          />
-                          {index > 0 && (
-                            <Button
-                              onClick={() => removeSplit(index)}
-                              rightIcon={<Link size={14} />}
-                              variant={ButtonVariant.secondary}
-                            >
-                              Merge
-                            </Button>
-                          )}
+                          <div
+                            className={`${className}__table-cell--split-entry__right-col`}
+                          >
+                            <CategoryMenu
+                              bankTransaction={bankTransaction}
+                              name={`category-${index}${
+                                asListItem ? '-li' : ''
+                              }`}
+                              value={split.category}
+                              onChange={value => changeCategory(index, value)}
+                              className='Layer__category-menu--full'
+                            />
+                            {index > 0 && (
+                              <Button
+                                className={`${className}__table-cell--split-entry__merge-btn`}
+                                onClick={() => removeSplit(index)}
+                                rightIcon={<Trash size={18} />}
+                                variant={ButtonVariant.secondary}
+                                iconOnly={true}
+                              />
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
                     {splitFormError && <ErrorText>{splitFormError}</ErrorText>}
-                    <div className={`${className}__splits-buttons`}>
-                      {rowState.splits.length > 1 ? (
-                        <TextButton
-                          onClick={addSplit}
-                          disabled={rowState.splits.length > 5}
-                        >
-                          Add new split
-                        </TextButton>
-                      ) : (
-                        <Button
-                          onClick={addSplit}
-                          rightIcon={<Scissors size={14} />}
-                          variant={ButtonVariant.secondary}
-                          disabled={rowState.splits.length > 5}
-                        >
-                          Split
-                        </Button>
+                    <div className={`${className}__total-and-btns`}>
+                      {rowState.splits.length > 1 && (
+                        <Input
+                          disabled={true}
+                          leftText='Total'
+                          value={`$${formatMoney(
+                            rowState.splits.reduce(
+                              (x, { amount }) => x + amount,
+                              0,
+                            ),
+                          )}`}
+                        />
                       )}
-                    </div>
-                    {rowState.splits.length > 1 && (
-                      <Text
-                        size={TextSize.sm}
-                        className={`${className}__splits-total`}
-                      >
-                        Total: $
-                        {formatMoney(
-                          rowState.splits.reduce(
-                            (x, { amount }) => x + amount,
-                            0,
-                          ),
+                      <div className={`${className}__splits-buttons`}>
+                        {rowState.splits.length > 1 ? (
+                          <TextButton
+                            onClick={addSplit}
+                            disabled={rowState.splits.length > 5}
+                          >
+                            Add new split
+                          </TextButton>
+                        ) : (
+                          <Button
+                            onClick={addSplit}
+                            rightIcon={<Scissors size={14} />}
+                            variant={ButtonVariant.secondary}
+                            disabled={rowState.splits.length > 5}
+                          >
+                            Split
+                          </Button>
                         )}
-                      </Text>
-                    )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
