@@ -8,10 +8,9 @@ import React, {
   TransitionEvent,
 } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
-import FolderPlus from '../../icons/FolderPlus'
-import Link from '../../icons/Link'
-import RefreshCcw from '../../icons/RefreshCcw'
+import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/Scissors'
+import Trash from '../../icons/Trash'
 import {
   centsToDollars as formatMoney,
   dollarsToCents as parseMoney,
@@ -23,23 +22,25 @@ import {
   Category,
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
-import { MatchBadge } from '../BankTransactionRow/MatchBadge'
-import { Button, SubmitButton, ButtonVariant } from '../Button'
+import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
+import { SubmitAction } from '../Button/SubmitButton'
 import { CategoryMenu } from '../CategoryMenu'
 import { InputGroup, Input, FileInput } from '../Input'
+import { MatchForm } from '../MatchForm'
 import { Textarea } from '../Textarea'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
+import { Text, ErrorText, TextSize } from '../Typography'
+import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
-import { parseISO, format as formatTime } from 'date-fns'
-
-const dateFormat = 'LLL d, yyyy'
 
 type Props = {
   bankTransaction: BankTransaction
   isOpen?: boolean
   asListItem?: boolean
   submitBtnText?: string
+  containerWidth?: number
+  editable?: boolean
 }
 
 type Split = {
@@ -82,13 +83,29 @@ const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
   return undefined
 }
 
+const validateSplit = (splitData: RowState) => {
+  let valid = true
+
+  splitData.splits.forEach(split => {
+    if (split.amount <= 0) {
+      valid = false
+    } else if (!split.category) {
+      valid = false
+    }
+  })
+
+  return valid
+}
+
 export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
   (
     {
       bankTransaction,
       isOpen = false,
+      editable,
       asListItem = false,
       submitBtnText = 'Save',
+      containerWidth,
     },
     ref,
   ) => {
@@ -97,11 +114,17 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       match: matchBankTransaction,
     } = useBankTransactions()
     const [purpose, setPurpose] = useState<Purpose>(
-      hasMatch(bankTransaction) ? Purpose.match : Purpose.categorize,
+      bankTransaction.category
+        ? Purpose.categorize
+        : hasMatch(bankTransaction)
+        ? Purpose.match
+        : Purpose.categorize,
     )
     const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
       isAlreadyMatched(bankTransaction),
     )
+    const [matchFormError, setMatchFormError] = useState<string | undefined>()
+    const [splitFormError, setSplitFormError] = useState<string | undefined>()
     const [height, setHeight] = useState<string | number>(0)
     const [isOver, setOver] = useState(false)
     const bodyRef = useRef<HTMLSpanElement>(null)
@@ -132,7 +155,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       file: undefined,
     })
 
-    const addSplit = () =>
+    const addSplit = () => {
       updateRowState({
         ...rowState,
         splits: [
@@ -140,6 +163,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
           { amount: 0, inputValue: '0.00', category: defaultCategory },
         ],
       })
+      setSplitFormError(undefined)
+    }
 
     const removeSplit = (index: number) => {
       const newSplits = rowState.splits.filter((_v, idx) => idx !== index)
@@ -155,6 +180,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         ...rowState,
         splits: newSplits,
       })
+      setSplitFormError(undefined)
     }
 
     const updateAmounts =
@@ -172,6 +198,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         rowState.splits[0].amount = remaining
         rowState.splits[0].inputValue = formatMoney(remaining)
         updateRowState({ ...rowState })
+        setSplitFormError(undefined)
       }
 
     const onBlur = (event: React.FocusEvent<HTMLInputElement>) => {
@@ -179,28 +206,46 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         const [_, index] = event.target.name.split('-')
         rowState.splits[parseInt(index)].inputValue = '0.00'
         updateRowState({ ...rowState })
+        setSplitFormError(undefined)
       }
     }
 
-    const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) =>
+    const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
       setPurpose(
         event.target.value === Purpose.match
           ? Purpose.match
           : Purpose.categorize,
       )
+      setSplitFormError(undefined)
+      setMatchFormError(undefined)
+    }
 
     const changeCategory = (index: number, newValue: Category) => {
       rowState.splits[index].category = newValue
       updateRowState({ ...rowState })
+      setSplitFormError(undefined)
     }
 
     const save = () => {
       if (purpose === Purpose.match) {
-        if (
+        if (!selectedMatchId) {
+          setMatchFormError('Select an option to match the transaction')
+        } else if (
           selectedMatchId &&
           selectedMatchId !== isAlreadyMatched(bankTransaction)
         ) {
           onMatchSubmit(selectedMatchId)
+        }
+        return
+      }
+
+      if (!validateSplit(rowState)) {
+        if (rowState.splits.length > 1) {
+          setSplitFormError(
+            'Use only positive amounts and select category for each entry',
+          )
+        } else {
+          setSplitFormError('Category is required')
         }
         return
       }
@@ -225,7 +270,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 amount: split.amount,
               })),
             } as SplitCategoryUpdate),
-      ).catch(e => console.error(e))
+      )
     }
 
     // Call this save action after clicking save in parent component:
@@ -305,12 +350,10 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   {
                     value: 'categorize',
                     label: 'Categorize',
-                    leftIcon: <FolderPlus size={15} />,
                   },
                   {
                     value: 'match',
                     label: 'Match',
-                    leftIcon: <RefreshCcw size={15} />,
                     disabled: !hasMatch(bankTransaction),
                   },
                 ]}
@@ -333,72 +376,16 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   )}
                 >
                   <div className={`${className}__content-panel-container`}>
-                    <table className={`Layer__table ${className}__match-table`}>
-                      <thead>
-                        <tr>
-                          <th className='Layer__table-header'>Date</th>
-                          <th className='Layer__table-header'>Description</th>
-                          <th
-                            className={`Layer__table-header ${className}__match-table__amount`}
-                          >
-                            Amount
-                          </th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {bankTransaction.suggested_matches?.map(
-                          (match, idx) => {
-                            return (
-                              <tr
-                                key={idx}
-                                className={classNames(
-                                  `${className}__match-row`,
-                                  match.id === selectedMatchId
-                                    ? `${className}__match-row--selected`
-                                    : '',
-                                )}
-                                onClick={() => {
-                                  if (selectedMatchId === match.id) {
-                                    setSelectedMatchId(undefined)
-                                    return
-                                  }
-                                  setSelectedMatchId(match.id)
-                                }}
-                              >
-                                <td className='Layer__table-cell Layer__nowrap'>
-                                  {formatTime(
-                                    parseISO(match.details.date),
-                                    dateFormat,
-                                  )}
-                                </td>
-                                <td className='Layer__table-cell'>
-                                  {match.details.description}
-                                </td>
-                                <td
-                                  className={`Layer__table-cell ${className}__match-table__amount`}
-                                >
-                                  ${formatMoney(match.details.amount)}
-                                </td>
-                                <td
-                                  className={`${className}__match-table__status`}
-                                >
-                                  {match.details.id ===
-                                    bankTransaction.match?.details.id && (
-                                    <MatchBadge
-                                      classNamePrefix={className}
-                                      bankTransaction={bankTransaction}
-                                      dateFormat={dateFormat}
-                                      text='Matched'
-                                    />
-                                  )}
-                                </td>
-                              </tr>
-                            )
-                          },
-                        )}
-                      </tbody>
-                    </table>
+                    <MatchForm
+                      classNamePrefix={className}
+                      bankTransaction={bankTransaction}
+                      selectedMatchId={selectedMatchId}
+                      setSelectedMatchId={id => {
+                        setMatchFormError(undefined)
+                        setSelectedMatchId(id)
+                      }}
+                      matchFormError={matchFormError}
+                    />
                   </div>
                 </div>
 
@@ -425,38 +412,67 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                             onChange={updateAmounts(index)}
                             value={split.inputValue}
                             onBlur={onBlur}
-                            className={`${className}__split-amount${
-                              split.amount < 0 ? '--negative' : ''
-                            }`}
+                            isInvalid={split.amount < 0}
+                            errorMessage='Negative values are not allowed'
                           />
-                          <CategoryMenu
-                            bankTransaction={bankTransaction}
-                            name={`category-${index}${asListItem ? '-li' : ''}`}
-                            value={split.category}
-                            onChange={value => changeCategory(index, value)}
-                            className='Layer__category-menu--full'
-                          />
-                          {index > 0 && (
-                            <Button
-                              onClick={() => removeSplit(index)}
-                              leftIcon={<Link size={14} />}
-                              variant={ButtonVariant.secondary}
-                            >
-                              Merge
-                            </Button>
-                          )}
+                          <div
+                            className={`${className}__table-cell--split-entry__right-col`}
+                          >
+                            <CategoryMenu
+                              bankTransaction={bankTransaction}
+                              name={`category-${index}${
+                                asListItem ? '-li' : ''
+                              }`}
+                              value={split.category}
+                              onChange={value => changeCategory(index, value)}
+                              className='Layer__category-menu--full'
+                            />
+                            {index > 0 && (
+                              <Button
+                                className={`${className}__table-cell--split-entry__merge-btn`}
+                                onClick={() => removeSplit(index)}
+                                rightIcon={<Trash size={18} />}
+                                variant={ButtonVariant.secondary}
+                                iconOnly={true}
+                              />
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
-                    <div className={`${className}__splits-buttons`}>
-                      <Button
-                        onClick={addSplit}
-                        leftIcon={<Scissors size={14} />}
-                        variant={ButtonVariant.secondary}
-                        disabled={rowState.splits.length > 5}
-                      >
-                        Split
-                      </Button>
+                    {splitFormError && <ErrorText>{splitFormError}</ErrorText>}
+                    <div className={`${className}__total-and-btns`}>
+                      {rowState.splits.length > 1 && (
+                        <Input
+                          disabled={true}
+                          leftText='Total'
+                          value={`$${formatMoney(
+                            rowState.splits.reduce(
+                              (x, { amount }) => x + amount,
+                              0,
+                            ),
+                          )}`}
+                        />
+                      )}
+                      <div className={`${className}__splits-buttons`}>
+                        {rowState.splits.length > 1 ? (
+                          <TextButton
+                            onClick={addSplit}
+                            disabled={rowState.splits.length > 5}
+                          >
+                            Add new split
+                          </TextButton>
+                        ) : (
+                          <Button
+                            onClick={addSplit}
+                            rightIcon={<Scissors size={14} />}
+                            variant={ButtonVariant.secondary}
+                            disabled={rowState.splits.length > 5}
+                          >
+                            Split
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -465,9 +481,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               <InputGroup
                 className={`${className}__description`}
                 name='description'
-                label='Description'
               >
-                <Textarea name='description' placeholder='Enter description' />
+                <Textarea name='description' placeholder='Add description' />
               </InputGroup>
 
               <div className={`${className}__file-upload`}>
@@ -476,6 +491,16 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
               {asListItem ? (
                 <div className={`${className}__submit-btn`}>
+                  {bankTransaction.error ? (
+                    <Text
+                      as='span'
+                      size={TextSize.md}
+                      className='Layer__unsaved-info'
+                    >
+                      <span>Unsaved</span>
+                      <AlertCircle size={12} />
+                    </Text>
+                  ) : null}
                   <SubmitButton
                     onClick={() => {
                       if (!bankTransaction.processing) {
@@ -484,14 +509,18 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                     }}
                     className='Layer__bank-transaction__submit-btn'
                     processing={bankTransaction.processing}
-                    error={bankTransaction.error}
                     active={true}
+                    action={editable ? SubmitAction.SAVE : SubmitAction.UPDATE}
                   >
                     {submitBtnText}
                   </SubmitButton>
                 </div>
               ) : null}
             </div>
+            <APIErrorNotifications
+              bankTransaction={bankTransaction}
+              containerWidth={containerWidth}
+            />
           </span>
         )}
       </span>

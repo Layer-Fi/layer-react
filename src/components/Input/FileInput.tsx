@@ -29,7 +29,7 @@ export const FileInput = ({ text = 'Upload', onUpload }: FileInputProps) => {
       <Button
         onClick={onClick}
         variant={ButtonVariant.secondary}
-        leftIcon={<UploadCloud />}
+        rightIcon={<UploadCloud />}
       >
         {text}
       </Button>

@@ -1,6 +1,7 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
-import ChevronDown from '../../icons/ChevronDown'
+import AlertCircle from '../../icons/AlertCircle'
+import ChevronDownFill from '../../icons/ChevronDownFill'
 import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import {
@@ -11,7 +12,8 @@ import {
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
 import { Badge } from '../Badge'
-import { SubmitButton } from '../Button'
+import { SubmitButton, IconButton, RetryButton } from '../Button'
+import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect'
 import {
   mapCategoryToOption,
@@ -20,20 +22,25 @@ import {
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { Text } from '../Typography'
-import { TextUseTooltip } from '../Typography/Text'
+import { TextSize, TextUseTooltip } from '../Typography/Text'
 import { MatchBadge } from './MatchBadge'
 import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
 type Props = {
+  index: number
   dateFormat: string
   bankTransaction: BankTransaction
   editable: boolean
+  removeTransaction: (id: string) => void
+  containerWidth?: number
 }
 
 const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
   direction === Direction.CREDIT
+
+export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
 
 export const extractDescriptionForSplit = (category: Category) => {
   if (!category.entries) {
@@ -54,11 +61,15 @@ export const getDefaultSelectedCategory = (
 }
 
 export const BankTransactionRow = ({
+  index = 0,
   dateFormat,
   bankTransaction,
   editable,
+  removeTransaction,
+  containerWidth,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
+  const [showRetry, setShowRetry] = useState(false)
   const [removed, setRemoved] = useState(false)
   const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
     useBankTransactions()
@@ -66,13 +77,31 @@ export const BankTransactionRow = ({
     getDefaultSelectedCategory(bankTransaction),
   )
   const [open, setOpen] = useState(false)
-  const toggleOpen = () => setOpen(!open)
+  const toggleOpen = () => {
+    setShowRetry(false)
+    setOpen(!open)
+  }
 
-  const save = () => {
+  const [showComponent, setShowComponent] = useState(false)
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowComponent(true)
+    }, index * 80)
+
+    return () => clearTimeout(timeoutId)
+  }, [])
+
+  useEffect(() => {
+    if (bankTransaction.error) {
+      setShowRetry(true)
+    }
+  }, [bankTransaction.error])
+
+  const save = async () => {
     // Save using form from expanded row when row is open:
     if (open && expandedRowRef?.current) {
       expandedRowRef?.current?.save()
-      setOpen(false)
       return
     }
 
@@ -106,6 +135,7 @@ export const BankTransactionRow = ({
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
+    showComponent ? 'show' : '',
   )
 
   return (
@@ -115,11 +145,12 @@ export const BankTransactionRow = ({
         onTransitionEnd={({ propertyName }) => {
           if (propertyName === 'top') {
             setRemoved(true)
+            removeTransaction(bankTransaction.id)
           }
         }}
       >
         <td className='Layer__table-cell'>
-          <span className='Layer__table-cell-content'>
+          <span className='Layer__table-cell-content Layer__bank-transaction-table__date-col'>
             {formatTime(parseISO(bankTransaction.date), dateFormat)}
           </span>
         </td>
@@ -149,7 +180,7 @@ export const BankTransactionRow = ({
           </span>
         </td>
         <td
-          className={`Layer__table-cell Layer__table-cell__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${
+          className={`Layer__table-cell Layer__table-cell__amount-col Layer__bank-transactions__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
         >
@@ -174,7 +205,10 @@ export const BankTransactionRow = ({
                 bankTransaction={bankTransaction}
                 name={`category-${bankTransaction.id}`}
                 value={selectedCategory}
-                onChange={setSelectedCategory}
+                onChange={category => {
+                  setSelectedCategory(category)
+                  setShowRetry(false)
+                }}
                 disabled={bankTransaction.processing}
               />
             ) : null}
@@ -228,7 +262,34 @@ export const BankTransactionRow = ({
                   )}
               </Text>
             ) : null}
-            {editable || open ? (
+            {editable && !open && showRetry ? (
+              <RetryButton
+                onClick={() => {
+                  if (!bankTransaction.processing) {
+                    save()
+                  }
+                }}
+                className='Layer__bank-transaction__retry-btn'
+                processing={bankTransaction.processing}
+                error={
+                  'Approval failed. Check connection and retry in few seconds.'
+                }
+              >
+                Retry
+              </RetryButton>
+            ) : null}
+            {open && bankTransaction.error ? (
+              <Text
+                as='span'
+                size={TextSize.md}
+                className='Layer__unsaved-info'
+              >
+                <span>Unsaved</span>
+                <AlertCircle size={12} />
+              </Text>
+            ) : null}
+            {(editable && (open || (!open && !showRetry))) ||
+            (!editable && open) ? (
               <SubmitButton
                 onClick={() => {
                   if (!bankTransaction.processing) {
@@ -237,31 +298,35 @@ export const BankTransactionRow = ({
                 }}
                 className='Layer__bank-transaction__submit-btn'
                 processing={bankTransaction.processing}
-                error={bankTransaction.error}
                 active={open}
+                action={editable ? SubmitAction.SAVE : SubmitAction.UPDATE}
               >
                 {editable ? 'Approve' : 'Update'}
               </SubmitButton>
             ) : null}
-            <div
+            <IconButton
               onClick={toggleOpen}
               className='Layer__bank-transaction-row__expand-button'
-            >
-              <ChevronDown
-                className={`Layer__chevron ${
-                  open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                }`}
-              />
-            </div>
+              active={open}
+              icon={
+                <ChevronDownFill
+                  className={`Layer__chevron ${
+                    open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                  }`}
+                />
+              }
+            />
           </span>
         </td>
       </tr>
       <tr>
-        <td colSpan={5}>
+        <td colSpan={5} className='Layer__bank-transaction-row__expanded-td'>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}
             isOpen={open}
+            containerWidth={containerWidth}
+            editable={editable}
           />
         </td>
       </tr>

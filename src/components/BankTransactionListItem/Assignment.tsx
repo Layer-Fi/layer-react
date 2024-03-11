@@ -1,14 +1,13 @@
 import React from 'react'
+import { DATE_FORMAT } from '../../config/general'
 import Scissors from '../../icons/Scissors'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { Badge } from '../Badge'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
 import { MatchBadge } from '../BankTransactionRow/MatchBadge'
 import { SplitTooltipDetails } from '../BankTransactionRow/SplitTooltipDetails'
-import { Pill } from '../Pill'
+import { Text } from '../Typography'
 import { parseISO, format as formatTime } from 'date-fns'
-
-const dateFormat = 'LLL d, yyyy'
 
 export interface AssignmentProps {
   bankTransaction: BankTransaction
@@ -24,17 +23,15 @@ export const Assignment = ({ bankTransaction }: AssignmentProps) => {
         <MatchBadge
           classNamePrefix='Layer__bank-transaction-list-item'
           bankTransaction={bankTransaction}
-          dateFormat={dateFormat}
+          dateFormat={DATE_FORMAT}
           text='Matched'
         />
-        <Pill>
-          <span className='Layer__bank-transaction-list-item__category-text__text'>
-            {`${formatTime(
-              parseISO(bankTransaction.match.bank_transaction.date),
-              dateFormat,
-            )}, ${bankTransaction.match.bank_transaction.description}`}
-          </span>
-        </Pill>
+        <Text className='Layer__bank-transaction-list-item__category-text__text'>
+          {`${formatTime(
+            parseISO(bankTransaction.match.bank_transaction.date),
+            DATE_FORMAT,
+          )}, ${bankTransaction.match.bank_transaction.description}`}
+        </Text>
       </>
     )
   }
@@ -53,14 +50,12 @@ export const Assignment = ({ bankTransaction }: AssignmentProps) => {
         >
           Split
         </Badge>
-        <Pill>
-          <span className='Layer__bank-transaction-list-item__category-text__text'>
-            {extractDescriptionForSplit(bankTransaction.category)}
-          </span>
-        </Pill>
+        <Text className='Layer__bank-transaction-list-item__category-text__text'>
+          {extractDescriptionForSplit(bankTransaction.category)}
+        </Text>
       </>
     )
   }
 
-  return <Pill>{bankTransaction?.category?.display_name}</Pill>
+  return <Text>{bankTransaction?.category?.display_name}</Text>
 }

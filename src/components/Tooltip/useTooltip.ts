@@ -75,8 +75,10 @@ export const useTooltip = ({
   const { isMounted, styles } = useTransitionStyles(context, {
     initial: {
       opacity: 0,
+      transform: 'scale(0.7)',
+      color: 'transparent',
     },
-    duration: 200,
+    duration: 300,
   })
 
   return React.useMemo(

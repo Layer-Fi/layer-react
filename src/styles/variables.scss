@@ -15,7 +15,7 @@
 
   --color-light-h: 0;
   --color-light-s: 0%;
-  --color-light-l: 76%;
+  --color-light-l: 90%;
   --color-light: hsl(var(--color-light-h) var(--color-light-s) var(--color-light-l));
 
   --color-base-0: #fff;
@@ -33,7 +33,9 @@
 
   --max-component-width: 1408px;
 
+  --base-transparent-5: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.05);
   --base-transparent-6: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.06);
+  --base-transparent-12: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.12);
 
 
   // 2. BASE CUSTOMIZATION
@@ -67,6 +69,7 @@
   --spacing-lg: 24px;
   --spacing-xl: 32px;
   --spacing-2xl: 36px;
+  --spacing-3xl: 40px;
   --spacing-5xl: 52px;
   --bg-color: var(--color-white);
   --border-color: var(--color-base-200);
@@ -84,7 +87,7 @@
   --input-border-radius: var(--border-radius-2xs);
   --input-font-size: var(--text-md);
   --input-border-color: var(--color-base-300);
-  --input-placeholder-color: var(--color-base-500);
+  --input-placeholder-color: var(--color-base-300);
   
   --label-color: var(--color-base-700);
 
@@ -130,7 +133,6 @@
   --buttons-border-color: var(--color-mischke);
   --button-color-dark: var(--color-fiord);
   --corner-radius: 0.5rem;
-  --error-color: var(--color-red);
   --indicator-color: var(--color-mine-shaft);
   --table-border-color: var(--color-athens-gray);
   --table-expanded-background-color: var(--color-alabaster);

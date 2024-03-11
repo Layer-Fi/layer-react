@@ -46,9 +46,9 @@ export const Indicator = ({
         width: `${boxWidth * multiplier}px`,
         // @ts-expect-error -- y is fine but x apparently isn't!
         x: actualX - xOffset,
-        y: 5,
+        y: 22,
         borderRadius: 8,
-        height: 'calc(100% - 10px)',
+        height: 'calc(100% - 38px)',
       }}
     />
   )

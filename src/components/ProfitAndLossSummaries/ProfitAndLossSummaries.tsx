@@ -43,7 +43,9 @@ export const ProfitAndLossSummaries = ({
           {revenueLabel}
         </span>
         {isLoading || storedData === undefined ? (
-          <SkeletonLoader />
+          <div className='Layer__profit-and-loss-summaries__loader'>
+            <SkeletonLoader />
+          </div>
         ) : (
           <span
             className={`Layer__profit-and-loss-summaries__amount ${incomeDirectionClass}`}
@@ -57,7 +59,9 @@ export const ProfitAndLossSummaries = ({
           Expenses
         </span>
         {isLoading || storedData === undefined ? (
-          <SkeletonLoader />
+          <div className='Layer__profit-and-loss-summaries__loader'>
+            <SkeletonLoader className='Layer__profit-and-loss-summaries__loader' />
+          </div>
         ) : (
           <span
             className={`Layer__profit-and-loss-summaries__amount ${expensesDirectionClass}`}
@@ -71,7 +75,9 @@ export const ProfitAndLossSummaries = ({
           Net Profit
         </span>
         {isLoading || storedData === undefined ? (
-          <SkeletonLoader />
+          <div className='Layer__profit-and-loss-summaries__loader'>
+            <SkeletonLoader className='Layer__profit-and-loss-summaries__loader' />
+          </div>
         ) : (
           <span
             className={`Layer__profit-and-loss-summaries__amount ${netProfitDirectionClass}`}

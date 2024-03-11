@@ -26,7 +26,7 @@
 }
 
 .Layer__component-header {
-  padding: var(--spacing-xl);
+  padding: var(--spacing-md);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -37,5 +37,13 @@
 @container (max-width: 700px) {
   .Layer__component-header {
     padding: var(--spacing-md);
+  }
+}
+
+@container (min-width: 1023px) {
+  .Layer__component-header {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+    padding-top: var(--spacing-xl);
   }
 }
