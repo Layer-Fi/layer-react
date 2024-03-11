@@ -78,7 +78,9 @@ export const ProfitAndLossRow = ({
         className={labelClasses.join(' ')}
         onClick={() => !lockExpanded && toggleExpanded()}
       >
-        {!lockExpanded && <ChevronDownFill size={16} />}
+        {!lockExpanded && variant !== 'summation' ? (
+          <ChevronDownFill size={16} />
+        ) : null}
         <Text>{display_name}</Text>
       </div>
       <div className={valueClasses.join(' ')}>

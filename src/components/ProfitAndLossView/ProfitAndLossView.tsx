@@ -11,7 +11,7 @@ export const ProfitAndLossView = () => {
     <Container name={COMPONENT_NAME}>
       <Header className={`Layer__${COMPONENT_NAME}__header`}>
         <Heading className='Layer__bank-transactions__title'>
-          Profit And Loss
+          Profit & Loss
         </Heading>
       </Header>
 

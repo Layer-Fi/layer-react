@@ -567,6 +567,14 @@
   }
 }
 
+@container (max-width: 1400px) {
+  .Layer__bank-transactions__header {
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+    padding-top: var(--spacing-md);
+  }
+}
+
 @container (max-width: 700px) {
   .Layer__bank-transactions__header {
     box-shadow: 0px -1px 0px 0px rgba(23, 51, 45, 0.16) inset;
