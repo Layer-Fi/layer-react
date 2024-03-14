@@ -15,7 +15,7 @@ export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
 
   if (isLoading || actualData === undefined) {
     return (
-      <div className='Layer__bank-transactions__loader-container'>
+      <div className='Layer__profit-and-loss-table__loader-container'>
         <Loader />
       </div>
     )
@@ -23,7 +23,7 @@ export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
 
   return (
     <>
-      <div className='Layer__profit-and-loss-table'>
+      <div className='Layer__profit-and-loss-table Layer__profit-and-loss-table--main'>
         <ProfitAndLossRow
           lineItem={data.income}
           direction={Direction.CREDIT}

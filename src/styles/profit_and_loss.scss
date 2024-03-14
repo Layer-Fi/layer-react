@@ -17,6 +17,14 @@
   background-color: var(--color-base-100);
 }
 
+.Layer__profit-and-loss-table__loader-container {
+  padding: var(--spacing-2xl);
+}
+
+.Layer__profit-and-loss-table__loader-container {
+  min-height: 950px;
+}
+
 .Layer__profit-and-loss-table__outflows {
   margin-top: 1rem;
 }
@@ -70,6 +78,13 @@
     transition: transform var(--transition-speed);
     transform: rotate(-90deg);
   }
+}
+
+.Layer__profit-and-loss-row__label.Layer__profit-and-loss-row__label--display-children-true:hover,
+.Layer__profit-and-loss-row__label.Layer__profit-and-loss-row__label--display-children-true:hover + .Layer__profit-and-loss-row__value,
+.Layer__profit-and-loss-row__value.Layer__profit-and-loss-row__value--display-children-true:hover,
+.Layer__profit-and-loss-row__value.Layer__profit-and-loss-row__value--display-children-true:hover + .Layer__profit-and-loss-row__label {
+  background: var(--color-base-50);
 }
 
 .Layer__profit-and-loss-row__label--expanded {

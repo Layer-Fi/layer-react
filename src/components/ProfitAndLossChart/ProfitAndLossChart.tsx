@@ -213,6 +213,8 @@ export const ProfitAndLossChart = () => {
           wrapperClassName='Layer__chart__tooltip-wrapper'
           content={<CustomTooltip />}
           cursor={<CustomizedCursor />}
+          animationDuration={100}
+          animationEasing='ease-out'
         />
         <CartesianGrid
           vertical={false}

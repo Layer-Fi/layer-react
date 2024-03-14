@@ -185,7 +185,7 @@
 
 .Layer__toggle--initialized {
   .Layer__toggle__thumb {
-    transition: left var(--transition-speed) ease-in-out, width var(--transition-speed) ease-out;
+    transition: left 150ms ease, width 150ms ease;
   }
 }
 
@@ -249,7 +249,7 @@
   .Layer__select__group-heading {
     color: var(--color-base-500);
     font-size: var(--text-xs);
-    padding: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-md);
   }
 
   .Layer__select__option {
@@ -259,7 +259,7 @@
     cursor: pointer;
     transition: all 200ms ease-out;
     background: var(--color-white);
-    padding: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-md);
 
     &.Layer__select__option--is-selected {
       color: var(--text-color-primary);
