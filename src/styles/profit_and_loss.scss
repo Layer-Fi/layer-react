@@ -118,6 +118,11 @@
   }
 }
 
+.Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value + .Layer__profit-and-loss-row__label,
+.Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value + .Layer__profit-and-loss-row__label + .Layer__profit-and-loss-row__value {
+  border-top: 1px solid var(--color-base-300);
+}
+
 .Layer__profit-and-loss-row__label--variant-summation.Layer__profit-and-loss-row__label--depth-0,
 .Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value--depth-0  {
   margin-bottom: var(--spacing-2xs);
@@ -126,15 +131,17 @@
     margin-bottom: 0;
   }
 
-  .Layer__text,
-  .Layer__text.Layer__text--md {
-    font-size: var(--text-lg);
+  .Layer__text {
     color: var(--color-base-1000);
   }
 }
 
 .Layer__profit-and-loss-row__label--variant-summation.Layer__profit-and-loss-row__label--depth-0 {
   padding-left: 22px;
+  .Layer__text,
+  .Layer__text.Layer__text--md {
+    font-size: var(--text-lg);
+  }
 }
 
 .Layer__profit-and-loss-row__value--amount-positive {
@@ -363,6 +370,9 @@
   fill: var(--bar-color-expenses);
 }
 
+.Layer__profit-and-loss-row__label--depth-0.Layer__profit-and-loss-row__label--display-children-false {
+  padding-left: 22px;
+}
 
 // @TODO - adjust responsive rules
 @container (min-width: 1024px) {
@@ -370,8 +380,24 @@
     padding-left: var(--spacing-xl);
   }
 
+  .Layer__profit-and-loss-row__label--depth-0.Layer__profit-and-loss-row__label--display-children-false {
+    padding-left: calc(var(--spacing-xl) + 6px);
+  }
+
+  .Layer__component-container .Layer__profit-and-loss-row__label--depth-0.Layer__profit-and-loss-row__label--variant-summation {
+    padding-left: calc(var(--spacing-xl) + 6px);
+  }
+
   .Layer__profit-and-loss-row__value {
     padding-right: var(--spacing-xl);
+  }
+
+  .Layer__profit-and-loss__chart_with_summaries__summary-col {
+    padding-right: var(--spacing-xs);
+  }
+
+  .Layer__profit-and-loss__chart_with_summaries__chart-col {
+    padding-left: var(--spacing-xs);
   }
 }
 

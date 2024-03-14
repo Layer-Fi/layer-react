@@ -163,8 +163,11 @@ export const BankTransactionRow = ({
           }
         }}
       >
-        <td className='Layer__table-cell' {...openRow}>
-          <span className='Layer__table-cell-content Layer__bank-transaction-table__date-col'>
+        <td
+          className='Layer__table-cell  Layer__bank-transaction-table__date-col'
+          {...openRow}
+        >
+          <span className='Layer__table-cell-content'>
             {formatTime(parseISO(bankTransaction.date), dateFormat)}
           </span>
         </td>
