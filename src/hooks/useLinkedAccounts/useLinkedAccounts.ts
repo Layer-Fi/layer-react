@@ -1,4 +1,5 @@
 // import { Layer } from '../../api/layer'
+import { useEffect, useState } from 'react'
 import { Metadata } from '../../types'
 import { LinkedAccount } from '../../types/linked_accounts'
 import { useLayerContext } from '../useLayerContext'
@@ -29,10 +30,18 @@ type UseLinkedAccounts = () => {
   isLoading: boolean
   isValidating: boolean
   error: unknown
+  refetch: () => void
 }
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
   const { auth, businessId, apiUrl } = useLayerContext()
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 2000)
+  }, [])
 
   // const {
   //   data: responseData,
@@ -48,7 +57,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   // )
 
   const responseData = { data: MOCK_DATA, meta: {}, error: undefined }
-  const isLoading = false
   const isValidating = false
 
   const {
@@ -57,11 +65,16 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     error = undefined,
   } = responseData || {}
 
+  const refetch = () => {
+    console.log('refetch...')
+  }
+
   return {
     data,
     metadata,
     isLoading,
     isValidating,
     error,
+    refetch,
   }
 }

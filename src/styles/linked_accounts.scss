@@ -1,3 +1,13 @@
+.Layer__linked-accounts {
+  min-height: 151px;
+  box-sizing: border-box;
+}
+
+.Layer__linked-accounts .Layer__data-state {
+  padding: var(--spacing-md);
+  padding-top: 0;
+}
+
 .Layer__linked-accounts__header {
   padding: var(--spacing-md);
   position: sticky;
@@ -16,6 +26,10 @@
 }
 
 @container (min-width: 1400px) {
+  .Layer__linked-accounts__loader-container {
+    min-height: 103px;
+  }
+
   .Layer__linked-accounts__header {
     padding: var(--spacing-lg);
   }
