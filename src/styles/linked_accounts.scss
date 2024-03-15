@@ -1,0 +1,111 @@
+.Layer__linked-accounts__header {
+  padding: var(--spacing-md);
+  position: sticky;
+  left: 0;
+}
+
+.Layer__linked-accounts__list {
+  padding: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.Layer__linked-accounts__header + .Layer__linked-accounts__list {
+  padding-top: 0;
+}
+
+@container (min-width: 1400px) {
+  .Layer__linked-accounts__header {
+    padding: var(--spacing-lg);
+  }
+
+  .Layer__linked-accounts__list {
+    padding: var(--spacing-lg);
+  }
+}
+
+.Layer__linked-account-thumb {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4xs);
+  padding: var(--spacing-3xs);
+  border-radius: var(--border-radius-sm);
+  background: var(--color-base-0);
+  box-shadow: 0px 2px 4px 0px var(--base-transparent-6), 0px 0px 0px 1px var(--base-transparent-4);
+  box-sizing: border-box;
+
+  .topbar {
+    height: 41px;
+    min-width: 272px;
+    display: flex;
+    align-items: center;
+    background: var(--color-base-900);
+    color: var(--color-base-0);
+    border-radius: var(--border-radius-xs);
+    padding: var(--spacing-xs) var(--spacing-md);
+    box-sizing: border-box;
+
+    .account-name {
+      flex: 1;
+    }
+
+    .account-number {
+      padding: var(--spacing-3xs) var(--spacing-xs);
+      border-radius: var(--border-radius-5xl);
+      background: var(--base-transparent-8);
+    }
+  }
+
+  .bottombar {
+    box-sizing: border-box;
+    display: flex;
+    height: 28px;
+
+    .account-amount {
+      padding: var(--spacing-3xs) var(--spacing-md);
+    }
+  }
+}
+
+.Layer__linked-accounts .Layer__linked-account-thumb:nth-child(5n) {
+  .topbar {
+    background: var(--color-base-900);
+    color: var(--color-base-0);
+  }
+}
+
+.Layer__linked-accounts .Layer__linked-account-thumb:nth-child(5n+1) {
+  .topbar {
+    background: var(--color-base-900);
+    color: var(--color-base-0);
+  }
+}
+
+.Layer__linked-accounts .Layer__linked-account-thumb:nth-child(5n+2) {
+  .topbar {
+    background: var(--color-base-400);
+    color: var(--color-base-900);
+  }
+}
+
+.Layer__linked-accounts .Layer__linked-account-thumb:nth-child(5n+3) {
+  .topbar {
+    background: var(--color-base-300);
+    color: var(--color-base-900);
+  }
+}
+
+.Layer__linked-accounts .Layer__linked-account-thumb:nth-child(5n+4) {
+  .topbar {
+    background: var(--color-base-500);
+    color: var(--color-base-900);
+  }
+}
+
+.Layer__linked-accounts .Layer__linked-account-thumb:nth-child(5n+5) {
+  .topbar {
+    background: var(--color-base-700);
+    color: var(--color-base-0);
+  }
+}
