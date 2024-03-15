@@ -33,8 +33,10 @@
 
   --max-component-width: 1408px;
 
+  --base-transparent-4: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.04);
   --base-transparent-5: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.05);
   --base-transparent-6: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.06);
+  --base-transparent-8: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.08);
   --base-transparent-12: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.12);
 
 
