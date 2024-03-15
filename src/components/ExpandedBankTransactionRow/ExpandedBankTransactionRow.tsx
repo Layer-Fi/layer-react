@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import AlertCircle from '../../icons/AlertCircle'
-import Scissors from '../../icons/Scissors'
+import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
 import {
   centsToDollars as formatMoney,

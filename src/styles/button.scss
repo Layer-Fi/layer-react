@@ -121,12 +121,8 @@
   font-size: var(--btn-font-size);
 }
 
-.Layer__btn-icon--left.Layer__btn-icon--primary {
-  margin-right: -4px;
-}
-
-.Layer__btn-icon--right.Layer__btn-icon--primary {
-  margin-left: -4px;
+.Layer__btn--with-primary-icon .Layer__btn-text {
+  padding-right: calc(var(--spacing-md) - 4px);
 }
 
 .Layer__btn--icon-only {

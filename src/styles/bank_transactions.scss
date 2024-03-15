@@ -6,6 +6,11 @@
   padding: var(--spacing-2xl);
 }
 
+.Layer__bank-transactions__header {
+  position: sticky;
+  left: 0;
+}
+
 .Layer__bank-transaction-row {
   transition: all var(--transition-speed) ease-in-out;
   top: 1px;
@@ -489,9 +494,11 @@
 .Layer__table.Layer__bank-transactions__table .Layer__table-cell__amount-col {
   position: -webkit-sticky;
   position: sticky;
-  right: 425px;
-  width: 125px;
+  right: 449px;
+  width: 150px;
+  min-width: 150px;
   z-index: 2;
+  box-sizing: border-box;
   box-shadow: -8px 0px 20px -2px rgb(255 255 255 / 64%);
 }
 
@@ -505,28 +512,43 @@
 }
 
 .Layer__bank-transactions__date-col {
-  min-width: 125px;
-  max-width: 140px;
+  min-width: 130px;
+  width: 130px;
+  max-width: 130px;
   box-sizing: border-box;
 }
 
 .Layer__bank-transactions__tx-col {
-  min-width: 105px;
-  max-width: 300px;
+  min-width: 125px;
+  width: 180px;
+  max-width: 280px;
   box-sizing: border-box;
 }
 
+.Layer__bank-transactions__tx-text {
+  width: 100%;
+}
+
 .Layer__bank-transactions__account-col {
-  min-width: 105px;
-  max-width: 300px;
+  min-width: 125px;
+  width: 180px;
+  max-width: 180px;
   box-sizing: border-box;
+}
+
+@container (min-width: 1400px) {
+  .Layer__bank-transactions__date-col {
+    min-width: 160px;
+    width: 160px;
+    max-width: 160px;
+  }
 }
 
 .Layer__bank-transaction-row:not(.Layer__bank-transaction-row--expanded) {
   .Layer__bank-transactions__account-col, 
   .Layer__bank-transactions__tx-col {
     text-overflow: ellipsis;
-    max-width: 300px;
+    max-width: 280px;
   
     .Layer__table-cell-content {
       .Layer__bank-transactions__account-text,
@@ -536,6 +558,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        box-sizing: border-box;
       }
     }
   }
@@ -555,6 +578,8 @@
   display: flex;
   justify-content: flex-end;
   padding: var(--spacing-md);
+  position: sticky;
+  left: 0;
 }
 
 @container (min-width: 1400px) {
@@ -565,7 +590,7 @@
   }
 }
 
-@container (max-width: 1000px) and (min-width: 801px) {
+@container (max-width: 1108px) and (min-width: 701px) {
   .Layer__table.Layer__bank-transactions__table .Layer__table-cell__amount-col {
     border-left: 1px solid var(--border-color);
     
@@ -1153,11 +1178,6 @@
   .Layer__bank-transaction-table__date-col,
   .Layer__bank-transactions__account-col {
     color: var(--color-base-1000);
-  }
-
-  .Layer__bank-transactions__tx-col,
-  .Layer__bank-transactions__amount-col {
-    font-variation-settings: 'wght' var(--font-weight-bold);
   }
 }
 

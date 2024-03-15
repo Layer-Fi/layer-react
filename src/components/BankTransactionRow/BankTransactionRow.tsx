@@ -60,6 +60,8 @@ export const getDefaultSelectedCategory = (
     : undefined
 }
 
+let clickTimer = Date.now()
+
 export const BankTransactionRow = ({
   index = 0,
   dateFormat,
@@ -80,6 +82,18 @@ export const BankTransactionRow = ({
   const toggleOpen = () => {
     setShowRetry(false)
     setOpen(!open)
+  }
+
+  const openRow = {
+    onMouseDown: () => {
+      clickTimer = Date.now()
+    },
+    onMouseUp: () => {
+      if (Date.now() - clickTimer < 100 && !open) {
+        setShowRetry(false)
+        setOpen(true)
+      }
+    },
   }
 
   const [showComponent, setShowComponent] = useState(false)
@@ -149,12 +163,18 @@ export const BankTransactionRow = ({
           }
         }}
       >
-        <td className='Layer__table-cell'>
-          <span className='Layer__table-cell-content Layer__bank-transaction-table__date-col'>
+        <td
+          className='Layer__table-cell  Layer__bank-transaction-table__date-col'
+          {...openRow}
+        >
+          <span className='Layer__table-cell-content'>
             {formatTime(parseISO(bankTransaction.date), dateFormat)}
           </span>
         </td>
-        <td className='Layer__table-cell Layer__bank-transactions__tx-col'>
+        <td
+          className='Layer__table-cell Layer__bank-transactions__tx-col'
+          {...openRow}
+        >
           <span className='Layer__table-cell-content'>
             <Text
               as='span'
@@ -168,7 +188,10 @@ export const BankTransactionRow = ({
             </Text>
           </span>
         </td>
-        <td className='Layer__table-cell Layer__bank-transactions__account-col'>
+        <td
+          className='Layer__table-cell Layer__bank-transactions__account-col'
+          {...openRow}
+        >
           <span className='Layer__table-cell-content'>
             <Text
               as='span'
@@ -183,6 +206,7 @@ export const BankTransactionRow = ({
           className={`Layer__table-cell Layer__table-cell__amount-col Layer__bank-transactions__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
+          {...openRow}
         >
           <span className='Layer__table-cell-content'>
             {isCredit(bankTransaction) ? '+$' : ' $'}
