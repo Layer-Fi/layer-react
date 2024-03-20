@@ -131,6 +131,17 @@ export const ProfitAndLossDetailedCharts = () => {
     })
   }, [filteredData])
 
+  const buildColClass = (column: string) => {
+    return classNames(
+      'Layer__sortable-col',
+      sidebarScope && filters[sidebarScope]?.sortBy === column
+        ? `sort--${
+            (sidebarScope && filters[sidebarScope]?.sortDirection) ?? 'desc'
+          }`
+        : '',
+    )
+  }
+
   return (
     <div
       className={classNames(
@@ -353,25 +364,25 @@ export const ProfitAndLossDetailedCharts = () => {
               <thead>
                 <tr>
                   <th
+                    className={buildColClass('category')}
                     onClick={() =>
                       sortBy(sidebarScope ?? 'expenses', 'category')
                     }
                   >
-                    Expense/Sale
+                    Expense/Sale <SortArrows className='Layer__sort-arrows' />
                   </th>
                   <th
+                    className={buildColClass('type')}
                     onClick={() => sortBy(sidebarScope ?? 'expenses', 'type')}
                   >
-                    Type
-                    <SortArrows
-                      className={`Layer__sort-arrows Layer__sort-arrows--desc`}
-                    />
+                    Type <SortArrows className='Layer__sort-arrows' />
                   </th>
                   <th></th>
                   <th
+                    className={buildColClass('value')}
                     onClick={() => sortBy(sidebarScope ?? 'expenses', 'value')}
                   >
-                    Value
+                    Value <SortArrows className='Layer__sort-arrows' />
                   </th>
                 </tr>
               </thead>

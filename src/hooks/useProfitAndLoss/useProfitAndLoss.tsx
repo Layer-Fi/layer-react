@@ -79,7 +79,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
   })
 
   // const [sidebarView, setSidebarView] = useState<SidebarView>(undefined)
-  const [sidebarScope, setSidebarScope] = useState<SidebarScope>()
+  const [sidebarScope, setSidebarScope] = useState<SidebarScope>('expenses')
 
   const {
     data: rawData,
@@ -132,11 +132,25 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       return x
     })
     const sorted = filtered.sort((a, b) => {
-      // @TODO
-      if (filters[sidebarScope ?? 'expenses']?.sortDirection === 'asc') {
-        return a.value - b.value
+      switch (filters[sidebarScope ?? 'expenses']?.sortBy) {
+        case 'category':
+          if (filters[sidebarScope ?? 'expenses']?.sortDirection === 'asc') {
+            return a.display_name.localeCompare(b.display_name)
+          }
+          return b.display_name.localeCompare(a.display_name)
+
+        case 'type':
+          if (filters[sidebarScope ?? 'expenses']?.sortDirection === 'asc') {
+            return a.type.localeCompare(b.type)
+          }
+          return b.type.localeCompare(a.type)
+
+        default:
+          if (filters[sidebarScope ?? 'expenses']?.sortDirection === 'asc') {
+            return a.value - b.value
+          }
+          return b.value - a.value
       }
-      return b.value - a.value
     })
     const total = sorted
       .filter(x => !x.hidden)
@@ -165,7 +179,9 @@ export const useProfitAndLoss: UseProfitAndLoss = (
         ...filters[scope],
         sortBy: field,
         sortDirection:
-          direction ?? filters[scope]?.sortDirection === 'asc' ? 'desc' : 'asc',
+          direction ?? filters[scope]?.sortDirection === 'desc'
+            ? 'asc'
+            : 'desc',
       },
     })
   }

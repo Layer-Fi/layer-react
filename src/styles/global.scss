@@ -19,9 +19,27 @@
   }
 }
 
-.Layer__sort-arrows {
+.Layer__sortable-col {
+  .Layer__sort-arrows {
+    .desc-arrow,
+    .asc-arrow {
+      stroke: var(--color-base-500);
+    }
+  }
 
-  &.Layer__sort-arrows--desc {
+  &.sort--desc {
+    .Layer__sort-arrows {
+      .desc-arrow {
+        stroke: var(--color-base-1000);
+      }
+    }
+  }
 
+  &.sort--asc {
+    .Layer__sort-arrows {
+      .asc-arrow {
+        stroke: var(--color-base-1000);
+      }
+    }
   }
 }

@@ -9,7 +9,8 @@ const doesLineItemQualifies = (item: LineItem) => {
     item.value === null ||
     isNaN(item.value) ||
     item.value === -Infinity ||
-    item.value === Infinity
+    item.value === Infinity ||
+    item.value < 0
   )
 }
 
