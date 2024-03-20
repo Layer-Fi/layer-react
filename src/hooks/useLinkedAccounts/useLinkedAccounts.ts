@@ -20,7 +20,7 @@ const MOCK_DATA: LinkedAccount[] = [
   {
     name: 'Account',
     account: '4321',
-    amount: 4400020620,
+    amount: 801.91,
   },
 ]
 
