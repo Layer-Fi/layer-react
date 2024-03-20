@@ -3,6 +3,7 @@ import { DATE_FORMAT } from '../../config/general'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
 import { BankTransaction, CategorizationStatus } from '../../types'
+import { debounce } from '../../utils/helpers'
 import { BankTransactionListItem } from '../BankTransactionListItem'
 import { BankTransactionRow } from '../BankTransactionRow'
 import { Container, Header } from '../Container'
@@ -35,20 +36,22 @@ export interface BankTransactionsProps {
   pageSize?: number
 }
 
-const filterVisibility =
-  (display: DisplayState) => (bankTransaction: BankTransaction) => {
-    const categorized = CategorizedCategories.includes(
-      bankTransaction.categorization_status,
-    )
-    const inReview =
-      ReviewCategories.includes(bankTransaction.categorization_status) ||
-      bankTransaction.recently_categorized
+const filterVisibility = (
+  display: DisplayState,
+  bankTransaction: BankTransaction,
+) => {
+  const categorized = CategorizedCategories.includes(
+    bankTransaction.categorization_status,
+  )
+  const inReview =
+    ReviewCategories.includes(bankTransaction.categorization_status) ||
+    bankTransaction.recently_categorized
 
-    return (
-      (display === DisplayState.review && inReview) ||
-      (display === DisplayState.categorized && categorized)
-    )
-  }
+  return (
+    (display === DisplayState.review && inReview) ||
+    (display === DisplayState.categorized && categorized)
+  )
+}
 
 export const BankTransactions = ({
   asWidget = false,
@@ -56,16 +59,19 @@ export const BankTransactions = ({
 }: BankTransactionsProps) => {
   const [display, setDisplay] = useState<DisplayState>(DisplayState.review)
   const [currentPage, setCurrentPage] = useState(1)
+  const [removedTxs, setRemovedTxs] = useState<string[]>([])
   const { data, isLoading, error, isValidating, refetch } =
     useBankTransactions()
 
-  const bankTransactionsByFilter = data?.filter(filterVisibility(display))
+  const bankTransactionsByFilter = data?.filter(
+    tx => !removedTxs.includes(tx.id) && filterVisibility(display, tx),
+  )
 
   const bankTransactions = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
     return bankTransactionsByFilter?.slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, bankTransactionsByFilter])
+  }, [currentPage, bankTransactionsByFilter, removedTxs])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -79,16 +85,25 @@ export const BankTransactions = ({
   }
 
   const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
+  const debounceShiftStickyHeader = debounce(setShiftStickyHeader, 500)
   const [listView, setListView] = useState(false)
+  const [containerWidth, setContainerWidth] = useState(0)
+  const debounceContainerWidth = debounce(setContainerWidth, 500)
+
+  const removeTransaction = (id: string) => {
+    const newTxs = removedTxs.slice()
+    newTxs.push(id)
+    setRemovedTxs(newTxs)
+  }
 
   const containerRef = useElementSize<HTMLDivElement>((_el, _en, size) => {
     if (size?.height && size?.height >= 90) {
       const newShift = -Math.floor(size.height / 2) + 6
       if (newShift !== shiftStickyHeader) {
-        setShiftStickyHeader(newShift)
+        debounceShiftStickyHeader(newShift)
       }
     } else if (size?.height > 0 && shiftStickyHeader !== 0) {
-      setShiftStickyHeader(0)
+      debounceShiftStickyHeader(0)
     }
 
     if (size.width > 700 && listView) {
@@ -96,11 +111,22 @@ export const BankTransactions = ({
     } else if (size.width <= 700 && !listView) {
       setListView(true)
     }
+
+    debounceContainerWidth(size?.width)
   })
 
   const editable = display === DisplayState.review
   return (
-    <Container name={COMPONENT_NAME} asWidget={asWidget} ref={containerRef}>
+    <Container
+      className={
+        editable
+          ? 'Layer__bank-transactions--to-review'
+          : 'Layer__bank-transactions--categorized'
+      }
+      name={COMPONENT_NAME}
+      asWidget={asWidget}
+      ref={containerRef}
+    >
       <Header
         className='Layer__bank-transactions__header'
         style={{ top: shiftStickyHeader }}
@@ -150,14 +176,19 @@ export const BankTransactions = ({
           </thead>
           <tbody>
             {!isLoading &&
-              bankTransactions?.map((bankTransaction: BankTransaction) => (
-                <BankTransactionRow
-                  key={bankTransaction.id}
-                  dateFormat={DATE_FORMAT}
-                  bankTransaction={bankTransaction}
-                  editable={editable}
-                />
-              ))}
+              bankTransactions?.map(
+                (bankTransaction: BankTransaction, index: number) => (
+                  <BankTransactionRow
+                    index={index}
+                    key={bankTransaction.id}
+                    dateFormat={DATE_FORMAT}
+                    bankTransaction={bankTransaction}
+                    editable={editable}
+                    removeTransaction={removeTransaction}
+                    containerWidth={containerWidth}
+                  />
+                ),
+              )}
           </tbody>
         </table>
       )}
@@ -170,14 +201,19 @@ export const BankTransactions = ({
 
       {!isLoading && listView ? (
         <ul className='Layer__bank-transactions__list'>
-          {bankTransactions?.map((bankTransaction: BankTransaction) => (
-            <BankTransactionListItem
-              key={bankTransaction.id}
-              dateFormat={DATE_FORMAT}
-              bankTransaction={bankTransaction}
-              editable={editable}
-            />
-          ))}
+          {bankTransactions?.map(
+            (bankTransaction: BankTransaction, index: number) => (
+              <BankTransactionListItem
+                index={index}
+                key={bankTransaction.id}
+                dateFormat={DATE_FORMAT}
+                bankTransaction={bankTransaction}
+                editable={editable}
+                removeTransaction={removeTransaction}
+                containerWidth={containerWidth}
+              />
+            ),
+          )}
         </ul>
       ) : null}
 

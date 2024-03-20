@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import ChevronDown from '../../icons/ChevronDown'
+import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars } from '../../models/Money'
 import { Direction, LineItem } from '../../types'
-import { Text, TextWeight } from '../Typography'
+import { Text } from '../Typography'
 
 type Props = {
   variant?: string
@@ -78,7 +78,9 @@ export const ProfitAndLossRow = ({
         className={labelClasses.join(' ')}
         onClick={() => !lockExpanded && toggleExpanded()}
       >
-        {!lockExpanded && <ChevronDown size={16} />}
+        {!lockExpanded && variant !== 'summation' ? (
+          <ChevronDownFill size={16} />
+        ) : null}
         <Text>{display_name}</Text>
       </div>
       <div className={valueClasses.join(' ')}>

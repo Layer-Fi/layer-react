@@ -2,8 +2,8 @@
   display: inline-flex;
   gap: var(--spacing-3xs);
   border-radius: var(--border-radius-5xl);
-  background-color: var(--color-light);
-  color: var(--color-dark);
+  background-color: var(--badge-bg-color);
+  color: var(--badge-color);
   padding: var(--spacing-3xs) var(--spacing-xs);
   font-size: var(--text-sm);
   align-items: center;
@@ -22,9 +22,9 @@
     cursor: pointer;
 
     &:hover {
-      background-color: var(--color-dark);
-      color: var(--color-light);
-      border-color: var(--color-dark);
+      background-color: var(--badge-color);
+      color: var(--badge-bg-color);
+      border-color: var(--badge-color);
     }
   }
 

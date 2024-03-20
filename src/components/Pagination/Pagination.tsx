@@ -39,6 +39,7 @@ export const Pagination = ({
   return (
     <ul className='Layer__pagination'>
       <li
+        key={`page-prev`}
         className={classnames(
           'Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--previous',
           {
@@ -60,6 +61,7 @@ export const Pagination = ({
 
         return (
           <li
+            key={`page-${pageNumber}`}
             className={classnames('Layer__pagination-item', {
               selected: pageNumber === currentPage,
             })}
@@ -74,6 +76,7 @@ export const Pagination = ({
         )
       })}
       <li
+        key={`page-last`}
         className={classnames(
           'Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--next',
           {

@@ -6,23 +6,31 @@ import { Heading } from '../Typography'
 
 const COMPONENT_NAME = 'profit-and-loss'
 
-export const ProfitAndLossView = () => {
+export interface ProfitAndLossViewProps {
+  hideTable?: boolean
+  hideChart?: boolean
+}
+
+export const ProfitAndLossView = (props: ProfitAndLossViewProps) => {
   return (
     <Container name={COMPONENT_NAME}>
       <Header className={`Layer__${COMPONENT_NAME}__header`}>
         <Heading className='Layer__bank-transactions__title'>
-          Profit And Loss
+          Profit & Loss
         </Heading>
       </Header>
 
       <ProfitAndLoss>
-        <Components />
+        <Components {...props} />
       </ProfitAndLoss>
     </Container>
   )
 }
 
-const Components = () => {
+const Components = ({
+  hideChart = false,
+  hideTable = false,
+}: ProfitAndLossViewProps) => {
   const { error, isLoading, isValidating, refetch } = useContext(
     ProfitAndLoss.Context,
   )
@@ -43,20 +51,22 @@ const Components = () => {
 
   return (
     <>
-      <div className={`Layer__${COMPONENT_NAME}__chart_with_summaries`}>
-        <div
-          className={`Layer__${COMPONENT_NAME}__chart_with_summaries__summary-col`}
-        >
-          <ProfitAndLoss.DatePicker />
-          <ProfitAndLoss.Summaries vertical={true} />
+      {!hideChart && (
+        <div className={`Layer__${COMPONENT_NAME}__chart_with_summaries`}>
+          <div
+            className={`Layer__${COMPONENT_NAME}__chart_with_summaries__summary-col`}
+          >
+            <ProfitAndLoss.DatePicker />
+            <ProfitAndLoss.Summaries vertical={true} />
+          </div>
+          <div
+            className={`Layer__${COMPONENT_NAME}__chart_with_summaries__chart-col`}
+          >
+            <ProfitAndLoss.Chart />
+          </div>
         </div>
-        <div
-          className={`Layer__${COMPONENT_NAME}__chart_with_summaries__chart-col`}
-        >
-          <ProfitAndLoss.Chart />
-        </div>
-      </div>
-      <ProfitAndLoss.Table />
+      )}
+      {!hideTable && <ProfitAndLoss.Table />}
     </>
   )
 }
