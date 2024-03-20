@@ -10,6 +10,7 @@ const COMPONENT_NAME = 'profit-and-loss'
 export interface ProfitAndLossViewProps {
   hideTable?: boolean
   hideChart?: boolean
+  showDetailedCharts?: boolean
 }
 
 export const ProfitAndLossView = (props: ProfitAndLossViewProps) => {
@@ -26,7 +27,7 @@ export const ProfitAndLossView = (props: ProfitAndLossViewProps) => {
           <Components {...props} />
         </div>
 
-        <ProfitAndLossDetailedCharts />
+        {props.showDetailedCharts !== false && <ProfitAndLossDetailedCharts />}
       </ProfitAndLoss>
     </Container>
   )

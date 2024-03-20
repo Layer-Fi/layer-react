@@ -79,7 +79,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
   })
 
   // const [sidebarView, setSidebarView] = useState<SidebarView>(undefined)
-  const [sidebarScope, setSidebarScope] = useState<SidebarScope>('expenses')
+  const [sidebarScope, setSidebarScope] = useState<SidebarScope>()
 
   const {
     data: rawData,

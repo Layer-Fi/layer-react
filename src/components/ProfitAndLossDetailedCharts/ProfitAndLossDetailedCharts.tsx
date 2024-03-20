@@ -111,7 +111,7 @@ export const ProfitAndLossDetailedCharts = () => {
     setFilterTypes,
   } = useContext(PNL.Context)
 
-  const [hoveredItem, setHoveredItem] = useState<string | undefined>('Fees')
+  const [hoveredItem, setHoveredItem] = useState<string | undefined>()
 
   const chartData = useMemo(() => {
     if (!filteredData) {
@@ -337,7 +337,7 @@ export const ProfitAndLossDetailedCharts = () => {
               [...new Set(filteredData?.map(x => x.type))].map(x => ({
                 label: x,
                 value: x,
-              })) as unknown as readonly (string | GroupBase<string>)[]
+              })) as unknown as readonly { value: string; label: string }[]
             }
             onChange={selected => {
               setFilterTypes(
