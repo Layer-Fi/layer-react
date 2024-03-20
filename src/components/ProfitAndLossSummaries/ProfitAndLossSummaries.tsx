@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { SkeletonLoader } from '../SkeletonLoader'
+import classNames from 'classnames'
 
 type Props = {
   revenueLabel?: string
@@ -12,7 +13,13 @@ export const ProfitAndLossSummaries = ({
   vertical,
   revenueLabel = 'Revenue',
 }: Props) => {
-  const { data: storedData, isLoading } = useContext(PNL.Context)
+  const {
+    data: storedData,
+    isLoading,
+    setSidebarScope,
+    sidebarScope,
+  } = useContext(PNL.Context)
+
   const data = storedData
     ? storedData
     : { income: { value: NaN }, net_profit: NaN }
@@ -20,17 +27,17 @@ export const ProfitAndLossSummaries = ({
   const incomeDirectionClass =
     (data.income.value ?? NaN) < 0
       ? 'Layer__profit-and-loss-summaries__amount--negative'
-      : 'Layer__profit-and-loss-summaries__amount--pasitive'
+      : 'Layer__profit-and-loss-summaries__amount--positive'
 
   const expensesDirectionClass =
     (data?.income?.value ?? NaN) - data.net_profit < 0
       ? 'Layer__profit-and-loss-summaries__amount--negative'
-      : 'Layer__profit-and-loss-summaries__amount--pasitive'
+      : 'Layer__profit-and-loss-summaries__amount--positive'
 
   const netProfitDirectionClass =
     data.net_profit < 0
       ? 'Layer__profit-and-loss-summaries__amount--negative'
-      : 'Layer__profit-and-loss-summaries__amount--pasitive'
+      : 'Layer__profit-and-loss-summaries__amount--positive'
 
   return (
     <div
@@ -38,7 +45,14 @@ export const ProfitAndLossSummaries = ({
         vertical ? 'flex-col' : ''
       }`}
     >
-      <div className='Layer__profit-and-loss-summaries__summary Layer__profit-and-loss-summaries__summary--income'>
+      <div
+        className={classNames(
+          'Layer__profit-and-loss-summaries__summary Layer__actionable',
+          'Layer__profit-and-loss-summaries__summary--income',
+          sidebarScope === 'revenue' ? 'active' : '',
+        )}
+        onClick={() => setSidebarScope('revenue')}
+      >
         <span className='Layer__profit-and-loss-summaries__title'>
           {revenueLabel}
         </span>
@@ -54,7 +68,14 @@ export const ProfitAndLossSummaries = ({
           </span>
         )}
       </div>
-      <div className='Layer__profit-and-loss-summaries__summary Layer__profit-and-loss-summaries__summary--expenses'>
+      <div
+        className={classNames(
+          'Layer__profit-and-loss-summaries__summary Layer__actionable',
+          'Layer__profit-and-loss-summaries__summary--expenses',
+          sidebarScope === 'expenses' ? 'active' : '',
+        )}
+        onClick={() => setSidebarScope('expenses')}
+      >
         <span className='Layer__profit-and-loss-summaries__title'>
           Expenses
         </span>

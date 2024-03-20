@@ -26,6 +26,7 @@ export {
   Account,
   NewAccount,
 } from './types/chart_of_accounts'
+export { SortDirection } from './types/general'
 
 // Only Date and string (ISO8601 formatted) make sense here
 export type DateRange<T = Date> = {
