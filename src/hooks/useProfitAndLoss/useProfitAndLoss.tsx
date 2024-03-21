@@ -36,7 +36,10 @@ type ProfitAndLossFilter = {
   types?: string[]
 }
 
-type ProfitAndLossFilters = Record<Scope, ProfitAndLossFilter | undefined>
+export type ProfitAndLossFilters = Record<
+  Scope,
+  ProfitAndLossFilter | undefined
+>
 
 type UseProfitAndLoss = (props?: Props) => {
   data: ProfitAndLoss | undefined
@@ -78,8 +81,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     revenue: undefined,
   })
 
-  // const [sidebarView, setSidebarView] = useState<SidebarView>(undefined)
-  const [sidebarScope, setSidebarScope] = useState<SidebarScope>('expenses')
+  const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
 
   const {
     data: rawData,
