@@ -22,10 +22,10 @@ export {
 } from './types/categories'
 export {
   AccountAlternate,
-  ChartOfAccounts,
+  LedgerAccounts,
   Account,
   NewAccount,
-} from './types/chart_of_accounts'
+} from './types/ledger_accounts'
 export { SortDirection } from './types/general'
 
 // Only Date and string (ISO8601 formatted) make sense here

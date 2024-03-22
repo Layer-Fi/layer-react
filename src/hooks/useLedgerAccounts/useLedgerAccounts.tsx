@@ -1,21 +1,21 @@
 import { Layer } from '../../api/layer'
-import { AccountAlternate, ChartOfAccounts, NewAccount } from '../../types'
+import { AccountAlternate, LedgerAccounts, NewAccount } from '../../types'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
-type UseChartOfAccounts = () => {
-  data: ChartOfAccounts | undefined
+type UseLedgerAccounts = () => {
+  data: LedgerAccounts | undefined
   isLoading: boolean
   error: unknown
   create: (newAccount: NewAccount) => Promise<AccountAlternate>
 }
 
-export const useChartOfAccounts: UseChartOfAccounts = () => {
+export const useLedgerAccounts: UseLedgerAccounts = () => {
   const { auth, businessId, apiUrl } = useLayerContext()
 
   const { data, isLoading, error, mutate } = useSWR(
-    businessId && auth?.access_token && `chart-of-accounts-${businessId}`,
-    Layer.getChartOfAccounts(apiUrl, auth?.access_token, {
+    businessId && auth?.access_token && `ledger-accounts-${businessId}`,
+    Layer.getLedgerAccounts(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
   )

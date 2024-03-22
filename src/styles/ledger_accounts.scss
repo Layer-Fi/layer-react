@@ -1,0 +1,54 @@
+.Layer__ledger-accounts__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.Layer__coa__name,
+.Layer__coa__type,
+.Layer__coa__subtype,
+.Layer__coa__balance,
+.Layer__coa__actions {
+  width: 20%;
+  flex: 1;
+}
+
+.Layer__alt-table__cell.Layer__coa__name,
+.Layer__alt-table__cell.Layer__coa__balance {
+  color: var(--color-base-800);
+}
+
+.Layer__coa__balance {
+  text-align: right;
+}
+
+.Layer__coa__actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+//**** @TODO MOVE TO ANOTHER CSS
+.Layer__alt-table-row {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 var(--spacing-md);
+  box-sizing: border-box;
+  box-shadow: 0px -1px 0px 0px var(--color-base-300) inset;
+}
+
+.Layer__alt-table__head-cell, .Layer__alt-table__cell {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.Layer__alt-table__head-cell {
+  color: var(--color-base-600);
+  font-size: 12px;
+}
+
+.Layer__alt-table__cell {
+  color: var(--color-base-600);
+  font-size: 14px;
+}
