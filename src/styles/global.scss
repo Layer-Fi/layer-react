@@ -18,3 +18,28 @@
     background: #999;
   }
 }
+
+.Layer__sortable-col {
+  .Layer__sort-arrows {
+    .desc-arrow,
+    .asc-arrow {
+      stroke: var(--color-base-500);
+    }
+  }
+
+  &.sort--desc {
+    .Layer__sort-arrows {
+      .desc-arrow {
+        stroke: var(--color-base-1000);
+      }
+    }
+  }
+
+  &.sort--asc {
+    .Layer__sort-arrows {
+      .asc-arrow {
+        stroke: var(--color-base-1000);
+      }
+    }
+  }
+}

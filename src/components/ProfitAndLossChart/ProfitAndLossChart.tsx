@@ -117,6 +117,7 @@ export const ProfitAndLossChart = () => {
     name: getMonthName(pnl),
     revenue: pnl?.income.value || 0,
     expenses: Math.abs((pnl?.income.value || 0) - (pnl?.net_profit || 0)),
+    netProfit: pnl?.net_profit || 0,
     selected:
       !!pnl &&
       parseISO(pnl.start_date).getMonth() >= startSelectionMonth &&
@@ -140,6 +141,9 @@ export const ProfitAndLossChart = () => {
     label,
   }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
+      const netProfit = payload[0].payload.netProfit ?? 0
+      const netProfitClass =
+        netProfit > 0 ? 'positive' : netProfit < 0 ? 'negative' : ''
       return (
         <div className='Layer__chart__tooltip'>
           <ul className='Layer__chart__tooltip-list'>
@@ -159,6 +163,12 @@ export const ProfitAndLossChart = () => {
                 ${centsToDollars(Math.abs(payload[1].value ?? 0))}
               </span>
             </li>
+            <li>
+              <label className='Layer__chart__tooltip-label'>Net Profit</label>
+              <span className={`Layer__chart__tooltip-value ${netProfitClass}`}>
+                ${centsToDollars(netProfit)}
+              </span>
+            </li>
           </ul>
         </div>
       )
@@ -168,16 +178,17 @@ export const ProfitAndLossChart = () => {
   }
 
   const CustomizedCursor = (props: any) => {
-    const { x, y, width, height } = props
+    const { x, width, height } = props
+
     return (
       <Rectangle
-        fill={getColor(100)?.hex ?? '#F5F4F3'}
+        fill={getColor(900)?.hex ?? '#333'}
         stroke='none'
-        x={x}
-        y={y}
-        radius={8}
-        width={width}
-        height={height + 24}
+        x={x + width / 2 - 11}
+        y={height + 44}
+        radius={2}
+        width={22}
+        height={2}
         className='Layer__chart__tooltip-cursor'
       />
     )
@@ -243,7 +254,7 @@ export const ProfitAndLossChart = () => {
           dataKey='revenue'
           barSize={barSize}
           isAnimationActive={false}
-          radius={[barSize / 4, barSize / 4, 0, 0]}
+          radius={[2, 2, 0, 0]}
           className='Layer__profit-and-loss-chart__bar--income'
         >
           <LabelList
@@ -269,7 +280,7 @@ export const ProfitAndLossChart = () => {
           dataKey='expenses'
           barSize={barSize}
           isAnimationActive={false}
-          radius={[barSize / 4, barSize / 4, 0, 0]}
+          radius={[2, 2, 0, 0]}
           className='Layer__profit-and-loss-chart__bar--expenses'
         >
           {data.map(entry => (

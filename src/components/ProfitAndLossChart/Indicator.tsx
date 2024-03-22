@@ -27,9 +27,11 @@ export const Indicator = ({
 
   const { x: animateTo = 0, width = 0 } =
     'x' in viewBox ? viewBox : emptyViewBox
-  const boxWidth = width * 2 + 4 // the bar gap is 4
-  const multiplier = 1.5
+  const margin = width > 12 ? 4 : 1
+  const boxWidth = width * 2 + margin
+  const multiplier = width > 12 ? 1.2 : 1
   const xOffset = (boxWidth * multiplier - boxWidth) / 2
+  const borderRadius = width > 16 ? 8 : width / 2
 
   // useEffect callbacks run after the browser paints
   useEffect(() => {
@@ -40,14 +42,13 @@ export const Indicator = ({
   return (
     <rect
       className='Layer__profit-and-loss-chart__selection-indicator'
-      rx='8'
-      ry='8'
+      rx={borderRadius}
+      ry={borderRadius}
       style={{
         width: `${boxWidth * multiplier}px`,
         // @ts-expect-error -- y is fine but x apparently isn't!
         x: actualX - xOffset,
         y: 22,
-        borderRadius: 8,
         height: 'calc(100% - 38px)',
       }}
     />

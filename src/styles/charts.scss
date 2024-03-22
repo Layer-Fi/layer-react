@@ -38,5 +38,13 @@
   
   .Layer__chart__tooltip-value {
     color: var(--color-base-300);
+
+    &.positive {
+      color: var(--color-success);
+    }
+
+    &.negative {
+      color: var(--color-danger);
+    }
   }
 }

@@ -2,6 +2,53 @@
   background-color: white;
 }
 
+.Layer__component-container .Layer__profit-and-loss {
+  display: flex;
+  align-items: stretch;
+}
+
+.Layer__profit-and-loss__main-panel {
+  flex: 1;
+}
+
+.Layer__profit-and-loss__side-panel {
+  box-sizing: border-box;
+  border-left: 1px solid var(--color-base-300);
+  max-width: 0;
+  overflow: hidden;
+  width: 480px;
+  opacity: 0.05;
+  transition: max-width 250ms ease-out, opacity 350ms ease-out;
+
+  &.open {
+    max-width: 480px;
+    opacity: 1;
+  }
+}
+
+@container (max-width: 1023px) {
+  .Layer__profit-and-loss__side-panel {
+    transition: transform 200ms ease-out;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    transform: translateX(-100%);
+    z-index: -1;
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+
+    &.open {
+      left: 0;
+      right: 0;
+      max-width: 100%;
+      transform: translateX(0);
+      z-index: 1;
+    }
+  }
+}
+
 .Layer__profit-and-loss__title {
   font-size: 1.5rem;
   font-weight: 600;
@@ -26,7 +73,7 @@
 }
 
 .Layer__profit-and-loss-table__outflows {
-  margin-top: 1rem;
+  padding-top: var(--spacing-2xs);
 }
 
 .Layer__profit-and-loss-row {
@@ -67,10 +114,15 @@
 
 .Layer__profit-and-loss-row__label {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 
-  svg {
+  .Layer__profit-and-loss-row__label__title {
+    display: flex;
+    align-items: center;
+  }
+
+  svg.Layer__profit-and-loss-row__label__chevron {
     color: var(--color-base-600);
     width: 1.25rem;
     height: 1.25rem;
@@ -88,7 +140,7 @@
 }
 
 .Layer__profit-and-loss-row__label--expanded {
-  svg {
+  svg.Layer__profit-and-loss-row__label__chevron {
     transform: rotate(0deg);
   }
 }
@@ -112,7 +164,7 @@
 
 .Layer__profit-and-loss-row__label--display-children-false {
   font-weight: normal;
-  svg {
+  svg.Layer__profit-and-loss-row__label__chevron {
     visibility: hidden;
     display: none;
   }
@@ -192,55 +244,17 @@
   }
 }
 
-.Layer__profit-and-loss-date-picker {
-  width: 270px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 0.25rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--corner-radius);
-}
-
-.Layer__profit-and-loss-date-picker__button {
-  padding: 0.25rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background-color: var(--background-color);
-  border: 0;
-  border-radius: var(--corner-radius);
-
-  &:active {
-    background-color: var(--active);
-  }
-}
-
-.Layer__profit-and-loss-date-picker__button-icon path {
-  stroke: var(--text-color);
-}
-
-.Layer__profit-and-loss-date-picker__label {
-  flex: 1;
-  font-size: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
 .Layer__profit-and-loss-chart .recharts-cartesian-axis-tick-value tspan {
   font-size: 0.75rem;
 }
 
 .Layer__profit-and-loss-chart .recharts-legend-wrapper {
-  margin-top: -1.25rem;
+  margin-top: 1.75rem;
 }
 
 .Layer__profit-and-loss-chart .recharts-legend-item-text {
-  font-size: 1rem;
+  font-size: 12px;
+  color: var(--color-base-700);
   vertical-align: middle;
 }
 
@@ -258,9 +272,9 @@
 }
 
 .Layer__profit-and-loss-chart__selection-indicator {
-  stroke: var(--indicator-color);
+  stroke: var(--chart-indicator-color);
   fill: none;
-  transition: x 0.5s;
+  transition: x 0.35s ease-in-out;
 }
 
 
@@ -288,7 +302,6 @@
   flex-direction: column;
   flex: 1;
   padding: var(--spacing-md);
-  padding-top: 68px;
 }
 
 .Layer__profit-and-loss-summaries {
@@ -307,14 +320,40 @@
 .Layer__profit-and-loss-summaries__summary {
   display: flex;
   flex: 1;
-  flex-direction: column;
-  gap: var(--spacing-4xs);
-  justify-content: center;
+  gap: var(--spacing-xs);
+  align-items: center;
   box-shadow: 0px 0px 0px 1px var(--color-base-300);
   border-radius: var(--border-radius-xs);
-  padding: var(--spacing-md);
-  min-height: 72px;
+  padding: var(--spacing-4xs);
+  min-height: 52px;
   box-sizing: border-box;
+
+  &.Layer__actionable {
+    cursor: pointer;
+    &:hover {
+      background: var(--color-base-50);
+    }
+  }
+
+  &.active {
+    box-shadow: 0px 0px 0px 1px var(--color-base-200);
+    background: var(--color-base-50);
+  }
+
+  .mini-chart {
+    background: var(--color-base-50);
+    border-radius: 6px;
+    border-width: 0;
+    box-shadow: none;
+  }
+
+  &.net-profit {
+    padding-left: var(--spacing-xs);
+    background: var(--color-base-50);
+    border-color: transparent;
+    box-shadow: none;
+    min-height: 56px;
+  }
 }
 
 .Layer__profit-and-loss-summaries__loader {
@@ -327,20 +366,25 @@
   }
 }
 
+.Layer__profit-and-loss-summaries__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4xs);
+}
+
 .Layer__profit-and-loss-summaries__title {
-  color: var(--text-color-primary);
+  color: var(--color-base-700);
   font-size: var(--text-sm);
 }
 
 .Layer__profit-and-loss-summaries__month {
   font-size: 1.125rem;
   margin-bottom: 0.25rem;
-  color: red;
 }
 
 .Layer__profit-and-loss-summaries__amount,
 .Layer__profit-and-loss-summaries__amount--positive {
-  color: var(--text-color-primary);
+  color: var(--color-base-900);
   font-size: var(--text-md);
 
   &::before {
@@ -451,5 +495,23 @@
 
   .Layer__profit-and-loss-summaries__summary {
     min-width: 150px;
+  }
+}
+
+.Layer__profit-and-loss-row__detailed-chart-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-base-100);
+  color: var(--color-base-600);
+  cursor: pointer;
+  transition: color 150ms ease-out, background-color 150ms ease-out;
+
+  &:hover {
+    background: var(--color-base-200);
+    color: var(--color-base-900);
   }
 }

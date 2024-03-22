@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
+import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import ChevronDownFill from '../../icons/ChevronDownFill'
+import PieChart from '../../icons/PieChart'
 import { centsToDollars } from '../../models/Money'
 import { Direction, LineItem } from '../../types'
 import { Text } from '../Typography'
@@ -10,6 +12,8 @@ type Props = {
   maxDepth?: number
   lineItem?: LineItem | null
   direction?: Direction
+  scope?: SidebarScope
+  setSidebarScope?: (name: SidebarScope) => void
 
   /* This removes the expand toggle and leaves everything in the expanded state */
   lockExpanded?: boolean
@@ -22,6 +26,8 @@ export const ProfitAndLossRow = ({
   maxDepth = 1,
   direction = Direction.DEBIT,
   lockExpanded = false,
+  scope,
+  setSidebarScope,
 }: Props) => {
   if (!lineItem) {
     return null
@@ -78,10 +84,26 @@ export const ProfitAndLossRow = ({
         className={labelClasses.join(' ')}
         onClick={() => !lockExpanded && toggleExpanded()}
       >
-        {!lockExpanded && variant !== 'summation' ? (
-          <ChevronDownFill size={16} />
-        ) : null}
-        <Text>{display_name}</Text>
+        <span className='Layer__profit-and-loss-row__label__title'>
+          {!lockExpanded && variant !== 'summation' ? (
+            <ChevronDownFill
+              size={16}
+              className='Layer__profit-and-loss-row__label__chevron'
+            />
+          ) : null}
+          <Text>{display_name}</Text>
+        </span>
+        {setSidebarScope && (
+          <span
+            className='Layer__profit-and-loss-row__detailed-chart-btn'
+            onClick={e => {
+              e.stopPropagation()
+              setSidebarScope && setSidebarScope(scope ?? 'expenses')
+            }}
+          >
+            <PieChart />
+          </span>
+        )}
       </div>
       <div className={valueClasses.join(' ')}>
         <Text>{amountString}</Text>

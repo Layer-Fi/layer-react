@@ -10,6 +10,8 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 type PNLContextType = ReturnType<typeof useProfitAndLoss>
 const PNLContext = createContext<PNLContextType>({
   data: undefined,
+  filteredData: [],
+  filteredTotal: undefined,
   isLoading: true,
   isValidating: false,
   error: undefined,
@@ -19,6 +21,14 @@ const PNLContext = createContext<PNLContextType>({
   },
   changeDateRange: () => {},
   refetch: () => {},
+  sidebarScope: undefined,
+  setSidebarScope: () => {},
+  sortBy: () => {},
+  setFilterTypes: () => {},
+  filters: {
+    expenses: undefined,
+    revenue: undefined,
+  },
 })
 
 type Props = PropsWithChildren & {

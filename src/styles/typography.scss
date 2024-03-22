@@ -43,3 +43,8 @@
 .Layer__text--error {
   color: var(--color-danger);
 }
+
+.Layer__label {
+  color: var(--color-base-500);
+  font-variation-settings: 'wght' var(--font-weight-normal);
+}
