@@ -88,18 +88,20 @@ export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
           lockExpanded={lockExpanded}
         />
       </div>
-      <div className='Layer__profit-and-loss-table Layer__profit-and-loss-table__outflows'>
-        <ProfitAndLossRow
-          lineItem={data.other_outflows}
-          direction={Direction.DEBIT}
-          lockExpanded={lockExpanded}
-        />
-        <ProfitAndLossRow
-          lineItem={data.personal_expenses}
-          direction={Direction.DEBIT}
-          lockExpanded={lockExpanded}
-        />
-      </div>
+      {data.other_outflows || data.personal_expenses ? (
+        <div className='Layer__profit-and-loss-table Layer__profit-and-loss-table__outflows'>
+          <ProfitAndLossRow
+            lineItem={data.other_outflows}
+            direction={Direction.DEBIT}
+            lockExpanded={lockExpanded}
+          />
+          <ProfitAndLossRow
+            lineItem={data.personal_expenses}
+            direction={Direction.DEBIT}
+            lockExpanded={lockExpanded}
+          />
+        </div>
+      ) : null}
     </>
   )
 }

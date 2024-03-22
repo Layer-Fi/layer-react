@@ -78,8 +78,8 @@ export const DetailedTable = ({
                     key={`pl-side-table-item-${idx}`}
                     className={classNames(
                       'Layer__profit-and-loss-detailed-table__row',
-                      hoveredItem && hoveredItem !== item.display_name
-                        ? 'inactive'
+                      hoveredItem && hoveredItem === item.display_name
+                        ? 'active'
                         : '',
                     )}
                     onMouseEnter={() => setHoveredItem(item.display_name)}

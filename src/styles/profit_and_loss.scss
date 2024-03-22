@@ -73,7 +73,7 @@
 }
 
 .Layer__profit-and-loss-table__outflows {
-  margin-top: 1rem;
+  padding-top: var(--spacing-2xs);
 }
 
 .Layer__profit-and-loss-row {
@@ -272,9 +272,9 @@
 }
 
 .Layer__profit-and-loss-chart__selection-indicator {
-  stroke: var(--indicator-color);
+  stroke: var(--chart-indicator-color);
   fill: none;
-  transition: x 0.5s;
+  transition: x 0.35s ease-in-out;
 }
 
 

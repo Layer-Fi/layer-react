@@ -118,6 +118,8 @@
   --bar-color-income: var(--color-base-400);
   --bar-color-expenses: var(--color-base-900); 
 
+  --chart-indicator-color: var(--color-base-700);
+
   // LEGACY (?)
   --color-alabaster: #f9f9f9;
   --color-athens-gray: #eaecf0;
@@ -135,7 +137,6 @@
   --buttons-border-color: var(--color-mischke);
   --button-color-dark: var(--color-fiord);
   --corner-radius: 0.5rem;
-  --indicator-color: var(--color-mine-shaft);
   --table-border-color: var(--color-athens-gray);
   --table-expanded-background-color: var(--color-alabaster);
   --text-color: var(--color-ebony);

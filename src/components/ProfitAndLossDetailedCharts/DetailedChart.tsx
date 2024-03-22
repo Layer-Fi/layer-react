@@ -79,8 +79,8 @@ export const DetailedChart = ({
               outerRadius={120}
               paddingAngle={0.5}
               fill='#8884d8'
-              animationDuration={250}
-              animationEasing='ease-out'
+              animationDuration={200}
+              animationEasing='ease-in-out'
             >
               {chartData.map((entry, index) => {
                 const colorConfig =
