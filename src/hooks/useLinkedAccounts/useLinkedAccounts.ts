@@ -8,20 +8,23 @@ import { useLayerContext } from '../useLayerContext'
 
 const MOCK_DATA: LinkedAccount[] = [
   {
-    name: 'Business Checking',
+    name: 'Public Demo Banking',
     account: '1234',
     amount: 1220620,
   },
-  {
-    name: 'Business Savings',
-    account: '5678',
-    amount: 1000206.2,
-  },
-  {
-    name: 'Account',
-    account: '4321',
-    amount: 801.91,
-  },
+  /* Temporarily removing these to make it match test data (with one account)
+   * we're using in the demo.
+   */
+  // {
+  //   name: 'Business Savings',
+  //   account: '5678',
+  //   amount: 1000206.2,
+  // },
+  // {
+  //   name: 'Account',
+  //   account: '4321',
+  //   amount: 801.91,
+  // },
 ]
 
 type UseLinkedAccounts = () => {
