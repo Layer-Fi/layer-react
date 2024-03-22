@@ -117,6 +117,7 @@ export const ProfitAndLossChart = () => {
     name: getMonthName(pnl),
     revenue: pnl?.income.value || 0,
     expenses: Math.abs((pnl?.income.value || 0) - (pnl?.net_profit || 0)),
+    netProfit: pnl?.net_profit || 0,
     selected:
       !!pnl &&
       parseISO(pnl.start_date).getMonth() >= startSelectionMonth &&
@@ -140,6 +141,9 @@ export const ProfitAndLossChart = () => {
     label,
   }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
+      const netProfit = payload[0].payload.netProfit ?? 0
+      const netProfitClass =
+        netProfit > 0 ? 'positive' : netProfit < 0 ? 'negative' : ''
       return (
         <div className='Layer__chart__tooltip'>
           <ul className='Layer__chart__tooltip-list'>
@@ -157,6 +161,12 @@ export const ProfitAndLossChart = () => {
               </label>
               <span className='Layer__chart__tooltip-value'>
                 ${centsToDollars(Math.abs(payload[1].value ?? 0))}
+              </span>
+            </li>
+            <li>
+              <label className='Layer__chart__tooltip-label'>Net Profit</label>
+              <span className={`Layer__chart__tooltip-value ${netProfitClass}`}>
+                ${centsToDollars(netProfit)}
               </span>
             </li>
           </ul>

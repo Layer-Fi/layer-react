@@ -10,7 +10,11 @@ type Props = {
 }
 
 export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
-  const { data: actualData, isLoading } = useContext(ProfitAndLoss.Context)
+  const {
+    data: actualData,
+    isLoading,
+    setSidebarScope,
+  } = useContext(ProfitAndLoss.Context)
   const data = !actualData || isLoading ? emptyPNL : actualData
 
   if (isLoading || actualData === undefined) {
@@ -28,11 +32,15 @@ export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
           lineItem={data.income}
           direction={Direction.CREDIT}
           lockExpanded={lockExpanded}
+          scope='revenue'
+          setSidebarScope={setSidebarScope}
         />
         <ProfitAndLossRow
           lineItem={data.cost_of_goods_sold}
           direction={Direction.DEBIT}
           lockExpanded={lockExpanded}
+          scope='expenses'
+          setSidebarScope={setSidebarScope}
         />
         <ProfitAndLossRow
           lineItem={{
@@ -42,11 +50,15 @@ export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
           variant='summation'
           direction={Direction.CREDIT}
           lockExpanded={lockExpanded}
+          scope='revenue'
+          setSidebarScope={setSidebarScope}
         />
         <ProfitAndLossRow
           lineItem={data.expenses}
           direction={Direction.DEBIT}
           lockExpanded={lockExpanded}
+          scope='expenses'
+          setSidebarScope={setSidebarScope}
         />
         <ProfitAndLossRow
           lineItem={{
@@ -56,11 +68,15 @@ export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
           variant='summation'
           direction={Direction.CREDIT}
           lockExpanded={lockExpanded}
+          scope='revenue'
+          setSidebarScope={setSidebarScope}
         />
         <ProfitAndLossRow
           lineItem={data.taxes}
           direction={Direction.DEBIT}
           lockExpanded={lockExpanded}
+          scope='expenses'
+          setSidebarScope={setSidebarScope}
         />
         <ProfitAndLossRow
           lineItem={{

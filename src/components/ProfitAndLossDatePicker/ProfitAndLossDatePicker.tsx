@@ -19,6 +19,7 @@ export const ProfitAndLossDatePicker = () => {
   const nextMonth = () => change({ months: 1 })
   return (
     <div className='Layer__profit-and-loss-date-picker'>
+      <span className='Layer__profit-and-loss-date-picker__label'>{label}</span>
       <button
         aria-label='View Previous Month'
         className='Layer__profit-and-loss-date-picker__button'
@@ -26,10 +27,9 @@ export const ProfitAndLossDatePicker = () => {
       >
         <ChevronLeft
           className='Layer__profit-and-loss-date-picker__button-icon'
-          size={18}
+          size={16}
         />
       </button>
-      <span className='Layer__profit-and-loss-date-picker__label'>{label}</span>
       <button
         aria-label='View Next Month'
         className='Layer__profit-and-loss-date-picker__button'
@@ -37,7 +37,7 @@ export const ProfitAndLossDatePicker = () => {
       >
         <ChevronRight
           className='Layer__profit-and-loss-date-picker__button-icon'
-          size={18}
+          size={16}
         />
       </button>
     </div>

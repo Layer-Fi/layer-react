@@ -3,6 +3,7 @@ import XIcon from '../../icons/X'
 import { humanizeTitle } from '../../utils/profitAndLossUtils'
 import { Button, ButtonVariant } from '../Button'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
+import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { Text, TextSize, TextWeight } from '../Typography'
 import { DetailedChart } from './DetailedChart'
 import { DetailedTable } from './DetailedTable'
@@ -33,7 +34,7 @@ export const ProfitAndLossDetailedCharts = () => {
       )}
     >
       <div className='Layer__profit-and-loss-detailed-charts'>
-        <header>
+        <header className='Layer__profit-and-loss-detailed-charts__header'>
           <div className='Layer__profit-and-loss-detailed-charts__head'>
             <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
               {humanizeTitle(sidebarScope)}
@@ -41,6 +42,7 @@ export const ProfitAndLossDetailedCharts = () => {
             <Text size={TextSize.sm} className='date'>
               {format(dateRange.startDate, 'LLLL, y')}
             </Text>
+            <ProfitAndLossDatePicker />
           </div>
           <Button
             rightIcon={<XIcon />}
@@ -50,28 +52,43 @@ export const ProfitAndLossDetailedCharts = () => {
           />
         </header>
 
-        <DetailedChart
-          filteredData={filteredData}
-          filteredTotal={filteredTotal}
-          hoveredItem={hoveredItem}
-          setHoveredItem={setHoveredItem}
-        />
+        <header className='Layer__profit-and-loss-detailed-charts__header--tablet'>
+          <Button
+            onClick={() => setSidebarScope(undefined)}
+            variant={ButtonVariant.secondary}
+          >
+            Back
+          </Button>
+        </header>
 
-        <Filters
-          filteredData={filteredData}
-          sidebarScope={sidebarScope}
-          filters={filters}
-          setFilterTypes={setFilterTypes}
-        />
+        <div className='Layer__profit-and-loss-detailed-charts__content'>
+          <DetailedChart
+            filteredData={filteredData}
+            filteredTotal={filteredTotal}
+            hoveredItem={hoveredItem}
+            setHoveredItem={setHoveredItem}
+            sidebarScope={sidebarScope}
+            date={dateRange.startDate}
+          />
 
-        <DetailedTable
-          filteredData={filteredData}
-          sidebarScope={sidebarScope}
-          filters={filters}
-          sortBy={sortBy}
-          hoveredItem={hoveredItem}
-          setHoveredItem={setHoveredItem}
-        />
+          <div className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
+            <Filters
+              filteredData={filteredData}
+              sidebarScope={sidebarScope}
+              filters={filters}
+              setFilterTypes={setFilterTypes}
+            />
+
+            <DetailedTable
+              filteredData={filteredData}
+              sidebarScope={sidebarScope}
+              filters={filters}
+              sortBy={sortBy}
+              hoveredItem={hoveredItem}
+              setHoveredItem={setHoveredItem}
+            />
+          </div>
+        </div>
       </div>
     </div>
   )
