@@ -238,7 +238,7 @@ export const ProfitAndLossChart = () => {
           wrapperStyle={{ top: -24 }}
           payload={[
             {
-              value: 'Income',
+              value: 'Revenue',
               type: 'circle',
               id: 'IncomeLegend',
             },
