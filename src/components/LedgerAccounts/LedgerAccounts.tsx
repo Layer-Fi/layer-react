@@ -38,8 +38,6 @@ export const LedgerAccounts = () => {
 const LedgerAccountsContent = () => {
   const { data, isLoading, addAccount } = useContext(LedgerAccountsContext)
 
-  console.log(data)
-
   return (
     <Container name={COMPONENT_NAME}>
       <div className={`Layer__${COMPONENT_NAME}__main-panel`}>
@@ -78,9 +76,11 @@ const LedgerAccountsContent = () => {
             <div className='Layer__alt-table__head-cell Layer__coa__actions'></div>
           </div>
 
-          <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-            {!data || isLoading ? <Loader /> : null}
-          </div>
+          {!data || isLoading ? (
+            <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
+              <Loader />
+            </div>
+          ) : null}
 
           {data?.accounts.map((account, idx) => (
             <LedgerAccountsRow key={account.id} account={account} depth={0} />
@@ -90,54 +90,4 @@ const LedgerAccountsContent = () => {
       <LedgerAccountsSidebar />
     </Container>
   )
-  // return (
-  //   <div className='Layer__component Layer__ledger-accounts'>
-  //     {!data || isLoading ? (
-  //       'Loading.'
-  //     ) : (
-  //       <>
-  //         <div className='Layer__chart-of-accounts__header'>
-  //           <h2 className='Layer__chart-of-accounts__title'>
-  //             Chart of Accounts
-  //           </h2>
-  //           <div className='Layer__chart-of-accounts__actions'>
-  //             <button className='Layer__chart-of-accounts__download-button'>
-  //               <DownloadCloud />
-  //               Download
-  //             </button>
-  //             <button
-  //               className='Layer__chart-of-accounts__edit-accounts-button'
-  //               onClick={() => setShowingForm(!showingForm)}
-  //             >
-  //               Edit Accounts
-  //             </button>
-  //           </div>
-  //         </div>
-  //         {showingForm && <ChartOfAccountsNewForm />}
-  //         <div className='Layer__chart-of-accounts__table'>
-  //           <div className='Layer__chart-of-accounts__table-cell Layer__chart-of-accounts__table-cell--header'>
-  //             Name
-  //           </div>
-  //           <div className='Layer__chart-of-accounts__table-cell Layer__chart-of-accounts__table-cell--header'>
-  //             Type
-  //           </div>
-  //           <div className='Layer__chart-of-accounts__table-cell Layer__chart-of-accounts__table-cell--header'>
-  //             Sub-Type
-  //           </div>
-  //           <div className='Layer__chart-of-accounts__table-cell Layer__chart-of-accounts__table-cell--header Layer__chart-of-accounts__table-cell--header-balance'>
-  //             Balance
-  //           </div>
-  //           <div className='Layer__chart-of-accounts__table-cell Layer__chart-of-accounts__table-cell--header'></div>
-  //           {data.accounts.map(account => (
-  //             <ChartOfAccountsRow
-  //               key={account.id}
-  //               account={account}
-  //               depth={0}
-  //             />
-  //           ))}
-  //         </div>
-  //       </>
-  //     )}
-  //   </div>
-  // )
 }

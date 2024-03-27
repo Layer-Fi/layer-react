@@ -1,5 +1,6 @@
 import React, { useContext, useMemo } from 'react'
-import { Account, Direction } from '../../types'
+import { flattenAccounts } from '../../hooks/useLedgerAccounts/useLedgerAccounts'
+import { Direction } from '../../types'
 import { BaseSelectOption } from '../../types/general'
 import { Button } from '../Button'
 import { Input, InputGroup, Select } from '../Input'
@@ -17,33 +18,27 @@ const SUB_TYPE_OPTIONS: BaseSelectOption[] = [
   },
 ]
 
-const flatSubAccounts = (entry: Account) => {
-  const result = [{ label: entry.name, value: entry.id }]
-  if (entry.sub_accounts) {
-    entry.sub_accounts.forEach(subAccount => {
-      result.concat(flatSubAccounts(subAccount))
-    })
-  }
-
-  return result
-}
-
 export const LedgerAccountsForm = () => {
   const { form, data, changeFormData, cancelForm, submitForm } = useContext(
     LedgerAccountsContext,
   )
 
-  const parentOptions = useMemo(() => {
-    let collected: BaseSelectOption[] = []
+  const parentOptions: BaseSelectOption[] = useMemo(
+    () =>
+      flattenAccounts(data?.accounts || [])
+        .sort((a, b) => (a?.name && b?.name ? a.name.localeCompare(b.name) : 0))
+        .map(x => {
+          return {
+            label: x.name,
+            value: x.id,
+          }
+        }),
+    [data?.accounts?.length],
+  )
 
-    data?.accounts.forEach(account => {
-      collected.concat(flatSubAccounts(account))
-    })
-
-    return collected
-  }, [data])
-
-  console.log('parentOptions', parentOptions)
+  if (!form) {
+    return
+  }
 
   return (
     <form
@@ -69,17 +64,16 @@ export const LedgerAccountsForm = () => {
           <Select
             options={parentOptions}
             value={form?.data.parent}
-            onChange={sel => console.log('change parent', sel)}
+            onChange={sel => changeFormData('parent', sel)}
           />
         </InputGroup>
         <InputGroup name='name' label='Name' inline={true}>
           <Input
             name='name'
             value={form?.data.name}
-            onChange={e => {
-              console.log('name chage', e)
+            onChange={e =>
               changeFormData('name', (e.target as HTMLInputElement).value)
-            }}
+            }
           />
         </InputGroup>
         <InputGroup name='type' label='Type' inline={true}>
@@ -87,24 +81,21 @@ export const LedgerAccountsForm = () => {
             options={[]}
             disabled
             value={form?.data.type}
-            onChange={sel => console.log('change subtype', sel)}
+            onChange={sel => changeFormData('type', sel)}
           />
         </InputGroup>
-        <InputGroup name='sub-type' label='Sub-Type' inline={true}>
+        <InputGroup name='subType' label='Sub-Type' inline={true}>
           <Select
             options={SUB_TYPE_OPTIONS}
             value={form?.data.subType}
-            onChange={sel => console.log('change subtype', sel)}
+            onChange={sel => changeFormData('subType', sel)}
           />
         </InputGroup>
         <InputGroup name='category' label='Category' inline={true}>
           <Select
             options={[]}
             value={form?.data.category}
-            onChange={sel => {
-              console.log('change cat', sel)
-              changeFormData('category', sel)
-            }}
+            onChange={sel => changeFormData('category', sel)}
           />
         </InputGroup>
       </div>

@@ -59,7 +59,12 @@ export const LedgerAccountsRow = ({
           <Button
             variant={ButtonVariant.secondary}
             rightIcon={<Edit2 size={12} />}
-            onClick={() => editAccount(account.id)}
+            onClick={e => {
+              e.preventDefault()
+              e.stopPropagation()
+              console.log('clicked on edit', account, account.id)
+              editAccount(account.id)
+            }}
           >
             Edit
           </Button>

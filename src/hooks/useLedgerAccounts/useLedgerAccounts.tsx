@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
 import {
+  Account,
   AccountAlternate,
   Direction,
   LedgerAccounts,
@@ -40,6 +41,12 @@ type UseLedgerAccounts = () => {
   setShowARForAccountId: (id: string) => void
 }
 
+export const flattenAccounts = (accounts: Account[]): Account[] =>
+  accounts
+    .flatMap(a => [a, flattenAccounts(a.sub_accounts || [])])
+    .flat()
+    .filter(id => id)
+
 export const useLedgerAccounts: UseLedgerAccounts = () => {
   const { auth, businessId, apiUrl } = useLayerContext()
 
@@ -63,8 +70,6 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
   }
 
   const submitForm = () => {
-    console.log('save...')
-
     if (!form || !form.action) {
       return
     }
@@ -83,13 +88,11 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
 
     if (form.action === 'new') {
       // @TODO add validation - no empty name
-      console.log('new')
       create(data)
       return
     }
 
     if (form.action === 'edit' && form.accountId) {
-      console.log('edit')
       // @TODO call update - missing endpoint?
       return
     }
@@ -112,19 +115,28 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     })
 
   const editAccount = (id: string) => {
-    console.log('edit account', id)
     // @TODO find in data AND sub_accounts!
-    const found = data?.data?.accounts?.find(x => x.id === id)
+    const allAccounts = flattenAccounts(data?.data?.accounts || [])
+    const found = allAccounts?.find(x => x.id === id)
 
     if (!found) {
       return
     }
 
+    const parent = allAccounts.find(
+      x => x.sub_accounts?.find(el => el.id === found.id),
+    )
+
     setForm({
       action: 'edit',
       accountId: id,
       data: {
-        parent: undefined,
+        parent: parent
+          ? {
+              value: parent.id,
+              label: parent.name,
+            }
+          : undefined,
         name: found.name,
         type: {
           value: 'assets',
@@ -135,8 +147,6 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
       },
     })
   }
-
-  console.log('f in', form)
 
   const cancelForm = () => setForm(undefined)
 
