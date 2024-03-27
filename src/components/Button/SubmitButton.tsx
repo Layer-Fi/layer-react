@@ -16,6 +16,7 @@ export interface SubmitButtonProps
   active?: boolean
   iconOnly?: boolean
   action?: SubmitAction
+  noIcon?: boolean
 }
 
 export enum SubmitAction {
@@ -27,11 +28,17 @@ const buildRightIcon = ({
   processing,
   error,
   action,
+  noIcon,
 }: {
   processing?: boolean
   error?: boolean | string
   action: SubmitAction
+  noIcon?: boolean
 }) => {
+  if (noIcon) {
+    return
+  }
+
   if (processing) {
     return <Loader size={14} className='Layer__anim--rotating' />
   }
@@ -70,6 +77,7 @@ export const SubmitButton = ({
   error,
   children,
   action = SubmitAction.SAVE,
+  noIcon,
   ...props
 }: SubmitButtonProps) => {
   const baseClassName = classNames(
@@ -83,7 +91,7 @@ export const SubmitButton = ({
       className={baseClassName}
       variant={ButtonVariant.primary}
       disabled={processing || disabled}
-      rightIcon={buildRightIcon({ processing, error, action })}
+      rightIcon={buildRightIcon({ processing, error, action, noIcon })}
       iconAsPrimary={true}
     >
       {children}

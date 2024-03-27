@@ -6,6 +6,16 @@ export interface LedgerAccounts {
   accounts: Account[]
 }
 
+export interface AccountEntry {
+  account: Account
+  amount?: number
+  createdAt?: string
+  direction: Direction
+  entry_at?: string
+  entry_id?: string
+  id?: string
+}
+
 export interface Account {
   id: string
   number: number
@@ -22,6 +32,7 @@ export interface Account {
   normality: Direction
   balance: number
   selfOnlyBalance: number
+  entries?: AccountEntry[]
 }
 
 export interface AccountAlternate {

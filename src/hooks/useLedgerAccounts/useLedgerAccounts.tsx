@@ -26,7 +26,9 @@ export interface LedgerAccountsForm {
 type UseLedgerAccounts = () => {
   data: LedgerAccounts | undefined
   isLoading?: boolean
+  isValidating?: boolean
   error?: unknown
+  refetch: () => void
   create: (newAccount: NewAccount) => void
   form?: LedgerAccountsForm
   addAccount: () => void
@@ -38,7 +40,7 @@ type UseLedgerAccounts = () => {
   ) => void
   submitForm: () => void
   showARForAccountId?: string
-  setShowARForAccountId: (id: string) => void
+  setShowARForAccountId: (id?: string) => void
 }
 
 export const flattenAccounts = (accounts: Account[]): Account[] =>
@@ -55,7 +57,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     string | undefined
   >()
 
-  const { data, isLoading, error, mutate } = useSWR(
+  const { data, isLoading, isValidating, error, mutate } = useSWR(
     businessId && auth?.access_token && `ledger-accounts-${businessId}`,
     Layer.getLedgerAccounts(apiUrl, auth?.access_token, {
       params: { businessId },
@@ -115,7 +117,6 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     })
 
   const editAccount = (id: string) => {
-    // @TODO find in data AND sub_accounts!
     const allAccounts = flattenAccounts(data?.data?.accounts || [])
     const found = allAccounts?.find(x => x.id === id)
 
@@ -167,10 +168,14 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     })
   }
 
+  const refetch = () => mutate()
+
   return {
     data: data?.data,
     isLoading,
+    isValidating,
     error,
+    refetch,
     create,
     form,
     addAccount,

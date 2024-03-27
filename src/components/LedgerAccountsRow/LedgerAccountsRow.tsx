@@ -19,7 +19,9 @@ export const LedgerAccountsRow = ({
   account,
   depth = 0,
 }: LedgerAccountsRowProps) => {
-  const { editAccount } = useContext(LedgerAccountsContext)
+  const { form, editAccount, setShowARForAccountId } = useContext(
+    LedgerAccountsContext,
+  )
   const [isOpen, setIsOpen] = useState(false)
 
   const baseClass = classNames(
@@ -28,6 +30,7 @@ export const LedgerAccountsRow = ({
       ? 'Layer__alt-table-row--expanded'
       : 'Layer__alt-table-row--collapsed',
     `Layer__alt-table-row--depth-${depth}`,
+    form?.accountId === account.id && 'active',
   )
 
   return (
@@ -62,7 +65,6 @@ export const LedgerAccountsRow = ({
             onClick={e => {
               e.preventDefault()
               e.stopPropagation()
-              console.log('clicked on edit', account, account.id)
               editAccount(account.id)
             }}
           >
@@ -71,6 +73,11 @@ export const LedgerAccountsRow = ({
           <Button
             variant={ButtonVariant.secondary}
             rightIcon={<ArrowRightCircle size={12} />}
+            onClick={e => {
+              e.preventDefault()
+              e.stopPropagation()
+              setShowARForAccountId(account.id)
+            }}
           >
             Open
           </Button>

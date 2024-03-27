@@ -32,7 +32,7 @@ export const Select = <T,>({
   name,
   options,
   className,
-  classNamePrefix,
+  classNamePrefix = 'Layer__select',
   value,
   onChange,
   disabled,

@@ -1,8 +1,9 @@
 import React, { useContext, useMemo } from 'react'
 import { flattenAccounts } from '../../hooks/useLedgerAccounts/useLedgerAccounts'
+import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
 import { BaseSelectOption } from '../../types/general'
-import { Button } from '../Button'
+import { Button, ButtonVariant, SubmitButton } from '../Button'
 import { Input, InputGroup, Select } from '../Input'
 import { LedgerAccountsContext } from '../LedgerAccounts/LedgerAccounts'
 import { Text, TextSize, TextWeight } from '../Typography'
@@ -36,6 +37,18 @@ export const LedgerAccountsForm = () => {
     [data?.accounts?.length],
   )
 
+  const entry = useMemo(() => {
+    if (form?.action === 'edit' && form.accountId) {
+      return flattenAccounts(data?.accounts || []).find(
+        x => x.id === form.accountId,
+      )
+    }
+
+    return
+  }, [data, form?.accountId])
+
+  console.log(entry)
+
   if (!form) {
     return
   }
@@ -52,12 +65,27 @@ export const LedgerAccountsForm = () => {
           {form?.action === 'edit' ? 'Edit' : 'Add New'} Account
         </Text>
         <div className='actions'>
-          <Button type='button' onClick={cancelForm}>
+          <Button
+            type='button'
+            onClick={cancelForm}
+            variant={ButtonVariant.secondary}
+          >
             Cancel
           </Button>
-          <Button type='submit'>Save</Button>
+          <SubmitButton type='submit' noIcon={true} active={true}>
+            Save
+          </SubmitButton>
         </div>
       </div>
+
+      {entry && (
+        <div className='Layer__ledger-accounts__form-edit-entry'>
+          <Text weight={TextWeight.bold}>{entry.name}</Text>
+          <Text weight={TextWeight.bold}>
+            ${centsToDollars(entry.balance || 0)}
+          </Text>
+        </div>
+      )}
 
       <div className='Layer__ledger-accounts__form'>
         <InputGroup name='parent' label='Parent' inline={true}>

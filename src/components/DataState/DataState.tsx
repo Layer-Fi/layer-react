@@ -9,6 +9,7 @@ import { Text, TextSize, TextWeight } from '../Typography'
 export enum DataStateStatus {
   allDone = 'allDone',
   failed = 'failed',
+  info = 'info',
 }
 
 export interface DataStateProps {
@@ -24,6 +25,12 @@ const getIcon = (status: DataStateStatus) => {
     case DataStateStatus.failed:
       return (
         <span className='Layer__data-state__icon Layer__data-state__icon--error'>
+          <AlertOctagon size={12} />
+        </span>
+      )
+    case DataStateStatus.info:
+      return (
+        <span className='Layer__data-state__icon Layer__data-state__icon--neutral'>
           <AlertOctagon size={12} />
         </span>
       )

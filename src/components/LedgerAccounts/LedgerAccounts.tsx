@@ -1,8 +1,10 @@
 import React, { createContext, useContext } from 'react'
 import { useLedgerAccounts } from '../../hooks/useLedgerAccounts'
 import DownloadCloud from '../../icons/DownloadCloud'
+import { AccountsReceivable } from '../AccountsReceivable'
 import { Button, ButtonVariant } from '../Button'
 import { Container, Header } from '../Container'
+import { DataState, DataStateStatus } from '../DataState'
 import { LedgerAccountsRow } from '../LedgerAccountsRow'
 import { LedgerAccountsSidebar } from '../LedgerAccountsSidebar'
 import { Loader } from '../Loader'
@@ -14,7 +16,9 @@ export type LedgerAccountsContextType = ReturnType<typeof useLedgerAccounts>
 export const LedgerAccountsContext = createContext<LedgerAccountsContextType>({
   data: undefined,
   isLoading: false,
+  isValidating: false,
   error: undefined,
+  refetch: () => {},
   create: () => {},
   form: undefined,
   addAccount: () => {},
@@ -36,7 +40,8 @@ export const LedgerAccounts = () => {
 }
 
 const LedgerAccountsContent = () => {
-  const { data, isLoading, addAccount } = useContext(LedgerAccountsContext)
+  const { data, isLoading, addAccount, error, isValidating, refetch } =
+    useContext(LedgerAccountsContext)
 
   return (
     <Container name={COMPONENT_NAME}>
@@ -76,18 +81,45 @@ const LedgerAccountsContent = () => {
             <div className='Layer__alt-table__head-cell Layer__coa__actions'></div>
           </div>
 
-          {!data || isLoading ? (
+          {error ? (
+            <div className='Layer__table-state-container'>
+              <DataState
+                status={DataStateStatus.failed}
+                title='Something went wrong'
+                description='We couldn’t load your data.'
+                onRefresh={() => refetch()}
+                isLoading={isValidating || isLoading}
+              />
+            </div>
+          ) : null}
+
+          {(!data || isLoading) && !error ? (
             <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
               <Loader />
             </div>
           ) : null}
 
-          {data?.accounts.map((account, idx) => (
-            <LedgerAccountsRow key={account.id} account={account} depth={0} />
-          ))}
+          {!error &&
+            data?.accounts.map(account => (
+              <LedgerAccountsRow key={account.id} account={account} depth={0} />
+            ))}
+
+          {!isLoading && !error && data?.accounts.length === 0 ? (
+            <div className='Layer__table-state-container'>
+              <DataState
+                status={DataStateStatus.info}
+                title='Accounts were not found'
+                description='New account can be created with "Add Account".'
+                onRefresh={() => refetch()}
+                isLoading={isValidating}
+              />
+            </div>
+          ) : null}
         </div>
       </div>
       <LedgerAccountsSidebar />
+
+      <AccountsReceivable />
     </Container>
   )
 }
