@@ -7,7 +7,7 @@ type Option<T = string> = { label: string; value: T }
 
 const flattenAccounts = (accounts: Account[]): Account[] =>
   accounts
-    .flatMap(a => [a, flattenAccounts(a.subAccounts || [])])
+    .flatMap(a => [a, flattenAccounts(a.sub_accounts || [])])
     .flat()
     .filter(id => id)
 

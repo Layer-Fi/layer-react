@@ -1,16 +1,65 @@
+.Layer__component-container.Layer__ledger-accounts {
+  display: flex;
+  align-items: stretch;
+}
+
+.Layer__ledger-accounts__loader-container {
+  padding: var(--spacing-2xl);
+}
+
+.Layer__ledger-accounts__main-panel {
+  padding-bottom: var(--spacing-lg);
+  flex: 1;
+}
+
+.Layer__ledger-accounts__sidebar {
+  width: 480px;
+  max-width: 0;
+  overflow: hidden;
+  transition: max-width 250ms ease-out;
+
+  .Layer__ledger-accounts__sidebar-content {
+    width: 480px;
+    height: 100%;
+    opacity: 0.2;
+    transition: opacity 250ms ease-out;
+    background: var(--color-base-0);
+    border-left: 1px solid var(--color-base-300);
+    box-shadow: 0px -1px 0px 0px var(--color-base-300) inset;
+  }
+
+  &.Layer__ledger-accounts__sidebar.open {
+    max-width: 480px;
+
+    .Layer__ledger-accounts__sidebar-content {
+      opacity: 1;
+    }
+  }
+}
+
 .Layer__ledger-accounts__actions {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
 }
 
-.Layer__coa__name,
 .Layer__coa__type,
 .Layer__coa__subtype,
 .Layer__coa__balance,
 .Layer__coa__actions {
-  width: 20%;
-  flex: 1;
+  &.Layer__alt-table__head-cell,
+  &.Layer__alt-table__cell {
+    width: 18%;
+    flex: 18 18 auto;
+  }
+}
+
+.Layer__coa__name {
+  &.Layer__alt-table__head-cell,
+  &.Layer__alt-table__cell {
+    width: 28%;
+    flex: 28 28 auto;
+  }
 }
 
 .Layer__alt-table__cell.Layer__coa__name,
@@ -18,29 +67,111 @@
   color: var(--color-base-800);
 }
 
+.Layer__alt-table__cell.Layer__coa__balance {
+  font-variation-settings: 'wght' var(--font-weight-bold);
+}
+
+.Layer__alt-table-row--depth-0 .Layer__alt-table__cell.Layer__coa__name {
+  font-variation-settings: 'wght' var(--font-weight-bold);
+}
+
 .Layer__coa__balance {
   text-align: right;
+  justify-content: flex-end;
 }
 
 .Layer__coa__actions {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  min-width: 192px;
+
+  & > .Layer__btn {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 300ms ease-out;
+    transform: scale(0.92);
+  }
+}
+
+.Layer__alt-table-row:hover .Layer__coa__actions > .Layer__btn {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.Layer__ledger-accounts__sidebar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  gap: var(--spacing-md);
+
+  .title {
+    margin: 0;
+    font-size: 24px;
+  }
+
+  .actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+  }
+}
+
+.Layer__ledger-accounts__form {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-xl);
+
+  .Layer__input-group.Layer__input-group--inline {
+    padding: var(--spacing-sm) 0;
+    label {
+      width: 140px;
+      min-width: 140px;
+      max-width: 140px;
+    }
+  }
 }
 
 //**** @TODO MOVE TO ANOTHER CSS
 .Layer__alt-table-row {
   width: 100%;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   padding: 0 var(--spacing-md);
   box-sizing: border-box;
   box-shadow: 0px -1px 0px 0px var(--color-base-300) inset;
+  transition: background 200ms ease-in-out;
+  position: relative;
+
+  &:not(.Layer__alt-table-row--header) {
+    cursor: pointer; 
+  }
+
+  &:not(.Layer__alt-table-row--header):hover {
+    background-color: var(--color-base-50);
+  }
+
+  &.active {
+    background-color: var(--color-base-50);
+    &:before {
+      content: '';
+      background-color: var(--color-base-400);
+      height: 100%;
+      width: 2px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
 }
 
 .Layer__alt-table__head-cell, .Layer__alt-table__cell {
   flex: 1;
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-md);
 }
 
 .Layer__alt-table__head-cell {
@@ -51,4 +182,20 @@
 .Layer__alt-table__cell {
   color: var(--color-base-600);
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.Layer__alt-table__expand-icon {
+  transition: transform 150ms ease-out;
+  color: var(--color-base-600);
+}
+
+.Layer__alt-table-row:not(.Layer__alt-table-row--depth-0):not(.Layer__alt-table-row--header) {
+  background-color: var(--color-base-50);
+}
+
+.Layer__alt-table-row--collapsed .Layer__alt-table__expand-icon {
+  transform: rotate(-90deg);
 }

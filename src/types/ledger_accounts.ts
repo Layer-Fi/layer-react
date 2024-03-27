@@ -16,7 +16,7 @@ export interface Account {
   description?: string
   scheduleCLine?: string
   scheduleCLineDescription?: string
-  subAccounts?: Account[]
+  sub_accounts?: Account[]
   hidePnl: boolean
   showInPnlIfEmpty: boolean
   normality: Direction
@@ -36,7 +36,7 @@ export interface AccountAlternate {
 export type NewAccount = {
   name: string
   normality: Direction
-  parent_id: {
+  parent_id?: {
     type: 'AccountId'
     id: string
   }

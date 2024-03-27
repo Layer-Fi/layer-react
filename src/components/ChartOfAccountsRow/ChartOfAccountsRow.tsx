@@ -49,7 +49,7 @@ export const ChartOfAccountsRow = ({ account, depth = 0 }: Props) => {
           View Entries
         </button>
       </div>
-      {(account.subAccounts || []).map(subAccount => (
+      {(account.sub_accounts || []).map(subAccount => (
         <ChartOfAccountsRow
           key={subAccount.id}
           account={subAccount}
