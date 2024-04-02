@@ -1,1 +1,0 @@
-export { ChartOfAccountsNewForm } from './ChartOfAccountsNewForm'

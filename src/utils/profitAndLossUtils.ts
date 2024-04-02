@@ -26,7 +26,7 @@ const collectSubItems = (type: string, item?: LineItem | null) => {
       items.push({
         name: item.name,
         display_name: item.display_name,
-        value: Math.abs(item.value || 0), // @TODO - confirm that's safe to do this
+        value: item.value || 0,
         type,
       })
     }
