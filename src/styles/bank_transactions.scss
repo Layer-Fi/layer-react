@@ -33,10 +33,6 @@
   }
 }
 
-.Layer__bank-transaction-row .Layer__table-cell {
-  border-top: 1px solid var(--border-color);
-}
-
 .Layer__bank-transaction-row:first-child .Layer__table-cell  {
   border-top-width: 0px;
 }
@@ -330,11 +326,16 @@
   width: 0%;
 }
 
-.Layer__bank-transactions--to-review .Layer__bank-transactions__table {
+.Layer__bank-transactions__table {
   .Layer__bank-transaction__submit-btn,
   .Layer__bank-transaction__retry-btn {
-    min-width: 122px;
+    width: 122px;
   }
+}
+
+.Layer__bank-transaction-row__expand-button {
+  width: 36px;
+  min-width: 36px;
 }
 
 .Layer__bank-transaction-row__actions-cell--open {
@@ -494,7 +495,7 @@
 .Layer__table.Layer__bank-transactions__table .Layer__table-cell__amount-col {
   position: -webkit-sticky;
   position: sticky;
-  right: 449px;
+  right: 430px;
   width: 150px;
   min-width: 150px;
   z-index: 2;
@@ -505,7 +506,8 @@
 .Layer__table.Layer__bank-transactions__table .Layer__table-cell__category-col {
   position: -webkit-sticky;
   position: sticky;
-  min-width: 425px;
+  min-width: 430px;
+  max-width: 430px;
   box-sizing: border-box;
   right: 0;
   z-index: 2;

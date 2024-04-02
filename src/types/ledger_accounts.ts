@@ -1,9 +1,19 @@
 import { Direction } from './bank_transactions'
 import { Category } from './categories'
 
-export interface ChartOfAccounts {
+export interface LedgerAccounts {
   name: string
   accounts: Account[]
+}
+
+export interface AccountEntry {
+  account: Account
+  amount?: number
+  createdAt?: string
+  direction: Direction
+  entry_at?: string
+  entry_id?: string
+  id?: string
 }
 
 export interface Account {
@@ -16,12 +26,13 @@ export interface Account {
   description?: string
   scheduleCLine?: string
   scheduleCLineDescription?: string
-  subAccounts?: Account[]
+  sub_accounts?: Account[]
   hidePnl: boolean
   showInPnlIfEmpty: boolean
   normality: Direction
   balance: number
   selfOnlyBalance: number
+  entries?: AccountEntry[]
 }
 
 export interface AccountAlternate {
@@ -36,7 +47,7 @@ export interface AccountAlternate {
 export type NewAccount = {
   name: string
   normality: Direction
-  parent_id: {
+  parent_id?: {
     type: 'AccountId'
     id: string
   }

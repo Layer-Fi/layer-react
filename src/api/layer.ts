@@ -6,7 +6,7 @@ import {
   matchBankTransaction,
 } from './layer/bankTransactions'
 import { getCategories } from './layer/categories'
-import { getChartOfAccounts, createAccount } from './layer/chart_of_accounts'
+import { getLedgerAccounts, createAccount } from './layer/ledger_accounts'
 import { getProfitAndLoss } from './layer/profit_and_loss'
 
 export const Layer = {
@@ -17,6 +17,6 @@ export const Layer = {
   getBalanceSheet,
   getBankTransactions,
   getCategories,
-  getChartOfAccounts,
+  getLedgerAccounts,
   getProfitAndLoss,
 }

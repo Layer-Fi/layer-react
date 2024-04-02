@@ -7,15 +7,21 @@ export interface InputGroupProps {
   name?: string
   className?: string
   children?: ReactNode
+  inline?: boolean
 }
 
 export const InputGroup = ({
   label,
   name,
   className,
+  inline,
   children,
 }: InputGroupProps) => {
-  const baseClassName = classNames('Layer__input-group', className)
+  const baseClassName = classNames(
+    'Layer__input-group',
+    className,
+    inline && 'Layer__input-group--inline',
+  )
   return (
     <div className={baseClassName}>
       {label && (

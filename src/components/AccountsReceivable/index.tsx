@@ -1,0 +1,1 @@
+export { AccountsReceivable } from './AccountsReceivableIndex'
