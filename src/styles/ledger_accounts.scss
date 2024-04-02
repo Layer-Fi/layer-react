@@ -38,41 +38,37 @@
   }
 }
 
+.Layer__ledger-accounts__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
 .Layer__ledger-accounts__actions {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
 }
 
-.Layer__coa__type,
-.Layer__coa__subtype,
-.Layer__coa__balance,
-.Layer__coa__actions {
-  &.Layer__alt-table__head-cell,
-  &.Layer__alt-table__cell {
-    width: 18%;
-    flex: 18 18 auto;
-  }
-}
-
-.Layer__coa__name {
-  &.Layer__alt-table__head-cell,
-  &.Layer__alt-table__cell {
-    width: 28%;
-    flex: 28 28 auto;
-  }
-}
-
-.Layer__alt-table__cell.Layer__coa__name,
-.Layer__alt-table__cell.Layer__coa__balance {
+.Layer__table-cell.Layer__coa__name,
+.Layer__table-cell.Layer__coa__balance {
   color: var(--color-base-800);
 }
 
-.Layer__alt-table__cell.Layer__coa__balance {
+/** @TODO add media queries for better handling of columns widths */
+.Layer__table-cell.Layer__coa__name {
+  width: calc(100% - 192px - 50%);
+}
+
+.Layer__table-cell.Layer__coa__type,
+.Layer__table-cell.Layer__coa__subtype {
+  width: calc(100% - 192px - 75%);
+}
+
+.Layer__table-cell.Layer__coa__balance {
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
-.Layer__alt-table-row--depth-0 .Layer__alt-table__cell.Layer__coa__name {
+.Layer__ledger-accounts__table .Layer__table-row--depth-0 .Layer__table-cell.Layer__coa__name {
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
@@ -81,21 +77,27 @@
   justify-content: flex-end;
 }
 
-.Layer__coa__actions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  min-width: 192px;
+.Layer__table-cell.Layer__coa__actions {
+  width: 192px;
 
-  & > .Layer__btn {
-    opacity: 0;
-    visibility: hidden;
-    transition: all 300ms ease-out;
-    transform: scale(0.92);
+  .Layer__table-cell-content {  
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: var(--spacing-3xs);
+    padding-bottom: var(--spacing-3xs);
+    gap: var(--spacing-xs);
+
+    & > .Layer__btn {
+      opacity: 0;
+      visibility: hidden;
+      transition: all 300ms ease-out;
+      transform: scale(0.92);
+    }
   }
 }
 
-.Layer__alt-table-row:hover .Layer__coa__actions > .Layer__btn {
+.Layer__ledger-accounts__table .Layer__table-row:hover .Layer__coa__actions .Layer__btn {
   opacity: 1;
   visibility: visible;
   transform: scale(1);
@@ -119,6 +121,31 @@
     gap: var(--spacing-sm);
     align-items: center;
   }
+}
+
+.Layer__ledger-accounts__table .Layer__table-row {
+  &:not(.Layer__table-row--header) {
+    cursor: pointer; 
+  }
+
+  &:not(.Layer__table-row--header):hover {
+    background-color: var(--color-base-50);
+  }
+}
+
+.Layer__table__expand-icon {
+  transition: transform 150ms ease-out;
+  color: var(--color-base-600);
+  margin-left: -3px;
+  margin-right: var(--spacing-sm);
+}
+
+.Layer__ledger-accounts__table .Layer__table-row:not(.Layer__table-row--depth-0):not(.Layer__table-row--header) {
+  background-color: var(--color-base-50);
+}
+
+.Layer__ledger-accounts__table .Layer__table-row--collapsed .Layer__table__expand-icon {
+  transform: rotate(-90deg);
 }
 
 .Layer__ledger-accounts__form {
@@ -145,134 +172,5 @@
 
   .Layer__text {
     margin: 0;
-  }
-}
-
-//**** @TODO MOVE TO ANOTHER CSS
-.Layer__alt-table-row {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 0 var(--spacing-md);
-  box-sizing: border-box;
-  box-shadow: 0px -1px 0px 0px var(--color-base-300) inset;
-  transition: background 200ms ease-in-out;
-  position: relative;
-
-  &:not(.Layer__alt-table-row--header) {
-    cursor: pointer; 
-  }
-
-  &:not(.Layer__alt-table-row--header):hover {
-    background-color: var(--color-base-50);
-  }
-
-  &.active {
-    background-color: var(--color-base-50);
-    &:before {
-      content: '';
-      background-color: var(--color-base-400);
-      height: 100%;
-      width: 2px;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-    }
-  }
-}
-
-.Layer__alt-table__head-cell, .Layer__alt-table__cell {
-  flex: 1;
-  padding: var(--spacing-md);
-}
-
-.Layer__alt-table__head-cell {
-  color: var(--color-base-600);
-  font-size: 12px;
-}
-
-.Layer__alt-table__cell {
-  color: var(--color-base-600);
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.Layer__alt-table__expand-icon {
-  transition: transform 150ms ease-out;
-  color: var(--color-base-600);
-}
-
-.Layer__alt-table-row:not(.Layer__alt-table-row--depth-0):not(.Layer__alt-table-row--header) {
-  background-color: var(--color-base-50);
-}
-
-.Layer__alt-table-row--collapsed .Layer__alt-table__expand-icon {
-  transform: rotate(-90deg);
-}
-
-
-/*** @TODO move to another scss ***/
-.Layer__accounts-receivable__index {
-  position: fixed;
-  visibility: hidden;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  background-color: var(--color-base-0);
-  transform: scale(0.5), translateY(-100);
-  opacity: 0.4;
-  transition: transform 200ms ease-out, opacity 300ms ease-out;
-
-  &.open {
-    visibility: visible;
-    transform: scale(1), translateY(0);
-    opacity: 1;
-  }
-}
-
-.Layer__accounts-receivable__header {
-  display: flex;
-  flex-direction: column;
-  padding: var(--spacing-xl);
-  padding-bottom: var(--spacing-md);
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-
-.Layer__accounts-receivable__title-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding-top: var(--spacing-md);
-  padding-bottom: var(--spacing-3xs);
-}
-
-.Layer__accounts-receivable__title {
-  font-size: 24px;
-}
-
-.Layer__accounts-receivable__balance-container {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-}
-
-.Layer__accounts-receivable__balance-label {
-  color: var(--color-base-600);
-}
-
-.Layer__accounts-receivable-table .Layer__table-cell {
-  border-top: 1px solid var(--border-color);
-}
-
-@container (max-width: 1400px) {
-  .Layer__accounts-receivable__header {
-    padding: var(--spacing-md);
   }
 }

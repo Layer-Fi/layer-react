@@ -46,20 +46,46 @@
   font-size: var(--text-md);
   text-align: left;
   color: var(--text-color-secondary);
+  border-top: 1px solid var(--border-color);
+  height: var(--spacing-5xl);
+  padding: 0;
 }
 
-.Layer__table-cell--amount {
-  justify-content: flex-end;
-  text-align: right;
+.Layer__table-row:last-child .Layer__table-cell {
+  border-bottom: 1px solid var(--border-color);
 }
 
 .Layer__table-cell-content {
-  display: block;
+  display: flex;
+  align-items: center;
+  height: 100%;
   top: 0px;
   padding: var(--spacing-sm) var(--spacing-md);
   box-sizing: border-box;
   transition: all var(--transition-speed) ease-out;
   position: relative;
+}
+
+.Layer__table-cell-content-indentation {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.Layer__table-row--active .Layer__table-cell:first-child .Layer__table-cell-content:before {
+  content: '';
+  background-color: var(--color-base-400);
+  height: 100%;
+  width: 4px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.Layer__table-cell--amount {
+  justify-content: flex-end;
+  text-align: right;
 }
 
 .Layer__table.with-cell-separators > tbody > tr > td .Layer__table-cell-content::after,

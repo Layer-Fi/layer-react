@@ -90,21 +90,21 @@ export const AccountsReceivable = () => {
                   </span>
                 </td>
                 <td className='Layer__table-cell'>
-                  <span className='Layer__table-cell-content'>TBD</span>
+                  <span className='Layer__table-cell-content'>#123</span>
                 </td>
                 <td className='Layer__table-cell'>
-                  <span className='Layer__table-cell-content'>TBD</span>
+                  <span className='Layer__table-cell-content'>Invoice</span>
                 </td>
                 <td className='Layer__table-cell Layer__table-cell--amount'>
                   <span className='Layer__table-cell-content'>
-                    {x.direction} TBD
+                    {x.direction} $X,XXX.XX
                   </span>
                 </td>
                 <td className='Layer__table-cell Layer__table-cell--amount'>
-                  <span className='Layer__table-cell-content'>TBD</span>
+                  <span className='Layer__table-cell-content'>$X,XXX.XX</span>
                 </td>
                 <td className='Layer__table-cell Layer__table-cell--amount'>
-                  <span className='Layer__table-cell-content'>TBD</span>
+                  <span className='Layer__table-cell-content'>$X,XXX.XX</span>
                 </td>
               </tr>
             )
