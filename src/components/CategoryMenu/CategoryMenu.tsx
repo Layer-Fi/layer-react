@@ -75,6 +75,9 @@ export const CategoryMenu = ({
       name={name}
       className={`Layer__category-menu Layer__select ${className ?? ''}`}
       classNamePrefix='Layer__select'
+      classNames={{
+        menu: () => 'Layer__select__menu--lg',
+      }}
       options={options}
       isSearchable={true}
       value={value}

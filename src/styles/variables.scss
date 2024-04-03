@@ -2,21 +2,25 @@
 .Layer__select__menu-portal,
 .Layer__tooltip {
   // 1. BASE VARIABLES:
-  --color-black: #1A1A1A;
+  --color-black: #1a1a1a;
   --color-white: white;
-  --color-info-error: #E46362;
-  --color-info-success: #29BC9B;
-  --color-info-warning: #F5A622;
+  --color-info-error: #e46362;
+  --color-info-success: #29bc9b;
+  --color-info-warning: #f5a622;
 
   --color-dark-h: 0;
   --color-dark-s: 0%;
   --color-dark-l: 7%;
-  --color-dark: hsl(var(--color-dark-h) var(--color-dark-s) var(--color-dark-l));
+  --color-dark: hsl(
+    var(--color-dark-h) var(--color-dark-s) var(--color-dark-l)
+  );
 
   --color-light-h: 0;
   --color-light-s: 0%;
   --color-light-l: 90%;
-  --color-light: hsl(var(--color-light-h) var(--color-light-s) var(--color-light-l));
+  --color-light: hsl(
+    var(--color-light-h) var(--color-light-s) var(--color-light-l)
+  );
 
   --color-base-0: #fff;
   --color-base-50: hsl(var(--color-dark-h) 1% 98%);
@@ -33,13 +37,37 @@
 
   --max-component-width: 1408px;
 
-  --base-transparent-4: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.04);
-  --base-transparent-5: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.05);
-  --base-transparent-6: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.06);
-  --base-transparent-8: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.08);
-  --base-transparent-12: hsla(var(--color-dark-h), var(--color-dark-s), var(--color-dark-l), 0.12);
+  --base-transparent-4: hsla(
+    var(--color-dark-h),
+    var(--color-dark-s),
+    var(--color-dark-l),
+    0.04
+  );
+  --base-transparent-5: hsla(
+    var(--color-dark-h),
+    var(--color-dark-s),
+    var(--color-dark-l),
+    0.05
+  );
+  --base-transparent-6: hsla(
+    var(--color-dark-h),
+    var(--color-dark-s),
+    var(--color-dark-l),
+    0.06
+  );
+  --base-transparent-8: hsla(
+    var(--color-dark-h),
+    var(--color-dark-s),
+    var(--color-dark-l),
+    0.08
+  );
+  --base-transparent-12: hsla(
+    var(--color-dark-h),
+    var(--color-dark-s),
+    var(--color-dark-l),
+    0.12
+  );
 
-  
   // 2. BASE CUSTOMIZATION
   --color-primary: var(--color-dark);
   --color-accent: var(--color-light);
@@ -48,12 +76,11 @@
   --color-danger: var(--color-info-error);
   --text-color-primary: var(--color-dark);
   --text-color-secondary: var(--color-base-700);
-  --bg-element-focus:  var(--color-base-50);
-
+  --bg-element-focus: var(--color-base-50);
 
   // 3. EXTENDED CUSTOMIZATION
-  --font-family: "InterVariable", "Inter", sans-serif;
-  --font-family-numeric: "InterVariable", "Inter", sans-serif;
+  --font-family: 'InterVariable', 'Inter', sans-serif;
+  --font-family-numeric: 'InterVariable', 'Inter', sans-serif;
   --text-xs: 11px;
   --text-sm: 12px;
   --text-md: 14px;
@@ -89,8 +116,8 @@
   --input-border-radius: var(--border-radius-2xs);
   --input-font-size: var(--text-md);
   --input-border-color: var(--color-base-300);
-  --input-placeholder-color: var(--color-base-300);
-  
+  --input-placeholder-color: var(--color-base-500);
+
   --label-color: var(--color-base-700);
 
   --btn-font-size: var(--text-md);
@@ -116,7 +143,7 @@
   --tooltip-bg-color: var(--color-base-800);
 
   --bar-color-income: var(--color-base-400);
-  --bar-color-expenses: var(--color-base-900); 
+  --bar-color-expenses: var(--color-base-900);
 
   --chart-indicator-color: var(--color-base-700);
 
@@ -151,5 +178,10 @@
 
   font-family: var(--font-family);
   font-variation-settings: 'wght' var(--font-weight-normal);
-  font-feature-settings: 'cv10' on, 'cv01' on, 'cv05' on, 'cv08' on, 'ss03' on;
+  font-feature-settings:
+    'cv10' on,
+    'cv01' on,
+    'cv05' on,
+    'cv08' on,
+    'ss03' on;
 }

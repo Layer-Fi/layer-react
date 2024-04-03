@@ -2,8 +2,9 @@ import { Direction } from './bank_transactions'
 import { Category } from './categories'
 
 export interface LedgerAccounts {
-  name: string
+  type: string
   accounts: Account[]
+  entries?: any[]
 }
 
 export interface AccountEntry {
@@ -33,15 +34,6 @@ export interface Account {
   balance: number
   selfOnlyBalance: number
   entries?: AccountEntry[]
-}
-
-export interface AccountAlternate {
-  type: 'Ledger_Account'
-  id: string
-  name: string
-  stable_name: string | null
-  normality: Direction
-  pnl_category: string | null
 }
 
 export type NewAccount = {
