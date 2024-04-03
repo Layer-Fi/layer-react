@@ -20,12 +20,7 @@ export {
   SplitCategoryUpdate,
   CategoryUpdate,
 } from './types/categories'
-export {
-  AccountAlternate,
-  LedgerAccounts,
-  Account,
-  NewAccount,
-} from './types/ledger_accounts'
+export { LedgerAccounts, Account, NewAccount } from './types/ledger_accounts'
 export { SortDirection } from './types/general'
 
 // Only Date and string (ISO8601 formatted) make sense here

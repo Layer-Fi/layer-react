@@ -21,6 +21,8 @@ export const LedgerAccountsContext = createContext<LedgerAccountsContextType>({
   refetch: () => {},
   create: () => {},
   form: undefined,
+  sendingForm: false,
+  apiError: undefined,
   addAccount: () => {},
   editAccount: () => {},
   cancelForm: () => {},

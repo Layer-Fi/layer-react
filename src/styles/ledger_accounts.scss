@@ -54,6 +54,10 @@
   color: var(--color-base-800);
 }
 
+.Layer__table-header.Layer__coa__name {
+  padding-left: var(--spacing-xl);
+}
+
 /** @TODO add media queries for better handling of columns widths */
 .Layer__table-cell.Layer__coa__name {
   width: calc(100% - 192px - 50%);
@@ -68,7 +72,9 @@
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
-.Layer__ledger-accounts__table .Layer__table-row--depth-0 .Layer__table-cell.Layer__coa__name {
+.Layer__ledger-accounts__table
+  .Layer__table-row--depth-0
+  .Layer__table-cell.Layer__coa__name {
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
@@ -80,7 +86,7 @@
 .Layer__table-cell.Layer__coa__actions {
   width: 192px;
 
-  .Layer__table-cell-content {  
+  .Layer__table-cell-content {
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -97,7 +103,10 @@
   }
 }
 
-.Layer__ledger-accounts__table .Layer__table-row:hover .Layer__coa__actions .Layer__btn {
+.Layer__ledger-accounts__table
+  .Layer__table-row:hover
+  .Layer__coa__actions
+  .Layer__btn {
   opacity: 1;
   visibility: visible;
   transform: scale(1);
@@ -125,7 +134,7 @@
 
 .Layer__ledger-accounts__table .Layer__table-row {
   &:not(.Layer__table-row--header) {
-    cursor: pointer; 
+    cursor: pointer;
   }
 
   &:not(.Layer__table-row--header):hover {
@@ -140,11 +149,20 @@
   margin-right: var(--spacing-sm);
 }
 
-.Layer__ledger-accounts__table .Layer__table-row:not(.Layer__table-row--depth-0):not(.Layer__table-row--header) {
+.Layer__ledger-accounts__table
+  .Layer__table-row:not(.Layer__table-row--depth-0):not(
+    .Layer__table-row--header
+  ) {
   background-color: var(--color-base-50);
+
+  &:hover {
+    background-color: var(--color-base-100);
+  }
 }
 
-.Layer__ledger-accounts__table .Layer__table-row--collapsed .Layer__table__expand-icon {
+.Layer__ledger-accounts__table
+  .Layer__table-row--collapsed
+  .Layer__table__expand-icon {
   transform: rotate(-90deg);
 }
 
@@ -154,7 +172,7 @@
   padding: var(--spacing-xl);
 
   .Layer__input-group.Layer__input-group--inline {
-    padding: var(--spacing-sm) 0;
+    padding: var(--spacing-xs) 0;
     label {
       width: 140px;
       min-width: 140px;
@@ -173,4 +191,12 @@
   .Layer__text {
     margin: 0;
   }
+}
+
+.Layer__ledger-accounts__form__error-message {
+  padding: var(--spacing-4xs) var(--spacing-xl);
+  width: 100%;
+  text-align: right;
+  box-sizing: border-box;
+  color: var(--color-danger);
 }

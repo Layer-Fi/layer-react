@@ -3,7 +3,7 @@ import { flattenAccounts } from '../../hooks/useLedgerAccounts/useLedgerAccounts
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
 import { BaseSelectOption } from '../../types/general'
-import { Button, ButtonVariant, SubmitButton } from '../Button'
+import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
 import { Input, InputGroup, Select } from '../Input'
 import { LedgerAccountsContext } from '../LedgerAccounts/LedgerAccounts'
 import { Text, TextSize, TextWeight } from '../Typography'
@@ -20,11 +20,15 @@ const SUB_TYPE_OPTIONS: BaseSelectOption[] = [
 ]
 
 export const LedgerAccountsForm = () => {
-  const { form, data, changeFormData, cancelForm, submitForm } = useContext(
-    LedgerAccountsContext,
-  )
-
-  // @TEST CHANGE
+  const {
+    form,
+    data,
+    changeFormData,
+    cancelForm,
+    submitForm,
+    sendingForm,
+    apiError,
+  } = useContext(LedgerAccountsContext)
 
   const parentOptions: BaseSelectOption[] = useMemo(
     () =>
@@ -49,14 +53,13 @@ export const LedgerAccountsForm = () => {
     return
   }, [data, form?.accountId])
 
-  console.log(entry)
-
   if (!form) {
     return
   }
 
   return (
     <form
+      className='Layer__form'
       onSubmit={e => {
         e.preventDefault()
         submitForm()
@@ -71,14 +74,41 @@ export const LedgerAccountsForm = () => {
             type='button'
             onClick={cancelForm}
             variant={ButtonVariant.secondary}
+            disabled={sendingForm}
           >
             Cancel
           </Button>
-          <SubmitButton type='submit' noIcon={true} active={true}>
-            Save
-          </SubmitButton>
+          {apiError && (
+            <RetryButton
+              type='submit'
+              processing={sendingForm}
+              error={'Check connection and retry in few seconds.'}
+              disabled={sendingForm}
+            >
+              Retry
+            </RetryButton>
+          )}
+          {!apiError && (
+            <SubmitButton
+              type='submit'
+              noIcon={true}
+              active={true}
+              disabled={sendingForm}
+            >
+              Save
+            </SubmitButton>
+          )}
         </div>
       </div>
+
+      {apiError && (
+        <Text
+          size={TextSize.sm}
+          className='Layer__ledger-accounts__form__error-message'
+        >
+          {apiError}
+        </Text>
+      )}
 
       {entry && (
         <div className='Layer__ledger-accounts__form-edit-entry'>
@@ -95,12 +125,17 @@ export const LedgerAccountsForm = () => {
             options={parentOptions}
             value={form?.data.parent}
             onChange={sel => changeFormData('parent', sel)}
+            disabled={sendingForm}
           />
         </InputGroup>
         <InputGroup name='name' label='Name' inline={true}>
           <Input
             name='name'
+            placeholder='Enter name...'
             value={form?.data.name}
+            isInvalid={Boolean(form?.errors?.find(x => x.field === 'name'))}
+            errorMessage={form?.errors?.find(x => x.field === 'name')?.message}
+            disabled={sendingForm}
             onChange={e =>
               changeFormData('name', (e.target as HTMLInputElement).value)
             }
@@ -119,6 +154,7 @@ export const LedgerAccountsForm = () => {
             options={SUB_TYPE_OPTIONS}
             value={form?.data.subType}
             onChange={sel => changeFormData('subType', sel)}
+            disabled={sendingForm}
           />
         </InputGroup>
         <InputGroup name='category' label='Category' inline={true}>
@@ -126,6 +162,7 @@ export const LedgerAccountsForm = () => {
             options={[]}
             value={form?.data.category}
             onChange={sel => changeFormData('category', sel)}
+            disabled={sendingForm}
           />
         </InputGroup>
       </div>
