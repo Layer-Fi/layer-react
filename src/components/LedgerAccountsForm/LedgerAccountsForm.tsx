@@ -24,8 +24,6 @@ export const LedgerAccountsForm = () => {
     LedgerAccountsContext,
   )
 
-  // @TEST CHANGE
-
   const parentOptions: BaseSelectOption[] = useMemo(
     () =>
       flattenAccounts(data?.accounts || [])
