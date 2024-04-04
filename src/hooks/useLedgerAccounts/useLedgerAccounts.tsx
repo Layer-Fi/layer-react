@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Layer } from '../../api/layer'
 import { Account, Direction, LedgerAccounts, NewAccount } from '../../types'
 import { BaseSelectOption } from '../../types/general'
+import { convertToStableName } from '../../utils/helpers'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
@@ -124,6 +125,34 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     }
   }
 
+  const update = async (accountData: NewAccount, accountId: string) => {
+    setSendingForm(true)
+    setApiError(undefined)
+
+    const stable_name = convertToStableName(accountData.name)
+
+    /** @TODO some fields will be deprecated soon */
+    const newAccountData = {
+      ...accountData,
+      stable_name: stable_name,
+      pnl_category: 'INCOME', //this field will be deprecated soon, but is still required
+      always_show_in_pnl: false, //this field will be deprecated soon, but is still required
+    }
+
+    try {
+      await Layer.updateAccount(apiUrl, auth?.access_token, {
+        params: { businessId, accountId },
+        body: newAccountData,
+      })
+      refetch()
+      setForm(undefined)
+    } catch (_err) {
+      setApiError('Submit failed. Please, check your connection and try again.')
+    } finally {
+      setSendingForm(false)
+    }
+  }
+
   const submitForm = () => {
     if (!form || !form.action) {
       return
@@ -158,7 +187,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     }
 
     if (form.action === 'edit' && form.accountId) {
-      // @TODO call update - missing endpoint?
+      update(data, form.accountId)
       return
     }
   }
