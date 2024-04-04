@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Layer } from '../../api/layer'
 import { Account, Direction, LedgerAccounts, NewAccount } from '../../types'
 import { BaseSelectOption } from '../../types/general'
-import { AccountEntry } from '../../types/ledger_accounts'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
