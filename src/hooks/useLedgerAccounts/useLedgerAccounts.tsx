@@ -116,7 +116,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
         params: { businessId },
         body: newAccount,
       })
-      refetch()
+      await refetch()
       setForm(undefined)
     } catch (_err) {
       setApiError('Submit failed. Please, check your connection and try again.')
@@ -144,7 +144,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
         params: { businessId, accountId },
         body: newAccountData,
       })
-      refetch()
+      await refetch()
       setForm(undefined)
     } catch (_err) {
       setApiError('Submit failed. Please, check your connection and try again.')
