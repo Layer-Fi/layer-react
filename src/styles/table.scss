@@ -2,22 +2,22 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  
+
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 4px;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: #e2e2e2;
     border-radius: 4px;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
     background: #999;
   }
@@ -28,7 +28,11 @@
   font-size: var(--text-sm);
   font-variation-settings: 'wght' var(--font-weight-normal);
   font-variant-numeric: lining-nums proportional-nums;
-  font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
+  font-feature-settings:
+    'cv10' on,
+    'cv05' on,
+    'cv08' on,
+    'ss03' on;
   text-overflow: ellipsis;
   line-height: 140%;
   letter-spacing: -0.06px;
@@ -72,7 +76,9 @@
   align-items: center;
 }
 
-.Layer__table-row--active .Layer__table-cell:first-child .Layer__table-cell-content:before {
+.Layer__table-row--active
+  .Layer__table-cell:first-child
+  .Layer__table-cell-content:before {
   content: '';
   background-color: var(--color-base-400);
   height: 100%;
@@ -88,8 +94,15 @@
   text-align: right;
 }
 
-.Layer__table.with-cell-separators > tbody > tr > td .Layer__table-cell-content::after,
-.Layer__table.with-cell-separators > tbody > tr > th.Layer__table-header::after {
+.Layer__table.with-cell-separators
+  > tbody
+  > tr
+  > td
+  .Layer__table-cell-content::after,
+.Layer__table.with-cell-separators
+  > tbody
+  > tr
+  > th.Layer__table-header::after {
   content: '';
   position: absolute;
   left: 0;
@@ -100,10 +113,24 @@
   margin-top: -10px;
 }
 
-.Layer__table.with-cell-separators > tbody > tr > td:first-child .Layer__table-cell-content::after,
-.Layer__table.with-cell-separators > tbody > tr > td:last-child .Layer__table-cell-content::after,
-.Layer__table.with-cell-separators > thead > tr > th:first-child.Layer__table-header::after,
-.Layer__table.with-cell-separators > thead > tr > th:last-child.Layer__table-header::after {
+.Layer__table.with-cell-separators
+  > tbody
+  > tr
+  > td:first-child
+  .Layer__table-cell-content::after,
+.Layer__table.with-cell-separators
+  > tbody
+  > tr
+  > td:last-child
+  .Layer__table-cell-content::after,
+.Layer__table.with-cell-separators
+  > thead
+  > tr
+  > th:first-child.Layer__table-header::after,
+.Layer__table.with-cell-separators
+  > thead
+  > tr
+  > th:last-child.Layer__table-header::after {
   display: none;
 }
 
@@ -116,7 +143,7 @@
   height: calc(100vh - 200px);
 }
 
-.Layer__component--as-widget .Layer__table-state-container  {
+.Layer__component--as-widget .Layer__table-state-container {
   height: calc(100% - 160px);
 }
 
@@ -138,4 +165,38 @@
     padding-left: var(--spacing-xl);
     padding-right: var(--spacing-xl);
   }
+}
+
+.Layer__table-row--hidden .Layer__table-cell {
+  border-top-width: 0;
+}
+
+.Layer__table-cell {
+  height: auto;
+
+  & > .Layer__table-cell-content {
+    overflow: hidden;
+    transition:
+      height 30ms ease-out,
+      opacity 150ms ease-in-out;
+  }
+}
+
+.Layer__table-row {
+  transition: all 180ms ease-in-out;
+
+  &.Layer__table-row--collapsed {
+    .Layer__table-cell {
+      & > .Layer__table-cell-content {
+        transition:
+          height 60ms ease-out,
+          opacity 50ms ease-in-out;
+      }
+    }
+  }
+}
+
+.Layer__table-row.Layer__table-row--anim-starting-state {
+  transform: scaleX(0.98);
+  opacity: 0;
 }
