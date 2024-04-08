@@ -124,17 +124,22 @@ export const BankTransactionRow = ({
     }
 
     if (selectedCategory.type === 'match') {
-      matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
+      await matchBankTransaction(
+        bankTransaction.id,
+        selectedCategory.payload.id,
+      )
+      setOpen(false)
       return
     }
 
-    categorizeBankTransaction(bankTransaction.id, {
+    await categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: {
         type: 'StableName',
         stable_name: selectedCategory?.payload.stable_name || '',
       },
     })
+    setOpen(false)
   }
 
   if (removed) {
@@ -145,7 +150,7 @@ export const BankTransactionRow = ({
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    bankTransaction.recently_categorized
+    bankTransaction.recently_categorized && editable
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
@@ -159,7 +164,9 @@ export const BankTransactionRow = ({
         onTransitionEnd={({ propertyName }) => {
           if (propertyName === 'top') {
             setRemoved(true)
-            removeTransaction(bankTransaction.id)
+            if (editable) {
+              removeTransaction(bankTransaction.id)
+            }
           }
         }}
       >
@@ -349,6 +356,7 @@ export const BankTransactionRow = ({
             ref={expandedRowRef}
             bankTransaction={bankTransaction}
             isOpen={open}
+            close={() => setOpen(false)}
             containerWidth={containerWidth}
             editable={editable}
           />
