@@ -22,7 +22,8 @@ export const MatchBadge = ({
     bankTransaction.categorization_status === CategorizationStatus.MATCHED &&
     bankTransaction.match
   ) {
-    const { date, amount, description } = bankTransaction.match.bank_transaction
+    const { date, amount, description, match } =
+      bankTransaction.match.bank_transaction
 
     return (
       <Badge
@@ -33,7 +34,7 @@ export const MatchBadge = ({
               {formatTime(parseISO(date), dateFormat)}
             </div>
             <div className={`${classNamePrefix}__match-tooltip__description`}>
-              {description}
+              {description ?? match?.details?.description}
             </div>
             <div className={`${classNamePrefix}__match-tooltip__amount`}>
               ${formatMoney(amount)}
