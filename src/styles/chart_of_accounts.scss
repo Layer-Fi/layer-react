@@ -1,25 +1,25 @@
-.Layer__component-container.Layer__ledger-accounts {
+.Layer__component-container.Layer__chart-of-accounts {
   display: flex;
   align-items: stretch;
   position: relative;
 }
 
-.Layer__ledger-accounts__loader-container {
+.Layer__chart-of-accounts__loader-container {
   padding: var(--spacing-2xl);
 }
 
-.Layer__ledger-accounts__main-panel {
+.Layer__chart-of-accounts__main-panel {
   padding-bottom: var(--spacing-lg);
   flex: 1;
 }
 
-.Layer__ledger-accounts__sidebar {
+.Layer__chart-of-accounts__sidebar {
   width: 480px;
   max-width: 0;
   overflow: hidden;
   transition: max-width 250ms ease-out;
 
-  .Layer__ledger-accounts__sidebar-content {
+  .Layer__chart-of-accounts__sidebar-content {
     width: 480px;
     height: 100%;
     opacity: 0.2;
@@ -29,21 +29,21 @@
     box-shadow: 0px -1px 0px 0px var(--color-base-300) inset;
   }
 
-  &.Layer__ledger-accounts__sidebar.open {
+  &.Layer__chart-of-accounts__sidebar.open {
     max-width: 480px;
 
-    .Layer__ledger-accounts__sidebar-content {
+    .Layer__chart-of-accounts__sidebar-content {
       opacity: 1;
     }
   }
 }
 
-.Layer__ledger-accounts__table {
+.Layer__chart-of-accounts__table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.Layer__ledger-accounts__actions {
+.Layer__chart-of-accounts__actions {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
@@ -72,7 +72,7 @@
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
-.Layer__ledger-accounts__table
+.Layer__chart-of-accounts__table
   .Layer__table-row--depth-0
   .Layer__table-cell.Layer__coa__name {
   font-variation-settings: 'wght' var(--font-weight-bold);
@@ -103,7 +103,7 @@
   }
 }
 
-.Layer__ledger-accounts__table
+.Layer__chart-of-accounts__table
   .Layer__table-row:hover
   .Layer__coa__actions
   .Layer__btn {
@@ -112,7 +112,7 @@
   transform: scale(1);
 }
 
-.Layer__ledger-accounts__sidebar__header {
+.Layer__chart-of-accounts__sidebar__header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -132,7 +132,7 @@
   }
 }
 
-.Layer__ledger-accounts__table .Layer__table-row {
+.Layer__chart-of-accounts__table .Layer__table-row {
   &:not(.Layer__table-row--header) {
     cursor: pointer;
   }
@@ -149,7 +149,7 @@
   margin-right: var(--spacing-sm);
 }
 
-.Layer__ledger-accounts__table
+.Layer__chart-of-accounts__table
   .Layer__table-row:not(.Layer__table-row--depth-0):not(
     .Layer__table-row--header
   ) {
@@ -160,13 +160,13 @@
   }
 }
 
-.Layer__ledger-accounts__table
+.Layer__chart-of-accounts__table
   .Layer__table-row--collapsed
   .Layer__table__expand-icon {
   transform: rotate(-90deg);
 }
 
-.Layer__ledger-accounts__form {
+.Layer__chart-of-accounts__form {
   display: flex;
   flex-direction: column;
   padding: var(--spacing-xl);
@@ -181,7 +181,7 @@
   }
 }
 
-.Layer__ledger-accounts__form-edit-entry {
+.Layer__chart-of-accounts__form-edit-entry {
   padding: var(--spacing-md) var(--spacing-xl);
   display: flex;
   align-items: center;
@@ -193,7 +193,7 @@
   }
 }
 
-.Layer__ledger-accounts__form__error-message {
+.Layer__chart-of-accounts__form__error-message {
   padding: var(--spacing-4xs) var(--spacing-xl);
   width: 100%;
   text-align: right;

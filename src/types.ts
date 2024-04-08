@@ -21,11 +21,11 @@ export {
   CategoryUpdate,
 } from './types/categories'
 export {
-  LedgerAccounts,
+  ChartOfAccounts,
   Account,
   NewAccount,
   EditAccount,
-} from './types/ledger_accounts'
+} from './types/chart_of_accounts'
 export { SortDirection } from './types/general'
 
 // Only Date and string (ISO8601 formatted) make sense here

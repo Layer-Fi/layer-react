@@ -1,17 +1,17 @@
 import React, { useContext, useMemo } from 'react'
 import { DATE_FORMAT } from '../../config/general'
-import { flattenAccounts } from '../../hooks/useLedgerAccounts/useLedgerAccounts'
+import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import DownloadCloud from '../../icons/DownloadCloud'
 import { centsToDollars } from '../../models/Money'
-import { Button, BackButton, ButtonVariant } from '../Button'
-import { LedgerAccountsContext } from '../LedgerAccounts/LedgerAccounts'
+import { Button, ButtonVariant } from '../Button'
+import { ChartOfAccountsContext } from '../ChartOfAccounts/ChartOfAccounts'
 import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
-export const AccountsReceivable = () => {
+export const LedgerAccount = () => {
   const { data, showARForAccountId, setShowARForAccountId } = useContext(
-    LedgerAccountsContext,
+    ChartOfAccountsContext,
   )
 
   const entry = useMemo(() => {
@@ -21,7 +21,7 @@ export const AccountsReceivable = () => {
   }, [showARForAccountId])
 
   const baseClassName = classNames(
-    'Layer__accounts-receivable__index',
+    'Layer__ledger-account__index',
     showARForAccountId && 'open',
   )
 
@@ -29,12 +29,14 @@ export const AccountsReceivable = () => {
 
   return (
     <div className={baseClassName}>
-      <div className='Layer__accounts-receivable__header'>
-        <BackButton onClick={close} />
-        <div className='Layer__accounts-receivable__title-container'>
+      <div className='Layer__ledger-account__header'>
+        <Button onClick={close} variant={ButtonVariant.secondary}>
+          Back
+        </Button>
+        <div className='Layer__ledger-account__title-container'>
           <Text
             weight={TextWeight.bold}
-            className='Layer__accounts-receivable__title'
+            className='Layer__ledger-account__title'
           >
             {entry?.name || ''}
           </Text>
@@ -45,22 +47,22 @@ export const AccountsReceivable = () => {
             Download
           </Button>
         </div>
-        <div className='Layer__accounts-receivable__balance-container'>
+        <div className='Layer__ledger-account__balance-container'>
           <Text
             weight={TextWeight.bold}
-            className='Layer__accounts-receivable__balance-label'
+            className='Layer__ledger-account__balance-label'
           >
             Current balance
           </Text>
           <Text
             weight={TextWeight.bold}
-            className='Layer__accounts-receivable__balance-value'
+            className='Layer__ledger-account__balance-value'
           >
             ${centsToDollars(entry?.balance || 0)}
           </Text>
         </div>
       </div>
-      <table className='Layer__table Layer__accounts-receivable-table'>
+      <table className='Layer__table Layer__ledger-account-table'>
         <thead>
           <tr>
             <th className='Layer__table-header'>Date</th>

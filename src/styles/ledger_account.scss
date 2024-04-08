@@ -1,4 +1,4 @@
-.Layer__accounts-receivable__index {
+.Layer__ledger-account__index {
   position: fixed;
   visibility: hidden;
   top: 0;
@@ -18,7 +18,7 @@
   }
 }
 
-.Layer__accounts-receivable__header {
+.Layer__ledger-account__header {
   display: flex;
   flex-direction: column;
   padding: var(--spacing-xl);
@@ -27,7 +27,7 @@
   justify-content: flex-start;
 }
 
-.Layer__accounts-receivable__title-container {
+.Layer__ledger-account__title-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -36,22 +36,22 @@
   padding-bottom: var(--spacing-3xs);
 }
 
-.Layer__accounts-receivable__title {
+.Layer__ledger-account__title {
   font-size: 24px;
 }
 
-.Layer__accounts-receivable__balance-container {
+.Layer__ledger-account__balance-container {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
 }
 
-.Layer__accounts-receivable__balance-label {
+.Layer__ledger-account__balance-label {
   color: var(--color-base-600);
 }
 
 @container (max-width: 1400px) {
-  .Layer__accounts-receivable__header {
+  .Layer__ledger-account__header {
     padding: var(--spacing-md);
   }
 }

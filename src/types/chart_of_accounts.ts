@@ -1,7 +1,7 @@
 import { Direction } from './bank_transactions'
 import { Category } from './categories'
 
-export interface LedgerAccounts {
+export interface ChartOfAccounts {
   type: string
   accounts: Account[]
   entries?: any[]

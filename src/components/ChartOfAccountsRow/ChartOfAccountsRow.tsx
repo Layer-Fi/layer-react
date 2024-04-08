@@ -5,10 +5,10 @@ import Edit2 from '../../icons/Edit2'
 import { centsToDollars } from '../../models/Money'
 import { Account } from '../../types'
 import { Button, ButtonVariant } from '../Button'
-import { LedgerAccountsContext } from '../LedgerAccounts/LedgerAccounts'
+import { ChartOfAccountsContext } from '../ChartOfAccounts/ChartOfAccounts'
 import classNames from 'classnames'
 
-type LedgerAccountsRowProps = {
+type ChartOfAccountsRowProps = {
   account: Account
   depth?: number
   index: number
@@ -34,7 +34,7 @@ const COLLAPSED_STYLE = {
   opacity: 0.5,
 }
 
-export const LedgerAccountsRow = ({
+export const ChartOfAccountsRow = ({
   account,
   depth = 0,
   index,
@@ -42,9 +42,9 @@ export const LedgerAccountsRow = ({
   expanded = false,
   defaultOpen = false,
   acountsLength,
-}: LedgerAccountsRowProps) => {
+}: ChartOfAccountsRowProps) => {
   const { form, editAccount, setShowARForAccountId } = useContext(
-    LedgerAccountsContext,
+    ChartOfAccountsContext,
   )
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const style = expanded
@@ -145,7 +145,7 @@ export const LedgerAccountsRow = ({
       </tr>
 
       {(account.sub_accounts || []).map((subAccount, idx) => (
-        <LedgerAccountsRow
+        <ChartOfAccountsRow
           key={subAccount.id}
           account={subAccount}
           depth={depth + 1}

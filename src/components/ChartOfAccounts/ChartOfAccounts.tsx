@@ -1,49 +1,51 @@
 import React, { createContext, useContext } from 'react'
-import { useLedgerAccounts } from '../../hooks/useLedgerAccounts'
+import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
 import DownloadCloud from '../../icons/DownloadCloud'
-import { AccountsReceivable } from '../AccountsReceivable'
+import { LedgerAccount } from '../LedgerAccount'
 import { Button, ButtonVariant } from '../Button'
+import { ChartOfAccountsRow } from '../ChartOfAccountsRow'
+import { ChartOfAccountsSidebar } from '../ChartOfAccountsSidebar'
 import { Container, Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
-import { LedgerAccountsRow } from '../LedgerAccountsRow'
-import { LedgerAccountsSidebar } from '../LedgerAccountsSidebar'
 import { Loader } from '../Loader'
 import { Heading } from '../Typography'
 
-const COMPONENT_NAME = 'ledger-accounts'
+const COMPONENT_NAME = 'chart-of-accounts'
 
-export type LedgerAccountsContextType = ReturnType<typeof useLedgerAccounts>
-export const LedgerAccountsContext = createContext<LedgerAccountsContextType>({
-  data: undefined,
-  isLoading: false,
-  isValidating: false,
-  error: undefined,
-  refetch: () => {},
-  create: () => {},
-  form: undefined,
-  sendingForm: false,
-  apiError: undefined,
-  addAccount: () => {},
-  editAccount: () => {},
-  cancelForm: () => {},
-  changeFormData: () => {},
-  submitForm: () => {},
-  showARForAccountId: undefined,
-  setShowARForAccountId: () => {},
-})
+export type ChartOfAccountsContextType = ReturnType<typeof useChartOfAccounts>
+export const ChartOfAccountsContext = createContext<ChartOfAccountsContextType>(
+  {
+    data: undefined,
+    isLoading: false,
+    isValidating: false,
+    error: undefined,
+    refetch: () => {},
+    create: () => {},
+    form: undefined,
+    sendingForm: false,
+    apiError: undefined,
+    addAccount: () => {},
+    editAccount: () => {},
+    cancelForm: () => {},
+    changeFormData: () => {},
+    submitForm: () => {},
+    showARForAccountId: undefined,
+    setShowARForAccountId: () => {},
+  },
+)
 
-export const LedgerAccounts = () => {
-  const contextData = useLedgerAccounts()
+export const ChartOfAccounts = () => {
+  const contextData = useChartOfAccounts()
   return (
-    <LedgerAccountsContext.Provider value={contextData}>
-      <LedgerAccountsContent />
-    </LedgerAccountsContext.Provider>
+    <ChartOfAccountsContext.Provider value={contextData}>
+      <ChartOfAccountsContent />
+    </ChartOfAccountsContext.Provider>
   )
 }
 
-const LedgerAccountsContent = () => {
+const ChartOfAccountsContent = () => {
   const { data, isLoading, addAccount, error, isValidating, refetch } =
-    useContext(LedgerAccountsContext)
+    useContext(ChartOfAccountsContext)
 
   let cumulativeIndex = 0
 
@@ -93,7 +95,7 @@ const LedgerAccountsContent = () => {
                   (account.sub_accounts?.length || 0) + cumulativeIndex + 1
 
                 return (
-                  <LedgerAccountsRow
+                  <ChartOfAccountsRow
                     key={account.id}
                     account={account}
                     depth={0}
@@ -138,9 +140,9 @@ const LedgerAccountsContent = () => {
           </div>
         ) : null}
       </div>
-      <LedgerAccountsSidebar />
+      <ChartOfAccountsSidebar />
 
-      <AccountsReceivable />
+      <LedgerAccount />
     </Container>
   )
 }

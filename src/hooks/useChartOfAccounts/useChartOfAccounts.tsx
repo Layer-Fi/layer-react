@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
-import { Account, Direction, LedgerAccounts, NewAccount } from '../../types'
+import { Account, Direction, ChartOfAccounts, NewAccount } from '../../types'
 import { BaseSelectOption } from '../../types/general'
 import { convertToStableName } from '../../utils/helpers'
 import { useLayerContext } from '../useLayerContext'
@@ -11,7 +11,7 @@ interface FormError {
   message: string
 }
 
-const validate = (formData?: LedgerAccountsForm) => {
+const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []
 
   const nameError = validateName(formData)
@@ -22,7 +22,7 @@ const validate = (formData?: LedgerAccountsForm) => {
   return errors
 }
 
-const revalidateField = (fieldName: string, formData?: LedgerAccountsForm) => {
+const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
   switch (fieldName) {
     case 'name':
       const nameError = validateName(formData)
@@ -38,7 +38,7 @@ const revalidateField = (fieldName: string, formData?: LedgerAccountsForm) => {
   }
 }
 
-const validateName = (formData?: LedgerAccountsForm) => {
+const validateName = (formData?: ChartOfAccountsForm) => {
   if (!formData?.data.name?.trim()) {
     return {
       field: 'name',
@@ -49,7 +49,7 @@ const validateName = (formData?: LedgerAccountsForm) => {
   return
 }
 
-export interface LedgerAccountsForm {
+export interface ChartOfAccountsForm {
   action: 'new' | 'edit'
   accountId?: string
   data: {
@@ -62,14 +62,14 @@ export interface LedgerAccountsForm {
   errors?: FormError[]
 }
 
-type UseLedgerAccounts = () => {
-  data: LedgerAccounts | undefined
+type UseChartOfAccounts = () => {
+  data: ChartOfAccounts | undefined
   isLoading?: boolean
   isValidating?: boolean
   error?: unknown
   refetch: () => void
   create: (newAccount: NewAccount) => void
-  form?: LedgerAccountsForm
+  form?: ChartOfAccountsForm
   sendingForm?: boolean
   apiError?: string
   addAccount: () => void
@@ -90,10 +90,10 @@ export const flattenAccounts = (accounts: Account[]): Account[] =>
     .flat()
     .filter(id => id)
 
-export const useLedgerAccounts: UseLedgerAccounts = () => {
+export const useChartOfAccounts: UseChartOfAccounts = () => {
   const { auth, businessId, apiUrl } = useLayerContext()
 
-  const [form, setForm] = useState<LedgerAccountsForm | undefined>()
+  const [form, setForm] = useState<ChartOfAccountsForm | undefined>()
   const [sendingForm, setSendingForm] = useState(false)
   const [apiError, setApiError] = useState<string | undefined>(undefined)
   const [showARForAccountId, setShowARForAccountId] = useState<
@@ -101,8 +101,8 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
   >()
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
-    businessId && auth?.access_token && `ledger-accounts-${businessId}`,
-    Layer.getLedgerAccounts(apiUrl, auth?.access_token, {
+    businessId && auth?.access_token && `chart-of-accounts-${businessId}`,
+    Layer.getChartOfAccounts(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
   )

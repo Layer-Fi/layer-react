@@ -1,7 +1,7 @@
-import { Account, LedgerAccounts, NewAccount, EditAccount } from '../../types'
+import { Account, ChartOfAccounts, NewAccount, EditAccount } from '../../types'
 import { get, post, put } from './authenticated_http'
 
-export const getLedgerAccounts = get<{ data: LedgerAccounts }>(
+export const getChartOfAccounts = get<{ data: ChartOfAccounts }>(
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/accounts`,
 )
 
