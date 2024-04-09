@@ -24,7 +24,11 @@ import {
 import { hasSuggestions } from '../../types/categories'
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import { CategoryMenu } from '../CategoryMenu'
+import { CategorySelect } from '../CategorySelect'
+import {
+  CategoryOption,
+  mapCategoryToOption,
+} from '../CategorySelect/CategorySelect'
 import { InputGroup, Input, FileInput } from '../Input'
 import { MatchForm } from '../MatchForm'
 import { Textarea } from '../Textarea'
@@ -46,7 +50,7 @@ type Props = {
 type Split = {
   amount: number
   inputValue: string
-  category: Category | undefined
+  category: CategoryOption | undefined
 }
 
 type RowState = {
@@ -141,14 +145,14 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
             return {
               amount: c.amount || 0,
               inputValue: formatMoney(c.amount),
-              category: c.category,
+              category: mapCategoryToOption(c.category),
             }
           })
         : [
             {
               amount: bankTransaction.amount,
               inputValue: formatMoney(bankTransaction.amount),
-              category: defaultCategory,
+              category: mapCategoryToOption(defaultCategory),
             },
           ],
       description: '',
@@ -160,7 +164,11 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         ...rowState,
         splits: [
           ...rowState.splits,
-          { amount: 0, inputValue: '0.00', category: defaultCategory },
+          {
+            amount: 0,
+            inputValue: '0.00',
+            category: mapCategoryToOption(defaultCategory),
+          },
         ],
       })
       setSplitFormError(undefined)
@@ -220,7 +228,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       setMatchFormError(undefined)
     }
 
-    const changeCategory = (index: number, newValue: Category) => {
+    const changeCategory = (index: number, newValue: CategoryOption) => {
       rowState.splits[index].category = newValue
       updateRowState({ ...rowState })
       setSplitFormError(undefined)
@@ -257,16 +265,13 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               type: 'Category',
               category: {
                 type: 'StableName',
-                stable_name:
-                  rowState?.splits[0].category?.stable_name ||
-                  rowState?.splits[0].category?.category,
+                stable_name: rowState?.splits[0].category?.payload.stable_name,
               },
             } as SingleCategoryUpdate)
           : ({
               type: 'Split',
               entries: rowState.splits.map(split => ({
-                category:
-                  split.category?.stable_name || split.category?.category,
+                category: split.category?.payload.stable_name,
                 amount: split.amount,
               })),
             } as SplitCategoryUpdate),
@@ -418,14 +423,13 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                           <div
                             className={`${className}__table-cell--split-entry__right-col`}
                           >
-                            <CategoryMenu
+                            <CategorySelect
                               bankTransaction={bankTransaction}
-                              name={`category-${index}${
-                                asListItem ? '-li' : ''
-                              }`}
+                              name={`category-${bankTransaction.id}`}
                               value={split.category}
                               onChange={value => changeCategory(index, value)}
                               className='Layer__category-menu--full'
+                              disabled={bankTransaction.processing}
                             />
                             {index > 0 && (
                               <Button
