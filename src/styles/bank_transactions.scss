@@ -504,8 +504,8 @@
   right: 430px;
   width: 150px;
   min-width: 150px;
-  z-index: 2;
   box-sizing: border-box;
+  z-index: 2;
   box-shadow: -8px 0px 20px -2px rgb(255 255 255 / 64%);
 }
 
@@ -513,6 +513,7 @@
   position: -webkit-sticky;
   position: sticky;
   min-width: 430px;
+  width: 430px;
   max-width: 430px;
   box-sizing: border-box;
   right: 0;

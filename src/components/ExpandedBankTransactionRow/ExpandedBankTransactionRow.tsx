@@ -41,6 +41,7 @@ import classNames from 'classnames'
 type Props = {
   bankTransaction: BankTransaction
   isOpen?: boolean
+  close: () => void
   asListItem?: boolean
   submitBtnText?: string
   containerWidth?: number
@@ -106,6 +107,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     {
       bankTransaction,
       isOpen = false,
+      close,
       editable,
       asListItem = false,
       submitBtnText = 'Save',
@@ -234,7 +236,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       setSplitFormError(undefined)
     }
 
-    const save = () => {
+    const save = async () => {
       if (purpose === Purpose.match) {
         if (!selectedMatchId) {
           setMatchFormError('Select an option to match the transaction')
@@ -258,7 +260,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         return
       }
 
-      categorizeBankTransaction(
+      await categorizeBankTransaction(
         bankTransaction.id,
         rowState.splits.length === 1
           ? ({
@@ -276,6 +278,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               })),
             } as SplitCategoryUpdate),
       )
+
+      close()
     }
 
     // Call this save action after clicking save in parent component:
@@ -283,7 +287,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       save,
     }))
 
-    const onMatchSubmit = (matchId: string) => {
+    const onMatchSubmit = async (matchId: string) => {
       const foundMatch = bankTransaction.suggested_matches?.find(
         x => x.id === matchId,
       )
@@ -291,7 +295,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         return
       }
 
-      matchBankTransaction(bankTransaction.id, foundMatch.id)
+      await matchBankTransaction(bankTransaction.id, foundMatch.id)
+      close()
     }
 
     const getDivHeight = useCallback(() => {
