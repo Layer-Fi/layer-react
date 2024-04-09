@@ -8,7 +8,7 @@ import { LinkedAccountThumb } from './LinkedAccountThumb'
 
 const COMPONENT_NAME = 'linked-accounts'
 
-export const LinkedAccounts = () => {
+export const LinkedAccounts = ({ asWidget }: { asWidget?: boolean }) => {
   const { data, isLoading, error, isValidating, refetch } = useLinkedAccounts()
 
   return (
@@ -38,7 +38,11 @@ export const LinkedAccounts = () => {
       {!error && !isLoading ? (
         <div className='Layer__linked-accounts__list'>
           {data?.map((account, index) => (
-            <LinkedAccountThumb account={account} key={`linked-acc-${index}`} />
+            <LinkedAccountThumb
+              account={account}
+              asWidget={index === 2 ? true : asWidget}
+              key={`linked-acc-${index}`}
+            />
           ))}
         </div>
       ) : null}
