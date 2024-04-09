@@ -270,9 +270,7 @@ export const BankTransactionRow = ({
                         {`${formatTime(
                           parseISO(bankTransaction.match.bank_transaction.date),
                           dateFormat,
-                        )}, ${
-                          bankTransaction.match.bank_transaction.description
-                        }`}
+                        )}, ${bankTransaction.match?.details?.description}`}
                       </span>
                     </>
                   )}
