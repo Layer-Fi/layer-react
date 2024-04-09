@@ -2,6 +2,7 @@ import React from 'react'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { LinkedAccount } from '../../types/linked_accounts'
 import { Text, TextSize } from '../Typography'
+import InstitutionIcon from '../../icons/InstitutionIcon'
 import classNames from 'classnames'
 
 export interface LinkedAccountThumbProps {
@@ -29,9 +30,11 @@ export const LinkedAccountThumb = ({
       <div className='topbar'>
         <div className='topbar-details'>
           <Text as='span' className='account-name'>
-            {account.accountName}
+            {account.external_account_name}
           </Text>
-          {!asWidget && <AccountNumber accountNumber={account.accountNumber} />}
+          {!asWidget && (
+            <AccountNumber accountNumber={account.external_account_number} />
+          )}
           <Text
             as='span'
             className='account-institution'
@@ -41,10 +44,9 @@ export const LinkedAccountThumb = ({
           </Text>
         </div>
         <div className='topbar-logo'>
-          {/* <img
-            src={account.institutionLogo}
-            alt={`${account.institution}-logo`}
-          /> */}
+          {!account.institutionLogo && (
+            <InstitutionIcon />
+          )}
         </div>
       </div>
       {!asWidget && (
@@ -57,13 +59,13 @@ export const LinkedAccountThumb = ({
             Bank Balance
           </Text>
           <Text as='span' className='account-balance'>
-            ${formatMoney(account.latestBalance)}
+            ${formatMoney(account.latest_balance_timestamp.balance)}
           </Text>
         </div>
       )}
       <div className='bottombar'>
         {asWidget ? (
-          <AccountNumber accountNumber={account.accountNumber} />
+          <AccountNumber accountNumber={account.external_account_number} />
         ) : (
           <Text
             as='span'
@@ -74,7 +76,7 @@ export const LinkedAccountThumb = ({
           </Text>
         )}
         <Text as='span' className='account-balance'>
-          ${formatMoney(account.ledgerBalance)}
+          ${formatMoney(account.current_ledger_balance)}
         </Text>
       </div>
     </div>

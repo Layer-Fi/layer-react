@@ -1,6 +1,10 @@
 .Layer__linked-accounts {
   min-height: 151px;
   box-sizing: border-box;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .Layer__linked-accounts .Layer__data-state {
@@ -17,8 +21,15 @@
 .Layer__linked-accounts__list {
   padding: var(--spacing-md);
   display: flex;
-  align-items: center;
+  max-width: 1000px;
+  flex-wrap: wrap;
+  align-items: stretch;
   gap: var(--spacing-md);
+
+  @media screen and (max-width: 650px) {
+    flex-wrap: nowrap;
+    max-width: none;
+  }
 }
 
 .Layer__linked-accounts__header + .Layer__linked-accounts__list {
@@ -39,18 +50,25 @@
   }
 }
 
-.Layer__linked-account__new-account {
+.Layer__linked-accounts__new-account {
   display: flex;
-  flex-direction: column;
-  min-width: 272px;
-  gap: var(--spacing-4xs);
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  max-width: 284px;
+  gap: var(--spacing-xs);
   padding: var(--spacing-2xs);
   border-radius: var(--border-radius-sm);
-  background: var(--color-base-0);
+  background: var(--color-base-50);
+  color: var(--color-base-500);
   box-shadow:
     0px 2px 4px 0px var(--base-transparent-6),
     0px 0px 0px 1px var(--base-transparent-4);
+  white-space: nowrap;
   box-sizing: border-box;
+  @media screen and (max-width: 650px) {
+    margin-right: var(--spacing-lg);
+  }
 }
 
 .Layer__linked-account-thumb {
@@ -91,6 +109,9 @@
     }
 
     .topbar-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 52px;
       height: 28px;
       padding: var(--spacing-3xs) 0;
