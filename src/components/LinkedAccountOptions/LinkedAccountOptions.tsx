@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import MoreVertical from '../../icons/MoreVertical'
 import { HoverMenu, HoverMenuProps } from '../HoverMenu'
 
