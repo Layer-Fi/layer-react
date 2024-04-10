@@ -3,6 +3,7 @@ import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import PlusIcon from '../../icons/PlusIcon'
 import { Container, Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
+import { LinkedAccountOptions } from '../LinkedAccountOptions'
 import { LinkedAccountThumb } from '../LinkedAccountThumb'
 import { Loader } from '../Loader'
 import { Heading, HeadingSize, Text, TextSize } from '../Typography'
@@ -11,8 +12,21 @@ import classNames from 'classnames'
 const COMPONENT_NAME = 'linked-accounts'
 
 export const LinkedAccounts = ({ asWidget }: { asWidget?: boolean }) => {
-  const { data, isLoading, error, isValidating, refetch, addAccount } =
-    useLinkedAccounts()
+  const {
+    data,
+    isLoading,
+    error,
+    isValidating,
+    refetch,
+    addAccount,
+    unlinkAccount,
+    relinkAccount,
+  } = useLinkedAccounts()
+
+  const linkedAccountOptionsConfig = [
+    { name: 'Unlink', action: unlinkAccount },
+    { name: 'Relink', action: relinkAccount },
+  ]
 
   const linkedAccountsNewAccountClassName = classNames(
     'Layer__linked-accounts__new-account',
@@ -46,11 +60,12 @@ export const LinkedAccounts = ({ asWidget }: { asWidget?: boolean }) => {
       {!error && !isLoading ? (
         <div className='Layer__linked-accounts__list'>
           {data?.map((account, index) => (
-            <LinkedAccountThumb
-              account={account}
-              asWidget={asWidget}
+            <LinkedAccountOptions
               key={`linked-acc-${index}`}
-            />
+              config={linkedAccountOptionsConfig}
+            >
+              <LinkedAccountThumb account={account} asWidget={asWidget} />
+            </LinkedAccountOptions>
           ))}
           <div
             role='button'
