@@ -6,11 +6,18 @@ import { DataState, DataStateStatus } from '../DataState'
 import { LinkedAccountThumb } from '../LinkedAccountThumb'
 import { Loader } from '../Loader'
 import { Heading, HeadingSize, Text, TextSize } from '../Typography'
+import classNames from 'classnames'
 
 const COMPONENT_NAME = 'linked-accounts'
 
 export const LinkedAccounts = ({ asWidget }: { asWidget?: boolean }) => {
-  const { data, isLoading, error, isValidating, refetch } = useLinkedAccounts()
+  const { data, isLoading, error, isValidating, refetch, addAccount } =
+    useLinkedAccounts()
+
+  const linkedAccountsNewAccountClassName = classNames(
+    'Layer__linked-accounts__new-account',
+    asWidget && '--as-widget',
+  )
 
   return (
     <Container name={COMPONENT_NAME}>
@@ -45,11 +52,19 @@ export const LinkedAccounts = ({ asWidget }: { asWidget?: boolean }) => {
               key={`linked-acc-${index}`}
             />
           ))}
-          <div className='Layer__linked-accounts__new-account'>
-            <PlusIcon />
-            <Text as='span' size={'sm' as TextSize}>
-              New Account
-            </Text>
+          <div
+            role='button'
+            tabIndex={0}
+            aria-label='new-account'
+            onClick={() => addAccount()}
+            className={linkedAccountsNewAccountClassName}
+          >
+            <div className='Layer__linked-accounts__new-account-label'>
+              <PlusIcon size={16} />
+              <Text as='span' size={'sm' as TextSize}>
+                New Account
+              </Text>
+            </div>
           </div>
         </div>
       ) : null}
