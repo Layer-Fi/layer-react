@@ -37,6 +37,13 @@
 
   --max-component-width: 1408px;
 
+  --base-transparent-1: hsla(
+    var(--color-dark-h),
+    var(--color-dark-s),
+    var(--color-dark-l),
+    0.01
+  );
+
   --base-transparent-4: hsla(
     var(--color-dark-h),
     var(--color-dark-s),
