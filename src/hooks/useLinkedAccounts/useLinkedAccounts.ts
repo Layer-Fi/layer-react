@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { LinkedAccount } from '../../types/linked_accounts'
 import { useLayerContext } from '../useLayerContext'
@@ -74,6 +73,8 @@ type UseLinkedAccounts = () => {
   error: unknown
   refetch: () => void
   addAccount: () => void
+  unlinkAccount: () => void
+  relinkAccount: () => void
 }
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
@@ -99,6 +100,14 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     console.log('add account...')
   }
 
+  const unlinkAccount = () => {
+    console.log('unlink account...')
+  }
+
+  const relinkAccount = () => {
+    console.log('relink account...')
+  }
+
   const refetch = () => {
     console.log('refetch...')
   }
@@ -111,5 +120,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     error: responseError,
     refetch,
     addAccount,
+    unlinkAccount,
+    relinkAccount,
   }
 }

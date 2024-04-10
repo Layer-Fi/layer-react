@@ -1,5 +1,8 @@
 .Layer__linked-accounts {
   min-height: 151px;
+  box-shadow:
+    0px 2px 4px 0px var(--base-transparent-6),
+    0px 0px 0px 1px var(--base-transparent-4);
   box-sizing: border-box;
 
   &::-webkit-scrollbar {
@@ -56,15 +59,12 @@
   align-items: center;
   justify-content: center;
   flex: 1;
-  max-width: 284px;
+  max-width: 272px;
   min-height: 152px;
   padding: var(--spacing-2xs);
+  border: 1px solid var(--color-base-100);
   border-radius: var(--border-radius-sm);
   background: var(--base-transparent-1);
-  box-shadow:
-    0px 2px 4px 0px var(--base-transparent-6),
-    0px 0px 0px 1px var(--base-transparent-4);
-  box-sizing: border-box;
 
   &.--as-widget {
     min-height: 100px;
@@ -92,9 +92,7 @@
   padding: var(--spacing-2xs);
   border-radius: var(--border-radius-sm);
   background: var(--color-base-0);
-  box-shadow:
-    0px 2px 4px 0px var(--base-transparent-6),
-    0px 0px 0px 1px var(--base-transparent-4);
+  border: 1px solid var(--color-base-100);
   box-sizing: border-box;
 
   .topbar {
@@ -189,6 +187,53 @@
 
     .bottombar {
       padding: 0 var(--spacing-xs) 0 0;
+    }
+  }
+}
+
+.Layer__linked-accounts__options {
+  position: relative;
+  display: flex;
+
+  &:hover .Layer__linked-accounts__options-overlay {
+    opacity: 1;
+    touch-action: auto;
+
+    .Layer__linked-accounts__options-overlay-button {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .Layer__linked-accounts__options-overlay {
+    opacity: 0;
+    touch-action: none;
+    position: absolute;
+    top: var(--spacing-2xs);
+    right: var(--spacing-2xs);
+    width: 74px;
+    height: 54px;
+    display: flex;
+    justify-content: flex-end;
+    background: linear-gradient(
+      270deg,
+      #f8f8fa 1.52%,
+      rgba(248, 248, 250, 0) 99.75%
+    );
+    transition: 0.2s all ease-in-out;
+
+    .Layer__linked-accounts__options-overlay-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      margin: var(--spacing-xs);
+      background: var(--color-base-0);
+      border: none;
+      border-radius: var(--spacing-2xs);
+      cursor: pointer;
+      transform: translate3d(5px, -5px, 0);
+      transition: 0.2s all ease-in-out;
     }
   }
 }
