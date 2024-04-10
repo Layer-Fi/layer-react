@@ -45,3 +45,14 @@ export type NewAccount = {
   }
   description: string
 }
+
+export type EditAccount = {
+  name: string
+  stable_name: string
+  normality: Direction
+  parent_id?: {
+    type: 'AccountId'
+    id: string
+  }
+  description: string
+}

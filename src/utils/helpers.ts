@@ -19,3 +19,14 @@ export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(
 export const sleep = (time: number) => {
   return new Promise(resolve => setTimeout(resolve, time))
 }
+
+/**
+ * Convert the account name into stable_name
+ */
+export const convertToStableName = (name: string): string =>
+  name
+    .replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '')
+    .replace(/\W+/g, ' ')
+    .split(/ |\B(?=[A-Z])/)
+    .map(word => word.toLowerCase())
+    .join('_')

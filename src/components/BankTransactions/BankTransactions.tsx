@@ -44,8 +44,8 @@ const filterVisibility = (
     bankTransaction.categorization_status,
   )
   const inReview =
-    ReviewCategories.includes(bankTransaction.categorization_status) ||
-    bankTransaction.recently_categorized
+    ReviewCategories.includes(bankTransaction.categorization_status) &&
+    !bankTransaction.recently_categorized
 
   return (
     (display === DisplayState.review && inReview) ||
