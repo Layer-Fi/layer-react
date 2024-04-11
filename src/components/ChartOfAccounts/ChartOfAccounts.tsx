@@ -1,16 +1,20 @@
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
+import { useElementSize } from '../../hooks/useElementSize'
 import DownloadCloud from '../../icons/DownloadCloud'
-import { LedgerAccount } from '../LedgerAccount'
 import { Button, ButtonVariant } from '../Button'
 import { ChartOfAccountsRow } from '../ChartOfAccountsRow'
 import { ChartOfAccountsSidebar } from '../ChartOfAccountsSidebar'
 import { Container, Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
+import { LedgerAccount } from '../LedgerAccount'
 import { Loader } from '../Loader'
 import { Heading } from '../Typography'
 
 const COMPONENT_NAME = 'chart-of-accounts'
+const MOBILE_BREAKPOINT = 760
+
+export type View = 'mobile' | 'desktop'
 
 export type ChartOfAccountsContextType = ReturnType<typeof useChartOfAccounts>
 export const ChartOfAccountsContext = createContext<ChartOfAccountsContextType>(
@@ -47,12 +51,24 @@ const ChartOfAccountsContent = () => {
   const { data, isLoading, addAccount, error, isValidating, refetch } =
     useContext(ChartOfAccountsContext)
 
+  const [view, setView] = useState<View>('desktop')
+
   let cumulativeIndex = 0
 
   const accountsLength = data?.accounts.length ?? 0
 
+  const containerRef = useElementSize<HTMLDivElement>((_a, _b, { width }) => {
+    if (width) {
+      if (width >= MOBILE_BREAKPOINT && view !== 'desktop') {
+        setView('desktop')
+      } else if (width < MOBILE_BREAKPOINT && view !== 'mobile') {
+        setView('mobile')
+      }
+    }
+  })
+
   return (
-    <Container name={COMPONENT_NAME}>
+    <Container name={COMPONENT_NAME} ref={containerRef}>
       <div className={`Layer__${COMPONENT_NAME}__main-panel`}>
         <Header className={`Layer__${COMPONENT_NAME}__header`}>
           <Heading className={`Layer__${COMPONENT_NAME}__title`}>
@@ -77,7 +93,7 @@ const ChartOfAccountsContent = () => {
             <tr className='Layer__table-row--header'>
               <th className='Layer__table-header Layer__coa__name'>Name</th>
               <th className='Layer__table-header Layer__coa__type'>Type</th>
-              <th className='Layer__table-header Layer__coa__subtype'>
+              <th className='Layer__table-header Layer__coa__subtype Layer__mobile--hidden'>
                 Sub-Type
               </th>
               <th className='Layer__table-header Layer__coa__balance'>
@@ -104,6 +120,7 @@ const ChartOfAccountsContent = () => {
                     expanded={true}
                     defaultOpen={true}
                     acountsLength={accountsLength}
+                    view={view}
                   />
                 )
               })}

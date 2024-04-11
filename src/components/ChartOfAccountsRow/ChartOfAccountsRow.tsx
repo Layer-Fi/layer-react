@@ -4,8 +4,12 @@ import ChevronDownFill from '../../icons/ChevronDownFill'
 import Edit2 from '../../icons/Edit2'
 import { centsToDollars } from '../../models/Money'
 import { Account } from '../../types'
-import { Button, ButtonVariant } from '../Button'
-import { ChartOfAccountsContext } from '../ChartOfAccounts/ChartOfAccounts'
+import { Button, ButtonVariant, TextButton } from '../Button'
+import {
+  ChartOfAccountsContext,
+  View,
+} from '../ChartOfAccounts/ChartOfAccounts'
+import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 
 type ChartOfAccountsRowProps = {
@@ -16,9 +20,11 @@ type ChartOfAccountsRowProps = {
   expanded: boolean
   acountsLength: number
   defaultOpen?: boolean
+  view?: View
 }
 
 const INDENTATION = 12
+const MOBILE_INDENTATION = 12
 
 const EXPANDED_STYLE = {
   height: 52,
@@ -42,10 +48,12 @@ export const ChartOfAccountsRow = ({
   expanded = false,
   defaultOpen = false,
   acountsLength,
+  view,
 }: ChartOfAccountsRowProps) => {
   const { form, editAccount, setShowARForAccountId } = useContext(
     ChartOfAccountsContext,
   )
+
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const style = expanded
     ? {
@@ -76,73 +84,165 @@ export const ChartOfAccountsRow = ({
     !showComponent && 'Layer__table-row--anim-starting-state',
   )
 
+  const desktopRowClass = classNames(
+    baseClass,
+    'Layer__chart-of-accounts__row---desktop',
+  )
+  const mobileRowClass = classNames(
+    baseClass,
+    'Layer__chart-of-accounts__row---mobile',
+  )
+
   return (
     <>
-      <tr className={baseClass} onClick={() => setIsOpen(!isOpen)}>
-        <td className='Layer__table-cell Layer__coa__name'>
-          <span className='Layer__table-cell-content' style={style}>
+      {view === 'desktop' && (
+        <tr
+          className={desktopRowClass}
+          onClick={e => {
+            e.preventDefault()
+            e.stopPropagation()
+            setShowARForAccountId(account.id)
+          }}
+        >
+          <td className='Layer__table-cell Layer__coa__name'>
+            <span className='Layer__table-cell-content' style={style}>
+              <span
+                className='Layer__table-cell-content-indentation'
+                style={{
+                  paddingLeft: INDENTATION * depth + 16,
+                }}
+              >
+                {account.sub_accounts && account.sub_accounts.length > 0 && (
+                  <ChevronDownFill
+                    size={16}
+                    className='Layer__table__expand-icon'
+                    onClick={e => {
+                      e.stopPropagation()
+                      setIsOpen(!isOpen)
+                    }}
+                  />
+                )}
+                <span className='Layer__coa__name__text'>{account.name}</span>
+              </span>
+            </span>
+          </td>
+          <td className='Layer__table-cell Layer__coa__type'>
+            {/* @TODO what is type and subtype*/}
+            <span
+              className='Layer__table-cell-content Layer__mobile--hidden'
+              style={style}
+            >
+              {account.normality}
+            </span>
+            <span
+              className='Layer__table-cell-content Layer__desktop--hidden'
+              style={style}
+            >
+              <Text
+                weight={TextWeight.bold}
+                className='Layer__coa__type--mobile'
+              >
+                {account.normality}
+              </Text>
+              <Text className='Layer__coa__subtype--mobile'>Sub-Type</Text>
+            </span>
+          </td>
+          <td className='Layer__table-cell Layer__coa__subtype Layer__mobile--hidden'>
+            <span className='Layer__table-cell-content' style={style}>
+              Sub-Type
+            </span>
+          </td>
+          <td className='Layer__table-cell Layer__coa__balance'>
+            <span
+              className='Layer__table-cell-content Layer__table-cell--amount'
+              style={style}
+            >
+              ${centsToDollars(Math.abs(account.balance || 0))}
+            </span>
+          </td>
+          <td className='Layer__table-cell Layer__coa__actions'>
+            <span className='Layer__table-cell-content' style={style}>
+              <Button
+                variant={ButtonVariant.secondary}
+                rightIcon={<Edit2 size={12} />}
+                iconOnly={true}
+                onClick={e => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  editAccount(account.id)
+                }}
+              >
+                Edit
+              </Button>
+            </span>
+          </td>
+        </tr>
+      )}
+
+      {view === 'mobile' && (
+        <tr
+          className={mobileRowClass}
+          onClick={e => {
+            e.preventDefault()
+            e.stopPropagation()
+            setShowARForAccountId(account.id)
+          }}
+        >
+          <td className='Layer__table-cell' colSpan={5}>
             <span
               className='Layer__table-cell-content-indentation'
               style={{
-                paddingLeft: INDENTATION * depth + 16,
+                paddingLeft: MOBILE_INDENTATION * depth + 16,
+                ...style,
+                height: 'auto',
               }}
             >
               {account.sub_accounts && account.sub_accounts.length > 0 && (
                 <ChevronDownFill
                   size={16}
                   className='Layer__table__expand-icon'
+                  onClick={e => {
+                    e.stopPropagation()
+                    setIsOpen(!isOpen)
+                  }}
                 />
               )}
-              <span className='Layer__coa__name__text'>{account.name}</span>
+              <div className='Layer__chart-of-accounts__mobile-row-content'>
+                <div className='Layer__chart-of-accounts__mobile-row-content__top-row'>
+                  <Text
+                    as='span'
+                    className='Layer__chart-of-accounts__mobile-row-content__name'
+                  >
+                    {account.name}
+                  </Text>
+                  <TextButton
+                    onClick={e => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      editAccount(account.id)
+                    }}
+                  >
+                    Edit
+                  </TextButton>
+                </div>
+                <div className='Layer__chart-of-accounts__mobile-row-content__bottom-row'>
+                  <div className='Layer__chart-of-accounts__mobile-row-content__types'>
+                    <Text as='span'>{account.normality}</Text>
+                    <span className='Layer__chart-of-accounts__mobile-row-content__separator' />
+                    <Text as='span'>Sub-Type</Text>
+                  </div>
+                  <Text
+                    as='span'
+                    className='Layer__chart-of-accounts__mobile-row-content__balance'
+                  >
+                    ${centsToDollars(Math.abs(account.balance || 0))}
+                  </Text>
+                </div>
+              </div>
             </span>
-          </span>
-        </td>
-        <td className='Layer__table-cell Layer__coa__type'>
-          {/* @TODO what is type and subtype*/}
-          <span className='Layer__table-cell-content' style={style}>
-            {account.normality}
-          </span>
-        </td>
-        <td className='Layer__table-cell Layer__coa__subtype'>
-          <span className='Layer__table-cell-content' style={style}>
-            Sub-Type
-          </span>
-        </td>
-        <td className='Layer__table-cell Layer__coa__balance'>
-          <span
-            className='Layer__table-cell-content Layer__table-cell--amount'
-            style={style}
-          >
-            ${centsToDollars(Math.abs(account.balance || 0))}
-          </span>
-        </td>
-        <td className='Layer__table-cell Layer__coa__actions'>
-          <span className='Layer__table-cell-content' style={style}>
-            <Button
-              variant={ButtonVariant.secondary}
-              rightIcon={<Edit2 size={12} />}
-              onClick={e => {
-                e.preventDefault()
-                e.stopPropagation()
-                editAccount(account.id)
-              }}
-            >
-              Edit
-            </Button>
-            <Button
-              variant={ButtonVariant.secondary}
-              rightIcon={<ArrowRightCircle size={12} />}
-              onClick={e => {
-                e.preventDefault()
-                e.stopPropagation()
-                setShowARForAccountId(account.id)
-              }}
-            >
-              Open
-            </Button>
-          </span>
-        </td>
-      </tr>
+          </td>
+        </tr>
+      )}
 
       {(account.sub_accounts || []).map((subAccount, idx) => (
         <ChartOfAccountsRow
@@ -153,6 +253,7 @@ export const ChartOfAccountsRow = ({
           expanded={isOpen && expanded}
           cumulativeIndex={cumulativeIndex + idx + 1}
           acountsLength={(account.sub_accounts ?? []).length}
+          view={view}
         />
       ))}
     </>

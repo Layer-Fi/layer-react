@@ -1,23 +1,12 @@
 import React, { useContext, useMemo } from 'react'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { centsToDollars } from '../../models/Money'
-import { Direction } from '../../types'
-import { BaseSelectOption } from '../../types/general'
 import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
 import { ChartOfAccountsContext } from '../ChartOfAccounts/ChartOfAccounts'
 import { Input, InputGroup, Select } from '../Input'
 import { Text, TextSize, TextWeight } from '../Typography'
-
-const SUB_TYPE_OPTIONS: BaseSelectOption[] = [
-  {
-    value: Direction.DEBIT,
-    label: 'Debit',
-  },
-  {
-    value: Direction.CREDIT,
-    label: 'Credit',
-  },
-]
+import { SUB_TYPE_OPTIONS } from './constants'
+import { useParentOptions } from './useParentOptions'
 
 export const ChartOfAccountsForm = () => {
   const {
@@ -30,18 +19,7 @@ export const ChartOfAccountsForm = () => {
     apiError,
   } = useContext(ChartOfAccountsContext)
 
-  const parentOptions: BaseSelectOption[] = useMemo(
-    () =>
-      flattenAccounts(data?.accounts || [])
-        .sort((a, b) => (a?.name && b?.name ? a.name.localeCompare(b.name) : 0))
-        .map(x => {
-          return {
-            label: x.name,
-            value: x.id,
-          }
-        }),
-    [data?.accounts?.length],
-  )
+  const parentOptions = useParentOptions(data)
 
   const entry = useMemo(() => {
     if (form?.action === 'edit' && form.accountId) {

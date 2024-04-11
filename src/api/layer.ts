@@ -11,6 +11,8 @@ import {
   getChartOfAccounts,
   createAccount,
   updateAccount,
+  getLedgerAccountsLines,
+  getLedgerAccountsEntry,
 } from './layer/chart_of_accounts'
 import { getProfitAndLoss } from './layer/profit_and_loss'
 
@@ -24,6 +26,8 @@ export const Layer = {
   getBankTransactions,
   getCategories,
   getChartOfAccounts,
+  getLedgerAccountsLines,
+  getLedgerAccountsEntry,
   getProfitAndLoss,
   getLinkedAccounts,
 }

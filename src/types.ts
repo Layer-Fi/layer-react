@@ -25,6 +25,8 @@ export {
   Account,
   NewAccount,
   EditAccount,
+  LedgerAccountLine,
+  LedgerAccountEntry,
 } from './types/chart_of_accounts'
 export { SortDirection } from './types/general'
 

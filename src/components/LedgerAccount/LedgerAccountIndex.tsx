@@ -1,29 +1,58 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
+import { Layer } from '../../api/layer'
 import { DATE_FORMAT } from '../../config/general'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
+import { useLayerContext } from '../../hooks/useLayerContext'
 import DownloadCloud from '../../icons/DownloadCloud'
 import { centsToDollars } from '../../models/Money'
+import { Direction } from '../../types'
 import { Button, ButtonVariant } from '../Button'
 import { ChartOfAccountsContext } from '../ChartOfAccounts/ChartOfAccounts'
 import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import useSWR from 'swr'
 
 export const LedgerAccount = () => {
-  const { data, showARForAccountId, setShowARForAccountId } = useContext(
-    ChartOfAccountsContext,
+  const { auth, businessId, apiUrl } = useLayerContext()
+  const {
+    data: accountData,
+    showARForAccountId,
+    setShowARForAccountId,
+  } = useContext(ChartOfAccountsContext)
+
+  const { data, isLoading, isValidating, error, mutate } = useSWR(
+    businessId &&
+      showARForAccountId &&
+      auth?.access_token &&
+      `ledger-accounts-lines-${businessId}-${showARForAccountId}`,
+    Layer.getLedgerAccountsLines(apiUrl, auth?.access_token, {
+      params: { businessId, accountId: showARForAccountId },
+    }),
   )
 
-  const entry = useMemo(() => {
-    return flattenAccounts(data?.accounts || []).find(
-      x => x.id === showARForAccountId,
-    )
-  }, [showARForAccountId])
+  const [lineId, setLineId] = useState<string | undefined>()
+
+  const { data: entryData } = useSWR(
+    businessId &&
+      lineId &&
+      auth?.access_token &&
+      `ledger-accounts-entry-${businessId}-${lineId}}`,
+    Layer.getLedgerAccountsEntry(apiUrl, auth?.access_token, {
+      params: { businessId, entryId: lineId },
+    }),
+  )
 
   const baseClassName = classNames(
     'Layer__ledger-account__index',
     showARForAccountId && 'open',
   )
+
+  const entry = useMemo(() => {
+    return flattenAccounts(accountData?.accounts || []).find(
+      x => x.id === showARForAccountId,
+    )
+  }, [showARForAccountId])
 
   const close = () => setShowARForAccountId(undefined)
 
@@ -38,7 +67,7 @@ export const LedgerAccount = () => {
             weight={TextWeight.bold}
             className='Layer__ledger-account__title'
           >
-            {entry?.name || ''}
+            Name
           </Text>
           <Button
             variant={ButtonVariant.secondary}
@@ -80,37 +109,60 @@ export const LedgerAccount = () => {
           </tr>
         </thead>
         <tbody>
-          {entry?.entries?.map(x => {
+          {data?.data?.map(x => {
             return (
-              <tr key={x.id}>
+              <tr
+                key={x.id}
+                onClick={() => {
+                  if (lineId === x.entry_id) {
+                    setLineId(undefined)
+                  } else {
+                    setLineId(x.entry_id)
+                  }
+                }}
+              >
                 <td className='Layer__table-cell'>
                   <span className='Layer__table-cell-content'>
-                    {x.createdAt &&
-                      formatTime(parseISO(x.createdAt), DATE_FORMAT)}
+                    {x.date && formatTime(parseISO(x.date), DATE_FORMAT)}
                   </span>
                 </td>
                 <td className='Layer__table-cell'>
                   <span className='Layer__table-cell-content'>#123</span>
                 </td>
                 <td className='Layer__table-cell'>
-                  <span className='Layer__table-cell-content'>Invoice</span>
-                </td>
-                <td className='Layer__table-cell Layer__table-cell--amount'>
                   <span className='Layer__table-cell-content'>
-                    {x.direction} $X,XXX.XX
+                    Invoice (TBD null)
                   </span>
                 </td>
-                <td className='Layer__table-cell Layer__table-cell--amount'>
-                  <span className='Layer__table-cell-content'>$X,XXX.XX</span>
+                <td className='Layer__table-cell'>
+                  <span className='Layer__table-cell-content Layer__table-cell--amount'>
+                    {x.direction === Direction.DEBIT &&
+                      `$${centsToDollars(x?.amount || 0)}`}
+                  </span>
                 </td>
-                <td className='Layer__table-cell Layer__table-cell--amount'>
-                  <span className='Layer__table-cell-content'>$X,XXX.XX</span>
+                <td className='Layer__table-cell'>
+                  <span className='Layer__table-cell-content Layer__table-cell--amount'>
+                    {x.direction === Direction.CREDIT &&
+                      `$${centsToDollars(x?.amount || 0)}`}
+                  </span>
+                </td>
+                <td className='Layer__table-cell'>
+                  <span className='Layer__table-cell-content Layer__table-cell--amount'>
+                    $X,XXX.XX
+                  </span>
                 </td>
               </tr>
             )
           })}
         </tbody>
       </table>
+      {lineId && (
+        <div
+          style={{
+            position: 'absolute',
+          }}
+        ></div>
+      )}
     </div>
   )
 }

@@ -251,7 +251,8 @@
     'cv08' on,
     'ss03' on;
   line-height: 140%;
-  width: calc(100% + 200px);
+  // width: calc(100% + 200px);
+  width: 100%;
 
   & .Layer__select__control {
     border-width: 0px;
