@@ -215,12 +215,12 @@
     height: 54px;
     display: flex;
     justify-content: flex-end;
+    transition: 0.2s all ease-in-out;
     background: linear-gradient(
       270deg,
       #f8f8fa 1.52%,
       rgba(248, 248, 250, 0) 99.75%
     );
-    transition: 0.2s all ease-in-out;
 
     .Layer__linked-accounts__options-overlay-button {
       display: flex;
@@ -236,5 +236,33 @@
       transform: translate3d(5px, -5px, 0);
       transition: 0.2s all ease-in-out;
     }
+  }
+}
+
+.Layer__linked-accounts__inactive {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4xs);
+  border-radius: 52px;
+  background: var(--color-danger-light);
+  color: var(--color-danger-dark);
+  padding: 1px var(--spacing-2xs) 1px 1px;
+  font-weight: 540px;
+  transition: 0.1s all ease-in-out;
+
+  &:hover {
+    background: var(--color-danger);
+  }
+
+  .Layer__linked-accounts__inactive-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    padding: var(--spacing-4xs);
+    border-radius: 100%;
+    background: var(--color-danger);
+    color: var(--color-base-900);
   }
 }

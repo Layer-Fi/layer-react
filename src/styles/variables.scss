@@ -4,9 +4,16 @@
   // 1. BASE VARIABLES:
   --color-black: #1a1a1a;
   --color-white: white;
-  --color-info-error: #e46362;
   --color-info-success: #29bc9b;
   --color-info-warning: #f5a622;
+
+  --color-info-error-h: 0;
+  --color-info-error-s: 71%;
+  --color-info-error-l: 64%;
+  --color-info-error: hsl(
+    var(--color-info-error-h) var(--color-info-error-s)
+      var(--color-info-error-l)
+  );
 
   --color-dark-h: 0;
   --color-dark-s: 0%;
@@ -81,6 +88,13 @@
   --color-secondary: var(--color-base);
   --color-success: var(--color-info-success);
   --color-danger: var(--color-info-error);
+  --color-danger-dark: hsl(349, 30%, 30%);
+  --color-danger-light: hsla(
+    var(--color-info-error-h),
+    var(--color-info-error-s),
+    var(--color-info-error-l),
+    0.4
+  );
   --text-color-primary: var(--color-dark);
   --text-color-secondary: var(--color-base-700);
   --bg-element-focus: var(--color-base-50);

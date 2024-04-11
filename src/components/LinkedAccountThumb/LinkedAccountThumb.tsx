@@ -1,8 +1,9 @@
 import React from 'react'
+import InstitutionIcon from '../../icons/InstitutionIcon'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { LinkedAccount } from '../../types/linked_accounts'
+import { LinkedAccountsInactive } from '../LinkedAccountsInactive'
 import { Text, TextSize } from '../Typography'
-import InstitutionIcon from '../../icons/InstitutionIcon'
 import classNames from 'classnames'
 
 export interface LinkedAccountThumbProps {
@@ -44,9 +45,7 @@ export const LinkedAccountThumb = ({
           </Text>
         </div>
         <div className='topbar-logo'>
-          {!account.institutionLogo && (
-            <InstitutionIcon />
-          )}
+          {!account.institutionLogo && <InstitutionIcon />}
         </div>
       </div>
       {!asWidget && (
@@ -56,11 +55,12 @@ export const LinkedAccountThumb = ({
             className='account-balance-text'
             size={'sm' as TextSize}
           >
-            Bank Balance
+            Bank balance
           </Text>
-          <Text as='span' className='account-balance'>
+          <LinkedAccountsInactive />
+          {/* <Text as='span' className='account-balance'>
             ${formatMoney(account.latest_balance_timestamp.balance)}
-          </Text>
+          </Text> */}
         </div>
       )}
       <div className='bottombar'>
@@ -72,7 +72,7 @@ export const LinkedAccountThumb = ({
             className='account-balance-text'
             size={'sm' as TextSize}
           >
-            Ledger Balance
+            Ledger balance
           </Text>
         )}
         <Text as='span' className='account-balance'>
