@@ -33,18 +33,20 @@ export const LinkedAccountThumb = ({
             {account.external_account_name}
           </Text>
           {!asWidget && (
-            <AccountNumber accountNumber={account.external_account_number} />
+            <AccountNumber
+              accountNumber={'TODO' /*account.external_account_number*/}
+            />
           )}
           <Text
             as='span'
             className='account-institution'
             size={'sm' as TextSize}
           >
-            {account.institution}
+            {account.institution?.name}
           </Text>
         </div>
         <div className='topbar-logo'>
-          {!account.institutionLogo && <InstitutionIcon />}
+          {!account.institution?.logo && <InstitutionIcon />}
         </div>
       </div>
       {!asWidget && (
@@ -63,7 +65,9 @@ export const LinkedAccountThumb = ({
       )}
       <div className='bottombar'>
         {asWidget ? (
-          <AccountNumber accountNumber={account.external_account_number} />
+          <AccountNumber
+            accountNumber={'TODO' /*account.external_account_number*/}
+          />
         ) : (
           <Text
             as='span'

@@ -7,12 +7,18 @@ interface LinkedAccountOptionsProps extends HoverMenuProps {}
 export const LinkedAccountOptions = ({
   children,
   config,
+  accountId,
+  plaidItemId,
 }: LinkedAccountOptionsProps) => {
   return (
     <div className='Layer__linked-accounts__options'>
       <div className='Layer__linked-accounts__options-overlay'>
         <div className='Layer__linked-accounts__options-overlay-button'>
-          <HoverMenu config={config}>
+          <HoverMenu
+            config={config}
+            accountId={accountId}
+            plaidItemId={plaidItemId}
+          >
             <MoreVertical size={16} />
           </HoverMenu>
         </div>

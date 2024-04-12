@@ -62,6 +62,7 @@ export const request =
 
 export const post = request('post')
 export const put = request('put')
+export const deleteRequest = request('delete')
 
 const handleResponse = async <Return>(res: Response) => {
   if (!res.ok) {
