@@ -20,12 +20,12 @@ export const LinkedAccounts = ({ asWidget }: { asWidget?: boolean }) => {
     refetch,
     addAccount,
     unlinkAccount,
-    relinkAccount,
+    renewLinkAccount,
   } = useLinkedAccounts()
 
   const linkedAccountOptionsConfig = [
+    { name: 'Renew link', action: renewLinkAccount },
     { name: 'Unlink', action: unlinkAccount },
-    { name: 'Relink', action: relinkAccount },
   ]
 
   const linkedAccountsNewAccountClassName = classNames(
@@ -75,9 +75,9 @@ export const LinkedAccounts = ({ asWidget }: { asWidget?: boolean }) => {
             className={linkedAccountsNewAccountClassName}
           >
             <div className='Layer__linked-accounts__new-account-label'>
-              <PlusIcon size={16} />
+              <PlusIcon size={15} />
               <Text as='span' size={'sm' as TextSize}>
-                New Account
+                New account
               </Text>
             </div>
           </div>

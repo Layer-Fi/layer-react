@@ -1,5 +1,5 @@
 .Layer__linked-accounts {
-  min-height: 151px;
+  min-height: 150px;
   box-shadow:
     0px 2px 4px 0px var(--base-transparent-6),
     0px 0px 0px 1px var(--base-transparent-4);
@@ -60,14 +60,13 @@
   justify-content: center;
   flex: 1;
   max-width: 272px;
-  min-height: 152px;
+  min-height: 135px;
   padding: var(--spacing-2xs);
-  border: 1px solid var(--color-base-100);
   border-radius: var(--border-radius-sm);
   background: var(--base-transparent-1);
 
   &.--as-widget {
-    min-height: 100px;
+    min-height: 90px;
   }
 
   @media screen and (max-width: 650px) {
@@ -82,6 +81,9 @@
     gap: var(--spacing-xs);
     color: var(--color-base-500);
     text-align: center;
+    span {
+      line-height: normal;
+    }
   }
 }
 
@@ -159,8 +161,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 28px;
-    padding: 0 var(--spacing-xs);
+    height: 20px;
+    padding: var(--spacing-3xs) var(--spacing-xs) 0;
 
     .account-balance-text {
       color: var(--color-base-500);
@@ -209,18 +211,20 @@
     opacity: 0;
     touch-action: none;
     position: absolute;
+    z-index: 99;
     top: var(--spacing-2xs);
     right: var(--spacing-2xs);
     width: 74px;
     height: 54px;
     display: flex;
     justify-content: flex-end;
+    transition: 0.15s all ease-out;
+    border-top-right-radius: var(--border-radius-sm);
     background: linear-gradient(
       270deg,
       #f8f8fa 1.52%,
       rgba(248, 248, 250, 0) 99.75%
     );
-    transition: 0.2s all ease-in-out;
 
     .Layer__linked-accounts__options-overlay-button {
       display: flex;
@@ -231,10 +235,44 @@
       margin: var(--spacing-xs);
       background: var(--color-base-0);
       border: none;
+      box-shadow: 0px 0px 8px 0px
+        var(--base-transparent-12, rgba(16, 24, 40, 0.12));
       border-radius: var(--spacing-2xs);
       cursor: pointer;
       transform: translate3d(5px, -5px, 0);
-      transition: 0.2s all ease-in-out;
+      transition: 0.15s all ease-out;
     }
+  }
+}
+
+.Layer__linked-accounts__inactive {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4xs);
+  border-radius: 52px;
+  background: var(--color-danger-light);
+  color: var(--color-danger-dark);
+  padding: 1px var(--spacing-2xs) 1px 1px;
+  font-weight: 540px;
+  transition: 0.1s all ease-in-out;
+
+  p {
+    line-height: normal;
+  }
+
+  &:hover {
+    background: var(--color-danger);
+  }
+
+  .Layer__linked-accounts__inactive-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    padding: var(--spacing-4xs);
+    border-radius: 100%;
+    background: var(--color-danger);
+    color: var(--color-base-900);
   }
 }

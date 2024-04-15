@@ -74,7 +74,7 @@ type UseLinkedAccounts = () => {
   refetch: () => void
   addAccount: () => void
   unlinkAccount: () => void
-  relinkAccount: () => void
+  renewLinkAccount: () => void
 }
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
@@ -104,7 +104,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     console.log('unlink account...')
   }
 
-  const relinkAccount = () => {
+  const renewLinkAccount = () => {
     console.log('relink account...')
   }
 
@@ -121,6 +121,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     refetch,
     addAccount,
     unlinkAccount,
-    relinkAccount,
+    renewLinkAccount,
   }
 }
