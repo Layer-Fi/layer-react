@@ -4,7 +4,7 @@ import { IconSvgProps } from './types'
 const PlusIcon = ({ size = 14, ...props }: IconSvgProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
-    viewBox='0 0 16 20'
+    viewBox='0 0 16 16'
     fill='none'
     {...props}
     width={size}

@@ -5,6 +5,7 @@
   &.--open {
     .Layer__hover-menu__list-wrapper {
       top: 100%;
+      right: 0px;
       opacity: 1;
       touch-action: auto;
       pointer-events: auto;
@@ -20,24 +21,24 @@
 
   .Layer__hover-menu__list-wrapper {
     position: absolute;
-    top: 120%;
-    right: 0;
+    z-index: 99;
+    top: 80%;
+    right: -8px;
     padding-top: var(--spacing-xs);
+    background: var(--color-base-0);
     min-width: 108px;
     touch-action: none;
     pointer-events: none;
     opacity: 0;
     display: flex;
     justify-content: stretch;
-    transition: all 0.15s ease;
+    transition: all 0.15s ease-out;
 
     .Layer__hover-menu__list {
       flex: 1;
       display: flex;
       flex-direction: column;
       gap: var(--spacing-3xs);
-      background: var(--color-base-0);
-      border: 1px solid var(--color-base-100);
       border-radius: var(--spacing-xs);
       box-shadow:
         0px 0px 0px 1px rgba(25, 25, 25, 0.06),
@@ -54,6 +55,8 @@
         border-radius: var(--spacing-2xs);
         color: var(--color-base-500);
         transition: all 0.2s ease-in-out;
+        display: flex;
+        align-items: center;
 
         .Layer__hover-menu__list-item-button {
           background: none;
@@ -61,7 +64,10 @@
           outline: none;
           color: inherit;
           font-size: var(--text-sm);
-          font-weight: 540;
+          font-family: inherit;
+          font-feature-settings: inherit;
+          font-weight: 500;
+          line-height: normal;
           letter-spacing: -0.06px;
           cursor: pointer;
         }
@@ -69,6 +75,7 @@
         &:hover {
           background: var(--color-base-50);
           color: var(--color-base-800);
+          font-weight: 540;
         }
       }
     }

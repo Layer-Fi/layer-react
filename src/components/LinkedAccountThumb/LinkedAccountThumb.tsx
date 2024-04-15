@@ -2,7 +2,6 @@ import React from 'react'
 import InstitutionIcon from '../../icons/InstitutionIcon'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { LinkedAccount } from '../../types/linked_accounts'
-import { LinkedAccountsInactive } from '../LinkedAccountsInactive'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
 
@@ -57,10 +56,9 @@ export const LinkedAccountThumb = ({
           >
             Bank balance
           </Text>
-          <LinkedAccountsInactive />
-          {/* <Text as='span' className='account-balance'>
+          <Text as='span' className='account-balance'>
             ${formatMoney(account.latest_balance_timestamp.balance)}
-          </Text> */}
+          </Text>
         </div>
       )}
       <div className='bottombar'>
@@ -72,7 +70,7 @@ export const LinkedAccountThumb = ({
             className='account-balance-text'
             size={'sm' as TextSize}
           >
-            Ledger balance
+            General ledger balance
           </Text>
         )}
         <Text as='span' className='account-balance'>
