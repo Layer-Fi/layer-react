@@ -449,13 +449,16 @@
 .Layer__profit-and-loss-date-picker {
   width: 210px;
   font-size: 14px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  flex-direction: flex-end;
   padding: 0.25rem;
   border: 1px solid var(--input-border-color);
   border-radius: var(--input-border-radius);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 1;
 }
 
 .Layer__profit-and-loss-date-picker__button {
@@ -467,6 +470,8 @@
   background-color: var(--color-base-0);
   border: 0;
   border-radius: var(--input-border-radius);
+  z-index: 3;
+  position: relative;
 
   &:active {
     background-color: var(--color-base-0);
@@ -485,4 +490,24 @@
   align-items: center;
   text-align: center;
   padding: 0 var(--spacing-xs);
+  transition: opacity 0.7s ease-in-out, transform 0.4s ease-in-out;
+  width: 33%;
+  position: relative;
+  padding-left: 20px;
+}
+
+.Layer__profit-and-loss-date-picker__labels-container {
+  display: flex;
+  width: 660px;
+  position: absolute;
+}
+
+.Layer__profit-and-loss-date-picker__effect-blur {
+  width: 120px;
+  height: 100%;
+  position: absolute;
+  right: -10px;
+  bottom: 1px;
+  background: linear-gradient(-90deg, #fff 50%, rgba(255, 255, 255, 0) 100%);
+  z-index: 2;
 }
