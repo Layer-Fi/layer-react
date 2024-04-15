@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
 import { useElementSize } from '../../hooks/useElementSize'
 import DownloadCloud from '../../icons/DownloadCloud'
@@ -52,6 +52,7 @@ const ChartOfAccountsContent = () => {
     useContext(ChartOfAccountsContext)
 
   const [view, setView] = useState<View>('desktop')
+  const [offset, setOffset] = useState(0)
 
   let cumulativeIndex = 0
 
@@ -66,6 +67,44 @@ const ChartOfAccountsContent = () => {
       }
     }
   })
+
+  useEffect(() => {
+    console.log(
+      containerRef?.current?.offsetHeight,
+      containerRef?.current?.scrollHeight,
+      containerRef?.current?.scrollTop,
+      containerRef?.current?.offsetTop,
+      containerRef?.current?.getBoundingClientRect(),
+      containerRef?.current?.getClientRects(),
+    )
+  }, [containerRef?.current?.getBoundingClientRect()])
+
+  const calcPos = () => {
+    if (!containerRef?.current) {
+      return 0
+    }
+
+    const windShift =
+      containerRef?.current?.getBoundingClientRect().top < 0
+        ? containerRef?.current?.getBoundingClientRect().top
+        : 0
+
+    const shift = containerRef?.current?.scrollTop - windShift
+    console.log(shift)
+    if (shift < 0) {
+      return 0
+    }
+    if (containerRef?.current?.getBoundingClientRect().bottom < 480) {
+      console.log('case 2')
+      return containerRef?.current?.offsetHeight - 480
+    }
+    return shift
+  }
+
+  useEffect(() => {
+    console.log('effe')
+    setOffset(calcPos())
+  }, [])
 
   return (
     <Container name={COMPONENT_NAME} ref={containerRef}>
@@ -157,7 +196,7 @@ const ChartOfAccountsContent = () => {
           </div>
         ) : null}
       </div>
-      <ChartOfAccountsSidebar />
+      <ChartOfAccountsSidebar offset={offset} />
 
       <LedgerAccount />
     </Container>
