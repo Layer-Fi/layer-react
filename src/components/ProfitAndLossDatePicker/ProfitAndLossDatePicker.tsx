@@ -60,7 +60,7 @@ export const ProfitAndLossDatePicker = () => {
 
   const currentLabel = format(localDate, 'LLLL, y')
   const prevLabel = format(add(localDate, { months: -1 }), 'LLLL y')
-  const nextLabel = format(add(localDate, { months: 1 }), 'LLLL y')
+  const nextLabel = format(add(localDate, { months: 1 }), 'LLLL, y')
 
   return (
     <div
