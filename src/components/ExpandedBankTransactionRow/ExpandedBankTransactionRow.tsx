@@ -24,7 +24,11 @@ import {
 import { hasSuggestions } from '../../types/categories'
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import { CategoryMenu } from '../CategoryMenu'
+import { CategorySelect } from '../CategorySelect'
+import {
+  CategoryOption,
+  mapCategoryToOption,
+} from '../CategorySelect/CategorySelect'
 import { InputGroup, Input, FileInput } from '../Input'
 import { MatchForm } from '../MatchForm'
 import { Textarea } from '../Textarea'
@@ -37,6 +41,7 @@ import classNames from 'classnames'
 type Props = {
   bankTransaction: BankTransaction
   isOpen?: boolean
+  close: () => void
   asListItem?: boolean
   submitBtnText?: string
   containerWidth?: number
@@ -46,7 +51,7 @@ type Props = {
 type Split = {
   amount: number
   inputValue: string
-  category: Category | undefined
+  category: CategoryOption | undefined
 }
 
 type RowState = {
@@ -102,6 +107,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     {
       bankTransaction,
       isOpen = false,
+      close,
       editable,
       asListItem = false,
       submitBtnText = 'Save',
@@ -141,14 +147,14 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
             return {
               amount: c.amount || 0,
               inputValue: formatMoney(c.amount),
-              category: c.category,
+              category: mapCategoryToOption(c.category),
             }
           })
         : [
             {
               amount: bankTransaction.amount,
               inputValue: formatMoney(bankTransaction.amount),
-              category: defaultCategory,
+              category: mapCategoryToOption(defaultCategory),
             },
           ],
       description: '',
@@ -160,7 +166,11 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         ...rowState,
         splits: [
           ...rowState.splits,
-          { amount: 0, inputValue: '0.00', category: defaultCategory },
+          {
+            amount: 0,
+            inputValue: '0.00',
+            category: mapCategoryToOption(defaultCategory),
+          },
         ],
       })
       setSplitFormError(undefined)
@@ -220,13 +230,13 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       setMatchFormError(undefined)
     }
 
-    const changeCategory = (index: number, newValue: Category) => {
+    const changeCategory = (index: number, newValue: CategoryOption) => {
       rowState.splits[index].category = newValue
       updateRowState({ ...rowState })
       setSplitFormError(undefined)
     }
 
-    const save = () => {
+    const save = async () => {
       if (purpose === Purpose.match) {
         if (!selectedMatchId) {
           setMatchFormError('Select an option to match the transaction')
@@ -250,27 +260,26 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         return
       }
 
-      categorizeBankTransaction(
+      await categorizeBankTransaction(
         bankTransaction.id,
         rowState.splits.length === 1
           ? ({
               type: 'Category',
               category: {
                 type: 'StableName',
-                stable_name:
-                  rowState?.splits[0].category?.stable_name ||
-                  rowState?.splits[0].category?.category,
+                stable_name: rowState?.splits[0].category?.payload.stable_name,
               },
             } as SingleCategoryUpdate)
           : ({
               type: 'Split',
               entries: rowState.splits.map(split => ({
-                category:
-                  split.category?.stable_name || split.category?.category,
+                category: split.category?.payload.stable_name,
                 amount: split.amount,
               })),
             } as SplitCategoryUpdate),
       )
+
+      close()
     }
 
     // Call this save action after clicking save in parent component:
@@ -278,7 +287,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       save,
     }))
 
-    const onMatchSubmit = (matchId: string) => {
+    const onMatchSubmit = async (matchId: string) => {
       const foundMatch = bankTransaction.suggested_matches?.find(
         x => x.id === matchId,
       )
@@ -286,7 +295,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         return
       }
 
-      matchBankTransaction(bankTransaction.id, foundMatch.id)
+      await matchBankTransaction(bankTransaction.id, foundMatch.id)
+      close()
     }
 
     const getDivHeight = useCallback(() => {
@@ -418,14 +428,13 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                           <div
                             className={`${className}__table-cell--split-entry__right-col`}
                           >
-                            <CategoryMenu
+                            <CategorySelect
                               bankTransaction={bankTransaction}
-                              name={`category-${index}${
-                                asListItem ? '-li' : ''
-                              }`}
+                              name={`category-${bankTransaction.id}`}
                               value={split.category}
                               onChange={value => changeCategory(index, value)}
                               className='Layer__category-menu--full'
+                              disabled={bankTransaction.processing}
                             />
                             {index > 0 && (
                               <Button

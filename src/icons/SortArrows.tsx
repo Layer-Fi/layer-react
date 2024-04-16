@@ -14,29 +14,29 @@ const SortArrows = ({ size = 13, ...props }: IconSvgProps) => (
       <path
         d='M1.33325 8.5L3.99992 11.1667L6.66659 8.5'
         stroke='currentColor'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeLinecap='round'
+        strokeLinejoin='round'
         className='desc-arrow'
       />
       <path
         d='M4 2.5L4 11.1667'
         stroke='currentColor'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeLinecap='round'
+        strokeLinejoin='round'
         className='desc-arrow'
       />
       <path
         d='M5.99988 5.16602L8.66654 2.49935L11.3332 5.16602'
         stroke='currentColor'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeLinecap='round'
+        strokeLinejoin='round'
         className='asc-arrow'
       />
       <path
         d='M8.66663 11.166L8.66663 2.49935'
         stroke='currentColor'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeLinecap='round'
+        strokeLinejoin='round'
         className='asc-arrow'
       />
     </g>

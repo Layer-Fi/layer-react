@@ -97,6 +97,25 @@
 .Layer__table.with-cell-separators
   > tbody
   > tr
+  > td
+  .Layer__table-cell-content::after,
+.Layer__table.with-cell-separators
+  > tbody
+  > tr
+  > th.Layer__table-header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 20px;
+  background-color: var(--color-base-200);
+  top: 50%;
+  margin-top: -10px;
+}
+
+.Layer__table.with-cell-separators
+  > tbody
+  > tr
   > td:first-child
   .Layer__table-cell-content::after,
 .Layer__table.with-cell-separators
@@ -146,4 +165,38 @@
     padding-left: var(--spacing-xl);
     padding-right: var(--spacing-xl);
   }
+}
+
+.Layer__table-row--hidden .Layer__table-cell {
+  border-top-width: 0;
+}
+
+.Layer__table-cell {
+  height: auto;
+
+  & > .Layer__table-cell-content {
+    overflow: hidden;
+    transition:
+      height 30ms ease-out,
+      opacity 150ms ease-in-out;
+  }
+}
+
+.Layer__table-row {
+  transition: all 180ms ease-in-out;
+
+  &.Layer__table-row--collapsed {
+    .Layer__table-cell {
+      & > .Layer__table-cell-content {
+        transition:
+          height 60ms ease-out,
+          opacity 50ms ease-in-out;
+      }
+    }
+  }
+}
+
+.Layer__table-row.Layer__table-row--anim-starting-state {
+  transform: scaleX(0.98);
+  opacity: 0;
 }

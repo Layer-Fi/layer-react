@@ -1,15 +1,53 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
-import {
-  Account,
-  AccountAlternate,
-  Direction,
-  LedgerAccounts,
-  NewAccount,
-} from '../../types'
+import { Account, Direction, LedgerAccounts, NewAccount } from '../../types'
 import { BaseSelectOption } from '../../types/general'
+import { convertToStableName } from '../../utils/helpers'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
+
+interface FormError {
+  field: string
+  message: string
+}
+
+const validate = (formData?: LedgerAccountsForm) => {
+  const errors: FormError[] = []
+
+  const nameError = validateName(formData)
+  if (nameError) {
+    errors.push(nameError)
+  }
+
+  return errors
+}
+
+const revalidateField = (fieldName: string, formData?: LedgerAccountsForm) => {
+  switch (fieldName) {
+    case 'name':
+      const nameError = validateName(formData)
+      if (nameError) {
+        return (formData?.errors || [])
+          .filter(x => x.field !== fieldName)
+          .concat([nameError])
+      }
+
+      return (formData?.errors || []).filter(x => x.field !== fieldName)
+    default:
+      return formData?.errors
+  }
+}
+
+const validateName = (formData?: LedgerAccountsForm) => {
+  if (!formData?.data.name?.trim()) {
+    return {
+      field: 'name',
+      message: 'Cannot be blank',
+    }
+  }
+
+  return
+}
 
 export interface LedgerAccountsForm {
   action: 'new' | 'edit'
@@ -21,6 +59,7 @@ export interface LedgerAccountsForm {
     subType?: BaseSelectOption
     category?: BaseSelectOption
   }
+  errors?: FormError[]
 }
 
 type UseLedgerAccounts = () => {
@@ -31,6 +70,8 @@ type UseLedgerAccounts = () => {
   refetch: () => void
   create: (newAccount: NewAccount) => void
   form?: LedgerAccountsForm
+  sendingForm?: boolean
+  apiError?: string
   addAccount: () => void
   editAccount: (id: string) => void
   cancelForm: () => void
@@ -53,6 +94,8 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
   const { auth, businessId, apiUrl } = useLayerContext()
 
   const [form, setForm] = useState<LedgerAccountsForm | undefined>()
+  const [sendingForm, setSendingForm] = useState(false)
+  const [apiError, setApiError] = useState<string | undefined>(undefined)
   const [showARForAccountId, setShowARForAccountId] = useState<
     string | undefined
   >()
@@ -64,15 +107,65 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     }),
   )
 
-  const create = (newAccount: NewAccount) => {
-    Layer.createAccount(apiUrl, auth?.access_token, {
-      params: { businessId },
-      body: newAccount,
-    }).then(({ data }) => (mutate(), data))
+  const create = async (newAccount: NewAccount) => {
+    setSendingForm(true)
+    setApiError(undefined)
+
+    try {
+      await Layer.createAccount(apiUrl, auth?.access_token, {
+        params: { businessId },
+        body: newAccount,
+      })
+      await refetch()
+      setForm(undefined)
+    } catch (_err) {
+      setApiError('Submit failed. Please, check your connection and try again.')
+    } finally {
+      setSendingForm(false)
+    }
+  }
+
+  const update = async (accountData: NewAccount, accountId: string) => {
+    setSendingForm(true)
+    setApiError(undefined)
+
+    const stable_name = convertToStableName(accountData.name)
+
+    /** @TODO some fields will be deprecated soon */
+    const newAccountData = {
+      ...accountData,
+      stable_name: stable_name,
+      pnl_category: 'INCOME', //this field will be deprecated soon, but is still required
+      always_show_in_pnl: false, //this field will be deprecated soon, but is still required
+    }
+
+    try {
+      await Layer.updateAccount(apiUrl, auth?.access_token, {
+        params: { businessId, accountId },
+        body: newAccountData,
+      })
+      await refetch()
+      setForm(undefined)
+    } catch (_err) {
+      setApiError('Submit failed. Please, check your connection and try again.')
+    } finally {
+      setSendingForm(false)
+    }
   }
 
   const submitForm = () => {
     if (!form || !form.action) {
+      return
+    }
+
+    const errors = validate(form)
+
+    if (errors.length > 0) {
+      setForm({
+        ...form,
+        errors,
+      })
+
       return
     }
 
@@ -89,13 +182,12 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     }
 
     if (form.action === 'new') {
-      // @TODO add validation - no empty name
       create(data)
       return
     }
 
     if (form.action === 'edit' && form.accountId) {
-      // @TODO call update - missing endpoint?
+      update(data, form.accountId)
       return
     }
   }
@@ -159,12 +251,19 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
       return
     }
 
-    setForm({
+    const newFormData = {
       ...form,
       data: {
         ...form.data,
         [fieldName]: value,
       },
+    }
+
+    const errors = revalidateField(fieldName, newFormData)
+
+    setForm({
+      ...newFormData,
+      errors,
     })
   }
 
@@ -178,6 +277,8 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     refetch,
     create,
     form,
+    sendingForm,
+    apiError,
     addAccount,
     editAccount,
     cancelForm,

@@ -21,6 +21,8 @@ export const LedgerAccountsContext = createContext<LedgerAccountsContextType>({
   refetch: () => {},
   create: () => {},
   form: undefined,
+  sendingForm: false,
+  apiError: undefined,
   addAccount: () => {},
   editAccount: () => {},
   cancelForm: () => {},
@@ -42,6 +44,10 @@ export const LedgerAccounts = () => {
 const LedgerAccountsContent = () => {
   const { data, isLoading, addAccount, error, isValidating, refetch } =
     useContext(LedgerAccountsContext)
+
+  let cumulativeIndex = 0
+
+  const accountsLength = data?.accounts.length ?? 0
 
   return (
     <Container name={COMPONENT_NAME}>
@@ -81,13 +87,24 @@ const LedgerAccountsContent = () => {
 
           <tbody>
             {!error &&
-              data?.accounts.map(account => (
-                <LedgerAccountsRow
-                  key={account.id}
-                  account={account}
-                  depth={0}
-                />
-              ))}
+              data?.accounts.map((account, idx) => {
+                const currentCumulativeIndex = cumulativeIndex
+                cumulativeIndex =
+                  (account.sub_accounts?.length || 0) + cumulativeIndex + 1
+
+                return (
+                  <LedgerAccountsRow
+                    key={account.id}
+                    account={account}
+                    depth={0}
+                    index={idx}
+                    cumulativeIndex={currentCumulativeIndex}
+                    expanded={true}
+                    defaultOpen={true}
+                    acountsLength={accountsLength}
+                  />
+                )
+              })}
           </tbody>
         </table>
 

@@ -148,6 +148,7 @@ export const BankTransactionListItem = ({
           ref={expandedRowRef}
           bankTransaction={bankTransaction}
           isOpen={open}
+          close={() => setOpen(false)}
           editable={editable}
           asListItem={true}
           submitBtnText={editable ? 'Approve' : 'Update'}

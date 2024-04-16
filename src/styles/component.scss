@@ -1,5 +1,6 @@
 .Layer__component {
   max-width: 1406px;
+  font-family: var(--font-family);
 }
 
 .Layer__component-container {
@@ -13,17 +14,17 @@
     width: 6px;
     height: 6px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 4px;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: #e2e2e2;
     border-radius: 4px;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
     background: #999;
   }
@@ -35,7 +36,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-md); 
+  gap: var(--spacing-md);
 }
 
 @container (max-width: 700px) {

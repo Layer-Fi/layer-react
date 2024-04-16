@@ -21,10 +21,10 @@ export {
   CategoryUpdate,
 } from './types/categories'
 export {
-  AccountAlternate,
   LedgerAccounts,
   Account,
   NewAccount,
+  EditAccount,
 } from './types/ledger_accounts'
 export { SortDirection } from './types/general'
 

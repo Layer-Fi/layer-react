@@ -4,9 +4,16 @@
   // 1. BASE VARIABLES:
   --color-black: #1a1a1a;
   --color-white: white;
-  --color-info-error: #e46362;
   --color-info-success: #29bc9b;
   --color-info-warning: #f5a622;
+
+  --color-info-error-h: 0;
+  --color-info-error-s: 71%;
+  --color-info-error-l: 64%;
+  --color-info-error: hsl(
+    var(--color-info-error-h) var(--color-info-error-s)
+      var(--color-info-error-l)
+  );
 
   --color-dark-h: 0;
   --color-dark-s: 0%;
@@ -36,6 +43,13 @@
   --color-base-1000: hsl(var(--color-dark-h) 20% 7%);
 
   --max-component-width: 1408px;
+
+  --base-transparent-1: hsla(
+    var(--color-dark-h),
+    var(--color-dark-s),
+    var(--color-dark-l),
+    0.01
+  );
 
   --base-transparent-4: hsla(
     var(--color-dark-h),
@@ -74,6 +88,13 @@
   --color-secondary: var(--color-base);
   --color-success: var(--color-info-success);
   --color-danger: var(--color-info-error);
+  --color-danger-dark: hsl(349, 30%, 30%);
+  --color-danger-light: hsla(
+    var(--color-info-error-h),
+    var(--color-info-error-s),
+    var(--color-info-error-l),
+    0.4
+  );
   --text-color-primary: var(--color-dark);
   --text-color-secondary: var(--color-base-700);
   --bg-element-focus: var(--color-base-50);
@@ -116,7 +137,7 @@
   --input-border-radius: var(--border-radius-2xs);
   --input-font-size: var(--text-md);
   --input-border-color: var(--color-base-300);
-  --input-placeholder-color: var(--color-base-300);
+  --input-placeholder-color: var(--color-base-500);
 
   --label-color: var(--color-base-700);
 

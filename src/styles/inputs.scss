@@ -45,20 +45,32 @@
   border: 1px solid var(--border-color);
   border-radius: var(--input-border-radius);
   border-width: 0px;
-  box-shadow: 0px 0px 0px 1px var(--input-border-color), 0px 0px 0px 2px rgba(0,0,0,0);
+  box-shadow:
+    0px 0px 0px 1px var(--input-border-color),
+    0px 0px 0px 2px rgba(0, 0, 0, 0);
   margin: 1px;
   font-family: var(--font-family);
   font-size: var(--input-font-size);
   line-height: 140%;
 
   &.Layer__input--error {
-    color: var(--color-danger);
-    box-shadow: 0px 0px 0px 1px var(--color-base-300), 0px 0px 0px 2px var(--color-danger);
+    box-shadow:
+      0px 0px 0px 1px var(--color-base-300),
+      0px 0px 0px 2px var(--color-danger);
   }
 
   &:disabled {
     background-color: var(--color-base-100);
     color: var(--color-base-800);
+  }
+
+  &:focus,
+  &:active,
+  &:focus-visible {
+    box-shadow:
+      0px 0px 0px 3px rgba(26, 26, 26, 0.08),
+      0px 0px 0px 1px var(--color-base-700);
+    outline: none;
   }
 }
 
@@ -96,12 +108,15 @@
   font-family: var(--font-family);
   font-size: var(--input-font-size);
 
-  &:focus, &:active, &:focus-visible {
-    box-shadow: 0px 0px 0px 3px rgba(26, 26, 26, 0.08), 0px 0px 0px 1px var(--color-base-700);
+  &:focus,
+  &:active,
+  &:focus-visible {
+    box-shadow:
+      0px 0px 0px 3px rgba(26, 26, 26, 0.08),
+      0px 0px 0px 1px var(--color-base-700);
     outline: none;
   }
 }
-
 
 .Layer__toggle {
   display: flex;
@@ -154,7 +169,9 @@
     font-family: var(--font-family);
     font-size: var(--btn-font-size);
     cursor: pointer;
-    transition: color var(--transition-speed) ease-in-out, background-color 150ms ease-in-out;
+    transition:
+      color var(--transition-speed) ease-in-out,
+      background-color 150ms ease-in-out;
     justify-content: center;
 
     &:hover {
@@ -163,7 +180,7 @@
   }
 
   & input:checked + span {
-     color: var(--text-color-primary);
+    color: var(--text-color-primary);
   }
 
   & input:disabled + span {
@@ -201,7 +218,12 @@
   border-radius: 52px;
 
   background: var(--color-white);
-  box-shadow: 0px 0px 0px 1px var(--color-base-300), 0px 1px 1px 0px rgba(0, 0, 0, 0.04), 0px 2px 3px 0px rgba(0, 0, 0, 0.04), 0px 3px 4px 0px rgba(0, 0, 0, 0.02), 0px 4px 5px 0px rgba(0, 0, 0, 0.01);
+  box-shadow:
+    0px 0px 0px 1px var(--color-base-300),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.04),
+    0px 2px 3px 0px rgba(0, 0, 0, 0.04),
+    0px 3px 4px 0px rgba(0, 0, 0, 0.02),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.01);
 }
 
 .Layer__toggle.Layer__toggle--small .Layer__toggle__thumb {
@@ -211,10 +233,11 @@
 
 .Layer__toggle--initialized {
   .Layer__toggle__thumb {
-    transition: left 150ms ease, width 150ms ease;
+    transition:
+      left 150ms ease,
+      width 150ms ease;
   }
 }
-
 
 .Layer__select {
   border-width: 0px;
@@ -222,7 +245,11 @@
   font-size: var(--input-font-size);
   font-variation-settings: 'wght' var(--font-weight-normal);
   font-variant-numeric: lining-nums proportional-nums;
-  font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
+  font-feature-settings:
+    'cv10' on,
+    'cv05' on,
+    'cv08' on,
+    'ss03' on;
   line-height: 140%;
   width: calc(100% + 200px);
 
@@ -235,7 +262,9 @@
   }
 
   & .Layer__select__control--is-focused {
-    box-shadow: 0px 0px 0px 3px rgba(26, 26, 26, 0.08), 0px 0px 0px 1px var(--color-base-700);
+    box-shadow:
+      0px 0px 0px 3px rgba(26, 26, 26, 0.08),
+      0px 0px 0px 1px var(--color-base-700);
   }
 
   .Layer__select__multi-value {
@@ -278,7 +307,11 @@
     font-family: var(--font-family);
     font-variation-settings: 'wght' var(--font-weight-normal);
     font-variant-numeric: lining-nums proportional-nums;
-    font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
+    font-feature-settings:
+      'cv10' on,
+      'cv05' on,
+      'cv08' on,
+      'ss03' on;
   }
 
   .Layer__select__option-label {
@@ -292,11 +325,6 @@
   font-family: var(--font-family);
   font-size: var(--input-font-size);
   line-height: 140%;
-
-  .Layer__select__menu {
-    width: calc(100% + 60px);
-    margin-left: -30px;
-  }
 
   .Layer__select__group-heading {
     color: var(--color-base-500);
@@ -317,7 +345,13 @@
       color: var(--text-color-primary);
     }
 
-    &.Layer__select__option--is-focused , &.Layer__select__option--is-selected, &:hover, &:focus, &:active, &:focus-visible, &:focus-within {
+    &.Layer__select__option--is-focused,
+    &.Layer__select__option--is-selected,
+    &:hover,
+    &:focus,
+    &:active,
+    &:focus-visible,
+    &:focus-within {
       color: var(--text-color-primary);
       background: var(--color-base-100);
     }
@@ -361,35 +395,39 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs);
-  
+
     .Layer__select__option-content__match__main-row {
       display: flex;
       gap: var(--spacing-3xs);
       flex-direction: column;
     }
-  
+
     .Layer__select__option-content__match__date {
       font-size: var(--text-sm);
       color: var(--color-base-600);
       white-space: nowrap;
-  
     }
-  
+
     .Layer__select__option-content__match__description {
       font-size: var(--text-sm);
       color: var(--color-base-700);
     }
-  
+
     .Layer__select__option-content__match__amount-row {
       display: flex;
     }
-  
+
     .Layer__select__option-content__match__amount {
       font-size: var(--text-sm);
       color: var(--color-base-900);
       font-variation-settings: 'wght' var(--font-weight-bold);
     }
   }
+}
+
+.Layer__select__menu.Layer__select__menu--lg {
+  width: calc(100% + 60px);
+  margin-left: -30px;
 }
 
 .Layer__category-menu {
