@@ -75,6 +75,12 @@
     var(--color-dark-l),
     0.08
   );
+  --base-transparent-10: hsla(
+    var(--color-dark-h),
+    var(--color-dark-s),
+    var(--color-dark-l),
+    0.1
+  );
   --base-transparent-12: hsla(
     var(--color-dark-h),
     var(--color-dark-s),
@@ -145,6 +151,8 @@
   --btn-border-radius: var(--border-radius-2xs);
   --btn-color: var(--color-black);
   --btn-bg-color: var(--color-white);
+  --btn-color-primary: var(--color-white);
+  --btn-bg-color-primary: var(--color-black);
   --btn-color-hover: var(--color-white);
   --btn-bg-color-hover: var(--color-primary);
   --btn-color-icon: var(--color-black);
