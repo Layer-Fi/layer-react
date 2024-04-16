@@ -9,8 +9,8 @@ export const ProfitAndLossDatePicker = () => {
   const [isAnimating, setIsAnimating] = useState(false)
 
   const [localDate, setLocalDate] = useState(dateRange.startDate)
-  const [nextOpacity, setNextOpacity] = useState(0) // Start with 0 opacity
-  const [currentOpacity, setCurrentOpacity] = useState(1) // Start fully opaque
+  const [nextOpacity, setNextOpacity] = useState(0) 
+  const [currentOpacity, setCurrentOpacity] = useState(1) 
 
   const [transformStyle, setTransformStyle] = useState({
     transform: 'translateX(33%)',
@@ -59,7 +59,7 @@ export const ProfitAndLossDatePicker = () => {
   }
 
   const currentLabel = format(localDate, 'LLLL, y')
-  const prevLabel = format(add(localDate, { months: -1 }), 'LLLL y')
+  const prevLabel = format(add(localDate, { months: -1 }), 'LLLL, y')
   const nextLabel = format(add(localDate, { months: 1 }), 'LLLL, y')
 
   return (
