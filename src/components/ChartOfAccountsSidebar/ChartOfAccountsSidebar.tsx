@@ -1,10 +1,54 @@
-import React, { useContext } from 'react'
+import React, { RefObject, useContext, useEffect, useState } from 'react'
 import { ChartOfAccountsContext } from '../ChartOfAccounts/ChartOfAccounts'
 import { ChartOfAccountsForm } from '../ChartOfAccountsForm'
 import classNames from 'classnames'
 
-export const ChartOfAccountsSidebar = ({ offset }: { offset: number }) => {
+const calcPos = (parentRef?: RefObject<HTMLDivElement>) => {
+  if (!parentRef) {
+    return 0
+  }
+
+  console.log(
+    parentRef?.current?.offsetHeight,
+    parentRef?.current?.scrollHeight,
+    parentRef?.current?.scrollTop,
+    parentRef?.current?.offsetTop,
+    parentRef?.current?.getBoundingClientRect(),
+    parentRef?.current?.getClientRects(),
+  )
+
+  if (!parentRef?.current) {
+    return 0
+  }
+
+  const windShift =
+    parentRef?.current?.getBoundingClientRect().top < 0
+      ? parentRef?.current?.getBoundingClientRect().top
+      : 0
+
+  const shift = parentRef?.current?.scrollTop - windShift
+  console.log(shift)
+  if (shift < 0) {
+    console.log('case 1')
+    return 0
+  }
+  if (parentRef?.current?.getBoundingClientRect().bottom < 480) {
+    console.log('case 2')
+    return parentRef?.current?.offsetHeight - 480
+  }
+  console.log('case 3')
+  return shift
+}
+
+export const ChartOfAccountsSidebar = ({ parentRef }: { parentRef?: RefObject<HTMLDivElement> }) => {
   const { form } = useContext(ChartOfAccountsContext)
+  const [offset, setOffset] = useState(calcPos(parentRef))
+
+
+  useEffect(() => {
+    console.log('effe')
+    setOffset(calcPos(parentRef))
+  }, [form])
 
   return (
     <div
@@ -13,10 +57,7 @@ export const ChartOfAccountsSidebar = ({ offset }: { offset: number }) => {
         form ? 'open' : '',
       )}
       style={{
-        position: 'absolute',
         top: offset,
-        left: 0,
-        right: 0,
         background: '#f2f2f2',
       }}
     >
