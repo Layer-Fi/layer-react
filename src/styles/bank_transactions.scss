@@ -12,10 +12,14 @@
 }
 
 .Layer__bank-transaction-row {
-  transition: all var(--transition-speed) ease-in-out;
   top: 1px;
-  transform: scale(0.8);
-  opacity: 0;
+  transition: all var(--transition-speed) ease-in-out;
+  opacity: 0.3;
+
+  &.initial-load {
+    transform: scale(0.9);
+    opacity: 0;
+  }
 
   &.show {
     transform: scale(1);

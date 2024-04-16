@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
@@ -60,12 +60,22 @@ export const BankTransactions = ({
   const [display, setDisplay] = useState<DisplayState>(DisplayState.review)
   const [currentPage, setCurrentPage] = useState(1)
   const [removedTxs, setRemovedTxs] = useState<string[]>([])
+  const [initialLoad, setInitialLoad] = useState(true)
   const { data, isLoading, error, isValidating, refetch } =
     useBankTransactions()
 
   const bankTransactionsByFilter = data?.filter(
     tx => !removedTxs.includes(tx.id) && filterVisibility(display, tx),
   )
+
+  useEffect(() => {
+    if (!isLoading) {
+      const timeoutLoad = setTimeout(() => {
+        setInitialLoad(false)
+      }, 1000)
+      return () => clearTimeout(timeoutLoad)
+    }
+  }, [isLoading])
 
   const bankTransactions = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize
@@ -179,6 +189,7 @@ export const BankTransactions = ({
               bankTransactions?.map(
                 (bankTransaction: BankTransaction, index: number) => (
                   <BankTransactionRow
+                    initialLoad={initialLoad}
                     index={index}
                     key={bankTransaction.id}
                     dateFormat={DATE_FORMAT}

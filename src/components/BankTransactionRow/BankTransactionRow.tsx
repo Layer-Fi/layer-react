@@ -35,6 +35,7 @@ type Props = {
   editable: boolean
   removeTransaction: (id: string) => void
   containerWidth?: number
+  initialLoad?: boolean
 }
 
 const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
@@ -69,6 +70,7 @@ export const BankTransactionRow = ({
   editable,
   removeTransaction,
   containerWidth,
+  initialLoad,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
@@ -99,11 +101,15 @@ export const BankTransactionRow = ({
   const [showComponent, setShowComponent] = useState(false)
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setShowComponent(true)
-    }, index * 80)
+    if (initialLoad) {
+      const timeoutId = setTimeout(() => {
+        setShowComponent(true)
+      }, index * 10)
 
-    return () => clearTimeout(timeoutId)
+      return () => clearTimeout(timeoutId)
+    } else {
+      setShowComponent(true)
+    }
   }, [])
 
   useEffect(() => {
@@ -154,6 +160,7 @@ export const BankTransactionRow = ({
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
+    initialLoad ? 'initial-load' : '',
     showComponent ? 'show' : '',
   )
 

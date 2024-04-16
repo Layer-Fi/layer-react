@@ -53,7 +53,10 @@ export const Pagination = ({
       {paginationRange.map(pageNumber => {
         if (pageNumber === DOTS) {
           return (
-            <li className='Layer__pagination-item Layer__pagination-dots'>
+            <li
+              key={`page-${pageNumber}`}
+              className='Layer__pagination-item Layer__pagination-dots'
+            >
               &#8230;
             </li>
           )
