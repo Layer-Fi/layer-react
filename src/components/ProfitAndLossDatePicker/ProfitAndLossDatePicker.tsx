@@ -27,11 +27,11 @@ export const ProfitAndLossDatePicker = () => {
   const change = (monthsToAdd: number) => {
     if (isAnimating) return
     setIsAnimating(true)
-    setNextOpacity(1) // Start the transition to full opacity
+    setNextOpacity(1) 
 
     const newDate = add(localDate, { months: monthsToAdd })
     if (monthsToAdd === -1) {
-      setCurrentOpacity(0) // Begin transitioning opacity to 0
+      setCurrentOpacity(0) 
     }
 
     changeDateRange({
@@ -53,9 +53,9 @@ export const ProfitAndLossDatePicker = () => {
       setLocalDate(newDate)
       setTransformStyle({ transform: 'translateX(33%)', transition: 'none' })
       setIsAnimating(false)
-      setNextOpacity(0) // Reset opacity for the next cycle
+      setNextOpacity(0) 
       setCurrentOpacity(1)
-    }, 300) // Match the timeout to your animation duration
+    }, 300)
   }
 
   const currentLabel = format(localDate, 'LLLL, y')
@@ -65,7 +65,6 @@ export const ProfitAndLossDatePicker = () => {
   return (
     <div
       className='Layer__profit-and-loss-date-picker'
-      style={{ overflow: 'hidden' }}
     >
       <div className='Layer__profit-and-loss-date-picker__labels-container' style={transformStyle}>
         <span className='Layer__profit-and-loss-date-picker__label'>
