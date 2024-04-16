@@ -24,7 +24,7 @@ export const ProfitAndLossDatePicker = () => {
     }
   }, [dateRange.startDate, localDate, isAnimating])
 
-  const change = monthsToAdd => {
+  const change = (monthsToAdd: number) => {
     if (isAnimating) return
     setIsAnimating(true)
     setNextOpacity(1) // Start the transition to full opacity
