@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import XIcon from '../../icons/X'
 import { humanizeTitle } from '../../utils/profitAndLossUtils'
-import { Button, ButtonVariant } from '../Button'
+import { Button, BackButton, ButtonVariant } from '../Button'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { Text, TextSize, TextWeight } from '../Typography'
@@ -53,12 +53,7 @@ export const ProfitAndLossDetailedCharts = () => {
         </header>
 
         <header className='Layer__profit-and-loss-detailed-charts__header--tablet'>
-          <Button
-            onClick={() => setSidebarScope(undefined)}
-            variant={ButtonVariant.secondary}
-          >
-            Back
-          </Button>
+          <BackButton onClick={() => setSidebarScope(undefined)} />
         </header>
 
         <div className='Layer__profit-and-loss-detailed-charts__content'>

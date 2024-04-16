@@ -97,25 +97,6 @@
 .Layer__table.with-cell-separators
   > tbody
   > tr
-  > td
-  .Layer__table-cell-content::after,
-.Layer__table.with-cell-separators
-  > tbody
-  > tr
-  > th.Layer__table-header::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  width: 1px;
-  height: 20px;
-  background-color: var(--color-base-200);
-  top: 50%;
-  margin-top: -10px;
-}
-
-.Layer__table.with-cell-separators
-  > tbody
-  > tr
   > td:first-child
   .Layer__table-cell-content::after,
 .Layer__table.with-cell-separators

@@ -25,7 +25,6 @@
     top: 80%;
     right: -8px;
     padding-top: var(--spacing-xs);
-    background: var(--color-base-0);
     min-width: 108px;
     touch-action: none;
     pointer-events: none;
@@ -40,6 +39,7 @@
       flex-direction: column;
       gap: var(--spacing-3xs);
       border-radius: var(--spacing-xs);
+      background: var(--color-base-0);
       box-shadow:
         0px 0px 0px 1px rgba(25, 25, 25, 0.06),
         0px 4px 12px 0px var(--base-transparent-1, rgba(16, 24, 40, 0.01)),

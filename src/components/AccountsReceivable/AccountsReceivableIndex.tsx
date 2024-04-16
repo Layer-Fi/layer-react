@@ -3,7 +3,7 @@ import { DATE_FORMAT } from '../../config/general'
 import { flattenAccounts } from '../../hooks/useLedgerAccounts/useLedgerAccounts'
 import DownloadCloud from '../../icons/DownloadCloud'
 import { centsToDollars } from '../../models/Money'
-import { Button, ButtonVariant } from '../Button'
+import { Button, BackButton, ButtonVariant } from '../Button'
 import { LedgerAccountsContext } from '../LedgerAccounts/LedgerAccounts'
 import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
@@ -30,9 +30,7 @@ export const AccountsReceivable = () => {
   return (
     <div className={baseClassName}>
       <div className='Layer__accounts-receivable__header'>
-        <Button onClick={close} variant={ButtonVariant.secondary}>
-          Back
-        </Button>
+        <BackButton onClick={close} />
         <div className='Layer__accounts-receivable__title-container'>
           <Text
             weight={TextWeight.bold}

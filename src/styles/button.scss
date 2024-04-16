@@ -10,7 +10,6 @@
     'cv05' on,
     'cv08' on,
     'ss03' on;
-  padding: 0;
   cursor: pointer;
   min-height: 36px;
   box-sizing: border-box;
@@ -22,6 +21,18 @@
     0px 4px 5px 0px rgba(0, 0, 0, 0.01);
   transition: all 100ms ease-out;
   padding: 0 var(--spacing-md);
+
+  &.Layer__back-btn {
+    color: var(--btn-secondary-color);
+    background: var(--btn-secondary-bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: all 150ms ease-out;
+    padding: var(--spacing-2xs) var(--spacing-sm);
+  }
 
   &.Layer__btn--with-primary-icon {
     padding: 0;
@@ -60,6 +71,12 @@
 
     & .Layer__btn-icon--on-active {
       display: none;
+    }
+
+    &.Layer__btn-icon--primary {
+      background: var(--btn-bg-color-icon);
+      width: 32px;
+      height: 32px;
     }
 
     &.Layer__btn-icon--primary {
