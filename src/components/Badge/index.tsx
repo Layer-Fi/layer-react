@@ -1,2 +1,2 @@
 export { Badge } from './Badge'
-export { BadgeVariants } from './Badge'
+export { BadgeVariant } from './Badge'

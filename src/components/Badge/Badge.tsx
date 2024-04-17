@@ -9,7 +9,7 @@ export enum BadgeSize {
   MEDIUM = 'medium',
 }
 
-export enum BadgeVariants {
+export enum BadgeVariant {
   DEFAULT = 'default',
   SUCCESS = 'success',
   WARNING = 'warning',
@@ -22,7 +22,7 @@ export interface BadgeProps {
   onClick?: ButtonProps['onClick']
   tooltip?: ReactNode
   size?: BadgeSize
-  variants?: BadgeVariants
+  variant?: BadgeVariant
   hoverable?: boolean
 }
 
@@ -32,7 +32,7 @@ export const Badge = ({
   children,
   tooltip,
   size = BadgeSize.MEDIUM,
-  variants = BadgeVariants.DEFAULT,
+  variant = BadgeVariant.DEFAULT,
   hoverable = false,
 }: BadgeProps) => {
   const baseProps = {
@@ -41,7 +41,7 @@ export const Badge = ({
       hoverable && !tooltip ? 'Layer__badge--with-hover' : '',
       onClick || tooltip ? 'Layer__badge--clickable' : '',
       `Layer__badge--${size}`,
-      `Layer__badge--${variants}`,
+      `Layer__badge--${variant}`,
     ),
     onClick,
     children,
