@@ -12,7 +12,7 @@ export const HoverMenu = ({ children, config }: HoverMenuProps) => {
 
   const hoverMenuClassName = classNames(
     'Layer__hover-menu',
-    openMenu && '--open',
+    openMenu && 'Layer__hover-menu--open',
   )
 
   useEffect(() => {
