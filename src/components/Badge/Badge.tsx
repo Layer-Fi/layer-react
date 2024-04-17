@@ -9,12 +9,21 @@ export enum BadgeSize {
   MEDIUM = 'medium',
 }
 
+export enum BadgeVariant {
+  DEFAULT = 'default',
+  SUCCESS = 'success',
+  WARNING = 'warning',
+  ERROR = 'error',
+}
+
 export interface BadgeProps {
   children: ReactNode
   icon?: ReactNode
   onClick?: ButtonProps['onClick']
   tooltip?: ReactNode
   size?: BadgeSize
+  variant?: BadgeVariant
+  hoverable?: boolean
 }
 
 export const Badge = ({
@@ -23,12 +32,16 @@ export const Badge = ({
   children,
   tooltip,
   size = BadgeSize.MEDIUM,
+  variant = BadgeVariant.DEFAULT,
+  hoverable = false,
 }: BadgeProps) => {
   const baseProps = {
     className: classNames(
       'Layer__badge',
+      hoverable && !tooltip ? 'Layer__badge--with-hover' : '',
       onClick || tooltip ? 'Layer__badge--clickable' : '',
       `Layer__badge--${size}`,
+      `Layer__badge--${variant}`,
     ),
     onClick,
     children,

@@ -8,7 +8,6 @@
   font-size: var(--text-sm);
   align-items: center;
   transition: all var(--transition-speed) ease-in-out;
-  border: 1px solid var(--base-transparent-5);
   box-sizing: border-box;
   height: 27px;
 
@@ -22,13 +21,54 @@
     cursor: pointer;
 
     &:hover {
-      background-color: var(--badge-color);
+      background-color: var(--badge-fg-color);
       color: var(--badge-bg-color);
-      border-color: var(--badge-color);
     }
   }
 
   .Layer__badge__icon {
     margin-top: 2px;
+  }
+  
+  &.Layer__badge--default {
+    background-color: var(--badge-bg-color);
+    color: var(--badge-fg-color);
+  }
+
+  &.Layer__badge--success {
+    background-color: var(--badge-bg-color-success);
+    color: var(--badge-fg-color-success);
+  }
+
+  &.Layer__badge--warning {
+    background-color: var(--badge-bg-color-warning);
+    color: var(--badge-fg-color-warning);
+  }
+
+  &.Layer__badge--error {
+    background-color: var(--badge-bg-color-error);
+    color: var(--badge-fg-color-error);
+  }
+
+  &.Layer__badge--with-hover:hover {
+    &.Layer__badge--default {
+      background-color: var(--badge-color);
+      color: var(--badge-bg-color);
+    }
+
+    &.Layer__badge--success {
+      background-color: var(--badge-color-success);
+      color: var(--badge-bg-color-success);
+    }
+
+    &.Layer__badge--warning {
+      background-color: var(--badge-color-warning);
+      color: var(--badge-bg-color-warning);
+    }
+
+    &.Layer__badge--error {
+      background-color: var(--badge-color-error);
+      color: var(--badge-bg-color-error);
+    }
   }
 }
