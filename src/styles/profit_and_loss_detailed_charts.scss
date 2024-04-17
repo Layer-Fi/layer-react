@@ -84,6 +84,7 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 
   .filters {
     display: flex;
+    align-items: center;
     margin: 0 var(--spacing-md);
     padding: var(--spacing-2xs) var(--spacing-xs);
     gap: var(--spacing-xs);

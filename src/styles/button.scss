@@ -90,12 +90,6 @@
     box-shadow:
       0px 0px 0px 1px var(--color-base-300),
       0px 1px 2px 0px var(--base-transparent-6, rgba(17, 17, 17, 0.06));
-    box-shadow:
-      0px 0px 0px 1px var(--color-base-900),
-      0px 1px 0px 0px var(--base-transparent-12),
-      0px 2px 2px 0px var(--base-transparent-8),
-      0px 3px 3px 0px var(--base-transparent-6),
-      0px 4px 4px 0px var(--base-transparent-5);
   }
 
   &:visited,
@@ -123,14 +117,16 @@
 }
 
 .Layer__btn--primary {
-  color: var(--btn-color);
-  background: var(--btn-bg-color);
+  color: var(--btn-color-primary);
+  background: var(--btn-bg-color-primary);
+
+  &:visited,
+  &:active {
+    box-shadow: 0px 0px 0px 1px var(--color-base-800);
+  }
 
   &:hover:not([disabled]),
   &.Layer__btn--active:not([disabled]) {
-    color: var(--btn-color-hover);
-    background: var(--btn-bg-color-hover);
-
     .Layer__btn-icon {
       color: var(--btn-color-icon-hover);
       background: var(--btn-bg-color-icon-hover);
