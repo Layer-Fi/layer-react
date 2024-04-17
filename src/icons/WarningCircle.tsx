@@ -10,27 +10,27 @@ const WarningCircle = ({ size = 18, ...props }: IconSvgProps) => (
     width={size}
     height={size}
   >
-    <g clip-path='url(#clip0_2217_119740)'>
+    <g clipPath='url(#clip0_2217_119740)'>
       <path
         d='M6.00008 10.5833C8.53139 10.5833 10.5834 8.5313 10.5834 6C10.5834 3.46869 8.53139 1.41666 6.00008 1.41666C3.46878 1.41666 1.41675 3.46869 1.41675 6C1.41675 8.5313 3.46878 10.5833 6.00008 10.5833Z'
         stroke='currentColor'
-        stroke-opacity='0.6'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeOpacity='0.6'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M6 4.16666V6'
         stroke='currentColor'
-        stroke-opacity='0.6'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeOpacity='0.6'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
       <path
         d='M6 7.83333H6.00458'
         stroke='currentColor'
-        stroke-opacity='0.6'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeOpacity='0.6'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
     </g>
     <defs>

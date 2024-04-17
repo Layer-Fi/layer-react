@@ -1,8 +1,8 @@
 import React from 'react'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import WarningCircle from '../../icons/WarningCircle'
+import { Badge, BadgeVariants } from '../Badge'
 import { HoverMenu } from '../HoverMenu'
-import { Text, TextSize } from '../Typography'
 
 export const LinkedAccountsInactive = () => {
   const { renewLinkAccount } = useLinkedAccounts()
@@ -15,12 +15,13 @@ export const LinkedAccountsInactive = () => {
   ]
   return (
     <HoverMenu config={hoverActions}>
-      <div className='Layer__linked-accounts__inactive'>
-        <div className='Layer__linked-accounts__inactive-icon'>
-          <WarningCircle size={14} />
-        </div>
-        <Text size={'sm' as TextSize}>Fix account</Text>
-      </div>
+      <Badge
+        hoverable
+        variants={BadgeVariants.ERROR}
+        icon={<WarningCircle size={14} />}
+      >
+        Fix account
+      </Badge>
     </HoverMenu>
   )
 }
