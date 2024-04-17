@@ -8,13 +8,17 @@ type UseLedgerAccounts = () => {
   data?: LedgerAccounts
   entryData?: LedgerAccountsEntry
   isLoading?: boolean
+  isLoadingEntry?: boolean
   isValidating?: boolean
+  isValidatingEntry?: boolean
   error?: unknown
+  errorEntry?: unknown
   refetch: () => void
   accountId?: string
   setAccountId: (id?: string) => void
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void
+  closeSelectedEntry: () => void
 }
 
 export const useLedgerAccounts: UseLedgerAccounts = () => {
@@ -33,7 +37,13 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     }),
   )
 
-  const { data: entryData } = useSWR(
+  const {
+    data: entryData,
+    mutate: mutateEntryData,
+    isLoading: isLoadingEntry,
+    isValidating: isValdiatingEntry,
+    error: errorEntry,
+  } = useSWR(
     businessId &&
       selectedEntryId &&
       auth?.access_token &&
@@ -45,16 +55,25 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
 
   const refetch = () => mutate()
 
+  const closeSelectedEntry = () => {
+    setSelectedEntryId(undefined)
+    mutateEntryData()
+  }
+
   return {
     data: data?.data,
     entryData: entryData?.data,
     isLoading,
+    isLoadingEntry,
     isValidating,
+    isValdiatingEntry,
     error,
+    errorEntry,
     refetch,
     accountId,
     setAccountId,
     selectedEntryId,
     setSelectedEntryId,
+    closeSelectedEntry,
   }
 }

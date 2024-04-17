@@ -12,7 +12,7 @@ import { DetailsList, DetailsListItem } from '../DetailsList'
 import { parseISO, format as formatTime } from 'date-fns'
 
 export const LedgerAccountEntryDetails = () => {
-  const { entryData, setSelectedEntryId } = useContext(LedgerAccountsContext)
+  const { entryData, closeSelectedEntry } = useContext(LedgerAccountsContext)
 
   const { totalDebit, totalCredit } = useMemo(() => {
     let totalDebit = 0
@@ -33,10 +33,7 @@ export const LedgerAccountEntryDetails = () => {
       <DetailsList
         title='Transaction source'
         actions={
-          <IconButton
-            icon={<X />}
-            onClick={() => setSelectedEntryId(undefined)}
-          />
+          <IconButton icon={<X />} onClick={() => closeSelectedEntry()} />
         }
       >
         <DetailsListItem label='Source'>

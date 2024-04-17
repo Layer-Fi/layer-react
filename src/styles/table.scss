@@ -46,6 +46,11 @@
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
+.Layer__table-cell--primary {
+  color: var(--color-base-800);
+  font-variation-settings: 'wght' var(--font-weight-bold);
+}
+
 .Layer__table-cell {
   font-size: var(--text-md);
   text-align: left;

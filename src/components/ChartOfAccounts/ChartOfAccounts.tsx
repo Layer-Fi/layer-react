@@ -39,13 +39,17 @@ export const LedgerAccountsContext = createContext<LedgerAccountsContextType>({
   data: undefined,
   entryData: undefined,
   isLoading: false,
+  isLoadingEntry: false,
   isValidating: false,
+  isValidatingEntry: false,
   error: undefined,
+  errorEntry: undefined,
   refetch: () => {},
   accountId: undefined,
   setAccountId: () => {},
   selectedEntryId: undefined,
   setSelectedEntryId: () => {},
+  closeSelectedEntry: () => {},
 })
 
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => {

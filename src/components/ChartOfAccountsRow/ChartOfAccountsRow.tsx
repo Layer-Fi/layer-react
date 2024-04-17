@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import ArrowRightCircle from '../../icons/ArrowRightCircle'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import Edit2 from '../../icons/Edit2'
 import { centsToDollars } from '../../models/Money'

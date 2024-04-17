@@ -17,6 +17,10 @@
   min-height: 800px;
 }
 
+.Layer__ledger-account-table .Layer__table-row--active {
+  background-color: var(--color-base-50);
+}
+
 .Layer__ledger-account__panel .Layer__panel__sidebar {
   background-color: var(--color-base-50);
 
@@ -75,6 +79,17 @@
 .Layer__table.Layer__ledger-account__entry-details__table th,
 .Layer__ledger-account__entry-details__table__total-row td {
   padding: var(--spacing-lm) var(--spacing-md);
+}
+
+.Layer__ledger-account__pagination {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-md);
+  padding-bottom: 0;
+
+  .Layer__pagination {
+    margin-bottom: 0;
+  }
 }
 
 @container (max-width: 1400px) {
