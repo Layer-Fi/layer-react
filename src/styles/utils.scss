@@ -26,6 +26,10 @@
   padding-top: 2px;
 }
 
+.Layer__border-top {
+  border-top: 1px solid var(--border-color);
+}
+
 @keyframes rotating {
   from {
     -ms-transform: rotate(0deg);

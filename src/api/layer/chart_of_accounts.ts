@@ -3,8 +3,8 @@ import {
   ChartOfAccounts,
   NewAccount,
   EditAccount,
-  LedgerAccountLine,
-  LedgerAccountEntry,
+  LedgerAccounts,
+  LedgerAccountsEntry,
 } from '../../types'
 import { get, post, put } from './authenticated_http'
 
@@ -21,12 +21,12 @@ export const updateAccount = put<{ data: Account }, EditAccount>(
     `/v1/businesses/${businessId}/ledger/accounts/${accountId}`,
 )
 
-export const getLedgerAccountsLines = get<{ data: LedgerAccountLine[] }>(
+export const getLedgerAccountsLines = get<{ data: LedgerAccounts }>(
   ({ businessId, accountId }) =>
     `/v1/businesses/${businessId}/ledger/accounts/${accountId}/lines`,
 )
 
-export const getLedgerAccountsEntry = get<{ data: LedgerAccountEntry }>(
+export const getLedgerAccountsEntry = get<{ data: LedgerAccountsEntry }>(
   ({ businessId, entryId }) =>
     `/v1/businesses/${businessId}/ledger/entries/${entryId}`,
 )

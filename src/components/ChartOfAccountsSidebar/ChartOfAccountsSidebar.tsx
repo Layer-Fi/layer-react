@@ -8,14 +8,15 @@ const calcPos = (parentRef?: RefObject<HTMLDivElement>) => {
     return 0
   }
 
-  console.log(
-    parentRef?.current?.offsetHeight,
-    parentRef?.current?.scrollHeight,
-    parentRef?.current?.scrollTop,
-    parentRef?.current?.offsetTop,
-    parentRef?.current?.getBoundingClientRect(),
-    parentRef?.current?.getClientRects(),
-  )
+  // @TODO
+  // console.log(
+  //   parentRef?.current?.offsetHeight,
+  //   parentRef?.current?.scrollHeight,
+  //   parentRef?.current?.scrollTop,
+  //   parentRef?.current?.offsetTop,
+  //   parentRef?.current?.getBoundingClientRect(),
+  //   parentRef?.current?.getClientRects(),
+  // )
 
   if (!parentRef?.current) {
     return 0
@@ -27,43 +28,47 @@ const calcPos = (parentRef?: RefObject<HTMLDivElement>) => {
       : 0
 
   const shift = parentRef?.current?.scrollTop - windShift
-  console.log(shift)
+  // console.log(shift)
   if (shift < 0) {
-    console.log('case 1')
+    // console.log('case 1')
     return 0
   }
   if (parentRef?.current?.getBoundingClientRect().bottom < 480) {
-    console.log('case 2')
+    // console.log('case 2')
     return parentRef?.current?.offsetHeight - 480
   }
-  console.log('case 3')
+  // console.log('case 3')
   return shift
 }
 
-export const ChartOfAccountsSidebar = ({ parentRef }: { parentRef?: RefObject<HTMLDivElement> }) => {
+export const ChartOfAccountsSidebar = ({
+  parentRef,
+}: {
+  parentRef?: RefObject<HTMLDivElement>
+}) => {
   const { form } = useContext(ChartOfAccountsContext)
   const [offset, setOffset] = useState(calcPos(parentRef))
 
-
   useEffect(() => {
-    console.log('effe')
     setOffset(calcPos(parentRef))
   }, [form])
 
-  return (
-    <div
-      className={classNames(
-        'Layer__chart-of-accounts__sidebar',
-        form ? 'open' : '',
-      )}
-      style={{
-        top: offset,
-        background: '#f2f2f2',
-      }}
-    >
-      <div className='Layer__chart-of-accounts__sidebar-content'>
-        <ChartOfAccountsForm />
-      </div>
-    </div>
-  )
+  return <ChartOfAccountsForm />
+
+  // return (
+  //   <div
+  //     className={classNames(
+  //       'Layer__chart-of-accounts__sidebar',
+  //       form ? 'open' : '',
+  //     )}
+  //     style={{
+  //       top: offset,
+  //       background: '#f2f2f2',
+  //     }}
+  //   >
+  //     <div className='Layer__chart-of-accounts__sidebar-content'>
+  //       <ChartOfAccountsForm />
+  //     </div>
+  //   </div>
+  // )
 }

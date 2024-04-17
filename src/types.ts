@@ -25,9 +25,13 @@ export {
   Account,
   NewAccount,
   EditAccount,
-  LedgerAccountLine,
-  LedgerAccountEntry,
 } from './types/chart_of_accounts'
+export {
+  LedgerAccounts,
+  LedgerAccountsLine,
+  LedgerAccountsAccount,
+  LedgerAccountsEntry,
+} from './types/ledger_accounts'
 export { SortDirection } from './types/general'
 
 // Only Date and string (ISO8601 formatted) make sense here

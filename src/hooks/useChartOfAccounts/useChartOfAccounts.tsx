@@ -80,8 +80,6 @@ type UseChartOfAccounts = () => {
     value: string | BaseSelectOption | undefined,
   ) => void
   submitForm: () => void
-  showARForAccountId?: string
-  setShowARForAccountId: (id?: string) => void
 }
 
 export const flattenAccounts = (accounts: Account[]): Account[] =>
@@ -96,9 +94,6 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
   const [form, setForm] = useState<ChartOfAccountsForm | undefined>()
   const [sendingForm, setSendingForm] = useState(false)
   const [apiError, setApiError] = useState<string | undefined>(undefined)
-  const [showARForAccountId, setShowARForAccountId] = useState<
-    string | undefined
-  >()
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     businessId && auth?.access_token && `chart-of-accounts-${businessId}`,
@@ -284,7 +279,5 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
     cancelForm,
     changeFormData,
     submitForm,
-    showARForAccountId,
-    setShowARForAccountId,
   }
 }

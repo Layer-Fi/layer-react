@@ -1,20 +1,27 @@
 .Layer__ledger-account__index {
-  position: fixed;
-  visibility: hidden;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
   background-color: var(--color-base-0);
-  transform: scale(0.5), translateY(-100);
-  opacity: 0.4;
-  transition: transform 200ms ease-out, opacity 300ms ease-out;
+  width: 100%;
+  // transform: scale(0.5), translateY(-100);
+  // opacity: 0.4;
+  transition:
+    transform 200ms ease-out,
+    opacity 300ms ease-out;
 
   &.open {
     visibility: visible;
-    transform: scale(1), translateY(0);
     opacity: 1;
+  }
+}
+
+.Layer__ledger-account__panel {
+  min-height: 800px;
+}
+
+.Layer__ledger-account__panel .Layer__panel__sidebar {
+  background-color: var(--color-base-50);
+
+  .Layer__ledger-account__entry-details .Layer__details-list {
+    background: var(--color-base-0);
   }
 }
 
@@ -48,6 +55,26 @@
 
 .Layer__ledger-account__balance-label {
   color: var(--color-base-600);
+}
+
+.Layer__ledger-account__entry-details__line-items {
+  padding: var(--spacing-md);
+}
+
+.Layer__ledger-account__entry-details__table td {
+  padding: var(--spacing-xs) var(--spacing-md);
+  font-size: 12px;
+  color: var(--color-base-600);
+}
+
+.Layer__ledger-account__entry-details__table__total-row td {
+  font-variation-settings: 'wght' var(--font-weight-bold);
+  color: var(--color-base-900);
+}
+
+.Layer__table.Layer__ledger-account__entry-details__table th,
+.Layer__ledger-account__entry-details__table__total-row td {
+  padding: var(--spacing-lm) var(--spacing-md);
 }
 
 @container (max-width: 1400px) {

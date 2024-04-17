@@ -8,48 +8,6 @@
   padding: var(--spacing-2xl);
 }
 
-.Layer__chart-of-accounts__main-panel {
-  padding-bottom: var(--spacing-lg);
-  flex: 1;
-}
-
-.Layer__chart-of-accounts__sidebar {
-  width: 480px;
-  max-width: 0;
-  // @TODO test expanding sidebar
-  // position: absolute;
-  // right: 0;
-  // top: 0;
-  // height: 100%;
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  right: 0;
-  overflow: hidden;
-  transition: max-width 250ms ease-out;
-  height: 480px;
-
-  .Layer__chart-of-accounts__sidebar-content {
-    position: absolute;
-    width: 480px;
-    height: 100%;
-    opacity: 0.2;
-    transition: opacity 250ms ease-out;
-    background: var(--color-base-0);
-    border-left: 1px solid var(--color-base-300);
-    box-shadow: 0px -1px 0px 0px var(--color-base-300) inset;
-  }
-
-  &.open {
-    max-width: 480px;
-
-    .Layer__chart-of-accounts__sidebar-content {
-      opacity: 1;
-    }
-  }
-}
-
 .Layer__chart-of-accounts__table {
   width: 100%;
   border-collapse: collapse;
@@ -294,8 +252,6 @@
 }
 
 .Layer__chart-of-accounts {
-  max-height: 100vh;
-
   .Layer__desktop--hidden {
     display: none;
   }
@@ -338,10 +294,6 @@
 }
 
 @container (max-width: 760px) {
-  .Layer__chart-of-accounts {
-    max-height: 100vh;
-  }
-
   .Layer__table-cell.Layer__coa__actions {
     width: 64px;
   }
@@ -367,28 +319,6 @@
     .Layer__chart-of-accounts__form-row__name_field {
       flex: 1;
       width: 100%;
-    }
-  }
-
-  .Layer__chart-of-accounts .Layer__chart-of-accounts__sidebar {
-    position: absolute;
-    width: 100%;
-    max-width: 100%;
-    height: 100%;
-    max-height: 100vh;
-    display: flex;
-    justify-content: center;
-    z-index: -1;
-    opacity: 0.3;
-
-    &.open {
-      background-color: var(--color-base-0);
-      z-index: 1;
-      opacity: 1;
-    }
-
-    .Layer__chart-of-accounts__sidebar-content {
-      border-width: 0;
     }
   }
 }

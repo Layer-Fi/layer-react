@@ -7,6 +7,7 @@ import { Account } from '../../types'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import {
   ChartOfAccountsContext,
+  LedgerAccountsContext,
   View,
 } from '../ChartOfAccounts/ChartOfAccounts'
 import { Text, TextWeight } from '../Typography'
@@ -50,9 +51,9 @@ export const ChartOfAccountsRow = ({
   acountsLength,
   view,
 }: ChartOfAccountsRowProps) => {
-  const { form, editAccount, setShowARForAccountId } = useContext(
-    ChartOfAccountsContext,
-  )
+  const { form, editAccount } = useContext(ChartOfAccountsContext)
+
+  const { setAccountId } = useContext(LedgerAccountsContext)
 
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const style = expanded
@@ -101,7 +102,7 @@ export const ChartOfAccountsRow = ({
           onClick={e => {
             e.preventDefault()
             e.stopPropagation()
-            setShowARForAccountId(account.id)
+            setAccountId(account.id)
           }}
         >
           <td className='Layer__table-cell Layer__coa__name'>
@@ -185,7 +186,7 @@ export const ChartOfAccountsRow = ({
           onClick={e => {
             e.preventDefault()
             e.stopPropagation()
-            setShowARForAccountId(account.id)
+            setAccountId(account.id)
           }}
         >
           <td className='Layer__table-cell' colSpan={5}>
