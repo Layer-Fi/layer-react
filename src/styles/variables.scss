@@ -4,16 +4,18 @@
   // 1. BASE VARIABLES:
   --color-black: #1a1a1a;
   --color-white: white;
-  --color-info-success: #29bc9b;
-  --color-info-warning: #f5a622;
 
-  --color-info-error-h: 0;
-  --color-info-error-s: 71%;
-  --color-info-error-l: 64%;
-  --color-info-error: hsl(
-    var(--color-info-error-h) var(--color-info-error-s)
-      var(--color-info-error-l)
-  );
+  --color-info-success: hsl(145, 45%, 42%);
+  --color-info-success-bg: hsl(145, 59%, 86%);
+  --color-info-success-fg: hsl(145, 63%, 29%);
+
+  --color-info-warning: hsl(43, 100%, 44%);
+  --color-info-warning-bg: hsl(43, 100%, 84%);
+  --color-info-warning-fg: hsl(43, 88%, 26%);
+
+  --color-info-error: hsl(0 76% 50%);
+  --color-info-error-bg: hsl(0 83% 86%);
+  --color-info-error-fg: hsl(0 88% 32%);
 
   --color-dark-h: 0;
   --color-dark-s: 0%;
@@ -44,12 +46,9 @@
 
   --max-component-width: 1408px;
 
-  --base-transparent-1: hsla(
-    var(--color-dark-h),
-    var(--color-dark-s),
-    var(--color-dark-l),
-    0.01
-  );
+  --base-transparent-1: hsla(220, 43%, 11%, 0.01);
+
+  --base-transparent-2: hsla(220, 43%, 11%, 0.02);
 
   --base-transparent-4: hsla(
     var(--color-dark-h),
@@ -154,8 +153,21 @@
   --btn-secondary-color: var(--color-black);
   --btn-secondary-bg-color: var(--color-white);
 
-  --badge-color: var(--color-dark);
+  --badge-color: var(--color-base-900);
   --badge-bg-color: var(--color-base-400);
+
+  --badge-color-success: var(--color-info-success);
+  --badge-fg-color-success: var(--color-info-success-fg);
+  --badge-bg-color-success: var(--color-info-success-bg);
+
+  --badge-color-warning: var(--color-info-warning);
+  --badge-fg-color-warning: var(--color-info-warning-fg);
+  --badge-bg-color-warning: var(--color-info-warning-bg);
+
+  --badge-color-error: var(--color-info-error);
+  --badge-fg-color-error: var(--color-info-error-fg);
+  --badge-bg-color-error: var(--color-info-error-bg);
+
   --badge-border-radius: var(--border-radius-sm);
 
   --table-bg: var(--color-white);
