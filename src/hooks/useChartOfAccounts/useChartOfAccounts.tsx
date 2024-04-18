@@ -165,7 +165,7 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
     }
 
     const data = {
-      name: form.data.name || 'Test name',
+      name: form.data.name ?? '',
       normality: form.data.subType?.value as Direction,
       parent_id: form.data.parent
         ? {
@@ -173,7 +173,7 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
             id: form.data.parent.value as string,
           }
         : undefined,
-      description: form.data.type?.value.toString() || 'Test description',
+      description: form.data.type?.value.toString() ?? '',
     }
 
     if (form.action === 'new') {
