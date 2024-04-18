@@ -4,7 +4,7 @@ import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccoun
 import DownloadCloud from '../../icons/DownloadCloud'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
-import { Button, ButtonVariant } from '../Button'
+import { BackButton, Button, ButtonVariant } from '../Button'
 import {
   ChartOfAccountsContext,
   LedgerAccountsContext,
@@ -79,9 +79,7 @@ export const LedgerAccount = ({
     >
       <div className={baseClassName}>
         <div className='Layer__ledger-account__header'>
-          <Button onClick={close} variant={ButtonVariant.secondary}>
-            Back
-          </Button>
+          <BackButton onClick={close} />
           <div className='Layer__ledger-account__title-container'>
             <Text
               weight={TextWeight.bold}
@@ -111,7 +109,7 @@ export const LedgerAccount = ({
             </Text>
           </div>
         </div>
-        <table className='Layer__table Layer__ledger-account-table'>
+        <table className='Layer__table Layer__table--hover-effect Layer__ledger-account-table'>
           <thead>
             <tr>
               <th className='Layer__table-header'>Date</th>

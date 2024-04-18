@@ -3,7 +3,7 @@ import X from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
 import { humanizeEnum } from '../../utils/format'
-import { Badge } from '../Badge'
+import { Badge, BadgeVariant } from '../Badge'
 import { IconButton } from '../Button'
 import { Card } from '../Card'
 import { LedgerAccountsContext } from '../ChartOfAccounts/ChartOfAccounts'
@@ -88,12 +88,16 @@ export const LedgerAccountEntryDetails = () => {
                     </td>
                     <td className='Layer__table-cell Layer__table-cell--amount'>
                       {item.direction === Direction.DEBIT && (
-                        <Badge>${centsToDollars(item.amount || 0)}</Badge>
+                        <Badge variant={BadgeVariant.WARNING}>
+                          ${centsToDollars(item.amount || 0)}
+                        </Badge>
                       )}
                     </td>
                     <td className='Layer__table-cell Layer__table-cell--amount'>
                       {item.direction === Direction.CREDIT && (
-                        <Badge>${centsToDollars(item.amount || 0)}</Badge>
+                        <Badge variant={BadgeVariant.SUCCESS}>
+                          ${centsToDollars(item.amount || 0)}
+                        </Badge>
                       )}
                     </td>
                   </tr>

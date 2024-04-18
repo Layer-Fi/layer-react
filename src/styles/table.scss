@@ -95,6 +95,11 @@
   bottom: 0;
 }
 
+.Layer__table--hover-effect .Layer__table-row:hover {
+  background-color: var(--color-base-50);
+  cursor: pointer;
+}
+
 .Layer__table-cell--amount {
   justify-content: flex-end;
   text-align: right;
