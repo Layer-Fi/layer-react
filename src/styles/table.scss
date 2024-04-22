@@ -46,7 +46,8 @@
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
-.Layer__table-cell--primary {
+.Layer__table-cell--primary,
+.Layer__table-cell--primary .Layer__table-cell-content {
   color: var(--color-base-800);
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
@@ -185,6 +186,15 @@
           opacity 50ms ease-in-out;
       }
     }
+  }
+}
+
+.Layer__table-row.Layer__table-row--with-show:not(.initial-load) {
+  opacity: 0.5;
+
+  &.show {
+    transition: opacity 50ms ease-out;
+    opacity: 1;
   }
 }
 

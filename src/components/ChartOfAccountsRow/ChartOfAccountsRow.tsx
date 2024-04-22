@@ -33,6 +33,13 @@ const EXPANDED_STYLE = {
   opacity: 1,
 }
 
+const EXPANDED_MOBILE_STYLE = {
+  height: 76,
+  paddingTop: 12,
+  paddingBottom: 12,
+  opacity: 1,
+}
+
 const COLLAPSED_STYLE = {
   height: 0,
   paddingTop: 0,
@@ -54,10 +61,12 @@ export const ChartOfAccountsRow = ({
 
   const { setAccountId } = useContext(LedgerAccountsContext)
 
+  const baseStyle = view === 'desktop' ? EXPANDED_STYLE : EXPANDED_MOBILE_STYLE
+
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const style = expanded
     ? {
-        ...EXPANDED_STYLE,
+        ...baseStyle,
         transitionDelay: `${15 * index}ms`,
       }
     : {
@@ -179,7 +188,7 @@ export const ChartOfAccountsRow = ({
         </tr>
       )}
 
-      {view === 'mobile' && (
+      {view === 'mobile' || view === 'tablet' ? (
         <tr
           className={mobileRowClass}
           onClick={e => {
@@ -190,11 +199,10 @@ export const ChartOfAccountsRow = ({
         >
           <td className='Layer__table-cell' colSpan={5}>
             <span
-              className='Layer__table-cell-content-indentation'
+              className='Layer__table-cell-content Layer__table-cell-content-indentation'
               style={{
                 paddingLeft: MOBILE_INDENTATION * depth + 16,
                 ...style,
-                height: 'auto',
               }}
             >
               {account.sub_accounts && account.sub_accounts.length > 0 && (
@@ -242,7 +250,7 @@ export const ChartOfAccountsRow = ({
             </span>
           </td>
         </tr>
-      )}
+      ) : null}
 
       {(account.sub_accounts || []).map((subAccount, idx) => (
         <ChartOfAccountsRow

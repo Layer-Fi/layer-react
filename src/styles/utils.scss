@@ -71,3 +71,27 @@
   -o-animation: rotating 2s linear infinite;
   animation: rotating 2s linear infinite;
 }
+
+@container (min-width: 1024px) and (max-width: 1400px) {
+  .Layer__hidden-lg {
+    display: none;
+  }
+}
+
+@container (min-width: 1024px) and (max-width: 1400px) {
+  .Layer__hidden-md {
+    display: none;
+  }
+}
+
+@container (min-width: 500px) and (max-width: 1024px) {
+  .Layer__hidden-sm {
+    display: none;
+  }
+}
+
+@container (max-width: 499px) {
+  .Layer__hidden-xs {
+    display: none;
+  }
+}

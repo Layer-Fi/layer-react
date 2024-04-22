@@ -4,7 +4,7 @@ import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
 import { humanizeEnum } from '../../utils/format'
 import { Badge, BadgeVariant } from '../Badge'
-import { IconButton } from '../Button'
+import { BackButton, IconButton } from '../Button'
 import { Card } from '../Card'
 import { LedgerAccountsContext } from '../ChartOfAccounts/ChartOfAccounts'
 import { DateTime } from '../DateTime'
@@ -30,10 +30,17 @@ export const LedgerAccountEntryDetails = () => {
 
   return (
     <div className='Layer__ledger-account__entry-details'>
+      <div className='Layer__ledger-account__entry-details__back-btn'>
+        <BackButton onClick={() => closeSelectedEntry()} />
+      </div>
       <DetailsList
         title='Transaction source'
         actions={
-          <IconButton icon={<X />} onClick={() => closeSelectedEntry()} />
+          <IconButton
+            icon={<X />}
+            onClick={() => closeSelectedEntry()}
+            className='Layer__hidden-sm Layer__hidden-xs'
+          />
         }
       >
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>

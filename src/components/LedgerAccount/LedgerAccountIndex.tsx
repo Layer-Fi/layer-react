@@ -1,9 +1,14 @@
-import React, { RefObject, useContext, useMemo, useState } from 'react'
-import { DATE_FORMAT } from '../../config/general'
+import React, {
+  RefObject,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
+import { useElementSize } from '../../hooks/useElementSize'
 import DownloadCloud from '../../icons/DownloadCloud'
 import { centsToDollars } from '../../models/Money'
-import { Direction } from '../../types'
 import { BackButton, Button, ButtonVariant } from '../Button'
 import {
   ChartOfAccountsContext,
@@ -16,8 +21,8 @@ import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
 import { Panel } from '../Panel'
 import { Text, TextWeight } from '../Typography'
+import { LedgerAccountRow } from './LedgerAccountRow'
 import classNames from 'classnames'
-import { parseISO, format as formatTime } from 'date-fns'
 
 export interface LedgerAccountProps {
   view: View
@@ -28,8 +33,10 @@ export interface LedgerAccountProps {
 export const LedgerAccount = ({
   containerRef,
   pageSize = 15,
+  view,
 }: LedgerAccountProps) => {
   const [currentPage, setCurrentPage] = useState(1)
+  const [initialLoad, setInitialLoad] = useState(true)
 
   const { data: accountData } = useContext(ChartOfAccountsContext)
 
@@ -41,10 +48,18 @@ export const LedgerAccount = ({
     accountId,
     setAccountId,
     selectedEntryId,
-    setSelectedEntryId,
     closeSelectedEntry,
     refetch,
   } = useContext(LedgerAccountsContext)
+
+  useEffect(() => {
+    if (!isLoading) {
+      const timeoutLoad = setTimeout(() => {
+        setInitialLoad(false)
+      }, 1000)
+      return () => clearTimeout(timeoutLoad)
+    }
+  }, [isLoading])
 
   const baseClassName = classNames(
     'Layer__ledger-account__index',
@@ -112,71 +127,39 @@ export const LedgerAccount = ({
         <table className='Layer__table Layer__table--hover-effect Layer__ledger-account-table'>
           <thead>
             <tr>
-              <th className='Layer__table-header'>Date</th>
-              <th className='Layer__table-header'>Journal id #</th>
-              <th className='Layer__table-header'>Source</th>
-              <th className='Layer__table-header Layer__table-cell--amount'>
-                Debit
-              </th>
-              <th className='Layer__table-header Layer__table-cell--amount'>
-                Credit
-              </th>
-              <th className='Layer__table-header Layer__table-cell--amount'>
-                Running balance
-              </th>
+              {view !== 'desktop' && <th />}
+              {view === 'desktop' && (
+                <>
+                  <th className='Layer__table-header'>Date</th>
+                  <th className='Layer__table-header'>Journal id #</th>
+                  <th className='Layer__table-header'>Source</th>
+                </>
+              )}
+              {view !== 'mobile' && (
+                <>
+                  <th className='Layer__table-header Layer__table-cell--amount'>
+                    Debit
+                  </th>
+                  <th className='Layer__table-header Layer__table-cell--amount'>
+                    Credit
+                  </th>
+                  <th className='Layer__table-header Layer__table-cell--amount'>
+                    Running balance
+                  </th>
+                </>
+              )}
             </tr>
           </thead>
           <tbody>
-            {data?.map(x => {
-              return (
-                <tr
-                  key={x.id}
-                  className={classNames(
-                    'Layer__table-row',
-                    x.entry_id === selectedEntryId &&
-                      'Layer__table-row--active',
-                  )}
-                  onClick={() => {
-                    if (selectedEntryId === x.entry_id) {
-                      closeSelectedEntry()
-                    } else {
-                      setSelectedEntryId(x.entry_id)
-                    }
-                  }}
-                >
-                  <td className='Layer__table-cell'>
-                    <span className='Layer__table-cell-content'>
-                      {x.date && formatTime(parseISO(x.date), DATE_FORMAT)}
-                    </span>
-                  </td>
-                  <td className='Layer__table-cell Layer__table-cell--primary'>
-                    <span className='Layer__table-cell-content'>#123</span>
-                  </td>
-                  <td className='Layer__table-cell'>
-                    <span className='Layer__table-cell-content'>
-                      Invoice (TBD null)
-                    </span>
-                  </td>
-                  <td className='Layer__table-cell Layer__table-cell--primary'>
-                    <span className='Layer__table-cell-content Layer__table-cell--amount'>
-                      {x.direction === Direction.DEBIT &&
-                        `$${centsToDollars(x?.amount || 0)}`}
-                    </span>
-                  </td>
-                  <td className='Layer__table-cell Layer__table-cell--primary'>
-                    <span className='Layer__table-cell-content Layer__table-cell--amount'>
-                      {x.direction === Direction.CREDIT &&
-                        `$${centsToDollars(x?.amount || 0)}`}
-                    </span>
-                  </td>
-                  <td className='Layer__table-cell Layer__table-cell--primary'>
-                    <span className='Layer__table-cell-content Layer__table-cell--amount'>
-                      $X,XXX.XX
-                    </span>
-                  </td>
-                </tr>
-              )
-            })}
+            {data?.map((x, index) => (
+              <LedgerAccountRow
+                key={x.id}
+                row={x}
+                index={index}
+                initialLoad={initialLoad}
+                view={view}
+              />
+            ))}
           </tbody>
         </table>
 

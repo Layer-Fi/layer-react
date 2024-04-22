@@ -23,7 +23,7 @@ export const Panel = ({
 
   useEffect(() => {
     if (parentRef?.current?.offsetHeight) {
-      setSidebarHeight(parentRef?.current?.offsetHeight)
+      setSidebarHeight(parentRef?.current?.offsetHeight - 1)
     }
   }, [parentRef?.current?.offsetHeight])
 
@@ -42,7 +42,9 @@ export const Panel = ({
       {sidebar && (
         <div
           className='Layer__panel__sidebar'
-          style={{ height: sidebarHeight > 0 ? sidebarHeight : undefined }}
+          style={{
+            maxHeight: sidebarHeight > 0 && sidebarIsOpen ? sidebarHeight : 0,
+          }}
         >
           <div className='Layer__panel__sidebar-content'>{sidebar}</div>
         </div>

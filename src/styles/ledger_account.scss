@@ -1,16 +1,6 @@
 .Layer__ledger-account__index {
   background-color: var(--color-base-0);
   width: 100%;
-  // transform: scale(0.5), translateY(-100);
-  // opacity: 0.4;
-  transition:
-    transform 200ms ease-out,
-    opacity 300ms ease-out;
-
-  &.open {
-    visibility: visible;
-    opacity: 1;
-  }
 }
 
 .Layer__ledger-account__panel {
@@ -19,6 +9,10 @@
 
 .Layer__ledger-account-table .Layer__table-row--active {
   background-color: var(--color-base-50);
+}
+
+.Layer__ledger-account-table .Layer__table-cell-content {
+  min-height: 52px;
 }
 
 .Layer__ledger-account__panel .Layer__panel__sidebar {
@@ -92,8 +86,108 @@
   }
 }
 
+.Layer__ledger-account__entry-details__back-btn {
+  display: none;
+  background: var(--color-base-0);
+  padding-top: var(--spacing-xl);
+  padding-left: var(--spacing-xl);
+  padding-right: var(--spacing-xl);
+}
+
+.Layer__ledger-account-table__tablet-main-col {
+  .Layer__table-cell-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .Layer__ledger-account-table__tablet-main-col__date {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+}
+
+.Layer__ledger_account-table__journal-id {
+  color: var(--color-base-800);
+}
+
+.Layer__ledger_account-table__balances-mobile {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: var(--spacing-xs);
+}
+
+.Layer__ledger_account-table__balance-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+
+  .Layer__ledger_account-table__balances-mobile__value {
+    font-variation-settings: 'wght' var(--font-weight-bold);
+    color: var(--color-base-900);
+  }
+}
+
 @container (max-width: 1400px) {
   .Layer__ledger-account__header {
     padding: var(--spacing-md);
+  }
+}
+
+@container (max-width: 1024px) {
+  .Layer__ledger-account__panel
+    .Layer__panel__sidebar
+    .Layer__panel__sidebar-content {
+    width: 100%;
+  }
+
+  .Layer__ledger-account__entry-details__back-btn {
+    display: flex;
+  }
+}
+
+@container (min-width: 500px) and (max-width: 1024px) {
+  .Layer__ledger-account__panel .Layer__details-list .Layer__component-header {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+  }
+}
+
+@container (max-width: 499px) {
+  .Layer__ledger-account__panel
+    .Layer__details-list
+    .Layer__details-list-item__label,
+  .Layer__ledger-account__panel
+    .Layer__details-list
+    .Layer__details-list-item__value {
+    padding: var(--spacing-xs);
+  }
+
+  .Layer__ledger-account__panel .Layer__details-list .Layer__details-list-item {
+    padding: 0 var(--spacing-xs);
+  }
+
+  .Layer__ledger-account__entry-details__line-items {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+
+    .Layer__card {
+      box-shadow: none;
+      border-radius: 0;
+    }
+  }
+
+  .Layer__ledger-account__panel .Layer__panel__sidebar {
+    background: var(--color-base-0);
+  }
+
+  .Layer__ledger-account__entry-details__back-btn {
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
   }
 }

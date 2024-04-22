@@ -28,7 +28,6 @@
   padding-left: var(--spacing-xl);
 }
 
-/** @TODO add media queries for better handling of columns widths */
 .Layer__table-cell.Layer__coa__name {
   width: calc(100% - 192px - 50%);
 }
@@ -301,11 +300,6 @@
   .Layer__chart-of-accounts__row---mobile {
     visibility: visible;
     display: table-row;
-
-    &.Layer__table-row--hidden {
-      visibility: hidden;
-      display: none;
-    }
   }
 
   .Layer__chart-of-accounts__row---desktop {

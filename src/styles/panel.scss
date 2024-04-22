@@ -58,3 +58,36 @@
     opacity: 1;
   }
 }
+
+@container (max-width: 1024px) {
+  .Layer__panel__sidebar {
+    position: absolute;
+    max-width: 100%;
+    width: 100%;
+    border-width: 0;
+    opacity: 0.2;
+    transform: translateY(-50px) scale(0.96);
+    transition:
+      transform 120ms ease-in-out,
+      opacity 120ms ease-in-out;
+  }
+
+  .Layer__panel.Layer__panel--open .Layer__panel__sidebar {
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    display: flex;
+    max-height: 100%;
+    justify-content: center;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .Layer__panel.Layer__panel--open {
+    .Layer__panel__content {
+      width: 100%;
+    }
+  }
+}

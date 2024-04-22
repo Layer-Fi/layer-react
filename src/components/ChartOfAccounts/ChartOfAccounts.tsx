@@ -6,9 +6,11 @@ import { ChartOfAccountsTable } from '../ChartOfAccountsTable'
 import { Container } from '../Container'
 import { LedgerAccount } from '../LedgerAccount'
 
-const MOBILE_BREAKPOINT = 760
+const TABLET_BREAKPOINT = 760
 
-export type View = 'mobile' | 'desktop'
+const MOBILE_BREAKPOINT = 500
+
+export type View = 'mobile' | 'tablet' | 'desktop'
 
 export interface ChartOfAccountsProps {
   asWidget?: boolean
@@ -71,8 +73,14 @@ const ChartOfAccountsContent = ({ asWidget }: ChartOfAccountsProps) => {
 
   const containerRef = useElementSize<HTMLDivElement>((_a, _b, { width }) => {
     if (width) {
-      if (width >= MOBILE_BREAKPOINT && view !== 'desktop') {
+      if (width >= TABLET_BREAKPOINT && view !== 'desktop') {
         setView('desktop')
+      } else if (
+        width <= TABLET_BREAKPOINT &&
+        width > MOBILE_BREAKPOINT &&
+        view !== 'tablet'
+      ) {
+        setView('tablet')
       } else if (width < MOBILE_BREAKPOINT && view !== 'mobile') {
         setView('mobile')
       }
