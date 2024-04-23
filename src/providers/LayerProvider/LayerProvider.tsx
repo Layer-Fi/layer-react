@@ -7,6 +7,7 @@ import {
   LayerContextActionName as Action,
 } from '../../types'
 import {
+  ColorConfig,
   ColorsPaletteOption,
   LayerThemeConfig,
 } from '../../types/layer_context'
@@ -155,6 +156,37 @@ export const LayerProvider = ({
       payload: { theme },
     })
 
+  const setLightColor = (color?: ColorConfig) => {
+    setTheme({
+      ...(state.theme ?? {}),
+      colors: {
+        ...(state.theme?.colors ?? {}),
+        light: color,
+      },
+    })
+  }
+
+  const setDarkColor = (color?: ColorConfig) => {
+    console.log(state.theme)
+    setTheme({
+      ...(state.theme ?? {}),
+      colors: {
+        ...(state.theme?.colors ?? {}),
+        dark: color,
+      },
+    })
+  }
+
+  const setColors = (colors?: {
+    dark?: ColorConfig
+    light?: ColorConfig
+  }) => {
+    setTheme({
+      ...(state.theme ?? {}),
+      colors
+    })
+  }
+
   const getColor = (shade: number): ColorsPaletteOption | undefined => {
     if (colors && shade in colors) {
       return colors[shade]
@@ -165,7 +197,9 @@ export const LayerProvider = ({
 
   return (
     <SWRConfig value={defaultSWRConfig}>
-      <LayerContext.Provider value={{ ...state, setTheme, getColor }}>
+      <LayerContext.Provider
+        value={{ ...state, setTheme, getColor, setLightColor, setDarkColor, setColors }}
+      >
         {children}
       </LayerContext.Provider>
     </SWRConfig>

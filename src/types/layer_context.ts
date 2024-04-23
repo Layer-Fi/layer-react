@@ -12,6 +12,9 @@ export type LayerContextValues = {
 
 export type LayerContextHelpers = {
   getColor: (shade: number) => ColorsPaletteOption | undefined
+  setLightColor: (color?: ColorConfig) => void
+  setDarkColor: (color?: ColorConfig) => void
+  setColors: (colors?: LayerThemeConfigColors) => void
 }
 
 export interface ColorHSLConfig {
@@ -52,11 +55,13 @@ export interface ColorsPaletteOption {
 
 export type ColorsPalette = Record<number, ColorsPaletteOption>
 
+export interface LayerThemeConfigColors  {
+  dark?: ColorConfig
+  light?: ColorConfig
+}
+
 export interface LayerThemeConfig {
-  colors?: {
-    dark?: ColorConfig
-    light?: ColorConfig
-  }
+  colors?: LayerThemeConfigColors
 }
 
 export enum LayerContextActionName {

@@ -22,4 +22,7 @@ export const LayerContext = createContext<
   colors: {},
   setTheme: () => undefined,
   getColor: _shade => undefined,
+  setLightColor: () => undefined,
+  setDarkColor: () => undefined,
+  setColors: () => undefined
 })
