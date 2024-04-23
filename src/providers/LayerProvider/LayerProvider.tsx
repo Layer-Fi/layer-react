@@ -167,7 +167,6 @@ export const LayerProvider = ({
   }
 
   const setDarkColor = (color?: ColorConfig) => {
-    console.log(state.theme)
     setTheme({
       ...(state.theme ?? {}),
       colors: {
