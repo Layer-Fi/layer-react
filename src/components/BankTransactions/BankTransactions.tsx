@@ -34,6 +34,7 @@ const ReviewCategories = [
 export interface BankTransactionsProps {
   asWidget?: boolean
   pageSize?: number
+  categorizedOnly?: boolean
 }
 
 const filterVisibility = (
@@ -56,8 +57,11 @@ const filterVisibility = (
 export const BankTransactions = ({
   asWidget = false,
   pageSize = 15,
+  categorizedOnly = false,
 }: BankTransactionsProps) => {
-  const [display, setDisplay] = useState<DisplayState>(DisplayState.review)
+  const [display, setDisplay] = useState<DisplayState>(
+    categorizedOnly ? DisplayState.categorized : DisplayState.review,
+  )
   const [currentPage, setCurrentPage] = useState(1)
   const [removedTxs, setRemovedTxs] = useState<string[]>([])
   const [initialLoad, setInitialLoad] = useState(true)
@@ -144,15 +148,17 @@ export const BankTransactions = ({
         <Heading className='Layer__bank-transactions__title'>
           Transactions
         </Heading>
-        <Toggle
-          name='bank-transaction-display'
-          options={[
-            { label: 'To Review', value: DisplayState.review },
-            { label: 'Categorized', value: DisplayState.categorized },
-          ]}
-          selected={display}
-          onChange={onCategorizationDisplayChange}
-        />
+        {!categorizedOnly && (
+          <Toggle
+            name='bank-transaction-display'
+            options={[
+              { label: 'To Review', value: DisplayState.review },
+              { label: 'Categorized', value: DisplayState.categorized },
+            ]}
+            selected={display}
+            onChange={onCategorizationDisplayChange}
+          />
+        )}
       </Header>
       {!listView && (
         <table
