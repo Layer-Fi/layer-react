@@ -18,7 +18,9 @@
   overflow: hidden;
   width: 480px;
   opacity: 0.05;
-  transition: max-width 250ms ease-out, opacity 350ms ease-out;
+  transition:
+    max-width 250ms ease-out,
+    opacity 350ms ease-out;
 
   &.open {
     max-width: 480px;
@@ -133,9 +135,11 @@
 }
 
 .Layer__profit-and-loss-row__label.Layer__profit-and-loss-row__label--display-children-true:hover,
-.Layer__profit-and-loss-row__label.Layer__profit-and-loss-row__label--display-children-true:hover + .Layer__profit-and-loss-row__value,
+.Layer__profit-and-loss-row__label.Layer__profit-and-loss-row__label--display-children-true:hover
+  + .Layer__profit-and-loss-row__value,
 .Layer__profit-and-loss-row__value.Layer__profit-and-loss-row__value--display-children-true:hover,
-.Layer__profit-and-loss-row__value.Layer__profit-and-loss-row__value--display-children-true:hover + .Layer__profit-and-loss-row__label {
+.Layer__profit-and-loss-row__value.Layer__profit-and-loss-row__value--display-children-true:hover
+  + .Layer__profit-and-loss-row__label {
   background: var(--color-base-50);
 }
 
@@ -170,16 +174,19 @@
   }
 }
 
-.Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value + .Layer__profit-and-loss-row__label,
-.Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value + .Layer__profit-and-loss-row__label + .Layer__profit-and-loss-row__value {
+.Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value
+  + .Layer__profit-and-loss-row__label,
+.Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value
+  + .Layer__profit-and-loss-row__label
+  + .Layer__profit-and-loss-row__value {
   border-top: 1px solid var(--color-base-300);
 }
 
 .Layer__profit-and-loss-row__label--variant-summation.Layer__profit-and-loss-row__label--depth-0,
-.Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value--depth-0  {
+.Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value--depth-0 {
   margin-bottom: var(--spacing-2xs);
   &:last-child,
-  &:nth-last-child(-n+2) {
+  &:nth-last-child(-n + 2) {
     margin-bottom: 0;
   }
 
@@ -277,13 +284,15 @@
   transition: x 0.35s ease-in-out;
 }
 
-
 /** ---- */
 .Layer__profit-and-loss__chart_with_summaries {
   display: flex;
   align-items: stretch;
   border-radius: var(--border-radius-sm);
-  box-shadow: 0px 0px 0px 1px rgba(16, 24, 40, 0.04), 0px 2px 4px 0px rgba(16, 24, 40, 0.06), 0px 4px 12px 0px rgba(16, 24, 40, 0.08);
+  box-shadow:
+    0px 0px 0px 1px rgba(16, 24, 40, 0.04),
+    0px 2px 4px 0px rgba(16, 24, 40, 0.06),
+    0px 4px 12px 0px rgba(16, 24, 40, 0.08);
   margin-left: var(--spacing-xl);
   margin-right: var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
@@ -418,7 +427,6 @@
   padding-left: 22px;
 }
 
-// @TODO - adjust responsive rules
 @container (min-width: 1024px) {
   .Layer__profit-and-loss-row__label--depth-0 {
     padding-left: var(--spacing-xl);
@@ -428,7 +436,8 @@
     padding-left: calc(var(--spacing-xl) + 6px);
   }
 
-  .Layer__component-container .Layer__profit-and-loss-row__label--depth-0.Layer__profit-and-loss-row__label--variant-summation {
+  .Layer__component-container
+    .Layer__profit-and-loss-row__label--depth-0.Layer__profit-and-loss-row__label--variant-summation {
     padding-left: calc(var(--spacing-xl) + 6px);
   }
 
@@ -447,7 +456,7 @@
 
 @container (max-width: 1023px) and (min-width: 760px) {
   .Layer__profit-and-loss-summaries,
-  .Layer__profit-and-loss-summaries.flex-col { 
+  .Layer__profit-and-loss-summaries.flex-col {
     flex-direction: row;
   }
 
@@ -461,7 +470,7 @@
 
 @container (max-width: 759px) and (min-width: 500px) {
   .Layer__profit-and-loss-summaries,
-  .Layer__profit-and-loss-summaries.flex-col { 
+  .Layer__profit-and-loss-summaries.flex-col {
     flex-direction: column;
   }
 
@@ -476,7 +485,7 @@
 
 @container (max-width: 500px) {
   .Layer__profit-and-loss-summaries,
-  .Layer__profit-and-loss-summaries.flex-col { 
+  .Layer__profit-and-loss-summaries.flex-col {
     flex-direction: row;
     max-width: 100%;
     overflow: auto;
@@ -508,7 +517,9 @@
   background: var(--color-base-100);
   color: var(--color-base-600);
   cursor: pointer;
-  transition: color 150ms ease-out, background-color 150ms ease-out;
+  transition:
+    color 150ms ease-out,
+    background-color 150ms ease-out;
 
   &:hover {
     background: var(--color-base-200);

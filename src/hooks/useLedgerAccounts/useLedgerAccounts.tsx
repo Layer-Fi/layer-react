@@ -1,290 +1,79 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
-import { Account, Direction, LedgerAccounts, NewAccount } from '../../types'
-import { BaseSelectOption } from '../../types/general'
-import { convertToStableName } from '../../utils/helpers'
+import { LedgerAccounts, LedgerAccountsEntry } from '../../types'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
-interface FormError {
-  field: string
-  message: string
-}
-
-const validate = (formData?: LedgerAccountsForm) => {
-  const errors: FormError[] = []
-
-  const nameError = validateName(formData)
-  if (nameError) {
-    errors.push(nameError)
-  }
-
-  return errors
-}
-
-const revalidateField = (fieldName: string, formData?: LedgerAccountsForm) => {
-  switch (fieldName) {
-    case 'name':
-      const nameError = validateName(formData)
-      if (nameError) {
-        return (formData?.errors || [])
-          .filter(x => x.field !== fieldName)
-          .concat([nameError])
-      }
-
-      return (formData?.errors || []).filter(x => x.field !== fieldName)
-    default:
-      return formData?.errors
-  }
-}
-
-const validateName = (formData?: LedgerAccountsForm) => {
-  if (!formData?.data.name?.trim()) {
-    return {
-      field: 'name',
-      message: 'Cannot be blank',
-    }
-  }
-
-  return
-}
-
-export interface LedgerAccountsForm {
-  action: 'new' | 'edit'
-  accountId?: string
-  data: {
-    parent?: BaseSelectOption
-    name?: string
-    type?: BaseSelectOption
-    subType?: BaseSelectOption
-    category?: BaseSelectOption
-  }
-  errors?: FormError[]
-}
-
 type UseLedgerAccounts = () => {
-  data: LedgerAccounts | undefined
+  data?: LedgerAccounts
+  entryData?: LedgerAccountsEntry
   isLoading?: boolean
+  isLoadingEntry?: boolean
   isValidating?: boolean
+  isValidatingEntry?: boolean
   error?: unknown
+  errorEntry?: unknown
   refetch: () => void
-  create: (newAccount: NewAccount) => void
-  form?: LedgerAccountsForm
-  sendingForm?: boolean
-  apiError?: string
-  addAccount: () => void
-  editAccount: (id: string) => void
-  cancelForm: () => void
-  changeFormData: (
-    name: string,
-    value: string | BaseSelectOption | undefined,
-  ) => void
-  submitForm: () => void
-  showARForAccountId?: string
-  setShowARForAccountId: (id?: string) => void
+  accountId?: string
+  setAccountId: (id?: string) => void
+  selectedEntryId?: string
+  setSelectedEntryId: (id?: string) => void
+  closeSelectedEntry: () => void
 }
-
-export const flattenAccounts = (accounts: Account[]): Account[] =>
-  accounts
-    .flatMap(a => [a, flattenAccounts(a.sub_accounts || [])])
-    .flat()
-    .filter(id => id)
 
 export const useLedgerAccounts: UseLedgerAccounts = () => {
   const { auth, businessId, apiUrl } = useLayerContext()
 
-  const [form, setForm] = useState<LedgerAccountsForm | undefined>()
-  const [sendingForm, setSendingForm] = useState(false)
-  const [apiError, setApiError] = useState<string | undefined>(undefined)
-  const [showARForAccountId, setShowARForAccountId] = useState<
-    string | undefined
-  >()
+  const [accountId, setAccountId] = useState<string | undefined>()
+  const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
-    businessId && auth?.access_token && `ledger-accounts-${businessId}`,
-    Layer.getLedgerAccounts(apiUrl, auth?.access_token, {
-      params: { businessId },
+    businessId &&
+      accountId &&
+      auth?.access_token &&
+      `ledger-accounts-lines-${businessId}-${accountId}`,
+    Layer.getLedgerAccountsLines(apiUrl, auth?.access_token, {
+      params: { businessId, accountId },
     }),
   )
 
-  const create = async (newAccount: NewAccount) => {
-    setSendingForm(true)
-    setApiError(undefined)
-
-    try {
-      await Layer.createAccount(apiUrl, auth?.access_token, {
-        params: { businessId },
-        body: newAccount,
-      })
-      await refetch()
-      setForm(undefined)
-    } catch (_err) {
-      setApiError('Submit failed. Please, check your connection and try again.')
-    } finally {
-      setSendingForm(false)
-    }
-  }
-
-  const update = async (accountData: NewAccount, accountId: string) => {
-    setSendingForm(true)
-    setApiError(undefined)
-
-    const stable_name = convertToStableName(accountData.name)
-
-    /** @TODO some fields will be deprecated soon */
-    const newAccountData = {
-      ...accountData,
-      stable_name: stable_name,
-      pnl_category: 'INCOME', //this field will be deprecated soon, but is still required
-      always_show_in_pnl: false, //this field will be deprecated soon, but is still required
-    }
-
-    try {
-      await Layer.updateAccount(apiUrl, auth?.access_token, {
-        params: { businessId, accountId },
-        body: newAccountData,
-      })
-      await refetch()
-      setForm(undefined)
-    } catch (_err) {
-      setApiError('Submit failed. Please, check your connection and try again.')
-    } finally {
-      setSendingForm(false)
-    }
-  }
-
-  const submitForm = () => {
-    if (!form || !form.action) {
-      return
-    }
-
-    const errors = validate(form)
-
-    if (errors.length > 0) {
-      setForm({
-        ...form,
-        errors,
-      })
-
-      return
-    }
-
-    const data = {
-      name: form.data.name || 'Test name',
-      normality: form.data.subType?.value as Direction,
-      parent_id: form.data.parent
-        ? {
-            type: 'AccountId' as 'AccountId',
-            id: form.data.parent.value as string,
-          }
-        : undefined,
-      description: form.data.type?.value.toString() || 'Test description',
-    }
-
-    if (form.action === 'new') {
-      create(data)
-      return
-    }
-
-    if (form.action === 'edit' && form.accountId) {
-      update(data, form.accountId)
-      return
-    }
-  }
-
-  const addAccount = () =>
-    setForm({
-      action: 'new',
-      accountId: undefined,
-      data: {
-        parent: undefined,
-        name: undefined,
-        type: {
-          value: 'assets',
-          label: 'Assets',
-        },
-        subType: undefined,
-        category: undefined,
-      },
-    })
-
-  const editAccount = (id: string) => {
-    const allAccounts = flattenAccounts(data?.data?.accounts || [])
-    const found = allAccounts?.find(x => x.id === id)
-
-    if (!found) {
-      return
-    }
-
-    const parent = allAccounts.find(
-      x => x.sub_accounts?.find(el => el.id === found.id),
-    )
-
-    setForm({
-      action: 'edit',
-      accountId: id,
-      data: {
-        parent: parent
-          ? {
-              value: parent.id,
-              label: parent.name,
-            }
-          : undefined,
-        name: found.name,
-        type: {
-          value: 'assets',
-          label: 'Assets',
-        },
-        subType: undefined,
-        category: undefined,
-      },
-    })
-  }
-
-  const cancelForm = () => setForm(undefined)
-
-  const changeFormData = (
-    fieldName: string,
-    value: string | BaseSelectOption | undefined,
-  ) => {
-    if (!form) {
-      return
-    }
-
-    const newFormData = {
-      ...form,
-      data: {
-        ...form.data,
-        [fieldName]: value,
-      },
-    }
-
-    const errors = revalidateField(fieldName, newFormData)
-
-    setForm({
-      ...newFormData,
-      errors,
-    })
-  }
+  const {
+    data: entryData,
+    mutate: mutateEntryData,
+    isLoading: isLoadingEntry,
+    isValidating: isValdiatingEntry,
+    error: errorEntry,
+  } = useSWR(
+    businessId &&
+      selectedEntryId &&
+      auth?.access_token &&
+      `ledger-accounts-entry-${businessId}-${selectedEntryId}}`,
+    Layer.getLedgerAccountsEntry(apiUrl, auth?.access_token, {
+      params: { businessId, entryId: selectedEntryId },
+    }),
+  )
 
   const refetch = () => mutate()
 
+  const closeSelectedEntry = () => {
+    setSelectedEntryId(undefined)
+    mutateEntryData()
+  }
+
   return {
     data: data?.data,
+    entryData: entryData?.data,
     isLoading,
+    isLoadingEntry,
     isValidating,
+    isValdiatingEntry,
     error,
+    errorEntry,
     refetch,
-    create,
-    form,
-    sendingForm,
-    apiError,
-    addAccount,
-    editAccount,
-    cancelForm,
-    changeFormData,
-    submitForm,
-    showARForAccountId,
-    setShowARForAccountId,
+    accountId,
+    setAccountId,
+    selectedEntryId,
+    setSelectedEntryId,
+    closeSelectedEntry,
   }
 }

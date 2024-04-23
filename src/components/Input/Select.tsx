@@ -15,6 +15,7 @@ export interface SelectProps<T> {
   value?: T
   onChange: (selected: T) => void
   disabled?: boolean
+  placeholder?: string
 }
 
 const DropdownIndicator:
@@ -36,12 +37,14 @@ export const Select = <T,>({
   value,
   onChange,
   disabled,
+  placeholder,
 }: SelectProps<T>) => {
   return (
     <ReactSelect<T>
       name={name}
       className={`Layer__select ${className ?? ''}`}
       classNamePrefix={classNamePrefix}
+      placeholder={placeholder ?? 'Select...'}
       options={options}
       value={value}
       onChange={newValue => newValue && onChange(newValue)}

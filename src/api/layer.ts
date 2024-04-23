@@ -8,10 +8,12 @@ import {
 import { getCategories } from './layer/categories'
 import { getLinkedAccounts } from './layer/linked_accounts'
 import {
-  getLedgerAccounts,
+  getChartOfAccounts,
   createAccount,
   updateAccount,
-} from './layer/ledger_accounts'
+  getLedgerAccountsLines,
+  getLedgerAccountsEntry,
+} from './layer/chart_of_accounts'
 import { getProfitAndLoss } from './layer/profit_and_loss'
 
 export const Layer = {
@@ -23,7 +25,9 @@ export const Layer = {
   getBalanceSheet,
   getBankTransactions,
   getCategories,
-  getLedgerAccounts,
+  getChartOfAccounts,
+  getLedgerAccountsLines,
+  getLedgerAccountsEntry,
   getProfitAndLoss,
   getLinkedAccounts,
 }

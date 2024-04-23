@@ -46,6 +46,12 @@
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
+.Layer__table-cell--primary,
+.Layer__table-cell--primary .Layer__table-cell-content {
+  color: var(--color-base-800);
+  font-variation-settings: 'wght' var(--font-weight-bold);
+}
+
 .Layer__table-cell {
   font-size: var(--text-md);
   text-align: left;
@@ -74,6 +80,7 @@
   height: 100%;
   display: flex;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .Layer__table-row--active
@@ -87,6 +94,11 @@
   left: 0;
   top: 0;
   bottom: 0;
+}
+
+.Layer__table--hover-effect .Layer__table-row:hover {
+  background-color: var(--color-base-50);
+  cursor: pointer;
 }
 
 .Layer__table-cell--amount {
@@ -174,6 +186,15 @@
           opacity 50ms ease-in-out;
       }
     }
+  }
+}
+
+.Layer__table-row.Layer__table-row--with-show:not(.initial-load) {
+  opacity: 0.5;
+
+  &.show {
+    transition: opacity 50ms ease-out;
+    opacity: 1;
   }
 }
 

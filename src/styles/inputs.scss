@@ -251,7 +251,7 @@
     'cv08' on,
     'ss03' on;
   line-height: 140%;
-  width: calc(100% + 200px);
+  width: 100%;
 
   & .Layer__select__control {
     border-width: 0px;
@@ -489,7 +489,9 @@
   align-items: center;
   text-align: center;
   padding: 0 var(--spacing-xs);
-  transition: opacity 0.7s ease-in-out, transform 0.4s ease-in-out;
+  transition:
+    opacity 0.7s ease-in-out,
+    transform 0.4s ease-in-out;
   width: 33%;
   position: relative;
   padding-left: 20px;

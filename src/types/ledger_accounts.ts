@@ -1,58 +1,51 @@
-import { Direction } from './bank_transactions'
-import { Category } from './categories'
+import { BankTransaction, Direction } from './bank_transactions'
 
-export interface LedgerAccounts {
-  type: string
-  accounts: Account[]
-  entries?: any[]
-}
+export type LedgerAccounts = LedgerAccountsLine[]
 
-export interface AccountEntry {
-  account: Account
-  amount?: number
-  createdAt?: string
-  direction: Direction
-  entry_at?: string
-  entry_id?: string
-  id?: string
-}
-
-export interface Account {
+export interface LedgerAccountsEntry {
+  agent?: string
+  business_id: string
+  date: string
+  entry_at: string
+  entry_type: string // @TODO - into enum?
   id: string
-  number: number
-  pnlCategory?: Category
-  headerForPnlCategory?: Category
-  name: string
-  accountStableName?: string
-  description?: string
-  scheduleCLine?: string
-  scheduleCLineDescription?: string
-  sub_accounts?: Account[]
-  hidePnl: boolean
-  showInPnlIfEmpty: boolean
-  normality: Direction
-  balance: number
-  selfOnlyBalance: number
-  entries?: AccountEntry[]
+  invoice?: Record<string, string> // @TODO - fix after having API ready
+  ledger_id: string
+  line_items: LedgerAccountLineItem[]
+  manual_entry?: boolean // @TODO - is it correct
+  reversal_id?: string
+  reversal_of_id?: string
+  type: string
+  transaction?: BankTransaction
 }
 
-export type NewAccount = {
-  name: string
-  normality: Direction
-  parent_id?: {
-    type: 'AccountId'
-    id: string
-  }
-  description: string
+export interface LedgerAccountsLine {
+  type: string
+  id: string
+  entry_id: string
+  account: LedgerAccountsAccount
+  amount: number
+  direction: Direction
+  date: string
+  transaction?: BankTransaction
+  invoice: string | null
 }
 
-export type EditAccount = {
+export interface LedgerAccountsAccount {
+  always_show_in_pnl?: boolean
+  id: string
   name: string
+  normality: string // @TODO - enum?
+  pnl_category?: string
   stable_name: string
-  normality: Direction
-  parent_id?: {
-    type: 'AccountId'
-    id: string
-  }
-  description: string
+}
+
+export interface LedgerAccountLineItem {
+  account?: LedgerAccountsAccount
+  amount: number
+  createdAt: string
+  direction: Direction
+  entry_at: string
+  entry_id: string
+  id: string
 }

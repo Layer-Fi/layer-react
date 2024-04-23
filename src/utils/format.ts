@@ -53,3 +53,10 @@ export const formatPercent = (
     ...options,
   })
 }
+
+/**
+ * Convert Enum-like (upper snakecase) text into human friendly format.
+ */
+export const humanizeEnum = (text: string) => {
+  return capitalizeFirstLetter(text.replace(/_/gi, ' ').toLowerCase())
+}

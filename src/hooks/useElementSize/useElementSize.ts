@@ -4,7 +4,12 @@ export const useElementSize = <T extends HTMLElement>(
   callback: (
     target: T,
     entry: ResizeObserverEntry,
-    size: { width: number; height: number },
+    size: {
+      width: number
+      height: number
+      clientWidth: number
+      clientHeight: number
+    },
   ) => void,
 ) => {
   const ref = useRef<T>(null)
@@ -20,6 +25,8 @@ export const useElementSize = <T extends HTMLElement>(
       callback(element, entries[0], {
         width: element.offsetWidth,
         height: element.offsetHeight,
+        clientWidth: element.clientWidth,
+        clientHeight: element.clientHeight,
       })
     })
 

@@ -21,10 +21,16 @@ export {
   CategoryUpdate,
 } from './types/categories'
 export {
-  LedgerAccounts,
+  ChartOfAccounts,
   Account,
   NewAccount,
   EditAccount,
+} from './types/chart_of_accounts'
+export {
+  LedgerAccounts,
+  LedgerAccountsLine,
+  LedgerAccountsAccount,
+  LedgerAccountsEntry,
 } from './types/ledger_accounts'
 export { SortDirection } from './types/general'
 
