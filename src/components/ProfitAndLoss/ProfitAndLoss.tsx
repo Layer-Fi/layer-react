@@ -38,13 +38,21 @@ type Props = PropsWithChildren & {
     values: string[]
   }
   reportingBasis?: ReportingBasis
+  asContainer?: boolean
 }
 
-const ProfitAndLoss = ({ children, tagFilter, reportingBasis }: Props) => {
+const ProfitAndLoss = ({
+  children,
+  tagFilter,
+  reportingBasis,
+  asContainer = true,
+}: Props) => {
   const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
   return (
     <PNLContext.Provider value={contextData}>
-      <Container name='profit-and-loss'>{children}</Container>
+      <Container name='profit-and-loss' asContainer={asContainer}>
+        {children}
+      </Container>
     </PNLContext.Provider>
   )
 }
