@@ -23,7 +23,7 @@ type ChartOfAccountsRowProps = {
   view?: View
 }
 
-const INDENTATION = 12
+const INDENTATION = 24
 const MOBILE_INDENTATION = 12
 
 const EXPANDED_STYLE = {

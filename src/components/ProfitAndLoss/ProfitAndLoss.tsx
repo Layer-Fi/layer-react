@@ -1,6 +1,7 @@
 import React, { PropsWithChildren, createContext } from 'react'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 import { ReportingBasis } from '../../types'
+import { Container } from '../Container'
 import { ProfitAndLossChart } from '../ProfitAndLossChart'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { ProfitAndLossSummaries } from '../ProfitAndLossSummaries'
@@ -43,7 +44,7 @@ const ProfitAndLoss = ({ children, tagFilter, reportingBasis }: Props) => {
   const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
   return (
     <PNLContext.Provider value={contextData}>
-      <div className='Layer__component Layer__profit-and-loss'>{children}</div>
+      <Container name='profit-and-loss'>{children}</Container>
     </PNLContext.Provider>
   )
 }
