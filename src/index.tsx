@@ -7,3 +7,8 @@ export { ProfitAndLossView } from './components/ProfitAndLossView'
 export { ChartOfAccounts } from './components/ChartOfAccounts'
 export { LayerProvider } from './providers/LayerProvider'
 export { useLayerContext } from './hooks/useLayerContext'
+
+// Views:
+export { AccountingOverview } from './views/AccountingOverview'
+export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts'
+export { Reports } from './views/Reports'

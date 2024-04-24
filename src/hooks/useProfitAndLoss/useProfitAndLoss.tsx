@@ -43,8 +43,10 @@ export type ProfitAndLossFilters = Record<
 
 type UseProfitAndLoss = (props?: Props) => {
   data: ProfitAndLoss | undefined
-  filteredData: LineBaseItem[]
-  filteredTotal?: number
+  filteredDataRevenue: LineBaseItem[]
+  filteredTotalRevenue?: number
+  filteredDataExpenses: LineBaseItem[]
+  filteredTotalExpenses?: number
   isLoading: boolean
   isValidating: boolean
   error: unknown
@@ -110,20 +112,16 @@ export const useProfitAndLoss: UseProfitAndLoss = (
   )
   const { data, error } = rawData || {}
 
-  const { filteredData, filteredTotal } = useMemo(() => {
+  const { filteredDataRevenue, filteredTotalRevenue } = useMemo(() => {
     if (!data) {
-      return { filteredData: [], filteredTotal: undefined }
+      return { filteredDataRevenue: [], filteredTotalRevenue: undefined }
     }
-    const items =
-      sidebarScope === 'revenue'
-        ? collectRevenueItems(data)
-        : collectExpensesItems(data)
+    const items = collectRevenueItems(data)
     const filtered = items.map(x => {
       if (
-        sidebarScope &&
-        filters[sidebarScope]?.types &&
-        filters[sidebarScope]!.types!.length > 0 &&
-        !filters[sidebarScope]?.types?.includes(x.type)
+        filters['revenue']?.types &&
+        filters['revenue']!.types!.length > 0 &&
+        !filters['revenue']?.types?.includes(x.type)
       ) {
         return {
           ...x,
@@ -134,21 +132,21 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       return x
     })
     const sorted = filtered.sort((a, b) => {
-      switch (filters[sidebarScope ?? 'expenses']?.sortBy) {
+      switch (filters['revenue']?.sortBy) {
         case 'category':
-          if (filters[sidebarScope ?? 'expenses']?.sortDirection === 'asc') {
+          if (filters['revenue']?.sortDirection === 'asc') {
             return a.display_name.localeCompare(b.display_name)
           }
           return b.display_name.localeCompare(a.display_name)
 
         case 'type':
-          if (filters[sidebarScope ?? 'expenses']?.sortDirection === 'asc') {
+          if (filters['revenue']?.sortDirection === 'asc') {
             return a.type.localeCompare(b.type)
           }
           return b.type.localeCompare(a.type)
 
         default:
-          if (filters[sidebarScope ?? 'expenses']?.sortDirection === 'asc') {
+          if (filters['revenue']?.sortDirection === 'asc') {
             return a.value - b.value
           }
           return b.value - a.value
@@ -159,7 +157,55 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       .reduce((x, { value }) => x + value, 0)
     const withShare = applyShare(sorted, total)
 
-    return { filteredData: withShare, filteredTotal: total }
+    return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
+  }, [data, startDate, filters, sidebarScope])
+
+  const { filteredDataExpenses, filteredTotalExpenses } = useMemo(() => {
+    if (!data) {
+      return { filteredDataExpenses: [], filteredTotalExpenses: undefined }
+    }
+    const items = collectExpensesItems(data)
+    const filtered = items.map(x => {
+      if (
+        filters['expenses']?.types &&
+        filters['expenses']!.types!.length > 0 &&
+        !filters['expenses']?.types?.includes(x.type)
+      ) {
+        return {
+          ...x,
+          hidden: true,
+        }
+      }
+
+      return x
+    })
+    const sorted = filtered.sort((a, b) => {
+      switch (filters['expenses']?.sortBy) {
+        case 'category':
+          if (filters['expenses']?.sortDirection === 'asc') {
+            return a.display_name.localeCompare(b.display_name)
+          }
+          return b.display_name.localeCompare(a.display_name)
+
+        case 'type':
+          if (filters['expenses']?.sortDirection === 'asc') {
+            return a.type.localeCompare(b.type)
+          }
+          return b.type.localeCompare(a.type)
+
+        default:
+          if (filters['expenses']?.sortDirection === 'asc') {
+            return a.value - b.value
+          }
+          return b.value - a.value
+      }
+    })
+    const total = sorted
+      .filter(x => !x.hidden)
+      .reduce((x, { value }) => x + value, 0)
+    const withShare = applyShare(sorted, total)
+
+    return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
   }, [data, startDate, filters, sidebarScope])
 
   const changeDateRange = ({
@@ -200,8 +246,10 @@ export const useProfitAndLoss: UseProfitAndLoss = (
 
   return {
     data,
-    filteredData,
-    filteredTotal,
+    filteredDataRevenue,
+    filteredTotalRevenue,
+    filteredDataExpenses,
+    filteredTotalExpenses,
     isLoading,
     isValidating,
     error: error || rawError,

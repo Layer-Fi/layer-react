@@ -4,6 +4,7 @@ import { ReportingBasis } from '../../types'
 import { Container } from '../Container'
 import { ProfitAndLossChart } from '../ProfitAndLossChart'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
+import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummaries } from '../ProfitAndLossSummaries'
 import { ProfitAndLossTable } from '../ProfitAndLossTable'
 import { endOfMonth, startOfMonth } from 'date-fns'
@@ -11,8 +12,10 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 type PNLContextType = ReturnType<typeof useProfitAndLoss>
 const PNLContext = createContext<PNLContextType>({
   data: undefined,
-  filteredData: [],
-  filteredTotal: undefined,
+  filteredDataRevenue: [],
+  filteredTotalRevenue: undefined,
+  filteredDataExpenses: [],
+  filteredTotalExpenses: undefined,
   isLoading: true,
   isValidating: false,
   error: undefined,
@@ -38,13 +41,23 @@ type Props = PropsWithChildren & {
     values: string[]
   }
   reportingBasis?: ReportingBasis
+  asContainer?: boolean
 }
 
-const ProfitAndLoss = ({ children, tagFilter, reportingBasis }: Props) => {
+const ProfitAndLoss = ({
+  children,
+  tagFilter,
+  reportingBasis,
+  asContainer = true,
+}: Props) => {
   const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
   return (
     <PNLContext.Provider value={contextData}>
-      <Container name='profit-and-loss'>{children}</Container>
+      {asContainer ? (
+        <Container name='profit-and-loss'>{children}</Container>
+      ) : (
+        children
+      )}
     </PNLContext.Provider>
   )
 }
@@ -54,4 +67,5 @@ ProfitAndLoss.Context = PNLContext
 ProfitAndLoss.DatePicker = ProfitAndLossDatePicker
 ProfitAndLoss.Summaries = ProfitAndLossSummaries
 ProfitAndLoss.Table = ProfitAndLossTable
+ProfitAndLoss.DetailedCharts = ProfitAndLossDetailedCharts
 export { ProfitAndLoss }

@@ -4,12 +4,14 @@ import { Loader } from '../Loader'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { ProfitAndLossRow } from '../ProfitAndLossRow'
 import emptyPNL from './empty_profit_and_loss_report'
+import classNames from 'classnames'
 
 type Props = {
   lockExpanded?: boolean
+  asContainer?: boolean
 }
 
-export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
+export const ProfitAndLossTable = ({ lockExpanded, asContainer }: Props) => {
   const {
     data: actualData,
     isLoading,
@@ -19,7 +21,12 @@ export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
 
   if (isLoading || actualData === undefined) {
     return (
-      <div className='Layer__profit-and-loss-table__loader-container'>
+      <div
+        className={classNames(
+          'Layer__profit-and-loss-table__loader-container',
+          asContainer && 'Layer__component-container',
+        )}
+      >
         <Loader />
       </div>
     )
@@ -27,7 +34,12 @@ export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
 
   return (
     <>
-      <div className='Layer__profit-and-loss-table Layer__profit-and-loss-table--main'>
+      <div
+        className={classNames(
+          'Layer__profit-and-loss-table Layer__profit-and-loss-table--main',
+          asContainer && 'Layer__component-container',
+        )}
+      >
         <ProfitAndLossRow
           lineItem={data.income}
           direction={Direction.CREDIT}

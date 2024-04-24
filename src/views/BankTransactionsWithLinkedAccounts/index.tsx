@@ -1,0 +1,1 @@
+export { BankTransactionsWithLinkedAccounts } from './BankTransactionsWithLinkedAccounts'

@@ -11,7 +11,7 @@
     width: 32px;
     height: 32px;
     min-height: 32px;
-    padding: 0
+    padding: 0;
   }
 }
 
@@ -66,7 +66,8 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
   .recharts-responsive-container {
     box-shadow: none;
 
-    path:focus, g:focus {
+    path:focus,
+    g:focus {
       outline: none;
     }
   }
@@ -96,7 +97,11 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
     font-family: var(--font-family);
     font-variation-settings: 'wght' var(--font-weight-normal);
     font-variant-numeric: lining-nums proportional-nums;
-    font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
+    font-feature-settings:
+      'cv10' on,
+      'cv05' on,
+      'cv08' on,
+      'ss03' on;
     display: inline-flex;
 
     .Layer__select__control {
@@ -104,9 +109,12 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       font-family: var(--font-family);
       font-variation-settings: 'wght' var(--font-weight-normal);
       font-variant-numeric: lining-nums proportional-nums;
-      font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
+      font-feature-settings:
+        'cv10' on,
+        'cv05' on,
+        'cv08' on,
+        'ss03' on;
       box-shadow: none;
-
     }
 
     .Layer__select__placeholder {
@@ -114,7 +122,11 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       font-family: var(--font-family);
       font-variation-settings: 'wght' var(--font-weight-normal);
       font-variant-numeric: lining-nums proportional-nums;
-      font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
+      font-feature-settings:
+        'cv10' on,
+        'cv05' on,
+        'cv08' on,
+        'ss03' on;
     }
 
     .Layer__select__indicator-separator {
@@ -132,8 +144,14 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      
-      &.Layer__select__option--is-focused , &.Layer__select__option--is-selected, &:hover, &:focus, &:active, &:focus-visible, &:focus-within {
+
+      &.Layer__select__option--is-focused,
+      &.Layer__select__option--is-selected,
+      &:hover,
+      &:focus,
+      &:active,
+      &:focus-visible,
+      &:focus-within {
         color: var(--text-color-primary);
         background: var(--color-base-100);
       }
@@ -148,7 +166,8 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       width: 100%;
       border-collapse: collapse;
 
-      th, td {
+      th,
+      td {
         text-align: left;
         font-size: 12px;
         padding: var(--spacing-2xs) var(--spacing-xs);
@@ -196,6 +215,16 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       }
     }
   }
+}
+
+.Layer__profit-and-loss .Layer__panel__sidebar .Layer__panel__sidebar-content {
+  width: 100%;
+}
+
+.Layer__profit-and-loss
+  .Layer__panel__sidebar
+  .Layer__profit-and-loss-detailed-charts {
+  width: 100%;
 }
 
 .Layer__profit-and-loss-detailed-table__row {

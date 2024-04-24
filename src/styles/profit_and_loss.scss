@@ -1,55 +1,52 @@
-.Layer__profit-and-loss {
-  background-color: white;
-}
-
 .Layer__component-container .Layer__profit-and-loss {
   display: flex;
   align-items: stretch;
+  background-color: white;
 }
 
 .Layer__profit-and-loss__main-panel {
   flex: 1;
 }
 
-.Layer__profit-and-loss__side-panel {
-  box-sizing: border-box;
-  border-left: 1px solid var(--color-base-300);
-  max-width: 0;
-  overflow: hidden;
-  width: 480px;
-  opacity: 0.05;
-  transition:
-    max-width 250ms ease-out,
-    opacity 350ms ease-out;
+// .Layer__profit-and-loss__side-panel {
+//   box-sizing: border-box;
+//   border-left: 1px solid var(--color-base-300);
+//   max-width: 0;
+//   overflow: hidden;
+//   width: 480px;
+//   opacity: 0.05;
+//   transition:
+//     max-width 250ms ease-out,
+//     opacity 350ms ease-out;
 
-  &.open {
-    max-width: 480px;
-    opacity: 1;
-  }
-}
+//   &.open {
+//     max-width: 480px;
+//     opacity: 1;
+//   }
+// }
 
-@container (max-width: 1023px) {
-  .Layer__profit-and-loss__side-panel {
-    transition: transform 200ms ease-out;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    transform: translateX(-100%);
-    z-index: -1;
-    max-width: 100%;
-    width: 100%;
-    height: 100%;
+// @container (max-width: 1023px) {
+//   .Layer__profit-and-loss__side-panel {
+//     transition: transform 200ms ease-out;
+//     position: absolute;
+//     left: 0;
+//     right: 0;
+//     top: 0;
+//     transform: translateX(-100%);
+//     z-index: -1;
+//     max-width: 100%;
+//     width: 100%;
+//     height: 100%;
 
-    &.open {
-      left: 0;
-      right: 0;
-      max-width: 100%;
-      transform: translateX(0);
-      z-index: 1;
-    }
-  }
-}
+//     &.open {
+//       left: 0;
+//       right: 0;
+//       max-width: 100%;
+//       transform: translateX(0);
+//       z-index: 1;
+//     }
+//   }
+// }
 
 .Layer__profit-and-loss__title {
   font-size: 1.5rem;

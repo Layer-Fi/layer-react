@@ -15,7 +15,7 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
     const baseClassName = classNames(
       'Layer__component Layer__component-container',
       `Layer__${name}`,
-      asWidget ? 'Layer__component--as-widget' : '',
+      asWidget && 'Layer__component--as-widget',
       className,
     )
 
