@@ -1,7 +1,6 @@
 import React from 'react'
 import { BankTransactions } from '../../components/BankTransactions'
 import { LinkedAccounts } from '../../components/LinkedAccounts'
-import { HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
 
 export interface BankTransactionsWithLinkedAccountsProps {
