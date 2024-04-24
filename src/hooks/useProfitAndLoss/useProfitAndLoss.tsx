@@ -117,7 +117,6 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       return { filteredDataRevenue: [], filteredTotalRevenue: undefined }
     }
     const items = collectRevenueItems(data)
-    // : collectExpensesItems(data)
     const filtered = items.map(x => {
       if (
         filters['revenue']?.types &&
