@@ -11,7 +11,7 @@ import { DataState, DataStateStatus } from '../DataState'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
 import { Toggle } from '../Toggle'
-import { Heading } from '../Typography'
+import { Heading, HeadingSize } from '../Typography'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -145,7 +145,10 @@ export const BankTransactions = ({
         className='Layer__bank-transactions__header'
         style={{ top: shiftStickyHeader }}
       >
-        <Heading className='Layer__bank-transactions__title'>
+        <Heading
+          className='Layer__bank-transactions__title'
+          size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
+        >
           Transactions
         </Heading>
         {!categorizedOnly && (
