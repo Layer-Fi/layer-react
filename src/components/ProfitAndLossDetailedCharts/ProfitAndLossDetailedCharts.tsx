@@ -26,6 +26,7 @@ export const ProfitAndLossDetailedCharts = ({
     filteredDataExpenses,
     filteredTotalExpenses,
     sortBy,
+    isLoading,
     filters,
     dateRange,
     sidebarScope,
@@ -75,6 +76,7 @@ export const ProfitAndLossDetailedCharts = ({
           setHoveredItem={setHoveredItem}
           sidebarScope={theScope}
           date={dateRange.startDate}
+          isLoading={isLoading}
         />
 
         <div className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
