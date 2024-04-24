@@ -110,7 +110,7 @@
   .topbar {
     min-width: 272px;
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     justify-content: space-between;
     background: var(--color-base-50);
     color: var(--color-base-900);
