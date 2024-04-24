@@ -6,11 +6,18 @@
 }
 
 .Layer__view-header {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid var(--color-base-200);
+}
+
+.Layer__view-header__content {
   padding: var(--spacing-lg);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--color-base-200);
+  width: 100%;
+  max-width: 1406px;
 }
 
 .Layer__view-header__controls {

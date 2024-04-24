@@ -1,6 +1,7 @@
-import React, { useContext } from 'react'
+import React, { RefObject, useContext, useRef } from 'react'
 import { Container, Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
+import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
 import { Heading } from '../Typography'
@@ -13,23 +14,42 @@ export interface ProfitAndLossViewProps {
   showDetailedCharts?: boolean
 }
 
+export interface ProfitAndLossViewPanelProps extends ProfitAndLossViewProps {
+  containerRef: RefObject<HTMLDivElement>
+}
+
 export const ProfitAndLossView = (props: ProfitAndLossViewProps) => {
+  const containerRef = useRef<HTMLDivElement>(null)
+
   return (
-    <Container name={COMPONENT_NAME}>
+    <Container name={COMPONENT_NAME} ref={containerRef}>
       <ProfitAndLoss>
-        <div className={`Layer__${COMPONENT_NAME}__main-panel`}>
-          <Header className={`Layer__${COMPONENT_NAME}__header`}>
-            <Heading className='Layer__bank-transactions__title'>
-              Profit & Loss
-            </Heading>
-          </Header>
-
-          <Components {...props} />
-        </div>
-
-        {props.showDetailedCharts !== false && <ProfitAndLossDetailedCharts />}
+        <ProfitAndLossPanel containerRef={containerRef} {...props} />
       </ProfitAndLoss>
     </Container>
+  )
+}
+
+const ProfitAndLossPanel = ({
+  containerRef,
+  ...props
+}: ProfitAndLossViewPanelProps) => {
+  const { sidebarScope } = useContext(ProfitAndLoss.Context)
+
+  return (
+    <Panel
+      sidebar={<ProfitAndLossDetailedCharts />}
+      sidebarIsOpen={Boolean(sidebarScope)}
+      parentRef={containerRef}
+    >
+      <Header className={`Layer__${COMPONENT_NAME}__header`}>
+        <Heading className='Layer__profit-and-loss__title'>
+          Profit & Loss
+        </Heading>
+      </Header>
+
+      <Components {...props} />
+    </Panel>
   )
 }
 

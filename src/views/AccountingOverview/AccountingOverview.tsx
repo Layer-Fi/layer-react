@@ -1,6 +1,6 @@
 import React from 'react'
+import { Container, Header } from '../../components/Container'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
-import { ProfitAndLossDetailedCharts } from '../../components/ProfitAndLossDetailedCharts'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
 
@@ -15,13 +15,19 @@ export const AccountingOverview = ({
     <ProfitAndLoss asContainer={false}>
       <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
         <ProfitAndLoss.Summaries />
-        <div className='Layer__component-container' style={{ padding: 16 }}>
-          <Heading size={HeadingSize.secondary}>Profit & Loss</Heading>
+        <Container name='accounting-overview-profit-and-loss' asWidget>
+          <Header>
+            <Heading size={HeadingSize.secondary}>Profit & Loss</Heading>
+          </Header>
           <ProfitAndLoss.Chart />
-        </div>
-        <div style={{ display: 'flex' }}>
-          <ProfitAndLossDetailedCharts />
-          <ProfitAndLossDetailedCharts />
+        </Container>
+        <div className='accounting-overview-profit-and-loss-charts'>
+          <Container name='accounting-overview-profit-and-loss-chart'>
+            <ProfitAndLoss.DetailedCharts scope='revenue' hideClose={true} />
+          </Container>
+          <Container name='accounting-overview-profit-and-loss-chart'>
+            <ProfitAndLoss.DetailedCharts scope='expenses' hideClose={true} />
+          </Container>
         </div>
       </View>
     </ProfitAndLoss>

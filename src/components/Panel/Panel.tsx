@@ -25,7 +25,7 @@ export const Panel = ({
     if (parentRef?.current?.offsetHeight) {
       setSidebarHeight(parentRef?.current?.offsetHeight - 1)
     }
-  }, [parentRef?.current?.offsetHeight])
+  }, [parentRef?.current?.offsetHeight, sidebarIsOpen])
 
   return (
     <div
