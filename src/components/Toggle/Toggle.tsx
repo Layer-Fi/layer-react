@@ -13,6 +13,7 @@ export interface Option {
   label: string
   value: string
   disabled?: boolean
+  disabledMessage?: string
   leftIcon?: ReactNode
 }
 
@@ -37,6 +38,7 @@ interface ToggleOptionProps {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
   value: string
   disabled?: boolean
+  disabledMessage?: string
   leftIcon?: ReactNode
   index: number
 }
@@ -131,6 +133,7 @@ export const Toggle = ({
           checked={selectedValue === option.value}
           onChange={handleChange}
           disabled={option.disabled ?? false}
+          disabledMessage={option.disabledMessage}
           index={index}
         />
       ))}
@@ -148,6 +151,7 @@ const ToggleOption = ({
   size,
   leftIcon,
   disabled,
+  disabledMessage = 'Disabled',
   index,
 }: ToggleOptionProps) => {
   if (disabled) {
@@ -173,7 +177,7 @@ const ToggleOption = ({
           </label>
         </TooltipTrigger>
         <TooltipContent className='Layer__tooltip'>
-          We could not find matching transactions
+          {disabledMessage}
         </TooltipContent>
       </Tooltip>
     )
