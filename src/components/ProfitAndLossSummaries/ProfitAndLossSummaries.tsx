@@ -15,6 +15,7 @@ import classNames from 'classnames'
 type Props = {
   revenueLabel?: string
   vertical?: boolean
+  actionable?: boolean
 }
 
 const CHART_PLACEHOLDER = [
@@ -56,6 +57,7 @@ const buildMiniChartData = (scope: Scope, data?: ProfitAndLoss) => {
 export const ProfitAndLossSummaries = ({
   vertical,
   revenueLabel = 'Revenue',
+  actionable = true,
 }: Props) => {
   const {
     data: storedData,
@@ -99,11 +101,14 @@ export const ProfitAndLossSummaries = ({
     >
       <div
         className={classNames(
-          'Layer__profit-and-loss-summaries__summary Layer__actionable',
+          'Layer__profit-and-loss-summaries__summary',
+          actionable && 'Layer__actionable',
           'Layer__profit-and-loss-summaries__summary--income',
           sidebarScope === 'revenue' ? 'active' : '',
         )}
-        onClick={() => setSidebarScope('revenue')}
+        onClick={() => {
+          actionable && setSidebarScope('revenue')
+        }}
       >
         <MiniChart data={revenueChartData} />
         <div className='Layer__profit-and-loss-summaries__text'>
@@ -125,11 +130,14 @@ export const ProfitAndLossSummaries = ({
       </div>
       <div
         className={classNames(
-          'Layer__profit-and-loss-summaries__summary Layer__actionable',
+          'Layer__profit-and-loss-summaries__summary',
+          actionable && 'Layer__actionable',
           'Layer__profit-and-loss-summaries__summary--expenses',
           sidebarScope === 'expenses' ? 'active' : '',
         )}
-        onClick={() => setSidebarScope('expenses')}
+        onClick={() => {
+          actionable && setSidebarScope('expenses')
+        }}
       >
         <MiniChart data={expensesChartData} />
         <div className='Layer__profit-and-loss-summaries__text'>
@@ -151,7 +159,12 @@ export const ProfitAndLossSummaries = ({
           )}
         </div>
       </div>
-      <div className='Layer__profit-and-loss-summaries__summary net-profit Layer__profit-and-loss-summaries__summary--net-profit'>
+      <div
+        className={classNames(
+          'Layer__profit-and-loss-summaries__summary net-profit Layer__profit-and-loss-summaries__summary--net-profit',
+          actionable && 'Layer__actionable',
+        )}
+      >
         <div className='Layer__profit-and-loss-summaries__text'>
           <span className='Layer__profit-and-loss-summaries__title'>
             Net Profit

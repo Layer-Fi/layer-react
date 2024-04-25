@@ -317,6 +317,7 @@
   justify-content: space-evenly;
   column-gap: var(--spacing-md);
   row-gap: var(--spacing-md);
+  max-width: 1406px;
 }
 
 .Layer__profit-and-loss-summaries.flex-col {
@@ -333,6 +334,7 @@
   padding: var(--spacing-4xs);
   min-height: 52px;
   box-sizing: border-box;
+  background-color: var(--color-base-0);
 
   &.Layer__actionable {
     cursor: pointer;
@@ -355,10 +357,13 @@
 
   &.net-profit {
     padding-left: var(--spacing-xs);
+    min-height: 56px;
+  }
+
+  &.Layer__actionable.net-profit {
     background: var(--color-base-50);
     border-color: transparent;
     box-shadow: none;
-    min-height: 56px;
   }
 }
 

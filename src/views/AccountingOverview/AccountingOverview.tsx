@@ -14,7 +14,7 @@ export const AccountingOverview = ({
   return (
     <ProfitAndLoss asContainer={false}>
       <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
-        <ProfitAndLoss.Summaries />
+        <ProfitAndLoss.Summaries actionable={false} />
         <Container name='accounting-overview-profit-and-loss' asWidget>
           <Header>
             <Heading size={HeadingSize.secondary}>Profit & Loss</Heading>
