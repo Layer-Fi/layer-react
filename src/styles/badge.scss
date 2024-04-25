@@ -15,6 +15,7 @@
     font-size: var(--text-xs);
     padding: var(--spacing-3xs) var(--spacing-xs);
     line-height: 1.1;
+    height: 21px;
   }
 
   &.Layer__badge--clickable {
@@ -29,7 +30,7 @@
   .Layer__badge__icon {
     margin-top: 2px;
   }
-  
+
   &.Layer__badge--default {
     background-color: var(--badge-bg-color);
     color: var(--badge-fg-color);
