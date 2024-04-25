@@ -1,14 +1,11 @@
 import React, { createContext, useContext, useState } from 'react'
+import { BREAKPOINTS } from '../../config/general'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useLedgerAccounts } from '../../hooks/useLedgerAccounts'
 import { ChartOfAccountsTable } from '../ChartOfAccountsTable'
 import { Container } from '../Container'
 import { LedgerAccount } from '../LedgerAccount'
-
-const TABLET_BREAKPOINT = 760
-
-const MOBILE_BREAKPOINT = 500
 
 export type View = 'mobile' | 'tablet' | 'desktop'
 
@@ -73,15 +70,15 @@ const ChartOfAccountsContent = ({ asWidget }: ChartOfAccountsProps) => {
 
   const containerRef = useElementSize<HTMLDivElement>((_a, _b, { width }) => {
     if (width) {
-      if (width >= TABLET_BREAKPOINT && view !== 'desktop') {
+      if (width >= BREAKPOINTS.TABLET && view !== 'desktop') {
         setView('desktop')
       } else if (
-        width <= TABLET_BREAKPOINT &&
-        width > MOBILE_BREAKPOINT &&
+        width <= BREAKPOINTS.TABLET &&
+        width > BREAKPOINTS.MOBILE &&
         view !== 'tablet'
       ) {
         setView('tablet')
-      } else if (width < MOBILE_BREAKPOINT && view !== 'mobile') {
+      } else if (width < BREAKPOINTS.MOBILE && view !== 'mobile') {
         setView('mobile')
       }
     }
