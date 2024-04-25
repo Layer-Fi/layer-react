@@ -278,7 +278,7 @@
 .Layer__profit-and-loss-chart__selection-indicator {
   stroke: var(--chart-indicator-color);
   fill: none;
-  transition: x 0.35s ease-in-out;
+  transition: opacity 0.1s linear;
 }
 
 /** ---- */
