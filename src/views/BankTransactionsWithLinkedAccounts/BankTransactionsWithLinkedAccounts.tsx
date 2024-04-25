@@ -12,7 +12,7 @@ export const BankTransactionsWithLinkedAccounts = ({
 }: BankTransactionsWithLinkedAccountsProps) => {
   return (
     <View title={title}>
-      <LinkedAccounts />
+      <LinkedAccounts elevated={true} />
       <BankTransactions asWidget />
     </View>
   )

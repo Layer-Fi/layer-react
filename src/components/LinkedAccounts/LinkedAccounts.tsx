@@ -11,7 +11,12 @@ import classNames from 'classnames'
 
 const COMPONENT_NAME = 'linked-accounts'
 
-export const LinkedAccounts = ({ asWidget }: { asWidget?: boolean }) => {
+export interface LinkedAccountsProps {
+  asWidget?: boolean
+  elevated?: boolean
+}
+
+export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
   const {
     data,
     isLoading,
@@ -34,7 +39,7 @@ export const LinkedAccounts = ({ asWidget }: { asWidget?: boolean }) => {
   )
 
   return (
-    <Container name={COMPONENT_NAME}>
+    <Container name={COMPONENT_NAME} elevated={elevated}>
       <Header className='Layer__linked-accounts__header'>
         <Heading
           className='Layer__linked-accounts__title'

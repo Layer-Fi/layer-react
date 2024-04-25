@@ -30,6 +30,13 @@
   }
 }
 
+.Layer__component.Layer__component--elevated {
+  box-shadow:
+    0px 4px 12px 0px var(--base-transparent-8),
+    0px 2px 4px 0px var(--base-transparent-6),
+    0px 0px 0px 1px var(--base-transparent-4);
+}
+
 .Layer__component-header {
   padding: var(--spacing-md);
   display: flex;

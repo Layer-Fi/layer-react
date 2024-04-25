@@ -7,14 +7,16 @@ export interface ContainerProps {
   name: string
   className?: string
   asWidget?: boolean
+  elevated?: boolean
   children: ReactNode
 }
 
 export const Container = forwardRef<HTMLDivElement, ContainerProps>(
-  ({ name, className, children, asWidget }, ref) => {
+  ({ name, className, children, asWidget, elevated = false }, ref) => {
     const baseClassName = classNames(
       'Layer__component Layer__component-container',
       `Layer__${name}`,
+      elevated && 'Layer__component--elevated',
       asWidget && 'Layer__component--as-widget',
       className,
     )

@@ -365,6 +365,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                     value: 'match',
                     label: 'Match',
                     disabled: !hasMatch(bankTransaction),
+                    disabledMessage: 'We could not find matching transactions',
                   },
                 ]}
                 selected={purpose}
