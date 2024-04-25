@@ -10,7 +10,7 @@ const SortArrows = ({ size = 13, ...props }: IconSvgProps) => (
     width={size}
     height={size}
   >
-    <g clip-path='url(#clip0_1758_75388)'>
+    <g clipPath='url(#clip0_1758_75388)'>
       <path
         d='M1.33325 8.5L3.99992 11.1667L6.66659 8.5'
         stroke='currentColor'
