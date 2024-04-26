@@ -51,6 +51,7 @@ const ProfitAndLoss = ({
   asContainer = true,
 }: Props) => {
   const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
+
   return (
     <PNLContext.Provider value={contextData}>
       {asContainer ? (

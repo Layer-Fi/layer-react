@@ -29,6 +29,11 @@ export const ProfitAndLossChart = () => {
   const { getColor } = useLayerContext()
   const { changeDateRange, dateRange } = useContext(PNL.Context)
   const thisMonth = startOfMonth(Date.now())
+  const [customCursorSize, setCustomCursorSize] = useState({
+    width: 0,
+    height: 0,
+    x: 0,
+  })
 
   const startSelectionMonth = dateRange.startDate.getMonth()
   const endSelectionMonth = dateRange.endDate.getMonth()
@@ -36,79 +41,29 @@ export const ProfitAndLossChart = () => {
   // Yes, this looks weird, but we have to load all the data from the
   // last 12 months as we don't have a single endpoint yet. And we
   // can't use hooks in a loop.
-  const monthData: (ProfitAndLoss | undefined)[] = []
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 11 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 11 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 10 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 10 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 9 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 9 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 8 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 8 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 7 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 7 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 6 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 6 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 5 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 5 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 4 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 4 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 3 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 3 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 2 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 2 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 1 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 1 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: thisMonth,
-      endDate: endOfMonth(thisMonth),
-    })?.data,
-  )
+  const { isLoading, data: fetchData} = useProfitAndLoss({
+    startDate: thisMonth,
+    endDate: endOfMonth(thisMonth),
+    fetchMultipleMonths: true,
+  })
+
+  
+
+  const monthData: ProfitAndLoss[] = useMemo(() => {
+    console.log('fetchData', fetchData);
+    
+    if (!fetchData) {
+      return []
+    }
+
+    if (Array.isArray(fetchData)) {
+      return fetchData.slice()
+    }
+
+    return [fetchData]
+  }, [fetchData, isLoading])
+  
+  console.log('month data', monthData)
 
   const getMonthName = (pnl: ProfitAndLoss | undefined) =>
     pnl ? format(parseISO(pnl.start_date), 'LLL') : ''
@@ -135,11 +90,7 @@ export const ProfitAndLossChart = () => {
     }
   }
 
-  const CustomTooltip = ({
-    active,
-    payload,
-    label,
-  }: TooltipProps<number, string>) => {
+  const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       const netProfit = payload[0].payload.netProfit ?? 0
       const netProfitClass =
@@ -178,17 +129,19 @@ export const ProfitAndLossChart = () => {
   }
 
   const CustomizedCursor = (props: any) => {
-    const { x, width, height } = props
+    const { x, y } = props
+    const { width, height } = customCursorSize
+    const offsetX = width * 0.1
 
     return (
       <Rectangle
-        fill={getColor(900)?.hex ?? '#333'}
+        fill={'#F7F8FA'}
         stroke='none'
-        x={x + width / 2 - 11}
-        y={height + 44}
-        radius={2}
-        width={22}
-        height={2}
+        x={x + offsetX}
+        y={y}
+        width={width}
+        height={height}
+        radius={6}
         className='Layer__chart__tooltip-cursor'
       />
     )
@@ -233,9 +186,9 @@ export const ProfitAndLossChart = () => {
           strokeDasharray='5 5'
         />
         <Legend
-          verticalAlign='top'
+          verticalAlign='bottom'
           align='left'
-          wrapperStyle={{ top: -24 }}
+          wrapperStyle={{ bottom: 0 }}
           payload={[
             {
               value: 'Revenue',
@@ -260,6 +213,10 @@ export const ProfitAndLossChart = () => {
           <LabelList
             content={
               <Indicator
+                setCustomCursorSize={(width, height, x) =>
+                  setCustomCursorSize({ width, height, x })
+                }
+                customCursorSize={customCursorSize}
                 animateFrom={animateFrom}
                 setAnimateFrom={setAnimateFrom}
               />
