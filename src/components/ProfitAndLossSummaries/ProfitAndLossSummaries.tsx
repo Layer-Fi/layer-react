@@ -64,17 +64,19 @@ export const ProfitAndLossSummaries = ({
     sidebarScope,
   } = useContext(PNL.Context)
 
+  const dataItem = Array.isArray(storedData)
+    ? storedData[storedData.length - 1]
+    : storedData
+
   const expensesChartData = useMemo(() => {
-    return buildMiniChartData('expenses', storedData)
+    return buildMiniChartData('expenses', dataItem)
   }, [storedData])
 
   const revenueChartData = useMemo(() => {
-    return buildMiniChartData('revenue', storedData)
+    return buildMiniChartData('revenue', dataItem)
   }, [storedData])
 
-  const data = storedData
-    ? storedData
-    : { income: { value: NaN }, net_profit: NaN }
+  const data = dataItem ? dataItem : { income: { value: NaN }, net_profit: NaN }
 
   const incomeDirectionClass =
     (data.income.value ?? NaN) < 0

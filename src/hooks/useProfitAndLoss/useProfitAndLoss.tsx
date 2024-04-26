@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import { Layer } from '../../api/layer'
 import {
   ProfitAndLoss,
   DateRange,
@@ -13,8 +12,8 @@ import {
   applyShare,
 } from '../../utils/profitAndLossUtils'
 import { useLayerContext } from '../useLayerContext'
+import { fetchProfitAndLossData } from './fetchProfitAndLossData'
 import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
-import useSWR from 'swr'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -28,6 +27,7 @@ type Props = {
     values: string[]
   }
   reportingBasis?: ReportingBasis
+  fetchMultipleMonths?: boolean
 }
 
 type ProfitAndLossFilter = {
@@ -42,7 +42,7 @@ export type ProfitAndLossFilters = Record<
 >
 
 type UseProfitAndLoss = (props?: Props) => {
-  data: ProfitAndLoss | undefined
+  data: ProfitAndLoss | ProfitAndLoss[] | undefined
   filteredData: LineBaseItem[]
   filteredTotal?: number
   isLoading: boolean
@@ -64,12 +64,12 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     endDate: initialEndDate,
     tagFilter,
     reportingBasis,
+    fetchMultipleMonths = false,
   }: Props = {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   },
 ) => {
-  const { auth, businessId, apiUrl } = useLayerContext()
   const [startDate, setStartDate] = useState(
     initialStartDate || startOfMonth(Date.now()),
   )
@@ -81,43 +81,62 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     revenue: undefined,
   })
 
+  const { businessId, auth, apiUrl } = useLayerContext()
+
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
 
-  const {
-    data: rawData,
-    isLoading,
-    isValidating,
-    error: rawError,
-    mutate,
-  } = useSWR(
-    businessId &&
-      startDate &&
-      endDate &&
-      auth?.access_token &&
-      `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
-        ',',
-      )}-${reportingBasis}`,
-    Layer.getProfitAndLoss(apiUrl, auth?.access_token, {
-      params: {
-        businessId,
-        startDate: formatISO(startDate),
-        endDate: formatISO(endDate),
-        tagKey: tagFilter?.key,
-        tagValues: tagFilter?.values?.join(','),
-        reportingBasis,
+  const { data, isLoading, isValidating, error, mutate } =
+    fetchProfitAndLossData({
+      startDate,
+      endDate,
+      tagFilter,
+      reportingBasis,
+      fetchMultipleMonths,
+      businessId,
+      auth,
+      apiUrl,
+    })
+
+  const changeDateRange = ({
+    startDate: newStartDate,
+    endDate: newEndDate,
+  }: Partial<DateRange>) => {
+    newStartDate && setStartDate(newStartDate)
+    newEndDate && setEndDate(newEndDate)
+  }
+
+  const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {
+    setFilters({
+      ...filters,
+      [scope]: {
+        ...filters[scope],
+        sortBy: field,
+        sortDirection:
+          direction ?? filters[scope]?.sortDirection === 'desc'
+            ? 'asc'
+            : 'desc',
       },
-    }),
-  )
-  const { data, error } = rawData || {}
+    })
+  }
+
+  const setFilterTypes = (scope: Scope, types: string[]) => {
+    setFilters({
+      ...filters,
+      [scope]: {
+        ...filters[scope],
+        types,
+      },
+    })
+  }
 
   const { filteredData, filteredTotal } = useMemo(() => {
-    if (!data) {
+    if (!data || data.length === 0) {
       return { filteredData: [], filteredTotal: undefined }
     }
     const items =
       sidebarScope === 'revenue'
-        ? collectRevenueItems(data)
-        : collectExpensesItems(data)
+        ? collectRevenueItems(data[0])
+        : collectExpensesItems(data[0])
     const filtered = items.map(x => {
       if (
         sidebarScope &&
@@ -133,6 +152,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
 
       return x
     })
+
     const sorted = filtered.sort((a, b) => {
       switch (filters[sidebarScope ?? 'expenses']?.sortBy) {
         case 'category':
@@ -162,49 +182,17 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     return { filteredData: withShare, filteredTotal: total }
   }, [data, startDate, filters, sidebarScope])
 
-  const changeDateRange = ({
-    startDate: newStartDate,
-    endDate: newEndDate,
-  }: Partial<DateRange>) => {
-    newStartDate && setStartDate(newStartDate)
-    newEndDate && setEndDate(newEndDate)
-  }
-
   const refetch = () => {
     mutate()
   }
 
-  const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {
-    setFilters({
-      ...filters,
-      [scope]: {
-        ...filters[scope],
-        sortBy: field,
-        sortDirection:
-          direction ?? filters[scope]?.sortDirection === 'desc'
-            ? 'asc'
-            : 'desc',
-      },
-    })
-  }
-
-  const setFilterTypes = (scope: Scope, types: string[]) => {
-    setFilters({
-      ...filters,
-      [scope]: {
-        ...filters[scope],
-        types,
-      },
-    })
-  }
-
   return {
-    data,
+    data: fetchMultipleMonths ? data : data?.[0],
     filteredData,
     filteredTotal,
     isLoading,
     isValidating,
-    error: error || rawError,
+    error: error,
     dateRange: { startDate, endDate },
     refetch,
     changeDateRange,

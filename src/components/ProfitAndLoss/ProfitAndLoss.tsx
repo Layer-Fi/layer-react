@@ -9,7 +9,7 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 
 type PNLContextType = ReturnType<typeof useProfitAndLoss>
 const PNLContext = createContext<PNLContextType>({
-  data: undefined,
+  data: [],
   filteredData: [],
   filteredTotal: undefined,
   isLoading: true,
@@ -41,6 +41,7 @@ type Props = PropsWithChildren & {
 
 const ProfitAndLoss = ({ children, tagFilter, reportingBasis }: Props) => {
   const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
+
   return (
     <PNLContext.Provider value={contextData}>
       <div className='Layer__component Layer__profit-and-loss'>{children}</div>

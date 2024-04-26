@@ -15,7 +15,11 @@ export const ProfitAndLossTable = ({ lockExpanded }: Props) => {
     isLoading,
     setSidebarScope,
   } = useContext(ProfitAndLoss.Context)
-  const data = !actualData || isLoading ? emptyPNL : actualData
+
+  const currentData = Array.isArray(actualData)
+    ? actualData[actualData.length - 1]
+    : actualData
+  const data = !currentData || isLoading ? emptyPNL : currentData
 
   if (isLoading || actualData === undefined) {
     return (
