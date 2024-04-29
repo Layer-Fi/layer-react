@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, useState } from 'react'
 import { useLayerContext } from '../../hooks/useLayerContext'
-import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
+import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
 import { ProfitAndLoss } from '../../types'
 import { capitalizeFirstLetter } from '../../utils/format'
@@ -28,7 +28,6 @@ const barSize = 20
 export const ProfitAndLossChart = () => {
   const { getColor } = useLayerContext()
   const { changeDateRange, dateRange } = useContext(PNL.Context)
-  const thisMonth = startOfMonth(Date.now())
   const [customCursorSize, setCustomCursorSize] = useState({
     width: 0,
     height: 0,
@@ -41,29 +40,25 @@ export const ProfitAndLossChart = () => {
   // Yes, this looks weird, but we have to load all the data from the
   // last 12 months as we don't have a single endpoint yet. And we
   // can't use hooks in a loop.
-  const { isLoading, data: fetchData} = useProfitAndLoss({
-    startDate: thisMonth,
-    endDate: endOfMonth(thisMonth),
-    fetchMultipleMonths: true,
+  const { isLoading, data } = useProfitAndLossLTM({
+    currentDate: startOfMonth(Date.now()),
   })
 
-  
+  // const monthData: ProfitAndLoss[] = useMemo(() => {
+  //   console.log('fetchData', fetchData)
 
-  const monthData: ProfitAndLoss[] = useMemo(() => {
-    console.log('fetchData', fetchData);
-    
-    if (!fetchData) {
-      return []
-    }
+  //   if (!fetchData) {
+  //     return []
+  //   }
 
-    if (Array.isArray(fetchData)) {
-      return fetchData.slice()
-    }
+  //   if (Array.isArray(fetchData)) {
+  //     return fetchData.slice()
+  //   }
 
-    return [fetchData]
-  }, [fetchData, isLoading])
-  
-  console.log('month data', monthData)
+  //   return [fetchData]
+  // }, [fetchData, isLoading])
+
+  console.log('month data', data)
 
   const getMonthName = (pnl: ProfitAndLoss | undefined) =>
     pnl ? format(parseISO(pnl.start_date), 'LLL') : ''
@@ -80,12 +75,12 @@ export const ProfitAndLossChart = () => {
   })
 
   const onClick: CategoricalChartFunc = ({ activeTooltipIndex }) => {
-    const selection = monthData[activeTooltipIndex || -1]
+    const selection = data[activeTooltipIndex || -1]
     if (selection) {
-      const { start_date: startDate, end_date: endDate } = selection
+      const { startDate, endDate } = selection
       changeDateRange({
-        startDate: parseISO(startDate),
-        endDate: parseISO(endDate),
+        startDate: parseISO(startDate.toDateString()),
+        endDate: parseISO(endDate.toDateString()),
       })
     }
   }
@@ -148,13 +143,9 @@ export const ProfitAndLossChart = () => {
   }
 
   // If net profit doesn't change, we're probably still the same.
-  const data = useMemo(
-    () => monthData.map(summarizePnL),
-    [
-      startSelectionMonth,
-      endSelectionMonth,
-      ...monthData.map(m => m?.net_profit),
-    ],
+  const theData = useMemo(
+    () => data?.map(x => summarizePnL(x.data)),
+    [startSelectionMonth, endSelectionMonth],
   )
 
   const [animateFrom, setAnimateFrom] = useState(-1)
@@ -222,7 +213,7 @@ export const ProfitAndLossChart = () => {
               />
             }
           />
-          {data.map(entry => (
+          {theData?.map(entry => (
             <Cell
               key={entry.name}
               className={
@@ -240,7 +231,7 @@ export const ProfitAndLossChart = () => {
           radius={[2, 2, 0, 0]}
           className='Layer__profit-and-loss-chart__bar--expenses'
         >
-          {data.map(entry => (
+          {theData.map(entry => (
             <Cell
               key={entry.name}
               className={
