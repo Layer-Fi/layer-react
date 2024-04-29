@@ -135,14 +135,6 @@ export const ChartOfAccountsForm = () => {
             disabled={sendingForm}
           />
         </InputGroup>
-        <InputGroup name='category' label='Category' inline={true}>
-          <Select
-            options={[]}
-            value={form?.data.category}
-            onChange={sel => changeFormData('category', sel)}
-            disabled={sendingForm}
-          />
-        </InputGroup>
       </div>
     </form>
   )

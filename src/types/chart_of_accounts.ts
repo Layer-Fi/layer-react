@@ -64,7 +64,7 @@ export type NewAccount = {
     id: string
   }
   account_type: string
-  account_subtype: string
+  account_subtype?: string
 }
 
 export type EditAccount = {
@@ -76,6 +76,6 @@ export type EditAccount = {
     id: string
   }
   account_type: string
-  account_subtype: string
+  account_subtype?: string
   always_show_in_pnl: boolean
 }

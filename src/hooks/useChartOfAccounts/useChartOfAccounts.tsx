@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
-import { Account, Direction, ChartOfAccounts, NewAccount } from '../../types'
+import { Direction, NewAccount } from '../../types'
 import {
   ChartWithBalances,
   LedgerAccountBalance,
@@ -28,7 +28,7 @@ const validate = (formData?: ChartOfAccountsForm) => {
 
 const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
   switch (fieldName) {
-    case 'name':
+    case 'name': {
       const nameError = validateName(formData)
       if (nameError) {
         return (formData?.errors || [])
@@ -37,6 +37,7 @@ const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
       }
 
       return (formData?.errors || []).filter(x => x.field !== fieldName)
+    }
     default:
       return formData?.errors
   }
@@ -59,9 +60,8 @@ export interface ChartOfAccountsForm {
   data: {
     parent?: BaseSelectOption
     name?: string
-    type?: BaseSelectOption
+    type: BaseSelectOption
     subType?: BaseSelectOption
-    category?: BaseSelectOption
   }
   errors?: FormError[]
 }
@@ -179,7 +179,8 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
             id: form.data.parent.value as string,
           }
         : undefined,
-      description: form.data.type?.value.toString() ?? '',
+      account_type: form.data.type.value.toString(),
+      account_subtype: form.data.subType?.value.toString(),
     }
 
     if (form.action === 'new') {
@@ -201,11 +202,10 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
         parent: undefined,
         name: undefined,
         type: {
-          value: 'assets',
+          value: 'ASSETS',
           label: 'Assets',
         },
         subType: undefined,
-        category: undefined,
       },
     })
 
@@ -233,11 +233,10 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
           : undefined,
         name: found.name,
         type: {
-          value: 'assets',
+          value: 'ASSETS',
           label: 'Assets',
         },
         subType: undefined,
-        category: undefined,
       },
     })
   }
