@@ -26,7 +26,6 @@ export interface LinkedAccount {
   logo_base64?: string
 
   // Not added to API yet
-  // external_account_number_last_four: string
   //connection_id: string
   //connection_status: string
 }

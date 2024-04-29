@@ -46,17 +46,6 @@ export type ApiAccountType = {
 }
 
 export type LedgerAccountBalance = {
-  /*
-    @SerialName("id") @Serializable(with = AccountIdSerializer::class) val accountId: AccountIdentifier.AccountId,
-    val name: String,
-    @SerialName("stable_name") @Serializable(with = StableNameSerializer::class) val stableName: AccountIdentifier.AccountStableName?,
-    val normality: BankTransactionDirection,
-    open val accountType: LedgerAccountType?, //TODO: Shouldn't be nullable
-    open val accountSubtype: LedgerAccountSubtype?, //TODO: Shouldn't be nullable
-    val balance: Long,
-    val entries: List<ApiLineItem>,
-    @SerialName("sub_accounts") val subAccounts: List<NestedApiLedgerAccount>
-    */
   id: string
   name: string
   stable_name: string
