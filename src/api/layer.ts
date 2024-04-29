@@ -8,6 +8,7 @@ import {
 import { getCategories } from './layer/categories'
 import {
   getChartOfAccounts,
+  getLedgerAccountBalances,
   createAccount,
   updateAccount,
   getLedgerAccountsLines,
@@ -32,6 +33,7 @@ export const Layer = {
   getBankTransactions,
   getCategories,
   getChartOfAccounts,
+  getLedgerAccountBalances,
   getLedgerAccountsLines,
   getLedgerAccountsEntry,
   getProfitAndLoss,

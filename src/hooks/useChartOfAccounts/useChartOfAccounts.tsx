@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
 import { Account, Direction, ChartOfAccounts, NewAccount } from '../../types'
+import {
+  ChartWithBalances,
+  LedgerAccountBalance,
+} from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
 import { convertToStableName } from '../../utils/helpers'
 import { useLayerContext } from '../useLayerContext'
@@ -63,7 +67,7 @@ export interface ChartOfAccountsForm {
 }
 
 type UseChartOfAccounts = () => {
-  data: ChartOfAccounts | undefined
+  data: ChartWithBalances | undefined
   isLoading?: boolean
   isValidating?: boolean
   error?: unknown
@@ -82,7 +86,9 @@ type UseChartOfAccounts = () => {
   submitForm: () => void
 }
 
-export const flattenAccounts = (accounts: Account[]): Account[] =>
+export const flattenAccounts = (
+  accounts: LedgerAccountBalance[],
+): LedgerAccountBalance[] =>
   accounts
     .flatMap(a => [a, flattenAccounts(a.sub_accounts || [])])
     .flat()
@@ -97,7 +103,7 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     businessId && auth?.access_token && `chart-of-accounts-${businessId}`,
-    Layer.getChartOfAccounts(apiUrl, auth?.access_token, {
+    Layer.getLedgerAccountBalances(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
   )
@@ -169,7 +175,7 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
       normality: form.data.subType?.value as Direction,
       parent_id: form.data.parent
         ? {
-            type: 'AccountId' as 'AccountId',
+            type: 'AccountId' as const,
             id: form.data.parent.value as string,
           }
         : undefined,

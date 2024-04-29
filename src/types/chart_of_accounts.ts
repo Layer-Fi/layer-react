@@ -36,6 +36,37 @@ export interface Account {
   entries?: AccountEntry[]
 }
 
+export type ChartWithBalances = {
+  accounts: LedgerAccountBalance[]
+}
+
+export type ApiAccountType = {
+  value: string
+  display_name: string
+}
+
+export type LedgerAccountBalance = {
+  /*
+    @SerialName("id") @Serializable(with = AccountIdSerializer::class) val accountId: AccountIdentifier.AccountId,
+    val name: String,
+    @SerialName("stable_name") @Serializable(with = StableNameSerializer::class) val stableName: AccountIdentifier.AccountStableName?,
+    val normality: BankTransactionDirection,
+    open val accountType: LedgerAccountType?, //TODO: Shouldn't be nullable
+    open val accountSubtype: LedgerAccountSubtype?, //TODO: Shouldn't be nullable
+    val balance: Long,
+    val entries: List<ApiLineItem>,
+    @SerialName("sub_accounts") val subAccounts: List<NestedApiLedgerAccount>
+    */
+  id: string
+  name: string
+  stable_name: string
+  account_type: ApiAccountType
+  account_subtype?: ApiAccountType
+  normality: Direction
+  balance: number
+  sub_accounts: LedgerAccountBalance[]
+}
+
 export type NewAccount = {
   name: string
   normality: Direction
@@ -43,16 +74,19 @@ export type NewAccount = {
     type: 'AccountId'
     id: string
   }
-  description: string
+  account_type: string
+  account_subtype: string
 }
 
 export type EditAccount = {
-  name: string
   stable_name: string
+  name: string
   normality: Direction
   parent_id?: {
     type: 'AccountId'
     id: string
   }
-  description: string
+  account_type: string
+  account_subtype: string
+  always_show_in_pnl: boolean
 }

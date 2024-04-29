@@ -2,6 +2,16 @@ import React, { useContext, useMemo } from 'react'
 import X from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
+import {
+  InvoiceLedgerEntrySource,
+  InvoicePaymentLedgerEntrySource,
+  LedgerEntrySource,
+  ManualLedgerEntrySource,
+  OpeningBalanceLedgerEntrySource,
+  PayoutLedgerEntrySource,
+  RefundPaymentLedgerEntrySource,
+  TransactionLedgerEntrySource,
+} from '../../types/ledger_accounts'
 import { humanizeEnum } from '../../utils/format'
 import { Badge, BadgeVariant } from '../Badge'
 import { BackButton, IconButton } from '../Button'
@@ -9,6 +19,126 @@ import { Card } from '../Card'
 import { LedgerAccountsContext } from '../ChartOfAccounts/ChartOfAccounts'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
+import { is } from 'date-fns/locale'
+
+/*
+
+    @SerialName("Transaction_Ledger_Entry_Source")
+    @SerialName("Invoice_Ledger_Entry_Source")
+    @SerialName("Manual_Ledger_Entry_Source")
+    @SerialName("Invoice_Payment_Ledger_Entry_Source")
+    @SerialName("Refund_Ledger_Entry_Source")
+    @SerialName("Opening_Balance_Ledger_Entry_Source")
+    @SerialName("Payout_Ledger_Entry_Source")
+    */
+const SourceDetailView = ({ source }: { source: LedgerEntrySource }) => {
+  switch (source.type) {
+    case 'Transaction_Ledger_Entry_Source': {
+      const transactionSource = source as TransactionLedgerEntrySource
+      return (
+        <>
+          <DetailsListItem label='Account name'>
+            {transactionSource.account_name}
+          </DetailsListItem>
+          <DetailsListItem label='Date'>
+            <DateTime value={transactionSource.date} />
+          </DetailsListItem>
+          <DetailsListItem label='Amount'>
+            {`$${centsToDollars(transactionSource.amount)}`}
+          </DetailsListItem>
+          <DetailsListItem label='Direction'>
+            {transactionSource.direction}
+          </DetailsListItem>
+          <DetailsListItem label='Counterparty'>
+            {transactionSource.counterparty}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Invoice_Ledger_Entry_Source': {
+      const invoiceSource = source as InvoiceLedgerEntrySource
+      return (
+        <>
+          <DetailsListItem label='Invoice number'>
+            {invoiceSource.invoice_number}
+          </DetailsListItem>
+          <DetailsListItem label='Recipient name'>
+            {invoiceSource.recipient_name}
+          </DetailsListItem>
+          <DetailsListItem label='Date'>
+            <DateTime value={invoiceSource.date} />
+          </DetailsListItem>
+          <DetailsListItem label='Amount'>
+            {`$${centsToDollars(invoiceSource.amount)}`}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Manual_Ledger_Entry_Source': {
+      const manualSource = source as ManualLedgerEntrySource
+      return (
+        <>
+          <DetailsListItem label='Memo'>{manualSource.memo}</DetailsListItem>
+          <DetailsListItem label='Created by'>
+            {manualSource.created_by}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Invoice_Payment_Ledger_Entry_Source': {
+      const invoicePaymentSource = source as InvoicePaymentLedgerEntrySource
+      return (
+        <>
+          <DetailsListItem label='Invoice number'>
+            {invoicePaymentSource.invoice_number}
+          </DetailsListItem>
+          <DetailsListItem label='Amount'>
+            {`$${centsToDollars(invoicePaymentSource.amount)}`}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Refund_Ledger_Entry_Source': {
+      const refundSource = source as RefundPaymentLedgerEntrySource
+      return (
+        <>
+          <DetailsListItem label='Amount'>
+            {`$${centsToDollars(refundSource.refunded_to_customer_amount)}`}
+          </DetailsListItem>
+          <DetailsListItem label='Recipient name'>
+            {refundSource.recipient_name}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Opening_Balance_Ledger_Entry_Source': {
+      const openingBalanceSource = source as OpeningBalanceLedgerEntrySource
+      return (
+        <>
+          <DetailsListItem label='Account name'>
+            {openingBalanceSource.account_name}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Payout_Ledger_Entry_Source': {
+      const payoutSource = source as PayoutLedgerEntrySource
+      return (
+        <>
+          <DetailsListItem label='Amount'>
+            {`$${centsToDollars(payoutSource.paid_out_amount)}`}
+          </DetailsListItem>
+          <DetailsListItem label='Processor'>
+            {payoutSource.processor}
+          </DetailsListItem>
+        </>
+      )
+    }
+
+    default:
+      return null
+  }
+}
 
 export const LedgerAccountEntryDetails = () => {
   const { entryData, isLoadingEntry, closeSelectedEntry, errorEntry } =
@@ -44,20 +174,17 @@ export const LedgerAccountEntryDetails = () => {
         }
       >
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
-          <Badge>Invoice</Badge>
+          <Badge>{entryData?.source?.type}</Badge>
         </DetailsListItem>
-        <DetailsListItem label='Number' isLoading={isLoadingEntry}>
-          1234
-        </DetailsListItem>
-        <DetailsListItem label='Date' isLoading={isLoadingEntry}>
-          May 5, 2023
-        </DetailsListItem>
-        <DetailsListItem label='Account' isLoading={isLoadingEntry}>
-          89 8888 7656 6666 0000 6765
-        </DetailsListItem>
+        {entryData?.source?.display_description && (
+          <SourceDetailView source={entryData?.source} />
+        )}
       </DetailsList>
 
-      <DetailsList title='Journal Entry #123' className='Layer__border-top'>
+      <DetailsList
+        title={`Journal Entry ${entryData?.id.substring(0, 5)}`}
+        className='Layer__border-top'
+      >
         <DetailsListItem label='Entry type' isLoading={isLoadingEntry}>
           {humanizeEnum(entryData?.entry_type ?? '')}
         </DetailsListItem>
@@ -67,9 +194,11 @@ export const LedgerAccountEntryDetails = () => {
         <DetailsListItem label='Creation date' isLoading={isLoadingEntry}>
           {entryData?.date && <DateTime value={entryData?.date} />}
         </DetailsListItem>
-        <DetailsListItem label='Reversal' isLoading={isLoadingEntry}>
-          Journal Entry #79 TBD
-        </DetailsListItem>
+        {entryData?.reversal_id && (
+          <DetailsListItem label='Reversal' isLoading={isLoadingEntry}>
+            {entryData?.reversal_id.substring(0, 5)}
+          </DetailsListItem>
+        )}
       </DetailsList>
 
       {!isLoadingEntry && !errorEntry ? (
