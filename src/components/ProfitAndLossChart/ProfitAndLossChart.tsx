@@ -40,9 +40,6 @@ export const ProfitAndLossChart = () => {
   const startSelectionMonth = dateRange.startDate.getMonth()
   const endSelectionMonth = dateRange.endDate.getMonth()
 
-  // Yes, this looks weird, but we have to load all the data from the
-  // last 12 months as we don't have a single endpoint yet. And we
-  // can't use hooks in a loop.
   const { data, loaded } = useProfitAndLossLTM({
     currentDate: startOfMonth(Date.now()),
   })

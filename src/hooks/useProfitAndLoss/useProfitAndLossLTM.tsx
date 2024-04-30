@@ -47,6 +47,10 @@ const buildDates = ({ currentDate }: { currentDate: Date }) => {
   return list
 }
 
+/**
+ * Hooks fetch Last Twelve Months sending 12 requests (one for each month).
+ * Implementation is not perfect, but we cannot use loops and arrays with hooks.
+ */
 export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
   { currentDate, tagFilter, reportingBasis }: UseProfitAndLossLTMProps = {
     currentDate: new Date(),
