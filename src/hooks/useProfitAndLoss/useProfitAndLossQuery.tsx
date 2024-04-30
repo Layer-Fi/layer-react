@@ -37,8 +37,6 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
 ) => {
   const { auth, businessId, apiUrl } = useLayerContext()
 
-  console.log(startDate.valueOf(), endDate.valueOf())
-
   const {
     data: rawData,
     isLoading,

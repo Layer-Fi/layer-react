@@ -11,8 +11,7 @@ import {
   collectRevenueItems,
   applyShare,
 } from '../../utils/profitAndLossUtils'
-import { useLayerContext } from '../useLayerContext'
-import { fetchProfitAndLossData } from './fetchProfitAndLossData'
+import { useProfitAndLossQuery } from './useProfitAndLossQuery'
 import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
 
 export type Scope = 'expenses' | 'revenue'
@@ -81,20 +80,14 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     revenue: undefined,
   })
 
-  const { businessId, auth, apiUrl } = useLayerContext()
-
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
 
-  const { data, isLoading, isValidating, error, mutate } =
-    fetchProfitAndLossData({
+  const { data, isLoading, isValidating, error, refetch } =
+    useProfitAndLossQuery({
       startDate,
       endDate,
       tagFilter,
       reportingBasis,
-      fetchMultipleMonths,
-      businessId,
-      auth,
-      apiUrl,
     })
 
   const changeDateRange = ({
@@ -130,13 +123,13 @@ export const useProfitAndLoss: UseProfitAndLoss = (
   }
 
   const { filteredData, filteredTotal } = useMemo(() => {
-    if (!data || data.length === 0) {
+    if (!data) {
       return { filteredData: [], filteredTotal: undefined }
     }
     const items =
       sidebarScope === 'revenue'
-        ? collectRevenueItems(data[0])
-        : collectExpensesItems(data[0])
+        ? collectRevenueItems(data)
+        : collectExpensesItems(data)
     const filtered = items.map(x => {
       if (
         sidebarScope &&
@@ -182,12 +175,8 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     return { filteredData: withShare, filteredTotal: total }
   }, [data, startDate, filters, sidebarScope])
 
-  const refetch = () => {
-    mutate()
-  }
-
   return {
-    data: fetchMultipleMonths ? data : data?.[0],
+    data,
     filteredData,
     filteredTotal,
     isLoading,
