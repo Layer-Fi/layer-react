@@ -11,9 +11,8 @@ import {
   collectRevenueItems,
   applyShare,
 } from '../../utils/profitAndLossUtils'
-import { useLayerContext } from '../useLayerContext'
-import { fetchProfitAndLossData } from './fetchProfitAndLossData'
-import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
+import { useProfitAndLossQuery } from './useProfitAndLossQuery'
+import { startOfMonth, endOfMonth } from 'date-fns'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -83,20 +82,14 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     revenue: undefined,
   })
 
-  const { businessId, auth, apiUrl } = useLayerContext()
-
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
 
-  const { data, isLoading, isValidating, error, mutate } =
-    fetchProfitAndLossData({
+  const { data, isLoading, isValidating, error, refetch } =
+    useProfitAndLossQuery({
       startDate,
       endDate,
       tagFilter,
       reportingBasis,
-      fetchMultipleMonths,
-      businessId,
-      auth,
-      apiUrl,
     })
 
   const changeDateRange = ({
@@ -227,10 +220,6 @@ export const useProfitAndLoss: UseProfitAndLoss = (
 
     return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
   }, [data, startDate, filters, sidebarScope])
-
-  const refetch = () => {
-    mutate()
-  }
 
   return {
     data,

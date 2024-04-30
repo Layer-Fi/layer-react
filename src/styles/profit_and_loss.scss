@@ -425,6 +425,28 @@
   fill: var(--bar-color-expenses);
 }
 
+.Layer__chart-container--loading .Layer__profit-and-loss-chart__bar--expenses {
+  fill: var(--color-base-50);
+  animation: layer_chart_bar_loading_anim 2s linear infinite;
+}
+
+.Layer__chart-container--loading .Layer__profit-and-loss-chart__bar--income {
+  fill: var(--color-base-100);
+  animation: layer_chart_bar_loading_anim 2s linear infinite;
+}
+
+@keyframes layer_chart_bar_loading_anim {
+  0% {
+    fill: var(--color-base-50);
+  }
+  50% {
+    fill: var(--color-base-200);
+  }
+  100% {
+    fill: var(--color-base-50);
+  }
+}
+
 .Layer__profit-and-loss-row__label--depth-0.Layer__profit-and-loss-row__label--display-children-false {
   padding-left: 22px;
 }
