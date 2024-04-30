@@ -3,7 +3,7 @@ import { ProfitAndLoss, ReportingBasis } from '../../types'
 import { LoadedStatus } from '../../types/general'
 import { useLayerContext } from '../useLayerContext'
 import { useProfitAndLossQuery } from './useProfitAndLossQuery'
-import { startOfMonth, endOfMonth, formatISO, sub } from 'date-fns'
+import { startOfMonth, endOfMonth, sub } from 'date-fns'
 
 type UseProfitAndLossLTMProps = {
   currentDate: Date
@@ -386,7 +386,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     }
 
     if (!isLoading && data && !data.find(x => !x.data && !x.error)) {
-      // setLoaded('complete')
+      setLoaded('complete')
     }
   }, [data, isLoading])
 

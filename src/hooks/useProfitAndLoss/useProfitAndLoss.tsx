@@ -12,7 +12,7 @@ import {
   applyShare,
 } from '../../utils/profitAndLossUtils'
 import { useProfitAndLossQuery } from './useProfitAndLossQuery'
-import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
+import { startOfMonth, endOfMonth } from 'date-fns'
 
 export type Scope = 'expenses' | 'revenue'
 
