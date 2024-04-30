@@ -34,6 +34,11 @@ export {
 } from './types/ledger_accounts'
 export { SortDirection } from './types/general'
 
+export {
+  JournalEntry,
+  JournalEntryLine,
+} from './types/journal'
+
 // Only Date and string (ISO8601 formatted) make sense here
 export type DateRange<T = Date> = {
   startDate: T
