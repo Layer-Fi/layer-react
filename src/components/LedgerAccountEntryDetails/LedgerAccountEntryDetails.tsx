@@ -174,7 +174,7 @@ export const LedgerAccountEntryDetails = () => {
         }
       >
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
-          <Badge>{entryData?.source?.type}</Badge>
+          <Badge>{entryData?.source?.entity_name}</Badge>
         </DetailsListItem>
         {entryData?.source?.display_description && (
           <SourceDetailView source={entryData?.source} />

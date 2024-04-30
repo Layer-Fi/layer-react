@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
+import { NORMALITY_OPTIONS } from '../../components/ChartOfAccountsForm/constants'
 import { Direction, NewAccount } from '../../types'
 import {
   ChartWithBalances,
+  EditAccount,
   LedgerAccountBalance,
 } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
@@ -22,6 +24,14 @@ const validate = (formData?: ChartOfAccountsForm) => {
   if (nameError) {
     errors.push(nameError)
   }
+  const normalityError = validateNormality(formData)
+  if (normalityError) {
+    errors.push(normalityError)
+  }
+  const typeError = validateType(formData)
+  if (typeError) {
+    errors.push(typeError)
+  }
 
   return errors
 }
@@ -38,9 +48,57 @@ const revalidateField = (fieldName: string, formData?: ChartOfAccountsForm) => {
 
       return (formData?.errors || []).filter(x => x.field !== fieldName)
     }
+    case 'normality': {
+      const normalityError = validateNormality(formData)
+      if (normalityError) {
+        return (formData?.errors || [])
+          .filter(x => x.field !== fieldName)
+          .concat([normalityError])
+      }
+
+      return (formData?.errors || []).filter(x => x.field !== fieldName)
+    }
+    case 'type': {
+      const typeError = validateType(formData)
+      if (typeError) {
+        return (formData?.errors || [])
+          .filter(x => x.field !== fieldName)
+          .concat([typeError])
+      }
+
+      return (formData?.errors || []).filter(x => x.field !== fieldName)
+    }
     default:
       return formData?.errors
   }
+}
+
+const validateType = (formData?: ChartOfAccountsForm) => {
+  if (!formData?.data.type?.value) {
+    return {
+      field: 'type',
+      message: 'Must be selected',
+    }
+  }
+
+  return
+}
+
+const validateNormality = (formData?: ChartOfAccountsForm) => {
+  const stringValueNormality = formData?.data.normality?.value?.toString()
+  if (stringValueNormality === undefined) {
+    return {
+      field: 'normality',
+      message: 'Must be selected',
+    }
+  } else if (!['DEBIT', 'CREDIT'].includes(stringValueNormality)) {
+    return {
+      field: 'normality',
+      message: 'Must be selected',
+    }
+  }
+
+  return
 }
 
 const validateName = (formData?: ChartOfAccountsForm) => {
@@ -59,9 +117,11 @@ export interface ChartOfAccountsForm {
   accountId?: string
   data: {
     parent?: BaseSelectOption
+    stable_name?: string
     name?: string
-    type: BaseSelectOption
+    type?: BaseSelectOption
     subType?: BaseSelectOption
+    normality?: BaseSelectOption
   }
   errors?: FormError[]
 }
@@ -126,18 +186,12 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
     }
   }
 
-  const update = async (accountData: NewAccount, accountId: string) => {
+  const update = async (accountData: EditAccount, accountId: string) => {
     setSendingForm(true)
     setApiError(undefined)
 
-    const stable_name = convertToStableName(accountData.name)
-
-    /** @TODO some fields will be deprecated soon */
     const newAccountData = {
       ...accountData,
-      stable_name: stable_name,
-      pnl_category: 'INCOME', //this field will be deprecated soon, but is still required
-      always_show_in_pnl: false, //this field will be deprecated soon, but is still required
     }
 
     try {
@@ -172,15 +226,16 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
 
     const data = {
       name: form.data.name ?? '',
-      normality: form.data.subType?.value as Direction,
+      stable_name: form.data.stable_name,
       parent_id: form.data.parent
         ? {
             type: 'AccountId' as const,
             id: form.data.parent.value as string,
           }
         : undefined,
-      account_type: form.data.type.value.toString(),
+      account_type: (form.data.type as BaseSelectOption).value.toString(),
       account_subtype: form.data.subType?.value.toString(),
+      normality: form.data.normality?.value as Direction,
     }
 
     if (form.action === 'new') {
@@ -201,10 +256,8 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
       data: {
         parent: undefined,
         name: undefined,
-        type: {
-          value: 'ASSETS',
-          label: 'Assets',
-        },
+        type: undefined,
+        normality: undefined,
         subType: undefined,
       },
     })
@@ -231,12 +284,22 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
               label: parent.name,
             }
           : undefined,
+        stable_name: found.stable_name,
         name: found.name,
         type: {
-          value: 'ASSETS',
-          label: 'Assets',
+          value: found.account_type.value,
+          label: found.account_type.display_name,
         },
-        subType: undefined,
+
+        subType: found.account_subtype
+          ? {
+              value: found.account_subtype?.value,
+              label: found.account_subtype?.display_name,
+            }
+          : undefined,
+        normality: NORMALITY_OPTIONS.find(
+          normalityOption => normalityOption.value == found.normality,
+        ),
       },
     })
   }
@@ -251,12 +314,46 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
       return
     }
 
-    const newFormData = {
+    let newFormData = {
       ...form,
       data: {
         ...form.data,
         [fieldName]: value,
       },
+    }
+
+    /* When setting the parent field, automatically inherit the parent's type & normality fields */
+    if (fieldName === 'parent') {
+      const allAccounts = flattenAccounts(data?.data?.accounts || [])
+      const foundParent = allAccounts?.find(
+        x => x.id === (value as BaseSelectOption).value,
+      )
+      if (foundParent) {
+        newFormData = {
+          ...newFormData,
+          data: {
+            ...newFormData.data,
+            /* Inherit the parent's type */
+            type: {
+              value: foundParent.account_type.value,
+              label: foundParent.account_type.display_name,
+            },
+
+            /* If the parent has a subtype, inherit it */
+            subType: foundParent.account_subtype
+              ? {
+                  value: foundParent.account_subtype?.value,
+                  label: foundParent.account_subtype?.display_name,
+                }
+              : undefined,
+
+            /* Inherit the parent's normality */
+            normality: NORMALITY_OPTIONS.find(
+              normalityOption => normalityOption.value == foundParent.normality,
+            ),
+          },
+        }
+      }
     }
 
     const errors = revalidateField(fieldName, newFormData)

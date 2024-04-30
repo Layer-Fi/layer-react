@@ -42,6 +42,7 @@ export interface LedgerAccountLineItem {
 
 export interface LedgerEntrySource {
   display_description: string
+  entity_name: string
   type: string
 }
 export interface TransactionLedgerEntrySource extends LedgerEntrySource {

@@ -6,6 +6,8 @@ import ReactSelect, {
   components,
 } from 'react-select'
 import ChevronDownFill from '../../icons/ChevronDownFill'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
+import classNames from 'classnames'
 
 export interface SelectProps<T> {
   name?: string
@@ -16,6 +18,8 @@ export interface SelectProps<T> {
   onChange: (selected: T) => void
   disabled?: boolean
   placeholder?: string
+  isInvalid?: boolean
+  errorMessage?: string
 }
 
 const DropdownIndicator:
@@ -38,20 +42,32 @@ export const Select = <T,>({
   onChange,
   disabled,
   placeholder,
+  isInvalid,
+  errorMessage,
 }: SelectProps<T>) => {
+  const baseClassName = classNames(
+    'Layer__select',
+    isInvalid ? 'Layer__select--error' : '',
+    className,
+  )
   return (
-    <ReactSelect<T>
-      name={name}
-      className={`Layer__select ${className ?? ''}`}
-      classNamePrefix={classNamePrefix}
-      placeholder={placeholder ?? 'Select...'}
-      options={options}
-      value={value}
-      onChange={newValue => newValue && onChange(newValue)}
-      menuPortalTarget={document.body}
-      styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-      components={{ DropdownIndicator }}
-      isDisabled={disabled}
-    />
+    <Tooltip disabled={!isInvalid || !errorMessage}>
+      <TooltipTrigger className='Layer__input-tooltip'>
+        <ReactSelect<T>
+          name={name}
+          className={baseClassName}
+          classNamePrefix={classNamePrefix}
+          placeholder={placeholder ?? 'Select...'}
+          options={options}
+          value={value}
+          onChange={newValue => newValue && onChange(newValue)}
+          menuPortalTarget={document.body}
+          styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+          components={{ DropdownIndicator }}
+          isDisabled={disabled}
+        />
+      </TooltipTrigger>
+      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+    </Tooltip>
   )
 }

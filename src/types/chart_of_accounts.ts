@@ -68,7 +68,7 @@ export type NewAccount = {
 }
 
 export type EditAccount = {
-  stable_name: string
+  stable_name?: string
   name: string
   normality: Direction
   parent_id?: {
@@ -77,5 +77,4 @@ export type EditAccount = {
   }
   account_type: string
   account_subtype?: string
-  always_show_in_pnl: boolean
 }

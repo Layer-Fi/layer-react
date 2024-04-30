@@ -2,9 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import Edit2 from '../../icons/Edit2'
 import { centsToDollars } from '../../models/Money'
-import { Account } from '../../types'
 import { LedgerAccountBalance } from '../../types/chart_of_accounts'
-import { humanizeEnum } from '../../utils/format'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import {
   ChartOfAccountsContext,
