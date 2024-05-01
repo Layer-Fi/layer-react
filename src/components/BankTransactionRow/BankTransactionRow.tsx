@@ -54,11 +54,15 @@ export const extractDescriptionForSplit = (category: Category) => {
 export const getDefaultSelectedCategory = (
   bankTransaction: BankTransaction,
 ) => {
-  return hasSuggestions(bankTransaction.categorization_flow)
-    ? mapCategoryToOption(bankTransaction.categorization_flow.suggestions[0])
-    : bankTransaction.suggested_matches?.length === 1
-    ? mapSuggestedMatchToOption(bankTransaction.suggested_matches[0])
-    : undefined
+  if (bankTransaction.suggested_matches?.[0]) {
+    return mapSuggestedMatchToOption(bankTransaction.suggested_matches?.[0])
+  }
+  if (hasSuggestions(bankTransaction.categorization_flow)) {
+    return mapCategoryToOption(
+      bankTransaction.categorization_flow.suggestions[0],
+    )
+  }
+  return undefined
 }
 
 let clickTimer = Date.now()

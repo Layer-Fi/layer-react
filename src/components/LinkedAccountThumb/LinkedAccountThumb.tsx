@@ -12,7 +12,7 @@ export interface LinkedAccountThumbProps {
 
 const AccountNumber = ({ accountNumber }: { accountNumber: string }) => (
   <div className='account-number'>
-    <Text size={'sm' as TextSize}>•••{accountNumber}</Text>
+    <Text size={'sm' as TextSize}>••• {accountNumber}</Text>
   </div>
 )
 
@@ -32,10 +32,8 @@ export const LinkedAccountThumb = ({
           <Text as='span' className='account-name'>
             {account.external_account_name}
           </Text>
-          {!asWidget && (
-            <AccountNumber
-              accountNumber={'TODO' /*account.external_account_number*/}
-            />
+          {!asWidget && account.mask && (
+            <AccountNumber accountNumber={account.mask} />
           )}
           <Text
             as='span'
@@ -46,7 +44,16 @@ export const LinkedAccountThumb = ({
           </Text>
         </div>
         <div className='topbar-logo'>
-          {!account.institution?.logo && <InstitutionIcon />}
+          {account.logo_base64 != undefined ? (
+            <img
+              width={28}
+              height={28}
+              src={`data:image/png;base64,${account.logo_base64}`}
+              alt={account.institution?.name}
+            />
+          ) : (
+            <InstitutionIcon />
+          )}
         </div>
       </div>
       {!asWidget && (
@@ -74,7 +81,7 @@ export const LinkedAccountThumb = ({
             className='account-balance-text'
             size={'sm' as TextSize}
           >
-            General ledger balance
+            Ledger balance
           </Text>
         )}
         <Text as='span' className='account-balance'>
