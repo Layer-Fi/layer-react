@@ -66,7 +66,7 @@ export const LinkedAccountThumb = ({
             Bank balance
           </Text>
           <Text as='span' className='account-balance'>
-            ${formatMoney(account.latest_balance_timestamp.balance)}
+            ${formatMoney(account.latest_balance_timestamp?.balance)}
           </Text>
         </div>
       )}
