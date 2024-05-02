@@ -3,13 +3,18 @@ import {
   ChartOfAccounts,
   NewAccount,
   EditAccount,
-  LedgerAccounts,
   LedgerAccountsEntry,
 } from '../../types'
+import { ChartWithBalances } from '../../types/chart_of_accounts'
+import { LedgerAccountLineItems } from '../../types/ledger_accounts'
 import { get, post, put } from './authenticated_http'
 
 export const getChartOfAccounts = get<{ data: ChartOfAccounts }>(
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/accounts`,
+)
+
+export const getLedgerAccountBalances = get<{ data: ChartWithBalances }>(
+  ({ businessId }) => `/v1/businesses/${businessId}/ledger/balances`,
 )
 
 export const createAccount = post<{ data: Account }, NewAccount>(
@@ -21,7 +26,7 @@ export const updateAccount = put<{ data: Account }, EditAccount>(
     `/v1/businesses/${businessId}/ledger/accounts/${accountId}`,
 )
 
-export const getLedgerAccountsLines = get<{ data: LedgerAccounts }>(
+export const getLedgerAccountsLines = get<{ data: LedgerAccountLineItems }>(
   ({ businessId, accountId }) =>
     `/v1/businesses/${businessId}/ledger/accounts/${accountId}/lines`,
 )

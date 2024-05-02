@@ -1,0 +1,88 @@
+import { LinkedAccount } from '../../types/linked_accounts'
+
+export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
+  {
+    id: '1',
+    external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+    external_account_source: 'PLAID',
+    external_account_name: 'Citi Double Cash® Card',
+    //external_account_number: '1234',
+    latest_balance_timestamp: {
+      external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+      external_account_source: 'PLAID',
+      balance: 435121,
+      at: '2024-04-03T13:00:00Z',
+      created_at: '2024-04-06T16:44:35.715458Z',
+    },
+    current_ledger_balance: 373717,
+    institution: {
+      name: 'Chase',
+      logo: '',
+    },
+    //connection_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+    //connection_status: 'OK',
+  },
+  {
+    id: '2',
+    external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+    external_account_source: 'PLAID',
+    external_account_name: 'Citi Double Cash® Card',
+    //external_account_number: '1234',
+    latest_balance_timestamp: {
+      external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+      external_account_source: 'PLAID',
+      balance: 435121,
+      at: '2024-04-03T13:00:00Z',
+      created_at: '2024-04-06T16:44:35.715458Z',
+    },
+    current_ledger_balance: 373717,
+    institution: {
+      name: 'Chase',
+      logo: '',
+    },
+    //connection_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+    //connection_status: 'OK',
+  },
+  {
+    id: '3',
+    external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+    external_account_source: 'PLAID',
+    external_account_name: 'Citi Double Cash® Card',
+    //external_account_number: '1234',
+    latest_balance_timestamp: {
+      external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+      external_account_source: 'PLAID',
+      balance: 435121,
+      at: '2024-04-03T13:00:00Z',
+      created_at: '2024-04-06T16:44:35.715458Z',
+    },
+    current_ledger_balance: 373717,
+    institution: {
+      name: 'Chase',
+      logo: '',
+    },
+    //connection_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+    //connection_status: 'OK',
+  },
+  {
+    id: '4',
+    external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+    external_account_source: 'PLAID',
+    external_account_name: 'Citi Double Cash® Card',
+    //external_account_number: '1234',
+    latest_balance_timestamp: {
+      external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+      external_account_source: 'PLAID',
+      balance: 435121,
+      at: '2024-04-03T13:00:00Z',
+      created_at: '2024-04-06T16:44:35.715458Z',
+    },
+    current_ledger_balance: 373717,
+    institution: {
+      name: 'Chase',
+      logo: '',
+    },
+    //connection_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+    //connection_status: 'OK',
+  },
+]

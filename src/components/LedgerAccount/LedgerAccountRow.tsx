@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { DATE_FORMAT } from '../../config/general'
-import { centsToDollars } from '../../models/Money'
-import { Direction, LedgerAccountsLine } from '../../types'
+import { centsToDollars, dollarsToCents } from '../../models/Money'
+import { Direction, LedgerAccountLineItem } from '../../types'
 import { LedgerAccountsContext, View } from '../ChartOfAccounts/ChartOfAccounts'
 import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
 export interface LedgerAccountRowProps {
-  row: LedgerAccountsLine
+  row: LedgerAccountLineItem
   index: number
   initialLoad?: boolean
   view: View
@@ -63,13 +63,13 @@ export const LedgerAccountRow = ({
                 {row.date && formatTime(parseISO(row.date), DATE_FORMAT)}
               </Text>
               <Text
-                weight={TextWeight.bold}
+                weight={TextWeight.normal}
                 className='Layer__ledger_account-table__journal-id'
               >
-                #123
+                {row.entry_id.substring(0, 5)}
               </Text>
             </div>
-            <Text>Invoice (TBD null)</Text>
+            <Text>{row.source?.display_description ?? ''}</Text>
           </span>
         </td>
         <td className='Layer__table-cell Layer__table-cell--primary'>
@@ -86,7 +86,7 @@ export const LedgerAccountRow = ({
         </td>
         <td className='Layer__table-cell Layer__table-cell--primary'>
           <span className='Layer__table-cell-content Layer__table-cell--amount'>
-            $X,XXX.XX
+            {`$${centsToDollars(row.running_balance)}`}
           </span>
         </td>
       </tr>
@@ -119,13 +119,13 @@ export const LedgerAccountRow = ({
                 {row.date && formatTime(parseISO(row.date), DATE_FORMAT)}
               </Text>
               <Text
-                weight={TextWeight.bold}
+                weight={TextWeight.normal}
                 className='Layer__ledger_account-table__journal-id'
               >
-                #123
+                {row.entry_id.substring(0, 5)}
               </Text>
             </div>
-            <Text>Invoice (TBD null)</Text>
+            <Text>{row.source?.display_description ?? ''}</Text>
             <div className='Layer__ledger_account-table__balances-mobile'>
               <div className='Layer__ledger_account-table__balance-item'>
                 <span className='Layer__ledger_account-table__balances-mobile__label'>
@@ -151,7 +151,7 @@ export const LedgerAccountRow = ({
                   Running balance
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
-                  $X,XXX.XX
+                  {`$${centsToDollars(row.running_balance)}`}
                 </span>
               </div>
             </div>
@@ -184,11 +184,15 @@ export const LedgerAccountRow = ({
           {row.date && formatTime(parseISO(row.date), DATE_FORMAT)}
         </span>
       </td>
-      <td className='Layer__table-cell Layer__table-cell--primary'>
-        <span className='Layer__table-cell-content'>#123</span>
+      <td className='Layer__table-cell'>
+        <span className='Layer__table-cell-content'>
+          {row.entry_id.substring(0, 5)}
+        </span>
       </td>
       <td className='Layer__table-cell'>
-        <span className='Layer__table-cell-content'>Invoice (TBD null)</span>
+        <span className='Layer__table-cell-content'>
+          {row.source?.display_description ?? ''}
+        </span>
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>
         <span className='Layer__table-cell-content Layer__table-cell--amount'>
@@ -204,7 +208,7 @@ export const LedgerAccountRow = ({
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>
         <span className='Layer__table-cell-content Layer__table-cell--amount'>
-          $X,XXX.XX
+          {`$${centsToDollars(row.running_balance)}`}
         </span>
       </td>
     </tr>

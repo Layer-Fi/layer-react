@@ -22,8 +22,8 @@ export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
     isLoading,
     error,
     isValidating,
-    refetch,
-    addAccount,
+    refetchAccounts,
+    addConnection,
     unlinkAccount,
     renewLinkAccount,
   } = useLinkedAccounts()
@@ -58,7 +58,7 @@ export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
           status={DataStateStatus.failed}
           title='Something went wrong'
           description='We couldn’t load your data.'
-          onRefresh={() => refetch()}
+          onRefresh={() => refetchAccounts()}
           isLoading={isValidating}
         />
       ) : null}
@@ -68,6 +68,8 @@ export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
             <LinkedAccountOptions
               key={`linked-acc-${index}`}
               config={linkedAccountOptionsConfig}
+              accountId={account.external_account_external_id}
+              plaidItemId={'TODO' /*account.connection_id*/}
             >
               <LinkedAccountThumb account={account} asWidget={asWidget} />
             </LinkedAccountOptions>
@@ -76,13 +78,13 @@ export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
             role='button'
             tabIndex={0}
             aria-label='new-account'
-            onClick={() => addAccount()}
+            onClick={() => addConnection('PLAID')}
             className={linkedAccountsNewAccountClassName}
           >
             <div className='Layer__linked-accounts__new-account-label'>
               <PlusIcon size={15} />
               <Text as='span' size={'sm' as TextSize}>
-                New account
+                Add Account
               </Text>
             </div>
           </div>

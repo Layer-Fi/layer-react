@@ -6,14 +6,21 @@ import {
   matchBankTransaction,
 } from './layer/bankTransactions'
 import { getCategories } from './layer/categories'
-import { getLinkedAccounts } from './layer/linked_accounts'
 import {
   getChartOfAccounts,
+  getLedgerAccountBalances,
   createAccount,
   updateAccount,
   getLedgerAccountsLines,
   getLedgerAccountsEntry,
 } from './layer/chart_of_accounts'
+import {
+  getLinkedAccounts,
+  getPlaidLinkToken,
+  exchangePlaidPublicToken,
+  unlinkPlaidItem,
+  unlinkPlaidAccount,
+} from './layer/linked_accounts'
 import { getProfitAndLoss } from './layer/profit_and_loss'
 
 export const Layer = {
@@ -26,8 +33,13 @@ export const Layer = {
   getBankTransactions,
   getCategories,
   getChartOfAccounts,
+  getLedgerAccountBalances,
   getLedgerAccountsLines,
   getLedgerAccountsEntry,
   getProfitAndLoss,
   getLinkedAccounts,
+  getPlaidLinkToken,
+  exchangePlaidPublicToken,
+  unlinkPlaidAccount,
+  unlinkPlaidItem,
 }

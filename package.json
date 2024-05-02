@@ -1,6 +1,6 @@
 {
   "name": "@layerfi/components",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "description": "Layer React Components",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -61,6 +61,7 @@
     "@floating-ui/react": "^0.26.8",
     "classnames": "^2.5.1",
     "date-fns": "^2.30.0",
+    "react-plaid-link": "^3.5.1",
     "react-select": "^5.8.0",
     "recharts": "^2.10.1",
     "swr": "^2.2.4"

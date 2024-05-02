@@ -3,10 +3,20 @@ import classNames from 'classnames'
 
 export interface HoverMenuProps {
   children: ReactNode
-  config: { name: string; action: () => void }[]
+  config: {
+    name: string
+    action: (plaidItemId: string, accountId: string) => void
+  }[]
+  plaidItemId: string
+  accountId: string
 }
 
-export const HoverMenu = ({ children, config }: HoverMenuProps) => {
+export const HoverMenu = ({
+  children,
+  config,
+  plaidItemId,
+  accountId,
+}: HoverMenuProps) => {
   const [openMenu, setOpenMenu] = useState(false)
   const hoverMenuRef = useRef<HTMLDivElement>(null)
 
@@ -56,7 +66,7 @@ export const HoverMenu = ({ children, config }: HoverMenuProps) => {
               >
                 <button
                   className='Layer__hover-menu__list-item-button'
-                  onClick={() => item.action()}
+                  onClick={() => item.action(plaidItemId, accountId)}
                 >
                   {item.name}
                 </button>

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import Edit2 from '../../icons/Edit2'
 import { centsToDollars } from '../../models/Money'
-import { Account } from '../../types'
+import { LedgerAccountBalance } from '../../types/chart_of_accounts'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import {
   ChartOfAccountsContext,
@@ -13,7 +13,7 @@ import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 
 type ChartOfAccountsRowProps = {
-  account: Account
+  account: LedgerAccountBalance
   depth?: number
   index: number
   cumulativeIndex?: number
@@ -141,7 +141,7 @@ export const ChartOfAccountsRow = ({
               className='Layer__table-cell-content Layer__mobile--hidden'
               style={style}
             >
-              {account.normality}
+              {account.account_type?.display_name}
             </span>
             <span
               className='Layer__table-cell-content Layer__desktop--hidden'
@@ -153,12 +153,14 @@ export const ChartOfAccountsRow = ({
               >
                 {account.normality}
               </Text>
-              <Text className='Layer__coa__subtype--mobile'>Sub-Type</Text>
+              <Text className='Layer__coa__subtype--mobile'>
+                {account.account_subtype?.display_name}
+              </Text>
             </span>
           </td>
           <td className='Layer__table-cell Layer__coa__subtype Layer__mobile--hidden'>
             <span className='Layer__table-cell-content' style={style}>
-              Sub-Type
+              {account.account_subtype?.display_name}
             </span>
           </td>
           <td className='Layer__table-cell Layer__coa__balance'>

@@ -27,8 +27,8 @@ export {
   EditAccount,
 } from './types/chart_of_accounts'
 export {
-  LedgerAccounts,
-  LedgerAccountsLine,
+  LedgerAccountLineItems as LedgerAccounts,
+  LedgerAccountLineItem,
   LedgerAccountsAccount,
   LedgerAccountsEntry,
 } from './types/ledger_accounts'
