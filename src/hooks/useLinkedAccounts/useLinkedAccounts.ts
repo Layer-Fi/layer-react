@@ -70,7 +70,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   ) => {
     await Layer.exchangePlaidPublicToken(apiUrl, auth?.access_token, {
       params: { businessId },
-      body: { public_token: publicToken, institution_id: metadata.institution },
+      body: { public_token: publicToken, institution: metadata.institution },
     })
 
     refetchAccounts()
