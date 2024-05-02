@@ -44,11 +44,11 @@ export const LinkedAccountThumb = ({
           </Text>
         </div>
         <div className='topbar-logo'>
-          {account.logo_base64 != undefined ? (
+          {account.institution?.logo != undefined ? (
             <img
               width={28}
               height={28}
-              src={`data:image/png;base64,${account.logo_base64}`}
+              src={`data:image/png;base64,${account.institution.logo}`}
               alt={account.institution?.name}
             />
           ) : (

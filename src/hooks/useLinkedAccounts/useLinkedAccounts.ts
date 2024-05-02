@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
 import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 import { Layer } from '../../api/layer'
-import { LinkedAccount } from '../../types/linked_accounts'
+import { LinkedAccount, Source } from '../../types/linked_accounts'
 import { useLayerContext } from '../useLayerContext'
 import { LINKED_ACCOUNTS_MOCK_DATA } from './mockData'
 import useSWR from 'swr'
-
-type Source = 'PLAID' | 'STRIPE'
 
 type UseLinkedAccounts = () => {
   data?: LinkedAccount[]
@@ -15,9 +13,9 @@ type UseLinkedAccounts = () => {
   error: unknown
   addConnection: (source: Source) => void
   removeConnection: (source: Source, sourceId: string) => void // means, "unlink institution"
+  repairConnection: (source: Source, sourceId: string) => void
   refetchAccounts: () => void
-  unlinkAccount: (plaidAccountId: string) => void
-  renewLinkAccount: () => void
+  unlinkAccount: (source: Source, accountId: string) => void
 }
 
 const DEBUG = true
@@ -44,27 +42,41 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }),
   )
 
-  // Fetch link token on component load
-  useEffect(() => {
-    const getLinkToken = async () => {
-      if (auth?.access_token) {
-        const linkToken = (
-          await Layer.getPlaidLinkToken(apiUrl, auth.access_token, {
-            params: { businessId },
-          })
-        ).data.link_token
-        setLinkToken(linkToken)
-      }
+  /**
+   * Initiates an add connection flow with Plaid
+   */
+  const fetchPlaidLinkToken = async () => {
+    if (auth?.access_token) {
+      const linkToken = (
+        await Layer.getPlaidLinkToken(apiUrl, auth.access_token, {
+          params: { businessId },
+        })
+      ).data.link_token
+      setLinkToken(linkToken)
     }
-    getLinkToken()
-  }, [setLinkToken, auth?.access_token])
+  }
+
+  /**
+   * Initiates a connection repair flow with Plaid
+   */
+  const fetchPlaidUpdateModeLinkToken = async (plaidItemId: string) => {
+    if (auth?.access_token) {
+      const linkToken = (
+        await Layer.getPlaidUpdateModeLinkToken(apiUrl, auth.access_token, {
+          params: { businessId },
+          body: {plaid_item_id: plaidItemId}
+        })
+      ).data.link_token
+      setLinkToken(linkToken)
+    }
+  }
 
   /**
    * When the user has finished entering credentials, send the resulting
    * token to the backend where it will fetch and save the Plaid access token
    * and item id
    * */
-  const exchangePublicToken = async (
+  const exchangePlaidPublicToken = async (
     publicToken: string,
     metadata: PlaidLinkOnSuccessMetadata,
   ) => {
@@ -78,9 +90,15 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
     token: linkToken,
-    onSuccess: exchangePublicToken,
+    onSuccess: exchangePlaidPublicToken,
     env: USE_PLAID_SANDBOX ? 'sandbox' : undefined,
   })
+
+  useEffect(() => {
+    if (plaidLinkReady) {
+      plaidLinkStart()
+    }
+  },[plaidLinkStart, plaidLinkReady])
 
   const mockResponseData = {
     data: LINKED_ACCOUNTS_MOCK_DATA,
@@ -90,9 +108,17 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const addConnection = (source: Source) => {
     if (source === 'PLAID') {
-      linkPlaidItem()
+      fetchPlaidLinkToken()
     } else {
-      console.error(`Connection with source ${source} not yet supported`)
+      console.error(`Adding a connection with source ${source} not yet supported`)
+    }
+  }
+
+  const repairConnection = (source: Source, sourceId: string) => {
+    if (source === 'PLAID') {
+      fetchPlaidUpdateModeLinkToken(sourceId)
+    } else {
+      console.error(`Repairing a connection with source ${source} not yet supported`)
     }
   }
 
@@ -100,15 +126,24 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     if (source === 'PLAID') {
       unlinkPlaidItem(connectionId)
     } else {
-      console.error(`Connection with source ${source} not yet supported`)
+      console.error(`Removing a connection with source ${source} not yet supported`)
     }
   }
 
-  const linkPlaidItem = async () => {
-    DEBUG && console.log('add account...')
-    // TODO: display error if not ready
-    console.log('plaidLinkReady', plaidLinkReady)
-    plaidLinkReady && plaidLinkStart()
+  const unlinkAccount = (source: Source, accountId: string) => {
+    DEBUG && console.log('unlinking account')
+    if (source === 'PLAID') {
+      Layer.unlinkAccount(apiUrl, auth?.access_token, {
+        params: { businessId, accountId: accountId },
+      })
+    } else {
+      console.error(`Unlinking an account with source ${source} not yet supported`)
+    }
+  }
+
+  const refetchAccounts = () => {
+    DEBUG && console.log('refetching accounts...')
+    mutate()
   }
 
   const unlinkPlaidItem = (plaidItemId: string) => {
@@ -116,22 +151,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     Layer.unlinkPlaidItem(apiUrl, auth?.access_token, {
       params: { businessId, plaidItemId },
     })
-  }
-
-  const unlinkAccount = (plaidAccountId: string) => {
-    DEBUG && console.log('unlinking account')
-    Layer.unlinkPlaidAccount(apiUrl, auth?.access_token, {
-      params: { businessId, accountId: plaidAccountId },
-    })
-  }
-
-  const renewLinkAccount = () => {
-    DEBUG && console.log('relink account...')
-  }
-
-  const refetchAccounts = () => {
-    DEBUG && console.log('refetching plaid accounts...')
-    mutate()
   }
 
   return {
@@ -143,8 +162,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     error: responseError,
     addConnection,
     removeConnection,
+    repairConnection,
     refetchAccounts,
     unlinkAccount,
-    renewLinkAccount,
   }
 }
