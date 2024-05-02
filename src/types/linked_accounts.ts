@@ -32,5 +32,5 @@ export interface LinkedAccount {
 
 export type PublicToken = {
   public_token: string
-  institution_id: PlaidInstitution | null
+  institution: PlaidInstitution | null
 }
