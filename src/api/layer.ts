@@ -17,9 +17,12 @@ import {
 import {
   getLinkedAccounts,
   getPlaidLinkToken,
+  getPlaidUpdateModeLinkToken,
   exchangePlaidPublicToken,
   unlinkPlaidItem,
-  unlinkPlaidAccount,
+  unlinkAccount,
+  confirmConnection,
+  denyConnection,
 } from './layer/linked_accounts'
 import { getProfitAndLoss } from './layer/profit_and_loss'
 
@@ -39,7 +42,10 @@ export const Layer = {
   getProfitAndLoss,
   getLinkedAccounts,
   getPlaidLinkToken,
+  getPlaidUpdateModeLinkToken,
   exchangePlaidPublicToken,
-  unlinkPlaidAccount,
+  unlinkAccount,
   unlinkPlaidItem,
+  confirmConnection,
+  denyConnection,
 }

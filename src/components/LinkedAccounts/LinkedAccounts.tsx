@@ -8,6 +8,7 @@ import { LinkedAccountThumb } from '../LinkedAccountThumb'
 import { Loader } from '../Loader'
 import { Heading, HeadingSize, Text, TextSize } from '../Typography'
 import classNames from 'classnames'
+import { Source } from '../../types/linked_accounts'
 
 const COMPONENT_NAME = 'linked-accounts'
 
@@ -25,12 +26,13 @@ export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
     refetchAccounts,
     addConnection,
     unlinkAccount,
-    renewLinkAccount,
   } = useLinkedAccounts()
 
   const linkedAccountOptionsConfig = [
-    { name: 'Renew link', action: renewLinkAccount },
-    { name: 'Unlink', action: unlinkAccount },
+    {
+      name: 'Unlink account',
+      action: (source: Source, __: string, accountId: string) => unlinkAccount(source, accountId )
+    },
   ]
 
   const linkedAccountsNewAccountClassName = classNames(
@@ -68,8 +70,9 @@ export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
             <LinkedAccountOptions
               key={`linked-acc-${index}`}
               config={linkedAccountOptionsConfig}
-              accountId={account.external_account_external_id}
-              plaidItemId={'TODO' /*account.connection_id*/}
+              accountId={account.id}
+              connectionId={account.connection_id}
+              source={account.external_account_source}
             >
               <LinkedAccountThumb account={account} asWidget={asWidget} />
             </LinkedAccountOptions>

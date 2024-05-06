@@ -8,7 +8,8 @@ export const LinkedAccountOptions = ({
   children,
   config,
   accountId,
-  plaidItemId,
+  connectionId,
+  source,
 }: LinkedAccountOptionsProps) => {
   return (
     <div className='Layer__linked-accounts__options'>
@@ -17,7 +18,8 @@ export const LinkedAccountOptions = ({
           <HoverMenu
             config={config}
             accountId={accountId}
-            plaidItemId={plaidItemId}
+            connectionId={connectionId}
+            source={source}
           >
             <MoreVertical size={16} />
           </HoverMenu>
