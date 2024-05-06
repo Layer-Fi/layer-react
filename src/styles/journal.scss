@@ -96,12 +96,8 @@
   }
 }
 
-.Layer__journal__table-row--expanded {
+.Layer__journal-line__table-row {
   background-color: var(--color-base-50);
-}
-
-.Layer__journal-line__table-row--expanded {
-  background-color: var(--color-base-100);
 }
 
 .Layer__journal__table
@@ -133,13 +129,15 @@
   }
 }
 
-.Layer__journal__table .Layer__table-row {
-  &:not(.Layer__table-row--header) {
-    cursor: pointer;
-  }
-
+.Layer__journal__table .Layer__journal-table-row {
   &:not(.Layer__table-row--header):hover {
     background-color: var(--color-base-50);
+  }
+}
+
+.Layer__journal__table .Layer__journal-entry-table-row {
+  &:not(.Layer__table-row--header):hover {
+    background-color: var(--color-base-100);
   }
 }
 
@@ -250,4 +248,23 @@
       width: 100%;
     }
   }
+}
+
+.Layer__journal__pagination {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-md);
+  padding-bottom: 0;
+
+  .Layer__pagination {
+    margin-bottom: 0;
+  }
+}
+
+.Layer__journal__entry-details__back-btn {
+  display: none;
+  background: var(--color-base-0);
+  padding-top: var(--spacing-xl);
+  padding-left: var(--spacing-xl);
+  padding-right: var(--spacing-xl);
 }

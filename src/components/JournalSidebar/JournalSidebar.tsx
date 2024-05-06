@@ -32,11 +32,11 @@ export const JournalSidebar = ({
   }, [data, selectedEntryId])
 
   return (
-    <div className='Layer__ledger-account__entry-details'>
-      <div className='Layer__ledger-account__entry-details__back-btn'>
+    <div className='Layer__journal__entry-details'>
+      <div className='Layer__journal__entry-details__back-btn'>
         <BackButton onClick={() => closeSelectedEntry()} />
       </div>
-      <DetailsList title='Journal Entry #123' className='Layer__border-top'>
+      <DetailsList title='Journal Entry #123'>
         <DetailsListItem label='Entry type' isLoading={isLoadingEntry}>
           {humanizeEnum(entry?.entry_type ?? '')}
         </DetailsListItem>

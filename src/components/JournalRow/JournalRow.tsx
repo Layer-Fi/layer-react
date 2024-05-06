@@ -2,9 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars } from '../../models/Money'
-import { Direction, JournalEntry, JournalEntryLine } from '../../types'
+import { JournalEntry, JournalEntryLine } from '../../types'
 import { JournalContext, View } from '../Journal'
-import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
@@ -75,12 +74,12 @@ export const JournalRow = ({
   )
 
   const journalEntryLineClass = classNames(
-    'Layer__table-row',
+    'Layer__journal-entry-table-row',
     selectedEntries && 'Layer__table-row--active',
     initialLoad && 'initial-load',
     'Layer__table-row--with-show',
     showComponent ? 'show' : 'Layer__table-row--anim-starting-state',
-    isOpen && 'Layer__journal-line__table-row--expanded',
+    'Layer__journal-line__table-row',
     !expanded && 'Layer__table-row--hidden',
   )
 
@@ -100,7 +99,7 @@ export const JournalRow = ({
     return (
       <>
         <tr
-          className={classNames(baseClass)}
+          className={baseClass}
           style={{ transitionDelay: `${15 * index}ms` }}
           onClick={e => {
             e.stopPropagation()
@@ -130,6 +129,9 @@ export const JournalRow = ({
                   <ChevronDownFill
                     size={16}
                     className='Layer__table__expand-icon'
+                    style={{
+                      transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)',
+                    }}
                   />
                 )}
               </span>
@@ -197,10 +199,12 @@ export const JournalRow = ({
 
   return (
     <tr
-      className={classNames(journalEntryLineClass)}
+      className={journalEntryLineClass}
       style={{ transitionDelay: `${15 * index}ms` }}
     >
-      <td className='Layer__table-cell' />
+      <td className='Layer__table-cell'>
+        <span className='Layer__table-cell-content' style={style} />
+      </td>
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content' style={style}>
           <span className='Layer__table-cell-hidden'>
