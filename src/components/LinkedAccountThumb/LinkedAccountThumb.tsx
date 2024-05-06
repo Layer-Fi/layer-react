@@ -71,10 +71,8 @@ export const LinkedAccountThumb = ({
         </div>
       )}
       <div className='bottombar'>
-        {asWidget ? (
-          <AccountNumber
-            accountNumber={'TODO' /*account.external_account_number*/}
-          />
+        {asWidget && account.mask ? (
+          <AccountNumber accountNumber={account.mask} />
         ) : (
           <Text
             as='span'
