@@ -14,6 +14,7 @@ import {
   getLedgerAccountsLines,
   getLedgerAccountsEntry,
 } from './layer/chart_of_accounts'
+import { getJournal, addEntry } from './layer/journal'
 import {
   getLinkedAccounts,
   getPlaidLinkToken,
