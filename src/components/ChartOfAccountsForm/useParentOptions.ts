@@ -1,9 +1,11 @@
 import React, { useMemo } from 'react'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
-import { ChartOfAccounts } from '../../types'
+import { ChartWithBalances } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
 
-export const useParentOptions = (data?: ChartOfAccounts): BaseSelectOption[] =>
+export const useParentOptions = (
+  data?: ChartWithBalances,
+): BaseSelectOption[] =>
   useMemo(
     () =>
       flattenAccounts(data?.accounts || [])

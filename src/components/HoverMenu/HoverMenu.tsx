@@ -1,12 +1,25 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
+import { Source } from '../../types/linked_accounts'
 
 export interface HoverMenuProps {
   children: ReactNode
-  config: { name: string; action: () => void }[]
+  config: {
+    name: string
+    action: (source: Source, sourceId: string, accountId: string) => void
+  }[]
+  connectionId: string
+  accountId: string
+  source: Source
 }
 
-export const HoverMenu = ({ children, config }: HoverMenuProps) => {
+export const HoverMenu = ({
+  children,
+  config,
+  connectionId,
+  accountId,
+  source,
+}: HoverMenuProps) => {
   const [openMenu, setOpenMenu] = useState(false)
   const hoverMenuRef = useRef<HTMLDivElement>(null)
 
@@ -56,7 +69,7 @@ export const HoverMenu = ({ children, config }: HoverMenuProps) => {
               >
                 <button
                   className='Layer__hover-menu__list-item-button'
-                  onClick={() => item.action()}
+                  onClick={() => item.action(source, connectionId, accountId)}
                 >
                   {item.name}
                 </button>

@@ -36,6 +36,26 @@ export interface Account {
   entries?: AccountEntry[]
 }
 
+export type ChartWithBalances = {
+  accounts: LedgerAccountBalance[]
+}
+
+export type ApiAccountType = {
+  value: string
+  display_name: string
+}
+
+export type LedgerAccountBalance = {
+  id: string
+  name: string
+  stable_name: string
+  account_type: ApiAccountType
+  account_subtype?: ApiAccountType
+  normality: Direction
+  balance: number
+  sub_accounts: LedgerAccountBalance[]
+}
+
 export type NewAccount = {
   name: string
   normality: Direction
@@ -43,16 +63,18 @@ export type NewAccount = {
     type: 'AccountId'
     id: string
   }
-  description: string
+  account_type: string
+  account_subtype?: string
 }
 
 export type EditAccount = {
+  stable_name?: string
   name: string
-  stable_name: string
   normality: Direction
   parent_id?: {
     type: 'AccountId'
     id: string
   }
-  description: string
+  account_type: string
+  account_subtype?: string
 }

@@ -8,6 +8,7 @@ import { LinkedAccountThumb } from '../LinkedAccountThumb'
 import { Loader } from '../Loader'
 import { Heading, HeadingSize, Text, TextSize } from '../Typography'
 import classNames from 'classnames'
+import { Source } from '../../types/linked_accounts'
 
 const COMPONENT_NAME = 'linked-accounts'
 
@@ -22,15 +23,16 @@ export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
     isLoading,
     error,
     isValidating,
-    refetch,
-    addAccount,
+    refetchAccounts,
+    addConnection,
     unlinkAccount,
-    renewLinkAccount,
   } = useLinkedAccounts()
 
   const linkedAccountOptionsConfig = [
-    { name: 'Renew link', action: renewLinkAccount },
-    { name: 'Unlink', action: unlinkAccount },
+    {
+      name: 'Unlink account',
+      action: (source: Source, __: string, accountId: string) => unlinkAccount(source, accountId )
+    },
   ]
 
   const linkedAccountsNewAccountClassName = classNames(
@@ -58,7 +60,7 @@ export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
           status={DataStateStatus.failed}
           title='Something went wrong'
           description='We couldn’t load your data.'
-          onRefresh={() => refetch()}
+          onRefresh={() => refetchAccounts()}
           isLoading={isValidating}
         />
       ) : null}
@@ -68,6 +70,9 @@ export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
             <LinkedAccountOptions
               key={`linked-acc-${index}`}
               config={linkedAccountOptionsConfig}
+              accountId={account.id}
+              connectionId={account.connection_id}
+              source={account.external_account_source}
             >
               <LinkedAccountThumb account={account} asWidget={asWidget} />
             </LinkedAccountOptions>
@@ -76,13 +81,13 @@ export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
             role='button'
             tabIndex={0}
             aria-label='new-account'
-            onClick={() => addAccount()}
+            onClick={() => addConnection('PLAID')}
             className={linkedAccountsNewAccountClassName}
           >
             <div className='Layer__linked-accounts__new-account-label'>
               <PlusIcon size={15} />
               <Text as='span' size={'sm' as TextSize}>
-                New account
+                Add Account
               </Text>
             </div>
           </div>
