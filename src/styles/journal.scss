@@ -1,0 +1,269 @@
+.Layer__component-container.Layer__journal {
+  display: flex;
+  align-items: stretch;
+  position: relative;
+}
+
+.Layer__journal-table .Layer__table-cell-content::before {
+  background: var(--color-base-400);
+}
+
+.Layer__journal__table
+  .Layer__table-cell
+  .Layer__table-cell-content
+  .Layer__table-cell-content::before {
+  height: 52px;
+}
+
+.Layer__journal__loader-container {
+  padding: var(--spacing-2xl);
+}
+
+.Layer__table-cell-hidden {
+  visibility: hidden;
+}
+
+.Layer__journal__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.Layer__journal__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.Layer__table-cell.Layer__journal__name,
+.Layer__table-cell.Layer__journal__balance {
+  color: var(--color-base-800);
+}
+
+.Layer__table-header.Layer__journal__name {
+  padding-left: var(--spacing-xl);
+}
+
+.Layer__table-cell.Layer__journal__name {
+  width: calc(100% - 192px - 50%);
+}
+
+.Layer__table-cell.Layer__journal__type,
+.Layer__table-cell.Layer__journal__subtype {
+  width: calc(100% - 192px - 75%);
+}
+
+.Layer__table-cell.Layer__journal__balance {
+  font-variation-settings: 'wght' var(--font-weight-bold);
+}
+
+.Layer__journal__table
+  .Layer__table-row--depth-0
+  .Layer__table-cell.Layer__journal__name {
+  font-variation-settings: 'wght' var(--font-weight-bold);
+}
+
+.Layer__journal__balance {
+  text-align: right;
+  justify-content: flex-end;
+}
+
+.Layer__table-cell.Layer__journal__actions {
+  width: 160px;
+
+  .Layer__table-cell-content {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: var(--spacing-3xs);
+    padding-bottom: var(--spacing-3xs);
+    gap: var(--spacing-xs);
+
+    & > .Layer__btn {
+      opacity: 0;
+      visibility: hidden;
+      transition: all 300ms ease-out;
+      transform: scale(0.92);
+    }
+  }
+
+  .Layer__btn--icon-only {
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+
+.Layer__journal-line__table-row {
+  background-color: var(--color-base-50);
+}
+
+.Layer__journal__table
+  .Layer__table-row:hover
+  .Layer__journal__actions
+  .Layer__btn {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.Layer__journal__sidebar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  gap: var(--spacing-md);
+
+  .title {
+    margin: 0;
+    font-size: 24px;
+  }
+
+  .actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+  }
+}
+
+.Layer__journal__table .Layer__journal-table-row {
+  &:not(.Layer__table-row--header):hover {
+    background-color: var(--color-base-50);
+  }
+}
+
+.Layer__journal__table .Layer__journal-entry-table-row {
+  &:not(.Layer__table-row--header):hover {
+    background-color: var(--color-base-100);
+  }
+}
+
+.Layer__row--expanded .Layer__table-cell {
+  background-color: var(--bg-element-focus);
+}
+
+.Layer__table__expand-icon {
+  transition: transform 150ms ease-out;
+  color: var(--color-base-600);
+  margin-left: -3px;
+  margin-right: var(--spacing-sm);
+}
+
+.Layer__journal__table .Layer__table-row--collapsed .Layer__table__expand-icon {
+  transform: rotate(-90deg);
+}
+
+.Layer__journal__form {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-xl);
+
+  .Layer__input-group.Layer__input-group--inline {
+    padding: var(--spacing-xs) 0;
+    label {
+      width: 140px;
+      min-width: 140px;
+      max-width: 140px;
+    }
+  }
+}
+
+.Layer__journal__form-edit-entry {
+  padding: var(--spacing-md) var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+
+  .Layer__text {
+    margin: 0;
+  }
+}
+
+.Layer__journal {
+  .Layer__desktop--hidden {
+    display: none;
+  }
+}
+
+.Layer__journal__type--mobile {
+  color: var(--color-base-800);
+}
+
+@container (min-width: 761px) and (max-width: 1024px) {
+  .Layer__journal {
+    .Layer__mobile--hidden {
+      display: none;
+    }
+
+    .Layer__desktop--hidden {
+      &.Layer__table-header {
+        display: table-cell;
+      }
+
+      &.Layer__table-cell-content {
+        display: flex;
+      }
+    }
+
+    .Layer__journal__type .Layer__table-cell-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      &.Layer__mobile--hidden {
+        display: none;
+      }
+    }
+
+    .Layer__table-cell.Layer__journal__actions {
+      width: 64px;
+    }
+  }
+}
+
+@container (max-width: 760px) {
+  .Layer__table-cell.Layer__journal__actions {
+    width: 64px;
+  }
+
+  .Layer__journal__row---mobile {
+    visibility: visible;
+    display: table-row;
+  }
+
+  .Layer__journal__row---desktop {
+    visibility: hidden;
+    display: none;
+  }
+
+  .Layer__journal__form-row {
+    flex-direction: column;
+
+    .Layer__journal__form-row__name_field {
+      flex: 1;
+      width: 100%;
+    }
+  }
+}
+
+.Layer__journal__pagination {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-md);
+  padding-bottom: 0;
+
+  .Layer__pagination {
+    margin-bottom: 0;
+  }
+}
+
+.Layer__journal__entry-details__back-btn {
+  background: var(--color-base-0);
+  padding-top: var(--spacing-xl);
+  padding-left: var(--spacing-xl);
+  padding-right: var(--spacing-xl);
+}

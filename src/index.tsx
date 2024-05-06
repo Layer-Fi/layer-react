@@ -7,6 +7,7 @@ export { ProfitAndLossView } from './components/ProfitAndLossView'
 export { ChartOfAccounts } from './components/ChartOfAccounts'
 export { LayerProvider } from './providers/LayerProvider'
 export { useLayerContext } from './hooks/useLayerContext'
+export { Journal } from './components/Journal'
 
 // Views:
 export { AccountingOverview } from './views/AccountingOverview'
