@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import { Layer } from '../../api/layer'
 import {
   ProfitAndLoss,
   DateRange,
@@ -12,9 +11,8 @@ import {
   collectRevenueItems,
   applyShare,
 } from '../../utils/profitAndLossUtils'
-import { useLayerContext } from '../useLayerContext'
-import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
-import useSWR from 'swr'
+import { useProfitAndLossQuery } from './useProfitAndLossQuery'
+import { startOfMonth, endOfMonth } from 'date-fns'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -28,6 +26,7 @@ type Props = {
     values: string[]
   }
   reportingBasis?: ReportingBasis
+  fetchMultipleMonths?: boolean
 }
 
 type ProfitAndLossFilter = {
@@ -66,12 +65,12 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     endDate: initialEndDate,
     tagFilter,
     reportingBasis,
+    fetchMultipleMonths = false,
   }: Props = {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   },
 ) => {
-  const { auth, businessId, apiUrl } = useLayerContext()
   const [startDate, setStartDate] = useState(
     initialStartDate || startOfMonth(Date.now()),
   )
@@ -85,32 +84,45 @@ export const useProfitAndLoss: UseProfitAndLoss = (
 
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
 
-  const {
-    data: rawData,
-    isLoading,
-    isValidating,
-    error: rawError,
-    mutate,
-  } = useSWR(
-    businessId &&
-      startDate &&
-      endDate &&
-      auth?.access_token &&
-      `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
-        ',',
-      )}-${reportingBasis}`,
-    Layer.getProfitAndLoss(apiUrl, auth?.access_token, {
-      params: {
-        businessId,
-        startDate: formatISO(startDate),
-        endDate: formatISO(endDate),
-        tagKey: tagFilter?.key,
-        tagValues: tagFilter?.values?.join(','),
-        reportingBasis,
+  const { data, isLoading, isValidating, error, refetch } =
+    useProfitAndLossQuery({
+      startDate,
+      endDate,
+      tagFilter,
+      reportingBasis,
+    })
+
+  const changeDateRange = ({
+    startDate: newStartDate,
+    endDate: newEndDate,
+  }: Partial<DateRange>) => {
+    newStartDate && setStartDate(newStartDate)
+    newEndDate && setEndDate(newEndDate)
+  }
+
+  const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {
+    setFilters({
+      ...filters,
+      [scope]: {
+        ...filters[scope],
+        sortBy: field,
+        sortDirection:
+          direction ?? filters[scope]?.sortDirection === 'desc'
+            ? 'asc'
+            : 'desc',
       },
-    }),
-  )
-  const { data, error } = rawData || {}
+    })
+  }
+
+  const setFilterTypes = (scope: Scope, types: string[]) => {
+    setFilters({
+      ...filters,
+      [scope]: {
+        ...filters[scope],
+        types,
+      },
+    })
+  }
 
   const { filteredDataRevenue, filteredTotalRevenue } = useMemo(() => {
     if (!data) {
@@ -131,6 +143,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
 
       return x
     })
+
     const sorted = filtered.sort((a, b) => {
       switch (filters['revenue']?.sortBy) {
         case 'category':
@@ -208,42 +221,6 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
   }, [data, startDate, filters, sidebarScope])
 
-  const changeDateRange = ({
-    startDate: newStartDate,
-    endDate: newEndDate,
-  }: Partial<DateRange>) => {
-    newStartDate && setStartDate(newStartDate)
-    newEndDate && setEndDate(newEndDate)
-  }
-
-  const refetch = () => {
-    mutate()
-  }
-
-  const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {
-    setFilters({
-      ...filters,
-      [scope]: {
-        ...filters[scope],
-        sortBy: field,
-        sortDirection:
-          direction ?? filters[scope]?.sortDirection === 'desc'
-            ? 'asc'
-            : 'desc',
-      },
-    })
-  }
-
-  const setFilterTypes = (scope: Scope, types: string[]) => {
-    setFilters({
-      ...filters,
-      [scope]: {
-        ...filters[scope],
-        types,
-      },
-    })
-  }
-
   return {
     data,
     filteredDataRevenue,
@@ -252,7 +229,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     filteredTotalExpenses,
     isLoading,
     isValidating,
-    error: error || rawError,
+    error: error,
     dateRange: { startDate, endDate },
     refetch,
     changeDateRange,

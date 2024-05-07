@@ -9,8 +9,8 @@ export const ProfitAndLossDatePicker = () => {
   const [isAnimating, setIsAnimating] = useState(false)
 
   const [localDate, setLocalDate] = useState(dateRange.startDate)
-  const [nextOpacity, setNextOpacity] = useState(0) 
-  const [currentOpacity, setCurrentOpacity] = useState(1) 
+  const [nextOpacity, setNextOpacity] = useState(0)
+  const [currentOpacity, setCurrentOpacity] = useState(1)
 
   const [transformStyle, setTransformStyle] = useState({
     transform: 'translateX(33%)',
@@ -27,11 +27,11 @@ export const ProfitAndLossDatePicker = () => {
   const change = (monthsToAdd: number) => {
     if (isAnimating) return
     setIsAnimating(true)
-    setNextOpacity(1) 
+    setNextOpacity(1)
 
     const newDate = add(localDate, { months: monthsToAdd })
     if (monthsToAdd === -1) {
-      setCurrentOpacity(0) 
+      setCurrentOpacity(0)
     }
 
     changeDateRange({
@@ -53,7 +53,7 @@ export const ProfitAndLossDatePicker = () => {
       setLocalDate(newDate)
       setTransformStyle({ transform: 'translateX(33%)', transition: 'none' })
       setIsAnimating(false)
-      setNextOpacity(0) 
+      setNextOpacity(0)
       setCurrentOpacity(1)
     }, 300)
   }
@@ -63,10 +63,11 @@ export const ProfitAndLossDatePicker = () => {
   const nextLabel = format(add(localDate, { months: 1 }), 'LLLL, y')
 
   return (
-    <div
-      className='Layer__profit-and-loss-date-picker'
-    >
-      <div className='Layer__profit-and-loss-date-picker__labels-container' style={transformStyle}>
+    <div className='Layer__profit-and-loss-date-picker'>
+      <div
+        className='Layer__profit-and-loss-date-picker__labels-container'
+        style={transformStyle}
+      >
         <span className='Layer__profit-and-loss-date-picker__label'>
           {prevLabel}
         </span>

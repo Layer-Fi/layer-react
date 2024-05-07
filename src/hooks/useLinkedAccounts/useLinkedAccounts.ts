@@ -1,87 +1,36 @@
+import { useEffect, useState } from 'react'
+import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 import { Layer } from '../../api/layer'
-import { LinkedAccount } from '../../types/linked_accounts'
+import { LinkedAccount, Source } from '../../types/linked_accounts'
 import { useLayerContext } from '../useLayerContext'
+import { LINKED_ACCOUNTS_MOCK_DATA } from './mockData'
 import useSWR from 'swr'
-
-const MOCK_DATA: LinkedAccount[] = [
-  {
-    id: '1',
-    external_account_name: 'Citi Double Cash® Card',
-    external_account_number: '1234',
-    latest_balance_timestamp: {
-      external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
-      external_account_source: 'PLAID',
-      balance: 435121,
-      at: '2024-04-03T13:00:00Z',
-      created_at: '2024-04-06T16:44:35.715458Z',
-    },
-    current_ledger_balance: 373717,
-    institution: 'Chase',
-    institutionLogo: '',
-  },
-  {
-    id: '2',
-    external_account_name: 'Citi Double Cash® Card',
-    external_account_number: '1234',
-    latest_balance_timestamp: {
-      external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
-      external_account_source: 'PLAID',
-      balance: 435121,
-      at: '2024-04-03T13:00:00Z',
-      created_at: '2024-04-06T16:44:35.715458Z',
-    },
-    current_ledger_balance: 373717,
-    institution: 'Chase',
-    institutionLogo: '',
-  },
-  {
-    id: '3',
-    external_account_name: 'Citi Double Cash® Card',
-    external_account_number: '1234',
-    latest_balance_timestamp: {
-      external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
-      external_account_source: 'PLAID',
-      balance: 435121,
-      at: '2024-04-03T13:00:00Z',
-      created_at: '2024-04-06T16:44:35.715458Z',
-    },
-    current_ledger_balance: 373717,
-    institution: 'Chase',
-    institutionLogo: '',
-  },
-  {
-    id: '4',
-    external_account_name: 'Citi Double Cash® Card',
-    external_account_number: '1234',
-    latest_balance_timestamp: {
-      external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
-      external_account_source: 'PLAID',
-      balance: 435121,
-      at: '2024-04-03T13:00:00Z',
-      created_at: '2024-04-06T16:44:35.715458Z',
-    },
-    current_ledger_balance: 373717,
-    institution: 'Chase',
-    institutionLogo: '',
-  },
-]
 
 type UseLinkedAccounts = () => {
   data?: LinkedAccount[]
   isLoading: boolean
   isValidating: boolean
   error: unknown
-  refetch: () => void
-  addAccount: () => void
-  unlinkAccount: () => void
-  renewLinkAccount: () => void
+  addConnection: (source: Source) => void
+  removeConnection: (source: Source, sourceId: string) => void // means, "unlink institution"
+  repairConnection: (source: Source, sourceId: string) => void
+  refetchAccounts: () => void
+  unlinkAccount: (source: Source, accountId: string) => void
 }
+
+const DEBUG = true
+const USE_MOCK_RESPONSE_DATA = false
+
+// Note: you will need to be using a business whose client's plaid client and plaid secret correspond to the
+// plaid sandbox account
+const USE_PLAID_SANDBOX = true
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
   const { auth, businessId, apiUrl } = useLayerContext()
+  const [linkToken, setLinkToken] = useState<string | null>(null)
 
   const {
-    // data: responseData,
+    data: responseData,
     isLoading,
     isValidating,
     error: responseError,
@@ -93,34 +42,128 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }),
   )
 
-  const responseData = { data: MOCK_DATA, meta: {}, error: undefined }
-  // const isValidating = false
-
-  const addAccount = () => {
-    console.log('add account...')
+  /**
+   * Initiates an add connection flow with Plaid
+   */
+  const fetchPlaidLinkToken = async () => {
+    if (auth?.access_token) {
+      const linkToken = (
+        await Layer.getPlaidLinkToken(apiUrl, auth.access_token, {
+          params: { businessId },
+        })
+      ).data.link_token
+      setLinkToken(linkToken)
+    }
   }
 
-  const unlinkAccount = () => {
-    console.log('unlink account...')
+  /**
+   * Initiates a connection repair flow with Plaid
+   */
+  const fetchPlaidUpdateModeLinkToken = async (plaidItemId: string) => {
+    if (auth?.access_token) {
+      const linkToken = (
+        await Layer.getPlaidUpdateModeLinkToken(apiUrl, auth.access_token, {
+          params: { businessId },
+          body: {plaid_item_id: plaidItemId}
+        })
+      ).data.link_token
+      setLinkToken(linkToken)
+    }
   }
 
-  const renewLinkAccount = () => {
-    console.log('relink account...')
+  /**
+   * When the user has finished entering credentials, send the resulting
+   * token to the backend where it will fetch and save the Plaid access token
+   * and item id
+   * */
+  const exchangePlaidPublicToken = async (
+    publicToken: string,
+    metadata: PlaidLinkOnSuccessMetadata,
+  ) => {
+    await Layer.exchangePlaidPublicToken(apiUrl, auth?.access_token, {
+      params: { businessId },
+      body: { public_token: publicToken, institution: metadata.institution },
+    })
+
+    refetchAccounts()
   }
 
-  const refetch = () => {
-    console.log('refetch...')
+  const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
+    token: linkToken,
+    onSuccess: exchangePlaidPublicToken,
+    env: USE_PLAID_SANDBOX ? 'sandbox' : undefined,
+  })
+
+  useEffect(() => {
+    if (plaidLinkReady) {
+      plaidLinkStart()
+    }
+  },[plaidLinkStart, plaidLinkReady])
+
+  const mockResponseData = {
+    data: LINKED_ACCOUNTS_MOCK_DATA,
+    meta: {},
+    error: undefined,
+  }
+
+  const addConnection = (source: Source) => {
+    if (source === 'PLAID') {
+      fetchPlaidLinkToken()
+    } else {
+      console.error(`Adding a connection with source ${source} not yet supported`)
+    }
+  }
+
+  const repairConnection = (source: Source, sourceId: string) => {
+    if (source === 'PLAID') {
+      fetchPlaidUpdateModeLinkToken(sourceId)
+    } else {
+      console.error(`Repairing a connection with source ${source} not yet supported`)
+    }
+  }
+
+  const removeConnection = (source: Source, connectionId: string) => {
+    if (source === 'PLAID') {
+      unlinkPlaidItem(connectionId)
+    } else {
+      console.error(`Removing a connection with source ${source} not yet supported`)
+    }
+  }
+
+  const unlinkAccount = (source: Source, accountId: string) => {
+    DEBUG && console.log('unlinking account')
+    if (source === 'PLAID') {
+      Layer.unlinkAccount(apiUrl, auth?.access_token, {
+        params: { businessId, accountId: accountId },
+      })
+    } else {
+      console.error(`Unlinking an account with source ${source} not yet supported`)
+    }
+  }
+
+  const refetchAccounts = () => {
+    DEBUG && console.log('refetching accounts...')
+    mutate()
+  }
+
+  const unlinkPlaidItem = (plaidItemId: string) => {
+    DEBUG && console.log('unlinking plaid item')
+    Layer.unlinkPlaidItem(apiUrl, auth?.access_token, {
+      params: { businessId, plaidItemId },
+    })
   }
 
   return {
-    // data: responseData?.data.external_accounts,
-    data: responseData.data,
+    data: USE_MOCK_RESPONSE_DATA
+      ? mockResponseData.data
+      : responseData?.data.external_accounts,
     isLoading,
     isValidating,
     error: responseError,
-    refetch,
-    addAccount,
+    addConnection,
+    removeConnection,
+    repairConnection,
+    refetchAccounts,
     unlinkAccount,
-    renewLinkAccount,
   }
 }

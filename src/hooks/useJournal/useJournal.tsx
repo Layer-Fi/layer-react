@@ -33,7 +33,6 @@ type UseJournal = () => {
 export interface JournalFormTypes {
   action: 'new'
   data: {}
-}
 
 export const useJournal: UseJournal = () => {
   const { auth, businessId, apiUrl } = useLayerContext()

@@ -1,5 +1,5 @@
-import { Account, NewAccount } from '../../types'
-import { JournalEntry, NewJournalEntry } from '../../types/journal'
+
+import { JournalEntry } from '../../types/journal'
 import { get, post } from './authenticated_http'
 
 export const getJournal = get<{ data: JournalEntry[] }>(

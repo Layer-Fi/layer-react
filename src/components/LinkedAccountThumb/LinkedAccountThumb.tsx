@@ -12,7 +12,7 @@ export interface LinkedAccountThumbProps {
 
 const AccountNumber = ({ accountNumber }: { accountNumber: string }) => (
   <div className='account-number'>
-    <Text size={'sm' as TextSize}>•••{accountNumber}</Text>
+    <Text size={'sm' as TextSize}>••• {accountNumber}</Text>
   </div>
 )
 
@@ -32,19 +32,28 @@ export const LinkedAccountThumb = ({
           <Text as='span' className='account-name'>
             {account.external_account_name}
           </Text>
-          {!asWidget && (
-            <AccountNumber accountNumber={account.external_account_number} />
+          {!asWidget && account.mask && (
+            <AccountNumber accountNumber={account.mask} />
           )}
           <Text
             as='span'
             className='account-institution'
             size={'sm' as TextSize}
           >
-            {account.institution}
+            {account.institution?.name}
           </Text>
         </div>
         <div className='topbar-logo'>
-          {!account.institutionLogo && <InstitutionIcon />}
+          {account.institution?.logo != undefined ? (
+            <img
+              width={28}
+              height={28}
+              src={`data:image/png;base64,${account.institution.logo}`}
+              alt={account.institution?.name}
+            />
+          ) : (
+            <InstitutionIcon />
+          )}
         </div>
       </div>
       {!asWidget && (
@@ -57,20 +66,20 @@ export const LinkedAccountThumb = ({
             Bank balance
           </Text>
           <Text as='span' className='account-balance'>
-            ${formatMoney(account.latest_balance_timestamp.balance)}
+            ${formatMoney(account.latest_balance_timestamp?.balance)}
           </Text>
         </div>
       )}
       <div className='bottombar'>
-        {asWidget ? (
-          <AccountNumber accountNumber={account.external_account_number} />
+        {asWidget && account.mask ? (
+          <AccountNumber accountNumber={account.mask} />
         ) : (
           <Text
             as='span'
             className='account-balance-text'
             size={'sm' as TextSize}
           >
-            General ledger balance
+            Ledger balance
           </Text>
         )}
         <Text as='span' className='account-balance'>

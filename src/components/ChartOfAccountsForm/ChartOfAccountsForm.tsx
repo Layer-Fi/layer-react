@@ -1,11 +1,17 @@
 import React, { useContext, useMemo } from 'react'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { centsToDollars } from '../../models/Money'
+import { Direction } from '../../types'
 import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
 import { ChartOfAccountsContext } from '../ChartOfAccounts/ChartOfAccounts'
 import { Input, InputGroup, Select } from '../Input'
 import { Text, TextSize, TextWeight } from '../Typography'
-import { SUB_TYPE_OPTIONS } from './constants'
+import {
+  LEDGER_ACCOUNT_SUBTYPES,
+  LEDGER_ACCOUNT_SUBTYPES_FOR_TYPE,
+  LEDGER_ACCOUNT_TYPES,
+  NORMALITY_OPTIONS,
+} from './constants'
 import { useParentOptions } from './useParentOptions'
 
 export const ChartOfAccountsForm = () => {
@@ -121,25 +127,41 @@ export const ChartOfAccountsForm = () => {
         </InputGroup>
         <InputGroup name='type' label='Type' inline={true}>
           <Select
-            options={[]}
-            disabled
+            options={LEDGER_ACCOUNT_TYPES}
             value={form?.data.type}
             onChange={sel => changeFormData('type', sel)}
+            isInvalid={Boolean(form?.errors?.find(x => x.field === 'type'))}
+            errorMessage={form?.errors?.find(x => x.field === 'type')?.message}
+            disabled={
+              sendingForm ||
+              form.action === 'edit' ||
+              form.data.parent !== undefined
+            }
           />
         </InputGroup>
         <InputGroup name='subType' label='Sub-Type' inline={true}>
           <Select
-            options={SUB_TYPE_OPTIONS}
+            options={
+              form?.data.type?.value !== undefined
+                ? LEDGER_ACCOUNT_SUBTYPES_FOR_TYPE[form?.data.type?.value]
+                : LEDGER_ACCOUNT_SUBTYPES
+            }
             value={form?.data.subType}
             onChange={sel => changeFormData('subType', sel)}
             disabled={sendingForm}
           />
         </InputGroup>
-        <InputGroup name='category' label='Category' inline={true}>
+        <InputGroup name='normality' label='Normality' inline={true}>
           <Select
-            options={[]}
-            value={form?.data.category}
-            onChange={sel => changeFormData('category', sel)}
+            options={NORMALITY_OPTIONS}
+            value={form?.data.normality}
+            isInvalid={Boolean(
+              form?.errors?.find(x => x.field === 'normality'),
+            )}
+            errorMessage={
+              form?.errors?.find(x => x.field === 'normality')?.message
+            }
+            onChange={sel => changeFormData('normality', sel)}
             disabled={sendingForm}
           />
         </InputGroup>

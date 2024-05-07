@@ -1,12 +1,14 @@
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useLayerContext } from '../../hooks/useLayerContext'
-import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
+import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
 import { ProfitAndLoss } from '../../types'
 import { capitalizeFirstLetter } from '../../utils/format'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
+import { Text } from '../Typography'
 import { Indicator } from './Indicator'
-import { endOfMonth, format, parseISO, startOfMonth, sub } from 'date-fns'
+import classNames from 'classnames'
+import { format, parseISO, startOfMonth } from 'date-fns'
 import {
   BarChart,
   XAxis,
@@ -28,87 +30,27 @@ const barSize = 20
 export const ProfitAndLossChart = () => {
   const { getColor } = useLayerContext()
   const { changeDateRange, dateRange } = useContext(PNL.Context)
-  const thisMonth = startOfMonth(Date.now())
+  const [customCursorSize, setCustomCursorSize] = useState({
+    width: 0,
+    height: 0,
+    x: 0,
+  })
+  const [barAnimActive, setBarAnimActive] = useState(true)
 
   const startSelectionMonth = dateRange.startDate.getMonth()
   const endSelectionMonth = dateRange.endDate.getMonth()
 
-  // Yes, this looks weird, but we have to load all the data from the
-  // last 12 months as we don't have a single endpoint yet. And we
-  // can't use hooks in a loop.
-  const monthData: (ProfitAndLoss | undefined)[] = []
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 11 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 11 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 10 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 10 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 9 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 9 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 8 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 8 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 7 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 7 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 6 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 6 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 5 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 5 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 4 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 4 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 3 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 3 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 2 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 2 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: startOfMonth(sub(thisMonth, { months: 1 })),
-      endDate: endOfMonth(sub(thisMonth, { months: 1 })),
-    })?.data,
-  )
-  monthData.push(
-    useProfitAndLoss({
-      startDate: thisMonth,
-      endDate: endOfMonth(thisMonth),
-    })?.data,
-  )
+  const { data, loaded } = useProfitAndLossLTM({
+    currentDate: startOfMonth(Date.now()),
+  })
+
+  useEffect(() => {
+    if (loaded === 'complete') {
+      setTimeout(() => {
+        setBarAnimActive(false)
+      }, 1000)
+    }
+  }, [loaded])
 
   const getMonthName = (pnl: ProfitAndLoss | undefined) =>
     pnl ? format(parseISO(pnl.start_date), 'LLL') : ''
@@ -125,51 +67,55 @@ export const ProfitAndLossChart = () => {
   })
 
   const onClick: CategoricalChartFunc = ({ activeTooltipIndex }) => {
-    const selection = monthData[activeTooltipIndex || -1]
-    if (selection) {
-      const { start_date: startDate, end_date: endDate } = selection
+    const selection = data[activeTooltipIndex || -1]
+    if (selection && selection.data) {
+      const { start_date, end_date } = selection.data
       changeDateRange({
-        startDate: parseISO(startDate),
-        endDate: parseISO(endDate),
+        startDate: parseISO(start_date),
+        endDate: parseISO(end_date),
       })
     }
   }
 
-  const CustomTooltip = ({
-    active,
-    payload,
-    label,
-  }: TooltipProps<number, string>) => {
+  const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
       const netProfit = payload[0].payload.netProfit ?? 0
       const netProfitClass =
         netProfit > 0 ? 'positive' : netProfit < 0 ? 'negative' : ''
       return (
         <div className='Layer__chart__tooltip'>
-          <ul className='Layer__chart__tooltip-list'>
-            <li>
-              <label className='Layer__chart__tooltip-label'>
-                {capitalizeFirstLetter(payload[0].name ?? '')}
-              </label>
-              <span className='Layer__chart__tooltip-value'>
-                ${centsToDollars(Math.abs(payload[0].value ?? 0))}
-              </span>
-            </li>
-            <li>
-              <label className='Layer__chart__tooltip-label'>
-                {capitalizeFirstLetter(payload[1].name ?? '')}
-              </label>
-              <span className='Layer__chart__tooltip-value'>
-                ${centsToDollars(Math.abs(payload[1].value ?? 0))}
-              </span>
-            </li>
-            <li>
-              <label className='Layer__chart__tooltip-label'>Net Profit</label>
-              <span className={`Layer__chart__tooltip-value ${netProfitClass}`}>
-                ${centsToDollars(netProfit)}
-              </span>
-            </li>
-          </ul>
+          {loaded !== 'complete' ? (
+            <Text>Loading...</Text>
+          ) : (
+            <ul className='Layer__chart__tooltip-list'>
+              <li>
+                <label className='Layer__chart__tooltip-label'>
+                  {capitalizeFirstLetter(payload[0].name ?? '')}
+                </label>
+                <span className='Layer__chart__tooltip-value'>
+                  ${centsToDollars(Math.abs(payload[0].value ?? 0))}
+                </span>
+              </li>
+              <li>
+                <label className='Layer__chart__tooltip-label'>
+                  {capitalizeFirstLetter(payload[1].name ?? '')}
+                </label>
+                <span className='Layer__chart__tooltip-value'>
+                  ${centsToDollars(Math.abs(payload[1].value ?? 0))}
+                </span>
+              </li>
+              <li>
+                <label className='Layer__chart__tooltip-label'>
+                  Net Profit
+                </label>
+                <span
+                  className={`Layer__chart__tooltip-value ${netProfitClass}`}
+                >
+                  ${centsToDollars(netProfit)}
+                </span>
+              </li>
+            </ul>
+          )}
         </div>
       )
     }
@@ -178,44 +124,53 @@ export const ProfitAndLossChart = () => {
   }
 
   const CustomizedCursor = (props: any) => {
-    const { x, width, height } = props
+    const { x, y } = props
+    const { width, height } = customCursorSize
+    const offsetX = width * 0.1
 
     return (
       <Rectangle
-        fill={getColor(900)?.hex ?? '#333'}
+        fill={'#F7F8FA'}
         stroke='none'
-        x={x + width / 2 - 11}
-        y={height + 44}
-        radius={2}
-        width={22}
-        height={2}
+        x={x + offsetX}
+        y={y}
+        width={width}
+        height={height}
+        radius={6}
         className='Layer__chart__tooltip-cursor'
       />
     )
   }
 
   // If net profit doesn't change, we're probably still the same.
-  const data = useMemo(
-    () => monthData.map(summarizePnL),
-    [
-      startSelectionMonth,
-      endSelectionMonth,
-      ...monthData.map(m => m?.net_profit),
-    ],
-  )
+  const theData = useMemo(() => {
+    if (loaded !== 'complete') {
+      return data?.map(x => ({
+        name: format(x.startDate, 'LLL'),
+        revenue: 1,
+        expenses: 1,
+        netProfit: 0,
+        selected: false,
+      }))
+    }
+    return data?.map(x => summarizePnL(x.data))
+  }, [startSelectionMonth, endSelectionMonth, loaded])
 
   const [animateFrom, setAnimateFrom] = useState(-1)
 
   return (
     <ResponsiveContainer
-      className='Layer__chart-container'
+      className={classNames(
+        'Layer__chart-container',
+        loaded !== 'complete' && 'Layer__chart-container--loading',
+      )}
       width='100%'
       height='100%'
       minHeight={200}
     >
       <BarChart
         margin={{ left: 12, right: 12, bottom: 12 }}
-        data={data}
+        data={theData}
         onClick={onClick}
         barGap={barGap}
         className='Layer__profit-and-loss-chart'
@@ -233,9 +188,9 @@ export const ProfitAndLossChart = () => {
           strokeDasharray='5 5'
         />
         <Legend
-          verticalAlign='top'
+          verticalAlign='bottom'
           align='left'
-          wrapperStyle={{ top: -24 }}
+          wrapperStyle={{ bottom: 0 }}
           payload={[
             {
               value: 'Revenue',
@@ -253,37 +208,43 @@ export const ProfitAndLossChart = () => {
         <Bar
           dataKey='revenue'
           barSize={barSize}
-          isAnimationActive={false}
+          isAnimationActive={barAnimActive}
           radius={[2, 2, 0, 0]}
           className='Layer__profit-and-loss-chart__bar--income'
         >
           <LabelList
             content={
               <Indicator
+                setCustomCursorSize={(width, height, x) =>
+                  setCustomCursorSize({ width, height, x })
+                }
+                customCursorSize={customCursorSize}
                 animateFrom={animateFrom}
                 setAnimateFrom={setAnimateFrom}
               />
             }
           />
-          {data.map(entry => (
-            <Cell
-              key={entry.name}
-              className={
-                entry.selected
-                  ? 'Layer__profit-and-loss-chart__cell--selected'
-                  : ''
-              }
-            />
-          ))}
+          {theData?.map(entry => {
+            return (
+              <Cell
+                key={entry.name}
+                className={
+                  entry.selected
+                    ? 'Layer__profit-and-loss-chart__cell--selected'
+                    : ''
+                }
+              />
+            )
+          })}
         </Bar>
         <Bar
           dataKey='expenses'
           barSize={barSize}
-          isAnimationActive={false}
+          isAnimationActive={barAnimActive}
           radius={[2, 2, 0, 0]}
           className='Layer__profit-and-loss-chart__bar--expenses'
         >
-          {data.map(entry => (
+          {theData.map(entry => (
             <Cell
               key={entry.name}
               className={
