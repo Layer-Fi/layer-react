@@ -6,11 +6,14 @@ import { useLedgerAccounts } from '../../hooks/useLedgerAccounts'
 import { ChartOfAccountsTable } from '../ChartOfAccountsTable'
 import { Container } from '../Container'
 import { LedgerAccount } from '../LedgerAccount'
+import { endOfMonth, startOfMonth } from 'date-fns'
 
 export type View = 'mobile' | 'tablet' | 'desktop'
 
 export interface ChartOfAccountsProps {
   asWidget?: boolean
+  withDateControl?: boolean
+  withExpandAllButton?: boolean
 }
 
 export type ChartOfAccountsContextType = ReturnType<typeof useChartOfAccounts>
@@ -30,6 +33,11 @@ export const ChartOfAccountsContext = createContext<ChartOfAccountsContextType>(
     cancelForm: () => {},
     changeFormData: () => {},
     submitForm: () => {},
+    dateRange: {
+      startDate: startOfMonth(new Date()),
+      endDate: endOfMonth(new Date()),
+    },
+    changeDateRange: () => {},
   },
 )
 
@@ -57,13 +65,17 @@ export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
   return (
     <ChartOfAccountsContext.Provider value={chartOfAccountsContextData}>
       <LedgerAccountsContext.Provider value={ledgerAccountsContextData}>
-        <ChartOfAccountsContent />
+        <ChartOfAccountsContent {...props} />
       </LedgerAccountsContext.Provider>
     </ChartOfAccountsContext.Provider>
   )
 }
 
-const ChartOfAccountsContent = ({ asWidget }: ChartOfAccountsProps) => {
+const ChartOfAccountsContent = ({
+  asWidget,
+  withDateControl,
+  withExpandAllButton,
+}: ChartOfAccountsProps) => {
   const { accountId } = useContext(LedgerAccountsContext)
 
   const [view, setView] = useState<View>('desktop')
@@ -89,7 +101,13 @@ const ChartOfAccountsContent = ({ asWidget }: ChartOfAccountsProps) => {
       {accountId ? (
         <LedgerAccount view={view} containerRef={containerRef} />
       ) : (
-        <ChartOfAccountsTable view={view} containerRef={containerRef} />
+        <ChartOfAccountsTable
+          asWidget={asWidget}
+          withDateControl={withDateControl}
+          withExpandAllButton={withExpandAllButton}
+          view={view}
+          containerRef={containerRef}
+        />
       )}
     </Container>
   )
