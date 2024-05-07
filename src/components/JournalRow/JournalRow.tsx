@@ -111,7 +111,7 @@ export const JournalRow = ({
             }
           }}
         >
-          <td className='Layer__table-cell Layer__journal__name'>
+          <td className='Layer__table-cell Layer__journal__arrow'>
             <span className='Layer__table-cell-content'>
               <span
                 className='Layer__table-cell-content-indentation'

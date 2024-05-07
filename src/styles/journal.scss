@@ -8,6 +8,10 @@
   background: var(--color-base-400);
 }
 
+.Layer__journal__arrow .Layer__table-cell-content {
+  padding-right: 0 !important;
+}
+
 .Layer__journal__table
   .Layer__table-cell
   .Layer__table-cell-content
@@ -34,17 +38,17 @@
   gap: var(--spacing-sm);
 }
 
-.Layer__table-cell.Layer__journal__name,
+.Layer__table-cell.Layer__journal__arrow,
 .Layer__table-cell.Layer__journal__balance {
   color: var(--color-base-800);
 }
 
-.Layer__table-header.Layer__journal__name {
+.Layer__table-header.Layer__journal__arrow {
   padding-left: var(--spacing-xl);
 }
 
-.Layer__table-cell.Layer__journal__name {
-  width: calc(100% - 192px - 50%);
+.Layer__table-cell.Layer__journal__arrow {
+  width: 25px;
 }
 
 .Layer__table-cell.Layer__journal__type,
@@ -58,7 +62,7 @@
 
 .Layer__journal__table
   .Layer__table-row--depth-0
-  .Layer__table-cell.Layer__journal__name {
+  .Layer__table-cell.Layer__journal__arrow {
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
@@ -261,10 +265,103 @@
   }
 }
 
-.Layer__journal__entry-details__back-btn {
-  display: none;
-  background: var(--color-base-0);
-  padding-top: var(--spacing-xl);
-  padding-left: var(--spacing-xl);
-  padding-right: var(--spacing-xl);
+.Layer__journal__entry-details__title {
+  .Layer__component-header {
+    padding-bottom: var(--spacing-3xs);
+  }
+  .Layer__journal__entry-details__back-btn {
+    display: flex;
+    background: var(--color-base-0);
+  }
+}
+
+@container (max-width: 1024px) {
+  .Layer__journal__panel .Layer__panel__sidebar .Layer__panel__sidebar-content {
+    width: 100%;
+  }
+}
+
+@container (min-width: 500px) and (max-width: 1024px) {
+  .Layer__journal__panel .Layer__details-list .Layer__component-header {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+  }
+}
+
+@container (max-width: 499px) {
+  .Layer__journal__panel .Layer__details-list .Layer__details-list-item__label,
+  .Layer__journal__panel .Layer__details-list .Layer__details-list-item__value {
+    padding: var(--spacing-xs);
+  }
+
+  .Layer__journal__panel .Layer__details-list .Layer__details-list-item {
+    padding: 0 var(--spacing-xs);
+  }
+
+  .Layer__journal__entry-details__line-items {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+
+    .Layer__card {
+      box-shadow: none;
+      border-radius: 0;
+    }
+  }
+
+  .Layer__journal__panel .Layer__panel__sidebar {
+    background: var(--color-base-0);
+  }
+
+  .Layer__journal__entry-details__back-btn {
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+  }
+}
+
+.Layer__journal__form__input-group {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-xl);
+  gap: var(--spacing-3xs);
+
+  &__border {
+    border-bottom: 1px solid var(--color-base-300);
+  }
+
+  .Layer__input-label {
+    padding: 0;
+  }
+
+  .Layer__journal__form__input-group__title {
+    padding-bottom: var(--spacing-xl);
+  }
+}
+
+.Layer__journal__sidebar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  gap: var(--spacing-md);
+
+  .title {
+    margin: 0;
+    font-size: 24px;
+  }
+
+  .actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+  }
+}
+
+.Layer__journal__form__error-message {
+  padding: var(--spacing-4xs) var(--spacing-xl);
+  width: 100%;
+  text-align: right;
+  box-sizing: border-box;
+  color: var(--color-danger);
 }

@@ -23,3 +23,10 @@ export interface JournalEntryLine {
   entry_at: string
   createdAt: string
 }
+
+export type NewJournalEntry = {
+  name: string
+  amount: number
+  entry_at: string
+  createdAt: string
+}

@@ -24,6 +24,13 @@ export const JournalContext = createContext<JournalContextType>({
   selectedEntryId: undefined,
   setSelectedEntryId: () => {},
   closeSelectedEntry: () => {},
+  create: () => {},
+  submitForm: () => {},
+  cancelForm: () => {},
+  form: undefined,
+  setForm: () => {},
+  sendingForm: false,
+  apiError: undefined,
 })
 
 export const Journal = (props: JournalProps) => {

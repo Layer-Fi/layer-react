@@ -13,7 +13,7 @@ import {
   getLedgerAccountsLines,
   getLedgerAccountsEntry,
 } from './layer/chart_of_accounts'
-import { getJournal, addEntry } from './layer/journal'
+import { getJournal, createJournalEntries } from './layer/journal'
 import { getLinkedAccounts } from './layer/linked_accounts'
 import { getProfitAndLoss } from './layer/profit_and_loss'
 
@@ -32,5 +32,5 @@ export const Layer = {
   getProfitAndLoss,
   getLinkedAccounts,
   getJournal,
-  addEntry,
+  createJournalEntries,
 }

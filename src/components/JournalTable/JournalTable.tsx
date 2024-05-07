@@ -6,7 +6,6 @@ import React, {
   useState,
 } from 'react'
 import DownloadCloud from '../../icons/DownloadCloud'
-import { JournalEntryLine } from '../../types'
 import { Button, ButtonVariant } from '../Button'
 import { Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
@@ -37,9 +36,8 @@ export const JournalTable = ({
     error,
     isValidating,
     refetch,
-    closeSelectedEntry,
-    setSelectedEntryId,
     selectedEntryId,
+    setSelectedEntryId,
   } = useContext(JournalContext)
 
   useEffect(() => {
@@ -59,11 +57,6 @@ export const JournalTable = ({
       ?.slice(firstPageIndex, lastPageIndex)
   }, [rawData, currentPage])
 
-  const close = () => {
-    setSelectedEntryId(undefined)
-    closeSelectedEntry()
-  }
-
   return (
     <Panel
       sidebar={<JournalSidebar parentRef={containerRef} />}
@@ -80,7 +73,10 @@ export const JournalTable = ({
           >
             Download
           </Button>
-          <Button onClick={() => console.log('add entry')} disabled={isLoading}>
+          <Button
+            onClick={() => setSelectedEntryId('new')}
+            disabled={isLoading}
+          >
             Add Entry
           </Button>
         </div>
@@ -92,7 +88,7 @@ export const JournalTable = ({
             <th className='Layer__table-header' />
             <th className='Layer__table-header'>Id</th>
             <th className='Layer__table-header'>Date</th>
-            <th className='Layer__table-header'>Transactions</th>
+            <th className='Layer__table-header'>Transaction</th>
             <th className='Layer__table-header'>Account</th>
             <th className='Layer__table-header Layer__table-cell--amount'>
               Debit
