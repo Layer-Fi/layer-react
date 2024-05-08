@@ -518,3 +518,15 @@
   background: linear-gradient(-90deg, #fff 50%, rgba(255, 255, 255, 0) 100%);
   z-index: 2;
 }
+
+.Layer__input-with-badge {
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  .Layer__badge {
+    position: absolute;
+    right: 8px;
+    z-index: 1;
+  }
+}

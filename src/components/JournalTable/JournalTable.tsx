@@ -37,7 +37,7 @@ export const JournalTable = ({
     isValidating,
     refetch,
     selectedEntryId,
-    setSelectedEntryId,
+    addEntry,
   } = useContext(JournalContext)
 
   useEffect(() => {
@@ -73,10 +73,7 @@ export const JournalTable = ({
           >
             Download
           </Button>
-          <Button
-            onClick={() => setSelectedEntryId('new')}
-            disabled={isLoading}
-          >
+          <Button onClick={() => addEntry()} disabled={isLoading}>
             Add Entry
           </Button>
         </div>

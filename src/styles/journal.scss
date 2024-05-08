@@ -365,3 +365,10 @@
   box-sizing: border-box;
   color: var(--color-danger);
 }
+
+.Layer__journal__add-entry-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) 0 0;
+}

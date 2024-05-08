@@ -1,12 +1,31 @@
 import React, { useContext } from 'react'
-import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
-import { Input, InputGroup, Select } from '../Input'
+import {
+  convertCurrencyToNumber,
+  convertNumberToCurrency,
+  CURRENCY_INPUT_PATTERN,
+} from '../../utils/format'
+import { BadgeVariant } from '../Badge'
+import {
+  Button,
+  ButtonVariant,
+  RetryButton,
+  SubmitButton,
+  TextButton,
+} from '../Button'
+import { InputWithBadge, InputGroup, Select, DateInput } from '../Input'
 import { JournalContext } from '../Journal/Journal'
 import { Text, TextSize, TextWeight } from '../Typography'
 
 export const JournalForm = () => {
-  const { form, cancelForm, submitForm, sendingForm, apiError } =
-    useContext(JournalContext)
+  const {
+    form,
+    cancelForm,
+    submitForm,
+    sendingForm,
+    apiError,
+    changeFormData,
+    addEntryLine,
+  } = useContext(JournalContext)
 
   // const parentOptions = useParentOptions(data)
 
@@ -65,78 +84,77 @@ export const JournalForm = () => {
 
       <div className='Layer__journal__form__input-group'>
         <InputGroup name='date' label='Date' inline={true}>
-          <Select
-            // options={parentOptions}
-            value={form?.data.parent}
-            onChange={sel => changeFormData('parent', sel)}
-            disabled={sendingForm}
+          <DateInput
+            selected={form?.data.entry_at}
+            onChange={(date: string) => changeFormData('entry_at', date)}
+            dateFormat='MMMM d, yyyy'
+            placeholderText='Select date'
           />
-          <Select
-            // options={parentOptions}
-            value={form?.data.parent}
-            onChange={sel => changeFormData('parent', sel)}
-            disabled={sendingForm}
-          />
-        </InputGroup>
-      </div>
-      <div className='Layer__journal__form__input-group Layer__journal__form__input-group__border'>
-        <Text
-          className='Layer__journal__form__input-group__title'
-          size={TextSize.lg}
-        >
-          Add Debit Account
-        </Text>
-        <InputGroup name='amount' label='Amount' inline={true}>
-          <Input
-            name='amount'
-            placeholder='Enter amount...'
-            value={form?.data.name}
-            isInvalid={Boolean(form?.errors?.find(x => x.field === 'name'))}
-            errorMessage={form?.errors?.find(x => x.field === 'name')?.message}
-            disabled={sendingForm}
-            onChange={e =>
-              changeFormData('name', (e.target as HTMLInputElement).value)
-            }
-          />
-        </InputGroup>
-        <InputGroup name='account-name' label='Account name' inline={true}>
-          <Select
-            options={[]}
-            disabled
-            value={form?.data.type}
-            onChange={sel => changeFormData('type', sel)}
+          <DateInput
+            selected={form?.data.entry_at}
+            onChange={(date: string) => changeFormData('entry_at', date)}
+            showTimeSelect
+            showTimeSelectOnly
+            timeIntervals={15}
+            timeCaption='Time'
+            dateFormat='h:mm aa'
+            placeholderText='Select time'
           />
         </InputGroup>
       </div>
-      <div className='Layer__journal__form__input-group Layer__journal__form__input-group__border'>
-        <Text
-          className='Layer__journal__form__input-group__title'
-          size={TextSize.lg}
-        >
-          Add Credit Account
-        </Text>
-        <InputGroup name='amount' label='Amount' inline={true}>
-          <Input
-            name='amount'
-            placeholder='Enter amount...'
-            value={form?.data.name}
-            isInvalid={Boolean(form?.errors?.find(x => x.field === 'name'))}
-            errorMessage={form?.errors?.find(x => x.field === 'name')?.message}
-            disabled={sendingForm}
-            onChange={e =>
-              changeFormData('name', (e.target as HTMLInputElement).value)
-            }
-          />
-        </InputGroup>
-        <InputGroup name='account-name' label='Account name' inline={true}>
-          <Select
-            options={[]}
-            disabled={sendingForm}
-            value={form?.data.type}
-            onChange={sel => changeFormData('type', sel)}
-          />
-        </InputGroup>
-      </div>
+      {form?.data.line_items.map((item, idx) => {
+        const direction =
+          item.direction.toLowerCase().charAt(0).toUpperCase() +
+          item.direction.toLowerCase().slice(1)
+        return (
+          <div
+            key={'Layer__journal__form__input-group-' + idx}
+            className='Layer__journal__form__input-group Layer__journal__form__input-group__border'
+          >
+            <Text
+              className='Layer__journal__form__input-group__title'
+              size={TextSize.lg}
+            >
+              Add {direction} Account
+            </Text>
+            <InputGroup name='debit' label='Amount' inline={true}>
+              <InputWithBadge
+                name='debit'
+                placeholder='$0.00'
+                value={convertNumberToCurrency(item.amount)}
+                disabled={sendingForm}
+                badge={direction}
+                variant={
+                  item.direction === 'CREDIT'
+                    ? BadgeVariant.SUCCESS
+                    : BadgeVariant.WARNING
+                }
+                onChange={e =>
+                  changeFormData(
+                    'amount',
+                    convertCurrencyToNumber(
+                      (e.target as HTMLInputElement).value,
+                    ),
+                  )
+                }
+              />
+            </InputGroup>
+            <InputGroup name='account-name' label='Account name' inline={true}>
+              <Select
+                options={[]}
+                value={item.account_identifier.stable_name}
+                onChange={sel => changeFormData('debitAccount', sel)}
+              />
+            </InputGroup>
+            <TextButton
+              className='Layer__journal__add-entry-line'
+              onClick={() => addEntryLine(item.direction)}
+            >
+              Add next account
+            </TextButton>
+          </div>
+        )
+      })}
     </form>
   )
 }

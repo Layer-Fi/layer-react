@@ -148,9 +148,7 @@ export const JournalRow = ({
             </span>
           </td>
           <td className='Layer__table-cell'>
-            <span className='Layer__table-cell-content'>
-              Invoice (TBD null)
-            </span>
+            <span className='Layer__table-cell-content'>Invoice</span>
           </td>
           <td className='Layer__table-cell'>
             <span className='Layer__table-cell-content'>{`(${row.line_items.length})`}</span>

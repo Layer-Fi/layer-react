@@ -25,8 +25,15 @@ export interface JournalEntryLine {
 }
 
 export type NewJournalEntry = {
-  name: string
-  amount: number
   entry_at: string
-  createdAt: string
+  created_by: string
+  memo: string
+  line_items: {
+    account_identifier: {
+      type: string
+      stable_name: string
+    }
+    amount: number
+    direction: Direction
+  }[]
 }

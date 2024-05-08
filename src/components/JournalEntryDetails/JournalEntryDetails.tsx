@@ -31,7 +31,7 @@ export const JournalEntryDetails = () => {
     <div className='Layer__journal__entry-details'>
       <DetailsList
         className='Layer__journal__entry-details__title'
-        title='Journal Entry #123'
+        title={`Journal Entry #${entry?.id.substring(0, 5)}`}
         actions={
           <div className='Layer__journal__entry-details__back-btn'>
             <CloseButton onClick={() => closeSelectedEntry()} />
@@ -47,9 +47,11 @@ export const JournalEntryDetails = () => {
         <DetailsListItem label='Creation date' isLoading={isLoadingEntry}>
           {entry?.date && <DateTime value={entry?.date} />}
         </DetailsListItem>
-        <DetailsListItem label='Reversal' isLoading={isLoadingEntry}>
-          Journal Entry #79 TBD
-        </DetailsListItem>
+        {entry?.reversal_id && (
+          <DetailsListItem label='Reversal' isLoading={isLoadingEntry}>
+            Journal Entry #{entry?.reversal_id}
+          </DetailsListItem>
+        )}
       </DetailsList>
 
       {!isLoadingEntry && !errorEntry ? (
