@@ -1,14 +1,11 @@
-import React from 'react'
-import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
-import PlusIcon from '../../icons/PlusIcon'
+import React, { useContext } from 'react'
+import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
+import { LinkedAccountsProvider } from '../../providers/LinkedAccountsProvider'
 import { Container, Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
-import { LinkedAccountOptions } from '../LinkedAccountOptions'
-import { LinkedAccountThumb } from '../LinkedAccountThumb'
 import { Loader } from '../Loader'
-import { Heading, HeadingSize, Text, TextSize } from '../Typography'
-import classNames from 'classnames'
-import { Source } from '../../types/linked_accounts'
+import { Heading, HeadingSize } from '../Typography'
+import { LinkedAccountsContent } from './LinkedAccountsContent'
 
 const COMPONENT_NAME = 'linked-accounts'
 
@@ -17,27 +14,20 @@ export interface LinkedAccountsProps {
   elevated?: boolean
 }
 
-export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
-  const {
-    data,
-    isLoading,
-    error,
-    isValidating,
-    refetchAccounts,
-    addConnection,
-    unlinkAccount,
-  } = useLinkedAccounts()
+export const LinkedAccounts = (props: LinkedAccountsProps) => {
+  return (
+    <LinkedAccountsProvider>
+      <LinkedAccountsComponent {...props} />
+    </LinkedAccountsProvider>
+  )
+}
 
-  const linkedAccountOptionsConfig = [
-    {
-      name: 'Unlink account',
-      action: (source: Source, __: string, accountId: string) => unlinkAccount(source, accountId )
-    },
-  ]
-
-  const linkedAccountsNewAccountClassName = classNames(
-    'Layer__linked-accounts__new-account',
-    asWidget && '--as-widget',
+export const LinkedAccountsComponent = ({
+  asWidget,
+  elevated,
+}: LinkedAccountsProps) => {
+  const { isLoading, error, isValidating, refetchAccounts } = useContext(
+    LinkedAccountsContext,
   )
 
   return (
@@ -50,6 +40,7 @@ export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
           Linked Accounts
         </Heading>
       </Header>
+
       {isLoading && (
         <div className='Layer__linked-accounts__loader-container'>
           <Loader />
@@ -65,33 +56,7 @@ export const LinkedAccounts = ({ asWidget, elevated }: LinkedAccountsProps) => {
         />
       ) : null}
       {!error && !isLoading ? (
-        <div className='Layer__linked-accounts__list'>
-          {data?.map((account, index) => (
-            <LinkedAccountOptions
-              key={`linked-acc-${index}`}
-              config={linkedAccountOptionsConfig}
-              accountId={account.id}
-              connectionId={account.connection_id}
-              source={account.external_account_source}
-            >
-              <LinkedAccountThumb account={account} asWidget={asWidget} />
-            </LinkedAccountOptions>
-          ))}
-          <div
-            role='button'
-            tabIndex={0}
-            aria-label='new-account'
-            onClick={() => addConnection('PLAID')}
-            className={linkedAccountsNewAccountClassName}
-          >
-            <div className='Layer__linked-accounts__new-account-label'>
-              <PlusIcon size={15} />
-              <Text as='span' size={'sm' as TextSize}>
-                Add Account
-              </Text>
-            </div>
-          </div>
-        </div>
+        <LinkedAccountsContent asWidget={asWidget} />
       ) : null}
     </Container>
   )

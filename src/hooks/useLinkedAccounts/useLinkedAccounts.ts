@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 import { Layer } from '../../api/layer'
+import { LoadedStatus } from '../../types/general'
 import { LinkedAccount, Source } from '../../types/linked_accounts'
 import { useLayerContext } from '../useLayerContext'
 import { LINKED_ACCOUNTS_MOCK_DATA } from './mockData'
@@ -9,6 +10,7 @@ import useSWR from 'swr'
 type UseLinkedAccounts = () => {
   data?: LinkedAccount[]
   isLoading: boolean
+  loadingStatus: LoadedStatus
   isValidating: boolean
   error: unknown
   addConnection: (source: Source) => void
@@ -28,6 +30,7 @@ const USE_PLAID_SANDBOX = true
 export const useLinkedAccounts: UseLinkedAccounts = () => {
   const { auth, businessId, apiUrl } = useLayerContext()
   const [linkToken, setLinkToken] = useState<string | null>(null)
+  const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
 
   const {
     data: responseData,
@@ -41,6 +44,22 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       params: { businessId },
     }),
   )
+
+  useEffect(() => {
+    if (!isLoading && responseData?.data.external_accounts) {
+      setLoadingStatus('complete')
+      return
+    }
+
+    if (isLoading && loadingStatus === 'initial') {
+      setLoadingStatus('loading')
+      return
+    }
+
+    if (!isLoading && loadingStatus === 'loading') {
+      setLoadingStatus('complete')
+    }
+  }, [isLoading])
 
   /**
    * Initiates an add connection flow with Plaid
@@ -64,7 +83,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       const linkToken = (
         await Layer.getPlaidUpdateModeLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
-          body: {plaid_item_id: plaidItemId}
+          body: { plaid_item_id: plaidItemId },
         })
       ).data.link_token
       setLinkToken(linkToken)
@@ -98,7 +117,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     if (plaidLinkReady) {
       plaidLinkStart()
     }
-  },[plaidLinkStart, plaidLinkReady])
+  }, [plaidLinkStart, plaidLinkReady])
 
   const mockResponseData = {
     data: LINKED_ACCOUNTS_MOCK_DATA,
@@ -110,7 +129,9 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     if (source === 'PLAID') {
       fetchPlaidLinkToken()
     } else {
-      console.error(`Adding a connection with source ${source} not yet supported`)
+      console.error(
+        `Adding a connection with source ${source} not yet supported`,
+      )
     }
   }
 
@@ -118,7 +139,9 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     if (source === 'PLAID') {
       fetchPlaidUpdateModeLinkToken(sourceId)
     } else {
-      console.error(`Repairing a connection with source ${source} not yet supported`)
+      console.error(
+        `Repairing a connection with source ${source} not yet supported`,
+      )
     }
   }
 
@@ -126,7 +149,9 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     if (source === 'PLAID') {
       unlinkPlaidItem(connectionId)
     } else {
-      console.error(`Removing a connection with source ${source} not yet supported`)
+      console.error(
+        `Removing a connection with source ${source} not yet supported`,
+      )
     }
   }
 
@@ -137,7 +162,9 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         params: { businessId, accountId: accountId },
       })
     } else {
-      console.error(`Unlinking an account with source ${source} not yet supported`)
+      console.error(
+        `Unlinking an account with source ${source} not yet supported`,
+      )
     }
   }
 
@@ -158,6 +185,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       ? mockResponseData.data
       : responseData?.data.external_accounts,
     isLoading,
+    loadingStatus,
     isValidating,
     error: responseError,
     addConnection,

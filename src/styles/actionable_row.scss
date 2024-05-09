@@ -1,0 +1,32 @@
+.Layer__actionable_row {
+  display: flex;
+  padding: var(--spacing-md);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  border-radius: var(--XS, 8px);
+  background: var(--color-base-0);
+  box-shadow: 0px 0px 0px 1px var(--color-base-300);
+}
+
+.Layer__actionable_row__main {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.Layer__actionable_row__icon {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  background-color: var(--color-base-100);
+  border-radius: var(--border-radius-3xs);
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 3px 0px var(--base-transparent-4) inset;
+}
+
+.Layer__actionable_row__description {
+  color: var(--color-base-500);
+  font-size: var(--text-sm);
+}

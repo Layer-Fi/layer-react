@@ -15,7 +15,7 @@ import { Heading, HeadingSize } from '../Typography'
 
 const COMPONENT_NAME = 'bank-transactions'
 
-enum DisplayState {
+export enum DisplayState {
   review = 'review',
   categorized = 'categorized',
 }
@@ -37,7 +37,7 @@ export interface BankTransactionsProps {
   categorizedOnly?: boolean
 }
 
-const filterVisibility = (
+export const filterVisibility = (
   display: DisplayState,
   bankTransaction: BankTransaction,
 ) => {

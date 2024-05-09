@@ -8,6 +8,7 @@ export type LayerContextValues = {
   apiUrl: string
   theme?: LayerThemeConfig
   colors: ColorsPalette
+  onboardingStep?: OnboardingStep
 }
 
 export type LayerContextHelpers = {
@@ -15,6 +16,7 @@ export type LayerContextHelpers = {
   setLightColor: (color?: ColorConfig) => void
   setDarkColor: (color?: ColorConfig) => void
   setColors: (colors?: LayerThemeConfigColors) => void
+  setOnboardingStep: (value: OnboardingStep) => void
 }
 
 export interface ColorHSLConfig {
@@ -55,7 +57,7 @@ export interface ColorsPaletteOption {
 
 export type ColorsPalette = Record<number, ColorsPaletteOption>
 
-export interface LayerThemeConfigColors  {
+export interface LayerThemeConfigColors {
   dark?: ColorConfig
   light?: ColorConfig
 }
@@ -64,10 +66,13 @@ export interface LayerThemeConfig {
   colors?: LayerThemeConfigColors
 }
 
+export type OnboardingStep = undefined | 'connectAccount' | 'complete'
+
 export enum LayerContextActionName {
   setAuth = 'LayerContext.setAuth',
   setCategories = 'LayerContext.setCategories',
   setTheme = 'LayerContext.setTheme',
+  setOnboardingStep = 'LayerContext.setOnboardingStep',
 }
 
 export type LayerContextAction =
@@ -82,4 +87,8 @@ export type LayerContextAction =
   | {
       type: LayerContextActionName.setTheme
       payload: { theme: LayerContextValues['theme'] }
+    }
+  | {
+      type: LayerContextActionName.setOnboardingStep
+      payload: { onboardingStep: LayerContextValues['onboardingStep'] }
     }
