@@ -89,7 +89,7 @@
   &:hover {
     box-shadow:
       0px 0px 0px 1px var(--color-base-300),
-      0px 1px 2px 0px var(--base-transparent-6, rgba(17, 17, 17, 0.06));
+      0px 1px 2px 0px var(--base-transparent-6);
   }
 
   &:visited,
@@ -120,6 +120,11 @@
   color: var(--btn-color-primary);
   background: var(--btn-bg-color-primary);
 
+  &:hover .Layer__btn-icon {
+    color: var(--btn-color-primary);
+    background: transparent;
+  }
+
   &:visited,
   &:active {
     box-shadow: 0px 0px 0px 1px var(--color-base-800);
@@ -138,6 +143,20 @@
       & .Layer__btn-icon--on-inactive {
         display: none;
       }
+    }
+  }
+}
+
+.Layer__btn--primary:not(.Layer__btn--with-primary-icon) {
+  .Layer__btn-icon {
+    color: var(--btn-color-primary);
+  }
+
+  &:hover:not([disabled]),
+  &.Layer__btn--active:not([disabled]) {
+    .Layer__btn-icon {
+      color: var(--btn-color-primary);
+      background: transparent;
     }
   }
 }
@@ -195,6 +214,23 @@
   &:hover {
     background-color: var(--color-base-300);
     color: var(--color-base-1000);
+  }
+
+  &.Layer__icon-btn--border {
+    color: var(--color-base-800);
+    box-shadow:
+      0px 0px 0px 1px var(--color-base-300),
+      0px 1px 1px 0px var(--base-transparent-4),
+      0px 2px 3px 0px var(--base-transparent-4),
+      0px 3px 4px 0px var(--base-transparent-2),
+      0px 4px 5px 0px var(--base-transparent-1);
+
+    &:hover {
+      background-color: var(--color-base-0);
+      box-shadow:
+        0px 0px 0px 1px var(--color-base-300),
+        0px 1px 2px 0px var(--base-transparent-6);
+    }
   }
 
   &.Layer__icon-btn--active {

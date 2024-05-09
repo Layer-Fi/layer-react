@@ -24,6 +24,12 @@
   color: var(--text-color-primary);
 }
 
+.Layer__data-state__icon--success {
+  box-shadow: 0px 0px 3px 0px rgba(23, 51, 45, 0.04) inset;
+  background: var(--color-info-success-bg);
+  color: var(--color-info-success-fg);
+}
+
 .Layer__data-state__icon--error {
   background: transparent;
   color: var(--color-danger);
@@ -32,11 +38,11 @@
 .Layer__data-state__title {
   display: block;
   margin-bottom: var(--spacing-2xs);
+  color: var(--color-base-700);
 }
 
 .Layer__data-state__description {
   display: block;
   margin-bottom: var(--spacing-xl);
-  color: var(--color-base-700);
+  color: var(--color-base-500);
 }
-
