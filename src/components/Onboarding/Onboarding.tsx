@@ -38,7 +38,6 @@ export const OnboardingContent = ({
     onboardingStep ? EXPANDED_STYLE : COLLAPSED_STYLE,
   )
   const { data, loadingStatus } = useContext(LinkedAccountsContext)
-  console.log(onboardingStep, style)
 
   useEffect(() => {
     if (
