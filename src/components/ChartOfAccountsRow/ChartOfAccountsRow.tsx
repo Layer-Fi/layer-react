@@ -1,14 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
+import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import Edit2 from '../../icons/Edit2'
 import { centsToDollars } from '../../models/Money'
 import { LedgerAccountBalance } from '../../types/chart_of_accounts'
 import { Button, ButtonVariant, TextButton } from '../Button'
-import {
-  ChartOfAccountsContext,
-  LedgerAccountsContext,
-  View,
-} from '../ChartOfAccounts/ChartOfAccounts'
+import { View } from '../ChartOfAccounts/ChartOfAccounts'
 import { ExpandActionState } from '../ChartOfAccountsTable/ChartOfAccountsTable'
 import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'

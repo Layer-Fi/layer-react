@@ -1,9 +1,9 @@
 import React, { useContext, useMemo } from 'react'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
 import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
-import { ChartOfAccountsContext } from '../ChartOfAccounts/ChartOfAccounts'
 import { Input, InputGroup, Select } from '../Input'
 import { Text, TextSize, TextWeight } from '../Typography'
 import {

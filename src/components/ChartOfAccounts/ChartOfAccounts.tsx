@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
+import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useLedgerAccounts } from '../../hooks/useLedgerAccounts'
 import { ChartOfAccountsTable } from '../ChartOfAccountsTable'
 import { Container } from '../Container'
 import { LedgerAccount } from '../LedgerAccount'
-import { endOfMonth, startOfMonth } from 'date-fns'
 
 export type View = 'mobile' | 'tablet' | 'desktop'
 
@@ -16,51 +17,10 @@ export interface ChartOfAccountsProps {
   withExpandAllButton?: boolean
 }
 
-export type ChartOfAccountsContextType = ReturnType<typeof useChartOfAccounts>
-export const ChartOfAccountsContext = createContext<ChartOfAccountsContextType>(
-  {
-    data: undefined,
-    isLoading: false,
-    isValidating: false,
-    error: undefined,
-    refetch: () => {},
-    create: () => {},
-    form: undefined,
-    sendingForm: false,
-    apiError: undefined,
-    addAccount: () => {},
-    editAccount: () => {},
-    cancelForm: () => {},
-    changeFormData: () => {},
-    submitForm: () => {},
-    dateRange: {
-      startDate: startOfMonth(new Date()),
-      endDate: endOfMonth(new Date()),
-    },
-    changeDateRange: () => {},
-  },
-)
-
-export type LedgerAccountsContextType = ReturnType<typeof useLedgerAccounts>
-export const LedgerAccountsContext = createContext<LedgerAccountsContextType>({
-  data: undefined,
-  entryData: undefined,
-  isLoading: false,
-  isLoadingEntry: false,
-  isValidating: false,
-  isValidatingEntry: false,
-  error: undefined,
-  errorEntry: undefined,
-  refetch: () => {},
-  accountId: undefined,
-  setAccountId: () => {},
-  selectedEntryId: undefined,
-  setSelectedEntryId: () => {},
-  closeSelectedEntry: () => {},
-})
-
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
-  const chartOfAccountsContextData = useChartOfAccounts()
+  const chartOfAccountsContextData = useChartOfAccounts({
+    withDates: props.withDateControl,
+  })
   const ledgerAccountsContextData = useLedgerAccounts()
   return (
     <ChartOfAccountsContext.Provider value={chartOfAccountsContextData}>

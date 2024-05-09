@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { ChartOfAccountsContext } from '../ChartOfAccounts'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { DateMonthPicker } from '../DateMonthPicker'
 
 export const ChartOfAccountsDatePicker = () => {

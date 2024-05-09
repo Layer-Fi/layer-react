@@ -8,9 +8,8 @@ import {
   LedgerAccountBalance,
 } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
-import { convertToStableName } from '../../utils/helpers'
 import { useLayerContext } from '../useLayerContext'
-import { endOfMonth, startOfMonth } from 'date-fns'
+import { endOfMonth, formatISO, startOfMonth } from 'date-fns'
 import useSWR from 'swr'
 
 interface FormError {
@@ -163,7 +162,7 @@ export const flattenAccounts = (
     .flat()
     .filter(id => id)
 
-export const useChartOfAccounts: UseChartOfAccounts = (
+export const useChartOfAccounts = (
   { withDates, startDate: initialStartDate, endDate: initialEndDate }: Props = {
     withDates: false,
     startDate: startOfMonth(new Date()),
@@ -182,13 +181,18 @@ export const useChartOfAccounts: UseChartOfAccounts = (
     initialEndDate ?? endOfMonth(Date.now()),
   )
 
-  // @TODO - withDates and startDate + endDate
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     businessId &&
       auth?.access_token &&
       `chart-of-accounts-${businessId}-${startDate?.valueOf()}-${endDate?.valueOf()}`,
     Layer.getLedgerAccountBalances(apiUrl, auth?.access_token, {
-      params: { businessId },
+      params: {
+        businessId,
+        startDate:
+          withDates && startDate ? formatISO(startDate.valueOf()) : undefined,
+        endDate:
+          withDates && endDate ? formatISO(endDate.valueOf()) : undefined,
+      },
     }),
   )
 
