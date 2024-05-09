@@ -68,7 +68,7 @@ export const ActionableRow = ({
         </div>
       </div>
       <div className='Layer__actionable_row__action'>
-        {button ? button : null}
+        {button && button}
         {!button && onClick ? (
           <IconButton
             onClick={onClick}

@@ -24,10 +24,14 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
 
     const { theme } = useLayerContext()
 
-    const styles = parseStylesFromThemeConfig(theme)
+    const themeStyles = parseStylesFromThemeConfig(theme)
 
     return (
-      <div ref={ref} className={baseClassName} style={{ ...styles, ...style }}>
+      <div
+        ref={ref}
+        className={baseClassName}
+        style={{ ...themeStyles, ...style }}
+      >
         {children}
       </div>
     )
