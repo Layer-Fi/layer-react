@@ -1,0 +1,11 @@
+.Layer__accounting-overview__summaries-row {
+  display: flex;
+  align-items: center;
+  column-gap: var(--spacing-md);
+  max-width: 1406px;
+
+  .Layer__notification-card {
+    width: calc(25% - 12px);
+    height: 56px;
+  }
+}

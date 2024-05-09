@@ -241,6 +241,15 @@
       background-color: var(--color-base-300);
     }
   }
+
+  &.Layer__icon-btn--border {
+    box-shadow:
+      0px 4px 5px 0px var(--base-transparent-1),
+      0px 3px 4px 0px var(--base-transparent-2),
+      0px 2px 3px 0px var(--base-transparent-4),
+      0px 1px 1px 0px var(--base-transparent-4),
+      0px 0px 0px 1px var(--color-base-300);
+  }
 }
 
 .Layer__text-btn {
