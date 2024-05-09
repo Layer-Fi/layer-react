@@ -20,6 +20,8 @@
 
   &.Layer__badge--clickable {
     cursor: pointer;
+    min-height: 21px;
+    border-width: 0;
 
     &:hover {
       background-color: var(--badge-fg-color);

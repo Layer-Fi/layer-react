@@ -21,7 +21,6 @@ export const AccountingOverview = ({
     <ProfitAndLoss asContainer={false}>
       <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
         {enableOnboarding && <Onboarding />}
-        <ProfitAndLoss.Summaries actionable={false} />
         <div className='Layer__accounting-overview__summaries-row'>
           <ProfitAndLoss.Summaries actionable={false} />
           <TransactionToReviewCard onClick={onTransactionsToReviewClick} />
