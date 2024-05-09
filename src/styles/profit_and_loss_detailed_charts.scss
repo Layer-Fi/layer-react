@@ -45,7 +45,7 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
     margin: 0;
   }
 
-  .Layer__profit-and-loss-date-picker {
+  .Layer__date-month-picker {
     display: none;
   }
 }
@@ -309,10 +309,10 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
         font-size: 24px;
       }
 
-      .Layer__profit-and-loss-date-picker {
+      .Layer__date-month-picker {
         margin-top: var(--spacing-sm);
 
-        .Layer__profit-and-loss-date-picker__label {
+        .Layer__date-month-picker__label {
           font-size: 14px;
         }
       }
@@ -337,10 +337,10 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
         display: none;
       }
 
-      .Layer__profit-and-loss-date-picker {
+      .Layer__date-month-picker {
         display: flex;
 
-        .Layer__profit-and-loss-date-picker__label {
+        .Layer__date-month-picker__label {
           font-size: 14px;
         }
       }

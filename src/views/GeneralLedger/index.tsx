@@ -1,0 +1,1 @@
+export { GeneralLedgerView } from './GeneralLedger'

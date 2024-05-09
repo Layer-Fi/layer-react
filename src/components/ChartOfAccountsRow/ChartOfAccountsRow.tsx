@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
+import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import Edit2 from '../../icons/Edit2'
 import { centsToDollars } from '../../models/Money'
 import { LedgerAccountBalance } from '../../types/chart_of_accounts'
 import { Button, ButtonVariant, TextButton } from '../Button'
-import {
-  ChartOfAccountsContext,
-  LedgerAccountsContext,
-  View,
-} from '../ChartOfAccounts/ChartOfAccounts'
+import { View } from '../ChartOfAccounts/ChartOfAccounts'
+import { ExpandActionState } from '../ChartOfAccountsTable/ChartOfAccountsTable'
 import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 
@@ -21,6 +20,7 @@ type ChartOfAccountsRowProps = {
   acountsLength: number
   defaultOpen?: boolean
   view?: View
+  expandAll?: ExpandActionState
 }
 
 const INDENTATION = 24
@@ -56,6 +56,7 @@ export const ChartOfAccountsRow = ({
   defaultOpen = false,
   acountsLength,
   view,
+  expandAll,
 }: ChartOfAccountsRowProps) => {
   const { form, editAccount } = useContext(ChartOfAccountsContext)
 
@@ -75,6 +76,7 @@ export const ChartOfAccountsRow = ({
       }
 
   const [showComponent, setShowComponent] = useState(false)
+  const [prevExpandedAll, setPrevExpandedAll] = useState(expandAll)
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -83,6 +85,12 @@ export const ChartOfAccountsRow = ({
 
     return () => clearTimeout(timeoutId)
   }, [])
+
+  useEffect(() => {
+    if (prevExpandedAll !== expandAll && expandAll) {
+      setIsOpen(expandAll === 'collapsed' ? false : true)
+    }
+  }, [expandAll])
 
   const baseClass = classNames(
     'Layer__table-row',
@@ -136,7 +144,6 @@ export const ChartOfAccountsRow = ({
             </span>
           </td>
           <td className='Layer__table-cell Layer__coa__type'>
-            {/* @TODO what is type and subtype*/}
             <span
               className='Layer__table-cell-content Layer__mobile--hidden'
               style={style}
@@ -264,6 +271,7 @@ export const ChartOfAccountsRow = ({
           cumulativeIndex={cumulativeIndex + idx + 1}
           acountsLength={(account.sub_accounts ?? []).length}
           view={view}
+          expandAll={expandAll}
         />
       ))}
     </>

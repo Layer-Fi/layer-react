@@ -14,7 +14,10 @@ export const getChartOfAccounts = get<{ data: ChartOfAccounts }>(
 )
 
 export const getLedgerAccountBalances = get<{ data: ChartWithBalances }>(
-  ({ businessId }) => `/v1/businesses/${businessId}/ledger/balances`,
+  ({ businessId, startDate, endDate }) =>
+    `/v1/businesses/${businessId}/ledger/balances?${
+      startDate ? `&start_date=${encodeURIComponent(startDate)}` : ''
+    }${endDate ? `&end_date=${encodeURIComponent(endDate)}` : ''}`,
 )
 
 export const createAccount = post<{ data: Account }, NewAccount>(

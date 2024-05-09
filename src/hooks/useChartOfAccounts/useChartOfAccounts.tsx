@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
 import { NORMALITY_OPTIONS } from '../../components/ChartOfAccountsForm/constants'
-import { Direction, NewAccount } from '../../types'
+import { DateRange, Direction, NewAccount } from '../../types'
 import {
   ChartWithBalances,
   EditAccount,
   LedgerAccountBalance,
 } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
-import { convertToStableName } from '../../utils/helpers'
 import { useLayerContext } from '../useLayerContext'
+import { endOfMonth, formatISO, startOfMonth } from 'date-fns'
 import useSWR from 'swr'
 
 interface FormError {
@@ -126,6 +126,12 @@ export interface ChartOfAccountsForm {
   errors?: FormError[]
 }
 
+type Props = {
+  startDate?: Date
+  endDate?: Date
+  withDates?: boolean
+}
+
 type UseChartOfAccounts = () => {
   data: ChartWithBalances | undefined
   isLoading?: boolean
@@ -144,6 +150,8 @@ type UseChartOfAccounts = () => {
     value: string | BaseSelectOption | undefined,
   ) => void
   submitForm: () => void
+  dateRange: DateRange
+  changeDateRange: (dateRange: Partial<DateRange>) => void
 }
 
 export const flattenAccounts = (
@@ -154,17 +162,37 @@ export const flattenAccounts = (
     .flat()
     .filter(id => id)
 
-export const useChartOfAccounts: UseChartOfAccounts = () => {
+export const useChartOfAccounts = (
+  { withDates, startDate: initialStartDate, endDate: initialEndDate }: Props = {
+    withDates: false,
+    startDate: startOfMonth(new Date()),
+    endDate: endOfMonth(new Date()),
+  },
+) => {
   const { auth, businessId, apiUrl } = useLayerContext()
 
   const [form, setForm] = useState<ChartOfAccountsForm | undefined>()
   const [sendingForm, setSendingForm] = useState(false)
   const [apiError, setApiError] = useState<string | undefined>(undefined)
+  const [startDate, setStartDate] = useState(
+    initialStartDate ?? startOfMonth(Date.now()),
+  )
+  const [endDate, setEndDate] = useState(
+    initialEndDate ?? endOfMonth(Date.now()),
+  )
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
-    businessId && auth?.access_token && `chart-of-accounts-${businessId}`,
+    businessId &&
+      auth?.access_token &&
+      `chart-of-accounts-${businessId}-${startDate?.valueOf()}-${endDate?.valueOf()}`,
     Layer.getLedgerAccountBalances(apiUrl, auth?.access_token, {
-      params: { businessId },
+      params: {
+        businessId,
+        startDate:
+          withDates && startDate ? formatISO(startDate.valueOf()) : undefined,
+        endDate:
+          withDates && endDate ? formatISO(endDate.valueOf()) : undefined,
+      },
     }),
   )
 
@@ -364,6 +392,14 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
     })
   }
 
+  const changeDateRange = ({
+    startDate: newStartDate,
+    endDate: newEndDate,
+  }: Partial<DateRange>) => {
+    newStartDate && setStartDate(newStartDate)
+    newEndDate && setEndDate(newEndDate)
+  }
+
   const refetch = () => mutate()
 
   return {
@@ -381,5 +417,7 @@ export const useChartOfAccounts: UseChartOfAccounts = () => {
     cancelForm,
     changeFormData,
     submitForm,
+    dateRange: { startDate, endDate },
+    changeDateRange,
   }
 }

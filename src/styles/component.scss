@@ -44,6 +44,33 @@
   justify-content: space-between;
   align-items: center;
   gap: var(--spacing-md);
+  box-sizing: border-box;
+
+  &.Layer__component-header--next-line-actions {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .Layer__heading {
+      align-self: flex-start;
+    }
+
+    .Layer__header__actions {
+      width: 100%;
+    }
+  }
+}
+
+.Layer__header__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.Layer__header__actions-col {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
 @container (max-width: 700px) {
