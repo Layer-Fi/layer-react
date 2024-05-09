@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import CreditCardIcon from '../../icons/CreditCard'
@@ -10,6 +10,10 @@ import { OnboardingStep } from '../../types/layer_context'
 import { ActionableRow } from '../ActionableRow'
 import { Badge, BadgeVariant } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
+import {
+  DisplayState,
+  filterVisibility,
+} from '../BankTransactions/BankTransactions'
 import { Button } from '../Button'
 import { DataState, DataStateStatus } from '../DataState'
 import { Text } from '../Typography'
@@ -26,13 +30,12 @@ export const ConnectAccount = ({
   const { addConnection } = useContext(LinkedAccountsContext)
   const { data, isLoading } = useBankTransactions()
 
-  const [transactionsToReview, setTransactionsToReview] = useState(0)
-
-  useEffect(() => {
-    if (data && data.length > 0 && !isLoading) {
-      // @TODO - count only current / last month?
-      setTransactionsToReview(data.length)
+  const transactionsToReview = useMemo(() => {
+    if (data && data.length > 0) {
+      return data.filter(tx => filterVisibility(DisplayState.review, tx)).length
     }
+
+    return 0
   }, [data, isLoading])
 
   if (onboardingStep === 'connectAccount') {
