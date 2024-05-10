@@ -8,6 +8,7 @@ import classNames from 'classnames'
 export interface LinkedAccountThumbProps {
   account: LinkedAccount
   asWidget?: boolean
+  showLedgerBalance?: boolean
 }
 
 const AccountNumber = ({ accountNumber }: { accountNumber: string }) => (
@@ -19,11 +20,13 @@ const AccountNumber = ({ accountNumber }: { accountNumber: string }) => (
 export const LinkedAccountThumb = ({
   account,
   asWidget,
+  showLedgerBalance,
 }: LinkedAccountThumbProps) => {
   const linkedAccountThumbClassName = classNames(
     'Layer__linked-account-thumb',
     asWidget && '--as-widget',
   )
+  console.log(showLedgerBalance)
 
   return (
     <div className={linkedAccountThumbClassName}>
@@ -70,22 +73,24 @@ export const LinkedAccountThumb = ({
           </Text>
         </div>
       )}
-      <div className='bottombar'>
-        {asWidget && account.mask ? (
-          <AccountNumber accountNumber={account.mask} />
-        ) : (
-          <Text
-            as='span'
-            className='account-balance-text'
-            size={'sm' as TextSize}
-          >
-            Ledger balance
+      {showLedgerBalance && (
+        <div className='bottombar'>
+          {asWidget && account.mask ? (
+            <AccountNumber accountNumber={account.mask} />
+          ) : (
+            <Text
+              as='span'
+              className='account-balance-text'
+              size={'sm' as TextSize}
+            >
+              Ledger balance
+            </Text>
+          )}
+          <Text as='span' className='account-balance'>
+            ${formatMoney(account.current_ledger_balance)}
           </Text>
-        )}
-        <Text as='span' className='account-balance'>
-          ${formatMoney(account.current_ledger_balance)}
-        </Text>
-      </div>
+        </div>
+      )}
     </div>
   )
 }

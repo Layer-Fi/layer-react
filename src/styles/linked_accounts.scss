@@ -5,6 +5,11 @@
   &::-webkit-scrollbar {
     display: none;
   }
+
+  .Layer__linked-accounts__options.--hide-ledger-balance {
+    position: relative;
+    display: block;
+  }
 }
 
 .Layer__linked-accounts .Layer__data-state {
@@ -204,6 +209,11 @@
 .Layer__linked-accounts__options {
   position: relative;
   display: flex;
+
+  &.--hide-ledger-balance {
+    position: relative;
+    display: block;
+  }
 
   &:hover .Layer__linked-accounts__options-overlay {
     opacity: 1;

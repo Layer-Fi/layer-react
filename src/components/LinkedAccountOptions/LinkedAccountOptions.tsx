@@ -1,8 +1,11 @@
 import React from 'react'
 import MoreVertical from '../../icons/MoreVertical'
 import { HoverMenu, HoverMenuProps } from '../HoverMenu'
+import classNames from 'classnames'
 
-interface LinkedAccountOptionsProps extends HoverMenuProps {}
+interface LinkedAccountOptionsProps extends HoverMenuProps {
+  showLedgerBalance: boolean
+}
 
 export const LinkedAccountOptions = ({
   children,
@@ -10,9 +13,14 @@ export const LinkedAccountOptions = ({
   accountId,
   connectionId,
   source,
+  showLedgerBalance,
 }: LinkedAccountOptionsProps) => {
+  const linkedAccountOptionsClassName = classNames(
+    'Layer__linked-accounts__options',
+    !showLedgerBalance && '--hide-ledger-balance',
+  )
   return (
-    <div className='Layer__linked-accounts__options'>
+    <div className={linkedAccountOptionsClassName}>
       <div className='Layer__linked-accounts__options-overlay'>
         <div className='Layer__linked-accounts__options-overlay-button'>
           <HoverMenu
