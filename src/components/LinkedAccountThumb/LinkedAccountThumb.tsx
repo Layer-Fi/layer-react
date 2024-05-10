@@ -26,7 +26,6 @@ export const LinkedAccountThumb = ({
     'Layer__linked-account-thumb',
     asWidget && '--as-widget',
   )
-  console.log(showLedgerBalance)
 
   return (
     <div className={linkedAccountThumbClassName}>
