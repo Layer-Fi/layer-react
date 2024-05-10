@@ -1,8 +1,14 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
-import { Direction } from '../../types'
+import { Direction, FormError, FormErrorWithId } from '../../types'
+import { LedgerAccountBalance } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
-import { JournalEntry, NewJournalEntry } from '../../types/journal'
+import {
+  JournalEntry,
+  JournalEntryLineItem,
+  NewJournalEntry,
+} from '../../types/journal'
+import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
@@ -22,6 +28,8 @@ type UseJournal = () => {
   changeFormData: (
     name: string,
     value: string | BaseSelectOption | undefined | number,
+    lineItemIndex?: number,
+    accounts?: LedgerAccountBalance[] | undefined,
   ) => void
   submitForm: () => void
   cancelForm: () => void
@@ -31,11 +39,18 @@ type UseJournal = () => {
   apiError?: string
   setForm: (form?: JournalFormTypes) => void
   addEntryLine: (direction: Direction) => void
+  removeEntryLine: (index: number) => void
 }
 
 export interface JournalFormTypes {
-  action: 'new'
+  action: string
   data: NewJournalEntry
+  errors?:
+    | {
+        entry: FormError[]
+        lineItems: FormErrorWithId[]
+      }
+    | undefined
 }
 
 export const useJournal: UseJournal = () => {
@@ -44,6 +59,7 @@ export const useJournal: UseJournal = () => {
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
 
   const [form, setForm] = useState<JournalFormTypes | undefined>()
+  const [addingEntry, setAddingEntry] = useState(false)
   const [sendingForm, setSendingForm] = useState(false)
   const [apiError, setApiError] = useState<string | undefined>(undefined)
 
@@ -70,6 +86,7 @@ export const useJournal: UseJournal = () => {
         body: newJournalEntry,
       })
       await refetch()
+      closeSelectedEntry()
       setForm(undefined)
     } catch (_err) {
       setApiError('Submit failed. Please, check your connection and try again.')
@@ -83,60 +100,188 @@ export const useJournal: UseJournal = () => {
     setForm({
       action: 'new',
       data: {
-        entry_at: '2024-03-07T18:00:00Z',
+        entry_at: '',
         created_by: 'Test API Integration',
-        memo: 'cash rent payment',
+        memo: '',
         line_items: [
           {
             account_identifier: {
-              type: 'StableName',
-              stable_name: 'JOB_SUPPLIES',
-            },
-            amount: 0,
-            direction: Direction.DEBIT,
-          },
-          {
-            account_identifier: {
-              type: 'StableName',
-              stable_name: 'CASH',
+              type: '',
+              stable_name: '',
+              id: '',
+              name: '',
+              subType: undefined,
             },
             amount: 0,
             direction: Direction.CREDIT,
           },
+          {
+            account_identifier: {
+              type: '',
+              stable_name: '',
+              id: '',
+              name: '',
+              subType: undefined,
+            },
+            amount: 0,
+            direction: Direction.DEBIT,
+          },
         ],
       },
+      errors: undefined,
     })
   }
 
   const changeFormData = (
     fieldName: string,
     value: string | BaseSelectOption | undefined | number,
+    lineItemIndex?: number,
+    accounts?: LedgerAccountBalance[] | undefined,
   ) => {
     if (!form) {
       return
     }
 
-    let newFormData = {
-      ...form,
-      data: {
-        ...form.data,
-        [fieldName]: value,
-      },
-    }
+    let newFormData = form
 
-    // const errors = revalidateField(fieldName, newFormData)
+    if (lineItemIndex !== undefined) {
+      const lineItems = form.data.line_items || []
+      const lineItem = lineItems[lineItemIndex]
+
+      if (!lineItem) {
+        return
+      }
+
+      if (fieldName === 'parent' && accounts) {
+        const allAccounts = flattenAccounts(accounts || [])
+        const foundParent = allAccounts?.find(
+          x => x.id === (value as BaseSelectOption).value,
+        )
+
+        if (foundParent) {
+          let newLineItem = {
+            ...lineItem,
+            account_identifier: {
+              id: foundParent.id,
+              stable_name: foundParent.stable_name,
+              type: foundParent.account_type.value,
+              name: foundParent.name,
+              subType: foundParent.account_subtype
+                ? {
+                    value: foundParent.account_subtype.value,
+                    label: foundParent.account_subtype.display_name,
+                  }
+                : undefined,
+            },
+          }
+          lineItems[lineItemIndex] = newLineItem
+        }
+      } else {
+        let newLineItem = {
+          ...lineItem,
+          [fieldName]: value,
+        }
+
+        lineItems[lineItemIndex] = newLineItem
+      }
+
+      newFormData = {
+        ...form,
+        data: {
+          ...form.data,
+          line_items: lineItems,
+        },
+      }
+    } else {
+      newFormData = {
+        ...form,
+        data: {
+          ...form.data,
+          [fieldName]: value,
+        },
+      }
+    }
 
     setForm({
       ...newFormData,
-      // errors,
     })
   }
 
+  const validateLineItems = (lineItems?: JournalEntryLineItem[]) => {
+    if (!lineItems) {
+      return
+    }
+    const errors: FormErrorWithId[] = []
+
+    lineItems.map((lineItem, idx) => {
+      if (!lineItem.account_identifier.id) {
+        errors.push({
+          id: idx,
+          field: 'account',
+          message: 'Account is required',
+        })
+      }
+
+      if (!lineItem.amount) {
+        errors.push({
+          id: idx,
+          field: 'amount',
+          message: 'Amount cannot be empty or zero',
+        })
+      }
+    })
+    return errors
+  }
+
+  const validate = (formData?: JournalFormTypes) => {
+    let errors: {
+      entry: FormError[]
+      lineItems: FormErrorWithId[]
+    } = {
+      entry: [],
+      lineItems: [],
+    }
+
+    const lineItems = validateLineItems(formData?.data.line_items)
+
+    if (lineItems) {
+      errors = {
+        ...errors,
+        lineItems,
+      }
+    }
+
+    return errors
+  }
+
   const submitForm = () => {
-    console.log('submitForm', form)
-    // if (form?.action === 'new') {
-    //   create({} as NewJournalEntry)
-    // }
+    if (!form || !form.action || addingEntry) {
+      return
+    }
+
+    const errors = validate(form)
+
+    if (errors.entry.length > 0 || errors.lineItems.length > 0) {
+      setForm({
+        ...form,
+        errors,
+      })
+
+      return
+    }
+
+    if (form?.data) {
+      create({
+        ...form.data,
+        line_items: form.data.line_items?.map(line => ({
+          ...line,
+          account_identifier: {
+            type: 'StableName',
+            stable_name: line.account_identifier.stable_name,
+          },
+        })),
+      } as NewJournalEntry)
+    }
   }
 
   const addEntryLine = (direction: Direction) => {
@@ -144,10 +289,15 @@ export const useJournal: UseJournal = () => {
       return
     }
 
+    setAddingEntry(true)
+
     const newEntryLine = {
       account_identifier: {
         type: '',
         stable_name: '',
+        id: '',
+        name: '',
+        subType: undefined,
       },
       amount: 0,
       direction,
@@ -155,6 +305,24 @@ export const useJournal: UseJournal = () => {
 
     const entryLines = form?.data.line_items || []
     entryLines.push(newEntryLine)
+
+    setForm({
+      ...form,
+      data: {
+        ...form.data,
+        line_items: entryLines,
+      },
+    })
+    setTimeout(() => setAddingEntry(false), 100)
+  }
+
+  const removeEntryLine = (index: number) => {
+    if (!form) {
+      return
+    }
+
+    const entryLines = form.data.line_items || []
+    entryLines.splice(index, 1)
 
     setForm({
       ...form,
@@ -186,6 +354,7 @@ export const useJournal: UseJournal = () => {
     form,
     apiError,
     addEntryLine,
+    removeEntryLine,
   }
 }
 

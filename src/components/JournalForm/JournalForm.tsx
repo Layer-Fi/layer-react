@@ -1,22 +1,11 @@
 import React, { useContext } from 'react'
-import {
-  convertCurrencyToNumber,
-  convertNumberToCurrency,
-  CURRENCY_INPUT_PATTERN,
-} from '../../utils/format'
-import { BadgeVariant } from '../Badge'
-import {
-  Button,
-  ButtonVariant,
-  RetryButton,
-  SubmitButton,
-  TextButton,
-} from '../Button'
-import { InputWithBadge, InputGroup, Select, DateInput } from '../Input'
-import { JournalContext } from '../Journal/Journal'
+import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
+import { InputGroup, DateInput, Textarea } from '../Input'
+import { JournalConfig, JournalContext } from '../Journal/Journal'
 import { Text, TextSize, TextWeight } from '../Typography'
+import { JournalFormEntryLines } from './JournalFormEntryLines'
 
-export const JournalForm = () => {
+export const JournalForm = ({ config }: { config: JournalConfig }) => {
   const {
     form,
     cancelForm,
@@ -25,9 +14,8 @@ export const JournalForm = () => {
     apiError,
     changeFormData,
     addEntryLine,
+    removeEntryLine,
   } = useContext(JournalContext)
-
-  // const parentOptions = useParentOptions(data)
 
   return (
     <form
@@ -84,77 +72,47 @@ export const JournalForm = () => {
 
       <div className='Layer__journal__form__input-group'>
         <InputGroup name='date' label='Date' inline={true}>
-          <DateInput
-            selected={form?.data.entry_at}
-            onChange={(date: string) => changeFormData('entry_at', date)}
-            dateFormat='MMMM d, yyyy'
-            placeholderText='Select date'
-          />
-          <DateInput
-            selected={form?.data.entry_at}
-            onChange={(date: string) => changeFormData('entry_at', date)}
-            showTimeSelect
-            showTimeSelectOnly
-            timeIntervals={15}
-            timeCaption='Time'
-            dateFormat='h:mm aa'
-            placeholderText='Select time'
+          <div className='Layer__journal__datepicker__wrapper'>
+            <DateInput
+              selected={form?.data.entry_at}
+              onChange={(date: string) => changeFormData('entry_at', date)}
+              dateFormat='MMMM d, yyyy'
+              placeholderText='Select date'
+            />
+            <DateInput
+              selected={form?.data.entry_at}
+              onChange={(date: string) => changeFormData('entry_at', date)}
+              showTimeSelect
+              showTimeSelectOnly
+              timeIntervals={15}
+              timeCaption='Time'
+              dateFormat='h:mm aa'
+              placeholderText='Select time'
+            />
+          </div>
+        </InputGroup>
+      </div>
+      <JournalFormEntryLines
+        entrylineItems={form?.data.line_items || []}
+        addEntryLine={addEntryLine}
+        removeEntryLine={removeEntryLine}
+        changeFormData={changeFormData}
+        sendingForm={sendingForm}
+        config={config}
+      />
+      <div className='Layer__journal__form__input-group Layer__journal__form__input-group__textarea'>
+        <InputGroup name='memo' label='Notes'>
+          <Textarea
+            name='memo'
+            placeholder='Add description'
+            value={form?.data.memo}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              changeFormData('memo', e.target.value)
+            }
+            disabled={sendingForm}
           />
         </InputGroup>
       </div>
-      {form?.data.line_items.map((item, idx) => {
-        const direction =
-          item.direction.toLowerCase().charAt(0).toUpperCase() +
-          item.direction.toLowerCase().slice(1)
-        return (
-          <div
-            key={'Layer__journal__form__input-group-' + idx}
-            className='Layer__journal__form__input-group Layer__journal__form__input-group__border'
-          >
-            <Text
-              className='Layer__journal__form__input-group__title'
-              size={TextSize.lg}
-            >
-              Add {direction} Account
-            </Text>
-            <InputGroup name='debit' label='Amount' inline={true}>
-              <InputWithBadge
-                name='debit'
-                placeholder='$0.00'
-                value={convertNumberToCurrency(item.amount)}
-                disabled={sendingForm}
-                badge={direction}
-                variant={
-                  item.direction === 'CREDIT'
-                    ? BadgeVariant.SUCCESS
-                    : BadgeVariant.WARNING
-                }
-                onChange={e =>
-                  changeFormData(
-                    'amount',
-                    convertCurrencyToNumber(
-                      (e.target as HTMLInputElement).value,
-                    ),
-                  )
-                }
-              />
-            </InputGroup>
-            <InputGroup name='account-name' label='Account name' inline={true}>
-              <Select
-                options={[]}
-                value={item.account_identifier.stable_name}
-                onChange={sel => changeFormData('debitAccount', sel)}
-              />
-            </InputGroup>
-            <TextButton
-              className='Layer__journal__add-entry-line'
-              onClick={() => addEntryLine(item.direction)}
-            >
-              Add next account
-            </TextButton>
-          </div>
-        )
-      })}
     </form>
   )
 }

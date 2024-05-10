@@ -139,10 +139,16 @@
   }
 }
 
-.Layer__journal__table .Layer__journal-entry-table-row {
-  &:not(.Layer__table-row--header):hover {
-    background-color: var(--color-base-100);
+.Layer__journal-entry-table-row,
+.Layer__journal-table-row {
+  .Layer__table-cell {
+    transition: all 150ms ease-out;
+    height: var(--spacing-5xl);
   }
+}
+
+.Layer__table-row--hidden .Layer__table-cell {
+  height: 0px;
 }
 
 .Layer__row--expanded .Layer__table-cell {
@@ -319,14 +325,52 @@
   }
 }
 
+.Layer__journal__form__input-group__line-item {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-md) 0;
+  gap: var(--spacing-2xs);
+
+  &:not(:first-of-type) {
+    border-top: 1px solid var(--color-base-300);
+  }
+}
+
+.Layer__remove__button {
+  box-shadow:
+    0px 0px 0px 1px var(--input-border-color),
+    0px 0px 0px 2px rgba(0, 0, 0, 0);
+  padding: 8px;
+  margin-left: 8px;
+}
+
 .Layer__journal__form__input-group {
   display: flex;
   flex-direction: column;
   padding: var(--spacing-xl);
   gap: var(--spacing-3xs);
 
+  &__textarea {
+    background: var(--color-base-50);
+    textarea {
+      margin: var(--spacing-sm) 0;
+    }
+  }
+
   &__border {
     border-bottom: 1px solid var(--color-base-300);
+  }
+
+  .Layer__input-group {
+    .Layer__journal__datepicker__wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+
+  .Layer__datepicker__time {
+    margin-left: var(--spacing-sm);
   }
 
   .Layer__input-label {

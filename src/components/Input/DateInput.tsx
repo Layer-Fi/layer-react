@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import classNames from 'classnames'
 
 export const DateInput = ({
   selected,
@@ -26,14 +27,18 @@ export const DateInput = ({
     }
   }, [selectedDate])
 
+  const wrapperClassName = classNames(
+    'Layer__datepicker',
+    props.showTimeSelect && 'Layer__datepicker__time',
+  )
   return (
     <DatePicker
-      wrapperClassName='Layer__date-picker'
+      wrapperClassName={wrapperClassName}
       selected={selected ? new Date(selected) : selectedDate}
       onChange={date => setSelectedDate(date)}
-      calendarClassName='Layer__date-picker__calendar'
-      popperClassName='Layer__date-picker__popper'
-      calendarIconClassname='Layer__date-picker__calendar-icon'
+      calendarClassName='Layer__datepicker__calendar'
+      popperClassName='Layer__datepicker__popper'
+      calendarIconClassname='Layer__datepicker__calendar-icon'
       {...props}
     />
   )

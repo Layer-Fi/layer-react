@@ -1,21 +1,15 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
 import { NORMALITY_OPTIONS } from '../../components/ChartOfAccountsForm/constants'
-import { Direction, NewAccount } from '../../types'
+import { Direction, FormError, NewAccount } from '../../types'
 import {
   ChartWithBalances,
   EditAccount,
   LedgerAccountBalance,
 } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
-import { convertToStableName } from '../../utils/helpers'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
-
-interface FormError {
-  field: string
-  message: string
-}
 
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []

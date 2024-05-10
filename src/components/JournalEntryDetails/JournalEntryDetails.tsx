@@ -98,6 +98,7 @@ export const JournalEntryDetails = () => {
                     {centsToDollars(
                       Math.abs(
                         entry?.line_items
+                          .filter(item => item.direction === 'DEBIT')
                           .map(item => item.amount)
                           .reduce((a, b) => a + b, 0),
                       ) || 0,
@@ -108,6 +109,7 @@ export const JournalEntryDetails = () => {
                     {centsToDollars(
                       Math.abs(
                         entry?.line_items
+                          .filter(item => item.direction === 'CREDIT')
                           .map(item => item.amount)
                           .reduce((a, b) => a + b, 0),
                       ) || 0,

@@ -28,12 +28,22 @@ export type NewJournalEntry = {
   entry_at: string
   created_by: string
   memo: string
-  line_items: {
-    account_identifier: {
-      type: string
-      stable_name: string
-    }
-    amount: number
-    direction: Direction
-  }[]
+  line_items: JournalEntryLineItem[]
+}
+
+export type JournalEntryLineItem = {
+  account_identifier: {
+    type: string
+    stable_name: string
+    id: string
+    name: string
+    subType:
+      | {
+          value: string
+          label: string
+        }
+      | undefined
+  }
+  amount: number
+  direction: Direction
 }

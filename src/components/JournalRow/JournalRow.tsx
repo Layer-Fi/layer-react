@@ -3,7 +3,9 @@ import { DATE_FORMAT } from '../../config/general'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars } from '../../models/Money'
 import { JournalEntry, JournalEntryLine } from '../../types'
+import { humanizeEnum } from '../../utils/format'
 import { JournalContext, View } from '../Journal'
+import { JournalConfig } from '../Journal/Journal'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
@@ -23,17 +25,15 @@ export interface JournalRowProps {
 const INDENTATION = 24
 
 const EXPANDED_STYLE = {
-  height: 41,
-  paddingTop: 12,
-  paddingBottom: 12,
+  height: '100%',
   opacity: 1,
 }
 
 const COLLAPSED_STYLE = {
   height: 0,
+  opacity: 0.5,
   paddingTop: 0,
   paddingBottom: 0,
-  opacity: 0.5,
 }
 
 export const JournalRow = ({
@@ -42,8 +42,8 @@ export const JournalRow = ({
   initialLoad,
   view,
   lineItemsLength = 8,
-  defaultOpen = true,
-  expanded = true,
+  defaultOpen = false,
+  expanded = false,
   depth = 0,
   cumulativeIndex = 0,
   selectedEntries = false,
@@ -51,7 +51,7 @@ export const JournalRow = ({
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
     useContext(JournalContext)
 
-  const [isOpen, setIsOpen] = useState(defaultOpen)
+  const [isOpen, setIsOpen] = useState(index === 0 ? true : defaultOpen)
 
   const style = expanded
     ? {
@@ -148,7 +148,9 @@ export const JournalRow = ({
             </span>
           </td>
           <td className='Layer__table-cell'>
-            <span className='Layer__table-cell-content'>Invoice</span>
+            <span className='Layer__table-cell-content'>
+              {humanizeEnum(row.entry_type)}
+            </span>
           </td>
           <td className='Layer__table-cell'>
             <span className='Layer__table-cell-content'>{`(${row.line_items.length})`}</span>
@@ -159,6 +161,7 @@ export const JournalRow = ({
               {centsToDollars(
                 Math.abs(
                   row.line_items
+                    .filter(item => item.direction === 'DEBIT')
                     .map(item => item.amount)
                     .reduce((a, b) => a + b, 0),
                 ),
@@ -171,6 +174,7 @@ export const JournalRow = ({
               {centsToDollars(
                 Math.abs(
                   row.line_items
+                    .filter(item => item.direction === 'CREDIT')
                     .map(item => item.amount)
                     .reduce((a, b) => a + b, 0),
                 ),
@@ -218,20 +222,24 @@ export const JournalRow = ({
         </span>
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>
-        <span
-          className='Layer__table-cell-content Layer__table-cell--amount'
-          style={style}
-        >
-          ${centsToDollars(Math.abs(row.amount))}
-        </span>
+        {row.direction === 'DEBIT' && (
+          <span
+            className='Layer__table-cell-content Layer__table-cell--amount'
+            style={style}
+          >
+            ${centsToDollars(Math.abs(row.amount))}
+          </span>
+        )}
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>
-        <span
-          className='Layer__table-cell-content Layer__table-cell--amount'
-          style={style}
-        >
-          ${centsToDollars(Math.abs(row.amount))}
-        </span>
+        {row.direction === 'CREDIT' && (
+          <span
+            className='Layer__table-cell-content Layer__table-cell--amount'
+            style={style}
+          >
+            ${centsToDollars(Math.abs(row.amount))}
+          </span>
+        )}
       </td>
     </tr>
   )

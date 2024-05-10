@@ -1,15 +1,10 @@
-import React, {
-  RefObject,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import React, { RefObject, useContext, useMemo, useState } from 'react'
 import DownloadCloud from '../../icons/DownloadCloud'
 import { Button, ButtonVariant } from '../Button'
 import { Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
 import { JournalContext, View } from '../Journal'
+import { JournalConfig } from '../Journal/Journal'
 import { JournalRow } from '../JournalRow'
 import { JournalSidebar } from '../JournalSidebar'
 import { Loader } from '../Loader'
@@ -23,13 +18,14 @@ export const JournalTable = ({
   view,
   containerRef,
   pageSize = 15,
+  config,
 }: {
   view: View
   containerRef: RefObject<HTMLDivElement>
   pageSize?: number
+  config: JournalConfig
 }) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const [initialLoad, setInitialLoad] = useState(true)
   const {
     data: rawData,
     isLoading,
@@ -39,15 +35,6 @@ export const JournalTable = ({
     selectedEntryId,
     addEntry,
   } = useContext(JournalContext)
-
-  useEffect(() => {
-    if (!isLoading) {
-      const timeoutLoad = setTimeout(() => {
-        setInitialLoad(false)
-      }, 1000)
-      return () => clearTimeout(timeoutLoad)
-    }
-  }, [isLoading])
 
   const data = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize
@@ -59,7 +46,7 @@ export const JournalTable = ({
 
   return (
     <Panel
-      sidebar={<JournalSidebar parentRef={containerRef} />}
+      sidebar={<JournalSidebar parentRef={containerRef} config={config} />}
       sidebarIsOpen={Boolean(selectedEntryId)}
       parentRef={containerRef}
     >
@@ -101,7 +88,7 @@ export const JournalTable = ({
             data?.map((entry, idx) => {
               return (
                 <JournalRow
-                  key={entry.id}
+                  key={'journal-row-' + idx + entry.id}
                   index={idx}
                   view={view}
                   row={entry}
