@@ -9,10 +9,12 @@ import classNames from 'classnames'
 
 interface LinkedAccountsDataProps {
   asWidget?: boolean
+  showLedgerBalance?: boolean
 }
 
 export const LinkedAccountsContent = ({
   asWidget,
+  showLedgerBalance,
 }: LinkedAccountsDataProps) => {
   const { data, addConnection, unlinkAccount } = useContext(
     LinkedAccountsContext,
@@ -40,8 +42,13 @@ export const LinkedAccountsContent = ({
           accountId={account.id}
           connectionId={account.connection_id}
           source={account.external_account_source}
+          showLedgerBalance={showLedgerBalance}
         >
-          <LinkedAccountThumb account={account} asWidget={asWidget} />
+          <LinkedAccountThumb
+            account={account}
+            asWidget={asWidget}
+            showLedgerBalance={showLedgerBalance}
+          />
         </LinkedAccountOptions>
       ))}
       <div
