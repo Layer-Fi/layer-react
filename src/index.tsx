@@ -8,8 +8,10 @@ export { ChartOfAccounts } from './components/ChartOfAccounts'
 export { LayerProvider } from './providers/LayerProvider'
 export { useLayerContext } from './hooks/useLayerContext'
 export { Journal } from './components/Journal'
+export { Onboarding } from './components/Onboarding'
 
 // Views:
 export { AccountingOverview } from './views/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts'
 export { Reports } from './views/Reports'
+export { GeneralLedgerView } from './views/GeneralLedger'

@@ -26,7 +26,6 @@ type Props = {
     values: string[]
   }
   reportingBasis?: ReportingBasis
-  fetchMultipleMonths?: boolean
 }
 
 type ProfitAndLossFilter = {
@@ -65,7 +64,6 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     endDate: initialEndDate,
     tagFilter,
     reportingBasis,
-    fetchMultipleMonths = false,
   }: Props = {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),

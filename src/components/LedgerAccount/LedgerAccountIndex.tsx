@@ -5,16 +5,13 @@ import React, {
   useMemo,
   useState,
 } from 'react'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
+import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
-import { useElementSize } from '../../hooks/useElementSize'
 import DownloadCloud from '../../icons/DownloadCloud'
 import { centsToDollars } from '../../models/Money'
 import { BackButton, Button, ButtonVariant } from '../Button'
-import {
-  ChartOfAccountsContext,
-  LedgerAccountsContext,
-  View,
-} from '../ChartOfAccounts/ChartOfAccounts'
+import { View } from '../ChartOfAccounts/ChartOfAccounts'
 import { DataState, DataStateStatus } from '../DataState'
 import { LedgerAccountEntryDetails } from '../LedgerAccountEntryDetails'
 import { Loader } from '../Loader'

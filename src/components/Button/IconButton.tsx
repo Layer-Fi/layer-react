@@ -5,6 +5,7 @@ export interface IconButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: ReactNode
   active?: boolean
+  withBorder?: boolean
 }
 
 export const IconButton = ({
@@ -12,11 +13,13 @@ export const IconButton = ({
   children,
   icon,
   active,
+  withBorder = false,
   ...props
 }: IconButtonProps) => {
   const baseClassName = classNames(
     'Layer__icon-btn',
     `Layer__icon-btn--${active ? 'active' : 'inactive'}`,
+    withBorder && 'Layer__icon-btn--border',
     className,
   )
 

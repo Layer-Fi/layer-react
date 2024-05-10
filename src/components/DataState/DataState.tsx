@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import AlertOctagon from '../../icons/AlertOctagon'
 import CheckCircle from '../../icons/CheckCircle'
 import Loader from '../../icons/Loader'
@@ -8,6 +8,7 @@ import { Text, TextSize, TextWeight } from '../Typography'
 
 export enum DataStateStatus {
   allDone = 'allDone',
+  success = 'success',
   failed = 'failed',
   info = 'info',
 }
@@ -15,29 +16,36 @@ export enum DataStateStatus {
 export interface DataStateProps {
   status: DataStateStatus
   title?: string
+  icon?: ReactNode
   description?: string
   onRefresh?: () => void
   isLoading?: boolean
 }
 
-const getIcon = (status: DataStateStatus) => {
+const getIcon = (status: DataStateStatus, icon?: ReactNode) => {
   switch (status) {
     case DataStateStatus.failed:
       return (
         <span className='Layer__data-state__icon Layer__data-state__icon--error'>
-          <AlertOctagon size={12} />
+          {icon ?? <AlertOctagon size={12} />}
         </span>
       )
     case DataStateStatus.info:
       return (
         <span className='Layer__data-state__icon Layer__data-state__icon--neutral'>
-          <AlertOctagon size={12} />
+          {icon ?? <AlertOctagon size={12} />}
+        </span>
+      )
+    case DataStateStatus.success:
+      return (
+        <span className='Layer__data-state__icon Layer__data-state__icon--success'>
+          {icon ?? <AlertOctagon size={12} />}
         </span>
       )
     default:
       return (
         <span className='Layer__data-state__icon Layer__data-state__icon--neutral'>
-          <CheckCircle size={12} />
+          {icon ?? <CheckCircle size={12} />}
         </span>
       )
   }
@@ -49,10 +57,11 @@ export const DataState = ({
   description,
   onRefresh,
   isLoading,
+  icon,
 }: DataStateProps) => {
   return (
     <div className='Layer__data-state'>
-      {getIcon(status)}
+      {getIcon(status, icon)}
       <Text
         as='span'
         size={TextSize.lg}

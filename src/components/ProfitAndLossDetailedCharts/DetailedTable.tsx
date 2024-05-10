@@ -50,7 +50,7 @@ export const DetailedTable = ({
                 className={buildColClass('category')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'category')}
               >
-                Expense/Sale <SortArrows className='Layer__sort-arrows' />
+                Category <SortArrows className='Layer__sort-arrows' />
               </th>
               <th
                 className={buildColClass('type')}

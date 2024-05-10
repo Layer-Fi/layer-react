@@ -1,4 +1,10 @@
-import React, { PropsWithChildren, useReducer, useEffect, Reducer } from 'react'
+import React, {
+  PropsWithChildren,
+  useReducer,
+  useEffect,
+  Reducer,
+  useState,
+} from 'react'
 import { Layer } from '../../api/layer'
 import { LayerContext } from '../../contexts/LayerContext'
 import {
@@ -10,6 +16,7 @@ import {
   ColorConfig,
   ColorsPaletteOption,
   LayerThemeConfig,
+  OnboardingStep,
 } from '../../types/layer_context'
 import { buildColorsPalette } from '../../utils/colors'
 import { add, isBefore } from 'date-fns'
@@ -23,6 +30,7 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
     case Action.setAuth:
     case Action.setCategories:
     case Action.setTheme:
+    case Action.setOnboardingStep:
       return { ...state, ...action.payload }
     default:
       return state
@@ -88,6 +96,7 @@ export const LayerProvider = ({
     apiUrl,
     theme,
     colors,
+    onboardingStep: undefined,
   })
 
   const { data: auth } =
@@ -176,13 +185,10 @@ export const LayerProvider = ({
     })
   }
 
-  const setColors = (colors?: {
-    dark?: ColorConfig
-    light?: ColorConfig
-  }) => {
+  const setColors = (colors?: { dark?: ColorConfig; light?: ColorConfig }) => {
     setTheme({
       ...(state.theme ?? {}),
-      colors
+      colors,
     })
   }
 
@@ -194,10 +200,24 @@ export const LayerProvider = ({
     return
   }
 
+  const setOnboardingStep = (value: OnboardingStep) =>
+    dispatch({
+      type: Action.setOnboardingStep,
+      payload: { onboardingStep: value },
+    })
+
   return (
     <SWRConfig value={defaultSWRConfig}>
       <LayerContext.Provider
-        value={{ ...state, setTheme, getColor, setLightColor, setDarkColor, setColors }}
+        value={{
+          ...state,
+          setTheme,
+          getColor,
+          setLightColor,
+          setDarkColor,
+          setColors,
+          setOnboardingStep,
+        }}
       >
         {children}
       </LayerContext.Provider>

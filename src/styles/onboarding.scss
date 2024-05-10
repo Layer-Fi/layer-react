@@ -1,0 +1,19 @@
+.Layer__onboarding {
+  transition:
+    max-height 500ms ease-out,
+    opacity 550ms ease-out,
+    transform 500ms ease-out;
+}
+
+.Layer__onboarding__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-3xl);
+  box-sizing: border-box;
+}
+
+.Layer__onboarding .Layer__actionable_row {
+  max-width: 90%;
+  width: 640px;
+}

@@ -61,6 +61,7 @@
     align-items: center;
     padding-top: var(--spacing-3xs);
     padding-bottom: var(--spacing-3xs);
+    padding-right: var(--spacing-xl);
     gap: var(--spacing-xs);
 
     & > .Layer__btn {
@@ -260,6 +261,12 @@
   color: var(--color-base-800);
 }
 
+@container (max-width: 1024px) {
+  .Layer__table-cell.Layer__coa__actions .Layer__table-cell-content {
+    padding-right: var(--spacing-md);
+  }
+}
+
 @container (min-width: 761px) and (max-width: 1024px) {
   .Layer__chart-of-accounts {
     .Layer__mobile--hidden {
@@ -314,5 +321,10 @@
       flex: 1;
       width: 100%;
     }
+  }
+
+  .Layer__chart-of-accounts__actions.Layer__header__actions {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

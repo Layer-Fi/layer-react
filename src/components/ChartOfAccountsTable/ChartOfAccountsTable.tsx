@@ -1,26 +1,38 @@
-import React, { RefObject, useContext } from 'react'
+import React, { RefObject, useContext, useState } from 'react'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import DownloadCloud from '../../icons/DownloadCloud'
 import { Button, ButtonVariant } from '../Button'
-import { ChartOfAccountsContext, View } from '../ChartOfAccounts'
+import { View } from '../ChartOfAccounts/ChartOfAccounts'
+import { ChartOfAccountsDatePicker } from '../ChartOfAccountsDatePicker'
 import { ChartOfAccountsRow } from '../ChartOfAccountsRow'
 import { ChartOfAccountsSidebar } from '../ChartOfAccountsSidebar'
 import { Header } from '../Container'
+import { HeaderLayout } from '../Container/Header'
 import { DataState, DataStateStatus } from '../DataState'
 import { Loader } from '../Loader'
 import { Panel } from '../Panel'
-import { Heading } from '../Typography'
+import { Heading, HeadingSize } from '../Typography'
 
 const COMPONENT_NAME = 'chart-of-accounts'
+export type ExpandActionState = undefined | 'expanded' | 'collapsed'
 
 export const ChartOfAccountsTable = ({
   view,
   containerRef,
+  asWidget = false,
+  withDateControl = false,
+  withExpandAllButton = false,
 }: {
   view: View
   containerRef: RefObject<HTMLDivElement>
+  asWidget?: boolean
+  withDateControl?: boolean
+  withExpandAllButton?: boolean
 }) => {
   const { data, isLoading, addAccount, error, isValidating, refetch, form } =
     useContext(ChartOfAccountsContext)
+
+  const [expandAll, setExpandAll] = useState<ExpandActionState>()
 
   let cumulativeIndex = 0
   const accountsLength = data?.accounts.length ?? 0
@@ -31,21 +43,52 @@ export const ChartOfAccountsTable = ({
       sidebarIsOpen={Boolean(form)}
       parentRef={containerRef}
     >
-      <Header className={`Layer__${COMPONENT_NAME}__header`}>
-        <Heading className={`Layer__${COMPONENT_NAME}__title`}>
+      <Header
+        className={`Layer__${COMPONENT_NAME}__header`}
+        layout={withDateControl ? HeaderLayout.NEXT_LINE_ACTIONS : undefined}
+      >
+        <Heading
+          className={`Layer__${COMPONENT_NAME}__title`}
+          size={asWidget ? HeadingSize.secondary : HeadingSize.primary}
+        >
           Chart of Accounts
         </Heading>
-        <div className={`Layer__${COMPONENT_NAME}__actions`}>
-          <Button
-            variant={ButtonVariant.secondary}
-            disabled={isLoading}
-            rightIcon={<DownloadCloud size={12} />}
-          >
-            Download
-          </Button>
-          <Button onClick={() => addAccount()} disabled={isLoading}>
-            Add Account
-          </Button>
+        <div
+          className={`Layer__${COMPONENT_NAME}__actions Layer__header__actions`}
+        >
+          {withDateControl || withExpandAllButton ? (
+            <div className='Layer__header__actions-col'>
+              {withDateControl && <ChartOfAccountsDatePicker />}
+              {withExpandAllButton && (
+                <Button
+                  variant={ButtonVariant.secondary}
+                  onClick={() =>
+                    setExpandAll(
+                      !expandAll || expandAll === 'collapsed'
+                        ? 'expanded'
+                        : 'collapsed',
+                    )
+                  }
+                >
+                  {!expandAll || expandAll === 'collapsed'
+                    ? 'Expand all rows'
+                    : 'Collpase all rows'}
+                </Button>
+              )}
+            </div>
+          ) : null}
+          <div className='Layer__header__actions-col'>
+            <Button
+              variant={ButtonVariant.secondary}
+              disabled={isLoading}
+              rightIcon={<DownloadCloud size={12} />}
+            >
+              Download
+            </Button>
+            <Button onClick={() => addAccount()} disabled={isLoading}>
+              Add Account
+            </Button>
+          </div>
         </div>
       </Header>
 
@@ -80,6 +123,7 @@ export const ChartOfAccountsTable = ({
                   defaultOpen={true}
                   acountsLength={accountsLength}
                   view={view}
+                  expandAll={expandAll}
                 />
               )
             })}
