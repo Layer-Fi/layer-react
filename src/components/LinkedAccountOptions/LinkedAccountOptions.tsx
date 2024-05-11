@@ -4,7 +4,7 @@ import { HoverMenu, HoverMenuProps } from '../HoverMenu'
 import classNames from 'classnames'
 
 interface LinkedAccountOptionsProps extends HoverMenuProps {
-  showLedgerBalance: boolean
+  showLedgerBalance?: boolean
 }
 
 export const LinkedAccountOptions = ({
@@ -17,7 +17,7 @@ export const LinkedAccountOptions = ({
 }: LinkedAccountOptionsProps) => {
   const linkedAccountOptionsClassName = classNames(
     'Layer__linked-accounts__options',
-    !showLedgerBalance && '--hide-ledger-balance',
+    showLedgerBalance == false && '--hide-ledger-balance',
   )
   return (
     <div className={linkedAccountOptionsClassName}>
