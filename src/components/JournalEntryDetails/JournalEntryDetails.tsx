@@ -1,4 +1,5 @@
 import React, { useContext, useMemo } from 'react'
+import { JournalContext } from '../../contexts/JournalContext'
 import { flattenEntries } from '../../hooks/useJournal/useJournal'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
@@ -8,7 +9,6 @@ import { CloseButton } from '../Button'
 import { Card } from '../Card'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
-import { JournalContext } from '../Journal'
 
 export const JournalEntryDetails = () => {
   const {

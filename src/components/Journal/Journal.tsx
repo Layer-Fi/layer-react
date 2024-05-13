@@ -1,9 +1,10 @@
 import React, { createContext, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
+import { JournalContext } from '../../contexts/JournalContext'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useJournal } from '../../hooks/useJournal'
-import { ChartOfAccountsContext } from '../ChartOfAccounts'
 import { Container } from '../Container'
 import { JournalTable } from '../JournalTable'
 
@@ -19,28 +20,6 @@ export interface JournalProps {
   asWidget?: boolean
   config?: JournalConfig
 }
-
-export type JournalContextType = ReturnType<typeof useJournal>
-export const JournalContext = createContext<JournalContextType>({
-  data: undefined,
-  isLoading: false,
-  error: undefined,
-  refetch: () => {},
-  selectedEntryId: undefined,
-  setSelectedEntryId: () => {},
-  closeSelectedEntry: () => {},
-  addEntry: () => {},
-  addEntryLine: () => {},
-  removeEntryLine: () => {},
-  create: () => {},
-  changeFormData: () => {},
-  submitForm: () => {},
-  cancelForm: () => {},
-  form: undefined,
-  setForm: () => {},
-  sendingForm: false,
-  apiError: undefined,
-})
 
 export const JOURNAL_CONFIG: JournalConfig = {
   form: {

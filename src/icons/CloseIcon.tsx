@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { IconSvgProps } from './types'
 
-const CloseIcon = ({ size = 18, ...props }: IconSvgProps) => (
+const CloseIcon = ({ size = 12, ...props }: IconSvgProps) => (
   <svg
     viewBox='0 0 12 12'
     fill='none'

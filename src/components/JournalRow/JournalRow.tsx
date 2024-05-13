@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { DATE_FORMAT } from '../../config/general'
+import { JournalContext } from '../../contexts/JournalContext'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars } from '../../models/Money'
 import { JournalEntry, JournalEntryLine } from '../../types'
 import { humanizeEnum } from '../../utils/format'
-import { JournalContext, View } from '../Journal'
-import { JournalConfig } from '../Journal/Journal'
+import { View } from '../Journal'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 

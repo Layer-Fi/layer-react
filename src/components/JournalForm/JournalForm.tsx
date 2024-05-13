@@ -1,7 +1,9 @@
 import React, { useContext } from 'react'
+import { JournalContext } from '../../contexts/JournalContext'
 import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
-import { InputGroup, DateInput, Textarea } from '../Input'
-import { JournalConfig, JournalContext } from '../Journal/Journal'
+import { InputGroup, DateInput } from '../Input'
+import { JournalConfig } from '../Journal/Journal'
+import { Textarea } from '../Textarea/Textarea'
 import { Text, TextSize, TextWeight } from '../Typography'
 import { JournalFormEntryLines } from './JournalFormEntryLines'
 

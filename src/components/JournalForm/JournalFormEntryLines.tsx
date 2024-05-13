@@ -1,4 +1,6 @@
 import React, { useContext } from 'react'
+import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
+import { JournalContext } from '../../contexts/JournalContext'
 import Trash from '../../icons/Trash'
 import { Direction, JournalEntryLineItem } from '../../types'
 import { LedgerAccountBalance } from '../../types/chart_of_accounts'
@@ -10,10 +12,9 @@ import {
 } from '../../utils/format'
 import { BadgeVariant } from '../Badge'
 import { IconButton, TextButton } from '../Button'
-import { ChartOfAccountsContext } from '../ChartOfAccounts'
 import { useParentOptions } from '../ChartOfAccountsForm/useParentOptions'
 import { InputWithBadge, InputGroup, Select } from '../Input'
-import { JournalConfig, JournalContext } from '../Journal/Journal'
+import { JournalConfig } from '../Journal/Journal'
 import { Text, TextSize } from '../Typography'
 
 export const JournalFormEntryLines = ({
@@ -64,9 +65,9 @@ export const JournalFormEntryLines = ({
                   className='Layer__journal__form__input-group__line-item'
                   key={direction + '-' + idx}
                 >
-                  <InputGroup name='debit' label='Amount' inline={true}>
+                  <InputGroup name={direction} label='Amount' inline={true}>
                     <InputWithBadge
-                      name='debit'
+                      name={direction}
                       placeholder='$0.00'
                       value={convertNumberToCurrency(item.amount)}
                       disabled={sendingForm}
