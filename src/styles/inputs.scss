@@ -38,6 +38,42 @@
   color: var(--label-color);
 }
 
+.Layer__textarea {
+  width: 100%;
+  resize: none;
+  box-shadow:
+    0px 0px 0px 1px var(--input-border-color),
+    0px 0px 0px 2px rgba(0, 0, 0, 0);
+  border: 1px solid var(--border-color);
+  border-radius: var(--input-border-radius);
+  border-width: 0px;
+  min-height: 100px;
+  padding: var(--spacing-xs);
+  font-family: var(--font-family);
+  font-size: var(--input-font-size);
+  line-height: 140%;
+
+  &.Layer__textarea--error {
+    box-shadow:
+      0px 0px 0px 1px var(--color-base-300),
+      0px 0px 0px 2px var(--color-danger);
+  }
+
+  &:disabled {
+    background-color: var(--color-base-100);
+    color: var(--color-base-800);
+  }
+
+  &:focus,
+  &:active,
+  &:focus-visible {
+    box-shadow:
+      0px 0px 0px 3px rgba(26, 26, 26, 0.08),
+      0px 0px 0px 1px var(--color-base-700);
+    outline: none;
+  }
+}
+
 .Layer__input {
   padding: 8px;
   box-sizing: border-box;
@@ -449,5 +485,84 @@
 @media screen and (max-width: 400px) {
   .Layer__select__menu-portal .Layer__select__option {
     font-size: var(--text-sm) !important;
+  }
+}
+
+.Layer__profit-and-loss-date-picker {
+  width: 210px;
+  font-size: 14px;
+  padding: 0.25rem;
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--input-border-radius);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 1;
+}
+
+.Layer__profit-and-loss-date-picker__button {
+  padding: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: var(--color-base-0);
+  border: 0;
+  border-radius: var(--input-border-radius);
+  z-index: 3;
+  position: relative;
+
+  &:active {
+    background-color: var(--color-base-0);
+  }
+}
+
+.Layer__profit-and-loss-date-picker__button-icon path {
+  stroke: var(--text-color);
+}
+
+.Layer__profit-and-loss-date-picker__label {
+  flex: 1;
+  font-size: 14px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  padding: 0 var(--spacing-xs);
+  transition:
+    opacity 0.7s ease-in-out,
+    transform 0.4s ease-in-out;
+  width: 33%;
+  position: relative;
+  padding-left: 20px;
+}
+
+.Layer__profit-and-loss-date-picker__labels-container {
+  display: flex;
+  width: 660px;
+  position: absolute;
+}
+
+.Layer__profit-and-loss-date-picker__effect-blur {
+  width: 120px;
+  height: 100%;
+  position: absolute;
+  right: -10px;
+  bottom: 1px;
+  background: linear-gradient(-90deg, #fff 50%, rgba(255, 255, 255, 0) 100%);
+  z-index: 2;
+}
+
+.Layer__input-with-badge {
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  .Layer__badge {
+    position: absolute;
+    right: 8px;
+    z-index: 1;
   }
 }

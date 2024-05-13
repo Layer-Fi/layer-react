@@ -60,3 +60,19 @@ export const formatPercent = (
 export const humanizeEnum = (text: string) => {
   return capitalizeFirstLetter(text.replace(/_/gi, ' ').toLowerCase())
 }
+
+export const convertNumberToCurrency = (amount: number | undefined): string => {
+  if (!amount) return ''
+
+  let formattedValue = amount.toLocaleString('en-US')
+
+  return formattedValue.length > 0 ? `$${formattedValue}` : ''
+}
+
+export const convertCurrencyToNumber = (amount: string): number => {
+  const inputValue = amount.replace(/[^0-9.]/g, '')
+
+  return parseFloat(inputValue)
+}
+
+export const CURRENCY_INPUT_PATTERN = '[0-9]+(.[0-9]+)?'

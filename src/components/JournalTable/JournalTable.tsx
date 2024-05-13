@@ -1,16 +1,11 @@
-import React, {
-  RefObject,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import React, { RefObject, useContext, useMemo, useState } from 'react'
+import { JournalContext } from '../../contexts/JournalContext'
 import DownloadCloud from '../../icons/DownloadCloud'
-import { JournalEntryLine } from '../../types'
 import { Button, ButtonVariant } from '../Button'
 import { Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
-import { JournalContext, View } from '../Journal'
+import { View } from '../Journal'
+import { JournalConfig } from '../Journal/Journal'
 import { JournalRow } from '../JournalRow'
 import { JournalSidebar } from '../JournalSidebar'
 import { Loader } from '../Loader'
@@ -24,32 +19,23 @@ export const JournalTable = ({
   view,
   containerRef,
   pageSize = 15,
+  config,
 }: {
   view: View
   containerRef: RefObject<HTMLDivElement>
   pageSize?: number
+  config: JournalConfig
 }) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const [initialLoad, setInitialLoad] = useState(true)
   const {
     data: rawData,
     isLoading,
     error,
     isValidating,
     refetch,
-    closeSelectedEntry,
-    setSelectedEntryId,
     selectedEntryId,
+    addEntry,
   } = useContext(JournalContext)
-
-  useEffect(() => {
-    if (!isLoading) {
-      const timeoutLoad = setTimeout(() => {
-        setInitialLoad(false)
-      }, 1000)
-      return () => clearTimeout(timeoutLoad)
-    }
-  }, [isLoading])
 
   const data = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize
@@ -59,14 +45,9 @@ export const JournalTable = ({
       ?.slice(firstPageIndex, lastPageIndex)
   }, [rawData, currentPage])
 
-  const close = () => {
-    setSelectedEntryId(undefined)
-    closeSelectedEntry()
-  }
-
   return (
     <Panel
-      sidebar={<JournalSidebar parentRef={containerRef} />}
+      sidebar={<JournalSidebar parentRef={containerRef} config={config} />}
       sidebarIsOpen={Boolean(selectedEntryId)}
       parentRef={containerRef}
     >
@@ -80,7 +61,7 @@ export const JournalTable = ({
           >
             Download
           </Button>
-          <Button onClick={() => console.log('add entry')} disabled={isLoading}>
+          <Button onClick={() => addEntry()} disabled={isLoading}>
             Add Entry
           </Button>
         </div>
@@ -92,7 +73,7 @@ export const JournalTable = ({
             <th className='Layer__table-header' />
             <th className='Layer__table-header'>Id</th>
             <th className='Layer__table-header'>Date</th>
-            <th className='Layer__table-header'>Transactions</th>
+            <th className='Layer__table-header'>Transaction</th>
             <th className='Layer__table-header'>Account</th>
             <th className='Layer__table-header Layer__table-cell--amount'>
               Debit
@@ -108,7 +89,7 @@ export const JournalTable = ({
             data?.map((entry, idx) => {
               return (
                 <JournalRow
-                  key={entry.id}
+                  key={'journal-row-' + idx + entry.id}
                   index={idx}
                   view={view}
                   row={entry}

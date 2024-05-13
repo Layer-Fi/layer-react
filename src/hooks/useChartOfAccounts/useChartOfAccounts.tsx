@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
 import { NORMALITY_OPTIONS } from '../../components/ChartOfAccountsForm/constants'
-import { DateRange, Direction, NewAccount } from '../../types'
+import { FormError, DateRange, Direction, NewAccount } from '../../types'
 import {
   ChartWithBalances,
   EditAccount,
@@ -11,11 +11,6 @@ import { BaseSelectOption } from '../../types/general'
 import { useLayerContext } from '../useLayerContext'
 import { endOfMonth, formatISO, startOfMonth } from 'date-fns'
 import useSWR from 'swr'
-
-interface FormError {
-  field: string
-  message: string
-}
 
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []

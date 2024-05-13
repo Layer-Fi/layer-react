@@ -50,11 +50,11 @@ export const Pagination = ({
       >
         <ChevronLeft size={12} />
       </li>
-      {paginationRange.map(pageNumber => {
+      {paginationRange.map((pageNumber, idx) => {
         if (pageNumber === DOTS) {
           return (
             <li
-              key={`page-${pageNumber}`}
+              key={`${idx}-page-${pageNumber}`}
               className='Layer__pagination-item Layer__pagination-dots'
             >
               &#8230;

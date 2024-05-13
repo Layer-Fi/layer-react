@@ -1,0 +1,1 @@
+export { JournalEntryDetails } from './JournalEntryDetails'

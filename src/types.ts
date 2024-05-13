@@ -34,9 +34,19 @@ export {
 } from './types/ledger_accounts'
 export { SortDirection } from './types/general'
 
+export interface FormError {
+  field: string
+  message: string
+}
+
+export interface FormErrorWithId extends FormError {
+  id: number
+}
+
 export {
   JournalEntry,
   JournalEntryLine,
+  JournalEntryLineItem,
 } from './types/journal'
 
 // Only Date and string (ISO8601 formatted) make sense here

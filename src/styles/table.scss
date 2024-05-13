@@ -171,9 +171,7 @@
 
   & > .Layer__table-cell-content {
     overflow: hidden;
-    transition:
-      height 30ms ease-out,
-      opacity 150ms ease-in-out;
+    transition: all 100ms ease-out;
   }
 }
 

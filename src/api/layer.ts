@@ -14,7 +14,7 @@ import {
   getLedgerAccountsLines,
   getLedgerAccountsEntry,
 } from './layer/chart_of_accounts'
-import { getJournal, addEntry } from './layer/journal'
+import { getJournal, createJournalEntries } from './layer/journal'
 import {
   getLinkedAccounts,
   getPlaidLinkToken,
@@ -43,7 +43,7 @@ export const Layer = {
   getProfitAndLoss,
   getLinkedAccounts,
   getJournal,
-  addEntry,
+  createJournalEntries,
   getPlaidLinkToken,
   getPlaidUpdateModeLinkToken,
   exchangePlaidPublicToken,

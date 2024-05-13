@@ -12,3 +12,41 @@
 .Layer__datetime__time {
   color: var(--color-base-600);
 }
+
+.Layer__datepicker {
+  input {
+    padding: 8px;
+    box-sizing: border-box;
+    position: relative;
+    border: 1px solid var(--border-color);
+    border-radius: var(--input-border-radius);
+    border-width: 0px;
+    box-shadow:
+      0px 0px 0px 1px var(--input-border-color),
+      0px 0px 0px 2px rgba(0, 0, 0, 0);
+    margin: 1px;
+    max-width: 150px;
+    font-family: var(--font-family);
+    font-size: var(--input-font-size);
+    line-height: 140%;
+
+    &:focus,
+    &:active,
+    &:focus-visible {
+      box-shadow:
+        0px 0px 0px 3px rgba(26, 26, 26, 0.08),
+        0px 0px 0px 1px var(--color-base-700);
+      outline: none;
+    }
+  }
+}
+
+.react-datepicker__tab-loop {
+  z-index: 99;
+}
+
+.Layer__datepicker__time {
+  input {
+    max-width: 100px;
+  }
+}
