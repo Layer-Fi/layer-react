@@ -67,7 +67,11 @@ export const ProfitAndLossChart = () => {
   })
 
   const onClick: CategoricalChartFunc = ({ activeTooltipIndex }) => {
-    const selection = data[activeTooltipIndex || -1]
+    const index =
+      activeTooltipIndex !== undefined && activeTooltipIndex > -1
+        ? activeTooltipIndex
+        : -1
+    const selection = data[index]
     if (selection && selection.data) {
       const { start_date, end_date } = selection.data
       changeDateRange({
@@ -124,9 +128,9 @@ export const ProfitAndLossChart = () => {
   }
 
   const CustomizedCursor = (props: any) => {
-    const { x, y } = props
+    const { x, y, width: rectWidth } = props
     const { width, height } = customCursorSize
-    const offsetX = width * 0.1
+    const offsetX = (rectWidth - width) / 2
 
     return (
       <Rectangle
@@ -166,7 +170,6 @@ export const ProfitAndLossChart = () => {
       )}
       width='100%'
       height='100%'
-      minHeight={200}
     >
       <BarChart
         margin={{ left: 12, right: 12, bottom: 12 }}
@@ -188,9 +191,8 @@ export const ProfitAndLossChart = () => {
           strokeDasharray='5 5'
         />
         <Legend
-          verticalAlign='bottom'
-          align='left'
-          wrapperStyle={{ bottom: 0 }}
+          verticalAlign='top'
+          align='right'
           payload={[
             {
               value: 'Revenue',

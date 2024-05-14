@@ -8,8 +8,12 @@
   }
 }
 
+.Layer__component .recharts-responsive-container.Layer__chart-container {
+  padding-top: 42px;
+}
+
 .Layer__chart-container {
-  min-height: 200px;
+  min-height: 250px;
 }
 
 .Layer__chart__tooltip {

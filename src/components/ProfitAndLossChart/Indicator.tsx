@@ -77,7 +77,7 @@ export const Indicator = ({
         width: rectWidth,
         // @ts-expect-error -- y is fine but x apparently isn't!
         x: actualX - xOffset,
-        y: 1,
+        y: 22,
         height: rectHeight,
         opacity: opacityIndicator,
       }}
