@@ -1,12 +1,15 @@
 .Layer__component .recharts-responsive-container {
   padding: 4px;
-  padding-top: 42px;
   box-sizing: border-box;
   border-radius: var(--border-radius-xs);
 
   .recharts-cartesian-axis-line {
     stroke: var(--color-base-300);
   }
+}
+
+.Layer__component .recharts-responsive-container.Layer__chart-container {
+  padding-top: 42px;
 }
 
 .Layer__chart-container {
