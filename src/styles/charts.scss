@@ -1,5 +1,6 @@
 .Layer__component .recharts-responsive-container {
   padding: 4px;
+  padding-top: 42px;
   box-sizing: border-box;
   border-radius: var(--border-radius-xs);
 
@@ -9,7 +10,7 @@
 }
 
 .Layer__chart-container {
-  min-height: 200px;
+  min-height: 250px;
 }
 
 .Layer__chart__tooltip {
