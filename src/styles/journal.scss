@@ -155,17 +155,6 @@
   background-color: var(--bg-element-focus);
 }
 
-.Layer__table__expand-icon {
-  transition: transform 150ms ease-out;
-  color: var(--color-base-600);
-  margin-left: -3px;
-  margin-right: var(--spacing-sm);
-}
-
-.Layer__journal__table .Layer__table-row--collapsed .Layer__table__expand-icon {
-  transform: rotate(-90deg);
-}
-
 .Layer__journal__form {
   display: flex;
   flex-direction: column;

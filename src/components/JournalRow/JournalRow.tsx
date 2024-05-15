@@ -130,7 +130,7 @@ export const JournalRow = ({
                     size={16}
                     className='Layer__table__expand-icon'
                     style={{
-                      transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)',
+                      transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)',
                     }}
                   />
                 )}
