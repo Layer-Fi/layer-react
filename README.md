@@ -1,19 +1,29 @@
 # Layer Financial React Components
 
-This is a Javascript library that provides easy access to Layer Financial's
-acounting offering through React components.
+Layer's embeddable React component library provides an out of the box accounting experience. This project emphasizes composability and brandability, allowing you to
+
+1. Use full page layouts we've already tested and used _or_ layout individual components however you choose.
+2. Brand components with your company colors, fonts, and more.
+
+All you need to get started is sandbox development credentials - reach out [here](https://www.layerfi.com/#contact-sale) if you don't have those yet!
+
+#### Related links
+
+- Layer home: https://www.layerfi.com
+- Documentation: https://docs.layerfi.com/introduction
+- NPM: https://www.npmjs.com/package/@layerfi/components
 
 <br />
 
 ## Installation
 
-```
+```ts
 npm install --save @layerfi/components
 ```
 
 or
 
-```
+```ts
 yarn install @layerfi/components
 ```
 
@@ -185,7 +195,7 @@ body .Layer__component {
 }
 ```
 
-The full list of variables is listed in the `variables.css file` and contains:
+The full list of variables is listed in the [`variables.css`](https://github.com/Layer-Fi/layer-react/blob/main/src/styles/variables.scss) file and contains:
 
 ```scss
 // 1. BASE VARIABLES:
