@@ -61,6 +61,13 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
     padding-bottom: var(--spacing-lg);
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
+    box-sizing: border-box;
+
+    @container (max-width: 280px) {
+      & {
+        width: 100%;
+      }
+    }
   }
 
   .recharts-responsive-container {
