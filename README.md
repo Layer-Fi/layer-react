@@ -7,6 +7,12 @@ Layer's embeddable React component library provides an out of the box accounting
 
 All you need to get started is sandbox development credentials - reach out [here](https://www.layerfi.com/#contact-sale) if you don't have those yet!
 
+#### Related links
+
+- Layer home: https://www.layerfi.com
+- Documentation: https://docs.layerfi.com/introduction
+- NPM: https://www.npmjs.com/package/@layerfi/components
+
 <br />
 
 ## Installation
