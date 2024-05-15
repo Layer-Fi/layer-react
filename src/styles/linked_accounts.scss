@@ -1,6 +1,7 @@
 .Layer__linked-accounts {
   min-height: 150px;
   box-sizing: border-box;
+  overflow: visible;
 
   &::-webkit-scrollbar {
     display: none;
@@ -259,5 +260,9 @@
       transform: translate3d(5px, -5px, 0);
       transition: 0.15s all ease-out;
     }
+  }
+
+  .Layer__linked-accounts__options-overlay--transparent {
+    background: none;
   }
 }

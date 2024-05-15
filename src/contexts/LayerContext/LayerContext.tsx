@@ -28,4 +28,5 @@ export const LayerContext = createContext<
   setColors: () => undefined,
   onboardingStep: undefined,
   setOnboardingStep: () => undefined,
+  environment: '',
 })

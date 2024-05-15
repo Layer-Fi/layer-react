@@ -18,6 +18,11 @@ type UseLinkedAccounts = () => {
   repairConnection: (source: Source, sourceId: string) => void
   refetchAccounts: () => void
   unlinkAccount: (source: Source, accountId: string) => void
+  confirmAccount: (source: Source, accountId: string) => void
+  denyAccount: (source: Source, accountId: string) => void
+
+  // Only works in non-production environments for test purposes
+  breakConnection: (source: Source, connectionExternalId: string) => void
 }
 
 const DEBUG = true
@@ -133,9 +138,12 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const repairConnection = (source: Source, sourceId: string) => {
+  const repairConnection = async (
+    source: Source,
+    connectionExternalId: string,
+  ) => {
     if (source === 'PLAID') {
-      fetchPlaidUpdateModeLinkToken(sourceId)
+      await fetchPlaidUpdateModeLinkToken(connectionExternalId)
     } else {
       console.error(
         `Repairing a connection with source ${source} not yet supported`,
@@ -143,9 +151,12 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const removeConnection = (source: Source, connectionId: string) => {
+  const removeConnection = async (
+    source: Source,
+    connectionExternalId: string,
+  ) => {
     if (source === 'PLAID') {
-      unlinkPlaidItem(connectionId)
+      await unlinkPlaidItem(connectionExternalId)
     } else {
       console.error(
         `Removing a connection with source ${source} not yet supported`,
@@ -153,10 +164,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const unlinkAccount = (source: Source, accountId: string) => {
+  const unlinkAccount = async (source: Source, accountId: string) => {
     DEBUG && console.log('unlinking account')
     if (source === 'PLAID') {
-      Layer.unlinkAccount(apiUrl, auth?.access_token, {
+      await Layer.unlinkAccount(apiUrl, auth?.access_token, {
         params: { businessId, accountId: accountId },
       })
     } else {
@@ -166,15 +177,75 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
+  /**
+   * Note: When the user confirms an account is not a duplicate, this confirmation
+   * actually applies to the institution connection as a whole.
+   */
+  const confirmAccount = async (source: Source, accountId: string) => {
+    DEBUG && console.log('confirming account')
+    if (source === 'PLAID') {
+      await Layer.confirmConnection(apiUrl, auth?.access_token, {
+        params: {
+          businessId,
+          accountId,
+        },
+      })
+    } else {
+      console.error(
+        `Confirming an account with source ${source} not yet supported`,
+      )
+    }
+  }
+
+  /**
+   * Note: When the user identifies an account as a duplicate, this
+   * actually applies to the institution connection as a whole. It means that
+   * there is a duplicate institution connection
+   */
+  const denyAccount = async (source: Source, accountId: string) => {
+    DEBUG && console.log('confirming account')
+    if (source === 'PLAID') {
+      await Layer.denyConnection(apiUrl, auth?.access_token, {
+        params: {
+          businessId,
+          accountId,
+        },
+      })
+    } else {
+      console.error(
+        `Denying an account with source ${source} not yet supported`,
+      )
+    }
+  }
+
+  /**
+   * Test utility that puts a connection into a broken state. Only works in non-production environments.
+   */
+  const breakConnection = (source: Source, connectionExternalId: string) => {
+    DEBUG && console.log('Breaking sandbox plaid item connection')
+    if (source === 'PLAID') {
+      Layer.breakPlaidItemConnection(apiUrl, auth?.access_token, {
+        params: {
+          businessId,
+          plaidItemPlaidId: connectionExternalId,
+        },
+      })
+    } else {
+      console.error(
+        `Breaking a sandbox connection with source ${source} not yet supported`,
+      )
+    }
+  }
+
   const refetchAccounts = () => {
     DEBUG && console.log('refetching accounts...')
     mutate()
   }
 
-  const unlinkPlaidItem = (plaidItemId: string) => {
+  const unlinkPlaidItem = async (plaidItemPlaidId: string) => {
     DEBUG && console.log('unlinking plaid item')
-    Layer.unlinkPlaidItem(apiUrl, auth?.access_token, {
-      params: { businessId, plaidItemId },
+    await Layer.unlinkPlaidItem(apiUrl, auth?.access_token, {
+      params: { businessId, plaidItemPlaidId },
     })
   }
 
@@ -191,5 +262,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     repairConnection,
     refetchAccounts,
     unlinkAccount,
+    confirmAccount,
+    denyAccount,
+    breakConnection,
   }
 }

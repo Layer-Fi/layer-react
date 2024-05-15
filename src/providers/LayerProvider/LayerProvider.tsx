@@ -100,6 +100,7 @@ export const LayerProvider = ({
     colors,
     usePlaidSandbox,
     onboardingStep: undefined,
+    environment,
   })
 
   const { data: auth } =

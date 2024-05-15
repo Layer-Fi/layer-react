@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
+import { useLayerContext } from '../../hooks/useLayerContext'
 import PlusIcon from '../../icons/PlusIcon'
-import { Source } from '../../types/linked_accounts'
 import { LinkedAccountOptions } from '../LinkedAccountOptions'
 import { LinkedAccountThumb } from '../LinkedAccountThumb'
 import { Text, TextSize } from '../Typography'
@@ -16,17 +16,18 @@ export const LinkedAccountsContent = ({
   asWidget,
   showLedgerBalance,
 }: LinkedAccountsDataProps) => {
-  const { data, addConnection, unlinkAccount } = useContext(
-    LinkedAccountsContext,
-  )
-
-  const linkedAccountOptionsConfig = [
-    {
-      name: 'Unlink account',
-      action: (source: Source, __: string, accountId: string) =>
-        unlinkAccount(source, accountId),
-    },
-  ]
+  const {
+    data,
+    addConnection,
+    unlinkAccount,
+    removeConnection,
+    repairConnection,
+    confirmAccount,
+    denyAccount,
+    refetchAccounts,
+    breakConnection,
+  } = useContext(LinkedAccountsContext)
+  const { environment } = useLayerContext()
 
   const linkedAccountsNewAccountClassName = classNames(
     'Layer__linked-accounts__new-account',
@@ -35,22 +36,135 @@ export const LinkedAccountsContent = ({
 
   return (
     <div className='Layer__linked-accounts__list'>
-      {data?.map((account, index) => (
-        <LinkedAccountOptions
-          key={`linked-acc-${index}`}
-          config={linkedAccountOptionsConfig}
-          accountId={account.id}
-          connectionId={account.connection_id}
-          source={account.external_account_source}
-          showLedgerBalance={showLedgerBalance}
-        >
-          <LinkedAccountThumb
-            account={account}
-            asWidget={asWidget}
+      {data?.map((account, index) => {
+        let pillConfig
+        if (account.requires_user_confirmation_as_of) {
+          pillConfig = {
+            text: 'Confirm account',
+            config: [
+              {
+                name: 'Oops... this is a duplicate account!',
+                action: async () => {
+                  // TODO: trigger some sort of loading spinner here
+                  await denyAccount(account.external_account_source, account.id)
+                  // TODO: turn off loading spinner
+                  refetchAccounts()
+                },
+              },
+              {
+                name: 'This is not a duplicate account',
+                action: async () => {
+                  // TODO: trigger some sort of loading spinner here
+                  await confirmAccount(
+                    account.external_account_source,
+                    account.id,
+                  )
+                  // TODO: turn off loading spinner
+                  refetchAccounts()
+                },
+              },
+            ],
+          }
+        } else if (account.connection_needs_repair_as_of) {
+          pillConfig = {
+            text: 'Fix account',
+            config: [
+              {
+                name: 'Repair connection',
+                action: async () => {
+                  if (account.connection_id)
+                    // An account is "broken" when its connection is broken
+                    await repairConnection(
+                      account.external_account_source,
+                      account.connection_id,
+                    )
+                  refetchAccounts()
+                },
+              },
+            ],
+          }
+        }
+
+        return (
+          <LinkedAccountOptions
+            key={`linked-acc-${index}`}
+            config={[
+              {
+                name: 'Unlink account',
+                action: async () => {
+                  // TODO: replace with better confirm dialog
+                  if (
+                    !confirm(
+                      'Please confirm you wish to remove this financial account',
+                    )
+                  ) {
+                    return
+                  }
+                  // TODO: trigger some sort of loading spinner here
+                  await unlinkAccount(
+                    account.external_account_source,
+                    account.id,
+                  )
+                  // TODO: turn off loading spinner
+                  refetchAccounts()
+                },
+              },
+              {
+                name: `Unlink all accounts under this ${account.institution?.name} connection`,
+                action: async () => {
+                  // TODO: replace with better confirm dialog
+                  if (
+                    !account.connection_external_id ||
+                    !confirm(
+                      `Please confirm you wish to remove all accounts belonging to ${
+                        account.institution?.name || 'this institution'
+                      }`,
+                    )
+                  ) {
+                    return
+                  }
+                  // TODO: trigger some sort of loading spinner here
+                  await removeConnection(
+                    account.external_account_source,
+                    account.connection_external_id,
+                  )
+                  // TODO: turn off loading spinner
+                  refetchAccounts()
+                },
+              },
+              ...(pillConfig ? pillConfig.config : []),
+              ...(environment === 'staging'
+                ? [
+                    {
+                      name: 'Break connection (test utility)',
+                      action: async () => {
+                        if (account.connection_external_id) {
+                          await breakConnection(
+                            account.external_account_source,
+                            account.connection_external_id,
+                          )
+                          refetchAccounts()
+                        } else {
+                          console.warn(
+                            "Account doesn't have defined connection_external_id",
+                          )
+                        }
+                      },
+                    },
+                  ]
+                : []),
+            ]}
             showLedgerBalance={showLedgerBalance}
-          />
-        </LinkedAccountOptions>
-      ))}
+          >
+            <LinkedAccountThumb
+              account={account}
+              asWidget={asWidget}
+              showLedgerBalance={showLedgerBalance}
+              pillConfig={pillConfig}
+            />
+          </LinkedAccountOptions>
+        )
+      })}
       <div
         role='button'
         tabIndex={0}
