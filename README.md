@@ -127,11 +127,13 @@ The chart of accounts gives direct read and write access into the double entry g
 
 You have a range of options for custom styling. In order of most simple to most control:
 
-1. Using `theme` attribute of `LayerProvider`,
+1. Using the `theme` attribute of `LayerProvider`,
 2. Setting CSS variables,
 3. Overwriting CSS classes.
 
 ### Using `theme` attribute
+
+The theme attribute allows you to set parimary light and dark colors. The component will then use your primary colors to create a cohesive color palette across all components. We won't add any new colors, just different lightness of your brand colors for accents where helpful, e.g. hover states.
 
 ```ts
 <LayerProvider
