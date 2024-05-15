@@ -1,6 +1,6 @@
 {
   "name": "@layerfi/components",
-  "version": "0.1.12",
+  "version": "0.1.18",
   "description": "Layer React Components",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,7 +22,7 @@
     "react"
   ],
   "author": "Layer Financial",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Layer-Fi/layer-react/issues"
   },
