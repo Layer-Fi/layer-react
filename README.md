@@ -61,7 +61,7 @@ import { LayerProvider } from "@layerfi/components";
 
 ### Profit And Loss
 
-![Profit and Loss chart](https://mintlify.s3-us-west-1.amazonaws.com/layerfinancialtechnologiesinc/images/pnl-chart.png)
+![Profit and Loss chart](https://github.com/Layer-Fi/layer-react/assets/1592431/34e36b1b-024b-4598-b23b-dff723b2659c)
 
 ```tsx
 import { ProfitAndLoss } from "@layerfi/components";
