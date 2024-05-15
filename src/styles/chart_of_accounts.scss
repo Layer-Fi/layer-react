@@ -124,8 +124,8 @@
 .Layer__table__expand-icon {
   transition: transform 150ms ease-out;
   color: var(--color-base-600);
-  margin-left: -3px;
-  margin-right: var(--spacing-sm);
+  margin-left: -15px;
+  padding: var(--spacing-sm);
 }
 
 .Layer__chart-of-accounts__table
