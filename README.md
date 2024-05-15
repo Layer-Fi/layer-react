@@ -78,7 +78,7 @@ import { ProfitAndLoss } from "@layerfi/components";
 
 Displays all accounts connected to Layer including embedded banking, Plaid, and custom accounts.
 
-![Linked Accounts](https://mintlify.s3-us-west-1.amazonaws.com/layerfinancialtechnologiesinc/images/bank-linking-component.png)
+![Linked Accounts](https://github.com/Layer-Fi/layer-react/assets/1592431/3e7c1349-a5c3-47c8-a4d5-71f9bdc3be78)
 
 ```tsx
 <LinkedAccounts
@@ -91,7 +91,7 @@ Displays all accounts connected to Layer including embedded banking, Plaid, and 
 
 The transaction categorization component handles displaying both categorized transactions and the workflow for categorizing new transactions as they are imported into Layer.
 
-![TransactionCategorization](https://mintlify.s3-us-west-1.amazonaws.com/layerfinancialtechnologiesinc/images/bank-transactions-component.png)
+![TransactionCategorization](https://github.com/Layer-Fi/layer-react/assets/1592431/c1fea59b-a4c3-4d53-bfc9-9126c5ecba4a)
 
 ```tsx
 <BankTransactions asWidget />
@@ -101,7 +101,7 @@ The transaction categorization component handles displaying both categorized tra
 
 The reports component contains multiple accounting reports and tables, including the profit and loss table.
 
-![P&L Table](https://mintlify.s3-us-west-1.amazonaws.com/layerfinancialtechnologiesinc/images/pnl-table.png)
+![P&L Table](https://github.com/Layer-Fi/layer-react/assets/1592431/d165b5b0-a0b5-4fff-b470-56bd8a9f6eaf)
 
 These can be embedded individually
 
