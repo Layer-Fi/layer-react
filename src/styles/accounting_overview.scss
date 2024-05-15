@@ -1,8 +1,9 @@
 .Layer__accounting-overview__summaries-row {
   display: flex;
   align-items: center;
-  column-gap: var(--spacing-md);
+  gap: var(--spacing-md);
   max-width: 1406px;
+  width: 100%;
 
   .Layer__notification-card {
     width: calc(25% - 12px);
@@ -13,4 +14,19 @@
 .Layer__component.Layer__accounting-overview-profit-and-loss
   .recharts-responsive-container {
   margin-top: -42px;
+}
+
+@container (max-width: 796px) {
+  .Layer__accounting-overview__summaries-row {
+    flex-direction: column;
+
+    .Layer__profit-and-loss-summaries {
+      width: 100%;
+      flex-direction: column;
+    }
+
+    .Layer__notification-card.Layer__txs-to-review {
+      width: 100%;
+    }
+  }
 }
