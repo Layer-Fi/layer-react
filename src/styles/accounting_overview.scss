@@ -20,6 +20,12 @@
   display: none;
 }
 
+@container (max-width: 1023px) {
+  .Layer__accounting-overview-profit-and-loss .recharts-legend-wrapper {
+    margin-top: -40px;
+  }
+}
+
 @container (max-width: 796px) {
   .Layer__accounting-overview__summaries-row {
     flex-direction: column;
