@@ -29,4 +29,12 @@
       width: 100%;
     }
   }
+
+  .accounting-overview-profit-and-loss-charts {
+    flex-direction: column;
+  }
+
+  .Layer__component.Layer__accounting-overview-profit-and-loss-chart.accounting-overview-profit-and-loss-chart--hidden {
+    display: none;
+  }
 }

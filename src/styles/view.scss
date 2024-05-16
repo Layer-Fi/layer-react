@@ -10,6 +10,7 @@
   display: flex;
   width: 100%;
   border-bottom: 1px solid var(--color-base-200);
+  container-type: inline-size;
 }
 
 .Layer__view-header__content {
@@ -24,4 +25,16 @@
 .Layer__view-header__controls {
   display: flex;
   align-items: center;
+}
+
+@container (max-width: 760px) {
+  .Layer__view-header__content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+
+    .Layer__heading {
+      align-self: flex-start;
+    }
+  }
 }

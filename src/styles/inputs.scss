@@ -354,6 +354,10 @@
       'cv05' on,
       'cv08' on,
       'ss03' on;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .Layer__select__option-label {
@@ -564,5 +568,15 @@
     position: absolute;
     right: 8px;
     z-index: 1;
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 2) {
+  .Layer__component {
+    .Layer__textarea,
+    .Layer__select__control,
+    .Layer__input {
+      font-size: 16px;
+    }
   }
 }
