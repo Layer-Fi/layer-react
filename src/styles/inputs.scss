@@ -577,6 +577,13 @@
     .Layer__select__control,
     .Layer__input {
       font-size: 16px;
+      min-height: 39px;
+    }
+
+    .Layer__bank-transaction-list-item__expanded-row
+      .Layer__select
+      .Layer__select__control {
+      min-height: 39px;
     }
   }
 }
