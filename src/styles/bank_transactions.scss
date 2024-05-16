@@ -223,6 +223,7 @@
   display: flex;
   gap: var(--spacing-sm);
   flex: 1;
+  align-items: center;
 }
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry__merge-btn {
