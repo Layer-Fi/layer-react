@@ -72,7 +72,7 @@ export const ChartOfAccountsTable = ({
                 >
                   {!expandAll || expandAll === 'collapsed'
                     ? 'Expand all rows'
-                    : 'Collpase all rows'}
+                    : 'Collapse all rows'}
                 </Button>
               )}
             </div>
