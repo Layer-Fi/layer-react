@@ -25,6 +25,7 @@ import {
   confirmConnection,
   denyConnection,
   breakPlaidItemConnection,
+  syncConnection,
 } from './layer/linked_accounts'
 import { getProfitAndLoss } from './layer/profit_and_loss'
 import { getTasks, submitResponseToTask } from './layer/tasks'
@@ -56,4 +57,5 @@ export const Layer = {
   getTasks,
   submitResponseToTask,
   breakPlaidItemConnection,
+  syncConnection,
 }

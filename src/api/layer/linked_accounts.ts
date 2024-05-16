@@ -1,5 +1,13 @@
 import { LinkedAccounts, PublicToken } from '../../types/linked_accounts'
-import { get, post, deleteRequest } from './authenticated_http'
+import { get, post } from './authenticated_http'
+
+export const syncConnection = post<
+  Record<string, unknown>,
+  Record<string, unknown>,
+  {
+    businessId: string
+  }
+>(({ businessId }) => `/v1/businesses/${businessId}/sync`)
 
 export const getLinkedAccounts = get<
   { data: LinkedAccounts },

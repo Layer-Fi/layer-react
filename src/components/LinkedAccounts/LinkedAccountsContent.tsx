@@ -24,7 +24,6 @@ export const LinkedAccountsContent = ({
     repairConnection,
     confirmAccount,
     denyAccount,
-    refetchAccounts,
     breakConnection,
   } = useContext(LinkedAccountsContext)
   const { environment } = useLayerContext()
@@ -48,7 +47,6 @@ export const LinkedAccountsContent = ({
                   // TODO: trigger some sort of loading spinner here
                   await denyAccount(account.external_account_source, account.id)
                   // TODO: turn off loading spinner
-                  refetchAccounts()
                 },
               },
               {
@@ -60,7 +58,6 @@ export const LinkedAccountsContent = ({
                     account.id,
                   )
                   // TODO: turn off loading spinner
-                  refetchAccounts()
                 },
               },
             ],
@@ -72,13 +69,14 @@ export const LinkedAccountsContent = ({
               {
                 name: 'Repair connection',
                 action: async () => {
-                  if (account.connection_id)
+                  if (account.connection_external_id)
+                    // TODO: trigger some sort of loading spinner here
                     // An account is "broken" when its connection is broken
                     await repairConnection(
                       account.external_account_source,
-                      account.connection_id,
+                      account.connection_external_id,
                     )
-                  refetchAccounts()
+                  // TODO: turn off loading spinner
                 },
               },
             ],
@@ -106,7 +104,6 @@ export const LinkedAccountsContent = ({
                     account.id,
                   )
                   // TODO: turn off loading spinner
-                  refetchAccounts()
                 },
               },
               {
@@ -129,11 +126,11 @@ export const LinkedAccountsContent = ({
                     account.connection_external_id,
                   )
                   // TODO: turn off loading spinner
-                  refetchAccounts()
                 },
               },
               ...(pillConfig ? pillConfig.config : []),
-              ...(environment === 'staging'
+              ...(environment === 'staging' &&
+              !account.connection_needs_repair_as_of
                 ? [
                     {
                       name: 'Break connection (test utility)',
@@ -143,7 +140,6 @@ export const LinkedAccountsContent = ({
                             account.external_account_source,
                             account.connection_external_id,
                           )
-                          refetchAccounts()
                         } else {
                           console.warn(
                             "Account doesn't have defined connection_external_id",
