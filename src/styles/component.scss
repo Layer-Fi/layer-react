@@ -31,6 +31,7 @@
 }
 
 .Layer__component.Layer__component--elevated {
+  border-width: 0;
   box-shadow:
     0px 4px 12px 0px var(--base-transparent-8),
     0px 2px 4px 0px var(--base-transparent-6),

@@ -9,7 +9,7 @@ export interface MiniChartProps {
 
 export const MiniChart = ({ data }: MiniChartProps) => {
   return (
-    <PieChart width={48} height={48} className='mini-chart'>
+    <PieChart width={52} height={52} className='mini-chart'>
       <Pie
         data={data}
         dataKey='value'
@@ -18,7 +18,7 @@ export const MiniChart = ({ data }: MiniChartProps) => {
         cy='50%'
         innerRadius={10}
         outerRadius={16}
-        paddingAngle={0.2}
+        paddingAngle={0.4}
         fill='#8884d8'
         width={24}
         height={24}

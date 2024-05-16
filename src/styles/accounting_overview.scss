@@ -16,6 +16,10 @@
   margin-top: -42px;
 }
 
+.accounting-overview-profit-and-loss-charts > .Layer__toggle {
+  display: none;
+}
+
 @container (max-width: 796px) {
   .Layer__accounting-overview__summaries-row {
     flex-direction: column;
@@ -32,6 +36,10 @@
 
   .accounting-overview-profit-and-loss-charts {
     flex-direction: column;
+  }
+
+  .accounting-overview-profit-and-loss-charts > .Layer__toggle {
+    display: flex;
   }
 
   .Layer__component.Layer__accounting-overview-profit-and-loss-chart.accounting-overview-profit-and-loss-chart--hidden {
