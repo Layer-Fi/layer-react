@@ -20,6 +20,7 @@ export const LayerContext = createContext<
   apiUrl: '',
   theme: undefined,
   colors: {},
+  usePlaidSandbox: true,
   setTheme: () => undefined,
   getColor: _shade => undefined,
   setLightColor: () => undefined,

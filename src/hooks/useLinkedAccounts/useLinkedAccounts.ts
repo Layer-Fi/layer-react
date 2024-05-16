@@ -23,14 +23,12 @@ type UseLinkedAccounts = () => {
 const DEBUG = true
 const USE_MOCK_RESPONSE_DATA = false
 
-// Note: you will need to be using a business whose client's plaid client and plaid secret correspond to the
-// plaid sandbox account
-const USE_PLAID_SANDBOX = true
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
-  const { auth, businessId, apiUrl } = useLayerContext()
+  const { auth, businessId, apiUrl, usePlaidSandbox } = useLayerContext()
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
+  const USE_PLAID_SANDBOX = usePlaidSandbox ?? true
 
   const {
     data: responseData,

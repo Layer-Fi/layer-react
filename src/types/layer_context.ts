@@ -8,6 +8,7 @@ export type LayerContextValues = {
   apiUrl: string
   theme?: LayerThemeConfig
   colors: ColorsPalette
+  usePlaidSandbox?: boolean
   onboardingStep?: OnboardingStep
 }
 
