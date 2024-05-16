@@ -63,6 +63,7 @@ export type Props = {
   businessAccessToken?: string
   environment?: keyof typeof LayerEnvironment
   theme?: LayerThemeConfig
+  usePlaidSandbox?: boolean
 }
 
 export const LayerProvider = ({
@@ -73,6 +74,7 @@ export const LayerProvider = ({
   businessAccessToken,
   environment = 'production',
   theme,
+  usePlaidSandbox,
 }: PropsWithChildren<Props>) => {
   const defaultSWRConfig = {
     revalidateInterval: 0,
@@ -96,6 +98,7 @@ export const LayerProvider = ({
     apiUrl,
     theme,
     colors,
+    usePlaidSandbox,
     onboardingStep: undefined,
   })
 
