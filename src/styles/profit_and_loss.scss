@@ -381,8 +381,17 @@
   fill: var(--bar-color-income);
 }
 
+.Layer__profit-and-loss-chart__bar--income-uncategorized {
+  fill: rgba(71, 153, 158, 0.16);
+}
+
 .Layer__profit-and-loss-chart__bar--expenses {
   fill: var(--bar-color-expenses);
+}
+
+.Layer__profit-and-loss-chart__bar--expenses-uncategorized {
+  // fill: var(--bar-color-expenses);
+  fill: rgba(71, 153, 158, 0.16);
 }
 
 .Layer__chart-container--loading .Layer__profit-and-loss-chart__bar--expenses {
