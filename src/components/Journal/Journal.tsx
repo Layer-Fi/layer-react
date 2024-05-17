@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+import React, { useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { JournalContext } from '../../contexts/JournalContext'

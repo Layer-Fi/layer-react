@@ -9,6 +9,7 @@ export { LayerProvider } from './providers/LayerProvider'
 export { useLayerContext } from './hooks/useLayerContext'
 export { Journal } from './components/Journal'
 export { Onboarding } from './components/Onboarding'
+export { Tasks } from './components/Tasks'
 
 // Views:
 export { AccountingOverview } from './views/AccountingOverview'
