@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { TasksContext } from '../../contexts/TasksContext'
 import { useTasks } from '../../hooks/useTasks'
 import { Container } from '../Container'
@@ -12,19 +12,27 @@ export const Tasks = () => {
 
   return (
     <TasksContext.Provider value={contextData}>
-      <Container name='tasks-component'>
-        <TasksHeader />
-        {contextData?.isLoading || !contextData.data ? (
-          <div className={`Layer__tasks__loader-container`}>
-            <Loader />
-          </div>
-        ) : (
-          <>
-            {contextData.data.length > 0 && <TasksPending />}
-            <TasksList />
-          </>
-        )}
-      </Container>
+      <TasksComponent />
     </TasksContext.Provider>
+  )
+}
+
+export const TasksComponent = () => {
+  const { isLoading, data } = useContext(TasksContext)
+
+  return (
+    <Container name='tasks-component'>
+      <TasksHeader />
+      {isLoading || !data ? (
+        <div className={`Layer__tasks__loader-container`}>
+          <Loader />
+        </div>
+      ) : (
+        <>
+          {data.length > 0 && <TasksPending />}
+          <TasksList />
+        </>
+      )}
+    </Container>
   )
 }

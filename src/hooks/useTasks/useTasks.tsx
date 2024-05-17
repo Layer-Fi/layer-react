@@ -9,7 +9,7 @@ type UseTasks = () => {
   isValidating?: boolean
   error?: unknown
   refetch: () => void
-  update: (taskId: string, userResponse: string) => void
+  submitResponseToTask: (taskId: string, userResponse: string) => void
 }
 
 export const useTasks: UseTasks = () => {
@@ -24,7 +24,7 @@ export const useTasks: UseTasks = () => {
 
   const refetch = () => mutate()
 
-  const update = (taskId: string, userResponse: string) => {
+  const submitResponseToTask = (taskId: string, userResponse: string) => {
     if (!taskId || !userResponse || userResponse.length === 0) return
 
     const data = {
@@ -32,7 +32,7 @@ export const useTasks: UseTasks = () => {
       user_response: userResponse,
     }
 
-    Layer.submitUserResponse(apiUrl, auth?.access_token, {
+    Layer.submitResponseToTask(apiUrl, auth?.access_token, {
       params: { businessId, taskId },
       body: data,
     }).then(() => refetch())
@@ -44,6 +44,6 @@ export const useTasks: UseTasks = () => {
     isValidating,
     error,
     refetch,
-    update,
+    submitResponseToTask,
   }
 }

@@ -19,7 +19,7 @@ export const TasksListItem = ({
   const [isOpen, setIsOpen] = useState(index === 0 ? true : false)
   const [userResponse, setUserResponse] = useState(task.user_response || '')
 
-  const { update } = useContext(TasksContext)
+  const { submitResponseToTask } = useContext(TasksContext)
 
   const taskBodyClassName = classNames(
     'Layer__tasks-list-item__body',
@@ -80,9 +80,9 @@ export const TasksListItem = ({
                   task.status === 'COMPLETED' || userResponse.length === 0
                 }
                 variant={ButtonVariant.secondary}
-                onClick={() => update(task.id, userResponse)}
+                onClick={() => submitResponseToTask(task.id, userResponse)}
               >
-                Update
+                {userResponse && userResponse.length === 0 ? 'Update' : 'Save'}
               </Button>
             </div>
           </div>

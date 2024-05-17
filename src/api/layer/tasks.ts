@@ -5,7 +5,7 @@ export const getTasks = get<{ data: TaskTypes[] }>(
   ({ businessId }) => `/v1/businesses/${businessId}/tasks`,
 )
 
-export const submitUserResponse = post<{ data: TaskTypes }>(
+export const submitResponseToTask = post<{ data: TaskTypes }>(
   ({ businessId, taskId }) =>
     `/v1/businesses/${businessId}/tasks/${taskId}/user-response`,
 )

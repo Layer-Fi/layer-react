@@ -26,7 +26,7 @@ import {
   denyConnection,
 } from './layer/linked_accounts'
 import { getProfitAndLoss } from './layer/profit_and_loss'
-import { getTasks, submitUserResponse } from './layer/tasks'
+import { getTasks, submitResponseToTask } from './layer/tasks'
 
 export const Layer = {
   authenticate,
@@ -53,5 +53,5 @@ export const Layer = {
   confirmConnection,
   denyConnection,
   getTasks,
-  submitUserResponse,
+  submitResponseToTask,
 }
