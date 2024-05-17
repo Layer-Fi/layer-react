@@ -76,3 +76,8 @@ export const DEFAULT_CHART_COLORS = [
     opacity: 0.1,
   },
 ]
+
+export const TASKS_CHARTS_COLORS = {
+  done: '#3B9C63',
+  pending: '#DFA000',
+}
