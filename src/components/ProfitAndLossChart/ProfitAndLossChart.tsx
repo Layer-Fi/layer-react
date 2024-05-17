@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { useElementSize } from '../../hooks/useElementSize'
 import { useLayerContext } from '../../hooks/useLayerContext'
 import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
@@ -10,7 +11,6 @@ import { Indicator } from './Indicator'
 import classNames from 'classnames'
 import { format, parseISO, startOfMonth } from 'date-fns'
 import {
-  BarChart,
   XAxis,
   Cell,
   Bar,
@@ -24,13 +24,17 @@ import {
   YAxis,
   Line,
   ComposedChart,
+  ReferenceLine,
 } from 'recharts'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 
 // const barGap = 4
-const barSize = 10
+// const barSize = 10
 
 export const ProfitAndLossChart = () => {
+  const [compactView, setCompactView] = useState(false)
+  const barSize = compactView ? 10 : 20
+
   const { getColor } = useLayerContext()
   const { changeDateRange, dateRange } = useContext(PNL.Context)
   const [customCursorSize, setCustomCursorSize] = useState({
@@ -56,39 +60,38 @@ export const ProfitAndLossChart = () => {
   }, [loaded])
 
   const getMonthName = (pnl: ProfitAndLoss | undefined) =>
-    pnl ? format(parseISO(pnl.start_date), 'LLL') : ''
+    pnl ? format(parseISO(pnl.start_date), compactView ? 'L' : 'LLL') : ''
 
-  const summarizePnL = (pnl: ProfitAndLoss | undefined) => {
-    console.log('pnl', pnl)
-    return {
-      name: getMonthName(pnl),
-      revenue: pnl?.income.value || 0,
-      revenueUncategorized: (pnl?.income.value || 0) / 2, // @TODO - replace with actual value
-      expenses: -Math.abs((pnl?.income.value || 0) - (pnl?.net_profit || 0)),
-      expensesUncategorized:
-        -Math.abs((pnl?.income.value || 0) - (pnl?.net_profit || 0)) / 2, // @TODO - replace with actual value
-      netProfit: pnl?.net_profit || 0,
-      selected:
-        !!pnl &&
-        parseISO(pnl.start_date).getMonth() >= startSelectionMonth &&
-        parseISO(pnl.end_date).getMonth() <= endSelectionMonth,
-    }
-  }
+  const summarizePnL = (pnl: ProfitAndLoss | undefined) => ({
+    name: getMonthName(pnl),
+    revenue: pnl?.income.value || 0,
+    revenueUncategorized: (pnl?.income.value || 0) / 2, // @TODO - replace with actual value
+    expenses: -Math.abs((pnl?.income.value || 0) - (pnl?.net_profit || 0)),
+    expensesUncategorized:
+      -Math.abs((pnl?.income.value || 0) - (pnl?.net_profit || 0)) / 2, // @TODO - replace with actual value
+    netProfit: pnl?.net_profit || 0,
+    selected:
+      !!pnl &&
+      parseISO(pnl.start_date).getMonth() >= startSelectionMonth &&
+      parseISO(pnl.end_date).getMonth() <= endSelectionMonth,
+    base: 0,
+  })
 
   const theData = useMemo(() => {
     if (loaded !== 'complete') {
       return data?.map(x => ({
-        name: format(x.startDate, 'LLL'),
+        name: format(x.startDate, compactView ? 'L' : 'LLL'),
         revenue: 1,
         revenueUncategorized: 0,
         expenses: 1,
         expensesUncategorized: 0,
         netProfit: 0,
         selected: false,
+        base: 0,
       }))
     }
     return data?.map(x => summarizePnL(x.data))
-  }, [startSelectionMonth, endSelectionMonth, loaded])
+  }, [startSelectionMonth, endSelectionMonth, loaded, compactView])
 
   const onClick: CategoricalChartFunc = ({ activeTooltipIndex }) => {
     const index =
@@ -173,18 +176,27 @@ export const ProfitAndLossChart = () => {
     }
 
     try {
-      return (Number(value) / 100).toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      })
+      let suffix = ''
+      const base = Number(value) / 100
+      let val = base
+
+      if (Math.abs(base) >= 1000000000) {
+        suffix = 'B'
+        val = base / 1000000000
+      } else if (Math.abs(base) >= 1000000) {
+        suffix = 'M'
+        val = base / 1000000
+      } else if (Math.abs(base) >= 1000) {
+        suffix = 'k'
+        val = base / 1000
+      }
+      return `${val}${suffix}`
     } catch (_err) {
       return value
     }
   }
 
   const CustomizedYTick = (props: any) => {
-    // return <text orientation="left" width="60" height="140.34375" stroke="none" x="64" y="21.65625" class="recharts-text recharts-cartesian-axis-tick-value" text-anchor="end" fill="#666"><tspan x="64" dy="0.355em">2100000</tspan></text>
-
     return (
       <text {...props} className='Layer__chart_y-axis-tick'>
         <tspan dy='0.355em'>{formatYAxisValue(props.payload.value)}</tspan>
@@ -197,33 +209,18 @@ export const ProfitAndLossChart = () => {
     const { width, height } = customCursorSize
     const offsetX = (rectWidth - width) / 2
 
-    console.log('curosr', props, width, height, offsetX, x, y)
-
     return (
       <Rectangle
-        fill={'#F7F8FA'}
+        fill='#F7F8FA'
         stroke='none'
         x={points[0].x - width / 2}
         y={points[0].y}
-        width={width + 1}
+        width={width}
         height={height}
         radius={6}
         className='Layer__chart__tooltip-cursor'
       />
     )
-
-    // return (
-    //   <Rectangle
-    //     fill={'#F7F8FA'}
-    //     stroke='none'
-    //     x={x + offsetX}
-    //     y={y}
-    //     width={width}
-    //     height={height}
-    //     radius={6}
-    //     className='Layer__chart__tooltip-cursor'
-    //   />
-    // )
   }
 
   const [animateFrom, setAnimateFrom] = useState(-1)
@@ -236,6 +233,17 @@ export const ProfitAndLossChart = () => {
       )}
       width='100%'
       height='100%'
+      onResize={width => {
+        if (width && width < 620 && !compactView) {
+          setCompactView(true)
+          return
+        }
+
+        if (width && width >= 620 && compactView) {
+          setCompactView(false)
+          return
+        }
+      }}
     >
       <ComposedChart
         margin={{ left: 12, right: 12, bottom: 12 }}
@@ -280,10 +288,10 @@ export const ProfitAndLossChart = () => {
         <XAxis dataKey='name' xAxisId='expenses' tickLine={false} hide />
         <YAxis
           tick={<CustomizedYTick />}
-          domain={([dataMin, dataMax]) => {
-            // @TODO calculate min and max as roundings to 10k (or if less than 10k then to full 5k or 1k)
-            return [-3000000, 3000000]
-          }}
+          // domain={([dataMin, dataMax]) => {
+          //   // @TODO calculate min and max as roundings to 10k (or if less than 10k then to full 5k or 1k)
+          //   // return [-3000000, 3000000]
+          // }}
         />
         <Bar
           dataKey='revenue'
@@ -365,6 +373,11 @@ export const ProfitAndLossChart = () => {
           dataKey='netProfit'
           stroke={getColor(1000)?.hex ?? '#000'}
           name='Net profit'
+          xAxisId='revenue'
+        />
+        <ReferenceLine
+          y={0}
+          stroke={getColor(300)?.hex ?? '#EBEDF0'}
           xAxisId='revenue'
         />
       </ComposedChart>

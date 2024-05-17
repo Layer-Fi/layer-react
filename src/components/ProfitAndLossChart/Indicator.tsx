@@ -33,12 +33,14 @@ export const Indicator = ({
 
   const { x: animateTo = 0, width = 0 } =
     'x' in viewBox ? viewBox : emptyViewBox
-  const margin = width > 12 ? 12 : 4
-  const boxWidth = width * 2 + margin
-  const multiplier = width > 12 ? 1.2 : 1
-  const xOffset = (boxWidth * multiplier - boxWidth) / 2
+  const margin = width > 12 ? 12 : 6
+  const boxWidth = width + margin
+  // const multiplier = width > 12 ? 1.2 : 1
+  // const xOffset = (boxWidth * multiplier - boxWidth) / 2
+  const xOffset = boxWidth / 2
   const borderRadius = 6
-  const rectWidth = `${boxWidth * multiplier}px`
+  // const rectWidth = `${boxWidth * multiplier}px`
+  const rectWidth = `${boxWidth}px`
   const rectHeight = 'calc(100% - 38px)'
 
   // useEffect callbacks run after the browser paints
@@ -76,7 +78,7 @@ export const Indicator = ({
       style={{
         width: rectWidth,
         // @ts-expect-error -- y is fine but x apparently isn't!
-        x: actualX - margin - 2, // @TODO
+        x: actualX - xOffset / 2 + margin / 4, // @TODO
         y: 22,
         height: rectHeight,
         opacity: opacityIndicator,
