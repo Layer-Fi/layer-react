@@ -229,10 +229,17 @@
 
 .Layer__profit-and-loss-chart .legend-item-0 {
   fill: var(--bar-color-income);
+  stroke: var(--bar-color-income);
 }
 
 .Layer__profit-and-loss-chart .legend-item-1 {
   fill: var(--bar-color-expenses);
+  stroke: var(--bar-color-expenses);
+}
+
+.Layer__profit-and-loss-chart .legend-item-2 {
+  fill: var(--base-transparent-16-light);
+  stroke: var(--bar-color-income);
 }
 
 .Layer__profit-and-loss-chart__selection-indicator {
@@ -377,20 +384,30 @@
   background-color: var(--color-base-50);
 }
 
+.Layer__profit-and-loss-chart__bar--loading {
+  fill: var(--color-base-50);
+  stroke: var(--color-base-50);
+  animation: layer_chart_bar_loading_anim 2s linear infinite;
+}
+
 .Layer__profit-and-loss-chart__bar--income {
   fill: var(--bar-color-income);
+  stroke: var(--bar-color-income);
 }
 
 .Layer__profit-and-loss-chart__bar--income-uncategorized {
   fill: var(--base-transparent-16-light);
+  stroke: var(--bar-color-income);
 }
 
 .Layer__profit-and-loss-chart__bar--expenses {
   fill: var(--bar-color-expenses);
+  stroke: var(--bar-color-expenses);
 }
 
 .Layer__profit-and-loss-chart__bar--expenses-uncategorized {
   fill: var(--base-transparent-16);
+  stroke: var(--bar-color-expenses);
 }
 
 .Layer__chart-container--loading .Layer__profit-and-loss-chart__bar--expenses {

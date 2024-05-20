@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { useElementSize } from '../../hooks/useElementSize'
 import { useLayerContext } from '../../hooks/useLayerContext'
 import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
@@ -27,9 +26,6 @@ import {
   ReferenceLine,
 } from 'recharts'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
-
-// const barGap = 4
-// const barSize = 10
 
 export const ProfitAndLossChart = () => {
   const [compactView, setCompactView] = useState(false)
@@ -75,18 +71,20 @@ export const ProfitAndLossChart = () => {
       parseISO(pnl.start_date).getMonth() >= startSelectionMonth &&
       parseISO(pnl.end_date).getMonth() <= endSelectionMonth,
     base: 0,
+    loading: 0,
   })
 
   const theData = useMemo(() => {
     if (loaded !== 'complete') {
       return data?.map(x => ({
         name: format(x.startDate, compactView ? 'L' : 'LLL'),
-        revenue: 1,
+        revenue: 0,
         revenueUncategorized: 0,
-        expenses: 1,
+        expenses: 0,
         expensesUncategorized: 0,
         netProfit: 0,
         selected: false,
+        loading: 1,
         base: 0,
       }))
     }
@@ -129,26 +127,10 @@ export const ProfitAndLossChart = () => {
               </li>
               <li>
                 <label className='Layer__chart__tooltip-label'>
-                  {capitalizeFirstLetter(payload[1].name ?? '')}
-                </label>
-                <span className='Layer__chart__tooltip-value'>
-                  ${centsToDollars(Math.abs(payload[1].value ?? 0))}
-                </span>
-              </li>
-              <li>
-                <label className='Layer__chart__tooltip-label'>
                   {capitalizeFirstLetter(payload[2].name ?? '')}
                 </label>
                 <span className='Layer__chart__tooltip-value'>
                   ${centsToDollars(Math.abs(payload[2].value ?? 0))}
-                </span>
-              </li>
-              <li>
-                <label className='Layer__chart__tooltip-label'>
-                  {capitalizeFirstLetter(payload[3].name ?? '')}
-                </label>
-                <span className='Layer__chart__tooltip-value'>
-                  ${centsToDollars(Math.abs(payload[3].value ?? 0))}
                 </span>
               </li>
               <li>
@@ -205,9 +187,8 @@ export const ProfitAndLossChart = () => {
   }
 
   const CustomizedCursor = (props: any) => {
-    const { x, y, width: rectWidth, points } = props
+    const { points } = props
     const { width, height } = customCursorSize
-    const offsetX = (rectWidth - width) / 2
 
     return (
       <Rectangle
@@ -286,17 +267,22 @@ export const ProfitAndLossChart = () => {
         />
         <XAxis dataKey='name' xAxisId='revenue' tickLine={false} />
         <XAxis dataKey='name' xAxisId='expenses' tickLine={false} hide />
-        <YAxis
-          tick={<CustomizedYTick />}
-          // domain={([dataMin, dataMax]) => {
-          //   // @TODO calculate min and max as roundings to 10k (or if less than 10k then to full 5k or 1k)
-          //   // return [-3000000, 3000000]
-          // }}
+        <YAxis tick={<CustomizedYTick />} />
+        <Bar
+          dataKey='loading'
+          barSize={barSize}
+          isAnimationActive={barAnimActive}
+          animationDuration={100}
+          radius={[2, 2, 0, 0]}
+          className='Layer__profit-and-loss-chart__bar--loading'
+          xAxisId='revenue'
+          stackId='revenue'
         />
         <Bar
           dataKey='revenue'
           barSize={barSize}
           isAnimationActive={barAnimActive}
+          animationDuration={100}
           radius={[2, 2, 0, 0]}
           className='Layer__profit-and-loss-chart__bar--income'
           xAxisId='revenue'
@@ -331,6 +317,7 @@ export const ProfitAndLossChart = () => {
           dataKey='revenueUncategorized'
           barSize={barSize}
           isAnimationActive={barAnimActive}
+          animationDuration={100}
           radius={[2, 2, 0, 0]}
           className='Layer__profit-and-loss-chart__bar--income-uncategorized'
           xAxisId='revenue'
@@ -340,6 +327,7 @@ export const ProfitAndLossChart = () => {
           dataKey='expenses'
           barSize={barSize}
           isAnimationActive={barAnimActive}
+          animationDuration={100}
           radius={[2, 2, 0, 0]}
           className='Layer__profit-and-loss-chart__bar--expenses'
           xAxisId='expenses'
@@ -360,6 +348,7 @@ export const ProfitAndLossChart = () => {
           dataKey='expensesUncategorized'
           barSize={barSize}
           isAnimationActive={barAnimActive}
+          animationDuration={100}
           radius={[2, 2, 0, 0]}
           className='Layer__profit-and-loss-chart__bar--expenses-uncategorized'
           xAxisId='expenses'
@@ -374,6 +363,7 @@ export const ProfitAndLossChart = () => {
           stroke={getColor(1000)?.hex ?? '#000'}
           name='Net profit'
           xAxisId='revenue'
+          animationDuration={20}
         />
         <ReferenceLine
           y={0}
