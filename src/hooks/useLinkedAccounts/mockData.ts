@@ -2,11 +2,11 @@ import { LinkedAccount } from '../../types/linked_accounts'
 
 export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
   {
-    id: '1',
+    id: 'd800ada8-8075-4436-a712-08efabcbd51a',
     external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
     external_account_source: 'PLAID',
     external_account_name: 'Citi Double Cash® Card',
-    mask: "1234",
+    mask: '1234',
     latest_balance_timestamp: {
       external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
       external_account_source: 'PLAID',
@@ -20,15 +20,16 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
       logo: '',
     },
     connection_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+    connection_external_id: '11111',
     connection_needs_repair_as_of: null,
     requires_user_confirmation_as_of: null,
   },
   {
-    id: '2',
+    id: 'f98ec50a-c370-484d-a35b-d00207436075',
     external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
     external_account_source: 'PLAID',
     external_account_name: 'Citi Double Cash® Card',
-    mask: "1234",
+    mask: '1234',
     latest_balance_timestamp: {
       external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
       external_account_source: 'PLAID',
@@ -42,15 +43,16 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
       logo: '',
     },
     connection_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+    connection_external_id: '11111',
     connection_needs_repair_as_of: null,
     requires_user_confirmation_as_of: null,
   },
   {
-    id: '3',
+    id: '843f1748-fdaa-422d-a73d-2489a40c8dc7',
     external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
     external_account_source: 'PLAID',
     external_account_name: 'Citi Double Cash® Card',
-    mask: "1234",
+    mask: '1234',
     latest_balance_timestamp: {
       external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
       external_account_source: 'PLAID',
@@ -64,15 +66,16 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
       logo: '',
     },
     connection_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+    connection_external_id: '11111',
     connection_needs_repair_as_of: '2024-03-06T16:44:35.715458Z',
     requires_user_confirmation_as_of: null,
   },
   {
-    id: '4',
+    id: '8f430e29-e339-4d71-a08a-fce469c7a7c1',
     external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
     external_account_source: 'PLAID',
     external_account_name: 'Citi Double Cash® Card',
-    mask: "1234",
+    mask: '1234',
     latest_balance_timestamp: {
       external_account_external_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
       external_account_source: 'PLAID',
@@ -86,6 +89,7 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
       logo: '',
     },
     connection_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
+    connection_external_id: '11111',
     connection_needs_repair_as_of: null,
     requires_user_confirmation_as_of: '2024-03-06T16:44:35.715458Z',
   },

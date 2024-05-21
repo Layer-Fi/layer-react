@@ -43,7 +43,7 @@
   .Layer__tasks-header {
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
     gap: var(--spacing-md);
   }
 
@@ -156,7 +156,7 @@
     display: flex;
     gap: var(--spacing-xs);
     align-items: center;
-    justify-content: end;
+    justify-content: flex-end;
   }
 
   .Layer__tasks-icon {
@@ -172,7 +172,7 @@
 
   .Layer__tasks__pagination {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     padding: var(--spacing-md) var(--spacing-sm);
     margin: 0 var(--spacing-xs);
 

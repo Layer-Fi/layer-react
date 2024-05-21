@@ -23,7 +23,8 @@ export interface LinkedAccount {
     logo: string | null
   }
   mask?: string
-  connection_id: string
+  connection_id?: string
+  connection_external_id?: string
   connection_needs_repair_as_of: string | null
   requires_user_confirmation_as_of: string | null
 }

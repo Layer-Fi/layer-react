@@ -10,6 +10,7 @@ export type LayerContextValues = {
   colors: ColorsPalette
   usePlaidSandbox?: boolean
   onboardingStep?: OnboardingStep
+  environment: string
 }
 
 export type LayerContextHelpers = {

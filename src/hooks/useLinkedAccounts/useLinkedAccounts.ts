@@ -17,18 +17,26 @@ type UseLinkedAccounts = () => {
   removeConnection: (source: Source, sourceId: string) => void // means, "unlink institution"
   repairConnection: (source: Source, sourceId: string) => void
   refetchAccounts: () => void
+  syncAccounts: () => void
   unlinkAccount: (source: Source, accountId: string) => void
+  confirmAccount: (source: Source, accountId: string) => void
+  denyAccount: (source: Source, accountId: string) => void
+
+  // Only works in non-production environments for test purposes
+  breakConnection: (source: Source, connectionExternalId: string) => void
 }
 
 const DEBUG = true
 const USE_MOCK_RESPONSE_DATA = false
 
+type LinkMode = 'update' | 'add'
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
   const { auth, businessId, apiUrl, usePlaidSandbox } = useLayerContext()
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const USE_PLAID_SANDBOX = usePlaidSandbox ?? true
+  const [linkMode, setLinkMode] = useState<LinkMode>('add')
 
   const {
     data: responseData,
@@ -69,6 +77,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
           params: { businessId },
         })
       ).data.link_token
+      setLinkMode('add')
       setLinkToken(linkToken)
     }
   }
@@ -76,14 +85,15 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   /**
    * Initiates a connection repair flow with Plaid
    */
-  const fetchPlaidUpdateModeLinkToken = async (plaidItemId: string) => {
+  const fetchPlaidUpdateModeLinkToken = async (plaidItemPlaidId: string) => {
     if (auth?.access_token) {
       const linkToken = (
         await Layer.getPlaidUpdateModeLinkToken(apiUrl, auth.access_token, {
           params: { businessId },
-          body: { plaid_item_id: plaidItemId },
+          body: { plaid_item_id: plaidItemPlaidId },
         })
       ).data.link_token
+      setLinkMode('update')
       setLinkToken(linkToken)
     }
   }
@@ -101,13 +111,33 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       params: { businessId },
       body: { public_token: publicToken, institution: metadata.institution },
     })
-
     refetchAccounts()
   }
 
   const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
     token: linkToken,
-    onSuccess: exchangePlaidPublicToken,
+
+    // If in update mode, we don't need to exchange the public token for an access token.
+    // The existing access token will automatically become valid again
+    onSuccess: async (
+      publicToken: string,
+      metadata: PlaidLinkOnSuccessMetadata,
+    ) => {
+      if (linkMode == 'add') {
+        // Note: a sync is kicked off in the backend in this endpoint
+        exchangePlaidPublicToken(publicToken, metadata)
+      } else {
+        // Note: As syncAccounts kick off a *mostly* async syncing job, the accounts are
+        // not guaranteed to be fully refreshed before the syncing completes; however the account connections
+        // themselves should be refreshed before this endpoint responds, which should remove the error
+        // pills from any broken accounts.
+        await syncAccounts()
+        refetchAccounts()
+
+        setLinkMode('add')
+      }
+    },
+    onExit: () => setLinkMode('add'),
     env: USE_PLAID_SANDBOX ? 'sandbox' : undefined,
   })
 
@@ -133,9 +163,12 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const repairConnection = (source: Source, sourceId: string) => {
+  const repairConnection = async (
+    source: Source,
+    connectionExternalId: string,
+  ) => {
     if (source === 'PLAID') {
-      fetchPlaidUpdateModeLinkToken(sourceId)
+      await fetchPlaidUpdateModeLinkToken(connectionExternalId)
     } else {
       console.error(
         `Repairing a connection with source ${source} not yet supported`,
@@ -143,9 +176,13 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const removeConnection = (source: Source, connectionId: string) => {
+  const removeConnection = async (
+    source: Source,
+    connectionExternalId: string,
+  ) => {
     if (source === 'PLAID') {
-      unlinkPlaidItem(connectionId)
+      await unlinkPlaidItem(connectionExternalId)
+      await refetchAccounts()
     } else {
       console.error(
         `Removing a connection with source ${source} not yet supported`,
@@ -153,12 +190,13 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const unlinkAccount = (source: Source, accountId: string) => {
+  const unlinkAccount = async (source: Source, accountId: string) => {
     DEBUG && console.log('unlinking account')
     if (source === 'PLAID') {
-      Layer.unlinkAccount(apiUrl, auth?.access_token, {
+      await Layer.unlinkAccount(apiUrl, auth?.access_token, {
         params: { businessId, accountId: accountId },
       })
+      await refetchAccounts()
     } else {
       console.error(
         `Unlinking an account with source ${source} not yet supported`,
@@ -166,16 +204,93 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const refetchAccounts = () => {
-    DEBUG && console.log('refetching accounts...')
-    mutate()
+  /**
+   * Note: When the user confirms an account is not a duplicate, this confirmation
+   * actually applies to the institution connection as a whole.
+   */
+  const confirmAccount = async (source: Source, accountId: string) => {
+    DEBUG && console.log('confirming account')
+    if (source === 'PLAID') {
+      await Layer.confirmConnection(apiUrl, auth?.access_token, {
+        params: {
+          businessId,
+          accountId,
+        },
+      })
+      // we kick off a sync as the confirmed account had previously been blocked from syncing
+      syncAccounts()
+
+      await refetchAccounts()
+    } else {
+      console.error(
+        `Confirming an account with source ${source} not yet supported`,
+      )
+    }
   }
 
-  const unlinkPlaidItem = (plaidItemId: string) => {
-    DEBUG && console.log('unlinking plaid item')
-    Layer.unlinkPlaidItem(apiUrl, auth?.access_token, {
-      params: { businessId, plaidItemId },
+  /**
+   * Note: When the user identifies an account as a duplicate, this
+   * actually applies to the institution connection as a whole. It means that
+   * there is a duplicate institution connection
+   */
+  const denyAccount = async (source: Source, accountId: string) => {
+    DEBUG && console.log('confirming account')
+    if (source === 'PLAID') {
+      await Layer.denyConnection(apiUrl, auth?.access_token, {
+        params: {
+          businessId,
+          accountId,
+        },
+      })
+      await refetchAccounts()
+    } else {
+      console.error(
+        `Denying an account with source ${source} not yet supported`,
+      )
+    }
+  }
+
+  /**
+   * Test utility that puts a connection into a broken state. Only works in non-production environments.
+   */
+  const breakConnection = async (
+    source: Source,
+    connectionExternalId: string,
+  ) => {
+    DEBUG && console.log('Breaking sandbox plaid item connection')
+    if (source === 'PLAID') {
+      await Layer.breakPlaidItemConnection(apiUrl, auth?.access_token, {
+        params: {
+          businessId,
+          plaidItemPlaidId: connectionExternalId,
+        },
+      })
+      await refetchAccounts()
+    } else {
+      console.error(
+        `Breaking a sandbox connection with source ${source} not yet supported`,
+      )
+    }
+  }
+
+  const refetchAccounts = async () => {
+    DEBUG && console.log('refetching accounts...')
+    await mutate()
+  }
+
+  const syncAccounts = async () => {
+    DEBUG && console.log('resyncing accounts...')
+    await Layer.syncConnection(apiUrl, auth?.access_token, {
+      params: { businessId },
     })
+  }
+
+  const unlinkPlaidItem = async (plaidItemPlaidId: string) => {
+    DEBUG && console.log('unlinking plaid item')
+    await Layer.unlinkPlaidItem(apiUrl, auth?.access_token, {
+      params: { businessId, plaidItemPlaidId },
+    })
+    await refetchAccounts()
   }
 
   return {
@@ -191,5 +306,9 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     repairConnection,
     refetchAccounts,
     unlinkAccount,
+    confirmAccount,
+    denyAccount,
+    breakConnection,
+    syncAccounts,
   }
 }

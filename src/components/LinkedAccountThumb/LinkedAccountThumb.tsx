@@ -2,6 +2,7 @@ import React from 'react'
 import InstitutionIcon from '../../icons/InstitutionIcon'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { LinkedAccount } from '../../types/linked_accounts'
+import { LinkedAccountPill } from '../LinkedAccountPill'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
 
@@ -9,6 +10,10 @@ export interface LinkedAccountThumbProps {
   account: LinkedAccount
   asWidget?: boolean
   showLedgerBalance?: boolean
+  pillConfig?: {
+    text: string
+    config: { name: string; action: () => void }[]
+  }
 }
 
 const AccountNumber = ({ accountNumber }: { accountNumber: string }) => (
@@ -21,11 +26,25 @@ export const LinkedAccountThumb = ({
   account,
   asWidget,
   showLedgerBalance,
+  pillConfig,
 }: LinkedAccountThumbProps) => {
   const linkedAccountThumbClassName = classNames(
     'Layer__linked-account-thumb',
     asWidget && '--as-widget',
   )
+
+  let balance: React.ReactNode
+  if (pillConfig) {
+    balance = (
+      <LinkedAccountPill text={pillConfig.text} config={pillConfig.config} />
+    )
+  } else {
+    balance = (
+      <Text as='span' className='account-balance'>
+        ${formatMoney(account.latest_balance_timestamp?.balance)}
+      </Text>
+    )
+  }
 
   return (
     <div className={linkedAccountThumbClassName}>
@@ -67,9 +86,7 @@ export const LinkedAccountThumb = ({
           >
             Bank balance
           </Text>
-          <Text as='span' className='account-balance'>
-            ${formatMoney(account.latest_balance_timestamp?.balance)}
-          </Text>
+          {balance}
         </div>
       )}
       {showLedgerBalance && (
