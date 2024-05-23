@@ -27,7 +27,10 @@ import {
   breakPlaidItemConnection,
   syncConnection,
 } from './layer/linked_accounts'
-import { getProfitAndLoss } from './layer/profit_and_loss'
+import {
+  getProfitAndLoss,
+  getProfitAndLossSummaries,
+} from './layer/profit_and_loss'
 import { getTasks, submitResponseToTask } from './layer/tasks'
 
 export const Layer = {
@@ -44,6 +47,7 @@ export const Layer = {
   getLedgerAccountsLines,
   getLedgerAccountsEntry,
   getProfitAndLoss,
+  getProfitAndLossSummaries,
   getLinkedAccounts,
   getJournal,
   createJournalEntries,

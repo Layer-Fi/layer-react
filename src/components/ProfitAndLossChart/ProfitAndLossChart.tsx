@@ -2,13 +2,13 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useLayerContext } from '../../hooks/useLayerContext'
 import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
-import { ProfitAndLoss } from '../../types'
+import { ProfitAndLossSummary } from '../../types/profit_and_loss'
 import { capitalizeFirstLetter } from '../../utils/format'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { Text } from '../Typography'
 import { Indicator } from './Indicator'
 import classNames from 'classnames'
-import { format, parseISO, startOfMonth } from 'date-fns'
+import { add, endOfMonth, format, startOfMonth, sub } from 'date-fns'
 import {
   XAxis,
   Cell,
@@ -27,6 +27,43 @@ import {
 } from 'recharts'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 
+const getChartWindow = ({
+  chartWindow,
+  currentYear,
+  currentMonth,
+}: {
+  chartWindow: { start: Date; end: Date }
+  currentYear: number
+  currentMonth: number
+}) => {
+  const today = endOfMonth(Date.now())
+  const yearAgo = sub(today, { months: 11 })
+  const current = new Date(currentYear, currentMonth, 0)
+
+  if (current >= yearAgo) {
+    return {
+      start: startOfMonth(yearAgo),
+      end: today,
+    }
+  }
+
+  if (Number(current) > Number(chartWindow.end)) {
+    return {
+      start: startOfMonth(sub(current, { months: 11 })),
+      end: endOfMonth(current),
+    }
+  }
+
+  if (Number(current) < Number(chartWindow.start)) {
+    return {
+      start: startOfMonth(current),
+      end: endOfMonth(add(current, { months: 11 })),
+    }
+  }
+
+  return chartWindow
+}
+
 export const ProfitAndLossChart = () => {
   const [compactView, setCompactView] = useState(false)
   const barSize = compactView ? 10 : 20
@@ -39,13 +76,56 @@ export const ProfitAndLossChart = () => {
     x: 0,
   })
   const [barAnimActive, setBarAnimActive] = useState(true)
+  const [chartWindow, setChartWindow] = useState({
+    start: startOfMonth(sub(Date.now(), { months: 11 })),
+    end: endOfMonth(Date.now()),
+  })
 
-  const startSelectionMonth = dateRange.startDate.getMonth()
-  const endSelectionMonth = dateRange.endDate.getMonth()
-
-  const { data, loaded } = useProfitAndLossLTM({
+  const selectionMonth = {
+    year: dateRange.startDate.getFullYear(),
+    month: dateRange.startDate.getMonth(),
+  }
+  const { data, loaded, pullData } = useProfitAndLossLTM({
     currentDate: startOfMonth(Date.now()),
   })
+
+  useEffect(() => {
+    if (loaded === 'complete' && data) {
+      const found = data.find(
+        x =>
+          Number(startOfMonth(new Date(x.year, x.month - 1, 1))) >=
+            Number(dateRange.startDate) &&
+          Number(startOfMonth(new Date(x.year, x.month - 1, 1))) <
+            Number(dateRange.endDate),
+      )
+
+      if (!found) {
+        const newDate = startOfMonth(
+          new Date(
+            dateRange.startDate.getFullYear(),
+            startOfMonth(Date.now()).getMonth(),
+            1,
+          ),
+        )
+        pullData(newDate)
+      }
+    }
+  }, [dateRange])
+
+  useEffect(() => {
+    const newChartWindow = getChartWindow({
+      chartWindow,
+      currentYear: dateRange.startDate.getFullYear(),
+      currentMonth: dateRange.startDate.getMonth(),
+    })
+
+    if (
+      Number(newChartWindow.start) !== Number(chartWindow.start) &&
+      Number(newChartWindow.end) !== Number(chartWindow.end)
+    ) {
+      setChartWindow(newChartWindow)
+    }
+  }, [dateRange])
 
   useEffect(() => {
     if (loaded === 'complete') {
@@ -55,53 +135,68 @@ export const ProfitAndLossChart = () => {
     }
   }, [loaded])
 
-  const getMonthName = (pnl: ProfitAndLoss | undefined) =>
-    pnl ? format(parseISO(pnl.start_date), compactView ? 'L' : 'LLL') : ''
+  const getMonthName = (pnl: ProfitAndLossSummary | undefined) =>
+    pnl
+      ? format(new Date(pnl.year, pnl.month - 1, 1), compactView ? 'L' : 'LLL')
+      : ''
 
-  const summarizePnL = (pnl: ProfitAndLoss | undefined) => ({
+  const summarizePnL = (pnl: ProfitAndLossSummary | undefined) => ({
     name: getMonthName(pnl),
-    revenue: pnl?.income.value || 0,
-    revenueUncategorized: (pnl?.income.value || 0) / 2, // @TODO - replace with actual value
-    expenses: -Math.abs((pnl?.income.value || 0) - (pnl?.net_profit || 0)),
-    expensesUncategorized:
-      -Math.abs((pnl?.income.value || 0) - (pnl?.net_profit || 0)) / 2, // @TODO - replace with actual value
-    netProfit: pnl?.net_profit || 0,
+    revenue: pnl?.income || 0,
+    revenueUncategorized: pnl?.uncategorizedInflows || 0,
+    expenses: -Math.abs((pnl?.income || 0) - (pnl?.netProfit || 0)),
+    expensesUncategorized: -Math.abs(pnl?.uncategorizedOutflows || 0),
+    netProfit: pnl?.netProfit || 0,
     selected:
       !!pnl &&
-      parseISO(pnl.start_date).getMonth() >= startSelectionMonth &&
-      parseISO(pnl.end_date).getMonth() <= endSelectionMonth,
+      pnl.month === selectionMonth.month + 1 &&
+      pnl.year === selectionMonth.year,
+    year: pnl?.year,
+    month: pnl?.month,
     base: 0,
     loading: 0,
   })
 
   const theData = useMemo(() => {
     if (loaded !== 'complete') {
-      return data?.map(x => ({
-        name: format(x.startDate, compactView ? 'L' : 'LLL'),
-        revenue: 0,
-        revenueUncategorized: 0,
-        expenses: 0,
-        expensesUncategorized: 0,
-        netProfit: 0,
-        selected: false,
-        loading: 1,
-        base: 0,
-      }))
+      const loadingData = []
+      const today = Date.now()
+      for (let i = 0; i <= 11; i++) {
+        const currentDate = sub(today, { months: i })
+        loadingData.push({
+          name: format(currentDate, compactView ? 'L' : 'LLL'),
+          revenue: 0,
+          revenueUncategorized: 0,
+          expenses: 0,
+          expensesUncategorized: 0,
+          netProfit: 0,
+          selected: false,
+          year: currentDate.getFullYear(),
+          month: currentDate.getMonth() + 1,
+          loading: 1,
+          base: 0,
+        })
+      }
+      return loadingData
     }
-    return data?.map(x => summarizePnL(x.data))
-  }, [startSelectionMonth, endSelectionMonth, loaded, compactView])
+    return data
+      ?.filter(x => {
+        return (
+          Number(startOfMonth(new Date(x.year, x.month, 0))) >=
+            Number(chartWindow.start) &&
+          Number(endOfMonth(new Date(x.year, x.month, 0))) <=
+            Number(chartWindow.end)
+        )
+      })
+      .map(x => summarizePnL(x))
+  }, [selectionMonth, chartWindow, loaded, compactView])
 
-  const onClick: CategoricalChartFunc = ({ activeTooltipIndex }) => {
-    const index =
-      activeTooltipIndex !== undefined && activeTooltipIndex > -1
-        ? activeTooltipIndex
-        : -1
-    const selection = data[index]
-    if (selection && selection.data) {
-      const { start_date, end_date } = selection.data
+  const onClick: CategoricalChartFunc = ({ activePayload }) => {
+    if (activePayload && activePayload.length > 0) {
+      const { year, month } = activePayload[0].payload
       changeDateRange({
-        startDate: parseISO(start_date),
-        endDate: parseISO(end_date),
+        startDate: new Date(year, month - 1, 1),
+        endDate: endOfMonth(new Date(year, month - 1, 1)),
       })
     }
   }
