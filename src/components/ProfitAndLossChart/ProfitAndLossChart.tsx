@@ -111,6 +111,7 @@ export const ProfitAndLossChart = () => {
       const netProfit = payload[0].payload.netProfit ?? 0
       const netProfitClass =
         netProfit > 0 ? 'positive' : netProfit < 0 ? 'negative' : ''
+
       return (
         <div className='Layer__chart__tooltip'>
           {loaded !== 'complete' ? (
@@ -119,18 +120,18 @@ export const ProfitAndLossChart = () => {
             <ul className='Layer__chart__tooltip-list'>
               <li>
                 <label className='Layer__chart__tooltip-label'>
-                  {capitalizeFirstLetter(payload[0].name ?? '')}
+                  {capitalizeFirstLetter(payload[1].name ?? '')}
                 </label>
                 <span className='Layer__chart__tooltip-value'>
-                  ${centsToDollars(Math.abs(payload[0].value ?? 0))}
+                  ${centsToDollars(Math.abs(payload[1].value ?? 0))}
                 </span>
               </li>
               <li>
                 <label className='Layer__chart__tooltip-label'>
-                  {capitalizeFirstLetter(payload[2].name ?? '')}
+                  {capitalizeFirstLetter(payload[3].name ?? '')}
                 </label>
                 <span className='Layer__chart__tooltip-value'>
-                  ${centsToDollars(Math.abs(payload[2].value ?? 0))}
+                  ${centsToDollars(Math.abs(payload[3].value ?? 0))}
                 </span>
               </li>
               <li>
