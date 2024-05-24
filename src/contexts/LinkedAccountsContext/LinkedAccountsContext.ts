@@ -16,4 +16,5 @@ export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
   denyAccount: () => {},
   confirmAccount: () => {},
   breakConnection: () => {},
+  syncAccounts: () => {},
 })
