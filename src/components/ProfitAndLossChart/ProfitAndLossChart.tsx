@@ -214,7 +214,6 @@ export const ProfitAndLossChart = () => {
     name: getMonthName(pnl),
     revenue: pnl?.income || 0,
     revenueUncategorized: pnl?.uncategorizedInflows || 0,
-    // revenueUncategorized: (pnl?.income || 0) / 2, // @TODO remove after tests and ui review
     expenses: -Math.abs((pnl?.income || 0) - (pnl?.netProfit || 0)),
     expensesUncategorized: -Math.abs(pnl?.uncategorizedOutflows || 0),
     netProfit: pnl?.netProfit || 0,
