@@ -16,6 +16,7 @@ export const LayerContext = createContext<
     token_type: '',
   },
   businessId: '',
+  business: undefined,
   categories: [],
   apiUrl: '',
   theme: undefined,

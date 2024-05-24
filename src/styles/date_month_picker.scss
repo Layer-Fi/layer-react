@@ -33,6 +33,12 @@
   stroke: var(--text-color);
 }
 
+.Layer__date-month-picker__button--disabled
+  .Layer__date-month-picker__button-icon
+  path {
+  stroke: var(--color-base-500);
+}
+
 .Layer__date-month-picker__label {
   flex: 1;
   font-size: 14px;

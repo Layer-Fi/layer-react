@@ -52,3 +52,10 @@
     display: none;
   }
 }
+
+@container (max-width: 460px) {
+  .Layer__component.Layer__accounting-overview-profit-and-loss
+    .recharts-responsive-container {
+    margin-top: -12px;
+  }
+}
