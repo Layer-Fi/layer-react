@@ -214,7 +214,7 @@ export const ProfitAndLossChart = () => {
     name: getMonthName(pnl),
     revenue: pnl?.income || 0,
     revenueUncategorized: pnl?.uncategorizedInflows || 0,
-    // revenueUncategorized: (pnl?.income || 0) / 2, @TODO remove after tests and ui review
+    // revenueUncategorized: (pnl?.income || 0) / 2, // @TODO remove after tests and ui review
     expenses: -Math.abs((pnl?.income || 0) - (pnl?.netProfit || 0)),
     expensesUncategorized: -Math.abs(pnl?.uncategorizedOutflows || 0),
     netProfit: pnl?.netProfit || 0,
@@ -431,7 +431,7 @@ export const ProfitAndLossChart = () => {
             patternUnits='userSpaceOnUse'
           >
             <rect width='4' height='4' opacity={0.16} />
-            <line x1='0' y='0' x2='0' y2='4' stroke-width='3' />
+            <line x1='0' y='0' x2='0' y2='4' stroke-width='2' />
           </pattern>
 
           <pattern
@@ -444,7 +444,7 @@ export const ProfitAndLossChart = () => {
             patternUnits='userSpaceOnUse'
           >
             <rect width='4' height='4' opacity={0.16} />
-            <line x1='0' y='0' x2='0' y2='4' stroke-width='3' />
+            <line x1='0' y='0' x2='0' y2='4' stroke-width='2' />
           </pattern>
         </defs>
         <Tooltip
