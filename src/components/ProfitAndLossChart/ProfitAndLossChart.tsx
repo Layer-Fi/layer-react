@@ -50,7 +50,7 @@ const getChartWindow = ({
 
   if (
     differenceInMonths(startOfMonth(chartWindow.start), current) < 0 &&
-    differenceInMonths(startOfMonth(chartWindow.end), current) > 0
+    differenceInMonths(startOfMonth(chartWindow.end), current) > 1
   ) {
     return chartWindow
   }
@@ -63,12 +63,13 @@ const getChartWindow = ({
   }
 
   if (
-    differenceInMonths(startOfMonth(chartWindow.end), current) === 0 &&
-    differenceInMonths(today, current) < 0
+    differenceInMonths(endOfMonth(chartWindow.end), endOfMonth(current)) ===
+      1 &&
+    differenceInMonths(today, current) >= 1
   ) {
     return {
-      start: startOfMonth(add(current, { months: 1 })),
-      end: endOfMonth(sub(current, { months: 11 })),
+      start: startOfMonth(sub(current, { months: 10 })),
+      end: endOfMonth(add(current, { months: 2 })),
     }
   }
 
@@ -273,7 +274,7 @@ export const ProfitAndLossChart = () => {
           ) <= 12,
       )
       .map(x => summarizePnL(x))
-  }, [selectionMonth, chartWindow, loaded, compactView])
+  }, [selectionMonth, chartWindow, data, loaded, compactView])
 
   const onClick: CategoricalChartFunc = ({ activePayload }) => {
     if (activePayload && activePayload.length > 0) {
