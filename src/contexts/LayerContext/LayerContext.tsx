@@ -16,10 +16,12 @@ export const LayerContext = createContext<
     token_type: '',
   },
   businessId: '',
+  business: undefined,
   categories: [],
   apiUrl: '',
   theme: undefined,
   colors: {},
+  usePlaidSandbox: true,
   setTheme: () => undefined,
   getColor: _shade => undefined,
   setLightColor: () => undefined,
@@ -27,4 +29,5 @@ export const LayerContext = createContext<
   setColors: () => undefined,
   onboardingStep: undefined,
   setOnboardingStep: () => undefined,
+  environment: '',
 })

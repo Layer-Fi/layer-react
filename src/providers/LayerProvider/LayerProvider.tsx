@@ -1,10 +1,4 @@
-import React, {
-  PropsWithChildren,
-  useReducer,
-  useEffect,
-  Reducer,
-  useState,
-} from 'react'
+import React, { PropsWithChildren, useReducer, useEffect, Reducer } from 'react'
 import { Layer } from '../../api/layer'
 import { LayerContext } from '../../contexts/LayerContext'
 import {
@@ -28,9 +22,11 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
 ) => {
   switch (action.type) {
     case Action.setAuth:
+    case Action.setBusiness:
     case Action.setCategories:
     case Action.setTheme:
     case Action.setOnboardingStep:
+    case Action.setColors:
       return { ...state, ...action.payload }
     default:
       return state
@@ -63,6 +59,7 @@ export type Props = {
   businessAccessToken?: string
   environment?: keyof typeof LayerEnvironment
   theme?: LayerThemeConfig
+  usePlaidSandbox?: boolean
 }
 
 export const LayerProvider = ({
@@ -73,6 +70,7 @@ export const LayerProvider = ({
   businessAccessToken,
   environment = 'production',
   theme,
+  usePlaidSandbox,
 }: PropsWithChildren<Props>) => {
   const defaultSWRConfig = {
     revalidateInterval: 0,
@@ -92,11 +90,14 @@ export const LayerProvider = ({
       expires_at: new Date(2000, 1, 1),
     },
     businessId,
+    business: undefined,
     categories: [],
     apiUrl,
     theme,
     colors,
+    usePlaidSandbox,
     onboardingStep: undefined,
+    environment,
   })
 
   const { data: auth } =
@@ -159,11 +160,33 @@ export const LayerProvider = ({
     },
   )
 
-  const setTheme = (theme: LayerThemeConfig) =>
+  useSWR(
+    businessId && auth?.access_token && `business-${businessId}`,
+    Layer.getBusiness(apiUrl, auth?.access_token, { params: { businessId } }),
+    {
+      ...defaultSWRConfig,
+      onSuccess: response => {
+        if (response?.data) {
+          dispatch({
+            type: Action.setBusiness,
+            payload: { business: response.data || [] },
+          })
+        }
+      },
+    },
+  )
+
+  const setTheme = (theme: LayerThemeConfig) => {
     dispatch({
       type: Action.setTheme,
       payload: { theme },
     })
+
+    dispatch({
+      type: Action.setColors,
+      payload: { colors: buildColorsPalette(theme) },
+    })
+  }
 
   const setLightColor = (color?: ColorConfig) => {
     setTheme({
@@ -185,16 +208,15 @@ export const LayerProvider = ({
     })
   }
 
-  const setColors = (colors?: { dark?: ColorConfig; light?: ColorConfig }) => {
+  const setColors = (colors?: { dark?: ColorConfig; light?: ColorConfig }) =>
     setTheme({
       ...(state.theme ?? {}),
       colors,
     })
-  }
 
   const getColor = (shade: number): ColorsPaletteOption | undefined => {
-    if (colors && shade in colors) {
-      return colors[shade]
+    if (state.colors && shade in state.colors) {
+      return state.colors[shade]
     }
 
     return

@@ -13,4 +13,7 @@ export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
   repairConnection: () => {},
   refetchAccounts: () => {},
   unlinkAccount: () => {},
+  denyAccount: () => {},
+  confirmAccount: () => {},
+  breakConnection: () => {},
 })

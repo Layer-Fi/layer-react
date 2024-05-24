@@ -16,3 +16,24 @@ export interface ProfitAndLoss {
   personal_expenses?: LineItem | null
   fully_categorized: boolean
 }
+
+export interface ProfitAndLossSummary {
+  year: number
+  month: number
+  income: number
+  costOfGoodsSold: number
+  grossProfit: number
+  operatingExpenses: number
+  profitBeforeTaxes: number
+  taxes: number
+  netProfit: number
+  fullyCategorized: boolean
+  totalExpenses: number
+  uncategorizedInflows: number
+  uncategorizedOutflows: number
+}
+
+export interface ProfitAndLossSummaries {
+  type: 'Profit_And_Loss_Summaries'
+  months: ProfitAndLossSummary[]
+}

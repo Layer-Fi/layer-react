@@ -5,6 +5,7 @@ import {
   categorizeBankTransaction,
   matchBankTransaction,
 } from './layer/bankTransactions'
+import { getBusiness } from './layer/business'
 import { getCategories } from './layer/categories'
 import {
   getChartOfAccounts,
@@ -24,11 +25,18 @@ import {
   unlinkAccount,
   confirmConnection,
   denyConnection,
+  breakPlaidItemConnection,
+  syncConnection,
 } from './layer/linked_accounts'
-import { getProfitAndLoss } from './layer/profit_and_loss'
+import {
+  getProfitAndLoss,
+  getProfitAndLossSummaries,
+} from './layer/profit_and_loss'
+import { getTasks, submitResponseToTask } from './layer/tasks'
 
 export const Layer = {
   authenticate,
+  getBusiness,
   categorizeBankTransaction,
   matchBankTransaction,
   createAccount,
@@ -41,6 +49,7 @@ export const Layer = {
   getLedgerAccountsLines,
   getLedgerAccountsEntry,
   getProfitAndLoss,
+  getProfitAndLossSummaries,
   getLinkedAccounts,
   getJournal,
   createJournalEntries,
@@ -51,4 +60,8 @@ export const Layer = {
   unlinkPlaidItem,
   confirmConnection,
   denyConnection,
+  getTasks,
+  submitResponseToTask,
+  breakPlaidItemConnection,
+  syncConnection,
 }

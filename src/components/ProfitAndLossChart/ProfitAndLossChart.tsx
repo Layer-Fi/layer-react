@@ -2,15 +2,22 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useLayerContext } from '../../hooks/useLayerContext'
 import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
-import { ProfitAndLoss } from '../../types'
+import { ProfitAndLossSummary } from '../../types/profit_and_loss'
+import { isDateAllowedToBrowse } from '../../utils/business'
 import { capitalizeFirstLetter } from '../../utils/format'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { Text } from '../Typography'
 import { Indicator } from './Indicator'
 import classNames from 'classnames'
-import { format, parseISO, startOfMonth } from 'date-fns'
 import {
-  BarChart,
+  add,
+  differenceInMonths,
+  endOfMonth,
+  format,
+  startOfMonth,
+  sub,
+} from 'date-fns'
+import {
   XAxis,
   Cell,
   Bar,
@@ -21,63 +28,267 @@ import {
   Tooltip,
   TooltipProps,
   Rectangle,
+  YAxis,
+  Line,
+  ComposedChart,
+  ReferenceLine,
 } from 'recharts'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 
-const barGap = 4
-const barSize = 20
+const getChartWindow = ({
+  chartWindow,
+  currentYear,
+  currentMonth,
+}: {
+  chartWindow: { start: Date; end: Date }
+  currentYear: number
+  currentMonth: number
+}) => {
+  const today = startOfMonth(Date.now())
+  const yearAgo = sub(today, { months: 11 })
+  const current = startOfMonth(new Date(currentYear, currentMonth - 1, 1))
+
+  if (
+    differenceInMonths(startOfMonth(chartWindow.start), current) < 0 &&
+    differenceInMonths(startOfMonth(chartWindow.end), current) > 1
+  ) {
+    return chartWindow
+  }
+
+  if (differenceInMonths(startOfMonth(chartWindow.start), current) === 0) {
+    return {
+      start: startOfMonth(sub(current, { months: 1 })),
+      end: endOfMonth(add(current, { months: 11 })),
+    }
+  }
+
+  if (
+    differenceInMonths(endOfMonth(chartWindow.end), endOfMonth(current)) ===
+      1 &&
+    differenceInMonths(today, current) >= 1
+  ) {
+    return {
+      start: startOfMonth(sub(current, { months: 10 })),
+      end: endOfMonth(add(current, { months: 2 })),
+    }
+  }
+
+  if (
+    differenceInMonths(current, startOfMonth(chartWindow.end)) === 0 &&
+    differenceInMonths(current, startOfMonth(today)) > 0
+  ) {
+    return {
+      start: startOfMonth(sub(current, { months: 11 })),
+      end: endOfMonth(add(current, { months: 1 })),
+    }
+  }
+
+  if (current >= yearAgo) {
+    return {
+      start: startOfMonth(yearAgo),
+      end: endOfMonth(today),
+    }
+  }
+
+  if (Number(current) > Number(chartWindow.end)) {
+    return {
+      start: startOfMonth(sub(current, { months: 12 })),
+      end: endOfMonth(current),
+    }
+  }
+
+  if (differenceInMonths(current, startOfMonth(chartWindow.start)) < 0) {
+    return {
+      start: startOfMonth(current),
+      end: endOfMonth(add(current, { months: 11 })),
+    }
+  }
+
+  return chartWindow
+}
 
 export const ProfitAndLossChart = () => {
-  const { getColor } = useLayerContext()
+  const [compactView, setCompactView] = useState(false)
+  const barSize = compactView ? 10 : 20
+
+  const { getColor, business } = useLayerContext()
   const { changeDateRange, dateRange } = useContext(PNL.Context)
+  const [localDateRange, setLocalDateRange] = useState(dateRange)
   const [customCursorSize, setCustomCursorSize] = useState({
     width: 0,
     height: 0,
     x: 0,
   })
   const [barAnimActive, setBarAnimActive] = useState(true)
+  const [chartWindow, setChartWindow] = useState({
+    start: startOfMonth(sub(Date.now(), { months: 11 })),
+    end: endOfMonth(Date.now()),
+  })
 
-  const startSelectionMonth = dateRange.startDate.getMonth()
-  const endSelectionMonth = dateRange.endDate.getMonth()
+  const selectionMonth = useMemo(
+    () => ({
+      year: localDateRange.startDate.getFullYear(),
+      month: localDateRange.startDate.getMonth(),
+    }),
+    [localDateRange],
+  )
 
-  const { data, loaded } = useProfitAndLossLTM({
+  useEffect(() => {
+    if (
+      Number(dateRange.startDate) !== Number(localDateRange.startDate) ||
+      Number(dateRange.endDate) !== Number(localDateRange.endDate)
+    ) {
+      setLocalDateRange(dateRange)
+    }
+  }, [dateRange])
+
+  const { data, loaded, pullData } = useProfitAndLossLTM({
     currentDate: startOfMonth(Date.now()),
   })
+
+  useEffect(() => {
+    if (loaded === 'complete' && data) {
+      const foundCurrent = data.find(
+        x =>
+          Number(startOfMonth(new Date(x.year, x.month - 1, 1))) >=
+            Number(localDateRange.startDate) &&
+          Number(startOfMonth(new Date(x.year, x.month - 1, 1))) <
+            Number(localDateRange.endDate),
+      )
+
+      if (!foundCurrent) {
+        const newDate = startOfMonth(localDateRange.startDate)
+        pullData(newDate)
+        return
+      }
+
+      const foundBefore = data.find(
+        x =>
+          Number(startOfMonth(new Date(x.year, x.month - 1, 1))) >=
+            Number(sub(localDateRange.startDate, { months: 1 })) &&
+          Number(startOfMonth(new Date(x.year, x.month - 1, 1))) <
+            Number(sub(localDateRange.endDate, { months: 1 })),
+      )
+
+      if (!foundBefore) {
+        const newDate = startOfMonth(
+          sub(localDateRange.startDate, { months: 1 }),
+        )
+        pullData(newDate)
+      }
+    }
+  }, [localDateRange])
+
+  useEffect(() => {
+    const newChartWindow = getChartWindow({
+      chartWindow,
+      currentYear: localDateRange.startDate.getFullYear(),
+      currentMonth: localDateRange.startDate.getMonth() + 1,
+    })
+
+    if (
+      Number(newChartWindow.start) !== Number(chartWindow.start) ||
+      Number(newChartWindow.end) !== Number(chartWindow.end)
+    ) {
+      setChartWindow(newChartWindow)
+    }
+  }, [localDateRange])
 
   useEffect(() => {
     if (loaded === 'complete') {
       setTimeout(() => {
         setBarAnimActive(false)
-      }, 1000)
+      }, 2000)
     }
   }, [loaded])
 
-  const getMonthName = (pnl: ProfitAndLoss | undefined) =>
-    pnl ? format(parseISO(pnl.start_date), 'LLL') : ''
+  const getMonthName = (pnl: ProfitAndLossSummary | undefined) =>
+    pnl
+      ? format(
+          new Date(pnl.year, pnl.month - 1, 1),
+          compactView ? 'LLLLL' : 'LLL',
+        )
+      : ''
 
-  const summarizePnL = (pnl: ProfitAndLoss | undefined) => ({
+  const summarizePnL = (pnl: ProfitAndLossSummary | undefined) => ({
     name: getMonthName(pnl),
-    revenue: pnl?.income.value || 0,
-    expenses: Math.abs((pnl?.income.value || 0) - (pnl?.net_profit || 0)),
-    netProfit: pnl?.net_profit || 0,
+    revenue: pnl?.income || 0,
+    revenueUncategorized: pnl?.uncategorizedInflows || 0,
+    expenses: -Math.abs((pnl?.income || 0) - (pnl?.netProfit || 0)),
+    expensesUncategorized: -Math.abs(pnl?.uncategorizedOutflows || 0),
+    netProfit: pnl?.netProfit || 0,
     selected:
       !!pnl &&
-      parseISO(pnl.start_date).getMonth() >= startSelectionMonth &&
-      parseISO(pnl.end_date).getMonth() <= endSelectionMonth,
+      pnl.month === selectionMonth.month + 1 &&
+      pnl.year === selectionMonth.year,
+    year: pnl?.year,
+    month: pnl?.month,
+    base: 0,
+    loading: 0,
   })
 
-  const onClick: CategoricalChartFunc = ({ activeTooltipIndex }) => {
-    const index =
-      activeTooltipIndex !== undefined && activeTooltipIndex > -1
-        ? activeTooltipIndex
-        : -1
-    const selection = data[index]
-    if (selection && selection.data) {
-      const { start_date, end_date } = selection.data
-      changeDateRange({
-        startDate: parseISO(start_date),
-        endDate: parseISO(end_date),
-      })
+  const theData = useMemo(() => {
+    if (loaded !== 'complete') {
+      const loadingData = []
+      const today = Date.now()
+      for (let i = 11; i >= 0; i--) {
+        const currentDate = sub(today, { months: i })
+        loadingData.push({
+          name: format(currentDate, compactView ? 'LLLLL' : 'LLL'),
+          revenue: 0,
+          revenueUncategorized: 0,
+          expenses: 0,
+          expensesUncategorized: 0,
+          netProfit: 0,
+          selected: false,
+          year: currentDate.getFullYear(),
+          month: currentDate.getMonth() + 1,
+          loading: 1000 * Math.pow(-1, i + 1) * (((i + 1) % 12) + 1) + 90000,
+          loadingExpenses:
+            -1000 * Math.pow(-1, i + 1) * (((i + 1) % 2) + 1) - 90000,
+          base: 0,
+        })
+      }
+      return loadingData
+    }
+
+    return data
+      ?.filter(
+        x =>
+          differenceInMonths(
+            startOfMonth(new Date(x.year, x.month - 1, 1)),
+            chartWindow.start,
+          ) >= 0 &&
+          differenceInMonths(
+            startOfMonth(new Date(x.year, x.month - 1, 1)),
+            chartWindow.start,
+          ) < 12 &&
+          differenceInMonths(
+            chartWindow.end,
+            startOfMonth(new Date(x.year, x.month - 1, 1)),
+          ) >= 0 &&
+          differenceInMonths(
+            chartWindow.end,
+            startOfMonth(new Date(x.year, x.month - 1, 1)),
+          ) <= 12,
+      )
+      .map(x => summarizePnL(x))
+  }, [selectionMonth, chartWindow, data, loaded, compactView])
+
+  const onClick: CategoricalChartFunc = ({ activePayload }) => {
+    if (activePayload && activePayload.length > 0) {
+      const { year, month } = activePayload[0].payload
+      const isMonthAllowed = isDateAllowedToBrowse(
+        new Date(year, month - 1, 1),
+        business,
+      )
+
+      if (isMonthAllowed) {
+        changeDateRange({
+          startDate: new Date(year, month - 1, 1),
+          endDate: endOfMonth(new Date(year, month - 1, 1)),
+        })
+      }
     }
   }
 
@@ -86,6 +297,7 @@ export const ProfitAndLossChart = () => {
       const netProfit = payload[0].payload.netProfit ?? 0
       const netProfitClass =
         netProfit > 0 ? 'positive' : netProfit < 0 ? 'negative' : ''
+
       return (
         <div className='Layer__chart__tooltip'>
           {loaded !== 'complete' ? (
@@ -94,18 +306,18 @@ export const ProfitAndLossChart = () => {
             <ul className='Layer__chart__tooltip-list'>
               <li>
                 <label className='Layer__chart__tooltip-label'>
-                  {capitalizeFirstLetter(payload[0].name ?? '')}
-                </label>
-                <span className='Layer__chart__tooltip-value'>
-                  ${centsToDollars(Math.abs(payload[0].value ?? 0))}
-                </span>
-              </li>
-              <li>
-                <label className='Layer__chart__tooltip-label'>
                   {capitalizeFirstLetter(payload[1].name ?? '')}
                 </label>
                 <span className='Layer__chart__tooltip-value'>
                   ${centsToDollars(Math.abs(payload[1].value ?? 0))}
+                </span>
+              </li>
+              <li>
+                <label className='Layer__chart__tooltip-label'>
+                  {capitalizeFirstLetter(payload[3].name ?? '')}
+                </label>
+                <span className='Layer__chart__tooltip-value'>
+                  ${centsToDollars(Math.abs(payload[3].value ?? 0))}
                 </span>
               </li>
               <li>
@@ -127,17 +339,50 @@ export const ProfitAndLossChart = () => {
     return null
   }
 
+  const formatYAxisValue = (value?: string | number) => {
+    if (!value) {
+      return value
+    }
+
+    try {
+      let suffix = ''
+      const base = Number(value) / 100
+      let val = base
+
+      if (Math.abs(base) >= 1000000000) {
+        suffix = 'B'
+        val = base / 1000000000
+      } else if (Math.abs(base) >= 1000000) {
+        suffix = 'M'
+        val = base / 1000000
+      } else if (Math.abs(base) >= 1000) {
+        suffix = 'k'
+        val = base / 1000
+      }
+      return `${val}${suffix}`
+    } catch (_err) {
+      return value
+    }
+  }
+
+  const CustomizedYTick = (props: any) => {
+    return (
+      <text {...props} className='Layer__chart_y-axis-tick'>
+        <tspan dy='0.355em'>{formatYAxisValue(props.payload.value)}</tspan>
+      </text>
+    )
+  }
+
   const CustomizedCursor = (props: any) => {
-    const { x, y, width: rectWidth } = props
+    const { points } = props
     const { width, height } = customCursorSize
-    const offsetX = (rectWidth - width) / 2
 
     return (
       <Rectangle
-        fill={'#F7F8FA'}
+        fill='#F7F8FA'
         stroke='none'
-        x={x + offsetX}
-        y={y}
+        x={points[0].x - width / 2}
+        y={points[0].y}
         width={width}
         height={height}
         radius={6}
@@ -145,20 +390,6 @@ export const ProfitAndLossChart = () => {
       />
     )
   }
-
-  // If net profit doesn't change, we're probably still the same.
-  const theData = useMemo(() => {
-    if (loaded !== 'complete') {
-      return data?.map(x => ({
-        name: format(x.startDate, 'LLL'),
-        revenue: 1,
-        expenses: 1,
-        netProfit: 0,
-        selected: false,
-      }))
-    }
-    return data?.map(x => summarizePnL(x.data))
-  }, [startSelectionMonth, endSelectionMonth, loaded])
 
   const [animateFrom, setAnimateFrom] = useState(-1)
 
@@ -170,14 +401,51 @@ export const ProfitAndLossChart = () => {
       )}
       width='100%'
       height='100%'
+      onResize={width => {
+        if (width && width < 620 && !compactView) {
+          setCompactView(true)
+          return
+        }
+
+        if (width && width >= 620 && compactView) {
+          setCompactView(false)
+          return
+        }
+      }}
     >
-      <BarChart
+      <ComposedChart
         margin={{ left: 12, right: 12, bottom: 12 }}
         data={theData}
         onClick={onClick}
-        barGap={barGap}
         className='Layer__profit-and-loss-chart'
       >
+        <defs>
+          <pattern
+            id='layer-bar-stripe-pattern'
+            x='0'
+            y='0'
+            width='4'
+            height='4'
+            patternTransform='rotate(45)'
+            patternUnits='userSpaceOnUse'
+          >
+            <rect width='4' height='4' opacity={0.16} />
+            <line x1='0' y='0' x2='0' y2='4' stroke-width='2' />
+          </pattern>
+
+          <pattern
+            id='layer-bar-stripe-pattern-dark'
+            x='0'
+            y='0'
+            width='4'
+            height='4'
+            patternTransform='rotate(45)'
+            patternUnits='userSpaceOnUse'
+          >
+            <rect width='4' height='4' opacity={0.16} />
+            <line x1='0' y='0' x2='0' y2='4' stroke-width='2' />
+          </pattern>
+        </defs>
         <Tooltip
           wrapperClassName='Layer__chart__tooltip-wrapper'
           content={<CustomTooltip />}
@@ -204,15 +472,44 @@ export const ProfitAndLossChart = () => {
               type: 'circle',
               id: 'ExpensesLegend',
             },
+            {
+              value: 'Uncategorized',
+              type: 'circle',
+              id: 'UncategorizedLegend',
+            },
           ]}
         />
-        <XAxis dataKey='name' tickLine={false} />
+        <XAxis dataKey='name' xAxisId='revenue' tickLine={false} />
+        <XAxis dataKey='name' xAxisId='expenses' tickLine={false} hide />
+        <YAxis tick={<CustomizedYTick />} />
+        <Bar
+          dataKey='loading'
+          barSize={barSize}
+          isAnimationActive={barAnimActive}
+          animationDuration={100}
+          radius={[2, 2, 0, 0]}
+          className='Layer__profit-and-loss-chart__bar--loading'
+          xAxisId='revenue'
+          stackId='revenue'
+        />
+        <Bar
+          dataKey='loadingExpenses'
+          barSize={barSize}
+          isAnimationActive={barAnimActive}
+          animationDuration={100}
+          radius={[2, 2, 0, 0]}
+          className='Layer__profit-and-loss-chart__bar--loading'
+          xAxisId='expenses'
+          stackId='expenses'
+        />
         <Bar
           dataKey='revenue'
           barSize={barSize}
           isAnimationActive={barAnimActive}
-          radius={[2, 2, 0, 0]}
+          animationDuration={100}
           className='Layer__profit-and-loss-chart__bar--income'
+          xAxisId='revenue'
+          stackId='revenue'
         >
           <LabelList
             content={
@@ -240,11 +537,29 @@ export const ProfitAndLossChart = () => {
           })}
         </Bar>
         <Bar
+          dataKey='revenueUncategorized'
+          barSize={barSize}
+          isAnimationActive={barAnimActive}
+          animationDuration={100}
+          radius={[2, 2, 0, 0]}
+          className='Layer__profit-and-loss-chart__bar--income-uncategorized'
+          xAxisId='revenue'
+          stackId='revenue'
+        >
+          {theData?.map(entry => {
+            return (
+              <Cell key={entry.name} fill='url(#layer-bar-stripe-pattern)' />
+            )
+          })}
+        </Bar>
+        <Bar
           dataKey='expenses'
           barSize={barSize}
           isAnimationActive={barAnimActive}
-          radius={[2, 2, 0, 0]}
+          animationDuration={100}
           className='Layer__profit-and-loss-chart__bar--expenses'
+          xAxisId='expenses'
+          stackId='expenses'
         >
           {theData.map(entry => (
             <Cell
@@ -257,7 +572,42 @@ export const ProfitAndLossChart = () => {
             />
           ))}
         </Bar>
-      </BarChart>
+        <Bar
+          dataKey='expensesUncategorized'
+          barSize={barSize}
+          isAnimationActive={barAnimActive}
+          animationDuration={100}
+          radius={[2, 2, 0, 0]}
+          className='Layer__profit-and-loss-chart__bar--expenses-uncategorized'
+          xAxisId='expenses'
+          stackId='expenses'
+        >
+          {theData?.map(entry => {
+            return (
+              <Cell
+                key={entry.name}
+                fill='url(#layer-bar-stripe-pattern-dark)'
+              />
+            )
+          })}
+        </Bar>
+        <Line
+          dot={true}
+          strokeWidth={1}
+          strokeLinecap='round'
+          type='monotone'
+          dataKey='netProfit'
+          stroke={getColor(1000)?.hex ?? '#000'}
+          name='Net profit'
+          xAxisId='revenue'
+          animationDuration={20}
+        />
+        <ReferenceLine
+          y={0}
+          stroke={getColor(300)?.hex ?? '#EBEDF0'}
+          xAxisId='revenue'
+        />
+      </ComposedChart>
     </ResponsiveContainer>
   )
 }

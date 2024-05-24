@@ -1,0 +1,204 @@
+.Layer__tasks-component {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  padding: var(--spacing-md) var(--spacing-lg);
+  gap: var(--spacing-md);
+  max-width: 480px;
+
+  .Layer__tasks-pending {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-xs)
+      var(--spacing-sm);
+    border-radius: 8px;
+    background-color: var(--color-base-0);
+    box-shadow: 0px 0px 0px 1px var(--color-base-300);
+
+    .Layer__tasks-pending-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      font-weight: 540;
+      padding: var(--spacing-xs);
+      border-radius: 8px;
+      background-color: var(--color-base-50);
+
+      .mini-chart {
+        transform: rotate(90deg);
+      }
+
+      .Layer__tasks-pending-bar__status--done {
+        color: var(--color-success);
+      }
+
+      .Layer__tasks-pending-bar__status--pending {
+        color: var(--color-warning);
+      }
+    }
+  }
+
+  .Layer__tasks-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  .Layer__tasks-list {
+    border-radius: 8px;
+    background-color: var(--color-base-0);
+    box-shadow: 0px 0px 0px 1px var(--color-base-300);
+
+    .Layer__tasks-list-item-wrapper {
+      padding: var(--spacing-xs);
+
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--color-base-300);
+      }
+
+      .Layer__tasks-list-item {
+        display: flex;
+        flex-direction: column;
+        transition: all 0.1s ease-in-out;
+
+        &.Layer__tasks-list-item__expanded {
+          background: var(--color-base-50);
+          border-radius: 6px;
+        }
+
+        .Layer__tasks-list-item__head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: var(--spacing-xs);
+          padding: var(--spacing-sm);
+
+          .Layer__tasks-list-item__head-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+
+            .Layer__tasks-list-item__head-info__status {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: var(--spacing-3xs);
+              border-radius: 100%;
+            }
+
+            &.Layer__tasks-list-item--completed {
+              color: var(--color-base-500);
+              text-decoration: line-through;
+
+              .Layer__tasks-list-item__head-info__status {
+                color: var(--color-info-success);
+              }
+            }
+
+            &.Layer__tasks-list-item--pending
+              .Layer__tasks-list-item__head-info__status {
+              color: var(--color-info-warning-fg);
+              background: var(--color-info-warning-bg);
+            }
+          }
+        }
+
+        .Layer__tasks-list-item__body {
+          padding-right: var(--spacing-sm);
+          padding-left: var(--spacing-sm);
+          padding-bottom: 0;
+          height: 0;
+          opacity: 0;
+          transition: all 0.2s ease-out;
+
+          .Layer__tasks-list-item__body-info {
+            display: flex;
+            flex-direction: column;
+
+            .Layer__text {
+              margin-bottom: var(--spacing-md);
+            }
+
+            .Layer__tasks-list-item__actions {
+              margin-top: var(--spacing-xs);
+            }
+          }
+
+          &.Layer__tasks-list-item--completed {
+            color: var(--color-base-500);
+          }
+
+          &.Layer__tasks-list-item__body--expanded {
+            padding-bottom: var(--spacing-sm);
+            height: auto;
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    .Layer__tasks-empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-md);
+      text-align: center;
+      padding: var(--spacing-md);
+      color: var(--color-base-500);
+    }
+  }
+
+  .Layer__tasks-list-item__actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .Layer__tasks-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    background-color: var(--color-base-50);
+    box-shadow: 0px 0px 0px 1px var(--color-base-300);
+  }
+
+  .Layer__tasks__pagination {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--spacing-md) var(--spacing-sm);
+    margin: 0 var(--spacing-xs);
+
+    ul {
+      margin: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .Layer__tasks-component {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .Layer__tasks-list {
+    .Layer__tasks-list-item-wrapper {
+      .Layer__tasks-list-item {
+        .Layer__tasks-list-item__head {
+          padding: var(--spacing-xs);
+        }
+
+        .Layer__tasks-list-item__body {
+          padding-right: var(--spacing-xs);
+          padding-left: var(--spacing-xs);
+        }
+      }
+    }
+  }
+}

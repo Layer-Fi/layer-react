@@ -1,5 +1,4 @@
-import React, { ReactNode, MouseEvent } from 'react'
-import { Button } from '../Button'
+import React, { ReactNode } from 'react'
 import { ButtonProps } from '../Button/Button'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import classNames from 'classnames'
