@@ -77,6 +77,7 @@ export enum LayerContextActionName {
   setCategories = 'LayerContext.setCategories',
   setTheme = 'LayerContext.setTheme',
   setOnboardingStep = 'LayerContext.setOnboardingStep',
+  setColors = 'LayerContext.setColors',
 }
 
 export type LayerContextAction =
@@ -99,4 +100,8 @@ export type LayerContextAction =
   | {
       type: LayerContextActionName.setOnboardingStep
       payload: { onboardingStep: LayerContextValues['onboardingStep'] }
+    }
+  | {
+      type: LayerContextActionName.setColors
+      payload: { colors: LayerContextValues['colors'] }
     }

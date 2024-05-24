@@ -214,7 +214,7 @@ export const ProfitAndLossChart = () => {
     name: getMonthName(pnl),
     revenue: pnl?.income || 0,
     revenueUncategorized: pnl?.uncategorizedInflows || 0,
-    // revenueUncategorized: (pnl?.income || 0) / 2,
+    // revenueUncategorized: (pnl?.income || 0) / 2, @TODO remove after tests and ui review
     expenses: -Math.abs((pnl?.income || 0) - (pnl?.netProfit || 0)),
     expensesUncategorized: -Math.abs(pnl?.uncategorizedOutflows || 0),
     netProfit: pnl?.netProfit || 0,
@@ -420,6 +420,33 @@ export const ProfitAndLossChart = () => {
         onClick={onClick}
         className='Layer__profit-and-loss-chart'
       >
+        <defs>
+          <pattern
+            id='layer-bar-stripe-pattern'
+            x='0'
+            y='0'
+            width='4'
+            height='4'
+            patternTransform='rotate(45)'
+            patternUnits='userSpaceOnUse'
+          >
+            <rect width='4' height='4' opacity={0.16} />
+            <line x1='0' y='0' x2='0' y2='4' stroke-width='3' />
+          </pattern>
+
+          <pattern
+            id='layer-bar-stripe-pattern-dark'
+            x='0'
+            y='0'
+            width='4'
+            height='4'
+            patternTransform='rotate(45)'
+            patternUnits='userSpaceOnUse'
+          >
+            <rect width='4' height='4' opacity={0.16} />
+            <line x1='0' y='0' x2='0' y2='4' stroke-width='3' />
+          </pattern>
+        </defs>
         <Tooltip
           wrapperClassName='Layer__chart__tooltip-wrapper'
           content={<CustomTooltip />}
@@ -481,7 +508,6 @@ export const ProfitAndLossChart = () => {
           barSize={barSize}
           isAnimationActive={barAnimActive}
           animationDuration={100}
-          radius={[2, 2, 0, 0]}
           className='Layer__profit-and-loss-chart__bar--income'
           xAxisId='revenue'
           stackId='revenue'
@@ -520,13 +546,18 @@ export const ProfitAndLossChart = () => {
           className='Layer__profit-and-loss-chart__bar--income-uncategorized'
           xAxisId='revenue'
           stackId='revenue'
-        />
+        >
+          {theData?.map(entry => {
+            return (
+              <Cell key={entry.name} fill='url(#layer-bar-stripe-pattern)' />
+            )
+          })}
+        </Bar>
         <Bar
           dataKey='expenses'
           barSize={barSize}
           isAnimationActive={barAnimActive}
           animationDuration={100}
-          radius={[2, 2, 0, 0]}
           className='Layer__profit-and-loss-chart__bar--expenses'
           xAxisId='expenses'
           stackId='expenses'
@@ -551,7 +582,16 @@ export const ProfitAndLossChart = () => {
           className='Layer__profit-and-loss-chart__bar--expenses-uncategorized'
           xAxisId='expenses'
           stackId='expenses'
-        />
+        >
+          {theData?.map(entry => {
+            return (
+              <Cell
+                key={entry.name}
+                fill='url(#layer-bar-stripe-pattern-dark)'
+              />
+            )
+          })}
+        </Bar>
         <Line
           dot={true}
           strokeWidth={1}

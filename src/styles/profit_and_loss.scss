@@ -386,28 +386,15 @@
 
 .Layer__profit-and-loss-chart__bar--loading {
   fill: var(--color-base-50);
-  stroke: var(--color-base-50);
   animation: layer_chart_bar_loading_anim 2s linear infinite;
 }
 
 .Layer__profit-and-loss-chart__bar--income {
   fill: var(--bar-color-income);
-  stroke: var(--bar-color-income);
-}
-
-.Layer__profit-and-loss-chart__bar--income-uncategorized {
-  fill: var(--base-transparent-16-light);
-  stroke: var(--bar-color-income);
 }
 
 .Layer__profit-and-loss-chart__bar--expenses {
   fill: var(--bar-color-expenses);
-  stroke: var(--bar-color-expenses);
-}
-
-.Layer__profit-and-loss-chart__bar--expenses-uncategorized {
-  fill: var(--base-transparent-16);
-  stroke: var(--bar-color-expenses);
 }
 
 .Layer__chart-container--loading .Layer__profit-and-loss-chart__bar--expenses {
@@ -434,6 +421,22 @@
 
 .Layer__profit-and-loss-row__label--depth-0.Layer__profit-and-loss-row__label--display-children-false {
   padding-left: 22px;
+}
+
+#layer-bar-stripe-pattern rect {
+  fill: var(--color-base-400);
+}
+
+#layer-bar-stripe-pattern line {
+  stroke: var(--color-base-400);
+}
+
+#layer-bar-stripe-pattern-dark rect {
+  fill: var(--color-base-900);
+}
+
+#layer-bar-stripe-pattern-dark line {
+  stroke: var(--color-base-900);
 }
 
 @container (min-width: 1024px) {
