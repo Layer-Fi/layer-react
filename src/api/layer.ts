@@ -5,6 +5,7 @@ import {
   categorizeBankTransaction,
   matchBankTransaction,
 } from './layer/bankTransactions'
+import { getBusiness } from './layer/business'
 import { getCategories } from './layer/categories'
 import {
   getChartOfAccounts,
@@ -35,6 +36,7 @@ import { getTasks, submitResponseToTask } from './layer/tasks'
 
 export const Layer = {
   authenticate,
+  getBusiness,
   categorizeBankTransaction,
   matchBankTransaction,
   createAccount,

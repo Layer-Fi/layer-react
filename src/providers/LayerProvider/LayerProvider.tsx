@@ -28,6 +28,7 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
 ) => {
   switch (action.type) {
     case Action.setAuth:
+    case Action.setBusiness:
     case Action.setCategories:
     case Action.setTheme:
     case Action.setOnboardingStep:
@@ -94,6 +95,7 @@ export const LayerProvider = ({
       expires_at: new Date(2000, 1, 1),
     },
     businessId,
+    business: undefined,
     categories: [],
     apiUrl,
     theme,
@@ -157,6 +159,22 @@ export const LayerProvider = ({
           dispatch({
             type: Action.setCategories,
             payload: { categories: response.data.categories || [] },
+          })
+        }
+      },
+    },
+  )
+
+  useSWR(
+    businessId && auth?.access_token && `business-${businessId}`,
+    Layer.getBusiness(apiUrl, auth?.access_token, { params: { businessId } }),
+    {
+      ...defaultSWRConfig,
+      onSuccess: response => {
+        if (response?.data) {
+          dispatch({
+            type: Action.setBusiness,
+            payload: { business: response.data || [] },
           })
         }
       },
