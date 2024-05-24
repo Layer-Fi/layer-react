@@ -7,5 +7,5 @@ export const TasksContext = createContext<TasksContextType>({
   isLoading: false,
   error: undefined,
   refetch: () => {},
-  update: () => {},
+  submitResponseToTask: () => {},
 })
