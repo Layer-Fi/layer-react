@@ -15,7 +15,7 @@ import { TextUseTooltip } from '../Typography/Text'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
-export interface BankTransactionNative1ListItemProps {
+export interface BankTransactionMobileListItemProps {
   index: number
   bankTransaction: BankTransaction
   editable: boolean
@@ -29,12 +29,12 @@ const DATE_FORMAT = 'LLL d'
 const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
   direction === Direction.CREDIT
 
-export const BankTransactionNative1ListItem = ({
+export const BankTransactionMobileListItem = ({
   index = 0,
   bankTransaction,
   editable,
   containerWidth,
-}: BankTransactionNative1ListItemProps) => {
+}: BankTransactionMobileListItemProps) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
   const [removed, setRemoved] = useState(false)
@@ -95,7 +95,7 @@ export const BankTransactionNative1ListItem = ({
     return null
   }
 
-  const className = 'Layer__bank-transaction-native-1-list-item'
+  const className = 'Layer__bank-transaction-mobile-list-item'
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,

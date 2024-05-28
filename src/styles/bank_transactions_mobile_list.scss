@@ -1,52 +1,61 @@
-.Layer__bank-transactions__native-1 {
-  padding: 0 var(--spacing-md);
+.Layer__bank-transactions__mobile-list {
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
   list-style: none;
 }
 
-.Layer__bank-transaction-native-1-list-item {
+.Layer__bank-transaction-mobile-list-item {
   padding: var(--spacing-sm);
+  margin: 0 var(--spacing-sm);
   background: var(--color-base-0);
   box-shadow:
     0px 2px 2px 0px var(--color-base-200),
     0px 4px 4px 0px var(--color-base-100);
   border-radius: var(--border-radius-sm);
+  opacity: 0;
+  transform: scale(0.96);
   transition: all 180ms ease-in-out;
 
-  .Layer__bank-transaction-native-1-list-item__expanded-row {
+  &.show {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .Layer__bank-transaction-mobile-list-item__expanded-row {
     max-height: 0;
     height: 0;
     overflow: hidden;
     transition: all 180ms ease-in-out;
   }
 
-  &.Layer__bank-transaction-native-1-list-item--expanded {
-    .Layer__bank-transaction-native-1-list-item__expanded-row {
+  &.Layer__bank-transaction-mobile-list-item--expanded {
+    .Layer__bank-transaction-mobile-list-item__expanded-row {
       max-height: none;
       height: 300px;
     }
   }
 }
 
-.Layer__bank-transaction-native-1-list-item__heading {
+.Layer__bank-transaction-mobile-list-item__heading {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--spacing-xs);
 }
 
-.Layer__bank-transaction-native-1-list-item__heading__main {
+.Layer__bank-transaction-mobile-list-item__heading__main {
   display: flex;
   flex-direction: column;
 }
 
-.Layer__bank-transaction-native-1-list-item__heading__account-name {
+.Layer__bank-transaction-mobile-list-item__heading__account-name {
   color: var(--color-base-500);
 }
 
-.Layer__bank-transaction-native-1-list-item__heading__amount {
+.Layer__bank-transaction-mobile-list-item__heading__amount {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -54,7 +63,7 @@
   font-size: 14px;
 }
 
-.Layer__bank-transaction-native-1-list-item__heading__date {
+.Layer__bank-transaction-mobile-list-item__heading__date {
   color: var(--color-base-500);
   font-size: 12px;
 }

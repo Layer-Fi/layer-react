@@ -1,1 +1,0 @@
-export { BankTransactionNative1 } from './BankTransactionNative1'

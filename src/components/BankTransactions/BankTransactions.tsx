@@ -1,18 +1,16 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { DATE_FORMAT } from '../../config/general'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
-import { BankTransaction, CategorizationStatus } from '../../types'
 import { debounce } from '../../utils/helpers'
-import { BankTransactionListItem } from '../BankTransactionListItem'
-import { BankTransactionNative1 } from '../BankTransactionNative1'
-import { BankTransactionRow } from '../BankTransactionRow'
+import { BankTransactionList } from '../BankTransactionList'
+import { BankTransactionMobileList } from '../BankTransactionMobileList'
+import { BankTransactionsTable } from '../BankTransactionsTable'
 import { Container } from '../Container'
-import { DataState, DataStateStatus } from '../DataState'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
 import { BankTransactionsHeader } from './BankTransactionsHeader'
-import { DisplayState, MobileVariant } from './constants'
+import { DataStates } from './DataStates'
+import { DisplayState, MobileComponentType } from './constants'
 import { filterVisibility } from './utils'
 
 const COMPONENT_NAME = 'bank-transactions'
@@ -23,7 +21,8 @@ export interface BankTransactionsProps {
   categorizedOnly?: boolean
   showDescriptions?: boolean
   showReceiptUploads?: boolean
-  mobileVariant?: MobileVariant
+  monthlyView?: boolean
+  mobileComponent?: MobileComponentType
 }
 
 export const BankTransactions = ({
@@ -32,7 +31,8 @@ export const BankTransactions = ({
   categorizedOnly = false,
   showDescriptions = false,
   showReceiptUploads = false,
-  mobileVariant,
+  monthlyView = false,
+  mobileComponent,
 }: BankTransactionsProps) => {
   const [display, setDisplay] = useState<DisplayState>(
     categorizedOnly ? DisplayState.categorized : DisplayState.review,
@@ -112,7 +112,7 @@ export const BankTransactions = ({
           ? 'Layer__bank-transactions--to-review'
           : 'Layer__bank-transactions--categorized'
       }
-      transparentBg={listView && mobileVariant === 'native-1'}
+      transparentBg={listView && mobileComponent === 'mobileList'}
       name={COMPONENT_NAME}
       asWidget={asWidget}
       ref={containerRef}
@@ -123,59 +123,22 @@ export const BankTransactions = ({
         categorizedOnly={categorizedOnly}
         display={display}
         onCategorizationDisplayChange={onCategorizationDisplayChange}
-        mobileVariant={mobileVariant}
+        mobileComponent={mobileComponent}
+        withDatePicker={monthlyView}
         listView={listView}
       />
+
       {!listView && (
-        <table
-          width='100%'
-          className='Layer__table Layer__bank-transactions__table with-cell-separators'
-        >
-          <thead>
-            <tr>
-              <th className='Layer__table-header Layer__bank-transactions__date-col'>
-                Date
-              </th>
-              <th className='Layer__table-header Layer__bank-transactions__tx-col'>
-                Transaction
-              </th>
-              <th className='Layer__table-header Layer__bank-transactions__account-col'>
-                Account
-              </th>
-              <th className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'>
-                Amount
-              </th>
-              {editable ? (
-                <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
-                  Categorize
-                </th>
-              ) : (
-                <th className='Layer__table-header Layer__table-cell__category-col'>
-                  Category
-                </th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {!isLoading &&
-              bankTransactions?.map(
-                (bankTransaction: BankTransaction, index: number) => (
-                  <BankTransactionRow
-                    initialLoad={initialLoad}
-                    index={index}
-                    key={bankTransaction.id}
-                    dateFormat={DATE_FORMAT}
-                    bankTransaction={bankTransaction}
-                    editable={editable}
-                    removeTransaction={removeTransaction}
-                    containerWidth={containerWidth}
-                    showDescriptions={showDescriptions}
-                    showReceiptUploads={showReceiptUploads}
-                  />
-                ),
-              )}
-          </tbody>
-        </table>
+        <BankTransactionsTable
+          editable={editable}
+          isLoading={isLoading}
+          bankTransactions={bankTransactions}
+          initialLoad={initialLoad}
+          containerWidth={containerWidth}
+          removeTransaction={removeTransaction}
+          showDescriptions={showDescriptions}
+          showReceiptUploads={showReceiptUploads}
+        />
       )}
 
       {isLoading && !bankTransactions ? (
@@ -184,28 +147,8 @@ export const BankTransactions = ({
         </div>
       ) : null}
 
-      {!isLoading && listView && mobileVariant !== 'native-1' ? (
-        <ul className='Layer__bank-transactions__list'>
-          {bankTransactions?.map(
-            (bankTransaction: BankTransaction, index: number) => (
-              <BankTransactionListItem
-                index={index}
-                key={bankTransaction.id}
-                dateFormat={DATE_FORMAT}
-                bankTransaction={bankTransaction}
-                editable={editable}
-                removeTransaction={removeTransaction}
-                containerWidth={containerWidth}
-                showDescriptions={showDescriptions}
-                showReceiptUploads={showReceiptUploads}
-              />
-            ),
-          )}
-        </ul>
-      ) : null}
-
-      {!isLoading && listView && mobileVariant === 'native-1' ? (
-        <BankTransactionNative1
+      {!isLoading && listView && mobileComponent !== 'mobileList' ? (
+        <BankTransactionList
           bankTransactions={bankTransactions}
           editable={editable}
           removeTransaction={removeTransaction}
@@ -213,41 +156,33 @@ export const BankTransactions = ({
         />
       ) : null}
 
-      {!isLoading &&
-      !error &&
-      (bankTransactions === undefined ||
-        (bankTransactions !== undefined && bankTransactions.length === 0)) ? (
-        <div className='Layer__table-state-container'>
-          <DataState
-            status={DataStateStatus.allDone}
-            title='You are up to date with transactions!'
-            description='All uncategorized transaction will be displayed here'
-            onRefresh={() => refetch()}
-            isLoading={isValidating}
-          />
-        </div>
-      ) : null}
-
-      {!isLoading && error ? (
-        <div className='Layer__table-state-container'>
-          <DataState
-            status={DataStateStatus.failed}
-            title='Something went wrong'
-            description='We couldn’t load your data.'
-            onRefresh={() => refetch()}
-            isLoading={isValidating}
-          />
-        </div>
-      ) : null}
-
-      <div className='Layer__bank-transactions__pagination'>
-        <Pagination
-          currentPage={currentPage}
-          totalCount={bankTransactionsByFilter?.length || 0}
-          pageSize={pageSize}
-          onPageChange={page => setCurrentPage(page)}
+      {!isLoading && listView && mobileComponent === 'mobileList' ? (
+        <BankTransactionMobileList
+          bankTransactions={bankTransactions}
+          editable={editable}
+          removeTransaction={removeTransaction}
+          containerWidth={containerWidth}
         />
-      </div>
+      ) : null}
+
+      <DataStates
+        bankTransactions={bankTransactions}
+        isLoading={isLoading}
+        isValidating={isValidating}
+        error={error}
+        refetch={refetch}
+      />
+
+      {!monthlyView && (
+        <div className='Layer__bank-transactions__pagination'>
+          <Pagination
+            currentPage={currentPage}
+            totalCount={bankTransactionsByFilter?.length || 0}
+            pageSize={pageSize}
+            onPageChange={page => setCurrentPage(page)}
+          />
+        </div>
+      )}
     </Container>
   )
 }

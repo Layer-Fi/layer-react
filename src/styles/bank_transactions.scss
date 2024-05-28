@@ -9,6 +9,28 @@
 .Layer__bank-transactions__header {
   position: sticky;
   left: 0;
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.Layer__bank-transactions__header__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Layer__bank-transactions__header.Layer__bank-transactions__header--mobile {
+  background-color: transparent;
+}
+
+.Layer__bank-transactions__header.Layer__bank-transactions__header--mobile,
+.Layer__bank-transactions__header.Layer__bank-transactions__header--with-date-picker {
+  flex-direction: column;
+
+  .Layer__bank-transactions__header__content {
+    width: 100%;
+  }
 }
 
 .Layer__bank-transaction-row {
@@ -640,6 +662,10 @@
     position: sticky;
     top: 0px;
     z-index: 2;
+  }
+
+  .Layer__bank-transactions__header.Layer__bank-transactions__header--mobile {
+    box-shadow: none;
   }
 }
 

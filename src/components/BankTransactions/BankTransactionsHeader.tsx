@@ -1,8 +1,10 @@
 import React, { ChangeEvent } from 'react'
 import { Header } from '../Container'
+import { Tabs } from '../Tabs'
 import { Toggle } from '../Toggle'
 import { Heading, HeadingSize } from '../Typography'
-import { DisplayState, MobileVariant } from './constants'
+import { DisplayState, MobileComponentType } from './constants'
+import classNames from 'classnames'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -10,7 +12,7 @@ export interface BankTransactionsHeaderProps {
   categorizedOnly?: boolean
   display: DisplayState
   onCategorizationDisplayChange: (event: ChangeEvent<HTMLInputElement>) => void
-  mobileVariant?: MobileVariant
+  mobileComponent?: MobileComponentType
   withDatePicker?: boolean
   listView?: boolean
 }
@@ -21,16 +23,22 @@ export const BankTransactionsHeader = ({
   categorizedOnly,
   display,
   onCategorizationDisplayChange,
-  mobileVariant,
+  mobileComponent,
   withDatePicker,
   listView,
 }: BankTransactionsHeaderProps) => {
   return (
     <Header
-      className='Layer__bank-transactions__header'
+      className={classNames(
+        'Layer__bank-transactions__header',
+        withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
+        mobileComponent && listView
+          ? 'Layer__bank-transactions__header--mobile'
+          : undefined,
+      )}
       style={{ top: shiftStickyHeader }}
     >
-      <div>
+      <div className='Layer__bank-transactions__header__content'>
         <Heading
           className='Layer__bank-transactions__title'
           size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
@@ -39,8 +47,21 @@ export const BankTransactionsHeader = ({
         </Heading>
         {withDatePicker && <span>Date picker</span>}
       </div>
-      {!categorizedOnly && (
+
+      {!categorizedOnly && !(mobileComponent == 'mobileList' && listView) && (
         <Toggle
+          name='bank-transaction-display'
+          options={[
+            { label: 'To Review', value: DisplayState.review },
+            { label: 'Categorized', value: DisplayState.categorized },
+          ]}
+          selected={display}
+          onChange={onCategorizationDisplayChange}
+        />
+      )}
+
+      {!categorizedOnly && mobileComponent === 'mobileList' && listView && (
+        <Tabs
           name='bank-transaction-display'
           options={[
             { label: 'To Review', value: DisplayState.review },

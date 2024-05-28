@@ -1,6 +1,6 @@
 import { CategorizationStatus } from '../../types'
 
-export type MobileVariant = 'regular' | 'native-1'
+export type MobileComponentType = 'regularList' | 'mobileList'
 
 export enum DisplayState {
   review = 'review',

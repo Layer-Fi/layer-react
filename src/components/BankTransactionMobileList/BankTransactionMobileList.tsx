@@ -1,29 +1,27 @@
 import React from 'react'
-import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
-import { BankTransactionNative1ListItem } from './BankTransactionNative1ListItem'
+import { BankTransactionMobileListItem } from './BankTransactionMobileListItem'
 
-export interface BankTransactionNative1Props {
+export interface BankTransactionMobileListProps {
   bankTransactions?: BankTransaction[]
   editable: boolean
   removeTransaction: (id: string) => void
   containerWidth?: number
 }
 
-export const BankTransactionNative1 = ({
+export const BankTransactionMobileList = ({
   bankTransactions,
   removeTransaction,
   editable,
   containerWidth,
-}: BankTransactionNative1Props) => {
+}: BankTransactionMobileListProps) => {
   return (
-    <ul className='Layer__bank-transactions__native-1'>
+    <ul className='Layer__bank-transactions__mobile-list'>
       {bankTransactions?.map(
         (bankTransaction: BankTransaction, index: number) => (
-          <BankTransactionNative1ListItem
+          <BankTransactionMobileListItem
             index={index}
             key={bankTransaction.id}
-            dateFormat={DATE_FORMAT}
             bankTransaction={bankTransaction}
             editable={editable}
             removeTransaction={removeTransaction}
