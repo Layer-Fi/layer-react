@@ -19,11 +19,13 @@ export const LinkedAccountOptions = ({
   return (
     <div className={linkedAccountOptionsClassName}>
       <div className='Layer__linked-accounts__options-overlay'>
-        <div className='Layer__linked-accounts__options-overlay-button'>
-          <HoverMenu config={config}>
-            <MoreVertical size={16} />
-          </HoverMenu>
-        </div>
+        {config.length ? (
+          <div className='Layer__linked-accounts__options-overlay-button'>
+            <HoverMenu config={config}>
+              <MoreVertical size={16} />
+            </HoverMenu>
+          </div>
+        ) : null}
       </div>
       {children}
     </div>
