@@ -145,8 +145,10 @@ export const LayerProvider = ({
   }, [businessAccessToken, auth?.access_token])
 
   useSWR(
-    businessId && auth?.access_token && `categories-${businessId}`,
-    Layer.getCategories(apiUrl, auth?.access_token, { params: { businessId } }),
+    businessId && state.auth?.access_token && `categories-${businessId}`,
+    Layer.getCategories(apiUrl, state.auth?.access_token, {
+      params: { businessId },
+    }),
     {
       ...defaultSWRConfig,
       onSuccess: response => {
@@ -161,8 +163,10 @@ export const LayerProvider = ({
   )
 
   useSWR(
-    businessId && auth?.access_token && `business-${businessId}`,
-    Layer.getBusiness(apiUrl, auth?.access_token, { params: { businessId } }),
+    businessId && state?.auth?.access_token && `business-${businessId}`,
+    Layer.getBusiness(apiUrl, state?.auth?.access_token, {
+      params: { businessId },
+    }),
     {
       ...defaultSWRConfig,
       onSuccess: response => {
