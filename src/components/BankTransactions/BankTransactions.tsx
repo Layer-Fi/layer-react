@@ -5,31 +5,17 @@ import { useElementSize } from '../../hooks/useElementSize'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { debounce } from '../../utils/helpers'
 import { BankTransactionListItem } from '../BankTransactionListItem'
+import { BankTransactionNative1 } from '../BankTransactionNative1'
 import { BankTransactionRow } from '../BankTransactionRow'
-import { Container, Header } from '../Container'
+import { Container } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
-import { Toggle } from '../Toggle'
-import { Heading, HeadingSize } from '../Typography'
+import { BankTransactionsHeader } from './BankTransactionsHeader'
+import { DisplayState, MobileVariant } from './constants'
+import { filterVisibility } from './utils'
 
 const COMPONENT_NAME = 'bank-transactions'
-
-export enum DisplayState {
-  review = 'review',
-  categorized = 'categorized',
-}
-
-const CategorizedCategories = [
-  CategorizationStatus.CATEGORIZED,
-  CategorizationStatus.JOURNALING,
-  CategorizationStatus.SPLIT,
-  CategorizationStatus.MATCHED,
-]
-const ReviewCategories = [
-  CategorizationStatus.READY_FOR_INPUT,
-  CategorizationStatus.LAYER_REVIEW,
-]
 
 export interface BankTransactionsProps {
   asWidget?: boolean
@@ -37,23 +23,7 @@ export interface BankTransactionsProps {
   categorizedOnly?: boolean
   showDescriptions?: boolean
   showReceiptUploads?: boolean
-}
-
-export const filterVisibility = (
-  display: DisplayState,
-  bankTransaction: BankTransaction,
-) => {
-  const categorized = CategorizedCategories.includes(
-    bankTransaction.categorization_status,
-  )
-  const inReview =
-    ReviewCategories.includes(bankTransaction.categorization_status) &&
-    !bankTransaction.recently_categorized
-
-  return (
-    (display === DisplayState.review && inReview) ||
-    (display === DisplayState.categorized && categorized)
-  )
+  mobileVariant?: MobileVariant
 }
 
 export const BankTransactions = ({
@@ -62,6 +32,7 @@ export const BankTransactions = ({
   categorizedOnly = false,
   showDescriptions = false,
   showReceiptUploads = false,
+  mobileVariant,
 }: BankTransactionsProps) => {
   const [display, setDisplay] = useState<DisplayState>(
     categorizedOnly ? DisplayState.categorized : DisplayState.review,
@@ -141,32 +112,20 @@ export const BankTransactions = ({
           ? 'Layer__bank-transactions--to-review'
           : 'Layer__bank-transactions--categorized'
       }
+      transparentBg={listView && mobileVariant === 'native-1'}
       name={COMPONENT_NAME}
       asWidget={asWidget}
       ref={containerRef}
     >
-      <Header
-        className='Layer__bank-transactions__header'
-        style={{ top: shiftStickyHeader }}
-      >
-        <Heading
-          className='Layer__bank-transactions__title'
-          size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
-        >
-          Transactions
-        </Heading>
-        {!categorizedOnly && (
-          <Toggle
-            name='bank-transaction-display'
-            options={[
-              { label: 'To Review', value: DisplayState.review },
-              { label: 'Categorized', value: DisplayState.categorized },
-            ]}
-            selected={display}
-            onChange={onCategorizationDisplayChange}
-          />
-        )}
-      </Header>
+      <BankTransactionsHeader
+        shiftStickyHeader={shiftStickyHeader}
+        asWidget={asWidget}
+        categorizedOnly={categorizedOnly}
+        display={display}
+        onCategorizationDisplayChange={onCategorizationDisplayChange}
+        mobileVariant={mobileVariant}
+        listView={listView}
+      />
       {!listView && (
         <table
           width='100%'
@@ -225,7 +184,7 @@ export const BankTransactions = ({
         </div>
       ) : null}
 
-      {!isLoading && listView ? (
+      {!isLoading && listView && mobileVariant !== 'native-1' ? (
         <ul className='Layer__bank-transactions__list'>
           {bankTransactions?.map(
             (bankTransaction: BankTransaction, index: number) => (
@@ -243,6 +202,15 @@ export const BankTransactions = ({
             ),
           )}
         </ul>
+      ) : null}
+
+      {!isLoading && listView && mobileVariant === 'native-1' ? (
+        <BankTransactionNative1
+          bankTransactions={bankTransactions}
+          editable={editable}
+          removeTransaction={removeTransaction}
+          containerWidth={containerWidth}
+        />
       ) : null}
 
       {!isLoading &&
