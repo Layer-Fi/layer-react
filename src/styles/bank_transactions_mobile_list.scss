@@ -8,7 +8,7 @@
 }
 
 .Layer__bank-transaction-mobile-list-item {
-  padding: var(--spacing-sm);
+  padding: 0;
   margin: 0 var(--spacing-sm);
   background: var(--color-base-0);
   box-shadow:
@@ -25,17 +25,9 @@
   }
 
   .Layer__bank-transaction-mobile-list-item__expanded-row {
-    max-height: 0;
     height: 0;
     overflow: hidden;
     transition: all 180ms ease-in-out;
-  }
-
-  &.Layer__bank-transaction-mobile-list-item--expanded {
-    .Layer__bank-transaction-mobile-list-item__expanded-row {
-      max-height: none;
-      height: 300px;
-    }
   }
 }
 
@@ -44,6 +36,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--spacing-xs);
+  padding: var(--spacing-sm);
 }
 
 .Layer__bank-transaction-mobile-list-item__heading__main {
@@ -66,4 +59,35 @@
 .Layer__bank-transaction-mobile-list-item__heading__date {
   color: var(--color-base-500);
   font-size: 12px;
+}
+
+.Layer__bank-transaction-mobile-list-item__amount-credit {
+  color: var(--color-info-success);
+}
+
+.Layer__bank-transaction-mobile-list-item__toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3xs);
+  padding: 0 var(--spacing-sm);
+}
+
+.Layer__bank-transaction-mobile-list-item__form-container {
+  padding: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Layer__bank-transaction-mobile-list-item__personal-form {
+  padding: var(--spacing-md) 0 var(--spacing-xs) 0;
+
+  .Layer__btn--primary {
+    width: 100%;
+  }
+}
+
+.Layer__bank-transaction-mobile-list-item__business-form {
+  width: 100%;
 }

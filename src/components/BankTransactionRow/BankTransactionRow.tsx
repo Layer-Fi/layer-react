@@ -4,13 +4,9 @@ import AlertCircle from '../../icons/AlertCircle'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import {
-  BankTransaction,
-  CategorizationStatus,
-  Category,
-  Direction,
-} from '../../types'
+import { BankTransaction, CategorizationStatus, Category } from '../../types'
 import { hasSuggestions } from '../../types/categories'
+import { isCredit } from '../../utils/bankTransactions'
 import { Badge } from '../Badge'
 import { SubmitButton, IconButton, RetryButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
@@ -39,9 +35,6 @@ type Props = {
   showDescriptions: boolean
   showReceiptUploads: boolean
 }
-
-const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
-  direction === Direction.CREDIT
 
 export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
 

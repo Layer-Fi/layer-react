@@ -162,6 +162,7 @@ export const BankTransactions = ({
           editable={editable}
           removeTransaction={removeTransaction}
           containerWidth={containerWidth}
+          initialLoad={initialLoad}
         />
       ) : null}
 

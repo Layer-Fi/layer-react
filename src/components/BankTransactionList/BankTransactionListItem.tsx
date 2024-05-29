@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, Direction } from '../../types'
+import { BankTransaction } from '../../types'
+import { isCredit } from '../../utils/bankTransactions'
 import { getDefaultSelectedCategory } from '../BankTransactionRow/BankTransactionRow'
 import { RetryButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
@@ -25,9 +26,6 @@ type Props = {
   removeTransaction: (id: string) => void
   containerWidth?: number
 }
-
-const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
-  direction === Direction.CREDIT
 
 export const BankTransactionListItem = ({
   index = 0,

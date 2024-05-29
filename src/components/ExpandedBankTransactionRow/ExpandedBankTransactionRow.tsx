@@ -19,9 +19,9 @@ import {
   BankTransaction,
   SplitCategoryUpdate,
   SingleCategoryUpdate,
-  Category,
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
+import { hasMatch } from '../../utils/bankTransactions'
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect'
@@ -69,14 +69,6 @@ enum Purpose {
 
 export type SaveHandle = {
   save: () => void
-}
-
-const hasMatch = (bankTransaction?: BankTransaction) => {
-  return Boolean(
-    (bankTransaction?.suggested_matches &&
-      bankTransaction?.suggested_matches?.length > 0) ||
-      bankTransaction?.match,
-  )
 }
 
 const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
