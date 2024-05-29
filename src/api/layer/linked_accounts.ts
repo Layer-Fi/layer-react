@@ -9,6 +9,17 @@ export const syncConnection = post<
   }
 >(({ businessId }) => `/v1/businesses/${businessId}/sync`)
 
+export const updateConnectionStatus = post<
+  Record<string, unknown>,
+  Record<string, unknown>,
+  {
+    businessId: string
+  }
+>(
+  ({ businessId }) =>
+    `/v1/businesses/${businessId}/external-accounts/update-connection-status`,
+)
+
 export const getLinkedAccounts = get<
   { data: LinkedAccounts },
   {

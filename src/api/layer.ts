@@ -27,6 +27,7 @@ import {
   denyConnection,
   breakPlaidItemConnection,
   syncConnection,
+  updateConnectionStatus,
 } from './layer/linked_accounts'
 import {
   getProfitAndLoss,
@@ -64,4 +65,5 @@ export const Layer = {
   submitResponseToTask,
   breakPlaidItemConnection,
   syncConnection,
+  updateConnectionStatus,
 }
