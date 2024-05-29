@@ -87,50 +87,55 @@ export const LinkedAccountsContent = ({
           <LinkedAccountOptions
             key={`linked-acc-${index}`}
             config={[
-              {
-                name: 'Unlink account',
-                action: async () => {
-                  // TODO: replace with better confirm dialog
-                  if (
-                    !confirm(
-                      'Please confirm you wish to remove this financial account',
-                    )
-                  ) {
-                    return
-                  }
-                  // TODO: trigger some sort of loading spinner here
-                  await unlinkAccount(
-                    account.external_account_source,
-                    account.id,
-                  )
-                  // TODO: turn off loading spinner
-                },
-              },
-              {
-                name: `Unlink all accounts under this ${account.institution?.name} connection`,
-                action: async () => {
-                  // TODO: replace with better confirm dialog
-                  if (
-                    !account.connection_external_id ||
-                    !confirm(
-                      `Please confirm you wish to remove all accounts belonging to ${
-                        account.institution?.name || 'this institution'
-                      }`,
-                    )
-                  ) {
-                    return
-                  }
-                  // TODO: trigger some sort of loading spinner here
-                  await removeConnection(
-                    account.external_account_source,
-                    account.connection_external_id,
-                  )
-                  // TODO: turn off loading spinner
-                },
-              },
+              ...(account.external_account_source === 'PLAID'
+                ? [
+                    {
+                      name: 'Unlink account',
+                      action: async () => {
+                        // TODO: replace with better confirm dialog
+                        if (
+                          !confirm(
+                            'Please confirm you wish to remove this financial account',
+                          )
+                        ) {
+                          return
+                        }
+                        // TODO: trigger some sort of loading spinner here
+                        await unlinkAccount(
+                          account.external_account_source,
+                          account.id,
+                        )
+                        // TODO: turn off loading spinner
+                      },
+                    },
+                    {
+                      name: `Unlink all accounts under this ${account.institution?.name} connection`,
+                      action: async () => {
+                        // TODO: replace with better confirm dialog
+                        if (
+                          !account.connection_external_id ||
+                          !confirm(
+                            `Please confirm you wish to remove all accounts belonging to ${
+                              account.institution?.name || 'this institution'
+                            }`,
+                          )
+                        ) {
+                          return
+                        }
+                        // TODO: trigger some sort of loading spinner here
+                        await removeConnection(
+                          account.external_account_source,
+                          account.connection_external_id,
+                        )
+                        // TODO: turn off loading spinner
+                      },
+                    },
+                  ]
+                : []),
               ...(pillConfig ? pillConfig.config : []),
               ...(environment === 'staging' &&
-              !account.connection_needs_repair_as_of
+              !account.connection_needs_repair_as_of &&
+              account.external_account_source === 'PLAID'
                 ? [
                     {
                       name: 'Break connection (test utility)',
