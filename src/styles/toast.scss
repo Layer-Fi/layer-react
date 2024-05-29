@@ -1,0 +1,69 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.Layer__toasts-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  z-index: 1000;
+
+  .Layer__toast {
+    color: var(--color-base-0);
+    background: var(--color-base-1000);
+    border-radius: var(--spacing-3xs);
+    padding: var(--spacing-xs) var(--spacing-md);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s linear, transform 0.6s linear;
+    box-shadow: 0px 4px 4px 0px var(--base-transparent-5, rgba(16, 24, 40, 0.05)),
+      0px 3px 3px 0px var(--base-transparent-6, rgba(16, 24, 40, 0.06)),
+      0px 2px 2px 0px var(--base-transparent-8, rgba(16, 24, 40, 0.08)),
+      0px 1px 0px 0px var(--base-transparent-12, rgba(16, 24, 40, 0.12)), 0px 0px 0px 1px var(--base-900, #05132f);
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--color-base-0);
+    }
+  }
+}
+
+.Layer__toast.enter {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.Layer__toast.exit {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s linear, transform 0.5s linear;
+}
+
+@media screen and (max-width: 400px) {
+  .Layer__toasts-container {
+    right: 50%;
+    transform: translateX(50%);
+  }
+}

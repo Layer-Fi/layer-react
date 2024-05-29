@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Container, Header } from '../../components/Container'
 import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
@@ -6,7 +6,9 @@ import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
+import { ToastsContainer } from '../../components/Toast';
 import classNames from 'classnames'
+
 
 export interface AccountingOverviewProps {
   title?: string
@@ -22,9 +24,22 @@ export const AccountingOverview = ({
   onTransactionsToReviewClick,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
+  
+  const toastRef = useRef<{ addToast: (toast: { content: string; duration?: number }) => void } | null>(null);
 
+  const handleAddToast = () => {
+    if (toastRef.current) {
+      toastRef.current.addToast({
+        content: 'This is a toast message',
+        duration: 3000,
+      });
+    }
+  };
+  
   return (
     <ProfitAndLoss asContainer={false}>
+      <button className='Layer__toast' onClick={handleAddToast}>Show Toast</button>
+      <ToastsContainer ref={toastRef} />
       <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
         {enableOnboarding && <Onboarding />}
         <div className='Layer__accounting-overview__summaries-row'>
