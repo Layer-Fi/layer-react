@@ -7,12 +7,16 @@ export interface BankTransactionsWithLinkedAccountsProps {
   title?: string
   elevatedLinkedAccounts?: boolean
   showLedgerBalance?: boolean
+  showDescriptions?: boolean
+  showReceiptUploads?: boolean
 }
 
 export const BankTransactionsWithLinkedAccounts = ({
   title = 'Bank transactions',
   elevatedLinkedAccounts = true,
   showLedgerBalance = true,
+  showDescriptions,
+  showReceiptUploads,
 }: BankTransactionsWithLinkedAccountsProps) => {
   return (
     <View title={title}>
@@ -20,7 +24,11 @@ export const BankTransactionsWithLinkedAccounts = ({
         elevated={elevatedLinkedAccounts}
         showLedgerBalance={showLedgerBalance}
       />
-      <BankTransactions asWidget />
+      <BankTransactions
+        asWidget
+        showDescriptions={showDescriptions}
+        showReceiptUploads={showReceiptUploads}
+      />
     </View>
   )
 }

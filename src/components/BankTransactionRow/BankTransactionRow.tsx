@@ -36,6 +36,8 @@ type Props = {
   removeTransaction: (id: string) => void
   containerWidth?: number
   initialLoad?: boolean
+  showDescriptions: boolean
+  showReceiptUploads: boolean
 }
 
 const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
@@ -75,6 +77,8 @@ export const BankTransactionRow = ({
   removeTransaction,
   containerWidth,
   initialLoad,
+  showDescriptions,
+  showReceiptUploads
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
@@ -368,6 +372,8 @@ export const BankTransactionRow = ({
             close={() => setOpen(false)}
             containerWidth={containerWidth}
             editable={editable}
+            showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
           />
         </td>
       </tr>
