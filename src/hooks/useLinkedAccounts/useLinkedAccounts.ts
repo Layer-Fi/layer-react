@@ -16,6 +16,7 @@ type UseLinkedAccounts = () => {
   addConnection: (source: Source) => void
   removeConnection: (source: Source, sourceId: string) => void // means, "unlink institution"
   repairConnection: (source: Source, sourceId: string) => void
+  updateConnectionStatus: () => void
   refetchAccounts: () => void
   syncAccounts: () => void
   unlinkAccount: (source: Source, accountId: string) => void
@@ -127,13 +128,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         // Note: a sync is kicked off in the backend in this endpoint
         exchangePlaidPublicToken(publicToken, metadata)
       } else {
-        // Note: As syncAccounts kick off a *mostly* async syncing job, the accounts are
-        // not guaranteed to be fully refreshed before the syncing completes; however the account connections
-        // themselves should be refreshed before this endpoint responds, which should remove the error
-        // pills from any broken accounts.
-        await syncAccounts()
+        // Refresh the account connections, which should remove the error
+        // pills from any broken accounts
+        await updateConnectionStatus()
         refetchAccounts()
-
         setLinkMode('add')
       }
     },
@@ -204,10 +202,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  /**
-   * Note: When the user confirms an account is not a duplicate, this confirmation
-   * actually applies to the institution connection as a whole.
-   */
   const confirmAccount = async (source: Source, accountId: string) => {
     DEBUG && console.log('confirming account')
     if (source === 'PLAID') {
@@ -217,9 +211,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
           accountId,
         },
       })
-      // we kick off a sync as the confirmed account had previously been blocked from syncing
-      syncAccounts()
-
       await refetchAccounts()
     } else {
       console.error(
@@ -228,11 +219,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  /**
-   * Note: When the user identifies an account as a duplicate, this
-   * actually applies to the institution connection as a whole. It means that
-   * there is a duplicate institution connection
-   */
   const denyAccount = async (source: Source, accountId: string) => {
     DEBUG && console.log('confirming account')
     if (source === 'PLAID') {
@@ -285,6 +271,13 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     })
   }
 
+  const updateConnectionStatus = async () => {
+    DEBUG && console.log('updating connection status...')
+    await Layer.updateConnectionStatus(apiUrl, auth?.access_token, {
+      params: { businessId },
+    })
+  }
+
   const unlinkPlaidItem = async (plaidItemPlaidId: string) => {
     DEBUG && console.log('unlinking plaid item')
     await Layer.unlinkPlaidItem(apiUrl, auth?.access_token, {
@@ -310,5 +303,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     denyAccount,
     breakConnection,
     syncAccounts,
+    updateConnectionStatus,
   }
 }
