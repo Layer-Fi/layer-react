@@ -60,8 +60,8 @@ export const BankTransactions = ({
   asWidget = false,
   pageSize = 15,
   categorizedOnly = false,
-  showDescriptions = true,
-  showReceiptUploads = true,
+  showDescriptions = false,
+  showReceiptUploads = false,
 }: BankTransactionsProps) => {
   const [display, setDisplay] = useState<DisplayState>(
     categorizedOnly ? DisplayState.categorized : DisplayState.review,
