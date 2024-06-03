@@ -35,6 +35,8 @@ export interface BankTransactionsProps {
   asWidget?: boolean
   pageSize?: number
   categorizedOnly?: boolean
+  showDescriptions?: boolean
+  showReceiptUploads?: boolean
 }
 
 export const filterVisibility = (
@@ -58,6 +60,8 @@ export const BankTransactions = ({
   asWidget = false,
   pageSize = 15,
   categorizedOnly = false,
+  showDescriptions = false,
+  showReceiptUploads = false,
 }: BankTransactionsProps) => {
   const [display, setDisplay] = useState<DisplayState>(
     categorizedOnly ? DisplayState.categorized : DisplayState.review,
@@ -206,6 +210,8 @@ export const BankTransactions = ({
                     editable={editable}
                     removeTransaction={removeTransaction}
                     containerWidth={containerWidth}
+                    showDescriptions={showDescriptions}
+                    showReceiptUploads={showReceiptUploads}
                   />
                 ),
               )}
@@ -231,6 +237,8 @@ export const BankTransactions = ({
                 editable={editable}
                 removeTransaction={removeTransaction}
                 containerWidth={containerWidth}
+                showDescriptions={showDescriptions}
+                showReceiptUploads={showReceiptUploads}
               />
             ),
           )}

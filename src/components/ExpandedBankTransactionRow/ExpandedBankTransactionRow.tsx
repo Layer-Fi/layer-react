@@ -46,6 +46,8 @@ type Props = {
   submitBtnText?: string
   containerWidth?: number
   editable?: boolean
+  showDescriptions: boolean
+  showReceiptUploads: boolean
 }
 
 type Split = {
@@ -112,6 +114,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       asListItem = false,
       submitBtnText = 'Save',
       containerWidth,
+      showDescriptions,
+      showReceiptUploads,
     },
     ref,
   ) => {
@@ -488,16 +492,20 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 </div>
               </div>
 
-              <InputGroup
-                className={`${className}__description`}
-                name='description'
-              >
-                <Textarea name='description' placeholder='Add description' />
-              </InputGroup>
+              {showDescriptions && (
+                <InputGroup
+                  className={`${className}__description`}
+                  name='description'
+                >
+                  <Textarea name='description' placeholder='Add description' />
+                </InputGroup>
+              )}
 
-              <div className={`${className}__file-upload`}>
-                <FileInput text='Upload receipt' />
-              </div>
+              {showReceiptUploads && (
+                <div className={`${className}__file-upload`}>
+                  <FileInput text='Upload receipt' />
+                </div>
+              )}
 
               {asListItem ? (
                 <div className={`${className}__submit-btn`}>
