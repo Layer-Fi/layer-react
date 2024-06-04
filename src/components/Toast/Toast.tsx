@@ -33,13 +33,7 @@ export const ToastsContainer = forwardRef((props, ref) => {
   return (
     <div className="Layer__toasts-container">
       {toasts.map((toast) => (
-        <Toast
-          key={toast.id}
-          id={toast.id}
-          content={toast.content}
-          duration={toast.duration}
-          isExiting={toast.isExiting}
-        />
+        <Toast {...toast} />
       ))}
     </div>
   );
