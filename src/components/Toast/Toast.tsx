@@ -26,7 +26,7 @@ export const ToastsContainer = forwardRef((props, ref) => {
         setTimeout(() => {
           setToasts((prevToasts) => prevToasts.filter((t) => t.id !== id));
         }, 1000);
-      }, (toast.duration || 3000));
+      }, (toast.duration || 2000));
     },
   }));
 
