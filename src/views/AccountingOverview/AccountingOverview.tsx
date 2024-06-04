@@ -7,6 +7,7 @@ import { TransactionToReviewCard } from '../../components/TransactionToReviewCar
 import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
 import { ToastsContainer } from '../../components/Toast';
+import { Drawer } from '../../components/Drawer';
 import classNames from 'classnames'
 
 
@@ -24,7 +25,7 @@ export const AccountingOverview = ({
   onTransactionsToReviewClick,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
-  
+
   const toastRef = useRef<{ addToast: (toast: { content: string; duration?: number }) => void } | null>(null);
 
   const handleAddToast = () => {
@@ -35,11 +36,21 @@ export const AccountingOverview = ({
       });
     }
   };
-  
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
+
   return (
     <ProfitAndLoss asContainer={false}>
+      <button onClick={toggleDrawer}>Open Drawer</button>
       <button className='Layer__toast' onClick={handleAddToast}>Show Toast</button>
       <ToastsContainer ref={toastRef} />
+      <Drawer isOpen={isDrawerOpen} onClose={toggleDrawer}>
+        <div>Content inside the drawer</div>
+      </Drawer>
       <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
         {enableOnboarding && <Onboarding />}
         <div className='Layer__accounting-overview__summaries-row'>
@@ -76,7 +87,7 @@ export const AccountingOverview = ({
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
               pnlToggle !== 'revenue' &&
-                'accounting-overview-profit-and-loss-chart--hidden',
+              'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts scope='revenue' hideClose={true} />
@@ -85,7 +96,7 @@ export const AccountingOverview = ({
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
               pnlToggle !== 'expenses' &&
-                'accounting-overview-profit-and-loss-chart--hidden',
+              'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts scope='expenses' hideClose={true} />
