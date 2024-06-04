@@ -8,6 +8,7 @@ export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
   loadingStatus: 'initial',
   isValidating: false,
   error: undefined,
+  updateConnectionStatus: () => {},
   addConnection: () => {},
   removeConnection: () => {},
   repairConnection: () => {},
@@ -16,4 +17,5 @@ export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
   denyAccount: () => {},
   confirmAccount: () => {},
   breakConnection: () => {},
+  syncAccounts: () => {},
 })

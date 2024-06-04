@@ -13,7 +13,7 @@ const Toast = ({ id, content, isExiting }: ToastProps & { isExiting: boolean }) 
   </div>
 );
 
-export const ToastsContainer = forwardRef((props, ref) => {
+export const ToastsContainer = forwardRef((_props, ref) => {
   const [toasts, setToasts] = useState<(ToastProps & { isExiting: boolean })[]>([]);
 
   useImperativeHandle(ref, () => ({
@@ -26,20 +26,14 @@ export const ToastsContainer = forwardRef((props, ref) => {
         setTimeout(() => {
           setToasts((prevToasts) => prevToasts.filter((t) => t.id !== id));
         }, 1000);
-      }, (toast.duration || 3000));
+      }, (toast.duration || 2000));
     },
   }));
 
   return (
     <div className="Layer__toasts-container">
       {toasts.map((toast) => (
-        <Toast
-          key={toast.id}
-          id={toast.id}
-          content={toast.content}
-          duration={toast.duration}
-          isExiting={toast.isExiting}
-        />
+        <Toast {...toast} />
       ))}
     </div>
   );

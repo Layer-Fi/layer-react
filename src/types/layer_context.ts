@@ -1,9 +1,10 @@
-import { Category } from '../types'
+import { Business, Category } from '../types'
 import { ExpiringOAuthResponse } from './authentication'
 
 export type LayerContextValues = {
   auth: ExpiringOAuthResponse
   businessId: string
+  business?: Business
   categories: Category[]
   apiUrl: string
   theme?: LayerThemeConfig
@@ -72,15 +73,21 @@ export type OnboardingStep = undefined | 'connectAccount' | 'complete'
 
 export enum LayerContextActionName {
   setAuth = 'LayerContext.setAuth',
+  setBusiness = 'LayerContext.setBusiness',
   setCategories = 'LayerContext.setCategories',
   setTheme = 'LayerContext.setTheme',
   setOnboardingStep = 'LayerContext.setOnboardingStep',
+  setColors = 'LayerContext.setColors',
 }
 
 export type LayerContextAction =
   | {
       type: LayerContextActionName.setAuth
       payload: { auth: LayerContextValues['auth'] }
+    }
+  | {
+      type: LayerContextActionName.setBusiness
+      payload: { business: LayerContextValues['business'] }
     }
   | {
       type: LayerContextActionName.setCategories
@@ -93,4 +100,8 @@ export type LayerContextAction =
   | {
       type: LayerContextActionName.setOnboardingStep
       payload: { onboardingStep: LayerContextValues['onboardingStep'] }
+    }
+  | {
+      type: LayerContextActionName.setColors
+      payload: { colors: LayerContextValues['colors'] }
     }

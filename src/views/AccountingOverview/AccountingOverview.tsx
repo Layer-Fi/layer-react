@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Container, Header } from '../../components/Container'
 import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
@@ -6,10 +6,8 @@ import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
-import { ToastsContainer } from '../../components/Toast';
 import { Drawer } from '../../components/Drawer';
 import classNames from 'classnames'
-
 
 export interface AccountingOverviewProps {
   title?: string
@@ -26,17 +24,6 @@ export const AccountingOverview = ({
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
 
-  const toastRef = useRef<{ addToast: (toast: { content: string; duration?: number }) => void } | null>(null);
-
-  const handleAddToast = () => {
-    if (toastRef.current) {
-      toastRef.current.addToast({
-        content: 'This is a toast message',
-        duration: 3000,
-      });
-    }
-  };
-
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -45,9 +32,6 @@ export const AccountingOverview = ({
 
   return (
     <ProfitAndLoss asContainer={false}>
-      <button onClick={toggleDrawer}>Open Drawer</button>
-      <button className='Layer__toast' onClick={handleAddToast}>Show Toast</button>
-      <ToastsContainer ref={toastRef} />
       <Drawer isOpen={isDrawerOpen} onClose={toggleDrawer}>
         <div>Content inside the drawer</div>
       </Drawer>
@@ -57,6 +41,7 @@ export const AccountingOverview = ({
           <ProfitAndLoss.Summaries actionable={false} />
           <TransactionToReviewCard onClick={onTransactionsToReviewClick} />
         </div>
+        <button onClick={toggleDrawer}>show drawer</button>
         <Container
           name='accounting-overview-profit-and-loss'
           asWidget

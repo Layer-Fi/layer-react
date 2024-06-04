@@ -13,7 +13,7 @@
 }
 
 .Layer__chart-container {
-  min-height: 250px;
+  min-height: 300px;
 }
 
 .Layer__chart__tooltip {
@@ -49,5 +49,11 @@
     &.negative {
       color: var(--color-danger);
     }
+  }
+}
+
+.Layer__chart_y-axis-tick {
+  tspan {
+    font-size: var(--text-sm);
   }
 }

@@ -90,6 +90,20 @@
     0.12
   );
 
+  --base-transparent-16: hsla(
+    var(--color-dark-h),
+    var(--color-dark-s),
+    var(--color-dark-l),
+    0.16
+  );
+
+  --base-transparent-16-light: hsla(
+    var(--color-light-h),
+    var(--color-light-s),
+    var(--color-light-l),
+    0.16
+  );
+
   // 2. BASE CUSTOMIZATION
   --color-primary: var(--color-dark);
   --color-accent: var(--color-light);

@@ -2,16 +2,21 @@ import React, { useState, useEffect } from 'react'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
 import { DateRange } from '../../types'
+import classNames from 'classnames'
 import { add, endOfMonth, format, startOfMonth } from 'date-fns'
 
 interface DateMonthPickerProps {
   dateRange: DateRange
   changeDateRange: (dateRange: Partial<DateRange>) => void
+  enableFutureDates?: boolean
+  minDate?: Date
 }
 
 export const DateMonthPicker = ({
   dateRange,
   changeDateRange,
+  enableFutureDates = false,
+  minDate,
 }: DateMonthPickerProps) => {
   const [isAnimating, setIsAnimating] = useState(false)
 
@@ -69,6 +74,19 @@ export const DateMonthPicker = ({
   const prevLabel = format(add(localDate, { months: -1 }), 'LLLL, y')
   const nextLabel = format(add(localDate, { months: 1 }), 'LLLL, y')
 
+  const today = startOfMonth(Date.now())
+  const isTodayOrAfter = Boolean(
+    localDate.getFullYear() === today.getFullYear() &&
+      localDate.getMonth() === today.getMonth(),
+  )
+
+  const isBeforeMinDate =
+    minDate &&
+    Boolean(
+      localDate.getFullYear() === minDate.getFullYear() &&
+        localDate.getMonth() === minDate.getMonth(),
+    )
+
   return (
     <div className='Layer__date-month-picker'>
       <div
@@ -91,9 +109,12 @@ export const DateMonthPicker = ({
       </div>
       <button
         aria-label='View Previous Month'
-        className='Layer__date-month-picker__button'
+        className={classNames(
+          'Layer__date-month-picker__button',
+          isBeforeMinDate && 'Layer__date-month-picker__button--disabled',
+        )}
         onClick={() => change(-1)}
-        disabled={isAnimating}
+        disabled={isAnimating || isBeforeMinDate}
       >
         <ChevronLeft
           className='Layer__date-month-picker__button-icon'
@@ -102,9 +123,14 @@ export const DateMonthPicker = ({
       </button>
       <button
         aria-label='View Next Month'
-        className='Layer__date-month-picker__button'
+        className={classNames(
+          'Layer__date-month-picker__button',
+          !enableFutureDates && isTodayOrAfter
+            ? 'Layer__date-month-picker__button--disabled'
+            : undefined,
+        )}
         onClick={() => change(1)}
-        disabled={isAnimating}
+        disabled={isAnimating || (!enableFutureDates && isTodayOrAfter)}
       >
         <ChevronRight
           className='Layer__date-month-picker__button-icon'

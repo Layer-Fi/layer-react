@@ -33,6 +33,7 @@ export {
   LedgerAccountsEntry,
 } from './types/ledger_accounts'
 export { SortDirection } from './types/general'
+export { Business } from './types/business'
 
 export interface FormError {
   field: string

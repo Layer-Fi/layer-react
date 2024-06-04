@@ -20,6 +20,8 @@ type Props = {
   dateFormat: string
   bankTransaction: BankTransaction
   editable: boolean
+  showDescriptions: boolean
+  showReceiptUploads: boolean
   removeTransaction: (id: string) => void
   containerWidth?: number
 }
@@ -32,6 +34,8 @@ export const BankTransactionListItem = ({
   dateFormat,
   bankTransaction,
   editable,
+  showDescriptions,
+  showReceiptUploads,
   containerWidth,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
@@ -153,6 +157,8 @@ export const BankTransactionListItem = ({
           asListItem={true}
           submitBtnText={editable ? 'Approve' : 'Update'}
           containerWidth={containerWidth}
+          showDescriptions={showDescriptions}
+          showReceiptUploads={showReceiptUploads}
         />
       </span>
       <span className={`${className}__base-row`}>
