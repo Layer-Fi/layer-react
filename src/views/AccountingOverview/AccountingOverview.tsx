@@ -8,6 +8,7 @@ import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
 import classNames from 'classnames'
 
+
 export interface AccountingOverviewProps {
   title?: string
   enableOnboarding?: boolean
@@ -22,7 +23,7 @@ export const AccountingOverview = ({
   onTransactionsToReviewClick,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
-
+  
   return (
     <ProfitAndLoss asContainer={false}>
       <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
