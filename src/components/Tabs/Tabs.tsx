@@ -55,7 +55,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
 
     optionsNodes.forEach((c, i) => {
       if (i < active) {
-        shift = shift + (c as HTMLElement).offsetWidth
+        shift = shift + (c as HTMLElement).offsetWidth + 8
       } else if (i === active) {
         width = (c as HTMLElement).offsetWidth
       }

@@ -1,9 +1,16 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
+import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useLayerContext } from '../../hooks/useLayerContext'
-import { BankTransaction, Category } from '../../types'
-import { ActionableList, ActionableListOption } from '../ActionableList'
 import {
-  CategoryOption,
+  BankTransaction,
+  CategorizationStatus,
+  CategorizationType,
+  Category,
+} from '../../types'
+import { ActionableList } from '../ActionableList'
+import { Button } from '../Button'
+import {
+  CategoryOptionPayload,
   OptionActionType,
 } from '../CategorySelect/CategorySelect'
 
@@ -11,60 +18,154 @@ interface BusinessFormProps {
   bankTransaction: BankTransaction
 }
 
-const mapCategoryToOption = (category: Category) => ({
-  type: OptionActionType.CATEGORY,
-  payload: {
-    id: category.id,
-    option_type: OptionActionType.CATEGORY,
-    display_name: category.display_name,
-    type: category.type,
-    stable_name: category.stable_name,
-    entries: category.entries,
-    subCategories: category.subCategories,
+// @TODO refactor with PersonalForm
+const PersonalCategories = ['PERSONAL_INCOME', 'PERSONAL_EXPENSES']
+
+interface Option {
+  label: string
+  id: string
+  value: {
+    type: 'CATEGORY' | 'SELECT_CATEGORY' | 'GROUP'
+    payload?: CategoryOptionPayload
+    items?: Option[]
+  }
+}
+
+const mapCategoryToOption = (category: Category): Option => ({
+  label: category.display_name,
+  id: category.id,
+  value: {
+    type: 'CATEGORY',
+    payload: {
+      id: category.id,
+      option_type: OptionActionType.CATEGORY,
+      display_name: category.display_name,
+      type: category.type,
+      stable_name: category.stable_name,
+      entries: category.entries,
+      subCategories: category.subCategories,
+    },
   },
 })
 
-const flattenCategories = (
-  categories: Category[],
-): ActionableListOption<CategoryOption[]>[] => {
+const flattenCategories = (categories: Category[]): Option[] => {
   const categoryOptions = (categories || []).flatMap(category => {
     if (category?.subCategories && category?.subCategories?.length > 0) {
       if (category?.subCategories?.every(c => c.subCategories === undefined)) {
         return [
           {
             label: category.display_name,
-            value: category.subCategories.map(x => mapCategoryToOption(x)),
-          },
+            id: category.id,
+            value: {
+              type: 'GROUP',
+              items: category.subCategories.map(x => mapCategoryToOption(x)),
+            },
+          } satisfies Option,
         ]
       }
       return flattenCategories(category.subCategories)
     }
 
-    const resultOption = {
-      label: category.display_name,
-      value: [mapCategoryToOption(category)],
-    } satisfies ActionableListOption<CategoryOption[]>
+    const resultOption = mapCategoryToOption(category) satisfies Option
     return [resultOption]
   })
 
   return categoryOptions
 }
 
+const getAssignedValue = (
+  bankTransaction: BankTransaction,
+): Option | undefined => {
+  if (
+    bankTransaction.categorization_status === CategorizationStatus.MATCHED ||
+    bankTransaction?.categorization_status === CategorizationStatus.SPLIT
+  ) {
+    return
+  }
+
+  if (
+    bankTransaction.category &&
+    !PersonalCategories.includes(bankTransaction.category.display_name)
+  ) {
+    return mapCategoryToOption(bankTransaction.category)
+  }
+
+  return
+}
+
 export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
   const { categories } = useLayerContext()
-  const [selectedCategory, setSelectedCategory] =
-    useState<ActionableListOption<CategoryOption[]>>()
+  const { categorize: categorizeBankTransaction } = useBankTransactions()
+  const [selectedCategory, setSelectedCategory] = useState<Option | undefined>(
+    getAssignedValue(bankTransaction),
+  )
 
+  // @TODO - use category options in drawer
   const categoryOptions = flattenCategories(categories)
 
-  console.log('selectedCategory - open drawer with options', selectedCategory)
+  const options = useMemo(() => {
+    const options =
+      bankTransaction?.categorization_flow?.type ===
+      CategorizationType.ASK_FROM_SUGGESTIONS
+        ? bankTransaction.categorization_flow.suggestions.map(x =>
+            mapCategoryToOption(x),
+          )
+        : []
+
+    options.push({
+      label: options.length > 0 ? 'Something else' : 'Select category',
+      id: 'SELECT_CATEGORY',
+      value: {
+        type: 'SELECT_CATEGORY',
+      },
+    })
+
+    if (selectedCategory && !options.find(x => x.id === selectedCategory?.id)) {
+      options.unshift(selectedCategory)
+    }
+
+    return options
+  }, [bankTransaction, selectedCategory])
+
+  const onCategorySelect = (category: Option) => {
+    if (category.value.type === 'SELECT_CATEGORY') {
+      console.log('open drawer...', categoryOptions)
+    } else {
+      if (
+        selectedCategory &&
+        category.value.payload?.id === selectedCategory.value.payload?.id
+      ) {
+        setSelectedCategory(undefined)
+      } else {
+        setSelectedCategory(category)
+      }
+    }
+  }
+
+  const save = () => {
+    if (!selectedCategory || !selectedCategory.value.payload) {
+      return
+    }
+
+    categorizeBankTransaction(bankTransaction.id, {
+      type: 'Category',
+      category: {
+        type: 'StableName',
+        stable_name: selectedCategory.value.payload.stable_name || '',
+      },
+    })
+  }
 
   return (
     <div className='Layer__bank-transaction-mobile-list-item__business-form'>
-      <ActionableList<CategoryOption[]>
-        options={categoryOptions}
-        onClick={setSelectedCategory}
+      <ActionableList<Option['value']>
+        options={options}
+        onClick={onCategorySelect}
+        selected={selectedCategory}
       />
+      <Button onClick={save} disabled={!selectedCategory} fullWidth={true}>
+        Save
+      </Button>
     </div>
   )
 }

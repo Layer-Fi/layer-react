@@ -9,6 +9,7 @@
   cursor: pointer;
   position: relative;
   isolation: isolate;
+  gap: var(--spacing-xs);
 
   .Layer__tabs-option-content {
     display: flex;
@@ -34,7 +35,7 @@
 
   & input + span {
     box-sizing: border-box;
-    padding: 8px 16px;
+    padding: var(--spacing-xs) var(--spacing-3xs);
     height: 36px;
     color: var(--text-color-secondary);
     font-family: var(--font-family);

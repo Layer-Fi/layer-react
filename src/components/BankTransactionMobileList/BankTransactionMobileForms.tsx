@@ -3,6 +3,7 @@ import { BankTransaction } from '../../types'
 import { Purpose } from './BankTransactionMobileListItem'
 import { BusinessForm } from './BusinessForm'
 import { PersonalForm } from './PersonalForm'
+import { SplitAndMatchForm } from './SplitAndMatchForm'
 
 interface BankTransactionMobileFormsProps {
   purpose: Purpose
@@ -18,9 +19,9 @@ export const BankTransactionMobileForms = ({
       case 'business':
         return <BusinessForm bankTransaction={bankTransaction} />
       case 'personal':
-        return <PersonalForm />
+        return <PersonalForm bankTransaction={bankTransaction} />
       case 'more':
-        return <div>Split and match</div>
+        return <SplitAndMatchForm bankTransaction={bankTransaction} />
       default:
         return null
     }

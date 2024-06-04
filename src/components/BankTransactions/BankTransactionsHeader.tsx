@@ -1,5 +1,9 @@
 import React, { ChangeEvent } from 'react'
+import { useLayerContext } from '../../hooks/useLayerContext'
+import { DateRange } from '../../types'
+import { getEarliestDateToBrowse } from '../../utils/business'
 import { Header } from '../Container'
+import { DateMonthPicker } from '../DateMonthPicker'
 import { Tabs } from '../Tabs'
 import { Toggle } from '../Toggle'
 import { Heading, HeadingSize } from '../Typography'
@@ -15,6 +19,8 @@ export interface BankTransactionsHeaderProps {
   mobileComponent?: MobileComponentType
   withDatePicker?: boolean
   listView?: boolean
+  dateRange?: DateRange
+  setDateRange?: (value: DateRange) => void
 }
 
 export const BankTransactionsHeader = ({
@@ -26,7 +32,11 @@ export const BankTransactionsHeader = ({
   mobileComponent,
   withDatePicker,
   listView,
+  dateRange,
+  setDateRange,
 }: BankTransactionsHeaderProps) => {
+  const { business } = useLayerContext()
+
   return (
     <Header
       className={classNames(
@@ -45,7 +55,13 @@ export const BankTransactionsHeader = ({
         >
           Transactions
         </Heading>
-        {withDatePicker && <span>Date picker</span>}
+        {withDatePicker && dateRange && setDateRange ? (
+          <DateMonthPicker
+            dateRange={dateRange}
+            changeDateRange={setDateRange}
+            minDate={getEarliestDateToBrowse(business)}
+          />
+        ) : null}
       </div>
 
       {!categorizedOnly && !(mobileComponent == 'mobileList' && listView) && (

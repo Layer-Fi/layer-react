@@ -7,7 +7,7 @@ import { add, endOfMonth, format, startOfMonth } from 'date-fns'
 
 interface DateMonthPickerProps {
   dateRange: DateRange
-  changeDateRange: (dateRange: Partial<DateRange>) => void
+  changeDateRange: (dateRange: DateRange) => void
   enableFutureDates?: boolean
   minDate?: Date
 }

@@ -34,6 +34,10 @@
     padding: var(--spacing-2xs) var(--spacing-sm);
   }
 
+  &.Layer__btn--full-width {
+    width: 100%;
+  }
+
   &.Layer__btn--with-primary-icon {
     padding: 0;
 

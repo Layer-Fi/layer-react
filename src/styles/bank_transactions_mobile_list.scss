@@ -18,6 +18,7 @@
   opacity: 0;
   transform: scale(0.96);
   transition: all 180ms ease-in-out;
+  cursor: pointer;
 
   &.show {
     opacity: 1;
@@ -65,6 +66,34 @@
   color: var(--color-info-success);
 }
 
+.Layer__bank-transaction-mobile-list-item__value {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-3xs);
+  padding: 0 var(--spacing-sm);
+  background-color: var(--base-transparent-2);
+  border-bottom-left-radius: var(--border-radius-sm);
+  border-bottom-right-radius: var(--border-radius-sm);
+  transition: all 180ms ease-in-out;
+  height: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  opacity: 0;
+
+  &.open {
+    height: auto;
+    padding: var(--spacing-sm);
+    opacity: 1;
+  }
+
+  & > .Layer__text {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
 .Layer__bank-transaction-mobile-list-item__toggle-row {
   display: flex;
   align-items: center;
@@ -82,12 +111,30 @@
 
 .Layer__bank-transaction-mobile-list-item__personal-form {
   padding: var(--spacing-md) 0 var(--spacing-xs) 0;
-
-  .Layer__btn--primary {
-    width: 100%;
-  }
+  width: 100%;
 }
 
 .Layer__bank-transaction-mobile-list-item__business-form {
   width: 100%;
+}
+
+.Layer__bank-transaction-mobile-list-item__split-and-match-form {
+  width: 100%;
+
+  .bank-transactions__splits-inputs {
+    padding: var(--spacing-sm) 0;
+
+    .bank-transactions__table-cell--split-entry {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      padding-bottom: var(--spacing-xs);
+    }
+  }
+
+  // @TODO temp
+  .Layer__select__control {
+    width: 150px;
+    font-size: 12px;
+  }
 }

@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
+import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction } from '../../types'
+import { BankTransaction, CategorizationStatus } from '../../types'
 import { hasMatch, isCredit } from '../../utils/bankTransactions'
-import { getDefaultSelectedCategory } from '../BankTransactionRow/BankTransactionRow'
+import { Badge } from '../Badge'
+import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
+import { MatchBadge } from '../BankTransactionRow/MatchBadge'
+import { SplitTooltipDetails } from '../BankTransactionRow/SplitTooltipDetails'
 import { CloseButton } from '../Button'
-import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
 import { Text } from '../Typography'
@@ -38,14 +40,8 @@ export const BankTransactionMobileListItem = ({
   containerWidth,
   initialLoad,
 }: BankTransactionMobileListItemProps) => {
-  const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
   const [removed, setRemoved] = useState(false)
-  const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
-    useBankTransactions()
-  const [selectedCategory, setSelectedCategory] = useState(
-    getDefaultSelectedCategory(bankTransaction),
-  )
   const [purpose, setPurpose] = useState<Purpose>(
     bankTransaction.category
       ? Purpose.business
@@ -92,31 +88,6 @@ export const BankTransactionMobileListItem = ({
       setShowRetry(true)
     }
   }, [bankTransaction.error])
-
-  const save = () => {
-    // Save using form from expanded row when row is open:
-    if (open && expandedRowRef?.current) {
-      expandedRowRef?.current?.save()
-      return
-    }
-
-    if (!selectedCategory) {
-      return
-    }
-
-    if (selectedCategory.type === 'match') {
-      matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
-      return
-    }
-
-    categorizeBankTransaction(bankTransaction.id, {
-      type: 'Category',
-      category: {
-        type: 'StableName',
-        stable_name: selectedCategory?.payload.stable_name || '',
-      },
-    })
-  }
 
   const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPurpose(event.target.value as Purpose)
@@ -169,6 +140,62 @@ export const BankTransactionMobileListItem = ({
           </span>
         </div>
       </span>
+      {!editable &&
+        bankTransaction.categorization_status && [
+          CategorizationStatus.SPLIT,
+          CategorizationStatus.MATCHED,
+        ] && (
+          <div className={classNames(`${className}__value`, !open && 'open')}>
+            {!editable ? (
+              <Text as='span' className={`${className}__category-text`}>
+                {bankTransaction.categorization_status ===
+                  CategorizationStatus.SPLIT && (
+                  <>
+                    <Badge
+                      icon={<Scissors size={11} />}
+                      tooltip={
+                        <SplitTooltipDetails
+                          classNamePrefix={className}
+                          category={bankTransaction.category}
+                        />
+                      }
+                    >
+                      Split
+                    </Badge>
+                    <span className={`${className}__category-text__text`}>
+                      {extractDescriptionForSplit(bankTransaction.category)}
+                    </span>
+                  </>
+                )}
+                {bankTransaction?.categorization_status ===
+                  CategorizationStatus.MATCHED &&
+                  bankTransaction?.match && (
+                    <>
+                      <MatchBadge
+                        classNamePrefix={className}
+                        bankTransaction={bankTransaction}
+                        dateFormat={DATE_FORMAT}
+                      />
+                      <span className={`${className}__category-text__text`}>
+                        {`${formatTime(
+                          parseISO(bankTransaction.match.bank_transaction.date),
+                          DATE_FORMAT,
+                        )}, ${bankTransaction.match?.details?.description}`}
+                      </span>
+                    </>
+                  )}
+                {bankTransaction?.categorization_status !==
+                  CategorizationStatus.MATCHED &&
+                  bankTransaction?.categorization_status !==
+                    CategorizationStatus.SPLIT && (
+                    <span className={`${className}__category-text__text`}>
+                      {bankTransaction?.category?.display_name}
+                    </span>
+                  )}
+              </Text>
+            ) : null}
+          </div>
+        )}
       <div className={`${className}__expanded-row`} style={{ height }}>
         {open && (
           <div

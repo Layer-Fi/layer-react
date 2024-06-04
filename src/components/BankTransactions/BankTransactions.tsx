@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
+import { DateRange } from '../../types'
 import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
@@ -12,6 +13,7 @@ import { BankTransactionsHeader } from './BankTransactionsHeader'
 import { DataStates } from './DataStates'
 import { DisplayState, MobileComponentType } from './constants'
 import { filterVisibility } from './utils'
+import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -40,6 +42,10 @@ export const BankTransactions = ({
   const [currentPage, setCurrentPage] = useState(1)
   const [removedTxs, setRemovedTxs] = useState<string[]>([])
   const [initialLoad, setInitialLoad] = useState(true)
+  const [dateRange, setDateRange] = useState<DateRange>({
+    startDate: startOfMonth(new Date()),
+    endDate: endOfMonth(new Date()),
+  })
   const { data, isLoading, error, isValidating, refetch } =
     useBankTransactions()
 
@@ -57,10 +63,15 @@ export const BankTransactions = ({
   }, [isLoading])
 
   const bankTransactions = useMemo(() => {
+    if (monthlyView) {
+      return bankTransactionsByFilter?.filter(x => parseISO(x.date) >= dateRange.startDate && parseISO(x.date) <= dateRange.endDate)
+    }
+
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
     return bankTransactionsByFilter?.slice(firstPageIndex, lastPageIndex)
   }, [currentPage, bankTransactionsByFilter, removedTxs])
+
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -126,6 +137,8 @@ export const BankTransactions = ({
         mobileComponent={mobileComponent}
         withDatePicker={monthlyView}
         listView={listView}
+        dateRange={dateRange}
+        setDateRange={v => setDateRange(v)}
       />
 
       {!listView && (
