@@ -13,7 +13,7 @@ const Toast = ({ id, content, isExiting }: ToastProps & { isExiting: boolean }) 
   </div>
 );
 
-export const ToastsContainer = forwardRef((props, ref) => {
+export const ToastsContainer = forwardRef((_props, ref) => {
   const [toasts, setToasts] = useState<(ToastProps & { isExiting: boolean })[]>([]);
 
   useImperativeHandle(ref, () => ({
