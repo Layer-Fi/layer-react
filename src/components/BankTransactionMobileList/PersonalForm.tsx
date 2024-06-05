@@ -4,13 +4,11 @@ import { BankTransaction, CategorizationStatus } from '../../types'
 import { isCredit } from '../../utils/bankTransactions'
 import { Button, RetryButton } from '../Button'
 import { ErrorText } from '../Typography'
+import { PersonalCategories } from './constants'
 
 interface PersonalFormProps {
   bankTransaction: BankTransaction
 }
-
-// @TODO refactor with PersonalForm
-const PersonalCategories = ['PERSONAL_INCOME', 'PERSONAL_EXPENSES']
 
 const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
   if (
@@ -49,7 +47,6 @@ export const PersonalForm = ({ bankTransaction }: PersonalFormProps) => {
     })
   }
 
-  // @TODO - test when assigning to personal works
   const alreadyAssigned = isAlreadyAssigned(bankTransaction)
 
   return (

@@ -21,7 +21,6 @@ export interface BankTransactionMobileListItemProps {
   bankTransaction: BankTransaction
   editable: boolean
   removeTransaction: (id: string) => void
-  containerWidth?: number
   initialLoad?: boolean
 }
 
@@ -37,11 +36,12 @@ export const BankTransactionMobileListItem = ({
   index = 0,
   bankTransaction,
   editable,
-  containerWidth,
   initialLoad,
 }: BankTransactionMobileListItemProps) => {
-  const [showRetry, setShowRetry] = useState(false)
-  const [removed, setRemoved] = useState(false)
+  const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
+    setHeight(height),
+  )
+
   const [purpose, setPurpose] = useState<Purpose>(
     bankTransaction.category
       ? bankTransaction.categorization_status === CategorizationStatus.SPLIT
@@ -51,10 +51,11 @@ export const BankTransactionMobileListItem = ({
       ? Purpose.more
       : Purpose.business,
   )
-
   const [open, setOpen] = useState(false)
+  const [showComponent, setShowComponent] = useState(false)
+  const [height, setHeight] = useState(0)
+
   const toggleOpen = () => {
-    setShowRetry(false)
     if (open) {
       setHeight(0)
     }
@@ -65,13 +66,6 @@ export const BankTransactionMobileListItem = ({
     setOpen(false)
     setHeight(0)
   }
-
-  const [showComponent, setShowComponent] = useState(false)
-  const [height, setHeight] = useState(0)
-
-  const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
-    setHeight(height),
-  )
 
   useEffect(() => {
     if (initialLoad) {
@@ -85,22 +79,8 @@ export const BankTransactionMobileListItem = ({
     }
   }, [])
 
-  useEffect(() => {
-    if (bankTransaction.error) {
-      setShowRetry(true)
-    }
-  }, [bankTransaction.error])
-
-  const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) =>
     setPurpose(event.target.value as Purpose)
-    // @TODO - use later
-    // setSplitFormError(undefined)
-    // setMatchFormError(undefined)
-  }
-
-  if (removed) {
-    return null
-  }
 
   const className = 'Layer__bank-transaction-mobile-list-item'
   const openClassName = open ? `${className}--expanded` : ''

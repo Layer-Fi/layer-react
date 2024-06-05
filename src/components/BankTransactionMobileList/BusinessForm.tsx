@@ -1,97 +1,19 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useLayerContext } from '../../hooks/useLayerContext'
-import {
-  BankTransaction,
-  CategorizationStatus,
-  CategorizationType,
-  Category,
-} from '../../types'
+import { BankTransaction, CategorizationType } from '../../types'
 import { ActionableList } from '../ActionableList'
 import { Button, RetryButton } from '../Button'
-import {
-  CategoryOptionPayload,
-  OptionActionType,
-} from '../CategorySelect/CategorySelect'
 import { ErrorText } from '../Typography'
+import {
+  Option,
+  mapCategoryToOption,
+  flattenCategories,
+  getAssignedValue,
+} from './utils'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
-}
-
-// @TODO refactor with PersonalForm
-const PersonalCategories = ['PERSONAL_INCOME', 'PERSONAL_EXPENSES']
-
-interface Option {
-  label: string
-  id: string
-  value: {
-    type: 'CATEGORY' | 'SELECT_CATEGORY' | 'GROUP'
-    payload?: CategoryOptionPayload
-    items?: Option[]
-  }
-}
-
-const mapCategoryToOption = (category: Category): Option => ({
-  label: category.display_name,
-  id: category.id,
-  value: {
-    type: 'CATEGORY',
-    payload: {
-      id: category.id,
-      option_type: OptionActionType.CATEGORY,
-      display_name: category.display_name,
-      type: category.type,
-      stable_name: category.stable_name,
-      entries: category.entries,
-      subCategories: category.subCategories,
-    },
-  },
-})
-
-const flattenCategories = (categories: Category[]): Option[] => {
-  const categoryOptions = (categories || []).flatMap(category => {
-    if (category?.subCategories && category?.subCategories?.length > 0) {
-      if (category?.subCategories?.every(c => c.subCategories === undefined)) {
-        return [
-          {
-            label: category.display_name,
-            id: category.id,
-            value: {
-              type: 'GROUP',
-              items: category.subCategories.map(x => mapCategoryToOption(x)),
-            },
-          } satisfies Option,
-        ]
-      }
-      return flattenCategories(category.subCategories)
-    }
-
-    const resultOption = mapCategoryToOption(category) satisfies Option
-    return [resultOption]
-  })
-
-  return categoryOptions
-}
-
-const getAssignedValue = (
-  bankTransaction: BankTransaction,
-): Option | undefined => {
-  if (
-    bankTransaction.categorization_status === CategorizationStatus.MATCHED ||
-    bankTransaction?.categorization_status === CategorizationStatus.SPLIT
-  ) {
-    return
-  }
-
-  if (
-    bankTransaction.category &&
-    !PersonalCategories.includes(bankTransaction.category.display_name)
-  ) {
-    return mapCategoryToOption(bankTransaction.category)
-  }
-
-  return
 }
 
 export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {

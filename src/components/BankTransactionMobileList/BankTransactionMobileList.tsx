@@ -6,7 +6,6 @@ export interface BankTransactionMobileListProps {
   bankTransactions?: BankTransaction[]
   editable: boolean
   removeTransaction: (id: string) => void
-  containerWidth?: number
   initialLoad?: boolean
 }
 
@@ -14,7 +13,6 @@ export const BankTransactionMobileList = ({
   bankTransactions,
   removeTransaction,
   editable,
-  containerWidth,
   initialLoad,
 }: BankTransactionMobileListProps) => {
   return (
@@ -27,7 +25,6 @@ export const BankTransactionMobileList = ({
             bankTransaction={bankTransaction}
             editable={editable}
             removeTransaction={removeTransaction}
-            containerWidth={containerWidth}
             initialLoad={initialLoad}
           />
         ),

@@ -64,14 +64,17 @@ export const BankTransactions = ({
 
   const bankTransactions = useMemo(() => {
     if (monthlyView) {
-      return bankTransactionsByFilter?.filter(x => parseISO(x.date) >= dateRange.startDate && parseISO(x.date) <= dateRange.endDate)
+      return bankTransactionsByFilter?.filter(
+        x =>
+          parseISO(x.date) >= dateRange.startDate &&
+          parseISO(x.date) <= dateRange.endDate,
+      )
     }
 
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
     return bankTransactionsByFilter?.slice(firstPageIndex, lastPageIndex)
   }, [currentPage, bankTransactionsByFilter, removedTxs])
-
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -174,7 +177,6 @@ export const BankTransactions = ({
           bankTransactions={bankTransactions}
           editable={editable}
           removeTransaction={removeTransaction}
-          containerWidth={containerWidth}
           initialLoad={initialLoad}
         />
       ) : null}
