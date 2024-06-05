@@ -10,3 +10,14 @@ export const hasMatch = (bankTransaction?: BankTransaction) => {
 
 export const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
   direction === Direction.CREDIT
+
+export const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
+  if (bankTransaction?.match) {
+    const foundMatch = bankTransaction.suggested_matches?.find(
+      x => x.details.id === bankTransaction?.match?.details.id,
+    )
+    return foundMatch?.id
+  }
+
+  return undefined
+}
