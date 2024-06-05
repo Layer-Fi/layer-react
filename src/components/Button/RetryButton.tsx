@@ -9,6 +9,7 @@ export interface RetryButtonProps
   processing?: boolean
   disabled?: boolean
   error: string
+  fullWidth?: boolean
 }
 
 export const RetryButton = ({

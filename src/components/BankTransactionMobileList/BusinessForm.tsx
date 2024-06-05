@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useLayerContext } from '../../hooks/useLayerContext'
 import {
@@ -8,11 +8,12 @@ import {
   Category,
 } from '../../types'
 import { ActionableList } from '../ActionableList'
-import { Button } from '../Button'
+import { Button, RetryButton } from '../Button'
 import {
   CategoryOptionPayload,
   OptionActionType,
 } from '../CategorySelect/CategorySelect'
+import { ErrorText } from '../Typography'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
@@ -95,10 +96,18 @@ const getAssignedValue = (
 
 export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
   const { categories } = useLayerContext()
-  const { categorize: categorizeBankTransaction } = useBankTransactions()
+  const { categorize: categorizeBankTransaction, isLoading } =
+    useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState<Option | undefined>(
     getAssignedValue(bankTransaction),
   )
+  const [showRetry, setShowRetry] = useState(false)
+
+  useEffect(() => {
+    if (bankTransaction.error) {
+      setShowRetry(true)
+    }
+  }, [bankTransaction.error])
 
   // @TODO - use category options in drawer
   const categoryOptions = flattenCategories(categories)
@@ -163,9 +172,35 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
         onClick={onCategorySelect}
         selected={selectedCategory}
       />
-      <Button onClick={save} disabled={!selectedCategory} fullWidth={true}>
-        Save
-      </Button>
+      {!showRetry && (
+        <Button
+          onClick={save}
+          disabled={!selectedCategory || isLoading}
+          fullWidth={true}
+        >
+          Save
+        </Button>
+      )}
+      {showRetry ? (
+        <RetryButton
+          onClick={() => {
+            if (!bankTransaction.processing) {
+              save()
+            }
+          }}
+          fullWidth={true}
+          className='Layer__bank-transaction__retry-btn'
+          processing={bankTransaction.processing}
+          error={'Approval failed. Check connection and retry in few seconds.'}
+        >
+          Retry
+        </RetryButton>
+      ) : null}
+      {bankTransaction.error && showRetry ? (
+        <ErrorText>
+          Approval failed. Check connection and retry in few seconds.
+        </ErrorText>
+      ) : null}
     </div>
   )
 }

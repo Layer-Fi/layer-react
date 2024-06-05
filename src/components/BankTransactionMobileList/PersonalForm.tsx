@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { isCredit } from '../../utils/bankTransactions'
-import { Button } from '../Button'
+import { Button, RetryButton } from '../Button'
+import { ErrorText } from '../Typography'
 
 interface PersonalFormProps {
   bankTransaction: BankTransaction
@@ -26,7 +27,15 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
 }
 
 export const PersonalForm = ({ bankTransaction }: PersonalFormProps) => {
-  const { categorize: categorizeBankTransaction } = useBankTransactions()
+  const { categorize: categorizeBankTransaction, isLoading } =
+    useBankTransactions()
+  const [showRetry, setShowRetry] = useState(false)
+
+  useEffect(() => {
+    if (bankTransaction.error) {
+      setShowRetry(true)
+    }
+  }, [bankTransaction.error])
 
   const save = () => {
     categorizeBankTransaction(bankTransaction.id, {
@@ -45,9 +54,35 @@ export const PersonalForm = ({ bankTransaction }: PersonalFormProps) => {
 
   return (
     <div className='Layer__bank-transaction-mobile-list-item__personal-form'>
-      <Button fullWidth={true} disabled={alreadyAssigned} onClick={save}>
-        {alreadyAssigned ? 'Saved as Personal' : 'Categorize as Personal'}
-      </Button>
+      {!showRetry && (
+        <Button
+          fullWidth={true}
+          disabled={alreadyAssigned || isLoading}
+          onClick={save}
+        >
+          {alreadyAssigned ? 'Saved as Personal' : 'Categorize as Personal'}
+        </Button>
+      )}
+      {showRetry ? (
+        <RetryButton
+          onClick={() => {
+            if (!bankTransaction.processing) {
+              save()
+            }
+          }}
+          fullWidth={true}
+          className='Layer__bank-transaction__retry-btn'
+          processing={bankTransaction.processing}
+          error={'Approval failed. Check connection and retry in few seconds.'}
+        >
+          Categorize as Personal
+        </RetryButton>
+      ) : null}
+      {bankTransaction.error && showRetry ? (
+        <ErrorText>
+          Approval failed. Check connection and retry in few seconds.
+        </ErrorText>
+      ) : null}
     </div>
   )
 }

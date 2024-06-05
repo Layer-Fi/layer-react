@@ -44,7 +44,9 @@ export const BankTransactionMobileListItem = ({
   const [removed, setRemoved] = useState(false)
   const [purpose, setPurpose] = useState<Purpose>(
     bankTransaction.category
-      ? Purpose.business
+      ? bankTransaction.categorization_status === CategorizationStatus.SPLIT
+        ? Purpose.more
+        : Purpose.business
       : hasMatch(bankTransaction)
       ? Purpose.more
       : Purpose.business,
