@@ -7,10 +7,8 @@ import BellIcon from '../../icons/Bell'
 import CheckIcon from '../../icons/Check'
 import RefreshCcw from '../../icons/RefreshCcw'
 import { BadgeLoader } from '../BadgeLoader'
-import {
-  DisplayState,
-  filterVisibility,
-} from '../BankTransactions/BankTransactions'
+import { DisplayState } from '../BankTransactions/constants'
+import { filterVisibility } from '../BankTransactions/utils'
 import { NotificationCard } from '../NotificationCard'
 
 export interface TransactionToReviewCardProps {

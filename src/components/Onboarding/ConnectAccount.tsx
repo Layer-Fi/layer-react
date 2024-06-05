@@ -10,10 +10,8 @@ import { OnboardingStep } from '../../types/layer_context'
 import { ActionableRow } from '../ActionableRow'
 import { Badge, BadgeVariant } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
-import {
-  DisplayState,
-  filterVisibility,
-} from '../BankTransactions/BankTransactions'
+import { DisplayState } from '../BankTransactions/constants'
+import { filterVisibility } from '../BankTransactions/utils'
 import { Button } from '../Button'
 import { DataState, DataStateStatus } from '../DataState'
 import { Text } from '../Typography'

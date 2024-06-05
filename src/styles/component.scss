@@ -38,6 +38,12 @@
     0px 0px 0px 1px var(--base-transparent-4);
 }
 
+.Layer__component--no-bg {
+  border-width: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
 .Layer__component-header {
   padding: var(--spacing-md);
   display: flex;

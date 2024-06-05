@@ -1,10 +1,4 @@
-import React, {
-  ChangeEvent,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { ChangeEvent, ReactNode, useEffect, useState } from 'react'
 import { useElementSize } from '../../hooks/useElementSize'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import classNames from 'classnames'

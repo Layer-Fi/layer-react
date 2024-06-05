@@ -1,5 +1,4 @@
 import React, { ReactNode, RefObject, useEffect, useRef, useState } from 'react'
-import { useElementSize } from '../../hooks/useElementSize'
 import classNames from 'classnames'
 
 export interface PanelProps {
