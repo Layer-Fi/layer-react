@@ -1,4 +1,5 @@
 import { createContext } from 'react'
+import { ToastProps } from '../../components/Toast/Toast'
 import { LayerContextValues } from '../../types'
 import {
   LayerContextHelpers,
@@ -7,7 +8,7 @@ import {
 
 export const LayerContext = createContext<
   LayerContextValues &
-    LayerContextHelpers & { setTheme: (theme: LayerThemeConfig) => void }
+  LayerContextHelpers & { setTheme: (theme: LayerThemeConfig) => void }
 >({
   auth: {
     access_token: '',
@@ -30,4 +31,6 @@ export const LayerContext = createContext<
   onboardingStep: undefined,
   setOnboardingStep: () => undefined,
   environment: '',
+  toasts: [],
+  addToast: (toast: ToastProps) => undefined
 })

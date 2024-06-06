@@ -1,10 +1,12 @@
 import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import classNames from 'classnames';
+import { useLayerContext } from '../../hooks/useLayerContext';
 
 export interface ToastProps {
   id?: string;
   content: string;
   duration?: number;
+  isExiting?: boolean
 }
 
 const Toast = ({ id, content, isExiting }: ToastProps & { isExiting: boolean }) => (
@@ -14,21 +16,7 @@ const Toast = ({ id, content, isExiting }: ToastProps & { isExiting: boolean }) 
 );
 
 export const ToastsContainer = forwardRef((_props, ref) => {
-  const [toasts, setToasts] = useState<(ToastProps & { isExiting: boolean })[]>([]);
-
-  useImperativeHandle(ref, () => ({
-    addToast(toast: ToastProps) {
-      const id = `${Date.now()}-${Math.random()}`;
-      setToasts((prevToasts) => [...prevToasts, { ...toast, id, isExiting: false }]);
-
-      setTimeout(() => {
-        setToasts((prevToasts) => prevToasts.map(t => t.id === id ? { ...t, isExiting: true } : t));
-        setTimeout(() => {
-          setToasts((prevToasts) => prevToasts.filter((t) => t.id !== id));
-        }, 1000);
-      }, (toast.duration || 2000));
-    },
-  }));
+  const { toasts } = useLayerContext()
 
   return (
     <div className="Layer__toasts-container">
