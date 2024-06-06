@@ -1,5 +1,11 @@
-import React, { PropsWithChildren, useReducer, useEffect, Reducer } from 'react'
+import React, {
+  PropsWithChildren,
+  useReducer,
+  useEffect,
+  Reducer
+} from 'react'
 import { Layer } from '../../api/layer'
+import { ToastProps } from '../../components/Toast/Toast'
 import { LayerContext } from '../../contexts/LayerContext'
 import {
   LayerContextValues,
@@ -28,6 +34,28 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
     case Action.setOnboardingStep:
     case Action.setColors:
       return { ...state, ...action.payload }
+    case Action.setToast:
+      return {
+        ...state,
+        toasts: [
+          ...state.toasts,
+          { ...action.payload.toast, isExiting: false },
+        ],
+      }
+    case Action.setToastExit:
+      return {
+        ...state,
+        toasts: state.toasts.map(toast =>
+          toast.id === action.payload.toast.id
+            ? { ...toast, isExiting: false }
+            : toast,
+        ),
+      }
+    case Action.removeToast:
+      return {
+        ...state,
+        toasts: state.toasts.filter(t => t.id !== action.payload.toast.id),
+      }
     default:
       return state
   }
@@ -98,6 +126,7 @@ export const LayerProvider = ({
     usePlaidSandbox,
     onboardingStep: undefined,
     environment,
+    toasts: [],
   })
 
   const { data: auth } =
@@ -212,6 +241,32 @@ export const LayerProvider = ({
     })
   }
 
+  const setToast = (toast: ToastProps) => {
+    dispatch({ type: Action.setToast, payload: { toast: toast } })
+  }
+
+  const removeToast = (toast: ToastProps) => {
+    dispatch({ type: Action.removeToast, payload: { toast: toast } })
+  }
+
+  const setToastExit = (toast: ToastProps) => {
+    dispatch({ type: Action.setToastExit, payload: { toast: toast } })
+  }
+
+  const addToast = (toast: ToastProps) => {
+    const id = `${Date.now()}-${Math.random()}`
+    const newToast = { id, isExiting: false, ...toast }
+
+    setToast(newToast)
+
+    setTimeout(() => {
+      removeToast(newToast)
+      setTimeout(() => {
+        setToastExit(newToast)
+      }, 1000)
+    }, toast.duration || 2000)
+  }
+
   const setColors = (colors?: { dark?: ColorConfig; light?: ColorConfig }) =>
     setTheme({
       ...(state.theme ?? {}),
@@ -243,6 +298,8 @@ export const LayerProvider = ({
           setDarkColor,
           setColors,
           setOnboardingStep,
+          addToast,
+          removeToast,
         }}
       >
         {children}

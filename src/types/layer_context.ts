@@ -1,3 +1,4 @@
+import { ToastProps } from '../components/Toast/Toast'
 import { Business, Category } from '../types'
 import { ExpiringOAuthResponse } from './authentication'
 
@@ -12,6 +13,7 @@ export type LayerContextValues = {
   usePlaidSandbox?: boolean
   onboardingStep?: OnboardingStep
   environment: string
+  toasts: (ToastProps & { isExiting: boolean })[]
 }
 
 export type LayerContextHelpers = {
@@ -20,6 +22,8 @@ export type LayerContextHelpers = {
   setDarkColor: (color?: ColorConfig) => void
   setColors: (colors?: LayerThemeConfigColors) => void
   setOnboardingStep: (value: OnboardingStep) => void
+  addToast: (toast: ToastProps) => void
+  removeToast: (toast: ToastProps) => void
 }
 
 export interface ColorHSLConfig {
@@ -78,6 +82,9 @@ export enum LayerContextActionName {
   setTheme = 'LayerContext.setTheme',
   setOnboardingStep = 'LayerContext.setOnboardingStep',
   setColors = 'LayerContext.setColors',
+  setToast = 'LayerContext.setToast',
+  removeToast = 'LayerContext.removeToast',
+  setToastExit = 'LayerContext.setToastExit',
 }
 
 export type LayerContextAction =
@@ -104,4 +111,16 @@ export type LayerContextAction =
   | {
       type: LayerContextActionName.setColors
       payload: { colors: LayerContextValues['colors'] }
+    }
+  | {
+      type: LayerContextActionName.setToast
+      payload: { toast: ToastProps }
+    }
+  | {
+      type: LayerContextActionName.removeToast
+      payload: { toast: ToastProps }
+    }
+  | {
+      type: LayerContextActionName.setToastExit
+      payload: { toast: ToastProps }
     }
