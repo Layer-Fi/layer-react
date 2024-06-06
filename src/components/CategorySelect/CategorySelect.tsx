@@ -27,6 +27,7 @@ type Props = {
   onChange: (newValue: CategoryOption) => void
   disabled?: boolean
   className?: string
+  excludeMatches?: boolean
 }
 
 export enum OptionActionType {
@@ -205,28 +206,30 @@ export const CategorySelect = ({
   onChange,
   disabled,
   className,
+  excludeMatches = false,
 }: Props) => {
   const { categories } = useLayerContext()
 
-  const matchOptions = bankTransaction?.suggested_matches
-    ? [
-        {
-          label: 'Match',
-          options: bankTransaction.suggested_matches.map(x => {
-            return {
-              type: OptionActionType.MATCH,
-              payload: {
-                id: x.id,
-                option_type: OptionActionType.MATCH,
-                display_name: x.details.description,
-                date: x.details.date,
-                amount: x.details.amount,
-              },
-            } satisfies CategoryOption
-          }),
-        } satisfies GroupBase<CategoryOption>,
-      ]
-    : []
+  const matchOptions =
+    !excludeMatches && bankTransaction?.suggested_matches
+      ? [
+          {
+            label: 'Match',
+            options: bankTransaction.suggested_matches.map(x => {
+              return {
+                type: OptionActionType.MATCH,
+                payload: {
+                  id: x.id,
+                  option_type: OptionActionType.MATCH,
+                  display_name: x.details.description,
+                  date: x.details.date,
+                  amount: x.details.amount,
+                },
+              } satisfies CategoryOption
+            }),
+          } satisfies GroupBase<CategoryOption>,
+        ]
+      : []
 
   const suggestedOptions =
     bankTransaction?.categorization_flow?.type ===

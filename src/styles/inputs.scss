@@ -185,6 +185,27 @@
   border-radius: 6px;
 }
 
+.Layer__toggle.Layer__toggle--xsmall {
+  height: 36px;
+  border-radius: 6px;
+
+  .Layer__toggle-option {
+    input + span {
+      height: 32px;
+      border-radius: 6px;
+    }
+
+    .Layer__toggle-option-content {
+      font-size: 12px;
+    }
+  }
+
+  .Layer__toggle__thumb {
+    height: 34px;
+    border-radius: 6px;
+  }
+}
+
 .Layer__toggle-option {
   position: relative;
   cursor: pointer;

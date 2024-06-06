@@ -19,6 +19,7 @@ import {
 } from '../CategorySelect/CategorySelect'
 import { Input } from '../Input'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
+import classNames from 'classnames'
 
 type Split = {
   amount: number
@@ -64,7 +65,7 @@ export const SplitForm = ({
           },
           {
             amount: 0,
-            inputValue: '0',
+            inputValue: '0.00',
             category: mapCategoryToOption(defaultCategory),
           },
         ],
@@ -196,15 +197,17 @@ export const SplitForm = ({
       <Text weight={TextWeight.bold} size={TextSize.sm}>
         Split transaction
       </Text>
-      <div className={`bank-transactions__splits-inputs`}>
+      <div className='Layer__bank-transactions__table-cell__header'>
+        <Text size={TextSize.sm}>Category</Text>
+        <Text size={TextSize.sm}>Amount</Text>
+      </div>
+      <div className='Layer__bank-transactions__splits-inputs'>
         {rowState.splits.map((split, index) => (
           <div
-            className={`bank-transactions__table-cell--split-entry`}
+            className='Layer__bank-transactions__table-cell--split-entry'
             key={`split-${index}`}
           >
-            <div
-              className={`bank-transactions__table-cell--split-entry__right-col`}
-            >
+            <div className='Layer__bank-transactions__table-cell--split-entry__right-col'>
               <CategorySelect
                 bankTransaction={bankTransaction}
                 name={`category-${bankTransaction.id}`}
@@ -212,11 +215,16 @@ export const SplitForm = ({
                 onChange={value => changeCategory(index, value)}
                 className='Layer__category-menu--full'
                 disabled={bankTransaction.processing}
+                excludeMatches
               />
             </div>
             <Input
               type='text'
               name={`split-${index}`}
+              className={classNames(
+                'Layer__split-amount-input',
+                index === 0 && 'Layer__split-amount-input--first',
+              )}
               disabled={index === 0}
               onChange={updateAmounts(index)}
               value={split.inputValue}
@@ -226,9 +234,9 @@ export const SplitForm = ({
             />
             {index > 0 && (
               <Button
-                className={`bank-transactions__table-cell--split-entry__merge-btn`}
+                className='Layer__bank-transactions__table-cell--split-entry__merge-btn'
                 onClick={() => removeSplit(index)}
-                rightIcon={<Trash size={12} />}
+                rightIcon={<Trash size={16} />}
                 variant={ButtonVariant.secondary}
                 iconOnly={true}
               />
@@ -238,6 +246,7 @@ export const SplitForm = ({
         <TextButton
           onClick={addSplit}
           disabled={rowState.splits.length > 5 || isLoading}
+          className='Layer__add-new-split'
         >
           Add new split
         </TextButton>
@@ -259,7 +268,7 @@ export const SplitForm = ({
           processing={bankTransaction.processing}
           error={'Approval failed. Check connection and retry in few seconds.'}
         >
-          Retry
+          Save
         </RetryButton>
       ) : null}
       {formError && <ErrorText>{formError}</ErrorText>}

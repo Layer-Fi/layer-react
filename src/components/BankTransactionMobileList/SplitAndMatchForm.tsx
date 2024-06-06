@@ -35,14 +35,18 @@ export const SplitAndMatchForm = ({
         <MatchForm bankTransaction={bankTransaction} />
       )}
       {anyMatch && formType === Purpose.match ? (
-        <TextButton onClick={() => setFormType(Purpose.categorize)}>
-          or split transaction
-        </TextButton>
+        <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>
+          <TextButton onClick={() => setFormType(Purpose.categorize)}>
+            or split transaction
+          </TextButton>
+        </div>
       ) : null}
       {anyMatch && formType === Purpose.categorize ? (
-        <TextButton onClick={() => setFormType(Purpose.match)}>
-          or find match
-        </TextButton>
+        <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>
+          <TextButton onClick={() => setFormType(Purpose.match)}>
+            or find match
+          </TextButton>
+        </div>
       ) : null}
     </div>
   )

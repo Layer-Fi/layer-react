@@ -21,6 +21,8 @@ export const MatchForm = ({
   useEffect(() => {
     if (bankTransaction.error) {
       setShowRetry(true)
+    } else if (showRetry) {
+      setShowRetry(false)
     }
   }, [bankTransaction.error])
 
@@ -78,7 +80,7 @@ export const MatchForm = ({
           processing={bankTransaction.processing}
           error={'Approval failed. Check connection and retry in few seconds.'}
         >
-          Retry
+          Approve match
         </RetryButton>
       ) : null}
 

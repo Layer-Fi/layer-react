@@ -44,11 +44,13 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
         : []
 
     options.push({
-      label: options.length > 0 ? 'Something else' : 'Select category',
+      label: options.length > 0 ? 'All categories' : 'Select category',
       id: 'SELECT_CATEGORY',
       value: {
         type: 'SELECT_CATEGORY',
       },
+      secondary: true,
+      asLink: true,
     })
 
     if (selectedCategory && !options.find(x => x.id === selectedCategory?.id)) {
@@ -115,7 +117,7 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
           processing={bankTransaction.processing}
           error={'Approval failed. Check connection and retry in few seconds.'}
         >
-          Retry
+          Save
         </RetryButton>
       ) : null}
       {bankTransaction.error && showRetry ? (

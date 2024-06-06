@@ -11,7 +11,7 @@ import { SplitTooltipDetails } from '../BankTransactionRow/SplitTooltipDetails'
 import { CloseButton } from '../Button'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
-import { Text } from '../Typography'
+import { Text, TextUseTooltip } from '../Typography'
 import { BankTransactionMobileForms } from './BankTransactionMobileForms'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
@@ -31,6 +31,18 @@ export enum Purpose {
 }
 
 const DATE_FORMAT = 'LLL d'
+
+const getAssignedValue = (bankTransaction: BankTransaction) => {
+  if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
+    return extractDescriptionForSplit(bankTransaction.category)
+  }
+
+  if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
+    return bankTransaction.match?.details?.description
+  }
+
+  return bankTransaction.category?.display_name
+}
 
 export const BankTransactionMobileListItem = ({
   index = 0,
@@ -105,8 +117,16 @@ export const BankTransactionMobileListItem = ({
             {bankTransaction.counterparty_name ?? bankTransaction.description}
           </Text>
           <Text as='span' className={`${className}__heading__account-name`}>
-            {bankTransaction.account_name ?? ''}
+            {!editable && bankTransaction.categorization_status
+              ? getAssignedValue(bankTransaction)
+              : null}
+            {editable && bankTransaction.account_name}
           </Text>
+          {!editable && open && (
+            <Text as='span' className={`${className}__categorized-name`}>
+              {bankTransaction.account_name}
+            </Text>
+          )}
         </div>
         <div className={`${className}__heading__amount`}>
           <span
@@ -122,62 +142,6 @@ export const BankTransactionMobileListItem = ({
           </span>
         </div>
       </span>
-      {!editable &&
-        bankTransaction.categorization_status && [
-          CategorizationStatus.SPLIT,
-          CategorizationStatus.MATCHED,
-        ] && (
-          <div className={classNames(`${className}__value`, !open && 'open')}>
-            {!editable ? (
-              <Text as='span' className={`${className}__category-text`}>
-                {bankTransaction.categorization_status ===
-                  CategorizationStatus.SPLIT && (
-                  <>
-                    <Badge
-                      icon={<Scissors size={11} />}
-                      tooltip={
-                        <SplitTooltipDetails
-                          classNamePrefix={className}
-                          category={bankTransaction.category}
-                        />
-                      }
-                    >
-                      Split
-                    </Badge>
-                    <span className={`${className}__category-text__text`}>
-                      {extractDescriptionForSplit(bankTransaction.category)}
-                    </span>
-                  </>
-                )}
-                {bankTransaction?.categorization_status ===
-                  CategorizationStatus.MATCHED &&
-                  bankTransaction?.match && (
-                    <>
-                      <MatchBadge
-                        classNamePrefix={className}
-                        bankTransaction={bankTransaction}
-                        dateFormat={DATE_FORMAT}
-                      />
-                      <span className={`${className}__category-text__text`}>
-                        {`${formatTime(
-                          parseISO(bankTransaction.match.bank_transaction.date),
-                          DATE_FORMAT,
-                        )}, ${bankTransaction.match?.details?.description}`}
-                      </span>
-                    </>
-                  )}
-                {bankTransaction?.categorization_status !==
-                  CategorizationStatus.MATCHED &&
-                  bankTransaction?.categorization_status !==
-                    CategorizationStatus.SPLIT && (
-                    <span className={`${className}__category-text__text`}>
-                      {bankTransaction?.category?.display_name}
-                    </span>
-                  )}
-              </Text>
-            ) : null}
-          </div>
-        )}
       <div className={`${className}__expanded-row`} style={{ height }}>
         {open && (
           <div
@@ -187,19 +151,22 @@ export const BankTransactionMobileListItem = ({
             <div className={`${className}__toggle-row`}>
               <Toggle
                 name={`purpose-${bankTransaction.id}`}
-                size={ToggleSize.small}
+                size={ToggleSize.xsmall}
                 options={[
                   {
                     value: 'business',
                     label: 'Business',
+                    style: { minWidth: 84 },
                   },
                   {
                     value: 'personal',
                     label: 'Personal',
+                    style: { minWidth: 84 },
                   },
                   {
                     value: 'more',
                     label: 'More',
+                    style: { minWidth: 84 },
                   },
                 ]}
                 selected={purpose}

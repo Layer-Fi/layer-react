@@ -30,6 +30,7 @@
 
   .Layer__bank-transactions__header__content {
     width: 100%;
+    padding-left: var(--spacing-3xs);
   }
 }
 
@@ -652,6 +653,7 @@
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
     padding-top: var(--spacing-md);
+    row-gap: var(--spacing-sm);
   }
 }
 
@@ -666,6 +668,7 @@
 
   .Layer__bank-transactions__header.Layer__bank-transactions__header--mobile {
     box-shadow: none;
+    padding-bottom: var(--spacing-2xs);
   }
 }
 
@@ -930,6 +933,10 @@
   gap: var(--spacing-sm);
   border-bottom: 1px solid var(--color-base-50);
 
+  .Layer__bank-transaction-mobile-list-item__match-item__name {
+    color: var(--color-base-500);
+  }
+
   .Layer__bank-transaction-mobile-list-item__match-item__col-details {
     flex: 1;
     display: flex;
@@ -954,6 +961,12 @@
     min-width: 24px;
     display: flex;
     justify-content: flex-end;
+  }
+}
+
+.Layer__bank-transaction-mobile-list-item__match-item.Layer__bank-transaction-mobile-list-item__match-item--selected {
+  .Layer__bank-transaction-mobile-list-item__match-item__name {
+    color: var(--color-base-1000);
   }
 }
 

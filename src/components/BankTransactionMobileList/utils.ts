@@ -13,6 +13,8 @@ export interface Option {
     payload?: CategoryOptionPayload
     items?: Option[]
   }
+  asLink?: boolean
+  secondary?: boolean
 }
 
 export const mapCategoryToOption = (category: Category): Option => ({

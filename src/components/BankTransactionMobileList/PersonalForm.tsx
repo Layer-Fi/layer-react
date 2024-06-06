@@ -4,6 +4,7 @@ import { BankTransaction, CategorizationStatus } from '../../types'
 import { isCredit } from '../../utils/bankTransactions'
 import { Button, RetryButton } from '../Button'
 import { ErrorText } from '../Typography'
+import { Purpose } from './BankTransactionMobileListItem'
 import { PersonalCategories } from './constants'
 
 interface PersonalFormProps {
