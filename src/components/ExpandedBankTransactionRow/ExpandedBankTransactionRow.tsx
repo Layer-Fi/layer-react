@@ -432,6 +432,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               onChange={value => changeCategory(index, value)}
                               className='Layer__category-menu--full'
                               disabled={bankTransaction.processing}
+                              excludeMatches
                             />
                             {index > 0 && (
                               <Button

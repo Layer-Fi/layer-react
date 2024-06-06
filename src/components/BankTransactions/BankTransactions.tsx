@@ -187,6 +187,7 @@ export const BankTransactions = ({
         isValidating={isValidating}
         error={error}
         refetch={refetch}
+        editable={editable}
       />
 
       {!monthlyView && (

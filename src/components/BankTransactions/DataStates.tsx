@@ -1,4 +1,5 @@
 import React from 'react'
+import InboxIcon from '../../icons/Inbox'
 import { BankTransaction } from '../../types'
 import { DataState, DataStateStatus } from '../DataState'
 
@@ -8,6 +9,7 @@ interface DataStatesProps {
   isValidating?: boolean
   error?: unknown
   refetch: () => void
+  editable: boolean
 }
 
 export const DataStates = ({
@@ -16,6 +18,7 @@ export const DataStates = ({
   isValidating,
   error,
   refetch,
+  editable,
 }: DataStatesProps) => {
   return (
     <>
@@ -26,10 +29,19 @@ export const DataStates = ({
         <div className='Layer__table-state-container'>
           <DataState
             status={DataStateStatus.allDone}
-            title='You are up to date with transactions!'
-            description='All uncategorized transaction will be displayed here'
+            title={
+              editable
+                ? 'You are up to date with transactions!'
+                : 'You have no categorized transactions'
+            }
+            description={
+              editable
+                ? 'All uncategorized transaction will be displayed here'
+                : 'All transaction will be displayed here once reviewed'
+            }
             onRefresh={() => refetch()}
             isLoading={isValidating}
+            icon={!editable ? <InboxIcon /> : undefined}
           />
         </div>
       ) : null}
