@@ -6,7 +6,6 @@ import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
-import { Drawer } from '../../components/Drawer';
 import classNames from 'classnames'
 
 export interface AccountingOverviewProps {
@@ -24,24 +23,14 @@ export const AccountingOverview = ({
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
-
   return (
     <ProfitAndLoss asContainer={false}>
-      <Drawer isOpen={isDrawerOpen} onClose={toggleDrawer}>
-        <div>Content inside the drawer</div>
-      </Drawer>
       <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
         {enableOnboarding && <Onboarding />}
         <div className='Layer__accounting-overview__summaries-row'>
           <ProfitAndLoss.Summaries actionable={false} />
           <TransactionToReviewCard onClick={onTransactionsToReviewClick} />
         </div>
-        <button onClick={toggleDrawer}>show drawer</button>
         <Container
           name='accounting-overview-profit-and-loss'
           asWidget
@@ -72,7 +61,7 @@ export const AccountingOverview = ({
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
               pnlToggle !== 'revenue' &&
-              'accounting-overview-profit-and-loss-chart--hidden',
+                'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts scope='revenue' hideClose={true} />
@@ -81,7 +70,7 @@ export const AccountingOverview = ({
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
               pnlToggle !== 'expenses' &&
-              'accounting-overview-profit-and-loss-chart--hidden',
+                'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts scope='expenses' hideClose={true} />
