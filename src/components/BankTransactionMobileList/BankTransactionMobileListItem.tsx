@@ -107,11 +107,7 @@ export const BankTransactionMobileListItem = ({
 
   return (
     <li className={rowClassName}>
-      <span
-        className={`${className}__heading`}
-        onClick={toggleOpen}
-        role='button'
-      >
+      <span className={`${className}__heading`} onClick={toggleOpen}>
         <div className={`${className}__heading__main`}>
           <Text as='span' className={`${className}__heading__tx-name`}>
             {bankTransaction.counterparty_name ?? bankTransaction.description}

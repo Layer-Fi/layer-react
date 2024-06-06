@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BankTransaction } from '../../types'
 import { BankTransactionMobileListItem } from './BankTransactionMobileListItem'
 

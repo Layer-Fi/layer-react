@@ -46,6 +46,7 @@ export const flattenCategories = (categories: Category[]): Option[] => {
               type: 'GROUP',
               items: category.subCategories.map(x => mapCategoryToOption(x)),
             },
+            asLink: true,
           } satisfies Option,
         ]
       }

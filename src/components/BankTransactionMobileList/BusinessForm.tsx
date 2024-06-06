@@ -1,23 +1,19 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { DrawerContext } from '../../contexts/DrawerContext'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
-import { useLayerContext } from '../../hooks/useLayerContext'
 import { BankTransaction, CategorizationType } from '../../types'
 import { ActionableList } from '../ActionableList'
 import { Button, RetryButton } from '../Button'
 import { ErrorText } from '../Typography'
-import {
-  Option,
-  mapCategoryToOption,
-  flattenCategories,
-  getAssignedValue,
-} from './utils'
+import { BusinessCategories } from './BusinessCategories'
+import { Option, mapCategoryToOption, getAssignedValue } from './utils'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
 }
 
 export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
-  const { categories } = useLayerContext()
+  const { setContent, close } = useContext(DrawerContext)
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState<Option | undefined>(
@@ -30,9 +26,6 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
       setShowRetry(true)
     }
   }, [bankTransaction.error])
-
-  // @TODO - use category options in drawer
-  const categoryOptions = flattenCategories(categories)
 
   const options = useMemo(() => {
     const options =
@@ -60,9 +53,14 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
     return options
   }, [bankTransaction, selectedCategory])
 
+  const onDrawerCategorySelect = (value: Option) => {
+    close()
+    setSelectedCategory(value)
+  }
+
   const onCategorySelect = (category: Option) => {
     if (category.value.type === 'SELECT_CATEGORY') {
-      console.log('open drawer...', categoryOptions)
+      setContent(<BusinessCategories select={onDrawerCategorySelect} />)
     } else {
       if (
         selectedCategory &&
