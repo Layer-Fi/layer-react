@@ -8,7 +8,7 @@ import {
 
 export const LayerContext = createContext<
   LayerContextValues &
-  LayerContextHelpers & { setTheme: (theme: LayerThemeConfig) => void }
+    LayerContextHelpers & { setTheme: (theme: LayerThemeConfig) => void }
 >({
   auth: {
     access_token: '',
@@ -32,5 +32,6 @@ export const LayerContext = createContext<
   setOnboardingStep: () => undefined,
   environment: '',
   toasts: [],
-  addToast: (toast: ToastProps) => undefined
+  addToast: (toast: ToastProps) => undefined,
+  removeToast: () => undefined,
 })
