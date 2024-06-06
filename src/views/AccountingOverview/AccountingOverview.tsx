@@ -8,7 +8,6 @@ import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
 import classNames from 'classnames'
 
-
 export interface AccountingOverviewProps {
   title?: string
   enableOnboarding?: boolean
