@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
+import { Layer } from '../../api/layer'
 import { DATE_FORMAT } from '../../config/general'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
@@ -67,18 +68,19 @@ const DownloadButton = () => {
       rightIcon={<DownloadCloud size={12} />}
       onClick={async () => {
         const currentYear = new Date().getFullYear().toString()
-        const createResponse = await fetch(
-          `https://sandbox.layerfi.com/v1/businesses/${businessId}/reports/transactions/exports/csv?year=${currentYear}`,
+        const getBankTransactionsCsv = Layer.getBankTransactionsCsv(
+          apiUrl,
+          auth.access_token,
           {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${auth?.access_token}`,
+            params: {
+              businessId: businessId,
+              year: currentYear,
             },
           },
         )
-        const body = await createResponse.json()
-        window.location.href = body.data.presignedUrl
+        const result = await getBankTransactionsCsv()
+        if (result?.data?.presignedUrl)
+          window.location.href = result.data.presignedUrl
       }}
     >
       Download

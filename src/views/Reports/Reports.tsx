@@ -1,4 +1,5 @@
 import React, { RefObject, useContext, useRef } from 'react'
+import { Layer } from '../../api/layer'
 import { Button, ButtonVariant } from '../../components/Button'
 import { Container } from '../../components/Container'
 import { Panel } from '../../components/Panel'
@@ -26,18 +27,20 @@ const DownloadButton = () => {
       onClick={async () => {
         const month = (dateRange.startDate.getMonth() + 1).toString()
         const year = dateRange.startDate.getFullYear().toString()
-        const createResponse = await fetch(
-          `${apiUrl}/v1/businesses/${businessId}/reports/profit-and-loss/exports/csv?month=${month}&year=${year}`,
+        const getProfitAndLossCsv = Layer.getProfitAndLossCsv(
+          apiUrl,
+          auth.access_token,
           {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${auth?.access_token}`,
+            params: {
+              businessId: businessId,
+              year: year,
+              month: month,
             },
           },
         )
-        const body = await createResponse.json()
-        window.location.href = body.data.presignedUrl
+        const result = await getProfitAndLossCsv()
+        if (result?.data?.presignedUrl)
+          window.location.href = result.data.presignedUrl
       }}
     >
       Download

@@ -3,6 +3,7 @@ import {
   BankTransactionMatch,
   BankTransactionMatchType,
 } from '../../types/bank_transactions'
+import { S3PresignedUrl } from '../../types/general'
 import { get, put } from './authenticated_http'
 
 export type GetBankTransactionsReturn = {
@@ -43,3 +44,29 @@ export const matchBankTransaction = put<
   ({ businessId, bankTransactionId }) =>
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/match`,
 )
+
+export interface GetBankTransactionsCsvParams
+  extends Record<string, string | undefined> {
+  businessId: string
+  startDate?: string
+  endDate?: string
+  categorized?: 'true' | 'false'
+  category?: string
+  month?: string
+  year?: string
+}
+
+export const getBankTransactionsCsv = get<{
+  data?: S3PresignedUrl
+  error?: unknown
+}>((params: Record<string, string | undefined>) => {
+  const { businessId, startDate, endDate, categorized, category, month, year } =
+    params as GetBankTransactionsCsvParams // Type assertion here for clarity
+  return `/v1/businesses/${businessId}/reports/transactions/exports/csv?${
+    startDate ? `start_date=${encodeURIComponent(startDate)}&` : ''
+  }${endDate ? `end_date=${encodeURIComponent(endDate)}&` : ''}${
+    month ? `month=${encodeURIComponent(month)}&` : ''
+  }${year ? `year=${encodeURIComponent(year)}&` : ''}${
+    categorized ? `categorized=${categorized}&` : ''
+  }${category ? `category=${encodeURIComponent(category)}&` : ''}`
+})
