@@ -19,7 +19,9 @@ export const View = ({ title, children, headerControls }: ViewProps) => {
       <ViewHeader title={title} controls={headerControls} />
       <div className='Layer__view-main'>{children}</div>
       <ToastsContainer />
-      <button onClick={() => addToast({ content: 'This is a toast message' })}>add toast</button>
+      <button onClick={() => addToast({ content: 'This is a toast message' })}>
+        add toast
+      </button>
     </div>
   )
 }

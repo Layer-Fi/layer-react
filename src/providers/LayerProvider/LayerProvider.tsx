@@ -1,5 +1,12 @@
-import React, { PropsWithChildren, useReducer, useEffect, Reducer, useState } from 'react'
+import React, {
+  PropsWithChildren,
+  useReducer,
+  useEffect,
+  Reducer,
+  useState,
+} from 'react'
 import { Layer } from '../../api/layer'
+import { ToastProps } from '../../components/Toast/Toast'
 import { LayerContext } from '../../contexts/LayerContext'
 import {
   LayerContextValues,
@@ -15,7 +22,6 @@ import {
 import { buildColorsPalette } from '../../utils/colors'
 import { add, isBefore } from 'date-fns'
 import useSWR, { SWRConfig } from 'swr'
-import { ToastProps } from '../../components/Toast/Toast'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -32,17 +38,24 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
     case Action.setToast:
       return {
         ...state,
-        toasts: [...state.toasts, { ...action.payload.toast, isExiting: false }]
+        toasts: [
+          ...state.toasts,
+          { ...action.payload.toast, isExiting: false },
+        ],
       }
     case Action.setToastExit:
       return {
         ...state,
-        toasts: state.toasts.map(toast => toast.id === action.payload.toast.id ? { ...toast, isExiting: false } : toast)
+        toasts: state.toasts.map(toast =>
+          toast.id === action.payload.toast.id
+            ? { ...toast, isExiting: false }
+            : toast,
+        ),
       }
     case Action.removeToast:
       return {
         ...state,
-        toasts: state.toasts.filter((t) => t.id !== action.payload.toast.id)
+        toasts: state.toasts.filter(t => t.id !== action.payload.toast.id),
       }
     default:
       return state
@@ -119,23 +132,22 @@ export const LayerProvider = ({
 
   // const [toasts, setToasts] = useState<(ToastProps & { isExiting: boolean })[]>([]);
 
-
   const { data: auth } =
     appId !== undefined && appSecret !== undefined
       ? useSWR(
-        businessAccessToken === undefined &&
-        appId !== undefined &&
-        appSecret !== undefined &&
-        isBefore(state.auth.expires_at, new Date()) &&
-        'authenticate',
-        Layer.authenticate({
-          appId,
-          appSecret,
-          authenticationUrl: url,
-          scope,
-        }),
-        defaultSWRConfig,
-      )
+          businessAccessToken === undefined &&
+            appId !== undefined &&
+            appSecret !== undefined &&
+            isBefore(state.auth.expires_at, new Date()) &&
+            'authenticate',
+          Layer.authenticate({
+            appId,
+            appSecret,
+            authenticationUrl: url,
+            scope,
+          }),
+          defaultSWRConfig,
+        )
       : { data: undefined }
 
   useEffect(() => {
@@ -245,18 +257,17 @@ export const LayerProvider = ({
   }
 
   const addToast = (toast: ToastProps) => {
-
-    const id = `${Date.now()}-${Math.random()}`;
+    const id = `${Date.now()}-${Math.random()}`
     const newToast = { id, isExiting: false, ...toast }
 
-    setToast(newToast);
+    setToast(newToast)
 
     setTimeout(() => {
       removeToast(newToast)
       setTimeout(() => {
         setToastExit(newToast)
-      }, 1000);
-    }, (toast.duration || 2000));
+      }, 1000)
+    }, toast.duration || 2000)
   }
 
   const setColors = (colors?: { dark?: ColorConfig; light?: ColorConfig }) =>
@@ -279,8 +290,6 @@ export const LayerProvider = ({
       payload: { onboardingStep: value },
     })
 
-
-
   return (
     <SWRConfig value={defaultSWRConfig}>
       <LayerContext.Provider
@@ -293,6 +302,7 @@ export const LayerProvider = ({
           setColors,
           setOnboardingStep,
           addToast,
+          removeToast,
         }}
       >
         {children}
