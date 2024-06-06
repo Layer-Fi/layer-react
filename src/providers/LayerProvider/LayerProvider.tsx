@@ -2,8 +2,7 @@ import React, {
   PropsWithChildren,
   useReducer,
   useEffect,
-  Reducer,
-  useState,
+  Reducer
 } from 'react'
 import { Layer } from '../../api/layer'
 import { ToastProps } from '../../components/Toast/Toast'
@@ -129,8 +128,6 @@ export const LayerProvider = ({
     environment,
     toasts: [],
   })
-
-  // const [toasts, setToasts] = useState<(ToastProps & { isExiting: boolean })[]>([]);
 
   const { data: auth } =
     appId !== undefined && appSecret !== undefined
