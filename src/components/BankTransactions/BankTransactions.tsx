@@ -2,10 +2,13 @@ import React, { useState, useMemo, useEffect } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
+import { useLayerContext } from '../../hooks/useLayerContext'
+import DownloadCloud from '../../icons/DownloadCloud'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { debounce } from '../../utils/helpers'
 import { BankTransactionListItem } from '../BankTransactionListItem'
 import { BankTransactionRow } from '../BankTransactionRow'
+import { Button, ButtonVariant } from '../Button'
 import { Container, Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
 import { Loader } from '../Loader'
@@ -53,6 +56,33 @@ export const filterVisibility = (
   return (
     (display === DisplayState.review && inReview) ||
     (display === DisplayState.categorized && categorized)
+  )
+}
+
+const DownloadButton = () => {
+  const { auth, businessId, apiUrl } = useLayerContext()
+  return (
+    <Button
+      variant={ButtonVariant.secondary}
+      rightIcon={<DownloadCloud size={12} />}
+      onClick={async () => {
+        const currentYear = new Date().getFullYear().toString()
+        const createResponse = await fetch(
+          `https://sandbox.layerfi.com/v1/businesses/${businessId}/reports/transactions/exports/csv?year=${currentYear}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${auth?.access_token}`,
+            },
+          },
+        )
+        const body = await createResponse.json()
+        window.location.href = body.data.presignedUrl
+      }}
+    >
+      Download
+    </Button>
   )
 }
 
@@ -155,17 +185,20 @@ export const BankTransactions = ({
         >
           Transactions
         </Heading>
-        {!categorizedOnly && (
-          <Toggle
-            name='bank-transaction-display'
-            options={[
-              { label: 'To Review', value: DisplayState.review },
-              { label: 'Categorized', value: DisplayState.categorized },
-            ]}
-            selected={display}
-            onChange={onCategorizationDisplayChange}
-          />
-        )}
+        <div className='Layer__header__actions'>
+          <DownloadButton />
+          {!categorizedOnly && (
+            <Toggle
+              name='bank-transaction-display'
+              options={[
+                { label: 'To Review', value: DisplayState.review },
+                { label: 'Categorized', value: DisplayState.categorized },
+              ]}
+              selected={display}
+              onChange={onCategorizationDisplayChange}
+            />
+          )}
+        </div>
       </Header>
       {!listView && (
         <table

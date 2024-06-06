@@ -1,6 +1,5 @@
 import React, { RefObject, useContext, useState } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
-import DownloadCloud from '../../icons/DownloadCloud'
 import { Button, ButtonVariant } from '../Button'
 import { View } from '../ChartOfAccounts/ChartOfAccounts'
 import { ChartOfAccountsDatePicker } from '../ChartOfAccountsDatePicker'
@@ -78,13 +77,6 @@ export const ChartOfAccountsTable = ({
             </div>
           ) : null}
           <div className='Layer__header__actions-col'>
-            <Button
-              variant={ButtonVariant.secondary}
-              disabled={isLoading}
-              rightIcon={<DownloadCloud size={12} />}
-            >
-              Download
-            </Button>
             <Button onClick={() => addAccount()} disabled={isLoading}>
               Add Account
             </Button>
