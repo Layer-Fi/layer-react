@@ -38,9 +38,11 @@ const DownloadButton = () => {
             },
           },
         )
-        const result = await getProfitAndLossCsv()
-        if (result?.data?.presignedUrl)
-          window.location.href = result.data.presignedUrl
+        try {
+          const result = await getProfitAndLossCsv()
+          if (result?.data?.presignedUrl)
+            window.location.href = result.data.presignedUrl
+        } catch (e) {}
       }}
     >
       Download
