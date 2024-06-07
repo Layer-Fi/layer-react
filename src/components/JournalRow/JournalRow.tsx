@@ -3,14 +3,18 @@ import { DATE_FORMAT } from '../../config/general'
 import { JournalContext } from '../../contexts/JournalContext'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars } from '../../models/Money'
-import { JournalEntry, JournalEntryLineItem } from '../../types'
+import {
+  JournalEntry,
+  JournalEntryLine,
+  JournalEntryLineItem,
+} from '../../types'
 import { humanizeEnum } from '../../utils/format'
 import { View } from '../Journal'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
 export interface JournalRowProps {
-  row: JournalEntry | JournalEntryLineItem
+  row: JournalEntry | JournalEntryLine | JournalEntryLineItem
   index: number
   initialLoad?: boolean
   view: View
@@ -36,12 +40,20 @@ const COLLAPSED_STYLE = {
   paddingBottom: 0,
 }
 
-const rowId = (row: JournalEntry | JournalEntryLineItem) => {
+const rowId = (row: JournalEntry | JournalEntryLineItem | JournalEntryLine) => {
   if ('id' in row) {
     return row.id
   }
 
   return `${row.account_identifier.id}-${Math.random()}`
+}
+
+const accountName = (row: JournalEntryLine | JournalEntryLineItem) => {
+  if ('account' in row) {
+    return row.account.name
+  }
+
+  return row.account_identifier.name
 }
 
 export const JournalRow = ({
@@ -226,7 +238,7 @@ export const JournalRow = ({
       <td className='Layer__table-cell' />
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content' style={style}>
-          {row.account_identifier.name}
+          {accountName(row)}
         </span>
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>
