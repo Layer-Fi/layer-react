@@ -20,6 +20,7 @@ import { Panel } from '../Panel'
 import { Text, TextWeight } from '../Typography'
 import { LedgerAccountRow } from './LedgerAccountRow'
 import classNames from 'classnames'
+import { format } from 'date-fns'
 
 export interface LedgerAccountProps {
   view: View
@@ -35,7 +36,7 @@ export const LedgerAccount = ({
   const [currentPage, setCurrentPage] = useState(1)
   const [initialLoad, setInitialLoad] = useState(true)
 
-  const { data: accountData } = useContext(ChartOfAccountsContext)
+  const { data: accountData, dateRange } = useContext(ChartOfAccountsContext)
 
   const {
     data: rawData,
@@ -111,7 +112,7 @@ export const LedgerAccount = ({
               weight={TextWeight.bold}
               className='Layer__ledger-account__balance-label'
             >
-              Current balance
+              {format(dateRange.endDate, 'LLLL y')} Balance
             </Text>
             <Text
               weight={TextWeight.bold}
@@ -184,7 +185,7 @@ export const LedgerAccount = ({
         ) : null}
 
         {(!data || isLoading) && !error ? (
-          <div className={`Layer__ledger-account__loader-container`}>
+          <div className={'Layer__ledger-account__loader-container'}>
             <Loader />
           </div>
         ) : null}
