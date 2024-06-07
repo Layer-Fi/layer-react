@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
+import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
 import { DateRange } from '../../types'
@@ -109,9 +110,9 @@ export const BankTransactions = ({
       debounceShiftStickyHeader(0)
     }
 
-    if (size.width > 760 && listView) {
+    if (size.width > BREAKPOINTS.TABLET && listView) {
       setListView(false)
-    } else if (size.width <= 760 && !listView) {
+    } else if (size.width <= BREAKPOINTS.TABLET && !listView) {
       setListView(true)
     }
 
