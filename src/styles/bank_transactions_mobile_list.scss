@@ -32,6 +32,10 @@
     transform: scale(1);
   }
 
+  &.show.Layer__bank-transaction-row--removing {
+    opacity: 0.99999;
+  }
+
   .Layer__bank-transaction-mobile-list-item__expanded-row {
     height: 0;
     overflow: hidden;

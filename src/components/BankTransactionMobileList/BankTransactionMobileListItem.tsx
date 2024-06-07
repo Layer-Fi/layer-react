@@ -50,6 +50,7 @@ export const BankTransactionMobileListItem = ({
     setHeight(height),
   )
 
+  const [removeAnim, setRemoveAnim] = useState(false)
   const [purpose, setPurpose] = useState<Purpose>(
     bankTransaction.category
       ? bankTransaction.categorization_status === CategorizationStatus.SPLIT
@@ -62,6 +63,16 @@ export const BankTransactionMobileListItem = ({
   const [open, setOpen] = useState(false)
   const [showComponent, setShowComponent] = useState(!initialLoad)
   const [height, setHeight] = useState(0)
+
+  useEffect(() => {
+    if (!removeAnim && bankTransaction.recently_categorized) {
+      setRemoveAnim(true)
+    }
+  }, [
+    bankTransaction.recently_categorized,
+    bankTransaction.category,
+    bankTransaction.match,
+  ])
 
   const toggleOpen = () => {
     if (open) {
@@ -94,15 +105,26 @@ export const BankTransactionMobileListItem = ({
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    bankTransaction.recently_categorized
-      ? 'Layer__bank-transaction-row--removing'
-      : '',
+    removeAnim ? 'Layer__bank-transaction-row--removing' : '',
     open ? openClassName : '',
     showComponent ? 'show' : '',
   )
 
   return (
-    <li className={rowClassName}>
+    <li
+      className={rowClassName}
+      onTransitionEnd={({ propertyName }) => {
+        if (propertyName === 'opacity') {
+          if (editable) {
+            close()
+            setRemoveAnim(false)
+          } else {
+            close()
+            setRemoveAnim(false)
+          }
+        }
+      }}
+    >
       <span
         className={`${className}__heading`}
         onClick={toggleOpen}
