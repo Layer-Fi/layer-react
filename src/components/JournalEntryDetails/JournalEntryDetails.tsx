@@ -1,6 +1,5 @@
 import React, { useContext, useMemo } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
-import { flattenEntries } from '../../hooks/useJournal/useJournal'
 import X from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
@@ -23,7 +22,7 @@ export const JournalEntryDetails = () => {
 
   const entry = useMemo(() => {
     if (selectedEntryId && data) {
-      return flattenEntries(data || []).find(x => x.id === selectedEntryId)
+      return data.find(x => x.id === selectedEntryId)
     }
 
     return
