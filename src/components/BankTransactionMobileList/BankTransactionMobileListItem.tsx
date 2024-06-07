@@ -60,7 +60,7 @@ export const BankTransactionMobileListItem = ({
       : Purpose.business,
   )
   const [open, setOpen] = useState(false)
-  const [showComponent, setShowComponent] = useState(false)
+  const [showComponent, setShowComponent] = useState(!initialLoad)
   const [height, setHeight] = useState(0)
 
   const toggleOpen = () => {
