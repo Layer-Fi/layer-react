@@ -8,16 +8,29 @@ export interface ContainerProps {
   className?: string
   asWidget?: boolean
   elevated?: boolean
+  transparentBg?: boolean
   children: ReactNode
   style?: CSSProperties
 }
 
 export const Container = forwardRef<HTMLDivElement, ContainerProps>(
-  ({ name, className, children, asWidget, elevated = false, style }, ref) => {
+  (
+    {
+      name,
+      className,
+      children,
+      asWidget,
+      elevated = false,
+      transparentBg = false,
+      style,
+    },
+    ref,
+  ) => {
     const baseClassName = classNames(
       'Layer__component Layer__component-container',
       `Layer__${name}`,
       elevated && 'Layer__component--elevated',
+      transparentBg && 'Layer__component--no-bg',
       asWidget && 'Layer__component--as-widget',
       className,
     )

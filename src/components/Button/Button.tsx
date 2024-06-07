@@ -15,6 +15,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconOnly?: ReactNode
   iconAsPrimary?: boolean
   justify?: ButtonJustify
+  fullWidth?: boolean
 }
 
 export const Button = ({
@@ -26,6 +27,7 @@ export const Button = ({
   iconOnly,
   iconAsPrimary = false,
   justify = 'center',
+  fullWidth,
   ...props
 }: ButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -46,6 +48,7 @@ export const Button = ({
     `Layer__btn--${variant}`,
     iconOnly ? 'Layer__btn--icon-only' : '',
     iconAsPrimary && 'Layer__btn--with-primary-icon',
+    fullWidth && 'Layer__btn--full-width',
     className,
   )
 

@@ -34,6 +34,10 @@
     padding: var(--spacing-2xs) var(--spacing-sm);
   }
 
+  &.Layer__btn--full-width {
+    width: 100%;
+  }
+
   &.Layer__btn--with-primary-icon {
     padding: 0;
 
@@ -114,6 +118,10 @@
 .Layer__btn--secondary {
   color: var(--btn-secondary-color);
   background: var(--btn-secondary-bg-color);
+}
+
+.Layer__download-retry-btn {
+  width: 122px;
 }
 
 .Layer__btn--primary {

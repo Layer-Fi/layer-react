@@ -19,9 +19,9 @@ import {
   BankTransaction,
   SplitCategoryUpdate,
   SingleCategoryUpdate,
-  Category,
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
+import { hasMatch } from '../../utils/bankTransactions'
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect'
@@ -46,6 +46,8 @@ type Props = {
   submitBtnText?: string
   containerWidth?: number
   editable?: boolean
+  showDescriptions: boolean
+  showReceiptUploads: boolean
 }
 
 type Split = {
@@ -67,14 +69,6 @@ enum Purpose {
 
 export type SaveHandle = {
   save: () => void
-}
-
-const hasMatch = (bankTransaction?: BankTransaction) => {
-  return Boolean(
-    (bankTransaction?.suggested_matches &&
-      bankTransaction?.suggested_matches?.length > 0) ||
-      bankTransaction?.match,
-  )
 }
 
 const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
@@ -112,6 +106,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       asListItem = false,
       submitBtnText = 'Save',
       containerWidth,
+      showDescriptions,
+      showReceiptUploads,
     },
     ref,
   ) => {
@@ -436,6 +432,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               onChange={value => changeCategory(index, value)}
                               className='Layer__category-menu--full'
                               disabled={bankTransaction.processing}
+                              excludeMatches
                             />
                             {index > 0 && (
                               <Button
@@ -488,16 +485,20 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 </div>
               </div>
 
-              <InputGroup
-                className={`${className}__description`}
-                name='description'
-              >
-                <Textarea name='description' placeholder='Add description' />
-              </InputGroup>
+              {showDescriptions && (
+                <InputGroup
+                  className={`${className}__description`}
+                  name='description'
+                >
+                  <Textarea name='description' placeholder='Add description' />
+                </InputGroup>
+              )}
 
-              <div className={`${className}__file-upload`}>
-                <FileInput text='Upload receipt' />
-              </div>
+              {showReceiptUploads && (
+                <div className={`${className}__file-upload`}>
+                  <FileInput text='Upload receipt' />
+                </div>
+              )}
 
               {asListItem ? (
                 <div className={`${className}__submit-btn`}>

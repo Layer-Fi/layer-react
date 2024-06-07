@@ -61,7 +61,7 @@ export const AccountingOverview = ({
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
               pnlToggle !== 'revenue' &&
-                'accounting-overview-profit-and-loss-chart--hidden',
+              'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts scope='revenue' hideClose={true} />
@@ -70,7 +70,7 @@ export const AccountingOverview = ({
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
               pnlToggle !== 'expenses' &&
-                'accounting-overview-profit-and-loss-chart--hidden',
+              'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts scope='expenses' hideClose={true} />

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { IconSvgProps } from './types'
 
-const ChavronRight = ({ size = 18, ...props }: IconSvgProps) => (
+const ChevronRight = ({ size = 18, ...props }: IconSvgProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     width='18'
@@ -18,4 +18,4 @@ const ChavronRight = ({ size = 18, ...props }: IconSvgProps) => (
     />
   </svg>
 )
-export default ChavronRight
+export default ChevronRight

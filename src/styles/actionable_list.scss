@@ -1,0 +1,25 @@
+.Layer__actionable-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    padding: var(--spacing-xs) 0;
+    gap: var(--spacing-2xs);
+    border-bottom: 1px solid var(--color-base-100);
+    box-sizing: border-box;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &.Layer__actionable-list-item--secondary {
+      color: var(--color-base-500);
+
+      &.Layer__actionable-list-item--as-link:hover {
+        color: var(--color-base-1000);
+      }
+    }
+  }
+}

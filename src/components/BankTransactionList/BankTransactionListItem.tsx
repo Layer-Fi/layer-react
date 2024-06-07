@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, Direction } from '../../types'
+import { BankTransaction } from '../../types'
+import { isCredit } from '../../utils/bankTransactions'
 import { getDefaultSelectedCategory } from '../BankTransactionRow/BankTransactionRow'
 import { RetryButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
@@ -20,18 +21,19 @@ type Props = {
   dateFormat: string
   bankTransaction: BankTransaction
   editable: boolean
+  showDescriptions: boolean
+  showReceiptUploads: boolean
   removeTransaction: (id: string) => void
   containerWidth?: number
 }
-
-const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
-  direction === Direction.CREDIT
 
 export const BankTransactionListItem = ({
   index = 0,
   dateFormat,
   bankTransaction,
   editable,
+  showDescriptions,
+  showReceiptUploads,
   containerWidth,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
@@ -153,6 +155,8 @@ export const BankTransactionListItem = ({
           asListItem={true}
           submitBtnText={editable ? 'Approve' : 'Update'}
           containerWidth={containerWidth}
+          showDescriptions={showDescriptions}
+          showReceiptUploads={showReceiptUploads}
         />
       </span>
       <span className={`${className}__base-row`}>

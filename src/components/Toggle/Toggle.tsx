@@ -1,8 +1,8 @@
 import React, {
+  CSSProperties,
   ChangeEvent,
   ReactNode,
   useEffect,
-  useRef,
   useState,
 } from 'react'
 import { useElementSize } from '../../hooks/useElementSize'
@@ -15,11 +15,13 @@ export interface Option {
   disabled?: boolean
   disabledMessage?: string
   leftIcon?: ReactNode
+  style?: CSSProperties
 }
 
 export enum ToggleSize {
   medium = 'medium',
   small = 'small',
+  xsmall = 'xsmall',
 }
 
 export interface ToggleProps {
@@ -30,7 +32,7 @@ export interface ToggleProps {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
-interface ToggleOptionProps {
+interface ToggleOptionProps extends Option {
   checked: boolean
   label: string
   name: string
@@ -152,13 +154,18 @@ const ToggleOption = ({
   leftIcon,
   disabled,
   disabledMessage = 'Disabled',
+  style,
   index,
 }: ToggleOptionProps) => {
   if (disabled) {
     return (
       <Tooltip>
         <TooltipTrigger>
-          <label className={`Layer__toggle-option`} data-checked={checked}>
+          <label
+            className={`Layer__toggle-option`}
+            data-checked={checked}
+            style={style}
+          >
             <input
               type='radio'
               checked={checked}
@@ -184,7 +191,11 @@ const ToggleOption = ({
   }
 
   return (
-    <label className={`Layer__toggle-option`} data-checked={checked}>
+    <label
+      className={`Layer__toggle-option`}
+      data-checked={checked}
+      style={style}
+    >
       <input
         type='radio'
         checked={checked}
