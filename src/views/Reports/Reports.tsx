@@ -74,7 +74,7 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
   return (
     <ProfitAndLoss asContainer={false}>
       <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
-        <div className='Layer__header__actions'>
+        <div className='Layer__component Layer__header__actions'>
           <Toggle
             name='reports-tabs'
             options={[
