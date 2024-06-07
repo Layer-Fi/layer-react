@@ -1,6 +1,6 @@
-import React, { RefObject, useContext, useRef } from 'react'
+import React, { RefObject, useContext, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { Button, ButtonVariant } from '../../components/Button'
+import { Button, ButtonVariant, RetryButton } from '../../components/Button'
 import { Container } from '../../components/Container'
 import { Panel } from '../../components/Panel'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
@@ -20,30 +20,48 @@ export interface ReportsPanelProps {
 const DownloadButton = () => {
   const { dateRange } = useContext(ProfitAndLoss.Context)
   const { auth, businessId, apiUrl } = useLayerContext()
-  return (
+  const [requestFailed, setRequestFailed] = useState(false)
+
+  const handleClick = async () => {
+    const month = (dateRange.startDate.getMonth() + 1).toString()
+    const year = dateRange.startDate.getFullYear().toString()
+    const getProfitAndLossCsv = Layer.getProfitAndLossCsv(
+      apiUrl,
+      auth.access_token,
+      {
+        params: {
+          businessId: businessId,
+          year: year,
+          month: month,
+        },
+      },
+    )
+    try {
+      const result = await getProfitAndLossCsv()
+      if (result?.data?.presignedUrl) {
+        window.location.href = result.data.presignedUrl
+        setRequestFailed(false)
+      } else {
+        setRequestFailed(true)
+      }
+    } catch (e) {
+      setRequestFailed(true)
+    }
+  }
+
+  return requestFailed ? (
+    <RetryButton
+      onClick={handleClick}
+      className='Layer__download-retry-btn'
+      error={'Approval failed. Check connection and retry in few seconds.'}
+    >
+      Retry
+    </RetryButton>
+  ) : (
     <Button
       variant={ButtonVariant.secondary}
       rightIcon={<DownloadCloud size={12} />}
-      onClick={async () => {
-        const month = (dateRange.startDate.getMonth() + 1).toString()
-        const year = dateRange.startDate.getFullYear().toString()
-        const getProfitAndLossCsv = Layer.getProfitAndLossCsv(
-          apiUrl,
-          auth.access_token,
-          {
-            params: {
-              businessId: businessId,
-              year: year,
-              month: month,
-            },
-          },
-        )
-        try {
-          const result = await getProfitAndLossCsv()
-          if (result?.data?.presignedUrl)
-            window.location.href = result.data.presignedUrl
-        } catch (e) {}
-      }}
+      onClick={handleClick}
     >
       Download
     </Button>

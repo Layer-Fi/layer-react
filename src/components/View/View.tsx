@@ -11,17 +11,13 @@ export interface ViewProps {
 }
 
 export const View = ({ title, children, headerControls }: ViewProps) => {
-  const { theme, addToast } = useLayerContext()
+  const { theme } = useLayerContext()
   const styles = parseStylesFromThemeConfig(theme)
 
   return (
     <div className='Layer__view' style={{ ...styles }}>
       <ViewHeader title={title} controls={headerControls} />
       <div className='Layer__view-main'>{children}</div>
-      <ToastsContainer />
-      <button onClick={() => addToast({ content: 'This is a toast message' })}>
-        add toast
-      </button>
     </div>
   )
 }
