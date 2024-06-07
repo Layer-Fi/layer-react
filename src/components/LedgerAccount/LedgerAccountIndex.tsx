@@ -112,7 +112,7 @@ export const LedgerAccount = ({
               weight={TextWeight.bold}
               className='Layer__ledger-account__balance-label'
             >
-              {format(dateRange.endDate, 'LLLL y')} Balance
+              Current Balance
             </Text>
             <Text
               weight={TextWeight.bold}
