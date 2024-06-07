@@ -189,6 +189,7 @@ export const SplitForm = ({
               amount: split.amount,
             })),
           } as SplitCategoryUpdate),
+      true,
     )
   }
 
@@ -252,8 +253,12 @@ export const SplitForm = ({
         </TextButton>
       </div>
       {!showRetry && (
-        <Button fullWidth={true} onClick={save} disabled={isLoading}>
-          {isLoading ? 'Saving...' : 'Save'}
+        <Button
+          fullWidth={true}
+          onClick={save}
+          disabled={isLoading || bankTransaction.processing}
+        >
+          {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
         </Button>
       )}
       {showRetry ? (

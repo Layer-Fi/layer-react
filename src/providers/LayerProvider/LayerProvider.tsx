@@ -1,12 +1,10 @@
-import React, {
-  PropsWithChildren,
-  useReducer,
-  useEffect,
-  Reducer
-} from 'react'
+import React, { PropsWithChildren, useReducer, useEffect, Reducer } from 'react'
 import { Layer } from '../../api/layer'
+import { GlobalWidgets } from '../../components/GlobalWidgets'
 import { ToastProps } from '../../components/Toast/Toast'
+import { DrawerContext } from '../../contexts/DrawerContext'
 import { LayerContext } from '../../contexts/LayerContext'
+import { useDrawer } from '../../hooks/useDrawer'
 import {
   LayerContextValues,
   LayerContextAction,
@@ -287,6 +285,8 @@ export const LayerProvider = ({
       payload: { onboardingStep: value },
     })
 
+  const drawerContextData = useDrawer()
+
   return (
     <SWRConfig value={defaultSWRConfig}>
       <LayerContext.Provider
@@ -302,7 +302,10 @@ export const LayerProvider = ({
           removeToast,
         }}
       >
-        {children}
+        <DrawerContext.Provider value={drawerContextData}>
+          {children}
+          <GlobalWidgets />
+        </DrawerContext.Provider>
       </LayerContext.Provider>
     </SWRConfig>
   )

@@ -1,23 +1,19 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { DrawerContext } from '../../contexts/DrawerContext'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
-import { useLayerContext } from '../../hooks/useLayerContext'
 import { BankTransaction, CategorizationType } from '../../types'
 import { ActionableList } from '../ActionableList'
 import { Button, RetryButton } from '../Button'
 import { ErrorText } from '../Typography'
-import {
-  Option,
-  mapCategoryToOption,
-  flattenCategories,
-  getAssignedValue,
-} from './utils'
+import { BusinessCategories } from './BusinessCategories'
+import { Option, mapCategoryToOption, getAssignedValue } from './utils'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
 }
 
 export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
-  const { categories } = useLayerContext()
+  const { setContent, close } = useContext(DrawerContext)
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactions()
   const [selectedCategory, setSelectedCategory] = useState<Option | undefined>(
@@ -31,9 +27,6 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
     }
   }, [bankTransaction.error])
 
-  // @TODO - use category options in drawer
-  const categoryOptions = flattenCategories(categories)
-
   const options = useMemo(() => {
     const options =
       bankTransaction?.categorization_flow?.type ===
@@ -43,26 +36,37 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
           )
         : []
 
-    options.push({
-      label: options.length > 0 ? 'All categories' : 'Select category',
-      id: 'SELECT_CATEGORY',
-      value: {
-        type: 'SELECT_CATEGORY',
-      },
-      secondary: true,
-      asLink: true,
-    })
-
     if (selectedCategory && !options.find(x => x.id === selectedCategory?.id)) {
       options.unshift(selectedCategory)
+    }
+
+    if (options.length) {
+      options.push({
+        label: 'All categories',
+        id: 'SELECT_CATEGORY',
+        value: {
+          type: 'SELECT_CATEGORY',
+        },
+        secondary: true,
+        asLink: true,
+      })
     }
 
     return options
   }, [bankTransaction, selectedCategory])
 
+  const onDrawerCategorySelect = (value: Option) => {
+    close()
+    setSelectedCategory(value)
+  }
+
+  const openDrawer = () => {
+    setContent(<BusinessCategories select={onDrawerCategorySelect} />)
+  }
+
   const onCategorySelect = (category: Option) => {
     if (category.value.type === 'SELECT_CATEGORY') {
-      console.log('open drawer...', categoryOptions)
+      openDrawer()
     } else {
       if (
         selectedCategory &&
@@ -79,14 +83,17 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
     if (!selectedCategory || !selectedCategory.value.payload) {
       return
     }
-
-    categorizeBankTransaction(bankTransaction.id, {
-      type: 'Category',
-      category: {
-        type: 'StableName',
-        stable_name: selectedCategory.value.payload.stable_name || '',
+    categorizeBankTransaction(
+      bankTransaction.id,
+      {
+        type: 'Category',
+        category: {
+          type: 'StableName',
+          stable_name: selectedCategory.value.payload.stable_name || '',
+        },
       },
-    })
+      true,
+    )
   }
 
   return (
@@ -96,16 +103,23 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
         onClick={onCategorySelect}
         selected={selectedCategory}
       />
-      {!showRetry && (
+      {options.length === 0 ? (
+        <Button onClick={openDrawer} fullWidth={true}>
+          Select category
+        </Button>
+      ) : null}
+      {!showRetry && options.length > 0 ? (
         <Button
           onClick={save}
-          disabled={!selectedCategory || isLoading}
+          disabled={
+            !selectedCategory || isLoading || bankTransaction.processing
+          }
           fullWidth={true}
         >
-          Save
+          {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
         </Button>
-      )}
-      {showRetry ? (
+      ) : null}
+      {showRetry && options.length > 0 ? (
         <RetryButton
           onClick={() => {
             if (!bankTransaction.processing) {

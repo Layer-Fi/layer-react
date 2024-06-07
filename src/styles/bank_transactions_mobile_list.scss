@@ -19,6 +19,13 @@
   transform: scale(0.96);
   transition: all 180ms ease-in-out;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 
   &.show {
     opacity: 1;
@@ -195,4 +202,10 @@
   & > .Layer__text-btn {
     color: var(--color-base-1000);
   }
+}
+
+.Layer__bank-transaction-mobile-list-item__categories_list-title {
+  padding-top: var(--spacing-2xs);
+  padding-bottom: var(--spacing-lg);
+  font-size: 18px;
 }

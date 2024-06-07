@@ -109,9 +109,9 @@ export const BankTransactions = ({
       debounceShiftStickyHeader(0)
     }
 
-    if (size.width > 700 && listView) {
+    if (size.width > 760 && listView) {
       setListView(false)
-    } else if (size.width <= 700 && !listView) {
+    } else if (size.width <= 760 && !listView) {
       setListView(true)
     }
 

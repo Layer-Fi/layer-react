@@ -2,7 +2,6 @@ import React, { ReactNode } from 'react'
 import { ViewHeader } from '../../components/ViewHeader'
 import { useLayerContext } from '../../hooks/useLayerContext'
 import { parseStylesFromThemeConfig } from '../../utils/colors'
-import { ToastsContainer } from '../Toast/Toast'
 
 export interface ViewProps {
   children: ReactNode

@@ -1,17 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useElementSize } from '../../hooks/useElementSize'
-import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { hasMatch, isCredit } from '../../utils/bankTransactions'
-import { Badge } from '../Badge'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
-import { MatchBadge } from '../BankTransactionRow/MatchBadge'
-import { SplitTooltipDetails } from '../BankTransactionRow/SplitTooltipDetails'
 import { CloseButton } from '../Button'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
-import { Text, TextUseTooltip } from '../Typography'
+import { Text } from '../Typography'
 import { BankTransactionMobileForms } from './BankTransactionMobileForms'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
@@ -64,7 +60,7 @@ export const BankTransactionMobileListItem = ({
       : Purpose.business,
   )
   const [open, setOpen] = useState(false)
-  const [showComponent, setShowComponent] = useState(false)
+  const [showComponent, setShowComponent] = useState(!initialLoad)
   const [height, setHeight] = useState(0)
 
   const toggleOpen = () => {

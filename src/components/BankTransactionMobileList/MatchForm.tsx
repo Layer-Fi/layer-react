@@ -11,7 +11,7 @@ export const MatchForm = ({
 }: {
   bankTransaction: BankTransaction
 }) => {
-  const { match: matchBankTransaction } = useBankTransactions()
+  const { match: matchBankTransaction, isLoading } = useBankTransactions()
   const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
     isAlreadyMatched(bankTransaction),
   )
@@ -34,7 +34,7 @@ export const MatchForm = ({
       return
     }
 
-    await matchBankTransaction(bankTransaction.id, foundMatch.id)
+    await matchBankTransaction(bankTransaction.id, foundMatch.id, true)
   }
 
   const save = async () => {
@@ -64,8 +64,19 @@ export const MatchForm = ({
         }}
       />
       {!showRetry && (
-        <Button fullWidth={true} disabled={!selectedMatchId} onClick={save}>
-          Approve match
+        <Button
+          fullWidth={true}
+          disabled={
+            !selectedMatchId ||
+            isLoading ||
+            bankTransaction.processing ||
+            selectedMatchId === isAlreadyMatched(bankTransaction)
+          }
+          onClick={save}
+        >
+          {isLoading || bankTransaction.processing
+            ? 'Saving...'
+            : 'Approve match'}
         </Button>
       )}
       {showRetry ? (

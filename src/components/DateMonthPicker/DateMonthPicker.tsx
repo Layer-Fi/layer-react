@@ -22,7 +22,7 @@ export const DateMonthPicker = ({
   minDate,
   currentDateOption = true,
 }: DateMonthPickerProps) => {
-  const { isMobile } = useSizeClass()
+  const { isMobile, isTablet } = useSizeClass()
   const [isAnimating, setIsAnimating] = useState(false)
 
   const [localDate, setLocalDate] = useState(dateRange.startDate)
@@ -172,7 +172,7 @@ export const DateMonthPicker = ({
         </button>
         <div className='Layer__date-month-picker__effect-blur'></div>
       </div>
-      {!isMobile && currentDateOption && (
+      {!isMobile && !isTablet && currentDateOption && (
         <Button
           className='Layer__date-month-picker__current-button'
           onClick={() => setCurrentDate()}
