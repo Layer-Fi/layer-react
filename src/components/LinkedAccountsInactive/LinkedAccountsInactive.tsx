@@ -5,12 +5,12 @@ import { Badge, BadgeVariant } from '../Badge'
 import { HoverMenu } from '../HoverMenu'
 
 export const LinkedAccountsInactive = () => {
-  const { renewLinkAccount } = useLinkedAccounts()
+  const { repairConnection } = useLinkedAccounts()
 
   const hoverActions = [
     {
       name: 'Renew link',
-      action: renewLinkAccount,
+      action: () => repairConnection,
     },
   ]
   return (
