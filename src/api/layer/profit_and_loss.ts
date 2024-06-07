@@ -1,4 +1,5 @@
 import { ProfitAndLoss } from '../../types'
+import { S3PresignedUrl } from '../../types/general'
 import { ProfitAndLossSummaries } from '../../types/profit_and_loss'
 import { get } from './authenticated_http'
 
@@ -39,4 +40,29 @@ export const getProfitAndLossSummaries = get<{
     }${reportingBasis ? `&reporting_basis=${reportingBasis}` : ''}${
       tagKey ? `&tag_key=${tagKey}` : ''
     }${tagValues ? `&tag_values=${tagValues}` : ''}`,
+)
+
+export const getProfitAndLossCsv = get<{
+  data?: S3PresignedUrl
+  error?: unknown
+}>(
+  ({
+    businessId,
+    startDate,
+    endDate,
+    month,
+    year,
+    tagKey,
+    tagValues,
+    reportingBasis,
+  }) =>
+    `/v1/businesses/${businessId}/reports/profit-and-loss/exports/csv?${
+      startDate ? `start_date=${encodeURIComponent(startDate)}` : ''
+    }${endDate ? `&end_date=${encodeURIComponent(endDate)}` : ''}${
+      month ? `&month=${month}` : ''
+    }${year ? `&year=${year}` : ''}${
+      reportingBasis ? `&reporting_basis=${reportingBasis}` : ''
+    }${tagKey ? `&tag_key=${tagKey}` : ''}${
+      tagValues ? `&tag_values=${tagValues}` : ''
+    }`,
 )

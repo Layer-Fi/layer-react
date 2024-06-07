@@ -4,6 +4,7 @@ import {
   getBankTransactions,
   categorizeBankTransaction,
   matchBankTransaction,
+  getBankTransactionsCsv,
 } from './layer/bankTransactions'
 import { getBusiness } from './layer/business'
 import { getCategories } from './layer/categories'
@@ -32,6 +33,7 @@ import {
 import {
   getProfitAndLoss,
   getProfitAndLossSummaries,
+  getProfitAndLossCsv,
 } from './layer/profit_and_loss'
 import { getTasks, submitResponseToTask } from './layer/tasks'
 
@@ -44,6 +46,7 @@ export const Layer = {
   updateAccount,
   getBalanceSheet,
   getBankTransactions,
+  getBankTransactionsCsv,
   getCategories,
   getChartOfAccounts,
   getLedgerAccountBalances,
@@ -51,6 +54,7 @@ export const Layer = {
   getLedgerAccountsEntry,
   getProfitAndLoss,
   getProfitAndLossSummaries,
+  getProfitAndLossCsv,
   getLinkedAccounts,
   getJournal,
   createJournalEntries,

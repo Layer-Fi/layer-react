@@ -1,7 +1,10 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, useState } from 'react'
+import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../hooks/useLayerContext'
+import DownloadCloud from '../../icons/DownloadCloud'
 import { DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
+import { Button, ButtonVariant, RetryButton } from '../Button'
 import { Header } from '../Container'
 import { DateMonthPicker } from '../DateMonthPicker'
 import { Tabs } from '../Tabs'
@@ -21,6 +24,53 @@ export interface BankTransactionsHeaderProps {
   listView?: boolean
   dateRange?: DateRange
   setDateRange?: (value: DateRange) => void
+}
+
+const DownloadButton = () => {
+  const { auth, businessId, apiUrl } = useLayerContext()
+  const [requestFailed, setRequestFailed] = useState(false)
+  const handleClick = async () => {
+    const currentYear = new Date().getFullYear().toString()
+    const getBankTransactionsCsv = Layer.getBankTransactionsCsv(
+      apiUrl,
+      auth.access_token,
+      {
+        params: {
+          businessId: businessId,
+          year: currentYear,
+        },
+      },
+    )
+    try {
+      const result = await getBankTransactionsCsv()
+      if (result?.data?.presignedUrl) {
+        window.location.href = result.data.presignedUrl
+        setRequestFailed(false)
+      } else {
+        setRequestFailed(true)
+      }
+    } catch (e) {
+      setRequestFailed(true)
+    }
+  }
+
+  return requestFailed ? (
+    <RetryButton
+      onClick={handleClick}
+      className='Layer__download-retry-btn'
+      error={'Approval failed. Check connection and retry in few seconds.'}
+    >
+      Retry
+    </RetryButton>
+  ) : (
+    <Button
+      variant={ButtonVariant.secondary}
+      rightIcon={<DownloadCloud size={12} />}
+      onClick={handleClick}
+    >
+      Download
+    </Button>
+  )
 }
 
 export const BankTransactionsHeader = ({
@@ -65,15 +115,18 @@ export const BankTransactionsHeader = ({
       </div>
 
       {!categorizedOnly && !(mobileComponent == 'mobileList' && listView) && (
-        <Toggle
-          name='bank-transaction-display'
-          options={[
-            { label: 'To Review', value: DisplayState.review },
-            { label: 'Categorized', value: DisplayState.categorized },
-          ]}
-          selected={display}
-          onChange={onCategorizationDisplayChange}
-        />
+        <div className='Layer__header__actions'>
+          <DownloadButton />
+          <Toggle
+            name='bank-transaction-display'
+            options={[
+              { label: 'To Review', value: DisplayState.review },
+              { label: 'Categorized', value: DisplayState.categorized },
+            ]}
+            selected={display}
+            onChange={onCategorizationDisplayChange}
+          />
+        </div>
       )}
 
       {!categorizedOnly && mobileComponent === 'mobileList' && listView && (
