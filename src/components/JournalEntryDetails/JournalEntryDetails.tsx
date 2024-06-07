@@ -117,8 +117,8 @@ export const JournalEntryDetails = () => {
                         entry?.line_items
                           .filter(item => item.direction === 'DEBIT')
                           .map(item => item.amount)
-                          .reduce((a, b) => a + b, 0),
-                      ) || 0,
+                          .reduce((a, b) => a + b, 0) || 0,
+                      ),
                     )}
                   </td>
                   <td className='Layer__table-cell Layer__table-cell--amount'>
@@ -128,8 +128,8 @@ export const JournalEntryDetails = () => {
                         entry?.line_items
                           .filter(item => item.direction === 'CREDIT')
                           .map(item => item.amount)
-                          .reduce((a, b) => a + b, 0),
-                      ) || 0,
+                          .reduce((a, b) => a + b, 0) || 0,
+                      ),
                     )}
                   </td>
                 </tr>
