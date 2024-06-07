@@ -30,10 +30,6 @@ export const JournalEntryDetails = () => {
 
   return (
     <div className='Layer__journal__entry-details'>
-      <div className='Layer__journal__entry-details__back-btn'>
-        <CloseButton onClick={() => closeSelectedEntry()} />
-      </div>
-
       <DetailsList
         title='Transaction source'
         actions={
