@@ -430,7 +430,7 @@ export const ProfitAndLossChart = () => {
             patternUnits='userSpaceOnUse'
           >
             <rect width='4' height='4' opacity={0.16} />
-            <line x1='0' y='0' x2='0' y2='4' stroke-width='2' />
+            <line x1='0' y='0' x2='0' y2='4' strokeWidth='2' />
           </pattern>
 
           <pattern
@@ -443,7 +443,7 @@ export const ProfitAndLossChart = () => {
             patternUnits='userSpaceOnUse'
           >
             <rect width='4' height='4' opacity={0.16} />
-            <line x1='0' y='0' x2='0' y2='4' stroke-width='2' />
+            <line x1='0' y='0' x2='0' y2='4' strokeWidth='2' />
           </pattern>
         </defs>
         <Tooltip

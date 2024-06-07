@@ -31,7 +31,7 @@ import { is } from 'date-fns/locale'
     @SerialName("Opening_Balance_Ledger_Entry_Source")
     @SerialName("Payout_Ledger_Entry_Source")
     */
-const SourceDetailView = ({ source }: { source: LedgerEntrySource }) => {
+export const SourceDetailView = ({ source }: { source: LedgerEntrySource }) => {
   switch (source.type) {
     case 'Transaction_Ledger_Entry_Source': {
       const transactionSource = source as TransactionLedgerEntrySource

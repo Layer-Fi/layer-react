@@ -159,7 +159,7 @@ export const useJournal: UseJournal = () => {
         )
 
         if (foundParent) {
-          let newLineItem = {
+          const newLineItem = {
             ...lineItem,
             account_identifier: {
               id: foundParent.id,
@@ -177,7 +177,7 @@ export const useJournal: UseJournal = () => {
           lineItems[lineItemIndex] = newLineItem
         }
       } else {
-        let newLineItem = {
+        const newLineItem = {
           ...lineItem,
           [fieldName]: value,
         }
@@ -357,9 +357,3 @@ export const useJournal: UseJournal = () => {
     removeEntryLine,
   }
 }
-
-export const flattenEntries = (entries: JournalEntry[]): JournalEntry[] =>
-  entries
-    .flatMap(a => [a, flattenEntries(a.line_items || [])])
-    .flat()
-    .filter(id => id)

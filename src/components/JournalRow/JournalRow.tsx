@@ -3,14 +3,18 @@ import { DATE_FORMAT } from '../../config/general'
 import { JournalContext } from '../../contexts/JournalContext'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars } from '../../models/Money'
-import { JournalEntry, JournalEntryLine } from '../../types'
+import {
+  JournalEntry,
+  JournalEntryLine,
+  JournalEntryLineItem,
+} from '../../types'
 import { humanizeEnum } from '../../utils/format'
 import { View } from '../Journal'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
 export interface JournalRowProps {
-  row: JournalEntry | JournalEntryLine
+  row: JournalEntry | JournalEntryLine | JournalEntryLineItem
   index: number
   initialLoad?: boolean
   view: View
@@ -34,6 +38,22 @@ const COLLAPSED_STYLE = {
   opacity: 0.5,
   paddingTop: 0,
   paddingBottom: 0,
+}
+
+const rowId = (row: JournalEntry | JournalEntryLineItem | JournalEntryLine) => {
+  if ('id' in row) {
+    return row.id
+  }
+
+  return `${row.account_identifier.id}-${Math.random()}`
+}
+
+const accountName = (row: JournalEntryLine | JournalEntryLineItem) => {
+  if ('account' in row) {
+    return row.account.name
+  }
+
+  return row.account_identifier.name
 }
 
 export const JournalRow = ({
@@ -66,7 +86,7 @@ export const JournalRow = ({
 
   const baseClass = classNames(
     'Layer__journal-table-row',
-    row.id === selectedEntryId && 'Layer__table-row--active',
+    rowId(row) === selectedEntryId && 'Layer__table-row--active',
     initialLoad && 'initial-load',
     'Layer__table-row--with-show',
     showComponent ? 'show' : 'Layer__table-row--anim-starting-state',
@@ -184,7 +204,7 @@ export const JournalRow = ({
         </tr>
         {(row.line_items || []).map((lineItem, idx) => (
           <JournalRow
-            key={lineItem.id}
+            key={`${row.id}-${idx}`}
             row={lineItem}
             depth={depth + 1}
             index={idx}
@@ -210,7 +230,7 @@ export const JournalRow = ({
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content' style={style}>
           <span className='Layer__table-cell-hidden'>
-            {row.id.substring(0, 5)}
+            {rowId(row).substring(0, 5)}
           </span>
         </span>
       </td>
@@ -218,7 +238,7 @@ export const JournalRow = ({
       <td className='Layer__table-cell' />
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content' style={style}>
-          {row.account.name}
+          {accountName(row)}
         </span>
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>

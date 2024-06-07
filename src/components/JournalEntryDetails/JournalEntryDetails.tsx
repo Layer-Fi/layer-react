@@ -1,14 +1,15 @@
 import React, { useContext, useMemo } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
-import { flattenEntries } from '../../hooks/useJournal/useJournal'
+import X from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
 import { humanizeEnum } from '../../utils/format'
 import { Badge, BadgeVariant } from '../Badge'
-import { CloseButton } from '../Button'
+import { CloseButton, IconButton } from '../Button'
 import { Card } from '../Card'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
+import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 
 export const JournalEntryDetails = () => {
   const {
@@ -21,7 +22,7 @@ export const JournalEntryDetails = () => {
 
   const entry = useMemo(() => {
     if (selectedEntryId && data) {
-      return flattenEntries(data || []).find(x => x.id === selectedEntryId)
+      return data.find(x => x.id === selectedEntryId)
     }
 
     return
@@ -30,13 +31,25 @@ export const JournalEntryDetails = () => {
   return (
     <div className='Layer__journal__entry-details'>
       <DetailsList
-        className='Layer__journal__entry-details__title'
-        title={`Journal Entry #${entry?.id.substring(0, 5)}`}
+        title='Transaction source'
         actions={
-          <div className='Layer__journal__entry-details__back-btn'>
-            <CloseButton onClick={() => closeSelectedEntry()} />
-          </div>
+          <IconButton
+            icon={<X />}
+            onClick={() => closeSelectedEntry()}
+            className='Layer__hidden-sm Layer__hidden-xs'
+          />
         }
+      >
+        <DetailsListItem label='Source' isLoading={isLoadingEntry}>
+          <Badge>{entry?.source?.entity_name}</Badge>
+        </DetailsListItem>
+        {entry?.source?.display_description && (
+          <SourceDetailView source={entry?.source} />
+        )}
+      </DetailsList>
+      <DetailsList
+        title={`Journal Entry ${entry?.id.substring(0, 5)}`}
+        className='Layer__border-top'
       >
         <DetailsListItem label='Entry type' isLoading={isLoadingEntry}>
           {humanizeEnum(entry?.entry_type ?? '')}
@@ -53,7 +66,6 @@ export const JournalEntryDetails = () => {
           </DetailsListItem>
         )}
       </DetailsList>
-
       {!isLoadingEntry && !errorEntry ? (
         <div className='Layer__ledger-account__entry-details__line-items'>
           <Card>
@@ -70,10 +82,10 @@ export const JournalEntryDetails = () => {
                 </tr>
               </thead>
               <tbody>
-                {entry?.line_items?.map(item => (
-                  <tr key={`ledger-line-item-${item.id}`}>
+                {entry?.line_items?.map((item, index) => (
+                  <tr key={`ledger-line-item-${index}`}>
                     <td className='Layer__table-cell'>
-                      {item.account?.name || ''}
+                      {item.account_identifier?.name || ''}
                     </td>
                     <td className='Layer__table-cell Layer__table-cell--amount'>
                       {item.direction === Direction.DEBIT && (
@@ -100,8 +112,8 @@ export const JournalEntryDetails = () => {
                         entry?.line_items
                           .filter(item => item.direction === 'DEBIT')
                           .map(item => item.amount)
-                          .reduce((a, b) => a + b, 0),
-                      ) || 0,
+                          .reduce((a, b) => a + b, 0) || 0,
+                      ),
                     )}
                   </td>
                   <td className='Layer__table-cell Layer__table-cell--amount'>
@@ -111,8 +123,8 @@ export const JournalEntryDetails = () => {
                         entry?.line_items
                           .filter(item => item.direction === 'CREDIT')
                           .map(item => item.amount)
-                          .reduce((a, b) => a + b, 0),
-                      ) || 0,
+                          .reduce((a, b) => a + b, 0) || 0,
+                      ),
                     )}
                   </td>
                 </tr>
