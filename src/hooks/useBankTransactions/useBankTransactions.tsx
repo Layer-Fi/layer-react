@@ -13,17 +13,19 @@ type UseBankTransactions = () => {
   categorize: (
     id: BankTransaction['id'],
     newCategory: CategoryUpdate,
+    notify?: boolean,
   ) => Promise<void>
   match: (
     id: BankTransaction['id'],
     matchId: BankTransaction['id'],
+    notify?: boolean,
   ) => Promise<void>
   updateOneLocal: (bankTransaction: BankTransaction) => void
   refetch: () => void
 }
 
 export const useBankTransactions: UseBankTransactions = () => {
-  const { auth, businessId, apiUrl } = useLayerContext()
+  const { auth, businessId, apiUrl, addToast } = useLayerContext()
 
   const {
     data: responseData,
@@ -47,6 +49,7 @@ export const useBankTransactions: UseBankTransactions = () => {
   const categorize = (
     id: BankTransaction['id'],
     newCategory: CategoryUpdate,
+    notify?: boolean,
   ) => {
     const foundBT = data?.find(x => x.business_id === businessId && x.id === id)
     if (foundBT) {
@@ -66,6 +69,9 @@ export const useBankTransactions: UseBankTransactions = () => {
           console.error(errors)
           throw errors
         }
+        if (newBT?.recently_categorized === true && notify) {
+          addToast({ content: 'Transaction saved' })
+        }
       })
       .catch(err => {
         const newBT = data?.find(
@@ -82,7 +88,11 @@ export const useBankTransactions: UseBankTransactions = () => {
       })
   }
 
-  const match = (id: BankTransaction['id'], matchId: BankTransaction['id']) => {
+  const match = (
+    id: BankTransaction['id'],
+    matchId: BankTransaction['id'],
+    notify?: boolean,
+  ) => {
     const foundBT = data?.find(x => x.business_id === businessId && x.id === id)
     if (foundBT) {
       updateOneLocal({ ...foundBT, processing: true, error: undefined })
@@ -105,6 +115,10 @@ export const useBankTransactions: UseBankTransactions = () => {
         if (errors) {
           console.error(errors)
           throw errors
+        }
+
+        if (newBT?.recently_categorized === true && notify) {
+          addToast({ content: 'Transaction saved' })
         }
       })
       .catch(err => {

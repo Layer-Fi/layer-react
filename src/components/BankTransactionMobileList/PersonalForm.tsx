@@ -37,15 +37,19 @@ export const PersonalForm = ({ bankTransaction }: PersonalFormProps) => {
   }, [bankTransaction.error])
 
   const save = () => {
-    categorizeBankTransaction(bankTransaction.id, {
-      type: 'Category',
-      category: {
-        type: 'StableName',
-        stable_name: isCredit(bankTransaction)
-          ? 'PERSONAL_INCOME'
-          : 'PERSONAL_EXPENSES',
+    categorizeBankTransaction(
+      bankTransaction.id,
+      {
+        type: 'Category',
+        category: {
+          type: 'StableName',
+          stable_name: isCredit(bankTransaction)
+            ? 'PERSONAL_INCOME'
+            : 'PERSONAL_EXPENSES',
+        },
       },
-    })
+      true,
+    )
   }
 
   const alreadyAssigned = isAlreadyAssigned(bankTransaction)
@@ -55,10 +59,14 @@ export const PersonalForm = ({ bankTransaction }: PersonalFormProps) => {
       {!showRetry && (
         <Button
           fullWidth={true}
-          disabled={alreadyAssigned || isLoading}
+          disabled={alreadyAssigned || isLoading || bankTransaction.processing}
           onClick={save}
         >
-          {alreadyAssigned ? 'Saved as Personal' : 'Categorize as Personal'}
+          {isLoading || bankTransaction.processing
+            ? 'Saving...'
+            : alreadyAssigned
+            ? 'Saved as Personal'
+            : 'Categorize as Personal'}
         </Button>
       )}
       {showRetry ? (

@@ -36,18 +36,20 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
           )
         : []
 
-    options.push({
-      label: options.length > 0 ? 'All categories' : 'Select category',
-      id: 'SELECT_CATEGORY',
-      value: {
-        type: 'SELECT_CATEGORY',
-      },
-      secondary: true,
-      asLink: true,
-    })
-
     if (selectedCategory && !options.find(x => x.id === selectedCategory?.id)) {
       options.unshift(selectedCategory)
+    }
+
+    if (options.length) {
+      options.push({
+        label: 'All categories',
+        id: 'SELECT_CATEGORY',
+        value: {
+          type: 'SELECT_CATEGORY',
+        },
+        secondary: true,
+        asLink: true,
+      })
     }
 
     return options
@@ -58,9 +60,13 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
     setSelectedCategory(value)
   }
 
+  const openDrawer = () => {
+    setContent(<BusinessCategories select={onDrawerCategorySelect} />)
+  }
+
   const onCategorySelect = (category: Option) => {
     if (category.value.type === 'SELECT_CATEGORY') {
-      setContent(<BusinessCategories select={onDrawerCategorySelect} />)
+      openDrawer()
     } else {
       if (
         selectedCategory &&
@@ -77,14 +83,17 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
     if (!selectedCategory || !selectedCategory.value.payload) {
       return
     }
-
-    categorizeBankTransaction(bankTransaction.id, {
-      type: 'Category',
-      category: {
-        type: 'StableName',
-        stable_name: selectedCategory.value.payload.stable_name || '',
+    categorizeBankTransaction(
+      bankTransaction.id,
+      {
+        type: 'Category',
+        category: {
+          type: 'StableName',
+          stable_name: selectedCategory.value.payload.stable_name || '',
+        },
       },
-    })
+      true,
+    )
   }
 
   return (
@@ -94,16 +103,23 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
         onClick={onCategorySelect}
         selected={selectedCategory}
       />
-      {!showRetry && (
+      {options.length === 0 ? (
+        <Button onClick={openDrawer} fullWidth={true}>
+          Select category
+        </Button>
+      ) : null}
+      {!showRetry && options.length > 0 ? (
         <Button
           onClick={save}
-          disabled={!selectedCategory || isLoading}
+          disabled={
+            !selectedCategory || isLoading || bankTransaction.processing
+          }
           fullWidth={true}
         >
-          Save
+          {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
         </Button>
-      )}
-      {showRetry ? (
+      ) : null}
+      {showRetry && options.length > 0 ? (
         <RetryButton
           onClick={() => {
             if (!bankTransaction.processing) {

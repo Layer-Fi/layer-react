@@ -657,7 +657,7 @@
   }
 }
 
-@container (max-width: 700px) {
+@container (max-width: 760px) {
   .Layer__bank-transactions__header {
     box-shadow: 0px -1px 0px 0px rgba(23, 51, 45, 0.16) inset;
     background-color: var(--table-bg);
@@ -970,7 +970,7 @@
   }
 }
 
-@container (max-width: 700px) {
+@container (max-width: 760px) {
   .Layer__expanded-bank-transaction-row__match-table
     .Layer__expanded-bank-transaction-row__match-table__header {
     display: none;
