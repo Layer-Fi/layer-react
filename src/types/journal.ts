@@ -1,5 +1,6 @@
 import { Account } from '../types'
 import { Direction } from './bank_transactions'
+import { LedgerEntrySource } from './ledger_accounts'
 
 export interface JournalEntry {
   id: string
@@ -11,7 +12,8 @@ export interface JournalEntry {
   entry_at: string
   reversal_of_id: string | null
   reversal_id: string | null
-  line_items: any[]
+  line_items: JournalEntryLineItem[]
+  source?: LedgerEntrySource
 }
 
 export interface JournalEntryLine {
