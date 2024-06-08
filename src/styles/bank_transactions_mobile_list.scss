@@ -5,6 +5,7 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   list-style: none;
+  overflow: hidden;
 }
 
 .Layer__bank-transaction-mobile-list-item {
@@ -26,6 +27,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  box-sizing: border-box;
 
   &.show {
     opacity: 1;
@@ -50,11 +52,19 @@
 }
 
 .Layer__bank-transaction-mobile-list-item__heading {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.Layer__bank-transaction-mobile-list-item__heading__content {
   display: flex;
+  width: 100%;
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--spacing-xs);
   padding: var(--spacing-sm);
+  box-sizing: border-box;
 }
 
 .Layer__bank-transaction-mobile-list-item__heading__main {

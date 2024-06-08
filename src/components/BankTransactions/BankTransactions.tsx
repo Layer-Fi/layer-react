@@ -47,21 +47,30 @@ export const BankTransactions = ({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   })
-  const { data, isLoading, error, isValidating, refetch } =
+  const { data, isLoading, loadingStatus, error, isValidating, refetch } =
     useBankTransactions()
 
+  // const bankTransactionsByFilter = data?.filter(
+  //   tx => !removedTxs.includes(tx.id) && filterVisibility(display, tx),
+  // )
+
   const bankTransactionsByFilter = data?.filter(
-    tx => !removedTxs.includes(tx.id) && filterVisibility(display, tx),
+    tx =>
+      filterVisibility(display, tx) ||
+      (display === DisplayState.review &&
+        tx.recently_categorized &&
+        !removedTxs.includes(tx.id)) ||
+      (display === DisplayState.categorized && tx.recently_categorized),
   )
 
   useEffect(() => {
-    if (!isLoading) {
+    if (loadingStatus === 'complete') {
       const timeoutLoad = setTimeout(() => {
         setInitialLoad(false)
       }, 1000)
       return () => clearTimeout(timeoutLoad)
     }
-  }, [isLoading])
+  }, [loadingStatus])
 
   const bankTransactions = useMemo(() => {
     if (monthlyView) {

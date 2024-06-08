@@ -1,12 +1,15 @@
+import { useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { BankTransaction, CategoryUpdate, Metadata } from '../../types'
 import { BankTransactionMatchType } from '../../types/bank_transactions'
+import { LoadedStatus } from '../../types/general'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
 
 type UseBankTransactions = () => {
   data?: BankTransaction[]
   metadata: Metadata
+  loadingStatus: LoadedStatus
   isLoading: boolean
   isValidating: boolean
   error: unknown
@@ -26,6 +29,7 @@ type UseBankTransactions = () => {
 
 export const useBankTransactions: UseBankTransactions = () => {
   const { auth, businessId, apiUrl, addToast } = useLayerContext()
+  const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
 
   const {
     data: responseData,
@@ -39,6 +43,18 @@ export const useBankTransactions: UseBankTransactions = () => {
       params: { businessId },
     }),
   )
+
+  useEffect(() => {
+    if (isLoading && loadingStatus === 'initial') {
+      setLoadingStatus('loading')
+      return
+    }
+
+    if (!isLoading && loadingStatus === 'loading') {
+      setLoadingStatus('complete')
+      return
+    }
+  }, [isLoading])
 
   const {
     data = undefined,
@@ -150,6 +166,7 @@ export const useBankTransactions: UseBankTransactions = () => {
   return {
     data,
     metadata,
+    loadingStatus,
     isLoading,
     isValidating,
     refetch,
