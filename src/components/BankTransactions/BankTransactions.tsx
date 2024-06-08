@@ -50,10 +50,6 @@ export const BankTransactions = ({
   const { data, isLoading, loadingStatus, error, isValidating, refetch } =
     useBankTransactions()
 
-  // const bankTransactionsByFilter = data?.filter(
-  //   tx => !removedTxs.includes(tx.id) && filterVisibility(display, tx),
-  // )
-
   const bankTransactionsByFilter = data?.filter(
     tx =>
       filterVisibility(display, tx) ||
