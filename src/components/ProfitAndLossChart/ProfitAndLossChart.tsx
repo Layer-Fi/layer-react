@@ -34,6 +34,7 @@ import {
   ReferenceLine,
 } from 'recharts'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
+import { Props as LegendProps } from 'recharts/types/component/DefaultLegendContent'
 
 const getChartWindow = ({
   chartWindow,
@@ -365,6 +366,64 @@ export const ProfitAndLossChart = () => {
     }
   }
 
+  const renderLegend = (props: LegendProps) => {
+    return (
+      <ul className='Layer__chart-legend-list'>
+        {props.payload?.map((entry, idx) => {
+          if (entry.id === 'UncategorizedLegend') {
+            return (
+              <li
+                key={`legend-item-${idx}`}
+                className={`recharts-legend-item legend-item-${idx}`}
+              >
+                <svg
+                  className='recharts-surface'
+                  width='15'
+                  height='15'
+                  viewBox='0 0 15 15'
+                  style={{
+                    display: 'inline-block',
+                    verticalAlign: 'middle',
+                    marginRight: 4,
+                  }}
+                >
+                  <circle
+                    cx='7'
+                    cy='7'
+                    r='7'
+                    fill='url(#layer-bar-stripe-pattern-dark)'
+                  />
+                </svg>
+                {entry.value}
+              </li>
+            )
+          }
+          return (
+            <li
+              key={`legend-item-${idx}`}
+              className={`recharts-legend-item legend-item-${idx}`}
+            >
+              <svg
+                className='recharts-surface'
+                width='15'
+                height='15'
+                viewBox='0 0 15 15'
+                style={{
+                  display: 'inline-block',
+                  verticalAlign: 'middle',
+                  marginRight: 4,
+                }}
+              >
+                <circle cx='7' cy='7' r='7' />
+              </svg>
+              {entry.value}
+            </li>
+          )
+        })}
+      </ul>
+    )
+  }
+
   const CustomizedYTick = (props: any) => {
     return (
       <text {...props} className='Layer__chart_y-axis-tick'>
@@ -446,6 +505,11 @@ export const ProfitAndLossChart = () => {
             <line x1='0' y='0' x2='0' y2='4' strokeWidth='2' />
           </pattern>
         </defs>
+        <ReferenceLine
+          y={0}
+          stroke={getColor(300)?.hex ?? '#EBEDF0'}
+          xAxisId='revenue'
+        />
         <Tooltip
           wrapperClassName='Layer__chart__tooltip-wrapper'
           content={<CustomTooltip />}
@@ -461,6 +525,7 @@ export const ProfitAndLossChart = () => {
         <Legend
           verticalAlign='top'
           align='right'
+          content={renderLegend}
           payload={[
             {
               value: 'Revenue',
@@ -594,18 +659,12 @@ export const ProfitAndLossChart = () => {
         <Line
           dot={true}
           strokeWidth={1}
-          strokeLinecap='round'
-          type='monotone'
+          type='linear'
           dataKey='netProfit'
           stroke={getColor(1000)?.hex ?? '#000'}
           name='Net profit'
           xAxisId='revenue'
           animationDuration={20}
-        />
-        <ReferenceLine
-          y={0}
-          stroke={getColor(300)?.hex ?? '#EBEDF0'}
-          xAxisId='revenue'
         />
       </ComposedChart>
     </ResponsiveContainer>
