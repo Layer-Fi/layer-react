@@ -6,6 +6,10 @@
   .recharts-cartesian-axis-line {
     stroke: var(--color-base-300);
   }
+
+  .recharts-cartesian-axis-tick-line {
+    stroke: var(--color-base-300);
+  }
 }
 
 .Layer__component .recharts-responsive-container.Layer__chart-container {
@@ -14,6 +18,17 @@
 
 .Layer__chart-container {
   min-height: 300px;
+}
+
+.Layer__chart-legend-list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  gap: var(--spacing-sm);
+  list-style: none;
+  justify-content: flex-end;
 }
 
 .Layer__chart__tooltip {
