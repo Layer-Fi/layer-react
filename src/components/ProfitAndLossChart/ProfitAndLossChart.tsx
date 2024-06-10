@@ -1,6 +1,9 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useLayerContext } from '../../hooks/useLayerContext'
-import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
+import {
+  ProfitAndLossSummaryData,
+  useProfitAndLossLTM,
+} from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
 import { ProfitAndLossSummary } from '../../types/profit_and_loss'
 import { isDateAllowedToBrowse } from '../../utils/business'
@@ -107,6 +110,26 @@ const getChartWindow = ({
   return chartWindow
 }
 
+const getLoadingValue = (data?: ProfitAndLossSummaryData[]) => {
+  if (!data) {
+    return 10000
+  }
+
+  let max = 0
+
+  data.forEach(x => {
+    const current = Math.max(
+      Math.abs(x.income),
+      Math.abs(Math.abs((x?.income || 0) - (x?.netProfit || 0))),
+    )
+    if (current > max) {
+      max = current
+    }
+  })
+
+  return max === 0 ? 10000 : max * 0.6
+}
+
 export const ProfitAndLossChart = () => {
   const [compactView, setCompactView] = useState(false)
   const barSize = compactView ? 10 : 20
@@ -145,6 +168,8 @@ export const ProfitAndLossChart = () => {
   const { data, loaded, pullData } = useProfitAndLossLTM({
     currentDate: startOfMonth(Date.now()),
   })
+
+  const loadingValue = useMemo(() => getLoadingValue(data), [data])
 
   useEffect(() => {
     if (loaded === 'complete' && data) {
@@ -202,7 +227,7 @@ export const ProfitAndLossChart = () => {
     }
   }, [loaded])
 
-  const getMonthName = (pnl: ProfitAndLossSummary | undefined) =>
+  const getMonthName = (pnl: ProfitAndLossSummaryData | undefined) =>
     pnl
       ? format(
           new Date(pnl.year, pnl.month - 1, 1),
@@ -210,7 +235,7 @@ export const ProfitAndLossChart = () => {
         )
       : ''
 
-  const summarizePnL = (pnl: ProfitAndLossSummary | undefined) => ({
+  const summarizePnL = (pnl: ProfitAndLossSummaryData | undefined) => ({
     name: getMonthName(pnl),
     revenue: pnl?.income || 0,
     revenueUncategorized: pnl?.uncategorizedInflows || 0,
@@ -224,7 +249,8 @@ export const ProfitAndLossChart = () => {
     year: pnl?.year,
     month: pnl?.month,
     base: 0,
-    loading: 0,
+    loading: pnl?.isLoading ? loadingValue : 0,
+    loadingExpenses: pnl?.isLoading ? -loadingValue : 0,
   })
 
   const theData = useMemo(() => {
@@ -294,9 +320,11 @@ export const ProfitAndLossChart = () => {
 
   const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload && payload.length) {
-      const netProfit = payload[0].payload.netProfit ?? 0
+      const netProfit = payload.find(x => x.dataKey === 'netProfit')?.value ?? 0
       const netProfitClass =
         netProfit > 0 ? 'positive' : netProfit < 0 ? 'negative' : ''
+      const revenue = payload.find(x => x.dataKey === 'revenue')?.value ?? 0
+      const expenses = payload.find(x => x.dataKey === 'expenses')?.value ?? 0
 
       return (
         <div className='Layer__chart__tooltip'>
@@ -305,19 +333,15 @@ export const ProfitAndLossChart = () => {
           ) : (
             <ul className='Layer__chart__tooltip-list'>
               <li>
-                <label className='Layer__chart__tooltip-label'>
-                  {capitalizeFirstLetter(payload[1].name ?? '')}
-                </label>
+                <label className='Layer__chart__tooltip-label'>Revenue</label>
                 <span className='Layer__chart__tooltip-value'>
-                  ${centsToDollars(Math.abs(payload[1].value ?? 0))}
+                  ${centsToDollars(revenue)}
                 </span>
               </li>
               <li>
-                <label className='Layer__chart__tooltip-label'>
-                  {capitalizeFirstLetter(payload[3].name ?? '')}
-                </label>
+                <label className='Layer__chart__tooltip-label'>Expenses</label>
                 <span className='Layer__chart__tooltip-value'>
-                  ${centsToDollars(Math.abs(payload[3].value ?? 0))}
+                  ${centsToDollars(Math.abs(expenses))}
                 </span>
               </li>
               <li>
