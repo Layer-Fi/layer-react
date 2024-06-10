@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
+import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
 import { DateRange } from '../../types'
@@ -46,21 +47,26 @@ export const BankTransactions = ({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   })
-  const { data, isLoading, error, isValidating, refetch } =
+  const { data, isLoading, loadingStatus, error, isValidating, refetch } =
     useBankTransactions()
 
   const bankTransactionsByFilter = data?.filter(
-    tx => !removedTxs.includes(tx.id) && filterVisibility(display, tx),
+    tx =>
+      filterVisibility(display, tx) ||
+      (display === DisplayState.review &&
+        tx.recently_categorized &&
+        !removedTxs.includes(tx.id)) ||
+      (display === DisplayState.categorized && tx.recently_categorized),
   )
 
   useEffect(() => {
-    if (!isLoading) {
+    if (loadingStatus === 'complete') {
       const timeoutLoad = setTimeout(() => {
         setInitialLoad(false)
       }, 1000)
       return () => clearTimeout(timeoutLoad)
     }
-  }, [isLoading])
+  }, [loadingStatus])
 
   const bankTransactions = useMemo(() => {
     if (monthlyView) {
@@ -109,9 +115,9 @@ export const BankTransactions = ({
       debounceShiftStickyHeader(0)
     }
 
-    if (size.width > 760 && listView) {
+    if (size.width > BREAKPOINTS.TABLET && listView) {
       setListView(false)
-    } else if (size.width <= 760 && !listView) {
+    } else if (size.width <= BREAKPOINTS.TABLET && !listView) {
       setListView(true)
     }
 

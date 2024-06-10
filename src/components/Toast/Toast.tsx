@@ -32,8 +32,8 @@ export const ToastsContainer = forwardRef((_props, ref) => {
 
   return (
     <div className='Layer__toasts-container'>
-      {toasts.map(toast => (
-        <Toast {...toast} />
+      {toasts.map((toast, idx) => (
+        <Toast key={`layer-toast-${idx}`} {...toast} />
       ))}
     </div>
   )
