@@ -24,7 +24,6 @@ type ChartOfAccountsRowProps = {
 }
 
 const INDENTATION = 24
-const MOBILE_INDENTATION = 24
 
 const EXPANDED_STYLE = {
   height: 52,
@@ -210,7 +209,7 @@ export const ChartOfAccountsRow = ({
             <span
               className='Layer__table-cell-content Layer__table-cell-content-indentation'
               style={{
-                paddingLeft: MOBILE_INDENTATION * depth + 16,
+                paddingLeft: INDENTATION * depth + 16,
                 ...style,
               }}
             >
