@@ -24,7 +24,7 @@ type ChartOfAccountsRowProps = {
 }
 
 const INDENTATION = 24
-const MOBILE_INDENTATION = 12
+const MOBILE_INDENTATION = 24
 
 const EXPANDED_STYLE = {
   height: 52,
