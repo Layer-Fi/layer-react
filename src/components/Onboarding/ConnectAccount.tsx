@@ -1,6 +1,7 @@
 import React, { useContext, useMemo } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
+import BellIcon from '../../icons/Bell'
 import CreditCardIcon from '../../icons/CreditCard'
 import FolderIcon from '../../icons/Folder'
 import LinkIcon from '../../icons/Link'
@@ -76,7 +77,11 @@ export const ConnectAccount = ({
           title={
             <Text>
               Categorise transactions{' '}
-              <Badge variant={BadgeVariant.WARNING} size={BadgeSize.SMALL}>
+              <Badge
+                variant={BadgeVariant.WARNING}
+                size={BadgeSize.SMALL}
+                icon={<BellIcon size={12} />}
+              >
                 {transactionsToReview} pending
               </Badge>
             </Text>

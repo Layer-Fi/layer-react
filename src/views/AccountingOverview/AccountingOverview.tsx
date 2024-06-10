@@ -26,7 +26,11 @@ export const AccountingOverview = ({
   return (
     <ProfitAndLoss asContainer={false}>
       <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
-        {enableOnboarding && <Onboarding />}
+        {enableOnboarding && (
+          <Onboarding
+            onTransactionsToReviewClick={onTransactionsToReviewClick}
+          />
+        )}
         <div className='Layer__accounting-overview__summaries-row'>
           <ProfitAndLoss.Summaries actionable={false} />
           <TransactionToReviewCard onClick={onTransactionsToReviewClick} />
@@ -61,7 +65,7 @@ export const AccountingOverview = ({
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
               pnlToggle !== 'revenue' &&
-              'accounting-overview-profit-and-loss-chart--hidden',
+                'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts scope='revenue' hideClose={true} />
@@ -70,7 +74,7 @@ export const AccountingOverview = ({
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
               pnlToggle !== 'expenses' &&
-              'accounting-overview-profit-and-loss-chart--hidden',
+                'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts scope='expenses' hideClose={true} />
