@@ -4,7 +4,7 @@ import { ReportingBasis } from '../../types'
 import { LoadedStatus } from '../../types/general'
 import { ProfitAndLossSummary } from '../../types/profit_and_loss'
 import { useLayerContext } from '../useLayerContext'
-import { endOfMonth, startOfMonth } from 'date-fns'
+import { endOfMonth, startOfMonth, sub } from 'date-fns'
 import useSWR from 'swr'
 
 type UseProfitAndLossLTMProps = {
@@ -35,6 +35,19 @@ const buildDates = ({ currentDate }: { currentDate: Date }) => {
     endYear: startOfMonth(currentDate).getFullYear(),
     endMonth: startOfMonth(currentDate).getMonth() + 1,
   }
+}
+
+const buildMonthsArray = (startDate: Date, endDate: Date) => {
+  if (startDate >= endDate) {
+    return []
+  }
+
+  var dates = []
+  for (var d = startDate; d <= endDate; d.setMonth(d.getMonth() + 1)) {
+    dates.push(new Date(d))
+  }
+
+  return dates
 }
 
 /**
@@ -84,6 +97,50 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
       },
     }),
   )
+
+  useEffect(() => {
+    // When new date range is set, populate 'data' with 'loading' items
+    const newData = data.slice()
+
+    const newPeriod = buildMonthsArray(sub(date, { years: 1 }), date)
+
+    if (newData && newPeriod) {
+      newPeriod.forEach(x => {
+        if (
+          !newData?.find(
+            n => x.getMonth() + 1 === n.month && x.getFullYear() === n.year,
+          )
+        ) {
+          newData.push({
+            year: x.getFullYear(),
+            month: x.getMonth() + 1,
+            income: 0,
+            costOfGoodsSold: 0,
+            grossProfit: 0,
+            operatingExpenses: 0,
+            profitBeforeTaxes: 0,
+            taxes: 0,
+            netProfit: 0,
+            fullyCategorized: false,
+            totalExpenses: 0,
+            uncategorizedInflows: 0,
+            uncategorizedOutflows: 0,
+            isLoading: true,
+          } satisfies ProfitAndLossSummaryData)
+        }
+      })
+    }
+
+    if (newData) {
+      setData(
+        newData.sort(
+          (a, b) =>
+            Number(new Date(a.year, a.month, 1)) -
+            Number(new Date(b.year, b.month, 1)),
+        ),
+      )
+    }
+  }, [startYear, startMonth])
 
   useEffect(() => {
     const newData = rawData?.data?.months?.slice()
