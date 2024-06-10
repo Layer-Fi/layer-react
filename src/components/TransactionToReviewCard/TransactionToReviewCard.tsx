@@ -6,17 +6,18 @@ import { useBankTransactions } from '../../hooks/useBankTransactions'
 import BellIcon from '../../icons/Bell'
 import CheckIcon from '../../icons/Check'
 import RefreshCcw from '../../icons/RefreshCcw'
+import { countTransactionsToReview } from '../../utils/bankTransactions'
 import { BadgeLoader } from '../BadgeLoader'
-import { DisplayState } from '../BankTransactions/constants'
-import { filterVisibility } from '../BankTransactions/utils'
 import { NotificationCard } from '../NotificationCard'
 
 export interface TransactionToReviewCardProps {
   onClick?: () => void
+  currentMonthOnly?: true
 }
 
 export const TransactionToReviewCard = ({
   onClick,
+  currentMonthOnly = true,
 }: TransactionToReviewCardProps) => {
   const [loaded, setLoaded] = useState('initiated')
   const { data, isLoading, error, refetch } = useBankTransactions()
@@ -37,13 +38,10 @@ export const TransactionToReviewCard = ({
     }
   }, [isLoading])
 
-  const toReview = useMemo(() => {
-    if (data && data.length > 0) {
-      return data.filter(tx => filterVisibility(DisplayState.review, tx)).length
-    }
-
-    return 0
-  }, [data, isLoading])
+  const toReview = useMemo(
+    () => countTransactionsToReview({ transactions: data, currentMonthOnly }),
+    [data, isLoading],
+  )
 
   return (
     <NotificationCard

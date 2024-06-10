@@ -7,6 +7,7 @@ import LinkIcon from '../../icons/Link'
 import PlaidIcon from '../../icons/PlaidIcon'
 import SunriseIcon from '../../icons/Sunrise'
 import { OnboardingStep } from '../../types/layer_context'
+import { countTransactionsToReview } from '../../utils/bankTransactions'
 import { ActionableRow } from '../ActionableRow'
 import { Badge, BadgeVariant } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
@@ -19,22 +20,21 @@ import { Text } from '../Typography'
 export interface ConnectAccountProps {
   onboardingStep: OnboardingStep
   onTransactionsToReviewClick?: () => void
+  currentMonthOnly?: boolean
 }
 
 export const ConnectAccount = ({
   onboardingStep,
   onTransactionsToReviewClick,
+  currentMonthOnly = true,
 }: ConnectAccountProps) => {
   const { addConnection } = useContext(LinkedAccountsContext)
   const { data, isLoading } = useBankTransactions()
 
-  const transactionsToReview = useMemo(() => {
-    if (data && data.length > 0) {
-      return data.filter(tx => filterVisibility(DisplayState.review, tx)).length
-    }
-
-    return 0
-  }, [data, isLoading])
+  const transactionsToReview = useMemo(
+    () => countTransactionsToReview({ transactions: data, currentMonthOnly }),
+    [data, isLoading],
+  )
 
   if (onboardingStep === 'connectAccount') {
     return (
