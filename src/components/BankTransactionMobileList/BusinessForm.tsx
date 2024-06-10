@@ -83,14 +83,22 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
     if (!selectedCategory || !selectedCategory.value.payload) {
       return
     }
+
+    const payload = selectedCategory?.value?.payload?.id
+      ? {
+          type: 'AccountId' as 'AccountId',
+          id: selectedCategory.value.payload.id,
+        }
+      : {
+          type: 'StableName' as 'StableName',
+          stable_name: selectedCategory.value.payload?.stable_name || '',
+        }
+
     categorizeBankTransaction(
       bankTransaction.id,
       {
         type: 'Category',
-        category: {
-          type: 'StableName',
-          stable_name: selectedCategory.value.payload.stable_name || '',
-        },
+        category: payload,
       },
       true,
     )

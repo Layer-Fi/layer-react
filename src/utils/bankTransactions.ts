@@ -1,6 +1,7 @@
 import { DisplayState } from '../components/BankTransactions/constants'
 import { filterVisibility } from '../components/BankTransactions/utils'
-import { BankTransaction, Direction } from '../types'
+import { CategoryOption } from '../components/CategorySelect/CategorySelect'
+import { BankTransaction, Category, Direction } from '../types'
 import { endOfMonth, isWithinInterval, parseISO, startOfMonth } from 'date-fns'
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
@@ -54,4 +55,18 @@ export const countTransactionsToReview = ({
   }
 
   return 0
+}
+
+export const getCategorizePayload = (category: CategoryOption) => {
+  if (category?.payload && 'id' in category.payload && category.payload.id) {
+    return {
+      type: 'AccountId' as 'AccountId',
+      id: category.payload.id,
+    }
+  }
+
+  return {
+    type: 'StableName' as 'StableName',
+    stable_name: category?.payload.stable_name || '',
+  }
 }

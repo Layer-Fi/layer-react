@@ -3,7 +3,7 @@ import { useBankTransactions } from '../../hooks/useBankTransactions'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types'
-import { isCredit } from '../../utils/bankTransactions'
+import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
 import { getDefaultSelectedCategory } from '../BankTransactionRow/BankTransactionRow'
 import { RetryButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
@@ -85,10 +85,7 @@ export const BankTransactionListItem = ({
 
     categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
-      category: {
-        type: 'StableName',
-        stable_name: selectedCategory?.payload.stable_name || '',
-      },
+      category: getCategorizePayload(selectedCategory),
     })
   }
 

@@ -42,10 +42,15 @@ export type Categorization = AutoCategorization | SuggestedCategorization
 
 export type SingleCategoryUpdate = {
   type: 'Category'
-  category: {
-    type: 'StableName'
-    stable_name: string
-  }
+  category:
+    | {
+        type: 'StableName'
+        stable_name: string
+      }
+    | {
+        type: 'AccountId'
+        id: string
+      }
 }
 export type SplitCategoryUpdate = {
   type: 'Split'
