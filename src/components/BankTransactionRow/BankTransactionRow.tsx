@@ -6,7 +6,7 @@ import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationStatus, Category } from '../../types'
 import { hasSuggestions } from '../../types/categories'
-import { isCredit } from '../../utils/bankTransactions'
+import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
 import { Badge } from '../Badge'
 import { SubmitButton, IconButton, RetryButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
@@ -71,7 +71,7 @@ export const BankTransactionRow = ({
   containerWidth,
   initialLoad,
   showDescriptions,
-  showReceiptUploads
+  showReceiptUploads,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
@@ -141,10 +141,7 @@ export const BankTransactionRow = ({
 
     await categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
-      category: {
-        type: 'StableName',
-        stable_name: selectedCategory?.payload.stable_name || '',
-      },
+      category: getCategorizePayload(selectedCategory),
     })
     setOpen(false)
   }
