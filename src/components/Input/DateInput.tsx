@@ -39,6 +39,7 @@ export const DateInput = ({
       calendarClassName='Layer__datepicker__calendar'
       popperClassName='Layer__datepicker__popper'
       calendarIconClassname='Layer__datepicker__calendar-icon'
+      formatWeekDay={nameOfDay => nameOfDay.slice(0, 1)}
       {...props}
     />
   )
