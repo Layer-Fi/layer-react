@@ -2,6 +2,7 @@ import React from 'react'
 import { BankTransactions } from '../../components/BankTransactions'
 import { LinkedAccounts } from '../../components/LinkedAccounts'
 import { View } from '../../components/View'
+import {MobileComponentType} from "../../components/BankTransactions/constants";
 
 export interface BankTransactionsWithLinkedAccountsProps {
   title?: string
@@ -9,6 +10,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   showLedgerBalance?: boolean
   showDescriptions?: boolean
   showReceiptUploads?: boolean
+  mobileComponent?: MobileComponentType
 }
 
 export const BankTransactionsWithLinkedAccounts = ({
@@ -17,6 +19,7 @@ export const BankTransactionsWithLinkedAccounts = ({
   showLedgerBalance = true,
   showDescriptions,
   showReceiptUploads,
+  mobileComponent,
 }: BankTransactionsWithLinkedAccountsProps) => {
   return (
     <View title={title}>
@@ -28,6 +31,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         asWidget
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
+        mobileComponent={mobileComponent}
       />
     </View>
   )
