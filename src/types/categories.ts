@@ -40,22 +40,24 @@ export interface SuggestedCategorization {
 }
 export type Categorization = AutoCategorization | SuggestedCategorization
 
+export type CategoryPayloadObject =
+  | {
+      type: 'StableName'
+      stable_name: string
+    }
+  | {
+      type: 'AccountId'
+      id: string
+    }
+
 export type SingleCategoryUpdate = {
   type: 'Category'
-  category:
-    | {
-        type: 'StableName'
-        stable_name: string
-      }
-    | {
-        type: 'AccountId'
-        id: string
-      }
+  category: CategoryPayloadObject
 }
 export type SplitCategoryUpdate = {
   type: 'Split'
   entries: {
-    category: string
+    category: string | CategoryPayloadObject
     amount: number
   }[]
 }

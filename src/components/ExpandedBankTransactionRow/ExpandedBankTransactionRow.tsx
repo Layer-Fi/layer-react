@@ -21,7 +21,7 @@ import {
   SingleCategoryUpdate,
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
-import { hasMatch } from '../../utils/bankTransactions'
+import { getCategorizePayload, hasMatch } from '../../utils/bankTransactions'
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect'
@@ -258,18 +258,17 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
       await categorizeBankTransaction(
         bankTransaction.id,
-        rowState.splits.length === 1
+        rowState.splits.length === 1 && rowState?.splits[0].category
           ? ({
               type: 'Category',
-              category: {
-                type: 'StableName',
-                stable_name: rowState?.splits[0].category?.payload.stable_name,
-              },
+              category: getCategorizePayload(rowState?.splits[0].category),
             } as SingleCategoryUpdate)
           : ({
               type: 'Split',
               entries: rowState.splits.map(split => ({
-                category: split.category?.payload.stable_name,
+                category: split.category
+                  ? getCategorizePayload(split.category)
+                  : '',
                 amount: split.amount,
               })),
             } as SplitCategoryUpdate),

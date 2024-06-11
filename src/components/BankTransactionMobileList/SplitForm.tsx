@@ -173,42 +173,24 @@ export const SplitForm = ({
       return
     }
 
-    console.log(
+    await categorizeBankTransaction(
+      bankTransaction.id,
       rowState.splits.length === 1 && rowState?.splits[0].category
         ? ({
             type: 'Category',
             category: getCategorizePayload(rowState?.splits[0].category),
           } as SingleCategoryUpdate)
-        : // @TODO - need confirmation how to handle `category` and `accountId` in splits
-          ({
+        : ({
             type: 'Split',
             entries: rowState.splits.map(split => ({
-              category: split.category?.payload.stable_name,
+              category: split.category
+                ? getCategorizePayload(split.category)
+                : '',
               amount: split.amount,
             })),
           } as SplitCategoryUpdate),
+      true,
     )
-
-    // await categorizeBankTransaction(
-    //   bankTransaction.id,
-    //   rowState.splits.length === 1 && rowState?.splits[0].category
-    //     ? ({
-    //         type: 'Category',
-    //         category: getCategorizePayload(rowState?.splits[0].category),
-    //         // {
-    //         // type: 'StableName',
-    //         // stable_name: rowState?.splits[0].category?.payload.stable_name,
-    //         // },
-    //       } as SingleCategoryUpdate)
-    //     : ({
-    //         type: 'Split',
-    //         entries: rowState.splits.map(split => ({
-    //           category: split.category?.payload.stable_name,
-    //           amount: split.amount,
-    //         })),
-    //       } as SplitCategoryUpdate),
-    //   true,
-    // )
   }
 
   return (
