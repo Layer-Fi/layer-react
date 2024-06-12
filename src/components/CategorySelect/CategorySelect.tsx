@@ -237,9 +237,9 @@ export const CategorySelect = ({
       ? [
           {
             label: 'Suggestions',
-            options: bankTransaction.categorization_flow.suggestions.map(x =>
-              mapCategoryToOption(x),
-            ),
+            options: (
+              bankTransaction.categorization_flow.suggestions ?? []
+            ).map(x => mapCategoryToOption(x)),
           } satisfies GroupBase<CategoryOption>,
         ]
       : []

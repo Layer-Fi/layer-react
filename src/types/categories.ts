@@ -36,7 +36,7 @@ export interface AutoCategorization {
 }
 export interface SuggestedCategorization {
   type: CategorizationType
-  suggestions: Category[]
+  suggestions?: Category[]
 }
 export type Categorization = AutoCategorization | SuggestedCategorization
 
@@ -66,5 +66,6 @@ export type CategoryUpdate = SingleCategoryUpdate | SplitCategoryUpdate
 export function hasSuggestions(
   categorization: Categorization,
 ): categorization is SuggestedCategorization {
-  return (categorization as SuggestedCategorization).suggestions !== undefined
+  const suggestions = (categorization as SuggestedCategorization).suggestions
+  return suggestions !== undefined && suggestions.length > 0
 }

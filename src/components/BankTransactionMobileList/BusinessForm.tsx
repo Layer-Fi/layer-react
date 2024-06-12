@@ -31,7 +31,7 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
     const options =
       bankTransaction?.categorization_flow?.type ===
       CategorizationType.ASK_FROM_SUGGESTIONS
-        ? bankTransaction.categorization_flow.suggestions.map(x =>
+        ? (bankTransaction.categorization_flow.suggestions ?? []).map(x =>
             mapCategoryToOption(x),
           )
         : []
