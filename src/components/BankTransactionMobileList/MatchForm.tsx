@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { BankTransaction } from '../../types'
 import { isAlreadyMatched } from '../../utils/bankTransactions'
-import { Button, RetryButton } from '../Button'
+import { Button } from '../Button'
 import { MatchFormMobile } from '../MatchForm'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 
@@ -63,38 +63,20 @@ export const MatchForm = ({
           setSelectedMatchId(id)
         }}
       />
-      {!showRetry && (
-        <Button
-          fullWidth={true}
-          disabled={
-            !selectedMatchId ||
-            isLoading ||
-            bankTransaction.processing ||
-            selectedMatchId === isAlreadyMatched(bankTransaction)
-          }
-          onClick={save}
-        >
-          {isLoading || bankTransaction.processing
-            ? 'Saving...'
-            : 'Approve match'}
-        </Button>
-      )}
-      {showRetry ? (
-        <RetryButton
-          onClick={() => {
-            if (!bankTransaction.processing) {
-              save()
-            }
-          }}
-          fullWidth={true}
-          className='Layer__bank-transaction__retry-btn'
-          processing={bankTransaction.processing}
-          error={'Approval failed. Check connection and retry in few seconds.'}
-        >
-          Approve match
-        </RetryButton>
-      ) : null}
-
+      <Button
+        fullWidth={true}
+        disabled={
+          !selectedMatchId ||
+          isLoading ||
+          bankTransaction.processing ||
+          selectedMatchId === isAlreadyMatched(bankTransaction)
+        }
+        onClick={save}
+      >
+        {isLoading || bankTransaction.processing
+          ? 'Saving...'
+          : 'Approve match'}
+      </Button>
       {formError && <ErrorText>{formError}</ErrorText>}
       {bankTransaction.error && showRetry ? (
         <ErrorText>

@@ -3,7 +3,7 @@ import { DrawerContext } from '../../contexts/DrawerContext'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { BankTransaction, CategorizationType } from '../../types'
 import { ActionableList } from '../ActionableList'
-import { Button, RetryButton } from '../Button'
+import { Button } from '../Button'
 import { ErrorText } from '../Typography'
 import { BusinessCategories } from './BusinessCategories'
 import { Option, mapCategoryToOption, getAssignedValue } from './utils'
@@ -116,7 +116,7 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
           Select category
         </Button>
       ) : null}
-      {!showRetry && options.length > 0 ? (
+      {options.length > 0 ? (
         <Button
           onClick={save}
           disabled={
@@ -126,21 +126,6 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
         >
           {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
         </Button>
-      ) : null}
-      {showRetry && options.length > 0 ? (
-        <RetryButton
-          onClick={() => {
-            if (!bankTransaction.processing) {
-              save()
-            }
-          }}
-          fullWidth={true}
-          className='Layer__bank-transaction__retry-btn'
-          processing={bankTransaction.processing}
-          error={'Approval failed. Check connection and retry in few seconds.'}
-        >
-          Save
-        </RetryButton>
       ) : null}
       {bankTransaction.error && showRetry ? (
         <ErrorText>
