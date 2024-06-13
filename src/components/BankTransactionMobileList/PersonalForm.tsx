@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { isCredit } from '../../utils/bankTransactions'
-import { Button, RetryButton } from '../Button'
+import { Button } from '../Button'
 import { ErrorText } from '../Typography'
-import { Purpose } from './BankTransactionMobileListItem'
 import { PersonalCategories } from './constants'
 
 interface PersonalFormProps {
@@ -56,34 +55,17 @@ export const PersonalForm = ({ bankTransaction }: PersonalFormProps) => {
 
   return (
     <div className='Layer__bank-transaction-mobile-list-item__personal-form'>
-      {!showRetry && (
-        <Button
-          fullWidth={true}
-          disabled={alreadyAssigned || isLoading || bankTransaction.processing}
-          onClick={save}
-        >
-          {isLoading || bankTransaction.processing
-            ? 'Saving...'
-            : alreadyAssigned
-            ? 'Saved as Personal'
-            : 'Categorize as Personal'}
-        </Button>
-      )}
-      {showRetry ? (
-        <RetryButton
-          onClick={() => {
-            if (!bankTransaction.processing) {
-              save()
-            }
-          }}
-          fullWidth={true}
-          className='Layer__bank-transaction__retry-btn'
-          processing={bankTransaction.processing}
-          error={'Approval failed. Check connection and retry in few seconds.'}
-        >
-          Categorize as Personal
-        </RetryButton>
-      ) : null}
+      <Button
+        fullWidth={true}
+        disabled={alreadyAssigned || isLoading || bankTransaction.processing}
+        onClick={save}
+      >
+        {isLoading || bankTransaction.processing
+          ? 'Saving...'
+          : alreadyAssigned
+          ? 'Saved as Personal'
+          : 'Categorize as Personal'}
+      </Button>
       {bankTransaction.error && showRetry ? (
         <ErrorText>
           Approval failed. Check connection and retry in few seconds.

@@ -12,7 +12,7 @@ import {
   hasSuggestions,
 } from '../../types/categories'
 import { getCategorizePayload } from '../../utils/bankTransactions'
-import { Button, ButtonVariant, RetryButton, TextButton } from '../Button'
+import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
 import {
   CategoryOption,
@@ -252,30 +252,13 @@ export const SplitForm = ({
           Add new split
         </TextButton>
       </div>
-      {!showRetry && (
-        <Button
-          fullWidth={true}
-          onClick={save}
-          disabled={isLoading || bankTransaction.processing}
-        >
-          {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
-        </Button>
-      )}
-      {showRetry ? (
-        <RetryButton
-          onClick={() => {
-            if (!bankTransaction.processing) {
-              save()
-            }
-          }}
-          fullWidth={true}
-          className='Layer__bank-transaction__retry-btn'
-          processing={bankTransaction.processing}
-          error={'Approval failed. Check connection and retry in few seconds.'}
-        >
-          Save
-        </RetryButton>
-      ) : null}
+      <Button
+        fullWidth={true}
+        onClick={save}
+        disabled={isLoading || bankTransaction.processing}
+      >
+        {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
+      </Button>
       {formError && <ErrorText>{formError}</ErrorText>}
       {bankTransaction.error && showRetry ? (
         <ErrorText>
