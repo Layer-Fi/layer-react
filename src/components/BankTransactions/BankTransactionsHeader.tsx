@@ -17,7 +17,8 @@ export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
   asWidget?: boolean
   categorizedOnly?: boolean
-  display: DisplayState
+  categorizeView?: boolean
+  display?: DisplayState
   onCategorizationDisplayChange: (event: ChangeEvent<HTMLInputElement>) => void
   mobileComponent?: MobileComponentType
   withDatePicker?: boolean
@@ -77,6 +78,7 @@ export const BankTransactionsHeader = ({
   shiftStickyHeader,
   asWidget,
   categorizedOnly,
+  categorizeView = true,
   display,
   onCategorizationDisplayChange,
   mobileComponent,
@@ -114,7 +116,7 @@ export const BankTransactionsHeader = ({
         ) : null}
       </div>
 
-      {!categorizedOnly && !(mobileComponent == 'mobileList' && listView) && (
+      {!categorizedOnly && !(mobileComponent == 'mobileList' && listView) && categorizeView && (
         <div className='Layer__header__actions'>
           <DownloadButton />
           <Toggle
@@ -129,7 +131,7 @@ export const BankTransactionsHeader = ({
         </div>
       )}
 
-      {!categorizedOnly && mobileComponent === 'mobileList' && listView && (
+      {!categorizedOnly && mobileComponent === 'mobileList' && listView && categorizeView && (
         <Tabs
           name='bank-transaction-display'
           options={[

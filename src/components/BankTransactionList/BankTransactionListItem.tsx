@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types'
@@ -40,7 +40,7 @@ export const BankTransactionListItem = ({
   const [showRetry, setShowRetry] = useState(false)
   const [removed, setRemoved] = useState(false)
   const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
-    useBankTransactions()
+    useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import Scissors from '../../icons/Scissors'
@@ -77,7 +77,7 @@ export const BankTransactionRow = ({
   const [showRetry, setShowRetry] = useState(false)
   const [removed, setRemoved] = useState(false)
   const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
-    useBankTransactions()
+    useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )
@@ -196,7 +196,9 @@ export const BankTransactionRow = ({
                 contentClassName: 'Layer__bank-transactions__tx-tooltip',
               }}
             >
-              {bankTransaction.counterparty_name ?? bankTransaction.description}
+              <span style={{ color: bankTransaction.match || bankTransaction.category ? 'red' : undefined }}>
+                {bankTransaction.counterparty_name ?? bankTransaction.description}
+              </span>
             </Text>
           </span>
         </td>

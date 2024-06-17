@@ -7,7 +7,7 @@ import React, {
   useRef,
   TransitionEvent,
 } from 'react'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
@@ -114,7 +114,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const {
       categorize: categorizeBankTransaction,
       match: matchBankTransaction,
-    } = useBankTransactions()
+    } = useBankTransactionsContext()
     const [purpose, setPurpose] = useState<Purpose>(
       bankTransaction.category
         ? Purpose.categorize

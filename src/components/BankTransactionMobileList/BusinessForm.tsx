@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { DrawerContext } from '../../contexts/DrawerContext'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { BankTransaction, CategorizationType } from '../../types'
 import { ActionableList } from '../ActionableList'
 import { Button } from '../Button'
@@ -15,7 +15,7 @@ interface BusinessFormProps {
 export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
   const { setContent, close } = useContext(DrawerContext)
   const { categorize: categorizeBankTransaction, isLoading } =
-    useBankTransactions()
+    useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState<Option | undefined>(
     getAssignedValue(bankTransaction),
   )

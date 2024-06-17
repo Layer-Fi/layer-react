@@ -1,4 +1,10 @@
-import { BankTransaction, CategoryUpdate, Metadata } from '../../types'
+import {
+  BankTransaction,
+  CategoryUpdate,
+  DateRange,
+  Direction,
+  Metadata,
+} from '../../types'
 import { LoadedStatus } from '../../types/general'
 
 export interface NumericRangeFilter {
@@ -13,6 +19,10 @@ export interface AccountItem {
 
 export interface BankTransactionFilters {
   amount?: NumericRangeFilter
+  account?: string[]
+  direction?: Direction[]
+  categorizationStatus?: string[] // @TODO - use enum?
+  dateRange?: Partial<DateRange>
 }
 
 export type UseBankTransactions = () => {
@@ -36,6 +46,6 @@ export type UseBankTransactions = () => {
   ) => Promise<void>
   updateOneLocal: (bankTransaction: BankTransaction) => void
   refetch: () => void
-  setFilters: (filters?: BankTransactionFilters) => void
+  setFilters: (filters?: Partial<BankTransactionFilters>) => void
   activate: () => void
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { BankTransaction } from '../../types'
 import { isAlreadyMatched } from '../../utils/bankTransactions'
 import { Button } from '../Button'
@@ -11,7 +11,8 @@ export const MatchForm = ({
 }: {
   bankTransaction: BankTransaction
 }) => {
-  const { match: matchBankTransaction, isLoading } = useBankTransactions()
+  const { match: matchBankTransaction, isLoading } =
+    useBankTransactionsContext()
   const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
     isAlreadyMatched(bankTransaction),
   )

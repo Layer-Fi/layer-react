@@ -26,22 +26,26 @@ export interface BankTransactionsProps {
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   monthlyView?: boolean
+  categorizeView?: boolean
   mobileComponent?: MobileComponentType
   filters?: BankTransactionFilters
+  hideHeader?: boolean
 }
 
 export const BankTransactions = ({
   asWidget = false,
   pageSize = 15,
   categorizedOnly = false,
+  categorizeView = true,
   showDescriptions = false,
   showReceiptUploads = false,
   monthlyView = false,
   mobileComponent,
   filters: inputFilters,
+  hideHeader = false,
 }: BankTransactionsProps) => {
-  const [display, setDisplay] = useState<DisplayState>(
-    categorizedOnly ? DisplayState.categorized : DisplayState.review,
+  const [display, setDisplay] = useState<DisplayState | undefined>(
+    !categorizeView ? undefined : categorizedOnly ? DisplayState.categorized : DisplayState.review,
   )
   const [currentPage, setCurrentPage] = useState(1)
   const [removedTxs, setRemovedTxs] = useState<string[]>([])
@@ -60,6 +64,7 @@ export const BankTransactions = ({
     refetch,
     setFilters,
     filters,
+    accountsList,
   } = useBankTransactionsContext()
 
   useEffect(() => {
@@ -72,14 +77,14 @@ export const BankTransactions = ({
     }
   }, [inputFilters])
 
-  const bankTransactionsByFilter = data?.filter(
+  const bankTransactionsByFilter = display ? data?.filter(
     tx =>
       filterVisibility(display, tx) ||
       (display === DisplayState.review &&
         tx.recently_categorized &&
         !removedTxs.includes(tx.id)) ||
       (display === DisplayState.categorized && tx.recently_categorized),
-  )
+  ) : data
 
   useEffect(() => {
     if (loadingStatus === 'complete') {
@@ -159,18 +164,51 @@ export const BankTransactions = ({
       asWidget={asWidget}
       ref={containerRef}
     >
-      <BankTransactionsHeader
-        shiftStickyHeader={shiftStickyHeader}
-        asWidget={asWidget}
-        categorizedOnly={categorizedOnly}
-        display={display}
-        onCategorizationDisplayChange={onCategorizationDisplayChange}
-        mobileComponent={mobileComponent}
-        withDatePicker={monthlyView}
-        listView={listView}
-        dateRange={dateRange}
-        setDateRange={v => setDateRange(v)}
-      />
+      {!hideHeader && (
+        <BankTransactionsHeader
+          shiftStickyHeader={shiftStickyHeader}
+          asWidget={asWidget}
+          categorizedOnly={categorizedOnly}
+          categorizeView={categorizeView}
+          display={display}
+          onCategorizationDisplayChange={onCategorizationDisplayChange}
+          mobileComponent={mobileComponent}
+          withDatePicker={monthlyView}
+          listView={listView}
+          dateRange={dateRange}
+          setDateRange={v => setDateRange(v)}
+        />
+      )}
+
+      {!hideHeader && (
+        <>
+          <input
+            onChange={e =>
+              setFilters({ amount: { min: Number(e.target.value) } })
+            }
+            placeholder='Min amount'
+            value={filters?.amount?.min}
+          />
+
+          <select
+            value={filters?.account}
+            onChange={e =>
+              setFilters({
+                account:
+                  e.target.value === 'Any' ? undefined : [e.target.value],
+              })
+            }
+          >
+            <option>Any</option>
+            <option>Any</option>
+            {accountsList?.map(x => (
+              <option value={x.id} key={x.id}>
+                {x.name}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
 
       {!listView && (
         <BankTransactionsTable

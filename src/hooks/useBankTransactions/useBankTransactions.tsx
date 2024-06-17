@@ -5,14 +5,30 @@ import { BankTransaction, CategoryUpdate } from '../../types'
 import { BankTransactionMatchType } from '../../types/bank_transactions'
 import { LoadedStatus } from '../../types/general'
 import { BankTransactionFilters, UseBankTransactions } from './types'
-import { applyAmountFilter, collectAccounts } from './utils'
+import {
+  applyAccountFilter,
+  applyAmountFilter,
+  applyCategorizationStatusFilter,
+  applyDirectionFilter,
+  appplyDateRangeFilter,
+  collectAccounts,
+} from './utils'
 import useSWR from 'swr'
 
 export const useBankTransactions: UseBankTransactions = () => {
-  const { auth, businessId, apiUrl, addToast, business } = useLayerContext()
+  const { auth, businessId, apiUrl, addToast } = useLayerContext()
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
-  const [filters, setFilters] = useState<BankTransactionFilters | undefined>()
+  const [filters, setTheFilters] = useState<
+    BankTransactionFilters | undefined
+  >()
   const [active, setActive] = useState(false)
+
+  const queryKey = useMemo(() => {
+    if (!active) {
+      return false
+    }
+    return businessId && auth?.access_token && `bank-transactions-${businessId}`
+  }, [businessId, auth?.access_token, active])
 
   const {
     data: responseData,
@@ -21,9 +37,7 @@ export const useBankTransactions: UseBankTransactions = () => {
     error: responseError,
     mutate,
   } = useSWR(
-    active
-      ? businessId && auth?.access_token && `bank-transactions-${businessId}`
-      : null,
+    queryKey,
     Layer.getBankTransactions(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
@@ -50,6 +64,13 @@ export const useBankTransactions: UseBankTransactions = () => {
     setActive(true)
   }
 
+  const setFilters = (value?: Partial<BankTransactionFilters>) => {
+    setTheFilters({
+      ...filters,
+      ...(value ?? {}),
+    })
+  }
+
   const {
     data = undefined,
     meta: metadata = {},
@@ -61,6 +82,22 @@ export const useBankTransactions: UseBankTransactions = () => {
 
     if (filters?.amount?.min || filters?.amount?.max) {
       filtered = applyAmountFilter(filtered, filters.amount)
+    }
+
+    if (filters?.account) {
+      filtered = applyAccountFilter(filtered, filters.account)
+    }
+
+    if (filters?.direction) {
+      filtered = applyDirectionFilter(filtered, filters.direction)
+    }
+
+    if (filters?.categorizationStatus) {
+      filtered = applyCategorizationStatusFilter(filtered, filters.categorizationStatus)
+    }
+
+    if (filters?.dateRange?.startDate || filters?.dateRange?.endDate) {
+      filtered = appplyDateRangeFilter(filtered, filters?.dateRange)
     }
 
     return filtered
@@ -166,6 +203,8 @@ export const useBankTransactions: UseBankTransactions = () => {
   const refetch = () => {
     mutate()
   }
+
+  console.log('filters', filters)
 
   return {
     data: filteredData,
