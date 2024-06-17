@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
 import { LedgerAccounts, LedgerAccountsEntry } from '../../types'
-import { useLayerContext } from '../useLayerContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import useSWR from 'swr'
 
 type UseLedgerAccounts = () => {

@@ -3,7 +3,7 @@ import { Layer } from '../../api/layer'
 import { BankTransaction, CategoryUpdate, Metadata } from '../../types'
 import { BankTransactionMatchType } from '../../types/bank_transactions'
 import { LoadedStatus } from '../../types/general'
-import { useLayerContext } from '../useLayerContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import useSWR from 'swr'
 
 interface NumericRangeFilter {
