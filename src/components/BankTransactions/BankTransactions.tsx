@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { BREAKPOINTS } from '../../config/general'
-import { BankTransactionFilters } from '../../hooks/useBankTransactions/useBankTransactions'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
 import { DateRange } from '../../types'
 import { debounce } from '../../utils/helpers'
@@ -15,7 +16,6 @@ import { DataStates } from './DataStates'
 import { DisplayState, MobileComponentType } from './constants'
 import { filterVisibility } from './utils'
 import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -51,6 +51,7 @@ export const BankTransactions = ({
     endDate: endOfMonth(new Date()),
   })
   const {
+    activate,
     data,
     isLoading,
     loadingStatus,
@@ -58,8 +59,12 @@ export const BankTransactions = ({
     isValidating,
     refetch,
     setFilters,
-    filters
+    filters,
   } = useBankTransactionsContext()
+
+  useEffect(() => {
+    activate()
+  }, [])
 
   useEffect(() => {
     if (JSON.stringify(inputFilters) !== JSON.stringify(filters)) {

@@ -5,7 +5,6 @@ import { ToastProps } from '../../components/Toast/Toast'
 import { DrawerContext } from '../../contexts/DrawerContext'
 import { LayerContext } from '../../contexts/LayerContext'
 import { useDrawer } from '../../hooks/useDrawer'
-import { BankTransactionsContext, useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { BankTransactionsProvider } from '../../providers/BankTransactionsProvider'
 import {
   LayerContextValues,
@@ -288,7 +287,6 @@ export const LayerProvider = ({
     })
 
   const drawerContextData = useDrawer()
-
 
   return (
     <SWRConfig value={defaultSWRConfig}>

@@ -1,93 +1,18 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { BankTransaction, CategoryUpdate, Metadata } from '../../types'
+import { useLayerContext } from '../../contexts/LayerContext'
+import { BankTransaction, CategoryUpdate } from '../../types'
 import { BankTransactionMatchType } from '../../types/bank_transactions'
 import { LoadedStatus } from '../../types/general'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { BankTransactionFilters, UseBankTransactions } from './types'
+import { applyAmountFilter, collectAccounts } from './utils'
 import useSWR from 'swr'
-
-interface NumericRangeFilter {
-  min?: number
-  max?: number
-}
-
-export interface AccountItem {
-  id: string
-  name: string
-}
-
-export interface BankTransactionFilters {
-  amount?: NumericRangeFilter
-}
-
-type UseBankTransactions = () => {
-  data?: BankTransaction[]
-  metadata: Metadata
-  loadingStatus: LoadedStatus
-  isLoading: boolean
-  isValidating: boolean
-  error: unknown
-  filters?: BankTransactionFilters
-  accountsList?: AccountItem[]
-  categorize: (
-    id: BankTransaction['id'],
-    newCategory: CategoryUpdate,
-    notify?: boolean,
-  ) => Promise<void>
-  match: (
-    id: BankTransaction['id'],
-    matchId: BankTransaction['id'],
-    notify?: boolean,
-  ) => Promise<void>
-  updateOneLocal: (bankTransaction: BankTransaction) => void
-  refetch: () => void
-  setFilters: (filters?: BankTransactionFilters) => void
-}
-
-const applyAmountFilter = (
-  data?: BankTransaction[],
-  filter?: NumericRangeFilter,
-) => {
-  return data?.filter(x => {
-    if (
-      (filter?.min || filter?.min === 0) &&
-      (filter?.max || filter?.max === 0)
-    ) {
-      return x.amount >= filter.min * 100 && x.amount <= filter.max * 100
-    }
-
-    if (filter?.min || filter?.min === 0) {
-      return x.amount >= filter.min * 100
-    }
-
-    if (filter?.max || filter?.max === 0) {
-      return x.amount <= filter.max * 100
-    }
-  })
-}
-
-const collectAccounts = (transactions?: BankTransaction[]) => {
-  const accounts: AccountItem[] = []
-  if (!transactions) {
-    return accounts
-  }
-
-  transactions.forEach(x => {
-    if (!accounts.find(y => y.id === x.source_account_id)) {
-      accounts.push({
-        id: x.source_account_id,
-        name: x.account_name || '',
-      })
-    }
-  })
-
-  return accounts.sort((a, b) => a.name.localeCompare(b.name))
-}
 
 export const useBankTransactions: UseBankTransactions = () => {
   const { auth, businessId, apiUrl, addToast, business } = useLayerContext()
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [filters, setFilters] = useState<BankTransactionFilters | undefined>()
+  const [active, setActive] = useState(false)
 
   const {
     data: responseData,
@@ -96,7 +21,9 @@ export const useBankTransactions: UseBankTransactions = () => {
     error: responseError,
     mutate,
   } = useSWR(
-    businessId && auth?.access_token && `bank-transactions-${businessId}`,
+    active
+      ? businessId && auth?.access_token && `bank-transactions-${businessId}`
+      : null,
     Layer.getBankTransactions(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
@@ -118,6 +45,10 @@ export const useBankTransactions: UseBankTransactions = () => {
       return
     }
   }, [isLoading])
+
+  const activate = () => {
+    setActive(true)
+  }
 
   const {
     data = undefined,
@@ -249,6 +180,7 @@ export const useBankTransactions: UseBankTransactions = () => {
     updateOneLocal,
     filters,
     setFilters,
-    accountsList
+    accountsList,
+    activate,
   }
 }
