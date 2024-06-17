@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import { ViewHeader } from '../../components/ViewHeader'
-import { useLayerContext } from '../../hooks/useLayerContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import { parseStylesFromThemeConfig } from '../../utils/colors'
 
 export interface ViewProps {

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
+import { useLayerContext } from '../../contexts/LayerContext'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
-import { useLayerContext } from '../../hooks/useLayerContext'
 import PlusIcon from '../../icons/PlusIcon'
 import { LinkedAccountOptions } from '../LinkedAccountOptions'
 import { LinkedAccountThumb } from '../LinkedAccountThumb'

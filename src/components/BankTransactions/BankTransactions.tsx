@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { BREAKPOINTS } from '../../config/general'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { BankTransactionFilters } from '../../hooks/useBankTransactions/useBankTransactions'
 import { useElementSize } from '../../hooks/useElementSize'
 import { DateRange } from '../../types'
 import { debounce } from '../../utils/helpers'
@@ -15,6 +15,7 @@ import { DataStates } from './DataStates'
 import { DisplayState, MobileComponentType } from './constants'
 import { filterVisibility } from './utils'
 import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -26,6 +27,7 @@ export interface BankTransactionsProps {
   showReceiptUploads?: boolean
   monthlyView?: boolean
   mobileComponent?: MobileComponentType
+  filters?: BankTransactionFilters
 }
 
 export const BankTransactions = ({
@@ -36,6 +38,7 @@ export const BankTransactions = ({
   showReceiptUploads = false,
   monthlyView = false,
   mobileComponent,
+  filters: inputFilters,
 }: BankTransactionsProps) => {
   const [display, setDisplay] = useState<DisplayState>(
     categorizedOnly ? DisplayState.categorized : DisplayState.review,
@@ -47,8 +50,22 @@ export const BankTransactions = ({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   })
-  const { data, isLoading, loadingStatus, error, isValidating, refetch } =
-    useBankTransactions()
+  const {
+    data,
+    isLoading,
+    loadingStatus,
+    error,
+    isValidating,
+    refetch,
+    setFilters,
+    filters
+  } = useBankTransactionsContext()
+
+  useEffect(() => {
+    if (JSON.stringify(inputFilters) !== JSON.stringify(filters)) {
+      setFilters(inputFilters)
+    }
+  }, [inputFilters])
 
   const bankTransactionsByFilter = data?.filter(
     tx =>

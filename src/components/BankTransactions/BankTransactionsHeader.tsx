@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../hooks/useLayerContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import DownloadCloud from '../../icons/DownloadCloud'
 import { DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'

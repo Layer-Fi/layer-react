@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useLayerContext } from '../../hooks/useLayerContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { DateMonthPicker } from '../DateMonthPicker'
 import { ProfitAndLoss } from '../ProfitAndLoss'

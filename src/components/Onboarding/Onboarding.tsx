@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { useLayerContext } from '../../contexts/LayerContext'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
-import { useLayerContext } from '../../hooks/useLayerContext'
 import { LinkedAccountsProvider } from '../../providers/LinkedAccountsProvider'
 import { Container } from '../Container'
 import { ConnectAccount } from './ConnectAccount'

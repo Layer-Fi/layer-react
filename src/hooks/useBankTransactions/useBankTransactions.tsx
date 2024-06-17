@@ -1,10 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { BankTransaction, CategoryUpdate, Metadata } from '../../types'
 import { BankTransactionMatchType } from '../../types/bank_transactions'
 import { LoadedStatus } from '../../types/general'
 import { useLayerContext } from '../useLayerContext'
 import useSWR from 'swr'
+
+interface NumericRangeFilter {
+  min?: number
+  max?: number
+}
+
+export interface AccountItem {
+  id: string
+  name: string
+}
+
+export interface BankTransactionFilters {
+  amount?: NumericRangeFilter
+}
 
 type UseBankTransactions = () => {
   data?: BankTransaction[]
@@ -13,6 +27,8 @@ type UseBankTransactions = () => {
   isLoading: boolean
   isValidating: boolean
   error: unknown
+  filters?: BankTransactionFilters
+  accountsList?: AccountItem[]
   categorize: (
     id: BankTransaction['id'],
     newCategory: CategoryUpdate,
@@ -25,11 +41,53 @@ type UseBankTransactions = () => {
   ) => Promise<void>
   updateOneLocal: (bankTransaction: BankTransaction) => void
   refetch: () => void
+  setFilters: (filters?: BankTransactionFilters) => void
+}
+
+const applyAmountFilter = (
+  data?: BankTransaction[],
+  filter?: NumericRangeFilter,
+) => {
+  return data?.filter(x => {
+    if (
+      (filter?.min || filter?.min === 0) &&
+      (filter?.max || filter?.max === 0)
+    ) {
+      return x.amount >= filter.min * 100 && x.amount <= filter.max * 100
+    }
+
+    if (filter?.min || filter?.min === 0) {
+      return x.amount >= filter.min * 100
+    }
+
+    if (filter?.max || filter?.max === 0) {
+      return x.amount <= filter.max * 100
+    }
+  })
+}
+
+const collectAccounts = (transactions?: BankTransaction[]) => {
+  const accounts: AccountItem[] = []
+  if (!transactions) {
+    return accounts
+  }
+
+  transactions.forEach(x => {
+    if (!accounts.find(y => y.id === x.source_account_id)) {
+      accounts.push({
+        id: x.source_account_id,
+        name: x.account_name || '',
+      })
+    }
+  })
+
+  return accounts.sort((a, b) => a.name.localeCompare(b.name))
 }
 
 export const useBankTransactions: UseBankTransactions = () => {
-  const { auth, businessId, apiUrl, addToast } = useLayerContext()
+  const { auth, businessId, apiUrl, addToast, business } = useLayerContext()
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
+  const [filters, setFilters] = useState<BankTransactionFilters | undefined>()
 
   const {
     data: responseData,
@@ -42,6 +100,11 @@ export const useBankTransactions: UseBankTransactions = () => {
     Layer.getBankTransactions(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
+  )
+
+  const accountsList = useMemo(
+    () => collectAccounts(responseData?.data),
+    [responseData],
   )
 
   useEffect(() => {
@@ -61,6 +124,16 @@ export const useBankTransactions: UseBankTransactions = () => {
     meta: metadata = {},
     error = undefined,
   } = responseData || {}
+
+  const filteredData = useMemo(() => {
+    let filtered = data
+
+    if (filters?.amount?.min || filters?.amount?.max) {
+      filtered = applyAmountFilter(filtered, filters.amount)
+    }
+
+    return filtered
+  }, [filters, responseData])
 
   const categorize = (
     id: BankTransaction['id'],
@@ -164,7 +237,7 @@ export const useBankTransactions: UseBankTransactions = () => {
   }
 
   return {
-    data,
+    data: filteredData,
     metadata,
     loadingStatus,
     isLoading,
@@ -174,5 +247,8 @@ export const useBankTransactions: UseBankTransactions = () => {
     categorize,
     match,
     updateOneLocal,
+    filters,
+    setFilters,
+    accountsList
   }
 }

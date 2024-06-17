@@ -6,7 +6,7 @@ import { Panel } from '../../components/Panel'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
-import { useLayerContext } from '../../hooks/useLayerContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import DownloadCloud from '../../icons/DownloadCloud'
 
 export interface ReportsProps {

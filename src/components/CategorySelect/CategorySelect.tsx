@@ -7,7 +7,7 @@ import Select, {
   components,
 } from 'react-select'
 import { DATE_FORMAT } from '../../config/general'
-import { useLayerContext } from '../../hooks/useLayerContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import Check from '../../icons/Check'
 import ChevronDown from '../../icons/ChevronDown'
 import MinimizeTwo from '../../icons/MinimizeTwo'

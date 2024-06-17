@@ -1,1 +1,1 @@
-export { LayerContext } from './LayerContext'
+export { LayerContext, useLayerContext } from './LayerContext'
