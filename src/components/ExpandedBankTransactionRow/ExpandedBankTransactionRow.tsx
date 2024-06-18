@@ -7,7 +7,7 @@ import React, {
   useRef,
   TransitionEvent,
 } from 'react'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
@@ -45,7 +45,7 @@ type Props = {
   asListItem?: boolean
   submitBtnText?: string
   containerWidth?: number
-  editable?: boolean
+  categorized?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
 }
@@ -102,7 +102,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       bankTransaction,
       isOpen = false,
       close,
-      editable,
+      categorized,
       asListItem = false,
       submitBtnText = 'Save',
       containerWidth,
@@ -114,7 +114,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const {
       categorize: categorizeBankTransaction,
       match: matchBankTransaction,
-    } = useBankTransactions()
+    } = useBankTransactionsContext()
     const [purpose, setPurpose] = useState<Purpose>(
       bankTransaction.category
         ? Purpose.categorize
@@ -520,7 +520,9 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                     className='Layer__bank-transaction__submit-btn'
                     processing={bankTransaction.processing}
                     active={true}
-                    action={editable ? SubmitAction.SAVE : SubmitAction.UPDATE}
+                    action={
+                      categorized ? SubmitAction.SAVE : SubmitAction.UPDATE
+                    }
                   >
                     {submitBtnText}
                   </SubmitButton>

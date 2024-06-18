@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types'
@@ -15,6 +15,7 @@ import { TextUseTooltip } from '../Typography/Text'
 import { Assignment } from './Assignment'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import { isCategorized } from '../BankTransactions/utils'
 
 type Props = {
   index: number
@@ -40,7 +41,7 @@ export const BankTransactionListItem = ({
   const [showRetry, setShowRetry] = useState(false)
   const [removed, setRemoved] = useState(false)
   const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
-    useBankTransactions()
+    useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )
@@ -93,11 +94,13 @@ export const BankTransactionListItem = ({
     return null
   }
 
+  const categorized = isCategorized(bankTransaction)
+
   const className = 'Layer__bank-transaction-list-item'
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    bankTransaction.recently_categorized
+    bankTransaction.recently_categorized && editable
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
@@ -148,16 +151,16 @@ export const BankTransactionListItem = ({
           bankTransaction={bankTransaction}
           isOpen={open}
           close={() => setOpen(false)}
-          editable={editable}
+          categorized={categorized}
           asListItem={true}
-          submitBtnText={editable ? 'Approve' : 'Update'}
+          submitBtnText={categorized ? 'Update' : 'Approve'}
           containerWidth={containerWidth}
           showDescriptions={showDescriptions}
           showReceiptUploads={showReceiptUploads}
         />
       </span>
       <span className={`${className}__base-row`}>
-        {editable ? (
+        {!categorized ? (
           <CategorySelect
             bankTransaction={bankTransaction}
             name={`category-${bankTransaction.id}`}
@@ -169,8 +172,8 @@ export const BankTransactionListItem = ({
             disabled={bankTransaction.processing}
           />
         ) : null}
-        {!editable ? <Assignment bankTransaction={bankTransaction} /> : null}
-        {editable && !showRetry ? (
+        {categorized ? <Assignment bankTransaction={bankTransaction} /> : null}
+        {!categorized && !showRetry ? (
           <SubmitButton
             onClick={() => {
               if (!bankTransaction.processing) {
@@ -179,12 +182,12 @@ export const BankTransactionListItem = ({
             }}
             className='Layer__bank-transaction__submit-btn'
             processing={bankTransaction.processing}
-            action={editable ? SubmitAction.SAVE : SubmitAction.UPDATE}
+            action={!categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
           >
-            {editable ? 'Approve' : 'Update'}
+            {!categorized ? 'Approve' : 'Update'}
           </SubmitButton>
         ) : null}
-        {editable && showRetry ? (
+        {!categorized && showRetry ? (
           <RetryButton
             onClick={() => {
               if (!bankTransaction.processing) {

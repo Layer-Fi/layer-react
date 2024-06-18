@@ -9,7 +9,7 @@ import {
   NewJournalEntry,
 } from '../../types/journal'
 import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
-import { useLayerContext } from '../useLayerContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import useSWR from 'swr'
 
 type UseJournal = () => {

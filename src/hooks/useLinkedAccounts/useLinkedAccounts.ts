@@ -3,7 +3,7 @@ import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 import { Layer } from '../../api/layer'
 import { LoadedStatus } from '../../types/general'
 import { LinkedAccount, Source } from '../../types/linked_accounts'
-import { useLayerContext } from '../useLayerContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import { LINKED_ACCOUNTS_MOCK_DATA } from './mockData'
 import useSWR from 'swr'
 

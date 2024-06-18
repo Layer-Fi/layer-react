@@ -1,5 +1,5 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react'
-import { useLayerContext } from '../../hooks/useLayerContext'
+import React, { forwardRef } from 'react'
+import { useLayerContext } from '../../contexts/LayerContext'
 import classNames from 'classnames'
 
 export interface ToastProps {

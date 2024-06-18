@@ -1,6 +1,6 @@
 import { Layer } from '../../api/layer'
 import { ProfitAndLoss, ReportingBasis } from '../../types'
-import { useLayerContext } from '../useLayerContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
 import useSWR from 'swr'
 

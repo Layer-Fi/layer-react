@@ -5,6 +5,7 @@ import { ToastProps } from '../../components/Toast/Toast'
 import { DrawerContext } from '../../contexts/DrawerContext'
 import { LayerContext } from '../../contexts/LayerContext'
 import { useDrawer } from '../../hooks/useDrawer'
+import { BankTransactionsProvider } from '../../providers/BankTransactionsProvider'
 import {
   LayerContextValues,
   LayerContextAction,
@@ -302,10 +303,12 @@ export const LayerProvider = ({
           removeToast,
         }}
       >
-        <DrawerContext.Provider value={drawerContextData}>
-          {children}
-          <GlobalWidgets />
-        </DrawerContext.Provider>
+        <BankTransactionsProvider>
+          <DrawerContext.Provider value={drawerContextData}>
+            {children}
+            <GlobalWidgets />
+          </DrawerContext.Provider>
+        </BankTransactionsProvider>
       </LayerContext.Provider>
     </SWRConfig>
   )

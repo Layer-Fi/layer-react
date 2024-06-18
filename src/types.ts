@@ -12,6 +12,7 @@ export { BalanceSheet } from './types/balance_sheet'
 export { Direction, BankTransaction } from './types/bank_transactions'
 export {
   CategorizationStatus,
+  CategorizationScope,
   Category,
   CategorizationType,
   AutoCategorization,

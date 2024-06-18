@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { isCredit } from '../../utils/bankTransactions'
 import { Button } from '../Button'
@@ -26,7 +26,7 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
 
 export const PersonalForm = ({ bankTransaction }: PersonalFormProps) => {
   const { categorize: categorizeBankTransaction, isLoading } =
-    useBankTransactions()
+    useBankTransactionsContext()
   const [showRetry, setShowRetry] = useState(false)
 
   useEffect(() => {

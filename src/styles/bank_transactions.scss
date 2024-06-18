@@ -406,6 +406,10 @@
     transform: scale(1);
   }
 
+  &.Layer__bank-transaction-row--removing {
+    display: none;
+  }
+
   .Layer__bank-transaction-list-item__base-row {
     max-height: 60px;
     opacity: 1;

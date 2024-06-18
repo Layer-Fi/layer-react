@@ -1,4 +1,4 @@
-import { createContext } from 'react'
+import { createContext, useContext } from 'react'
 import { ToastProps } from '../../components/Toast/Toast'
 import { LayerContextValues } from '../../types'
 import {
@@ -35,3 +35,5 @@ export const LayerContext = createContext<
   addToast: (toast: ToastProps) => undefined,
   removeToast: () => undefined,
 })
+
+export const useLayerContext = () => useContext(LayerContext)

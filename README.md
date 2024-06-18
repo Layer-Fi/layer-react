@@ -107,6 +107,24 @@ The transaction categorization component handles displaying both categorized tra
 <BankTransactions asWidget />
 ```
 
+Optional properties and `useBankTransactionsContext` give more control over the transactions list:
+
+```tsx
+/** Using props */
+<BankTransactions
+  filters={{
+    amount: { min: 0, max: 100 },
+  }}
+/>
+
+/** Using hook */
+const { setFilters } = useBankTransactionsContext()
+
+setFilters({ amount: { min: 0, max: 10000 } })
+
+<BankTransactions />
+```
+
 ### Reports
 
 The reports component contains multiple accounting reports and tables, including the profit and loss table.

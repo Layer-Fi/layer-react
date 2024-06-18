@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { useLayerContext } from '../../hooks/useLayerContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import { ActionableList } from '../ActionableList'
-import { Text, TextSize, TextWeight } from '../Typography'
+import { Text, TextWeight } from '../Typography'
 import { Option, flattenCategories } from './utils'
 
 export interface BusinessCategoriesProps {

@@ -3,7 +3,7 @@ import { useProfitAndLoss } from './'
 import { renderHook, waitFor } from '@testing-library/react'
 import { startOfMonth, endOfMonth } from 'date-fns'
 
-jest.mock('../useLayerContext', () => ({
+jest.mock('../../contexts/LayerContext', () => ({
   useLayerContext: () => ({
     auth: { access_token: '1234567890' },
     businessId: 'TRUCK',

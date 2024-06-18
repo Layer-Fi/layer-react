@@ -1,35 +1,50 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { BankTransaction, CategoryUpdate, Metadata } from '../../types'
+import { useLayerContext } from '../../contexts/LayerContext'
+import {
+  BankTransaction,
+  CategorizationScope,
+  CategorizationStatus,
+  CategoryUpdate,
+} from '../../types'
 import { BankTransactionMatchType } from '../../types/bank_transactions'
 import { LoadedStatus } from '../../types/general'
-import { useLayerContext } from '../useLayerContext'
+import {
+  BankTransactionFilters,
+  DisplayState,
+  UseBankTransactions,
+} from './types'
+import {
+  applyAccountFilter,
+  applyAmountFilter,
+  applyCategorizationStatusFilter,
+  applyDirectionFilter,
+  appplyDateRangeFilter,
+  collectAccounts,
+} from './utils'
 import useSWR from 'swr'
-
-type UseBankTransactions = () => {
-  data?: BankTransaction[]
-  metadata: Metadata
-  loadingStatus: LoadedStatus
-  isLoading: boolean
-  isValidating: boolean
-  error: unknown
-  categorize: (
-    id: BankTransaction['id'],
-    newCategory: CategoryUpdate,
-    notify?: boolean,
-  ) => Promise<void>
-  match: (
-    id: BankTransaction['id'],
-    matchId: BankTransaction['id'],
-    notify?: boolean,
-  ) => Promise<void>
-  updateOneLocal: (bankTransaction: BankTransaction) => void
-  refetch: () => void
-}
 
 export const useBankTransactions: UseBankTransactions = () => {
   const { auth, businessId, apiUrl, addToast } = useLayerContext()
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
+  const [filters, setTheFilters] = useState<
+    BankTransactionFilters | undefined
+  >()
+  const [active, setActive] = useState(false)
+  const display = useMemo(() => {
+    if (filters?.categorizationStatus === CategorizationScope.TO_REVIEW) {
+      return DisplayState.review
+    }
+
+    return DisplayState.categorized
+  }, [filters?.categorizationStatus])
+
+  const queryKey = useMemo(() => {
+    if (!active) {
+      return false
+    }
+    return businessId && auth?.access_token && `bank-transactions-${businessId}`
+  }, [businessId, auth?.access_token, active])
 
   const {
     data: responseData,
@@ -38,10 +53,15 @@ export const useBankTransactions: UseBankTransactions = () => {
     error: responseError,
     mutate,
   } = useSWR(
-    businessId && auth?.access_token && `bank-transactions-${businessId}`,
+    queryKey,
     Layer.getBankTransactions(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
+  )
+
+  const accountsList = useMemo(
+    () => collectAccounts(responseData?.data),
+    [responseData],
   )
 
   useEffect(() => {
@@ -56,11 +76,51 @@ export const useBankTransactions: UseBankTransactions = () => {
     }
   }, [isLoading])
 
+  const activate = () => {
+    setActive(true)
+  }
+
+  const setFilters = (value?: Partial<BankTransactionFilters>) => {
+    setTheFilters({
+      ...filters,
+      ...(value ?? {}),
+    })
+  }
+
   const {
     data = undefined,
     meta: metadata = {},
     error = undefined,
   } = responseData || {}
+
+  const filteredData = useMemo(() => {
+    let filtered = data
+
+    if (filters?.amount?.min || filters?.amount?.max) {
+      filtered = applyAmountFilter(filtered, filters.amount)
+    }
+
+    if (filters?.account) {
+      filtered = applyAccountFilter(filtered, filters.account)
+    }
+
+    if (filters?.direction) {
+      filtered = applyDirectionFilter(filtered, filters.direction)
+    }
+
+    if (filters?.categorizationStatus) {
+      filtered = applyCategorizationStatusFilter(
+        filtered,
+        filters.categorizationStatus,
+      )
+    }
+
+    if (filters?.dateRange?.startDate || filters?.dateRange?.endDate) {
+      filtered = appplyDateRangeFilter(filtered, filters?.dateRange)
+    }
+
+    return filtered
+  }, [filters, responseData])
 
   const categorize = (
     id: BankTransaction['id'],
@@ -126,6 +186,7 @@ export const useBankTransactions: UseBankTransactions = () => {
         if (newBT) {
           newBT.recently_categorized = true
           newBT.match = bt
+          newBT.categorization_status = CategorizationStatus.MATCHED
           updateOneLocal(newBT)
         }
         if (errors) {
@@ -164,7 +225,7 @@ export const useBankTransactions: UseBankTransactions = () => {
   }
 
   return {
-    data,
+    data: filteredData,
     metadata,
     loadingStatus,
     isLoading,
@@ -174,5 +235,10 @@ export const useBankTransactions: UseBankTransactions = () => {
     categorize,
     match,
     updateOneLocal,
+    filters,
+    setFilters,
+    accountsList,
+    activate,
+    display,
   }
 }

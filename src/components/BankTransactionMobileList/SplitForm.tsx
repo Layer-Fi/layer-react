@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import Trash from '../../icons/Trash'
 import {
   centsToDollars as formatMoney,
@@ -43,7 +43,7 @@ export const SplitForm = ({
     categorize: categorizeBankTransaction,
     isLoading,
     error,
-  } = useBankTransactions()
+  } = useBankTransactionsContext()
   const defaultCategory =
     bankTransaction.category ||
     (hasSuggestions(bankTransaction.categorization_flow) &&

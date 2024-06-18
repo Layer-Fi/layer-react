@@ -1,8 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { BREAKPOINTS } from '../../config/general'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import {
+  BankTransactionFilters,
+  DisplayState,
+} from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
-import { DateRange } from '../../types'
+import { CategorizationScope, DateRange } from '../../types'
 import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
@@ -12,8 +16,7 @@ import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
 import { BankTransactionsHeader } from './BankTransactionsHeader'
 import { DataStates } from './DataStates'
-import { DisplayState, MobileComponentType } from './constants'
-import { filterVisibility } from './utils'
+import { MobileComponentType } from './constants'
 import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
@@ -25,21 +28,24 @@ export interface BankTransactionsProps {
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   monthlyView?: boolean
+  categorizeView?: boolean
   mobileComponent?: MobileComponentType
+  filters?: BankTransactionFilters
+  hideHeader?: boolean
 }
 
 export const BankTransactions = ({
   asWidget = false,
   pageSize = 15,
   categorizedOnly = false,
+  categorizeView = true,
   showDescriptions = false,
   showReceiptUploads = false,
   monthlyView = false,
   mobileComponent,
+  filters: inputFilters,
+  hideHeader = false,
 }: BankTransactionsProps) => {
-  const [display, setDisplay] = useState<DisplayState>(
-    categorizedOnly ? DisplayState.categorized : DisplayState.review,
-  )
   const [currentPage, setCurrentPage] = useState(1)
   const [removedTxs, setRemovedTxs] = useState<string[]>([])
   const [initialLoad, setInitialLoad] = useState(true)
@@ -47,17 +53,51 @@ export const BankTransactions = ({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   })
-  const { data, isLoading, loadingStatus, error, isValidating, refetch } =
-    useBankTransactions()
+  const {
+    activate,
+    data,
+    isLoading,
+    loadingStatus,
+    error,
+    isValidating,
+    refetch,
+    setFilters,
+    filters,
+    accountsList,
+    display,
+  } = useBankTransactionsContext()
 
-  const bankTransactionsByFilter = data?.filter(
-    tx =>
-      filterVisibility(display, tx) ||
-      (display === DisplayState.review &&
-        tx.recently_categorized &&
-        !removedTxs.includes(tx.id)) ||
-      (display === DisplayState.categorized && tx.recently_categorized),
-  )
+  useEffect(() => {
+    activate()
+  }, [])
+
+  useEffect(() => {
+    if (JSON.stringify(inputFilters) !== JSON.stringify(filters)) {
+      if (!filters?.categorizationStatus && categorizeView) {
+        setFilters({
+          ...filters,
+          ...inputFilters,
+          categorizationStatus: CategorizationScope.TO_REVIEW,
+        })
+      } else if (!filters?.categorizationStatus && categorizedOnly) {
+        setFilters({
+          ...filters,
+          ...inputFilters,
+          categorizationStatus: CategorizationScope.CATEGORIZED,
+        })
+      } else {
+        setFilters({ ...filters, ...inputFilters })
+      }
+    } else if (!filters?.categorizationStatus && categorizeView) {
+      setFilters({
+        categorizationStatus: CategorizationScope.TO_REVIEW,
+      })
+    } else if (!filters?.categorizationStatus && categorizedOnly) {
+      setFilters({
+        categorizationStatus: CategorizationScope.CATEGORIZED,
+      })
+    }
+  }, [inputFilters, categorizeView, categorizedOnly])
 
   useEffect(() => {
     if (loadingStatus === 'complete') {
@@ -70,7 +110,7 @@ export const BankTransactions = ({
 
   const bankTransactions = useMemo(() => {
     if (monthlyView) {
-      return bankTransactionsByFilter?.filter(
+      return data?.filter(
         x =>
           parseISO(x.date) >= dateRange.startDate &&
           parseISO(x.date) <= dateRange.endDate,
@@ -79,17 +119,18 @@ export const BankTransactions = ({
 
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
-    return bankTransactionsByFilter?.slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, bankTransactionsByFilter, removedTxs])
+    return data?.slice(firstPageIndex, lastPageIndex)
+  }, [currentPage, data, removedTxs, dateRange])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setDisplay(
-      event.target.value === DisplayState.categorized
-        ? DisplayState.categorized
-        : DisplayState.review,
-    )
+    setFilters({
+      categorizationStatus:
+        event.target.value === DisplayState.categorized
+          ? CategorizationScope.CATEGORIZED
+          : CategorizationScope.TO_REVIEW,
+    })
     setCurrentPage(1)
   }
 
@@ -128,7 +169,7 @@ export const BankTransactions = ({
   return (
     <Container
       className={
-        editable
+        display === DisplayState.review
           ? 'Layer__bank-transactions--to-review'
           : 'Layer__bank-transactions--categorized'
       }
@@ -137,21 +178,25 @@ export const BankTransactions = ({
       asWidget={asWidget}
       ref={containerRef}
     >
-      <BankTransactionsHeader
-        shiftStickyHeader={shiftStickyHeader}
-        asWidget={asWidget}
-        categorizedOnly={categorizedOnly}
-        display={display}
-        onCategorizationDisplayChange={onCategorizationDisplayChange}
-        mobileComponent={mobileComponent}
-        withDatePicker={monthlyView}
-        listView={listView}
-        dateRange={dateRange}
-        setDateRange={v => setDateRange(v)}
-      />
+      {!hideHeader && (
+        <BankTransactionsHeader
+          shiftStickyHeader={shiftStickyHeader}
+          asWidget={asWidget}
+          categorizedOnly={categorizedOnly}
+          categorizeView={categorizeView}
+          display={display}
+          onCategorizationDisplayChange={onCategorizationDisplayChange}
+          mobileComponent={mobileComponent}
+          withDatePicker={monthlyView}
+          listView={listView}
+          dateRange={dateRange}
+          setDateRange={v => setDateRange(v)}
+        />
+      )}
 
       {!listView && (
         <BankTransactionsTable
+          categorizeView={categorizeView}
           editable={editable}
           isLoading={isLoading}
           bankTransactions={bankTransactions}
@@ -200,7 +245,7 @@ export const BankTransactions = ({
         <div className='Layer__bank-transactions__pagination'>
           <Pagination
             currentPage={currentPage}
-            totalCount={bankTransactionsByFilter?.length || 0}
+            totalCount={data?.length || 0}
             pageSize={pageSize}
             onPageChange={page => setCurrentPage(page)}
           />
