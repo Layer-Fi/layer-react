@@ -1,9 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
+import {
+  BankTransactionFilters,
+  DisplayState,
+} from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
-import { DateRange } from '../../types'
+import { CategorizationScope, DateRange } from '../../types'
 import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
@@ -13,8 +16,7 @@ import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
 import { BankTransactionsHeader } from './BankTransactionsHeader'
 import { DataStates } from './DataStates'
-import { DisplayState, MobileComponentType } from './constants'
-import { filterVisibility } from './utils'
+import { MobileComponentType } from './constants'
 import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
@@ -44,9 +46,6 @@ export const BankTransactions = ({
   filters: inputFilters,
   hideHeader = false,
 }: BankTransactionsProps) => {
-  const [display, setDisplay] = useState<DisplayState | undefined>(
-    !categorizeView ? undefined : categorizedOnly ? DisplayState.categorized : DisplayState.review,
-  )
   const [currentPage, setCurrentPage] = useState(1)
   const [removedTxs, setRemovedTxs] = useState<string[]>([])
   const [initialLoad, setInitialLoad] = useState(true)
@@ -65,6 +64,7 @@ export const BankTransactions = ({
     setFilters,
     filters,
     accountsList,
+    display,
   } = useBankTransactionsContext()
 
   useEffect(() => {
@@ -73,18 +73,31 @@ export const BankTransactions = ({
 
   useEffect(() => {
     if (JSON.stringify(inputFilters) !== JSON.stringify(filters)) {
-      setFilters(inputFilters)
+      if (!filters?.categorizationStatus && categorizeView) {
+        setFilters({
+          ...filters,
+          ...inputFilters,
+          categorizationStatus: CategorizationScope.TO_REVIEW,
+        })
+      } else if (!filters?.categorizationStatus && categorizedOnly) {
+        setFilters({
+          ...filters,
+          ...inputFilters,
+          categorizationStatus: CategorizationScope.CATEGORIZED,
+        })
+      } else {
+        setFilters({ ...filters, ...inputFilters })
+      }
+    } else if (!filters?.categorizationStatus && categorizeView) {
+      setFilters({
+        categorizationStatus: CategorizationScope.TO_REVIEW,
+      })
+    } else if (!filters?.categorizationStatus && categorizedOnly) {
+      setFilters({
+        categorizationStatus: CategorizationScope.CATEGORIZED,
+      })
     }
-  }, [inputFilters])
-
-  const bankTransactionsByFilter = display ? data?.filter(
-    tx =>
-      filterVisibility(display, tx) ||
-      (display === DisplayState.review &&
-        tx.recently_categorized &&
-        !removedTxs.includes(tx.id)) ||
-      (display === DisplayState.categorized && tx.recently_categorized),
-  ) : data
+  }, [inputFilters, categorizeView, categorizedOnly])
 
   useEffect(() => {
     if (loadingStatus === 'complete') {
@@ -97,7 +110,7 @@ export const BankTransactions = ({
 
   const bankTransactions = useMemo(() => {
     if (monthlyView) {
-      return bankTransactionsByFilter?.filter(
+      return data?.filter(
         x =>
           parseISO(x.date) >= dateRange.startDate &&
           parseISO(x.date) <= dateRange.endDate,
@@ -106,17 +119,18 @@ export const BankTransactions = ({
 
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
-    return bankTransactionsByFilter?.slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, bankTransactionsByFilter, removedTxs])
+    return data?.slice(firstPageIndex, lastPageIndex)
+  }, [currentPage, data, removedTxs, dateRange])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setDisplay(
-      event.target.value === DisplayState.categorized
-        ? DisplayState.categorized
-        : DisplayState.review,
-    )
+    setFilters({
+      categorizationStatus:
+        event.target.value === DisplayState.categorized
+          ? CategorizationScope.CATEGORIZED
+          : CategorizationScope.TO_REVIEW,
+    })
     setCurrentPage(1)
   }
 
@@ -155,7 +169,7 @@ export const BankTransactions = ({
   return (
     <Container
       className={
-        editable
+        display === DisplayState.review
           ? 'Layer__bank-transactions--to-review'
           : 'Layer__bank-transactions--categorized'
       }
@@ -180,38 +194,9 @@ export const BankTransactions = ({
         />
       )}
 
-      {!hideHeader && (
-        <>
-          <input
-            onChange={e =>
-              setFilters({ amount: { min: Number(e.target.value) } })
-            }
-            placeholder='Min amount'
-            value={filters?.amount?.min}
-          />
-
-          <select
-            value={filters?.account}
-            onChange={e =>
-              setFilters({
-                account:
-                  e.target.value === 'Any' ? undefined : [e.target.value],
-              })
-            }
-          >
-            <option>Any</option>
-            <option>Any</option>
-            {accountsList?.map(x => (
-              <option value={x.id} key={x.id}>
-                {x.name}
-              </option>
-            ))}
-          </select>
-        </>
-      )}
-
       {!listView && (
         <BankTransactionsTable
+          categorizeView={categorizeView}
           editable={editable}
           isLoading={isLoading}
           bankTransactions={bankTransactions}
@@ -260,7 +245,7 @@ export const BankTransactions = ({
         <div className='Layer__bank-transactions__pagination'>
           <Pagination
             currentPage={currentPage}
-            totalCount={bankTransactionsByFilter?.length || 0}
+            totalCount={data?.length || 0}
             pageSize={pageSize}
             onPageChange={page => setCurrentPage(page)}
           />

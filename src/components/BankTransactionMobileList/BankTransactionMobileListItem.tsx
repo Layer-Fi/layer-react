@@ -4,6 +4,7 @@ import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { hasMatch, isCredit } from '../../utils/bankTransactions'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
+import { isCategorized } from '../BankTransactions/utils'
 import { CloseButton } from '../Button'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
@@ -133,6 +134,8 @@ export const BankTransactionMobileListItem = ({
   const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) =>
     setPurpose(event.target.value as Purpose)
 
+  const categorized = isCategorized(bankTransaction)
+
   const className = 'Layer__bank-transaction-mobile-list-item'
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
@@ -171,12 +174,12 @@ export const BankTransactionMobileListItem = ({
               {bankTransaction.counterparty_name ?? bankTransaction.description}
             </Text>
             <Text as='span' className={`${className}__heading__account-name`}>
-              {!editable && bankTransaction.categorization_status
+              {categorized && bankTransaction.categorization_status
                 ? getAssignedValue(bankTransaction)
                 : null}
-              {editable && bankTransaction.account_name}
+              {!categorized && bankTransaction.account_name}
             </Text>
-            {!editable && open && (
+            {categorized && open && (
               <Text as='span' className={`${className}__categorized-name`}>
                 {bankTransaction.account_name}
               </Text>

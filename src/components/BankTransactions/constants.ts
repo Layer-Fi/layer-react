@@ -2,11 +2,6 @@ import { CategorizationStatus } from '../../types'
 
 export type MobileComponentType = 'regularList' | 'mobileList'
 
-export enum DisplayState {
-  review = 'review',
-  categorized = 'categorized',
-}
-
 export const CategorizedCategories = [
   CategorizationStatus.CATEGORIZED,
   CategorizationStatus.JOURNALING,

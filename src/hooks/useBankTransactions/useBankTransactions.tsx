@@ -1,10 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { BankTransaction, CategoryUpdate } from '../../types'
+import {
+  BankTransaction,
+  CategorizationScope,
+  CategorizationStatus,
+  CategoryUpdate,
+} from '../../types'
 import { BankTransactionMatchType } from '../../types/bank_transactions'
 import { LoadedStatus } from '../../types/general'
-import { BankTransactionFilters, UseBankTransactions } from './types'
+import {
+  BankTransactionFilters,
+  DisplayState,
+  UseBankTransactions,
+} from './types'
 import {
   applyAccountFilter,
   applyAmountFilter,
@@ -22,6 +31,13 @@ export const useBankTransactions: UseBankTransactions = () => {
     BankTransactionFilters | undefined
   >()
   const [active, setActive] = useState(false)
+  const display = useMemo(() => {
+    if (filters?.categorizationStatus === CategorizationScope.TO_REVIEW) {
+      return DisplayState.review
+    }
+
+    return DisplayState.categorized
+  }, [filters?.categorizationStatus])
 
   const queryKey = useMemo(() => {
     if (!active) {
@@ -93,7 +109,10 @@ export const useBankTransactions: UseBankTransactions = () => {
     }
 
     if (filters?.categorizationStatus) {
-      filtered = applyCategorizationStatusFilter(filtered, filters.categorizationStatus)
+      filtered = applyCategorizationStatusFilter(
+        filtered,
+        filters.categorizationStatus,
+      )
     }
 
     if (filters?.dateRange?.startDate || filters?.dateRange?.endDate) {
@@ -167,6 +186,7 @@ export const useBankTransactions: UseBankTransactions = () => {
         if (newBT) {
           newBT.recently_categorized = true
           newBT.match = bt
+          newBT.categorization_status = CategorizationStatus.MATCHED
           updateOneLocal(newBT)
         }
         if (errors) {
@@ -204,8 +224,6 @@ export const useBankTransactions: UseBankTransactions = () => {
     mutate()
   }
 
-  console.log('filters', filters)
-
   return {
     data: filteredData,
     metadata,
@@ -221,5 +239,6 @@ export const useBankTransactions: UseBankTransactions = () => {
     setFilters,
     accountsList,
     activate,
+    display,
   }
 }

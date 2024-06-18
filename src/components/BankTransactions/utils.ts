@@ -1,23 +1,22 @@
-import { BankTransaction } from '../../types'
-import {
-  CategorizedCategories,
-  DisplayState,
-  ReviewCategories,
-} from './constants'
+import { BankTransaction, CategorizationScope } from '../../types'
+import { CategorizedCategories, ReviewCategories } from './constants'
 
 export const filterVisibility = (
-  display: DisplayState,
+  scope: CategorizationScope,
   bankTransaction: BankTransaction,
 ) => {
   const categorized = CategorizedCategories.includes(
     bankTransaction.categorization_status,
   )
-  const inReview =
-    ReviewCategories.includes(bankTransaction.categorization_status) &&
-    !bankTransaction.recently_categorized
+  const inReview = ReviewCategories.includes(
+    bankTransaction.categorization_status,
+  )
 
   return (
-    (display === DisplayState.review && inReview) ||
-    (display === DisplayState.categorized && categorized)
+    (scope === CategorizationScope.TO_REVIEW && inReview) ||
+    (scope === CategorizationScope.CATEGORIZED && categorized)
   )
 }
+
+export const isCategorized = (bankTransaction: BankTransaction) =>
+  CategorizedCategories.includes(bankTransaction.categorization_status)

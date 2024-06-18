@@ -1,6 +1,12 @@
-import { parseISO } from 'date-fns'
-import { BankTransaction, DateRange, Direction } from '../../types'
+import { filterVisibility } from '../../components/BankTransactions/utils'
+import {
+  BankTransaction,
+  CategorizationScope,
+  DateRange,
+  Direction,
+} from '../../types'
 import { AccountItem, NumericRangeFilter } from './types'
+import { parseISO } from 'date-fns'
 
 export const collectAccounts = (transactions?: BankTransaction[]) => {
   const accounts: AccountItem[] = []
@@ -45,7 +51,7 @@ export const applyAmountFilter = (
 export const applyAccountFilter = (
   data?: BankTransaction[],
   filter?: string[],
-) =>  data?.filter(x => filter && filter.includes(x.source_account_id))
+) => data?.filter(x => filter && filter.includes(x.source_account_id))
 
 export const applyDirectionFilter = (
   data?: BankTransaction[],
@@ -56,19 +62,25 @@ export const applyDirectionFilter = (
   }
   const normalizedFilter = filter.map(x => x.toLowerCase())
 
-  return data?.filter(x => normalizedFilter.includes(x.direction?.toLowerCase()))
+  return data?.filter(x =>
+    normalizedFilter.includes(x.direction?.toLowerCase()),
+  )
 }
 
 export const applyCategorizationStatusFilter = (
   data?: BankTransaction[],
-  filter?: string[],
+  filter?: CategorizationScope,
 ) => {
   if (!filter) {
     return data
   }
-  const normalizedFilter = filter.map(x => x.toLowerCase())
 
-  return data?.filter(x => normalizedFilter.includes(x.categorization_status?.toLowerCase()))
+  return data?.filter(
+    tx =>
+      filterVisibility(filter, tx) ||
+      (filter === CategorizationScope.TO_REVIEW && tx.recently_categorized) ||
+      (filter === CategorizationScope.CATEGORIZED && tx.recently_categorized),
+  )
 }
 
 export const appplyDateRangeFilter = (

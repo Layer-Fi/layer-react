@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { DisplayState } from '../../hooks/useBankTransactions/types'
 import DownloadCloud from '../../icons/DownloadCloud'
 import { DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
@@ -10,7 +11,7 @@ import { DateMonthPicker } from '../DateMonthPicker'
 import { Tabs } from '../Tabs'
 import { Toggle } from '../Toggle'
 import { Heading, HeadingSize } from '../Typography'
-import { DisplayState, MobileComponentType } from './constants'
+import { MobileComponentType } from './constants'
 import classNames from 'classnames'
 
 export interface BankTransactionsHeaderProps {
@@ -116,10 +117,28 @@ export const BankTransactionsHeader = ({
         ) : null}
       </div>
 
-      {!categorizedOnly && !(mobileComponent == 'mobileList' && listView) && categorizeView && (
-        <div className='Layer__header__actions'>
-          <DownloadButton />
-          <Toggle
+      {!categorizedOnly &&
+        !(mobileComponent == 'mobileList' && listView) &&
+        categorizeView && (
+          <div className='Layer__header__actions'>
+            <DownloadButton />
+            <Toggle
+              name='bank-transaction-display'
+              options={[
+                { label: 'To Review', value: DisplayState.review },
+                { label: 'Categorized', value: DisplayState.categorized },
+              ]}
+              selected={display}
+              onChange={onCategorizationDisplayChange}
+            />
+          </div>
+        )}
+
+      {!categorizedOnly &&
+        mobileComponent === 'mobileList' &&
+        listView &&
+        categorizeView && (
+          <Tabs
             name='bank-transaction-display'
             options={[
               { label: 'To Review', value: DisplayState.review },
@@ -128,20 +147,7 @@ export const BankTransactionsHeader = ({
             selected={display}
             onChange={onCategorizationDisplayChange}
           />
-        </div>
-      )}
-
-      {!categorizedOnly && mobileComponent === 'mobileList' && listView && categorizeView && (
-        <Tabs
-          name='bank-transaction-display'
-          options={[
-            { label: 'To Review', value: DisplayState.review },
-            { label: 'Categorized', value: DisplayState.categorized },
-          ]}
-          selected={display}
-          onChange={onCategorizationDisplayChange}
-        />
-      )}
+        )}
     </Header>
   )
 }

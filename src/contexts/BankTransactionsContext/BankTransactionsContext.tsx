@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { DisplayState } from '../../hooks/useBankTransactions/types'
 
 export type BankTransactionsContextType = ReturnType<typeof useBankTransactions>
 export const BankTransactionsContext =
@@ -19,6 +20,7 @@ export const BankTransactionsContext =
     },
     updateOneLocal: () => undefined,
     activate: () => undefined,
+    display: DisplayState.review
   })
 
 export const useBankTransactionsContext = () =>

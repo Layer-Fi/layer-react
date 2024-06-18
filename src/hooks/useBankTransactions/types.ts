@@ -1,5 +1,6 @@
 import {
   BankTransaction,
+  CategorizationScope,
   CategoryUpdate,
   DateRange,
   Direction,
@@ -17,11 +18,16 @@ export interface AccountItem {
   name: string
 }
 
+export enum DisplayState {
+  review = 'review',
+  categorized = 'categorized',
+}
+
 export interface BankTransactionFilters {
   amount?: NumericRangeFilter
   account?: string[]
   direction?: Direction[]
-  categorizationStatus?: string[] // @TODO - use enum?
+  categorizationStatus?: CategorizationScope
   dateRange?: Partial<DateRange>
 }
 
@@ -34,6 +40,7 @@ export type UseBankTransactions = () => {
   error: unknown
   filters?: BankTransactionFilters
   accountsList?: AccountItem[]
+  display: DisplayState
   categorize: (
     id: BankTransaction['id'],
     newCategory: CategoryUpdate,

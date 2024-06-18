@@ -1,7 +1,6 @@
-import { DisplayState } from '../components/BankTransactions/constants'
 import { filterVisibility } from '../components/BankTransactions/utils'
 import { CategoryOption } from '../components/CategorySelect/CategorySelect'
-import { BankTransaction, Category, Direction } from '../types'
+import { BankTransaction, CategorizationScope, Direction } from '../types'
 import { endOfMonth, isWithinInterval, parseISO, startOfMonth } from 'date-fns'
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
@@ -42,7 +41,7 @@ export const countTransactionsToReview = ({
       return transactions.filter(tx => {
         try {
           return (
-            filterVisibility(DisplayState.review, tx) &&
+            filterVisibility(CategorizationScope.TO_REVIEW, tx) &&
             isWithinInterval(parseISO(tx.date), currentMonth)
           )
         } catch (_err) {
@@ -50,8 +49,9 @@ export const countTransactionsToReview = ({
         }
       }).length
     }
-    return transactions.filter(tx => filterVisibility(DisplayState.review, tx))
-      .length
+    return transactions.filter(tx =>
+      filterVisibility(CategorizationScope.TO_REVIEW, tx),
+    ).length
   }
 
   return 0

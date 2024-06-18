@@ -45,7 +45,7 @@ type Props = {
   asListItem?: boolean
   submitBtnText?: string
   containerWidth?: number
-  editable?: boolean
+  categorized?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
 }
@@ -102,7 +102,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       bankTransaction,
       isOpen = false,
       close,
-      editable,
+      categorized,
       asListItem = false,
       submitBtnText = 'Save',
       containerWidth,
@@ -520,7 +520,9 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                     className='Layer__bank-transaction__submit-btn'
                     processing={bankTransaction.processing}
                     active={true}
-                    action={editable ? SubmitAction.SAVE : SubmitAction.UPDATE}
+                    action={
+                      categorized ? SubmitAction.SAVE : SubmitAction.UPDATE
+                    }
                   >
                     {submitBtnText}
                   </SubmitButton>

@@ -6,6 +6,7 @@ import { BankTransactionRow } from '../BankTransactionRow'
 interface BankTransactionsTableProps {
   bankTransactions?: BankTransaction[]
   editable: boolean
+  categorizeView?: boolean
   isLoading?: boolean
   initialLoad?: boolean
   containerWidth: number
@@ -15,6 +16,7 @@ interface BankTransactionsTableProps {
 }
 
 export const BankTransactionsTable = ({
+  categorizeView,
   editable,
   isLoading,
   bankTransactions,
@@ -43,7 +45,7 @@ export const BankTransactionsTable = ({
           <th className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'>
             Amount
           </th>
-          {editable ? (
+          {categorizeView && editable ? (
             <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
               Categorize
             </th>
@@ -61,10 +63,10 @@ export const BankTransactionsTable = ({
               <BankTransactionRow
                 initialLoad={initialLoad}
                 index={index}
+                editable={editable}
                 key={bankTransaction.id}
                 dateFormat={DATE_FORMAT}
                 bankTransaction={bankTransaction}
-                editable={editable}
                 removeTransaction={removeTransaction}
                 containerWidth={containerWidth}
                 showDescriptions={showDescriptions}
