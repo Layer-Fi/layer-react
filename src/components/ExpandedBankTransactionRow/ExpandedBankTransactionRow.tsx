@@ -419,6 +419,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                             value={split.inputValue}
                             onBlur={onBlur}
                             isInvalid={split.amount < 0}
+                            inputMode='numeric'
                             errorMessage='Negative values are not allowed'
                           />
                           <div
@@ -452,6 +453,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                         <Input
                           disabled={true}
                           leftText='Total'
+                          inputMode='numeric'
                           value={`$${formatMoney(
                             rowState.splits.reduce(
                               (x, { amount }) => x + amount,
