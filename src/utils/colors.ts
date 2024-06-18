@@ -22,10 +22,27 @@ export const parseStylesFromThemeConfig = (theme?: LayerThemeConfig) => {
   if (theme.colors) {
     const darkColor = parseColorFromTheme('dark', theme.colors.dark)
     const lightColor = parseColorFromTheme('light', theme.colors.light)
-    styles = { ...styles, ...darkColor, ...lightColor }
+    const textColor = parseTextColorFromTheme(theme.colors.text)
+    styles = { ...styles, ...darkColor, ...lightColor, ...textColor }
   }
 
   return styles
+}
+
+const parseTextColorFromTheme = (color?: ColorConfig) => {
+  if (!color) {
+    return {}
+  }
+
+  try {
+    if ('hex' in color) {
+      return { '--text-color-primary': color.hex }
+    }
+
+    return {}
+  } catch (_err) {
+    return {}
+  }
 }
 
 /**

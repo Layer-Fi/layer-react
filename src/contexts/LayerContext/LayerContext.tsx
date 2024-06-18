@@ -27,6 +27,7 @@ export const LayerContext = createContext<
   getColor: _shade => undefined,
   setLightColor: () => undefined,
   setDarkColor: () => undefined,
+  setTextColor: () => undefined,
   setColors: () => undefined,
   onboardingStep: undefined,
   setOnboardingStep: () => undefined,
