@@ -20,6 +20,7 @@ export type LayerContextHelpers = {
   getColor: (shade: number) => ColorsPaletteOption | undefined
   setLightColor: (color?: ColorConfig) => void
   setDarkColor: (color?: ColorConfig) => void
+  setTextColor: (color?: ColorConfig) => void
   setColors: (colors?: LayerThemeConfigColors) => void
   setOnboardingStep: (value: OnboardingStep) => void
   addToast: (toast: ToastProps) => void
@@ -67,6 +68,7 @@ export type ColorsPalette = Record<number, ColorsPaletteOption>
 export interface LayerThemeConfigColors {
   dark?: ColorConfig
   light?: ColorConfig
+  text?: ColorConfig
 }
 
 export interface LayerThemeConfig {

@@ -239,6 +239,16 @@ export const LayerProvider = ({
     })
   }
 
+  const setTextColor = (color?: ColorConfig) => {
+    setTheme({
+      ...(state.theme ?? {}),
+      colors: {
+        ...(state.theme?.colors ?? {}),
+        text: color,
+      },
+    })
+  }
+
   const setToast = (toast: ToastProps) => {
     dispatch({ type: Action.setToast, payload: { toast: toast } })
   }
@@ -296,6 +306,7 @@ export const LayerProvider = ({
           getColor,
           setLightColor,
           setDarkColor,
+          setTextColor,
           setColors,
           setOnboardingStep,
           addToast,
