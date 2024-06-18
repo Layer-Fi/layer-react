@@ -1,17 +1,54 @@
-import React from 'react';
+import React, { useContext } from 'react'
+import { DrawerContext } from '../../contexts/DrawerContext'
 
-const DrawerBackground = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => (
-  <div className={`Layer__drawer-background ${isOpen ? 'open' : ''}`} onClick={onClose}></div>
-);
+const DrawerBackground = ({
+  isOpen,
+  isClosing,
+  onClose,
+}: {
+  isOpen: boolean
+  isClosing: boolean
+  onClose: () => void
+}) => (
+  <div
+    className={`Layer__drawer-background ${isClosing ? 'closing' : ''} ${
+      isOpen ? 'open' : ''
+    }`}
+    onClick={onClose}
+  ></div>
+)
 
-export const Drawer = ({ isOpen, onClose, children }: { isOpen: boolean; onClose: () => void; children: React.ReactNode }) => {
+export const Drawer = ({
+  isOpen,
+  onClose,
+  children,
+}: {
+  isOpen: boolean
+  onClose: () => void
+  children: React.ReactNode
+}) => {
+  const { isClosing, finishClosing } = useContext(DrawerContext)
+
   return (
     <>
-      <DrawerBackground isOpen={isOpen} onClose={onClose} />
-      <div className={`Layer__drawer ${isOpen ? 'open' : ''}`} onClick={(e) => e.stopPropagation()}>
+      <DrawerBackground
+        isOpen={isOpen}
+        onClose={onClose}
+        isClosing={isClosing}
+      />
+      <div
+        className={`Layer__drawer ${isClosing ? 'closing' : ''} ${
+          isOpen ? 'open' : ''
+        }`}
+        onTransitionEnd={({ propertyName }) => {
+          if (propertyName === 'bottom' && isClosing) {
+            finishClosing()
+          }
+        }}
+        onClick={e => e.stopPropagation()}
+      >
         {children}
       </div>
     </>
-  );
-};
-
+  )
+}

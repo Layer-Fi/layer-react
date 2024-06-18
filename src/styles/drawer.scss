@@ -5,8 +5,15 @@
   left: 0;
   right: 0;
   bottom: 0;
+  opacity: 0;
   z-index: 1000;
-  transition: background 0.3s ease-in-out;
+  transition:
+    background 0.2s ease-in-out,
+    opacity 0.2s ease-in-out;
+
+  &.open.closing {
+    opacity: 0;
+  }
 
   &.open {
     display: block;
@@ -41,7 +48,7 @@
     border-radius: 80px;
   }
 
-  &.open {
+  &.open:not(.closing) {
     bottom: 0;
   }
 }
