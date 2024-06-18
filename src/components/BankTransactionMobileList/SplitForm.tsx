@@ -232,6 +232,7 @@ export const SplitForm = ({
               onBlur={onBlur}
               isInvalid={split.amount < 0}
               errorMessage='Negative values are not allowed'
+              inputMode='numeric'
             />
             {index > 0 && (
               <Button
