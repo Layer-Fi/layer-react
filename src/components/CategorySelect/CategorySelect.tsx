@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Select, {
   DropdownIndicatorProps,
   GroupHeadingProps,
@@ -17,6 +17,7 @@ import { SuggestedMatch } from '../../types/bank_transactions'
 import { CategoryEntry } from '../../types/categories'
 import { Badge } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
+import { CategorySelectDrawer } from './CategorySelectDrawer'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 
@@ -28,6 +29,7 @@ type Props = {
   disabled?: boolean
   className?: string
   excludeMatches?: boolean
+  asDrawer?: boolean
 }
 
 export enum OptionActionType {
@@ -207,6 +209,7 @@ export const CategorySelect = ({
   disabled,
   className,
   excludeMatches = false,
+  asDrawer = false,
 }: Props) => {
   const { categories } = useLayerContext()
 
@@ -255,17 +258,20 @@ export const CategorySelect = ({
 
   const selected = value
     ? value
-    : matchOptions?.length === 1 && matchOptions[0].options.length === 1
+    : !excludeMatches &&
+      matchOptions?.length === 1 &&
+      matchOptions[0].options.length === 1
     ? matchOptions[0].options[0]
     : undefined
-
-  // @TODO ^ do this same for suggested options so user can just click approve
-  // However... parent component may handle this already - need some test data from API to verify
 
   const placeholder =
     matchOptions?.length === 1 && matchOptions[0].options.length > 1
       ? `${matchOptions[0].options.length} possible matches...`
       : 'Categorize or match...'
+
+  if (asDrawer) {
+    return <CategorySelectDrawer onSelect={onChange} selected={value} />
+  }
 
   // The menu does not show in all cases unless the
   // menuPortalTarget and styles lines exist
