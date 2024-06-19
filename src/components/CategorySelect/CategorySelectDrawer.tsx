@@ -47,18 +47,16 @@ const CategorySelectDrawerContent = ({
   onSelect,
 }: {
   onSelect: (value: CategoryOption) => void
-}) => {
-  return (
-    <BusinessCategories
-      select={option => {
-        option.value.payload &&
-          onSelect({
-            type: OptionActionType.CATEGORY,
-            payload: {
-              ...option.value.payload,
-            },
-          } satisfies CategoryOption)
-      }}
-    />
-  )
-}
+}) => (
+  <BusinessCategories
+    select={option => {
+      option.value.payload &&
+        onSelect({
+          type: OptionActionType.CATEGORY,
+          payload: {
+            ...option.value.payload,
+          },
+        } satisfies CategoryOption)
+    }}
+  />
+)
