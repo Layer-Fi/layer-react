@@ -1,5 +1,6 @@
-import React, { useContext } from 'react'
+import React, { RefObject, useContext, useRef } from 'react'
 import { DrawerContext } from '../../contexts/DrawerContext'
+import { useElementSize } from '../../hooks/useElementSize'
 
 const DrawerBackground = ({
   isOpen,
