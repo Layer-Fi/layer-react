@@ -6,6 +6,8 @@
   gap: var(--spacing-sm);
   list-style: none;
   overflow: hidden;
+  max-width: 414px;
+  margin: auto;
 }
 
 .Layer__bank-transaction-mobile-list-item {
