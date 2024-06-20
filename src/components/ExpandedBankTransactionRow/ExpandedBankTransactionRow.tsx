@@ -8,6 +8,7 @@ import React, {
   TransitionEvent,
 } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
@@ -130,7 +131,11 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [height, setHeight] = useState<string | number>(0)
     const [isOver, setOver] = useState(false)
     const bodyRef = useRef<HTMLSpanElement>(null)
+    const [memoText, setMemoText] = useState<string | undefined>()
+    const [receiptUrls, setReceiptUrls] = useState<string[]>([])
     const [isLoaded, setIsLoaded] = useState(false)
+
+    const { auth, businessId, apiUrl } = useLayerContext()
 
     const defaultCategory =
       bankTransaction.category ||
@@ -233,6 +238,23 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }
 
     const save = async () => {
+      const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/metadata`
+
+      if (showDescriptions && memoText != undefined) {
+        const headers = {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${auth.access_token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            memo: memoText,
+          }),
+        }
+        const result = await fetch(apiUrl + endpoint, headers)
+        const resultJson = await result.json()
+      }
+
       if (purpose === Purpose.match) {
         if (!selectedMatchId) {
           setMatchFormError('Select an option to match the transaction')
@@ -275,6 +297,38 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       )
 
       close()
+    }
+
+    const fetchMetadata = async () => {
+      const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/metadata`
+      const headers = {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${auth.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+      const result = await fetch(apiUrl + endpoint, headers)
+      const resultJson = await result.json()
+      const retrievedMemo = resultJson.data.memo ?? ''
+      setMemoText(retrievedMemo)
+    }
+
+    const fetchDocuments = async () => {
+      const docsEndpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/documents`
+      const docsHeaders = {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${auth.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+      const docsResult = await fetch(apiUrl + docsEndpoint, docsHeaders)
+      const docsResultJson = await docsResult.json()
+      const retrievedDocs = docsResultJson.data.documentUrls.map(
+        (docUrl: any) => docUrl.presignedUrl,
+      )
+      setReceiptUrls(retrievedDocs)
     }
 
     // Call this save action after clicking save in parent component:
@@ -330,8 +384,13 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }, [getDivHeight, isOpen])
 
     useEffect(() => {
-      setIsLoaded(true)
-      setOver(true)
+      const loadDocumentsAndMetadata = async () => {
+        if (showDescriptions) await fetchMetadata()
+        if (showReceiptUploads) await fetchDocuments()
+        setIsLoaded(true)
+        setOver(true)
+      }
+      loadDocumentsAndMetadata()
     }, [])
 
     const className = 'Layer__expanded-bank-transaction-row'
@@ -491,13 +550,57 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   className={`${className}__description`}
                   name='description'
                 >
-                  <Textarea name='description' placeholder='Add description' />
+                  <Textarea
+                    name='description'
+                    placeholder='Add description'
+                    value={memoText}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      setMemoText(e.target.value)
+                    }
+                  />
                 </InputGroup>
               )}
 
               {showReceiptUploads && (
-                <div className={`${className}__file-upload`}>
-                  <FileInput text='Upload receipt' />
+                <div>
+                  <div className={`${className}__file-upload`}>
+                    <FileInput
+                      onUpload={async (file: File) => {
+                        const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/documents`
+                        const formData = new FormData()
+                        formData.append('file', file)
+                        formData.append('documentType', 'RECEIPT') // Assuming the document type is known and static
+
+                        try {
+                          const headers = {
+                            method: 'POST',
+                            headers: {
+                              Authorization: `Bearer ${auth.access_token}`,
+                            },
+                            body: formData,
+                          }
+                          const result = await fetch(apiUrl + endpoint, headers)
+                          const resultJson = await result.json()
+                          await fetchDocuments()
+                        } catch (error) {
+                          console.error('Error uploading file:', error)
+                        }
+                      }}
+                      text='Upload receipt'
+                    />
+
+                    {receiptUrls.length > 0 && 'Attached receipts:'}
+                    {receiptUrls.map((url, index) => (
+                      <a
+                        key={url}
+                        href={url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        Receipt {index + 1}
+                      </a>
+                    ))}
+                  </div>
                 </div>
               )}
 

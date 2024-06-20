@@ -352,6 +352,9 @@
 .Layer__expanded-bank-transaction-row__file-upload {
   padding: 0 var(--spacing-md);
   padding-bottom: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .Layer__bank-transaction-row__actions-cell {
