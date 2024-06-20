@@ -29,14 +29,12 @@ export const TransactionToReviewCard = ({
   } = useBankTransactions()
 
   useEffect(() => {
-    activateBankTransactions()
+    if (data === undefined) {
+      activateBankTransactions()
+    }
   }, [])
 
   useEffect(() => {
-    if (!isLoading && data && data?.length > 0) {
-      setLoaded('complete')
-      return
-    }
     if (isLoading && loaded === 'initiated') {
       setLoaded('loading')
       return
@@ -52,6 +50,12 @@ export const TransactionToReviewCard = ({
     () => countTransactionsToReview({ transactions: data, currentMonthOnly }),
     [data, isLoading],
   )
+
+  useEffect(() => {
+    if (toReview !== undefined && toReview > 0) {
+      setLoaded('complete')
+    }
+  }, [toReview])
 
   return (
     <NotificationCard
