@@ -8,6 +8,7 @@ import React, {
   TransitionEvent,
 } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
@@ -130,7 +131,11 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [height, setHeight] = useState<string | number>(0)
     const [isOver, setOver] = useState(false)
     const bodyRef = useRef<HTMLSpanElement>(null)
+    const [memoText, setMemoText] = useState('')
+    const [receiptUrls, setReceiptUrls] = useState<string[]>([])
     const [isLoaded, setIsLoaded] = useState(false)
+
+    const { auth, businessId, apiUrl } = useLayerContext()
 
     const defaultCategory =
       bankTransaction.category ||
@@ -233,6 +238,22 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }
 
     const save = async () => {
+      const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/metadata`
+      const headers = {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${auth.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          memo: memoText,
+        }),
+      }
+      const result = await fetch(apiUrl + endpoint, headers)
+      const resultJson = await result.json()
+      const retrievedMemo = resultJson.data.memo ?? ''
+      console.log(retrievedMemo)
+
       if (purpose === Purpose.match) {
         if (!selectedMatchId) {
           setMatchFormError('Select an option to match the transaction')
@@ -330,8 +351,24 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }, [getDivHeight, isOpen])
 
     useEffect(() => {
-      setIsLoaded(true)
-      setOver(true)
+      const loadDocumentsAndMetadata = async () => {
+        const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/metadata`
+        const headers = {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${auth.access_token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+        const result = await fetch(apiUrl + endpoint, headers)
+        const resultJson = await result.json()
+        const retrievedMemo = resultJson.data.memo ?? ''
+        setMemoText(retrievedMemo)
+
+        setIsLoaded(true)
+        setOver(true)
+      }
+      loadDocumentsAndMetadata()
     }, [])
 
     const className = 'Layer__expanded-bank-transaction-row'
@@ -491,13 +528,38 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   className={`${className}__description`}
                   name='description'
                 >
-                  <Textarea name='description' placeholder='Add description' />
+                  <Textarea
+                    name='description'
+                    placeholder='Add description'
+                    value={memoText}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      setMemoText(e.target.value)
+                    }
+                  />
                 </InputGroup>
               )}
 
               {showReceiptUploads && (
-                <div className={`${className}__file-upload`}>
-                  <FileInput text='Upload receipt' />
+                <div>
+                  <div className={`${className}__file-upload`}>
+                    <FileInput
+                      onUpload={(file: File) => {
+                        console.log('uploaded')
+                      }}
+                      text='Upload receipt'
+                    />
+                      Attached receipts:
+                      {receiptUrls.map((url, index) => (
+                        <a
+                          key={url}
+                          href={url}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                        >
+                          {index + 1}
+                        </a>
+                      ))}
+                  </div>
                 </div>
               )}
 
