@@ -382,8 +382,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     useEffect(() => {
       const loadDocumentsAndMetadata = async () => {
-        await fetchMetadata()
-        await fetchDocuments()
+        if (showDescriptions) await fetchMetadata()
+        if (showReceiptUploads) await fetchDocuments()
         setIsLoaded(true)
         setOver(true)
       }
