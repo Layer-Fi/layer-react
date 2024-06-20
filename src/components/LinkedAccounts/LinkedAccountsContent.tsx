@@ -31,6 +31,7 @@ export const LinkedAccountsContent = ({
   const linkedAccountsNewAccountClassName = classNames(
     'Layer__linked-accounts__new-account',
     asWidget && '--as-widget',
+    showLedgerBalance && '--show-ledger-balance',
   )
 
   return (

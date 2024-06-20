@@ -20,7 +20,17 @@ export const TransactionToReviewCard = ({
   currentMonthOnly = true,
 }: TransactionToReviewCardProps) => {
   const [loaded, setLoaded] = useState('initiated')
-  const { data, isLoading, error, refetch } = useBankTransactions()
+  const {
+    data,
+    isLoading,
+    error,
+    refetch,
+    activate: activateBankTransactions,
+  } = useBankTransactions()
+
+  useEffect(() => {
+    activateBankTransactions()
+  }, [])
 
   useEffect(() => {
     if (!isLoading && data && data?.length > 0) {
