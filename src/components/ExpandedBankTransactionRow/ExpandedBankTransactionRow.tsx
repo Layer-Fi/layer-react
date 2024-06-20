@@ -251,8 +251,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       }
       const result = await fetch(apiUrl + endpoint, headers)
       const resultJson = await result.json()
-      const retrievedMemo = resultJson.data.memo ?? ''
-      console.log(retrievedMemo)
 
       if (purpose === Purpose.match) {
         if (!selectedMatchId) {
@@ -296,6 +294,38 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       )
 
       close()
+    }
+
+    const fetchMetadata = async () => {
+      const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/metadata`
+      const headers = {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${auth.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+      const result = await fetch(apiUrl + endpoint, headers)
+      const resultJson = await result.json()
+      const retrievedMemo = resultJson.data.memo ?? ''
+      setMemoText(retrievedMemo)
+    }
+
+    const fetchDocuments = async () => {
+      const docsEndpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/documents`
+      const docsHeaders = {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${auth.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+      const docsResult = await fetch(apiUrl + docsEndpoint, docsHeaders)
+      const docsResultJson = await docsResult.json()
+      const retrievedDocs = docsResultJson.data.documentUrls.map(
+        (docUrl: any) => docUrl.presignedUrl,
+      )
+      setReceiptUrls(retrievedDocs)
     }
 
     // Call this save action after clicking save in parent component:
@@ -352,19 +382,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     useEffect(() => {
       const loadDocumentsAndMetadata = async () => {
-        const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/metadata`
-        const headers = {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${auth.access_token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-        const result = await fetch(apiUrl + endpoint, headers)
-        const resultJson = await result.json()
-        const retrievedMemo = resultJson.data.memo ?? ''
-        setMemoText(retrievedMemo)
-
+        await fetchMetadata()
+        await fetchDocuments()
         setIsLoaded(true)
         setOver(true)
       }
@@ -543,22 +562,41 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 <div>
                   <div className={`${className}__file-upload`}>
                     <FileInput
-                      onUpload={(file: File) => {
-                        console.log('uploaded')
+                      onUpload={async (file: File) => {
+                        const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/documents`
+                        const formData = new FormData()
+                        formData.append('file', file)
+                        formData.append('documentType', 'RECEIPT') // Assuming the document type is known and static
+
+                        try {
+                          const headers = {
+                            method: 'POST',
+                            headers: {
+                              Authorization: `Bearer ${auth.access_token}`,
+                            },
+                            body: formData,
+                          }
+                          const result = await fetch(apiUrl + endpoint, headers)
+                          const resultJson = await result.json()
+                          await fetchDocuments()
+                        } catch (error) {
+                          console.error('Error uploading file:', error)
+                        }
                       }}
                       text='Upload receipt'
                     />
-                      Attached receipts:
-                      {receiptUrls.map((url, index) => (
-                        <a
-                          key={url}
-                          href={url}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        >
-                          {index + 1}
-                        </a>
-                      ))}
+
+                    {receiptUrls.length > 0 && 'Attached receipts:'}
+                    {receiptUrls.map((url, index) => (
+                      <a
+                        key={url}
+                        href={url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        Receipt {index + 1}
+                      </a>
+                    ))}
                   </div>
                 </div>
               )}
