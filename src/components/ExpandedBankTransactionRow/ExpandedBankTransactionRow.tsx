@@ -131,7 +131,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [height, setHeight] = useState<string | number>(0)
     const [isOver, setOver] = useState(false)
     const bodyRef = useRef<HTMLSpanElement>(null)
-    const [memoText, setMemoText] = useState('')
+    const [memoText, setMemoText] = useState<string | undefined>()
     const [receiptUrls, setReceiptUrls] = useState<string[]>([])
     const [isLoaded, setIsLoaded] = useState(false)
 
@@ -239,18 +239,21 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     const save = async () => {
       const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/metadata`
-      const headers = {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${auth.access_token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          memo: memoText,
-        }),
+
+      if (showDescriptions && memoText != undefined) {
+        const headers = {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${auth.access_token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            memo: memoText,
+          }),
+        }
+        const result = await fetch(apiUrl + endpoint, headers)
+        const resultJson = await result.json()
       }
-      const result = await fetch(apiUrl + endpoint, headers)
-      const resultJson = await result.json()
 
       if (purpose === Purpose.match) {
         if (!selectedMatchId) {
