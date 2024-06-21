@@ -255,7 +255,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
             },
           },
         )
-        if (result.errors) console.error(result.errors)
       }
 
       if (purpose === Purpose.match) {
@@ -581,7 +580,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                           file: file,
                           documentType: 'RECEIPT',
                         })
-                        console.log(result)
                         await fetchDocuments()
                       }}
                       text='Upload receipt'
