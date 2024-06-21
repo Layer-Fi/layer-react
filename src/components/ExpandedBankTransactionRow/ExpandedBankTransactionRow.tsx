@@ -7,6 +7,7 @@ import React, {
   useRef,
   TransitionEvent,
 } from 'react'
+import { Layer } from '../../api/layer'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useLayerContext } from '../../contexts/LayerContext'
 import AlertCircle from '../../icons/AlertCircle'
@@ -241,18 +242,19 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/metadata`
 
       if (showDescriptions && memoText != undefined) {
-        const headers = {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${auth.access_token}`,
-            'Content-Type': 'application/json',
+        const result = await Layer.updateBankTransactionMetadata(
+          apiUrl,
+          auth.access_token,
+          {
+            params: {
+              businessId: businessId,
+              bankTransactionId: bankTransaction.id,
+            },
+            body: {
+              memo: memoText,
+            },
           },
-          body: JSON.stringify({
-            memo: memoText,
-          }),
-        }
-        const result = await fetch(apiUrl + endpoint, headers)
-        const resultJson = await result.json()
+        )
       }
 
       if (purpose === Purpose.match) {
@@ -300,32 +302,33 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }
 
     const fetchMetadata = async () => {
-      const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/metadata`
-      const headers = {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${auth.access_token}`,
-          'Content-Type': 'application/json',
+      const getBankTransactionMetadata = Layer.getBankTransactionMetadata(
+        apiUrl,
+        auth.access_token,
+        {
+          params: {
+            businessId: businessId,
+            bankTransactionId: bankTransaction.id,
+          },
         },
-      }
-      const result = await fetch(apiUrl + endpoint, headers)
-      const resultJson = await result.json()
-      const retrievedMemo = resultJson.data.memo ?? ''
-      setMemoText(retrievedMemo)
+      )
+      const result = await getBankTransactionMetadata()
+      if (result.data.memo) setMemoText(result.data.memo)
     }
 
     const fetchDocuments = async () => {
-      const docsEndpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/documents`
-      const docsHeaders = {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${auth.access_token}`,
-          'Content-Type': 'application/json',
+      const listBankTransactionDocuments = Layer.listBankTransactionDocuments(
+        apiUrl,
+        auth.access_token,
+        {
+          params: {
+            businessId: businessId,
+            bankTransactionId: bankTransaction.id,
+          },
         },
-      }
-      const docsResult = await fetch(apiUrl + docsEndpoint, docsHeaders)
-      const docsResultJson = await docsResult.json()
-      const retrievedDocs = docsResultJson.data.documentUrls.map(
+      )
+      const result = await listBankTransactionDocuments()
+      const retrievedDocs = result.data.documentUrls.map(
         (docUrl: any) => docUrl.presignedUrl,
       )
       setReceiptUrls(retrievedDocs)
@@ -566,25 +569,18 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   <div className={`${className}__file-upload`}>
                     <FileInput
                       onUpload={async (file: File) => {
-                        const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/documents`
-                        const formData = new FormData()
-                        formData.append('file', file)
-                        formData.append('documentType', 'RECEIPT') // Assuming the document type is known and static
-
-                        try {
-                          const headers = {
-                            method: 'POST',
-                            headers: {
-                              Authorization: `Bearer ${auth.access_token}`,
-                            },
-                            body: formData,
-                          }
-                          const result = await fetch(apiUrl + endpoint, headers)
-                          const resultJson = await result.json()
-                          await fetchDocuments()
-                        } catch (error) {
-                          console.error('Error uploading file:', error)
-                        }
+                        const uploadDocument =
+                          Layer.uploadBankTransactionDocument(
+                            apiUrl,
+                            auth.access_token,
+                          )
+                        const result = await uploadDocument({
+                          businessId: businessId,
+                          bankTransactionId: bankTransaction.id,
+                          file: file,
+                          documentType: 'RECEIPT',
+                        })
+                        await fetchDocuments()
                       }}
                       text='Upload receipt'
                     />
