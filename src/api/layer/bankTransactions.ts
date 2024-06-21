@@ -2,9 +2,12 @@ import { CategoryUpdate, BankTransaction, Metadata } from '../../types'
 import {
   BankTransactionMatch,
   BankTransactionMatchType,
+  BankTransactionMetadata,
+  DocumentS3Urls,
+  FileMetadata,
 } from '../../types/bank_transactions'
 import { S3PresignedUrl } from '../../types/general'
-import { get, put } from './authenticated_http'
+import { get, put, post, postWithFormData } from './authenticated_http'
 
 export type GetBankTransactionsReturn = {
   data?: BankTransaction[]
@@ -70,3 +73,53 @@ export const getBankTransactionsCsv = get<{
     categorized ? `categorized=${categorized}&` : ''
   }${category ? `category=${encodeURIComponent(category)}&` : ''}`
 })
+
+export const getBankTransactionMetadata = get<{
+  data: BankTransactionMetadata
+  errors: unknown
+}>(
+  ({ businessId, bankTransactionId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/metadata`,
+)
+
+export const updateBankTransactionMetadata = put<
+  { data: BankTransactionMetadata; errors: unknown },
+  { memo: string }
+>(
+  ({ businessId, bankTransactionId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/metadata`,
+)
+
+export const listBankTransactionDocuments = get<{
+  data: DocumentS3Urls
+  errors: unknown
+}>(
+  ({ businessId, bankTransactionId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents`,
+)
+
+export const uploadBankTransactionDocument =
+  (baseUrl: string, accessToken: string) =>
+  ({
+    businessId,
+    bankTransactionId,
+    file,
+    documentType,
+  }: {
+    businessId: string
+    bankTransactionId: string
+    file: File
+    documentType: string
+  }) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('documentType', documentType)
+
+    const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents`
+    return postWithFormData<{ data: FileMetadata; errors: unknown }>(
+      endpoint,
+      formData,
+      baseUrl,
+      accessToken,
+    )
+  }
