@@ -1,9 +1,6 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { BalanceSheetContext } from '../../contexts/BalanceSheetContext'
-import {
-  TableExpandContext,
-  TableExpandProvider,
-} from '../../contexts/TableExpandContext'
+import { TableExpandProvider } from '../../contexts/TableExpandContext'
 import { useBalanceSheet } from '../../hooks/useBalanceSheet'
 import { BalanceSheetHeader } from '../BalanceSheetHeader'
 import { BalanceSheetTable } from '../BalanceSheetTable'
