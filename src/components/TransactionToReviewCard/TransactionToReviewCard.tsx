@@ -9,17 +9,18 @@ import RefreshCcw from '../../icons/RefreshCcw'
 import { countTransactionsToReview } from '../../utils/bankTransactions'
 import { BadgeLoader } from '../BadgeLoader'
 import { NotificationCard } from '../NotificationCard'
+import {DateRange} from "../../types";
 import {ProfitAndLoss} from "../ProfitAndLoss";
 
 export interface TransactionToReviewCardProps {
   onClick?: () => void
-  currentMonthOnly?: true
+  usePnlDateRange?: boolean
 }
 
 export const TransactionToReviewCard = ({
   onClick,
+  usePnlDateRange,
 }: TransactionToReviewCardProps) => {
-  const { dateRange } = useContext(ProfitAndLoss.Context)
   const {
     data,
     isLoading,
@@ -28,6 +29,9 @@ export const TransactionToReviewCard = ({
     refetch,
     activate: activateBankTransactions,
   } = useBankTransactionsContext()
+
+  const { dateRange: contextDateRange } = useContext(ProfitAndLoss.Context)
+  const dateRange = usePnlDateRange ? contextDateRange : undefined
 
   useEffect(() => {
     activateBankTransactions()
