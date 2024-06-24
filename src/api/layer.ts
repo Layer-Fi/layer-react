@@ -5,6 +5,10 @@ import {
   categorizeBankTransaction,
   matchBankTransaction,
   getBankTransactionsCsv,
+  getBankTransactionMetadata,
+  updateBankTransactionMetadata,
+  listBankTransactionDocuments,
+  uploadBankTransactionDocument,
 } from './layer/bankTransactions'
 import { getBusiness } from './layer/business'
 import { getCategories } from './layer/categories'
@@ -47,6 +51,10 @@ export const Layer = {
   getBalanceSheet,
   getBankTransactions,
   getBankTransactionsCsv,
+  getBankTransactionMetadata,
+  listBankTransactionDocuments,
+  updateBankTransactionMetadata,
+  uploadBankTransactionDocument,
   getCategories,
   getChartOfAccounts,
   getLedgerAccountBalances,

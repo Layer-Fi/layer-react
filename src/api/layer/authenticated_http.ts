@@ -64,6 +64,25 @@ export const post = request('post')
 export const put = request('put')
 export const deleteRequest = request('delete')
 
+export const postWithFormData = <
+  Return extends Record<string, unknown> = Record<string, unknown>,
+>(
+  url: string,
+  formData: FormData,
+  baseUrl: string,
+  accessToken: string | undefined,
+): Promise<Return> => {
+  return fetch(`${baseUrl}${url}`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + (accessToken || ''),
+    },
+    body: formData,
+  })
+    .then(res => handleResponse<Return>(res))
+    .catch(error => handleException(error))
+}
+
 const handleResponse = async <Return>(res: Response) => {
   if (!res.ok) {
     const errors = await tryToReadErrorsFromResponse(res)

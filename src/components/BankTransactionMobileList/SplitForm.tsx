@@ -62,12 +62,16 @@ export const SplitForm = ({
           {
             amount: bankTransaction.amount,
             inputValue: formatMoney(bankTransaction.amount),
-            category: mapCategoryToOption(defaultCategory),
+            category: defaultCategory
+              ? mapCategoryToOption(defaultCategory)
+              : undefined,
           },
           {
             amount: 0,
             inputValue: '0.00',
-            category: mapCategoryToOption(defaultCategory),
+            category: defaultCategory
+              ? mapCategoryToOption(defaultCategory)
+              : undefined,
           },
         ],
     description: '',
@@ -140,7 +144,9 @@ export const SplitForm = ({
         {
           amount: 0,
           inputValue: '0.00',
-          category: mapCategoryToOption(defaultCategory),
+          category: defaultCategory
+            ? mapCategoryToOption(defaultCategory)
+            : undefined,
         },
       ],
     })
@@ -217,6 +223,7 @@ export const SplitForm = ({
                 className='Layer__category-menu--full'
                 disabled={bankTransaction.processing}
                 excludeMatches
+                asDrawer
               />
             </div>
             <Input

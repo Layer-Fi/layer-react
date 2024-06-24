@@ -7,7 +7,9 @@ import React, {
   useRef,
   TransitionEvent,
 } from 'react'
+import { Layer } from '../../api/layer'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useLayerContext } from '../../contexts/LayerContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
@@ -130,7 +132,11 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [height, setHeight] = useState<string | number>(0)
     const [isOver, setOver] = useState(false)
     const bodyRef = useRef<HTMLSpanElement>(null)
+    const [memoText, setMemoText] = useState<string | undefined>()
+    const [receiptUrls, setReceiptUrls] = useState<string[]>([])
     const [isLoaded, setIsLoaded] = useState(false)
+
+    const { auth, businessId, apiUrl } = useLayerContext()
 
     const defaultCategory =
       bankTransaction.category ||
@@ -233,6 +239,24 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }
 
     const save = async () => {
+      const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/metadata`
+
+      if (showDescriptions && memoText != undefined) {
+        const result = await Layer.updateBankTransactionMetadata(
+          apiUrl,
+          auth.access_token,
+          {
+            params: {
+              businessId: businessId,
+              bankTransactionId: bankTransaction.id,
+            },
+            body: {
+              memo: memoText,
+            },
+          },
+        )
+      }
+
       if (purpose === Purpose.match) {
         if (!selectedMatchId) {
           setMatchFormError('Select an option to match the transaction')
@@ -275,6 +299,39 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       )
 
       close()
+    }
+
+    const fetchMetadata = async () => {
+      const getBankTransactionMetadata = Layer.getBankTransactionMetadata(
+        apiUrl,
+        auth.access_token,
+        {
+          params: {
+            businessId: businessId,
+            bankTransactionId: bankTransaction.id,
+          },
+        },
+      )
+      const result = await getBankTransactionMetadata()
+      if (result.data.memo) setMemoText(result.data.memo)
+    }
+
+    const fetchDocuments = async () => {
+      const listBankTransactionDocuments = Layer.listBankTransactionDocuments(
+        apiUrl,
+        auth.access_token,
+        {
+          params: {
+            businessId: businessId,
+            bankTransactionId: bankTransaction.id,
+          },
+        },
+      )
+      const result = await listBankTransactionDocuments()
+      const retrievedDocs = result.data.documentUrls.map(
+        (docUrl: any) => docUrl.presignedUrl,
+      )
+      setReceiptUrls(retrievedDocs)
     }
 
     // Call this save action after clicking save in parent component:
@@ -330,8 +387,13 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }, [getDivHeight, isOpen])
 
     useEffect(() => {
-      setIsLoaded(true)
-      setOver(true)
+      const loadDocumentsAndMetadata = async () => {
+        if (showDescriptions) await fetchMetadata()
+        if (showReceiptUploads) await fetchDocuments()
+        setIsLoaded(true)
+        setOver(true)
+      }
+      loadDocumentsAndMetadata()
     }, [])
 
     const className = 'Layer__expanded-bank-transaction-row'
@@ -491,13 +553,50 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   className={`${className}__description`}
                   name='description'
                 >
-                  <Textarea name='description' placeholder='Add description' />
+                  <Textarea
+                    name='description'
+                    placeholder='Add description'
+                    value={memoText}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      setMemoText(e.target.value)
+                    }
+                  />
                 </InputGroup>
               )}
 
               {showReceiptUploads && (
-                <div className={`${className}__file-upload`}>
-                  <FileInput text='Upload receipt' />
+                <div>
+                  <div className={`${className}__file-upload`}>
+                    <FileInput
+                      onUpload={async (file: File) => {
+                        const uploadDocument =
+                          Layer.uploadBankTransactionDocument(
+                            apiUrl,
+                            auth.access_token,
+                          )
+                        const result = await uploadDocument({
+                          businessId: businessId,
+                          bankTransactionId: bankTransaction.id,
+                          file: file,
+                          documentType: 'RECEIPT',
+                        })
+                        await fetchDocuments()
+                      }}
+                      text='Upload receipt'
+                    />
+
+                    {receiptUrls.length > 0 && 'Attached receipts:'}
+                    {receiptUrls.map((url, index) => (
+                      <a
+                        key={url}
+                        href={url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        Receipt {index + 1}
+                      </a>
+                    ))}
+                  </div>
                 </div>
               )}
 

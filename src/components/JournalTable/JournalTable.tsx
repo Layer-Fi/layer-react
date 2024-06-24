@@ -1,6 +1,5 @@
 import React, { RefObject, useContext, useMemo, useState } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
-import DownloadCloud from '../../icons/DownloadCloud'
 import { Button, ButtonVariant } from '../Button'
 import { Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
@@ -54,13 +53,6 @@ export const JournalTable = ({
       <Header className={`Layer__${COMPONENT_NAME}__header`}>
         <Heading className={`Layer__${COMPONENT_NAME}__title`}>Journal</Heading>
         <div className={`Layer__${COMPONENT_NAME}__actions`}>
-          <Button
-            variant={ButtonVariant.secondary}
-            disabled={isLoading}
-            rightIcon={<DownloadCloud size={12} />}
-          >
-            Download
-          </Button>
           <Button onClick={() => addEntry()} disabled={isLoading}>
             Add Entry
           </Button>

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Badge } from '../../components/Badge'
 import { BadgeSize, BadgeVariant } from '../../components/Badge/Badge'
 import { Text, TextSize } from '../../components/Typography'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import BellIcon from '../../icons/Bell'
 import CheckIcon from '../../icons/Check'
 import RefreshCcw from '../../icons/RefreshCcw'
@@ -19,43 +19,23 @@ export const TransactionToReviewCard = ({
   onClick,
   currentMonthOnly = true,
 }: TransactionToReviewCardProps) => {
-  const [loaded, setLoaded] = useState('initiated')
   const {
     data,
     isLoading,
+    loadingStatus,
     error,
     refetch,
     activate: activateBankTransactions,
-  } = useBankTransactions()
+  } = useBankTransactionsContext()
 
   useEffect(() => {
-    if (data === undefined) {
-      activateBankTransactions()
-    }
+    activateBankTransactions()
   }, [])
-
-  useEffect(() => {
-    if (isLoading && loaded === 'initiated') {
-      setLoaded('loading')
-      return
-    }
-
-    if (!isLoading && loaded !== 'initiated') {
-      setLoaded('complete')
-      return
-    }
-  }, [isLoading])
 
   const toReview = useMemo(
     () => countTransactionsToReview({ transactions: data, currentMonthOnly }),
     [data, isLoading],
   )
-
-  useEffect(() => {
-    if (toReview !== undefined && toReview > 0) {
-      setLoaded('complete')
-    }
-  }, [toReview])
 
   return (
     <NotificationCard
@@ -63,23 +43,22 @@ export const TransactionToReviewCard = ({
       onClick={() => onClick && onClick()}
     >
       <Text size={TextSize.sm}>Transactions to review</Text>
-      {loaded === 'initiated' || loaded === 'loading' ? <BadgeLoader /> : null}
+      {loadingStatus === 'initial' || loadingStatus === 'loading' ? (
+        <BadgeLoader />
+      ) : null}
 
-      {loaded === 'complete' && error ? (
+      {loadingStatus === 'complete' && error ? (
         <Badge
           variant={BadgeVariant.ERROR}
           size={BadgeSize.SMALL}
           icon={<RefreshCcw size={12} />}
-          onClick={() => {
-            setLoaded('loading')
-            refetch()
-          }}
+          onClick={() => refetch()}
         >
           Refresh
         </Badge>
       ) : null}
 
-      {loaded === 'complete' && !error && toReview > 0 ? (
+      {loadingStatus === 'complete' && !error && toReview > 0 ? (
         <Badge
           variant={BadgeVariant.WARNING}
           size={BadgeSize.SMALL}
@@ -89,7 +68,7 @@ export const TransactionToReviewCard = ({
         </Badge>
       ) : null}
 
-      {loaded === 'complete' && !error && toReview === 0 ? (
+      {loadingStatus === 'complete' && !error && toReview === 0 ? (
         <Badge
           variant={BadgeVariant.SUCCESS}
           size={BadgeSize.SMALL}
