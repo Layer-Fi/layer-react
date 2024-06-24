@@ -45,7 +45,7 @@ export interface SuggestedCategorization {
 }
 export type Categorization = AutoCategorization | SuggestedCategorization
 
-export type CategoryPayloadObject =
+export type AccountIdentifierPayloadObject =
   | {
       type: 'StableName'
       stable_name: string
@@ -57,12 +57,12 @@ export type CategoryPayloadObject =
 
 export type SingleCategoryUpdate = {
   type: 'Category'
-  category: CategoryPayloadObject
+  category: AccountIdentifierPayloadObject
 }
 export type SplitCategoryUpdate = {
   type: 'Split'
   entries: {
-    category: string | CategoryPayloadObject
+    category: string | AccountIdentifierPayloadObject
     amount: number
   }[]
 }
