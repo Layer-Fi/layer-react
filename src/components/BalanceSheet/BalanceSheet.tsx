@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useBalanceSheet } from '../../hooks/useBalanceSheet'
-import DownloadCloud from '../../icons/DownloadCloud'
 import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker'
 import { BalanceSheetRow } from '../BalanceSheetRow'
 import { SkeletonBalanceSheetRow } from '../SkeletonBalanceSheetRow'
@@ -33,10 +32,6 @@ export const BalanceSheet = () => {
           value={effectiveDate}
           onChange={event => setEffectiveDate(parseISO(event.target.value))}
         />
-        <button className='Layer__balance-sheet__download-button'>
-          <DownloadCloud />
-          Download
-        </button>
       </div>
       {!data || isLoading ? (
         <div className='Layer__balance-sheet__table'>

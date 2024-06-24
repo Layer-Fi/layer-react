@@ -8,7 +8,6 @@ import React, {
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
-import DownloadCloud from '../../icons/DownloadCloud'
 import { centsToDollars } from '../../models/Money'
 import { BackButton, Button, ButtonVariant } from '../Button'
 import { View } from '../ChartOfAccounts/ChartOfAccounts'
@@ -99,12 +98,6 @@ export const LedgerAccount = ({
             >
               {entry?.name ?? ''}
             </Text>
-            <Button
-              variant={ButtonVariant.secondary}
-              rightIcon={<DownloadCloud size={12} />}
-            >
-              Download
-            </Button>
           </div>
           <div className='Layer__ledger-account__balance-container'>
             <Text
