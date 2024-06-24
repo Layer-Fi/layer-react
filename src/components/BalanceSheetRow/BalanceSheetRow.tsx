@@ -25,7 +25,7 @@ export const BalanceSheetRow = ({
   }
 
   const { value, display_name, line_items } = lineItem
-  const { isOpen, setIsOpen } = useTableExpandRow(0, depth < 2)
+  const { isOpen, setIsOpen } = useTableExpandRow(0, false)
   const amount = value || 0
   const isPositive = amount >= 0
   const amountString = centsToDollars(Math.abs(amount))
