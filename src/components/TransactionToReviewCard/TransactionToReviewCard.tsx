@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, {useContext, useEffect, useMemo, useState} from 'react'
 import { Badge } from '../../components/Badge'
 import { BadgeSize, BadgeVariant } from '../../components/Badge/Badge'
 import { Text, TextSize } from '../../components/Typography'
@@ -9,6 +9,7 @@ import RefreshCcw from '../../icons/RefreshCcw'
 import { countTransactionsToReview } from '../../utils/bankTransactions'
 import { BadgeLoader } from '../BadgeLoader'
 import { NotificationCard } from '../NotificationCard'
+import {ProfitAndLoss} from "../ProfitAndLoss";
 
 export interface TransactionToReviewCardProps {
   onClick?: () => void
@@ -17,8 +18,8 @@ export interface TransactionToReviewCardProps {
 
 export const TransactionToReviewCard = ({
   onClick,
-  currentMonthOnly = true,
 }: TransactionToReviewCardProps) => {
+  const { dateRange } = useContext(ProfitAndLoss.Context)
   const {
     data,
     isLoading,
@@ -33,8 +34,8 @@ export const TransactionToReviewCard = ({
   }, [])
 
   const toReview = useMemo(
-    () => countTransactionsToReview({ transactions: data, currentMonthOnly }),
-    [data, isLoading],
+    () => countTransactionsToReview({ transactions: data, dateRange }),
+    [data, isLoading, dateRange],
   )
 
   return (
