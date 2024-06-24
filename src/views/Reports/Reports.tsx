@@ -4,11 +4,13 @@ import { BalanceSheet } from '../../components/BalanceSheet'
 import { Button, ButtonVariant, RetryButton } from '../../components/Button'
 import { Container } from '../../components/Container'
 import { Panel } from '../../components/Panel'
+import { PanelView } from '../../components/PanelView'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useLayerContext } from '../../contexts/LayerContext'
 import DownloadCloud from '../../icons/DownloadCloud'
+import { startOfDay } from 'date-fns'
 
 export interface ReportsProps {
   title?: string
@@ -77,27 +79,25 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
   const [activeTab, setActiveTab] = useState<ReportType>('profitAndLoss')
 
   return (
-    <ProfitAndLoss asContainer={false}>
-      <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
-        <div className='Layer__component Layer__header__actions'>
-          <Toggle
-            name='reports-tabs'
-            options={
-              [
-                { value: 'profitAndLoss', label: 'Profit & Loss' },
-                { value: 'balanceSheet', label: 'Balance Sheet' },
-              ] as ReportOption[]
-            }
-            selected='profitAndLoss'
-            onChange={opt => setActiveTab(opt.target.value as ReportType)}
-          />
-          <DownloadButton />
-        </div>
-        <Container name='reports' ref={containerRef}>
-          <ReportsPanel containerRef={containerRef} openReport={activeTab} />
-        </Container>
-      </View>
-    </ProfitAndLoss>
+    <View title={'Reports'}>
+      <div className='Layer__component Layer__header__actions'>
+        <Toggle
+          name='reports-tabs'
+          options={
+            [
+              { value: 'profitAndLoss', label: 'Profit & Loss' },
+              { value: 'balanceSheet', label: 'Balance Sheet' },
+            ] as ReportOption[]
+          }
+          selected={activeTab}
+          onChange={opt => setActiveTab(opt.target.value as ReportType)}
+        />
+        <DownloadButton />
+      </div>
+      <Container name='reports' ref={containerRef}>
+        <ReportsPanel containerRef={containerRef} openReport={activeTab} />
+      </Container>
+    </View>
   )
 }
 
@@ -111,9 +111,18 @@ const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
       parentRef={containerRef}
     >
       {openReport === 'profitAndLoss' ? (
-        <ProfitAndLoss.Table asContainer={false} />
+        <ProfitAndLoss asContainer={false}>
+          <PanelView
+            title={'Profit & Loss'}
+            headerControls={<ProfitAndLoss.DatePicker />}
+          >
+            <ProfitAndLoss.Table asContainer={false} />
+          </PanelView>
+        </ProfitAndLoss>
       ) : (
-        <BalanceSheet />
+        <BalanceSheet effectiveDate={startOfDay(new Date())}>
+          <BalanceSheet.View />
+        </BalanceSheet>
       )}
     </Panel>
   )

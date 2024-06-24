@@ -41,12 +41,12 @@ export const BalanceSheetHeader = ({
             </Button>
           )}
         </div>
-        <Button
+        {/* <Button
           variant={ButtonVariant.secondary}
           rightIcon={<DownloadCloud size={12} />}
         >
           Download
-        </Button>
+        </Button> */}
       </div>
     </div>
   )
