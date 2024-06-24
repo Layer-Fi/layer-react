@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, {useContext, useEffect, useMemo, useState} from 'react'
 import { Badge } from '../../components/Badge'
 import { BadgeSize, BadgeVariant } from '../../components/Badge/Badge'
 import { Text, TextSize } from '../../components/Typography'
@@ -9,15 +9,17 @@ import RefreshCcw from '../../icons/RefreshCcw'
 import { countTransactionsToReview } from '../../utils/bankTransactions'
 import { BadgeLoader } from '../BadgeLoader'
 import { NotificationCard } from '../NotificationCard'
+import {DateRange} from "../../types";
+import {ProfitAndLoss} from "../ProfitAndLoss";
 
 export interface TransactionToReviewCardProps {
   onClick?: () => void
-  currentMonthOnly?: true
+  usePnlDateRange?: boolean
 }
 
 export const TransactionToReviewCard = ({
   onClick,
-  currentMonthOnly = true,
+  usePnlDateRange,
 }: TransactionToReviewCardProps) => {
   const {
     data,
@@ -28,13 +30,16 @@ export const TransactionToReviewCard = ({
     activate: activateBankTransactions,
   } = useBankTransactionsContext()
 
+  const { dateRange: contextDateRange } = useContext(ProfitAndLoss.Context)
+  const dateRange = usePnlDateRange ? contextDateRange : undefined
+
   useEffect(() => {
     activateBankTransactions()
   }, [])
 
   const toReview = useMemo(
-    () => countTransactionsToReview({ transactions: data, currentMonthOnly }),
-    [data, isLoading],
+    () => countTransactionsToReview({ transactions: data, dateRange }),
+    [data, isLoading, dateRange],
   )
 
   return (
