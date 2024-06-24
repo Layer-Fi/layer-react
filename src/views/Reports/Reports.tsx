@@ -79,7 +79,7 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
   const [activeTab, setActiveTab] = useState<ReportType>('profitAndLoss')
 
   return (
-    <View title={'Reports'}>
+    <View title={title}>
       <div className='Layer__component Layer__header__actions'>
         <Toggle
           name='reports-tabs'
