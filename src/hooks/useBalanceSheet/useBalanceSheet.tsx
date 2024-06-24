@@ -22,7 +22,7 @@ export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
     Layer.getBalanceSheet(apiUrl, auth?.access_token, {
       params: {
         businessId,
-        effective_date: dateString,
+        effectiveDate: dateString,
       },
     }),
   )

@@ -5,8 +5,8 @@ import { BalanceSheetRow } from '../BalanceSheetRow'
 
 type BalanceSheetRowProps = {
   name: string
-  display_name: string
-  line_item: string
+  displayName: string
+  lineItem: string
 }
 
 export const BalanceSheetTable = ({
@@ -30,7 +30,7 @@ export const BalanceSheetTable = ({
           return (
             <BalanceSheetRow
               key={'balance-sheet-row-' + idx + row.name}
-              lineItem={data[row.line_item as keyof BalanceSheet] as LineItem}
+              lineItem={data[row.lineItem as keyof BalanceSheet] as LineItem}
               summarize={false}
             />
           )
