@@ -83,6 +83,7 @@ export const LinkedAccountsContent = ({
                       account.external_account_source,
                       account.connection_external_id,
                     )
+                    // TODO: turn off loading spinner
                   }
                 },
               },
