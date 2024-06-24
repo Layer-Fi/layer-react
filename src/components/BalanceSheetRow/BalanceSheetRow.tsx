@@ -34,7 +34,7 @@ export const BalanceSheetRow = ({
   const displayChildren = hasChildren && canGoDeeper
 
   const toggleExpanded = () => {
-    if (variant === 'summation') return
+    if (variant === 'summation' || !displayChildren) return
     setIsOpen(!isOpen)
   }
 
@@ -59,8 +59,8 @@ export const BalanceSheetRow = ({
   const valueClassNames = classNames([
     'Layer__table-cell',
     'Layer__balance-sheet-cell__value',
-    !!value && isPositive && 'Layer__balance-sheet-cell__value--positive',
-    !!value && !isPositive && 'Layer__balance-sheet-cell__value--negative',
+    isPositive && 'Layer__balance-sheet-cell__value--positive',
+    !isPositive && 'Layer__balance-sheet-cell__value--negative',
   ])
 
   if (canGoDeeper && hasChildren) {
@@ -84,11 +84,7 @@ export const BalanceSheetRow = ({
               <span className='Layer__table-cell-content'>{display_name}</span>
             </span>
           </td>
-          <td className={valueClassNames}>
-            <span className='Layer__table-cell-content'>
-              {!!value && amountString}
-            </span>
-          </td>
+          <td className={valueClassNames} />
         </tr>
         <>
           {isOpen &&
@@ -122,9 +118,7 @@ export const BalanceSheetRow = ({
         <span className='Layer__table-cell-content'>{display_name}</span>
       </td>
       <td className={valueClassNames}>
-        <span className='Layer__table-cell-content'>
-          {!!value && amountString}
-        </span>
+        <span className='Layer__table-cell-content'>{amountString}</span>
       </td>
     </tr>
   )

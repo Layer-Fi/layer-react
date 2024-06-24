@@ -1,21 +1,23 @@
-// import { BalanceSheet } from '../../types'
-// import { get } from './authenticated_http'
 import { BalanceSheet } from '../../types'
-import Data from './balance_sheet.json'
+import { get } from './authenticated_http'
 
-// export const getBalanceSheet = get<{
-//   data?: BalanceSheet
-//   error?: unknown
-// }>(
-//   ({ businessId }) =>
-//     `https://sandbox.layerfi.com/v1/businesses/${businessId}/balances`,
-// )
+export const getBalanceSheet = get<
+  GetBalanceSheetReturn,
+  GetBalanceSheetParams
+>(
+  ({ businessId, effective_date }: GetBalanceSheetParams) =>
+    `/v1/businesses/${businessId}/reports/balance-sheet?effective_date=${encodeURIComponent(
+      effective_date,
+    )}`,
+)
 
-export interface GetBalanceSheetParams {
-  businessId: string
-  date: string
+export type GetBalanceSheetReturn = {
+  data?: BalanceSheet
+  error?: unknown
 }
 
-export const getBalanceSheet =
-  (_token: string, _params: { params: GetBalanceSheetParams }) => () =>
-    Data as unknown as BalanceSheet
+export interface GetBalanceSheetParams
+  extends Record<string, string | undefined> {
+  businessId: string
+  effective_date: string
+}

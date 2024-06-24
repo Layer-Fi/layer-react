@@ -13,6 +13,12 @@
       'ss03' on;
   }
 
+  tbody {
+    .Layer__table__empty-row:first-child {
+      display: none;
+    }
+  }
+
   .Layer__balance-sheet__title {
     display: inline;
     flex: 1;
@@ -23,6 +29,22 @@
   @container (max-width: 800px) {
     .Layer__balance-sheet__header {
       flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+  }
+
+  @container (max-width: 540px) {
+    .Layer__balance-sheet__header {
+      flex-direction: row;
+      gap: var(--spacing-sm);
+      flex-wrap: wrap;
+      .Layer__balance-sheet__actions {
+        flex-wrap: wrap;
+      }
+      .Layer__balance-sheet__actions__date-picker {
+        flex-wrap: wrap;
+        gap: var(--spacing-xs);
+      }
     }
   }
 
@@ -113,6 +135,7 @@
 
     &.Layer__balance-sheet-row--display-children-true {
       font-weight: bold;
+      cursor: pointer;
     }
 
     &.Layer__balance-sheet-row--display-children-false {
@@ -149,15 +172,10 @@
     }
   }
 
-  .Layer__balance-sheet-row--max-depth {
-    border-left: 4px solid var(--color-base-400);
-  }
-
   .Layer__balance-sheet-row {
+    border-left: 4px solid transparent;
     &:not(.Layer__balance-sheet-row--display-children-true) {
-      &:not(.Layer__balance-sheet-row--variant-summation) {
-        border-left: 4px solid var(--color-base-400);
-      }
+      border-left: 4px solid var(--color-base-400);
     }
   }
 

@@ -1,6 +1,6 @@
 import { Layer } from '../../api/layer'
-import { BalanceSheet } from '../../types'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { BalanceSheet } from '../../types'
 import { format, startOfDay } from 'date-fns'
 import useSWR from 'swr'
 
@@ -11,18 +11,21 @@ type UseBalanceSheet = (date?: Date) => {
 }
 
 export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
-  const { auth, businessId } = useLayerContext()
-  const dateString = format(startOfDay(date), 'yyyy-mm-dd')
+  const { auth, businessId, apiUrl } = useLayerContext()
+  const dateString = format(startOfDay(date), "yyyy-MM-dd'T'HH:mm:ssXXX")
 
   const { data, isLoading, error } = useSWR(
     businessId &&
       dateString &&
       auth?.access_token &&
       `balance-sheet-${businessId}-${dateString}`,
-    Layer.getBalanceSheet(auth?.access_token, {
-      params: { businessId, date: dateString },
+    Layer.getBalanceSheet(apiUrl, auth?.access_token, {
+      params: {
+        businessId,
+        effective_date: dateString,
+      },
     }),
   )
 
-  return { data, isLoading, error }
+  return { data: data?.data, isLoading, error }
 }

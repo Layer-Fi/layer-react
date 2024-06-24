@@ -5,7 +5,7 @@ export interface BalanceSheet {
   type: 'Balance_Sheet'
   start_date: string
   end_date: string
-  assets: LineItem[]
-  liabilities_and_equity: LineItem[]
+  assets: LineItem
+  liabilities_and_equity: LineItem
   fully_categorized: boolean
 }

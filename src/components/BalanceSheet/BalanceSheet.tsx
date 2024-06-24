@@ -9,7 +9,6 @@ import { BalanceSheetHeader } from '../BalanceSheetHeader'
 import { BalanceSheetTable } from '../BalanceSheetTable'
 import { Container } from '../Container'
 import { Loader } from '../Loader'
-import { Table } from '../Table'
 import { BALANCE_SHEET_ROWS } from './constants'
 import { startOfDay } from 'date-fns'
 
