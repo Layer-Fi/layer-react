@@ -77,6 +77,7 @@ export const ProfitAndLossDetailedCharts = ({
           sidebarScope={theScope}
           date={dateRange.startDate}
           isLoading={isLoading}
+          showDatePicker={showDatePicker}
         />
 
         <div className='Layer__profit-and-loss-detailed-charts__table-wrapper'>

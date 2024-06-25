@@ -33,11 +33,7 @@ export const JournalEntryDetails = () => {
       <DetailsList
         title='Transaction source'
         actions={
-          <IconButton
-            icon={<X />}
-            onClick={() => closeSelectedEntry()}
-            className='Layer__hidden-sm Layer__hidden-xs'
-          />
+          <IconButton icon={<X />} onClick={() => closeSelectedEntry()} />
         }
       >
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>

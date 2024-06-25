@@ -1,0 +1,10 @@
+.Layer__reports .Layer__panel__content {
+  border-radius: var(--border-radius-sm);
+}
+
+@container (min-width: 1024px) {
+  .Layer__reports .Layer__panel__content {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
