@@ -206,7 +206,7 @@ The P&L table supports one optional prop:
 
 #### Balance Sheet
 
-![Balance Sheet](https://github.com/Layer-Fi/layer-react/assets/1592431/62bea271-6edd-46b4-9f66-a375ae5143d9)
+![Balance Sheet](https://github.com/Layer-Fi/layer-react/assets/1592431/c35a6110-38e3-4845-b725-b1ca4913b831)
 
 The Balance Sheet component displays an interactive table. A default date can be passed in via the `effectiveDate` prop.
 
@@ -227,6 +227,24 @@ The following props are supported
 - `asWidget`: Displays a more compact version.
 - `withDateControl`: Includes a date picker which determines the effective date of account balances displayed.
 - `withExpandAllButton`: Optionally displays a button to expand and collapse all sub account lists.
+
+#### Journal
+
+![Journal](https://github.com/Layer-Fi/layer-react/assets/1592431/52ed02c7-a73a-4a68-9eac-1ede16633afc)
+
+The Journal component displays the full history of journal entries and allows users to create journal entries by hand as well.
+
+A sidebar expands to display details about the invoice.
+
+![Journal sidebar](https://github.com/Layer-Fi/layer-react/assets/1592431/f9c14a59-aeec-4716-bd10-98903b221c44)
+
+```tsx
+<Journal />
+```
+
+The follow props are supported:
+
+- `asWidget`: Compact version
 
 ## Styling
 
