@@ -31,7 +31,7 @@ export const BalanceSheetTable = ({
             <BalanceSheetRow
               key={'balance-sheet-row-' + idx + row.name}
               lineItem={data[row.lineItem as keyof BalanceSheet] as LineItem}
-              summarize={false}
+              summarize={true}
             />
           )
         })}

@@ -1,54 +1,54 @@
-import React, { useState } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 import { BalanceSheetContext } from '../../contexts/BalanceSheetContext'
 import { TableExpandProvider } from '../../contexts/TableExpandContext'
 import { useBalanceSheet } from '../../hooks/useBalanceSheet'
-<<<<<<< HEAD
-import { BalanceSheetHeader } from '../BalanceSheetHeader'
+import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker'
+import { BalanceSheetExpandAllButton } from '../BalanceSheetExpandAllButton'
 import { BalanceSheetTable } from '../BalanceSheetTable'
-import { Container } from '../Container'
 import { Loader } from '../Loader'
+import { PanelView } from '../PanelView'
 import { BALANCE_SHEET_ROWS } from './constants'
 import { startOfDay } from 'date-fns'
-=======
-import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker'
-import { BalanceSheetRow } from '../BalanceSheetRow'
-import { SkeletonBalanceSheetRow } from '../SkeletonBalanceSheetRow'
-import { format, parseISO } from 'date-fns'
->>>>>>> origin/main
 
-export interface BalanceSheetProps {
-  withTitle?: boolean
-  effectiveDate?: Date
+export type BalanceSheetViewProps = PropsWithChildren & {
   withExpandAllButton?: boolean
+}
+
+export type BalanceSheetProps = PropsWithChildren & {
+  effectiveDate: Date
 }
 
 const COMPONENT_NAME = 'balance-sheet'
 
-export const BalanceSheet = (props: BalanceSheetProps) => {
+const BalanceSheet = (props: BalanceSheetProps) => {
   const balanceSheetContextData = useBalanceSheet(props.effectiveDate)
   return (
     <BalanceSheetContext.Provider value={balanceSheetContextData}>
-      <BalanceSheetContent {...props} />
+      {props.children}
     </BalanceSheetContext.Provider>
   )
 }
 
-export const BalanceSheetContent = ({
+const BalanceSheetView = ({
   withExpandAllButton = true,
-  withTitle = true,
-}: BalanceSheetProps) => {
+}: BalanceSheetViewProps) => {
   const [effectiveDate, setEffectiveDate] = useState(startOfDay(new Date()))
   const { data, isLoading } = useBalanceSheet(effectiveDate)
 
   return (
     <TableExpandProvider>
-      <Container name='balance-sheet'>
-        <BalanceSheetHeader
-          effectiveDate={effectiveDate}
-          setEffectiveDate={setEffectiveDate}
-          withExpandAllButton={withExpandAllButton}
-          withTitle={withTitle}
-        />
+      <PanelView
+        title='Balance Sheet'
+        headerControls={
+          <>
+            <BalanceSheetDatePicker
+              effectiveDate={effectiveDate}
+              setEffectiveDate={setEffectiveDate}
+            />
+            {withExpandAllButton && <BalanceSheetExpandAllButton />}
+          </>
+        }
+      >
         {!data || isLoading ? (
           <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
             <Loader />
@@ -58,7 +58,10 @@ export const BalanceSheetContent = ({
             <BalanceSheetTable data={data} config={BALANCE_SHEET_ROWS} />
           </>
         )}
-      </Container>
+      </PanelView>
     </TableExpandProvider>
   )
 }
+
+BalanceSheet.View = BalanceSheetView
+export { BalanceSheet }

@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { TableExpandContext } from '../../contexts/TableExpandContext'
-import DownloadCloud from '../../icons/DownloadCloud'
 import { Button, ButtonVariant } from '../Button'
 import { DateDayPicker } from '../DateDayPicker'
 import classNames from 'classnames'
@@ -41,12 +40,13 @@ export const BalanceSheetHeader = ({
             </Button>
           )}
         </div>
-        <Button
+        {/* Re-enable when we have balance sheet downloading available */}
+        {/* <Button
           variant={ButtonVariant.secondary}
           rightIcon={<DownloadCloud size={12} />}
         >
           Download
-        </Button>
+        </Button> */}
       </div>
     </div>
   )
