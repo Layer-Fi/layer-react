@@ -65,10 +65,6 @@ export const DetailedChart = ({
   return (
     <div className='chart-field'>
       <div className='header--tablet'>
-        <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-          {humanizeTitle(sidebarScope)}
-        </Text>
-
         {showDatePicker && <ProfitAndLossDatePicker />}
       </div>
 

@@ -17,6 +17,13 @@
 
 header.Layer__profit-and-loss-detailed-charts__header--tablet {
   display: none;
+  justify-content: flex-start;
+  gap: var(--spacing-md);
+  align-items: center;
+
+  .title {
+    font-size: 24px;
+  }
 }
 
 @container (max-width: 1023px) and (min-width: 768px) {

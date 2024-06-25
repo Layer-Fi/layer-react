@@ -66,6 +66,9 @@ export const ProfitAndLossDetailedCharts = ({
 
       <header className='Layer__profit-and-loss-detailed-charts__header--tablet'>
         <BackButton onClick={() => setSidebarScope(undefined)} />
+        <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
+          {humanizeTitle(theScope)}
+        </Text>
       </header>
 
       <div className='Layer__profit-and-loss-detailed-charts__content'>
