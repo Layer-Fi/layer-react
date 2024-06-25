@@ -9,6 +9,10 @@ export { LayerProvider } from './providers/LayerProvider'
 /* ------------------ Onboarding ------------------ */
 export { Onboarding } from './components/Onboarding'
 
+/* ------------------ Bank Accounts & Transactions ------------------ */
+export { LinkedAccounts } from './components/LinkedAccounts'
+export { BankTransactions } from './components/BankTransactions'
+
 /* ------------------ Reporting ------------------ */
 export { ProfitAndLoss } from './components/ProfitAndLoss'
 /* Profit and loss contains 6 sub-components:
@@ -20,10 +24,6 @@ export { ProfitAndLoss } from './components/ProfitAndLoss'
  * - DetailedCharts
  */
 export { BalanceSheet } from './components/BalanceSheet'
-
-/* ------------------ Bank Accounts & Transactions ------------------ */
-export { LinkedAccounts } from './components/LinkedAccounts'
-export { BankTransactions } from './components/BankTransactions'
 
 /* ------------------ Ledger ------------------ */
 export { ChartOfAccounts } from './components/ChartOfAccounts'

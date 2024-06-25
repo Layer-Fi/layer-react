@@ -93,22 +93,9 @@ This component has one primary prop: `onTransactionsToReviewClick` should be a f
 
 This prop is a function, so you can use your app's standard strategy for navigation.
 
-### Profit And Loss
+### Bank Accounts & Transactions
 
-![Profit and Loss chart](https://github.com/Layer-Fi/layer-react/assets/1592431/34e36b1b-024b-4598-b23b-dff723b2659c)
-
-```tsx
-import { ProfitAndLoss } from "@layerfi/components";
-…
-<ProfitAndLoss>
-  <ProfitAndLoss.Chart />
-  <ProfitAndLoss.Summaries />
-  <ProfitAndLoss.DatePicker />
-  <ProfitAndLoss.Table />
-</ProfitAndLoss>
-```
-
-### Linked Accounts
+#### Linked Accounts
 
 Displays all accounts connected to Layer including embedded banking, Plaid, and custom accounts.
 
@@ -121,7 +108,13 @@ Displays all accounts connected to Layer including embedded banking, Plaid, and 
 />
 ```
 
-### Transaction categorization
+Props:
+
+- `asWidget`: Minimized version of the component
+- `elevated`: Stylistic option to highlight component
+- `showLedgerBalance`: Flag to enable or hide the current ledger balance corresponding to this external account. Useful for reconciliation.
+
+#### Transaction categorization
 
 The transaction categorization component handles displaying both categorized transactions and the workflow for categorizing new transactions as they are imported into Layer.
 
@@ -149,31 +142,91 @@ setFilters({ amount: { min: 0, max: 10000 } })
 <BankTransactions />
 ```
 
-### Reports
+### Reporting
 
-The reports component contains multiple accounting reports and tables, including the profit and loss table.
+#### Profit And Loss Chart
 
-![P&L Table](https://github.com/Layer-Fi/layer-react/assets/1592431/d165b5b0-a0b5-4fff-b470-56bd8a9f6eaf)
-
-These can be embedded individually
+![Profit and Loss chart](https://github.com/Layer-Fi/layer-react/assets/1592431/34e36b1b-024b-4598-b23b-dff723b2659c)
 
 ```tsx
-<ProfitAndLoss.DetailedCharts />
+import { ProfitAndLoss } from "@layerfi/components";
+…
+<ProfitAndLoss>
+  <ProfitAndLoss.Chart />
+  <ProfitAndLoss.Summaries />
+  <ProfitAndLoss.DatePicker />
+  <ProfitAndLoss.Table />
+</ProfitAndLoss>
 ```
 
-Or as a prebuilt panel
+#### Profit and Loss Summary Cards
+
+![](https://github.com/Layer-Fi/layer-react/assets/1592431/06459f20-519e-4413-80ba-fb9965c32f9f)
 
 ```tsx
-<Reports />
+import { ProfitAndLoss } from "@layerfi/components";
+…
+<ProfitAndLoss>
+  <div className='Layer__accounting-overview__summaries-row'>
+    <ProfitAndLoss.Summaries actionable={false} />
+    <TransactionToReviewCard onClick={onTransactionsToReviewClick} />
+  </div>
+</ProfitAndLoss>
 ```
 
-### Chart of Accounts
+Props:
 
-The chart of accounts gives direct read and write access into the double entry general ledger underlying Layer's data.
+- `actionable`: enables or disables whether clicking the revenue & expense charts open the P&L sidebar view.
+- `vertical`: changes the card layout to be vertically stacked instead of horizontal
+- `revenueLabel`: specifiable label for revenue for uses where you prefer 'income' or other another term.
+
+Note that the `<TransactionToReviewCard>` is a separate component, but is meant to be optionally bundled with the summary cards. As with the onboarding component, this component has one primary prop: `onTransactionsToReviewClick` should be a function which navigates to the bank transactions to review page. For example, if the bank transaction categorizaiton page lives on `/account/bank-transactions` within your app:
+
+```tsx
+<Onboarding
+  onTransactionsToReviewClick={() => navigate('/accounting/bank-transactions')}
+/>
+```
+
+#### Profit and Loss Table
+
+![Profit And Loss Table](https://github.com/Layer-Fi/layer-react/assets/1592431/8bca34d1-6357-4030-811a-e46fe1f83195)
+
+```tsx
+import { ProfitAndLoss } from "@layerfi/components";
+…
+<ProfitAndLoss>
+  <ProfitAndLoss.Table>
+</ProfitAndLoss>
+```
+
+The P&L table supports one optional prop:
+
+- `lockExpanded` forces the table to be fully expanded showing all rows
+
+#### Balance Sheet
+
+![Balance Sheet](https://github.com/Layer-Fi/layer-react/assets/1592431/62bea271-6edd-46b4-9f66-a375ae5143d9)
+
+The Balance Sheet component displays an interactive table. A default date can be passed in via the `effectiveDate` prop.
+
+### Ledger
+
+#### Chart of Accounts
+
+![Chart of Accounts](https://github.com/Layer-Fi/layer-react/assets/1592431/05405344-81de-4d76-b835-633e247cdeb9)
+
+The chart of accounts gives direct read and write access into the double entry general ledger underlying Layer's data. It exposes the list of accounts and enables users to create new accounts.
 
 ```tsx
 <ChartOfAccounts asWidget withDateControl withExpandAllButton />
 ```
+
+The following props are supported
+
+- `asWidget`: Displays a more compact version.
+- `withDateControl`: Includes a date picker which determines the effective date of account balances displayed.
+- `withExpandAllButton`: Optionally displays a button to expand and collapse all sub account lists.
 
 ## Styling
 
