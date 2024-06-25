@@ -13,6 +13,8 @@ export interface LinkedAccountsProps {
   asWidget?: boolean
   elevated?: boolean
   showLedgerBalance?: boolean
+  showUnlinkItem?: boolean
+  showBreakConnection?: boolean
 }
 
 export const LinkedAccounts = (props: LinkedAccountsProps) => {
@@ -27,6 +29,8 @@ export const LinkedAccountsComponent = ({
   asWidget,
   elevated,
   showLedgerBalance = true,
+  showUnlinkItem = false,
+  showBreakConnection = false,
 }: LinkedAccountsProps) => {
   const { isLoading, error, isValidating, refetchAccounts } = useContext(
     LinkedAccountsContext,
@@ -61,6 +65,8 @@ export const LinkedAccountsComponent = ({
         <LinkedAccountsContent
           asWidget={asWidget}
           showLedgerBalance={showLedgerBalance}
+          showUnlinkItem={showUnlinkItem}
+          showBreakConnection={showBreakConnection}
         />
       ) : null}
     </Container>

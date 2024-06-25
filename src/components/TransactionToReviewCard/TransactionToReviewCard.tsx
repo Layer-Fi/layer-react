@@ -1,46 +1,45 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, {useContext, useEffect, useMemo, useState} from 'react'
 import { Badge } from '../../components/Badge'
 import { BadgeSize, BadgeVariant } from '../../components/Badge/Badge'
 import { Text, TextSize } from '../../components/Typography'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import BellIcon from '../../icons/Bell'
 import CheckIcon from '../../icons/Check'
 import RefreshCcw from '../../icons/RefreshCcw'
 import { countTransactionsToReview } from '../../utils/bankTransactions'
 import { BadgeLoader } from '../BadgeLoader'
 import { NotificationCard } from '../NotificationCard'
+import {DateRange} from "../../types";
+import {ProfitAndLoss} from "../ProfitAndLoss";
 
 export interface TransactionToReviewCardProps {
   onClick?: () => void
-  currentMonthOnly?: true
+  usePnlDateRange?: boolean
 }
 
 export const TransactionToReviewCard = ({
   onClick,
-  currentMonthOnly = true,
+  usePnlDateRange,
 }: TransactionToReviewCardProps) => {
-  const [loaded, setLoaded] = useState('initiated')
-  const { data, isLoading, error, refetch } = useBankTransactions()
+  const {
+    data,
+    isLoading,
+    loadingStatus,
+    error,
+    refetch,
+    activate: activateBankTransactions,
+  } = useBankTransactionsContext()
+
+  const { dateRange: contextDateRange } = useContext(ProfitAndLoss.Context)
+  const dateRange = usePnlDateRange ? contextDateRange : undefined
 
   useEffect(() => {
-    if (!isLoading && data && data?.length > 0) {
-      setLoaded('complete')
-      return
-    }
-    if (isLoading && loaded === 'initiated') {
-      setLoaded('loading')
-      return
-    }
-
-    if (!isLoading && loaded !== 'initiated') {
-      setLoaded('complete')
-      return
-    }
-  }, [isLoading])
+    activateBankTransactions()
+  }, [])
 
   const toReview = useMemo(
-    () => countTransactionsToReview({ transactions: data, currentMonthOnly }),
-    [data, isLoading],
+    () => countTransactionsToReview({ transactions: data, dateRange }),
+    [data, isLoading, dateRange],
   )
 
   return (
@@ -49,23 +48,22 @@ export const TransactionToReviewCard = ({
       onClick={() => onClick && onClick()}
     >
       <Text size={TextSize.sm}>Transactions to review</Text>
-      {loaded === 'initiated' || loaded === 'loading' ? <BadgeLoader /> : null}
+      {loadingStatus === 'initial' || loadingStatus === 'loading' ? (
+        <BadgeLoader />
+      ) : null}
 
-      {loaded === 'complete' && error ? (
+      {loadingStatus === 'complete' && error ? (
         <Badge
           variant={BadgeVariant.ERROR}
           size={BadgeSize.SMALL}
           icon={<RefreshCcw size={12} />}
-          onClick={() => {
-            setLoaded('loading')
-            refetch()
-          }}
+          onClick={() => refetch()}
         >
           Refresh
         </Badge>
       ) : null}
 
-      {loaded === 'complete' && !error && toReview > 0 ? (
+      {loadingStatus === 'complete' && !error && toReview > 0 ? (
         <Badge
           variant={BadgeVariant.WARNING}
           size={BadgeSize.SMALL}
@@ -75,7 +73,7 @@ export const TransactionToReviewCard = ({
         </Badge>
       ) : null}
 
-      {loaded === 'complete' && !error && toReview === 0 ? (
+      {loadingStatus === 'complete' && !error && toReview === 0 ? (
         <Badge
           variant={BadgeVariant.SUCCESS}
           size={BadgeSize.SMALL}

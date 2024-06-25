@@ -1,15 +1,18 @@
 import { useState } from 'react'
 import { Layer } from '../../api/layer'
+import { get } from '../../api/layer/authenticated_http'
+import { useLayerContext } from '../../contexts/LayerContext'
 import { Direction, FormError, FormErrorWithId } from '../../types'
 import { LedgerAccountBalance } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
 import {
   JournalEntry,
   JournalEntryLineItem,
-  NewJournalEntry,
+  NewApiJournalEntry,
+  NewFormJournalEntry,
 } from '../../types/journal'
+import { getAccountIdentifierPayload } from '../../utils/journal'
 import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
-import { useLayerContext } from '../../contexts/LayerContext'
 import useSWR from 'swr'
 
 type UseJournal = () => {
@@ -24,7 +27,7 @@ type UseJournal = () => {
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void
   closeSelectedEntry: () => void
-  create: (newJournalEntry: NewJournalEntry) => void
+  create: (newJournalEntry: NewApiJournalEntry) => void
   changeFormData: (
     name: string,
     value: string | BaseSelectOption | undefined | number,
@@ -44,7 +47,7 @@ type UseJournal = () => {
 
 export interface JournalFormTypes {
   action: string
-  data: NewJournalEntry
+  data: NewFormJournalEntry
   errors?:
     | {
         entry: FormError[]
@@ -76,7 +79,7 @@ export const useJournal: UseJournal = () => {
     setSelectedEntryId(undefined)
   }
 
-  const create = async (newJournalEntry: NewJournalEntry) => {
+  const create = async (newJournalEntry: NewApiJournalEntry) => {
     setSendingForm(true)
     setApiError(undefined)
 
@@ -275,12 +278,9 @@ export const useJournal: UseJournal = () => {
         ...form.data,
         line_items: form.data.line_items?.map(line => ({
           ...line,
-          account_identifier: {
-            type: 'StableName',
-            stable_name: line.account_identifier.stable_name,
-          },
+          account_identifier: getAccountIdentifierPayload(line),
         })),
-      } as NewJournalEntry)
+      } as NewApiJournalEntry)
     }
   }
 

@@ -9,7 +9,7 @@
   }
 }
 
-@media screen and (min-width: 760px) {
+@container (min-width: 760px) {
   .Layer__date-month-picker__wrapper {
     &.Layer__date-month-picker__wrapper--current-date-option {
       .Layer__date-month-picker {
@@ -99,7 +99,7 @@
   z-index: 2;
 }
 
-@media screen and (max-width: 760px) {
+@container (max-width: 760px) {
   .Layer__date-month-picker__wrapper {
     .Layer__date-month-picker {
       border: none;

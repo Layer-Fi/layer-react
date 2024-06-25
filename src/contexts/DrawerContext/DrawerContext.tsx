@@ -6,4 +6,6 @@ export const DrawerContext = createContext<DrawerContextType>({
   content: undefined,
   setContent: () => undefined,
   close: () => undefined,
+  isClosing: false,
+  finishClosing: () => undefined,
 })

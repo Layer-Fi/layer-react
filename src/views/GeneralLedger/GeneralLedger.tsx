@@ -35,7 +35,7 @@ export const GeneralLedgerView = ({
         />
         <Container name='generalLedger'>
           {activeTab === 'chartOfAccounts' ? (
-            <ChartOfAccounts asWidget withDateControl withExpandAllButton />
+            <ChartOfAccounts asWidget withExpandAllButton />
           ) : (
             <Journal />
           )}
