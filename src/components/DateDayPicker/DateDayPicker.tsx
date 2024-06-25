@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
 import { Button, ButtonVariant } from '../Button'
@@ -21,7 +20,6 @@ export const DateDayPicker = ({
   enableFutureDates = false,
   currentDateOption = true,
 }: DateDayPickerProps) => {
-  const { isMobile, isTablet } = useSizeClass()
   const [isAnimating, setIsAnimating] = useState(false)
 
   const [localDate, setLocalDate] = useState(startOfDay(new Date()))
@@ -153,7 +151,7 @@ export const DateDayPicker = ({
         </button>
         <div className='Layer__date-month-picker__effect-blur'></div>
       </div>
-      {!isMobile && !isTablet && currentDateOption && (
+      {currentDateOption && (
         <Button
           className='Layer__date-month-picker__current-button'
           onClick={() => setCurrentDate()}

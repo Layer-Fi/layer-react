@@ -99,7 +99,7 @@
   z-index: 2;
 }
 
-@container (max-width: 760px) {
+@container (max-width: 759px) {
   .Layer__date-month-picker__wrapper {
     .Layer__date-month-picker {
       border: none;
@@ -139,5 +139,9 @@
       justify-content: flex-end;
       font-size: 12px;
     }
+  }
+
+  .Layer__date-month-picker__current-button {
+    display: none;
   }
 }
