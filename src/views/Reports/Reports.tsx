@@ -112,10 +112,10 @@ const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
       {openReport === 'profitAndLoss' ? (
         <PanelView
           title={'Profit & Loss'}
-          headerControls={<ProfitAndLoss.DatePicker showDatePicker={false} />}
+          headerControls={<ProfitAndLoss.DatePicker />}
         >
           <Panel
-            sidebar={<ProfitAndLoss.DetailedCharts />}
+            sidebar={<ProfitAndLoss.DetailedCharts showDatePicker={false} />}
             sidebarIsOpen={Boolean(sidebarScope)}
             parentRef={containerRef}
           >
