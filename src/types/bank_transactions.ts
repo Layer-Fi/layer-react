@@ -1,4 +1,5 @@
 import { Categorization, CategorizationStatus, Category } from './categories'
+import {S3PresignedUrl} from "./general";
 
 export enum Direction {
   CREDIT = 'CREDIT',
@@ -59,4 +60,21 @@ export interface BankTransactionMatch {
     id: string
     type: string
   }
+}
+
+export interface BankTransactionMetadata {
+  memo: string | null
+}
+
+export interface DocumentS3Urls {
+  type: 'Document_S3_Urls'
+  documentUrls: S3PresignedUrl[]
+}
+
+export interface FileMetadata {
+  type: 'File_Metadata'
+  id: string | null
+  fileType: string
+  fileName: string
+  documentType: string
 }

@@ -25,13 +25,12 @@ export interface ConnectAccountProps {
 export const ConnectAccount = ({
   onboardingStep,
   onTransactionsToReviewClick,
-  currentMonthOnly = true,
 }: ConnectAccountProps) => {
   const { addConnection } = useContext(LinkedAccountsContext)
   const { data, isLoading } = useBankTransactions()
 
   const transactionsToReview = useMemo(
-    () => countTransactionsToReview({ transactions: data, currentMonthOnly }),
+    () => countTransactionsToReview({ transactions: data }),
     [data, isLoading],
   )
 

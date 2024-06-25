@@ -22,6 +22,8 @@
 
 .Layer__bank-transactions__header.Layer__bank-transactions__header--mobile {
   background-color: transparent;
+  max-width: 414px;
+  margin: auto;
 }
 
 .Layer__bank-transactions__header.Layer__bank-transactions__header--mobile,
@@ -148,7 +150,7 @@
   flex: 1;
   color: var(--text-color-primary);
   white-space: nowrap;
-  max-width: 350px;
+  padding-left: 10px;
   text-overflow: ellipsis;
   overflow: hidden;
   display: inline-flex;
@@ -350,6 +352,9 @@
 .Layer__expanded-bank-transaction-row__file-upload {
   padding: 0 var(--spacing-md);
   padding-bottom: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .Layer__bank-transaction-row__actions-cell {

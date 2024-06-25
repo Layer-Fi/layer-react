@@ -64,7 +64,7 @@
   justify-content: center;
   flex: 1;
   max-width: 272px;
-  min-height: 135px;
+  min-height: 115px;
   padding: var(--spacing-2xs);
   border-radius: var(--border-radius-sm);
   background: var(--base-transparent-1);
@@ -72,6 +72,10 @@
 
   &.--as-widget {
     min-height: 90px;
+  }
+
+  &.--show-ledger-balance {
+    min-height: 135px;
   }
 
   &:hover {
