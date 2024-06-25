@@ -95,7 +95,11 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
         <DownloadButton />
       </div>
       <Container name='reports' ref={containerRef}>
-        <ReportsPanel containerRef={containerRef} openReport={activeTab} />
+        <ProfitAndLoss asContainer={false}>
+          <BalanceSheet effectiveDate={startOfDay(new Date())}>
+            <ReportsPanel containerRef={containerRef} openReport={activeTab} />
+          </BalanceSheet>
+        </ProfitAndLoss>
       </Container>
     </View>
   )
@@ -103,27 +107,24 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
 
 const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
   const { sidebarScope } = useContext(ProfitAndLoss.Context)
-
   return (
-    <Panel
-      sidebar={<ProfitAndLoss.DetailedCharts />}
-      sidebarIsOpen={Boolean(sidebarScope)}
-      parentRef={containerRef}
-    >
+    <>
       {openReport === 'profitAndLoss' ? (
-        <ProfitAndLoss asContainer={false}>
-          <PanelView
-            title={'Profit & Loss'}
-            headerControls={<ProfitAndLoss.DatePicker />}
+        <PanelView
+          title={'Profit & Loss'}
+          headerControls={<ProfitAndLoss.DatePicker />}
+        >
+          <Panel
+            sidebar={<ProfitAndLoss.DetailedCharts />}
+            sidebarIsOpen={Boolean(sidebarScope)}
+            parentRef={containerRef}
           >
             <ProfitAndLoss.Table asContainer={false} />
-          </PanelView>
-        </ProfitAndLoss>
+          </Panel>
+        </PanelView>
       ) : (
-        <BalanceSheet effectiveDate={startOfDay(new Date())}>
-          <BalanceSheet.View />
-        </BalanceSheet>
+        <BalanceSheet.View />
       )}
-    </Panel>
+    </>
   )
 }
