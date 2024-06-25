@@ -111,6 +111,14 @@
   }
 }
 
+.Layer__chart-of-accounts__form .actions {
+  display: none;
+  gap: var(--spacing-sm);
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: var(--spacing-xl);
+}
+
 .Layer__chart-of-accounts__table .Layer__table-row {
   &:not(.Layer__table-row--header) {
     cursor: pointer;
@@ -264,6 +272,14 @@
 @container (max-width: 1024px) {
   .Layer__table-cell.Layer__coa__actions .Layer__table-cell-content {
     padding-right: var(--spacing-md);
+  }
+
+  .Layer__chart-of-accounts__sidebar__header .actions {
+    display: none;
+  }
+
+  .Layer__chart-of-accounts__form .actions {
+    display: flex;
   }
 }
 
