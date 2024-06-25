@@ -23,7 +23,7 @@ export interface JournalProps {
 
 export const JOURNAL_CONFIG: JournalConfig = {
   form: {
-    addEntryLinesLimit: 2,
+    addEntryLinesLimit: 10,
   },
 }
 
