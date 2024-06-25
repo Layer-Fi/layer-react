@@ -9,7 +9,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json())
 
 export const Hello = ({ user }: Props) => {
   const { data, isLoading } = useSWR(
-    `https://api.github.com/users/${user || 'jyurek'}`,
+    `https://api.github.com/users/${user || 'doneel'}`,
     fetcher,
   )
   const name = (isLoading ? '...' : data?.name) || 'User'

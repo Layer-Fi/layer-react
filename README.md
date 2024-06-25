@@ -69,6 +69,30 @@ import { LayerProvider } from "@layerfi/components";
 
 ## Components
 
+### Onboarding
+
+The onboarding component can be included on an accounting landing page to prompt users to connect accounts.
+![Onboarding landing state](https://github.com/Layer-Fi/layer-react/assets/1592431/1fef5910-3a6f-41d8-9600-a66b07ccfc33)
+
+After connecting accounts, the component will change into a prompt to categorize transactions.
+![Onboarding after linking](https://github.com/Layer-Fi/layer-react/assets/1592431/4b7d5711-f1da-42cb-8105-e0489f7431ad)
+
+For a business that has already onboarded, this component will render nothing, so it's safe to leave on the default page for all businesses.
+
+```tsx
+<Onboarding onTransactionsToReviewClick={onTransactionsToReviewClick} />
+```
+
+This component has one primary prop: `onTransactionsToReviewClick` should be a function which navigates to the bank transactions to review page. For example, if the bank transaction categorizaiton page lives on `/account/bank-transactions` within your app:
+
+```tsx
+<Onboarding
+  onTransactionsToReviewClick={() => navigate('/accounting/bank-transactions')}
+/>
+```
+
+This prop is a function, so you can use your app's standard strategy for navigation.
+
 ### Profit And Loss
 
 ![Profit and Loss chart](https://github.com/Layer-Fi/layer-react/assets/1592431/34e36b1b-024b-4598-b23b-dff723b2659c)
