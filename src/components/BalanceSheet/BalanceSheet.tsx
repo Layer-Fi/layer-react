@@ -2,12 +2,19 @@ import React, { useState } from 'react'
 import { BalanceSheetContext } from '../../contexts/BalanceSheetContext'
 import { TableExpandProvider } from '../../contexts/TableExpandContext'
 import { useBalanceSheet } from '../../hooks/useBalanceSheet'
+<<<<<<< HEAD
 import { BalanceSheetHeader } from '../BalanceSheetHeader'
 import { BalanceSheetTable } from '../BalanceSheetTable'
 import { Container } from '../Container'
 import { Loader } from '../Loader'
 import { BALANCE_SHEET_ROWS } from './constants'
 import { startOfDay } from 'date-fns'
+=======
+import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker'
+import { BalanceSheetRow } from '../BalanceSheetRow'
+import { SkeletonBalanceSheetRow } from '../SkeletonBalanceSheetRow'
+import { format, parseISO } from 'date-fns'
+>>>>>>> origin/main
 
 export interface BalanceSheetProps {
   withTitle?: boolean

@@ -1,5 +1,6 @@
 import { Account } from '../types'
 import { Direction } from './bank_transactions'
+import { AccountIdentifierPayloadObject } from './categories'
 import { LedgerEntrySource } from './ledger_accounts'
 
 export interface JournalEntry {
@@ -26,7 +27,20 @@ export interface JournalEntryLine {
   createdAt: string
 }
 
-export type NewJournalEntry = {
+export type NewApiJournalEntry = {
+  entry_at: string
+  created_by: string
+  memo: string
+  line_items: NewApiJournalEntryLineItem[]
+}
+
+export type NewApiJournalEntryLineItem = {
+  account_identifier: AccountIdentifierPayloadObject
+  amount: number
+  direction: Direction
+}
+
+export type NewFormJournalEntry = {
   entry_at: string
   created_by: string
   memo: string

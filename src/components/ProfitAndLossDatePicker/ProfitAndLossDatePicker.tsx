@@ -12,6 +12,7 @@ export const ProfitAndLossDatePicker = () => {
 
   return (
     <DateMonthPicker
+      key={dateRange.startDate.toISOString()}
       dateRange={dateRange}
       changeDateRange={changeDateRange}
       minDate={minDate}
