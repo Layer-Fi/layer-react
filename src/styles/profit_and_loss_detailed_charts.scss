@@ -53,6 +53,7 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 .Layer__profit-and-loss-detailed-charts {
   width: 100%;
   background: var(--color-base-0);
+  border-radius: var(--border-radius-sm);
 
   .chart-field {
     width: 100%;

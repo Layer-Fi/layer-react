@@ -25,6 +25,8 @@
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(6px);
   z-index: 1;
+  border-top-left-radius: var(--border-radius-sm);
+  border-top-right-radius: var(--border-radius-sm);
 }
 
 .Layer__panel__sidebar {
@@ -40,6 +42,7 @@
   background: var(--color-base-0);
   height: 100%;
   border-left: 1px solid var(--color-base-300);
+  border-top-right-radius: var(--border-radius-sm);
 
   .Layer__panel__sidebar-content {
     width: 480px;
@@ -65,11 +68,22 @@
     max-width: 100%;
     width: 100%;
     border-width: 0;
+    border-radius: var(--border-radius-sm);
     opacity: 0.2;
     transform: translateY(-50px) scale(0.96);
     transition:
       transform 120ms ease-in-out,
       opacity 120ms ease-in-out;
+
+    .Layer__panel__sidebar-content {
+      position: sticky;
+      top: 0;
+      height: min-content;
+    }
+  }
+
+  .Layer__panel--open .Layer__panel__sidebar {
+    overflow: unset;
   }
 
   .Layer__panel.Layer__panel--open .Layer__panel__sidebar {
