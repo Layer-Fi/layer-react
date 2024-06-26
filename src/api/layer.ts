@@ -39,6 +39,7 @@ import {
   getProfitAndLossSummaries,
   getProfitAndLossCsv,
 } from './layer/profit_and_loss'
+import { getStatementOfCash } from './layer/statement-of-cash'
 import { getTasks, submitResponseToTask } from './layer/tasks'
 
 export const Layer = {
@@ -78,4 +79,5 @@ export const Layer = {
   breakPlaidItemConnection,
   syncConnection,
   updateConnectionStatus,
+  getStatementOfCash,
 }

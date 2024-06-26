@@ -6,6 +6,7 @@ import { Container } from '../../components/Container'
 import { Panel } from '../../components/Panel'
 import { PanelView } from '../../components/PanelView'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import { StatementOfCash } from '../../components/StatementOfCash'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useLayerContext } from '../../contexts/LayerContext'
@@ -16,7 +17,7 @@ export interface ReportsProps {
   title?: string
 }
 
-type ReportType = 'profitAndLoss' | 'balanceSheet'
+type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
 type ReportOption = { value: ReportType; label: string }
 export interface ReportsPanelProps {
   containerRef: RefObject<HTMLDivElement>
@@ -85,8 +86,9 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
           name='reports-tabs'
           options={
             [
-              { value: 'profitAndLoss', label: 'Profit & Loss' },
-              { value: 'balanceSheet', label: 'Balance Sheet' },
+              { value: 'profitAndLoss', label: 'Profit & loss' },
+              { value: 'balanceSheet', label: 'Balance sheet' },
+              { value: 'statementOfCashFlow', label: 'Statement of cash flow' },
             ] as ReportOption[]
           }
           selected={activeTab}
@@ -96,9 +98,7 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
       </div>
       <Container name='reports' ref={containerRef}>
         <ProfitAndLoss asContainer={false}>
-          <BalanceSheet effectiveDate={startOfDay(new Date())}>
-            <ReportsPanel containerRef={containerRef} openReport={activeTab} />
-          </BalanceSheet>
+          <ReportsPanel containerRef={containerRef} openReport={activeTab} />
         </ProfitAndLoss>
       </Container>
     </View>
@@ -109,7 +109,7 @@ const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
   const { sidebarScope } = useContext(ProfitAndLoss.Context)
   return (
     <>
-      {openReport === 'profitAndLoss' ? (
+      {openReport === 'profitAndLoss' && (
         <PanelView
           title={'Profit & Loss'}
           headerControls={<ProfitAndLoss.DatePicker />}
@@ -122,9 +122,9 @@ const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
             <ProfitAndLoss.Table asContainer={false} />
           </Panel>
         </PanelView>
-      ) : (
-        <BalanceSheet.View />
       )}
+      {openReport === 'balanceSheet' && <BalanceSheet />}
+      {openReport === 'statementOfCashFlow' && <StatementOfCash />}
     </>
   )
 }

@@ -1,4 +1,4 @@
-.Layer__balance-sheet {
+.Layer__statement-of-cash {
   border: 1px solid var(--border-color);
   border-radius: var(--corner-radius);
   background-color: var(--background-color);
@@ -19,7 +19,7 @@
     }
   }
 
-  .Layer__balance-sheet__title {
+  .Layer__statement-of-cash__title {
     display: inline;
     flex: 1;
     font-size: var(--text-heading);
@@ -27,21 +27,21 @@
   }
 
   @container (max-width: 800px) {
-    .Layer__balance-sheet__header {
+    .Layer__statement-of-cash__header {
       flex-direction: column;
       gap: var(--spacing-sm);
     }
   }
 
   @container (max-width: 540px) {
-    .Layer__balance-sheet__header {
+    .Layer__statement-of-cash__header {
       flex-direction: row;
       gap: var(--spacing-sm);
       flex-wrap: wrap;
-      .Layer__balance-sheet__actions {
+      .Layer__statement-of-cash__actions {
         flex-wrap: wrap;
       }
-      .Layer__balance-sheet__actions__date-picker {
+      .Layer__statement-of-cash__actions__date-picker {
         flex-wrap: wrap;
         gap: var(--spacing-xs);
       }
@@ -58,22 +58,22 @@
   }
 }
 
-.Layer__balance-sheet__header {
+.Layer__statement-of-cash__header {
   display: flex;
   flex: 1;
   flex-direction: row;
   padding: var(--spacing-sm) var(--spacing-md);
-  &.Layer__balance-sheet__header--no-title {
-    .Layer__balance-sheet__actions {
+  &.Layer__statement-of-cash__header--no-title {
+    .Layer__statement-of-cash__actions {
       flex: 1;
     }
   }
-  .Layer__balance-sheet__actions {
+  .Layer__statement-of-cash__actions {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     gap: var(--spacing-xs);
-    .Layer__balance-sheet__actions__date-picker {
+    .Layer__statement-of-cash__actions__date-picker {
       display: flex;
       flex-direction: row;
       gap: var(--spacing-xs);
@@ -81,27 +81,27 @@
   }
 }
 
-.Layer__balance-sheet__table {
+.Layer__statement-of-cash__table {
   width: 100%;
   border-collapse: collapse;
 
-  .Layer__balance-sheet-row {
+  .Layer__statement-of-cash-row {
     font-size: 1em;
     height: 52px;
 
-    .Layer__balance-sheet-cell__value {
+    .Layer__statement-of-cash-cell__value {
       .Layer__table-cell-content {
         justify-content: flex-end;
       }
     }
 
-    &.Layer__balance-sheet-row--depth-0 {
-      &:not(.Layer__balance-sheet-row--display-children-true) {
-        .Layer__balance-sheet-cell__label {
+    &.Layer__statement-of-cash-row--depth-0 {
+      &:not(.Layer__statement-of-cash-row--display-children-true) {
+        .Layer__statement-of-cash-cell__label {
           padding-left: 16px;
         }
       }
-      .Layer__balance-sheet-cell__label {
+      .Layer__statement-of-cash-cell__label {
         .Layer__table-cell-content {
           font-size: var(--text-lg);
           font-weight: 540;
@@ -110,14 +110,14 @@
       }
     }
 
-    &.Layer__balance-sheet-row--depth-1 {
-      &:not(.Layer__balance-sheet-row--display-children-true) {
+    &.Layer__statement-of-cash-row--depth-1 {
+      &:not(.Layer__statement-of-cash-row--display-children-true) {
         background-color: var(--color-base-50);
-        .Layer__balance-sheet-cell__label {
+        .Layer__statement-of-cash-cell__label {
           padding-left: calc(50px - var(--spacing-sm));
         }
       }
-      .Layer__balance-sheet-cell__label {
+      .Layer__statement-of-cash-cell__label {
         padding-left: calc(34px - var(--spacing-sm));
       }
       .Layer__table-cell-content {
@@ -127,14 +127,14 @@
       }
     }
 
-    &.Layer__balance-sheet-row--depth-2 {
-      &:not(.Layer__balance-sheet-row--display-children-true) {
+    &.Layer__statement-of-cash-row--depth-2 {
+      &:not(.Layer__statement-of-cash-row--display-children-true) {
         background-color: var(--color-base-50);
-        .Layer__balance-sheet-cell__label {
+        .Layer__statement-of-cash-cell__label {
           padding-left: calc(80px - var(--spacing-sm));
         }
       }
-      .Layer__balance-sheet-cell__label {
+      .Layer__statement-of-cash-cell__label {
         padding-left: calc(64px - var(--spacing-sm));
       }
       .Layer__table-cell-content {
@@ -144,14 +144,14 @@
       }
     }
 
-    &.Layer__balance-sheet-row--depth-3 {
-      &:not(.Layer__balance-sheet-row--display-children-true) {
+    &.Layer__statement-of-cash-row--depth-3 {
+      &:not(.Layer__statement-of-cash-row--display-children-true) {
         background-color: var(--color-base-50);
-        .Layer__balance-sheet-cell__label {
+        .Layer__statement-of-cash-cell__label {
           padding-left: calc(104px - var(--spacing-sm));
         }
       }
-      .Layer__balance-sheet-cell__label {
+      .Layer__statement-of-cash-cell__label {
         padding-left: calc(88px - var(--spacing-sm));
       }
       .Layer__table-cell-content {
@@ -161,14 +161,14 @@
       }
     }
 
-    &.Layer__balance-sheet-row--depth-4 {
-      &:not(.Layer__balance-sheet-row--display-children-true) {
+    &.Layer__statement-of-cash-row--depth-4 {
+      &:not(.Layer__statement-of-cash-row--display-children-true) {
         background-color: var(--color-base-50);
-        .Layer__balance-sheet-cell__label {
+        .Layer__statement-of-cash-cell__label {
           padding-left: calc(130px - var(--spacing-sm));
         }
       }
-      .Layer__balance-sheet-cell__label {
+      .Layer__statement-of-cash-cell__label {
         padding-left: calc(114px - var(--spacing-sm));
       }
       .Layer__table-cell-content {
@@ -178,17 +178,17 @@
       }
     }
 
-    &.Layer__balance-sheet-row--display-children-true {
+    &.Layer__statement-of-cash-row--display-children-true {
       font-weight: bold;
       cursor: pointer;
     }
 
-    &.Layer__balance-sheet-row--display-children-false {
+    &.Layer__statement-of-cash-row--display-children-false {
       font-weight: normal;
     }
 
-    &.Layer__balance-sheet-row--variant-summation {
-      background: var(--color-base-100) !important;
+    &.Layer__statement-of-cash-row--variant-summation {
+      background: var(--color-base-100);
       .Layer__table-cell-content {
         font-size: var(--text-md);
         font-variation-settings: 'wght' var(--font-weight-bold);
@@ -196,7 +196,7 @@
       }
     }
 
-    &.Layer__balance-sheet-row--expanded {
+    &.Layer__statement-of-cash-row--expanded {
       svg {
         transform: rotate(0deg);
       }
@@ -217,43 +217,23 @@
     }
   }
 
-  .Layer__balance-sheet-cell__label {
+  .Layer__statement-of-cash-cell__label {
     position: relative;
   }
 
-  .Layer__table-cell__active {
-    display: none;
-    width: 4px;
-    height: 100%;
-    position: absolute;
-    background: var(--color-base-400);
-    left: 0;
-    top: 0;
-  }
-
-  .Layer__balance-sheet-row {
-    .Layer__table-cell__active {
-      display: none;
-    }
-    &:not(.Layer__balance-sheet-row--display-children-true)
-      .Layer__table-cell__active {
-      display: block;
-    }
-  }
-
-  .Layer__balance-sheet-cell__label {
+  .Layer__statement-of-cash-cell__label {
     .Layer__table-cell-content {
       padding-left: 0;
     }
   }
 
-  .Layer__balance-sheet-cell__value--positive .Layer__table-cell-content {
+  .Layer__statement-of-cash-cell__value--positive .Layer__table-cell-content {
     &::before {
       content: '$';
     }
   }
 
-  .Layer__balance-sheet-cell__value--negative .Layer__table-cell-content {
+  .Layer__statement-of-cash-cell__value--negative .Layer__table-cell-content {
     &::before {
       content: '-$';
     }
