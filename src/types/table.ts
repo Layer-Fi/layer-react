@@ -1,22 +1,35 @@
+export interface TableContextProps {
+  tableState: boolean
+  toggleTableState: () => void
+}
 export interface TableProps {
+  children: React.ReactNode | React.ReactNode[]
   componentName?: string
-  columns: TableColumnProps[]
-  rows: TableRowProps[]
-  maxDepth?: number
-  expandable?: boolean
   hoverEffect?: boolean
-  withHeader?: boolean
+  borderCollapse?: 'collapse' | 'separate'
 }
 
-export interface TableColumnProps {
-  data: string | number
-  cellClassNames?: string
-  isCurrency?: boolean
+export interface TableHeadProps {
+  children: React.ReactNode
 }
 
+export interface TableBodyProps {
+  children: React.ReactNode | React.ReactNode[]
+}
 export interface TableRowProps {
-  columns: TableColumnProps[]
-  line_items?: TableRowProps[]
-  summarize?: boolean
-  rowClassName?: string
+  children: React.ReactNode | React.ReactNode[]
+  depth?: number
+  expandable?: boolean
+  variant?: 'default' | 'summation' | 'expandable'
+  withDivider?: boolean
+  withDividerPosition?: 'top' | 'bottom'
 }
+
+export interface TableCellProps {
+  children?: number | string | React.ReactNode
+  isCurrency?: boolean
+  isHeaderCell?: boolean
+  primary?: boolean
+}
+
+export interface TableActionsProps {}

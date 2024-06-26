@@ -1,7 +1,8 @@
 import React from 'react'
-import { BalanceSheet } from '../../types'
-import { LineItem } from '../../types/line_item'
-import { BalanceSheetRow } from '../BalanceSheetRow'
+import { BalanceSheet, LineItem } from '../../types'
+// import { LineItem } from '../../types/line_item'
+// import { BalanceSheetRow } from '../BalanceSheetRow'
+import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 
 type BalanceSheetRowProps = {
   name: string
@@ -16,26 +17,52 @@ export const BalanceSheetTable = ({
   data: BalanceSheet
   config: BalanceSheetRowProps[]
 }) => {
-  return (
-    <table className='Layer__table Layer__table--hover-effect Layer__balance-sheet__table'>
-      <thead>
-        <tr>
-          <th className='Layer__table-header'>Type</th>
-          <th className='Layer__table-header Layer__table-cell--last'>Total</th>
-        </tr>
-      </thead>
+  console.log(data)
 
-      <tbody>
-        {config.map((row, idx) => {
-          return (
-            <BalanceSheetRow
-              key={'balance-sheet-row-' + idx + row.name}
-              lineItem={data[row.lineItem as keyof BalanceSheet] as LineItem}
-              summarize={true}
-            />
-          )
-        })}
-      </tbody>
-    </table>
+  const renderLineItem = (
+    lineItem: LineItem,
+    depth: number = 0,
+  ): React.ReactNode => {
+    const expanddable =
+      lineItem.line_items && lineItem.line_items.length > 0 ? true : false
+    return (
+      <>
+        <TableRow key={lineItem.name} expandable={expanddable} depth={depth}>
+          <TableCell>{lineItem.display_name}</TableCell>
+          <TableCell>{!expanddable && lineItem.value}</TableCell>
+        </TableRow>
+        {lineItem.line_items &&
+          lineItem.line_items.length > 0 &&
+          lineItem.line_items.map((subItem: LineItem) =>
+            renderLineItem(subItem, depth + 1),
+          )}
+      </>
+    )
+  }
+
+  return (
+    <Table borderCollapse='collapse'>
+      <TableHead>
+        <TableRow>
+          <TableCell key='balance-head-type' isHeaderCell={true}>
+            Type
+          </TableCell>
+          <TableCell key='balance-head-total' isHeaderCell={true}>
+            Total
+          </TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {config.map(row => (
+          <>
+            {data[row.lineItem as keyof BalanceSheet] !== undefined &&
+              renderLineItem(
+                data[row.lineItem as keyof BalanceSheet] as LineItem,
+                0,
+              )}
+          </>
+        ))}
+      </TableBody>
+    </Table>
   )
 }

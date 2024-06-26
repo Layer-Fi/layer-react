@@ -96,9 +96,7 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
       </div>
       <Container name='reports' ref={containerRef}>
         <ProfitAndLoss asContainer={false}>
-          <BalanceSheet effectiveDate={startOfDay(new Date())}>
-            <ReportsPanel containerRef={containerRef} openReport={activeTab} />
-          </BalanceSheet>
+          <ReportsPanel containerRef={containerRef} openReport={activeTab} />
         </ProfitAndLoss>
       </Container>
     </View>
@@ -123,7 +121,7 @@ const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
           </Panel>
         </PanelView>
       ) : (
-        <BalanceSheet.View />
+        <BalanceSheet />
       )}
     </>
   )

@@ -1,4 +1,3 @@
-
 .Layer__panel_view-main {
   display: flex;
   flex-direction: column;
@@ -26,6 +25,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+  flex-wrap: wrap;
 }
 
 @container (max-width: 760px) {

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { TableExpandContext } from '../../contexts/TableExpandContext'
+import { TableContext } from '../../contexts/TableContext'
 import { Button, ButtonVariant } from '../Button'
 import { DateDayPicker } from '../DateDayPicker'
 import classNames from 'classnames'
@@ -15,8 +15,7 @@ export const BalanceSheetHeader = ({
   withTitle: boolean
   withExpandAllButton: boolean
 }) => {
-  const { tableExpandState, toggleTableExpandState } =
-    useContext(TableExpandContext)
+  const { tableState, toggleTableState } = useContext(TableContext)
   const headerClassNames = classNames('Layer__balance-sheet__header', {
     'Layer__balance-sheet__header--no-title': !withTitle,
   })
@@ -33,10 +32,10 @@ export const BalanceSheetHeader = ({
           />
           {withExpandAllButton && (
             <Button
-              onClick={toggleTableExpandState}
+              onClick={toggleTableState}
               variant={ButtonVariant.secondary}
             >
-              {!tableExpandState ? 'Expand all rows' : 'Collapse all rows'}
+              {!tableState ? 'Expand all rows' : 'Collapse all rows'}
             </Button>
           )}
         </div>
