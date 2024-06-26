@@ -1,27 +1,19 @@
-import React, { useRef } from 'react'
-import CalendarIcon from '../../icons/Calendar'
-import { format } from 'date-fns'
+import React from 'react'
+import { DateDayPicker } from '../DateDayPicker'
 
-type Props = {
-  value: Date
-  onChange: React.ChangeEventHandler<HTMLInputElement>
+export type BalanceSheetDatePickerProps = {
+  effectiveDate: Date
+  setEffectiveDate: (date: Date) => void
 }
 
-export const BalanceSheetDatePicker = ({ value, onChange }: Props) => {
-  const inputRef = useRef<HTMLInputElement>(null)
-  const showPicker = () => inputRef.current && inputRef.current.showPicker()
+export const BalanceSheetDatePicker = ({
+  effectiveDate,
+  setEffectiveDate,
+}: BalanceSheetDatePickerProps) => {
   return (
-    <span className='Layer__balance-sheet-date-picker'>
-      <button onClick={showPicker}>
-        <CalendarIcon />
-        {format(value, 'LLLL dd, yyyy')}
-        <input
-          type='date'
-          ref={inputRef}
-          value={format(value, 'yyyy-MM-dd')}
-          onChange={onChange}
-        />
-      </button>
-    </span>
+    <DateDayPicker
+      dateDay={effectiveDate}
+      changeDateDay={date => setEffectiveDate(date)}
+    />
   )
 }

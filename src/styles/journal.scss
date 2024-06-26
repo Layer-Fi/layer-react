@@ -2,6 +2,21 @@
   display: flex;
   align-items: stretch;
   position: relative;
+  overflow: auto;
+}
+
+@container (min-width: 1025px) {
+  .Layer__component-container.Layer__journal {
+    overflow: unset;
+  }
+}
+
+.Layer__journal .Layer__journal__bottom-actions {
+  display: none;
+  gap: var(--spacing-sm);
+  align-items: center;
+  justify-content: flex-end;
+  padding: var(--spacing-xl);
 }
 
 .Layer__journal-table .Layer__table-cell-content::before {
@@ -273,6 +288,26 @@
 @container (max-width: 1024px) {
   .Layer__journal__panel .Layer__panel__sidebar .Layer__panel__sidebar-content {
     width: 100%;
+  }
+
+  .Layer__journal .Layer__journal__sidebar__header .actions {
+    display: none;
+  }
+
+  .Layer__journal .Layer__journal__sidebar__header .actions {
+    display: none;
+  }
+
+  .Layer__journal .Layer__journal__bottom-actions {
+    display: flex;
+  }
+
+  .Layer__journal .Layer__panel.Layer__panel--open {
+    overflow: hidden;
+  }
+
+  .Layer__journal__form__input-group.Layer__journal__form__input-group__textarea {
+    background: transparent;
   }
 }
 

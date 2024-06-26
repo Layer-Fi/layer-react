@@ -1,23 +1,48 @@
 export { LayerProvider } from './providers/LayerProvider'
 
-// Components:
-export { BalanceSheet } from './components/BalanceSheet'
-export { BankTransactions } from './components/BankTransactions'
-export { Hello } from './components/Hello'
+/*
+==========================================================
+======================= Components =======================
+==========================================================
+*/
+
+/* ------------------ Onboarding ------------------ */
+export { Onboarding } from './components/Onboarding'
+
+/* ------------------ Bank Accounts & Transactions ------------------ */
 export { LinkedAccounts } from './components/LinkedAccounts'
+export { BankTransactions } from './components/BankTransactions'
+
+/* ------------------ Reporting ------------------ */
 export { ProfitAndLoss } from './components/ProfitAndLoss'
-export { ProfitAndLossView } from './components/ProfitAndLossView'
+/* Profit and loss contains 6 sub-components:
+ * - Chart
+ * - Context
+ * - DatePicker
+ * - Summaries
+ * - Table
+ * - DetailedCharts
+ */
+export { BalanceSheet } from './components/BalanceSheet'
+
+/* ------------------ Ledger ------------------ */
 export { ChartOfAccounts } from './components/ChartOfAccounts'
 export { Journal } from './components/Journal'
-export { Onboarding } from './components/Onboarding'
+
+/* ------------------ Account Operations ------------------ */
 export { Tasks } from './components/Tasks'
 
-// Views:
+/*
+======================= Composite Views =======================
+*/
 export { AccountingOverview } from './views/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts'
-export { Reports } from './views/Reports'
 export { GeneralLedgerView } from './views/GeneralLedger'
+export { Reports } from './views/Reports'
+export { ProfitAndLossView } from './components/ProfitAndLossView'
 
-// Hooks / contexts:
+/*
+======================= Hooks & Contexts =======================
+*/
 export { useLayerContext } from './contexts/LayerContext'
 export { useBankTransactionsContext } from './contexts/BankTransactionsContext'

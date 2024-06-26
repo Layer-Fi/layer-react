@@ -1,20 +1,26 @@
 import React, { RefObject, useContext, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
+import { BalanceSheet } from '../../components/BalanceSheet'
 import { Button, ButtonVariant, RetryButton } from '../../components/Button'
 import { Container } from '../../components/Container'
 import { Panel } from '../../components/Panel'
+import { PanelView } from '../../components/PanelView'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useLayerContext } from '../../contexts/LayerContext'
 import DownloadCloud from '../../icons/DownloadCloud'
+import { startOfDay } from 'date-fns'
 
 export interface ReportsProps {
   title?: string
 }
 
+type ReportType = 'profitAndLoss' | 'balanceSheet'
+type ReportOption = { value: ReportType; label: string }
 export interface ReportsPanelProps {
   containerRef: RefObject<HTMLDivElement>
+  openReport: ReportType
 }
 
 const DownloadButton = () => {
@@ -70,40 +76,55 @@ const DownloadButton = () => {
 
 export const Reports = ({ title = 'Reports' }: ReportsProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [activeTab, setActiveTab] = useState<ReportType>('profitAndLoss')
 
   return (
-    <ProfitAndLoss asContainer={false}>
-      <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
-        <div className='Layer__component Layer__header__actions'>
-          <Toggle
-            name='reports-tabs'
-            options={[
-              { value: 'profitAndLoss', label: 'Profit & loss' },
-              { value: 'balanceSheet', label: 'Balance sheet', disabled: true },
-            ]}
-            selected='profitAndLoss'
-            onChange={() => null}
-          />
-          <DownloadButton />
-        </div>
-        <Container name='reports' ref={containerRef}>
-          <ReportsPanel containerRef={containerRef} />
-        </Container>
-      </View>
-    </ProfitAndLoss>
+    <View title={title}>
+      <div className='Layer__component Layer__header__actions'>
+        <Toggle
+          name='reports-tabs'
+          options={
+            [
+              { value: 'profitAndLoss', label: 'Profit & Loss' },
+              { value: 'balanceSheet', label: 'Balance Sheet' },
+            ] as ReportOption[]
+          }
+          selected={activeTab}
+          onChange={opt => setActiveTab(opt.target.value as ReportType)}
+        />
+        <DownloadButton />
+      </div>
+      <Container name='reports' ref={containerRef}>
+        <ProfitAndLoss asContainer={false}>
+          <BalanceSheet effectiveDate={startOfDay(new Date())}>
+            <ReportsPanel containerRef={containerRef} openReport={activeTab} />
+          </BalanceSheet>
+        </ProfitAndLoss>
+      </Container>
+    </View>
   )
 }
 
-const ReportsPanel = ({ containerRef }: ReportsPanelProps) => {
+const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
   const { sidebarScope } = useContext(ProfitAndLoss.Context)
-
   return (
-    <Panel
-      sidebar={<ProfitAndLoss.DetailedCharts />}
-      sidebarIsOpen={Boolean(sidebarScope)}
-      parentRef={containerRef}
-    >
-      <ProfitAndLoss.Table asContainer={false} />
-    </Panel>
+    <>
+      {openReport === 'profitAndLoss' ? (
+        <PanelView
+          title={'Profit & Loss'}
+          headerControls={<ProfitAndLoss.DatePicker />}
+        >
+          <Panel
+            sidebar={<ProfitAndLoss.DetailedCharts showDatePicker={false} />}
+            sidebarIsOpen={Boolean(sidebarScope)}
+            parentRef={containerRef}
+          >
+            <ProfitAndLoss.Table asContainer={false} />
+          </Panel>
+        </PanelView>
+      ) : (
+        <BalanceSheet.View />
+      )}
+    </>
   )
 }

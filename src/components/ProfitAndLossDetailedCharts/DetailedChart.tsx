@@ -29,6 +29,7 @@ interface DetailedChartProps {
   sidebarScope?: SidebarScope
   date: number | Date
   isLoading?: boolean
+  showDatePicker?: boolean
 }
 
 export const DetailedChart = ({
@@ -39,6 +40,7 @@ export const DetailedChart = ({
   sidebarScope,
   date,
   isLoading,
+  showDatePicker = true,
 }: DetailedChartProps) => {
   const chartData = useMemo(() => {
     if (!filteredData) {
@@ -67,7 +69,7 @@ export const DetailedChart = ({
           {humanizeTitle(sidebarScope)}
         </Text>
 
-        <ProfitAndLossDatePicker />
+        {showDatePicker && <ProfitAndLossDatePicker />}
       </div>
 
       <div className='chart-container'>

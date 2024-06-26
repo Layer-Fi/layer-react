@@ -1,29 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
-import { DateRange } from '../../types'
 import { Button, ButtonVariant } from '../Button'
 import classNames from 'classnames'
-import { add, endOfMonth, format, startOfMonth } from 'date-fns'
+import { add, format, startOfDay, endOfDay, startOfMonth } from 'date-fns'
 
-interface DateMonthPickerProps {
-  dateRange: DateRange
-  changeDateRange: (dateRange: DateRange) => void
+interface DateDayPickerProps {
+  dateDay: Date
+  changeDateDay: (dateDay: Date) => void
   enableFutureDates?: boolean
-  minDate?: Date
   currentDateOption?: boolean
+  minDate?: Date
 }
 
-export const DateMonthPicker = ({
-  dateRange,
-  changeDateRange,
-  enableFutureDates = false,
+export const DateDayPicker = ({
+  dateDay,
+  changeDateDay,
   minDate,
+  enableFutureDates = false,
   currentDateOption = true,
-}: DateMonthPickerProps) => {
+}: DateDayPickerProps) => {
   const [isAnimating, setIsAnimating] = useState(false)
 
-  const [localDate, setLocalDate] = useState(dateRange.startDate)
+  const [localDate, setLocalDate] = useState(startOfDay(new Date()))
   const [nextOpacity, setNextOpacity] = useState(0)
   const [currentOpacity, setCurrentOpacity] = useState(1)
   const [activeCurrentButton, setActiveCurrentButton] = useState(true)
@@ -34,32 +33,25 @@ export const DateMonthPicker = ({
   })
 
   useEffect(() => {
-    if (
-      dateRange.startDate !== localDate &&
-      !isAnimating &&
-      activeCurrentButton
-    ) {
-      setLocalDate(dateRange.startDate)
+    if (dateDay !== localDate && !isAnimating && activeCurrentButton) {
+      setLocalDate(dateDay)
       setTransformStyle({ transform: 'translateX(33%)', transition: 'none' })
     }
-  }, [dateRange.startDate, localDate, isAnimating])
+  }, [dateDay, localDate, isAnimating])
 
-  const change = (monthsToAdd: number) => {
+  const change = (daysToAdd: number) => {
     if (isAnimating) return
     setIsAnimating(true)
     setNextOpacity(1)
 
-    const newDate = add(localDate, { months: monthsToAdd })
-    if (monthsToAdd === -1) {
+    const newDate = add(localDate, { days: daysToAdd })
+    if (daysToAdd === -1) {
       setCurrentOpacity(0)
     }
 
-    changeDateRange({
-      startDate: startOfMonth(newDate),
-      endDate: endOfMonth(newDate),
-    })
+    changeDateDay(startOfDay(newDate))
 
-    const translateXValue = monthsToAdd > 0 ? '0%' : '66%'
+    const translateXValue = daysToAdd > 0 ? '0%' : '66%'
     setTransformStyle({
       transform: `translateX(${translateXValue})`,
       transition: 'transform 0.4s ease',
@@ -78,22 +70,16 @@ export const DateMonthPicker = ({
     }, 300)
   }
 
-  const currentLabel = format(localDate, 'LLLL, y')
-  const prevLabel = format(add(localDate, { months: -1 }), 'LLLL, y')
-  const nextLabel = format(add(localDate, { months: 1 }), 'LLLL, y')
+  const currentLabel = format(localDate, 'MMM d, yyyy')
+  const prevLabel = format(add(localDate, { days: -1 }), 'MMM d, yyyy')
+  const nextLabel = format(add(localDate, { days: 1 }), 'MMM d, yyyy')
 
-  const today = startOfMonth(Date.now())
-  const isTodayOrAfter = Boolean(
-    localDate.getFullYear() === today.getFullYear() &&
-      localDate.getMonth() === today.getMonth(),
-  )
+  const today = startOfDay(new Date())
+  const isTodayOrAfter = localDate >= today
 
   const setCurrentDate = () => {
     setLocalDate(today)
-    changeDateRange({
-      startDate: startOfMonth(today),
-      endDate: endOfMonth(today),
-    })
+    changeDateDay(startOfDay(today))
   }
 
   useEffect(() => {
@@ -104,21 +90,16 @@ export const DateMonthPicker = ({
     }
   }, [localDate])
 
-  const isBeforeMinDate =
-    minDate &&
-    Boolean(
-      localDate.getFullYear() === minDate.getFullYear() &&
-        localDate.getMonth() === minDate.getMonth(),
-    )
+  const isBeforeMinDate = minDate && localDate < startOfDay(minDate)
 
-  const DateMonthPickerWrapperClassName = classNames(
+  const DateDayPickerWrapperClassName = classNames(
     'Layer__date-month-picker__wrapper',
     currentDateOption &&
       'Layer__date-month-picker__wrapper--current-date-option',
   )
 
   return (
-    <div className={DateMonthPickerWrapperClassName}>
+    <div className={DateDayPickerWrapperClassName}>
       <div className='Layer__date-month-picker'>
         <div
           className='Layer__date-month-picker__labels-container'
@@ -139,7 +120,7 @@ export const DateMonthPicker = ({
           </span>
         </div>
         <button
-          aria-label='View Previous Month'
+          aria-label='View Previous Day'
           className={classNames(
             'Layer__date-month-picker__button',
             isBeforeMinDate && 'Layer__date-month-picker__button--disabled',
@@ -153,7 +134,7 @@ export const DateMonthPicker = ({
           />
         </button>
         <button
-          aria-label='View Next Month'
+          aria-label='View Next Day'
           className={classNames(
             'Layer__date-month-picker__button',
             !enableFutureDates && isTodayOrAfter
@@ -177,7 +158,7 @@ export const DateMonthPicker = ({
           variant={ButtonVariant.secondary}
           disabled={activeCurrentButton}
         >
-          Current
+          Today
         </Button>
       )}
     </div>

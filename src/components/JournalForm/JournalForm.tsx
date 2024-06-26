@@ -115,6 +115,36 @@ export const JournalForm = ({ config }: { config: JournalConfig }) => {
           />
         </InputGroup>
       </div>
+      <div className='Layer__journal__bottom-actions'>
+        <Button
+          type='button'
+          onClick={cancelForm}
+          variant={ButtonVariant.secondary}
+          disabled={sendingForm}
+        >
+          Cancel
+        </Button>
+        {apiError && (
+          <RetryButton
+            type='submit'
+            processing={sendingForm}
+            error={'Check connection and retry in few seconds.'}
+            disabled={sendingForm}
+          >
+            Retry
+          </RetryButton>
+        )}
+        {!apiError && (
+          <SubmitButton
+            type='submit'
+            noIcon={true}
+            active={true}
+            disabled={sendingForm}
+          >
+            Save
+          </SubmitButton>
+        )}
+      </div>
     </form>
   )
 }
