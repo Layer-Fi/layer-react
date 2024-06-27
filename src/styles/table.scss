@@ -152,6 +152,16 @@
   }
 }
 
+@container (min-width: 1400px) {
+  .Layer__table tr td:first-child .Layer__table-cell-content,
+  .Layer__table tr td:last-child .Layer__table-cell-content,
+  .Layer__table tr th:first-child.Layer__table-header,
+  .Layer__table tr th:last-child.Layer__table-header {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+  }
+}
+
 .Layer__table-row--hidden .Layer__table-cell {
   border-top-width: 0;
 }

@@ -60,9 +60,7 @@ const BalanceSheetView = ({
               <Loader />
             </div>
           ) : (
-            <>
-              <BalanceSheetTable data={data} config={BALANCE_SHEET_ROWS} />
-            </>
+            <BalanceSheetTable data={data} config={BALANCE_SHEET_ROWS} />
           )}
         </PanelView>
       </Container>

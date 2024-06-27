@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars } from '../../models/Money'
@@ -11,6 +11,7 @@ type Props = {
   lineItem?: LineItem | null
   variant?: string
   summarize?: boolean
+  defaultExpanded?: boolean
 }
 
 export const StatementOfCashFlowRow = ({
@@ -19,13 +20,14 @@ export const StatementOfCashFlowRow = ({
   maxDepth = 10,
   variant = 'default',
   summarize = true,
+  defaultExpanded = false,
 }: Props) => {
   if (!lineItem) {
     return null
   }
 
   const { value, display_name, line_items } = lineItem
-  const { isOpen, setIsOpen } = useTableExpandRow(0, false)
+  const { isOpen, setIsOpen } = useTableExpandRow(0, defaultExpanded)
   const amount = value || 0
   const isPositive = amount >= 0
   const amountString = centsToDollars(Math.abs(amount))
@@ -38,31 +40,35 @@ export const StatementOfCashFlowRow = ({
     setIsOpen(!isOpen)
   }
 
+  useEffect(() => {
+    setIsOpen(defaultExpanded)
+  }, [])
+
   const rowClassNames = classNames([
-    'Layer__statement-of-cash-row',
-    `Layer__statement-of-cash-row--depth-${depth}`,
-    variant && `Layer__statement-of-cash-row--variant-${variant}`,
+    'Layer__statement-of-cash-flow-row',
+    `Layer__statement-of-cash-flow-row--depth-${depth}`,
+    variant && `Layer__statement-of-cash-flow-row--variant-${variant}`,
     displayChildren &&
-      `Layer__statement-of-cash-row--display-children-${
+      `Layer__statement-of-cash-flow-row--display-children-${
         !!line_items && depth < maxDepth
       }`,
     ,
-    isOpen && 'Layer__statement-of-cash-row--expanded',
+    isOpen && 'Layer__statement-of-cash-flow-row--expanded',
     isOpen &&
       depth + 1 >= maxDepth &&
-      'Layer__statement-of-cash-row--max-depth',
+      'Layer__statement-of-cash-flow-row--max-depth',
   ])
 
   const labelClassNames = classNames([
     'Layer__table-cell',
-    'Layer__statement-of-cash-cell__label',
+    'Layer__statement-of-cash-flow-cell__label',
   ])
 
   const valueClassNames = classNames([
     'Layer__table-cell',
-    'Layer__statement-of-cash-cell__value',
-    isPositive && 'Layer__statement-of-cash-cell__value--positive',
-    !isPositive && 'Layer__statement-of-cash-cell__value--negative',
+    'Layer__statement-of-cash-flow-cell__value',
+    isPositive && 'Layer__statement-of-cash-flow-cell__value--positive',
+    !isPositive && 'Layer__statement-of-cash-flow-cell__value--negative',
   ])
 
   if (canGoDeeper && hasChildren) {
