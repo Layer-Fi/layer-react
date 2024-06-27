@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
-import X from '../../icons/X'
+import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
 import {
@@ -15,10 +15,11 @@ import {
 } from '../../types/ledger_accounts'
 import { humanizeEnum } from '../../utils/format'
 import { Badge, BadgeVariant } from '../Badge'
-import { BackButton, IconButton } from '../Button'
+import { BackButton, Button, ButtonVariant } from '../Button'
 import { Card } from '../Card'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
+import { Text, TextWeight } from '../Typography'
 import { is } from 'date-fns/locale'
 
 /*
@@ -162,14 +163,19 @@ export const LedgerAccountEntryDetails = () => {
     <div className='Layer__ledger-account__entry-details'>
       <div className='Layer__ledger-account__entry-details__back-btn'>
         <BackButton onClick={() => closeSelectedEntry()} />
+        <div className='Layer__ledger-account__entry-details__title-container'>
+          <Text weight={TextWeight.bold}>Transaction details</Text>
+        </div>
       </div>
       <DetailsList
         title='Transaction source'
         actions={
-          <IconButton
-            icon={<X />}
-            onClick={() => closeSelectedEntry()}
-            className='Layer__hidden-sm Layer__hidden-xs'
+          <Button
+            rightIcon={<XIcon />}
+            iconOnly={true}
+            onClick={closeSelectedEntry}
+            variant={ButtonVariant.secondary}
+            className='Layer__details-list__close-btn'
           />
         }
       >

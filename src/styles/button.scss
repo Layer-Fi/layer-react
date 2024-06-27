@@ -31,7 +31,9 @@
     border-radius: 4px;
     box-sizing: border-box;
     transition: all 150ms ease-out;
-    padding: var(--spacing-2xs) var(--spacing-sm);
+    padding: 0;
+    width: 36px;
+    height: 36px;
   }
 
   &.Layer__btn--full-width {

@@ -20,10 +20,6 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
   justify-content: flex-start;
   gap: var(--spacing-md);
   align-items: center;
-
-  .title {
-    font-size: 24px;
-  }
 }
 
 @container (max-width: 1023px) and (min-width: 768px) {
@@ -38,7 +34,7 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 .Layer__profit-and-loss-detailed-charts__head {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2xs);
+  gap: var(--spacing-4xs);
 
   .title {
     color: var(--color-base-800);
