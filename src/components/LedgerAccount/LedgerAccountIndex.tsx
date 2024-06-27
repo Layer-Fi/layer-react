@@ -16,7 +16,7 @@ import { LedgerAccountEntryDetails } from '../LedgerAccountEntryDetails'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
 import { Panel } from '../Panel'
-import { Text, TextWeight } from '../Typography'
+import { Text, TextSize, TextWeight } from '../Typography'
 import { LedgerAccountRow } from './LedgerAccountRow'
 import classNames from 'classnames'
 
@@ -98,20 +98,20 @@ export const LedgerAccount = ({
             >
               {entry?.name ?? ''}
             </Text>
-          </div>
-          <div className='Layer__ledger-account__balance-container'>
-            <Text
-              weight={TextWeight.bold}
-              className='Layer__ledger-account__balance-label'
-            >
-              Current balance
-            </Text>
-            <Text
-              weight={TextWeight.bold}
-              className='Layer__ledger-account__balance-value'
-            >
-              ${centsToDollars(entry?.balance || 0)}
-            </Text>
+            <div className='Layer__ledger-account__balance-container'>
+              <Text
+                className='Layer__ledger-account__balance-label'
+                size={TextSize.sm}
+              >
+                Current balance
+              </Text>
+              <Text
+                className='Layer__ledger-account__balance-value'
+                size={TextSize.sm}
+              >
+                ${centsToDollars(entry?.balance || 0)}
+              </Text>
+            </div>
           </div>
         </div>
         <table className='Layer__table Layer__table--hover-effect Layer__ledger-account-table'>

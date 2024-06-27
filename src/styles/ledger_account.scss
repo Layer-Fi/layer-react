@@ -25,24 +25,20 @@
 
 .Layer__ledger-account__header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   padding: var(--spacing-xl);
   padding-bottom: var(--spacing-md);
+  gap: var(--spacing-md);
   align-items: flex-start;
   justify-content: flex-start;
 }
 
 .Layer__ledger-account__title-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   width: 100%;
-  padding-top: var(--spacing-md);
-  padding-bottom: var(--spacing-3xs);
-}
-
-.Layer__ledger-account__title {
-  font-size: 24px;
 }
 
 .Layer__ledger-account__balance-container {
@@ -53,6 +49,17 @@
 
 .Layer__ledger-account__balance-label {
   color: var(--color-base-600);
+}
+
+.Layer__ledger-account__entry-details__back-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+}
+
+.Layer__ledger-account__entry-details__title-container > .Layer__text {
+  font-size: 24px;
 }
 
 .Layer__ledger-account__entry-details__line-items {

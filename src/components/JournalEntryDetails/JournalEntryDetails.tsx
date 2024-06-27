@@ -1,11 +1,11 @@
 import React, { useContext, useMemo } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
-import X from '../../icons/X'
+import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
 import { humanizeEnum } from '../../utils/format'
 import { Badge, BadgeVariant } from '../Badge'
-import { CloseButton, IconButton } from '../Button'
+import { Button, ButtonVariant } from '../Button'
 import { Card } from '../Card'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
@@ -33,7 +33,13 @@ export const JournalEntryDetails = () => {
       <DetailsList
         title='Transaction source'
         actions={
-          <IconButton icon={<X />} onClick={() => closeSelectedEntry()} />
+          <Button
+            rightIcon={<XIcon />}
+            iconOnly={true}
+            onClick={closeSelectedEntry}
+            className='Layer__details-list__close-btn'
+            variant={ButtonVariant.secondary}
+          />
         }
       >
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
