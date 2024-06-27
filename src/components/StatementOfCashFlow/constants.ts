@@ -1,4 +1,4 @@
-export const STATEMENT_OF_CASH_ROWS = [
+export const STATEMENT_OF_CASH_FLOW_ROWS = [
   {
     name: 'FinancingActivities',
     displayName: 'Financing Activities',

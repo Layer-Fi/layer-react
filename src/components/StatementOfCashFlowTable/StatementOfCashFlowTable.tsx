@@ -1,29 +1,31 @@
 import React from 'react'
-import { StatementOfCash } from '../../types'
+import { StatementOfCashFlow } from '../../types'
 import { LineItem } from '../../types/line_item'
-import { StatementOfCashRow } from '../StatementOfCashRow'
+import { StatementOfCashFlowRow } from '../StatementOfCashFlowRow'
 
-type StatementOfCashRowProps = {
+type StatementOfCashFlowRowProps = {
   name: string
   displayName: string
   lineItem: string
 }
 
-export const StatementOfCashTable = ({
+export const StatementOfCashFlowTable = ({
   data,
   config,
 }: {
-  data: StatementOfCash
-  config: StatementOfCashRowProps[]
+  data: StatementOfCashFlow
+  config: StatementOfCashFlowRowProps[]
 }) => {
   return (
     <table className='Layer__table Layer__table--hover-effect Layer__statement-of-cash__table'>
       <tbody>
         {config.map((row, idx) => {
           return (
-            <StatementOfCashRow
+            <StatementOfCashFlowRow
               key={'statement-of-cash-row-' + idx + row.name}
-              lineItem={data[row.lineItem as keyof StatementOfCash] as LineItem}
+              lineItem={
+                data[row.lineItem as keyof StatementOfCashFlow] as LineItem
+              }
               summarize={true}
             />
           )

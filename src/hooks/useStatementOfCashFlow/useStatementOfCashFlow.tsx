@@ -1,20 +1,20 @@
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { StatementOfCash } from '../../types'
+import { StatementOfCashFlow } from '../../types'
 import { format, startOfDay } from 'date-fns'
 import useSWR from 'swr'
 
-type UseStatementOfCash = (
+type UseStatementOfCashFlow = (
   startDate?: Date,
   endDate?: Date,
 ) => {
-  data: StatementOfCash | undefined
+  data: StatementOfCashFlow | undefined
   isLoading: boolean
   error: unknown
   refetch: () => void
 }
 
-export const useStatementOfCash: UseStatementOfCash = (
+export const useStatementOfCashFlow: UseStatementOfCashFlow = (
   startDate: Date = new Date(),
   endDate: Date = new Date(),
 ) => {
@@ -31,7 +31,7 @@ export const useStatementOfCash: UseStatementOfCash = (
       endDateString &&
       auth?.access_token &&
       `statement-of-cash-${businessId}-${startDateString}-${endDateString}`,
-    Layer.getStatementOfCash(apiUrl, auth?.access_token, {
+    Layer.getStatementOfCashFlow(apiUrl, auth?.access_token, {
       params: {
         businessId,
         startDate: startDateString,

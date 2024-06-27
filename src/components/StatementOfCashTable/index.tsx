@@ -1,1 +1,0 @@
-export { StatementOfCashTable } from './StatementOfCashTable'

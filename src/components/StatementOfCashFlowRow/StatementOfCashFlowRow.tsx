@@ -13,7 +13,7 @@ type Props = {
   summarize?: boolean
 }
 
-export const StatementOfCashRow = ({
+export const StatementOfCashFlowRow = ({
   lineItem,
   depth = 0,
   maxDepth = 10,
@@ -88,7 +88,7 @@ export const StatementOfCashRow = ({
             canGoDeeper &&
             hasChildren &&
             (line_items || []).map((line_item, idx) => (
-              <StatementOfCashRow
+              <StatementOfCashFlowRow
                 key={`${line_item.display_name}_${idx}`}
                 lineItem={line_item}
                 depth={depth + 1}
@@ -96,7 +96,7 @@ export const StatementOfCashRow = ({
               />
             ))}
           {summarize && (
-            <StatementOfCashRow
+            <StatementOfCashFlowRow
               key={display_name}
               lineItem={{ value, display_name: `Total of ${display_name}` }}
               variant='summation'

@@ -1,6 +1,6 @@
 import { LineItem } from './line_item'
 
-export interface StatementOfCash {
+export interface StatementOfCashFlow {
   business_id: string
   type: 'Cashflow_Statement'
   start_date: string

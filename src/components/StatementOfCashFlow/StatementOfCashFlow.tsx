@@ -1,32 +1,35 @@
 import React, { useState } from 'react'
-import { StatementOfCashContext } from '../../contexts/StatementOfCashContext'
+import { StatementOfCashFlowContext } from '../../contexts/StatementOfCashContext'
 import { TableExpandProvider } from '../../contexts/TableExpandContext'
-import { useStatementOfCash } from '../../hooks/useStatementOfCash'
+import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow'
 import { Container } from '../Container'
 import { DateRangeInput } from '../Input'
 import { Loader } from '../Loader'
 import { PanelView } from '../PanelView'
-import { StatementOfCashTable } from '../StatementOfCashTable'
-import { STATEMENT_OF_CASH_ROWS } from './constants'
+import { StatementOfCashFlowTable } from '../StatementOfCashFlowTable'
+import { STATEMENT_OF_CASH_FLOW_ROWS } from './constants'
 import { startOfDay, subWeeks } from 'date-fns'
 
-const COMPONENT_NAME = 'statement-of-cash'
+const COMPONENT_NAME = 'statement-of-cash-flow'
 
-export const StatementOfCash = () => {
-  const cashContextData = useStatementOfCash()
+export const StatementOfCashFlow = () => {
+  const cashContextData = useStatementOfCashFlow()
   return (
-    <StatementOfCashContext.Provider value={cashContextData}>
-      <StatementOfCashView />
-    </StatementOfCashContext.Provider>
+    <StatementOfCashFlowContext.Provider value={cashContextData}>
+      <StatementOfCashFlowView />
+    </StatementOfCashFlowContext.Provider>
   )
 }
 
-const StatementOfCashView = () => {
+const StatementOfCashFlowView = () => {
   const [startDate, setStartDate] = useState(
     startOfDay(subWeeks(new Date(), 4)),
   )
   const [endDate, setEndDate] = useState(startOfDay(new Date()))
-  const { data, isLoading, refetch } = useStatementOfCash(startDate, endDate)
+  const { data, isLoading, refetch } = useStatementOfCashFlow(
+    startDate,
+    endDate,
+  )
 
   const handleDateChange = (dates: [Date | null, Date | null]) => {
     if (dates[0]) {
@@ -45,7 +48,7 @@ const StatementOfCashView = () => {
     <TableExpandProvider>
       <Container name={COMPONENT_NAME}>
         <PanelView
-          title='Statement of cash'
+          title='Statement of cash flow'
           headerControls={
             <>
               <DateRangeInput
@@ -61,7 +64,10 @@ const StatementOfCashView = () => {
               <Loader />
             </div>
           ) : (
-            <StatementOfCashTable data={data} config={STATEMENT_OF_CASH_ROWS} />
+            <StatementOfCashFlowTable
+              data={data}
+              config={STATEMENT_OF_CASH_FLOW_ROWS}
+            />
           )}
         </PanelView>
       </Container>

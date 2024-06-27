@@ -6,7 +6,7 @@ import { Container } from '../../components/Container'
 import { Panel } from '../../components/Panel'
 import { PanelView } from '../../components/PanelView'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
-import { StatementOfCash } from '../../components/StatementOfCash'
+import { StatementOfCashFlow } from '../../components/StatementOfCashFlow'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useLayerContext } from '../../contexts/LayerContext'
@@ -128,7 +128,7 @@ const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
         </PanelView>
       )}
       {openReport === 'balanceSheet' && <BalanceSheet />}
-      {openReport === 'statementOfCashFlow' && <StatementOfCash />}
+      {openReport === 'statementOfCashFlow' && <StatementOfCashFlow />}
     </>
   )
 }
