@@ -16,6 +16,7 @@ export const ProfitAndLossDatePicker = () => {
       dateRange={dateRange}
       changeDateRange={changeDateRange}
       minDate={minDate}
+      responsive={false}
     />
   )
 }

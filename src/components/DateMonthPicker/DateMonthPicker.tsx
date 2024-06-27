@@ -12,6 +12,7 @@ interface DateMonthPickerProps {
   enableFutureDates?: boolean
   minDate?: Date
   currentDateOption?: boolean
+  responsive?: boolean
 }
 
 export const DateMonthPicker = ({
@@ -20,6 +21,7 @@ export const DateMonthPicker = ({
   enableFutureDates = false,
   minDate,
   currentDateOption = true,
+  responsive = true,
 }: DateMonthPickerProps) => {
   const [isAnimating, setIsAnimating] = useState(false)
 
@@ -115,6 +117,7 @@ export const DateMonthPicker = ({
     'Layer__date-month-picker__wrapper',
     currentDateOption &&
       'Layer__date-month-picker__wrapper--current-date-option',
+    responsive && 'Layer__date-month-picker--responsive',
   )
 
   return (
