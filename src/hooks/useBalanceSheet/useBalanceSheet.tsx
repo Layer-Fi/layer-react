@@ -8,13 +8,14 @@ type UseBalanceSheet = (date?: Date) => {
   data: BalanceSheet | undefined
   isLoading: boolean
   error: unknown
+  refetch: () => void
 }
 
 export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
   const { auth, businessId, apiUrl } = useLayerContext()
   const dateString = format(startOfDay(date), "yyyy-MM-dd'T'HH:mm:ssXXX")
 
-  const { data, isLoading, error } = useSWR(
+  const { data, isLoading, error, mutate } = useSWR(
     businessId &&
       dateString &&
       auth?.access_token &&
@@ -27,5 +28,9 @@ export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
     }),
   )
 
-  return { data: data?.data, isLoading, error }
+  const refetch = () => {
+    mutate()
+  }
+
+  return { data: data?.data, isLoading, error, refetch }
 }

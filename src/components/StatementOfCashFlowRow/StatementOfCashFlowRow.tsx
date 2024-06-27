@@ -14,11 +14,11 @@ type Props = {
   defaultExpanded?: boolean
 }
 
-export const BalanceSheetRow = ({
+export const StatementOfCashFlowRow = ({
   lineItem,
   depth = 0,
-  maxDepth = 4,
-  variant,
+  maxDepth = 10,
+  variant = 'default',
   summarize = true,
   defaultExpanded = false,
 }: Props) => {
@@ -35,48 +35,45 @@ export const BalanceSheetRow = ({
   const hasChildren = (line_items?.length ?? 0) > 0
   const displayChildren = hasChildren && canGoDeeper
 
-  useEffect(() => {
-    setIsOpen(defaultExpanded)
-  }, [])
-
   const toggleExpanded = () => {
     if (variant === 'summation' || !displayChildren) return
     setIsOpen(!isOpen)
   }
 
+  useEffect(() => {
+    setIsOpen(defaultExpanded)
+  }, [])
+
   const rowClassNames = classNames([
-    'Layer__balance-sheet-row',
-    `Layer__balance-sheet-row--depth-${depth}`,
-    variant && `Layer__balance-sheet-row--variant-${variant}`,
+    'Layer__statement-of-cash-flow-row',
+    `Layer__statement-of-cash-flow-row--depth-${depth}`,
+    variant && `Layer__statement-of-cash-flow-row--variant-${variant}`,
     displayChildren &&
-      `Layer__balance-sheet-row--display-children-${
+      `Layer__statement-of-cash-flow-row--display-children-${
         !!line_items && depth < maxDepth
       }`,
     ,
-    isOpen && 'Layer__balance-sheet-row--expanded',
-    isOpen && depth + 1 >= maxDepth && 'Layer__balance-sheet-row--max-depth',
+    isOpen && 'Layer__statement-of-cash-flow-row--expanded',
+    isOpen &&
+      depth + 1 >= maxDepth &&
+      'Layer__statement-of-cash-flow-row--max-depth',
   ])
 
   const labelClassNames = classNames([
     'Layer__table-cell',
-    'Layer__balance-sheet-cell__label',
+    'Layer__statement-of-cash-flow-cell__label',
   ])
 
   const valueClassNames = classNames([
     'Layer__table-cell',
-    'Layer__balance-sheet-cell__value',
-    isPositive && 'Layer__balance-sheet-cell__value--positive',
-    !isPositive && 'Layer__balance-sheet-cell__value--negative',
+    'Layer__statement-of-cash-flow-cell__value',
+    isPositive && 'Layer__statement-of-cash-flow-cell__value--positive',
+    !isPositive && 'Layer__statement-of-cash-flow-cell__value--negative',
   ])
 
   if (canGoDeeper && hasChildren) {
     return (
       <>
-        {depth === 0 && displayChildren && (
-          <tr className='Layer__table__empty-row'>
-            <td colSpan={2} />
-          </tr>
-        )}
         <tr className={rowClassNames} onClick={toggleExpanded}>
           <td className={labelClassNames}>
             <span className='Layer__table-cell__content-wrapper'>
@@ -97,7 +94,7 @@ export const BalanceSheetRow = ({
             canGoDeeper &&
             hasChildren &&
             (line_items || []).map((line_item, idx) => (
-              <BalanceSheetRow
+              <StatementOfCashFlowRow
                 key={`${line_item.display_name}_${idx}`}
                 lineItem={line_item}
                 depth={depth + 1}
@@ -105,7 +102,7 @@ export const BalanceSheetRow = ({
               />
             ))}
           {summarize && (
-            <BalanceSheetRow
+            <StatementOfCashFlowRow
               key={display_name}
               lineItem={{ value, display_name: `Total of ${display_name}` }}
               variant='summation'
@@ -119,14 +116,15 @@ export const BalanceSheetRow = ({
   }
 
   return (
-    <tr className={rowClassNames} onClick={toggleExpanded}>
-      <td className={labelClassNames}>
-        <span className='Layer__table-cell__active' />
-        <span className='Layer__table-cell-content'>{display_name}</span>
-      </td>
-      <td className={valueClassNames}>
-        <span className='Layer__table-cell-content'>{amountString}</span>
-      </td>
-    </tr>
+    <>
+      <tr className={rowClassNames} onClick={toggleExpanded}>
+        <td className={labelClassNames}>
+          <span className='Layer__table-cell-content'>{display_name}</span>
+        </td>
+        <td className={valueClassNames}>
+          <span className='Layer__table-cell-content'>{amountString}</span>
+        </td>
+      </tr>
+    </>
   )
 }

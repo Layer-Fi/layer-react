@@ -45,6 +45,10 @@
   z-index: 99;
 }
 
+.Layer__datepicker input {
+  text-align: center;
+}
+
 .Layer__datepicker__time {
   input {
     max-width: 100px;
@@ -56,7 +60,20 @@
 }
 
 .Layer__datepicker__popper {
+  z-index: 99;
   border-radius: 8px;
+
+  .react-datepicker__day--in-range,
+  .react-datepicker__day--in-selecting-range {
+    background-color: var(--color-base-200);
+    color: var(--color-base-800);
+  }
+
+  .react-datepicker__day--range-end {
+    background-color: var(--color-base-800);
+    color: var(--color-base-100);
+  }
+
   .react-datepicker__triangle {
     display: none;
   }
@@ -198,5 +215,26 @@
         border-bottom: 1px solid var(--color-base-200);
       }
     }
+  }
+}
+
+.react-datepicker__children-container {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.Layer__datepicker__popper__custom-footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: var(--spacing-md) var(--spacing-xs);
+  border-top: 1px solid var(--color-base-200);
+  .Layer__text-btn {
+    padding: var(--spacing-xs) var(--spacing-xs);
+    color: var(--color-base-800);
+    font-weight: 460;
+    text-decoration: none;
   }
 }

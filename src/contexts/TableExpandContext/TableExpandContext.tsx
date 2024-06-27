@@ -20,7 +20,7 @@ interface TableExpandProviderProps {
 export const TableExpandProvider: React.FC<TableExpandProviderProps> = ({
   children,
 }) => {
-  const [tableExpandState, setTableExpandState] = useState(true)
+  const [tableExpandState, setTableExpandState] = useState(false)
 
   const toggleTableExpandState = () => {
     setTableExpandState(prevState => !prevState)
