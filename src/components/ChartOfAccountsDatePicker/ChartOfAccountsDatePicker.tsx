@@ -6,6 +6,10 @@ export const ChartOfAccountsDatePicker = () => {
   const { changeDateRange, dateRange } = useContext(ChartOfAccountsContext)
 
   return (
-    <DateMonthPicker dateRange={dateRange} changeDateRange={changeDateRange} />
+    <DateMonthPicker
+      dateRange={dateRange}
+      changeDateRange={changeDateRange}
+      responsive={false}
+    />
   )
 }
