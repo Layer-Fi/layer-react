@@ -49,7 +49,7 @@ export const LinkedAccountsContent = ({
             text: 'Confirm account',
             config: [
               {
-                name: 'Oops... this is a duplicate account!',
+                name: 'Mark as a duplicate account',
                 action: async () => {
                   // TODO: trigger some sort of loading spinner here
                   await denyAccount(account.external_account_source, account.id)
@@ -57,7 +57,7 @@ export const LinkedAccountsContent = ({
                 },
               },
               {
-                name: 'This is not a duplicate account',
+                name: 'Mark as not a duplicate account',
                 action: async () => {
                   // TODO: trigger some sort of loading spinner here
                   await confirmAccount(
