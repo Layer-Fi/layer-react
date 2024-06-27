@@ -94,7 +94,6 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
           selected={activeTab}
           onChange={opt => setActiveTab(opt.target.value as ReportType)}
         />
-        <DownloadButton />
       </div>
       <Container name='reports' ref={containerRef}>
         <ProfitAndLoss asContainer={false}>
@@ -112,7 +111,12 @@ const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
       {openReport === 'profitAndLoss' && (
         <PanelView
           title={'Profit & Loss'}
-          headerControls={<ProfitAndLoss.DatePicker />}
+          headerControls={
+            <>
+              <ProfitAndLoss.DatePicker />
+              <DownloadButton />
+            </>
+          }
         >
           <Panel
             sidebar={<ProfitAndLoss.DetailedCharts showDatePicker={false} />}

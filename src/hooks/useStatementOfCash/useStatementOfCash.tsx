@@ -11,6 +11,7 @@ type UseStatementOfCash = (
   data: StatementOfCash | undefined
   isLoading: boolean
   error: unknown
+  refetch: () => void
 }
 
 export const useStatementOfCash: UseStatementOfCash = (
@@ -24,7 +25,7 @@ export const useStatementOfCash: UseStatementOfCash = (
   )
   const endDateString = format(startOfDay(endDate), "yyyy-MM-dd'T'HH:mm:ssXXX")
 
-  const { data, isLoading, error } = useSWR(
+  const { data, isLoading, error, mutate } = useSWR(
     businessId &&
       startDateString &&
       endDateString &&
@@ -39,5 +40,9 @@ export const useStatementOfCash: UseStatementOfCash = (
     }),
   )
 
-  return { data: data?.data, isLoading, error }
+  const refetch = () => {
+    mutate()
+  }
+
+  return { data: data?.data, isLoading, error, refetch }
 }

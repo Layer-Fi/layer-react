@@ -3,6 +3,10 @@
   border-radius: var(--corner-radius);
   background-color: var(--background-color);
 
+  .Layer__panel_view-header__controls {
+    gap: 0;
+  }
+
   * {
     font-family: var(--font-family);
     font-feature-settings:

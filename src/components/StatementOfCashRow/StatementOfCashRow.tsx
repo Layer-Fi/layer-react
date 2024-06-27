@@ -68,11 +68,6 @@ export const StatementOfCashRow = ({
   if (canGoDeeper && hasChildren) {
     return (
       <>
-        {depth === 0 && displayChildren && (
-          <tr className='Layer__table__empty-row'>
-            <td colSpan={2} />
-          </tr>
-        )}
         <tr className={rowClassNames} onClick={toggleExpanded}>
           <td className={labelClassNames}>
             <span className='Layer__table-cell__content-wrapper'>

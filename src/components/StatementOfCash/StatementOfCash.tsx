@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from 'react'
+import React, { useState } from 'react'
 import { StatementOfCashContext } from '../../contexts/StatementOfCashContext'
 import { TableExpandProvider } from '../../contexts/TableExpandContext'
 import { useStatementOfCash } from '../../hooks/useStatementOfCash'
@@ -23,10 +23,10 @@ export const StatementOfCash = () => {
 
 const StatementOfCashView = () => {
   const [startDate, setStartDate] = useState(
-    startOfDay(subWeeks(new Date(), 2)),
+    startOfDay(subWeeks(new Date(), 4)),
   )
   const [endDate, setEndDate] = useState(startOfDay(new Date()))
-  const { data, isLoading } = useStatementOfCash(startDate, endDate)
+  const { data, isLoading, refetch } = useStatementOfCash(startDate, endDate)
 
   const handleDateChange = (dates: [Date | null, Date | null]) => {
     if (dates[0]) {
@@ -35,18 +35,23 @@ const StatementOfCashView = () => {
     if (dates[1]) {
       setEndDate(startOfDay(dates[1]))
     }
+
+    if (dates[0] && dates[1]) {
+      refetch()
+    }
   }
 
   return (
     <TableExpandProvider>
       <Container name={COMPONENT_NAME}>
         <PanelView
-          title='Statement Of Cash'
+          title='Statement of cash'
           headerControls={
             <>
               <DateRangeInput
                 selected={[startDate, endDate]}
                 onChange={dates => handleDateChange(dates)}
+                dateFormat='MMM d'
               />
             </>
           }
