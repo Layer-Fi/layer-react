@@ -36,6 +36,11 @@
     }
 
     &.Layer__balance-sheet-row--depth-0 {
+      &:not(.Layer__balance-sheet-row--display-children-true) {
+        .Layer__balance-sheet-cell__label {
+          padding-left: 16px;
+        }
+      }
       .Layer__balance-sheet-cell__label {
         .Layer__table-cell-content {
           font-size: var(--text-lg);
@@ -48,9 +53,12 @@
     &.Layer__balance-sheet-row--depth-1 {
       &:not(.Layer__balance-sheet-row--display-children-true) {
         background-color: var(--color-base-50);
+        .Layer__balance-sheet-cell__label {
+          padding-left: calc(50px - var(--spacing-sm));
+        }
       }
       .Layer__balance-sheet-cell__label {
-        padding-left: calc(40px - var(--spacing-sm));
+        padding-left: calc(34px - var(--spacing-sm));
       }
       .Layer__table-cell-content {
         font-size: var(--text-md);
@@ -62,9 +70,46 @@
     &.Layer__balance-sheet-row--depth-2 {
       &:not(.Layer__balance-sheet-row--display-children-true) {
         background-color: var(--color-base-50);
+        .Layer__balance-sheet-cell__label {
+          padding-left: calc(80px - var(--spacing-sm));
+        }
       }
       .Layer__balance-sheet-cell__label {
-        padding-left: calc(80px - var(--spacing-sm));
+        padding-left: calc(64px - var(--spacing-sm));
+      }
+      .Layer__table-cell-content {
+        font-size: var(--text-md);
+        font-weight: 460;
+        color: var(--text-color-secondary);
+      }
+    }
+
+    &.Layer__balance-sheet-row--depth-3 {
+      &:not(.Layer__balance-sheet-row--display-children-true) {
+        background-color: var(--color-base-50);
+        .Layer__balance-sheet-cell__label {
+          padding-left: calc(104px - var(--spacing-sm));
+        }
+      }
+      .Layer__balance-sheet-cell__label {
+        padding-left: calc(88px - var(--spacing-sm));
+      }
+      .Layer__table-cell-content {
+        font-size: var(--text-md);
+        font-weight: 460;
+        color: var(--text-color-secondary);
+      }
+    }
+
+    &.Layer__balance-sheet-row--depth-4 {
+      &:not(.Layer__balance-sheet-row--display-children-true) {
+        background-color: var(--color-base-50);
+        .Layer__balance-sheet-cell__label {
+          padding-left: calc(130px - var(--spacing-sm));
+        }
+      }
+      .Layer__balance-sheet-cell__label {
+        padding-left: calc(114px - var(--spacing-sm));
       }
       .Layer__table-cell-content {
         font-size: var(--text-md);
@@ -83,7 +128,7 @@
     }
 
     &.Layer__balance-sheet-row--variant-summation {
-      background: var(--color-base-100);
+      background: var(--color-base-100) !important;
       .Layer__table-cell-content {
         font-size: var(--text-md);
         font-variation-settings: 'wght' var(--font-weight-bold);
@@ -112,10 +157,27 @@
     }
   }
 
+  .Layer__balance-sheet-cell__label {
+    position: relative;
+  }
+
+  .Layer__table-cell__active {
+    display: none;
+    width: 4px;
+    height: 100%;
+    position: absolute;
+    background: var(--color-base-400);
+    left: 0;
+    top: 0;
+  }
+
   .Layer__balance-sheet-row {
-    border-left: 4px solid transparent;
-    &:not(.Layer__balance-sheet-row--display-children-true) {
-      border-left: 4px solid var(--color-base-400);
+    .Layer__table-cell__active {
+      display: none;
+    }
+    &:not(.Layer__balance-sheet-row--display-children-true)
+      .Layer__table-cell__active {
+      display: block;
     }
   }
 

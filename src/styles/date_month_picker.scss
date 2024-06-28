@@ -9,20 +9,18 @@
   }
 }
 
-@container (min-width: 760px) {
-  .Layer__date-month-picker__wrapper {
-    &.Layer__date-month-picker__wrapper--current-date-option {
-      .Layer__date-month-picker {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-      }
+.Layer__date-month-picker__wrapper {
+  &.Layer__date-month-picker__wrapper--current-date-option {
+    .Layer__date-month-picker {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
     }
+  }
 
-    .Layer__date-month-picker__current-button {
-      border: 1px solid var(--input-border-color);
-      border-left: none;
-      box-shadow: none;
-    }
+  .Layer__date-month-picker__current-button {
+    border: 1px solid var(--input-border-color);
+    border-left: none;
+    box-shadow: none;
   }
 }
 
@@ -99,45 +97,51 @@
   z-index: 2;
 }
 
-@container (max-width: 760px) {
-  .Layer__date-month-picker__wrapper {
-    .Layer__date-month-picker {
-      border: none;
-      background: none;
-      width: 175px;
+@container (max-width: 759px) {
+  .Layer__date-month-picker--responsive {
+    &.Layer__date-month-picker__wrapper {
+      .Layer__date-month-picker {
+        border: none;
+        background: none;
+        width: 175px;
+      }
+
+      .Layer__date-month-picker__button {
+        margin: 0 0.125rem;
+        box-shadow:
+          0px 1px 2px 0px var(--base-transparent-6, rgba(16, 24, 40, 0.06)),
+          0px 0px 0px 1px var(--color-base-300);
+        border-radius: 4px;
+      }
+
+      .Layer__date-month-picker__effect-blur {
+        right: 0;
+        max-width: 70px;
+        background: linear-gradient(
+          -90deg,
+          #f7f8fa 75%,
+          rgba(255, 255, 255, 0) 100%
+        );
+      }
+
+      .Layer__date-month-picker__button--disabled {
+        background-color: var(--color-base-200);
+      }
+
+      .Layer__date-month-picker__labels-container {
+        width: 550px;
+      }
+
+      .Layer__date-month-picker__label {
+        padding-left: 0;
+        padding-right: 75px;
+        justify-content: flex-end;
+        font-size: 12px;
+      }
     }
 
-    .Layer__date-month-picker__button {
-      margin: 0 0.125rem;
-      box-shadow:
-        0px 1px 2px 0px var(--base-transparent-6, rgba(16, 24, 40, 0.06)),
-        0px 0px 0px 1px var(--color-base-300);
-      border-radius: 4px;
-    }
-
-    .Layer__date-month-picker__effect-blur {
-      right: 0;
-      max-width: 70px;
-      background: linear-gradient(
-        -90deg,
-        #f7f8fa 75%,
-        rgba(255, 255, 255, 0) 100%
-      );
-    }
-
-    .Layer__date-month-picker__button--disabled {
-      background-color: var(--color-base-200);
-    }
-
-    .Layer__date-month-picker__labels-container {
-      width: 550px;
-    }
-
-    .Layer__date-month-picker__label {
-      padding-left: 0;
-      padding-right: 75px;
-      justify-content: flex-end;
-      font-size: 12px;
+    .Layer__date-month-picker__current-button {
+      display: none;
     }
   }
 }

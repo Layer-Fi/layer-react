@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
 import { DateRange } from '../../types'
@@ -13,6 +12,7 @@ interface DateMonthPickerProps {
   enableFutureDates?: boolean
   minDate?: Date
   currentDateOption?: boolean
+  responsive?: boolean
 }
 
 export const DateMonthPicker = ({
@@ -21,8 +21,8 @@ export const DateMonthPicker = ({
   enableFutureDates = false,
   minDate,
   currentDateOption = true,
+  responsive = true,
 }: DateMonthPickerProps) => {
-  const { isMobile, isTablet } = useSizeClass()
   const [isAnimating, setIsAnimating] = useState(false)
 
   const [localDate, setLocalDate] = useState(dateRange.startDate)
@@ -117,6 +117,7 @@ export const DateMonthPicker = ({
     'Layer__date-month-picker__wrapper',
     currentDateOption &&
       'Layer__date-month-picker__wrapper--current-date-option',
+    responsive && 'Layer__date-month-picker--responsive',
   )
 
   return (
@@ -172,7 +173,7 @@ export const DateMonthPicker = ({
         </button>
         <div className='Layer__date-month-picker__effect-blur'></div>
       </div>
-      {!isMobile && !isTablet && currentDateOption && (
+      {currentDateOption && (
         <Button
           className='Layer__date-month-picker__current-button'
           onClick={() => setCurrentDate()}

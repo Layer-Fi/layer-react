@@ -1,5 +1,9 @@
 .Layer__bank-transactions {
   max-width: var(--max-component-width);
+
+  &.Layer__component {
+    overflow: auto;
+  }
 }
 
 .Layer__bank-transactions__loader-container {

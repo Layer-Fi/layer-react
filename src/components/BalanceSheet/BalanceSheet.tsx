@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from 'react'
+import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { BalanceSheetContext } from '../../contexts/BalanceSheetContext'
 import { TableProvider } from '../../contexts/TableContext'
 import { useBalanceSheet } from '../../hooks/useBalanceSheet'
@@ -34,7 +34,11 @@ const BalanceSheetView = ({
   withExpandAllButton = true,
 }: BalanceSheetViewProps) => {
   const [effectiveDate, setEffectiveDate] = useState(startOfDay(new Date()))
-  const { data, isLoading } = useBalanceSheet(effectiveDate)
+  const { data, isLoading, refetch } = useBalanceSheet(effectiveDate)
+
+  useEffect(() => {
+    refetch()
+  }, [effectiveDate])
 
   return (
     <TableProvider>

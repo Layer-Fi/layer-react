@@ -3,6 +3,16 @@
   flex-direction: column;
 }
 
+.Layer__details-list__actions > .Layer__details-list__close-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+
+  @container (max-width: 1024px) {
+    display: none;
+  }
+}
+
 .Layer__details-list .Layer__component-header {
   padding-bottom: 0;
 }

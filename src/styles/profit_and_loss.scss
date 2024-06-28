@@ -21,6 +21,7 @@
   grid-template-columns: 1fr auto;
   overflow: hidden;
   background-color: var(--color-base-100);
+  border-radius: var(--border-radius-sm);
 }
 
 .Layer__profit-and-loss-table__loader-container {
@@ -460,6 +461,11 @@
 
   .Layer__profit-and-loss__chart_with_summaries__chart-col {
     padding-left: var(--spacing-xs);
+  }
+
+  .Layer__panel--open .Layer__profit-and-loss-table {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 }
 

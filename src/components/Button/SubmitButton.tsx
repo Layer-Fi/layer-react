@@ -57,14 +57,14 @@ const buildRightIcon = ({
   if (action === SubmitAction.UPDATE) {
     return (
       <span className='Layer__pt-2'>
-        <Save size={14} />
+        <CheckCircle size={14} />
       </span>
     )
   }
 
   return (
     <span>
-      <CheckCircle size={14} style={{ paddingTop: 4 }} />
+      <Save size={14} style={{ paddingTop: 4 }} />
     </span>
   )
 }
