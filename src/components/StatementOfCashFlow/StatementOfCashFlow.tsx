@@ -48,7 +48,7 @@ const StatementOfCashFlowView = () => {
     <TableExpandProvider>
       <Container name={COMPONENT_NAME}>
         <PanelView
-          title='Statement of Cash Flow'
+          title='Statement of Cash Flows'
           headerControls={
             <>
               <DateRangeInput
