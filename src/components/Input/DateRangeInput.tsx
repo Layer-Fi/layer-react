@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
 import { TextButton } from '../Button'
 import classNames from 'classnames'
 import {
