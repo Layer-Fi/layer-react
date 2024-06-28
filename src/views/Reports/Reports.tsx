@@ -88,7 +88,10 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
             [
               { value: 'profitAndLoss', label: 'Profit & loss' },
               { value: 'balanceSheet', label: 'Balance sheet' },
-              { value: 'statementOfCashFlow', label: 'Statement of cash flow' },
+              {
+                value: 'statementOfCashFlow',
+                label: 'Statement of Cash Flows',
+              },
             ] as ReportOption[]
           }
           selected={activeTab}
