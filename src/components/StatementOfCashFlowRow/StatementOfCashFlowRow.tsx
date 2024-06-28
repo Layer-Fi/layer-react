@@ -3,6 +3,7 @@ import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars } from '../../models/Money'
 import { LineItem } from '../../types'
+import { ADJUSTMENTS_ROW_NAME } from '../StatementOfCashFlow/constants'
 import classNames from 'classnames'
 
 type Props = {
@@ -93,12 +94,13 @@ export const StatementOfCashFlowRow = ({
           {isOpen &&
             canGoDeeper &&
             hasChildren &&
-            (line_items || []).map((line_item, idx) => (
+            (line_items || []).map((child_line_item, idx) => (
               <StatementOfCashFlowRow
-                key={`${line_item.display_name}_${idx}`}
-                lineItem={line_item}
+                key={`${child_line_item.display_name}_${idx}`}
+                lineItem={child_line_item}
                 depth={depth + 1}
                 maxDepth={maxDepth}
+                summarize={child_line_item.name === ADJUSTMENTS_ROW_NAME}
               />
             ))}
           {summarize && (
@@ -108,6 +110,7 @@ export const StatementOfCashFlowRow = ({
               variant='summation'
               depth={depth}
               maxDepth={maxDepth}
+              summarize={false}
             />
           )}
         </>
@@ -125,6 +128,16 @@ export const StatementOfCashFlowRow = ({
           <span className='Layer__table-cell-content'>{amountString}</span>
         </td>
       </tr>
+      {summarize && (
+        <StatementOfCashFlowRow
+          key={display_name}
+          lineItem={{ value, display_name: `Total of ${display_name}` }}
+          variant='summation'
+          depth={depth}
+          maxDepth={maxDepth}
+          summarize={false}
+        />
+      )}
     </>
   )
 }
