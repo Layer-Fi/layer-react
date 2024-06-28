@@ -210,6 +210,12 @@ The P&L table supports one optional prop:
 
 The Balance Sheet component displays an interactive table. A default date can be passed in via the `effectiveDate` prop.
 
+#### Statement of Cash Flows
+
+![Statement of Cash Flows](https://github.com/Layer-Fi/layer-react/assets/1592431/39d92340-405b-46e4-873d-175b6c75f96b)
+
+The statement of cashflows component is an interactive table displaying cash changes broken out into investing, financing, and operational activities. It is shown calculated via the standard indirect method.
+
 ### Ledger
 
 #### Chart of Accounts

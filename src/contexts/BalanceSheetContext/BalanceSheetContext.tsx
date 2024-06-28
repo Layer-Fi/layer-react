@@ -6,4 +6,5 @@ export const BalanceSheetContext = createContext<BalanceSheetContextType>({
   data: undefined,
   isLoading: false,
   error: undefined,
+  refetch: () => {},
 })
