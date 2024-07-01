@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { BalanceSheetContext } from '../../contexts/BalanceSheetContext'
-import { TableExpandProvider } from '../../contexts/TableExpandContext'
+import { TableProvider } from '../../contexts/TableContext'
 import { useBalanceSheet } from '../../hooks/useBalanceSheet'
 import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker'
 import { BalanceSheetExpandAllButton } from '../BalanceSheetExpandAllButton'
@@ -25,7 +25,7 @@ export const BalanceSheet = (props: BalanceSheetProps) => {
   const balanceSheetContextData = useBalanceSheet(props.effectiveDate)
   return (
     <BalanceSheetContext.Provider value={balanceSheetContextData}>
-      <BalanceSheetView />
+      <BalanceSheetView {...props} />
     </BalanceSheetContext.Provider>
   )
 }
@@ -41,7 +41,7 @@ const BalanceSheetView = ({
   }, [effectiveDate])
 
   return (
-    <TableExpandProvider>
+    <TableProvider>
       <Container name='balance-sheet'>
         <PanelView
           title='Balance Sheet'
@@ -64,6 +64,6 @@ const BalanceSheetView = ({
           )}
         </PanelView>
       </Container>
-    </TableExpandProvider>
+    </TableProvider>
   )
 }

@@ -1334,3 +1334,13 @@
     }
   }
 }
+
+.Layer__bank-transaction-row--removing {
+  .Layer__table-cell-content {
+    max-height: 0px;
+    top: 1px;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+}
