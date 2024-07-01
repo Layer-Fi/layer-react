@@ -83,6 +83,7 @@
     &:hover {
       border-radius: var(--spacing-3xs);
       background: var(--color-base-100);
+      max-width: max-content;
     }
 
     &.Layer__selected {
