@@ -58,6 +58,13 @@ export const countTransactionsToReview = ({
 }
 
 export const getCategorizePayload = (category: CategoryOption) => {
+  if (category?.payload && 'id' in category.payload && category.payload.type == 'ExclusionNested') {
+    return {
+      type: 'Exclusion' as 'Exclusion',
+      exclusion_type: category.payload.id,
+    }
+  }
+
   if (category?.payload && 'id' in category.payload && category.payload.id) {
     return {
       type: 'AccountId' as 'AccountId',
