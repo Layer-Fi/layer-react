@@ -7,8 +7,6 @@ import { TransactionToReviewCard } from '../../components/TransactionToReviewCar
 import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
 import classNames from 'classnames'
-import { PeriodPicker } from '../../components/PeriodPicker'
-import { PeriodPickerOption } from '../../components/PeriodPicker/PeriodPicker'
 
 export interface AccountingOverviewProps {
   title?: string
@@ -25,24 +23,6 @@ export const AccountingOverview = ({
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
 
-  const [selectedPeriod, setSelectedPeriod] = useState<{
-    key: PeriodPickerOption
-    start_date: string
-    end_date: string
-  }>({
-    key: 'month',
-    start_date: '',
-    end_date: '',
-  })
-
-  const handlePeriodSelect = (option: {
-    key: PeriodPickerOption
-    start_date: string
-    end_date: string
-  }) => {
-    setSelectedPeriod(option)
-  }
-
   return (
     <ProfitAndLoss asContainer={false}>
       <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
@@ -58,7 +38,6 @@ export const AccountingOverview = ({
             onClick={onTransactionsToReviewClick}
           />
         </div>
-        <PeriodPicker onSelect={handlePeriodSelect} defaultValue='month' />
         <Container
           name='accounting-overview-profit-and-loss'
           asWidget
@@ -83,13 +62,13 @@ export const AccountingOverview = ({
               },
             ]}
             selected={pnlToggle}
-            onChange={(e) => setPnlToggle(e.target.value as PnlToggleOption)}
+            onChange={e => setPnlToggle(e.target.value as PnlToggleOption)}
           />
           <Container
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
               pnlToggle !== 'revenue' &&
-                'accounting-overview-profit-and-loss-chart--hidden'
+                'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts scope='revenue' hideClose={true} />
@@ -98,7 +77,7 @@ export const AccountingOverview = ({
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
               pnlToggle !== 'expenses' &&
-                'accounting-overview-profit-and-loss-chart--hidden'
+                'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts scope='expenses' hideClose={true} />
