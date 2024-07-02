@@ -1,7 +1,9 @@
 export interface TableContextProps {
-  tableState: boolean
-  toggleTableState: () => void
+  expandedRows: string[]
+  setExpandedRows: (rowKey: string) => void
+  collapseRows: () => void
 }
+
 export interface TableProps {
   children: React.ReactNode | React.ReactNode[]
   componentName?: string
@@ -16,13 +18,17 @@ export interface TableHeadProps {
 export interface TableBodyProps {
   children: React.ReactNode | React.ReactNode[]
 }
+
 export interface TableRowProps {
-  children: React.ReactNode | React.ReactNode[]
+  children: React.ReactNode
   depth?: number
   expandable?: boolean
-  variant?: 'default' | 'summation' | 'expandable'
+  variant?: 'expandable' | 'default' | 'summation'
   withDivider?: boolean
   withDividerPosition?: 'top' | 'bottom'
+  isExpanded?: boolean
+  handleExpand?: () => void
+  isHeadRow?: boolean
 }
 
 export interface TableCellProps {
@@ -30,6 +36,5 @@ export interface TableCellProps {
   isCurrency?: boolean
   isHeaderCell?: boolean
   primary?: boolean
+  withExpandIcon?: boolean
 }
-
-export interface TableActionsProps {}

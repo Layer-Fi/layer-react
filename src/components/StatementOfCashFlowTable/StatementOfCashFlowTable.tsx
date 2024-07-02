@@ -1,8 +1,8 @@
 import React from 'react'
-import { centsToDollars } from '../../models/Money'
-import { StatementOfCashFlow } from '../../types'
+import { useTableExpandRow } from '../../hooks/useTableExpandRow'
+import { BalanceSheet, StatementOfCashFlow } from '../../types'
 import { LineItem } from '../../types/line_item'
-import { StatementOfCashFlowRow } from '../StatementOfCashFlowRow'
+import { Table, TableHead, TableBody, TableRow, TableCell } from '../Table'
 
 type StatementOfCashFlowRowProps = {
   name: string
@@ -19,37 +19,95 @@ export const StatementOfCashFlowTable = ({
   data: StatementOfCashFlow
   config: StatementOfCashFlowRowProps[]
 }) => {
+  const { isOpen, setIsOpen } = useTableExpandRow()
+
+  const renderLineItem = (
+    lineItem: LineItem,
+    depth: number = 0,
+    rowKey: string,
+    rowIndex: number,
+  ): React.ReactNode => {
+    const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
+    const expanded = expandable ? isOpen(rowKey) : true
+
+    return (
+      <React.Fragment key={rowKey + '-' + rowIndex}>
+        <TableRow
+          expandable={expandable}
+          isExpanded={expanded}
+          handleExpand={() => setIsOpen(rowKey)}
+          depth={depth}
+          withDivider={depth === 0 && rowIndex > 0}
+        >
+          <TableCell
+            withExpandIcon={expandable}
+            primary={expandable && !expanded}
+          >
+            {lineItem.display_name}
+          </TableCell>
+          <TableCell
+            isCurrency={!expandable || (expandable && !expanded)}
+            primary={expandable && !expanded}
+          >
+            {(!expandable || (expandable && !expanded)) && lineItem.value}
+          </TableCell>
+        </TableRow>
+        {expanded &&
+          lineItem.line_items &&
+          lineItem.line_items.map((subItem, subIdx) =>
+            renderLineItem(
+              subItem,
+              depth + 1,
+              rowKey + ':' + subItem.name,
+              subIdx,
+            ),
+          )}
+        {expanded && expandable && (
+          <TableRow depth={depth + 1} variant='summation'>
+            <TableCell primary>{`Total of ${lineItem.display_name}`}</TableCell>
+            <TableCell primary isCurrency>
+              {lineItem.value}
+            </TableCell>
+          </TableRow>
+        )}
+      </React.Fragment>
+    )
+  }
+
   return (
-    <table className='Layer__table Layer__table--hover-effect Layer__statement-of-cash-flow__table'>
-      <tbody>
+    <Table borderCollapse='collapse'>
+      <TableHead>
+        <TableRow isHeadRow>
+          <TableCell isHeaderCell>Type</TableCell>
+          <TableCell isHeaderCell>Total</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
         {config.map((row, idx) => {
-          return row.type === 'line_item' ? (
-            <StatementOfCashFlowRow
-              key={'statement-of-cash-flow-row-' + idx + row.name}
-              lineItem={
-                data[row.lineItem as keyof StatementOfCashFlow] as LineItem
-              }
-              summarize={row.summarize}
-              defaultExpanded={true}
-            />
-          ) : (
-            <StatementOfCashFlowRow
-              key={'statement-of-cash-flow-row-' + idx + row.name}
-              lineItem={{
-                name: row.name,
-                display_name: row.displayName,
-                value: data[
-                  row.lineItem as keyof StatementOfCashFlow
-                ] as number,
-                line_items: null,
-                is_contra: false,
-              }}
-              summarize={row.summarize}
-              defaultExpanded={true}
-            />
-          )
+          if (row.type === 'line_item') {
+            return (
+              <React.Fragment key={row.lineItem}>
+                {data[row.lineItem as keyof StatementOfCashFlow] &&
+                  renderLineItem(
+                    data[row.lineItem as keyof StatementOfCashFlow] as LineItem,
+                    0,
+                    row.lineItem ? row.lineItem : '',
+                    idx,
+                  )}
+              </React.Fragment>
+            )
+          } else {
+            return (
+              <TableRow key={row.name} variant='default' withDivider>
+                <TableCell primary>{row.displayName}</TableCell>
+                <TableCell primary isCurrency>
+                  {row.lineItem}
+                </TableCell>
+              </TableRow>
+            )
+          }
         })}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   )
 }

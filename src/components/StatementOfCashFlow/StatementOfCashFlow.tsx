@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { StatementOfCashFlowContext } from '../../contexts/StatementOfCashContext'
-import { TableExpandProvider } from '../../contexts/TableExpandContext'
+import { TableProvider } from '../../contexts/TableContext'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow'
 import { Container } from '../Container'
 import { DateRangeInput } from '../Input'
@@ -45,7 +45,7 @@ const StatementOfCashFlowView = () => {
   }
 
   return (
-    <TableExpandProvider>
+    <TableProvider>
       <Container name={COMPONENT_NAME}>
         <PanelView
           title='Statement of Cash Flows'
@@ -71,6 +71,6 @@ const StatementOfCashFlowView = () => {
           )}
         </PanelView>
       </Container>
-    </TableExpandProvider>
+    </TableProvider>
   )
 }

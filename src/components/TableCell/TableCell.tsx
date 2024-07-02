@@ -1,4 +1,5 @@
 import React from 'react'
+import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars } from '../../models/Money'
 import { TableCellProps } from '../../types/table'
 import classNames from 'classnames'
@@ -8,6 +9,7 @@ export const TableCell = ({
   isHeaderCell,
   isCurrency,
   primary,
+  withExpandIcon = false,
 }: TableCellProps) => {
   const amount = typeof children === 'number' ? children : 0
   const isPositive = amount >= 0
@@ -32,6 +34,12 @@ export const TableCell = ({
   return (
     <td className={cellClassNames}>
       <span className='Layer__table-cell-content'>
+        {withExpandIcon && (
+          <ChevronDownFill
+            className='Layer__table-row--expand-icon'
+            size={16}
+          />
+        )}
         {isCurrency ? amountString : children}{' '}
       </span>
     </td>

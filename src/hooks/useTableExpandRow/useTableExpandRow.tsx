@@ -1,13 +1,14 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import { TableContext } from '../../contexts/TableContext'
 
-export const useTableExpandRow = (index: number, defaultOpen = false) => {
-  const [isOpen, setIsOpen] = useState(index === 0 ? true : defaultOpen)
-  const { tableState } = useContext(TableContext)
+export const useTableExpandRow = () => {
+  const { expandedRows, setExpandedRows } = useContext(TableContext)
 
-  useEffect(() => {
-    setIsOpen(tableState)
-  }, [tableState])
+  const setIsOpen = (rowKey: string) => {
+    setExpandedRows(rowKey)
+  }
+
+  const isOpen = (rowKey: string) => expandedRows.includes(rowKey)
 
   return {
     isOpen,

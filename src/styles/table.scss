@@ -72,52 +72,55 @@
   .Layer__table-row {
     position: relative;
     height: var(--spacing-5xl);
-    &--expanded + .Layer__table-row {
-      display: none;
+    transition: all 180ms ease-in-out;
+
+    &.Layer__table-row--expanded {
+      .Layer__table-cell:nth-child(1) .Layer__table-cell-content:before {
+        content: '';
+        background-color: var(--color-base-400);
+        height: 100%;
+        width: 4px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+      }
+
+      .Layer__table-row--expand-icon {
+        transform: rotate(0deg);
+      }
+    }
+    &.Layer__table-row--collapsed {
+      .Layer__table-row--expand-icon {
+        transform: rotate(-90deg);
+      }
+    }
+
+    &.Layer__table-row--variant-default {
+      background: var(--color-base-50);
+    }
+
+    &.Layer__table-row--variant-summation {
+      background: var(--color-base-100);
     }
 
     @for $depth from 1 through 10 {
-      &--depth-#{$depth}:not(.Layer__table-row--variant-expandable) {
-        background: var(--color-base-50);
+      &--depth-#{$depth} td:nth-child(1) .Layer__table-cell-content:before {
+        content: '';
+        background-color: var(--color-base-400);
+        height: 100%;
+        width: 4px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
       }
     }
 
     @for $depth from 0 through 10 {
-      &--depth-#{$depth}.Layer__table-row--expanded
-        ~ tr.Layer__table-row--depth-#{($depth + 1)} {
-        display: none;
+      &--depth-#{$depth} td:nth-child(1) .Layer__table-cell-content {
+        padding-left: calc(var(--spacing-lg) * #{$depth + 1});
       }
-    }
-
-    @for $depth from 0 through 10 {
-      &--depth-#{$depth}.Layer__table-row--variant-expandable
-        td:nth-child(2)
-        .Layer__table-cell-content {
-        padding-left: calc(14px * #{$depth + 1} + 8px + var(--spacing-lg));
-      }
-    }
-
-    @for $depth from 0 through 10 {
-      &--depth-#{$depth}.Layer__table-row--variant-default
-        td:nth-child(2)
-        .Layer__table-cell-content {
-        padding-left: calc(8px * #{$depth + 1} + var(--spacing-lg));
-      }
-    }
-
-    .Layer__table-row--expand-cell {
-      width: 16px;
-      height: 16px;
-      position: absolute;
-      left: 0;
-      top: 1.2em;
-      bottom: auto;
-      .Layer__table-row--expand-icon {
-        width: 16px;
-        height: 16px;
-      }
-    }
-    &.Layer__table-row--variant-summation {
     }
   }
 
@@ -134,17 +137,15 @@
       font-variation-settings: 'wght' var(--font-weight-bold);
     }
 
-    &.Layer__table-cell--amount {
-      .Layer__table-cell-amount--positive .Layer__table-cell-content {
-        &::before {
-          content: '$';
-        }
+    &.Layer__table-cell-amount--positive .Layer__table-cell-content {
+      &::before {
+        content: '$';
       }
+    }
 
-      .Layer__table-cell-amount--negative .Layer__table-cell-content {
-        &::before {
-          content: '-$';
-        }
+    &.Layer__table-cell-amount--negative .Layer__table-cell-content {
+      &::before {
+        content: '-$';
       }
     }
 
@@ -157,11 +158,17 @@
       box-sizing: border-box;
       transition: all var(--transition-speed) ease-out;
       position: relative;
+      .Layer__table-row--expand-icon {
+        transition: transform 0.1s ease-in-out;
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+      }
     }
   }
 
-  tr th:nth-child(2) .Layer__table-cell-content,
-  tr td:nth-child(2) .Layer__table-cell-content {
+  tr th:nth-child(1) .Layer__table-cell-content,
+  tr td:nth-child(1) .Layer__table-cell-content {
     padding-left: var(--spacing-lg);
   }
   tr td:last-child .Layer__table-cell-content,

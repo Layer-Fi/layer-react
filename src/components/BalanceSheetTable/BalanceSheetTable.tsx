@@ -1,7 +1,6 @@
 import React from 'react'
+import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { BalanceSheet, LineItem } from '../../types'
-// import { LineItem } from '../../types/line_item'
-// import { BalanceSheetRow } from '../BalanceSheetRow'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 
 type BalanceSheetRowProps = {
@@ -17,50 +16,79 @@ export const BalanceSheetTable = ({
   data: BalanceSheet
   config: BalanceSheetRowProps[]
 }) => {
-  console.log(data)
+  const { isOpen, setIsOpen } = useTableExpandRow()
 
   const renderLineItem = (
     lineItem: LineItem,
     depth: number = 0,
+    rowKey: string,
+    rowIndex: number,
   ): React.ReactNode => {
-    const expanddable =
-      lineItem.line_items && lineItem.line_items.length > 0 ? true : false
+    const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
+    const expanded = expandable ? isOpen(rowKey) : true
     return (
-      <>
-        <TableRow key={lineItem.name} expandable={expanddable} depth={depth}>
-          <TableCell>{lineItem.display_name}</TableCell>
-          <TableCell>{!expanddable && lineItem.value}</TableCell>
+      <React.Fragment key={rowKey + '-' + rowIndex}>
+        <TableRow
+          expandable={expandable}
+          isExpanded={expanded}
+          handleExpand={() => setIsOpen(rowKey)}
+          depth={depth}
+          withDivider={depth === 0 && rowIndex > 0}
+        >
+          <TableCell
+            withExpandIcon={expandable}
+            primary={expandable && !expanded}
+          >
+            {lineItem.display_name}
+          </TableCell>
+          <TableCell
+            isCurrency={!expandable || (expandable && !expanded)}
+            primary={expandable && !expanded}
+          >
+            {(!expandable || (expandable && !expanded)) && lineItem.value}
+          </TableCell>
         </TableRow>
-        {lineItem.line_items &&
-          lineItem.line_items.length > 0 &&
-          lineItem.line_items.map((subItem: LineItem) =>
-            renderLineItem(subItem, depth + 1),
+        {expanded &&
+          lineItem.line_items &&
+          lineItem.line_items.map((subItem, subIdx) =>
+            renderLineItem(
+              subItem,
+              depth + 1,
+              rowKey + ':' + subItem.name,
+              subIdx,
+            ),
           )}
-      </>
+        {expanded && expandable && (
+          <TableRow depth={depth + 1} variant='summation'>
+            <TableCell primary>{`Total of ${lineItem.display_name}`}</TableCell>
+            <TableCell primary isCurrency>
+              {lineItem.value}
+            </TableCell>
+          </TableRow>
+        )}
+      </React.Fragment>
     )
   }
-
+  let indexRows = 0
   return (
     <Table borderCollapse='collapse'>
       <TableHead>
-        <TableRow>
-          <TableCell key='balance-head-type' isHeaderCell={true}>
-            Type
-          </TableCell>
-          <TableCell key='balance-head-total' isHeaderCell={true}>
-            Total
-          </TableCell>
+        <TableRow isHeadRow>
+          <TableCell isHeaderCell>Type</TableCell>
+          <TableCell isHeaderCell>Total</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {config.map(row => (
-          <>
-            {data[row.lineItem as keyof BalanceSheet] !== undefined &&
+        {config.map((row, idx) => (
+          <React.Fragment key={row.lineItem}>
+            {data[row.lineItem as keyof BalanceSheet] &&
               renderLineItem(
                 data[row.lineItem as keyof BalanceSheet] as LineItem,
                 0,
+                row.lineItem,
+                idx,
               )}
-          </>
+          </React.Fragment>
         ))}
       </TableBody>
     </Table>
