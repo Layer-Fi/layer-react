@@ -7,7 +7,7 @@ import { BalanceSheetExpandAllButton } from '../BalanceSheetExpandAllButton'
 import { BalanceSheetTable } from '../BalanceSheetTable'
 import { Container } from '../Container'
 import { Loader } from '../Loader'
-import { PanelView } from '../PanelView'
+import { View } from '../View'
 import { BALANCE_SHEET_ROWS } from './constants'
 import { startOfDay } from 'date-fns'
 
@@ -43,8 +43,8 @@ const BalanceSheetView = ({
   return (
     <TableProvider>
       <Container name='balance-sheet'>
-        <PanelView
-          title='Balance Sheet'
+        <View
+          type='panel'
           headerControls={
             <>
               <BalanceSheetDatePicker
@@ -62,7 +62,7 @@ const BalanceSheetView = ({
           ) : (
             <BalanceSheetTable data={data} config={BALANCE_SHEET_ROWS} />
           )}
-        </PanelView>
+        </View>
       </Container>
     </TableProvider>
   )

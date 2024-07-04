@@ -3,6 +3,7 @@ import { TableRowProps } from '../../types/table'
 import classNames from 'classnames'
 
 export const TableRow: React.FC<TableRowProps> = ({
+  rowKey,
   children,
   depth = 0,
   expandable = false,
@@ -37,7 +38,7 @@ export const TableRow: React.FC<TableRowProps> = ({
         </tr>
       )}
 
-      <tr className={rowClassNames} onClick={toggleExpanded}>
+      <tr data-key={rowKey} className={rowClassNames} onClick={toggleExpanded}>
         {children}
       </tr>
 

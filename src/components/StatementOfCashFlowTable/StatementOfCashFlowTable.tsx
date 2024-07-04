@@ -33,21 +33,18 @@ export const StatementOfCashFlowTable = ({
     return (
       <React.Fragment key={rowKey + '-' + rowIndex}>
         <TableRow
+          rowKey={rowKey + '-' + rowIndex}
           expandable={expandable}
           isExpanded={expanded}
           handleExpand={() => setIsOpen(rowKey)}
           depth={depth}
-          withDivider={depth === 0 && rowIndex > 0}
         >
-          <TableCell
-            withExpandIcon={expandable}
-            primary={expandable && !expanded}
-          >
+          <TableCell withExpandIcon={expandable} primary={expandable}>
             {lineItem.display_name}
           </TableCell>
           <TableCell
             isCurrency={!expandable || (expandable && !expanded)}
-            primary={expandable && !expanded}
+            primary={expandable}
           >
             {(!expandable || (expandable && !expanded)) && lineItem.value}
           </TableCell>
@@ -63,7 +60,11 @@ export const StatementOfCashFlowTable = ({
             ),
           )}
         {expanded && expandable && (
-          <TableRow depth={depth + 1} variant='summation'>
+          <TableRow
+            rowKey={rowKey + '-' + rowIndex + '--summation'}
+            depth={depth + 1}
+            variant='summation'
+          >
             <TableCell primary>{`Total of ${lineItem.display_name}`}</TableCell>
             <TableCell primary isCurrency>
               {lineItem.value}
@@ -77,7 +78,7 @@ export const StatementOfCashFlowTable = ({
   return (
     <Table borderCollapse='collapse'>
       <TableHead>
-        <TableRow isHeadRow>
+        <TableRow rowKey='soc-flow-head-row' isHeadRow>
           <TableCell isHeaderCell>Type</TableCell>
           <TableCell isHeaderCell>Total</TableCell>
         </TableRow>
@@ -98,7 +99,7 @@ export const StatementOfCashFlowTable = ({
             )
           } else {
             return (
-              <TableRow key={row.name} variant='default' withDivider>
+              <TableRow rowKey={row.name + '-' + idx} variant='default'>
                 <TableCell primary>{row.displayName}</TableCell>
                 <TableCell primary isCurrency>
                   {row.lineItem}

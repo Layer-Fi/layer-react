@@ -75,17 +75,6 @@
     transition: all 180ms ease-in-out;
 
     &.Layer__table-row--expanded {
-      .Layer__table-cell:nth-child(1) .Layer__table-cell-content:before {
-        content: '';
-        background-color: var(--color-base-400);
-        height: 100%;
-        width: 4px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-      }
-
       .Layer__table-row--expand-icon {
         transform: rotate(0deg);
       }
@@ -104,19 +93,6 @@
       background: var(--color-base-100);
     }
 
-    @for $depth from 1 through 10 {
-      &--depth-#{$depth} td:nth-child(1) .Layer__table-cell-content:before {
-        content: '';
-        background-color: var(--color-base-400);
-        height: 100%;
-        width: 4px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-      }
-    }
-
     @for $depth from 0 through 10 {
       &--depth-#{$depth} td:nth-child(1) .Layer__table-cell-content {
         padding-left: calc(var(--spacing-lg) * #{$depth + 1});
@@ -129,7 +105,6 @@
     text-align: left;
     color: var(--text-color-secondary);
     border-top: 1px solid var(--border-color);
-    height: var(--spacing-5xl);
     padding: 0;
 
     &.Layer__table-cell--primary {
@@ -219,7 +194,8 @@
       & > .Layer__table-cell-content {
         transition:
           height 60ms ease-out,
-          opacity 50ms ease-in-out;
+          opacity 50ms ease-in-out,
+          padding 50ms ease-in-out;
       }
     }
   }
@@ -232,11 +208,6 @@
     transition: opacity 50ms ease-out;
     opacity: 1;
   }
-}
-
-.Layer__table-row.Layer__table-row--anim-starting-state {
-  transform: scaleX(0.98);
-  opacity: 0;
 }
 
 .Layer__table.with-cell-separators
@@ -474,7 +445,8 @@
       & > .Layer__table-cell-content {
         transition:
           height 60ms ease-out,
-          opacity 50ms ease-in-out;
+          opacity 50ms ease-in-out,
+          padding 50ms ease-in-out;
       }
     }
   }
@@ -490,8 +462,16 @@
 }
 
 .Layer__table-row.Layer__table-row--anim-starting-state {
-  transform: scaleX(0.98);
   opacity: 0;
+  height: 0px;
+  td {
+    .Layer__table-cell-content {
+      opacity: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      height: 0%;
+    }
+  }
 }
 
 .Layer__table__empty-row {
@@ -504,5 +484,23 @@
 tbody {
   .Layer__table__empty-row:first-child {
     display: none;
+  }
+}
+
+.Layer__table-row.Layer__table-row--anim-complete-state {
+  height: var(--spacing-5xl);
+  td {
+    .Layer__table-cell-content {
+      opacity: 1;
+      padding-top: var(--spacing-sm);
+      padding-bottom: var(--spacing-sm);
+    }
+  }
+}
+
+.Layer__table-wrapper--bottom-spacing {
+  padding-bottom: var(--spacing-lg);
+  .Layer__table {
+    border-bottom: 1px solid var(--border-color);
   }
 }
