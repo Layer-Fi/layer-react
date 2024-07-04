@@ -17,30 +17,35 @@ export const Table = ({
       const rows = tbody ? Array.from(tbody.querySelectorAll('tr')) : []
 
       const prevChildrenArray = prevChildrenRef.current
-      const currentChildren = rows.map(child => child.getAttribute('data-key'))
+      const currentChildren = rows.map(
+        child =>
+          child.getAttribute('data-key') && {
+            key: child.getAttribute('data-key'),
+            child,
+          },
+      )
+      const newChildrenKeys: string[] = []
 
       const newChildrenArray = currentChildren.filter(el => {
-        return el && !prevChildrenArray.includes(el)
+        if (el && el.key) {
+          newChildrenKeys.push(el.key)
+        }
+        return el && el.key && !prevChildrenArray.includes(el.key)
       })
 
-      rows.forEach((row, index: number) => {
-        const rowKey = row.getAttribute('data-key')
-
-        if (
-          rowKey &&
-          newChildrenArray.includes(rowKey) &&
-          !row.classList.contains('Layer__table-empty-row')
-        ) {
-          row.classList.add('Layer__table-row--anim-starting-state')
+      newChildrenArray.forEach((row, index: number) => {
+        const rowKey = row && row.key
+        if (rowKey && !row.child.classList.contains('Layer__table-empty-row')) {
+          row.child.classList.add('Layer__table-row--anim-starting-state')
 
           setTimeout(() => {
-            row.classList.remove('Layer__table-row--anim-starting-state')
-            row.classList.add('Layer__table-row--anim-complete-state')
-          }, 10 * index)
+            row.child.classList.remove('Layer__table-row--anim-starting-state')
+            row.child.classList.add('Layer__table-row--anim-complete-state')
+          }, 20 * index)
         }
       })
 
-      prevChildrenRef.current = currentChildren as string[]
+      prevChildrenRef.current = newChildrenKeys as string[]
     }
   }, [children])
 
