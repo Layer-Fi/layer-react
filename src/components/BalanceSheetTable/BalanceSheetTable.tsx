@@ -29,21 +29,19 @@ export const BalanceSheetTable = ({
     return (
       <React.Fragment key={rowKey + '-' + rowIndex}>
         <TableRow
+          rowKey={rowKey + '-' + rowIndex}
           expandable={expandable}
           isExpanded={expanded}
           handleExpand={() => setIsOpen(rowKey)}
           depth={depth}
           withDivider={depth === 0 && rowIndex > 0}
         >
-          <TableCell
-            withExpandIcon={expandable}
-            primary={expandable && !expanded}
-          >
+          <TableCell withExpandIcon={expandable} primary={expandable}>
             {lineItem.display_name}
           </TableCell>
           <TableCell
             isCurrency={!expandable || (expandable && !expanded)}
-            primary={expandable && !expanded}
+            primary={expandable}
           >
             {(!expandable || (expandable && !expanded)) && lineItem.value}
           </TableCell>
@@ -59,7 +57,11 @@ export const BalanceSheetTable = ({
             ),
           )}
         {expanded && expandable && (
-          <TableRow depth={depth + 1} variant='summation'>
+          <TableRow
+            rowKey={rowKey + '-' + rowIndex + '--summation'}
+            depth={depth + 1}
+            variant='summation'
+          >
             <TableCell primary>{`Total of ${lineItem.display_name}`}</TableCell>
             <TableCell primary isCurrency>
               {lineItem.value}
@@ -69,11 +71,11 @@ export const BalanceSheetTable = ({
       </React.Fragment>
     )
   }
-  let indexRows = 0
+
   return (
     <Table borderCollapse='collapse'>
       <TableHead>
-        <TableRow isHeadRow>
+        <TableRow isHeadRow rowKey='balance-sheet-head-row'>
           <TableCell isHeaderCell>Type</TableCell>
           <TableCell isHeaderCell>Total</TableCell>
         </TableRow>

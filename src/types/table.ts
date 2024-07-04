@@ -7,8 +7,8 @@ export interface TableContextProps {
 export interface TableProps {
   children: React.ReactNode | React.ReactNode[]
   componentName?: string
-  hoverEffect?: boolean
   borderCollapse?: 'collapse' | 'separate'
+  bottomSpacing?: boolean
 }
 
 export interface TableHeadProps {
@@ -20,6 +20,7 @@ export interface TableBodyProps {
 }
 
 export interface TableRowProps {
+  rowKey: string
   children: React.ReactNode
   depth?: number
   expandable?: boolean
