@@ -3,6 +3,7 @@
   box-sizing: border-box;
   overflow: visible;
   z-index: 1;
+  max-width: var(--max-component-width);
 
   &::-webkit-scrollbar {
     display: none;
@@ -28,7 +29,6 @@
 .Layer__linked-accounts__list {
   padding: var(--spacing-md);
   display: flex;
-  max-width: 1000px;
   flex-wrap: wrap;
   align-items: stretch;
   gap: var(--spacing-md);
