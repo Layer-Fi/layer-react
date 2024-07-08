@@ -85,6 +85,10 @@
       }
     }
 
+    &.Layer__table-row--variant-expandable {
+      cursor: pointer;
+    }
+
     &.Layer__table-row--variant-default {
       background: var(--color-base-50);
     }

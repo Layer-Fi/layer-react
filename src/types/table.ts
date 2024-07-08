@@ -3,7 +3,9 @@ import { ReactNode } from 'react'
 export interface TableContextProps {
   expandedRows: string[]
   setExpandedRows: (rowKey: string) => void
-  collapseRows: () => void
+  expandAllRows: (rowKeys: string[]) => void
+  expandedAllRows: boolean
+  setExpandedAllRows: (expanded: boolean) => void
 }
 
 export interface TableProps {

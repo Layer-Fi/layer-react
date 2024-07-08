@@ -4,7 +4,9 @@ import { TableContextProps } from '../../types/table'
 const defaultValue: TableContextProps = {
   expandedRows: [],
   setExpandedRows: () => {},
-  collapseRows: () => {},
+  expandAllRows: () => {},
+  expandedAllRows: false,
+  setExpandedAllRows: () => {},
 }
 
 export const TableContext = createContext<TableContextProps>(defaultValue)
@@ -15,6 +17,7 @@ interface TableProviderProps {
 
 export const TableProvider: React.FC<TableProviderProps> = ({ children }) => {
   const [expandedRows, setExpandedRowsState] = useState<string[]>([])
+  const [expandedAllRows, setExpandedAllRows] = useState(false)
 
   const toggleRow = (rowKey: string) => {
     setExpandedRowsState(prevRows => {
@@ -28,10 +31,16 @@ export const TableProvider: React.FC<TableProviderProps> = ({ children }) => {
     })
   }
 
+  const expandAllRows = (rowKeys: string[]) => {
+    setExpandedRowsState(rowKeys)
+  }
+
   const contextValue: TableContextProps = {
     expandedRows,
     setExpandedRows: toggleRow,
-    collapseRows: () => setExpandedRowsState([]),
+    expandAllRows,
+    expandedAllRows,
+    setExpandedAllRows,
   }
 
   return (
