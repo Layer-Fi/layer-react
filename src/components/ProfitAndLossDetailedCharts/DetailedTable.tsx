@@ -1,5 +1,5 @@
 import React from 'react'
-import { DEFAULT_CHART_COLORS } from '../../config/charts'
+import { DEFAULT_CHART_COLOR_TYPE } from '../../config/charts'
 import {
   Scope,
   SidebarScope,
@@ -21,6 +21,32 @@ export interface DetailedTableProps {
   sortBy: (scope: Scope, field: string, direction?: SortDirection) => void
 }
 
+export const mapColorsToTypes = (data: any[]) => {
+  const typeToColor: any = {}
+  const typeToLastOpacity: any = {}
+  let colorIndex = 0
+
+  return data.map((obj) => {
+    const type = obj.type
+
+    if (!typeToColor[type]) {
+      typeToColor[type] =
+        DEFAULT_CHART_COLOR_TYPE[colorIndex % DEFAULT_CHART_COLOR_TYPE.length]
+      colorIndex++
+      typeToLastOpacity[type] = 1
+    } else {
+      typeToLastOpacity[type] -= 0.1
+    }
+
+    const opacity = typeToLastOpacity[type]
+
+    return {
+      color: typeToColor[type],
+      opacity: opacity,
+    }
+  })
+}
+
 export const DetailedTable = ({
   filteredData,
   sidebarScope,
@@ -36,9 +62,14 @@ export const DetailedTable = ({
         ? `sort--${
             (sidebarScope && filters[sidebarScope]?.sortDirection) ?? 'desc'
           }`
-        : '',
+        : ''
     )
   }
+
+  const typeColorMapping: any = mapColorsToTypes(filteredData)
+
+  // Index to keep track of the next color to assign
+  let colorIndex = 0
 
   return (
     <div className='details-container'>
@@ -69,10 +100,8 @@ export const DetailedTable = ({
           </thead>
           <tbody>
             {filteredData
-              .filter(x => !x.hidden)
+              .filter((x) => !x.hidden)
               .map((item, idx) => {
-                const colorConfig =
-                  DEFAULT_CHART_COLORS[idx % DEFAULT_CHART_COLORS.length]
                 return (
                   <tr
                     key={`pl-side-table-item-${idx}`}
@@ -80,7 +109,7 @@ export const DetailedTable = ({
                       'Layer__profit-and-loss-detailed-table__row',
                       hoveredItem && hoveredItem === item.display_name
                         ? 'active'
-                        : '',
+                        : ''
                     )}
                     onMouseEnter={() => setHoveredItem(item.display_name)}
                     onMouseLeave={() => setHoveredItem(undefined)}
@@ -94,8 +123,8 @@ export const DetailedTable = ({
                         <div
                           className='share-icon'
                           style={{
-                            background: colorConfig.color,
-                            opacity: colorConfig.opacity,
+                            background: typeColorMapping[idx].color,
+                            opacity: typeColorMapping[idx].opacity,
                           }}
                         />
                       </span>
