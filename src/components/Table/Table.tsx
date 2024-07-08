@@ -39,9 +39,9 @@ export const Table = ({
           row.child.classList.add('Layer__table-row--anim-starting-state')
 
           setTimeout(() => {
-            row.child.classList.remove('Layer__table-row--anim-starting-state')
             row.child.classList.add('Layer__table-row--anim-complete-state')
-          }, 20 * index)
+            row.child.classList.remove('Layer__table-row--anim-starting-state')
+          }, 15 * index)
         }
       })
 

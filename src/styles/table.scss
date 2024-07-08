@@ -72,7 +72,7 @@
   .Layer__table-row {
     position: relative;
     height: var(--spacing-5xl);
-    transition: all 180ms ease-in-out;
+    transition: all 100ms ease-in-out;
 
     &.Layer__table-row--expanded {
       .Layer__table-row--expand-icon {
@@ -182,12 +182,12 @@
 
   & > .Layer__table-cell-content {
     overflow: hidden;
-    transition: all 100ms ease-out;
+    transition: all 50ms ease-out;
   }
 }
 
 .Layer__table-row {
-  transition: all 180ms ease-in-out;
+  transition: all 100ms ease-in-out;
 
   &.Layer__table-row--collapsed {
     .Layer__table-cell {
@@ -433,12 +433,12 @@
 
   & > .Layer__table-cell-content {
     overflow: hidden;
-    transition: all 100ms ease-out;
+    transition: all 50ms ease-out;
   }
 }
 
 .Layer__table-row {
-  transition: all 180ms ease-in-out;
+  transition: all 100ms ease-in-out;
 
   &.Layer__table-row--collapsed {
     .Layer__table-cell {

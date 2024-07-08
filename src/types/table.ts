@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 export interface TableContextProps {
   expandedRows: string[]
   setExpandedRows: (rowKey: string) => void
@@ -5,7 +7,7 @@ export interface TableContextProps {
 }
 
 export interface TableProps {
-  children: React.ReactNode | React.ReactNode[]
+  children: ReactNode | ReactNode[]
   componentName?: string
   borderCollapse?: 'collapse' | 'separate'
   bottomSpacing?: boolean
@@ -16,12 +18,12 @@ export interface TableHeadProps {
 }
 
 export interface TableBodyProps {
-  children: React.ReactNode | React.ReactNode[]
+  children: ReactNode | ReactNode[]
 }
 
 export interface TableRowProps {
   rowKey: string
-  children: React.ReactNode
+  children: ReactNode
   depth?: number
   expandable?: boolean
   variant?: 'expandable' | 'default' | 'summation'
@@ -33,7 +35,7 @@ export interface TableRowProps {
 }
 
 export interface TableCellProps {
-  children?: number | string | React.ReactNode
+  children?: number | string | ReactNode
   isCurrency?: boolean
   isHeaderCell?: boolean
   primary?: boolean
