@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, ReactNode } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import {
@@ -34,7 +34,7 @@ export interface BankTransactionsProps {
   hideHeader?: boolean
 }
 
-export const BankTransactions = ({
+export const BankTransactionsPlain = ({
   asWidget = false,
   pageSize = 15,
   categorizedOnly = false,
@@ -165,6 +165,8 @@ export const BankTransactions = ({
     debounceContainerWidth(size?.width)
   })
 
+  throw new Error('Bad thing')
+
   const editable = display === DisplayState.review
   return (
     <Container
@@ -252,5 +254,47 @@ export const BankTransactions = ({
         </div>
       )}
     </Container>
+  )
+}
+
+export interface ComponentBasePropsTemp {
+  onError?: (x: any) => void
+}
+
+export type AProps = BankTransactionsProps & ComponentBasePropsTemp
+
+export class ErrorBoundary extends React.Component {
+  constructor(props: any) {
+    super(props)
+    this.state = { hasError: false }
+  }
+  static getDerivedStateFromError(error: any) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true }
+  }
+  componentDidCatch(error: any, info: any) {
+    // Example "componentStack":
+    // in ComponentThatThrows (created by App)
+    // in ErrorBoundary (created by App)
+    // in div (created by App)
+    // in App
+    // logErrorToMyService(error, info.componentStack)
+  }
+
+  render() {
+    console.log(this.state)
+    if ((this.state as { hasError: any }).hasError) {
+      // You can render any custom fallback UI
+      return <p>Something went wrong, Sorry!</p>
+    }
+    return (this.props as { children: any }).children
+  }
+}
+
+export const BankTransactions = ({ onError, ...props }: AProps) => {
+  return (
+    <ErrorBoundary>
+      <BankTransactionsPlain {...props} />
+    </ErrorBoundary>
   )
 }
