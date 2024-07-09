@@ -1,5 +1,5 @@
 import React, { ErrorInfo, Component } from 'react'
-import { LayerContext } from '../../contexts/LayerContext'
+import { LayerError, reportError } from '../../models/ErrorHandler'
 import { ErrorBoundaryMessage } from './ErrorBoundaryMessage'
 
 interface ErrorBoundaryProps {
@@ -14,10 +14,11 @@ export class ErrorBoundary extends Component<
   React.PropsWithChildren<ErrorBoundaryProps>,
   ErrorBoundaryState
 > {
-  static contextType = LayerContext
+  onError: (err: LayerError) => void
 
   constructor(props: any) {
     super(props)
+    this.onError = props.onError
     this.state = { hasError: false }
   }
 
@@ -27,11 +28,10 @@ export class ErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, _info: ErrorInfo) {
-    if (this.props.onError) {
-      this.props.onError(error)
-    } else if ((this.context as { onError?: (e: Error) => void }).onError) {
-      const context = this.context as { onError: (e: Error) => void }
-      context.onError(error)
+    if (this.onError) {
+      this.onError({ type: 'render', payload: error })
+    } else {
+      reportError({ type: 'render', payload: error })
     }
   }
 

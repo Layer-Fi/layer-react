@@ -150,6 +150,8 @@ const BankTransactionsContent = ({
     setCurrentPage(1)
   }
 
+  throw new Error('hell yeah')
+
   const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
   const debounceShiftStickyHeader = debounce(setShiftStickyHeader, 500)
   const [listView, setListView] = useState(false)

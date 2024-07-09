@@ -1,4 +1,5 @@
 import { ToastProps } from '../components/Toast/Toast'
+import { LayerError } from '../models/ErrorHandler'
 import { Business, Category } from '../types'
 import { ExpiringOAuthResponse } from './authentication'
 
@@ -25,7 +26,7 @@ export type LayerContextHelpers = {
   setOnboardingStep: (value: OnboardingStep) => void
   addToast: (toast: ToastProps) => void
   removeToast: (toast: ToastProps) => void
-  onError?: (error: Error) => void
+  onError?: (error: LayerError) => void
 }
 
 export interface ColorHSLConfig {

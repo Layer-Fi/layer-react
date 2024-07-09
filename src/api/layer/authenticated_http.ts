@@ -1,6 +1,5 @@
-import { useErrorHandler } from '../../hooks/useErrorHandler'
 import { APIError } from '../../models/APIError'
-import { errorHand } from '../../providers/LayerProvider/LayerProvider'
+import { reportError } from '../../models/ErrorHandler'
 
 export type HTTPVerb = 'get' | 'put' | 'post' | 'patch' | 'options' | 'delete'
 
@@ -116,9 +115,12 @@ const handleException = async (error: Error | APIError) => {
     error,
     'code' in error ? error.code : 'none',
   )
-  errorHand.onError(error)
+
   if (error.name === 'APIError') {
-    console.log('HADNLE EXCEPTION 2a')
+    reportError({
+      type: (error as APIError).code === 401 ? 'unauthenticated' : 'api',
+      payload: error,
+    })
 
     throw error
   }
@@ -129,6 +131,11 @@ const handleException = async (error: Error | APIError) => {
     [],
   )
   console.log('HADNLE EXCEPTION 2b')
+
+  reportError({
+    type: 'api',
+    payload: apiError,
+  })
 
   throw apiError
 }

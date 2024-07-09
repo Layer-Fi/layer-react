@@ -5,7 +5,7 @@ import { ToastProps } from '../../components/Toast/Toast'
 import { DrawerContext } from '../../contexts/DrawerContext'
 import { LayerContext } from '../../contexts/LayerContext'
 import { useDrawer } from '../../hooks/useDrawer'
-import { useErrorHandler } from '../../hooks/useErrorHandler'
+import { LayerError, errorHandler } from '../../models/ErrorHandler'
 import { BankTransactionsProvider } from '../../providers/BankTransactionsProvider'
 import {
   LayerContextValues,
@@ -21,27 +21,6 @@ import {
 import { buildColorsPalette } from '../../utils/colors'
 import { add, isBefore } from 'date-fns'
 import useSWR, { SWRConfig } from 'swr'
-
-export class ErrorHandClass {
-  protected onErrorCallback?: (err: Error) => void | undefined
-
-  constructor() {
-    // initialization code
-    this.onErrorCallback = undefined
-  }
-
-  public setOnError(errorFnc: ((err: Error) => void) | undefined) {
-    this.onErrorCallback = errorFnc
-  }
-
-  public onError(err: Error) {
-    if (this.onErrorCallback) {
-      this.onErrorCallback(err)
-    }
-  }
-}
-
-export const errorHand = new ErrorHandClass()
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -109,7 +88,7 @@ export type Props = {
   environment?: keyof typeof LayerEnvironment
   theme?: LayerThemeConfig
   usePlaidSandbox?: boolean
-  onError?: (error: Error) => void
+  onError?: (error: LayerError) => void
 }
 
 export const LayerProvider = ({
@@ -130,10 +109,7 @@ export const LayerProvider = ({
     revalidateIfStale: false,
   }
 
-  // const { onError: onErrorCallback } = useErrorHandler(onError)
-  useEffect(() => {
-    errorHand.setOnError(onError)
-  }, [onError])
+  errorHandler.setOnError(onError)
 
   const colors = buildColorsPalette(theme)
 
@@ -341,7 +317,7 @@ export const LayerProvider = ({
           setOnboardingStep,
           addToast,
           removeToast,
-          onError: errorHand.onError,
+          onError: errorHandler.onError,
         }}
       >
         <BankTransactionsProvider>
