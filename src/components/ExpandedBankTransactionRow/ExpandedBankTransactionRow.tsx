@@ -87,13 +87,13 @@ const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
 const validateSplit = (splitData: RowState) => {
   let valid = true
 
-  // splitData.splits.forEach(split => {
-  //   if (split.amount <= 0) {
-  //     valid = false
-  //   } else if (!split.category) {
-  //     valid = false
-  //   }
-  // })
+  splitData.splits.forEach(split => {
+    if (split.amount <= 0) {
+      valid = false
+    } else if (!split.category) {
+      valid = false
+    }
+  })
 
   return valid
 }

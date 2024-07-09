@@ -85,7 +85,6 @@ export const postWithFormData = <
 }
 
 const handleResponse = async <Return>(res: Response) => {
-  console.log('res', res.status, res.type, res)
   if (!res.ok) {
     const errors = await tryToReadErrorsFromResponse(res)
     const apiError = new APIError(
@@ -110,12 +109,6 @@ const handleResponse = async <Return>(res: Response) => {
 }
 
 const handleException = async (error: Error | APIError) => {
-  console.log(
-    'HADNLE EXCEPTION 1',
-    error,
-    'code' in error ? error.code : 'none',
-  )
-
   if (error.name === 'APIError') {
     reportError({
       type: (error as APIError).code === 401 ? 'unauthenticated' : 'api',
@@ -130,7 +123,6 @@ const handleException = async (error: Error | APIError) => {
     undefined,
     [],
   )
-  console.log('HADNLE EXCEPTION 2b')
 
   reportError({
     type: 'api',
