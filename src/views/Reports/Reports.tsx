@@ -88,7 +88,7 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
               { value: 'balanceSheet', label: 'Balance sheet' },
               {
                 value: 'statementOfCashFlow',
-                label: 'Statement of Cash Flows',
+                label: 'Statement of Cash Flow',
               },
             ] as ReportOption[]
           }
