@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, ReactNode } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import {
@@ -12,6 +12,7 @@ import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
 import { BankTransactionsTable } from '../BankTransactionsTable'
 import { Container } from '../Container'
+import { ErrorBoundary } from '../ErrorBoundary'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
 import { BankTransactionsHeader } from './BankTransactionsHeader'
@@ -34,7 +35,22 @@ export interface BankTransactionsProps {
   hideHeader?: boolean
 }
 
-export const BankTransactionsPlain = ({
+export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
+  onError?: (error: Error) => void
+}
+
+export const BankTransactions = ({
+  onError,
+  ...props
+}: BankTransactionsWithErrorProps) => {
+  return (
+    <ErrorBoundary onError={onError}>
+      <BankTransactionsContent {...props} />
+    </ErrorBoundary>
+  )
+}
+
+const BankTransactionsContent = ({
   asWidget = false,
   pageSize = 15,
   categorizedOnly = false,
@@ -165,9 +181,8 @@ export const BankTransactionsPlain = ({
     debounceContainerWidth(size?.width)
   })
 
-  throw new Error('Bad thing')
-
   const editable = display === DisplayState.review
+
   return (
     <Container
       className={
@@ -254,47 +269,5 @@ export const BankTransactionsPlain = ({
         </div>
       )}
     </Container>
-  )
-}
-
-export interface ComponentBasePropsTemp {
-  onError?: (x: any) => void
-}
-
-export type AProps = BankTransactionsProps & ComponentBasePropsTemp
-
-export class ErrorBoundary extends React.Component {
-  constructor(props: any) {
-    super(props)
-    this.state = { hasError: false }
-  }
-  static getDerivedStateFromError(error: any) {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true }
-  }
-  componentDidCatch(error: any, info: any) {
-    // Example "componentStack":
-    // in ComponentThatThrows (created by App)
-    // in ErrorBoundary (created by App)
-    // in div (created by App)
-    // in App
-    // logErrorToMyService(error, info.componentStack)
-  }
-
-  render() {
-    console.log(this.state)
-    if ((this.state as { hasError: any }).hasError) {
-      // You can render any custom fallback UI
-      return <p>Something went wrong, Sorry!</p>
-    }
-    return (this.props as { children: any }).children
-  }
-}
-
-export const BankTransactions = ({ onError, ...props }: AProps) => {
-  return (
-    <ErrorBoundary>
-      <BankTransactionsPlain {...props} />
-    </ErrorBoundary>
   )
 }

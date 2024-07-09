@@ -1,4 +1,6 @@
+import { useErrorHandler } from '../../hooks/useErrorHandler'
 import { APIError } from '../../models/APIError'
+import { errorHand } from '../../providers/LayerProvider/LayerProvider'
 
 export type HTTPVerb = 'get' | 'put' | 'post' | 'patch' | 'options' | 'delete'
 
@@ -84,6 +86,7 @@ export const postWithFormData = <
 }
 
 const handleResponse = async <Return>(res: Response) => {
+  console.log('res', res.status, res.type, res)
   if (!res.ok) {
     const errors = await tryToReadErrorsFromResponse(res)
     const apiError = new APIError(
@@ -107,8 +110,16 @@ const handleResponse = async <Return>(res: Response) => {
   return parsedResponse as Return
 }
 
-const handleException = async (error: Error) => {
+const handleException = async (error: Error | APIError) => {
+  console.log(
+    'HADNLE EXCEPTION 1',
+    error,
+    'code' in error ? error.code : 'none',
+  )
+  errorHand.onError(error)
   if (error.name === 'APIError') {
+    console.log('HADNLE EXCEPTION 2a')
+
     throw error
   }
 
@@ -117,6 +128,8 @@ const handleException = async (error: Error) => {
     undefined,
     [],
   )
+  console.log('HADNLE EXCEPTION 2b')
+
   throw apiError
 }
 

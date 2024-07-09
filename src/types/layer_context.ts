@@ -25,6 +25,7 @@ export type LayerContextHelpers = {
   setOnboardingStep: (value: OnboardingStep) => void
   addToast: (toast: ToastProps) => void
   removeToast: (toast: ToastProps) => void
+  onError?: (error: Error) => void
 }
 
 export interface ColorHSLConfig {

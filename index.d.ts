@@ -1019,20 +1019,10 @@ declare module '@layerfi/components/components/BankTransactions/BankTransactions
       filters?: BankTransactionFilters;
       hideHeader?: boolean;
   }
-  export const BankTransactionsPlain: ({ asWidget, pageSize, categorizedOnly, categorizeView, showDescriptions, showReceiptUploads, monthlyView, mobileComponent, filters: inputFilters, hideHeader, }: BankTransactionsProps) => React.JSX.Element;
-  export interface ComponentBasePropsTemp {
-      onError?: (x: any) => void;
+  export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
+      onError?: (error: Error) => void;
   }
-  export type AProps = BankTransactionsProps & ComponentBasePropsTemp;
-  export class ErrorBoundary extends React.Component {
-      constructor(props: any);
-      static getDerivedStateFromError(error: any): {
-          hasError: boolean;
-      };
-      componentDidCatch(error: any, info: any): void;
-      render(): any;
-  }
-  export const BankTransactions: ({ onError, ...props }: AProps) => React.JSX.Element;
+  export const BankTransactions: ({ onError, ...props }: BankTransactionsWithErrorProps) => React.JSX.Element;
 
 }
 declare module '@layerfi/components/components/BankTransactions/BankTransactionsHeader' {
@@ -1524,6 +1514,37 @@ declare module '@layerfi/components/components/Drawer/Drawer' {
 }
 declare module '@layerfi/components/components/Drawer/index' {
   export { Drawer } from '@layerfi/components/components/Drawer/Drawer';
+
+}
+declare module '@layerfi/components/components/ErrorBoundary/ErrorBoundary' {
+  import React, { ErrorInfo, Component } from 'react';
+  interface ErrorBoundaryProps {
+      onError?: (error: Error) => void;
+  }
+  interface ErrorBoundaryState {
+      hasError?: boolean;
+  }
+  export class ErrorBoundary extends Component<React.PropsWithChildren<ErrorBoundaryProps>, ErrorBoundaryState> {
+      static contextType: React.Context<import("@layerfi/components/types").LayerContextValues & import("../../types").LayerContextHelpers & {
+          setTheme: (theme: import("@layerfi/components/types/layer_context").LayerThemeConfig) => void;
+      }>;
+      constructor(props: any);
+      static getDerivedStateFromError(_error: Error): {
+          hasError: boolean;
+      };
+      componentDidCatch(error: Error, _info: ErrorInfo): void;
+      render(): any;
+  }
+  export {};
+
+}
+declare module '@layerfi/components/components/ErrorBoundary/ErrorBoundaryMessage' {
+  import React from 'react';
+  export const ErrorBoundaryMessage: () => React.JSX.Element;
+
+}
+declare module '@layerfi/components/components/ErrorBoundary/index' {
+  export { ErrorBoundary } from '@layerfi/components/components/ErrorBoundary/ErrorBoundary';
 
 }
 declare module '@layerfi/components/components/ExpandedBankTransactionRow/APIErrorNotifications' {
@@ -3250,6 +3271,20 @@ declare module '@layerfi/components/hooks/useElementSize/useElementSize' {
   }) => void) => import("react").RefObject<T>;
 
 }
+declare module '@layerfi/components/hooks/useErrorHandler/index' {
+  export { useErrorHandler } from '@layerfi/components/hooks/useErrorHandler/useErrorHandler';
+
+}
+declare module '@layerfi/components/hooks/useErrorHandler/useErrorHandler' {
+  /// <reference types="react" />
+  export const ErrorHandlerContext: import("react").Context<{
+      callback?: ((err: Error) => void | undefined) | undefined;
+  }>;
+  export const useErrorHandler: () => {
+      onError: (error: Error) => void;
+  };
+
+}
 declare module '@layerfi/components/hooks/useJournal/index' {
   export { useJournal } from '@layerfi/components/hooks/useJournal/useJournal';
 
@@ -3861,8 +3896,9 @@ declare module '@layerfi/components/providers/LayerProvider/LayerProvider' {
       environment?: keyof typeof LayerEnvironment;
       theme?: LayerThemeConfig;
       usePlaidSandbox?: boolean;
+      onError?: (error: Error) => void;
   };
-  export const LayerProvider: ({ appId, appSecret, businessId, children, businessAccessToken, environment, theme, usePlaidSandbox, }: PropsWithChildren<Props>) => React.JSX.Element;
+  export const LayerProvider: ({ appId, appSecret, businessId, children, businessAccessToken, environment, theme, usePlaidSandbox, onError, }: PropsWithChildren<Props>) => React.JSX.Element;
   export {};
 
 }
@@ -4253,6 +4289,7 @@ declare module '@layerfi/components/types/layer_context' {
       setOnboardingStep: (value: OnboardingStep) => void;
       addToast: (toast: ToastProps) => void;
       removeToast: (toast: ToastProps) => void;
+      onError?: (error: Error) => void;
   };
   export interface ColorHSLConfig {
       h: string;
