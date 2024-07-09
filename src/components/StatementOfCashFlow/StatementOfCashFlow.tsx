@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { StatementOfCashFlowContext } from '../../contexts/StatementOfCashContext'
-import { TableExpandProvider } from '../../contexts/TableExpandContext'
+import { TableProvider } from '../../contexts/TableContext'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow'
 import { Container } from '../Container'
 import { DateRangeInput } from '../Input'
 import { Loader } from '../Loader'
-import { PanelView } from '../PanelView'
 import { StatementOfCashFlowTable } from '../StatementOfCashFlowTable'
+import { View } from '../View'
 import { STATEMENT_OF_CASH_FLOW_ROWS } from './constants'
 import { startOfDay, subWeeks } from 'date-fns'
 
@@ -45,10 +45,10 @@ const StatementOfCashFlowView = () => {
   }
 
   return (
-    <TableExpandProvider>
+    <TableProvider>
       <Container name={COMPONENT_NAME}>
-        <PanelView
-          title='Statement of Cash Flows'
+        <View
+          type='panel'
           headerControls={
             <>
               <DateRangeInput
@@ -69,8 +69,8 @@ const StatementOfCashFlowView = () => {
               config={STATEMENT_OF_CASH_FLOW_ROWS}
             />
           )}
-        </PanelView>
+        </View>
       </Container>
-    </TableExpandProvider>
+    </TableProvider>
   )
 }

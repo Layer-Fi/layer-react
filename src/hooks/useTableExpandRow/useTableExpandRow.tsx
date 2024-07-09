@@ -1,29 +1,43 @@
-import { useContext, useEffect, useState } from 'react'
-import { TableExpandContext } from '../../contexts/TableExpandContext'
+import { useContext } from 'react'
+import { TableContext } from '../../contexts/TableContext'
 
-const INDENTATION = 24
+export const useTableExpandRow = () => {
+  const {
+    expandedAllRows,
+    setExpandedAllRows,
+    expandAllRows,
+    expandedRows,
+    setExpandedRows,
+  } = useContext(TableContext)
 
-export const useTableExpandRow = (index: number, defaultOpen = false) => {
-  const [isOpen, setIsOpen] = useState(defaultOpen)
-  const [showComponent, setShowComponent] = useState(false)
-  const { tableExpandState } = useContext(TableExpandContext)
+  const toggleAllRows = () => {
+    if (expandedAllRows) {
+      setIsOpen([])
+      return setExpandedAllRows(false)
+    } else {
+      return setExpandedAllRows(true)
+    }
+  }
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setShowComponent(true)
-    }, index * 10)
+  const setIsOpen = (
+    rowKey: string | string[],
+    withoutAllRowsUpdate?: boolean,
+  ) => {
+    if (!withoutAllRowsUpdate && expandedAllRows) {
+      setExpandedAllRows(false)
+    }
+    if (Array.isArray(rowKey)) {
+      return expandAllRows(rowKey)
+    }
+    return setExpandedRows(rowKey)
+  }
 
-    return () => clearTimeout(timeoutId)
-  }, [index])
-
-  useEffect(() => {
-    setIsOpen(tableExpandState)
-  }, [tableExpandState])
+  const isOpen = (rowKey: string) => expandedRows.includes(rowKey)
 
   return {
     isOpen,
     setIsOpen,
-    showComponent,
-    INDENTATION,
+    expandedAllRows,
+    toggleAllRows,
   }
 }

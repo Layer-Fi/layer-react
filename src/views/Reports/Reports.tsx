@@ -4,14 +4,12 @@ import { BalanceSheet } from '../../components/BalanceSheet'
 import { Button, ButtonVariant, RetryButton } from '../../components/Button'
 import { Container } from '../../components/Container'
 import { Panel } from '../../components/Panel'
-import { PanelView } from '../../components/PanelView'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { StatementOfCashFlow } from '../../components/StatementOfCashFlow'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useLayerContext } from '../../contexts/LayerContext'
 import DownloadCloud from '../../icons/DownloadCloud'
-import { startOfDay } from 'date-fns'
 
 export interface ReportsProps {
   title?: string
@@ -90,7 +88,7 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
               { value: 'balanceSheet', label: 'Balance sheet' },
               {
                 value: 'statementOfCashFlow',
-                label: 'Statement of Cash Flows',
+                label: 'Statement of Cash Flow',
               },
             ] as ReportOption[]
           }
@@ -112,8 +110,8 @@ const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
   return (
     <>
       {openReport === 'profitAndLoss' && (
-        <PanelView
-          title={'Profit & Loss'}
+        <View
+          type='panel'
           headerControls={
             <>
               <ProfitAndLoss.DatePicker />
@@ -128,7 +126,7 @@ const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
           >
             <ProfitAndLoss.Table asContainer={false} />
           </Panel>
-        </PanelView>
+        </View>
       )}
       {openReport === 'balanceSheet' && <BalanceSheet />}
       {openReport === 'statementOfCashFlow' && <StatementOfCashFlow />}

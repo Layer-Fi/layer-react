@@ -1,7 +1,7 @@
-import React from 'react'
-import { BalanceSheet } from '../../types'
-import { LineItem } from '../../types/line_item'
-import { BalanceSheetRow } from '../BalanceSheetRow'
+import React, { useEffect } from 'react'
+import { useTableExpandRow } from '../../hooks/useTableExpandRow'
+import { BalanceSheet, LineItem } from '../../types'
+import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 
 type BalanceSheetRowProps = {
   name: string
@@ -16,27 +16,102 @@ export const BalanceSheetTable = ({
   data: BalanceSheet
   config: BalanceSheetRowProps[]
 }) => {
-  return (
-    <table className='Layer__table Layer__table--hover-effect Layer__balance-sheet__table'>
-      <thead>
-        <tr>
-          <th className='Layer__table-header'>Type</th>
-          <th className='Layer__table-header Layer__table-cell--last'>Total</th>
-        </tr>
-      </thead>
+  const { isOpen, setIsOpen, expandedAllRows } = useTableExpandRow()
+  const allRowKeys: string[] = []
 
-      <tbody>
-        {config.map((row, idx) => {
-          return (
-            <BalanceSheetRow
-              key={'balance-sheet-row-' + idx + row.name}
-              lineItem={data[row.lineItem as keyof BalanceSheet] as LineItem}
-              summarize={true}
-              defaultExpanded={idx === 0 ? true : false}
-            />
-          )
-        })}
-      </tbody>
-    </table>
+  useEffect(() => {
+    if (expandedAllRows) {
+      setIsOpen(allRowKeys, true)
+    }
+  }, [expandedAllRows])
+
+  useEffect(() => {
+    setIsOpen(['assets'])
+  }, [])
+
+  const renderLineItem = (
+    lineItem: LineItem,
+    depth: number = 0,
+    rowKey: string,
+    rowIndex: number,
+  ): React.ReactNode => {
+    const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
+
+    const expanded = expandable ? isOpen(rowKey) : true
+
+    const showChildren = expanded || expandedAllRows
+
+    if (expandable) {
+      allRowKeys.push(rowKey)
+    }
+
+    return (
+      <React.Fragment key={rowKey + '-' + rowIndex}>
+        <TableRow
+          rowKey={rowKey + '-' + rowIndex}
+          expandable={expandable}
+          isExpanded={showChildren}
+          handleExpand={() => setIsOpen(rowKey)}
+          depth={depth}
+          withDivider={depth === 0 && rowIndex > 0}
+        >
+          <TableCell withExpandIcon={expandable} primary={expandable}>
+            {lineItem.display_name}
+          </TableCell>
+          <TableCell
+            isCurrency={!expandable || (expandable && !expanded)}
+            primary={expandable}
+          >
+            {(!expandable || (expandable && !expanded)) && lineItem.value}
+          </TableCell>
+        </TableRow>
+        {showChildren &&
+          lineItem.line_items &&
+          lineItem.line_items.map((subItem, subIdx) =>
+            renderLineItem(
+              subItem,
+              depth + 1,
+              rowKey + ':' + subItem.name,
+              subIdx,
+            ),
+          )}
+        {showChildren && expandable && (
+          <TableRow
+            rowKey={rowKey + '-' + rowIndex + '--summation'}
+            depth={depth + 1}
+            variant='summation'
+          >
+            <TableCell primary>{`Total of ${lineItem.display_name}`}</TableCell>
+            <TableCell primary isCurrency>
+              {lineItem.value}
+            </TableCell>
+          </TableRow>
+        )}
+      </React.Fragment>
+    )
+  }
+
+  return (
+    <Table borderCollapse='collapse'>
+      <TableHead>
+        <TableRow isHeadRow rowKey='balance-sheet-head-row'>
+          <TableCell isHeaderCell>Type</TableCell>
+          <TableCell isHeaderCell>Total</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {config.map((row, idx) => (
+          <React.Fragment key={row.lineItem}>
+            {data[row.lineItem as keyof BalanceSheet] &&
+              renderLineItem(
+                data[row.lineItem as keyof BalanceSheet] as LineItem,
+                0,
+                row.lineItem,
+                idx,
+              )}
+          </React.Fragment>
+        ))}
+      </TableBody>
+    </Table>
   )
 }

@@ -17,12 +17,6 @@
       'ss03' on;
   }
 
-  tbody {
-    .Layer__table__empty-row:first-child {
-      display: none;
-    }
-  }
-
   .Layer__statement-of-cash-flow__title {
     display: inline;
     flex: 1;
@@ -51,15 +45,6 @@
       }
     }
   }
-
-  @container (min-width: 1400px) {
-    .Layer__table tr td:first-child .Layer__table-cell-content,
-    .Layer__table tr td:last-child .Layer__table-cell-content,
-    .Layer__table tr th:first-child.Layer__table-header,
-    .Layer__table tr th:last-child.Layer__table-header {
-      padding-left: 0;
-    }
-  }
 }
 
 .Layer__statement-of-cash-flow__header {
@@ -81,173 +66,6 @@
       display: flex;
       flex-direction: row;
       gap: var(--spacing-xs);
-    }
-  }
-}
-
-.Layer__statement-of-cash-flow__table {
-  width: 100%;
-  border-collapse: collapse;
-
-  .Layer__statement-of-cash-flow-row {
-    font-size: 1em;
-    height: 52px;
-
-    .Layer__statement-of-cash-flow-cell__value {
-      .Layer__table-cell-content {
-        justify-content: flex-end;
-      }
-    }
-
-    &.Layer__statement-of-cash-flow-row--depth-0 {
-      &:not(.Layer__statement-of-cash-flow-row--display-children-true) {
-        .Layer__statement-of-cash-flow-cell__label {
-          padding-left: 16px;
-        }
-      }
-      .Layer__statement-of-cash-flow-cell__label {
-        .Layer__table-cell-content {
-          font-size: var(--text-lg);
-          font-weight: 540;
-          color: var(--text-color-primary);
-        }
-      }
-      &.Layer__statement-of-cash-flow-row--variant-summation {
-        .Layer__table-cell-content {
-          font-size: var(--text-md);
-        }
-      }
-    }
-
-    &.Layer__statement-of-cash-flow-row--depth-1 {
-      &:not(.Layer__statement-of-cash-flow-row--display-children-true) {
-        background-color: var(--color-base-50);
-        .Layer__statement-of-cash-flow-cell__label {
-          padding-left: calc(50px - var(--spacing-sm));
-        }
-      }
-      .Layer__statement-of-cash-flow-cell__label {
-        padding-left: calc(34px - var(--spacing-sm));
-      }
-      .Layer__table-cell-content {
-        font-size: var(--text-md);
-        font-variation-settings: 'wght' var(--font-weight-bold);
-        color: var(--color-base-700);
-      }
-
-    }
-
-    &.Layer__statement-of-cash-flow-row--depth-2 {
-      &:not(.Layer__statement-of-cash-flow-row--display-children-true) {
-        background-color: var(--color-base-50);
-        .Layer__statement-of-cash-flow-cell__label {
-          padding-left: calc(80px - var(--spacing-sm));
-        }
-      }
-      .Layer__statement-of-cash-flow-cell__label {
-        padding-left: calc(64px - var(--spacing-sm));
-      }
-      .Layer__table-cell-content {
-        font-size: var(--text-md);
-        font-weight: 460;
-        color: var(--text-color-secondary);
-      }
-    }
-
-    &.Layer__statement-of-cash-flow-row--depth-3 {
-      &:not(.Layer__statement-of-cash-flow-row--display-children-true) {
-        background-color: var(--color-base-50);
-        .Layer__statement-of-cash-flow-cell__label {
-          padding-left: calc(104px - var(--spacing-sm));
-        }
-      }
-      .Layer__statement-of-cash-flow-cell__label {
-        padding-left: calc(88px - var(--spacing-sm));
-      }
-      .Layer__table-cell-content {
-        font-size: var(--text-md);
-        font-weight: 460;
-        color: var(--text-color-secondary);
-      }
-    }
-
-    &.Layer__statement-of-cash-flow-row--depth-4 {
-      &:not(.Layer__statement-of-cash-flow-row--display-children-true) {
-        background-color: var(--color-base-50);
-        .Layer__statement-of-cash-flow-cell__label {
-          padding-left: calc(130px - var(--spacing-sm));
-        }
-      }
-      .Layer__statement-of-cash-flow-cell__label {
-        padding-left: calc(114px - var(--spacing-sm));
-      }
-      .Layer__table-cell-content {
-        font-size: var(--text-md);
-        font-weight: 460;
-        color: var(--text-color-secondary);
-      }
-    }
-
-    &.Layer__statement-of-cash-flow-row--display-children-true {
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    &.Layer__statement-of-cash-flow-row--display-children-false {
-      font-weight: normal;
-    }
-
-    &.Layer__statement-of-cash-flow-row--variant-summation {
-      background: var(--color-base-100);
-      .Layer__table-cell-content {
-        font-size: var(--text-md);
-        font-variation-settings: 'wght' var(--font-weight-bold);
-        color: var(--text-color-primary);
-      }
-    }
-
-    &.Layer__statement-of-cash-flow-row--expanded {
-      svg {
-        transform: rotate(0deg);
-      }
-    }
-  }
-
-  .Layer__table-cell--last {
-    text-align: right;
-  }
-
-  .Layer__table-cell__content-wrapper {
-    display: flex;
-    align-items: center;
-    .Layer__table__expand-icon {
-      margin: 0;
-      transition: transform var(--transition-speed);
-      transform: rotate(-90deg);
-    }
-  }
-
-  .Layer__statement-of-cash-flow-cell__label {
-    position: relative;
-  }
-
-  .Layer__statement-of-cash-flow-cell__label {
-    .Layer__table-cell-content {
-      padding-left: 0;
-    }
-  }
-
-  .Layer__statement-of-cash-flow-cell__value--positive
-    .Layer__table-cell-content {
-    &::before {
-      content: '$';
-    }
-  }
-
-  .Layer__statement-of-cash-flow-cell__value--negative
-    .Layer__table-cell-content {
-    &::before {
-      content: '-$';
     }
   }
 }
