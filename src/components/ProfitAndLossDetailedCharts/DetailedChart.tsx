@@ -1,8 +1,4 @@
 import React, { useMemo } from 'react'
-import {
-  INACTIVE_OPACITY_LEVELS,
-  DEFAULT_CHART_COLORS,
-} from '../../config/charts'
 import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { LineBaseItem } from '../../types/line_item'
@@ -20,6 +16,7 @@ import {
   Text as ChartText,
 } from 'recharts'
 import { PolarViewBox } from 'recharts/types/util/types'
+import { mapColorsToTypes } from './DetailedTable'
 
 interface DetailedChartProps {
   filteredData: LineBaseItem[]
@@ -46,21 +43,26 @@ export const DetailedChart = ({
     if (!filteredData) {
       return []
     }
-    return filteredData.map(x => {
+    return filteredData.map((x) => {
       if (x.hidden) {
         return {
           name: x.display_name,
           value: 0,
+          type: x.type,
         }
       }
       return {
         name: x.display_name,
         value: x.value,
+        type: x.type,
       }
     })
   }, [filteredData, isLoading])
 
-  const noValue = chartData.length === 0 || !chartData.find(x => x.value !== 0)
+  const noValue =
+    chartData.length === 0 || !chartData.find((x) => x.value !== 0)
+
+  const typeColorMapping = mapColorsToTypes(chartData)
 
   return (
     <div className='chart-field'>
@@ -86,18 +88,11 @@ export const DetailedChart = ({
                 animationEasing='ease-in-out'
               >
                 {chartData.map((entry, index) => {
-                  const colorConfig =
-                    DEFAULT_CHART_COLORS[index % DEFAULT_CHART_COLORS.length]
-                  let fill: string | undefined = colorConfig.color
-                  let opacity = colorConfig.opacity
+                  let fill: string | undefined = typeColorMapping[index].color
                   let active = true
                   if (hoveredItem && entry.name !== hoveredItem) {
                     active = false
                     fill = undefined
-                    opacity =
-                      INACTIVE_OPACITY_LEVELS[
-                        index % INACTIVE_OPACITY_LEVELS.length
-                      ]
                   }
 
                   return (
@@ -107,7 +102,7 @@ export const DetailedChart = ({
                         hoveredItem && active ? 'active' : 'inactive'
                       }`}
                       style={{ fill }}
-                      opacity={opacity}
+                      opacity={typeColorMapping[index].opacity}
                       onMouseEnter={() => setHoveredItem(entry.name)}
                       onMouseLeave={() => setHoveredItem(undefined)}
                     />
@@ -117,7 +112,7 @@ export const DetailedChart = ({
                   position='center'
                   value='Total'
                   className='pie-center-label-title'
-                  content={props => {
+                  content={(props) => {
                     const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
                       cx: 0,
                       cy: 0,
@@ -154,7 +149,7 @@ export const DetailedChart = ({
                   position='center'
                   value='Total'
                   className='pie-center-label-title'
-                  content={props => {
+                  content={(props) => {
                     const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
                       cx: 0,
                       cy: 0,
@@ -173,7 +168,7 @@ export const DetailedChart = ({
                     let value = filteredTotal
                     if (hoveredItem) {
                       value = filteredData.find(
-                        x => x.display_name === hoveredItem,
+                        (x) => x.display_name === hoveredItem
                       )?.value
                     }
 
@@ -192,7 +187,7 @@ export const DetailedChart = ({
                   position='center'
                   value='Total'
                   className='pie-center-label-title'
-                  content={props => {
+                  content={(props) => {
                     const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
                       cx: 0,
                       cy: 0,
@@ -217,8 +212,8 @@ export const DetailedChart = ({
                         >
                           {`${formatPercent(
                             filteredData.find(
-                              x => x.display_name === hoveredItem,
-                            )?.share,
+                              (x) => x.display_name === hoveredItem
+                            )?.share
                           )}%`}
                         </ChartText>
                       )
@@ -248,7 +243,7 @@ export const DetailedChart = ({
                   position='center'
                   value='Total'
                   className='pie-center-label-title'
-                  content={props => {
+                  content={(props) => {
                     const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
                       cx: 0,
                       cy: 0,
@@ -285,7 +280,7 @@ export const DetailedChart = ({
                   position='center'
                   value='Total'
                   className='pie-center-label-title'
-                  content={props => {
+                  content={(props) => {
                     const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
                       cx: 0,
                       cy: 0,
@@ -304,7 +299,7 @@ export const DetailedChart = ({
                     let value = filteredTotal
                     if (hoveredItem) {
                       value = filteredData.find(
-                        x => x.display_name === hoveredItem,
+                        (x) => x.display_name === hoveredItem
                       )?.value
                     }
 
