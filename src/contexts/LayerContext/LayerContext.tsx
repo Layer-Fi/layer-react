@@ -35,6 +35,7 @@ export const LayerContext = createContext<
   toasts: [],
   addToast: (toast: ToastProps) => undefined,
   removeToast: () => undefined,
+  onError: () => undefined,
 })
 
 export const useLayerContext = () => useContext(LayerContext)

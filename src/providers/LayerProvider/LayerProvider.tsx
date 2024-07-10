@@ -5,6 +5,7 @@ import { ToastProps } from '../../components/Toast/Toast'
 import { DrawerContext } from '../../contexts/DrawerContext'
 import { LayerContext } from '../../contexts/LayerContext'
 import { useDrawer } from '../../hooks/useDrawer'
+import { LayerError, errorHandler } from '../../models/ErrorHandler'
 import { BankTransactionsProvider } from '../../providers/BankTransactionsProvider'
 import {
   LayerContextValues,
@@ -87,6 +88,7 @@ export type Props = {
   environment?: keyof typeof LayerEnvironment
   theme?: LayerThemeConfig
   usePlaidSandbox?: boolean
+  onError?: (error: LayerError) => void
 }
 
 export const LayerProvider = ({
@@ -98,6 +100,7 @@ export const LayerProvider = ({
   environment = 'production',
   theme,
   usePlaidSandbox,
+  onError,
 }: PropsWithChildren<Props>) => {
   const defaultSWRConfig = {
     revalidateInterval: 0,
@@ -105,6 +108,8 @@ export const LayerProvider = ({
     revalidateOnReconnect: false,
     revalidateIfStale: false,
   }
+
+  errorHandler.setOnError(onError)
 
   const colors = buildColorsPalette(theme)
 
@@ -312,6 +317,7 @@ export const LayerProvider = ({
           setOnboardingStep,
           addToast,
           removeToast,
+          onError: errorHandler.onError,
         }}
       >
         <BankTransactionsProvider>

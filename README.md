@@ -35,6 +35,7 @@ Nest the components you want to use under the `LayerProvider` component. You sho
 - `businessAccessToken` Temporary authentication token scoped to this specific business. See the [getting started guide](https://docs.layerfi.com/guides/embedded-components#backend-setup) for how to fetch these tokens on your backend.
 - `envronment` (Optional, defaults to "production") the Layer environment you're attempting to access [`staging` or `production`]
 - `theme` (Optional) to customize the look of components
+- `onError` (Optional) to get notified about exceptions
 
 ```tsx
 import { LayerProvider } from "@layerfi/components";
@@ -517,4 +518,25 @@ body .Layer__table-cell-content {
 body .Layer__bank-transaction-row .Layer__table-cell-content {
   background: gray;
 }
+```
+
+## Error callback
+
+Use `onError` property on `<LayerProvider />` to get notified about all exceptions:
+
+```ts
+<LayerProvider
+  businessId="..."
+  environment="..."
+  appId="..."
+  onError={err => console.log('My error callback', err)}
+>
+  {...}
+</LayerProvider>
+```
+
+...or on specific component:
+
+```ts
+<BankTransactions onError={e => console.log('My callback:', e)} />
 ```
