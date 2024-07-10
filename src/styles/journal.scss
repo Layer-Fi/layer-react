@@ -390,11 +390,8 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
+      gap: var(--spacing-xs);
     }
-  }
-
-  .Layer__datepicker__time {
-    margin-left: var(--spacing-sm);
   }
 
   .Layer__input-label {
