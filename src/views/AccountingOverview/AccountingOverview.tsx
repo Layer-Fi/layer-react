@@ -34,8 +34,8 @@ export const AccountingOverview = ({
         <div className='Layer__accounting-overview__summaries-row'>
           <ProfitAndLoss.Summaries actionable={false} />
           <TransactionToReviewCard
-              usePnlDateRange={true}
-              onClick={onTransactionsToReviewClick}
+            usePnlDateRange={true}
+            onClick={onTransactionsToReviewClick}
           />
         </div>
         <Container

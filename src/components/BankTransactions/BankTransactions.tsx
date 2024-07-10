@@ -12,6 +12,7 @@ import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
 import { BankTransactionsTable } from '../BankTransactionsTable'
 import { Container } from '../Container'
+import { ErrorBoundary } from '../ErrorBoundary'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
 import { BankTransactionsHeader } from './BankTransactionsHeader'
@@ -34,7 +35,22 @@ export interface BankTransactionsProps {
   hideHeader?: boolean
 }
 
+export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
+  onError?: (error: Error) => void
+}
+
 export const BankTransactions = ({
+  onError,
+  ...props
+}: BankTransactionsWithErrorProps) => {
+  return (
+    <ErrorBoundary onError={onError}>
+      <BankTransactionsContent {...props} />
+    </ErrorBoundary>
+  )
+}
+
+const BankTransactionsContent = ({
   asWidget = false,
   pageSize = 15,
   categorizedOnly = false,
@@ -166,6 +182,7 @@ export const BankTransactions = ({
   })
 
   const editable = display === DisplayState.review
+
   return (
     <Container
       className={

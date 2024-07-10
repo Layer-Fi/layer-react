@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { BalanceSheet, LineItem } from '../../types'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
@@ -16,7 +16,18 @@ export const BalanceSheetTable = ({
   data: BalanceSheet
   config: BalanceSheetRowProps[]
 }) => {
-  const { isOpen, setIsOpen } = useTableExpandRow()
+  const { isOpen, setIsOpen, expandedAllRows } = useTableExpandRow()
+  const allRowKeys: string[] = []
+
+  useEffect(() => {
+    if (expandedAllRows) {
+      setIsOpen(allRowKeys, true)
+    }
+  }, [expandedAllRows])
+
+  useEffect(() => {
+    setIsOpen(['assets'])
+  }, [])
 
   const renderLineItem = (
     lineItem: LineItem,
@@ -25,13 +36,21 @@ export const BalanceSheetTable = ({
     rowIndex: number,
   ): React.ReactNode => {
     const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
+
     const expanded = expandable ? isOpen(rowKey) : true
+
+    const showChildren = expanded || expandedAllRows
+
+    if (expandable) {
+      allRowKeys.push(rowKey)
+    }
+
     return (
       <React.Fragment key={rowKey + '-' + rowIndex}>
         <TableRow
           rowKey={rowKey + '-' + rowIndex}
           expandable={expandable}
-          isExpanded={expanded}
+          isExpanded={showChildren}
           handleExpand={() => setIsOpen(rowKey)}
           depth={depth}
           withDivider={depth === 0 && rowIndex > 0}
@@ -46,7 +65,7 @@ export const BalanceSheetTable = ({
             {(!expandable || (expandable && !expanded)) && lineItem.value}
           </TableCell>
         </TableRow>
-        {expanded &&
+        {showChildren &&
           lineItem.line_items &&
           lineItem.line_items.map((subItem, subIdx) =>
             renderLineItem(
@@ -56,7 +75,7 @@ export const BalanceSheetTable = ({
               subIdx,
             ),
           )}
-        {expanded && expandable && (
+        {showChildren && expandable && (
           <TableRow
             rowKey={rowKey + '-' + rowIndex + '--summation'}
             depth={depth + 1}

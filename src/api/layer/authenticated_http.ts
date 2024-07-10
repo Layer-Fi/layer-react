@@ -1,4 +1,5 @@
 import { APIError } from '../../models/APIError'
+import { reportError } from '../../models/ErrorHandler'
 
 export type HTTPVerb = 'get' | 'put' | 'post' | 'patch' | 'options' | 'delete'
 
@@ -107,8 +108,13 @@ const handleResponse = async <Return>(res: Response) => {
   return parsedResponse as Return
 }
 
-const handleException = async (error: Error) => {
+const handleException = async (error: Error | APIError) => {
   if (error.name === 'APIError') {
+    reportError({
+      type: (error as APIError).code === 401 ? 'unauthenticated' : 'api',
+      payload: error,
+    })
+
     throw error
   }
 
@@ -117,6 +123,12 @@ const handleException = async (error: Error) => {
     undefined,
     [],
   )
+
+  reportError({
+    type: 'api',
+    payload: apiError,
+  })
+
   throw apiError
 }
 

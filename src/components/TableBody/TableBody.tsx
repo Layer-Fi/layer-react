@@ -1,9 +1,6 @@
 import React from 'react'
-import { TableHeadProps } from '../../types/table'
-import classNames from 'classnames'
+import { TableBodyProps } from '../../types/table'
 
-export const TableBody = ({ children }: TableHeadProps) => {
-  const tbodyClassNames = classNames('Layer__table-body')
-
-  return <tbody className={tbodyClassNames}>{children}</tbody>
+export const TableBody = ({ children }: TableBodyProps) => {
+  return <tbody className='Layer__table-body'>{children}</tbody>
 }

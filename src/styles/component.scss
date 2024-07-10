@@ -92,3 +92,10 @@
     padding-top: var(--spacing-xl);
   }
 }
+
+.Layer__error-boundary {
+  padding: var(--spacing-xl);
+  .Layer__data-state__description {
+    margin-bottom: 0;
+  }
+}

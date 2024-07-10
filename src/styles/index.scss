@@ -11,7 +11,6 @@
 @import './hover-menu.scss';
 @import './component.scss';
 @import './datetime.scss';
-@import './datepicker.scss';
 @import './details_list.scss';
 @import './inputs.scss';
 @import './onboarding.scss';
@@ -21,6 +20,7 @@
 @import './typography.scss';
 @import './utils.scss';
 @import './view.scss';
+@import './date_month_picker.scss';
 
 @import './ledger_account.scss';
 @import './balance_sheet.scss';
@@ -38,6 +38,7 @@
 @import './tasks.scss';
 @import './pagination.scss';
 @import './panel.scss';
+@import './period_picker.scss';
 @import './pill.scss';
 @import './profit_and_loss.scss';
 @import './profit_and_loss_detailed_charts.scss';
@@ -47,3 +48,4 @@
 
 @import './accounting_overview.scss';
 @import './reports.scss';
+@import 'react-datepicker/dist/react-datepicker.css';

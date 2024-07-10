@@ -1,12 +1,12 @@
-import React, { useContext } from 'react'
-import { TableContext } from '../../contexts/TableContext'
+import React from 'react'
+import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { Button, ButtonVariant } from '../Button'
 
 export const BalanceSheetExpandAllButton = () => {
-  const { tableState, toggleTableState } = useContext(TableContext)
+  const { expandedAllRows, toggleAllRows } = useTableExpandRow()
   return (
-    <Button onClick={toggleTableState} variant={ButtonVariant.secondary}>
-      {tableState ? 'Expand all rows' : 'Collapse all rows'}
+    <Button onClick={() => toggleAllRows()} variant={ButtonVariant.secondary}>
+      {!expandedAllRows ? 'Expand all rows' : 'Collapse all rows'}
     </Button>
   )
 }
