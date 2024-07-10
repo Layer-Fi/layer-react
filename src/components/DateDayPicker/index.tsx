@@ -1,1 +1,0 @@
-export { DateDayPicker } from './DateDayPicker'
