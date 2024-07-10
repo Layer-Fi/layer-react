@@ -5,6 +5,7 @@ import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { Heading, HeadingSize } from '../../components/Typography'
+import { TagInput } from '../../components/TagInput'
 import { View } from '../../components/View'
 import classNames from 'classnames'
 
@@ -25,6 +26,8 @@ export const AccountingOverview = ({
 
   return (
     <ProfitAndLoss asContainer={false}>
+                        <TagInput />
+
       <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
         {enableOnboarding && (
           <Onboarding

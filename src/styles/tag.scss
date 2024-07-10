@@ -1,0 +1,120 @@
+.layer__add-tag-button.hidden {
+  opacity: 0.5;
+}
+
+.layer__input-block {
+  position: absolute;
+  top: 40px; /* Adjust based on your layout */
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  z-index: 10;
+  max-width: 500px;
+}
+
+.layer__tag-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+}
+
+.layer__suggestions,
+.layer__tags-list,
+.layer__suggested-tags {
+  margin-top: 20px;
+}
+
+.layer__suggestion-item,
+.layer__tag,
+.layer__suggested-tags .layer__tag {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.layer__suggestion-item:hover,
+.layer__tag:hover,
+.layer__suggested-tags .layer__tag:hover {
+  background-color: #f0f0f0;
+}
+
+.layer__tags-list .layer__tag {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.layer__tag .layer__subtags {
+  display: flex;
+  gap: 5px;
+}
+
+.layer__tag .layer__subtag {
+  padding: 2px 5px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+}
+
+.layer__tag-manager-container {
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #fff;
+}
+
+.layer__tag-manager-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+}
+
+.layer__tag-manager-subtags-list {
+  margin-top: 20px;
+}
+
+.layer__tag-manager-subtag {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+}
+
+.layer__tag-manager-subtag span {
+  flex-grow: 1;
+}
+
+.layer__tag-manager-subtag button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.layer__tag-manager-subtag button:hover {
+  background-color: #d0d0d0;
+}
+
+.layer__tag-manager-edit-input {
+  width: 100%;
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+}
