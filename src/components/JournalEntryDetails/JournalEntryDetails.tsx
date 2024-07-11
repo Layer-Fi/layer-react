@@ -73,7 +73,7 @@ export const JournalEntryDetails = () => {
         <div className='Layer__ledger-account__entry-details__line-items'>
           <Card>
             <Table
-              componentName='journal-account__entry-details'
+              componentName='ledger-account__entry-details'
               borderCollapse='collapse'
             >
               <TableHead>
