@@ -46,31 +46,29 @@ const StatementOfCashFlowView = () => {
 
   return (
     <TableProvider>
-      <Container name={COMPONENT_NAME}>
-        <View
-          type='panel'
-          headerControls={
-            <>
-              <DateRangeInput
-                selected={[startDate, endDate]}
-                onChange={dates => handleDateChange(dates)}
-                dateFormat='MMM d'
-              />
-            </>
-          }
-        >
-          {!data || isLoading ? (
-            <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-              <Loader />
-            </div>
-          ) : (
-            <StatementOfCashFlowTable
-              data={data}
-              config={STATEMENT_OF_CASH_FLOW_ROWS}
+      <View
+        type='panel'
+        headerControls={
+          <>
+            <DateRangeInput
+              selected={[startDate, endDate]}
+              onChange={dates => handleDateChange(dates)}
+              dateFormat='MMM d'
             />
-          )}
-        </View>
-      </Container>
+          </>
+        }
+      >
+        {!data || isLoading ? (
+          <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
+            <Loader />
+          </div>
+        ) : (
+          <StatementOfCashFlowTable
+            data={data}
+            config={STATEMENT_OF_CASH_FLOW_ROWS}
+          />
+        )}
+      </View>
     </TableProvider>
   )
 }

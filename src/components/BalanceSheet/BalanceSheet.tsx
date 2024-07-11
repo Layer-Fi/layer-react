@@ -42,28 +42,26 @@ const BalanceSheetView = ({
 
   return (
     <TableProvider>
-      <Container name='balance-sheet'>
-        <View
-          type='panel'
-          headerControls={
-            <>
-              <BalanceSheetDatePicker
-                effectiveDate={effectiveDate}
-                setEffectiveDate={setEffectiveDate}
-              />
-              {withExpandAllButton && <BalanceSheetExpandAllButton />}
-            </>
-          }
-        >
-          {!data || isLoading ? (
-            <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-              <Loader />
-            </div>
-          ) : (
-            <BalanceSheetTable data={data} config={BALANCE_SHEET_ROWS} />
-          )}
-        </View>
-      </Container>
+      <View
+        type='panel'
+        headerControls={
+          <>
+            <BalanceSheetDatePicker
+              effectiveDate={effectiveDate}
+              setEffectiveDate={setEffectiveDate}
+            />
+            {withExpandAllButton && <BalanceSheetExpandAllButton />}
+          </>
+        }
+      >
+        {!data || isLoading ? (
+          <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
+            <Loader />
+          </div>
+        ) : (
+          <BalanceSheetTable data={data} config={BALANCE_SHEET_ROWS} />
+        )}
+      </View>
     </TableProvider>
   )
 }

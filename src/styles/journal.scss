@@ -440,3 +440,10 @@
   justify-content: space-between;
   padding: var(--spacing-md) 0 0;
 }
+
+.Layer__journal-account__entry-details__table {
+  .Layer__table-row.Layer__table-row--variant-default,
+  .Layer__table-row.Layer__table-row--variant-summation {
+    background-color: var(--color-base-0);
+  }
+}
