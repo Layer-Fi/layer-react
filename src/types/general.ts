@@ -12,3 +12,14 @@ export interface S3PresignedUrl {
 }
 
 export type LoadedStatus = 'initial' | 'loading' | 'complete'
+
+export enum DataModel {
+  BUSINESS = 'BUSINESS',
+  BALANCE_SHEET = 'BALANCE_SHEET',
+  BANK_TRANSACTIONS = 'BANK_TRANSACTIONS',
+  CHART_OF_ACCOUNTS = 'CHART_OF_ACCOUNTS',
+  LINKED_ACCOUNTS = 'LINKED_ACCOUNTS',
+  PROFIT_AND_LOSS = 'PROFIT_AND_LOSS',
+  STATEMENT_OF_CASH_FLOWS = 'STATEMENT_OF_CASH_FLOWS',
+  TASKS = 'TASKS',
+}
