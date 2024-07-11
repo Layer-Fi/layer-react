@@ -14,9 +14,7 @@ export const BalanceSheetDatePicker = ({
     <>
       <DatePicker
         selected={effectiveDate}
-        onChange={date => {
-          if (date) setEffectiveDate(date as Date)
-        }}
+        onChange={date => date && setEffectiveDate(date as Date)}
         mode='dayPicker'
       />
     </>
