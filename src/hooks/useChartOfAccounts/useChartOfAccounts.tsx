@@ -1,14 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { NORMALITY_OPTIONS } from '../../components/ChartOfAccountsForm/constants'
+import { useLayerContext } from '../../contexts/LayerContext'
 import { FormError, DateRange, Direction, NewAccount } from '../../types'
 import {
   ChartWithBalances,
   EditAccount,
   LedgerAccountBalance,
 } from '../../types/chart_of_accounts'
-import { BaseSelectOption } from '../../types/general'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { BaseSelectOption, DataModel } from '../../types/general'
 import { endOfMonth, formatISO, startOfMonth } from 'date-fns'
 import useSWR from 'swr'
 
@@ -164,7 +164,15 @@ export const useChartOfAccounts = (
     endDate: endOfMonth(new Date()),
   },
 ) => {
-  const { auth, businessId, apiUrl } = useLayerContext()
+  const {
+    auth,
+    businessId,
+    apiUrl,
+    touch,
+    read,
+    syncTimestamps,
+    hasBeenTouched,
+  } = useLayerContext()
 
   const [form, setForm] = useState<ChartOfAccountsForm | undefined>()
   const [sendingForm, setSendingForm] = useState(false)
@@ -206,6 +214,7 @@ export const useChartOfAccounts = (
       setApiError('Submit failed. Please, check your connection and try again.')
     } finally {
       setSendingForm(false)
+      touch(DataModel.CHART_OF_ACCOUNTS)
     }
   }
 
@@ -228,6 +237,7 @@ export const useChartOfAccounts = (
       setApiError('Submit failed. Please, check your connection and try again.')
     } finally {
       setSendingForm(false)
+      touch(DataModel.CHART_OF_ACCOUNTS)
     }
   }
 
@@ -396,6 +406,19 @@ export const useChartOfAccounts = (
   }
 
   const refetch = () => mutate()
+
+  // Refetch data if related models has been changed since last fetch
+  useEffect(() => {
+    if (isLoading || isValidating) {
+      read(DataModel.CHART_OF_ACCOUNTS)
+    }
+  }, [isLoading, isValidating])
+
+  useEffect(() => {
+    if (hasBeenTouched(DataModel.CHART_OF_ACCOUNTS)) {
+      refetch()
+    }
+  }, [syncTimestamps])
 
   return {
     data: data?.data,

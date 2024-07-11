@@ -2,6 +2,7 @@ import { ToastProps } from '../components/Toast/Toast'
 import { LayerError } from '../models/ErrorHandler'
 import { Business, Category } from '../types'
 import { ExpiringOAuthResponse } from './authentication'
+import { DataModel } from './general'
 
 export type LayerContextValues = {
   auth: ExpiringOAuthResponse
@@ -27,6 +28,11 @@ export type LayerContextHelpers = {
   addToast: (toast: ToastProps) => void
   removeToast: (toast: ToastProps) => void
   onError?: (error: LayerError) => void
+  touch: (model: DataModel) => void
+  read: (model: DataModel) => void
+  syncTimestamps: Partial<Record<DataModel, number>>
+  readTimestamps: Partial<Record<DataModel, number>>
+  hasBeenTouched: (model: DataModel) => boolean
 }
 
 export interface ColorHSLConfig {

@@ -8,7 +8,7 @@ import {
   CategoryUpdate,
 } from '../../types'
 import { BankTransactionMatchType } from '../../types/bank_transactions'
-import { LoadedStatus } from '../../types/general'
+import { DataModel, LoadedStatus } from '../../types/general'
 import {
   BankTransactionFilters,
   DisplayState,
@@ -25,7 +25,16 @@ import {
 import useSWR from 'swr'
 
 export const useBankTransactions: UseBankTransactions = () => {
-  const { auth, businessId, apiUrl, addToast } = useLayerContext()
+  const {
+    auth,
+    businessId,
+    apiUrl,
+    addToast,
+    touch,
+    read,
+    syncTimestamps,
+    hasBeenTouched,
+  } = useLayerContext()
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [filters, setTheFilters] = useState<
     BankTransactionFilters | undefined
@@ -162,6 +171,7 @@ export const useBankTransactions: UseBankTransactions = () => {
           })
         }
       })
+      .finally(() => touch(DataModel.BANK_TRANSACTIONS))
   }
 
   const match = (
@@ -211,6 +221,7 @@ export const useBankTransactions: UseBankTransactions = () => {
           })
         }
       })
+      .finally(() => touch(DataModel.BANK_TRANSACTIONS))
   }
 
   const updateOneLocal = (newBankTransaction: BankTransaction) => {
@@ -223,6 +234,19 @@ export const useBankTransactions: UseBankTransactions = () => {
   const refetch = () => {
     mutate()
   }
+
+  // Refetch data if related models has been changed since last fetch
+  useEffect(() => {
+    if (isLoading || isValidating) {
+      read(DataModel.BANK_TRANSACTIONS)
+    }
+  }, [isLoading, isValidating])
+
+  useEffect(() => {
+    if (hasBeenTouched(DataModel.BANK_TRANSACTIONS)) {
+      refetch()
+    }
+  }, [syncTimestamps])
 
   return {
     data: filteredData,
