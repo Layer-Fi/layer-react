@@ -9,7 +9,7 @@ import { Container } from '../Container'
 import { Loader } from '../Loader'
 import { View } from '../View'
 import { BALANCE_SHEET_ROWS } from './constants'
-import { startOfDay } from 'date-fns'
+import { format, parse, startOfDay } from 'date-fns'
 
 export type BalanceSheetViewProps = PropsWithChildren & {
   withExpandAllButton?: boolean
@@ -37,7 +37,21 @@ const BalanceSheetView = ({
   const { data, isLoading, refetch } = useBalanceSheet(effectiveDate)
 
   useEffect(() => {
-    refetch()
+    // Refetch only if selected effectiveDate and data's effectiveDate are different
+    const d1 =
+      effectiveDate &&
+      format(startOfDay(effectiveDate), "yyyy-MM-dd'T'HH:mm:ssXXX")
+    const d2 =
+      data?.effective_date &&
+      format(
+        startOfDay(
+          parse(data.effective_date, "yyyy-MM-dd'T'HH:mm:ssXXX", new Date()),
+        ),
+        "yyyy-MM-dd'T'HH:mm:ssXXX",
+      )
+    if (d1 && (!d2 || (d2 && d2 !== d1))) {
+      refetch()
+    }
   }, [effectiveDate])
 
   return (

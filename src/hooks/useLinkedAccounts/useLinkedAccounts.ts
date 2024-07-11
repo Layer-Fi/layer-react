@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 import { Layer } from '../../api/layer'
-import { LoadedStatus } from '../../types/general'
-import { LinkedAccount, Source } from '../../types/linked_accounts'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { DataModel, LoadedStatus } from '../../types/general'
+import { LinkedAccount, Source } from '../../types/linked_accounts'
 import { LINKED_ACCOUNTS_MOCK_DATA } from './mockData'
 import useSWR from 'swr'
 
@@ -33,7 +33,16 @@ const USE_MOCK_RESPONSE_DATA = false
 type LinkMode = 'update' | 'add'
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
-  const { auth, businessId, apiUrl, usePlaidSandbox } = useLayerContext()
+  const {
+    auth,
+    businessId,
+    apiUrl,
+    usePlaidSandbox,
+    touch,
+    read,
+    syncTimestamps,
+    hasBeenTouched,
+  } = useLayerContext()
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const USE_PLAID_SANDBOX = usePlaidSandbox ?? true
@@ -262,6 +271,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const refetchAccounts = async () => {
     DEBUG && console.log('refetching accounts...')
     await mutate()
+    touch(DataModel.LINKED_ACCOUNTS)
   }
 
   const syncAccounts = async () => {
@@ -285,6 +295,19 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     })
     await refetchAccounts()
   }
+
+  // Refetch data if related models has been changed since last fetch
+  useEffect(() => {
+    if (isLoading || isValidating) {
+      read(DataModel.LINKED_ACCOUNTS)
+    }
+  }, [isLoading, isValidating])
+
+  useEffect(() => {
+    if (hasBeenTouched(DataModel.LINKED_ACCOUNTS)) {
+      refetchAccounts()
+    }
+  }, [syncTimestamps])
 
   return {
     data: USE_MOCK_RESPONSE_DATA

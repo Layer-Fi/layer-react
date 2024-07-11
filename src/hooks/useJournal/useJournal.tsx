@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { get } from '../../api/layer/authenticated_http'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { Direction, FormError, FormErrorWithId } from '../../types'
 import { LedgerAccountBalance } from '../../types/chart_of_accounts'
-import { BaseSelectOption } from '../../types/general'
+import { BaseSelectOption, DataModel } from '../../types/general'
 import {
   JournalEntry,
   JournalEntryLineItem,
@@ -57,7 +57,15 @@ export interface JournalFormTypes {
 }
 
 export const useJournal: UseJournal = () => {
-  const { auth, businessId, apiUrl } = useLayerContext()
+  const {
+    auth,
+    businessId,
+    apiUrl,
+    touch,
+    read,
+    syncTimestamps,
+    hasBeenTouched,
+  } = useLayerContext()
 
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
 
@@ -95,6 +103,7 @@ export const useJournal: UseJournal = () => {
       setApiError('Submit failed. Please, check your connection and try again.')
     } finally {
       setSendingForm(false)
+      touch(DataModel.BANK_TRANSACTIONS)
     }
   }
 
@@ -278,6 +287,7 @@ export const useJournal: UseJournal = () => {
         ...form.data,
         line_items: form.data.line_items?.map(line => ({
           ...line,
+          amount: line.amount * 100,
           account_identifier: getAccountIdentifierPayload(line),
         })),
       } as NewApiJournalEntry)
@@ -332,6 +342,19 @@ export const useJournal: UseJournal = () => {
       },
     })
   }
+
+  // Refetch data if related models has been changed since last fetch
+  useEffect(() => {
+    if (isLoading || isValidating) {
+      read(DataModel.JOURNAL)
+    }
+  }, [isLoading, isValidating])
+
+  useEffect(() => {
+    if (hasBeenTouched(DataModel.JOURNAL)) {
+      refetch()
+    }
+  }, [syncTimestamps])
 
   return {
     data: data?.data,

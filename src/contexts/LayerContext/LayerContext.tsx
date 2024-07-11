@@ -36,6 +36,11 @@ export const LayerContext = createContext<
   addToast: (toast: ToastProps) => undefined,
   removeToast: () => undefined,
   onError: () => undefined,
+  touch: () => undefined,
+  read: () => undefined,
+  syncTimestamps: {},
+  readTimestamps: {},
+  hasBeenTouched: () => false,
 })
 
 export const useLayerContext = () => useContext(LayerContext)

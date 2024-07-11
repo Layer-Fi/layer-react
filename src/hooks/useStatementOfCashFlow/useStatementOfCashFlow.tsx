@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { StatementOfCashFlow } from '../../types'
+import { DataModel } from '../../types/general'
 import { format, startOfDay } from 'date-fns'
 import useSWR from 'swr'
 
@@ -18,14 +20,15 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = (
   startDate: Date = new Date(),
   endDate: Date = new Date(),
 ) => {
-  const { auth, businessId, apiUrl } = useLayerContext()
+  const { auth, businessId, apiUrl, read, syncTimestamps, hasBeenTouched } =
+    useLayerContext()
   const startDateString = format(
     startOfDay(startDate),
     "yyyy-MM-dd'T'HH:mm:ssXXX",
   )
   const endDateString = format(startOfDay(endDate), "yyyy-MM-dd'T'HH:mm:ssXXX")
 
-  const { data, isLoading, error, mutate } = useSWR(
+  const { data, isLoading, isValidating, error, mutate } = useSWR(
     businessId &&
       startDateString &&
       endDateString &&
@@ -43,6 +46,19 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = (
   const refetch = () => {
     mutate()
   }
+
+  // Refetch data if related models has been changed since last fetch
+  useEffect(() => {
+    if (isLoading || isValidating) {
+      read(DataModel.STATEMENT_OF_CASH_FLOWS)
+    }
+  }, [isLoading, isValidating])
+
+  useEffect(() => {
+    if (hasBeenTouched(DataModel.STATEMENT_OF_CASH_FLOWS)) {
+      refetch()
+    }
+  }, [syncTimestamps])
 
   return { data: data?.data, isLoading, error, refetch }
 }
