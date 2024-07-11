@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { JournalContext } from '../../contexts/JournalContext'
+import { TableProvider } from '../../contexts/TableContext'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useJournal } from '../../hooks/useJournal'
@@ -33,7 +34,9 @@ export const Journal = (props: JournalProps) => {
   return (
     <ChartOfAccountsContext.Provider value={AccountsContextData}>
       <JournalContext.Provider value={JournalContextData}>
-        <JournalContent {...props} />
+        <TableProvider>
+          <JournalContent {...props} />
+        </TableProvider>
       </JournalContext.Provider>
     </ChartOfAccountsContext.Provider>
   )
