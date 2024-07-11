@@ -142,6 +142,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         await updateConnectionStatus()
         refetchAccounts()
         setLinkMode('add')
+        touch(DataModel.LINKED_ACCOUNTS)
       }
     },
     onExit: () => setLinkMode('add'),
@@ -204,6 +205,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         params: { businessId, accountId: accountId },
       })
       await refetchAccounts()
+      touch(DataModel.LINKED_ACCOUNTS)
     } else {
       console.error(
         `Unlinking an account with source ${source} not yet supported`,
@@ -221,6 +223,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         },
       })
       await refetchAccounts()
+      touch(DataModel.LINKED_ACCOUNTS)
     } else {
       console.error(
         `Confirming an account with source ${source} not yet supported`,
@@ -238,6 +241,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         },
       })
       await refetchAccounts()
+      touch(DataModel.LINKED_ACCOUNTS)
     } else {
       console.error(
         `Denying an account with source ${source} not yet supported`,
@@ -261,6 +265,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         },
       })
       await refetchAccounts()
+      touch(DataModel.LINKED_ACCOUNTS)
     } else {
       console.error(
         `Breaking a sandbox connection with source ${source} not yet supported`,
@@ -271,7 +276,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const refetchAccounts = async () => {
     DEBUG && console.log('refetching accounts...')
     await mutate()
-    touch(DataModel.LINKED_ACCOUNTS)
   }
 
   const syncAccounts = async () => {
@@ -294,6 +298,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       params: { businessId, plaidItemPlaidId },
     })
     await refetchAccounts()
+    touch(DataModel.LINKED_ACCOUNTS)
   }
 
   // Refetch data if related models has been changed since last fetch
