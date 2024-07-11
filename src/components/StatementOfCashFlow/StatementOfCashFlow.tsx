@@ -3,7 +3,7 @@ import { StatementOfCashFlowContext } from '../../contexts/StatementOfCashContex
 import { TableProvider } from '../../contexts/TableContext'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow'
 import { Container } from '../Container'
-import { DateRangeInput } from '../Input'
+import { DatePicker } from '../DatePicker'
 import { Loader } from '../Loader'
 import { StatementOfCashFlowTable } from '../StatementOfCashFlowTable'
 import { View } from '../View'
@@ -51,10 +51,13 @@ const StatementOfCashFlowView = () => {
           type='panel'
           headerControls={
             <>
-              <DateRangeInput
+              <DatePicker
                 selected={[startDate, endDate]}
-                onChange={dates => handleDateChange(dates)}
+                onChange={dates =>
+                  handleDateChange(dates as [Date | null, Date | null])
+                }
                 dateFormat='MMM d'
+                mode='dayRangePicker'
               />
             </>
           }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { DateDayPicker } from '../DateDayPicker'
+import { DatePicker } from '../DatePicker'
 
 export type BalanceSheetDatePickerProps = {
   effectiveDate: Date
@@ -11,9 +11,12 @@ export const BalanceSheetDatePicker = ({
   setEffectiveDate,
 }: BalanceSheetDatePickerProps) => {
   return (
-    <DateDayPicker
-      dateDay={effectiveDate}
-      changeDateDay={date => setEffectiveDate(date)}
-    />
+    <>
+      <DatePicker
+        selected={effectiveDate}
+        onChange={date => date && setEffectiveDate(date as Date)}
+        mode='dayPicker'
+      />
+    </>
   )
 }

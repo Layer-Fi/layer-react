@@ -7,12 +7,13 @@ import { DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { Button, ButtonVariant, RetryButton } from '../Button'
 import { Header } from '../Container'
-import { DateMonthPicker } from '../DateMonthPicker'
+import { DatePicker } from '../DatePicker'
 import { Tabs } from '../Tabs'
 import { Toggle } from '../Toggle'
 import { Heading, HeadingSize } from '../Typography'
 import { MobileComponentType } from './constants'
 import classNames from 'classnames'
+import { endOfMonth, startOfMonth } from 'date-fns'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -109,9 +110,17 @@ export const BankTransactionsHeader = ({
           Transactions
         </Heading>
         {withDatePicker && dateRange && setDateRange ? (
-          <DateMonthPicker
-            dateRange={dateRange}
-            changeDateRange={setDateRange}
+          <DatePicker
+            mode='monthPicker'
+            selected={dateRange.startDate}
+            onChange={date => {
+              if (!Array.isArray(date)) {
+                setDateRange({
+                  startDate: startOfMonth(date),
+                  endDate: endOfMonth(date),
+                })
+              }
+            }}
             minDate={getEarliestDateToBrowse(business)}
           />
         ) : null}

@@ -1,7 +1,8 @@
 import React, { useContext } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
-import { InputGroup, DateInput } from '../Input'
+import { DatePicker } from '../DatePicker'
+import { InputGroup } from '../Input'
 import { JournalConfig } from '../Journal/Journal'
 import { Textarea } from '../Textarea/Textarea'
 import { Text, TextSize, TextWeight } from '../Typography'
@@ -75,21 +76,31 @@ export const JournalForm = ({ config }: { config: JournalConfig }) => {
       <div className='Layer__journal__form__input-group'>
         <InputGroup name='date' label='Date' inline={true}>
           <div className='Layer__journal__datepicker__wrapper'>
-            <DateInput
-              selected={form?.data.entry_at}
-              onChange={(date: string) => changeFormData('entry_at', date)}
-              dateFormat='MMMM d, yyyy'
+            <DatePicker
+              selected={
+                form?.data.entry_at ? new Date(form?.data.entry_at) : new Date()
+              }
+              onChange={date => {
+                if (!Array.isArray(date)) {
+                  changeFormData('entry_at', date.toISOString())
+                }
+              }}
+              mode='dayPicker'
               placeholderText='Select date'
+              currentDateOption={false}
             />
-            <DateInput
-              selected={form?.data.entry_at}
-              onChange={(date: string) => changeFormData('entry_at', date)}
-              showTimeSelect
-              showTimeSelectOnly
-              timeIntervals={15}
-              timeCaption='Time'
-              dateFormat='h:mm aa'
+            <DatePicker
+              selected={
+                form?.data.entry_at ? new Date(form?.data.entry_at) : new Date()
+              }
+              onChange={date => {
+                if (!Array.isArray(date)) {
+                  changeFormData('entry_at', date.toISOString())
+                }
+              }}
+              mode='timePicker'
               placeholderText='Select time'
+              currentDateOption={false}
             />
           </div>
         </InputGroup>

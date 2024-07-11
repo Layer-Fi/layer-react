@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
-import { DateMonthPicker } from '../DateMonthPicker'
+import { DatePicker } from '../DatePicker'
 import { ProfitAndLoss } from '../ProfitAndLoss'
+import { endOfMonth, startOfMonth } from 'date-fns'
 
 export const ProfitAndLossDatePicker = () => {
   const { business } = useLayerContext()
@@ -11,12 +12,18 @@ export const ProfitAndLossDatePicker = () => {
   const minDate = getEarliestDateToBrowse(business)
 
   return (
-    <DateMonthPicker
-      key={dateRange.startDate.toISOString()}
-      dateRange={dateRange}
-      changeDateRange={changeDateRange}
+    <DatePicker
+      mode='monthPicker'
+      selected={dateRange.startDate}
+      onChange={date => {
+        if (!Array.isArray(date)) {
+          changeDateRange({
+            startDate: startOfMonth(date),
+            endDate: endOfMonth(date),
+          })
+        }
+      }}
       minDate={minDate}
-      responsive={false}
     />
   )
 }
