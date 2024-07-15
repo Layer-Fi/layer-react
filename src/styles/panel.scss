@@ -51,6 +51,15 @@
   }
 }
 
+.Layer__panel__sidebar--default {
+  max-width: none;
+  width: 100%;
+  flex: 1;
+  .Layer__panel__sidebar-content {
+    width: 100%;
+  }
+}
+
 .Layer__panel.Layer__panel--open .Layer__panel__sidebar {
   max-width: 480px;
   margin-left: -1px;

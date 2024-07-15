@@ -28,6 +28,11 @@ export const Panel = ({
     }
   }, [parentRef?.current?.offsetHeight, sidebarIsOpen])
 
+  const sidebarClass = classNames(
+    'Layer__panel__sidebar',
+    defaultSidebarHeight && 'Layer__panel__sidebar--default',
+  )
+
   return (
     <div
       className={classNames(
@@ -36,13 +41,13 @@ export const Panel = ({
         sidebarIsOpen && 'Layer__panel--open',
       )}
     >
-      <div className='Layer__panel__content'>
+      <div className={'Layer__panel__content'}>
         {header}
         {children}
       </div>
       {sidebar && (
         <div
-          className='Layer__panel__sidebar'
+          className={sidebarClass}
           style={
             !defaultSidebarHeight
               ? {

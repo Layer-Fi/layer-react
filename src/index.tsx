@@ -37,6 +37,7 @@ export { Tasks } from './components/Tasks'
 ======================= Composite Views =======================
 */
 export { BookkeepingOverview } from './views/BookkeepingOverview'
+export { AccountingOverview } from './views/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts'
 export { GeneralLedgerView } from './views/GeneralLedger'
 export { Reports } from './views/Reports'
