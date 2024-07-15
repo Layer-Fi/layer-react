@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 import { Layer } from '../../api/layer'
-import { LoadedStatus } from '../../types/general'
-import { LinkedAccount, Source } from '../../types/linked_accounts'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { DataModel, LoadedStatus } from '../../types/general'
+import { LinkedAccount, Source } from '../../types/linked_accounts'
 import { LINKED_ACCOUNTS_MOCK_DATA } from './mockData'
 import useSWR from 'swr'
 
@@ -33,7 +33,16 @@ const USE_MOCK_RESPONSE_DATA = false
 type LinkMode = 'update' | 'add'
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
-  const { auth, businessId, apiUrl, usePlaidSandbox } = useLayerContext()
+  const {
+    auth,
+    businessId,
+    apiUrl,
+    usePlaidSandbox,
+    touch,
+    read,
+    syncTimestamps,
+    hasBeenTouched,
+  } = useLayerContext()
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const USE_PLAID_SANDBOX = usePlaidSandbox ?? true
@@ -133,6 +142,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         await updateConnectionStatus()
         refetchAccounts()
         setLinkMode('add')
+        touch(DataModel.LINKED_ACCOUNTS)
       }
     },
     onExit: () => setLinkMode('add'),
@@ -195,6 +205,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         params: { businessId, accountId: accountId },
       })
       await refetchAccounts()
+      touch(DataModel.LINKED_ACCOUNTS)
     } else {
       console.error(
         `Unlinking an account with source ${source} not yet supported`,
@@ -212,6 +223,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         },
       })
       await refetchAccounts()
+      touch(DataModel.LINKED_ACCOUNTS)
     } else {
       console.error(
         `Confirming an account with source ${source} not yet supported`,
@@ -229,6 +241,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         },
       })
       await refetchAccounts()
+      touch(DataModel.LINKED_ACCOUNTS)
     } else {
       console.error(
         `Denying an account with source ${source} not yet supported`,
@@ -252,6 +265,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         },
       })
       await refetchAccounts()
+      touch(DataModel.LINKED_ACCOUNTS)
     } else {
       console.error(
         `Breaking a sandbox connection with source ${source} not yet supported`,
@@ -284,7 +298,21 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       params: { businessId, plaidItemPlaidId },
     })
     await refetchAccounts()
+    touch(DataModel.LINKED_ACCOUNTS)
   }
+
+  // Refetch data if related models has been changed since last fetch
+  useEffect(() => {
+    if (isLoading || isValidating) {
+      read(DataModel.LINKED_ACCOUNTS)
+    }
+  }, [isLoading, isValidating])
+
+  useEffect(() => {
+    if (hasBeenTouched(DataModel.LINKED_ACCOUNTS)) {
+      refetchAccounts()
+    }
+  }, [syncTimestamps])
 
   return {
     data: USE_MOCK_RESPONSE_DATA

@@ -46,6 +46,10 @@
     text-align: left;
     position: relative;
 
+    .Layer__table-cell {
+      border-top: none;
+    }
+
     &.Layer__table-header--primary {
       .Layer__table-cell {
         &.Layer__table-cell--primary {

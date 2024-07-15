@@ -4,6 +4,7 @@ import { GlobalWidgets } from '../../components/GlobalWidgets'
 import { ToastProps } from '../../components/Toast/Toast'
 import { DrawerContext } from '../../contexts/DrawerContext'
 import { LayerContext } from '../../contexts/LayerContext'
+import { useDataSync } from '../../hooks/useDataSync'
 import { useDrawer } from '../../hooks/useDrawer'
 import { LayerError, errorHandler } from '../../models/ErrorHandler'
 import { BankTransactionsProvider } from '../../providers/BankTransactionsProvider'
@@ -132,6 +133,9 @@ export const LayerProvider = ({
     environment,
     toasts: [],
   })
+
+  const { touch, syncTimestamps, read, readTimestamps, hasBeenTouched } =
+    useDataSync()
 
   const { data: auth } =
     appId !== undefined && appSecret !== undefined
@@ -318,6 +322,11 @@ export const LayerProvider = ({
           addToast,
           removeToast,
           onError: errorHandler.onError,
+          touch,
+          read,
+          syncTimestamps,
+          readTimestamps,
+          hasBeenTouched,
         }}
       >
         <BankTransactionsProvider>

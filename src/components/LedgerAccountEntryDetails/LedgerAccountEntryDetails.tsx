@@ -19,6 +19,11 @@ import { BackButton, Button, ButtonVariant } from '../Button'
 import { Card } from '../Card'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
+import { Table } from '../Table'
+import { TableBody } from '../TableBody'
+import { TableCell } from '../TableCell'
+import { TableHead } from '../TableHead'
+import { TableRow } from '../TableRow'
 import { Text, TextWeight } from '../Typography'
 import { is } from 'date-fns/locale'
 
@@ -210,51 +215,54 @@ export const LedgerAccountEntryDetails = () => {
       {!isLoadingEntry && !errorEntry ? (
         <div className='Layer__ledger-account__entry-details__line-items'>
           <Card>
-            <table className='Layer__table Layer__ledger-account__entry-details__table'>
-              <thead>
-                <tr>
-                  <th className='Layer__table-header'>Line items</th>
-                  <th className='Layer__table-header Layer__table-cell--amount'>
-                    Debit
-                  </th>
-                  <th className='Layer__table-header Layer__table-cell--amount'>
-                    Credit
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {entryData?.line_items?.map(item => (
-                  <tr key={`ledger-line-item-${item.id}`}>
-                    <td className='Layer__table-cell'>
-                      {item.account?.name || ''}
-                    </td>
-                    <td className='Layer__table-cell Layer__table-cell--amount'>
+            <Table
+              componentName='ledger-account__entry-details'
+              borderCollapse='collapse'
+            >
+              <TableHead>
+                <TableRow rowKey='soc-flow-head-row' isHeadRow>
+                  <TableCell>Line items</TableCell>
+                  <TableCell>Debit</TableCell>
+                  <TableCell>Credit</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {entryData?.line_items?.map((item, index) => (
+                  <TableRow
+                    key={`ledger-line-item-${index}`}
+                    rowKey={`ledger-line-item-${index}`}
+                  >
+                    <TableCell>{item.account?.name || ''}</TableCell>
+                    <TableCell>
                       {item.direction === Direction.DEBIT && (
                         <Badge variant={BadgeVariant.WARNING}>
                           ${centsToDollars(item.amount || 0)}
                         </Badge>
                       )}
-                    </td>
-                    <td className='Layer__table-cell Layer__table-cell--amount'>
+                    </TableCell>
+                    <TableCell>
                       {item.direction === Direction.CREDIT && (
                         <Badge variant={BadgeVariant.SUCCESS}>
                           ${centsToDollars(item.amount || 0)}
                         </Badge>
                       )}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-                <tr className='Layer__table Layer__ledger-account__entry-details__table__total-row'>
-                  <td className='Layer__table-cell'>Total</td>
-                  <td className='Layer__table-cell Layer__table-cell--amount'>
-                    ${centsToDollars(totalDebit || 0)}
-                  </td>
-                  <td className='Layer__table-cell Layer__table-cell--amount'>
-                    ${centsToDollars(totalCredit || 0)}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                <TableRow
+                  rowKey='ledger-line-item-summation'
+                  variant='summation'
+                >
+                  <TableCell primary>Total</TableCell>
+                  <TableCell isCurrency primary>
+                    {totalDebit || 0}
+                  </TableCell>
+                  <TableCell isCurrency primary>
+                    {totalCredit || 0}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </Card>
         </div>
       ) : null}

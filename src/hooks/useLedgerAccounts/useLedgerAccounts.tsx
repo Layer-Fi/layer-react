@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { LedgerAccounts, LedgerAccountsEntry } from '../../types'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { LedgerAccounts, LedgerAccountsEntry } from '../../types'
+import { DataModel } from '../../types/general'
 import useSWR from 'swr'
 
 type UseLedgerAccounts = () => {
@@ -22,7 +23,8 @@ type UseLedgerAccounts = () => {
 }
 
 export const useLedgerAccounts: UseLedgerAccounts = () => {
-  const { auth, businessId, apiUrl } = useLayerContext()
+  const { auth, businessId, apiUrl, read, syncTimestamps, hasBeenTouched } =
+    useLayerContext()
 
   const [accountId, setAccountId] = useState<string | undefined>()
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
@@ -59,6 +61,19 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     setSelectedEntryId(undefined)
     mutateEntryData()
   }
+
+  // Refetch data if related models has been changed since last fetch
+  useEffect(() => {
+    if (isLoading || isValidating) {
+      read(DataModel.LEDGER_ACCOUNTS)
+    }
+  }, [isLoading, isValidating])
+
+  useEffect(() => {
+    if (hasBeenTouched(DataModel.LEDGER_ACCOUNTS)) {
+      refetch()
+    }
+  }, [syncTimestamps])
 
   return {
     data: data?.data,

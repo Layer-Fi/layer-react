@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { Layer } from '../../api/layer'
-import { ProfitAndLoss, ReportingBasis } from '../../types'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { ProfitAndLoss, ReportingBasis } from '../../types'
+import { DataModel } from '../../types/general'
 import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
 import useSWR from 'swr'
 
@@ -35,7 +37,8 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
     endDate: endOfMonth(new Date()),
   },
 ) => {
-  const { auth, businessId, apiUrl } = useLayerContext()
+  const { auth, businessId, apiUrl, syncTimestamps, read, hasBeenTouched } =
+    useLayerContext()
 
   const {
     data: rawData,
@@ -66,6 +69,19 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
   const refetch = () => {
     mutate()
   }
+
+  // Refetch data if related models has been changed since last fetch
+  useEffect(() => {
+    if (isLoading || isValidating) {
+      read(DataModel.PROFIT_AND_LOSS)
+    }
+  }, [isLoading, isValidating])
+
+  useEffect(() => {
+    if (hasBeenTouched(DataModel.PROFIT_AND_LOSS)) {
+      refetch()
+    }
+  }, [syncTimestamps])
 
   return {
     startDate,

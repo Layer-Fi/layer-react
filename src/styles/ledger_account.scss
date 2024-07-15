@@ -66,33 +66,6 @@
   padding: var(--spacing-md);
 }
 
-.Layer__ledger-account__entry-details__table td {
-  padding: var(--spacing-xs) var(--spacing-md);
-  font-size: 12px;
-  color: var(--color-base-600);
-}
-
-.Layer__ledger-account__entry-details__table__total-row td {
-  font-variation-settings: 'wght' var(--font-weight-bold);
-  color: var(--text-color-primary);
-}
-
-.Layer__table.Layer__ledger-account__entry-details__table th,
-.Layer__ledger-account__entry-details__table__total-row td,
-.Layer__table.Layer__ledger-account__entry-details__table
-  tr
-  th:last-child.Layer__table-header,
-.Layer__table.Layer__ledger-account__entry-details__table
-  tr
-  th:first-child.Layer__table-header {
-  padding: var(--spacing-md);
-}
-
-.Layer__ledger-account__entry-details__table .Layer__table-cell--amount {
-  width: 128px;
-  box-sizing: border-box;
-}
-
 .Layer__ledger-account__pagination {
   display: flex;
   justify-content: flex-end;
@@ -207,5 +180,35 @@
   .Layer__ledger-account__entry-details__back-btn {
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
+  }
+}
+
+.Layer__ledger-account__entry-details__table {
+  .Layer__table-row.Layer__table-row--variant-default,
+  .Layer__table-row.Layer__table-row--variant-summation {
+    background-color: var(--color-base-0);
+  }
+  tr td:first-child {
+    width: 75%;
+  }
+}
+
+@container (min-width: 1400px) {
+  .Layer__ledger-account__entry-details__table
+    tr
+    td:first-child
+    .Layer__table-cell-content,
+  .Layer__ledger-account__entry-details__table
+    tr
+    td:last-child
+    .Layer__table-cell-content,
+  .Layer__ledger-account__entry-details__table
+    tr
+    th:first-child.Layer__table-header,
+  .Layer__ledger-account__entry-details__table
+    tr
+    th:last-child.Layer__table-header {
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
   }
 }

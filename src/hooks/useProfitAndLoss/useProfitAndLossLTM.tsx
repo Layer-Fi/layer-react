@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { ReportingBasis } from '../../types'
-import { LoadedStatus } from '../../types/general'
-import { ProfitAndLossSummary } from '../../types/profit_and_loss'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { ReportingBasis } from '../../types'
+import { DataModel, LoadedStatus } from '../../types/general'
+import { ProfitAndLossSummary } from '../../types/profit_and_loss'
 import { startOfMonth, sub } from 'date-fns'
 import useSWR from 'swr'
 
@@ -59,7 +59,8 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     currentDate: new Date(),
   },
 ) => {
-  const { businessId, auth, apiUrl } = useLayerContext()
+  const { businessId, auth, apiUrl, syncTimestamps, read, hasBeenTouched } =
+    useLayerContext()
   const [date, setDate] = useState(currentDate)
   const [loaded, setLoaded] = useState<LoadedStatus>('initial')
   const [data, setData] = useState<ProfitAndLossSummaryData[]>([])
@@ -176,6 +177,19 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
   }, [data, isLoading])
 
   const pullData = (date: Date) => setDate(date)
+
+  // Refetch data if related models has been changed since last fetch
+  useEffect(() => {
+    if (isLoading || isValidating) {
+      read(DataModel.PROFIT_AND_LOSS)
+    }
+  }, [isLoading, isValidating])
+
+  useEffect(() => {
+    if (hasBeenTouched(DataModel.PROFIT_AND_LOSS)) {
+      mutate()
+    }
+  }, [syncTimestamps])
 
   return {
     data,
