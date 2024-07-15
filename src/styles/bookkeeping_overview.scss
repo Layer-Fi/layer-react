@@ -1,4 +1,4 @@
-.Layer__accounting-overview__summaries-row {
+.Layer__bookkeeping-overview__summaries-row {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
@@ -11,23 +11,29 @@
   }
 }
 
-.Layer__component.Layer__accounting-overview-profit-and-loss
+.Layer__bookkeeping-overview-profit-and-loss-charts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.Layer__component.Layer__bookkeeping-overview-profit-and-loss
   .recharts-responsive-container {
   margin-top: -42px;
 }
 
-.accounting-overview-profit-and-loss-charts > .Layer__toggle {
+.bookkeeping-overview-profit-and-loss-charts > .Layer__toggle {
   display: none;
 }
 
 @container (max-width: 1023px) {
-  .Layer__accounting-overview-profit-and-loss .recharts-legend-wrapper {
+  .Layer__bookkeeping-overview-profit-and-loss .recharts-legend-wrapper {
     margin-top: -40px;
   }
 }
 
 @container (max-width: 796px) {
-  .Layer__accounting-overview__summaries-row {
+  .Layer__bookkeeping-overview__summaries-row {
     flex-direction: column;
 
     .Layer__profit-and-loss-summaries {
@@ -40,21 +46,21 @@
     }
   }
 
-  .accounting-overview-profit-and-loss-charts {
+  .bookkeeping-overview-profit-and-loss-charts {
     flex-direction: column;
   }
 
-  .accounting-overview-profit-and-loss-charts > .Layer__toggle {
+  .bookkeeping-overview-profit-and-loss-charts > .Layer__toggle {
     display: flex;
   }
 
-  .Layer__component.Layer__accounting-overview-profit-and-loss-chart.accounting-overview-profit-and-loss-chart--hidden {
+  .Layer__component.Layer__bookkeeping-overview-profit-and-loss-chart.bookkeeping-overview-profit-and-loss-chart--hidden {
     display: none;
   }
 }
 
 @container (max-width: 460px) {
-  .Layer__component.Layer__accounting-overview-profit-and-loss
+  .Layer__component.Layer__bookkeeping-overview-profit-and-loss
     .recharts-responsive-container {
     margin-top: -12px;
   }

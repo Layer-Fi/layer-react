@@ -1,6 +1,7 @@
 .Layer__panel {
   flex: 1;
   display: flex;
+  align-items: start;
   height: 100%;
 }
 
@@ -24,7 +25,6 @@
   top: 0;
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(6px);
-  z-index: 1;
   border-top-left-radius: var(--border-radius-sm);
   border-top-right-radius: var(--border-radius-sm);
 }
@@ -35,7 +35,6 @@
   position: -webkit-sticky;
   position: sticky;
   max-height: 0;
-  z-index: 1;
   top: 0;
   overflow-x: hidden;
   transition: max-width 180ms ease-in-out;

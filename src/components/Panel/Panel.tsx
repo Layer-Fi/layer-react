@@ -1,4 +1,4 @@
-import React, { ReactNode, RefObject, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, RefObject, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
 export interface PanelProps {
@@ -8,6 +8,7 @@ export interface PanelProps {
   sidebarIsOpen?: boolean
   header?: ReactNode
   parentRef?: RefObject<HTMLDivElement>
+  defaultSidebarHeight?: boolean
 }
 
 export const Panel = ({
@@ -17,6 +18,7 @@ export const Panel = ({
   header,
   sidebarIsOpen,
   parentRef,
+  defaultSidebarHeight = false,
 }: PanelProps) => {
   const [sidebarHeight, setSidebarHeight] = useState(0)
 
@@ -41,9 +43,14 @@ export const Panel = ({
       {sidebar && (
         <div
           className='Layer__panel__sidebar'
-          style={{
-            maxHeight: sidebarHeight > 0 && sidebarIsOpen ? sidebarHeight : 0,
-          }}
+          style={
+            !defaultSidebarHeight
+              ? {
+                  maxHeight:
+                    sidebarHeight > 0 && sidebarIsOpen ? sidebarHeight : 0,
+                }
+              : {}
+          }
         >
           <div className='Layer__panel__sidebar-content'>{sidebar}</div>
         </div>

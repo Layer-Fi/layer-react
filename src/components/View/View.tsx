@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react'
 import { ViewHeader } from '../../components/ViewHeader'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { parseStylesFromThemeConfig } from '../../utils/colors'
+import { Panel } from '../Panel'
 import classNames from 'classnames'
 
 export interface ViewProps {
@@ -9,9 +10,18 @@ export interface ViewProps {
   title?: string
   headerControls?: ReactNode
   type?: 'default' | 'panel'
+  withSidebar?: boolean
+  sidebar?: ReactNode
 }
 
-export const View = ({ title, children, headerControls, type }: ViewProps) => {
+export const View = ({
+  title,
+  children,
+  headerControls,
+  type,
+  withSidebar = false,
+  sidebar,
+}: ViewProps) => {
   const { theme } = useLayerContext()
   const styles = parseStylesFromThemeConfig(theme)
 
@@ -23,7 +33,13 @@ export const View = ({ title, children, headerControls, type }: ViewProps) => {
   return (
     <div className={viewClassName} style={{ ...styles }}>
       <ViewHeader title={title} controls={headerControls} />
-      <div className='Layer__view-main'>{children}</div>
+      {withSidebar ? (
+        <Panel sidebarIsOpen={true} sidebar={sidebar} defaultSidebarHeight>
+          <div className='Layer__view-main'>{children}</div>
+        </Panel>
+      ) : (
+        <div className='Layer__view-main'>{children}</div>
+      )}
     </div>
   )
 }

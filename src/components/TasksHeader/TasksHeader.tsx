@@ -35,7 +35,7 @@ export const TasksHeader = () => {
 
   return (
     <div className='Layer__tasks-header'>
-      <Text size={TextSize.lg}>December Books</Text>
+      <Text size={TextSize.lg}>Books</Text>
       {!tasks || error ? (
         <Badge
           onClick={() => refetch()}

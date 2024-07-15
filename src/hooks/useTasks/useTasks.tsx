@@ -1,6 +1,6 @@
 import { Layer } from '../../api/layer'
-import { TaskTypes } from '../../types/tasks'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { TaskTypes } from '../../types/tasks'
 import useSWR from 'swr'
 
 type UseTasks = () => {
