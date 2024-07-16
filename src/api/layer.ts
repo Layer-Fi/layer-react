@@ -39,6 +39,13 @@ import {
   getProfitAndLossSummaries,
   getProfitAndLossCsv,
 } from './layer/profit_and_loss'
+import {
+  syncFromQuickbooks,
+  statusOfSyncFromQuickbooks,
+  initQuickbooksOAuth,
+  statusOfQuickbooksConnection,
+  unlinkQuickbooksConnection,
+} from './layer/quickbooks'
 import { getStatementOfCashFlow } from './layer/statement-of-cash-flow'
 import { getTasks, submitResponseToTask } from './layer/tasks'
 
@@ -80,4 +87,9 @@ export const Layer = {
   syncConnection,
   updateConnectionStatus,
   getStatementOfCashFlow,
+  syncFromQuickbooks,
+  statusOfSyncFromQuickbooks,
+  statusOfQuickbooksConnection,
+  initQuickbooksOAuth,
+  unlinkQuickbooksConnection,
 }

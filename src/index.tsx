@@ -13,6 +13,9 @@ export { Onboarding } from './components/Onboarding'
 export { LinkedAccounts } from './components/LinkedAccounts'
 export { BankTransactions } from './components/BankTransactions'
 
+/* ------------------- Third Party Accounting Systems --------------- */
+export { Quickbooks } from './components/Quickbooks'
+
 /* ------------------ Reporting ------------------ */
 export { ProfitAndLoss } from './components/ProfitAndLoss'
 /* Profit and loss contains 6 sub-components:
