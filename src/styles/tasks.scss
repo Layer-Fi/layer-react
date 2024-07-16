@@ -190,6 +190,14 @@
 @media screen and (max-width: 400px) {
   .Layer__tasks-component {
     padding: var(--spacing-xs) var(--spacing-sm);
+    .Layer__tasks-pending {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-xs);
+      .Layer__tasks-pending-bar {
+        justify-content: space-between;
+      }
+    }
   }
 
   .Layer__tasks-list {
