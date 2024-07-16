@@ -2,13 +2,15 @@ import React, { useState } from 'react'
 import { Container, Header } from '../../components/Container'
 import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import { Tasks } from '../../components/Tasks'
 import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
+import { useSizeClass } from '../../hooks/useWindowSize'
 import classNames from 'classnames'
 
-export interface AccountingOverviewProps {
+export interface BookkeepingOverviewProps {
   title?: string
   enableOnboarding?: boolean
   onTransactionsToReviewClick?: () => void
@@ -16,25 +18,29 @@ export interface AccountingOverviewProps {
 
 type PnlToggleOption = 'revenue' | 'expenses'
 
-export const AccountingOverview = ({
-  title = 'Accounting overview',
+export const BookkeepingOverview = ({
+  title = 'Bookkeeping overview',
   enableOnboarding = false,
   onTransactionsToReviewClick,
-}: AccountingOverviewProps) => {
+}: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
+  const { isDesktop } = useSizeClass()
 
   return (
     <ProfitAndLoss asContainer={false}>
       <View
         title={title}
         headerControls={<ProfitAndLoss.DatePicker />}
+        withSidebar={isDesktop}
+        sidebar={<Tasks asContainer={false} />}
       >
+        {!isDesktop && <Tasks asContainer={true} />}
         {enableOnboarding && (
           <Onboarding
             onTransactionsToReviewClick={onTransactionsToReviewClick}
           />
         )}
-        <div className='Layer__accounting-overview__summaries-row'>
+        <div className='Layer__bookkeeping-overview__summaries-row'>
           <ProfitAndLoss.Summaries actionable={false} />
           <TransactionToReviewCard
             usePnlDateRange={true}
@@ -42,7 +48,7 @@ export const AccountingOverview = ({
           />
         </div>
         <Container
-          name='accounting-overview-profit-and-loss'
+          name='bookkeeping-overview-profit-and-loss'
           asWidget
           elevated={true}
         >
@@ -51,7 +57,7 @@ export const AccountingOverview = ({
           </Header>
           <ProfitAndLoss.Chart />
         </Container>
-        <div className='Layer__accounting-overview-profit-and-loss-charts'>
+        <div className='Layer__bookkeeping-overview-profit-and-loss-charts'>
           <Toggle
             name='pnl-detailed-charts'
             options={[
@@ -69,18 +75,18 @@ export const AccountingOverview = ({
           />
           <Container
             name={classNames(
-              'accounting-overview-profit-and-loss-chart',
+              'bookkeeping-overview-profit-and-loss-chart',
               pnlToggle !== 'revenue' &&
-                'accounting-overview-profit-and-loss-chart--hidden',
+                'bookkeeping-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts scope='revenue' hideClose={true} />
           </Container>
           <Container
             name={classNames(
-              'accounting-overview-profit-and-loss-chart',
+              'bookkeeping-overview-profit-and-loss-chart',
               pnlToggle !== 'expenses' &&
-                'accounting-overview-profit-and-loss-chart--hidden',
+                'bookkeeping-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts scope='expenses' hideClose={true} />

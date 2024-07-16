@@ -13,10 +13,12 @@ import { format, parse, startOfDay } from 'date-fns'
 
 export type BalanceSheetViewProps = PropsWithChildren & {
   withExpandAllButton?: boolean
+  asWidget?: boolean
 }
 
 export type BalanceSheetProps = PropsWithChildren & {
   effectiveDate?: Date
+  asWidget?: boolean
 }
 
 const COMPONENT_NAME = 'balance-sheet'
@@ -25,13 +27,14 @@ export const BalanceSheet = (props: BalanceSheetProps) => {
   const balanceSheetContextData = useBalanceSheet(props.effectiveDate)
   return (
     <BalanceSheetContext.Provider value={balanceSheetContextData}>
-      <BalanceSheetView {...props} />
+      <BalanceSheetView asWidget={props.asWidget} {...props} />
     </BalanceSheetContext.Provider>
   )
 }
 
 const BalanceSheetView = ({
   withExpandAllButton = true,
+  asWidget = false,
 }: BalanceSheetViewProps) => {
   const [effectiveDate, setEffectiveDate] = useState(startOfDay(new Date()))
   const { data, isLoading, refetch } = useBalanceSheet(effectiveDate)
@@ -53,6 +56,35 @@ const BalanceSheetView = ({
       refetch()
     }
   }, [effectiveDate])
+
+  if (asWidget) {
+    return (
+      <TableProvider>
+        <Container name={COMPONENT_NAME} asWidget={true}>
+          <View
+            type='panel'
+            headerControls={
+              <>
+                <BalanceSheetDatePicker
+                  effectiveDate={effectiveDate}
+                  setEffectiveDate={setEffectiveDate}
+                />
+                {withExpandAllButton && <BalanceSheetExpandAllButton />}
+              </>
+            }
+          >
+            {!data || isLoading ? (
+              <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
+                <Loader />
+              </div>
+            ) : (
+              <BalanceSheetTable data={data} config={BALANCE_SHEET_ROWS} />
+            )}
+          </View>
+        </Container>
+      </TableProvider>
+    )
+  }
 
   return (
     <TableProvider>
