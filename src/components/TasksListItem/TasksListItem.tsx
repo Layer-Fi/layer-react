@@ -58,7 +58,7 @@ export const TasksListItem = ({
           </div>
           <ChevronDownFill
             size={16}
-            className='Layer__table__expand-icon'
+            className='Layer__tasks__expand-icon'
             style={{
               transform: isOpen ? 'rotate(0deg)' : 'rotate(-180deg)',
             }}

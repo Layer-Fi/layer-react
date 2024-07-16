@@ -181,6 +181,12 @@
   }
 }
 
+.Layer__tasks__expand-icon {
+  transition: transform 150ms ease-out;
+  color: var(--color-base-600);
+  margin-left: -15px;
+}
+
 @media screen and (max-width: 400px) {
   .Layer__tasks-component {
     padding: var(--spacing-xs) var(--spacing-sm);
