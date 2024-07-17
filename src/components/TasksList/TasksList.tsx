@@ -36,7 +36,7 @@ export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
           {sortedTasks.map((task, index) => (
             <TasksListItem key={index} task={task} index={index} />
           ))}
-          {tasks && (
+          {tasks && tasks.length >= 10 && (
             <div className='Layer__tasks__pagination'>
               <Pagination
                 currentPage={currentPage}

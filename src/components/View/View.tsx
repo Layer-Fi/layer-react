@@ -12,6 +12,7 @@ export interface ViewProps {
   type?: 'default' | 'panel'
   withSidebar?: boolean
   sidebar?: ReactNode
+  viewClassName?: string
 }
 
 export const View = ({
@@ -21,17 +22,19 @@ export const View = ({
   type,
   withSidebar = false,
   sidebar,
+  viewClassName,
 }: ViewProps) => {
   const { theme } = useLayerContext()
   const styles = parseStylesFromThemeConfig(theme)
 
-  const viewClassName = classNames(
+  const viewClassNames = classNames(
     'Layer__view',
     type === 'panel' && 'Layer__view--panel',
+    viewClassName,
   )
 
   return (
-    <div className={viewClassName} style={{ ...styles }}>
+    <div className={viewClassNames} style={{ ...styles }}>
       <ViewHeader title={title} controls={headerControls} />
       {withSidebar ? (
         <Panel sidebarIsOpen={true} sidebar={sidebar} defaultSidebarHeight>
