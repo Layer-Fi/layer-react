@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
 import { TasksContext } from '../../contexts/TasksContext'
+import AlertCircle from '../../icons/AlertCircle'
 import Check from '../../icons/Check'
-import ProgressIcon from '../../icons/ProgressIcon'
 import RefreshCcw from '../../icons/RefreshCcw'
+import { isComplete } from '../../types/tasks'
 import { Badge, BadgeVariant } from '../Badge'
 import { Text, TextSize } from '../Typography'
 
@@ -13,7 +14,7 @@ const ICONS = {
     badge: BadgeVariant.SUCCESS,
   },
   pending: {
-    icon: <ProgressIcon size={12} />,
+    icon: <AlertCircle size={12} />,
     text: 'In progress',
     badge: BadgeVariant.WARNING,
   },
@@ -31,8 +32,7 @@ export const TasksHeader = ({
 }) => {
   const { data: tasks, refetch, error } = useContext(TasksContext)
 
-  const completedTasks = tasks?.filter(task => task.status === 'COMPLETED')
-    .length
+  const completedTasks = tasks?.filter(task => isComplete(task.status)).length
 
   const badgeVariant =
     completedTasks === tasks?.length ? ICONS.done : ICONS.pending

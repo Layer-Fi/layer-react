@@ -25,7 +25,7 @@ export const TasksComponent = ({ tasksHeader }: { tasksHeader?: string }) => {
     <>
       <TasksHeader tasksHeader={tasksHeader} />
       {isLoading || !data ? (
-        <div className={`Layer__tasks__loader-container`}>
+        <div className={'Layer__tasks__loader-container'}>
           <Loader />
         </div>
       ) : (

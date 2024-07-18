@@ -1,13 +1,14 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { TasksContext } from '../../contexts/TasksContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Check from '../../icons/Check'
 import ChevronDownFill from '../../icons/ChevronDownFill'
-import { TaskTypes } from '../../types/tasks'
+import { isComplete, TaskTypes } from '../../types/tasks'
 import { Button, ButtonVariant } from '../Button'
 import { Textarea } from '../Textarea'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
+import { set } from 'date-fns'
 
 export const TasksListItem = ({
   task,
@@ -16,7 +17,9 @@ export const TasksListItem = ({
   task: TaskTypes
   index: number
 }) => {
-  const [isOpen, setIsOpen] = useState(index === 0 ? true : false)
+  const [isOpen, setIsOpen] = useState(
+    index === 0 && !isComplete(task.status) ? true : false,
+  )
   const [userResponse, setUserResponse] = useState(task.user_response || '')
 
   const { submitResponseToTask } = useContext(TasksContext)
@@ -24,12 +27,12 @@ export const TasksListItem = ({
   const taskBodyClassName = classNames(
     'Layer__tasks-list-item__body',
     isOpen && 'Layer__tasks-list-item__body--expanded',
-    task.status === 'COMPLETED' && 'Layer__tasks-list-item--completed',
+    isComplete(task.status) && 'Layer__tasks-list-item--completed',
   )
 
   const taskHeadClassName = classNames(
     'Layer__tasks-list-item__head-info',
-    task.status === 'COMPLETED'
+    isComplete(task.status)
       ? 'Layer__tasks-list-item--completed'
       : 'Layer__tasks-list-item--pending',
   )
@@ -48,7 +51,7 @@ export const TasksListItem = ({
         >
           <div className={taskHeadClassName}>
             <div className='Layer__tasks-list-item__head-info__status'>
-              {task.status === 'COMPLETED' ? (
+              {isComplete(task.status) ? (
                 <Check size={12} />
               ) : (
                 <AlertCircle size={12} />
@@ -68,8 +71,7 @@ export const TasksListItem = ({
           <div className='Layer__tasks-list-item__body-info'>
             <Text size={TextSize.sm}>{task.question}</Text>
             <Textarea
-              disabled={task.status === 'COMPLETED'}
-              placeholder={userResponse}
+              value={userResponse}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setUserResponse(e.target.value)
               }
@@ -77,10 +79,14 @@ export const TasksListItem = ({
             <div className='Layer__tasks-list-item__actions'>
               <Button
                 disabled={
-                  task.status === 'COMPLETED' || userResponse.length === 0
+                  userResponse.length === 0 ||
+                  userResponse === task.user_response
                 }
                 variant={ButtonVariant.secondary}
-                onClick={() => submitResponseToTask(task.id, userResponse)}
+                onClick={() => {
+                  submitResponseToTask(task.id, userResponse)
+                  setIsOpen(false)
+                }}
               >
                 {userResponse && userResponse.length === 0 ? 'Update' : 'Save'}
               </Button>

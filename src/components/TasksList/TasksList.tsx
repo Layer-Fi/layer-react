@@ -1,6 +1,7 @@
 import React, { useContext, useMemo, useState } from 'react'
 import { TasksContext } from '../../contexts/TasksContext'
 import SmileIcon from '../../icons/SmileIcon'
+import { isComplete } from '../../types/tasks'
 import { Pagination } from '../Pagination'
 import { TasksListItem } from '../TasksListItem'
 import { ErrorText, Text, TextSize } from '../Typography'
@@ -25,7 +26,7 @@ export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
     return tasks
-      ?.sort(a => (a.status === 'COMPLETED' ? 1 : -1))
+      ?.sort(a => (isComplete(a.status) ? 1 : -1))
       ?.slice(firstPageIndex, lastPageIndex)
   }, [tasks, currentPage])
 
@@ -34,7 +35,7 @@ export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
       {sortedTasks && sortedTasks.length > 0 ? (
         <>
           {sortedTasks.map((task, index) => (
-            <TasksListItem key={index} task={task} index={index} />
+            <TasksListItem key={task.id} task={task} index={index} />
           ))}
           {tasks && tasks.length >= 10 && (
             <div className='Layer__tasks__pagination'>

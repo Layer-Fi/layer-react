@@ -1,15 +1,15 @@
 import React, { useContext } from 'react'
 import { TASKS_CHARTS_COLORS } from '../../config/charts'
 import { TasksContext } from '../../contexts/TasksContext'
+import { isComplete } from '../../types/tasks'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
-import { Cell, Pie, PieChart } from 'recharts'
 import { format } from 'date-fns'
+import { Cell, Pie, PieChart } from 'recharts'
 
 export const TasksPending = () => {
   const { data } = useContext(TasksContext)
-  const completedTasks = data?.filter(task => task.status === 'COMPLETED')
-    .length
+  const completedTasks = data?.filter(task => isComplete(task.status)).length
 
   const chartData = [
     {
@@ -18,7 +18,7 @@ export const TasksPending = () => {
     },
     {
       name: 'pending',
-      value: data?.filter(task => task.status !== 'COMPLETED').length,
+      value: data?.filter(task => !isComplete(task.status)).length,
     },
   ]
 
@@ -55,7 +55,7 @@ export const TasksPending = () => {
               return (
                 <Cell
                   key={`cell-${index}`}
-                  className={`Layer__profit-and-loss-detailed-charts__pie`}
+                  className={'Layer__profit-and-loss-detailed-charts__pie'}
                   fill={
                     TASKS_CHARTS_COLORS[
                       task.name as keyof typeof TASKS_CHARTS_COLORS
