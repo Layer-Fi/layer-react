@@ -4,6 +4,7 @@ import { TasksContext } from '../../contexts/TasksContext'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
 import { Cell, Pie, PieChart } from 'recharts'
+import { format } from 'date-fns'
 
 export const TasksPending = () => {
   const { data } = useContext(TasksContext)
@@ -28,7 +29,7 @@ export const TasksPending = () => {
   )
   return (
     <div className='Layer__tasks-pending'>
-      <Text size={TextSize.lg}>Bookkeeping Tasks</Text>
+      <Text size={TextSize.lg}>{format(Date.now(), 'MMMM')}</Text>
       <div className='Layer__tasks-pending-bar'>
         <Text size={TextSize.sm}>
           <span className={taskStatusClassName}>{completedTasks}</span>/

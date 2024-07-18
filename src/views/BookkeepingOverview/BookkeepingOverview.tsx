@@ -1,52 +1,34 @@
 import React, { useState } from 'react'
 import { Container, Header } from '../../components/Container'
-import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Tasks } from '../../components/Tasks'
 import { Toggle } from '../../components/Toggle'
-import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
-import { useSizeClass } from '../../hooks/useWindowSize'
+import { useSizeClass, useWindowSize } from '../../hooks/useWindowSize'
 import classNames from 'classnames'
 
 export interface BookkeepingOverviewProps {
   title?: string
-  enableOnboarding?: boolean
-  onTransactionsToReviewClick?: () => void
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
 
 export const BookkeepingOverview = ({
   title = 'Bookkeeping overview',
-  enableOnboarding = false,
-  onTransactionsToReviewClick,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
-  const { isDesktop } = useSizeClass()
+  const [width] = useWindowSize()
 
   return (
     <ProfitAndLoss asContainer={false}>
       <View
+        viewClassName='Layer__bookkeeping-overview--view'
         title={title}
-        headerControls={<ProfitAndLoss.DatePicker />}
-        withSidebar={isDesktop}
-        sidebar={<Tasks asContainer={false} />}
+        withSidebar={width > 1100}
+        sidebar={<Tasks tasksHeader='Bookkeeeping Tasks' />}
       >
-        {!isDesktop && <Tasks asContainer={true} />}
-        {enableOnboarding && (
-          <Onboarding
-            onTransactionsToReviewClick={onTransactionsToReviewClick}
-          />
-        )}
-        <div className='Layer__bookkeeping-overview__summaries-row'>
-          <ProfitAndLoss.Summaries actionable={false} />
-          <TransactionToReviewCard
-            usePnlDateRange={true}
-            onClick={onTransactionsToReviewClick}
-          />
-        </div>
+        {width <= 1100 && <Tasks tasksHeader='Bookkeeeping Tasks' />}
         <Container
           name='bookkeeping-overview-profit-and-loss'
           asWidget
@@ -54,7 +36,11 @@ export const BookkeepingOverview = ({
         >
           <Header>
             <Heading size={HeadingSize.secondary}>Profit & Loss</Heading>
+            <ProfitAndLoss.DatePicker />
           </Header>
+          <div className='Layer__bookkeeping-overview__summaries-row'>
+            <ProfitAndLoss.Summaries actionable={false} />
+          </div>
           <ProfitAndLoss.Chart />
         </Container>
         <div className='Layer__bookkeeping-overview-profit-and-loss-charts'>

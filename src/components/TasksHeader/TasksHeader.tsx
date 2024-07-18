@@ -24,7 +24,11 @@ const ICONS = {
   },
 }
 
-export const TasksHeader = () => {
+export const TasksHeader = ({
+  tasksHeader = 'Book Tasks',
+}: {
+  tasksHeader?: string
+}) => {
   const { data: tasks, refetch, error } = useContext(TasksContext)
 
   const completedTasks = tasks?.filter(task => task.status === 'COMPLETED')
@@ -35,7 +39,7 @@ export const TasksHeader = () => {
 
   return (
     <div className='Layer__tasks-header'>
-      <Text size={TextSize.lg}>Books</Text>
+      <Text size={TextSize.lg}>{tasksHeader}</Text>
       {!tasks || error ? (
         <Badge
           onClick={() => refetch()}

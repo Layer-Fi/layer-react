@@ -46,13 +46,23 @@ export const DatePicker = ({
   currentDateOption = true,
   ...props
 }: DatePickerProps) => {
+  const [updatePickerDate, setPickerDate] = useState<boolean>(false)
   const [selectedDates, setSelectedDates] = useState<
     Date | [Date | null, Date | null] | null
   >(selected)
 
   useEffect(() => {
-    if (onChange) {
+    setPickerDate(true)
+    if (selected !== selectedDates) {
+      setSelectedDates(selected)
+    }
+  }, [selected])
+
+  useEffect(() => {
+    if (onChange && !updatePickerDate) {
       onChange(selectedDates as Date | [Date, Date])
+    } else {
+      setPickerDate(false)
     }
   }, [selectedDates])
 

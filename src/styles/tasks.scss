@@ -3,18 +3,16 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  padding: var(--spacing-md) var(--spacing-lg);
-  gap: var(--spacing-md);
+  border-radius: 8px;
+  box-shadow: 0px 0px 0px 1px var(--color-base-300);
+  background-color: var(--color-base-0);
 
   .Layer__tasks-pending {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-xs)
-      var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
     border-radius: 8px;
-    background-color: var(--color-base-0);
-    box-shadow: 0px 0px 0px 1px var(--color-base-300);
 
     .Layer__tasks-pending-bar {
       display: flex;
@@ -22,8 +20,8 @@
       gap: var(--spacing-xs);
       font-weight: 540;
       padding: var(--spacing-xs);
-      border-radius: 8px;
       background-color: var(--color-base-50);
+      border-radius: 8px;
 
       .mini-chart {
         transform: rotate(90deg);
@@ -44,15 +42,16 @@
     align-items: center;
     justify-content: flex-start;
     gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-bottom: 1px solid var(--color-base-300);
   }
 
   .Layer__tasks-list {
-    border-radius: 8px;
     background-color: var(--color-base-0);
     box-shadow: 0px 0px 0px 1px var(--color-base-300);
 
     .Layer__tasks-list-item-wrapper {
-      padding: var(--spacing-xs);
+      padding: var(--spacing-2xs);
 
       &:not(:last-child) {
         border-bottom: 1px solid var(--color-base-300);
@@ -73,7 +72,7 @@
           align-items: center;
           justify-content: space-between;
           gap: var(--spacing-xs);
-          padding: var(--spacing-sm);
+          padding: var(--spacing-md);
 
           .Layer__tasks-list-item__head-info {
             display: flex;
@@ -106,8 +105,8 @@
         }
 
         .Layer__tasks-list-item__body {
-          padding-right: var(--spacing-sm);
-          padding-left: var(--spacing-sm);
+          padding-right: var(--spacing-md);
+          padding-left: var(--spacing-md);
           padding-bottom: 0;
           height: 0;
           opacity: 0;
@@ -194,9 +193,16 @@
       flex-direction: column;
       align-items: stretch;
       gap: var(--spacing-xs);
+      padding: var(--spacing-md) 0;
       .Layer__tasks-pending-bar {
         justify-content: space-between;
       }
+    }
+    .Layer__badge {
+      white-space: nowrap;
+    }
+    .Layer__tasks-header {
+      padding: var(--spacing-md) 0;
     }
   }
 
