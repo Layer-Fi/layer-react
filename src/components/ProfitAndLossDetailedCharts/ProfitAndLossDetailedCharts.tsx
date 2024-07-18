@@ -65,7 +65,7 @@ export const ProfitAndLossDetailedCharts = ({
       </header>
 
       <header className='Layer__profit-and-loss-detailed-charts__header--tablet'>
-        <BackButton onClick={() => setSidebarScope(undefined)} />
+        {!hideClose && <BackButton onClick={() => setSidebarScope(undefined)} />}
         <div className='Layer__profit-and-loss-detailed-charts__head'>
           <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
             {humanizeTitle(theScope)}
