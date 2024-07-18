@@ -14,6 +14,10 @@
 
 @media screen and (min-width: 1100px) {
   .Layer__bookkeeping-overview--view {
+    .Layer__panel__content {
+      max-width: 1406px;
+    }
+
     .Layer__view-main {
       padding-right: 0;
     }

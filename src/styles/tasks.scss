@@ -173,6 +173,7 @@
     justify-content: flex-end;
     padding: var(--spacing-md) var(--spacing-sm);
     margin: 0 var(--spacing-xs);
+    isolation: isolate;
 
     ul {
       margin: 0;
