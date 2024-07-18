@@ -54,6 +54,10 @@ export type AccountIdentifierPayloadObject =
       type: 'AccountId'
       id: string
     }
+  | {
+      type: 'Exclusion'
+      exclusion_type: string
+    }
 
 export type SingleCategoryUpdate = {
   type: 'Category'
