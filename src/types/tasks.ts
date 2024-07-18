@@ -14,5 +14,11 @@ export interface TaskTypes {
   updated_at: string
 }
 
-export type TasksStatusType = 'COMPLETED' | 'TODO'
+export type TasksStatusType = 'COMPLETED' | 'TODO' | 'USER_MARKED_COMPLETED'
 export type TasksResponseType = 'FREE_RESPONSE'
+
+const COMPLETED_TASK_TYPES = ['COMPLETED', 'USER_MARKED_COMPLETED']
+
+export function isComplete(taskType: TasksStatusType) {
+  return COMPLETED_TASK_TYPES.includes(taskType)
+}
