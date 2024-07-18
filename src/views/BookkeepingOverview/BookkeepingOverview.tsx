@@ -28,7 +28,13 @@ export const BookkeepingOverview = ({
         withSidebar={width > 1100}
         sidebar={<Tasks tasksHeader='Bookkeeeping Tasks' />}
       >
-        {width <= 1100 && <Tasks tasksHeader='Bookkeeeping Tasks' />}
+        {width <= 1100 && (
+          <Tasks
+            tasksHeader='Bookkeeeping Tasks'
+            collapsable
+            defaultCollapsed
+          />
+        )}
         <Container
           name='bookkeeping-overview-profit-and-loss'
           asWidget

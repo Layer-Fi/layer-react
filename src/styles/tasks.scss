@@ -38,12 +38,33 @@
   }
 
   .Layer__tasks-header {
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-bottom: 1px solid var(--color-base-300);
+  }
+
+  .Layer__tasks-header__left-col {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: var(--spacing-md);
-    padding: var(--spacing-md) var(--spacing-lg);
-    border-bottom: 1px solid var(--color-base-300);
+  }
+
+  .Layer__tasks__content {
+    max-height: 1000px;
+    opacity: 1;
+    transition:
+      max-height 0.18s ease-out,
+      opacity 0.2s ease-out;
+  }
+
+  .Layer__tasks__content.Layer__tasks__content--collapsed {
+    opacity: 0.3;
+    max-height: 0;
   }
 
   .Layer__tasks-list {
