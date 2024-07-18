@@ -22,10 +22,6 @@ export const TasksListItem = ({
   )
   const [userResponse, setUserResponse] = useState(task.user_response || '')
 
-  useEffect(() => {
-    setUserResponse(task.user_response || '')
-  }, [task.user_response])
-
   const { submitResponseToTask } = useContext(TasksContext)
 
   const taskBodyClassName = classNames(
