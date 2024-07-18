@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Container, Header } from '../../components/Container'
+import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Tasks } from '../../components/Tasks'
 import { Toggle } from '../../components/Toggle'
@@ -10,12 +11,16 @@ import classNames from 'classnames'
 
 export interface BookkeepingOverviewProps {
   title?: string
+  enableOnboarding?: boolean
+  onTransactionsToReviewClick?: () => void
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
 
 export const BookkeepingOverview = ({
   title = 'Bookkeeping overview',
+  enableOnboarding,
+  onTransactionsToReviewClick,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
   const [width] = useWindowSize()
@@ -28,6 +33,11 @@ export const BookkeepingOverview = ({
         withSidebar={width > 1100}
         sidebar={<Tasks tasksHeader='Bookkeeeping Tasks' />}
       >
+        {enableOnboarding && (
+          <Onboarding
+            onTransactionsToReviewClick={onTransactionsToReviewClick}
+          />
+        )}
         {width <= 1100 && <Tasks tasksHeader='Bookkeeeping Tasks' />}
         <Container
           name='bookkeeping-overview-profit-and-loss'
