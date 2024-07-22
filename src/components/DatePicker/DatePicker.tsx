@@ -24,6 +24,7 @@ interface DatePickerProps {
   popperClassName?: string
   currentDateOption?: boolean
   minDate?: Date
+  maxDate?: Date
 }
 
 export const DatePicker = ({
@@ -43,6 +44,7 @@ export const DatePicker = ({
   calendarClassName,
   popperClassName,
   minDate,
+  maxDate,
   currentDateOption = true,
   ...props
 }: DatePickerProps) => {
@@ -154,6 +156,7 @@ export const DatePicker = ({
         showTimeSelect={mode === 'timePicker'}
         showTimeSelectOnly={mode === 'timePicker'}
         minDate={minDate}
+        maxDate={maxDate}
         {...props}
       >
         {mode === 'dayRangePicker' && (

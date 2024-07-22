@@ -122,6 +122,7 @@ export const BankTransactionsHeader = ({
               }
             }}
             minDate={getEarliestDateToBrowse(business)}
+            maxDate={new Date()}
           />
         ) : null}
       </div>
