@@ -63,6 +63,7 @@ export const BankTransactionMobileListItem = ({
   const itemRef = useRef<HTMLLIElement>(null)
 
   const [removeAnim, setRemoveAnim] = useState(false)
+  const [removed, setRemoved] = useState(false)
   const [purpose, setPurpose] = useState<Purpose>(
     bankTransaction.category
       ? bankTransaction.categorization_status === CategorizationStatus.SPLIT
@@ -145,6 +146,10 @@ export const BankTransactionMobileListItem = ({
     showComponent ? 'show' : '',
   )
 
+  if (removed) {
+    return null
+  }
+
   return (
     <li
       ref={itemRef}
@@ -155,6 +160,11 @@ export const BankTransactionMobileListItem = ({
           close()
           if (editable) {
             setRemoveAnim(false)
+          }
+        }
+
+        if (propertyName === 'top') {
+          if (editable) {
             setTimeout(() => {
               removeTransaction(bankTransaction.id)
             }, 500)
