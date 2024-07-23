@@ -52,7 +52,7 @@ export const LinkedAccountThumb = ({
     <div className={linkedAccountThumbClassName}>
       <div className='topbar'>
         <div className='topbar-details'>
-          <Text as='span' className='account-name'>
+          <Text as='div' className='account-name'>
             {account.external_account_name}
           </Text>
           {!asWidget && account.mask && (
