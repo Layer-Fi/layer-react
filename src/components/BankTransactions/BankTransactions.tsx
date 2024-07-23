@@ -81,6 +81,7 @@ const BankTransactionsContent = ({
     filters,
     accountsList,
     display,
+    fetchNext,
   } = useBankTransactionsContext()
 
   useEffect(() => {
@@ -258,6 +259,7 @@ const BankTransactionsContent = ({
         editable={editable}
       />
 
+        <button onClick={() => fetchNext()}>Fetch next</button>
       {!monthlyView && (
         <div className='Layer__bank-transactions__pagination'>
           <Pagination

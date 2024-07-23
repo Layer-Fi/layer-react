@@ -22,7 +22,8 @@ import {
   appplyDateRangeFilter,
   collectAccounts,
 } from './utils'
-import useSWR from 'swr'
+import useSWRInfinite  from 'swr/infinite'
+import { PaginationMetadata } from '../../types/api'
 
 export const useBankTransactions: UseBankTransactions = () => {
   const {
@@ -48,25 +49,90 @@ export const useBankTransactions: UseBankTransactions = () => {
     return DisplayState.categorized
   }, [filters?.categorizationStatus])
 
+  const [pagination, setPagination] = useState<PaginationMetadata | undefined>()
+  const [cursor, setCursor] = useState('')
+
   const queryKey = useMemo(() => {
     if (!active) {
       return false
     }
-    return businessId && auth?.access_token && `bank-transactions-${businessId}`
-  }, [businessId, auth?.access_token, active])
+    return businessId && auth?.access_token && `bank-transactions-${businessId}-${cursor}`
+  }, [businessId, auth?.access_token, active, cursor])
+
+  const getKey = (index: number, prevData: any) => {
+    console.log('inde', index, prevData, auth?.access_token)
+    if (!auth?.access_token) {
+      console.log('retrun empty token false')
+      return [false, undefined]
+    }
+
+    if (!prevData?.meta?.pagination?.cursor) {
+      console.log('retrun no cursot')
+      return [businessId && auth?.access_token && `bank-transactions-${businessId}`, undefined]
+    }
+
+    console.log('retrun curosr')
+    return [businessId && auth?.access_token && `bank-transactions-${businessId}-${prevData.meta.pagination.cursor}`, prevData.meta.pagination.cursor]
+  }
+
+  // const {
+  //   data: responseData,
+  //   isLoading,
+  //   isValidating,
+  //   error: responseError,
+  //   mutate,
+  // } = useSWRInfinite(
+  //   queryKey,
+  //   Layer.getBankTransactions(apiUrl, auth?.access_token, {
+  //     params: { businessId, cursor },
+  //   }),
+  // )
 
   const {
-    data: responseData,
+    data: rawResponseData,
     isLoading,
     isValidating,
     error: responseError,
     mutate,
-  } = useSWR(
-    queryKey,
-    Layer.getBankTransactions(apiUrl, auth?.access_token, {
-      params: { businessId },
-    }),
+    size,
+    setSize
+  } = useSWRInfinite(
+    getKey,
+    async ([query, nextCursor]) => {
+      console.log('nextTokjen', query, nextCursor)
+      if (auth?.access_token) {
+        return Layer.getBankTransactions(apiUrl, auth?.access_token, {
+          params: { businessId, cursor: nextCursor },
+        }).call()
+      }
+
+      return undefined
+  },
+  { 
+    initialSize: 1, 
+    revalidateFirstPage : false 
+  }
   )
+
+  const responseData = useMemo(() => {
+    const r = rawResponseData?.filter(x => Boolean(x))
+    console.log('r', rawResponseData)
+    if(r && r.length > 0) {
+      return { data: r?.map(x => x.data).flat().filter(x => Boolean(x)) }
+    }
+
+    return undefined
+  }, [rawResponseData])
+
+  console.log('responseData', responseData)
+
+  // console.log('pagination', pagination, 'cursor', cursor)
+
+  // useEffect(() => {
+  //   if (responseData?.meta?.pagination) {
+  //     setPagination(responseData?.meta?.pagination)
+  //   }
+  // }, [responseData?.meta])
 
   const accountsList = useMemo(
     () => collectAccounts(responseData?.data),
@@ -235,6 +301,14 @@ export const useBankTransactions: UseBankTransactions = () => {
     mutate()
   }
 
+  const fetchNext = () => {
+    console.log('fetch next', size)
+    setSize(size + 1)
+    if (pagination?.cursor) {
+      setCursor(pagination?.cursor)
+    }
+  }
+
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
     if (isLoading || isValidating) {
@@ -264,5 +338,6 @@ export const useBankTransactions: UseBankTransactions = () => {
     accountsList,
     activate,
     display,
+    fetchNext
   }
 }

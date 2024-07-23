@@ -26,10 +26,11 @@ export const getBankTransactions = get<
 >(
   ({
     businessId,
+    cursor,
     sortBy = 'date',
     sortOrder = 'DESC',
   }: GetBankTransactionsParams) =>
-    `/v1/businesses/${businessId}/bank-transactions?sort_by=${sortBy}&sort_order=${sortOrder}&limit=200`,
+    `/v1/businesses/${businessId}/bank-transactions?${cursor ? `cursor=${cursor}&` : ''}sort_by=${sortBy}&sort_order=${sortOrder}&limit=200`,
 )
 
 export const categorizeBankTransaction = put<

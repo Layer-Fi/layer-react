@@ -55,4 +55,5 @@ export type UseBankTransactions = () => {
   refetch: () => void
   setFilters: (filters?: Partial<BankTransactionFilters>) => void
   activate: () => void
+  fetchNext: () => void
 }
