@@ -41,7 +41,7 @@ export const LinkedAccountThumb = ({
   } else {
     bankBalance = (
       <Text as='span' className='account-balance'>
-        {isLessThanFiveMinutesOld(account.created_at)
+        {account.is_syncing
           ? 'Syncing...'
           : `${formatMoney(account.latest_balance_timestamp?.balance)}`}
       </Text>
@@ -105,7 +105,7 @@ export const LinkedAccountThumb = ({
             </Text>
           )}
           <Text as='span' className='account-balance'>
-            {isLessThanFiveMinutesOld(account.created_at)
+            {account.is_syncing
               ? 'Syncing...'
               : `${formatMoney(account.current_ledger_balance)}`}
           </Text>
@@ -114,6 +114,3 @@ export const LinkedAccountThumb = ({
     </div>
   )
 }
-
-const isLessThanFiveMinutesOld = (dateString: string) =>
-  Number(new Date()) - Number(new Date(dateString)) < 5 * 60 * 1000
