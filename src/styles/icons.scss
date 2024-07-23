@@ -1,4 +1,3 @@
-
 .Layer__chevron {
   stroke: var(--text-color);
   transition: transform 0.33s;
@@ -14,4 +13,15 @@
 
 .Layer__chevron__up--counterclockwise {
   transform: rotate(-180deg);
+}
+
+.Layer__icon-box {
+  width: 32px;
+  height: 32px;
+  background-color: var(--color-base-0);
+  border-radius: var(--border-radius-3xs);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-base-1000);
 }

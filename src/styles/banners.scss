@@ -1,0 +1,21 @@
+.Layer__bar-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--color-base-800);
+  color: var(--color-base-50);
+  border-radius: var(--border-radius-xs);
+  padding: var(--spacing-3xs) var(--spacing-sm);
+  min-height: 52px;
+  box-shadow: 0px 0px 0px 3px var(--color-base-300);
+}
+
+.Layer__bar-banner__left-col {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.Layer__bar-banner__text-container__desc {
+  color: var(--color-base-300);
+}

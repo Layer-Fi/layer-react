@@ -70,7 +70,7 @@ export const TasksHeader = ({
           <Badge variant={badgeVariant.badge} icon={badgeVariant.icon}>
             {badgeVariant.text}
           </Badge>
-        ) : loadedStatus !== 'complete' && open ? null : (
+        ) : open ? null : (
           <Badge variant={badgeVariant.badge} icon={badgeVariant.icon}>
             {badgeVariant.text}
           </Badge>

@@ -13,8 +13,8 @@
 
 .Layer__accounting-overview-profit-and-loss-charts {
   display: flex;
-  flex-direction: column;
   gap: var(--spacing-md);
+  max-width: 1406px;
 }
 
 .Layer__component.Layer__accounting-overview-profit-and-loss
@@ -22,7 +22,7 @@
   margin-top: -42px;
 }
 
-.accounting-overview-profit-and-loss-charts > .Layer__toggle {
+.Layer__accounting-overview-profit-and-loss-charts > .Layer__toggle {
   display: none;
 }
 
@@ -46,11 +46,11 @@
     }
   }
 
-  .accounting-overview-profit-and-loss-charts {
+  .Layer__accounting-overview-profit-and-loss-charts {
     flex-direction: column;
   }
 
-  .accounting-overview-profit-and-loss-charts > .Layer__toggle {
+  .Layer__accounting-overview-profit-and-loss-charts > .Layer__toggle {
     display: flex;
   }
 
