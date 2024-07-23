@@ -154,6 +154,7 @@ export const DatePicker = ({
         showTimeSelect={mode === 'timePicker'}
         showTimeSelectOnly={mode === 'timePicker'}
         minDate={minDate}
+        maxDate={new Date()}
         {...props}
       >
         {mode === 'dayRangePicker' && (
