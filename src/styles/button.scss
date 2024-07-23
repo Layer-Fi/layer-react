@@ -21,6 +21,12 @@
     0px 4px 5px 0px rgba(0, 0, 0, 0.01);
   transition: all 100ms ease-out;
   padding: 0 var(--spacing-md);
+  text-decoration: none;
+
+  &.Layer__btn--as-link {
+    display: inline-flex;
+    align-items: center;
+  }
 
   &.Layer__back-btn {
     color: var(--btn-secondary-color);

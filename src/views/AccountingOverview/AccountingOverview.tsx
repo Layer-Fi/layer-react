@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { Container, Header } from '../../components/Container'
 import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
@@ -12,6 +12,7 @@ export interface AccountingOverviewProps {
   title?: string
   enableOnboarding?: boolean
   onTransactionsToReviewClick?: () => void
+  middleBanner?: ReactNode
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
@@ -20,15 +21,13 @@ export const AccountingOverview = ({
   title = 'Accounting overview',
   enableOnboarding = false,
   onTransactionsToReviewClick,
+  middleBanner,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
 
   return (
     <ProfitAndLoss asContainer={false}>
-      <View
-        title={title}
-        headerControls={<ProfitAndLoss.DatePicker />}
-      >
+      <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
         {enableOnboarding && (
           <Onboarding
             onTransactionsToReviewClick={onTransactionsToReviewClick}
@@ -51,6 +50,11 @@ export const AccountingOverview = ({
           </Header>
           <ProfitAndLoss.Chart />
         </Container>
+        {middleBanner && (
+          <Container name='accounting-overview-middle-banner'>
+            {middleBanner}
+          </Container>
+        )}
         <div className='Layer__accounting-overview-profit-and-loss-charts'>
           <Toggle
             name='pnl-detailed-charts'
