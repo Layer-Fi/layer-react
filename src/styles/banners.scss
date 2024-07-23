@@ -19,3 +19,16 @@
 .Layer__bar-banner__text-container__desc {
   color: var(--color-base-300);
 }
+
+@container (max-width: 560px) {
+  .Layer__bar-banner--bookkeeping {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+
+    .Layer__icon-box {
+      display: none;
+    }
+  }
+}

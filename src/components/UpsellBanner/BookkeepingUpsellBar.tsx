@@ -14,7 +14,7 @@ export const BookkeepingUpsellBar = ({
   href,
 }: BookkeepingUpsellBarProps) => {
   return (
-    <div className='Layer__bar-banner'>
+    <div className='Layer__bar-banner Layer__bar-banner--bookkeeping'>
       <div className='Layer__bar-banner__left-col'>
         <IconBox>
           <CoffeeIcon />
