@@ -31,8 +31,8 @@ export interface ProfitAndLossSummary {
   totalExpenses: number
   uncategorizedInflows: number
   uncategorizedOutflows: number
-  operatingExpensesInversed?: number
-  uncategorizedOutflowsInversed?: number
+  operatingExpensesInverse?: number
+  uncategorizedOutflowsInverse?: number
 }
 
 export interface ProfitAndLossSummaries {

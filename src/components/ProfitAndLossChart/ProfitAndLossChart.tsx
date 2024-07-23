@@ -240,8 +240,8 @@ export const ProfitAndLossChart = () => {
     revenueUncategorized: pnl?.uncategorizedInflows || 0,
     expenses: -(pnl?.operatingExpenses || 0),
     expensesUncategorized: -(pnl?.uncategorizedOutflows || 0),
-    operatingExpensesInversed: pnl?.operatingExpensesInversed || 0,
-    uncategorizedOutflowsInversed: pnl?.uncategorizedOutflowsInversed || 0,
+    operatingExpensesInverse: pnl?.operatingExpensesInverse || 0,
+    uncategorizedOutflowsInverse: pnl?.uncategorizedOutflowsInverse || 0,
     netProfit: pnl?.netProfit || 0,
     selected:
       !!pnl &&
@@ -264,8 +264,8 @@ export const ProfitAndLossChart = () => {
           name: format(currentDate, compactView ? 'LLLLL' : 'LLL'),
           revenue: 0,
           revenueUncategorized: 0,
-          operatingExpensesInversed: 0,
-          uncategorizedOutflowsInversed: 0,
+          operatingExpensesInverse: 0,
+          uncategorizedOutflowsInverse: 0,
           expenses: 0,
           expensesUncategorized: 0,
           netProfit: 0,
@@ -288,8 +288,8 @@ export const ProfitAndLossChart = () => {
             ...x,
             operatingExpenses: x.operatingExpenses < 0 ? 0 : x.operatingExpenses,
             uncategorizedOutflows: x.uncategorizedOutflows < 0 ? 0 : x.uncategorizedOutflows,
-            operatingExpensesInversed: x.operatingExpenses < 0 ? -x.operatingExpenses : 0,
-            uncategorizedOutflowsInversed:  x.uncategorizedOutflows < 0 ? -x.uncategorizedOutflows : 0,
+            operatingExpensesInverse: x.operatingExpenses < 0 ? -x.operatingExpenses : 0,
+            uncategorizedOutflowsInverse:  x.uncategorizedOutflows < 0 ? -x.uncategorizedOutflows : 0,
           }
         }
 
@@ -607,7 +607,7 @@ export const ProfitAndLossChart = () => {
           stackId='expenses'
         />
         <Bar
-          dataKey='uncategorizedOutflowsInversed'
+          dataKey='uncategorizedOutflowsInverse'
           barSize={barSize}
           isAnimationActive={barAnimActive}
           animationDuration={100}
@@ -623,7 +623,7 @@ export const ProfitAndLossChart = () => {
           })}
         </Bar>
         <Bar
-          dataKey='operatingExpensesInversed'
+          dataKey='operatingExpensesInverse'
           barSize={barSize}
           isAnimationActive={barAnimActive}
           animationDuration={100}
