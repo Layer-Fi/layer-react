@@ -12,6 +12,26 @@
       0px 0px 0px 1px var(--color-base-700);
     outline: none;
   }
+  &.Layer__datepicker__wrapper--arrows {
+    .react-datepicker__input-container {
+      input {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+  }
+
+  .Layer__datepicker__next-button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    box-shadow: none;
+    border-left: 1px solid var(--input-border-color);
+  }
+  .Layer__datepicker__prev-button {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: none;
+  }
 
   .Layer__datepicker__current-button {
     border-top-left-radius: 0;
@@ -280,6 +300,14 @@
     .react-datepicker__month-container {
       min-width: auto;
       max-width: auto;
+    }
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .Layer__datepicker__wrapper {
+    .Layer__datepicker__current-button {
+      display: none;
     }
   }
 }

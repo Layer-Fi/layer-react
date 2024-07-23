@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { useSizeClass } from '../../hooks/useWindowSize'
+import ChevronLeft from '../../icons/ChevronLeft'
+import ChevronRight from '../../icons/ChevronRight'
 import { Button, ButtonVariant } from '../Button'
 import { DatePickerOptions } from './DatePickerOptions'
 import classNames from 'classnames'
@@ -25,6 +28,7 @@ interface DatePickerProps {
   currentDateOption?: boolean
   minDate?: Date
   maxDate?: Date
+  navigateArrows?: boolean
 }
 
 export const DatePicker = ({
@@ -46,6 +50,7 @@ export const DatePicker = ({
   minDate,
   maxDate,
   currentDateOption = true,
+  navigateArrows = mode === 'monthPicker',
   ...props
 }: DatePickerProps) => {
   const [updatePickerDate, setPickerDate] = useState<boolean>(false)
@@ -71,6 +76,7 @@ export const DatePicker = ({
   const wrapperClassNames = classNames(
     'Layer__datepicker__wrapper',
     mode === 'timePicker' && 'Layer__datepicker__time__wrapper',
+    navigateArrows && 'Layer__datepicker__wrapper--arrows',
   )
 
   const datePickerWrapperClassNames = classNames(
@@ -115,6 +121,34 @@ export const DatePicker = ({
     } else if (mode === 'monthPicker') {
       setSelectedDates(
         new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+      )
+    }
+  }
+
+  const isTodayOrAfter = Boolean(
+    selectedDates instanceof Date && selectedDates >= new Date(),
+  )
+
+  const isBeforeMinDate = Boolean(
+    minDate && selectedDates instanceof Date && selectedDates <= minDate,
+  )
+
+  const changeDate = (value: number) => {
+    if (mode === 'dayPicker') {
+      setSelectedDates(
+        new Date(
+          (selectedDates as Date).setDate(
+            (selectedDates as Date).getDate() + value,
+          ),
+        ),
+      )
+    } else if (mode === 'monthPicker') {
+      setSelectedDates(
+        new Date(
+          (selectedDates as Date).setMonth(
+            (selectedDates as Date).getMonth() + value,
+          ),
+        ),
       )
     }
   }
@@ -166,6 +200,39 @@ export const DatePicker = ({
           />
         )}
       </ReactDatePicker>
+      {navigateArrows && (
+        <>
+          <Button
+            aria-label='Previous Date'
+            className={classNames(
+              'Layer__datepicker__prev-button',
+              isBeforeMinDate && 'Layer__datepicker__button--disabled',
+            )}
+            onClick={() => changeDate(-1)}
+            variant={ButtonVariant.secondary}
+            disabled={isBeforeMinDate}
+          >
+            <ChevronLeft className='Layer__datepicker__button-icon' size={16} />
+          </Button>
+          <Button
+            aria-label='Next Date'
+            variant={ButtonVariant.secondary}
+            className={classNames(
+              'Layer__datepicker__next-button',
+              isTodayOrAfter
+                ? 'Layer__datepicker__button--disabled'
+                : undefined,
+            )}
+            onClick={() => changeDate(1)}
+            disabled={isTodayOrAfter}
+          >
+            <ChevronRight
+              className='Layer__datepicker__button-icon'
+              size={16}
+            />
+          </Button>
+        </>
+      )}
       {currentDateOption &&
         (mode === 'dayPicker' || mode === 'monthPicker') && (
           <Button
