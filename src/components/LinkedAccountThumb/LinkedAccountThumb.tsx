@@ -33,15 +33,17 @@ export const LinkedAccountThumb = ({
     asWidget && '--as-widget',
   )
 
-  let balance: React.ReactNode
+  let bankBalance: React.ReactNode
   if (pillConfig) {
-    balance = (
+    bankBalance = (
       <LinkedAccountPill text={pillConfig.text} config={pillConfig.config} />
     )
   } else {
-    balance = (
+    bankBalance = (
       <Text as='span' className='account-balance'>
-        ${formatMoney(account.latest_balance_timestamp?.balance)}
+        {isLessThanFiveMinutesOld(account.created_at)
+          ? 'Syncing...'
+          : `${formatMoney(account.latest_balance_timestamp?.balance)}`}
       </Text>
     )
   }
@@ -86,7 +88,7 @@ export const LinkedAccountThumb = ({
           >
             Bank balance
           </Text>
-          {balance}
+          {bankBalance}
         </div>
       )}
       {showLedgerBalance && (
@@ -103,10 +105,15 @@ export const LinkedAccountThumb = ({
             </Text>
           )}
           <Text as='span' className='account-balance'>
-            ${formatMoney(account.current_ledger_balance)}
+            {isLessThanFiveMinutesOld(account.created_at)
+              ? 'Syncing...'
+              : `${formatMoney(account.current_ledger_balance)}`}
           </Text>
         </div>
       )}
     </div>
   )
 }
+
+const isLessThanFiveMinutesOld = (dateString: string) =>
+  Number(new Date()) - Number(new Date(dateString)) < 5 * 60 * 1000
