@@ -70,9 +70,9 @@ type LayerEnvironmentConfig = {
 
 export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
   production: {
-    url: 'not defined yet',
-    scope: 'not defined yet',
-    apiUrl: 'not defined yet',
+    url: 'https://auth.layerfi.com/oauth2/token',
+    scope: 'https://api.layerfi.com/production',
+    apiUrl: 'https://api.layerfi.com',
   },
   staging: {
     url: 'https://auth.layerfi.com/oauth2/token',
