@@ -27,6 +27,7 @@ export interface LinkedAccount {
   connection_external_id?: string
   connection_needs_repair_as_of: string | null
   requires_user_confirmation_as_of: string | null
+  is_syncing: boolean
 }
 
 export type PublicToken = {
