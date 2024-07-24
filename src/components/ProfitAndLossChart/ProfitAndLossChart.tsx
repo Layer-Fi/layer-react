@@ -607,22 +607,6 @@ export const ProfitAndLossChart = () => {
           stackId='expenses'
         />
         <Bar
-          dataKey='uncategorizedOutflowsInverse'
-          barSize={barSize}
-          isAnimationActive={barAnimActive}
-          animationDuration={100}
-          radius={[2, 2, 0, 0]}
-          className='Layer__profit-and-loss-chart__bar--expenses-uncategorized'
-          xAxisId='revenue'
-          stackId='revenue'
-        >
-          {theData?.map(entry => {
-            return (
-              <Cell key={entry.name} fill='url(#layer-bar-stripe-pattern-dark)' />
-            )
-          })}
-        </Bar>
-        <Bar
           dataKey='operatingExpensesInverse'
           barSize={barSize}
           isAnimationActive={barAnimActive}
@@ -669,6 +653,22 @@ export const ProfitAndLossChart = () => {
                     : ''
                 }
               />
+            )
+          })}
+        </Bar>
+        <Bar
+          dataKey='uncategorizedOutflowsInverse'
+          barSize={barSize}
+          isAnimationActive={barAnimActive}
+          animationDuration={100}
+          radius={[2, 2, 0, 0]}
+          className='Layer__profit-and-loss-chart__bar--expenses-uncategorized'
+          xAxisId='revenue'
+          stackId='revenue'
+        >
+          {theData?.map(entry => {
+            return (
+              <Cell key={entry.name} fill='url(#layer-bar-stripe-pattern-dark)' />
             )
           })}
         </Bar>
