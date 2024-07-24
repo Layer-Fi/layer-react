@@ -5,6 +5,7 @@ import {
   BankTransactionFilters,
 } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
+import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { BankTransaction, DateRange, DisplayState } from '../../types'
 import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
@@ -20,6 +21,7 @@ import { MobileComponentType } from './constants'
 import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
+const TEST_EMPTY_STATE = false
 
 export interface BankTransactionsProps {
   asWidget?: boolean
@@ -83,6 +85,8 @@ const BankTransactionsContent = ({
     removeAfterCategorize,
   } = useBankTransactionsContext()
 
+  const { data: linkedAccounts } = useLinkedAccounts()
+
   useEffect(() => {
     activate()
   }, [])
@@ -124,14 +128,16 @@ const BankTransactionsContent = ({
     }
   }, [loadingStatus])
 
-  const bankTransactions = useMemo(() => {
-    if (monthlyView) {
-      return data?.filter(
-        x =>
-          parseISO(x.date) >= dateRange.startDate &&
-          parseISO(x.date) <= dateRange.endDate,
-      )
-    }
+  const bankTransactions = TEST_EMPTY_STATE
+    ? []
+    : useMemo(() => {
+        if (monthlyView) {
+          return data?.filter(
+            x =>
+              parseISO(x.date) >= dateRange.startDate &&
+              parseISO(x.date) <= dateRange.endDate,
+          )
+        }
 
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
@@ -249,6 +255,9 @@ const BankTransactionsContent = ({
       <DataStates
         bankTransactions={bankTransactions}
         isLoading={isLoading}
+        transactionsLoading={Boolean(
+          linkedAccounts?.some(item => item.is_syncing),
+        )}
         isValidating={isValidating}
         error={error}
         refetch={refetch}

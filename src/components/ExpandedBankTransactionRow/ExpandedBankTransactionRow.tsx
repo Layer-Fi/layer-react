@@ -195,15 +195,33 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       setSplitFormError(undefined)
     }
 
+    const sanitizeNumberInput = (input: string): string => {
+      let sanitized = input.replace(/[^0-9.]/g, '')
+
+      // Ensure there's at most one period
+      let parts = sanitized.split('.')
+      if (parts.length > 2) {
+        sanitized = parts[0] + '.' + parts.slice(1).join('')
+      }
+
+      // Limit to two digits after the decimal point
+      if (parts.length === 2) {
+        sanitized = parts[0] + '.' + parts[1].slice(0, 2)
+      }
+
+      return sanitized
+    }
+
     const updateAmounts =
       (rowNumber: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newAmount = parseMoney(event.target.value) || 0
-        const newDisplaying = event.target.value
+        const newDisplaying = sanitizeNumberInput(event.target.value)
+        const newAmount = Number(newDisplaying)
         const splitTotal = rowState.splits.reduce((sum, split, index) => {
           const amount =
             index === 0 ? 0 : index === rowNumber ? newAmount : split.amount
           return sum + amount
         }, 0)
+
         const remaining = bankTransaction.amount - splitTotal
         rowState.splits[rowNumber].amount = newAmount
         rowState.splits[rowNumber].inputValue = newDisplaying
