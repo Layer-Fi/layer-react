@@ -267,6 +267,8 @@ const BankTransactionsContent = ({
             totalCount={data?.length || 0}
             pageSize={pageSize}
             onPageChange={page => setCurrentPage(page)}
+            hasMore={true}
+            fetchMore={fetchNext}
           />
         </div>
       )}

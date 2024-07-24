@@ -10,6 +10,8 @@ export interface PaginationProps {
   onPageChange: (page: number) => void
   totalCount: number
   siblingCount?: number
+  hasMore?: boolean
+  fetchMore?: () => void
 }
 
 export const Pagination = ({
@@ -18,6 +20,8 @@ export const Pagination = ({
   siblingCount = 1,
   currentPage,
   pageSize,
+  hasMore,
+  fetchMore
 }: PaginationProps) => {
   const paginationRange = usePagination({
     currentPage,
@@ -78,6 +82,15 @@ export const Pagination = ({
           </li>
         )
       })}
+      {hasMore && fetchMore ?(
+        <li
+        key={`page-has-more`}
+        className='Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--next'
+        onClick={fetchMore}
+      >
+        ...
+      </li>
+      ) : null}
       <li
         key={`page-last`}
         className={classnames(

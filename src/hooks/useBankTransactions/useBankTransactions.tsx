@@ -103,7 +103,7 @@ export const useBankTransactions: UseBankTransactions = () => {
       if (auth?.access_token) {
         return Layer.getBankTransactions(apiUrl, auth?.access_token, {
           params: { businessId, cursor: nextCursor },
-        }).call()
+        }).call(false)
       }
 
       return undefined
