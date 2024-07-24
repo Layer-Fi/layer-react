@@ -54,9 +54,9 @@ export const BankTransactionMobileListItem = ({
     setTransactionIdToOpen,
     clearTransactionIdToOpen,
   } = useContext(TransactionToOpenContext)
-  const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
-    setHeight(height),
-  )
+  const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) => {
+    setHeight(height)
+  })
   const headingRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) => {
     setHeadingHeight(height)
   })
@@ -99,8 +99,12 @@ export const BankTransactionMobileListItem = ({
 
   useEffect(() => {
     if (!removeAnim && bankTransaction.recently_categorized) {
-      setRemoveAnim(true)
-      openNext()
+      if (editable) {
+        setRemoveAnim(true)
+        openNext()
+      } else {
+        close()
+      }
     }
   }, [
     bankTransaction.recently_categorized,
@@ -146,7 +150,7 @@ export const BankTransactionMobileListItem = ({
     showComponent ? 'show' : '',
   )
 
-  if (removed) {
+  if (removed || (editable && bankTransaction.categorization_method)) {
     return null
   }
 
@@ -157,17 +161,12 @@ export const BankTransactionMobileListItem = ({
       data-item={bankTransaction.id}
       onTransitionEnd={({ propertyName }) => {
         if (propertyName === 'opacity') {
-          close()
-          if (editable) {
-            setRemoveAnim(false)
-          }
-        }
-
-        if (propertyName === 'top') {
-          if (editable) {
-            setTimeout(() => {
+          if (bankTransaction.recently_categorized) {
+            close()
+            if (editable) {
               removeTransaction(bankTransaction.id)
-            }, 500)
+              setRemoved(true)
+            }
           }
         }
       }}
@@ -210,7 +209,10 @@ export const BankTransactionMobileListItem = ({
           </div>
         </div>
       </span>
-      <div className={`${className}__expanded-row`} style={{ height }}>
+      <div
+        className={`${className}__expanded-row`}
+        style={{ height: !open ? 0 : height }}
+      >
         {open && (
           <div
             className={`${className}__expanded-row__content`}

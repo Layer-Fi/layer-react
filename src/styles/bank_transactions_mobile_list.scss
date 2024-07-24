@@ -39,8 +39,8 @@
   }
 
   &.show.Layer__bank-transaction-row--removing {
-    opacity: 0.99;
-    top: -1px;
+    opacity: 0.2;
+    overflow: hidden;
 
     .Layer__bank-transaction-mobile-list-item__heading {
       height: 0 !important;
@@ -65,6 +65,11 @@
   width: 100%;
   box-sizing: border-box;
   transition: height 180ms ease-out;
+}
+
+.Layer__bank-transaction-mobile-list-item
+  .Layer__bank-transaction-row--removing
+  .Layer__bank-transaction-mobile-list-item__heading {
   transition-delay: 180ms;
 }
 
