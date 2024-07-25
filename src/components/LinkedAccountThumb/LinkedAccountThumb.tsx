@@ -5,6 +5,7 @@ import { LinkedAccount } from '../../types/linked_accounts'
 import { LinkedAccountPill } from '../LinkedAccountPill'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
+import LoaderIcon from '../../icons/Loader'
 
 export interface LinkedAccountThumbProps {
   account: LinkedAccount
@@ -31,6 +32,13 @@ export const LinkedAccountThumb = ({
   const linkedAccountThumbClassName = classNames(
     'Layer__linked-account-thumb',
     asWidget && '--as-widget',
+    account.is_syncing && "--is-syncing",
+    account.is_syncing && "skeleton-loader"
+  )
+
+  const linkedAccountInfoClassName = classNames(
+    'topbar',
+    account.is_syncing && "--is-syncing",
   )
 
   let bankBalance: React.ReactNode
@@ -41,16 +49,14 @@ export const LinkedAccountThumb = ({
   } else {
     bankBalance = (
       <Text as='span' className='account-balance'>
-        {account.is_syncing
-          ? 'Syncing...'
-          : `${formatMoney(account.latest_balance_timestamp?.balance)}`}
+          {`${formatMoney(account.latest_balance_timestamp?.balance)}`}
       </Text>
     )
   }
 
   return (
     <div className={linkedAccountThumbClassName}>
-      <div className='topbar'>
+      <div className={linkedAccountInfoClassName}>
         <div className='topbar-details'>
           <Text as='div' className='account-name'>
             {account.external_account_name}
@@ -79,6 +85,18 @@ export const LinkedAccountThumb = ({
           )}
         </div>
       </div>
+      {account.is_syncing ? (
+        <div className="loadingbar">
+          <div className="loading-text Layer__text--sm">
+            <div>Syncing account data</div>
+            <div className="syncing-data-description">This may take up to 5 minutes</div>
+          </div>
+          <div className="loading-wrapper">
+      <LoaderIcon size={11} className='Layer__anim--rotating' />
+          </div>
+        </div>
+      ) :
+      <>
       {!asWidget && (
         <div className='middlebar'>
           <Text
@@ -105,12 +123,12 @@ export const LinkedAccountThumb = ({
             </Text>
           )}
           <Text as='span' className='account-balance'>
-            {account.is_syncing
-              ? 'Syncing...'
-              : `${formatMoney(account.current_ledger_balance)}`}
+            {`${formatMoney(account.current_ledger_balance)}`}
           </Text>
         </div>
       )}
+      </>
+      }
     </div>
   )
 }
