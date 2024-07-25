@@ -32,10 +32,7 @@ const getDefaultRangeDate = (
   selected: Date | [Date | null, Date | null],
 ) => {
   try {
-    if (
-      (mode === 'dayRangePicker' || mode === 'monthRangePicker') &&
-      selected
-    ) {
+    if (isRangeMode(mode) && selected) {
       if (date === 'end') {
         return (selected as [Date | null, Date | null])[1]
       }
@@ -47,6 +44,9 @@ const getDefaultRangeDate = (
     return null
   }
 }
+
+const isRangeMode = (mode: DatePickerProps['mode']) =>
+  mode === 'dayRangePicker' || mode === 'monthRangePicker'
 
 export const DatePicker = ({
   selected,
@@ -81,9 +81,23 @@ export const DatePicker = ({
   )
 
   useEffect(() => {
-    setPickerDate(true)
-    if (selected !== selectedDates) {
-      setSelectedDates(selected)
+    try {
+      setPickerDate(true)
+      if (!isRangeMode(mode) && selected !== selectedDates) {
+        setSelectedDates(selected)
+        return
+      }
+
+      if (isRangeMode(mode) && Array.isArray(selected)) {
+        if (startDate !== selected[0]) {
+          setStartDate(selected[0])
+        }
+        if (endDate !== selected[1]) {
+          setEndDate(selected[1])
+        }
+      }
+    } catch (_err) {
+      return
     }
   }, [selected])
 
@@ -96,7 +110,7 @@ export const DatePicker = ({
   }, [selectedDates])
 
   useEffect(() => {
-    if (mode === 'dayRangePicker' || mode === 'monthRangePicker') {
+    if (isRangeMode(mode)) {
       setSelectedDates([startDate, endDate])
     }
   }, [startDate, endDate])
@@ -121,7 +135,7 @@ export const DatePicker = ({
   )
 
   const handleDateChange = (date: Date | [Date | null, Date | null]) => {
-    if (mode === 'dayRangePicker' || mode === 'monthRangePicker') {
+    if (isRangeMode(mode)) {
       const [start, end] = date as [Date | null, Date | null]
       setStartDate(start)
       setEndDate(end)
@@ -163,16 +177,8 @@ export const DatePicker = ({
     <div className={wrapperClassNames}>
       <ReactDatePicker
         wrapperClassName={datePickerWrapperClassNames}
-        startDate={
-          mode === 'dayRangePicker' || mode === 'monthRangePicker'
-            ? startDate
-            : undefined
-        }
-        endDate={
-          mode === 'dayRangePicker' || mode === 'monthRangePicker'
-            ? endDate
-            : undefined
-        }
+        startDate={isRangeMode(mode) ? startDate : undefined}
+        endDate={isRangeMode(mode) ? endDate : undefined}
         selected={
           mode !== 'dayRangePicker' && mode !== 'monthRangePicker'
             ? (selectedDates as Date)
@@ -183,7 +189,7 @@ export const DatePicker = ({
         popperClassName={popperClassNames}
         enableTabLoop={false}
         popperPlacement='bottom-start'
-        selectsRange={mode === 'dayRangePicker' || mode === 'monthRangePicker'}
+        selectsRange={isRangeMode(mode)}
         showMonthYearPicker={
           mode === 'monthPicker' || mode === 'monthRangePicker'
         }
