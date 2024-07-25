@@ -10,6 +10,11 @@ export enum BankTransactionMatchType {
   CONFIRM_MATCH = 'Confirm_Match',
 }
 
+export enum DisplayState {
+  review = 'review',
+  categorized = 'categorized',
+}
+
 // This isn't my favorite but BankTransaction contains much
 // more than we're using right now.
 export interface BankTransaction extends Record<string, unknown> {

@@ -329,12 +329,10 @@ export const LayerProvider = ({
           hasBeenTouched,
         }}
       >
-        <BankTransactionsProvider>
-          <DrawerContext.Provider value={drawerContextData}>
-            {children}
-            <GlobalWidgets />
-          </DrawerContext.Provider>
-        </BankTransactionsProvider>
+        <DrawerContext.Provider value={drawerContextData}>
+          {children}
+          <GlobalWidgets />
+        </DrawerContext.Provider>
       </LayerContext.Provider>
     </SWRConfig>
   )

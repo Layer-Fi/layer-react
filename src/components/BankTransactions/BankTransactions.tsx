@@ -3,10 +3,10 @@ import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import {
   BankTransactionFilters,
-  DisplayState,
 } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
-import { CategorizationScope, DateRange } from '../../types'
+import { BankTransactionsProvider } from '../../providers/BankTransactionsProvider'
+import { DateRange, DisplayState } from '../../types'
 import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
@@ -45,7 +45,9 @@ export const BankTransactions = ({
 }: BankTransactionsWithErrorProps) => {
   return (
     <ErrorBoundary onError={onError}>
-      <BankTransactionsContent {...props} />
+      <BankTransactionsProvider>
+        <BankTransactionsContent {...props} />
+      </BankTransactionsProvider>
     </ErrorBoundary>
   )
 }
@@ -81,7 +83,7 @@ const BankTransactionsContent = ({
     filters,
     accountsList,
     display,
-    fetchNext,
+    fetchMore,
   } = useBankTransactionsContext()
 
   useEffect(() => {
@@ -94,24 +96,24 @@ const BankTransactionsContent = ({
         setFilters({
           ...filters,
           ...inputFilters,
-          categorizationStatus: CategorizationScope.TO_REVIEW,
+          categorizationStatus: DisplayState.review,
         })
       } else if (!filters?.categorizationStatus && categorizedOnly) {
         setFilters({
           ...filters,
           ...inputFilters,
-          categorizationStatus: CategorizationScope.CATEGORIZED,
+          categorizationStatus: DisplayState.categorized,
         })
       } else {
         setFilters({ ...filters, ...inputFilters })
       }
     } else if (!filters?.categorizationStatus && categorizeView) {
       setFilters({
-        categorizationStatus: CategorizationScope.TO_REVIEW,
+        categorizationStatus: DisplayState.review,
       })
     } else if (!filters?.categorizationStatus && categorizedOnly) {
       setFilters({
-        categorizationStatus: CategorizationScope.CATEGORIZED,
+        categorizationStatus: DisplayState.categorized,
       })
     }
   }, [inputFilters, categorizeView, categorizedOnly])
@@ -145,8 +147,8 @@ const BankTransactionsContent = ({
     setFilters({
       categorizationStatus:
         event.target.value === DisplayState.categorized
-          ? CategorizationScope.CATEGORIZED
-          : CategorizationScope.TO_REVIEW,
+          ? DisplayState.categorized
+          : DisplayState.review,
     })
     setCurrentPage(1)
   }
@@ -259,7 +261,7 @@ const BankTransactionsContent = ({
         editable={editable}
       />
 
-        <button onClick={() => fetchNext()}>Fetch next</button>
+      <button onClick={() => fetchMore()}>Fetch next</button>
       {!monthlyView && (
         <div className='Layer__bank-transactions__pagination'>
           <Pagination
@@ -268,7 +270,7 @@ const BankTransactionsContent = ({
             pageSize={pageSize}
             onPageChange={page => setCurrentPage(page)}
             hasMore={true}
-            fetchMore={fetchNext}
+            fetchMore={fetchMore}
           />
         </div>
       )}

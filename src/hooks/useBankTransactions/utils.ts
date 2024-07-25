@@ -1,10 +1,5 @@
 import { filterVisibility } from '../../components/BankTransactions/utils'
-import {
-  BankTransaction,
-  CategorizationScope,
-  DateRange,
-  Direction,
-} from '../../types'
+import { BankTransaction, DateRange, Direction, DisplayState } from '../../types'
 import { AccountItem, NumericRangeFilter } from './types'
 import { parseISO } from 'date-fns'
 
@@ -25,6 +20,9 @@ export const collectAccounts = (transactions?: BankTransaction[]) => {
 
   return accounts.sort((a, b) => a.name.localeCompare(b.name))
 }
+
+export const uniqAccountsList = (arr: AccountItem[], track = new Set()) =>
+  arr.filter(({ id }) => (track.has(id) ? false : track.add(id)))
 
 export const applyAmountFilter = (
   data?: BankTransaction[],
@@ -69,7 +67,7 @@ export const applyDirectionFilter = (
 
 export const applyCategorizationStatusFilter = (
   data?: BankTransaction[],
-  filter?: CategorizationScope,
+  filter?: DisplayState,
 ) => {
   if (!filter) {
     return data
@@ -78,8 +76,8 @@ export const applyCategorizationStatusFilter = (
   return data?.filter(
     tx =>
       filterVisibility(filter, tx) ||
-      (filter === CategorizationScope.TO_REVIEW && tx.recently_categorized) ||
-      (filter === CategorizationScope.CATEGORIZED && tx.recently_categorized),
+      (filter === DisplayState.review && tx.recently_categorized) ||
+      (filter === DisplayState.categorized && tx.recently_categorized),
   )
 }
 

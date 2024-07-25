@@ -14,9 +14,12 @@ export type GetBankTransactionsReturn = {
   meta?: Metadata
   error?: unknown
 }
+
 export interface GetBankTransactionsParams
   extends Record<string, string | undefined> {
   businessId: string
+  cursor?: string
+  categorized?: string
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
 }
@@ -27,10 +30,15 @@ export const getBankTransactions = get<
   ({
     businessId,
     cursor,
+    categorized,
     sortBy = 'date',
     sortOrder = 'DESC',
   }: GetBankTransactionsParams) =>
-    `/v1/businesses/${businessId}/bank-transactions?${cursor ? `cursor=${cursor}&` : ''}sort_by=${sortBy}&sort_order=${sortOrder}&limit=200`,
+    `/v1/businesses/${businessId}/bank-transactions?${
+      cursor ? `cursor=${cursor}&` : ''
+    }${
+      categorized !== undefined ? `categorized=${categorized}&` : ''
+    }sort_by=${sortBy}&sort_order=${sortOrder}&limit=200`,
 )
 
 export const categorizeBankTransaction = put<

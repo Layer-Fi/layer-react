@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
-import { DisplayState } from '../../hooks/useBankTransactions/types'
+import { DisplayState } from '../../types'
 
 export type BankTransactionsContextType = ReturnType<typeof useBankTransactions>
 export const BankTransactionsContext =
@@ -11,7 +11,7 @@ export const BankTransactionsContext =
     isValidating: false,
     error: undefined,
     refetch: () => {},
-    categorize: () => Promise.resolve(undefined),
+  categorize: () => Promise.resolve(undefined),
     match: () => Promise.resolve(undefined),
     filters: undefined,
     setFilters: () => {},
@@ -20,7 +20,8 @@ export const BankTransactionsContext =
     },
     updateOneLocal: () => undefined,
     activate: () => undefined,
-    display: DisplayState.review
+    display: DisplayState.review,
+    fetchMore: () => {},
   })
 
 export const useBankTransactionsContext = () =>
