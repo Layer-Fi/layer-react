@@ -26,6 +26,28 @@ interface DatePickerProps {
   minDate?: Date
 }
 
+const getDefaultRangeDate = (
+  date: 'start' | 'end',
+  mode: DatePickerProps['mode'],
+  selected: Date | [Date | null, Date | null],
+) => {
+  try {
+    if (
+      (mode === 'dayRangePicker' || mode === 'monthRangePicker') &&
+      selected
+    ) {
+      if (date === 'end') {
+        return (selected as [Date | null, Date | null])[1]
+      }
+      return (selected as [Date | null, Date | null])[0]
+    }
+
+    return null
+  } catch (_err) {
+    return null
+  }
+}
+
 export const DatePicker = ({
   selected,
   onChange,
@@ -51,6 +73,13 @@ export const DatePicker = ({
     Date | [Date | null, Date | null] | null
   >(selected)
 
+  const [startDate, setStartDate] = useState<Date | null>(
+    getDefaultRangeDate('start', mode, selected) ?? new Date(),
+  )
+  const [endDate, setEndDate] = useState<Date | null>(
+    getDefaultRangeDate('end', mode, selected),
+  )
+
   useEffect(() => {
     setPickerDate(true)
     if (selected !== selectedDates) {
@@ -65,6 +94,12 @@ export const DatePicker = ({
       setPickerDate(false)
     }
   }, [selectedDates])
+
+  useEffect(() => {
+    if (mode === 'dayRangePicker' || mode === 'monthRangePicker') {
+      setSelectedDates([startDate, endDate])
+    }
+  }, [startDate, endDate])
 
   const wrapperClassNames = classNames(
     'Layer__datepicker__wrapper',
@@ -86,6 +121,13 @@ export const DatePicker = ({
   )
 
   const handleDateChange = (date: Date | [Date | null, Date | null]) => {
+    if (mode === 'dayRangePicker' || mode === 'monthRangePicker') {
+      const [start, end] = date as [Date | null, Date | null]
+      setStartDate(start)
+      setEndDate(end)
+      return
+    }
+
     setSelectedDates(date)
   }
 
@@ -123,12 +165,12 @@ export const DatePicker = ({
         wrapperClassName={datePickerWrapperClassNames}
         startDate={
           mode === 'dayRangePicker' || mode === 'monthRangePicker'
-            ? (selectedDates as [Date | null, Date | null])[0]
+            ? startDate
             : undefined
         }
         endDate={
           mode === 'dayRangePicker' || mode === 'monthRangePicker'
-            ? (selectedDates as [Date | null, Date | null])[1]
+            ? endDate
             : undefined
         }
         selected={
