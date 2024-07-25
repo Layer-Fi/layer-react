@@ -53,7 +53,7 @@ export const DatePicker = ({
   navigateArrows = mode === 'monthPicker',
   ...props
 }: DatePickerProps) => {
-  const { isMobile } = useSizeClass()
+  const { isMobile, isDesktop } = useSizeClass()
   const [updatePickerDate, setPickerDate] = useState<boolean>(false)
   const [selectedDates, setSelectedDates] = useState<
     Date | [Date | null, Date | null] | null
@@ -182,7 +182,11 @@ export const DatePicker = ({
         showMonthYearPicker={
           mode === 'monthPicker' || mode === 'monthRangePicker'
         }
-        dateFormat={dateFormat}
+        dateFormat={
+          (isMobile && mode === 'monthPicker') || mode === 'monthRangePicker'
+            ? 'MMM, yyyy'
+            : dateFormat
+        }
         renderDayContents={day => (
           <span className='Layer__datepicker__day-contents'>{day}</span>
         )}
@@ -192,7 +196,29 @@ export const DatePicker = ({
         showTimeSelectOnly={mode === 'timePicker'}
         minDate={minDate}
         maxDate={maxDate}
-        withPortal={isMobile}
+        withPortal={!isDesktop}
+        onCalendarOpen={() => {
+          if (!isDesktop) {
+            document
+              .getElementById('Layer__datepicker__portal')
+              ?.classList.remove('Layer__datepicker__portal--closed')
+            document
+              .getElementById('Layer__datepicker__portal')
+              ?.classList.add('Layer__datepicker__portal--opened')
+          }
+          console.log('Calendar Opened')
+        }}
+        onCalendarClose={() => {
+          if (!isDesktop) {
+            document
+              .getElementById('Layer__datepicker__portal')
+              ?.classList.add('Layer__datepicker__portal--closed')
+            document
+              .getElementById('Layer__datepicker__portal')
+              ?.classList.remove('Layer__datepicker__portal--opened')
+          }
+          console.log('Calendar Closed')
+        }}
         portalId='Layer__datepicker__portal'
         {...props}
       >
@@ -203,7 +229,7 @@ export const DatePicker = ({
           />
         )}
       </ReactDatePicker>
-      {navigateArrows && (
+      {navigateArrows && !isDesktop && (
         <>
           <Button
             aria-label='Previous Date'
