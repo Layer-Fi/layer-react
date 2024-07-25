@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { useSizeClass } from '../../hooks/useWindowSize'
 import { Button, ButtonVariant } from '../Button'
 import { DatePickerOptions } from './DatePickerOptions'
 import classNames from 'classnames'
@@ -48,6 +49,7 @@ export const DatePicker = ({
   currentDateOption = true,
   ...props
 }: DatePickerProps) => {
+  const { isMobile } = useSizeClass()
   const [updatePickerDate, setPickerDate] = useState<boolean>(false)
   const [selectedDates, setSelectedDates] = useState<
     Date | [Date | null, Date | null] | null
@@ -157,6 +159,8 @@ export const DatePicker = ({
         showTimeSelectOnly={mode === 'timePicker'}
         minDate={minDate}
         maxDate={maxDate}
+        withPortal={isMobile}
+        portalId='Layer__datepicker__portal'
         {...props}
       >
         {mode === 'dayRangePicker' && (
