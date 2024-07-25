@@ -87,9 +87,8 @@
     }
   }
 
-  @media screen and (max-width: 650px) {
-    min-width: 150px;
-  }
+  min-width: 286px;
+  box-sizing: border-box;
 
   .Layer__linked-accounts__new-account-label {
     display: flex;
@@ -155,6 +154,10 @@
 
     .account-name {
       flex: 1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 200px;
+      overflow: hidden;
     }
   }
 

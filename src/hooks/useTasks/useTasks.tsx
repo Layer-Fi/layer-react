@@ -1,6 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { LoadedStatus } from '../../types/general'
 import { DataModel } from '../../types/general'
 import { TaskTypes } from '../../types/tasks'
 import useSWR from 'swr'
@@ -8,6 +9,7 @@ import useSWR from 'swr'
 type UseTasks = () => {
   data?: TaskTypes[]
   isLoading?: boolean
+  loadedStatus?: LoadedStatus
   isValidating?: boolean
   error?: unknown
   refetch: () => void
@@ -15,6 +17,7 @@ type UseTasks = () => {
 }
 
 export const useTasks: UseTasks = () => {
+  const [loadedStatus, setLoadedStatus] = useState<LoadedStatus>('initial')
   const { auth, businessId, apiUrl, read, syncTimestamps, hasBeenTouched } =
     useLayerContext()
 
@@ -24,6 +27,14 @@ export const useTasks: UseTasks = () => {
       params: { businessId },
     }),
   )
+
+  useEffect(() => {
+    if (isLoading && loadedStatus === 'initial') {
+      setLoadedStatus('loading')
+    } else if (!isLoading && loadedStatus === 'loading') {
+      setLoadedStatus('complete')
+    }
+  }, [isLoading])
 
   const refetch = () => mutate()
 
@@ -57,6 +68,7 @@ export const useTasks: UseTasks = () => {
   return {
     data: data?.data,
     isLoading,
+    loadedStatus,
     isValidating,
     error,
     refetch,

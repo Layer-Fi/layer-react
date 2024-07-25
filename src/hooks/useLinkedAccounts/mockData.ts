@@ -12,7 +12,7 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
       external_account_source: 'PLAID',
       balance: 435121,
       at: '2024-04-03T13:00:00Z',
-      created_at: '2024-04-06T16:44:35.715458Z',
+      created_at: '2024-04-06T22:47:59.715458Z',
     },
     current_ledger_balance: 373717,
     institution: {
@@ -23,6 +23,7 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
     connection_external_id: '11111',
     connection_needs_repair_as_of: null,
     requires_user_confirmation_as_of: null,
+    is_syncing: true,
   },
   {
     id: 'f98ec50a-c370-484d-a35b-d00207436075',
@@ -46,6 +47,7 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
     connection_external_id: '11111',
     connection_needs_repair_as_of: null,
     requires_user_confirmation_as_of: null,
+    is_syncing: false,
   },
   {
     id: '843f1748-fdaa-422d-a73d-2489a40c8dc7',
@@ -69,6 +71,7 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
     connection_external_id: '11111',
     connection_needs_repair_as_of: '2024-03-06T16:44:35.715458Z',
     requires_user_confirmation_as_of: null,
+    is_syncing: false,
   },
   {
     id: '8f430e29-e339-4d71-a08a-fce469c7a7c1',
@@ -92,5 +95,6 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
     connection_external_id: '11111',
     connection_needs_repair_as_of: null,
     requires_user_confirmation_as_of: '2024-03-06T16:44:35.715458Z',
+    is_syncing: false,
   },
 ]

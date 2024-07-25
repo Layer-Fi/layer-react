@@ -21,6 +21,12 @@
     0px 4px 5px 0px rgba(0, 0, 0, 0.01);
   transition: all 100ms ease-out;
   padding: 0 var(--spacing-md);
+  text-decoration: none;
+
+  &.Layer__btn--as-link {
+    display: inline-flex;
+    align-items: center;
+  }
 
   &.Layer__back-btn {
     color: var(--btn-secondary-color);
@@ -34,6 +40,29 @@
     padding: 0;
     width: 36px;
     height: 36px;
+  }
+
+  &.Layer__expand-btn {
+    color: var(--btn-secondary-color);
+    background: var(--btn-secondary-bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: all 150ms ease-out;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+
+    & svg {
+      transform: rotate(90deg);
+      transition: transform 120ms ease-in-out;
+    }
+
+    &.Layer__expand-btn--collapsed svg {
+      transform: rotate(-90deg);
+    }
   }
 
   &.Layer__btn--full-width {

@@ -36,6 +36,9 @@ export { Journal } from './components/Journal'
 /* ------------------ Account Operations ------------------ */
 export { Tasks } from './components/Tasks'
 
+/* --------------------- Banners -------------------------- */
+export { BookkeepingUpsellBar } from './components/UpsellBanner'
+
 /*
 ======================= Composite Views =======================
 */

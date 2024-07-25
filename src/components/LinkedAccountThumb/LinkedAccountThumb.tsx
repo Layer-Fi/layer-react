@@ -33,15 +33,17 @@ export const LinkedAccountThumb = ({
     asWidget && '--as-widget',
   )
 
-  let balance: React.ReactNode
+  let bankBalance: React.ReactNode
   if (pillConfig) {
-    balance = (
+    bankBalance = (
       <LinkedAccountPill text={pillConfig.text} config={pillConfig.config} />
     )
   } else {
-    balance = (
+    bankBalance = (
       <Text as='span' className='account-balance'>
-        ${formatMoney(account.latest_balance_timestamp?.balance)}
+        {account.is_syncing
+          ? 'Syncing...'
+          : `${formatMoney(account.latest_balance_timestamp?.balance)}`}
       </Text>
     )
   }
@@ -50,7 +52,7 @@ export const LinkedAccountThumb = ({
     <div className={linkedAccountThumbClassName}>
       <div className='topbar'>
         <div className='topbar-details'>
-          <Text as='span' className='account-name'>
+          <Text as='div' className='account-name'>
             {account.external_account_name}
           </Text>
           {!asWidget && account.mask && (
@@ -86,7 +88,7 @@ export const LinkedAccountThumb = ({
           >
             Bank balance
           </Text>
-          {balance}
+          {bankBalance}
         </div>
       )}
       {showLedgerBalance && (
@@ -103,7 +105,9 @@ export const LinkedAccountThumb = ({
             </Text>
           )}
           <Text as='span' className='account-balance'>
-            ${formatMoney(account.current_ledger_balance)}
+            {account.is_syncing
+              ? 'Syncing...'
+              : `${formatMoney(account.current_ledger_balance)}`}
           </Text>
         </div>
       )}
