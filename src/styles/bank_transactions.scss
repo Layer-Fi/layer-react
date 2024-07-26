@@ -42,10 +42,8 @@
 }
 
 .Layer__bank-transaction-row {
-  top: 0;
   transition: all var(--transition-speed) ease-in-out;
   opacity: 0.3;
-  position: relative;
 
   &.initial-load {
     transform: scale(0.9);
@@ -58,8 +56,6 @@
   }
 
   &.Layer__bank-transaction-row--removing {
-    top: -1px;
-
     .Layer__table-cell-content {
       padding: 0 var(--spacing-md);
       overflow: hidden;
@@ -415,10 +411,6 @@
   &.show {
     opacity: 1;
     transform: scale(1);
-  }
-
-  &.Layer__bank-transaction-row--removing {
-    opacity: 0.99;
   }
 
   .Layer__bank-transaction-list-item__base-row {
