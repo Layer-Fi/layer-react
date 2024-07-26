@@ -105,6 +105,35 @@
   }
 }
 
+
+@keyframes skeletonSweep {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-loader {
+  position: relative;
+  padding: 1rem;
+  background: white;
+  border-radius: var(--border-radius-base);
+  overflow: hidden;
+}
+
+.skeleton-loader::after {
+  display: block;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent);
+  animation: skeletonSweep 1.5s infinite;
+}
+
+
 .Layer__linked-account-thumb {
   display: flex;
   flex-direction: column;
@@ -114,6 +143,8 @@
   background: var(--color-base-0);
   border: 1px solid var(--color-base-100);
   box-sizing: border-box;
+  min-width: 286px;
+  justify-content: space-between;
 
   .topbar {
     min-width: 272px;
@@ -128,6 +159,12 @@
     border-bottom-right-radius: 0;
     padding: var(--spacing-xs);
     box-sizing: border-box;
+
+    &.--is-syncing {
+      color: var(--color-base-500);
+      background: none;
+      z-index: 50;
+    }
 
     .account-institution {
       color: var(--color-base-500);
@@ -178,6 +215,35 @@
     }
   }
 
+  .loadingbar {
+    display: flex;
+    padding: var(--spacing-xs);
+    border-bottom-left-radius: var(--border-radius-xs);
+    border-bottom-right-radius: var(--border-radius-xs);
+    gap: var(--spacing-xs);
+    align-items: center;
+    z-index: 100;
+
+    .loading-text {
+      flex: 1;
+      line-height: 140%;
+    }
+
+    .loading-wrapper {
+      width: 28px;
+      height: 28px;
+      background: var(--color-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .syncing-data-description {
+      color: var(--color-base-500);
+    }
+  }
+
   .bottombar {
     box-sizing: border-box;
     display: flex;
@@ -189,6 +255,10 @@
     .account-balance-text {
       color: var(--color-base-500);
     }
+  }
+
+  &.--is-syncing {
+      background: hsla(200 11% 96%);
   }
 
   &.--as-widget {

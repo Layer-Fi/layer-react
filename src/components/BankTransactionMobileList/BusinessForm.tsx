@@ -3,7 +3,7 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import { DrawerContext } from '../../contexts/DrawerContext'
 import { BankTransaction, CategorizationType } from '../../types'
 import { ActionableList } from '../ActionableList'
-import { Button } from '../Button'
+import { Button, ButtonVariant } from '../Button'
 import { ErrorText } from '../Typography'
 import { BusinessCategories } from './BusinessCategories'
 import { Option, mapCategoryToOption, getAssignedValue } from './utils'
@@ -112,7 +112,11 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
         selected={selectedCategory}
       />
       {options.length === 0 ? (
-        <Button onClick={openDrawer} fullWidth={true}>
+        <Button
+          onClick={openDrawer}
+          fullWidth={true}
+          variant={ButtonVariant.secondary}
+        >
           Select category
         </Button>
       ) : null}
