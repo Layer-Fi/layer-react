@@ -24,7 +24,7 @@ type Props = {
   editable: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
-  removeTransaction: (id: string) => void
+  removeTransaction: (bt: BankTransaction) => void
   containerWidth?: number
 }
 
@@ -36,10 +36,10 @@ export const BankTransactionListItem = ({
   showDescriptions,
   showReceiptUploads,
   containerWidth,
+  removeTransaction,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
-  const [removed, setRemoved] = useState(false)
   const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
     useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState(
@@ -90,10 +90,6 @@ export const BankTransactionListItem = ({
     })
   }
 
-  if (removed) {
-    return null
-  }
-
   const categorized = isCategorized(bankTransaction)
 
   const className = 'Layer__bank-transaction-list-item'
@@ -108,7 +104,11 @@ export const BankTransactionListItem = ({
   )
 
   return (
-    <li className={rowClassName}>
+    <li className={rowClassName} onTransitionEnd={({ propertyName }) => {
+      if (propertyName === 'opacity' && editable && bankTransaction.recently_categorized) {
+        removeTransaction(bankTransaction)
+      }
+    }}>
       <span className={`${className}__heading`}>
         <div className={`${className}__heading__main`}>
           <span className={`${className}__heading-date`}>

@@ -305,6 +305,16 @@ export const useBankTransactions: UseBankTransactions = params => {
     mutate(updatedData, { revalidate: false })
   }
 
+  const removeAfterCategorize = (bankTransaction: BankTransaction) => {
+    const updatedData = rawResponseData?.map(page => {
+      return {
+        ...page,
+        data: page.data?.filter(bt => bt.id !== bankTransaction.id)
+      }
+    })
+    mutate(updatedData, { revalidate: false })
+  }
+
   const refetch = () => {
     mutate()
   }
@@ -339,6 +349,7 @@ export const useBankTransactions: UseBankTransactions = params => {
     categorize,
     match,
     updateOneLocal,
+    removeAfterCategorize,
     filters,
     setFilters,
     accountsList,

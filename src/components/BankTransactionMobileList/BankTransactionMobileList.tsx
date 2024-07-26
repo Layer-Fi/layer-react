@@ -9,7 +9,7 @@ import {
 export interface BankTransactionMobileListProps {
   bankTransactions?: BankTransaction[]
   editable: boolean
-  removeTransaction: (id: string) => void
+  removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
 }
 

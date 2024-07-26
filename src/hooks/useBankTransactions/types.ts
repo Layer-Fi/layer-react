@@ -49,6 +49,7 @@ export type UseBankTransactions = (params?: { scope?: DisplayState }) => {
     notify?: boolean,
   ) => Promise<void>
   updateOneLocal: (bankTransaction: BankTransaction) => void
+  removeAfterCategorize: (bankTransaction: BankTransaction) => void
   refetch: () => void
   setFilters: (filters?: Partial<BankTransactionFilters>) => void
   activate: () => void

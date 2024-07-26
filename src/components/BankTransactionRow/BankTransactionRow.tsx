@@ -30,7 +30,7 @@ type Props = {
   editable: boolean
   dateFormat: string
   bankTransaction: BankTransaction
-  removeTransaction: (id: string) => void
+  removeTransaction: (bt: BankTransaction) => void
   containerWidth?: number
   initialLoad?: boolean
   showDescriptions: boolean
@@ -173,11 +173,8 @@ export const BankTransactionRow = ({
       <tr
         className={rowClassName}
         onTransitionEnd={({ propertyName }) => {
-          if (propertyName === 'top') {
-            if (editable) {
-              setRemoved(true)
-              removeTransaction(bankTransaction.id)
-            }
+          if (propertyName === 'top' && editable && bankTransaction.recently_categorized) {
+            removeTransaction(bankTransaction)
           }
         }}
       >

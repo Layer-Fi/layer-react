@@ -18,7 +18,7 @@ export interface BankTransactionMobileListItemProps {
   index: number
   bankTransaction: BankTransaction
   editable: boolean
-  removeTransaction: (id: string) => void
+  removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
 }
 
@@ -98,8 +98,12 @@ export const BankTransactionMobileListItem = ({
 
   useEffect(() => {
     if (!removeAnim && bankTransaction.recently_categorized) {
-      setRemoveAnim(true)
-      openNext()
+      if (editable) {
+        setRemoveAnim(true)
+        openNext()
+      } else {
+        close()
+      }
     }
   }, [
     bankTransaction.recently_categorized,
@@ -152,12 +156,11 @@ export const BankTransactionMobileListItem = ({
       data-item={bankTransaction.id}
       onTransitionEnd={({ propertyName }) => {
         if (propertyName === 'opacity') {
-          close()
-          if (editable) {
-            setRemoveAnim(false)
-            setTimeout(() => {
-              removeTransaction(bankTransaction.id)
-            }, 500)
+          if (bankTransaction.recently_categorized) {
+            close()
+            if (editable) {
+              removeTransaction(bankTransaction)
+            }
           }
         }
       }}
@@ -200,7 +203,7 @@ export const BankTransactionMobileListItem = ({
           </div>
         </div>
       </span>
-      <div className={`${className}__expanded-row`} style={{ height }}>
+      <div className={`${className}__expanded-row`} style={{ height: !open || removeAnim ? 0 : height }}>
         {open && (
           <div
             className={`${className}__expanded-row__content`}

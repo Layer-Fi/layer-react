@@ -10,7 +10,7 @@ interface BankTransactionsTableProps {
   isLoading?: boolean
   initialLoad?: boolean
   containerWidth: number
-  removeTransaction: (id: string) => void
+  removeTransaction: (bt: BankTransaction) => void
   showDescriptions?: boolean
   showReceiptUploads?: boolean
 }

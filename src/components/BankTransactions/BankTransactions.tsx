@@ -5,7 +5,7 @@ import {
   BankTransactionFilters,
 } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
-import { DateRange, DisplayState } from '../../types'
+import { BankTransaction, DateRange, DisplayState } from '../../types'
 import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
@@ -62,7 +62,6 @@ const BankTransactionsContent = ({
   hideHeader = false,
 }: BankTransactionsProps) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const [removedTxs, setRemovedTxs] = useState<string[]>([])
   const [initialLoad, setInitialLoad] = useState(true)
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: startOfMonth(new Date()),
@@ -81,6 +80,7 @@ const BankTransactionsContent = ({
     display,
     hasMore,
     fetchMore,
+    removeAfterCategorize,
   } = useBankTransactionsContext()
 
   useEffect(() => {
@@ -136,7 +136,7 @@ const BankTransactionsContent = ({
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
     return data?.slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, data, removedTxs, dateRange])
+  }, [currentPage, data, dateRange])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -156,11 +156,8 @@ const BankTransactionsContent = ({
   const [containerWidth, setContainerWidth] = useState(0)
   const debounceContainerWidth = debounce(setContainerWidth, 500)
 
-  const removeTransaction = (id: string) => {
-    const newTxs = removedTxs.slice()
-    newTxs.push(id)
-    setRemovedTxs(newTxs)
-  }
+  const removeTransaction = (bankTransaction: BankTransaction) =>
+    removeAfterCategorize(bankTransaction)
 
   const containerRef = useElementSize<HTMLDivElement>((_el, _en, size) => {
     if (size?.height && size?.height >= 90) {
