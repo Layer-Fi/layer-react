@@ -68,6 +68,14 @@ export const BankTransactionListItem = ({
     }
   }, [bankTransaction.error])
 
+  useEffect(() => {
+    if (editable && bankTransaction.recently_categorized) {
+      setTimeout(() => {
+        removeTransaction(bankTransaction)
+      }, 300)
+    }
+  }, [bankTransaction.recently_categorized])
+
   const save = () => {
     // Save using form from expanded row when row is open:
     if (open && expandedRowRef?.current) {
@@ -104,11 +112,7 @@ export const BankTransactionListItem = ({
   )
 
   return (
-    <li className={rowClassName} onTransitionEnd={({ propertyName }) => {
-      if (propertyName === 'opacity' && editable && bankTransaction.recently_categorized) {
-        removeTransaction(bankTransaction)
-      }
-    }}>
+    <li className={rowClassName}>
       <span className={`${className}__heading`}>
         <div className={`${className}__heading__main`}>
           <span className={`${className}__heading-date`}>

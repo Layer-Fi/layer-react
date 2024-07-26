@@ -135,6 +135,14 @@ export const BankTransactionMobileListItem = ({
     }
   }, [])
 
+  useEffect(() => {
+    if (editable && bankTransaction.recently_categorized) {
+      setTimeout(() => {
+        removeTransaction(bankTransaction)
+      }, 300)
+    }
+  }, [bankTransaction.recently_categorized])
+
   const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) =>
     setPurpose(event.target.value as Purpose)
 
@@ -154,16 +162,6 @@ export const BankTransactionMobileListItem = ({
       ref={itemRef}
       className={rowClassName}
       data-item={bankTransaction.id}
-      onTransitionEnd={({ propertyName }) => {
-        if (propertyName === 'opacity') {
-          if (bankTransaction.recently_categorized) {
-            close()
-            if (editable) {
-              removeTransaction(bankTransaction)
-            }
-          }
-        }
-      }}
     >
       <span
         className={`${className}__heading`}
