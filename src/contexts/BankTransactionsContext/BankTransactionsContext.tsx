@@ -11,7 +11,7 @@ export const BankTransactionsContext =
     isValidating: false,
     error: undefined,
     refetch: () => {},
-  categorize: () => Promise.resolve(undefined),
+    categorize: () => Promise.resolve(undefined),
     match: () => Promise.resolve(undefined),
     filters: undefined,
     setFilters: () => {},
@@ -22,6 +22,7 @@ export const BankTransactionsContext =
     activate: () => undefined,
     display: DisplayState.review,
     fetchMore: () => {},
+    hasMore: false
   })
 
 export const useBankTransactionsContext = () =>

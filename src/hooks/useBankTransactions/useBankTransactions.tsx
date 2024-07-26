@@ -34,11 +34,9 @@ export const useBankTransactions: UseBankTransactions = params => {
     hasBeenTouched,
   } = useLayerContext()
   const { scope = undefined } = params ?? {}
-  const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [filters, setTheFilters] = useState<BankTransactionFilters | undefined>(
     scope ? { categorizationStatus: scope } : undefined,
   )
-  const [active, setActive] = useState(false)
   const display = useMemo(() => {
     if (filters?.categorizationStatus === DisplayState.review) {
       return DisplayState.review
@@ -47,13 +45,15 @@ export const useBankTransactions: UseBankTransactions = params => {
     return DisplayState.categorized
   }, [filters?.categorizationStatus])
 
-  const getKey = (index: number, prevData: any) => {
+  const [active, setActive] = useState(false)
+  const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
+
+  const getKey = (_index: number, prevData: any) => {
     if (!auth?.access_token || !active) {
       return [false, undefined]
     }
 
     if (!prevData?.meta?.pagination?.cursor) {
-      console.log('retrun no cursot')
       return [
         businessId &&
           auth?.access_token &&
@@ -89,7 +89,6 @@ export const useBankTransactions: UseBankTransactions = params => {
   } = useSWRInfinite(
     getKey,
     async ([query, nextCursor]) => {
-      console.log('nextTokjen', query, nextCursor)
       if (auth?.access_token) {
         return Layer.getBankTransactions(apiUrl, auth?.access_token, {
           params: {
@@ -103,6 +102,7 @@ export const useBankTransactions: UseBankTransactions = params => {
           },
         }).call(false)
       }
+      
 
       return {}
     },
@@ -112,25 +112,38 @@ export const useBankTransactions: UseBankTransactions = params => {
     },
   )
 
-  const responseData = useMemo(() => {
+
+  const data: BankTransaction[] | undefined = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {
-      const x = rawResponseData
-      ?.filter(x => !!x)
+      return rawResponseData
       ?.map(x => x?.data)
       .flat()
-      .filter(x => !!x)
-
-      return {
-        data: x
-      }
+      .filter(x => !!x) as unknown as BankTransaction[]
     }
 
     return undefined
   }, [rawResponseData])
 
+  const lastMetadata = useMemo(() => {
+    if (rawResponseData && rawResponseData.length > 0) {
+      return rawResponseData[rawResponseData.length - 1].meta
+    }
+
+    return undefined
+  }, [rawResponseData])
+
+  const hasMore = useMemo(() => {
+    if (rawResponseData && rawResponseData.length > 0) {
+      const lastElement = rawResponseData[rawResponseData.length - 1]
+      return Boolean(lastElement.meta?.pagination?.cursor && lastElement.meta?.pagination?.has_more)
+    }
+
+    return false
+  }, [rawResponseData])
+
   const accountsList = useMemo(
-    () => responseData?.data ? collectAccounts(responseData?.data) : [],
-    [responseData],
+    () => data ? collectAccounts(data) : [],
+    [data],
   )
 
   useEffect(() => {
@@ -155,14 +168,6 @@ export const useBankTransactions: UseBankTransactions = params => {
       ...(value ?? {}),
     })
   }
-
-  console.log('filters', filters)
-
-  const {
-    data = undefined,
-    // meta: metadata = {},
-    // error = undefined,
-  } = responseData || {}
 
   const filteredData = useMemo(() => {
     let filtered = data
@@ -195,7 +200,7 @@ export const useBankTransactions: UseBankTransactions = params => {
     }
 
     return filtered
-  }, [filters, responseData])
+  }, [filters, data])
 
   const categorize = (
     id: BankTransaction['id'],
@@ -291,10 +296,13 @@ export const useBankTransactions: UseBankTransactions = params => {
   }
 
   const updateOneLocal = (newBankTransaction: BankTransaction) => {
-    const updatedData = data?.map(bt =>
-      bt.id === newBankTransaction.id ? newBankTransaction : bt,
-    )
-    // mutate({ data: updatedData }, { revalidate: false })
+    const updatedData = rawResponseData?.map(page => {
+      return {
+        ...page,
+        data: page.data?.map(bt => bt.id === newBankTransaction.id ? newBankTransaction : bt)
+      }
+    })
+    mutate(updatedData, { revalidate: false })
   }
 
   const refetch = () => {
@@ -302,11 +310,9 @@ export const useBankTransactions: UseBankTransactions = params => {
   }
 
   const fetchMore = () => {
-    console.log('fetch next', size)
-    setSize(size + 1)
-    // if (pagination?.cursor) {
-    //   setCursor(pagination?.cursor)
-    // }
+    if (hasMore) {
+      setSize(size + 1)
+    }
   }
 
   // Refetch data if related models has been changed since last fetch
@@ -323,8 +329,8 @@ export const useBankTransactions: UseBankTransactions = params => {
   }, [syncTimestamps])
 
   return {
-    data: [],
-    metadata: {}, //
+    data: filteredData,
+    metadata: lastMetadata,
     loadingStatus,
     isLoading,
     isValidating,
@@ -339,5 +345,6 @@ export const useBankTransactions: UseBankTransactions = params => {
     activate,
     display,
     fetchMore,
+    hasMore
   }
 }

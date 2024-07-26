@@ -5,7 +5,6 @@ import {
   BankTransactionFilters,
 } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
-import { BankTransactionsProvider } from '../../providers/BankTransactionsProvider'
 import { DateRange, DisplayState } from '../../types'
 import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
@@ -45,16 +44,14 @@ export const BankTransactions = ({
 }: BankTransactionsWithErrorProps) => {
   return (
     <ErrorBoundary onError={onError}>
-      <BankTransactionsProvider>
-        <BankTransactionsContent {...props} />
-      </BankTransactionsProvider>
+      <BankTransactionsContent {...props} />
     </ErrorBoundary>
   )
 }
 
 const BankTransactionsContent = ({
   asWidget = false,
-  pageSize = 15,
+  pageSize = 20,
   categorizedOnly = false,
   categorizeView = true,
   showDescriptions = false,
@@ -81,8 +78,8 @@ const BankTransactionsContent = ({
     refetch,
     setFilters,
     filters,
-    accountsList,
     display,
+    hasMore,
     fetchMore,
   } = useBankTransactionsContext()
 
@@ -261,7 +258,6 @@ const BankTransactionsContent = ({
         editable={editable}
       />
 
-      <button onClick={() => fetchMore()}>Fetch next</button>
       {!monthlyView && (
         <div className='Layer__bank-transactions__pagination'>
           <Pagination
@@ -269,8 +265,8 @@ const BankTransactionsContent = ({
             totalCount={data?.length || 0}
             pageSize={pageSize}
             onPageChange={page => setCurrentPage(page)}
-            hasMore={true}
             fetchMore={fetchMore}
+            hasMore={hasMore}
           />
         </div>
       )}

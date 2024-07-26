@@ -29,11 +29,12 @@ export interface BankTransactionFilters {
 
 export type UseBankTransactions = (params?: { scope?: DisplayState }) => {
   data?: BankTransaction[]
-  metadata: Metadata
+  metadata?: Metadata
   loadingStatus: LoadedStatus
   isLoading: boolean
   isValidating: boolean
   error: unknown
+  hasMore?: boolean
   filters?: BankTransactionFilters
   accountsList?: AccountItem[]
   display: DisplayState

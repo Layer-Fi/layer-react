@@ -75,6 +75,9 @@ export const Pagination = ({
             onClick={() => {
               if (typeof pageNumber === 'number') {
                 onPageChange(pageNumber)
+                if (pageNumber === lastPage && hasMore && fetchMore) {
+                  fetchMore()
+                }
               }
             }}
           >
