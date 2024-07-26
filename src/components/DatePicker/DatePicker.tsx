@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { BREAKPOINTS } from '../../config/general'
+import { useElementSize } from '../../hooks/useElementSize'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
@@ -75,11 +77,13 @@ export const DatePicker = ({
   navigateArrows = mode === 'monthPicker',
   ...props
 }: DatePickerProps) => {
-  const { isMobile, isDesktop } = useSizeClass()
+  const pickerRef = useRef<ReactDatePicker>(null)
   const [updatePickerDate, setPickerDate] = useState<boolean>(false)
   const [selectedDates, setSelectedDates] = useState<
     Date | [Date | null, Date | null] | null
   >(selected)
+
+  const { isMobile, isDesktop } = useSizeClass()
 
   const [startDate, setStartDate] = useState<Date | null>(
     getDefaultRangeDate('start', mode, selected) ?? new Date(),
@@ -213,6 +217,7 @@ export const DatePicker = ({
   return (
     <div className={wrapperClassNames}>
       <ReactDatePicker
+        ref={pickerRef}
         wrapperClassName={datePickerWrapperClassNames}
         startDate={isRangeMode(mode) ? startDate : undefined}
         endDate={isRangeMode(mode) ? endDate : undefined}
@@ -231,7 +236,7 @@ export const DatePicker = ({
           mode === 'monthPicker' || mode === 'monthRangePicker'
         }
         dateFormat={
-          (isMobile && mode === 'monthPicker') || mode === 'monthRangePicker'
+          (!isDesktop && mode === 'monthPicker') || mode === 'monthRangePicker'
             ? 'MMM, yyyy'
             : dateFormat
         }
@@ -247,14 +252,15 @@ export const DatePicker = ({
         withPortal={!isDesktop}
         onCalendarOpen={() => {
           if (!isDesktop) {
-            document
-              .getElementById('Layer__datepicker__portal')
-              ?.classList.remove('Layer__datepicker__portal--closed')
-            document
-              .getElementById('Layer__datepicker__portal')
-              ?.classList.add('Layer__datepicker__portal--opened')
+            setTimeout(() => {
+              document
+                .getElementById('Layer__datepicker__portal')
+                ?.classList.remove('Layer__datepicker__portal--closed')
+              document
+                .getElementById('Layer__datepicker__portal')
+                ?.classList.add('Layer__datepicker__portal--opened')
+            }, 10)
           }
-          console.log('Calendar Opened')
         }}
         onCalendarClose={() => {
           if (!isDesktop) {
@@ -265,9 +271,14 @@ export const DatePicker = ({
               .getElementById('Layer__datepicker__portal')
               ?.classList.remove('Layer__datepicker__portal--opened')
           }
-          console.log('Calendar Closed')
         }}
         portalId='Layer__datepicker__portal'
+        onFocus={e => (e.target.readOnly = true)}
+        onInputClick={() => {
+          if (pickerRef.current && !isDesktop) {
+            pickerRef.current.setOpen(!pickerRef.current.isCalendarOpen)
+          }
+        }}
         {...props}
       >
         {mode === 'dayRangePicker' && (

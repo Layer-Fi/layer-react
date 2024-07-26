@@ -351,6 +351,7 @@
   #Layer__datepicker__portal {
     &.Layer__datepicker__portal--opened {
       .react-datepicker__portal {
+        background-color: rgba(36, 36, 36, 0.4);
         .Layer__datepicker__calendar {
           bottom: 0;
         }
@@ -359,16 +360,38 @@
     &.Layer__datepicker__portal--closed {
       .react-datepicker__portal {
         .Layer__datepicker__calendar {
-          bottom: -100px;
+          bottom: -100%;
         }
       }
     }
     .react-datepicker__portal {
       align-items: flex-end;
       z-index: 99;
-      background-color: rgba(36, 36, 36, 0.4);
+      background-color: rgba(36, 36, 36, 0);
+      transition: all 180ms ease-in-out;
       * {
         outline-color: var(--color-base-800);
+      }
+
+      .react-datepicker__time-container {
+        width: 100%;
+        .react-datepicker__time-box {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .react-datepicker__time-list {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          gap: var(--spacing-2xs);
+          padding: var(--spacing-xs);
+          width: 100%;
+          .react-datepicker__time-list-item {
+            width: 15%;
+            border-radius: 0.3rem;
+          }
+        }
       }
 
       .react-datepicker__header {
@@ -449,9 +472,12 @@
           }
         }
         .react-datepicker__day-names {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
           padding: var(--spacing-xs) var(--spacing-xs) 0;
           .react-datepicker__day-name {
-            width: 32px;
+            width: 100%;
             height: 32px;
             color: var(--color-base-500);
             font-size: 12px;
@@ -463,7 +489,7 @@
           .react-datepicker__month-wrapper {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             .react-datepicker__day,
             .react-datepicker__month-text {
               display: flex;
@@ -512,7 +538,7 @@
               }
             }
             .react-datepicker__day {
-              width: 32px;
+              width: 100%;
               height: 32px;
             }
             .react-datepicker__month-text {
