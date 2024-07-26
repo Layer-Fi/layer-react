@@ -378,8 +378,7 @@
       }
 
       .react-datepicker__time {
-        border-top-left-radius: var(--spacing-md);
-        border-top-right-radius: var(--spacing-md);
+        border-radius: var(--spacing-md);
         overflow: clip;
       }
 
@@ -398,8 +397,7 @@
           gap: var(--spacing-2xs);
           padding: var(--spacing-md) var(--spacing-xs);
           width: 100%;
-          border-top-left-radius: var(--spacing-md);
-          border-top-right-radius: var(--spacing-md);
+          border-radius: var(--spacing-md);
           .react-datepicker__time-list-item {
             width: 100%;
             border-radius: 0.3rem;
@@ -574,6 +572,20 @@
       .Layer__datepicker__calendar {
         margin: 0;
         border-radius: var(--spacing-md) var(--spacing-md) 0 0;
+      }
+      .react-datepicker__time {
+        border-top-left-radius: var(--spacing-md);
+        border-top-right-radius: var(--spacing-md);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+      .react-datepicker__time-container {
+        .react-datepicker__time-list {
+          border-top-left-radius: var(--spacing-md);
+          border-top-right-radius: var(--spacing-md);
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
       }
     }
   }
