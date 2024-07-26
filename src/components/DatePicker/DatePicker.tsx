@@ -241,6 +241,7 @@ export const DatePicker = ({
         )}
         timeIntervals={timeIntervals}
         timeCaption={timeCaption}
+        timeFormat='h mm aa'
         showTimeSelect={mode === 'timePicker'}
         showTimeSelectOnly={mode === 'timePicker'}
         minDate={minDate}

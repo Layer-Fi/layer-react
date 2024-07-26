@@ -268,7 +268,11 @@
         padding: var(--spacing-sm) 0 0;
         background: white;
         border: none;
+        &.react-datepicker__header--time--only {
+          padding: 0;
+        }
         .react-datepicker-time__header {
+          display: none;
           padding: 0 var(--spacing-md) var(--spacing-sm);
           text-align: left;
           font-weight: 460;
@@ -373,12 +377,19 @@
         outline-color: var(--color-base-800);
       }
 
+      .react-datepicker__time {
+        border-top-left-radius: var(--spacing-md);
+        border-top-right-radius: var(--spacing-md);
+        overflow: clip;
+      }
+
       .react-datepicker__time-container {
         width: 100%;
         .react-datepicker__time-box {
           display: flex;
           align-items: center;
           justify-content: center;
+          width: 100%;
         }
         .react-datepicker__time-list {
           display: flex;
@@ -387,9 +398,13 @@
           gap: var(--spacing-2xs);
           padding: var(--spacing-md) var(--spacing-xs);
           width: 100%;
+          border-top-left-radius: var(--spacing-md);
+          border-top-right-radius: var(--spacing-md);
           .react-datepicker__time-list-item {
-            width: 15%;
+            width: 100%;
             border-radius: 0.3rem;
+            font-size: 15px;
+            word-spacing: 8px;
           }
         }
       }
