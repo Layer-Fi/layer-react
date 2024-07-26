@@ -60,10 +60,10 @@ export const DatePicker = ({
   onChange,
   mode = 'dayPicker',
   dateFormat = mode === 'monthPicker' || mode === 'monthRangePicker'
-    ? 'MMMM, yyyy'
+    ? 'MMM, yyyy'
     : mode === 'timePicker'
     ? 'h:mm aa'
-    : 'MMMM d, yyyy',
+    : 'MMM d, yyyy',
   timeIntervals = 15,
   timeCaption,
   placeholderText,
@@ -83,7 +83,7 @@ export const DatePicker = ({
     Date | [Date | null, Date | null] | null
   >(selected)
 
-  const { isMobile, isDesktop } = useSizeClass()
+  const { isDesktop } = useSizeClass()
 
   const [startDate, setStartDate] = useState<Date | null>(
     getDefaultRangeDate('start', mode, selected) ?? new Date(),
@@ -235,11 +235,7 @@ export const DatePicker = ({
         showMonthYearPicker={
           mode === 'monthPicker' || mode === 'monthRangePicker'
         }
-        dateFormat={
-          (!isDesktop && mode === 'monthPicker') || mode === 'monthRangePicker'
-            ? 'MMM, yyyy'
-            : dateFormat
-        }
+        dateFormat={dateFormat}
         renderDayContents={day => (
           <span className='Layer__datepicker__day-contents'>{day}</span>
         )}
