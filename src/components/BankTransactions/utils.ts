@@ -1,8 +1,8 @@
-import { BankTransaction, CategorizationScope } from '../../types'
+import { BankTransaction, DisplayState } from '../../types'
 import { CategorizedCategories, ReviewCategories } from './constants'
 
 export const filterVisibility = (
-  scope: CategorizationScope,
+  scope: DisplayState,
   bankTransaction: BankTransaction,
 ) => {
   const categorized = CategorizedCategories.includes(
@@ -13,8 +13,8 @@ export const filterVisibility = (
   )
 
   return (
-    (scope === CategorizationScope.TO_REVIEW && inReview) ||
-    (scope === CategorizationScope.CATEGORIZED && categorized)
+    (scope === DisplayState.review && inReview) ||
+    (scope === DisplayState.categorized && categorized)
   )
 }
 

@@ -15,6 +15,7 @@ import { BadgeSize } from '../Badge/Badge'
 import { Button } from '../Button'
 import { DataState, DataStateStatus } from '../DataState'
 import { Text } from '../Typography'
+import { DisplayState } from '../../types'
 
 export interface ConnectAccountProps {
   onboardingStep: OnboardingStep
@@ -27,7 +28,9 @@ export const ConnectAccount = ({
   onTransactionsToReviewClick,
 }: ConnectAccountProps) => {
   const { addConnection } = useContext(LinkedAccountsContext)
-  const { data, isLoading } = useBankTransactions()
+  const { data, isLoading } = useBankTransactions({
+    scope: DisplayState.review,
+  })
 
   const transactionsToReview = useMemo(
     () => countTransactionsToReview({ transactions: data }),

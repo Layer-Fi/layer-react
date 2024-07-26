@@ -7,12 +7,6 @@ export enum CategorizationStatus {
   JOURNALING = 'JOURNALING',
   MATCHED = 'MATCHED',
 }
-
-export enum CategorizationScope {
-  TO_REVIEW = 'TO_REVIEW',
-  CATEGORIZED = 'CATEGORIZED',
-}
-
 export interface CategoryEntry {
   amount?: number
   category: Category
