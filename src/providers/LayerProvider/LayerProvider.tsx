@@ -79,6 +79,11 @@ export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
     scope: 'https://sandbox.layerfi.com/sandbox',
     apiUrl: 'https://sandbox.layerfi.com',
   },
+  staging2: {
+    url: 'https://auth.layerfi.com/oauth2/token',
+    scope: 'https://sandbox.layerfi.com/sandbox',
+    apiUrl: 'https://staging.layerfi.com',
+  },
 }
 
 export type Props = {
