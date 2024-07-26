@@ -8,6 +8,8 @@ import {
   startOfQuarter,
   startOfYear,
   subMonths,
+  subQuarters,
+  subYears,
 } from 'date-fns'
 
 export const DatePickerOptions = ({
@@ -63,6 +65,21 @@ export const DatePickerOptions = ({
             This quarter
           </TextButton>
         )
+      case 'last-quarter':
+        return (
+          <TextButton
+            key={option}
+            onClick={() => {
+              const lastQuarter = subQuarters(new Date(), 1)
+              setSelectedDate([
+                startOfQuarter(lastQuarter),
+                endOfQuarter(lastQuarter),
+              ])
+            }}
+          >
+            Last quarter
+          </TextButton>
+        )
       case 'this-year':
         return (
           <TextButton
@@ -74,12 +91,31 @@ export const DatePickerOptions = ({
             This year
           </TextButton>
         )
+      case 'last-year':
+        return (
+          <TextButton
+            key={option}
+            onClick={() => {
+              const lastYear = subYears(new Date(), 1)
+              setSelectedDate([startOfYear(lastYear), endOfYear(lastYear)])
+            }}
+          >
+            Last year
+          </TextButton>
+        )
     }
     return <></>
   }
 
   if (options.length === 0) {
-    const allOptions = ['this-month', 'last-month', 'this-quarter', 'this-year']
+    const allOptions = [
+      'this-month',
+      'last-month',
+      'this-quarter',
+      'last-quarter',
+      'this-year',
+      'last-year',
+    ]
     allOptions.forEach(option => {
       optionsComponents.push(getOptionComponent(option))
     })

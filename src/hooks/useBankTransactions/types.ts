@@ -1,9 +1,9 @@
 import {
   BankTransaction,
-  CategorizationScope,
   CategoryUpdate,
   DateRange,
   Direction,
+  DisplayState,
   Metadata,
 } from '../../types'
 import { LoadedStatus } from '../../types/general'
@@ -18,26 +18,23 @@ export interface AccountItem {
   name: string
 }
 
-export enum DisplayState {
-  review = 'review',
-  categorized = 'categorized',
-}
 
 export interface BankTransactionFilters {
   amount?: NumericRangeFilter
   account?: string[]
   direction?: Direction[]
-  categorizationStatus?: CategorizationScope
+  categorizationStatus?: DisplayState
   dateRange?: Partial<DateRange>
 }
 
-export type UseBankTransactions = () => {
+export type UseBankTransactions = (params?: { scope?: DisplayState }) => {
   data?: BankTransaction[]
-  metadata: Metadata
+  metadata?: Metadata
   loadingStatus: LoadedStatus
   isLoading: boolean
   isValidating: boolean
   error: unknown
+  hasMore?: boolean
   filters?: BankTransactionFilters
   accountsList?: AccountItem[]
   display: DisplayState
@@ -52,7 +49,9 @@ export type UseBankTransactions = () => {
     notify?: boolean,
   ) => Promise<void>
   updateOneLocal: (bankTransaction: BankTransaction) => void
+  removeAfterCategorize: (bankTransaction: BankTransaction) => void
   refetch: () => void
   setFilters: (filters?: Partial<BankTransactionFilters>) => void
   activate: () => void
+  fetchMore: () => void
 }

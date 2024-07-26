@@ -30,7 +30,7 @@ type Props = {
   editable: boolean
   dateFormat: string
   bankTransaction: BankTransaction
-  removeTransaction: (id: string) => void
+  removeTransaction: (bt: BankTransaction) => void
   containerWidth?: number
   initialLoad?: boolean
   showDescriptions: boolean
@@ -76,7 +76,6 @@ export const BankTransactionRow = ({
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
-  const [removed, setRemoved] = useState(false)
   const {
     filters,
     categorize: categorizeBankTransaction,
@@ -123,6 +122,14 @@ export const BankTransactionRow = ({
     }
   }, [bankTransaction.error])
 
+  useEffect(() => {
+    if (editable && bankTransaction.recently_categorized) {
+      setTimeout(() => {
+        removeTransaction(bankTransaction)
+      }, 300)
+    }
+  }, [bankTransaction.recently_categorized])
+
   const save = async () => {
     // Save using form from expanded row when row is open:
     if (open && expandedRowRef?.current) {
@@ -150,10 +157,6 @@ export const BankTransactionRow = ({
     setOpen(false)
   }
 
-  if (removed) {
-    return null
-  }
-
   const categorized = isCategorized(bankTransaction)
 
   const className = 'Layer__bank-transaction-row'
@@ -170,17 +173,7 @@ export const BankTransactionRow = ({
 
   return (
     <>
-      <tr
-        className={rowClassName}
-        onTransitionEnd={({ propertyName }) => {
-          if (propertyName === 'top') {
-            if (editable) {
-              setRemoved(true)
-              removeTransaction(bankTransaction.id)
-            }
-          }
-        }}
-      >
+      <tr className={rowClassName}>
         <td
           className='Layer__table-cell  Layer__bank-transaction-table__date-col'
           {...openRow}

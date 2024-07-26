@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
-import { DisplayState } from '../../hooks/useBankTransactions/types'
+import { DisplayState } from '../../types'
 
 export type BankTransactionsContextType = ReturnType<typeof useBankTransactions>
 export const BankTransactionsContext =
@@ -19,8 +19,11 @@ export const BankTransactionsContext =
       pagination: undefined,
     },
     updateOneLocal: () => undefined,
+    removeAfterCategorize: () => undefined,
     activate: () => undefined,
-    display: DisplayState.review
+    display: DisplayState.review,
+    fetchMore: () => {},
+    hasMore: false
   })
 
 export const useBankTransactionsContext = () =>

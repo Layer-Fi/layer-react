@@ -31,6 +31,28 @@ interface DatePickerProps {
   navigateArrows?: boolean
 }
 
+const getDefaultRangeDate = (
+  date: 'start' | 'end',
+  mode: DatePickerProps['mode'],
+  selected: Date | [Date | null, Date | null],
+) => {
+  try {
+    if (isRangeMode(mode) && selected) {
+      if (date === 'end') {
+        return (selected as [Date | null, Date | null])[1]
+      }
+      return (selected as [Date | null, Date | null])[0]
+    }
+
+    return null
+  } catch (_err) {
+    return null
+  }
+}
+
+const isRangeMode = (mode: DatePickerProps['mode']) =>
+  mode === 'dayRangePicker' || mode === 'monthRangePicker'
+
 export const DatePicker = ({
   selected,
   onChange,
@@ -59,10 +81,31 @@ export const DatePicker = ({
     Date | [Date | null, Date | null] | null
   >(selected)
 
+  const [startDate, setStartDate] = useState<Date | null>(
+    getDefaultRangeDate('start', mode, selected) ?? new Date(),
+  )
+  const [endDate, setEndDate] = useState<Date | null>(
+    getDefaultRangeDate('end', mode, selected),
+  )
+
   useEffect(() => {
-    setPickerDate(true)
-    if (selected !== selectedDates) {
-      setSelectedDates(selected)
+    try {
+      setPickerDate(true)
+      if (!isRangeMode(mode) && selected !== selectedDates) {
+        setSelectedDates(selected)
+        return
+      }
+
+      if (isRangeMode(mode) && Array.isArray(selected)) {
+        if (startDate !== selected[0]) {
+          setStartDate(selected[0])
+        }
+        if (endDate !== selected[1]) {
+          setEndDate(selected[1])
+        }
+      }
+    } catch (_err) {
+      return
     }
   }, [selected])
 
@@ -73,6 +116,12 @@ export const DatePicker = ({
       setPickerDate(false)
     }
   }, [selectedDates])
+
+  useEffect(() => {
+    if (isRangeMode(mode)) {
+      setSelectedDates([startDate, endDate])
+    }
+  }, [startDate, endDate])
 
   const wrapperClassNames = classNames(
     'Layer__datepicker__wrapper',
@@ -95,6 +144,13 @@ export const DatePicker = ({
   )
 
   const handleDateChange = (date: Date | [Date | null, Date | null]) => {
+    if (isRangeMode(mode)) {
+      const [start, end] = date as [Date | null, Date | null]
+      setStartDate(start)
+      setEndDate(end)
+      return
+    }
+
     setSelectedDates(date)
   }
 
@@ -158,16 +214,8 @@ export const DatePicker = ({
     <div className={wrapperClassNames}>
       <ReactDatePicker
         wrapperClassName={datePickerWrapperClassNames}
-        startDate={
-          mode === 'dayRangePicker' || mode === 'monthRangePicker'
-            ? (selectedDates as [Date | null, Date | null])[0]
-            : undefined
-        }
-        endDate={
-          mode === 'dayRangePicker' || mode === 'monthRangePicker'
-            ? (selectedDates as [Date | null, Date | null])[1]
-            : undefined
-        }
+        startDate={isRangeMode(mode) ? startDate : undefined}
+        endDate={isRangeMode(mode) ? endDate : undefined}
         selected={
           mode !== 'dayRangePicker' && mode !== 'monthRangePicker'
             ? (selectedDates as Date)
@@ -178,7 +226,7 @@ export const DatePicker = ({
         popperClassName={popperClassNames}
         enableTabLoop={false}
         popperPlacement='bottom-start'
-        selectsRange={mode === 'dayRangePicker' || mode === 'monthRangePicker'}
+        selectsRange={isRangeMode(mode)}
         showMonthYearPicker={
           mode === 'monthPicker' || mode === 'monthRangePicker'
         }

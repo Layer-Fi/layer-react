@@ -3,10 +3,9 @@ import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import {
   BankTransactionFilters,
-  DisplayState,
 } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
-import { CategorizationScope, DateRange } from '../../types'
+import { BankTransaction, DateRange, DisplayState } from '../../types'
 import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
@@ -52,7 +51,7 @@ export const BankTransactions = ({
 
 const BankTransactionsContent = ({
   asWidget = false,
-  pageSize = 15,
+  pageSize = 20,
   categorizedOnly = false,
   categorizeView = true,
   showDescriptions = false,
@@ -63,7 +62,6 @@ const BankTransactionsContent = ({
   hideHeader = false,
 }: BankTransactionsProps) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const [removedTxs, setRemovedTxs] = useState<string[]>([])
   const [initialLoad, setInitialLoad] = useState(true)
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: startOfMonth(new Date()),
@@ -79,8 +77,10 @@ const BankTransactionsContent = ({
     refetch,
     setFilters,
     filters,
-    accountsList,
     display,
+    hasMore,
+    fetchMore,
+    removeAfterCategorize,
   } = useBankTransactionsContext()
 
   useEffect(() => {
@@ -93,24 +93,24 @@ const BankTransactionsContent = ({
         setFilters({
           ...filters,
           ...inputFilters,
-          categorizationStatus: CategorizationScope.TO_REVIEW,
+          categorizationStatus: DisplayState.review,
         })
       } else if (!filters?.categorizationStatus && categorizedOnly) {
         setFilters({
           ...filters,
           ...inputFilters,
-          categorizationStatus: CategorizationScope.CATEGORIZED,
+          categorizationStatus: DisplayState.categorized,
         })
       } else {
         setFilters({ ...filters, ...inputFilters })
       }
     } else if (!filters?.categorizationStatus && categorizeView) {
       setFilters({
-        categorizationStatus: CategorizationScope.TO_REVIEW,
+        categorizationStatus: DisplayState.review,
       })
     } else if (!filters?.categorizationStatus && categorizedOnly) {
       setFilters({
-        categorizationStatus: CategorizationScope.CATEGORIZED,
+        categorizationStatus: DisplayState.categorized,
       })
     }
   }, [inputFilters, categorizeView, categorizedOnly])
@@ -136,7 +136,7 @@ const BankTransactionsContent = ({
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
     return data?.slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, data, removedTxs, dateRange])
+  }, [currentPage, data, dateRange])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -144,8 +144,8 @@ const BankTransactionsContent = ({
     setFilters({
       categorizationStatus:
         event.target.value === DisplayState.categorized
-          ? CategorizationScope.CATEGORIZED
-          : CategorizationScope.TO_REVIEW,
+          ? DisplayState.categorized
+          : DisplayState.review,
     })
     setCurrentPage(1)
   }
@@ -156,11 +156,8 @@ const BankTransactionsContent = ({
   const [containerWidth, setContainerWidth] = useState(0)
   const debounceContainerWidth = debounce(setContainerWidth, 500)
 
-  const removeTransaction = (id: string) => {
-    const newTxs = removedTxs.slice()
-    newTxs.push(id)
-    setRemovedTxs(newTxs)
-  }
+  const removeTransaction = (bankTransaction: BankTransaction) =>
+    removeAfterCategorize(bankTransaction)
 
   const containerRef = useElementSize<HTMLDivElement>((_el, _en, size) => {
     if (size?.height && size?.height >= 90) {
@@ -267,6 +264,8 @@ const BankTransactionsContent = ({
             totalCount={data?.length || 0}
             pageSize={pageSize}
             onPageChange={page => setCurrentPage(page)}
+            fetchMore={fetchMore}
+            hasMore={hasMore}
           />
         </div>
       )}

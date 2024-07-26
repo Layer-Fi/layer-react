@@ -1,7 +1,7 @@
 import { filterVisibility } from '../components/BankTransactions/utils'
 import { CategoryOption } from '../components/CategorySelect/CategorySelect'
-import {BankTransaction, CategorizationScope, DateRange, Direction} from '../types'
-import { endOfMonth, isWithinInterval, parseISO, startOfMonth } from 'date-fns'
+import { BankTransaction, DateRange, Direction, DisplayState } from '../types'
+import { isWithinInterval, parseISO } from 'date-fns'
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
   return Boolean(
@@ -27,7 +27,7 @@ export const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
 
 export const countTransactionsToReview = ({
   transactions,
-  dateRange
+  dateRange,
 }: {
   transactions?: BankTransaction[]
   dateRange?: DateRange
@@ -41,7 +41,7 @@ export const countTransactionsToReview = ({
       return transactions.filter(tx => {
         try {
           return (
-            filterVisibility(CategorizationScope.TO_REVIEW, tx) &&
+            filterVisibility(DisplayState.review, tx) &&
             isWithinInterval(parseISO(tx.date), dateRangeInterval)
           )
         } catch (_err) {
@@ -49,16 +49,19 @@ export const countTransactionsToReview = ({
         }
       }).length
     }
-    return transactions.filter(tx =>
-      filterVisibility(CategorizationScope.TO_REVIEW, tx),
-    ).length
+    return transactions.filter(tx => filterVisibility(DisplayState.review, tx))
+      .length
   }
 
   return 0
 }
 
 export const getCategorizePayload = (category: CategoryOption) => {
-  if (category?.payload && 'id' in category.payload && category.payload.type == 'ExclusionNested') {
+  if (
+    category?.payload &&
+    'id' in category.payload &&
+    category.payload.type == 'ExclusionNested'
+  ) {
     return {
       type: 'Exclusion' as 'Exclusion',
       exclusion_type: category.payload.id,

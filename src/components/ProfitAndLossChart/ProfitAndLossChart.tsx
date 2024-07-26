@@ -5,9 +5,7 @@ import {
   useProfitAndLossLTM,
 } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
-import { ProfitAndLossSummary } from '../../types/profit_and_loss'
 import { isDateAllowedToBrowse } from '../../utils/business'
-import { capitalizeFirstLetter } from '../../utils/format'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { Text } from '../Typography'
 import { Indicator } from './Indicator'
@@ -240,8 +238,10 @@ export const ProfitAndLossChart = () => {
     name: getMonthName(pnl),
     revenue: pnl?.income || 0,
     revenueUncategorized: pnl?.uncategorizedInflows || 0,
-    expenses: -Math.abs((pnl?.income || 0) - (pnl?.netProfit || 0)),
-    expensesUncategorized: -Math.abs(pnl?.uncategorizedOutflows || 0),
+    expenses: -(pnl?.operatingExpenses || 0),
+    expensesUncategorized: -(pnl?.uncategorizedOutflows || 0),
+    operatingExpensesInverse: pnl?.operatingExpensesInverse || 0,
+    uncategorizedOutflowsInverse: pnl?.uncategorizedOutflowsInverse || 0,
     netProfit: pnl?.netProfit || 0,
     selected:
       !!pnl &&
@@ -264,6 +264,8 @@ export const ProfitAndLossChart = () => {
           name: format(currentDate, compactView ? 'LLLLL' : 'LLL'),
           revenue: 0,
           revenueUncategorized: 0,
+          operatingExpensesInverse: 0,
+          uncategorizedOutflowsInverse: 0,
           expenses: 0,
           expensesUncategorized: 0,
           netProfit: 0,
@@ -280,6 +282,19 @@ export const ProfitAndLossChart = () => {
     }
 
     return data
+      ?.map(x => {
+        if (x.operatingExpenses < 0 || x.uncategorizedOutflows < 0) {
+          return {
+            ...x,
+            operatingExpenses: x.operatingExpenses < 0 ? 0 : x.operatingExpenses,
+            uncategorizedOutflows: x.uncategorizedOutflows < 0 ? 0 : x.uncategorizedOutflows,
+            operatingExpensesInverse: x.operatingExpenses < 0 ? -x.operatingExpenses : 0,
+            uncategorizedOutflowsInverse:  x.uncategorizedOutflows < 0 ? -x.uncategorizedOutflows : 0,
+          }
+        }
+
+        return x
+      })
       ?.filter(
         x =>
           differenceInMonths(
@@ -592,6 +607,22 @@ export const ProfitAndLossChart = () => {
           stackId='expenses'
         />
         <Bar
+          dataKey='operatingExpensesInverse'
+          barSize={barSize}
+          isAnimationActive={barAnimActive}
+          animationDuration={100}
+          radius={[2, 2, 0, 0]}
+          className='Layer__profit-and-loss-chart__bar--expenses'
+          xAxisId='revenue'
+          stackId='revenue'
+        >
+          {theData?.map(entry => {
+            return (
+              <Cell key={entry.name} fill='url(#layer-bar-stripe-pattern-dark)' />
+            )
+          })}
+        </Bar>
+        <Bar
           dataKey='revenue'
           barSize={barSize}
           isAnimationActive={barAnimActive}
@@ -622,6 +653,22 @@ export const ProfitAndLossChart = () => {
                     : ''
                 }
               />
+            )
+          })}
+        </Bar>
+        <Bar
+          dataKey='uncategorizedOutflowsInverse'
+          barSize={barSize}
+          isAnimationActive={barAnimActive}
+          animationDuration={100}
+          radius={[2, 2, 0, 0]}
+          className='Layer__profit-and-loss-chart__bar--expenses-uncategorized'
+          xAxisId='revenue'
+          stackId='revenue'
+        >
+          {theData?.map(entry => {
+            return (
+              <Cell key={entry.name} fill='url(#layer-bar-stripe-pattern-dark)' />
             )
           })}
         </Bar>

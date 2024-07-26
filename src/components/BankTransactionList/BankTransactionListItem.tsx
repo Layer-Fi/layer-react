@@ -24,7 +24,7 @@ type Props = {
   editable: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
-  removeTransaction: (id: string) => void
+  removeTransaction: (bt: BankTransaction) => void
   containerWidth?: number
 }
 
@@ -36,10 +36,10 @@ export const BankTransactionListItem = ({
   showDescriptions,
   showReceiptUploads,
   containerWidth,
+  removeTransaction,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
-  const [removed, setRemoved] = useState(false)
   const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
     useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState(
@@ -68,6 +68,14 @@ export const BankTransactionListItem = ({
     }
   }, [bankTransaction.error])
 
+  useEffect(() => {
+    if (editable && bankTransaction.recently_categorized) {
+      setTimeout(() => {
+        removeTransaction(bankTransaction)
+      }, 300)
+    }
+  }, [bankTransaction.recently_categorized])
+
   const save = () => {
     // Save using form from expanded row when row is open:
     if (open && expandedRowRef?.current) {
@@ -88,10 +96,6 @@ export const BankTransactionListItem = ({
       type: 'Category',
       category: getCategorizePayload(selectedCategory),
     })
-  }
-
-  if (removed) {
-    return null
   }
 
   const categorized = isCategorized(bankTransaction)

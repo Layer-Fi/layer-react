@@ -54,3 +54,6 @@ export { ProfitAndLossView } from './components/ProfitAndLossView'
 */
 export { useLayerContext } from './contexts/LayerContext'
 export { useBankTransactionsContext } from './contexts/BankTransactionsContext'
+export { BankTransactionsProvider } from './providers/BankTransactionsProvider'
+
+export { DisplayState } from './types/bank_transactions'
