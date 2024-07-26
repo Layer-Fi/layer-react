@@ -74,10 +74,20 @@ export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
     scope: 'https://api.layerfi.com/production',
     apiUrl: 'https://api.layerfi.com',
   },
+  sandbox: {
+    url: 'https://auth.layerfi.com/oauth2/token',
+    scope: 'https://sandbox.layerfi.com/sandbox',
+    apiUrl: 'https://sandbox.layerfi.com',
+  },
   staging: {
     url: 'https://auth.layerfi.com/oauth2/token',
     scope: 'https://sandbox.layerfi.com/sandbox',
     apiUrl: 'https://sandbox.layerfi.com',
+  },
+  internalStaging: {
+    url: 'https://auth.layerfi.com/oauth2/token',
+    scope: 'https://sandbox.layerfi.com/sandbox',
+    apiUrl: 'https://staging.layerfi.com',
   },
 }
 
