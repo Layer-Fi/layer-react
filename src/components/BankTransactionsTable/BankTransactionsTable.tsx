@@ -2,6 +2,16 @@ import React from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
 import { BankTransactionRow } from '../BankTransactionRow'
+import { BankTransactionsStringOverrides } from '../BankTransactions/BankTransactions'
+
+export interface BankTransactionsTableStringOverrides {
+  dateColumnHeaderText?: string
+  transactionColumnHeaderText?: string
+  accountColumnHeaderText?: string
+  amountColumnHeaderText?: string
+  categorizeColumnHeaderText?: string
+  categoryColumnHeaderText?: string
+}
 
 interface BankTransactionsTableProps {
   bankTransactions?: BankTransaction[]
@@ -14,6 +24,7 @@ interface BankTransactionsTableProps {
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   hardRefreshPnlOnCategorize?: boolean
+  stringOverrides?: BankTransactionsStringOverrides
 }
 
 export const BankTransactionsTable = ({
@@ -27,6 +38,7 @@ export const BankTransactionsTable = ({
   showDescriptions = false,
   showReceiptUploads = false,
   hardRefreshPnlOnCategorize = false,
+  stringOverrides,
 }: BankTransactionsTableProps) => {
   return (
     <table
@@ -36,24 +48,29 @@ export const BankTransactionsTable = ({
       <thead>
         <tr>
           <th className='Layer__table-header Layer__bank-transactions__date-col'>
-            Date
+            {stringOverrides?.transactionsTable?.dateColumnHeaderText || 'Date'}
           </th>
           <th className='Layer__table-header Layer__bank-transactions__tx-col'>
-            Transaction
+            {stringOverrides?.transactionsTable?.transactionColumnHeaderText ||
+              'Transaction'}
           </th>
           <th className='Layer__table-header Layer__bank-transactions__account-col'>
-            Account
+            {stringOverrides?.transactionsTable?.accountColumnHeaderText ||
+              'Account'}
           </th>
           <th className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'>
-            Amount
+            {stringOverrides?.transactionsTable?.amountColumnHeaderText ||
+              'Amount'}
           </th>
           {categorizeView && editable ? (
             <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
-              Categorize
+              {stringOverrides?.transactionsTable?.categorizeColumnHeaderText ||
+                'Categorize'}
             </th>
           ) : (
             <th className='Layer__table-header Layer__table-cell__category-col'>
-              Category
+              {stringOverrides?.transactionsTable?.categoryColumnHeaderText ||
+                'Category'}
             </th>
           )}
         </tr>
@@ -74,6 +91,7 @@ export const BankTransactionsTable = ({
                 showDescriptions={showDescriptions}
                 showReceiptUploads={showReceiptUploads}
                 hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
+                stringOverrides={stringOverrides?.bankTransactionCTAs}
               />
             ),
           )}

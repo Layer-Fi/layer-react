@@ -10,9 +10,25 @@ import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useLayerContext } from '../../contexts/LayerContext'
 import DownloadCloud from '../../icons/DownloadCloud'
+import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
+import { StatementOfCashFlowStringOverrides } from '../../components/StatementOfCashFlow/StatementOfCashFlow'
+import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossTableStringOverrides } from '../../components/ProfitAndLossTable/ProfitAndLossTable'
+
+interface ReportsStringOverrides {
+  title?: string
+  downloadButton?: DownloadButtonStringOverrides
+  profitAndLoss?: {
+    detailedCharts?: ProfitAndLossDetailedChartsStringOverrides
+    table?: ProfitAndLossTableStringOverrides
+  }
+  balanceSheet?: BalanceSheetStringOverrides
+  statementOfCashflow?: StatementOfCashFlowStringOverrides
+}
 
 export interface ReportsProps {
-  title?: string
+  title?: string // deprecated
+  stringOverrides?: ReportsStringOverrides
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -20,9 +36,15 @@ type ReportOption = { value: ReportType; label: string }
 export interface ReportsPanelProps {
   containerRef: RefObject<HTMLDivElement>
   openReport: ReportType
+  stringOverrides?: ReportsStringOverrides
 }
 
-const DownloadButton = () => {
+interface DownloadButtonStringOverrides {
+  downloadButtonText?: string
+  retryButtonText?: string
+}
+
+const DownloadButton = ({ stringOverrides} : { stringOverrides?: DownloadButtonStringOverrides }) => {
   const { dateRange } = useContext(ProfitAndLoss.Context)
   const { auth, businessId, apiUrl } = useLayerContext()
   const [requestFailed, setRequestFailed] = useState(false)
@@ -60,7 +82,7 @@ const DownloadButton = () => {
       className='Layer__download-retry-btn'
       error={'Approval failed. Check connection and retry in few seconds.'}
     >
-      Retry
+      {stringOverrides?.retryButtonText || "Retry"}
     </RetryButton>
   ) : (
     <Button
@@ -68,17 +90,17 @@ const DownloadButton = () => {
       rightIcon={<DownloadCloud size={12} />}
       onClick={handleClick}
     >
-      Download
+      {stringOverrides?.downloadButtonText || "Download"}
     </Button>
   )
 }
 
-export const Reports = ({ title = 'Reports' }: ReportsProps) => {
+export const Reports = ({ title, stringOverrides }: ReportsProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeTab, setActiveTab] = useState<ReportType>('profitAndLoss')
 
   return (
-    <View title={title}>
+    <View title={stringOverrides?.title || title || "Reports"}>
       <div className='Layer__component Layer__header__actions'>
         <Toggle
           name='reports-tabs'
@@ -98,14 +120,14 @@ export const Reports = ({ title = 'Reports' }: ReportsProps) => {
       </div>
       <Container name='reports' ref={containerRef}>
         <ProfitAndLoss asContainer={false}>
-          <ReportsPanel containerRef={containerRef} openReport={activeTab} />
+          <ReportsPanel containerRef={containerRef} openReport={activeTab} stringOverrides={stringOverrides} />
         </ProfitAndLoss>
       </Container>
     </View>
   )
 }
 
-const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
+const ReportsPanel = ({ containerRef, openReport, stringOverrides }: ReportsPanelProps) => {
   const { sidebarScope } = useContext(ProfitAndLoss.Context)
   return (
     <>
@@ -115,21 +137,29 @@ const ReportsPanel = ({ containerRef, openReport }: ReportsPanelProps) => {
           headerControls={
             <>
               <ProfitAndLoss.DatePicker />
-              <DownloadButton />
+              <DownloadButton stringOverrides={stringOverrides?.downloadButton}/>
             </>
           }
         >
           <Panel
-            sidebar={<ProfitAndLoss.DetailedCharts showDatePicker={false} />}
+            sidebar={
+              <ProfitAndLoss.DetailedCharts
+                showDatePicker={false}
+                stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+              />
+            }
             sidebarIsOpen={Boolean(sidebarScope)}
             parentRef={containerRef}
           >
-            <ProfitAndLoss.Table asContainer={false} />
+            <ProfitAndLoss.Table
+              asContainer={false}
+              stringOverrides={stringOverrides?.profitAndLoss?.table}
+            />
           </Panel>
         </View>
       )}
-      {openReport === 'balanceSheet' && <BalanceSheet />}
-      {openReport === 'statementOfCashFlow' && <StatementOfCashFlow />}
+      {openReport === 'balanceSheet' && <BalanceSheet stringOverrides={stringOverrides?.balanceSheet}/>}
+      {openReport === 'statementOfCashFlow' && <StatementOfCashFlow stringOverrides={stringOverrides?.statementOfCashflow}/>}
     </>
   )
 }

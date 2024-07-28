@@ -2,26 +2,30 @@ import React, { useState } from 'react'
 import { StatementOfCashFlowContext } from '../../contexts/StatementOfCashContext'
 import { TableProvider } from '../../contexts/TableContext'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow'
-import { Container } from '../Container'
 import { DatePicker } from '../DatePicker'
 import { Loader } from '../Loader'
 import { StatementOfCashFlowTable } from '../StatementOfCashFlowTable'
 import { View } from '../View'
 import { STATEMENT_OF_CASH_FLOW_ROWS } from './constants'
 import { startOfDay, subWeeks } from 'date-fns'
+import { StatementOfCashFlowTableStringOverrides } from '../StatementOfCashFlowTable/StatementOfCashFlowTable'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
-export const StatementOfCashFlow = () => {
+export interface StatementOfCashFlowStringOverrides {
+  statementOfCashFlowTable?: StatementOfCashFlowTableStringOverrides
+}
+
+export const StatementOfCashFlow = ({ stringOverrides }: { stringOverrides?: StatementOfCashFlowStringOverrides }) => {
   const cashContextData = useStatementOfCashFlow()
   return (
     <StatementOfCashFlowContext.Provider value={cashContextData}>
-      <StatementOfCashFlowView />
+      <StatementOfCashFlowView stringOverrides={stringOverrides} />
     </StatementOfCashFlowContext.Provider>
   )
 }
 
-const StatementOfCashFlowView = () => {
+const StatementOfCashFlowView = ( { stringOverrides }: {stringOverrides?: StatementOfCashFlowStringOverrides }) => {
   const [startDate, setStartDate] = useState(
     startOfDay(subWeeks(new Date(), 4)),
   )
@@ -69,6 +73,7 @@ const StatementOfCashFlowView = () => {
           <StatementOfCashFlowTable
             data={data}
             config={STATEMENT_OF_CASH_FLOW_ROWS}
+            stringOverrides={stringOverrides?.statementOfCashFlowTable}
           />
         )}
       </View>

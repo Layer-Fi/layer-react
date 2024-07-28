@@ -7,15 +7,28 @@ import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import classNames from 'classnames'
+import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { TasksStringOverrides } from '../../components/Tasks/Tasks'
 
 export interface BookkeepingOverviewProps {
-  title?: string
+  title?: string // deprecated
+  stringOverrides?: {
+    title?: string
+    tasks?: TasksStringOverrides
+    profitAndLoss?: {
+      header?: string
+      detailedCharts?: ProfitAndLossDetailedChartsStringOverrides
+      summaries?: ProfitAndLossSummariesStringOverrides
+    }
+  }
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
 
 export const BookkeepingOverview = ({
-  title = 'Bookkeeping overview',
+  title, // deprecated
+  stringOverrides,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
   const [width] = useWindowSize()
@@ -25,15 +38,15 @@ export const BookkeepingOverview = ({
       <TasksProvider>
         <View
           viewClassName='Layer__bookkeeping-overview--view'
-          title={title}
+          title={stringOverrides?.title || title || "Bookkeeping overview"}
           withSidebar={width > 1100}
-          sidebar={<TasksComponent tasksHeader='Bookkeeeping Tasks' />}
+          sidebar={<TasksComponent stringOverrides={stringOverrides?.tasks} />}
         >
           {width <= 1100 && (
             <TasksComponent
-              tasksHeader='Bookkeeeping Tasks'
               collapsable
               collapsedWhenComplete
+              stringOverrides={stringOverrides?.tasks}
             />
           )}
           <Container
@@ -42,11 +55,13 @@ export const BookkeepingOverview = ({
             elevated={true}
           >
             <Header>
-              <Heading size={HeadingSize.secondary}>Profit & Loss</Heading>
+              <Heading size={HeadingSize.secondary}>
+                {stringOverrides?.profitAndLoss?.header || "Profit & Loss"}
+              </Heading>
               <ProfitAndLoss.DatePicker />
             </Header>
             <div className='Layer__bookkeeping-overview__summaries-row'>
-              <ProfitAndLoss.Summaries actionable={false} />
+              <ProfitAndLoss.Summaries actionable={false} stringOverrides={stringOverrides?.profitAndLoss?.summaries}/>
             </div>
             <ProfitAndLoss.Chart />
           </Container>
@@ -73,7 +88,11 @@ export const BookkeepingOverview = ({
                   'bookkeeping-overview-profit-and-loss-chart--hidden',
               )}
             >
-              <ProfitAndLoss.DetailedCharts scope='revenue' hideClose={true} />
+              <ProfitAndLoss.DetailedCharts
+                scope='revenue'
+                hideClose={true}
+                stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+              />
             </Container>
             <Container
               name={classNames(
@@ -82,7 +101,11 @@ export const BookkeepingOverview = ({
                   'bookkeeping-overview-profit-and-loss-chart--hidden',
               )}
             >
-              <ProfitAndLoss.DetailedCharts scope='expenses' hideClose={true} />
+              <ProfitAndLoss.DetailedCharts
+                scope='expenses'
+                hideClose={true}
+                stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+              />
             </Container>
           </div>
         </View>

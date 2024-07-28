@@ -1,9 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import {
-  BankTransactionFilters,
-} from '../../hooks/useBankTransactions/types'
+import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { BankTransaction, DateRange, DisplayState } from '../../types'
@@ -11,17 +9,32 @@ import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
 import { BankTransactionsTable } from '../BankTransactionsTable'
+import { BankTransactionsTableStringOverrides } from '../BankTransactionsTable/BankTransactionsTable'
 import { Container } from '../Container'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
-import { BankTransactionsHeader } from './BankTransactionsHeader'
+import {
+  BankTransactionsHeader,
+  BankTransactionsHeaderStringOverrides,
+} from './BankTransactionsHeader'
 import { DataStates } from './DataStates'
 import { MobileComponentType } from './constants'
 import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
 const TEST_EMPTY_STATE = false
+
+export interface BankTransactionsStringOverrides {
+  bankTransactionCTAs?: BankTransactionCTAStringOverrides
+  transactionsTable?: BankTransactionsTableStringOverrides
+  bankTransactionsHeader?: BankTransactionsHeaderStringOverrides
+}
+
+export interface BankTransactionCTAStringOverrides {
+  approveButtonText?: string
+  updateButtonText?: string
+}
 
 export interface BankTransactionsProps {
   asWidget?: boolean
@@ -35,6 +48,7 @@ export interface BankTransactionsProps {
   mobileComponent?: MobileComponentType
   filters?: BankTransactionFilters
   hideHeader?: boolean
+  stringOverrides?: BankTransactionsStringOverrides
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -64,6 +78,7 @@ const BankTransactionsContent = ({
   mobileComponent,
   filters: inputFilters,
   hideHeader = false,
+  stringOverrides,
 }: BankTransactionsProps) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [initialLoad, setInitialLoad] = useState(true)
@@ -141,10 +156,10 @@ const BankTransactionsContent = ({
           )
         }
 
-    const firstPageIndex = (currentPage - 1) * pageSize
-    const lastPageIndex = firstPageIndex + pageSize
-    return data?.slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, data, dateRange])
+        const firstPageIndex = (currentPage - 1) * pageSize
+        const lastPageIndex = firstPageIndex + pageSize
+        return data?.slice(firstPageIndex, lastPageIndex)
+      }, [currentPage, data, dateRange])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -213,6 +228,7 @@ const BankTransactionsContent = ({
           listView={listView}
           dateRange={dateRange}
           setDateRange={v => setDateRange(v)}
+          stringOverrides={stringOverrides?.bankTransactionsHeader}
         />
       )}
 
@@ -229,6 +245,7 @@ const BankTransactionsContent = ({
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
+            stringOverrides={stringOverrides}
           />
         </div>
       )}
@@ -246,6 +263,7 @@ const BankTransactionsContent = ({
           removeTransaction={removeTransaction}
           containerWidth={containerWidth}
           hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
+          stringOverrides={stringOverrides?.bankTransactionCTAs}
         />
       ) : null}
 

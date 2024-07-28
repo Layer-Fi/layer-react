@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import AlertCircle from '../../icons/AlertCircle'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import Scissors from '../../icons/Scissors'
@@ -8,6 +9,7 @@ import { BankTransaction, CategorizationStatus, Category } from '../../types'
 import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
 import { Badge } from '../Badge'
+import { BankTransactionCTAStringOverrides } from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { SubmitButton, IconButton, RetryButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
@@ -24,7 +26,6 @@ import { MatchBadge } from './MatchBadge'
 import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
-import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 
 type Props = {
   index: number
@@ -37,6 +38,7 @@ type Props = {
   showDescriptions: boolean
   showReceiptUploads: boolean
   hardRefreshPnlOnCategorize: boolean
+  stringOverrides?: BankTransactionCTAStringOverrides
 }
 
 export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
@@ -76,6 +78,7 @@ export const BankTransactionRow = ({
   showDescriptions,
   showReceiptUploads,
   hardRefreshPnlOnCategorize,
+  stringOverrides,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
@@ -341,7 +344,9 @@ export const BankTransactionRow = ({
                 active={open}
                 action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
               >
-                {categorized ? 'Update' : 'Approve'}
+                {categorized
+                  ? stringOverrides?.updateButtonText || 'Update'
+                  : stringOverrides?.approveButtonText || 'Approve'}
               </SubmitButton>
             ) : null}
             <IconButton

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
@@ -8,13 +8,21 @@ import { useLedgerAccounts } from '../../hooks/useLedgerAccounts'
 import { ChartOfAccountsTable } from '../ChartOfAccountsTable'
 import { Container } from '../Container'
 import { LedgerAccount } from '../LedgerAccount'
+import { ChartOfAccountsTableStringOverrides } from '../ChartOfAccountsTable/ChartOfAccountsTable'
+import { LedgerAccountStringOverrides } from '../LedgerAccount/LedgerAccountIndex'
 
 export type View = 'mobile' | 'tablet' | 'desktop'
+
+export interface ChartOfAccountsStringOverrides {
+  chartOfAccountsTable?: ChartOfAccountsTableStringOverrides
+  ledgerAccount?: LedgerAccountStringOverrides
+}
 
 export interface ChartOfAccountsProps {
   asWidget?: boolean
   withDateControl?: boolean
   withExpandAllButton?: boolean
+  stringOverrides?: ChartOfAccountsStringOverrides
 }
 
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
@@ -35,6 +43,7 @@ const ChartOfAccountsContent = ({
   asWidget,
   withDateControl,
   withExpandAllButton,
+  stringOverrides,
 }: ChartOfAccountsProps) => {
   const { accountId } = useContext(LedgerAccountsContext)
 
@@ -59,7 +68,7 @@ const ChartOfAccountsContent = ({
   return (
     <Container name='chart-of-accounts' ref={containerRef} asWidget={asWidget}>
       {accountId ? (
-        <LedgerAccount view={view} containerRef={containerRef} />
+        <LedgerAccount view={view} containerRef={containerRef} stringOverrides={stringOverrides?.ledgerAccount}/>
       ) : (
         <ChartOfAccountsTable
           asWidget={asWidget}
@@ -67,6 +76,7 @@ const ChartOfAccountsContent = ({
           withExpandAllButton={withExpandAllButton}
           view={view}
           containerRef={containerRef}
+          stringOverrides={stringOverrides?.chartOfAccountsTable}
         />
       )}
     </Container>

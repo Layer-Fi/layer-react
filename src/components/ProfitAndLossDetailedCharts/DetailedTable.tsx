@@ -12,6 +12,12 @@ import { LineBaseItem } from '../../types/line_item'
 import { formatPercent } from '../../utils/format'
 import classNames from 'classnames'
 
+export interface DetailedTableStringOverrides {
+  categoryColumnHeader?: string
+  typeColumnHeader?: string
+  valueColumnHeader?: string
+}
+
 export interface DetailedTableProps {
   filteredData: LineBaseItem[]
   hoveredItem?: string
@@ -19,6 +25,7 @@ export interface DetailedTableProps {
   sidebarScope: SidebarScope
   filters: ProfitAndLossFilters
   sortBy: (scope: Scope, field: string, direction?: SortDirection) => void
+  stringOverrides?: DetailedTableStringOverrides
 }
 
 export const mapColorsToTypes = (data: any[]) => {
@@ -54,6 +61,7 @@ export const DetailedTable = ({
   sortBy,
   hoveredItem,
   setHoveredItem,
+  stringOverrides,
 }: DetailedTableProps) => {
   const buildColClass = (column: string) => {
     return classNames(
@@ -81,20 +89,20 @@ export const DetailedTable = ({
                 className={buildColClass('category')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'category')}
               >
-                Category <SortArrows className='Layer__sort-arrows' />
+                {stringOverrides?.categoryColumnHeader || "Category"} <SortArrows className='Layer__sort-arrows' />
               </th>
               <th
                 className={buildColClass('type')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'type')}
               >
-                Type <SortArrows className='Layer__sort-arrows' />
+                {stringOverrides?.typeColumnHeader || "Type"} <SortArrows className='Layer__sort-arrows' />
               </th>
               <th></th>
               <th
                 className={buildColClass('value')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'value')}
               >
-                Value <SortArrows className='Layer__sort-arrows' />
+                {stringOverrides?.valueColumnHeader || "Value"} <SortArrows className='Layer__sort-arrows' />
               </th>
             </tr>
           </thead>

@@ -5,6 +5,9 @@ import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
 import { Heading } from '../Typography'
+import { ProfitAndLossTableStringOverrides } from '../ProfitAndLossTable/ProfitAndLossTable'
+import { ProfitAndLossSummariesStringOverrides } from '../ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { ProfitAndLossDetailedChartsStringOverrides } from '../ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 
 const COMPONENT_NAME = 'profit-and-loss'
 
@@ -12,6 +15,12 @@ export interface ProfitAndLossViewProps {
   hideTable?: boolean
   hideChart?: boolean
   showDetailedCharts?: boolean
+  stringOverrides?: {
+    header?: string
+    profitAndLossTable?: ProfitAndLossTableStringOverrides
+    profitAndLossSummaries?: ProfitAndLossSummariesStringOverrides
+    profitAndLossDetailedCharts?: ProfitAndLossDetailedChartsStringOverrides
+  }
 }
 
 export interface ProfitAndLossViewPanelProps extends ProfitAndLossViewProps {
@@ -32,23 +41,24 @@ export const ProfitAndLossView = (props: ProfitAndLossViewProps) => {
 
 const ProfitAndLossPanel = ({
   containerRef,
+  stringOverrides,
   ...props
 }: ProfitAndLossViewPanelProps) => {
   const { sidebarScope } = useContext(ProfitAndLoss.Context)
 
   return (
     <Panel
-      sidebar={<ProfitAndLossDetailedCharts />}
+      sidebar={<ProfitAndLossDetailedCharts stringOverrides={stringOverrides?.profitAndLossDetailedCharts}/>}
       sidebarIsOpen={Boolean(sidebarScope)}
       parentRef={containerRef}
     >
       <Header className={`Layer__${COMPONENT_NAME}__header`}>
         <Heading className='Layer__profit-and-loss__title'>
-          Profit & Loss
+          {stringOverrides?.header || "Profit & Loss"}
         </Heading>
       </Header>
 
-      <Components {...props} />
+      <Components stringOverrides={stringOverrides} {...props} />
     </Panel>
   )
 }
@@ -56,6 +66,7 @@ const ProfitAndLossPanel = ({
 const Components = ({
   hideChart = false,
   hideTable = false,
+  stringOverrides,
 }: ProfitAndLossViewProps) => {
   const { error, isLoading, isValidating, refetch } = useContext(
     ProfitAndLoss.Context,
@@ -83,7 +94,7 @@ const Components = ({
             className={`Layer__${COMPONENT_NAME}__chart_with_summaries__summary-col`}
           >
             <ProfitAndLoss.DatePicker />
-            <ProfitAndLoss.Summaries vertical={true} />
+            <ProfitAndLoss.Summaries vertical={true} stringOverrides={stringOverrides?.profitAndLossSummaries}/>
           </div>
           <div
             className={`Layer__${COMPONENT_NAME}__chart_with_summaries__chart-col`}
@@ -92,7 +103,7 @@ const Components = ({
           </div>
         </div>
       )}
-      {!hideTable && <ProfitAndLoss.Table />}
+      {!hideTable && <ProfitAndLoss.Table stringOverrides={stringOverrides?.profitAndLossTable}/>}
     </>
   )
 }

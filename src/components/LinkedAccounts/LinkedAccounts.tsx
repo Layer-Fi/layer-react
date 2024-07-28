@@ -15,6 +15,9 @@ export interface LinkedAccountsProps {
   showLedgerBalance?: boolean
   showUnlinkItem?: boolean
   showBreakConnection?: boolean
+  stringOverrides?: {
+    title?: string
+  }
 }
 
 export const LinkedAccounts = (props: LinkedAccountsProps) => {
@@ -31,6 +34,7 @@ export const LinkedAccountsComponent = ({
   showLedgerBalance = true,
   showUnlinkItem = false,
   showBreakConnection = false,
+  stringOverrides,
 }: LinkedAccountsProps) => {
   const { isLoading, error, isValidating, refetchAccounts } = useContext(
     LinkedAccountsContext,
@@ -43,7 +47,7 @@ export const LinkedAccountsComponent = ({
           className='Layer__linked-accounts__title'
           size={HeadingSize.secondary}
         >
-          Linked Accounts
+          {stringOverrides?.title || "Linked Accounts"}
         </Heading>
       </Header>
 

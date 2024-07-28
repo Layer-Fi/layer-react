@@ -3,6 +3,11 @@ import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { BalanceSheet, LineItem } from '../../types'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 
+export interface BalanceSheetTableStringOverrides {
+  typeColumnHeader?: string
+  totalColumnHeader?: string
+}
+
 type BalanceSheetRowProps = {
   name: string
   displayName: string
@@ -12,9 +17,11 @@ type BalanceSheetRowProps = {
 export const BalanceSheetTable = ({
   data,
   config,
+  stringOverrides,
 }: {
   data: BalanceSheet
   config: BalanceSheetRowProps[]
+  stringOverrides?: BalanceSheetTableStringOverrides
 }) => {
   const { isOpen, setIsOpen, expandedAllRows } = useTableExpandRow()
   const allRowKeys: string[] = []
@@ -95,8 +102,8 @@ export const BalanceSheetTable = ({
     <Table borderCollapse='collapse'>
       <TableHead>
         <TableRow isHeadRow rowKey='balance-sheet-head-row'>
-          <TableCell isHeaderCell>Type</TableCell>
-          <TableCell isHeaderCell>Total</TableCell>
+          <TableCell isHeaderCell>{stringOverrides?.typeColumnHeader || "Type"}</TableCell>
+          <TableCell isHeaderCell>{stringOverrides?.totalColumnHeader || "Total"}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

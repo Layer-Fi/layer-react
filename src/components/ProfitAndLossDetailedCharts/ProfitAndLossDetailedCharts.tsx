@@ -7,18 +7,24 @@ import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { Text, TextSize, TextWeight } from '../Typography'
 import { DetailedChart } from './DetailedChart'
-import { DetailedTable } from './DetailedTable'
+import { DetailedTable, DetailedTableStringOverrides } from './DetailedTable'
 import { Filters } from './Filters'
 import { format } from 'date-fns'
+
+export interface ProfitAndLossDetailedChartsStringOverrides {
+  detailedTableStringOverrides?: DetailedTableStringOverrides
+}
 
 export const ProfitAndLossDetailedCharts = ({
   scope,
   hideClose = false,
   showDatePicker = false,
+  stringOverrides,
 }: {
   scope?: SidebarScope
   hideClose?: boolean
   showDatePicker?: boolean
+  stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
 }) => {
   const {
     filteredDataRevenue,
@@ -86,6 +92,7 @@ export const ProfitAndLossDetailedCharts = ({
           date={dateRange.startDate}
           isLoading={isLoading}
           showDatePicker={showDatePicker}
+
         />
 
         <div className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
@@ -103,6 +110,7 @@ export const ProfitAndLossDetailedCharts = ({
             sortBy={sortBy}
             hoveredItem={hoveredItem}
             setHoveredItem={setHoveredItem}
+            stringOverrides={stringOverrides?.detailedTableStringOverrides}
           />
         </div>
       </div>
