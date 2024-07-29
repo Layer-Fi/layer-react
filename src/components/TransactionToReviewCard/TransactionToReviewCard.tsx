@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Badge } from '../../components/Badge'
 import { BadgeSize, BadgeVariant } from '../../components/Badge/Badge'
 import { Text, TextSize } from '../../components/Typography'
@@ -6,7 +6,6 @@ import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLo
 import BellIcon from '../../icons/Bell'
 import CheckIcon from '../../icons/Check'
 import RefreshCcw from '../../icons/RefreshCcw'
-import { countTransactionsToReview } from '../../utils/bankTransactions'
 import { BadgeLoader } from '../BadgeLoader'
 import { NotificationCard } from '../NotificationCard'
 import { ProfitAndLoss } from '../ProfitAndLoss'
@@ -26,28 +25,30 @@ export const TransactionToReviewCard = ({
 
   const [toReview, setToReview] = useState(0)
 
-  const { data, loaded, error, refetch, pullData } = useProfitAndLossLTM({
+  const { data, loaded, error, refetch } = useProfitAndLossLTM({
     currentDate: dateRange ? dateRange.startDate : startOfMonth(new Date()),
   })
 
   useEffect(() => {
-    if (dateRange) {
-      pullData(dateRange.startDate)
-    }
-  }, [dateRange])
+    checkTransactionsToReview()
+  }, [])
 
-  useMemo(() => {
+  useEffect(() => {
+    checkTransactionsToReview()
+  }, [dateRange, loaded])
+
+  const checkTransactionsToReview = () => {
     if (data && dateRange) {
       const monthTx = data.filter(
         x =>
-          x.month === getMonth(dateRange.startDate) &&
+          x.month - 1 === getMonth(dateRange.startDate) &&
           x.year === getYear(dateRange.startDate),
       )
       if (monthTx.length > 0) {
         setToReview(monthTx[0].uncategorized_transactions)
       }
     }
-  }, [data])
+  }
 
   return (
     <NotificationCard
