@@ -26,13 +26,15 @@ export const TransactionToReviewCard = ({
 
   const [toReview, setToReview] = useState(0)
 
-  const { data, loaded, error, refetch, pullData } = useProfitAndLossLTM()
+  const { data, loaded, error, refetch, pullData } = useProfitAndLossLTM({
+    currentDate: dateRange ? dateRange.startDate : startOfMonth(new Date()),
+  })
 
   useEffect(() => {
     if (dateRange) {
       pullData(dateRange.startDate)
     }
-  }, [usePnlDateRange])
+  }, [dateRange])
 
   useMemo(() => {
     if (data && dateRange) {
