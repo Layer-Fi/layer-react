@@ -215,17 +215,19 @@ const BankTransactionsContent = ({
       )}
 
       {!listView && (
-        <BankTransactionsTable
-          categorizeView={categorizeView}
-          editable={editable}
-          isLoading={isLoading}
-          bankTransactions={bankTransactions}
-          initialLoad={initialLoad}
-          containerWidth={containerWidth}
-          removeTransaction={removeTransaction}
-          showDescriptions={showDescriptions}
-          showReceiptUploads={showReceiptUploads}
-        />
+        <div className='Layer__bank-transactions__table-wrapper'>
+          <BankTransactionsTable
+            categorizeView={categorizeView}
+            editable={editable}
+            isLoading={isLoading}
+            bankTransactions={bankTransactions}
+            initialLoad={initialLoad}
+            containerWidth={containerWidth}
+            removeTransaction={removeTransaction}
+            showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
+          />
+        </div>
       )}
 
       {isLoading && !bankTransactions ? (

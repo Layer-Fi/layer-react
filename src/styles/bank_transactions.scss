@@ -1,7 +1,8 @@
 .Layer__bank-transactions {
   max-width: var(--max-component-width);
 
-  &.Layer__component {
+  .Layer__bank-transactions__table-wrapper {
+    max-width: var(--max-component-width);
     overflow: auto;
   }
 }

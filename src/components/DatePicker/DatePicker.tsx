@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { BREAKPOINTS } from '../../config/general'
+import { useElementSize } from '../../hooks/useElementSize'
+import { useSizeClass } from '../../hooks/useWindowSize'
+import ChevronLeft from '../../icons/ChevronLeft'
+import ChevronRight from '../../icons/ChevronRight'
 import { Button, ButtonVariant } from '../Button'
 import { DatePickerOptions } from './DatePickerOptions'
 import classNames from 'classnames'
@@ -24,6 +29,8 @@ interface DatePickerProps {
   popperClassName?: string
   currentDateOption?: boolean
   minDate?: Date
+  maxDate?: Date
+  navigateArrows?: boolean
 }
 
 const getDefaultRangeDate = (
@@ -53,10 +60,10 @@ export const DatePicker = ({
   onChange,
   mode = 'dayPicker',
   dateFormat = mode === 'monthPicker' || mode === 'monthRangePicker'
-    ? 'MMMM, yyyy'
+    ? 'MMM, yyyy'
     : mode === 'timePicker'
     ? 'h:mm aa'
-    : 'MMMM d, yyyy',
+    : 'MMM d, yyyy',
   timeIntervals = 15,
   timeCaption,
   placeholderText,
@@ -65,13 +72,18 @@ export const DatePicker = ({
   calendarClassName,
   popperClassName,
   minDate,
+  maxDate,
   currentDateOption = true,
+  navigateArrows = mode === 'monthPicker',
   ...props
 }: DatePickerProps) => {
+  const pickerRef = useRef<ReactDatePicker>(null)
   const [updatePickerDate, setPickerDate] = useState<boolean>(false)
   const [selectedDates, setSelectedDates] = useState<
     Date | [Date | null, Date | null] | null
   >(selected)
+
+  const { isDesktop } = useSizeClass()
 
   const [startDate, setStartDate] = useState<Date | null>(
     getDefaultRangeDate('start', mode, selected) ?? new Date(),
@@ -118,6 +130,7 @@ export const DatePicker = ({
   const wrapperClassNames = classNames(
     'Layer__datepicker__wrapper',
     mode === 'timePicker' && 'Layer__datepicker__time__wrapper',
+    navigateArrows && 'Layer__datepicker__wrapper--arrows',
   )
 
   const datePickerWrapperClassNames = classNames(
@@ -173,9 +186,38 @@ export const DatePicker = ({
     }
   }
 
+  const isTodayOrAfter = Boolean(
+    selectedDates instanceof Date && selectedDates >= new Date(),
+  )
+
+  const isBeforeMinDate = Boolean(
+    minDate && selectedDates instanceof Date && selectedDates <= minDate,
+  )
+
+  const changeDate = (value: number) => {
+    if (mode === 'dayPicker') {
+      setSelectedDates(
+        new Date(
+          (selectedDates as Date).setDate(
+            (selectedDates as Date).getDate() + value,
+          ),
+        ),
+      )
+    } else if (mode === 'monthPicker') {
+      setSelectedDates(
+        new Date(
+          (selectedDates as Date).setMonth(
+            (selectedDates as Date).getMonth() + value,
+          ),
+        ),
+      )
+    }
+  }
+
   return (
     <div className={wrapperClassNames}>
       <ReactDatePicker
+        ref={pickerRef}
         wrapperClassName={datePickerWrapperClassNames}
         startDate={isRangeMode(mode) ? startDate : undefined}
         endDate={isRangeMode(mode) ? endDate : undefined}
@@ -199,10 +241,41 @@ export const DatePicker = ({
         )}
         timeIntervals={timeIntervals}
         timeCaption={timeCaption}
+        timeFormat='h mm aa'
         showTimeSelect={mode === 'timePicker'}
         showTimeSelectOnly={mode === 'timePicker'}
         minDate={minDate}
-        maxDate={new Date()}
+        maxDate={maxDate}
+        withPortal={!isDesktop}
+        onCalendarOpen={() => {
+          if (!isDesktop) {
+            setTimeout(() => {
+              document
+                .getElementById('Layer__datepicker__portal')
+                ?.classList.remove('Layer__datepicker__portal--closed')
+              document
+                .getElementById('Layer__datepicker__portal')
+                ?.classList.add('Layer__datepicker__portal--opened')
+            }, 10)
+          }
+        }}
+        onCalendarClose={() => {
+          if (!isDesktop) {
+            document
+              .getElementById('Layer__datepicker__portal')
+              ?.classList.add('Layer__datepicker__portal--closed')
+            document
+              .getElementById('Layer__datepicker__portal')
+              ?.classList.remove('Layer__datepicker__portal--opened')
+          }
+        }}
+        portalId='Layer__datepicker__portal'
+        onFocus={e => (e.target.readOnly = true)}
+        onInputClick={() => {
+          if (pickerRef.current && !isDesktop) {
+            pickerRef.current.setOpen(!pickerRef.current.isCalendarOpen)
+          }
+        }}
         {...props}
       >
         {mode === 'dayRangePicker' && (
@@ -212,6 +285,39 @@ export const DatePicker = ({
           />
         )}
       </ReactDatePicker>
+      {navigateArrows && !isDesktop && (
+        <>
+          <Button
+            aria-label='Previous Date'
+            className={classNames(
+              'Layer__datepicker__prev-button',
+              isBeforeMinDate && 'Layer__datepicker__button--disabled',
+            )}
+            onClick={() => changeDate(-1)}
+            variant={ButtonVariant.secondary}
+            disabled={isBeforeMinDate}
+          >
+            <ChevronLeft className='Layer__datepicker__button-icon' size={16} />
+          </Button>
+          <Button
+            aria-label='Next Date'
+            variant={ButtonVariant.secondary}
+            className={classNames(
+              'Layer__datepicker__next-button',
+              isTodayOrAfter
+                ? 'Layer__datepicker__button--disabled'
+                : undefined,
+            )}
+            onClick={() => changeDate(1)}
+            disabled={isTodayOrAfter}
+          >
+            <ChevronRight
+              className='Layer__datepicker__button-icon'
+              size={16}
+            />
+          </Button>
+        </>
+      )}
       {currentDateOption &&
         (mode === 'dayPicker' || mode === 'monthPicker') && (
           <Button

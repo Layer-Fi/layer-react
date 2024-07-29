@@ -31,9 +31,9 @@ export function useSizeClass(): UseSizeClass {
 
   const sizeClass = useMemo((): SizeClass => {
     switch (true) {
-      case width < BREAKPOINTS.MOBILE:
+      case width <= BREAKPOINTS.MOBILE:
         return 'mobile'
-      case width < BREAKPOINTS.TABLET:
+      case width <= BREAKPOINTS.TABLET:
         return 'tablet'
       default:
         return 'desktop'
