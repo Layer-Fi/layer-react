@@ -26,6 +26,7 @@ type UseProfitAndLossLTMReturn = (props?: UseProfitAndLossLTMProps) => {
   loaded?: LoadedStatus
   error?: any
   pullData: (date: Date) => void
+  refetch: () => void
 }
 
 const buildDates = ({ currentDate }: { currentDate: Date }) => {
@@ -126,6 +127,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
             totalExpenses: 0,
             uncategorizedInflows: 0,
             uncategorizedOutflows: 0,
+            uncategorized_transactions: 0,
             isLoading: true,
           } satisfies ProfitAndLossSummaryData)
         }
@@ -191,11 +193,16 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     }
   }, [syncTimestamps])
 
+  const refetch = () => {
+    mutate()
+  }
+
   return {
     data,
     isLoading,
     loaded,
     error,
     pullData,
+    refetch,
   }
 }

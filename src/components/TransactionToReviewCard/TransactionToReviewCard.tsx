@@ -1,16 +1,16 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Badge } from '../../components/Badge'
 import { BadgeSize, BadgeVariant } from '../../components/Badge/Badge'
 import { Text, TextSize } from '../../components/Typography'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import BellIcon from '../../icons/Bell'
 import CheckIcon from '../../icons/Check'
 import RefreshCcw from '../../icons/RefreshCcw'
 import { countTransactionsToReview } from '../../utils/bankTransactions'
 import { BadgeLoader } from '../BadgeLoader'
 import { NotificationCard } from '../NotificationCard'
-import {DateRange} from "../../types";
-import {ProfitAndLoss} from "../ProfitAndLoss";
+import { ProfitAndLoss } from '../ProfitAndLoss'
+import { getMonth, getYear, startOfMonth } from 'date-fns'
 
 export interface TransactionToReviewCardProps {
   onClick?: () => void
@@ -21,26 +21,31 @@ export const TransactionToReviewCard = ({
   onClick,
   usePnlDateRange,
 }: TransactionToReviewCardProps) => {
-  const {
-    data,
-    isLoading,
-    loadingStatus,
-    error,
-    refetch,
-    activate: activateBankTransactions,
-  } = useBankTransactionsContext()
-
   const { dateRange: contextDateRange } = useContext(ProfitAndLoss.Context)
   const dateRange = usePnlDateRange ? contextDateRange : undefined
 
-  useEffect(() => {
-    activateBankTransactions()
-  }, [])
+  const [toReview, setToReview] = useState(0)
 
-  const toReview = useMemo(
-    () => countTransactionsToReview({ transactions: data, dateRange }),
-    [data, isLoading, dateRange],
-  )
+  const { data, loaded, error, refetch, pullData } = useProfitAndLossLTM()
+
+  useEffect(() => {
+    if (dateRange) {
+      pullData(dateRange.startDate)
+    }
+  }, [usePnlDateRange])
+
+  useMemo(() => {
+    if (data && dateRange) {
+      const monthTx = data.filter(
+        x =>
+          x.month === getMonth(dateRange.startDate) &&
+          x.year === getYear(dateRange.startDate),
+      )
+      if (monthTx.length > 0) {
+        setToReview(monthTx[0].uncategorized_transactions)
+      }
+    }
+  }, [data])
 
   return (
     <NotificationCard
@@ -48,11 +53,9 @@ export const TransactionToReviewCard = ({
       onClick={() => onClick && onClick()}
     >
       <Text size={TextSize.sm}>Transactions to review</Text>
-      {loadingStatus === 'initial' || loadingStatus === 'loading' ? (
-        <BadgeLoader />
-      ) : null}
+      {loaded === 'initial' || loaded === 'loading' ? <BadgeLoader /> : null}
 
-      {loadingStatus === 'complete' && error ? (
+      {loaded === 'complete' && error ? (
         <Badge
           variant={BadgeVariant.ERROR}
           size={BadgeSize.SMALL}
@@ -63,7 +66,7 @@ export const TransactionToReviewCard = ({
         </Badge>
       ) : null}
 
-      {loadingStatus === 'complete' && !error && toReview > 0 ? (
+      {loaded === 'complete' && !error && toReview > 0 ? (
         <Badge
           variant={BadgeVariant.WARNING}
           size={BadgeSize.SMALL}
@@ -73,7 +76,7 @@ export const TransactionToReviewCard = ({
         </Badge>
       ) : null}
 
-      {loadingStatus === 'complete' && !error && toReview === 0 ? (
+      {loaded === 'complete' && !error && toReview === 0 ? (
         <Badge
           variant={BadgeVariant.SUCCESS}
           size={BadgeSize.SMALL}
