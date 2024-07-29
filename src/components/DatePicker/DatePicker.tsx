@@ -72,7 +72,7 @@ export const DatePicker = ({
   calendarClassName,
   popperClassName,
   minDate,
-  maxDate,
+  maxDate = new Date(),
   currentDateOption = true,
   navigateArrows = mode === 'monthPicker',
   ...props
@@ -144,6 +144,7 @@ export const DatePicker = ({
   )
   const popperClassNames = classNames(
     'Layer__datepicker__popper',
+    mode === 'timePicker' && 'Layer__datepicker__time__popper',
     popperClassName,
   )
 

@@ -72,6 +72,10 @@
     z-index: 99;
     border-radius: 8px;
 
+    &.Layer__datepicker__time__popper {
+      min-width: auto;
+    }
+
     * {
       outline-color: var(--color-base-800);
     }
