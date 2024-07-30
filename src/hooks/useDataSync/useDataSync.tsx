@@ -28,12 +28,29 @@ const DEPENDENCIES: Partial<Record<DataModel, DataModel[]>> = {
 }
 
 export const useDataSync: UseDataSync = () => {
+  const initialTimestamp = Date.now()
   const [syncTimestamps, setSyncTimestamps] = useState<
     Partial<Record<DataModel, number>>
-  >({})
+  >({
+    [DataModel.BALANCE_SHEET]: initialTimestamp,
+    [DataModel.CHART_OF_ACCOUNTS]: initialTimestamp,
+    [DataModel.JOURNAL]: initialTimestamp,
+    [DataModel.LEDGER_ACCOUNTS]: initialTimestamp,
+    [DataModel.LINKED_ACCOUNTS]: initialTimestamp,
+    [DataModel.PROFIT_AND_LOSS]: initialTimestamp,
+    [DataModel.STATEMENT_OF_CASH_FLOWS]: initialTimestamp,
+  })
   const [readTimestamps, setReadTimestamps] = useState<
     Partial<Record<DataModel, number>>
-  >({})
+  >({
+    [DataModel.BALANCE_SHEET]: initialTimestamp,
+    [DataModel.CHART_OF_ACCOUNTS]: initialTimestamp,
+    [DataModel.JOURNAL]: initialTimestamp,
+    [DataModel.LEDGER_ACCOUNTS]: initialTimestamp,
+    [DataModel.LINKED_ACCOUNTS]: initialTimestamp,
+    [DataModel.PROFIT_AND_LOSS]: initialTimestamp,
+    [DataModel.STATEMENT_OF_CASH_FLOWS]: initialTimestamp,
+  })
 
   const touch = (model: DataModel) => {
     setSyncTimestamps({
