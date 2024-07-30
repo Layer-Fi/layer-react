@@ -7,8 +7,25 @@
   }
 }
 
-.Layer__bank-transactions__loader-container {
-  padding: var(--spacing-2xl);
+.Layer__syncing__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4xs);
+  padding: var(--spacing-md);
+  font-size: var(--text-sm);
+  color: var(--color-base-500);
+  span:first-child {
+    color: var(--color-base-800);
+  }
+}
+
+.Layer__header__actions-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.Layer__bank-transactions__loader-row {
+  padding: var(--spacing-xs) var(--spacing-md);
 }
 
 .Layer__bank-transactions__header {

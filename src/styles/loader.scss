@@ -18,10 +18,14 @@
   border-radius: 50%;
 }
 
+.Layer__skeleton-loader__row {
+  padding: var(--spacing-xs) var(--spacing-md);
+}
+
 .Layer__skeleton-loader {
   width: 100%;
   height: 12px;
-  background-color: red;
+  border-radius: 4px;
 }
 
 @keyframes shine {
@@ -34,12 +38,12 @@
   background: var(--color-base-100);
   background: linear-gradient(
     110deg,
-    var(--color-base-50) 8%,
-    var(--color-base-100) 18%,
-    var(--color-base-50) 33%,
-    var(--color-base-50) 50%
+    var(--color-base-50) 0%,
+    var(--color-base-0) 28%,
+    var(--color-base-50) 50%,
+    var(--color-base-50) 100%
   );
-  border-radius: var(--border-radius-4xs);
+  border-radius: 4px;
   background-size: 200% 100%;
-  animation: 1.2s shine linear infinite;
+  animation: 1.5s shine linear infinite;
 }

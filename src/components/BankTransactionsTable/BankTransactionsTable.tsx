@@ -2,6 +2,8 @@ import React from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
 import { BankTransactionRow } from '../BankTransactionRow'
+import { SkeletonLoader } from '../SkeletonLoader'
+import { SkeletonTableLoader } from '../SkeletonTableLoader'
 
 interface BankTransactionsTableProps {
   bankTransactions?: BankTransaction[]
@@ -56,6 +58,13 @@ export const BankTransactionsTable = ({
           )}
         </tr>
       </thead>
+      {isLoading && (
+        <SkeletonTableLoader
+          rows={6}
+          cols={[{ colSpan: 4 }, { colSpan: 1 }]}
+          height={20}
+        />
+      )}
       <tbody>
         {!isLoading &&
           bankTransactions?.map(
