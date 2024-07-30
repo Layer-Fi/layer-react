@@ -25,6 +25,7 @@ export interface BankTransactionsHeaderProps {
   withDatePicker?: boolean
   listView?: boolean
   dateRange?: DateRange
+  isDataLoading?: boolean
   setDateRange?: (value: DateRange) => void
 }
 
@@ -87,6 +88,7 @@ export const BankTransactionsHeader = ({
   listView,
   dateRange,
   setDateRange,
+  isDataLoading,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
 
@@ -124,13 +126,29 @@ export const BankTransactionsHeader = ({
           />
         ) : null}
       </div>
+      <div className='Layer__header__actions-wrapper'>
+        {!categorizedOnly &&
+          !(mobileComponent == 'mobileList' && listView) &&
+          categorizeView && (
+            <div className='Layer__header__actions'>
+              <DownloadButton />
+              <Toggle
+                name='bank-transaction-display'
+                options={[
+                  { label: 'To Review', value: DisplayState.review },
+                  { label: 'Categorized', value: DisplayState.categorized },
+                ]}
+                selected={display}
+                onChange={onCategorizationDisplayChange}
+              />
+            </div>
+          )}
 
-      {!categorizedOnly &&
-        !(mobileComponent == 'mobileList' && listView) &&
-        categorizeView && (
-          <div className='Layer__header__actions'>
-            <DownloadButton />
-            <Toggle
+        {!categorizedOnly &&
+          mobileComponent === 'mobileList' &&
+          listView &&
+          categorizeView && (
+            <Tabs
               name='bank-transaction-display'
               options={[
                 { label: 'To Review', value: DisplayState.review },
@@ -139,23 +157,14 @@ export const BankTransactionsHeader = ({
               selected={display}
               onChange={onCategorizationDisplayChange}
             />
+          )}
+        {isDataLoading && (
+          <div className='Layer__syncing__info'>
+            <span>Syncing account data</span>
+            <span>This may take up to 5 minutes</span>
           </div>
         )}
-
-      {!categorizedOnly &&
-        mobileComponent === 'mobileList' &&
-        listView &&
-        categorizeView && (
-          <Tabs
-            name='bank-transaction-display'
-            options={[
-              { label: 'To Review', value: DisplayState.review },
-              { label: 'Categorized', value: DisplayState.categorized },
-            ]}
-            selected={display}
-            onChange={onCategorizationDisplayChange}
-          />
-        )}
+      </div>
     </Header>
   )
 }

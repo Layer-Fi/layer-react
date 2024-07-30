@@ -1,9 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import {
-  BankTransactionFilters,
-} from '../../hooks/useBankTransactions/types'
+import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { BankTransaction, DateRange, DisplayState } from '../../types'
@@ -15,6 +13,7 @@ import { Container } from '../Container'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
+import { SkeletonLoader } from '../SkeletonLoader'
 import { BankTransactionsHeader } from './BankTransactionsHeader'
 import { DataStates } from './DataStates'
 import { MobileComponentType } from './constants'
@@ -141,10 +140,10 @@ const BankTransactionsContent = ({
           )
         }
 
-    const firstPageIndex = (currentPage - 1) * pageSize
-    const lastPageIndex = firstPageIndex + pageSize
-    return data?.slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, data, dateRange])
+        const firstPageIndex = (currentPage - 1) * pageSize
+        const lastPageIndex = firstPageIndex + pageSize
+        return data?.slice(firstPageIndex, lastPageIndex)
+      }, [currentPage, data, dateRange])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -213,6 +212,7 @@ const BankTransactionsContent = ({
           listView={listView}
           dateRange={dateRange}
           setDateRange={v => setDateRange(v)}
+          isDataLoading={isLoading}
         />
       )}
 
@@ -232,12 +232,6 @@ const BankTransactionsContent = ({
           />
         </div>
       )}
-
-      {isLoading && !bankTransactions ? (
-        <div className='Layer__bank-transactions__loader-container'>
-          <Loader />
-        </div>
-      ) : null}
 
       {!isLoading && listView && mobileComponent !== 'mobileList' ? (
         <BankTransactionList
