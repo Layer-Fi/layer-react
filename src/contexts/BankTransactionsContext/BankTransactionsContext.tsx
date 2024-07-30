@@ -23,7 +23,7 @@ export const BankTransactionsContext =
     activate: () => undefined,
     display: DisplayState.review,
     fetchMore: () => {},
-    hasMore: false
+    hasMore: false,
   })
 
 export const useBankTransactionsContext = () =>
