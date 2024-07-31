@@ -13,6 +13,7 @@ interface BankTransactionsTableProps {
   removeTransaction: (bt: BankTransaction) => void
   showDescriptions?: boolean
   showReceiptUploads?: boolean
+  hardRefreshPnlOnCategorize?: boolean
 }
 
 export const BankTransactionsTable = ({
@@ -25,6 +26,7 @@ export const BankTransactionsTable = ({
   removeTransaction,
   showDescriptions = false,
   showReceiptUploads = false,
+  hardRefreshPnlOnCategorize = false,
 }: BankTransactionsTableProps) => {
   return (
     <table
@@ -71,6 +73,7 @@ export const BankTransactionsTable = ({
                 containerWidth={containerWidth}
                 showDescriptions={showDescriptions}
                 showReceiptUploads={showReceiptUploads}
+                hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
               />
             ),
           )}

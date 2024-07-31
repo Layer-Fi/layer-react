@@ -36,6 +36,7 @@ type Props = {
   initialLoad?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
+  hardRefreshPnlOnCategorize: boolean
 }
 
 export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
@@ -74,6 +75,7 @@ export const BankTransactionRow = ({
   initialLoad,
   showDescriptions,
   showReceiptUploads,
+  hardRefreshPnlOnCategorize,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
@@ -136,7 +138,7 @@ export const BankTransactionRow = ({
     // Save using form from expanded row when row is open:
     if (open && expandedRowRef?.current) {
       expandedRowRef?.current?.save()
-      refetch()
+      if (hardRefreshPnlOnCategorize) refetch()
       return
     }
 
@@ -150,7 +152,7 @@ export const BankTransactionRow = ({
         selectedCategory.payload.id,
       )
       setOpen(false)
-      refetch()
+      if (hardRefreshPnlOnCategorize) refetch()
       return
     }
 
@@ -158,7 +160,7 @@ export const BankTransactionRow = ({
       type: 'Category',
       category: getCategorizePayload(selectedCategory),
     })
-    refetch()
+    if (hardRefreshPnlOnCategorize) refetch()
     setOpen(false)
   }
 
