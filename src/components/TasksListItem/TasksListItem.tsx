@@ -12,14 +12,14 @@ import { set } from 'date-fns'
 
 export const TasksListItem = ({
   task,
-  index,
+  goToNextPageIfAllComplete,
+  defaultOpen,
 }: {
   task: TaskTypes
-  index: number
+  goToNextPageIfAllComplete: (task: TaskTypes) => void
+  defaultOpen: boolean
 }) => {
-  const [isOpen, setIsOpen] = useState(
-    index === 0 && !isComplete(task.status) ? true : false,
-  )
+  const [isOpen, setIsOpen] = useState(defaultOpen)
   const [userResponse, setUserResponse] = useState(task.user_response || '')
 
   const { submitResponseToTask } = useContext(TasksContext)
@@ -41,6 +41,10 @@ export const TasksListItem = ({
     'Layer__tasks-list-item',
     isOpen && 'Layer__tasks-list-item__expanded',
   )
+
+  useEffect(() => {
+    setIsOpen(defaultOpen)
+  }, [defaultOpen])
 
   return (
     <div className='Layer__tasks-list-item-wrapper'>
@@ -86,6 +90,7 @@ export const TasksListItem = ({
                 onClick={() => {
                   submitResponseToTask(task.id, userResponse)
                   setIsOpen(false)
+                  goToNextPageIfAllComplete(task)
                 }}
               >
                 {userResponse && userResponse.length === 0 ? 'Update' : 'Save'}
