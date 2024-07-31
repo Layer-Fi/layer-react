@@ -1,5 +1,6 @@
 import { ToastProps } from '../components/Toast/Toast'
 import { LayerError } from '../models/ErrorHandler'
+import { EventCallbacks } from '../providers/LayerProvider/LayerProvider'
 import { Business, Category } from '../types'
 import { ExpiringOAuthResponse } from './authentication'
 import { DataModel } from './general'
@@ -16,6 +17,7 @@ export type LayerContextValues = {
   onboardingStep?: OnboardingStep
   environment: string
   toasts: (ToastProps & { isExiting: boolean })[]
+  eventCallbacks?: EventCallbacks
 }
 
 export type LayerContextHelpers = {

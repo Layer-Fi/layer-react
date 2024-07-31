@@ -41,6 +41,7 @@ export const LayerContext = createContext<
   syncTimestamps: {},
   readTimestamps: {},
   hasBeenTouched: () => false,
+  eventCallbacks: {},
 })
 
 export const useLayerContext = () => useContext(LayerContext)

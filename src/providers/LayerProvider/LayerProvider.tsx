@@ -12,6 +12,7 @@ import {
   LayerContextValues,
   LayerContextAction,
   LayerContextActionName as Action,
+  BankTransaction,
 } from '../../types'
 import {
   ColorConfig,
@@ -91,6 +92,10 @@ export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
   },
 }
 
+export type EventCallbacks = {
+  onTransactionCategorized?: (bankTransactionId: string) => void
+}
+
 export type Props = {
   businessId: string
   appId?: string
@@ -100,6 +105,7 @@ export type Props = {
   theme?: LayerThemeConfig
   usePlaidSandbox?: boolean
   onError?: (error: LayerError) => void
+  eventCallbacks?: EventCallbacks
 }
 
 export const LayerProvider = ({
@@ -112,6 +118,7 @@ export const LayerProvider = ({
   theme,
   usePlaidSandbox,
   onError,
+  eventCallbacks,
 }: PropsWithChildren<Props>) => {
   const defaultSWRConfig = {
     revalidateInterval: 0,
@@ -142,6 +149,7 @@ export const LayerProvider = ({
     onboardingStep: undefined,
     environment,
     toasts: [],
+    eventCallbacks: {},
   })
 
   const { touch, syncTimestamps, read, readTimestamps, hasBeenTouched } =
@@ -337,6 +345,7 @@ export const LayerProvider = ({
           syncTimestamps,
           readTimestamps,
           hasBeenTouched,
+          eventCallbacks,
         }}
       >
         <BankTransactionsProvider>
