@@ -24,6 +24,7 @@ import { MatchBadge } from './MatchBadge'
 import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 
 type Props = {
   index: number
@@ -81,6 +82,7 @@ export const BankTransactionRow = ({
     categorize: categorizeBankTransaction,
     match: matchBankTransaction,
   } = useBankTransactionsContext()
+  const { refetch } = useProfitAndLossLTM()
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )
@@ -134,6 +136,7 @@ export const BankTransactionRow = ({
     // Save using form from expanded row when row is open:
     if (open && expandedRowRef?.current) {
       expandedRowRef?.current?.save()
+      refetch()
       return
     }
 
@@ -147,6 +150,7 @@ export const BankTransactionRow = ({
         selectedCategory.payload.id,
       )
       setOpen(false)
+      refetch()
       return
     }
 
@@ -154,6 +158,7 @@ export const BankTransactionRow = ({
       type: 'Category',
       category: getCategorizePayload(selectedCategory),
     })
+    refetch()
     setOpen(false)
   }
 
