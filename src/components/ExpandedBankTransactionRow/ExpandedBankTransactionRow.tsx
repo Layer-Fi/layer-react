@@ -215,7 +215,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const updateAmounts =
       (rowNumber: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const newDisplaying = sanitizeNumberInput(event.target.value)
-        const newAmount = Number(newDisplaying)
+
+        const newAmount = Number(newDisplaying) * 100 // cents
         const splitTotal = rowState.splits.reduce((sum, split, index) => {
           const amount =
             index === 0 ? 0 : index === rowNumber ? newAmount : split.amount
