@@ -107,21 +107,25 @@ export const BankTransactionsHeader = ({
       style={{ top: shiftStickyHeader }}
     >
       <div className='Layer__bank-transactions__header__content'>
-        <Heading
-          className='Layer__bank-transactions__title'
-          size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
-        >
-          Transactions
-        </Heading>
-        {isSyncing && (
-          <div className='Layer__syncing__info'>
-            <SmallLoader />
-            <div className='Layer__syncing__info__text'>
-              <span>Syncing account data</span>
-              <span>This may take up to 5 minutes</span>
+        <div className='Layer__bank-transactions__header__content-title'>
+          <Heading
+            className='Layer__bank-transactions__title'
+            size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
+          >
+            Transactions
+          </Heading>
+          {isSyncing && (
+            <div className='Layer__syncing__info'>
+              <SmallLoader />
+              {!listView ? (
+                <div className='Layer__syncing__info__text'>
+                  <span>Syncing account data</span>
+                  <span>This may take up to 5 minutes</span>
+                </div>
+              ) : null}
             </div>
-          </div>
-        )}
+          )}
+        </div>
         {withDatePicker && dateRange && setDateRange ? (
           <DatePicker
             mode='monthPicker'

@@ -21,6 +21,7 @@ import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
 const TEST_EMPTY_STATE = false
+const POLL_INTERVAL = 10000
 
 export interface BankTransactionsProps {
   asWidget?: boolean
@@ -84,15 +85,25 @@ const BankTransactionsContent = ({
     removeAfterCategorize,
   } = useBankTransactionsContext()
 
-  const data: BankTransaction[] = []
+  const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
 
-  const { data: linkedAccounts } = useLinkedAccounts()
+  const [isSyncing, setIsSyncing] = useState(true)
 
-  const isSyncing = useMemo(
-    // () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
-    () => true,
-    [linkedAccounts],
-  )
+  // @TODO temp
+  // const data: BankTransaction[] = []
+  const data = rawData
+
+  useEffect(() => {
+    setTimeout(() => {
+      // setIsSyncing(false)
+    }, 20000)
+  }, [])
+
+  // const isSyncing = useMemo(
+  //   // () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
+  //   () => true,
+  //   [linkedAccounts],
+  // )
 
   const transactionsNotSynced = useMemo(
     () =>
@@ -102,7 +113,28 @@ const BankTransactionsContent = ({
     [data, isSyncing, loadingStatus],
   )
 
-  console.log('ex', isSyncing, transactionsNotSynced, loadingStatus)
+  let intervalId: ReturnType<typeof setInterval> | undefined = undefined
+
+  useEffect(() => {
+    if (isSyncing) {
+      intervalId = setInterval(() => {
+        refetchAccounts()
+        refetch()
+      }, POLL_INTERVAL)
+    } else {
+      if (intervalId) {
+        clearInterval(intervalId)
+      }
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId)
+      }
+    }
+  }, [isSyncing, transactionsNotSynced])
+
+  // @TODO temp end
 
   useEffect(() => {
     activate()
@@ -239,6 +271,7 @@ const BankTransactionsContent = ({
             categorizeView={categorizeView}
             editable={editable}
             isLoading={isLoading}
+            isSyncing={isSyncing}
             bankTransactions={bankTransactions}
             initialLoad={initialLoad}
             containerWidth={containerWidth}
@@ -267,15 +300,16 @@ const BankTransactionsContent = ({
         />
       ) : null}
 
-      <DataStates
-        bankTransactions={bankTransactions}
-        isLoading={isLoading}
-        transactionsLoading={isSyncing}
-        isValidating={isValidating}
-        error={error}
-        refetch={refetch}
-        editable={editable}
-      />
+      {!isSyncing && (
+        <DataStates
+          bankTransactions={bankTransactions}
+          isLoading={isLoading}
+          isValidating={isValidating}
+          error={error}
+          refetch={refetch}
+          editable={editable}
+        />
+      )}
 
       {!monthlyView && (
         <div className='Layer__bank-transactions__pagination'>

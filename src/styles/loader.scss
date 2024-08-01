@@ -26,7 +26,8 @@
 }
 
 .Layer__skeleton-loader__row {
-  padding: var(--spacing-xs) var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .Layer__skeleton-loader {
