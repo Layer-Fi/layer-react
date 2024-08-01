@@ -16,6 +16,7 @@ import { Assignment } from './Assignment'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { isCategorized } from '../BankTransactions/utils'
+import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 
 type Props = {
   index: number
@@ -24,6 +25,7 @@ type Props = {
   editable: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
+  hardRefreshPnlOnCategorize: boolean
   removeTransaction: (bt: BankTransaction) => void
   containerWidth?: number
 }
@@ -35,6 +37,7 @@ export const BankTransactionListItem = ({
   editable,
   showDescriptions,
   showReceiptUploads,
+  hardRefreshPnlOnCategorize,
   containerWidth,
   removeTransaction,
 }: Props) => {
@@ -42,6 +45,7 @@ export const BankTransactionListItem = ({
   const [showRetry, setShowRetry] = useState(false)
   const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
     useBankTransactionsContext()
+  const { refetch } = useProfitAndLossLTM()
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )
@@ -80,6 +84,7 @@ export const BankTransactionListItem = ({
     // Save using form from expanded row when row is open:
     if (open && expandedRowRef?.current) {
       expandedRowRef?.current?.save()
+      if (hardRefreshPnlOnCategorize) refetch()
       return
     }
 
@@ -89,6 +94,7 @@ export const BankTransactionListItem = ({
 
     if (selectedCategory.type === 'match') {
       matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
+      if (hardRefreshPnlOnCategorize) refetch()
       return
     }
 
@@ -96,6 +102,7 @@ export const BankTransactionListItem = ({
       type: 'Category',
       category: getCategorizePayload(selectedCategory),
     })
+    if (hardRefreshPnlOnCategorize) refetch()
   }
 
   const categorized = isCategorized(bankTransaction)
@@ -161,6 +168,7 @@ export const BankTransactionListItem = ({
           containerWidth={containerWidth}
           showDescriptions={showDescriptions}
           showReceiptUploads={showReceiptUploads}
+          hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
         />
       </span>
       <span className={`${className}__base-row`}>

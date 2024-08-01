@@ -29,6 +29,7 @@ export interface BankTransactionsProps {
   categorizedOnly?: boolean
   showDescriptions?: boolean
   showReceiptUploads?: boolean
+  hardRefreshPnlOnCategorize?: boolean
   monthlyView?: boolean
   categorizeView?: boolean
   mobileComponent?: MobileComponentType
@@ -58,6 +59,7 @@ const BankTransactionsContent = ({
   categorizeView = true,
   showDescriptions = false,
   showReceiptUploads = false,
+  hardRefreshPnlOnCategorize = false,
   monthlyView = false,
   mobileComponent,
   filters: inputFilters,
@@ -226,6 +228,7 @@ const BankTransactionsContent = ({
             removeTransaction={removeTransaction}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
+            hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
           />
         </div>
       )}
@@ -242,6 +245,7 @@ const BankTransactionsContent = ({
           editable={editable}
           removeTransaction={removeTransaction}
           containerWidth={containerWidth}
+          hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
         />
       ) : null}
 
@@ -251,6 +255,7 @@ const BankTransactionsContent = ({
           editable={editable}
           removeTransaction={removeTransaction}
           initialLoad={initialLoad}
+          hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
         />
       ) : null}
 
