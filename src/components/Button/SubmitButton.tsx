@@ -1,6 +1,5 @@
 import React, { ButtonHTMLAttributes } from 'react'
 import AlertCircle from '../../icons/AlertCircle'
-import Check from '../../icons/Check'
 import CheckCircle from '../../icons/CheckCircle'
 import Loader from '../../icons/Loader'
 import Save from '../../icons/Save'

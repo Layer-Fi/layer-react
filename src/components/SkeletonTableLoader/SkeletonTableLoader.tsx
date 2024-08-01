@@ -3,7 +3,7 @@ import { SkeletonLoader } from '../SkeletonLoader'
 
 interface SkeletonTableLoaderProps {
   rows: number
-  cols: Array<{ colSpan: number }>
+  cols: Array<{ colSpan: number; colComponent?: React.ReactNode }>
   height?: number
   width?: number
 }
@@ -24,7 +24,11 @@ export const SkeletonTableLoader = ({
               colSpan={col.colSpan}
               className='Layer__skeleton-loader__row'
             >
-              <SkeletonLoader width={`${width}%`} height={`${height}px`} />
+              {col.colComponent ? (
+                col.colComponent
+              ) : (
+                <SkeletonLoader width={`${width}%`} height={`${height}px`} />
+              )}
             </td>
           ))}
         </tr>
