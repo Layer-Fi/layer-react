@@ -83,7 +83,7 @@ const Components = ({
             className={`Layer__${COMPONENT_NAME}__chart_with_summaries__summary-col`}
           >
             <ProfitAndLoss.DatePicker />
-            <ProfitAndLoss.Summaries vertical={true} />
+            <ProfitAndLoss.Summaries vertical={true} actionable />
           </div>
           <div
             className={`Layer__${COMPONENT_NAME}__chart_with_summaries__chart-col`}

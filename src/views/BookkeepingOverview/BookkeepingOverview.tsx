@@ -46,7 +46,7 @@ export const BookkeepingOverview = ({
               <ProfitAndLoss.DatePicker />
             </Header>
             <div className='Layer__bookkeeping-overview__summaries-row'>
-              <ProfitAndLoss.Summaries actionable={false} />
+              <ProfitAndLoss.Summaries />
             </div>
             <ProfitAndLoss.Chart />
           </Container>
