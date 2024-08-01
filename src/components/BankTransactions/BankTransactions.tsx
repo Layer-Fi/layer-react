@@ -103,11 +103,20 @@ const BankTransactionsContent = ({
 
   let intervalId: ReturnType<typeof setInterval> | undefined = undefined
 
+  // calling `refetch()` directly in the `setInterval` didn't trigger actual request to API.
+  // But it works when called from `useEffect`
+  const [refreshTrigger, setRefreshTrigger] = useState(-1)
+  useEffect(() => {
+    if (refreshTrigger !== -1) {
+      refetch()
+      refetchAccounts()
+    }
+  }, [refreshTrigger])
+
   useEffect(() => {
     if (isSyncing) {
       intervalId = setInterval(() => {
-        refetchAccounts()
-        refetch()
+        setRefreshTrigger(Math.random())
       }, POLL_INTERVAL)
     } else {
       if (intervalId) {
