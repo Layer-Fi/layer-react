@@ -2,8 +2,8 @@ import React from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
 import { BankTransactionRow } from '../BankTransactionRow'
-import { SkeletonLoader } from '../SkeletonLoader'
 import { SkeletonTableLoader } from '../SkeletonTableLoader'
+import { SyncingComponent } from '../SyncingComponent'
 
 interface BankTransactionsTableProps {
   bankTransactions?: BankTransaction[]
@@ -18,6 +18,8 @@ interface BankTransactionsTableProps {
   hardRefreshPnlOnCategorize?: boolean
   isSyncing?: boolean
   page?: number
+  lastPage?: boolean
+  onRefresh?: () => void
 }
 
 export const BankTransactionsTable = ({
@@ -33,6 +35,8 @@ export const BankTransactionsTable = ({
   hardRefreshPnlOnCategorize = false,
   isSyncing = false,
   page,
+  lastPage,
+  onRefresh,
 }: BankTransactionsTableProps) => {
   return (
     <table
@@ -90,6 +94,13 @@ export const BankTransactionsTable = ({
               />
             ),
           )}
+        {(isLoading || isSyncing) && lastPage ? (
+          <tr>
+            <td colSpan={3}>
+              <SyncingComponent onRefresh={() => onRefresh && onRefresh()} />
+            </td>
+          </tr>
+        ) : null}
       </tbody>
     </table>
   )

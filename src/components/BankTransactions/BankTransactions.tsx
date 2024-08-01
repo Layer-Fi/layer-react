@@ -237,6 +237,11 @@ const BankTransactionsContent = ({
 
   const editable = display === DisplayState.review
 
+  const isLastPage =
+    data &&
+    !hasMore &&
+    Math.ceil((data?.length || 0) / pageSize) === currentPage
+
   return (
     <Container
       className={
@@ -282,6 +287,8 @@ const BankTransactionsContent = ({
             showReceiptUploads={showReceiptUploads}
             page={currentPage}
             hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
+            lastPage={isLastPage}
+            onRefresh={refetch}
           />
         </div>
       )}
