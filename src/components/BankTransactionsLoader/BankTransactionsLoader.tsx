@@ -40,7 +40,7 @@ export const BankTransactionsLoader = ({
   )
   return (
     <SkeletonTableLoader
-      rows={isLoading ? 6 : 4}
+      rows={4}
       cols={
         isLoading
           ? [{ colSpan: 4 }, { colSpan: 1 }]

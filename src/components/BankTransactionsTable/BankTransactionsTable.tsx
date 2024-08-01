@@ -93,7 +93,10 @@ export const BankTransactionsTable = ({
               />
             ),
           )}
-        {(isLoading || isSyncing) && lastPage ? (
+        {isSyncing &&
+        (lastPage ||
+          ((!bankTransactions || bankTransactions.length === 0) &&
+            page === 1)) ? (
           <tr>
             <td colSpan={3}>
               <SyncingComponent

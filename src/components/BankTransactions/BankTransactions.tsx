@@ -11,6 +11,7 @@ import { BankTransactionMobileList } from '../BankTransactionMobileList'
 import { BankTransactionsTable } from '../BankTransactionsTable'
 import { Container } from '../Container'
 import { ErrorBoundary } from '../ErrorBoundary'
+import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
 import { BankTransactionsHeader } from './BankTransactionsHeader'
 import { DataStates } from './DataStates'
@@ -71,7 +72,7 @@ const BankTransactionsContent = ({
   })
   const {
     activate,
-    data: rawData,
+    data,
     isLoading,
     loadingStatus,
     error,
@@ -87,23 +88,10 @@ const BankTransactionsContent = ({
 
   const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
 
-  const [isSyncing, setIsSyncing] = useState(true)
-
-  // @TODO temp
-  // const data: BankTransaction[] = []
-  const data = rawData
-
-  useEffect(() => {
-    setTimeout(() => {
-      // setIsSyncing(false)
-    }, 20000)
-  }, [])
-
-  // const isSyncing = useMemo(
-  //   // () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
-  //   () => true,
-  //   [linkedAccounts],
-  // )
+  const isSyncing = useMemo(
+    () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
+    [linkedAccounts],
+  )
 
   const transactionsNotSynced = useMemo(
     () =>
@@ -133,8 +121,6 @@ const BankTransactionsContent = ({
       }
     }
   }, [isSyncing, transactionsNotSynced])
-
-  // @TODO temp end
 
   useEffect(() => {
     activate()
@@ -311,7 +297,13 @@ const BankTransactionsContent = ({
         />
       ) : null}
 
-      {!isSyncing || (mobileComponent && listView) ? (
+      {listView && isLoading ? (
+        <div className='Layer__bank-transactions__list-loader'>
+          <Loader />
+        </div>
+      ) : null}
+
+      {!isSyncing || listView ? (
         <DataStates
           bankTransactions={bankTransactions}
           isLoading={isLoading}
