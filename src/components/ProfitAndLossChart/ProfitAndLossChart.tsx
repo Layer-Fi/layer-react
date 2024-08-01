@@ -286,10 +286,14 @@ export const ProfitAndLossChart = () => {
         if (x.operatingExpenses < 0 || x.uncategorizedOutflows < 0) {
           return {
             ...x,
-            operatingExpenses: x.operatingExpenses < 0 ? 0 : x.operatingExpenses,
-            uncategorizedOutflows: x.uncategorizedOutflows < 0 ? 0 : x.uncategorizedOutflows,
-            operatingExpensesInverse: x.operatingExpenses < 0 ? -x.operatingExpenses : 0,
-            uncategorizedOutflowsInverse:  x.uncategorizedOutflows < 0 ? -x.uncategorizedOutflows : 0,
+            operatingExpenses:
+              x.operatingExpenses < 0 ? 0 : x.operatingExpenses,
+            uncategorizedOutflows:
+              x.uncategorizedOutflows < 0 ? 0 : x.uncategorizedOutflows,
+            operatingExpensesInverse:
+              x.operatingExpenses < 0 ? -x.operatingExpenses : 0,
+            uncategorizedOutflowsInverse:
+              x.uncategorizedOutflows < 0 ? -x.uncategorizedOutflows : 0,
           }
         }
 
@@ -493,6 +497,7 @@ export const ProfitAndLossChart = () => {
 
   return (
     <ResponsiveContainer
+      key={JSON.stringify(theData)}
       className={classNames(
         'Layer__chart-container',
         loaded !== 'complete' && 'Layer__chart-container--loading',
@@ -618,7 +623,10 @@ export const ProfitAndLossChart = () => {
         >
           {theData?.map(entry => {
             return (
-              <Cell key={entry.name} fill='url(#layer-bar-stripe-pattern-dark)' />
+              <Cell
+                key={entry.name}
+                fill='url(#layer-bar-stripe-pattern-dark)'
+              />
             )
           })}
         </Bar>
@@ -668,7 +676,10 @@ export const ProfitAndLossChart = () => {
         >
           {theData?.map(entry => {
             return (
-              <Cell key={entry.name} fill='url(#layer-bar-stripe-pattern-dark)' />
+              <Cell
+                key={entry.name}
+                fill='url(#layer-bar-stripe-pattern-dark)'
+              />
             )
           })}
         </Bar>
