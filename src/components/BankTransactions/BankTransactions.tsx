@@ -70,7 +70,7 @@ const BankTransactionsContent = ({
   })
   const {
     activate,
-    data,
+    data: rawData,
     isLoading,
     loadingStatus,
     error,
@@ -84,7 +84,25 @@ const BankTransactionsContent = ({
     removeAfterCategorize,
   } = useBankTransactionsContext()
 
+  const data: BankTransaction[] = []
+
   const { data: linkedAccounts } = useLinkedAccounts()
+
+  const isSyncing = useMemo(
+    // () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
+    () => true,
+    [linkedAccounts],
+  )
+
+  const transactionsNotSynced = useMemo(
+    () =>
+      loadingStatus === 'complete' &&
+      isSyncing &&
+      (!data || data?.length === 0),
+    [data, isSyncing, loadingStatus],
+  )
+
+  console.log('ex', isSyncing, transactionsNotSynced, loadingStatus)
 
   useEffect(() => {
     activate()
@@ -211,6 +229,7 @@ const BankTransactionsContent = ({
           dateRange={dateRange}
           setDateRange={v => setDateRange(v)}
           isDataLoading={isLoading}
+          isSyncing={isSyncing}
         />
       )}
 
@@ -251,9 +270,7 @@ const BankTransactionsContent = ({
       <DataStates
         bankTransactions={bankTransactions}
         isLoading={isLoading}
-        transactionsLoading={Boolean(
-          linkedAccounts?.some(item => item.is_syncing),
-        )}
+        transactionsLoading={isSyncing}
         isValidating={isValidating}
         error={error}
         refetch={refetch}
