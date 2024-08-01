@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Scope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { ProfitAndLoss } from '../../types'
@@ -64,7 +64,21 @@ export const ProfitAndLossSummaries = ({
     isLoading,
     setSidebarScope,
     sidebarScope,
+    refetch,
+    dateRange,
   } = useContext(PNL.Context)
+
+  // @TODO - temporary fix to revalidate summary card data
+  const [trigger, setTrigger] = useState(-1)
+  useEffect(() => {
+    setTrigger(Math.random())
+  }, [dateRange?.startDate])
+
+  useEffect(() => {
+    refetch()
+  }, [trigger])
+
+  // @TODO - temporary fix - END
 
   const dataItem = Array.isArray(storedData)
     ? storedData[storedData.length - 1]
