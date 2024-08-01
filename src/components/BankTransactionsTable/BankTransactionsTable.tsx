@@ -68,8 +68,11 @@ export const BankTransactionsTable = ({
           )}
         </tr>
       </thead>
-      {(isLoading || isSyncing) && page && page === 1 ? (
-        <BankTransactionsLoader />
+      {isLoading && page && page === 1 ? (
+        <BankTransactionsLoader isLoading={true} />
+      ) : null}
+      {!isLoading && isSyncing && page && page === 1 ? (
+        <BankTransactionsLoader isLoading={false} />
       ) : null}
       <tbody>
         {!isLoading &&

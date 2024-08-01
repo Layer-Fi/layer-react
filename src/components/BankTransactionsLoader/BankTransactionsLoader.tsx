@@ -6,7 +6,11 @@ import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect'
 import { SkeletonTableLoader } from '../SkeletonTableLoader'
 
-export const BankTransactionsLoader = () => {
+export const BankTransactionsLoader = ({
+  isLoading = true,
+}: {
+  isLoading: boolean
+}) => {
   const inactiveBankTransactionsActions = (
     <div className='Layer__bank-transaction-row__actions-container Layer__bank-transaction-row__actions-disabled'>
       <CategorySelect
@@ -36,11 +40,15 @@ export const BankTransactionsLoader = () => {
   )
   return (
     <SkeletonTableLoader
-      rows={6}
-      cols={[
-        { colSpan: 4 },
-        { colSpan: 1, colComponent: inactiveBankTransactionsActions },
-      ]}
+      rows={isLoading ? 6 : 4}
+      cols={
+        isLoading
+          ? [{ colSpan: 4 }, { colSpan: 1 }]
+          : [
+              { colSpan: 4 },
+              { colSpan: 1, colComponent: inactiveBankTransactionsActions },
+            ]
+      }
       height={20}
     />
   )
