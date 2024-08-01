@@ -16,6 +16,7 @@ interface BankTransactionsTableProps {
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   isSyncing?: boolean
+  page?: number
 }
 
 export const BankTransactionsTable = ({
@@ -29,6 +30,7 @@ export const BankTransactionsTable = ({
   showDescriptions = false,
   showReceiptUploads = false,
   isSyncing = false,
+  page,
 }: BankTransactionsTableProps) => {
   return (
     <table
@@ -60,7 +62,7 @@ export const BankTransactionsTable = ({
           )}
         </tr>
       </thead>
-      {isLoading || isSyncing ? (
+      {(isLoading || isSyncing) && page && page === 1 ? (
         <SkeletonTableLoader
           rows={bankTransactions && bankTransactions.length > 0 ? 4 : 6}
           cols={[{ colSpan: 4 }, { colSpan: 1 }]}

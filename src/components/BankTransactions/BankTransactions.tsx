@@ -278,6 +278,7 @@ const BankTransactionsContent = ({
             removeTransaction={removeTransaction}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
+            page={currentPage}
           />
         </div>
       )}
@@ -300,7 +301,7 @@ const BankTransactionsContent = ({
         />
       ) : null}
 
-      {!isSyncing && (
+      {!isSyncing || (mobileComponent && listView) ? (
         <DataStates
           bankTransactions={bankTransactions}
           isLoading={isLoading}
@@ -309,7 +310,7 @@ const BankTransactionsContent = ({
           refetch={refetch}
           editable={editable}
         />
-      )}
+      ) : null}
 
       {!monthlyView && (
         <div className='Layer__bank-transactions__pagination'>

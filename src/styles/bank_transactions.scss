@@ -17,6 +17,12 @@
   border-left: 1px solid var(--border-color);
 }
 
+.Layer__bank-transactions__header--mobile .Layer__syncing__info {
+  border-width: 0;
+  padding: 0 var(--spacing-xs);
+  margin-left: 0;
+}
+
 .Layer__syncing__info__text {
   display: flex;
   flex-direction: column;
