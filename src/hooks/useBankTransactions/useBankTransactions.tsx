@@ -6,12 +6,12 @@ import {
   CategorizationStatus,
   CategoryUpdate,
 } from '../../types'
-import { BankTransactionMatchType, DisplayState } from '../../types/bank_transactions'
-import { DataModel, LoadedStatus } from '../../types/general'
 import {
-  BankTransactionFilters,
-  UseBankTransactions,
-} from './types'
+  BankTransactionMatchType,
+  DisplayState,
+} from '../../types/bank_transactions'
+import { DataModel, LoadedStatus } from '../../types/general'
+import { BankTransactionFilters, UseBankTransactions } from './types'
 import {
   applyAccountFilter,
   applyAmountFilter,
@@ -32,6 +32,7 @@ export const useBankTransactions: UseBankTransactions = params => {
     read,
     syncTimestamps,
     hasBeenTouched,
+    eventCallbacks,
   } = useLayerContext()
   const { scope = undefined } = params ?? {}
   const [filters, setTheFilters] = useState<BankTransactionFilters | undefined>(
@@ -102,7 +103,6 @@ export const useBankTransactions: UseBankTransactions = params => {
           },
         }).call(false)
       }
-      
 
       return {}
     },
@@ -112,13 +112,12 @@ export const useBankTransactions: UseBankTransactions = params => {
     },
   )
 
-
   const data: BankTransaction[] | undefined = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {
       return rawResponseData
-      ?.map(x => x?.data)
-      .flat()
-      .filter(x => !!x) as unknown as BankTransaction[]
+        ?.map(x => x?.data)
+        .flat()
+        .filter(x => !!x) as unknown as BankTransaction[]
     }
 
     return undefined
@@ -135,14 +134,17 @@ export const useBankTransactions: UseBankTransactions = params => {
   const hasMore = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {
       const lastElement = rawResponseData[rawResponseData.length - 1]
-      return Boolean(lastElement.meta?.pagination?.cursor && lastElement.meta?.pagination?.has_more)
+      return Boolean(
+        lastElement.meta?.pagination?.cursor &&
+          lastElement.meta?.pagination?.has_more,
+      )
     }
 
     return false
   }, [rawResponseData])
 
   const accountsList = useMemo(
-    () => data ? collectAccounts(data) : [],
+    () => (data ? collectAccounts(data) : []),
     [data],
   )
 
@@ -242,7 +244,10 @@ export const useBankTransactions: UseBankTransactions = params => {
           })
         }
       })
-      .finally(() => touch(DataModel.BANK_TRANSACTIONS))
+      .finally(() => {
+        touch(DataModel.BANK_TRANSACTIONS)
+        eventCallbacks?.onTransactionCategorized?.(id)
+      })
   }
 
   const match = (
@@ -292,14 +297,19 @@ export const useBankTransactions: UseBankTransactions = params => {
           })
         }
       })
-      .finally(() => touch(DataModel.BANK_TRANSACTIONS))
+      .finally(() => {
+        touch(DataModel.BANK_TRANSACTIONS)
+        eventCallbacks?.onTransactionCategorized?.(id)
+      })
   }
 
   const updateOneLocal = (newBankTransaction: BankTransaction) => {
     const updatedData = rawResponseData?.map(page => {
       return {
         ...page,
-        data: page.data?.map(bt => bt.id === newBankTransaction.id ? newBankTransaction : bt)
+        data: page.data?.map(bt =>
+          bt.id === newBankTransaction.id ? newBankTransaction : bt,
+        ),
       }
     })
     mutate(updatedData, { revalidate: false })
@@ -309,7 +319,7 @@ export const useBankTransactions: UseBankTransactions = params => {
     const updatedData = rawResponseData?.map(page => {
       return {
         ...page,
-        data: page.data?.filter(bt => bt.id !== bankTransaction.id)
+        data: page.data?.filter(bt => bt.id !== bankTransaction.id),
       }
     })
     mutate(updatedData, { revalidate: false })
@@ -356,6 +366,6 @@ export const useBankTransactions: UseBankTransactions = params => {
     activate,
     display,
     fetchMore,
-    hasMore
+    hasMore,
   }
 }
