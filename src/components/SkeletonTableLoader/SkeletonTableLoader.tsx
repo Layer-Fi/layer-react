@@ -15,7 +15,7 @@ export const SkeletonTableLoader = ({
   width = 100,
 }: SkeletonTableLoaderProps) => {
   return (
-    <tbody>
+    <tbody className='Layer__skeleton-table-body__loader'>
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <tr key={rowIndex}>
           {cols.map((col, colIndex) => (
