@@ -34,7 +34,7 @@ export const AccountingOverview = ({
           />
         )}
         <div className='Layer__accounting-overview__summaries-row'>
-          <ProfitAndLoss.Summaries actionable={false} />
+          <ProfitAndLoss.Summaries />
           <TransactionToReviewCard
             usePnlDateRange={true}
             onClick={onTransactionsToReviewClick}

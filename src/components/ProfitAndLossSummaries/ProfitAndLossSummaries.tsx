@@ -57,7 +57,7 @@ const buildMiniChartData = (scope: Scope, data?: ProfitAndLoss) => {
 export const ProfitAndLossSummaries = ({
   vertical,
   revenueLabel = 'Revenue',
-  actionable = true,
+  actionable = false,
 }: Props) => {
   const {
     data: storedData,
