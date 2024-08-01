@@ -7,6 +7,7 @@ import { getEarliestDateToBrowse } from '../../utils/business'
 import { Button, ButtonVariant, RetryButton } from '../Button'
 import { Header } from '../Container'
 import { DatePicker } from '../DatePicker'
+import { SyncingComponent } from '../SyncingComponent'
 import { Tabs } from '../Tabs'
 import { Toggle } from '../Toggle'
 import { Heading, HeadingSize } from '../Typography'
@@ -25,6 +26,8 @@ export interface BankTransactionsHeaderProps {
   withDatePicker?: boolean
   listView?: boolean
   dateRange?: DateRange
+  isDataLoading?: boolean
+  isSyncing?: boolean
   setDateRange?: (value: DateRange) => void
 }
 
@@ -87,6 +90,7 @@ export const BankTransactionsHeader = ({
   listView,
   dateRange,
   setDateRange,
+  isSyncing,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
 
@@ -102,12 +106,21 @@ export const BankTransactionsHeader = ({
       style={{ top: shiftStickyHeader }}
     >
       <div className='Layer__bank-transactions__header__content'>
-        <Heading
-          className='Layer__bank-transactions__title'
-          size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
-        >
-          Transactions
-        </Heading>
+        <div className='Layer__bank-transactions__header__content-title'>
+          <Heading
+            className='Layer__bank-transactions__title'
+            size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
+          >
+            Transactions
+          </Heading>
+          {isSyncing && (
+            <SyncingComponent
+              timeSync={5}
+              inProgress={true}
+              hideContent={listView}
+            />
+          )}
+        </div>
         {withDatePicker && dateRange && setDateRange ? (
           <DatePicker
             mode='monthPicker'
@@ -124,13 +137,29 @@ export const BankTransactionsHeader = ({
           />
         ) : null}
       </div>
+      <div className='Layer__header__actions-wrapper'>
+        {!categorizedOnly &&
+          !(mobileComponent == 'mobileList' && listView) &&
+          categorizeView && (
+            <div className='Layer__header__actions'>
+              <DownloadButton />
+              <Toggle
+                name='bank-transaction-display'
+                options={[
+                  { label: 'To Review', value: DisplayState.review },
+                  { label: 'Categorized', value: DisplayState.categorized },
+                ]}
+                selected={display}
+                onChange={onCategorizationDisplayChange}
+              />
+            </div>
+          )}
 
-      {!categorizedOnly &&
-        !(mobileComponent == 'mobileList' && listView) &&
-        categorizeView && (
-          <div className='Layer__header__actions'>
-            <DownloadButton />
-            <Toggle
+        {!categorizedOnly &&
+          mobileComponent === 'mobileList' &&
+          listView &&
+          categorizeView && (
+            <Tabs
               name='bank-transaction-display'
               options={[
                 { label: 'To Review', value: DisplayState.review },
@@ -139,23 +168,8 @@ export const BankTransactionsHeader = ({
               selected={display}
               onChange={onCategorizationDisplayChange}
             />
-          </div>
-        )}
-
-      {!categorizedOnly &&
-        mobileComponent === 'mobileList' &&
-        listView &&
-        categorizeView && (
-          <Tabs
-            name='bank-transaction-display'
-            options={[
-              { label: 'To Review', value: DisplayState.review },
-              { label: 'Categorized', value: DisplayState.categorized },
-            ]}
-            selected={display}
-            onChange={onCategorizationDisplayChange}
-          />
-        )}
+          )}
+      </div>
     </Header>
   )
 }

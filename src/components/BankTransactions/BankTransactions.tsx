@@ -1,9 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import {
-  BankTransactionFilters,
-} from '../../hooks/useBankTransactions/types'
+import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { BankTransaction, DateRange, DisplayState } from '../../types'
@@ -22,6 +20,7 @@ import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
 const TEST_EMPTY_STATE = false
+const POLL_INTERVAL = 10000
 
 export interface BankTransactionsProps {
   asWidget?: boolean
@@ -87,7 +86,50 @@ const BankTransactionsContent = ({
     removeAfterCategorize,
   } = useBankTransactionsContext()
 
-  const { data: linkedAccounts } = useLinkedAccounts()
+  const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
+
+  const isSyncing = useMemo(
+    () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
+    [linkedAccounts],
+  )
+
+  const transactionsNotSynced = useMemo(
+    () =>
+      loadingStatus === 'complete' &&
+      isSyncing &&
+      (!data || data?.length === 0),
+    [data, isSyncing, loadingStatus],
+  )
+
+  let intervalId: ReturnType<typeof setInterval> | undefined = undefined
+
+  // calling `refetch()` directly in the `setInterval` didn't trigger actual request to API.
+  // But it works when called from `useEffect`
+  const [refreshTrigger, setRefreshTrigger] = useState(-1)
+  useEffect(() => {
+    if (refreshTrigger !== -1) {
+      refetch()
+      refetchAccounts()
+    }
+  }, [refreshTrigger])
+
+  useEffect(() => {
+    if (isSyncing) {
+      intervalId = setInterval(() => {
+        setRefreshTrigger(Math.random())
+      }, POLL_INTERVAL)
+    } else {
+      if (intervalId) {
+        clearInterval(intervalId)
+      }
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId)
+      }
+    }
+  }, [isSyncing, transactionsNotSynced])
 
   useEffect(() => {
     activate()
@@ -141,10 +183,10 @@ const BankTransactionsContent = ({
           )
         }
 
-    const firstPageIndex = (currentPage - 1) * pageSize
-    const lastPageIndex = firstPageIndex + pageSize
-    return data?.slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, data, dateRange])
+        const firstPageIndex = (currentPage - 1) * pageSize
+        const lastPageIndex = firstPageIndex + pageSize
+        return data?.slice(firstPageIndex, lastPageIndex)
+      }, [currentPage, data, dateRange])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -188,6 +230,11 @@ const BankTransactionsContent = ({
 
   const editable = display === DisplayState.review
 
+  const isLastPage =
+    data &&
+    !hasMore &&
+    Math.ceil((data?.length || 0) / pageSize) === currentPage
+
   return (
     <Container
       className={
@@ -213,6 +260,8 @@ const BankTransactionsContent = ({
           listView={listView}
           dateRange={dateRange}
           setDateRange={v => setDateRange(v)}
+          isDataLoading={isLoading}
+          isSyncing={isSyncing}
         />
       )}
 
@@ -222,22 +271,20 @@ const BankTransactionsContent = ({
             categorizeView={categorizeView}
             editable={editable}
             isLoading={isLoading}
+            isSyncing={isSyncing}
             bankTransactions={bankTransactions}
             initialLoad={initialLoad}
             containerWidth={containerWidth}
             removeTransaction={removeTransaction}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
+            page={currentPage}
             hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
+            lastPage={isLastPage}
+            onRefresh={refetch}
           />
         </div>
       )}
-
-      {isLoading && !bankTransactions ? (
-        <div className='Layer__bank-transactions__loader-container'>
-          <Loader />
-        </div>
-      ) : null}
 
       {!isLoading && listView && mobileComponent !== 'mobileList' ? (
         <BankTransactionList
@@ -259,17 +306,22 @@ const BankTransactionsContent = ({
         />
       ) : null}
 
-      <DataStates
-        bankTransactions={bankTransactions}
-        isLoading={isLoading}
-        transactionsLoading={Boolean(
-          linkedAccounts?.some(item => item.is_syncing),
-        )}
-        isValidating={isValidating}
-        error={error}
-        refetch={refetch}
-        editable={editable}
-      />
+      {listView && isLoading ? (
+        <div className='Layer__bank-transactions__list-loader'>
+          <Loader />
+        </div>
+      ) : null}
+
+      {!isSyncing || listView ? (
+        <DataStates
+          bankTransactions={bankTransactions}
+          isLoading={isLoading}
+          isValidating={isValidating}
+          error={error}
+          refetch={refetch}
+          editable={editable}
+        />
+      ) : null}
 
       {!monthlyView && (
         <div className='Layer__bank-transactions__pagination'>

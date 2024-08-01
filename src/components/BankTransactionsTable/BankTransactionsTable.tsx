@@ -2,6 +2,8 @@ import React from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
 import { BankTransactionRow } from '../BankTransactionRow'
+import { BankTransactionsLoader } from '../BankTransactionsLoader'
+import { SyncingComponent } from '../SyncingComponent'
 
 interface BankTransactionsTableProps {
   bankTransactions?: BankTransaction[]
@@ -14,6 +16,10 @@ interface BankTransactionsTableProps {
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   hardRefreshPnlOnCategorize?: boolean
+  isSyncing?: boolean
+  page?: number
+  lastPage?: boolean
+  onRefresh?: () => void
 }
 
 export const BankTransactionsTable = ({
@@ -27,6 +33,10 @@ export const BankTransactionsTable = ({
   showDescriptions = false,
   showReceiptUploads = false,
   hardRefreshPnlOnCategorize = false,
+  isSyncing = false,
+  page,
+  lastPage,
+  onRefresh,
 }: BankTransactionsTableProps) => {
   return (
     <table
@@ -58,6 +68,12 @@ export const BankTransactionsTable = ({
           )}
         </tr>
       </thead>
+      {isLoading && page && page === 1 ? (
+        <BankTransactionsLoader isLoading={true} />
+      ) : null}
+      {!isLoading && isSyncing && page && page === 1 ? (
+        <BankTransactionsLoader isLoading={false} />
+      ) : null}
       <tbody>
         {!isLoading &&
           bankTransactions?.map(
@@ -77,6 +93,19 @@ export const BankTransactionsTable = ({
               />
             ),
           )}
+        {isSyncing &&
+        (lastPage ||
+          ((!bankTransactions || bankTransactions.length === 0) &&
+            page === 1)) ? (
+          <tr>
+            <td colSpan={3}>
+              <SyncingComponent
+                title='Syncing historical account data'
+                onRefresh={() => onRefresh && onRefresh()}
+              />
+            </td>
+          </tr>
+        ) : null}
       </tbody>
     </table>
   )
