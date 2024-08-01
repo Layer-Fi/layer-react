@@ -245,6 +245,7 @@ const BankTransactionsContent = ({
           editable={editable}
           removeTransaction={removeTransaction}
           containerWidth={containerWidth}
+          hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
         />
       ) : null}
 
@@ -254,6 +255,7 @@ const BankTransactionsContent = ({
           editable={editable}
           removeTransaction={removeTransaction}
           initialLoad={initialLoad}
+          hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
         />
       ) : null}
 

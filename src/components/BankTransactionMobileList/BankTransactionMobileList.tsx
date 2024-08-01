@@ -11,6 +11,7 @@ export interface BankTransactionMobileListProps {
   editable: boolean
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
+  hardRefreshPnlOnCategorize?: boolean
 }
 
 export const BankTransactionMobileList = ({
@@ -18,6 +19,7 @@ export const BankTransactionMobileList = ({
   removeTransaction,
   editable,
   initialLoad,
+  hardRefreshPnlOnCategorize
 }: BankTransactionMobileListProps) => {
   const transactionToOpenContextData = useTransactionToOpen()
 
@@ -33,6 +35,7 @@ export const BankTransactionMobileList = ({
               editable={editable}
               removeTransaction={removeTransaction}
               initialLoad={initialLoad}
+              hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
             />
           ),
         )}

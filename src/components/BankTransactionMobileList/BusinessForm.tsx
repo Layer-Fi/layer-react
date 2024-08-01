@@ -7,15 +7,21 @@ import { Button, ButtonVariant } from '../Button'
 import { ErrorText } from '../Typography'
 import { BusinessCategories } from './BusinessCategories'
 import { Option, mapCategoryToOption, getAssignedValue } from './utils'
+import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
+  hardRefreshPnlOnCategorize?: boolean
 }
 
-export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
+export const BusinessForm = ({
+  bankTransaction,
+  hardRefreshPnlOnCategorize = false
+}: BusinessFormProps) => {
   const { setContent, close } = useContext(DrawerContext)
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactionsContext()
+  const { refetch } = useProfitAndLossLTM()
   const [selectedCategory, setSelectedCategory] = useState<Option | undefined>(
     getAssignedValue(bankTransaction),
   )
@@ -102,6 +108,7 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
       },
       true,
     )
+    if (hardRefreshPnlOnCategorize) refetch()
   }
 
   return (

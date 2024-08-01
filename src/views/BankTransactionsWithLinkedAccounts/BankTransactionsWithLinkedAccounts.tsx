@@ -12,6 +12,8 @@ export interface BankTransactionsWithLinkedAccountsProps {
   showBreakConnection?: boolean
   showDescriptions?: boolean
   showReceiptUploads?: boolean
+  categorizedOnly?: boolean
+  hardRefreshPnlOnCategorize?: boolean
   mobileComponent?: MobileComponentType
 }
 
@@ -21,6 +23,8 @@ export const BankTransactionsWithLinkedAccounts = ({
   showLedgerBalance = true,
   showUnlinkItem = false,
   showBreakConnection = false,
+  categorizedOnly = false,
+  hardRefreshPnlOnCategorize = false,
   showDescriptions,
   showReceiptUploads,
   mobileComponent,
@@ -38,6 +42,8 @@ export const BankTransactionsWithLinkedAccounts = ({
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
         mobileComponent={mobileComponent}
+        categorizedOnly={categorizedOnly}
+        hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
       />
     </View>
   )

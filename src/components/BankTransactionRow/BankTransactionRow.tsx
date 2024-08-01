@@ -370,6 +370,7 @@ export const BankTransactionRow = ({
             containerWidth={containerWidth}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
+            hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
           />
         </td>
       </tr>

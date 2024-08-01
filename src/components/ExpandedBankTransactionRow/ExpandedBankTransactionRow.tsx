@@ -39,6 +39,7 @@ import { ToggleSize } from '../Toggle/Toggle'
 import { Text, ErrorText, TextSize } from '../Typography'
 import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
+import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -50,6 +51,7 @@ type Props = {
   categorized?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
+  hardRefreshPnlOnCategorize: boolean
 }
 
 type Split = {
@@ -110,6 +112,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       containerWidth,
       showDescriptions,
       showReceiptUploads,
+      hardRefreshPnlOnCategorize,
     },
     ref,
   ) => {
@@ -117,6 +120,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       categorize: categorizeBankTransaction,
       match: matchBankTransaction,
     } = useBankTransactionsContext()
+    const { refetch } = useProfitAndLossLTM()
     const [purpose, setPurpose] = useState<Purpose>(
       bankTransaction.category
         ? Purpose.categorize
@@ -285,6 +289,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         ) {
           onMatchSubmit(selectedMatchId)
         }
+        if (hardRefreshPnlOnCategorize) refetch()
         return
       }
 
@@ -316,7 +321,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               })),
             } as SplitCategoryUpdate),
       )
-
+      if (hardRefreshPnlOnCategorize) refetch()
       close()
     }
 
