@@ -7,7 +7,6 @@ import { getEarliestDateToBrowse } from '../../utils/business'
 import { Button, ButtonVariant, RetryButton } from '../Button'
 import { Header } from '../Container'
 import { DatePicker } from '../DatePicker'
-import { SmallLoader } from '../Loader'
 import { SyncingComponent } from '../SyncingComponent'
 import { Tabs } from '../Tabs'
 import { Toggle } from '../Toggle'
@@ -91,7 +90,6 @@ export const BankTransactionsHeader = ({
   listView,
   dateRange,
   setDateRange,
-  isDataLoading,
   isSyncing,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
