@@ -68,7 +68,8 @@ export const BankTransactionsTable = ({
           )}
         </tr>
       </thead>
-      {(isLoading || isSyncing) && page && page === 1 ? ( <BankTransactionsLoader />
+      {(isLoading || isSyncing) && page && page === 1 ? (
+        <BankTransactionsLoader />
       ) : null}
       <tbody>
         {!isLoading &&
@@ -92,7 +93,10 @@ export const BankTransactionsTable = ({
         {(isLoading || isSyncing) && lastPage ? (
           <tr>
             <td colSpan={3}>
-              <SyncingComponent onRefresh={() => onRefresh && onRefresh()} />
+              <SyncingComponent
+                title='Syncing historical account data'
+                onRefresh={() => onRefresh && onRefresh()}
+              />
             </td>
           </tr>
         ) : null}

@@ -8,6 +8,7 @@ import { Button, ButtonVariant, RetryButton } from '../Button'
 import { Header } from '../Container'
 import { DatePicker } from '../DatePicker'
 import { SmallLoader } from '../Loader'
+import { SyncingComponent } from '../SyncingComponent'
 import { Tabs } from '../Tabs'
 import { Toggle } from '../Toggle'
 import { Heading, HeadingSize } from '../Typography'
@@ -115,15 +116,11 @@ export const BankTransactionsHeader = ({
             Transactions
           </Heading>
           {isSyncing && (
-            <div className='Layer__syncing__info'>
-              <SmallLoader />
-              {!listView ? (
-                <div className='Layer__syncing__info__text'>
-                  <span>Syncing account data</span>
-                  <span>This may take up to 5 minutes</span>
-                </div>
-              ) : null}
-            </div>
+            <SyncingComponent
+              timeSync={5}
+              inProgress={true}
+              hideContent={listView}
+            />
           )}
         </div>
         {withDatePicker && dateRange && setDateRange ? (
