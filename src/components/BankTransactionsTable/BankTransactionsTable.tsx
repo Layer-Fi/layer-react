@@ -14,6 +14,8 @@ interface BankTransactionsTableProps {
   removeTransaction: (bt: BankTransaction) => void
   showDescriptions?: boolean
   showReceiptUploads?: boolean
+  isSyncing?: boolean
+  page?: number
 }
 
 export const BankTransactionsTable = ({
@@ -26,6 +28,8 @@ export const BankTransactionsTable = ({
   removeTransaction,
   showDescriptions = false,
   showReceiptUploads = false,
+  isSyncing = false,
+  page,
 }: BankTransactionsTableProps) => {
   return (
     <table
@@ -57,7 +61,8 @@ export const BankTransactionsTable = ({
           )}
         </tr>
       </thead>
-      {true && <BankTransactionsLoader />}
+      {(isLoading || isSyncing) && page && page === 1 ? ( <BankTransactionsLoader />
+      ) : null}
       <tbody>
         {!isLoading &&
           bankTransactions?.map(

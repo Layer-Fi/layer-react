@@ -7,6 +7,7 @@ import { getEarliestDateToBrowse } from '../../utils/business'
 import { Button, ButtonVariant, RetryButton } from '../Button'
 import { Header } from '../Container'
 import { DatePicker } from '../DatePicker'
+import { SmallLoader } from '../Loader'
 import { Tabs } from '../Tabs'
 import { Toggle } from '../Toggle'
 import { Heading, HeadingSize } from '../Typography'
@@ -26,6 +27,7 @@ export interface BankTransactionsHeaderProps {
   listView?: boolean
   dateRange?: DateRange
   isDataLoading?: boolean
+  isSyncing?: boolean
   setDateRange?: (value: DateRange) => void
 }
 
@@ -89,6 +91,7 @@ export const BankTransactionsHeader = ({
   dateRange,
   setDateRange,
   isDataLoading,
+  isSyncing,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
 
@@ -104,12 +107,25 @@ export const BankTransactionsHeader = ({
       style={{ top: shiftStickyHeader }}
     >
       <div className='Layer__bank-transactions__header__content'>
-        <Heading
-          className='Layer__bank-transactions__title'
-          size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
-        >
-          Transactions
-        </Heading>
+        <div className='Layer__bank-transactions__header__content-title'>
+          <Heading
+            className='Layer__bank-transactions__title'
+            size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
+          >
+            Transactions
+          </Heading>
+          {isSyncing && (
+            <div className='Layer__syncing__info'>
+              <SmallLoader />
+              {!listView ? (
+                <div className='Layer__syncing__info__text'>
+                  <span>Syncing account data</span>
+                  <span>This may take up to 5 minutes</span>
+                </div>
+              ) : null}
+            </div>
+          )}
+        </div>
         {withDatePicker && dateRange && setDateRange ? (
           <DatePicker
             mode='monthPicker'
@@ -158,12 +174,6 @@ export const BankTransactionsHeader = ({
               onChange={onCategorizationDisplayChange}
             />
           )}
-        {isDataLoading && (
-          <div className='Layer__syncing__info'>
-            <span>Syncing account data</span>
-            <span>This may take up to 5 minutes</span>
-          </div>
-        )}
       </div>
     </Header>
   )
