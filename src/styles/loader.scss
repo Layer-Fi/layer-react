@@ -47,3 +47,36 @@
   background-size: 200% 100%;
   animation: 1.5s shine linear infinite;
 }
+
+.Layer__syncing-component {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: var(--spacing-md) var(--spacing-lg);
+
+  .Layer__syncing-component__content {
+    .Layer__syncing-component__title {
+      color: var(--text-color-primary);
+      font-size: var(--text-sm);
+    }
+    .Layer__syncing-component__message {
+      color: var(--text-color-secondary);
+      font-size: var(--text-xs);
+    }
+  }
+
+  .Layer__icon-btn {
+    color: var(--color-base-1000);
+    box-shadow:
+      0px 1px 2px 0px var(--base-transparent-6, rgba(17, 17, 17, 0.06)),
+      0px 0px 0px 1px var(--base-300, #eaeaea);
+    svg {
+      transition: transform 0.3s ease;
+    }
+    &:hover {
+      svg {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
