@@ -109,6 +109,24 @@
 
 .Layer__bank-transactions__table {
   border-bottom: 1px solid var(--border-color);
+  .Layer__skeleton-table-body__loader {
+    td:last-child {
+      position: sticky;
+      min-width: 430px;
+      width: 430px;
+      max-width: 430px;
+      box-sizing: border-box;
+      right: 0;
+      z-index: 2;
+      border-left: 1px solid var(--border-color);
+      background-color: var(--color-base-0);
+      .Layer__bank-transaction-row__actions-disabled {
+        transition: all var(--transition-speed) ease-out;
+        padding-right: var(--spacing-xs);
+        padding-left: 0;
+      }
+    }
+  }
 }
 
 .Layer__bank-transactions__table .Layer__table-header {
@@ -622,6 +640,16 @@
     min-width: 160px;
     width: 160px;
     max-width: 160px;
+  }
+  .Layer__bank-transactions__table {
+    .Layer__skeleton-table-body__loader {
+      td:last-child {
+        .Layer__bank-transaction-row__actions-disabled {
+          padding-right: var(--spacing-md);
+          padding-left: var(--spacing-md);
+        }
+      }
+    }
   }
 }
 

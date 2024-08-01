@@ -2,7 +2,7 @@ import React from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
 import { BankTransactionRow } from '../BankTransactionRow'
-import { SkeletonTableLoader } from '../SkeletonTableLoader'
+import { BankTransactionsLoader } from '../BankTransactionsLoader'
 import { SyncingComponent } from '../SyncingComponent'
 
 interface BankTransactionsTableProps {
@@ -68,12 +68,7 @@ export const BankTransactionsTable = ({
           )}
         </tr>
       </thead>
-      {(isLoading || isSyncing) && page && page === 1 ? (
-        <SkeletonTableLoader
-          rows={bankTransactions && bankTransactions.length > 0 ? 4 : 6}
-          cols={[{ colSpan: 4 }, { colSpan: 1 }]}
-          height={20}
-        />
+      {(isLoading || isSyncing) && page && page === 1 ? ( <BankTransactionsLoader />
       ) : null}
       <tbody>
         {!isLoading &&
