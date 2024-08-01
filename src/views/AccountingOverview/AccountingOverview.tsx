@@ -2,13 +2,13 @@ import React, { ReactNode, useState } from 'react'
 import { Container, Header } from '../../components/Container'
 import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
 import classNames from 'classnames'
-import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 
 interface AccountingOverviewStringOverrides {
   header?: string
@@ -46,7 +46,10 @@ export const AccountingOverview = ({
           />
         )}
         <div className='Layer__accounting-overview__summaries-row'>
-          <ProfitAndLoss.Summaries actionable={false} stringOverrides={stringOverrides?.profitAndLoss?.summaries}/>
+          <ProfitAndLoss.Summaries
+            actionable={false}
+            stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+          />
           <TransactionToReviewCard
             usePnlDateRange={true}
             onClick={onTransactionsToReviewClick}
@@ -58,7 +61,9 @@ export const AccountingOverview = ({
           elevated={true}
         >
           <Header>
-            <Heading size={HeadingSize.secondary}>{stringOverrides?.header || "Profit & Loss"}</Heading>
+            <Heading size={HeadingSize.secondary}>
+              {stringOverrides?.header || 'Profit & Loss'}
+            </Heading>
           </Header>
           <ProfitAndLoss.Chart />
         </Container>

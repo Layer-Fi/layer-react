@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Scope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { ProfitAndLoss } from '../../types'
@@ -63,16 +63,30 @@ const buildMiniChartData = (scope: Scope, data?: ProfitAndLoss) => {
 
 export const ProfitAndLossSummaries = ({
   vertical,
-  actionable = true,
+  actionable = false,
   revenueLabel, // deprecated
-  stringOverrides
+  stringOverrides,
 }: Props) => {
   const {
     data: storedData,
     isLoading,
     setSidebarScope,
     sidebarScope,
+    refetch,
+    dateRange,
   } = useContext(PNL.Context)
+
+  // @TODO - temporary fix to revalidate summary card data
+  const [trigger, setTrigger] = useState(-1)
+  useEffect(() => {
+    setTrigger(Math.random())
+  }, [dateRange?.startDate])
+
+  useEffect(() => {
+    refetch()
+  }, [trigger])
+
+  // @TODO - temporary fix - END
 
   const dataItem = Array.isArray(storedData)
     ? storedData[storedData.length - 1]
@@ -123,7 +137,7 @@ export const ProfitAndLossSummaries = ({
         <MiniChart data={revenueChartData} />
         <div className='Layer__profit-and-loss-summaries__text'>
           <span className='Layer__profit-and-loss-summaries__title'>
-            {stringOverrides?.revenueLabel || revenueLabel || "Revenue"}
+            {stringOverrides?.revenueLabel || revenueLabel || 'Revenue'}
           </span>
           {isLoading || storedData === undefined ? (
             <div className='Layer__profit-and-loss-summaries__loader'>
@@ -152,7 +166,7 @@ export const ProfitAndLossSummaries = ({
         <MiniChart data={expensesChartData} />
         <div className='Layer__profit-and-loss-summaries__text'>
           <span className='Layer__profit-and-loss-summaries__title'>
-            {stringOverrides?.expensesLabel || "Expenses"}
+            {stringOverrides?.expensesLabel || 'Expenses'}
           </span>
           {isLoading || storedData === undefined ? (
             <div className='Layer__profit-and-loss-summaries__loader'>
@@ -177,7 +191,7 @@ export const ProfitAndLossSummaries = ({
       >
         <div className='Layer__profit-and-loss-summaries__text'>
           <span className='Layer__profit-and-loss-summaries__title'>
-            {stringOverrides?.netProfitLabel || "Net Profit"}
+            {stringOverrides?.netProfitLabel || 'Net Profit'}
           </span>
           {isLoading || storedData === undefined ? (
             <div className='Layer__profit-and-loss-summaries__loader'>

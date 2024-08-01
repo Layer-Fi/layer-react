@@ -4,10 +4,10 @@ import { DataState, DataStateStatus } from '../DataState'
 import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
-import { Heading } from '../Typography'
-import { ProfitAndLossTableStringOverrides } from '../ProfitAndLossTable/ProfitAndLossTable'
-import { ProfitAndLossSummariesStringOverrides } from '../ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossSummariesStringOverrides } from '../ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { ProfitAndLossTableStringOverrides } from '../ProfitAndLossTable/ProfitAndLossTable'
+import { Heading } from '../Typography'
 
 const COMPONENT_NAME = 'profit-and-loss'
 
@@ -48,13 +48,17 @@ const ProfitAndLossPanel = ({
 
   return (
     <Panel
-      sidebar={<ProfitAndLossDetailedCharts stringOverrides={stringOverrides?.profitAndLossDetailedCharts}/>}
+      sidebar={
+        <ProfitAndLossDetailedCharts
+          stringOverrides={stringOverrides?.profitAndLossDetailedCharts}
+        />
+      }
       sidebarIsOpen={Boolean(sidebarScope)}
       parentRef={containerRef}
     >
       <Header className={`Layer__${COMPONENT_NAME}__header`}>
         <Heading className='Layer__profit-and-loss__title'>
-          {stringOverrides?.header || "Profit & Loss"}
+          {stringOverrides?.header || 'Profit & Loss'}
         </Heading>
       </Header>
 
@@ -94,7 +98,11 @@ const Components = ({
             className={`Layer__${COMPONENT_NAME}__chart_with_summaries__summary-col`}
           >
             <ProfitAndLoss.DatePicker />
-            <ProfitAndLoss.Summaries vertical={true} stringOverrides={stringOverrides?.profitAndLossSummaries}/>
+            <ProfitAndLoss.Summaries
+              vertical={true}
+              actionable
+              stringOverrides={stringOverrides?.profitAndLossSummaries}
+            />
           </div>
           <div
             className={`Layer__${COMPONENT_NAME}__chart_with_summaries__chart-col`}
@@ -103,7 +111,11 @@ const Components = ({
           </div>
         </div>
       )}
-      {!hideTable && <ProfitAndLoss.Table stringOverrides={stringOverrides?.profitAndLossTable}/>}
+      {!hideTable && (
+        <ProfitAndLoss.Table
+          stringOverrides={stringOverrides?.profitAndLossTable}
+        />
+      )}
     </>
   )
 }

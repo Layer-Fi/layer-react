@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { Container, Header } from '../../components/Container'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { TasksComponent, TasksProvider } from '../../components/Tasks'
+import { TasksStringOverrides } from '../../components/Tasks/Tasks'
 import { Toggle } from '../../components/Toggle'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import classNames from 'classnames'
-import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { TasksStringOverrides } from '../../components/Tasks/Tasks'
 
 export interface BookkeepingOverviewProps {
   title?: string // deprecated
@@ -38,7 +38,7 @@ export const BookkeepingOverview = ({
       <TasksProvider>
         <View
           viewClassName='Layer__bookkeeping-overview--view'
-          title={stringOverrides?.title || title || "Bookkeeping overview"}
+          title={stringOverrides?.title || title || 'Bookkeeping overview'}
           withSidebar={width > 1100}
           sidebar={<TasksComponent stringOverrides={stringOverrides?.tasks} />}
         >
@@ -56,12 +56,14 @@ export const BookkeepingOverview = ({
           >
             <Header>
               <Heading size={HeadingSize.secondary}>
-                {stringOverrides?.profitAndLoss?.header || "Profit & Loss"}
+                {stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
               </Heading>
               <ProfitAndLoss.DatePicker />
             </Header>
             <div className='Layer__bookkeeping-overview__summaries-row'>
-              <ProfitAndLoss.Summaries actionable={false} stringOverrides={stringOverrides?.profitAndLoss?.summaries}/>
+              <ProfitAndLoss.Summaries
+                stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+              />
             </div>
             <ProfitAndLoss.Chart />
           </Container>
