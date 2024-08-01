@@ -16,6 +16,8 @@ interface BankTransactionsTableProps {
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   hardRefreshPnlOnCategorize?: boolean
+  isSyncing?: boolean
+  page?: number
 }
 
 export const BankTransactionsTable = ({
@@ -29,6 +31,8 @@ export const BankTransactionsTable = ({
   showDescriptions = false,
   showReceiptUploads = false,
   hardRefreshPnlOnCategorize = false,
+  isSyncing = false,
+  page,
 }: BankTransactionsTableProps) => {
   return (
     <table
@@ -60,13 +64,13 @@ export const BankTransactionsTable = ({
           )}
         </tr>
       </thead>
-      {isLoading && (
+      {(isLoading || isSyncing) && page && page === 1 ? (
         <SkeletonTableLoader
-          rows={6}
+          rows={bankTransactions && bankTransactions.length > 0 ? 4 : 6}
           cols={[{ colSpan: 4 }, { colSpan: 1 }]}
           height={20}
         />
-      )}
+      ) : null}
       <tbody>
         {!isLoading &&
           bankTransactions?.map(

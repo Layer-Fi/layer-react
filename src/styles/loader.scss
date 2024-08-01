@@ -18,8 +18,16 @@
   border-radius: 50%;
 }
 
+.Layer__loader--with-bg {
+  background-color: var(--color-base-400);
+  color: var(--text-color-primary);
+  padding: 0;
+  border-radius: 50%;
+}
+
 .Layer__skeleton-loader__row {
-  padding: var(--spacing-xs) var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .Layer__skeleton-loader {
