@@ -366,7 +366,7 @@ export const ProfitAndLossChart = ({
               <li>
                 <label className='Layer__chart__tooltip-label'>Expenses</label>
                 <span className='Layer__chart__tooltip-value'>
-                  ${centsToDollars(expenses)}
+                  ${centsToDollars(Math.abs(expenses))}
                 </span>
               </li>
               <li>
