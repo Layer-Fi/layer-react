@@ -1,11 +1,11 @@
 import React from 'react'
 import InstitutionIcon from '../../icons/InstitutionIcon'
+import LoaderIcon from '../../icons/Loader'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { LinkedAccount } from '../../types/linked_accounts'
 import { LinkedAccountPill } from '../LinkedAccountPill'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
-import LoaderIcon from '../../icons/Loader'
 
 export interface LinkedAccountThumbProps {
   account: LinkedAccount
@@ -32,13 +32,15 @@ export const LinkedAccountThumb = ({
   const linkedAccountThumbClassName = classNames(
     'Layer__linked-account-thumb',
     asWidget && '--as-widget',
-    account.is_syncing && "--is-syncing",
-    account.is_syncing && "skeleton-loader"
+    account.is_syncing && '--is-syncing',
+    account.is_syncing && 'skeleton-loader',
+    showLedgerBalance && '--show-ledger-balance',
   )
 
   const linkedAccountInfoClassName = classNames(
     'topbar',
-    account.is_syncing && "--is-syncing",
+    account.is_syncing && '--is-syncing',
+    !(showLedgerBalance || account.is_syncing) && '--hide-ledger-balance',
   )
 
   let bankBalance: React.ReactNode
@@ -49,7 +51,7 @@ export const LinkedAccountThumb = ({
   } else {
     bankBalance = (
       <Text as='span' className='account-balance'>
-          {`${formatMoney(account.latest_balance_timestamp?.balance)}`}
+        {`${formatMoney(account.latest_balance_timestamp?.balance)}`}
       </Text>
     )
   }
@@ -86,49 +88,54 @@ export const LinkedAccountThumb = ({
         </div>
       </div>
       {account.is_syncing ? (
-        <div className="loadingbar">
-          <div className="loading-text Layer__text--sm">
+        <div className='loadingbar'>
+          <div className='loading-text Layer__text--sm'>
             <div>Syncing account data</div>
-            <div className="syncing-data-description">This may take up to 5 minutes</div>
+            <div className='syncing-data-description'>
+              This may take up to 5 minutes
+            </div>
           </div>
-          <div className="loading-wrapper">
-      <LoaderIcon size={11} className='Layer__anim--rotating' />
+          <div className='loading-wrapper'>
+            <LoaderIcon size={11} className='Layer__anim--rotating' />
           </div>
         </div>
-      ) :
-      <>
-      {!asWidget && (
-        <div className='middlebar'>
-          <Text
-            as='span'
-            className='account-balance-text'
-            size={'sm' as TextSize}
-          >
-            Bank balance
-          </Text>
-          {bankBalance}
-        </div>
-      )}
-      {showLedgerBalance && (
-        <div className='bottombar'>
-          {asWidget && account.mask ? (
-            <AccountNumber accountNumber={account.mask} />
-          ) : (
-            <Text
-              as='span'
-              className='account-balance-text'
-              size={'sm' as TextSize}
-            >
-              Ledger balance
-            </Text>
+      ) : (
+        <>
+          {!asWidget && (
+            <div className='middlebar'>
+              <Text
+                as='span'
+                className={classNames(
+                  'account-balance-text',
+                  !showLedgerBalance && '--hide-ledger-balance',
+                )}
+                size={'sm' as TextSize}
+              >
+                Bank balance
+              </Text>
+              {bankBalance}
+            </div>
           )}
-          <Text as='span' className='account-balance'>
-            {`${formatMoney(account.current_ledger_balance)}`}
-          </Text>
-        </div>
+          {showLedgerBalance && (
+            <div className='bottombar'>
+              {asWidget && account.mask ? (
+                <AccountNumber accountNumber={account.mask} />
+              ) : (
+                <Text
+                  as='span'
+                  className='account-balance-text'
+                  size={'sm' as TextSize}
+                >
+                  Ledger balance
+                </Text>
+              )}
+              <Text as='span' className='account-balance'>
+                {`${formatMoney(account.current_ledger_balance)}`}
+              </Text>
+            </div>
+          )}
+        </>
       )}
-      </>
-      }
     </div>
   )
 }
