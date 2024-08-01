@@ -47,7 +47,6 @@ export const AccountingOverview = ({
         )}
         <div className='Layer__accounting-overview__summaries-row'>
           <ProfitAndLoss.Summaries
-            actionable={false}
             stringOverrides={stringOverrides?.profitAndLoss?.summaries}
           />
           <TransactionToReviewCard
