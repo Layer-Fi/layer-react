@@ -1,5 +1,5 @@
 import React from 'react'
-import { DEFAULT_CHART_COLORS } from '../../config/charts'
+import { DEFAULT_MINICHART_COLORS } from '../../config/charts'
 import { LineBaseItem } from '../../types/line_item'
 import { PieChart, Pie, Cell } from 'recharts'
 
@@ -27,7 +27,7 @@ export const MiniChart = ({ data }: MiniChartProps) => {
       >
         {data.map((entry, index) => {
           const colorConfig =
-            DEFAULT_CHART_COLORS[index % DEFAULT_CHART_COLORS.length]
+            DEFAULT_MINICHART_COLORS[index % DEFAULT_MINICHART_COLORS.length]
 
           return (
             <Cell

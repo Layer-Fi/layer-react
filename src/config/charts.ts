@@ -1,12 +1,5 @@
 export const INACTIVE_OPACITY_LEVELS = [
-  0.85,
-  0.7,
-  0.66,
-  0.55,
-  0.4,
-  0.33,
-  0.25,
-  0.15,
+  0.85, 0.7, 0.66, 0.55, 0.4, 0.33, 0.25, 0.15,
 ]
 
 export const DEFAULT_CHART_OPACITY = [1, 0.8, 0.6, 0.4, 0.2, 0.1]
@@ -26,7 +19,7 @@ export const DEFAULT_CHART_COLOR_TYPE = [
   '#71CC56',
 ]
 
-export const DEFAULT_CHART_COLORS = [
+export const DEFAULT_MINICHART_COLORS = [
   {
     color: '#7417B3',
     opacity: 1,

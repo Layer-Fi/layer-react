@@ -6,6 +6,7 @@ import { formatPercent } from '../../utils/format'
 import { humanizeTitle } from '../../utils/profitAndLossUtils'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { Text, TextSize, TextWeight } from '../Typography'
+import { mapTypesToColors } from './DetailedTable'
 import { format } from 'date-fns'
 import {
   PieChart,
@@ -16,7 +17,6 @@ import {
   Text as ChartText,
 } from 'recharts'
 import { PolarViewBox } from 'recharts/types/util/types'
-import { mapColorsToTypes } from './DetailedTable'
 
 interface DetailedChartProps {
   filteredData: LineBaseItem[]
@@ -27,6 +27,7 @@ interface DetailedChartProps {
   date: number | Date
   isLoading?: boolean
   showDatePicker?: boolean
+  chartColorsList?: string[]
 }
 
 export const DetailedChart = ({
@@ -36,6 +37,7 @@ export const DetailedChart = ({
   setHoveredItem,
   sidebarScope,
   date,
+  chartColorsList,
   isLoading,
   showDatePicker = true,
 }: DetailedChartProps) => {
@@ -43,7 +45,7 @@ export const DetailedChart = ({
     if (!filteredData) {
       return []
     }
-    return filteredData.map((x) => {
+    return filteredData.map(x => {
       if (x.hidden) {
         return {
           name: x.display_name,
@@ -59,10 +61,9 @@ export const DetailedChart = ({
     })
   }, [filteredData, isLoading])
 
-  const noValue =
-    chartData.length === 0 || !chartData.find((x) => x.value !== 0)
+  const noValue = chartData.length === 0 || !chartData.find(x => x.value !== 0)
 
-  const typeColorMapping = mapColorsToTypes(chartData)
+  const typeColorMapping = mapTypesToColors(chartData, chartColorsList)
 
   return (
     <div className='chart-field'>
@@ -112,7 +113,7 @@ export const DetailedChart = ({
                   position='center'
                   value='Total'
                   className='pie-center-label-title'
-                  content={(props) => {
+                  content={props => {
                     const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
                       cx: 0,
                       cy: 0,
@@ -149,7 +150,7 @@ export const DetailedChart = ({
                   position='center'
                   value='Total'
                   className='pie-center-label-title'
-                  content={(props) => {
+                  content={props => {
                     const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
                       cx: 0,
                       cy: 0,
@@ -168,7 +169,7 @@ export const DetailedChart = ({
                     let value = filteredTotal
                     if (hoveredItem) {
                       value = filteredData.find(
-                        (x) => x.display_name === hoveredItem
+                        x => x.display_name === hoveredItem,
                       )?.value
                     }
 
@@ -187,7 +188,7 @@ export const DetailedChart = ({
                   position='center'
                   value='Total'
                   className='pie-center-label-title'
-                  content={(props) => {
+                  content={props => {
                     const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
                       cx: 0,
                       cy: 0,
@@ -212,8 +213,8 @@ export const DetailedChart = ({
                         >
                           {`${formatPercent(
                             filteredData.find(
-                              (x) => x.display_name === hoveredItem
-                            )?.share
+                              x => x.display_name === hoveredItem,
+                            )?.share,
                           )}%`}
                         </ChartText>
                       )
@@ -243,7 +244,7 @@ export const DetailedChart = ({
                   position='center'
                   value='Total'
                   className='pie-center-label-title'
-                  content={(props) => {
+                  content={props => {
                     const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
                       cx: 0,
                       cy: 0,
@@ -280,7 +281,7 @@ export const DetailedChart = ({
                   position='center'
                   value='Total'
                   className='pie-center-label-title'
-                  content={(props) => {
+                  content={props => {
                     const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
                       cx: 0,
                       cy: 0,
@@ -299,7 +300,7 @@ export const DetailedChart = ({
                     let value = filteredTotal
                     if (hoveredItem) {
                       value = filteredData.find(
-                        (x) => x.display_name === hoveredItem
+                        x => x.display_name === hoveredItem,
                       )?.value
                     }
 

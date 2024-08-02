@@ -23,6 +23,7 @@ export interface AccountingOverviewProps {
   enableOnboarding?: boolean
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
+  chartColorsList?: string[]
   stringOverrides?: AccountingOverviewStringOverrides
 }
 
@@ -33,6 +34,7 @@ export const AccountingOverview = ({
   enableOnboarding = false,
   onTransactionsToReviewClick,
   middleBanner,
+  chartColorsList,
   stringOverrides,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
@@ -98,6 +100,7 @@ export const AccountingOverview = ({
               scope='revenue'
               hideClose={true}
               stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+              chartColorsList={chartColorsList}
             />
           </Container>
           <Container
@@ -111,6 +114,7 @@ export const AccountingOverview = ({
               scope='expenses'
               hideClose={true}
               stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+              chartColorsList={chartColorsList}
             />
           </Container>
         </div>

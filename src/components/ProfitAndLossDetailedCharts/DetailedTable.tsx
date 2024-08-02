@@ -25,20 +25,23 @@ export interface DetailedTableProps {
   sidebarScope: SidebarScope
   filters: ProfitAndLossFilters
   sortBy: (scope: Scope, field: string, direction?: SortDirection) => void
+  chartColorsList?: string[]
   stringOverrides?: DetailedTableStringOverrides
 }
 
-export const mapColorsToTypes = (data: any[]) => {
+export const mapTypesToColors = (
+  data: any[],
+  colorList: string[] = DEFAULT_CHART_COLOR_TYPE,
+) => {
   const typeToColor: any = {}
   const typeToLastOpacity: any = {}
   let colorIndex = 0
 
-  return data.map((obj) => {
+  return data.map(obj => {
     const type = obj.type
 
     if (!typeToColor[type]) {
-      typeToColor[type] =
-        DEFAULT_CHART_COLOR_TYPE[colorIndex % DEFAULT_CHART_COLOR_TYPE.length]
+      typeToColor[type] = colorList[colorIndex % colorList.length]
       colorIndex++
       typeToLastOpacity[type] = 1
     } else {
@@ -61,6 +64,7 @@ export const DetailedTable = ({
   sortBy,
   hoveredItem,
   setHoveredItem,
+  chartColorsList,
   stringOverrides,
 }: DetailedTableProps) => {
   const buildColClass = (column: string) => {
@@ -70,14 +74,14 @@ export const DetailedTable = ({
         ? `sort--${
             (sidebarScope && filters[sidebarScope]?.sortDirection) ?? 'desc'
           }`
-        : ''
+        : '',
     )
   }
 
-  const typeColorMapping: any = mapColorsToTypes(filteredData)
+  const typeColorMapping: any = mapTypesToColors(filteredData, chartColorsList)
 
   // Index to keep track of the next color to assign
-  let colorIndex = 0
+  const colorIndex = 0
 
   return (
     <div className='details-container'>
@@ -89,26 +93,29 @@ export const DetailedTable = ({
                 className={buildColClass('category')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'category')}
               >
-                {stringOverrides?.categoryColumnHeader || "Category"} <SortArrows className='Layer__sort-arrows' />
+                {stringOverrides?.categoryColumnHeader || 'Category'}{' '}
+                <SortArrows className='Layer__sort-arrows' />
               </th>
               <th
                 className={buildColClass('type')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'type')}
               >
-                {stringOverrides?.typeColumnHeader || "Type"} <SortArrows className='Layer__sort-arrows' />
+                {stringOverrides?.typeColumnHeader || 'Type'}{' '}
+                <SortArrows className='Layer__sort-arrows' />
               </th>
               <th></th>
               <th
                 className={buildColClass('value')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'value')}
               >
-                {stringOverrides?.valueColumnHeader || "Value"} <SortArrows className='Layer__sort-arrows' />
+                {stringOverrides?.valueColumnHeader || 'Value'}{' '}
+                <SortArrows className='Layer__sort-arrows' />
               </th>
             </tr>
           </thead>
           <tbody>
             {filteredData
-              .filter((x) => !x.hidden)
+              .filter(x => !x.hidden)
               .map((item, idx) => {
                 return (
                   <tr
@@ -117,7 +124,7 @@ export const DetailedTable = ({
                       'Layer__profit-and-loss-detailed-table__row',
                       hoveredItem && hoveredItem === item.display_name
                         ? 'active'
-                        : ''
+                        : '',
                     )}
                     onMouseEnter={() => setHoveredItem(item.display_name)}
                     onMouseLeave={() => setHoveredItem(undefined)}
