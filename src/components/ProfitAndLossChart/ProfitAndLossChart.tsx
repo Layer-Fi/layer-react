@@ -244,9 +244,9 @@ export const ProfitAndLossChart = ({
     name: getMonthName(pnl),
     revenue: pnl?.income || 0,
     revenueUncategorized: pnl?.uncategorizedInflows || 0,
-    expenses: -(pnl?.totalExpenses || 0),
+    expenses: -(pnl?.operatingExpenses || 0),
     expensesUncategorized: -(pnl?.uncategorizedOutflows || 0),
-    operatingExpensesInverse: pnl?.totalExpenses || 0,
+    operatingExpensesInverse: pnl?.operatingExpensesInverse || 0,
     uncategorizedOutflowsInverse: pnl?.uncategorizedOutflowsInverse || 0,
     netProfit: pnl?.netProfit || 0,
     selected:
