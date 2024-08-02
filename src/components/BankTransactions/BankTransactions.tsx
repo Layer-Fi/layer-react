@@ -26,6 +26,17 @@ const COMPONENT_NAME = 'bank-transactions'
 const TEST_EMPTY_STATE = false
 const POLL_INTERVAL = 10000
 
+export type BankTransactionsMode = 'bookkeeping-client' | 'self-serve'
+
+export const categorizationEnabled: (
+  mode: BankTransactionsMode,
+) => boolean = mode => {
+  if (mode === 'bookkeeping-client') {
+    return false
+  }
+  return true
+}
+
 export interface BankTransactionsStringOverrides {
   bankTransactionCTAs?: BankTransactionCTAStringOverrides
   transactionsTable?: BankTransactionsTableStringOverrides
@@ -40,7 +51,7 @@ export interface BankTransactionCTAStringOverrides {
 export interface BankTransactionsProps {
   asWidget?: boolean
   pageSize?: number
-  categorizedOnly?: boolean
+  mode?: BankTransactionsMode
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   hardRefreshPnlOnCategorize?: boolean
@@ -70,8 +81,7 @@ export const BankTransactions = ({
 const BankTransactionsContent = ({
   asWidget = false,
   pageSize = 20,
-  categorizedOnly = false,
-  categorizeView = true,
+  mode = 'self-serve',
   showDescriptions = false,
   showReceiptUploads = false,
   hardRefreshPnlOnCategorize = false,
@@ -87,6 +97,8 @@ const BankTransactionsContent = ({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   })
+  const categorizeView = categorizationEnabled(mode)
+
   const {
     activate,
     data,
@@ -160,7 +172,10 @@ const BankTransactionsContent = ({
           ...inputFilters,
           categorizationStatus: DisplayState.review,
         })
-      } else if (!filters?.categorizationStatus && categorizedOnly) {
+      } else if (
+        !filters?.categorizationStatus &&
+        !categorizationEnabled(mode)
+      ) {
         setFilters({
           ...filters,
           ...inputFilters,
@@ -173,12 +188,12 @@ const BankTransactionsContent = ({
       setFilters({
         categorizationStatus: DisplayState.review,
       })
-    } else if (!filters?.categorizationStatus && categorizedOnly) {
+    } else if (!filters?.categorizationStatus && !categorizationEnabled(mode)) {
       setFilters({
         categorizationStatus: DisplayState.categorized,
       })
     }
-  }, [inputFilters, categorizeView, categorizedOnly])
+  }, [inputFilters, categorizeView, mode])
 
   useEffect(() => {
     if (loadingStatus === 'complete') {
@@ -268,7 +283,7 @@ const BankTransactionsContent = ({
         <BankTransactionsHeader
           shiftStickyHeader={shiftStickyHeader}
           asWidget={asWidget}
-          categorizedOnly={categorizedOnly}
+          categorizedOnly={!categorizationEnabled(mode)}
           categorizeView={categorizeView}
           display={display}
           onCategorizationDisplayChange={onCategorizationDisplayChange}
@@ -291,6 +306,7 @@ const BankTransactionsContent = ({
             isLoading={isLoading}
             isSyncing={isSyncing}
             bankTransactions={bankTransactions}
+            mode={mode}
             initialLoad={initialLoad}
             containerWidth={containerWidth}
             removeTransaction={removeTransaction}
@@ -307,6 +323,7 @@ const BankTransactionsContent = ({
 
       {!isLoading && listView && mobileComponent !== 'mobileList' ? (
         <BankTransactionList
+          mode={mode}
           bankTransactions={bankTransactions}
           editable={editable}
           removeTransaction={removeTransaction}

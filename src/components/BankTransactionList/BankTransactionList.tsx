@@ -1,12 +1,16 @@
 import React from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
-import { BankTransactionCTAStringOverrides } from '../BankTransactions/BankTransactions'
+import {
+  BankTransactionCTAStringOverrides,
+  BankTransactionsMode,
+} from '../BankTransactions/BankTransactions'
 import { BankTransactionListItem } from './BankTransactionListItem'
 
 interface BankTransactionListProps {
   bankTransactions?: BankTransaction[]
   editable: boolean
+  mode: BankTransactionsMode
   containerWidth: number
   removeTransaction: (bt: BankTransaction) => void
   showDescriptions?: boolean
@@ -19,6 +23,7 @@ export const BankTransactionList = ({
   bankTransactions,
   editable,
   removeTransaction,
+  mode,
   containerWidth,
   showDescriptions = false,
   showReceiptUploads = false,
@@ -34,6 +39,7 @@ export const BankTransactionList = ({
             key={bankTransaction.id}
             dateFormat={DATE_FORMAT}
             bankTransaction={bankTransaction}
+            mode={mode}
             editable={editable}
             removeTransaction={removeTransaction}
             containerWidth={containerWidth}

@@ -1,6 +1,9 @@
 import React from 'react'
 import { BankTransactions } from '../../components/BankTransactions'
-import { BankTransactionsStringOverrides } from '../../components/BankTransactions/BankTransactions'
+import {
+  BankTransactionsMode,
+  BankTransactionsStringOverrides,
+} from '../../components/BankTransactions/BankTransactions'
 import { MobileComponentType } from '../../components/BankTransactions/constants'
 import { LinkedAccounts } from '../../components/LinkedAccounts'
 import { View } from '../../components/View'
@@ -19,7 +22,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   showBreakConnection?: boolean
   showDescriptions?: boolean
   showReceiptUploads?: boolean
-  categorizedOnly?: boolean
+  mode?: BankTransactionsMode
   hardRefreshPnlOnCategorize?: boolean
   mobileComponent?: MobileComponentType
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
@@ -31,7 +34,7 @@ export const BankTransactionsWithLinkedAccounts = ({
   showLedgerBalance = true,
   showUnlinkItem = false,
   showBreakConnection = false,
-  categorizedOnly = false,
+  mode = 'self-serve',
   hardRefreshPnlOnCategorize = false,
   showDescriptions,
   showReceiptUploads,
@@ -52,7 +55,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
         mobileComponent={mobileComponent}
-        categorizedOnly={categorizedOnly}
+        mode={mode}
         hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
         stringOverrides={stringOverrides?.bankTransactions}
       />
