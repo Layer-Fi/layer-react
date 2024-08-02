@@ -19,11 +19,13 @@ export const ProfitAndLossDetailedCharts = ({
   scope,
   hideClose = false,
   showDatePicker = false,
+  chartColorsList,
   stringOverrides,
 }: {
   scope?: SidebarScope
   hideClose?: boolean
   showDatePicker?: boolean
+  chartColorsList?: string[]
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
 }) => {
   const {
@@ -71,7 +73,9 @@ export const ProfitAndLossDetailedCharts = ({
       </header>
 
       <header className='Layer__profit-and-loss-detailed-charts__header--tablet'>
-        {!hideClose && <BackButton onClick={() => setSidebarScope(undefined)} />}
+        {!hideClose && (
+          <BackButton onClick={() => setSidebarScope(undefined)} />
+        )}
         <div className='Layer__profit-and-loss-detailed-charts__head'>
           <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
             {humanizeTitle(theScope)}
@@ -91,8 +95,8 @@ export const ProfitAndLossDetailedCharts = ({
           sidebarScope={theScope}
           date={dateRange.startDate}
           isLoading={isLoading}
+          chartColorsList={chartColorsList}
           showDatePicker={showDatePicker}
-
         />
 
         <div className='Layer__profit-and-loss-detailed-charts__table-wrapper'>
@@ -110,6 +114,7 @@ export const ProfitAndLossDetailedCharts = ({
             sortBy={sortBy}
             hoveredItem={hoveredItem}
             setHoveredItem={setHoveredItem}
+            chartColorsList={chartColorsList}
             stringOverrides={stringOverrides?.detailedTableStringOverrides}
           />
         </div>
