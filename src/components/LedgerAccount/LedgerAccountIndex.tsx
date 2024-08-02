@@ -9,7 +9,7 @@ import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { centsToDollars } from '../../models/Money'
-import { BackButton, Button, ButtonVariant } from '../Button'
+import { BackButton } from '../Button'
 import { View } from '../ChartOfAccounts/ChartOfAccounts'
 import { DataState, DataStateStatus } from '../DataState'
 import { LedgerAccountEntryDetails } from '../LedgerAccountEntryDetails'
@@ -19,17 +19,34 @@ import { Panel } from '../Panel'
 import { Text, TextSize, TextWeight } from '../Typography'
 import { LedgerAccountRow } from './LedgerAccountRow'
 import classNames from 'classnames'
+import { LedgerAccountEntryDetailsStringOverrides } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
+
+interface LedgerEntriesTableStringOverrides {
+    dateColumnHeader?: string
+    journalIdColumnHeader?: string
+    sourceColumnHeader?: string
+    debitColumnHeader?: string
+    creditColumnHeader?: string
+    runningBalanceColumnHeader?: string
+}
+
+export interface LedgerAccountStringOverrides {
+    ledgerEntryDetail?: LedgerAccountEntryDetailsStringOverrides
+    ledgerEntriesTable?: LedgerEntriesTableStringOverrides
+}
 
 export interface LedgerAccountProps {
   view: View
   containerRef: RefObject<HTMLDivElement>
   pageSize?: number
+  stringOverrides?: LedgerAccountStringOverrides
 }
 
 export const LedgerAccount = ({
   containerRef,
   pageSize = 15,
   view,
+  stringOverrides,
 }: LedgerAccountProps) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [initialLoad, setInitialLoad] = useState(true)
@@ -83,7 +100,10 @@ export const LedgerAccount = ({
 
   return (
     <Panel
-      sidebar={<LedgerAccountEntryDetails />}
+      sidebar={
+        <LedgerAccountEntryDetails
+          stringOverrides={stringOverrides?.ledgerEntryDetail}
+        />}
       sidebarIsOpen={Boolean(selectedEntryId)}
       parentRef={containerRef}
       className='Layer__ledger-account__panel'
@@ -120,21 +140,27 @@ export const LedgerAccount = ({
               {view !== 'desktop' && <th />}
               {view === 'desktop' && (
                 <>
-                  <th className='Layer__table-header'>Date</th>
-                  <th className='Layer__table-header'>Journal id #</th>
-                  <th className='Layer__table-header'>Source</th>
+                  <th className='Layer__table-header'>
+                    {stringOverrides?.ledgerEntriesTable?.dateColumnHeader || "Date"}
+                  </th>
+                  <th className='Layer__table-header'>
+                    {stringOverrides?.ledgerEntriesTable?.journalIdColumnHeader || "Journal id #"}
+                    </th>
+                  <th className='Layer__table-header'>
+                    {stringOverrides?.ledgerEntriesTable?.sourceColumnHeader || "Source"}
+                  </th>
                 </>
               )}
               {view !== 'mobile' && (
                 <>
                   <th className='Layer__table-header Layer__table-cell--amount'>
-                    Debit
+                    {stringOverrides?.ledgerEntriesTable?.debitColumnHeader || "Debit"}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
-                    Credit
+                    {stringOverrides?.ledgerEntriesTable?.creditColumnHeader || "Credit"}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
-                    Running balance
+                    {stringOverrides?.ledgerEntriesTable?.runningBalanceColumnHeader || "Running balance"}
                   </th>
                 </>
               )}

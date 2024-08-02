@@ -11,19 +11,34 @@ import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
 import { Panel } from '../Panel'
 import { Heading } from '../Typography'
+import { JournalFormStringOverrides } from '../JournalForm/JournalForm'
 
 const COMPONENT_NAME = 'journal'
+
+export interface JournalTableStringOverrides {
+    componentTitle?: string,
+    addEntryButton?: string,
+    idColumnHeader?: string,
+    dateColumnHeader?: string,
+    transactionColumnHeader?: string,
+    accountColumnHeader?: string,
+    debitColumnHeader?: string,
+    creditColumnHeader?: string,
+    journalForm?: JournalFormStringOverrides
+}
 
 export const JournalTable = ({
   view,
   containerRef,
   pageSize = 15,
   config,
+  stringOverrides,
 }: {
   view: View
   containerRef: RefObject<HTMLDivElement>
   pageSize?: number
   config: JournalConfig
+  stringOverrides?: JournalTableStringOverrides
 }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const {
@@ -46,15 +61,15 @@ export const JournalTable = ({
 
   return (
     <Panel
-      sidebar={<JournalSidebar parentRef={containerRef} config={config} />}
+      sidebar={<JournalSidebar parentRef={containerRef} config={config} stringOverrides={stringOverrides?.journalForm} />}
       sidebarIsOpen={Boolean(selectedEntryId)}
       parentRef={containerRef}
     >
       <Header className={`Layer__${COMPONENT_NAME}__header`}>
-        <Heading className={`Layer__${COMPONENT_NAME}__title`}>Journal</Heading>
+        <Heading className={`Layer__${COMPONENT_NAME}__title`}>{stringOverrides?.componentTitle || "Journal"}</Heading>
         <div className={`Layer__${COMPONENT_NAME}__actions`}>
           <Button onClick={() => addEntry()} disabled={isLoading}>
-            Add Entry
+            {stringOverrides?.addEntryButton || "Add Entry"}
           </Button>
         </div>
       </Header>
@@ -63,15 +78,15 @@ export const JournalTable = ({
         <thead>
           <tr>
             <th className='Layer__table-header' />
-            <th className='Layer__table-header'>Id</th>
-            <th className='Layer__table-header'>Date</th>
-            <th className='Layer__table-header'>Transaction</th>
-            <th className='Layer__table-header'>Account</th>
+            <th className='Layer__table-header'>{stringOverrides?.idColumnHeader || "Id"}</th>
+            <th className='Layer__table-header'>{stringOverrides?.dateColumnHeader || "Date"}</th>
+            <th className='Layer__table-header'>{stringOverrides?.transactionColumnHeader || "Transaction"}</th>
+            <th className='Layer__table-header'>{stringOverrides?.accountColumnHeader || "Account"}</th>
             <th className='Layer__table-header Layer__table-cell--amount'>
-              Debit
+              {stringOverrides?.debitColumnHeader || "Debit"}
             </th>
             <th className='Layer__table-header Layer__table-cell--amount'>
-              Credit
+              {stringOverrides?.creditColumnHeader || "Credit"}
             </th>
           </tr>
         </thead>

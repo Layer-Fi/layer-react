@@ -2,17 +2,28 @@ import React, { ReactNode, useState } from 'react'
 import { Container, Header } from '../../components/Container'
 import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
 import classNames from 'classnames'
 
+interface AccountingOverviewStringOverrides {
+  header?: string
+  profitAndLoss?: {
+    detailedCharts?: ProfitAndLossDetailedChartsStringOverrides
+    summaries?: ProfitAndLossSummariesStringOverrides
+  }
+}
+
 export interface AccountingOverviewProps {
   title?: string
   enableOnboarding?: boolean
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
+  stringOverrides?: AccountingOverviewStringOverrides
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
@@ -22,6 +33,7 @@ export const AccountingOverview = ({
   enableOnboarding = false,
   onTransactionsToReviewClick,
   middleBanner,
+  stringOverrides,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
 
@@ -34,7 +46,9 @@ export const AccountingOverview = ({
           />
         )}
         <div className='Layer__accounting-overview__summaries-row'>
-          <ProfitAndLoss.Summaries />
+          <ProfitAndLoss.Summaries
+            stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+          />
           <TransactionToReviewCard
             usePnlDateRange={true}
             onClick={onTransactionsToReviewClick}
@@ -46,7 +60,9 @@ export const AccountingOverview = ({
           elevated={true}
         >
           <Header>
-            <Heading size={HeadingSize.secondary}>Profit & Loss</Heading>
+            <Heading size={HeadingSize.secondary}>
+              {stringOverrides?.header || 'Profit & Loss'}
+            </Heading>
           </Header>
           <ProfitAndLoss.Chart />
         </Container>
@@ -78,7 +94,11 @@ export const AccountingOverview = ({
                 'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
-            <ProfitAndLoss.DetailedCharts scope='revenue' hideClose={true} />
+            <ProfitAndLoss.DetailedCharts
+              scope='revenue'
+              hideClose={true}
+              stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+            />
           </Container>
           <Container
             name={classNames(
@@ -87,7 +107,11 @@ export const AccountingOverview = ({
                 'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
-            <ProfitAndLoss.DetailedCharts scope='expenses' hideClose={true} />
+            <ProfitAndLoss.DetailedCharts
+              scope='expenses'
+              hideClose={true}
+              stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+            />
           </Container>
         </div>
       </View>

@@ -29,9 +29,19 @@ export interface BankTransactionsHeaderProps {
   isDataLoading?: boolean
   isSyncing?: boolean
   setDateRange?: (value: DateRange) => void
+  stringOverrides?: BankTransactionsHeaderStringOverrides
 }
 
-const DownloadButton = () => {
+export interface BankTransactionsHeaderStringOverrides {
+  header?: string
+  downloadButton?: string
+}
+
+const DownloadButton = ({
+  downloadButtonTextOverride,
+}: {
+  downloadButtonTextOverride?: string
+}) => {
   const { auth, businessId, apiUrl } = useLayerContext()
   const [requestFailed, setRequestFailed] = useState(false)
   const handleClick = async () => {
@@ -73,7 +83,7 @@ const DownloadButton = () => {
       rightIcon={<DownloadCloud size={12} />}
       onClick={handleClick}
     >
-      Download
+      {downloadButtonTextOverride || 'Download'}
     </Button>
   )
 }
@@ -90,6 +100,7 @@ export const BankTransactionsHeader = ({
   listView,
   dateRange,
   setDateRange,
+  stringOverrides,
   isSyncing,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
@@ -111,7 +122,7 @@ export const BankTransactionsHeader = ({
             className='Layer__bank-transactions__title'
             size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
           >
-            Transactions
+            {stringOverrides?.header || 'Transactions'}
           </Heading>
           {isSyncing && (
             <SyncingComponent
@@ -142,7 +153,9 @@ export const BankTransactionsHeader = ({
           !(mobileComponent == 'mobileList' && listView) &&
           categorizeView && (
             <div className='Layer__header__actions'>
-              <DownloadButton />
+              <DownloadButton
+                downloadButtonTextOverride={stringOverrides?.downloadButton}
+              />
               <Toggle
                 name='bank-transaction-display'
                 options={[

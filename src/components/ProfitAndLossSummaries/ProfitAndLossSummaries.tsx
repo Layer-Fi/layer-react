@@ -12,10 +12,17 @@ import { SkeletonLoader } from '../SkeletonLoader'
 import { MiniChart } from './MiniChart'
 import classNames from 'classnames'
 
-type Props = {
+export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string
+  expensesLabel?: string
+  netProfitLabel?: string
+}
+
+type Props = {
   vertical?: boolean
   actionable?: boolean
+  revenueLabel?: string // deprecated
+  stringOverrides?: ProfitAndLossSummariesStringOverrides
 }
 
 const CHART_PLACEHOLDER = [
@@ -56,8 +63,9 @@ const buildMiniChartData = (scope: Scope, data?: ProfitAndLoss) => {
 
 export const ProfitAndLossSummaries = ({
   vertical,
-  revenueLabel = 'Revenue',
   actionable = false,
+  revenueLabel, // deprecated
+  stringOverrides,
 }: Props) => {
   const {
     data: storedData,
@@ -129,7 +137,7 @@ export const ProfitAndLossSummaries = ({
         <MiniChart data={revenueChartData} />
         <div className='Layer__profit-and-loss-summaries__text'>
           <span className='Layer__profit-and-loss-summaries__title'>
-            {revenueLabel}
+            {stringOverrides?.revenueLabel || revenueLabel || 'Revenue'}
           </span>
           {isLoading || storedData === undefined ? (
             <div className='Layer__profit-and-loss-summaries__loader'>
@@ -158,7 +166,7 @@ export const ProfitAndLossSummaries = ({
         <MiniChart data={expensesChartData} />
         <div className='Layer__profit-and-loss-summaries__text'>
           <span className='Layer__profit-and-loss-summaries__title'>
-            Expenses
+            {stringOverrides?.expensesLabel || 'Expenses'}
           </span>
           {isLoading || storedData === undefined ? (
             <div className='Layer__profit-and-loss-summaries__loader'>
@@ -183,7 +191,7 @@ export const ProfitAndLossSummaries = ({
       >
         <div className='Layer__profit-and-loss-summaries__text'>
           <span className='Layer__profit-and-loss-summaries__title'>
-            Net Profit
+            {stringOverrides?.netProfitLabel || 'Net Profit'}
           </span>
           {isLoading || storedData === undefined ? (
             <div className='Layer__profit-and-loss-summaries__loader'>

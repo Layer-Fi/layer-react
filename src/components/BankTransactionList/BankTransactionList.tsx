@@ -1,6 +1,7 @@
 import React from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
+import { BankTransactionCTAStringOverrides } from '../BankTransactions/BankTransactions'
 import { BankTransactionListItem } from './BankTransactionListItem'
 
 interface BankTransactionListProps {
@@ -11,6 +12,7 @@ interface BankTransactionListProps {
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   hardRefreshPnlOnCategorize?: boolean
+  stringOverrides?: BankTransactionCTAStringOverrides
 }
 
 export const BankTransactionList = ({
@@ -21,6 +23,7 @@ export const BankTransactionList = ({
   showDescriptions = false,
   showReceiptUploads = false,
   hardRefreshPnlOnCategorize = false,
+  stringOverrides,
 }: BankTransactionListProps) => {
   return (
     <ul className='Layer__bank-transactions__list'>
@@ -37,6 +40,7 @@ export const BankTransactionList = ({
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
+            stringOverrides={stringOverrides}
           />
         ),
       )}

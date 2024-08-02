@@ -6,12 +6,19 @@ import { ProfitAndLossRow } from '../ProfitAndLossRow'
 import emptyPNL from './empty_profit_and_loss_report'
 import classNames from 'classnames'
 
+export interface ProfitAndLossTableStringOverrides {
+  grossProfitLabel?: string
+  profitBeforeTaxesLabel?: string
+  netProfitLabel?: string
+}
+
 type Props = {
   lockExpanded?: boolean
   asContainer?: boolean
+  stringOverrides?: ProfitAndLossTableStringOverrides
 }
 
-export const ProfitAndLossTable = ({ lockExpanded, asContainer }: Props) => {
+export const ProfitAndLossTable = ({ lockExpanded, asContainer, stringOverrides }: Props) => {
   const {
     data: actualData,
     isLoading,
@@ -61,7 +68,7 @@ export const ProfitAndLossTable = ({ lockExpanded, asContainer }: Props) => {
         <ProfitAndLossRow
           lineItem={{
             value: data.gross_profit,
-            display_name: 'Gross Profit',
+            display_name: stringOverrides?.grossProfitLabel || 'Gross Profit',
           }}
           variant='summation'
           direction={Direction.CREDIT}
@@ -79,7 +86,7 @@ export const ProfitAndLossTable = ({ lockExpanded, asContainer }: Props) => {
         <ProfitAndLossRow
           lineItem={{
             value: data.profit_before_taxes,
-            display_name: 'Profit Before Taxes',
+            display_name: stringOverrides?.profitBeforeTaxesLabel || 'Profit Before Taxes',
           }}
           variant='summation'
           direction={Direction.CREDIT}
@@ -97,7 +104,7 @@ export const ProfitAndLossTable = ({ lockExpanded, asContainer }: Props) => {
         <ProfitAndLossRow
           lineItem={{
             value: data.net_profit,
-            display_name: 'Net Profit',
+            display_name: stringOverrides?.netProfitLabel || 'Net Profit',
           }}
           variant='summation'
           direction={Direction.CREDIT}

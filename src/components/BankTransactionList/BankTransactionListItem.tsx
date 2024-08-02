@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types'
 import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
 import { getDefaultSelectedCategory } from '../BankTransactionRow/BankTransactionRow'
+import { BankTransactionCTAStringOverrides } from '../BankTransactions/BankTransactions'
+import { isCategorized } from '../BankTransactions/utils'
 import { RetryButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect'
@@ -15,8 +18,6 @@ import { TextUseTooltip } from '../Typography/Text'
 import { Assignment } from './Assignment'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
-import { isCategorized } from '../BankTransactions/utils'
-import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 
 type Props = {
   index: number
@@ -28,6 +29,7 @@ type Props = {
   hardRefreshPnlOnCategorize: boolean
   removeTransaction: (bt: BankTransaction) => void
   containerWidth?: number
+  stringOverrides?: BankTransactionCTAStringOverrides
 }
 
 export const BankTransactionListItem = ({
@@ -40,6 +42,7 @@ export const BankTransactionListItem = ({
   hardRefreshPnlOnCategorize,
   containerWidth,
   removeTransaction,
+  stringOverrides,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
@@ -164,7 +167,11 @@ export const BankTransactionListItem = ({
           close={() => setOpen(false)}
           categorized={categorized}
           asListItem={true}
-          submitBtnText={categorized ? 'Update' : 'Approve'}
+          submitBtnText={
+            categorized
+              ? stringOverrides?.updateButtonText || 'Update'
+              : stringOverrides?.approveButtonText || 'Approve'
+          }
           containerWidth={containerWidth}
           showDescriptions={showDescriptions}
           showReceiptUploads={showReceiptUploads}
@@ -196,7 +203,9 @@ export const BankTransactionListItem = ({
             processing={bankTransaction.processing}
             action={!categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
           >
-            {!categorized ? 'Approve' : 'Update'}
+            {!categorized
+              ? stringOverrides?.approveButtonText || 'Approve'
+              : stringOverrides?.updateButtonText || 'Update'}
           </SubmitButton>
         ) : null}
         {!categorized && showRetry ? (

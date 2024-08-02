@@ -11,9 +11,20 @@ import { DataState, DataStateStatus } from '../DataState'
 import { Loader } from '../Loader'
 import { Panel } from '../Panel'
 import { Heading, HeadingSize } from '../Typography'
+import { ChartOfAccountsFormStringOverrides } from '../ChartOfAccountsForm/ChartOfAccountsForm'
 
 const COMPONENT_NAME = 'chart-of-accounts'
 export type ExpandActionState = undefined | 'expanded' | 'collapsed'
+
+export interface ChartOfAccountsTableStringOverrides {
+  headerText?: string
+  addAccountButtonText?: string
+  nameColumnHeader?: string
+  typeColumnHeader?: string
+  balanceColumnHeader?: string
+  subtypeColumnHeader?: string
+  chartOfAccountsForm?: ChartOfAccountsFormStringOverrides
+}
 
 export const ChartOfAccountsTable = ({
   view,
@@ -21,12 +32,14 @@ export const ChartOfAccountsTable = ({
   asWidget = false,
   withDateControl = false,
   withExpandAllButton = false,
+  stringOverrides,
 }: {
   view: View
   containerRef: RefObject<HTMLDivElement>
   asWidget?: boolean
   withDateControl?: boolean
   withExpandAllButton?: boolean
+  stringOverrides?: ChartOfAccountsTableStringOverrides
 }) => {
   const { data, isLoading, addAccount, error, isValidating, refetch, form } =
     useContext(ChartOfAccountsContext)
@@ -38,7 +51,11 @@ export const ChartOfAccountsTable = ({
 
   return (
     <Panel
-      sidebar={<ChartOfAccountsSidebar parentRef={containerRef} />}
+      sidebar={
+        <ChartOfAccountsSidebar
+          parentRef={containerRef}
+          stringOverrides={stringOverrides?.chartOfAccountsForm}
+        />}
       sidebarIsOpen={Boolean(form)}
       parentRef={containerRef}
     >
@@ -50,7 +67,7 @@ export const ChartOfAccountsTable = ({
           className={`Layer__${COMPONENT_NAME}__title`}
           size={asWidget ? HeadingSize.secondary : HeadingSize.primary}
         >
-          Chart of Accounts
+          {stringOverrides?.headerText || "Chart of Accounts"}
         </Heading>
         <div
           className={`Layer__${COMPONENT_NAME}__actions Layer__header__actions`}
@@ -78,7 +95,7 @@ export const ChartOfAccountsTable = ({
           ) : null}
           <div className='Layer__header__actions-col'>
             <Button onClick={() => addAccount()} disabled={isLoading}>
-              Add Account
+              {stringOverrides?.addAccountButtonText || "Add Account"}
             </Button>
           </div>
         </div>
@@ -87,12 +104,18 @@ export const ChartOfAccountsTable = ({
       <table className='Layer__chart-of-accounts__table'>
         <thead>
           <tr className='Layer__table-row--header'>
-            <th className='Layer__table-header Layer__coa__name'>Name</th>
-            <th className='Layer__table-header Layer__coa__type'>Type</th>
-            <th className='Layer__table-header Layer__coa__subtype Layer__mobile--hidden'>
-              Sub-Type
+            <th className='Layer__table-header Layer__coa__name'>
+              {stringOverrides?.nameColumnHeader || "Name"}
             </th>
-            <th className='Layer__table-header Layer__coa__balance'>Balance</th>
+            <th className='Layer__table-header Layer__coa__type'>
+              {stringOverrides?.typeColumnHeader || "Type"}
+            </th>
+            <th className='Layer__table-header Layer__coa__subtype Layer__mobile--hidden'>
+              {stringOverrides?.subtypeColumnHeader || "Sub-Type"}
+            </th>
+            <th className='Layer__table-header Layer__coa__balance'>
+              {stringOverrides?.balanceColumnHeader || "Balance"}
+            </th>
             <th className='Layer__table-header Layer__coa__actions' />
           </tr>
         </thead>

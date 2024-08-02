@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
-import { BalanceSheet, StatementOfCashFlow } from '../../types'
+import { StatementOfCashFlow } from '../../types'
 import { LineItem } from '../../types/line_item'
 import { Table, TableHead, TableBody, TableRow, TableCell } from '../Table'
 
@@ -12,12 +12,19 @@ type StatementOfCashFlowRowProps = {
   type: string
 }
 
+export interface StatementOfCashFlowTableStringOverrides {
+  typeColumnHeader?: string
+  totalColumnHeader?: string
+}
+
 export const StatementOfCashFlowTable = ({
   data,
   config,
+  stringOverrides,
 }: {
   data: StatementOfCashFlow
   config: StatementOfCashFlowRowProps[]
+  stringOverrides?: StatementOfCashFlowTableStringOverrides
 }) => {
   const { isOpen, setIsOpen } = useTableExpandRow()
 
@@ -79,8 +86,8 @@ export const StatementOfCashFlowTable = ({
     <Table borderCollapse='collapse'>
       <TableHead>
         <TableRow rowKey='soc-flow-head-row' isHeadRow>
-          <TableCell isHeaderCell>Type</TableCell>
-          <TableCell isHeaderCell>Total</TableCell>
+          <TableCell isHeaderCell>{stringOverrides?.typeColumnHeader || "Type"}</TableCell>
+          <TableCell isHeaderCell>{stringOverrides?.totalColumnHeader || "Total"}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

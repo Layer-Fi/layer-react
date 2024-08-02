@@ -25,7 +25,20 @@ import { TableCell } from '../TableCell'
 import { TableHead } from '../TableHead'
 import { TableRow } from '../TableRow'
 import { Text, TextWeight } from '../Typography'
-import { is } from 'date-fns/locale'
+
+interface SourceDetailStringOverrides {
+    sourceLabel?: string
+    accountNameLabel?: string
+    dateLabel?: string
+    amountLabel?: string
+    directionLabel?: string
+    counterpartyLabel?: string
+    invoiceNumberLabel?: string
+    recipientNameLabel?: string
+    memoLabel?: string
+    createdByLabel?: string
+    processorLabel?: string
+}
 
 /*
 
@@ -37,25 +50,27 @@ import { is } from 'date-fns/locale'
     @SerialName("Opening_Balance_Ledger_Entry_Source")
     @SerialName("Payout_Ledger_Entry_Source")
     */
-export const SourceDetailView = ({ source }: { source: LedgerEntrySource }) => {
+export const SourceDetailView = (
+  { source, stringOverrides }: { source: LedgerEntrySource, stringOverrides?: SourceDetailStringOverrides  }
+) => {
   switch (source.type) {
     case 'Transaction_Ledger_Entry_Source': {
       const transactionSource = source as TransactionLedgerEntrySource
       return (
         <>
-          <DetailsListItem label='Account name'>
+          <DetailsListItem label={stringOverrides?.accountNameLabel || 'Account name'}>
             {transactionSource.account_name}
           </DetailsListItem>
-          <DetailsListItem label='Date'>
+          <DetailsListItem label={stringOverrides?.dateLabel || 'Date'}>
             <DateTime value={transactionSource.date} />
           </DetailsListItem>
-          <DetailsListItem label='Amount'>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
             {`$${centsToDollars(transactionSource.amount)}`}
           </DetailsListItem>
-          <DetailsListItem label='Direction'>
+          <DetailsListItem label={stringOverrides?.directionLabel || 'Direction'}>
             {transactionSource.direction}
           </DetailsListItem>
-          <DetailsListItem label='Counterparty'>
+          <DetailsListItem label={stringOverrides?.counterpartyLabel || 'Counterparty'}>
             {transactionSource.counterparty}
           </DetailsListItem>
         </>
@@ -65,16 +80,16 @@ export const SourceDetailView = ({ source }: { source: LedgerEntrySource }) => {
       const invoiceSource = source as InvoiceLedgerEntrySource
       return (
         <>
-          <DetailsListItem label='Invoice number'>
+          <DetailsListItem label={stringOverrides?.invoiceNumberLabel || 'Invoice number'}>
             {invoiceSource.invoice_number}
           </DetailsListItem>
-          <DetailsListItem label='Recipient name'>
+          <DetailsListItem label={stringOverrides?.recipientNameLabel || 'Recipient name'}>
             {invoiceSource.recipient_name}
           </DetailsListItem>
-          <DetailsListItem label='Date'>
+          <DetailsListItem label={stringOverrides?.dateLabel || 'Date'}>
             <DateTime value={invoiceSource.date} />
           </DetailsListItem>
-          <DetailsListItem label='Amount'>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
             {`$${centsToDollars(invoiceSource.amount)}`}
           </DetailsListItem>
         </>
@@ -84,8 +99,8 @@ export const SourceDetailView = ({ source }: { source: LedgerEntrySource }) => {
       const manualSource = source as ManualLedgerEntrySource
       return (
         <>
-          <DetailsListItem label='Memo'>{manualSource.memo}</DetailsListItem>
-          <DetailsListItem label='Created by'>
+          <DetailsListItem label={stringOverrides?.memoLabel || 'Memo'}>{manualSource.memo}</DetailsListItem>
+          <DetailsListItem label={stringOverrides?.createdByLabel || 'Created by'}>
             {manualSource.created_by}
           </DetailsListItem>
         </>
@@ -95,10 +110,10 @@ export const SourceDetailView = ({ source }: { source: LedgerEntrySource }) => {
       const invoicePaymentSource = source as InvoicePaymentLedgerEntrySource
       return (
         <>
-          <DetailsListItem label='Invoice number'>
+          <DetailsListItem label={stringOverrides?.invoiceNumberLabel || 'Invoice number'}>
             {invoicePaymentSource.invoice_number}
           </DetailsListItem>
-          <DetailsListItem label='Amount'>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
             {`$${centsToDollars(invoicePaymentSource.amount)}`}
           </DetailsListItem>
         </>
@@ -108,10 +123,10 @@ export const SourceDetailView = ({ source }: { source: LedgerEntrySource }) => {
       const refundSource = source as RefundPaymentLedgerEntrySource
       return (
         <>
-          <DetailsListItem label='Amount'>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
             {`$${centsToDollars(refundSource.refunded_to_customer_amount)}`}
           </DetailsListItem>
-          <DetailsListItem label='Recipient name'>
+          <DetailsListItem label={stringOverrides?.recipientNameLabel || 'Recipient name'}>
             {refundSource.recipient_name}
           </DetailsListItem>
         </>
@@ -121,7 +136,7 @@ export const SourceDetailView = ({ source }: { source: LedgerEntrySource }) => {
       const openingBalanceSource = source as OpeningBalanceLedgerEntrySource
       return (
         <>
-          <DetailsListItem label='Account name'>
+          <DetailsListItem label={stringOverrides?.accountNameLabel || 'Account name'}>
             {openingBalanceSource.account_name}
           </DetailsListItem>
         </>
@@ -131,10 +146,10 @@ export const SourceDetailView = ({ source }: { source: LedgerEntrySource }) => {
       const payoutSource = source as PayoutLedgerEntrySource
       return (
         <>
-          <DetailsListItem label='Amount'>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
             {`$${centsToDollars(payoutSource.paid_out_amount)}`}
           </DetailsListItem>
-          <DetailsListItem label='Processor'>
+          <DetailsListItem label={stringOverrides?.processorLabel || 'Processor'}>
             {payoutSource.processor}
           </DetailsListItem>
         </>
@@ -146,7 +161,34 @@ export const SourceDetailView = ({ source }: { source: LedgerEntrySource }) => {
   }
 }
 
-export const LedgerAccountEntryDetails = () => {
+interface JournalEntryDetailsStringOverrides {
+    entryTypeLabel?: string
+    dateLabel?: string
+    creationDateLabel?: string
+    reversalLabel?: string
+}
+
+interface LineItemsTableStringOverrides {
+  lineItemsColumnHeader?: string
+  debitColumnHeader?: string
+  creditColumnHeader?: string
+  totalRowHeader?: string
+}
+
+export interface LedgerAccountEntryDetailsStringOverrides {
+  title?: string
+  transactionSource?: {
+    header?: string
+    details?: SourceDetailStringOverrides
+  }
+  journalEntry?: {
+    header?: (entryId?: string) => string
+    details?: JournalEntryDetailsStringOverrides
+  }
+  lineItemsTable?: LineItemsTableStringOverrides
+}
+
+export const LedgerAccountEntryDetails = ({ stringOverrides } : { stringOverrides?: LedgerAccountEntryDetailsStringOverrides }) => {
   const { entryData, isLoadingEntry, closeSelectedEntry, errorEntry } =
     useContext(LedgerAccountsContext)
 
@@ -169,11 +211,11 @@ export const LedgerAccountEntryDetails = () => {
       <div className='Layer__ledger-account__entry-details__back-btn'>
         <BackButton onClick={() => closeSelectedEntry()} />
         <div className='Layer__ledger-account__entry-details__title-container'>
-          <Text weight={TextWeight.bold}>Transaction details</Text>
+          <Text weight={TextWeight.bold}>{stringOverrides?.title || "Transaction details"}</Text>
         </div>
       </div>
       <DetailsList
-        title='Transaction source'
+        title={stringOverrides?.transactionSource?.header || 'Transaction source'}
         actions={
           <Button
             rightIcon={<XIcon />}
@@ -184,7 +226,10 @@ export const LedgerAccountEntryDetails = () => {
           />
         }
       >
-        <DetailsListItem label='Source' isLoading={isLoadingEntry}>
+        <DetailsListItem
+          label={stringOverrides?.transactionSource?.details?.sourceLabel || 'Source'}
+          isLoading={isLoadingEntry}
+        >
           <Badge>{entryData?.source?.entity_name}</Badge>
         </DetailsListItem>
         {entryData?.source?.display_description && (
@@ -193,20 +238,24 @@ export const LedgerAccountEntryDetails = () => {
       </DetailsList>
 
       <DetailsList
-        title={`Journal Entry ${entryData?.id.substring(0, 5)}`}
+        title={
+          stringOverrides?.journalEntry?.header ?
+            stringOverrides?.journalEntry?.header(entryData?.id.substring(0, 5)) :
+            `Journal Entry ${entryData?.id.substring(0, 5)}`
+        }
         className='Layer__border-top'
       >
-        <DetailsListItem label='Entry type' isLoading={isLoadingEntry}>
+        <DetailsListItem label={stringOverrides?.journalEntry?.details?.entryTypeLabel || 'Entry type'} isLoading={isLoadingEntry}>
           {humanizeEnum(entryData?.entry_type ?? '')}
         </DetailsListItem>
-        <DetailsListItem label='Date' isLoading={isLoadingEntry}>
+        <DetailsListItem label={stringOverrides?.journalEntry?.details?.dateLabel || 'Date'} isLoading={isLoadingEntry}>
           {entryData?.entry_at && <DateTime value={entryData?.entry_at} />}
         </DetailsListItem>
-        <DetailsListItem label='Creation date' isLoading={isLoadingEntry}>
+        <DetailsListItem label={stringOverrides?.journalEntry?.details?.creationDateLabel || 'Creation date'} isLoading={isLoadingEntry}>
           {entryData?.date && <DateTime value={entryData?.date} />}
         </DetailsListItem>
         {entryData?.reversal_id && (
-          <DetailsListItem label='Reversal' isLoading={isLoadingEntry}>
+          <DetailsListItem label={stringOverrides?.journalEntry?.details?.reversalLabel || 'Reversal'} isLoading={isLoadingEntry}>
             {entryData?.reversal_id.substring(0, 5)}
           </DetailsListItem>
         )}
@@ -221,9 +270,9 @@ export const LedgerAccountEntryDetails = () => {
             >
               <TableHead>
                 <TableRow rowKey='soc-flow-head-row' isHeadRow>
-                  <TableCell>Line items</TableCell>
-                  <TableCell>Debit</TableCell>
-                  <TableCell>Credit</TableCell>
+                  <TableCell>{stringOverrides?.lineItemsTable?.lineItemsColumnHeader || "Line items"}</TableCell>
+                  <TableCell>{stringOverrides?.lineItemsTable?.debitColumnHeader || "Debit"}</TableCell>
+                  <TableCell>{stringOverrides?.lineItemsTable?.creditColumnHeader || "Credit"}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -253,7 +302,7 @@ export const LedgerAccountEntryDetails = () => {
                   rowKey='ledger-line-item-summation'
                   variant='summation'
                 >
-                  <TableCell primary>Total</TableCell>
+                  <TableCell primary>{stringOverrides?.lineItemsTable?.totalRowHeader || "Total"}</TableCell>
                   <TableCell isCurrency primary>
                     {totalDebit || 0}
                   </TableCell>

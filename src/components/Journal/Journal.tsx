@@ -8,6 +8,7 @@ import { useElementSize } from '../../hooks/useElementSize'
 import { useJournal } from '../../hooks/useJournal'
 import { Container } from '../Container'
 import { JournalTable } from '../JournalTable'
+import { JournalTableStringOverrides } from '../JournalTable/JournalTable'
 
 export type View = 'mobile' | 'tablet' | 'desktop'
 
@@ -17,9 +18,14 @@ export interface JournalConfig {
   }
 }
 
+export interface JournalStringOverrides {
+  journalTable?: JournalTableStringOverrides
+}
+
 export interface JournalProps {
   asWidget?: boolean
   config?: JournalConfig
+  stringOverrides?: JournalStringOverrides
 }
 
 export const JOURNAL_CONFIG: JournalConfig = {
@@ -45,6 +51,7 @@ export const Journal = (props: JournalProps) => {
 const JournalContent = ({
   asWidget,
   config = JOURNAL_CONFIG,
+  stringOverrides,
 }: JournalProps) => {
   const [view, setView] = useState<View>('desktop')
 
@@ -66,7 +73,12 @@ const JournalContent = ({
 
   return (
     <Container name='journal' ref={containerRef} asWidget={asWidget}>
-      <JournalTable view={view} containerRef={containerRef} config={config} />
+      <JournalTable
+        view={view}
+        containerRef={containerRef}
+        config={config}
+        stringOverrides={stringOverrides?.journalTable}
+      />
     </Container>
   )
 }

@@ -28,24 +28,31 @@ export const UseTasksContext = createContext<UseTasksContextType>({
 
 export const useTasksContext = () => useContext(UseTasksContext)
 
+export interface TasksStringOverrides {
+    header?: string
+}
+
 export const Tasks = ({
-  tasksHeader,
   collapsable = false,
   defaultCollapsed = false,
   collapsedWhenComplete,
+  tasksHeader, // deprecated
+  stringOverrides,
 }: {
   tasksHeader?: string
   collapsable?: boolean
   defaultCollapsed?: boolean
   collapsedWhenComplete?: boolean
+  stringOverrides?: TasksStringOverrides
 }) => {
   return (
     <TasksProvider>
       <TasksComponent
-        tasksHeader={tasksHeader}
         collapsable={collapsable}
         defaultCollapsed={defaultCollapsed}
         collapsedWhenComplete={collapsedWhenComplete}
+        tasksHeader={tasksHeader} // deprecated
+        stringOverrides={stringOverrides}
       />
     </TasksProvider>
   )
@@ -62,15 +69,17 @@ export const TasksProvider = ({ children }: { children: ReactNode }) => {
 }
 
 export const TasksComponent = ({
-  tasksHeader,
   collapsable = false,
   defaultCollapsed = false,
   collapsedWhenComplete,
+  tasksHeader, // deprecated
+  stringOverrides,
 }: {
   tasksHeader?: string
   collapsable?: boolean
   defaultCollapsed?: boolean
   collapsedWhenComplete?: boolean
+  stringOverrides?: TasksStringOverrides
 }) => {
   const { isLoading, loadedStatus, data } = useContext(TasksContext)
   const allComplete = useMemo(() => {
@@ -103,7 +112,7 @@ export const TasksComponent = ({
   return (
     <div className='Layer__tasks-component'>
       <TasksHeader
-        tasksHeader={tasksHeader}
+        tasksHeader={stringOverrides?.header || tasksHeader}
         collapsable={collapsable}
         open={open}
         toggleContent={() => setOpen(!open)}

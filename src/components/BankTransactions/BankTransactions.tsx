@@ -9,11 +9,15 @@ import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
 import { BankTransactionsTable } from '../BankTransactionsTable'
+import { BankTransactionsTableStringOverrides } from '../BankTransactionsTable/BankTransactionsTable'
 import { Container } from '../Container'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
-import { BankTransactionsHeader } from './BankTransactionsHeader'
+import {
+  BankTransactionsHeader,
+  BankTransactionsHeaderStringOverrides,
+} from './BankTransactionsHeader'
 import { DataStates } from './DataStates'
 import { MobileComponentType } from './constants'
 import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
@@ -21,6 +25,17 @@ import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
 const COMPONENT_NAME = 'bank-transactions'
 const TEST_EMPTY_STATE = false
 const POLL_INTERVAL = 10000
+
+export interface BankTransactionsStringOverrides {
+  bankTransactionCTAs?: BankTransactionCTAStringOverrides
+  transactionsTable?: BankTransactionsTableStringOverrides
+  bankTransactionsHeader?: BankTransactionsHeaderStringOverrides
+}
+
+export interface BankTransactionCTAStringOverrides {
+  approveButtonText?: string
+  updateButtonText?: string
+}
 
 export interface BankTransactionsProps {
   asWidget?: boolean
@@ -34,6 +49,7 @@ export interface BankTransactionsProps {
   mobileComponent?: MobileComponentType
   filters?: BankTransactionFilters
   hideHeader?: boolean
+  stringOverrides?: BankTransactionsStringOverrides
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -63,6 +79,7 @@ const BankTransactionsContent = ({
   mobileComponent,
   filters: inputFilters,
   hideHeader = false,
+  stringOverrides,
 }: BankTransactionsProps) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [initialLoad, setInitialLoad] = useState(true)
@@ -260,6 +277,7 @@ const BankTransactionsContent = ({
           listView={listView}
           dateRange={dateRange}
           setDateRange={v => setDateRange(v)}
+          stringOverrides={stringOverrides?.bankTransactionsHeader}
           isDataLoading={isLoading}
           isSyncing={isSyncing}
         />
@@ -280,6 +298,7 @@ const BankTransactionsContent = ({
             showReceiptUploads={showReceiptUploads}
             page={currentPage}
             hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
+            stringOverrides={stringOverrides}
             lastPage={isLastPage}
             onRefresh={refetch}
           />
@@ -293,6 +312,7 @@ const BankTransactionsContent = ({
           removeTransaction={removeTransaction}
           containerWidth={containerWidth}
           hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
+          stringOverrides={stringOverrides?.bankTransactionCTAs}
         />
       ) : null}
 
