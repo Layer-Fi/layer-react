@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { ChartOfAccounts } from '../../components/ChartOfAccounts'
+import { ChartOfAccountsStringOverrides } from '../../components/ChartOfAccounts/ChartOfAccounts'
 import { Container } from '../../components/Container'
 import { Journal } from '../../components/Journal'
+import { JournalStringOverrides } from '../../components/Journal/Journal'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
-import { ChartOfAccountsStringOverrides } from '../../components/ChartOfAccounts/ChartOfAccounts'
-import { JournalStringOverrides } from '../../components/Journal/Journal'
 
 export interface GeneralLedgerStringOverrides {
   title?: string
@@ -18,7 +18,7 @@ export interface GeneralLedgerStringOverrides {
 
 export interface GeneralLedgerProps {
   title?: string // deprecated
-  stringOverrides: GeneralLedgerStringOverrides
+  stringOverrides?: GeneralLedgerStringOverrides
 }
 
 export const GeneralLedgerView = ({
@@ -29,13 +29,15 @@ export const GeneralLedgerView = ({
 
   return (
     <ProfitAndLoss asContainer={false}>
-      <View title={stringOverrides?.title || title || "General Ledger"}>
+      <View title={stringOverrides?.title || title || 'General Ledger'}>
         <Toggle
           name='general-ledger-tabs'
           options={[
             {
               value: 'chartOfAccounts',
-              label: stringOverrides?.chartOfAccountsToggleOption || 'Chart of accounts',
+              label:
+                stringOverrides?.chartOfAccountsToggleOption ||
+                'Chart of accounts',
             },
             {
               value: 'journal',
@@ -47,7 +49,11 @@ export const GeneralLedgerView = ({
         />
         <Container name='generalLedger'>
           {activeTab === 'chartOfAccounts' ? (
-            <ChartOfAccounts asWidget withExpandAllButton stringOverrides={stringOverrides?.chartOfAccounts} />
+            <ChartOfAccounts
+              asWidget
+              withExpandAllButton
+              stringOverrides={stringOverrides?.chartOfAccounts}
+            />
           ) : (
             <Journal stringOverrides={stringOverrides?.journal} />
           )}
