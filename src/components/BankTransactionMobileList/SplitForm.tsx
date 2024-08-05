@@ -21,7 +21,6 @@ import {
 import { Input } from '../Input'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
-import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 
 type Split = {
   amount: number
@@ -37,7 +36,7 @@ type RowState = {
 
 export const SplitForm = ({
   bankTransaction,
-  hardRefreshPnlOnCategorize
+  hardRefreshPnlOnCategorize,
 }: {
   bankTransaction: BankTransaction
   hardRefreshPnlOnCategorize?: boolean
@@ -47,7 +46,6 @@ export const SplitForm = ({
     isLoading,
     error,
   } = useBankTransactionsContext()
-  const { refetch } = useProfitAndLossLTM()
   const defaultCategory =
     bankTransaction.category ||
     (hasSuggestions(bankTransaction.categorization_flow) &&
@@ -201,7 +199,6 @@ export const SplitForm = ({
           } as SplitCategoryUpdate),
       true,
     )
-    if (hardRefreshPnlOnCategorize) refetch()
   }
 
   return (

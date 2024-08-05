@@ -126,7 +126,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       categorize: categorizeBankTransaction,
       match: matchBankTransaction,
     } = useBankTransactionsContext()
-    const { refetch } = useProfitAndLossLTM()
     const [purpose, setPurpose] = useState<Purpose>(
       bankTransaction.category
         ? Purpose.categorize
@@ -295,7 +294,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         ) {
           onMatchSubmit(selectedMatchId)
         }
-        if (hardRefreshPnlOnCategorize) refetch()
         return
       }
 
@@ -327,7 +325,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               })),
             } as SplitCategoryUpdate),
       )
-      if (hardRefreshPnlOnCategorize) refetch()
       close()
     }
 

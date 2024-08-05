@@ -27,6 +27,8 @@ const DEPENDENCIES: Partial<Record<DataModel, DataModel[]>> = {
   [DataModel.STATEMENT_OF_CASH_FLOWS]: ALL_TOUCHABLE,
 }
 
+let readTimestampsG = {}
+
 export const useDataSync: UseDataSync = () => {
   const initialTimestamp = Date.now()
   const [syncTimestamps, setSyncTimestamps] = useState<
@@ -44,8 +46,6 @@ export const useDataSync: UseDataSync = () => {
     Partial<Record<string, { t: number; m: DataModel }>>
   >({})
 
-  console.log(syncTimestamps, readTimestamps)
-
   const touch = (model: DataModel) => {
     setSyncTimestamps({
       ...syncTimestamps,
@@ -54,38 +54,23 @@ export const useDataSync: UseDataSync = () => {
   }
 
   const read = (model: DataModel, cacheKey: string) => {
-    setReadTimestamps({
-      ...readTimestamps,
+    readTimestampsG = {
+      ...readTimestampsG,
       [cacheKey]: {
         t: Date.now(),
         m: model,
       },
-    })
+    }
+    setReadTimestamps({ ...readTimestampsG })
   }
 
   const hasBeenTouched = (cacheKey: string) => {
     const lastRead =
       cacheKey in readTimestamps ? readTimestamps[cacheKey] : undefined
 
-    console.log('lastRead', lastRead)
-
     if (!lastRead || !lastRead?.m || !lastRead?.t) {
-      console.log('exit')
       return false
     }
-
-    console.log(
-      'check',
-      Boolean(
-        DEPENDENCIES[lastRead!.m]?.find(dep => {
-          return (
-            dep in syncTimestamps &&
-            Boolean(syncTimestamps[dep]) &&
-            (syncTimestamps[dep] as number) > (lastRead!.t as number)
-          )
-        }),
-      ),
-    )
 
     return Boolean(
       DEPENDENCIES[lastRead!.m]?.find(dep => {

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types'
@@ -53,7 +52,6 @@ export const BankTransactionListItem = ({
   const [showRetry, setShowRetry] = useState(false)
   const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
     useBankTransactionsContext()
-  const { refetch } = useProfitAndLossLTM()
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )
@@ -92,7 +90,6 @@ export const BankTransactionListItem = ({
     // Save using form from expanded row when row is open:
     if (open && expandedRowRef?.current) {
       expandedRowRef?.current?.save()
-      if (hardRefreshPnlOnCategorize) refetch()
       return
     }
 
@@ -102,7 +99,6 @@ export const BankTransactionListItem = ({
 
     if (selectedCategory.type === 'match') {
       matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
-      if (hardRefreshPnlOnCategorize) refetch()
       return
     }
 
@@ -110,7 +106,6 @@ export const BankTransactionListItem = ({
       type: 'Category',
       category: getCategorizePayload(selectedCategory),
     })
-    if (hardRefreshPnlOnCategorize) refetch()
   }
 
   const categorized = isCategorized(bankTransaction)
