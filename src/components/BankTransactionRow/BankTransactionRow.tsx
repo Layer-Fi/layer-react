@@ -187,8 +187,6 @@ export const BankTransactionRow = ({
     showComponent ? 'show' : '',
   )
 
-  console.log('categorizationEnabled', categorizationEnabled(mode), mode)
-
   return (
     <>
       <tr className={rowClassName}>

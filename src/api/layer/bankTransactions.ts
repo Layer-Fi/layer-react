@@ -37,9 +37,7 @@ export const getBankTransactions = get<
     `/v1/businesses/${businessId}/bank-transactions?${
       cursor ? `cursor=${cursor}&` : ''
     }${
-      categorized !== undefined && categorized !== ''
-        ? `categorized=${categorized}&`
-        : ''
+      categorized !== undefined && categorized !== '' ? `categorized=${categorized}&` : ''
     }sort_by=${sortBy}&sort_order=${sortOrder}&limit=200`,
 )
 
