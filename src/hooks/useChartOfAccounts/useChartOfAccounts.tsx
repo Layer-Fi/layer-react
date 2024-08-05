@@ -421,7 +421,7 @@ export const useChartOfAccounts = (
     if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
-  }, [syncTimestamps])
+  }, [syncTimestamps, startDate, endDate])
 
   return {
     data: data?.data,

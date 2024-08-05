@@ -84,7 +84,7 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
     if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
-  }, [syncTimestamps])
+  }, [syncTimestamps, startDate, endDate, tagFilter, reportingBasis])
 
   return {
     startDate,

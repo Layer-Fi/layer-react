@@ -76,7 +76,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
-  }, [syncTimestamps])
+  }, [syncTimestamps, accountId])
 
   return {
     data: data?.data,

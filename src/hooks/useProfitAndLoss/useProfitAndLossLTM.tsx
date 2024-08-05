@@ -190,11 +190,22 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     }
   }, [isLoading, isValidating])
 
+  console.log('startMonth', startMonth)
+
   useEffect(() => {
+    console.log('check')
     if (queryKey && hasBeenTouched(queryKey)) {
       mutate()
     }
-  }, [syncTimestamps])
+  }, [
+    syncTimestamps,
+    startYear,
+    startMonth,
+    endYear,
+    endMonth,
+    tagFilter,
+    reportingBasis,
+  ])
 
   const refetch = () => {
     mutate()

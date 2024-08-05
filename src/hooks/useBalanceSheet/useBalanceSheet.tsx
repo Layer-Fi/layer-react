@@ -49,7 +49,7 @@ export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
     if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
-  }, [syncTimestamps])
+  }, [syncTimestamps, dateString])
 
   return { data: data?.data, isLoading, error, refetch }
 }

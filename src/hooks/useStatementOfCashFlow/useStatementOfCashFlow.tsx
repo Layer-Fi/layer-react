@@ -61,7 +61,7 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = (
     if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
-  }, [syncTimestamps])
+  }, [syncTimestamps, startDateString, endDateString])
 
   return { data: data?.data, isLoading, error, refetch }
 }
