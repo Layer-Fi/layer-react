@@ -337,6 +337,7 @@ const BankTransactionsContent = ({
         <BankTransactionMobileList
           bankTransactions={bankTransactions}
           editable={editable}
+          mode={mode}
           removeTransaction={removeTransaction}
           initialLoad={initialLoad}
           hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
