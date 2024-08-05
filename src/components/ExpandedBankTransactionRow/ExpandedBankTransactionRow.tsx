@@ -485,6 +485,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       classNamePrefix={className}
                       bankTransaction={bankTransaction}
                       selectedMatchId={selectedMatchId}
+                      readOnly={!categorizationEnabled(mode)}
                       setSelectedMatchId={id => {
                         setMatchFormError(undefined)
                         setSelectedMatchId(id)
