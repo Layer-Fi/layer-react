@@ -31,10 +31,10 @@ export type LayerContextHelpers = {
   removeToast: (toast: ToastProps) => void
   onError?: (error: LayerError) => void
   touch: (model: DataModel) => void
-  read: (model: DataModel) => void
+  read: (model: DataModel, cacheKey: string) => void
   syncTimestamps: Partial<Record<DataModel, number>>
   readTimestamps: Partial<Record<DataModel, number>>
-  hasBeenTouched: (model: DataModel) => boolean
+  hasBeenTouched: (cacheKey: string) => boolean
 }
 
 export interface ColorHSLConfig {

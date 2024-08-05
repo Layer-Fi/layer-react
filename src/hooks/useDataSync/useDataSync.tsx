@@ -3,10 +3,10 @@ import { DataModel } from '../../types/general'
 
 type UseDataSync = () => {
   touch: (model: DataModel) => void
-  read: (model: DataModel) => void
+  read: (model: DataModel, cacheKey: string) => void
   syncTimestamps: Partial<Record<DataModel, number>>
-  readTimestamps: Partial<Record<DataModel, number>>
-  hasBeenTouched: (model: DataModel) => boolean
+  readTimestamps: Partial<Record<string, { t: number; m: DataModel }>>
+  hasBeenTouched: (cacheKey: string) => boolean
 }
 
 const ALL_TOUCHABLE = [
@@ -41,16 +41,10 @@ export const useDataSync: UseDataSync = () => {
     [DataModel.STATEMENT_OF_CASH_FLOWS]: initialTimestamp,
   })
   const [readTimestamps, setReadTimestamps] = useState<
-    Partial<Record<DataModel, number>>
-  >({
-    [DataModel.BALANCE_SHEET]: initialTimestamp,
-    [DataModel.CHART_OF_ACCOUNTS]: initialTimestamp,
-    [DataModel.JOURNAL]: initialTimestamp,
-    [DataModel.LEDGER_ACCOUNTS]: initialTimestamp,
-    [DataModel.LINKED_ACCOUNTS]: initialTimestamp,
-    [DataModel.PROFIT_AND_LOSS]: initialTimestamp,
-    [DataModel.STATEMENT_OF_CASH_FLOWS]: initialTimestamp,
-  })
+    Partial<Record<string, { t: number; m: DataModel }>>
+  >({})
+
+  console.log(syncTimestamps, readTimestamps)
 
   const touch = (model: DataModel) => {
     setSyncTimestamps({
@@ -59,30 +53,30 @@ export const useDataSync: UseDataSync = () => {
     })
   }
 
-  const read = (model: DataModel) => {
+  const read = (model: DataModel, cacheKey: string) => {
     setReadTimestamps({
       ...readTimestamps,
-      [model]: Date.now(),
+      [cacheKey]: {
+        t: Date.now(),
+        m: model,
+      },
     })
   }
 
-  const hasBeenTouched = (model: DataModel) => {
-    if (!(model in DEPENDENCIES)) {
-      return false
-    }
-
-    const lastRead = model in readTimestamps ? readTimestamps[model] : undefined
+  const hasBeenTouched = (cacheKey: string) => {
+    const lastRead =
+      cacheKey in readTimestamps ? readTimestamps[cacheKey] : undefined
 
     if (!lastRead) {
       false
     }
 
     return Boolean(
-      DEPENDENCIES[model]?.find(dep => {
+      DEPENDENCIES[lastRead!.m]?.find(dep => {
         return (
           dep in syncTimestamps &&
           Boolean(syncTimestamps[dep]) &&
-          (syncTimestamps[dep] as number) > (lastRead as number)
+          (syncTimestamps[dep] as number) > (lastRead!.t as number)
         )
       }),
     )

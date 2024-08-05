@@ -29,11 +29,14 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
   const [accountId, setAccountId] = useState<string | undefined>()
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
 
-  const { data, isLoading, isValidating, error, mutate } = useSWR(
+  const queryKey =
     businessId &&
-      accountId &&
-      auth?.access_token &&
-      `ledger-accounts-lines-${businessId}-${accountId}`,
+    accountId &&
+    auth?.access_token &&
+    `ledger-accounts-lines-${businessId}-${accountId}`
+
+  const { data, isLoading, isValidating, error, mutate } = useSWR(
+    queryKey,
     Layer.getLedgerAccountsLines(apiUrl, auth?.access_token, {
       params: { businessId, accountId },
     }),
@@ -64,13 +67,13 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
-    if (isLoading || isValidating) {
-      read(DataModel.LEDGER_ACCOUNTS)
+    if (queryKey && (isLoading || isValidating)) {
+      read(DataModel.LEDGER_ACCOUNTS, queryKey)
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(DataModel.LEDGER_ACCOUNTS)) {
+    if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
   }, [syncTimestamps])

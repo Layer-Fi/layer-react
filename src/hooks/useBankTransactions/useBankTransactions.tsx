@@ -338,12 +338,12 @@ export const useBankTransactions: UseBankTransactions = params => {
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
     if (isLoading || isValidating) {
-      read(DataModel.BANK_TRANSACTIONS)
+      read(DataModel.BANK_TRANSACTIONS, 'bank-transactions')
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(DataModel.BANK_TRANSACTIONS)) {
+    if (hasBeenTouched('bank-transactions')) {
       refetch()
     }
   }, [syncTimestamps])

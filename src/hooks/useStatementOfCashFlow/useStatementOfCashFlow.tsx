@@ -28,12 +28,15 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = (
   )
   const endDateString = format(startOfDay(endDate), "yyyy-MM-dd'T'HH:mm:ssXXX")
 
-  const { data, isLoading, isValidating, error, mutate } = useSWR(
+  const queryKey =
     businessId &&
-      startDateString &&
-      endDateString &&
-      auth?.access_token &&
-      `statement-of-cash-${businessId}-${startDateString}-${endDateString}`,
+    startDateString &&
+    endDateString &&
+    auth?.access_token &&
+    `statement-of-cash-${businessId}-${startDateString}-${endDateString}`
+
+  const { data, isLoading, isValidating, error, mutate } = useSWR(
+    queryKey,
     Layer.getStatementOfCashFlow(apiUrl, auth?.access_token, {
       params: {
         businessId,
@@ -49,13 +52,13 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = (
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
-    if (isLoading || isValidating) {
-      read(DataModel.STATEMENT_OF_CASH_FLOWS)
+    if (queryKey && (isLoading || isValidating)) {
+      read(DataModel.STATEMENT_OF_CASH_FLOWS, queryKey)
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(DataModel.STATEMENT_OF_CASH_FLOWS)) {
+    if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
   }, [syncTimestamps])

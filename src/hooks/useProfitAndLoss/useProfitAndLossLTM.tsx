@@ -70,6 +70,17 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     return buildDates({ currentDate: date })
   }, [date, businessId, tagFilter, reportingBasis])
 
+  const queryKey =
+    businessId &&
+    Boolean(startYear) &&
+    Boolean(startMonth) &&
+    Boolean(endYear) &&
+    Boolean(endMonth) &&
+    auth?.access_token &&
+    `profit-and-loss-summaries-${businessId}-${startYear.toString()}-${startMonth.toString()}-${tagFilter?.key}-${tagFilter?.values?.join(
+      ',',
+    )}-${reportingBasis}`
+
   const {
     data: rawData,
     isLoading,
@@ -77,15 +88,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     error,
     mutate,
   } = useSWR(
-    businessId &&
-      Boolean(startYear) &&
-      Boolean(startMonth) &&
-      Boolean(endYear) &&
-      Boolean(endMonth) &&
-      auth?.access_token &&
-      `profit-and-loss-summaries-${businessId}-${startYear.toString()}-${startMonth.toString()}-${tagFilter?.key}-${tagFilter?.values?.join(
-        ',',
-      )}-${reportingBasis}`,
+    queryKey,
     Layer.getProfitAndLossSummaries(apiUrl, auth?.access_token, {
       params: {
         businessId,
@@ -182,13 +185,13 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
-    if (isLoading || isValidating) {
-      read(DataModel.PROFIT_AND_LOSS)
+    if (queryKey && (isLoading || isValidating)) {
+      read(DataModel.PROFIT_AND_LOSS, queryKey)
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(DataModel.PROFIT_AND_LOSS)) {
+    if (queryKey && hasBeenTouched(queryKey)) {
       mutate()
     }
   }, [syncTimestamps])

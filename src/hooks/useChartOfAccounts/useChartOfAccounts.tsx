@@ -184,10 +184,13 @@ export const useChartOfAccounts = (
     initialEndDate ?? endOfMonth(Date.now()),
   )
 
-  const { data, isLoading, isValidating, error, mutate } = useSWR(
+  const queryKey =
     businessId &&
-      auth?.access_token &&
-      `chart-of-accounts-${businessId}-${startDate?.valueOf()}-${endDate?.valueOf()}`,
+    auth?.access_token &&
+    `chart-of-accounts-${businessId}-${startDate?.valueOf()}-${endDate?.valueOf()}`
+
+  const { data, isLoading, isValidating, error, mutate } = useSWR(
+    queryKey,
     Layer.getLedgerAccountBalances(apiUrl, auth?.access_token, {
       params: {
         businessId,
@@ -409,13 +412,13 @@ export const useChartOfAccounts = (
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
-    if (isLoading || isValidating) {
-      read(DataModel.CHART_OF_ACCOUNTS)
+    if (queryKey && (isLoading || isValidating)) {
+      read(DataModel.CHART_OF_ACCOUNTS, queryKey)
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(DataModel.CHART_OF_ACCOUNTS)) {
+    if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
   }, [syncTimestamps])
