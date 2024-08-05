@@ -85,7 +85,9 @@ export const ProfitAndLossRow = ({
       <div
         className={labelClasses.join(' ')}
         onClick={() => !lockExpanded && toggleExpanded()}
-        style={{ paddingLeft: 16 * (depth + 1) }}
+        style={{
+          paddingLeft: depth === 0 && !hasChildren ? 28 : 16 * (depth + 1) + 2,
+        }}
       >
         <span className='Layer__profit-and-loss-row__label__title'>
           {!lockExpanded && variant !== 'summation' ? (

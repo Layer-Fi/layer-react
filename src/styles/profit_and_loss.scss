@@ -173,15 +173,15 @@
   }
 }
 
-.Layer__profit-and-loss-row__label--depth-0 {
+.Layer__profit-and-loss-row__label {
   .Layer__text {
-    color: var(--color-base-800);
-    font-variation-settings: 'wght' var(--font-weight-bold);
+    color: var(--color-base-700);
+    font-variation-settings: 'wght' var(--font-weight-normal);
     margin: 0;
   }
 }
 
-.Layer__profit-and-loss-row__value--depth-0 {
+.Layer__profit-and-loss-row__label.Layer__profit-and-loss-row__label--depth-0 {
   .Layer__text {
     color: var(--color-base-800);
     font-variation-settings: 'wght' var(--font-weight-bold);
@@ -194,14 +194,6 @@
   padding-left: calc(var(--spacing-5xl) + var(--spacing-md));
   padding-top: var(--spacing-sm);
   padding-bottom: var(--spacing-sm);
-  .Layer__text {
-    color: var(--color-base-700);
-    font-variation-settings: 'wght' var(--font-weight-normal);
-    margin: 0;
-  }
-}
-
-.Layer__profit-and-loss-row__label {
   .Layer__text {
     color: var(--color-base-700);
     font-variation-settings: 'wght' var(--font-weight-normal);
