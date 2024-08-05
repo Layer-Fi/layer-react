@@ -72,21 +72,7 @@ export const ProfitAndLossSummaries = ({
     isLoading,
     setSidebarScope,
     sidebarScope,
-    refetch,
-    dateRange,
   } = useContext(PNL.Context)
-
-  // @TODO - temporary fix to revalidate summary card data
-  const [trigger, setTrigger] = useState(-1)
-  useEffect(() => {
-    setTrigger(Math.random())
-  }, [dateRange?.startDate])
-
-  useEffect(() => {
-    refetch()
-  }, [trigger])
-
-  // @TODO - temporary fix - END
 
   const dataItem = Array.isArray(storedData)
     ? storedData[storedData.length - 1]

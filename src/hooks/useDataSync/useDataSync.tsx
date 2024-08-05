@@ -67,8 +67,11 @@ export const useDataSync: UseDataSync = () => {
     const lastRead =
       cacheKey in readTimestamps ? readTimestamps[cacheKey] : undefined
 
-    if (!lastRead) {
-      false
+    console.log('lastRead', lastRead)
+
+    if (!lastRead || !lastRead?.m || !lastRead?.t) {
+      console.log('exit')
+      return false
     }
 
     return Boolean(
