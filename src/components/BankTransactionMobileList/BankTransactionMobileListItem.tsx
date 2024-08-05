@@ -4,6 +4,10 @@ import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { hasMatch, isCredit } from '../../utils/bankTransactions'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
+import {
+  BankTransactionsMode,
+  categorizationEnabled,
+} from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { CloseButton } from '../Button'
 import { Toggle } from '../Toggle'
@@ -21,6 +25,7 @@ export interface BankTransactionMobileListItemProps {
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
   hardRefreshPnlOnCategorize?: boolean
+  mode: BankTransactionsMode
 }
 
 export enum Purpose {
@@ -48,8 +53,9 @@ export const BankTransactionMobileListItem = ({
   bankTransaction,
   removeTransaction,
   editable,
+  mode,
   initialLoad,
-  hardRefreshPnlOnCategorize = false
+  hardRefreshPnlOnCategorize = false,
 }: BankTransactionMobileListItemProps) => {
   const {
     transactionIdToOpen,
@@ -160,11 +166,7 @@ export const BankTransactionMobileListItem = ({
   )
 
   return (
-    <li
-      ref={itemRef}
-      className={rowClassName}
-      data-item={bankTransaction.id}
-    >
+    <li ref={itemRef} className={rowClassName} data-item={bankTransaction.id}>
       <span
         className={`${className}__heading`}
         onClick={toggleOpen}
@@ -203,46 +205,56 @@ export const BankTransactionMobileListItem = ({
           </div>
         </div>
       </span>
-      <div className={`${className}__expanded-row`} style={{ height: !open || removeAnim ? 0 : height }}>
-        {open && (
-          <div
-            className={`${className}__expanded-row__content`}
-            ref={formRowRef}
-          >
-            <div className={`${className}__toggle-row`}>
-              <Toggle
-                name={`purpose-${bankTransaction.id}`}
-                size={ToggleSize.xsmall}
-                options={[
-                  {
-                    value: 'business',
-                    label: 'Business',
-                    style: { minWidth: 84 },
-                  },
-                  {
-                    value: 'personal',
-                    label: 'Personal',
-                    style: { minWidth: 84 },
-                  },
-                  {
-                    value: 'more',
-                    label: 'More',
-                    style: { minWidth: 84 },
-                  },
-                ]}
-                selected={purpose}
-                onChange={onChangePurpose}
+      {categorizationEnabled(mode) ? (
+        <div
+          className={`${className}__expanded-row`}
+          style={{ height: !open || removeAnim ? 0 : height }}
+        >
+          {open && (
+            <div
+              className={`${className}__expanded-row__content`}
+              ref={formRowRef}
+            >
+              <div className={`${className}__toggle-row`}>
+                <Toggle
+                  name={`purpose-${bankTransaction.id}`}
+                  size={ToggleSize.xsmall}
+                  options={[
+                    {
+                      value: 'business',
+                      label: 'Business',
+                      style: { minWidth: 84 },
+                      disabled: categorizationEnabled(mode),
+                    },
+                    {
+                      value: 'personal',
+                      label: 'Personal',
+                      style: { minWidth: 84 },
+                      disabled: categorizationEnabled(mode),
+                    },
+                    {
+                      value: 'more',
+                      label: 'More',
+                      style: { minWidth: 84 },
+                      disabled: categorizationEnabled(mode),
+                    },
+                  ]}
+                  selected={purpose}
+                  onChange={onChangePurpose}
+                />
+                <CloseButton onClick={() => close()} />
+              </div>
+              <BankTransactionMobileForms
+                purpose={purpose}
+                bankTransaction={bankTransaction}
+                hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
               />
-              <CloseButton onClick={() => close()} />
             </div>
-            <BankTransactionMobileForms
-              purpose={purpose}
-              bankTransaction={bankTransaction}
-              hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
-            />
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      ) : (
+        <></>
+      )}
     </li>
   )
 }

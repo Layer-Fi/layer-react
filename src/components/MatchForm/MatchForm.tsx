@@ -13,6 +13,7 @@ export interface MatchFormProps {
   selectedMatchId?: string
   setSelectedMatchId: (val?: string) => void
   matchFormError?: string
+  readOnly?: boolean
 }
 
 export const MatchForm = ({
@@ -21,6 +22,7 @@ export const MatchForm = ({
   selectedMatchId,
   setSelectedMatchId,
   matchFormError,
+  readOnly = false,
 }: MatchFormProps) => {
   return (
     <div className={`${classNamePrefix}__match-table`}>
@@ -49,6 +51,9 @@ export const MatchForm = ({
                 : '',
             )}
             onClick={() => {
+              if (readOnly === true) {
+                return
+              }
               if (selectedMatchId === match.id) {
                 setSelectedMatchId(undefined)
                 return

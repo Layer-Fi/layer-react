@@ -10,6 +10,7 @@ import React, {
 import { Layer } from '../../api/layer'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
@@ -24,6 +25,10 @@ import {
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, hasMatch } from '../../utils/bankTransactions'
+import {
+  BankTransactionsMode,
+  categorizationEnabled,
+} from '../BankTransactions/BankTransactions'
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect'
@@ -39,7 +44,6 @@ import { ToggleSize } from '../Toggle/Toggle'
 import { Text, ErrorText, TextSize } from '../Typography'
 import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
-import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -47,6 +51,7 @@ type Props = {
   close: () => void
   asListItem?: boolean
   submitBtnText?: string
+  mode: BankTransactionsMode
   containerWidth?: number
   categorized?: boolean
   showDescriptions: boolean
@@ -111,6 +116,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       submitBtnText = 'Save',
       containerWidth,
       showDescriptions,
+      mode,
       showReceiptUploads,
       hardRefreshPnlOnCategorize,
     },
@@ -203,7 +209,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       let sanitized = input.replace(/[^0-9.]/g, '')
 
       // Ensure there's at most one period
-      let parts = sanitized.split('.')
+      const parts = sanitized.split('.')
       if (parts.length > 2) {
         sanitized = parts[0] + '.' + parts.slice(1).join('')
       }
@@ -433,26 +439,33 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       >
         {shouldHide ? null : (
           <span className={`${className}__wrapper`} ref={bodyRef}>
-            <div className={`${className}__content-toggle`}>
-              <Toggle
-                name={`purpose-${bankTransaction.id}${asListItem ? '-li' : ''}`}
-                size={ToggleSize.small}
-                options={[
-                  {
-                    value: 'categorize',
-                    label: 'Categorize',
-                  },
-                  {
-                    value: 'match',
-                    label: 'Match',
-                    disabled: !hasMatch(bankTransaction),
-                    disabledMessage: 'We could not find matching transactions',
-                  },
-                ]}
-                selected={purpose}
-                onChange={onChangePurpose}
-              />
-            </div>
+            {categorizationEnabled(mode) ? (
+              <div className={`${className}__content-toggle`}>
+                <Toggle
+                  name={`purpose-${bankTransaction.id}${
+                    asListItem ? '-li' : ''
+                  }`}
+                  size={ToggleSize.small}
+                  options={[
+                    {
+                      value: 'categorize',
+                      label: 'Categorize',
+                    },
+                    {
+                      value: 'match',
+                      label: 'Match',
+                      disabled: !hasMatch(bankTransaction),
+                      disabledMessage:
+                        'We could not find matching transactions',
+                    },
+                  ]}
+                  selected={purpose}
+                  onChange={onChangePurpose}
+                />
+              </div>
+            ) : (
+              <></>
+            )}
             <div
               className={`${className}__content`}
               id={`expanded-${bankTransaction.id}`}
@@ -472,6 +485,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       classNamePrefix={className}
                       bankTransaction={bankTransaction}
                       selectedMatchId={selectedMatchId}
+                      readOnly={!categorizationEnabled(mode)}
                       setSelectedMatchId={id => {
                         setMatchFormError(undefined)
                         setSelectedMatchId(id)
@@ -500,7 +514,9 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                           <Input
                             type='text'
                             name={`split-${index}${asListItem ? '-li' : ''}`}
-                            disabled={index === 0}
+                            disabled={
+                              index === 0 || !categorizationEnabled(mode)
+                            }
                             onChange={updateAmounts(index)}
                             value={split.inputValue}
                             onBlur={onBlur}
@@ -517,7 +533,10 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               value={split.category}
                               onChange={value => changeCategory(index, value)}
                               className='Layer__category-menu--full'
-                              disabled={bankTransaction.processing}
+                              disabled={
+                                bankTransaction.processing ||
+                                !categorizationEnabled(mode)
+                              }
                               excludeMatches
                             />
                             {index > 0 && (
@@ -548,25 +567,29 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                           )}`}
                         />
                       )}
-                      <div className={`${className}__splits-buttons`}>
-                        {rowState.splits.length > 1 ? (
-                          <TextButton
-                            onClick={addSplit}
-                            disabled={rowState.splits.length > 5}
-                          >
-                            Add new split
-                          </TextButton>
-                        ) : (
-                          <Button
-                            onClick={addSplit}
-                            rightIcon={<Scissors size={14} />}
-                            variant={ButtonVariant.secondary}
-                            disabled={rowState.splits.length > 5}
-                          >
-                            Split
-                          </Button>
-                        )}
-                      </div>
+                      {categorizationEnabled(mode) ? (
+                        <div className={`${className}__splits-buttons`}>
+                          {rowState.splits.length > 1 ? (
+                            <TextButton
+                              onClick={addSplit}
+                              disabled={rowState.splits.length > 5}
+                            >
+                              Add new split
+                            </TextButton>
+                          ) : (
+                            <Button
+                              onClick={addSplit}
+                              rightIcon={<Scissors size={14} />}
+                              variant={ButtonVariant.secondary}
+                              disabled={rowState.splits.length > 5}
+                            >
+                              Split
+                            </Button>
+                          )}
+                        </div>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
                 </div>

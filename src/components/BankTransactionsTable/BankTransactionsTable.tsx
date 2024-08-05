@@ -2,7 +2,10 @@ import React from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
 import { BankTransactionRow } from '../BankTransactionRow'
-import { BankTransactionsStringOverrides } from '../BankTransactions/BankTransactions'
+import {
+  BankTransactionsMode,
+  BankTransactionsStringOverrides,
+} from '../BankTransactions/BankTransactions'
 import { BankTransactionsLoader } from '../BankTransactionsLoader'
 import { SyncingComponent } from '../SyncingComponent'
 
@@ -19,6 +22,7 @@ interface BankTransactionsTableProps {
   bankTransactions?: BankTransaction[]
   editable: boolean
   categorizeView?: boolean
+  mode: BankTransactionsMode
   isLoading?: boolean
   initialLoad?: boolean
   containerWidth: number
@@ -38,6 +42,7 @@ export const BankTransactionsTable = ({
   editable,
   isLoading,
   bankTransactions,
+  mode,
   initialLoad,
   containerWidth,
   removeTransaction,
@@ -99,6 +104,7 @@ export const BankTransactionsTable = ({
                 initialLoad={initialLoad}
                 index={index}
                 editable={editable}
+                mode={mode}
                 key={bankTransaction.id}
                 dateFormat={DATE_FORMAT}
                 bankTransaction={bankTransaction}

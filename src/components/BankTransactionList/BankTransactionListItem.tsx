@@ -6,7 +6,10 @@ import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types'
 import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
 import { getDefaultSelectedCategory } from '../BankTransactionRow/BankTransactionRow'
-import { BankTransactionCTAStringOverrides } from '../BankTransactions/BankTransactions'
+import {
+  BankTransactionCTAStringOverrides,
+  BankTransactionsMode,
+} from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { RetryButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
@@ -24,6 +27,7 @@ type Props = {
   dateFormat: string
   bankTransaction: BankTransaction
   editable: boolean
+  mode: BankTransactionsMode
   showDescriptions: boolean
   showReceiptUploads: boolean
   hardRefreshPnlOnCategorize: boolean
@@ -37,6 +41,7 @@ export const BankTransactionListItem = ({
   dateFormat,
   bankTransaction,
   editable,
+  mode,
   showDescriptions,
   showReceiptUploads,
   hardRefreshPnlOnCategorize,
@@ -164,6 +169,7 @@ export const BankTransactionListItem = ({
           ref={expandedRowRef}
           bankTransaction={bankTransaction}
           isOpen={open}
+          mode={mode}
           close={() => setOpen(false)}
           categorized={categorized}
           asListItem={true}
