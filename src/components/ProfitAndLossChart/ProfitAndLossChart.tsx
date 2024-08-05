@@ -244,9 +244,9 @@ export const ProfitAndLossChart = ({
     name: getMonthName(pnl),
     revenue: pnl?.income || 0,
     revenueUncategorized: pnl?.uncategorizedInflows || 0,
-    expenses: -(pnl?.operatingExpenses || 0),
+    expenses: -(pnl?.totalExpenses || 0),
     expensesUncategorized: -(pnl?.uncategorizedOutflows || 0),
-    operatingExpensesInverse: pnl?.operatingExpensesInverse || 0,
+    totalExpensesInverse: pnl?.totalExpensesInverse || 0,
     uncategorizedOutflowsInverse: pnl?.uncategorizedOutflowsInverse || 0,
     netProfit: pnl?.netProfit || 0,
     selected:
@@ -270,7 +270,7 @@ export const ProfitAndLossChart = ({
           name: format(currentDate, compactView ? 'LLLLL' : 'LLL'),
           revenue: 0,
           revenueUncategorized: 0,
-          operatingExpensesInverse: 0,
+          totalExpensesInverse: 0,
           uncategorizedOutflowsInverse: 0,
           expenses: 0,
           expensesUncategorized: 0,
@@ -293,10 +293,10 @@ export const ProfitAndLossChart = ({
         if (totalExpenses < 0 || x.uncategorizedOutflows < 0) {
           return {
             ...x,
-            operatingExpenses: totalExpenses < 0 ? 0 : totalExpenses,
+            totalExpenses: totalExpenses < 0 ? 0 : totalExpenses,
             uncategorizedOutflows:
               x.uncategorizedOutflows < 0 ? 0 : x.uncategorizedOutflows,
-            operatingExpensesInverse: totalExpenses < 0 ? -totalExpenses : 0,
+            totalExpensesInverse: totalExpenses < 0 ? -totalExpenses : 0,
             uncategorizedOutflowsInverse:
               x.uncategorizedOutflows < 0 ? -x.uncategorizedOutflows : 0,
           }
@@ -617,7 +617,7 @@ export const ProfitAndLossChart = ({
           stackId='expenses'
         />
         <Bar
-          dataKey='operatingExpensesInverse'
+          dataKey='totalExpensesInverse'
           barSize={barSize}
           isAnimationActive={barAnimActive}
           animationDuration={100}
