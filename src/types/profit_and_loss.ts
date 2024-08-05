@@ -31,7 +31,7 @@ export interface ProfitAndLossSummary {
   totalExpenses: number
   uncategorizedInflows: number
   uncategorizedOutflows: number
-  operatingExpensesInverse?: number
+  totalExpensesInverse?: number
   uncategorizedOutflowsInverse?: number
   uncategorized_transactions: number
 }
