@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
 import { BREAKPOINTS } from '../../config/general'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useSizeClass } from '../../hooks/useWindowSize'
