@@ -14,6 +14,7 @@ type Props = {
   direction?: Direction
   scope?: SidebarScope
   setSidebarScope?: (name: SidebarScope) => void
+  defaultExpanded?: boolean
 
   /* This removes the expand toggle and leaves everything in the expanded state */
   lockExpanded?: boolean
@@ -23,17 +24,18 @@ export const ProfitAndLossRow = ({
   variant,
   lineItem,
   depth = 0,
-  maxDepth = 1,
+  maxDepth = 8,
   direction = Direction.DEBIT,
   lockExpanded = false,
   scope,
   setSidebarScope,
+  defaultExpanded = false,
 }: Props) => {
   if (!lineItem) {
     return null
   }
   const { value, display_name, line_items } = lineItem
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(lockExpanded || defaultExpanded)
   const amount = value ?? 0
   const amountString = centsToDollars(Math.abs(amount))
   const labelClasses = [
@@ -83,6 +85,9 @@ export const ProfitAndLossRow = ({
       <div
         className={labelClasses.join(' ')}
         onClick={() => !lockExpanded && toggleExpanded()}
+        style={{
+          paddingLeft: depth === 0 && !hasChildren ? 28 : 16 * (depth + 1) + 2,
+        }}
       >
         <span className='Layer__profit-and-loss-row__label__title'>
           {!lockExpanded && variant !== 'summation' ? (
