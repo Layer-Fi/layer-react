@@ -18,7 +18,11 @@ type Props = {
   stringOverrides?: ProfitAndLossTableStringOverrides
 }
 
-export const ProfitAndLossTable = ({ lockExpanded, asContainer, stringOverrides }: Props) => {
+export const ProfitAndLossTable = ({
+  lockExpanded,
+  asContainer,
+  stringOverrides,
+}: Props) => {
   const {
     data: actualData,
     isLoading,
@@ -57,6 +61,7 @@ export const ProfitAndLossTable = ({ lockExpanded, asContainer, stringOverrides 
           lockExpanded={lockExpanded}
           scope='revenue'
           setSidebarScope={setSidebarScope}
+          defaultExpanded
         />
         <ProfitAndLossRow
           lineItem={data.cost_of_goods_sold}
@@ -64,6 +69,7 @@ export const ProfitAndLossTable = ({ lockExpanded, asContainer, stringOverrides 
           lockExpanded={lockExpanded}
           scope='expenses'
           setSidebarScope={setSidebarScope}
+          defaultExpanded
         />
         <ProfitAndLossRow
           lineItem={{
@@ -75,6 +81,7 @@ export const ProfitAndLossTable = ({ lockExpanded, asContainer, stringOverrides 
           lockExpanded={lockExpanded}
           scope='revenue'
           setSidebarScope={setSidebarScope}
+          defaultExpanded
         />
         <ProfitAndLossRow
           lineItem={data.expenses}
@@ -82,17 +89,20 @@ export const ProfitAndLossTable = ({ lockExpanded, asContainer, stringOverrides 
           lockExpanded={lockExpanded}
           scope='expenses'
           setSidebarScope={setSidebarScope}
+          defaultExpanded
         />
         <ProfitAndLossRow
           lineItem={{
             value: data.profit_before_taxes,
-            display_name: stringOverrides?.profitBeforeTaxesLabel || 'Profit Before Taxes',
+            display_name:
+              stringOverrides?.profitBeforeTaxesLabel || 'Profit Before Taxes',
           }}
           variant='summation'
           direction={Direction.CREDIT}
           lockExpanded={lockExpanded}
           scope='revenue'
           setSidebarScope={setSidebarScope}
+          defaultExpanded
         />
         <ProfitAndLossRow
           lineItem={data.taxes}
@@ -100,6 +110,7 @@ export const ProfitAndLossTable = ({ lockExpanded, asContainer, stringOverrides 
           lockExpanded={lockExpanded}
           scope='expenses'
           setSidebarScope={setSidebarScope}
+          defaultExpanded
         />
         <ProfitAndLossRow
           lineItem={{
