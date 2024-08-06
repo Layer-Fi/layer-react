@@ -199,7 +199,7 @@ export const LayerProvider = ({
     }
   }, [businessAccessToken, auth?.access_token])
 
-  useSWR(
+  const { data: categoriesData } = useSWR(
     businessId && state.auth?.access_token && `categories-${businessId}`,
     Layer.getCategories(apiUrl, state.auth?.access_token, {
       params: { businessId },
@@ -216,8 +216,16 @@ export const LayerProvider = ({
       },
     },
   )
+  useEffect(() => {
+    if (categoriesData?.data?.categories?.length) {
+      dispatch({
+        type: Action.setCategories,
+        payload: { categories: categoriesData.data.categories || [] },
+      })
+    }
+  }, [categoriesData])
 
-  useSWR(
+  const { data: businessData } = useSWR(
     businessId && state?.auth?.access_token && `business-${businessId}`,
     Layer.getBusiness(apiUrl, state?.auth?.access_token, {
       params: { businessId },
@@ -234,6 +242,14 @@ export const LayerProvider = ({
       },
     },
   )
+  useEffect(() => {
+    if (businessData?.data) {
+      dispatch({
+        type: Action.setBusiness,
+        payload: { business: businessData.data || [] },
+      })
+    }
+  }, [businessData])
 
   const setTheme = (theme: LayerThemeConfig) => {
     dispatch({
