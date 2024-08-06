@@ -67,9 +67,10 @@ export type SplitCategoryUpdate = {
 export type CategoryUpdate = SingleCategoryUpdate | SplitCategoryUpdate
 
 export function hasSuggestions(
-  categorization: Categorization,
+  categorization: Categorization | null,
 ): categorization is SuggestedCategorization {
   return (
+    categorization != null &&
     (categorization as SuggestedCategorization).suggestions !== undefined &&
     (categorization as SuggestedCategorization).suggestions.length > 0
   )

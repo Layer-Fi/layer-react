@@ -1,5 +1,5 @@
 import { Categorization, CategorizationStatus, Category } from './categories'
-import {S3PresignedUrl} from "./general";
+import { S3PresignedUrl } from './general'
 
 export enum Direction {
   CREDIT = 'CREDIT',
@@ -34,7 +34,7 @@ export interface BankTransaction extends Record<string, unknown> {
   counterparty_name: string
   category: Category
   categorization_status: CategorizationStatus
-  categorization_flow: Categorization
+  categorization_flow: Categorization | null
   categorization_method: string
   error?: string
   processing?: boolean
