@@ -10,13 +10,9 @@ import { Option, mapCategoryToOption, getAssignedValue } from './utils'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
-  hardRefreshPnlOnCategorize?: boolean
 }
 
-export const BusinessForm = ({
-  bankTransaction,
-  hardRefreshPnlOnCategorize = false,
-}: BusinessFormProps) => {
+export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
   const { setContent, close } = useContext(DrawerContext)
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactionsContext()

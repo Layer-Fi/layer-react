@@ -24,7 +24,6 @@ export interface BankTransactionMobileListItemProps {
   editable: boolean
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
-  hardRefreshPnlOnCategorize?: boolean
   mode: BankTransactionsMode
 }
 
@@ -55,7 +54,6 @@ export const BankTransactionMobileListItem = ({
   editable,
   mode,
   initialLoad,
-  hardRefreshPnlOnCategorize = false,
 }: BankTransactionMobileListItemProps) => {
   const {
     transactionIdToOpen,
@@ -247,7 +245,6 @@ export const BankTransactionMobileListItem = ({
               <BankTransactionMobileForms
                 purpose={purpose}
                 bankTransaction={bankTransaction}
-                hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
               />
             </div>
           )}

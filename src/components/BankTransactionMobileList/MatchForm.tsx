@@ -8,10 +8,8 @@ import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 
 export const MatchForm = ({
   bankTransaction,
-  hardRefreshPnlOnCategorize,
 }: {
   bankTransaction: BankTransaction
-  hardRefreshPnlOnCategorize?: boolean
 }) => {
   const { match: matchBankTransaction, isLoading } =
     useBankTransactionsContext()

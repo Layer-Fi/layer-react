@@ -56,7 +56,6 @@ type Props = {
   categorized?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
-  hardRefreshPnlOnCategorize: boolean
 }
 
 type Split = {
@@ -118,7 +117,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       showDescriptions,
       mode,
       showReceiptUploads,
-      hardRefreshPnlOnCategorize,
     },
     ref,
   ) => {

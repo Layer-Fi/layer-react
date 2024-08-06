@@ -40,7 +40,6 @@ type Props = {
   initialLoad?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
-  hardRefreshPnlOnCategorize: boolean
   mode: BankTransactionsMode
   stringOverrides?: BankTransactionCTAStringOverrides
 }
@@ -82,7 +81,6 @@ export const BankTransactionRow = ({
   initialLoad,
   showDescriptions,
   showReceiptUploads,
-  hardRefreshPnlOnCategorize,
   stringOverrides,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
@@ -377,7 +375,6 @@ export const BankTransactionRow = ({
             containerWidth={containerWidth}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
-            hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
           />
         </td>
       </tr>

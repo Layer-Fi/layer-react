@@ -29,7 +29,6 @@ type Props = {
   mode: BankTransactionsMode
   showDescriptions: boolean
   showReceiptUploads: boolean
-  hardRefreshPnlOnCategorize: boolean
   removeTransaction: (bt: BankTransaction) => void
   containerWidth?: number
   stringOverrides?: BankTransactionCTAStringOverrides
@@ -43,7 +42,6 @@ export const BankTransactionListItem = ({
   mode,
   showDescriptions,
   showReceiptUploads,
-  hardRefreshPnlOnCategorize,
   containerWidth,
   removeTransaction,
   stringOverrides,
@@ -176,7 +174,6 @@ export const BankTransactionListItem = ({
           containerWidth={containerWidth}
           showDescriptions={showDescriptions}
           showReceiptUploads={showReceiptUploads}
-          hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
         />
       </span>
       <span className={`${className}__base-row`}>

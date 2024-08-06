@@ -8,7 +8,6 @@ import { PersonalCategories } from './constants'
 
 interface PersonalFormProps {
   bankTransaction: BankTransaction
-  hardRefreshPnlOnCategorize?: boolean
 }
 
 const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
@@ -25,10 +24,7 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
   )
 }
 
-export const PersonalForm = ({
-  bankTransaction,
-  hardRefreshPnlOnCategorize,
-}: PersonalFormProps) => {
+export const PersonalForm = ({ bankTransaction }: PersonalFormProps) => {
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactionsContext()
   const [showRetry, setShowRetry] = useState(false)

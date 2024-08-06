@@ -36,10 +36,8 @@ type RowState = {
 
 export const SplitForm = ({
   bankTransaction,
-  hardRefreshPnlOnCategorize,
 }: {
   bankTransaction: BankTransaction
-  hardRefreshPnlOnCategorize?: boolean
 }) => {
   const {
     categorize: categorizeBankTransaction,
