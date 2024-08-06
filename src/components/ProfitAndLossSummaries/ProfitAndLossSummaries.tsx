@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { Scope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { ProfitAndLoss } from '../../types'
