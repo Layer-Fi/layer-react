@@ -33,7 +33,7 @@ const ICONS = {
 }
 
 export const TasksHeader = ({
-  tasksHeader = 'Book Tasks',
+  tasksHeader = 'Bookkeeping Tasks',
   collapsable,
   open,
   toggleContent,
