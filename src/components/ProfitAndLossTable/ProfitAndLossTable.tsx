@@ -30,7 +30,7 @@ export const ProfitAndLossTable = ({ asContainer, stringOverrides }: Props) => {
   const { isOpen, setIsOpen } = useTableExpandRow()
 
   useEffect(() => {
-    setIsOpen(['income'])
+    setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
   }, [])
 
   const currentData = Array.isArray(actualData)
@@ -64,14 +64,12 @@ export const ProfitAndLossTable = ({ asContainer, stringOverrides }: Props) => {
 
     const expanded = expandable ? isOpen(rowKey) : true
 
-    const showChildren = expanded
-
     return (
       <React.Fragment key={rowKey + '-' + rowIndex}>
         <TableRow
           rowKey={rowKey + '-' + rowIndex}
           expandable={expandable}
-          isExpanded={showChildren}
+          isExpanded={expanded}
           depth={depth}
           variant={variant ? variant : expandable ? 'expandable' : 'default'}
           handleExpand={() => setIsOpen(rowKey)}
@@ -98,7 +96,7 @@ export const ProfitAndLossTable = ({ asContainer, stringOverrides }: Props) => {
             {lineItem.value}
           </TableCell>
         </TableRow>
-        {showChildren && lineItem.line_items
+        {expanded && lineItem.line_items
           ? lineItem.line_items.map((child, i) =>
               renderLineItem(
                 child,
