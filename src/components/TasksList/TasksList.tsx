@@ -60,8 +60,6 @@ export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
     }
   }
 
-  console.log('TasksList', { tasks, sortedTasks, currentPage })
-
   return (
     <div className='Layer__tasks-list'>
       {sortedTasks && sortedTasks.length > 0 ? (
