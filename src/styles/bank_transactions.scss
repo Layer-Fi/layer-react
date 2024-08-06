@@ -775,6 +775,8 @@
     position: sticky;
     top: 0px;
     z-index: 2;
+    border-top-left-radius: var(--border-radius-sm);
+    border-top-right-radius: var(--border-radius-sm);
   }
 
   .Layer__bank-transactions__header.Layer__bank-transactions__header--mobile {

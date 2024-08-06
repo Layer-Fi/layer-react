@@ -94,16 +94,20 @@ export const DatePicker = ({
   useEffect(() => {
     try {
       setPickerDate(true)
-      if (!isRangeMode(mode) && selected !== selectedDates) {
+      if (
+        !isRangeMode(mode) &&
+        (selected as Date | null)?.getTime() !==
+          (selectedDates as Date | null)?.getTime()
+      ) {
         setSelectedDates(selected)
         return
       }
 
       if (isRangeMode(mode) && Array.isArray(selected)) {
-        if (startDate !== selected[0]) {
+        if ((startDate as Date | null)?.getTime() !== selected[0]?.getTime()) {
           setStartDate(selected[0])
         }
-        if (endDate !== selected[1]) {
+        if ((endDate as Date | null)?.getTime() !== selected[1]?.getTime()) {
           setEndDate(selected[1])
         }
       }
@@ -113,7 +117,10 @@ export const DatePicker = ({
   }, [selected])
 
   useEffect(() => {
-    if (onChange && !updatePickerDate) {
+    if (
+      onChange &&
+      (!isRangeMode(mode) || (isRangeMode(mode) && !updatePickerDate))
+    ) {
       onChange(selectedDates as Date | [Date, Date])
     } else {
       setPickerDate(false)
