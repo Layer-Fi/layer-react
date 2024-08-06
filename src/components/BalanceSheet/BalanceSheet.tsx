@@ -5,12 +5,12 @@ import { useBalanceSheet } from '../../hooks/useBalanceSheet'
 import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker'
 import { BalanceSheetExpandAllButton } from '../BalanceSheetExpandAllButton'
 import { BalanceSheetTable } from '../BalanceSheetTable'
+import { BalanceSheetTableStringOverrides } from '../BalanceSheetTable/BalanceSheetTable'
 import { Container } from '../Container'
 import { Loader } from '../Loader'
 import { View } from '../View'
 import { BALANCE_SHEET_ROWS } from './constants'
 import { format, parse, startOfDay } from 'date-fns'
-import { BalanceSheetTableStringOverrides } from '../BalanceSheetTable/BalanceSheetTable'
 
 export interface BalanceSheetStringOverrides {
   balanceSheetTable?: BalanceSheetTableStringOverrides
@@ -34,7 +34,11 @@ export const BalanceSheet = (props: BalanceSheetProps) => {
   const balanceSheetContextData = useBalanceSheet(props.effectiveDate)
   return (
     <BalanceSheetContext.Provider value={balanceSheetContextData}>
-      <BalanceSheetView asWidget={props.asWidget} stringOverrides={props.stringOverrides} {...props} />
+      <BalanceSheetView
+        asWidget={props.asWidget}
+        stringOverrides={props.stringOverrides}
+        {...props}
+      />
     </BalanceSheetContext.Provider>
   )
 }
@@ -86,7 +90,11 @@ const BalanceSheetView = ({
                 <Loader />
               </div>
             ) : (
-              <BalanceSheetTable data={data} config={BALANCE_SHEET_ROWS} stringOverrides={stringOverrides?.balanceSheetTable} />
+              <BalanceSheetTable
+                data={data}
+                config={BALANCE_SHEET_ROWS}
+                stringOverrides={stringOverrides?.balanceSheetTable}
+              />
             )}
           </View>
         </Container>
@@ -113,7 +121,11 @@ const BalanceSheetView = ({
             <Loader />
           </div>
         ) : (
-          <BalanceSheetTable data={data} config={BALANCE_SHEET_ROWS} stringOverrides={stringOverrides?.balanceSheetTable} />
+          <BalanceSheetTable
+            data={data}
+            config={BALANCE_SHEET_ROWS}
+            stringOverrides={stringOverrides?.balanceSheetTable}
+          />
         )}
       </View>
     </TableProvider>

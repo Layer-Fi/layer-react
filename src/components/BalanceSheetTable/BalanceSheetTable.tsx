@@ -102,8 +102,12 @@ export const BalanceSheetTable = ({
     <Table borderCollapse='collapse'>
       <TableHead>
         <TableRow isHeadRow rowKey='balance-sheet-head-row'>
-          <TableCell isHeaderCell>{stringOverrides?.typeColumnHeader || "Type"}</TableCell>
-          <TableCell isHeaderCell>{stringOverrides?.totalColumnHeader || "Total"}</TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.typeColumnHeader || 'Type'}
+          </TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.totalColumnHeader || 'Total'}
+          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

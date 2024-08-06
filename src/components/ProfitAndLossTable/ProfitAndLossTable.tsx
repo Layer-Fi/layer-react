@@ -1,8 +1,12 @@
-import React, { useContext } from 'react'
-import { Direction } from '../../types'
+import React, { useContext, useEffect } from 'react'
+import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
+import { useTableExpandRow } from '../../hooks/useTableExpandRow'
+import PieChart from '../../icons/PieChart'
+import { BalanceSheet, Direction, LineItem } from '../../types'
 import { Loader } from '../Loader'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { ProfitAndLossRow } from '../ProfitAndLossRow'
+import { Table, TableBody, TableCell, TableRow } from '../Table'
 import emptyPNL from './empty_profit_and_loss_report'
 import classNames from 'classnames'
 
@@ -18,12 +22,17 @@ type Props = {
   stringOverrides?: ProfitAndLossTableStringOverrides
 }
 
-export const ProfitAndLossTable = ({ lockExpanded, asContainer, stringOverrides }: Props) => {
+export const ProfitAndLossTable = ({ asContainer, stringOverrides }: Props) => {
   const {
     data: actualData,
     isLoading,
     setSidebarScope,
   } = useContext(ProfitAndLoss.Context)
+  const { isOpen, setIsOpen } = useTableExpandRow()
+
+  useEffect(() => {
+    setIsOpen(['income'])
+  }, [])
 
   const currentData = Array.isArray(actualData)
     ? actualData[actualData.length - 1]
@@ -43,88 +52,150 @@ export const ProfitAndLossTable = ({ lockExpanded, asContainer, stringOverrides 
     )
   }
 
+  const renderLineItem = (
+    lineItem: LineItem,
+    depth: number,
+    rowKey: string,
+    rowIndex: number,
+    scope?: SidebarScope,
+    setSidebarScope?: (view: SidebarScope) => void,
+    variant?: 'default' | 'summation',
+  ): React.ReactNode => {
+    const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
+
+    const expanded = expandable ? isOpen(rowKey) : true
+
+    const showChildren = expanded
+
+    return (
+      <React.Fragment key={rowKey + '-' + rowIndex}>
+        <TableRow
+          rowKey={rowKey + '-' + rowIndex}
+          expandable={expandable}
+          isExpanded={showChildren}
+          depth={depth}
+          variant={variant ? variant : expandable ? 'expandable' : 'default'}
+          handleExpand={() => setIsOpen(rowKey)}
+        >
+          <TableCell primary withExpandIcon={expandable}>
+            {lineItem.display_name}{' '}
+            {setSidebarScope && (
+              <span
+                className='Layer__profit-and-loss-row__detailed-chart-btn'
+                onClick={e => {
+                  e.stopPropagation()
+                  setSidebarScope && setSidebarScope(scope ?? 'expenses')
+                }}
+              >
+                <PieChart />
+              </span>
+            )}
+          </TableCell>
+          <TableCell isCurrency primary>
+            {lineItem.value}
+          </TableCell>
+        </TableRow>
+        {showChildren && lineItem.line_items
+          ? lineItem.line_items.map((child, i) =>
+              renderLineItem(
+                child,
+                depth + 1,
+                child.display_name + '-' + rowIndex,
+                i,
+              ),
+            )
+          : null}
+      </React.Fragment>
+    )
+  }
+
   return (
     <>
-      <div
-        className={classNames(
-          'Layer__profit-and-loss-table Layer__profit-and-loss-table--main',
-          asContainer && 'Layer__component-container',
-        )}
-      >
-        <ProfitAndLossRow
-          lineItem={data.income}
-          direction={Direction.CREDIT}
-          lockExpanded={lockExpanded}
-          scope='revenue'
-          setSidebarScope={setSidebarScope}
-        />
-        <ProfitAndLossRow
-          lineItem={data.cost_of_goods_sold}
-          direction={Direction.DEBIT}
-          lockExpanded={lockExpanded}
-          scope='expenses'
-          setSidebarScope={setSidebarScope}
-        />
-        <ProfitAndLossRow
-          lineItem={{
-            value: data.gross_profit,
-            display_name: stringOverrides?.grossProfitLabel || 'Gross Profit',
-          }}
-          variant='summation'
-          direction={Direction.CREDIT}
-          lockExpanded={lockExpanded}
-          scope='revenue'
-          setSidebarScope={setSidebarScope}
-        />
-        <ProfitAndLossRow
-          lineItem={data.expenses}
-          direction={Direction.DEBIT}
-          lockExpanded={lockExpanded}
-          scope='expenses'
-          setSidebarScope={setSidebarScope}
-        />
-        <ProfitAndLossRow
-          lineItem={{
-            value: data.profit_before_taxes,
-            display_name: stringOverrides?.profitBeforeTaxesLabel || 'Profit Before Taxes',
-          }}
-          variant='summation'
-          direction={Direction.CREDIT}
-          lockExpanded={lockExpanded}
-          scope='revenue'
-          setSidebarScope={setSidebarScope}
-        />
-        <ProfitAndLossRow
-          lineItem={data.taxes}
-          direction={Direction.DEBIT}
-          lockExpanded={lockExpanded}
-          scope='expenses'
-          setSidebarScope={setSidebarScope}
-        />
-        <ProfitAndLossRow
-          lineItem={{
-            value: data.net_profit,
-            display_name: stringOverrides?.netProfitLabel || 'Net Profit',
-          }}
-          variant='summation'
-          direction={Direction.CREDIT}
-          lockExpanded={lockExpanded}
-        />
-      </div>
-      {data.other_outflows || data.personal_expenses ? (
-        <div className='Layer__profit-and-loss-table Layer__profit-and-loss-table__outflows'>
-          <ProfitAndLossRow
-            lineItem={data.other_outflows}
-            direction={Direction.DEBIT}
-            lockExpanded={lockExpanded}
-          />
-          <ProfitAndLossRow
-            lineItem={data.personal_expenses}
-            direction={Direction.DEBIT}
-            lockExpanded={lockExpanded}
-          />
-        </div>
-      ) : null}
+      <Table borderCollapse='collapse' bottomSpacing={false}>
+        <TableBody>
+          {renderLineItem(
+            data.income,
+            0,
+            'income',
+            0,
+            'revenue',
+            setSidebarScope,
+          )}
+          {renderLineItem(
+            data.cost_of_goods_sold,
+            0,
+            'cost_of_goods_sold',
+            1,
+            'expenses',
+            setSidebarScope,
+          )}
+          {renderLineItem(
+            {
+              value: data.gross_profit,
+              display_name: stringOverrides?.grossProfitLabel || 'Gross Profit',
+            },
+            0,
+            'gross_profit',
+            2,
+            'revenue',
+            setSidebarScope,
+            'summation',
+          )}
+          {renderLineItem(
+            data.expenses,
+            0,
+            'expenses',
+            3,
+            'expenses',
+            setSidebarScope,
+          )}
+          {renderLineItem(
+            {
+              value: data.profit_before_taxes,
+              display_name:
+                stringOverrides?.profitBeforeTaxesLabel ||
+                'Profit Before Taxes',
+            },
+            0,
+            'profit_before_taxes',
+            4,
+            'revenue',
+            setSidebarScope,
+            'summation',
+          )}
+          {renderLineItem(
+            data.taxes,
+            0,
+            'taxes',
+            5,
+            'expenses',
+            setSidebarScope,
+          )}
+          {renderLineItem(
+            {
+              value: data.net_profit,
+              display_name: stringOverrides?.netProfitLabel || 'Net Profit',
+            },
+            0,
+            'net_profit',
+            5,
+            undefined,
+            undefined,
+            'summation',
+          )}
+          {data.other_outflows || data.personal_expenses ? (
+            <React.Fragment>
+              {renderLineItem(data.other_outflows, 0, 'other_outflows', 6)}
+              {renderLineItem(
+                data.personal_expenses,
+                0,
+                'personal_expenses',
+                7,
+              )}
+            </React.Fragment>
+          ) : null}
+        </TableBody>
+      </Table>
     </>
   )
 }
