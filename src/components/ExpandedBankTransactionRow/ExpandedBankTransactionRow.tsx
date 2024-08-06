@@ -642,7 +642,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 </div>
               )}
 
-              {asListItem ? (
+              {asListItem && categorizationEnabled(mode) ? (
                 <div className={`${className}__submit-btn`}>
                   {bankTransaction.error ? (
                     <Text
