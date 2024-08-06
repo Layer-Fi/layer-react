@@ -40,10 +40,13 @@ export const BankTransactionsLoader = ({
   )
   return (
     <SkeletonTableLoader
-      rows={4}
+      rows={6}
       cols={
         isLoading
-          ? [{ colSpan: 4 }, { colSpan: 1 }]
+          ? [
+              { colSpan: 4, trimLastXRows: 3 },
+              { colSpan: 1, parts: 2 },
+            ]
           : [
               { colSpan: 4 },
               { colSpan: 1, colComponent: inactiveBankTransactionsActions },
