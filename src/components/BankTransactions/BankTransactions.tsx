@@ -54,7 +54,6 @@ export interface BankTransactionsProps {
   mode?: BankTransactionsMode
   showDescriptions?: boolean
   showReceiptUploads?: boolean
-  hardRefreshPnlOnCategorize?: boolean
   monthlyView?: boolean
   categorizeView?: boolean
   mobileComponent?: MobileComponentType
@@ -84,7 +83,6 @@ const BankTransactionsContent = ({
   mode = 'self-serve',
   showDescriptions = false,
   showReceiptUploads = false,
-  hardRefreshPnlOnCategorize = false,
   monthlyView = false,
   mobileComponent,
   filters: inputFilters,
@@ -313,7 +311,6 @@ const BankTransactionsContent = ({
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             page={currentPage}
-            hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
             stringOverrides={stringOverrides}
             lastPage={isLastPage}
             onRefresh={refetch}
@@ -328,7 +325,6 @@ const BankTransactionsContent = ({
           editable={editable}
           removeTransaction={removeTransaction}
           containerWidth={containerWidth}
-          hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
           stringOverrides={stringOverrides?.bankTransactionCTAs}
         />
       ) : null}
@@ -340,7 +336,6 @@ const BankTransactionsContent = ({
           mode={mode}
           removeTransaction={removeTransaction}
           initialLoad={initialLoad}
-          hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
         />
       ) : null}
 

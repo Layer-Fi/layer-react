@@ -21,8 +21,10 @@ export const useTasks: UseTasks = () => {
   const { auth, businessId, apiUrl, read, syncTimestamps, hasBeenTouched } =
     useLayerContext()
 
+  const queryKey = businessId && auth?.access_token && `tasks-${businessId}`
+
   const { data, isLoading, isValidating, error, mutate } = useSWR(
-    businessId && auth?.access_token && `tasks-${businessId}`,
+    queryKey,
     Layer.getTasks(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
@@ -54,13 +56,13 @@ export const useTasks: UseTasks = () => {
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
-    if (isLoading || isValidating) {
-      read(DataModel.TASKS)
+    if (queryKey && (isLoading || isValidating)) {
+      read(DataModel.TASKS, queryKey)
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(DataModel.TASKS)) {
+    if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
   }, [syncTimestamps])

@@ -8,22 +8,20 @@ import { SplitAndMatchForm } from './SplitAndMatchForm'
 interface BankTransactionMobileFormsProps {
   purpose: Purpose
   bankTransaction: BankTransaction
-  hardRefreshPnlOnCategorize?: boolean
 }
 
 export const BankTransactionMobileForms = ({
   purpose,
   bankTransaction,
-  hardRefreshPnlOnCategorize
 }: BankTransactionMobileFormsProps) => {
   const getContent = () => {
     switch (purpose) {
       case 'business':
-        return <BusinessForm bankTransaction={bankTransaction} hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize} />
+        return <BusinessForm bankTransaction={bankTransaction} />
       case 'personal':
-        return <PersonalForm bankTransaction={bankTransaction} hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}/>
+        return <PersonalForm bankTransaction={bankTransaction} />
       case 'more':
-        return <SplitAndMatchForm bankTransaction={bankTransaction} hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}/>
+        return <SplitAndMatchForm bankTransaction={bankTransaction} />
       default:
         return null
     }

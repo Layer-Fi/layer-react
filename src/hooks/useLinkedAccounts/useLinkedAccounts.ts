@@ -48,6 +48,9 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const USE_PLAID_SANDBOX = usePlaidSandbox ?? true
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
 
+  const queryKey =
+    businessId && auth?.access_token && `linked-accounts-${businessId}`
+
   const {
     data: responseData,
     isLoading,
@@ -55,7 +58,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     error: responseError,
     mutate,
   } = useSWR(
-    businessId && auth?.access_token && `linked-accounts-${businessId}`,
+    queryKey,
     Layer.getLinkedAccounts(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
@@ -303,13 +306,13 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
-    if (isLoading || isValidating) {
-      read(DataModel.LINKED_ACCOUNTS)
+    if (queryKey && (isLoading || isValidating)) {
+      read(DataModel.LINKED_ACCOUNTS, queryKey)
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(DataModel.LINKED_ACCOUNTS)) {
+    if (queryKey && hasBeenTouched(queryKey)) {
       refetchAccounts()
     }
   }, [syncTimestamps])

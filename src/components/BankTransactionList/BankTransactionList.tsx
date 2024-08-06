@@ -15,7 +15,6 @@ interface BankTransactionListProps {
   removeTransaction: (bt: BankTransaction) => void
   showDescriptions?: boolean
   showReceiptUploads?: boolean
-  hardRefreshPnlOnCategorize?: boolean
   stringOverrides?: BankTransactionCTAStringOverrides
 }
 
@@ -27,7 +26,6 @@ export const BankTransactionList = ({
   containerWidth,
   showDescriptions = false,
   showReceiptUploads = false,
-  hardRefreshPnlOnCategorize = false,
   stringOverrides,
 }: BankTransactionListProps) => {
   return (
@@ -45,7 +43,6 @@ export const BankTransactionList = ({
             containerWidth={containerWidth}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
-            hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
             stringOverrides={stringOverrides}
           />
         ),

@@ -74,8 +74,11 @@ export const useJournal: UseJournal = () => {
   const [sendingForm, setSendingForm] = useState(false)
   const [apiError, setApiError] = useState<string | undefined>(undefined)
 
+  const queryKey =
+    businessId && auth?.access_token && `journal-lines-${businessId}`
+
   const { data, isLoading, isValidating, error, mutate } = useSWR(
-    businessId && auth?.access_token && `journal-lines-${businessId}`,
+    queryKey,
     Layer.getJournal(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
@@ -345,13 +348,13 @@ export const useJournal: UseJournal = () => {
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
-    if (isLoading || isValidating) {
-      read(DataModel.JOURNAL)
+    if (queryKey && (isLoading || isValidating)) {
+      read(DataModel.JOURNAL, queryKey)
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(DataModel.JOURNAL)) {
+    if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
   }, [syncTimestamps])

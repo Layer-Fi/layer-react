@@ -5,11 +5,9 @@ import { isCredit } from '../../utils/bankTransactions'
 import { Button } from '../Button'
 import { ErrorText } from '../Typography'
 import { PersonalCategories } from './constants'
-import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 
 interface PersonalFormProps {
   bankTransaction: BankTransaction
-  hardRefreshPnlOnCategorize?: boolean
 }
 
 const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
@@ -26,10 +24,9 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
   )
 }
 
-export const PersonalForm = ({ bankTransaction, hardRefreshPnlOnCategorize }: PersonalFormProps) => {
+export const PersonalForm = ({ bankTransaction }: PersonalFormProps) => {
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactionsContext()
-  const { refetch } = useProfitAndLossLTM()
   const [showRetry, setShowRetry] = useState(false)
 
   useEffect(() => {
@@ -52,7 +49,6 @@ export const PersonalForm = ({ bankTransaction, hardRefreshPnlOnCategorize }: Pe
       },
       true,
     )
-    if (hardRefreshPnlOnCategorize) refetch()
   }
 
   const alreadyAssigned = isAlreadyAssigned(bankTransaction)

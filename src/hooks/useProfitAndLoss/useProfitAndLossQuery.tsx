@@ -40,6 +40,15 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
   const { auth, businessId, apiUrl, syncTimestamps, read, hasBeenTouched } =
     useLayerContext()
 
+  const queryKey =
+    businessId &&
+    startDate &&
+    endDate &&
+    auth?.access_token &&
+    `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
+      ',',
+    )}-${reportingBasis}`
+
   const {
     data: rawData,
     isLoading,
@@ -47,13 +56,7 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
     error: rawError,
     mutate,
   } = useSWR(
-    businessId &&
-      startDate &&
-      endDate &&
-      auth?.access_token &&
-      `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
-        ',',
-      )}-${reportingBasis}`,
+    queryKey,
     Layer.getProfitAndLoss(apiUrl, auth?.access_token, {
       params: {
         businessId,
@@ -72,16 +75,16 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
-    if (isLoading || isValidating) {
-      read(DataModel.PROFIT_AND_LOSS)
+    if (queryKey && (isLoading || isValidating)) {
+      read(DataModel.PROFIT_AND_LOSS, queryKey)
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(DataModel.PROFIT_AND_LOSS)) {
+    if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
-  }, [syncTimestamps])
+  }, [syncTimestamps, startDate, endDate, tagFilter, reportingBasis])
 
   return {
     startDate,

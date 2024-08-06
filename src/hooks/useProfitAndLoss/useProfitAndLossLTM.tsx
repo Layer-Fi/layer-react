@@ -57,11 +57,18 @@ const buildMonthsArray = (startDate: Date, endDate: Date) => {
  */
 export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
   { currentDate, tagFilter, reportingBasis }: UseProfitAndLossLTMProps = {
-    currentDate: new Date(),
+    currentDate: startOfMonth(Date.now()),
   },
 ) => {
-  const { businessId, auth, apiUrl, syncTimestamps, read, hasBeenTouched } =
-    useLayerContext()
+  const {
+    businessId,
+    auth,
+    apiUrl,
+    syncTimestamps,
+    read,
+    readTimestamps,
+    hasBeenTouched,
+  } = useLayerContext()
   const [date, setDate] = useState(currentDate)
   const [loaded, setLoaded] = useState<LoadedStatus>('initial')
   const [data, setData] = useState<ProfitAndLossSummaryData[]>([])
@@ -70,6 +77,17 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     return buildDates({ currentDate: date })
   }, [date, businessId, tagFilter, reportingBasis])
 
+  const queryKey =
+    businessId &&
+    Boolean(startYear) &&
+    Boolean(startMonth) &&
+    Boolean(endYear) &&
+    Boolean(endMonth) &&
+    auth?.access_token &&
+    `profit-and-loss-summaries-${businessId}-${startYear.toString()}-${startMonth.toString()}-${tagFilter?.key}-${tagFilter?.values?.join(
+      ',',
+    )}-${reportingBasis}`
+
   const {
     data: rawData,
     isLoading,
@@ -77,15 +95,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     error,
     mutate,
   } = useSWR(
-    businessId &&
-      Boolean(startYear) &&
-      Boolean(startMonth) &&
-      Boolean(endYear) &&
-      Boolean(endMonth) &&
-      auth?.access_token &&
-      `profit-and-loss-summaries-${businessId}-${startYear.toString()}-${startMonth.toString()}-${tagFilter?.key}-${tagFilter?.values?.join(
-        ',',
-      )}-${reportingBasis}`,
+    queryKey,
     Layer.getProfitAndLossSummaries(apiUrl, auth?.access_token, {
       params: {
         businessId,
@@ -182,16 +192,24 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
-    if (isLoading || isValidating) {
-      read(DataModel.PROFIT_AND_LOSS)
+    if (queryKey && (isLoading || isValidating)) {
+      read(DataModel.PROFIT_AND_LOSS, queryKey)
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(DataModel.PROFIT_AND_LOSS)) {
+    if (queryKey && hasBeenTouched(queryKey)) {
       mutate()
     }
-  }, [syncTimestamps])
+  }, [
+    syncTimestamps,
+    startYear,
+    startMonth,
+    endYear,
+    endMonth,
+    tagFilter,
+    reportingBasis,
+  ])
 
   const refetch = () => {
     mutate()

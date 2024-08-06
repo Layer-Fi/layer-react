@@ -23,7 +23,6 @@ export interface BankTransactionsWithLinkedAccountsProps {
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   mode?: BankTransactionsMode
-  hardRefreshPnlOnCategorize?: boolean
   mobileComponent?: MobileComponentType
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
 }
@@ -35,7 +34,6 @@ export const BankTransactionsWithLinkedAccounts = ({
   showUnlinkItem = false,
   showBreakConnection = false,
   mode = 'self-serve',
-  hardRefreshPnlOnCategorize = false,
   showDescriptions,
   showReceiptUploads,
   mobileComponent,
@@ -56,7 +54,6 @@ export const BankTransactionsWithLinkedAccounts = ({
         showReceiptUploads={showReceiptUploads}
         mobileComponent={mobileComponent}
         mode={mode}
-        hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
         stringOverrides={stringOverrides?.bankTransactions}
       />
     </View>

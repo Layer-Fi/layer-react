@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import AlertCircle from '../../icons/AlertCircle'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import Scissors from '../../icons/Scissors'
@@ -41,7 +40,6 @@ type Props = {
   initialLoad?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
-  hardRefreshPnlOnCategorize: boolean
   mode: BankTransactionsMode
   stringOverrides?: BankTransactionCTAStringOverrides
 }
@@ -83,7 +81,6 @@ export const BankTransactionRow = ({
   initialLoad,
   showDescriptions,
   showReceiptUploads,
-  hardRefreshPnlOnCategorize,
   stringOverrides,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
@@ -93,7 +90,6 @@ export const BankTransactionRow = ({
     categorize: categorizeBankTransaction,
     match: matchBankTransaction,
   } = useBankTransactionsContext()
-  const { refetch } = useProfitAndLossLTM()
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )
@@ -147,7 +143,6 @@ export const BankTransactionRow = ({
     // Save using form from expanded row when row is open:
     if (open && expandedRowRef?.current) {
       expandedRowRef?.current?.save()
-      if (hardRefreshPnlOnCategorize) refetch()
       return
     }
 
@@ -161,7 +156,6 @@ export const BankTransactionRow = ({
         selectedCategory.payload.id,
       )
       setOpen(false)
-      if (hardRefreshPnlOnCategorize) refetch()
       return
     }
 
@@ -169,7 +163,6 @@ export const BankTransactionRow = ({
       type: 'Category',
       category: getCategorizePayload(selectedCategory),
     })
-    if (hardRefreshPnlOnCategorize) refetch()
     setOpen(false)
   }
 
@@ -382,7 +375,6 @@ export const BankTransactionRow = ({
             containerWidth={containerWidth}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
-            hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
           />
         </td>
       </tr>

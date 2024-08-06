@@ -29,7 +29,6 @@ interface BankTransactionsTableProps {
   removeTransaction: (bt: BankTransaction) => void
   showDescriptions?: boolean
   showReceiptUploads?: boolean
-  hardRefreshPnlOnCategorize?: boolean
   stringOverrides?: BankTransactionsStringOverrides
   isSyncing?: boolean
   page?: number
@@ -48,7 +47,6 @@ export const BankTransactionsTable = ({
   removeTransaction,
   showDescriptions = false,
   showReceiptUploads = false,
-  hardRefreshPnlOnCategorize = false,
   stringOverrides,
   isSyncing = false,
   page,
@@ -112,7 +110,6 @@ export const BankTransactionsTable = ({
                 containerWidth={containerWidth}
                 showDescriptions={showDescriptions}
                 showReceiptUploads={showReceiptUploads}
-                hardRefreshPnlOnCategorize={hardRefreshPnlOnCategorize}
                 stringOverrides={stringOverrides?.bankTransactionCTAs}
               />
             ),

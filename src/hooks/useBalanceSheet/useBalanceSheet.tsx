@@ -18,11 +18,14 @@ export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
     useLayerContext()
   const dateString = format(startOfDay(date), "yyyy-MM-dd'T'HH:mm:ssXXX")
 
-  const { data, isLoading, isValidating, error, mutate } = useSWR(
+  const queryKey =
     businessId &&
-      dateString &&
-      auth?.access_token &&
-      `balance-sheet-${businessId}-${dateString}`,
+    dateString &&
+    auth?.access_token &&
+    `balance-sheet-${businessId}-${dateString}`
+
+  const { data, isLoading, isValidating, error, mutate } = useSWR(
+    queryKey,
     Layer.getBalanceSheet(apiUrl, auth?.access_token, {
       params: {
         businessId,
@@ -37,16 +40,16 @@ export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
-    if (isLoading || isValidating) {
-      read(DataModel.BALANCE_SHEET)
+    if (queryKey && (isLoading || isValidating)) {
+      read(DataModel.BALANCE_SHEET, queryKey)
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(DataModel.BALANCE_SHEET)) {
+    if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
-  }, [syncTimestamps])
+  }, [syncTimestamps, dateString])
 
   return { data: data?.data, isLoading, error, refetch }
 }

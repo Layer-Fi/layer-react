@@ -5,17 +5,14 @@ import { isAlreadyMatched } from '../../utils/bankTransactions'
 import { Button } from '../Button'
 import { MatchFormMobile } from '../MatchForm'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
-import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 
 export const MatchForm = ({
-  bankTransaction, hardRefreshPnlOnCategorize
+  bankTransaction,
 }: {
-  bankTransaction: BankTransaction,
-  hardRefreshPnlOnCategorize?: boolean
+  bankTransaction: BankTransaction
 }) => {
   const { match: matchBankTransaction, isLoading } =
     useBankTransactionsContext()
-  const { refetch } = useProfitAndLossLTM()
   const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
     isAlreadyMatched(bankTransaction),
   )
@@ -49,7 +46,6 @@ export const MatchForm = ({
       selectedMatchId !== isAlreadyMatched(bankTransaction)
     ) {
       onMatchSubmit(selectedMatchId)
-      if (hardRefreshPnlOnCategorize) refetch()
     }
     return
   }
