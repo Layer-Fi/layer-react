@@ -2,10 +2,9 @@ import React, { useContext, useEffect } from 'react'
 import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import PieChart from '../../icons/PieChart'
-import { BalanceSheet, Direction, LineItem } from '../../types'
+import { LineItem } from '../../types'
 import { Loader } from '../Loader'
 import { ProfitAndLoss } from '../ProfitAndLoss'
-import { ProfitAndLossRow } from '../ProfitAndLossRow'
 import { Table, TableBody, TableCell, TableRow } from '../Table'
 import emptyPNL from './empty_profit_and_loss_report'
 import classNames from 'classnames'
@@ -77,7 +76,11 @@ export const ProfitAndLossTable = ({ asContainer, stringOverrides }: Props) => {
           variant={variant ? variant : expandable ? 'expandable' : 'default'}
           handleExpand={() => setIsOpen(rowKey)}
         >
-          <TableCell primary withExpandIcon={expandable}>
+          <TableCell
+            primary
+            withExpandIcon={expandable}
+            fullWidth={!!setSidebarScope}
+          >
             {lineItem.display_name}{' '}
             {setSidebarScope && (
               <span
@@ -110,90 +113,77 @@ export const ProfitAndLossTable = ({ asContainer, stringOverrides }: Props) => {
   }
 
   return (
-      <Table borderCollapse='collapse' bottomSpacing={false}>
-        <TableBody>
-          {renderLineItem(
-            data.income,
-            0,
-            'income',
-            0,
-            'revenue',
-            setSidebarScope,
-          )}
-          {renderLineItem(
-            data.cost_of_goods_sold,
-            0,
-            'cost_of_goods_sold',
-            1,
-            'expenses',
-            setSidebarScope,
-          )}
-          {renderLineItem(
-            {
-              value: data.gross_profit,
-              display_name: stringOverrides?.grossProfitLabel || 'Gross Profit',
-            },
-            0,
-            'gross_profit',
-            2,
-            'revenue',
-            setSidebarScope,
-            'summation',
-          )}
-          {renderLineItem(
-            data.expenses,
-            0,
-            'expenses',
-            3,
-            'expenses',
-            setSidebarScope,
-          )}
-          {renderLineItem(
-            {
-              value: data.profit_before_taxes,
-              display_name:
-                stringOverrides?.profitBeforeTaxesLabel ||
-                'Profit Before Taxes',
-            },
-            0,
-            'profit_before_taxes',
-            4,
-            'revenue',
-            setSidebarScope,
-            'summation',
-          )}
-          {renderLineItem(
-            data.taxes,
-            0,
-            'taxes',
-            5,
-            'expenses',
-            setSidebarScope,
-          )}
-          {renderLineItem(
-            {
-              value: data.net_profit,
-              display_name: stringOverrides?.netProfitLabel || 'Net Profit',
-            },
-            0,
-            'net_profit',
-            5,
-            undefined,
-            undefined,
-            'summation',
-          )}
-          {data.other_outflows || data.personal_expenses ? (
-            <React.Fragment>
-              {renderLineItem(data.other_outflows, 0, 'other_outflows', 6)}
-              {renderLineItem(
-                data.personal_expenses,
-                0,
-                'personal_expenses',
-                7,
-              )}
-            </React.Fragment>
-          ) : null}
-        </TableBody>
-      </Table>
+    <Table borderCollapse='collapse' bottomSpacing={false}>
+      <TableBody>
+        {renderLineItem(
+          data.income,
+          0,
+          'income',
+          0,
+          'revenue',
+          setSidebarScope,
+        )}
+        {renderLineItem(
+          data.cost_of_goods_sold,
+          0,
+          'cost_of_goods_sold',
+          1,
+          'expenses',
+          setSidebarScope,
+        )}
+        {renderLineItem(
+          {
+            value: data.gross_profit,
+            display_name: stringOverrides?.grossProfitLabel || 'Gross Profit',
+          },
+          0,
+          'gross_profit',
+          2,
+          'revenue',
+          setSidebarScope,
+          'summation',
+        )}
+        {renderLineItem(
+          data.expenses,
+          0,
+          'expenses',
+          3,
+          'expenses',
+          setSidebarScope,
+        )}
+        {renderLineItem(
+          {
+            value: data.profit_before_taxes,
+            display_name:
+              stringOverrides?.profitBeforeTaxesLabel || 'Profit Before Taxes',
+          },
+          0,
+          'profit_before_taxes',
+          4,
+          'revenue',
+          setSidebarScope,
+          'summation',
+        )}
+        {renderLineItem(data.taxes, 0, 'taxes', 5, 'expenses', setSidebarScope)}
+        {renderLineItem(
+          {
+            value: data.net_profit,
+            display_name: stringOverrides?.netProfitLabel || 'Net Profit',
+          },
+          0,
+          'net_profit',
+          5,
+          undefined,
+          undefined,
+          'summation',
+        )}
+        {data.other_outflows || data.personal_expenses ? (
+          <React.Fragment>
+            {renderLineItem(data.other_outflows, 0, 'other_outflows', 6)}
+            {renderLineItem(data.personal_expenses, 0, 'personal_expenses', 7)}
+          </React.Fragment>
+        ) : null}
+      </TableBody>
+    </Table>
   )
 }

@@ -173,24 +173,15 @@ const ReportsPanel = ({
     <>
       {openReport === 'profitAndLoss' && (
         <TableProvider>
-
-        <View
-          type='panel'
-          headerControls={
-            <>
-              <ProfitAndLoss.DatePicker />
-              <DownloadButton
-                stringOverrides={stringOverrides?.downloadButton}
-              />
-            </>
-          }
-        >
-          <Panel
-            sidebar={
-              <ProfitAndLoss.DetailedCharts
-                showDatePicker={false}
-                stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-              />
+          <View
+            type='panel'
+            headerControls={
+              <>
+                <ProfitAndLoss.DatePicker />
+                <DownloadButton
+                  stringOverrides={stringOverrides?.downloadButton}
+                />
+              </>
             }
           >
             <Panel
