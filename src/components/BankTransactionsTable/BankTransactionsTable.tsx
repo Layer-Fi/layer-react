@@ -91,9 +91,6 @@ export const BankTransactionsTable = ({
       {isLoading && page && page === 1 ? (
         <BankTransactionsLoader isLoading={true} />
       ) : null}
-      {!isLoading && isSyncing && page && page === 1 ? (
-        <BankTransactionsLoader isLoading={false} />
-      ) : null}
       <tbody>
         {!isLoading &&
           bankTransactions?.map(

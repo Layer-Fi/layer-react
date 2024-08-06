@@ -31,6 +31,12 @@
   height: 63px;
 }
 
+.Layer__skeleton-loader__row__group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
 .Layer__skeleton-loader {
   width: 100%;
   height: 12px;
