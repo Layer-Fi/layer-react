@@ -79,9 +79,19 @@ export const Toggle = ({
       return
     }
 
-    const optionsNodes = [...toggleRef.current.children].filter(c =>
-      c.className.includes('Layer__toggle-option'),
-    )
+    const optionsNodes = [...toggleRef.current.children]
+      .map(x => {
+        if (
+          x.className.includes('Layer__tooltip-trigger') &&
+          x.children &&
+          x.children.length > 0
+        ) {
+          return x.children[0]
+        }
+
+        return x
+      })
+      .filter(c => c.className.includes('Layer__toggle-option'))
 
     let shift = 0
     let width = thumbPos.width
