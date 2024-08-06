@@ -149,13 +149,13 @@ export const BankTransactionsHeader = ({
         ) : null}
       </div>
       <div className='Layer__header__actions-wrapper'>
-        {!categorizedOnly &&
-          !(mobileComponent == 'mobileList' && listView) &&
-          categorizeView && (
-            <div className='Layer__header__actions'>
-              <DownloadButton
-                downloadButtonTextOverride={stringOverrides?.downloadButton}
-              />
+        <div className='Layer__header__actions'>
+          <DownloadButton
+            downloadButtonTextOverride={stringOverrides?.downloadButton}
+          />
+          {!categorizedOnly &&
+            !(mobileComponent == 'mobileList' && listView) &&
+            categorizeView && (
               <Toggle
                 name='bank-transaction-display'
                 options={[
@@ -165,8 +165,8 @@ export const BankTransactionsHeader = ({
                 selected={display}
                 onChange={onCategorizationDisplayChange}
               />
-            </div>
-          )}
+            )}
+        </div>
 
         {!categorizedOnly &&
           mobileComponent === 'mobileList' &&

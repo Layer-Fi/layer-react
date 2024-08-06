@@ -18,7 +18,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'prettier'],
+  plugins: ['react', '@typescript-eslint', 'prettier', 'import'],
   rules: {
     'prettier/prettier': 'error',
     indent: ['off', 2, { SwitchCase: 1 }],
@@ -37,4 +37,17 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['*.tsx'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            patterns: ['*.css'],
+          },
+        ],
+      },
+    },
+  ],
 }

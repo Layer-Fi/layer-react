@@ -1,5 +1,6 @@
 import React from 'react'
 import { BankTransaction } from '../../types'
+import { BankTransactionsMode } from '../BankTransactions/BankTransactions'
 import { BankTransactionMobileListItem } from './BankTransactionMobileListItem'
 import {
   useTransactionToOpen,
@@ -12,6 +13,7 @@ export interface BankTransactionMobileListProps {
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
   hardRefreshPnlOnCategorize?: boolean
+  mode: BankTransactionsMode
 }
 
 export const BankTransactionMobileList = ({
@@ -19,7 +21,8 @@ export const BankTransactionMobileList = ({
   removeTransaction,
   editable,
   initialLoad,
-  hardRefreshPnlOnCategorize
+  mode,
+  hardRefreshPnlOnCategorize,
 }: BankTransactionMobileListProps) => {
   const transactionToOpenContextData = useTransactionToOpen()
 
@@ -30,6 +33,7 @@ export const BankTransactionMobileList = ({
           (bankTransaction: BankTransaction, index: number) => (
             <BankTransactionMobileListItem
               index={index}
+              mode={mode}
               key={bankTransaction.id}
               bankTransaction={bankTransaction}
               editable={editable}

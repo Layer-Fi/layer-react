@@ -9,7 +9,11 @@ import { BankTransaction, CategorizationStatus, Category } from '../../types'
 import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
 import { Badge } from '../Badge'
-import { BankTransactionCTAStringOverrides } from '../BankTransactions/BankTransactions'
+import {
+  BankTransactionCTAStringOverrides,
+  BankTransactionsMode,
+  categorizationEnabled,
+} from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { SubmitButton, IconButton, RetryButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
@@ -38,6 +42,7 @@ type Props = {
   showDescriptions: boolean
   showReceiptUploads: boolean
   hardRefreshPnlOnCategorize: boolean
+  mode: BankTransactionsMode
   stringOverrides?: BankTransactionCTAStringOverrides
 }
 
@@ -72,6 +77,7 @@ export const BankTransactionRow = ({
   editable,
   dateFormat,
   bankTransaction,
+  mode,
   removeTransaction,
   containerWidth,
   initialLoad,
@@ -332,7 +338,7 @@ export const BankTransactionRow = ({
               </Text>
             ) : null}
             {(!categorized && (open || (!open && !showRetry))) ||
-            (categorized && open) ? (
+            (categorizationEnabled(mode) && categorized && open) ? (
               <SubmitButton
                 onClick={() => {
                   if (!bankTransaction.processing) {
@@ -371,6 +377,7 @@ export const BankTransactionRow = ({
             bankTransaction={bankTransaction}
             categorized={categorized}
             isOpen={open}
+            mode={mode}
             close={() => setOpen(false)}
             containerWidth={containerWidth}
             showDescriptions={showDescriptions}

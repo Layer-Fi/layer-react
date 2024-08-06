@@ -110,7 +110,6 @@ export const ProfitAndLossTable = ({ asContainer, stringOverrides }: Props) => {
   }
 
   return (
-    <>
       <Table borderCollapse='collapse' bottomSpacing={false}>
         <TableBody>
           {renderLineItem(
@@ -196,6 +195,5 @@ export const ProfitAndLossTable = ({ asContainer, stringOverrides }: Props) => {
           ) : null}
         </TableBody>
       </Table>
-    </>
   )
 }

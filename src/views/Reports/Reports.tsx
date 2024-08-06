@@ -30,6 +30,7 @@ interface ReportsStringOverrides {
 export interface ReportsProps {
   title?: string // deprecated
   stringOverrides?: ReportsStringOverrides
+  enabledReports?: ReportType[]
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -100,29 +101,55 @@ const DownloadButton = ({
   )
 }
 
-export const Reports = ({ title, stringOverrides }: ReportsProps) => {
+const getOptions = (enabledReports: ReportType[]) => {
+  return [
+    enabledReports.includes('profitAndLoss')
+      ? {
+          value: 'profitAndLoss',
+          label: 'Profit & Loss',
+        }
+      : null,
+    enabledReports.includes('balanceSheet')
+      ? {
+          value: 'balanceSheet',
+          label: 'Balance Sheet',
+        }
+      : null,
+    enabledReports.includes('statementOfCashFlow')
+      ? {
+          value: 'statementOfCashFlow',
+          label: 'Statement of Cash Flow',
+        }
+      : null,
+  ].filter(o => !!o) as ReportOption[]
+}
+
+export const Reports = ({
+  title,
+  stringOverrides,
+  enabledReports = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow'],
+}: ReportsProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [activeTab, setActiveTab] = useState<ReportType>('profitAndLoss')
+  const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
+
+  const options = getOptions(enabledReports)
+  const defaultTitle =
+    enabledReports.length > 1
+      ? 'Reports'
+      : options.find(option => (option.value = enabledReports[0]))?.label
 
   return (
-    <View title={stringOverrides?.title || title || 'Reports'}>
-      <div className='Layer__component Layer__header__actions'>
-        <Toggle
-          name='reports-tabs'
-          options={
-            [
-              { value: 'profitAndLoss', label: 'Profit & loss' },
-              { value: 'balanceSheet', label: 'Balance sheet' },
-              {
-                value: 'statementOfCashFlow',
-                label: 'Statement of Cash Flow',
-              },
-            ] as ReportOption[]
-          }
-          selected={activeTab}
-          onChange={opt => setActiveTab(opt.target.value as ReportType)}
-        />
-      </div>
+    <View title={stringOverrides?.title || title || defaultTitle}>
+      {enabledReports.length > 1 && (
+        <div className='Layer__component Layer__header__actions'>
+          <Toggle
+            name='reports-tabs'
+            options={options}
+            selected={activeTab}
+            onChange={opt => setActiveTab(opt.target.value as ReportType)}
+          />
+        </div>
+      )}
       <Container name='reports' ref={containerRef}>
         <ProfitAndLoss asContainer={false}>
           <ReportsPanel
@@ -146,15 +173,24 @@ const ReportsPanel = ({
     <>
       {openReport === 'profitAndLoss' && (
         <TableProvider>
-          <View
-            type='panel'
-            headerControls={
-              <>
-                <ProfitAndLoss.DatePicker />
-                <DownloadButton
-                  stringOverrides={stringOverrides?.downloadButton}
-                />
-              </>
+
+        <View
+          type='panel'
+          headerControls={
+            <>
+              <ProfitAndLoss.DatePicker />
+              <DownloadButton
+                stringOverrides={stringOverrides?.downloadButton}
+              />
+            </>
+          }
+        >
+          <Panel
+            sidebar={
+              <ProfitAndLoss.DetailedCharts
+                showDatePicker={false}
+                stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+              />
             }
           >
             <Panel
