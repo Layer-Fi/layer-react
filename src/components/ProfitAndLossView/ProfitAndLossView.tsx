@@ -1,4 +1,5 @@
 import React, { RefObject, useContext, useRef } from 'react'
+import { TableProvider } from '../../contexts/TableContext'
 import { Container, Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
 import { Panel } from '../Panel'
@@ -112,9 +113,11 @@ const Components = ({
         </div>
       )}
       {!hideTable && (
-        <ProfitAndLoss.Table
-          stringOverrides={stringOverrides?.profitAndLossTable}
-        />
+        <TableProvider>
+          <ProfitAndLoss.Table
+            stringOverrides={stringOverrides?.profitAndLossTable}
+          />
+        </TableProvider>
       )}
     </>
   )
