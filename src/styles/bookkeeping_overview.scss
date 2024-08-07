@@ -44,7 +44,7 @@
   max-width: 1406px;
 }
 
-.bookkeeping-overview-profit-and-loss-charts > .Layer__toggle {
+.Layer__bookkeeping-overview-profit-and-loss-charts > .Layer__toggle {
   display: none;
 }
 
@@ -52,9 +52,6 @@
   top: 16px !important;
 }
 
-.Layer__component.Layer__bookkeeping-overview-profit-and-loss-chart.bookkeeping-overview-profit-and-loss-chart--hidden {
-  display: none;
-}
 
 @container (max-width: 796px) {
   .Layer__bookkeeping-overview__summaries-row {
@@ -76,6 +73,10 @@
 
   .Layer__bookkeeping-overview-profit-and-loss-charts > .Layer__toggle {
     display: flex;
+  }
+
+  .Layer__component.Layer__bookkeeping-overview-profit-and-loss-chart.bookkeeping-overview-profit-and-loss-chart--hidden {
+    display: none;
   }
 }
 

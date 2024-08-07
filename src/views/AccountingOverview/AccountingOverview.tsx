@@ -37,7 +37,7 @@ export const AccountingOverview = ({
   chartColorsList,
   stringOverrides,
 }: AccountingOverviewProps) => {
-  const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
+  const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
 
   return (
     <ProfitAndLoss asContainer={false}>
