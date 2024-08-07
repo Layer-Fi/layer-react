@@ -1,4 +1,10 @@
-import { BankTransaction, CategorizationStatus, Category } from '../../types'
+import {
+  BankTransaction,
+  CategorizationStatus,
+  Category,
+  SuggestedCategorization,
+} from '../../types'
+import { hasSuggestions } from '../../types/categories'
 import {
   CategoryOptionPayload,
   OptionActionType,
@@ -75,6 +81,13 @@ export const getAssignedValue = (
     !PersonalCategories.includes(bankTransaction.category.display_name)
   ) {
     return mapCategoryToOption(bankTransaction.category)
+  }
+
+  if (hasSuggestions(bankTransaction.categorization_flow)) {
+    const firstSuggestion = (
+      bankTransaction.categorization_flow as SuggestedCategorization
+    ).suggestions[0]
+    return mapCategoryToOption(firstSuggestion)
   }
 
   return

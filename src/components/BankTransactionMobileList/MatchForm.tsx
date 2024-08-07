@@ -14,7 +14,11 @@ export const MatchForm = ({
   const { match: matchBankTransaction, isLoading } =
     useBankTransactionsContext()
   const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
-    isAlreadyMatched(bankTransaction),
+    isAlreadyMatched(bankTransaction) ??
+      (bankTransaction.suggested_matches &&
+      bankTransaction.suggested_matches?.length > 0
+        ? bankTransaction.suggested_matches[0].id
+        : undefined),
   )
   const [formError, setFormError] = useState<string | undefined>()
   const [showRetry, setShowRetry] = useState(false)
