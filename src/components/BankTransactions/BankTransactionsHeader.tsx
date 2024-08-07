@@ -10,6 +10,7 @@ import { DatePicker } from '../DatePicker'
 import { SyncingComponent } from '../SyncingComponent'
 import { Tabs } from '../Tabs'
 import { Toggle } from '../Toggle'
+import { ToggleSize } from '../Toggle/Toggle'
 import { Heading, HeadingSize } from '../Typography'
 import { MobileComponentType } from './constants'
 import classNames from 'classnames'
@@ -39,12 +40,16 @@ export interface BankTransactionsHeaderStringOverrides {
 
 const DownloadButton = ({
   downloadButtonTextOverride,
+  iconOnly,
 }: {
   downloadButtonTextOverride?: string
+  iconOnly?: boolean
 }) => {
   const { auth, businessId, apiUrl } = useLayerContext()
   const [requestFailed, setRequestFailed] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
   const handleClick = async () => {
+    setIsDownloading(true)
     const currentYear = new Date().getFullYear().toString()
     const getBankTransactionsCsv = Layer.getBankTransactionsCsv(
       apiUrl,
@@ -66,6 +71,8 @@ const DownloadButton = ({
       }
     } catch (e) {
       setRequestFailed(true)
+    } finally {
+      setIsDownloading(false)
     }
   }
 
@@ -74,6 +81,8 @@ const DownloadButton = ({
       onClick={handleClick}
       className='Layer__download-retry-btn'
       error={'Approval failed. Check connection and retry in few seconds.'}
+      disabled={isDownloading}
+      iconOnly={iconOnly}
     >
       Retry
     </RetryButton>
@@ -82,6 +91,9 @@ const DownloadButton = ({
       variant={ButtonVariant.secondary}
       rightIcon={<DownloadCloud size={12} />}
       onClick={handleClick}
+      disabled={isDownloading}
+      iconAsPrimary={iconOnly}
+      iconOnly={iconOnly}
     >
       {downloadButtonTextOverride || 'Download'}
     </Button>
@@ -149,31 +161,15 @@ export const BankTransactionsHeader = ({
         ) : null}
       </div>
       <div className='Layer__header__actions-wrapper'>
-        <div className='Layer__header__actions'>
-          <DownloadButton
-            downloadButtonTextOverride={stringOverrides?.downloadButton}
-          />
-          {!categorizedOnly &&
-            !(mobileComponent == 'mobileList' && listView) &&
-            categorizeView && (
-              <Toggle
-                name='bank-transaction-display'
-                options={[
-                  { label: 'To Review', value: DisplayState.review },
-                  { label: 'Categorized', value: DisplayState.categorized },
-                ]}
-                selected={display}
-                onChange={onCategorizationDisplayChange}
-              />
-            )}
-        </div>
-
-        {!categorizedOnly &&
-          mobileComponent === 'mobileList' &&
-          listView &&
-          categorizeView && (
-            <Tabs
+        <div className='Layer__header__actions Layer__justify--space-between'>
+          {!categorizedOnly && categorizeView && (
+            <Toggle
               name='bank-transaction-display'
+              size={
+                mobileComponent === 'mobileList'
+                  ? ToggleSize.small
+                  : ToggleSize.medium
+              }
               options={[
                 { label: 'To Review', value: DisplayState.review },
                 { label: 'Categorized', value: DisplayState.categorized },
@@ -182,6 +178,12 @@ export const BankTransactionsHeader = ({
               onChange={onCategorizationDisplayChange}
             />
           )}
+
+          <DownloadButton
+            downloadButtonTextOverride={stringOverrides?.downloadButton}
+            iconOnly={listView}
+          />
+        </div>
       </div>
     </Header>
   )

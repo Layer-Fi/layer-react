@@ -11,7 +11,7 @@
 
 .Layer__bank-transaction-mobile-list-item {
   padding: 0;
-  margin: var(--spacing-2xs);
+  margin: var(--spacing-2xs) var(--spacing-md);
   background: var(--color-base-0);
   box-shadow:
     0px 2px 2px 0px var(--color-base-200),
@@ -37,7 +37,9 @@
 
   &.show.Layer__bank-transaction-row--removing {
     opacity: 0;
-    transition: all 500ms ease-in-out, opacity 80ms ease-out;
+    transition:
+      all 500ms ease-in-out,
+      opacity 80ms ease-out;
     overflow: hidden;
     margin-top: 0;
     margin-bottom: 0;
