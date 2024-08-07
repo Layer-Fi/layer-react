@@ -10,6 +10,7 @@ export interface RetryButtonProps
   disabled?: boolean
   error: string
   fullWidth?: boolean
+  iconOnly?: boolean
 }
 
 export const RetryButton = ({
