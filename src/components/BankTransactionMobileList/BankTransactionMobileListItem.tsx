@@ -25,6 +25,7 @@ export interface BankTransactionMobileListItemProps {
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
   mode: BankTransactionsMode
+  isFirstItem?: boolean
 }
 
 export enum Purpose {
@@ -54,6 +55,7 @@ export const BankTransactionMobileListItem = ({
   editable,
   mode,
   initialLoad,
+  isFirstItem = false,
 }: BankTransactionMobileListItemProps) => {
   const {
     transactionIdToOpen,
@@ -78,7 +80,7 @@ export const BankTransactionMobileListItem = ({
       ? Purpose.more
       : Purpose.business,
   )
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(isFirstItem)
   const [showComponent, setShowComponent] = useState(!initialLoad)
   const [height, setHeight] = useState(0)
   const [headingHeight, setHeadingHeight] = useState(63)

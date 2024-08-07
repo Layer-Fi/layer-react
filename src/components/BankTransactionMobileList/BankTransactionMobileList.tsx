@@ -37,6 +37,7 @@ export const BankTransactionMobileList = ({
               editable={editable}
               removeTransaction={removeTransaction}
               initialLoad={initialLoad}
+              isFirstItem={index == 0}
             />
           ),
         )}
