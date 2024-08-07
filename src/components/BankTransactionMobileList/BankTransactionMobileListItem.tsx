@@ -222,19 +222,19 @@ export const BankTransactionMobileListItem = ({
                       value: 'business',
                       label: 'Business',
                       style: { minWidth: 84 },
-                      disabled: categorizationEnabled(mode),
+                      disabled: !categorizationEnabled(mode),
                     },
                     {
                       value: 'personal',
                       label: 'Personal',
                       style: { minWidth: 84 },
-                      disabled: categorizationEnabled(mode),
+                      disabled: !categorizationEnabled(mode),
                     },
                     {
                       value: 'more',
                       label: 'More',
                       style: { minWidth: 84 },
-                      disabled: categorizationEnabled(mode),
+                      disabled: !categorizationEnabled(mode),
                     },
                   ]}
                   selected={purpose}
