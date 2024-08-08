@@ -24,7 +24,7 @@ import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
 const TEST_EMPTY_STATE = false
-const POLL_INTERVAL = 10000
+const POLL_INTERVAL = 1000
 
 export type BankTransactionsMode = 'bookkeeping-client' | 'self-serve'
 
