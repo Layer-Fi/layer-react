@@ -151,6 +151,13 @@
   background: var(--btn-secondary-bg-color);
 }
 
+.Layer__btn--tertiary {
+  color: var(--btn-tertiary-color);
+  background: var(--btn-tertiary-bg-color);
+  border-color: transparent;
+  box-shadow: none;
+}
+
 .Layer__download-retry-btn {
   width: 122px;
 }
