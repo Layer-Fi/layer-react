@@ -12,49 +12,49 @@ const Loader = ({ size = 18, ...props }: IconSvgProps) => (
   >
     <path
       d='M9 1.5V4.5'
-      stroke='#3E4044'
+      stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'
     />
     <path
       d='M9 13.5V16.5'
-      stroke='#818388'
+      stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'
     />
     <path
-      d='M3.6975 3.6975L5.82 5.82'
-      stroke='#5F6166'
+      d='M3.69751 3.69751L5.82001 5.82001'
+      stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'
     />
     <path
-      d='M12.18 12.18L14.3025 14.3025'
-      stroke='#2D2F33'
+      d='M12.1799 12.18L14.3024 14.3025'
+      stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'
     />
     <path
       d='M1.5 9H4.5'
-      stroke='#5F6166'
+      stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'
     />
     <path
       d='M13.5 9H16.5'
-      stroke='#2D2F33'
+      stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'
     />
     <path
-      d='M3.6975 14.3025L5.82 12.18'
-      stroke='#818388'
+      d='M3.69751 14.3025L5.82001 12.18'
+      stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'
     />
     <path
-      d='M12.18 5.82L14.3025 3.6975'
-      stroke='#3E4044'
+      d='M12.1799 5.82001L14.3024 3.69751'
+      stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'
     />

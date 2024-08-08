@@ -1,14 +1,12 @@
 import React, { ChangeEvent, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
-import DownloadCloud from '../../icons/DownloadCloud'
 import { DateRange, DisplayState } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
-import { Button, ButtonVariant, RetryButton } from '../Button'
+import { DownloadButton as DownloadButtonComponent } from '../Button'
 import { Header } from '../Container'
 import { DatePicker } from '../DatePicker'
 import { SyncingComponent } from '../SyncingComponent'
-import { Tabs } from '../Tabs'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
 import { Heading, HeadingSize } from '../Typography'
@@ -76,27 +74,14 @@ const DownloadButton = ({
     }
   }
 
-  return requestFailed ? (
-    <RetryButton
-      onClick={handleClick}
-      className='Layer__download-retry-btn'
-      error={'Approval failed. Check connection and retry in few seconds.'}
-      disabled={isDownloading}
+  return (
+    <DownloadButtonComponent
       iconOnly={iconOnly}
-    >
-      Retry
-    </RetryButton>
-  ) : (
-    <Button
-      variant={ButtonVariant.secondary}
-      rightIcon={<DownloadCloud size={12} />}
       onClick={handleClick}
-      disabled={isDownloading}
-      iconAsPrimary={iconOnly}
-      iconOnly={iconOnly}
-    >
-      {downloadButtonTextOverride || 'Download'}
-    </Button>
+      isDownloading={isDownloading}
+      requestFailed={requestFailed}
+      text={downloadButtonTextOverride ?? 'Download'}
+    />
   )
 }
 
@@ -178,7 +163,6 @@ export const BankTransactionsHeader = ({
               onChange={onCategorizationDisplayChange}
             />
           )}
-
           <DownloadButton
             downloadButtonTextOverride={stringOverrides?.downloadButton}
             iconOnly={listView}
