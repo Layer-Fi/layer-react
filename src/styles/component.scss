@@ -73,6 +73,43 @@
   gap: var(--spacing-sm);
 }
 
+.Layer__header {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.Layer__header--sticky {
+  position: sticky;
+  top: 0;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(6px);
+  z-index: 10;
+}
+
+.Layer__header--top-rounded {
+  border-top-left-radius: var(--border-radius-sm);
+  border-top-right-radius: var(--border-radius-sm);
+}
+
+.Layer__header__row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.Layer__header__col {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  min-height: 68px;
+  box-sizing: border-box;
+}
+
 .Layer__header__actions-col {
   display: flex;
   align-items: center;
@@ -90,6 +127,12 @@
     padding-left: var(--spacing-xl);
     padding-right: var(--spacing-xl);
     padding-top: var(--spacing-xl);
+  }
+}
+
+@container (min-width: 1400px) {
+  .Layer__header__col {
+    padding: var(--spacing-md) var(--spacing-xl);
   }
 }
 

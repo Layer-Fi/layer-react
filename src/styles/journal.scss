@@ -2,7 +2,6 @@
   display: flex;
   align-items: stretch;
   position: relative;
-  overflow: auto;
 }
 
 @container (min-width: 1025px) {
@@ -17,6 +16,15 @@
   align-items: center;
   justify-content: flex-end;
   padding: var(--spacing-xl);
+}
+
+.Layer__journal .Layer__panel {
+  max-width: 100%;
+}
+
+.Layer__journal__table-container {
+  max-width: 100%;
+  overflow: auto;
 }
 
 .Layer__journal-table .Layer__table-cell-content::before {
@@ -45,6 +53,7 @@
 .Layer__journal__table {
   width: 100%;
   border-collapse: collapse;
+  max-width: 100%;
 }
 
 .Layer__journal__actions {
@@ -63,7 +72,12 @@
 }
 
 .Layer__table-cell.Layer__journal__arrow {
+  cursor: pointer;
   width: 25px;
+
+  .Layer__table-cell-content-indentation {
+    margin-left: -8px;
+  }
 }
 
 .Layer__table-cell.Layer__journal__type,
@@ -128,27 +142,8 @@
   transform: scale(1);
 }
 
-.Layer__journal__sidebar__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: var(--spacing-xl);
-  padding-bottom: var(--spacing-lg);
-  gap: var(--spacing-md);
-
-  .title {
-    margin: 0;
-    font-size: 24px;
-  }
-
-  .actions {
-    display: flex;
-    gap: var(--spacing-sm);
-    align-items: center;
-  }
-}
-
 .Layer__journal__table .Layer__journal-table-row {
+  cursor: pointer;
   &:not(.Layer__table-row--header):hover {
     background-color: var(--color-base-50);
   }
@@ -205,6 +200,22 @@
 
 .Layer__journal__type--mobile {
   color: var(--color-base-800);
+}
+
+@container (max-width: 1024px) {
+  .Layer__journal.Layer__component
+    .Layer__panel__sidebar
+    .Layer__panel__sidebar-content {
+    width: 100%;
+
+    .Layer__details-list-item {
+      padding-left: 0;
+    }
+
+    .Layer__ledger-account__entry-details__line-items {
+      max-width: 600px;
+    }
+  }
 }
 
 @container (min-width: 761px) and (max-width: 1024px) {
@@ -285,6 +296,14 @@
   }
 }
 
+@container (min-width: 1400px) {
+  .Layer__table-cell.Layer__journal__arrow {
+    .Layer__table-cell-content-indentation {
+      margin-left: 0px;
+    }
+  }
+}
+
 @container (max-width: 1024px) {
   .Layer__journal__panel .Layer__panel__sidebar .Layer__panel__sidebar-content {
     width: 100%;
@@ -347,6 +366,17 @@
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
   }
+
+  .Layer__input-group.Layer__input-group--inline {
+    flex-direction: column;
+    gap: var(--spacing-2xs);
+    align-items: flex-start;
+    padding-top: var(--spacing-sm);
+
+    & > label {
+      width: 100%;
+    }
+  }
 }
 
 .Layer__journal__form__input-group__line-item {
@@ -397,25 +427,9 @@
   .Layer__input-label {
     padding: 0;
   }
-
-  .Layer__journal__form__input-group__title {
-    padding-bottom: var(--spacing-xl);
-  }
 }
 
 .Layer__journal__sidebar__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: var(--spacing-xl);
-  padding-bottom: var(--spacing-lg);
-  gap: var(--spacing-md);
-
-  .title {
-    margin: 0;
-    font-size: 24px;
-  }
-
   .actions {
     display: flex;
     gap: var(--spacing-sm);

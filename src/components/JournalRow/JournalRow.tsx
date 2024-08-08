@@ -136,7 +136,7 @@ export const JournalRow = ({
               <span
                 className='Layer__table-cell-content-indentation'
                 style={{
-                  paddingLeft: INDENTATION * depth + 16,
+                  paddingLeft: INDENTATION * depth,
                 }}
                 onClick={e => {
                   e.stopPropagation()

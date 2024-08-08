@@ -5,12 +5,14 @@ import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
 import { humanizeEnum } from '../../utils/format'
 import { Badge, BadgeVariant } from '../Badge'
-import { Button, ButtonVariant } from '../Button'
+import { BackButton, Button, ButtonVariant } from '../Button'
 import { Card } from '../Card'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
+import { Header, HeaderCol, HeaderRow } from '../Header'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
+import { Heading, HeadingSize } from '../Typography'
 
 export const JournalEntryDetails = () => {
   const {
@@ -31,6 +33,14 @@ export const JournalEntryDetails = () => {
 
   return (
     <div className='Layer__journal__entry-details'>
+      <Header className='Layer__journal__entry-details__mobile-header'>
+        <HeaderRow>
+          <HeaderCol>
+            <BackButton onClick={closeSelectedEntry} />
+            <Heading size={HeadingSize.secondary}>Transaction details</Heading>
+          </HeaderCol>
+        </HeaderRow>
+      </Header>
       <DetailsList
         title='Transaction source'
         actions={
