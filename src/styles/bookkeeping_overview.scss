@@ -37,14 +37,17 @@
   }
 }
 
+.Layer__bookkeeping-overview-profit-and-loss-chart {
+  width: calc(50% - var(--spacing-md) / 2);
+}
+
 .Layer__bookkeeping-overview-profit-and-loss-charts {
   display: flex;
-  flex-direction: column;
   gap: var(--spacing-md);
   max-width: 1406px;
 }
 
-.bookkeeping-overview-profit-and-loss-charts > .Layer__toggle {
+.Layer__bookkeeping-overview-profit-and-loss-charts > .Layer__toggle {
   display: none;
 }
 
@@ -52,9 +55,6 @@
   top: 16px !important;
 }
 
-.Layer__component.Layer__bookkeeping-overview-profit-and-loss-chart.bookkeeping-overview-profit-and-loss-chart--hidden {
-  display: none;
-}
 
 @container (max-width: 796px) {
   .Layer__bookkeeping-overview__summaries-row {
@@ -70,12 +70,20 @@
     }
   }
 
+  .Layer__bookkeeping-overview-profit-and-loss-chart {
+    width: 100%;
+  }
+
   .Layer__bookkeeping-overview-profit-and-loss-charts {
     flex-direction: column;
   }
 
   .Layer__bookkeeping-overview-profit-and-loss-charts > .Layer__toggle {
     display: flex;
+  }
+
+  .Layer__component.Layer__bookkeeping-overview-profit-and-loss-chart.bookkeeping-overview-profit-and-loss-chart--hidden {
+    display: none;
   }
 }
 

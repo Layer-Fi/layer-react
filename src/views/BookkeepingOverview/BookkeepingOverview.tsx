@@ -30,7 +30,7 @@ export const BookkeepingOverview = ({
   title, // deprecated
   stringOverrides,
 }: BookkeepingOverviewProps) => {
-  const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('revenue')
+  const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
 
   return (
