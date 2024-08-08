@@ -22,6 +22,10 @@
     }
   }
 
+  & > div {
+    max-width: 100%;
+  }
+
   .Layer__datepicker__next-button {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -295,6 +299,8 @@
 }
 
 .Layer__datepicker__time__wrapper {
+  max-width: 98px;
+
   .react-datepicker__header {
     padding: 0 !important;
   }
@@ -313,6 +319,13 @@
       min-width: auto;
       max-width: auto;
     }
+  }
+
+  .react-datepicker__input-container {
+    margin-right: 1px;
+  }
+  .react-datepicker__input-container > input {
+    max-width: 84px;
   }
 }
 
