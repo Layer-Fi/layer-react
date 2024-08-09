@@ -40,6 +40,13 @@ export const mapTypesToColors = (
   return data.map(obj => {
     const type = obj.type
 
+    if (type === 'Uncategorized') {
+      return {
+        color: '#EEEEF0',
+        opacity: 1,
+      }
+    }
+
     if (!typeToColor[type]) {
       typeToColor[type] = colorList[colorIndex % colorList.length]
       colorIndex++
@@ -55,6 +62,30 @@ export const mapTypesToColors = (
       opacity: opacity,
     }
   })
+}
+
+const ValueIcon = ({
+  item,
+  typeColorMapping,
+  idx,
+}: {
+  item: LineBaseItem
+  typeColorMapping: any
+  idx: number
+}) => {
+  if (item.type === 'Uncategorized') {
+    return <div className='share-icon Layer__value-icon--uncategorized' />
+  }
+
+  return (
+    <div
+      className='share-icon'
+      style={{
+        background: typeColorMapping[idx].color,
+        opacity: typeColorMapping[idx].opacity,
+      }}
+    />
+  )
 }
 
 export const DetailedTable = ({
@@ -135,12 +166,10 @@ export const DetailedTable = ({
                     <td className='share-col'>
                       <span className='share-cell-content'>
                         {formatPercent(item.share)}%
-                        <div
-                          className='share-icon'
-                          style={{
-                            background: typeColorMapping[idx].color,
-                            opacity: typeColorMapping[idx].opacity,
-                          }}
+                        <ValueIcon
+                          item={item}
+                          typeColorMapping={typeColorMapping}
+                          idx={idx}
                         />
                       </span>
                     </td>

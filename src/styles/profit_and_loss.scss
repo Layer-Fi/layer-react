@@ -429,6 +429,14 @@
   stroke: var(--color-base-900);
 }
 
+#layer-pie-stripe-pattern rect {
+  fill: var(--color-base-200);
+}
+
+#layer-pie-stripe-pattern line {
+  stroke: var(--color-base-500);
+}
+
 @container (min-width: 1024px) {
   .Layer__profit-and-loss-row__label--depth-0 {
     padding-left: var(--spacing-xl);
