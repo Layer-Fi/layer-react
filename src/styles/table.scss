@@ -150,12 +150,12 @@
     }
   }
 
-  tr th:nth-child(1) .Layer__table-cell-content,
+  tr th:nth-child(1).Layer__table-header,
   tr td:nth-child(1) .Layer__table-cell-content {
     padding-left: var(--spacing-lg);
   }
   tr td:last-child .Layer__table-cell-content,
-  tr th:last-child .Layer__table-cell-content {
+  tr th:last-child.Layer__table-header {
     justify-content: flex-end;
     padding-right: var(--spacing-lg);
   }
@@ -371,6 +371,7 @@
   cursor: pointer;
 }
 
+.Layer__table-header.Layer__table-cell--amount,
 .Layer__table-cell--amount {
   justify-content: flex-end;
   text-align: right;

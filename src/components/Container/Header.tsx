@@ -1,3 +1,7 @@
+/**
+ * @deprecated- use components/Header instead.
+ * This has been kept to not introduce breaking changes.
+ */
 import React, { CSSProperties, ReactNode, forwardRef } from 'react'
 import classNames from 'classnames'
 
