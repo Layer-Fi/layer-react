@@ -228,6 +228,18 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
         height: 12px;
         border-radius: 2px;
       }
+
+      .Layer__value-icon--uncategorized {
+        background-image: repeating-linear-gradient(
+          -45deg,
+          var(--color-base-200) 0px,
+          var(--color-base-200) 2px,
+          var(--color-base-500) 2px,
+          var(--color-base-500) 3.5px,
+          var(--color-base-200) 3.5px,
+          var(--color-base-200) 4px
+        );
+      }
     }
   }
 }
