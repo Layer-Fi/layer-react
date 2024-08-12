@@ -4,6 +4,7 @@
 .Layer__tooltip,
 .Layer__toasts-container,
 .Layer__drawer,
+.Layer__variables,
 #Layer__datepicker__portal {
   // 1. BASE VARIABLES:
   --color-black: #1a1a1a;
@@ -21,7 +22,6 @@
   --color-info-error: hsl(0 76% 50%);
   --color-info-error-bg: hsl(0 83% 86%);
   --color-info-error-fg: hsl(0 88% 32%);
-
 
   --color-dark-h: 0;
   --color-dark-s: 0%;
