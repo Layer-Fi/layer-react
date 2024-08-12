@@ -56,13 +56,7 @@ export const useBankTransactions: UseBankTransactions = params => {
 
     if (!prevData?.meta?.pagination?.cursor) {
       return [
-        businessId &&
-          auth?.access_token &&
-          `bank-transactions${
-            filters?.categorizationStatus
-              ? `-scope-${filters?.categorizationStatus}`
-              : ''
-          }-${businessId}`,
+        businessId && auth?.access_token && `bank-transactions-${businessId}`,
         undefined,
       ]
     }
@@ -70,11 +64,7 @@ export const useBankTransactions: UseBankTransactions = params => {
     return [
       businessId &&
         auth?.access_token &&
-        `bank-transactions${
-          filters?.categorizationStatus
-            ? `-scope-${filters?.categorizationStatus}`
-            : ''
-        }-${businessId}-${prevData.meta.pagination.cursor}`,
+        `bank-transactions-${businessId}-${prevData.meta.pagination.cursor}`,
       prevData.meta.pagination.cursor,
     ]
   }
@@ -95,11 +85,6 @@ export const useBankTransactions: UseBankTransactions = params => {
           params: {
             businessId,
             cursor: nextCursor,
-            categorized: filters?.categorizationStatus
-              ? filters?.categorizationStatus === DisplayState.categorized
-                ? 'true'
-                : 'false'
-              : '',
           },
         }).call(false)
       }
@@ -316,6 +301,8 @@ export const useBankTransactions: UseBankTransactions = params => {
   }
 
   const removeAfterCategorize = (bankTransaction: BankTransaction) => {
+    /*
+    Removed 2024-08-12 by @doneel as part of unifying transaction lists in LAY-298
     const updatedData = rawResponseData?.map(page => {
       return {
         ...page,
@@ -323,6 +310,7 @@ export const useBankTransactions: UseBankTransactions = params => {
       }
     })
     mutate(updatedData, { revalidate: false })
+    */
   }
 
   const refetch = () => {
