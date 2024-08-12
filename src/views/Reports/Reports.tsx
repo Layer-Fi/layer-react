@@ -13,6 +13,7 @@ import { StatementOfCashFlowStringOverrides } from '../../components/StatementOf
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { TableProvider } from '../../contexts/TableContext'
 import DownloadCloud from '../../icons/DownloadCloud'
 
 interface ReportsStringOverrides {
@@ -171,33 +172,37 @@ const ReportsPanel = ({
   return (
     <>
       {openReport === 'profitAndLoss' && (
-        <View
-          type='panel'
-          headerControls={
-            <>
-              <ProfitAndLoss.DatePicker />
-              <DownloadButton
-                stringOverrides={stringOverrides?.downloadButton}
-              />
-            </>
-          }
-        >
-          <Panel
-            sidebar={
-              <ProfitAndLoss.DetailedCharts
-                showDatePicker={false}
-                stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-              />
+        <TableProvider>
+          <View
+            type='panel'
+            headerControls={
+              <>
+                <ProfitAndLoss.DatePicker />
+                <DownloadButton
+                  stringOverrides={stringOverrides?.downloadButton}
+                />
+              </>
             }
-            sidebarIsOpen={Boolean(sidebarScope)}
-            parentRef={containerRef}
           >
-            <ProfitAndLoss.Table
-              asContainer={false}
-              stringOverrides={stringOverrides?.profitAndLoss?.table}
-            />
-          </Panel>
-        </View>
+            <Panel
+              sidebar={
+                <ProfitAndLoss.DetailedCharts
+                  showDatePicker={false}
+                  stringOverrides={
+                    stringOverrides?.profitAndLoss?.detailedCharts
+                  }
+                />
+              }
+              sidebarIsOpen={Boolean(sidebarScope)}
+              parentRef={containerRef}
+            >
+              <ProfitAndLoss.Table
+                asContainer={false}
+                stringOverrides={stringOverrides?.profitAndLoss?.table}
+              />
+            </Panel>
+          </View>
+        </TableProvider>
       )}
       {openReport === 'balanceSheet' && (
         <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} />

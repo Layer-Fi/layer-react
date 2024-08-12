@@ -10,6 +10,7 @@ export const TableCell = ({
   isCurrency,
   primary,
   withExpandIcon = false,
+  fullWidth,
 }: TableCellProps) => {
   const amount = typeof children === 'number' ? children : 0
   const isPositive = amount >= 0
@@ -32,7 +33,10 @@ export const TableCell = ({
   }
 
   return (
-    <td className={cellClassNames}>
+    <td
+      className={cellClassNames}
+      style={fullWidth ? { width: '100%' } : undefined}
+    >
       <span className='Layer__table-cell-content'>
         {withExpandIcon && (
           <ChevronDownFill

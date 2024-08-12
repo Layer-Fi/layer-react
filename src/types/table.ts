@@ -42,4 +42,5 @@ export interface TableCellProps {
   isHeaderCell?: boolean
   primary?: boolean
   withExpandIcon?: boolean
+  fullWidth?: boolean
 }
