@@ -7,6 +7,7 @@ import { humanizeTitle } from '../../utils/profitAndLossUtils'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { Text, TextSize, TextWeight } from '../Typography'
 import { mapTypesToColors } from './DetailedTable'
+import classNames from 'classnames'
 import { format } from 'date-fns'
 import {
   PieChart,
@@ -87,6 +88,17 @@ export const DetailedChart = ({
                 <rect width='4' height='4' opacity={0.16} />
                 <line x1='0' y='0' x2='0' y2='4' strokeWidth='2' />
               </pattern>
+              <pattern
+                id='layer-pie-dots-pattern'
+                x='0'
+                y='0'
+                width='3'
+                height='3'
+                patternUnits='userSpaceOnUse'
+              >
+                <rect width='3' height='3' opacity={0.46} className='bg' />
+                <rect width='1' height='1' opacity={0.56} />
+              </pattern>
             </defs>
             {!isLoading && !noValue ? (
               <Pie
@@ -113,13 +125,16 @@ export const DetailedChart = ({
                   return (
                     <Cell
                       key={`cell-${index}`}
-                      className={`Layer__profit-and-loss-detailed-charts__pie ${
-                        hoveredItem && active ? 'active' : 'inactive'
-                      }`}
+                      className={classNames(
+                        'Layer__profit-and-loss-detailed-charts__pie',
+                        hoveredItem && active ? 'active' : 'inactive',
+                        entry.type === 'Uncategorized' &&
+                          'Layer__profit-and-loss-detailed-charts__pie--border',
+                      )}
                       style={{
                         fill:
                           entry.type === 'Uncategorized' && fill
-                            ? 'url(#layer-pie-stripe-pattern)'
+                            ? 'url(#layer-pie-dots-pattern)'
                             : fill,
                       }}
                       opacity={typeColorMapping[index].opacity}
