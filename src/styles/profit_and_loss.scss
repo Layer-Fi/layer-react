@@ -413,6 +413,10 @@
   padding-left: 22px;
 }
 
+.Layer__profit-and-loss-detailed-charts__pie--border {
+  stroke: var(--color-base-200);
+}
+
 #layer-bar-stripe-pattern rect {
   fill: var(--color-base-400);
 }
@@ -427,6 +431,30 @@
 
 #layer-bar-stripe-pattern-dark line {
   stroke: var(--color-base-900);
+}
+
+#layer-pie-stripe-pattern rect {
+  fill: var(--color-base-300);
+}
+
+#layer-dots-stripe-pattern rect {
+  fill: var(--color-base-500);
+}
+
+#layer-pie-dots-pattern rect {
+  fill: var(--color-base-500);
+}
+
+#layer-pie-dots-pattern rect.bg {
+  fill: var(--color-base-100);
+}
+
+#layer-pie-dots-pattern-legend rect {
+  fill: var(--color-base-500);
+}
+
+#layer-pie-dots-pattern-bg {
+  fill: var(--color-base-100);
 }
 
 @container (min-width: 1024px) {

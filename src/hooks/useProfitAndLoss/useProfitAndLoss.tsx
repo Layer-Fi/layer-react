@@ -11,6 +11,7 @@ import {
   collectRevenueItems,
   applyShare,
 } from '../../utils/profitAndLossUtils'
+import { useProfitAndLossLTM } from './useProfitAndLossLTM'
 import { useProfitAndLossQuery } from './useProfitAndLossQuery'
 import { startOfMonth, endOfMonth } from 'date-fns'
 
@@ -90,6 +91,10 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       reportingBasis,
     })
 
+  const { data: summaryData } = useProfitAndLossLTM({
+    currentDate: startDate ? startDate : startOfMonth(new Date()),
+  })
+
   const changeDateRange = ({
     startDate: newStartDate,
     endDate: newEndDate,
@@ -142,6 +147,20 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       return x
     })
 
+    const month = startDate.getMonth() + 1
+    const year = startDate.getFullYear()
+    const found = summaryData.find(x => x.month === month && x.year === year)
+    if (found && (found.uncategorizedInflows ?? 0) > 0) {
+      filtered.push({
+        name: 'uncategorized',
+        display_name: 'Uncategorized',
+        value: found.uncategorizedInflows,
+        type: 'Uncategorized',
+        share: 0,
+        hidden: false,
+      })
+    }
+
     const sorted = filtered.sort((a, b) => {
       switch (filters['revenue']?.sortBy) {
         case 'category':
@@ -169,7 +188,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
-  }, [data, startDate, filters, sidebarScope])
+  }, [data, startDate, filters, sidebarScope, summaryData])
 
   const { filteredDataExpenses, filteredTotalExpenses } = useMemo(() => {
     if (!data) {
@@ -190,6 +209,21 @@ export const useProfitAndLoss: UseProfitAndLoss = (
 
       return x
     })
+
+    const month = startDate.getMonth() + 1
+    const year = startDate.getFullYear()
+    const found = summaryData.find(x => x.month === month && x.year === year)
+    if (found && (found.uncategorizedOutflows ?? 0) > 0) {
+      filtered.push({
+        name: 'uncategorized',
+        display_name: 'Uncategorized',
+        value: found.uncategorizedOutflows,
+        type: 'Uncategorized',
+        share: 0,
+        hidden: false,
+      })
+    }
+
     const sorted = filtered.sort((a, b) => {
       switch (filters['expenses']?.sortBy) {
         case 'category':
@@ -217,7 +251,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
-  }, [data, startDate, filters, sidebarScope])
+  }, [data, startDate, filters, sidebarScope, summaryData])
 
   return {
     data,
