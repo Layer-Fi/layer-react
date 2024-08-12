@@ -331,10 +331,8 @@ export const useBankTransactions: UseBankTransactions = params => {
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched('bank-transactions') || true) {
-      console.log('Refetching bank transactions')
+    if (hasBeenTouched('bank-transactions')) {
       refetch()
-    } else {
     }
   }, [syncTimestamps])
 
