@@ -191,7 +191,9 @@ export const DetailedTable = ({
                     <td className='value-col'>${formatMoney(item.value)}</td>
                     <td className='share-col'>
                       <span className='share-cell-content'>
-                        {formatPercent(item.share)}%
+                        {item.share !== undefined
+                          ? `${formatPercent(item.share)}%`
+                          : ''}
                         <ValueIcon
                           item={item}
                           typeColorMapping={typeColorMapping}

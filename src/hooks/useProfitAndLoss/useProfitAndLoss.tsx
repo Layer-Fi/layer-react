@@ -19,6 +19,8 @@ export type Scope = 'expenses' | 'revenue'
 
 export type SidebarScope = Scope | undefined
 
+const EXCLUDE_FROM_TOTAL = ['Uncategorized']
+
 type Props = {
   startDate?: Date
   endDate?: Date
@@ -46,6 +48,8 @@ type UseProfitAndLoss = (props?: Props) => {
   filteredTotalRevenue?: number
   filteredDataExpenses: LineBaseItem[]
   filteredTotalExpenses?: number
+  uncategorizedTotalRevenue?: number
+  uncategorizedTotalExpenses?: number
   isLoading: boolean
   isValidating: boolean
   error: unknown
@@ -127,9 +131,17 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     })
   }
 
-  const { filteredDataRevenue, filteredTotalRevenue } = useMemo(() => {
+  const {
+    filteredDataRevenue,
+    filteredTotalRevenue,
+    uncategorizedTotalRevenue,
+  } = useMemo(() => {
     if (!data) {
-      return { filteredDataRevenue: [], filteredTotalRevenue: undefined }
+      return {
+        filteredDataRevenue: [],
+        filteredTotalRevenue: undefined,
+        uncategorizedTotalRevenue: undefined,
+      }
     }
     const items = collectRevenueItems(data)
     const filtered = items.map(x => {
@@ -150,7 +162,9 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const month = startDate.getMonth() + 1
     const year = startDate.getFullYear()
     const found = summaryData.find(x => x.month === month && x.year === year)
+    let uncategorizedTotal = undefined
     if (found && (found.uncategorizedInflows ?? 0) > 0) {
+      uncategorizedTotal = found.uncategorizedInflows
       filtered.push({
         name: 'uncategorized',
         display_name: 'Uncategorized',
@@ -183,16 +197,28 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       }
     })
     const total = sorted
-      .filter(x => !x.hidden)
+      .filter(x => !x.hidden && !EXCLUDE_FROM_TOTAL.includes(x.type))
       .reduce((x, { value }) => x + value, 0)
-    const withShare = applyShare(sorted, total)
+    const withShare = applyShare(sorted, total, EXCLUDE_FROM_TOTAL)
 
-    return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
+    return {
+      filteredDataRevenue: withShare,
+      filteredTotalRevenue: total,
+      uncategorizedTotalRevenue: uncategorizedTotal,
+    }
   }, [data, startDate, filters, sidebarScope, summaryData])
 
-  const { filteredDataExpenses, filteredTotalExpenses } = useMemo(() => {
+  const {
+    filteredDataExpenses,
+    filteredTotalExpenses,
+    uncategorizedTotalExpenses,
+  } = useMemo(() => {
     if (!data) {
-      return { filteredDataExpenses: [], filteredTotalExpenses: undefined }
+      return {
+        filteredDataExpenses: [],
+        filteredTotalExpenses: undefined,
+        uncategorizedTotalExpenses: undefined,
+      }
     }
     const items = collectExpensesItems(data)
     const filtered = items.map(x => {
@@ -213,7 +239,9 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const month = startDate.getMonth() + 1
     const year = startDate.getFullYear()
     const found = summaryData.find(x => x.month === month && x.year === year)
+    let uncategorizedTotal = undefined
     if (found && (found.uncategorizedOutflows ?? 0) > 0) {
+      uncategorizedTotal = found.uncategorizedOutflows
       filtered.push({
         name: 'uncategorized',
         display_name: 'Uncategorized',
@@ -245,12 +273,17 @@ export const useProfitAndLoss: UseProfitAndLoss = (
           return b.value - a.value
       }
     })
-    const total = sorted
-      .filter(x => !x.hidden)
-      .reduce((x, { value }) => x + value, 0)
-    const withShare = applyShare(sorted, total)
 
-    return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
+    const total = sorted
+      .filter(x => !x.hidden && !EXCLUDE_FROM_TOTAL.includes(x.type))
+      .reduce((x, { value }) => x + value, 0)
+    const withShare = applyShare(sorted, total, EXCLUDE_FROM_TOTAL)
+
+    return {
+      filteredDataExpenses: withShare,
+      filteredTotalExpenses: total,
+      uncategorizedTotalExpenses: uncategorizedTotal,
+    }
   }, [data, startDate, filters, sidebarScope, summaryData])
 
   return {
@@ -259,6 +292,8 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     filteredTotalRevenue,
     filteredDataExpenses,
     filteredTotalExpenses,
+    uncategorizedTotalRevenue,
+    uncategorizedTotalExpenses,
     isLoading,
     isValidating,
     error: error,

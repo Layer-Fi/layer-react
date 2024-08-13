@@ -356,6 +356,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4xs);
+  flex: 1;
 }
 
 .Layer__profit-and-loss-summaries__title {
@@ -376,6 +377,19 @@
   &::before {
     content: '$';
   }
+}
+
+.Layer__profit-and-loss-summaries__amount-wrapper {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: var(--spacing-2xs);
+}
+
+.Layer__profit-and-loss-summaries__amount-uncategorized {
+  font-size: var(--text-sm);
+  color: var(--text-color-secondary);
 }
 
 .Layer__profit-and-loss-summaries__amount--negative {

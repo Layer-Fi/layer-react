@@ -235,16 +235,15 @@ export const DetailedChart = ({
                     }
 
                     if (hoveredItem) {
+                      const found = filteredData.find(
+                        x => x.display_name === hoveredItem,
+                      )?.share
                       return (
                         <ChartText
                           {...positioningProps}
                           className='pie-center-label__share'
                         >
-                          {`${formatPercent(
-                            filteredData.find(
-                              x => x.display_name === hoveredItem,
-                            )?.share,
-                          )}%`}
+                          {found ? `${formatPercent(found)}%` : ''}
                         </ChartText>
                       )
                     }

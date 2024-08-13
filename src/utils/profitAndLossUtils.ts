@@ -63,10 +63,18 @@ export const humanizeTitle = (sidebarView: SidebarScope) => {
 export const applyShare = (
   items: LineBaseItem[],
   total: number,
+  exclude?: string[],
 ): LineBaseItem[] => {
   return items.map(item => {
     if (total === 0) {
       return item
+    }
+
+    if (exclude && exclude.includes(item.type)) {
+      return {
+        ...item,
+        share: undefined,
+      }
     }
 
     return {

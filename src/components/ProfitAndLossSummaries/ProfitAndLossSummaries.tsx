@@ -69,6 +69,8 @@ export const ProfitAndLossSummaries = ({
 }: Props) => {
   const {
     data: storedData,
+    uncategorizedTotalExpenses,
+    uncategorizedTotalRevenue,
     isLoading,
     setSidebarScope,
     sidebarScope,
@@ -87,6 +89,8 @@ export const ProfitAndLossSummaries = ({
   }, [storedData])
 
   const data = dataItem ? dataItem : { income: { value: NaN }, net_profit: NaN }
+
+  console.log('data', data)
 
   const incomeDirectionClass =
     (data.income.value ?? NaN) < 0
@@ -130,11 +134,20 @@ export const ProfitAndLossSummaries = ({
               <SkeletonLoader />
             </div>
           ) : (
-            <span
-              className={`Layer__profit-and-loss-summaries__amount ${incomeDirectionClass}`}
-            >
-              {formatMoney(Math.abs(data?.income?.value ?? NaN))}
-            </span>
+            <div className='Layer__profit-and-loss-summaries__amount-wrapper'>
+              <span
+                className={`Layer__profit-and-loss-summaries__amount ${incomeDirectionClass}`}
+              >
+                {formatMoney(Math.abs(data?.income?.value ?? NaN))}
+              </span>
+              {uncategorizedTotalRevenue && (
+                <span
+                  className={`Layer__profit-and-loss-summaries__amount-uncategorized ${expensesDirectionClass}`}
+                >
+                  {formatMoney(uncategorizedTotalRevenue)}
+                </span>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -159,13 +172,22 @@ export const ProfitAndLossSummaries = ({
               <SkeletonLoader className='Layer__profit-and-loss-summaries__loader' />
             </div>
           ) : (
-            <span
-              className={`Layer__profit-and-loss-summaries__amount ${expensesDirectionClass}`}
-            >
-              {formatMoney(
-                Math.abs((data.income.value ?? 0) - data.net_profit),
+            <div className='Layer__profit-and-loss-summaries__amount-wrapper'>
+              <span
+                className={`Layer__profit-and-loss-summaries__amount ${expensesDirectionClass}`}
+              >
+                {formatMoney(
+                  Math.abs((data.income.value ?? 0) - data.net_profit),
+                )}
+              </span>
+              {uncategorizedTotalExpenses && (
+                <span
+                  className={`Layer__profit-and-loss-summaries__amount-uncategorized ${expensesDirectionClass}`}
+                >
+                  {formatMoney(uncategorizedTotalExpenses)}
+                </span>
               )}
-            </span>
+            </div>
           )}
         </div>
       </div>
