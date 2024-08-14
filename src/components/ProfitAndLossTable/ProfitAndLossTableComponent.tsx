@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react'
+import { TableProvider } from '../../contexts/TableContext'
 import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import PieChart from '../../icons/PieChart'
@@ -15,13 +16,16 @@ export interface ProfitAndLossTableStringOverrides {
   netProfitLabel?: string
 }
 
-type Props = {
+export type ProfilAndLostTableProps = {
   lockExpanded?: boolean
   asContainer?: boolean
   stringOverrides?: ProfitAndLossTableStringOverrides
 }
 
-export const ProfitAndLossTable = ({ asContainer, stringOverrides }: Props) => {
+export const ProfitAndLossTableComponent = ({
+  asContainer,
+  stringOverrides,
+}: ProfilAndLostTableProps) => {
   const {
     data: actualData,
     isLoading,
