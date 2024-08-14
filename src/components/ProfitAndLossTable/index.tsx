@@ -1,1 +1,2 @@
-export { ProfitAndLossTable } from './ProfitAndLossTable'
+export { ProfitAndLossTableWithProvider as ProfitAndLossTable } from './ProfitAndLossTableWithProvider'
+export { ProfitAndLossTableStringOverrides } from './ProfitAndLossTableComponent'
