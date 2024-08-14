@@ -53,6 +53,7 @@ export const GeneralLedgerView = ({
               asWidget
               withExpandAllButton
               stringOverrides={stringOverrides?.chartOfAccounts}
+              withDateControl
             />
           ) : (
             <Journal stringOverrides={stringOverrides?.journal} />

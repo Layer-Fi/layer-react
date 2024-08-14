@@ -19,12 +19,13 @@ import { BackButton, Button, ButtonVariant } from '../Button'
 import { Card } from '../Card'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
+import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Table } from '../Table'
 import { TableBody } from '../TableBody'
 import { TableCell } from '../TableCell'
 import { TableHead } from '../TableHead'
 import { TableRow } from '../TableRow'
-import { Text, TextWeight } from '../Typography'
+import { Heading, HeadingSize, TextWeight, Text } from '../Typography'
 
 interface SourceDetailStringOverrides {
   sourceLabel?: string

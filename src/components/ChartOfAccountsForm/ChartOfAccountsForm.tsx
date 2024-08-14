@@ -3,8 +3,9 @@ import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { centsToDollars } from '../../models/Money'
 import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
+import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Input, InputGroup, Select } from '../Input'
-import { Text, TextSize, TextWeight } from '../Typography'
+import { Heading, HeadingSize, Text, TextSize, TextWeight } from '../Typography'
 import {
   LEDGER_ACCOUNT_SUBTYPES,
   LEDGER_ACCOUNT_SUBTYPES_FOR_TYPE,
@@ -26,7 +27,9 @@ export interface ChartOfAccountsFormStringOverrides {
   normalityLabel?: string
 }
 
-export const ChartOfAccountsForm = ({ stringOverrides } : {
+export const ChartOfAccountsForm = ({
+  stringOverrides,
+}: {
   stringOverrides?: ChartOfAccountsFormStringOverrides
 }) => {
   const {
@@ -63,43 +66,47 @@ export const ChartOfAccountsForm = ({ stringOverrides } : {
         submitForm()
       }}
     >
-      <div className='Layer__chart-of-accounts__sidebar__header'>
-        <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-          {form?.action === 'edit'
-            ? stringOverrides?.editModeHeader || 'Edit Account'
-            : stringOverrides?.createModeHeader || 'Add New Account'}
-        </Text>
-        <div className='actions'>
-          <Button
-            type='button'
-            onClick={cancelForm}
-            variant={ButtonVariant.secondary}
-            disabled={sendingForm}
-          >
-            {stringOverrides?.cancelButton || "Cancel"}
-          </Button>
-          {apiError && (
-            <RetryButton
-              type='submit'
-              processing={sendingForm}
-              error={'Check connection and retry in few seconds.'}
+      <Header className='Layer__chart-of-accounts__sidebar__header'>
+        <HeaderRow>
+          <HeaderCol>
+            <Heading size={HeadingSize.secondary} className='title'>
+              {form?.action === 'edit'
+                ? stringOverrides?.editModeHeader || 'Edit Account'
+                : stringOverrides?.createModeHeader || 'Add New Account'}
+            </Heading>
+          </HeaderCol>
+          <HeaderCol className='actions'>
+            <Button
+              type='button'
+              onClick={cancelForm}
+              variant={ButtonVariant.secondary}
               disabled={sendingForm}
             >
-              {stringOverrides?.retryButton || "Retry"}
-            </RetryButton>
-          )}
-          {!apiError && (
-            <SubmitButton
-              type='submit'
-              noIcon={true}
-              active={true}
-              disabled={sendingForm}
-            >
-              {stringOverrides?.saveButton || "Save"}
-            </SubmitButton>
-          )}
-        </div>
-      </div>
+              {stringOverrides?.cancelButton || 'Cancel'}
+            </Button>
+            {apiError && (
+              <RetryButton
+                type='submit'
+                processing={sendingForm}
+                error={'Check connection and retry in few seconds.'}
+                disabled={sendingForm}
+              >
+                {stringOverrides?.retryButton || 'Retry'}
+              </RetryButton>
+            )}
+            {!apiError && (
+              <SubmitButton
+                type='submit'
+                noIcon={true}
+                active={true}
+                disabled={sendingForm}
+              >
+                {stringOverrides?.saveButton || 'Save'}
+              </SubmitButton>
+            )}
+          </HeaderCol>
+        </HeaderRow>
+      </Header>
 
       {apiError && (
         <Text
@@ -120,7 +127,11 @@ export const ChartOfAccountsForm = ({ stringOverrides } : {
       )}
 
       <div className='Layer__chart-of-accounts__form'>
-        <InputGroup name='parent' label={stringOverrides?.parentLabel || 'Parent'} inline={true}>
+        <InputGroup
+          name='parent'
+          label={stringOverrides?.parentLabel || 'Parent'}
+          inline={true}
+        >
           <Select
             options={parentOptions}
             value={form?.data.parent}
@@ -128,7 +139,11 @@ export const ChartOfAccountsForm = ({ stringOverrides } : {
             disabled={sendingForm}
           />
         </InputGroup>
-        <InputGroup name='name' label={stringOverrides?.nameLabel || 'Name'} inline={true}>
+        <InputGroup
+          name='name'
+          label={stringOverrides?.nameLabel || 'Name'}
+          inline={true}
+        >
           <Input
             name='name'
             placeholder='Enter name...'
@@ -141,7 +156,11 @@ export const ChartOfAccountsForm = ({ stringOverrides } : {
             }
           />
         </InputGroup>
-        <InputGroup name='type' label={stringOverrides?.typeLabel || 'Type'} inline={true}>
+        <InputGroup
+          name='type'
+          label={stringOverrides?.typeLabel || 'Type'}
+          inline={true}
+        >
           <Select
             options={LEDGER_ACCOUNT_TYPES}
             value={form?.data.type}
@@ -155,7 +174,11 @@ export const ChartOfAccountsForm = ({ stringOverrides } : {
             }
           />
         </InputGroup>
-        <InputGroup name='subType' label={stringOverrides?.subTypeLabel || 'Sub-Type'} inline={true}>
+        <InputGroup
+          name='subType'
+          label={stringOverrides?.subTypeLabel || 'Sub-Type'}
+          inline={true}
+        >
           <Select
             options={
               form?.data.type?.value !== undefined
@@ -167,7 +190,11 @@ export const ChartOfAccountsForm = ({ stringOverrides } : {
             disabled={sendingForm}
           />
         </InputGroup>
-        <InputGroup name='normality' label={stringOverrides?.normalityLabel || 'Normality'} inline={true}>
+        <InputGroup
+          name='normality'
+          label={stringOverrides?.normalityLabel || 'Normality'}
+          inline={true}
+        >
           <Select
             options={NORMALITY_OPTIONS}
             value={form?.data.normality}
@@ -189,7 +216,7 @@ export const ChartOfAccountsForm = ({ stringOverrides } : {
             variant={ButtonVariant.secondary}
             disabled={sendingForm}
           >
-            {stringOverrides?.cancelButton || "Cancel"}
+            {stringOverrides?.cancelButton || 'Cancel'}
           </Button>
           {apiError && (
             <RetryButton
@@ -198,7 +225,7 @@ export const ChartOfAccountsForm = ({ stringOverrides } : {
               error={'Check connection and retry in few seconds.'}
               disabled={sendingForm}
             >
-              {stringOverrides?.retryButton || "Retry"}
+              {stringOverrides?.retryButton || 'Retry'}
             </RetryButton>
           )}
           {!apiError && (
@@ -208,7 +235,7 @@ export const ChartOfAccountsForm = ({ stringOverrides } : {
               active={true}
               disabled={sendingForm}
             >
-              {stringOverrides?.saveButton || "Save"}
+              {stringOverrides?.saveButton || 'Save'}
             </SubmitButton>
           )}
         </div>

@@ -202,6 +202,12 @@
   color: var(--color-base-800);
 }
 
+@container (min-width: 1400px) {
+  .Layer__journal .Layer__panel__sidebar .Layer__journal__form__input-group {
+    padding: var(--spacing-xl);
+  }
+}
+
 @container (max-width: 1024px) {
   .Layer__journal.Layer__component
     .Layer__panel__sidebar
@@ -214,6 +220,26 @@
 
     .Layer__ledger-account__entry-details__line-items {
       max-width: 600px;
+    }
+
+    .Layer__form .Layer__input-group,
+    .Layer__form .Layer__journal__form__input-group__title,
+    .Layer__form .Layer__journal__add-entry-line {
+      max-width: 600px;
+      width: 100%;
+      margin: auto;
+    }
+
+    .Layer__form .Layer__header__col {
+      width: 100%;
+      margin: auto;
+      padding: var(--spacing-md) var(--spacing-xl);
+      max-width: calc(600px + (var(--spacing-xl) * 2));
+    }
+
+    .Layer__journal__bottom-actions {
+      max-width: 600px;
+      margin: auto;
     }
   }
 }
@@ -401,7 +427,7 @@
 .Layer__journal__form__input-group {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-xl);
+  padding: var(--spacing-xl) var(--spacing-md);
   gap: var(--spacing-3xs);
 
   &__textarea {

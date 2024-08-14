@@ -6,9 +6,9 @@ import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useLedgerAccounts } from '../../hooks/useLedgerAccounts'
 import { ChartOfAccountsTable } from '../ChartOfAccountsTable'
+import { ChartOfAccountsTableStringOverrides } from '../ChartOfAccountsTable/ChartOfAccountsTable'
 import { Container } from '../Container'
 import { LedgerAccount } from '../LedgerAccount'
-import { ChartOfAccountsTableStringOverrides } from '../ChartOfAccountsTable/ChartOfAccountsTable'
 import { LedgerAccountStringOverrides } from '../LedgerAccount/LedgerAccountIndex'
 
 export type View = 'mobile' | 'tablet' | 'desktop'
@@ -68,7 +68,11 @@ const ChartOfAccountsContent = ({
   return (
     <Container name='chart-of-accounts' ref={containerRef} asWidget={asWidget}>
       {accountId ? (
-        <LedgerAccount view={view} containerRef={containerRef} stringOverrides={stringOverrides?.ledgerAccount}/>
+        <LedgerAccount
+          view={view}
+          containerRef={containerRef}
+          stringOverrides={stringOverrides?.ledgerAccount}
+        />
       ) : (
         <ChartOfAccountsTable
           asWidget={asWidget}

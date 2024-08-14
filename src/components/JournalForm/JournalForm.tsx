@@ -6,7 +6,7 @@ import { Header, HeaderCol, HeaderRow } from '../Header'
 import { InputGroup } from '../Input'
 import { JournalConfig } from '../Journal/Journal'
 import { Textarea } from '../Textarea/Textarea'
-import { Heading, HeadingSize, Text, TextSize, TextWeight } from '../Typography'
+import { Heading, HeadingSize, Text, TextSize } from '../Typography'
 import { JournalFormEntryLines } from './JournalFormEntryLines'
 
 export interface JournalFormStringOverrides {

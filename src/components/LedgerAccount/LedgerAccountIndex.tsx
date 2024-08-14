@@ -12,27 +12,28 @@ import { centsToDollars } from '../../models/Money'
 import { BackButton } from '../Button'
 import { View } from '../ChartOfAccounts/ChartOfAccounts'
 import { DataState, DataStateStatus } from '../DataState'
+import { Header, HeaderCol, HeaderRow } from '../Header'
 import { LedgerAccountEntryDetails } from '../LedgerAccountEntryDetails'
+import { LedgerAccountEntryDetailsStringOverrides } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
 import { Panel } from '../Panel'
 import { Text, TextSize, TextWeight } from '../Typography'
 import { LedgerAccountRow } from './LedgerAccountRow'
 import classNames from 'classnames'
-import { LedgerAccountEntryDetailsStringOverrides } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 
 interface LedgerEntriesTableStringOverrides {
-    dateColumnHeader?: string
-    journalIdColumnHeader?: string
-    sourceColumnHeader?: string
-    debitColumnHeader?: string
-    creditColumnHeader?: string
-    runningBalanceColumnHeader?: string
+  dateColumnHeader?: string
+  journalIdColumnHeader?: string
+  sourceColumnHeader?: string
+  debitColumnHeader?: string
+  creditColumnHeader?: string
+  runningBalanceColumnHeader?: string
 }
 
 export interface LedgerAccountStringOverrides {
-    ledgerEntryDetail?: LedgerAccountEntryDetailsStringOverrides
-    ledgerEntriesTable?: LedgerEntriesTableStringOverrides
+  ledgerEntryDetail?: LedgerAccountEntryDetailsStringOverrides
+  ledgerEntriesTable?: LedgerEntriesTableStringOverrides
 }
 
 export interface LedgerAccountProps {
@@ -103,37 +104,42 @@ export const LedgerAccount = ({
       sidebar={
         <LedgerAccountEntryDetails
           stringOverrides={stringOverrides?.ledgerEntryDetail}
-        />}
+        />
+      }
       sidebarIsOpen={Boolean(selectedEntryId)}
       parentRef={containerRef}
       className='Layer__ledger-account__panel'
     >
       <div className={baseClassName}>
-        <div className='Layer__ledger-account__header'>
-          <BackButton onClick={close} />
-          <div className='Layer__ledger-account__title-container'>
-            <Text
-              weight={TextWeight.bold}
-              className='Layer__ledger-account__title'
-            >
-              {entry?.name ?? ''}
-            </Text>
-            <div className='Layer__ledger-account__balance-container'>
-              <Text
-                className='Layer__ledger-account__balance-label'
-                size={TextSize.sm}
-              >
-                Current balance
-              </Text>
-              <Text
-                className='Layer__ledger-account__balance-value'
-                size={TextSize.sm}
-              >
-                ${centsToDollars(entry?.balance || 0)}
-              </Text>
-            </div>
-          </div>
-        </div>
+        <Header className='Layer__ledger-account__header'>
+          <HeaderRow>
+            <HeaderCol>
+              <BackButton onClick={close} />
+              <div className='Layer__ledger-account__title-container'>
+                <Text
+                  weight={TextWeight.bold}
+                  className='Layer__ledger-account__title'
+                >
+                  {entry?.name ?? ''}
+                </Text>
+                <div className='Layer__ledger-account__balance-container'>
+                  <Text
+                    className='Layer__ledger-account__balance-label'
+                    size={TextSize.sm}
+                  >
+                    Current balance
+                  </Text>
+                  <Text
+                    className='Layer__ledger-account__balance-value'
+                    size={TextSize.sm}
+                  >
+                    ${centsToDollars(entry?.balance || 0)}
+                  </Text>
+                </div>
+              </div>
+            </HeaderCol>
+          </HeaderRow>
+        </Header>
         <table className='Layer__table Layer__table--hover-effect Layer__ledger-account-table'>
           <thead>
             <tr>
@@ -141,26 +147,32 @@ export const LedgerAccount = ({
               {view === 'desktop' && (
                 <>
                   <th className='Layer__table-header'>
-                    {stringOverrides?.ledgerEntriesTable?.dateColumnHeader || "Date"}
+                    {stringOverrides?.ledgerEntriesTable?.dateColumnHeader ||
+                      'Date'}
                   </th>
                   <th className='Layer__table-header'>
-                    {stringOverrides?.ledgerEntriesTable?.journalIdColumnHeader || "Journal id #"}
-                    </th>
+                    {stringOverrides?.ledgerEntriesTable
+                      ?.journalIdColumnHeader || 'Journal id #'}
+                  </th>
                   <th className='Layer__table-header'>
-                    {stringOverrides?.ledgerEntriesTable?.sourceColumnHeader || "Source"}
+                    {stringOverrides?.ledgerEntriesTable?.sourceColumnHeader ||
+                      'Source'}
                   </th>
                 </>
               )}
               {view !== 'mobile' && (
                 <>
                   <th className='Layer__table-header Layer__table-cell--amount'>
-                    {stringOverrides?.ledgerEntriesTable?.debitColumnHeader || "Debit"}
+                    {stringOverrides?.ledgerEntriesTable?.debitColumnHeader ||
+                      'Debit'}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
-                    {stringOverrides?.ledgerEntriesTable?.creditColumnHeader || "Credit"}
+                    {stringOverrides?.ledgerEntriesTable?.creditColumnHeader ||
+                      'Credit'}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
-                    {stringOverrides?.ledgerEntriesTable?.runningBalanceColumnHeader || "Running balance"}
+                    {stringOverrides?.ledgerEntriesTable
+                      ?.runningBalanceColumnHeader || 'Running balance'}
                   </th>
                 </>
               )}
