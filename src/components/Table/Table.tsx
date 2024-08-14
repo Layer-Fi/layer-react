@@ -12,7 +12,9 @@ export const Table = ({
   const prevChildrenRef = useRef<string[]>([])
 
   useEffect(() => {
+    console.log('table children?')
     if (tableRef.current) {
+      console.log('entered')
       const tbody = tableRef.current.querySelector('tbody')
       const rows = tbody ? Array.from(tbody.querySelectorAll('tr')) : []
 

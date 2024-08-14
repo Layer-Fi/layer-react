@@ -13,10 +13,17 @@ export const TableRow: React.FC<TableRowProps> = ({
   withDivider,
   withDividerPosition = 'top',
   isHeadRow = false,
+  onClick,
 }) => {
-  const toggleExpanded = () => {
-    if (variant === 'summation' || !expandable) return
-    handleExpand && handleExpand()
+  const toggleExpanded = (
+    e: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
+  ) => {
+    if (onClick) {
+      onClick(e)
+    } else {
+      if (variant === 'summation' || !expandable) return
+      handleExpand && handleExpand()
+    }
   }
 
   const rowClassNames = classNames([
@@ -38,7 +45,11 @@ export const TableRow: React.FC<TableRowProps> = ({
         </tr>
       )}
 
-      <tr data-key={rowKey} className={rowClassNames} onClick={toggleExpanded}>
+      <tr
+        data-key={rowKey}
+        className={rowClassNames}
+        onClick={e => toggleExpanded(e)}
+      >
         {children}
       </tr>
 

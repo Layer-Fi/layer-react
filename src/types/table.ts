@@ -33,6 +33,7 @@ export interface TableRowProps {
   withDividerPosition?: 'top' | 'bottom'
   isExpanded?: boolean
   handleExpand?: () => void
+  onClick?: (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>) => void
   isHeadRow?: boolean
 }
 
@@ -43,4 +44,6 @@ export interface TableCellProps {
   primary?: boolean
   withExpandIcon?: boolean
   fullWidth?: boolean
+  colSpan?: number
+  onClick?: (e: React.MouseEvent<HTMLTableCellElement, MouseEvent>) => void
 }
