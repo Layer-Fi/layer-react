@@ -7,6 +7,7 @@ import FolderIcon from '../../icons/Folder'
 import LinkIcon from '../../icons/Link'
 import PlaidIcon from '../../icons/PlaidIcon'
 import SunriseIcon from '../../icons/Sunrise'
+import { DisplayState } from '../../types'
 import { OnboardingStep } from '../../types/layer_context'
 import { countTransactionsToReview } from '../../utils/bankTransactions'
 import { ActionableRow } from '../ActionableRow'
@@ -15,7 +16,6 @@ import { BadgeSize } from '../Badge/Badge'
 import { Button } from '../Button'
 import { DataState, DataStateStatus } from '../DataState'
 import { Text } from '../Typography'
-import { DisplayState } from '../../types'
 
 export interface ConnectAccountProps {
   onboardingStep: OnboardingStep

@@ -54,9 +54,15 @@ export const useBankTransactions: UseBankTransactions = params => {
       return [false, undefined]
     }
 
-    if (!prevData?.meta?.pagination?.cursor) {
+    if (_index === 0) {
       return [
-        businessId && auth?.access_token && `bank-transactions-${businessId}`,
+        businessId &&
+          auth?.access_token &&
+          `bank-transactions${
+            filters?.categorizationStatus
+              ? `-scope-${filters?.categorizationStatus}`
+              : ''
+          }-${businessId}`,
         undefined,
       ]
     }
@@ -64,8 +70,12 @@ export const useBankTransactions: UseBankTransactions = params => {
     return [
       businessId &&
         auth?.access_token &&
-        `bank-transactions-${businessId}-${prevData.meta.pagination.cursor}`,
-      prevData.meta.pagination.cursor,
+        `bank-transactions${
+          filters?.categorizationStatus
+            ? `-scope-${filters?.categorizationStatus}`
+            : ''
+        }-${businessId}-${prevData?.meta?.pagination?.cursor}`,
+      prevData?.meta?.pagination?.cursor.toString(),
     ]
   }
 
@@ -79,12 +89,17 @@ export const useBankTransactions: UseBankTransactions = params => {
     setSize,
   } = useSWRInfinite(
     getKey,
-    async ([query, nextCursor]) => {
+    async ([_query, nextCursor]) => {
       if (auth?.access_token) {
         return Layer.getBankTransactions(apiUrl, auth?.access_token, {
           params: {
             businessId,
-            cursor: nextCursor,
+            cursor: nextCursor ?? '',
+            categorized: filters?.categorizationStatus
+              ? filters?.categorizationStatus === DisplayState.categorized
+                ? 'true'
+                : 'false'
+              : '',
           },
         }).call(false)
       }
@@ -301,8 +316,6 @@ export const useBankTransactions: UseBankTransactions = params => {
   }
 
   const removeAfterCategorize = (bankTransaction: BankTransaction) => {
-    /*
-    Removed 2024-08-12 by @doneel as part of unifying transaction lists in LAY-298
     const updatedData = rawResponseData?.map(page => {
       return {
         ...page,
@@ -310,7 +323,6 @@ export const useBankTransactions: UseBankTransactions = params => {
       }
     })
     mutate(updatedData, { revalidate: false })
-    */
   }
 
   const refetch = () => {
@@ -326,15 +338,18 @@ export const useBankTransactions: UseBankTransactions = params => {
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
     if (isLoading || isValidating) {
-      read(DataModel.BANK_TRANSACTIONS, 'bank-transactions')
+      read(
+        DataModel.BANK_TRANSACTIONS,
+        `bank-transactions-${filters?.categorizationStatus}`,
+      )
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched('bank-transactions')) {
+    if (hasBeenTouched(`bank-transactions-${filters?.categorizationStatus}`)) {
       refetch()
     }
-  }, [syncTimestamps])
+  }, [syncTimestamps, filters?.categorizationStatus])
 
   return {
     data: filteredData,
