@@ -179,10 +179,14 @@ export const ProfitAndLossTableComponent = ({
           undefined,
           'summation',
         )}
-        {data.other_outflows || data.personal_expenses ? (
+        {data.personal_expenses ? (
+          <React.Fragment>
+            {renderLineItem(data.personal_expenses, 0, 'personal_expenses', 7)}
+          </React.Fragment>
+        ) : null}
+        {data.other_outflows ? (
           <React.Fragment>
             {renderLineItem(data.other_outflows, 0, 'other_outflows', 6)}
-            {renderLineItem(data.personal_expenses, 0, 'personal_expenses', 7)}
           </React.Fragment>
         ) : null}
       </TableBody>
