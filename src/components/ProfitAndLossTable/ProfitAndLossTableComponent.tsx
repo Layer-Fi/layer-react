@@ -64,7 +64,16 @@ export const ProfitAndLossTableComponent = ({
     setSidebarScope?: (view: SidebarScope) => void,
     variant?: 'default' | 'summation',
   ): React.ReactNode => {
+    console.log('lineItem', lineItem)
     const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
+    console.log(
+      'lineItem',
+      lineItem,
+      'expandable',
+      expandable,
+      'lineItems',
+      lineItem.line_items,
+    )
 
     const expanded = expandable ? isOpen(rowKey) : true
 
@@ -101,19 +110,21 @@ export const ProfitAndLossTableComponent = ({
           </TableCell>
         </TableRow>
         {expanded && lineItem.line_items
-          ? lineItem.line_items.map((child, i) =>
+          ? lineItem.line_items.map((child, i) => {
+              console.log('rendering child', child)
               renderLineItem(
                 child,
                 depth + 1,
                 child.display_name + '-' + rowIndex,
                 i,
-              ),
-            )
+              )
+            })
           : null}
       </React.Fragment>
     )
   }
 
+  console.log('data', data)
   return (
     <Table borderCollapse='collapse' bottomSpacing={false}>
       <TableBody>
@@ -179,10 +190,14 @@ export const ProfitAndLossTableComponent = ({
           undefined,
           'summation',
         )}
-        {data.other_outflows || data.personal_expenses ? (
+        {data.personal_expenses ? (
+          <React.Fragment>
+            {renderLineItem(data.personal_expenses, 0, 'personal_expenses', 7)}
+          </React.Fragment>
+        ) : null}
+        {data.other_outflows ? (
           <React.Fragment>
             {renderLineItem(data.other_outflows, 0, 'other_outflows', 6)}
-            {renderLineItem(data.personal_expenses, 0, 'personal_expenses', 7)}
           </React.Fragment>
         ) : null}
       </TableBody>
