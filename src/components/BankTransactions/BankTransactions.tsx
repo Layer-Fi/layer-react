@@ -14,7 +14,10 @@ import { Container } from '../Container'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
-import { BankTransactionsHeader, BankTransactionsHeaderStringOverrides } from './BankTransactionsHeader'
+import {
+  BankTransactionsHeader,
+  BankTransactionsHeaderStringOverrides,
+} from './BankTransactionsHeader'
 import { DataStates } from './DataStates'
 import { MobileComponentType } from './constants'
 import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
@@ -81,7 +84,7 @@ const BankTransactionsContent = ({
   showDescriptions = false,
   showReceiptUploads = false,
   monthlyView = false,
-  categorizeView : categorizeViewProp,
+  categorizeView: categorizeViewProp,
   mobileComponent,
   filters: inputFilters,
   hideHeader = false,
@@ -184,7 +187,10 @@ const BankTransactionsContent = ({
       setFilters({
         categorizationStatus: DisplayState.review,
       })
-    } else if (!inputFilters?.categorizationStatus && !categorizationEnabled(mode)) {
+    } else if (
+      !inputFilters?.categorizationStatus &&
+      !categorizationEnabled(mode)
+    ) {
       setFilters({
         categorizationStatus: DisplayState.categorized,
       })
@@ -222,7 +228,8 @@ const BankTransactionsContent = ({
     setFilters({
       categorizationStatus:
         event.target.value === DisplayState.categorized
-          ? DisplayState.categorized : event.target.value === DisplayState.all
+          ? DisplayState.categorized
+          : event.target.value === DisplayState.all
           ? DisplayState.all
           : DisplayState.review,
     })
@@ -257,7 +264,8 @@ const BankTransactionsContent = ({
     debounceContainerWidth(size?.width)
   })
 
-  const editable = display === DisplayState.review || display === DisplayState.all
+  const editable =
+    display === DisplayState.review || display === DisplayState.all
 
   const isLastPage =
     data &&
