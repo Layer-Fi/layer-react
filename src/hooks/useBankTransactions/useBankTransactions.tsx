@@ -42,6 +42,9 @@ export const useBankTransactions: UseBankTransactions = params => {
     if (filters?.categorizationStatus === DisplayState.review) {
       return DisplayState.review
     }
+    else if (filters?.categorizationStatus === DisplayState.all) {
+      return DisplayState.all
+    }
 
     return DisplayState.categorized
   }, [filters?.categorizationStatus])

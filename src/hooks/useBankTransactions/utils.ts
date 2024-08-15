@@ -1,5 +1,10 @@
 import { filterVisibility } from '../../components/BankTransactions/utils'
-import { BankTransaction, DateRange, Direction, DisplayState } from '../../types'
+import {
+  BankTransaction,
+  DateRange,
+  Direction,
+  DisplayState,
+} from '../../types'
 import { AccountItem, NumericRangeFilter } from './types'
 import { parseISO } from 'date-fns'
 
@@ -76,6 +81,7 @@ export const applyCategorizationStatusFilter = (
   return data?.filter(
     tx =>
       filterVisibility(filter, tx) ||
+      filter === DisplayState.all ||
       (filter === DisplayState.review && tx.recently_categorized) ||
       (filter === DisplayState.categorized && tx.recently_categorized),
   )
