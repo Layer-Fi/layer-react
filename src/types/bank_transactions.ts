@@ -11,6 +11,7 @@ export enum BankTransactionMatchType {
 }
 
 export enum DisplayState {
+  all = 'all',
   review = 'review',
   categorized = 'categorized',
 }

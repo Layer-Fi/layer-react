@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
@@ -14,10 +14,7 @@ import { Container } from '../Container'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
-import {
-  BankTransactionsHeader,
-  BankTransactionsHeaderStringOverrides,
-} from './BankTransactionsHeader'
+import { BankTransactionsHeader, BankTransactionsHeaderStringOverrides } from './BankTransactionsHeader'
 import { DataStates } from './DataStates'
 import { MobileComponentType } from './constants'
 import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
@@ -84,6 +81,7 @@ const BankTransactionsContent = ({
   showDescriptions = false,
   showReceiptUploads = false,
   monthlyView = false,
+  categorizeView : categorizeViewProp,
   mobileComponent,
   filters: inputFilters,
   hideHeader = false,
@@ -95,7 +93,7 @@ const BankTransactionsContent = ({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   })
-  const categorizeView = categorizationEnabled(mode)
+  const categorizeView = categorizeViewProp ?? categorizationEnabled(mode)
 
   const {
     activate,
@@ -164,14 +162,14 @@ const BankTransactionsContent = ({
 
   useEffect(() => {
     if (JSON.stringify(inputFilters) !== JSON.stringify(filters)) {
-      if (!filters?.categorizationStatus && categorizeView) {
+      if (!inputFilters?.categorizationStatus && categorizeView) {
         setFilters({
           ...filters,
           ...inputFilters,
           categorizationStatus: DisplayState.review,
         })
       } else if (
-        !filters?.categorizationStatus &&
+        !inputFilters?.categorizationStatus &&
         !categorizationEnabled(mode)
       ) {
         setFilters({
@@ -182,11 +180,11 @@ const BankTransactionsContent = ({
       } else {
         setFilters({ ...filters, ...inputFilters })
       }
-    } else if (!filters?.categorizationStatus && categorizeView) {
+    } else if (!inputFilters?.categorizationStatus && categorizeView) {
       setFilters({
         categorizationStatus: DisplayState.review,
       })
-    } else if (!filters?.categorizationStatus && !categorizationEnabled(mode)) {
+    } else if (!inputFilters?.categorizationStatus && !categorizationEnabled(mode)) {
       setFilters({
         categorizationStatus: DisplayState.categorized,
       })
@@ -224,7 +222,8 @@ const BankTransactionsContent = ({
     setFilters({
       categorizationStatus:
         event.target.value === DisplayState.categorized
-          ? DisplayState.categorized
+          ? DisplayState.categorized : event.target.value === DisplayState.all
+          ? DisplayState.all
           : DisplayState.review,
     })
     setCurrentPage(1)
@@ -258,7 +257,7 @@ const BankTransactionsContent = ({
     debounceContainerWidth(size?.width)
   })
 
-  const editable = display === DisplayState.review
+  const editable = display === DisplayState.review || display === DisplayState.all
 
   const isLastPage =
     data &&

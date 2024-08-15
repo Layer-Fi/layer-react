@@ -56,4 +56,4 @@ export { useLayerContext } from './contexts/LayerContext'
 export { useBankTransactionsContext } from './contexts/BankTransactionsContext'
 export { BankTransactionsProvider } from './providers/BankTransactionsProvider'
 
-export { DisplayState } from './types/bank_transactions'
+export { DisplayState, Direction } from './types/bank_transactions'
