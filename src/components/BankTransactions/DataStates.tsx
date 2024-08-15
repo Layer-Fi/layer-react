@@ -24,8 +24,8 @@ export const DataStates = ({
     ? 'You are up to date with transactions!'
     : 'You have no categorized transactions'
   let description = editable
-    ? 'All uncategorized transaction will be displayed here'
-    : 'All transaction will be displayed here once reviewed'
+    ? 'All uncategorized transactions will be displayed here'
+    : 'All transactions will be displayed here once reviewed'
 
   const showRefreshButton = bankTransactions?.length
 
