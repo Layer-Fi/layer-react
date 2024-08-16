@@ -348,7 +348,19 @@ export const useBankTransactions: UseBankTransactions = params => {
     if (isLoading || isValidating) {
       read(
         DataModel.BANK_TRANSACTIONS,
-        `bank-transactions-${filters?.categorizationStatus}`,
+        `bank-transactions${
+          filters?.categorizationStatus
+            ? `-categorizationStatus-${filters.categorizationStatus}`
+            : `-categorizationStatus-${DisplayState.all}`
+        }${
+          filters?.dateRange?.startDate
+            ? `-startDate-${filters.dateRange.startDate.toISOString()}`
+            : ''
+        }${
+          filters?.dateRange?.endDate
+            ? `-endDate-${filters.dateRange.endDate.toISOString()}`
+            : ''
+        }`,
       )
     }
   }, [isLoading, isValidating])

@@ -187,7 +187,6 @@ const BankTransactionsContent = ({
       setFilters({
         categorizationStatus: DisplayState.review,
       })
-
     } else if (
       !inputFilters?.categorizationStatus &&
       !categorizationEnabled(mode)
