@@ -7,6 +7,7 @@ type UseDataSync = () => {
   syncTimestamps: Partial<Record<DataModel, number>>
   readTimestamps: Partial<Record<string, { t: number; m: DataModel }>>
   hasBeenTouched: (cacheKey: string) => boolean
+  resetCaches: () => void
 }
 
 const ALL_TOUCHABLE = [
@@ -83,11 +84,25 @@ export const useDataSync: UseDataSync = () => {
     )
   }
 
+  const resetCaches = () => {
+    setSyncTimestamps({
+      [DataModel.BALANCE_SHEET]: initialTimestamp,
+      [DataModel.CHART_OF_ACCOUNTS]: initialTimestamp,
+      [DataModel.JOURNAL]: initialTimestamp,
+      [DataModel.LEDGER_ACCOUNTS]: initialTimestamp,
+      [DataModel.LINKED_ACCOUNTS]: initialTimestamp,
+      [DataModel.PROFIT_AND_LOSS]: initialTimestamp,
+      [DataModel.STATEMENT_OF_CASH_FLOWS]: initialTimestamp,
+    })
+    setReadTimestamps({})
+  }
+
   return {
     touch,
     read,
     syncTimestamps,
     readTimestamps,
     hasBeenTouched,
+    resetCaches
   }
 }
