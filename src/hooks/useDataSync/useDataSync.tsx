@@ -85,18 +85,6 @@ export const useDataSync: UseDataSync = () => {
   }
 
   const resetCaches = () => {
-<<<<<<< Updated upstream
-    setSyncTimestamps({
-      [DataModel.BALANCE_SHEET]: initialTimestamp,
-      [DataModel.CHART_OF_ACCOUNTS]: initialTimestamp,
-      [DataModel.JOURNAL]: initialTimestamp,
-      [DataModel.LEDGER_ACCOUNTS]: initialTimestamp,
-      [DataModel.LINKED_ACCOUNTS]: initialTimestamp,
-      [DataModel.PROFIT_AND_LOSS]: initialTimestamp,
-      [DataModel.STATEMENT_OF_CASH_FLOWS]: initialTimestamp,
-    })
-    setReadTimestamps({})
-=======
     const now = Date.now()
     setSyncTimestamps({
       [DataModel.BALANCE_SHEET]: now,
@@ -107,7 +95,6 @@ export const useDataSync: UseDataSync = () => {
       [DataModel.PROFIT_AND_LOSS]: now,
       [DataModel.STATEMENT_OF_CASH_FLOWS]: now,
     })
->>>>>>> Stashed changes
   }
 
   return {
@@ -116,10 +103,6 @@ export const useDataSync: UseDataSync = () => {
     syncTimestamps,
     readTimestamps,
     hasBeenTouched,
-<<<<<<< Updated upstream
-    resetCaches
-=======
     resetCaches,
->>>>>>> Stashed changes
   }
 }
