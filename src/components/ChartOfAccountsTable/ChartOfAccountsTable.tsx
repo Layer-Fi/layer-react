@@ -1,227 +1,201 @@
-import React, { RefObject, useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
+import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
+import { TableProvider } from '../../contexts/TableContext'
+import { useTableExpandRow } from '../../hooks/useTableExpandRow'
+import Edit2 from '../../icons/Edit2'
+import {
+  ChartWithBalances,
+  LedgerAccountBalance,
+} from '../../types/chart_of_accounts'
 import { Button, ButtonVariant } from '../Button'
 import { View } from '../ChartOfAccounts/ChartOfAccounts'
-import { ChartOfAccountsDatePicker } from '../ChartOfAccountsDatePicker'
-import { ChartOfAccountsFormStringOverrides } from '../ChartOfAccountsForm/ChartOfAccountsForm'
 import { ChartOfAccountsRow } from '../ChartOfAccountsRow'
-import { ChartOfAccountsSidebar } from '../ChartOfAccountsSidebar'
-import { Header } from '../Container'
-import { HeaderLayout } from '../Container/Header'
-import { DataState, DataStateStatus } from '../DataState'
-import { Loader } from '../Loader'
-import { Panel } from '../Panel'
 import { Table, TableBody } from '../Table'
 import { TableCell } from '../TableCell'
 import { TableHead } from '../TableHead'
 import { TableRow } from '../TableRow'
-import { Heading, HeadingSize } from '../Typography'
-
-const COMPONENT_NAME = 'chart-of-accounts'
-export type ExpandActionState = undefined | 'expanded' | 'collapsed'
-
-export interface ChartOfAccountsTableStringOverrides {
-  headerText?: string
-  addAccountButtonText?: string
-  nameColumnHeader?: string
-  typeColumnHeader?: string
-  balanceColumnHeader?: string
-  subtypeColumnHeader?: string
-  chartOfAccountsForm?: ChartOfAccountsFormStringOverrides
-}
+import {
+  ChartOfAccountsTableStringOverrides,
+  ExpandActionState,
+} from './ChartOfAccountsTableWithPanel'
 
 export const ChartOfAccountsTable = ({
   view,
-  containerRef,
-  asWidget = false,
-  withDateControl = false,
-  withExpandAllButton = false,
   stringOverrides,
+  data,
+  error,
+  expandAll,
+  cumulativeIndex,
+  accountsLength,
 }: {
   view: View
-  containerRef: RefObject<HTMLDivElement>
-  asWidget?: boolean
-  withDateControl?: boolean
-  withExpandAllButton?: boolean
+  data: ChartWithBalances
   stringOverrides?: ChartOfAccountsTableStringOverrides
+  error?: any
+  expandAll?: ExpandActionState
+  cumulativeIndex: number
+  accountsLength: number
+}) => (
+  <TableProvider>
+    <ChartOfAccountsTableContent
+      view={view}
+      data={data}
+      stringOverrides={stringOverrides}
+      error={error}
+      expandAll={expandAll}
+      cumulativeIndex={cumulativeIndex}
+      accountsLength={accountsLength}
+    />
+  </TableProvider>
+)
+
+export const ChartOfAccountsTableContent = ({
+  view,
+  stringOverrides,
+  data,
+  error,
+  expandAll,
+  cumulativeIndex,
+  accountsLength,
+}: {
+  view: View
+  data: ChartWithBalances
+  stringOverrides?: ChartOfAccountsTableStringOverrides
+  error?: any
+  expandAll?: ExpandActionState
+  cumulativeIndex: number
+  accountsLength: number
 }) => {
-  const { data, isLoading, addAccount, error, isValidating, refetch, form } =
-    useContext(ChartOfAccountsContext)
+  const { setAccountId } = useContext(LedgerAccountsContext)
+  const { editAccount } = useContext(ChartOfAccountsContext)
+  const { isOpen, setIsOpen } = useTableExpandRow()
+  const [accountsRowKeys, setAccountsRowKeys] = useState<string[]>([])
 
-  const [expandAll, setExpandAll] = useState<ExpandActionState>()
+  useEffect(() => {
+    if (expandAll === 'expanded') {
+      setIsOpen(accountsRowKeys)
+    } else if (expandAll === 'collapsed') {
+      setIsOpen([])
+    }
+  }, [expandAll])
 
-  let cumulativeIndex = 0
-  const accountsLength = data?.accounts.length ?? 0
+  useEffect(() => {
+    const defaultExpanded = data.accounts.map(
+      account => 'coa-row-' + account.id,
+    )
+    setIsOpen(defaultExpanded)
+
+    const searchRowsToExpand = (
+      accounts: LedgerAccountBalance[],
+      rowKey: string,
+    ) => {
+      accounts.map(account => {
+        if (account.sub_accounts.length > 0) {
+          setAccountsRowKeys(prev => [...prev, `${rowKey}-${account.id}`])
+          searchRowsToExpand(account.sub_accounts, `${rowKey}-${account.id}`)
+        }
+      })
+    }
+
+    searchRowsToExpand(data.accounts, 'coa-row')
+  }, [])
+
+  const renderChartOfAccountsDesktopRow = (
+    account: LedgerAccountBalance,
+    index: number,
+    rowKey: string,
+    depth: number,
+  ) => {
+    const expandable = !!account.sub_accounts && account.sub_accounts.length > 0
+    const expanded = expandable ? isOpen(rowKey) : true
+
+    return (
+      <React.Fragment key={rowKey + '-' + index}>
+        <TableRow
+          rowKey={rowKey + '-' + index}
+          expandable={expandable}
+          isExpanded={expanded}
+          onClick={e => {
+            e.stopPropagation()
+            setAccountId(account.id)
+          }}
+          depth={depth}
+        >
+          <TableCell
+            withExpandIcon={expandable}
+            onClick={e => {
+              e.stopPropagation()
+              expandable && setIsOpen(rowKey)
+            }}
+          >
+            {account.name}
+          </TableCell>
+          <TableCell>{account.account_type?.display_name}</TableCell>
+          <TableCell>{account.account_subtype?.display_name}</TableCell>
+          <TableCell isCurrency>{account.balance}</TableCell>
+          <TableCell>
+            <span className='Layer__coa__actions'>
+              <Button
+                variant={ButtonVariant.secondary}
+                rightIcon={<Edit2 size={12} />}
+                iconOnly={true}
+                onClick={e => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  editAccount(account.id)
+                }}
+              >
+                Edit
+              </Button>
+            </span>
+          </TableCell>
+        </TableRow>
+        {expandable &&
+          expanded &&
+          account.sub_accounts.map((subItem, subIdx) => {
+            const subRowKey = `${rowKey}-${subItem.id}`
+            return renderChartOfAccountsDesktopRow(
+              subItem,
+              subIdx,
+              subRowKey,
+              depth + 1,
+            )
+          })}
+      </React.Fragment>
+    )
+  }
 
   return (
-    <Panel
-      sidebar={
-        <ChartOfAccountsSidebar
-          parentRef={containerRef}
-          stringOverrides={stringOverrides?.chartOfAccountsForm}
-        />
-      }
-      sidebarIsOpen={Boolean(form)}
-      parentRef={containerRef}
-    >
-      <Header
-        className={`Layer__${COMPONENT_NAME}__header`}
-        layout={withDateControl ? HeaderLayout.NEXT_LINE_ACTIONS : undefined}
-      >
-        <Heading
-          className={`Layer__${COMPONENT_NAME}__title`}
-          size={asWidget ? HeadingSize.secondary : HeadingSize.primary}
-        >
-          {stringOverrides?.headerText || 'Chart of Accounts'}
-        </Heading>
-        <div
-          className={`Layer__${COMPONENT_NAME}__actions Layer__header__actions`}
-        >
-          {withDateControl || withExpandAllButton ? (
-            <div className='Layer__header__actions-col'>
-              {withDateControl && <ChartOfAccountsDatePicker />}
-              {withExpandAllButton && (
-                <Button
-                  variant={ButtonVariant.secondary}
-                  onClick={() =>
-                    setExpandAll(
-                      !expandAll || expandAll === 'collapsed'
-                        ? 'expanded'
-                        : 'collapsed',
-                    )
-                  }
-                >
-                  {!expandAll || expandAll === 'collapsed'
-                    ? 'Expand all rows'
-                    : 'Collapse all rows'}
-                </Button>
-              )}
-            </div>
-          ) : null}
-          <div className='Layer__header__actions-col'>
-            <Button onClick={() => addAccount()} disabled={isLoading}>
-              {stringOverrides?.addAccountButtonText || 'Add Account'}
-            </Button>
-          </div>
-        </div>
-      </Header>
-
-      <Table>
-        <TableHead>
-          <TableRow isHeadRow rowKey='charts-of-accounts-head-row'>
-            <TableCell isHeaderCell>
-              {stringOverrides?.nameColumnHeader || 'Name'}
-            </TableCell>
-            <TableCell isHeaderCell>
-              {stringOverrides?.typeColumnHeader || 'Type'}
-            </TableCell>
-            <TableCell isHeaderCell>
-              {stringOverrides?.subtypeColumnHeader || 'Sub-Type'}
-            </TableCell>
-            <TableCell isHeaderCell>
-              {stringOverrides?.balanceColumnHeader || 'Balance'}
-            </TableCell>
-            <TableCell isHeaderCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {!error &&
-            data?.accounts.map((account, idx) => {
-              const currentCumulativeIndex = cumulativeIndex
-              cumulativeIndex =
-                (account.sub_accounts?.length || 0) + cumulativeIndex + 1
-
-              return (
-                <ChartOfAccountsRow
-                  key={account.id}
-                  account={account}
-                  depth={0}
-                  index={idx}
-                  cumulativeIndex={currentCumulativeIndex}
-                  expanded={true}
-                  defaultOpen={true}
-                  acountsLength={accountsLength}
-                  view={view}
-                  expandAll={expandAll}
-                />
-              )
-            })}
-        </TableBody>
-      </Table>
-
-      <table className='Layer__chart-of-accounts__table'>
-        <thead>
-          <tr className='Layer__table-row--header'>
-            <th className='Layer__table-header Layer__coa__name'>
-              {stringOverrides?.nameColumnHeader || 'Name'}
-            </th>
-            <th className='Layer__table-header Layer__coa__type'>
-              {stringOverrides?.typeColumnHeader || 'Type'}
-            </th>
-            <th className='Layer__table-header Layer__coa__subtype Layer__mobile--hidden'>
-              {stringOverrides?.subtypeColumnHeader || 'Sub-Type'}
-            </th>
-            <th className='Layer__table-header Layer__coa__balance'>
-              {stringOverrides?.balanceColumnHeader || 'Balance'}
-            </th>
-            <th className='Layer__table-header Layer__coa__actions' />
-          </tr>
-        </thead>
-
-        <tbody>
-          {!error &&
-            data?.accounts.map((account, idx) => {
-              const currentCumulativeIndex = cumulativeIndex
-              cumulativeIndex =
-                (account.sub_accounts?.length || 0) + cumulativeIndex + 1
-
-              return (
-                <ChartOfAccountsRow
-                  key={account.id}
-                  account={account}
-                  depth={0}
-                  index={idx}
-                  cumulativeIndex={currentCumulativeIndex}
-                  expanded={true}
-                  defaultOpen={true}
-                  acountsLength={accountsLength}
-                  view={view}
-                  expandAll={expandAll}
-                />
-              )
-            })}
-        </tbody>
-      </table>
-
-      {error ? (
-        <div className='Layer__table-state-container'>
-          <DataState
-            status={DataStateStatus.failed}
-            title='Something went wrong'
-            description='We couldn’t load your data.'
-            onRefresh={() => refetch()}
-            isLoading={isValidating || isLoading}
-          />
-        </div>
-      ) : null}
-
-      {(!data || isLoading) && !error ? (
-        <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-          <Loader />
-        </div>
-      ) : null}
-
-      {!isLoading && !error && data?.accounts.length === 0 ? (
-        <div className='Layer__table-state-container'>
-          <DataState
-            status={DataStateStatus.info}
-            title='Accounts were not found'
-            description='New account can be created with "Add Account".'
-            onRefresh={() => refetch()}
-            isLoading={isValidating}
-          />
-        </div>
-      ) : null}
-    </Panel>
+    <Table>
+      <TableHead>
+        <TableRow isHeadRow rowKey='charts-of-accounts-head-row'>
+          <TableCell isHeaderCell>
+            {stringOverrides?.nameColumnHeader || 'Name'}
+          </TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.typeColumnHeader || 'Type'}
+          </TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.subtypeColumnHeader || 'Sub-Type'}
+          </TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.balanceColumnHeader || 'Balance'}
+          </TableCell>
+          <TableCell isHeaderCell />
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {!error &&
+          data.accounts.map((account, idx) =>
+            renderChartOfAccountsDesktopRow(
+              account,
+              idx,
+              `coa-row-${account.id}`,
+              0,
+            ),
+          )}
+      </TableBody>
+    </Table>
   )
 }
