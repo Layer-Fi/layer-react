@@ -15,9 +15,7 @@ import { BankTransactionFilters, UseBankTransactions } from './types'
 import {
   applyAccountFilter,
   applyAmountFilter,
-  applyCategorizationStatusFilter,
   applyDirectionFilter,
-  appplyDateRangeFilter,
   collectAccounts,
 } from './utils'
 import useSWRInfinite from 'swr/infinite'
@@ -42,7 +40,9 @@ export const useBankTransactions: UseBankTransactions = params => {
     if (filters?.categorizationStatus === DisplayState.review) {
       return DisplayState.review
     }
-
+    else if (filters?.categorizationStatus === DisplayState.all) {
+      return DisplayState.all
+    }
     return DisplayState.categorized
   }, [filters?.categorizationStatus])
 
@@ -60,7 +60,15 @@ export const useBankTransactions: UseBankTransactions = params => {
           auth?.access_token &&
           `bank-transactions${
             filters?.categorizationStatus
-              ? `-scope-${filters?.categorizationStatus}`
+              ? `-categorizationStatus-${filters.categorizationStatus}`
+              : `-categorizationStatus-${DisplayState.all}`
+          }${
+            filters?.dateRange?.startDate
+              ? `-startDate-${filters.dateRange.startDate.toISOString()}`
+              : ''
+          }${
+            filters?.dateRange?.endDate
+              ? `-endDate-${filters.dateRange.endDate.toISOString()}`
               : ''
           }-${businessId}`,
         undefined,
@@ -70,11 +78,19 @@ export const useBankTransactions: UseBankTransactions = params => {
     return [
       businessId &&
         auth?.access_token &&
-        `bank-transactions${
-          filters?.categorizationStatus
-            ? `-scope-${filters?.categorizationStatus}`
-            : ''
-        }-${businessId}-${prevData?.meta?.pagination?.cursor}`,
+      `bank-transactions${
+        filters?.categorizationStatus
+          ? `-categorizationStatus-${filters.categorizationStatus}`
+          : `-categorizationStatus-${DisplayState.all}`
+      }${
+        filters?.dateRange?.startDate
+          ? `-startDate-${filters.dateRange.startDate.toISOString()}`
+          : ''
+      }${
+        filters?.dateRange?.endDate
+          ? `-endDate-${filters.dateRange.endDate.toISOString()}`
+          : ''
+      }-${businessId}-${prevData?.meta?.pagination?.cursor}`,
       prevData?.meta?.pagination?.cursor.toString(),
     ]
   }
@@ -97,9 +113,10 @@ export const useBankTransactions: UseBankTransactions = params => {
             cursor: nextCursor ?? '',
             categorized: filters?.categorizationStatus
               ? filters?.categorizationStatus === DisplayState.categorized
-                ? 'true'
-                : 'false'
+                ? 'true' : filters?.categorizationStatus === DisplayState.review ? 'false' : ''
               : '',
+            startDate: filters?.dateRange?.startDate?.toISOString() ?? undefined,
+            endDate: filters?.dateRange?.endDate?.toISOString() ?? undefined
           },
         }).call(false)
       }
@@ -188,17 +205,6 @@ export const useBankTransactions: UseBankTransactions = params => {
 
     if (filters?.direction) {
       filtered = applyDirectionFilter(filtered, filters.direction)
-    }
-
-    if (filters?.categorizationStatus) {
-      filtered = applyCategorizationStatusFilter(
-        filtered,
-        filters.categorizationStatus,
-      )
-    }
-
-    if (filters?.dateRange?.startDate || filters?.dateRange?.endDate) {
-      filtered = appplyDateRangeFilter(filtered, filters?.dateRange)
     }
 
     return filtered
@@ -346,10 +352,22 @@ export const useBankTransactions: UseBankTransactions = params => {
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(`bank-transactions-${filters?.categorizationStatus}`)) {
+    if (hasBeenTouched(`bank-transactions${
+      filters?.categorizationStatus
+        ? `-categorizationStatus-${filters.categorizationStatus}`
+        : `-categorizationStatus-${DisplayState.all}`
+    }${
+      filters?.dateRange?.startDate
+        ? `-startDate-${filters.dateRange.startDate.toISOString()}`
+        : ''
+    }${
+      filters?.dateRange?.endDate
+        ? `-endDate-${filters.dateRange.endDate.toISOString()}`
+        : ''
+    }`)) {
       refetch()
     }
-  }, [syncTimestamps, filters?.categorizationStatus])
+  }, [syncTimestamps, filters])
 
   return {
     data: filteredData,

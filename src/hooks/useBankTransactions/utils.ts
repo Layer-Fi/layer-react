@@ -65,38 +65,3 @@ export const applyDirectionFilter = (
   )
 }
 
-export const applyCategorizationStatusFilter = (
-  data?: BankTransaction[],
-  filter?: DisplayState,
-) => {
-  if (!filter) {
-    return data
-  }
-
-  return data?.filter(
-    tx =>
-      filterVisibility(filter, tx) ||
-      (filter === DisplayState.review && tx.recently_categorized) ||
-      (filter === DisplayState.categorized && tx.recently_categorized),
-  )
-}
-
-export const appplyDateRangeFilter = (
-  data?: BankTransaction[],
-  filter?: Partial<DateRange>,
-) => {
-  return data?.filter(x => {
-    const txDate = parseISO(x.date)
-    if (filter?.startDate && filter?.endDate) {
-      return txDate >= filter.startDate && txDate <= filter.endDate
-    }
-
-    if (filter?.startDate) {
-      return txDate >= filter.startDate
-    }
-
-    if (filter?.endDate) {
-      return txDate <= filter.endDate
-    }
-  })
-}
