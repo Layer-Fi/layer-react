@@ -343,42 +343,34 @@ export const useBankTransactions: UseBankTransactions = params => {
     }
   }
 
+  const getCacheKey = (txnFilters?: BankTransactionFilters ) => {
+    return `bank-transactions${
+      txnFilters?.categorizationStatus
+        ? `-categorizationStatus-${txnFilters.categorizationStatus}`
+        : `-categorizationStatus-${DisplayState.all}`
+    }${
+      txnFilters?.dateRange?.startDate
+        ? `-startDate-${txnFilters.dateRange.startDate.toISOString()}`
+        : ''
+    }${
+      txnFilters?.dateRange?.endDate
+        ? `-endDate-${txnFilters.dateRange.endDate.toISOString()}`
+        : ''
+    }`
+  }
+
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
     if (isLoading || isValidating) {
       read(
         DataModel.BANK_TRANSACTIONS,
-        `bank-transactions${
-          filters?.categorizationStatus
-            ? `-categorizationStatus-${filters.categorizationStatus}`
-            : `-categorizationStatus-${DisplayState.all}`
-        }${
-          filters?.dateRange?.startDate
-            ? `-startDate-${filters.dateRange.startDate.toISOString()}`
-            : ''
-        }${
-          filters?.dateRange?.endDate
-            ? `-endDate-${filters.dateRange.endDate.toISOString()}`
-            : ''
-        }`,
+        getCacheKey(filters),
       )
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched(`bank-transactions${
-      filters?.categorizationStatus
-        ? `-categorizationStatus-${filters.categorizationStatus}`
-        : `-categorizationStatus-${DisplayState.all}`
-    }${
-      filters?.dateRange?.startDate
-        ? `-startDate-${filters.dateRange.startDate.toISOString()}`
-        : ''
-    }${
-      filters?.dateRange?.endDate
-        ? `-endDate-${filters.dateRange.endDate.toISOString()}`
-        : ''
-    }`)) {
+    if (hasBeenTouched(getCacheKey(filters))) {
       refetch()
     }
   }, [syncTimestamps, filters])
