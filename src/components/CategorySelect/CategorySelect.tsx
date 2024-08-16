@@ -180,25 +180,19 @@ const allCategoriesDivider: GroupBase<CategoryOption>[] = [
 function flattenCategories(
   categories: Category[],
 ): GroupBase<CategoryOption>[] {
-  const categoryOptions = (categories || []).flatMap(category => {
-    if (category?.subCategories && category?.subCategories?.length > 0) {
-      if (category?.subCategories?.every(c => c.subCategories === undefined)) {
-        return [
-          {
-            label: category.display_name,
-            options: category.subCategories.map(x => mapCategoryToOption(x)),
-          },
-        ]
-      }
-      return flattenCategories(category.subCategories)
+  function getLeafCategories(category: Category): Category[] {
+    if (!category.subCategories || category.subCategories.length === 0) {
+      return [category];
     }
-    const resultOption = {
-      label: category.display_name,
-      options: [mapCategoryToOption(category)],
-    } satisfies GroupBase<CategoryOption>
-    return [resultOption]
-  })
-  return categoryOptions
+    return category.subCategories.flatMap(subCategory => getLeafCategories(subCategory));
+  }
+  return categories.map(category => {
+      return {
+        label: category.display_name,
+        options: getLeafCategories(category).map(x => mapCategoryToOption(x))
+      } satisfies GroupBase<CategoryOption>
+    }
+  )
 }
 
 export const CategorySelect = ({

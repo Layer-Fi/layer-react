@@ -7,7 +7,7 @@ import { ProfitAndLoss } from '../ProfitAndLoss'
 import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { ProfitAndLossTableStringOverrides } from '../ProfitAndLossTable/ProfitAndLossTable'
+import { ProfitAndLossTableStringOverrides } from '../ProfitAndLossTable/ProfitAndLossTableComponent'
 import { Heading } from '../Typography'
 
 const COMPONENT_NAME = 'profit-and-loss'
@@ -113,11 +113,9 @@ const Components = ({
         </div>
       )}
       {!hideTable && (
-        <TableProvider>
-          <ProfitAndLoss.Table
-            stringOverrides={stringOverrides?.profitAndLossTable}
-          />
-        </TableProvider>
+        <ProfitAndLoss.Table
+          stringOverrides={stringOverrides?.profitAndLossTable}
+        />
       )}
     </>
   )

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
@@ -187,7 +187,11 @@ const BankTransactionsContent = ({
       setFilters({
         categorizationStatus: DisplayState.review,
       })
-    } else if (!inputFilters?.categorizationStatus && !categorizationEnabled(mode)) {
+
+    } else if (
+      !inputFilters?.categorizationStatus &&
+      !categorizationEnabled(mode)
+    ) {
       setFilters({
         categorizationStatus: DisplayState.categorized,
       })
@@ -227,7 +231,7 @@ const BankTransactionsContent = ({
         event.target.value === DisplayState.categorized
           ? DisplayState.categorized
           : event.target.value === DisplayState.all
-            ? DisplayState.all
+          ? DisplayState.all
           : DisplayState.review,
     })
     setCurrentPage(1)

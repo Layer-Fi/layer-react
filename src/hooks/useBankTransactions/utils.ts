@@ -1,5 +1,10 @@
 import { filterVisibility } from '../../components/BankTransactions/utils'
-import { BankTransaction, DateRange, Direction, DisplayState } from '../../types'
+import {
+  BankTransaction,
+  DateRange,
+  Direction,
+  DisplayState,
+} from '../../types'
 import { AccountItem, NumericRangeFilter } from './types'
 import { parseISO } from 'date-fns'
 
@@ -64,4 +69,3 @@ export const applyDirectionFilter = (
     normalizedFilter.includes(x.direction?.toLowerCase()),
   )
 }
-

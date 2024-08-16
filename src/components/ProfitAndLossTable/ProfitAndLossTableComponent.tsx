@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react'
+import { TableProvider } from '../../contexts/TableContext'
 import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import PieChart from '../../icons/PieChart'
@@ -15,13 +16,16 @@ export interface ProfitAndLossTableStringOverrides {
   netProfitLabel?: string
 }
 
-type Props = {
+export type ProfilAndLostTableProps = {
   lockExpanded?: boolean
   asContainer?: boolean
   stringOverrides?: ProfitAndLossTableStringOverrides
 }
 
-export const ProfitAndLossTable = ({ asContainer, stringOverrides }: Props) => {
+export const ProfitAndLossTableComponent = ({
+  asContainer,
+  stringOverrides,
+}: ProfilAndLostTableProps) => {
   const {
     data: actualData,
     isLoading,
@@ -175,10 +179,14 @@ export const ProfitAndLossTable = ({ asContainer, stringOverrides }: Props) => {
           undefined,
           'summation',
         )}
-        {data.other_outflows || data.personal_expenses ? (
+        {data.personal_expenses ? (
+          <React.Fragment>
+            {renderLineItem(data.personal_expenses, 0, 'personal_expenses', 7)}
+          </React.Fragment>
+        ) : null}
+        {data.other_outflows ? (
           <React.Fragment>
             {renderLineItem(data.other_outflows, 0, 'other_outflows', 6)}
-            {renderLineItem(data.personal_expenses, 0, 'personal_expenses', 7)}
           </React.Fragment>
         ) : null}
       </TableBody>

@@ -43,6 +43,8 @@ export const useBankTransactions: UseBankTransactions = params => {
     else if (filters?.categorizationStatus === DisplayState.all) {
       return DisplayState.all
     }
+
+
     return DisplayState.categorized
   }, [filters?.categorizationStatus])
 
