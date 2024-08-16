@@ -31,9 +31,9 @@ yarn install @layerfi/components
 
 Nest the components you want to use under the `LayerProvider` component. You should provide the component with a few props:
 
-- `businessId` The ID of the business whose infomation you're showing.
+- `businessId` The ID of the business whose information you're showing.
 - `businessAccessToken` Temporary authentication token scoped to this specific business. See the [getting started guide](https://docs.layerfi.com/guides/embedded-components#backend-setup) for how to fetch these tokens on your backend.
-- `envronment` (Optional, defaults to "production") the Layer environment you're attempting to access [`staging` or `production`]
+- `environment` (Optional, defaults to "production") the Layer environment you're attempting to access [`staging` or `production`]
 - `theme` (Optional) to customize the look of components
 - `onError` (Optional) to get notified about exceptions
 
@@ -78,13 +78,13 @@ The onboarding component can be included on an accounting landing page to prompt
 After connecting accounts, the component will change into a prompt to categorize transactions.
 ![Onboarding after linking](https://github.com/Layer-Fi/layer-react/assets/1592431/4b7d5711-f1da-42cb-8105-e0489f7431ad)
 
-For a business that has already onboarded, this component will render nothing, so it's safe to leave on the default page for all businesses.
+For a business that has already been onboarded, this component will render nothing, so it's safe to leave it on the default page for all businesses.
 
 ```tsx
 <Onboarding onTransactionsToReviewClick={onTransactionsToReviewClick} />
 ```
 
-This component has one primary prop: `onTransactionsToReviewClick` should be a function which navigates to the bank transactions to review page. For example, if the bank transaction categorizaiton page lives on `/account/bank-transactions` within your app:
+This component has one primary prop: `onTransactionsToReviewClick` should be a function that navigates to the bank transactions to review page. For example, if the bank transaction categorization page lives on `/account/bank-transactions` within your app:
 
 ```tsx
 <Onboarding
@@ -181,7 +181,7 @@ Props:
 - `vertical`: changes the card layout to be vertically stacked instead of horizontal
 - `revenueLabel`: specifiable label for revenue for uses where you prefer 'income' or other another term.
 
-Note that the `<TransactionToReviewCard>` is a separate component, but is meant to be optionally bundled with the summary cards. As with the onboarding component, this component has one primary prop: `onTransactionsToReviewClick` should be a function which navigates to the bank transactions to review page. For example, if the bank transaction categorizaiton page lives on `/account/bank-transactions` within your app:
+Note that the `<TransactionToReviewCard>` is a separate component, but is meant to be optionally bundled with the summary cards. As with the onboarding component, this component has one primary prop: `onTransactionsToReviewClick` should be a function which navigates to the bank transactions to review page. For example, if the bank transaction categorization page lives on `/account/bank-transactions` within your app:
 
 ```tsx
 <Onboarding
@@ -223,7 +223,7 @@ The statement of cashflows component is an interactive table displaying cash cha
 
 ![Chart of Accounts](https://github.com/Layer-Fi/layer-react/assets/1592431/05405344-81de-4d76-b835-633e247cdeb9)
 
-The chart of accounts gives direct read and write access into the double entry general ledger underlying Layer's data. It exposes the list of accounts and enables users to create new accounts.
+The chart of accounts gives direct read-and-write access into the double-entry general ledger underlying Layer's data. It exposes the list of accounts and enables users to create new accounts.
 
 ```tsx
 <ChartOfAccounts asWidget withDateControl withExpandAllButton />
@@ -232,8 +232,8 @@ The chart of accounts gives direct read and write access into the double entry g
 The following props are supported
 
 - `asWidget`: Displays a more compact version.
-- `withDateControl`: Includes a date picker which determines the effective date of account balances displayed.
-- `withExpandAllButton`: Optionally displays a button to expand and collapse all sub account lists.
+- `withDateControl`: Includes a date picker that determines the effective date of account balances displayed.
+- `withExpandAllButton`: Optionally displays a button to expand and collapse all sub-account lists.
 
 #### Journal
 
@@ -263,7 +263,7 @@ You have a range of options for custom styling. In order of most simple to most 
 
 ### Using `theme` attribute
 
-The theme attribute allows you to set parimary light and dark colors. The component will then use your primary colors to create a cohesive color palette across all components. We won't add any new colors, just different lightness of your brand colors for accents where helpful, e.g. hover states.
+The theme attribute allows you to set primary light and dark colors. The component will then use your primary colors to create a cohesive color palette across all components. We won't add any new colors, just different lightness of your brand colors for accents where helpful, e.g. hover states.
 
 ```ts
 <LayerProvider
@@ -508,7 +508,7 @@ The full list of variables is listed in the [`variables.css`](https://github.com
 
 ### CSS classes
 
-For fine grained control, you can override specific classes. We recommend using your browser dev tools to find the component you want restyle and overriding that specific class with a higher priority CSS rule.
+For fine grained control, you can override specific classes. We recommend using your browser dev tools to find the component you want to restyle and override that specific class with a higher priority CSS rule.
 
 ```css
 body .Layer__table-cell-content {
@@ -535,7 +535,7 @@ Use `onError` property on `<LayerProvider />` to get notified about all exceptio
 </LayerProvider>
 ```
 
-...or on specific component:
+...or on the specific component:
 
 ```ts
 <BankTransactions onError={e => console.log('My callback:', e)} />
