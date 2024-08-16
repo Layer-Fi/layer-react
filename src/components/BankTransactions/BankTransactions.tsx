@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
@@ -114,50 +114,12 @@ const BankTransactionsContent = ({
     removeAfterCategorize,
   } = useBankTransactionsContext()
 
-  const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
+  const { data: linkedAccounts } = useLinkedAccounts()
 
   const isSyncing = useMemo(
     () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
     [linkedAccounts],
   )
-
-  const transactionsNotSynced = useMemo(
-    () =>
-      loadingStatus === 'complete' &&
-      isSyncing &&
-      (!data || data?.length === 0),
-    [data, isSyncing, loadingStatus],
-  )
-
-  let intervalId: ReturnType<typeof setInterval> | undefined = undefined
-
-  // calling `refetch()` directly in the `setInterval` didn't trigger actual request to API.
-  // But it works when called from `useEffect`
-  const [refreshTrigger, setRefreshTrigger] = useState(-1)
-  useEffect(() => {
-    if (refreshTrigger !== -1) {
-      refetch()
-      refetchAccounts()
-    }
-  }, [refreshTrigger])
-
-  useEffect(() => {
-    if (isSyncing) {
-      intervalId = setInterval(() => {
-        setRefreshTrigger(Math.random())
-      }, POLL_INTERVAL)
-    } else {
-      if (intervalId) {
-        clearInterval(intervalId)
-      }
-    }
-
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId)
-      }
-    }
-  }, [isSyncing, transactionsNotSynced])
 
   useEffect(() => {
     activate()
