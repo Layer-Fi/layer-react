@@ -41,6 +41,7 @@ export const LayerContext = createContext<
   syncTimestamps: {},
   readTimestamps: {},
   hasBeenTouched: () => false,
+  expireDataCaches: () => undefined,
   eventCallbacks: {},
 })
 
