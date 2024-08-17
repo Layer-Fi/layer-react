@@ -26,6 +26,7 @@ const DEPENDENCIES: Partial<Record<DataModel, DataModel[]>> = {
   [DataModel.LINKED_ACCOUNTS]: ALL_TOUCHABLE,
   [DataModel.PROFIT_AND_LOSS]: ALL_TOUCHABLE,
   [DataModel.STATEMENT_OF_CASH_FLOWS]: ALL_TOUCHABLE,
+  [DataModel.BANK_TRANSACTIONS]: ALL_TOUCHABLE,
 }
 
 let readTimestampsG = {}
@@ -42,6 +43,7 @@ export const useDataSync: UseDataSync = () => {
     [DataModel.LINKED_ACCOUNTS]: initialTimestamp,
     [DataModel.PROFIT_AND_LOSS]: initialTimestamp,
     [DataModel.STATEMENT_OF_CASH_FLOWS]: initialTimestamp,
+    [DataModel.BANK_TRANSACTIONS]: initialTimestamp,
   })
   const [readTimestamps, setReadTimestamps] = useState<
     Partial<Record<string, { t: number; m: DataModel }>>
@@ -94,6 +96,7 @@ export const useDataSync: UseDataSync = () => {
       [DataModel.LINKED_ACCOUNTS]: now,
       [DataModel.PROFIT_AND_LOSS]: now,
       [DataModel.STATEMENT_OF_CASH_FLOWS]: now,
+      [DataModel.BANK_TRANSACTIONS]: now,
     })
   }
 
