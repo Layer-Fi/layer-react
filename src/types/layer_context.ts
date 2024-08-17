@@ -34,6 +34,7 @@ export type LayerContextHelpers = {
   read: (model: DataModel, cacheKey: string) => void
   syncTimestamps: Partial<Record<DataModel, number>>
   readTimestamps: Partial<Record<DataModel, number>>
+  expireDataCaches: () => void
   hasBeenTouched: (cacheKey: string) => boolean
 }
 
