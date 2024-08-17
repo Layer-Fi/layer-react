@@ -152,8 +152,14 @@ export const LayerProvider = ({
     eventCallbacks: {},
   })
 
-  const { touch, syncTimestamps, read, readTimestamps, hasBeenTouched } =
-    useDataSync()
+  const {
+    touch,
+    syncTimestamps,
+    read,
+    readTimestamps,
+    hasBeenTouched,
+    resetCaches,
+  } = useDataSync()
 
   const { data: auth } =
     appId !== undefined && appSecret !== undefined
@@ -360,6 +366,7 @@ export const LayerProvider = ({
           read,
           syncTimestamps,
           readTimestamps,
+          expireDataCaches: resetCaches,
           hasBeenTouched,
           eventCallbacks,
         }}
