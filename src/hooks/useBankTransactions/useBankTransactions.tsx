@@ -23,6 +23,9 @@ import {
 } from './utils'
 import useSWRInfinite from 'swr/infinite'
 
+const INITIAL_POLL_INTERVAL_MS = 1000
+const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
+
 function useTriggerOnChange(
   data: BankTransaction[] | undefined,
   anyAccountSyncing: boolean,
@@ -364,7 +367,7 @@ export const useBankTransactions: UseBankTransactions = params => {
     [linkedAccounts],
   )
 
-  const [pollIntervalMs, setPollIntervalMs] = useState(1000)
+  const [pollIntervalMs, setPollIntervalMs] = useState(INITIAL_POLL_INTERVAL_MS)
 
   const transactionsNotSynced = useMemo(
     () =>
@@ -405,9 +408,8 @@ export const useBankTransactions: UseBankTransactions = params => {
   }, [anyAccountSyncing, transactionsNotSynced, pollIntervalMs])
 
   useTriggerOnChange(data, anyAccountSyncing, newTransactionList => {
-    console.log('Triggered transaction list change via polling')
     clearInterval(intervalId)
-    setPollIntervalMs(5000)
+    setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
     touch(DataModel.BANK_TRANSACTIONS)
   })
 
