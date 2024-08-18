@@ -19,6 +19,7 @@ import {
   collectAccounts,
 } from './utils'
 import useSWRInfinite from 'swr/infinite'
+import { ReviewCategories } from '../../components/BankTransactions/constants'
 
 export const useBankTransactions: UseBankTransactions = params => {
   const {
@@ -323,14 +324,21 @@ export const useBankTransactions: UseBankTransactions = params => {
     mutate(updatedData, { revalidate: false })
   }
 
+  const shouldHideAfterCategorize = (bankTransaction: BankTransaction): boolean => {
+    return filters?.categorizationStatus === DisplayState.review &&
+      ReviewCategories.includes(bankTransaction.categorization_status)
+  }
+
   const removeAfterCategorize = (bankTransaction: BankTransaction) => {
-    const updatedData = rawResponseData?.map(page => {
-      return {
-        ...page,
-        data: page.data?.filter(bt => bt.id !== bankTransaction.id),
-      }
-    })
-    mutate(updatedData, { revalidate: false })
+    if (shouldHideAfterCategorize(bankTransaction)) {
+      const updatedData = rawResponseData?.map(page => {
+        return {
+          ...page,
+          data: page.data?.filter(bt => bt.id !== bankTransaction.id),
+        }
+      })
+      mutate(updatedData, { revalidate: false })
+    }
   }
 
   const refetch = () => {
@@ -386,6 +394,7 @@ export const useBankTransactions: UseBankTransactions = params => {
     categorize,
     match,
     updateOneLocal,
+    shouldHideAfterCategorize,
     removeAfterCategorize,
     filters,
     setFilters,
