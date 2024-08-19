@@ -347,10 +347,7 @@ export const useBankTransactions: UseBankTransactions = params => {
   const shouldHideAfterCategorize = (
     bankTransaction: BankTransaction,
   ): boolean => {
-    return (
-      filters?.categorizationStatus === DisplayState.review &&
-      ReviewCategories.includes(bankTransaction.categorization_status)
-    )
+    return ( filters?.categorizationStatus === DisplayState.review )
   }
 
   const removeAfterCategorize = (bankTransaction: BankTransaction) => {

@@ -285,12 +285,15 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       if (purpose === Purpose.match) {
         if (!selectedMatchId) {
           setMatchFormError('Select an option to match the transaction')
+          return
         } else if (
           selectedMatchId &&
           selectedMatchId !== isAlreadyMatched(bankTransaction)
         ) {
-          onMatchSubmit(selectedMatchId)
+          await onMatchSubmit(selectedMatchId)
+          return
         }
+        close()
         return
       }
 
