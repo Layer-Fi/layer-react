@@ -4,6 +4,22 @@
   background-color: white;
 }
 
+.Layer__compare__options {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  .Layer__input-tooltip {
+    flex: 1;
+  }
+  .Layer__compare__switch__options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+  }
+}
+
 .Layer__profit-and-loss__main-panel {
   flex: 1;
 }

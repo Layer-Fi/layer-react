@@ -3,6 +3,7 @@ import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 import { ReportingBasis } from '../../types'
 import { Container } from '../Container'
 import { ProfitAndLossChart } from '../ProfitAndLossChart'
+import { ProfitAndLossCompareOptions } from '../ProfitAndLossCompareOptions'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummaries } from '../ProfitAndLossSummaries'
@@ -33,6 +34,8 @@ const PNLContext = createContext<PNLContextType>({
     expenses: undefined,
     revenue: undefined,
   },
+  compareMode: false,
+  setCompareMode: () => {},
 })
 
 type Props = PropsWithChildren & {
@@ -66,6 +69,7 @@ const ProfitAndLoss = ({
 ProfitAndLoss.Chart = ProfitAndLossChart
 ProfitAndLoss.Context = PNLContext
 ProfitAndLoss.DatePicker = ProfitAndLossDatePicker
+ProfitAndLoss.CompareOptions = ProfitAndLossCompareOptions
 ProfitAndLoss.Summaries = ProfitAndLossSummaries
 ProfitAndLoss.Table = ProfitAndLossTable
 ProfitAndLoss.DetailedCharts = ProfitAndLossDetailedCharts

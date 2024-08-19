@@ -176,6 +176,7 @@ const ReportsPanel = ({
           headerControls={
             <>
               <ProfitAndLoss.DatePicker />
+              <ProfitAndLoss.CompareOptions />
               <DownloadButton
                 stringOverrides={stringOverrides?.downloadButton}
               />

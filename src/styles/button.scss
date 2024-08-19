@@ -341,3 +341,88 @@
   align-items: center;
   gap: var(--spacing-4xs);
 }
+
+.Layer__switch__container {
+  display: flex;
+  align-items: center;
+  .Layer__switch__button {
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-width: 0px;
+    border-radius: var(--btn-border-radius);
+    font-family: var(--font-family);
+    cursor: pointer;
+    min-height: 36px;
+    box-sizing: border-box;
+    transition: all 100ms ease-out;
+    padding: 0 2px;
+    text-decoration: none;
+
+    &:focus,
+    :active {
+      box-shadow:
+        0px 0px 0px 1px var(--color-base-0),
+        0px 0px 0px 3px var(--color-base-0);
+      outline: var(--color-base-0);
+    }
+
+    &--checked {
+      .Layer__switch__knob__wrapper {
+        background: var(--color-black);
+        border-color: var(--color-black);
+        .Layer__switch__knob {
+          transform: translateX(8px);
+          background: var(--color-white);
+          border-color: var(--color-white);
+        }
+      }
+    }
+
+    &--disabled {
+      .Layer__switch__knob__wrapper {
+        color: var(--btn-color-icon-hover);
+        background: var(--color-white);
+        border-color: var(--btn-bg-color-icon-hover);
+        cursor: not-allowed;
+
+        .Layer__switch__knob {
+          background: var(--color-white);
+          border-color: var(--btn-bg-color-icon-hover);
+        }
+      }
+
+      .Layer__switch__label {
+        color: var(--btn-color-icon-hover);
+      }
+    }
+  }
+
+  .Layer__switch__knob__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: var(--color-white);
+    border: 2px solid var(--color-base-300);
+    width: 18px;
+    height: 12px;
+    padding: 0 2px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    .Layer__switch__knob {
+      width: 6px;
+      height: 6px;
+      background-color: var(--color-white);
+      border-radius: 50%;
+      border: 2px solid var(--color-base-300);
+      transition: all 0.2s ease;
+    }
+  }
+
+  .Layer__switch__label {
+    color: var(--btn-color-icon-hover);
+    margin-right: 10px;
+  }
+}
