@@ -128,7 +128,9 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
           }
           fullWidth={true}
         >
-          {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
+          {isLoading || bankTransaction.processing
+            ? 'Confirming...'
+            : 'Confirm'}
         </Button>
       ) : null}
       {bankTransaction.error && showRetry ? (

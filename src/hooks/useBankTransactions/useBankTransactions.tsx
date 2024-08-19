@@ -257,7 +257,7 @@ export const useBankTransactions: UseBankTransactions = params => {
           throw errors
         }
         if (newBT?.recently_categorized === true && notify) {
-          addToast({ content: 'Transaction saved' })
+          addToast({ content: 'Transaction confirmed' })
         }
       })
       .catch(err => {
