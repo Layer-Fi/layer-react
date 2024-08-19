@@ -21,7 +21,7 @@ export const Pagination = ({
   currentPage,
   pageSize,
   hasMore,
-  fetchMore
+  fetchMore,
 }: PaginationProps) => {
   const paginationRange = usePagination({
     currentPage,
@@ -85,14 +85,14 @@ export const Pagination = ({
           </li>
         )
       })}
-      {hasMore && fetchMore ?(
+      {hasMore && fetchMore ? (
         <li
-        key={`page-has-more`}
-        className='Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--next'
-        onClick={fetchMore}
-      >
-        ...
-      </li>
+          key={`page-has-more`}
+          className='Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--next'
+          onClick={fetchMore}
+        >
+          ...
+        </li>
       ) : null}
       <li
         key={`page-last`}

@@ -48,8 +48,11 @@ export const BankTransactionListItem = ({
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
-  const { categorize: categorizeBankTransaction, match: matchBankTransaction } =
-    useBankTransactionsContext()
+  const {
+    categorize: categorizeBankTransaction,
+    match: matchBankTransaction,
+    shouldHideAfterCategorize,
+  } = useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )
@@ -77,7 +80,11 @@ export const BankTransactionListItem = ({
   }, [bankTransaction.error])
 
   useEffect(() => {
-    if (editable && bankTransaction.recently_categorized) {
+    if (
+      editable &&
+      bankTransaction.recently_categorized &&
+      shouldHideAfterCategorize(bankTransaction)
+    ) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
       }, 300)
@@ -112,7 +119,9 @@ export const BankTransactionListItem = ({
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    bankTransaction.recently_categorized && editable
+    bankTransaction.recently_categorized &&
+      editable &&
+      shouldHideAfterCategorize(bankTransaction)
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',

@@ -265,8 +265,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }
 
     const save = async () => {
-      const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/metadata`
-
       if (showDescriptions && memoText != undefined) {
         const result = await Layer.updateBankTransactionMetadata(
           apiUrl,
