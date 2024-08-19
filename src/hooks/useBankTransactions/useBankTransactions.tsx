@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { ReviewCategories } from '../../components/BankTransactions/constants'
 import { useLayerContext } from '../../contexts/LayerContext'
@@ -13,9 +13,32 @@ import {
   DisplayState,
 } from '../../types/bank_transactions'
 import { DataModel, LoadedStatus } from '../../types/general'
+import { useLinkedAccounts } from '../useLinkedAccounts'
 import { BankTransactionFilters, UseBankTransactions } from './types'
 import { applyAccountFilter, applyAmountFilter, collectAccounts } from './utils'
 import useSWRInfinite from 'swr/infinite'
+
+const INITIAL_POLL_INTERVAL_MS = 1000
+const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
+
+function useTriggerOnChange(
+  data: BankTransaction[] | undefined,
+  anyAccountSyncing: boolean,
+  callback: (data: BankTransaction[] | undefined) => void,
+) {
+  const prevDataRef = useRef<BankTransaction[]>()
+
+  useEffect(() => {
+    if (
+      anyAccountSyncing &&
+      prevDataRef.current !== undefined &&
+      prevDataRef.current !== data
+    ) {
+      callback(data)
+    }
+    prevDataRef.current = data
+  }, [data, anyAccountSyncing, callback])
+}
 
 const filtersSettingString = (filters?: BankTransactionFilters): string => {
   return `bank-transactions${
@@ -368,6 +391,58 @@ export const useBankTransactions: UseBankTransactions = params => {
       refetch()
     }
   }, [syncTimestamps, filters])
+
+  const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
+  const anyAccountSyncing = useMemo(
+    () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
+    [linkedAccounts],
+  )
+
+  const [pollIntervalMs, setPollIntervalMs] = useState(INITIAL_POLL_INTERVAL_MS)
+
+  const transactionsNotSynced = useMemo(
+    () =>
+      loadingStatus === 'complete' &&
+      anyAccountSyncing &&
+      (!data || data?.length === 0),
+    [data, anyAccountSyncing, loadingStatus],
+  )
+
+  let intervalId: ReturnType<typeof setInterval> | undefined = undefined
+
+  // calling `refetch()` directly in the `setInterval` didn't trigger actual request to API.
+  // But it works when called from `useEffect`
+  const [refreshTrigger, setRefreshTrigger] = useState(-1)
+  useEffect(() => {
+    if (refreshTrigger !== -1) {
+      refetch()
+      refetchAccounts()
+    }
+  }, [refreshTrigger])
+
+  useEffect(() => {
+    if (anyAccountSyncing) {
+      intervalId = setInterval(() => {
+        setRefreshTrigger(Math.random())
+      }, pollIntervalMs)
+    } else {
+      if (intervalId) {
+        clearInterval(intervalId)
+      }
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId)
+      }
+    }
+  }, [anyAccountSyncing, transactionsNotSynced, pollIntervalMs])
+
+  useTriggerOnChange(data, anyAccountSyncing, newTransactionList => {
+    clearInterval(intervalId)
+    setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
+    touch(DataModel.BANK_TRANSACTIONS)
+  })
 
   return {
     data: filteredData,
