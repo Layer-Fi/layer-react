@@ -41,7 +41,7 @@ export const getBankTransactions = get<
     sortOrder = 'DESC',
   }: GetBankTransactionsParams) =>
     `/v1/businesses/${businessId}/bank-transactions?${
-      cursor ? `cursor=${cursor}&` : ''
+      cursor !== undefined && cursor !== '' ? `cursor=${cursor}&` : ''
     }${
       categorized !== undefined && categorized !== ''
         ? `categorized=${categorized}&`

@@ -17,6 +17,26 @@ import { BankTransactionFilters, UseBankTransactions } from './types'
 import { applyAccountFilter, applyAmountFilter, collectAccounts } from './utils'
 import useSWRInfinite from 'swr/infinite'
 
+const filtersSettingString = (filters?: BankTransactionFilters): string => {
+  return `bank-transactions${
+    filters?.categorizationStatus
+      ? `-categorizationStatus-${filters.categorizationStatus}`
+      : `-categorizationStatus-${DisplayState.all}`
+  }${
+    filters?.direction?.length === 1
+      ? `-direction-${filters.direction.join('-')}`
+      : ''
+  }${
+    filters?.dateRange?.startDate
+      ? `-startDate-${filters.dateRange.startDate.toISOString()}`
+      : ''
+  }${
+    filters?.dateRange?.endDate
+      ? `-endDate-${filters.dateRange.endDate.toISOString()}`
+      : ''
+  }`
+}
+
 export const useBankTransactions: UseBankTransactions = params => {
   const {
     auth,
@@ -46,32 +66,16 @@ export const useBankTransactions: UseBankTransactions = params => {
   const [active, setActive] = useState(false)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
 
-  const getKey = (_index: number, prevData: any) => {
+  const getKey = (index: number, prevData: any) => {
     if (!auth?.access_token || !active) {
       return [false, undefined]
     }
 
-    if (_index === 0) {
+    if (index === 0) {
       return [
         businessId &&
           auth?.access_token &&
-          `bank-transactions${
-            filters?.categorizationStatus
-              ? `-categorizationStatus-${filters.categorizationStatus}`
-              : `-categorizationStatus-${DisplayState.all}`
-          }${
-            filters?.direction?.length === 1
-              ? `-startDate-${filters.direction[0]}`
-              : ''
-          }${
-            filters?.dateRange?.startDate
-              ? `-startDate-${filters.dateRange.startDate.toISOString()}`
-              : ''
-          }${
-            filters?.dateRange?.endDate
-              ? `-endDate-${filters.dateRange.endDate.toISOString()}`
-              : ''
-          }-${businessId}`,
+          `${filtersSettingString(filters)}-${businessId}`,
         undefined,
       ]
     }
@@ -79,23 +83,8 @@ export const useBankTransactions: UseBankTransactions = params => {
     return [
       businessId &&
         auth?.access_token &&
-        `bank-transactions${
-          filters?.categorizationStatus
-            ? `-categorizationStatus-${filters.categorizationStatus}`
-            : `-categorizationStatus-${DisplayState.all}`
-        }${
-          filters?.direction?.length === 1
-            ? `-startDate-${filters.direction[0]}`
-            : ''
-        }${
-          filters?.dateRange?.startDate
-            ? `-startDate-${filters.dateRange.startDate.toISOString()}`
-            : ''
-        }${
-          filters?.dateRange?.endDate
-            ? `-endDate-${filters.dateRange.endDate.toISOString()}`
-            : ''
-        }-${businessId}-${prevData?.meta?.pagination?.cursor}`,
+        `${filtersSettingString(filters)}-${businessId}-${prevData?.meta
+          ?.pagination?.cursor}`,
       prevData?.meta?.pagination?.cursor.toString(),
     ]
   }
@@ -364,24 +353,7 @@ export const useBankTransactions: UseBankTransactions = params => {
   }
 
   const getCacheKey = (txnFilters?: BankTransactionFilters) => {
-    console.log(txnFilters)
-    return `bank-transactions${
-      txnFilters?.categorizationStatus
-        ? `-categorizationStatus-${txnFilters.categorizationStatus}`
-        : `-categorizationStatus-${DisplayState.all}`
-    }${
-      txnFilters?.direction?.length === 1
-        ? `-startDate-${txnFilters.direction[0]}`
-        : ''
-    }${
-      txnFilters?.dateRange?.startDate
-        ? `-startDate-${txnFilters.dateRange.startDate.toISOString()}`
-        : ''
-    }${
-      txnFilters?.dateRange?.endDate
-        ? `-endDate-${txnFilters.dateRange.endDate.toISOString()}`
-        : ''
-    }`
+    return filtersSettingString(txnFilters)
   }
 
   // Refetch data if related models has been changed since last fetch
