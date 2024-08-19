@@ -25,7 +25,7 @@ const DEPENDENCIES: Partial<Record<DataModel, DataModel[]>> = {
   [DataModel.LINKED_ACCOUNTS]: ALL_TOUCHABLE,
   [DataModel.PROFIT_AND_LOSS]: ALL_TOUCHABLE,
   [DataModel.STATEMENT_OF_CASH_FLOWS]: ALL_TOUCHABLE,
-  [DataModel.BANK_TRANSACTIONS]: [DataModel.BANK_TRANSACTIONS],
+  [DataModel.BANK_TRANSACTIONS]: ALL_TOUCHABLE,
 }
 
 let readTimestampsG = {}

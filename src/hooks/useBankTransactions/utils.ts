@@ -55,17 +55,3 @@ export const applyAccountFilter = (
   data?: BankTransaction[],
   filter?: string[],
 ) => data?.filter(x => filter && filter.includes(x.source_account_id))
-
-export const applyDirectionFilter = (
-  data?: BankTransaction[],
-  filter?: Direction[],
-) => {
-  if (!filter) {
-    return data
-  }
-  const normalizedFilter = filter.map(x => x.toLowerCase())
-
-  return data?.filter(x =>
-    normalizedFilter.includes(x.direction?.toLowerCase()),
-  )
-}

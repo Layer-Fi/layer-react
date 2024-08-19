@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Layer } from '../../api/layer'
+import { ReviewCategories } from '../../components/BankTransactions/constants'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
   BankTransaction,
   CategorizationStatus,
   CategoryUpdate,
+  Direction,
 } from '../../types'
 import {
   BankTransactionMatchType,
@@ -12,14 +14,8 @@ import {
 } from '../../types/bank_transactions'
 import { DataModel, LoadedStatus } from '../../types/general'
 import { BankTransactionFilters, UseBankTransactions } from './types'
-import {
-  applyAccountFilter,
-  applyAmountFilter,
-  applyDirectionFilter,
-  collectAccounts,
-} from './utils'
+import { applyAccountFilter, applyAmountFilter, collectAccounts } from './utils'
 import useSWRInfinite from 'swr/infinite'
-import { ReviewCategories } from '../../components/BankTransactions/constants'
 
 export const useBankTransactions: UseBankTransactions = params => {
   const {
@@ -40,11 +36,9 @@ export const useBankTransactions: UseBankTransactions = params => {
   const display = useMemo(() => {
     if (filters?.categorizationStatus === DisplayState.review) {
       return DisplayState.review
-    }
-    else if (filters?.categorizationStatus === DisplayState.all) {
+    } else if (filters?.categorizationStatus === DisplayState.all) {
       return DisplayState.all
     }
-
 
     return DisplayState.categorized
   }, [filters?.categorizationStatus])
@@ -66,6 +60,10 @@ export const useBankTransactions: UseBankTransactions = params => {
               ? `-categorizationStatus-${filters.categorizationStatus}`
               : `-categorizationStatus-${DisplayState.all}`
           }${
+            filters?.direction?.length === 1
+              ? `-startDate-${filters.direction[0]}`
+              : ''
+          }${
             filters?.dateRange?.startDate
               ? `-startDate-${filters.dateRange.startDate.toISOString()}`
               : ''
@@ -81,19 +79,23 @@ export const useBankTransactions: UseBankTransactions = params => {
     return [
       businessId &&
         auth?.access_token &&
-      `bank-transactions${
-        filters?.categorizationStatus
-          ? `-categorizationStatus-${filters.categorizationStatus}`
-          : `-categorizationStatus-${DisplayState.all}`
-      }${
-        filters?.dateRange?.startDate
-          ? `-startDate-${filters.dateRange.startDate.toISOString()}`
-          : ''
-      }${
-        filters?.dateRange?.endDate
-          ? `-endDate-${filters.dateRange.endDate.toISOString()}`
-          : ''
-      }-${businessId}-${prevData?.meta?.pagination?.cursor}`,
+        `bank-transactions${
+          filters?.categorizationStatus
+            ? `-categorizationStatus-${filters.categorizationStatus}`
+            : `-categorizationStatus-${DisplayState.all}`
+        }${
+          filters?.direction?.length === 1
+            ? `-startDate-${filters.direction[0]}`
+            : ''
+        }${
+          filters?.dateRange?.startDate
+            ? `-startDate-${filters.dateRange.startDate.toISOString()}`
+            : ''
+        }${
+          filters?.dateRange?.endDate
+            ? `-endDate-${filters.dateRange.endDate.toISOString()}`
+            : ''
+        }-${businessId}-${prevData?.meta?.pagination?.cursor}`,
       prevData?.meta?.pagination?.cursor.toString(),
     ]
   }
@@ -116,10 +118,20 @@ export const useBankTransactions: UseBankTransactions = params => {
             cursor: nextCursor ?? '',
             categorized: filters?.categorizationStatus
               ? filters?.categorizationStatus === DisplayState.categorized
-                ? 'true' : filters?.categorizationStatus === DisplayState.review ? 'false' : ''
+                ? 'true'
+                : filters?.categorizationStatus === DisplayState.review
+                ? 'false'
+                : ''
               : '',
-            startDate: filters?.dateRange?.startDate?.toISOString() ?? undefined,
-            endDate: filters?.dateRange?.endDate?.toISOString() ?? undefined
+            direction:
+              filters?.direction?.length === 1
+                ? filters.direction[0] === Direction.CREDIT
+                  ? 'INFLOW'
+                  : 'OUTFLOW'
+                : undefined,
+            startDate:
+              filters?.dateRange?.startDate?.toISOString() ?? undefined,
+            endDate: filters?.dateRange?.endDate?.toISOString() ?? undefined,
           },
         }).call(false)
       }
@@ -204,10 +216,6 @@ export const useBankTransactions: UseBankTransactions = params => {
 
     if (filters?.account) {
       filtered = applyAccountFilter(filtered, filters.account)
-    }
-
-    if (filters?.direction) {
-      filtered = applyDirectionFilter(filtered, filters.direction)
     }
 
     return filtered
@@ -324,9 +332,13 @@ export const useBankTransactions: UseBankTransactions = params => {
     mutate(updatedData, { revalidate: false })
   }
 
-  const shouldHideAfterCategorize = (bankTransaction: BankTransaction): boolean => {
-    return filters?.categorizationStatus === DisplayState.review &&
+  const shouldHideAfterCategorize = (
+    bankTransaction: BankTransaction,
+  ): boolean => {
+    return (
+      filters?.categorizationStatus === DisplayState.review &&
       ReviewCategories.includes(bankTransaction.categorization_status)
+    )
   }
 
   const removeAfterCategorize = (bankTransaction: BankTransaction) => {
@@ -351,11 +363,16 @@ export const useBankTransactions: UseBankTransactions = params => {
     }
   }
 
-  const getCacheKey = (txnFilters?: BankTransactionFilters ) => {
+  const getCacheKey = (txnFilters?: BankTransactionFilters) => {
+    console.log(txnFilters)
     return `bank-transactions${
       txnFilters?.categorizationStatus
         ? `-categorizationStatus-${txnFilters.categorizationStatus}`
         : `-categorizationStatus-${DisplayState.all}`
+    }${
+      txnFilters?.direction?.length === 1
+        ? `-startDate-${txnFilters.direction[0]}`
+        : ''
     }${
       txnFilters?.dateRange?.startDate
         ? `-startDate-${txnFilters.dateRange.startDate.toISOString()}`
@@ -370,10 +387,7 @@ export const useBankTransactions: UseBankTransactions = params => {
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
     if (isLoading || isValidating) {
-      read(
-        DataModel.BANK_TRANSACTIONS,
-        getCacheKey(filters),
-      )
+      read(DataModel.BANK_TRANSACTIONS, getCacheKey(filters))
     }
   }, [isLoading, isValidating])
 
