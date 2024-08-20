@@ -68,7 +68,10 @@ export type NewAccount = {
 }
 
 export type EditAccount = {
-  stable_name?: string
+  stable_name?: {
+    type: 'StableName'
+    stable_name: string
+  }
   name: string
   normality: Direction
   parent_id?: {
