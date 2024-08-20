@@ -176,7 +176,6 @@ export const ProfitAndLossChart = ({
     currentDate: startOfMonth(Date.now()),
   })
 
-  // const anyData = true
   const anyData = useMemo(() => {
     return Boolean(
       data?.find(
@@ -194,11 +193,10 @@ export const ProfitAndLossChart = ({
 
   const { data: linkedAccounts } = useLinkedAccounts()
 
-  const isSyncing = true
-  // const isSyncing = useMemo(
-  //   () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
-  //   [linkedAccounts],
-  // )
+  const isSyncing = useMemo(
+    () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
+    [linkedAccounts],
+  )
 
   const loadingValue = useMemo(() => getLoadingValue(data), [data])
 

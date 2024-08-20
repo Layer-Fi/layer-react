@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { Header } from '../Container'
@@ -20,12 +20,11 @@ export const ProfitAndLossHeader = ({
 }: ProfitAndLossHeaderProps) => {
   const { data: linkedAccounts } = useLinkedAccounts()
 
-  // @TODO - TOM
-  const isSyncing = true
-  // const isSyncing = useMemo(
-  //   () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
-  //   [linkedAccounts],
-  // )
+  const isSyncing = useMemo(
+    () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
+    [linkedAccounts],
+  )
+
   return (
     <Header className={className}>
       <span className='Layer__component-header__title-wrapper'>
