@@ -262,7 +262,12 @@ export const useChartOfAccounts = (
 
     const data = {
       name: form.data.name ?? '',
-      stable_name: form.data.stable_name,
+      stable_name: form.data.stable_name
+        ? {
+            type: 'StableName' as const,
+            stable_name: form.data.stable_name,
+          }
+        : undefined,
       parent_id: form.data.parent
         ? {
             type: 'AccountId' as const,
