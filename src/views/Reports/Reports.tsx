@@ -176,10 +176,12 @@ const ReportsPanel = ({
           headerControls={
             <>
               <ProfitAndLoss.DatePicker />
-              <ProfitAndLoss.CompareOptions />
-              <DownloadButton
-                stringOverrides={stringOverrides?.downloadButton}
-              />
+              <div className='Layer__compare__controls__wrapper'>
+                <ProfitAndLoss.CompareOptions />
+                <DownloadButton
+                  stringOverrides={stringOverrides?.downloadButton}
+                />
+              </div>
             </>
           }
         >

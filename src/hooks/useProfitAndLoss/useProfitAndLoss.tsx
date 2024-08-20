@@ -81,7 +81,10 @@ export const useProfitAndLoss: UseProfitAndLoss = (
   const [compareOptions, setCompareOptions] = useState<string[]>([])
 
   useEffect(() => {
-    if (compareMonths > 0 || compareOptions.length > 0) {
+    if (compareMonths > 1 || compareOptions.length > 1) {
+      if (compareMonths === 0) {
+        setCompareMonths(2)
+      }
       setCompareMode(true)
     } else {
       setCompareMode(false)

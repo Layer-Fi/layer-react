@@ -39,6 +39,7 @@
   .Layer__view-header__controls {
     display: flex;
     align-items: center;
+    flex: 1;
   }
 
   @container (max-width: 760px) {

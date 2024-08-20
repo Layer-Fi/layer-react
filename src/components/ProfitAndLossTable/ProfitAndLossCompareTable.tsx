@@ -47,7 +47,7 @@ export const ProfitAndLossCompareTable = ({
   const generateMonths = (startDate: number | Date, numberOfMonths: number) => {
     return Array.from({ length: numberOfMonths }, (_, index) => {
       const currentMonth = subMonths(startDate, numberOfMonths - index - 1)
-      return format(currentMonth, 'MMMM')
+      return format(currentMonth, 'MMM')
     })
   }
 

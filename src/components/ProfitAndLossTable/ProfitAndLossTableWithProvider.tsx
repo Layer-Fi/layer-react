@@ -14,7 +14,9 @@ export const ProfitAndLossTableWithProvider = (
   return (
     <TableProvider>
       {compareMode ? (
-        <ProfitAndLossCompareTable {...props} />
+        <div className='Layer__compare__table__wrapper'>
+          <ProfitAndLossCompareTable {...props} />
+        </div>
       ) : (
         <ProfitAndLossTableComponent {...props} />
       )}

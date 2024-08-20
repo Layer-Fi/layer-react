@@ -529,7 +529,7 @@
   font-size: var(--input-font-size);
   line-height: 140%;
   background-color: var(--color-base-0);
-  min-height: 39px;
+  min-height: 36px;
   align-items: center;
   cursor: pointer;
 
@@ -640,13 +640,13 @@
     .Layer__select__control,
     .Layer__input {
       font-size: 16px;
-      min-height: 39px;
+      min-height: 36px;
     }
 
     .Layer__bank-transaction-list-item__expanded-row
       .Layer__select
       .Layer__select__control {
-      min-height: 39px;
+      min-height: 36px;
     }
   }
 }
