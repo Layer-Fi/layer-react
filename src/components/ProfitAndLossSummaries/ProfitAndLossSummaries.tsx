@@ -218,6 +218,12 @@ export const ProfitAndLossSummaries = ({
             )}
           </div>
         </div>
+        {!dataItem?.fully_categorized && (
+          <Badge variant={BadgeVariant.SUCCESS}>
+            <span>Uncategorized</span>
+            <span>{12} tbd transactions</span>
+          </Badge>
+        )}
       </div>
     </div>
   )

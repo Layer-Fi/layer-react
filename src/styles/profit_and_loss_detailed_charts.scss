@@ -389,13 +389,13 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
   width: 100%;
   align-items: center;
   display: flex;
-  border-radius: 4px;
+  border-radius: 2px;
   overflow: hidden;
   margin: var(--spacing-2xs) 0;
 }
 
 .Layer__profit-and-loss-horiztonal-line-chart__item {
-  height: 16px;
+  height: 9px;
   display: flex;
   box-sizing: border-box;
   transition: 120ms width ease-in-out;
