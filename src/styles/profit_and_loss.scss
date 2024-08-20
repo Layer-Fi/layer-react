@@ -376,6 +376,9 @@
 
 .Layer__profit-and-loss-chart__bar--loading {
   fill: var(--color-base-50);
+}
+
+.Layer__profit-and-loss-chart__bar--loading-anim {
   animation: layer_chart_bar_loading_anim 2s linear infinite;
 }
 
@@ -561,4 +564,40 @@
     background: var(--color-base-200);
     color: var(--color-base-900);
   }
+}
+
+.Layer__profit-and-loss-chart__state-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  background: #fff;
+  padding: var(--spacing-lg) var(--spacing-4xs);
+  width: 260px;
+  max-width: 70%;
+  height: 120px;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, -60px);
+  border-radius: var(--border-radius-sm);
+  box-shadow: 0px 0px 0px 1px var(--base-transparent-4);
+  gap: var(--spacing-md);
+
+  .Layer__icon-box {
+    background-color: var(--color-base-100);
+  }
+}
+
+.Layer__profit-and-loss-chart__state-card__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-4xs);
+}
+
+.Layer__profit-and-loss-chart__state-card__description {
+  color: var(--text-color-secondary);
+  text-align: center;
 }

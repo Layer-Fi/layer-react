@@ -61,11 +61,9 @@ export const AccountingOverview = ({
           asWidget
           elevated={true}
         >
-          <Header>
-            <Heading size={HeadingSize.secondary}>
-              {stringOverrides?.header || 'Profit & Loss'}
-            </Heading>
-          </Header>
+          <ProfitAndLoss.Header
+            text={stringOverrides?.header || 'Profit & Loss'}
+          />
           <ProfitAndLoss.Chart />
         </Container>
         {middleBanner && (

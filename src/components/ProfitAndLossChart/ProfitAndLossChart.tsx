@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import {
   ProfitAndLossSummaryData,
   useProfitAndLossLTM,
@@ -8,6 +9,7 @@ import { centsToDollars } from '../../models/Money'
 import { isDateAllowedToBrowse } from '../../utils/business'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { Text } from '../Typography'
+import { ChartStateCard } from './ChartStateCard'
 import { Indicator } from './Indicator'
 import classNames from 'classnames'
 import {
@@ -174,6 +176,30 @@ export const ProfitAndLossChart = ({
     currentDate: startOfMonth(Date.now()),
   })
 
+  // const anyData = true
+  const anyData = useMemo(() => {
+    return Boolean(
+      data?.find(
+        x =>
+          x.income !== 0 ||
+          x.costOfGoodsSold !== 0 ||
+          x.grossProfit !== 0 ||
+          x.operatingExpenses !== 0 ||
+          x.profitBeforeTaxes !== 0 ||
+          x.taxes !== 0 ||
+          x.totalExpenses !== 0,
+      ),
+    )
+  }, [data])
+
+  const { data: linkedAccounts } = useLinkedAccounts()
+
+  const isSyncing = true
+  // const isSyncing = useMemo(
+  //   () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
+  //   [linkedAccounts],
+  // )
+
   const loadingValue = useMemo(() => getLoadingValue(data), [data])
 
   useEffect(() => {
@@ -261,7 +287,7 @@ export const ProfitAndLossChart = ({
   })
 
   const theData = useMemo(() => {
-    if (loaded !== 'complete') {
+    if (loaded !== 'complete' || (loaded === 'complete' && !anyData)) {
       const loadingData = []
       const today = Date.now()
       for (let i = 11; i >= 0; i--) {
@@ -327,6 +353,10 @@ export const ProfitAndLossChart = ({
   }, [selectionMonth, chartWindow, data, loaded, compactView])
 
   const onClick: CategoricalChartFunc = ({ activePayload }) => {
+    if (loaded !== 'complete' || !anyData) {
+      return
+    }
+
     if (activePayload && activePayload.length > 0) {
       const { year, month } = activePayload[0].payload
       const isMonthAllowed = isDateAllowedToBrowse(
@@ -355,6 +385,8 @@ export const ProfitAndLossChart = ({
         <div className='Layer__chart__tooltip'>
           {loaded !== 'complete' ? (
             <Text>Loading...</Text>
+          ) : !anyData ? (
+            <Text>No data yet</Text>
           ) : (
             <ul className='Layer__chart__tooltip-list'>
               <li>
@@ -501,163 +533,228 @@ export const ProfitAndLossChart = ({
   const [animateFrom, setAnimateFrom] = useState(-1)
 
   return (
-    <ResponsiveContainer
-      key={forceRerenderOnDataChange ? JSON.stringify(theData) : 'pnl-chart'}
-      className={classNames(
-        'Layer__chart-container',
-        loaded !== 'complete' && 'Layer__chart-container--loading',
-      )}
-      width='100%'
-      height='100%'
-      onResize={width => {
-        if (width && width < 620 && !compactView) {
-          setCompactView(true)
-          return
-        }
+    <div className=''>
+      <ResponsiveContainer
+        key={forceRerenderOnDataChange ? JSON.stringify(theData) : 'pnl-chart'}
+        className={classNames(
+          'Layer__chart-container',
+          loaded !== 'complete' && 'Layer__chart-container--loading',
+        )}
+        width='100%'
+        height='100%'
+        onResize={width => {
+          if (width && width < 620 && !compactView) {
+            setCompactView(true)
+            return
+          }
 
-        if (width && width >= 620 && compactView) {
-          setCompactView(false)
-          return
-        }
-      }}
-    >
-      <ComposedChart
-        margin={{ left: 12, right: 12, bottom: 12 }}
-        data={theData}
-        onClick={onClick}
-        className='Layer__profit-and-loss-chart'
+          if (width && width >= 620 && compactView) {
+            setCompactView(false)
+            return
+          }
+        }}
       >
-        <defs>
-          <pattern
-            id='layer-bar-stripe-pattern'
-            x='0'
-            y='0'
-            width='4'
-            height='4'
-            patternTransform='rotate(45)'
-            patternUnits='userSpaceOnUse'
-          >
-            <rect width='4' height='4' opacity={0.16} />
-            <line x1='0' y='0' x2='0' y2='4' strokeWidth='2' />
-          </pattern>
+        <ComposedChart
+          margin={{ left: 12, right: 12, bottom: 12 }}
+          data={theData}
+          onClick={onClick}
+          className='Layer__profit-and-loss-chart'
+        >
+          <defs>
+            <pattern
+              id='layer-bar-stripe-pattern'
+              x='0'
+              y='0'
+              width='4'
+              height='4'
+              patternTransform='rotate(45)'
+              patternUnits='userSpaceOnUse'
+            >
+              <rect width='4' height='4' opacity={0.16} />
+              <line x1='0' y='0' x2='0' y2='4' strokeWidth='2' />
+            </pattern>
 
-          <pattern
-            id='layer-bar-stripe-pattern-dark'
-            x='0'
-            y='0'
-            width='4'
-            height='4'
-            patternTransform='rotate(45)'
-            patternUnits='userSpaceOnUse'
-          >
-            <rect width='4' height='4' opacity={0.16} />
-            <line x1='0' y='0' x2='0' y2='4' strokeWidth='2' />
-          </pattern>
-        </defs>
-        <ReferenceLine
-          y={0}
-          stroke={getColor(300)?.hex ?? '#EBEDF0'}
-          xAxisId='revenue'
-        />
-        <Tooltip
-          wrapperClassName='Layer__chart__tooltip-wrapper'
-          content={<CustomTooltip />}
-          cursor={<CustomizedCursor />}
-          animationDuration={100}
-          animationEasing='ease-out'
-        />
-        <CartesianGrid
-          vertical={false}
-          stroke={getColor(200)?.hex ?? '#fff'}
-          strokeDasharray='5 5'
-        />
-        <Legend
-          verticalAlign='top'
-          align='right'
-          content={renderLegend}
-          payload={[
-            {
-              value: 'Revenue',
-              type: 'circle',
-              id: 'IncomeLegend',
-            },
-            {
-              value: 'Expenses',
-              type: 'circle',
-              id: 'ExpensesLegend',
-            },
-            {
-              value: 'Uncategorized',
-              type: 'circle',
-              id: 'UncategorizedLegend',
-            },
-          ]}
-        />
-        <XAxis dataKey='name' xAxisId='revenue' tickLine={false} />
-        <XAxis dataKey='name' xAxisId='expenses' tickLine={false} hide />
-        <YAxis tick={<CustomizedYTick />} />
-        <Bar
-          dataKey='loading'
-          barSize={barSize}
-          isAnimationActive={barAnimActive}
-          animationDuration={100}
-          radius={[2, 2, 0, 0]}
-          className='Layer__profit-and-loss-chart__bar--loading'
-          xAxisId='revenue'
-          stackId='revenue'
-        />
-        <Bar
-          dataKey='loadingExpenses'
-          barSize={barSize}
-          isAnimationActive={barAnimActive}
-          animationDuration={100}
-          radius={[2, 2, 0, 0]}
-          className='Layer__profit-and-loss-chart__bar--loading'
-          xAxisId='expenses'
-          stackId='expenses'
-        />
-        <Bar
-          dataKey='totalExpensesInverse'
-          barSize={barSize}
-          isAnimationActive={barAnimActive}
-          animationDuration={100}
-          radius={[2, 2, 0, 0]}
-          className='Layer__profit-and-loss-chart__bar--expenses'
-          xAxisId='revenue'
-          stackId='revenue'
-        >
-          {theData?.map(entry => {
-            return (
-              <Cell
-                key={entry.name}
-                fill='url(#layer-bar-stripe-pattern-dark)'
-              />
-            )
-          })}
-        </Bar>
-        <Bar
-          dataKey='revenue'
-          barSize={barSize}
-          isAnimationActive={barAnimActive}
-          animationDuration={100}
-          className='Layer__profit-and-loss-chart__bar--income'
-          xAxisId='revenue'
-          stackId='revenue'
-        >
-          <LabelList
-            content={
-              <Indicator
-                setCustomCursorSize={(width, height, x) =>
-                  setCustomCursorSize({ width, height, x })
-                }
-                customCursorSize={customCursorSize}
-                animateFrom={animateFrom}
-                setAnimateFrom={setAnimateFrom}
-              />
-            }
+            <pattern
+              id='layer-bar-stripe-pattern-dark'
+              x='0'
+              y='0'
+              width='4'
+              height='4'
+              patternTransform='rotate(45)'
+              patternUnits='userSpaceOnUse'
+            >
+              <rect width='4' height='4' opacity={0.16} />
+              <line x1='0' y='0' x2='0' y2='4' strokeWidth='2' />
+            </pattern>
+          </defs>
+          <ReferenceLine
+            y={0}
+            stroke={getColor(300)?.hex ?? '#EBEDF0'}
+            xAxisId='revenue'
           />
-          {theData?.map(entry => {
-            return (
+          <Tooltip
+            wrapperClassName='Layer__chart__tooltip-wrapper'
+            content={<CustomTooltip />}
+            cursor={<CustomizedCursor />}
+            animationDuration={100}
+            animationEasing='ease-out'
+          />
+          <CartesianGrid
+            vertical={false}
+            stroke={getColor(200)?.hex ?? '#fff'}
+            strokeDasharray='5 5'
+          />
+          <Legend
+            verticalAlign='top'
+            align='right'
+            content={renderLegend}
+            payload={[
+              {
+                value: 'Revenue',
+                type: 'circle',
+                id: 'IncomeLegend',
+              },
+              {
+                value: 'Expenses',
+                type: 'circle',
+                id: 'ExpensesLegend',
+              },
+              {
+                value: 'Uncategorized',
+                type: 'circle',
+                id: 'UncategorizedLegend',
+              },
+            ]}
+          />
+          <XAxis dataKey='name' xAxisId='revenue' tickLine={false} />
+          <XAxis dataKey='name' xAxisId='expenses' tickLine={false} hide />
+          <YAxis tick={<CustomizedYTick />} />
+          <Bar
+            dataKey='loading'
+            barSize={barSize}
+            isAnimationActive={barAnimActive}
+            animationDuration={100}
+            radius={[2, 2, 0, 0]}
+            className={classNames(
+              'Layer__profit-and-loss-chart__bar--loading',
+              loaded !== 'complete' &&
+                'Layer__profit-and-loss-chart__bar--loading-anim',
+            )}
+            xAxisId='revenue'
+            stackId='revenue'
+          />
+          <Bar
+            dataKey='loadingExpenses'
+            barSize={barSize}
+            isAnimationActive={barAnimActive}
+            animationDuration={100}
+            radius={[2, 2, 0, 0]}
+            className={classNames(
+              'Layer__profit-and-loss-chart__bar--loading',
+              loaded !== 'complete' &&
+                'Layer__profit-and-loss-chart__bar--loading-anim',
+            )}
+            xAxisId='expenses'
+            stackId='expenses'
+          />
+          <Bar
+            dataKey='totalExpensesInverse'
+            barSize={barSize}
+            isAnimationActive={barAnimActive}
+            animationDuration={100}
+            radius={[2, 2, 0, 0]}
+            className='Layer__profit-and-loss-chart__bar--expenses'
+            xAxisId='revenue'
+            stackId='revenue'
+          >
+            {theData?.map(entry => {
+              return (
+                <Cell
+                  key={entry.name}
+                  fill='url(#layer-bar-stripe-pattern-dark)'
+                />
+              )
+            })}
+          </Bar>
+          <Bar
+            dataKey='revenue'
+            barSize={barSize}
+            isAnimationActive={barAnimActive}
+            animationDuration={100}
+            className='Layer__profit-and-loss-chart__bar--income'
+            xAxisId='revenue'
+            stackId='revenue'
+          >
+            <LabelList
+              content={
+                <Indicator
+                  setCustomCursorSize={(width, height, x) =>
+                    setCustomCursorSize({ width, height, x })
+                  }
+                  customCursorSize={customCursorSize}
+                  animateFrom={animateFrom}
+                  setAnimateFrom={setAnimateFrom}
+                />
+              }
+            />
+            {theData?.map(entry => {
+              return (
+                <Cell
+                  key={entry.name}
+                  className={
+                    entry.selected
+                      ? 'Layer__profit-and-loss-chart__cell--selected'
+                      : ''
+                  }
+                />
+              )
+            })}
+          </Bar>
+          <Bar
+            dataKey='uncategorizedOutflowsInverse'
+            barSize={barSize}
+            isAnimationActive={barAnimActive}
+            animationDuration={100}
+            radius={[2, 2, 0, 0]}
+            className='Layer__profit-and-loss-chart__bar--expenses-uncategorized'
+            xAxisId='revenue'
+            stackId='revenue'
+          >
+            {theData?.map(entry => {
+              return (
+                <Cell
+                  key={entry.name}
+                  fill='url(#layer-bar-stripe-pattern-dark)'
+                />
+              )
+            })}
+          </Bar>
+          <Bar
+            dataKey='revenueUncategorized'
+            barSize={barSize}
+            isAnimationActive={barAnimActive}
+            animationDuration={100}
+            radius={[2, 2, 0, 0]}
+            className='Layer__profit-and-loss-chart__bar--income-uncategorized'
+            xAxisId='revenue'
+            stackId='revenue'
+          >
+            {theData?.map(entry => {
+              return (
+                <Cell key={entry.name} fill='url(#layer-bar-stripe-pattern)' />
+              )
+            })}
+          </Bar>
+          <Bar
+            dataKey='expenses'
+            barSize={barSize}
+            isAnimationActive={barAnimActive}
+            animationDuration={100}
+            className='Layer__profit-and-loss-chart__bar--expenses'
+            xAxisId='expenses'
+            stackId='expenses'
+          >
+            {theData.map(entry => (
               <Cell
                 key={entry.name}
                 className={
@@ -666,94 +763,41 @@ export const ProfitAndLossChart = ({
                     : ''
                 }
               />
-            )
-          })}
-        </Bar>
-        <Bar
-          dataKey='uncategorizedOutflowsInverse'
-          barSize={barSize}
-          isAnimationActive={barAnimActive}
-          animationDuration={100}
-          radius={[2, 2, 0, 0]}
-          className='Layer__profit-and-loss-chart__bar--expenses-uncategorized'
-          xAxisId='revenue'
-          stackId='revenue'
-        >
-          {theData?.map(entry => {
-            return (
-              <Cell
-                key={entry.name}
-                fill='url(#layer-bar-stripe-pattern-dark)'
-              />
-            )
-          })}
-        </Bar>
-        <Bar
-          dataKey='revenueUncategorized'
-          barSize={barSize}
-          isAnimationActive={barAnimActive}
-          animationDuration={100}
-          radius={[2, 2, 0, 0]}
-          className='Layer__profit-and-loss-chart__bar--income-uncategorized'
-          xAxisId='revenue'
-          stackId='revenue'
-        >
-          {theData?.map(entry => {
-            return (
-              <Cell key={entry.name} fill='url(#layer-bar-stripe-pattern)' />
-            )
-          })}
-        </Bar>
-        <Bar
-          dataKey='expenses'
-          barSize={barSize}
-          isAnimationActive={barAnimActive}
-          animationDuration={100}
-          className='Layer__profit-and-loss-chart__bar--expenses'
-          xAxisId='expenses'
-          stackId='expenses'
-        >
-          {theData.map(entry => (
-            <Cell
-              key={entry.name}
-              className={
-                entry.selected
-                  ? 'Layer__profit-and-loss-chart__cell--selected'
-                  : ''
-              }
-            />
-          ))}
-        </Bar>
-        <Bar
-          dataKey='expensesUncategorized'
-          barSize={barSize}
-          isAnimationActive={barAnimActive}
-          animationDuration={100}
-          radius={[2, 2, 0, 0]}
-          className='Layer__profit-and-loss-chart__bar--expenses-uncategorized'
-          xAxisId='expenses'
-          stackId='expenses'
-        >
-          {theData?.map(entry => {
-            return (
-              <Cell
-                key={entry.name}
-                fill='url(#layer-bar-stripe-pattern-dark)'
-              />
-            )
-          })}
-        </Bar>
-        <Line
-          dot={true}
-          strokeWidth={1}
-          type='linear'
-          dataKey='netProfit'
-          stroke={getColor(1000)?.hex ?? '#000'}
-          name='Net profit'
-          xAxisId='revenue'
-          animationDuration={20}
-        />
-      </ComposedChart>
-    </ResponsiveContainer>
+            ))}
+          </Bar>
+          <Bar
+            dataKey='expensesUncategorized'
+            barSize={barSize}
+            isAnimationActive={barAnimActive}
+            animationDuration={100}
+            radius={[2, 2, 0, 0]}
+            className='Layer__profit-and-loss-chart__bar--expenses-uncategorized'
+            xAxisId='expenses'
+            stackId='expenses'
+          >
+            {theData?.map(entry => {
+              return (
+                <Cell
+                  key={entry.name}
+                  fill='url(#layer-bar-stripe-pattern-dark)'
+                />
+              )
+            })}
+          </Bar>
+          <Line
+            dot={true}
+            strokeWidth={1}
+            type='linear'
+            dataKey='netProfit'
+            stroke={getColor(1000)?.hex ?? '#000'}
+            name='Net profit'
+            xAxisId='revenue'
+            animationDuration={20}
+          />
+        </ComposedChart>
+      </ResponsiveContainer>
+
+      {isSyncing && !anyData ? <ChartStateCard /> : null}
+    </div>
   )
 }

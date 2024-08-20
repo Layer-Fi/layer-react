@@ -38,6 +38,11 @@
     color: var(--badge-fg-color);
   }
 
+  &.Layer__badge--info {
+    background-color: var(--badge-bg-color-info);
+    color: var(--badge-fg-color-info);
+  }
+
   &.Layer__badge--success {
     background-color: var(--badge-bg-color-success);
     color: var(--badge-fg-color-success);
