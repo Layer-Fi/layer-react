@@ -438,6 +438,7 @@ export const useBankTransactions: UseBankTransactions = params => {
   useTriggerOnChange(data, anyAccountSyncing, newTransactionList => {
     clearInterval(intervalId)
     setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
+    eventCallbacks?.onTransactionsFetched?.()
     touch(DataModel.BANK_TRANSACTIONS)
   })
 
