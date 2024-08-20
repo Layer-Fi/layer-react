@@ -60,12 +60,7 @@ export const ChartOfAccountsTable = ({
       sidebarIsOpen={Boolean(form)}
       parentRef={containerRef}
     >
-      <Header
-        className={`Layer__${COMPONENT_NAME}__header`}
-        asHeader
-        sticky
-        rounded
-      >
+      <Header className={`Layer__${COMPONENT_NAME}__header`} asHeader rounded>
         <HeaderRow>
           <HeaderCol>
             <Heading
@@ -77,7 +72,7 @@ export const ChartOfAccountsTable = ({
           </HeaderCol>
         </HeaderRow>
       </Header>
-      <Header className={`Layer__${COMPONENT_NAME}__header`}>
+      <Header className={`Layer__${COMPONENT_NAME}__header`} sticky>
         <HeaderRow>
           <HeaderCol>
             <Heading
