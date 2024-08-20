@@ -4,6 +4,7 @@ import { centsToDollars as formatMoney } from '../../models/Money'
 import { LineBaseItem } from '../../types/line_item'
 import { formatPercent } from '../../utils/format'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
+import { Text, TextSize, TextWeight } from '../Typography'
 import { mapTypesToColors } from './DetailedTable'
 import classNames from 'classnames'
 import {
@@ -28,6 +29,12 @@ interface DetailedChartProps {
   chartColorsList?: string[]
 }
 
+interface ChartData {
+  name: string
+  value: number
+  type: string
+}
+
 export const DetailedChart = ({
   filteredData,
   filteredTotal,
@@ -37,29 +44,105 @@ export const DetailedChart = ({
   isLoading,
   showDatePicker = true,
 }: DetailedChartProps) => {
-  const chartData = useMemo(() => {
+  // const chartData = useMemo(() => {
+  //   if (!filteredData) {
+  //     return []
+  //   }
+  //   return filteredData.map(x => {
+  //     if (x.hidden) {
+  //       return {
+  //         name: x.display_name,
+  //         value: 0,
+  //         type: x.type,
+  //       }
+  //     }
+  //     return {
+  //       name: x.display_name,
+  //       value: x.value,
+  //       type: x.type,
+  //     }
+  //   })
+  // }, [filteredData, isLoading])
+
+  const { chartData, negativeData, total, negativeTotal } = useMemo(() => {
+    const chartData: ChartData[] = []
+    const negativeData: ChartData[] = []
+    let total = 0
+    let negativeTotal = 0
     if (!filteredData) {
-      return []
+      return {
+        chartData,
+        negativeData,
+        total: undefined,
+        negativeTotal: undefined,
+      }
     }
-    return filteredData.map(x => {
+    filteredData.forEach(x => {
       if (x.hidden) {
-        return {
-          name: x.display_name,
-          value: 0,
-          type: x.type,
+        if (x.value < 0) {
+          negativeData.push({
+            name: x.display_name,
+            value: 0,
+            type: x.type,
+          })
+        } else {
+          chartData.push({
+            name: x.display_name,
+            value: 0,
+            type: x.type,
+          })
         }
       }
-      return {
-        name: x.display_name,
-        value: x.value,
-        type: x.type,
+
+      if (x.value < 0) {
+        negativeData.push({
+          name: x.display_name,
+          value: x.value,
+          type: x.type,
+        })
+        negativeTotal -= x.value
+      } else {
+        chartData.push({
+          name: x.display_name,
+          value: x.value,
+          type: x.type,
+        })
+        total += x.value
       }
     })
+
+    if (total > negativeTotal) {
+      negativeData.push({
+        name: '',
+        value: total - negativeTotal,
+        type: 'empty',
+      })
+    } else {
+      chartData.push({
+        name: '',
+        value: negativeTotal - total,
+        type: 'empty',
+      })
+    }
+
+    return { chartData, negativeData, total, negativeTotal }
   }, [filteredData, isLoading])
+
+  console.log('chartData', chartData, negativeData, total, negativeTotal)
 
   const noValue = chartData.length === 0 || !chartData.find(x => x.value !== 0)
 
-  const typeColorMapping = mapTypesToColors(chartData, chartColorsList)
+  const chartDataWithNoCategorized = chartData.filter(
+    x => x.type !== 'Uncategorized',
+  )
+
+  const typeColorMapping = mapTypesToColors(
+    chartDataWithNoCategorized,
+    chartColorsList,
+  )
+
+  const uncategorizedTotal =
+    chartData.find(x => x.type === 'Uncategorized')?.value ?? 0
 
   return (
     <div className='chart-field'>
@@ -97,7 +180,7 @@ export const DetailedChart = ({
             </defs>
             {!isLoading && !noValue ? (
               <Pie
-                data={chartData}
+                data={chartDataWithNoCategorized}
                 dataKey='value'
                 nameKey='name'
                 cx='50%'
@@ -109,8 +192,12 @@ export const DetailedChart = ({
                 animationDuration={200}
                 animationEasing='ease-in-out'
               >
-                {chartData.map((entry, index) => {
-                  let fill: string | undefined = typeColorMapping[index].color
+                {chartDataWithNoCategorized.map((entry, index) => {
+                  const placeholder = entry.type === 'empty'
+                  let fill: string | undefined =
+                    entry.type === 'empty'
+                      ? '#fff'
+                      : typeColorMapping[index].color
                   let active = true
                   if (hoveredItem && entry.name !== hoveredItem) {
                     active = false
@@ -132,9 +219,254 @@ export const DetailedChart = ({
                             ? 'url(#layer-pie-dots-pattern)'
                             : fill,
                       }}
-                      opacity={typeColorMapping[index].opacity}
-                      onMouseEnter={() => setHoveredItem(entry.name)}
-                      onMouseLeave={() => setHoveredItem(undefined)}
+                      opacity={
+                        placeholder ? 0 : typeColorMapping[index].opacity
+                      }
+                      onMouseEnter={() =>
+                        !placeholder && setHoveredItem(entry.name)
+                      }
+                      onMouseLeave={() =>
+                        !placeholder && setHoveredItem(undefined)
+                      }
+                    />
+                  )
+                })}
+                {negativeTotal !== 0 ? (
+                  <>
+                    <Label
+                      position='center'
+                      value='Total'
+                      className='pie-center-label-title'
+                      content={props => {
+                        const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
+                          cx: 0,
+                          cy: 0,
+                        }
+                        const positioningProps = {
+                          x: cx,
+                          y: (cy || 0) - 35,
+                          textAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end'
+                            | 'inherit',
+                          verticalAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end',
+                        }
+
+                        let text = 'Positive'
+
+                        if (hoveredItem) {
+                          text = hoveredItem
+                        }
+
+                        return (
+                          <ChartText
+                            {...positioningProps}
+                            className='pie-center-label__title'
+                          >
+                            {text}
+                          </ChartText>
+                        )
+                      }}
+                    />
+                    <Label
+                      position='center'
+                      value='Total'
+                      className='pie-center-label-title'
+                      content={props => {
+                        const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
+                          cx: 0,
+                          cy: 0,
+                        }
+                        const positioningProps = {
+                          x: cx,
+                          y: (cy || 0) - 15,
+                          textAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end'
+                            | 'inherit',
+                          verticalAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end',
+                        }
+
+                        return (
+                          <ChartText
+                            {...positioningProps}
+                            className='pie-center-label__value'
+                          >
+                            {`$${formatMoney(total)}`}
+                          </ChartText>
+                        )
+                      }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Label
+                      position='center'
+                      value='Total'
+                      className='pie-center-label-title'
+                      content={props => {
+                        const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
+                          cx: 0,
+                          cy: 0,
+                        }
+                        const positioningProps = {
+                          x: cx,
+                          y: (cy || 0) - 15,
+                          textAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end'
+                            | 'inherit',
+                          verticalAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end',
+                        }
+
+                        let text = 'Total'
+
+                        if (hoveredItem) {
+                          text = hoveredItem
+                        }
+
+                        return (
+                          <ChartText
+                            {...positioningProps}
+                            className='pie-center-label__title'
+                          >
+                            {text}
+                          </ChartText>
+                        )
+                      }}
+                    />
+
+                    <Label
+                      position='center'
+                      value='Total'
+                      className='pie-center-label-title'
+                      content={props => {
+                        const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
+                          cx: 0,
+                          cy: 0,
+                        }
+                        const positioningProps = {
+                          x: cx,
+                          y: (cy || 0) + 5,
+                          textAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end'
+                            | 'inherit',
+                          verticalAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end',
+                        }
+
+                        let value = filteredTotal
+                        if (hoveredItem) {
+                          value = filteredData.find(
+                            x => x.display_name === hoveredItem,
+                          )?.value
+                        }
+
+                        return (
+                          <ChartText
+                            {...positioningProps}
+                            className='pie-center-label__value'
+                          >
+                            {`$${formatMoney(value)}`}
+                          </ChartText>
+                        )
+                      }}
+                    />
+
+                    <Label
+                      position='center'
+                      value='Total'
+                      className='pie-center-label-title'
+                      content={props => {
+                        const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
+                          cx: 0,
+                          cy: 0,
+                        }
+                        const positioningProps = {
+                          x: cx,
+                          y: (cy || 0) + 25,
+                          height: 20,
+                          textAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end'
+                            | 'inherit',
+                          verticalAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end',
+                        }
+
+                        if (hoveredItem) {
+                          const found = filteredData.find(
+                            x => x.display_name === hoveredItem,
+                          )?.share
+                          return (
+                            <ChartText
+                              {...positioningProps}
+                              className='pie-center-label__share'
+                            >
+                              {found ? `${formatPercent(found)}%` : ''}
+                            </ChartText>
+                          )
+                        }
+
+                        return
+                      }}
+                    />
+                  </>
+                )}
+              </Pie>
+            ) : null}
+
+            {/*   -------------   */}
+
+            {!isLoading && !noValue && negativeTotal !== 0 ? (
+              <Pie
+                data={negativeData.map(x => ({
+                  ...x,
+                  value: Math.abs(x.value),
+                }))}
+                dataKey='value'
+                nameKey='name'
+                cx='50%'
+                cy='50%'
+                innerRadius={'74%'}
+                outerRadius={'83%'}
+                paddingAngle={0.5}
+                animationDuration={200}
+                animationEasing='ease-in-out'
+              >
+                {negativeData.map((entry, index) => {
+                  let fill: string | undefined =
+                    entry.type === 'empty' ? '#ffffff00' : '#3E4044'
+
+                  const opacity = 1 - ((0.2 * index) % 1) // @TODO
+
+                  return (
+                    <Cell
+                      key={`cell-${index}`}
+                      className={
+                        'Layer__profit-and-loss-detailed-charts__pie active'
+                      }
+                      fill={fill}
+                      style={{ opacity: entry.type === 'empty' ? 0 : opacity }}
                     />
                   )
                 })}
@@ -149,7 +481,7 @@ export const DetailedChart = ({
                     }
                     const positioningProps = {
                       x: cx,
-                      y: (cy || 0) - 15,
+                      y: (cy || 0) + 15,
                       textAnchor: 'middle' as
                         | 'start'
                         | 'middle'
@@ -158,11 +490,7 @@ export const DetailedChart = ({
                       verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
                     }
 
-                    let text = 'Total'
-
-                    if (hoveredItem) {
-                      text = hoveredItem
-                    }
+                    let text = 'Negative'
 
                     return (
                       <ChartText
@@ -174,7 +502,6 @@ export const DetailedChart = ({
                     )
                   }}
                 />
-
                 <Label
                   position='center'
                   value='Total'
@@ -186,20 +513,13 @@ export const DetailedChart = ({
                     }
                     const positioningProps = {
                       x: cx,
-                      y: (cy || 0) + 5,
+                      y: (cy || 0) + 35,
                       textAnchor: 'middle' as
                         | 'start'
                         | 'middle'
                         | 'end'
                         | 'inherit',
                       verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
-                    }
-
-                    let value = filteredTotal
-                    if (hoveredItem) {
-                      value = filteredData.find(
-                        x => x.display_name === hoveredItem,
-                      )?.value
                     }
 
                     return (
@@ -207,52 +527,14 @@ export const DetailedChart = ({
                         {...positioningProps}
                         className='pie-center-label__value'
                       >
-                        {`$${formatMoney(value)}`}
+                        {`-$${formatMoney(negativeTotal)}`}
                       </ChartText>
                     )
                   }}
                 />
-
-                <Label
-                  position='center'
-                  value='Total'
-                  className='pie-center-label-title'
-                  content={props => {
-                    const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
-                      cx: 0,
-                      cy: 0,
-                    }
-                    const positioningProps = {
-                      x: cx,
-                      y: (cy || 0) + 25,
-                      height: 20,
-                      textAnchor: 'middle' as
-                        | 'start'
-                        | 'middle'
-                        | 'end'
-                        | 'inherit',
-                      verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
-                    }
-
-                    if (hoveredItem) {
-                      const found = filteredData.find(
-                        x => x.display_name === hoveredItem,
-                      )?.share
-                      return (
-                        <ChartText
-                          {...positioningProps}
-                          className='pie-center-label__share'
-                        >
-                          {found ? `${formatPercent(found)}%` : ''}
-                        </ChartText>
-                      )
-                    }
-
-                    return
-                  }}
-                />
               </Pie>
             ) : null}
+            {/*   -------------   */}
 
             {!isLoading && noValue ? (
               <Pie
@@ -279,7 +561,7 @@ export const DetailedChart = ({
                     }
                     const positioningProps = {
                       x: cx,
-                      y: (cy || 0) - 15,
+                      y: (cy || 0) - 25,
                       textAnchor: 'middle' as
                         | 'start'
                         | 'middle'
@@ -362,6 +644,131 @@ export const DetailedChart = ({
             ) : null}
           </PieChart>
         </ResponsiveContainer>
+        <HorizontalLineChart
+          data={chartDataWithNoCategorized}
+          uncategorizedTotal={uncategorizedTotal}
+          netRevenue={filteredTotal}
+          typeColorMapping={typeColorMapping}
+        />
+      </div>
+    </div>
+  )
+}
+
+const HorizontalLineChart = ({
+  data,
+  uncategorizedTotal,
+  netRevenue,
+  typeColorMapping,
+}: {
+  data?: ChartData[]
+  uncategorizedTotal: number
+  netRevenue?: number
+  typeColorMapping: {
+    color: any
+    opacity: any
+  }[]
+}) => {
+  if (!data) {
+    return
+  }
+
+  const total =
+    data.reduce((x, { value }) => (value < 0 ? x : x + value), 0) +
+    uncategorizedTotal
+
+  const items = data
+    .filter(x => x.value >= 0 && x.type !== 'empty')
+    .map(x => ({ ...x, share: x.value / total }))
+
+  if (uncategorizedTotal > 0) {
+    items.push({
+      name: 'Uncategorized',
+      value: uncategorizedTotal,
+      type: 'uncategorized',
+      share: uncategorizedTotal / total,
+    })
+  }
+
+  console.log('items,', typeColorMapping, items)
+
+  return (
+    <div className='Layer__profit-and-loss-horiztonal-line-chart'>
+      <div className='Layer__profit-and-loss-horiztonal-line-chart__details-row'>
+        <Text
+          className='Layer__profit-and-loss-horiztonal-line-chart__details-label'
+          size={TextSize.sm}
+        >
+          Net Revenue
+        </Text>
+        <Text
+          className='Layer__profit-and-loss-horiztonal-line-chart__details-value'
+          size={TextSize.sm}
+          weight={TextWeight.bold}
+        >
+          {`$${formatMoney(netRevenue)}`}
+        </Text>
+      </div>
+      {!items || items.length === 0 ? (
+        <div className='Layer__profit-and-loss-horiztonal-line-chart__bar'>
+          <span className='Layer__profit-and-loss-horiztonal-line-chart__item Layer__profit-and-loss-horiztonal-line-chart__item--placeholder' />
+        </div>
+      ) : (
+        <div className='Layer__profit-and-loss-horiztonal-line-chart__bar'>
+          {items.map((x, index) => {
+            if (x.type === 'uncategorized') {
+              return (
+                <span
+                  className='Layer__profit-and-loss-horiztonal-line-chart__item'
+                  style={{ width: `${x.share * 100}%`, background: '#f2f2f2' }}
+                />
+              )
+            }
+
+            const { color, opacity } =
+              typeColorMapping[index] ?? typeColorMapping[0]
+            return (
+              <span
+                className='Layer__profit-and-loss-horiztonal-line-chart__item'
+                style={{
+                  width: `${x.share * 100}%`,
+                  background: color,
+                  opacity,
+                }}
+              />
+            )
+          })}
+        </div>
+      )}
+      <div className='Layer__profit-and-loss-horiztonal-line-chart__details-row'>
+        <div className='Layer__profit-and-loss-horiztonal-line-chart__details-col'>
+          <Text
+            className='Layer__profit-and-loss-horiztonal-line-chart__details-label'
+            size={TextSize.sm}
+          >
+            Categorized
+          </Text>
+          <Text
+            className='Layer__profit-and-loss-horiztonal-line-chart__details-value'
+            size={TextSize.sm}
+            weight={TextWeight.bold}
+          >
+            {`$${formatMoney(total)}`}
+          </Text>
+        </div>
+        <div className='Layer__profit-and-loss-horiztonal-line-chart__details-col Layer__align-end'>
+          <Text
+            className='Layer__profit-and-loss-horiztonal-line-chart__details-label'
+            size={TextSize.sm}
+          >
+            Uncategorized
+          </Text>
+          <Text
+            className='Layer__profit-and-loss-horiztonal-line-chart__details-value'
+            size={TextSize.sm}
+            weight={TextWeight.bold}
+          >{`$${formatMoney(uncategorizedTotal)}`}</Text>
+        </div>
       </div>
     </div>
   )

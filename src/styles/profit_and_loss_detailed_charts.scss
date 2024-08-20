@@ -64,9 +64,9 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 
   .chart-container {
     width: 100%;
-    height: 280px;
+    height: calc(280px + 75px);
     padding-top: var(--spacing-2xl);
-    padding-bottom: var(--spacing-lg);
+    padding-bottom: calc(var(--spacing-lg) + 75px);
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
     box-sizing: border-box;
@@ -377,4 +377,52 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       }
     }
   }
+}
+
+.Layer__profit-and-loss-horiztonal-line-chart {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-xs);
+}
+
+.Layer__profit-and-loss-horiztonal-line-chart__bar {
+  width: 100%;
+  align-items: center;
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: var(--spacing-2xs) 0;
+}
+
+.Layer__profit-and-loss-horiztonal-line-chart__item {
+  height: 16px;
+  display: flex;
+  box-sizing: border-box;
+  transition: 120ms width ease-in-out;
+}
+
+.Layer__profit-and-loss-horiztonal-line-chart__item--placeholder {
+  width: 100%;
+  background: var(--color-base-100);
+}
+
+.Layer__profit-and-loss-horiztonal-line-chart__details-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Layer__profit-and-loss-horiztonal-line-chart__details-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4xs);
+}
+
+.Layer__profit-and-loss-horiztonal-line-chart__details-label {
+  color: var(--text-color-secondary);
+}
+
+.Layer__profit-and-loss-horiztonal-line-chart__details-value {
+  color: var(--text-color-primary);
 }

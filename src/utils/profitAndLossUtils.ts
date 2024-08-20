@@ -4,13 +4,15 @@ import { ProfitAndLoss } from '../types/profit_and_loss'
 
 const doesLineItemQualifies = (item: LineItem) => {
   return !(
-    item.is_contra ||
-    item.value === undefined ||
-    item.value === null ||
-    isNaN(item.value) ||
-    item.value === -Infinity ||
-    item.value === Infinity ||
-    item.value < 0
+    (
+      item.is_contra ||
+      item.value === undefined ||
+      item.value === null ||
+      isNaN(item.value) ||
+      item.value === -Infinity ||
+      item.value === Infinity
+    )
+    // || item.value < 0
   )
 }
 

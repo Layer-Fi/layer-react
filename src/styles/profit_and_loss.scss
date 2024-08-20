@@ -302,6 +302,7 @@
 .Layer__profit-and-loss-summaries__summary {
   display: flex;
   flex: 1;
+  flex-direction: column;
   gap: var(--spacing-xs);
   align-items: center;
   box-shadow: 0px 0px 0px 1px var(--color-base-300);
@@ -340,6 +341,18 @@
     border-color: transparent;
     box-shadow: none;
   }
+
+  & > .Layer__badge {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+.Layer__profit-and-loss-summaries__summary__content {
+  display: flex;
+  flex: 1;
+  width: 100%;
 }
 
 .Layer__profit-and-loss-summaries__loader {

@@ -7,6 +7,7 @@ import {
   collectExpensesItems,
   collectRevenueItems,
 } from '../../utils/profitAndLossUtils'
+import { Badge, BadgeVariant } from '../Badge'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { SkeletonLoader } from '../SkeletonLoader'
 import { MiniChart } from './MiniChart'
@@ -124,32 +125,33 @@ export const ProfitAndLossSummaries = ({
           actionable && setSidebarScope('revenue')
         }}
       >
-        <MiniChart data={revenueChartData} />
-        <div className='Layer__profit-and-loss-summaries__text'>
-          <span className='Layer__profit-and-loss-summaries__title'>
-            {stringOverrides?.revenueLabel || revenueLabel || 'Revenue'}
-          </span>
-          {isLoading || storedData === undefined ? (
-            <div className='Layer__profit-and-loss-summaries__loader'>
-              <SkeletonLoader />
-            </div>
-          ) : (
-            <div className='Layer__profit-and-loss-summaries__amount-wrapper'>
-              <span
-                className={`Layer__profit-and-loss-summaries__amount ${incomeDirectionClass}`}
-              >
-                {formatMoney(Math.abs(data?.income?.value ?? NaN))}
-              </span>
-              {uncategorizedTotalRevenue && (
+        <div className='Layer__profit-and-loss-summaries__summary__content'>
+          <MiniChart data={revenueChartData} />
+          <div className='Layer__profit-and-loss-summaries__text'>
+            <span className='Layer__profit-and-loss-summaries__title'>
+              {stringOverrides?.revenueLabel || revenueLabel || 'Revenue'}
+            </span>
+            {isLoading || storedData === undefined ? (
+              <div className='Layer__profit-and-loss-summaries__loader'>
+                <SkeletonLoader />
+              </div>
+            ) : (
+              <div className='Layer__profit-and-loss-summaries__amount-wrapper'>
                 <span
-                  className={`Layer__profit-and-loss-summaries__amount-uncategorized ${expensesDirectionClass}`}
+                  className={`Layer__profit-and-loss-summaries__amount ${incomeDirectionClass}`}
                 >
-                  {formatMoney(uncategorizedTotalRevenue)}
+                  {formatMoney(Math.abs(data?.income?.value ?? NaN))}
                 </span>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </div>
+        {!dataItem?.fully_categorized && (
+          <Badge variant={BadgeVariant.SUCCESS}>
+            <span>Uncategorized</span>
+            <span>{`$${formatMoney(uncategorizedTotalRevenue)}`}</span>
+          </Badge>
+        )}
       </div>
       <div
         className={classNames(
@@ -162,34 +164,35 @@ export const ProfitAndLossSummaries = ({
           actionable && setSidebarScope('expenses')
         }}
       >
-        <MiniChart data={expensesChartData} />
-        <div className='Layer__profit-and-loss-summaries__text'>
-          <span className='Layer__profit-and-loss-summaries__title'>
-            {stringOverrides?.expensesLabel || 'Expenses'}
-          </span>
-          {isLoading || storedData === undefined ? (
-            <div className='Layer__profit-and-loss-summaries__loader'>
-              <SkeletonLoader className='Layer__profit-and-loss-summaries__loader' />
-            </div>
-          ) : (
-            <div className='Layer__profit-and-loss-summaries__amount-wrapper'>
-              <span
-                className={`Layer__profit-and-loss-summaries__amount ${expensesDirectionClass}`}
-              >
-                {formatMoney(
-                  Math.abs((data.income.value ?? 0) - data.net_profit),
-                )}
-              </span>
-              {uncategorizedTotalExpenses && (
+        <div className='Layer__profit-and-loss-summaries__summary__content'>
+          <MiniChart data={expensesChartData} />
+          <div className='Layer__profit-and-loss-summaries__text'>
+            <span className='Layer__profit-and-loss-summaries__title'>
+              {stringOverrides?.expensesLabel || 'Expenses'}
+            </span>
+            {isLoading || storedData === undefined ? (
+              <div className='Layer__profit-and-loss-summaries__loader'>
+                <SkeletonLoader className='Layer__profit-and-loss-summaries__loader' />
+              </div>
+            ) : (
+              <div className='Layer__profit-and-loss-summaries__amount-wrapper'>
                 <span
-                  className={`Layer__profit-and-loss-summaries__amount-uncategorized ${expensesDirectionClass}`}
+                  className={`Layer__profit-and-loss-summaries__amount ${expensesDirectionClass}`}
                 >
-                  {formatMoney(uncategorizedTotalExpenses)}
+                  {formatMoney(
+                    Math.abs((data.income.value ?? 0) - data.net_profit),
+                  )}
                 </span>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </div>
+        {!dataItem?.fully_categorized && (
+          <Badge variant={BadgeVariant.SUCCESS}>
+            <span>Uncategorized</span>
+            <span>{`$${formatMoney(uncategorizedTotalExpenses)}`}</span>
+          </Badge>
+        )}
       </div>
       <div
         className={classNames(
@@ -197,21 +200,23 @@ export const ProfitAndLossSummaries = ({
           actionable && 'Layer__actionable',
         )}
       >
-        <div className='Layer__profit-and-loss-summaries__text'>
-          <span className='Layer__profit-and-loss-summaries__title'>
-            {stringOverrides?.netProfitLabel || 'Net Profit'}
-          </span>
-          {isLoading || storedData === undefined ? (
-            <div className='Layer__profit-and-loss-summaries__loader'>
-              <SkeletonLoader className='Layer__profit-and-loss-summaries__loader' />
-            </div>
-          ) : (
-            <span
-              className={`Layer__profit-and-loss-summaries__amount ${netProfitDirectionClass}`}
-            >
-              {formatMoney(Math.abs(data.net_profit))}
+        <div className='Layer__profit-and-loss-summaries__summary__content'>
+          <div className='Layer__profit-and-loss-summaries__text'>
+            <span className='Layer__profit-and-loss-summaries__title'>
+              {stringOverrides?.netProfitLabel || 'Net Profit'}
             </span>
-          )}
+            {isLoading || storedData === undefined ? (
+              <div className='Layer__profit-and-loss-summaries__loader'>
+                <SkeletonLoader className='Layer__profit-and-loss-summaries__loader' />
+              </div>
+            ) : (
+              <span
+                className={`Layer__profit-and-loss-summaries__amount ${netProfitDirectionClass}`}
+              >
+                {formatMoney(Math.abs(data.net_profit))}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

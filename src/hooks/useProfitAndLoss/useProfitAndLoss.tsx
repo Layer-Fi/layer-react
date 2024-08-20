@@ -198,7 +198,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     })
     const total = sorted
       .filter(x => !x.hidden && !EXCLUDE_FROM_TOTAL.includes(x.type))
-      .reduce((x, { value }) => x + value, 0)
+      .reduce((x, { value }) => (value < 0 ? x : x + value), 0)
     const withShare = applyShare(sorted, total, EXCLUDE_FROM_TOTAL)
 
     return {
@@ -276,7 +276,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
 
     const total = sorted
       .filter(x => !x.hidden && !EXCLUDE_FROM_TOTAL.includes(x.type))
-      .reduce((x, { value }) => x + value, 0)
+      .reduce((x, { value }) => (value < 0 ? x : x + value), 0)
     const withShare = applyShare(sorted, total, EXCLUDE_FROM_TOTAL)
 
     return {

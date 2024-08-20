@@ -89,10 +89,43 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
   return {
     startDate,
     endDate,
-    data: rawData?.data,
+    // data: rawData?.data,
+    data: testData(rawData?.data),
     isLoading,
     isValidating,
     error: rawError,
     refetch,
   }
+}
+
+const testData = (data?: ProfitAndLoss) => {
+  if (!data) {
+    return
+  }
+
+  const a = {
+    ...data,
+    expenses: {
+      ...data.expenses,
+      line_items: data?.expenses?.line_items?.map(x => {
+        if (['FEES', 'MEALS'].includes(x.name ?? '')) {
+          return { ...x, value: -(x.value ?? 0) }
+        }
+        return x
+      }),
+    },
+    cost_of_goods_sold: {
+      ...data.cost_of_goods_sold,
+      line_items: data?.cost_of_goods_sold?.line_items?.map(x => {
+        if (['LABOR_EXPENSE'].includes(x.name ?? '')) {
+          return { ...x, value: -(x.value ?? 0) }
+        }
+        return x
+      }),
+    },
+  } as ProfitAndLoss
+
+  console.log('datatest', a)
+
+  return a
 }
