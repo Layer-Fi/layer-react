@@ -94,6 +94,7 @@ export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
 
 export type EventCallbacks = {
   onTransactionCategorized?: (bankTransactionId: string) => void
+  onTransactionsFetched?: () => void
 }
 
 export type Props = {

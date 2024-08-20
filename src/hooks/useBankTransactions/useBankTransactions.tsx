@@ -414,6 +414,7 @@ export const useBankTransactions: UseBankTransactions = params => {
     if (refreshTrigger !== -1) {
       refetch()
       refetchAccounts()
+      eventCallbacks?.onTransactionsFetched?.()
     }
   }, [refreshTrigger])
 
