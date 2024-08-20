@@ -22,7 +22,7 @@ import {
 } from '../../types/layer_context'
 import { buildColorsPalette } from '../../utils/colors'
 import { add, isBefore } from 'date-fns'
-import useSWR, { SWRConfig } from 'swr'
+import useSWR, { SWRConfig, SWRConfiguration } from 'swr'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -120,8 +120,8 @@ export const LayerProvider = ({
   onError,
   eventCallbacks,
 }: PropsWithChildren<Props>) => {
-  const defaultSWRConfig = {
-    revalidateInterval: 0,
+  const defaultSWRConfig: SWRConfiguration = {
+    refreshInterval: 0,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     revalidateIfStale: false,
@@ -175,7 +175,6 @@ export const LayerProvider = ({
             authenticationUrl: url,
             scope,
           }),
-          defaultSWRConfig,
         )
       : { data: undefined }
 
@@ -211,7 +210,6 @@ export const LayerProvider = ({
       params: { businessId },
     }),
     {
-      ...defaultSWRConfig,
       onSuccess: response => {
         if (response?.data?.categories?.length) {
           dispatch({
@@ -237,7 +235,6 @@ export const LayerProvider = ({
       params: { businessId },
     }),
     {
-      ...defaultSWRConfig,
       onSuccess: response => {
         if (response?.data) {
           dispatch({
@@ -348,7 +345,7 @@ export const LayerProvider = ({
   const drawerContextData = useDrawer()
 
   return (
-    <SWRConfig value={defaultSWRConfig}>
+    <SWRConfig value={{ ...defaultSWRConfig, provider: () => new Map() }}>
       <LayerContext.Provider
         value={{
           ...state,
