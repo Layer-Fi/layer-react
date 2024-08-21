@@ -531,7 +531,7 @@ export const ProfitAndLossChart = ({
   const [animateFrom, setAnimateFrom] = useState(-1)
 
   return (
-    <div className=''>
+    <div className='Layer__chart-wrapper'>
       <ResponsiveContainer
         key={forceRerenderOnDataChange ? JSON.stringify(theData) : 'pnl-chart'}
         className={classNames(
