@@ -132,7 +132,11 @@ export const BankTransactionRow = ({
   }, [bankTransaction.error])
 
   useEffect(() => {
-    if (editable && bankTransaction.recently_categorized && shouldHideAfterCategorize(bankTransaction)) {
+    if (
+      editable &&
+      bankTransaction.recently_categorized &&
+      shouldHideAfterCategorize(bankTransaction)
+    ) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
       }, 300)
@@ -172,7 +176,9 @@ export const BankTransactionRow = ({
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    bankTransaction.recently_categorized && editable && shouldHideAfterCategorize(bankTransaction)
+    bankTransaction.recently_categorized &&
+      editable &&
+      shouldHideAfterCategorize(bankTransaction)
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
@@ -345,7 +351,7 @@ export const BankTransactionRow = ({
               >
                 {categorized
                   ? stringOverrides?.updateButtonText || 'Update'
-                  : stringOverrides?.approveButtonText || 'Approve'}
+                  : stringOverrides?.approveButtonText || 'Confirm'}
               </SubmitButton>
             ) : null}
             <IconButton
