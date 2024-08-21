@@ -59,26 +59,6 @@ export type SingleCategoryUpdate = {
   category: AccountIdentifierPayloadObject
 }
 
-type AccountSplitEntry = {
-  type: 'AccountSplitEntry'
-  amount: number
-  category: {
-    id: string,
-    stable_name?: string,
-    category: string,
-    display_name: string
-  }
-}
-
-type ExclusionSplitEntry = {
-  type: 'ExclusionSplitEntry'
-  amount: number
-  category: {
-    id: string,
-    category: string,
-    display_name: string
-  }
-}
 
 export type SplitCategoryUpdate = {
   type: 'Split'
