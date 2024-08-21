@@ -8,6 +8,7 @@ export enum CategorizationStatus {
   MATCHED = 'MATCHED',
 }
 export interface CategoryEntry {
+  type?: string
   amount?: number
   category: Category
 }
@@ -57,6 +58,8 @@ export type SingleCategoryUpdate = {
   type: 'Category'
   category: AccountIdentifierPayloadObject
 }
+
+
 export type SplitCategoryUpdate = {
   type: 'Split'
   entries: {

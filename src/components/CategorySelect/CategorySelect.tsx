@@ -71,6 +71,21 @@ export const mapCategoryToOption = (category: Category): CategoryOption => {
   }
 }
 
+export const mapCategoryToExclusionOption = (category: Category): CategoryOption => {
+  return {
+    type: OptionActionType.CATEGORY,
+    payload: {
+      id: category.id,
+      option_type: OptionActionType.CATEGORY,
+      display_name: category.display_name,
+      type: 'ExclusionNested',
+      stable_name: category.stable_name,
+      entries: category.entries,
+      subCategories: category.subCategories,
+    },
+  }
+}
+
 export const mapSuggestedMatchToOption = (
   record: SuggestedMatch,
 ): CategoryOption => {
