@@ -33,7 +33,7 @@ import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect'
 import {
-  CategoryOption,
+  CategoryOption, mapCategoryToExclusionOption,
   mapCategoryToOption,
 } from '../CategorySelect/CategorySelect'
 import { InputGroup, Input, FileInput } from '../Input'
@@ -154,7 +154,11 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [rowState, updateRowState] = useState<RowState>({
       splits: bankTransaction.category?.entries
         ? bankTransaction.category?.entries.map(c => {
-            return {
+            return c.type === 'ExclusionSplitEntry' ?  {
+              amount: c.amount || 0,
+              inputValue: formatMoney(c.amount),
+              category: mapCategoryToExclusionOption(c.category),
+            } : {
               amount: c.amount || 0,
               inputValue: formatMoney(c.amount),
               category: mapCategoryToOption(c.category),
