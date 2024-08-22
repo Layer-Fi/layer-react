@@ -72,7 +72,7 @@ export const applyShare = (
       return item
     }
 
-    if (exclude && exclude.includes(item.type)) {
+    if ((exclude && exclude.includes(item.type)) || item.value < 0) {
       return {
         ...item,
         share: undefined,

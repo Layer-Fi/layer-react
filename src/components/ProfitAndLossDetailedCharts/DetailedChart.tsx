@@ -5,7 +5,7 @@ import { LineBaseItem } from '../../types/line_item'
 import { formatPercent } from '../../utils/format'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { Text, TextSize, TextWeight } from '../Typography'
-import { mapTypesToColors } from './DetailedTable'
+import { ColorsMapOption, mapTypesToColors } from './DetailedTable'
 import classNames from 'classnames'
 import {
   PieChart,
@@ -112,13 +112,13 @@ export const DetailedChart = ({
     })
 
     if (total > negativeTotal) {
-      negativeData.push({
+      negativeData.unshift({
         name: '',
         value: total - negativeTotal,
         type: 'empty',
       })
     } else {
-      chartData.push({
+      chartData.unshift({
         name: '',
         value: negativeTotal - total,
         type: 'empty',
@@ -128,8 +128,6 @@ export const DetailedChart = ({
     return { chartData, negativeData, total, negativeTotal }
   }, [filteredData, isLoading])
 
-  console.log('chartData', chartData, negativeData, total, negativeTotal)
-
   const noValue = chartData.length === 0 || !chartData.find(x => x.value !== 0)
 
   const chartDataWithNoCategorized = chartData.filter(
@@ -137,7 +135,7 @@ export const DetailedChart = ({
   )
 
   const typeColorMapping = mapTypesToColors(
-    chartDataWithNoCategorized,
+    chartDataWithNoCategorized.concat(negativeData),
     chartColorsList,
   )
 
@@ -197,7 +195,8 @@ export const DetailedChart = ({
                   let fill: string | undefined =
                     entry.type === 'empty'
                       ? '#fff'
-                      : typeColorMapping[index].color
+                      : typeColorMapping.find(x => x.name === entry.name)
+                          ?.color ?? '#f2f2f2'
                   let active = true
                   if (hoveredItem && entry.name !== hoveredItem) {
                     active = false
@@ -220,7 +219,10 @@ export const DetailedChart = ({
                             : fill,
                       }}
                       opacity={
-                        placeholder ? 0 : typeColorMapping[index].opacity
+                        placeholder
+                          ? 0
+                          : typeColorMapping.find(x => x.name === entry.name)
+                              ?.opacity ?? 1
                       }
                       onMouseEnter={() =>
                         !placeholder && setHoveredItem(entry.name)
@@ -231,7 +233,7 @@ export const DetailedChart = ({
                     />
                   )
                 })}
-                {negativeTotal !== 0 ? (
+                {negativeTotal !== 0 && !hoveredItem ? (
                   <>
                     <Label
                       position='center'
@@ -454,84 +456,115 @@ export const DetailedChart = ({
                 animationEasing='ease-in-out'
               >
                 {negativeData.map((entry, index) => {
+                  const placeholder = entry.type === 'empty'
                   let fill: string | undefined =
-                    entry.type === 'empty' ? '#ffffff00' : '#3E4044'
+                    entry.type === 'empty'
+                      ? '#fff'
+                      : typeColorMapping.find(x => x.name === entry.name)
+                          ?.color ?? '#f2f2f2'
+                  let active = true
+                  if (hoveredItem && entry.name !== hoveredItem) {
+                    active = false
+                    fill = undefined
+                  }
 
-                  const opacity = 1 - ((0.2 * index) % 1) // @TODO
+                  console.log('active', fill, active, entry.name, hoveredItem)
 
                   return (
                     <Cell
                       key={`cell-${index}`}
-                      className={
-                        'Layer__profit-and-loss-detailed-charts__pie active'
+                      className={classNames(
+                        'Layer__profit-and-loss-detailed-charts__pie',
+                        hoveredItem && active ? 'active' : 'inactive',
+                      )}
+                      style={{ fill }}
+                      opacity={
+                        placeholder
+                          ? 0
+                          : typeColorMapping.find(x => x.name === entry.name)
+                              ?.opacity ?? 1
                       }
-                      fill={fill}
-                      style={{ opacity: entry.type === 'empty' ? 0 : opacity }}
+                      onMouseEnter={() =>
+                        !placeholder && setHoveredItem(entry.name)
+                      }
+                      onMouseLeave={() =>
+                        !placeholder && setHoveredItem(undefined)
+                      }
                     />
                   )
                 })}
-                <Label
-                  position='center'
-                  value='Total'
-                  className='pie-center-label-title'
-                  content={props => {
-                    const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
-                      cx: 0,
-                      cy: 0,
-                    }
-                    const positioningProps = {
-                      x: cx,
-                      y: (cy || 0) + 15,
-                      textAnchor: 'middle' as
-                        | 'start'
-                        | 'middle'
-                        | 'end'
-                        | 'inherit',
-                      verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
-                    }
+                {!hoveredItem && (
+                  <>
+                    <Label
+                      position='center'
+                      value='Total'
+                      className='pie-center-label-title'
+                      content={props => {
+                        const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
+                          cx: 0,
+                          cy: 0,
+                        }
+                        const positioningProps = {
+                          x: cx,
+                          y: (cy || 0) + 15,
+                          textAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end'
+                            | 'inherit',
+                          verticalAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end',
+                        }
 
-                    let text = 'Negative'
+                        let text = 'Negative'
 
-                    return (
-                      <ChartText
-                        {...positioningProps}
-                        className='pie-center-label__title'
-                      >
-                        {text}
-                      </ChartText>
-                    )
-                  }}
-                />
-                <Label
-                  position='center'
-                  value='Total'
-                  className='pie-center-label-title'
-                  content={props => {
-                    const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
-                      cx: 0,
-                      cy: 0,
-                    }
-                    const positioningProps = {
-                      x: cx,
-                      y: (cy || 0) + 35,
-                      textAnchor: 'middle' as
-                        | 'start'
-                        | 'middle'
-                        | 'end'
-                        | 'inherit',
-                      verticalAnchor: 'middle' as 'start' | 'middle' | 'end',
-                    }
+                        return (
+                          <ChartText
+                            {...positioningProps}
+                            className='pie-center-label__title'
+                          >
+                            {text}
+                          </ChartText>
+                        )
+                      }}
+                    />
+                    <Label
+                      position='center'
+                      value='Total'
+                      className='pie-center-label-title'
+                      content={props => {
+                        const { cx, cy } = (props.viewBox as PolarViewBox) ?? {
+                          cx: 0,
+                          cy: 0,
+                        }
+                        const positioningProps = {
+                          x: cx,
+                          y: (cy || 0) + 35,
+                          textAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end'
+                            | 'inherit',
+                          verticalAnchor: 'middle' as
+                            | 'start'
+                            | 'middle'
+                            | 'end',
+                        }
 
-                    return (
-                      <ChartText
-                        {...positioningProps}
-                        className='pie-center-label__value'
-                      >
-                        {`-$${formatMoney(negativeTotal)}`}
-                      </ChartText>
-                    )
-                  }}
-                />
+                        return (
+                          <ChartText
+                            {...positioningProps}
+                            className='pie-center-label__value'
+                          >
+                            {`-$${formatMoney(negativeTotal)}`}
+                          </ChartText>
+                        )
+                      }}
+                    />
+                  </>
+                )}
               </Pie>
             ) : null}
             {/*   -------------   */}
@@ -664,10 +697,7 @@ const HorizontalLineChart = ({
   data?: ChartData[]
   uncategorizedTotal: number
   netRevenue?: number
-  typeColorMapping: {
-    color: any
-    opacity: any
-  }[]
+  typeColorMapping: ColorsMapOption[]
 }) => {
   if (!data) {
     return
@@ -689,8 +719,6 @@ const HorizontalLineChart = ({
       share: uncategorizedTotal / total,
     })
   }
-
-  console.log('items,', typeColorMapping, items)
 
   return (
     <div className='Layer__profit-and-loss-horiztonal-line-chart'>
@@ -726,7 +754,8 @@ const HorizontalLineChart = ({
             }
 
             const { color, opacity } =
-              typeColorMapping[index] ?? typeColorMapping[0]
+              typeColorMapping.find(y => y.name === x.name) ??
+              typeColorMapping[0]
             return (
               <span
                 className='Layer__profit-and-loss-horiztonal-line-chart__item'

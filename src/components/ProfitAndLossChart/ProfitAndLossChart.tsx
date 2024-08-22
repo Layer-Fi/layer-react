@@ -383,8 +383,6 @@ export const ProfitAndLossChart = ({
       const expensesUncategorized =
         payload.find(x => x.dataKey === 'expensesUncategorized')?.value ?? 0
 
-      console.log('payload', payload)
-
       return (
         <div className='Layer__chart__tooltip'>
           {loaded !== 'complete' ? (

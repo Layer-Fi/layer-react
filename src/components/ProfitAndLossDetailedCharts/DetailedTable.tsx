@@ -1,5 +1,8 @@
 import React from 'react'
-import { DEFAULT_CHART_COLOR_TYPE } from '../../config/charts'
+import {
+  DEFAULT_CHART_COLOR_TYPE,
+  DEFAULT_CHART_NEGATIVE_COLOR,
+} from '../../config/charts'
 import {
   Scope,
   SidebarScope,
@@ -29,25 +32,51 @@ export interface DetailedTableProps {
   stringOverrides?: DetailedTableStringOverrides
 }
 
+export interface ColorsMapOption {
+  color: string
+  name: string
+  opacity: number
+  type: string
+}
+
 export const mapTypesToColors = (
   data: any[],
   colorList: string[] = DEFAULT_CHART_COLOR_TYPE,
-) => {
+  negativeColor = DEFAULT_CHART_NEGATIVE_COLOR,
+): ColorsMapOption[] => {
   const typeToColor: any = {}
   const typeToLastOpacity: any = {}
   let colorIndex = 0
+  let colorNegativeIndex = 0
 
   return data.map(obj => {
-    const type = obj.type
+    const type = obj.value < 0 ? 'negative' : obj.type
 
     if (type === 'Uncategorized') {
       return {
         color: '#EEEEF0',
         opacity: 1,
+        type: 'Uncategorized',
+        name: 'Uncategorized',
       }
     }
 
-    if (!typeToColor[type]) {
+    if (type === 'empty') {
+      return {
+        color: '#fff',
+        opacity: 0,
+        type: 'empty',
+        name: 'empty',
+      }
+    }
+
+    if (type === 'negative' && !typeToColor['negative']) {
+      typeToColor['negative'] = negativeColor
+      colorNegativeIndex++
+      typeToLastOpacity[type] = 1
+    } else if (type === 'negative' && typeToColor[type]) {
+      typeToLastOpacity[type] -= 0.1
+    } else if (!typeToColor[type]) {
       typeToColor[type] = colorList[colorIndex % colorList.length]
       colorIndex++
       typeToLastOpacity[type] = 1
@@ -58,6 +87,8 @@ export const mapTypesToColors = (
     const opacity = typeToLastOpacity[type]
 
     return {
+      type: type,
+      name: obj.name,
       color: typeToColor[type],
       opacity: opacity,
     }
@@ -70,7 +101,7 @@ const ValueIcon = ({
   idx,
 }: {
   item: LineBaseItem
-  typeColorMapping: any
+  typeColorMapping: ColorsMapOption[]
   idx: number
 }) => {
   if (item.type === 'Uncategorized') {
@@ -106,12 +137,17 @@ const ValueIcon = ({
     )
   }
 
+  const colorMapping = typeColorMapping.find(x => x.name === item.name) ?? {
+    color: '#f2f2f2',
+    opacity: 1,
+  }
+
   return (
     <div
       className='share-icon'
       style={{
-        background: typeColorMapping[idx].color,
-        opacity: typeColorMapping[idx].opacity,
+        background: colorMapping.color,
+        opacity: colorMapping.opacity,
       }}
     />
   )
@@ -138,7 +174,7 @@ export const DetailedTable = ({
     )
   }
 
-  const typeColorMapping: any = mapTypesToColors(filteredData, chartColorsList)
+  const typeColorMapping = mapTypesToColors(filteredData, chartColorsList)
 
   return (
     <div className='details-container'>

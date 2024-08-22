@@ -295,6 +295,23 @@
   max-width: 1406px;
 }
 
+.Layer__profit-and-loss-summaries__info-banner {
+  border-radius: var(--border-radius-xs);
+  background-color: var(--color-base-50);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  color: var(--color-info-warning-fg);
+  padding: var(--spacing-2xs);
+  box-sizing: border-box;
+}
+
+.Layer__profit-and-loss-summaries__info-banner__value {
+  display: flex;
+  align-items: center;
+}
+
 .Layer__profit-and-loss-summaries.flex-col {
   flex-direction: column;
 }
