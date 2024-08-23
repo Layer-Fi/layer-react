@@ -1,7 +1,10 @@
 import { ProfitAndLoss } from '../../types'
 import { S3PresignedUrl } from '../../types/general'
-import { ProfitAndLossSummaries } from '../../types/profit_and_loss'
-import { get } from './authenticated_http'
+import {
+  ProfitAndLossComparison,
+  ProfitAndLossSummaries,
+} from '../../types/profit_and_loss'
+import { get, post } from './authenticated_http'
 
 export const getProfitAndLoss = get<{
   data?: ProfitAndLoss
@@ -15,6 +18,14 @@ export const getProfitAndLoss = get<{
     }${tagKey ? `&tag_key=${tagKey}` : ''}${
       tagValues ? `&tag_values=${tagValues}` : ''
     }`,
+)
+
+export const compareProfitAndLoss = post<{
+  data?: ProfitAndLossComparison
+  error?: unknown
+}>(
+  ({ businessId }) =>
+    `/v1/businesses/${businessId}/reports/profit-and-loss-comparison`,
 )
 
 export const getProfitAndLossSummaries = get<{

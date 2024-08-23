@@ -1,5 +1,7 @@
 import React, { PropsWithChildren, createContext } from 'react'
+import { PNLComparisonContext } from '../../contexts/ProfitAndLossComparisonContext'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
+import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison'
 import { ReportingBasis } from '../../types'
 import { Container } from '../Container'
 import { ProfitAndLossChart } from '../ProfitAndLossChart'
@@ -34,8 +36,6 @@ const PNLContext = createContext<PNLContextType>({
     expenses: undefined,
     revenue: undefined,
   },
-  compareMode: false,
-  setCompareMode: () => {},
 })
 
 type Props = PropsWithChildren & {
@@ -54,20 +54,24 @@ const ProfitAndLoss = ({
   asContainer = true,
 }: Props) => {
   const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
+  const comparisonContextData = useProfitAndLossComparison({ reportingBasis })
 
   return (
     <PNLContext.Provider value={contextData}>
-      {asContainer ? (
-        <Container name='profit-and-loss'>{children}</Container>
-      ) : (
-        children
-      )}
+      <PNLComparisonContext.Provider value={comparisonContextData}>
+        {asContainer ? (
+          <Container name='profit-and-loss'>{children}</Container>
+        ) : (
+          children
+        )}
+      </PNLComparisonContext.Provider>
     </PNLContext.Provider>
   )
 }
 
 ProfitAndLoss.Chart = ProfitAndLossChart
 ProfitAndLoss.Context = PNLContext
+ProfitAndLoss.ComparisonContext = PNLComparisonContext
 ProfitAndLoss.DatePicker = ProfitAndLossDatePicker
 ProfitAndLoss.CompareOptions = ProfitAndLossCompareOptions
 ProfitAndLoss.Summaries = ProfitAndLossSummaries

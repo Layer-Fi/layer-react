@@ -7,7 +7,7 @@ import {
   FileMetadata,
 } from '../../types/bank_transactions'
 import { S3PresignedUrl } from '../../types/general'
-import { get, put, post, postWithFormData } from './authenticated_http'
+import { get, put, postWithFormData } from './authenticated_http'
 
 export type GetBankTransactionsReturn = {
   data?: BankTransaction[]
@@ -37,7 +37,9 @@ export const getBankTransactions = get<
     `/v1/businesses/${businessId}/bank-transactions?${
       cursor ? `cursor=${cursor}&` : ''
     }${
-      categorized !== undefined && categorized !== '' ? `categorized=${categorized}&` : ''
+      categorized !== undefined && categorized !== ''
+        ? `categorized=${categorized}&`
+        : ''
     }sort_by=${sortBy}&sort_order=${sortOrder}&limit=200`,
 )
 

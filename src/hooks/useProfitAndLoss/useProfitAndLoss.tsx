@@ -57,12 +57,6 @@ type UseProfitAndLoss = (props?: Props) => {
   filters: ProfitAndLossFilters
   sortBy: (scope: Scope, field: string, direction?: SortDirection) => void
   setFilterTypes: (scope: Scope, types: string[]) => void
-  compareMode?: boolean
-  setCompareMode?: (mode: boolean) => void
-  compareMonths?: number
-  setCompareMonths?: (months: number) => void
-  compareOptions?: string[]
-  setCompareOptions?: (options: string[]) => void
 }
 
 export const useProfitAndLoss: UseProfitAndLoss = (
@@ -76,21 +70,6 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     endDate: endOfMonth(new Date()),
   },
 ) => {
-  const [compareMode, setCompareMode] = useState(false)
-  const [compareMonths, setCompareMonths] = useState(0)
-  const [compareOptions, setCompareOptions] = useState<string[]>([])
-
-  useEffect(() => {
-    if (compareMonths > 1 || compareOptions.length > 1) {
-      if (compareMonths === 0) {
-        setCompareMonths(2)
-      }
-      setCompareMode(true)
-    } else {
-      setCompareMode(false)
-    }
-  }, [compareMonths, compareOptions])
-
   const [startDate, setStartDate] = useState(
     initialStartDate || startOfMonth(Date.now()),
   )
@@ -291,11 +270,5 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     sortBy,
     filters,
     setFilterTypes,
-    compareMode,
-    setCompareMode,
-    compareMonths,
-    setCompareMonths,
-    compareOptions,
-    setCompareOptions,
   }
 }

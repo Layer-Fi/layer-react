@@ -10,7 +10,7 @@ import {
 export const ProfitAndLossTableWithProvider = (
   props: ProfilAndLostTableProps,
 ) => {
-  const { compareMode } = useContext(ProfitAndLoss.Context)
+  const { compareMode } = useContext(ProfitAndLoss.ComparisonContext)
   return (
     <TableProvider>
       {compareMode ? (

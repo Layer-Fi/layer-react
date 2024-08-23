@@ -7,7 +7,7 @@ const DEFAULT_SWITCH_OPTIONS = ['PC', 'MSO']
 
 export const ProfitAndLossCompareOptions = () => {
   const { setCompareMonths, setCompareOptions } = useContext(
-    ProfitAndLoss.Context,
+    ProfitAndLoss.ComparisonContext,
   )
 
   const [months, setMonths] = useState<number>(0)

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { LineItem } from '../../types'
+import { ProfitAndLossComparisonPnl } from '../../types/profit_and_loss'
 import { Loader } from '../Loader'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import { Table, TableBody, TableHead, TableRow, TableCell } from '../Table'
@@ -19,10 +20,14 @@ export const ProfitAndLossCompareTable = ({
   const {
     data: actualData,
     isLoading,
-    compareMonths,
-    compareOptions,
     dateRange,
   } = useContext(ProfitAndLoss.Context)
+  const {
+    data: comparisonData,
+    isLoading: comparisonIsLoading,
+    compareMonths,
+    compareOptions,
+  } = useContext(ProfitAndLoss.ComparisonContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
 
   useEffect(() => {
@@ -34,7 +39,7 @@ export const ProfitAndLossCompareTable = ({
     : actualData
   const data = !currentData || isLoading ? emptyPNL : currentData
 
-  if (isLoading || actualData === undefined) {
+  if (comparisonIsLoading || isLoading || actualData === undefined) {
     return (
       <div
         className={classNames('Layer__profit-and-loss-table__loader-container')}
@@ -49,6 +54,52 @@ export const ProfitAndLossCompareTable = ({
       const currentMonth = subMonths(startDate, numberOfMonths - index - 1)
       return format(currentMonth, 'MMM')
     })
+  }
+
+  const getCompareValue = (
+    option: string,
+    rowKey: string,
+    monthIndex: number,
+    depth: number,
+  ) => {
+    if (!comparisonData || comparisonData.length === 0) {
+      return 0
+    } else {
+      const filterData = comparisonData.filter(item =>
+        option === 'Total'
+          ? item.tag_filter === null
+          : item.tag_filter?.values.includes(option.toLowerCase()),
+      )
+
+      if (filterData.length === 0) {
+        return 0
+      }
+
+      let foundValue
+
+      if (rowKey in filterData[monthIndex].pnl) {
+        if (depth === 0) {
+          foundValue =
+            filterData[monthIndex].pnl[
+              rowKey as keyof ProfitAndLossComparisonPnl
+            ]
+          if (
+            typeof foundValue === 'number' ||
+            typeof foundValue === 'string'
+          ) {
+            return foundValue
+          } else if (
+            typeof foundValue === 'object' &&
+            foundValue &&
+            'line_items' in foundValue
+          ) {
+            return foundValue.value
+          }
+        }
+      }
+
+      return 0
+    }
   }
 
   const renderLineItem = (
@@ -83,7 +134,9 @@ export const ProfitAndLossCompareTable = ({
                     <TableCell
                       key={'compare-value-' + index + '-' + i}
                       isCurrency
-                    ></TableCell>
+                    >
+                      {getCompareValue(option, rowKey, index, depth)}
+                    </TableCell>
                   ))}
               </React.Fragment>
             ))
@@ -91,22 +144,16 @@ export const ProfitAndLossCompareTable = ({
             <React.Fragment key={'compare-values'}>
               {compareMonths &&
                 Array.from({ length: compareMonths }, (_, index) => (
-                  <TableCell
-                    key={'compare-value-' + index + '-'}
-                    isCurrency
-                  ></TableCell>
+                  <TableCell key={'compare-value-' + index + '-'} isCurrency>
+                    {/* {getCompareValue()} */}
+                  </TableCell>
                 ))}
             </React.Fragment>
           )}
         </TableRow>
         {expanded && lineItem.line_items
           ? lineItem.line_items.map((child, i) =>
-              renderLineItem(
-                child,
-                depth + 1,
-                child.display_name + '-' + rowIndex,
-                i,
-              ),
+              renderLineItem(child, depth + 1, child.display_name, i),
             )
           : null}
       </React.Fragment>
