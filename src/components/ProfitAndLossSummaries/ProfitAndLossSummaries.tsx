@@ -1,5 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { Scope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
+import Check from '../../icons/Check'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { ProfitAndLoss } from '../../types'
 import { LineBaseItem } from '../../types/line_item'
@@ -25,6 +26,7 @@ type Props = {
   actionable?: boolean
   revenueLabel?: string // deprecated
   stringOverrides?: ProfitAndLossSummariesStringOverrides
+  showUncategorized?: boolean
 }
 
 const CHART_PLACEHOLDER = [
@@ -68,11 +70,13 @@ export const ProfitAndLossSummaries = ({
   actionable = false,
   revenueLabel, // deprecated
   stringOverrides,
+  showUncategorized = false,
 }: Props) => {
   const {
     data: storedData,
     uncategorizedTotalExpenses,
     uncategorizedTotalRevenue,
+    uncategorizedTransactions,
     isLoading,
     setSidebarScope,
     sidebarScope,
@@ -92,8 +96,6 @@ export const ProfitAndLossSummaries = ({
 
   const data = dataItem ? dataItem : { income: { value: NaN }, net_profit: NaN }
 
-  console.log('dataItem', data, storedData)
-
   const incomeDirectionClass =
     (data.income.value ?? NaN) < 0
       ? 'Layer__profit-and-loss-summaries__amount--negative'
@@ -108,6 +110,8 @@ export const ProfitAndLossSummaries = ({
     data.net_profit < 0
       ? 'Layer__profit-and-loss-summaries__amount--negative'
       : 'Layer__profit-and-loss-summaries__amount--positive'
+
+  const expenses = Math.abs((data.income.value ?? 0) - data.net_profit)
 
   return (
     <div
@@ -147,14 +151,24 @@ export const ProfitAndLossSummaries = ({
             )}
           </div>
         </div>
-        {!dataItem?.fully_categorized && (
+        {showUncategorized &&
+        !dataItem?.fully_categorized &&
+        uncategorizedTotalRevenue ? (
           <div className='Layer__profit-and-loss-summaries__info-banner'>
-            <Text size={TextSize.sm}>Uncategorized</Text>
+            <Text
+              size={TextSize.sm}
+              className='Layer__profit-and-loss-summaries-hide-xs'
+            >
+              Uncategorized
+            </Text>
             <span className='Layer__profit-and-loss-summaries__info-banner__value'>
               <Text size={TextSize.sm}>{`$${formatMoney(
                 uncategorizedTotalRevenue,
               )}`}</Text>
-              <Text size={TextSize.sm}>
+              <Text
+                size={TextSize.sm}
+                className='Layer__profit-and-loss-summaries__info-banner__subvalue'
+              >
                 /
                 {`$${formatMoney(
                   uncategorizedTotalRevenue ??
@@ -163,7 +177,15 @@ export const ProfitAndLossSummaries = ({
               </Text>
             </span>
           </div>
-        )}
+        ) : null}
+        {showUncategorized &&
+        !dataItem?.fully_categorized &&
+        !uncategorizedTotalRevenue ? (
+          <div className='Layer__profit-and-loss-summaries__info-banner Layer__profit-and-loss-summaries__info-banner--done'>
+            <Check />
+            <Text size={TextSize.sm}>All categorized</Text>
+          </div>
+        ) : null}
       </div>
       <div
         className={classNames(
@@ -199,23 +221,40 @@ export const ProfitAndLossSummaries = ({
             )}
           </div>
         </div>
-        {!dataItem?.fully_categorized && (
+        {showUncategorized &&
+        !dataItem?.fully_categorized &&
+        uncategorizedTotalExpenses ? (
           <div className='Layer__profit-and-loss-summaries__info-banner'>
-            <Text size={TextSize.sm}>Uncategorized</Text>
+            <Text
+              size={TextSize.sm}
+              className='Layer__profit-and-loss-summaries-hide-xs'
+            >
+              Uncategorized
+            </Text>
             <span className='Layer__profit-and-loss-summaries__info-banner__value'>
               <Text size={TextSize.sm}>{`$${formatMoney(
                 uncategorizedTotalExpenses,
               )}`}</Text>
-              <Text size={TextSize.sm}>
+              <Text
+                size={TextSize.sm}
+                className='Layer__profit-and-loss-summaries__info-banner__subvalue'
+              >
                 /
                 {`$${formatMoney(
-                  uncategorizedTotalExpenses ??
-                    0 + Math.abs((data.income.value ?? 0) - data.net_profit),
+                  Math.abs(uncategorizedTotalExpenses ?? 0) + expenses,
                 )}`}
               </Text>
             </span>
           </div>
-        )}
+        ) : null}
+        {showUncategorized &&
+        !dataItem?.fully_categorized &&
+        !uncategorizedTotalExpenses ? (
+          <div className='Layer__profit-and-loss-summaries__info-banner Layer__profit-and-loss-summaries__info-banner--done'>
+            <Check />
+            <Text size={TextSize.sm}>All categorized</Text>
+          </div>
+        ) : null}
       </div>
       <div
         className={classNames(
@@ -241,17 +280,16 @@ export const ProfitAndLossSummaries = ({
             )}
           </div>
         </div>
-        {!dataItem?.fully_categorized && (
-          <Badge variant={BadgeVariant.SUCCESS}>
-            <span>Uncategorized</span>
-            <span>{12} tbd transactions</span>
-          </Badge>
-        )}
-        {!dataItem?.fully_categorized && (
+        {showUncategorized && !dataItem?.fully_categorized && (
           <div className='Layer__profit-and-loss-summaries__info-banner'>
             <Text size={TextSize.sm}>Uncategorized</Text>
             <span className='Layer__profit-and-loss-summaries__info-banner__value'>
-              <Text size={TextSize.sm}>{12} / 24 transactions</Text>
+              <Text size={TextSize.sm}>
+                {uncategorizedTransactions}{' '}
+                <span className='Layer__profit-and-loss-summaries-hide-xs'>
+                  transactions
+                </span>
+              </Text>
             </span>
           </div>
         )}

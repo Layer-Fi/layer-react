@@ -89,8 +89,8 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
   return {
     startDate,
     endDate,
-    data: rawData?.data, // @TODO - TOM
-    // data: testData(rawData?.data),
+    // data: rawData?.data, // @TODO - TOM
+    data: testData(rawData?.data),
     isLoading,
     isValidating,
     error: rawError,

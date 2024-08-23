@@ -2,12 +2,28 @@
   box-sizing: border-box;
   box-shadow: 0px 0px 0px 1px var(--color-base-300);
   border-radius: var(--border-radius-xs);
-  padding: var(--spacing-2xs) var(--spacing-xs);
+  padding: var(--spacing-4xs);
   min-height: 52px;
   background-color: var(--color-base-0);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-direction: column;
+
+  .Layer__notification-card__content {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    padding: var(--spacing-2xs);
+    box-sizing: border-box;
+  }
+
+  .Layer__notification-card__bottom-bar {
+    display: flex;
+    width: 100%;
+  }
 
   .Layer__skeleton-loader {
     margin-top: 3px;
@@ -37,5 +53,9 @@
     color: var(--color-info-success-fg);
     background-color: var(--color-base-50);
     font-variation-settings: 'wght' var(--font-weight-bold);
+  }
+
+  .Layer__notification-card__bottom-bar .Layer__badge {
+    min-height: 25px;
   }
 }

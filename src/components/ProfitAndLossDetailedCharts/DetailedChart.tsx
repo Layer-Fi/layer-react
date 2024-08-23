@@ -4,8 +4,8 @@ import { centsToDollars as formatMoney } from '../../models/Money'
 import { LineBaseItem } from '../../types/line_item'
 import { formatPercent } from '../../utils/format'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
-import { Text, TextSize, TextWeight } from '../Typography'
-import { ColorsMapOption, mapTypesToColors } from './DetailedTable'
+import { mapTypesToColors } from './DetailedTable'
+import { HorizontalLineChart } from './HorizontalLineChart'
 import classNames from 'classnames'
 import {
   PieChart,
@@ -27,9 +27,10 @@ interface DetailedChartProps {
   isLoading?: boolean
   showDatePicker?: boolean
   chartColorsList?: string[]
+  showHorizontalChart?: boolean
 }
 
-interface ChartData {
+export interface ChartData {
   name: string
   value: number
   type: string
@@ -43,27 +44,8 @@ export const DetailedChart = ({
   chartColorsList,
   isLoading,
   showDatePicker = true,
+  showHorizontalChart = false,
 }: DetailedChartProps) => {
-  // const chartData = useMemo(() => {
-  //   if (!filteredData) {
-  //     return []
-  //   }
-  //   return filteredData.map(x => {
-  //     if (x.hidden) {
-  //       return {
-  //         name: x.display_name,
-  //         value: 0,
-  //         type: x.type,
-  //       }
-  //     }
-  //     return {
-  //       name: x.display_name,
-  //       value: x.value,
-  //       type: x.type,
-  //     }
-  //   })
-  // }, [filteredData, isLoading])
-
   const { chartData, negativeData, total, negativeTotal } = useMemo(() => {
     const chartData: ChartData[] = []
     const negativeData: ChartData[] = []
@@ -77,6 +59,7 @@ export const DetailedChart = ({
         negativeTotal: undefined,
       }
     }
+
     filteredData.forEach(x => {
       if (x.hidden) {
         if (x.value < 0) {
@@ -92,6 +75,7 @@ export const DetailedChart = ({
             type: x.type,
           })
         }
+        return
       }
 
       if (x.value < 0) {
@@ -437,8 +421,6 @@ export const DetailedChart = ({
               </Pie>
             ) : null}
 
-            {/*   -------------   */}
-
             {!isLoading && !noValue && negativeTotal !== 0 ? (
               <Pie
                 data={negativeData.map(x => ({
@@ -467,8 +449,6 @@ export const DetailedChart = ({
                     active = false
                     fill = undefined
                   }
-
-                  console.log('active', fill, active, entry.name, hoveredItem)
 
                   return (
                     <Cell
@@ -567,7 +547,6 @@ export const DetailedChart = ({
                 )}
               </Pie>
             ) : null}
-            {/*   -------------   */}
 
             {!isLoading && noValue ? (
               <Pie
@@ -677,127 +656,15 @@ export const DetailedChart = ({
             ) : null}
           </PieChart>
         </ResponsiveContainer>
-        <HorizontalLineChart
-          data={chartDataWithNoCategorized}
-          uncategorizedTotal={uncategorizedTotal}
-          netRevenue={filteredTotal}
-          typeColorMapping={typeColorMapping}
-        />
-      </div>
-    </div>
-  )
-}
-
-const HorizontalLineChart = ({
-  data,
-  uncategorizedTotal,
-  netRevenue,
-  typeColorMapping,
-}: {
-  data?: ChartData[]
-  uncategorizedTotal: number
-  netRevenue?: number
-  typeColorMapping: ColorsMapOption[]
-}) => {
-  if (!data) {
-    return
-  }
-
-  const total =
-    data.reduce((x, { value }) => (value < 0 ? x : x + value), 0) +
-    uncategorizedTotal
-
-  const items = data
-    .filter(x => x.value >= 0 && x.type !== 'empty')
-    .map(x => ({ ...x, share: x.value / total }))
-
-  if (uncategorizedTotal > 0) {
-    items.push({
-      name: 'Uncategorized',
-      value: uncategorizedTotal,
-      type: 'uncategorized',
-      share: uncategorizedTotal / total,
-    })
-  }
-
-  return (
-    <div className='Layer__profit-and-loss-horiztonal-line-chart'>
-      <div className='Layer__profit-and-loss-horiztonal-line-chart__details-row'>
-        <Text
-          className='Layer__profit-and-loss-horiztonal-line-chart__details-label'
-          size={TextSize.sm}
-        >
-          Net Revenue
-        </Text>
-        <Text
-          className='Layer__profit-and-loss-horiztonal-line-chart__details-value'
-          size={TextSize.sm}
-          weight={TextWeight.bold}
-        >
-          {`$${formatMoney(netRevenue)}`}
-        </Text>
-      </div>
-      {!items || items.length === 0 ? (
-        <div className='Layer__profit-and-loss-horiztonal-line-chart__bar'>
-          <span className='Layer__profit-and-loss-horiztonal-line-chart__item Layer__profit-and-loss-horiztonal-line-chart__item--placeholder' />
-        </div>
-      ) : (
-        <div className='Layer__profit-and-loss-horiztonal-line-chart__bar'>
-          {items.map((x, index) => {
-            if (x.type === 'uncategorized') {
-              return (
-                <span
-                  className='Layer__profit-and-loss-horiztonal-line-chart__item'
-                  style={{ width: `${x.share * 100}%`, background: '#f2f2f2' }}
-                />
-              )
-            }
-
-            const { color, opacity } =
-              typeColorMapping.find(y => y.name === x.name) ??
-              typeColorMapping[0]
-            return (
-              <span
-                className='Layer__profit-and-loss-horiztonal-line-chart__item'
-                style={{
-                  width: `${x.share * 100}%`,
-                  background: color,
-                  opacity,
-                }}
-              />
-            )
-          })}
-        </div>
-      )}
-      <div className='Layer__profit-and-loss-horiztonal-line-chart__details-row'>
-        <div className='Layer__profit-and-loss-horiztonal-line-chart__details-col'>
-          <Text
-            className='Layer__profit-and-loss-horiztonal-line-chart__details-label'
-            size={TextSize.sm}
-          >
-            Categorized
-          </Text>
-          <Text
-            className='Layer__profit-and-loss-horiztonal-line-chart__details-value'
-            size={TextSize.sm}
-            weight={TextWeight.bold}
-          >
-            {`$${formatMoney(total)}`}
-          </Text>
-        </div>
-        <div className='Layer__profit-and-loss-horiztonal-line-chart__details-col Layer__align-end'>
-          <Text
-            className='Layer__profit-and-loss-horiztonal-line-chart__details-label'
-            size={TextSize.sm}
-          >
-            Uncategorized
-          </Text>
-          <Text
-            className='Layer__profit-and-loss-horiztonal-line-chart__details-value'
-            size={TextSize.sm}
-            weight={TextWeight.bold}
-          >{`$${formatMoney(uncategorizedTotal)}`}</Text>
-        </div>
+        {showHorizontalChart && (
+          <HorizontalLineChart
+            data={chartDataWithNoCategorized}
+            uncategorizedTotal={uncategorizedTotal}
+            netValue={filteredTotal}
+            type={sidebarScope === 'expenses' ? 'Expenses' : 'Revenue'}
+            typeColorMapping={typeColorMapping}
+          />
+        )}
       </div>
     </div>
   )

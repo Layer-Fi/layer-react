@@ -97,6 +97,7 @@ export const ProfitAndLossDetailedCharts = ({
           isLoading={isLoading}
           chartColorsList={chartColorsList}
           showDatePicker={showDatePicker}
+          showHorizontalChart
         />
 
         <div className='Layer__profit-and-loss-detailed-charts__table-wrapper'>

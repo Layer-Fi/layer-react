@@ -101,6 +101,7 @@ const Components = ({
               vertical={true}
               actionable
               stringOverrides={stringOverrides?.profitAndLossSummaries}
+              showUncategorized
             />
           </div>
           <div

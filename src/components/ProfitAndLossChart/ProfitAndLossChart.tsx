@@ -397,12 +397,11 @@ export const ProfitAndLossChart = ({
                   ${centsToDollars(revenue)}
                 </span>
               </li>
-              <li style={{ marginBottom: 6 }}>
-                <label className='Layer__chart__tooltip-label'></label>
-                <span
-                  className='Layer__chart__tooltip-value'
-                  style={{ opacity: 0.5 }}
-                >
+              <li className='Layer__chart__tooltip-list--secondary-item'>
+                <label className='Layer__chart__tooltip-label'>
+                  Uncategorized
+                </label>
+                <span className='Layer__chart__tooltip-value'>
                   ${centsToDollars(revenueUncategorized)}
                 </span>
               </li>
@@ -412,12 +411,11 @@ export const ProfitAndLossChart = ({
                   ${centsToDollars(Math.abs(expenses))}
                 </span>
               </li>
-              <li style={{ marginBottom: 6 }}>
-                <label className='Layer__chart__tooltip-label'></label>
-                <span
-                  className='Layer__chart__tooltip-value'
-                  style={{ opacity: 0.5 }}
-                >
+              <li className='Layer__chart__tooltip-list--secondary-item'>
+                <label className='Layer__chart__tooltip-label'>
+                  Uncategorized
+                </label>
+                <span className='Layer__chart__tooltip-value'>
                   {expensesUncategorized &&
                     `$${centsToDollars(expensesUncategorized * -1)}`}
                 </span>

@@ -303,13 +303,31 @@
   justify-content: space-between;
   width: 100%;
   color: var(--color-info-warning-fg);
-  padding: var(--spacing-2xs);
+  padding: var(--spacing-2xs) var(--spacing-xs);
   box-sizing: border-box;
+  height: 25px;
+  container-type: inline-size;
+
+  &.Layer__profit-and-loss-summaries__info-banner--done {
+    justify-content: flex-start;
+    color: var(--color-info-success-fg);
+  }
+
+  @container (max-width: 220px) {
+    .Layer__profit-and-loss-summaries-hide-xs {
+      display: none;
+      align-self: flex-end;
+    }
+  }
 }
 
 .Layer__profit-and-loss-summaries__info-banner__value {
   display: flex;
   align-items: center;
+}
+
+.Layer__profit-and-loss-summaries__info-banner__subvalue {
+  opacity: 0.6;
 }
 
 .Layer__profit-and-loss-summaries.flex-col {
@@ -320,7 +338,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-4xs);
   align-items: center;
   box-shadow: 0px 0px 0px 1px var(--color-base-300);
   border-radius: var(--border-radius-xs);
@@ -349,8 +367,11 @@
   }
 
   &.net-profit {
-    padding-left: var(--spacing-xs);
-    min-height: 56px;
+    .Layer__profit-and-loss-summaries__summary__content {
+      min-height: 56px;
+      padding-left: var(--spacing-xs);
+      box-sizing: border-box;
+    }
   }
 
   &.Layer__actionable.net-profit {
@@ -370,6 +391,8 @@
   display: flex;
   flex: 1;
   width: 100%;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
 .Layer__profit-and-loss-summaries__loader {
@@ -384,6 +407,7 @@
 
 .Layer__profit-and-loss-summaries__text {
   display: flex;
+  justify-content: center;
   flex-direction: column;
   gap: var(--spacing-4xs);
   flex: 1;
@@ -411,7 +435,6 @@
 
 .Layer__profit-and-loss-summaries__amount-wrapper {
   display: flex;
-  flex: 1;
   align-items: center;
   justify-content: space-between;
   padding-right: var(--spacing-2xs);

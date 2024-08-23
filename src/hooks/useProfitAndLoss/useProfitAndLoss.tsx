@@ -50,6 +50,7 @@ type UseProfitAndLoss = (props?: Props) => {
   filteredTotalExpenses?: number
   uncategorizedTotalRevenue?: number
   uncategorizedTotalExpenses?: number
+  uncategorizedTransactions?: number
   isLoading: boolean
   isValidating: boolean
   error: unknown
@@ -286,6 +287,17 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     }
   }, [data, startDate, filters, sidebarScope, summaryData])
 
+  const uncategorizedTransactions = useMemo(() => {
+    if (!summaryData) {
+      return
+    }
+
+    const month = startDate.getMonth() + 1
+    const year = startDate.getFullYear()
+    return summaryData.find(x => x.month === month && x.year === year)
+      ?.uncategorized_transactions
+  }, [summaryData, startDate])
+
   return {
     data,
     filteredDataRevenue,
@@ -294,6 +306,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     filteredTotalExpenses,
     uncategorizedTotalRevenue,
     uncategorizedTotalExpenses,
+    uncategorizedTransactions,
     isLoading,
     isValidating,
     error: error,

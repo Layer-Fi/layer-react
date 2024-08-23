@@ -49,10 +49,13 @@ export const AccountingOverview = ({
         <div className='Layer__accounting-overview__summaries-row'>
           <ProfitAndLoss.Summaries
             stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+            showUncategorized
           />
           <TransactionToReviewCard
             usePnlDateRange={true}
             onClick={onTransactionsToReviewClick}
+            hideWhenNoTransactions
+            size='large'
           />
         </div>
         <Container
