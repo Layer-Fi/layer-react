@@ -288,6 +288,10 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
   }
 }
 
+.Layer__profit-and-loss-horiztonal-line-chart__item--inactive {
+  background-color: var(--color-base-300) !important;
+}
+
 .Layer__profit-and-loss-detailed-charts .header--tablet {
   display: none;
 }

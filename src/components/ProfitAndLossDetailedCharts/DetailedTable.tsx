@@ -115,23 +115,25 @@ const ValueIcon = ({
       >
         <defs>
           <pattern
-            id='layer-pie-dots-pattern-legend'
+            id='layer-pie-stripe-pattern'
             x='0'
             y='0'
-            width='3'
-            height='3'
+            width='4'
+            height='4'
+            patternTransform='rotate(45)'
             patternUnits='userSpaceOnUse'
           >
-            <rect width='1' height='1' opacity={0.76} />
+            <rect width='4' height='4' opacity={0.16} />
+            <line x1='0' y='0' x2='0' y2='4' strokeWidth='2' />
           </pattern>
+
+          <rect width='1' height='1' opacity={0.76} />
         </defs>
-        <rect width='12' height='12' id='layer-pie-dots-pattern-bg' rx='2' />
         <rect
-          x='1'
-          y='1'
-          width='10'
-          height='10'
-          fill='url(#layer-pie-dots-pattern-legend)'
+          width='12'
+          height='12'
+          fill='url(#layer-pie-stripe-pattern)'
+          rx='3'
         />
       </svg>
     )

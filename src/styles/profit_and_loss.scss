@@ -525,6 +525,10 @@
   fill: var(--color-base-300);
 }
 
+#layer-pie-stripe-pattern line {
+  stroke: var(--color-base-900);
+}
+
 #layer-dots-stripe-pattern rect {
   fill: var(--color-base-500);
 }
@@ -542,6 +546,14 @@
 }
 
 #layer-pie-dots-pattern-bg {
+  fill: var(--color-base-100);
+}
+
+#layer-pie-dots-pattern-line-chart rect {
+  fill: var(--color-base-500);
+}
+
+#layer-pie-dots-pattern-bg-line-chart {
   fill: var(--color-base-100);
 }
 

@@ -663,6 +663,8 @@ export const DetailedChart = ({
             netValue={filteredTotal}
             type={sidebarScope === 'expenses' ? 'Expenses' : 'Revenue'}
             typeColorMapping={typeColorMapping}
+            hoveredItem={hoveredItem}
+            setHoveredItem={setHoveredItem}
           />
         )}
       </div>
