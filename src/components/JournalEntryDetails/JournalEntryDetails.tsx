@@ -5,7 +5,7 @@ import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
 import { humanizeEnum } from '../../utils/format'
 import { Badge, BadgeVariant } from '../Badge'
-import { BackButton, Button, ButtonVariant } from '../Button'
+import { BackButton, Button, ButtonVariant, CloseButton } from '../Button'
 import { Card } from '../Card'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
@@ -35,23 +35,21 @@ export const JournalEntryDetails = () => {
     <div className='Layer__journal__entry-details'>
       <Header className='Layer__journal__entry-details__mobile-header'>
         <HeaderRow>
-          <HeaderCol>
+          <HeaderCol className='Layer__hidden-lg Layer__hidden-xl'>
             <BackButton onClick={closeSelectedEntry} />
             <Heading size={HeadingSize.secondary}>Transaction details</Heading>
+          </HeaderCol>
+          <HeaderCol className='Layer__show-lg Layer__show-xl'>
+            <Heading size={HeadingSize.secondary}>Transaction source</Heading>
+          </HeaderCol>
+          <HeaderCol className='Layer__show-lg Layer__show-xl'>
+            <CloseButton onClick={closeSelectedEntry} />
           </HeaderCol>
         </HeaderRow>
       </Header>
       <DetailsList
+        titleClassName='Layer__hidden-lg Layer__hidden-xl'
         title='Transaction source'
-        actions={
-          <Button
-            rightIcon={<XIcon />}
-            iconOnly={true}
-            onClick={closeSelectedEntry}
-            className='Layer__details-list__close-btn'
-            variant={ButtonVariant.secondary}
-          />
-        }
       >
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
           <Badge>{entry?.source?.entity_name}</Badge>

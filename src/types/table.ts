@@ -36,10 +36,16 @@ export interface TableRowProps {
   isHeadRow?: boolean
 }
 
+export enum TableCellAlign {
+  RIGHT = 'right',
+  LEFT = 'left',
+}
+
 export interface TableCellProps {
   children?: number | string | ReactNode
   isCurrency?: boolean
   isHeaderCell?: boolean
+  align?: TableCellAlign
   primary?: boolean
   withExpandIcon?: boolean
   fullWidth?: boolean

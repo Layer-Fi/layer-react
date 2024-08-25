@@ -98,9 +98,27 @@
   animation: rotating 2s linear infinite;
 }
 
+.Layer__show-lg {
+  display: none;
+}
+
+@container (min-width: 1401px) {
+  .Layer__hidden-xl {
+    display: none;
+  }
+
+  .Layer__show-xl {
+    display: flex;
+  }
+}
+
 @container (min-width: 1024px) and (max-width: 1400px) {
   .Layer__hidden-lg {
     display: none;
+  }
+
+  .Layer__show-lg {
+    display: flex;
   }
 }
 

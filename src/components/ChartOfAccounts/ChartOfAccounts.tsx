@@ -3,15 +3,14 @@ import { BREAKPOINTS } from '../../config/general'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
-import { useElementSize } from '../../hooks/useElementSize'
+import { useElementViewSize } from '../../hooks/useElementViewSize'
 import { useLedgerAccounts } from '../../hooks/useLedgerAccounts'
+import { View } from '../../types/general'
 import { ChartOfAccountsTable } from '../ChartOfAccountsTable'
 import { ChartOfAccountsTableStringOverrides } from '../ChartOfAccountsTable/ChartOfAccountsTable'
 import { Container } from '../Container'
 import { LedgerAccount } from '../LedgerAccount'
 import { LedgerAccountStringOverrides } from '../LedgerAccount/LedgerAccountIndex'
-
-export type View = 'mobile' | 'tablet' | 'desktop'
 
 export interface ChartOfAccountsStringOverrides {
   chartOfAccountsTable?: ChartOfAccountsTableStringOverrides
@@ -48,22 +47,9 @@ const ChartOfAccountsContent = ({
   const { accountId } = useContext(LedgerAccountsContext)
 
   const [view, setView] = useState<View>('desktop')
-
-  const containerRef = useElementSize<HTMLDivElement>((_a, _b, { width }) => {
-    if (width) {
-      if (width >= BREAKPOINTS.TABLET && view !== 'desktop') {
-        setView('desktop')
-      } else if (
-        width <= BREAKPOINTS.TABLET &&
-        width > BREAKPOINTS.MOBILE &&
-        view !== 'tablet'
-      ) {
-        setView('tablet')
-      } else if (width < BREAKPOINTS.MOBILE && view !== 'mobile') {
-        setView('mobile')
-      }
-    }
-  })
+  const containerRef = useElementViewSize<HTMLDivElement>(newView =>
+    setView(newView),
+  )
 
   return (
     <Container name='chart-of-accounts' ref={containerRef} asWidget={asWidget}>

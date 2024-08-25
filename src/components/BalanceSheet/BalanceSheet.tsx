@@ -2,6 +2,8 @@ import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { BalanceSheetContext } from '../../contexts/BalanceSheetContext'
 import { TableProvider } from '../../contexts/TableContext'
 import { useBalanceSheet } from '../../hooks/useBalanceSheet'
+import { useElementViewSize } from '../../hooks/useElementViewSize'
+import { View as ViewType } from '../../types/general'
 import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker'
 import { BalanceSheetExpandAllButton } from '../BalanceSheetExpandAllButton'
 import { BalanceSheetTable } from '../BalanceSheetTable'
@@ -69,6 +71,11 @@ const BalanceSheetView = ({
     }
   }, [effectiveDate])
 
+  const [view, setView] = useState<ViewType>('desktop')
+  const containerRef = useElementViewSize<HTMLDivElement>(newView =>
+    setView(newView),
+  )
+
   if (asWidget) {
     return (
       <TableProvider>
@@ -81,9 +88,12 @@ const BalanceSheetView = ({
                   effectiveDate={effectiveDate}
                   setEffectiveDate={setEffectiveDate}
                 />
-                {withExpandAllButton && <BalanceSheetExpandAllButton />}
+                {withExpandAllButton && (
+                  <BalanceSheetExpandAllButton view={view} />
+                )}
               </>
             }
+            ref={containerRef}
           >
             {!data || isLoading ? (
               <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
@@ -112,9 +122,10 @@ const BalanceSheetView = ({
               effectiveDate={effectiveDate}
               setEffectiveDate={setEffectiveDate}
             />
-            {withExpandAllButton && <BalanceSheetExpandAllButton />}
+            {withExpandAllButton && <BalanceSheetExpandAllButton view={view} />}
           </>
         }
+        ref={containerRef}
       >
         {!data || isLoading ? (
           <div className={`Layer__${COMPONENT_NAME}__loader-container`}>

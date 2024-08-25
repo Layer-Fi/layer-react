@@ -13,6 +13,8 @@ export interface S3PresignedUrl {
 
 export type LoadedStatus = 'initial' | 'loading' | 'complete'
 
+export type View = 'mobile' | 'tablet' | 'desktop'
+
 export enum DataModel {
   BUSINESS = 'BUSINESS',
   BALANCE_SHEET = 'BALANCE_SHEET',

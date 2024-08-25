@@ -120,6 +120,11 @@
       font-variation-settings: 'wght' var(--font-weight-bold);
     }
 
+    &.Layer__table-cell--right .Layer__table-cell-content {
+      text-align: right;
+      justify-content: flex-end;
+    }
+
     &.Layer__table-cell-amount--positive .Layer__table-cell-content {
       &::before {
         content: '$';

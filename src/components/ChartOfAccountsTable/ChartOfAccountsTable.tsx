@@ -1,8 +1,8 @@
 import React, { RefObject, useContext, useState } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import PlusIcon from '../../icons/Plus'
-import { Button, ButtonVariant } from '../Button'
-import { View } from '../ChartOfAccounts/ChartOfAccounts'
+import { View } from '../../types/general'
+import { Button, ButtonVariant, ExpandCollapseButton } from '../Button'
 import { ChartOfAccountsDatePicker } from '../ChartOfAccountsDatePicker'
 import { ChartOfAccountsFormStringOverrides } from '../ChartOfAccountsForm/ChartOfAccountsForm'
 import { ChartOfAccountsRow } from '../ChartOfAccountsRow'
@@ -83,13 +83,8 @@ export const ChartOfAccountsTable = ({
                 <div className='Layer__header__actions-col'>
                   {withDateControl && <ChartOfAccountsDatePicker />}
                   {withExpandAllButton && (
-                    <Button
-                      className='Layer__hidden-xs'
-                      variant={
-                        withDateControl
-                          ? ButtonVariant.tertiary
-                          : ButtonVariant.secondary
-                      }
+                    <ExpandCollapseButton
+                      iconOnly={view === 'mobile'}
                       onClick={() =>
                         setExpandAll(
                           !expandAll || expandAll === 'collapsed'
@@ -97,11 +92,10 @@ export const ChartOfAccountsTable = ({
                             : 'collapsed',
                         )
                       }
-                    >
-                      {!expandAll || expandAll === 'collapsed'
-                        ? 'Expand all rows'
-                        : 'Collapse all rows'}
-                    </Button>
+                      expanded={
+                        !Boolean(!expandAll || expandAll === 'collapsed')
+                      }
+                    />
                   )}
                 </div>
               ) : null}
