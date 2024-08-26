@@ -66,6 +66,12 @@
   }
 }
 
+.Layer__component-header__title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
 .Layer__header__actions {
   display: flex;
   align-items: center;

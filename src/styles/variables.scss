@@ -11,6 +11,10 @@
   --color-white: white;
   --color-blue: hsl(217 100% 92%);
 
+  --color-info: #0968f8;
+  --color-info-bg: #d6e6ff;
+  --color-info-fg: #0056d7;
+
   --color-info-success: hsl(145, 45%, 42%);
   --color-info-success-bg: hsl(145, 59%, 86%);
   --color-info-success-fg: hsl(145, 63%, 29%);
@@ -185,6 +189,10 @@
   --badge-color: var(--color-base-900);
   --badge-fg-color: var(--color-base-900);
   --badge-bg-color: var(--color-base-400);
+
+  --badge-color-info: var(--color-info);
+  --badge-fg-color-info: var(--color-info-fg);
+  --badge-bg-color-info: var(--color-info-bg);
 
   --badge-color-success: var(--color-info-success);
   --badge-fg-color-success: var(--color-info-success-fg);
