@@ -30,7 +30,7 @@ export interface ReportsProps {
   title?: string // deprecated
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
-  comparisonMode?: boolean
+  comparisonOptions?: string[]
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -39,7 +39,7 @@ export interface ReportsPanelProps {
   containerRef: RefObject<HTMLDivElement>
   openReport: ReportType
   stringOverrides?: ReportsStringOverrides
-  comparisonMode?: boolean
+  comparisonOptions?: string[]
 }
 
 interface DownloadButtonStringOverrides {
@@ -129,7 +129,7 @@ export const Reports = ({
   title,
   stringOverrides,
   enabledReports = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow'],
-  comparisonMode,
+  comparisonOptions,
 }: ReportsProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
@@ -158,7 +158,7 @@ export const Reports = ({
             containerRef={containerRef}
             openReport={activeTab}
             stringOverrides={stringOverrides}
-            comparisonMode={comparisonMode}
+            comparisonOptions={comparisonOptions}
           />
         </ProfitAndLoss>
       </Container>
@@ -170,7 +170,7 @@ const ReportsPanel = ({
   containerRef,
   openReport,
   stringOverrides,
-  comparisonMode,
+  comparisonOptions,
 }: ReportsPanelProps) => {
   const { sidebarScope } = useContext(ProfitAndLoss.Context)
   return (
@@ -182,7 +182,11 @@ const ReportsPanel = ({
             <>
               <ProfitAndLoss.DatePicker />
               <div className='Layer__compare__controls__wrapper'>
-                {comparisonMode && <ProfitAndLoss.CompareOptions />}
+                {comparisonOptions && (
+                  <ProfitAndLoss.CompareOptions
+                    comparisonOptions={comparisonOptions}
+                  />
+                )}
                 <DownloadButton
                   stringOverrides={stringOverrides?.downloadButton}
                 />

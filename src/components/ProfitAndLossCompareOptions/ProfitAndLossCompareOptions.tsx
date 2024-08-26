@@ -3,9 +3,13 @@ import { SwitchButton } from '../Button'
 import { Select } from '../Input'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 
-const DEFAULT_SWITCH_OPTIONS = ['PC', 'MSO']
+export interface ProfitAndLossCompareOptionsProps {
+  comparisonOptions: string[]
+}
 
-export const ProfitAndLossCompareOptions = () => {
+export const ProfitAndLossCompareOptions = ({
+  comparisonOptions,
+}: ProfitAndLossCompareOptionsProps) => {
   const {
     setCompareMonths,
     setCompareOptions,
@@ -14,6 +18,8 @@ export const ProfitAndLossCompareOptions = () => {
     compareMonths,
     compareOptions,
   } = useContext(ProfitAndLoss.ComparisonContext)
+
+  console.log('compareOptions', comparisonOptions, compareOptions)
 
   const { dateRange } = useContext(ProfitAndLoss.Context)
 
@@ -101,7 +107,7 @@ export const ProfitAndLossCompareOptions = () => {
         >
           Show total
         </SwitchButton>
-        {DEFAULT_SWITCH_OPTIONS.map(option => (
+        {comparisonOptions.map(option => (
           <SwitchButton
             key={option}
             onChange={checked => handleSwitch(option, checked)}
