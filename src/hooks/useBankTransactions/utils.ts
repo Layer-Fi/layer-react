@@ -55,3 +55,20 @@ export const applyAccountFilter = (
   data?: BankTransaction[],
   filter?: string[],
 ) => data?.filter(x => filter && filter.includes(x.source_account_id))
+
+export const applyCategorizationStatusFilter = (
+  data?: BankTransaction[],
+  filter?: DisplayState,
+) => {
+  if (!filter) {
+    return data
+  }
+
+  return data?.filter(
+    tx =>
+      filterVisibility(filter, tx) ||
+      filter === DisplayState.all ||
+      (filter === DisplayState.review && tx.recently_categorized) ||
+      (filter === DisplayState.categorized && tx.recently_categorized),
+  )
+}

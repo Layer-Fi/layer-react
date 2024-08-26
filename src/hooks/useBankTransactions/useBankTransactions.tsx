@@ -15,7 +15,12 @@ import {
 import { DataModel, LoadedStatus } from '../../types/general'
 import { useLinkedAccounts } from '../useLinkedAccounts'
 import { BankTransactionFilters, UseBankTransactions } from './types'
-import { applyAccountFilter, applyAmountFilter, collectAccounts } from './utils'
+import {
+  applyAccountFilter,
+  applyAmountFilter,
+  applyCategorizationStatusFilter,
+  collectAccounts,
+} from './utils'
 import useSWRInfinite from 'swr/infinite'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
@@ -222,6 +227,13 @@ export const useBankTransactions: UseBankTransactions = params => {
       return
     }
 
+    if (filters?.categorizationStatus) {
+      filtered = applyCategorizationStatusFilter(
+        filtered,
+        filters.categorizationStatus,
+      )
+    }
+
     if (filters?.amount?.min || filters?.amount?.max) {
       filtered = applyAmountFilter(filtered, filters.amount)
     }
@@ -347,7 +359,7 @@ export const useBankTransactions: UseBankTransactions = params => {
   const shouldHideAfterCategorize = (
     bankTransaction: BankTransaction,
   ): boolean => {
-    return ( filters?.categorizationStatus === DisplayState.review )
+    return filters?.categorizationStatus === DisplayState.review
   }
 
   const removeAfterCategorize = (bankTransaction: BankTransaction) => {
