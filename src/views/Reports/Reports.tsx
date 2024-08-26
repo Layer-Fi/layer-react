@@ -38,6 +38,7 @@ export interface ReportsPanelProps {
   containerRef: RefObject<HTMLDivElement>
   openReport: ReportType
   stringOverrides?: ReportsStringOverrides
+  comparisonMode?: boolean
 }
 
 interface DownloadButtonStringOverrides {
@@ -166,6 +167,7 @@ const ReportsPanel = ({
   containerRef,
   openReport,
   stringOverrides,
+  comparisonMode,
 }: ReportsPanelProps) => {
   const { sidebarScope } = useContext(ProfitAndLoss.Context)
   return (
@@ -177,7 +179,7 @@ const ReportsPanel = ({
             <>
               <ProfitAndLoss.DatePicker />
               <div className='Layer__compare__controls__wrapper'>
-                <ProfitAndLoss.CompareOptions />
+                {comparisonMode && <ProfitAndLoss.CompareOptions />}
                 <DownloadButton
                   stringOverrides={stringOverrides?.downloadButton}
                 />
