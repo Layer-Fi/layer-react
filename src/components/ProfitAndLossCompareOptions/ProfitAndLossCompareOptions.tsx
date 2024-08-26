@@ -19,8 +19,6 @@ export const ProfitAndLossCompareOptions = ({
     compareOptions,
   } = useContext(ProfitAndLoss.ComparisonContext)
 
-  console.log('compareOptions', comparisonOptions, compareOptions)
-
   const { dateRange } = useContext(ProfitAndLoss.Context)
 
   useEffect(() => {
