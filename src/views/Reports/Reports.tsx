@@ -30,6 +30,7 @@ export interface ReportsProps {
   title?: string // deprecated
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
+  comparisonMode?: boolean
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -128,6 +129,7 @@ export const Reports = ({
   title,
   stringOverrides,
   enabledReports = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow'],
+  comparisonMode,
 }: ReportsProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
@@ -156,6 +158,7 @@ export const Reports = ({
             containerRef={containerRef}
             openReport={activeTab}
             stringOverrides={stringOverrides}
+            comparisonMode={comparisonMode}
           />
         </ProfitAndLoss>
       </Container>
