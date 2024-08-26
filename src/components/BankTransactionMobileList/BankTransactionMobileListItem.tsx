@@ -17,6 +17,7 @@ import { BankTransactionMobileForms } from './BankTransactionMobileForms'
 import { TransactionToOpenContext } from './TransactionToOpenContext'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 
 export interface BankTransactionMobileListItemProps {
   index: number
@@ -62,6 +63,7 @@ export const BankTransactionMobileListItem = ({
     setTransactionIdToOpen,
     clearTransactionIdToOpen,
   } = useContext(TransactionToOpenContext)
+  const { shouldHideAfterCategorize } = useBankTransactionsContext()
   const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
     setHeight(height),
   )
@@ -106,7 +108,7 @@ export const BankTransactionMobileListItem = ({
 
   useEffect(() => {
     if (!removeAnim && bankTransaction.recently_categorized) {
-      if (editable) {
+      if (editable && shouldHideAfterCategorize(bankTransaction)) {
         setRemoveAnim(true)
         openNext()
       } else {
@@ -144,7 +146,7 @@ export const BankTransactionMobileListItem = ({
   }, [])
 
   useEffect(() => {
-    if (editable && bankTransaction.recently_categorized) {
+    if (editable && bankTransaction.recently_categorized && shouldHideAfterCategorize(bankTransaction)) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
       }, 300)

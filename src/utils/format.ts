@@ -69,10 +69,12 @@ export const convertNumberToCurrency = (amount: number | undefined): string => {
   return formattedValue.length > 0 ? `$${formattedValue}` : ''
 }
 
-export const convertCurrencyToNumber = (amount: string): number => {
-  const inputValue = amount.replace(/[^0-9.]/g, '')
-
-  return parseFloat(inputValue)
-}
-
-export const CURRENCY_INPUT_PATTERN = '[0-9]+(.[0-9]+)?'
+export const convertCurrencyToNumber = (amount: string): string =>
+  amount
+    .replace('$', '')
+    .replace(',', '')
+    .replace(/[^\d.]/g, '')
+    .replace(/(?!^)-/g, '')
+    .replace(/(\..*)\./g, '$1')
+    .replace(/(\.\d{2})\d+/, '$1')
+    .replace(/^0(?!\.)/, '')

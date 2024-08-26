@@ -33,7 +33,7 @@ import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect'
 import {
-  CategoryOption,
+  CategoryOption, mapCategoryToExclusionOption,
   mapCategoryToOption,
 } from '../CategorySelect/CategorySelect'
 import { InputGroup, Input, FileInput } from '../Input'
@@ -82,7 +82,8 @@ export type SaveHandle = {
 const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
   if (bankTransaction?.match) {
     const foundMatch = bankTransaction.suggested_matches?.find(
-      x => x.details.id === bankTransaction?.match?.details.id,
+      x => x.details.id === bankTransaction?.match?.details.id
+        || x.details.id === bankTransaction?.match?.bank_transaction.id
     )
     return foundMatch?.id
   }
@@ -132,7 +133,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         : Purpose.categorize,
     )
     const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
-      isAlreadyMatched(bankTransaction),
+      isAlreadyMatched(bankTransaction) ?? bankTransaction?.suggested_matches?.[0]?.id,
     )
     const [matchFormError, setMatchFormError] = useState<string | undefined>()
     const [splitFormError, setSplitFormError] = useState<string | undefined>()
@@ -153,7 +154,11 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [rowState, updateRowState] = useState<RowState>({
       splits: bankTransaction.category?.entries
         ? bankTransaction.category?.entries.map(c => {
-            return {
+            return c.type === 'ExclusionSplitEntry' ?  {
+              amount: c.amount || 0,
+              inputValue: formatMoney(c.amount),
+              category: mapCategoryToExclusionOption(c.category),
+            } : {
               amount: c.amount || 0,
               inputValue: formatMoney(c.amount),
               category: mapCategoryToOption(c.category),
@@ -265,8 +270,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }
 
     const save = async () => {
-      const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransaction.id}/metadata`
-
       if (showDescriptions && memoText != undefined) {
         const result = await Layer.updateBankTransactionMetadata(
           apiUrl,
@@ -286,12 +289,15 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       if (purpose === Purpose.match) {
         if (!selectedMatchId) {
           setMatchFormError('Select an option to match the transaction')
+          return
         } else if (
           selectedMatchId &&
           selectedMatchId !== isAlreadyMatched(bankTransaction)
         ) {
-          onMatchSubmit(selectedMatchId)
+          await onMatchSubmit(selectedMatchId)
+          return
         }
+        close()
         return
       }
 

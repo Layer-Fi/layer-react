@@ -19,6 +19,7 @@ export const BankTransactionsContext =
       pagination: undefined,
     },
     updateOneLocal: () => undefined,
+    shouldHideAfterCategorize: () => false,
     removeAfterCategorize: () => undefined,
     activate: () => undefined,
     display: DisplayState.review,

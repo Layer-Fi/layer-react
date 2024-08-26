@@ -160,6 +160,10 @@ const BankTransactionsContent = ({
   }, [inputFilters, categorizeView, mode])
 
   useEffect(() => {
+    setCurrentPage(1)
+  }, [filters])
+
+  useEffect(() => {
     if (loadingStatus === 'complete') {
       const timeoutLoad = setTimeout(() => {
         setInitialLoad(false)

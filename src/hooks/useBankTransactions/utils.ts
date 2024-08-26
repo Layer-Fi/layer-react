@@ -56,20 +56,6 @@ export const applyAccountFilter = (
   filter?: string[],
 ) => data?.filter(x => filter && filter.includes(x.source_account_id))
 
-export const applyDirectionFilter = (
-  data?: BankTransaction[],
-  filter?: Direction[],
-) => {
-  if (!filter) {
-    return data
-  }
-  const normalizedFilter = filter.map(x => x.toLowerCase())
-
-  return data?.filter(x =>
-    normalizedFilter.includes(x.direction?.toLowerCase()),
-  )
-}
-
 export const applyCategorizationStatusFilter = (
   data?: BankTransaction[],
   filter?: DisplayState,
@@ -85,24 +71,4 @@ export const applyCategorizationStatusFilter = (
       (filter === DisplayState.review && tx.recently_categorized) ||
       (filter === DisplayState.categorized && tx.recently_categorized),
   )
-}
-
-export const appplyDateRangeFilter = (
-  data?: BankTransaction[],
-  filter?: Partial<DateRange>,
-) => {
-  return data?.filter(x => {
-    const txDate = parseISO(x.date)
-    if (filter?.startDate && filter?.endDate) {
-      return txDate >= filter.startDate && txDate <= filter.endDate
-    }
-
-    if (filter?.startDate) {
-      return txDate >= filter.startDate
-    }
-
-    if (filter?.endDate) {
-      return txDate <= filter.endDate
-    }
-  })
 }

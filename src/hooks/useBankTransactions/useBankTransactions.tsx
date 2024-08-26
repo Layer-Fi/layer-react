@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
+import { ReviewCategories } from '../../components/BankTransactions/constants'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
   BankTransaction,
   CategorizationStatus,
   CategoryUpdate,
+  Direction,
 } from '../../types'
 import {
   BankTransactionMatchType,
@@ -17,8 +19,6 @@ import {
   applyAccountFilter,
   applyAmountFilter,
   applyCategorizationStatusFilter,
-  applyDirectionFilter,
-  appplyDateRangeFilter,
   collectAccounts,
 } from './utils'
 import useSWRInfinite from 'swr/infinite'
@@ -43,6 +43,26 @@ function useTriggerOnChange(
     }
     prevDataRef.current = data
   }, [data, anyAccountSyncing, callback])
+}
+
+const filtersSettingString = (filters?: BankTransactionFilters): string => {
+  return `bank-transactions${
+    filters?.categorizationStatus
+      ? `-categorizationStatus-${filters.categorizationStatus}`
+      : `-categorizationStatus-${DisplayState.all}`
+  }${
+    filters?.direction?.length === 1
+      ? `-direction-${filters.direction.join('-')}`
+      : ''
+  }${
+    filters?.dateRange?.startDate
+      ? `-startDate-${filters.dateRange.startDate.toISOString()}`
+      : ''
+  }${
+    filters?.dateRange?.endDate
+      ? `-endDate-${filters.dateRange.endDate.toISOString()}`
+      : ''
+  }`
 }
 
 export const useBankTransactions: UseBankTransactions = params => {
@@ -74,14 +94,16 @@ export const useBankTransactions: UseBankTransactions = params => {
   const [active, setActive] = useState(false)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
 
-  const getKey = (_index: number, prevData: any) => {
+  const getKey = (index: number, prevData: any) => {
     if (!auth?.access_token || !active) {
       return [false, undefined]
     }
 
-    if (!prevData?.meta?.pagination?.cursor) {
+    if (index === 0) {
       return [
-        businessId && auth?.access_token && `bank-transactions-${businessId}`,
+        businessId &&
+          auth?.access_token &&
+          `${filtersSettingString(filters)}-${businessId}`,
         undefined,
       ]
     }
@@ -89,8 +111,9 @@ export const useBankTransactions: UseBankTransactions = params => {
     return [
       businessId &&
         auth?.access_token &&
-        `bank-transactions-${businessId}-${prevData.meta.pagination.cursor}`,
-      prevData.meta.pagination.cursor,
+        `${filtersSettingString(filters)}-${businessId}-${prevData?.meta
+          ?.pagination?.cursor}`,
+      prevData?.meta?.pagination?.cursor.toString(),
     ]
   }
 
@@ -104,12 +127,28 @@ export const useBankTransactions: UseBankTransactions = params => {
     setSize,
   } = useSWRInfinite(
     getKey,
-    async ([query, nextCursor]) => {
+    async ([_query, nextCursor]) => {
       if (auth?.access_token) {
         return Layer.getBankTransactions(apiUrl, auth?.access_token, {
           params: {
             businessId,
-            cursor: nextCursor,
+            cursor: nextCursor ?? '',
+            categorized: filters?.categorizationStatus
+              ? filters?.categorizationStatus === DisplayState.categorized
+                ? 'true'
+                : filters?.categorizationStatus === DisplayState.review
+                ? 'false'
+                : ''
+              : '',
+            direction:
+              filters?.direction?.length === 1
+                ? filters.direction[0] === Direction.CREDIT
+                  ? 'INFLOW'
+                  : 'OUTFLOW'
+                : undefined,
+            startDate:
+              filters?.dateRange?.startDate?.toISOString() ?? undefined,
+            endDate: filters?.dateRange?.endDate?.toISOString() ?? undefined,
           },
         }).call(false)
       }
@@ -188,18 +227,6 @@ export const useBankTransactions: UseBankTransactions = params => {
       return
     }
 
-    if (filters?.amount?.min || filters?.amount?.max) {
-      filtered = applyAmountFilter(filtered, filters.amount)
-    }
-
-    if (filters?.account) {
-      filtered = applyAccountFilter(filtered, filters.account)
-    }
-
-    if (filters?.direction) {
-      filtered = applyDirectionFilter(filtered, filters.direction)
-    }
-
     if (filters?.categorizationStatus) {
       filtered = applyCategorizationStatusFilter(
         filtered,
@@ -207,8 +234,12 @@ export const useBankTransactions: UseBankTransactions = params => {
       )
     }
 
-    if (filters?.dateRange?.startDate || filters?.dateRange?.endDate) {
-      filtered = appplyDateRangeFilter(filtered, filters?.dateRange)
+    if (filters?.amount?.min || filters?.amount?.max) {
+      filtered = applyAmountFilter(filtered, filters.amount)
+    }
+
+    if (filters?.account) {
+      filtered = applyAccountFilter(filtered, filters.account)
     }
 
     return filtered
@@ -238,7 +269,7 @@ export const useBankTransactions: UseBankTransactions = params => {
           throw errors
         }
         if (newBT?.recently_categorized === true && notify) {
-          addToast({ content: 'Transaction saved' })
+          addToast({ content: 'Transaction confirmed' })
         }
       })
       .catch(err => {
@@ -270,6 +301,13 @@ export const useBankTransactions: UseBankTransactions = params => {
       updateOneLocal({ ...foundBT, processing: true, error: undefined })
     }
 
+    const foundTransferBt = data?.find(
+      x => x.id !== id && x?.suggested_matches?.some(sm => sm.id == matchId),
+    )
+    if (foundTransferBt) {
+      updateOneLocal({ ...foundTransferBt, processing: true, error: undefined })
+    }
+
     return Layer.matchBankTransaction(apiUrl, auth.access_token, {
       params: { businessId, bankTransactionId: id },
       body: { match_id: matchId, type: BankTransactionMatchType.CONFIRM_MATCH },
@@ -285,6 +323,18 @@ export const useBankTransactions: UseBankTransactions = params => {
           newBT.categorization_status = CategorizationStatus.MATCHED
           updateOneLocal(newBT)
         }
+
+        const newTransferBT = data?.find(
+          x =>
+            x.id !== id && x?.suggested_matches?.some(sm => sm.id == matchId),
+        )
+        if (newTransferBT) {
+          newTransferBT.recently_categorized = true
+          newTransferBT.match = bt // This gets the wrong leg of the transfer, but the one we want isn't returned by the api call.
+          newTransferBT.categorization_status = CategorizationStatus.MATCHED
+          updateOneLocal(newTransferBT)
+        }
+
         if (errors) {
           console.error(errors)
           throw errors
@@ -325,17 +375,22 @@ export const useBankTransactions: UseBankTransactions = params => {
     mutate(updatedData, { revalidate: false })
   }
 
+  const shouldHideAfterCategorize = (
+    bankTransaction: BankTransaction,
+  ): boolean => {
+    return filters?.categorizationStatus === DisplayState.review
+  }
+
   const removeAfterCategorize = (bankTransaction: BankTransaction) => {
-    /*
-    Removed 2024-08-12 by @doneel as part of unifying transaction lists in LAY-298
-    const updatedData = rawResponseData?.map(page => {
-      return {
-        ...page,
-        data: page.data?.filter(bt => bt.id !== bankTransaction.id),
-      }
-    })
-    mutate(updatedData, { revalidate: false })
-    */
+    if (shouldHideAfterCategorize(bankTransaction)) {
+      const updatedData = rawResponseData?.map(page => {
+        return {
+          ...page,
+          data: page.data?.filter(bt => bt.id !== bankTransaction.id),
+        }
+      })
+      mutate(updatedData, { revalidate: false })
+    }
   }
 
   const refetch = () => {
@@ -348,18 +403,22 @@ export const useBankTransactions: UseBankTransactions = params => {
     }
   }
 
+  const getCacheKey = (txnFilters?: BankTransactionFilters) => {
+    return filtersSettingString(txnFilters)
+  }
+
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
     if (isLoading || isValidating) {
-      read(DataModel.BANK_TRANSACTIONS, 'bank-transactions')
+      read(DataModel.BANK_TRANSACTIONS, getCacheKey(filters))
     }
   }, [isLoading, isValidating])
 
   useEffect(() => {
-    if (hasBeenTouched('bank-transactions')) {
+    if (hasBeenTouched(getCacheKey(filters))) {
       refetch()
     }
-  }, [syncTimestamps])
+  }, [syncTimestamps, filters])
 
   const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
   const anyAccountSyncing = useMemo(
@@ -410,6 +469,7 @@ export const useBankTransactions: UseBankTransactions = params => {
   useTriggerOnChange(data, anyAccountSyncing, newTransactionList => {
     clearInterval(intervalId)
     setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
+    eventCallbacks?.onTransactionsFetched?.()
     touch(DataModel.BANK_TRANSACTIONS)
   })
 
@@ -424,6 +484,7 @@ export const useBankTransactions: UseBankTransactions = params => {
     categorize,
     match,
     updateOneLocal,
+    shouldHideAfterCategorize,
     removeAfterCategorize,
     filters,
     setFilters,

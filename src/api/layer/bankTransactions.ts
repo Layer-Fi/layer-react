@@ -20,6 +20,9 @@ export interface GetBankTransactionsParams
   businessId: string
   cursor?: string
   categorized?: string
+  direction?: 'INFLOW' | 'OUTFLOW'
+  startDate?: string
+  endDate?: string
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
 }
@@ -31,15 +34,24 @@ export const getBankTransactions = get<
     businessId,
     cursor,
     categorized,
+    direction,
+    startDate,
+    endDate,
     sortBy = 'date',
     sortOrder = 'DESC',
   }: GetBankTransactionsParams) =>
     `/v1/businesses/${businessId}/bank-transactions?${
-      cursor ? `cursor=${cursor}&` : ''
+      cursor !== undefined && cursor !== '' ? `cursor=${cursor}&` : ''
     }${
       categorized !== undefined && categorized !== ''
         ? `categorized=${categorized}&`
         : ''
+    }${direction !== undefined ? `direction=${direction}&` : ''}${
+      startDate !== undefined && startDate !== ''
+        ? `start_date=${startDate}&`
+        : ''
+    }${
+      endDate !== undefined && endDate !== '' ? `end_date=${endDate}&` : ''
     }sort_by=${sortBy}&sort_order=${sortOrder}&limit=200`,
 )
 

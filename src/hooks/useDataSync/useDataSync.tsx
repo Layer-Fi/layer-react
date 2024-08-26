@@ -23,10 +23,19 @@ const DEPENDENCIES: Partial<Record<DataModel, DataModel[]>> = {
   [DataModel.CHART_OF_ACCOUNTS]: ALL_TOUCHABLE,
   [DataModel.JOURNAL]: ALL_TOUCHABLE,
   [DataModel.LEDGER_ACCOUNTS]: ALL_TOUCHABLE,
-  [DataModel.LINKED_ACCOUNTS]: ALL_TOUCHABLE,
+  [DataModel.LINKED_ACCOUNTS]: [
+    DataModel.BUSINESS,
+    DataModel.LINKED_ACCOUNTS,
+    DataModel.CHART_OF_ACCOUNTS,
+  ],
   [DataModel.PROFIT_AND_LOSS]: ALL_TOUCHABLE,
   [DataModel.STATEMENT_OF_CASH_FLOWS]: ALL_TOUCHABLE,
-  [DataModel.BANK_TRANSACTIONS]: ALL_TOUCHABLE,
+  [DataModel.BANK_TRANSACTIONS]: [
+    DataModel.LINKED_ACCOUNTS,
+    DataModel.BANK_TRANSACTIONS,
+    DataModel.BUSINESS,
+    DataModel.CHART_OF_ACCOUNTS,
+  ],
 }
 
 let readTimestampsG = {}
