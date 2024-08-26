@@ -301,6 +301,13 @@ export const useBankTransactions: UseBankTransactions = params => {
       updateOneLocal({ ...foundBT, processing: true, error: undefined })
     }
 
+    const foundTransferBt = data?.find(
+      x => x.id !== id && x?.suggested_matches?.some(sm => sm.id == matchId),
+    )
+    if (foundTransferBt) {
+      updateOneLocal({ ...foundTransferBt, processing: true, error: undefined })
+    }
+
     return Layer.matchBankTransaction(apiUrl, auth.access_token, {
       params: { businessId, bankTransactionId: id },
       body: { match_id: matchId, type: BankTransactionMatchType.CONFIRM_MATCH },
@@ -316,6 +323,18 @@ export const useBankTransactions: UseBankTransactions = params => {
           newBT.categorization_status = CategorizationStatus.MATCHED
           updateOneLocal(newBT)
         }
+
+        const newTransferBT = data?.find(
+          x =>
+            x.id !== id && x?.suggested_matches?.some(sm => sm.id == matchId),
+        )
+        if (newTransferBT) {
+          newTransferBT.recently_categorized = true
+          newTransferBT.match = bt // This gets the wrong leg of the transfer, but the one we want isn't returned by the api call.
+          newTransferBT.categorization_status = CategorizationStatus.MATCHED
+          updateOneLocal(newTransferBT)
+        }
+
         if (errors) {
           console.error(errors)
           throw errors
