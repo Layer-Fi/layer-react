@@ -6,9 +6,25 @@ import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 const DEFAULT_SWITCH_OPTIONS = ['PC', 'MSO']
 
 export const ProfitAndLossCompareOptions = () => {
-  const { setCompareMonths, setCompareOptions } = useContext(
-    ProfitAndLoss.ComparisonContext,
-  )
+  const {
+    setCompareMonths,
+    setCompareOptions,
+    compareMode,
+    refetch,
+    compareMonths,
+    compareOptions,
+  } = useContext(ProfitAndLoss.ComparisonContext)
+
+  const { dateRange } = useContext(ProfitAndLoss.Context)
+
+  useEffect(() => {
+    if (compareMode) {
+      refetch({
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+      })
+    }
+  }, [compareMode, compareOptions, compareMonths])
 
   const [months, setMonths] = useState<number>(0)
   const [toggle, setToggle] = useState<string[]>(['Total'])

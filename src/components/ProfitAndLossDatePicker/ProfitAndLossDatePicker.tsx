@@ -8,6 +8,18 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 export const ProfitAndLossDatePicker = () => {
   const { business } = useLayerContext()
   const { changeDateRange, dateRange } = useContext(ProfitAndLoss.Context)
+  const { refetch, compareMode, compareMonths } = useContext(
+    ProfitAndLoss.ComparisonContext,
+  )
+
+  const getComparisonData = (date: Date) => {
+    if (compareMode && compareMonths > 0) {
+      refetch({
+        startDate: startOfMonth(date),
+        endDate: endOfMonth(date),
+      })
+    }
+  }
 
   const minDate = getEarliestDateToBrowse(business)
 
@@ -17,6 +29,7 @@ export const ProfitAndLossDatePicker = () => {
       selected={dateRange.startDate}
       onChange={date => {
         if (!Array.isArray(date)) {
+          getComparisonData(date)
           changeDateRange({
             startDate: startOfMonth(date),
             endDate: endOfMonth(date),

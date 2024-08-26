@@ -1,6 +1,5 @@
-import { useEffect, useState, useCallback, useContext } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Layer } from '../../api/layer'
-import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, ReportingBasis } from '../../types'
 import {
@@ -40,6 +39,7 @@ type UseProfitAndLossComparison = (props: Props) => {
   setCompareMonths: (months: number) => void
   compareOptions: string[]
   setCompareOptions: (options: string[]) => void
+  refetch: (dateRange: DateRange) => void
 }
 
 export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
@@ -55,8 +55,6 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
   const [isValidating, setIsValidating] = useState(false)
   const [error, setError] = useState<unknown>(null)
 
-  const { dateRange } = useContext(ProfitAndLoss.Context)
-
   const { auth, businessId, apiUrl } = useLayerContext()
 
   useEffect(() => {
@@ -64,14 +62,6 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
       if (compareMonths === 0) {
         setCompareMonths(2)
       }
-      fetchPnLComparisonData(
-        {
-          startDate: dateRange.startDate,
-          endDate: dateRange.endDate,
-        },
-        compareMonths,
-        compareOptions,
-      )
       if (compareMode === false) {
         setCompareMode(true)
       }
@@ -126,6 +116,10 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
     return periods
   }
 
+  const refetch = (dateRange: DateRange) => {
+    fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
+  }
+
   const fetchPnLComparisonData = useCallback(
     async (
       dateRange: DateRange,
@@ -176,5 +170,6 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
     setCompareMonths,
     compareOptions,
     setCompareOptions,
+    refetch,
   }
 }

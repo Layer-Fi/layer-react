@@ -591,6 +591,10 @@
 }
 
 .Layer__compare__table__wrapper {
+  .Layer__table__wrapper {
+    overflow: auto;
+    max-width: 100%;
+  }
   .Layer__table tr td:last-child .Layer__table-cell-content,
   .Layer__table tr th:last-child .Layer__table-cell-content {
     justify-content: flex-start;
