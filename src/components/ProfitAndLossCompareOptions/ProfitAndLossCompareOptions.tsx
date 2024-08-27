@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { SwitchButton } from '../Button'
 import { MultiSelect, Select } from '../Input'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 
@@ -10,9 +9,13 @@ export interface ProfitAndLossCompareOptionsProps {
 
 export interface TagComparisonOption {
   displayName: string
-  tagFilters: TagFilterInput
+  tagFilterConfig: TagViewConfig
 }
 
+export type TagViewConfig = {
+  structure?: string
+  tagFilters: TagFilterInput
+}
 export type TagFilterInput =
   | {
       tagKey: string
@@ -71,7 +74,7 @@ export const ProfitAndLossCompareOptions = ({
   const tagComparisonSelectOptions = tagComparisonOptions.map(
     tagComparisonOption => {
       return {
-        value: JSON.stringify(tagComparisonOption.tagFilters),
+        value: JSON.stringify(tagComparisonOption.tagFilterConfig),
         label: tagComparisonOption.displayName,
       }
     },
@@ -96,14 +99,14 @@ export const ProfitAndLossCompareOptions = ({
             e
               .map(option =>
                 tagComparisonOptions.find(
-                  t => JSON.stringify(t.tagFilters) === option.value,
+                  t => JSON.stringify(t.tagFilterConfig) === option.value,
                 ),
               )
               .filter(Boolean) as TagComparisonOption[],
           )
         }}
         defaultValue={toggle?.map(option => ({
-          value: JSON.stringify(option.tagFilters),
+          value: JSON.stringify(option.tagFilterConfig),
           label: option.displayName,
         }))}
         placeholder='Select views'

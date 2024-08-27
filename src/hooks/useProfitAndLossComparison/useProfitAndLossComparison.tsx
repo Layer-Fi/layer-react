@@ -26,6 +26,7 @@ type TagFilter = Array<{
     key: string
     value: string
   }>
+  structure?: string
 }>
 
 type Props = {
@@ -81,12 +82,13 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
   const prepareFiltersBody = (compareOptions: TagComparisonOption[]) => {
     const tagFilters: TagFilter = []
     compareOptions.map(option => {
-      if (option.tagFilters === 'None') {
+      if (option.tagFilterConfig.tagFilters === 'None') {
         tagFilters.push({
           required_tags: [],
+          structure: option.tagFilterConfig.structure,
         })
       } else {
-        const tagFilter = option.tagFilters
+        const tagFilter = option.tagFilterConfig.tagFilters
         tagFilters.push({
           required_tags: tagFilter.tagValues.map(tagValue => {
             return {
@@ -94,6 +96,7 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
               value: tagValue,
             }
           }),
+          structure: option.tagFilterConfig.structure,
         })
       }
     })
