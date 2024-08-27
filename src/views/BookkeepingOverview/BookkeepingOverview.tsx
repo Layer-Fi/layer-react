@@ -54,12 +54,10 @@ export const BookkeepingOverview = ({
             asWidget
             elevated={true}
           >
-            <Header>
-              <Heading size={HeadingSize.secondary}>
-                {stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
-              </Heading>
-              <ProfitAndLoss.DatePicker />
-            </Header>
+            <ProfitAndLoss.Header
+              text={stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
+              withDatePicker
+            />
             <div className='Layer__bookkeeping-overview__summaries-row'>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
