@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { Layer } from '../../api/layer'
 import {
   TagComparisonOption,
@@ -52,6 +52,11 @@ let initialFetchDone = false
 export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
   reportingBasis,
 }: Props) => {
+  const lastQuery =
+    useRef<
+      Promise<{ data?: ProfitAndLossComparison | undefined; error?: unknown }>
+    >()
+
   const [compareMode, setCompareMode] = useState(false)
   const [compareMonths, setCompareMonths] = useState(0)
   const [compareOptions, setCompareOptions] = useState<TagComparisonOption[]>(
@@ -151,26 +156,27 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
       try {
         const periods = preparePeriodsBody(dateRange, compareMonths)
         const tagFilters = prepareFiltersBody(compareOptions)
-        const results = await Layer.compareProfitAndLoss(
-          apiUrl,
-          auth?.access_token,
-          {
-            params: {
-              businessId,
-            },
-            body: {
-              periods,
-              tag_filters: tagFilters,
-              reporting_basis: reportingBasis,
-            },
+        const request = Layer.compareProfitAndLoss(apiUrl, auth?.access_token, {
+          params: {
+            businessId,
           },
-        )
-        setData(results.data)
-        setError(null)
+          body: {
+            periods,
+            tag_filters: tagFilters,
+            reporting_basis: reportingBasis,
+          },
+        })
+        lastQuery.current = request
+        const results = await request
+        if (lastQuery.current === request) {
+          setData(results.data)
+          setError(null)
+          setIsLoading(false)
+          setIsValidating(false)
+        }
       } catch (err) {
         setError(err)
         setData(undefined)
-      } finally {
         setIsLoading(false)
         setIsValidating(false)
       }
