@@ -15,7 +15,8 @@ export interface SelectProps<T> {
   options?: OptionsOrGroups<T, GroupBase<T>>
   className?: string
   classNamePrefix?: string
-  value?: T
+  value?: T[]
+  defaultValue?: T[]
   onChange: (selected: MultiValue<T>) => void
   disabled?: boolean
   placeholder?: string
@@ -40,6 +41,7 @@ export const MultiSelect = <T,>({
   className,
   classNamePrefix = 'Layer__select',
   value,
+  defaultValue,
   onChange,
   disabled,
   placeholder,
@@ -61,6 +63,7 @@ export const MultiSelect = <T,>({
           placeholder={placeholder ?? 'Select...'}
           options={options}
           value={value}
+          defaultValue={defaultValue}
           onChange={newValue => newValue && onChange(newValue)}
           menuPortalTarget={document.body}
           styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}

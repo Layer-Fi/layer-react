@@ -71,11 +71,15 @@ export const ProfitAndLossCompareOptions = ({
   const tagComparisonSelectOptions = tagComparisonOptions.map(
     tagComparisonOption => {
       return {
-        value: tagComparisonOption.tagFilters,
+        value:
+          tagComparisonOption.tagFilters === 'None'
+            ? 'None'
+            : tagComparisonOption.tagFilters.tagKey,
         label: tagComparisonOption.displayName,
       }
     },
   )
+
   return (
     <div className='Layer__compare__options'>
       <Select
@@ -99,6 +103,11 @@ export const ProfitAndLossCompareOptions = ({
               .filter(Boolean) as TagComparisonOption[],
           )
         }}
+        defaultValue={toggle?.map(option => ({
+          value:
+            option.tagFilters === 'None' ? 'None' : option.tagFilters.tagKey,
+          label: option.displayName,
+        }))}
         placeholder='Select views'
       />
     </div>
