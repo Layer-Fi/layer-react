@@ -634,6 +634,12 @@
   }
 }
 
+.Layer__compare__options {
+  .Layer__select {
+    width: max-content;
+  }
+}
+
 @media screen and (-webkit-min-device-pixel-ratio: 2) {
   .Layer__component {
     .Layer__textarea,
