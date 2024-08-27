@@ -71,11 +71,12 @@ export const ProfitAndLossCompareOptions = ({
   const tagComparisonSelectOptions = tagComparisonOptions.map(
     tagComparisonOption => {
       return {
-        value: tagComparisonOption.tagFilters,
+        value: JSON.stringify(tagComparisonOption.tagFilters),
         label: tagComparisonOption.displayName,
       }
     },
   )
+
   return (
     <div className='Layer__compare__options'>
       <Select
@@ -94,11 +95,17 @@ export const ProfitAndLossCompareOptions = ({
           setToggle(
             e
               .map(option =>
-                tagComparisonOptions.find(t => t.tagFilters === option.value),
+                tagComparisonOptions.find(
+                  t => JSON.stringify(t.tagFilters) === option.value,
+                ),
               )
               .filter(Boolean) as TagComparisonOption[],
           )
         }}
+        defaultValue={toggle?.map(option => ({
+          value: JSON.stringify(option.tagFilters),
+          label: option.displayName,
+        }))}
         placeholder='Select views'
       />
     </div>
