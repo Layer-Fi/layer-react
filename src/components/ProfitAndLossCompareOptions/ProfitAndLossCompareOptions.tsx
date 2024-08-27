@@ -71,10 +71,7 @@ export const ProfitAndLossCompareOptions = ({
   const tagComparisonSelectOptions = tagComparisonOptions.map(
     tagComparisonOption => {
       return {
-        value:
-          tagComparisonOption.tagFilters === 'None'
-            ? 'None'
-            : tagComparisonOption.tagFilters.tagKey,
+        value: JSON.stringify(tagComparisonOption.tagFilters),
         label: tagComparisonOption.displayName,
       }
     },
@@ -98,14 +95,15 @@ export const ProfitAndLossCompareOptions = ({
           setToggle(
             e
               .map(option =>
-                tagComparisonOptions.find(t => t.tagFilters === option.value),
+                tagComparisonOptions.find(
+                  t => JSON.stringify(t.tagFilters) === option.value,
+                ),
               )
               .filter(Boolean) as TagComparisonOption[],
           )
         }}
         defaultValue={toggle?.map(option => ({
-          value:
-            option.tagFilters === 'None' ? 'None' : option.tagFilters.tagKey,
+          value: JSON.stringify(option.tagFilters),
           label: option.displayName,
         }))}
         placeholder='Select views'
