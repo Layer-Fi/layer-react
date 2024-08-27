@@ -35,6 +35,7 @@ export interface TableRowProps {
   handleExpand?: () => void
   onClick?: (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>) => void
   isHeadRow?: boolean
+  selected?: boolean
 }
 
 export interface TableCellProps {

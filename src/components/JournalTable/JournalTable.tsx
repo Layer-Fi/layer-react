@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { JournalContext } from '../../contexts/JournalContext'
 import { TableProvider } from '../../contexts/TableContext'
@@ -81,6 +81,7 @@ const JournalTableContent = ({
   ) => {
     const expandable = !!row.line_items && row.line_items.length > 0
     const expanded = expandable ? isOpen(rowKey) : true
+    const [selectedRow, setSelectedRow] = useState(false)
     return (
       <React.Fragment key={rowKey + '-' + index}>
         <TableRow
@@ -88,13 +89,16 @@ const JournalTableContent = ({
           expandable={expandable}
           isExpanded={expanded}
           handleExpand={() => setIsOpen(rowKey)}
+          selected={selectedRow}
           onClick={e => {
             e.stopPropagation()
 
             if (selectedEntryId === row.id) {
               closeSelectedEntry()
+              setSelectedRow(false)
             } else {
               setSelectedEntryId(row.id)
+              setSelectedRow(true)
             }
           }}
           depth={depth}
@@ -139,6 +143,7 @@ const JournalTableContent = ({
             <TableRow
               rowKey={rowKey + '-' + index + '-' + subIdx}
               depth={depth + 1}
+              selected={selectedRow}
             >
               <TableCell />
               <TableCell />
@@ -190,7 +195,7 @@ const JournalTableContent = ({
       </TableHead>
       <TableBody>
         {data.map((entry, idx) =>
-          renderJournalRow(entry, idx, `journal-row- + ${entry.id}`, 0),
+          renderJournalRow(entry, idx, `journal-row-${entry.id}`, 0),
         )}
       </TableBody>
     </Table>

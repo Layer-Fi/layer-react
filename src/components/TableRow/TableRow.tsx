@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { TableRowProps } from '../../types/table'
 import classNames from 'classnames'
 
@@ -13,6 +13,7 @@ export const TableRow: React.FC<TableRowProps> = ({
   withDivider,
   withDividerPosition = 'top',
   isHeadRow = false,
+  selected,
   onClick,
 }) => {
   const toggleExpanded = (
@@ -30,6 +31,7 @@ export const TableRow: React.FC<TableRowProps> = ({
     'Layer__table-row',
     !isHeadRow && `Layer__table-row--depth-${depth}`,
     !isHeadRow && `Layer__table-row--variant-${variant}`,
+    selected && 'Layer__table-row--selected',
     !isHeadRow &&
       expandable &&
       (isExpanded

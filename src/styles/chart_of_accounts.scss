@@ -186,6 +186,10 @@
 }
 
 @container (max-width: 760px) {
+  .Layer__chart-of-accounts {
+    overflow: auto;
+  }
+
   .Layer__chart-of-accounts__row---mobile {
     visibility: visible;
     display: table-row;
