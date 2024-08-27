@@ -8,6 +8,7 @@ import { ProfitAndLossChart } from '../ProfitAndLossChart'
 import { ProfitAndLossCompareOptions } from '../ProfitAndLossCompareOptions'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
+import { ProfitAndLossHeader } from '../ProfitAndLossHeader'
 import { ProfitAndLossSummaries } from '../ProfitAndLossSummaries'
 import { ProfitAndLossTable } from '../ProfitAndLossTable'
 import { endOfMonth, startOfMonth } from 'date-fns'
@@ -77,4 +78,5 @@ ProfitAndLoss.CompareOptions = ProfitAndLossCompareOptions
 ProfitAndLoss.Summaries = ProfitAndLossSummaries
 ProfitAndLoss.Table = ProfitAndLossTable
 ProfitAndLoss.DetailedCharts = ProfitAndLossDetailedCharts
+ProfitAndLoss.Header = ProfitAndLossHeader
 export { ProfitAndLoss }

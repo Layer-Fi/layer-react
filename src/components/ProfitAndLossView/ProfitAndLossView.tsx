@@ -57,11 +57,11 @@ const ProfitAndLossPanel = ({
       sidebarIsOpen={Boolean(sidebarScope)}
       parentRef={containerRef}
     >
-      <Header className={`Layer__${COMPONENT_NAME}__header`}>
-        <Heading className='Layer__profit-and-loss__title'>
-          {stringOverrides?.header || 'Profit & Loss'}
-        </Heading>
-      </Header>
+      <ProfitAndLoss.Header
+        text={stringOverrides?.header || 'Profit & Loss'}
+        className={`Layer__${COMPONENT_NAME}__header`}
+        headingClassName='Layer__profit-and-loss__title'
+      />
 
       <Components stringOverrides={stringOverrides} {...props} />
     </Panel>
