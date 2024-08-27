@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
-import { LineItem } from '../../types'
+import { DateRange, LineItem } from '../../types'
 import { ProfitAndLossComparisonPnl } from '../../types/profit_and_loss'
 import {
   generatComparisonMonths,
@@ -26,12 +26,30 @@ export const ProfitAndLossCompareTable = ({
     isLoading,
     compareMonths,
     compareOptions,
+    refetch,
   } = useContext(ProfitAndLoss.ComparisonContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
 
   useEffect(() => {
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
   }, [])
+
+  useEffect(() => {
+    if (
+      dateRange?.startDate &&
+      dateRange?.endDate &&
+      !comparisonData &&
+      !isLoading
+    ) {
+      refetch(
+        {
+          startDate: dateRange.startDate,
+          endDate: dateRange.endDate,
+        },
+        true,
+      )
+    }
+  }, [dateRange, comparisonData])
 
   if (isLoading || comparisonData === undefined) {
     return (
@@ -50,7 +68,7 @@ export const ProfitAndLossCompareTable = ({
     lineItem?: LineItem,
     data?: (string | number | LineItem)[],
   ): React.ReactNode => {
-    let rowData: (string | number | boolean | LineItem | null | undefined)[] =
+    const rowData: (string | number | boolean | LineItem | null | undefined)[] =
       data ? data : []
 
     if (!lineItem) {
@@ -125,7 +143,7 @@ export const ProfitAndLossCompareTable = ({
             {compareOptions.map((option, i) => (
               <React.Fragment key={option + '-' + i}>
                 <TableCell key={option + '-' + i} primary isHeaderCell>
-                  {option}
+                  {option.displayName}
                 </TableCell>
                 {compareMonths &&
                   Array.from({ length: compareMonths - 1 }, (_, index) => (

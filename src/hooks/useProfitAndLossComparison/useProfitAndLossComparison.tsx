@@ -1,5 +1,9 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { Layer } from '../../api/layer'
+import {
+  TagComparisonOption,
+  TagFilterInput,
+} from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, ReportingBasis } from '../../types'
 import {
@@ -13,7 +17,7 @@ export type Scope = 'expenses' | 'revenue'
 export type SidebarScope = Scope | undefined
 
 type Periods = {
-  type: 'Months'
+  type: 'Comparison_Months'
   months: Array<{ year: number; month: number }>
 }
 
@@ -22,6 +26,7 @@ type TagFilter = Array<{
     key: string
     value: string
   }>
+  structure?: string
 }>
 
 type Props = {
@@ -37,31 +42,40 @@ type UseProfitAndLossComparison = (props: Props) => {
   setCompareMode: (mode: boolean) => void
   compareMonths: number
   setCompareMonths: (months: number) => void
-  compareOptions: string[]
-  setCompareOptions: (options: string[]) => void
-  refetch: (dateRange: DateRange) => void
+  compareOptions: TagComparisonOption[]
+  setCompareOptions: (options: TagComparisonOption[]) => void
+  refetch: (dateRange: DateRange, actAsInitial?: boolean) => void
 }
+
+let initialFetchDone = false
 
 export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
   reportingBasis,
 }: Props) => {
+  const lastQuery =
+    useRef<
+      Promise<{ data?: ProfitAndLossComparison | undefined; error?: unknown }>
+    >()
+
   const [compareMode, setCompareMode] = useState(false)
   const [compareMonths, setCompareMonths] = useState(0)
-  const [compareOptions, setCompareOptions] = useState<string[]>([])
+  const [compareOptions, setCompareOptions] = useState<TagComparisonOption[]>(
+    [],
+  )
   const [data, setData] = useState<ProfitAndLossComparison | undefined>(
     undefined,
   )
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [isValidating, setIsValidating] = useState(false)
   const [error, setError] = useState<unknown>(null)
 
   const { auth, businessId, apiUrl } = useLayerContext()
 
   useEffect(() => {
-    if (compareMonths > 1 || compareOptions.length > 1) {
-      if (compareMonths === 0) {
-        setCompareMonths(2)
-      }
+    if (
+      compareMonths > 1 ||
+      compareOptions.filter(x => x.displayName).length > 0
+    ) {
       if (compareMode === false) {
         setCompareMode(true)
       }
@@ -70,21 +84,24 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
     }
   }, [compareMonths, compareOptions])
 
-  const prepareFiltersBody = (compareOptions: string[]) => {
+  const prepareFiltersBody = (compareOptions: TagComparisonOption[]) => {
     const tagFilters: TagFilter = []
     compareOptions.map(option => {
-      if (option === 'Total') {
+      if (option.tagFilterConfig.tagFilters === 'None') {
         tagFilters.push({
           required_tags: [],
+          structure: option.tagFilterConfig.structure,
         })
       } else {
+        const tagFilter = option.tagFilterConfig.tagFilters
         tagFilters.push({
-          required_tags: [
-            {
-              key: 'entity',
-              value: option.toLowerCase(),
-            },
-          ],
+          required_tags: tagFilter.tagValues.map(tagValue => {
+            return {
+              key: tagFilter.tagKey,
+              value: tagValue,
+            }
+          }),
+          structure: option.tagFilterConfig.structure,
         })
       }
     })
@@ -93,7 +110,7 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
 
   const preparePeriodsBody = (dateRange: DateRange, compareMonths: number) => {
     const periods: Periods = {
-      type: 'Months',
+      type: 'Comparison_Months',
       months: [],
     }
     const adjustedStartDate = startOfMonth(dateRange.startDate)
@@ -116,47 +133,63 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
     return periods
   }
 
-  const refetch = (dateRange: DateRange) => {
-    fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
+  const refetch = (dateRange: DateRange, actAsInitial?: boolean) => {
+    if (actAsInitial && !initialFetchDone) {
+      fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
+    } else if (!actAsInitial) {
+      fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
+    }
   }
 
   const fetchPnLComparisonData = useCallback(
     async (
       dateRange: DateRange,
       compareMonths: number,
-      compareOptions: string[],
+      compareOptions: TagComparisonOption[],
     ) => {
+      if (!auth.access_token || !businessId || !apiUrl) {
+        return
+      }
       setIsLoading(true)
       setIsValidating(true)
+      initialFetchDone = true
       try {
         const periods = preparePeriodsBody(dateRange, compareMonths)
         const tagFilters = prepareFiltersBody(compareOptions)
-        const results = await Layer.compareProfitAndLoss(
-          apiUrl,
-          auth?.access_token,
-          {
-            params: {
-              businessId,
-            },
-            body: {
-              periods,
-              tag_filters: tagFilters,
-              structure: 'DEFAULT',
-              reporting_basis: reportingBasis,
-            },
+        const request = Layer.compareProfitAndLoss(apiUrl, auth?.access_token, {
+          params: {
+            businessId,
           },
-        )
-        setData(results.data)
-        setError(null)
+          body: {
+            periods,
+            tag_filters: tagFilters,
+            reporting_basis: reportingBasis,
+          },
+        })
+        lastQuery.current = request
+        const results = await request
+        if (lastQuery.current === request) {
+          setData(results.data)
+          setError(null)
+          setIsLoading(false)
+          setIsValidating(false)
+        }
       } catch (err) {
         setError(err)
         setData(undefined)
-      } finally {
         setIsLoading(false)
         setIsValidating(false)
       }
     },
-    [apiUrl, auth?.access_token, businessId, reportingBasis],
+    [
+      apiUrl,
+      auth,
+      auth?.access_token,
+      businessId,
+      compareOptions,
+      compareMonths,
+      reportingBasis,
+    ],
   )
 
   return {

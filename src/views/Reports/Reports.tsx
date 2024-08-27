@@ -6,6 +6,11 @@ import { Button, ButtonVariant, RetryButton } from '../../components/Button'
 import { Container } from '../../components/Container'
 import { Panel } from '../../components/Panel'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import {
+  ProfitAndLossCompareOptionsProps,
+  TagComparisonOption,
+  TagFilterInput,
+} from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossTableStringOverrides } from '../../components/ProfitAndLossTable'
 import { StatementOfCashFlow } from '../../components/StatementOfCashFlow'
@@ -30,7 +35,7 @@ export interface ReportsProps {
   title?: string // deprecated
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
-  comparisonOptions?: string[]
+  comparisonConfig: ProfitAndLossCompareOptionsProps
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -39,7 +44,7 @@ export interface ReportsPanelProps {
   containerRef: RefObject<HTMLDivElement>
   openReport: ReportType
   stringOverrides?: ReportsStringOverrides
-  comparisonOptions?: string[]
+  comparisonConfig: ProfitAndLossCompareOptionsProps
 }
 
 interface DownloadButtonStringOverrides {
@@ -129,7 +134,7 @@ export const Reports = ({
   title,
   stringOverrides,
   enabledReports = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow'],
-  comparisonOptions,
+  comparisonConfig,
 }: ReportsProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
@@ -158,7 +163,7 @@ export const Reports = ({
             containerRef={containerRef}
             openReport={activeTab}
             stringOverrides={stringOverrides}
-            comparisonOptions={comparisonOptions}
+            comparisonConfig={comparisonConfig}
           />
         </ProfitAndLoss>
       </Container>
@@ -170,7 +175,7 @@ const ReportsPanel = ({
   containerRef,
   openReport,
   stringOverrides,
-  comparisonOptions,
+  comparisonConfig,
 }: ReportsPanelProps) => {
   const { sidebarScope } = useContext(ProfitAndLoss.Context)
   return (
@@ -182,9 +187,10 @@ const ReportsPanel = ({
             <>
               <ProfitAndLoss.DatePicker />
               <div className='Layer__compare__controls__wrapper'>
-                {comparisonOptions && (
+                {comparisonConfig && (
                   <ProfitAndLoss.CompareOptions
-                    comparisonOptions={comparisonOptions}
+                    tagComparisonOptions={comparisonConfig.tagComparisonOptions}
+                    defaultTagFilter={comparisonConfig.defaultTagFilter}
                   />
                 )}
                 <DownloadButton
