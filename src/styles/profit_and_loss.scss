@@ -4,6 +4,24 @@
   background-color: white;
 }
 
+.Layer__compare__options {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  .Layer__input-tooltip {
+    flex: 1;
+    min-width: 100px;
+  }
+  .Layer__compare__switch__options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+  }
+}
+
 .Layer__profit-and-loss__main-panel {
   flex: 1;
 }
@@ -600,4 +618,25 @@
 .Layer__profit-and-loss-chart__state-card__description {
   color: var(--text-color-secondary);
   text-align: center;
+}
+
+.Layer__compare__controls__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  flex-grow: 1;
+  flex-wrap: wrap;
+}
+
+.Layer__compare__table__wrapper {
+  .Layer__table__wrapper {
+    overflow: auto;
+    max-width: 100%;
+  }
+  .Layer__table tr td:last-child .Layer__table-cell-content,
+  .Layer__table tr th:last-child .Layer__table-cell-content {
+    justify-content: flex-start;
+    padding-right: var(--spacing-lg);
+  }
 }

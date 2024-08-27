@@ -7,7 +7,7 @@ import {
   FileMetadata,
 } from '../../types/bank_transactions'
 import { S3PresignedUrl } from '../../types/general'
-import { get, put, post, postWithFormData } from './authenticated_http'
+import { get, put, postWithFormData } from './authenticated_http'
 
 export type GetBankTransactionsReturn = {
   data?: BankTransaction[]

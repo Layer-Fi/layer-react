@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { TableProvider } from '../../contexts/TableContext'
+import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
+import { ProfitAndLossCompareTable } from './ProfitAndLossCompareTable'
 import {
   ProfitAndLossTableComponent,
   ProfilAndLostTableProps,
@@ -8,9 +10,16 @@ import {
 export const ProfitAndLossTableWithProvider = (
   props: ProfilAndLostTableProps,
 ) => {
+  const { compareMode } = useContext(ProfitAndLoss.ComparisonContext)
   return (
     <TableProvider>
-      <ProfitAndLossTableComponent {...props} />
+      {compareMode ? (
+        <div className='Layer__compare__table__wrapper'>
+          <ProfitAndLossCompareTable {...props} />
+        </div>
+      ) : (
+        <ProfitAndLossTableComponent {...props} />
+      )}
     </TableProvider>
   )
 }

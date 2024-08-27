@@ -66,6 +66,7 @@
       align-items: center;
       gap: var(--spacing-sm);
       flex-wrap: wrap;
+      flex-grow: 1;
     }
   }
 }
