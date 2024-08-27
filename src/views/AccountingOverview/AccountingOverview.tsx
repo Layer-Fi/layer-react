@@ -1,6 +1,10 @@
 import React, { ReactNode, useState } from 'react'
 import { Container, Header } from '../../components/Container'
 import { Onboarding } from '../../components/Onboarding'
+import {
+  CallReminder,
+  OnboardingCallCalendar,
+} from '../../components/OnboardingCall'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
@@ -66,6 +70,11 @@ export const AccountingOverview = ({
           />
           <ProfitAndLoss.Chart />
         </Container>
+        <div>
+          <OnboardingCallCalendar />
+          <hr />
+          <CallReminder />
+        </div>
         {middleBanner && (
           <Container name='accounting-overview-middle-banner'>
             {middleBanner}
