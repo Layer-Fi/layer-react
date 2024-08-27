@@ -64,7 +64,10 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
   const { auth, businessId, apiUrl } = useLayerContext()
 
   useEffect(() => {
-    if (compareMonths > 1 || compareOptions.length > 1) {
+    if (
+      compareMonths > 1 ||
+      compareOptions.filter(x => x.displayName).length > 0
+    ) {
       if (compareMode === false) {
         setCompareMode(true)
       }
