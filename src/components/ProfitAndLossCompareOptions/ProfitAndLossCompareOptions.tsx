@@ -1,14 +1,28 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { SwitchButton } from '../Button'
-import { Select } from '../Input'
+import { MultiSelect, Select } from '../Input'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 
 export interface ProfitAndLossCompareOptionsProps {
-  comparisonOptions: string[]
+  tagComparisonOptions: TagComparisonOption[]
+  defaultTagFilter: TagComparisonOption
 }
 
+export interface TagComparisonOption {
+  displayName: string
+  tagFilters: TagFilterInput
+}
+
+export type TagFilterInput =
+  | {
+      tagKey: string
+      tagValues: string[]
+    }
+  | 'None'
+
 export const ProfitAndLossCompareOptions = ({
-  comparisonOptions,
+  tagComparisonOptions,
+  defaultTagFilter: defaultOption,
 }: ProfitAndLossCompareOptionsProps) => {
   const {
     setCompareMonths,
@@ -30,91 +44,63 @@ export const ProfitAndLossCompareOptions = ({
     }
   }, [compareMode, compareOptions, compareMonths])
 
-  const [months, setMonths] = useState<number>(0)
-  const [toggle, setToggle] = useState<string[]>(['Total'])
+  const [months, setMonths] = useState<number>(1)
+  const [toggle, setToggle] = useState<TagComparisonOption[]>([defaultOption])
 
   useEffect(() => {
-    if (months > 0 && toggle.length === 0) {
-      handleSwitch('Total', true)
+    if (months === 0 && toggle.length > 1) {
+      setMonths(1)
     }
     setCompareMonths && setCompareMonths(months)
   }, [months])
 
   useEffect(() => {
-    if (toggle.length === 0 && months > 0) {
-      setMonths(0)
-      handleSwitch('Total', true)
+    if (toggle.length === 0) {
+      setToggle([defaultOption])
+    } else {
+      setCompareOptions && setCompareOptions(toggle)
     }
-    if (toggle.length > 1 && months === 0) {
-      setMonths(2)
-    }
-    setCompareOptions && setCompareOptions(toggle)
   }, [toggle])
 
-  const handleSwitch = (name: string, value: boolean) => {
-    let updatedToggle = [...toggle]
+  const timeComparisonOptions = [
+    { value: 1, label: 'This month' },
+    { value: 2, label: 'Last 2 months' },
+    { value: 3, label: 'Last 3 months' },
+  ]
 
-    if (value) {
-      0
-      if (!updatedToggle.includes(name)) {
-        updatedToggle = [...updatedToggle, name]
+  const tagComparisonSelectOptions = tagComparisonOptions.map(
+    tagComparisonOption => {
+      return {
+        value: tagComparisonOption.tagFilters,
+        label: tagComparisonOption.displayName,
       }
-    } else {
-      0
-      if (
-        updatedToggle.length > 1 ||
-        (name !== 'Total' && updatedToggle.length === 1)
-      ) {
-        updatedToggle = updatedToggle.filter(item => item !== name)
-      }
-    }
-
-    updatedToggle = updatedToggle
-      .filter(item => item !== 'Total')
-      .sort()
-      .concat(updatedToggle.includes('Total') ? ['Total'] : [])
-
-    setToggle(updatedToggle)
-  }
-
+    },
+  )
   return (
     <div className='Layer__compare__options'>
       <Select
-        options={[
-          { value: 2, label: 'Compare last month' },
-          { value: 3, label: 'Compare 3 month' },
-          { value: null, label: "Don't compare" },
-        ]}
+        options={timeComparisonOptions}
         onChange={e => setMonths(e && e.value ? e.value : 0)}
         value={
           months === 0
             ? null
-            : {
-                value: months,
-                label: `Compare ${
-                  months === 2 ? 'last month' : months + ' ' + 'months'
-                }`,
-              }
+            : timeComparisonOptions.find(option => option.value === months)
         }
         placeholder='Compare months'
       />
-      <div className='Layer__compare__switch__options'>
-        <SwitchButton
-          onChange={checked => handleSwitch('Total', checked)}
-          checked={toggle.includes('Total')}
-        >
-          Show total
-        </SwitchButton>
-        {comparisonOptions.map(option => (
-          <SwitchButton
-            key={option}
-            onChange={checked => handleSwitch(option, checked)}
-            checked={toggle.includes(option)}
-          >
-            {option}
-          </SwitchButton>
-        ))}
-      </div>
+      <MultiSelect
+        options={tagComparisonSelectOptions}
+        onChange={e => {
+          setToggle(
+            e
+              .map(option =>
+                tagComparisonOptions.find(t => t.tagFilters === option.value),
+              )
+              .filter(Boolean) as TagComparisonOption[],
+          )
+        }}
+        placeholder='Select views'
+      />
     </div>
   )
 }

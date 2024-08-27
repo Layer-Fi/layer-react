@@ -1,5 +1,9 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Layer } from '../../api/layer'
+import {
+  TagComparisonOption,
+  TagFilterInput,
+} from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, ReportingBasis } from '../../types'
 import {
@@ -13,7 +17,7 @@ export type Scope = 'expenses' | 'revenue'
 export type SidebarScope = Scope | undefined
 
 type Periods = {
-  type: 'Months'
+  type: 'Comparison_Months'
   months: Array<{ year: number; month: number }>
 }
 
@@ -37,8 +41,8 @@ type UseProfitAndLossComparison = (props: Props) => {
   setCompareMode: (mode: boolean) => void
   compareMonths: number
   setCompareMonths: (months: number) => void
-  compareOptions: string[]
-  setCompareOptions: (options: string[]) => void
+  compareOptions: TagComparisonOption[]
+  setCompareOptions: (options: TagComparisonOption[]) => void
   refetch: (dateRange: DateRange) => void
 }
 
@@ -47,7 +51,9 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
 }: Props) => {
   const [compareMode, setCompareMode] = useState(false)
   const [compareMonths, setCompareMonths] = useState(0)
-  const [compareOptions, setCompareOptions] = useState<string[]>([])
+  const [compareOptions, setCompareOptions] = useState<TagComparisonOption[]>(
+    [],
+  )
   const [data, setData] = useState<ProfitAndLossComparison | undefined>(
     undefined,
   )
@@ -59,9 +65,6 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
 
   useEffect(() => {
     if (compareMonths > 1 || compareOptions.length > 1) {
-      if (compareMonths === 0) {
-        setCompareMonths(2)
-      }
       if (compareMode === false) {
         setCompareMode(true)
       }
@@ -70,21 +73,22 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
     }
   }, [compareMonths, compareOptions])
 
-  const prepareFiltersBody = (compareOptions: string[]) => {
+  const prepareFiltersBody = (compareOptions: TagComparisonOption[]) => {
     const tagFilters: TagFilter = []
     compareOptions.map(option => {
-      if (option === 'Total') {
+      if (option.tagFilters === 'None') {
         tagFilters.push({
           required_tags: [],
         })
       } else {
+        const tagFilter = option.tagFilters
         tagFilters.push({
-          required_tags: [
-            {
-              key: 'entity',
-              value: option.toLowerCase(),
-            },
-          ],
+          required_tags: tagFilter.tagValues.map(tagValue => {
+            return {
+              key: tagFilter.tagKey,
+              value: tagValue,
+            }
+          }),
         })
       }
     })
@@ -93,7 +97,7 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
 
   const preparePeriodsBody = (dateRange: DateRange, compareMonths: number) => {
     const periods: Periods = {
-      type: 'Months',
+      type: 'Comparison_Months',
       months: [],
     }
     const adjustedStartDate = startOfMonth(dateRange.startDate)
@@ -124,7 +128,7 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
     async (
       dateRange: DateRange,
       compareMonths: number,
-      compareOptions: string[],
+      compareOptions: TagComparisonOption[],
     ) => {
       setIsLoading(true)
       setIsValidating(true)
@@ -141,7 +145,6 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
             body: {
               periods,
               tag_filters: tagFilters,
-              structure: 'DEFAULT',
               reporting_basis: reportingBasis,
             },
           },

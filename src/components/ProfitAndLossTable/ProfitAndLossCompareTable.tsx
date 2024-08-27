@@ -50,7 +50,7 @@ export const ProfitAndLossCompareTable = ({
     lineItem?: LineItem,
     data?: (string | number | LineItem)[],
   ): React.ReactNode => {
-    let rowData: (string | number | boolean | LineItem | null | undefined)[] =
+    const rowData: (string | number | boolean | LineItem | null | undefined)[] =
       data ? data : []
 
     if (!lineItem) {
@@ -125,7 +125,7 @@ export const ProfitAndLossCompareTable = ({
             {compareOptions.map((option, i) => (
               <React.Fragment key={option + '-' + i}>
                 <TableCell key={option + '-' + i} primary isHeaderCell>
-                  {option}
+                  {option.displayName}
                 </TableCell>
                 {compareMonths &&
                   Array.from({ length: compareMonths - 1 }, (_, index) => (

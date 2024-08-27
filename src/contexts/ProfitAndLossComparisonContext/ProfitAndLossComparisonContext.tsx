@@ -1,4 +1,5 @@
 import { createContext } from 'react'
+import { TagComparisonOption } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison/useProfitAndLossComparison'
 import { DateRange } from '../../types'
 
@@ -13,7 +14,7 @@ export const PNLComparisonContext = createContext<PNLComparisonContextType>({
   compareMonths: 0,
   setCompareMonths: () => {},
   compareOptions: [],
-  setCompareOptions: function (options: string[]): void {
+  setCompareOptions: function (options: TagComparisonOption[]): void {
     throw new Error('Function not implemented.')
   },
   refetch: function (dateRange: DateRange): void {
