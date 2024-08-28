@@ -81,7 +81,6 @@ const JournalTableContent = ({
   ) => {
     const expandable = !!row.line_items && row.line_items.length > 0
     const expanded = expandable ? isOpen(rowKey) : true
-    const [selectedRow, setSelectedRow] = useState(false)
     return (
       <React.Fragment key={rowKey + '-' + index}>
         <TableRow
@@ -89,16 +88,14 @@ const JournalTableContent = ({
           expandable={expandable}
           isExpanded={expanded}
           handleExpand={() => setIsOpen(rowKey)}
-          selected={selectedRow}
+          selected={selectedEntryId === row.id}
           onClick={e => {
             e.stopPropagation()
 
             if (selectedEntryId === row.id) {
               closeSelectedEntry()
-              setSelectedRow(false)
             } else {
               setSelectedEntryId(row.id)
-              setSelectedRow(true)
             }
           }}
           depth={depth}
@@ -141,9 +138,10 @@ const JournalTableContent = ({
           expanded &&
           row.line_items.map((subItem, subIdx) => (
             <TableRow
+              key={rowKey + '-' + index + '-' + subIdx}
               rowKey={rowKey + '-' + index + '-' + subIdx}
               depth={depth + 1}
-              selected={selectedRow}
+              selected={selectedEntryId === row.id}
             >
               <TableCell />
               <TableCell />

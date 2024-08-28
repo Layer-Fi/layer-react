@@ -10,7 +10,6 @@ import {
 } from '../../types/chart_of_accounts'
 import { Button, ButtonVariant } from '../Button'
 import { View } from '../ChartOfAccounts/ChartOfAccounts'
-import { ChartOfAccountsRow } from '../ChartOfAccountsRow'
 import { Table, TableBody } from '../Table'
 import { TableCell } from '../TableCell'
 import { TableHead } from '../TableHead'
