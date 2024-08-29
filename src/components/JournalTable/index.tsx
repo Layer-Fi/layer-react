@@ -1,1 +1,1 @@
-export { JournalTable } from './JournalTable'
+export { JournalTableWithPanel as JournalTable } from './JournalTableWithPanel'

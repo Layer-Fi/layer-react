@@ -1,139 +1,201 @@
-import React, { RefObject, useContext, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { DATE_FORMAT } from '../../config/general'
 import { JournalContext } from '../../contexts/JournalContext'
-import { Button, ButtonVariant } from '../Button'
-import { Header } from '../Container'
-import { DataState, DataStateStatus } from '../DataState'
+import { TableProvider } from '../../contexts/TableContext'
+import { useTableExpandRow } from '../../hooks/useTableExpandRow'
+import {
+  JournalEntry,
+  JournalEntryLine,
+  JournalEntryLineItem,
+} from '../../types'
+import { humanizeEnum } from '../../utils/format'
 import { View } from '../Journal'
-import { JournalConfig } from '../Journal/Journal'
-import { JournalRow } from '../JournalRow'
-import { JournalSidebar } from '../JournalSidebar'
-import { Loader } from '../Loader'
-import { Pagination } from '../Pagination'
-import { Panel } from '../Panel'
-import { Heading } from '../Typography'
-import { JournalFormStringOverrides } from '../JournalForm/JournalForm'
+import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
+import { JournalTableStringOverrides } from './JournalTableWithPanel'
+import { parseISO, format as formatTime } from 'date-fns'
 
-const COMPONENT_NAME = 'journal'
+const rowId = (row: JournalEntry | JournalEntryLineItem | JournalEntryLine) => {
+  if ('id' in row) {
+    return row.id
+  }
+  if ('account_identifier' in row) {
+    return `${row.account_identifier.id}-${Math.random()}`
+  }
 
-export interface JournalTableStringOverrides {
-    componentTitle?: string,
-    addEntryButton?: string,
-    idColumnHeader?: string,
-    dateColumnHeader?: string,
-    transactionColumnHeader?: string,
-    accountColumnHeader?: string,
-    debitColumnHeader?: string,
-    creditColumnHeader?: string,
-    journalForm?: JournalFormStringOverrides
+  return `${Math.random()}`
+}
+
+const accountName = (
+  row: JournalEntry | JournalEntryLine | JournalEntryLineItem,
+) => {
+  if ('account' in row) {
+    return row.account.name
+  }
+  if ('account_identifier' in row) {
+    return row.account_identifier.name
+  }
+  return ''
 }
 
 export const JournalTable = ({
   view,
-  containerRef,
-  pageSize = 15,
-  config,
+  data,
   stringOverrides,
 }: {
   view: View
-  containerRef: RefObject<HTMLDivElement>
-  pageSize?: number
-  config: JournalConfig
+  data: JournalEntry[]
+  stringOverrides?: JournalTableStringOverrides
+}) => (
+  <TableProvider>
+    <JournalTableContent
+      view={view}
+      data={data}
+      stringOverrides={stringOverrides}
+    />
+  </TableProvider>
+)
+
+const JournalTableContent = ({
+  view,
+  data,
+  stringOverrides,
+}: {
+  view: View
+  data: JournalEntry[]
   stringOverrides?: JournalTableStringOverrides
 }) => {
-  const [currentPage, setCurrentPage] = useState(1)
-  const {
-    data: rawData,
-    isLoading,
-    error,
-    isValidating,
-    refetch,
-    selectedEntryId,
-    addEntry,
-  } = useContext(JournalContext)
+  const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
+    useContext(JournalContext)
 
-  const data = useMemo(() => {
-    const firstPageIndex = (currentPage - 1) * pageSize
-    const lastPageIndex = firstPageIndex + pageSize
-    return rawData
-      ?.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
-      ?.slice(firstPageIndex, lastPageIndex)
-  }, [rawData, currentPage])
+  const { isOpen, setIsOpen } = useTableExpandRow()
+
+  useEffect(() => {
+    setIsOpen([`journal-row- + ${data[0].id}`])
+  }, [])
+
+  const renderJournalRow = (
+    row: JournalEntry,
+    index: number,
+    rowKey: string,
+    depth: number,
+  ) => {
+    const expandable = !!row.line_items && row.line_items.length > 0
+    const expanded = expandable ? isOpen(rowKey) : true
+    return (
+      <React.Fragment key={rowKey + '-' + index}>
+        <TableRow
+          rowKey={rowKey + '-' + index}
+          expandable={expandable}
+          isExpanded={expanded}
+          handleExpand={() => setIsOpen(rowKey)}
+          selected={selectedEntryId === row.id}
+          onClick={e => {
+            e.stopPropagation()
+
+            if (selectedEntryId === row.id) {
+              closeSelectedEntry()
+            } else {
+              setSelectedEntryId(row.id)
+            }
+          }}
+          depth={depth}
+        >
+          <TableCell
+            withExpandIcon={expandable}
+            onClick={e => {
+              e.stopPropagation()
+
+              expandable && setIsOpen(rowKey)
+            }}
+          >
+            {rowId(row).substring(0, 5)}
+          </TableCell>
+          <TableCell>
+            {row.date && formatTime(parseISO(row.date), DATE_FORMAT)}
+          </TableCell>
+          <TableCell>{humanizeEnum(row.entry_type)}</TableCell>
+          <TableCell>({row.line_items.length})</TableCell>
+          <TableCell isCurrency primary>
+            {'line_items' in row &&
+              Math.abs(
+                row.line_items
+                  .filter(item => item.direction === 'DEBIT')
+                  .map(item => item.amount)
+                  .reduce((a, b) => a + b, 0),
+              )}
+          </TableCell>
+          <TableCell isCurrency primary>
+            {'line_items' in row &&
+              Math.abs(
+                row.line_items
+                  .filter(item => item.direction === 'CREDIT')
+                  .map(item => item.amount)
+                  .reduce((a, b) => a + b, 0),
+              )}
+          </TableCell>
+        </TableRow>
+        {expandable &&
+          expanded &&
+          row.line_items.map((subItem, subIdx) => (
+            <TableRow
+              key={rowKey + '-' + index + '-' + subIdx}
+              rowKey={rowKey + '-' + index + '-' + subIdx}
+              depth={depth + 1}
+              selected={selectedEntryId === row.id}
+            >
+              <TableCell />
+              <TableCell />
+              <TableCell />
+              <TableCell>{accountName(subItem)}</TableCell>
+              {subItem.direction === 'DEBIT' && subItem.amount > 0 ? (
+                <TableCell isCurrency primary>
+                  {subItem.amount}
+                </TableCell>
+              ) : (
+                <TableCell />
+              )}
+              {subItem.direction === 'CREDIT' && subItem.amount > 0 ? (
+                <TableCell isCurrency primary>
+                  {subItem.amount}
+                </TableCell>
+              ) : (
+                <TableCell />
+              )}
+            </TableRow>
+          ))}
+      </React.Fragment>
+    )
+  }
 
   return (
-    <Panel
-      sidebar={<JournalSidebar parentRef={containerRef} config={config} stringOverrides={stringOverrides?.journalForm} />}
-      sidebarIsOpen={Boolean(selectedEntryId)}
-      parentRef={containerRef}
-    >
-      <Header className={`Layer__${COMPONENT_NAME}__header`}>
-        <Heading className={`Layer__${COMPONENT_NAME}__title`}>{stringOverrides?.componentTitle || "Journal"}</Heading>
-        <div className={`Layer__${COMPONENT_NAME}__actions`}>
-          <Button onClick={() => addEntry()} disabled={isLoading}>
-            {stringOverrides?.addEntryButton || "Add Entry"}
-          </Button>
-        </div>
-      </Header>
-
-      <table className='Layer__table Layer__table--hover-effect Layer__journal__table'>
-        <thead>
-          <tr>
-            <th className='Layer__table-header' />
-            <th className='Layer__table-header'>{stringOverrides?.idColumnHeader || "Id"}</th>
-            <th className='Layer__table-header'>{stringOverrides?.dateColumnHeader || "Date"}</th>
-            <th className='Layer__table-header'>{stringOverrides?.transactionColumnHeader || "Transaction"}</th>
-            <th className='Layer__table-header'>{stringOverrides?.accountColumnHeader || "Account"}</th>
-            <th className='Layer__table-header Layer__table-cell--amount'>
-              {stringOverrides?.debitColumnHeader || "Debit"}
-            </th>
-            <th className='Layer__table-header Layer__table-cell--amount'>
-              {stringOverrides?.creditColumnHeader || "Credit"}
-            </th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {!error &&
-            data?.map((entry, idx) => {
-              return (
-                <JournalRow
-                  key={'journal-row-' + idx + entry.id}
-                  index={idx}
-                  view={view}
-                  row={entry}
-                />
-              )
-            })}
-        </tbody>
-      </table>
-
-      {data && (
-        <div className='Layer__journal__pagination'>
-          <Pagination
-            currentPage={currentPage}
-            totalCount={rawData?.length || 0}
-            pageSize={pageSize}
-            onPageChange={page => setCurrentPage(page)}
-          />
-        </div>
-      )}
-
-      {error ? (
-        <div className='Layer__table-state-container'>
-          <DataState
-            status={DataStateStatus.failed}
-            title='Something went wrong'
-            description='We couldn’t load your data.'
-            onRefresh={() => refetch()}
-            isLoading={isValidating || isLoading}
-          />
-        </div>
-      ) : null}
-
-      {(!data || isLoading) && !error ? (
-        <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-          <Loader />
-        </div>
-      ) : null}
-    </Panel>
+    <Table borderCollapse='collapse'>
+      <TableHead>
+        <TableRow isHeadRow rowKey='journal-head-row'>
+          <TableCell isHeaderCell>
+            {stringOverrides?.idColumnHeader || 'Id'}
+          </TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.dateColumnHeader || 'Date'}
+          </TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.transactionColumnHeader || 'Transaction'}
+          </TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.accountColumnHeader || 'Account'}
+          </TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.debitColumnHeader || 'Debit'}
+          </TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.creditColumnHeader || 'Credit'}
+          </TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {data.map((entry, idx) =>
+          renderJournalRow(entry, idx, `journal-row-${entry.id}`, 0),
+        )}
+      </TableBody>
+    </Table>
   )
 }

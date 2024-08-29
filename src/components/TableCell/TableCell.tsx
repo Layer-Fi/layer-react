@@ -11,6 +11,8 @@ export const TableCell = ({
   primary,
   withExpandIcon = false,
   fullWidth,
+  colSpan = 1,
+  onClick,
 }: TableCellProps) => {
   const amount = typeof children === 'number' ? children : 0
   const isPositive = amount >= 0
@@ -26,7 +28,7 @@ export const TableCell = ({
 
   if (isHeaderCell) {
     return (
-      <th className={cellClassNames}>
+      <th className={cellClassNames} colSpan={colSpan}>
         <span className='Layer__table-cell-content'>{children}</span>
       </th>
     )
@@ -36,6 +38,8 @@ export const TableCell = ({
     <td
       className={cellClassNames}
       style={fullWidth ? { width: '100%' } : undefined}
+      colSpan={colSpan}
+      onClick={e => onClick && onClick(e)}
     >
       <span className='Layer__table-cell-content'>
         {withExpandIcon && (

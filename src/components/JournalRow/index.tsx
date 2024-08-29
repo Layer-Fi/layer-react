@@ -1,1 +1,0 @@
-export { JournalRow } from './JournalRow'
