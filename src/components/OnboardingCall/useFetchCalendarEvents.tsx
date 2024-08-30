@@ -22,10 +22,8 @@ export const useFetchCalendarEvents = () => {
   )
   const [isLoading, setIsLoading] = useState(true)
 
-  // const apiToken = ''
-  // const orgId = ''
-  const apiToken =
-    'eyJraWQiOiIxY2UxZTEzNjE3ZGNmNzY2YjNjZWJjY2Y4ZGM1YmFmYThhNjVlNjg0MDIzZjdjMzJiZTgzNDliMjM4MDEzNWI0IiwidHlwIjoiUEFUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2F1dGguY2FsZW5kbHkuY29tIiwiaWF0IjoxNzI0NzYxMjQ3LCJqdGkiOiJiYWJiNGIyNy00ZmFkLTQ3YTktYmJjOS0xMjBkMzk2ZmUwY2IiLCJ1c2VyX3V1aWQiOiI2ZjIxZjQxOS01ZWU2LTQ2NjMtYTc0Yy1lNzlmYmNiMDYwMWMifQ.XrTNrAvgd7aK3MNJgcSi7mjw35kWQXpFdVE9aeZcqEUTLDA-WdnyRS1ShNpwx1clqGMiNR5fGf3EE1jeCHsUcA'
+  const apiToken = ''
+  const orgId = ''
 
   const fetchUpcomingEvents = async () => {
     try {
