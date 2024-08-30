@@ -77,6 +77,7 @@ export const ProfitAndLossSummaries = ({
     uncategorizedTotalExpenses,
     uncategorizedTotalRevenue,
     uncategorizedTransactions,
+    categorizedTransactions,
     isLoading,
     setSidebarScope,
     sidebarScope,
@@ -285,7 +286,9 @@ export const ProfitAndLossSummaries = ({
             <Text size={TextSize.sm}>Uncategorized</Text>
             <span className='Layer__profit-and-loss-summaries__info-banner__value'>
               <Text size={TextSize.sm}>
-                {uncategorizedTransactions}{' '}
+                {uncategorizedTransactions ?? 0}/
+                {(uncategorizedTransactions ?? 0) +
+                  (categorizedTransactions ?? 0)}{' '}
                 <span className='Layer__profit-and-loss-summaries-hide-xs'>
                   transactions
                 </span>

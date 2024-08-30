@@ -51,6 +51,7 @@ type UseProfitAndLoss = (props?: Props) => {
   uncategorizedTotalRevenue?: number
   uncategorizedTotalExpenses?: number
   uncategorizedTransactions?: number
+  categorizedTransactions?: number
   isLoading: boolean
   isValidating: boolean
   error: unknown
@@ -287,15 +288,29 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     }
   }, [data, startDate, filters, sidebarScope, summaryData])
 
-  const uncategorizedTransactions = useMemo(() => {
+  const { uncategorizedTransactions, categorizedTransactions } = useMemo(() => {
     if (!summaryData) {
-      return
+      return {
+        categorizedTransactions: undefined,
+        uncategorizedTransactions: undefined,
+      }
     }
 
     const month = startDate.getMonth() + 1
     const year = startDate.getFullYear()
-    return summaryData.find(x => x.month === month && x.year === year)
-      ?.uncategorized_transactions
+    const record = summaryData.find(x => x.month === month && x.year === year)
+
+    if (!record) {
+      return {
+        categorizedTransactions: undefined,
+        uncategorizedTransactions: undefined,
+      }
+    }
+
+    return {
+      categorizedTransactions: record.categorized_transactions,
+      uncategorizedTransactions: record.uncategorized_transactions,
+    }
   }, [summaryData, startDate])
 
   return {
@@ -307,6 +322,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     uncategorizedTotalRevenue,
     uncategorizedTotalExpenses,
     uncategorizedTransactions,
+    categorizedTransactions,
     isLoading,
     isValidating,
     error: error,
