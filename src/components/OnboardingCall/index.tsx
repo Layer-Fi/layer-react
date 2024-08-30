@@ -1,2 +1,2 @@
-export { OnboardingCallCalendar } from './OnboardingCallCalendar'
-export { CallReminder } from './CallReminder'
+export { OnboardingCalendar } from './OnboardingCalendar'
+export { MeetingReminder } from './MeetingReminder'
