@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { DrawerContext } from '../../contexts/DrawerContext'
 import ChevronDown from '../../icons/ChevronDown'
 import { BusinessCategories } from '../BankTransactionMobileList/BusinessCategories'
+import { Option } from '../BankTransactionMobileList/utils'
 import { CategoryOption, OptionActionType } from './CategorySelect'
 import classNames from 'classnames'
 
@@ -30,7 +31,10 @@ export const CategorySelectDrawer = ({
       )}
       onClick={() =>
         setContent(
-          <CategorySelectDrawerContent onSelect={onDrawerCategorySelect} />,
+          <CategorySelectDrawerContent
+            selected={selected}
+            onSelect={onDrawerCategorySelect}
+          />,
         )
       }
     >
@@ -45,8 +49,10 @@ export const CategorySelectDrawer = ({
 
 const CategorySelectDrawerContent = ({
   onSelect,
+  selected,
 }: {
   onSelect: (value: CategoryOption) => void
+  selected?: CategoryOption
 }) => (
   <BusinessCategories
     select={option => {
@@ -58,5 +64,6 @@ const CategorySelectDrawerContent = ({
           },
         } satisfies CategoryOption)
     }}
+    selectedId={selected?.payload?.id}
   />
 )
