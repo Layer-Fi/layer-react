@@ -1,10 +1,6 @@
 import React, { ReactNode, useState } from 'react'
 import { Container } from '../../components/Container'
 import { Onboarding } from '../../components/Onboarding'
-import {
-  MeetingReminder,
-  OnboardingCalendar,
-} from '../../components/OnboardingCall'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
@@ -69,11 +65,6 @@ export const AccountingOverview = ({
           />
           <ProfitAndLoss.Chart />
         </Container>
-        <div>
-          <OnboardingCalendar calendarUrl='https://calendly.com/altalogy-tom-antas/15min' />
-          <hr />
-          <MeetingReminder />
-        </div>
         {middleBanner && (
           <Container name='accounting-overview-middle-banner'>
             {middleBanner}
