@@ -35,7 +35,7 @@ export interface ReportsProps {
   title?: string // deprecated
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
-  comparisonConfig: ProfitAndLossCompareOptionsProps
+  comparisonConfig?: ProfitAndLossCompareOptionsProps
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -44,7 +44,7 @@ export interface ReportsPanelProps {
   containerRef: RefObject<HTMLDivElement>
   openReport: ReportType
   stringOverrides?: ReportsStringOverrides
-  comparisonConfig: ProfitAndLossCompareOptionsProps
+  comparisonConfig?: ProfitAndLossCompareOptionsProps
 }
 
 interface DownloadButtonStringOverrides {
