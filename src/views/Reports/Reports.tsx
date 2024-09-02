@@ -50,29 +50,6 @@ export interface ReportsPanelProps {
   view: ViewBreakpoint
 }
 
-const getOptions = (enabledReports: ReportType[]) => {
-  return [
-    enabledReports.includes('profitAndLoss')
-      ? {
-          value: 'profitAndLoss',
-          label: 'Profit & Loss',
-        }
-      : null,
-    enabledReports.includes('balanceSheet')
-      ? {
-          value: 'balanceSheet',
-          label: 'Balance Sheet',
-        }
-      : null,
-    enabledReports.includes('statementOfCashFlow')
-      ? {
-          value: 'statementOfCashFlow',
-          label: 'Statement of Cash Flow',
-        }
-      : null,
-  ].filter(o => !!o) as ReportOption[]
-}
-
 export const Reports = ({
   title,
   showTitle = true,

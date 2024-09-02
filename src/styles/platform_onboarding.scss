@@ -1,0 +1,266 @@
+.Layer__platform__onboarding--view {
+  .Layer__platform__onboarding--wrapper {
+    .Layer__platform__onboaring--back-button {
+      position: absolute;
+    }
+    .Layer__platform-onboarding {
+      padding: var(--spacing-xl);
+      max-width: 672px;
+      margin: auto;
+    }
+    .Layer__platform__onboarding__header {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-lg) 0;
+
+      max-width: 52ch;
+      .Layer__heading {
+        align-self: flex-start;
+      }
+      p {
+        color: var(--color-base-500);
+        margin-bottom: var(--spacing-xl);
+      }
+    }
+
+    .Layer__platform__onboarding__progress {
+      display: flex;
+      align-items: center;
+
+      .Layer__platform__onboarding__progress--step-wrapper {
+        display: flex;
+        align-items: center;
+        position: relative;
+        min-width: 50px;
+        .Layer__platform__onboarding__progress--step {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          flex-direction: column;
+          gap: var(--spacing-sm);
+          &.Layer__platform__onboarding__progress--step-active {
+            .Layer__platform__onboarding__progress--circle {
+              &::after {
+                border-color: var(--color-base-800);
+                transform: rotate(60deg);
+              }
+            }
+          }
+          &.Layer__platform__onboarding__progress--step-complete {
+            .Layer__platform__onboarding__progress--circle {
+              border-color: var(--color-info-success-fg);
+              background-color: var(--color-info-success-bg);
+              &::after {
+                border-color: var(--color-info-success-fg);
+              }
+            }
+          }
+          .Layer__platform__onboarding__progress--label {
+            padding-right: var(--spacing-lg);
+          }
+          .Layer__platform__onboarding__progress--circle {
+            width: 12px;
+            height: 12px;
+            background-color: var(--color-base-50);
+            border: 1px var(--color-base-500);
+            border-style: dashed;
+            border-radius: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms ease;
+            &::after {
+              display: block;
+              content: '';
+              width: 12px;
+              height: 12px;
+              border-radius: 100%;
+              border: 1px var(--color-base-500);
+              border-style: dashed;
+              border-radius: 100%;
+              position: absolute;
+              top: -1px;
+              left: -1px;
+              transition: all 200ms ease;
+            }
+          }
+        }
+      }
+    }
+    .Layer__platform__onboarding__progress--step-line {
+      width: 100%;
+      height: 2px;
+      background-color: var(--color-base-300);
+      position: absolute;
+      top: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      &::after {
+        content: '';
+        width: 0%;
+        height: 2px;
+        background-color: var(--color-base-800);
+        position: absolute;
+        transition: all 200ms ease;
+      }
+      &.Layer__platform__onboarding__progress--step-line-filled {
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+.Layer__platform__onboarding__guide {
+  .Layer__heading {
+    align-self: flex-start;
+  }
+  p {
+    color: var(--color-base-500);
+  }
+  .Layer__platform__onboarding__how-it-works {
+    padding: var(--spacing-xl);
+    max-width: 672px;
+    margin: auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2xs);
+    margin-bottom: var(--spacing-xl);
+    .Layer__platform__onboarding__guide--benefits {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+      .Layer__platform__onboarding__guide--benefit {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        .Layer__platform__onboarding__guide--heading-wrapper {
+          display: flex;
+          gap: var(--spacing-xs);
+        }
+      }
+    }
+  }
+  .Layer__platform__onboarding__guide--elements {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+    align-items: flex-start;
+    .Layer__platform__onboarding__guide--element {
+      flex-grow: 1;
+      flex: 1;
+      .Layer__platform__onboarding__guide--image-wrapper {
+        display: flex;
+        height: 300px;
+        padding: 36px 48px;
+        flex-direction: column;
+        align-items: center;
+        gap: 36px;
+        flex: 1 0 0;
+        border-radius: 12px;
+        background: var(--color-base-0);
+        box-shadow: 0px 0px 0px 1px
+          var(--base-transparent-4, rgba(16, 24, 40, 0.04));
+      }
+      .Layer__platform__onboarding__guide--text-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        align-items: center;
+        justify-content: center;
+        padding: 36px 0;
+        max-width: 27ch;
+        margin: auto;
+        text-align: center;
+        .Layer__heading {
+          align-self: center;
+        }
+      }
+    }
+  }
+}
+
+.Layer__platform__onboarding__form-wrapper {
+  .Layer__platform__onboarding__form {
+    p {
+      margin-bottom: var(--spacing-xs);
+    }
+    .Layer__platform__onboarding__form--inputs {
+      margin-bottom: var(--spacing-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      label {
+        padding-left: 0;
+        color: var(--color-base-500);
+      }
+      input {
+        width: 100%;
+      }
+      .Layer__platform__onboarding__input-group--inline {
+        display: flex;
+        gap: var(--spacing-lg);
+        align-items: center;
+        .Layer__input-group {
+          flex-grow: 1;
+        }
+      }
+    }
+  }
+}
+
+.Layer__platform__onboarding__accounts-wrapper {
+  .Layer__platform__onboarding__connect-accounts {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    border-radius: 8px;
+    background: var(--color-base-0);
+    padding: var(--spacing-md);
+    box-shadow: 0px 0px 0px 1px
+      var(--base-transparent-4, rgba(16, 24, 40, 0.04));
+    align-self: stretch;
+    .Layer__platform__onboarding__connect-account-icon {
+      width: 32px;
+      height: 32px;
+      background-color: black;
+      border-radius: 4px;
+    }
+    .Layer__platform__onboarding__connect-account-content {
+      flex-grow: 1;
+      p {
+        color: var(--color-base-500);
+      }
+    }
+    .Layer__platform__onboarding__connect-account-button {
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .Layer__platform__onboarding--view {
+    .Layer__platform__onboarding--wrapper {
+      .Layer__platform__onboarding__progress {
+        .Layer__platform__onboarding__progress--step-wrapper {
+          .Layer__platform__onboarding__progress--label {
+            display: none;
+          }
+        }
+      }
+    }
+    .Layer__platform__onboarding__input-group--inline {
+      flex-wrap: wrap;
+    }
+    .Layer__platform__onboarding__guide--elements {
+      display: none;
+    }
+  }
+}
