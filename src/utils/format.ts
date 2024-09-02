@@ -78,3 +78,25 @@ export const convertCurrencyToNumber = (amount: string): string =>
     .replace(/(\..*)\./g, '$1')
     .replace(/(\.\d{2})\d+/, '$1')
     .replace(/^0(?!\.)/, '')
+
+export const toRFC5545Date = (
+  date: Date,
+  includeTime = false,
+  useUTC = true,
+) => {
+  const pad = (number: number) => (number < 10 ? '0' + number : number)
+
+  const year = date.getFullYear()
+  const month = pad(date.getMonth() + 1)
+  const day = pad(date.getDate())
+
+  const hours = pad(useUTC ? date.getUTCHours() : date.getHours())
+  const minutes = pad(useUTC ? date.getUTCMinutes() : date.getMinutes())
+  const seconds = pad(useUTC ? date.getUTCSeconds() : date.getSeconds())
+
+  const time = `${hours}${minutes}${seconds}`
+
+  return useUTC
+    ? `${year}${month}${day}T${time}Z`
+    : `${year}${month}${day}T${time}`
+}
