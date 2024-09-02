@@ -48,6 +48,7 @@ export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWith
 export { GeneralLedgerView } from './views/GeneralLedger'
 export { Reports } from './views/Reports'
 export { ProfitAndLossView } from './components/ProfitAndLossView'
+export { PlatformOnboardingView } from './views/PlatformOnboardingView'
 
 /*
 ======================= Hooks & Contexts =======================
