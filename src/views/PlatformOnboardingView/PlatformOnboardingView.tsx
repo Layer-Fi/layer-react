@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { Button, ButtonVariant } from '../../components/Button'
 import { Container } from '../../components/Container'
+import { OnboardingCalendar } from '../../components/OnboardingCall'
 import { PlatformOnboardingAccounts } from '../../components/PlatformOnboardingAccounts'
 import { PlatformOnboardingForm } from '../../components/PlatformOnboardingForm'
 import { PlatformOnboardingGetStarted } from '../../components/PlatformOnboardingGetStarted'
@@ -33,7 +34,9 @@ export const PlatformOnboardingView = (props: PlatformOnboardingViewProps) => {
 const PlatformOnboarding = ({
   stringOverrides,
 }: PlatformOnboardingViewProps) => {
-  const { currentStep, prevStep } = useContext(PlatformOnboardingContext)
+  const { currentStep, prevStep, nextStep } = useContext(
+    PlatformOnboardingContext,
+  )
 
   const renderStep = () => {
     switch (currentStep) {
@@ -87,6 +90,12 @@ const PlatformOnboarding = ({
         </Container>
       </div>
       {currentStep === 0 && <PlatformOnboardingGuide />}
+      {currentStep === 3 && (
+        <OnboardingCalendar
+          calendarUrl='https://calendly.com/release-bookkeeping/information-call'
+          onScheduled={nextStep}
+        />
+      )}
     </View>
   )
 }

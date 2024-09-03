@@ -43,7 +43,12 @@ export const PlatformOnboardingGuide = () => {
 
       <div className='Layer__platform__onboarding__guide--elements'>
         <div className='Layer__platform__onboarding__guide--element'>
-          <div className='Layer__platform__onboarding__guide--image-wrapper' />
+          <div className='Layer__platform__onboarding__guide--image-wrapper'>
+            <img
+              src='https://layer-public.s3.us-west-2.amazonaws.com/site-images/linked-accounts.png'
+              alt='Connect your accounts'
+            />
+          </div>
           <div className='Layer__platform__onboarding__guide--text-wrapper'>
             <Heading size={HeadingSize.secondary}>
               Connect your accounts
@@ -55,7 +60,12 @@ export const PlatformOnboardingGuide = () => {
           </div>
         </div>
         <div className='Layer__platform__onboarding__guide--element'>
-          <div className='Layer__platform__onboarding__guide--image-wrapper' />
+          <div className='Layer__platform__onboarding__guide--image-wrapper'>
+            <img
+              src='https://layer-public.s3.us-west-2.amazonaws.com/site-images/bookkeeping-tasks.png'
+              alt='Bookkeeping tasks'
+            />
+          </div>
           <div className='Layer__platform__onboarding__guide--text-wrapper'>
             <Heading size={HeadingSize.secondary}>
               Ongoing monthly bookkeeping
@@ -67,7 +77,12 @@ export const PlatformOnboardingGuide = () => {
           </div>
         </div>
         <div className='Layer__platform__onboarding__guide--element'>
-          <div className='Layer__platform__onboarding__guide--image-wrapper' />
+          <div className='Layer__platform__onboarding__guide--image-wrapper'>
+            <img
+              src='https://layer-public.s3.us-west-2.amazonaws.com/site-images/revenue.png'
+              alt='Profitability'
+            />
+          </div>
           <div className='Layer__platform__onboarding__guide--text-wrapper'>
             <Heading size={HeadingSize.secondary}>
               See your profitability
