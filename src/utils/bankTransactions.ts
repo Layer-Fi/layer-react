@@ -63,20 +63,20 @@ export const getCategorizePayload = (category: CategoryOption) => {
     category.payload.type == 'ExclusionNested'
   ) {
     return {
-      type: 'Exclusion' as 'Exclusion',
+      type: 'Exclusion' as const,
       exclusion_type: category.payload.id,
     }
   }
 
   if (category?.payload && 'id' in category.payload && category.payload.id) {
     return {
-      type: 'AccountId' as 'AccountId',
+      type: 'AccountId' as const,
       id: category.payload.id,
     }
   }
 
   return {
-    type: 'StableName' as 'StableName',
+    type: 'StableName' as const,
     stable_name: category?.payload.stable_name || '',
   }
 }

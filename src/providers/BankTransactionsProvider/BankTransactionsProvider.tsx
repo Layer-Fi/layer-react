@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { BankTransactionsContext, useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { BankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 
 interface BankTransactionsProviderProps {

@@ -46,7 +46,7 @@ export const ChartOfAccountsTableWithPanel = ({
 
   const [expandAll, setExpandAll] = useState<ExpandActionState>()
 
-  let cumulativeIndex = 0
+  const cumulativeIndex = 0
   const accountsLength = data?.accounts.length ?? 0
 
   return (

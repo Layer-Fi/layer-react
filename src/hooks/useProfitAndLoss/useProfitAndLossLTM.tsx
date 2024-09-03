@@ -43,8 +43,8 @@ const buildMonthsArray = (startDate: Date, endDate: Date) => {
     return []
   }
 
-  var dates = []
-  for (var d = startDate; d <= endDate; d.setMonth(d.getMonth() + 1)) {
+  const dates = []
+  for (let d = startDate; d <= endDate; d.setMonth(d.getMonth() + 1)) {
     dates.push(new Date(d))
   }
 

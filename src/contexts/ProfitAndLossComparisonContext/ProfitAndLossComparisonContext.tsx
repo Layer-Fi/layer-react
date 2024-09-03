@@ -14,10 +14,10 @@ export const PNLComparisonContext = createContext<PNLComparisonContextType>({
   compareMonths: 0,
   setCompareMonths: () => {},
   compareOptions: [],
-  setCompareOptions: function (options: TagComparisonOption[]): void {
+  setCompareOptions: function (): void {
     throw new Error('Function not implemented.')
   },
-  refetch: function (dateRange: DateRange): void {
+  refetch: function (): void {
     throw new Error('Function not implemented.')
   },
 })

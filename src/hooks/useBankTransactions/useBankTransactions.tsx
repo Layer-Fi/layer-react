@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { ReviewCategories } from '../../components/BankTransactions/constants'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
   BankTransaction,
