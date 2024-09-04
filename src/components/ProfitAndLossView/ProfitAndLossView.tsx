@@ -1,6 +1,5 @@
 import React, { RefObject, useContext, useRef } from 'react'
-import { TableProvider } from '../../contexts/TableContext'
-import { Container, Header } from '../Container'
+import { Container } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
 import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
@@ -8,7 +7,6 @@ import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossTableStringOverrides } from '../ProfitAndLossTable/ProfitAndLossTableComponent'
-import { Heading } from '../Typography'
 
 const COMPONENT_NAME = 'profit-and-loss'
 

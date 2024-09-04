@@ -60,15 +60,8 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     currentDate: startOfMonth(Date.now()),
   },
 ) => {
-  const {
-    businessId,
-    auth,
-    apiUrl,
-    syncTimestamps,
-    read,
-    readTimestamps,
-    hasBeenTouched,
-  } = useLayerContext()
+  const { businessId, auth, apiUrl, syncTimestamps, read, hasBeenTouched } =
+    useLayerContext()
   const [date, setDate] = useState(currentDate)
   const [loaded, setLoaded] = useState<LoadedStatus>('initial')
   const [data, setData] = useState<ProfitAndLossSummaryData[]>([])

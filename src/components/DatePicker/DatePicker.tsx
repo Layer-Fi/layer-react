@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
-import { BREAKPOINTS } from '../../config/general'
-import { useElementSize } from '../../hooks/useElementSize'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'

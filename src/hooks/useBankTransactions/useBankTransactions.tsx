@@ -374,14 +374,12 @@ export const useBankTransactions: UseBankTransactions = params => {
     mutate(updatedData, { revalidate: false })
   }
 
-  const shouldHideAfterCategorize = (
-    bankTransaction: BankTransaction,
-  ): boolean => {
+  const shouldHideAfterCategorize = (): boolean => {
     return filters?.categorizationStatus === DisplayState.review
   }
 
   const removeAfterCategorize = (bankTransaction: BankTransaction) => {
-    if (shouldHideAfterCategorize(bankTransaction)) {
+    if (shouldHideAfterCategorize()) {
       const updatedData = rawResponseData?.map(page => {
         return {
           ...page,
@@ -465,7 +463,7 @@ export const useBankTransactions: UseBankTransactions = params => {
     }
   }, [anyAccountSyncing, transactionsNotSynced, pollIntervalMs])
 
-  useTriggerOnChange(data, anyAccountSyncing, newTransactionList => {
+  useTriggerOnChange(data, anyAccountSyncing, _ => {
     clearInterval(intervalId)
     setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
     eventCallbacks?.onTransactionsFetched?.()

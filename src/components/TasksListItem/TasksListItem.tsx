@@ -8,7 +8,6 @@ import { Button, ButtonVariant } from '../Button'
 import { Textarea } from '../Textarea'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
-import { set } from 'date-fns'
 
 export const TasksListItem = ({
   task,

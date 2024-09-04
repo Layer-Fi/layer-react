@@ -33,8 +33,6 @@ export const DetailedChart = ({
   filteredTotal,
   hoveredItem,
   setHoveredItem,
-  sidebarScope,
-  date,
   chartColorsList,
   isLoading,
   showDatePicker = true,

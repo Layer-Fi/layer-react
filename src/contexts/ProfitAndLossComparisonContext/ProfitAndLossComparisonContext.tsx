@@ -1,7 +1,5 @@
 import { createContext } from 'react'
-import { TagComparisonOption } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison/useProfitAndLossComparison'
-import { DateRange } from '../../types'
 
 type PNLComparisonContextType = ReturnType<typeof useProfitAndLossComparison>
 export const PNLComparisonContext = createContext<PNLComparisonContextType>({

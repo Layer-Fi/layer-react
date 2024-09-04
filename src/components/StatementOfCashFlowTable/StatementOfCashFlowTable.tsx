@@ -110,7 +110,11 @@ export const StatementOfCashFlowTable = ({
             )
           } else {
             return (
-              <TableRow rowKey={row.name + '-' + idx} variant='default'>
+              <TableRow
+                key={row.name + '-' + idx}
+                rowKey={row.name + '-' + idx}
+                variant='default'
+              >
                 <TableCell primary>{row.displayName}</TableCell>
                 <TableCell primary isCurrency>
                   {row.lineItem}

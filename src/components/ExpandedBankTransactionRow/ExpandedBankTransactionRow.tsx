@@ -10,14 +10,10 @@ import React, {
 import { Layer } from '../../api/layer'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
-import {
-  centsToDollars as formatMoney,
-  dollarsToCents as parseMoney,
-} from '../../models/Money'
+import { centsToDollars as formatMoney } from '../../models/Money'
 import {
   BankTransaction,
   SplitCategoryUpdate,
