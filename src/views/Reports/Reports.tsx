@@ -43,6 +43,7 @@ export interface ReportsProps {
   comparisonConfig?: ProfitAndLossCompareOptionsProps
   profitAndLossConfig?: {
     datePickerMode?: DateRangeDatePickerModes
+    csvMoneyFormat?: MoneyFormat
   }
   statementOfCashFlowConfig?: {
     datePickerMode?: DateRangeDatePickerModes
@@ -58,6 +59,7 @@ export interface ReportsPanelProps {
   comparisonConfig?: ProfitAndLossCompareOptionsProps
   profitAndLossConfig?: {
     datePickerMode?: DateRangeDatePickerModes
+    csvMoneyFormat?: MoneyFormat
   }
   statementOfCashFlowConfig?: {
     datePickerMode?: DateRangeDatePickerModes
@@ -225,6 +227,7 @@ const ReportsPanel = ({
                 )}
                 <DownloadButton
                   stringOverrides={stringOverrides?.downloadButton}
+                  moneyFormat={profitAndLossConfig?.csvMoneyFormat}
                 />
               </div>
             </>
