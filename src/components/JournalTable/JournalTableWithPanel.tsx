@@ -58,8 +58,6 @@ export const JournalTableWithPanel = ({
       ?.slice(firstPageIndex, lastPageIndex)
   }, [rawData, currentPage])
 
-  console.log('data', data, isLoading)
-
   return (
     <Panel
       sidebar={
