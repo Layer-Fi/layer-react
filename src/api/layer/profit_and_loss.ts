@@ -66,6 +66,7 @@ export const getProfitAndLossCsv = get<{
     tagKey,
     tagValues,
     reportingBasis,
+    moneyFormat,
   }) =>
     `/v1/businesses/${businessId}/reports/profit-and-loss/exports/csv?${
       startDate ? `start_date=${encodeURIComponent(startDate)}` : ''
@@ -75,5 +76,5 @@ export const getProfitAndLossCsv = get<{
       reportingBasis ? `&reporting_basis=${reportingBasis}` : ''
     }${tagKey ? `&tag_key=${tagKey}` : ''}${
       tagValues ? `&tag_values=${tagValues}` : ''
-    }`,
+    }${moneyFormat ? `&money_format=${moneyFormat}` : ''}`,
 )

@@ -19,6 +19,7 @@ import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useLayerContext } from '../../contexts/LayerContext'
 import DownloadCloud from '../../icons/DownloadCloud'
+import { MoneyFormat } from '../../types'
 
 interface ReportsStringOverrides {
   title?: string
@@ -38,6 +39,7 @@ export interface ReportsProps {
   comparisonConfig?: ProfitAndLossCompareOptionsProps
   profitAndLossConfig?: {
     datePickerMode?: DateRangeDatePickerModes
+    csvMoneyFormat?: MoneyFormat
   }
   statementOfCashFlowConfig?: {
     datePickerMode?: DateRangeDatePickerModes
@@ -53,6 +55,7 @@ export interface ReportsPanelProps {
   comparisonConfig?: ProfitAndLossCompareOptionsProps
   profitAndLossConfig?: {
     datePickerMode?: DateRangeDatePickerModes
+    csvMoneyFormat?: MoneyFormat
   }
   statementOfCashFlowConfig?: {
     datePickerMode?: DateRangeDatePickerModes
@@ -64,11 +67,15 @@ interface DownloadButtonStringOverrides {
   retryButtonText?: string
 }
 
+interface DownloadButtonProps {
+  stringOverrides?: DownloadButtonStringOverrides
+  moneyFormat?: MoneyFormat
+}
+
 const DownloadButton = ({
   stringOverrides,
-}: {
-  stringOverrides?: DownloadButtonStringOverrides
-}) => {
+  moneyFormat,
+}: DownloadButtonProps) => {
   const { dateRange } = useContext(ProfitAndLoss.Context)
   const { auth, businessId, apiUrl } = useLayerContext()
   const [requestFailed, setRequestFailed] = useState(false)
@@ -84,6 +91,7 @@ const DownloadButton = ({
           businessId: businessId,
           year: year,
           month: month,
+          moneyFormat: moneyFormat,
         },
       },
     )
@@ -215,6 +223,7 @@ const ReportsPanel = ({
                 )}
                 <DownloadButton
                   stringOverrides={stringOverrides?.downloadButton}
+                  moneyFormat={profitAndLossConfig?.csvMoneyFormat}
                 />
               </div>
             </>
