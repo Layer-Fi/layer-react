@@ -4,6 +4,10 @@ import { BalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Button, ButtonVariant, RetryButton } from '../../components/Button'
 import { Container } from '../../components/Container'
+import {
+  DatePickerMode,
+  DateRangeDatePickerModes,
+} from '../../components/DatePicker/DatePicker'
 import { Panel } from '../../components/Panel'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import {
@@ -37,6 +41,12 @@ export interface ReportsProps {
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
   comparisonConfig?: ProfitAndLossCompareOptionsProps
+  profitAndLossConfig?: {
+    datePickerMode?: DateRangeDatePickerModes
+  }
+  statementOfCashFlowConfig?: {
+    datePickerMode?: DateRangeDatePickerModes
+  }
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -46,6 +56,12 @@ export interface ReportsPanelProps {
   openReport: ReportType
   stringOverrides?: ReportsStringOverrides
   comparisonConfig?: ProfitAndLossCompareOptionsProps
+  profitAndLossConfig?: {
+    datePickerMode?: DateRangeDatePickerModes
+  }
+  statementOfCashFlowConfig?: {
+    datePickerMode?: DateRangeDatePickerModes
+  }
 }
 
 interface DownloadButtonStringOverrides {
@@ -141,6 +157,8 @@ export const Reports = ({
   stringOverrides,
   enabledReports = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow'],
   comparisonConfig,
+  profitAndLossConfig,
+  statementOfCashFlowConfig,
 }: ReportsProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
@@ -170,6 +188,8 @@ export const Reports = ({
             openReport={activeTab}
             stringOverrides={stringOverrides}
             comparisonConfig={comparisonConfig}
+            profitAndLossConfig={profitAndLossConfig}
+            statementOfCashFlowConfig={statementOfCashFlowConfig}
           />
         </ProfitAndLoss>
       </Container>
@@ -182,6 +202,8 @@ const ReportsPanel = ({
   openReport,
   stringOverrides,
   comparisonConfig,
+  profitAndLossConfig,
+  statementOfCashFlowConfig,
 }: ReportsPanelProps) => {
   const { sidebarScope } = useContext(ProfitAndLoss.Context)
   return (
@@ -191,7 +213,9 @@ const ReportsPanel = ({
           type='panel'
           headerControls={
             <>
-              <ProfitAndLoss.DatePicker />
+              <ProfitAndLoss.DatePicker
+                datePickerMode={profitAndLossConfig?.datePickerMode}
+              />
               <div className='Layer__compare__controls__wrapper'>
                 {comparisonConfig && (
                   <ProfitAndLoss.CompareOptions
@@ -229,6 +253,7 @@ const ReportsPanel = ({
       {openReport === 'statementOfCashFlow' && (
         <StatementOfCashFlow
           stringOverrides={stringOverrides?.statementOfCashflow}
+          datePickerMode={statementOfCashFlowConfig?.datePickerMode}
         />
       )}
     </>
