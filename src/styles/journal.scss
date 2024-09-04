@@ -3,6 +3,9 @@
   align-items: stretch;
   position: relative;
   overflow: auto;
+  .Layer__table-state-container {
+    height: calc(100% - 160px);
+  }
 }
 
 @container (min-width: 1025px) {
