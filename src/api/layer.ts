@@ -47,6 +47,7 @@ import {
   statusOfQuickbooksConnection,
   unlinkQuickbooksConnection,
 } from './layer/quickbooks'
+import { getRules } from './layer/rules'
 import { getStatementOfCashFlow } from './layer/statement-of-cash-flow'
 import { getTasks, submitResponseToTask } from './layer/tasks'
 
@@ -74,6 +75,7 @@ export const Layer = {
   getProfitAndLossCsv,
   getLinkedAccounts,
   getJournal,
+  getRules,
   compareProfitAndLoss,
   createJournalEntries,
   getPlaidLinkToken,

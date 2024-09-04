@@ -1,0 +1,1 @@
+export { RulesTableWithPanel as RulesTable } from './RulesTableWithPanel'

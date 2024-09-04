@@ -35,6 +35,7 @@ export {
 } from './types/ledger_accounts'
 export { SortDirection } from './types/general'
 export { Business } from './types/business'
+export { Rule } from './types/rules'
 
 export interface FormError {
   field: string
