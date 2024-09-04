@@ -9,13 +9,15 @@ import { Button, ButtonVariant } from '../Button'
 import { DatePickerOptions } from './DatePickerOptions'
 import classNames from 'classnames'
 
+export type DatePickerMode =
+  | 'dayPicker'
+  | 'monthRangePicker'
+  | 'timePicker'
+  | DateRangeDatePickerModes
+
+export type DateRangeDatePickerModes = 'dayRangePicker' | 'monthPicker'
 interface DatePickerProps {
-  mode:
-    | 'dayPicker'
-    | 'dayRangePicker'
-    | 'monthPicker'
-    | 'monthRangePicker'
-    | 'timePicker'
+  mode: DatePickerMode
   selected: Date | [Date | null, Date | null]
   onChange: (date: Date | [Date, Date | null]) => void
   dateFormat?: string

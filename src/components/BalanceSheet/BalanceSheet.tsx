@@ -82,6 +82,7 @@ const BalanceSheetView = ({
                   setEffectiveDate={setEffectiveDate}
                 />
                 {withExpandAllButton && <BalanceSheetExpandAllButton />}
+                {withExpandAllButton && <BalanceSheetExpandAllButton />}
               </>
             }
           >
