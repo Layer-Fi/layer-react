@@ -62,3 +62,5 @@ export type DateRange<T = Date> = {
 }
 
 export type ReportingBasis = 'CASH' | 'ACCRUAL'
+
+export type MoneyFormat = 'CENTS' | 'DOLLAR_STRING'

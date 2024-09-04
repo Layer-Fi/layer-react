@@ -3,37 +3,47 @@ import { StatementOfCashFlowContext } from '../../contexts/StatementOfCashContex
 import { TableProvider } from '../../contexts/TableContext'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow'
 import { DatePicker } from '../DatePicker'
+import {
+  DatePickerMode,
+  DateRangeDatePickerModes,
+} from '../DatePicker/DatePicker'
 import { Loader } from '../Loader'
 import { StatementOfCashFlowTable } from '../StatementOfCashFlowTable'
 import { StatementOfCashFlowTableStringOverrides } from '../StatementOfCashFlowTable/StatementOfCashFlowTable'
 import { View } from '../View'
 import { STATEMENT_OF_CASH_FLOW_ROWS } from './constants'
-import { startOfDay, subWeeks } from 'date-fns'
+import { endOfMonth, startOfDay, startOfMonth, subWeeks } from 'date-fns'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
 export interface StatementOfCashFlowStringOverrides {
   statementOfCashFlowTable?: StatementOfCashFlowTableStringOverrides
+  datePickerMode?: DatePickerMode
 }
 
+export interface StatementOfCashFlowProps {
+  stringOverrides?: StatementOfCashFlowStringOverrides
+  datePickerMode?: DateRangeDatePickerModes
+}
 export const StatementOfCashFlow = ({
   stringOverrides,
-}: {
-  stringOverrides?: StatementOfCashFlowStringOverrides
-}) => {
+  datePickerMode,
+}: StatementOfCashFlowProps) => {
   const cashContextData = useStatementOfCashFlow()
   return (
     <StatementOfCashFlowContext.Provider value={cashContextData}>
-      <StatementOfCashFlowView stringOverrides={stringOverrides} />
+      <StatementOfCashFlowView
+        stringOverrides={stringOverrides}
+        datePickerMode={datePickerMode}
+      />
     </StatementOfCashFlowContext.Provider>
   )
 }
 
 const StatementOfCashFlowView = ({
   stringOverrides,
-}: {
-  stringOverrides?: StatementOfCashFlowStringOverrides
-}) => {
+  datePickerMode = 'dayRangePicker',
+}: StatementOfCashFlowProps) => {
   const [startDate, setStartDate] = useState(
     startOfDay(subWeeks(new Date(), 4)),
   )
@@ -56,23 +66,33 @@ const StatementOfCashFlowView = ({
     }
   }
 
+  const datePicker =
+    datePickerMode === 'monthPicker' ? (
+      <DatePicker
+        selected={startDate}
+        onChange={dates => {
+          if (!Array.isArray(dates)) {
+            const date = dates as Date
+            handleDateChange([startOfMonth(date), endOfMonth(date)])
+          }
+        }}
+        dateFormat='MMM'
+        mode={datePickerMode}
+      />
+    ) : (
+      <DatePicker
+        selected={[startDate, endDate]}
+        onChange={dates =>
+          handleDateChange(dates as [Date | null, Date | null])
+        }
+        dateFormat='MMM d'
+        mode={datePickerMode}
+      />
+    )
+
   return (
     <TableProvider>
-      <View
-        type='panel'
-        headerControls={
-          <>
-            <DatePicker
-              selected={[startDate, endDate]}
-              onChange={dates =>
-                handleDateChange(dates as [Date | null, Date | null])
-              }
-              dateFormat='MMM d'
-              mode='dayRangePicker'
-            />
-          </>
-        }
-      >
+      <View type='panel' headerControls={<>{datePicker}</>}>
         {!data || isLoading ? (
           <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
             <Loader />
