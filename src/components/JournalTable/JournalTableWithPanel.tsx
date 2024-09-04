@@ -58,6 +58,8 @@ export const JournalTableWithPanel = ({
       ?.slice(firstPageIndex, lastPageIndex)
   }, [rawData, currentPage])
 
+  console.log('data', data, isLoading)
+
   return (
     <Panel
       sidebar={
@@ -90,6 +92,16 @@ export const JournalTableWithPanel = ({
             totalCount={rawData?.length || 0}
             pageSize={pageSize}
             onPageChange={page => setCurrentPage(page)}
+          />
+        </div>
+      )}
+
+      {data?.length === 0 && !isLoading && !error && (
+        <div className='Layer__table-state-container'>
+          <DataState
+            status={DataStateStatus.allDone}
+            title='No entries found'
+            description='There are no entries in the journal.'
           />
         </div>
       )}

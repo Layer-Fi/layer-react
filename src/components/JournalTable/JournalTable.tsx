@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { JournalContext } from '../../contexts/JournalContext'
 import { TableProvider } from '../../contexts/TableContext'
@@ -9,6 +9,7 @@ import {
   JournalEntryLineItem,
 } from '../../types'
 import { humanizeEnum } from '../../utils/format'
+import { DataState, DataStateStatus } from '../DataState'
 import { View } from '../Journal'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { JournalTableStringOverrides } from './JournalTableWithPanel'
@@ -56,7 +57,6 @@ export const JournalTable = ({
 )
 
 const JournalTableContent = ({
-  view,
   data,
   stringOverrides,
 }: {
@@ -70,7 +70,9 @@ const JournalTableContent = ({
   const { isOpen, setIsOpen } = useTableExpandRow()
 
   useEffect(() => {
-    setIsOpen([`journal-row- + ${data[0].id}`])
+    if (data.length > 0) {
+      setIsOpen([`journal-row- + ${data[0].id}`])
+    }
   }, [])
 
   const renderJournalRow = (

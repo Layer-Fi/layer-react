@@ -50,13 +50,10 @@ export const ChartOfAccountsTable = ({
 )
 
 export const ChartOfAccountsTableContent = ({
-  view,
   stringOverrides,
   data,
   error,
   expandAll,
-  cumulativeIndex,
-  accountsLength,
 }: {
   view: View
   data: ChartWithBalances

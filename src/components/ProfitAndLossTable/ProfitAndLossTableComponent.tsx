@@ -97,7 +97,7 @@ export const ProfitAndLossTableComponent = ({
             )}
           </TableCell>
           <TableCell isCurrency primary>
-            {lineItem.value}
+            {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
           </TableCell>
         </TableRow>
         {expanded && lineItem.line_items
