@@ -55,8 +55,6 @@ export const ChartOfAccountsTableContent = ({
   data,
   error,
   expandAll,
-  cumulativeIndex,
-  accountsLength,
 }: {
   view: View
   data: ChartWithBalances

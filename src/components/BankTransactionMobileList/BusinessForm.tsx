@@ -86,11 +86,11 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
 
     const payload = selectedCategory?.value?.payload?.id
       ? {
-          type: 'AccountId' as 'AccountId',
+          type: 'AccountId' as const,
           id: selectedCategory.value.payload.id,
         }
       : {
-          type: 'StableName' as 'StableName',
+          type: 'StableName' as const,
           stable_name: selectedCategory.value.payload?.stable_name || '',
         }
 

@@ -32,7 +32,7 @@ export const MiniChart = ({ data }: MiniChartProps) => {
           return (
             <Cell
               key={`cell-${index}`}
-              className={`Layer__profit-and-loss-detailed-charts__pie`}
+              className={'Layer__profit-and-loss-detailed-charts__pie'}
               fill={
                 entry.name === 'placeholder' ? '#e6e6e6' : colorConfig.color
               }

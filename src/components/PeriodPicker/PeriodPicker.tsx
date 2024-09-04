@@ -50,7 +50,7 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
       return storedOption
         ? (storedOption as PeriodPickerOption)
         : defaultValue || 'month'
-    }
+    },
   )
 
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -66,7 +66,7 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
   }
 
   const getStartEndDate = (
-    option: PeriodPickerOption
+    option: PeriodPickerOption,
   ): { start_date: string; end_date: string } => {
     const currentDate = new Date()
     let startDate: Date
@@ -77,12 +77,12 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
         startDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth(),
-          1
+          1,
         )
         endDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth() + 1,
-          0
+          0,
         )
         break
       case 'quarter':
@@ -98,48 +98,48 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
         startDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth() - 1,
-          1
+          1,
         )
         endDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth() + 1,
-          0
+          0,
         )
         break
       case '3_months':
         startDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth() - 2,
-          1
+          1,
         )
         endDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth() + 1,
-          0
+          0,
         )
         break
       case '6_months':
         startDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth() - 5,
-          1
+          1,
         )
         endDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth() + 1,
-          0
+          0,
         )
         break
       case '12_months':
         startDate = new Date(
           currentDate.getFullYear() - 1,
           currentDate.getMonth(),
-          1
+          1,
         )
         endDate = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth() + 1,
-          0
+          0,
         )
         break
       case '2_quarters':
@@ -147,12 +147,12 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
         startDate = new Date(
           currentDate.getFullYear(),
           currentQuarter2 * 3 - 3,
-          1
+          1,
         )
         endDate = new Date(
           currentDate.getFullYear(),
           currentQuarter2 * 3 + 3,
-          0
+          0,
         )
         break
       case '3_quarters':
@@ -160,12 +160,12 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
         startDate = new Date(
           currentDate.getFullYear(),
           currentQuarter3 * 3 - 6,
-          1
+          1,
         )
         endDate = new Date(
           currentDate.getFullYear(),
           currentQuarter3 * 3 + 3,
-          0
+          0,
         )
         break
       case '4_quarters':
@@ -173,12 +173,12 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
         startDate = new Date(
           currentDate.getFullYear(),
           currentQuarter4 * 3 - 9,
-          1
+          1,
         )
         endDate = new Date(
           currentDate.getFullYear(),
           currentQuarter4 * 3 + 3,
-          0
+          0,
         )
         break
       case '8_quarters':
@@ -186,12 +186,12 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
         startDate = new Date(
           currentDate.getFullYear(),
           currentQuarter8 * 3 - 21,
-          1
+          1,
         )
         endDate = new Date(
           currentDate.getFullYear(),
           currentQuarter8 * 3 + 3,
-          0
+          0,
         )
         break
       case '2_years':

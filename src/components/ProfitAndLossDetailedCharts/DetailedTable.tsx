@@ -140,9 +140,6 @@ export const DetailedTable = ({
 
   const typeColorMapping: any = mapTypesToColors(filteredData, chartColorsList)
 
-  // Index to keep track of the next color to assign
-  const colorIndex = 0
-
   return (
     <div className='details-container'>
       <div className='table'>

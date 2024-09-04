@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { get } from '../../api/layer/authenticated_http'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { Direction, FormError, FormErrorWithId } from '../../types'
 import { LedgerAccountBalance } from '../../types/chart_of_accounts'

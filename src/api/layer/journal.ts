@@ -1,4 +1,3 @@
-
 import { JournalEntry } from '../../types/journal'
 import { get, post } from './authenticated_http'
 

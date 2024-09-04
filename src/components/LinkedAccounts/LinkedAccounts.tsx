@@ -47,7 +47,7 @@ export const LinkedAccountsComponent = ({
           className='Layer__linked-accounts__title'
           size={HeadingSize.secondary}
         >
-          {stringOverrides?.title || "Linked Accounts"}
+          {stringOverrides?.title || 'Linked Accounts'}
         </Heading>
       </Header>
 
