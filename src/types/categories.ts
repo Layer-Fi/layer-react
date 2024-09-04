@@ -59,7 +59,6 @@ export type SingleCategoryUpdate = {
   category: AccountIdentifierPayloadObject
 }
 
-
 export type SplitCategoryUpdate = {
   type: 'Split'
   entries: {

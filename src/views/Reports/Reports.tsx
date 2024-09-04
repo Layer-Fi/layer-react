@@ -10,11 +10,7 @@ import {
 } from '../../components/DatePicker/DatePicker'
 import { Panel } from '../../components/Panel'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
-import {
-  ProfitAndLossCompareOptionsProps,
-  TagComparisonOption,
-  TagFilterInput,
-} from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
+import { ProfitAndLossCompareOptionsProps } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossTableStringOverrides } from '../../components/ProfitAndLossTable'
 import { StatementOfCashFlow } from '../../components/StatementOfCashFlow'

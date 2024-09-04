@@ -86,8 +86,12 @@ export const StatementOfCashFlowTable = ({
     <Table borderCollapse='collapse'>
       <TableHead>
         <TableRow rowKey='soc-flow-head-row' isHeadRow>
-          <TableCell isHeaderCell>{stringOverrides?.typeColumnHeader || "Type"}</TableCell>
-          <TableCell isHeaderCell>{stringOverrides?.totalColumnHeader || "Total"}</TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.typeColumnHeader || 'Type'}
+          </TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.totalColumnHeader || 'Total'}
+          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -106,7 +110,11 @@ export const StatementOfCashFlowTable = ({
             )
           } else {
             return (
-              <TableRow rowKey={row.name + '-' + idx} variant='default'>
+              <TableRow
+                key={row.name + '-' + idx}
+                rowKey={row.name + '-' + idx}
+                variant='default'
+              >
                 <TableCell primary>{row.displayName}</TableCell>
                 <TableCell primary isCurrency>
                   {row.lineItem}

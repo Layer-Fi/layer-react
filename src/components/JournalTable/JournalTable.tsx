@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { JournalContext } from '../../contexts/JournalContext'
 import { TableProvider } from '../../contexts/TableContext'
@@ -56,7 +56,6 @@ export const JournalTable = ({
 )
 
 const JournalTableContent = ({
-  view,
   data,
   stringOverrides,
 }: {

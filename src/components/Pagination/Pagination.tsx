@@ -38,12 +38,12 @@ export const Pagination = ({
     return
   }
 
-  let lastPage = paginationRange[paginationRange.length - 1]
+  const lastPage = paginationRange[paginationRange.length - 1]
 
   return (
     <ul className='Layer__pagination'>
       <li
-        key={`page-prev`}
+        key={'page-prev'}
         className={classnames(
           'Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--previous',
           {
@@ -87,7 +87,7 @@ export const Pagination = ({
       })}
       {hasMore && fetchMore ? (
         <li
-          key={`page-has-more`}
+          key={'page-has-more'}
           className='Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--next'
           onClick={fetchMore}
         >
@@ -95,7 +95,7 @@ export const Pagination = ({
         </li>
       ) : null}
       <li
-        key={`page-last`}
+        key={'page-last'}
         className={classnames(
           'Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--next',
           {

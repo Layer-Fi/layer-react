@@ -18,7 +18,6 @@ export interface AccountItem {
   name: string
 }
 
-
 export interface BankTransactionFilters {
   amount?: NumericRangeFilter
   account?: string[]

@@ -71,7 +71,9 @@ export const mapCategoryToOption = (category: Category): CategoryOption => {
   }
 }
 
-export const mapCategoryToExclusionOption = (category: Category): CategoryOption => {
+export const mapCategoryToExclusionOption = (
+  category: Category,
+): CategoryOption => {
   return {
     type: OptionActionType.CATEGORY,
     payload: {
@@ -197,17 +199,18 @@ function flattenCategories(
 ): GroupBase<CategoryOption>[] {
   function getLeafCategories(category: Category): Category[] {
     if (!category.subCategories || category.subCategories.length === 0) {
-      return [category];
+      return [category]
     }
-    return category.subCategories.flatMap(subCategory => getLeafCategories(subCategory));
+    return category.subCategories.flatMap(subCategory =>
+      getLeafCategories(subCategory),
+    )
   }
   return categories.map(category => {
-      return {
-        label: category.display_name,
-        options: getLeafCategories(category).map(x => mapCategoryToOption(x))
-      } satisfies GroupBase<CategoryOption>
-    }
-  )
+    return {
+      label: category.display_name,
+      options: getLeafCategories(category).map(x => mapCategoryToOption(x)),
+    } satisfies GroupBase<CategoryOption>
+  })
 }
 
 export const CategorySelect = ({

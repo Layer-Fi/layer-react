@@ -1,12 +1,6 @@
 import { filterVisibility } from '../../components/BankTransactions/utils'
-import {
-  BankTransaction,
-  DateRange,
-  Direction,
-  DisplayState,
-} from '../../types'
+import { BankTransaction, DisplayState } from '../../types'
 import { AccountItem, NumericRangeFilter } from './types'
-import { parseISO } from 'date-fns'
 
 export const collectAccounts = (transactions?: BankTransaction[]) => {
   const accounts: AccountItem[] = []
