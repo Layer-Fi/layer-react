@@ -94,6 +94,16 @@ export const JournalTableWithPanel = ({
         </div>
       )}
 
+      {data?.length === 0 && !isLoading && !error && (
+        <div className='Layer__table-state-container'>
+          <DataState
+            status={DataStateStatus.allDone}
+            title='No entries found'
+            description='There are no entries in the journal.'
+          />
+        </div>
+      )}
+
       {error ? (
         <div className='Layer__table-state-container'>
           <DataState

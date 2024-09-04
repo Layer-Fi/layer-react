@@ -50,7 +50,6 @@ export const ChartOfAccountsTable = ({
 )
 
 export const ChartOfAccountsTableContent = ({
-  view,
   stringOverrides,
   data,
   error,
