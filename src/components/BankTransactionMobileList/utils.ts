@@ -14,6 +14,7 @@ import { PersonalCategories } from './constants'
 export interface Option {
   label: string
   id: string
+  description?: string
   value: {
     type: 'CATEGORY' | 'SELECT_CATEGORY' | 'GROUP'
     payload?: CategoryOptionPayload
@@ -26,6 +27,9 @@ export interface Option {
 export const mapCategoryToOption = (category: Category): Option => ({
   label: category.display_name,
   id: category.id,
+  /** @todo: Add description to the category object */
+  description:
+    'Short category description for clarity. Short category description for better understanding',
   value: {
     type: 'CATEGORY',
     payload: {
@@ -33,6 +37,9 @@ export const mapCategoryToOption = (category: Category): Option => ({
       option_type: OptionActionType.CATEGORY,
       display_name: category.display_name,
       type: category.type,
+      /** @todo: Add description to the category object */
+      description:
+        'Short category description for clarity. Short category description for better understanding',
       stable_name: category.stable_name,
       entries: category.entries,
       subCategories: category.subCategories,
