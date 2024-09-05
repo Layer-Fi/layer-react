@@ -45,6 +45,7 @@ export const DetailedChart = ({
   isLoading,
   showDatePicker = true,
   showHorizontalChart = false,
+  sidebarScope,
 }: DetailedChartProps) => {
   const { chartData, negativeData, total, negativeTotal } = useMemo(() => {
     const chartData: ChartData[] = []
