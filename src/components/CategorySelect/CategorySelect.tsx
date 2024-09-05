@@ -174,24 +174,24 @@ const Option = (
       {...props}
       className={`Layer__select__option-menu-content ${props.className}`}
     >
-      <Tooltip>
-        <TooltipTrigger>
-          <div className='Layer__select__option-menu--name'>
-            <div>{props.data.payload.display_name}</div>
-            {props.data.payload.description && <InfoIcon />}
-          </div>
-        </TooltipTrigger>
+      <div className='Layer__select__option-menu--name'>
+        <div>{props.data.payload.display_name}</div>
         {props.data.payload.description && (
-          <TooltipContent className='Layer__actionable-list__tooltip-content'>
-            <Text
-              className='Layer__actionable-list__content-description'
-              size={TextSize.sm}
-            >
-              {props.data.payload.description}
-            </Text>
-          </TooltipContent>
+          <Tooltip>
+            <TooltipTrigger>
+              <InfoIcon />
+            </TooltipTrigger>
+            <TooltipContent className='Layer__actionable-list__tooltip-content'>
+              <Text
+                className='Layer__actionable-list__content-description'
+                size={TextSize.sm}
+              >
+                {props.data.payload.description}
+              </Text>
+            </TooltipContent>
+          </Tooltip>
         )}
-      </Tooltip>
+      </div>
       {props.isSelected ? (
         <span className='Layer__select__option-menu-content-check'>
           <Check size={16} />
