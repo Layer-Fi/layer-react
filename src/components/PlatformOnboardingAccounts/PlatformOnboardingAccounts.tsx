@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { PlatformOnboardingContext } from '../../contexts/PlatformOnboardingContext'
 import Link from '../../icons/Link'
+import PlaidIcon from '../../icons/PlaidIcon'
 import { Button } from '../Button'
 import { Heading, HeadingSize, TextSize, Text } from '../Typography'
 
@@ -15,7 +16,9 @@ export const PlatformOnboardingAccounts = () => {
         </Heading>
       </div>
       <div className='Layer__platform__onboarding__connect-accounts'>
-        <div className='Layer__platform__onboarding__connect-account-icon'></div>
+        <div className='Layer__platform__onboarding__connect-account-icon'>
+          <PlaidIcon />
+        </div>
         <div className='Layer__platform__onboarding__connect-account-content'>
           <Text as='h2'>Connect accounts</Text>
           <Text size={TextSize.sm}>
