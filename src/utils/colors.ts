@@ -261,8 +261,8 @@ const hueToRgb = (p: number, q: number, t: number) => {
  */
 const hslToRgb = (hsl: ColorHSLNumberConfig): ColorRGBNumberConfig => {
   let r, g, b
-  let l = hsl.l / 100
-  let s = hsl.s / 100
+  const l = hsl.l / 100
+  const s = hsl.s / 100
 
   if (hsl.s === 0) {
     r = g = b = l

@@ -1,6 +1,5 @@
 import React from 'react'
 import AlertCircle from '../../icons/AlertCircle'
-import MoreVertical from '../../icons/MoreVertical'
 import { HoverMenu } from '../HoverMenu'
 import { Pill } from '../Pill/Pill'
 

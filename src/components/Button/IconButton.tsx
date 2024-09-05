@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, ReactNode, useRef } from 'react'
+import React, { ButtonHTMLAttributes, ReactNode } from 'react'
 import classNames from 'classnames'
 
 export interface IconButtonProps

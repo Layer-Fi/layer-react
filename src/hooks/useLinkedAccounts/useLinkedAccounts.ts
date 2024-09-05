@@ -202,7 +202,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const unlinkAccount = async (source: Source, accountId: string) => {
-    DEBUG && console.log('unlinking account')
+    // DEBUG && console.log('unlinking account')
     if (source === 'PLAID') {
       await Layer.unlinkAccount(apiUrl, auth?.access_token, {
         params: { businessId, accountId: accountId },

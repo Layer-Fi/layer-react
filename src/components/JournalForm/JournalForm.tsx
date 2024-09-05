@@ -15,11 +15,13 @@ export interface JournalFormStringOverrides {
   saveButton?: string
 }
 
-export const JournalForm = (
-  { config, stringOverrides }: {
-    config: JournalConfig,
-    stringOverrides?: JournalFormStringOverrides
-  }) => {
+export const JournalForm = ({
+  config,
+  stringOverrides,
+}: {
+  config: JournalConfig
+  stringOverrides?: JournalFormStringOverrides
+}) => {
   const {
     form,
     cancelForm,
@@ -41,7 +43,7 @@ export const JournalForm = (
     >
       <div className='Layer__journal__sidebar__header'>
         <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-          {stringOverrides?.header && "Add New Entry"}
+          {stringOverrides?.header && 'Add New Entry'}
         </Text>
         <div className='actions'>
           <Button
@@ -50,7 +52,7 @@ export const JournalForm = (
             variant={ButtonVariant.secondary}
             disabled={sendingForm}
           >
-            {stringOverrides?.cancelButton || "Cancel"}
+            {stringOverrides?.cancelButton || 'Cancel'}
           </Button>
           {apiError && (
             <RetryButton
@@ -59,7 +61,7 @@ export const JournalForm = (
               error={'Check connection and retry in few seconds.'}
               disabled={sendingForm}
             >
-              {stringOverrides?.retryButton || "Retry"}
+              {stringOverrides?.retryButton || 'Retry'}
             </RetryButton>
           )}
           {!apiError && (
@@ -69,7 +71,7 @@ export const JournalForm = (
               active={true}
               disabled={sendingForm}
             >
-              {stringOverrides?.saveButton || "Save"}
+              {stringOverrides?.saveButton || 'Save'}
             </SubmitButton>
           )}
         </div>
@@ -144,7 +146,7 @@ export const JournalForm = (
           variant={ButtonVariant.secondary}
           disabled={sendingForm}
         >
-          {stringOverrides?.cancelButton || "Cancel"}
+          {stringOverrides?.cancelButton || 'Cancel'}
         </Button>
         {apiError && (
           <RetryButton
@@ -153,7 +155,7 @@ export const JournalForm = (
             error={'Check connection and retry in few seconds.'}
             disabled={sendingForm}
           >
-            {stringOverrides?.retryButton || "Retry"}
+            {stringOverrides?.retryButton || 'Retry'}
           </RetryButton>
         )}
         {!apiError && (
@@ -163,7 +165,7 @@ export const JournalForm = (
             active={true}
             disabled={sendingForm}
           >
-            {stringOverrides?.saveButton || "Save"}
+            {stringOverrides?.saveButton || 'Save'}
           </SubmitButton>
         )}
       </div>

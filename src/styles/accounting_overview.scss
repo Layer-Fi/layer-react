@@ -59,6 +59,11 @@
   }
 }
 
+.Layer__accounting-overview-profit-and-loss-chart {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 @container (max-width: 460px) {
   .Layer__component.Layer__accounting-overview-profit-and-loss
     .recharts-responsive-container {

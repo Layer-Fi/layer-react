@@ -2,13 +2,12 @@ import React, { useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { JournalContext } from '../../contexts/JournalContext'
-import { TableProvider } from '../../contexts/TableContext'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useJournal } from '../../hooks/useJournal'
 import { Container } from '../Container'
 import { JournalTable } from '../JournalTable'
-import { JournalTableStringOverrides } from '../JournalTable/JournalTable'
+import { JournalTableStringOverrides } from '../JournalTable/JournalTableWithPanel'
 
 export type View = 'mobile' | 'tablet' | 'desktop'
 
@@ -40,9 +39,7 @@ export const Journal = (props: JournalProps) => {
   return (
     <ChartOfAccountsContext.Provider value={AccountsContextData}>
       <JournalContext.Provider value={JournalContextData}>
-        <TableProvider>
-          <JournalContent {...props} />
-        </TableProvider>
+        <JournalContent {...props} />
       </JournalContext.Provider>
     </ChartOfAccountsContext.Provider>
   )
