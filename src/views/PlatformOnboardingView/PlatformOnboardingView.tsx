@@ -69,7 +69,7 @@ const PlatformOnboarding = ({
       }
     >
       <div className='Layer__platform__onboarding--wrapper'>
-        {currentStep > 0 && (
+        {currentStep > 0 && currentStep <= 4 && (
           <div className='Layer__platform__onboaring--back-button'>
             <Button variant={ButtonVariant.secondary} onClick={prevStep}>
               Back
