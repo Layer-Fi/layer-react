@@ -8,6 +8,11 @@ export interface TableContextProps {
   setExpandedAllRows: (expanded: boolean) => void
 }
 
+export enum TableCellAlign {
+  RIGHT = 'right',
+  LEFT = 'left',
+}
+
 export interface TableProps {
   children: ReactNode | ReactNode[]
   componentName?: string
@@ -42,6 +47,7 @@ export interface TableCellProps {
   children?: number | string | ReactNode
   isCurrency?: boolean
   isHeaderCell?: boolean
+  align?: TableCellAlign
   primary?: boolean
   withExpandIcon?: boolean
   fullWidth?: boolean

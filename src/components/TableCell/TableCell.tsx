@@ -8,6 +8,7 @@ export const TableCell = ({
   children,
   isHeaderCell,
   isCurrency,
+  align,
   primary,
   withExpandIcon = false,
   fullWidth,
@@ -24,6 +25,7 @@ export const TableCell = ({
     isCurrency && 'Layer__table-cell-amount',
     isCurrency && isPositive && 'Layer__table-cell-amount--positive',
     isCurrency && !isPositive && 'Layer__table-cell-amount--negative',
+    align && `Layer__table-cell--${align}`,
   )
 
   if (isHeaderCell) {
