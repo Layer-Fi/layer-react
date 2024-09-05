@@ -11,7 +11,7 @@ export const PlatformOnboardingGetStarted = ({
   return (
     <div className='Layer__platform__onboarding__header'>
       <Heading>Welcome to {stringOverrides?.header}</Heading>
-      <Text as='p' size={TextSize.md}>
+      <Text size={TextSize.md}>
         In this flow we’ll confirm your business information, connect your
         financial accounts, and schedule a call with a member of our bookkeeping
         onboarding team to complete your setup.

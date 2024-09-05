@@ -45,7 +45,14 @@
             .Layer__platform__onboarding__progress--circle {
               &::after {
                 border-color: var(--color-base-800);
-                transform: rotate(70deg);
+                transform: rotate(60deg);
+              }
+            }
+            &:not(.Layer__platform__onboarding__progress--step-complete) {
+              .Layer__platform__onboarding__progress--label p {
+                &::after {
+                  opacity: 1;
+                }
               }
             }
           }
@@ -60,6 +67,23 @@
           }
           .Layer__platform__onboarding__progress--label {
             padding-right: var(--spacing-lg);
+            p {
+              position: relative;
+              &::after {
+                content: '';
+                opacity: 0;
+                width: 100%;
+                height: 100%;
+                padding: 2px 8px;
+                background-color: var(--color-base-300);
+                position: absolute;
+                border-radius: 30px;
+                top: -2px;
+                left: -8px;
+                transition: all 200ms ease;
+                z-index: -1;
+              }
+            }
           }
           .Layer__platform__onboarding__progress--circle {
             width: 12px;
@@ -154,6 +178,8 @@
     flex-wrap: wrap;
     gap: var(--spacing-lg);
     align-items: flex-start;
+    max-width: 1200px;
+    margin: auto;
     .Layer__platform__onboarding__guide--element {
       flex-grow: 1;
       flex: 1;
@@ -246,6 +272,9 @@
 }
 
 @media screen and (max-width: 768px) {
+  .Layer__onboarding-calendar {
+    min-width: 100%;
+  }
   .Layer__platform__onboarding--view {
     .Layer__platform__onboarding--wrapper {
       .Layer__platform__onboarding__progress {
