@@ -13,6 +13,16 @@
   }
 }
 
+.Layer__journal__entry-details__mobile-header {
+  display: none;
+}
+
+@container (max-width: 1024px) {
+  .Layer__journal__entry-details__mobile-header {
+    display: flex;
+  }
+}
+
 .Layer__details-list .Layer__component-header {
   padding-bottom: 0;
 }
