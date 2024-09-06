@@ -23,14 +23,8 @@
   }
 }
 
-.Layer__ledger-account__header {
-  display: flex;
-  flex-direction: row;
-  padding: var(--spacing-xl);
-  padding-bottom: var(--spacing-md);
-  gap: var(--spacing-md);
-  align-items: flex-start;
-  justify-content: flex-start;
+.Layer__ledger-account__entry-details__header {
+  background: var(--color-base-0);
 }
 
 .Layer__ledger-account__title-container {
@@ -120,12 +114,6 @@
   .Layer__ledger_account-table__balances-mobile__value {
     font-variation-settings: 'wght' var(--font-weight-bold);
     color: var(--color-base-900);
-  }
-}
-
-@container (max-width: 1400px) {
-  .Layer__ledger-account__header {
-    padding: var(--spacing-md);
   }
 }
 

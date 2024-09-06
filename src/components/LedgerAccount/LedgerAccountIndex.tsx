@@ -9,9 +9,10 @@ import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { centsToDollars } from '../../models/Money'
+import { View } from '../../types/general'
 import { BackButton } from '../Button'
-import { View } from '../ChartOfAccounts/ChartOfAccounts'
 import { DataState, DataStateStatus } from '../DataState'
+import { Header, HeaderCol, HeaderRow } from '../Header'
 import { LedgerAccountEntryDetails } from '../LedgerAccountEntryDetails'
 import { LedgerAccountEntryDetailsStringOverrides } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { Loader } from '../Loader'
@@ -110,31 +111,35 @@ export const LedgerAccount = ({
       className='Layer__ledger-account__panel'
     >
       <div className={baseClassName}>
-        <div className='Layer__ledger-account__header'>
-          <BackButton onClick={close} />
-          <div className='Layer__ledger-account__title-container'>
-            <Text
-              weight={TextWeight.bold}
-              className='Layer__ledger-account__title'
-            >
-              {entry?.name ?? ''}
-            </Text>
-            <div className='Layer__ledger-account__balance-container'>
-              <Text
-                className='Layer__ledger-account__balance-label'
-                size={TextSize.sm}
-              >
-                Current balance
-              </Text>
-              <Text
-                className='Layer__ledger-account__balance-value'
-                size={TextSize.sm}
-              >
-                ${centsToDollars(entry?.balance || 0)}
-              </Text>
-            </div>
-          </div>
-        </div>
+        <Header className='Layer__ledger-account__header'>
+          <HeaderRow>
+            <HeaderCol>
+              <BackButton onClick={close} />
+              <div className='Layer__ledger-account__title-container'>
+                <Text
+                  weight={TextWeight.bold}
+                  className='Layer__ledger-account__title'
+                >
+                  {entry?.name ?? ''}
+                </Text>
+                <div className='Layer__ledger-account__balance-container'>
+                  <Text
+                    className='Layer__ledger-account__balance-label'
+                    size={TextSize.sm}
+                  >
+                    Current balance
+                  </Text>
+                  <Text
+                    className='Layer__ledger-account__balance-value'
+                    size={TextSize.sm}
+                  >
+                    ${centsToDollars(entry?.balance || 0)}
+                  </Text>
+                </div>
+              </div>
+            </HeaderCol>
+          </HeaderRow>
+        </Header>
         <table className='Layer__table Layer__table--hover-effect Layer__ledger-account-table'>
           <thead>
             <tr>
