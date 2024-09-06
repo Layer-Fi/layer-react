@@ -3,8 +3,9 @@ import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { centsToDollars } from '../../models/Money'
 import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
+import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Input, InputGroup, Select } from '../Input'
-import { Text, TextSize, TextWeight } from '../Typography'
+import { Heading, HeadingSize, Text, TextSize, TextWeight } from '../Typography'
 import {
   LEDGER_ACCOUNT_SUBTYPES,
   LEDGER_ACCOUNT_SUBTYPES_FOR_TYPE,
@@ -65,43 +66,47 @@ export const ChartOfAccountsForm = ({
         submitForm()
       }}
     >
-      <div className='Layer__chart-of-accounts__sidebar__header'>
-        <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-          {form?.action === 'edit'
-            ? stringOverrides?.editModeHeader || 'Edit Account'
-            : stringOverrides?.createModeHeader || 'Add New Account'}
-        </Text>
-        <div className='actions'>
-          <Button
-            type='button'
-            onClick={cancelForm}
-            variant={ButtonVariant.secondary}
-            disabled={sendingForm}
-          >
-            {stringOverrides?.cancelButton || 'Cancel'}
-          </Button>
-          {apiError && (
-            <RetryButton
-              type='submit'
-              processing={sendingForm}
-              error={'Check connection and retry in few seconds.'}
+      <Header className='Layer__chart-of-accounts__sidebar__header'>
+        <HeaderRow>
+          <HeaderCol>
+            <Heading size={HeadingSize.secondary} className='title'>
+              {form?.action === 'edit'
+                ? stringOverrides?.editModeHeader || 'Edit Account'
+                : stringOverrides?.createModeHeader || 'Add New Account'}
+            </Heading>
+          </HeaderCol>
+          <HeaderCol className='actions'>
+            <Button
+              type='button'
+              onClick={cancelForm}
+              variant={ButtonVariant.secondary}
               disabled={sendingForm}
             >
-              {stringOverrides?.retryButton || 'Retry'}
-            </RetryButton>
-          )}
-          {!apiError && (
-            <SubmitButton
-              type='submit'
-              noIcon={true}
-              active={true}
-              disabled={sendingForm}
-            >
-              {stringOverrides?.saveButton || 'Save'}
-            </SubmitButton>
-          )}
-        </div>
-      </div>
+              {stringOverrides?.cancelButton || 'Cancel'}
+            </Button>
+            {apiError && (
+              <RetryButton
+                type='submit'
+                processing={sendingForm}
+                error={'Check connection and retry in few seconds.'}
+                disabled={sendingForm}
+              >
+                {stringOverrides?.retryButton || 'Retry'}
+              </RetryButton>
+            )}
+            {!apiError && (
+              <SubmitButton
+                type='submit'
+                noIcon={true}
+                active={true}
+                disabled={sendingForm}
+              >
+                {stringOverrides?.saveButton || 'Save'}
+              </SubmitButton>
+            )}
+          </HeaderCol>
+        </HeaderRow>
+      </Header>
 
       {apiError && (
         <Text
