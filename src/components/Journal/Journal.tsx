@@ -3,13 +3,12 @@ import { BREAKPOINTS } from '../../config/general'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { JournalContext } from '../../contexts/JournalContext'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
-import { useElementSize } from '../../hooks/useElementSize'
+import { useElementViewSize } from '../../hooks/useElementViewSize'
 import { useJournal } from '../../hooks/useJournal'
+import { View } from '../../types/general'
 import { Container } from '../Container'
 import { JournalTable } from '../JournalTable'
 import { JournalTableStringOverrides } from '../JournalTable/JournalTableWithPanel'
-
-export type View = 'mobile' | 'tablet' | 'desktop'
 
 export interface JournalConfig {
   form: {
@@ -52,21 +51,9 @@ const JournalContent = ({
 }: JournalProps) => {
   const [view, setView] = useState<View>('desktop')
 
-  const containerRef = useElementSize<HTMLDivElement>((_a, _b, { width }) => {
-    if (width) {
-      if (width >= BREAKPOINTS.TABLET && view !== 'desktop') {
-        setView('desktop')
-      } else if (
-        width <= BREAKPOINTS.TABLET &&
-        width > BREAKPOINTS.MOBILE &&
-        view !== 'tablet'
-      ) {
-        setView('tablet')
-      } else if (width < BREAKPOINTS.MOBILE && view !== 'mobile') {
-        setView('mobile')
-      }
-    }
-  })
+  const containerRef = useElementViewSize<HTMLDivElement>(newView =>
+    setView(newView),
+  )
 
   return (
     <Container name='journal' ref={containerRef} asWidget={asWidget}>
