@@ -25,6 +25,8 @@
 
 .Layer__ledger-account__entry-details__header {
   background: var(--color-base-0);
+  border-top-left-radius: var(--border-radius-sm);
+  border-top-right-radius: var(--border-radius-sm);
 }
 
 .Layer__ledger-account__title-container {
@@ -198,5 +200,20 @@
     th:last-child.Layer__table-header {
     padding-left: var(--spacing-lg);
     padding-right: var(--spacing-lg);
+  }
+}
+
+@container (max-width: 1023px) and (min-width: 700px) {
+  .Layer__ledger-account__entry-details__table {
+    .Layer__table-row.Layer__table-row--variant-default,
+    .Layer__table-row.Layer__table-row--variant-summation {
+      background-color: var(--color-base-0);
+    }
+    tr td {
+      width: 30%;
+    }
+    tr td:first-child {
+      width: 40%;
+    }
   }
 }
