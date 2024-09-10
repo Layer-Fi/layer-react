@@ -18,18 +18,20 @@ export interface GeneralLedgerStringOverrides {
 
 export interface GeneralLedgerProps {
   title?: string // deprecated
+  showTitle?: boolean
   stringOverrides?: GeneralLedgerStringOverrides
 }
 
 export const GeneralLedgerView = ({
   title, // deprecated
+  showTitle = true,
   stringOverrides,
 }: GeneralLedgerProps) => {
   const [activeTab, setActiveTab] = useState('chartOfAccounts')
 
   return (
     <ProfitAndLoss asContainer={false}>
-      <View title={stringOverrides?.title || title || 'General Ledger'}>
+      <View title={stringOverrides?.title || title || 'General Ledger'} showHeader={showTitle}>
         <Toggle
           name='general-ledger-tabs'
           options={[

@@ -19,6 +19,7 @@ interface AccountingOverviewStringOverrides {
 
 export interface AccountingOverviewProps {
   title?: string
+  showTitle?: boolean
   enableOnboarding?: boolean
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
@@ -30,6 +31,7 @@ type PnlToggleOption = 'revenue' | 'expenses'
 
 export const AccountingOverview = ({
   title = 'Accounting overview',
+  showTitle = true,
   enableOnboarding = false,
   onTransactionsToReviewClick,
   middleBanner,
@@ -40,7 +42,7 @@ export const AccountingOverview = ({
 
   return (
     <ProfitAndLoss asContainer={false}>
-      <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
+      <View title={title} showHeader={showTitle} headerControls={<ProfitAndLoss.DatePicker />}>
         {enableOnboarding && (
           <Onboarding
             onTransactionsToReviewClick={onTransactionsToReviewClick}
