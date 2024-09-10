@@ -167,7 +167,10 @@ export const Reports = ({
       : options.find(option => (option.value = enabledReports[0]))?.label
 
   return (
-    <View title={stringOverrides?.title || title || defaultTitle} showHeader={showTitle}>
+    <View
+      title={stringOverrides?.title || title || defaultTitle}
+      showHeader={showTitle}
+    >
       {enabledReports.length > 1 && (
         <div className='Layer__component Layer__header__actions'>
           <Toggle

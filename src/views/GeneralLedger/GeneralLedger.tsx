@@ -31,7 +31,10 @@ export const GeneralLedgerView = ({
 
   return (
     <ProfitAndLoss asContainer={false}>
-      <View title={stringOverrides?.title || title || 'General Ledger'} showHeader={showTitle}>
+      <View
+        title={stringOverrides?.title || title || 'General Ledger'}
+        showHeader={showTitle}
+      >
         <Toggle
           name='general-ledger-tabs'
           options={[

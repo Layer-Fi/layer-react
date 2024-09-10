@@ -42,7 +42,10 @@ export const BankTransactionsWithLinkedAccounts = ({
   stringOverrides,
 }: BankTransactionsWithLinkedAccountsProps) => {
   return (
-    <View title={stringOverrides?.title || title || 'Bank transactions'} showHeader={showTitle}>
+    <View
+      title={stringOverrides?.title || title || 'Bank transactions'}
+      showHeader={showTitle}
+    >
       <LinkedAccounts
         elevated={elevatedLinkedAccounts}
         showLedgerBalance={showLedgerBalance}

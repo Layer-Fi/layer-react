@@ -42,7 +42,11 @@ export const AccountingOverview = ({
 
   return (
     <ProfitAndLoss asContainer={false}>
-      <View title={title} showHeader={showTitle} headerControls={<ProfitAndLoss.DatePicker />}>
+      <View
+        title={title}
+        showHeader={showTitle}
+        headerControls={<ProfitAndLoss.DatePicker />}
+      >
         {enableOnboarding && (
           <Onboarding
             onTransactionsToReviewClick={onTransactionsToReviewClick}

@@ -20,7 +20,7 @@ export const View = forwardRef<HTMLDivElement, ViewProps>(
   (
     {
       title,
-      showHeader= true,
+      showHeader = true,
       children,
       headerControls,
       type,
@@ -41,7 +41,7 @@ export const View = forwardRef<HTMLDivElement, ViewProps>(
 
     return (
       <div className={viewClassNames} style={{ ...styles }} ref={ref}>
-        {showHeader && (<ViewHeader title={title} controls={headerControls} />)}
+        {showHeader && <ViewHeader title={title} controls={headerControls} />}
         {withSidebar ? (
           <Panel sidebarIsOpen={true} sidebar={sidebar} defaultSidebarHeight>
             <div className='Layer__view-main'>{children}</div>
