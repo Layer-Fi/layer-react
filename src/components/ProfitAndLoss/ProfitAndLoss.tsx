@@ -12,6 +12,7 @@ import { ProfitAndLossHeader } from '../ProfitAndLossHeader'
 import { ProfitAndLossSummaries } from '../ProfitAndLossSummaries'
 import { ProfitAndLossTable } from '../ProfitAndLossTable'
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { ProfitAndLossReport } from '../ProfitAndLossReport/ProfitAndLossReport'
 
 type PNLContextType = ReturnType<typeof useProfitAndLoss>
 const PNLContext = createContext<PNLContextType>({
@@ -79,4 +80,5 @@ ProfitAndLoss.Summaries = ProfitAndLossSummaries
 ProfitAndLoss.Table = ProfitAndLossTable
 ProfitAndLoss.DetailedCharts = ProfitAndLossDetailedCharts
 ProfitAndLoss.Header = ProfitAndLossHeader
+ProfitAndLoss.Report = ProfitAndLossReport
 export { ProfitAndLoss }
