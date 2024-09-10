@@ -1,1 +1,1 @@
-export { ChartOfAccounts, View } from './ChartOfAccounts'
+export { ChartOfAccounts } from './ChartOfAccounts'

@@ -10,7 +10,7 @@ import {
 } from '../../types'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
-import { View } from '../Journal'
+import { View } from '../../types/general'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { JournalTableStringOverrides } from './JournalTableWithPanel'
 import { parseISO, format as formatTime } from 'date-fns'
