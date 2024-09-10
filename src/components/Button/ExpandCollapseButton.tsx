@@ -9,6 +9,7 @@ export interface ExpandCollapseButtonProps {
   expanded?: boolean
   className?: string
   iconOnly?: boolean
+  variant?: ButtonVariant
 }
 
 export const ExpandCollapseButton = ({
@@ -16,12 +17,19 @@ export const ExpandCollapseButton = ({
   expanded,
   className,
   iconOnly,
+  variant,
 }: ExpandCollapseButtonProps) => {
   return (
     <>
       <Button
         onClick={() => onClick(!expanded)}
-        variant={iconOnly ? ButtonVariant.secondary : ButtonVariant.tertiary}
+        variant={
+          variant
+            ? variant
+            : iconOnly
+            ? ButtonVariant.secondary
+            : ButtonVariant.tertiary
+        }
         className={classNames(
           iconOnly
             ? 'Layer__expand-collpase-all-rows-btn--sm'

@@ -529,6 +529,11 @@ tbody {
   }
 }
 
+.Layer__table-wrapper {
+  max-width: 100%;
+  overflow: auto;
+}
+
 .Layer__table-wrapper--bottom-spacing {
   padding-bottom: var(--spacing-lg);
   .Layer__table {
