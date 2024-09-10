@@ -4,10 +4,7 @@ import { BalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Button, ButtonVariant, RetryButton } from '../../components/Button'
 import { Container } from '../../components/Container'
-import {
-  DatePickerMode,
-  DateRangeDatePickerModes,
-} from '../../components/DatePicker/DatePicker'
+import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
 import { Panel } from '../../components/Panel'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossCompareOptionsProps } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
@@ -34,6 +31,7 @@ interface ReportsStringOverrides {
 
 export interface ReportsProps {
   title?: string // deprecated
+  showTitle?: boolean
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
   comparisonConfig?: ProfitAndLossCompareOptionsProps
@@ -152,6 +150,7 @@ const getOptions = (enabledReports: ReportType[]) => {
 
 export const Reports = ({
   title,
+  showTitle = true,
   stringOverrides,
   enabledReports = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow'],
   comparisonConfig,
@@ -168,7 +167,7 @@ export const Reports = ({
       : options.find(option => (option.value = enabledReports[0]))?.label
 
   return (
-    <View title={stringOverrides?.title || title || defaultTitle}>
+    <View title={stringOverrides?.title || title || defaultTitle} showHeader={showTitle}>
       {enabledReports.length > 1 && (
         <div className='Layer__component Layer__header__actions'>
           <Toggle
