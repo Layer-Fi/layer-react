@@ -79,7 +79,7 @@ export const LedgerAccount = ({
     accountId && 'open',
   )
 
-  const entry = useMemo(() => {
+  const account = useMemo(() => {
     return flattenAccounts(accountData?.accounts || []).find(
       x => x.id === accountId,
     )
@@ -117,7 +117,7 @@ export const LedgerAccount = ({
               weight={TextWeight.bold}
               className='Layer__ledger-account__title'
             >
-              {entry?.name ?? ''}
+              {account?.name ?? ''}
             </Text>
             <div className='Layer__ledger-account__balance-container'>
               <Text
@@ -130,9 +130,10 @@ export const LedgerAccount = ({
                 className='Layer__ledger-account__balance-value'
                 size={TextSize.sm}
               >
-                ${centsToDollars(entry?.balance || 0)}
+                ${centsToDollars(account?.balance || 0)}
               </Text>
             </div>
+            {/* TODO: Add control to show reversed entries */}
           </div>
         </div>
         <table className='Layer__table Layer__table--hover-effect Layer__ledger-account-table'>
@@ -174,15 +175,19 @@ export const LedgerAccount = ({
             </tr>
           </thead>
           <tbody>
-            {data?.map((x, index) => (
-              <LedgerAccountRow
-                key={x.id}
-                row={x}
-                index={index}
-                initialLoad={initialLoad}
-                view={view}
-              />
-            ))}
+            {data
+              ?.filter(
+                entry => !entry.entryReversalOf && !entry.entryReversedBy,
+              )
+              ?.map((x, index) => (
+                <LedgerAccountRow
+                  key={x.id}
+                  row={x}
+                  index={index}
+                  initialLoad={initialLoad}
+                  view={view}
+                />
+              ))}
           </tbody>
         </table>
 
