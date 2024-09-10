@@ -6,13 +6,17 @@ import classNames from 'classnames'
 
 export const TableCell = ({
   children,
+  className,
   isHeaderCell,
   isCurrency,
+  align,
   primary,
   withExpandIcon = false,
   fullWidth,
   colSpan = 1,
   onClick,
+  style,
+  width,
 }: TableCellProps) => {
   const amount = typeof children === 'number' ? children : 0
   const isPositive = amount >= 0
@@ -24,11 +28,13 @@ export const TableCell = ({
     isCurrency && 'Layer__table-cell-amount',
     isCurrency && isPositive && 'Layer__table-cell-amount--positive',
     isCurrency && !isPositive && 'Layer__table-cell-amount--negative',
+    align && `Layer__table-cell--${align}`,
+    className,
   )
 
   if (isHeaderCell) {
     return (
-      <th className={cellClassNames} colSpan={colSpan}>
+      <th className={cellClassNames} colSpan={colSpan} style={style}>
         <span className='Layer__table-cell-content'>{children}</span>
       </th>
     )
@@ -37,7 +43,10 @@ export const TableCell = ({
   return (
     <td
       className={cellClassNames}
-      style={fullWidth ? { width: '100%' } : undefined}
+      style={{
+        ...(fullWidth ? { width: '100%' } : width ? { width } : {}),
+        ...(style ?? {}),
+      }}
       colSpan={colSpan}
       onClick={e => onClick && onClick(e)}
     >

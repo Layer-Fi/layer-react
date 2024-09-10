@@ -1,8 +1,9 @@
 import React, { RefObject, useContext, useMemo, useState } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
+import PlusIcon from '../../icons/PlusIcon'
 import { Button } from '../Button'
-import { Header } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
+import { Header, HeaderCol, HeaderRow } from '../Header'
 import { View } from '../Journal'
 import { JournalConfig } from '../Journal/Journal'
 import { JournalFormStringOverrides } from '../JournalForm/JournalForm'
@@ -10,11 +11,12 @@ import { JournalSidebar } from '../JournalSidebar'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
 import { Panel } from '../Panel'
-import { Heading } from '../Typography'
+import { Heading, HeadingSize } from '../Typography'
 import { JournalTable } from './JournalTable'
 
 export interface JournalTableStringOverrides {
   componentTitle?: string
+  componentSubtitle?: string
   addEntryButton?: string
   idColumnHeader?: string
   dateColumnHeader?: string
@@ -32,6 +34,7 @@ export const JournalTableWithPanel = ({
   pageSize = 15,
   config,
   stringOverrides,
+  view,
 }: {
   view: View
   containerRef: RefObject<HTMLDivElement>
@@ -70,15 +73,41 @@ export const JournalTableWithPanel = ({
       sidebarIsOpen={Boolean(selectedEntryId)}
       parentRef={containerRef}
     >
-      <Header className={`Layer__${COMPONENT_NAME}__header`}>
-        <Heading className={`Layer__${COMPONENT_NAME}__title`}>
-          {stringOverrides?.componentTitle || 'Journal'}
-        </Heading>
-        <div className={`Layer__${COMPONENT_NAME}__actions`}>
-          <Button onClick={() => addEntry()} disabled={isLoading}>
-            {stringOverrides?.addEntryButton || 'Add Entry'}
-          </Button>
-        </div>
+      <Header
+        className={`Layer__${COMPONENT_NAME}__header`}
+        asHeader
+        sticky
+        rounded
+      >
+        <HeaderRow>
+          <HeaderCol>
+            <Heading className={`Layer__${COMPONENT_NAME}__title`}>
+              {stringOverrides?.componentTitle || 'Journal'}
+            </Heading>
+          </HeaderCol>
+        </HeaderRow>
+      </Header>
+      <Header>
+        <HeaderRow>
+          <HeaderCol>
+            <Heading
+              size={HeadingSize.secondary}
+              className={`Layer__${COMPONENT_NAME}__subtitle`}
+            >
+              {stringOverrides?.componentSubtitle || 'Entries'}
+            </Heading>
+          </HeaderCol>
+          <HeaderCol>
+            <Button
+              onClick={() => addEntry()}
+              disabled={isLoading}
+              iconOnly={view === 'mobile'}
+              leftIcon={view === 'mobile' && <PlusIcon size={14} />}
+            >
+              {stringOverrides?.addEntryButton || 'Add Entry'}
+            </Button>
+          </HeaderCol>
+        </HeaderRow>
       </Header>
 
       {data && <JournalTable view={'desktop'} data={data} />}
