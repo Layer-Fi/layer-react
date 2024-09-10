@@ -52,17 +52,16 @@ export const GeneralLedgerView = ({
           selected={activeTab}
           onChange={opt => setActiveTab(opt.target.value)}
         />
-        <Container name='generalLedger'>
-          {activeTab === 'chartOfAccounts' ? (
-            <ChartOfAccounts
-              asWidget
-              withExpandAllButton
-              stringOverrides={stringOverrides?.chartOfAccounts}
-            />
-          ) : (
-            <Journal stringOverrides={stringOverrides?.journal} />
-          )}
-        </Container>
+
+        {activeTab === 'chartOfAccounts' ? (
+          <ChartOfAccounts
+            asWidget
+            withExpandAllButton
+            stringOverrides={stringOverrides?.chartOfAccounts}
+          />
+        ) : (
+          <Journal stringOverrides={stringOverrides?.journal} />
+        )}
       </View>
     </ProfitAndLoss>
   )

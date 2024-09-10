@@ -6,6 +6,7 @@ import { Button, ButtonVariant, RetryButton } from '../../components/Button'
 import { DownloadButton as DownloadButtonComponent } from '../../components/Button'
 import { Container } from '../../components/Container'
 import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
+import { Header, HeaderCol, HeaderRow } from '../../components/Header'
 import { Panel } from '../../components/Panel'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossCompareOptionsProps } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
@@ -223,25 +224,45 @@ const ReportsPanel = ({
       {openReport === 'profitAndLoss' && (
         <View
           type='panel'
-          headerControls={
-            <>
-              <ProfitAndLoss.DatePicker
-                datePickerMode={profitAndLossConfig?.datePickerMode}
-              />
-              <div className='Layer__compare__controls__wrapper'>
-                {comparisonConfig && (
-                  <ProfitAndLoss.CompareOptions
-                    tagComparisonOptions={comparisonConfig.tagComparisonOptions}
-                    defaultTagFilter={comparisonConfig.defaultTagFilter}
+          header={
+            <Header>
+              <HeaderRow>
+                <HeaderCol>
+                  <>
+                    <ProfitAndLoss.DatePicker
+                      datePickerMode={profitAndLossConfig?.datePickerMode}
+                    />
+                    {comparisonConfig && view === 'desktop' ? (
+                      <ProfitAndLoss.CompareOptions
+                        tagComparisonOptions={
+                          comparisonConfig.tagComparisonOptions
+                        }
+                        defaultTagFilter={comparisonConfig.defaultTagFilter}
+                      />
+                    ) : null}
+                  </>
+                </HeaderCol>
+                <HeaderCol>
+                  <DownloadButton
+                    stringOverrides={stringOverrides?.downloadButton}
+                    moneyFormat={profitAndLossConfig?.csvMoneyFormat}
+                    view={view}
                   />
-                )}
-                <DownloadButton
-                  stringOverrides={stringOverrides?.downloadButton}
-                  moneyFormat={profitAndLossConfig?.csvMoneyFormat}
-                  view={view}
-                />
-              </div>
-            </>
+                </HeaderCol>
+              </HeaderRow>
+              {comparisonConfig && view !== 'desktop' ? (
+                <HeaderRow>
+                  <HeaderCol>
+                    <ProfitAndLoss.CompareOptions
+                      tagComparisonOptions={
+                        comparisonConfig.tagComparisonOptions
+                      }
+                      defaultTagFilter={comparisonConfig.defaultTagFilter}
+                    />
+                  </HeaderCol>
+                </HeaderRow>
+              ) : null}
+            </Header>
           }
         >
           <Panel

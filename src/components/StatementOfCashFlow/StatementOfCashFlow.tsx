@@ -7,6 +7,7 @@ import {
   DatePickerMode,
   DateRangeDatePickerModes,
 } from '../DatePicker/DatePicker'
+import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Loader } from '../Loader'
 import { StatementOfCashFlowTable } from '../StatementOfCashFlowTable'
 import { StatementOfCashFlowTableStringOverrides } from '../StatementOfCashFlowTable/StatementOfCashFlowTable'
@@ -92,7 +93,16 @@ const StatementOfCashFlowView = ({
 
   return (
     <TableProvider>
-      <View type='panel' headerControls={<>{datePicker}</>}>
+      <View
+        type='panel'
+        header={
+          <Header>
+            <HeaderRow>
+              <HeaderCol>{datePicker}</HeaderCol>
+            </HeaderRow>
+          </Header>
+        }
+      >
         {!data || isLoading ? (
           <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
             <Loader />

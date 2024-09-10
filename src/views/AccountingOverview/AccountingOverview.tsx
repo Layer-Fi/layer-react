@@ -1,5 +1,6 @@
 import React, { ReactNode, useState } from 'react'
 import { Container } from '../../components/Container'
+import { Header, HeaderCol, HeaderRow } from '../../components/Header'
 import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -45,7 +46,15 @@ export const AccountingOverview = ({
       <View
         title={title}
         showHeader={showTitle}
-        headerControls={<ProfitAndLoss.DatePicker />}
+        header={
+          <Header>
+            <HeaderRow>
+              <HeaderCol>
+                <ProfitAndLoss.DatePicker />
+              </HeaderCol>
+            </HeaderRow>
+          </Header>
+        }
       >
         {enableOnboarding && (
           <Onboarding
