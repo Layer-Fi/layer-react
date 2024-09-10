@@ -1,0 +1,1 @@
+export { PlatformOnboardingAccounts } from './PlatformOnboardingAccounts'

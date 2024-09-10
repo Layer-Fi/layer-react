@@ -9,6 +9,11 @@
     padding: var(--spacing-md) var(--spacing-lg);
     border-left: none;
     background: none;
+    .Layer__panel__sidebar-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
   }
 }
 
@@ -54,7 +59,6 @@
 .Layer__bookkeeping-overview-profit-and-loss .recharts-legend-wrapper {
   top: 16px !important;
 }
-
 
 @container (max-width: 796px) {
   .Layer__bookkeeping-overview__summaries-row {

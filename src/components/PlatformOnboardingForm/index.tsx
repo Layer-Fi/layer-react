@@ -1,0 +1,1 @@
+export { PlatformOnboardingForm } from './PlatformOnboardingForm'

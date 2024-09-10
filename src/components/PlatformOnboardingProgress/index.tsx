@@ -1,0 +1,1 @@
+export { PlatformOnboardingProgress } from './PlatformOnboardingProgress'

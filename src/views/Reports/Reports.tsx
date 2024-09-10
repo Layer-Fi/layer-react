@@ -4,10 +4,7 @@ import { BalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Button, ButtonVariant, RetryButton } from '../../components/Button'
 import { Container } from '../../components/Container'
-import {
-  DatePickerMode,
-  DateRangeDatePickerModes,
-} from '../../components/DatePicker/DatePicker'
+import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
 import { Panel } from '../../components/Panel'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossCompareOptionsProps } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'

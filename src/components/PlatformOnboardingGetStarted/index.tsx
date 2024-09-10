@@ -1,0 +1,1 @@
+export { PlatformOnboardingGetStarted } from './PlatformOnboardingGetStarted'
