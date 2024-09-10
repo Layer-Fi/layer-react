@@ -12,6 +12,7 @@ import classNames from 'classnames'
 
 export interface BookkeepingOverviewProps {
   title?: string // deprecated
+  showTitle?: boolean
   stringOverrides?: {
     title?: string
     tasks?: TasksStringOverrides
@@ -27,6 +28,7 @@ type PnlToggleOption = 'revenue' | 'expenses'
 
 export const BookkeepingOverview = ({
   title, // deprecated
+  showTitle = true,
   stringOverrides,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
@@ -40,6 +42,7 @@ export const BookkeepingOverview = ({
           title={stringOverrides?.title || title || 'Bookkeeping overview'}
           withSidebar={width > 1100}
           sidebar={<TasksComponent stringOverrides={stringOverrides?.tasks} />}
+          showHeader={showTitle}
         >
           {width <= 1100 && (
             <TasksComponent

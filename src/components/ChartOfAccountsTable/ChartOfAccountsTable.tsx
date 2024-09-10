@@ -9,7 +9,7 @@ import {
   LedgerAccountBalance,
 } from '../../types/chart_of_accounts'
 import { Button, ButtonVariant } from '../Button'
-import { View } from '../ChartOfAccounts/ChartOfAccounts'
+import { View } from '../../types/general'
 import { Table, TableBody } from '../Table'
 import { TableCell } from '../TableCell'
 import { TableHead } from '../TableHead'
