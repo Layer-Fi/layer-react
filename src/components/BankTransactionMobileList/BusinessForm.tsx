@@ -61,7 +61,12 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
   }
 
   const openDrawer = () => {
-    setContent(<BusinessCategories select={onDrawerCategorySelect} />)
+    setContent(
+      <BusinessCategories
+        selectedId={selectedCategory?.id}
+        select={onDrawerCategorySelect}
+      />,
+    )
   }
 
   const onCategorySelect = (category: Option) => {
@@ -109,7 +114,7 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
       <ActionableList<Option['value']>
         options={options}
         onClick={onCategorySelect}
-        selected={selectedCategory}
+        selectedId={selectedCategory?.id}
       />
       {options.length === 0 ? (
         <Button
