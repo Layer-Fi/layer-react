@@ -4,7 +4,7 @@ import PlusIcon from '../../icons/PlusIcon'
 import { Button } from '../Button'
 import { DataState, DataStateStatus } from '../DataState'
 import { Header, HeaderCol, HeaderRow } from '../Header'
-import { View } from '../Journal'
+import { View } from '../../types/general'
 import { JournalConfig } from '../Journal/Journal'
 import { JournalFormStringOverrides } from '../JournalForm/JournalForm'
 import { JournalSidebar } from '../JournalSidebar'
@@ -81,7 +81,10 @@ export const JournalTableWithPanel = ({
       >
         <HeaderRow>
           <HeaderCol>
-            <Heading className={`Layer__${COMPONENT_NAME}__title`}>
+            <Heading
+              className={`Layer__${COMPONENT_NAME}__title`}
+              size={HeadingSize.view}
+            >
               {stringOverrides?.componentTitle || 'Journal'}
             </Heading>
           </HeaderCol>

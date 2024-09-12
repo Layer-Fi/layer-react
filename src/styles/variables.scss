@@ -5,6 +5,7 @@
 .Layer__toasts-container,
 .Layer__drawer,
 .Layer__variables,
+.Layer__tasks-component,
 #Layer__datepicker__portal {
   // 1. BASE VARIABLES:
   --color-black: #1a1a1a;
@@ -136,6 +137,8 @@
   --text-md: 14px;
   --text-lg: 16px;
   --text-heading: 24px;
+  --text-heading-page: var(--text-heading);
+  --text-heading-view: 20px;
   --text-heading-sm: 16px;
   --font-weight-normal: 460;
   --font-weight-bold: 540;

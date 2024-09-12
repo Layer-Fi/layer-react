@@ -15,13 +15,13 @@ export interface ActionableListOption<T> {
 interface ActionableListProps<T> {
   options: ActionableListOption<T>[]
   onClick: (item: ActionableListOption<T>) => void
-  selected?: ActionableListOption<T>
+  selectedId?: string
 }
 
 export const ActionableList = <T,>({
   options,
   onClick,
-  selected,
+  selectedId,
 }: ActionableListProps<T>) => {
   return (
     <ul className='Layer__actionable-list'>
@@ -36,11 +36,16 @@ export const ActionableList = <T,>({
           )}
         >
           <Text>{x.label}</Text>
-          {!x.asLink && selected && selected.id === x.id ? (
-            <CheckIcon
-              size={16}
-              className='Layer__actionable-list__selected-icon'
-            />
+          {!x.asLink && selectedId && selectedId === x.id ? (
+            <span className='Layer__actionable-list__select Layer__actionable-list__select--selected'>
+              <CheckIcon
+                size={14}
+                className='Layer__actionable-list__selected-icon'
+              />
+            </span>
+          ) : null}
+          {!x.asLink && (!selectedId || selectedId !== x.id) ? (
+            <span className='Layer__actionable-list__select' />
           ) : null}
           {x.asLink && (
             <ChevronRight

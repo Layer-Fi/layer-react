@@ -320,7 +320,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   return {
     data: USE_MOCK_RESPONSE_DATA
       ? mockResponseData.data
-      : responseData?.data.external_accounts,
+      : responseData?.data.external_accounts ?? [],
     isLoading,
     loadingStatus,
     isValidating,

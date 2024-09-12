@@ -3,6 +3,12 @@ import { BalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Container } from '../../components/Container'
 import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
+import { Button, ButtonVariant, RetryButton } from '../../components/Button'
+import { DownloadButton as DownloadButtonComponent } from '../../components/Button'
+import { Container } from '../../components/Container'
+import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
+import { Header, HeaderCol, HeaderRow } from '../../components/Header'
+import { Panel } from '../../components/Panel'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossCompareOptionsProps } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -12,7 +18,14 @@ import { StatementOfCashFlowStringOverrides } from '../../components/StatementOf
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { DownloadButtonStringOverrides } from '../../components/ProfitAndLossReport/ProfitAndLossReport'
+import { BREAKPOINTS } from '../../config/general'
+import { useLayerContext } from '../../contexts/LayerContext'
+import { useElementSize } from '../../hooks/useElementSize'
+import { useElementViewSize } from '../../hooks/useElementViewSize'
 import { MoneyFormat } from '../../types'
+import { View as ViewType } from '../../types/general'
+
+type ViewBreakpoint = ViewType | undefined
 
 export interface ReportsStringOverrides {
   title?: string
@@ -27,6 +40,7 @@ export interface ReportsStringOverrides {
 
 export interface ReportsProps {
   title?: string // deprecated
+  showTitle?: boolean
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
   comparisonConfig?: ProfitAndLossCompareOptionsProps
@@ -53,6 +67,7 @@ export interface ReportsPanelProps {
   statementOfCashFlowConfig?: {
     datePickerMode?: DateRangeDatePickerModes
   }
+  view: ViewBreakpoint
 }
 
 const getOptions = (enabledReports: ReportType[]) => {
@@ -80,14 +95,19 @@ const getOptions = (enabledReports: ReportType[]) => {
 
 export const Reports = ({
   title,
+  showTitle = true,
   stringOverrides,
   enabledReports = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow'],
   comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
 }: ReportsProps) => {
-  const containerRef = useRef<HTMLDivElement>(null)
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
+  const [view, setView] = useState<ViewBreakpoint>('desktop')
+
+  const containerRef = useElementViewSize<HTMLDivElement>(newView =>
+    setView(newView),
+  )
 
   const options = getOptions(enabledReports)
   const defaultTitle =
@@ -96,7 +116,10 @@ export const Reports = ({
       : options.find(option => (option.value = enabledReports[0]))?.label
 
   return (
-    <View title={stringOverrides?.title || title || defaultTitle}>
+    <View
+      title={stringOverrides?.title || title || defaultTitle}
+      showHeader={showTitle}
+    >
       {enabledReports.length > 1 && (
         <div className='Layer__component Layer__header__actions'>
           <Toggle
@@ -116,6 +139,7 @@ export const Reports = ({
             comparisonConfig={comparisonConfig}
             profitAndLossConfig={profitAndLossConfig}
             statementOfCashFlowConfig={statementOfCashFlowConfig}
+            view={view}
           />
         </ProfitAndLoss>
       </Container>
@@ -130,6 +154,7 @@ const ReportsPanel = ({
   comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
+  view,
 }: ReportsPanelProps) => {
   return (
     <>

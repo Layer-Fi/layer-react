@@ -65,7 +65,7 @@ export const ChartOfAccountsTableWithPanel = ({
           <HeaderCol>
             <Heading
               className={`Layer__${COMPONENT_NAME}__title`}
-              size={asWidget ? HeadingSize.secondary : HeadingSize.primary}
+              size={asWidget ? HeadingSize.view : HeadingSize.primary}
             >
               {stringOverrides?.headerText || 'Chart of Accounts'}
             </Heading>
