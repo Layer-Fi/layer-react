@@ -1,3 +1,5 @@
+import { DocumentType } from './file_upload'
+
 export interface TaskTypes {
   id: string
   question: string
@@ -5,17 +7,18 @@ export interface TaskTypes {
   title: string
   transaction_id: string | null
   type: string
-  user_marked_completed_at: string
-  user_response: string
+  user_marked_completed_at: string | null
+  user_response: string | null
   user_response_type: TasksResponseType
   archived_at: string | null
-  completed_at: string
+  completed_at: string | null
   created_at: string
   updated_at: string
+  document_type: DocumentType
 }
 
 export type TasksStatusType = 'COMPLETED' | 'TODO' | 'USER_MARKED_COMPLETED'
-export type TasksResponseType = 'FREE_RESPONSE'
+export type TasksResponseType = 'FREE_RESPONSE' | 'UPLOAD_DOCUMENT'
 
 const COMPLETED_TASK_TYPES = ['COMPLETED', 'USER_MARKED_COMPLETED']
 

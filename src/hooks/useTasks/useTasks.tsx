@@ -4,6 +4,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { LoadedStatus } from '../../types/general'
 import { DataModel } from '../../types/general'
 import { TaskTypes } from '../../types/tasks'
+import { mockData } from './mockData'
 import useSWR from 'swr'
 
 type UseTasks = () => {
@@ -14,7 +15,10 @@ type UseTasks = () => {
   error?: unknown
   refetch: () => void
   submitResponseToTask: (taskId: string, userResponse: string) => void
+  uploadDocumentForTask: (taskId: string, file: File) => void
 }
+
+const DEBUG_MODE = false
 
 export const useTasks: UseTasks = () => {
   const [loadedStatus, setLoadedStatus] = useState<LoadedStatus>('initial')
@@ -39,6 +43,18 @@ export const useTasks: UseTasks = () => {
   }, [isLoading])
 
   const refetch = () => mutate()
+
+  const uploadDocumentForTask = (taskId: string, file: File) => {
+    const uploadDocument = Layer.completeTaskWithUpload(
+      apiUrl,
+      auth.access_token,
+    )
+    uploadDocument({
+      businessId,
+      taskId,
+      file,
+    }).then(refetch)
+  }
 
   const submitResponseToTask = (taskId: string, userResponse: string) => {
     if (!taskId || !userResponse || userResponse.length === 0) return
@@ -68,12 +84,13 @@ export const useTasks: UseTasks = () => {
   }, [syncTimestamps])
 
   return {
-    data: data?.data,
+    data: DEBUG_MODE ? mockData : data?.data,
     isLoading,
     loadedStatus,
     isValidating,
     error,
     refetch,
     submitResponseToTask,
+    uploadDocumentForTask,
   }
 }

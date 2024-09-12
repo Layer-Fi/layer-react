@@ -626,7 +626,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                             apiUrl,
                             auth.access_token,
                           )
-                        const result = await uploadDocument({
+                        await uploadDocument({
                           businessId: businessId,
                           bankTransactionId: bankTransaction.id,
                           file: file,

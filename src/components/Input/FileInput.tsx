@@ -6,9 +6,10 @@ import { ButtonVariant } from '../Button/Button'
 export interface FileInputProps {
   text?: string
   onUpload?: (file: File) => void
+  disabled?: boolean
 }
 
-export const FileInput = ({ text = 'Upload', onUpload }: FileInputProps) => {
+export const FileInput = ({ text = 'Upload', onUpload, disabled = false }: FileInputProps) => {
   const hiddenFileInput = useRef<HTMLInputElement>(null)
 
   const onClick = () => {
@@ -30,6 +31,7 @@ export const FileInput = ({ text = 'Upload', onUpload }: FileInputProps) => {
         onClick={onClick}
         variant={ButtonVariant.secondary}
         rightIcon={<UploadCloud />}
+        disabled={disabled}
       >
         {text}
       </Button>

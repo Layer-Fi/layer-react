@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { useLayerContext } from '../../contexts/LayerContext'
 import { TasksContext } from '../../contexts/TasksContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Check from '../../icons/Check'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { isComplete, TaskTypes } from '../../types/tasks'
 import { Button, ButtonVariant } from '../Button'
+import { FileInput } from '../Input'
 import { Textarea } from '../Textarea'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
@@ -21,7 +23,8 @@ export const TasksListItem = ({
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [userResponse, setUserResponse] = useState(task.user_response || '')
 
-  const { submitResponseToTask } = useContext(TasksContext)
+  const { submitResponseToTask, uploadDocumentForTask } =
+    useContext(TasksContext)
 
   const taskBodyClassName = classNames(
     'Layer__tasks-list-item__body',
@@ -73,27 +76,47 @@ export const TasksListItem = ({
         <div className={taskBodyClassName}>
           <div className='Layer__tasks-list-item__body-info'>
             <Text size={TextSize.sm}>{task.question}</Text>
-            <Textarea
-              value={userResponse}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                setUserResponse(e.target.value)
-              }
-            />
-            <div className='Layer__tasks-list-item__actions'>
-              <Button
-                disabled={
-                  userResponse.length === 0 ||
-                  userResponse === task.user_response
+            {task.user_response_type === 'FREE_RESPONSE' ? (
+              <Textarea
+                value={userResponse}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  setUserResponse(e.target.value)
                 }
-                variant={ButtonVariant.secondary}
-                onClick={() => {
-                  submitResponseToTask(task.id, userResponse)
-                  setIsOpen(false)
-                  goToNextPageIfAllComplete(task)
-                }}
-              >
-                {userResponse && userResponse.length === 0 ? 'Update' : 'Save'}
-              </Button>
+              />
+            ) : null}
+            <div className='Layer__tasks-list-item__actions'>
+              {task.user_response_type === 'UPLOAD_DOCUMENT' ? (
+                <FileInput
+                  onUpload={(file: File) => {
+                    uploadDocumentForTask(task.id, file)
+                    setIsOpen(false)
+                    goToNextPageIfAllComplete(task)
+                  }}
+                  text='Upload file'
+                  disabled={
+                    task.completed_at != null ||
+                    task.user_marked_completed_at != null ||
+                    task.archived_at != null
+                  }
+                />
+              ) : (
+                <Button
+                  disabled={
+                    userResponse.length === 0 ||
+                    userResponse === task.user_response
+                  }
+                  variant={ButtonVariant.secondary}
+                  onClick={() => {
+                    submitResponseToTask(task.id, userResponse)
+                    setIsOpen(false)
+                    goToNextPageIfAllComplete(task)
+                  }}
+                >
+                  {userResponse && userResponse.length === 0
+                    ? 'Update'
+                    : 'Save'}
+                </Button>
+              )}
             </div>
           </div>
         </div>
