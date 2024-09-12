@@ -2,6 +2,7 @@ import React from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { StatementOfCashFlow } from '../../types'
 import { LineItem } from '../../types/line_item'
+import { TableCellAlign } from '../../types/table'
 import { Table, TableHead, TableBody, TableRow, TableCell } from '../Table'
 
 type StatementOfCashFlowRowProps = {
@@ -52,6 +53,7 @@ export const StatementOfCashFlowTable = ({
           <TableCell
             isCurrency={!expandable || (expandable && !expanded)}
             primary={expandable}
+            align={TableCellAlign.RIGHT}
           >
             {(!expandable || (expandable && !expanded)) && lineItem.value}
           </TableCell>
@@ -73,7 +75,7 @@ export const StatementOfCashFlowTable = ({
             variant='summation'
           >
             <TableCell primary>{`Total of ${lineItem.display_name}`}</TableCell>
-            <TableCell primary isCurrency>
+            <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
               {lineItem.value}
             </TableCell>
           </TableRow>
@@ -89,7 +91,7 @@ export const StatementOfCashFlowTable = ({
           <TableCell isHeaderCell>
             {stringOverrides?.typeColumnHeader || 'Type'}
           </TableCell>
-          <TableCell isHeaderCell>
+          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
             {stringOverrides?.totalColumnHeader || 'Total'}
           </TableCell>
         </TableRow>
@@ -116,7 +118,7 @@ export const StatementOfCashFlowTable = ({
                 variant='default'
               >
                 <TableCell primary>{row.displayName}</TableCell>
-                <TableCell primary isCurrency>
+                <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
                   {row.lineItem}
                 </TableCell>
               </TableRow>

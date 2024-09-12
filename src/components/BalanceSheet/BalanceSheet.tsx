@@ -9,6 +9,7 @@ import { BalanceSheetExpandAllButton } from '../BalanceSheetExpandAllButton'
 import { BalanceSheetTable } from '../BalanceSheetTable'
 import { BalanceSheetTableStringOverrides } from '../BalanceSheetTable/BalanceSheetTable'
 import { Container } from '../Container'
+import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Loader } from '../Loader'
 import { View } from '../View'
 import { BALANCE_SHEET_ROWS } from './constants'
@@ -83,16 +84,22 @@ const BalanceSheetView = ({
           <View
             type='panel'
             ref={containerRef}
-            headerControls={
-              <>
-                <BalanceSheetDatePicker
-                  effectiveDate={effectiveDate}
-                  setEffectiveDate={setEffectiveDate}
-                />
-                {withExpandAllButton && (
-                  <BalanceSheetExpandAllButton view={view} />
-                )}
-              </>
+            header={
+              <Header>
+                <HeaderRow>
+                  <HeaderCol>
+                    <BalanceSheetDatePicker
+                      effectiveDate={effectiveDate}
+                      setEffectiveDate={setEffectiveDate}
+                    />
+                  </HeaderCol>
+                  {withExpandAllButton && (
+                    <HeaderCol>
+                      <BalanceSheetExpandAllButton view={view} />
+                    </HeaderCol>
+                  )}
+                </HeaderRow>
+              </Header>
             }
           >
             {!data || isLoading ? (
@@ -117,14 +124,22 @@ const BalanceSheetView = ({
       <View
         type='panel'
         ref={containerRef}
-        headerControls={
-          <>
-            <BalanceSheetDatePicker
-              effectiveDate={effectiveDate}
-              setEffectiveDate={setEffectiveDate}
-            />
-            {withExpandAllButton && <BalanceSheetExpandAllButton view={view} />}
-          </>
+        header={
+          <Header>
+            <HeaderRow>
+              <HeaderCol>
+                <BalanceSheetDatePicker
+                  effectiveDate={effectiveDate}
+                  setEffectiveDate={setEffectiveDate}
+                />
+              </HeaderCol>
+              {withExpandAllButton && (
+                <HeaderCol>
+                  <BalanceSheetExpandAllButton view={view} />
+                </HeaderCol>
+              )}
+            </HeaderRow>
+          </Header>
         }
       >
         {!data || isLoading ? (

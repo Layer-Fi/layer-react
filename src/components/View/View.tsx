@@ -9,7 +9,8 @@ export interface ViewProps {
   children: ReactNode
   title?: string
   showHeader?: boolean
-  headerControls?: ReactNode
+  header?: ReactNode
+  headerControls?: ReactNode // @deprecated
   type?: 'default' | 'panel'
   withSidebar?: boolean
   sidebar?: ReactNode
@@ -23,6 +24,7 @@ export const View = forwardRef<HTMLDivElement, ViewProps>(
       showHeader = true,
       children,
       headerControls,
+      header,
       type,
       withSidebar = false,
       sidebar,
@@ -41,7 +43,16 @@ export const View = forwardRef<HTMLDivElement, ViewProps>(
 
     return (
       <div className={viewClassNames} style={{ ...styles }} ref={ref}>
-        {showHeader && <ViewHeader title={title} controls={headerControls} />}
+        {showHeader && (
+          <ViewHeader
+            title={title}
+            className={classNames(
+              headerControls ? 'Layer__view-header--paddings' : undefined,
+            )}
+          >
+            {header ?? headerControls}
+          </ViewHeader>
+        )}
         {withSidebar ? (
           <Panel sidebarIsOpen={true} sidebar={sidebar} defaultSidebarHeight>
             <div className='Layer__view-main'>{children}</div>

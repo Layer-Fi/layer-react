@@ -23,6 +23,15 @@ export type TagFilterInput =
     }
   | 'None'
 
+const selectStyles = {
+  valueContainer: (styles: any) => {
+    return {
+      ...styles,
+      flexWrap: 'nowrap',
+    }
+  },
+}
+
 export const ProfitAndLossCompareOptions = ({
   tagComparisonOptions,
   defaultTagFilter: defaultOption,
@@ -38,29 +47,44 @@ export const ProfitAndLossCompareOptions = ({
 
   const { dateRange } = useContext(ProfitAndLoss.Context)
 
+  const [initialDone, setInitialDone] = useState(false)
+
   useEffect(() => {
+    if (initialDone) {
+      fetchData()
+    } else {
+      setInitialDone(true)
+    }
+  }, [compareMode, compareOptions, compareMonths])
+
+  const fetchData = () => {
     if (compareMode) {
       refetch({
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
       })
     }
-  }, [compareMode, compareOptions, compareMonths])
+  }
 
-  const [months, setMonths] = useState<number>(1)
-  const [toggle, setToggle] = useState<TagComparisonOption[]>([defaultOption])
+  const [months, setMonths] = useState<number>(
+    compareMonths !== 0 ? compareMonths : 1,
+  )
+  const [toggle, setToggle] = useState<TagComparisonOption[]>(
+    compareOptions?.length > 0 ? compareOptions : [defaultOption],
+  )
 
   useEffect(() => {
     if (months === 0 && toggle.length > 1) {
       setMonths(1)
+    } else if (months !== compareMonths) {
+      setCompareMonths && setCompareMonths(months)
     }
-    setCompareMonths && setCompareMonths(months)
   }, [months])
 
   useEffect(() => {
     if (toggle.length === 0) {
-      setToggle([defaultOption])
-    } else {
+      setToggle(compareOptions?.length > 0 ? compareOptions : [defaultOption])
+    } else if (JSON.stringify(toggle) !== JSON.stringify(compareOptions)) {
       setCompareOptions && setCompareOptions(toggle)
     }
   }, [toggle])
@@ -86,9 +110,11 @@ export const ProfitAndLossCompareOptions = ({
         options={timeComparisonOptions}
         onChange={e => setMonths(e && e.value ? e.value : 0)}
         value={
-          months === 0
+          compareMonths === 0
             ? null
-            : timeComparisonOptions.find(option => option.value === months)
+            : timeComparisonOptions.find(
+                option => option.value === compareMonths,
+              )
         }
         placeholder='Compare months'
       />
@@ -109,7 +135,14 @@ export const ProfitAndLossCompareOptions = ({
           value: JSON.stringify(option.tagFilterConfig),
           label: option.displayName,
         }))}
+        value={compareOptions.map(tagComparisonOption => {
+          return {
+            value: JSON.stringify(tagComparisonOption.tagFilterConfig),
+            label: tagComparisonOption.displayName,
+          }
+        })}
         placeholder='Select views'
+        styles={selectStyles}
       />
     </div>
   )

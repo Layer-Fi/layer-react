@@ -1,10 +1,11 @@
 .Layer__view {
   .Layer__view-main {
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: var(--spacing-lg);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
     container-type: inline-size;
+    box-sizing: border-box;
 
     .Layer__toggle {
       border-radius: 6px;
@@ -21,36 +22,52 @@
   .Layer__view-header {
     display: flex;
     width: 100%;
-    border-bottom: 1px solid var(--color-base-200);
+    max-width: 100%;
+    overflow: auto;
     container-type: inline-size;
     position: relative;
     z-index: 1;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 var(--spacing-md);
+    box-sizing: border-box;
+
+    .Layer__header__row:last-child {
+      border-width: 0;
+    }
+  }
+
+  .Layer__view-header__title + .Layer__view-header__children {
+    width: min-content;
+  }
+
+  .Layer__view-header__title {
+    padding: var(--spacing-md) var(--spacing-sm);
+    width: 100%;
+    min-height: 44px;
+    align-items: center;
+    display: flex;
   }
 
   .Layer__view-header__content {
-    padding: var(--spacing-lg);
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-width: 1406px;
+    max-width: 1460px;
   }
 
-  .Layer__view-header__controls {
-    display: flex;
-    align-items: center;
-  }
-
-  @container (max-width: 760px) {
+  .Layer__view-header--paddings {
     .Layer__view-header__content {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--spacing-sm);
-
-      .Layer__heading {
-        align-self: flex-start;
+      padding: var(--spacing-md);
+      .Layer__view-header__children {
+        gap: var(--spacing-md);
       }
     }
+  }
+
+  .Layer__view-header__children {
+    width: 100%;
+    display: flex;
   }
 
   &.Layer__view--panel {
@@ -60,13 +77,11 @@
     .Layer__view-header {
       position: relative;
       z-index: 1;
+      padding: 0;
     }
-    .Layer__view-header__controls {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-      flex-wrap: wrap;
-      flex-grow: 1;
+
+    .Layer__view-header__content {
+      max-width: 1406px;
     }
   }
 }

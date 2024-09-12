@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { BalanceSheet, LineItem } from '../../types'
+import { TableCellAlign } from '../../types/table'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 
 export interface BalanceSheetTableStringOverrides {
@@ -68,6 +69,7 @@ export const BalanceSheetTable = ({
           <TableCell
             isCurrency={!expandable || (expandable && !expanded)}
             primary={expandable}
+            align={TableCellAlign.RIGHT}
           >
             {(!expandable || (expandable && !expanded)) && lineItem.value}
           </TableCell>
@@ -89,7 +91,7 @@ export const BalanceSheetTable = ({
             variant='summation'
           >
             <TableCell primary>{`Total of ${lineItem.display_name}`}</TableCell>
-            <TableCell primary isCurrency>
+            <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
               {lineItem.value}
             </TableCell>
           </TableRow>
@@ -105,7 +107,7 @@ export const BalanceSheetTable = ({
           <TableCell isHeaderCell>
             {stringOverrides?.typeColumnHeader || 'Type'}
           </TableCell>
-          <TableCell isHeaderCell>
+          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
             {stringOverrides?.totalColumnHeader || 'Total'}
           </TableCell>
         </TableRow>

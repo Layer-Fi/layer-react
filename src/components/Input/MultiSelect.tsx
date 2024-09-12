@@ -4,6 +4,7 @@ import ReactSelect, {
   GroupBase,
   MultiValue,
   OptionsOrGroups,
+  StylesConfig,
   components,
 } from 'react-select'
 import ChevronDownFill from '../../icons/ChevronDownFill'
@@ -22,6 +23,7 @@ export interface SelectProps<T> {
   placeholder?: string
   isInvalid?: boolean
   errorMessage?: string
+  styles?: StylesConfig<T, true, GroupBase<T>>
 }
 
 const DropdownIndicator:
@@ -47,6 +49,7 @@ export const MultiSelect = <T,>({
   placeholder,
   isInvalid,
   errorMessage,
+  styles,
 }: SelectProps<T>) => {
   const baseClassName = classNames(
     'Layer__select',
@@ -66,7 +69,10 @@ export const MultiSelect = <T,>({
           defaultValue={defaultValue}
           onChange={newValue => newValue && onChange(newValue)}
           menuPortalTarget={document.body}
-          styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+          styles={{
+            menuPortal: base => ({ ...base, zIndex: 9999 }),
+            ...styles,
+          }}
           components={{ DropdownIndicator }}
           isDisabled={disabled}
           isMulti={true}

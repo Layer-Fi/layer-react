@@ -81,7 +81,10 @@ export const JournalTableWithPanel = ({
       >
         <HeaderRow>
           <HeaderCol>
-            <Heading className={`Layer__${COMPONENT_NAME}__title`}>
+            <Heading
+              className={`Layer__${COMPONENT_NAME}__title`}
+              size={HeadingSize.view}
+            >
               {stringOverrides?.componentTitle || 'Journal'}
             </Heading>
           </HeaderCol>
