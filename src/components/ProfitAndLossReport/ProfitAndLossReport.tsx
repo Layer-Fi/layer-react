@@ -11,6 +11,15 @@ import { Layer } from '../../api/layer'
 import { Button, ButtonVariant, RetryButton } from '../Button'
 import DownloadCloud from '../../icons/DownloadCloud'
 
+import { DownloadButton as DownloadButtonComponent } from '../../components/Button'
+import { Header, HeaderCol, HeaderRow } from '../../components/Header'
+import { BREAKPOINTS } from '../../config/general'
+import { useElementSize } from '../../hooks/useElementSize'
+import { useElementViewSize } from '../../hooks/useElementViewSize'
+import { View as ViewType } from '../../types/general'
+
+type ViewBreakpoint = ViewType | undefined
+
 
 export interface ProfitAndLossReportProps {
   stringOverrides?: ReportsStringOverrides
