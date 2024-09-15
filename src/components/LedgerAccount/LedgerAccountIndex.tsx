@@ -181,7 +181,7 @@ export const LedgerAccount = ({
           <tbody>
             {data
               ?.filter(
-                entry => !entry.entryReversalOf && !entry.entryReversedBy,
+                entry => !entry.entry_reversal_of && !entry.entry_reversed_by,
               )
               ?.map((x, index) => (
                 <LedgerAccountRow

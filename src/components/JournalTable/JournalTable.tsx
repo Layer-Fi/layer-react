@@ -8,9 +8,10 @@ import {
   JournalEntryLine,
   JournalEntryLineItem,
 } from '../../types'
+import { View } from '../../types/general'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
-import { View } from '../../types/general'
+import { entryNumber } from '../../utils/journal'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { JournalTableStringOverrides } from './JournalTableWithPanel'
 import { parseISO, format as formatTime } from 'date-fns'
@@ -110,7 +111,7 @@ const JournalTableContent = ({
               expandable && setIsOpen(rowKey)
             }}
           >
-            {rowId(row).substring(0, 5)}
+            {entryNumber(row)}
           </TableCell>
           <TableCell>
             {row.date && formatTime(parseISO(row.date), DATE_FORMAT)}

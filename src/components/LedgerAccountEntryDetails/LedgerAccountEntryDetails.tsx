@@ -15,6 +15,7 @@ import {
 } from '../../types/ledger_accounts'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
+import { entryNumber } from '../../utils/journal'
 import { Badge, BadgeVariant } from '../Badge'
 import { BackButton, Button, ButtonVariant, CloseButton } from '../Button'
 import { Card } from '../Card'
@@ -292,9 +293,9 @@ export const LedgerAccountEntryDetails = ({
         title={
           stringOverrides?.journalEntry?.header
             ? stringOverrides?.journalEntry?.header(
-                entryData?.id.substring(0, 5),
+                entryData ? entryNumber(entryData) : '',
               )
-            : `Journal Entry ${entryData?.id.substring(0, 5)}`
+            : `Journal Entry ${entryData ? entryNumber(entryData) : ''}`
         }
         className='Layer__border-top'
       >

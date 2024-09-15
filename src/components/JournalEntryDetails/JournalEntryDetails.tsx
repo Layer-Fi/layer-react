@@ -5,6 +5,7 @@ import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
+import { entryNumber } from '../../utils/journal'
 import { Badge, BadgeVariant } from '../Badge'
 import { BackButton, Button, ButtonVariant, CloseButton } from '../Button'
 import { Card } from '../Card'
@@ -69,7 +70,7 @@ export const JournalEntryDetails = () => {
         )}
       </DetailsList>
       <DetailsList
-        title={`Journal Entry ${entry?.id.substring(0, 5)}`}
+        title={`Journal Entry ${entry ? entryNumber(entry) : ''}`}
         className='Layer__border-top'
       >
         <DetailsListItem label='Entry type' isLoading={isLoadingEntry}>

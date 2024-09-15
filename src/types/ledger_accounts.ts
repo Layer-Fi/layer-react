@@ -40,8 +40,8 @@ export interface LedgerAccountLineItem {
   date: string
   source?: LedgerEntrySource
   running_balance: number
-  entryReversalOf?: string
-  entryReversedBy?: string
+  entry_reversal_of?: string
+  entry_reversed_by?: string
 }
 
 export interface LedgerEntrySource {

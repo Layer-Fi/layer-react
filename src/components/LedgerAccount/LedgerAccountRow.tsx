@@ -4,6 +4,7 @@ import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { centsToDollars } from '../../models/Money'
 import { Direction, LedgerAccountLineItem } from '../../types'
 import { View } from '../../types/general'
+import { entryNumber } from '../../utils/journal'
 import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
@@ -67,7 +68,7 @@ export const LedgerAccountRow = ({
                 weight={TextWeight.normal}
                 className='Layer__ledger_account-table__journal-id'
               >
-                {row.entry_id.substring(0, 5)}
+                {entryNumber(row)}
               </Text>
             </div>
             <Text>{row.source?.display_description ?? ''}</Text>
@@ -123,7 +124,7 @@ export const LedgerAccountRow = ({
                 weight={TextWeight.normal}
                 className='Layer__ledger_account-table__journal-id'
               >
-                {row.entry_id.substring(0, 5)}
+                {entryNumber(row)}
               </Text>
             </div>
             <Text>{row.source?.display_description ?? ''}</Text>
@@ -186,9 +187,7 @@ export const LedgerAccountRow = ({
         </span>
       </td>
       <td className='Layer__table-cell'>
-        <span className='Layer__table-cell-content'>
-          {row.entry_id.substring(0, 5)}
-        </span>
+        <span className='Layer__table-cell-content'>{entryNumber(row)}</span>
       </td>
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content'>
