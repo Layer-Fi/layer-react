@@ -16,16 +16,21 @@ export interface GeneralLedgerStringOverrides {
   journal: JournalStringOverrides
 }
 
+export interface ChartOfAccountsOptions {
+  templateAccountsEditable?: boolean
+}
 export interface GeneralLedgerProps {
   title?: string // deprecated
   showTitle?: boolean
   stringOverrides?: GeneralLedgerStringOverrides
+  chartOfAccountsOptions?: ChartOfAccountsOptions
 }
 
 export const GeneralLedgerView = ({
   title, // deprecated
   showTitle = true,
   stringOverrides,
+  chartOfAccountsOptions,
 }: GeneralLedgerProps) => {
   const [activeTab, setActiveTab] = useState('chartOfAccounts')
 
@@ -58,6 +63,9 @@ export const GeneralLedgerView = ({
             asWidget
             withExpandAllButton
             stringOverrides={stringOverrides?.chartOfAccounts}
+            templateAccountsEditable={
+              chartOfAccountsOptions?.templateAccountsEditable
+            }
           />
         ) : (
           <Journal stringOverrides={stringOverrides?.journal} />
