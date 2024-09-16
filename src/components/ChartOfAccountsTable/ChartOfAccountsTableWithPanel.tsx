@@ -33,6 +33,7 @@ export const ChartOfAccountsTableWithPanel = ({
   withDateControl = false,
   withExpandAllButton = false,
   stringOverrides,
+  templateAccountsEditable,
 }: {
   view: View
   containerRef: RefObject<HTMLDivElement>
@@ -40,6 +41,7 @@ export const ChartOfAccountsTableWithPanel = ({
   withDateControl?: boolean
   withExpandAllButton?: boolean
   stringOverrides?: ChartOfAccountsTableStringOverrides
+  templateAccountsEditable?: boolean
 }) => {
   const { data, isLoading, addAccount, error, isValidating, refetch, form } =
     useContext(ChartOfAccountsContext)
@@ -92,9 +94,7 @@ export const ChartOfAccountsTableWithPanel = ({
                             : 'collapsed',
                         )
                       }
-                      expanded={
-                        !Boolean(!expandAll || expandAll === 'collapsed')
-                      }
+                      expanded={!(!expandAll || expandAll === 'collapsed')}
                       variant={ButtonVariant.secondary}
                     />
                   )}
@@ -126,6 +126,7 @@ export const ChartOfAccountsTableWithPanel = ({
           expandAll={expandAll}
           accountsLength={accountsLength}
           cumulativeIndex={cumulativeIndex}
+          templateAccountsEditable={templateAccountsEditable}
         />
       )}
 
