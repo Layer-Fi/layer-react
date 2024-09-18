@@ -31,11 +31,11 @@ export const Pagination = ({
   })
 
   if (!paginationRange) {
-    return
+    return null
   }
 
   if (currentPage === 0 || paginationRange.length < 2) {
-    return
+    return null
   }
 
   const lastPage = paginationRange[paginationRange.length - 1]

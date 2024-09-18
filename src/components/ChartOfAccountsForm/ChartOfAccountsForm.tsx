@@ -55,7 +55,7 @@ export const ChartOfAccountsForm = ({
   }, [data, form?.accountId])
 
   if (!form) {
-    return
+    return null
   }
 
   return (

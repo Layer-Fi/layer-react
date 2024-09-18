@@ -153,7 +153,7 @@ export const useJournal: UseJournal = () => {
     accounts?: LedgerAccountBalance[] | undefined,
   ) => {
     if (!form) {
-      return
+      return null
     }
 
     let newFormData = form
@@ -163,7 +163,7 @@ export const useJournal: UseJournal = () => {
       const lineItem = lineItems[lineItemIndex]
 
       if (!lineItem) {
-        return
+        return null
       }
 
       if (fieldName === 'parent' && accounts) {
@@ -223,7 +223,7 @@ export const useJournal: UseJournal = () => {
 
   const validateLineItems = (lineItems?: JournalEntryLineItem[]) => {
     if (!lineItems) {
-      return
+      return null
     }
     const errors: FormErrorWithId[] = []
 
@@ -270,7 +270,7 @@ export const useJournal: UseJournal = () => {
 
   const submitForm = () => {
     if (!form || !form.action || addingEntry) {
-      return
+      return null
     }
 
     const errors = validate(form)
@@ -281,7 +281,7 @@ export const useJournal: UseJournal = () => {
         errors,
       })
 
-      return
+      return null
     }
 
     if (form?.data) {
@@ -298,7 +298,7 @@ export const useJournal: UseJournal = () => {
 
   const addEntryLine = (direction: Direction) => {
     if (!form) {
-      return
+      return null
     }
 
     setAddingEntry(true)
@@ -330,7 +330,7 @@ export const useJournal: UseJournal = () => {
 
   const removeEntryLine = (index: number) => {
     if (!form) {
-      return
+      return null
     }
 
     const entryLines = form.data.line_items || []

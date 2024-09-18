@@ -13,6 +13,7 @@ export const useElementSize = <T extends HTMLElement>(
   ) => void,
 ) => {
   const ref = useRef<T>(null)
+  const resizeTimeout = useRef<number | null>(null)
 
   useLayoutEffect(() => {
     const element = ref?.current
@@ -22,17 +23,25 @@ export const useElementSize = <T extends HTMLElement>(
     }
 
     const observer = new ResizeObserver(entries => {
-      callback(element, entries[0], {
-        width: element.offsetWidth,
-        height: element.offsetHeight,
-        clientWidth: element.clientWidth,
-        clientHeight: element.clientHeight,
-      })
+      if (resizeTimeout.current) {
+        clearTimeout(resizeTimeout.current)
+      }
+      resizeTimeout.current = window.setTimeout(() => {
+        const entry = entries[0]
+        callback(element, entry, {
+          width: element.offsetWidth,
+          height: element.offsetHeight,
+          clientWidth: element.clientWidth,
+          clientHeight: element.clientHeight,
+        })
+      }, 100)
     })
-
     observer.observe(element)
     return () => {
       observer.disconnect()
+      if (resizeTimeout.current) {
+        clearTimeout(resizeTimeout.current)
+      }
     }
   }, [callback, ref])
 
