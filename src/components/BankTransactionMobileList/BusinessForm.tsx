@@ -42,7 +42,7 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
 
     if (options.length) {
       options.push({
-        label: 'All categories',
+        label: 'See all categories',
         id: 'SELECT_CATEGORY',
         value: {
           type: 'SELECT_CATEGORY',

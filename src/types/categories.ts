@@ -18,6 +18,7 @@ export interface Category {
   type: string
   display_name: string
   category: string
+  description?: string
   stable_name?: string
   subCategories?: Category[]
   entries?: CategoryEntry[]
