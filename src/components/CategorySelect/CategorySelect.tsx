@@ -343,6 +343,7 @@ export const CategorySelect = ({
       components={{ DropdownIndicator, GroupHeading, Option }}
       isDisabled={disabled}
       isOptionDisabled={option => option.disabled ?? false}
+      isOptionSelected={option => selected?.payload.display_name == option.payload.display_name}
     />
   )
 }
