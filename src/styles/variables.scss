@@ -5,6 +5,8 @@
 .Layer__toasts-container,
 .Layer__drawer,
 .Layer__variables,
+.Layer__actionable-list__tooltip-content,
+.Layer__tasks-component,
 #Layer__datepicker__portal {
   // 1. BASE VARIABLES:
   --color-black: #1a1a1a;
@@ -136,6 +138,8 @@
   --text-md: 14px;
   --text-lg: 16px;
   --text-heading: 24px;
+  --text-heading-page: var(--text-heading);
+  --text-heading-view: 20px;
   --text-heading-sm: 16px;
   --font-weight-normal: 460;
   --font-weight-bold: 540;
@@ -185,6 +189,8 @@
   --btn-bg-color-icon-hover: var(--color-accent);
   --btn-secondary-color: var(--color-black);
   --btn-secondary-bg-color: var(--color-white);
+  --btn-tertiary-color: var(--color-black);
+  --btn-tertiary-bg-color: var(--color-white);
 
   --badge-color: var(--color-base-900);
   --badge-fg-color: var(--color-base-900);

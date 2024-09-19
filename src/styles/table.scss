@@ -120,7 +120,15 @@
 
     @for $depth from 0 through 10 {
       &--depth-#{$depth} td:nth-child(1) .Layer__table-cell-content {
-        padding-left: calc(var(--spacing-lg) * #{$depth + 1});
+        padding-left: calc(var(--spacing-lg) * #{$depth} + var(--spacing-md));
+      }
+    }
+
+    @container (min-width: 1400px) {
+      @for $depth from 0 through 10 {
+        &--depth-#{$depth} td:nth-child(1) .Layer__table-cell-content {
+          padding-left: calc(var(--spacing-lg) * #{$depth} + var(--spacing-xl));
+        }
       }
     }
   }
@@ -135,6 +143,11 @@
     &.Layer__table-cell--primary {
       color: var(--color-base-800);
       font-variation-settings: 'wght' var(--font-weight-bold);
+    }
+
+    &.Layer__table-cell--right .Layer__table-cell-content {
+      text-align: right;
+      justify-content: flex-end;
     }
 
     &.Layer__table-cell-amount--positive .Layer__table-cell-content {
@@ -165,16 +178,6 @@
         margin-right: 8px;
       }
     }
-  }
-
-  tr th:nth-child(1) .Layer__table-cell-content,
-  tr td:nth-child(1) .Layer__table-cell-content {
-    padding-left: var(--spacing-lg);
-  }
-  tr td:last-child .Layer__table-cell-content,
-  tr th:last-child .Layer__table-cell-content {
-    justify-content: flex-end;
-    padding-right: var(--spacing-lg);
   }
 }
 
@@ -388,6 +391,7 @@
   cursor: pointer;
 }
 
+.Layer__table-header.Layer__table-cell--amount,
 .Layer__table-cell--amount {
   justify-content: flex-end;
   text-align: right;
@@ -443,7 +447,9 @@
   .Layer__table tr td:first-child .Layer__table-cell-content,
   .Layer__table tr td:last-child .Layer__table-cell-content,
   .Layer__table tr th:first-child.Layer__table-header,
-  .Layer__table tr th:last-child.Layer__table-header {
+  .Layer__table tr th:last-child.Layer__table-header,
+  .Layer__table tr th:first-child.Layer__table-cell .Layer__table-cell-content,
+  .Layer__table tr th:last-child.Layer__table-cell .Layer__table-cell-content {
     padding-left: var(--spacing-xl);
     padding-right: var(--spacing-xl);
   }
@@ -521,6 +527,11 @@ tbody {
       padding-bottom: var(--spacing-sm);
     }
   }
+}
+
+.Layer__table-wrapper {
+  max-width: 100%;
+  overflow: auto;
 }
 
 .Layer__table-wrapper--bottom-spacing {

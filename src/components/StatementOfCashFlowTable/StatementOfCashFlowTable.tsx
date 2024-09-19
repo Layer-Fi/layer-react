@@ -2,6 +2,7 @@ import React from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { StatementOfCashFlow } from '../../types'
 import { LineItem } from '../../types/line_item'
+import { TableCellAlign } from '../../types/table'
 import { Table, TableHead, TableBody, TableRow, TableCell } from '../Table'
 
 type StatementOfCashFlowRowProps = {
@@ -52,6 +53,7 @@ export const StatementOfCashFlowTable = ({
           <TableCell
             isCurrency={!expandable || (expandable && !expanded)}
             primary={expandable}
+            align={TableCellAlign.RIGHT}
           >
             {(!expandable || (expandable && !expanded)) && lineItem.value}
           </TableCell>
@@ -73,7 +75,7 @@ export const StatementOfCashFlowTable = ({
             variant='summation'
           >
             <TableCell primary>{`Total of ${lineItem.display_name}`}</TableCell>
-            <TableCell primary isCurrency>
+            <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
               {lineItem.value}
             </TableCell>
           </TableRow>
@@ -86,8 +88,12 @@ export const StatementOfCashFlowTable = ({
     <Table borderCollapse='collapse'>
       <TableHead>
         <TableRow rowKey='soc-flow-head-row' isHeadRow>
-          <TableCell isHeaderCell>{stringOverrides?.typeColumnHeader || "Type"}</TableCell>
-          <TableCell isHeaderCell>{stringOverrides?.totalColumnHeader || "Total"}</TableCell>
+          <TableCell isHeaderCell>
+            {stringOverrides?.typeColumnHeader || 'Type'}
+          </TableCell>
+          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
+            {stringOverrides?.totalColumnHeader || 'Total'}
+          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -106,9 +112,13 @@ export const StatementOfCashFlowTable = ({
             )
           } else {
             return (
-              <TableRow rowKey={row.name + '-' + idx} variant='default'>
+              <TableRow
+                key={row.name + '-' + idx}
+                rowKey={row.name + '-' + idx}
+                variant='default'
+              >
                 <TableCell primary>{row.displayName}</TableCell>
-                <TableCell primary isCurrency>
+                <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
                   {row.lineItem}
                 </TableCell>
               </TableRow>

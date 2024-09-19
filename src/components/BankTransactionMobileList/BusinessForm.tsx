@@ -42,7 +42,7 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
 
     if (options.length) {
       options.push({
-        label: 'All categories',
+        label: 'See all categories',
         id: 'SELECT_CATEGORY',
         value: {
           type: 'SELECT_CATEGORY',
@@ -91,11 +91,11 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
 
     const payload = selectedCategory?.value?.payload?.id
       ? {
-          type: 'AccountId' as 'AccountId',
+          type: 'AccountId' as const,
           id: selectedCategory.value.payload.id,
         }
       : {
-          type: 'StableName' as 'StableName',
+          type: 'StableName' as const,
           stable_name: selectedCategory.value.payload?.stable_name || '',
         }
 

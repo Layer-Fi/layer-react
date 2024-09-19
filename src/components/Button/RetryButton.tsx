@@ -1,6 +1,5 @@
 import React, { ButtonHTMLAttributes } from 'react'
 import RefreshCcw from '../../icons/RefreshCcw'
-import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import { Button, ButtonVariant } from './Button'
 import classNames from 'classnames'
 

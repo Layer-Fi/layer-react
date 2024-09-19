@@ -13,20 +13,20 @@ const BarChart2 = ({ size = 12, ...props }: IconSvgProps) => (
     <path
       d='M9.5 10V5'
       stroke='currentColor'
-      stroke-linecap='round'
-      stroke-linejoin='round'
+      strokeLinecap='round'
+      strokeLinejoin='round'
     />
     <path
       d='M6.5 10V2'
       stroke='currentColor'
-      stroke-linecap='round'
-      stroke-linejoin='round'
+      strokeLinecap='round'
+      strokeLinejoin='round'
     />
     <path
       d='M3.5 10V7'
       stroke='currentColor'
-      stroke-linecap='round'
-      stroke-linejoin='round'
+      strokeLinecap='round'
+      strokeLinejoin='round'
     />
   </svg>
 )

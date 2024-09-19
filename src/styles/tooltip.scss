@@ -19,3 +19,20 @@
   padding-top: 2px;
   max-width: 100%;
 }
+
+.Layer__actionable-list__tooltip-content {
+  z-index: 99999;
+  top: 100px !important;
+  // pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  .Layer__tooltip-content {
+    margin-right: auto;
+    max-width: 220px;
+    border-radius: var(--border-radius-3xs);
+    padding: var(--spacing-2xs) var(--spacing-sm);
+    background-color: var(--color-base-800);
+    color: var(--color-base-0);
+  }
+}
