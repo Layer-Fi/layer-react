@@ -4,6 +4,7 @@ import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { LinkedAccountsProvider } from '../../providers/LinkedAccountsProvider'
 import { Container } from '../Container'
 import { ConnectAccount } from './ConnectAccount'
+import { OnboardingStep } from '../../types/layer_context'
 
 const COLLAPSED_STYLE = {
   maxHeight: 0,
@@ -21,6 +22,7 @@ const EXPANDED_STYLE = {
 
 export interface OnboardingProps {
   onTransactionsToReviewClick?: () => void
+  onboardingStepOverride?: OnboardingStep
 }
 
 export const Onboarding = (props: OnboardingProps) => (
@@ -31,8 +33,13 @@ export const Onboarding = (props: OnboardingProps) => (
 
 export const OnboardingContent = ({
   onTransactionsToReviewClick,
+  onboardingStepOverride = undefined,
 }: OnboardingProps) => {
   const { onboardingStep, setOnboardingStep } = useLayerContext()
+
+  useEffect(() => {
+    setOnboardingStep(onboardingStepOverride)
+  }, [onboardingStepOverride])
 
   const [style, setStyle] = useState(
     onboardingStep ? EXPANDED_STYLE : COLLAPSED_STYLE,

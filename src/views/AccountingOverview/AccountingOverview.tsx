@@ -9,6 +9,7 @@ import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { View } from '../../components/View'
 import classNames from 'classnames'
+import { OnboardingStep } from '../../types/layer_context'
 
 interface AccountingOverviewStringOverrides {
   header?: string
@@ -22,6 +23,7 @@ export interface AccountingOverviewProps {
   title?: string
   showTitle?: boolean
   enableOnboarding?: boolean
+  onboardingStepOverride?: OnboardingStep
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
   chartColorsList?: string[]
@@ -34,6 +36,7 @@ export const AccountingOverview = ({
   title = 'Accounting overview',
   showTitle = true,
   enableOnboarding = false,
+  onboardingStepOverride = undefined,
   onTransactionsToReviewClick,
   middleBanner,
   chartColorsList,
@@ -59,6 +62,7 @@ export const AccountingOverview = ({
         {enableOnboarding && (
           <Onboarding
             onTransactionsToReviewClick={onTransactionsToReviewClick}
+            onboardingStepOverride={onboardingStepOverride}
           />
         )}
         <div className='Layer__accounting-overview__summaries-row'>
