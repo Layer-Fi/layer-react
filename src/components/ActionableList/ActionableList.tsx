@@ -39,14 +39,17 @@ export const ActionableList = <T,>({
         >
           <div className='Layer__actionable-list__content'>
             <Text size={TextSize.sm}>{x.label}</Text>
-            {x.description && x.label !== 'See all categories' && (
-              <Text
-                className='Layer__actionable-list__content-description'
-                size={TextSize.sm}
-              >
-                {x.description}
-              </Text>
-            )}
+            {
+              /*TODO: Replace 'See all categories' with something more generic*/
+              x.description && x.label !== 'See all categories' && (
+                <Text
+                  className='Layer__actionable-list__content-description'
+                  size={TextSize.sm}
+                >
+                  {x.description}
+                </Text>
+              )
+            }
           </div>
           {!x.asLink && selectedId && selectedId === x.id ? (
             <span className='Layer__actionable-list__select Layer__actionable-list__select--selected'>

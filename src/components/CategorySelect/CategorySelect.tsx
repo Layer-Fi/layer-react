@@ -68,9 +68,7 @@ export const mapCategoryToOption = (category: Category): CategoryOption => {
       option_type: OptionActionType.CATEGORY,
       display_name: category.display_name,
       type: category.type,
-      /** @todo: Add description to the category object */
-      description:
-        'Short category description for clarity. Short category description for better understanding',
+      description: category.description ?? undefined,
       stable_name: category.stable_name,
       entries: category.entries,
       subCategories: category.subCategories,
