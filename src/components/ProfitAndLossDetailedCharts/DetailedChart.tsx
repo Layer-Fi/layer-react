@@ -249,7 +249,7 @@ export const DetailedChart = ({
                       )
                     }
 
-                    return
+                    return null
                   }}
                 />
               </Pie>

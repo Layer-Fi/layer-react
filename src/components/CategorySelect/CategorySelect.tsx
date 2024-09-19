@@ -135,7 +135,7 @@ const Option = (
   props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>>,
 ) => {
   if (props.data.payload.option_type === 'hidden') {
-    return
+    return null
   }
 
   if (props.data.type === 'match') {
