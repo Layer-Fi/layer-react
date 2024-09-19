@@ -22,6 +22,7 @@ export interface ChartOfAccountsProps {
   withDateControl?: boolean
   withExpandAllButton?: boolean
   stringOverrides?: ChartOfAccountsStringOverrides
+  templateAccountsEditable?: boolean
 }
 
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
@@ -43,6 +44,7 @@ const ChartOfAccountsContent = ({
   withDateControl,
   withExpandAllButton,
   stringOverrides,
+  templateAccountsEditable,
 }: ChartOfAccountsProps) => {
   const { accountId } = useContext(LedgerAccountsContext)
 
@@ -68,6 +70,7 @@ const ChartOfAccountsContent = ({
           view={view}
           containerRef={containerRef}
           stringOverrides={stringOverrides?.chartOfAccountsTable}
+          templateAccountsEditable={templateAccountsEditable}
         />
       )}
     </Container>
