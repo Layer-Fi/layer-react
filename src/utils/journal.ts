@@ -1,5 +1,6 @@
+import { LedgerAccountLineItem, LedgerAccountsEntry } from '../types'
 import { AccountIdentifierPayloadObject } from '../types/categories'
-import { JournalEntryLineItem } from '../types/journal'
+import { JournalEntry, JournalEntryLineItem } from '../types/journal'
 
 export const getAccountIdentifierPayload = (
   journalLineItem: JournalEntryLineItem,
@@ -18,4 +19,10 @@ export const getAccountIdentifierPayload = (
   }
 
   throw new Error('Invalid account identifier')
+}
+
+export const entryNumber = (
+  entry: JournalEntry | LedgerAccountsEntry | LedgerAccountLineItem,
+): string => {
+  return entry.entry_number?.toString() ?? entry.id.substring(0, 5)
 }

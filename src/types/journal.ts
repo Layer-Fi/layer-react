@@ -9,6 +9,7 @@ export interface JournalEntry {
   ledger_id: string
   agent: string
   entry_type: string
+  entry_number: number
   date: string
   entry_at: string
   reversal_of_id: string | null

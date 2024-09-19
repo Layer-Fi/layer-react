@@ -80,7 +80,7 @@ export const LedgerAccount = ({
     accountId && 'open',
   )
 
-  const entry = useMemo(() => {
+  const account = useMemo(() => {
     return flattenAccounts(accountData?.accounts || []).find(
       x => x.id === accountId,
     )
@@ -120,7 +120,7 @@ export const LedgerAccount = ({
                   weight={TextWeight.bold}
                   className='Layer__ledger-account__title'
                 >
-                  {entry?.name ?? ''}
+                  {account?.name ?? ''}
                 </Text>
                 <div className='Layer__ledger-account__balance-container'>
                   <Text
@@ -133,7 +133,7 @@ export const LedgerAccount = ({
                     className='Layer__ledger-account__balance-value'
                     size={TextSize.sm}
                   >
-                    ${centsToDollars(entry?.balance || 0)}
+                    ${centsToDollars(account?.balance || 0)}
                   </Text>
                 </div>
               </div>
@@ -179,15 +179,19 @@ export const LedgerAccount = ({
             </tr>
           </thead>
           <tbody>
-            {data?.map((x, index) => (
-              <LedgerAccountRow
-                key={x.id}
-                row={x}
-                index={index}
-                initialLoad={initialLoad}
-                view={view}
-              />
-            ))}
+            {data
+              ?.filter(
+                entry => !entry.entry_reversal_of && !entry.entry_reversed_by,
+              )
+              ?.map((x, index) => (
+                <LedgerAccountRow
+                  key={x.id}
+                  row={x}
+                  index={index}
+                  initialLoad={initialLoad}
+                  view={view}
+                />
+              ))}
           </tbody>
         </table>
 

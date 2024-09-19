@@ -7,6 +7,7 @@ export interface LedgerAccountsEntry {
   business_id: string
   date: string
   entry_at: string
+  entry_number?: number
   entry_type: string // @TODO - into enum?
   id: string
   invoice?: Record<string, string> // @TODO - fix after having API ready
@@ -32,12 +33,15 @@ export interface LedgerAccountsAccount {
 export interface LedgerAccountLineItem {
   id: string
   entry_id: string
+  entry_number?: number
   account: LedgerAccountsAccount
   amount: number
   direction: Direction
   date: string
   source?: LedgerEntrySource
   running_balance: number
+  entry_reversal_of?: string
+  entry_reversed_by?: string
 }
 
 export interface LedgerEntrySource {
