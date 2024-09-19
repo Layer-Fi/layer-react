@@ -18,5 +18,5 @@ export const JournalSidebar = ({
   if (selectedEntryId !== 'new') {
     return <JournalEntryDetails />
   }
-  return <JournalForm config={config} stringOverrides={stringOverrides}/>
+  return <JournalForm config={config} stringOverrides={stringOverrides} />
 }

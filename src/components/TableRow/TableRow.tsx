@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { TableRowProps } from '../../types/table'
 import classNames from 'classnames'
 

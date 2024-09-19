@@ -1,5 +1,5 @@
-import React from "react";
-import { useQuickbooks } from "../../hooks/useQuickbooks";
+import React from 'react'
+import { useQuickbooks } from '../../hooks/useQuickbooks'
 
 const Quickbooks = () => {
   const {
@@ -8,25 +8,25 @@ const Quickbooks = () => {
     quickbooksIsLinked,
     linkQuickbooks,
     unlinkQuickbooks,
-  } = useQuickbooks();
+  } = useQuickbooks()
 
   return (
     <div>
       <div>
-        Quickbooks OAuth connection status:{" "}
+        Quickbooks OAuth connection status:{' '}
         {quickbooksIsLinked === undefined
-          ? ""
+          ? ''
           : quickbooksIsLinked
-          ? "established"
-          : "not connected"}
+          ? 'established'
+          : 'not connected'}
       </div>
       <br />
-      {quickbooksIsLinked === null && "Loading..."}
+      {quickbooksIsLinked === null && 'Loading...'}
       {quickbooksIsLinked === false && (
         <button
           onClick={async () => {
-            const authorizationUrl = await linkQuickbooks();
-            window.location.href = authorizationUrl;
+            const authorizationUrl = await linkQuickbooks()
+            window.location.href = authorizationUrl
           }}
         >
           Link Quickbooks
@@ -34,7 +34,7 @@ const Quickbooks = () => {
       )}
       {quickbooksIsLinked === true &&
         (isSyncingFromQuickbooks ? (
-          "Syncing data from Quickbooks..."
+          'Syncing data from Quickbooks...'
         ) : (
           <div>
             <button onClick={syncFromQuickbooks}>Sync Quickbooks</button>
@@ -42,7 +42,7 @@ const Quickbooks = () => {
           </div>
         ))}
     </div>
-  );
-};
+  )
+}
 
-export { Quickbooks };
+export { Quickbooks }

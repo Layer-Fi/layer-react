@@ -6,6 +6,7 @@ import classNames from 'classnames'
 export interface DetailsListProps {
   title?: string
   className?: string
+  titleClassName?: string
   children: ReactNode
   actions?: ReactNode
 }
@@ -14,12 +15,13 @@ export const DetailsList = ({
   title,
   children,
   className,
+  titleClassName,
   actions,
 }: DetailsListProps) => {
   return (
     <div className={classNames('Layer__details-list', className)}>
       {title && (
-        <Header>
+        <Header className={titleClassName}>
           <Heading size={HeadingSize.secondary}>{title}</Heading>
           {actions && (
             <div className='Layer__details-list__actions'>{actions}</div>

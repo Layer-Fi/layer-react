@@ -1,28 +1,26 @@
-import React, { RefObject, useContext, useRef, useState } from 'react'
-import { Layer } from '../../api/layer'
+import React, { RefObject, useState } from 'react'
 import { BalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
-import { Button, ButtonVariant, RetryButton } from '../../components/Button'
 import { Container } from '../../components/Container'
-import { Panel } from '../../components/Panel'
+import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
-import {
-  ProfitAndLossCompareOptionsProps,
-  TagComparisonOption,
-  TagFilterInput,
-} from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
+import { ProfitAndLossCompareOptionsProps } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { PnLDownloadButtonStringOverrides } from '../../components/ProfitAndLossDownloadButton'
 import { ProfitAndLossTableStringOverrides } from '../../components/ProfitAndLossTable'
 import { StatementOfCashFlow } from '../../components/StatementOfCashFlow'
 import { StatementOfCashFlowStringOverrides } from '../../components/StatementOfCashFlow/StatementOfCashFlow'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
-import { useLayerContext } from '../../contexts/LayerContext'
-import DownloadCloud from '../../icons/DownloadCloud'
+import { useElementViewSize } from '../../hooks/useElementViewSize'
+import { MoneyFormat } from '../../types'
+import { View as ViewType } from '../../types/general'
 
-interface ReportsStringOverrides {
+type ViewBreakpoint = ViewType | undefined
+
+export interface ReportsStringOverrides {
   title?: string
-  downloadButton?: DownloadButtonStringOverrides
+  downloadButton?: PnLDownloadButtonStringOverrides
   profitAndLoss?: {
     detailedCharts?: ProfitAndLossDetailedChartsStringOverrides
     table?: ProfitAndLossTableStringOverrides
@@ -33,9 +31,17 @@ interface ReportsStringOverrides {
 
 export interface ReportsProps {
   title?: string // deprecated
+  showTitle?: boolean
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
   comparisonConfig?: ProfitAndLossCompareOptionsProps
+  profitAndLossConfig?: {
+    datePickerMode?: DateRangeDatePickerModes
+    csvMoneyFormat?: MoneyFormat
+  }
+  statementOfCashFlowConfig?: {
+    datePickerMode?: DateRangeDatePickerModes
+  }
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -45,66 +51,14 @@ export interface ReportsPanelProps {
   openReport: ReportType
   stringOverrides?: ReportsStringOverrides
   comparisonConfig?: ProfitAndLossCompareOptionsProps
-}
-
-interface DownloadButtonStringOverrides {
-  downloadButtonText?: string
-  retryButtonText?: string
-}
-
-const DownloadButton = ({
-  stringOverrides,
-}: {
-  stringOverrides?: DownloadButtonStringOverrides
-}) => {
-  const { dateRange } = useContext(ProfitAndLoss.Context)
-  const { auth, businessId, apiUrl } = useLayerContext()
-  const [requestFailed, setRequestFailed] = useState(false)
-
-  const handleClick = async () => {
-    const month = (dateRange.startDate.getMonth() + 1).toString()
-    const year = dateRange.startDate.getFullYear().toString()
-    const getProfitAndLossCsv = Layer.getProfitAndLossCsv(
-      apiUrl,
-      auth.access_token,
-      {
-        params: {
-          businessId: businessId,
-          year: year,
-          month: month,
-        },
-      },
-    )
-    try {
-      const result = await getProfitAndLossCsv()
-      if (result?.data?.presignedUrl) {
-        window.location.href = result.data.presignedUrl
-        setRequestFailed(false)
-      } else {
-        setRequestFailed(true)
-      }
-    } catch (e) {
-      setRequestFailed(true)
-    }
+  profitAndLossConfig?: {
+    datePickerMode?: DateRangeDatePickerModes
+    csvMoneyFormat?: MoneyFormat
   }
-
-  return requestFailed ? (
-    <RetryButton
-      onClick={handleClick}
-      className='Layer__download-retry-btn'
-      error={'Approval failed. Check connection and retry in few seconds.'}
-    >
-      {stringOverrides?.retryButtonText || 'Retry'}
-    </RetryButton>
-  ) : (
-    <Button
-      variant={ButtonVariant.secondary}
-      rightIcon={<DownloadCloud size={12} />}
-      onClick={handleClick}
-    >
-      {stringOverrides?.downloadButtonText || 'Download'}
-    </Button>
-  )
+  statementOfCashFlowConfig?: {
+    datePickerMode?: DateRangeDatePickerModes
+  }
+  view: ViewBreakpoint
 }
 
 const getOptions = (enabledReports: ReportType[]) => {
@@ -132,12 +86,19 @@ const getOptions = (enabledReports: ReportType[]) => {
 
 export const Reports = ({
   title,
+  showTitle = true,
   stringOverrides,
   enabledReports = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow'],
   comparisonConfig,
+  profitAndLossConfig,
+  statementOfCashFlowConfig,
 }: ReportsProps) => {
-  const containerRef = useRef<HTMLDivElement>(null)
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
+  const [view, setView] = useState<ViewBreakpoint>('desktop')
+
+  const containerRef = useElementViewSize<HTMLDivElement>(newView =>
+    setView(newView),
+  )
 
   const options = getOptions(enabledReports)
   const defaultTitle =
@@ -146,7 +107,10 @@ export const Reports = ({
       : options.find(option => (option.value = enabledReports[0]))?.label
 
   return (
-    <View title={stringOverrides?.title || title || defaultTitle}>
+    <View
+      title={stringOverrides?.title || title || defaultTitle}
+      showHeader={showTitle}
+    >
       {enabledReports.length > 1 && (
         <div className='Layer__component Layer__header__actions'>
           <Toggle
@@ -164,6 +128,9 @@ export const Reports = ({
             openReport={activeTab}
             stringOverrides={stringOverrides}
             comparisonConfig={comparisonConfig}
+            profitAndLossConfig={profitAndLossConfig}
+            statementOfCashFlowConfig={statementOfCashFlowConfig}
+            view={view}
           />
         </ProfitAndLoss>
       </Container>
@@ -176,46 +143,21 @@ const ReportsPanel = ({
   openReport,
   stringOverrides,
   comparisonConfig,
+  profitAndLossConfig,
+  statementOfCashFlowConfig,
+  view,
 }: ReportsPanelProps) => {
-  const { sidebarScope } = useContext(ProfitAndLoss.Context)
   return (
     <>
       {openReport === 'profitAndLoss' && (
-        <View
-          type='panel'
-          headerControls={
-            <>
-              <ProfitAndLoss.DatePicker />
-              <div className='Layer__compare__controls__wrapper'>
-                {comparisonConfig && (
-                  <ProfitAndLoss.CompareOptions
-                    tagComparisonOptions={comparisonConfig.tagComparisonOptions}
-                    defaultTagFilter={comparisonConfig.defaultTagFilter}
-                  />
-                )}
-                <DownloadButton
-                  stringOverrides={stringOverrides?.downloadButton}
-                />
-              </div>
-            </>
-          }
-        >
-          <Panel
-            sidebar={
-              <ProfitAndLoss.DetailedCharts
-                showDatePicker={false}
-                stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-              />
-            }
-            sidebarIsOpen={Boolean(sidebarScope)}
-            parentRef={containerRef}
-          >
-            <ProfitAndLoss.Table
-              asContainer={false}
-              stringOverrides={stringOverrides?.profitAndLoss?.table}
-            />
-          </Panel>
-        </View>
+        <ProfitAndLoss.Report
+          stringOverrides={stringOverrides}
+          comparisonConfig={comparisonConfig}
+          datePickerMode={profitAndLossConfig?.datePickerMode}
+          csvMoneyFormat={profitAndLossConfig?.csvMoneyFormat}
+          parentRef={containerRef}
+          view={view}
+        />
       )}
       {openReport === 'balanceSheet' && (
         <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} />
@@ -223,6 +165,7 @@ const ReportsPanel = ({
       {openReport === 'statementOfCashFlow' && (
         <StatementOfCashFlow
           stringOverrides={stringOverrides?.statementOfCashflow}
+          datePickerMode={statementOfCashFlowConfig?.datePickerMode}
         />
       )}
     </>

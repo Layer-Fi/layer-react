@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
-import { Container, Header } from '../../components/Container'
+import { Container } from '../../components/Container'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { TasksComponent, TasksProvider } from '../../components/Tasks'
 import { TasksStringOverrides } from '../../components/Tasks/Tasks'
 import { Toggle } from '../../components/Toggle'
-import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import classNames from 'classnames'
 
 export interface BookkeepingOverviewProps {
   title?: string // deprecated
+  showTitle?: boolean
   stringOverrides?: {
     title?: string
     tasks?: TasksStringOverrides
@@ -28,6 +28,7 @@ type PnlToggleOption = 'revenue' | 'expenses'
 
 export const BookkeepingOverview = ({
   title, // deprecated
+  showTitle = true,
   stringOverrides,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
@@ -41,6 +42,7 @@ export const BookkeepingOverview = ({
           title={stringOverrides?.title || title || 'Bookkeeping overview'}
           withSidebar={width > 1100}
           sidebar={<TasksComponent stringOverrides={stringOverrides?.tasks} />}
+          showHeader={showTitle}
         >
           {width <= 1100 && (
             <TasksComponent

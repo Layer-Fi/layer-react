@@ -1,12 +1,12 @@
 import React, { ReactNode, useState } from 'react'
-import { Container, Header } from '../../components/Container'
+import { Container } from '../../components/Container'
+import { Header, HeaderCol, HeaderRow } from '../../components/Header'
 import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
-import { Heading, HeadingSize } from '../../components/Typography'
 import { View } from '../../components/View'
 import classNames from 'classnames'
 
@@ -20,6 +20,7 @@ interface AccountingOverviewStringOverrides {
 
 export interface AccountingOverviewProps {
   title?: string
+  showTitle?: boolean
   enableOnboarding?: boolean
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
@@ -31,6 +32,7 @@ type PnlToggleOption = 'revenue' | 'expenses'
 
 export const AccountingOverview = ({
   title = 'Accounting overview',
+  showTitle = true,
   enableOnboarding = false,
   onTransactionsToReviewClick,
   middleBanner,
@@ -41,7 +43,19 @@ export const AccountingOverview = ({
 
   return (
     <ProfitAndLoss asContainer={false}>
-      <View title={title} headerControls={<ProfitAndLoss.DatePicker />}>
+      <View
+        title={title}
+        showHeader={showTitle}
+        header={
+          <Header>
+            <HeaderRow>
+              <HeaderCol>
+                <ProfitAndLoss.DatePicker />
+              </HeaderCol>
+            </HeaderRow>
+          </Header>
+        }
+      >
         {enableOnboarding && (
           <Onboarding
             onTransactionsToReviewClick={onTransactionsToReviewClick}

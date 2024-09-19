@@ -3,6 +3,9 @@
   align-items: stretch;
   position: relative;
   overflow: auto;
+  .Layer__table-state-container {
+    height: calc(100% - 160px);
+  }
 }
 
 @container (min-width: 1025px) {
@@ -17,6 +20,15 @@
   align-items: center;
   justify-content: flex-end;
   padding: var(--spacing-xl);
+}
+
+.Layer__journal .Layer__panel {
+  max-width: 100%;
+}
+
+.Layer__journal__table-container {
+  max-width: 100%;
+  overflow: auto;
 }
 
 .Layer__journal-table .Layer__table-cell-content::before {
@@ -45,6 +57,7 @@
 .Layer__journal__table {
   width: 100%;
   border-collapse: collapse;
+  max-width: 100%;
 }
 
 .Layer__journal__actions {
@@ -128,26 +141,6 @@
   transform: scale(1);
 }
 
-.Layer__journal__sidebar__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: var(--spacing-xl);
-  padding-bottom: var(--spacing-lg);
-  gap: var(--spacing-md);
-
-  .title {
-    margin: 0;
-    font-size: 24px;
-  }
-
-  .actions {
-    display: flex;
-    gap: var(--spacing-sm);
-    align-items: center;
-  }
-}
-
 .Layer__journal__table .Layer__journal-table-row {
   &:not(.Layer__table-row--header):hover {
     background-color: var(--color-base-50);
@@ -170,19 +163,9 @@
   background-color: var(--bg-element-focus);
 }
 
-.Layer__journal__form {
-  display: flex;
-  flex-direction: column;
-  padding: var(--spacing-xl);
-
-  .Layer__input-group.Layer__input-group--inline {
-    padding: var(--spacing-xs) 0;
-    label {
-      width: 140px;
-      min-width: 140px;
-      max-width: 140px;
-    }
-  }
+.Layer__journal .Layer__panel__sidebar-content .Layer__form {
+  max-width: 480px;
+  margin: auto;
 }
 
 .Layer__journal__form-edit-entry {
@@ -285,70 +268,6 @@
   }
 }
 
-@container (max-width: 1024px) {
-  .Layer__journal__panel .Layer__panel__sidebar .Layer__panel__sidebar-content {
-    width: 100%;
-  }
-
-  .Layer__journal .Layer__journal__sidebar__header .actions {
-    display: none;
-  }
-
-  .Layer__journal .Layer__journal__sidebar__header .actions {
-    display: none;
-  }
-
-  .Layer__journal .Layer__journal__bottom-actions {
-    display: flex;
-  }
-
-  .Layer__journal .Layer__panel.Layer__panel--open {
-    overflow: hidden;
-  }
-
-  .Layer__journal__form__input-group.Layer__journal__form__input-group__textarea {
-    background: transparent;
-  }
-}
-
-@container (min-width: 500px) and (max-width: 1024px) {
-  .Layer__journal__panel .Layer__details-list .Layer__component-header {
-    padding-left: var(--spacing-xl);
-    padding-right: var(--spacing-xl);
-  }
-}
-
-@container (max-width: 499px) {
-  .Layer__journal__panel .Layer__details-list .Layer__details-list-item__label,
-  .Layer__journal__panel .Layer__details-list .Layer__details-list-item__value {
-    padding: var(--spacing-xs);
-  }
-
-  .Layer__journal__panel .Layer__details-list .Layer__details-list-item {
-    padding: 0 var(--spacing-xs);
-  }
-
-  .Layer__journal__entry-details__line-items {
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 0;
-
-    .Layer__card {
-      box-shadow: none;
-      border-radius: 0;
-    }
-  }
-
-  .Layer__journal__panel .Layer__panel__sidebar {
-    background: var(--color-base-0);
-  }
-
-  .Layer__journal__entry-details__back-btn {
-    padding-left: var(--spacing-md);
-    padding-right: var(--spacing-md);
-  }
-}
-
 .Layer__journal__form__input-group__line-item {
   display: flex;
   flex-direction: column;
@@ -399,28 +318,12 @@
   }
 
   .Layer__journal__form__input-group__title {
-    padding-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-xs);
   }
 }
 
 .Layer__journal__sidebar__header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: var(--spacing-xl);
-  padding-bottom: var(--spacing-lg);
-  gap: var(--spacing-md);
-
-  .title {
-    margin: 0;
-    font-size: 24px;
-  }
-
-  .actions {
-    display: flex;
-    gap: var(--spacing-sm);
-    align-items: center;
-  }
 }
 
 .Layer__journal__form__error-message {
@@ -436,4 +339,127 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-md) 0 0;
+}
+
+.Layer__journal .Layer__panel__sidebar .Layer__panel__sidebar-content {
+  width: 100%;
+}
+
+.Layer__journal__entry-details__line-items {
+  padding: var(--spacing-md);
+
+  .Layer__table .Layer__table-row.Layer__table-row--variant-summation {
+    background: var(--color-base-0);
+  }
+}
+
+@container (max-width: 1400px) {
+  .Layer__journal__form__input-group {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+}
+
+@container (max-width: 1024px) {
+  .Layer__journal__panel .Layer__panel__sidebar .Layer__panel__sidebar-content {
+    .Layer__details-list-item {
+      padding-left: 0;
+    }
+
+    .Layer__ledger-account__entry-details__line-items {
+      max-width: 600px;
+    }
+
+    .Layer__form .Layer__input-group,
+    .Layer__form .Layer__journal__form__input-group__title,
+    .Layer__form .Layer__journal__add-entry-line {
+      max-width: 600px;
+      width: 100%;
+      margin: auto;
+    }
+
+    .Layer__form .Layer__header__col {
+      width: 100%;
+      margin: auto;
+      padding: var(--spacing-md) var(--spacing-xl);
+      max-width: calc(600px + (var(--spacing-xl) * 2));
+    }
+
+    .Layer__journal__bottom-actions {
+      max-width: 600px;
+      margin: auto;
+    }
+  }
+
+  .Layer__journal .Layer__journal__sidebar__header .actions {
+    display: none;
+  }
+
+  .Layer__journal .Layer__journal__sidebar__header .actions {
+    display: none;
+  }
+
+  .Layer__journal .Layer__journal__bottom-actions {
+    display: flex;
+  }
+
+  .Layer__journal .Layer__panel.Layer__panel--open {
+    overflow: hidden;
+  }
+
+  .Layer__journal__form__input-group.Layer__journal__form__input-group__textarea {
+    background: transparent;
+  }
+
+  .Layer__journal__debit-credit-col {
+    width: 25%;
+  }
+}
+
+@container (min-width: 500px) and (max-width: 1024px) {
+  .Layer__journal__panel .Layer__details-list .Layer__component-header {
+    padding-left: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+  }
+}
+
+@container (max-width: 499px) {
+  .Layer__journal__panel .Layer__details-list .Layer__details-list-item__label,
+  .Layer__journal__panel .Layer__details-list .Layer__details-list-item__value {
+    padding: var(--spacing-xs);
+  }
+
+  .Layer__journal__panel .Layer__details-list .Layer__details-list-item {
+    padding: 0 var(--spacing-xs);
+  }
+
+  .Layer__journal__entry-details__line-items {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+
+    .Layer__card {
+      box-shadow: none;
+      border-radius: 0;
+    }
+  }
+
+  .Layer__journal__panel .Layer__panel__sidebar {
+    background: var(--color-base-0);
+  }
+
+  .Layer__journal__entry-details__back-btn {
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+  }
+
+  .Layer__input-group.Layer__input-group--inline {
+    flex-direction: column;
+    gap: var(--spacing-2xs);
+    align-items: flex-start;
+    padding-top: var(--spacing-sm);
+
+    & > label {
+      width: 100%;
+    }
+  }
 }
