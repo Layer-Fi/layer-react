@@ -9,8 +9,7 @@ const doesLineItemQualifies = (item: LineItem) => {
     item.value === null ||
     isNaN(item.value) ||
     item.value === -Infinity ||
-    item.value === Infinity ||
-    item.value < 0
+    item.value === Infinity
   )
 }
 
@@ -63,10 +62,18 @@ export const humanizeTitle = (sidebarView: SidebarScope) => {
 export const applyShare = (
   items: LineBaseItem[],
   total: number,
+  exclude?: string[],
 ): LineBaseItem[] => {
   return items.map(item => {
     if (total === 0) {
       return item
+    }
+
+    if ((exclude && exclude.includes(item.type)) || item.value < 0) {
+      return {
+        ...item,
+        share: undefined,
+      }
     }
 
     return {

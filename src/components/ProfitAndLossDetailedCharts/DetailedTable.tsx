@@ -1,5 +1,8 @@
 import React from 'react'
-import { DEFAULT_CHART_COLOR_TYPE } from '../../config/charts'
+import {
+  DEFAULT_CHART_COLOR_TYPE,
+  DEFAULT_CHART_NEGATIVE_COLOR,
+} from '../../config/charts'
 import {
   Scope,
   SidebarScope,
@@ -29,25 +32,51 @@ export interface DetailedTableProps {
   stringOverrides?: DetailedTableStringOverrides
 }
 
+export interface ColorsMapOption {
+  color: string
+  name: string
+  opacity: number
+  type: string
+}
+
 export const mapTypesToColors = (
   data: any[],
   colorList: string[] = DEFAULT_CHART_COLOR_TYPE,
-) => {
+  negativeColor = DEFAULT_CHART_NEGATIVE_COLOR,
+): ColorsMapOption[] => {
   const typeToColor: any = {}
   const typeToLastOpacity: any = {}
   let colorIndex = 0
+  let colorNegativeIndex = 0
 
   return data.map(obj => {
-    const type = obj.type
+    const type = obj.value < 0 ? 'negative' : obj.type
 
     if (type === 'Uncategorized') {
       return {
         color: '#EEEEF0',
         opacity: 1,
+        type: 'Uncategorized',
+        name: 'Uncategorized',
       }
     }
 
-    if (!typeToColor[type]) {
+    if (type === 'empty') {
+      return {
+        color: '#fff',
+        opacity: 0,
+        type: 'empty',
+        name: 'empty',
+      }
+    }
+
+    if (type === 'negative' && !typeToColor['negative']) {
+      typeToColor['negative'] = negativeColor
+      colorNegativeIndex++
+      typeToLastOpacity[type] = 1
+    } else if (type === 'negative' && typeToColor[type]) {
+      typeToLastOpacity[type] -= 0.1
+    } else if (!typeToColor[type]) {
       typeToColor[type] = colorList[colorIndex % colorList.length]
       colorIndex++
       typeToLastOpacity[type] = 1
@@ -58,6 +87,8 @@ export const mapTypesToColors = (
     const opacity = typeToLastOpacity[type]
 
     return {
+      type: type,
+      name: obj.name,
       color: typeToColor[type],
       opacity: opacity,
     }
@@ -70,7 +101,7 @@ const ValueIcon = ({
   idx,
 }: {
   item: LineBaseItem
-  typeColorMapping: any
+  typeColorMapping: ColorsMapOption[]
   idx: number
 }) => {
   if (item.type === 'Uncategorized') {
@@ -84,34 +115,41 @@ const ValueIcon = ({
       >
         <defs>
           <pattern
-            id='layer-pie-dots-pattern-legend'
+            id='layer-pie-stripe-pattern'
             x='0'
             y='0'
-            width='3'
-            height='3'
+            width='4'
+            height='4'
+            patternTransform='rotate(45)'
             patternUnits='userSpaceOnUse'
           >
-            <rect width='1' height='1' opacity={0.76} />
+            <rect width='4' height='4' opacity={0.16} />
+            <line x1='0' y='0' x2='0' y2='4' strokeWidth='2' />
           </pattern>
+
+          <rect width='1' height='1' opacity={0.76} />
         </defs>
-        <rect width='12' height='12' id='layer-pie-dots-pattern-bg' rx='2' />
         <rect
-          x='1'
-          y='1'
-          width='10'
-          height='10'
-          fill='url(#layer-pie-dots-pattern-legend)'
+          width='12'
+          height='12'
+          fill='url(#layer-pie-stripe-pattern)'
+          rx='3'
         />
       </svg>
     )
+  }
+
+  const colorMapping = typeColorMapping.find(x => x.name === item.name) ?? {
+    color: '#f2f2f2',
+    opacity: 1,
   }
 
   return (
     <div
       className='share-icon'
       style={{
-        background: typeColorMapping[idx].color,
-        opacity: typeColorMapping[idx].opacity,
+        background: colorMapping.color,
+        opacity: colorMapping.opacity,
       }}
     />
   )
@@ -138,7 +176,7 @@ export const DetailedTable = ({
     )
   }
 
-  const typeColorMapping: any = mapTypesToColors(filteredData, chartColorsList)
+  const typeColorMapping = mapTypesToColors(filteredData, chartColorsList)
 
   return (
     <div className='details-container'>
@@ -191,7 +229,9 @@ export const DetailedTable = ({
                     <td className='value-col'>${formatMoney(item.value)}</td>
                     <td className='share-col'>
                       <span className='share-cell-content'>
-                        {formatPercent(item.share)}%
+                        {item.share !== undefined
+                          ? `${formatPercent(item.share)}%`
+                          : ''}
                         <ValueIcon
                           item={item}
                           typeColorMapping={typeColorMapping}

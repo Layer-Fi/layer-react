@@ -4,6 +4,8 @@ export const INACTIVE_OPACITY_LEVELS = [
 
 export const DEFAULT_CHART_OPACITY = [1, 0.8, 0.6, 0.4, 0.2, 0.1]
 
+export const DEFAULT_CHART_NEGATIVE_COLOR = '#3E4044'
+
 export const DEFAULT_CHART_COLOR_TYPE = [
   '#008028',
   '#7417B3',

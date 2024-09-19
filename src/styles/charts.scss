@@ -71,6 +71,11 @@
   }
 }
 
+.Layer__chart__tooltip-list--secondary-item {
+  opacity: 0.6;
+  margin-bottom: var(--spacing-sm);
+}
+
 .Layer__chart_y-axis-tick {
   tspan {
     font-size: var(--text-sm);

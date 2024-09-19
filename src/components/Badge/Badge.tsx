@@ -14,6 +14,12 @@ export enum BadgeVariant {
   SUCCESS = 'success',
   WARNING = 'warning',
   ERROR = 'error',
+  LIGHT = 'light',
+}
+
+export enum BadgeRoundings {
+  SMALL = 'small',
+  MEDIUM = 'medium',
 }
 
 export interface BadgeProps {
@@ -24,6 +30,9 @@ export interface BadgeProps {
   size?: BadgeSize
   variant?: BadgeVariant
   hoverable?: boolean
+  className?: string
+  wide?: boolean
+  roundings?: BadgeRoundings
 }
 
 export const Badge = ({
@@ -34,6 +43,9 @@ export const Badge = ({
   size = BadgeSize.MEDIUM,
   variant = BadgeVariant.DEFAULT,
   hoverable = false,
+  className,
+  wide,
+  roundings = BadgeRoundings.SMALL,
 }: BadgeProps) => {
   const baseProps = {
     className: classNames(
@@ -42,6 +54,10 @@ export const Badge = ({
       onClick || tooltip ? 'Layer__badge--clickable' : '',
       `Layer__badge--${size}`,
       `Layer__badge--${variant}`,
+      roundings !== BadgeRoundings.MEDIUM &&
+        `Layer__badge--roundings-${roundings}`,
+      wide && 'Layer__badge--wide',
+      className,
     ),
     onClick,
     children,

@@ -11,6 +11,14 @@
   box-sizing: border-box;
   height: 27px;
 
+  &.Layer__badge--wide {
+    width: 100%;
+  }
+
+  &.Layer__badge--roundings-small {
+    border-radius: var(--border-radius-2xs);
+  }
+
   &.Layer__badge--small {
     font-size: var(--text-xs);
     padding: var(--spacing-3xs) var(--spacing-xs);
@@ -46,6 +54,11 @@
   &.Layer__badge--success {
     background-color: var(--badge-bg-color-success);
     color: var(--badge-fg-color-success);
+  }
+
+  &.Layer__badge--light {
+    background-color: var(--color-base-50);
+    color: var(--text-color-primary);
   }
 
   &.Layer__badge--warning {

@@ -378,6 +378,10 @@ export const ProfitAndLossChart = ({
         netProfit > 0 ? 'positive' : netProfit < 0 ? 'negative' : ''
       const revenue = payload.find(x => x.dataKey === 'revenue')?.value ?? 0
       const expenses = payload.find(x => x.dataKey === 'expenses')?.value ?? 0
+      const revenueUncategorized =
+        payload.find(x => x.dataKey === 'revenueUncategorized')?.value ?? 0
+      const expensesUncategorized =
+        payload.find(x => x.dataKey === 'expensesUncategorized')?.value ?? 0
 
       return (
         <div className='Layer__chart__tooltip'>
@@ -393,10 +397,27 @@ export const ProfitAndLossChart = ({
                   ${centsToDollars(revenue)}
                 </span>
               </li>
+              <li className='Layer__chart__tooltip-list--secondary-item'>
+                <label className='Layer__chart__tooltip-label'>
+                  Uncategorized
+                </label>
+                <span className='Layer__chart__tooltip-value'>
+                  ${centsToDollars(revenueUncategorized)}
+                </span>
+              </li>
               <li>
                 <label className='Layer__chart__tooltip-label'>Expenses</label>
                 <span className='Layer__chart__tooltip-value'>
                   ${centsToDollars(Math.abs(expenses))}
+                </span>
+              </li>
+              <li className='Layer__chart__tooltip-list--secondary-item'>
+                <label className='Layer__chart__tooltip-label'>
+                  Uncategorized
+                </label>
+                <span className='Layer__chart__tooltip-value'>
+                  {expensesUncategorized &&
+                    `$${centsToDollars(expensesUncategorized * -1)}`}
                 </span>
               </li>
               <li>

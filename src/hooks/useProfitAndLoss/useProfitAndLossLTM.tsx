@@ -131,6 +131,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
             uncategorizedInflows: 0,
             uncategorizedOutflows: 0,
             uncategorized_transactions: 0,
+            categorized_transactions: 0,
             isLoading: true,
           } satisfies ProfitAndLossSummaryData)
         }

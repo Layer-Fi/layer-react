@@ -63,6 +63,7 @@ export const BookkeepingOverview = ({
             <div className='Layer__bookkeeping-overview__summaries-row'>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+                showUncategorized
               />
             </div>
             <ProfitAndLoss.Chart />
