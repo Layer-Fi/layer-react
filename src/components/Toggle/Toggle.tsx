@@ -124,7 +124,7 @@ export const Toggle = ({
   }, [currentWidth])
 
   const getSelectedIndex = () => {
-    const selectedIndex = options.findIndex(
+    let selectedIndex = options.findIndex(
       option => option.value === selectedValue,
     )
     if (selectedIndex === -1) {
@@ -172,7 +172,7 @@ const ToggleOption = ({
       <Tooltip>
         <TooltipTrigger>
           <label
-            className={'Layer__toggle-option'}
+            className={`Layer__toggle-option`}
             data-checked={checked}
             style={style}
           >
@@ -202,7 +202,7 @@ const ToggleOption = ({
 
   return (
     <label
-      className={'Layer__toggle-option'}
+      className={`Layer__toggle-option`}
       data-checked={checked}
       style={style}
     >

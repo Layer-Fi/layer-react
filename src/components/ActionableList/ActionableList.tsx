@@ -1,13 +1,12 @@
 import React from 'react'
 import CheckIcon from '../../icons/Check'
 import ChevronRight from '../../icons/ChevronRight'
-import { Text, TextSize } from '../Typography'
+import { Text } from '../Typography'
 import classNames from 'classnames'
 
 export interface ActionableListOption<T> {
   label: string
   id: string
-  description?: string
   value: T
   asLink?: boolean
   secondary?: boolean
@@ -34,23 +33,9 @@ export const ActionableList = <T,>({
           className={classNames(
             x.secondary && 'Layer__actionable-list-item--secondary',
             x.asLink && 'Layer__actionable-list-item--as-link',
-            selectedId === x.id && 'Layer__actionable-list__item--selected',
           )}
         >
-          <div className='Layer__actionable-list__content'>
-            <Text size={TextSize.sm}>{x.label}</Text>
-            {
-              /*TODO: Replace 'See all categories' with something more generic*/
-              x.description && x.label !== 'See all categories' && (
-                <Text
-                  className='Layer__actionable-list__content-description'
-                  size={TextSize.sm}
-                >
-                  {x.description}
-                </Text>
-              )
-            }
-          </div>
+          <Text>{x.label}</Text>
           {!x.asLink && selectedId && selectedId === x.id ? (
             <span className='Layer__actionable-list__select Layer__actionable-list__select--selected'>
               <CheckIcon

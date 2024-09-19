@@ -441,11 +441,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .Layer__select__option-menu--name {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-2xs);
-    }
   }
 
   .Layer__select__option-menu-content-check {

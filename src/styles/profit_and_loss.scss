@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: var(--spacing-md);
-
+  flex-wrap: wrap;
   .Layer__input-tooltip {
     flex: 1;
     // min-width: 100px;

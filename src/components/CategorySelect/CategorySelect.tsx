@@ -10,7 +10,6 @@ import { DATE_FORMAT } from '../../config/general'
 import { useLayerContext } from '../../contexts/LayerContext'
 import Check from '../../icons/Check'
 import ChevronDown from '../../icons/ChevronDown'
-import InfoIcon from '../../icons/InfoIcon'
 import MinimizeTwo from '../../icons/MinimizeTwo'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationType, Category } from '../../types'
@@ -18,8 +17,6 @@ import { SuggestedMatch } from '../../types/bank_transactions'
 import { CategoryEntry } from '../../types/categories'
 import { Badge } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
-import { Text, TextSize } from '../Typography'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
@@ -45,7 +42,6 @@ export interface CategoryOptionPayload {
   id: string
   option_type: OptionActionType
   display_name: string
-  description?: string
   date?: string
   amount?: number
   type?: string
@@ -68,7 +64,6 @@ export const mapCategoryToOption = (category: Category): CategoryOption => {
       option_type: OptionActionType.CATEGORY,
       display_name: category.display_name,
       type: category.type,
-      description: category.description ?? undefined,
       stable_name: category.stable_name,
       entries: category.entries,
       subCategories: category.subCategories,
@@ -76,9 +71,7 @@ export const mapCategoryToOption = (category: Category): CategoryOption => {
   }
 }
 
-export const mapCategoryToExclusionOption = (
-  category: Category,
-): CategoryOption => {
+export const mapCategoryToExclusionOption = (category: Category): CategoryOption => {
   return {
     type: OptionActionType.CATEGORY,
     payload: {
@@ -172,24 +165,7 @@ const Option = (
       {...props}
       className={`Layer__select__option-menu-content ${props.className}`}
     >
-      <div className='Layer__select__option-menu--name'>
-        <div>{props.data.payload.display_name}</div>
-        {props.data.payload.description && (
-          <Tooltip>
-            <TooltipTrigger>
-              <InfoIcon />
-            </TooltipTrigger>
-            <TooltipContent className='Layer__actionable-list__tooltip-content'>
-              <Text
-                className='Layer__actionable-list__content-description'
-                size={TextSize.sm}
-              >
-                {props.data.payload.description}
-              </Text>
-            </TooltipContent>
-          </Tooltip>
-        )}
-      </div>
+      <div>{props.data.payload.display_name}</div>
       {props.isSelected ? (
         <span className='Layer__select__option-menu-content-check'>
           <Check size={16} />
@@ -221,18 +197,17 @@ function flattenCategories(
 ): GroupBase<CategoryOption>[] {
   function getLeafCategories(category: Category): Category[] {
     if (!category.subCategories || category.subCategories.length === 0) {
-      return [category]
+      return [category];
     }
-    return category.subCategories.flatMap(subCategory =>
-      getLeafCategories(subCategory),
-    )
+    return category.subCategories.flatMap(subCategory => getLeafCategories(subCategory));
   }
   return categories.map(category => {
-    return {
-      label: category.display_name,
-      options: getLeafCategories(category).map(x => mapCategoryToOption(x)),
-    } satisfies GroupBase<CategoryOption>
-  })
+      return {
+        label: category.display_name,
+        options: getLeafCategories(category).map(x => mapCategoryToOption(x))
+      } satisfies GroupBase<CategoryOption>
+    }
+  )
 }
 
 export const CategorySelect = ({

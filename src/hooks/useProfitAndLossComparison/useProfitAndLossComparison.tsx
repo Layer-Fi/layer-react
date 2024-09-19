@@ -1,6 +1,9 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { Layer } from '../../api/layer'
-import { TagComparisonOption } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
+import {
+  TagComparisonOption,
+  TagFilterInput,
+} from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, ReportingBasis } from '../../types'
 import {

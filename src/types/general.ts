@@ -1,7 +1,5 @@
 export type SortDirection = 'asc' | 'desc'
 
-export type View = 'mobile' | 'tablet' | 'desktop'
-
 export interface BaseSelectOption {
   label: string
   value: string | number

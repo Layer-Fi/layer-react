@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useElementSize } from '../../hooks/useElementSize'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationStatus } from '../../types'
@@ -18,6 +17,7 @@ import { BankTransactionMobileForms } from './BankTransactionMobileForms'
 import { TransactionToOpenContext } from './TransactionToOpenContext'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 
 export interface BankTransactionMobileListItemProps {
   index: number
@@ -146,11 +146,7 @@ export const BankTransactionMobileListItem = ({
   }, [])
 
   useEffect(() => {
-    if (
-      editable &&
-      bankTransaction.recently_categorized &&
-      shouldHideAfterCategorize(bankTransaction)
-    ) {
+    if (editable && bankTransaction.recently_categorized && shouldHideAfterCategorize(bankTransaction)) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
       }, 300)

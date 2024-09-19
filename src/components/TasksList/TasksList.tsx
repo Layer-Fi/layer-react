@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { TasksContext } from '../../contexts/TasksContext'
 import SmileIcon from '../../icons/SmileIcon'
 import { isComplete, TaskTypes } from '../../types/tasks'

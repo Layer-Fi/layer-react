@@ -15,8 +15,7 @@ import { getCategorizePayload } from '../../utils/bankTransactions'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
 import {
-  CategoryOption,
-  mapCategoryToExclusionOption,
+  CategoryOption, mapCategoryToExclusionOption,
   mapCategoryToOption,
 } from '../CategorySelect/CategorySelect'
 import { Input } from '../Input'
@@ -53,17 +52,15 @@ export const SplitForm = ({
   const [rowState, updateRowState] = useState<RowState>({
     splits: bankTransaction.category?.entries
       ? bankTransaction.category?.entries.map(c => {
-          return c.type === 'ExclusionSplitEntry'
-            ? {
-                amount: c.amount || 0,
-                inputValue: formatMoney(c.amount),
-                category: mapCategoryToExclusionOption(c.category),
-              }
-            : {
-                amount: c.amount || 0,
-                inputValue: formatMoney(c.amount),
-                category: mapCategoryToOption(c.category),
-              }
+          return c.type === 'ExclusionSplitEntry' ?  {
+            amount: c.amount || 0,
+            inputValue: formatMoney(c.amount),
+            category: mapCategoryToExclusionOption(c.category),
+          } : {
+            amount: c.amount || 0,
+            inputValue: formatMoney(c.amount),
+            category: mapCategoryToOption(c.category),
+          }
         })
       : [
           {

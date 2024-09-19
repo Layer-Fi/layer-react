@@ -1,1 +1,1 @@
-export { Journal } from './Journal'
+export { Journal, View } from './Journal'

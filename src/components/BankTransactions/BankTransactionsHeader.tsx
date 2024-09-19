@@ -4,10 +4,11 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import DownloadCloud from '../../icons/DownloadCloud'
 import { DateRange, DisplayState } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
-import { DownloadButton as DownloadButtonComponent } from '../Button'
+import { Button, ButtonVariant, RetryButton } from '../Button'
 import { Header } from '../Container'
 import { DatePicker } from '../DatePicker'
 import { SyncingComponent } from '../SyncingComponent'
+import { Tabs } from '../Tabs'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
 import { Heading, HeadingSize } from '../Typography'
@@ -75,14 +76,27 @@ const DownloadButton = ({
     }
   }
 
-  return (
-    <DownloadButtonComponent
-      iconOnly={iconOnly}
+  return requestFailed ? (
+    <RetryButton
       onClick={handleClick}
-      isDownloading={isDownloading}
-      requestFailed={requestFailed}
-      text={downloadButtonTextOverride ?? 'Download'}
-    />
+      className='Layer__download-retry-btn'
+      error={'Approval failed. Check connection and retry in few seconds.'}
+      disabled={isDownloading}
+      iconOnly={iconOnly}
+    >
+      Retry
+    </RetryButton>
+  ) : (
+    <Button
+      variant={ButtonVariant.secondary}
+      rightIcon={<DownloadCloud size={12} />}
+      onClick={handleClick}
+      disabled={isDownloading}
+      iconAsPrimary={iconOnly}
+      iconOnly={iconOnly}
+    >
+      {downloadButtonTextOverride || 'Download'}
+    </Button>
   )
 }
 

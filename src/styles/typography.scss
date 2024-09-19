@@ -15,29 +15,11 @@
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
-.Layer__heading--view,
-.Layer__heading.Layer__heading--view {
-  color: var(--text-color-primary);
-  font-size: var(--text-heading-view);
-  font-variation-settings: 'wght' var(--font-weight-bold);
-}
-
-.Layer__heading--page,
-.Layer__heading.Layer__heading--page {
-  color: var(--text-color-primary);
-  font-size: var(--text-heading-page);
-  font-variation-settings: 'wght' var(--font-weight-bold);
-}
-
 .Layer__text {
   font-family: var(--font-family);
   font-variation-settings: 'wght' var(--font-weight-normal);
   font-variant-numeric: lining-nums proportional-nums;
-  font-feature-settings:
-    'cv10' on,
-    'cv05' on,
-    'cv08' on,
-    'ss03' on;
+  font-feature-settings: 'cv10' on, 'cv05' on, 'cv08' on, 'ss03' on;
   line-height: 140%;
   margin: 0;
 }
@@ -66,6 +48,4 @@
 .Layer__label {
   color: var(--color-base-500);
   font-variation-settings: 'wght' var(--font-weight-normal);
-  white-space: nowrap;
-  overflow: hidden;
 }

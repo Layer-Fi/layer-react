@@ -23,15 +23,18 @@
   transform: scale(1);
 }
 
-.Layer__chart-of-accounts .Layer__panel {
-  max-width: 100%;
-}
-
 .Layer__chart-of-accounts__sidebar__header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  padding: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
   gap: var(--spacing-md);
+
+  .title {
+    margin: 0;
+    font-size: 24px;
+  }
 
   .actions {
     display: flex;
@@ -51,7 +54,7 @@
 .Layer__chart-of-accounts__form {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-xl) var(--spacing-md);
+  padding: var(--spacing-xl);
 
   .Layer__input-group.Layer__input-group--inline {
     padding: var(--spacing-xs) 0;
@@ -64,7 +67,7 @@
 }
 
 .Layer__chart-of-accounts__form-edit-entry {
-  padding: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-xl);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -101,6 +104,7 @@
   }
 }
 
+// @TODO change to JS and dynamically mount row to decrease number of nodes
 .Layer__chart-of-accounts__row---mobile {
   visibility: hidden;
   display: none;
@@ -163,18 +167,6 @@
   color: var(--color-base-800);
 }
 
-@container (min-width: 1401px) {
-  .Layer__chart-of-accounts
-    .Layer__panel__sidebar
-    .Layer__chart-of-accounts__form {
-    padding: var(--spacing-xl);
-  }
-
-  .Layer__chart-of-accounts__form-edit-entry {
-    padding: var(--spacing-md) var(--spacing-xl);
-  }
-}
-
 @container (max-width: 1024px) {
   .Layer__chart-of-accounts__sidebar__header .actions {
     display: none;
@@ -183,41 +175,6 @@
   .Layer__chart-of-accounts__form .actions {
     display: flex;
   }
-
-  .Layer__chart-of-accounts.Layer__component
-    .Layer__panel__sidebar
-    .Layer__panel__sidebar-content {
-    width: 100%;
-
-    .Layer__form .Layer__input-group,
-    .Layer__form .Layer__chart-of-accounts__form__input-group__title {
-      box-sizing: border-box;
-      max-width: 600px;
-      width: 100%;
-      margin: auto;
-    }
-
-    .Layer__form .Layer__chart-of-accounts__form-edit-entry {
-      box-sizing: border-box;
-      max-width: calc(600px + (var(--spacing-xl) * 2));
-      padding: var(--spacing-md) var(--spacing-xl);
-      width: 100%;
-      margin: auto;
-    }
-
-    .Layer__form .Layer__header__col {
-      width: 100%;
-      margin: auto;
-      padding: var(--spacing-md) var(--spacing-xl);
-      max-width: calc(600px + (var(--spacing-xl) * 2));
-    }
-
-    .actions {
-      max-width: 600px;
-      width: 100%;
-      margin: auto;
-    }
-  }
 }
 
 @container (min-width: 761px) and (max-width: 1024px) {
@@ -225,10 +182,6 @@
     .Layer__mobile--hidden {
       display: none;
     }
-  }
-
-  .Layer__chart-of-accounts__form {
-    padding: var(--spacing-xl);
   }
 }
 

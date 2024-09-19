@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
@@ -24,6 +24,7 @@ import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
 const TEST_EMPTY_STATE = false
+const POLL_INTERVAL = 1000
 
 export type BankTransactionsMode = 'bookkeeping-client' | 'self-serve'
 

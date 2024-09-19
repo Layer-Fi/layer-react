@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { JournalContext } from '../../contexts/JournalContext'
 import { TableProvider } from '../../contexts/TableContext'
@@ -8,9 +8,8 @@ import {
   JournalEntryLine,
   JournalEntryLineItem,
 } from '../../types'
-import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
-import { View } from '../../types/general'
+import { View } from '../Journal'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { JournalTableStringOverrides } from './JournalTableWithPanel'
 import { parseISO, format as formatTime } from 'date-fns'
@@ -57,6 +56,7 @@ export const JournalTable = ({
 )
 
 const JournalTableContent = ({
+  view,
   data,
   stringOverrides,
 }: {
@@ -70,9 +70,7 @@ const JournalTableContent = ({
   const { isOpen, setIsOpen } = useTableExpandRow()
 
   useEffect(() => {
-    if (data.length > 0) {
-      setIsOpen([`journal-row- + ${data[0].id}`])
-    }
+    setIsOpen([`journal-row- + ${data[0].id}`])
   }, [])
 
   const renderJournalRow = (
@@ -117,7 +115,7 @@ const JournalTableContent = ({
           </TableCell>
           <TableCell>{humanizeEnum(row.entry_type)}</TableCell>
           <TableCell>({row.line_items.length})</TableCell>
-          <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+          <TableCell isCurrency primary>
             {'line_items' in row &&
               Math.abs(
                 row.line_items
@@ -126,7 +124,7 @@ const JournalTableContent = ({
                   .reduce((a, b) => a + b, 0),
               )}
           </TableCell>
-          <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+          <TableCell isCurrency primary>
             {'line_items' in row &&
               Math.abs(
                 row.line_items
@@ -150,14 +148,14 @@ const JournalTableContent = ({
               <TableCell />
               <TableCell>{accountName(subItem)}</TableCell>
               {subItem.direction === 'DEBIT' && subItem.amount > 0 ? (
-                <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+                <TableCell isCurrency primary>
                   {subItem.amount}
                 </TableCell>
               ) : (
                 <TableCell />
               )}
               {subItem.direction === 'CREDIT' && subItem.amount > 0 ? (
-                <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+                <TableCell isCurrency primary>
                   {subItem.amount}
                 </TableCell>
               ) : (
@@ -185,10 +183,10 @@ const JournalTableContent = ({
           <TableCell isHeaderCell>
             {stringOverrides?.accountColumnHeader || 'Account'}
           </TableCell>
-          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
+          <TableCell isHeaderCell>
             {stringOverrides?.debitColumnHeader || 'Debit'}
           </TableCell>
-          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
+          <TableCell isHeaderCell>
             {stringOverrides?.creditColumnHeader || 'Credit'}
           </TableCell>
         </TableRow>

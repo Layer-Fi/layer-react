@@ -202,7 +202,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const unlinkAccount = async (source: Source, accountId: string) => {
-    // DEBUG && console.log('unlinking account')
+    DEBUG && console.log('unlinking account')
     if (source === 'PLAID') {
       await Layer.unlinkAccount(apiUrl, auth?.access_token, {
         params: { businessId, accountId: accountId },
@@ -320,7 +320,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   return {
     data: USE_MOCK_RESPONSE_DATA
       ? mockResponseData.data
-      : responseData?.data.external_accounts ?? [],
+      : responseData?.data.external_accounts,
     isLoading,
     loadingStatus,
     isValidating,

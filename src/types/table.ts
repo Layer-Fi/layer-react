@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode } from 'react'
+import { ReactNode } from 'react'
 
 export interface TableContextProps {
   expandedRows: string[]
@@ -6,11 +6,6 @@ export interface TableContextProps {
   expandAllRows: (rowKeys: string[]) => void
   expandedAllRows: boolean
   setExpandedAllRows: (expanded: boolean) => void
-}
-
-export enum TableCellAlign {
-  RIGHT = 'right',
-  LEFT = 'left',
 }
 
 export interface TableProps {
@@ -45,15 +40,11 @@ export interface TableRowProps {
 
 export interface TableCellProps {
   children?: number | string | ReactNode
-  className?: string
   isCurrency?: boolean
   isHeaderCell?: boolean
-  align?: TableCellAlign
   primary?: boolean
   withExpandIcon?: boolean
   fullWidth?: boolean
-  width?: string
-  style?: CSSProperties
   colSpan?: number
   onClick?: (e: React.MouseEvent<HTMLTableCellElement, MouseEvent>) => void
 }

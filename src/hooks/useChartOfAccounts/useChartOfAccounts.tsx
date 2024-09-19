@@ -127,6 +127,28 @@ type Props = {
   withDates?: boolean
 }
 
+type UseChartOfAccounts = () => {
+  data: ChartWithBalances | undefined
+  isLoading?: boolean
+  isValidating?: boolean
+  error?: unknown
+  refetch: () => void
+  create: (newAccount: NewAccount) => void
+  form?: ChartOfAccountsForm
+  sendingForm?: boolean
+  apiError?: string
+  addAccount: () => void
+  editAccount: (id: string) => void
+  cancelForm: () => void
+  changeFormData: (
+    name: string,
+    value: string | BaseSelectOption | undefined,
+  ) => void
+  submitForm: () => void
+  dateRange: DateRange
+  changeDateRange: (dateRange: Partial<DateRange>) => void
+}
+
 export const flattenAccounts = (
   accounts: LedgerAccountBalance[],
 ): LedgerAccountBalance[] =>

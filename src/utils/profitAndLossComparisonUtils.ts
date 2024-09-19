@@ -64,7 +64,7 @@ export const mergeComparisonLineItemsAtDepth = (
 ): LineItem[] => {
   const map = new Map<string, LineItem>()
 
-  const mergeItems = (items: LineItem[]) => {
+  const mergeItems = (items: LineItem[], depth: number) => {
     items.forEach(item => {
       if (!map.has(item.display_name)) {
         map.set(item.display_name, { ...item, line_items: [] })
@@ -85,6 +85,6 @@ export const mergeComparisonLineItemsAtDepth = (
     })
   }
 
-  mergeItems(lineItems)
+  mergeItems(lineItems, 0)
   return Array.from(map.values())
 }

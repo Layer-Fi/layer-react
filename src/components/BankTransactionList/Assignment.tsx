@@ -30,10 +30,7 @@ export const Assignment = ({ bankTransaction }: AssignmentProps) => {
           {`${formatTime(
             parseISO(bankTransaction.match.bank_transaction.date),
             DATE_FORMAT,
-          )}, ${
-            bankTransaction.match.bank_transaction.description ??
-            bankTransaction.match?.details?.description
-          }`}
+          )}, ${bankTransaction.match.bank_transaction.description ?? bankTransaction.match?.details?.description}`}
         </Text>
       </>
     )

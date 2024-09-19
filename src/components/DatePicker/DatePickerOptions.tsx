@@ -19,7 +19,7 @@ export const DatePickerOptions = ({
   options: string[]
   setSelectedDate: (dates: [Date | null, Date | null]) => void
 }) => {
-  const optionsComponents: React.ReactNode[] = []
+  let optionsComponents: React.ReactNode[] = []
 
   const getOptionComponent = (option: string) => {
     switch (option) {

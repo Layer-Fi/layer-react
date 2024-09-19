@@ -16,7 +16,6 @@ interface BankTransactionsWithLinkedAccountsStringOverrides {
 
 export interface BankTransactionsWithLinkedAccountsProps {
   title?: string // deprecated
-  showTitle?: boolean
   elevatedLinkedAccounts?: boolean
   showLedgerBalance?: boolean
   showUnlinkItem?: boolean
@@ -30,7 +29,6 @@ export interface BankTransactionsWithLinkedAccountsProps {
 
 export const BankTransactionsWithLinkedAccounts = ({
   title, // deprecated
-  showTitle = true,
   elevatedLinkedAccounts = true,
   showLedgerBalance = true,
   showUnlinkItem = false,
@@ -42,10 +40,7 @@ export const BankTransactionsWithLinkedAccounts = ({
   stringOverrides,
 }: BankTransactionsWithLinkedAccountsProps) => {
   return (
-    <View
-      title={stringOverrides?.title || title || 'Bank transactions'}
-      showHeader={showTitle}
-    >
+    <View title={stringOverrides?.title || title || 'Bank transactions'}>
       <LinkedAccounts
         elevated={elevatedLinkedAccounts}
         showLedgerBalance={showLedgerBalance}

@@ -1,4 +1,1 @@
-export {
-  BankTransactionsContext,
-  useBankTransactionsContext,
-} from './BankTransactionsContext'
+export { BankTransactionsContext, useBankTransactionsContext } from './BankTransactionsContext'

@@ -9,7 +9,7 @@ import {
   LedgerAccountBalance,
 } from '../../types/chart_of_accounts'
 import { Button, ButtonVariant } from '../Button'
-import { View } from '../../types/general'
+import { View } from '../ChartOfAccounts/ChartOfAccounts'
 import { Table, TableBody } from '../Table'
 import { TableCell } from '../TableCell'
 import { TableHead } from '../TableHead'
@@ -50,10 +50,13 @@ export const ChartOfAccountsTable = ({
 )
 
 export const ChartOfAccountsTableContent = ({
+  view,
   stringOverrides,
   data,
   error,
   expandAll,
+  cumulativeIndex,
+  accountsLength,
 }: {
   view: View
   data: ChartWithBalances

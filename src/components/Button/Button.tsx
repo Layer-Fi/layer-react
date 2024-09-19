@@ -1,11 +1,9 @@
 import React, { ButtonHTMLAttributes, ReactNode, useRef } from 'react'
-import LoaderIcon from '../../icons/Loader'
 import classNames from 'classnames'
 
 export enum ButtonVariant {
   primary = 'primary',
   secondary = 'secondary',
-  tertiary = 'tertiary',
 }
 
 export type ButtonJustify = 'center' | 'space-between' | 'start'
@@ -18,7 +16,6 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconAsPrimary?: boolean
   justify?: ButtonJustify
   fullWidth?: boolean
-  isProcessing?: boolean
 }
 
 export const Button = ({
@@ -31,7 +28,6 @@ export const Button = ({
   iconAsPrimary = false,
   justify = 'center',
   fullWidth,
-  isProcessing,
   ...props
 }: ButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -84,11 +80,7 @@ export const Button = ({
               iconAsPrimary && 'Layer__btn-icon--primary',
             )}
           >
-            {isProcessing ? (
-              <LoaderIcon size={12} className='Layer__anim--rotating' />
-            ) : (
-              leftIcon
-            )}
+            {leftIcon}
           </span>
         )}
         {!iconOnly && <span className='Layer__btn-text'>{children}</span>}
@@ -99,11 +91,7 @@ export const Button = ({
               iconAsPrimary && 'Layer__btn-icon--primary',
             )}
           >
-            {isProcessing ? (
-              <LoaderIcon size={12} className='Layer__anim--rotating' />
-            ) : (
-              rightIcon
-            )}
+            {rightIcon}
           </span>
         )}
       </span>

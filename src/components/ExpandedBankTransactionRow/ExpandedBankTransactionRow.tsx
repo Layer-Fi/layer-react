@@ -10,10 +10,14 @@ import React, {
 import { Layer } from '../../api/layer'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
-import { centsToDollars as formatMoney } from '../../models/Money'
+import {
+  centsToDollars as formatMoney,
+  dollarsToCents as parseMoney,
+} from '../../models/Money'
 import {
   BankTransaction,
   SplitCategoryUpdate,
@@ -29,8 +33,7 @@ import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect'
 import {
-  CategoryOption,
-  mapCategoryToExclusionOption,
+  CategoryOption, mapCategoryToExclusionOption,
   mapCategoryToOption,
 } from '../CategorySelect/CategorySelect'
 import { InputGroup, Input, FileInput } from '../Input'
@@ -79,9 +82,8 @@ export type SaveHandle = {
 const isAlreadyMatched = (bankTransaction?: BankTransaction) => {
   if (bankTransaction?.match) {
     const foundMatch = bankTransaction.suggested_matches?.find(
-      x =>
-        x.details.id === bankTransaction?.match?.details.id ||
-        x.details.id === bankTransaction?.match?.bank_transaction.id,
+      x => x.details.id === bankTransaction?.match?.details.id
+        || x.details.id === bankTransaction?.match?.bank_transaction.id
     )
     return foundMatch?.id
   }
@@ -131,8 +133,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         : Purpose.categorize,
     )
     const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
-      isAlreadyMatched(bankTransaction) ??
-        bankTransaction?.suggested_matches?.[0]?.id,
+      isAlreadyMatched(bankTransaction) ?? bankTransaction?.suggested_matches?.[0]?.id,
     )
     const [matchFormError, setMatchFormError] = useState<string | undefined>()
     const [splitFormError, setSplitFormError] = useState<string | undefined>()
@@ -153,17 +154,15 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [rowState, updateRowState] = useState<RowState>({
       splits: bankTransaction.category?.entries
         ? bankTransaction.category?.entries.map(c => {
-            return c.type === 'ExclusionSplitEntry'
-              ? {
-                  amount: c.amount || 0,
-                  inputValue: formatMoney(c.amount),
-                  category: mapCategoryToExclusionOption(c.category),
-                }
-              : {
-                  amount: c.amount || 0,
-                  inputValue: formatMoney(c.amount),
-                  category: mapCategoryToOption(c.category),
-                }
+            return c.type === 'ExclusionSplitEntry' ?  {
+              amount: c.amount || 0,
+              inputValue: formatMoney(c.amount),
+              category: mapCategoryToExclusionOption(c.category),
+            } : {
+              amount: c.amount || 0,
+              inputValue: formatMoney(c.amount),
+              category: mapCategoryToOption(c.category),
+            }
           })
         : [
             {

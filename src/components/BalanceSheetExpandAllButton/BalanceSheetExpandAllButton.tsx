@@ -1,21 +1,12 @@
 import React from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
-import { View } from '../../types/general'
-import { ExpandCollapseButton } from '../Button'
+import { Button, ButtonVariant } from '../Button'
 
-export interface BalanceSheetExpandAllButtonProps {
-  view?: View
-}
-
-export const BalanceSheetExpandAllButton = ({
-  view,
-}: BalanceSheetExpandAllButtonProps) => {
+export const BalanceSheetExpandAllButton = () => {
   const { expandedAllRows, toggleAllRows } = useTableExpandRow()
   return (
-    <ExpandCollapseButton
-      onClick={toggleAllRows}
-      expanded={expandedAllRows}
-      iconOnly={view === 'mobile'}
-    />
+    <Button onClick={() => toggleAllRows()} variant={ButtonVariant.secondary}>
+      {!expandedAllRows ? 'Expand all rows' : 'Collapse all rows'}
+    </Button>
   )
 }

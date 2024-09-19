@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
-import { LineItem } from '../../types'
+import { DateRange, LineItem } from '../../types'
 import { ProfitAndLossComparisonPnl } from '../../types/profit_and_loss'
 import {
   generatComparisonMonths,

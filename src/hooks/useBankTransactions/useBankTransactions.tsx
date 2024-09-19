@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
+import { ReviewCategories } from '../../components/BankTransactions/constants'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
   BankTransaction,
@@ -374,12 +375,14 @@ export const useBankTransactions: UseBankTransactions = params => {
     mutate(updatedData, { revalidate: false })
   }
 
-  const shouldHideAfterCategorize = (): boolean => {
+  const shouldHideAfterCategorize = (
+    bankTransaction: BankTransaction,
+  ): boolean => {
     return filters?.categorizationStatus === DisplayState.review
   }
 
   const removeAfterCategorize = (bankTransaction: BankTransaction) => {
-    if (shouldHideAfterCategorize()) {
+    if (shouldHideAfterCategorize(bankTransaction)) {
       const updatedData = rawResponseData?.map(page => {
         return {
           ...page,
@@ -463,7 +466,7 @@ export const useBankTransactions: UseBankTransactions = params => {
     }
   }, [anyAccountSyncing, transactionsNotSynced, pollIntervalMs])
 
-  useTriggerOnChange(data, anyAccountSyncing, _ => {
+  useTriggerOnChange(data, anyAccountSyncing, newTransactionList => {
     clearInterval(intervalId)
     setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
     eventCallbacks?.onTransactionsFetched?.()

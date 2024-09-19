@@ -27,7 +27,7 @@ const Toast = (props: ToastProps & { isExiting: boolean }) => {
   )
 }
 
-export const ToastsContainer = forwardRef(_props => {
+export const ToastsContainer = forwardRef((_props, ref) => {
   const { toasts } = useLayerContext()
 
   return (

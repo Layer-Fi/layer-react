@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { IconSvgProps } from './types'
 
-const ChevronLeft = ({ ...props }: IconSvgProps) => (
+const ChevronLeft = ({ size = 18, ...props }: IconSvgProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     width='18'

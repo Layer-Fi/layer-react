@@ -29,7 +29,7 @@ export const UseTasksContext = createContext<UseTasksContextType>({
 export const useTasksContext = () => useContext(UseTasksContext)
 
 export interface TasksStringOverrides {
-  header?: string
+    header?: string
 }
 
 export const Tasks = ({

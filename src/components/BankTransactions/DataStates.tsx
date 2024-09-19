@@ -20,10 +20,10 @@ export const DataStates = ({
   refetch,
   editable,
 }: DataStatesProps) => {
-  const title = editable
+  let title = editable
     ? 'You are up to date with transactions!'
     : 'You have no categorized transactions'
-  const description = editable
+  let description = editable
     ? 'All uncategorized transactions will be displayed here'
     : 'All transactions will be displayed here once reviewed'
 

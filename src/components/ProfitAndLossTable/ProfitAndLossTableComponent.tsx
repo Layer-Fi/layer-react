@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react'
+import { TableProvider } from '../../contexts/TableContext'
 import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import PieChart from '../../icons/PieChart'
@@ -96,7 +97,7 @@ export const ProfitAndLossTableComponent = ({
             )}
           </TableCell>
           <TableCell isCurrency primary>
-            {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
+            {lineItem.value}
           </TableCell>
         </TableRow>
         {expanded && lineItem.line_items

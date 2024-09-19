@@ -76,7 +76,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
   }, [])
 
   const getSelectedIndex = () => {
-    const selectedIndex = options.findIndex(
+    let selectedIndex = options.findIndex(
       option => option.value === selectedValue,
     )
     if (selectedIndex === -1) {

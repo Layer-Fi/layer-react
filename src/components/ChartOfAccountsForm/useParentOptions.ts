@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { ChartWithBalances } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'

@@ -1,5 +1,5 @@
 export const range = (start: number, end: number) => {
-  const length = end - start + 1
+  let length = end - start + 1
   return Array.from({ length }, (_, idx) => idx + start)
 }
 
@@ -25,7 +25,7 @@ export const sleep = (time: number) => {
  */
 export const convertToStableName = (name: string): string =>
   name
-    .replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>{}[\]\\/]/gi, '')
+    .replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '')
     .replace(/\W+/g, ' ')
     .split(/ |\B(?=[A-Z])/)
     .map(word => word.toLowerCase())

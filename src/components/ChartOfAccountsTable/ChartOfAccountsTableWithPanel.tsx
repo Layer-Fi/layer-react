@@ -1,13 +1,13 @@
 import React, { RefObject, useContext, useState } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
-import PlusIcon from '../../icons/Plus'
-import { View } from '../../types/general'
-import { Button, ButtonVariant, ExpandCollapseButton } from '../Button'
+import { Button, ButtonVariant } from '../Button'
+import { View } from '../ChartOfAccounts/ChartOfAccounts'
 import { ChartOfAccountsDatePicker } from '../ChartOfAccountsDatePicker'
 import { ChartOfAccountsFormStringOverrides } from '../ChartOfAccountsForm/ChartOfAccountsForm'
 import { ChartOfAccountsSidebar } from '../ChartOfAccountsSidebar'
+import { Header } from '../Container'
+import { HeaderLayout } from '../Container/Header'
 import { DataState, DataStateStatus } from '../DataState'
-import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Loader } from '../Loader'
 import { Panel } from '../Panel'
 import { Heading, HeadingSize } from '../Typography'
@@ -46,7 +46,7 @@ export const ChartOfAccountsTableWithPanel = ({
 
   const [expandAll, setExpandAll] = useState<ExpandActionState>()
 
-  const cumulativeIndex = 0
+  let cumulativeIndex = 0
   const accountsLength = data?.accounts.length ?? 0
 
   return (
@@ -60,61 +60,46 @@ export const ChartOfAccountsTableWithPanel = ({
       sidebarIsOpen={Boolean(form)}
       parentRef={containerRef}
     >
-      <Header className={`Layer__${COMPONENT_NAME}__header`} asHeader rounded>
-        <HeaderRow>
-          <HeaderCol>
-            <Heading
-              className={`Layer__${COMPONENT_NAME}__title`}
-              size={asWidget ? HeadingSize.view : HeadingSize.primary}
-            >
-              {stringOverrides?.headerText || 'Chart of Accounts'}
-            </Heading>
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
-      <Header className={`Layer__${COMPONENT_NAME}__header`} sticky>
-        <HeaderRow>
-          <HeaderCol>
-            <Heading
-              size={HeadingSize.secondary}
-              className={`Layer__${COMPONENT_NAME}__subtitle`}
-            >
-              {withDateControl || withExpandAllButton ? (
-                <div className='Layer__header__actions-col'>
-                  {withDateControl && <ChartOfAccountsDatePicker />}
-                  {withExpandAllButton && (
-                    <ExpandCollapseButton
-                      iconOnly={view === 'mobile'}
-                      onClick={() =>
-                        setExpandAll(
-                          !expandAll || expandAll === 'collapsed'
-                            ? 'expanded'
-                            : 'collapsed',
-                        )
-                      }
-                      expanded={
-                        !Boolean(!expandAll || expandAll === 'collapsed')
-                      }
-                      variant={ButtonVariant.secondary}
-                    />
-                  )}
-                </div>
-              ) : null}
-            </Heading>
-          </HeaderCol>
-          <HeaderCol>
-            <Button
-              onClick={() => addAccount()}
-              disabled={isLoading}
-              iconOnly={['mobile', 'tablet'].includes(view)}
-              leftIcon={
-                ['mobile', 'tablet'].includes(view) && <PlusIcon size={14} />
-              }
-            >
+      <Header
+        className={`Layer__${COMPONENT_NAME}__header`}
+        layout={withDateControl ? HeaderLayout.NEXT_LINE_ACTIONS : undefined}
+      >
+        <Heading
+          className={`Layer__${COMPONENT_NAME}__title`}
+          size={asWidget ? HeadingSize.secondary : HeadingSize.primary}
+        >
+          {stringOverrides?.headerText || 'Chart of Accounts'}
+        </Heading>
+        <div
+          className={`Layer__${COMPONENT_NAME}__actions Layer__header__actions`}
+        >
+          {withDateControl || withExpandAllButton ? (
+            <div className='Layer__header__actions-col'>
+              {withDateControl && <ChartOfAccountsDatePicker />}
+              {withExpandAllButton && (
+                <Button
+                  variant={ButtonVariant.secondary}
+                  onClick={() =>
+                    setExpandAll(
+                      !expandAll || expandAll === 'collapsed'
+                        ? 'expanded'
+                        : 'collapsed',
+                    )
+                  }
+                >
+                  {!expandAll || expandAll === 'collapsed'
+                    ? 'Expand all rows'
+                    : 'Collapse all rows'}
+                </Button>
+              )}
+            </div>
+          ) : null}
+          <div className='Layer__header__actions-col'>
+            <Button onClick={() => addAccount()} disabled={isLoading}>
               {stringOverrides?.addAccountButtonText || 'Add Account'}
             </Button>
-          </HeaderCol>
-        </HeaderRow>
+          </div>
+        </div>
       </Header>
 
       {data && (

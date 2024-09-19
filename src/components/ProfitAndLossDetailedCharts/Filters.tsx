@@ -7,6 +7,7 @@ import {
 } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import ChevronDown from '../../icons/ChevronDown'
 import { LineBaseItem } from '../../types/line_item'
+import { CategoryOption } from '../CategorySelect/CategorySelect'
 import { Text, TextSize } from '../Typography'
 
 export interface FiltersProps {

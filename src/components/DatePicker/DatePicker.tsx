@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
+import { BREAKPOINTS } from '../../config/general'
+import { useElementSize } from '../../hooks/useElementSize'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
@@ -7,15 +9,13 @@ import { Button, ButtonVariant } from '../Button'
 import { DatePickerOptions } from './DatePickerOptions'
 import classNames from 'classnames'
 
-export type DatePickerMode =
-  | 'dayPicker'
-  | 'monthRangePicker'
-  | 'timePicker'
-  | DateRangeDatePickerModes
-
-export type DateRangeDatePickerModes = 'dayRangePicker' | 'monthPicker'
 interface DatePickerProps {
-  mode: DatePickerMode
+  mode:
+    | 'dayPicker'
+    | 'dayRangePicker'
+    | 'monthPicker'
+    | 'monthRangePicker'
+    | 'timePicker'
   selected: Date | [Date | null, Date | null]
   onChange: (date: Date | [Date, Date | null]) => void
   dateFormat?: string

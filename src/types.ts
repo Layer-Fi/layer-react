@@ -10,11 +10,7 @@ export { ProfitAndLoss } from './types/profit_and_loss'
 export { LineItem } from './types/line_item'
 export { BalanceSheet } from './types/balance_sheet'
 export { StatementOfCashFlow } from './types/statement_of_cash_flow'
-export {
-  Direction,
-  BankTransaction,
-  DisplayState,
-} from './types/bank_transactions'
+export { Direction, BankTransaction, DisplayState } from './types/bank_transactions'
 export {
   CategorizationStatus,
   Category,
@@ -62,5 +58,3 @@ export type DateRange<T = Date> = {
 }
 
 export type ReportingBasis = 'CASH' | 'ACCRUAL'
-
-export type MoneyFormat = 'CENTS' | 'DOLLAR_STRING'

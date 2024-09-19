@@ -4,8 +4,6 @@ import classNames from 'classnames'
 export enum HeadingSize {
   primary = 'primary',
   secondary = 'secondary',
-  page = 'page',
-  view = 'view',
 }
 
 export interface HeadingProps {

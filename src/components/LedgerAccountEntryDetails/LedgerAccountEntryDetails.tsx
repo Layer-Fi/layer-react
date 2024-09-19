@@ -13,20 +13,18 @@ import {
   RefundPaymentLedgerEntrySource,
   TransactionLedgerEntrySource,
 } from '../../types/ledger_accounts'
-import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
 import { Badge, BadgeVariant } from '../Badge'
-import { BackButton, Button, ButtonVariant, CloseButton } from '../Button'
+import { BackButton, Button, ButtonVariant } from '../Button'
 import { Card } from '../Card'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
-import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Table } from '../Table'
 import { TableBody } from '../TableBody'
 import { TableCell } from '../TableCell'
 import { TableHead } from '../TableHead'
 import { TableRow } from '../TableRow'
-import { Heading, HeadingSize, TextWeight, Text } from '../Typography'
+import { Text, TextWeight } from '../Typography'
 
 interface SourceDetailStringOverrides {
   sourceLabel?: string
@@ -241,30 +239,18 @@ export const LedgerAccountEntryDetails = ({
 
   return (
     <div className='Layer__ledger-account__entry-details'>
-      <Header className='Layer__ledger-account__entry-details__header'>
-        <HeaderRow>
-          <HeaderCol className='Layer__hidden-lg Layer__hidden-xl'>
-            <BackButton onClick={closeSelectedEntry} />
-            <Heading size={HeadingSize.secondary}>
-              {stringOverrides?.title || 'Transaction details'}
-            </Heading>
-          </HeaderCol>
-          <HeaderCol className='Layer__show-lg Layer__show-xl'>
-            <Heading size={HeadingSize.secondary}>
-              {stringOverrides?.transactionSource?.header ||
-                'Transaction source'}
-            </Heading>
-          </HeaderCol>
-          <HeaderCol className='Layer__show-lg Layer__show-xl'>
-            <CloseButton onClick={closeSelectedEntry} />
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
+      <div className='Layer__ledger-account__entry-details__back-btn'>
+        <BackButton onClick={() => closeSelectedEntry()} />
+        <div className='Layer__ledger-account__entry-details__title-container'>
+          <Text weight={TextWeight.bold}>
+            {stringOverrides?.title || 'Transaction details'}
+          </Text>
+        </div>
+      </div>
       <DetailsList
         title={
           stringOverrides?.transactionSource?.header || 'Transaction source'
         }
-        titleClassName='Layer__hidden-lg Layer__hidden-xl'
         actions={
           <Button
             rightIcon={<XIcon />}
@@ -348,11 +334,11 @@ export const LedgerAccountEntryDetails = ({
                     {stringOverrides?.lineItemsTable?.lineItemsColumnHeader ||
                       'Line items'}
                   </TableCell>
-                  <TableCell align={TableCellAlign.RIGHT}>
+                  <TableCell>
                     {stringOverrides?.lineItemsTable?.debitColumnHeader ||
                       'Debit'}
                   </TableCell>
-                  <TableCell align={TableCellAlign.RIGHT}>
+                  <TableCell>
                     {stringOverrides?.lineItemsTable?.creditColumnHeader ||
                       'Credit'}
                   </TableCell>
@@ -365,14 +351,14 @@ export const LedgerAccountEntryDetails = ({
                     rowKey={`ledger-line-item-${index}`}
                   >
                     <TableCell>{item.account?.name || ''}</TableCell>
-                    <TableCell align={TableCellAlign.RIGHT}>
+                    <TableCell>
                       {item.direction === Direction.DEBIT && (
                         <Badge variant={BadgeVariant.WARNING}>
                           ${centsToDollars(item.amount || 0)}
                         </Badge>
                       )}
                     </TableCell>
-                    <TableCell align={TableCellAlign.RIGHT}>
+                    <TableCell>
                       {item.direction === Direction.CREDIT && (
                         <Badge variant={BadgeVariant.SUCCESS}>
                           ${centsToDollars(item.amount || 0)}
@@ -388,10 +374,10 @@ export const LedgerAccountEntryDetails = ({
                   <TableCell primary>
                     {stringOverrides?.lineItemsTable?.totalRowHeader || 'Total'}
                   </TableCell>
-                  <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+                  <TableCell isCurrency primary>
                     {totalDebit || 0}
                   </TableCell>
-                  <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+                  <TableCell isCurrency primary>
                     {totalCredit || 0}
                   </TableCell>
                 </TableRow>

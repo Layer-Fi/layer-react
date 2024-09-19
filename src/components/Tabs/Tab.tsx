@@ -28,7 +28,7 @@ export const Tab = ({
     return (
       <Tooltip>
         <TooltipTrigger>
-          <label className={'Layer__tabs-option'} data-checked={checked}>
+          <label className={`Layer__tabs-option`} data-checked={checked}>
             <input
               type='radio'
               checked={checked}
@@ -54,7 +54,7 @@ export const Tab = ({
   }
 
   return (
-    <label className={'Layer__tabs-option'} data-checked={checked}>
+    <label className={`Layer__tabs-option`} data-checked={checked}>
       <input
         type='radio'
         checked={checked}
