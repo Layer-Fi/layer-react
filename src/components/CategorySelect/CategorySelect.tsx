@@ -177,7 +177,11 @@ const Option = (
           <span className='Layer__select__option-menu-content-check'>
           <Check size={16} />
         </span>
-        ) : null}
+        ) : (
+          <span className="Layer__select__option-menu-content-check">
+          <div style={{ width: 16, height: 16 }} />
+        </span>
+        )}
         <div>{props.data.payload.display_name}</div>
       </div>
       {props.data.payload.description && (
