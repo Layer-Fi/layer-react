@@ -11,7 +11,7 @@ import { View } from '../View'
 
 type ViewBreakpoint = ViewType | undefined
 
-interface ProfitAndLossReportProps {
+export interface ProfitAndLossReportProps {
   stringOverrides?: ReportsStringOverrides
   comparisonConfig?: ProfitAndLossCompareOptionsProps
   datePickerMode?: DateRangeDatePickerModes
