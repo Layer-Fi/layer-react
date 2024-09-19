@@ -13,7 +13,7 @@ export interface PnLDownloadButtonStringOverrides {
   retryButtonText?: string
 }
 
-interface ProfitAndLossDownloadButtonProps {
+export interface ProfitAndLossDownloadButtonProps {
   stringOverrides?: PnLDownloadButtonStringOverrides
   moneyFormat?: MoneyFormat
   view: ViewBreakpoint
