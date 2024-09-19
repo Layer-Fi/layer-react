@@ -173,8 +173,15 @@ const Option = (
       className={`Layer__select__option-menu-content ${props.className}`}
     >
       <div className='Layer__select__option-menu--name'>
+        {props.isSelected ? (
+          <span className='Layer__select__option-menu-content-check'>
+          <Check size={16} />
+        </span>
+        ) : null}
         <div>{props.data.payload.display_name}</div>
-        {props.data.payload.description && (
+      </div>
+      {props.data.payload.description && (
+        <div className='Layer__select__option-menu--tooltip'>
           <Tooltip>
             <TooltipTrigger>
               <InfoIcon />
@@ -188,13 +195,8 @@ const Option = (
               </Text>
             </TooltipContent>
           </Tooltip>
-        )}
-      </div>
-      {props.isSelected ? (
-        <span className='Layer__select__option-menu-content-check'>
-          <Check size={16} />
-        </span>
-      ) : null}
+        </div>
+      )}
     </components.Option>
   )
 }
