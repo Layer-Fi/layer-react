@@ -37,8 +37,10 @@ type RowState = {
 
 export const SplitForm = ({
   bankTransaction,
+  showTooltips,
 }: {
   bankTransaction: BankTransaction
+  showTooltips: boolean
 }) => {
   const {
     categorize: categorizeBankTransaction,
@@ -231,6 +233,7 @@ export const SplitForm = ({
                 disabled={bankTransaction.processing}
                 excludeMatches
                 asDrawer
+                showTooltips={showTooltips}
               />
             </div>
             <Input

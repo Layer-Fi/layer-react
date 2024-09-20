@@ -25,6 +25,7 @@ export interface BankTransactionMobileListItemProps {
   editable: boolean
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
+  showTooltips: boolean
   mode: BankTransactionsMode
   isFirstItem?: boolean
 }
@@ -56,6 +57,7 @@ export const BankTransactionMobileListItem = ({
   editable,
   mode,
   initialLoad,
+  showTooltips,
   isFirstItem = false,
 }: BankTransactionMobileListItemProps) => {
   const {
@@ -75,9 +77,9 @@ export const BankTransactionMobileListItem = ({
   const [removeAnim, setRemoveAnim] = useState(false)
   const [purpose, setPurpose] = useState<Purpose>(
     bankTransaction.category
-      ?
-      bankTransaction.category.type === 'Exclusion' ? Purpose.personal :
-      bankTransaction.categorization_status === CategorizationStatus.SPLIT
+      ? bankTransaction.category.type === 'Exclusion'
+        ? Purpose.personal
+        : bankTransaction.categorization_status === CategorizationStatus.SPLIT
         ? Purpose.more
         : Purpose.business
       : hasMatch(bankTransaction)
@@ -255,6 +257,7 @@ export const BankTransactionMobileListItem = ({
               <BankTransactionMobileForms
                 purpose={purpose}
                 bankTransaction={bankTransaction}
+                showTooltips={showTooltips}
               />
             </div>
           )}

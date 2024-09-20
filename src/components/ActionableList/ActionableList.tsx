@@ -17,12 +17,14 @@ interface ActionableListProps<T> {
   options: ActionableListOption<T>[]
   onClick: (item: ActionableListOption<T>) => void
   selectedId?: string
+  showDescriptions?: boolean
 }
 
 export const ActionableList = <T,>({
   options,
   onClick,
   selectedId,
+  showDescriptions = false,
 }: ActionableListProps<T>) => {
   return (
     <ul className='Layer__actionable-list'>
@@ -41,14 +43,16 @@ export const ActionableList = <T,>({
             <Text size={TextSize.sm}>{x.label}</Text>
             {
               /*TODO: Replace 'See all categories' with something more generic*/
-              x.description && x.label !== 'See all categories' && (
-                <Text
-                  className='Layer__actionable-list__content-description'
-                  size={TextSize.sm}
-                >
-                  {x.description}
-                </Text>
-              )
+              showDescriptions &&
+                x.description &&
+                x.label !== 'See all categories' && (
+                  <Text
+                    className='Layer__actionable-list__content-description'
+                    size={TextSize.sm}
+                  >
+                    {x.description}
+                  </Text>
+                )
             }
           </div>
           {!x.asLink && selectedId && selectedId === x.id ? (

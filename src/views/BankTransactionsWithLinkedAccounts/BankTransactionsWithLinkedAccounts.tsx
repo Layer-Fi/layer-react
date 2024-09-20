@@ -23,6 +23,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   showBreakConnection?: boolean
   showDescriptions?: boolean
   showReceiptUploads?: boolean
+  showTooltips?: boolean
   mode?: BankTransactionsMode
   mobileComponent?: MobileComponentType
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
@@ -38,6 +39,7 @@ export const BankTransactionsWithLinkedAccounts = ({
   mode = 'self-serve',
   showDescriptions,
   showReceiptUploads,
+  showTooltips = false,
   mobileComponent,
   stringOverrides,
 }: BankTransactionsWithLinkedAccountsProps) => {
@@ -57,6 +59,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         asWidget
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
+        showTooltips={showTooltips}
         mobileComponent={mobileComponent}
         mode={mode}
         stringOverrides={stringOverrides?.bankTransactions}

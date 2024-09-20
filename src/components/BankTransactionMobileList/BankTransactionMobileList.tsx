@@ -12,6 +12,7 @@ export interface BankTransactionMobileListProps {
   editable: boolean
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
+  showTooltips: boolean
   mode: BankTransactionsMode
 }
 
@@ -20,6 +21,7 @@ export const BankTransactionMobileList = ({
   removeTransaction,
   editable,
   initialLoad,
+  showTooltips,
   mode,
 }: BankTransactionMobileListProps) => {
   const transactionToOpenContextData = useTransactionToOpen()
@@ -34,6 +36,7 @@ export const BankTransactionMobileList = ({
               mode={mode}
               key={bankTransaction.id}
               bankTransaction={bankTransaction}
+              showTooltips={showTooltips}
               editable={editable}
               removeTransaction={removeTransaction}
               initialLoad={initialLoad}

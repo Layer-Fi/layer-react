@@ -8,8 +8,10 @@ import { SkeletonTableLoader } from '../SkeletonTableLoader'
 
 export const BankTransactionsLoader = ({
   isLoading = true,
+  showTooltips
 }: {
   isLoading: boolean
+  showTooltips: boolean
 }) => {
   const inactiveBankTransactionsActions = (
     <div className='Layer__bank-transaction-row__actions-container Layer__bank-transaction-row__actions-disabled'>
@@ -19,6 +21,7 @@ export const BankTransactionsLoader = ({
         value={undefined}
         onChange={() => {}}
         disabled={true}
+        showTooltips={showTooltips}
       />
       <SubmitButton
         onClick={() => {}}

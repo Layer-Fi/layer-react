@@ -53,6 +53,7 @@ type Props = {
   categorized?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
+  showTooltips: boolean
 }
 
 type Split = {
@@ -116,6 +117,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       showDescriptions,
       mode,
       showReceiptUploads,
+      showTooltips,
     },
     ref,
   ) => {
@@ -540,6 +542,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                                 !categorizationEnabled(mode)
                               }
                               excludeMatches
+                              showTooltips={showTooltips}
                             />
                             {index > 0 && (
                               <Button

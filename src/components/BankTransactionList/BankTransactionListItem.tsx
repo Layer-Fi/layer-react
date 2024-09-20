@@ -29,6 +29,7 @@ type Props = {
   mode: BankTransactionsMode
   showDescriptions: boolean
   showReceiptUploads: boolean
+  showTooltips: boolean
   removeTransaction: (bt: BankTransaction) => void
   containerWidth?: number
   stringOverrides?: BankTransactionCTAStringOverrides
@@ -42,6 +43,7 @@ export const BankTransactionListItem = ({
   mode,
   showDescriptions,
   showReceiptUploads,
+  showTooltips,
   containerWidth,
   removeTransaction,
   stringOverrides,
@@ -183,6 +185,7 @@ export const BankTransactionListItem = ({
           containerWidth={containerWidth}
           showDescriptions={showDescriptions}
           showReceiptUploads={showReceiptUploads}
+          showTooltips={showTooltips}
         />
       </span>
       <span className={`${className}__base-row`}>
@@ -196,6 +199,7 @@ export const BankTransactionListItem = ({
               setSelectedCategory(category)
             }}
             disabled={bankTransaction.processing}
+            showTooltips={showTooltips}
           />
         ) : null}
         {categorized ? <Assignment bankTransaction={bankTransaction} /> : null}

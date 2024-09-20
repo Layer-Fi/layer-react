@@ -31,6 +31,7 @@ type Props = {
   onChange: (newValue: CategoryOption) => void
   disabled?: boolean
   className?: string
+  showTooltips: boolean
   excludeMatches?: boolean
   asDrawer?: boolean
 }
@@ -137,7 +138,9 @@ const GroupHeading = (
 }
 
 const Option = (
-  props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>>,
+  props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
+    showTooltips: boolean
+  },
 ) => {
   if (props.data.payload.option_type === 'hidden') {
     return null
@@ -175,16 +178,16 @@ const Option = (
       <div className='Layer__select__option-menu--name'>
         {props.isSelected ? (
           <span className='Layer__select__option-menu-content-check'>
-          <Check size={16} />
-        </span>
+            <Check size={16} />
+          </span>
         ) : (
-          <span className="Layer__select__option-menu-content-check">
-          <div style={{ width: 16, height: 16 }} />
-        </span>
+          <span className='Layer__select__option-menu-content-check'>
+            <div style={{ width: 16, height: 16 }} />
+          </span>
         )}
         <div>{props.data.payload.display_name}</div>
       </div>
-      {props.data.payload.description && (
+      {props.showTooltips && props.data.payload.description && (
         <div className='Layer__select__option-menu--tooltip'>
           <Tooltip>
             <TooltipTrigger>
@@ -248,6 +251,7 @@ export const CategorySelect = ({
   onChange,
   disabled,
   className,
+  showTooltips,
   excludeMatches = false,
   asDrawer = false,
 }: Props) => {
@@ -346,10 +350,18 @@ export const CategorySelect = ({
       styles={{
         menuPortal: base => ({ ...base, zIndex: 9999 }),
       }}
-      components={{ DropdownIndicator, GroupHeading, Option }}
+      components={{
+        DropdownIndicator,
+        GroupHeading,
+        Option: optionProps => (
+          <Option {...optionProps} showTooltips={showTooltips} />
+        ),
+      }}
       isDisabled={disabled}
       isOptionDisabled={option => option.disabled ?? false}
-      isOptionSelected={option => selected?.payload.display_name == option.payload.display_name}
+      isOptionSelected={option =>
+        selected?.payload.display_name == option.payload.display_name
+      }
     />
   )
 }
