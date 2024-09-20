@@ -53,6 +53,7 @@ export interface BankTransactionsProps {
   mode?: BankTransactionsMode
   showDescriptions?: boolean
   showReceiptUploads?: boolean
+  showTooltips?: boolean
   monthlyView?: boolean
   categorizeView?: boolean
   mobileComponent?: MobileComponentType
@@ -82,6 +83,7 @@ const BankTransactionsContent = ({
   mode = 'self-serve',
   showDescriptions = false,
   showReceiptUploads = false,
+  showTooltips = false,
   monthlyView = false,
   categorizeView: categorizeViewProp,
   mobileComponent,
@@ -282,6 +284,7 @@ const BankTransactionsContent = ({
             removeTransaction={removeTransaction}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
             page={currentPage}
             stringOverrides={stringOverrides}
             lastPage={isLastPage}
@@ -298,6 +301,7 @@ const BankTransactionsContent = ({
           removeTransaction={removeTransaction}
           containerWidth={containerWidth}
           stringOverrides={stringOverrides?.bankTransactionCTAs}
+          showTooltips={showTooltips}
         />
       ) : null}
 
@@ -308,6 +312,7 @@ const BankTransactionsContent = ({
           mode={mode}
           removeTransaction={removeTransaction}
           initialLoad={initialLoad}
+          showTooltips={showTooltips}
         />
       ) : null}
 

@@ -29,6 +29,7 @@ interface BankTransactionsTableProps {
   removeTransaction: (bt: BankTransaction) => void
   showDescriptions?: boolean
   showReceiptUploads?: boolean
+  showTooltips: boolean
   stringOverrides?: BankTransactionsStringOverrides
   isSyncing?: boolean
   page?: number
@@ -47,6 +48,7 @@ export const BankTransactionsTable = ({
   removeTransaction,
   showDescriptions = false,
   showReceiptUploads = false,
+  showTooltips,
   stringOverrides,
   isSyncing = false,
   page,
@@ -89,7 +91,7 @@ export const BankTransactionsTable = ({
         </tr>
       </thead>
       {isLoading && page && page === 1 ? (
-        <BankTransactionsLoader isLoading={true} />
+        <BankTransactionsLoader isLoading={true} showTooltips={showTooltips} />
       ) : null}
       <tbody>
         {!isLoading &&
@@ -107,6 +109,7 @@ export const BankTransactionsTable = ({
                 containerWidth={containerWidth}
                 showDescriptions={showDescriptions}
                 showReceiptUploads={showReceiptUploads}
+                showTooltips={showTooltips}
                 stringOverrides={stringOverrides?.bankTransactionCTAs}
               />
             ),

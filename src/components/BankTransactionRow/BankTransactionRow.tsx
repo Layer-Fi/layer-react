@@ -40,6 +40,7 @@ type Props = {
   initialLoad?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
+  showTooltips: boolean
   mode: BankTransactionsMode
   stringOverrides?: BankTransactionCTAStringOverrides
 }
@@ -81,6 +82,7 @@ export const BankTransactionRow = ({
   initialLoad,
   showDescriptions,
   showReceiptUploads,
+  showTooltips,
   stringOverrides,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
@@ -260,6 +262,7 @@ export const BankTransactionRow = ({
                   setShowRetry(false)
                 }}
                 disabled={bankTransaction.processing}
+                showTooltips={showTooltips}
               />
             ) : null}
             {categorized && !open ? (
@@ -381,6 +384,7 @@ export const BankTransactionRow = ({
             containerWidth={containerWidth}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
           />
         </td>
       </tr>

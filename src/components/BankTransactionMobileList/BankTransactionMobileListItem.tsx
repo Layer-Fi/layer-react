@@ -25,6 +25,7 @@ export interface BankTransactionMobileListItemProps {
   editable: boolean
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
+  showTooltips: boolean
   mode: BankTransactionsMode
   isFirstItem?: boolean
 }
@@ -56,6 +57,7 @@ export const BankTransactionMobileListItem = ({
   editable,
   mode,
   initialLoad,
+  showTooltips,
   isFirstItem = false,
 }: BankTransactionMobileListItemProps) => {
   const {
@@ -255,6 +257,7 @@ export const BankTransactionMobileListItem = ({
               <BankTransactionMobileForms
                 purpose={purpose}
                 bankTransaction={bankTransaction}
+                showTooltips={showTooltips}
               />
             </div>
           )}

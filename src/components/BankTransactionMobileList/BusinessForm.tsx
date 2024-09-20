@@ -10,9 +10,10 @@ import { Option, mapCategoryToOption, getAssignedValue } from './utils'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
+  showTooltips: boolean
 }
 
-export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
+export const BusinessForm = ({ bankTransaction, showTooltips }: BusinessFormProps) => {
   const { setContent, close } = useContext(DrawerContext)
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactionsContext()
@@ -115,6 +116,7 @@ export const BusinessForm = ({ bankTransaction }: BusinessFormProps) => {
         options={options}
         onClick={onCategorySelect}
         selectedId={selectedCategory?.id}
+        showDescriptions={showTooltips}
       />
       {options.length === 0 ? (
         <Button
