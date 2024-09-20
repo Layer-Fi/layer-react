@@ -31,7 +31,10 @@ export const SplitAndMatchForm = ({
   return (
     <div className='Layer__bank-transaction-mobile-list-item__split-and-match-form'>
       {formType === Purpose.categorize && (
-        <SplitForm bankTransaction={bankTransaction} showTooltips={showTooltips} />
+        <SplitForm
+          bankTransaction={bankTransaction}
+          showTooltips={showTooltips}
+        />
       )}
       {formType === Purpose.match && (
         <MatchForm bankTransaction={bankTransaction} />

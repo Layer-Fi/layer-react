@@ -13,7 +13,10 @@ interface BusinessFormProps {
   showTooltips: boolean
 }
 
-export const BusinessForm = ({ bankTransaction, showTooltips }: BusinessFormProps) => {
+export const BusinessForm = ({
+  bankTransaction,
+  showTooltips,
+}: BusinessFormProps) => {
   const { setContent, close } = useContext(DrawerContext)
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactionsContext()

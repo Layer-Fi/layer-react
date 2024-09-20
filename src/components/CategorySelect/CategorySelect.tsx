@@ -138,7 +138,9 @@ const GroupHeading = (
 }
 
 const Option = (
-  props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & { showTooltips: boolean },
+  props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
+    showTooltips: boolean
+  },
 ) => {
   if (props.data.payload.option_type === 'hidden') {
     return null
@@ -176,12 +178,12 @@ const Option = (
       <div className='Layer__select__option-menu--name'>
         {props.isSelected ? (
           <span className='Layer__select__option-menu-content-check'>
-          <Check size={16} />
-        </span>
+            <Check size={16} />
+          </span>
         ) : (
-          <span className="Layer__select__option-menu-content-check">
-          <div style={{ width: 16, height: 16 }} />
-        </span>
+          <span className='Layer__select__option-menu-content-check'>
+            <div style={{ width: 16, height: 16 }} />
+          </span>
         )}
         <div>{props.data.payload.display_name}</div>
       </div>
@@ -348,10 +350,18 @@ export const CategorySelect = ({
       styles={{
         menuPortal: base => ({ ...base, zIndex: 9999 }),
       }}
-      components={{ DropdownIndicator, GroupHeading, Option: (optionProps) => <Option {...optionProps} showTooltips={showTooltips} /> }}
+      components={{
+        DropdownIndicator,
+        GroupHeading,
+        Option: optionProps => (
+          <Option {...optionProps} showTooltips={showTooltips} />
+        ),
+      }}
       isDisabled={disabled}
       isOptionDisabled={option => option.disabled ?? false}
-      isOptionSelected={option => selected?.payload.display_name == option.payload.display_name}
+      isOptionSelected={option =>
+        selected?.payload.display_name == option.payload.display_name
+      }
     />
   )
 }

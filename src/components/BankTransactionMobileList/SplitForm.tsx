@@ -39,7 +39,7 @@ export const SplitForm = ({
   bankTransaction,
   showTooltips,
 }: {
-  bankTransaction: BankTransaction,
+  bankTransaction: BankTransaction
   showTooltips: boolean
 }) => {
   const {
