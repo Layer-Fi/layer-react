@@ -20,7 +20,7 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
 
   return Boolean(
     bankTransaction.category &&
-      PersonalCategories.includes(bankTransaction.category.display_name),
+    Object.values(PersonalCategories).includes(bankTransaction.category.display_name as PersonalCategories),
   )
 }
 
@@ -41,10 +41,10 @@ export const PersonalForm = ({ bankTransaction }: PersonalFormProps) => {
       {
         type: 'Category',
         category: {
-          type: 'StableName',
-          stable_name: isCredit(bankTransaction)
-            ? 'PERSONAL_INCOME'
-            : 'PERSONAL_EXPENSES',
+          type: 'Exclusion',
+          exclusion_type: isCredit(bankTransaction)
+            ? PersonalCategories.INCOME
+            : PersonalCategories.EXPENSES,
         },
       },
       true,

@@ -1,1 +1,4 @@
-export const PersonalCategories = ['PERSONAL_INCOME', 'PERSONAL_EXPENSES']
+export enum PersonalCategories {
+  INCOME = 'PERSONAL_INFLOWS',
+  EXPENSES = 'PERSONAL_EXPENSES'
+}

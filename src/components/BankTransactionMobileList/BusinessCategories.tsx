@@ -15,7 +15,9 @@ export const BusinessCategories = ({
 }: BusinessCategoriesProps) => {
   const { categories } = useLayerContext()
 
-  const categoryOptions = flattenCategories(categories)
+  const categoryOptions = flattenCategories(
+    categories.filter(category => category.type != 'ExclusionNested'),
+  )
 
   const [optionsToShow, setOptionsToShow] = useState(categoryOptions)
   const [selectedGroup, setSelectedGroup] = useState<string>()

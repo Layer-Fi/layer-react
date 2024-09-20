@@ -9,7 +9,6 @@ import {
   CategoryOptionPayload,
   OptionActionType,
 } from '../CategorySelect/CategorySelect'
-import { PersonalCategories } from './constants'
 
 export interface Option {
   label: string
@@ -81,7 +80,7 @@ export const getAssignedValue = (
 
   if (
     bankTransaction.category &&
-    !PersonalCategories.includes(bankTransaction.category.display_name)
+    bankTransaction.category.type != 'Exclusion'
   ) {
     return mapCategoryToOption(bankTransaction.category)
   }
