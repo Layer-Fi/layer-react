@@ -9,11 +9,13 @@ import classNames from 'classnames'
 interface CategorySelectDrawerProps {
   onSelect: (value: CategoryOption) => void
   selected?: CategoryOption
+  showTooltips: boolean
 }
 
 export const CategorySelectDrawer = ({
   onSelect,
   selected,
+  showTooltips,
 }: CategorySelectDrawerProps) => {
   const { setContent, close } = useContext(DrawerContext)
 
@@ -34,6 +36,7 @@ export const CategorySelectDrawer = ({
           <CategorySelectDrawerContent
             selected={selected}
             onSelect={onDrawerCategorySelect}
+            showTooltips
           />,
         )
       }
@@ -50,9 +53,11 @@ export const CategorySelectDrawer = ({
 const CategorySelectDrawerContent = ({
   onSelect,
   selected,
+  showTooltips,
 }: {
   onSelect: (value: CategoryOption) => void
   selected?: CategoryOption
+  showTooltips: boolean
 }) => (
   <BusinessCategories
     select={option => {
@@ -65,5 +70,6 @@ const CategorySelectDrawerContent = ({
         } satisfies CategoryOption)
     }}
     selectedId={selected?.payload?.id}
+    showTooltips={showTooltips}
   />
 )

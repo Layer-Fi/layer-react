@@ -314,7 +314,13 @@ export const CategorySelect = ({
       : 'Categorize or match...'
 
   if (asDrawer) {
-    return <CategorySelectDrawer onSelect={onChange} selected={value} />
+    return (
+      <CategorySelectDrawer
+        onSelect={onChange}
+        selected={value}
+        showTooltips={showTooltips}
+      />
+    )
   }
 
   // The menu does not show in all cases unless the

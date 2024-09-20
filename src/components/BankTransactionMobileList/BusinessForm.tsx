@@ -69,6 +69,7 @@ export const BusinessForm = ({
       <BusinessCategories
         selectedId={selectedCategory?.id}
         select={onDrawerCategorySelect}
+        showTooltips={showTooltips}
       />,
     )
   }

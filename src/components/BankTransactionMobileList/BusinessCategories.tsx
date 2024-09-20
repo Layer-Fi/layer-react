@@ -6,12 +6,14 @@ import { Option, flattenCategories } from './utils'
 
 export interface BusinessCategoriesProps {
   select: (category: Option) => void
-  selectedId?: string
+  selectedId?: string,
+  showTooltips: boolean
 }
 
 export const BusinessCategories = ({
   select,
   selectedId,
+  showTooltips
 }: BusinessCategoriesProps) => {
   const { categories } = useLayerContext()
 
@@ -43,6 +45,7 @@ export const BusinessCategories = ({
         options={optionsToShow}
         onClick={onCategorySelect}
         selectedId={selectedId}
+        showDescriptions={showTooltips}
       />
     </div>
   )
