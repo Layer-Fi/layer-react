@@ -50,6 +50,7 @@ export const ProfitAndLossReport = ({
             <HeaderCol>
               <ProfitAndLoss.DownloadButton
                 stringOverrides={stringOverrides?.downloadButton}
+                comparisonConfig={comparisonConfig}
                 moneyFormat={csvMoneyFormat}
                 view={view}
               />

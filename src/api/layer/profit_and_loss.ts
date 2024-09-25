@@ -78,3 +78,13 @@ export const getProfitAndLossCsv = get<{
       tagValues ? `&tag_values=${tagValues}` : ''
     }${moneyFormat ? `&money_format=${moneyFormat}` : ''}`,
 )
+
+export const profitAndLossComparisonCsv = post<{
+  data?: S3PresignedUrl
+  error?: unknown
+}>(
+  ({ businessId, moneyFormat }) =>
+    `/v1/businesses/${businessId}/reports/profit-and-loss/exports/comparison-csv?money_format=${
+      moneyFormat ? moneyFormat : 'DOLLAR_STRING'
+    }`,
+)
