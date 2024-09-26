@@ -39,6 +39,7 @@ import {
   getProfitAndLossSummaries,
   getProfitAndLossCsv,
   compareProfitAndLoss,
+  profitAndLossComparisonCsv,
 } from './layer/profit_and_loss'
 import {
   syncFromQuickbooks,
@@ -75,6 +76,7 @@ export const Layer = {
   getLinkedAccounts,
   getJournal,
   compareProfitAndLoss,
+  profitAndLossComparisonCsv,
   createJournalEntries,
   getPlaidLinkToken,
   getPlaidUpdateModeLinkToken,

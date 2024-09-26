@@ -2,7 +2,8 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { Layer } from '../../api/layer'
 import { TagComparisonOption } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { DateRange, ReportingBasis } from '../../types'
+import { DateRange, MoneyFormat, ReportingBasis } from '../../types'
+import { S3PresignedUrl } from '../../types/general'
 import {
   ProfitAndLossComparison,
   ProfitAndLossComparisonItem,
@@ -42,6 +43,10 @@ type UseProfitAndLossComparison = (props: Props) => {
   compareOptions: TagComparisonOption[]
   setCompareOptions: (options: TagComparisonOption[]) => void
   refetch: (dateRange: DateRange, actAsInitial?: boolean) => void
+  getProfitAndLossComparisonCsv: (
+    dateRange: DateRange,
+    moneyFormat?: MoneyFormat,
+  ) => Promise<{ data?: S3PresignedUrl; error?: unknown }>
 }
 
 let initialFetchDone = false
@@ -189,6 +194,25 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
     ],
   )
 
+  const getProfitAndLossComparisonCsv = (
+    dateRange: DateRange,
+    moneyFormat?: MoneyFormat,
+  ) => {
+    const periods = preparePeriodsBody(dateRange, compareMonths)
+    const tagFilters = prepareFiltersBody(compareOptions)
+    return Layer.profitAndLossComparisonCsv(apiUrl, auth.access_token, {
+      params: {
+        businessId,
+        moneyFormat,
+      },
+      body: {
+        periods,
+        tag_filters: tagFilters,
+        reporting_basis: reportingBasis,
+      },
+    })
+  }
+
   return {
     data: data?.pnls,
     isLoading,
@@ -201,5 +225,6 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
     compareOptions,
     setCompareOptions,
     refetch,
+    getProfitAndLossComparisonCsv,
   }
 }

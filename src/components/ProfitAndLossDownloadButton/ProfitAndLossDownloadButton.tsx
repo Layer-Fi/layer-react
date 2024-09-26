@@ -15,16 +15,21 @@ export interface PnLDownloadButtonStringOverrides {
 
 export interface ProfitAndLossDownloadButtonProps {
   stringOverrides?: PnLDownloadButtonStringOverrides
+  useComparisonPnl?: boolean
   moneyFormat?: MoneyFormat
   view: ViewBreakpoint
 }
 
 export const ProfitAndLossDownloadButton = ({
   stringOverrides,
+  useComparisonPnl = false,
   moneyFormat,
   view,
 }: ProfitAndLossDownloadButtonProps) => {
   const { dateRange } = useContext(ProfitAndLoss.Context)
+  const { getProfitAndLossComparisonCsv } = useContext(
+    ProfitAndLoss.ComparisonContext,
+  )
   const { auth, businessId, apiUrl } = useLayerContext()
   const [requestFailed, setRequestFailed] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
@@ -46,7 +51,9 @@ export const ProfitAndLossDownloadButton = ({
       },
     )
     try {
-      const result = await getProfitAndLossCsv()
+      const result = useComparisonPnl
+        ? await getProfitAndLossComparisonCsv(dateRange, moneyFormat)
+        : await getProfitAndLossCsv()
       if (result?.data?.presignedUrl) {
         window.location.href = result.data.presignedUrl
         setRequestFailed(false)
