@@ -1,5 +1,6 @@
 import React, { ButtonHTMLAttributes, ReactNode, useRef } from 'react'
 import LoaderIcon from '../../icons/Loader'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import classNames from 'classnames'
 
 export enum ButtonVariant {
@@ -19,6 +20,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   justify?: ButtonJustify
   fullWidth?: boolean
   isProcessing?: boolean
+  tooltip?: ReactNode | string
 }
 
 export const Button = ({
@@ -32,6 +34,7 @@ export const Button = ({
   justify = 'center',
   fullWidth,
   isProcessing,
+  tooltip,
   ...props
 }: ButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -53,6 +56,7 @@ export const Button = ({
     iconOnly ? 'Layer__btn--icon-only' : '',
     iconAsPrimary && 'Layer__btn--with-primary-icon',
     fullWidth && 'Layer__btn--full-width',
+    tooltip && 'Layer__btn--with-tooltip',
     className,
   )
 
@@ -68,6 +72,40 @@ export const Button = ({
       el => (el as SVGAnimateElement).endElement(),
     )
 
+  const content = (
+    <span className={`Layer__btn-content Layer__justify--${justifyContent}`}>
+      {leftIcon && (
+        <span
+          className={classNames(
+            'Layer__btn-icon Layer__btn-icon--left',
+            iconAsPrimary && 'Layer__btn-icon--primary',
+          )}
+        >
+          {isProcessing ? (
+            <LoaderIcon size={12} className='Layer__anim--rotating' />
+          ) : (
+            leftIcon
+          )}
+        </span>
+      )}
+      {!iconOnly && <span className='Layer__btn-text'>{children}</span>}
+      {rightIcon && (
+        <span
+          className={classNames(
+            'Layer__btn-icon Layer__btn-icon--right',
+            iconAsPrimary && 'Layer__btn-icon--primary',
+          )}
+        >
+          {isProcessing ? (
+            <LoaderIcon size={12} className='Layer__anim--rotating' />
+          ) : (
+            rightIcon
+          )}
+        </span>
+      )}
+    </span>
+  )
+
   return (
     <button
       {...props}
@@ -76,37 +114,18 @@ export const Button = ({
       onMouseLeave={stopAnimation}
       ref={buttonRef}
     >
-      <span className={`Layer__btn-content Layer__justify--${justifyContent}`}>
-        {leftIcon && (
-          <span
-            className={classNames(
-              'Layer__btn-icon Layer__btn-icon--left',
-              iconAsPrimary && 'Layer__btn-icon--primary',
-            )}
-          >
-            {isProcessing ? (
-              <LoaderIcon size={12} className='Layer__anim--rotating' />
-            ) : (
-              leftIcon
-            )}
-          </span>
-        )}
-        {!iconOnly && <span className='Layer__btn-text'>{children}</span>}
-        {rightIcon && (
-          <span
-            className={classNames(
-              'Layer__btn-icon Layer__btn-icon--right',
-              iconAsPrimary && 'Layer__btn-icon--primary',
-            )}
-          >
-            {isProcessing ? (
-              <LoaderIcon size={12} className='Layer__anim--rotating' />
-            ) : (
-              rightIcon
-            )}
-          </span>
-        )}
-      </span>
+      {tooltip ? (
+        <Tooltip offset={12}>
+          <TooltipTrigger>{content}</TooltipTrigger>
+          {tooltip && (
+            <TooltipContent className='Layer__tooltip'>
+              {tooltip}
+            </TooltipContent>
+          )}
+        </Tooltip>
+      ) : (
+        content
+      )}
     </button>
   )
 }

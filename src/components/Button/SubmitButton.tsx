@@ -4,7 +4,7 @@ import CheckCircle from '../../icons/CheckCircle'
 import Loader from '../../icons/Loader'
 import Save from '../../icons/Save'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
-import { Button, ButtonVariant } from './Button'
+import { Button, ButtonProps, ButtonVariant } from './Button'
 import classNames from 'classnames'
 
 export interface SubmitButtonProps
@@ -16,6 +16,7 @@ export interface SubmitButtonProps
   iconOnly?: boolean
   action?: SubmitAction
   noIcon?: boolean
+  tooltip?: ButtonProps['tooltip']
 }
 
 export enum SubmitAction {

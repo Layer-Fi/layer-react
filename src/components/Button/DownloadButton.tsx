@@ -1,6 +1,6 @@
 import React from 'react'
 import DownloadCloud from '../../icons/DownloadCloud'
-import { Button, ButtonVariant } from './Button'
+import { Button, ButtonProps, ButtonVariant } from './Button'
 import { RetryButton } from './RetryButton'
 
 interface DownloadButtonProps {
@@ -11,6 +11,7 @@ interface DownloadButtonProps {
   text?: string
   retryText?: string
   errorText?: string
+  tooltip?: ButtonProps['tooltip']
 }
 
 export const DownloadButton = ({
@@ -18,6 +19,7 @@ export const DownloadButton = ({
   onClick,
   isDownloading,
   requestFailed,
+  tooltip,
   text = 'Download',
   retryText = 'Retry',
   errorText = 'Download failed. Check connection and retry in few seconds.',
@@ -44,6 +46,7 @@ export const DownloadButton = ({
       iconAsPrimary={iconOnly}
       iconOnly={iconOnly}
       isProcessing={isDownloading}
+      tooltip={tooltip}
     >
       {text}
     </Button>

@@ -14,7 +14,6 @@ import { Table, TableBody } from '../Table'
 import { TableCell } from '../TableCell'
 import { TableHead } from '../TableHead'
 import { TableRow } from '../TableRow'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import {
   ChartOfAccountsTableStringOverrides,
   ExpandActionState,
@@ -112,18 +111,6 @@ export const ChartOfAccountsTableContent = ({
     const expandable = !!account.sub_accounts && account.sub_accounts.length > 0
     const expanded = expandable ? isOpen(rowKey) : true
 
-    const editButton = <Edit2 size={12} />
-    const disabledEditButtonWithTooltip = (
-      <Tooltip offset={12}>
-        <TooltipTrigger>
-          <Edit2 size={12} />
-        </TooltipTrigger>
-        <TooltipContent className='Layer__tooltip'>
-          {'System accounts cannot be modified'}
-        </TooltipContent>
-      </Tooltip>
-    )
-
     return (
       <React.Fragment key={rowKey + '-' + index}>
         <TableRow
@@ -152,11 +139,7 @@ export const ChartOfAccountsTableContent = ({
             <span className='Layer__coa__actions'>
               <Button
                 variant={ButtonVariant.secondary}
-                rightIcon={
-                  !templateAccountsEditable && account.stable_name
-                    ? disabledEditButtonWithTooltip
-                    : editButton
-                }
+                rightIcon={<Edit2 size={12} />}
                 iconOnly={true}
                 disabled={!templateAccountsEditable && !!account.stable_name}
                 onClick={e => {
@@ -164,6 +147,11 @@ export const ChartOfAccountsTableContent = ({
                   e.stopPropagation()
                   editAccount(account.id)
                 }}
+                tooltip={
+                  !templateAccountsEditable && account.stable_name
+                    ? 'System accounts cannot be modified'
+                    : undefined
+                }
               >
                 Edit
               </Button>

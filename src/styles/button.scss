@@ -445,3 +445,13 @@
     margin-right: 10px;
   }
 }
+
+.Layer__btn.Layer__btn--with-tooltip {
+  padding: 0;
+
+  .Layer__tooltip-trigger {
+    padding: 0 var(--spacing-md);
+    justify-content: center;
+    height: 100%;
+  }
+}
