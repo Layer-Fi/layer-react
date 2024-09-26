@@ -45,8 +45,8 @@ type UseProfitAndLossComparison = (props: Props) => {
   refetch: (dateRange: DateRange, actAsInitial?: boolean) => void
   getProfitAndLossComparisonCsv: (
     dateRange: DateRange,
-    moneyFormat: MoneyFormat | undefined,
-  ) => Promise<{ data?: S3PresignedUrl | undefined; error?: unknown }>
+    moneyFormat?: MoneyFormat,
+  ) => Promise<{ data?: S3PresignedUrl; error?: unknown }>
 }
 
 let initialFetchDone = false
@@ -196,7 +196,7 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
 
   const getProfitAndLossComparisonCsv = (
     dateRange: DateRange,
-    moneyFormat: MoneyFormat | undefined,
+    moneyFormat?: MoneyFormat,
   ) => {
     const periods = preparePeriodsBody(dateRange, compareMonths)
     const tagFilters = prepareFiltersBody(compareOptions)

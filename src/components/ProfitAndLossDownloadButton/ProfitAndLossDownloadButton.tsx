@@ -1,12 +1,10 @@
 import React, { useContext, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison'
 import { MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
 import { DownloadButton as DownloadButtonComponent } from '../Button'
 import { ProfitAndLoss } from '../ProfitAndLoss'
-import { ProfitAndLossCompareOptionsProps } from '../ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -17,14 +15,14 @@ export interface PnLDownloadButtonStringOverrides {
 
 export interface ProfitAndLossDownloadButtonProps {
   stringOverrides?: PnLDownloadButtonStringOverrides
-  comparisonConfig?: ProfitAndLossCompareOptionsProps
+  useComparisonPnl?: boolean
   moneyFormat?: MoneyFormat
   view: ViewBreakpoint
 }
 
 export const ProfitAndLossDownloadButton = ({
   stringOverrides,
-  comparisonConfig,
+  useComparisonPnl = false,
   moneyFormat,
   view,
 }: ProfitAndLossDownloadButtonProps) => {
@@ -53,7 +51,7 @@ export const ProfitAndLossDownloadButton = ({
       },
     )
     try {
-      const result = comparisonConfig
+      const result = useComparisonPnl
         ? await getProfitAndLossComparisonCsv(dateRange, moneyFormat)
         : await getProfitAndLossCsv()
       if (result?.data?.presignedUrl) {
