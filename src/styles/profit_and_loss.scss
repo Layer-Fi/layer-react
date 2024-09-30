@@ -4,11 +4,19 @@
   background-color: white;
 }
 
+.Layer__reports {
+  .Layer__compare__options {
+    flex: 1;
+    .Layer__input-tooltip {
+      flex: none;
+    }
+  }
+}
 .Layer__compare__options {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 
   .Layer__input-tooltip {
     flex: 1;

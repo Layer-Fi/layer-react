@@ -120,16 +120,22 @@ export const ProfitAndLossCompareOptions = ({
       />
       <MultiSelect
         options={tagComparisonSelectOptions}
+        clearOption
+        clearLabel="Don't compare"
         onChange={e => {
-          setToggle(
-            e
-              .map(option =>
-                tagComparisonOptions.find(
-                  t => JSON.stringify(t.tagFilterConfig) === option.value,
-                ),
-              )
-              .filter(Boolean) as TagComparisonOption[],
-          )
+          if (e.length === 0) {
+            setToggle([defaultOption])
+          } else {
+            setToggle(
+              e
+                .map(option =>
+                  tagComparisonOptions.find(
+                    t => JSON.stringify(t.tagFilterConfig) === option.value,
+                  ),
+                )
+                .filter(Boolean) as TagComparisonOption[],
+            )
+          }
         }}
         defaultValue={toggle?.map(option => ({
           value: JSON.stringify(option.tagFilterConfig),
