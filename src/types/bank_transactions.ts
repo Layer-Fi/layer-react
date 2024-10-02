@@ -76,11 +76,3 @@ export interface DocumentS3Urls {
   type: 'Document_S3_Urls'
   documentUrls: S3PresignedUrl[]
 }
-
-export interface FileMetadata {
-  type: 'File_Metadata'
-  id: string | null
-  fileType: string
-  fileName: string
-  documentType: string
-}

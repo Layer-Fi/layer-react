@@ -24,7 +24,7 @@ export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
   staging: {
     url: 'https://auth.layerfi.com/oauth2/token',
     scope: 'https://sandbox.layerfi.com/sandbox',
-    apiUrl: 'https://sandbox.layerfi.com',
+    apiUrl: 'https://staging.layerfi.com',
   },
   internalStaging: {
     url: 'https://auth.layerfi.com/oauth2/token',

@@ -49,7 +49,11 @@ import {
   unlinkQuickbooksConnection,
 } from './layer/quickbooks'
 import { getStatementOfCashFlow } from './layer/statement-of-cash-flow'
-import { getTasks, submitResponseToTask } from './layer/tasks'
+import {
+  getTasks,
+  submitResponseToTask,
+  completeTaskWithUpload,
+} from './layer/tasks'
 
 export const Layer = {
   authenticate,
@@ -86,6 +90,7 @@ export const Layer = {
   confirmConnection,
   denyConnection,
   getTasks,
+  completeTaskWithUpload,
   submitResponseToTask,
   breakPlaidItemConnection,
   syncConnection,

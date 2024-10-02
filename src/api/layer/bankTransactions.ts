@@ -4,8 +4,8 @@ import {
   BankTransactionMatchType,
   BankTransactionMetadata,
   DocumentS3Urls,
-  FileMetadata,
 } from '../../types/bank_transactions'
+import { FileMetadata } from '../../types/file_upload'
 import { S3PresignedUrl } from '../../types/general'
 import { get, put, postWithFormData } from './authenticated_http'
 
