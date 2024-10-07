@@ -272,6 +272,25 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       setSplitFormError(undefined)
     }
 
+    const openReceiptInNewTab =
+      (url: string, index: number) =>
+      (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        e.preventDefault()
+        const newWindow = window.open('', '_blank')
+        if (newWindow) {
+          newWindow.document.write(`
+        <html>
+          <head>
+            <title>Receipt ${index + 1}</title>
+          </head>
+          <body style="margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <img src="${url}" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
+          </body>
+        </html>
+      `)
+        }
+      }
+
     const save = async () => {
       if (showDescriptions && memoText != undefined) {
         const result = await Layer.updateBankTransactionMetadata(
@@ -644,6 +663,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                         href={url}
                         target='_blank'
                         rel='noopener noreferrer'
+                        // onClick={openReceiptInNewTab(url, index)}
                       >
                         Receipt {index + 1}
                       </a>

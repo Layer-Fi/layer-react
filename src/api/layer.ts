@@ -9,6 +9,8 @@ import {
   updateBankTransactionMetadata,
   listBankTransactionDocuments,
   uploadBankTransactionDocument,
+  getBankTransactionDocument,
+  archiveBankTransactionDocument,
 } from './layer/bankTransactions'
 import { getBusiness } from './layer/business'
 import { getCategories } from './layer/categories'
@@ -67,6 +69,8 @@ export const Layer = {
   getBankTransactionsCsv,
   getBankTransactionMetadata,
   listBankTransactionDocuments,
+  getBankTransactionDocument,
+  archiveBankTransactionDocument,
   updateBankTransactionMetadata,
   uploadBankTransactionDocument,
   getCategories,

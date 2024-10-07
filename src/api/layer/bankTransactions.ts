@@ -7,7 +7,7 @@ import {
 } from '../../types/bank_transactions'
 import { FileMetadata } from '../../types/file_upload'
 import { S3PresignedUrl } from '../../types/general'
-import { get, put, postWithFormData } from './authenticated_http'
+import { get, put, postWithFormData, post } from './authenticated_http'
 
 export type GetBankTransactionsReturn = {
   data?: BankTransaction[]
@@ -118,7 +118,23 @@ export const listBankTransactionDocuments = get<{
   errors: unknown
 }>(
   ({ businessId, bankTransactionId }) =>
-    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents`,
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents?content_disposition=INLINE`,
+)
+
+export const getBankTransactionDocument = get<{
+  data: S3PresignedUrl
+  errors: unknown
+}>(
+  ({ businessId, bankTransactionId, documentId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents/${documentId}?content_disposition=INLINE`,
+)
+
+export const archiveBankTransactionDocument = post<{
+  data: {}
+  errors: unknown
+}>(
+  ({ businessId, bankTransactionId, documentId }) =>
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents/${documentId}/archive`,
 )
 
 export const uploadBankTransactionDocument =

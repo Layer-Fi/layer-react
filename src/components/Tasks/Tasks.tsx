@@ -24,6 +24,7 @@ export const UseTasksContext = createContext<UseTasksContextType>({
   error: undefined,
   refetch: () => {},
   submitResponseToTask: () => {},
+  uploadDocumentForTask: () => {},
 })
 
 export const useTasksContext = () => useContext(UseTasksContext)
