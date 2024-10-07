@@ -107,7 +107,6 @@ const validateSplit = (splitData: RowState) => {
   return valid
 }
 
-// @TODO move to global ts
 export interface DocumentWithStatus {
   url?: string
   status: 'pending' | 'uploaded'
@@ -489,8 +488,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     const className = 'Layer__expanded-bank-transaction-row'
     const shouldHide = !isOpen && isOver
-
-    console.log('receiptUrls', receiptUrls)
 
     return (
       <span
