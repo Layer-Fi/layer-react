@@ -661,7 +661,9 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       <a
                         key={url}
                         href={url}
-                        onClick={openReceiptInNewTab(url, index)}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        // onClick={openReceiptInNewTab(url, index)}
                       >
                         Receipt {index + 1}
                       </a>
