@@ -108,11 +108,13 @@ const validateSplit = (splitData: RowState) => {
 }
 
 export interface DocumentWithStatus {
+  id?: string
   url?: string
-  status: 'pending' | 'uploaded'
+  status: 'pending' | 'uploaded' | 'failed'
   type?: string
   name?: string
   date?: string
+  error?: string
 }
 
 export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
@@ -463,27 +465,45 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }, [])
 
     const onReceiptUpload = async (file: File) => {
-      setReceiptUrls([
+      const id = new Date().valueOf().toString()
+      const receipts = [
         ...receiptUrls,
         {
+          id,
           type: file.type,
           url: undefined,
           status: 'pending' as const,
           name: file.name,
           date: formatTime(parseISO(new Date().toISOString()), DATE_FORMAT),
         },
-      ])
-      const uploadDocument = Layer.uploadBankTransactionDocument(
-        apiUrl,
-        auth.access_token,
-      )
-      await uploadDocument({
-        businessId: businessId,
-        bankTransactionId: bankTransaction.id,
-        file: file,
-        documentType: 'RECEIPT',
-      })
-      await fetchDocuments()
+      ]
+      try {
+        setReceiptUrls(receipts)
+        const uploadDocument = Layer.uploadBankTransactionDocument(
+          apiUrl,
+          auth.access_token,
+        )
+        await uploadDocument({
+          businessId: businessId,
+          bankTransactionId: bankTransaction.id,
+          file: file,
+          documentType: 'RECEIPT',
+        })
+        await fetchDocuments()
+      } catch (_err) {
+        const newReceiptUrls = receipts.map(url => {
+          if (url.id === id) {
+            return {
+              ...url,
+              error: 'Failed to upload',
+              status: 'failed' as const,
+            }
+          }
+
+          return url
+        })
+        setReceiptUrls(newReceiptUrls)
+      }
     }
 
     const className = 'Layer__expanded-bank-transaction-row'
@@ -691,7 +711,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                           : undefined
                       }
                       enableDownload
-                      onDelete={() => console.log('clicked')}
+                      error={url.error}
                     />
                   ))}
                   {receiptUrls.length > 0 && receiptUrls.length < 10 ? (

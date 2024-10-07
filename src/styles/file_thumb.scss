@@ -75,3 +75,7 @@
   gap: var(--spacing-3xs);
   color: var(--color-info-fg);
 }
+
+.Layer__file-thumb__details__error {
+  color: var(--color-danger);
+}

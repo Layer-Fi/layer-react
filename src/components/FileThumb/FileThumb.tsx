@@ -16,6 +16,7 @@ export interface FileThumbProps {
   enableOpen?: boolean
   onOpen?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
   enableDownload?: boolean
+  error?: string
 }
 
 export const FileThumb = ({
@@ -28,11 +29,20 @@ export const FileThumb = ({
   enableOpen,
   onOpen,
   enableDownload,
+  error,
 }: FileThumbProps) => {
   return (
     <div className='Layer__file-thumb'>
       <div className='Layer__file-thumb__img'>
-        {url && <img src={url} alt={name} />}
+        {url && (
+          <img
+            src={url}
+            alt={name}
+            onError={({ currentTarget }) =>
+              (currentTarget.style.display = 'none')
+            }
+          />
+        )}
       </div>
       <div className='Layer__file-thumb__details'>
         <div className='Layer__file-thumb__details__name'>{name}</div>
@@ -43,6 +53,14 @@ export const FileThumb = ({
             </Text>
             <LoaderIcon className='Layer__anim--rotating' size={11} />
           </div>
+        ) : error ? (
+          <Text
+            as='span'
+            size={TextSize.sm}
+            className='Layer__file-thumb__details__error'
+          >
+            {error}
+          </Text>
         ) : (
           <div className='Layer__file-thumb__details__date'>{date}</div>
         )}
