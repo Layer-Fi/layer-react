@@ -8,6 +8,7 @@ import React, {
   TransitionEvent,
 } from 'react'
 import { Layer } from '../../api/layer'
+import { DATE_FORMAT } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useLayerContext } from '../../contexts/LayerContext'
 import AlertCircle from '../../icons/AlertCircle'
@@ -33,6 +34,7 @@ import {
   mapCategoryToExclusionOption,
   mapCategoryToOption,
 } from '../CategorySelect/CategorySelect'
+import { FileThumb } from '../FileThumb'
 import { InputGroup, Input, FileInput } from '../Input'
 import { MatchForm } from '../MatchForm'
 import { Textarea } from '../Textarea'
@@ -41,6 +43,7 @@ import { ToggleSize } from '../Toggle/Toggle'
 import { Text, ErrorText, TextSize } from '../Typography'
 import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
+import { parseISO, format as formatTime } from 'date-fns'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -104,6 +107,15 @@ const validateSplit = (splitData: RowState) => {
   return valid
 }
 
+// @TODO move to global ts
+export interface DocumentWithStatus {
+  url?: string
+  status: 'pending' | 'uploaded'
+  type?: string
+  name?: string
+  date?: string
+}
+
 export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
   (
     {
@@ -142,7 +154,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [isOver, setOver] = useState(false)
     const bodyRef = useRef<HTMLSpanElement>(null)
     const [memoText, setMemoText] = useState<string | undefined>()
-    const [receiptUrls, setReceiptUrls] = useState<string[]>([])
+    const [receiptUrls, setReceiptUrls] = useState<DocumentWithStatus[]>([])
     const [isLoaded, setIsLoaded] = useState(false)
 
     const { auth, businessId, apiUrl } = useLayerContext()
@@ -381,9 +393,11 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         },
       )
       const result = await listBankTransactionDocuments()
-      const retrievedDocs = result.data.documentUrls.map(
-        (docUrl: any) => docUrl.presignedUrl,
-      )
+      const retrievedDocs = result.data.documentUrls.map((docUrl: any) => ({
+        url: docUrl.presignedUrl as string,
+        type: docUrl.type as string | undefined,
+        status: 'uploaded' as const,
+      }))
       setReceiptUrls(retrievedDocs)
     }
 
@@ -449,8 +463,34 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       loadDocumentsAndMetadata()
     }, [])
 
+    const onReceiptUpload = async (file: File) => {
+      setReceiptUrls([
+        ...receiptUrls,
+        {
+          type: file.type,
+          url: undefined,
+          status: 'pending' as const,
+          name: file.name,
+          date: formatTime(parseISO(new Date().toISOString()), DATE_FORMAT),
+        },
+      ])
+      const uploadDocument = Layer.uploadBankTransactionDocument(
+        apiUrl,
+        auth.access_token,
+      )
+      await uploadDocument({
+        businessId: businessId,
+        bankTransactionId: bankTransaction.id,
+        file: file,
+        documentType: 'RECEIPT',
+      })
+      await fetchDocuments()
+    }
+
     const className = 'Layer__expanded-bank-transaction-row'
     const shouldHide = !isOpen && isOver
+
+    console.log('receiptUrls', receiptUrls)
 
     return (
       <span
@@ -636,39 +676,34 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               )}
 
               {showReceiptUploads && (
-                <div>
-                  <div className={`${className}__file-upload`}>
-                    <FileInput
-                      onUpload={async (file: File) => {
-                        const uploadDocument =
-                          Layer.uploadBankTransactionDocument(
-                            apiUrl,
-                            auth.access_token,
-                          )
-                        await uploadDocument({
-                          businessId: businessId,
-                          bankTransactionId: bankTransaction.id,
-                          file: file,
-                          documentType: 'RECEIPT',
-                        })
-                        await fetchDocuments()
-                      }}
-                      text='Upload receipt'
+                <div className={`${className}__file-upload`}>
+                  {!receiptUrls || receiptUrls.length === 0 ? (
+                    <FileInput onUpload={onReceiptUpload} text='Add receipt' />
+                  ) : null}
+                  {receiptUrls.map((url, index) => (
+                    <FileThumb
+                      key={index}
+                      url={url.url}
+                      type={url.type}
+                      uploadPending={url.status === 'pending'}
+                      name={url.name ?? `Receipt ${index + 1}`}
+                      date={url.date}
+                      onOpen={
+                        url.url
+                          ? openReceiptInNewTab(url.url, index)
+                          : undefined
+                      }
+                      enableDownload
+                      onDelete={() => console.log('clicked')}
                     />
-
-                    {receiptUrls.length > 0 && 'Attached receipts:'}
-                    {receiptUrls.map((url, index) => (
-                      <a
-                        key={url}
-                        href={url}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        // onClick={openReceiptInNewTab(url, index)}
-                      >
-                        Receipt {index + 1}
-                      </a>
-                    ))}
-                  </div>
+                  ))}
+                  {receiptUrls.length > 0 && receiptUrls.length < 10 ? (
+                    <FileInput
+                      secondary
+                      onUpload={onReceiptUpload}
+                      text='Add next receipt'
+                    />
+                  ) : null}
                 </div>
               )}
 
