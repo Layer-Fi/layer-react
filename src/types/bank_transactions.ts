@@ -41,6 +41,8 @@ export interface BankTransaction extends Record<string, unknown> {
   processing?: boolean
   suggested_matches?: SuggestedMatch[]
   match?: BankTransactionMatch
+  document_ids: String[]
+  metadata: BankTransactionMetadata
 }
 
 export interface SuggestedMatch {
