@@ -396,10 +396,17 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       const result = await listBankTransactionDocuments()
       const retrievedDocs = result.data.documentUrls.map((docUrl: any) => ({
         url: docUrl.presignedUrl as string,
-        type: docUrl.type as string | undefined,
+        type: docUrl.fileType as string | undefined,
         status: 'uploaded' as const,
+        name: docUrl.fileName,
+        date: readDate(docUrl.createdAt),
       }))
       setReceiptUrls(retrievedDocs)
+    }
+
+    const readDate = (date?: string) => {
+      if (!date) return undefined
+      return date && formatTime(parseISO(date), DATE_FORMAT)
     }
 
     // Call this save action after clicking save in parent component:
@@ -695,7 +702,10 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               {showReceiptUploads && (
                 <div className={`${className}__file-upload`}>
                   {!receiptUrls || receiptUrls.length === 0 ? (
-                    <FileInput onUpload={onReceiptUpload} text='Add receipt' />
+                    <FileInput
+                      onUpload={onReceiptUpload}
+                      text='Upload receipt'
+                    />
                   ) : null}
                   {receiptUrls.map((url, index) => (
                     <FileThumb
