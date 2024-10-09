@@ -290,6 +290,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         e.preventDefault()
         const newWindow = window.open('', '_blank')
+
         if (newWindow) {
           newWindow.document.write(`
         <html>
@@ -447,6 +448,18 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     )
 
     useEffect(() => {
+      // Fetch documents details when the row is being opened and the documents are not yet loaded
+      if (
+        isOpen &&
+        isLoaded &&
+        receiptUrls.length === 0 &&
+        bankTransaction?.document_ids?.length > 0
+      ) {
+        fetchDocuments()
+      }
+    }, [isOpen])
+
+    useEffect(() => {
       if (!isLoaded) {
         return
       }
@@ -464,7 +477,12 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     useEffect(() => {
       const loadDocumentsAndMetadata = async () => {
         if (showDescriptions) await fetchMetadata()
-        if (showReceiptUploads) await fetchDocuments()
+        if (
+          showReceiptUploads &&
+          bankTransaction?.document_ids?.length > 0 &&
+          isOpen
+        )
+          await fetchDocuments()
         setIsLoaded(true)
         setOver(true)
       }
@@ -510,6 +528,30 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
           return url
         })
         setReceiptUrls(newReceiptUrls)
+      }
+    }
+
+    const archiveDocument = async (documentId: string) => {
+      console.log(
+        'archiving document',
+        documentId,
+        businessId,
+        bankTransaction.id,
+        receiptUrls,
+      )
+      try {
+        // @TODO uncomment below and add some deleting/archiving status to the receiptUrls after matching it by id
+        // await Layer.archiveBankTransactionDocument(
+        //   apiUrl,
+        //   auth.access_token,
+        //   { params: {
+        //     businessId: businessId,
+        //     bankTransactionId: bankTransaction.id,
+        //     documentId,
+        //   }}
+        // )
+      } catch (_err) {
+        console.error(_err)
       }
     }
 
@@ -715,13 +757,15 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       uploadPending={url.status === 'pending'}
                       name={url.name ?? `Receipt ${index + 1}`}
                       date={url.date}
+                      enableOpen={url.type === 'application/pdf'}
                       onOpen={
-                        url.url
+                        url.url && url.type !== 'application/pdf'
                           ? openReceiptInNewTab(url.url, index)
                           : undefined
                       }
                       enableDownload
                       error={url.error}
+                      onDelete={() => url.id && archiveDocument(url.id)}
                     />
                   ))}
                   {receiptUrls.length > 0 && receiptUrls.length < 10 ? (

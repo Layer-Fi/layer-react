@@ -88,14 +88,12 @@ export const FileThumb = ({
           ) : null}
           {onOpen ? (
             <IconButton
-              href={url}
-              target='_blank'
-              rel='noopener noreferrer'
               active={!uploadPending}
               icon={<EyeIcon className='Layer__file-thumb__actions__open' />}
-              onClick={e =>
+              onClick={e => {
+                console.log('opening pdf 0')
                 onOpen(e as React.MouseEvent<HTMLAnchorElement, MouseEvent>)
-              }
+              }}
             />
           ) : null}
           {enableOpen && url && !onOpen ? (
