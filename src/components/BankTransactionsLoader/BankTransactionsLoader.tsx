@@ -8,7 +8,7 @@ import { SkeletonTableLoader } from '../SkeletonTableLoader'
 
 export const BankTransactionsLoader = ({
   isLoading = true,
-  showTooltips
+  showTooltips,
 }: {
   isLoading: boolean
   showTooltips: boolean
@@ -47,7 +47,7 @@ export const BankTransactionsLoader = ({
       cols={
         isLoading
           ? [
-              { colSpan: 4, trimLastXRows: 3 },
+              { colSpan: 5, trimLastXRows: 4 },
               { colSpan: 1, parts: 2 },
             ]
           : [

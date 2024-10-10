@@ -1,15 +1,21 @@
 import React, { useRef, ChangeEvent } from 'react'
 import UploadCloud from '../../icons/UploadCloud'
-import { Button } from '../Button'
+import { Button, TextButton } from '../Button'
 import { ButtonVariant } from '../Button/Button'
 
 export interface FileInputProps {
   text?: string
   onUpload?: (file: File) => void
   disabled?: boolean
+  secondary?: boolean
 }
 
-export const FileInput = ({ text = 'Upload', onUpload, disabled = false }: FileInputProps) => {
+export const FileInput = ({
+  text = 'Upload',
+  onUpload,
+  disabled = false,
+  secondary,
+}: FileInputProps) => {
   const hiddenFileInput = useRef<HTMLInputElement>(null)
 
   const onClick = () => {
@@ -23,6 +29,22 @@ export const FileInput = ({ text = 'Upload', onUpload, disabled = false }: FileI
       const fileUploaded = event.target.files[0]
       onUpload(fileUploaded)
     }
+  }
+
+  if (secondary) {
+    return (
+      <>
+        <TextButton onClick={onClick} disabled={disabled}>
+          {text}
+        </TextButton>
+        <input
+          type='file'
+          onChange={onChange}
+          ref={hiddenFileInput}
+          style={{ display: 'none' }}
+        />
+      </>
+    )
   }
 
   return (

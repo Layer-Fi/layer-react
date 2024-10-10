@@ -77,6 +77,7 @@ export const BankTransactionsTable = ({
             {stringOverrides?.transactionsTable?.amountColumnHeaderText ||
               'Amount'}
           </th>
+          <th className='Layer__table-header Layer__bank-transactions__documents-col' />
           {categorizeView && editable ? (
             <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
               {stringOverrides?.transactionsTable?.categorizeColumnHeaderText ||

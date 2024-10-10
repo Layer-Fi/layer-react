@@ -1,0 +1,1 @@
+export { FileThumb } from './FileThumb'
