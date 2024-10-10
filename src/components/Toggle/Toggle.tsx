@@ -55,6 +55,7 @@ export const Toggle = ({
   const [currentWidth, setCurrentWidth] = useState(0)
   const [thumbPos, setThumbPos] = useState({ left: 0, width: 0 })
   const [initialized, setInitialized] = useState(false)
+  const [activeOption, setActiveOption] = useState(selected || options[0].value)
 
   const toggleRef = useElementSize<HTMLDivElement>((a, b, c) => {
     if (c.width && c?.width !== currentWidth) {
@@ -62,7 +63,6 @@ export const Toggle = ({
     }
   })
 
-  const selectedValue = selected || options[0].value
   const baseClassName = classNames(
     'Layer__toggle',
     `Layer__toggle--${size}`,
@@ -70,6 +70,8 @@ export const Toggle = ({
   )
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value
+    setActiveOption(newValue)
     updateThumbPosition(Number(e.target.getAttribute('data-idx') ?? 0))
     onChange(e)
   }
@@ -142,7 +144,7 @@ export const Toggle = ({
           size={size}
           key={option.value}
           name={name}
-          checked={selectedValue === option.value}
+          checked={activeOption === option.value}
           onChange={handleChange}
           disabled={option.disabled ?? false}
           disabledMessage={option.disabledMessage}
@@ -167,12 +169,16 @@ const ToggleOption = ({
   style,
   index,
 }: ToggleOptionProps) => {
+  const optionClassName = classNames('Layer__toggle-option', {
+    'Layer__toggle-option--active': checked,
+  })
+
   if (disabled) {
     return (
       <Tooltip>
         <TooltipTrigger>
           <label
-            className={'Layer__toggle-option'}
+            className={optionClassName}
             data-checked={checked}
             style={style}
           >
@@ -182,7 +188,7 @@ const ToggleOption = ({
               name={name}
               onChange={onChange}
               value={value}
-              disabled={disabled ?? false}
+              disabled={disabled}
               data-idx={index}
             />
             <span className='Layer__toggle-option-content'>
@@ -201,18 +207,14 @@ const ToggleOption = ({
   }
 
   return (
-    <label
-      className={'Layer__toggle-option'}
-      data-checked={checked}
-      style={style}
-    >
+    <label className={optionClassName} data-checked={checked} style={style}>
       <input
         type='radio'
         checked={checked}
         name={name}
         onChange={onChange}
         value={value}
-        disabled={disabled ?? false}
+        disabled={disabled}
         data-idx={index}
       />
       <span className='Layer__toggle-option-content'>
