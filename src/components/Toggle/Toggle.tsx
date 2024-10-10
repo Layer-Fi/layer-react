@@ -127,7 +127,7 @@ export const Toggle = ({
 
   const getSelectedIndex = () => {
     const selectedIndex = options.findIndex(
-      option => option.value === selectedValue,
+      option => option.value === activeOption,
     )
     if (selectedIndex === -1) {
       return 0

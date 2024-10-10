@@ -39,6 +39,7 @@ export const BillsView = ({
                 mode='monthRangePicker'
                 selected={new Date()}
                 onChange={() => {}}
+                wrapperClassName='Layer__bills__main-datepicker'
               />
             </HeaderCol>
           </HeaderRow>

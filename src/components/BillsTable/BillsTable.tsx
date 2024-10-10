@@ -87,7 +87,7 @@ const BillsTableContent = ({
           selected={selectedEntryId === rowKey}
           depth={depth}
         >
-          <TableCell>
+          <TableCell primary>
             {bulkRecordPayment && activeTab === 'unpaid' && (
               <input
                 type='checkbox'
@@ -100,8 +100,8 @@ const BillsTableContent = ({
             {entry.vendor}
           </TableCell>
           <TableCell>{entry.dueDate}</TableCell>
-          <TableCell>{entry.billAmount.toFixed(2)}</TableCell>
-          <TableCell>{entry.openBalance.toFixed(2)}</TableCell>
+          <TableCell primary>{entry.billAmount.toFixed(2)}</TableCell>
+          <TableCell primary>{entry.openBalance.toFixed(2)}</TableCell>
           <TableCell>{entry.status}</TableCell>
           <TableCell align={TableCellAlign.RIGHT}>
             <div className='Layer__bills__status-with-actions'>

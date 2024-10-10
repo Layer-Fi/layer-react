@@ -50,6 +50,11 @@
       border-top: none;
     }
 
+    .Layer__table-cell-content {
+      color: var(--text-color-secondary);
+      font-size: var(--text-sm);
+    }
+
     &.Layer__table-header--primary {
       .Layer__table-cell {
         &.Layer__table-cell--primary {

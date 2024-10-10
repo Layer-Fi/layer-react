@@ -1,4 +1,7 @@
 .Layer__bills__view {
+  .Layer__bills__main-datepicker input {
+    min-width: 180px;
+  }
   .Layer__view-main {
     padding-top: 0;
     padding-bottom: 0;
@@ -33,9 +36,6 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    .Layer__btn--primary {
-      color: var(--color-base-1000);
-    }
   }
 
   .Layer__bill-details__content {
