@@ -46,6 +46,9 @@ export const IconButton = ({
         rel={rel}
         download={download}
         className={baseClassName}
+        onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+          if (props.disabled) e.preventDefault()
+        }}
       >
         {icon}
       </a>

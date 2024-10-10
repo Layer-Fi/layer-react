@@ -110,7 +110,7 @@ const validateSplit = (splitData: RowState) => {
 export interface DocumentWithStatus {
   id?: string
   url?: string
-  status: 'pending' | 'uploaded' | 'failed'
+  status: 'pending' | 'uploaded' | 'failed' | 'deleting'
   type?: string
   name?: string
   date?: string
@@ -396,6 +396,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       )
       const result = await listBankTransactionDocuments()
       const retrievedDocs = result.data.documentUrls.map((docUrl: any) => ({
+        id: docUrl.documentId,
         url: docUrl.presignedUrl as string,
         type: docUrl.fileType as string | undefined,
         status: 'uploaded' as const,
@@ -532,26 +533,41 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }
 
     const archiveDocument = async (documentId: string) => {
-      console.log(
-        'archiving document',
-        documentId,
-        businessId,
-        bankTransaction.id,
-        receiptUrls,
-      )
       try {
-        // @TODO uncomment below and add some deleting/archiving status to the receiptUrls after matching it by id
-        // await Layer.archiveBankTransactionDocument(
-        //   apiUrl,
-        //   auth.access_token,
-        //   { params: {
-        //     businessId: businessId,
-        //     bankTransactionId: bankTransaction.id,
-        //     documentId,
-        //   }}
-        // )
+        setReceiptUrls(
+          receiptUrls.map(url => {
+            if (url.id === documentId) {
+              return {
+                ...url,
+                status: 'deleting',
+              }
+            }
+
+            return url
+          }),
+        )
+        await Layer.archiveBankTransactionDocument(apiUrl, auth.access_token, {
+          params: {
+            businessId: businessId,
+            bankTransactionId: bankTransaction.id,
+            documentId,
+          },
+        })
+        fetchDocuments()
       } catch (_err) {
-        console.error(_err)
+        setReceiptUrls(
+          receiptUrls.map(url => {
+            if (url.id === documentId) {
+              return {
+                ...url,
+                status: 'failed',
+                error: 'Failed to delete',
+              }
+            }
+
+            return url
+          }),
+        )
       }
     }
 
@@ -755,6 +771,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       url={url.url}
                       type={url.type}
                       uploadPending={url.status === 'pending'}
+                      deletePending={url.status === 'deleting'}
                       name={url.name ?? `Receipt ${index + 1}`}
                       date={url.date}
                       enableOpen={url.type === 'application/pdf'}

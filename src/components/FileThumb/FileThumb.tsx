@@ -10,6 +10,7 @@ export interface FileThumbProps {
   url?: string
   type?: string
   uploadPending?: boolean
+  deletePending?: boolean
   name?: string
   date?: string
   onDelete?: () => void
@@ -23,6 +24,7 @@ export const FileThumb = ({
   url,
   type,
   uploadPending,
+  deletePending,
   name,
   date,
   onDelete,
@@ -31,6 +33,8 @@ export const FileThumb = ({
   enableDownload,
   error,
 }: FileThumbProps) => {
+  const disabled = uploadPending || deletePending
+
   return (
     <div className='Layer__file-thumb'>
       <div className='Layer__file-thumb__img'>
@@ -46,10 +50,10 @@ export const FileThumb = ({
       </div>
       <div className='Layer__file-thumb__details'>
         <div className='Layer__file-thumb__details__name'>{name}</div>
-        {uploadPending ? (
+        {uploadPending || deletePending ? (
           <div className='Layer__file-thumb__details__uploading'>
             <Text as='span' size={TextSize.sm}>
-              Uploading
+              {deletePending ? 'Deleting...' : 'Uploading'}
             </Text>
             <LoaderIcon className='Layer__anim--rotating' size={11} />
           </div>
@@ -69,8 +73,9 @@ export const FileThumb = ({
         <div className='Layer__file-thumb__actions'>
           {onDelete && (
             <IconButton
-              onClick={() => onDelete}
-              active={!uploadPending}
+              onClick={onDelete}
+              active={!disabled}
+              disabled={disabled}
               icon={
                 <TrashIcon className='Layer__file-thumb__actions__remove' />
               }
@@ -78,8 +83,9 @@ export const FileThumb = ({
           )}
           {enableDownload && url ? (
             <IconButton
-              active={!uploadPending}
+              active={!disabled}
               href={url}
+              disabled={disabled}
               download={name ?? 'receipt'}
               icon={
                 <DownloadCloud className='Layer__file-thumb__actions__download' />
@@ -88,10 +94,10 @@ export const FileThumb = ({
           ) : null}
           {onOpen ? (
             <IconButton
-              active={!uploadPending}
+              active={!disabled}
               icon={<EyeIcon className='Layer__file-thumb__actions__open' />}
+              disabled={disabled}
               onClick={e => {
-                console.log('opening pdf 0')
                 onOpen(e as React.MouseEvent<HTMLAnchorElement, MouseEvent>)
               }}
             />
@@ -101,7 +107,8 @@ export const FileThumb = ({
               href={url}
               target='_blank'
               rel='noopener noreferrer'
-              active={!uploadPending}
+              active={!disabled}
+              disabled={disabled}
               icon={<EyeIcon className='Layer__file-thumb__actions__open' />}
             />
           ) : null}
