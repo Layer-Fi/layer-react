@@ -5,15 +5,13 @@
   }
   .Layer__bills__sidebar__header {
     padding: 0;
+    .Layer__header__row {
+      min-height: 72px;
+    }
   }
 }
 
 .Layer__bills {
-  // .Layer__bills-account__index {
-  //   .Layer__bills-account__header {
-  //     padding: 0;
-  //   }
-  // }
   .Layer__bills-account__title-container {
     display: flex;
     flex-direction: column;
@@ -35,7 +33,11 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    .Layer__btn--primary {
+      color: var(--color-base-1000);
+    }
   }
+
   .Layer__bill-details__content {
     padding: var(--spacing-xl);
   }

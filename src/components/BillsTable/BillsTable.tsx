@@ -87,8 +87,8 @@ const BillsTableContent = ({
           selected={selectedEntryId === rowKey}
           depth={depth}
         >
-          {bulkRecordPayment && activeTab === 'unpaid' && (
-            <TableCell>
+          <TableCell>
+            {bulkRecordPayment && activeTab === 'unpaid' && (
               <input
                 type='checkbox'
                 checked={isSelected}
@@ -96,17 +96,15 @@ const BillsTableContent = ({
                   handleCheckboxChange(e)
                 }}
               />
-            </TableCell>
-          )}
-          <TableCell>{entry.vendor}</TableCell>
+            )}
+            {entry.vendor}
+          </TableCell>
           <TableCell>{entry.dueDate}</TableCell>
           <TableCell>{entry.billAmount.toFixed(2)}</TableCell>
-          <TableCell align={TableCellAlign.RIGHT}>
-            {entry.openBalance.toFixed(2)}
-          </TableCell>
+          <TableCell>{entry.openBalance.toFixed(2)}</TableCell>
+          <TableCell>{entry.status}</TableCell>
           <TableCell align={TableCellAlign.RIGHT}>
             <div className='Layer__bills__status-with-actions'>
-              <span>{entry.status}</span>
               {activeTab === 'unpaid' ? (
                 <SubmitButton
                   onClick={e => {
@@ -150,12 +148,13 @@ const BillsTableContent = ({
           <TableCell isHeaderCell>
             {stringOverrides?.billAmountColumnHeader || 'Bill amount'}
           </TableCell>
-          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
+          <TableCell isHeaderCell>
             {stringOverrides?.openBalanceColumnHeader || 'Open balance'}
           </TableCell>
-          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
+          <TableCell isHeaderCell>
             {stringOverrides?.statusColumnHeader || 'Status'}
           </TableCell>
+          <TableCell />
         </TableRow>
       </TableHead>
       <TableBody>

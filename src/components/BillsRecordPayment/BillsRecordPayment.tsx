@@ -16,7 +16,7 @@ export const BillsRecordPayment = ({
   stringOverrides?: JournalFormStringOverrides
   setPaymentRecorded: (paymentRecorded: boolean) => void
 }) => {
-  const { closeSelectedEntry } = useContext(BillsContext)
+  const { closeSelectedEntry, selectedEntryId } = useContext(BillsContext)
   const [paymentDate, setPaymentDate] = useState(new Date())
   const [amount, setAmount] = useState(80)
 
@@ -52,7 +52,7 @@ export const BillsRecordPayment = ({
           label='Vendor'
           className='Layer__bills__record-payment__vendor'
         >
-          <Input value='PG&E' readOnly />
+          <Text>PG&E</Text>
         </InputGroup>
 
         <InputGroup
