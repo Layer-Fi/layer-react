@@ -1,12 +1,11 @@
 import React, { useContext } from 'react'
 import { BillsContext } from '../../contexts/BillsContext'
 import Check from '../../icons/Check'
-import CloseIcon from '../../icons/CloseIcon'
-import { IconButton, Button } from '../Button'
+import { Button, ButtonVariant, CloseButton } from '../Button'
 import { Header } from '../Container'
 import { HeaderRow, HeaderCol } from '../Header'
-import { Input } from '../Input'
-import { Heading, HeadingSize, Text } from '../Typography'
+import { InputGroup, StaticValue } from '../Input'
+import { Heading, HeadingSize, Text, TextSize } from '../Typography'
 
 export const BillsPaymentRecorded = ({
   stringOverrides,
@@ -54,53 +53,71 @@ export const BillsPaymentRecorded = ({
             </Heading>
           </HeaderCol>
           <HeaderCol className='actions'>
-            <IconButton
-              type='button'
-              onClick={() => closeSelectedEntry()}
-              icon={<CloseIcon size={18} />}
-            />
+            <CloseButton type='button' onClick={() => closeSelectedEntry()} />
           </HeaderCol>
         </HeaderRow>
       </Header>
       <div className='Layer__bills__payment-recorded__content'>
         <div className='Layer__bills__payment-recorded__summary'>
-          <div>
-            <Text>Vendor</Text>
-            <Text>{paymentDetails.vendor}</Text>
-          </div>
-          <div>
-            <Text>Payment date</Text>
-            <Text>{paymentDetails.paymentDate}</Text>
-          </div>
-          <div>
-            <Text>Total paid</Text>
-            <Text>{paymentDetails.totalPaid}</Text>
-          </div>
+          <InputGroup inline={true} label='Vendor'>
+            <StaticValue>{paymentDetails.vendor}</StaticValue>
+          </InputGroup>
+          <InputGroup inline={true} label='Payment date'>
+            <StaticValue>{paymentDetails.paymentDate}</StaticValue>
+          </InputGroup>
+          <InputGroup inline={true} label='Total paid'>
+            <StaticValue>{paymentDetails.totalPaid}</StaticValue>
+          </InputGroup>
         </div>
-        <Heading size={HeadingSize.secondary}>Bills paid</Heading>
-        <div className='Layer__bills__payment-recorded__bills-list'>
-          <div className='Layer__bills__payment-recorded__bill-header'>
-            <Text>Bill date</Text>
-            <Text>Amount paid now</Text>
-            <Text>Open balance</Text>
-          </div>
-          {paymentDetails.billsPaid.map((bill, index) => (
-            <div
-              key={index}
-              className='Layer__bills__payment-recorded__bill-row'
-            >
-              <Text>{bill.date}</Text>
-              <Text>{bill.amountPaid}</Text>
-              <Text className={bill.isPaid ? 'paid' : 'unpaid'}>
-                {bill.openBalance}
-              </Text>
-              {bill.isPaid && <Check size={18} className='paid-icon' />}
-            </div>
-          ))}
+      </div>
+      <div className='Layer__bills__payment-recorded__bills'>
+        <Text>Bills paid</Text>
+        <table className='Layer__bills__payment-recorded__bills-table'>
+          <thead>
+            <tr>
+              <th>
+                <Text>Bill date</Text>
+              </th>
+              <th>
+                <Text>Amount paid now</Text>
+              </th>
+              <th className='Layer__bills__payment-recorded__open-balance-col'>
+                <Text>Open balance</Text>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {paymentDetails.billsPaid.map((bill, index) => (
+              <tr
+                key={index}
+                className='Layer__bills__payment-recorded__bill-row'
+              >
+                <td>
+                  <Text>{bill.date}</Text>
+                </td>
+                <td>
+                  <Text>{bill.amountPaid}</Text>
+                </td>
+                <td className='Layer__bills__payment-recorded__open-balance-col'>
+                  <Text className={bill.isPaid ? 'paid' : 'unpaid'}>
+                    {bill.openBalance}
+                  </Text>
+                </td>
+                <td>
+                  {bill.isPaid && <Check size={18} className='paid-icon' />}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className='Layer__bills__payment-recorded__submit-container'>
+          <Button
+            variant={ButtonVariant.secondary}
+            className='Layer__bills__payment-recorded__record-balance'
+          >
+            Record remaining balance
+          </Button>
         </div>
-        <Button className='Layer__bills__payment-recorded__record-balance'>
-          Record remaining balance
-        </Button>
       </div>
     </div>
   )

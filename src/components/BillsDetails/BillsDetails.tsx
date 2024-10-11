@@ -1,9 +1,8 @@
 import React, { useContext } from 'react'
 import { BillsContext } from '../../contexts/BillsContext'
 import { BackButton } from '../Button'
-import { Header } from '../Container'
 import { DatePicker } from '../DatePicker/DatePicker'
-import { HeaderRow, HeaderCol } from '../Header'
+import { Header, HeaderRow, HeaderCol } from '../Header'
 import { Input } from '../Input'
 import { Checkbox } from '../Input/Checkbox'
 import { Select } from '../Input/Select'
@@ -22,16 +21,11 @@ export const BillsDetails = ({
     billDetailsId && 'open',
   )
 
-  // Simple Tag component
-  const Tag = ({ children }: { children: React.ReactNode }) => (
-    <div className='Layer__tag'>{children}</div>
-  )
-
   return (
     <div className={baseClassName}>
       <Header className='Layer__bills-account__header'>
         <HeaderRow>
-          <HeaderCol style={{ padding: 0 }}>
+          <HeaderCol>
             <BackButton onClick={() => closeBillDetails()} />
             <div className='Layer__bills-account__title-container'>
               <Text
@@ -47,7 +41,7 @@ export const BillsDetails = ({
       </Header>
 
       <div className='Layer__bill-details__content'>
-        <div className='Layer__bill-details__summary'>
+        <div className='Layer__bill-details__section Layer__bill-details__summary'>
           <div>
             <Text size={TextSize.sm}>Bill amount</Text>
             <Text weight={TextWeight.bold} size={TextSize.lg}>
@@ -64,7 +58,7 @@ export const BillsDetails = ({
           </div>
         </div>
 
-        <div className='Layer__bill-details__form'>
+        <div className='Layer__bill-details__section'>
           <div className='Layer__bill-details__form-row'>
             <label>
               <Text size={TextSize.sm}>Vendor</Text>
@@ -125,11 +119,9 @@ Bayshore, CA 94326`}
               />
             </label>
           </div>
+        </div>
 
-          <div className='Layer__bill-details__form-row'>
-            <Tag>Add tag</Tag>
-          </div>
-
+        <div className='Layer__bill-details__section Layer__bill-details__section--category-details'>
           <div className='Layer__bill-details__form-row'>
             <Text weight={TextWeight.bold}>Category details</Text>
           </div>
@@ -147,7 +139,6 @@ Bayshore, CA 94326`}
             />
             <Input value='$ 26.44' />
             <Input placeholder='Description' />
-            <Tag>Add tag</Tag>
             <Checkbox checked label='Tax' />
             <Text>Billable</Text>
           </div>
@@ -165,7 +156,6 @@ Bayshore, CA 94326`}
             />
             <Input value='$ 26.44' />
             <Input placeholder='Description' />
-            <Tag>Add tag</Tag>
             <Checkbox checked label='Tax' />
             <Text>Billable</Text>
           </div>

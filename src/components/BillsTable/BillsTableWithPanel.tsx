@@ -102,7 +102,7 @@ export const BillsTableWithPanel = ({
                       setSelectedEntries([...selectedEntries, selectedEntry])
                     }
                   }}
-                  placeholder='Select bills to record payments'
+                  placeholder='Select vendor to record bulk payment'
                 />
               ) : (
                 <Button onClick={() => setBulkRecordPayment(true)}>

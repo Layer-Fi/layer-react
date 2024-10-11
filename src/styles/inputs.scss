@@ -11,6 +11,7 @@
     align-items: center;
     width: 100%;
     flex: 1;
+    gap: var(--spacing-sm);
 
     & label {
       width: 33%;
@@ -660,4 +661,8 @@
       min-height: 36px;
     }
   }
+}
+
+.Layer__input--static-value {
+  padding: 0 calc(var(--spacing-xs) + 1px);
 }

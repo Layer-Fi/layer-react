@@ -3,8 +3,7 @@
     min-width: 180px;
   }
   .Layer__view-main {
-    padding-top: 0;
-    padding-bottom: 0;
+    padding: 0;
   }
   .Layer__bills__sidebar__header {
     padding: 0;
@@ -12,9 +11,32 @@
       min-height: 72px;
     }
   }
+
+  .Layer__bills.Layer__component {
+    max-width: 1456px;
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    border-radius: 0;
+    border-bottom-right-radius: var(--border-radius-xs);
+    padding-bottom: 0;
+  }
+
+  .Layer__bills__header .Layer__header__row {
+    padding: 0 var(--spacing-md);
+    transition: padding 120ms ease-out;
+    box-sizing: border-box;
+
+    @container (min-width: 1400px) {
+      padding: 0 var(--spacing-xl);
+    }
+  }
 }
 
 .Layer__bills {
+  .Layer__panel {
+    position: sticky;
+  }
+
   .Layer__bills-account__title-container {
     display: flex;
     flex-direction: column;
@@ -38,31 +60,52 @@
     gap: 12px;
   }
 
-  .Layer__bill-details__content {
-    padding: var(--spacing-xl);
+  .Layer__bill-details__section {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+
+    @container (min-width: 1400px) {
+      padding: var(--spacing-md) var(--spacing-xl);
+    }
   }
 
   .Layer__bill-details__summary {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 24px;
 
     > div {
       flex: 1;
     }
   }
 
-  .Layer__bill-details__form {
-    .Layer__bill-details__form-row {
-      margin-bottom: 16px;
+  .Layer__bills-table__actions-col {
+    max-width: 250px;
+    width: 250px;
 
-      &--split {
-        display: flex;
-        gap: 16px;
+    @container (min-width: 1400px) {
+      max-width: 280px;
+      width: 280px;
+    }
 
-        > label {
-          flex: 1;
-        }
+    .Layer__btn {
+      white-space: nowrap;
+    }
+  }
+
+  .Layer__bills-table__status-col {
+    max-width: 120px;
+    width: 120px;
+  }
+
+  .Layer__bill-details__form-row {
+    margin-bottom: 16px;
+
+    &--split {
+      display: flex;
+      gap: 16px;
+
+      > label {
+        flex: 1;
       }
     }
 
@@ -105,25 +148,41 @@
   }
 }
 
+.Layer__bills-account__index {
+  background-color: var(--color-base-0);
+
+  .Layer__bill-details__section--category-details {
+    background-color: var(--color-base-50);
+  }
+}
+
 .Layer__bills__record-payment {
-  &__content {
-    padding: 16px;
+  label {
+    max-width: 33%;
   }
 
-  &__vendor,
-  &__date {
-    margin-bottom: 16px;
+  &__base-details {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  &__amount {
+    padding: var(--spacing-md);
+    padding-top: var(--spacing-xl);
   }
 
   &__amount-header {
-    margin-bottom: 12px;
+    margin-bottom: var(--spacing-lg);
   }
 
   &__amount-row {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 12px;
+    margin-bottom: var(--spacing-md);
 
     .Layer__input-group {
       flex: 1;
@@ -136,64 +195,111 @@
   }
 
   &__add-bill {
-    width: 100%;
     margin-bottom: 16px;
+    width: 120px;
   }
 
   &__total {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 24px;
+    margin-bottom: var(--spacing-xl);
     padding-top: 12px;
     border-top: 1px solid var(--border-color);
   }
 
-  &__submit {
-    width: 100%;
+  &__submit-container {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  @container (min-width: 1400px) {
+    &__base-details {
+      padding: var(--spacing-md) var(--spacing-xl);
+    }
+
+    &__amount {
+      padding: var(--spacing-xl);
+    }
+  }
+}
+
+.Layer__bills .Layer__panel__sidebar .Layer__panel__sidebar-content {
+  width: 100%;
+}
+
+.Layer__bills .Layer__panel__sidebar-content .Layer__form,
+.Layer__bills
+  .Layer__panel__sidebar-content
+  .Layer__bills__payment-recorded__content,
+.Layer__bills
+  .Layer__panel__sidebar-content
+  .Layer__bills__payment-recorded__bills {
+  max-width: 480px;
+  margin: auto;
+}
+
+@container (max-width: 1024px) {
+  .Layer__bills .Layer__panel__sidebar-content .Layer__header__row {
+    max-width: 480px;
+    margin: auto;
+    border-bottom-width: 0;
+  }
+  .Layer__bills .Layer__panel__sidebar-content .Layer__bills__sidebar__header {
+    border-bottom: 1px solid var(--border-color);
   }
 }
 
 .Layer__bills__payment-recorded {
+  label {
+    max-width: 33%;
+  }
+
   &__content {
-    padding: var(--spacing-xl);
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    box-sizing: border-box;
+  }
+
+  &__bills {
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    color: var(--text-color-secondary);
+    box-sizing: border-box;
   }
 
   &__summary {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 24px;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
 
-    > div {
-      flex: 1;
+  &__bills-table {
+    border-collapse: collapse;
+    color: var(--text-color-secondary);
+
+    td,
+    th {
+      padding: var(--spacing-3xs) var(--spacing-3xs);
+      &:first-child {
+        padding-left: 0;
+      }
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+
+    th:not(.Layer__bills__payment-recorded__open-balance-col) {
+      text-align: left;
     }
   }
 
-  &__bills-list {
-    margin-top: 16px;
-    margin-bottom: 24px;
-  }
-
-  &__bill-header,
-  &__bill-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 12px;
-
-    > * {
-      &:nth-child(1) {
-        flex: 1;
-      }
-      &:nth-child(2) {
-        flex: 1;
-      }
-      &:nth-child(3) {
-        flex: 1;
-      }
-      &:nth-child(4) {
-        flex: 0 0 auto;
-      }
-    }
+  &__open-balance-col {
+    text-align: right;
   }
 
   &__bill-row {
@@ -210,7 +316,20 @@
     }
   }
 
-  &__record-balance {
+  &__submit-container {
+    padding-top: var(--spacing-md);
+    display: flex;
     width: 100%;
+    justify-content: flex-end;
+  }
+
+  @container (min-width: 1400px) {
+    &__content {
+      padding: var(--spacing-md) var(--spacing-xl);
+    }
+
+    &__bills {
+      padding: var(--spacing-xl);
+    }
   }
 }
