@@ -10,7 +10,7 @@ import {
   ManualLedgerEntrySource,
   OpeningBalanceLedgerEntrySource,
   PayoutLedgerEntrySource,
-  RefundPaymentLedgerEntrySource,
+  RefundLedgerEntrySource, RefundPaymentLedgerEntrySource,
   TransactionLedgerEntrySource,
 } from '../../types/ledger_accounts'
 import { TableCellAlign } from '../../types/table'
@@ -144,6 +144,21 @@ export const SourceDetailView = ({
       )
     }
     case 'Refund_Ledger_Entry_Source': {
+      const refundSource = source as RefundLedgerEntrySource
+      return (
+        <>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {`$${centsToDollars(refundSource.refunded_to_customer_amount)}`}
+          </DetailsListItem>
+          <DetailsListItem
+            label={stringOverrides?.recipientNameLabel || 'Recipient name'}
+          >
+            {refundSource.recipient_name}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Refund_Payment_Ledger_Entry_Source': {
       const refundSource = source as RefundPaymentLedgerEntrySource
       return (
         <>

@@ -14,7 +14,7 @@ export interface JournalEntry {
   entry_at: string
   reversal_of_id: string | null
   reversal_id: string | null
-  line_items: JournalEntryLineItem[]
+  line_items: JournalEntryLine[]
   source?: LedgerEntrySource
 }
 
