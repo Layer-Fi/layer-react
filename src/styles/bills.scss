@@ -32,6 +32,10 @@
   }
 }
 
+.Layer__bills-table__checkbox {
+  margin-right: var(--spacing-xs);
+}
+
 .Layer__bills {
   .Layer__panel {
     position: sticky;
@@ -69,13 +73,23 @@
     }
   }
 
+  .Layer__bill-details__head {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   .Layer__bill-details__summary {
     display: flex;
     justify-content: space-between;
+    flex: 1;
+    max-width: 600px;
+    box-sizing: border-box;
+  }
 
-    > div {
-      flex: 1;
-    }
+  .Layer__bill-details__summary__label {
+    color: var(--color-base-600);
   }
 
   .Layer__bills-table__actions-col {
@@ -98,29 +112,27 @@
   }
 
   .Layer__bill-details__form-row {
-    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-lg);
 
-    &--split {
+    .Layer__bill-details__form-col {
+      flex: 1;
+      max-width: 500px;
       display: flex;
-      gap: 16px;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-xs) 0;
 
-      > label {
-        flex: 1;
+      label {
+        max-width: 120px;
       }
-    }
-
-    label {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 14px;
-      color: #6b7280;
     }
   }
   .Layer__bill-details__category-row {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 12px;
 
     > * {
       &:nth-child(1) {
@@ -148,12 +160,23 @@
   }
 }
 
+.Layer__bill-details__category__add-next {
+  display: flex;
+}
+
 .Layer__bills-account__index {
   background-color: var(--color-base-0);
 
   .Layer__bill-details__section--category-details {
     background-color: var(--color-base-50);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
   }
+}
+
+.Layer__bills-account__header__date {
+  color: var(--color-base-600);
 }
 
 .Layer__bills__record-payment {

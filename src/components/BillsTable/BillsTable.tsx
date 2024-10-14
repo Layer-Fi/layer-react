@@ -10,6 +10,7 @@ import { ButtonVariant, IconButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { DueStatus } from '../DueStatus'
 import { Checkbox } from '../Input'
+import { CheckboxSize, CheckboxVariant } from '../Input/Checkbox'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { BillsTableStringOverrides } from './BillsTableWithPanel'
 
@@ -93,10 +94,12 @@ const BillsTableContent = ({
           <TableCell primary>
             {bulkRecordPayment && activeTab === 'unpaid' && (
               <Checkbox
+                boxSize={CheckboxSize.LARGE}
                 checked={isSelected}
                 onChange={e => {
                   handleCheckboxChange(e)
                 }}
+                className='Layer__bills-table__checkbox'
               />
             )}
             {entry.vendor}
