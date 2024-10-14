@@ -368,21 +368,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       close()
     }
 
-    const fetchMetadata = async () => {
-      const getBankTransactionMetadata = Layer.getBankTransactionMetadata(
-        apiUrl,
-        auth.access_token,
-        {
-          params: {
-            businessId: businessId,
-            bankTransactionId: bankTransaction.id,
-          },
-        },
-      )
-      const result = await getBankTransactionMetadata()
-      if (result.data.memo) setMemoText(result.data.memo)
-    }
-
     const fetchDocuments = async () => {
       const listBankTransactionDocuments = Layer.listBankTransactionDocuments(
         apiUrl,
