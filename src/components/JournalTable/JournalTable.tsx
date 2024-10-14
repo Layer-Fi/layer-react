@@ -150,14 +150,14 @@ const JournalTableContent = ({
               <TableCell />
               <TableCell />
               <TableCell>{accountName(subItem)}</TableCell>
-              {subItem.direction === 'DEBIT' && subItem.amount > 0 ? (
+              {subItem.direction === 'DEBIT' && subItem.amount >= 0 ? (
                 <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
                   {subItem.amount}
                 </TableCell>
               ) : (
                 <TableCell />
               )}
-              {subItem.direction === 'CREDIT' && subItem.amount > 0 ? (
+              {subItem.direction === 'CREDIT' && subItem.amount >= 0 ? (
                 <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
                   {subItem.amount}
                 </TableCell>
