@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, ForwardedRef } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import classNames from 'classnames'
 
@@ -27,11 +27,14 @@ const Toast = (props: ToastProps & { isExiting: boolean }) => {
   )
 }
 
-export const ToastsContainer = forwardRef(_props => {
+export const ToastsContainer = forwardRef(function ToastsContainer(
+  _props,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
   const { toasts } = useLayerContext()
 
   return (
-    <div className='Layer__toasts-container'>
+    <div ref={ref} className='Layer__toasts-container'>
       {toasts.map((toast, idx) => (
         <Toast key={`layer-toast-${idx}`} {...toast} />
       ))}
