@@ -14,6 +14,7 @@ export interface SubmitButtonProps
   disabled?: boolean
   error?: boolean | string
   active?: boolean
+  variant?: ButtonProps['variant']
   iconOnly?: boolean
   variant?: ButtonProps['variant']
   action?: SubmitAction

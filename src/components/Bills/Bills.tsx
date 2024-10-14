@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { BillsContext } from '../../contexts/BillsContext'
 import { useBills } from '../../hooks/useBills'
+import { useElementSize } from '../../hooks/useElementSize'
 import { useElementViewSize } from '../../hooks/useElementViewSize'
 import { View } from '../../types/general'
 import { BillsDetails } from '../BillsDetails'
