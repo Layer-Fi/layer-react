@@ -5,8 +5,12 @@ import { BillType } from '../../hooks/useBills/useBills'
 import ChevronRight from '../../icons/ChevronRight'
 import { View } from '../../types/general'
 import { TableCellAlign } from '../../types/table'
-import { SubmitButton } from '../Button'
+import { convertNumberToCurrency } from '../../utils/format'
+import { ButtonVariant, IconButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
+import { DueStatus } from '../DueStatus'
+import { Checkbox } from '../Input'
+import { CheckboxSize, CheckboxVariant } from '../Input/Checkbox'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { BillsTableStringOverrides } from './BillsTableWithPanel'
 
@@ -87,23 +91,33 @@ const BillsTableContent = ({
           selected={selectedEntryId === rowKey}
           depth={depth}
         >
-          <TableCell>
+          <TableCell primary>
             {bulkRecordPayment && activeTab === 'unpaid' && (
-              <input
-                type='checkbox'
+              <Checkbox
+                boxSize={CheckboxSize.LARGE}
                 checked={isSelected}
                 onChange={e => {
                   handleCheckboxChange(e)
                 }}
+                className='Layer__bills-table__checkbox'
               />
             )}
             {entry.vendor}
           </TableCell>
           <TableCell>{entry.dueDate}</TableCell>
-          <TableCell>{entry.billAmount.toFixed(2)}</TableCell>
-          <TableCell>{entry.openBalance.toFixed(2)}</TableCell>
-          <TableCell>{entry.status}</TableCell>
-          <TableCell align={TableCellAlign.RIGHT}>
+          <TableCell primary>
+            {convertNumberToCurrency(entry.billAmount)}
+          </TableCell>
+          <TableCell primary>
+            {convertNumberToCurrency(entry.openBalance)}
+          </TableCell>
+          <TableCell className='Layer__bills-table__status-col'>
+            <DueStatus dueDate={entry.status} />
+          </TableCell>
+          <TableCell
+            align={TableCellAlign.RIGHT}
+            className='Layer__bills-table__actions-col'
+          >
             <div className='Layer__bills__status-with-actions'>
               {activeTab === 'unpaid' ? (
                 <SubmitButton
@@ -116,14 +130,15 @@ const BillsTableContent = ({
                       setSelectedEntryId(rowKey)
                     }
                   }}
-                  className='Layer__bank-transaction__submit-btn'
                   active={true}
                   action={SubmitAction.UPDATE}
+                  variant={ButtonVariant.secondary}
                 >
                   {stringOverrides?.recordPaymentButtonText || 'Record payment'}
                 </SubmitButton>
               ) : null}
-              <ChevronRight
+              <IconButton
+                icon={<ChevronRight />}
                 onClick={() => {
                   setBillDetailsId(rowKey)
                 }}
@@ -139,19 +154,19 @@ const BillsTableContent = ({
     <Table borderCollapse='collapse'>
       <TableHead>
         <TableRow isHeadRow rowKey='bills-head-row'>
-          <TableCell isHeaderCell>
+          <TableCell>
             {stringOverrides?.vendorColumnHeader || 'Vendor'}
           </TableCell>
-          <TableCell isHeaderCell>
+          <TableCell>
             {stringOverrides?.dueDateColumnHeader || 'Due date'}
           </TableCell>
-          <TableCell isHeaderCell>
+          <TableCell>
             {stringOverrides?.billAmountColumnHeader || 'Bill amount'}
           </TableCell>
-          <TableCell isHeaderCell>
+          <TableCell>
             {stringOverrides?.openBalanceColumnHeader || 'Open balance'}
           </TableCell>
-          <TableCell isHeaderCell>
+          <TableCell>
             {stringOverrides?.statusColumnHeader || 'Status'}
           </TableCell>
           <TableCell />
