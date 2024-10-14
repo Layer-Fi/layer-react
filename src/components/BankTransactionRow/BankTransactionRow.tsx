@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
 import ChevronDownFill from '../../icons/ChevronDownFill'
+import FileIcon from '../../icons/File'
 import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationStatus, Category } from '../../types'
@@ -23,6 +24,7 @@ import {
 } from '../CategorySelect/CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { IconBox } from '../IconBox'
 import { Text } from '../Typography'
 import { TextSize, TextUseTooltip } from '../Typography/Text'
 import { MatchBadge } from './MatchBadge'
@@ -241,6 +243,15 @@ export const BankTransactionRow = ({
             {formatMoney(bankTransaction.amount)}
           </span>
         </td>
+        <td className='Layer__table-cell Layer__bank-transactions__documents-col'>
+          {bankTransaction.document_ids?.length > 0 && (
+            <span className='Layer__table-cell-content'>
+              <IconBox>
+                <FileIcon size={12} />
+              </IconBox>
+            </span>
+          )}
+        </td>
         <td
           className={classNames(
             'Layer__table-cell',
@@ -373,7 +384,7 @@ export const BankTransactionRow = ({
         </td>
       </tr>
       <tr>
-        <td colSpan={5} className='Layer__bank-transaction-row__expanded-td'>
+        <td colSpan={6} className='Layer__bank-transaction-row__expanded-td'>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}

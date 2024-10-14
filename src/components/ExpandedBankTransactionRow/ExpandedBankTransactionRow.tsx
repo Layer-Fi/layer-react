@@ -8,6 +8,7 @@ import React, {
   TransitionEvent,
 } from 'react'
 import { Layer } from '../../api/layer'
+import { DATE_FORMAT } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useLayerContext } from '../../contexts/LayerContext'
 import AlertCircle from '../../icons/AlertCircle'
@@ -33,6 +34,7 @@ import {
   mapCategoryToExclusionOption,
   mapCategoryToOption,
 } from '../CategorySelect/CategorySelect'
+import { FileThumb } from '../FileThumb'
 import { InputGroup, Input, FileInput } from '../Input'
 import { MatchForm } from '../MatchForm'
 import { Textarea } from '../Textarea'
@@ -41,6 +43,7 @@ import { ToggleSize } from '../Toggle/Toggle'
 import { Text, ErrorText, TextSize } from '../Typography'
 import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
+import { parseISO, format as formatTime } from 'date-fns'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -104,6 +107,16 @@ const validateSplit = (splitData: RowState) => {
   return valid
 }
 
+export interface DocumentWithStatus {
+  id?: string
+  url?: string
+  status: 'pending' | 'uploaded' | 'failed' | 'deleting'
+  type?: string
+  name?: string
+  date?: string
+  error?: string
+}
+
 export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
   (
     {
@@ -142,7 +155,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [isOver, setOver] = useState(false)
     const bodyRef = useRef<HTMLSpanElement>(null)
     const [memoText, setMemoText] = useState<string | undefined>()
-    const [receiptUrls, setReceiptUrls] = useState<string[]>([])
+    const [receiptUrls, setReceiptUrls] = useState<DocumentWithStatus[]>([])
     const [isLoaded, setIsLoaded] = useState(false)
 
     const { auth, businessId, apiUrl } = useLayerContext()
@@ -277,6 +290,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         e.preventDefault()
         const newWindow = window.open('', '_blank')
+
         if (newWindow) {
           newWindow.document.write(`
         <html>
@@ -354,21 +368,6 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       close()
     }
 
-    const fetchMetadata = async () => {
-      const getBankTransactionMetadata = Layer.getBankTransactionMetadata(
-        apiUrl,
-        auth.access_token,
-        {
-          params: {
-            businessId: businessId,
-            bankTransactionId: bankTransaction.id,
-          },
-        },
-      )
-      const result = await getBankTransactionMetadata()
-      if (result.data.memo) setMemoText(result.data.memo)
-    }
-
     const fetchDocuments = async () => {
       const listBankTransactionDocuments = Layer.listBankTransactionDocuments(
         apiUrl,
@@ -381,10 +380,20 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         },
       )
       const result = await listBankTransactionDocuments()
-      const retrievedDocs = result.data.documentUrls.map(
-        (docUrl: any) => docUrl.presignedUrl,
-      )
+      const retrievedDocs = result.data.documentUrls.map((docUrl: any) => ({
+        id: docUrl.documentId,
+        url: docUrl.presignedUrl as string,
+        type: docUrl.fileType as string | undefined,
+        status: 'uploaded' as const,
+        name: docUrl.fileName,
+        date: readDate(docUrl.createdAt),
+      }))
       setReceiptUrls(retrievedDocs)
+    }
+
+    const readDate = (date?: string) => {
+      if (!date) return undefined
+      return date && formatTime(parseISO(date), DATE_FORMAT)
     }
 
     // Call this save action after clicking save in parent component:
@@ -425,6 +434,18 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     )
 
     useEffect(() => {
+      // Fetch documents details when the row is being opened and the documents are not yet loaded
+      if (
+        isOpen &&
+        isLoaded &&
+        receiptUrls.length === 0 &&
+        bankTransaction?.document_ids?.length > 0
+      ) {
+        fetchDocuments()
+      }
+    }, [isOpen])
+
+    useEffect(() => {
       if (!isLoaded) {
         return
       }
@@ -441,13 +462,100 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     useEffect(() => {
       const loadDocumentsAndMetadata = async () => {
-        if (showDescriptions) await fetchMetadata()
-        if (showReceiptUploads) await fetchDocuments()
+        if (showDescriptions && bankTransaction?.metadata.memo)
+          setMemoText(bankTransaction?.metadata.memo)
+        if (
+          showReceiptUploads &&
+          bankTransaction?.document_ids?.length > 0 &&
+          isOpen
+        )
+          await fetchDocuments()
         setIsLoaded(true)
         setOver(true)
       }
       loadDocumentsAndMetadata()
     }, [])
+
+    const onReceiptUpload = async (file: File) => {
+      const id = new Date().valueOf().toString()
+      const receipts = [
+        ...receiptUrls,
+        {
+          id,
+          type: file.type,
+          url: undefined,
+          status: 'pending' as const,
+          name: file.name,
+          date: formatTime(parseISO(new Date().toISOString()), DATE_FORMAT),
+        },
+      ]
+      try {
+        setReceiptUrls(receipts)
+        const uploadDocument = Layer.uploadBankTransactionDocument(
+          apiUrl,
+          auth.access_token,
+        )
+        await uploadDocument({
+          businessId: businessId,
+          bankTransactionId: bankTransaction.id,
+          file: file,
+          documentType: 'RECEIPT',
+        })
+        await fetchDocuments()
+      } catch (_err) {
+        const newReceiptUrls = receipts.map(url => {
+          if (url.id === id) {
+            return {
+              ...url,
+              error: 'Failed to upload',
+              status: 'failed' as const,
+            }
+          }
+
+          return url
+        })
+        setReceiptUrls(newReceiptUrls)
+      }
+    }
+
+    const archiveDocument = async (documentId: string) => {
+      try {
+        setReceiptUrls(
+          receiptUrls.map(url => {
+            if (url.id === documentId) {
+              return {
+                ...url,
+                status: 'deleting',
+              }
+            }
+
+            return url
+          }),
+        )
+        await Layer.archiveBankTransactionDocument(apiUrl, auth.access_token, {
+          params: {
+            businessId: businessId,
+            bankTransactionId: bankTransaction.id,
+            documentId,
+          },
+        })
+        fetchDocuments()
+      } catch (_err) {
+        setReceiptUrls(
+          receiptUrls.map(url => {
+            if (url.id === documentId) {
+              return {
+                ...url,
+                status: 'failed',
+                error: 'Failed to delete',
+              }
+            }
+
+            return url
+          }),
+        )
+      }
+    }
 
     const className = 'Layer__expanded-bank-transaction-row'
     const shouldHide = !isOpen && isOver
@@ -636,39 +744,40 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               )}
 
               {showReceiptUploads && (
-                <div>
-                  <div className={`${className}__file-upload`}>
+                <div className={`${className}__file-upload`}>
+                  {!receiptUrls || receiptUrls.length === 0 ? (
                     <FileInput
-                      onUpload={async (file: File) => {
-                        const uploadDocument =
-                          Layer.uploadBankTransactionDocument(
-                            apiUrl,
-                            auth.access_token,
-                          )
-                        await uploadDocument({
-                          businessId: businessId,
-                          bankTransactionId: bankTransaction.id,
-                          file: file,
-                          documentType: 'RECEIPT',
-                        })
-                        await fetchDocuments()
-                      }}
+                      onUpload={onReceiptUpload}
                       text='Upload receipt'
                     />
-
-                    {receiptUrls.length > 0 && 'Attached receipts:'}
-                    {receiptUrls.map((url, index) => (
-                      <a
-                        key={url}
-                        href={url}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        // onClick={openReceiptInNewTab(url, index)}
-                      >
-                        Receipt {index + 1}
-                      </a>
-                    ))}
-                  </div>
+                  ) : null}
+                  {receiptUrls.map((url, index) => (
+                    <FileThumb
+                      key={index}
+                      url={url.url}
+                      type={url.type}
+                      uploadPending={url.status === 'pending'}
+                      deletePending={url.status === 'deleting'}
+                      name={url.name ?? `Receipt ${index + 1}`}
+                      date={url.date}
+                      enableOpen={url.type === 'application/pdf'}
+                      onOpen={
+                        url.url && url.type !== 'application/pdf'
+                          ? openReceiptInNewTab(url.url, index)
+                          : undefined
+                      }
+                      enableDownload
+                      error={url.error}
+                      onDelete={() => url.id && archiveDocument(url.id)}
+                    />
+                  ))}
+                  {receiptUrls.length > 0 && receiptUrls.length < 10 ? (
+                    <FileInput
+                      secondary
+                      onUpload={onReceiptUpload}
+                      text='Add next receipt'
+                    />
+                  ) : null}
                 </div>
               )}
 

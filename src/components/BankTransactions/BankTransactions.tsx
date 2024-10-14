@@ -301,6 +301,8 @@ const BankTransactionsContent = ({
           removeTransaction={removeTransaction}
           containerWidth={containerWidth}
           stringOverrides={stringOverrides?.bankTransactionCTAs}
+          showDescriptions={showDescriptions}
+          showReceiptUploads={showReceiptUploads}
           showTooltips={showTooltips}
         />
       ) : null}
