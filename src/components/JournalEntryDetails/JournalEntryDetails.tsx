@@ -118,7 +118,7 @@ export const JournalEntryDetails = () => {
                     key={`ledger-line-item-${index}`}
                     rowKey={`ledger-line-item-${index}`}
                   >
-                    <TableCell>{item.account_identifier?.name || ''}</TableCell>
+                    <TableCell>{item.account.name}</TableCell>
                     <TableCell
                       className='Layer__journal__debit-credit-col'
                       align={TableCellAlign.RIGHT}

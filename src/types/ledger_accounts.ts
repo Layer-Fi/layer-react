@@ -81,9 +81,17 @@ export interface InvoicePaymentLedgerEntrySource extends LedgerEntrySource {
   amount: number
 }
 
+export interface RefundLedgerEntrySource extends LedgerEntrySource {
+  external_id: string
+  refund_id: string
+  refunded_to_customer_amount: number
+  recipient_name: string
+}
+
 export interface RefundPaymentLedgerEntrySource extends LedgerEntrySource {
   external_id: string
   refund_id: string
+  refund_payment_id: string
   refunded_to_customer_amount: number
   recipient_name: string
 }
