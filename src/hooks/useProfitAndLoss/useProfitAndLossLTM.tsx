@@ -20,6 +20,8 @@ export interface ProfitAndLossSummaryData extends ProfitAndLossSummary {
   isLoading?: boolean
 }
 
+export type Period = 'month' | 'quarter' | 'year'
+
 type UseProfitAndLossLTMReturn = (props?: UseProfitAndLossLTMProps) => {
   data: ProfitAndLossSummaryData[]
   isLoading?: boolean
@@ -27,6 +29,8 @@ type UseProfitAndLossLTMReturn = (props?: UseProfitAndLossLTMProps) => {
   error?: any
   pullData: (date: Date) => void
   refetch: () => void
+  period: Period
+  setPeriod: (period: Period) => void
 }
 
 const buildDates = ({ currentDate }: { currentDate: Date }) => {
@@ -65,6 +69,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
   const [date, setDate] = useState(currentDate)
   const [loaded, setLoaded] = useState<LoadedStatus>('initial')
   const [data, setData] = useState<ProfitAndLossSummaryData[]>([])
+  const [period, setPeriod] = useState<Period>('month')
 
   const { startYear, startMonth, endYear, endMonth } = useMemo(() => {
     return buildDates({ currentDate: date })
@@ -215,5 +220,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     error,
     pullData,
     refetch,
+    period,
+    setPeriod,
   }
 }

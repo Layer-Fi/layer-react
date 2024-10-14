@@ -15,6 +15,7 @@ type Props = BaseProps & {
   setAnimateFrom: (x: number) => void
   customCursorSize: { width: number; height: number }
   setCustomCursorSize: (width: number, height: number, x: number) => void
+  mult?: number
 }
 const emptyViewBox = { x: 0, y: 0, width: 0, height: 0 }
 export const Indicator = ({
@@ -24,6 +25,7 @@ export const Indicator = ({
   customCursorSize,
   setCustomCursorSize,
   viewBox = {},
+  mult = 1,
 }: Props) => {
   if (!className?.match(/selected/)) {
     return null
@@ -37,7 +39,7 @@ export const Indicator = ({
   const boxWidth = width + margin
   const xOffset = boxWidth / 2
   const borderRadius = 6
-  const rectWidth = `${boxWidth}px`
+  const rectWidth = `${boxWidth * mult}px`
   const rectHeight = 'calc(100% - 38px)'
 
   // useEffect callbacks run after the browser paints

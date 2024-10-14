@@ -56,6 +56,7 @@ export interface ProfitAndLossComparisonItem {
 export interface ProfitAndLossSummary {
   year: number
   month: number
+  quarter?: number
   income: number
   costOfGoodsSold: number
   grossProfit: number

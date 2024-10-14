@@ -1,15 +1,23 @@
 import React, { ReactNode, useState } from 'react'
+import { Button } from '../../components/Button'
 import { Container } from '../../components/Container'
 import { Header, HeaderCol, HeaderRow } from '../../components/Header'
 import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import { ProfitAndLossChartOpacity } from '../../components/ProfitAndLossChart/ProfitAndLossChartOpacity'
+import { ProfitAndLossChartToggling } from '../../components/ProfitAndLossChart/ProfitAndLossChartToggling'
+import { ProfitAndLossChartWideSelection } from '../../components/ProfitAndLossChart/ProfitAndLossChartWideSelection'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { View } from '../../components/View'
-import classNames from 'classnames'
+import {
+  Period,
+  useProfitAndLossLTM,
+} from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { OnboardingStep } from '../../types/layer_context'
+import classNames from 'classnames'
 
 interface AccountingOverviewStringOverrides {
   header?: string
@@ -31,6 +39,43 @@ export interface AccountingOverviewProps {
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
+
+const Charts = () => {
+  return (
+    <>
+      <Container
+        name='accounting-overview-profit-and-loss'
+        asWidget
+        elevated={true}
+      >
+        <ProfitAndLoss.Header text={'Profit & Loss'} />
+        <ProfitAndLoss.Chart />
+      </Container>
+
+      <Container
+        name='accounting-overview-profit-and-loss'
+        asWidget
+        elevated={true}
+      >
+        <ProfitAndLossChartOpacity />
+      </Container>
+      <Container
+        name='accounting-overview-profit-and-loss'
+        asWidget
+        elevated={true}
+      >
+        <ProfitAndLossChartWideSelection />
+      </Container>
+      <Container
+        name='accounting-overview-profit-and-loss'
+        asWidget
+        elevated={true}
+      >
+        <ProfitAndLossChartToggling />
+      </Container>
+    </>
+  )
+}
 
 export const AccountingOverview = ({
   title = 'Accounting overview',
@@ -74,16 +119,7 @@ export const AccountingOverview = ({
             onClick={onTransactionsToReviewClick}
           />
         </div>
-        <Container
-          name='accounting-overview-profit-and-loss'
-          asWidget
-          elevated={true}
-        >
-          <ProfitAndLoss.Header
-            text={stringOverrides?.header || 'Profit & Loss'}
-          />
-          <ProfitAndLoss.Chart />
-        </Container>
+        <Charts />
         {middleBanner && (
           <Container name='accounting-overview-middle-banner'>
             {middleBanner}
