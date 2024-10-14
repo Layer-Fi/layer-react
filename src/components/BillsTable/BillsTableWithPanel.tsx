@@ -46,8 +46,6 @@ export const BillsTableWithPanel = ({
   const [bulkRecordPayment, setBulkRecordPayment] = useState(false)
   const [selectedEntries, setSelectedEntries] = useState<BillType[]>([])
 
-  console.log(containerRef)
-
   const data = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize

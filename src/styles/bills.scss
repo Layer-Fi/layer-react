@@ -316,6 +316,10 @@
     }
   }
 
+  &__amount-paid-col {
+    color: var(--text-color-primary);
+  }
+
   &__submit-container {
     padding-top: var(--spacing-md);
     display: flex;

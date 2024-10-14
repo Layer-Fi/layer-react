@@ -71,18 +71,18 @@ export const BillsPaymentRecorded = ({
         </div>
       </div>
       <div className='Layer__bills__payment-recorded__bills'>
-        <Text>Bills paid</Text>
+        <Text size={TextSize.sm}>Bills paid</Text>
         <table className='Layer__bills__payment-recorded__bills-table'>
           <thead>
             <tr>
               <th>
-                <Text>Bill date</Text>
+                <Text size={TextSize.sm}>Bill date</Text>
               </th>
               <th>
-                <Text>Amount paid now</Text>
+                <Text size={TextSize.sm}>Amount paid now</Text>
               </th>
               <th className='Layer__bills__payment-recorded__open-balance-col'>
-                <Text>Open balance</Text>
+                <Text size={TextSize.sm}>Open balance</Text>
               </th>
             </tr>
           </thead>
@@ -96,7 +96,9 @@ export const BillsPaymentRecorded = ({
                   <Text>{bill.date}</Text>
                 </td>
                 <td>
-                  <Text>{bill.amountPaid}</Text>
+                  <Text className='Layer__bills__payment-recorded__amount-paid-col'>
+                    {bill.amountPaid}
+                  </Text>
                 </td>
                 <td className='Layer__bills__payment-recorded__open-balance-col'>
                   <Text className={bill.isPaid ? 'paid' : 'unpaid'}>

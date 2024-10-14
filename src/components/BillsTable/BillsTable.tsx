@@ -6,9 +6,10 @@ import ChevronRight from '../../icons/ChevronRight'
 import { View } from '../../types/general'
 import { TableCellAlign } from '../../types/table'
 import { convertNumberToCurrency } from '../../utils/format'
-import { ButtonVariant, SubmitButton } from '../Button'
+import { ButtonVariant, IconButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { DueStatus } from '../DueStatus'
+import { Checkbox } from '../Input'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { BillsTableStringOverrides } from './BillsTableWithPanel'
 
@@ -91,8 +92,7 @@ const BillsTableContent = ({
         >
           <TableCell primary>
             {bulkRecordPayment && activeTab === 'unpaid' && (
-              <input
-                type='checkbox'
+              <Checkbox
                 checked={isSelected}
                 onChange={e => {
                   handleCheckboxChange(e)
@@ -134,7 +134,8 @@ const BillsTableContent = ({
                   {stringOverrides?.recordPaymentButtonText || 'Record payment'}
                 </SubmitButton>
               ) : null}
-              <ChevronRight
+              <IconButton
+                icon={<ChevronRight />}
                 onClick={() => {
                   setBillDetailsId(rowKey)
                 }}

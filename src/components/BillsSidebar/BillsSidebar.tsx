@@ -26,7 +26,7 @@ export const BillsSidebar = ({
     }
   }
 
-  return !isPaymentRecorded ? (
+  return isPaymentRecorded ? (
     <BillsPaymentRecorded />
   ) : (
     <BillsRecordPayment setPaymentRecorded={setPaymentRecorded} />
