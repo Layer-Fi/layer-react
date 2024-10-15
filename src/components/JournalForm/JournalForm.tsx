@@ -92,7 +92,7 @@ export const JournalForm = ({
       )}
 
       <div className='Layer__journal__form__input-group'>
-        <InputGroup name='date' label='Date' inline={true}>
+        <InputGroup name='date' label='Effective Date' inline={true}>
           <div className='Layer__journal__datepicker__wrapper'>
             <DatePicker
               selected={
