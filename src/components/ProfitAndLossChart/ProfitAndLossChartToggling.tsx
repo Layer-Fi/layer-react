@@ -142,7 +142,6 @@ export const ProfitAndLossChartToggling = ({
   forceRerenderOnDataChange = false,
 }: Props) => {
   const [compactView, setCompactView] = useState(false)
-  const barSize = compactView ? 10 : 20
 
   const { getColor, business } = useLayerContext()
   const { changeDateRange, dateRange } = useContext(PNL.Context)
@@ -178,6 +177,10 @@ export const ProfitAndLossChartToggling = ({
   const { data, loaded, pullData, period, setPeriod } = useProfitAndLossLTM({
     currentDate: startOfMonth(Date.now()),
   })
+
+  // const barSize = compactView ? 10 : 20
+  const barSize = undefined
+  const maxBarSize = period === 'year' ? 300 : period === 'quarter' ? 100 : 20
 
   const anyData = useMemo(() => {
     return Boolean(
@@ -701,6 +704,7 @@ export const ProfitAndLossChartToggling = ({
           <Bar
             dataKey='loading'
             barSize={barSize}
+            maxBarSize={maxBarSize}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -715,6 +719,7 @@ export const ProfitAndLossChartToggling = ({
           <Bar
             dataKey='loadingExpenses'
             barSize={barSize}
+            maxBarSize={maxBarSize}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -729,6 +734,7 @@ export const ProfitAndLossChartToggling = ({
           <Bar
             dataKey='totalExpensesInverse'
             barSize={barSize}
+            maxBarSize={100}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -748,6 +754,8 @@ export const ProfitAndLossChartToggling = ({
           <Bar
             dataKey='revenue'
             barSize={barSize}
+            maxBarSize={maxBarSize}
+            radius={[2, 2, 0, 0]}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             className='Layer__profit-and-loss-chart__bar--income'
@@ -782,6 +790,7 @@ export const ProfitAndLossChartToggling = ({
           <Bar
             dataKey='uncategorizedOutflowsInverse'
             barSize={barSize}
+            maxBarSize={maxBarSize}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -801,6 +810,7 @@ export const ProfitAndLossChartToggling = ({
           <Bar
             dataKey='revenueUncategorized'
             barSize={barSize}
+            maxBarSize={maxBarSize}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -817,8 +827,10 @@ export const ProfitAndLossChartToggling = ({
           <Bar
             dataKey='expenses'
             barSize={barSize}
+            maxBarSize={maxBarSize}
             isAnimationActive={barAnimActive}
             animationDuration={100}
+            radius={[2, 2, 0, 0]}
             className='Layer__profit-and-loss-chart__bar--expenses'
             xAxisId='expenses'
             stackId='expenses'
@@ -837,6 +849,7 @@ export const ProfitAndLossChartToggling = ({
           <Bar
             dataKey='expensesUncategorized'
             barSize={barSize}
+            maxBarSize={maxBarSize}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
