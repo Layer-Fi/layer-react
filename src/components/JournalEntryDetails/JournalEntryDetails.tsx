@@ -84,7 +84,7 @@ export const JournalEntryDetails = () => {
         </DetailsListItem>
         {entry?.reversal_id && (
           <DetailsListItem label='Reversal' isLoading={isLoadingEntry}>
-            Journal Entry #{entry?.reversal_id}
+            {`Journal Entry #${entry?.reversal_id.substring(0, 5)}`}
           </DetailsListItem>
         )}
       </DetailsList>
