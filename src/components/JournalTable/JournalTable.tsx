@@ -184,7 +184,7 @@ const JournalTableContent = ({
             {stringOverrides?.transactionColumnHeader || 'Transaction'}
           </TableCell>
           <TableCell isHeaderCell>
-            {stringOverrides?.accountColumnHeader || 'Account'}
+            {stringOverrides?.accountColumnHeader || 'Account Name'}
           </TableCell>
           <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
             {stringOverrides?.debitColumnHeader || 'Debit'}
