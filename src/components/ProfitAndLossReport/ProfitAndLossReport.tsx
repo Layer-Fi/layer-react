@@ -47,7 +47,7 @@ export const ProfitAndLossReport = ({
                 ) : null}
               </>
             </HeaderCol>
-            <HeaderCol>
+            <HeaderCol className='Layer__header__col__with-download'>
               <ProfitAndLoss.DownloadButton
                 stringOverrides={stringOverrides?.downloadButton}
                 useComparisonPnl={!!comparisonConfig}

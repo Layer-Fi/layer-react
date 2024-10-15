@@ -33,6 +33,10 @@
   padding: var(--spacing-md);
   min-height: 68px;
   box-sizing: border-box;
+  flex-grow: 1;
+  &.Layer__header__col__with-download {
+    flex-grow: 0;
+  }
 }
 
 @container (min-width: 1400px) {
