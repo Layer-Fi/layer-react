@@ -22,7 +22,11 @@ import {
   getLedgerAccountsLines,
   getLedgerAccountsEntry,
 } from './layer/chart_of_accounts'
-import { getJournal, createJournalEntries } from './layer/journal'
+import {
+  getJournal,
+  createJournalEntries,
+  reverseJournalEntry,
+} from './layer/journal'
 import {
   getLinkedAccounts,
   getPlaidLinkToken,
@@ -83,6 +87,7 @@ export const Layer = {
   getProfitAndLossCsv,
   getLinkedAccounts,
   getJournal,
+  reverseJournalEntry,
   compareProfitAndLoss,
   profitAndLossComparisonCsv,
   createJournalEntries,

@@ -1,5 +1,7 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
+import AlertCircle from '../../icons/AlertCircle'
+import RefreshCcw from '../../icons/RefreshCcw'
 import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
@@ -23,7 +25,11 @@ export const JournalEntryDetails = () => {
     errorEntry,
     closeSelectedEntry,
     selectedEntryId,
+    reverseEntry,
+    refetch,
   } = useContext(JournalContext)
+  const [reverseEntryProcessing, setReverseEntryProcessing] = useState(false)
+  const [reverseEntryError, setReverseEntryError] = useState<string>()
 
   const entry = useMemo(() => {
     if (selectedEntryId && data) {
@@ -40,6 +46,22 @@ export const JournalEntryDetails = () => {
       ),
     [entry?.line_items],
   )
+
+  const onReverseEntry = async () => {
+    if (!entry) {
+      return
+    }
+    try {
+      setReverseEntryProcessing(true)
+      setReverseEntryError(undefined)
+      await reverseEntry(entry.id)
+      await refetch()
+    } catch (_err) {
+      setReverseEntryError('Failed')
+    } finally {
+      setReverseEntryProcessing(false)
+    }
+  }
 
   return (
     <div className='Layer__journal__entry-details'>
@@ -180,6 +202,26 @@ export const JournalEntryDetails = () => {
               </TableBody>
             </Table>
           </Card>
+
+          {entry && !entry.reversal_id ? (
+            <div className='Layer__journal__entry-details__reverse-btn-container'>
+              <Button
+                rightIcon={
+                  reverseEntryError ? (
+                    <AlertCircle size={12} />
+                  ) : (
+                    <RefreshCcw size={12} />
+                  )
+                }
+                variant={ButtonVariant.secondary}
+                onClick={onReverseEntry}
+                isProcessing={reverseEntryProcessing}
+                tooltip={reverseEntryError && 'Operation failed. Try again.'}
+              >
+                Reverse entry
+              </Button>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </div>
