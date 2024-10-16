@@ -21,4 +21,5 @@ export const JournalContext = createContext<JournalContextType>({
   setForm: () => {},
   sendingForm: false,
   apiError: undefined,
+  reverseEntry: () => Promise.resolve({}),
 })
