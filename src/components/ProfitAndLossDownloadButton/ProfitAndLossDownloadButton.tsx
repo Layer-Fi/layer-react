@@ -36,16 +36,14 @@ export const ProfitAndLossDownloadButton = ({
 
   const handleClick = async () => {
     setIsDownloading(true)
-    const month = (dateRange.startDate.getMonth() + 1).toString()
-    const year = dateRange.startDate.getFullYear().toString()
     const getProfitAndLossCsv = Layer.getProfitAndLossCsv(
       apiUrl,
       auth.access_token,
       {
         params: {
           businessId: businessId,
-          year: year,
-          month: month,
+          startDate: dateRange.startDate.toISOString(),
+          endDate: dateRange.endDate.toISOString(),
           moneyFormat: moneyFormat,
         },
       },
