@@ -10,7 +10,8 @@ import {
   ManualLedgerEntrySource,
   OpeningBalanceLedgerEntrySource,
   PayoutLedgerEntrySource,
-  RefundLedgerEntrySource, RefundPaymentLedgerEntrySource,
+  RefundLedgerEntrySource,
+  RefundPaymentLedgerEntrySource,
   TransactionLedgerEntrySource,
 } from '../../types/ledger_accounts'
 import { TableCellAlign } from '../../types/table'
