@@ -44,7 +44,7 @@ export const JournalFormEntryLines = ({
 
   return (
     <>
-      {Object.keys(Direction).map((direction, idx) => {
+      {['DEBIT', 'CREDIT'].map((direction, idx) => {
         return (
           <div
             key={'Layer__journal__form__input-group-' + idx}

@@ -33,6 +33,14 @@ export const JournalEntryDetails = () => {
     return
   }, [data, selectedEntryId])
 
+  const sortedLineItems = useMemo(
+    () =>
+      entry?.line_items?.sort((a, b) =>
+        a.direction > b.direction ? -1 : a.direction < b.direction ? 1 : 0,
+      ),
+    [entry?.line_items],
+  )
+
   return (
     <div className='Layer__journal__entry-details'>
       <Header className='Layer__journal__entry-details__mobile-header'>
@@ -113,7 +121,7 @@ export const JournalEntryDetails = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {entry?.line_items?.map((item, index) => (
+                {sortedLineItems?.map((item, index) => (
                   <TableRow
                     key={`ledger-line-item-${index}`}
                     rowKey={`ledger-line-item-${index}`}
