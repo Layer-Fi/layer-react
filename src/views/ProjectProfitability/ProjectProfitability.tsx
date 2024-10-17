@@ -1,18 +1,14 @@
-import React, { RefObject, useState } from 'react'
-import { BalanceSheet } from '../../components/BalanceSheet'
+import React, { useState } from 'react'
 import { BankTransactions } from '../../components/BankTransactions'
 import { Container } from '../../components/Container'
 import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
-import { ProfitAndLossCompareOptionsProps } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { ProjectSelector } from '../../components/ProjectProfitability/ProjectSelector'
-import { StatementOfCashFlow } from '../../components/StatementOfCashFlow'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useElementViewSize } from '../../hooks/useElementViewSize'
-import { MoneyFormat } from '../../types'
+import { DisplayState, MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
-import { ReportsPanelProps, ReportsStringOverrides } from '../Reports/Reports'
 import classNames from 'classnames'
 
 type ViewBreakpoint = ViewType | undefined
@@ -125,7 +121,18 @@ export const ProjectProfitabilityView = ({
                 </Container>
               </div>
             )}
-            {activeTab === 'transactions' && <BankTransactions />}
+            {activeTab === 'transactions' && (
+              <BankTransactions
+                hideHeader={true}
+                filters={{
+                  categorizationStatus: DisplayState.all,
+                  // tagFilter: {
+                  //   tagKey: 'project',
+                  //   tagValues: ['project1', 'project2'],
+                  // },
+                }}
+              />
+            )}
             {activeTab === 'report' && (
               <ProfitAndLoss.Report
                 stringOverrides={stringOverrides}

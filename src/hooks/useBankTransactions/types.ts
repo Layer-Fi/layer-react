@@ -1,3 +1,4 @@
+import { TagFilterInput } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import {
   BankTransaction,
   CategoryUpdate,
@@ -24,6 +25,7 @@ export interface BankTransactionFilters {
   direction?: Direction[]
   categorizationStatus?: DisplayState
   dateRange?: Partial<DateRange>
+  tagFilter?: TagFilterInput
 }
 
 export type UseBankTransactions = (params?: { scope?: DisplayState }) => {
