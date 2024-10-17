@@ -1,0 +1,1 @@
+export { ProjectProfitabilityView } from './ProjectProfitability'
