@@ -1,20 +1,20 @@
 import React from 'react'
 import Select from 'react-select'
-import { useTags } from '../../hooks/useProjects'
+import { useTags } from '../../hooks/tags/useTags'
 
 export function ProjectSelector() {
-  const { activeValue, valueOptions, setActiveValue } = useTags()
+  const { category, categoryOptions, setActiveCategory } = useTags()
 
   return (
     <Select
       className='Layer__category-menu Layer__select'
       classNamePrefix='Layer__select'
-      options={valueOptions}
+      options={categoryOptions}
       placeholder='Select a project...'
-      value={activeValue ?? null}
+      value={category ?? null}
       isClearable
       onChange={selectedOption => {
-        setActiveValue({ key: 'project', activeValue: selectedOption?.value })
+        setActiveCategory({ activeCategory: selectedOption?.value })
       }}
     />
   )
