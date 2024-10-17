@@ -1,21 +1,38 @@
-import React, { useEffect, useState } from 'react'
-import Select, { Options } from 'react-select'
+import React, { useState } from 'react'
 import { BankTransactions } from '../../components/BankTransactions'
 import { Container } from '../../components/Container'
 import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import { ProjectSelector } from '../../components/ProjectProfitability/ProjectSelector'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
+import {
+  TagsStoreProvider,
+  useTagsStore,
+} from '../../contexts/Tags/TagsStoreProvider'
 import { useElementViewSize } from '../../hooks/useElementViewSize'
 import { DisplayState, MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
 import classNames from 'classnames'
 
-type SelectOption = {
-  label: string
-  tagKey: string
-  tagValues: string[]
+function BankTransactionsWithProjectFilters() {
+  const { activeCategory, activeKey } = useTagsStore()
+  const tagFilter =
+    activeKey && activeCategory
+      ? { tagKey: activeKey, tagValues: [activeCategory] }
+      : 'None'
+
+  return (
+    <BankTransactions
+      hideHeader={true}
+      filters={{
+        categorizationStatus: DisplayState.all,
+        tagFilter,
+      }}
+    />
+  )
 }
+
 type ViewBreakpoint = ViewType | undefined
 type PnlToggleOption = 'revenue' | 'expenses'
 
@@ -28,6 +45,8 @@ export interface ProjectProfitabilityProps {
   stringOverrides?: ProjectsStringOverrides
 }
 
+type ProjectTab = 'overview' | 'transactions' | 'report'
+
 export const ProjectProfitabilityView = ({
   showTitle,
   stringOverrides,
@@ -38,9 +57,6 @@ export const ProjectProfitabilityView = ({
   const containerRef = useElementViewSize<HTMLDivElement>(newView =>
     setView(newView),
   )
-  const [tagFilter, setTagFilter] = useState<SelectOption | null>(null)
-
-  type ProjectTab = 'overview' | 'transactions' | 'report'
 
   const comparisonConfig = undefined
   const profitAndLossConfig: {
@@ -51,147 +67,100 @@ export const ProjectProfitabilityView = ({
     csvMoneyFormat: 'DOLLAR_STRING',
   }
 
-  const valueOptions: SelectOption[] = [
-    {
-      label: 'Project A',
-      tagKey: 'project',
-      tagValues: ['project-a'],
-    },
-    {
-      label: 'Project B',
-      tagKey: 'project',
-      tagValues: ['project-b'],
-    },
-    {
-      label: 'Project C',
-      tagKey: 'project',
-      tagValues: ['project-c'],
-    },
-  ]
-
-  const isOptionSelected = (
-    option: SelectOption,
-    selectValue: Options<SelectOption>,
-  ) => {
-    return selectValue.some(
-      value =>
-        value.tagKey === option.tagKey &&
-        JSON.stringify(value.tagValues) === JSON.stringify(option.tagValues),
-    )
-  }
-
   return (
-    <View title={stringOverrides?.title || ''} showHeader={showTitle}>
-      <Select
-        className='Layer__category-menu Layer__select'
-        classNamePrefix='Layer__select'
-        options={valueOptions}
-        placeholder='Select a project...'
-        isOptionSelected={isOptionSelected}
-        value={valueOptions.find(
-          option =>
-            tagFilter &&
-            option.tagKey === tagFilter.tagKey &&
-            JSON.stringify(option.tagValues) ===
-              JSON.stringify(tagFilter.tagValues),
-        )}
-        onChange={selectedOption => setTagFilter(selectedOption)}
-      />
-      <div className='Layer__component Layer__header__actions'>
-        <Toggle
-          name='project-tabs'
-          options={[
-            {
-              value: 'overview',
-              label: 'Overview',
-            },
-            {
-              value: 'transactions',
-              label: 'Transactions',
-            },
-            {
-              value: 'report',
-              label: 'Report',
-            },
-          ]}
-          selected={activeTab}
-          onChange={opt => setActiveTab(opt.target.value as ProjectTab)}
-        />
-      </div>
-      <ProfitAndLoss asContainer={false}>
-        <Container name='project' ref={containerRef}>
-          <>
-            {activeTab === 'overview' && (
-              <div className='Layer__accounting-overview-profit-and-loss-charts'>
-                <Toggle
-                  name='pnl-detailed-charts'
-                  options={[
-                    {
-                      value: 'revenue',
-                      label: 'Revenue',
-                    },
-                    {
-                      value: 'expenses',
-                      label: 'Expenses',
-                    },
-                  ]}
-                  selected={pnlToggle}
-                  onChange={e =>
-                    setPnlToggle(e.target.value as PnlToggleOption)
-                  }
+    <TagsStoreProvider initialActiveKey='project'>
+      <View title={stringOverrides?.title || ''} showHeader={showTitle}>
+        <ProjectSelector />
+        <div className='Layer__component Layer__header__actions'>
+          <Toggle
+            name='project-tabs'
+            options={[
+              {
+                value: 'overview',
+                label: 'Overview',
+              },
+              {
+                value: 'transactions',
+                label: 'Transactions',
+              },
+              {
+                value: 'report',
+                label: 'Report',
+              },
+            ]}
+            selected={activeTab}
+            onChange={opt => setActiveTab(opt.target.value as ProjectTab)}
+          />
+        </div>
+        <ProfitAndLoss asContainer={false}>
+          <Container name='project' ref={containerRef}>
+            <>
+              {activeTab === 'overview' && (
+                <div className='Layer__accounting-overview-profit-and-loss-charts'>
+                  <Toggle
+                    name='pnl-detailed-charts'
+                    options={[
+                      {
+                        value: 'revenue',
+                        label: 'Revenue',
+                      },
+                      {
+                        value: 'expenses',
+                        label: 'Expenses',
+                      },
+                    ]}
+                    selected={pnlToggle}
+                    onChange={e =>
+                      setPnlToggle(e.target.value as PnlToggleOption)
+                    }
+                  />
+                  <Container
+                    name={classNames(
+                      'accounting-overview-profit-and-loss-chart',
+                      pnlToggle !== 'revenue' &&
+                        'accounting-overview-profit-and-loss-chart--hidden',
+                    )}
+                  >
+                    <ProfitAndLoss.DetailedCharts
+                      scope='revenue'
+                      hideClose={true}
+                      // stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+                      // chartColorsList={chartColorsList}
+                    />
+                  </Container>
+                  <Container
+                    name={classNames(
+                      'accounting-overview-profit-and-loss-chart',
+                      pnlToggle !== 'expenses' &&
+                        'accounting-overview-profit-and-loss-chart--hidden',
+                    )}
+                  >
+                    <ProfitAndLoss.DetailedCharts
+                      scope='expenses'
+                      hideClose={true}
+                      // stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+                      // chartColorsList={chartColorsList}
+                    />
+                  </Container>
+                </div>
+              )}
+              {activeTab === 'transactions' && (
+                <BankTransactionsWithProjectFilters />
+              )}
+              {activeTab === 'report' && (
+                <ProfitAndLoss.Report
+                  stringOverrides={stringOverrides}
+                  comparisonConfig={comparisonConfig}
+                  datePickerMode={profitAndLossConfig?.datePickerMode}
+                  csvMoneyFormat={profitAndLossConfig?.csvMoneyFormat}
+                  parentRef={containerRef}
+                  view={view}
                 />
-                <Container
-                  name={classNames(
-                    'accounting-overview-profit-and-loss-chart',
-                    pnlToggle !== 'revenue' &&
-                      'accounting-overview-profit-and-loss-chart--hidden',
-                  )}
-                >
-                  <ProfitAndLoss.DetailedCharts
-                    scope='revenue'
-                    hideClose={true}
-                    // stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-                    // chartColorsList={chartColorsList}
-                  />
-                </Container>
-                <Container
-                  name={classNames(
-                    'accounting-overview-profit-and-loss-chart',
-                    pnlToggle !== 'expenses' &&
-                      'accounting-overview-profit-and-loss-chart--hidden',
-                  )}
-                >
-                  <ProfitAndLoss.DetailedCharts
-                    scope='expenses'
-                    hideClose={true}
-                    // stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-                    // chartColorsList={chartColorsList}
-                  />
-                </Container>
-              </div>
-            )}
-            {activeTab === 'transactions' && (
-              <BankTransactions
-                hideHeader={true}
-                filters={{
-                  categorizationStatus: DisplayState.all,
-                  tagFilter: tagFilter ?? undefined,
-                }}
-              />
-            )}
-            {activeTab === 'report' && (
-              <ProfitAndLoss.Report
-                stringOverrides={stringOverrides}
-                comparisonConfig={comparisonConfig}
-                datePickerMode={profitAndLossConfig?.datePickerMode}
-                csvMoneyFormat={profitAndLossConfig?.csvMoneyFormat}
-                parentRef={containerRef}
-                view={view}
-              />
-            )}
-          </>
-        </Container>
-      </ProfitAndLoss>
-    </View>
+              )}
+            </>
+          </Container>
+        </ProfitAndLoss>
+      </View>
+    </TagsStoreProvider>
   )
 }
