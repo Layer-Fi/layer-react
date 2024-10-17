@@ -203,25 +203,24 @@ export const JournalEntryDetails = () => {
             </Table>
           </Card>
 
-          {entry && !entry.reversal_id ? (
-            <div className='Layer__journal__entry-details__reverse-btn-container'>
-              <Button
-                rightIcon={
-                  reverseEntryError ? (
-                    <AlertCircle size={12} />
-                  ) : (
-                    <RefreshCcw size={12} />
-                  )
-                }
-                variant={ButtonVariant.secondary}
-                onClick={onReverseEntry}
-                isProcessing={reverseEntryProcessing}
-                tooltip={reverseEntryError && 'Operation failed. Try again.'}
-              >
-                Reverse entry
-              </Button>
-            </div>
-          ) : null}
+          <div className='Layer__journal__entry-details__reverse-btn-container'>
+            <Button
+              rightIcon={
+                reverseEntryError ? (
+                  <AlertCircle size={12} />
+                ) : (
+                  <RefreshCcw size={12} />
+                )
+              }
+              variant={ButtonVariant.secondary}
+              onClick={onReverseEntry}
+              isProcessing={reverseEntryProcessing}
+              tooltip={reverseEntryError && 'Operation failed. Try again.'}
+              disabled={Boolean(entry?.reversal_id)}
+            >
+              Reverse entry
+            </Button>
+          </div>
         </div>
       ) : null}
     </div>
