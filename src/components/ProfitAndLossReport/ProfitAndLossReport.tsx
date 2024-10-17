@@ -6,7 +6,7 @@ import { DateRangeDatePickerModes } from '../DatePicker/DatePicker'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
-import { ProfitAndLossCompareOptionsProps } from '../ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
+import { ProfitAndLossCompareOptionsProps } from '../ProfitAndLossCompareOptions'
 import { View } from '../View'
 
 type ViewBreakpoint = ViewType | undefined

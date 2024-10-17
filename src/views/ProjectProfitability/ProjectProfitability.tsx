@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Select, { Options } from 'react-select'
 import { BankTransactions } from '../../components/BankTransactions'
 import { Container } from '../../components/Container'
 import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import { TagFilterInput } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useElementViewSize } from '../../hooks/useElementViewSize'
+import { PnlTagFilter } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { DisplayState, MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
 import classNames from 'classnames'
@@ -32,6 +34,22 @@ export const ProjectProfitabilityView = ({
   showTitle,
   stringOverrides,
 }: ProjectProfitabilityProps) => {
+  return (
+    <View title={stringOverrides?.title || ''} showHeader={showTitle}>
+      <ProfitAndLoss asContainer={false}>
+        <ProjectProfitability
+          showTitle={showTitle}
+          stringOverrides={stringOverrides}
+        />
+      </ProfitAndLoss>
+    </View>
+  )
+}
+
+const ProjectProfitability = ({
+  showTitle,
+  stringOverrides,
+}: ProjectProfitabilityProps) => {
   const [activeTab, setActiveTab] = useState<ProjectTab>('overview')
   const [view, setView] = useState<ViewBreakpoint>('desktop')
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
@@ -39,10 +57,11 @@ export const ProjectProfitabilityView = ({
     setView(newView),
   )
   const [tagFilter, setTagFilter] = useState<SelectOption | null>(null)
+  const [pnlTagFilter, setPnlTagFilter] = useState<PnlTagFilter | undefined>(
+    undefined,
+  )
 
   type ProjectTab = 'overview' | 'transactions' | 'report'
-
-  const comparisonConfig = undefined
   const profitAndLossConfig: {
     datePickerMode?: DateRangeDatePickerModes
     csvMoneyFormat?: MoneyFormat
@@ -62,11 +81,6 @@ export const ProjectProfitabilityView = ({
       tagKey: 'project',
       tagValues: ['project-b'],
     },
-    {
-      label: 'Project C',
-      tagKey: 'project',
-      tagValues: ['project-c'],
-    },
   ]
 
   const isOptionSelected = (
@@ -80,45 +94,62 @@ export const ProjectProfitabilityView = ({
     )
   }
 
+  const getTagFilter = (
+    tagFilter: SelectOption | null,
+  ): { key: string; values: string[] } | undefined => {
+    return tagFilter &&
+      tagFilter.tagKey &&
+      tagFilter.tagValues &&
+      tagFilter.tagValues.length > 0
+      ? {
+          key: tagFilter.tagKey,
+          values: tagFilter.tagValues,
+        }
+      : undefined
+  }
+
   return (
     <View title={stringOverrides?.title || ''} showHeader={showTitle}>
-      <Select
-        className='Layer__category-menu Layer__select'
-        classNamePrefix='Layer__select'
-        options={valueOptions}
-        placeholder='Select a project...'
-        isOptionSelected={isOptionSelected}
-        value={valueOptions.find(
-          option =>
-            tagFilter &&
-            option.tagKey === tagFilter.tagKey &&
-            JSON.stringify(option.tagValues) ===
-              JSON.stringify(tagFilter.tagValues),
-        )}
-        onChange={selectedOption => setTagFilter(selectedOption)}
-      />
-      <div className='Layer__component Layer__header__actions'>
-        <Toggle
-          name='project-tabs'
-          options={[
-            {
-              value: 'overview',
-              label: 'Overview',
-            },
-            {
-              value: 'transactions',
-              label: 'Transactions',
-            },
-            {
-              value: 'report',
-              label: 'Report',
-            },
-          ]}
-          selected={activeTab}
-          onChange={opt => setActiveTab(opt.target.value as ProjectTab)}
+      <ProfitAndLoss asContainer={false} tagFilter={pnlTagFilter}>
+        <Select
+          className='Layer__category-menu Layer__select'
+          classNamePrefix='Layer__select'
+          options={valueOptions}
+          placeholder='Select a project...'
+          isOptionSelected={isOptionSelected}
+          value={valueOptions.find(
+            option =>
+              tagFilter &&
+              option.tagKey === tagFilter.tagKey &&
+              JSON.stringify(option.tagValues) ===
+                JSON.stringify(tagFilter.tagValues),
+          )}
+          onChange={selectedOption => {
+            setTagFilter(selectedOption)
+            setPnlTagFilter(getTagFilter(selectedOption))
+          }}
         />
-      </div>
-      <ProfitAndLoss asContainer={false}>
+        <div className='Layer__component Layer__header__actions'>
+          <Toggle
+            name='project-tabs'
+            options={[
+              {
+                value: 'overview',
+                label: 'Overview',
+              },
+              {
+                value: 'transactions',
+                label: 'Transactions',
+              },
+              {
+                value: 'report',
+                label: 'Report',
+              },
+            ]}
+            selected={activeTab}
+            onChange={opt => setActiveTab(opt.target.value as ProjectTab)}
+          />
+        </div>
         <Container name='project' ref={containerRef}>
           <>
             {activeTab === 'overview' && (
@@ -182,7 +213,6 @@ export const ProjectProfitabilityView = ({
             {activeTab === 'report' && (
               <ProfitAndLoss.Report
                 stringOverrides={stringOverrides}
-                comparisonConfig={comparisonConfig}
                 datePickerMode={profitAndLossConfig?.datePickerMode}
                 csvMoneyFormat={profitAndLossConfig?.csvMoneyFormat}
                 parentRef={containerRef}
