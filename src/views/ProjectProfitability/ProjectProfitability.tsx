@@ -7,6 +7,7 @@ import { ProjectSelector } from '../../components/ProjectProfitability/ProjectSe
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useElementViewSize } from '../../hooks/useElementViewSize'
+import { useTags } from '../../hooks/useProjects'
 import { DisplayState, MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
 import classNames from 'classnames'
@@ -33,6 +34,8 @@ export const ProjectProfitabilityView = ({
   const containerRef = useElementViewSize<HTMLDivElement>(newView =>
     setView(newView),
   )
+  const tags = useTags()
+  console.log('in component', tags.activeValue)
 
   type ProjectTab = 'overview' | 'transactions' | 'report'
 

@@ -24,17 +24,17 @@ const DEFAULT_TAG_STATE: TagState = {
     activeValue: undefined,
     valueOptions: [
       {
-        label: 'Project 1',
-        value: 'project-1',
+        label: 'Project A',
+        value: 'project-a',
       },
       {
-        label: 'Project 2',
-        value: 'project-2',
+        label: 'Project B',
+        value: 'project-b',
       },
-      {
-        label: 'Special Secret Project',
-        value: 'project-3',
-      },
+      // {
+      //   label: 'Special Secret Project',
+      //   value: 'project-3',
+      // },
     ],
   },
 }
@@ -46,6 +46,7 @@ export function useTags() {
 
   const setActiveValue = useCallback(
     ({ key, activeValue }: { key: TagKey; activeValue?: TagOptionValue }) => {
+      console.log('setting active value', key, activeValue)
       setTagState(currentState => {
         const tag = currentState[key]
 
@@ -80,6 +81,7 @@ export function useTags() {
   }
 
   const { label: tagLabel, key: tagKey, activeValue, valueOptions } = activeTag
+  console.log('internal state', activeValue)
 
   return {
     hasActiveTag: true,
