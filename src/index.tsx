@@ -46,6 +46,7 @@ export { BookkeepingOverview } from './views/BookkeepingOverview'
 export { AccountingOverview } from './views/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts'
 export { GeneralLedgerView } from './views/GeneralLedger'
+export { ProjectProfitabilityView } from './views/ProjectProfitability'
 export { Reports } from './views/Reports'
 export { ProfitAndLossView } from './components/ProfitAndLossView'
 
