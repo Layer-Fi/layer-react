@@ -15,7 +15,7 @@ export interface ProfitAndLossTableStringOverrides {
   netProfitLabel?: string
 }
 
-export type ProfilAndLostTableProps = {
+export type ProfitAndLossTableProps = {
   lockExpanded?: boolean
   asContainer?: boolean
   stringOverrides?: ProfitAndLossTableStringOverrides
@@ -24,7 +24,7 @@ export type ProfilAndLostTableProps = {
 export const ProfitAndLossTableComponent = ({
   asContainer,
   stringOverrides,
-}: ProfilAndLostTableProps) => {
+}: ProfitAndLossTableProps) => {
   const {
     data: actualData,
     isLoading,
