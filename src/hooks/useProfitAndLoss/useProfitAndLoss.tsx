@@ -70,6 +70,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     endDate: endOfMonth(new Date()),
   },
 ) => {
+  console.log('useProfitAndLoss tagFilter:', tagFilter)
   const [startDate, setStartDate] = useState(
     initialStartDate || startOfMonth(Date.now()),
   )
@@ -80,6 +81,8 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     expenses: undefined,
     revenue: undefined,
   })
+
+  const [tagQueryFilter, setTagQueryFilter] = useState(tagFilter)
 
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
 
@@ -93,6 +96,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
 
   const { data: summaryData } = useProfitAndLossLTM({
     currentDate: startDate ? startDate : startOfMonth(new Date()),
+    tagFilter: tagFilter,
   })
 
   const changeDateRange = ({

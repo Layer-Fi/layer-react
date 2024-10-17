@@ -8,8 +8,9 @@ import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAn
 import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { View } from '../../components/View'
-import classNames from 'classnames'
 import { OnboardingStep } from '../../types/layer_context'
+import { TagOption } from '../ProjectProfitability/ProjectProfitability'
+import classNames from 'classnames'
 
 interface AccountingOverviewStringOverrides {
   header?: string
@@ -28,6 +29,7 @@ export interface AccountingOverviewProps {
   middleBanner?: ReactNode
   chartColorsList?: string[]
   stringOverrides?: AccountingOverviewStringOverrides
+  tagFilter?: TagOption
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
@@ -41,11 +43,19 @@ export const AccountingOverview = ({
   middleBanner,
   chartColorsList,
   stringOverrides,
+  tagFilter = undefined,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
 
   return (
-    <ProfitAndLoss asContainer={false}>
+    <ProfitAndLoss
+      asContainer={false}
+      tagFilter={
+        tagFilter
+          ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+          : undefined
+      }
+    >
       <View
         title={title}
         showHeader={showTitle}
@@ -82,7 +92,13 @@ export const AccountingOverview = ({
           <ProfitAndLoss.Header
             text={stringOverrides?.header || 'Profit & Loss'}
           />
-          <ProfitAndLoss.Chart />
+          <ProfitAndLoss.Chart
+            tagFilter={
+              tagFilter
+                ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+                : undefined
+            }
+          />
         </Container>
         {middleBanner && (
           <Container name='accounting-overview-middle-banner'>
