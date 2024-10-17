@@ -23,6 +23,15 @@ export type TagFilterInput =
     }
   | 'None'
 
+export const tagFilterToQueryString = (tagFilter: TagFilterInput): string => {
+  if (tagFilter != 'None' && tagFilter.tagValues.length > 0) {
+    return `tag_key=${tagFilter.tagKey}&tag_values=${tagFilter.tagValues.join(
+      ',',
+    )}&`
+  }
+  return ''
+}
+
 const selectStyles = {
   valueContainer: (styles: any) => {
     return {

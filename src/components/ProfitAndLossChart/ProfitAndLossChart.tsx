@@ -7,6 +7,7 @@ import {
 } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
 import { isDateAllowedToBrowse } from '../../utils/business'
+import { TagOption } from '../../views/ProjectProfitability/ProjectProfitability'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { Text } from '../Typography'
 import { ChartStateCard } from './ChartStateCard'
@@ -133,10 +134,15 @@ const getLoadingValue = (data?: ProfitAndLossSummaryData[]) => {
 
 export interface Props {
   forceRerenderOnDataChange?: boolean
+  tagFilter?: {
+    key: string
+    values: string[]
+  }
 }
 
 export const ProfitAndLossChart = ({
   forceRerenderOnDataChange = false,
+  tagFilter = undefined,
 }: Props) => {
   const [compactView, setCompactView] = useState(false)
   const barSize = compactView ? 10 : 20
@@ -174,6 +180,7 @@ export const ProfitAndLossChart = ({
 
   const { data, loaded, pullData } = useProfitAndLossLTM({
     currentDate: startOfMonth(Date.now()),
+    tagFilter: tagFilter,
   })
 
   const anyData = useMemo(() => {

@@ -146,7 +146,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
         ),
       )
     }
-  }, [startYear, startMonth])
+  }, [startYear, startMonth, tagFilter])
 
   useEffect(() => {
     const newData = rawData?.data?.months?.slice()

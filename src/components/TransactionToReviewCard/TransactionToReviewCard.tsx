@@ -14,11 +14,16 @@ import { getMonth, getYear, startOfMonth } from 'date-fns'
 export interface TransactionToReviewCardProps {
   onClick?: () => void
   usePnlDateRange?: boolean
+  tagFilter?: {
+    key: string
+    values: string[]
+  }
 }
 
 export const TransactionToReviewCard = ({
   onClick,
   usePnlDateRange,
+  tagFilter = undefined,
 }: TransactionToReviewCardProps) => {
   const { dateRange: contextDateRange } = useContext(ProfitAndLoss.Context)
   const dateRange = usePnlDateRange ? contextDateRange : undefined
@@ -27,6 +32,7 @@ export const TransactionToReviewCard = ({
 
   const { data, loaded, error, refetch } = useProfitAndLossLTM({
     currentDate: dateRange ? dateRange.startDate : startOfMonth(new Date()),
+    tagFilter,
   })
 
   useEffect(() => {
