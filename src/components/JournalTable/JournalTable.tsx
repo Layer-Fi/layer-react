@@ -16,17 +16,6 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { JournalTableStringOverrides } from './JournalTableWithPanel'
 import { parseISO, format as formatTime } from 'date-fns'
 
-const rowId = (row: JournalEntry | JournalEntryLineItem | JournalEntryLine) => {
-  if ('id' in row) {
-    return row.id
-  }
-  if ('account_identifier' in row) {
-    return `${row.account_identifier.id}-${Math.random()}`
-  }
-
-  return `${Math.random()}`
-}
-
 const accountName = (
   row: JournalEntry | JournalEntryLine | JournalEntryLineItem,
 ) => {
@@ -72,9 +61,9 @@ const JournalTableContent = ({
 
   useEffect(() => {
     if (data.length > 0) {
-      setIsOpen([`journal-row- + ${data[0].id}`])
+      setIsOpen(data.map(x => `journal-row-${x.id}`))
     }
-  }, [])
+  }, [data])
 
   const renderJournalRow = (
     row: JournalEntry,
@@ -84,6 +73,7 @@ const JournalTableContent = ({
   ) => {
     const expandable = !!row.line_items && row.line_items.length > 0
     const expanded = expandable ? isOpen(rowKey) : true
+
     return (
       <React.Fragment key={rowKey + '-' + index}>
         <TableRow
