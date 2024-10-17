@@ -76,7 +76,7 @@ export const JournalEntryDetails = () => {
         <DetailsListItem label='Entry type' isLoading={isLoadingEntry}>
           {humanizeEnum(entry?.entry_type ?? '')}
         </DetailsListItem>
-        <DetailsListItem label='Date' isLoading={isLoadingEntry}>
+        <DetailsListItem label='Effective date' isLoading={isLoadingEntry}>
           {entry?.entry_at && <DateTime value={entry?.entry_at} />}
         </DetailsListItem>
         <DetailsListItem label='Creation date' isLoading={isLoadingEntry}>
