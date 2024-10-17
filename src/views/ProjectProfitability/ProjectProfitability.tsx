@@ -5,6 +5,7 @@ import { Container } from '../../components/Container'
 import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossCompareOptionsProps } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
+import { ProjectSelector } from '../../components/ProjectProfitability/ProjectSelector'
 import { StatementOfCashFlow } from '../../components/StatementOfCashFlow'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
@@ -50,6 +51,7 @@ export const ProjectProfitabilityView = ({
 
   return (
     <View title={stringOverrides?.title || ''} showHeader={showTitle}>
+      <ProjectSelector />
       <div className='Layer__component Layer__header__actions'>
         <Toggle
           name='project-tabs'

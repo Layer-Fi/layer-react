@@ -32,7 +32,7 @@ const DEFAULT_TAG_STATE: TagState = {
         value: 'project-2',
       },
       {
-        label: 'Project 3',
+        label: 'Special Secret Project',
         value: 'project-3',
       },
     ],
@@ -45,7 +45,7 @@ export function useTags() {
   const activeTag = Object.values(state).find(({ isActive }) => isActive)
 
   const setActiveValue = useCallback(
-    ({ key, activeValue }: { key: TagKey; activeValue: TagOptionValue }) => {
+    ({ key, activeValue }: { key: TagKey; activeValue?: TagOptionValue }) => {
       setTagState(currentState => {
         const tag = currentState[key]
 
@@ -58,9 +58,9 @@ export function useTags() {
           ...currentState,
           [key]: {
             ...tag,
-            activeValue:
-              tag.valueOptions.find(({ value }) => value === activeValue) ??
-              tag.activeValue,
+            activeValue: tag.valueOptions.find(
+              ({ value }) => value === activeValue,
+            ),
           },
         }
       })
