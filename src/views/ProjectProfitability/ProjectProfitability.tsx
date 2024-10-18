@@ -1,89 +1,48 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Select, { Options } from 'react-select'
 import { BankTransactions } from '../../components/BankTransactions'
 import { Container } from '../../components/Container'
 import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
-import { TagFilterInput } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { Toggle } from '../../components/Toggle'
-import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { View } from '../../components/View'
 import { useElementViewSize } from '../../hooks/useElementViewSize'
 import { PnlTagFilter } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { DisplayState, MoneyFormat } from '../../types'
-import { View as ViewType } from '../../types/general'
 import { AccountingOverview } from '../AccountingOverview'
-import classNames from 'classnames'
 
 export type TagOption = {
   label: string
   tagKey: string
   tagValues: string[]
 }
-type ViewBreakpoint = ViewType | undefined
-type PnlToggleOption = 'revenue' | 'expenses'
 
 export interface ProjectsStringOverrides {
   title?: string
 }
 
 export interface ProjectProfitabilityProps {
+  valueOptions: TagOption[]
   showTitle?: boolean
   stringOverrides?: ProjectsStringOverrides
+  datePickerMode?: DateRangeDatePickerModes
+  csvMoneyFormat?: MoneyFormat
 }
 
 export const ProjectProfitabilityView = ({
+  valueOptions,
   showTitle,
   stringOverrides,
-}: ProjectProfitabilityProps) => {
-  return (
-    <View title={stringOverrides?.title || ''} showHeader={showTitle}>
-      <ProfitAndLoss asContainer={false}>
-        <ProjectProfitability
-          showTitle={showTitle}
-          stringOverrides={stringOverrides}
-        />
-      </ProfitAndLoss>
-    </View>
-  )
-}
-
-const ProjectProfitability = ({
-  showTitle,
-  stringOverrides,
+  datePickerMode = 'monthPicker',
+  csvMoneyFormat = 'DOLLAR_STRING',
 }: ProjectProfitabilityProps) => {
   const [activeTab, setActiveTab] = useState<ProjectTab>('overview')
-  const [view, setView] = useState<ViewBreakpoint>('desktop')
-  const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
-  const containerRef = useElementViewSize<HTMLDivElement>(newView =>
-    setView(newView),
-  )
   const [tagFilter, setTagFilter] = useState<TagOption | null>(null)
   const [pnlTagFilter, setPnlTagFilter] = useState<PnlTagFilter | undefined>(
     undefined,
   )
 
   type ProjectTab = 'overview' | 'transactions' | 'report'
-  const profitAndLossConfig: {
-    datePickerMode?: DateRangeDatePickerModes
-    csvMoneyFormat?: MoneyFormat
-  } = {
-    datePickerMode: 'monthPicker',
-    csvMoneyFormat: 'DOLLAR_STRING',
-  }
-
-  const valueOptions: TagOption[] = [
-    {
-      label: 'Project A',
-      tagKey: 'project',
-      tagValues: ['project-a'],
-    },
-    {
-      label: 'Project B',
-      tagKey: 'project',
-      tagValues: ['project-b'],
-    },
-  ]
 
   const isOptionSelected = (
     option: TagOption,
@@ -97,7 +56,7 @@ const ProjectProfitability = ({
   }
 
   const getTagFilter = (
-    tagFilter: SelectOption | null,
+    tagFilter: TagOption | null,
   ): { key: string; values: string[] } | undefined => {
     return tagFilter &&
       tagFilter.tagKey &&
@@ -144,7 +103,7 @@ const ProjectProfitability = ({
           options={valueOptions}
           placeholder='Select a project...'
           isOptionSelected={isOptionSelected}
-          defaultValue={valueOptions.find(o => (o.label = 'Project A'))}
+          defaultValue={valueOptions.length > 0 ? valueOptions[0] : undefined}
           value={valueOptions.find(
             option =>
               tagFilter &&
@@ -158,16 +117,15 @@ const ProjectProfitability = ({
           }}
         />
       </div>
-      <Container name='project' ref={containerRef}>
+      <Container name='project'>
         <>
           {activeTab === 'overview' && (
             <AccountingOverview
               stringOverrides={{ header: 'Project Overview' }}
               tagFilter={tagFilter ? tagFilter : undefined}
-              onTransactionsToReviewClick={() => {
-                console.log('clicked')
-              }}
+              onTransactionsToReviewClick={() => setActiveTab('transactions')}
               enableOnboarding={false}
+              showTransactionsToReview={false}
             />
           )}
           {activeTab === 'transactions' && (
@@ -183,10 +141,8 @@ const ProjectProfitability = ({
             <ProfitAndLoss asContainer={false} tagFilter={pnlTagFilter}>
               <ProfitAndLoss.Report
                 stringOverrides={stringOverrides}
-                datePickerMode={profitAndLossConfig?.datePickerMode}
-                csvMoneyFormat={profitAndLossConfig?.csvMoneyFormat}
-                parentRef={containerRef}
-                view={view}
+                datePickerMode={datePickerMode}
+                csvMoneyFormat={csvMoneyFormat}
               />
             </ProfitAndLoss>
           )}

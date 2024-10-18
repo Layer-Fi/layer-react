@@ -30,6 +30,7 @@ export interface AccountingOverviewProps {
   chartColorsList?: string[]
   stringOverrides?: AccountingOverviewStringOverrides
   tagFilter?: TagOption
+  showTransactionsToReview?: boolean
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
@@ -44,6 +45,7 @@ export const AccountingOverview = ({
   chartColorsList,
   stringOverrides,
   tagFilter = undefined,
+  showTransactionsToReview = true,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
 
@@ -79,10 +81,12 @@ export const AccountingOverview = ({
           <ProfitAndLoss.Summaries
             stringOverrides={stringOverrides?.profitAndLoss?.summaries}
           />
-          <TransactionToReviewCard
-            usePnlDateRange={true}
-            onClick={onTransactionsToReviewClick}
-          />
+          {showTransactionsToReview && (
+            <TransactionToReviewCard
+              usePnlDateRange={true}
+              onClick={onTransactionsToReviewClick}
+            />
+          )}
         </div>
         <Container
           name='accounting-overview-profit-and-loss'
