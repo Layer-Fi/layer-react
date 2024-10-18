@@ -6,14 +6,16 @@ import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { TagFilterInput } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { Toggle } from '../../components/Toggle'
+import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { View } from '../../components/View'
 import { useElementViewSize } from '../../hooks/useElementViewSize'
 import { PnlTagFilter } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { DisplayState, MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
+import { AccountingOverview } from '../AccountingOverview'
 import classNames from 'classnames'
 
-type SelectOption = {
+export type TagOption = {
   label: string
   tagKey: string
   tagValues: string[]
@@ -56,7 +58,7 @@ const ProjectProfitability = ({
   const containerRef = useElementViewSize<HTMLDivElement>(newView =>
     setView(newView),
   )
-  const [tagFilter, setTagFilter] = useState<SelectOption | null>(null)
+  const [tagFilter, setTagFilter] = useState<TagOption | null>(null)
   const [pnlTagFilter, setPnlTagFilter] = useState<PnlTagFilter | undefined>(
     undefined,
   )
@@ -70,7 +72,7 @@ const ProjectProfitability = ({
     csvMoneyFormat: 'DOLLAR_STRING',
   }
 
-  const valueOptions: SelectOption[] = [
+  const valueOptions: TagOption[] = [
     {
       label: 'Project A',
       tagKey: 'project',
@@ -84,8 +86,8 @@ const ProjectProfitability = ({
   ]
 
   const isOptionSelected = (
-    option: SelectOption,
-    selectValue: Options<SelectOption>,
+    option: TagOption,
+    selectValue: Options<TagOption>,
   ) => {
     return selectValue.some(
       value =>
@@ -109,27 +111,13 @@ const ProjectProfitability = ({
   }
 
   return (
-    <View title={stringOverrides?.title || ''} showHeader={showTitle}>
-      <ProfitAndLoss asContainer={false} tagFilter={pnlTagFilter}>
-        <Select
-          className='Layer__category-menu Layer__select'
-          classNamePrefix='Layer__select'
-          options={valueOptions}
-          placeholder='Select a project...'
-          isOptionSelected={isOptionSelected}
-          value={valueOptions.find(
-            option =>
-              tagFilter &&
-              option.tagKey === tagFilter.tagKey &&
-              JSON.stringify(option.tagValues) ===
-                JSON.stringify(tagFilter.tagValues),
-          )}
-          onChange={selectedOption => {
-            setTagFilter(selectedOption)
-            setPnlTagFilter(getTagFilter(selectedOption))
-          }}
-        />
-        <div className='Layer__component Layer__header__actions'>
+    <View
+      title={stringOverrides?.title || ''}
+      showHeader={showTitle}
+      viewClassName='Layer__project-view'
+    >
+      <div className='Layer__component Layer__header__actions'>
+        <div className='Layer__component'>
           <Toggle
             name='project-tabs'
             options={[
@@ -150,67 +138,49 @@ const ProjectProfitability = ({
             onChange={opt => setActiveTab(opt.target.value as ProjectTab)}
           />
         </div>
-        <Container name='project' ref={containerRef}>
-          <>
-            {activeTab === 'overview' && (
-              <div className='Layer__accounting-overview-profit-and-loss-charts'>
-                <Toggle
-                  name='pnl-detailed-charts'
-                  options={[
-                    {
-                      value: 'revenue',
-                      label: 'Revenue',
-                    },
-                    {
-                      value: 'expenses',
-                      label: 'Expenses',
-                    },
-                  ]}
-                  selected={pnlToggle}
-                  onChange={e =>
-                    setPnlToggle(e.target.value as PnlToggleOption)
-                  }
-                />
-                <Container
-                  name={classNames(
-                    'accounting-overview-profit-and-loss-chart',
-                    pnlToggle !== 'revenue' &&
-                      'accounting-overview-profit-and-loss-chart--hidden',
-                  )}
-                >
-                  <ProfitAndLoss.DetailedCharts
-                    scope='revenue'
-                    hideClose={true}
-                    // stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-                    // chartColorsList={chartColorsList}
-                  />
-                </Container>
-                <Container
-                  name={classNames(
-                    'accounting-overview-profit-and-loss-chart',
-                    pnlToggle !== 'expenses' &&
-                      'accounting-overview-profit-and-loss-chart--hidden',
-                  )}
-                >
-                  <ProfitAndLoss.DetailedCharts
-                    scope='expenses'
-                    hideClose={true}
-                    // stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-                    // chartColorsList={chartColorsList}
-                  />
-                </Container>
-              </div>
-            )}
-            {activeTab === 'transactions' && (
-              <BankTransactions
-                hideHeader={true}
-                filters={{
-                  categorizationStatus: DisplayState.all,
-                  tagFilter: tagFilter ?? undefined,
-                }}
-              />
-            )}
-            {activeTab === 'report' && (
+        <Select
+          className='Layer__category-menu Layer__select'
+          classNamePrefix='Layer__select'
+          options={valueOptions}
+          placeholder='Select a project...'
+          isOptionSelected={isOptionSelected}
+          defaultValue={valueOptions.find(o => (o.label = 'Project A'))}
+          value={valueOptions.find(
+            option =>
+              tagFilter &&
+              option.tagKey === tagFilter.tagKey &&
+              JSON.stringify(option.tagValues) ===
+                JSON.stringify(tagFilter.tagValues),
+          )}
+          onChange={selectedOption => {
+            setTagFilter(selectedOption)
+            setPnlTagFilter(getTagFilter(selectedOption))
+          }}
+        />
+      </div>
+      <Container name='project' ref={containerRef}>
+        <>
+          {activeTab === 'overview' && (
+            <AccountingOverview
+              stringOverrides={{ header: 'Project Overview' }}
+              tagFilter={tagFilter ? tagFilter : undefined}
+              onTransactionsToReviewClick={() => {
+                console.log('clicked')
+              }}
+              enableOnboarding={false}
+            />
+          )}
+          {activeTab === 'transactions' && (
+            <BankTransactions
+              hideHeader={true}
+              filters={{
+                categorizationStatus: DisplayState.all,
+                tagFilter: tagFilter ?? undefined,
+              }}
+            />
+          )}
+          {activeTab === 'report' && (
+            <ProfitAndLoss asContainer={false} tagFilter={pnlTagFilter}>
               <ProfitAndLoss.Report
                 stringOverrides={stringOverrides}
                 datePickerMode={profitAndLossConfig?.datePickerMode}
@@ -218,10 +188,10 @@ const ProjectProfitability = ({
                 parentRef={containerRef}
                 view={view}
               />
-            )}
-          </>
-        </Container>
-      </ProfitAndLoss>
+            </ProfitAndLoss>
+          )}
+        </>
+      </Container>
     </View>
   )
 }
