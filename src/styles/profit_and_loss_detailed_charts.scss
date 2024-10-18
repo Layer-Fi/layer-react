@@ -160,6 +160,7 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      z-index: 999;
 
       &.Layer__select__option--is-focused,
       &.Layer__select__option--is-selected,

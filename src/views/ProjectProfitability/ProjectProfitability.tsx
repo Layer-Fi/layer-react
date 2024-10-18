@@ -6,7 +6,6 @@ import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
-import { useElementViewSize } from '../../hooks/useElementViewSize'
 import { PnlTagFilter } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { DisplayState, MoneyFormat } from '../../types'
 import { AccountingOverview } from '../AccountingOverview'
@@ -126,6 +125,7 @@ export const ProjectProfitabilityView = ({
               onTransactionsToReviewClick={() => setActiveTab('transactions')}
               enableOnboarding={false}
               showTransactionsToReview={false}
+              showTitle={false}
             />
           )}
           {activeTab === 'transactions' && (
