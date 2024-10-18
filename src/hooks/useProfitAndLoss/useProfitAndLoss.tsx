@@ -59,6 +59,7 @@ type UseProfitAndLoss = (props?: Props) => {
   filters: ProfitAndLossFilters
   sortBy: (scope: Scope, field: string, direction?: SortDirection) => void
   setFilterTypes: (scope: Scope, types: string[]) => void
+  tagFilter?: PnlTagFilter
 }
 
 export const useProfitAndLoss: UseProfitAndLoss = (
@@ -273,5 +274,6 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     sortBy,
     filters,
     setFilterTypes,
+    tagFilter
   }
 }
