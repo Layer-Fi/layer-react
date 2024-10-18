@@ -463,3 +463,15 @@
     }
   }
 }
+
+.Layer__journal__entry-details__reverse-btn-container {
+  padding: var(--spacing-sm) 0;
+
+  .Layer__btn {
+    min-width: 150px;
+
+    .Layer__btn-icon:not(.Layer__anim--rotating) {
+      color: var(--color-danger);
+    }
+  }
+}

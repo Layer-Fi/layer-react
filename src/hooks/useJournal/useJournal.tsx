@@ -42,6 +42,9 @@ type UseJournal = () => {
   setForm: (form?: JournalFormTypes) => void
   addEntryLine: (direction: Direction) => void
   removeEntryLine: (index: number) => void
+  reverseEntry: (
+    entryId: string,
+  ) => ReturnType<typeof Layer.reverseJournalEntry>
 }
 
 export interface JournalFormTypes {
@@ -345,6 +348,11 @@ export const useJournal: UseJournal = () => {
     })
   }
 
+  const reverseEntry = async (entryId: string) =>
+    Layer.reverseJournalEntry(apiUrl, auth?.access_token, {
+      params: { businessId, entryId },
+    })
+
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
     if (queryKey && (isLoading || isValidating)) {
@@ -380,5 +388,6 @@ export const useJournal: UseJournal = () => {
     apiError,
     addEntryLine,
     removeEntryLine,
+    reverseEntry,
   }
 }
