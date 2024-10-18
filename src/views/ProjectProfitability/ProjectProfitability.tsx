@@ -162,7 +162,7 @@ const ProjectProfitability = ({
         <>
           {activeTab === 'overview' && (
             <AccountingOverview
-              stringOverrides={{}}
+              stringOverrides={{ header: 'Project Overview' }}
               tagFilter={tagFilter ? tagFilter : undefined}
               onTransactionsToReviewClick={() => {
                 console.log('clicked')
@@ -180,13 +180,15 @@ const ProjectProfitability = ({
             />
           )}
           {activeTab === 'report' && (
-            <ProfitAndLoss.Report
-              stringOverrides={stringOverrides}
-              datePickerMode={profitAndLossConfig?.datePickerMode}
-              csvMoneyFormat={profitAndLossConfig?.csvMoneyFormat}
-              parentRef={containerRef}
-              view={view}
-            />
+            <ProfitAndLoss asContainer={false} tagFilter={pnlTagFilter}>
+              <ProfitAndLoss.Report
+                stringOverrides={stringOverrides}
+                datePickerMode={profitAndLossConfig?.datePickerMode}
+                csvMoneyFormat={profitAndLossConfig?.csvMoneyFormat}
+                parentRef={containerRef}
+                view={view}
+              />
+            </ProfitAndLoss>
           )}
         </>
       </Container>
