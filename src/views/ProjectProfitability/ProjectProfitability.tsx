@@ -132,7 +132,7 @@ export const ProjectProfitabilityView = ({
             <BankTransactions
               hideHeader={true}
               filters={{
-                categorizationStatus: DisplayState.all,
+                categorizationStatus: DisplayState.categorized,
                 tagFilter: tagFilter ?? undefined,
               }}
             />
