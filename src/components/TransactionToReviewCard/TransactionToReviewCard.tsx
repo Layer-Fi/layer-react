@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Badge } from '../../components/Badge'
-import { BadgeSize, BadgeVariant } from '../../components/Badge/Badge'
-import { Text, TextSize } from '../../components/Typography'
+import { Badge } from '../Badge'
+import { BadgeSize, BadgeVariant } from '../Badge/Badge'
+import { Text, TextSize } from '../Typography'
 import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import BellIcon from '../../icons/Bell'
 import CheckIcon from '../../icons/Check'
@@ -14,11 +14,16 @@ import { getMonth, getYear, startOfMonth } from 'date-fns'
 export interface TransactionToReviewCardProps {
   onClick?: () => void
   usePnlDateRange?: boolean
+  tagFilter?: {
+    key: string
+    values: string[]
+  }
 }
 
 export const TransactionToReviewCard = ({
   onClick,
   usePnlDateRange,
+  tagFilter = undefined,
 }: TransactionToReviewCardProps) => {
   const { dateRange: contextDateRange } = useContext(ProfitAndLoss.Context)
   const dateRange = usePnlDateRange ? contextDateRange : undefined
@@ -27,6 +32,7 @@ export const TransactionToReviewCard = ({
 
   const { data, loaded, error, refetch } = useProfitAndLossLTM({
     currentDate: dateRange ? dateRange.startDate : startOfMonth(new Date()),
+    tagFilter,
   })
 
   useEffect(() => {

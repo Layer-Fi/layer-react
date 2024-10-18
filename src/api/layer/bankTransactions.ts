@@ -23,6 +23,7 @@ export interface GetBankTransactionsParams
   direction?: 'INFLOW' | 'OUTFLOW'
   startDate?: string
   endDate?: string
+  tagFilterString?: string
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
 }
@@ -39,6 +40,7 @@ export const getBankTransactions = get<
     endDate,
     sortBy = 'date',
     sortOrder = 'DESC',
+    tagFilterString,
   }: GetBankTransactionsParams) =>
     `/v1/businesses/${businessId}/bank-transactions?${
       cursor !== undefined && cursor !== '' ? `cursor=${cursor}&` : ''
@@ -50,8 +52,8 @@ export const getBankTransactions = get<
       startDate !== undefined && startDate !== ''
         ? `start_date=${startDate}&`
         : ''
-    }${
-      endDate !== undefined && endDate !== '' ? `end_date=${endDate}&` : ''
+    }${endDate !== undefined && endDate !== '' ? `end_date=${endDate}&` : ''}${
+      tagFilterString ? tagFilterString : ''
     }sort_by=${sortBy}&sort_order=${sortOrder}&limit=200`,
 )
 

@@ -19,13 +19,15 @@ export type Scope = 'expenses' | 'revenue'
 
 export type SidebarScope = Scope | undefined
 
+export type PnlTagFilter = {
+  key: string
+  values: string[]
+}
+
 type Props = {
   startDate?: Date
   endDate?: Date
-  tagFilter?: {
-    key: string
-    values: string[]
-  }
+  tagFilter?: PnlTagFilter
   reportingBasis?: ReportingBasis
 }
 
@@ -93,6 +95,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
 
   const { data: summaryData } = useProfitAndLossLTM({
     currentDate: startDate ? startDate : startOfMonth(new Date()),
+    tagFilter: tagFilter,
   })
 
   const changeDateRange = ({

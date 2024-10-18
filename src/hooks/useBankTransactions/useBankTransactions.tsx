@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
+import { tagFilterToQueryString } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
   BankTransaction,
@@ -61,6 +62,8 @@ const filtersSettingString = (filters?: BankTransactionFilters): string => {
     filters?.dateRange?.endDate
       ? `-endDate-${filters.dateRange.endDate.toISOString()}`
       : ''
+  }${
+    filters?.tagFilter ? `--${tagFilterToQueryString(filters.tagFilter)}` : ''
   }`
 }
 
@@ -148,6 +151,9 @@ export const useBankTransactions: UseBankTransactions = params => {
             startDate:
               filters?.dateRange?.startDate?.toISOString() ?? undefined,
             endDate: filters?.dateRange?.endDate?.toISOString() ?? undefined,
+            tagFilterString: filters?.tagFilter
+              ? tagFilterToQueryString(filters?.tagFilter)
+              : undefined,
           },
         }).call(false)
       }
