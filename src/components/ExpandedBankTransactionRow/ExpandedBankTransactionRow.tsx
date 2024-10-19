@@ -391,6 +391,21 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       setReceiptUrls(retrievedDocs)
     }
 
+    const fetchMemos = async () => {
+      const getBankTransactionMetadata = Layer.getBankTransactionMetadata(
+        apiUrl,
+        auth.access_token,
+        {
+          params: {
+            businessId: businessId,
+            bankTransactionId: bankTransaction.id,
+          },
+        },
+      )
+      const result = await getBankTransactionMetadata()
+      if (result.data.memo) setMemoText(result.data.memo)
+    }
+
     const readDate = (date?: string) => {
       if (!date) return undefined
       return date && formatTime(parseISO(date), DATE_FORMAT)
@@ -443,6 +458,9 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       ) {
         fetchDocuments()
       }
+      if (isOpen && isLoaded) {
+        fetchMemos()
+      }
     }, [isOpen])
 
     useEffect(() => {
@@ -462,8 +480,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     useEffect(() => {
       const loadDocumentsAndMetadata = async () => {
-        if (showDescriptions && bankTransaction?.metadata.memo)
-          setMemoText(bankTransaction?.metadata.memo)
+        if (showDescriptions && isOpen) await fetchMemos()
         if (
           showReceiptUploads &&
           bankTransaction?.document_ids?.length > 0 &&
