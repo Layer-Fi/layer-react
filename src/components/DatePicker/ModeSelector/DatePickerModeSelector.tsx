@@ -7,15 +7,20 @@ type RangePickerMode = 'dayRangePicker' | 'monthRangePicker'
 
 export type DatePickerMode = SingularPickerMode | RangePickerMode
 
+export const DEFAULT_ALLOWED_PICKER_MODES = [
+  'monthPicker',
+  'dayRangePicker',
+] as const
+
 const DATE_RANGE_MODE_CONFIG: Record<DatePickerMode, { label: string }> = {
   timePicker: { label: 'Time' },
   dayPicker: { label: 'Day' },
-  dayRangePicker: { label: 'Custom Date Range' },
+  dayRangePicker: { label: 'Select dates' },
   monthPicker: { label: 'Month' },
-  monthRangePicker: { label: 'Custom Month Range' },
+  monthRangePicker: { label: 'Select months' },
 }
 
-function toToggleOptions(allowedModes: DatePickerMode[]) {
+function toToggleOptions(allowedModes: ReadonlyArray<DatePickerMode>) {
   return allowedModes.map(mode => ({
     label: DATE_RANGE_MODE_CONFIG[mode].label,
     value: mode,
@@ -24,7 +29,7 @@ function toToggleOptions(allowedModes: DatePickerMode[]) {
 
 export type DatePickerModeSelectorProps = {
   mode: DatePickerMode
-  allowedModes: DatePickerMode[]
+  allowedModes: ReadonlyArray<DatePickerMode>
   onChangeMode: (mode: DatePickerMode) => void
 }
 

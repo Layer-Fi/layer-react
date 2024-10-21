@@ -15,7 +15,7 @@ interface DatePickerProps {
   mode: DatePickerMode
   selected: Date | [Date | null, Date | null]
   onChange: (date: Date | [Date, Date | null]) => void
-  allowedModes?: DatePickerMode[]
+  allowedModes?: ReadonlyArray<DatePickerMode>
   dateFormat?: string
   timeIntervals?: number
   timeCaption?: string

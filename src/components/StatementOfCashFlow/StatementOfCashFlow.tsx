@@ -4,7 +4,10 @@ import { TableProvider } from '../../contexts/TableContext'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow'
 import { DatePicker } from '../DatePicker'
 import type { DatePickerMode } from '../DatePicker/ModeSelector/DatePickerModeSelector'
-import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerModeSelector'
+import {
+  DatePickerModeSelector,
+  DEFAULT_ALLOWED_PICKER_MODES,
+} from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Loader } from '../Loader'
 import { StatementOfCashFlowTable } from '../StatementOfCashFlowTable'
@@ -95,7 +98,7 @@ const StatementOfCashFlowView = ({
         }}
         dateFormat='MMM'
         mode={datePickerMode}
-        allowedModes={['dayRangePicker', 'monthPicker']}
+        allowedModes={DEFAULT_ALLOWED_PICKER_MODES}
         onChangeMode={setDatePickerMode}
         slots={{
           ModeSelector: DatePickerModeSelector,
@@ -109,7 +112,7 @@ const StatementOfCashFlowView = ({
         }
         dateFormat='MMM d'
         mode={datePickerMode}
-        allowedModes={['dayRangePicker', 'monthPicker']}
+        allowedModes={DEFAULT_ALLOWED_PICKER_MODES}
         onChangeMode={setDatePickerMode}
         slots={{
           ModeSelector: DatePickerModeSelector,
