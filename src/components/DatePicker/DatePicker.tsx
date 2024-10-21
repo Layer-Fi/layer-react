@@ -234,11 +234,6 @@ export const DatePicker = ({
       return
     }
 
-    /*
-     * This entire block is a hack to force the date.
-     *
-     * This is extremely bad code - do not copy.
-     */
     const firstSelectedDate = Array.isArray(selectedDates)
       ? selectedDates[0]
       : selectedDates ?? new Date()
