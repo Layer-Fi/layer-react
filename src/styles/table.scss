@@ -153,12 +153,14 @@
     &.Layer__table-cell-amount--positive .Layer__table-cell-content {
       &::before {
         content: '$';
+        flex-shrink: 0;
       }
     }
 
     &.Layer__table-cell-amount--negative .Layer__table-cell-content {
       &::before {
         content: '-$';
+        flex-shrink: 0;
       }
     }
 
