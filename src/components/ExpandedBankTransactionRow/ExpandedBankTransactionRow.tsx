@@ -547,32 +547,43 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       }
     }
 
-    const archiveDocument = async (documentId: string) => {
-      try {
-        setReceiptUrls(
-          receiptUrls.map(url => {
-            if (url.id === documentId) {
-              return {
-                ...url,
-                status: 'deleting',
-              }
-            }
+    const archiveDocument = async (document: DocumentWithStatus) => {
+      if (!document.id) return
 
-            return url
-          }),
-        )
-        await Layer.archiveBankTransactionDocument(apiUrl, auth.access_token, {
-          params: {
-            businessId: businessId,
-            bankTransactionId: bankTransaction.id,
-            documentId,
-          },
-        })
-        fetchDocuments()
+      try {
+        if (document.error) {
+          setReceiptUrls(receiptUrls.filter(url => url.id !== document.id))
+        } else {
+          setReceiptUrls(
+            receiptUrls.map(url => {
+              if (url.id === document.id) {
+                return {
+                  ...url,
+                  status: 'deleting',
+                }
+              }
+
+              return url
+            }),
+          )
+
+          await Layer.archiveBankTransactionDocument(
+            apiUrl,
+            auth.access_token,
+            {
+              params: {
+                businessId: businessId,
+                bankTransactionId: bankTransaction.id,
+                documentId: document.id,
+              },
+            },
+          )
+          fetchDocuments()
+        }
       } catch (_err) {
         setReceiptUrls(
           receiptUrls.map(url => {
-            if (url.id === documentId) {
+            if (url.id === document.id) {
               return {
                 ...url,
                 status: 'failed',
@@ -797,7 +808,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       }
                       enableDownload
                       error={url.error}
-                      onDelete={() => url.id && archiveDocument(url.id)}
+                      onDelete={() => url.id && archiveDocument(url)}
                     />
                   ))}
                   {receiptUrls.length > 0 && receiptUrls.length < 10 ? (
