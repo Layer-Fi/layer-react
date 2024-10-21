@@ -2,8 +2,8 @@ import React, { RefObject, useContext } from 'react'
 import { MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
 import { ReportsStringOverrides } from '../../views/Reports/Reports'
-import { DateRangeDatePickerModes } from '../DatePicker/DatePicker'
 import { CustomDateRange } from '../DatePicker/DatePickerOptions'
+import { RangePickerMode } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
@@ -15,7 +15,7 @@ type ViewBreakpoint = ViewType | undefined
 export interface ProfitAndLossReportProps {
   stringOverrides?: ReportsStringOverrides
   comparisonConfig?: ProfitAndLossCompareOptionsProps
-  datePickerMode?: DateRangeDatePickerModes
+  datePickerMode?: RangePickerMode
   customDateRanges?: CustomDateRange[]
   csvMoneyFormat?: MoneyFormat
   parentRef?: RefObject<HTMLDivElement>
