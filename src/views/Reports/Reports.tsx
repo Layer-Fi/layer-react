@@ -2,7 +2,8 @@ import React, { RefObject, useState } from 'react'
 import { BalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Container } from '../../components/Container'
-import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
+import { CustomDateRange } from '../../components/DatePicker/DatePickerOptions'
+import { RangePickerMode } from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossCompareOptionsProps } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -36,11 +37,13 @@ export interface ReportsProps {
   enabledReports?: ReportType[]
   comparisonConfig?: ProfitAndLossCompareOptionsProps
   profitAndLossConfig?: {
-    datePickerMode?: DateRangeDatePickerModes
+    datePickerMode?: RangePickerMode
     csvMoneyFormat?: MoneyFormat
+    customDateRanges?: CustomDateRange[]
   }
   statementOfCashFlowConfig?: {
-    datePickerMode?: DateRangeDatePickerModes
+    datePickerMode?: RangePickerMode
+    customDateRanges?: CustomDateRange[]
   }
 }
 
@@ -52,11 +55,13 @@ export interface ReportsPanelProps {
   stringOverrides?: ReportsStringOverrides
   comparisonConfig?: ProfitAndLossCompareOptionsProps
   profitAndLossConfig?: {
-    datePickerMode?: DateRangeDatePickerModes
+    datePickerMode?: RangePickerMode
     csvMoneyFormat?: MoneyFormat
+    customDateRanges?: CustomDateRange[]
   }
   statementOfCashFlowConfig?: {
-    datePickerMode?: DateRangeDatePickerModes
+    datePickerMode?: RangePickerMode
+    customDateRanges?: CustomDateRange[]
   }
   view: ViewBreakpoint
 }
@@ -154,6 +159,7 @@ const ReportsPanel = ({
           stringOverrides={stringOverrides}
           comparisonConfig={comparisonConfig}
           datePickerMode={profitAndLossConfig?.datePickerMode}
+          customDateRanges={profitAndLossConfig?.customDateRanges}
           csvMoneyFormat={profitAndLossConfig?.csvMoneyFormat}
           parentRef={containerRef}
           view={view}
@@ -166,6 +172,7 @@ const ReportsPanel = ({
         <StatementOfCashFlow
           stringOverrides={stringOverrides?.statementOfCashflow}
           datePickerMode={statementOfCashFlowConfig?.datePickerMode}
+          customDateRanges={statementOfCashFlowConfig?.customDateRanges}
         />
       )}
     </>

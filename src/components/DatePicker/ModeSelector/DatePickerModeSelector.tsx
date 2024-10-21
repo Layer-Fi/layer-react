@@ -2,8 +2,11 @@ import React from 'react'
 import { Toggle } from '../../Toggle'
 import { ToggleSize } from '../../Toggle/Toggle'
 
-type SingularPickerMode = 'dayPicker' | 'monthPicker' | 'timePicker'
-type RangePickerMode = 'dayRangePicker' | 'monthRangePicker'
+export type SingularPickerMode = 'dayPicker' | 'timePicker'
+export type RangePickerMode =
+  | 'dayRangePicker'
+  | 'monthRangePicker'
+  | 'monthPicker'
 
 export type DatePickerMode = SingularPickerMode | RangePickerMode
 

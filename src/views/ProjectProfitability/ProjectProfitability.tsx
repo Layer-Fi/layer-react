@@ -2,7 +2,10 @@ import React, { useState } from 'react'
 import Select, { Options } from 'react-select'
 import { BankTransactions } from '../../components/BankTransactions'
 import { Container } from '../../components/Container'
-import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
+import {
+  DatePickerMode,
+  RangePickerMode,
+} from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
@@ -24,7 +27,7 @@ export interface ProjectProfitabilityProps {
   valueOptions: TagOption[]
   showTitle?: boolean
   stringOverrides?: ProjectsStringOverrides
-  datePickerMode?: DateRangeDatePickerModes
+  datePickerMode?: RangePickerMode
   csvMoneyFormat?: MoneyFormat
 }
 

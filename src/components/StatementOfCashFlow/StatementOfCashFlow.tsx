@@ -3,6 +3,7 @@ import { StatementOfCashFlowContext } from '../../contexts/StatementOfCashContex
 import { TableProvider } from '../../contexts/TableContext'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow'
 import { DatePicker } from '../DatePicker'
+import { CustomDateRange } from '../DatePicker/DatePickerOptions'
 import type { DatePickerMode } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import {
   DatePickerModeSelector,
@@ -20,23 +21,23 @@ const COMPONENT_NAME = 'statement-of-cash-flow'
 
 export interface StatementOfCashFlowStringOverrides {
   statementOfCashFlowTable?: StatementOfCashFlowTableStringOverrides
-  datePickerMode?: DatePickerMode
 }
 
 export interface StatementOfCashFlowProps {
   stringOverrides?: StatementOfCashFlowStringOverrides
-
   /**
    * @deprecated Use `defaultDatePickedMode` instead
    */
   datePickerMode?: DatePickerMode
   defaultDatePickerMode?: DatePickerMode
+  customDateRanges?: CustomDateRange[]
 }
 
 export const StatementOfCashFlow = ({
   stringOverrides,
   datePickerMode: deprecated_datePickerMode,
   defaultDatePickerMode,
+  customDateRanges,
 }: StatementOfCashFlowProps) => {
   const cashContextData = useStatementOfCashFlow()
   return (
@@ -46,6 +47,7 @@ export const StatementOfCashFlow = ({
         defaultDatePickerMode={
           defaultDatePickerMode ?? deprecated_datePickerMode
         }
+        customDateRanges={customDateRanges}
       />
     </StatementOfCashFlowContext.Provider>
   )
@@ -54,11 +56,13 @@ export const StatementOfCashFlow = ({
 type StatementOfCashFlowViewProps = {
   stringOverrides?: StatementOfCashFlowStringOverrides
   defaultDatePickerMode?: DatePickerMode
+  customDateRanges?: CustomDateRange[]
 }
 
 const StatementOfCashFlowView = ({
   stringOverrides,
   defaultDatePickerMode = 'monthPicker',
+  customDateRanges,
 }: StatementOfCashFlowViewProps) => {
   const [startDate, setStartDate] = useState(
     startOfDay(subWeeks(new Date(), 4)),
@@ -107,6 +111,7 @@ const StatementOfCashFlowView = ({
     ) : (
       <DatePicker
         selected={[startDate, endDate]}
+        customDateRanges={customDateRanges}
         onChange={dates =>
           handleDateChange(dates as [Date | null, Date | null])
         }
