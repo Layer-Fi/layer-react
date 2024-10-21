@@ -800,9 +800,8 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       deletePending={url.status === 'deleting'}
                       name={url.name ?? `Receipt ${index + 1}`}
                       date={url.date}
-                      enableOpen={url.type === 'application/pdf'}
                       onOpen={
-                        url.url && url.type !== 'application/pdf'
+                        url.url && url.type && url.type.startsWith('image/')
                           ? openReceiptInNewTab(url.url, index)
                           : undefined
                       }
