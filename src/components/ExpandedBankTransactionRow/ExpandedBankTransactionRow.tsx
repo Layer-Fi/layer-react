@@ -137,6 +137,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const {
       categorize: categorizeBankTransaction,
       match: matchBankTransaction,
+      updateOneLocal: updateBankTransaction,
     } = useBankTransactionsContext()
     const [purpose, setPurpose] = useState<Purpose>(
       bankTransaction.category
@@ -512,13 +513,24 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
           apiUrl,
           auth.access_token,
         )
-        await uploadDocument({
+        const result = await uploadDocument({
           businessId: businessId,
           bankTransactionId: bankTransaction.id,
           file: file,
           documentType: 'RECEIPT',
         })
         await fetchDocuments()
+        // Update the bank transaction with the new document id
+        if (
+          result?.data?.id &&
+          bankTransaction?.document_ids &&
+          bankTransaction.document_ids.length === 0
+        ) {
+          updateBankTransaction({
+            ...bankTransaction,
+            document_ids: [result.data.id],
+          })
+        }
       } catch (_err) {
         const newReceiptUrls = receipts.map(url => {
           if (url.id === id) {
