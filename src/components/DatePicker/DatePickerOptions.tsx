@@ -28,11 +28,6 @@ export const DatePickerOptions = ({
 }) => {
   const optionsComponents: React.ReactNode[] = []
 
-  customOptions.map(customOption => {
-    console.log(
-      `Custom option: ${customOption.label} ${customOption.startDate} ${customOption.endDate}`,
-    )
-  })
   const customOptionComponents: React.ReactNode[] = customOptions.map(
     customOption => (
       <TextButton
