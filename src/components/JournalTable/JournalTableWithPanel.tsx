@@ -1,10 +1,10 @@
 import React, { RefObject, useContext, useMemo, useState } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import PlusIcon from '../../icons/PlusIcon'
+import { View } from '../../types/general'
 import { Button } from '../Button'
 import { DataState, DataStateStatus } from '../DataState'
 import { Header, HeaderCol, HeaderRow } from '../Header'
-import { View } from '../../types/general'
 import { JournalConfig } from '../Journal/Journal'
 import { JournalFormStringOverrides } from '../JournalForm/JournalForm'
 import { JournalSidebar } from '../JournalSidebar'
@@ -57,7 +57,7 @@ export const JournalTableWithPanel = ({
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
     return rawData
-      ?.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+      ?.sort((a, b) => Date.parse(b.entry_at) - Date.parse(a.entry_at))
       ?.slice(firstPageIndex, lastPageIndex)
   }, [rawData, currentPage])
 
