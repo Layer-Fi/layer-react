@@ -4,6 +4,7 @@ import { useElementSize } from '../../hooks/useElementSize'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { hasMatch, isCredit } from '../../utils/bankTransactions'
+import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionsMode,
@@ -27,6 +28,8 @@ export interface BankTransactionMobileListItemProps {
   initialLoad?: boolean
   showTooltips: boolean
   mode: BankTransactionsMode
+  showDescriptions?: boolean
+  showReceiptUploads?: boolean
   isFirstItem?: boolean
 }
 
@@ -59,6 +62,8 @@ export const BankTransactionMobileListItem = ({
   initialLoad,
   showTooltips,
   isFirstItem = false,
+  showDescriptions,
+  showReceiptUploads,
 }: BankTransactionMobileListItemProps) => {
   const {
     transactionIdToOpen,
@@ -259,6 +264,13 @@ export const BankTransactionMobileListItem = ({
                 bankTransaction={bankTransaction}
                 showTooltips={showTooltips}
               />
+              {showReceiptUploads && (
+                <BankTransactionReceipts
+                  bankTransaction={bankTransaction}
+                  isActive={open}
+                  floatingActions={false}
+                />
+              )}
             </div>
           )}
         </div>

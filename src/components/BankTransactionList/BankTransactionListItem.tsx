@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import ChevronDownFill from '../../icons/ChevronDownFill'
+import FileIcon from '../../icons/File'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types'
 import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
@@ -141,6 +142,10 @@ export const BankTransactionListItem = ({
           <span className={`${className}__heading-account-name`}>
             {bankTransaction.account_name ?? ''}
           </span>
+          {bankTransaction?.document_ids &&
+          bankTransaction?.document_ids.length > 0 ? (
+            <FileIcon size={12} />
+          ) : null}
         </div>
         <div
           onClick={toggleOpen}

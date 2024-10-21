@@ -796,6 +796,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       key={index}
                       url={url.url}
                       type={url.type}
+                      floatingActions={!asListItem}
                       uploadPending={url.status === 'pending'}
                       deletePending={url.status === 'deleting'}
                       name={url.name ?? `Receipt ${index + 1}`}

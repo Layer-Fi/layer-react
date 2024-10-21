@@ -5,10 +5,12 @@ import LoaderIcon from '../../icons/Loader'
 import TrashIcon from '../../icons/Trash'
 import { IconButton } from '../Button'
 import { Text, TextSize } from '../Typography'
+import classNames from 'classnames'
 
 export interface FileThumbProps {
   url?: string
   type?: string
+  floatingActions?: boolean
   uploadPending?: boolean
   deletePending?: boolean
   name?: string
@@ -23,6 +25,7 @@ export interface FileThumbProps {
 export const FileThumb = ({
   url,
   type,
+  floatingActions = false,
   uploadPending,
   deletePending,
   name,
@@ -36,41 +39,53 @@ export const FileThumb = ({
   const disabled = uploadPending || deletePending
 
   return (
-    <div className='Layer__file-thumb'>
-      <div className='Layer__file-thumb__img'>
-        {url && (
-          <img
-            src={url}
-            alt={name}
-            onError={({ currentTarget }) =>
-              (currentTarget.style.display = 'none')
-            }
-          />
-        )}
-      </div>
-      <div className='Layer__file-thumb__details'>
-        <div className='Layer__file-thumb__details__name'>{name}</div>
-        {uploadPending || deletePending ? (
-          <div className='Layer__file-thumb__details__uploading'>
-            <Text as='span' size={TextSize.sm}>
-              {deletePending ? 'Deleting...' : 'Uploading'}
+    <div
+      className={classNames(
+        'Layer__file-thumb',
+        floatingActions && 'Layer__file-thumb--floating',
+      )}
+    >
+      <div className='Layer__file-thumb__main'>
+        <div className='Layer__file-thumb__img'>
+          {url && (
+            <img
+              src={url}
+              alt={name}
+              onError={({ currentTarget }) =>
+                (currentTarget.style.display = 'none')
+              }
+            />
+          )}
+        </div>
+        <div className='Layer__file-thumb__details'>
+          <div className='Layer__file-thumb__details__name'>{name}</div>
+          {uploadPending || deletePending ? (
+            <div className='Layer__file-thumb__details__uploading'>
+              <Text as='span' size={TextSize.sm}>
+                {deletePending ? 'Deleting...' : 'Uploading'}
+              </Text>
+              <LoaderIcon className='Layer__anim--rotating' size={11} />
+            </div>
+          ) : error ? (
+            <Text
+              as='span'
+              size={TextSize.sm}
+              className='Layer__file-thumb__details__error'
+            >
+              {error}
             </Text>
-            <LoaderIcon className='Layer__anim--rotating' size={11} />
-          </div>
-        ) : error ? (
-          <Text
-            as='span'
-            size={TextSize.sm}
-            className='Layer__file-thumb__details__error'
-          >
-            {error}
-          </Text>
-        ) : (
-          <div className='Layer__file-thumb__details__date'>{date}</div>
-        )}
+          ) : (
+            <div className='Layer__file-thumb__details__date'>{date}</div>
+          )}
+        </div>
       </div>
       {enableOpen || enableDownload || onDelete ? (
-        <div className='Layer__file-thumb__actions'>
+        <div
+          className={classNames(
+            'Layer__file-thumb__actions',
+            floatingActions && 'Layer__file-thumb__actions--floating',
+          )}
+        >
           {onDelete && (
             <IconButton
               onClick={onDelete}
