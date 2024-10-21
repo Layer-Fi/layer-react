@@ -3,6 +3,7 @@ import { BalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Container } from '../../components/Container'
 import { DateRangeDatePickerModes } from '../../components/DatePicker/DatePicker'
+import { CustomDateRange } from '../../components/DatePicker/DatePickerOptions'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossCompareOptionsProps } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -38,9 +39,11 @@ export interface ReportsProps {
   profitAndLossConfig?: {
     datePickerMode?: DateRangeDatePickerModes
     csvMoneyFormat?: MoneyFormat
+    customDateRanges?: CustomDateRange[]
   }
   statementOfCashFlowConfig?: {
     datePickerMode?: DateRangeDatePickerModes
+    customDateRanges?: CustomDateRange[]
   }
 }
 
@@ -54,9 +57,11 @@ export interface ReportsPanelProps {
   profitAndLossConfig?: {
     datePickerMode?: DateRangeDatePickerModes
     csvMoneyFormat?: MoneyFormat
+    customDateRanges?: CustomDateRange[]
   }
   statementOfCashFlowConfig?: {
     datePickerMode?: DateRangeDatePickerModes
+    customDateRanges?: CustomDateRange[]
   }
   view: ViewBreakpoint
 }
@@ -154,6 +159,7 @@ const ReportsPanel = ({
           stringOverrides={stringOverrides}
           comparisonConfig={comparisonConfig}
           datePickerMode={profitAndLossConfig?.datePickerMode}
+          customDateRanges={profitAndLossConfig?.customDateRanges}
           csvMoneyFormat={profitAndLossConfig?.csvMoneyFormat}
           parentRef={containerRef}
           view={view}
@@ -166,6 +172,7 @@ const ReportsPanel = ({
         <StatementOfCashFlow
           stringOverrides={stringOverrides?.statementOfCashflow}
           datePickerMode={statementOfCashFlowConfig?.datePickerMode}
+          customDateRanges={statementOfCashFlowConfig?.customDateRanges}
         />
       )}
     </>

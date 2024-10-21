@@ -3,6 +3,7 @@ import { MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
 import { ReportsStringOverrides } from '../../views/Reports/Reports'
 import { DateRangeDatePickerModes } from '../DatePicker/DatePicker'
+import { CustomDateRange } from '../DatePicker/DatePickerOptions'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
@@ -15,6 +16,7 @@ export interface ProfitAndLossReportProps {
   stringOverrides?: ReportsStringOverrides
   comparisonConfig?: ProfitAndLossCompareOptionsProps
   datePickerMode?: DateRangeDatePickerModes
+  customDateRanges?: CustomDateRange[]
   csvMoneyFormat?: MoneyFormat
   parentRef?: RefObject<HTMLDivElement>
   view?: ViewBreakpoint
@@ -24,6 +26,7 @@ export const ProfitAndLossReport = ({
   stringOverrides,
   comparisonConfig,
   datePickerMode,
+  customDateRanges,
   csvMoneyFormat,
   parentRef,
   view,
@@ -38,7 +41,10 @@ export const ProfitAndLossReport = ({
           <HeaderRow>
             <HeaderCol>
               <>
-                <ProfitAndLoss.DatePicker datePickerMode={datePickerMode} />
+                <ProfitAndLoss.DatePicker
+                  datePickerMode={datePickerMode}
+                  customDateRanges={customDateRanges}
+                />
                 {comparisonConfig && view === 'desktop' ? (
                   <ProfitAndLoss.CompareOptions
                     tagComparisonOptions={comparisonConfig.tagComparisonOptions}

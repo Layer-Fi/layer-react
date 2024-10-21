@@ -7,6 +7,7 @@ import {
   DatePickerMode,
   DateRangeDatePickerModes,
 } from '../DatePicker/DatePicker'
+import { CustomDateRange } from '../DatePicker/DatePickerOptions'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Loader } from '../Loader'
 import { StatementOfCashFlowTable } from '../StatementOfCashFlowTable'
@@ -19,15 +20,16 @@ const COMPONENT_NAME = 'statement-of-cash-flow'
 
 export interface StatementOfCashFlowStringOverrides {
   statementOfCashFlowTable?: StatementOfCashFlowTableStringOverrides
-  datePickerMode?: DatePickerMode
 }
 
 export interface StatementOfCashFlowProps {
   stringOverrides?: StatementOfCashFlowStringOverrides
   datePickerMode?: DateRangeDatePickerModes
+  customDateRanges?: CustomDateRange[]
 }
 export const StatementOfCashFlow = ({
   stringOverrides,
+  customDateRanges,
   datePickerMode,
 }: StatementOfCashFlowProps) => {
   const cashContextData = useStatementOfCashFlow()
@@ -36,6 +38,7 @@ export const StatementOfCashFlow = ({
       <StatementOfCashFlowView
         stringOverrides={stringOverrides}
         datePickerMode={datePickerMode}
+        customDateRanges={customDateRanges}
       />
     </StatementOfCashFlowContext.Provider>
   )
@@ -43,6 +46,7 @@ export const StatementOfCashFlow = ({
 
 const StatementOfCashFlowView = ({
   stringOverrides,
+  customDateRanges,
   datePickerMode = 'dayRangePicker',
 }: StatementOfCashFlowProps) => {
   const [startDate, setStartDate] = useState(
@@ -83,6 +87,7 @@ const StatementOfCashFlowView = ({
     ) : (
       <DatePicker
         selected={[startDate, endDate]}
+        customDateRanges={customDateRanges}
         onChange={dates =>
           handleDateChange(dates as [Date | null, Date | null])
         }

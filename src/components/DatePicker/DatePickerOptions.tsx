@@ -12,15 +12,39 @@ import {
   subYears,
 } from 'date-fns'
 
+export interface CustomDateRange {
+  label: string
+  startDate: Date
+  endDate: Date
+}
 export const DatePickerOptions = ({
   options,
+  customDateRanges: customOptions,
   setSelectedDate,
 }: {
   options: string[]
+  customDateRanges: CustomDateRange[]
   setSelectedDate: (dates: [Date | null, Date | null]) => void
 }) => {
   const optionsComponents: React.ReactNode[] = []
 
+  customOptions.map(customOption => {
+    console.log(
+      `Custom option: ${customOption.label} ${customOption.startDate} ${customOption.endDate}`,
+    )
+  })
+  const customOptionComponents: React.ReactNode[] = customOptions.map(
+    customOption => (
+      <TextButton
+        key={customOption.label}
+        onClick={() => {
+          setSelectedDate([customOption.startDate, customOption.endDate])
+        }}
+      >
+        {customOption.label}
+      </TextButton>
+    ),
+  )
   const getOptionComponent = (option: string) => {
     switch (option) {
       case 'this-month':
@@ -124,6 +148,7 @@ export const DatePickerOptions = ({
       optionsComponents.push(getOptionComponent(option))
     })
   }
+  optionsComponents.push(...customOptionComponents)
 
   if (optionsComponents.length === 0) {
     return <></>

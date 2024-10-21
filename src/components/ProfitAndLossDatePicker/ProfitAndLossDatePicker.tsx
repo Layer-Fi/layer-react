@@ -3,15 +3,18 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { DatePicker } from '../DatePicker'
 import { DatePickerMode } from '../DatePicker/DatePicker'
+import { CustomDateRange } from '../DatePicker/DatePickerOptions'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 export type ProfitAndLossDatePickerProps = {
   datePickerMode?: DatePickerMode
+  customDateRanges?: CustomDateRange[]
 }
 
 export const ProfitAndLossDatePicker = ({
   datePickerMode = 'monthPicker',
+  customDateRanges,
 }: ProfitAndLossDatePickerProps) => {
   const { business } = useLayerContext()
   const { changeDateRange, dateRange } = useContext(ProfitAndLoss.Context)
@@ -34,6 +37,7 @@ export const ProfitAndLossDatePicker = ({
     return (
       <DatePicker
         mode={datePickerMode}
+        customDateRanges={customDateRanges}
         selected={[dateRange.startDate, dateRange.endDate]}
         onChange={dateSet => {
           const dates = dateSet as [Date | null, Date | null]
@@ -53,6 +57,7 @@ export const ProfitAndLossDatePicker = ({
   return (
     <DatePicker
       mode={datePickerMode}
+      customDateRanges={customDateRanges}
       selected={dateRange.startDate}
       onChange={date => {
         if (!Array.isArray(date)) {

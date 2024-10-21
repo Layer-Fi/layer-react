@@ -4,7 +4,7 @@ import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
 import { Button, ButtonVariant } from '../Button'
-import { DatePickerOptions } from './DatePickerOptions'
+import { CustomDateRange, DatePickerOptions } from './DatePickerOptions'
 import classNames from 'classnames'
 
 export type DatePickerMode =
@@ -23,6 +23,7 @@ interface DatePickerProps {
   timeCaption?: string
   placeholderText?: string
   options?: string[]
+  customDateRanges?: CustomDateRange[]
   wrapperClassName?: string
   calendarClassName?: string
   popperClassName?: string
@@ -67,6 +68,7 @@ export const DatePicker = ({
   timeCaption,
   placeholderText,
   options = [],
+  customDateRanges = [],
   wrapperClassName,
   calendarClassName,
   popperClassName,
@@ -285,9 +287,10 @@ export const DatePicker = ({
         }}
         {...props}
       >
-        {mode === 'dayRangePicker' && (
+        {['dayRangePicker'].includes(mode) && (
           <DatePickerOptions
             options={options}
+            customDateRanges={customDateRanges}
             setSelectedDate={setSelectedDates}
           />
         )}
