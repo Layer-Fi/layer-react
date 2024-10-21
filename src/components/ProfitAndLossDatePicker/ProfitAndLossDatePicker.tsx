@@ -1,22 +1,32 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { DatePicker } from '../DatePicker'
-import { DatePickerMode } from '../DatePicker/DatePicker'
+import { DatePickerMode } from '../DatePicker/ModeSelector/DatePickerModeSelector'
+import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 export type ProfitAndLossDatePickerProps = {
+  /**
+   * @deprecated Use `defaultDatePickedMode` instead
+   */
   datePickerMode?: DatePickerMode
+  defaultDatePickerMode?: DatePickerMode
 }
 
 export const ProfitAndLossDatePicker = ({
-  datePickerMode = 'monthPicker',
+  datePickerMode: deprecated_datePickerMode,
+  defaultDatePickerMode,
 }: ProfitAndLossDatePickerProps) => {
   const { business } = useLayerContext()
   const { changeDateRange, dateRange } = useContext(ProfitAndLoss.Context)
   const { refetch, compareMode, compareMonths } = useContext(
     ProfitAndLoss.ComparisonContext,
+  )
+
+  const [datePickerMode, setDatePickerMode] = useState<DatePickerMode>(
+    defaultDatePickerMode ?? deprecated_datePickerMode ?? 'monthPicker',
   )
 
   const getComparisonData = (date: Date) => {
@@ -34,6 +44,8 @@ export const ProfitAndLossDatePicker = ({
     return (
       <DatePicker
         mode={datePickerMode}
+        allowedModes={['dayRangePicker', 'monthPicker']}
+        onChangeMode={setDatePickerMode}
         selected={[dateRange.startDate, dateRange.endDate]}
         onChange={dateSet => {
           const dates = dateSet as [Date | null, Date | null]
@@ -46,6 +58,9 @@ export const ProfitAndLossDatePicker = ({
         }}
         minDate={minDate}
         dateFormat='MMM d'
+        slots={{
+          ModeSelector: DatePickerModeSelector,
+        }}
       />
     )
   }
@@ -53,6 +68,8 @@ export const ProfitAndLossDatePicker = ({
   return (
     <DatePicker
       mode={datePickerMode}
+      allowedModes={['dayRangePicker', 'monthPicker']}
+      onChangeMode={setDatePickerMode}
       selected={dateRange.startDate}
       onChange={date => {
         if (!Array.isArray(date)) {
@@ -64,6 +81,9 @@ export const ProfitAndLossDatePicker = ({
         }
       }}
       minDate={minDate}
+      slots={{
+        ModeSelector: DatePickerModeSelector,
+      }}
     />
   )
 }

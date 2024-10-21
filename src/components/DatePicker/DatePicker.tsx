@@ -1,23 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, type FC } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
 import { Button, ButtonVariant } from '../Button'
 import { DatePickerOptions } from './DatePickerOptions'
+import type {
+  DatePickerMode,
+  DatePickerModeSelectorProps,
+} from './ModeSelector/DatePickerModeSelector'
 import classNames from 'classnames'
 
-export type DatePickerMode =
-  | 'dayPicker'
-  | 'monthRangePicker'
-  | 'timePicker'
-  | DateRangeDatePickerModes
-
-export type DateRangeDatePickerModes = 'dayRangePicker' | 'monthPicker'
 interface DatePickerProps {
   mode: DatePickerMode
   selected: Date | [Date | null, Date | null]
   onChange: (date: Date | [Date, Date | null]) => void
+  allowedModes?: DatePickerMode[]
   dateFormat?: string
   timeIntervals?: number
   timeCaption?: string
@@ -30,6 +28,10 @@ interface DatePickerProps {
   minDate?: Date
   maxDate?: Date
   navigateArrows?: boolean
+  onChangeMode?: (mode: DatePickerMode) => void
+  slots?: {
+    ModeSelector: FC<DatePickerModeSelectorProps>
+  }
 }
 
 const getDefaultRangeDate = (
@@ -58,6 +60,7 @@ export const DatePicker = ({
   selected,
   onChange,
   mode = 'dayPicker',
+  allowedModes,
   dateFormat = mode === 'monthPicker' || mode === 'monthRangePicker'
     ? 'MMM, yyyy'
     : mode === 'timePicker'
@@ -74,8 +77,12 @@ export const DatePicker = ({
   maxDate = new Date(),
   currentDateOption = true,
   navigateArrows = mode === 'monthPicker',
+  onChangeMode,
+  slots,
   ...props
 }: DatePickerProps) => {
+  const { ModeSelector } = slots ?? {}
+
   const pickerRef = useRef<ReactDatePicker>(null)
   const [updatePickerDate, setPickerDate] = useState<boolean>(false)
   const [selectedDates, setSelectedDates] = useState<
@@ -221,6 +228,34 @@ export const DatePicker = ({
     }
   }
 
+  const onChangeModeInternal = (mode: DatePickerMode) => {
+    if (!onChangeMode) {
+      console.warn('`onChangeMode` expected when using `ModeSelector`')
+      return
+    }
+
+    /*
+     * This entire block is a hack to force the date.
+     *
+     * This is extremely bad code - do not copy.
+     */
+    const firstSelectedDate = Array.isArray(selectedDates)
+      ? selectedDates[0]
+      : selectedDates ?? new Date()
+
+    if (isRangeMode(mode)) {
+      setStartDate(firstSelectedDate)
+      setEndDate(firstSelectedDate)
+      setSelectedDates([firstSelectedDate, firstSelectedDate])
+    } else {
+      setStartDate(null)
+      setEndDate(null)
+      setSelectedDates(firstSelectedDate)
+    }
+
+    onChangeMode(mode)
+  }
+
   return (
     <div className={wrapperClassNames}>
       <ReactDatePicker
@@ -285,6 +320,13 @@ export const DatePicker = ({
         }}
         {...props}
       >
+        {ModeSelector && (
+          <ModeSelector
+            mode={mode}
+            allowedModes={allowedModes ?? [mode]}
+            onChangeMode={onChangeModeInternal}
+          />
+        )}
         {mode === 'dayRangePicker' && (
           <DatePickerOptions
             options={options}
