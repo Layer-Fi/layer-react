@@ -104,7 +104,7 @@ const JournalTableContent = ({
             {entryNumber(row)}
           </TableCell>
           <TableCell>
-            {row.date && formatTime(parseISO(row.date), DATE_FORMAT)}
+            {row.entry_at && formatTime(parseISO(row.entry_at), DATE_FORMAT)}
           </TableCell>
           <TableCell>{humanizeEnum(row.entry_type)}</TableCell>
           <TableCell>({row.line_items.length})</TableCell>
