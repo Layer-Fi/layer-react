@@ -56,8 +56,14 @@ export const LinkAccountsContent = ({
   onBack,
   onNext,
 }: LinkAccountsProps) => {
-  const { data, loadingStatus, error, refetchAccounts, addConnection } =
-    useContext(LinkedAccountsContext)
+  const {
+    data,
+    loadingStatus,
+    error,
+    refetchAccounts,
+    addConnection,
+    isAddingAccount,
+  } = useContext(LinkedAccountsContext)
 
   return (
     <div className='Layer__link-accounts'>
@@ -90,6 +96,7 @@ export const LinkAccountsContent = ({
               asWidget={asWidget}
             />
           ))}
+          {isAddingAccount && <Loader />}
         </div>
       ) : null}
       <ActionableRow

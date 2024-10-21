@@ -12,6 +12,7 @@ type UseLinkedAccounts = () => {
   isLoading: boolean
   loadingStatus: LoadedStatus
   isValidating: boolean
+  isAddingAccount?: boolean
   error: unknown
   addConnection: (source: Source) => void
   removeConnection: (source: Source, sourceId: string) => void // means, "unlink institution"
@@ -47,6 +48,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const USE_PLAID_SANDBOX = usePlaidSandbox ?? true
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
+  const [isAddingAccount, setIsAddingAccount] = useState(false)
+  const [expectedNumberOfAccounts, setExpectedNumberOfAccounts] = useState<
+    number | null
+  >(null)
 
   const queryKey =
     businessId && auth?.access_token && `linked-accounts-${businessId}`
@@ -79,6 +84,28 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       setLoadingStatus('complete')
     }
   }, [isLoading])
+
+  useEffect(() => {
+    if (
+      responseData?.data.external_accounts &&
+      (!expectedNumberOfAccounts ||
+        responseData?.data.external_accounts.length > expectedNumberOfAccounts)
+    ) {
+      setExpectedNumberOfAccounts(responseData?.data.external_accounts.length)
+    } else if (
+      responseData?.data.external_accounts &&
+      expectedNumberOfAccounts !== null &&
+      responseData?.data.external_accounts.length === expectedNumberOfAccounts
+    ) {
+      setIsAddingAccount(false)
+    }
+  }, [responseData])
+
+  console.log(
+    'expectedNumberOfAccounts',
+    expectedNumberOfAccounts,
+    isAddingAccount,
+  )
 
   /**
    * Initiates an add connection flow with Plaid
@@ -136,7 +163,9 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       publicToken: string,
       metadata: PlaidLinkOnSuccessMetadata,
     ) => {
+      console.log('on success', linkMode)
       if (linkMode == 'add') {
+        setIsAddingAccount(true)
         // Note: a sync is kicked off in the backend in this endpoint
         exchangePlaidPublicToken(publicToken, metadata)
       } else {
@@ -324,6 +353,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     isLoading,
     loadingStatus,
     isValidating,
+    isAddingAccount,
     error: responseError,
     addConnection,
     removeConnection,

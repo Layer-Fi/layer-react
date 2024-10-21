@@ -212,6 +212,19 @@
   }
 }
 
+.Layer__btn--primary:not(.Layer__btn--with-primary-icon):disabled {
+  .Layer__btn-icon {
+    color: var(--color-base-500);
+  }
+
+  &:hover,
+  &.Layer__btn--active {
+    .Layer__btn-icon {
+      color: var(--color-base-500);
+    }
+  }
+}
+
 .Layer__btn-content {
   padding: 2px;
   display: flex;

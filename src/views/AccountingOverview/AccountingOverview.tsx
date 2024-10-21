@@ -2,14 +2,18 @@ import React, { ReactNode, useState } from 'react'
 import { Container } from '../../components/Container'
 import { Header, HeaderCol, HeaderRow } from '../../components/Header'
 import { Onboarding } from '../../components/Onboarding'
+import {
+  LinkAccounts,
+  LinkAccountsContent,
+} from '../../components/PlatformOnboarding/LinkAccounts'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { View } from '../../components/View'
-import classNames from 'classnames'
 import { OnboardingStep } from '../../types/layer_context'
+import classNames from 'classnames'
 
 interface AccountingOverviewStringOverrides {
   header?: string
@@ -89,6 +93,9 @@ export const AccountingOverview = ({
             {middleBanner}
           </Container>
         )}
+        <div style={{ marginTop: 'var(--spacing-lg)' }}>
+          <LinkAccounts inBox />
+        </div>
         <div className='Layer__accounting-overview-profit-and-loss-charts'>
           <Toggle
             name='pnl-detailed-charts'
