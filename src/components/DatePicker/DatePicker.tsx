@@ -22,7 +22,6 @@ interface DatePickerProps {
   timeIntervals?: number
   timeCaption?: string
   placeholderText?: string
-  options?: string[]
   customDateRanges?: CustomDateRange[]
   wrapperClassName?: string
   calendarClassName?: string
@@ -67,8 +66,7 @@ export const DatePicker = ({
   timeIntervals = 15,
   timeCaption,
   placeholderText,
-  options = [],
-  customDateRanges = [],
+  customDateRanges,
   wrapperClassName,
   calendarClassName,
   popperClassName,
@@ -287,9 +285,8 @@ export const DatePicker = ({
         }}
         {...props}
       >
-        {['dayRangePicker'].includes(mode) && (
+        {mode === 'dayRangePicker' && (
           <DatePickerOptions
-            options={options}
             customDateRanges={customDateRanges}
             setSelectedDate={setSelectedDates}
           />
