@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { pdfjs } from 'react-pdf'
+import { Document, Page } from 'react-pdf'
 import DownloadCloud from '../../icons/DownloadCloud'
 import EyeIcon from '../../icons/Eye'
 import LoaderIcon from '../../icons/Loader'
@@ -35,85 +37,114 @@ export const FileThumb = ({
 }: FileThumbProps) => {
   const disabled = uploadPending || deletePending
 
+  const [numPages, setNumPages] = useState<number>()
+  const [pageNumber, setPageNumber] = useState<number>(1)
+
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+    console.log('onDocumentLoadSuccess', numPages)
+    setNumPages(numPages)
+  }
+
+  useEffect(() => {
+    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+  }, [])
+
   return (
-    <div className='Layer__file-thumb'>
-      <div className='Layer__file-thumb__img'>
-        {url && (
-          <img
-            src={url}
-            alt={name}
-            onError={({ currentTarget }) =>
-              (currentTarget.style.display = 'none')
-            }
-          />
-        )}
-      </div>
-      <div className='Layer__file-thumb__details'>
-        <div className='Layer__file-thumb__details__name'>{name}</div>
-        {uploadPending || deletePending ? (
-          <div className='Layer__file-thumb__details__uploading'>
-            <Text as='span' size={TextSize.sm}>
-              {deletePending ? 'Deleting...' : 'Uploading'}
-            </Text>
-            <LoaderIcon className='Layer__anim--rotating' size={11} />
-          </div>
-        ) : error ? (
-          <Text
-            as='span'
-            size={TextSize.sm}
-            className='Layer__file-thumb__details__error'
-          >
-            {error}
-          </Text>
-        ) : (
-          <div className='Layer__file-thumb__details__date'>{date}</div>
-        )}
-      </div>
-      {enableOpen || enableDownload || onDelete ? (
-        <div className='Layer__file-thumb__actions'>
-          {onDelete && (
-            <IconButton
-              onClick={onDelete}
-              active={!disabled}
-              disabled={disabled}
-              icon={
-                <TrashIcon className='Layer__file-thumb__actions__remove' />
+    <>
+      <div className='Layer__file-thumb'>
+        <div className='Layer__file-thumb__img'>
+          {url && (
+            <img
+              src={url}
+              alt={name}
+              onError={({ currentTarget }) =>
+                (currentTarget.style.display = 'none')
               }
             />
           )}
-          {enableDownload && url ? (
-            <IconButton
-              active={!disabled}
-              href={url}
-              disabled={disabled}
-              download={name ?? 'receipt'}
-              icon={
-                <DownloadCloud className='Layer__file-thumb__actions__download' />
-              }
-            />
-          ) : null}
-          {onOpen ? (
-            <IconButton
-              active={!disabled}
-              icon={<EyeIcon className='Layer__file-thumb__actions__open' />}
-              disabled={disabled}
-              onClick={e => {
-                onOpen(e as React.MouseEvent<HTMLAnchorElement, MouseEvent>)
-              }}
-            />
-          ) : null}
-          {enableOpen && url && !onOpen ? (
-            <IconButton
-              href={url}
-              target='_blank'
-              rel='noopener noreferrer'
-              active={!disabled}
-              disabled={disabled}
-              icon={<EyeIcon className='Layer__file-thumb__actions__open' />}
-            />
-          ) : null}
         </div>
-      ) : null}
-    </div>
+        <div className='Layer__file-thumb__details'>
+          <div className='Layer__file-thumb__details__name'>{name}</div>
+          {uploadPending || deletePending ? (
+            <div className='Layer__file-thumb__details__uploading'>
+              <Text as='span' size={TextSize.sm}>
+                {deletePending ? 'Deleting...' : 'Uploading'}
+              </Text>
+              <LoaderIcon className='Layer__anim--rotating' size={11} />
+            </div>
+          ) : error ? (
+            <Text
+              as='span'
+              size={TextSize.sm}
+              className='Layer__file-thumb__details__error'
+            >
+              {error}
+            </Text>
+          ) : (
+            <div className='Layer__file-thumb__details__date'>{date}</div>
+          )}
+        </div>
+        {enableOpen || enableDownload || onDelete ? (
+          <div className='Layer__file-thumb__actions'>
+            {onDelete && (
+              <IconButton
+                onClick={onDelete}
+                active={!disabled}
+                disabled={disabled}
+                icon={
+                  <TrashIcon className='Layer__file-thumb__actions__remove' />
+                }
+              />
+            )}
+            {enableDownload && url ? (
+              <IconButton
+                active={!disabled}
+                href={url}
+                disabled={disabled}
+                download={name ?? 'receipt'}
+                icon={
+                  <DownloadCloud className='Layer__file-thumb__actions__download' />
+                }
+              />
+            ) : null}
+            {onOpen ? (
+              <IconButton
+                active={!disabled}
+                icon={<EyeIcon className='Layer__file-thumb__actions__open' />}
+                disabled={disabled}
+                onClick={e => {
+                  onOpen(e as React.MouseEvent<HTMLAnchorElement, MouseEvent>)
+                }}
+              />
+            ) : null}
+            {enableOpen && url && !onOpen ? (
+              <IconButton
+                href={url}
+                target='_blank'
+                rel='noopener noreferrer'
+                active={!disabled}
+                disabled={disabled}
+                icon={<EyeIcon className='Layer__file-thumb__actions__open' />}
+              />
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+
+      {type === 'application/pdf' && (
+        <div style={{ width: '100%', minHeight: 400 }}>
+          <Document
+            file={url}
+            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={err => console.error('onLoadError', err)}
+          >
+            <Page pageNumber={pageNumber} />
+          </Document>
+          <p>
+            Page {pageNumber} of {numPages}
+          </p>
+        </div>
+      )}
+    </>
   )
 }
