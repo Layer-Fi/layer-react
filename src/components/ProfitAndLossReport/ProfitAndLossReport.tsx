@@ -1,7 +1,7 @@
 import React, { RefObject, useContext } from 'react'
 import { View as ViewType } from '../../types/general'
 import { ReportsStringOverrides } from '../../views/Reports/Reports'
-import type { RangeReportConfig } from '../../views/Reports/reportTypes'
+import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
@@ -15,7 +15,7 @@ export type ProfitAndLossReportProps = {
   comparisonConfig?: ProfitAndLossCompareOptionsProps
   parentRef?: RefObject<HTMLDivElement>
   view?: ViewBreakpoint
-} & RangeReportConfig
+} & TimeRangePickerConfig
 
 export const ProfitAndLossReport = ({
   stringOverrides,

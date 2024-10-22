@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
-import type { RangeReportConfig } from '../../views/Reports/reportTypes'
+import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { DatePicker } from '../DatePicker'
 import {
   DatePickerMode,
@@ -11,7 +11,7 @@ import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerMod
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
-export type ProfitAndLossDatePickerProps = RangeReportConfig
+export type ProfitAndLossDatePickerProps = TimeRangePickerConfig
 
 export const ProfitAndLossDatePicker = ({
   allowedDatePickerModes,

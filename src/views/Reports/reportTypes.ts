@@ -2,7 +2,7 @@ import type { CustomDateRange } from '../../components/DatePicker/DatePickerOpti
 import type { RangePickerMode } from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
 import type { MoneyFormat } from '../../types'
 
-export type RangeReportConfig = {
+export type TimeRangePickerConfig = {
   /**
    * @deprecated Use `defaultDatePickerMode` instead
    */

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { StatementOfCashFlowContext } from '../../contexts/StatementOfCashContext'
 import { TableProvider } from '../../contexts/TableContext'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow'
-import type { RangeReportConfig } from '../../views/Reports/reportTypes'
+import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { DatePicker } from '../DatePicker'
 import type { DatePickerMode } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import {
@@ -25,7 +25,7 @@ export interface StatementOfCashFlowStringOverrides {
 
 export type StatementOfCashFlowProps = {
   stringOverrides?: StatementOfCashFlowStringOverrides
-} & RangeReportConfig
+} & TimeRangePickerConfig
 
 export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
   const cashContextData = useStatementOfCashFlow()
@@ -38,7 +38,7 @@ export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
 
 type StatementOfCashFlowViewProps = {
   stringOverrides?: StatementOfCashFlowStringOverrides
-} & RangeReportConfig
+} & TimeRangePickerConfig
 
 const StatementOfCashFlowView = ({
   stringOverrides,

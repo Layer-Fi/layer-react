@@ -13,7 +13,7 @@ import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useElementViewSize } from '../../hooks/useElementViewSize'
 import { View as ViewType } from '../../types/general'
-import type { RangeReportConfig } from './reportTypes'
+import type { TimeRangePickerConfig } from './reportTypes'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -34,8 +34,8 @@ export interface ReportsProps {
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
   comparisonConfig?: ProfitAndLossCompareOptionsProps
-  profitAndLossConfig?: RangeReportConfig
-  statementOfCashFlowConfig?: RangeReportConfig
+  profitAndLossConfig?: TimeRangePickerConfig
+  statementOfCashFlowConfig?: TimeRangePickerConfig
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -45,8 +45,8 @@ export interface ReportsPanelProps {
   openReport: ReportType
   stringOverrides?: ReportsStringOverrides
   comparisonConfig?: ProfitAndLossCompareOptionsProps
-  profitAndLossConfig?: RangeReportConfig
-  statementOfCashFlowConfig?: RangeReportConfig
+  profitAndLossConfig?: TimeRangePickerConfig
+  statementOfCashFlowConfig?: TimeRangePickerConfig
   view: ViewBreakpoint
 }
 
