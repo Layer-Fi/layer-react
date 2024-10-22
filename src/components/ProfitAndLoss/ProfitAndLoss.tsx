@@ -39,7 +39,7 @@ const PNLContext = createContext<PNLContextType>({
     expenses: undefined,
     revenue: undefined,
   },
-  tagFilter: undefined
+  tagFilter: undefined,
 })
 
 type Props = PropsWithChildren & {

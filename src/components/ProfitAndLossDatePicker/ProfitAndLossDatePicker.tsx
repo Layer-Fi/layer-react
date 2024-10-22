@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
+import type { RangeReportConfig } from '../../views/Reports/reportTypes'
 import { DatePicker } from '../DatePicker'
-import { CustomDateRange } from '../DatePicker/DatePickerOptions'
 import {
   DatePickerMode,
   DEFAULT_ALLOWED_PICKER_MODES,
@@ -11,16 +11,10 @@ import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerMod
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
-export type ProfitAndLossDatePickerProps = {
-  /**
-   * @deprecated Use `defaultDatePickedMode` instead
-   */
-  datePickerMode?: DatePickerMode
-  defaultDatePickerMode?: DatePickerMode
-  customDateRanges?: CustomDateRange[]
-}
+export type ProfitAndLossDatePickerProps = RangeReportConfig
 
 export const ProfitAndLossDatePicker = ({
+  allowedDatePickerModes,
   datePickerMode: deprecated_datePickerMode,
   defaultDatePickerMode,
   customDateRanges,
@@ -51,7 +45,7 @@ export const ProfitAndLossDatePicker = ({
       <DatePicker
         mode={datePickerMode}
         customDateRanges={customDateRanges}
-        allowedModes={DEFAULT_ALLOWED_PICKER_MODES}
+        allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
         onChangeMode={setDatePickerMode}
         selected={[dateRange.startDate, dateRange.endDate]}
         onChange={dateSet => {
@@ -76,7 +70,7 @@ export const ProfitAndLossDatePicker = ({
     <DatePicker
       mode={datePickerMode}
       customDateRanges={customDateRanges}
-      allowedModes={DEFAULT_ALLOWED_PICKER_MODES}
+      allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
       onChangeMode={setDatePickerMode}
       selected={dateRange.startDate}
       onChange={date => {

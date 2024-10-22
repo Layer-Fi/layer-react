@@ -10,10 +10,7 @@ export type RangePickerMode =
 
 export type DatePickerMode = SingularPickerMode | RangePickerMode
 
-export const DEFAULT_ALLOWED_PICKER_MODES = [
-  'monthPicker',
-  'dayRangePicker',
-] as const
+export const DEFAULT_ALLOWED_PICKER_MODES = ['monthPicker'] as const
 
 const DATE_RANGE_MODE_CONFIG: Record<DatePickerMode, { label: string }> = {
   timePicker: { label: 'Time' },
