@@ -1,9 +1,7 @@
 import React, { RefObject, useContext } from 'react'
-import { MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
 import { ReportsStringOverrides } from '../../views/Reports/Reports'
-import { CustomDateRange } from '../DatePicker/DatePickerOptions'
-import { RangePickerMode } from '../DatePicker/ModeSelector/DatePickerModeSelector'
+import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
@@ -12,20 +10,19 @@ import { View } from '../View'
 
 type ViewBreakpoint = ViewType | undefined
 
-export interface ProfitAndLossReportProps {
+export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
   comparisonConfig?: ProfitAndLossCompareOptionsProps
-  datePickerMode?: RangePickerMode
-  customDateRanges?: CustomDateRange[]
-  csvMoneyFormat?: MoneyFormat
   parentRef?: RefObject<HTMLDivElement>
   view?: ViewBreakpoint
-}
+} & TimeRangePickerConfig
 
 export const ProfitAndLossReport = ({
   stringOverrides,
   comparisonConfig,
+  allowedDatePickerModes,
   datePickerMode,
+  defaultDatePickerMode,
   customDateRanges,
   csvMoneyFormat,
   parentRef,
@@ -42,7 +39,9 @@ export const ProfitAndLossReport = ({
             <HeaderCol>
               <>
                 <ProfitAndLoss.DatePicker
+                  allowedDatePickerModes={allowedDatePickerModes}
                   datePickerMode={datePickerMode}
+                  defaultDatePickerMode={defaultDatePickerMode}
                   customDateRanges={customDateRanges}
                 />
                 {comparisonConfig && view === 'desktop' ? (

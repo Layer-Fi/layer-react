@@ -12,11 +12,12 @@ import {
   subYears,
 } from 'date-fns'
 
-export interface CustomDateRange {
+export type CustomDateRange = {
   label: string
   startDate: Date
   endDate: Date
 }
+
 export const DatePickerOptions = ({
   customDateRanges = [
     {

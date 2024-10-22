@@ -2,8 +2,6 @@ import React, { RefObject, useState } from 'react'
 import { BalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Container } from '../../components/Container'
-import { CustomDateRange } from '../../components/DatePicker/DatePickerOptions'
-import { RangePickerMode } from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossCompareOptionsProps } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -14,8 +12,8 @@ import { StatementOfCashFlowStringOverrides } from '../../components/StatementOf
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useElementViewSize } from '../../hooks/useElementViewSize'
-import { MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
+import type { TimeRangePickerConfig } from './reportTypes'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -36,15 +34,8 @@ export interface ReportsProps {
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
   comparisonConfig?: ProfitAndLossCompareOptionsProps
-  profitAndLossConfig?: {
-    datePickerMode?: RangePickerMode
-    csvMoneyFormat?: MoneyFormat
-    customDateRanges?: CustomDateRange[]
-  }
-  statementOfCashFlowConfig?: {
-    datePickerMode?: RangePickerMode
-    customDateRanges?: CustomDateRange[]
-  }
+  profitAndLossConfig?: TimeRangePickerConfig
+  statementOfCashFlowConfig?: TimeRangePickerConfig
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -54,15 +45,8 @@ export interface ReportsPanelProps {
   openReport: ReportType
   stringOverrides?: ReportsStringOverrides
   comparisonConfig?: ProfitAndLossCompareOptionsProps
-  profitAndLossConfig?: {
-    datePickerMode?: RangePickerMode
-    csvMoneyFormat?: MoneyFormat
-    customDateRanges?: CustomDateRange[]
-  }
-  statementOfCashFlowConfig?: {
-    datePickerMode?: RangePickerMode
-    customDateRanges?: CustomDateRange[]
-  }
+  profitAndLossConfig?: TimeRangePickerConfig
+  statementOfCashFlowConfig?: TimeRangePickerConfig
   view: ViewBreakpoint
 }
 
@@ -158,11 +142,9 @@ const ReportsPanel = ({
         <ProfitAndLoss.Report
           stringOverrides={stringOverrides}
           comparisonConfig={comparisonConfig}
-          datePickerMode={profitAndLossConfig?.datePickerMode}
-          customDateRanges={profitAndLossConfig?.customDateRanges}
-          csvMoneyFormat={profitAndLossConfig?.csvMoneyFormat}
           parentRef={containerRef}
           view={view}
+          {...profitAndLossConfig}
         />
       )}
       {openReport === 'balanceSheet' && (
@@ -171,8 +153,7 @@ const ReportsPanel = ({
       {openReport === 'statementOfCashFlow' && (
         <StatementOfCashFlow
           stringOverrides={stringOverrides?.statementOfCashflow}
-          datePickerMode={statementOfCashFlowConfig?.datePickerMode}
-          customDateRanges={statementOfCashFlowConfig?.customDateRanges}
+          {...statementOfCashFlowConfig}
         />
       )}
     </>
