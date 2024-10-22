@@ -23,13 +23,16 @@ export interface ChartOfAccountsProps {
   withExpandAllButton?: boolean
   stringOverrides?: ChartOfAccountsStringOverrides
   templateAccountsEditable?: boolean
+  showReversalEntries?: boolean
 }
 
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
   const chartOfAccountsContextData = useChartOfAccounts({
     withDates: props.withDateControl,
   })
-  const ledgerAccountsContextData = useLedgerAccounts()
+  const ledgerAccountsContextData = useLedgerAccounts(
+    props.showReversalEntries ?? false,
+  )
   return (
     <ChartOfAccountsContext.Provider value={chartOfAccountsContextData}>
       <LedgerAccountsContext.Provider value={ledgerAccountsContextData}>

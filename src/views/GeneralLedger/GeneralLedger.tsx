@@ -18,6 +18,7 @@ export interface GeneralLedgerStringOverrides {
 
 export interface ChartOfAccountsOptions {
   templateAccountsEditable?: boolean
+  showReversalEntries?: boolean
 }
 export interface GeneralLedgerProps {
   title?: string // deprecated
@@ -66,6 +67,7 @@ export const GeneralLedgerView = ({
             templateAccountsEditable={
               chartOfAccountsOptions?.templateAccountsEditable
             }
+            showReversalEntries={chartOfAccountsOptions?.showReversalEntries}
           />
         ) : (
           <Journal stringOverrides={stringOverrides?.journal} />
