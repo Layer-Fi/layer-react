@@ -9,6 +9,7 @@ import { DataState, DataStateStatus } from '../DataState'
 import { LinkedAccountItemThumb } from '../LinkedAccounts'
 import { Loader } from '../Loader'
 import { Heading, HeadingSize } from '../Typography'
+import { View } from '../View'
 
 export interface LinkAccountsStringOverrides {
   backButtonText?: string
@@ -60,7 +61,7 @@ export const LinkAccountsContent = ({
     useContext(LinkedAccountsContext)
 
   return (
-    <div className='Layer__link-accounts'>
+    <div className='Layer__link-accounts Layer__component'>
       {title && <Heading size={HeadingSize.view}>{title}</Heading>}
 
       {data && data.length === 0 ? (
