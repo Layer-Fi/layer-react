@@ -30,8 +30,10 @@ export const updateAccount = put<{ data: Account }, EditAccount>(
 )
 
 export const getLedgerAccountsLines = get<{ data: LedgerAccountLineItems }>(
-  ({ businessId, accountId }) =>
-    `/v1/businesses/${businessId}/ledger/accounts/${accountId}/lines`,
+  ({ businessId, accountId, includeReversals }) =>
+    `/v1/businesses/${businessId}/ledger/accounts/${accountId}/lines${
+      includeReversals === 'true' ? '?include_reversals=true' : ''
+    }`,
 )
 
 export const getLedgerAccountsEntry = get<{ data: LedgerAccountsEntry }>(

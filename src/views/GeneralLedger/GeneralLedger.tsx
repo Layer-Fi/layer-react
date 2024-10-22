@@ -18,6 +18,7 @@ export interface GeneralLedgerStringOverrides {
 
 export interface ChartOfAccountsOptions {
   templateAccountsEditable?: boolean
+  showReversalEntries?: boolean
 }
 export interface GeneralLedgerProps {
   title?: string // deprecated
@@ -33,6 +34,7 @@ export const GeneralLedgerView = ({
   chartOfAccountsOptions,
 }: GeneralLedgerProps) => {
   const [activeTab, setActiveTab] = useState('chartOfAccounts')
+  console.log(chartOfAccountsOptions)
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -66,6 +68,7 @@ export const GeneralLedgerView = ({
             templateAccountsEditable={
               chartOfAccountsOptions?.templateAccountsEditable
             }
+            showReversalEntries={chartOfAccountsOptions?.showReversalEntries}
           />
         ) : (
           <Journal stringOverrides={stringOverrides?.journal} />
