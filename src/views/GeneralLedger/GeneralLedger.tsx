@@ -34,7 +34,6 @@ export const GeneralLedgerView = ({
   chartOfAccountsOptions,
 }: GeneralLedgerProps) => {
   const [activeTab, setActiveTab] = useState('chartOfAccounts')
-  console.log(chartOfAccountsOptions)
 
   return (
     <ProfitAndLoss asContainer={false}>
