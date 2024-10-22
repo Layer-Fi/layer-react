@@ -467,6 +467,10 @@
 .Layer__journal__entry-details__reverse-btn-container {
   padding: var(--spacing-sm) 0;
 
+  .Layer__btn--disabled {
+    cursor: not-allowed;
+  }
+
   .Layer__btn {
     min-width: 150px;
 
