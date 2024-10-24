@@ -6,22 +6,27 @@ import { hasReceipts, isAlreadyMatched } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button } from '../Button'
-import { FileInput } from '../Input'
+import { FileInput, InputGroup } from '../Input'
 import { MatchFormMobile } from '../MatchForm'
+import { Textarea } from '../Textarea'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
+import { useMemoTextContext } from './useMemoText'
 import classNames from 'classnames'
 
 export const MatchForm = ({
   bankTransaction,
   showReceiptUploads,
+  showDescriptions,
 }: {
   bankTransaction: BankTransaction
   showReceiptUploads?: boolean
+  showDescriptions?: boolean
 }) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const { match: matchBankTransaction, isLoading } =
     useBankTransactionsContext()
+  const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
   const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
     isAlreadyMatched(bankTransaction) ??
       (bankTransaction.suggested_matches &&
@@ -52,6 +57,10 @@ export const MatchForm = ({
   }
 
   const save = async () => {
+    if (showDescriptions && memoText !== undefined) {
+      saveMemoText()
+    }
+
     if (!selectedMatchId) {
       setFormError('Select an option to match the transaction')
     } else if (
@@ -77,6 +86,27 @@ export const MatchForm = ({
           setSelectedMatchId(id)
         }}
       />
+      {showDescriptions && (
+        <InputGroup
+          className='Layer__bank-transaction-mobile-list-item__description'
+          name='description'
+        >
+          <Text
+            size={TextSize.sm}
+            className='Layer__bank-transaction-mobile-list-item__description__label'
+          >
+            Description
+          </Text>
+          <Textarea
+            name='description'
+            placeholder='Add description'
+            value={memoText}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setMemoText(e.target.value)
+            }
+          />
+        </InputGroup>
+      )}
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',

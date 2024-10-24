@@ -8,9 +8,11 @@ import { ActionableList } from '../ActionableList'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button, ButtonVariant } from '../Button'
-import { FileInput } from '../Input'
-import { ErrorText } from '../Typography'
+import { FileInput, InputGroup } from '../Input'
+import { Textarea } from '../Textarea'
+import { Text, ErrorText, TextSize } from '../Typography'
 import { BusinessCategories } from './BusinessCategories'
+import { useMemoTextContext } from './useMemoText'
 import { Option, mapCategoryToOption, getAssignedValue } from './utils'
 import classNames from 'classnames'
 
@@ -18,12 +20,14 @@ interface BusinessFormProps {
   bankTransaction: BankTransaction
   showTooltips: boolean
   showReceiptUploads?: boolean
+  showDescriptions?: boolean
 }
 
 export const BusinessForm = ({
   bankTransaction,
   showTooltips,
   showReceiptUploads,
+  showDescriptions,
 }: BusinessFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
@@ -34,6 +38,7 @@ export const BusinessForm = ({
     getAssignedValue(bankTransaction),
   )
   const [showRetry, setShowRetry] = useState(false)
+  const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -100,6 +105,10 @@ export const BusinessForm = ({
   }
 
   const save = () => {
+    if (showDescriptions && memoText !== undefined) {
+      saveMemoText()
+    }
+
     if (!selectedCategory || !selectedCategory.value.payload) {
       return
     }
@@ -132,6 +141,27 @@ export const BusinessForm = ({
         selectedId={selectedCategory?.id}
         showDescriptions={showTooltips}
       />
+      {showDescriptions && (
+        <InputGroup
+          className='Layer__bank-transaction-mobile-list-item__description'
+          name='description'
+        >
+          <Text
+            size={TextSize.sm}
+            className='Layer__bank-transaction-mobile-list-item__description__label'
+          >
+            Description
+          </Text>
+          <Textarea
+            name='description'
+            placeholder='Add description'
+            value={memoText}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setMemoText(e.target.value)
+            }
+          />
+        </InputGroup>
+      )}
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',

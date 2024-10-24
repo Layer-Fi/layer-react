@@ -6,14 +6,17 @@ import { hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button } from '../Button'
-import { FileInput } from '../Input'
-import { ErrorText } from '../Typography'
+import { FileInput, InputGroup } from '../Input'
+import { Textarea } from '../Textarea'
+import { Text, ErrorText, TextSize } from '../Typography'
 import { PersonalCategories } from './constants'
+import { useMemoTextContext } from './useMemoText'
 import classNames from 'classnames'
 
 interface PersonalFormProps {
   bankTransaction: BankTransaction
   showReceiptUploads?: boolean
+  showDescriptions?: boolean
   isOpen?: boolean
 }
 
@@ -37,12 +40,14 @@ export const PersonalForm = ({
   bankTransaction,
   showReceiptUploads,
   isOpen,
+  showDescriptions,
 }: PersonalFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactionsContext()
   const [showRetry, setShowRetry] = useState(false)
+  const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -51,6 +56,10 @@ export const PersonalForm = ({
   }, [bankTransaction.error])
 
   const save = () => {
+    if (showDescriptions && memoText !== undefined) {
+      saveMemoText()
+    }
+
     categorizeBankTransaction(
       bankTransaction.id,
       {
@@ -70,6 +79,27 @@ export const PersonalForm = ({
 
   return (
     <div className='Layer__bank-transaction-mobile-list-item__personal-form'>
+      {showDescriptions && (
+        <InputGroup
+          className='Layer__bank-transaction-mobile-list-item__description'
+          name='description'
+        >
+          <Text
+            size={TextSize.sm}
+            className='Layer__bank-transaction-mobile-list-item__description__label'
+          >
+            Description
+          </Text>
+          <Textarea
+            name='description'
+            placeholder='Add description'
+            value={memoText}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setMemoText(e.target.value)
+            }
+          />
+        </InputGroup>
+      )}
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',

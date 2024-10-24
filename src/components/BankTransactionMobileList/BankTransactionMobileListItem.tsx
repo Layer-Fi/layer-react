@@ -266,6 +266,7 @@ export const BankTransactionMobileListItem = ({
                 bankTransaction={bankTransaction}
                 showTooltips={showTooltips}
                 showReceiptUploads={showReceiptUploads}
+                showDescriptions={showDescriptions}
                 isOpen={open}
               />
             </div>

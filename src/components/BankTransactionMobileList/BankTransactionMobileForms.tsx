@@ -5,12 +5,14 @@ import { Purpose } from './BankTransactionMobileListItem'
 import { BusinessForm } from './BusinessForm'
 import { PersonalForm } from './PersonalForm'
 import { SplitAndMatchForm } from './SplitAndMatchForm'
+import { MemoTextProvider } from './useMemoText'
 
 interface BankTransactionMobileFormsProps {
   purpose: Purpose
   bankTransaction: BankTransaction
   showTooltips: boolean
   showReceiptUploads?: boolean
+  showDescriptions?: boolean
   isOpen?: boolean
 }
 
@@ -19,6 +21,7 @@ export const BankTransactionMobileForms = ({
   bankTransaction,
   showTooltips,
   showReceiptUploads,
+  showDescriptions,
   isOpen,
 }: BankTransactionMobileFormsProps) => {
   const getContent = () => {
@@ -29,6 +32,7 @@ export const BankTransactionMobileForms = ({
             bankTransaction={bankTransaction}
             showTooltips={showTooltips}
             showReceiptUploads={showReceiptUploads}
+            showDescriptions={showDescriptions}
           />
         )
       case 'personal':
@@ -37,6 +41,7 @@ export const BankTransactionMobileForms = ({
             bankTransaction={bankTransaction}
             showReceiptUploads={showReceiptUploads}
             isOpen={isOpen}
+            showDescriptions={showDescriptions}
           />
         )
       case 'more':
@@ -46,6 +51,7 @@ export const BankTransactionMobileForms = ({
             showTooltips={showTooltips}
             showReceiptUploads={showReceiptUploads}
             isOpen={isOpen}
+            showDescriptions={showDescriptions}
           />
         )
       default:
@@ -55,9 +61,11 @@ export const BankTransactionMobileForms = ({
 
   return (
     <ReceiptsProvider bankTransaction={bankTransaction} isActive={isOpen}>
-      <div className='Layer__bank-transaction-mobile-list-item__form-container'>
-        {getContent()}
-      </div>
+      <MemoTextProvider bankTransaction={bankTransaction} isActive={isOpen}>
+        <div className='Layer__bank-transaction-mobile-list-item__form-container'>
+          {getContent()}
+        </div>
+      </MemoTextProvider>
     </ReceiptsProvider>
   )
 }

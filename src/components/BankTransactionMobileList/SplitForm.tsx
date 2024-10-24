@@ -22,8 +22,10 @@ import {
   mapCategoryToExclusionOption,
   mapCategoryToOption,
 } from '../CategorySelect/CategorySelect'
-import { FileInput, Input } from '../Input'
+import { FileInput, Input, InputGroup } from '../Input'
+import { Textarea } from '../Textarea'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
+import { useMemoTextContext } from './useMemoText'
 import classNames from 'classnames'
 
 type Split = {
@@ -42,10 +44,12 @@ export const SplitForm = ({
   bankTransaction,
   showTooltips,
   showReceiptUploads,
+  showDescriptions,
 }: {
   bankTransaction: BankTransaction
   showTooltips: boolean
   showReceiptUploads?: boolean
+  showDescriptions?: boolean
 }) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
@@ -54,6 +58,7 @@ export const SplitForm = ({
     isLoading,
     error,
   } = useBankTransactionsContext()
+  const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
   const defaultCategory =
     bankTransaction.category ||
     (hasSuggestions(bankTransaction.categorization_flow) &&
@@ -184,6 +189,10 @@ export const SplitForm = ({
   }
 
   const save = async () => {
+    if (showDescriptions && memoText !== undefined) {
+      saveMemoText()
+    }
+
     if (!validateSplit(rowState)) {
       if (rowState.splits.length > 1) {
         setFormError(
@@ -277,6 +286,27 @@ export const SplitForm = ({
           Add new split
         </TextButton>
       </div>
+      {showDescriptions && (
+        <InputGroup
+          className='Layer__bank-transaction-mobile-list-item__description'
+          name='description'
+        >
+          <Text
+            size={TextSize.sm}
+            className='Layer__bank-transaction-mobile-list-item__description__label'
+          >
+            Description
+          </Text>
+          <Textarea
+            name='description'
+            placeholder='Add description'
+            value={memoText}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setMemoText(e.target.value)
+            }
+          />
+        </InputGroup>
+      )}
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',

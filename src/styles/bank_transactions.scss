@@ -1069,6 +1069,20 @@
   }
 }
 
+.Layer__bank-transaction-mobile-list-item__description {
+  padding: var(--spacing-md) 0;
+  border-top: 1px solid var(--border-color);
+
+  .Layer__textarea {
+    min-height: 72px;
+  }
+}
+
+.Layer__bank-transaction-mobile-list-item__description__label {
+  color: var(--color-base-500);
+  margin-bottom: var(--spacing-2xs);
+}
+
 .Layer__bank-transaction-mobile-list-item__match-list {
   display: flex;
   flex-direction: column;
