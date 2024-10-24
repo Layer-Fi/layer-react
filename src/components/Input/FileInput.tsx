@@ -8,6 +8,7 @@ export interface FileInputProps {
   onUpload?: (file: File) => void
   disabled?: boolean
   secondary?: boolean
+  iconOnly?: boolean
 }
 
 export const FileInput = ({
@@ -15,6 +16,7 @@ export const FileInput = ({
   onUpload,
   disabled = false,
   secondary,
+  iconOnly = false,
 }: FileInputProps) => {
   const hiddenFileInput = useRef<HTMLInputElement>(null)
 
@@ -54,8 +56,9 @@ export const FileInput = ({
         variant={ButtonVariant.secondary}
         rightIcon={<UploadCloud />}
         disabled={disabled}
+        iconOnly={iconOnly}
       >
-        {text}
+        {!iconOnly && text}
       </Button>
       <input
         type='file'

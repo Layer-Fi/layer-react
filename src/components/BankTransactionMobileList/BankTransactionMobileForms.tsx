@@ -1,4 +1,5 @@
 import React from 'react'
+import { ReceiptsProvider } from '../../providers/ReceiptsProvider'
 import { BankTransaction } from '../../types'
 import { Purpose } from './BankTransactionMobileListItem'
 import { BusinessForm } from './BusinessForm'
@@ -9,12 +10,16 @@ interface BankTransactionMobileFormsProps {
   purpose: Purpose
   bankTransaction: BankTransaction
   showTooltips: boolean
+  showReceiptUploads?: boolean
+  isOpen?: boolean
 }
 
 export const BankTransactionMobileForms = ({
   purpose,
   bankTransaction,
   showTooltips,
+  showReceiptUploads,
+  isOpen,
 }: BankTransactionMobileFormsProps) => {
   const getContent = () => {
     switch (purpose) {
@@ -23,15 +28,24 @@ export const BankTransactionMobileForms = ({
           <BusinessForm
             bankTransaction={bankTransaction}
             showTooltips={showTooltips}
+            showReceiptUploads={showReceiptUploads}
           />
         )
       case 'personal':
-        return <PersonalForm bankTransaction={bankTransaction} />
+        return (
+          <PersonalForm
+            bankTransaction={bankTransaction}
+            showReceiptUploads={showReceiptUploads}
+            isOpen={isOpen}
+          />
+        )
       case 'more':
         return (
           <SplitAndMatchForm
             bankTransaction={bankTransaction}
             showTooltips={showTooltips}
+            showReceiptUploads={showReceiptUploads}
+            isOpen={isOpen}
           />
         )
       default:
@@ -40,8 +54,10 @@ export const BankTransactionMobileForms = ({
   }
 
   return (
-    <div className='Layer__bank-transaction-mobile-list-item__form-container'>
-      {getContent()}
-    </div>
+    <ReceiptsProvider bankTransaction={bankTransaction} isActive={isOpen}>
+      <div className='Layer__bank-transaction-mobile-list-item__form-container'>
+        {getContent()}
+      </div>
+    </ReceiptsProvider>
   )
 }

@@ -1,1 +1,4 @@
-export { BankTransactionReceipts } from './BankTransactionReceipts'
+export {
+  BankTransactionReceipts,
+  BankTransactionReceiptsWithProvider,
+} from './BankTransactionReceipts'

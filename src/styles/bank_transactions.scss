@@ -1122,6 +1122,22 @@
   }
 }
 
+.Layer__bank-transaction-mobile-list-item__actions--with-receipts {
+  padding: var(--spacing-md) 0;
+  border-top: 1px solid var(--border-color);
+
+  & .Layer__file-upload {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+}
+
+.Layer__bank-transaction-mobile-list-item__actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
 @container (max-width: 760px) {
   .Layer__expanded-bank-transaction-row__match-table
     .Layer__expanded-bank-transaction-row__match-table__header {

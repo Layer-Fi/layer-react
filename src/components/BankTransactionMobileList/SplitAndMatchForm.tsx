@@ -8,6 +8,8 @@ import { SplitForm } from './SplitForm'
 interface SplitAndMatchFormProps {
   bankTransaction: BankTransaction
   showTooltips: boolean
+  showReceiptUploads?: boolean
+  isOpen?: boolean
 }
 
 enum Purpose {
@@ -18,6 +20,8 @@ enum Purpose {
 export const SplitAndMatchForm = ({
   bankTransaction,
   showTooltips,
+  showReceiptUploads,
+  isOpen,
 }: SplitAndMatchFormProps) => {
   const anyMatch = hasMatch(bankTransaction)
   const [formType, setFormType] = useState(
@@ -34,10 +38,14 @@ export const SplitAndMatchForm = ({
         <SplitForm
           bankTransaction={bankTransaction}
           showTooltips={showTooltips}
+          showReceiptUploads={showReceiptUploads}
         />
       )}
       {formType === Purpose.match && (
-        <MatchForm bankTransaction={bankTransaction} />
+        <MatchForm
+          bankTransaction={bankTransaction}
+          showReceiptUploads={showReceiptUploads}
+        />
       )}
       {anyMatch && formType === Purpose.match ? (
         <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>

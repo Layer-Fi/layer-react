@@ -1,16 +1,24 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { BankTransaction } from '../../types'
-import { isAlreadyMatched } from '../../utils/bankTransactions'
+import { hasReceipts, isAlreadyMatched } from '../../utils/bankTransactions'
+import { BankTransactionReceipts } from '../BankTransactionReceipts'
+import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button } from '../Button'
+import { FileInput } from '../Input'
 import { MatchFormMobile } from '../MatchForm'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
+import classNames from 'classnames'
 
 export const MatchForm = ({
   bankTransaction,
+  showReceiptUploads,
 }: {
   bankTransaction: BankTransaction
+  showReceiptUploads?: boolean
 }) => {
+  const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
+
   const { match: matchBankTransaction, isLoading } =
     useBankTransactionsContext()
   const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
@@ -68,20 +76,45 @@ export const MatchForm = ({
           setSelectedMatchId(id)
         }}
       />
-      <Button
-        fullWidth={true}
-        disabled={
-          !selectedMatchId ||
-          isLoading ||
-          bankTransaction.processing ||
-          selectedMatchId === isAlreadyMatched(bankTransaction)
-        }
-        onClick={save}
+      <div
+        className={classNames(
+          'Layer__bank-transaction-mobile-list-item__receipts',
+          hasReceipts(bankTransaction)
+            ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
+            : undefined,
+        )}
       >
-        {isLoading || bankTransaction.processing
-          ? 'Saving...'
-          : 'Approve match'}
-      </Button>
+        {showReceiptUploads && (
+          <BankTransactionReceipts
+            ref={receiptsRef}
+            floatingActions={false}
+            hideUploadButtons={true}
+          />
+        )}
+      </div>
+      <div className='Layer__bank-transaction-mobile-list-item__actions'>
+        {showReceiptUploads && (
+          <FileInput
+            onUpload={receiptsRef.current?.uploadReceipt}
+            text='Upload receipt'
+            iconOnly={true}
+          />
+        )}
+        <Button
+          fullWidth={true}
+          disabled={
+            !selectedMatchId ||
+            isLoading ||
+            bankTransaction.processing ||
+            selectedMatchId === isAlreadyMatched(bankTransaction)
+          }
+          onClick={save}
+        >
+          {isLoading || bankTransaction.processing
+            ? 'Saving...'
+            : 'Approve match'}
+        </Button>
+      </div>
       {formError && <ErrorText>{formError}</ErrorText>}
       {bankTransaction.error && showRetry ? (
         <ErrorText>

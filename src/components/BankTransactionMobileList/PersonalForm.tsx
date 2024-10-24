@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { BankTransaction, CategorizationStatus } from '../../types'
-import { isCredit } from '../../utils/bankTransactions'
+import { hasReceipts, isCredit } from '../../utils/bankTransactions'
+import { BankTransactionReceipts } from '../BankTransactionReceipts'
+import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button } from '../Button'
+import { FileInput } from '../Input'
 import { ErrorText } from '../Typography'
 import { PersonalCategories } from './constants'
+import classNames from 'classnames'
 
 interface PersonalFormProps {
   bankTransaction: BankTransaction
+  showReceiptUploads?: boolean
+  isOpen?: boolean
 }
 
 const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
@@ -20,11 +26,19 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
 
   return Boolean(
     bankTransaction.category &&
-    Object.values(PersonalCategories).includes(bankTransaction.category.display_name as PersonalCategories),
+      Object.values(PersonalCategories).includes(
+        bankTransaction.category.display_name as PersonalCategories,
+      ),
   )
 }
 
-export const PersonalForm = ({ bankTransaction }: PersonalFormProps) => {
+export const PersonalForm = ({
+  bankTransaction,
+  showReceiptUploads,
+  isOpen,
+}: PersonalFormProps) => {
+  const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
+
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactionsContext()
   const [showRetry, setShowRetry] = useState(false)
@@ -55,17 +69,42 @@ export const PersonalForm = ({ bankTransaction }: PersonalFormProps) => {
 
   return (
     <div className='Layer__bank-transaction-mobile-list-item__personal-form'>
-      <Button
-        fullWidth={true}
-        disabled={alreadyAssigned || isLoading || bankTransaction.processing}
-        onClick={save}
+      <div
+        className={classNames(
+          'Layer__bank-transaction-mobile-list-item__receipts',
+          hasReceipts(bankTransaction)
+            ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
+            : undefined,
+        )}
       >
-        {isLoading || bankTransaction.processing
-          ? 'Saving...'
-          : alreadyAssigned
-          ? 'Saved as Personal'
-          : 'Categorize as Personal'}
-      </Button>
+        {showReceiptUploads && (
+          <BankTransactionReceipts
+            ref={receiptsRef}
+            floatingActions={false}
+            hideUploadButtons={true}
+          />
+        )}
+      </div>
+      <div className='Layer__bank-transaction-mobile-list-item__actions'>
+        {showReceiptUploads && (
+          <FileInput
+            onUpload={receiptsRef.current?.uploadReceipt}
+            text='Upload receipt'
+            iconOnly={true}
+          />
+        )}
+        <Button
+          fullWidth={true}
+          disabled={alreadyAssigned || isLoading || bankTransaction.processing}
+          onClick={save}
+        >
+          {isLoading || bankTransaction.processing
+            ? 'Saving...'
+            : alreadyAssigned
+            ? 'Saved as Personal'
+            : 'Categorize as Personal'}
+        </Button>
+      </div>
       {bankTransaction.error && showRetry ? (
         <ErrorText>
           Approval failed. Check connection and retry in few seconds.

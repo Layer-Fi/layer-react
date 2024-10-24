@@ -29,7 +29,6 @@ export const BankTransactionMobileList = ({
   showDescriptions,
 }: BankTransactionMobileListProps) => {
   const transactionToOpenContextData = useTransactionToOpen()
-  console.log('showReceiptUploads', showReceiptUploads)
 
   return (
     <TransactionToOpenContext.Provider value={transactionToOpenContextData}>
