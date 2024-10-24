@@ -80,6 +80,7 @@ export const AccountingOverview = ({
         <div className='Layer__accounting-overview__summaries-row'>
           <ProfitAndLoss.Summaries
             stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+            chartColorsList={chartColorsList}
           />
           {showTransactionsToReview && (
             <TransactionToReviewCard
