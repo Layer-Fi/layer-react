@@ -80,3 +80,6 @@ export const getCategorizePayload = (category: CategoryOption) => {
     stable_name: category?.payload.stable_name || '',
   }
 }
+
+export const hasReceipts = (bankTransaction?: BankTransaction) =>
+  bankTransaction?.document_ids && bankTransaction.document_ids.length > 0

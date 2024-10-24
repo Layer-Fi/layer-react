@@ -1069,6 +1069,20 @@
   }
 }
 
+.Layer__bank-transaction-mobile-list-item__description {
+  padding: var(--spacing-md) 0;
+  border-top: 1px solid var(--border-color);
+
+  .Layer__textarea {
+    min-height: 72px;
+  }
+}
+
+.Layer__bank-transaction-mobile-list-item__description__label {
+  color: var(--color-base-500);
+  margin-bottom: var(--spacing-2xs);
+}
+
 .Layer__bank-transaction-mobile-list-item__match-list {
   display: flex;
   flex-direction: column;
@@ -1120,6 +1134,26 @@
   .Layer__bank-transaction-mobile-list-item__match-item__name {
     color: var(--color-base-1000);
   }
+}
+
+.Layer__bank-transaction-mobile-list-item__actions--with-receipts {
+  padding: var(--spacing-md) 0;
+  border-top: 1px solid var(--border-color);
+
+  & .Layer__file-upload {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .Layer__file-upload__label {
+    color: var(--color-base-500);
+  }
+}
+
+.Layer__bank-transaction-mobile-list-item__actions {
+  display: flex;
+  gap: var(--spacing-sm);
 }
 
 @container (max-width: 760px) {

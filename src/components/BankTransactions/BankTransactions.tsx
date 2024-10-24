@@ -315,6 +315,8 @@ const BankTransactionsContent = ({
           removeTransaction={removeTransaction}
           initialLoad={initialLoad}
           showTooltips={showTooltips}
+          showReceiptUploads={showReceiptUploads}
+          showDescriptions={showDescriptions}
         />
       ) : null}
 

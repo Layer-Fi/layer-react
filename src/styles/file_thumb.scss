@@ -1,25 +1,53 @@
 .Layer__file-thumb {
   display: flex;
   align-items: flex-start;
-  justify-content: flex-start;
-  height: 38px;
+  justify-content: space-between;
+  min-height: 38px;
   gap: var(--spacing-2xs);
   position: relative;
+  box-sizing: border-box;
+  container-type: normal;
+
+  &:not(.Layer__file-thumb--floating) {
+    width: 100%;
+    max-width: 680px;
+  }
+
+  @container (max-width: 300px) {
+    &:not(.Layer__file-thumb--floating) {
+      flex-direction: column;
+      border-bottom: 1px solid var(--color-base-300);
+
+      .Layer__file-thumb__actions:not(.Layer__file-thumb__actions--floating) {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: -6px;
+
+        .Layer__icon-btn {
+          width: 26px;
+          height: 26px;
+
+          svg {
+            width: 14px;
+            height: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.Layer__file-thumb__main {
+  display: flex;
+  gap: var(--spacing-2xs);
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .Layer__file-thumb__actions {
-  display: none;
-  position: absolute;
-  top: -20px;
-  right: -10px;
+  display: flex;
   gap: var(--spacing-4xs);
   padding: var(--spacing-4xs);
-  background-color: var(--color-base-0);
-  border-radius: var(--border-radius-3xs);
-  box-shadow:
-    0px 1px 2px 0px var(--base-transparent-6),
-    0px 0px 0px 1px var(--color-base-300);
-  transform: scale(0.8);
 
   .Layer__icon-btn.Layer__icon-btn--active {
     background-color: var(--color-base-50);
@@ -32,9 +60,22 @@
   .Layer__file-thumb__actions__remove {
     color: var(--color-danger);
   }
+
+  &.Layer__file-thumb__actions--floating {
+    display: none;
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    background-color: var(--color-base-0);
+    border-radius: var(--border-radius-3xs);
+    box-shadow:
+      0px 1px 2px 0px var(--base-transparent-6),
+      0px 0px 0px 1px var(--color-base-300);
+    transform: scale(0.8);
+  }
 }
 
-.Layer__file-thumb:hover .Layer__file-thumb__actions {
+.Layer__file-thumb:hover .Layer__file-thumb__actions--floating {
   display: flex;
 }
 

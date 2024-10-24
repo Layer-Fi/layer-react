@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useElementSize } from '../../hooks/useElementSize'
+import FileIcon from '../../icons/File'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationStatus } from '../../types'
-import { hasMatch, isCredit } from '../../utils/bankTransactions'
+import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
+import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionsMode,
@@ -27,6 +29,8 @@ export interface BankTransactionMobileListItemProps {
   initialLoad?: boolean
   showTooltips: boolean
   mode: BankTransactionsMode
+  showDescriptions?: boolean
+  showReceiptUploads?: boolean
   isFirstItem?: boolean
 }
 
@@ -59,6 +63,8 @@ export const BankTransactionMobileListItem = ({
   initialLoad,
   showTooltips,
   isFirstItem = false,
+  showDescriptions,
+  showReceiptUploads,
 }: BankTransactionMobileListItemProps) => {
   const {
     transactionIdToOpen,
@@ -192,7 +198,8 @@ export const BankTransactionMobileListItem = ({
               {categorized && bankTransaction.categorization_status
                 ? getAssignedValue(bankTransaction)
                 : null}
-              {!categorized && bankTransaction.account_name}
+              <span>{!categorized && bankTransaction.account_name}</span>
+              {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
             </Text>
             {categorized && open && (
               <Text as='span' className={`${className}__categorized-name`}>
@@ -258,6 +265,9 @@ export const BankTransactionMobileListItem = ({
                 purpose={purpose}
                 bankTransaction={bankTransaction}
                 showTooltips={showTooltips}
+                showReceiptUploads={showReceiptUploads}
+                showDescriptions={showDescriptions}
+                isOpen={open}
               />
             </div>
           )}
