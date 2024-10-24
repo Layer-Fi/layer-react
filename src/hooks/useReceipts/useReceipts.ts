@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { DocumentWithStatus } from '../../components/BankTransactionReceipts/BankTransactionReceipts'
 import { DATE_FORMAT } from '../../config/general'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { BankTransaction } from '../../types'
 import { hasReceipts } from '../../utils/bankTransactions'
@@ -16,7 +17,7 @@ export interface UseReceiptsProps {
 type UseReceipts = (props: UseReceiptsProps) => {
   receiptUrls: DocumentWithStatus[]
   uploadReceipt: (file: File) => void
-  archiveDocument: (documentId: string) => void
+  archiveDocument: (document: DocumentWithStatus) => void
 }
 
 const readDate = (date?: string) => {
@@ -29,6 +30,7 @@ export const useReceipts: UseReceipts = ({
   isActive,
 }: UseReceiptsProps) => {
   const { auth, businessId, apiUrl } = useLayerContext()
+  const { updateOneLocal: updateBankTransaction } = useBankTransactionsContext()
 
   const [receiptUrls, setReceiptUrls] = useState<DocumentWithStatus[]>([])
 
@@ -81,13 +83,25 @@ export const useReceipts: UseReceipts = ({
         apiUrl,
         auth.access_token,
       )
-      await uploadDocument({
+      const result = await uploadDocument({
         businessId: businessId,
         bankTransactionId: bankTransaction.id,
         file: file,
         documentType: 'RECEIPT',
       })
       await fetchDocuments()
+      // Update the bank transaction with the new document id
+      if (
+        updateBankTransaction &&
+        result?.data?.id &&
+        bankTransaction?.document_ids &&
+        bankTransaction.document_ids.length === 0
+      ) {
+        updateBankTransaction({
+          ...bankTransaction,
+          document_ids: [result.data.id],
+        })
+      }
     } catch (_err) {
       const newReceiptUrls = receipts.map(url => {
         if (url.id === id) {
@@ -104,32 +118,38 @@ export const useReceipts: UseReceipts = ({
     }
   }
 
-  const archiveDocument = async (documentId: string) => {
-    try {
-      setReceiptUrls(
-        receiptUrls.map(url => {
-          if (url.id === documentId) {
-            return {
-              ...url,
-              status: 'deleting',
-            }
-          }
+  const archiveDocument = async (document: DocumentWithStatus) => {
+    if (!document.id) return
 
-          return url
-        }),
-      )
-      await Layer.archiveBankTransactionDocument(apiUrl, auth.access_token, {
-        params: {
-          businessId: businessId,
-          bankTransactionId: bankTransaction.id,
-          documentId,
-        },
-      })
-      fetchDocuments()
+    try {
+      if (document.error) {
+        setReceiptUrls(receiptUrls.filter(url => url.id !== document.id))
+      } else {
+        setReceiptUrls(
+          receiptUrls.map(url => {
+            if (url.id === document.id) {
+              return {
+                ...url,
+                status: 'deleting',
+              }
+            }
+
+            return url
+          }),
+        )
+        await Layer.archiveBankTransactionDocument(apiUrl, auth.access_token, {
+          params: {
+            businessId: businessId,
+            bankTransactionId: bankTransaction.id,
+            documentId: document.id,
+          },
+        })
+        fetchDocuments()
+      }
     } catch (_err) {
       setReceiptUrls(
         receiptUrls.map(url => {
-          if (url.id === documentId) {
+          if (url.id === document.id) {
             return {
               ...url,
               status: 'failed',

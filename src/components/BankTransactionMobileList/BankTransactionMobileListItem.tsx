@@ -198,7 +198,7 @@ export const BankTransactionMobileListItem = ({
               {categorized && bankTransaction.categorization_status
                 ? getAssignedValue(bankTransaction)
                 : null}
-              {!categorized && bankTransaction.account_name}
+              <span>{!categorized && bankTransaction.account_name}</span>
               {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
             </Text>
             {categorized && open && (

@@ -1,9 +1,10 @@
-import React, { forwardRef, useContext, useImperativeHandle } from 'react'
+import React, { forwardRef, useImperativeHandle } from 'react'
 import { useReceiptsContext } from '../../contexts/ReceiptsContext/ReceiptsContext'
 import { ReceiptsProvider } from '../../providers/ReceiptsProvider'
 import { BankTransaction } from '../../types'
 import { FileThumb } from '../FileThumb'
 import { FileInput } from '../Input'
+import { Text, TextSize } from '../Typography'
 
 export interface DocumentWithStatus {
   id?: string
@@ -19,6 +20,7 @@ export interface BankTransactionReceiptsProps {
   classNamePrefix?: string
   floatingActions?: boolean
   hideUploadButtons?: boolean
+  label?: string
 }
 
 export interface BankTransactionReceiptsWithProviderProps
@@ -71,6 +73,7 @@ export const BankTransactionReceipts = forwardRef<
       classNamePrefix = 'Layer',
       floatingActions = false,
       hideUploadButtons = false,
+      label,
     },
     ref,
   ) => {
@@ -83,6 +86,11 @@ export const BankTransactionReceipts = forwardRef<
 
     return (
       <div className={`${classNamePrefix}__file-upload`}>
+        {receiptUrls && receiptUrls.length > 0 && label ? (
+          <Text size={TextSize.sm} className='Layer__file-upload__label'>
+            {label}
+          </Text>
+        ) : null}
         {!hideUploadButtons && (!receiptUrls || receiptUrls.length === 0) ? (
           <FileInput onUpload={uploadReceipt} text='Upload receipt' />
         ) : null}
@@ -98,13 +106,13 @@ export const BankTransactionReceipts = forwardRef<
             date={url.date}
             enableOpen={url.type === 'application/pdf'}
             onOpen={
-              url.url && url.type !== 'application/pdf'
+              url.url && url.type && url.type.startsWith('image/')
                 ? openReceiptInNewTab(url.url, index)
                 : undefined
             }
             enableDownload
             error={url.error}
-            onDelete={() => url.id && archiveDocument(url.id)}
+            onDelete={() => url.id && archiveDocument(url)}
           />
         ))}
         {!hideUploadButtons &&

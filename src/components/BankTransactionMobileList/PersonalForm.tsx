@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
@@ -82,6 +83,7 @@ export const PersonalForm = ({
             ref={receiptsRef}
             floatingActions={false}
             hideUploadButtons={true}
+            label='Receipts'
           />
         )}
       </div>
@@ -91,6 +93,7 @@ export const PersonalForm = ({
             onUpload={receiptsRef.current?.uploadReceipt}
             text='Upload receipt'
             iconOnly={true}
+            icon={<PaperclipIcon />}
           />
         )}
         <Button

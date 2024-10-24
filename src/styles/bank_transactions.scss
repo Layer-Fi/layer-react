@@ -1131,6 +1131,10 @@
     flex-direction: column;
     gap: var(--spacing-sm);
   }
+
+  .Layer__file-upload__label {
+    color: var(--color-base-500);
+  }
 }
 
 .Layer__bank-transaction-mobile-list-item__actions {

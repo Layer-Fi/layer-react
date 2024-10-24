@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import PaperclipIcon from '../../icons/Paperclip'
 import Trash from '../../icons/Trash'
 import {
   centsToDollars as formatMoney,
@@ -289,6 +290,7 @@ export const SplitForm = ({
             ref={receiptsRef}
             floatingActions={false}
             hideUploadButtons={true}
+            label='Receipts'
           />
         )}
       </div>
@@ -298,6 +300,7 @@ export const SplitForm = ({
             onUpload={receiptsRef.current?.uploadReceipt}
             text='Upload receipt'
             iconOnly={true}
+            icon={<PaperclipIcon />}
           />
         )}
         <Button

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction } from '../../types'
 import { hasReceipts, isAlreadyMatched } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
@@ -89,6 +90,7 @@ export const MatchForm = ({
             ref={receiptsRef}
             floatingActions={false}
             hideUploadButtons={true}
+            label='Receipts'
           />
         )}
       </div>
@@ -98,6 +100,7 @@ export const MatchForm = ({
             onUpload={receiptsRef.current?.uploadReceipt}
             text='Upload receipt'
             iconOnly={true}
+            icon={<PaperclipIcon />}
           />
         )}
         <Button

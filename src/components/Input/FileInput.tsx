@@ -9,6 +9,7 @@ export interface FileInputProps {
   disabled?: boolean
   secondary?: boolean
   iconOnly?: boolean
+  icon?: React.ReactNode
 }
 
 export const FileInput = ({
@@ -17,6 +18,7 @@ export const FileInput = ({
   disabled = false,
   secondary,
   iconOnly = false,
+  icon,
 }: FileInputProps) => {
   const hiddenFileInput = useRef<HTMLInputElement>(null)
 
@@ -54,7 +56,7 @@ export const FileInput = ({
       <Button
         onClick={onClick}
         variant={ButtonVariant.secondary}
-        rightIcon={<UploadCloud />}
+        rightIcon={icon ?? <UploadCloud />}
         disabled={disabled}
         iconOnly={iconOnly}
       >

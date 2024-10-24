@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { DrawerContext } from '../../contexts/DrawerContext'
+import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction, CategorizationType } from '../../types'
 import { hasReceipts } from '../../utils/bankTransactions'
 import { ActionableList } from '../ActionableList'
@@ -141,6 +142,7 @@ export const BusinessForm = ({
       >
         {showReceiptUploads && (
           <BankTransactionReceipts
+            label='Receipts'
             ref={receiptsRef}
             floatingActions={false}
             hideUploadButtons={true}
@@ -153,6 +155,7 @@ export const BusinessForm = ({
             onUpload={receiptsRef.current?.uploadReceipt}
             text='Upload receipt'
             iconOnly={true}
+            icon={<PaperclipIcon />}
           />
         )}
         {options.length === 0 ? (

@@ -92,6 +92,14 @@
 
 .Layer__bank-transaction-mobile-list-item__heading__account-name {
   color: var(--color-base-500);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3xs);
+
+  svg {
+    padding-top: 1px;
+    padding-left: 2px;
+  }
 }
 
 .Layer__bank-transaction-mobile-list-item__categorized-name {
