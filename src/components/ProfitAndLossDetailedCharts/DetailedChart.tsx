@@ -44,12 +44,14 @@ export const DetailedChart = ({
     return filteredData.map(x => {
       if (x.hidden) {
         return {
+          ...x,
           name: x.display_name,
           value: 0,
           type: x.type,
         }
       }
       return {
+        ...x,
         name: x.display_name,
         value: x.value,
         type: x.type,

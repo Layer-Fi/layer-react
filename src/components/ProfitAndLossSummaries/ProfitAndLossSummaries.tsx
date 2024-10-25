@@ -18,13 +18,6 @@ export interface ProfitAndLossSummariesStringOverrides {
   netProfitLabel?: string
 }
 
-type Props = {
-  vertical?: boolean
-  actionable?: boolean
-  revenueLabel?: string // deprecated
-  stringOverrides?: ProfitAndLossSummariesStringOverrides
-}
-
 const CHART_PLACEHOLDER = [
   {
     name: 'placeholder',
@@ -61,12 +54,24 @@ const buildMiniChartData = (scope: Scope, data?: ProfitAndLoss) => {
   return items.slice()
 }
 
+type ProfitAndLossSummariesProps = {
+  vertical?: boolean
+  actionable?: boolean
+  /**
+   * @deprecated Use `stringOverrides.revenueLabel` instead
+   */
+  revenueLabel?: string
+  stringOverrides?: ProfitAndLossSummariesStringOverrides
+  chartColorsList?: string[]
+}
+
 export const ProfitAndLossSummaries = ({
   vertical,
   actionable = false,
-  revenueLabel, // deprecated
+  revenueLabel,
   stringOverrides,
-}: Props) => {
+  chartColorsList,
+}: ProfitAndLossSummariesProps) => {
   const {
     data: storedData,
     isLoading,
@@ -120,7 +125,7 @@ export const ProfitAndLossSummaries = ({
           actionable && setSidebarScope('revenue')
         }}
       >
-        <MiniChart data={revenueChartData} />
+        <MiniChart data={revenueChartData} chartColorsList={chartColorsList} />
         <div className='Layer__profit-and-loss-summaries__text'>
           <span className='Layer__profit-and-loss-summaries__title'>
             {stringOverrides?.revenueLabel || revenueLabel || 'Revenue'}
@@ -149,7 +154,7 @@ export const ProfitAndLossSummaries = ({
           actionable && setSidebarScope('expenses')
         }}
       >
-        <MiniChart data={expensesChartData} />
+        <MiniChart data={expensesChartData} chartColorsList={chartColorsList} />
         <div className='Layer__profit-and-loss-summaries__text'>
           <span className='Layer__profit-and-loss-summaries__title'>
             {stringOverrides?.expensesLabel || 'Expenses'}
