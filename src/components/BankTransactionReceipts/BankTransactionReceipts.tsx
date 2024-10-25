@@ -6,6 +6,8 @@ import { FileThumb } from '../FileThumb'
 import { FileInput } from '../Input'
 import { Text, TextSize } from '../Typography'
 
+const MAX_RECEIPTS_COUNT = 10
+
 export interface DocumentWithStatus {
   id?: string
   url?: string
@@ -117,7 +119,7 @@ export const BankTransactionReceipts = forwardRef<
         ))}
         {!hideUploadButtons &&
         receiptUrls.length > 0 &&
-        receiptUrls.length < 10 ? (
+        receiptUrls.length < MAX_RECEIPTS_COUNT ? (
           <FileInput
             secondary
             onUpload={uploadReceipt}
