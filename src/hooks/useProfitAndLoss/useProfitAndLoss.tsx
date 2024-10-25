@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useGlobalDateContext } from '../../contexts/DateContext'
 import {
   ProfitAndLoss,
   DateRange,
@@ -29,6 +30,7 @@ type Props = {
   endDate?: Date
   tagFilter?: PnlTagFilter
   reportingBasis?: ReportingBasis
+  dateSyncedWithGlobal?: boolean
 }
 
 type ProfitAndLossFilter = {
@@ -68,11 +70,15 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     endDate: initialEndDate,
     tagFilter,
     reportingBasis,
+    dateSyncedWithGlobal,
   }: Props = {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   },
 ) => {
+  const { dateRange: globalDateRange, setDateRange: setGlobalDateRange } =
+    useGlobalDateContext()
+
   const [startDate, setStartDate] = useState(
     initialStartDate || startOfMonth(Date.now()),
   )
@@ -83,6 +89,25 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     expenses: undefined,
     revenue: undefined,
   })
+
+  useEffect(() => {
+    if (
+      dateSyncedWithGlobal &&
+      JSON.stringify(globalDateRange) !== JSON.stringify({ startDate, endDate })
+    ) {
+      setStartDate(globalDateRange.startDate)
+      setEndDate(globalDateRange.endDate)
+    }
+  }, [globalDateRange])
+
+  useEffect(() => {
+    if (
+      dateSyncedWithGlobal &&
+      JSON.stringify(globalDateRange) !== JSON.stringify({ startDate, endDate })
+    ) {
+      setGlobalDateRange({ startDate, endDate })
+    }
+  }, [startDate, endDate])
 
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
 

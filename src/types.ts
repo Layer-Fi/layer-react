@@ -61,6 +61,8 @@ export type DateRange<T = Date> = {
   endDate: T
 }
 
+export type DatePeriod = 'DAY' | 'MONTH' | 'QUARTER' | 'YEAR' | 'YEAR_TO_DATE'
+
 export type ReportingBasis = 'CASH' | 'ACCRUAL'
 
 export type MoneyFormat = 'CENTS' | 'DOLLAR_STRING'

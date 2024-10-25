@@ -49,6 +49,7 @@ type Props = PropsWithChildren & {
   }
   reportingBasis?: ReportingBasis
   asContainer?: boolean
+  dateSyncedWithGlobal?: boolean
 }
 
 const ProfitAndLoss = ({
@@ -56,8 +57,13 @@ const ProfitAndLoss = ({
   tagFilter,
   reportingBasis,
   asContainer = true,
+  dateSyncedWithGlobal = false,
 }: Props) => {
-  const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
+  const contextData = useProfitAndLoss({
+    tagFilter,
+    reportingBasis,
+    dateSyncedWithGlobal,
+  })
   const comparisonContextData = useProfitAndLossComparison({ reportingBasis })
 
   return (
