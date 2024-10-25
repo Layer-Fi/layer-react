@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { tagFilterToQueryString } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
+import { TagFilterInput } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
   BankTransaction,
@@ -25,6 +25,15 @@ import useSWRInfinite from 'swr/infinite'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
+
+const tagFilterToQueryString = (tagFilter: TagFilterInput): string => {
+  if (tagFilter != 'None' && tagFilter.tagValues.length > 0) {
+    return `tag_key=${tagFilter.tagKey}&tag_values=${tagFilter.tagValues.join(
+      ',',
+    )}&`
+  }
+  return ''
+}
 
 function useTriggerOnChange(
   data: BankTransaction[] | undefined,
