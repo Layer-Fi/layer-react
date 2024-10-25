@@ -10,12 +10,17 @@ new Generator({
 }).generate()
 
 const entryPoints = ['src/index.tsx']
+
+/**
+ * @type {import('esbuild').BuildOptions}
+ */
 const sharedConfig = {
   entryPoints,
   bundle: true,
   minify: false,
   sourcemap: true,
   tsconfig: './tsconfig.json',
+  target: 'es2016',
   external: [
     ...Object.keys(dependencies || {}),
     ...Object.keys(peerDependencies || {}),

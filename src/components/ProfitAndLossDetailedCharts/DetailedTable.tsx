@@ -29,16 +29,21 @@ export interface DetailedTableProps {
   stringOverrides?: DetailedTableStringOverrides
 }
 
+export interface TypeColorMapping {
+  color: string
+  opacity: number
+}
+
 export const mapTypesToColors = (
-  data: any[],
+  data: LineBaseItem[],
   colorList: string[] = DEFAULT_CHART_COLOR_TYPE,
-) => {
-  const typeToColor: any = {}
-  const typeToLastOpacity: any = {}
+): TypeColorMapping[] => {
+  const typeToColor: Record<string, string> = {}
+  const typeToLastOpacity: Record<string, number> = {}
   let colorIndex = 0
 
   return data.map(obj => {
-    const type = obj.type
+    const type = obj.name ?? obj.type
 
     if (type === 'Uncategorized') {
       return {
@@ -70,7 +75,7 @@ const ValueIcon = ({
   idx,
 }: {
   item: LineBaseItem
-  typeColorMapping: any
+  typeColorMapping: TypeColorMapping[]
   idx: number
 }) => {
   if (item.type === 'Uncategorized') {

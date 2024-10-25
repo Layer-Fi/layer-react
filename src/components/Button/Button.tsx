@@ -57,6 +57,7 @@ export const Button = ({
     iconAsPrimary && 'Layer__btn--with-primary-icon',
     fullWidth && 'Layer__btn--full-width',
     tooltip && 'Layer__btn--with-tooltip',
+    props.disabled && 'Layer__btn--disabled',
     className,
   )
 

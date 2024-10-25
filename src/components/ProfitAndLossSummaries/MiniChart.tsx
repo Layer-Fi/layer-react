@@ -1,13 +1,17 @@
 import React from 'react'
 import { DEFAULT_MINICHART_COLORS } from '../../config/charts'
 import { LineBaseItem } from '../../types/line_item'
+import { mapTypesToColors } from '../ProfitAndLossDetailedCharts/DetailedTable'
 import { PieChart, Pie, Cell } from 'recharts'
 
 export interface MiniChartProps {
   data: LineBaseItem[]
+  chartColorsList?: string[]
 }
 
-export const MiniChart = ({ data }: MiniChartProps) => {
+export const MiniChart = ({ data, chartColorsList }: MiniChartProps) => {
+  const typeColorMapping = mapTypesToColors(data, chartColorsList)
+
   return (
     <PieChart width={52} height={52} className='mini-chart'>
       <Pie
@@ -26,8 +30,7 @@ export const MiniChart = ({ data }: MiniChartProps) => {
         animationEasing='ease-in-out'
       >
         {data.map((entry, index) => {
-          const colorConfig =
-            DEFAULT_MINICHART_COLORS[index % DEFAULT_MINICHART_COLORS.length]
+          const colorConfig = typeColorMapping[index]
 
           return (
             <Cell

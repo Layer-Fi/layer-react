@@ -16,6 +16,7 @@ import { DetailsList, DetailsListItem } from '../DetailsList'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import { Heading, HeadingSize } from '../Typography'
 
 export const JournalEntryDetails = () => {
@@ -213,9 +214,13 @@ export const JournalEntryDetails = () => {
                 )
               }
               variant={ButtonVariant.secondary}
-              onClick={onReverseEntry}
+              onClick={reverseEntryProcessing ? () => {} : onReverseEntry}
               isProcessing={reverseEntryProcessing}
-              tooltip={reverseEntryError && 'Operation failed. Try again.'}
+              tooltip={
+                (Boolean(entry?.reversal_id) &&
+                  'This entry has already been reversed') ??
+                (reverseEntryError && 'Operation failed. Try again.')
+              }
               disabled={Boolean(entry?.reversal_id)}
             >
               Reverse entry
