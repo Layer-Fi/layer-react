@@ -1,22 +1,36 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { DrawerContext } from '../../contexts/DrawerContext'
+import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction, CategorizationType } from '../../types'
+import { hasReceipts } from '../../utils/bankTransactions'
 import { ActionableList } from '../ActionableList'
+import { BankTransactionReceipts } from '../BankTransactionReceipts'
+import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button, ButtonVariant } from '../Button'
-import { ErrorText } from '../Typography'
+import { FileInput, InputGroup } from '../Input'
+import { Textarea } from '../Textarea'
+import { Text, ErrorText, TextSize } from '../Typography'
 import { BusinessCategories } from './BusinessCategories'
+import { useMemoTextContext } from './useMemoText'
 import { Option, mapCategoryToOption, getAssignedValue } from './utils'
+import classNames from 'classnames'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
   showTooltips: boolean
+  showReceiptUploads?: boolean
+  showDescriptions?: boolean
 }
 
 export const BusinessForm = ({
   bankTransaction,
   showTooltips,
+  showReceiptUploads,
+  showDescriptions,
 }: BusinessFormProps) => {
+  const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
+
   const { setContent, close } = useContext(DrawerContext)
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactionsContext()
@@ -24,6 +38,7 @@ export const BusinessForm = ({
     getAssignedValue(bankTransaction),
   )
   const [showRetry, setShowRetry] = useState(false)
+  const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -90,6 +105,10 @@ export const BusinessForm = ({
   }
 
   const save = () => {
+    if (showDescriptions && memoText !== undefined) {
+      saveMemoText()
+    }
+
     if (!selectedCategory || !selectedCategory.value.payload) {
       return
     }
@@ -122,28 +141,76 @@ export const BusinessForm = ({
         selectedId={selectedCategory?.id}
         showDescriptions={showTooltips}
       />
-      {options.length === 0 ? (
-        <Button
-          onClick={openDrawer}
-          fullWidth={true}
-          variant={ButtonVariant.secondary}
+      {showDescriptions && (
+        <InputGroup
+          className='Layer__bank-transaction-mobile-list-item__description'
+          name='description'
         >
-          Select category
-        </Button>
-      ) : null}
-      {options.length > 0 ? (
-        <Button
-          onClick={save}
-          disabled={
-            !selectedCategory || isLoading || bankTransaction.processing
-          }
-          fullWidth={true}
-        >
-          {isLoading || bankTransaction.processing
-            ? 'Confirming...'
-            : 'Confirm'}
-        </Button>
-      ) : null}
+          <Text
+            size={TextSize.sm}
+            className='Layer__bank-transaction-mobile-list-item__description__label'
+          >
+            Description
+          </Text>
+          <Textarea
+            name='description'
+            placeholder='Add description'
+            value={memoText}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setMemoText(e.target.value)
+            }
+          />
+        </InputGroup>
+      )}
+      <div
+        className={classNames(
+          'Layer__bank-transaction-mobile-list-item__receipts',
+          hasReceipts(bankTransaction)
+            ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
+            : undefined,
+        )}
+      >
+        {showReceiptUploads && (
+          <BankTransactionReceipts
+            label='Receipts'
+            ref={receiptsRef}
+            floatingActions={false}
+            hideUploadButtons={true}
+          />
+        )}
+      </div>
+      <div className='Layer__bank-transaction-mobile-list-item__actions'>
+        {showReceiptUploads && (
+          <FileInput
+            onUpload={receiptsRef.current?.uploadReceipt}
+            text='Upload receipt'
+            iconOnly={true}
+            icon={<PaperclipIcon />}
+          />
+        )}
+        {options.length === 0 ? (
+          <Button
+            onClick={openDrawer}
+            fullWidth={true}
+            variant={ButtonVariant.secondary}
+          >
+            Select category
+          </Button>
+        ) : null}
+        {options.length > 0 ? (
+          <Button
+            onClick={save}
+            disabled={
+              !selectedCategory || isLoading || bankTransaction.processing
+            }
+            fullWidth={true}
+          >
+            {isLoading || bankTransaction.processing
+              ? 'Confirming...'
+              : 'Confirm'}
+          </Button>
+        ) : null}
+      </div>
       {bankTransaction.error && showRetry ? (
         <ErrorText>
           Approval failed. Check connection and retry in few seconds.

@@ -1,18 +1,32 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction } from '../../types'
-import { isAlreadyMatched } from '../../utils/bankTransactions'
+import { hasReceipts, isAlreadyMatched } from '../../utils/bankTransactions'
+import { BankTransactionReceipts } from '../BankTransactionReceipts'
+import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button } from '../Button'
+import { FileInput, InputGroup } from '../Input'
 import { MatchFormMobile } from '../MatchForm'
+import { Textarea } from '../Textarea'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
+import { useMemoTextContext } from './useMemoText'
+import classNames from 'classnames'
 
 export const MatchForm = ({
   bankTransaction,
+  showReceiptUploads,
+  showDescriptions,
 }: {
   bankTransaction: BankTransaction
+  showReceiptUploads?: boolean
+  showDescriptions?: boolean
 }) => {
+  const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
+
   const { match: matchBankTransaction, isLoading } =
     useBankTransactionsContext()
+  const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
   const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
     isAlreadyMatched(bankTransaction) ??
       (bankTransaction.suggested_matches &&
@@ -43,6 +57,10 @@ export const MatchForm = ({
   }
 
   const save = async () => {
+    if (showDescriptions && memoText !== undefined) {
+      saveMemoText()
+    }
+
     if (!selectedMatchId) {
       setFormError('Select an option to match the transaction')
     } else if (
@@ -68,20 +86,68 @@ export const MatchForm = ({
           setSelectedMatchId(id)
         }}
       />
-      <Button
-        fullWidth={true}
-        disabled={
-          !selectedMatchId ||
-          isLoading ||
-          bankTransaction.processing ||
-          selectedMatchId === isAlreadyMatched(bankTransaction)
-        }
-        onClick={save}
+      {showDescriptions && (
+        <InputGroup
+          className='Layer__bank-transaction-mobile-list-item__description'
+          name='description'
+        >
+          <Text
+            size={TextSize.sm}
+            className='Layer__bank-transaction-mobile-list-item__description__label'
+          >
+            Description
+          </Text>
+          <Textarea
+            name='description'
+            placeholder='Add description'
+            value={memoText}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setMemoText(e.target.value)
+            }
+          />
+        </InputGroup>
+      )}
+      <div
+        className={classNames(
+          'Layer__bank-transaction-mobile-list-item__receipts',
+          hasReceipts(bankTransaction)
+            ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
+            : undefined,
+        )}
       >
-        {isLoading || bankTransaction.processing
-          ? 'Saving...'
-          : 'Approve match'}
-      </Button>
+        {showReceiptUploads && (
+          <BankTransactionReceipts
+            ref={receiptsRef}
+            floatingActions={false}
+            hideUploadButtons={true}
+            label='Receipts'
+          />
+        )}
+      </div>
+      <div className='Layer__bank-transaction-mobile-list-item__actions'>
+        {showReceiptUploads && (
+          <FileInput
+            onUpload={receiptsRef.current?.uploadReceipt}
+            text='Upload receipt'
+            iconOnly={true}
+            icon={<PaperclipIcon />}
+          />
+        )}
+        <Button
+          fullWidth={true}
+          disabled={
+            !selectedMatchId ||
+            isLoading ||
+            bankTransaction.processing ||
+            selectedMatchId === isAlreadyMatched(bankTransaction)
+          }
+          onClick={save}
+        >
+          {isLoading || bankTransaction.processing
+            ? 'Saving...'
+            : 'Approve match'}
+        </Button>
+      </div>
       {formError && <ErrorText>{formError}</ErrorText>}
       {bankTransaction.error && showRetry ? (
         <ErrorText>

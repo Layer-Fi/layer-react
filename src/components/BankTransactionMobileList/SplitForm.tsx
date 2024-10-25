@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import PaperclipIcon from '../../icons/Paperclip'
 import Trash from '../../icons/Trash'
 import {
   centsToDollars as formatMoney,
@@ -11,7 +12,9 @@ import {
   SplitCategoryUpdate,
   hasSuggestions,
 } from '../../types/categories'
-import { getCategorizePayload } from '../../utils/bankTransactions'
+import { getCategorizePayload, hasReceipts } from '../../utils/bankTransactions'
+import { BankTransactionReceipts } from '../BankTransactionReceipts'
+import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
 import {
@@ -19,8 +22,10 @@ import {
   mapCategoryToExclusionOption,
   mapCategoryToOption,
 } from '../CategorySelect/CategorySelect'
-import { Input } from '../Input'
+import { FileInput, Input, InputGroup } from '../Input'
+import { Textarea } from '../Textarea'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
+import { useMemoTextContext } from './useMemoText'
 import classNames from 'classnames'
 
 type Split = {
@@ -38,15 +43,22 @@ type RowState = {
 export const SplitForm = ({
   bankTransaction,
   showTooltips,
+  showReceiptUploads,
+  showDescriptions,
 }: {
   bankTransaction: BankTransaction
   showTooltips: boolean
+  showReceiptUploads?: boolean
+  showDescriptions?: boolean
 }) => {
+  const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
+
   const {
     categorize: categorizeBankTransaction,
     isLoading,
     error,
   } = useBankTransactionsContext()
+  const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
   const defaultCategory =
     bankTransaction.category ||
     (hasSuggestions(bankTransaction.categorization_flow) &&
@@ -177,6 +189,10 @@ export const SplitForm = ({
   }
 
   const save = async () => {
+    if (showDescriptions && memoText !== undefined) {
+      saveMemoText()
+    }
+
     if (!validateSplit(rowState)) {
       if (rowState.splits.length > 1) {
         setFormError(
@@ -270,13 +286,61 @@ export const SplitForm = ({
           Add new split
         </TextButton>
       </div>
-      <Button
-        fullWidth={true}
-        onClick={save}
-        disabled={isLoading || bankTransaction.processing}
+      {showDescriptions && (
+        <InputGroup
+          className='Layer__bank-transaction-mobile-list-item__description'
+          name='description'
+        >
+          <Text
+            size={TextSize.sm}
+            className='Layer__bank-transaction-mobile-list-item__description__label'
+          >
+            Description
+          </Text>
+          <Textarea
+            name='description'
+            placeholder='Add description'
+            value={memoText}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setMemoText(e.target.value)
+            }
+          />
+        </InputGroup>
+      )}
+      <div
+        className={classNames(
+          'Layer__bank-transaction-mobile-list-item__receipts',
+          hasReceipts(bankTransaction)
+            ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
+            : undefined,
+        )}
       >
-        {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
-      </Button>
+        {showReceiptUploads && (
+          <BankTransactionReceipts
+            ref={receiptsRef}
+            floatingActions={false}
+            hideUploadButtons={true}
+            label='Receipts'
+          />
+        )}
+      </div>
+      <div className='Layer__bank-transaction-mobile-list-item__actions'>
+        {showReceiptUploads && (
+          <FileInput
+            onUpload={receiptsRef.current?.uploadReceipt}
+            text='Upload receipt'
+            iconOnly={true}
+            icon={<PaperclipIcon />}
+          />
+        )}
+        <Button
+          fullWidth={true}
+          onClick={save}
+          disabled={isLoading || bankTransaction.processing}
+        >
+          {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
+        </Button>
+      </div>
       {formError && <ErrorText>{formError}</ErrorText>}
       {bankTransaction.error && showRetry ? (
         <ErrorText>

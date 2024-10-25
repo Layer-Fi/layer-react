@@ -14,6 +14,8 @@ export interface BankTransactionMobileListProps {
   initialLoad?: boolean
   showTooltips: boolean
   mode: BankTransactionsMode
+  showReceiptUploads?: boolean
+  showDescriptions?: boolean
 }
 
 export const BankTransactionMobileList = ({
@@ -23,6 +25,8 @@ export const BankTransactionMobileList = ({
   initialLoad,
   showTooltips,
   mode,
+  showReceiptUploads,
+  showDescriptions,
 }: BankTransactionMobileListProps) => {
   const transactionToOpenContextData = useTransactionToOpen()
 
@@ -41,6 +45,8 @@ export const BankTransactionMobileList = ({
               removeTransaction={removeTransaction}
               initialLoad={initialLoad}
               isFirstItem={index == 0}
+              showReceiptUploads={showReceiptUploads}
+              showDescriptions={showDescriptions}
             />
           ),
         )}
