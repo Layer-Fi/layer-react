@@ -8,6 +8,7 @@ type LayerEnvironmentConfig = {
   url: string
   scope: string
   apiUrl: string
+  usePlaidSandbox: boolean
 }
 
 export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
@@ -15,21 +16,25 @@ export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
     url: 'https://auth.layerfi.com/oauth2/token',
     scope: 'https://api.layerfi.com/production',
     apiUrl: 'https://api.layerfi.com',
+    usePlaidSandbox: false,
   },
   sandbox: {
     url: 'https://auth.layerfi.com/oauth2/token',
     scope: 'https://sandbox.layerfi.com/sandbox',
     apiUrl: 'https://sandbox.layerfi.com',
+    usePlaidSandbox: true,
   },
   staging: {
     url: 'https://auth.layerfi.com/oauth2/token',
     scope: 'https://sandbox.layerfi.com/sandbox',
     apiUrl: 'https://staging.layerfi.com',
+    usePlaidSandbox: true,
   },
   internalStaging: {
     url: 'https://auth.layerfi.com/oauth2/token',
     scope: 'https://sandbox.layerfi.com/sandbox',
     apiUrl: 'https://staging.layerfi.com',
+    usePlaidSandbox: true,
   },
 }
 
