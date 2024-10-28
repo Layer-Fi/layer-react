@@ -170,7 +170,6 @@ import { ProfitAndLoss } from "@layerfi/components";
 <ProfitAndLoss>
   <div className='Layer__accounting-overview__summaries-row'>
     <ProfitAndLoss.Summaries actionable={false} />
-    <TransactionToReviewCard onClick={onTransactionsToReviewClick} />
   </div>
 </ProfitAndLoss>
 ```
