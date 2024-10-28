@@ -8,6 +8,7 @@ import { TasksStringOverrides } from '../../components/Tasks/Tasks'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useWindowSize } from '../../hooks/useWindowSize'
+import { BookkeepingProfitAndLossSummariesContainer } from './internal/BookkeepingProfitAndLossSummariesContainer'
 import classNames from 'classnames'
 
 export interface BookkeepingOverviewProps {
@@ -60,11 +61,11 @@ export const BookkeepingOverview = ({
               text={stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
               withDatePicker
             />
-            <div className='Layer__bookkeeping-overview__summaries-row'>
+            <BookkeepingProfitAndLossSummariesContainer>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
               />
-            </div>
+            </BookkeepingProfitAndLossSummariesContainer>
             <ProfitAndLoss.Chart />
           </Container>
           <div className='Layer__bookkeeping-overview-profit-and-loss-charts'>

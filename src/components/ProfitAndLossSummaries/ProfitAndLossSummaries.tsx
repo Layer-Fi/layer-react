@@ -1,16 +1,14 @@
-import React, { useContext, useMemo } from 'react'
-import { Scope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
-import { centsToDollars as formatMoney } from '../../models/Money'
-import { ProfitAndLoss } from '../../types'
-import { LineBaseItem } from '../../types/line_item'
-import {
-  collectExpensesItems,
-  collectRevenueItems,
-} from '../../utils/profitAndLossUtils'
+import React, { useContext, useMemo, type ReactNode } from 'react'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
-import { SkeletonLoader } from '../SkeletonLoader'
-import { MiniChart } from './MiniChart'
-import classNames from 'classnames'
+import {
+  ProfitAndLossSummariesList,
+  ProfitAndLossSummariesListItem,
+} from './internal/ProfitAndLossSummariesList'
+import {
+  ProfitAndLossSummariesMiniChart,
+  toMiniChartData,
+} from './internal/ProfitAndLossSummariesMiniChart'
+import { ProfitAndLossSummariesSummary } from './internal/ProfitAndLossSummariesSummary'
 
 export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string
@@ -18,60 +16,37 @@ export interface ProfitAndLossSummariesStringOverrides {
   netProfitLabel?: string
 }
 
-const CHART_PLACEHOLDER = [
-  {
-    name: 'placeholder',
-    display_name: 'placeholder',
-    value: 1,
-    type: 'placeholder',
-    share: 1,
-  },
-]
-
-const buildMiniChartData = (scope: Scope, data?: ProfitAndLoss) => {
-  if (!data) {
-    return CHART_PLACEHOLDER
-  }
-
-  let items: LineBaseItem[] = []
-
-  switch (scope) {
-    case 'revenue':
-      items = collectRevenueItems(data)
-      break
-    default:
-      items = collectExpensesItems(data)
-  }
-
-  if (
-    !items ||
-    items.length === 0 ||
-    !items.find(x => Math.abs(x.value) !== 0)
-  ) {
-    return CHART_PLACEHOLDER
-  }
-
-  return items.slice()
-}
+const SECTION_CLASS_NAME = 'Layer__ProfitAndLossSummaries'
+const SECTION_CLASS_NAMES = `${SECTION_CLASS_NAME} Layer__component`
 
 type ProfitAndLossSummariesProps = {
-  vertical?: boolean
   actionable?: boolean
+  stringOverrides?: ProfitAndLossSummariesStringOverrides
+  chartColorsList?: string[]
+  slots?: {
+    unstable_AdditionalListItems?: [ReactNode]
+  }
+  variants?: {
+    size: 'sm' | 'lg'
+  }
   /**
    * @deprecated Use `stringOverrides.revenueLabel` instead
    */
   revenueLabel?: string
-  stringOverrides?: ProfitAndLossSummariesStringOverrides
-  chartColorsList?: string[]
+  /**
+   * @deprecated Orientation is determined by the container size
+   */
+  vertical?: boolean
 }
 
-export const ProfitAndLossSummaries = ({
-  vertical,
+export function ProfitAndLossSummaries({
   actionable = false,
   revenueLabel,
   stringOverrides,
   chartColorsList,
-}: ProfitAndLossSummariesProps) => {
+  slots,
+  variants,
+}: ProfitAndLossSummariesProps) {
   const {
     data: storedData,
     isLoading,
@@ -79,124 +54,83 @@ export const ProfitAndLossSummaries = ({
     sidebarScope,
   } = useContext(PNL.Context)
 
+  /*
+   * What is going on here? Why is this not explicitly an array type?
+   *
+   * This introduces unnecessary `any` types
+   */
   const dataItem = Array.isArray(storedData)
     ? storedData[storedData.length - 1]
     : storedData
 
-  const expensesChartData = useMemo(() => {
-    return buildMiniChartData('expenses', dataItem)
-  }, [storedData])
-
-  const revenueChartData = useMemo(() => {
-    return buildMiniChartData('revenue', dataItem)
-  }, [storedData])
+  const { revenueChartData, expensesChartData } = useMemo(
+    () => ({
+      revenueChartData: toMiniChartData({ scope: 'revenue', data: dataItem }),
+      expensesChartData: toMiniChartData({ scope: 'expenses', data: dataItem }),
+    }),
+    [dataItem],
+  )
 
   const data = dataItem ? dataItem : { income: { value: NaN }, net_profit: NaN }
 
-  const incomeDirectionClass =
-    (data.income.value ?? NaN) < 0
-      ? 'Layer__profit-and-loss-summaries__amount--negative'
-      : 'Layer__profit-and-loss-summaries__amount--positive'
-
-  const expensesDirectionClass =
-    (data?.income?.value ?? NaN) - data.net_profit < 0
-      ? 'Layer__profit-and-loss-summaries__amount--negative'
-      : 'Layer__profit-and-loss-summaries__amount--positive'
-
-  const netProfitDirectionClass =
-    data.net_profit < 0
-      ? 'Layer__profit-and-loss-summaries__amount--negative'
-      : 'Layer__profit-and-loss-summaries__amount--positive'
+  const { unstable_AdditionalListItems = [] } = slots ?? {}
+  const listItemCount = unstable_AdditionalListItems.length + 3
 
   return (
-    <div
-      className={`Layer__profit-and-loss-summaries ${
-        vertical ? 'flex-col' : ''
-      }`}
-    >
-      <div
-        className={classNames(
-          'Layer__profit-and-loss-summaries__summary',
-          actionable && 'Layer__actionable',
-          'Layer__profit-and-loss-summaries__summary--income',
-          sidebarScope === 'revenue' ? 'active' : '',
-        )}
-        onClick={() => {
-          actionable && setSidebarScope('revenue')
-        }}
-      >
-        <MiniChart data={revenueChartData} chartColorsList={chartColorsList} />
-        <div className='Layer__profit-and-loss-summaries__text'>
-          <span className='Layer__profit-and-loss-summaries__title'>
-            {stringOverrides?.revenueLabel || revenueLabel || 'Revenue'}
-          </span>
-          {isLoading || storedData === undefined ? (
-            <div className='Layer__profit-and-loss-summaries__loader'>
-              <SkeletonLoader />
-            </div>
-          ) : (
-            <span
-              className={`Layer__profit-and-loss-summaries__amount ${incomeDirectionClass}`}
-            >
-              {formatMoney(Math.abs(data?.income?.value ?? NaN))}
-            </span>
-          )}
-        </div>
-      </div>
-      <div
-        className={classNames(
-          'Layer__profit-and-loss-summaries__summary',
-          actionable && 'Layer__actionable',
-          'Layer__profit-and-loss-summaries__summary--expenses',
-          sidebarScope === 'expenses' ? 'active' : '',
-        )}
-        onClick={() => {
-          actionable && setSidebarScope('expenses')
-        }}
-      >
-        <MiniChart data={expensesChartData} chartColorsList={chartColorsList} />
-        <div className='Layer__profit-and-loss-summaries__text'>
-          <span className='Layer__profit-and-loss-summaries__title'>
-            {stringOverrides?.expensesLabel || 'Expenses'}
-          </span>
-          {isLoading || storedData === undefined ? (
-            <div className='Layer__profit-and-loss-summaries__loader'>
-              <SkeletonLoader className='Layer__profit-and-loss-summaries__loader' />
-            </div>
-          ) : (
-            <span
-              className={`Layer__profit-and-loss-summaries__amount ${expensesDirectionClass}`}
-            >
-              {formatMoney(
-                Math.abs((data.income.value ?? 0) - data.net_profit),
-              )}
-            </span>
-          )}
-        </div>
-      </div>
-      <div
-        className={classNames(
-          'Layer__profit-and-loss-summaries__summary net-profit Layer__profit-and-loss-summaries__summary--net-profit',
-          actionable && 'Layer__actionable',
-        )}
-      >
-        <div className='Layer__profit-and-loss-summaries__text'>
-          <span className='Layer__profit-and-loss-summaries__title'>
-            {stringOverrides?.netProfitLabel || 'Net Profit'}
-          </span>
-          {isLoading || storedData === undefined ? (
-            <div className='Layer__profit-and-loss-summaries__loader'>
-              <SkeletonLoader className='Layer__profit-and-loss-summaries__loader' />
-            </div>
-          ) : (
-            <span
-              className={`Layer__profit-and-loss-summaries__amount ${netProfitDirectionClass}`}
-            >
-              {formatMoney(Math.abs(data.net_profit))}
-            </span>
-          )}
-        </div>
-      </div>
-    </div>
+    <section className={SECTION_CLASS_NAMES}>
+      <ProfitAndLossSummariesList itemCount={listItemCount}>
+        <ProfitAndLossSummariesListItem
+          isActive={sidebarScope === 'revenue'}
+          onClick={actionable ? () => setSidebarScope('revenue') : undefined}
+        >
+          <ProfitAndLossSummariesSummary
+            label={stringOverrides?.revenueLabel || revenueLabel || 'Revenue'}
+            amount={data.income.value}
+            isLoading={isLoading}
+            slots={{
+              Chart: (
+                <ProfitAndLossSummariesMiniChart
+                  data={revenueChartData}
+                  chartColorsList={chartColorsList}
+                />
+              ),
+            }}
+            variants={variants}
+          />
+        </ProfitAndLossSummariesListItem>
+        <ProfitAndLossSummariesListItem
+          isActive={sidebarScope === 'expenses'}
+          onClick={actionable ? () => setSidebarScope('expenses') : undefined}
+        >
+          <ProfitAndLossSummariesSummary
+            label={stringOverrides?.revenueLabel || revenueLabel || 'Expenses'}
+            amount={(data?.income?.value ?? NaN) - data.net_profit}
+            isLoading={isLoading}
+            slots={{
+              Chart: (
+                <ProfitAndLossSummariesMiniChart
+                  data={expensesChartData}
+                  chartColorsList={chartColorsList}
+                />
+              ),
+            }}
+            variants={variants}
+          />
+        </ProfitAndLossSummariesListItem>
+        <ProfitAndLossSummariesListItem>
+          <ProfitAndLossSummariesSummary
+            label={stringOverrides?.netProfitLabel || 'Net Profit'}
+            amount={data.net_profit}
+            variants={variants}
+            isLoading={isLoading}
+          />
+        </ProfitAndLossSummariesListItem>
+        {unstable_AdditionalListItems.map((item, index) => (
+          <ProfitAndLossSummariesListItem key={index}>
+            {item}
+          </ProfitAndLossSummariesListItem>
+        ))}
+      </ProfitAndLossSummariesList>
+    </section>
   )
 }

@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Badge } from '../Badge'
-import { BadgeSize, BadgeVariant } from '../Badge/Badge'
-import { Text, TextSize } from '../Typography'
 import { useProfitAndLossLTM } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import BellIcon from '../../icons/Bell'
 import CheckIcon from '../../icons/Check'
 import RefreshCcw from '../../icons/RefreshCcw'
+import { Badge } from '../Badge'
+import { BadgeSize, BadgeVariant } from '../Badge/Badge'
 import { BadgeLoader } from '../BadgeLoader'
 import { NotificationCard } from '../NotificationCard'
 import { ProfitAndLoss } from '../ProfitAndLoss'
+import { Text, TextSize } from '../Typography'
 import { getMonth, getYear, startOfMonth } from 'date-fns'
 
 export interface TransactionToReviewCardProps {

@@ -77,18 +77,22 @@ export const AccountingOverview = ({
             onboardingStepOverride={onboardingStepOverride}
           />
         )}
-        <div className='Layer__accounting-overview__summaries-row'>
-          <ProfitAndLoss.Summaries
-            stringOverrides={stringOverrides?.profitAndLoss?.summaries}
-            chartColorsList={chartColorsList}
-          />
-          {showTransactionsToReview && (
-            <TransactionToReviewCard
-              usePnlDateRange={true}
-              onClick={onTransactionsToReviewClick}
-            />
-          )}
-        </div>
+        <ProfitAndLoss.Summaries
+          stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+          chartColorsList={chartColorsList}
+          slots={{
+            unstable_AdditionalListItems: showTransactionsToReview
+              ? [
+                  <TransactionToReviewCard
+                    key='transactions-to-review'
+                    usePnlDateRange={true}
+                    onClick={onTransactionsToReviewClick}
+                  />,
+                ]
+              : undefined,
+          }}
+          variants={{ size: 'lg' }}
+        />
         <Container
           name='accounting-overview-profit-and-loss'
           asWidget
