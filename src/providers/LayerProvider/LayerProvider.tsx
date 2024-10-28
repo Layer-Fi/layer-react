@@ -24,12 +24,6 @@ export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
     apiUrl: 'https://sandbox.layerfi.com',
     usePlaidSandbox: true,
   },
-  staging: {
-    url: 'https://auth.layerfi.com/oauth2/token',
-    scope: 'https://sandbox.layerfi.com/sandbox',
-    apiUrl: 'https://staging.layerfi.com',
-    usePlaidSandbox: true,
-  },
   internalStaging: {
     url: 'https://auth.layerfi.com/oauth2/token',
     scope: 'https://sandbox.layerfi.com/sandbox',

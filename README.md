@@ -33,7 +33,7 @@ Nest the components you want to use under the `LayerProvider` component. You sho
 
 - `businessId` The ID of the business whose information you're showing.
 - `businessAccessToken` Temporary authentication token scoped to this specific business. See the [getting started guide](https://docs.layerfi.com/guides/embedded-components#backend-setup) for how to fetch these tokens on your backend.
-- `environment` (Optional, defaults to "production") the Layer environment you're attempting to access [`staging` or `production`]
+- `environment` (Optional, defaults to "production") the Layer environment you're attempting to access [`sandbox` or `production`]
 - `theme` (Optional) to customize the look of components
 - `onError` (Optional) to get notified about exceptions
 
@@ -43,7 +43,7 @@ import { LayerProvider } from "@layerfi/components";
 <LayerProvider
   businesId="..."
   businessAccessToken="..."
-  environment={'staging'}
+  environment={'sandbox'}
 >
   {...}
 </LayerProvider>
@@ -60,7 +60,7 @@ import { LayerProvider } from "@layerfi/components";
   businesId="..."
   appId="..."
   appSecret="..."
-  environment={'staging'}
+  environment={'sandbox'}
 >
   {...}
 </LayerProvider>
