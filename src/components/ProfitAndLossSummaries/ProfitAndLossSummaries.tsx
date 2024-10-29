@@ -1,4 +1,5 @@
 import React, { useContext, useMemo, type ReactNode } from 'react'
+import type { Variants } from '../../utils/styleUtils/sizeVariants'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import {
   ProfitAndLossSummariesList,
@@ -26,9 +27,7 @@ type ProfitAndLossSummariesProps = {
   slots?: {
     unstable_AdditionalListItems?: [ReactNode]
   }
-  variants?: {
-    size: 'sm' | 'lg'
-  }
+  variants?: Variants
   /**
    * @deprecated Use `stringOverrides.revenueLabel` instead
    */
@@ -54,11 +53,6 @@ export function ProfitAndLossSummaries({
     sidebarScope,
   } = useContext(PNL.Context)
 
-  /*
-   * What is going on here? Why is this not explicitly an array type?
-   *
-   * This introduces unnecessary `any` types
-   */
   const dataItem = Array.isArray(storedData)
     ? storedData[storedData.length - 1]
     : storedData

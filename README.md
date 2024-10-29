@@ -160,7 +160,7 @@ import { ProfitAndLoss } from "@layerfi/components";
 </ProfitAndLoss>
 ```
 
-#### Profit and Loss Summary Cards
+#### Profit and Loss Summaries
 
 ![](https://github.com/Layer-Fi/layer-react/assets/1592431/06459f20-519e-4413-80ba-fb9965c32f9f)
 
@@ -171,6 +171,11 @@ import { ProfitAndLoss } from "@layerfi/components";
   <ProfitAndLoss.Summaries />
 </ProfitAndLoss>
 ```
+
+The P&L Summaries section supports several optional props:
+
+- `actionable`: When enabled, clicking the revenue & expense charts will open the P&L sidebar view.
+- `variants`: Override the size of the component; supports a small and large version.
 
 #### Profit and Loss Table
 

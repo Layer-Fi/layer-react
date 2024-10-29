@@ -1,5 +1,6 @@
 import React, { useMemo, type ReactNode } from 'react'
 import { centsToDollars as formatMoney } from '../../../models/Money'
+import type { Variants } from '../../../utils/styleUtils/sizeVariants'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import { SkeletonLoader } from '../../SkeletonLoader'
 
@@ -16,9 +17,7 @@ type ProfitAndLossSummariesSummaryProps = {
   slots?: {
     Chart: ReactNode
   }
-  variants?: {
-    size: 'sm' | 'lg'
-  }
+  variants?: Variants
 }
 
 export function ProfitAndLossSummariesSummary({

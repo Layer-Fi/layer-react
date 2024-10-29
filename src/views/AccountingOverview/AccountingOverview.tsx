@@ -9,6 +9,7 @@ import { Toggle } from '../../components/Toggle'
 import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { View } from '../../components/View'
 import { OnboardingStep } from '../../types/layer_context'
+import type { Variants } from '../../utils/styleUtils/sizeVariants'
 import { TagOption } from '../ProjectProfitability/ProjectProfitability'
 import classNames from 'classnames'
 
@@ -31,6 +32,7 @@ export interface AccountingOverviewProps {
   stringOverrides?: AccountingOverviewStringOverrides
   tagFilter?: TagOption
   showTransactionsToReview?: boolean
+  variants?: Variants
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
@@ -46,6 +48,7 @@ export const AccountingOverview = ({
   stringOverrides,
   tagFilter = undefined,
   showTransactionsToReview = true,
+  variants,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
 
@@ -91,7 +94,7 @@ export const AccountingOverview = ({
                 ]
               : undefined,
           }}
-          variants={{ size: 'lg' }}
+          variants={variants}
         />
         <Container
           name='accounting-overview-profit-and-loss'
