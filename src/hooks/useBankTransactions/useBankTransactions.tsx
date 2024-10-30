@@ -122,8 +122,9 @@ export const useBankTransactions: UseBankTransactions = params => {
     return [
       businessId &&
         auth?.access_token &&
-        `${filtersSettingString(filters)}-${businessId}-${prevData?.meta
-          ?.pagination?.cursor}`,
+        `${filtersSettingString(filters)}-${businessId}-${
+          prevData?.meta?.pagination?.cursor
+        }`,
       prevData?.meta?.pagination?.cursor.toString(),
     ]
   }
@@ -148,8 +149,8 @@ export const useBankTransactions: UseBankTransactions = params => {
               ? filters?.categorizationStatus === DisplayState.categorized
                 ? 'true'
                 : filters?.categorizationStatus === DisplayState.review
-                ? 'false'
-                : ''
+                  ? 'false'
+                  : ''
               : '',
             direction:
               filters?.direction?.length === 1

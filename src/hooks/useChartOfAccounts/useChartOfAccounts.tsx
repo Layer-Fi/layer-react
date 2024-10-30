@@ -289,8 +289,8 @@ export const useChartOfAccounts = (
       return
     }
 
-    const parent = allAccounts.find(
-      x => x.sub_accounts?.find(el => el.id === found.id),
+    const parent = allAccounts.find(x =>
+      x.sub_accounts?.find(el => el.id === found.id),
     )
 
     setForm({

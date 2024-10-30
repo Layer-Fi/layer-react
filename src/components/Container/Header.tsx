@@ -17,7 +17,7 @@ export interface HeaderProps {
   layout?: HeaderLayout
 }
 
-export const Header = forwardRef<HTMLElement, HeaderProps>(
+const Header = forwardRef<HTMLElement, HeaderProps>(
   ({ className, children, style, layout }, ref) => {
     const baseClassName = classNames(
       'Layer__component-header',
@@ -32,3 +32,7 @@ export const Header = forwardRef<HTMLElement, HeaderProps>(
     )
   },
 )
+
+Header.displayName = 'Header'
+
+export { Header }

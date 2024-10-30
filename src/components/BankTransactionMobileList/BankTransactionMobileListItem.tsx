@@ -86,11 +86,11 @@ export const BankTransactionMobileListItem = ({
       ? bankTransaction.category.type === 'Exclusion'
         ? Purpose.personal
         : bankTransaction.categorization_status === CategorizationStatus.SPLIT
-        ? Purpose.more
-        : Purpose.business
+          ? Purpose.more
+          : Purpose.business
       : hasMatch(bankTransaction)
-      ? Purpose.more
-      : Purpose.business,
+        ? Purpose.more
+        : Purpose.business,
   )
   const [open, setOpen] = useState(isFirstItem)
   const [showComponent, setShowComponent] = useState(!initialLoad)

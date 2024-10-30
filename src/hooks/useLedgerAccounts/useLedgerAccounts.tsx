@@ -5,7 +5,7 @@ import { LedgerAccounts, LedgerAccountsEntry } from '../../types'
 import { DataModel } from '../../types/general'
 import useSWR from 'swr'
 
-type UseLedgerAccounts = (showReversalEntries: Boolean) => {
+type UseLedgerAccounts = (showReversalEntries: boolean) => {
   data?: LedgerAccounts
   entryData?: LedgerAccountsEntry
   isLoading?: boolean
@@ -23,7 +23,7 @@ type UseLedgerAccounts = (showReversalEntries: Boolean) => {
 }
 
 export const useLedgerAccounts: UseLedgerAccounts = (
-  showReversalEntries: Boolean = false,
+  showReversalEntries: boolean = false,
 ) => {
   const { auth, businessId, apiUrl, read, syncTimestamps, hasBeenTouched } =
     useLayerContext()

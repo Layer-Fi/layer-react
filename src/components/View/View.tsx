@@ -17,7 +17,7 @@ export interface ViewProps {
   viewClassName?: string
 }
 
-export const View = forwardRef<HTMLDivElement, ViewProps>(
+const View = forwardRef<HTMLDivElement, ViewProps>(
   (
     {
       title,
@@ -64,3 +64,7 @@ export const View = forwardRef<HTMLDivElement, ViewProps>(
     )
   },
 )
+
+View.displayName = 'View'
+
+export { View }
