@@ -4,6 +4,7 @@ import { BadgeSize, BadgeVariant } from '../../../components/Badge/Badge'
 import { BadgeLoader } from '../../../components/BadgeLoader'
 import { IconButton } from '../../../components/Button'
 import { ProfitAndLoss } from '../../../components/ProfitAndLoss'
+import { ProfitAndLossSummariesHeading } from '../../../components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesHeading'
 import { Text, TextSize } from '../../../components/Typography'
 import { StackProps, VStack } from '../../../components/ui/Stack'
 import { useProfitAndLossLTM } from '../../../hooks/useProfitAndLoss/useProfitAndLossLTM'
@@ -67,7 +68,6 @@ export function TransactionsToReview({
     }
   }
 
-  const labelDataProperties = useMemo(() => toDataProperties({ size }), [size])
   let verticalGap: StackProps['gap'] = '3xs'
   switch (size) {
     case 'sm':
@@ -80,9 +80,9 @@ export function TransactionsToReview({
   return (
     <div onClick={onClick} className={CLASS_NAME}>
       <VStack gap={verticalGap} align='start'>
-        <h3 className={HEADING_CLASS_NAME} {...labelDataProperties}>
+        <ProfitAndLossSummariesHeading variants={variants}>
           Transactions to review
-        </h3>
+        </ProfitAndLossSummariesHeading>
         {loaded === 'initial' || loaded === 'loading' ? <BadgeLoader /> : null}
 
         {loaded === 'complete' && error ? (

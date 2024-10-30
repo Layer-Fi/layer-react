@@ -3,11 +3,11 @@ import { centsToDollars as formatMoney } from '../../../models/Money'
 import type { Variants } from '../../../utils/styleUtils/sizeVariants'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import { SkeletonLoader } from '../../SkeletonLoader'
+import { ProfitAndLossSummariesHeading } from './ProfitAndLossSummariesHeading'
 
 const CLASS_NAME = 'Layer__ProfitAndLossSummariesSummary'
 
 const CHART_AREA_CLASS_NAME = 'Layer__ProfitAndLossSummariesSummaryChartArea'
-const HEADING_CLASS_NAME = 'Layer__ProfitAndLossSummariesSummaryHeading'
 const AMOUNT_CLASS_NAME = 'Layer__ProfitAndLossSummariesSummaryAmount'
 
 type ProfitAndLossSummariesSummaryProps = {
@@ -31,7 +31,6 @@ export function ProfitAndLossSummariesSummary({
   const { size = 'sm' } = variants ?? {}
 
   const dataProperties = useMemo(() => toDataProperties({ size }), [size])
-  const labelDataProperties = useMemo(() => toDataProperties({ size }), [size])
   const amountDataProperties = useMemo(
     () =>
       toDataProperties({
@@ -45,9 +44,9 @@ export function ProfitAndLossSummariesSummary({
   return (
     <div className={CLASS_NAME} {...dataProperties}>
       {Chart && <div className={CHART_AREA_CLASS_NAME}>{Chart}</div>}
-      <h3 className={HEADING_CLASS_NAME} {...labelDataProperties}>
+      <ProfitAndLossSummariesHeading variants={variants}>
         {label}
-      </h3>
+      </ProfitAndLossSummariesHeading>
       {isLoading ? (
         <SkeletonLoader />
       ) : (
