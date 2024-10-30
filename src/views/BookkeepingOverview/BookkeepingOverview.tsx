@@ -8,6 +8,7 @@ import { TasksStringOverrides } from '../../components/Tasks/Tasks'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useWindowSize } from '../../hooks/useWindowSize'
+import { Variants } from '../../utils/styleUtils/sizeVariants'
 import { BookkeepingProfitAndLossSummariesContainer } from './internal/BookkeepingProfitAndLossSummariesContainer'
 import classNames from 'classnames'
 
@@ -21,6 +22,13 @@ export interface BookkeepingOverviewProps {
       header?: string
       detailedCharts?: ProfitAndLossDetailedChartsStringOverrides
       summaries?: ProfitAndLossSummariesStringOverrides
+    }
+  }
+  slotProps?: {
+    profitAndLoss?: {
+      summaries?: {
+        variants?: Variants
+      }
     }
   }
 }
@@ -64,6 +72,7 @@ export const BookkeepingOverview = ({
             <BookkeepingProfitAndLossSummariesContainer>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+                variants={{ size: 'lg' }}
               />
             </BookkeepingProfitAndLossSummariesContainer>
             <ProfitAndLoss.Chart />
