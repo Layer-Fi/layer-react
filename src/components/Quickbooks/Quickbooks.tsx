@@ -17,8 +17,8 @@ const Quickbooks = () => {
         {quickbooksIsLinked === undefined
           ? ''
           : quickbooksIsLinked
-          ? 'established'
-          : 'not connected'}
+            ? 'established'
+            : 'not connected'}
       </div>
       <br />
       {quickbooksIsLinked === null && 'Loading...'}

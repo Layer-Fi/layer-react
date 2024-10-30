@@ -1,1 +1,4 @@
-export { ProfitAndLossCompareOptions, ProfitAndLossCompareOptionsProps } from './ProfitAndLossCompareOptions'
+export {
+  ProfitAndLossCompareOptions,
+  ProfitAndLossCompareOptionsProps,
+} from './ProfitAndLossCompareOptions'

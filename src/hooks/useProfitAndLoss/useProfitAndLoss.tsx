@@ -114,7 +114,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
         ...filters[scope],
         sortBy: field,
         sortDirection:
-          direction ?? filters[scope]?.sortDirection === 'desc'
+          (direction ?? filters[scope]?.sortDirection === 'desc')
             ? 'asc'
             : 'desc',
       },

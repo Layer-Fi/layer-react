@@ -30,8 +30,8 @@ export const SplitAndMatchForm = ({
     bankTransaction.category
       ? Purpose.categorize
       : anyMatch
-      ? Purpose.match
-      : Purpose.categorize,
+        ? Purpose.match
+        : Purpose.categorize,
   )
 
   return (

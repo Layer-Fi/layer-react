@@ -55,7 +55,7 @@ const openReceiptInNewTab =
     }
   }
 
-export const BankTransactionReceiptsWithProvider = forwardRef<
+const BankTransactionReceiptsWithProvider = forwardRef<
   BankTransactionReceiptsHandle,
   BankTransactionReceiptsWithProviderProps
 >(({ bankTransaction, isActive, ...props }, ref) => {
@@ -66,7 +66,12 @@ export const BankTransactionReceiptsWithProvider = forwardRef<
   )
 })
 
-export const BankTransactionReceipts = forwardRef<
+BankTransactionReceiptsWithProvider.displayName =
+  'BankTransactionReceiptsWithProvider'
+
+export { BankTransactionReceiptsWithProvider }
+
+const BankTransactionReceipts = forwardRef<
   BankTransactionReceiptsHandle,
   BankTransactionReceiptsProps
 >(
@@ -130,3 +135,7 @@ export const BankTransactionReceipts = forwardRef<
     )
   },
 )
+
+BankTransactionReceipts.displayName = 'BankTransactionReceipts'
+
+export { BankTransactionReceipts }

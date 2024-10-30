@@ -134,8 +134,8 @@ export const PersonalForm = ({
           {isLoading || bankTransaction.processing
             ? 'Saving...'
             : alreadyAssigned
-            ? 'Saved as Personal'
-            : 'Categorize as Personal'}
+              ? 'Saved as Personal'
+              : 'Categorize as Personal'}
         </Button>
       </div>
       {bankTransaction.error && showRetry ? (

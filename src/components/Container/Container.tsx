@@ -13,7 +13,7 @@ export interface ContainerProps {
   style?: CSSProperties
 }
 
-export const Container = forwardRef<HTMLDivElement, ContainerProps>(
+const Container = forwardRef<HTMLDivElement, ContainerProps>(
   (
     {
       name,
@@ -50,3 +50,7 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
     )
   },
 )
+
+Container.displayName = 'Container'
+
+export { Container }
