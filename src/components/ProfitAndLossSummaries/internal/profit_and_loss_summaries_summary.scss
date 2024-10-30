@@ -11,7 +11,7 @@
 
   &[data-size="lg"] {
     min-block-size: 6rem;
-    column-gap: var(--spacing-sm);
+    column-gap: var(--spacing-md);
   }
 }
 
@@ -32,7 +32,7 @@
   font-size: var(--text-sm);
 
   &[data-size="lg"] {
-    font-size: var(--text-md);
+    font-size: var(--text-lg);
   }
 }
 
@@ -40,6 +40,8 @@
   grid-area: amount;
 
   font-size: var(--text-lg);
+  font-variation-settings: "wght" var(--font-weight-bold);
+
   overflow-x: hidden;
   text-overflow: ellipsis;
 

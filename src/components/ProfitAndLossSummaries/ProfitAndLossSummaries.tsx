@@ -24,9 +24,6 @@ type ProfitAndLossSummariesProps = {
   actionable?: boolean
   stringOverrides?: ProfitAndLossSummariesStringOverrides
   chartColorsList?: string[]
-  slots?: {
-    unstable_AdditionalListItems?: [ReactNode]
-  }
   variants?: Variants
   /**
    * @deprecated Use `stringOverrides.revenueLabel` instead
@@ -38,14 +35,20 @@ type ProfitAndLossSummariesProps = {
   vertical?: boolean
 }
 
-export function ProfitAndLossSummaries({
+type Internal_ProfitAndLossSummariesProps = {
+  slots?: {
+    unstable_AdditionalListItems?: [ReactNode]
+  }
+} & ProfitAndLossSummariesProps
+
+export function Internal_ProfitAndLossSummaries({
   actionable = false,
   revenueLabel,
   stringOverrides,
   chartColorsList,
   slots,
   variants,
-}: ProfitAndLossSummariesProps) {
+}: Internal_ProfitAndLossSummariesProps) {
   const {
     data: storedData,
     isLoading,
@@ -128,3 +131,6 @@ export function ProfitAndLossSummaries({
     </section>
   )
 }
+
+export const ProfitAndLossSummaries = (props: ProfitAndLossSummariesProps) =>
+  Internal_ProfitAndLossSummaries(props)

@@ -1,0 +1,18 @@
+.Layer__VStack {
+  display: flex;
+  flex-direction: column;
+
+  &[data-align="start"] {
+    align-items: start;
+  }
+
+  &[data-gap="3xs"] {
+    gap: var(--spacing-3xs);
+  }
+  &[data-gap="2xs"] {
+    gap: var(--spacing-2xs);
+  }
+  &[data-gap="xs"] {
+    gap: var(--spacing-xs);
+  }
+}

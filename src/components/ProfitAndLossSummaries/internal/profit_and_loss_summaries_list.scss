@@ -26,6 +26,8 @@
   all: unset;
   display: grid;
   gap: var(--spacing-sm);
+
+  grid-auto-rows: minmax(0, 1fr);
 }
 
 @container (min-width: 48rem) {

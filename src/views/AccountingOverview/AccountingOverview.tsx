@@ -4,13 +4,16 @@ import { Header, HeaderCol, HeaderRow } from '../../components/Header'
 import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import {
+  Internal_ProfitAndLossSummaries,
+  ProfitAndLossSummariesStringOverrides,
+} from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Toggle } from '../../components/Toggle'
-import { TransactionToReviewCard } from '../../components/TransactionToReviewCard'
 import { View } from '../../components/View'
 import { OnboardingStep } from '../../types/layer_context'
 import type { Variants } from '../../utils/styleUtils/sizeVariants'
 import { TagOption } from '../ProjectProfitability/ProjectProfitability'
+import { TransactionsToReview } from './internal/TransactionsToReview'
 import classNames from 'classnames'
 
 interface AccountingOverviewStringOverrides {
@@ -32,7 +35,13 @@ export interface AccountingOverviewProps {
   stringOverrides?: AccountingOverviewStringOverrides
   tagFilter?: TagOption
   showTransactionsToReview?: boolean
-  variants?: Variants
+  slotProps?: {
+    profitAndLoss?: {
+      summaries?: {
+        variants?: Variants
+      }
+    }
+  }
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
@@ -48,9 +57,12 @@ export const AccountingOverview = ({
   stringOverrides,
   tagFilter = undefined,
   showTransactionsToReview = true,
-  variants,
+  slotProps,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
+
+  const profitAndLossSummariesVariants =
+    slotProps?.profitAndLoss?.summaries?.variants
 
   return (
     <ProfitAndLoss
@@ -80,21 +92,22 @@ export const AccountingOverview = ({
             onboardingStepOverride={onboardingStepOverride}
           />
         )}
-        <ProfitAndLoss.Summaries
+        <Internal_ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
           chartColorsList={chartColorsList}
           slots={{
             unstable_AdditionalListItems: showTransactionsToReview
               ? [
-                  <TransactionToReviewCard
+                  <TransactionsToReview
                     key='transactions-to-review'
                     usePnlDateRange={true}
                     onClick={onTransactionsToReviewClick}
+                    variants={profitAndLossSummariesVariants}
                   />,
                 ]
               : undefined,
           }}
-          variants={variants}
+          variants={profitAndLossSummariesVariants}
         />
         <Container
           name='accounting-overview-profit-and-loss'

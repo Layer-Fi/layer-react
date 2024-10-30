@@ -26,19 +26,6 @@
   }
 }
 
-.Layer__bookkeeping-overview__summaries-row {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  max-width: 1406px;
-  padding: var(--spacing-md);
-
-  .Layer__notification-card {
-    width: calc(25% - 12px);
-    height: 56px;
-  }
-}
-
 .Layer__bookkeeping-overview-profit-and-loss-chart {
   width: calc(50% - var(--spacing-md) / 2);
 }
