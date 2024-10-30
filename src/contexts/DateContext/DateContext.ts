@@ -1,28 +1,28 @@
 import { createContext, useContext } from 'react'
 import { useDate } from '../../hooks/useDate'
-import { DatePeriod, DateRange } from '../../types'
+import { DateState } from '../../types'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 export type DateContextType = ReturnType<typeof useDate>
 
 export const DateContext = createContext<DateContextType>({
-  dateRange: {
+  date: {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
+    period: 'MONTH',
+    mode: 'monthPicker',
   },
-  setDateRange: (_dateRange: DateRange<Date | undefined>) => true,
-  datePeriod: 'MONTH',
-  setDatePeriod: (_datePeriod: DatePeriod) => {},
+  setDate: (_dateRange: Partial<DateState>) => true,
 })
 
 export const GlobalDateContext = createContext<DateContextType>({
-  dateRange: {
+  date: {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
+    period: 'CUSTOM',
+    mode: 'dayRangePicker',
   },
-  setDateRange: (_dateRange: DateRange<Date | undefined>) => true,
-  datePeriod: 'MONTH',
-  setDatePeriod: (_datePeriod: DatePeriod) => {},
+  setDate: (_dateRange: Partial<DateState>) => true,
 })
 
 export const useDateContext = () => {

@@ -1,55 +1,90 @@
 import { useState } from 'react'
-import { DatePeriod, DateRange } from '../../types'
+import { DEFAULT_ALLOWED_PICKER_MODES } from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
+import { DateState } from '../../types'
+import { resolveDateToDate } from '../../utils/date'
 import { endOfMonth, isAfter, isBefore, startOfMonth } from 'date-fns'
 
-type Props = {
-  startDate?: Date
-  endDate?: Date
-  period?: DatePeriod
+type UseDate = (props: Partial<DateState>) => {
+  date: DateState
+  setDate: (date: Partial<DateState>) => boolean
 }
 
-type UseDate = (props: Props) => {
-  dateRange: DateRange
-  setDateRange: (dateRange: DateRange<Date | undefined>) => boolean
-  datePeriod: DatePeriod
-  setDatePeriod: (datePeriod: DatePeriod) => void
-}
+export type UseDateProps = Partial<DateState>
 
+/**
+ * @TODO handle period
+ */
 export const useDate: UseDate = ({
   startDate: initialStartDate,
   endDate: initialEndDate,
   period: initialPeriod,
-}: Props) => {
-  const [datePeriod, setDatePeriod] = useState(initialPeriod ?? 'MONTH')
-  const [dateRange, setDateRangeState] = useState<DateRange>({
+  mode: initialMode,
+  supportedModes,
+  name, // @TODO - only for logging and testing
+}: UseDateProps) => {
+  const [dateState, setDateState] = useState<DateState>({
     startDate: initialStartDate ?? startOfMonth(new Date()),
     endDate: initialEndDate ?? endOfMonth(new Date()),
+    period: initialPeriod ?? 'MONTH',
+    mode: initialMode ?? 'monthPicker',
+    supportedModes: supportedModes ?? ['monthPicker'], // @TODO - use sth more generic and default
   })
 
-  const setDateRange = ({
+  const setDate = ({
     startDate: newStartDate,
     endDate: newEndDate,
-  }: DateRange<Date | undefined>) => {
-    if (newStartDate && newEndDate && !isAfter(newStartDate, newEndDate)) {
-      setDateRangeState({ startDate: newStartDate, endDate: newEndDate })
+    mode: newMode,
+    period: newPeriod,
+  }: Partial<DateState>) => {
+    let newDate: DateState = resolveDateToDate(
+      {
+        startDate: newStartDate ?? dateState.startDate,
+        endDate: newEndDate ?? dateState.endDate,
+        period: newPeriod ?? dateState.period,
+        mode: newMode ?? dateState.mode,
+        supportedModes: supportedModes ?? dateState.supportedModes,
+      },
+      dateState,
+    )
+
+    console.log(
+      'flagXX',
+      name,
+      {
+        startDate: newStartDate ?? dateState.startDate,
+        endDate: newEndDate ?? dateState.endDate,
+        period: newPeriod ?? dateState.period,
+        mode: newMode ?? dateState.mode,
+        supportedModes: supportedModes ?? dateState.supportedModes,
+      },
+      dateState,
+      newDate,
+    )
+
+    if (
+      newDate.startDate &&
+      newDate.endDate &&
+      !isAfter(newDate.startDate, newDate.endDate)
+    ) {
+      setDateState(newDate)
       return true
     }
 
     if (
-      newStartDate &&
-      !newEndDate &&
-      !isAfter(newStartDate, dateRange.endDate)
+      newDate.startDate &&
+      !newDate.endDate &&
+      !isAfter(newDate.startDate, dateState.endDate)
     ) {
-      setDateRangeState({ startDate: newStartDate, endDate: dateRange.endDate })
+      setDateState(newDate)
       return true
     }
 
     if (
-      !newStartDate &&
-      newEndDate &&
-      !isBefore(newEndDate, dateRange.startDate)
+      !newDate.startDate &&
+      newDate.endDate &&
+      !isBefore(newDate.endDate, dateState.startDate)
     ) {
-      setDateRangeState({ startDate: dateRange.startDate, endDate: newEndDate })
+      setDateState(newDate)
       return true
     }
 
@@ -57,9 +92,7 @@ export const useDate: UseDate = ({
   }
 
   return {
-    dateRange,
-    setDateRange: setDateRange,
-    datePeriod: datePeriod,
-    setDatePeriod: setDatePeriod,
+    date: dateState,
+    setDate: setDate,
   }
 }

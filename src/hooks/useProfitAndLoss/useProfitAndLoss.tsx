@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useGlobalDateContext } from '../../contexts/DateContext'
+import {
+  useDateContext,
+  useGlobalDateContext,
+} from '../../contexts/DateContext'
 import {
   ProfitAndLoss,
   DateRange,
@@ -66,8 +69,8 @@ type UseProfitAndLoss = (props?: Props) => {
 
 export const useProfitAndLoss: UseProfitAndLoss = (
   {
-    startDate: initialStartDate,
-    endDate: initialEndDate,
+    // startDate: initialStartDate,
+    // endDate: initialEndDate,
     tagFilter,
     reportingBasis,
     dateSyncedWithGlobal,
@@ -76,15 +79,17 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     endDate: endOfMonth(new Date()),
   },
 ) => {
-  const { dateRange: globalDateRange, setDateRange: setGlobalDateRange } =
+  const { date: globalDateRange, setDate: setGlobalDateRange } =
     useGlobalDateContext()
 
-  const [startDate, setStartDate] = useState(
-    initialStartDate || startOfMonth(Date.now()),
-  )
-  const [endDate, setEndDate] = useState(
-    initialEndDate || endOfMonth(Date.now()),
-  )
+  const { date: dateRange, setDate: setDateRange } = useDateContext()
+
+  // const [startDate, setStartDate] = useState(
+  //   initialStartDate || startOfMonth(Date.now()),
+  // )
+  // const [endDate, setEndDate] = useState(
+  //   initialEndDate || endOfMonth(Date.now()),
+  // )
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
     expenses: undefined,
     revenue: undefined,
@@ -93,34 +98,42 @@ export const useProfitAndLoss: UseProfitAndLoss = (
   useEffect(() => {
     if (
       dateSyncedWithGlobal &&
-      JSON.stringify(globalDateRange) !== JSON.stringify({ startDate, endDate })
+      JSON.stringify(globalDateRange) !== JSON.stringify(dateRange)
     ) {
-      setStartDate(globalDateRange.startDate)
-      setEndDate(globalDateRange.endDate)
+      setDateRange(globalDateRange) // @TODO - somewhere here we have to translate
+      // setStartDate(globalDateRange.startDate)
+      // setEndDate(globalDateRange.endDate)
     }
   }, [globalDateRange])
 
-  useEffect(() => {
-    if (
-      dateSyncedWithGlobal &&
-      JSON.stringify(globalDateRange) !== JSON.stringify({ startDate, endDate })
-    ) {
-      setGlobalDateRange({ startDate, endDate })
-    }
-  }, [startDate, endDate])
+  // useEffect(() => {
+  //   // @TODO period is wrong
+  //   // if (
+  //   //   dateSyncedWithGlobal &&
+  //   //   JSON.stringify(globalDateRange) !==
+  //   //     JSON.stringify({ startDate, endDate, period: globalDateRange.period })
+  //   // ) {
+  //   //   setGlobalDateRange({ startDate, endDate })
+  //   // }
+  //   if (dateSyncedWithGlobal) {
+  //     setGlobalDateRange(dateRange)
+  //   }
+  // }, [dateRange])
 
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
 
   const { data, isLoading, isValidating, error, refetch } =
     useProfitAndLossQuery({
-      startDate,
-      endDate,
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
       tagFilter,
       reportingBasis,
     })
 
   const { data: summaryData } = useProfitAndLossLTM({
-    currentDate: startDate ? startDate : startOfMonth(new Date()),
+    currentDate: dateRange.startDate
+      ? dateRange.startDate
+      : startOfMonth(new Date()),
     tagFilter: tagFilter,
   })
 
@@ -128,8 +141,16 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     startDate: newStartDate,
     endDate: newEndDate,
   }: Partial<DateRange>) => {
-    newStartDate && setStartDate(newStartDate)
-    newEndDate && setEndDate(newEndDate)
+    const newDateRange = {
+      startDate: newStartDate,
+      endDate: newEndDate,
+      period: dateRange.period,
+    }
+    setDateRange(newDateRange)
+
+    // if (dateSyncedWithGlobal) {
+    //   setGlobalDateRange(newDateRange)
+    // }
   }
 
   const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {
@@ -176,8 +197,8 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       return x
     })
 
-    const month = startDate.getMonth() + 1
-    const year = startDate.getFullYear()
+    const month = dateRange.startDate?.getMonth() ?? 0 + 1
+    const year = dateRange.startDate?.getFullYear()
     const found = summaryData.find(x => x.month === month && x.year === year)
     if (found && (found.uncategorizedInflows ?? 0) > 0) {
       filtered.push({
@@ -217,7 +238,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
-  }, [data, startDate, filters, sidebarScope, summaryData])
+  }, [data, dateRange.startDate, filters, sidebarScope, summaryData])
 
   const { filteredDataExpenses, filteredTotalExpenses } = useMemo(() => {
     if (!data) {
@@ -239,8 +260,8 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       return x
     })
 
-    const month = startDate.getMonth() + 1
-    const year = startDate.getFullYear()
+    const month = dateRange.startDate?.getMonth() ?? 0 + 1
+    const year = dateRange.startDate?.getFullYear()
     const found = summaryData.find(x => x.month === month && x.year === year)
     if (found && (found.uncategorizedOutflows ?? 0) > 0) {
       filtered.push({
@@ -280,7 +301,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
-  }, [data, startDate, filters, sidebarScope, summaryData])
+  }, [data, dateRange.startDate, filters, sidebarScope, summaryData])
 
   return {
     data,
@@ -291,7 +312,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     isLoading,
     isValidating,
     error: error,
-    dateRange: { startDate, endDate },
+    dateRange: dateRange,
     refetch,
     changeDateRange,
     sidebarScope,

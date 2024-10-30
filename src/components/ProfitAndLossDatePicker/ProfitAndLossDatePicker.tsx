@@ -62,10 +62,17 @@ export const ProfitAndLossDatePicker = ({
         slots={{
           ModeSelector: DatePickerModeSelector,
         }}
+        syncWithGlobalDate={true}
       />
     )
   }
 
+  console.log(
+    'flagXX',
+    datePickerMode,
+    customDateRanges,
+    allowedDatePickerModes,
+  )
   return (
     <DatePicker
       mode={datePickerMode}

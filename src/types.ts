@@ -1,3 +1,5 @@
+import { DatePickerMode } from './components/DatePicker/ModeSelector/DatePickerModeSelector'
+
 export { OAuthResponse } from './types/authentication'
 export {
   LayerContextValues,
@@ -55,13 +57,37 @@ export {
   JournalEntryLineItem,
 } from './types/journal'
 
+export type DateMode =
+  | 'DAY'
+  | 'DAY_RANGE'
+  | 'MONTH'
+  | 'MONTH_RANGE'
+  | 'QAURTER'
+  | 'YEAR'
+  | 'YEAR_TO_DATE'
+
+export type DateState = {
+  startDate: Date
+  endDate: Date
+  period: DatePeriod
+  mode: DatePickerMode // @TODO - make something more generic and unify with DatePickerMode
+  supportedModes?: DatePickerMode[]
+  name?: string // @TODO - only for logging and testing
+}
+
 // Only Date and string (ISO8601 formatted) make sense here
 export type DateRange<T = Date> = {
   startDate: T
   endDate: T
 }
 
-export type DatePeriod = 'DAY' | 'MONTH' | 'QUARTER' | 'YEAR' | 'YEAR_TO_DATE'
+export type DatePeriod =
+  | 'DAY'
+  | 'MONTH'
+  | 'QUARTER'
+  | 'YEAR'
+  | 'YEAR_TO_DATE'
+  | 'CUSTOM'
 
 export type ReportingBasis = 'CASH' | 'ACCRUAL'
 

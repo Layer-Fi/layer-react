@@ -1,9 +1,14 @@
 import React, { useEffect, useRef, useState, type FC } from 'react'
 import * as RDP from 'react-datepicker'
-import { useGlobalDateContext } from '../../contexts/DateContext'
+import {
+  DateContext,
+  useDateContext,
+  useGlobalDateContext,
+} from '../../contexts/DateContext'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
+import { DateState } from '../../types'
 import { Button, ButtonVariant } from '../Button'
 import { CustomDateRange, DatePickerOptions } from './DatePickerOptions'
 import type {
@@ -43,6 +48,8 @@ interface DatePickerProps {
     ModeSelector: FC<DatePickerModeSelectorProps>
   }
   syncWithGlobalDate?: boolean
+  sync?: DateState[]
+  withDateContext?: boolean
 }
 
 const getDefaultRangeDate = (
@@ -68,6 +75,23 @@ const isRangeMode = (mode: DatePickerProps['mode']) =>
   mode === 'dayRangePicker' || mode === 'monthRangePicker'
 
 export const DatePicker = ({
+  withDateContext = true,
+  ...props
+}: DatePickerProps) => {
+  if (!withDateContext) {
+    return <DatePickerController {...props} />
+  }
+
+  const dateContext = useDateContext()
+
+  return (
+    <DateContext.Provider value={dateContext}>
+      <DatePickerController {...props} />
+    </DateContext.Provider>
+  )
+}
+
+export const DatePickerController = ({
   selected,
   onChange,
   mode = 'dayPicker',
@@ -91,13 +115,11 @@ export const DatePicker = ({
   onChangeMode,
   slots,
   syncWithGlobalDate = false,
+  sync,
   ...props
 }: DatePickerProps) => {
-  const {
-    dateRange: globalDateRange,
-    setDateRange: setGlobalDateRange,
-    datePeriod,
-  } = useGlobalDateContext()
+  const { date: globalDateRange, setDate: setGlobalDateRange } =
+    useGlobalDateContext()
   const { ModeSelector } = slots ?? {}
 
   const pickerRef = useRef<{
@@ -109,7 +131,7 @@ export const DatePicker = ({
   const [selectedDates, setSelectedDates] = useState<
     Date | [Date | null, Date | null] | null
   >(
-    syncWithGlobalDate
+    syncWithGlobalDate && globalDateRange.startDate && globalDateRange.endDate
       ? [globalDateRange.startDate, globalDateRange.endDate]
       : selected,
   )
@@ -122,10 +144,6 @@ export const DatePicker = ({
   const [endDate, setEndDate] = useState<Date | null>(
     getDefaultRangeDate('end', mode, selected),
   )
-
-  console.log('selected', selected)
-  console.log('local dateRange', mode, startDate, endDate)
-  console.log('global dateRange', globalDateRange)
 
   useEffect(() => {
     try {
@@ -166,11 +184,12 @@ export const DatePicker = ({
         const newGlobalDateRange = {
           startDate: (selectedDates as [Date, Date])[0],
           endDate: (selectedDates as [Date, Date])[1],
+          period: globalDateRange.period,
         }
         if (
           JSON.stringify(globalDateRange) !== JSON.stringify(newGlobalDateRange)
         ) {
-          setGlobalDateRange(newGlobalDateRange)
+          // setGlobalDateRange(newGlobalDateRange)
         }
       }
       onChange(selectedDates as Date | [Date, Date])
@@ -182,6 +201,8 @@ export const DatePicker = ({
   useEffect(() => {
     if (
       syncWithGlobalDate &&
+      globalDateRange.startDate &&
+      globalDateRange.endDate &&
       (!selectedDates ||
         (selectedDates &&
           JSON.stringify(globalDateRange) !==
