@@ -24,6 +24,10 @@ import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
 const TEST_EMPTY_STATE = false
+const DEFAULT_DATE_RANGE = {
+  startDate: startOfMonth(new Date()),
+  endDate: endOfMonth(new Date()),
+}
 
 export type BankTransactionsMode = 'bookkeeping-client' | 'self-serve'
 
@@ -93,10 +97,6 @@ const BankTransactionsContent = ({
 }: BankTransactionsProps) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [initialLoad, setInitialLoad] = useState(true)
-  const [dateRange, setDateRange] = useState<DateRange>({
-    startDate: startOfMonth(new Date()),
-    endDate: endOfMonth(new Date()),
-  })
   const categorizeView = categorizeViewProp ?? categorizationEnabled(mode)
 
   const {
@@ -177,17 +177,13 @@ const BankTransactionsContent = ({
     ? []
     : useMemo(() => {
         if (monthlyView) {
-          return data?.filter(
-            x =>
-              parseISO(x.date) >= dateRange.startDate &&
-              parseISO(x.date) <= dateRange.endDate,
-          )
+          return data
         }
 
         const firstPageIndex = (currentPage - 1) * pageSize
         const lastPageIndex = firstPageIndex + pageSize
         return data?.slice(firstPageIndex, lastPageIndex)
-      }, [currentPage, data, dateRange])
+      }, [currentPage, data])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -262,8 +258,12 @@ const BankTransactionsContent = ({
           mobileComponent={mobileComponent}
           withDatePicker={monthlyView}
           listView={listView}
-          dateRange={dateRange}
-          setDateRange={v => setDateRange(v)}
+          dateRange={{ ...DEFAULT_DATE_RANGE, ...filters?.dateRange }}
+          setDateRange={v => {
+            if (monthlyView) {
+              setFilters({ ...filters, dateRange: v })
+            }
+          }}
           stringOverrides={stringOverrides?.bankTransactionsHeader}
           isDataLoading={isLoading}
           isSyncing={isSyncing}
