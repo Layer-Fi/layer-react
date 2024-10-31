@@ -7,7 +7,7 @@ import { IconButton } from '../Button'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
 
-export interface FileThumbProps {
+type FileThumbProps = {
   url?: string
   type?: string
   floatingActions?: boolean
@@ -24,7 +24,6 @@ export interface FileThumbProps {
 
 export const FileThumb = ({
   url,
-  type,
   floatingActions = false,
   uploadPending,
   deletePending,

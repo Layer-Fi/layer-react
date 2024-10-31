@@ -49,7 +49,6 @@ export const BankTransactionMobileForms = ({
             bankTransaction={bankTransaction}
             showTooltips={showTooltips}
             showReceiptUploads={showReceiptUploads}
-            isOpen={isOpen}
             showDescriptions={showDescriptions}
           />
         )

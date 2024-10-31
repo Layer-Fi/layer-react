@@ -2,14 +2,12 @@ import React, { ButtonHTMLAttributes } from 'react'
 import CloseIcon from '../../icons/CloseIcon'
 import classNames from 'classnames'
 
-export interface CloseButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {
+type CloseButtonProps = {
   textOnly?: boolean
-}
+} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>
 
 export const CloseButton = ({
   className,
-  children,
   textOnly = false,
   ...props
 }: CloseButtonProps) => {

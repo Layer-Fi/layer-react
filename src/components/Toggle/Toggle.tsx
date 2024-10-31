@@ -160,7 +160,7 @@ const ToggleOption = ({
   name,
   onChange,
   value,
-  size,
+  size: _size,
   leftIcon,
   disabled,
   disabledMessage = 'Disabled',

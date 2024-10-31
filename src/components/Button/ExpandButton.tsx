@@ -2,14 +2,12 @@ import React, { ButtonHTMLAttributes } from 'react'
 import BackArrow from '../../icons/BackArrow'
 import classNames from 'classnames'
 
-export interface ExpandButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {
+type ExpandButtonProps = {
   collapsed?: boolean
-}
+} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>
 
 export const ExpandButton = ({
   className,
-  children,
   collapsed,
   ...props
 }: ExpandButtonProps) => {
