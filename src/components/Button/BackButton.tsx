@@ -9,7 +9,7 @@ export interface BackButtonProps
 
 export const BackButton = ({
   className,
-  children,
+  children: _children,
   textOnly = false,
   ...props
 }: BackButtonProps) => {

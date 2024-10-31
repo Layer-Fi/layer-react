@@ -1,3 +1,4 @@
+/** @type {import("eslint").Linter.Config} */
 module.exports = {
   env: {
     browser: true,
@@ -8,7 +9,6 @@ module.exports = {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
   ],
   ignorePatterns: ['build/*', 'dist/*', 'bin/*'],
   parser: '@typescript-eslint/parser',
@@ -19,17 +19,17 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', '@stylistic', 'unused-imports'],
   rules: {
-    indent: ['off', 2, { SwitchCase: 1 }],
-    'linebreak-style': ['error', 'unix'],
-    'no-console': ['error', { allow: ['warn', 'error'] }],
-    quotes: ['error', 'single', { avoidEscape: true }],
-    'react/react-in-jsx-scope': 'off',
-    semi: ['error', 'never'],
-    'object-curly-spacing': ['error', 'always', { objectsInObjects: true }],
-    '@typescript-eslint/no-unused-vars': [
-      'warn',
+    'no-console': ['error', { allow: ['warn', 'error', 'debug'] }],
+
+    '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
+    '@stylistic/semi': ['error', 'never'],
+
+    '@typescript-eslint/no-unused-vars': 'off',
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'error',
       {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
@@ -50,4 +50,9 @@ module.exports = {
       },
     },
   ],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  }
 }

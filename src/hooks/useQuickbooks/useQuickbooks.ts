@@ -48,7 +48,7 @@ export const useQuickbooks: UseQuickbooks = () => {
   }
 
   const syncFromQuickbooks = () => {
-    DEBUG && console.log('Triggering sync from Quickbooks...')
+    DEBUG && console.debug('Triggering sync from Quickbooks...')
     setIsSyncingFromQuickbooks(true)
     try {
       Layer.syncFromQuickbooks(apiUrl, auth.access_token, {
@@ -60,7 +60,7 @@ export const useQuickbooks: UseQuickbooks = () => {
   }
 
   const fetchIsSyncingFromQuickbooks = async () => {
-    DEBUG && console.log('Fetching status of sync from Quickbooks...')
+    DEBUG && console.debug('Fetching status of sync from Quickbooks...')
     const isSyncing = (
       await Layer.statusOfSyncFromQuickbooks(apiUrl, auth.access_token, {
         params: { businessId },
