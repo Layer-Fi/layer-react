@@ -14,7 +14,11 @@ import {
 } from '../../types/bank_transactions'
 import { DataModel, LoadedStatus } from '../../types/general'
 import { useLinkedAccounts } from '../useLinkedAccounts'
-import { BankTransactionFilters, UseBankTransactions } from './types'
+import {
+  BankTransactionFilters,
+  UseBankTransactions,
+  UseBankTransactionsParams,
+} from './types'
 import {
   applyAccountFilter,
   applyAmountFilter,
@@ -77,19 +81,10 @@ const filtersSettingString = (filters?: BankTransactionFilters): string => {
   }`
 }
 
-export const useBankTransactions: UseBankTransactions = params => {
-  const {
-    auth,
-    businessId,
-    apiUrl,
-    addToast,
-    touch,
-    read,
-    syncTimestamps,
-    hasBeenTouched,
-    eventCallbacks,
-  } = useLayerContext()
-  const { scope = undefined, monthlyView = false } = params ?? {}
+const buildInitialFilters = ({
+  scope = undefined,
+  monthlyView = false,
+}: UseBankTransactionsParams) => {
   let initialFilters = {}
   if (monthlyView) {
     initialFilters = {
@@ -106,8 +101,27 @@ export const useBankTransactions: UseBankTransactions = params => {
       categorizationStatus: scope,
     }
   }
+
+  return initialFilters
+}
+
+export const useBankTransactions: UseBankTransactions = (
+  params?: UseBankTransactionsParams,
+) => {
+  const {
+    auth,
+    businessId,
+    apiUrl,
+    addToast,
+    touch,
+    read,
+    syncTimestamps,
+    hasBeenTouched,
+    eventCallbacks,
+  } = useLayerContext()
+
   const [filters, setTheFilters] = useState<BankTransactionFilters | undefined>(
-    initialFilters,
+    buildInitialFilters(params ?? {}),
   )
   const display = useMemo(() => {
     if (filters?.categorizationStatus === DisplayState.review) {

@@ -69,7 +69,6 @@ export interface BankTransactionsProps {
   filters?: BankTransactionFilters
   hideHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
-  pagination?: 'regular' | 'scroll'
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -81,6 +80,7 @@ export const BankTransactions = ({
   ...props
 }: BankTransactionsWithErrorProps) => {
   const contextData = useBankTransactions({ monthlyView: props.monthlyView })
+
   return (
     <ErrorBoundary onError={onError}>
       <BankTransactionsContext.Provider value={contextData}>
@@ -139,7 +139,10 @@ const BankTransactionsContent = ({
   }, [])
 
   useEffect(() => {
-    setFilters({ ...filters, dateRange: undefined })
+    // Reset date range when switching from monthly view to non-monthly view
+    if (!monthlyView && filters?.dateRange) {
+      setFilters({ ...filters, dateRange: undefined })
+    }
   }, [monthlyView])
 
   useEffect(() => {
