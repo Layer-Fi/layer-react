@@ -13,7 +13,6 @@ import { BookkeepingProfitAndLossSummariesContainer } from './internal/Bookkeepi
 import classNames from 'classnames'
 
 export interface BookkeepingOverviewProps {
-  title?: string // deprecated
   showTitle?: boolean
   stringOverrides?: {
     title?: string
@@ -31,17 +30,24 @@ export interface BookkeepingOverviewProps {
       }
     }
   }
+  /**
+   * @deprecated Use `stringOverrides.title` instead
+   */
+  title?: string
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
 
 export const BookkeepingOverview = ({
-  title, // deprecated
+  title,
   showTitle = true,
   stringOverrides,
+  slotProps,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
+
+  const profitAndLossSummariesVariants = slotProps?.profitAndLoss?.summaries?.variants
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -72,7 +78,7 @@ export const BookkeepingOverview = ({
             <BookkeepingProfitAndLossSummariesContainer>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
-                variants={{ size: 'lg' }}
+                variants={profitAndLossSummariesVariants}
               />
             </BookkeepingProfitAndLossSummariesContainer>
             <ProfitAndLoss.Chart />
