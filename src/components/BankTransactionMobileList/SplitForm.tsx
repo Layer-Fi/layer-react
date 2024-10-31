@@ -56,8 +56,8 @@ export const SplitForm = ({
   const {
     categorize: categorizeBankTransaction,
     isLoading,
-    error,
   } = useBankTransactionsContext()
+
   const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
   const defaultCategory =
     bankTransaction.category ||

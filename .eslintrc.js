@@ -7,8 +7,9 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
   ],
   ignorePatterns: ['build/*', 'dist/*', 'bin/*'],
   parser: '@typescript-eslint/parser',
@@ -23,7 +24,8 @@ module.exports = {
   rules: {
     'no-console': ['error', { allow: ['warn', 'error', 'debug'] }],
 
-    '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
+    '@stylistic/quotes': ['error', 'single', { avoidEscape: false }],
+    '@stylistic/jsx-quotes': ['error', 'prefer-single'],
     '@stylistic/semi': ['error', 'never'],
 
     '@typescript-eslint/no-unused-vars': 'off',
@@ -36,6 +38,8 @@ module.exports = {
         caughtErrorsIgnorePattern: '^_',
       },
     ],
+
+    'react/prop-types': 'off',
   },
   overrides: [
     {
@@ -54,5 +58,5 @@ module.exports = {
     react: {
       version: 'detect',
     },
-  }
+  },
 }

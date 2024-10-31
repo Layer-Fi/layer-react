@@ -2,14 +2,12 @@ import React, { ButtonHTMLAttributes } from 'react'
 import BackArrow from '../../icons/BackArrow'
 import classNames from 'classnames'
 
-export interface BackButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {
+type BackButtonProps = {
   textOnly?: boolean
-}
+} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>
 
 export const BackButton = ({
   className,
-  children: _children,
   textOnly = false,
   ...props
 }: BackButtonProps) => {

@@ -68,7 +68,7 @@ export const DatePicker = ({
       : 'MMM d, yyyy',
   timeIntervals = 15,
   timeCaption,
-  placeholderText,
+  placeholderText: _placeholderText,
   customDateRanges,
   wrapperClassName,
   calendarClassName,

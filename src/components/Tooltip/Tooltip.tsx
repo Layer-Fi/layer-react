@@ -65,10 +65,12 @@ export const TooltipTrigger = forwardRef<
   )
 })
 
+type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'>
+
 export const TooltipContent = forwardRef<
   HTMLDivElement,
-  HTMLProps<HTMLDivElement>
->(function TooltipContent({ style, className, ...props }, propRef) {
+  TooltipContentProps
+>(function TooltipContent({ className, ...props }, propRef) {
   const context = useTooltipContext()
   const ref = useMergeRefs([context.refs.setFloating, propRef])
 

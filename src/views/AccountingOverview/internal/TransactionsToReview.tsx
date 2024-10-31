@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Badge } from '../../../components/Badge'
 import { BadgeSize, BadgeVariant } from '../../../components/Badge/Badge'
 import { BadgeLoader } from '../../../components/BadgeLoader'
 import { IconButton } from '../../../components/Button'
 import { ProfitAndLoss } from '../../../components/ProfitAndLoss'
 import { ProfitAndLossSummariesHeading } from '../../../components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesHeading'
-import { Text, TextSize } from '../../../components/Typography'
 import { StackProps, VStack } from '../../../components/ui/Stack'
 import { useProfitAndLossLTM } from '../../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import BellIcon from '../../../icons/Bell'
@@ -13,11 +12,9 @@ import CheckIcon from '../../../icons/Check'
 import ChevronRight from '../../../icons/ChevronRight'
 import RefreshCcw from '../../../icons/RefreshCcw'
 import type { Variants } from '../../../utils/styleUtils/sizeVariants'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import { getMonth, getYear, startOfMonth } from 'date-fns'
 
 const CLASS_NAME = 'Layer__TransactionsToReview'
-const HEADING_CLASS_NAME = 'Layer__ProfitAndLossSummariesSummaryHeading'
 
 type TransactionsToReviewProps = {
   onClick?: () => void
