@@ -1,0 +1,40 @@
+.Layer__VStack {
+  display: flex;
+  flex-direction: column;
+
+  &[data-align="start"] {
+    align-items: start;
+  }
+
+  &[data-gap="3xs"] {
+    gap: var(--spacing-3xs);
+  }
+  &[data-gap="2xs"] {
+    gap: var(--spacing-2xs);
+  }
+  &[data-gap="xs"] {
+    gap: var(--spacing-xs);
+  }
+  &[data-gap="sm"] {
+    gap: var(--spacing-sm);
+  }
+  &[data-gap="md"] {
+    gap: var(--spacing-md);
+  }
+  &[data-gap="lg"] {
+    gap: var(--spacing-lg);
+  }
+  &[data-gap="xl"] {
+    gap: var(--spacing-xl);
+  }
+  &[data-gap="2xl"] {
+    gap: var(--spacing-2xl);
+  }
+  &[data-gap="3xl"] {
+    gap: var(--spacing-3xl);
+  }
+  &[data-gap="5xl"] {
+    gap: var(--spacing-5xl);
+  }
+
+}

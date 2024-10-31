@@ -274,6 +274,6 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     sortBy,
     filters,
     setFilterTypes,
-    tagFilter
+    tagFilter,
   }
 }

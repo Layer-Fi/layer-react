@@ -18,12 +18,13 @@
 @import './header.scss';
 @import './inputs.scss';
 @import './onboarding.scss';
-@import './notification_card.scss';
 @import './table.scss';
 @import './tabs.scss';
 @import './typography.scss';
 @import './utils.scss';
 @import './view.scss';
+
+@import '../components/ui/stack.scss';
 
 @import './ledger_account.scss';
 @import './balance_sheet.scss';

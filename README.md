@@ -160,7 +160,7 @@ import { ProfitAndLoss } from "@layerfi/components";
 </ProfitAndLoss>
 ```
 
-#### Profit and Loss Summary Cards
+#### Profit and Loss Summaries
 
 ![](https://github.com/Layer-Fi/layer-react/assets/1592431/06459f20-519e-4413-80ba-fb9965c32f9f)
 
@@ -168,25 +168,14 @@ import { ProfitAndLoss } from "@layerfi/components";
 import { ProfitAndLoss } from "@layerfi/components";
 …
 <ProfitAndLoss>
-  <div className='Layer__accounting-overview__summaries-row'>
-    <ProfitAndLoss.Summaries actionable={false} />
-  </div>
+  <ProfitAndLoss.Summaries />
 </ProfitAndLoss>
 ```
 
-Props:
+The P&L Summaries section supports several optional props:
 
-- `actionable`: enables or disables whether clicking the revenue & expense charts open the P&L sidebar view.
-- `vertical`: changes the card layout to be vertically stacked instead of horizontal
-- `revenueLabel`: specifiable label for revenue for uses where you prefer 'income' or other another term.
-
-Note that the `<TransactionToReviewCard>` is a separate component, but is meant to be optionally bundled with the summary cards. As with the onboarding component, this component has one primary prop: `onTransactionsToReviewClick` should be a function which navigates to the bank transactions to review page. For example, if the bank transaction categorization page lives on `/account/bank-transactions` within your app:
-
-```tsx
-<Onboarding
-  onTransactionsToReviewClick={() => navigate('/accounting/bank-transactions')}
-/>
-```
+- `actionable`: When enabled, clicking the revenue & expense charts will open the P&L sidebar view.
+- `variants`: Override the size of the component; supports a small and large version.
 
 #### Profit and Loss Table
 

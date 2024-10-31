@@ -98,7 +98,6 @@ const Components = ({
           >
             <ProfitAndLoss.DatePicker />
             <ProfitAndLoss.Summaries
-              vertical={true}
               actionable
               stringOverrides={stringOverrides?.profitAndLossSummaries}
             />

@@ -1,0 +1,8 @@
+@import "./internal/profit_and_loss_summaries_list.scss";
+@import "./internal/profit_and_loss_summaries_summary.scss";
+@import "./internal/profit_and_loss_summaries_heading.scss";
+
+.Layer__ProfitAndLossSummaries {
+  display: grid;
+  container-type: inline-size;
+}
