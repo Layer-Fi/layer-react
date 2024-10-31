@@ -8,10 +8,11 @@ import { TasksStringOverrides } from '../../components/Tasks/Tasks'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { useWindowSize } from '../../hooks/useWindowSize'
+import { Variants } from '../../utils/styleUtils/sizeVariants'
+import { BookkeepingProfitAndLossSummariesContainer } from './internal/BookkeepingProfitAndLossSummariesContainer'
 import classNames from 'classnames'
 
 export interface BookkeepingOverviewProps {
-  title?: string // deprecated
   showTitle?: boolean
   stringOverrides?: {
     title?: string
@@ -22,17 +23,31 @@ export interface BookkeepingOverviewProps {
       summaries?: ProfitAndLossSummariesStringOverrides
     }
   }
+  slotProps?: {
+    profitAndLoss?: {
+      summaries?: {
+        variants?: Variants
+      }
+    }
+  }
+  /**
+   * @deprecated Use `stringOverrides.title` instead
+   */
+  title?: string
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
 
 export const BookkeepingOverview = ({
-  title, // deprecated
+  title,
   showTitle = true,
   stringOverrides,
+  slotProps,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
+
+  const profitAndLossSummariesVariants = slotProps?.profitAndLoss?.summaries?.variants
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -60,11 +75,12 @@ export const BookkeepingOverview = ({
               text={stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
               withDatePicker
             />
-            <div className='Layer__bookkeeping-overview__summaries-row'>
+            <BookkeepingProfitAndLossSummariesContainer>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+                variants={profitAndLossSummariesVariants}
               />
-            </div>
+            </BookkeepingProfitAndLossSummariesContainer>
             <ProfitAndLoss.Chart />
           </Container>
           <div className='Layer__bookkeeping-overview-profit-and-loss-charts'>

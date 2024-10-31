@@ -1,0 +1,45 @@
+.Layer__ProfitAndLossSummariesSummary {
+  display: grid;
+  min-block-size: 3rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--spacing-xs);
+  row-gap: var(--spacing-3xs);
+  grid-template-areas:
+    'chart heading'
+    'chart amount'
+  ;
+
+  &[data-size="lg"] {
+    min-block-size: 6rem;
+    column-gap: var(--spacing-md);
+  }
+}
+
+.Layer__ProfitAndLossSummariesSummaryChartArea {
+  grid-area: chart;
+
+  align-content: center;
+  border-radius: var(--border-radius-xs);
+  background: var(--color-base-50);
+}
+
+.Layer__ProfitAndLossSummariesSummaryAmount {
+  grid-area: amount;
+
+  font-size: var(--text-lg);
+  font-variation-settings: "wght" var(--font-weight-bold);
+
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+
+  &[data-size="lg"] {
+    font-size: var(--text-heading);
+  }
+
+  &[data-positive]::before {
+    content: "$";
+  }
+  &[data-negative]::before {
+    content: "-$"
+  }
+}

@@ -1,3 +1,5 @@
+@import "../views/BookkeepingOverview/internal/bookkeeping_profit_and_loss_summaries_container.scss";
+
 .Layer__bookkeeping-overview--view {
   .Layer__panel .Layer__panel__content .Layer__component-header {
     z-index: 1;
@@ -24,19 +26,6 @@
   }
 }
 
-.Layer__bookkeeping-overview__summaries-row {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  max-width: 1406px;
-  padding: var(--spacing-md);
-
-  .Layer__notification-card {
-    width: calc(25% - 12px);
-    height: 56px;
-  }
-}
-
 .Layer__bookkeeping-overview-profit-and-loss-chart {
   width: calc(50% - var(--spacing-md) / 2);
 }
@@ -57,19 +46,6 @@
 
 
 @container (max-width: 796px) {
-  .Layer__bookkeeping-overview__summaries-row {
-    flex-direction: column;
-
-    .Layer__profit-and-loss-summaries {
-      width: 100%;
-      flex-direction: column;
-    }
-
-    .Layer__notification-card.Layer__txs-to-review {
-      width: 100%;
-    }
-  }
-
   .Layer__bookkeeping-overview-profit-and-loss-chart {
     width: 100%;
   }
