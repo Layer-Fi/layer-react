@@ -45,7 +45,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   } = useLayerContext()
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
-  const USE_PLAID_SANDBOX = usePlaidSandbox ?? true
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
 
   const queryKey =
@@ -149,7 +148,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       }
     },
     onExit: () => setLinkMode('add'),
-    env: USE_PLAID_SANDBOX ? 'sandbox' : undefined,
+    env: usePlaidSandbox ? 'sandbox' : undefined,
   })
 
   useEffect(() => {

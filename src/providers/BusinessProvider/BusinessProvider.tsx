@@ -86,7 +86,12 @@ export const BusinessProvider = ({
 
   const colors = buildColorsPalette(theme)
 
-  const { url, scope, apiUrl } = LayerEnvironment[environment]
+  const {
+    url,
+    scope,
+    apiUrl,
+    usePlaidSandbox: defaultUsePlaidSandbox,
+  } = LayerEnvironment[environment]
   const [state, dispatch] = useReducer(reducer, {
     auth: {
       access_token: '',
@@ -100,7 +105,7 @@ export const BusinessProvider = ({
     apiUrl,
     theme,
     colors,
-    usePlaidSandbox,
+    usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox,
     onboardingStep: undefined,
     environment,
     toasts: [],

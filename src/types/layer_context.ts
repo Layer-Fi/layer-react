@@ -13,7 +13,7 @@ export type LayerContextValues = {
   apiUrl: string
   theme?: LayerThemeConfig
   colors: ColorsPalette
-  usePlaidSandbox?: boolean
+  usePlaidSandbox: boolean
   onboardingStep?: OnboardingStep
   environment: string
   toasts: (ToastProps & { isExiting: boolean })[]
