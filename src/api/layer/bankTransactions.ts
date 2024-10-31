@@ -54,7 +54,7 @@ export const getBankTransactions = get<
         : ''
     }${endDate !== undefined && endDate !== '' ? `end_date=${endDate}&` : ''}${
       tagFilterString ? tagFilterString : ''
-    }sort_by=${sortBy}&sort_order=${sortOrder}&limit=5`,
+    }sort_by=${sortBy}&sort_order=${sortOrder}&limit=200`,
 )
 
 export const categorizeBankTransaction = put<

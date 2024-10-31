@@ -394,12 +394,6 @@ export const useBankTransactions: UseBankTransactions = params => {
       })
   }
 
-  useEffect(() => {
-    if (monthlyView && lastMetadata?.pagination?.has_more) {
-      fetchMore()
-    }
-  }, [lastMetadata])
-
   const updateOneLocal = (newBankTransaction: BankTransaction) => {
     const updatedData = rawResponseData?.map(page => {
       return {

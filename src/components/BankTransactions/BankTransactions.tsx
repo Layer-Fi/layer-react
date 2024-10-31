@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import {
   BankTransactionsContext,
@@ -7,6 +7,7 @@ import {
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
+import { useIsVisible } from '../../hooks/useIsVisible'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { BankTransaction, DisplayState } from '../../types'
 import { debounce } from '../../utils/helpers'
@@ -68,6 +69,7 @@ export interface BankTransactionsProps {
   filters?: BankTransactionFilters
   hideHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
+  pagination?: 'regular' | 'scroll'
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -102,6 +104,9 @@ const BankTransactionsContent = ({
   hideHeader = false,
   stringOverrides,
 }: BankTransactionsProps) => {
+  const scrollPaginationRef = useRef<HTMLDivElement>(null)
+  const isVisible = useIsVisible(scrollPaginationRef)
+
   const [currentPage, setCurrentPage] = useState(1)
   const [initialLoad, setInitialLoad] = useState(true)
   const categorizeView = categorizeViewProp ?? categorizationEnabled(mode)
@@ -132,6 +137,17 @@ const BankTransactionsContent = ({
   useEffect(() => {
     activate()
   }, [])
+
+  useEffect(() => {
+    setFilters({ ...filters, dateRange: undefined })
+  }, [monthlyView])
+
+  useEffect(() => {
+    // Fetch more when the user scrolls to the bottom of the page
+    if (monthlyView && isVisible && !isLoading && hasMore) {
+      fetchMore()
+    }
+  }, [monthlyView, isVisible, isLoading, hasMore])
 
   useEffect(() => {
     if (JSON.stringify(inputFilters) !== JSON.stringify(filters)) {
@@ -190,7 +206,7 @@ const BankTransactionsContent = ({
         const firstPageIndex = (currentPage - 1) * pageSize
         const lastPageIndex = firstPageIndex + pageSize
         return data?.slice(firstPageIndex, lastPageIndex)
-      }, [currentPage, data])
+      }, [currentPage, data, monthlyView])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -356,6 +372,8 @@ const BankTransactionsContent = ({
           />
         </div>
       )}
+
+      {monthlyView ? <div ref={scrollPaginationRef} /> : null}
     </Container>
   )
 }
