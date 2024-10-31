@@ -1,10 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import {
+  BankTransactionsContext,
+  useBankTransactionsContext,
+} from '../../contexts/BankTransactionsContext'
+import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
-import { BankTransaction, DateRange, DisplayState } from '../../types'
+import { BankTransaction, DisplayState } from '../../types'
 import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
@@ -20,7 +24,7 @@ import {
 } from './BankTransactionsHeader'
 import { DataStates } from './DataStates'
 import { MobileComponentType } from './constants'
-import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
+import { endOfMonth, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
 const TEST_EMPTY_STATE = false
@@ -74,9 +78,12 @@ export const BankTransactions = ({
   onError,
   ...props
 }: BankTransactionsWithErrorProps) => {
+  const contextData = useBankTransactions({ monthlyView: props.monthlyView })
   return (
     <ErrorBoundary onError={onError}>
-      <BankTransactionsContent {...props} />
+      <BankTransactionsContext.Provider value={contextData}>
+        <BankTransactionsContent {...props} />
+      </BankTransactionsContext.Provider>
     </ErrorBoundary>
   )
 }

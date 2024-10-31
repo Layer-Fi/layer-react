@@ -28,7 +28,10 @@ export interface BankTransactionFilters {
   tagFilter?: TagFilterInput
 }
 
-export type UseBankTransactions = (params?: { scope?: DisplayState }) => {
+export type UseBankTransactions = (params?: {
+  scope?: DisplayState
+  monthlyView?: boolean
+}) => {
   data?: BankTransaction[]
   metadata?: Metadata
   loadingStatus: LoadedStatus

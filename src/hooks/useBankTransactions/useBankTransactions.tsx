@@ -21,6 +21,7 @@ import {
   applyCategorizationStatusFilter,
   collectAccounts,
 } from './utils'
+import { endOfMonth, startOfMonth } from 'date-fns'
 import useSWRInfinite from 'swr/infinite'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
@@ -88,9 +89,25 @@ export const useBankTransactions: UseBankTransactions = params => {
     hasBeenTouched,
     eventCallbacks,
   } = useLayerContext()
-  const { scope = undefined } = params ?? {}
+  const { scope = undefined, monthlyView = false } = params ?? {}
+  let initialFilters = {}
+  if (monthlyView) {
+    initialFilters = {
+      dateRange: {
+        startDate: startOfMonth(new Date()),
+        endDate: endOfMonth(new Date()),
+      },
+    }
+  }
+
+  if (scope) {
+    initialFilters = {
+      ...initialFilters,
+      categorizationStatus: scope,
+    }
+  }
   const [filters, setTheFilters] = useState<BankTransactionFilters | undefined>(
-    scope ? { categorizationStatus: scope } : undefined,
+    initialFilters,
   )
   const display = useMemo(() => {
     if (filters?.categorizationStatus === DisplayState.review) {
@@ -376,6 +393,12 @@ export const useBankTransactions: UseBankTransactions = params => {
         eventCallbacks?.onTransactionCategorized?.(id)
       })
   }
+
+  useEffect(() => {
+    if (monthlyView && lastMetadata?.pagination?.has_more) {
+      fetchMore()
+    }
+  }, [lastMetadata])
 
   const updateOneLocal = (newBankTransaction: BankTransaction) => {
     const updatedData = rawResponseData?.map(page => {
