@@ -4,7 +4,6 @@ import { NORMALITY_OPTIONS } from '../../components/ChartOfAccountsForm/constant
 import { useLayerContext } from '../../contexts/LayerContext'
 import { FormError, DateRange, Direction, NewAccount } from '../../types'
 import {
-  ChartWithBalances,
   EditAccount,
   LedgerAccountBalance,
 } from '../../types/chart_of_accounts'

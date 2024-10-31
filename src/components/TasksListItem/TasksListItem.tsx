@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext'
 import { TasksContext } from '../../contexts/TasksContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Check from '../../icons/Check'

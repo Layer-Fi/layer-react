@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-import { BREAKPOINTS } from '../../config/general'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'

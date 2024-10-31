@@ -9,7 +9,6 @@ import { DataState, DataStateStatus } from '../DataState'
 import { LinkedAccountItemThumb } from '../LinkedAccounts'
 import { Loader } from '../Loader'
 import { Heading, HeadingSize } from '../Typography'
-import { View } from '../View'
 
 export interface LinkAccountsStringOverrides {
   backButtonText?: string

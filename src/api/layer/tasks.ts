@@ -1,4 +1,4 @@
-import { DocumentType, FileMetadata } from '../../types/file_upload'
+import { FileMetadata } from '../../types/file_upload'
 import { TaskTypes } from '../../types/tasks'
 import { get, post, postWithFormData } from './authenticated_http'
 

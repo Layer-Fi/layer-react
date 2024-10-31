@@ -5,7 +5,6 @@ import FileIcon from '../../icons/File'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
-import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionsMode,
