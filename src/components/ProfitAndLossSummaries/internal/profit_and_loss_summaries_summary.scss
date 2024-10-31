@@ -23,19 +23,6 @@
   background: var(--color-base-50);
 }
 
-.Layer__ProfitAndLossSummariesSummaryHeading {
-  grid-area: heading;
-  align-self: end;
-  margin: unset;
-
-  color: var(--color-base-700);
-  font-size: var(--text-sm);
-
-  &[data-size="lg"] {
-    font-size: var(--text-lg);
-  }
-}
-
 .Layer__ProfitAndLossSummariesSummaryAmount {
   grid-area: amount;
 

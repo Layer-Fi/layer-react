@@ -89,6 +89,7 @@ export function Internal_ProfitAndLossSummaries({
                 <ProfitAndLossSummariesMiniChart
                   data={revenueChartData}
                   chartColorsList={chartColorsList}
+                  variants={variants}
                 />
               ),
             }}
@@ -108,6 +109,7 @@ export function Internal_ProfitAndLossSummaries({
                 <ProfitAndLossSummariesMiniChart
                   data={expensesChartData}
                   chartColorsList={chartColorsList}
+                  variants={variants}
                 />
               ),
             }}

@@ -1,8 +1,8 @@
 import React, { useMemo, type PropsWithChildren } from 'react'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 
-type StackProps = PropsWithChildren<{
-  gap?: '3xs' | '2xs' | 'xs'
+export type StackProps = PropsWithChildren<{
+  gap?: '3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '5xl'
   align?: 'start'
 }>
 

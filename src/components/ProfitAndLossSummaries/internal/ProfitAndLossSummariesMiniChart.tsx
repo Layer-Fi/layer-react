@@ -6,6 +6,7 @@ import {
   collectExpensesItems,
   collectRevenueItems,
 } from '../../../utils/profitAndLossUtils'
+import { Variants } from '../../../utils/styleUtils/sizeVariants'
 import { mapTypesToColors } from '../../ProfitAndLossDetailedCharts/DetailedTable'
 import { PieChart, Pie, Cell } from 'recharts'
 
@@ -54,28 +55,46 @@ export function toMiniChartData({
 type ProfitAndLossMiniChartProps = {
   data: LineBaseItem[]
   chartColorsList?: string[]
+  variants?: Variants
 }
 
 export function ProfitAndLossSummariesMiniChart({
   data,
   chartColorsList,
+  variants,
 }: ProfitAndLossMiniChartProps) {
   const typeColorMapping = mapTypesToColors(data, chartColorsList)
 
+  let chartDimension: number = 52
+  let innerRadius: number = 10
+  let outerRadius: number = 16
+  switch (variants?.size) {
+    case 'sm':
+      chartDimension = 52
+      innerRadius = 10
+      outerRadius = 16
+      break
+    case 'lg':
+      chartDimension = 64
+      innerRadius = 12
+      outerRadius = 20
+      break
+  }
+
   return (
-    <PieChart width={52} height={52}>
+    <PieChart width={chartDimension} height={chartDimension}>
       <Pie
         data={data}
         dataKey='value'
         nameKey='name'
         cx='50%'
         cy='50%'
-        innerRadius={10}
-        outerRadius={16}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius}
         paddingAngle={0.4}
         fill='#8884d8'
-        width={24}
-        height={24}
+        width={36}
+        height={36}
         animationDuration={250}
         animationEasing='ease-in-out'
       >

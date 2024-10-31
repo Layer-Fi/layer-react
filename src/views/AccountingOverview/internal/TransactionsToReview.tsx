@@ -1,20 +1,23 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Badge } from '../../../components/Badge'
 import { BadgeSize, BadgeVariant } from '../../../components/Badge/Badge'
 import { BadgeLoader } from '../../../components/BadgeLoader'
 import { IconButton } from '../../../components/Button'
 import { ProfitAndLoss } from '../../../components/ProfitAndLoss'
+import { ProfitAndLossSummariesHeading } from '../../../components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesHeading'
 import { Text, TextSize } from '../../../components/Typography'
-import { VStack } from '../../../components/ui/Stack'
+import { StackProps, VStack } from '../../../components/ui/Stack'
 import { useProfitAndLossLTM } from '../../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import BellIcon from '../../../icons/Bell'
 import CheckIcon from '../../../icons/Check'
 import ChevronRight from '../../../icons/ChevronRight'
 import RefreshCcw from '../../../icons/RefreshCcw'
 import type { Variants } from '../../../utils/styleUtils/sizeVariants'
+import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import { getMonth, getYear, startOfMonth } from 'date-fns'
 
 const CLASS_NAME = 'Layer__TransactionsToReview'
+const HEADING_CLASS_NAME = 'Layer__ProfitAndLossSummariesSummaryHeading'
 
 type TransactionsToReviewProps = {
   onClick?: () => void
@@ -65,12 +68,21 @@ export function TransactionsToReview({
     }
   }
 
+  let verticalGap: StackProps['gap'] = '3xs'
+  switch (size) {
+    case 'sm':
+      verticalGap = '3xs'
+      break
+    case 'lg':
+      verticalGap = 'sm'
+      break
+  }
   return (
     <div onClick={onClick} className={CLASS_NAME}>
-      <VStack gap='3xs' align='start'>
-        <Text size={size === 'lg' ? TextSize.lg : TextSize.sm}>
+      <VStack gap={verticalGap} align='start'>
+        <ProfitAndLossSummariesHeading variants={variants}>
           Transactions to review
-        </Text>
+        </ProfitAndLossSummariesHeading>
         {loaded === 'initial' || loaded === 'loading' ? <BadgeLoader /> : null}
 
         {loaded === 'complete' && error ? (
