@@ -42,6 +42,7 @@ export interface AccountingOverviewProps {
       }
     }
   }
+  syncWithGlobalDate?: boolean
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
@@ -58,6 +59,7 @@ export const AccountingOverview = ({
   tagFilter = undefined,
   showTransactionsToReview = true,
   slotProps,
+  syncWithGlobalDate,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
 
@@ -72,6 +74,7 @@ export const AccountingOverview = ({
           ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
           : undefined
       }
+      dateSyncedWithGlobal={syncWithGlobalDate}
     >
       <View
         title={title}

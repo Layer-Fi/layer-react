@@ -23,12 +23,14 @@ export type BalanceSheetViewProps = PropsWithChildren & {
   withExpandAllButton?: boolean
   asWidget?: boolean
   stringOverrides?: BalanceSheetStringOverrides
+  syncWithGlobalDate?: boolean
 }
 
 export type BalanceSheetProps = PropsWithChildren & {
   effectiveDate?: Date
   asWidget?: boolean
   stringOverrides?: BalanceSheetStringOverrides
+  syncWithGlobalDate?: boolean
 }
 
 const COMPONENT_NAME = 'balance-sheet'
@@ -50,6 +52,7 @@ const BalanceSheetView = ({
   withExpandAllButton = true,
   asWidget = false,
   stringOverrides,
+  syncWithGlobalDate,
 }: BalanceSheetViewProps) => {
   const [effectiveDate, setEffectiveDate] = useState(startOfDay(new Date()))
   const { data, isLoading, refetch } = useBalanceSheet(effectiveDate)
@@ -91,6 +94,7 @@ const BalanceSheetView = ({
                     <BalanceSheetDatePicker
                       effectiveDate={effectiveDate}
                       setEffectiveDate={setEffectiveDate}
+                      syncWithGlobalDate={syncWithGlobalDate}
                     />
                   </HeaderCol>
                   {withExpandAllButton && (
@@ -131,6 +135,7 @@ const BalanceSheetView = ({
                 <BalanceSheetDatePicker
                   effectiveDate={effectiveDate}
                   setEffectiveDate={setEffectiveDate}
+                  syncWithGlobalDate={syncWithGlobalDate}
                 />
               </HeaderCol>
               {withExpandAllButton && (
