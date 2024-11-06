@@ -29,10 +29,6 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
 const TEST_EMPTY_STATE = false
-const DEFAULT_DATE_RANGE = {
-  startDate: startOfMonth(new Date()),
-  endDate: endOfMonth(new Date()),
-}
 
 export type BankTransactionsMode = 'bookkeeping-client' | 'self-serve'
 
@@ -104,6 +100,11 @@ const BankTransactionsContent = ({
   hideHeader = false,
   stringOverrides,
 }: BankTransactionsProps) => {
+  const [ defaultDateRange ] = useState(() => ({
+    startDate: startOfMonth(new Date()),
+    endDate: endOfMonth(new Date()),
+  }))
+
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
 
@@ -284,7 +285,7 @@ const BankTransactionsContent = ({
           mobileComponent={mobileComponent}
           withDatePicker={monthlyView}
           listView={listView}
-          dateRange={{ ...DEFAULT_DATE_RANGE, ...filters?.dateRange }}
+          dateRange={{ ...defaultDateRange, ...filters?.dateRange }}
           setDateRange={v => {
             if (monthlyView) {
               setFilters({ ...filters, dateRange: v })
