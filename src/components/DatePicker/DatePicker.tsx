@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState, type FC } from 'react'
 import * as RDP from 'react-datepicker'
+import React, { useEffect, useMemo, useRef, useState, type FC } from 'react'
 import {
   DateContext,
   useDateContext,
   useGlobalDateContext,
 } from '../../contexts/DateContext'
+import { useDate } from '../../hooks/useDate'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
@@ -16,6 +17,7 @@ import type {
   DatePickerModeSelectorProps,
 } from './ModeSelector/DatePickerModeSelector'
 import classNames from 'classnames'
+import { endOfDay, endOfMonth } from 'date-fns'
 
 /**
  * @see https://github.com/Hacker0x01/react-datepicker/issues/1333#issuecomment-2363284612
@@ -28,7 +30,8 @@ const ReactDatePicker = (((RDP.default as any).default as any)
 
 interface DatePickerProps {
   mode: DatePickerMode
-  selected: Date | [Date | null, Date | null]
+  selected?: Date | [Date | null, Date | null]
+  defaultSelected?: Date | [Date | null, Date | null]
   onChange: (date: Date | [Date, Date | null]) => void
   allowedModes?: ReadonlyArray<DatePickerMode>
   dateFormat?: string
@@ -52,25 +55,6 @@ interface DatePickerProps {
   withDateContext?: boolean
 }
 
-const getDefaultRangeDate = (
-  date: 'start' | 'end',
-  mode: DatePickerProps['mode'],
-  selected: Date | [Date | null, Date | null],
-) => {
-  try {
-    if (isRangeMode(mode) && selected) {
-      if (date === 'end') {
-        return (selected as [Date | null, Date | null])[1]
-      }
-      return (selected as [Date | null, Date | null])[0]
-    }
-
-    return null
-  } catch (_err) {
-    return null
-  }
-}
-
 const isRangeMode = (mode: DatePickerProps['mode']) =>
   mode === 'dayRangePicker' || mode === 'monthRangePicker'
 
@@ -78,11 +62,57 @@ export const DatePicker = ({
   withDateContext = true,
   ...props
 }: DatePickerProps) => {
+  const { date: globalDateRange } = useGlobalDateContext()
+
   if (!withDateContext) {
     return <DatePickerController {...props} />
   }
 
-  const dateContext = useDateContext()
+  const defaultValues = useMemo(() => {
+    if (props.syncWithGlobalDate) {
+      return {
+        startDate: globalDateRange.startDate,
+        endDate: globalDateRange.endDate,
+      }
+    }
+
+    if (props.defaultSelected && isRangeMode(props.mode)) {
+      return {
+        startDate: (props.defaultSelected as [Date, Date])[0],
+        endDate: (props.defaultSelected as [Date, Date])[1],
+      }
+    }
+
+    if (props.defaultSelected) {
+      return {
+        startDate: props.defaultSelected as Date,
+        endDate: endOfDay(props.defaultSelected as Date),
+      }
+    }
+
+    if (!props.selected) {
+      // @TODO check for globals and set globals instead if exists
+      return {}
+    }
+
+    if (
+      isRangeMode(props.mode)
+      && (props.selected as [Date, Date])[0]
+      && (props.selected as [Date, Date])[1]
+    ) {
+      return {
+        startDate: (props.selected as [Date, Date])[0],
+        endDate: (props.selected as [Date, Date])[1],
+      }
+    }
+
+    return {
+      startDate: props.selected as Date,
+      endDate: endOfDay(props.selected as Date),
+    }
+  }, [])
+
+  const dateContext = useDate(defaultValues)
 
   return (
     <DateContext.Provider value={dateContext}>
@@ -120,6 +150,7 @@ export const DatePickerController = ({
 }: DatePickerProps) => {
   const { date: globalDateRange, setDate: setGlobalDateRange } =
     useGlobalDateContext()
+  const { date, setDate } = useDateContext()
   const { ModeSelector } = slots ?? {}
 
   const pickerRef = useRef<{
@@ -128,100 +159,105 @@ export const DatePickerController = ({
   }>(null)
 
   const [updatePickerDate, setPickerDate] = useState<boolean>(false)
-  const [selectedDates, setSelectedDates] = useState<
-    Date | [Date | null, Date | null] | null
-  >(
-    syncWithGlobalDate && globalDateRange.startDate && globalDateRange.endDate
-      ? [globalDateRange.startDate, globalDateRange.endDate]
-      : selected,
-  )
+  // const [selectedDates, setSelectedDates] = useState<
+  //   Date | [Date | null, Date | null] | null
+  // >(
+  //   syncWithGlobalDate && globalDateRange.startDate && globalDateRange.endDate
+  //     ? [globalDateRange.startDate, globalDateRange.endDate]
+  //     : selected,
+  // )
+  // const pickerRef = useRef<ReactDatePicker>(null)
+  const [selectingDates, setSelectingDates] = useState<boolean>(false)
 
   const { isDesktop } = useSizeClass()
 
   const [startDate, setStartDate] = useState<Date | null>(
-    getDefaultRangeDate('start', mode, selected) ?? new Date(),
+    date.startDate ?? new Date(),
   )
   const [endDate, setEndDate] = useState<Date | null>(
-    getDefaultRangeDate('end', mode, selected),
+    date.endDate ?? endOfDay(new Date()),
   )
 
   useEffect(() => {
-    try {
-      setPickerDate(true)
-      if (
-        !isRangeMode(mode)
-        && (selected as Date | null)?.getTime()
-          !== (selectedDates as Date | null)?.getTime()
-      ) {
-        setSelectedDates(selected)
-        return
-      }
-
-      if (isRangeMode(mode) && Array.isArray(selected)) {
-        if ((startDate as Date | null)?.getTime() !== selected[0]?.getTime()) {
-          setStartDate(selected[0])
-        }
-        if ((endDate as Date | null)?.getTime() !== selected[1]?.getTime()) {
-          setEndDate(selected[1])
-        }
-      }
-    } catch (_err) {
+    if (!selected) {
       return
     }
+
+    if (isRangeMode(mode) && Array.isArray(selected)) {
+      if ((selected as [Date, Date])[0]) {
+        setStartDate((selected as [Date, Date])[0])
+      }
+      if ((selected as [Date, Date])[1]) {
+        setEndDate((selected as [Date, Date])[1])
+      }
+      return
+    }
+
+    setStartDate(selected as Date)
   }, [selected])
 
   useEffect(() => {
     if (
-      onChange
-      && (!isRangeMode(mode) || (isRangeMode(mode) && !updatePickerDate))
+      selectingDates === false
+      && startDate
+      && endDate
+      && JSON.stringify({ s: date.startDate, e: date.endDate })
+      !== JSON.stringify({ s: startDate, e: endDate })
     ) {
-      if (
-        syncWithGlobalDate &&
-        selectedDates &&
-        (selectedDates as [Date, Date])[0] &&
-        (selectedDates as [Date, Date])[1]
-      ) {
-        const newGlobalDateRange = {
-          startDate: (selectedDates as [Date, Date])[0],
-          endDate: (selectedDates as [Date, Date])[1],
-          period: globalDateRange.period,
-        }
-        if (
-          JSON.stringify(globalDateRange) !== JSON.stringify(newGlobalDateRange)
-        ) {
-          // setGlobalDateRange(newGlobalDateRange)
-        }
-      }
-      onChange(selectedDates as Date | [Date, Date])
-    } else {
-      setPickerDate(false)
+      setDate({ startDate, endDate })
     }
-  }, [selectedDates])
+  }, [selectingDates])
 
   useEffect(() => {
     if (
-      syncWithGlobalDate &&
-      globalDateRange.startDate &&
-      globalDateRange.endDate &&
-      (!selectedDates ||
-        (selectedDates &&
-          JSON.stringify(globalDateRange) !==
-            JSON.stringify({
-              startDate: (selectedDates as [Date, Date])[0],
-              endDate: (selectedDates as [Date, Date])[1],
-            })))
+      syncWithGlobalDate
+      && date.startDate
+      && date.endDate
+      && JSON.stringify({ s: date.startDate, e: date.endDate })
+      !== JSON.stringify({
+        s: globalDateRange.startDate,
+        e: globalDateRange.endDate,
+      })
     ) {
-      setSelectedDates([globalDateRange.startDate, globalDateRange.endDate])
+      setGlobalDateRange({
+        startDate: date.startDate,
+        endDate: date.endDate,
+      })
+    }
+
+    if (startDate !== date.startDate) {
+      setStartDate(date.startDate)
+    }
+
+    if (endDate !== date.endDate) {
+      setEndDate(date.endDate)
+    }
+  }, [date])
+
+  useEffect(() => {
+    if (
+      syncWithGlobalDate
+      && globalDateRange.startDate
+      && globalDateRange.endDate
+      && (!date
+        || (date
+          && JSON.stringify({
+            startDateL: globalDateRange.startDate,
+            endDate: globalDateRange.endDate,
+          })
+          !== JSON.stringify({
+            startDate: date.startDate,
+            endDate: date.endDate,
+          })))
+    ) {
+      setDate({
+        startDate: globalDateRange.startDate,
+        endDate: globalDateRange.endDate,
+      })
       setStartDate(globalDateRange.startDate)
       setEndDate(globalDateRange.endDate)
     }
   }, [globalDateRange])
-
-  useEffect(() => {
-    if (isRangeMode(mode)) {
-      setSelectedDates([startDate, endDate])
-    }
-  }, [startDate, endDate])
 
   const wrapperClassNames = classNames(
     'Layer__datepicker__wrapper',
@@ -245,28 +281,45 @@ export const DatePickerController = ({
   )
 
   const handleDateChange = (date: Date | [Date | null, Date | null]) => {
-    if (isRangeMode(mode)) {
-      const [start, end] = date as [Date | null, Date | null]
-      setStartDate(start)
-      setEndDate(end)
-      return
+    if (date && Array.isArray(date) && isRangeMode(mode)) {
+      const [s, e] = date as [Date | null, Date | null]
+      if (!e) {
+        setSelectingDates(true)
+        if (s) {
+          setStartDate(s)
+        }
+        setEndDate(null)
+      } else {
+        if (s) {
+          setStartDate(s)
+        }
+        if (e) {
+          setEndDate(e)
+        }
+        setSelectingDates(false)
+      }
+    } else if (date && !isRangeMode(mode)) {
+      setStartDate(date as Date)
+      setEndDate(endOfDay(date as Date))
+      setDate({
+        startDate: date as Date,
+        endDate: endOfDay(date as Date),
+      })
     }
-
-    setSelectedDates(date)
   }
 
   const isCurrentDate = () => {
     const currentDate = new Date()
     if (mode === 'dayPicker') {
       return (
-        selectedDates instanceof Date
-        && selectedDates.toDateString() === currentDate.toDateString()
+        startDate instanceof Date
+        && startDate.toDateString() === currentDate.toDateString()
       )
     } else if (mode === 'monthPicker') {
       return (
-        selectedDates instanceof Date
-        && selectedDates.getMonth() === currentDate.getMonth()
-        && selectedDates.getFullYear() === currentDate.getFullYear()
+        startDate instanceof Date
+        && startDate.getMonth() === currentDate.getMonth()
+        && startDate.getFullYear() === currentDate.getFullYear()
       )
     }
     return false
@@ -275,39 +328,48 @@ export const DatePickerController = ({
   const setCurrentDate = () => {
     const currentDate = new Date()
     if (mode === 'dayPicker') {
-      setSelectedDates(currentDate)
+      setDate({ startDate: currentDate, endDate: endOfDay(currentDate) })
     } else if (mode === 'monthPicker') {
-      setSelectedDates(
-        new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
-      )
+      setDate({
+        startDate: new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          1,
+        ),
+        endDate: endOfMonth(
+          new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+        ),
+      })
     }
   }
 
   const isTodayOrAfter = Boolean(
-    selectedDates instanceof Date && selectedDates >= new Date(),
+    !isRangeMode(mode) && startDate instanceof Date && startDate >= new Date(),
   )
 
   const isBeforeMinDate = Boolean(
-    minDate && selectedDates instanceof Date && selectedDates <= minDate,
+    minDate && startDate instanceof Date && startDate <= minDate,
   )
 
   const changeDate = (value: number) => {
     if (mode === 'dayPicker') {
-      setSelectedDates(
-        new Date(
-          (selectedDates as Date).setDate(
-            (selectedDates as Date).getDate() + value,
-          ),
+      const newDate = new Date(
+        (date.startDate as Date).setDate(
+          (date.startDate as Date).getDate() + value,
         ),
       )
+      setDate({
+        startDate: newDate,
+        endDate: endOfDay(newDate),
+      })
     } else if (mode === 'monthPicker') {
-      setSelectedDates(
-        new Date(
-          (selectedDates as Date).setMonth(
-            (selectedDates as Date).getMonth() + value,
-          ),
+      const newDate = new Date(
+        (date.startDate as Date).setMonth(
+          (date.startDate as Date).getMonth() + value,
         ),
       )
+
+      setDate({ startDate: newDate, endDate: endOfMonth(newDate) })
     }
   }
 
@@ -317,19 +379,19 @@ export const DatePickerController = ({
       return
     }
 
-    const firstSelectedDate = Array.isArray(selectedDates)
-      ? selectedDates[0]
-      : (selectedDates ?? new Date())
+    // const firstSelectedDate = Array.isArray(selectedDates)
+    //   ? selectedDates[0]
+    //   : (selectedDates ?? new Date())
 
-    if (isRangeMode(mode)) {
-      setStartDate(firstSelectedDate)
-      setEndDate(firstSelectedDate)
-      setSelectedDates([firstSelectedDate, firstSelectedDate])
-    } else {
-      setStartDate(null)
-      setEndDate(null)
-      setSelectedDates(firstSelectedDate)
-    }
+    // if (isRangeMode(mode)) {
+    //   setStartDate(firstSelectedDate)
+    //   setEndDate(firstSelectedDate)
+    //   setSelectedDates([firstSelectedDate, firstSelectedDate])
+    // } else {
+    //   setStartDate(null)
+    //   setEndDate(null)
+    //   setSelectedDates(firstSelectedDate)
+    // }
 
     onChangeMode(mode)
   }
@@ -337,16 +399,12 @@ export const DatePickerController = ({
   return (
     <div className={wrapperClassNames}>
       <ReactDatePicker
-      // @ts-expect-error = There is no good way to define the type of the ref
+        // @ts-expect-error = There is no good way to define the type of the ref
         ref={pickerRef}
         wrapperClassName={datePickerWrapperClassNames}
-        startDate={isRangeMode(mode) ? startDate : undefined}
+        startDate={startDate}
         endDate={isRangeMode(mode) ? endDate : undefined}
-        selected={
-          mode !== 'dayRangePicker' && mode !== 'monthRangePicker'
-            ? (selectedDates as Date)
-            : undefined
-        }
+        selected={startDate}
         onChange={handleDateChange}
         calendarClassName={calendarClassNames}
         popperClassName={popperClassNames}
@@ -409,7 +467,10 @@ export const DatePickerController = ({
         {mode === 'dayRangePicker' && (
           <DatePickerOptions
             customDateRanges={customDateRanges}
-            setSelectedDate={setSelectedDates}
+            setSelectedDate={([s, e]) => {
+              setStartDate(s)
+              setEndDate(e)
+            }}
           />
         )}
       </ReactDatePicker>
@@ -448,15 +509,15 @@ export const DatePickerController = ({
       )}
       {currentDateOption
         && (mode === 'dayPicker' || mode === 'monthPicker') && (
-        <Button
-          className='Layer__datepicker__current-button'
-          onClick={setCurrentDate}
-          variant={ButtonVariant.secondary}
-          disabled={isCurrentDate()}
-        >
-          {mode === 'dayPicker' ? 'Today' : 'Current'}
-        </Button>
-      )}
+          <Button
+            className='Layer__datepicker__current-button'
+            onClick={setCurrentDate}
+            variant={ButtonVariant.secondary}
+            disabled={isCurrentDate()}
+          >
+            {mode === 'dayPicker' ? 'Today' : 'Current'}
+          </Button>
+        )}
     </div>
   )
 }

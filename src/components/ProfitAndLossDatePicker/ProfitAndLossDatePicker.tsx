@@ -43,6 +43,7 @@ export const ProfitAndLossDatePicker = ({
   if (datePickerMode === 'dayRangePicker') {
     return (
       <DatePicker
+        withDateContext={false}
         mode={datePickerMode}
         customDateRanges={customDateRanges}
         allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
@@ -62,19 +63,13 @@ export const ProfitAndLossDatePicker = ({
         slots={{
           ModeSelector: DatePickerModeSelector,
         }}
-        syncWithGlobalDate={true}
       />
     )
   }
 
-  console.log(
-    'flagXX',
-    datePickerMode,
-    customDateRanges,
-    allowedDatePickerModes,
-  )
   return (
     <DatePicker
+      withDateContext={false}
       mode={datePickerMode}
       customDateRanges={customDateRanges}
       allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { DEFAULT_ALLOWED_PICKER_MODES } from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
 import { DateState } from '../../types'
 import { resolveDateToDate } from '../../utils/date'
 import { endOfMonth, isAfter, isBefore, startOfMonth } from 'date-fns'
@@ -45,20 +44,6 @@ export const useDate: UseDate = ({
         supportedModes: supportedModes ?? dateState.supportedModes,
       },
       dateState,
-    )
-
-    console.log(
-      'flagXX',
-      name,
-      {
-        startDate: newStartDate ?? dateState.startDate,
-        endDate: newEndDate ?? dateState.endDate,
-        period: newPeriod ?? dateState.period,
-        mode: newMode ?? dateState.mode,
-        supportedModes: supportedModes ?? dateState.supportedModes,
-      },
-      dateState,
-      newDate,
     )
 
     if (

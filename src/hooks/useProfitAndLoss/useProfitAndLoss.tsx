@@ -106,19 +106,19 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     }
   }, [globalDateRange])
 
-  // useEffect(() => {
-  //   // @TODO period is wrong
-  //   // if (
-  //   //   dateSyncedWithGlobal &&
-  //   //   JSON.stringify(globalDateRange) !==
-  //   //     JSON.stringify({ startDate, endDate, period: globalDateRange.period })
-  //   // ) {
-  //   //   setGlobalDateRange({ startDate, endDate })
-  //   // }
-  //   if (dateSyncedWithGlobal) {
-  //     setGlobalDateRange(dateRange)
-  //   }
-  // }, [dateRange])
+  useEffect(() => {
+    // @TODO period is wrong
+    // if (
+    //   dateSyncedWithGlobal &&
+    //   JSON.stringify(globalDateRange) !==
+    //     JSON.stringify({ startDate, endDate, period: globalDateRange.period })
+    // ) {
+    //   setGlobalDateRange({ startDate, endDate })
+    // }
+    if (dateSyncedWithGlobal) {
+      setGlobalDateRange(dateRange)
+    }
+  }, [dateRange])
 
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
 
