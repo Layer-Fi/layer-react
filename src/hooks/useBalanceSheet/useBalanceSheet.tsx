@@ -16,7 +16,7 @@ type UseBalanceSheet = (date?: Date) => {
 export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
   const { auth, businessId, apiUrl, read, syncTimestamps, hasBeenTouched } =
     useLayerContext()
-  const dateString = format(startOfDay(date), "yyyy-MM-dd'T'HH:mm:ssXXX")
+  const dateString = format(startOfDay(date), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
 
   const queryKey =
     businessId &&

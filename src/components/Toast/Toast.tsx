@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import classNames from 'classnames'
 
@@ -27,7 +27,7 @@ const Toast = (props: ToastProps & { isExiting: boolean }) => {
   )
 }
 
-export const ToastsContainer = forwardRef(_props => {
+export function ToastsContainer() {
   const { toasts } = useLayerContext()
 
   return (
@@ -37,4 +37,4 @@ export const ToastsContainer = forwardRef(_props => {
       ))}
     </div>
   )
-})
+}

@@ -130,7 +130,7 @@ export const LinkedAccountItemThumb = ({
             account.connection_external_id,
           )
         } else {
-          console.warn("Account doesn't have defined connection_external_id")
+          console.warn('Account doesn\'t have defined connection_external_id')
         }
       },
     })

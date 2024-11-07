@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
-import DownloadCloud from '../../icons/DownloadCloud'
 import { DateRange, DisplayState } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { DownloadButton as DownloadButtonComponent } from '../Button'

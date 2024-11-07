@@ -1,3 +1,4 @@
+/** @type {import("eslint").Linter.Config} */
 module.exports = {
   env: {
     browser: true,
@@ -6,8 +7,9 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
   ],
   ignorePatterns: ['build/*', 'dist/*', 'bin/*'],
   parser: '@typescript-eslint/parser',
@@ -18,24 +20,26 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'prettier', 'import'],
+  plugins: ['@typescript-eslint', '@stylistic', 'unused-imports'],
   rules: {
-    'prettier/prettier': 'error',
-    indent: ['off', 2, { SwitchCase: 1 }],
-    'linebreak-style': ['error', 'unix'],
-    'no-console': ['error', { allow: ['warn', 'error'] }],
-    quotes: ['error', 'single'],
-    'react/react-in-jsx-scope': 'off',
-    semi: ['error', 'never'],
-    'object-curly-spacing': ['error', 'always', { objectsInObjects: true }],
-    '@typescript-eslint/no-unused-vars': [
-      'warn',
+    'no-console': ['error', { allow: ['warn', 'error', 'debug'] }],
+
+    '@stylistic/quotes': ['error', 'single', { avoidEscape: false }],
+    '@stylistic/jsx-quotes': ['error', 'prefer-single'],
+    '@stylistic/semi': ['error', 'never'],
+
+    '@typescript-eslint/no-unused-vars': 'off',
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'error',
       {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
         caughtErrorsIgnorePattern: '^_',
       },
     ],
+
+    'react/prop-types': 'off',
   },
   overrides: [
     {
@@ -50,4 +54,9 @@ module.exports = {
       },
     },
   ],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
 }

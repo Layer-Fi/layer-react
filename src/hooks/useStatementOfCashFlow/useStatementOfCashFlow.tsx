@@ -24,9 +24,9 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = (
     useLayerContext()
   const startDateString = format(
     startOfDay(startDate),
-    "yyyy-MM-dd'T'HH:mm:ssXXX",
+    'yyyy-MM-dd\'T\'HH:mm:ssXXX',
   )
-  const endDateString = format(startOfDay(endDate), "yyyy-MM-dd'T'HH:mm:ssXXX")
+  const endDateString = format(startOfDay(endDate), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
 
   const queryKey =
     businessId &&

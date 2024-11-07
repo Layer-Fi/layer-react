@@ -1,5 +1,4 @@
 import React, {
-  AnchorHTMLAttributes,
   ButtonHTMLAttributes,
   ReactNode,
 } from 'react'
@@ -21,7 +20,7 @@ export interface IconButtonProps
 
 export const IconButton = ({
   className,
-  children,
+  children: _children,
   icon,
   active,
   withBorder = false,

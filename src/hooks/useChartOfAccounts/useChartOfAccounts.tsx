@@ -4,7 +4,6 @@ import { NORMALITY_OPTIONS } from '../../components/ChartOfAccountsForm/constant
 import { useLayerContext } from '../../contexts/LayerContext'
 import { FormError, DateRange, Direction, NewAccount } from '../../types'
 import {
-  ChartWithBalances,
   EditAccount,
   LedgerAccountBalance,
 } from '../../types/chart_of_accounts'
@@ -289,8 +288,8 @@ export const useChartOfAccounts = (
       return
     }
 
-    const parent = allAccounts.find(
-      x => x.sub_accounts?.find(el => el.id === found.id),
+    const parent = allAccounts.find(x =>
+      x.sub_accounts?.find(el => el.id === found.id),
     )
 
     setForm({

@@ -15,7 +15,7 @@ export interface HeaderProps {
   children: ReactNode
 }
 
-export const Header = forwardRef<HTMLElement | HTMLDivElement, HeaderProps>(
+const Header = forwardRef<HTMLElement | HTMLDivElement, HeaderProps>(
   ({ className, children, style, sticky, asHeader, rounded }, ref) => {
     const baseClassName = classNames(
       'Layer__header',
@@ -43,3 +43,7 @@ export const Header = forwardRef<HTMLElement | HTMLDivElement, HeaderProps>(
     )
   },
 )
+
+Header.displayName = 'Header'
+
+export { Header }

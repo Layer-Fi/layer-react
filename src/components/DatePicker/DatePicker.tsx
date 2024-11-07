@@ -64,11 +64,11 @@ export const DatePicker = ({
   dateFormat = mode === 'monthPicker' || mode === 'monthRangePicker'
     ? 'MMM, yyyy'
     : mode === 'timePicker'
-    ? 'h:mm aa'
-    : 'MMM d, yyyy',
+      ? 'h:mm aa'
+      : 'MMM d, yyyy',
   timeIntervals = 15,
   timeCaption,
-  placeholderText,
+  placeholderText: _placeholderText,
   customDateRanges,
   wrapperClassName,
   calendarClassName,
@@ -236,7 +236,7 @@ export const DatePicker = ({
 
     const firstSelectedDate = Array.isArray(selectedDates)
       ? selectedDates[0]
-      : selectedDates ?? new Date()
+      : (selectedDates ?? new Date())
 
     if (isRangeMode(mode)) {
       setStartDate(firstSelectedDate)

@@ -7,7 +7,6 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { BankTransaction } from '../../types'
 import { hasReceipts } from '../../utils/bankTransactions'
 import { parseISO, format as formatTime } from 'date-fns'
-import useSWR from 'swr'
 
 export interface UseReceiptsProps {
   bankTransaction: BankTransaction

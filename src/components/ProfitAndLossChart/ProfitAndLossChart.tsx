@@ -7,7 +7,6 @@ import {
 } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
 import { isDateAllowedToBrowse } from '../../utils/business'
-import { TagOption } from '../../views/ProjectProfitability/ProjectProfitability'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { Text } from '../Typography'
 import { ChartStateCard } from './ChartStateCard'

@@ -75,9 +75,9 @@ export const TextWithTooltip = ({
   as: Component = 'p',
   className,
   children,
-  size = TextSize.md,
-  weight = TextWeight.normal,
-  withTooltip = TextUseTooltip.whenTruncated,
+  size: _size = TextSize.md,
+  weight: _weight = TextWeight.normal,
+  withTooltip: _withTooltip = TextUseTooltip.whenTruncated,
   tooltipOptions,
   ...props
 }: TextProps) => {

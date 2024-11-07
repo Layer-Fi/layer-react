@@ -3,7 +3,6 @@ import Select, { Options } from 'react-select'
 import { BankTransactions } from '../../components/BankTransactions'
 import { Container } from '../../components/Container'
 import {
-  DatePickerMode,
   RangePickerMode,
 } from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'

@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { ChartOfAccounts } from '../../components/ChartOfAccounts'
 import { ChartOfAccountsStringOverrides } from '../../components/ChartOfAccounts/ChartOfAccounts'
-import { Container } from '../../components/Container'
 import { Journal } from '../../components/Journal'
 import { JournalStringOverrides } from '../../components/Journal/Journal'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'

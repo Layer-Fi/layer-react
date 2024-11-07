@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { LinkedAccountsProvider } from '../../providers/LinkedAccountsProvider'
+import { OnboardingStep } from '../../types/layer_context'
 import { Container } from '../Container'
 import { ConnectAccount } from './ConnectAccount'
-import { OnboardingStep } from '../../types/layer_context'
 
 const COLLAPSED_STYLE = {
   maxHeight: 0,

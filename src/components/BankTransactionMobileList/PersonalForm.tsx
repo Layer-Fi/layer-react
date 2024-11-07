@@ -17,7 +17,6 @@ interface PersonalFormProps {
   bankTransaction: BankTransaction
   showReceiptUploads?: boolean
   showDescriptions?: boolean
-  isOpen?: boolean
 }
 
 const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
@@ -39,7 +38,6 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
 export const PersonalForm = ({
   bankTransaction,
   showReceiptUploads,
-  isOpen,
   showDescriptions,
 }: PersonalFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
@@ -134,8 +132,8 @@ export const PersonalForm = ({
           {isLoading || bankTransaction.processing
             ? 'Saving...'
             : alreadyAssigned
-            ? 'Saved as Personal'
-            : 'Categorize as Personal'}
+              ? 'Saved as Personal'
+              : 'Categorize as Personal'}
         </Button>
       </div>
       {bankTransaction.error && showRetry ? (

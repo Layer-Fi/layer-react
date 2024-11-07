@@ -33,7 +33,7 @@ export const LayerContext = createContext<
   setOnboardingStep: () => undefined,
   environment: '',
   toasts: [],
-  addToast: (toast: ToastProps) => undefined,
+  addToast: (_toast: ToastProps) => undefined,
   removeToast: () => undefined,
   onError: () => undefined,
   touch: () => undefined,

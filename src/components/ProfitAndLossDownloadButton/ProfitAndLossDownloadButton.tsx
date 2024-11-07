@@ -45,8 +45,14 @@ export const ProfitAndLossDownloadButton = ({
           startDate: dateRange.startDate.toISOString(),
           endDate: dateRange.endDate.toISOString(),
           moneyFormat: moneyFormat,
-          tagKey: (tagFilter?.key && tagFilter.values.length > 0) ? tagFilter?.key : undefined,
-          tagValues: (tagFilter?.key && tagFilter.values.length > 0) ? tagFilter?.values.join(',') : undefined
+          tagKey:
+            tagFilter?.key && tagFilter.values.length > 0
+              ? tagFilter?.key
+              : undefined,
+          tagValues:
+            tagFilter?.key && tagFilter.values.length > 0
+              ? tagFilter?.values.join(',')
+              : undefined,
         },
       },
     )
