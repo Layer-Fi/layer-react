@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, type FC } from 'react'
-import ReactDatePicker from 'react-datepicker'
+import * as RDP from 'react-datepicker'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
@@ -10,6 +10,13 @@ import type {
   DatePickerModeSelectorProps,
 } from './ModeSelector/DatePickerModeSelector'
 import classNames from 'classnames'
+
+/**
+ * @see https://github.com/Hacker0x01/react-datepicker/issues/1333#issuecomment-2363284612
+ */
+const ReactDatePicker = (((RDP.default as any).default as any) ||
+  (RDP.default as any) ||
+  (RDP as any)) as typeof RDP.default
 
 interface DatePickerProps {
   mode: DatePickerMode
@@ -83,7 +90,11 @@ export const DatePicker = ({
 }: DatePickerProps) => {
   const { ModeSelector } = slots ?? {}
 
-  const pickerRef = useRef<ReactDatePicker>(null)
+  const pickerRef = useRef<{
+    setOpen: (open: boolean, skipSetBlur?: boolean) => void;
+    isCalendarOpen: () => boolean;
+  }>(null)
+
   const [updatePickerDate, setPickerDate] = useState<boolean>(false)
   const [selectedDates, setSelectedDates] = useState<
     Date | [Date | null, Date | null] | null
@@ -254,6 +265,7 @@ export const DatePicker = ({
   return (
     <div className={wrapperClassNames}>
       <ReactDatePicker
+      // @ts-expect-error = There is no good way to define the type of the ref
         ref={pickerRef}
         wrapperClassName={datePickerWrapperClassNames}
         startDate={isRangeMode(mode) ? startDate : undefined}
@@ -310,7 +322,7 @@ export const DatePicker = ({
         onFocus={e => (e.target.readOnly = true)}
         onInputClick={() => {
           if (pickerRef.current && !isDesktop) {
-            pickerRef.current.setOpen(!pickerRef.current.isCalendarOpen)
+            pickerRef.current.setOpen(!pickerRef.current.isCalendarOpen())
           }
         }}
         {...props}
