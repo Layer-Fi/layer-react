@@ -116,7 +116,7 @@ export const LinkedAccountItemThumb = ({
   }
 
   if (
-    environment === 'staging' &&
+    environment === 'internalStaging' &&
     !account.connection_needs_repair_as_of &&
     account.external_account_source === 'PLAID' &&
     showBreakConnection
