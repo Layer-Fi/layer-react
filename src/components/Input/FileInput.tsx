@@ -1,39 +1,40 @@
-import React, { useRef, ChangeEvent } from 'react'
-import UploadCloud from '../../icons/UploadCloud'
-import { Button, TextButton } from '../Button'
-import { ButtonVariant } from '../Button/Button'
+import React, { useRef, ChangeEvent } from "react";
+import UploadCloud from "../../icons/UploadCloud";
+import { Button, TextButton } from "../Button";
+import { ButtonVariant } from "../Button/Button";
 
 export interface FileInputProps {
-  text?: string
-  onUpload?: (file: File) => void
-  disabled?: boolean
-  secondary?: boolean
-  iconOnly?: boolean
-  icon?: React.ReactNode
+  text?: string;
+  onUpload?: (file: File) => void;
+  disabled?: boolean;
+  secondary?: boolean;
+  iconOnly?: boolean;
+  icon?: React.ReactNode;
 }
 
 export const FileInput = ({
-  text = 'Upload',
+  text = "Upload",
   onUpload,
   disabled = false,
   secondary,
   iconOnly = false,
   icon,
 }: FileInputProps) => {
-  const hiddenFileInput = useRef<HTMLInputElement>(null)
+  const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   const onClick = () => {
     if (hiddenFileInput.current) {
-      hiddenFileInput.current.click()
+      hiddenFileInput.current.value = ""; // reset in case user is trying reupload
+      hiddenFileInput.current.click();
     }
-  }
+  };
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0 && onUpload) {
-      const fileUploaded = event.target.files[0]
-      onUpload(fileUploaded)
+      const fileUploaded = event.target.files[0];
+      onUpload(fileUploaded);
     }
-  }
+  };
 
   if (secondary) {
     return (
@@ -42,13 +43,13 @@ export const FileInput = ({
           {text}
         </TextButton>
         <input
-          type='file'
+          type="file"
           onChange={onChange}
           ref={hiddenFileInput}
-          style={{ display: 'none' }}
+          style={{ display: "none" }}
         />
       </>
-    )
+    );
   }
 
   return (
@@ -63,11 +64,11 @@ export const FileInput = ({
         {!iconOnly && text}
       </Button>
       <input
-        type='file'
+        type="file"
         onChange={onChange}
         ref={hiddenFileInput}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
       />
     </>
-  )
-}
+  );
+};
