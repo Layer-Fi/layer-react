@@ -1,0 +1,54 @@
+.Layer__UI__Button {
+  all: unset;
+
+  align-items: center;
+  appearance: none;
+  border-radius: var(--btn-border-radius);
+  cursor: pointer;
+  display: inline-grid;
+  min-inline-size: 0;
+  min-block-size: 2rem;
+  padding-inline: var(--spacing-md);
+  justify-content: center;
+  outline: none;
+  user-select: none;
+  white-space: nowrap;
+  vertical-align: middle;
+
+  &[data-icon] {
+    padding-inline: 0;
+    inline-size: 2rem;
+    block-size: 2rem;
+  }
+
+  &[data-variant=solid] {
+    background-color: var(--button-bg-default);
+    color: var(--button-fg-default);
+
+    &[data-hovered] {
+      background-color: var(--button-bg-active);
+    }
+  }
+
+  &[data-variant=ghost] {
+    background-color: transparent;
+    color: var(--button-fg-ghost);
+
+    border: 2px solid transparent;
+
+    &[data-hovered] {
+      background-color: var(--button-bg-ghost-active);
+      color: var(--button-fg-ghost-active);
+      border-color: var(--button-outline-ghost-active);
+    }
+  }
+
+  &[data-size=lg] {
+    min-block-size: 2.25rem;
+    font-size: var(--text-lg);
+  }
+
+  &[data-pending] {
+    background-color: var(--button-bg-disabled);
+  }
+}

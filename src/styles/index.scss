@@ -1,5 +1,6 @@
 @import 'https://rsms.me/inter/inter.css';
 @import './variables.scss';
+@import './internal_variables.scss';
 
 @import './global.scss';
 @import './actionable_list.scss';
@@ -24,7 +25,8 @@
 @import './utils.scss';
 @import './view.scss';
 
-@import '../components/ui/stack.scss';
+@import '../components/ui/index.scss';
+@import '../components/LinkedAccounts/ConfirmationModal/linkedAccountToConfirm.scss';
 
 @import './ledger_account.scss';
 @import './balance_sheet.scss';

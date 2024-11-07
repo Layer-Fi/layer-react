@@ -22,7 +22,8 @@ import { buildColorsPalette } from '../../utils/colors'
 import { BankTransactionsProvider } from '../BankTransactionsProvider'
 import { LayerEnvironment, Props } from '../LayerProvider/LayerProvider'
 import { add, isBefore } from 'date-fns'
-import useSWR, { SWRConfiguration } from 'swr'
+import useSWR from 'swr'
+import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -75,13 +76,6 @@ export const BusinessProvider = ({
   onError,
   eventCallbacks,
 }: PropsWithChildren<Props>) => {
-  const defaultSWRConfig: SWRConfiguration = {
-    refreshInterval: 0,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    revalidateIfStale: false,
-  }
-
   errorHandler.setOnError(onError)
 
   const colors = buildColorsPalette(theme)
@@ -124,19 +118,19 @@ export const BusinessProvider = ({
   const { data: auth } =
     appId !== undefined && appSecret !== undefined
       ? useSWR(
-          businessAccessToken === undefined &&
-            appId !== undefined &&
-            appSecret !== undefined &&
-            isBefore(state.auth.expires_at, new Date()) &&
-            'authenticate',
-          Layer.authenticate({
-            appId,
-            appSecret,
-            authenticationUrl: url,
-            scope,
-          }),
-          { ...defaultSWRConfig, provider: () => new Map() },
-        )
+        businessAccessToken === undefined
+            && appId !== undefined
+            && appSecret !== undefined
+            && isBefore(state.auth.expires_at, new Date())
+            && 'authenticate',
+        Layer.authenticate({
+          appId,
+          appSecret,
+          authenticationUrl: url,
+          scope,
+        }),
+        { ...DEFAULT_SWR_CONFIG, provider: () => new Map() },
+      )
       : { data: undefined }
 
   useEffect(() => {
@@ -171,7 +165,7 @@ export const BusinessProvider = ({
       params: { businessId },
     }),
     {
-      ...defaultSWRConfig,
+      ...DEFAULT_SWR_CONFIG,
       provider: () => new Map(),
       onSuccess: response => {
         if (response?.data?.categories?.length) {
@@ -198,7 +192,7 @@ export const BusinessProvider = ({
       params: { businessId },
     }),
     {
-      ...defaultSWRConfig,
+      ...DEFAULT_SWR_CONFIG,
       provider: () => new Map(),
       onSuccess: response => {
         if (response?.data) {

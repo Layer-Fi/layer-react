@@ -4,6 +4,7 @@ import PlusIcon from '../../icons/PlusIcon'
 import { Text, TextSize } from '../Typography'
 import { LinkedAccountItemThumb } from './LinkedAccountItemThumb'
 import classNames from 'classnames'
+import { LinkedAccountsConfirmationModal } from '../LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'
 
 interface LinkedAccountsDataProps {
   asWidget?: boolean
@@ -29,31 +30,34 @@ export const LinkedAccountsContent = ({
   )
 
   return (
-    <div className='Layer__linked-accounts__list'>
-      {data?.map((account, index) => (
-        <LinkedAccountItemThumb
-          key={index}
-          account={account}
-          showLedgerBalance={showLedgerBalance}
-          showUnlinkItem={showUnlinkItem}
-          showBreakConnection={showBreakConnection}
-          asWidget={asWidget}
-        />
-      ))}
-      <div
-        role='button'
-        tabIndex={0}
-        aria-label='new-account'
-        onClick={() => addConnection('PLAID')}
-        className={linkedAccountsNewAccountClassName}
-      >
-        <div className='Layer__linked-accounts__new-account-label'>
-          <PlusIcon size={15} />
-          <Text as='span' size={'sm' as TextSize}>
-            Add Account
-          </Text>
+    <>
+      <div className='Layer__linked-accounts__list'>
+        {data?.map((account, index) => (
+          <LinkedAccountItemThumb
+            key={index}
+            account={account}
+            showLedgerBalance={showLedgerBalance}
+            showUnlinkItem={showUnlinkItem}
+            showBreakConnection={showBreakConnection}
+            asWidget={asWidget}
+          />
+        ))}
+        <div
+          role='button'
+          tabIndex={0}
+          aria-label='new-account'
+          onClick={() => addConnection('PLAID')}
+          className={linkedAccountsNewAccountClassName}
+        >
+          <div className='Layer__linked-accounts__new-account-label'>
+            <PlusIcon size={15} />
+            <Text as='span' size={'sm' as TextSize}>
+              Add Account
+            </Text>
+          </div>
         </div>
       </div>
-    </div>
+      <LinkedAccountsConfirmationModal />
+    </>
   )
 }

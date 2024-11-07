@@ -1,0 +1,51 @@
+.Layer__ModalOverlay {
+  display: grid;
+  place-items: center;
+
+  position: fixed;
+  inset: 0;
+
+  max-inline-size: 100dvi;
+  max-block-size: 100dvh;
+
+  background: rgba(0 0 0 / .5);
+
+  z-index: 100;
+
+  &[data-entering] {
+    animation-duration: 150ms;
+  }
+
+  &[data-exiting] {
+    animation-duration: 150ms;
+  }
+}
+
+.Layer__Modal {
+  inline-size: min(24rem, 90dvi);
+  block-size: min(36rem, 90dvb);
+
+  &[data-entering] {
+    animation-duration: 300ms;
+  }
+
+  &[data-exiting] {
+    animation-duration: 300ms;
+  }
+}
+
+.Layer__Dialog {
+  outline: none;
+  background-color: white;
+  block-size: 100%;
+
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-2xs);
+
+  display: flex;
+  flex-direction: column;
+
+  [slot=content] {
+    flex: 1;
+  }
+}

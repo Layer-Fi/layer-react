@@ -1,0 +1,21 @@
+
+.Layer__P {
+  margin: 0;
+
+  font-size: var(--text-md);
+  text-wrap: pretty;
+
+  $sizes: xs sm md lg;
+  @each $size in $sizes {
+    &[data-size="#{$size}"] {
+      font-size: var(--text-#{$size});
+    }
+  }
+
+  $paddings: xs sm md lg;
+  @each $padding in $paddings {
+    &[data-pbe="#{$padding}"] {
+      padding-block-end: var(--spacing-#{$padding});
+    }
+  }
+}

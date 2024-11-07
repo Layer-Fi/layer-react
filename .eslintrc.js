@@ -27,6 +27,26 @@ module.exports = {
     '@stylistic/quotes': ['error', 'single', { avoidEscape: false }],
     '@stylistic/jsx-quotes': ['error', 'prefer-single'],
     '@stylistic/semi': ['error', 'never'],
+    '@stylistic/eol-last': ['error', 'always'],
+    '@stylistic/indent': ['error', 2],
+    '@stylistic/operator-linebreak': [
+      'error',
+      'before',
+      {
+        overrides: {
+          '=': 'after',
+        },
+      }
+    ],
+    '@stylistic/max-len': [
+      'error',
+      {
+        code: 100,
+        ignoreUrls: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true
+      }
+    ],
 
     '@typescript-eslint/no-unused-vars': 'off',
     'unused-imports/no-unused-imports': 'error',

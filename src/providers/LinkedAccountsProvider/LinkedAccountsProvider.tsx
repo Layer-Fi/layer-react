@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
+import { AccountConfirmationStoreProvider } from '../AccountConfirmationStoreProvider'
 
 interface LinkedAccountsProviderProps {
   children: ReactNode
@@ -11,8 +12,10 @@ export const LinkedAccountsProvider = ({
 }: LinkedAccountsProviderProps) => {
   const linkedAccountsContextData = useLinkedAccounts()
   return (
-    <LinkedAccountsContext.Provider value={linkedAccountsContextData}>
-      {children}
-    </LinkedAccountsContext.Provider>
+    <AccountConfirmationStoreProvider>
+      <LinkedAccountsContext.Provider value={linkedAccountsContextData}>
+        {children}
+      </LinkedAccountsContext.Provider>
+    </AccountConfirmationStoreProvider>
   )
 }

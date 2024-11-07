@@ -110,7 +110,7 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
   .type-select {
     border-color: transparent;
     font-family: var(--font-family);
-    font-variation-settings: 'wght' var(--font-weight-normal);
+    font-weight: var(--font-weight-normal);
     font-variant-numeric: lining-nums proportional-nums;
     font-feature-settings:
       'cv10' on,
@@ -122,7 +122,7 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
     .Layer__select__control {
       border-color: transparent;
       font-family: var(--font-family);
-      font-variation-settings: 'wght' var(--font-weight-normal);
+      font-weight: var(--font-weight-normal);
       font-variant-numeric: lining-nums proportional-nums;
       font-feature-settings:
         'cv10' on,
@@ -135,7 +135,7 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
     .Layer__select__placeholder {
       font-size: 12px;
       font-family: var(--font-family);
-      font-variation-settings: 'wght' var(--font-weight-normal);
+      font-weight: var(--font-weight-normal);
       font-variant-numeric: lining-nums proportional-nums;
       font-feature-settings:
         'cv10' on,

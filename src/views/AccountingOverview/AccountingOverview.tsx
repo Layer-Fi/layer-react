@@ -98,13 +98,13 @@ export const AccountingOverview = ({
           slots={{
             unstable_AdditionalListItems: showTransactionsToReview
               ? [
-                  <TransactionsToReview
-                    key='transactions-to-review'
-                    usePnlDateRange={true}
-                    onClick={onTransactionsToReviewClick}
-                    variants={profitAndLossSummariesVariants}
-                  />,
-                ]
+                <TransactionsToReview
+                  key='transactions-to-review'
+                  usePnlDateRange={true}
+                  onClick={onTransactionsToReviewClick}
+                  variants={profitAndLossSummariesVariants}
+                />,
+              ]
               : undefined,
           }}
           variants={profitAndLossSummariesVariants}
@@ -149,8 +149,8 @@ export const AccountingOverview = ({
           <Container
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
-              pnlToggle !== 'revenue' &&
-                'accounting-overview-profit-and-loss-chart--hidden',
+              pnlToggle !== 'revenue'
+                && 'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts
@@ -163,8 +163,8 @@ export const AccountingOverview = ({
           <Container
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
-              pnlToggle !== 'expenses' &&
-                'accounting-overview-profit-and-loss-chart--hidden',
+              pnlToggle !== 'expenses'
+                && 'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts
