@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
 import ChevronDownFill from '../../icons/ChevronDownFill'
@@ -8,6 +8,7 @@ import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationStatus, Category } from '../../types'
 import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
+import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { Badge } from '../Badge'
 import {
   BankTransactionCTAStringOverrides,
@@ -42,6 +43,7 @@ type Props = {
   initialLoad?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
+  showReceiptUploadColumn: boolean
   showTooltips: boolean
   mode: BankTransactionsMode
   stringOverrides?: BankTransactionCTAStringOverrides
@@ -84,6 +86,7 @@ export const BankTransactionRow = ({
   initialLoad,
   showDescriptions,
   showReceiptUploads,
+  showReceiptUploadColumn,
   showTooltips,
   stringOverrides,
 }: Props) => {
@@ -190,6 +193,11 @@ export const BankTransactionRow = ({
     showComponent ? 'show' : '',
   )
 
+  const showReceiptDataProperties = useMemo(
+    () => toDataProperties({ showReceiptUploadColumn }),
+    [showReceiptUploadColumn],
+  )
+
   return (
     <>
       <tr className={rowClassName}>
@@ -237,14 +245,18 @@ export const BankTransactionRow = ({
             isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
           {...openRow}
+          {...showReceiptDataProperties}
         >
           <span className='Layer__table-cell-content'>
             {isCredit(bankTransaction) ? '+$' : ' $'}
             {formatMoney(bankTransaction.amount)}
           </span>
         </td>
-        <td className='Layer__table-cell Layer__bank-transactions__documents-col'>
-          {bankTransaction.document_ids?.length > 0 && (
+        <td
+          className='Layer__table-cell Layer__bank-transactions__documents-col'
+          {...showReceiptDataProperties}
+        >
+          {showReceiptUploads && bankTransaction.document_ids?.length > 0 && (
             <span className='Layer__table-cell-content'>
               <IconBox>
                 <FileIcon size={12} />
