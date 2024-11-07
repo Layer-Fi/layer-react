@@ -1,0 +1,9 @@
+.Layer__LinkedAccountToConfirm {
+  background-color: var(--bg-subtle);
+
+  padding-inline: var(--spacing-md);
+  padding-block: var(--spacing-sm);
+
+  display: grid;
+  grid-template-columns: 1fr auto;
+}

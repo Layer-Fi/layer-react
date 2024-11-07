@@ -1,0 +1,33 @@
+.Layer__ModalContextBar {
+  display: grid;
+
+  grid-template-columns: minmax(0, 2rem) 1fr minmax(0, 2rem);
+  column-gap: var(--spacing-md);
+  grid-template-areas: 'back logo close';
+  align-items: center;
+
+  > [slot=back] {
+    grid-area: back;
+  }
+  > [slot=logo] {
+    grid-area: logo;
+  }
+  > [slot=close] {
+    grid-area: close;
+  }
+}
+
+.Layer__ModalContent {
+  display: grid;
+  block-size: 100%;
+  overflow-y: auto;
+
+  > [slot=center] {
+    align-self: center;
+    justify-self: center;
+  }
+}
+
+.Layer__ModalActions {
+  padding-block-start: var(--spacing-lg);
+}

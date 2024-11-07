@@ -25,7 +25,7 @@ export const LinkedAccountItemThumb = ({
     removeConnection,
     repairConnection,
     confirmAccount,
-    denyAccount,
+    excludeAccount,
     breakConnection,
   } = useContext(LinkedAccountsContext)
   const { environment } = useEnvironment()
@@ -39,7 +39,7 @@ export const LinkedAccountItemThumb = ({
           name: 'Mark as a duplicate account',
           action: async () => {
             // TODO: trigger some sort of loading spinner here
-            await denyAccount(account.external_account_source, account.id)
+            await excludeAccount(account.external_account_source, account.id)
             // TODO: turn off loading spinner
           },
         },
@@ -97,8 +97,8 @@ export const LinkedAccountItemThumb = ({
       action: async () => {
         // TODO: replace with better confirm dialog
         if (
-          account.connection_external_id &&
-          confirm(
+          account.connection_external_id
+          && confirm(
             `Please confirm you wish to remove all accounts belonging to ${
               account.institution?.name || 'this institution'
             }`,
@@ -116,10 +116,10 @@ export const LinkedAccountItemThumb = ({
   }
 
   if (
-    environment === 'staging' &&
-    !account.connection_needs_repair_as_of &&
-    account.external_account_source === 'PLAID' &&
-    showBreakConnection
+    environment === 'staging'
+    && !account.connection_needs_repair_as_of
+    && account.external_account_source === 'PLAID'
+    && showBreakConnection
   ) {
     additionalConfigs.push({
       name: 'Break connection (test utility)',

@@ -1,7 +1,7 @@
 .Layer__heading {
   color: var(--text-color-primary);
   font-size: var(--text-heading);
-  font-variation-settings: 'wght' var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
   line-height: 140%;
   letter-spacing: -0.12px;
   margin: 0;
@@ -12,26 +12,26 @@
 .Layer__heading.Layer__heading--secondary {
   color: var(--text-color-primary);
   font-size: var(--text-heading-sm);
-  font-variation-settings: 'wght' var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 .Layer__heading--view,
 .Layer__heading.Layer__heading--view {
   color: var(--text-color-primary);
   font-size: var(--text-heading-view);
-  font-variation-settings: 'wght' var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 .Layer__heading--page,
 .Layer__heading.Layer__heading--page {
   color: var(--text-color-primary);
   font-size: var(--text-heading-page);
-  font-variation-settings: 'wght' var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 .Layer__text {
   font-family: var(--font-family);
-  font-variation-settings: 'wght' var(--font-weight-normal);
+  font-weight: var(--font-weight-normal);
   font-variant-numeric: lining-nums proportional-nums;
   font-feature-settings:
     'cv10' on,
@@ -56,7 +56,7 @@
 
 .Layer__text--bold,
 .Layer__text.Layer__text--bold {
-  font-variation-settings: 'wght' var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 .Layer__text--error {
@@ -65,7 +65,7 @@
 
 .Layer__label {
   color: var(--color-base-500);
-  font-variation-settings: 'wght' var(--font-weight-normal);
+  font-weight: var(--font-weight-normal);
   white-space: nowrap;
   overflow: hidden;
 }

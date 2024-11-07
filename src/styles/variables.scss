@@ -1,4 +1,5 @@
 .Layer__component,
+.Layer__Portal,
 .Layer__view,
 .Layer__select__menu-portal,
 .Layer__tooltip,
@@ -254,7 +255,8 @@
   box-sizing: border-box;
 
   font-family: var(--font-family);
-  font-variation-settings: 'wght' var(--font-weight-normal);
+  font-weight: var(--font-weight-normal);
+
   font-feature-settings:
     'cv10' on,
     'cv01' on,

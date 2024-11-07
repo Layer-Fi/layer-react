@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import LinkIcon from '../../icons/Link'
 import PlaidIcon from '../../icons/PlaidIcon'
@@ -29,18 +29,20 @@ export interface LinkAccountsProps {
 }
 
 export const LinkAccounts = ({ inBox, ...props }: LinkAccountsProps) => {
-  if (inBox) {
-    return (
-      <LinkedAccountsProvider>
+  const content = useMemo(() => {
+    if (inBox) {
+      return (
         <div className='Layer__link-accounts__box'>
           <LinkAccountsContent {...props} />
         </div>
-      </LinkedAccountsProvider>
-    )
-  }
+      )
+    }
+    return <LinkAccountsContent {...props} />
+  }, [inBox, props])
+
   return (
     <LinkedAccountsProvider>
-      <LinkAccountsContent {...props} />
+      {content}
     </LinkedAccountsProvider>
   )
 }
@@ -120,8 +122,8 @@ export const LinkAccountsContent = ({
           )}
           {onNext && (
             <Button onClick={onNext}>
-              {stringOverrides?.nextButtonText ??
-                'I’m done connecting my business accounts'}
+              {stringOverrides?.nextButtonText
+                || 'I’m done connecting my business accounts'}
             </Button>
           )}
         </div>

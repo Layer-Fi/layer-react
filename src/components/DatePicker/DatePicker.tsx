@@ -14,9 +14,9 @@ import classNames from 'classnames'
 /**
  * @see https://github.com/Hacker0x01/react-datepicker/issues/1333#issuecomment-2363284612
  */
-const ReactDatePicker = (((RDP.default as any).default as any) ||
-  (RDP.default as any) ||
-  (RDP as any)) as typeof RDP.default
+const ReactDatePicker = (((RDP.default as any).default as any)
+  || (RDP.default as any)
+  || (RDP as any)) as typeof RDP.default
 
 interface DatePickerProps {
   mode: DatePickerMode
@@ -113,9 +113,9 @@ export const DatePicker = ({
     try {
       setPickerDate(true)
       if (
-        !isRangeMode(mode) &&
-        (selected as Date | null)?.getTime() !==
-          (selectedDates as Date | null)?.getTime()
+        !isRangeMode(mode)
+        && (selected as Date | null)?.getTime()
+          !== (selectedDates as Date | null)?.getTime()
       ) {
         setSelectedDates(selected)
         return
@@ -136,8 +136,8 @@ export const DatePicker = ({
 
   useEffect(() => {
     if (
-      onChange &&
-      (!isRangeMode(mode) || (isRangeMode(mode) && !updatePickerDate))
+      onChange
+      && (!isRangeMode(mode) || (isRangeMode(mode) && !updatePickerDate))
     ) {
       onChange(selectedDates as Date | [Date, Date])
     } else {
@@ -187,14 +187,14 @@ export const DatePicker = ({
     const currentDate = new Date()
     if (mode === 'dayPicker') {
       return (
-        selectedDates instanceof Date &&
-        selectedDates.toDateString() === currentDate.toDateString()
+        selectedDates instanceof Date
+        && selectedDates.toDateString() === currentDate.toDateString()
       )
     } else if (mode === 'monthPicker') {
       return (
-        selectedDates instanceof Date &&
-        selectedDates.getMonth() === currentDate.getMonth() &&
-        selectedDates.getFullYear() === currentDate.getFullYear()
+        selectedDates instanceof Date
+        && selectedDates.getMonth() === currentDate.getMonth()
+        && selectedDates.getFullYear() === currentDate.getFullYear()
       )
     }
     return false
@@ -374,17 +374,17 @@ export const DatePicker = ({
           </Button>
         </>
       )}
-      {currentDateOption &&
-        (mode === 'dayPicker' || mode === 'monthPicker') && (
-          <Button
-            className='Layer__datepicker__current-button'
-            onClick={setCurrentDate}
-            variant={ButtonVariant.secondary}
-            disabled={isCurrentDate()}
-          >
-            {mode === 'dayPicker' ? 'Today' : 'Current'}
-          </Button>
-        )}
+      {currentDateOption
+        && (mode === 'dayPicker' || mode === 'monthPicker') && (
+        <Button
+          className='Layer__datepicker__current-button'
+          onClick={setCurrentDate}
+          variant={ButtonVariant.secondary}
+          disabled={isCurrentDate()}
+        >
+          {mode === 'dayPicker' ? 'Today' : 'Current'}
+        </Button>
+      )}
     </div>
   )
 }

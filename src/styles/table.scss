@@ -32,7 +32,7 @@
   .Layer__table-header {
     color: var(--text-color-secondary);
     font-size: var(--text-sm);
-    font-variation-settings: 'wght' var(--font-weight-normal);
+    font-weight: var(--font-weight-normal);
     font-variant-numeric: lining-nums proportional-nums;
     font-feature-settings:
       'cv10' on,
@@ -54,7 +54,7 @@
       .Layer__table-cell {
         &.Layer__table-cell--primary {
           color: var(--text-color-primary);
-          font-variation-settings: 'wght' var(--font-weight-bold);
+          font-weight: var(--font-weight-bold);
         }
       }
     }
@@ -142,7 +142,7 @@
 
     &.Layer__table-cell--primary {
       color: var(--color-base-800);
-      font-variation-settings: 'wght' var(--font-weight-bold);
+      font-weight: var(--font-weight-bold);
     }
 
     &.Layer__table-cell--right .Layer__table-cell-content {
@@ -322,7 +322,7 @@
 .Layer__table-header {
   color: var(--text-color-secondary);
   font-size: var(--text-sm);
-  font-variation-settings: 'wght' var(--font-weight-normal);
+  font-weight: var(--font-weight-normal);
   font-variant-numeric: lining-nums proportional-nums;
   font-feature-settings:
     'cv10' on,
@@ -339,13 +339,13 @@
 
 .Layer__table-header.Layer__table-header--primary {
   color: var(--text-color-primary);
-  font-variation-settings: 'wght' var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 .Layer__table-cell--primary,
 .Layer__table-cell--primary .Layer__table-cell-content {
   color: var(--color-base-800);
-  font-variation-settings: 'wght' var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 .Layer__table-cell {

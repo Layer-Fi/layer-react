@@ -21,9 +21,10 @@ import {
 import { buildColorsPalette } from '../../utils/colors'
 import { BankTransactionsProvider } from '../BankTransactionsProvider'
 import { LayerProviderProps } from '../LayerProvider/LayerProvider'
-import useSWR, { SWRConfiguration } from 'swr'
+import useSWR from 'swr'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../Environment/EnvironmentInputProvider'
+import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -74,13 +75,6 @@ export const BusinessProvider = ({
   onError,
   eventCallbacks,
 }: PropsWithChildren<BusinessProviderProps>) => {
-  const defaultSWRConfig: SWRConfiguration = {
-    refreshInterval: 0,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    revalidateIfStale: false,
-  }
-
   errorHandler.setOnError(onError)
 
   const colors = buildColorsPalette(theme)
@@ -114,7 +108,7 @@ export const BusinessProvider = ({
       params: { businessId },
     }),
     {
-      ...defaultSWRConfig,
+      ...DEFAULT_SWR_CONFIG,
       provider: () => new Map(),
       onSuccess: response => {
         if (response?.data?.categories?.length) {
@@ -141,7 +135,7 @@ export const BusinessProvider = ({
       params: { businessId },
     }),
     {
-      ...defaultSWRConfig,
+      ...DEFAULT_SWR_CONFIG,
       provider: () => new Map(),
       onSuccess: response => {
         if (response?.data) {

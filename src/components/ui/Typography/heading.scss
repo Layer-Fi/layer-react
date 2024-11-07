@@ -1,0 +1,17 @@
+.Layer__UI__Heading {
+  all: unset;
+
+  font-weight: bold;
+  font-size: var(--text-heading);
+
+  &[data-size="sm"] {
+    font-size: var(--text-heading-sm);
+  }
+
+  $paddings: 2xs xs sm md lg;
+  @each $padding in $paddings {
+    &[data-pbe="#{$padding}"] {
+      padding-block-end: var(--spacing-#{$padding});
+    }
+  }
+}

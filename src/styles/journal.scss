@@ -85,13 +85,13 @@
 }
 
 .Layer__table-cell.Layer__journal__balance {
-  font-variation-settings: 'wght' var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 .Layer__journal__table
   .Layer__table-row--depth-0
   .Layer__table-cell.Layer__journal__arrow {
-  font-variation-settings: 'wght' var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 .Layer__journal__balance {

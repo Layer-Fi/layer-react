@@ -1,13 +1,25 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DataModel, LoadedStatus } from '../../types/general'
-import { LinkedAccount, Source } from '../../types/linked_accounts'
+import { LinkedAccount, AccountSource } from '../../types/linked_accounts'
 import { LINKED_ACCOUNTS_MOCK_DATA } from './mockData'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
+import type { Awaitable } from '../../types/utility/promises'
+
+export function getAccountsNeedingConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
+  return linkedAccounts.filter(
+    ({ notifications }) => notifications?.some(({ type }) => type === 'CONFIRM_RELEVANT')
+  )
+}
+
+function accountNeedsConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
+  return getAccountsNeedingConfirmation(linkedAccounts).length > 0
+}
 
 type UseLinkedAccounts = () => {
   data?: LinkedAccount[]
@@ -15,22 +27,25 @@ type UseLinkedAccounts = () => {
   loadingStatus: LoadedStatus
   isValidating: boolean
   error: unknown
-  addConnection: (source: Source) => void
-  removeConnection: (source: Source, sourceId: string) => void // means, "unlink institution"
-  repairConnection: (source: Source, sourceId: string) => void
+  addConnection: (source: AccountSource) => void
+  removeConnection: (source: AccountSource, sourceId: string) => void // means, "unlink institution"
+  repairConnection: (source: AccountSource, sourceId: string) => void
   updateConnectionStatus: () => void
-  refetchAccounts: () => void
+  refetchAccounts: () => Awaitable<void>
   syncAccounts: () => void
-  unlinkAccount: (source: Source, accountId: string) => void
-  confirmAccount: (source: Source, accountId: string) => void
-  denyAccount: (source: Source, accountId: string) => void
+  unlinkAccount: (source: AccountSource, accountId: string) => void
+  confirmAccount: (source: AccountSource, accountId: string) => void
+  excludeAccount: (source: AccountSource, accountId: string) => void
 
   // Only works in non-production environments for test purposes
-  breakConnection: (source: Source, connectionExternalId: string) => void
+  breakConnection: (source: AccountSource, connectionExternalId: string) => void
 }
 
 const DEBUG = true
 const USE_MOCK_RESPONSE_DATA = false
+
+const MAX_POLLING_ATTEMPTS = 5
+const POLLING_INTERVAL = 1000
 
 type LinkMode = 'update' | 'add'
 
@@ -50,8 +65,9 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
 
-  const queryKey =
-    businessId && auth?.access_token && `linked-accounts-${businessId}`
+  const pollingInfoRef = useRef({ enabled: false, attempt: 0 })
+
+  const queryKey = businessId && auth?.access_token && `linked-accounts-${businessId}`
 
   const {
     data: responseData,
@@ -64,6 +80,27 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     Layer.getLinkedAccounts(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
+    {
+      refreshInterval: pollingInfoRef.current.enabled
+        ? POLLING_INTERVAL
+        : DEFAULT_SWR_CONFIG.refreshInterval,
+      dedupingInterval: pollingInfoRef.current.enabled ? POLLING_INTERVAL / 2 : undefined,
+      onSuccess: () => {
+        const { current: pollingInfo } = pollingInfoRef
+
+        if (accountNeedsConfirmation(responseData?.data.external_accounts ?? [])) {
+          pollingInfo.enabled = false
+          pollingInfo.attempt = 0
+        }
+
+        pollingInfo.attempt += pollingInfo.enabled ? 1 : 0
+
+        if (pollingInfo.attempt >= MAX_POLLING_ATTEMPTS) {
+          pollingInfo.enabled = false
+          pollingInfo.attempt = 0
+        }
+      }
+    }
   )
 
   useEffect(() => {
@@ -126,6 +163,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       params: { businessId },
       body: { public_token: publicToken, institution: metadata.institution },
     })
+    pollingInfoRef.current.enabled = true
     refetchAccounts()
   }
 
@@ -166,7 +204,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     error: undefined,
   }
 
-  const addConnection = (source: Source) => {
+  const addConnection = (source: AccountSource) => {
     if (source === 'PLAID') {
       fetchPlaidLinkToken()
     } else {
@@ -177,7 +215,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const repairConnection = async (
-    source: Source,
+    source: AccountSource,
     connectionExternalId: string,
   ) => {
     if (source === 'PLAID') {
@@ -190,7 +228,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const removeConnection = async (
-    source: Source,
+    source: AccountSource,
     connectionExternalId: string,
   ) => {
     if (source === 'PLAID') {
@@ -203,7 +241,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const unlinkAccount = async (source: Source, accountId: string) => {
+  const unlinkAccount = async (source: AccountSource, accountId: string) => {
     DEBUG && console.debug('unlinking account')
     if (source === 'PLAID') {
       await Layer.unlinkAccount(apiUrl, auth?.access_token, {
@@ -218,10 +256,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const confirmAccount = async (source: Source, accountId: string) => {
+  const confirmAccount = async (source: AccountSource, accountId: string) => {
     DEBUG && console.debug('confirming account')
     if (source === 'PLAID') {
-      await Layer.confirmConnection(apiUrl, auth?.access_token, {
+      await Layer.confirmAccount(apiUrl, auth?.access_token, {
         params: {
           businessId,
           accountId,
@@ -236,14 +274,17 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const denyAccount = async (source: Source, accountId: string) => {
-    DEBUG && console.debug('confirming account')
+  const excludeAccount = async (source: AccountSource, accountId: string) => {
+    DEBUG && console.debug('excluding account')
     if (source === 'PLAID') {
-      await Layer.denyConnection(apiUrl, auth?.access_token, {
+      await Layer.excludeAccount(apiUrl, auth?.access_token, {
         params: {
           businessId,
           accountId,
         },
+        body: {
+          is_duplicate: true,
+        }
       })
       await refetchAccounts()
       touch(DataModel.LINKED_ACCOUNTS)
@@ -255,10 +296,11 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   /**
-   * Test utility that puts a connection into a broken state. Only works in non-production environments.
+   * Test utility that puts a connection into a broken state; only works in non-production
+   * environments.
    */
   const breakConnection = async (
-    source: Source,
+    source: AccountSource,
     connectionExternalId: string,
   ) => {
     DEBUG && console.debug('Breaking sandbox plaid item connection')
@@ -333,7 +375,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     refetchAccounts,
     unlinkAccount,
     confirmAccount,
-    denyAccount,
+    excludeAccount,
     breakConnection,
     syncAccounts,
     updateConnectionStatus,

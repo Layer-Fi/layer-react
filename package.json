@@ -71,11 +71,14 @@
     "@floating-ui/react": "^0.26.8",
     "classnames": "^2.5.1",
     "date-fns": "^2.30.0",
+    "lucide-react": "^0.454.0",
+    "react-aria-components": "^1.4.1",
     "react-datepicker": "^6.9.0",
     "react-plaid-link": "^3.5.1",
     "react-select": "^5.8.0",
     "recharts": "^2.10.1",
-    "swr": "^2.2.4"
+    "swr": "^2.2.4",
+    "zustand": "^5.0.1"
   },
   "jest": {
     "testEnvironment": "jsdom",
