@@ -129,12 +129,12 @@
 
 .Layer__chart-of-accounts__mobile-row-content__balance {
   color: var(--color-base-800);
-  font-variation-settings: 'wght' var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 .Layer__chart-of-accounts__row---mobile.Layer__table-row--depth-0
   .Layer__chart-of-accounts__mobile-row-content__name {
-  font-variation-settings: 'wght' var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 }
 
 .Layer__chart-of-accounts__mobile-row-content__types {

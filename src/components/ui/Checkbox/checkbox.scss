@@ -1,0 +1,39 @@
+.Layer__Checkbox {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--spacing-xs);
+
+  cursor: pointer;
+
+  [slot=checkbox] {
+    background-color: var(--bg-default);
+    color: transparent;
+
+    padding: var(--spacing-3xs);
+    border: 2px solid var(--outline-default);
+    border-radius: var(--border-radius-xs);
+    display: grid;
+    place-items: center;
+  }
+
+  svg {
+    transition: all 200ms;
+  }
+
+  &[data-pressed] [slot=checkbox] {
+    border-color: var(--outline-active);
+  }
+
+  &[data-focus-visible] [slot=checkbox] {
+    outline: 2px solid var(--outline-active);
+    outline-offset: 2px;
+  }
+
+  &[data-selected] {
+    [slot=checkbox] {
+      color: var(--bg-default);
+      background-color: var(--fg-default);
+    }
+  }
+}

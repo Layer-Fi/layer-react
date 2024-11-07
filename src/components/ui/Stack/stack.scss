@@ -1,0 +1,25 @@
+.Layer__VStack {
+  display: flex;
+  flex-direction: column;
+
+  $alignments: start, center, end;
+  @each $alignment in $alignments {
+    &[data-align="#{$alignment}"] {
+      align-items: $alignment;
+    }
+  }
+
+  $justifications: start, center, end;
+  @each $justification in $justifications {
+    &[data-justify="#{$justification}"] {
+      justify-content: $justification;
+    }
+  }
+
+  $gaps: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
+  @each $gap in $gaps {
+    &[data-gap="#{$gap}"] {
+      gap: var(--spacing-#{$gap});
+    }
+  }
+}

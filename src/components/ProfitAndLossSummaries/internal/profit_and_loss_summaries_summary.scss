@@ -27,7 +27,7 @@
   grid-area: amount;
 
   font-size: var(--text-lg);
-  font-variation-settings: "wght" var(--font-weight-bold);
+  font-weight: var(--font-weight-bold);
 
   overflow-x: hidden;
   text-overflow: ellipsis;

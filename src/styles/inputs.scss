@@ -307,7 +307,7 @@
   border-width: 0px;
   font-family: var(--font-family);
   font-size: var(--input-font-size);
-  font-variation-settings: 'wght' var(--font-weight-normal);
+  font-weight: var(--font-weight-normal);
   font-variant-numeric: lining-nums proportional-nums;
   font-feature-settings:
     'cv10' on,
@@ -375,7 +375,7 @@
   & .Layer__select__placeholder {
     color: var(--color-base-500);
     font-family: var(--font-family);
-    font-variation-settings: 'wght' var(--font-weight-normal);
+    font-weight: var(--font-weight-normal);
     font-variant-numeric: lining-nums proportional-nums;
     font-feature-settings:
       'cv10' on,
@@ -499,7 +499,7 @@
     .Layer__select__option-content__match__amount {
       font-size: var(--text-sm);
       color: var(--color-base-900);
-      font-variation-settings: 'wght' var(--font-weight-bold);
+      font-weight: var(--font-weight-bold);
     }
   }
 }
