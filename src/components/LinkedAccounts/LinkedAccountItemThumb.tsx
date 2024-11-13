@@ -5,6 +5,12 @@ import { LinkedAccount } from '../../types/linked_accounts'
 import { LinkedAccountOptions } from '../LinkedAccountOptions'
 import { LinkedAccountThumb } from '../LinkedAccountThumb'
 
+function accountNeedsUniquenessConfirmation({
+  notifications
+}: Pick<LinkedAccount, 'notifications'>) {
+  return notifications?.some(({ type }) => type === 'CONFIRM_UNIQUE')
+}
+
 export interface LinkedAccountItemThumbProps {
   account: LinkedAccount
   asWidget?: boolean
@@ -31,7 +37,7 @@ export const LinkedAccountItemThumb = ({
   const { environment } = useLayerContext()
 
   let pillConfig
-  if (account.requires_user_confirmation_as_of) {
+  if (accountNeedsUniquenessConfirmation(account)) {
     pillConfig = {
       text: 'Confirm account',
       config: [

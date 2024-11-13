@@ -23,7 +23,6 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
     connection_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
     connection_external_id: '11111',
     connection_needs_repair_as_of: null,
-    requires_user_confirmation_as_of: null,
     is_syncing: true,
   },
   {
@@ -48,7 +47,6 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
     connection_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
     connection_external_id: '11111',
     connection_needs_repair_as_of: null,
-    requires_user_confirmation_as_of: null,
     is_syncing: false,
   },
   {
@@ -73,7 +71,6 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
     connection_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
     connection_external_id: '11111',
     connection_needs_repair_as_of: '2024-03-06T16:44:35.715458Z',
-    requires_user_confirmation_as_of: null,
     is_syncing: false,
   },
   {
@@ -98,7 +95,6 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
     connection_id: '0Br385JmgbTryJn8nEBnUb4A5ydv06U9Vbqqq',
     connection_external_id: '11111',
     connection_needs_repair_as_of: null,
-    requires_user_confirmation_as_of: '2024-03-06T16:44:35.715458Z',
     is_syncing: false,
   },
 ]

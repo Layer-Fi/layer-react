@@ -39,7 +39,7 @@ type UseLinkedAccounts = () => {
   breakConnection: (source: AccountSource, connectionExternalId: string) => void
 }
 
-const DEBUG = true
+const DEBUG = false
 const USE_MOCK_RESPONSE_DATA = false
 
 const MAX_POLLING_ATTEMPTS = 5
