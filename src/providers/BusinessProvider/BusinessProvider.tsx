@@ -20,9 +20,11 @@ import {
 } from '../../types/layer_context'
 import { buildColorsPalette } from '../../utils/colors'
 import { BankTransactionsProvider } from '../BankTransactionsProvider'
-import { LayerEnvironment, Props } from '../LayerProvider/LayerProvider'
-import { add, isBefore } from 'date-fns'
+import { Props } from '../LayerProvider/LayerProvider'
+import { add } from 'date-fns'
 import useSWR, { SWRConfiguration } from 'swr'
+import { EnvironmentConfigs } from '../LayerProvider/environment'
+import { useAuth } from '../../hooks/useAuth'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -87,11 +89,10 @@ export const BusinessProvider = ({
   const colors = buildColorsPalette(theme)
 
   const {
-    url,
-    scope,
     apiUrl,
     usePlaidSandbox: defaultUsePlaidSandbox,
-  } = LayerEnvironment[environment]
+  } = EnvironmentConfigs[environment]
+
   const [state, dispatch] = useReducer(reducer, {
     auth: {
       access_token: '',
@@ -121,23 +122,7 @@ export const BusinessProvider = ({
     resetCaches,
   } = useDataSync()
 
-  const { data: auth } =
-    appId !== undefined && appSecret !== undefined
-      ? useSWR(
-          businessAccessToken === undefined &&
-            appId !== undefined &&
-            appSecret !== undefined &&
-            isBefore(state.auth.expires_at, new Date()) &&
-            'authenticate',
-          Layer.authenticate({
-            appId,
-            appSecret,
-            authenticationUrl: url,
-            scope,
-          }),
-          { ...defaultSWRConfig, provider: () => new Map() },
-        )
-      : { data: undefined }
+  const { data: auth } = useAuth({ appId, appSecret, businessAccessToken, environment })
 
   useEffect(() => {
     if (businessAccessToken) {
@@ -163,7 +148,7 @@ export const BusinessProvider = ({
         },
       })
     }
-  }, [businessAccessToken, auth?.access_token])
+  }, [businessAccessToken, auth])
 
   const { data: categoriesData } = useSWR(
     businessId && state.auth?.access_token && `categories-${businessId}`,
