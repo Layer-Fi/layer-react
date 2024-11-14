@@ -19,7 +19,7 @@ type AccountConfirmDenyFormState = Record<string, boolean>
 
 function useConfirmAndDenyMultiple(
   formState: AccountConfirmDenyFormState,
-  { onSuccess }: { onSuccess: () => Awaitable<void> }
+  { onSuccess }: { onSuccess: () => Awaitable<unknown> }
 ) {
   const { apiUrl, auth, businessId } = useLayerContext()
 
@@ -60,9 +60,12 @@ function useConfirmAndDenyMultiple(
       Object.entries(formState).map(([ accountId, isConfirmed ]) =>
         isConfirmed ? confirm(accountId) : deny(accountId)
       )
-    ).then(() => onSuccess()),
+    )
+      .then(() => onSuccess())
+      .then(() => true as const),
     {
-      revalidate: false
+      revalidate: false,
+      throwOnError: false,
     }
   )
 }
@@ -124,9 +127,10 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     accounts.map(({ id }) => [ id, true ])
   ))
 
-  const { trigger, isMutating } = useConfirmAndDenyMultiple(formState, {
+  const { trigger, isMutating, error } = useConfirmAndDenyMultiple(formState, {
     onSuccess: refetchAccounts
   })
+  const hasError = Boolean(error)
 
   const handleDismiss = () => {
     onDismiss()
@@ -134,8 +138,10 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
   }
 
   const handleFinish = async () => {
-    await trigger()
-    onClose()
+    const success = await trigger()
+    if (success) {
+      onClose()
+    }
   }
 
   const { descriptionLabel, buttonLabel } = getFormComponentLabels(formState)
@@ -175,10 +181,28 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
         </ConditionalList>
       </ModalContent>
       <ModalActions>
-        <VStack>
-          <Button size='lg' onPress={handleFinish} isPending={isMutating}>
-            {buttonLabel}
-          </Button>
+        <VStack gap='md'>
+          {hasError
+            ? (
+              <>
+                <P size='sm'>
+                  An error occurred while confirming accounts.
+                  You will have an opportunity to try again later.
+                </P>
+                <P size='sm'>
+                  No data will be synced until you confirm.
+                </P>
+                <Button size='lg' onPress={handleDismiss}>
+                  Close
+                </Button>
+              </>
+            )
+            : (
+              <Button size='lg' onPress={handleFinish} isPending={isMutating}>
+                {buttonLabel}
+              </Button>
+            )
+          }
         </VStack>
       </ModalActions>
     </>
@@ -186,7 +210,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
 }
 
 export function LinkedAccountsConfirmationModal() {
-  const { isOpen: isOpen, onDismiss } = useLinkedAccountsConfirmationModal()
+  const { isOpen, onDismiss } = useLinkedAccountsConfirmationModal()
 
   return (
     <Modal isOpen={isOpen} onOpenChange={(isOpen) => {
