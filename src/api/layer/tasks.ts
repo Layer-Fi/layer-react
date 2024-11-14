@@ -17,7 +17,7 @@ export const markTaskAsComplete = post<{ data: TaskTypes }>(
 )
 
 export const completeTaskWithUpload =
-  (baseUrl: string, accessToken: string) =>
+  (baseUrl: string, accessToken?: string) =>
   ({
     businessId,
     taskId,

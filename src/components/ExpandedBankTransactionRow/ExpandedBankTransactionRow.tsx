@@ -42,6 +42,7 @@ import { ToggleSize } from '../Toggle/Toggle'
 import { Text, ErrorText, TextSize } from '../Typography'
 import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
+import { useAuth } from '../../hooks/useAuth'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -155,7 +156,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [memoText, setMemoText] = useState<string | undefined>()
     const [isLoaded, setIsLoaded] = useState(false)
 
-    const { auth, businessId, apiUrl } = useLayerContext()
+    const { businessId, apiUrl } = useLayerContext()
+    const { data: auth } = useAuth()
 
     const defaultCategory =
       bankTransaction.category ||
@@ -284,7 +286,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     const save = async () => {
       if (showDescriptions && memoText != undefined) {
-        await Layer.updateBankTransactionMetadata(apiUrl, auth.access_token, {
+        await Layer.updateBankTransactionMetadata(apiUrl, auth?.access_token, {
           params: {
             businessId: businessId,
             bankTransactionId: bankTransaction.id,
@@ -344,7 +346,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const fetchMemos = async () => {
       const getBankTransactionMetadata = Layer.getBankTransactionMetadata(
         apiUrl,
-        auth.access_token,
+        auth?.access_token,
         {
           params: {
             businessId: businessId,

@@ -132,7 +132,7 @@ export const getBankTransactionDocument = get<{
 )
 
 export const archiveBankTransactionDocument = post<{
-  data: {}
+  data: Record<never, never>
   errors: unknown
 }>(
   ({ businessId, bankTransactionId, documentId }) =>
@@ -140,7 +140,7 @@ export const archiveBankTransactionDocument = post<{
 )
 
 export const uploadBankTransactionDocument =
-  (baseUrl: string, accessToken: string) =>
+  (baseUrl: string, accessToken?: string) =>
   ({
     businessId,
     bankTransactionId,

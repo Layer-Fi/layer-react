@@ -8,6 +8,7 @@ import React, {
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { BankTransaction } from '../../types'
+import { useAuth } from '../../hooks/useAuth'
 
 interface MemoTextProps {
   bankTransaction: BankTransaction
@@ -29,7 +30,8 @@ export const MemoTextContext = createContext<MemoTextContextType>({
 export const useMemoTextContext = () => useContext(MemoTextContext)
 
 const useMemoText = ({ bankTransaction, isActive }: MemoTextProps) => {
-  const { auth, businessId, apiUrl } = useLayerContext()
+  const { businessId, apiUrl } = useLayerContext()
+  const { data: auth } = useAuth()
 
   const [memoText, setMemoText] = useState<string | undefined>()
   const [isLoaded, setIsLoaded] = useState(false)
@@ -46,7 +48,7 @@ const useMemoText = ({ bankTransaction, isActive }: MemoTextProps) => {
     try {
       const getBankTransactionMetadata = Layer.getBankTransactionMetadata(
         apiUrl,
-        auth.access_token,
+        auth?.access_token,
         {
           params: {
             businessId: businessId,
@@ -64,7 +66,7 @@ const useMemoText = ({ bankTransaction, isActive }: MemoTextProps) => {
   const saveMemoText = async () => {
     try {
       if (memoText !== undefined) {
-        await Layer.updateBankTransactionMetadata(apiUrl, auth.access_token, {
+        await Layer.updateBankTransactionMetadata(apiUrl, auth?.access_token, {
           params: {
             businessId: businessId,
             bankTransactionId: bankTransaction.id,

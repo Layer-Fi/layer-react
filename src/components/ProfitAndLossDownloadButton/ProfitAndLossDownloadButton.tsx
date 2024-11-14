@@ -5,6 +5,7 @@ import { MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
 import { DownloadButton as DownloadButtonComponent } from '../Button'
 import { ProfitAndLoss } from '../ProfitAndLoss'
+import { useAuth } from '../../hooks/useAuth'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -30,7 +31,10 @@ export const ProfitAndLossDownloadButton = ({
   const { getProfitAndLossComparisonCsv } = useContext(
     ProfitAndLoss.ComparisonContext,
   )
-  const { auth, businessId, apiUrl } = useLayerContext()
+
+  const { businessId, apiUrl } = useLayerContext()
+  const { data: auth } = useAuth()
+
   const [requestFailed, setRequestFailed] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
 
@@ -38,7 +42,7 @@ export const ProfitAndLossDownloadButton = ({
     setIsDownloading(true)
     const getProfitAndLossCsv = Layer.getProfitAndLossCsv(
       apiUrl,
-      auth.access_token,
+      auth?.access_token,
       {
         params: {
           businessId: businessId,

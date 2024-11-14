@@ -2,11 +2,9 @@ import { ToastProps } from '../components/Toast/Toast'
 import { LayerError } from '../models/ErrorHandler'
 import { EventCallbacks } from '../providers/LayerProvider/LayerProvider'
 import { Business, Category } from '../types'
-import { ExpiringOAuthResponse } from './authentication'
 import { DataModel } from './general'
 
 export type LayerContextValues = {
-  auth: ExpiringOAuthResponse
   businessId: string
   business?: Business
   categories: Category[]
@@ -101,10 +99,6 @@ export enum LayerContextActionName {
 }
 
 export type LayerContextAction =
-  | {
-      type: LayerContextActionName.setAuth
-      payload: { auth: LayerContextValues['auth'] }
-    }
   | {
       type: LayerContextActionName.setBusiness
       payload: { business: LayerContextValues['business'] }

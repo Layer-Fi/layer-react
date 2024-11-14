@@ -5,6 +5,7 @@ import { BalanceSheet } from '../../types'
 import { DataModel } from '../../types/general'
 import { format, startOfDay } from 'date-fns'
 import useSWR from 'swr'
+import { useAuth } from '../useAuth'
 
 type UseBalanceSheet = (date?: Date) => {
   data: BalanceSheet | undefined
@@ -14,8 +15,10 @@ type UseBalanceSheet = (date?: Date) => {
 }
 
 export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
-  const { auth, businessId, apiUrl, read, syncTimestamps, hasBeenTouched } =
+  const { businessId, apiUrl, read, syncTimestamps, hasBeenTouched } =
     useLayerContext()
+  const { data: auth } = useAuth()
+
   const dateString = format(startOfDay(date), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
 
   const queryKey =

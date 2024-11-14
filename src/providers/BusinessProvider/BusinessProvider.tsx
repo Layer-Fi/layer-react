@@ -21,7 +21,6 @@ import {
 import { buildColorsPalette } from '../../utils/colors'
 import { BankTransactionsProvider } from '../BankTransactionsProvider'
 import { Props } from '../LayerProvider/LayerProvider'
-import { add } from 'date-fns'
 import useSWR, { SWRConfiguration } from 'swr'
 import { EnvironmentConfigs } from '../LayerProvider/environment'
 import { useAuth } from '../../hooks/useAuth'
@@ -31,7 +30,6 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   action,
 ) => {
   switch (action.type) {
-    case Action.setAuth:
     case Action.setBusiness:
     case Action.setCategories:
     case Action.setTheme:
@@ -66,11 +64,8 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
 }
 
 export const BusinessProvider = ({
-  appId,
-  appSecret,
   businessId,
   children,
-  businessAccessToken,
   environment = 'production',
   theme,
   usePlaidSandbox,
@@ -90,16 +85,10 @@ export const BusinessProvider = ({
 
   const {
     apiUrl,
-    usePlaidSandbox: defaultUsePlaidSandbox,
+    usePlaidSandbox: defaultUsePlaidSandbox
   } = EnvironmentConfigs[environment]
 
   const [state, dispatch] = useReducer(reducer, {
-    auth: {
-      access_token: '',
-      token_type: '',
-      expires_in: 0,
-      expires_at: new Date(2000, 1, 1),
-    },
     businessId,
     business: undefined,
     categories: [],
@@ -122,37 +111,11 @@ export const BusinessProvider = ({
     resetCaches,
   } = useDataSync()
 
-  const { data: auth } = useAuth({ appId, appSecret, businessAccessToken, environment })
-
-  useEffect(() => {
-    if (businessAccessToken) {
-      dispatch({
-        type: Action.setAuth,
-        payload: {
-          auth: {
-            access_token: businessAccessToken,
-            token_type: 'Bearer',
-            expires_in: 3600,
-            expires_at: add(new Date(), { seconds: 3600.0 }),
-          },
-        },
-      })
-    } else if (auth?.access_token) {
-      dispatch({
-        type: Action.setAuth,
-        payload: {
-          auth: {
-            ...auth,
-            expires_at: add(new Date(), { seconds: auth.expires_in }),
-          },
-        },
-      })
-    }
-  }, [businessAccessToken, auth])
+  const { data: auth } = useAuth()
 
   const { data: categoriesData } = useSWR(
-    businessId && state.auth?.access_token && `categories-${businessId}`,
-    Layer.getCategories(apiUrl, state.auth?.access_token, {
+    businessId && auth?.access_token && `categories-${businessId}`,
+    Layer.getCategories(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
     {
@@ -178,8 +141,8 @@ export const BusinessProvider = ({
   }, [categoriesData])
 
   const { data: businessData } = useSWR(
-    businessId && state?.auth?.access_token && `business-${businessId}`,
-    Layer.getBusiness(apiUrl, state?.auth?.access_token, {
+    businessId && auth?.access_token && `business-${businessId}`,
+    Layer.getBusiness(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
     {
