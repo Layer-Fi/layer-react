@@ -9,6 +9,7 @@ import { DataState, DataStateStatus } from '../DataState'
 import { LinkedAccountItemThumb } from '../LinkedAccounts'
 import { Loader } from '../Loader'
 import { Heading, HeadingSize } from '../Typography'
+import { LinkedAccountsConfirmationModal } from '../LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'
 
 export interface LinkAccountsStringOverrides {
   backButtonText?: string
@@ -112,6 +113,7 @@ export const LinkAccountsContent = ({
           </Button>
         }
       />
+      <LinkedAccountsConfirmationModal />
 
       {onBack || onNext ? (
         <div className='Layer__link-accounts__footer'>
