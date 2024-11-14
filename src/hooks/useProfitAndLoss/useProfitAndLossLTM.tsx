@@ -6,6 +6,7 @@ import { DataModel, LoadedStatus } from '../../types/general'
 import { ProfitAndLossSummary } from '../../types/profit_and_loss'
 import { startOfMonth, sub } from 'date-fns'
 import useSWR from 'swr'
+import { useAuth } from '../useAuth'
 
 type UseProfitAndLossLTMProps = {
   currentDate: Date
@@ -60,8 +61,10 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     currentDate: startOfMonth(Date.now()),
   },
 ) => {
-  const { businessId, auth, apiUrl, syncTimestamps, read, hasBeenTouched } =
+  const { businessId, apiUrl, syncTimestamps, read, hasBeenTouched } =
     useLayerContext()
+  const { data: auth } = useAuth()
+
   const [date, setDate] = useState(currentDate)
   const [loaded, setLoaded] = useState<LoadedStatus>('initial')
   const [data, setData] = useState<ProfitAndLossSummaryData[]>([])

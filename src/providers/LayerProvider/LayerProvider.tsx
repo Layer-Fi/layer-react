@@ -4,6 +4,7 @@ import { BusinessProvider } from '../../providers/BusinessProvider/BusinessProvi
 import { LayerThemeConfig } from '../../types/layer_context'
 import { SWRConfig, SWRConfiguration } from 'swr'
 import type { Environment } from './environment'
+import { AuthInputProvider } from '../AuthInputProvider'
 
 export type EventCallbacks = {
   onTransactionCategorized?: (bankTransactionId: string) => void
@@ -22,7 +23,13 @@ export type Props = {
   eventCallbacks?: EventCallbacks
 }
 
-export const LayerProvider = (props: PropsWithChildren<Props>) => {
+export const LayerProvider = ({
+  appId,
+  appSecret,
+  businessAccessToken,
+  environment,
+  ...restProps
+}: PropsWithChildren<Props>) => {
   const defaultSWRConfig: SWRConfiguration = {
     refreshInterval: 0,
     revalidateOnFocus: false,
@@ -32,7 +39,14 @@ export const LayerProvider = (props: PropsWithChildren<Props>) => {
 
   return (
     <SWRConfig value={{ ...defaultSWRConfig, provider: () => new Map() }}>
-      <BusinessProvider {...props} />
+      <AuthInputProvider
+        appId={appId}
+        appSecret={appSecret}
+        businessAccessToken={businessAccessToken}
+        environment={environment}
+      >
+        <BusinessProvider {...restProps} environment={environment} />
+      </AuthInputProvider>
     </SWRConfig>
   )
 }

@@ -7,6 +7,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { BankTransaction } from '../../types'
 import { hasReceipts } from '../../utils/bankTransactions'
 import { parseISO, format as formatTime } from 'date-fns'
+import { useAuth } from '../useAuth'
 
 export interface UseReceiptsProps {
   bankTransaction: BankTransaction
@@ -28,7 +29,8 @@ export const useReceipts: UseReceipts = ({
   bankTransaction,
   isActive,
 }: UseReceiptsProps) => {
-  const { auth, businessId, apiUrl } = useLayerContext()
+  const { businessId, apiUrl } = useLayerContext()
+  const { data: auth } = useAuth()
   const { updateOneLocal: updateBankTransaction } = useBankTransactionsContext()
 
   const [receiptUrls, setReceiptUrls] = useState<DocumentWithStatus[]>([])
@@ -43,7 +45,7 @@ export const useReceipts: UseReceipts = ({
   const fetchDocuments = async () => {
     const listBankTransactionDocuments = Layer.listBankTransactionDocuments(
       apiUrl,
-      auth.access_token,
+      auth?.access_token,
       {
         params: {
           businessId: businessId,
@@ -80,7 +82,7 @@ export const useReceipts: UseReceipts = ({
       setReceiptUrls(receipts)
       const uploadDocument = Layer.uploadBankTransactionDocument(
         apiUrl,
-        auth.access_token,
+        auth?.access_token,
       )
       const result = await uploadDocument({
         businessId: businessId,
@@ -136,7 +138,7 @@ export const useReceipts: UseReceipts = ({
             return url
           }),
         )
-        await Layer.archiveBankTransactionDocument(apiUrl, auth.access_token, {
+        await Layer.archiveBankTransactionDocument(apiUrl, auth?.access_token, {
           params: {
             businessId: businessId,
             bankTransactionId: bankTransaction.id,

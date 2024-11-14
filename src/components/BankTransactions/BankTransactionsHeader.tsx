@@ -13,6 +13,7 @@ import { Heading, HeadingSize } from '../Typography'
 import { MobileComponentType } from './constants'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { useAuth } from '../../hooks/useAuth'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -43,7 +44,9 @@ const DownloadButton = ({
   downloadButtonTextOverride?: string
   iconOnly?: boolean
 }) => {
-  const { auth, businessId, apiUrl } = useLayerContext()
+  const { businessId, apiUrl } = useLayerContext()
+  const { data: auth } = useAuth()
+
   const [requestFailed, setRequestFailed] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const handleClick = async () => {
@@ -51,7 +54,7 @@ const DownloadButton = ({
     const currentYear = new Date().getFullYear().toString()
     const getBankTransactionsCsv = Layer.getBankTransactionsCsv(
       apiUrl,
-      auth.access_token,
+      auth?.access_token,
       {
         params: {
           businessId: businessId,

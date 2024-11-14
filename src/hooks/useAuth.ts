@@ -1,6 +1,7 @@
 import useSWR from 'swr'
 import { EnvironmentConfigs, type Environment } from '../providers/LayerProvider/environment'
 import type { OAuthResponse } from '../types'
+import { useAuthInput } from '../providers/AuthInputProvider'
 
 type ClientSpecificOptions = {
   appId: string
@@ -43,8 +44,11 @@ function buildKey({
   businessAccessToken,
   environment,
  }: KeyBuilderOptions) {
+  const { apiUrl, authUrl, scope } = EnvironmentConfigs[environment]
+
   if (businessAccessToken) {
     return {
+      apiUrl,
       businessAccessToken,
       mode: 'explicit' as const,
       tags: [ '#auth' ],
@@ -52,9 +56,8 @@ function buildKey({
   }
 
   if (appId && appSecret) {
-    const { authUrl, scope } = EnvironmentConfigs[environment]
-
     return {
+      apiUrl,
       appId,
       appSecret,
       authUrl,
@@ -70,31 +73,30 @@ function buildKey({
 const DEFAULT_EXPIRES_IN_SECONDS = 3600
 const FALLBACK_REFRESH_MS = 1000
 
-type AuthOptions = Partial<ClientSpecificOptions> & {
-  environment?: Environment
-  businessAccessToken?: string
-}
+export function useAuth() {
+  const {
+    appId,
+    appSecret,
+    businessAccessToken,
+    environment = 'production'
+  } = useAuthInput()
 
-export function useAuth({
-  appId,
-  appSecret,
-  businessAccessToken,
-  environment = 'production'
-}: AuthOptions) {
   return useSWR(
     () => buildKey({ appId, appSecret, businessAccessToken, environment }),
     (key) => {
       if (key.mode === 'explicit') {
-        const { businessAccessToken } = key
+        const { businessAccessToken, apiUrl } = key
         return {
+          apiUrl,
+          access_token: businessAccessToken,
           expires_in: DEFAULT_EXPIRES_IN_SECONDS,
           token_type: 'Bearer' as const,
-          access_token: businessAccessToken
         }
       }
 
-      const { appId, appSecret, authUrl, scope } = key
+      const { apiUrl, appId, appSecret, authUrl, scope } = key
       return requestOAuthToken({ appId, appSecret, authUrl, scope })
+        .then((data) => ({ apiUrl, ...data }))
     },
     {
       refreshInterval: (latestData) => {

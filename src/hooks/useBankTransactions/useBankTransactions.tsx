@@ -22,6 +22,7 @@ import {
   collectAccounts,
 } from './utils'
 import useSWRInfinite from 'swr/infinite'
+import { useAuth } from '../useAuth'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
@@ -78,7 +79,6 @@ const filtersSettingString = (filters?: BankTransactionFilters): string => {
 
 export const useBankTransactions: UseBankTransactions = params => {
   const {
-    auth,
     businessId,
     apiUrl,
     addToast,
@@ -88,6 +88,8 @@ export const useBankTransactions: UseBankTransactions = params => {
     hasBeenTouched,
     eventCallbacks,
   } = useLayerContext()
+  const { data: auth } = useAuth()
+
   const { scope = undefined } = params ?? {}
   const [filters, setTheFilters] = useState<BankTransactionFilters | undefined>(
     scope ? { categorizationStatus: scope } : undefined,
@@ -270,7 +272,7 @@ export const useBankTransactions: UseBankTransactions = params => {
       updateOneLocal({ ...foundBT, processing: true, error: undefined })
     }
 
-    return Layer.categorizeBankTransaction(apiUrl, auth.access_token, {
+    return Layer.categorizeBankTransaction(apiUrl, auth?.access_token, {
       params: { businessId, bankTransactionId: id },
       body: newCategory,
     })
@@ -323,7 +325,7 @@ export const useBankTransactions: UseBankTransactions = params => {
       updateOneLocal({ ...foundTransferBt, processing: true, error: undefined })
     }
 
-    return Layer.matchBankTransaction(apiUrl, auth.access_token, {
+    return Layer.matchBankTransaction(apiUrl, auth?.access_token, {
       params: { businessId, bankTransactionId: id },
       body: { match_id: matchId, type: BankTransactionMatchType.CONFIRM_MATCH },
     })

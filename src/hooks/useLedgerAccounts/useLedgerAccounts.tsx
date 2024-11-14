@@ -4,6 +4,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { LedgerAccounts, LedgerAccountsEntry } from '../../types'
 import { DataModel } from '../../types/general'
 import useSWR from 'swr'
+import { useAuth } from '../useAuth'
 
 type UseLedgerAccounts = (showReversalEntries: boolean) => {
   data?: LedgerAccounts
@@ -25,8 +26,9 @@ type UseLedgerAccounts = (showReversalEntries: boolean) => {
 export const useLedgerAccounts: UseLedgerAccounts = (
   showReversalEntries: boolean = false,
 ) => {
-  const { auth, businessId, apiUrl, read, syncTimestamps, hasBeenTouched } =
+  const { businessId, apiUrl, read, syncTimestamps, hasBeenTouched } =
     useLayerContext()
+  const { data: auth } = useAuth()
 
   const [accountId, setAccountId] = useState<string | undefined>()
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()

@@ -10,6 +10,7 @@ import {
 import { BaseSelectOption, DataModel } from '../../types/general'
 import { endOfMonth, formatISO, startOfMonth } from 'date-fns'
 import useSWR from 'swr'
+import { useAuth } from '../useAuth'
 
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []
@@ -142,7 +143,6 @@ export const useChartOfAccounts = (
   },
 ) => {
   const {
-    auth,
     businessId,
     apiUrl,
     touch,
@@ -150,6 +150,9 @@ export const useChartOfAccounts = (
     syncTimestamps,
     hasBeenTouched,
   } = useLayerContext()
+  const {
+    data: auth,
+  } = useAuth()
 
   const [form, setForm] = useState<ChartOfAccountsForm | undefined>()
   const [sendingForm, setSendingForm] = useState(false)

@@ -9,6 +9,7 @@ import {
   ProfitAndLossComparisonItem,
 } from '../../types/profit_and_loss'
 import { startOfMonth, subMonths, getYear, getMonth } from 'date-fns'
+import { useAuth } from '../useAuth'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -71,7 +72,8 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
   const [isValidating, setIsValidating] = useState(false)
   const [error, setError] = useState<unknown>(null)
 
-  const { auth, businessId, apiUrl } = useLayerContext()
+  const { businessId, apiUrl } = useLayerContext()
+  const { data: auth } = useAuth()
 
   useEffect(() => {
     if (
@@ -149,7 +151,7 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
       compareMonths: number,
       compareOptions: TagComparisonOption[],
     ) => {
-      if (!auth.access_token || !businessId || !apiUrl) {
+      if (!auth?.access_token || !businessId || !apiUrl) {
         return
       }
       setIsLoading(true)
@@ -186,10 +188,7 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
     [
       apiUrl,
       auth,
-      auth?.access_token,
       businessId,
-      compareOptions,
-      compareMonths,
       reportingBasis,
     ],
   )
@@ -200,7 +199,7 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
   ) => {
     const periods = preparePeriodsBody(dateRange, compareMonths)
     const tagFilters = prepareFiltersBody(compareOptions)
-    return Layer.profitAndLossComparisonCsv(apiUrl, auth.access_token, {
+    return Layer.profitAndLossComparisonCsv(apiUrl, auth?.access_token, {
       params: {
         businessId,
         moneyFormat,
