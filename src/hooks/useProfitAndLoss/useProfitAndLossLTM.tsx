@@ -8,6 +8,7 @@ import { startOfMonth, sub } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 type UseProfitAndLossLTMProps = {
   currentDate: Date
@@ -62,18 +63,19 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     currentDate: startOfMonth(Date.now()),
   },
 ) => {
-  const { businessId, syncTimestamps, read, hasBeenTouched } =
+  const { syncTimestamps, read, hasBeenTouched } =
     useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
+  const { businessId } = useBusinessId()
 
   const [date, setDate] = useState(currentDate)
   const [loaded, setLoaded] = useState<LoadedStatus>('initial')
   const [data, setData] = useState<ProfitAndLossSummaryData[]>([])
 
-  const { startYear, startMonth, endYear, endMonth } = useMemo(() => {
-    return buildDates({ currentDate: date })
-  }, [date, businessId, tagFilter, reportingBasis])
+  const { startYear, startMonth, endYear, endMonth } = useMemo(() => buildDates({
+    currentDate: date
+  }), [date])
 
   const queryKey =
     businessId &&

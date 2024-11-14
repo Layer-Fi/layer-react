@@ -5,7 +5,6 @@ import { Business, Category } from '../types'
 import { DataModel } from './general'
 
 export type LayerContextValues = {
-  businessId: string
   business?: Business
   categories: Category[]
   theme?: LayerThemeConfig

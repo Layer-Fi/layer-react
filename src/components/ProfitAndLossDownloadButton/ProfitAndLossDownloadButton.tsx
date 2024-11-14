@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
 import { MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
 import { DownloadButton as DownloadButtonComponent } from '../Button'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -33,7 +33,7 @@ export const ProfitAndLossDownloadButton = ({
     ProfitAndLoss.ComparisonContext,
   )
 
-  const { businessId } = useLayerContext()
+  const { businessId } = useBusinessId()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 

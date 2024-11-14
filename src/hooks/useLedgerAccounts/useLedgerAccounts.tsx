@@ -6,6 +6,7 @@ import { DataModel } from '../../types/general'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 type UseLedgerAccounts = (showReversalEntries: boolean) => {
   data?: LedgerAccounts
@@ -27,10 +28,11 @@ type UseLedgerAccounts = (showReversalEntries: boolean) => {
 export const useLedgerAccounts: UseLedgerAccounts = (
   showReversalEntries: boolean = false,
 ) => {
-  const { businessId, read, syncTimestamps, hasBeenTouched } =
+  const { read, syncTimestamps, hasBeenTouched } =
     useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
+  const { businessId } = useBusinessId()
 
   const [accountId, setAccountId] = useState<string | undefined>()
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()

@@ -25,14 +25,13 @@ import useSWR from 'swr'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../Environment/EnvironmentInputProvider'
 import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
+import { useBusinessId } from './BusinessInputProvider'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
   action,
 ) => {
   switch (action.type) {
-    case Action.setBusiness:
-    case Action.setCategories:
     case Action.setTheme:
     case Action.setOnboardingStep:
     case Action.setColors:
@@ -65,11 +64,10 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
 }
 
 type BusinessProviderProps = PropsWithChildren<
-  Pick<LayerProviderProps, 'businessId' | 'theme' | 'onError' | 'eventCallbacks'>
+  Pick<LayerProviderProps, 'theme' | 'onError' | 'eventCallbacks'>
 >
 
 export const BusinessProvider = ({
-  businessId,
   children,
   theme,
   onError,
@@ -80,7 +78,6 @@ export const BusinessProvider = ({
   const colors = buildColorsPalette(theme)
 
   const [state, dispatch] = useReducer(reducer, {
-    businessId,
     business: undefined,
     categories: [],
     theme,
@@ -101,6 +98,7 @@ export const BusinessProvider = ({
 
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
+  const { businessId } = useBusinessId()
 
   const { data: categoriesData } = useSWR(
     businessId && auth?.access_token && `categories-${businessId}`,

@@ -9,7 +9,6 @@ import React, {
 } from 'react'
 import { Layer } from '../../api/layer'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import { useLayerContext } from '../../contexts/LayerContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
@@ -44,6 +43,7 @@ import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -157,7 +157,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [memoText, setMemoText] = useState<string | undefined>()
     const [isLoaded, setIsLoaded] = useState(false)
 
-    const { businessId } = useLayerContext()
+    const { businessId } = useBusinessId()
     const { apiUrl } = useEnvironment()
     const { data: auth } = useAuth()
 

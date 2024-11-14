@@ -15,6 +15,7 @@ import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -45,7 +46,7 @@ const DownloadButton = ({
   downloadButtonTextOverride?: string
   iconOnly?: boolean
 }) => {
-  const { businessId } = useLayerContext()
+  const { businessId } = useBusinessId()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 

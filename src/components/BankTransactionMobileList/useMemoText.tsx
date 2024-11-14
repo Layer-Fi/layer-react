@@ -6,10 +6,10 @@ import React, {
   useState,
 } from 'react'
 import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
 import { BankTransaction } from '../../types'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 interface MemoTextProps {
   bankTransaction: BankTransaction
@@ -31,7 +31,7 @@ export const MemoTextContext = createContext<MemoTextContextType>({
 export const useMemoTextContext = () => useContext(MemoTextContext)
 
 const useMemoText = ({ bankTransaction, isActive }: MemoTextProps) => {
-  const { businessId } = useLayerContext()
+  const { businessId } = useBusinessId()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 

@@ -12,6 +12,7 @@ import { endOfMonth, formatISO, startOfMonth } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []
@@ -144,7 +145,6 @@ export const useChartOfAccounts = (
   },
 ) => {
   const {
-    businessId,
     touch,
     read,
     syncTimestamps,
@@ -152,6 +152,7 @@ export const useChartOfAccounts = (
   } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
+  const { businessId } = useBusinessId()
 
   const [form, setForm] = useState<ChartOfAccountsForm | undefined>()
   const [sendingForm, setSendingForm] = useState(false)

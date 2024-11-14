@@ -10,6 +10,7 @@ import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import type { Awaitable } from '../../types/utility/promises'
 import { useAccountConfirmationStoreActions } from '../../providers/AccountConfirmationStoreProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 export function getAccountsNeedingConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
   return linkedAccounts.filter(
@@ -44,14 +45,10 @@ type UseLinkedAccounts = () => {
 const DEBUG = false
 const USE_MOCK_RESPONSE_DATA = false
 
-const MAX_POLLING_ATTEMPTS = 5
-const POLLING_INTERVAL = 1000
-
 type LinkMode = 'update' | 'add'
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
   const {
-    businessId,
     touch,
     read,
     syncTimestamps,
@@ -60,6 +57,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const { apiUrl, usePlaidSandbox } = useEnvironment()
   const { data: auth } = useAuth()
+  const { businessId } = useBusinessId()
   const {
     preload: preloadAccountConfirmation,
     reset: resetAccountConfirmation

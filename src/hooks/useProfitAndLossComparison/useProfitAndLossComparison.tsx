@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { Layer } from '../../api/layer'
 import { TagComparisonOption } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
-import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, MoneyFormat, ReportingBasis } from '../../types'
 import { S3PresignedUrl } from '../../types/general'
 import {
@@ -11,6 +10,7 @@ import {
 import { startOfMonth, subMonths, getYear, getMonth } from 'date-fns'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -73,7 +73,7 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
   const [isValidating, setIsValidating] = useState(false)
   const [error, setError] = useState<unknown>(null)
 
-  const { businessId } = useLayerContext()
+  const { businessId } = useBusinessId()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 

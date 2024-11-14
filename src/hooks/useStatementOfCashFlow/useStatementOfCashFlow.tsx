@@ -7,6 +7,7 @@ import { format, startOfDay } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 type UseStatementOfCashFlow = (
   startDate?: Date,
@@ -22,10 +23,11 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = (
   startDate: Date = new Date(),
   endDate: Date = new Date(),
 ) => {
-  const { businessId, read, syncTimestamps, hasBeenTouched } =
+  const { read, syncTimestamps, hasBeenTouched } =
     useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
+  const { businessId } = useBusinessId()
 
   const startDateString = format(
     startOfDay(startDate),

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 type UseQuickbooks = () => {
   linkQuickbooks: () => Promise<string>;
@@ -15,7 +15,7 @@ type UseQuickbooks = () => {
 const DEBUG = true
 
 export const useQuickbooks: UseQuickbooks = () => {
-  const { businessId } = useLayerContext()
+  const { businessId } = useBusinessId()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 

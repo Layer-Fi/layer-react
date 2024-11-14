@@ -3,12 +3,12 @@ import { Layer } from '../../api/layer'
 import { DocumentWithStatus } from '../../components/BankTransactionReceipts/BankTransactionReceipts'
 import { DATE_FORMAT } from '../../config/general'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import { useLayerContext } from '../../contexts/LayerContext'
 import { BankTransaction } from '../../types'
 import { hasReceipts } from '../../utils/bankTransactions'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 export interface UseReceiptsProps {
   bankTransaction: BankTransaction
@@ -30,7 +30,7 @@ export const useReceipts: UseReceipts = ({
   bankTransaction,
   isActive,
 }: UseReceiptsProps) => {
-  const { businessId } = useLayerContext()
+  const { businessId } = useBusinessId()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
   const { updateOneLocal: updateBankTransaction } = useBankTransactionsContext()

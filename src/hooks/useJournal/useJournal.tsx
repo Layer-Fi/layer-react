@@ -15,6 +15,7 @@ import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
 
 type UseJournal = () => {
   data?: JournalEntry[]
@@ -62,7 +63,6 @@ export interface JournalFormTypes {
 
 export const useJournal: UseJournal = () => {
   const {
-    businessId,
     touch,
     read,
     syncTimestamps,
@@ -70,6 +70,7 @@ export const useJournal: UseJournal = () => {
   } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
+  const { businessId } = useBusinessId()
 
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
 

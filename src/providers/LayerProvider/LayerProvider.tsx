@@ -6,6 +6,7 @@ import { SWRConfig, SWRConfiguration } from 'swr'
 import type { Environment } from '../Environment/environmentConfigs'
 import { AuthInputProvider } from '../AuthInputProvider'
 import { EnvironmentInputProvider } from '../Environment/EnvironmentInputProvider'
+import { BusinessInputProvider } from '../BusinessProvider/BusinessInputProvider'
 
 export type EventCallbacks = {
   onTransactionCategorized?: (bankTransactionId: string) => void
@@ -27,6 +28,7 @@ export type LayerProviderProps = {
 export const LayerProvider = ({
   appId,
   appSecret,
+  businessId,
   businessAccessToken,
   environment,
   usePlaidSandbox,
@@ -47,7 +49,9 @@ export const LayerProvider = ({
           appSecret={appSecret}
           businessAccessToken={businessAccessToken}
         >
-          <BusinessProvider {...restProps} />
+          <BusinessInputProvider businessId={businessId}>
+            <BusinessProvider {...restProps} />
+          </BusinessInputProvider>
         </AuthInputProvider>
       </EnvironmentInputProvider>
     </SWRConfig>
