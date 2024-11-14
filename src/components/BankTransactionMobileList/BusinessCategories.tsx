@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext'
 import { ActionableList } from '../ActionableList'
 import { Text, TextWeight } from '../Typography'
 import { Option, flattenCategories } from './utils'
+import { useCategories } from '../../hooks/useCategories'
 
 export interface BusinessCategoriesProps {
   select: (category: Option) => void
@@ -15,7 +15,7 @@ export const BusinessCategories = ({
   selectedId,
   showTooltips,
 }: BusinessCategoriesProps) => {
-  const { categories } = useLayerContext()
+  const { data: categories = [] } = useCategories()
 
   const categoryOptions = flattenCategories(
     categories.filter(category => category.type != 'ExclusionNested'),

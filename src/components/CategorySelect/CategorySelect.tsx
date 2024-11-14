@@ -7,7 +7,6 @@ import Select, {
   components,
 } from 'react-select'
 import { DATE_FORMAT } from '../../config/general'
-import { useLayerContext } from '../../contexts/LayerContext'
 import Check from '../../icons/Check'
 import ChevronDown from '../../icons/ChevronDown'
 import InfoIcon from '../../icons/InfoIcon'
@@ -23,6 +22,7 @@ import { Text, TextSize } from '../Typography'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import { useCategories } from '../../hooks/useCategories'
 
 type Props = {
   name?: string
@@ -255,7 +255,7 @@ export const CategorySelect = ({
   excludeMatches = false,
   asDrawer = false,
 }: Props) => {
-  const { categories } = useLayerContext()
+  const { data: categories = [] } = useCategories()
 
   const matchOptions =
     !excludeMatches && bankTransaction?.suggested_matches

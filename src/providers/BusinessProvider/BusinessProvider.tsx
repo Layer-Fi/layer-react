@@ -1,5 +1,4 @@
-import React, { PropsWithChildren, useReducer, useEffect, Reducer } from 'react'
-import { Layer } from '../../api/layer'
+import React, { PropsWithChildren, useReducer, Reducer } from 'react'
 import { GlobalWidgets } from '../../components/GlobalWidgets'
 import { ToastProps } from '../../components/Toast/Toast'
 import { DrawerContext } from '../../contexts/DrawerContext'
@@ -21,11 +20,6 @@ import {
 import { buildColorsPalette } from '../../utils/colors'
 import { BankTransactionsProvider } from '../BankTransactionsProvider'
 import { LayerProviderProps } from '../LayerProvider/LayerProvider'
-import useSWR from 'swr'
-import { useAuth } from '../../hooks/useAuth'
-import { useEnvironment } from '../Environment/EnvironmentInputProvider'
-import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
-import { useBusinessId } from './BusinessInputProvider'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -78,7 +72,6 @@ export const BusinessProvider = ({
   const colors = buildColorsPalette(theme)
 
   const [state, dispatch] = useReducer(reducer, {
-    categories: [],
     theme,
     colors,
     onboardingStep: undefined,
@@ -94,37 +87,6 @@ export const BusinessProvider = ({
     hasBeenTouched,
     resetCaches,
   } = useDataSync()
-
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
-  const { businessId } = useBusinessId()
-
-  const { data: categoriesData } = useSWR(
-    businessId && auth?.access_token && `categories-${businessId}`,
-    Layer.getCategories(apiUrl, auth?.access_token, {
-      params: { businessId },
-    }),
-    {
-      ...DEFAULT_SWR_CONFIG,
-      provider: () => new Map(),
-      onSuccess: response => {
-        if (response?.data?.categories?.length) {
-          dispatch({
-            type: Action.setCategories,
-            payload: { categories: response.data.categories || [] },
-          })
-        }
-      },
-    },
-  )
-  useEffect(() => {
-    if (categoriesData?.data?.categories?.length) {
-      dispatch({
-        type: Action.setCategories,
-        payload: { categories: categoriesData.data.categories || [] },
-      })
-    }
-  }, [categoriesData])
 
   const setTheme = (theme: LayerThemeConfig) => {
     dispatch({
