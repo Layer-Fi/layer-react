@@ -18,14 +18,7 @@ export { Quickbooks } from './components/Quickbooks'
 
 /* ------------------ Reporting ------------------ */
 export { ProfitAndLoss } from './components/ProfitAndLoss'
-/* Profit and loss contains 6 sub-components:
- * - Chart
- * - Context
- * - DatePicker
- * - Summaries
- * - Table
- * - DetailedCharts
- */
+
 export { BalanceSheet } from './components/BalanceSheet'
 export { StatementOfCashFlow } from './components/StatementOfCashFlow'
 
@@ -52,13 +45,5 @@ export { GeneralLedgerView } from './views/GeneralLedger'
 export { ProjectProfitabilityView } from './views/ProjectProfitability'
 export { Reports } from './views/Reports'
 export { ProfitAndLossView } from './components/ProfitAndLossView'
-
-/*
-======================= Hooks & Contexts =======================
-*/
-export { useLayerContext } from './contexts/LayerContext'
-export { useBankTransactionsContext } from './contexts/BankTransactionsContext'
-export { BankTransactionsProvider } from './providers/BankTransactionsProvider'
-export { useDataSync } from './hooks/useDataSync'
 
 export { DisplayState, Direction } from './types/bank_transactions'

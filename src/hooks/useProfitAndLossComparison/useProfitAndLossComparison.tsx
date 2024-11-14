@@ -9,8 +9,8 @@ import {
 } from '../../types/profit_and_loss'
 import { startOfMonth, subMonths, getYear, getMonth } from 'date-fns'
 import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
+import { useEnvironment } from '../../providers/environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/business/BusinessInputProvider'
 
 export type Scope = 'expenses' | 'revenue'
 

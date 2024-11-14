@@ -74,8 +74,6 @@ const ProfitAndLoss = ({
 }
 
 ProfitAndLoss.Chart = ProfitAndLossChart
-ProfitAndLoss.Context = PNLContext
-ProfitAndLoss.ComparisonContext = PNLComparisonContext
 ProfitAndLoss.DatePicker = ProfitAndLossDatePicker
 ProfitAndLoss.CompareOptions = ProfitAndLossCompareOptions
 ProfitAndLoss.Summaries = ProfitAndLossSummaries
@@ -84,4 +82,18 @@ ProfitAndLoss.DetailedCharts = ProfitAndLossDetailedCharts
 ProfitAndLoss.Header = ProfitAndLossHeader
 ProfitAndLoss.Report = ProfitAndLossReport
 ProfitAndLoss.DownloadButton = ProfitAndLossDownloadButton
+
+/**
+ * @deprecated Direct access to the context may be removed in the future
+ */
+ProfitAndLoss.Context = PNLContext
+/**
+ * @deprecated Direct access to the comparison context may be removed in the future
+ */
+ProfitAndLoss.ComparisonContext = PNLComparisonContext
+
+/* Internal Only */
+export { PNLContext, PNLComparisonContext }
+
+/* Public */
 export { ProfitAndLoss }

@@ -7,9 +7,9 @@ import {
   DEFAULT_ALLOWED_PICKER_MODES,
 } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerModeSelector'
-import { ProfitAndLoss } from '../ProfitAndLoss'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { useBusiness } from '../../hooks/useBusiness'
+import { PNLComparisonContext, PNLContext } from '../ProfitAndLoss/ProfitAndLoss'
 
 export type ProfitAndLossDatePickerProps = TimeRangePickerConfig
 
@@ -20,9 +20,9 @@ export const ProfitAndLossDatePicker = ({
   customDateRanges,
 }: ProfitAndLossDatePickerProps) => {
   const { data: business } = useBusiness()
-  const { changeDateRange, dateRange } = useContext(ProfitAndLoss.Context)
+  const { changeDateRange, dateRange } = useContext(PNLContext)
   const { refetch, compareMode, compareMonths } = useContext(
-    ProfitAndLoss.ComparisonContext,
+    PNLComparisonContext,
   )
 
   const [datePickerMode, setDatePickerMode] = useState<DatePickerMode>(

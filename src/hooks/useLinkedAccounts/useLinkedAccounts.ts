@@ -1,25 +1,21 @@
 import { useEffect, useState } from 'react'
 import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { DataModel, LoadedStatus } from '../../types/general'
-import { LinkedAccount, AccountSource } from '../../types/linked_accounts'
+import type { LinkedAccount, AccountSource } from '../../types/linked_accounts'
 import { LINKED_ACCOUNTS_MOCK_DATA } from './mockData'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import type { Awaitable } from '../../types/utility/promises'
 import { useAccountConfirmationStoreActions } from '../../providers/AccountConfirmationStoreProvider'
-import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
+import { useBusinessId } from '../../providers/business/BusinessInputProvider'
+import { useEnvironment } from '../../providers/environment/EnvironmentInputProvider'
 
 export function getAccountsNeedingConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
   return linkedAccounts.filter(
     ({ notifications }) => notifications?.some(({ type }) => type === 'CONFIRM_RELEVANT')
   )
-}
-
-function accountNeedsConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
-  return getAccountsNeedingConfirmation(linkedAccounts).length > 0
 }
 
 type UseLinkedAccounts = () => {

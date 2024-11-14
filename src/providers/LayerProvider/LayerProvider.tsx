@@ -1,12 +1,12 @@
 import React, { PropsWithChildren } from 'react'
 import { LayerError } from '../../models/ErrorHandler'
-import { BusinessProvider } from '../../providers/BusinessProvider/BusinessProvider'
+import { GeneralConfigProvider } from '../general/GeneralConfigProvider'
 import { LayerThemeConfig } from '../../types/layer_context'
 import { SWRConfig, SWRConfiguration } from 'swr'
-import type { Environment } from '../Environment/environmentConfigs'
+import type { Environment } from '../environment/environmentConfigs'
 import { AuthInputProvider } from '../AuthInputProvider'
-import { EnvironmentInputProvider } from '../Environment/EnvironmentInputProvider'
-import { BusinessInputProvider } from '../BusinessProvider/BusinessInputProvider'
+import { EnvironmentInputProvider } from '../environment/EnvironmentInputProvider'
+import { BusinessInputProvider } from '../business/BusinessInputProvider'
 
 export type EventCallbacks = {
   onTransactionCategorized?: (bankTransactionId: string) => void
@@ -50,7 +50,7 @@ export const LayerProvider = ({
           businessAccessToken={businessAccessToken}
         >
           <BusinessInputProvider businessId={businessId}>
-            <BusinessProvider {...restProps} />
+            <GeneralConfigProvider {...restProps} />
           </BusinessInputProvider>
         </AuthInputProvider>
       </EnvironmentInputProvider>

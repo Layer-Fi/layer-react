@@ -14,8 +14,8 @@ import { Layer } from '../../../api/layer'
 import type { Awaitable } from '../../../types/utility/promises'
 import { P } from '../../ui/Typography/Text'
 import { useAuth } from '../../../hooks/useAuth'
-import { useLayerContext } from '../../../contexts/LayerContext'
 import { LoadingSpinner } from '../../ui/Loading/LoadingSpinner'
+import { useBusinessId } from '../../../providers/business/BusinessInputProvider'
 
 type AccountConfirmExcludeFormState = Record<string, boolean>
 
@@ -24,7 +24,7 @@ function useConfirmAndExcludeMultiple(
   { onSuccess }: { onSuccess: () => Awaitable<unknown> }
 ) {
   const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { businessId } = useBusinessId()
 
   const exclude = (accountId: string) => {
     return Layer.excludeAccount(

@@ -5,10 +5,10 @@ import PieChart from '../../icons/PieChart'
 import { LineItem } from '../../types'
 import { TableCellAlign } from '../../types/table'
 import { Loader } from '../Loader'
-import { ProfitAndLoss } from '../ProfitAndLoss'
 import { Table, TableBody, TableCell, TableRow } from '../Table'
 import emptyPNL from './empty_profit_and_loss_report'
 import classNames from 'classnames'
+import { PNLContext } from '../ProfitAndLoss/ProfitAndLoss'
 
 export interface ProfitAndLossTableStringOverrides {
   grossProfitLabel?: string
@@ -30,7 +30,7 @@ export const ProfitAndLossTableComponent = ({
     data: actualData,
     isLoading,
     setSidebarScope,
-  } = useContext(ProfitAndLoss.Context)
+  } = useContext(PNLContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
 
   useEffect(() => {

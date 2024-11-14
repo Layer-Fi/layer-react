@@ -1,16 +1,16 @@
 import React, { useContext } from 'react'
 import { TableProvider } from '../../contexts/TableContext'
-import { ProfitAndLoss } from '../ProfitAndLoss'
 import { ProfitAndLossCompareTable } from './ProfitAndLossCompareTable'
 import {
   ProfitAndLossTableComponent,
   ProfitAndLossTableProps,
 } from './ProfitAndLossTableComponent'
+import { PNLComparisonContext } from '../ProfitAndLoss/ProfitAndLoss'
 
 export const ProfitAndLossTableWithProvider = (
   props: ProfitAndLossTableProps,
 ) => {
-  const { compareMode } = useContext(ProfitAndLoss.ComparisonContext)
+  const { compareMode } = useContext(PNLComparisonContext)
   return (
     <TableProvider>
       {compareMode ? (

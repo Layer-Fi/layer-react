@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useReducer, Reducer } from 'react'
 import { GlobalWidgets } from '../../components/GlobalWidgets'
 import { ToastProps } from '../../components/Toast/Toast'
 import { DrawerContext } from '../../contexts/DrawerContext'
-import { LayerContext } from '../../contexts/LayerContext'
+import { LayerContext } from '../../contexts/LayerContext/LayerContext'
 import { useDataSync } from '../../hooks/useDataSync'
 import { useDrawer } from '../../hooks/useDrawer'
 import { errorHandler } from '../../models/ErrorHandler'
@@ -57,16 +57,16 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   }
 }
 
-type BusinessProviderProps = PropsWithChildren<
+type GeneralConfigProviderProps = PropsWithChildren<
   Pick<LayerProviderProps, 'theme' | 'onError' | 'eventCallbacks'>
 >
 
-export const BusinessProvider = ({
+export const GeneralConfigProvider = ({
   children,
   theme,
   onError,
   eventCallbacks,
-}: PropsWithChildren<BusinessProviderProps>) => {
+}: PropsWithChildren<GeneralConfigProviderProps>) => {
   errorHandler.setOnError(onError)
 
   const colors = buildColorsPalette(theme)
@@ -166,8 +166,6 @@ export const BusinessProvider = ({
     if (state.colors && shade in state.colors) {
       return state.colors[shade]
     }
-
-    return
   }
 
   const setOnboardingStep = (value: OnboardingStep) =>

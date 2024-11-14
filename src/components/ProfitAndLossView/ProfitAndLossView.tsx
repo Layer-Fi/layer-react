@@ -7,6 +7,7 @@ import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossTableStringOverrides } from '../ProfitAndLossTable/ProfitAndLossTableComponent'
+import { PNLContext } from '../ProfitAndLoss/ProfitAndLoss'
 
 const COMPONENT_NAME = 'profit-and-loss'
 
@@ -43,7 +44,7 @@ const ProfitAndLossPanel = ({
   stringOverrides,
   ...props
 }: ProfitAndLossViewPanelProps) => {
-  const { sidebarScope } = useContext(ProfitAndLoss.Context)
+  const { sidebarScope } = useContext(PNLContext)
 
   return (
     <Panel
@@ -71,9 +72,7 @@ const Components = ({
   hideTable = false,
   stringOverrides,
 }: ProfitAndLossViewProps) => {
-  const { error, isLoading, isValidating, refetch } = useContext(
-    ProfitAndLoss.Context,
-  )
+  const { error, isLoading, isValidating, refetch } = useContext(PNLContext)
 
   if (!isLoading && error) {
     return (

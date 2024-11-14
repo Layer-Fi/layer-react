@@ -3,7 +3,7 @@ import { makeBankTransaction } from '../../test/factories/bankTransaction'
 import { useBankTransactions } from './useBankTransactions'
 import { renderHook, waitFor } from '@testing-library/react'
 
-jest.mock('../../contexts/LayerContext', () => ({
+jest.mock('../../contexts/LayerContext/LayerContext', () => ({
   useLayerContext: () => ({
     auth: { access_token: '1234567890' },
     businessId: 'TRUCK',

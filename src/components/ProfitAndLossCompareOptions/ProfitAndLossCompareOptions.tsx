@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { MultiSelect, Select } from '../Input'
-import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import type { StylesConfig } from 'react-select'
+import { PNLComparisonContext, PNLContext } from '../ProfitAndLoss/ProfitAndLoss'
 
 export interface ProfitAndLossCompareOptionsProps {
   tagComparisonOptions: TagComparisonOption[]
@@ -19,9 +19,9 @@ export type TagViewConfig = {
 }
 export type TagFilterInput =
   | {
-      tagKey: string
-      tagValues: string[]
-    }
+    tagKey: string
+    tagValues: string[]
+  }
   | 'None'
 
 const selectStyles = {
@@ -44,9 +44,9 @@ export const ProfitAndLossCompareOptions = ({
     refetch,
     compareMonths,
     compareOptions,
-  } = useContext(ProfitAndLoss.ComparisonContext)
+  } = useContext(PNLComparisonContext)
 
-  const { dateRange } = useContext(ProfitAndLoss.Context)
+  const { dateRange } = useContext(PNLContext)
 
   const [initialDone, setInitialDone] = useState(false)
 
@@ -114,8 +114,8 @@ export const ProfitAndLossCompareOptions = ({
           compareMonths === 0
             ? null
             : timeComparisonOptions.find(
-                option => option.value === compareMonths,
-              )
+              option => option.value === compareMonths,
+            )
         }
         placeholder='Compare months'
       />

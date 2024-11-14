@@ -1,6 +1,6 @@
 import React, { forwardRef, ReactNode } from 'react'
 import { ViewHeader } from '../../components/ViewHeader'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { parseStylesFromThemeConfig } from '../../utils/colors'
 import { Panel } from '../Panel'
 import classNames from 'classnames'

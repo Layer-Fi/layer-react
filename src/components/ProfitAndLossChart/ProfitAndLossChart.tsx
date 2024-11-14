@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState, type FunctionComponent } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import {
   ProfitAndLossSummaryData,
@@ -7,7 +7,6 @@ import {
 } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
 import { isDateAllowedToBrowse } from '../../utils/business'
-import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { Text } from '../Typography'
 import { ChartStateCard } from './ChartStateCard'
 import { Indicator } from './Indicator'
@@ -39,6 +38,7 @@ import {
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 import { Props as LegendProps } from 'recharts/types/component/DefaultLegendContent'
 import { useBusiness } from '../../hooks/useBusiness'
+import { PNLContext } from '../ProfitAndLoss/ProfitAndLoss'
 
 const getChartWindow = ({
   chartWindow,
@@ -149,7 +149,7 @@ export const ProfitAndLossChart = ({
 
   const { getColor } = useLayerContext()
   const { data: business } = useBusiness()
-  const { changeDateRange, dateRange } = useContext(PNL.Context)
+  const { changeDateRange, dateRange } = useContext(PNLContext)
   const [localDateRange, setLocalDateRange] = useState(dateRange)
   const [customCursorSize, setCustomCursorSize] = useState({
     width: 0,

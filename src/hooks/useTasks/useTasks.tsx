@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { LoadedStatus } from '../../types/general'
 import { DataModel } from '../../types/general'
 import { TaskTypes } from '../../types/tasks'
 import { mockData } from './mockData'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
+import { useEnvironment } from '../../providers/environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/business/BusinessInputProvider'
 
 type UseTasks = () => {
   data?: TaskTypes[]

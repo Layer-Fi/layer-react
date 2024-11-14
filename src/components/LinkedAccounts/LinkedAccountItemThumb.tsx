@@ -3,7 +3,7 @@ import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { LinkedAccount } from '../../types/linked_accounts'
 import { LinkedAccountOptions } from '../LinkedAccountOptions'
 import { LinkedAccountThumb } from '../LinkedAccountThumb'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useEnvironment } from '../../providers/environment/EnvironmentInputProvider'
 
 function accountNeedsUniquenessConfirmation({
   notifications

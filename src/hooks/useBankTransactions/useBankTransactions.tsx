@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { TagFilterInput } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import {
   BankTransaction,
   CategorizationStatus,
@@ -28,7 +28,8 @@ import {
 import { endOfMonth, startOfMonth } from 'date-fns'
 import useSWRInfinite from 'swr/infinite'
 import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useEnvironment } from '../../providers/environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/business/BusinessInputProvider'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
@@ -120,6 +121,7 @@ export const useBankTransactions: UseBankTransactions = (
   } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
+  const { businessId } = useBusinessId()
 
   const { scope = undefined } = params ?? {}
   const [filters, setTheFilters] = useState<BankTransactionFilters | undefined>(
@@ -386,7 +388,11 @@ export const useBankTransactions: UseBankTransactions = (
         )
         if (newTransferBT) {
           newTransferBT.recently_categorized = true
-          newTransferBT.match = bt // This gets the wrong leg of the transfer, but the one we want isn't returned by the api call.
+
+          // This gets the wrong leg of the transfer, but the one we want isn't returned by
+          // the api call.
+          newTransferBT.match = bt
+
           newTransferBT.categorization_status = CategorizationStatus.MATCHED
           updateOneLocal(newTransferBT)
         }

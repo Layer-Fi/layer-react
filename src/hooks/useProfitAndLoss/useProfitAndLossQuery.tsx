@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { ProfitAndLoss, ReportingBasis } from '../../types'
 import { DataModel } from '../../types/general'
 import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
+import { useEnvironment } from '../../providers/environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/business/BusinessInputProvider'
 
 type UseProfitAndLossQueryProps = {
   startDate: Date

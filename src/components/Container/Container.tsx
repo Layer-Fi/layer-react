@@ -1,5 +1,5 @@
 import React, { CSSProperties, ReactNode, forwardRef } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { parseStylesFromThemeConfig } from '../../utils/colors'
 import classNames from 'classnames'
 

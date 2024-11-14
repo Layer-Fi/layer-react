@@ -3,7 +3,6 @@ import { Badge } from '../../../components/Badge'
 import { BadgeSize, BadgeVariant } from '../../../components/Badge/Badge'
 import { BadgeLoader } from '../../../components/BadgeLoader'
 import { IconButton } from '../../../components/Button'
-import { ProfitAndLoss } from '../../../components/ProfitAndLoss'
 import { ProfitAndLossSummariesHeading } from '../../../components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesHeading'
 import { StackProps, VStack } from '../../../components/ui/Stack/Stack'
 import { useProfitAndLossLTM } from '../../../hooks/useProfitAndLoss/useProfitAndLossLTM'
@@ -13,6 +12,7 @@ import ChevronRight from '../../../icons/ChevronRight'
 import RefreshCcw from '../../../icons/RefreshCcw'
 import type { Variants } from '../../../utils/styleUtils/sizeVariants'
 import { getMonth, getYear, startOfMonth } from 'date-fns'
+import { PNLContext } from '../../../components/ProfitAndLoss/ProfitAndLoss'
 
 const CLASS_NAME = 'Layer__TransactionsToReview'
 
@@ -34,7 +34,7 @@ export function TransactionsToReview({
 }: TransactionsToReviewProps) {
   const { size = 'sm' } = variants ?? {}
 
-  const { dateRange: contextDateRange } = useContext(ProfitAndLoss.Context)
+  const { dateRange: contextDateRange } = useContext(PNLContext)
   const dateRange = usePnlDateRange ? contextDateRange : undefined
 
   const [toReview, setToReview] = useState(0)

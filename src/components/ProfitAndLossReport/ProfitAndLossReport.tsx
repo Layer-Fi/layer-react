@@ -7,6 +7,7 @@ import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { ProfitAndLossCompareOptionsProps } from '../ProfitAndLossCompareOptions'
 import { View } from '../View'
+import { PNLContext } from '../ProfitAndLoss/ProfitAndLoss'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -28,7 +29,7 @@ export const ProfitAndLossReport = ({
   parentRef,
   view,
 }: ProfitAndLossReportProps) => {
-  const { sidebarScope } = useContext(ProfitAndLoss.Context)
+  const { sidebarScope } = useContext(PNLContext)
 
   return (
     <View

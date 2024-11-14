@@ -1,5 +1,5 @@
 import { getBusiness } from '../api/layer/business'
-import { useBusinessId } from '../providers/BusinessProvider/BusinessInputProvider'
+import { useBusinessId } from '../providers/business/BusinessInputProvider'
 import { useAuth } from './useAuth'
 import useSWR from 'swr'
 

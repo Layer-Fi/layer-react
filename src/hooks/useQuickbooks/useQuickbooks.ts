@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
+import { useEnvironment } from '../../providers/environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/business/BusinessInputProvider'
 
 type UseQuickbooks = () => {
   linkQuickbooks: () => Promise<string>;

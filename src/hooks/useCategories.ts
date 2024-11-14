@@ -1,5 +1,5 @@
 import { getCategories } from '../api/layer/categories'
-import { useBusinessId } from '../providers/BusinessProvider/BusinessInputProvider'
+import { useBusinessId } from '../providers/business/BusinessInputProvider'
 import { useAuth } from './useAuth'
 import useSWR from 'swr'
 

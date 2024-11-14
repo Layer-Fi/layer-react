@@ -3,10 +3,10 @@ import { Layer } from '../../api/layer'
 import { MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
 import { DownloadButton as DownloadButtonComponent } from '../Button'
-import { ProfitAndLoss } from '../ProfitAndLoss'
 import { useAuth } from '../../hooks/useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
+import { useEnvironment } from '../../providers/environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/business/BusinessInputProvider'
+import { PNLComparisonContext, PNLContext } from '../ProfitAndLoss/ProfitAndLoss'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -28,10 +28,8 @@ export const ProfitAndLossDownloadButton = ({
   moneyFormat,
   view,
 }: ProfitAndLossDownloadButtonProps) => {
-  const { dateRange, tagFilter } = useContext(ProfitAndLoss.Context)
-  const { getProfitAndLossComparisonCsv } = useContext(
-    ProfitAndLoss.ComparisonContext,
-  )
+  const { dateRange, tagFilter } = useContext(PNLContext)
+  const { getProfitAndLossComparisonCsv } = useContext(PNLComparisonContext)
 
   const { businessId } = useBusinessId()
   const { apiUrl } = useEnvironment()

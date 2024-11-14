@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useLayerContext } from '../../contexts/LayerContext/LayerContext'
 import { Direction, FormError, FormErrorWithId } from '../../types'
 import { LedgerAccountBalance } from '../../types/chart_of_accounts'
 import { BaseSelectOption, DataModel } from '../../types/general'
@@ -14,8 +14,8 @@ import { getAccountIdentifierPayload } from '../../utils/journal'
 import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
+import { useEnvironment } from '../../providers/environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/business/BusinessInputProvider'
 
 type UseJournal = () => {
   data?: JournalEntry[]

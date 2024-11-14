@@ -8,8 +8,8 @@ import React, {
 import { Layer } from '../../api/layer'
 import { BankTransaction } from '../../types'
 import { useAuth } from '../../hooks/useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
+import { useEnvironment } from '../../providers/environment/EnvironmentInputProvider'
+import { useBusinessId } from '../../providers/business/BusinessInputProvider'
 
 interface MemoTextProps {
   bankTransaction: BankTransaction

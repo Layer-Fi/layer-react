@@ -3,13 +3,13 @@ import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import XIcon from '../../icons/X'
 import { humanizeTitle } from '../../utils/profitAndLossUtils'
 import { Button, BackButton, ButtonVariant } from '../Button'
-import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { Text, TextSize, TextWeight } from '../Typography'
 import { DetailedChart } from './DetailedChart'
 import { DetailedTable, DetailedTableStringOverrides } from './DetailedTable'
 import { Filters } from './Filters'
 import { format } from 'date-fns'
+import { PNLContext } from '../ProfitAndLoss/ProfitAndLoss'
 
 export interface ProfitAndLossDetailedChartsStringOverrides {
   detailedTableStringOverrides?: DetailedTableStringOverrides
@@ -40,7 +40,7 @@ export const ProfitAndLossDetailedCharts = ({
     sidebarScope,
     setSidebarScope,
     setFilterTypes,
-  } = useContext(PNL.Context)
+  } = useContext(PNLContext)
 
   const theScope = scope ? scope : sidebarScope
   const data =

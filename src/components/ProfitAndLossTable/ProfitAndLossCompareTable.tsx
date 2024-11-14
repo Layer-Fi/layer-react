@@ -8,7 +8,7 @@ import {
   mergeComparisonLineItemsAtDepth,
 } from '../../utils/profitAndLossComparisonUtils'
 import { Loader } from '../Loader'
-import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
+import { PNLComparisonContext, PNLContext } from '../ProfitAndLoss/ProfitAndLoss'
 import { Table, TableBody, TableHead, TableRow, TableCell } from '../Table'
 import { ProfitAndLossTableStringOverrides } from './ProfitAndLossTableComponent'
 import classNames from 'classnames'
@@ -20,14 +20,14 @@ interface ProfilAndLostCompareTableProps {
 export const ProfitAndLossCompareTable = ({
   stringOverrides,
 }: ProfilAndLostCompareTableProps) => {
-  const { dateRange } = useContext(ProfitAndLoss.Context)
+  const { dateRange } = useContext(PNLContext)
   const {
     data: comparisonData,
     isLoading,
     compareMonths,
     compareOptions,
     refetch,
-  } = useContext(ProfitAndLoss.ComparisonContext)
+  } = useContext(PNLComparisonContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
 
   useEffect(() => {
