@@ -11,7 +11,6 @@ import {
   getBankTransactionDocument,
   archiveBankTransactionDocument,
 } from './layer/bankTransactions'
-import { getBusiness } from './layer/business'
 import { getCategories } from './layer/categories'
 import {
   getChartOfAccounts,
@@ -61,7 +60,6 @@ import {
 } from './layer/tasks'
 
 export const Layer = {
-  getBusiness,
   categorizeBankTransaction,
   matchBankTransaction,
   createAccount,

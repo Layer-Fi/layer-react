@@ -1,11 +1,10 @@
 import { ToastProps } from '../components/Toast/Toast'
 import { LayerError } from '../models/ErrorHandler'
 import { EventCallbacks } from '../providers/LayerProvider/LayerProvider'
-import { Business, Category } from '../types'
+import { Category } from '../types'
 import { DataModel } from './general'
 
 export type LayerContextValues = {
-  business?: Business
   categories: Category[]
   theme?: LayerThemeConfig
   colors: ColorsPalette
@@ -83,7 +82,6 @@ export interface LayerThemeConfig {
 export type OnboardingStep = undefined | 'connectAccount' | 'complete'
 
 export enum LayerContextActionName {
-  setBusiness = 'LayerContext.setBusiness',
   setCategories = 'LayerContext.setCategories',
   setTheme = 'LayerContext.setTheme',
   setOnboardingStep = 'LayerContext.setOnboardingStep',
@@ -94,10 +92,6 @@ export enum LayerContextActionName {
 }
 
 export type LayerContextAction =
-  | {
-      type: LayerContextActionName.setBusiness
-      payload: { business: LayerContextValues['business'] }
-    }
   | {
       type: LayerContextActionName.setCategories
       payload: { categories: LayerContextValues['categories'] }

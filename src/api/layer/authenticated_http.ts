@@ -3,23 +3,22 @@ import { reportError } from '../../models/ErrorHandler'
 
 export type HTTPVerb = 'get' | 'put' | 'post' | 'patch' | 'options' | 'delete'
 
+type DefaultParams = { businessId: string } & Record<string, string | undefined>
+
 export const get =
   <
     Return extends Record<string, unknown> = Record<string, unknown>,
-    Params extends Record<string, string | undefined> = Record<
-      string,
-      string | undefined
-    >,
+    Params extends DefaultParams = DefaultParams,
   >(
     url: (params: Params) => string,
   ) =>
   (
     baseUrl: string,
     accessToken: string | undefined,
-    options?: { params?: Params },
+    options: { params: Params },
   ) =>
   (): Promise<Return> =>
-    fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
+    fetch(`${baseUrl}${url(options.params)}`, {
       headers: {
         Authorization: 'Bearer ' + (accessToken || ''),
         'Content-Type': 'application/json',
@@ -34,22 +33,19 @@ export const request =
   <
     Return extends Record<string, unknown> = Record<string, unknown>,
     Body extends Record<string, unknown> = Record<string, unknown>,
-    Params extends Record<string, string | undefined> = Record<
-      string,
-      string | undefined
-    >,
+    Params extends DefaultParams = DefaultParams,
   >(
     url: (params: Params) => string,
   ) =>
   (
     baseUrl: string,
     accessToken: string | undefined,
-    options?: {
-      params?: Params
+    options: {
+      params: Params
       body?: Body
     },
   ): Promise<Return> =>
-    fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
+    fetch(`${baseUrl}${url(options.params)}`, {
       headers: {
         Authorization: 'Bearer ' + (accessToken || ''),
         'Content-Type': 'application/json',

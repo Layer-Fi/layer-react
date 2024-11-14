@@ -78,7 +78,6 @@ export const BusinessProvider = ({
   const colors = buildColorsPalette(theme)
 
   const [state, dispatch] = useReducer(reducer, {
-    business: undefined,
     categories: [],
     theme,
     colors,
@@ -126,33 +125,6 @@ export const BusinessProvider = ({
       })
     }
   }, [categoriesData])
-
-  const { data: businessData } = useSWR(
-    businessId && auth?.access_token && `business-${businessId}`,
-    Layer.getBusiness(apiUrl, auth?.access_token, {
-      params: { businessId },
-    }),
-    {
-      ...DEFAULT_SWR_CONFIG,
-      provider: () => new Map(),
-      onSuccess: response => {
-        if (response?.data) {
-          dispatch({
-            type: Action.setBusiness,
-            payload: { business: response.data || [] },
-          })
-        }
-      },
-    },
-  )
-  useEffect(() => {
-    if (businessData?.data) {
-      dispatch({
-        type: Action.setBusiness,
-        payload: { business: businessData.data || [] },
-      })
-    }
-  }, [businessData])
 
   const setTheme = (theme: LayerThemeConfig) => {
     dispatch({

@@ -38,6 +38,7 @@ import {
 } from 'recharts'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 import { Props as LegendProps } from 'recharts/types/component/DefaultLegendContent'
+import { useBusiness } from '../../hooks/useBusiness'
 
 const getChartWindow = ({
   chartWindow,
@@ -146,7 +147,8 @@ export const ProfitAndLossChart = ({
   const [compactView, setCompactView] = useState(false)
   const barSize = compactView ? 10 : 20
 
-  const { getColor, business } = useLayerContext()
+  const { getColor } = useLayerContext()
+  const { data: business } = useBusiness()
   const { changeDateRange, dateRange } = useContext(PNL.Context)
   const [localDateRange, setLocalDateRange] = useState(dateRange)
   const [customCursorSize, setCustomCursorSize] = useState({

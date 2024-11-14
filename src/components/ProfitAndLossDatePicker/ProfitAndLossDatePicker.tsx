@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { DatePicker } from '../DatePicker'
@@ -10,6 +9,7 @@ import {
 import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { useBusiness } from '../../hooks/useBusiness'
 
 export type ProfitAndLossDatePickerProps = TimeRangePickerConfig
 
@@ -19,7 +19,7 @@ export const ProfitAndLossDatePicker = ({
   defaultDatePickerMode,
   customDateRanges,
 }: ProfitAndLossDatePickerProps) => {
-  const { business } = useLayerContext()
+  const { data: business } = useBusiness()
   const { changeDateRange, dateRange } = useContext(ProfitAndLoss.Context)
   const { refetch, compareMode, compareMonths } = useContext(
     ProfitAndLoss.ComparisonContext,

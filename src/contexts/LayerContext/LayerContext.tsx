@@ -10,7 +10,6 @@ export const LayerContext = createContext<
   LayerContextValues &
     LayerContextHelpers & { setTheme: (theme: LayerThemeConfig) => void }
 >({
-  business: undefined,
   categories: [],
   theme: undefined,
   colors: {},

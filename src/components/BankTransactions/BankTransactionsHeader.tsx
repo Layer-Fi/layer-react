@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, DisplayState } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { DownloadButton as DownloadButtonComponent } from '../Button'
@@ -16,6 +15,7 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useBusinessId } from '../../providers/BusinessProvider/BusinessInputProvider'
+import { useBusiness } from '../../hooks/useBusiness'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -106,7 +106,7 @@ export const BankTransactionsHeader = ({
   stringOverrides,
   isSyncing,
 }: BankTransactionsHeaderProps) => {
-  const { business } = useLayerContext()
+  const { data: business } = useBusiness()
 
   return (
     <Header
