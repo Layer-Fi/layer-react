@@ -43,6 +43,7 @@ import { Text, ErrorText, TextSize } from '../Typography'
 import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
 import { useAuth } from '../../hooks/useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -156,7 +157,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [memoText, setMemoText] = useState<string | undefined>()
     const [isLoaded, setIsLoaded] = useState(false)
 
-    const { businessId, apiUrl } = useLayerContext()
+    const { businessId } = useLayerContext()
+    const { apiUrl } = useEnvironment()
     const { data: auth } = useAuth()
 
     const defaultCategory =

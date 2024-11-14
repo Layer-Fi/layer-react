@@ -8,6 +8,7 @@ import { BankTransaction } from '../../types'
 import { hasReceipts } from '../../utils/bankTransactions'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useAuth } from '../useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 export interface UseReceiptsProps {
   bankTransaction: BankTransaction
@@ -29,7 +30,8 @@ export const useReceipts: UseReceipts = ({
   bankTransaction,
   isActive,
 }: UseReceiptsProps) => {
-  const { businessId, apiUrl } = useLayerContext()
+  const { businessId } = useLayerContext()
+  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
   const { updateOneLocal: updateBankTransaction } = useBankTransactionsContext()
 

@@ -7,6 +7,7 @@ import { TaskTypes } from '../../types/tasks'
 import { mockData } from './mockData'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type UseTasks = () => {
   data?: TaskTypes[]
@@ -23,7 +24,10 @@ const DEBUG_MODE = false
 
 export const useTasks: UseTasks = () => {
   const [loadedStatus, setLoadedStatus] = useState<LoadedStatus>('initial')
-  const { businessId, apiUrl, read, syncTimestamps, hasBeenTouched } = useLayerContext()
+
+  const { businessId, read, syncTimestamps, hasBeenTouched } = useLayerContext()
+
+  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const queryKey = businessId && auth?.access_token && `tasks-${businessId}`

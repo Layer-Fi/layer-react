@@ -8,12 +8,9 @@ export type LayerContextValues = {
   businessId: string
   business?: Business
   categories: Category[]
-  apiUrl: string
   theme?: LayerThemeConfig
   colors: ColorsPalette
-  usePlaidSandbox: boolean
   onboardingStep?: OnboardingStep
-  environment: string
   toasts: (ToastProps & { isExiting: boolean })[]
   eventCallbacks?: EventCallbacks
 }
@@ -87,7 +84,6 @@ export interface LayerThemeConfig {
 export type OnboardingStep = undefined | 'connectAccount' | 'complete'
 
 export enum LayerContextActionName {
-  setAuth = 'LayerContext.setAuth',
   setBusiness = 'LayerContext.setBusiness',
   setCategories = 'LayerContext.setCategories',
   setTheme = 'LayerContext.setTheme',

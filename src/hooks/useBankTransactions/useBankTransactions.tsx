@@ -23,6 +23,7 @@ import {
 } from './utils'
 import useSWRInfinite from 'swr/infinite'
 import { useAuth } from '../useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
@@ -80,7 +81,6 @@ const filtersSettingString = (filters?: BankTransactionFilters): string => {
 export const useBankTransactions: UseBankTransactions = params => {
   const {
     businessId,
-    apiUrl,
     addToast,
     touch,
     read,
@@ -88,6 +88,7 @@ export const useBankTransactions: UseBankTransactions = params => {
     hasBeenTouched,
     eventCallbacks,
   } = useLayerContext()
+  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const { scope = undefined } = params ?? {}

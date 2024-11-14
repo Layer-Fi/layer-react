@@ -7,6 +7,7 @@ import { LinkedAccount, Source } from '../../types/linked_accounts'
 import { LINKED_ACCOUNTS_MOCK_DATA } from './mockData'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type UseLinkedAccounts = () => {
   data?: LinkedAccount[]
@@ -36,13 +37,13 @@ type LinkMode = 'update' | 'add'
 export const useLinkedAccounts: UseLinkedAccounts = () => {
   const {
     businessId,
-    apiUrl,
-    usePlaidSandbox,
     touch,
     read,
     syncTimestamps,
     hasBeenTouched,
   } = useLayerContext()
+
+  const { apiUrl, usePlaidSandbox } = useEnvironment()
   const { data: auth } = useAuth()
 
   const [linkToken, setLinkToken] = useState<string | null>(null)

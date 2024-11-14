@@ -1,7 +1,8 @@
 import useSWR from 'swr'
-import { EnvironmentConfigs, type Environment } from '../providers/LayerProvider/environment'
+import { EnvironmentConfigs, type Environment } from '../providers/Environment/environmentConfigs'
 import type { OAuthResponse } from '../types'
 import { useAuthInput } from '../providers/AuthInputProvider'
+import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
 
 type ClientSpecificOptions = {
   appId: string
@@ -33,19 +34,17 @@ async function requestOAuthToken({
 }
 
 type KeyBuilderOptions = Partial<ClientSpecificOptions>
-  & {
-    environment: Environment
-    businessAccessToken?: string
-  }
+  & Pick<(typeof EnvironmentConfigs)[Environment], 'authUrl' | 'apiUrl' | 'scope'>
+  & { businessAccessToken?: string }
 
 function buildKey({
   appId,
   appSecret,
   businessAccessToken,
-  environment,
+  apiUrl,
+  authUrl,
+  scope,
  }: KeyBuilderOptions) {
-  const { apiUrl, authUrl, scope } = EnvironmentConfigs[environment]
-
   if (businessAccessToken) {
     return {
       apiUrl,
@@ -75,14 +74,18 @@ const FALLBACK_REFRESH_MS = 1000
 
 export function useAuth() {
   const {
+    apiUrl,
+    authUrl,
+    scope,
+  } = useEnvironment()
+  const {
     appId,
     appSecret,
     businessAccessToken,
-    environment = 'production'
   } = useAuthInput()
 
   return useSWR(
-    () => buildKey({ appId, appSecret, businessAccessToken, environment }),
+    () => buildKey({ appId, appSecret, businessAccessToken, apiUrl, authUrl, scope }),
     (key) => {
       if (key.mode === 'explicit') {
         const { businessAccessToken, apiUrl } = key
