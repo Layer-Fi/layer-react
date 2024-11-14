@@ -10,6 +10,7 @@ import {
 } from '../../types/profit_and_loss'
 import { startOfMonth, subMonths, getYear, getMonth } from 'date-fns'
 import { useAuth } from '../useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -72,7 +73,8 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
   const [isValidating, setIsValidating] = useState(false)
   const [error, setError] = useState<unknown>(null)
 
-  const { businessId, apiUrl } = useLayerContext()
+  const { businessId } = useLayerContext()
+  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   useEffect(() => {

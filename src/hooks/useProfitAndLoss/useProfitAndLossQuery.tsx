@@ -6,6 +6,7 @@ import { DataModel } from '../../types/general'
 import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type UseProfitAndLossQueryProps = {
   startDate: Date
@@ -38,8 +39,9 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
     endDate: endOfMonth(new Date()),
   },
 ) => {
-  const { businessId, apiUrl, syncTimestamps, read, hasBeenTouched } =
+  const { businessId, syncTimestamps, read, hasBeenTouched } =
     useLayerContext()
+  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const queryKey =

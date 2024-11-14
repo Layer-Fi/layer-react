@@ -6,6 +6,7 @@ import { View as ViewType } from '../../types/general'
 import { DownloadButton as DownloadButtonComponent } from '../Button'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { useAuth } from '../../hooks/useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -32,7 +33,8 @@ export const ProfitAndLossDownloadButton = ({
     ProfitAndLoss.ComparisonContext,
   )
 
-  const { businessId, apiUrl } = useLayerContext()
+  const { businessId } = useLayerContext()
+  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const [requestFailed, setRequestFailed] = useState(false)

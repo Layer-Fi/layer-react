@@ -14,6 +14,7 @@ import { MobileComponentType } from './constants'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { useAuth } from '../../hooks/useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -44,7 +45,8 @@ const DownloadButton = ({
   downloadButtonTextOverride?: string
   iconOnly?: boolean
 }) => {
-  const { businessId, apiUrl } = useLayerContext()
+  const { businessId } = useLayerContext()
+  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const [requestFailed, setRequestFailed] = useState(false)

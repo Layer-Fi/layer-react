@@ -7,6 +7,7 @@ import { ProfitAndLossSummary } from '../../types/profit_and_loss'
 import { startOfMonth, sub } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type UseProfitAndLossLTMProps = {
   currentDate: Date
@@ -61,8 +62,9 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     currentDate: startOfMonth(Date.now()),
   },
 ) => {
-  const { businessId, apiUrl, syncTimestamps, read, hasBeenTouched } =
+  const { businessId, syncTimestamps, read, hasBeenTouched } =
     useLayerContext()
+  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const [date, setDate] = useState(currentDate)

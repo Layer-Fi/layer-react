@@ -20,10 +20,10 @@ import {
 } from '../../types/layer_context'
 import { buildColorsPalette } from '../../utils/colors'
 import { BankTransactionsProvider } from '../BankTransactionsProvider'
-import { Props } from '../LayerProvider/LayerProvider'
+import { LayerProviderProps } from '../LayerProvider/LayerProvider'
 import useSWR, { SWRConfiguration } from 'swr'
-import { EnvironmentConfigs } from '../LayerProvider/environment'
 import { useAuth } from '../../hooks/useAuth'
+import { useEnvironment } from '../Environment/EnvironmentInputProvider'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -63,15 +63,17 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   }
 }
 
+type BusinessProviderProps = PropsWithChildren<
+  Pick<LayerProviderProps, 'businessId' | 'theme' | 'onError' | 'eventCallbacks'>
+>
+
 export const BusinessProvider = ({
   businessId,
   children,
-  environment = 'production',
   theme,
-  usePlaidSandbox,
   onError,
   eventCallbacks,
-}: PropsWithChildren<Props>) => {
+}: PropsWithChildren<BusinessProviderProps>) => {
   const defaultSWRConfig: SWRConfiguration = {
     refreshInterval: 0,
     revalidateOnFocus: false,
@@ -83,21 +85,13 @@ export const BusinessProvider = ({
 
   const colors = buildColorsPalette(theme)
 
-  const {
-    apiUrl,
-    usePlaidSandbox: defaultUsePlaidSandbox
-  } = EnvironmentConfigs[environment]
-
   const [state, dispatch] = useReducer(reducer, {
     businessId,
     business: undefined,
     categories: [],
-    apiUrl,
     theme,
     colors,
-    usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox,
     onboardingStep: undefined,
-    environment,
     toasts: [],
     eventCallbacks: {},
   })
@@ -111,6 +105,7 @@ export const BusinessProvider = ({
     resetCaches,
   } = useDataSync()
 
+  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const { data: categoriesData } = useSWR(

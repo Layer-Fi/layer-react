@@ -5,6 +5,7 @@ import { LedgerAccounts, LedgerAccountsEntry } from '../../types'
 import { DataModel } from '../../types/general'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type UseLedgerAccounts = (showReversalEntries: boolean) => {
   data?: LedgerAccounts
@@ -26,8 +27,9 @@ type UseLedgerAccounts = (showReversalEntries: boolean) => {
 export const useLedgerAccounts: UseLedgerAccounts = (
   showReversalEntries: boolean = false,
 ) => {
-  const { businessId, apiUrl, read, syncTimestamps, hasBeenTouched } =
+  const { businessId, read, syncTimestamps, hasBeenTouched } =
     useLayerContext()
+  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const [accountId, setAccountId] = useState<string | undefined>()

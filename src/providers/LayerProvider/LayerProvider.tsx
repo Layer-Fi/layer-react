@@ -3,15 +3,16 @@ import { LayerError } from '../../models/ErrorHandler'
 import { BusinessProvider } from '../../providers/BusinessProvider/BusinessProvider'
 import { LayerThemeConfig } from '../../types/layer_context'
 import { SWRConfig, SWRConfiguration } from 'swr'
-import type { Environment } from './environment'
+import type { Environment } from '../Environment/environmentConfigs'
 import { AuthInputProvider } from '../AuthInputProvider'
+import { EnvironmentInputProvider } from '../Environment/EnvironmentInputProvider'
 
 export type EventCallbacks = {
   onTransactionCategorized?: (bankTransactionId: string) => void
   onTransactionsFetched?: () => void
 }
 
-export type Props = {
+export type LayerProviderProps = {
   businessId: string
   appId?: string
   appSecret?: string
@@ -28,8 +29,9 @@ export const LayerProvider = ({
   appSecret,
   businessAccessToken,
   environment,
+  usePlaidSandbox,
   ...restProps
-}: PropsWithChildren<Props>) => {
+}: PropsWithChildren<LayerProviderProps>) => {
   const defaultSWRConfig: SWRConfiguration = {
     refreshInterval: 0,
     revalidateOnFocus: false,
@@ -39,14 +41,15 @@ export const LayerProvider = ({
 
   return (
     <SWRConfig value={{ ...defaultSWRConfig, provider: () => new Map() }}>
-      <AuthInputProvider
-        appId={appId}
-        appSecret={appSecret}
-        businessAccessToken={businessAccessToken}
-        environment={environment}
-      >
-        <BusinessProvider {...restProps} environment={environment} />
-      </AuthInputProvider>
+      <EnvironmentInputProvider environment={environment} usePlaidSandbox={usePlaidSandbox}>
+        <AuthInputProvider
+          appId={appId}
+          appSecret={appSecret}
+          businessAccessToken={businessAccessToken}
+        >
+          <BusinessProvider {...restProps} />
+        </AuthInputProvider>
+      </EnvironmentInputProvider>
     </SWRConfig>
   )
 }
