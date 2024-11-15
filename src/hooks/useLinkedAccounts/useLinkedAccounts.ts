@@ -10,6 +10,7 @@ import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
 import type { Awaitable } from '../../types/utility/promises'
+import { useAccountConfirmationStoreActions } from '../../providers/AccountConfirmationStoreProvider'
 
 export function getAccountsNeedingConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
   return linkedAccounts.filter(
@@ -60,6 +61,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const { apiUrl, usePlaidSandbox } = useEnvironment()
   const { data: auth } = useAuth()
+  const { preload: preloadAccountConfirmation } = useAccountConfirmationStoreActions()
 
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
@@ -159,10 +161,13 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     publicToken: string,
     metadata: PlaidLinkOnSuccessMetadata,
   ) => {
+    preloadAccountConfirmation()
+
     await Layer.exchangePlaidPublicToken(apiUrl, auth?.access_token, {
       params: { businessId },
       body: { public_token: publicToken, institution: metadata.institution },
     })
+
     pollingInfoRef.current.enabled = true
     refetchAccounts()
   }
@@ -290,7 +295,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       touch(DataModel.LINKED_ACCOUNTS)
     } else {
       console.error(
-        `Denying an account with source ${source} not yet supported`,
+        `Excluding an account with source ${source} not yet supported`,
       )
     }
   }

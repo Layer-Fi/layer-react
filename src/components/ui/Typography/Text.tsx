@@ -8,11 +8,16 @@ type TextProps = {
   slot?: string
   size?: 'xs' | 'sm' | 'md' | 'lg'
   pbe?: 'xs' | 'sm' | 'md' | 'lg'
+  align?: 'center'
 }
 
 const P = forwardRef<HTMLParagraphElement, PropsWithChildren<TextProps>>(
-  ({ children, pbe, size, ...restProps }, ref) => {
-    const dataProperties = useMemo(() => toDataProperties({ pbe, size }), [pbe, size])
+  ({ align, children, pbe, size, ...restProps }, ref) => {
+    const dataProperties = useMemo(() => toDataProperties({
+      align,
+      pbe,
+      size
+    }), [align, pbe, size])
 
     return (
       <p {...restProps} {...dataProperties} className={P_CLASS_NAME} ref={ref}>

@@ -18,4 +18,11 @@
       padding-block-end: var(--spacing-#{$padding});
     }
   }
+
+  $alignments: left center right justify;
+  @each $alignment in $alignments {
+    &[data-align=#{$alignment}] {
+      text-align: $alignment;
+    }
+  }
 }
