@@ -1,10 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import {
+  BankTransactionsContext,
+  useBankTransactionsContext,
+} from '../../contexts/BankTransactionsContext'
+import { useBankTransactions } from '../../hooks/useBankTransactions'
 import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
+import { useIsVisible } from '../../hooks/useIsVisible'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
-import { BankTransaction, DateRange, DisplayState } from '../../types'
+import { BankTransaction, DisplayState } from '../../types'
 import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
@@ -20,7 +25,7 @@ import {
 } from './BankTransactionsHeader'
 import { DataStates } from './DataStates'
 import { MobileComponentType } from './constants'
-import { endOfMonth, parseISO, startOfMonth } from 'date-fns'
+import { endOfMonth, startOfMonth } from 'date-fns'
 
 const COMPONENT_NAME = 'bank-transactions'
 const TEST_EMPTY_STATE = false
@@ -70,9 +75,13 @@ export const BankTransactions = ({
   onError,
   ...props
 }: BankTransactionsWithErrorProps) => {
+  const contextData = useBankTransactions({ monthlyView: props.monthlyView })
+
   return (
     <ErrorBoundary onError={onError}>
-      <BankTransactionsContent {...props} />
+      <BankTransactionsContext.Provider value={contextData}>
+        <BankTransactionsContent {...props} />
+      </BankTransactionsContext.Provider>
     </ErrorBoundary>
   )
 }
@@ -91,12 +100,16 @@ const BankTransactionsContent = ({
   hideHeader = false,
   stringOverrides,
 }: BankTransactionsProps) => {
-  const [currentPage, setCurrentPage] = useState(1)
-  const [initialLoad, setInitialLoad] = useState(true)
-  const [dateRange, setDateRange] = useState<DateRange>({
+  const [ defaultDateRange ] = useState(() => ({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
-  })
+  }))
+
+  const scrollPaginationRef = useRef<HTMLDivElement>(null)
+  const isVisible = useIsVisible(scrollPaginationRef)
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const [initialLoad, setInitialLoad] = useState(true)
   const categorizeView = categorizeViewProp ?? categorizationEnabled(mode)
 
   const {
@@ -125,6 +138,20 @@ const BankTransactionsContent = ({
   useEffect(() => {
     activate()
   }, [])
+
+  useEffect(() => {
+    // Reset date range when switching from monthly view to non-monthly view
+    if (!monthlyView && filters?.dateRange) {
+      setFilters({ ...filters, dateRange: undefined })
+    }
+  }, [monthlyView])
+
+  useEffect(() => {
+    // Fetch more when the user scrolls to the bottom of the page
+    if (monthlyView && isVisible && !isLoading && hasMore) {
+      fetchMore()
+    }
+  }, [monthlyView, isVisible, isLoading, hasMore])
 
   useEffect(() => {
     if (JSON.stringify(inputFilters) !== JSON.stringify(filters)) {
@@ -177,17 +204,13 @@ const BankTransactionsContent = ({
     ? []
     : useMemo(() => {
         if (monthlyView) {
-          return data?.filter(
-            x =>
-              parseISO(x.date) >= dateRange.startDate &&
-              parseISO(x.date) <= dateRange.endDate,
-          )
+          return data
         }
 
         const firstPageIndex = (currentPage - 1) * pageSize
         const lastPageIndex = firstPageIndex + pageSize
         return data?.slice(firstPageIndex, lastPageIndex)
-      }, [currentPage, data, dateRange])
+      }, [currentPage, data, monthlyView])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -262,8 +285,12 @@ const BankTransactionsContent = ({
           mobileComponent={mobileComponent}
           withDatePicker={monthlyView}
           listView={listView}
-          dateRange={dateRange}
-          setDateRange={v => setDateRange(v)}
+          dateRange={{ ...defaultDateRange, ...filters?.dateRange }}
+          setDateRange={v => {
+            if (monthlyView) {
+              setFilters({ ...filters, dateRange: v })
+            }
+          }}
           stringOverrides={stringOverrides?.bankTransactionsHeader}
           isDataLoading={isLoading}
           isSyncing={isSyncing}
@@ -349,6 +376,8 @@ const BankTransactionsContent = ({
           />
         </div>
       )}
+
+      {monthlyView ? <div ref={scrollPaginationRef} /> : null}
     </Container>
   )
 }
