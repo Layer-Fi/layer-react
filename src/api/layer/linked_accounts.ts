@@ -1,5 +1,6 @@
 import { LinkedAccounts, PublicToken } from '../../types/linked_accounts'
 import { get, post } from './authenticated_http'
+import type { OneOf } from '../../types/utility/oneOf'
 
 export const syncConnection = post<
   Record<string, unknown>,
@@ -27,12 +28,18 @@ export const getLinkedAccounts = get<
   }
 >(({ businessId }) => `/v1/businesses/${businessId}/external-accounts`)
 
+type ConfirmAccountBodyBase = Partial<{
+  is_unique: boolean
+  is_relevant: boolean
+}>
+type ConfirmAccountBodyStrict = OneOf<[
+  { is_unique: true } & ConfirmAccountBodyBase,
+  { is_relevant: true } & ConfirmAccountBodyBase,
+]>
+
 export const confirmAccount = post<
   never,
-  Partial<{
-    is_unique: boolean
-    is_relevant: boolean
-  }>,
+  ConfirmAccountBodyStrict,
   {
     businessId: string
     accountId: string
@@ -42,12 +49,18 @@ export const confirmAccount = post<
     `/v1/businesses/${businessId}/external-accounts/${accountId}/confirm`,
 )
 
+type ExcludeAccountBodyBase = Partial<{
+  is_irrelevant: boolean
+  is_duplicate: boolean
+}>
+type ExcludeAccountBodyStrict = OneOf<[
+  { is_irrelevant: true } & ExcludeAccountBodyBase,
+  { is_duplicate: true } & ExcludeAccountBodyBase,
+]>
+
 export const excludeAccount = post<
   never,
-  Partial<{
-    is_irrelevant: boolean,
-    is_duplicate: boolean
-  }>,
+  ExcludeAccountBodyStrict,
   {
     businessId: string
     accountId: string

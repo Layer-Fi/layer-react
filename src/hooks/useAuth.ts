@@ -30,7 +30,7 @@ async function requestOAuthToken({
       client_id: appId,
     }).toString(),
   })
-  .then(res => res.json() as Promise<OAuthResponse>)
+    .then(res => res.json() as Promise<OAuthResponse>)
 }
 
 type KeyBuilderOptions = Partial<ClientSpecificOptions>
@@ -44,7 +44,7 @@ function buildKey({
   apiUrl,
   authUrl,
   scope,
- }: KeyBuilderOptions) {
+}: KeyBuilderOptions) {
   if (businessAccessToken) {
     return {
       apiUrl,

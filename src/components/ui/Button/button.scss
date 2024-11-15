@@ -48,7 +48,14 @@
     font-size: var(--text-lg);
   }
 
+  &[data-disabled] {
+    cursor: not-allowed;
+    color: var(--button-fg-disabled);
+    background-color: var(--button-bg-disabled);
+  }
+
   &[data-pending] {
+    cursor: progress;
     background-color: var(--button-bg-disabled);
   }
 }

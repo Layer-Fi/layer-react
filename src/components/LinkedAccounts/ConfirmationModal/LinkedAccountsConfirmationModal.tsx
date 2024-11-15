@@ -10,22 +10,25 @@ import { useAccountConfirmationStore } from '../../../providers/AccountConfirmat
 import { getAccountsNeedingConfirmation } from '../../../hooks/useLinkedAccounts/useLinkedAccounts'
 import { ConditionalList } from '../../utility/ConditionalList'
 import { LinkedAccountToConfirm } from './LinkedAccountToConfirm'
-import { useLayerContext } from '../../../contexts/LayerContext'
 import { Layer } from '../../../api/layer'
 import type { Awaitable } from '../../../types/utility/promises'
 import { P } from '../../ui/Typography/Text'
+import { useAuth } from '../../../hooks/useAuth'
+import { useLayerContext } from '../../../contexts/LayerContext'
+import { LoadingSpinner } from '../../ui/Loading/LoadingSpinner'
 
-type AccountConfirmDenyFormState = Record<string, boolean>
+type AccountConfirmExcludeFormState = Record<string, boolean>
 
-function useConfirmAndDenyMultiple(
-  formState: AccountConfirmDenyFormState,
+function useConfirmAndExcludeMultiple(
+  formState: AccountConfirmExcludeFormState,
   { onSuccess }: { onSuccess: () => Awaitable<unknown> }
 ) {
-  const { apiUrl, auth, businessId } = useLayerContext()
+  const { data: auth } = useAuth()
+  const { businessId } = useLayerContext()
 
-  const deny = (accountId: string) => {
+  const exclude = (accountId: string) => {
     return Layer.excludeAccount(
-      apiUrl,
+      auth?.apiUrl ?? '',
       auth?.access_token,
       {
         params: {
@@ -40,7 +43,7 @@ function useConfirmAndDenyMultiple(
   }
   const confirm = (accountId: string) => {
     return Layer.confirmAccount(
-      apiUrl,
+      auth?.apiUrl ?? '',
       auth?.access_token,
       {
         params: {
@@ -58,7 +61,7 @@ function useConfirmAndDenyMultiple(
     `/v1/businesses/${businessId}/external-accounts/bulk`,
     () => Promise.all(
       Object.entries(formState).map(([ accountId, isConfirmed ]) =>
-        isConfirmed ? confirm(accountId) : deny(accountId)
+        isConfirmed ? confirm(accountId) : exclude(accountId)
       )
     )
       .then(() => onSuccess())
@@ -81,21 +84,23 @@ function getButtonLabel(
 
   if (confirmedCount === 0) {
     return totalCount > 1
-      ? 'Deny All Accounts'
-      : 'Deny Account'
+      ? 'Exclude All Accounts'
+      : 'Exclude Account'
   }
 
   return `Confirm ${confirmedCount} Selected Account${confirmedCount > 1 ? 's' : ''}`
 }
 
-function getFormComponentLabels(formState: AccountConfirmDenyFormState) {
+function getFormComponentLabels(formState: AccountConfirmExcludeFormState) {
   const values = Object.values(formState)
 
   const totalCount = values.length
   const confirmedCount = values.filter(Boolean).length
 
   const buttonLabel = getButtonLabel({ totalCount, confirmedCount })
-  const descriptionLabel = `${totalCount > 1 ? 'Are any of' : 'Is'} the following account${totalCount > 1 ? 's' : ''} relevant to your business?`
+  const descriptionLabel = totalCount > 1
+    ? 'Select the accounts you use for your business.'
+    : 'Is this account relevant to your business?'
 
   return {
     buttonLabel,
@@ -108,26 +113,77 @@ function useLinkedAccountsConfirmationModal() {
   const accountsNeedingConfirmation = getAccountsNeedingConfirmation(data ?? [])
 
   const {
-    isDismissed,
-    actions: { dismiss: dismissAccountConfirmation }
+    visibility,
+    actions: { dismiss: dismissAccountConfirmation, reset: resetAccountConfirmation }
   } = useAccountConfirmationStore()
 
-  return {
-    isOpen: !isDismissed && accountsNeedingConfirmation.length > 0,
+  const preloadIsOpen = visibility === 'PRELOADED'
+  const mainIsOpen = accountsNeedingConfirmation.length > 0
+
+  const baseInfo = {
     accounts: accountsNeedingConfirmation,
     onDismiss: dismissAccountConfirmation,
+    onFinish: resetAccountConfirmation,
     refetchAccounts,
   }
+
+  if (mainIsOpen) {
+    return {
+      preloadIsOpen: false,
+      mainIsOpen: true,
+      ...baseInfo,
+    } as const
+  }
+
+  if (preloadIsOpen) {
+    return {
+      preloadIsOpen: true,
+      mainIsOpen: false,
+      ...baseInfo,
+    } as const
+  }
+
+  return {
+    preloadIsOpen: false,
+    mainIsOpen: false,
+    ...baseInfo,
+  } as const
+}
+
+function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose: () => void }) {
+  const { onDismiss } = useLinkedAccountsConfirmationModal()
+
+  const handleDismiss = () => {
+    onDismiss()
+    onClose()
+  }
+
+  return (
+    <>
+      <ModalContextBar onClose={handleDismiss} />
+      <ModalHeading pbe='md'>
+        Loading Your Accounts...
+      </ModalHeading>
+      <ModalContent>
+        <VStack slot='center' align='center' gap='md'>
+          <LoadingSpinner size={48} />
+          <P align='center'>
+            This may take a few minutes.
+          </P>
+        </VStack>
+      </ModalContent>
+    </>
+  )
 }
 
 function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
-  const { accounts, onDismiss, refetchAccounts } = useLinkedAccountsConfirmationModal()
+  const { accounts, onDismiss, onFinish, refetchAccounts } = useLinkedAccountsConfirmationModal()
 
   const [ formState, setFormState ] = useState(() => Object.fromEntries(
     accounts.map(({ id }) => [ id, true ])
   ))
 
-  const { trigger, isMutating, error } = useConfirmAndDenyMultiple(formState, {
+  const { trigger, isMutating, error } = useConfirmAndExcludeMultiple(formState, {
     onSuccess: refetchAccounts
   })
   const hasError = Boolean(error)
@@ -140,6 +196,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
   const handleFinish = async () => {
     const success = await trigger()
     if (success) {
+      onFinish()
       onClose()
     }
   }
@@ -150,7 +207,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     <>
       <ModalContextBar onClose={handleDismiss} />
       <ModalHeading pbe='2xs'>
-        Confirm Accounts
+        Confirm Business Accounts
       </ModalHeading>
       <ModalDescription pbe='md'>
         {descriptionLabel}
@@ -159,9 +216,11 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
         <ConditionalList
           list={accounts}
           Empty={
-            <P slot='center'>
-              There are no accounts to confirm. You may close this modal.
-            </P>
+            <VStack slot='center'>
+              <P align='center'>
+                There are no accounts to confirm. You may close this modal.
+              </P>
+            </VStack>
           }
           Container={({ children }) => <VStack gap='md'>{children}</VStack>}
         >
@@ -210,15 +269,15 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
 }
 
 export function LinkedAccountsConfirmationModal() {
-  const { isOpen, onDismiss } = useLinkedAccountsConfirmationModal()
+  const { preloadIsOpen, mainIsOpen } = useLinkedAccountsConfirmationModal()
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={(isOpen) => {
-      if (!isOpen) {
-        onDismiss()
+    <Modal isOpen={preloadIsOpen || mainIsOpen}>
+      {({ close }) =>
+        preloadIsOpen
+          ? <LinkedAccountsConfirmationModalPreloadedContent onClose={close} />
+          : <LinkedAccountsConfirmationModalContent onClose={close} />
       }
-    }}>
-      {({ close }) => <LinkedAccountsConfirmationModalContent onClose={close} />}
     </Modal>
   )
 }

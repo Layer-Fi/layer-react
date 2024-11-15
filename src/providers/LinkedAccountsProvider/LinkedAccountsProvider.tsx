@@ -1,21 +1,26 @@
-import React, { ReactNode } from 'react'
+import React, { type PropsWithChildren } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { AccountConfirmationStoreProvider } from '../AccountConfirmationStoreProvider'
 
-interface LinkedAccountsProviderProps {
-  children: ReactNode
+function InternalLinkedAccountsProvider({ children }: PropsWithChildren) {
+  const linkedAccountsContextData = useLinkedAccounts()
+
+  return (
+    <LinkedAccountsContext.Provider value={linkedAccountsContextData}>
+      {children}
+    </LinkedAccountsContext.Provider>
+  )
 }
 
 export const LinkedAccountsProvider = ({
   children,
-}: LinkedAccountsProviderProps) => {
-  const linkedAccountsContextData = useLinkedAccounts()
+}: PropsWithChildren) => {
   return (
     <AccountConfirmationStoreProvider>
-      <LinkedAccountsContext.Provider value={linkedAccountsContextData}>
+      <InternalLinkedAccountsProvider>
         {children}
-      </LinkedAccountsContext.Provider>
+      </InternalLinkedAccountsProvider>
     </AccountConfirmationStoreProvider>
   )
 }
