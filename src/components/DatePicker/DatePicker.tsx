@@ -14,9 +14,11 @@ import classNames from 'classnames'
 /**
  * @see https://github.com/Hacker0x01/react-datepicker/issues/1333#issuecomment-2363284612
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const ReactDatePicker = (((RDP.default as any).default as any)
   || (RDP.default as any)
   || (RDP as any)) as typeof RDP.default
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 interface DatePickerProps {
   mode: DatePickerMode

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import ReactSelect, {
   DropdownIndicatorProps,
   GroupBase,
@@ -26,17 +26,6 @@ export interface SelectProps<T> {
   styles?: StylesConfig<T, true, GroupBase<T>>
 }
 
-const DropdownIndicator:
-  | React.ComponentType<DropdownIndicatorProps<any, true, GroupBase<any>>>
-  | null
-  | undefined = props => {
-  return (
-    <components.DropdownIndicator {...props}>
-      <ChevronDownFill />
-    </components.DropdownIndicator>
-  )
-}
-
 export const MultiSelect = <T,>({
   name,
   options,
@@ -56,6 +45,13 @@ export const MultiSelect = <T,>({
     isInvalid ? 'Layer__select--error' : '',
     className,
   )
+
+  const DropdownIndicator = useCallback((props: DropdownIndicatorProps<T, true>) => (
+    <components.DropdownIndicator {...props}>
+      <ChevronDownFill />
+    </components.DropdownIndicator>
+  ), [])
+
   return (
     <Tooltip disabled={!isInvalid || !errorMessage}>
       <TooltipTrigger className='Layer__input-tooltip'>

@@ -508,16 +508,27 @@ export const ProfitAndLossChart = ({
     )
   }
 
-  const CustomizedYTick = (props: any) => {
+  const CustomizedYTick = (
+    {
+      verticalAnchor: _verticalAnchor,
+      visibleTicksCount: _visibleTicksCount,
+      tickFormatter: _tickFormatter,
+      payload,
+      ...restProps
+    }: {
+      verticalAnchor: unknown
+      visibleTicksCount: unknown
+      tickFormatter: unknown
+      payload: { value: string | number }
+    }) => {
     return (
-      <text {...props} className='Layer__chart_y-axis-tick'>
-        <tspan dy='0.355em'>{formatYAxisValue(props.payload.value)}</tspan>
+      <text {...restProps} className='Layer__chart_y-axis-tick'>
+        <tspan dy='0.355em'>{formatYAxisValue(payload.value)}</tspan>
       </text>
     )
   }
 
-  const CustomizedCursor = (props: any) => {
-    const { points } = props
+  const CustomizedCursor = ({ points }: { points: [{ x: number, y: number }] }) => {
     const { width, height } = customCursorSize
 
     return (

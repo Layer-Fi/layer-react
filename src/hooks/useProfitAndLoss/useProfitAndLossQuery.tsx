@@ -22,7 +22,7 @@ type UseProfitAndLossQueryReturn = (props?: UseProfitAndLossQueryProps) => {
   data?: ProfitAndLoss
   isLoading: boolean
   isValidating: boolean
-  error: any
+  error: unknown
   refetch: () => void
   startDate: Date
   endDate: Date

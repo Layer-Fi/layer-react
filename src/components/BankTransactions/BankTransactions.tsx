@@ -26,9 +26,9 @@ import {
 import { DataStates } from './DataStates'
 import { MobileComponentType } from './constants'
 import { endOfMonth, startOfMonth } from 'date-fns'
+import type { LayerError } from '../../models/ErrorHandler'
 
 const COMPONENT_NAME = 'bank-transactions'
-const TEST_EMPTY_STATE = false
 
 export type BankTransactionsMode = 'bookkeeping-client' | 'self-serve'
 
@@ -68,7 +68,7 @@ export interface BankTransactionsProps {
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
-  onError?: (error: Error) => void
+  onError?: (error: LayerError) => void
 }
 
 export const BankTransactions = ({
@@ -200,17 +200,15 @@ const BankTransactionsContent = ({
     }
   }, [loadingStatus])
 
-  const bankTransactions = TEST_EMPTY_STATE
-    ? []
-    : useMemo(() => {
-        if (monthlyView) {
-          return data
-        }
+  const bankTransactions = useMemo(() => {
+    if (monthlyView) {
+      return data
+    }
 
-        const firstPageIndex = (currentPage - 1) * pageSize
-        const lastPageIndex = firstPageIndex + pageSize
-        return data?.slice(firstPageIndex, lastPageIndex)
-      }, [currentPage, data, monthlyView])
+    const firstPageIndex = (currentPage - 1) * pageSize
+    const lastPageIndex = firstPageIndex + pageSize
+    return data?.slice(firstPageIndex, lastPageIndex)
+  }, [currentPage, data, monthlyView, pageSize])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,

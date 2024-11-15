@@ -143,7 +143,7 @@ export const DetailedTable = ({
     )
   }
 
-  const typeColorMapping: any = mapTypesToColors(filteredData, chartColorsList)
+  const typeColorMapping = mapTypesToColors(filteredData, chartColorsList)
 
   return (
     <div className='details-container'>

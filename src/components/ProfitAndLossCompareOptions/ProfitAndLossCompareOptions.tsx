@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { MultiSelect, Select } from '../Input'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
+import type { StylesConfig } from 'react-select'
 
 export interface ProfitAndLossCompareOptionsProps {
   tagComparisonOptions: TagComparisonOption[]
@@ -24,13 +25,13 @@ export type TagFilterInput =
   | 'None'
 
 const selectStyles = {
-  valueContainer: (styles: any) => {
+  valueContainer: (styles) => {
     return {
       ...styles,
       flexWrap: 'nowrap',
     }
   },
-}
+} satisfies StylesConfig<TagComparisonOption, true>
 
 export const ProfitAndLossCompareOptions = ({
   tagComparisonOptions,

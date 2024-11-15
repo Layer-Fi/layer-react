@@ -32,7 +32,7 @@ export const ChartOfAccountsTable = ({
   view: View
   data: ChartWithBalances
   stringOverrides?: ChartOfAccountsTableStringOverrides
-  error?: any
+  error?: unknown
   expandAll?: ExpandActionState
   cumulativeIndex: number
   accountsLength: number
@@ -62,7 +62,7 @@ export const ChartOfAccountsTableContent = ({
   view: View
   data: ChartWithBalances
   stringOverrides?: ChartOfAccountsTableStringOverrides
-  error?: any
+  error?: unknown
   expandAll?: ExpandActionState
   cumulativeIndex: number
   accountsLength: number

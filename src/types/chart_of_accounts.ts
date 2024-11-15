@@ -4,7 +4,7 @@ import { Category } from './categories'
 export interface ChartOfAccounts {
   type: string
   accounts: Account[]
-  entries?: any[]
+  entries?: unknown[]
 }
 
 export interface AccountEntry {
