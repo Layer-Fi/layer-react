@@ -16,7 +16,7 @@ export const RetryButton = ({
   className,
   processing,
   disabled,
-  error,
+  error: _error,
   children,
   ...props
 }: RetryButtonProps) => {

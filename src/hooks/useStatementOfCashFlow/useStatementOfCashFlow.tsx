@@ -5,6 +5,8 @@ import { StatementOfCashFlow } from '../../types'
 import { DataModel } from '../../types/general'
 import { format, startOfDay } from 'date-fns'
 import useSWR from 'swr'
+import { useAuth } from '../useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type UseStatementOfCashFlow = (
   startDate?: Date,
@@ -20,13 +22,16 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = (
   startDate: Date = new Date(),
   endDate: Date = new Date(),
 ) => {
-  const { auth, businessId, apiUrl, read, syncTimestamps, hasBeenTouched } =
+  const { businessId, read, syncTimestamps, hasBeenTouched } =
     useLayerContext()
+  const { apiUrl } = useEnvironment()
+  const { data: auth } = useAuth()
+
   const startDateString = format(
     startOfDay(startDate),
-    "yyyy-MM-dd'T'HH:mm:ssXXX",
+    'yyyy-MM-dd\'T\'HH:mm:ssXXX',
   )
-  const endDateString = format(startOfDay(endDate), "yyyy-MM-dd'T'HH:mm:ssXXX")
+  const endDateString = format(startOfDay(endDate), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
 
   const queryKey =
     businessId &&

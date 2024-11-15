@@ -42,6 +42,8 @@ import { ToggleSize } from '../Toggle/Toggle'
 import { Text, ErrorText, TextSize } from '../Typography'
 import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
+import { useAuth } from '../../hooks/useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -115,7 +117,7 @@ export interface DocumentWithStatus {
   error?: string
 }
 
-export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
+const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
   (
     {
       bankTransaction,
@@ -135,14 +137,13 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const {
       categorize: categorizeBankTransaction,
       match: matchBankTransaction,
-      updateOneLocal: updateBankTransaction,
     } = useBankTransactionsContext()
     const [purpose, setPurpose] = useState<Purpose>(
       bankTransaction.category
         ? Purpose.categorize
         : hasMatch(bankTransaction)
-        ? Purpose.match
-        : Purpose.categorize,
+          ? Purpose.match
+          : Purpose.categorize,
     )
     const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
       isAlreadyMatched(bankTransaction) ??
@@ -156,7 +157,9 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [memoText, setMemoText] = useState<string | undefined>()
     const [isLoaded, setIsLoaded] = useState(false)
 
-    const { auth, businessId, apiUrl } = useLayerContext()
+    const { businessId } = useLayerContext()
+    const { apiUrl } = useEnvironment()
+    const { data: auth } = useAuth()
 
     const defaultCategory =
       bankTransaction.category ||
@@ -285,19 +288,15 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     const save = async () => {
       if (showDescriptions && memoText != undefined) {
-        const result = await Layer.updateBankTransactionMetadata(
-          apiUrl,
-          auth.access_token,
-          {
-            params: {
-              businessId: businessId,
-              bankTransactionId: bankTransaction.id,
-            },
-            body: {
-              memo: memoText,
-            },
+        await Layer.updateBankTransactionMetadata(apiUrl, auth?.access_token, {
+          params: {
+            businessId: businessId,
+            bankTransactionId: bankTransaction.id,
           },
-        )
+          body: {
+            memo: memoText,
+          },
+        })
       }
 
       if (purpose === Purpose.match) {
@@ -349,7 +348,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const fetchMemos = async () => {
       const getBankTransactionMetadata = Layer.getBankTransactionMetadata(
         apiUrl,
-        auth.access_token,
+        auth?.access_token,
         {
           params: {
             businessId: businessId,
@@ -665,3 +664,7 @@ export const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     )
   },
 )
+
+ExpandedBankTransactionRow.displayName = 'ExpandedBankTransactionRow'
+
+export { ExpandedBankTransactionRow }

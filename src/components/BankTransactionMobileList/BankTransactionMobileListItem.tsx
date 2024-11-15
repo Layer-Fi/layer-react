@@ -5,7 +5,6 @@ import FileIcon from '../../icons/File'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
-import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionsMode,
@@ -86,11 +85,11 @@ export const BankTransactionMobileListItem = ({
       ? bankTransaction.category.type === 'Exclusion'
         ? Purpose.personal
         : bankTransaction.categorization_status === CategorizationStatus.SPLIT
-        ? Purpose.more
-        : Purpose.business
+          ? Purpose.more
+          : Purpose.business
       : hasMatch(bankTransaction)
-      ? Purpose.more
-      : Purpose.business,
+        ? Purpose.more
+        : Purpose.business,
   )
   const [open, setOpen] = useState(isFirstItem)
   const [showComponent, setShowComponent] = useState(!initialLoad)

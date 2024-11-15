@@ -16,7 +16,6 @@ import { DetailsList, DetailsListItem } from '../DetailsList'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import { Heading, HeadingSize } from '../Typography'
 
 export const JournalEntryDetails = () => {

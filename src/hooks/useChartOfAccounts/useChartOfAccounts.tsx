@@ -4,13 +4,14 @@ import { NORMALITY_OPTIONS } from '../../components/ChartOfAccountsForm/constant
 import { useLayerContext } from '../../contexts/LayerContext'
 import { FormError, DateRange, Direction, NewAccount } from '../../types'
 import {
-  ChartWithBalances,
   EditAccount,
   LedgerAccountBalance,
 } from '../../types/chart_of_accounts'
 import { BaseSelectOption, DataModel } from '../../types/general'
 import { endOfMonth, formatISO, startOfMonth } from 'date-fns'
 import useSWR from 'swr'
+import { useAuth } from '../useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []
@@ -143,14 +144,14 @@ export const useChartOfAccounts = (
   },
 ) => {
   const {
-    auth,
     businessId,
-    apiUrl,
     touch,
     read,
     syncTimestamps,
     hasBeenTouched,
   } = useLayerContext()
+  const { apiUrl } = useEnvironment()
+  const { data: auth } = useAuth()
 
   const [form, setForm] = useState<ChartOfAccountsForm | undefined>()
   const [sendingForm, setSendingForm] = useState(false)
@@ -289,8 +290,8 @@ export const useChartOfAccounts = (
       return
     }
 
-    const parent = allAccounts.find(
-      x => x.sub_accounts?.find(el => el.id === found.id),
+    const parent = allAccounts.find(x =>
+      x.sub_accounts?.find(el => el.id === found.id),
     )
 
     setForm({

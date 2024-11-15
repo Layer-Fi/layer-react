@@ -40,7 +40,6 @@ export const BankTransactionMobileForms = ({
           <PersonalForm
             bankTransaction={bankTransaction}
             showReceiptUploads={showReceiptUploads}
-            isOpen={isOpen}
             showDescriptions={showDescriptions}
           />
         )
@@ -50,7 +49,6 @@ export const BankTransactionMobileForms = ({
             bankTransaction={bankTransaction}
             showTooltips={showTooltips}
             showReceiptUploads={showReceiptUploads}
-            isOpen={isOpen}
             showDescriptions={showDescriptions}
           />
         )

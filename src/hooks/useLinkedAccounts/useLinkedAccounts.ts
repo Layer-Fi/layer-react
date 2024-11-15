@@ -6,6 +6,8 @@ import { DataModel, LoadedStatus } from '../../types/general'
 import { LinkedAccount, Source } from '../../types/linked_accounts'
 import { LINKED_ACCOUNTS_MOCK_DATA } from './mockData'
 import useSWR from 'swr'
+import { useAuth } from '../useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type UseLinkedAccounts = () => {
   data?: LinkedAccount[]
@@ -34,15 +36,16 @@ type LinkMode = 'update' | 'add'
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
   const {
-    auth,
     businessId,
-    apiUrl,
-    usePlaidSandbox,
     touch,
     read,
     syncTimestamps,
     hasBeenTouched,
   } = useLayerContext()
+
+  const { apiUrl, usePlaidSandbox } = useEnvironment()
+  const { data: auth } = useAuth()
+
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
@@ -201,7 +204,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const unlinkAccount = async (source: Source, accountId: string) => {
-    // DEBUG && console.log('unlinking account')
+    DEBUG && console.debug('unlinking account')
     if (source === 'PLAID') {
       await Layer.unlinkAccount(apiUrl, auth?.access_token, {
         params: { businessId, accountId: accountId },
@@ -216,7 +219,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const confirmAccount = async (source: Source, accountId: string) => {
-    DEBUG && console.log('confirming account')
+    DEBUG && console.debug('confirming account')
     if (source === 'PLAID') {
       await Layer.confirmConnection(apiUrl, auth?.access_token, {
         params: {
@@ -234,7 +237,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const denyAccount = async (source: Source, accountId: string) => {
-    DEBUG && console.log('confirming account')
+    DEBUG && console.debug('confirming account')
     if (source === 'PLAID') {
       await Layer.denyConnection(apiUrl, auth?.access_token, {
         params: {
@@ -258,7 +261,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     source: Source,
     connectionExternalId: string,
   ) => {
-    DEBUG && console.log('Breaking sandbox plaid item connection')
+    DEBUG && console.debug('Breaking sandbox plaid item connection')
     if (source === 'PLAID') {
       await Layer.breakPlaidItemConnection(apiUrl, auth?.access_token, {
         params: {
@@ -276,26 +279,26 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const refetchAccounts = async () => {
-    DEBUG && console.log('refetching accounts...')
+    DEBUG && console.debug('refetching accounts...')
     await mutate()
   }
 
   const syncAccounts = async () => {
-    DEBUG && console.log('resyncing accounts...')
+    DEBUG && console.debug('resyncing accounts...')
     await Layer.syncConnection(apiUrl, auth?.access_token, {
       params: { businessId },
     })
   }
 
   const updateConnectionStatus = async () => {
-    DEBUG && console.log('updating connection status...')
+    DEBUG && console.debug('updating connection status...')
     await Layer.updateConnectionStatus(apiUrl, auth?.access_token, {
       params: { businessId },
     })
   }
 
   const unlinkPlaidItem = async (plaidItemPlaidId: string) => {
-    DEBUG && console.log('unlinking plaid item')
+    DEBUG && console.debug('unlinking plaid item')
     await Layer.unlinkPlaidItem(apiUrl, auth?.access_token, {
       params: { businessId, plaidItemPlaidId },
     })
@@ -319,7 +322,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   return {
     data: USE_MOCK_RESPONSE_DATA
       ? mockResponseData.data
-      : responseData?.data.external_accounts ?? [],
+      : (responseData?.data.external_accounts ?? []),
     isLoading,
     loadingStatus,
     isValidating,

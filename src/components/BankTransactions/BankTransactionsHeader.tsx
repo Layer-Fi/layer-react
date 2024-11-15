@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
-import DownloadCloud from '../../icons/DownloadCloud'
 import { DateRange, DisplayState } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { DownloadButton as DownloadButtonComponent } from '../Button'
@@ -14,6 +13,8 @@ import { Heading, HeadingSize } from '../Typography'
 import { MobileComponentType } from './constants'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { useAuth } from '../../hooks/useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -44,7 +45,10 @@ const DownloadButton = ({
   downloadButtonTextOverride?: string
   iconOnly?: boolean
 }) => {
-  const { auth, businessId, apiUrl } = useLayerContext()
+  const { businessId } = useLayerContext()
+  const { apiUrl } = useEnvironment()
+  const { data: auth } = useAuth()
+
   const [requestFailed, setRequestFailed] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const handleClick = async () => {
@@ -52,7 +56,7 @@ const DownloadButton = ({
     const currentYear = new Date().getFullYear().toString()
     const getBankTransactionsCsv = Layer.getBankTransactionsCsv(
       apiUrl,
-      auth.access_token,
+      auth?.access_token,
       {
         params: {
           businessId: businessId,

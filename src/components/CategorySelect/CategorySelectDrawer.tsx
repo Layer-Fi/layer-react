@@ -2,7 +2,6 @@ import React, { useContext } from 'react'
 import { DrawerContext } from '../../contexts/DrawerContext'
 import ChevronDown from '../../icons/ChevronDown'
 import { BusinessCategories } from '../BankTransactionMobileList/BusinessCategories'
-import { Option } from '../BankTransactionMobileList/utils'
 import { CategoryOption, OptionActionType } from './CategorySelect'
 import classNames from 'classnames'
 
@@ -15,7 +14,7 @@ interface CategorySelectDrawerProps {
 export const CategorySelectDrawer = ({
   onSelect,
   selected,
-  showTooltips,
+  showTooltips: _showTooltips,
 }: CategorySelectDrawerProps) => {
   const { setContent, close } = useContext(DrawerContext)
 

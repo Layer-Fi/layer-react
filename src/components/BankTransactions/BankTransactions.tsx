@@ -220,8 +220,8 @@ const BankTransactionsContent = ({
         event.target.value === DisplayState.categorized
           ? DisplayState.categorized
           : event.target.value === DisplayState.all
-          ? DisplayState.all
-          : DisplayState.review,
+            ? DisplayState.all
+            : DisplayState.review,
     })
     setCurrentPage(1)
   }

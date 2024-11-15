@@ -303,10 +303,10 @@ export const CategorySelect = ({
   const selected = value
     ? value
     : !excludeMatches &&
-      matchOptions?.length === 1 &&
-      matchOptions[0].options.length === 1
-    ? matchOptions[0].options[0]
-    : undefined
+        matchOptions?.length === 1 &&
+        matchOptions[0].options.length === 1
+      ? matchOptions[0].options[0]
+      : undefined
 
   const placeholder =
     matchOptions?.length === 1 && matchOptions[0].options.length > 1

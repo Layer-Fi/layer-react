@@ -63,14 +63,14 @@ const BalanceSheetView = ({
     // Refetch only if selected effectiveDate and data's effectiveDate are different
     const d1 =
       effectiveDate &&
-      format(startOfDay(effectiveDate), "yyyy-MM-dd'T'HH:mm:ssXXX")
+      format(startOfDay(effectiveDate), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
     const d2 =
       data?.effective_date &&
       format(
         startOfDay(
-          parse(data.effective_date, "yyyy-MM-dd'T'HH:mm:ssXXX", new Date()),
+          parse(data.effective_date, 'yyyy-MM-dd\'T\'HH:mm:ssXXX', new Date()),
         ),
-        "yyyy-MM-dd'T'HH:mm:ssXXX",
+        'yyyy-MM-dd\'T\'HH:mm:ssXXX',
       )
     if (d1 && (!d2 || (d2 && d2 !== d1))) {
       refetch()

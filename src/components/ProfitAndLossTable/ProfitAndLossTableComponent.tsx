@@ -3,6 +3,7 @@ import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import PieChart from '../../icons/PieChart'
 import { LineItem } from '../../types'
+import { TableCellAlign } from '../../types/table'
 import { Loader } from '../Loader'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { Table, TableBody, TableCell, TableRow } from '../Table'
@@ -95,7 +96,7 @@ export const ProfitAndLossTableComponent = ({
               </span>
             )}
           </TableCell>
-          <TableCell isCurrency primary>
+          <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
             {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
           </TableCell>
         </TableRow>

@@ -3,59 +3,35 @@ import { LayerError } from '../../models/ErrorHandler'
 import { BusinessProvider } from '../../providers/BusinessProvider/BusinessProvider'
 import { LayerThemeConfig } from '../../types/layer_context'
 import { SWRConfig, SWRConfiguration } from 'swr'
-
-type LayerEnvironmentConfig = {
-  url: string
-  scope: string
-  apiUrl: string
-  usePlaidSandbox: boolean
-}
-
-export const LayerEnvironment: Record<string, LayerEnvironmentConfig> = {
-  production: {
-    url: 'https://auth.layerfi.com/oauth2/token',
-    scope: 'https://api.layerfi.com/production',
-    apiUrl: 'https://api.layerfi.com',
-    usePlaidSandbox: false,
-  },
-  sandbox: {
-    url: 'https://auth.layerfi.com/oauth2/token',
-    scope: 'https://sandbox.layerfi.com/sandbox',
-    apiUrl: 'https://sandbox.layerfi.com',
-    usePlaidSandbox: true,
-  },
-  staging: {
-    url: 'https://auth.layerfi.com/oauth2/token',
-    scope: 'https://sandbox.layerfi.com/sandbox',
-    apiUrl: 'https://staging.layerfi.com',
-    usePlaidSandbox: true,
-  },
-  internalStaging: {
-    url: 'https://auth.layerfi.com/oauth2/token',
-    scope: 'https://sandbox.layerfi.com/sandbox',
-    apiUrl: 'https://staging.layerfi.com',
-    usePlaidSandbox: true,
-  },
-}
+import type { Environment } from '../Environment/environmentConfigs'
+import { AuthInputProvider } from '../AuthInputProvider'
+import { EnvironmentInputProvider } from '../Environment/EnvironmentInputProvider'
 
 export type EventCallbacks = {
   onTransactionCategorized?: (bankTransactionId: string) => void
   onTransactionsFetched?: () => void
 }
 
-export type Props = {
+export type LayerProviderProps = {
   businessId: string
   appId?: string
   appSecret?: string
   businessAccessToken?: string
-  environment?: keyof typeof LayerEnvironment
+  environment?: Environment
   theme?: LayerThemeConfig
   usePlaidSandbox?: boolean
   onError?: (error: LayerError) => void
   eventCallbacks?: EventCallbacks
 }
 
-export const LayerProvider = (props: PropsWithChildren<Props>) => {
+export const LayerProvider = ({
+  appId,
+  appSecret,
+  businessAccessToken,
+  environment,
+  usePlaidSandbox,
+  ...restProps
+}: PropsWithChildren<LayerProviderProps>) => {
   const defaultSWRConfig: SWRConfiguration = {
     refreshInterval: 0,
     revalidateOnFocus: false,
@@ -65,7 +41,15 @@ export const LayerProvider = (props: PropsWithChildren<Props>) => {
 
   return (
     <SWRConfig value={{ ...defaultSWRConfig, provider: () => new Map() }}>
-      <BusinessProvider {...props} />
+      <EnvironmentInputProvider environment={environment} usePlaidSandbox={usePlaidSandbox}>
+        <AuthInputProvider
+          appId={appId}
+          appSecret={appSecret}
+          businessAccessToken={businessAccessToken}
+        >
+          <BusinessProvider {...restProps} />
+        </AuthInputProvider>
+      </EnvironmentInputProvider>
     </SWRConfig>
   )
 }

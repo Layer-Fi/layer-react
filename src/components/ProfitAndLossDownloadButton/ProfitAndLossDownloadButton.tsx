@@ -5,6 +5,8 @@ import { MoneyFormat } from '../../types'
 import { View as ViewType } from '../../types/general'
 import { DownloadButton as DownloadButtonComponent } from '../Button'
 import { ProfitAndLoss } from '../ProfitAndLoss'
+import { useAuth } from '../../hooks/useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -30,7 +32,11 @@ export const ProfitAndLossDownloadButton = ({
   const { getProfitAndLossComparisonCsv } = useContext(
     ProfitAndLoss.ComparisonContext,
   )
-  const { auth, businessId, apiUrl } = useLayerContext()
+
+  const { businessId } = useLayerContext()
+  const { apiUrl } = useEnvironment()
+  const { data: auth } = useAuth()
+
   const [requestFailed, setRequestFailed] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
 
@@ -38,15 +44,21 @@ export const ProfitAndLossDownloadButton = ({
     setIsDownloading(true)
     const getProfitAndLossCsv = Layer.getProfitAndLossCsv(
       apiUrl,
-      auth.access_token,
+      auth?.access_token,
       {
         params: {
           businessId: businessId,
           startDate: dateRange.startDate.toISOString(),
           endDate: dateRange.endDate.toISOString(),
           moneyFormat: moneyFormat,
-          tagKey: (tagFilter?.key && tagFilter.values.length > 0) ? tagFilter?.key : undefined,
-          tagValues: (tagFilter?.key && tagFilter.values.length > 0) ? tagFilter?.values.join(',') : undefined
+          tagKey:
+            tagFilter?.key && tagFilter.values.length > 0
+              ? tagFilter?.key
+              : undefined,
+          tagValues:
+            tagFilter?.key && tagFilter.values.length > 0
+              ? tagFilter?.values.join(',')
+              : undefined,
         },
       },
     )

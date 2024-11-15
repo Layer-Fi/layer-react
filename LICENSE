@@ -1,21 +1,33 @@
-MIT License
+Proprietary Software License Agreement
 
-Copyright (c) 2023 Layer Financial
+Copyright (c) 2024 Layer Financial
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. Authorized Use:
+This Software may only be used by individuals or organizations who have obtained a valid license from Layer Financial. Unauthorized use, copying, distribution, or modification is strictly prohibited and will be prosecuted to the fullest extent of the law.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2. Grant of License:
+Subject to the terms of this Agreement and any applicable Master Services Agreement (“MSA”) between the Licensee and Layer Financial, Layer Financial grants the Licensee a non-exclusive, non-transferable, limited license to use the Software solely for the purposes of serving their clients as defined within the scope of the MSA.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+3. Restrictions:
+Licensee shall not:
+
+  1. Redistribute, sell, lease, or license the Software to any third party.
+  2. Assign, transfer, or sublicense this License or any of its rights hereunder to any third party without the prior written consent of Layer Financial.
+
+4. Ownership:
+The Software is licensed, not sold. Layer Financial retains all rights, title, and interest, including future updates and enhancements.
+
+5. Updates:
+Layer Financial is under no obligation to provide updates or upgrades. Future updates may be subject to additional terms or fees.
+
+6. Termination:
+This License will automatically terminate upon any breach of this Agreement by the Licensee. Upon termination, Licensee must cease all use and destroy all copies of the Software.
+
+7. Limitation of Liability:
+The Software is provided "as is" without any warranties of any kind. In no event shall Layer Financial be liable for any damages arising from the use of the Software.
+
+8. Indemnification:
+The Licensee agrees to indemnify, defend, and hold harmless Layer Financial from any claims, damages, losses, or expenses arising out of or in connection with the Licensee’s use of the Software in violation of this Agreement.
+
+9. Governing Law:
+This Agreement shall be governed by the laws of the state of California.

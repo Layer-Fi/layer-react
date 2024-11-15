@@ -10,7 +10,6 @@ interface SplitAndMatchFormProps {
   showTooltips: boolean
   showReceiptUploads?: boolean
   showDescriptions?: boolean
-  isOpen?: boolean
 }
 
 enum Purpose {
@@ -22,7 +21,6 @@ export const SplitAndMatchForm = ({
   bankTransaction,
   showTooltips,
   showReceiptUploads,
-  isOpen,
   showDescriptions,
 }: SplitAndMatchFormProps) => {
   const anyMatch = hasMatch(bankTransaction)
@@ -30,8 +28,8 @@ export const SplitAndMatchForm = ({
     bankTransaction.category
       ? Purpose.categorize
       : anyMatch
-      ? Purpose.match
-      : Purpose.categorize,
+        ? Purpose.match
+        : Purpose.categorize,
   )
 
   return (

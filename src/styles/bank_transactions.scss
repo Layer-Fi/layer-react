@@ -646,13 +646,27 @@
 .Layer__table.Layer__bank-transactions__table .Layer__table-cell__amount-col {
   position: -webkit-sticky;
   position: sticky;
-  right: 494px;
   width: 150px;
-  min-width: 150px;
+  min-width: 50px;
   box-sizing: border-box;
   z-index: 2;
   text-align: right;
   box-shadow: -8px 0px 20px -2px rgb(255 255 255 / 64%);
+
+  right: 430px;
+  &[data-showreceiptuploadcolumn] {
+    right: 494px;
+  }
+}
+
+.Layer__table-header.Layer__bank-transactions__documents-col {
+    padding-left: 0px;
+    padding-right: 0px;
+
+    &[data-showreceiptuploadcolumn] {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
 }
 
 .Layer__table.Layer__bank-transactions__table
@@ -660,12 +674,20 @@
   position: -webkit-sticky;
   position: sticky;
   right: 430px;
-  width: 64px;
-  min-width: 64px;
   box-sizing: border-box;
   z-index: 2;
   text-align: center;
   box-shadow: -8px 0px 20px -2px rgb(255 255 255 / 64%);
+
+  width: 0px;
+  min-width: 0px;
+  max-width: 0px;
+
+  &[data-showreceiptuploadcolumn] {
+    width: 64px;
+    min-width: 64px;
+    max-width: 64px;
+  }
 }
 
 .Layer__table.Layer__bank-transactions__table .Layer__table-cell__category-col {

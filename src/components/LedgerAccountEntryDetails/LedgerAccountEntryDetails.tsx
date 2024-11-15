@@ -28,7 +28,7 @@ import { TableBody } from '../TableBody'
 import { TableCell } from '../TableCell'
 import { TableHead } from '../TableHead'
 import { TableRow } from '../TableRow'
-import { Heading, HeadingSize, TextWeight, Text } from '../Typography'
+import { Heading, HeadingSize } from '../Typography'
 
 interface SourceDetailStringOverrides {
   sourceLabel?: string

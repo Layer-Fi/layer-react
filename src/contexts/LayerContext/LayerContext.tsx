@@ -10,19 +10,11 @@ export const LayerContext = createContext<
   LayerContextValues &
     LayerContextHelpers & { setTheme: (theme: LayerThemeConfig) => void }
 >({
-  auth: {
-    access_token: '',
-    expires_at: new Date(2000, 1, 1),
-    expires_in: -1,
-    token_type: '',
-  },
   businessId: '',
   business: undefined,
   categories: [],
-  apiUrl: '',
   theme: undefined,
   colors: {},
-  usePlaidSandbox: true,
   setTheme: () => undefined,
   getColor: _shade => undefined,
   setLightColor: () => undefined,
@@ -31,9 +23,8 @@ export const LayerContext = createContext<
   setColors: () => undefined,
   onboardingStep: undefined,
   setOnboardingStep: () => undefined,
-  environment: '',
   toasts: [],
-  addToast: (toast: ToastProps) => undefined,
+  addToast: (_toast: ToastProps) => undefined,
   removeToast: () => undefined,
   onError: () => undefined,
   touch: () => undefined,

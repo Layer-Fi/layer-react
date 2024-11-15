@@ -2,20 +2,15 @@ import { ToastProps } from '../components/Toast/Toast'
 import { LayerError } from '../models/ErrorHandler'
 import { EventCallbacks } from '../providers/LayerProvider/LayerProvider'
 import { Business, Category } from '../types'
-import { ExpiringOAuthResponse } from './authentication'
 import { DataModel } from './general'
 
 export type LayerContextValues = {
-  auth: ExpiringOAuthResponse
   businessId: string
   business?: Business
   categories: Category[]
-  apiUrl: string
   theme?: LayerThemeConfig
   colors: ColorsPalette
-  usePlaidSandbox: boolean
   onboardingStep?: OnboardingStep
-  environment: string
   toasts: (ToastProps & { isExiting: boolean })[]
   eventCallbacks?: EventCallbacks
 }
@@ -89,7 +84,6 @@ export interface LayerThemeConfig {
 export type OnboardingStep = undefined | 'connectAccount' | 'complete'
 
 export enum LayerContextActionName {
-  setAuth = 'LayerContext.setAuth',
   setBusiness = 'LayerContext.setBusiness',
   setCategories = 'LayerContext.setCategories',
   setTheme = 'LayerContext.setTheme',
@@ -101,10 +95,6 @@ export enum LayerContextActionName {
 }
 
 export type LayerContextAction =
-  | {
-      type: LayerContextActionName.setAuth
-      payload: { auth: LayerContextValues['auth'] }
-    }
   | {
       type: LayerContextActionName.setBusiness
       payload: { business: LayerContextValues['business'] }

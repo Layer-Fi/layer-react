@@ -85,11 +85,12 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
           0,
         )
         break
-      case 'quarter':
+      case 'quarter': {
         const currentQuarter = Math.floor(currentDate.getMonth() / 3)
         startDate = new Date(currentDate.getFullYear(), currentQuarter * 3, 1)
         endDate = new Date(currentDate.getFullYear(), currentQuarter * 3 + 3, 0)
         break
+      }
       case 'year':
         startDate = new Date(currentDate.getFullYear(), 0, 1)
         endDate = new Date(currentDate.getFullYear(), 11, 31)
@@ -142,7 +143,7 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
           0,
         )
         break
-      case '2_quarters':
+      case '2_quarters': {
         const currentQuarter2 = Math.floor(currentDate.getMonth() / 3)
         startDate = new Date(
           currentDate.getFullYear(),
@@ -155,7 +156,8 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
           0,
         )
         break
-      case '3_quarters':
+      }
+      case '3_quarters': {
         const currentQuarter3 = Math.floor(currentDate.getMonth() / 3)
         startDate = new Date(
           currentDate.getFullYear(),
@@ -168,7 +170,8 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
           0,
         )
         break
-      case '4_quarters':
+      }
+      case '4_quarters': {
         const currentQuarter4 = Math.floor(currentDate.getMonth() / 3)
         startDate = new Date(
           currentDate.getFullYear(),
@@ -181,7 +184,8 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
           0,
         )
         break
-      case '8_quarters':
+      }
+      case '8_quarters': {
         const currentQuarter8 = Math.floor(currentDate.getMonth() / 3)
         startDate = new Date(
           currentDate.getFullYear(),
@@ -194,6 +198,7 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
           0,
         )
         break
+      }
       case '2_years':
         startDate = new Date(currentDate.getFullYear() - 2, 0, 1)
         endDate = new Date(currentDate.getFullYear(), 11, 31)

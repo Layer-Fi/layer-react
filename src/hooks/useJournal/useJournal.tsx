@@ -13,6 +13,8 @@ import {
 import { getAccountIdentifierPayload } from '../../utils/journal'
 import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
 import useSWR from 'swr'
+import { useAuth } from '../useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type UseJournal = () => {
   data?: JournalEntry[]
@@ -60,14 +62,14 @@ export interface JournalFormTypes {
 
 export const useJournal: UseJournal = () => {
   const {
-    auth,
     businessId,
-    apiUrl,
     touch,
     read,
     syncTimestamps,
     hasBeenTouched,
   } = useLayerContext()
+  const { apiUrl } = useEnvironment()
+  const { data: auth } = useAuth()
 
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
 

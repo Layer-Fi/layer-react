@@ -20,16 +20,16 @@ import {
 } from '../../types/layer_context'
 import { buildColorsPalette } from '../../utils/colors'
 import { BankTransactionsProvider } from '../BankTransactionsProvider'
-import { LayerEnvironment, Props } from '../LayerProvider/LayerProvider'
-import { add, isBefore } from 'date-fns'
+import { LayerProviderProps } from '../LayerProvider/LayerProvider'
 import useSWR, { SWRConfiguration } from 'swr'
+import { useAuth } from '../../hooks/useAuth'
+import { useEnvironment } from '../Environment/EnvironmentInputProvider'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
   action,
 ) => {
   switch (action.type) {
-    case Action.setAuth:
     case Action.setBusiness:
     case Action.setCategories:
     case Action.setTheme:
@@ -63,18 +63,17 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   }
 }
 
+type BusinessProviderProps = PropsWithChildren<
+  Pick<LayerProviderProps, 'businessId' | 'theme' | 'onError' | 'eventCallbacks'>
+>
+
 export const BusinessProvider = ({
-  appId,
-  appSecret,
   businessId,
   children,
-  businessAccessToken,
-  environment = 'production',
   theme,
-  usePlaidSandbox,
   onError,
   eventCallbacks,
-}: PropsWithChildren<Props>) => {
+}: PropsWithChildren<BusinessProviderProps>) => {
   const defaultSWRConfig: SWRConfiguration = {
     refreshInterval: 0,
     revalidateOnFocus: false,
@@ -86,28 +85,13 @@ export const BusinessProvider = ({
 
   const colors = buildColorsPalette(theme)
 
-  const {
-    url,
-    scope,
-    apiUrl,
-    usePlaidSandbox: defaultUsePlaidSandbox,
-  } = LayerEnvironment[environment]
   const [state, dispatch] = useReducer(reducer, {
-    auth: {
-      access_token: '',
-      token_type: '',
-      expires_in: 0,
-      expires_at: new Date(2000, 1, 1),
-    },
     businessId,
     business: undefined,
     categories: [],
-    apiUrl,
     theme,
     colors,
-    usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox,
     onboardingStep: undefined,
-    environment,
     toasts: [],
     eventCallbacks: {},
   })
@@ -121,53 +105,12 @@ export const BusinessProvider = ({
     resetCaches,
   } = useDataSync()
 
-  const { data: auth } =
-    appId !== undefined && appSecret !== undefined
-      ? useSWR(
-          businessAccessToken === undefined &&
-            appId !== undefined &&
-            appSecret !== undefined &&
-            isBefore(state.auth.expires_at, new Date()) &&
-            'authenticate',
-          Layer.authenticate({
-            appId,
-            appSecret,
-            authenticationUrl: url,
-            scope,
-          }),
-          { ...defaultSWRConfig, provider: () => new Map() },
-        )
-      : { data: undefined }
-
-  useEffect(() => {
-    if (businessAccessToken) {
-      dispatch({
-        type: Action.setAuth,
-        payload: {
-          auth: {
-            access_token: businessAccessToken,
-            token_type: 'Bearer',
-            expires_in: 3600,
-            expires_at: add(new Date(), { seconds: 3600.0 }),
-          },
-        },
-      })
-    } else if (auth?.access_token) {
-      dispatch({
-        type: Action.setAuth,
-        payload: {
-          auth: {
-            ...auth,
-            expires_at: add(new Date(), { seconds: auth.expires_in }),
-          },
-        },
-      })
-    }
-  }, [businessAccessToken, auth?.access_token])
+  const { apiUrl } = useEnvironment()
+  const { data: auth } = useAuth()
 
   const { data: categoriesData } = useSWR(
-    businessId && state.auth?.access_token && `categories-${businessId}`,
-    Layer.getCategories(apiUrl, state.auth?.access_token, {
+    businessId && auth?.access_token && `categories-${businessId}`,
+    Layer.getCategories(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
     {
@@ -193,8 +136,8 @@ export const BusinessProvider = ({
   }, [categoriesData])
 
   const { data: businessData } = useSWR(
-    businessId && state?.auth?.access_token && `business-${businessId}`,
-    Layer.getBusiness(apiUrl, state?.auth?.access_token, {
+    businessId && auth?.access_token && `business-${businessId}`,
+    Layer.getBusiness(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
     {

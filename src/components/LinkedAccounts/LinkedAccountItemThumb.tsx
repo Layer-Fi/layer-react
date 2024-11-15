@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { LinkedAccount } from '../../types/linked_accounts'
 import { LinkedAccountOptions } from '../LinkedAccountOptions'
 import { LinkedAccountThumb } from '../LinkedAccountThumb'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 export interface LinkedAccountItemThumbProps {
   account: LinkedAccount
@@ -28,7 +28,7 @@ export const LinkedAccountItemThumb = ({
     denyAccount,
     breakConnection,
   } = useContext(LinkedAccountsContext)
-  const { environment } = useLayerContext()
+  const { environment } = useEnvironment()
 
   let pillConfig
   if (account.requires_user_confirmation_as_of) {
@@ -130,7 +130,7 @@ export const LinkedAccountItemThumb = ({
             account.connection_external_id,
           )
         } else {
-          console.warn("Account doesn't have defined connection_external_id")
+          console.warn('Account doesn\'t have defined connection_external_id')
         }
       },
     })
