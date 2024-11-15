@@ -25,10 +25,6 @@ export const Indicator = ({
   setCustomCursorSize,
   viewBox = {},
 }: Props) => {
-  if (!className?.match(/selected/)) {
-    return null
-  }
-
   const [opacityIndicator, setOpacityIndicator] = useState(0)
 
   const { x: animateTo = 0, width = 0 } =
@@ -51,6 +47,10 @@ export const Indicator = ({
       setOpacityIndicator(1)
     }, 200)
   }, [animateTo])
+
+  if (!className?.match(/selected/)) {
+    return null
+  }
 
   const rectRef = (ref: SVGRectElement | null) => {
     if (ref) {

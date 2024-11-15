@@ -13,6 +13,7 @@ export interface S3PresignedUrl {
   fileType: string
   fileName: string
   createdAt: string
+  documentId?: string
 }
 
 export type LoadedStatus = 'initial' | 'loading' | 'complete'

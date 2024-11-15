@@ -56,14 +56,15 @@ export const useReceipts: UseReceipts = ({
       },
     )
     const result = await listBankTransactionDocuments()
-    const retrievedDocs = result.data.documentUrls.map((docUrl: any) => ({
+    const retrievedDocs = result.data.documentUrls.map((docUrl) => ({
       id: docUrl.documentId,
-      url: docUrl.presignedUrl as string,
-      type: docUrl.fileType as string | undefined,
+      url: docUrl.presignedUrl,
+      type: docUrl.fileType,
       status: 'uploaded' as const,
       name: docUrl.fileName,
       date: readDate(docUrl.createdAt),
     }))
+
     setReceiptUrls(retrievedDocs)
   }
 

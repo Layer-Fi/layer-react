@@ -1,9 +1,9 @@
-import React, { ErrorInfo, Component } from 'react'
+import React, { ErrorInfo, Component, type PropsWithChildren } from 'react'
 import { LayerError, reportError } from '../../models/ErrorHandler'
 import { ErrorBoundaryMessage } from './ErrorBoundaryMessage'
 
 interface ErrorBoundaryProps {
-  onError?: (error: Error) => void
+  onError?: (error: LayerError) => void
 }
 
 interface ErrorBoundaryState {
@@ -11,12 +11,12 @@ interface ErrorBoundaryState {
 }
 
 export class ErrorBoundary extends Component<
-  React.PropsWithChildren<ErrorBoundaryProps>,
+  PropsWithChildren<ErrorBoundaryProps>,
   ErrorBoundaryState
 > {
-  onError: (err: LayerError) => void
+  onError?: (err: LayerError) => void
 
-  constructor(props: any) {
+  constructor(props: PropsWithChildren<ErrorBoundaryProps>) {
     super(props)
     this.onError = props.onError
     this.state = { hasError: false }
@@ -39,6 +39,7 @@ export class ErrorBoundary extends Component<
     if (this.state.hasError) {
       return <ErrorBoundaryMessage />
     }
-    return (this.props as { children: any }).children
+
+    return this.props.children
   }
 }

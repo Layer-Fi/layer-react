@@ -26,7 +26,7 @@ type UseProfitAndLossLTMReturn = (props?: UseProfitAndLossLTMProps) => {
   data: ProfitAndLossSummaryData[]
   isLoading?: boolean
   loaded?: LoadedStatus
-  error?: any
+  error?: unknown
   pullData: (date: Date) => void
   refetch: () => void
 }
