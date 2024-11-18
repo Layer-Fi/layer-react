@@ -1,6 +1,6 @@
-import { TaskTypes } from '../../types/tasks'
+import { Task } from '../../types/tasks'
 
-export const mockData: TaskTypes[] = [
+export const mockData: Task[] = [
   {
     id: 'f49e6eb2-52d4-4872-b34a-2baf387b8592',
     question: 'What is your favorite food?',
@@ -15,6 +15,7 @@ export const mockData: TaskTypes[] = [
     completed_at: null,
     created_at: '2024-09-12T05:56:49.360176Z',
     updated_at: '2024-09-12T05:56:49.360176Z',
+    effective_date: '2024-09-12T05:56:49.360176Z',
     document_type: 'LOAN_STATEMENT',
     documents: [],
   },
@@ -32,6 +33,7 @@ export const mockData: TaskTypes[] = [
     completed_at: null,
     created_at: '2024-09-12T05:56:49.360176Z',
     updated_at: '2024-09-12T05:56:49.360176Z',
+    effective_date: '2024-09-12T05:56:49.360176Z',
     document_type: 'BANK_STATEMENT',
     documents: [],
   },

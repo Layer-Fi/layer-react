@@ -1,0 +1,56 @@
+.Layer__tasks-month-selector {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+    container-type: inline-size;
+}
+
+.Layer__tasks-month-selector__month {
+    min-height: 32px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-radius: var(--border-radius-xs);
+    padding: 0 var(--spacing-sm);
+    background: var(--color-base-0);
+    box-shadow: 0px 1px 2px 0px var(--base-transparent-6), 0px 0px 0px 1px var(--color-base-300);
+
+    &.Layer__tasks-month-selector__month--completed {
+        background-color: var(--color-base-50);
+        color: var(--color-base-600);
+    }
+
+    &.Layer__tasks-month-selector__month--active {
+        box-shadow: 0px 0px 0px 1px var(--color-base-800), 0px 0px 0px 3px var(--color-base-300);
+    }
+
+    &:hover {
+        box-shadow: 0px 0px 0px 1px var(--color-base-500), 0px 0px 0px 3px var(--color-base-300);
+    }
+}
+
+.Layer__tasks-month-selector__month__completed {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-info-success-bg);
+    color: var(--color-info-success-fg);
+    border-radius: 50%;
+}
+
+.Layer__tasks-month-selector__month__incompleted {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-4xs);
+    height: 16px;
+    padding: 0 var(--spacing-3xs);
+    background-color: var(--color-info-warning-bg);
+    color: var(--color-info-warning-fg);
+    border-radius: var(--border-radius-3xs);
+}
