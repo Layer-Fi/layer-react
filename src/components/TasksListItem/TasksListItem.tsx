@@ -3,7 +3,7 @@ import { TasksContext } from '../../contexts/TasksContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Check from '../../icons/Check'
 import ChevronDownFill from '../../icons/ChevronDownFill'
-import { isComplete, TaskTypes } from '../../types/tasks'
+import { isComplete, Task } from '../../types/tasks'
 import { Button, ButtonVariant } from '../Button'
 import { FileInput } from '../Input'
 import { Textarea } from '../Textarea'
@@ -15,8 +15,8 @@ export const TasksListItem = ({
   goToNextPageIfAllComplete,
   defaultOpen,
 }: {
-  task: TaskTypes
-  goToNextPageIfAllComplete: (task: TaskTypes) => void
+  task: Task
+  goToNextPageIfAllComplete: (task: Task) => void
   defaultOpen: boolean
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen)

@@ -13,6 +13,7 @@ import { Loader } from '../Loader'
 import { TasksHeader } from '../TasksHeader'
 import { TasksList } from '../TasksList'
 import { TasksPending } from '../TasksPending'
+import { TasksMonthSelector } from '../TasksMonthSelector/TasksMonthSelector'
 import classNames from 'classnames'
 
 export type UseTasksContextType = ReturnType<typeof useTasks>
@@ -22,9 +23,9 @@ export const UseTasksContext = createContext<UseTasksContextType>({
   loadedStatus: 'initial',
   isValidating: undefined,
   error: undefined,
-  refetch: () => {},
-  submitResponseToTask: () => {},
-  uploadDocumentForTask: () => {},
+  refetch: () => { },
+  submitResponseToTask: () => { },
+  uploadDocumentForTask: () => { },
 })
 
 export const useTasksContext = () => useContext(UseTasksContext)
@@ -82,7 +83,9 @@ export const TasksComponent = ({
   collapsedWhenComplete?: boolean
   stringOverrides?: TasksStringOverrides
 }) => {
-  const { isLoading, loadedStatus, data } = useContext(TasksContext)
+  // @TODO Move to date picker
+  const [currentDate, setCurrentDate] = useState(new Date())
+  const { isLoading, loadedStatus, data, monthlyData } = useContext(TasksContext)
   const allComplete = useMemo(() => {
     if (!data) {
       return undefined
@@ -130,6 +133,7 @@ export const TasksComponent = ({
           </div>
         ) : (
           <>
+            <TasksMonthSelector tasks={monthlyData} onClick={setCurrentDate} currentDate={currentDate} />
             {data.length > 0 && <TasksPending />}
             <TasksList />
           </>

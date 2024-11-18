@@ -1,7 +1,7 @@
 import React, { useContext, useMemo, useState } from 'react'
 import { TasksContext } from '../../contexts/TasksContext'
 import SmileIcon from '../../icons/SmileIcon'
-import { isComplete, TaskTypes } from '../../types/tasks'
+import { isComplete, Task } from '../../types/tasks'
 import { Pagination } from '../Pagination'
 import { TasksListItem } from '../TasksListItem'
 import { ErrorText, Text, TextSize } from '../Typography'
@@ -51,7 +51,7 @@ export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
     task => !isComplete(task.status),
   )
 
-  const goToNextPage = (task: TaskTypes) => {
+  const goToNextPage = (task: Task) => {
     const allComplete = sortedTasks
       ?.filter(taskInList => taskInList.id !== task.id)
       .every(task => isComplete(task.status))
