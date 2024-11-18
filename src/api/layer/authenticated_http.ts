@@ -1,5 +1,11 @@
+import { version as packageVersion } from '../../../package.json'
 import { APIError } from '../../models/APIError'
 import { reportError } from '../../models/ErrorHandler'
+
+const CUSTOM_PREFIX = 'Layer-'
+const CUSTOM_HEADERS = {
+  [`${CUSTOM_PREFIX}React-Version`]: packageVersion
+} as const
 
 export type HTTPVerb = 'get' | 'put' | 'post' | 'patch' | 'options' | 'delete'
 
@@ -13,57 +19,58 @@ export const get =
   >(
     url: (params: Params) => string,
   ) =>
-  (
-    baseUrl: string,
-    accessToken: string | undefined,
-    options?: { params?: Params },
-  ) =>
-  (): Promise<Return> =>
-    fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
-      headers: {
-        Authorization: 'Bearer ' + (accessToken || ''),
-        'Content-Type': 'application/json',
-      },
-      method: 'GET',
-    })
-      .then(res => handleResponse<Return>(res))
-      .catch(error => handleException(error))
+    (
+      baseUrl: string,
+      accessToken: string | undefined,
+      options?: { params?: Params },
+    ) =>
+      (): Promise<Return> =>
+        fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
+          headers: {
+            Authorization: 'Bearer ' + (accessToken || ''),
+            'Content-Type': 'application/json',
+            ...CUSTOM_HEADERS,
+          },
+          method: 'GET',
+        })
+          .then(res => handleResponse<Return>(res))
+          .catch(error => handleException(error))
 
 export const request =
-  (verb: HTTPVerb) =>
-  <
-    Return extends Record<string, unknown> = Record<string, unknown>,
-    Body extends Record<string, unknown> = Record<string, unknown>,
-    Params extends Record<string, string | undefined> = Record<
-      string,
+  (verb: Exclude<HTTPVerb, 'get'>) =>
+    <
+      Return extends Record<string, unknown> = Record<string, unknown>,
+      Body extends Record<string, unknown> = Record<string, unknown>,
+      Params extends Record<string, string | undefined> = Record<
+        string,
       string | undefined
-    >,
-  >(
-    url: (params: Params) => string,
-  ) =>
-  (
-    baseUrl: string,
-    accessToken: string | undefined,
-    options?: {
-      params?: Params
-      body?: Body
-    },
-  ): Promise<Return> =>
-    fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
-      headers: {
-        Authorization: 'Bearer ' + (accessToken || ''),
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache',
-      },
-      method: verb.toUpperCase(),
-      body: JSON.stringify(options?.body),
-    })
-      .then(res => handleResponse<Return>(res))
-      .catch(error => handleException(error))
+      >,
+    >(
+      url: (params: Params) => string,
+    ) =>
+      (
+        baseUrl: string,
+        accessToken: string | undefined,
+        options?: {
+          params?: Params
+          body?: Body
+        },
+      ): Promise<Return> =>
+        fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
+          headers: {
+            Authorization: 'Bearer ' + (accessToken || ''),
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache',
+            ...CUSTOM_HEADERS,
+          },
+          method: verb.toUpperCase(),
+          body: JSON.stringify(options?.body),
+        })
+          .then(res => handleResponse<Return>(res))
+          .catch(error => handleException(error))
 
 export const post = request('post')
 export const put = request('put')
-export const deleteRequest = request('delete')
 
 export const postWithFormData = <
   Return extends Record<string, unknown> = Record<string, unknown>,
@@ -77,6 +84,7 @@ export const postWithFormData = <
     method: 'POST',
     headers: {
       Authorization: 'Bearer ' + (accessToken || ''),
+      ...CUSTOM_HEADERS,
     },
     body: formData,
   })

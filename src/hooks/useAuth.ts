@@ -70,7 +70,7 @@ function buildKey({
 }
 
 const DEFAULT_EXPIRES_IN_SECONDS = 3600
-const FALLBACK_REFRESH_MS = 1000
+const FALLBACK_REFRESH_MS = (DEFAULT_EXPIRES_IN_SECONDS / 2) * 1000
 
 export function useAuth() {
   const {
