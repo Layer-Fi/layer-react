@@ -4,6 +4,7 @@ import React, {
   HTMLProps,
   isValidElement,
   cloneElement,
+  type Ref,
 } from 'react'
 import { TooltipContext, useTooltip, useTooltipContext } from './useTooltip'
 import { useMergeRefs, FloatingPortal } from '@floating-ui/react'
@@ -36,9 +37,9 @@ export const TooltipTrigger = forwardRef<
   HTMLProps<HTMLElement> & { asChild?: boolean }
 >(function TooltipTrigger({ children, asChild = false, ...props }, propRef) {
   const context = useTooltipContext()
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const childrenRef = (children as any).ref
+  const childrenRef = (isValidElement(children) && 'ref' in children)
+    ? children.ref as Ref<unknown>
+    : null
   const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef])
 
   if (asChild && isValidElement(children)) {
