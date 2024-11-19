@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
@@ -11,6 +11,7 @@ import { useEnvironment } from '../../providers/Environment/EnvironmentInputProv
 import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
 import type { Awaitable } from '../../types/utility/promises'
 import { useAccountConfirmationStoreActions } from '../../providers/AccountConfirmationStoreProvider'
+import { usePollingInfoRef } from '../../utils/polling/usePollingInfoRef'
 
 export function getAccountsNeedingConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
   return linkedAccounts.filter(
@@ -45,9 +46,6 @@ type UseLinkedAccounts = () => {
 const DEBUG = false
 const USE_MOCK_RESPONSE_DATA = false
 
-const MAX_POLLING_ATTEMPTS = 5
-const POLLING_INTERVAL = 1000
-
 type LinkMode = 'update' | 'add'
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
@@ -61,13 +59,16 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const { apiUrl, usePlaidSandbox } = useEnvironment()
   const { data: auth } = useAuth()
-  const { preload: preloadAccountConfirmation } = useAccountConfirmationStoreActions()
+  const {
+    preload: preloadAccountConfirmation,
+    reset: resetAccountConfirmation
+  } = useAccountConfirmationStoreActions()
 
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
 
-  const pollingInfoRef = useRef({ enabled: false, attempt: 0 })
+  const pollingInfoRef = usePollingInfoRef({ maxAttempts: 5, pollingIntervalMs: 1000 })
 
   const queryKey = businessId && auth?.access_token && `linked-accounts-${businessId}`
 
@@ -83,24 +84,20 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       params: { businessId },
     }),
     {
-      refreshInterval: pollingInfoRef.current.enabled
-        ? POLLING_INTERVAL
+      refreshInterval: pollingInfoRef.current.isEnabled()
+        ? pollingInfoRef.current.pollingIntervalMs
         : DEFAULT_SWR_CONFIG.refreshInterval,
-      dedupingInterval: pollingInfoRef.current.enabled ? POLLING_INTERVAL / 2 : undefined,
+      dedupingInterval: pollingInfoRef.current.isEnabled()
+        ? pollingInfoRef.current.pollingIntervalMs / 2
+        : undefined,
       onSuccess: () => {
         const { current: pollingInfo } = pollingInfoRef
 
         if (accountNeedsConfirmation(responseData?.data.external_accounts ?? [])) {
-          pollingInfo.enabled = false
-          pollingInfo.attempt = 0
+          pollingInfo.reset()
         }
 
-        pollingInfo.attempt += pollingInfo.enabled ? 1 : 0
-
-        if (pollingInfo.attempt >= MAX_POLLING_ATTEMPTS) {
-          pollingInfo.enabled = false
-          pollingInfo.attempt = 0
-        }
+        pollingInfo.incrementOrReset()
       }
     }
   )
@@ -168,7 +165,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       body: { public_token: publicToken, institution: metadata.institution },
     })
 
-    pollingInfoRef.current.enabled = true
+    pollingInfoRef.current.enable().then(() => {
+      resetAccountConfirmation()
+    })
+
     refetchAccounts()
   }
 
