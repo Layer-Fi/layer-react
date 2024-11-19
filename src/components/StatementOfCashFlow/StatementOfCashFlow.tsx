@@ -79,7 +79,7 @@ const StatementOfCashFlowView = ({
   const datePicker =
     datePickerMode === 'monthPicker' ? (
       <DatePicker
-        selected={startDate}
+        defaultSelected={startDate}
         onChange={dates => {
           if (!Array.isArray(dates)) {
             const date = dates as Date
@@ -97,7 +97,7 @@ const StatementOfCashFlowView = ({
       />
     ) : (
       <DatePicker
-        selected={[startDate, endDate]}
+        defaultSelected={[startDate, endDate]}
         customDateRanges={customDateRanges}
         onChange={dates =>
           handleDateChange(dates as [Date | null, Date | null])

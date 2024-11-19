@@ -98,14 +98,6 @@ export const useProfitAndLoss: UseProfitAndLoss = (
   }, [syncWithGlobalDate])
 
   useEffect(() => {
-    // @TODO period is wrong
-    // if (
-    //   dateSyncedWithGlobal &&
-    //   JSON.stringify(globalDateRange) !==
-    //     JSON.stringify({ startDate, endDate, period: globalDateRange.period })
-    // ) {
-    //   setGlobalDateRange({ startDate, endDate })
-    // }
     if (syncWithGlobalDate) {
       setGlobalDateRange(dateRange)
     }

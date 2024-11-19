@@ -85,7 +85,6 @@ export const DatePicker = ({
     }
 
     if (!props.selected) {
-      // @TODO check for globals and set globals instead if exists
       return {}
     }
 
@@ -193,13 +192,6 @@ export const DatePickerController = ({
       && JSON.stringify({ s: date.startDate, e: date.endDate })
       !== JSON.stringify({ s: startDate, e: endDate })
     ) {
-      if (onChange) {
-        if (isRangeMode(mode)) {
-          onChange(startDate)
-        } else {
-          onChange([startDate, endDate])
-        }
-      }
       setDate({ startDate, endDate })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -229,6 +221,15 @@ export const DatePickerController = ({
     if (endDate !== date.endDate) {
       setEndDate(date.endDate)
     }
+
+    // @TODO - handle only if without context?
+    // if (onChange) {
+    //   if (isRangeMode(mode)) {
+    //     onChange([date.startDate, date.endDate])
+    //   } else {
+    //     onChange(date.startDate)
+    //   }
+    // }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date])
 
