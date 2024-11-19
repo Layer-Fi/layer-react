@@ -509,15 +509,15 @@ export const DatePickerController = ({
       )}
       {currentDateOption
         && (mode === 'dayPicker' || mode === 'monthPicker') && (
-          <Button
-            className='Layer__datepicker__current-button'
-            onClick={setCurrentDate}
-            variant={ButtonVariant.secondary}
-            disabled={isCurrentDate()}
-          >
-            {mode === 'dayPicker' ? 'Today' : 'Current'}
-          </Button>
-        )}
+        <Button
+          className='Layer__datepicker__current-button'
+          onClick={setCurrentDate}
+          variant={ButtonVariant.secondary}
+          disabled={isCurrentDate()}
+        >
+          {mode === 'dayPicker' ? 'Today' : 'Current'}
+        </Button>
+      )}
     </div>
   )
 }
