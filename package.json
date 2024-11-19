@@ -1,6 +1,6 @@
 {
   "name": "@layerfi/components",
-  "version": "0.1.77",
+  "version": "0.1.78",
   "description": "Layer React Components",
   "main": "dist/cjs/index.cjs",
   "module": "dist/esm/index.mjs",
@@ -33,7 +33,7 @@
     "react"
   ],
   "author": "Layer Financial",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/Layer-Fi/layer-react/issues"
   },
