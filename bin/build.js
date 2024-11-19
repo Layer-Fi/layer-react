@@ -2,7 +2,7 @@ const { build, context } = require('esbuild')
 const { dependencies, peerDependencies } = require('../package.json')
 const { Generator } = require('npm-dts')
 const { sassPlugin } = require('esbuild-sass-plugin')
-const { rename, rm } = require('node:fs/promises')
+const { copyFile, rm } = require('node:fs/promises')
 
 const OUT_DIR = 'dist'
 
@@ -54,13 +54,12 @@ const STYLE_ENTRY_POINT = 'src/styles/index.scss'
 function moveStyles(baseDir, { withMap = false } = {}) {
   return Promise.all(
     [
-      rename(`${baseDir}/styles/index.css`, `${OUT_DIR}/index.css`),
+      copyFile(`${baseDir}/styles/index.css`, `${OUT_DIR}/index.css`),
       withMap
-        ? rename(`${baseDir}/styles/index.css.map`, `${OUT_DIR}/index.css.map`)
+        ? copyFile(`${baseDir}/styles/index.css.map`, `${OUT_DIR}/index.css.map`)
         : null
     ].filter(Boolean)
   )
-  .then(() => rm(`${baseDir}/styles`, { recursive: true }))
 }
 
 /** @type {import('esbuild').BuildOptions} */
