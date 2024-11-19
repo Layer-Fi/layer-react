@@ -64,7 +64,7 @@ const PlatformOnboarding = ({
         <Text>
           {stringOverrides?.header
             ? stringOverrides.header
-            : 'Finguard Bookkeeping'}
+            : 'Onboarding'}
         </Text>
       }
     >
