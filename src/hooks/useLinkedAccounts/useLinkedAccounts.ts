@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
@@ -8,7 +8,6 @@ import { LINKED_ACCOUNTS_MOCK_DATA } from './mockData'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
 import type { Awaitable } from '../../types/utility/promises'
 import { useAccountConfirmationStoreActions } from '../../providers/AccountConfirmationStoreProvider'
 
@@ -61,13 +60,14 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const { apiUrl, usePlaidSandbox } = useEnvironment()
   const { data: auth } = useAuth()
-  const { preload: preloadAccountConfirmation } = useAccountConfirmationStoreActions()
+  const {
+    preload: preloadAccountConfirmation,
+    reset: resetAccountConfirmation
+  } = useAccountConfirmationStoreActions()
 
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
-
-  const pollingInfoRef = useRef({ enabled: false, attempt: 0 })
 
   const queryKey = businessId && auth?.access_token && `linked-accounts-${businessId}`
 
@@ -82,27 +82,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     Layer.getLinkedAccounts(apiUrl, auth?.access_token, {
       params: { businessId },
     }),
-    {
-      refreshInterval: pollingInfoRef.current.enabled
-        ? POLLING_INTERVAL
-        : DEFAULT_SWR_CONFIG.refreshInterval,
-      dedupingInterval: pollingInfoRef.current.enabled ? POLLING_INTERVAL / 2 : undefined,
-      onSuccess: () => {
-        const { current: pollingInfo } = pollingInfoRef
-
-        if (accountNeedsConfirmation(responseData?.data.external_accounts ?? [])) {
-          pollingInfo.enabled = false
-          pollingInfo.attempt = 0
-        }
-
-        pollingInfo.attempt += pollingInfo.enabled ? 1 : 0
-
-        if (pollingInfo.attempt >= MAX_POLLING_ATTEMPTS) {
-          pollingInfo.enabled = false
-          pollingInfo.attempt = 0
-        }
-      }
-    }
   )
 
   useEffect(() => {
@@ -163,13 +142,16 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   ) => {
     preloadAccountConfirmation()
 
-    await Layer.exchangePlaidPublicToken(apiUrl, auth?.access_token, {
-      params: { businessId },
-      body: { public_token: publicToken, institution: metadata.institution },
-    })
-
-    pollingInfoRef.current.enabled = true
-    refetchAccounts()
+    try {
+      await Layer.exchangePlaidPublicToken(apiUrl, auth?.access_token, {
+        params: { businessId },
+        body: { public_token: publicToken, institution: metadata.institution },
+      })
+      await refetchAccounts()
+    }
+    finally {
+      resetAccountConfirmation()
+    }
   }
 
   const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
