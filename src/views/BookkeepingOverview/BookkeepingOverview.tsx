@@ -102,8 +102,8 @@ export const BookkeepingOverview = ({
             <Container
               name={classNames(
                 'bookkeeping-overview-profit-and-loss-chart',
-                pnlToggle !== 'revenue' &&
-                  'bookkeeping-overview-profit-and-loss-chart--hidden',
+                pnlToggle !== 'revenue'
+                  && 'bookkeeping-overview-profit-and-loss-chart--hidden',
               )}
             >
               <ProfitAndLoss.DetailedCharts
@@ -115,8 +115,8 @@ export const BookkeepingOverview = ({
             <Container
               name={classNames(
                 'bookkeeping-overview-profit-and-loss-chart',
-                pnlToggle !== 'expenses' &&
-                  'bookkeeping-overview-profit-and-loss-chart--hidden',
+                pnlToggle !== 'expenses'
+                  && 'bookkeeping-overview-profit-and-loss-chart--hidden',
               )}
             >
               <ProfitAndLoss.DetailedCharts

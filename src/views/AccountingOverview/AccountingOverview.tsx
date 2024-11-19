@@ -74,7 +74,7 @@ export const AccountingOverview = ({
           ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
           : undefined
       }
-      dateSyncedWithGlobal={syncWithGlobalDate}
+      syncWithGlobalDate={syncWithGlobalDate}
     >
       <View
         title={title}

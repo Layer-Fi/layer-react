@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react'
-import { DateContext, GlobalDateContext } from '../../contexts/DateContext'
-import { useDate } from '../../hooks/useDate'
-import { DateState } from '../../types'
+import { DateContext, GlobalDateContext } from '../contexts/DateContext'
+import { useDate } from '../hooks/useDate'
 
 interface DateProviderProps {
   children: ReactNode
@@ -17,7 +16,6 @@ export const DateProvider = ({ children }: DateProviderProps) => {
 
 export const GlobalDateProvider = ({ children }: DateProviderProps) => {
   const contextData = useDate({
-    name: 'GlobalDateProvider',
     period: 'CUSTOM',
     mode: 'dayRangePicker',
   })

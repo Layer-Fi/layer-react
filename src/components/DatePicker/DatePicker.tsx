@@ -9,7 +9,6 @@ import { useDate } from '../../hooks/useDate'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
-import { DateState } from '../../types'
 import { Button, ButtonVariant } from '../Button'
 import { CustomDateRange, DatePickerOptions } from './DatePickerOptions'
 import type {
@@ -51,7 +50,6 @@ interface DatePickerProps {
     ModeSelector: FC<DatePickerModeSelectorProps>
   }
   syncWithGlobalDate?: boolean
-  sync?: DateState[]
   withDateContext?: boolean
 }
 
@@ -63,10 +61,6 @@ export const DatePicker = ({
   ...props
 }: DatePickerProps) => {
   const { date: globalDateRange } = useGlobalDateContext()
-
-  if (!withDateContext) {
-    return <DatePickerController {...props} />
-  }
 
   const defaultValues = useMemo(() => {
     if (props.syncWithGlobalDate) {
@@ -110,9 +104,14 @@ export const DatePicker = ({
       startDate: props.selected as Date,
       endDate: endOfDay(props.selected as Date),
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const dateContext = useDate(defaultValues)
+
+  if (!withDateContext) {
+    return <DatePickerController {...props} />
+  }
 
   return (
     <DateContext.Provider value={dateContext}>
@@ -145,7 +144,6 @@ export const DatePickerController = ({
   onChangeMode,
   slots,
   syncWithGlobalDate = false,
-  sync,
   ...props
 }: DatePickerProps) => {
   const { date: globalDateRange, setDate: setGlobalDateRange } =
@@ -158,15 +156,6 @@ export const DatePickerController = ({
     isCalendarOpen: () => boolean;
   }>(null)
 
-  const [updatePickerDate, setPickerDate] = useState<boolean>(false)
-  // const [selectedDates, setSelectedDates] = useState<
-  //   Date | [Date | null, Date | null] | null
-  // >(
-  //   syncWithGlobalDate && globalDateRange.startDate && globalDateRange.endDate
-  //     ? [globalDateRange.startDate, globalDateRange.endDate]
-  //     : selected,
-  // )
-  // const pickerRef = useRef<ReactDatePicker>(null)
   const [selectingDates, setSelectingDates] = useState<boolean>(false)
 
   const { isDesktop } = useSizeClass()
@@ -194,7 +183,7 @@ export const DatePickerController = ({
     }
 
     setStartDate(selected as Date)
-  }, [selected])
+  }, [mode, selected])
 
   useEffect(() => {
     if (
@@ -204,8 +193,16 @@ export const DatePickerController = ({
       && JSON.stringify({ s: date.startDate, e: date.endDate })
       !== JSON.stringify({ s: startDate, e: endDate })
     ) {
+      if (onChange) {
+        if (isRangeMode(mode)) {
+          onChange(startDate)
+        } else {
+          onChange([startDate, endDate])
+        }
+      }
       setDate({ startDate, endDate })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectingDates])
 
   useEffect(() => {
@@ -232,6 +229,7 @@ export const DatePickerController = ({
     if (endDate !== date.endDate) {
       setEndDate(date.endDate)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date])
 
   useEffect(() => {
@@ -257,6 +255,7 @@ export const DatePickerController = ({
       setStartDate(globalDateRange.startDate)
       setEndDate(globalDateRange.endDate)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalDateRange])
 
   const wrapperClassNames = classNames(

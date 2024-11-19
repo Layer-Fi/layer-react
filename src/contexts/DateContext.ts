@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
-import { useDate } from '../../hooks/useDate'
-import { DateState } from '../../types'
+import { useDate } from '../hooks/useDate'
+import { DateState } from '../types'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 export type DateContextType = ReturnType<typeof useDate>

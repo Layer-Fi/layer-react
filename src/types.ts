@@ -72,7 +72,6 @@ export type DateState = {
   period: DatePeriod
   mode: DatePickerMode // @TODO - make something more generic and unify with DatePickerMode
   supportedModes?: DatePickerMode[]
-  name?: string // @TODO - only for logging and testing
 }
 
 // Only Date and string (ISO8601 formatted) make sense here

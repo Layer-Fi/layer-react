@@ -33,7 +33,7 @@ type Props = {
   endDate?: Date
   tagFilter?: PnlTagFilter
   reportingBasis?: ReportingBasis
-  dateSyncedWithGlobal?: boolean
+  syncWithGlobalDate?: boolean
 }
 
 type ProfitAndLossFilter = {
@@ -69,11 +69,9 @@ type UseProfitAndLoss = (props?: Props) => {
 
 export const useProfitAndLoss: UseProfitAndLoss = (
   {
-    // startDate: initialStartDate,
-    // endDate: initialEndDate,
     tagFilter,
     reportingBasis,
-    dateSyncedWithGlobal,
+    syncWithGlobalDate,
   }: Props = {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
@@ -84,12 +82,6 @@ export const useProfitAndLoss: UseProfitAndLoss = (
 
   const { date: dateRange, setDate: setDateRange } = useDateContext()
 
-  // const [startDate, setStartDate] = useState(
-  //   initialStartDate || startOfMonth(Date.now()),
-  // )
-  // const [endDate, setEndDate] = useState(
-  //   initialEndDate || endOfMonth(Date.now()),
-  // )
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
     expenses: undefined,
     revenue: undefined,
@@ -97,14 +89,13 @@ export const useProfitAndLoss: UseProfitAndLoss = (
 
   useEffect(() => {
     if (
-      dateSyncedWithGlobal &&
-      JSON.stringify(globalDateRange) !== JSON.stringify(dateRange)
+      syncWithGlobalDate
+      && JSON.stringify(globalDateRange) !== JSON.stringify(dateRange)
     ) {
-      setDateRange(globalDateRange) // @TODO - somewhere here we have to translate
-      // setStartDate(globalDateRange.startDate)
-      // setEndDate(globalDateRange.endDate)
+      setDateRange(globalDateRange)
     }
-  }, [globalDateRange])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [syncWithGlobalDate])
 
   useEffect(() => {
     // @TODO period is wrong
@@ -115,9 +106,10 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     // ) {
     //   setGlobalDateRange({ startDate, endDate })
     // }
-    if (dateSyncedWithGlobal) {
+    if (syncWithGlobalDate) {
       setGlobalDateRange(dateRange)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateRange])
 
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
@@ -184,9 +176,9 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const items = collectRevenueItems(data)
     const filtered = items.map(x => {
       if (
-        filters['revenue']?.types &&
-        filters['revenue']!.types!.length > 0 &&
-        !filters['revenue']?.types?.includes(x.type)
+        filters['revenue']?.types
+        && filters['revenue']!.types!.length > 0
+        && !filters['revenue']?.types?.includes(x.type)
       ) {
         return {
           ...x,
@@ -238,6 +230,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, dateRange.startDate, filters, sidebarScope, summaryData])
 
   const { filteredDataExpenses, filteredTotalExpenses } = useMemo(() => {
@@ -247,9 +240,9 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const items = collectExpensesItems(data)
     const filtered = items.map(x => {
       if (
-        filters['expenses']?.types &&
-        filters['expenses']!.types!.length > 0 &&
-        !filters['expenses']?.types?.includes(x.type)
+        filters['expenses']?.types
+        && filters['expenses']!.types!.length > 0
+        && !filters['expenses']?.types?.includes(x.type)
       ) {
         return {
           ...x,
@@ -301,6 +294,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, dateRange.startDate, filters, sidebarScope, summaryData])
 
   return {

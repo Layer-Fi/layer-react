@@ -56,21 +56,21 @@ const getOptions = (enabledReports: ReportType[]) => {
   return [
     enabledReports.includes('profitAndLoss')
       ? {
-          value: 'profitAndLoss',
-          label: 'Profit & Loss',
-        }
+        value: 'profitAndLoss',
+        label: 'Profit & Loss',
+      }
       : null,
     enabledReports.includes('balanceSheet')
       ? {
-          value: 'balanceSheet',
-          label: 'Balance Sheet',
-        }
+        value: 'balanceSheet',
+        label: 'Balance Sheet',
+      }
       : null,
     enabledReports.includes('statementOfCashFlow')
       ? {
-          value: 'statementOfCashFlow',
-          label: 'Statement of Cash Flow',
-        }
+        value: 'statementOfCashFlow',
+        label: 'Statement of Cash Flow',
+      }
       : null,
   ].filter(o => !!o) as ReportOption[]
 }
@@ -116,7 +116,7 @@ export const Reports = ({
       <Container name='reports' ref={containerRef}>
         <ProfitAndLoss
           asContainer={false}
-          dateSyncedWithGlobal={profitAndLossConfig?.syncWithGlobalDate}
+          syncWithGlobalDate={profitAndLossConfig?.syncWithGlobalDate}
         >
           <ReportsPanel
             containerRef={containerRef}

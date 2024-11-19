@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { DateState } from '../../types'
-import { resolveDateToDate } from '../../utils/date'
+import { DateState } from '../types'
+import { resolveDateToDate } from '../utils/date'
 import { endOfMonth, isAfter, isBefore, startOfMonth } from 'date-fns'
 
 type UseDate = (props: Partial<DateState>) => {
@@ -10,23 +10,19 @@ type UseDate = (props: Partial<DateState>) => {
 
 export type UseDateProps = Partial<DateState>
 
-/**
- * @TODO handle period
- */
 export const useDate: UseDate = ({
   startDate: initialStartDate,
   endDate: initialEndDate,
   period: initialPeriod,
   mode: initialMode,
   supportedModes,
-  name, // @TODO - only for logging and testing
 }: UseDateProps) => {
   const [dateState, setDateState] = useState<DateState>({
     startDate: initialStartDate ?? startOfMonth(new Date()),
     endDate: initialEndDate ?? endOfMonth(new Date()),
     period: initialPeriod ?? 'MONTH',
     mode: initialMode ?? 'monthPicker',
-    supportedModes: supportedModes ?? ['monthPicker'], // @TODO - use sth more generic and default
+    supportedModes: supportedModes ?? ['monthPicker'],
   })
 
   const setDate = ({
@@ -35,7 +31,7 @@ export const useDate: UseDate = ({
     mode: newMode,
     period: newPeriod,
   }: Partial<DateState>) => {
-    let newDate: DateState = resolveDateToDate(
+    const newDate: DateState = resolveDateToDate(
       {
         startDate: newStartDate ?? dateState.startDate,
         endDate: newEndDate ?? dateState.endDate,
@@ -47,27 +43,27 @@ export const useDate: UseDate = ({
     )
 
     if (
-      newDate.startDate &&
-      newDate.endDate &&
-      !isAfter(newDate.startDate, newDate.endDate)
+      newDate.startDate
+      && newDate.endDate
+      && !isAfter(newDate.startDate, newDate.endDate)
     ) {
       setDateState(newDate)
       return true
     }
 
     if (
-      newDate.startDate &&
-      !newDate.endDate &&
-      !isAfter(newDate.startDate, dateState.endDate)
+      newDate.startDate
+      && !newDate.endDate
+      && !isAfter(newDate.startDate, dateState.endDate)
     ) {
       setDateState(newDate)
       return true
     }
 
     if (
-      !newDate.startDate &&
-      newDate.endDate &&
-      !isBefore(newDate.endDate, dateState.startDate)
+      !newDate.startDate
+      && newDate.endDate
+      && !isBefore(newDate.endDate, dateState.startDate)
     ) {
       setDateState(newDate)
       return true
