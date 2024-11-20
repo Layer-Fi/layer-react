@@ -2,7 +2,7 @@ const { build, context } = require('esbuild')
 const { dependencies, peerDependencies } = require('../package.json')
 const { Generator } = require('npm-dts')
 const { sassPlugin } = require('esbuild-sass-plugin')
-const { copyFile, rename, mkdir, rm } = require('node:fs/promises')
+const { rename, rm } = require('node:fs/promises')
 
 const OUT_DIR = 'dist'
 
