@@ -8,14 +8,14 @@ export type PublicToken = {
 
 export type AccountSource = EnumWithUnknownValues<'PLAID' | 'STRIPE'>
 
-const KNOWN_ACCOUNT_NOTIFICATION_TYPES = [
+const _KNOWN_ACCOUNT_NOTIFICATION_TYPES = [
   'CONFIRM_RELEVANT',
-  'CONFIRM_UNIQUE'
+  'CONFIRM_UNIQUE',
 ] as const
-type KnownAccountNotificationType = typeof KNOWN_ACCOUNT_NOTIFICATION_TYPES[number]
+type KnownAccountNotificationType = typeof _KNOWN_ACCOUNT_NOTIFICATION_TYPES[number]
 
-const KNOWN_ACCOUNT_NOTIFICATION_SCOPES = ['USER'] as const
-type KnownAccountNotificationScope = typeof KNOWN_ACCOUNT_NOTIFICATION_SCOPES[number]
+const _KNOWN_ACCOUNT_NOTIFICATION_SCOPES = ['USER'] as const
+type KnownAccountNotificationScope = typeof _KNOWN_ACCOUNT_NOTIFICATION_SCOPES[number]
 
 type AccountNotificationType = EnumWithUnknownValues<KnownAccountNotificationType>
 type AccountNotificationScope = EnumWithUnknownValues<KnownAccountNotificationScope>
