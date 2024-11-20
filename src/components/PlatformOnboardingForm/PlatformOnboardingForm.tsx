@@ -2,12 +2,59 @@ import React, { useContext, useState } from 'react'
 import { PlatformOnboardingContext } from '../../contexts/PlatformOnboardingContext'
 import { SubmitButton } from '../Button'
 import { Input, InputGroup, Select } from '../Input'
-import { Heading, HeadingSize, Text, TextSize } from '../Typography'
+import { ErrorText, Heading, HeadingSize, Text, TextSize } from '../Typography'
+import { BaseSelectOption } from '../../types/general'
+import { Layer } from '../../api/layer'
+import { useLayerContext } from '../../contexts/LayerContext'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useAuth } from '../../hooks/useAuth'
+
+interface FormDataTypes {
+  firstName: string
+  lastName: string
+  email: string
+  phone_number: string
+  legal_name: string
+  dba?: string
+  country: string
+  entity?: BaseSelectOption
+  state?: BaseSelectOption
+  taxId: string
+}
 
 export const PlatformOnboardingForm = () => {
-  const { formData, updateFormData, nextStep } = useContext(
-    PlatformOnboardingContext,
-  )
+  const { nextStep } = useContext(PlatformOnboardingContext)
+  const { businessId } = useLayerContext()
+  const { apiUrl } = useEnvironment()
+  const { data: auth } = useAuth()
+
+  const [formData, setFormData] = useState<Partial<FormDataTypes>>({})
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState<string | undefined>()
+
+  const updateFormData = (
+    fieldName: string,
+    value: string | BaseSelectOption | undefined,
+  ) => {
+    setFormData(prevFormData => ({ ...prevFormData, [fieldName]: value }))
+  }
+
+  const submitForm = async() => {
+    try {
+      setSending(true)
+      setError(undefined)
+      await Layer.updateBusiness(apiUrl, auth?.access_token, {
+        params: { businessId },
+        body: formData,
+      })
+      nextStep()
+    } catch (err) {
+      console.error(err)
+      setError('Submit failed. Please, try again!')
+    } finally {
+      setSending(false)
+    }
+  }
 
   return (
     <div className='Layer__platform__onboarding__form-wrapper'>
@@ -21,7 +68,7 @@ export const PlatformOnboardingForm = () => {
         className='Layer__platform__onboarding__form'
         onSubmit={e => {
           e.preventDefault()
-          nextStep()
+          submitForm()
         }}
       >
         <Text as='p' size={TextSize.sm}>
@@ -33,7 +80,7 @@ export const PlatformOnboardingForm = () => {
               <Input
                 name='firstName'
                 placeholder='John'
-                value={formData.name}
+                value={formData.firstName}
                 onChange={e =>
                   updateFormData(
                     'firstName',
@@ -46,7 +93,7 @@ export const PlatformOnboardingForm = () => {
               <Input
                 name='lastName'
                 placeholder='Doe'
-                value={formData.name}
+                value={formData.lastName}
                 onChange={e =>
                   updateFormData(
                     'lastName',
@@ -63,22 +110,22 @@ export const PlatformOnboardingForm = () => {
             <Input
               name='email'
               placeholder='john@company.com'
-              value={formData.name}
+              value={formData.email}
               onChange={e =>
                 updateFormData('email', (e.target as HTMLInputElement).value)
               }
             />
           </InputGroup>
           <InputGroup
-            name='phone'
+            name='phone_number'
             label='What’s the phone number you want to use for bookkeeping communication?'
           >
             <Input
-              name='phone'
+              name='phone_number'
               placeholder='1-212-456-7890'
-              value={formData.name}
+              value={formData.phone_number}
               onChange={e =>
-                updateFormData('email', (e.target as HTMLInputElement).value)
+                updateFormData('phone_number', (e.target as HTMLInputElement).value)
               }
             />
           </InputGroup>
@@ -87,14 +134,14 @@ export const PlatformOnboardingForm = () => {
           Business information
         </Text>
         <div className='Layer__platform__onboarding__form--inputs'>
-          <InputGroup name='company' label='Company'>
+          <InputGroup name='legal_name' label='Company'>
             <Input
-              name='company'
+              name='legal_name'
               placeholder='Company'
-              value={formData.name}
+              value={formData.legal_name}
               onChange={e =>
                 updateFormData(
-                  'firstName',
+                  'legal_name',
                   (e.target as HTMLInputElement).value,
                 )
               }
@@ -102,11 +149,11 @@ export const PlatformOnboardingForm = () => {
           </InputGroup>
           <InputGroup name='dba' label='DBA (optional)'>
             <Input
-              name='email'
-              placeholder='john@company.com'
-              value={formData.name}
+              name='dba'
+              placeholder='01/02/2000'
+              value={formData.email}
               onChange={e =>
-                updateFormData('email', (e.target as HTMLInputElement).value)
+                updateFormData('dba', (e.target as HTMLInputElement).value)
               }
             />
           </InputGroup>
@@ -126,7 +173,7 @@ export const PlatformOnboardingForm = () => {
             <InputGroup name='taxId' label='Tax ID number (optional)'>
               <Input
                 name='taxId'
-                value={formData.name}
+                value={formData.taxId}
                 onChange={e =>
                   updateFormData('taxId', (e.target as HTMLInputElement).value)
                 }
@@ -134,9 +181,12 @@ export const PlatformOnboardingForm = () => {
             </InputGroup>
           </div>
         </div>
-        <SubmitButton type='submit' noIcon={true} active={true}>
+        <SubmitButton disabled={sending} type='submit' noIcon={true} active={true}>
           Save
         </SubmitButton>
+        {error && (
+          <ErrorText className='Layer__mt-md' size={TextSize.sm}>{error}</ErrorText>
+        )}
       </form>
     </div>
   )

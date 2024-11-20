@@ -104,8 +104,11 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       }
     }
   )
+  
+  console.log('isLoading', isLoading)
 
   useEffect(() => {
+    console.log('use effect', isLoading, loadingStatus)
     if (!isLoading && responseData?.data.external_accounts) {
       setLoadingStatus('complete')
       return

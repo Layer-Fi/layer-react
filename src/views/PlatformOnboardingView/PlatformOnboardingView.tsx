@@ -2,7 +2,6 @@ import React, { useContext } from 'react'
 import { Button, ButtonVariant } from '../../components/Button'
 import { Container } from '../../components/Container'
 import { OnboardingCalendar } from '../../components/OnboardingCall'
-import { PlatformOnboardingAccounts } from '../../components/PlatformOnboardingAccounts'
 import { PlatformOnboardingForm } from '../../components/PlatformOnboardingForm'
 import { PlatformOnboardingGetStarted } from '../../components/PlatformOnboardingGetStarted'
 import { PlatformOnboardingGuide } from '../../components/PlatformOnboardingGuide'
@@ -13,6 +12,7 @@ import { Text } from '../../components/Typography'
 import { View } from '../../components/View'
 import { PlatformOnboardingContext } from '../../contexts/PlatformOnboardingContext'
 import { usePlatformOnboarding } from '../../hooks/usePlatformOnboarding'
+import { LinkAccountsContent } from '../../components/PlatformOnboarding/LinkAccounts'
 
 interface StringOverrides {
   header?: string
@@ -47,7 +47,8 @@ const PlatformOnboarding = ({
       case 1:
         return <PlatformOnboardingForm />
       case 2:
-        return <PlatformOnboardingAccounts />
+        // return <PlatformOnboardingAccounts />
+        return <LinkAccountsContent />
       case 3:
         return <PlatformOnboardingSchedule />
       case 4:

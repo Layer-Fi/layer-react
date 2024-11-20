@@ -30,6 +30,10 @@
   padding-top: 2px;
 }
 
+.Layer__mt-md {
+  margin-top: var(--spacing-md);
+}
+
 .Layer__border-top {
   border-top: 1px solid var(--border-color);
 }

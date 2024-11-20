@@ -7,8 +7,6 @@ export type PlatformOnboardingContextType = ReturnType<
 export const PlatformOnboardingContext =
   createContext<PlatformOnboardingContextType>({
     currentStep: 0,
-    formData: {},
     nextStep: () => {},
     prevStep: () => {},
-    updateFormData: () => {},
   })

@@ -62,6 +62,8 @@ export const LinkAccountsContent = ({
   const { data, loadingStatus, error, refetchAccounts, addConnection } =
     useContext(LinkedAccountsContext)
 
+  console.log(loadingStatus, data)
+
   return (
     <div className='Layer__link-accounts Layer__component'>
       {title && <Heading size={HeadingSize.view}>{title}</Heading>}
