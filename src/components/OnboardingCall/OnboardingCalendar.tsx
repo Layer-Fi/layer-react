@@ -1,9 +1,5 @@
-/**
- * @TODO - change hosts image from base64 into assets
- */
 import React from 'react'
 import { InlineWidget, useCalendlyEventListener } from 'react-calendly'
-import { useLayerContext } from '../../contexts/LayerContext'
 import Camera from '../../icons/Camera'
 import CheckCircle from '../../icons/CheckCircle'
 import Clock from '../../icons/Clock'

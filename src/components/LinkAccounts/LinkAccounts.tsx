@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import LinkIcon from '../../icons/Link'
 import PlaidIcon from '../../icons/PlaidIcon'
@@ -30,20 +30,15 @@ export interface LinkAccountsProps {
 }
 
 export const LinkAccounts = ({ inBox, ...props }: LinkAccountsProps) => {
-  const content = useMemo(() => {
-    if (inBox) {
-      return (
+  return (
+    <LinkedAccountsProvider>
+      {inBox ? (
         <div className='Layer__link-accounts__box'>
           <LinkAccountsContent {...props} />
         </div>
-      )
-    }
-    return <LinkAccountsContent {...props} />
-  }, [inBox, props])
-
-  return (
-    <LinkedAccountsProvider>
-      {content}
+      ) : (
+        <LinkAccountsContent {...props} />
+      )}
     </LinkedAccountsProvider>
   )
 }
@@ -61,8 +56,6 @@ export const LinkAccountsContent = ({
 }: LinkAccountsProps) => {
   const { data, loadingStatus, error, refetchAccounts, addConnection } =
     useContext(LinkedAccountsContext)
-
-  console.log(loadingStatus, data)
 
   return (
     <div className='Layer__link-accounts Layer__component'>
@@ -97,6 +90,7 @@ export const LinkAccountsContent = ({
           ))}
         </div>
       ) : null}
+      
       <ActionableRow
         iconBox={<PlaidIcon />}
         title={
@@ -115,9 +109,10 @@ export const LinkAccountsContent = ({
           </Button>
         }
       />
+
       <LinkedAccountsConfirmationModal />
 
-      {onBack || onNext ? (
+      {(onBack || onNext) && data && data.length > 0 ? (
         <div className='Layer__link-accounts__footer'>
           {onBack && (
             <Button onClick={onBack} variant={ButtonVariant.secondary}>

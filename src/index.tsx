@@ -37,7 +37,7 @@ export { Journal } from './components/Journal'
 export { Tasks } from './components/Tasks'
 
 /* --------------------- Onboarding ------------------------ */
-export { LinkAccounts } from './components/PlatformOnboarding'
+export { LinkAccounts } from './components/LinkAccounts'
 
 /* --------------------- Banners -------------------------- */
 export { BookkeepingUpsellBar } from './components/UpsellBanner'

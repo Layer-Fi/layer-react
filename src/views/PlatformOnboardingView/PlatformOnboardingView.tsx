@@ -12,7 +12,7 @@ import { Text } from '../../components/Typography'
 import { View } from '../../components/View'
 import { PlatformOnboardingContext } from '../../contexts/PlatformOnboardingContext'
 import { usePlatformOnboarding } from '../../hooks/usePlatformOnboarding'
-import { LinkAccountsContent } from '../../components/PlatformOnboarding/LinkAccounts'
+import { LinkAccounts } from '../../components/LinkAccounts/LinkAccounts'
 
 interface StringOverrides {
   header?: string
@@ -47,8 +47,7 @@ const PlatformOnboarding = ({
       case 1:
         return <PlatformOnboardingForm />
       case 2:
-        // return <PlatformOnboardingAccounts />
-        return <LinkAccountsContent />
+        return <LinkAccounts onNext={nextStep} onBack={prevStep} />
       case 3:
         return <PlatformOnboardingSchedule />
       case 4:
