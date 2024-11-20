@@ -12,4 +12,5 @@ export type TimeRangePickerConfig = {
   allowedDatePickerModes?: ReadonlyArray<RangePickerMode>
   csvMoneyFormat?: MoneyFormat
   customDateRanges?: CustomDateRange[]
+  syncWithGlobalDate?: boolean
 }

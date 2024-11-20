@@ -1,5 +1,7 @@
 import React, { PropsWithChildren, createContext } from 'react'
+import { DateContext, useGlobalDateContext } from '../../contexts/DateContext'
 import { PNLComparisonContext } from '../../contexts/ProfitAndLossComparisonContext'
+import { useDate, UseDateProps } from '../../hooks/useDate'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison'
 import { ReportingBasis } from '../../types'
@@ -49,15 +51,45 @@ type Props = PropsWithChildren & {
   }
   reportingBasis?: ReportingBasis
   asContainer?: boolean
+  syncWithGlobalDate?: boolean
 }
 
-const ProfitAndLoss = ({
+const ProfitAndLoss = (props: Props) => {
+  let defaultValues: UseDateProps = {
+    supportedModes: [
+      'monthPicker',
+      'monthRangePicker',
+    ],
+  }
+
+  const {
+    date: { startDate, endDate },
+  } = useGlobalDateContext()
+
+  if (props.syncWithGlobalDate) {
+    defaultValues = { ...defaultValues, startDate, endDate }
+  }
+  const dateContextData = useDate(defaultValues)
+
+  return (
+    <DateContext.Provider value={dateContextData}>
+      <ProfitAndLossContent {...props} />
+    </DateContext.Provider>
+  )
+}
+
+const ProfitAndLossContent = ({
   children,
   tagFilter,
   reportingBasis,
   asContainer = true,
+  syncWithGlobalDate = false,
 }: Props) => {
-  const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
+  const contextData = useProfitAndLoss({
+    tagFilter,
+    reportingBasis,
+    syncWithGlobalDate,
+  })
   const comparisonContextData = useProfitAndLossComparison({ reportingBasis })
 
   return (

@@ -31,6 +31,8 @@ export interface BankTransactionsHeaderProps {
   isSyncing?: boolean
   setDateRange?: (value: DateRange) => void
   stringOverrides?: BankTransactionsHeaderStringOverrides
+  syncWithGlobalDate?: boolean
+  customDateProvider?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -104,6 +106,8 @@ export const BankTransactionsHeader = ({
   setDateRange,
   stringOverrides,
   isSyncing,
+  syncWithGlobalDate,
+  customDateProvider,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
 
@@ -147,6 +151,8 @@ export const BankTransactionsHeader = ({
               }
             }}
             minDate={getEarliestDateToBrowse(business)}
+            syncWithGlobalDate={syncWithGlobalDate}
+            customDateProvider={customDateProvider}
           />
         ) : null}
       </div>

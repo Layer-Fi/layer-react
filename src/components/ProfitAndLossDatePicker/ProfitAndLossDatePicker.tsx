@@ -43,11 +43,12 @@ export const ProfitAndLossDatePicker = ({
   if (datePickerMode === 'dayRangePicker') {
     return (
       <DatePicker
+        customDateProvider={true}
         mode={datePickerMode}
         customDateRanges={customDateRanges}
         allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
         onChangeMode={setDatePickerMode}
-        selected={[dateRange.startDate, dateRange.endDate]}
+        defaultSelected={[dateRange.startDate, dateRange.endDate]}
         onChange={dateSet => {
           const dates = dateSet as [Date | null, Date | null]
           if (dates.length === 2 && !!dates[0] && !!dates[1]) {
@@ -68,11 +69,12 @@ export const ProfitAndLossDatePicker = ({
 
   return (
     <DatePicker
+      customDateProvider={true}
       mode={datePickerMode}
       customDateRanges={customDateRanges}
       allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
       onChangeMode={setDatePickerMode}
-      selected={dateRange.startDate}
+      defaultSelected={dateRange.startDate}
       onChange={date => {
         if (!Array.isArray(date)) {
           getComparisonData(date)

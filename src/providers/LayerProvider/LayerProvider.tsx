@@ -2,6 +2,7 @@ import React, { PropsWithChildren } from 'react'
 import { LayerError } from '../../models/ErrorHandler'
 import { BusinessProvider } from '../../providers/BusinessProvider/BusinessProvider'
 import { LayerThemeConfig } from '../../types/layer_context'
+import { GlobalDateProvider } from '../DateProvider'
 import { SWRConfig, SWRConfiguration } from 'swr'
 import type { Environment } from '../Environment/environmentConfigs'
 import { AuthInputProvider } from '../AuthInputProvider'
@@ -41,15 +42,17 @@ export const LayerProvider = ({
 
   return (
     <SWRConfig value={{ ...defaultSWRConfig, provider: () => new Map() }}>
-      <EnvironmentInputProvider environment={environment} usePlaidSandbox={usePlaidSandbox}>
-        <AuthInputProvider
-          appId={appId}
-          appSecret={appSecret}
-          businessAccessToken={businessAccessToken}
-        >
-          <BusinessProvider {...restProps} />
-        </AuthInputProvider>
-      </EnvironmentInputProvider>
+      <GlobalDateProvider>
+        <EnvironmentInputProvider environment={environment} usePlaidSandbox={usePlaidSandbox}>
+          <AuthInputProvider
+            appId={appId}
+            appSecret={appSecret}
+            businessAccessToken={businessAccessToken}
+          >
+            <BusinessProvider {...restProps} />
+          </AuthInputProvider>
+        </EnvironmentInputProvider>
+      </GlobalDateProvider>
     </SWRConfig>
   )
 }

@@ -42,6 +42,9 @@ export { LinkAccounts } from './components/PlatformOnboarding'
 /* --------------------- Banners -------------------------- */
 export { BookkeepingUpsellBar } from './components/UpsellBanner'
 
+/* ----------------- UI Controllers ----------------------- */
+export { DatePicker } from './components/DatePicker'
+
 /*
 ======================= Composite Views =======================
 */
@@ -60,5 +63,7 @@ export { useLayerContext } from './contexts/LayerContext'
 export { useBankTransactionsContext } from './contexts/BankTransactionsContext'
 export { BankTransactionsProvider } from './providers/BankTransactionsProvider'
 export { useDataSync } from './hooks/useDataSync'
+export { useDate } from './hooks/useDate'
+export { useDateContext, useGlobalDateContext, DateContext } from './contexts/DateContext'
 
 export { DisplayState, Direction } from './types/bank_transactions'

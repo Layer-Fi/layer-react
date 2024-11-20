@@ -36,6 +36,7 @@ export interface ReportsProps {
   comparisonConfig?: ProfitAndLossCompareOptionsProps
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
+  balanceSheetConfig?: { syncWithGlobalDate?: boolean }
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -47,6 +48,7 @@ export interface ReportsPanelProps {
   comparisonConfig?: ProfitAndLossCompareOptionsProps
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
+  balanceSheetConfig?: { syncWithGlobalDate?: boolean }
   view: ViewBreakpoint
 }
 
@@ -54,21 +56,21 @@ const getOptions = (enabledReports: ReportType[]) => {
   return [
     enabledReports.includes('profitAndLoss')
       ? {
-          value: 'profitAndLoss',
-          label: 'Profit & Loss',
-        }
+        value: 'profitAndLoss',
+        label: 'Profit & Loss',
+      }
       : null,
     enabledReports.includes('balanceSheet')
       ? {
-          value: 'balanceSheet',
-          label: 'Balance Sheet',
-        }
+        value: 'balanceSheet',
+        label: 'Balance Sheet',
+      }
       : null,
     enabledReports.includes('statementOfCashFlow')
       ? {
-          value: 'statementOfCashFlow',
-          label: 'Statement of Cash Flow',
-        }
+        value: 'statementOfCashFlow',
+        label: 'Statement of Cash Flow',
+      }
       : null,
   ].filter(o => !!o) as ReportOption[]
 }
@@ -81,6 +83,7 @@ export const Reports = ({
   comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
+  balanceSheetConfig,
 }: ReportsProps) => {
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
   const [view, setView] = useState<ViewBreakpoint>('desktop')
@@ -111,7 +114,10 @@ export const Reports = ({
         </div>
       )}
       <Container name='reports' ref={containerRef}>
-        <ProfitAndLoss asContainer={false}>
+        <ProfitAndLoss
+          asContainer={false}
+          syncWithGlobalDate={profitAndLossConfig?.syncWithGlobalDate}
+        >
           <ReportsPanel
             containerRef={containerRef}
             openReport={activeTab}
@@ -119,6 +125,7 @@ export const Reports = ({
             comparisonConfig={comparisonConfig}
             profitAndLossConfig={profitAndLossConfig}
             statementOfCashFlowConfig={statementOfCashFlowConfig}
+            balanceSheetConfig={balanceSheetConfig}
             view={view}
           />
         </ProfitAndLoss>
@@ -134,6 +141,7 @@ const ReportsPanel = ({
   comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
+  balanceSheetConfig,
   view,
 }: ReportsPanelProps) => {
   return (
@@ -148,7 +156,10 @@ const ReportsPanel = ({
         />
       )}
       {openReport === 'balanceSheet' && (
-        <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} />
+        <BalanceSheet
+          stringOverrides={stringOverrides?.balanceSheet}
+          {...balanceSheetConfig}
+        />
       )}
       {openReport === 'statementOfCashFlow' && (
         <StatementOfCashFlow

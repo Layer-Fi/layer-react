@@ -1,4 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import {
+  useDateContext,
+  useGlobalDateContext,
+} from '../../contexts/DateContext'
 import {
   ProfitAndLoss,
   DateRange,
@@ -29,6 +33,7 @@ type Props = {
   endDate?: Date
   tagFilter?: PnlTagFilter
   reportingBasis?: ReportingBasis
+  syncWithGlobalDate?: boolean
 }
 
 type ProfitAndLossFilter = {
@@ -64,38 +69,55 @@ type UseProfitAndLoss = (props?: Props) => {
 
 export const useProfitAndLoss: UseProfitAndLoss = (
   {
-    startDate: initialStartDate,
-    endDate: initialEndDate,
     tagFilter,
     reportingBasis,
+    syncWithGlobalDate,
   }: Props = {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   },
 ) => {
-  const [startDate, setStartDate] = useState(
-    initialStartDate || startOfMonth(Date.now()),
-  )
-  const [endDate, setEndDate] = useState(
-    initialEndDate || endOfMonth(Date.now()),
-  )
+  const { date: globalDateRange, setDate: setGlobalDateRange } =
+    useGlobalDateContext()
+
+  const { date: dateRange, setDate: setDateRange } = useDateContext()
+
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
     expenses: undefined,
     revenue: undefined,
   })
 
+  useEffect(() => {
+    if (
+      syncWithGlobalDate
+      && JSON.stringify(globalDateRange) !== JSON.stringify(dateRange)
+    ) {
+      setDateRange(globalDateRange)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [syncWithGlobalDate, globalDateRange])
+
+  useEffect(() => {
+    if (syncWithGlobalDate) {
+      setGlobalDateRange(dateRange)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateRange])
+
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
 
   const { data, isLoading, isValidating, error, refetch } =
     useProfitAndLossQuery({
-      startDate,
-      endDate,
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
       tagFilter,
       reportingBasis,
     })
 
   const { data: summaryData } = useProfitAndLossLTM({
-    currentDate: startDate ? startDate : startOfMonth(new Date()),
+    currentDate: dateRange.startDate
+      ? dateRange.startDate
+      : startOfMonth(new Date()),
     tagFilter: tagFilter,
   })
 
@@ -103,8 +125,12 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     startDate: newStartDate,
     endDate: newEndDate,
   }: Partial<DateRange>) => {
-    newStartDate && setStartDate(newStartDate)
-    newEndDate && setEndDate(newEndDate)
+    const newDateRange = {
+      startDate: newStartDate,
+      endDate: newEndDate,
+      period: dateRange.period,
+    }
+    setDateRange(newDateRange)
   }
 
   const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {
@@ -138,9 +164,9 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const items = collectRevenueItems(data)
     const filtered = items.map(x => {
       if (
-        filters['revenue']?.types &&
-        filters['revenue']!.types!.length > 0 &&
-        !filters['revenue']?.types?.includes(x.type)
+        filters['revenue']?.types
+        && filters['revenue']!.types!.length > 0
+        && !filters['revenue']?.types?.includes(x.type)
       ) {
         return {
           ...x,
@@ -151,8 +177,8 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       return x
     })
 
-    const month = startDate.getMonth() + 1
-    const year = startDate.getFullYear()
+    const month = dateRange.startDate?.getMonth() ?? 0 + 1
+    const year = dateRange.startDate?.getFullYear()
     const found = summaryData.find(x => x.month === month && x.year === year)
     if (found && (found.uncategorizedInflows ?? 0) > 0) {
       filtered.push({
@@ -192,7 +218,8 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
-  }, [data, startDate, filters, sidebarScope, summaryData])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, dateRange.startDate, filters, sidebarScope, summaryData])
 
   const { filteredDataExpenses, filteredTotalExpenses } = useMemo(() => {
     if (!data) {
@@ -201,9 +228,9 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const items = collectExpensesItems(data)
     const filtered = items.map(x => {
       if (
-        filters['expenses']?.types &&
-        filters['expenses']!.types!.length > 0 &&
-        !filters['expenses']?.types?.includes(x.type)
+        filters['expenses']?.types
+        && filters['expenses']!.types!.length > 0
+        && !filters['expenses']?.types?.includes(x.type)
       ) {
         return {
           ...x,
@@ -214,8 +241,8 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       return x
     })
 
-    const month = startDate.getMonth() + 1
-    const year = startDate.getFullYear()
+    const month = dateRange.startDate?.getMonth() ?? 0 + 1
+    const year = dateRange.startDate?.getFullYear()
     const found = summaryData.find(x => x.month === month && x.year === year)
     if (found && (found.uncategorizedOutflows ?? 0) > 0) {
       filtered.push({
@@ -255,7 +282,8 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
-  }, [data, startDate, filters, sidebarScope, summaryData])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, dateRange.startDate, filters, sidebarScope, summaryData])
 
   return {
     data,
@@ -266,7 +294,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     isLoading,
     isValidating,
     error: error,
-    dateRange: { startDate, endDate },
+    dateRange: dateRange,
     refetch,
     changeDateRange,
     sidebarScope,

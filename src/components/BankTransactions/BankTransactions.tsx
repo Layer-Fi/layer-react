@@ -65,6 +65,8 @@ export interface BankTransactionsProps {
   filters?: BankTransactionFilters
   hideHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
+  syncWithGlobalDate?: boolean
+  customDateProvider?: boolean
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -99,6 +101,8 @@ const BankTransactionsContent = ({
   filters: inputFilters,
   hideHeader = false,
   stringOverrides,
+  syncWithGlobalDate,
+  customDateProvider,
 }: BankTransactionsProps) => {
   const [ defaultDateRange ] = useState(() => ({
     startDate: startOfMonth(new Date()),
@@ -137,6 +141,7 @@ const BankTransactionsContent = ({
 
   useEffect(() => {
     activate()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -144,6 +149,7 @@ const BankTransactionsContent = ({
     if (!monthlyView && filters?.dateRange) {
       setFilters({ ...filters, dateRange: undefined })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monthlyView])
 
   useEffect(() => {
@@ -151,6 +157,7 @@ const BankTransactionsContent = ({
     if (monthlyView && isVisible && !isLoading && hasMore) {
       fetchMore()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monthlyView, isVisible, isLoading, hasMore])
 
   useEffect(() => {
@@ -162,8 +169,8 @@ const BankTransactionsContent = ({
           categorizationStatus: DisplayState.review,
         })
       } else if (
-        !inputFilters?.categorizationStatus &&
-        !categorizationEnabled(mode)
+        !inputFilters?.categorizationStatus
+        && !categorizationEnabled(mode)
       ) {
         setFilters({
           ...filters,
@@ -178,13 +185,14 @@ const BankTransactionsContent = ({
         categorizationStatus: DisplayState.review,
       })
     } else if (
-      !inputFilters?.categorizationStatus &&
-      !categorizationEnabled(mode)
+      !inputFilters?.categorizationStatus
+      && !categorizationEnabled(mode)
     ) {
       setFilters({
         categorizationStatus: DisplayState.categorized,
       })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputFilters, categorizeView, mode])
 
   useEffect(() => {
@@ -256,9 +264,9 @@ const BankTransactionsContent = ({
     display === DisplayState.review || display === DisplayState.all
 
   const isLastPage =
-    data &&
-    !hasMore &&
-    Math.ceil((data?.length || 0) / pageSize) === currentPage
+    data
+    && !hasMore
+    && Math.ceil((data?.length || 0) / pageSize) === currentPage
 
   return (
     <Container
@@ -292,6 +300,8 @@ const BankTransactionsContent = ({
           stringOverrides={stringOverrides?.bankTransactionsHeader}
           isDataLoading={isLoading}
           isSyncing={isSyncing}
+          syncWithGlobalDate={syncWithGlobalDate}
+          customDateProvider={customDateProvider}
         />
       )}
 
