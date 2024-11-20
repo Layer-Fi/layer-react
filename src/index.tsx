@@ -63,6 +63,7 @@ export { useLayerContext } from './contexts/LayerContext'
 export { useBankTransactionsContext } from './contexts/BankTransactionsContext'
 export { BankTransactionsProvider } from './providers/BankTransactionsProvider'
 export { useDataSync } from './hooks/useDataSync'
-export { useDateContext, useGlobalDateContext } from './contexts/DateContext'
+export { useDate } from './hooks/useDate'
+export { useDateContext, useGlobalDateContext, DateContext } from './contexts/DateContext'
 
 export { DisplayState, Direction } from './types/bank_transactions'

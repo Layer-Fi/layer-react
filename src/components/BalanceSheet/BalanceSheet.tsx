@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 import { BalanceSheetContext } from '../../contexts/BalanceSheetContext'
 import { TableProvider } from '../../contexts/TableContext'
 import { useBalanceSheet } from '../../hooks/useBalanceSheet'
@@ -13,7 +13,7 @@ import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Loader } from '../Loader'
 import { View } from '../View'
 import { BALANCE_SHEET_ROWS } from './constants'
-import { format, parse, startOfDay } from 'date-fns'
+import { startOfDay } from 'date-fns'
 
 export interface BalanceSheetStringOverrides {
   balanceSheetTable?: BalanceSheetTableStringOverrides
@@ -24,6 +24,7 @@ export type BalanceSheetViewProps = PropsWithChildren & {
   asWidget?: boolean
   stringOverrides?: BalanceSheetStringOverrides
   syncWithGlobalDate?: boolean
+  customDateProvider?: boolean
 }
 
 export type BalanceSheetProps = PropsWithChildren & {
@@ -31,6 +32,7 @@ export type BalanceSheetProps = PropsWithChildren & {
   asWidget?: boolean
   stringOverrides?: BalanceSheetStringOverrides
   syncWithGlobalDate?: boolean
+  customDateProvider?: boolean
 }
 
 const COMPONENT_NAME = 'balance-sheet'
@@ -53,32 +55,15 @@ const BalanceSheetView = ({
   asWidget = false,
   stringOverrides,
   syncWithGlobalDate,
+  customDateProvider,
 }: BalanceSheetViewProps) => {
   const [effectiveDate, setEffectiveDate] = useState(startOfDay(new Date()))
-  const { data, isLoading, refetch } = useBalanceSheet(effectiveDate)
+  const { data, isLoading } = useBalanceSheet(effectiveDate)
 
   const [view, setView] = useState<ViewType>('desktop')
   const containerRef = useElementViewSize<HTMLDivElement>(newView =>
     setView(newView),
   )
-
-  useEffect(() => {
-    // Refetch only if selected effectiveDate and data's effectiveDate are different
-    const d1 =
-      effectiveDate &&
-      format(startOfDay(effectiveDate), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
-    const d2 =
-      data?.effective_date &&
-      format(
-        startOfDay(
-          parse(data.effective_date, 'yyyy-MM-dd\'T\'HH:mm:ssXXX', new Date()),
-        ),
-        'yyyy-MM-dd\'T\'HH:mm:ssXXX',
-      )
-    if (d1 && (!d2 || (d2 && d2 !== d1))) {
-      refetch()
-    }
-  }, [effectiveDate])
 
   if (asWidget) {
     return (
@@ -95,6 +80,7 @@ const BalanceSheetView = ({
                       effectiveDate={effectiveDate}
                       setEffectiveDate={setEffectiveDate}
                       syncWithGlobalDate={syncWithGlobalDate}
+                      customDateProvider={customDateProvider}
                     />
                   </HeaderCol>
                   {withExpandAllButton && (
@@ -136,6 +122,7 @@ const BalanceSheetView = ({
                   effectiveDate={effectiveDate}
                   setEffectiveDate={setEffectiveDate}
                   syncWithGlobalDate={syncWithGlobalDate}
+                  customDateProvider={customDateProvider}
                 />
               </HeaderCol>
               {withExpandAllButton && (

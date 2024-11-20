@@ -43,7 +43,7 @@ export const ProfitAndLossDatePicker = ({
   if (datePickerMode === 'dayRangePicker') {
     return (
       <DatePicker
-        withDateContext={false}
+        customDateProvider={true}
         mode={datePickerMode}
         customDateRanges={customDateRanges}
         allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
@@ -69,7 +69,7 @@ export const ProfitAndLossDatePicker = ({
 
   return (
     <DatePicker
-      withDateContext={false}
+      customDateProvider={true}
       mode={datePickerMode}
       customDateRanges={customDateRanges}
       allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}

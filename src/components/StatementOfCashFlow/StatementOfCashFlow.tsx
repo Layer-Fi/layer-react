@@ -26,6 +26,7 @@ export interface StatementOfCashFlowStringOverrides {
 export type StatementOfCashFlowProps = {
   stringOverrides?: StatementOfCashFlowStringOverrides
   syncWithGlobalDate?: boolean
+  customDateProvider?: boolean
 } & TimeRangePickerConfig
 
 export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
@@ -40,6 +41,7 @@ export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
 type StatementOfCashFlowViewProps = {
   stringOverrides?: StatementOfCashFlowStringOverrides
   syncWithGlobalDate?: boolean
+  customDateProvider?: boolean
 } & TimeRangePickerConfig
 
 const StatementOfCashFlowView = ({
@@ -49,6 +51,7 @@ const StatementOfCashFlowView = ({
   allowedDatePickerModes,
   customDateRanges,
   syncWithGlobalDate,
+  customDateProvider,
 }: StatementOfCashFlowViewProps) => {
   const [startDate, setStartDate] = useState(
     startOfDay(subWeeks(new Date(), 4)),
@@ -90,6 +93,7 @@ const StatementOfCashFlowView = ({
           ModeSelector: DatePickerModeSelector,
         }}
         syncWithGlobalDate={syncWithGlobalDate}
+        customDateProvider={customDateProvider}
       />
     ) : (
       <DatePicker
@@ -106,6 +110,7 @@ const StatementOfCashFlowView = ({
           ModeSelector: DatePickerModeSelector,
         }}
         syncWithGlobalDate={syncWithGlobalDate}
+        customDateProvider={customDateProvider}
       />
     )
 

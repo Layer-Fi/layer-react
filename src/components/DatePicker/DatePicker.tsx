@@ -51,14 +51,14 @@ interface DatePickerProps {
     ModeSelector: FC<DatePickerModeSelectorProps>
   }
   syncWithGlobalDate?: boolean
-  withDateContext?: boolean
+  customDateProvider?: boolean
 }
 
 const isRangeMode = (mode: DatePickerProps['mode']) =>
   mode === 'dayRangePicker' || mode === 'monthRangePicker'
 
 export const DatePicker = ({
-  withDateContext = true,
+  customDateProvider = false,
   ...props
 }: DatePickerProps) => {
   const { date: globalDateRange } = useGlobalDateContext()
@@ -109,7 +109,7 @@ export const DatePicker = ({
 
   const dateContext = useDate(defaultValues)
 
-  if (!withDateContext) {
+  if (customDateProvider) {
     return <DatePickerController {...props} />
   }
 

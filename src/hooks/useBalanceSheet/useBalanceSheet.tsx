@@ -24,10 +24,10 @@ export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
   const dateString = format(startOfDay(date), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
 
   const queryKey =
-    businessId &&
-    dateString &&
-    auth?.access_token &&
-    `balance-sheet-${businessId}-${dateString}`
+    businessId
+    && dateString
+    && auth?.access_token
+    && `balance-sheet-${businessId}-${dateString}`
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,
@@ -48,12 +48,14 @@ export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
     if (queryKey && (isLoading || isValidating)) {
       read(DataModel.BALANCE_SHEET, queryKey)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isValidating])
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncTimestamps, dateString])
 
   return { data: data?.data, isLoading, error, refetch }
