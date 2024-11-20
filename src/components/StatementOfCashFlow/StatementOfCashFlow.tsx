@@ -54,7 +54,7 @@ const StatementOfCashFlowView = ({
     startOfDay(subWeeks(new Date(), 4)),
   )
   const [endDate, setEndDate] = useState(startOfDay(new Date()))
-  const { data, isLoading, refetch } = useStatementOfCashFlow(
+  const { data, isLoading } = useStatementOfCashFlow(
     startDate,
     endDate,
   )
@@ -69,10 +69,6 @@ const StatementOfCashFlowView = ({
     }
     if (dates[1]) {
       setEndDate(startOfDay(dates[1]))
-    }
-
-    if (dates[0] && dates[1]) {
-      refetch()
     }
   }
 

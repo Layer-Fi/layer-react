@@ -95,7 +95,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       setDateRange(globalDateRange)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncWithGlobalDate])
+  }, [syncWithGlobalDate, globalDateRange])
 
   useEffect(() => {
     if (syncWithGlobalDate) {

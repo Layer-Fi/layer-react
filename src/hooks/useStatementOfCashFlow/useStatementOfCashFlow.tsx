@@ -34,11 +34,11 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = (
   const endDateString = format(startOfDay(endDate), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
 
   const queryKey =
-    businessId &&
-    startDateString &&
-    endDateString &&
-    auth?.access_token &&
-    `statement-of-cash-${businessId}-${startDateString}-${endDateString}`
+    businessId
+    && startDateString
+    && endDateString
+    && auth?.access_token
+    && `statement-of-cash-${businessId}-${startDateString}-${endDateString}`
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,
@@ -60,12 +60,14 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = (
     if (queryKey && (isLoading || isValidating)) {
       read(DataModel.STATEMENT_OF_CASH_FLOWS, queryKey)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isValidating])
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncTimestamps, startDateString, endDateString])
 
   return { data: data?.data, isLoading, error, refetch }

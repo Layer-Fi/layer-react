@@ -17,6 +17,7 @@ import type {
 } from './ModeSelector/DatePickerModeSelector'
 import classNames from 'classnames'
 import { endOfDay, endOfMonth } from 'date-fns'
+import { DateState } from '../../types'
 
 /**
  * @see https://github.com/Hacker0x01/react-datepicker/issues/1333#issuecomment-2363284612
@@ -145,9 +146,15 @@ export const DatePickerController = ({
   syncWithGlobalDate = false,
   ...props
 }: DatePickerProps) => {
+  // To track prev vs new value in the useEffect
+  const dateRef = useRef<DateState | null>(null)
+
   const { date: globalDateRange, setDate: setGlobalDateRange } =
     useGlobalDateContext()
   const { date, setDate } = useDateContext()
+
+  // Disable circular global date update when setting `date` from global date
+  const [ readingFromGlobal, setReadingFromGlobal] = useState(false)
   const { ModeSelector } = slots ?? {}
 
   const pickerRef = useRef<{
@@ -198,6 +205,13 @@ export const DatePickerController = ({
   }, [selectingDates])
 
   useEffect(() => {
+    // Ignore hook when prev and new values are actually the same,
+    // but because both are objects, useEffect doesn't recognize them as equal
+    if (JSON.stringify(dateRef.current) === JSON.stringify(date)) {
+      setReadingFromGlobal(false)
+      return
+    }
+    
     if (
       syncWithGlobalDate
       && date.startDate
@@ -208,10 +222,13 @@ export const DatePickerController = ({
         e: globalDateRange.endDate,
       })
     ) {
-      setGlobalDateRange({
-        startDate: date.startDate,
-        endDate: date.endDate,
-      })
+      // Ignore updating global state after setting local date from global date
+      if (!readingFromGlobal) {
+        setGlobalDateRange({
+          startDate: date.startDate,
+          endDate: date.endDate,
+        })
+      }
     }
 
     if (startDate !== date.startDate) {
@@ -222,14 +239,18 @@ export const DatePickerController = ({
       setEndDate(date.endDate)
     }
 
-    // @TODO - handle only if without context?
-    // if (onChange) {
-    //   if (isRangeMode(mode)) {
-    //     onChange([date.startDate, date.endDate])
-    //   } else {
-    //     onChange(date.startDate)
-    //   }
-    // }
+    if (onChange) {
+      if (isRangeMode(mode)) {
+        onChange([date.startDate, date.endDate])
+      } else {
+        onChange(date.startDate)
+      }
+    }
+
+    dateRef.current = date
+
+    // Clear the safety flag
+    setReadingFromGlobal(false)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date])
 
@@ -249,10 +270,15 @@ export const DatePickerController = ({
             endDate: date.endDate,
           })))
     ) {
+      // Set this flag to stop propagating local date update into global date
+      // in the next useEffect(() => {...}, [date]) - to avoid circular hooks runs
+      setReadingFromGlobal(true)
+
       setDate({
         startDate: globalDateRange.startDate,
         endDate: globalDateRange.endDate,
       })
+
       setStartDate(globalDateRange.startDate)
       setEndDate(globalDateRange.endDate)
     }
@@ -280,6 +306,15 @@ export const DatePickerController = ({
     popperClassName,
   )
 
+  const getEndDateBasedOnMode = (startDate: Date) => {
+    switch(mode) {
+      case 'monthPicker':
+        return endOfMonth(startDate)
+      default:
+        return endOfDay(startDate)
+    }
+  }
+
   const handleDateChange = (date: Date | [Date | null, Date | null]) => {
     if (date && Array.isArray(date) && isRangeMode(mode)) {
       const [s, e] = date as [Date | null, Date | null]
@@ -303,7 +338,7 @@ export const DatePickerController = ({
       setEndDate(endOfDay(date as Date))
       setDate({
         startDate: date as Date,
-        endDate: endOfDay(date as Date),
+        endDate: getEndDateBasedOnMode(date as Date),
       })
     }
   }
@@ -378,20 +413,6 @@ export const DatePickerController = ({
       console.warn('`onChangeMode` expected when using `ModeSelector`')
       return
     }
-
-    // const firstSelectedDate = Array.isArray(selectedDates)
-    //   ? selectedDates[0]
-    //   : (selectedDates ?? new Date())
-
-    // if (isRangeMode(mode)) {
-    //   setStartDate(firstSelectedDate)
-    //   setEndDate(firstSelectedDate)
-    //   setSelectedDates([firstSelectedDate, firstSelectedDate])
-    // } else {
-    //   setStartDate(null)
-    //   setEndDate(null)
-    //   setSelectedDates(firstSelectedDate)
-    // }
 
     onChangeMode(mode)
   }
@@ -468,8 +489,9 @@ export const DatePickerController = ({
           <DatePickerOptions
             customDateRanges={customDateRanges}
             setSelectedDate={([s, e]) => {
-              setStartDate(s)
-              setEndDate(e)
+              if (s && e) {
+                setDate({ startDate: s, endDate: e })
+              }
             }}
           />
         )}
