@@ -2,7 +2,7 @@ const { build, context } = require('esbuild')
 const { dependencies, peerDependencies } = require('../package.json')
 const { Generator } = require('npm-dts')
 const { sassPlugin } = require('esbuild-sass-plugin')
-const { copyFile, rm } = require('node:fs/promises')
+const { copyFile, rename, mkdir, rm } = require('node:fs/promises')
 
 const OUT_DIR = 'dist'
 
@@ -51,15 +51,28 @@ const cjsConfig = {
 
 const STYLE_ENTRY_POINT = 'src/styles/index.scss'
 
-function moveStyles(baseDir, { withMap = false } = {}) {
-  return Promise.all(
+async function moveStyles(baseDir, { withMap = false } = {}) {
+  await Promise.all(
     [
-      copyFile(`${baseDir}/styles/index.css`, `${OUT_DIR}/index.css`),
+      rename(`${baseDir}/styles/index.css`, `${OUT_DIR}/index.css`),
       withMap
-        ? copyFile(`${baseDir}/styles/index.css.map`, `${OUT_DIR}/index.css.map`)
+        ? rename(`${baseDir}/styles/index.css.map`, `${OUT_DIR}/index.css.map`)
         : null
     ].filter(Boolean)
-  )
+  );
+
+  // Preserve legacy directory structure for deep imports
+  await mkdir(`${OUT_DIR}/styles`, { recursive: true })
+  await Promise.all(
+    [
+      copyFile(`${OUT_DIR}/index.css`, `${OUT_DIR}/styles/index.css`),
+      withMap
+        ? copyFile(`${OUT_DIR}/index.css.map`, `${OUT_DIR}/styles/index.css.map`)
+        : null
+    ].filter(Boolean)
+  );
+
+  await rm(`${baseDir}/styles`, { recursive: true })
 }
 
 /** @type {import('esbuild').BuildOptions} */
