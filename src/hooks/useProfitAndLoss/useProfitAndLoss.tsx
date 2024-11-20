@@ -131,10 +131,6 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       period: dateRange.period,
     }
     setDateRange(newDateRange)
-
-    // if (dateSyncedWithGlobal) {
-    //   setGlobalDateRange(newDateRange)
-    // }
   }
 
   const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {

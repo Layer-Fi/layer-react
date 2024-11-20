@@ -7,6 +7,11 @@ import {
   startOfMonth,
 } from 'date-fns'
 
+/**
+ * Function finds the target DateState based on the reference DateState.
+ * When one is monthPicker and other is dayPicker function evaluates the target
+ * to date/dateRange overlapping reference date. For instance, May 2024 -> May 1, 2024.
+ */
 export const resolveDateToDate = (
   refDate: DateState,
   targetDate: DateState,
