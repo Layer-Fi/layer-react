@@ -1,18 +1,19 @@
 import React, { useContext } from 'react'
 import { Button, ButtonVariant } from '../../components/Button'
 import { Container } from '../../components/Container'
-import { OnboardingCalendar } from '../../components/OnboardingCall'
-import { PlatformOnboardingForm } from '../../components/PlatformOnboardingForm'
-import { PlatformOnboardingGetStarted } from '../../components/PlatformOnboardingGetStarted'
-import { PlatformOnboardingGuide } from '../../components/PlatformOnboardingGuide'
-import { PlatformOnboardingProgress } from '../../components/PlatformOnboardingProgress'
-import { PlatformOnboardingSchedule } from '../../components/PlatformOnboardingSchedule'
-import { PlatformOnboardingSummary } from '../../components/PlatformOnboardingSummary'
+import { OnboardingCalendar } from '../../components/OnboardingCall/OnboardingCalendar'
+import { PlatformOnboardingForm } from '../../components/PlatformOnboardingForm/PlatformOnboardingForm'
+import { PlatformOnboardingGetStarted } from '../../components/PlatformOnboardingGetStarted/PlatformOnboardingGetStarted'
+import { PlatformOnboardingGuide } from '../../components/PlatformOnboardingGuide/PlatformOnboardingGuide'
+import { PlatformOnboardingProgress } from '../../components/PlatformOnboardingProgress/PlatformOnboardingProgress'
+import { PlatformOnboardingSchedule } from '../../components/PlatformOnboardingSchedule/PlatformOnboardingSchedule'
+import { PlatformOnboardingSummary } from '../../components/PlatformOnboardingSummary/PlatformOnboardingSummary'
 import { Text } from '../../components/Typography'
 import { View } from '../../components/View'
 import { PlatformOnboardingContext } from '../../contexts/PlatformOnboardingContext'
 import { usePlatformOnboarding } from '../../hooks/usePlatformOnboarding'
 import { LinkAccounts } from '../../components/LinkAccounts/LinkAccounts'
+import { ONBOARDING_CALENDLY_CALENDAR } from '../../config/calendar'
 
 interface StringOverrides {
   header?: string
@@ -91,10 +92,7 @@ const PlatformOnboarding = ({
       </div>
       {currentStep === 0 && <PlatformOnboardingGuide />}
       {currentStep === 3 && (
-        <OnboardingCalendar
-          calendarUrl='https://calendly.com/release-bookkeeping/information-call'
-          onScheduled={nextStep}
-        />
+        <OnboardingCalendar calendarUrl={ONBOARDING_CALENDLY_CALENDAR} onScheduled={nextStep} />
       )}
     </View>
   )

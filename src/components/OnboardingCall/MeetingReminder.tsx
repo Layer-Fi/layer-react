@@ -5,7 +5,7 @@ import { capitalizeFirstLetter, toRFC5545Date } from '../../utils/format'
 import { Link } from '../Button'
 import { Loader } from '../Loader'
 import { Text, TextSize, TextWeight } from '../Typography'
-import { FutureEvent, useFetchCalendarEvents } from './useFetchCalendarEvents'
+import { OnboardingCalendarEvent, useOnboardingCalendarEvents } from '../../hooks/useOnboardingCalendarEvents'
 
 const GOOGLE_CALENDAR_URL = 'https://calendar.google.com/calendar/r/eventedit'
 
@@ -13,7 +13,7 @@ export interface MeetingReminderProps {
   showOnlyIfData?: boolean
 }
 
-const buildGoogleCalendarEventLink = ({ startTime, endTime }: FutureEvent) => {
+const buildGoogleCalendarEventLink = ({ startTime, endTime }: OnboardingCalendarEvent) => {
   if (!startTime || !endTime) {
     return
   }
@@ -26,7 +26,8 @@ const buildGoogleCalendarEventLink = ({ startTime, endTime }: FutureEvent) => {
 }
 
 export const MeetingReminder = ({ showOnlyIfData }: MeetingReminderProps) => {
-  const { isLoading, upcomingEvent } = useFetchCalendarEvents()
+  const { isLoading, upcomingEvent } = useOnboardingCalendarEvents()
+  
   if (showOnlyIfData && !upcomingEvent) {
     return
   }

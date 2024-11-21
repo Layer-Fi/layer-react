@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Container } from '../../components/Container'
-import { MeetingReminder } from '../../components/OnboardingCall'
+import { MeetingReminder } from '../../components/OnboardingCall/MeetingReminder'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
@@ -111,8 +111,8 @@ export const BookkeepingOverview = ({
             <Container
               name={classNames(
                 'bookkeeping-overview-profit-and-loss-chart',
-                pnlToggle !== 'revenue' &&
-                  'bookkeeping-overview-profit-and-loss-chart--hidden',
+                pnlToggle !== 'revenue'
+                  && 'bookkeeping-overview-profit-and-loss-chart--hidden',
               )}
             >
               <ProfitAndLoss.DetailedCharts
@@ -124,8 +124,8 @@ export const BookkeepingOverview = ({
             <Container
               name={classNames(
                 'bookkeeping-overview-profit-and-loss-chart',
-                pnlToggle !== 'expenses' &&
-                  'bookkeeping-overview-profit-and-loss-chart--hidden',
+                pnlToggle !== 'expenses'
+                  && 'bookkeeping-overview-profit-and-loss-chart--hidden',
               )}
             >
               <ProfitAndLoss.DetailedCharts

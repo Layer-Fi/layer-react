@@ -1,11 +1,10 @@
 /**
- * TEMPORARILY IN THIS FOLDER
  * @TODO call Layer API instead of Calendly API
  */
-import React, { useEffect, useState } from 'react'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useEffect, useState } from 'react'
+import { useLayerContext } from '../contexts/LayerContext'
 
-export interface FutureEvent {
+export interface OnboardingCalendarEvent {
   kind?: string
   startTime?: string
   endTime?: string
@@ -14,10 +13,10 @@ export interface FutureEvent {
   name?: string
 }
 
-export const useFetchCalendarEvents = () => {
+export const useOnboardingCalendarEvents = () => {
   const { businessId } = useLayerContext()
 
-  const [upcomingEvent, setUpcomingEvent] = useState<FutureEvent | undefined>(
+  const [upcomingEvent, setUpcomingEvent] = useState<OnboardingCalendarEvent | undefined>(
     undefined,
   )
   const [isLoading, setIsLoading] = useState(true)
