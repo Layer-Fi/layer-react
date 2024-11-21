@@ -9,4 +9,6 @@ export const PlatformOnboardingContext =
     currentStep: 0,
     nextStep: () => {},
     prevStep: () => {},
+    formData: {},
+    setFormData: () => {},
   })

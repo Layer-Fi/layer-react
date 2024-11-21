@@ -2,6 +2,40 @@
   .Layer__platform__onboarding--wrapper {
     .Layer__link-accounts__list {
       padding-top: var(--spacing-xl);
+      justify-content: space-between;
+    }
+
+    .Layer__link-accounts {
+      .Layer__actionable_row {
+        .Layer__btn {
+          white-space: nowrap;
+        }
+      }
+    }
+
+    @container (max-width: 460px) {
+      .Layer__link-accounts {
+       .Layer__actionable_row {
+          flex-direction: column;
+
+          .Layer__actionable_row__main,
+          .Layer__actionable_row__action {
+            width: 100%;
+
+            .Layer__btn {
+              width: 100%;
+            }
+          }
+        }
+
+        .Layer__link-accounts__footer {
+          flex-direction: column-reverse;
+
+          .Layer__btn {
+            width: 100%;
+          }
+        }
+      }
     }
 
     .Layer__platform__onboaring--back-button {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { PlatformOnboardingContext } from '../../contexts/PlatformOnboardingContext'
 import { SubmitButton } from '../Button'
 import { Input, InputGroup, Select } from '../Input'
@@ -8,35 +8,89 @@ import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useAuth } from '../../hooks/useAuth'
+import { Business } from '../../types'
+import { US_STATES } from '../../types/location'
+import { ENTITY_TYPES } from '../../types/business'
 
-interface FormDataTypes {
+export interface FormDataTypes {
   firstName: string
   lastName: string
   email: string
   phone_number: string
   legal_name: string
   dba?: string
-  country: string
-  entity?: BaseSelectOption
-  state?: BaseSelectOption
-  taxId: string
+  entity_type?: string
+  us_state?: string
+  tin: string
+}
+
+const buildDefaultValues = (business?: Business) => {
+  if (!business) {
+    return {} as Partial<FormDataTypes>
+  }
+
+  const data: Partial<FormDataTypes> = {}
+
+  if (business.legal_name) {
+    data.legal_name = business.legal_name
+  }
+
+  if (business.phone_number) {
+    data.phone_number = business.phone_number
+  }
+
+  if (business.entity_type) {
+    data.entity_type = business.entity_type
+  }
+
+  if (business.us_state) {
+    data.us_state = business.us_state
+  }
+
+  if (business.tin) {
+    data.tin = business.tin
+  }
+
+  return data
+}
+
+const buildSelectOptions = (strings: string[]) => strings.map(s => ({
+  label: s,
+  value: s,
+}))
+
+const findSelectOption = (options: BaseSelectOption[], value?: string) => {
+  if (!value) {
+    return undefined
+  }
+
+  return options.find(o => (o.value as string).toLowerCase() === value.toLowerCase())
 }
 
 export const PlatformOnboardingForm = () => {
-  const { nextStep } = useContext(PlatformOnboardingContext)
-  const { businessId } = useLayerContext()
+  const { nextStep, formData, setFormData } = useContext(PlatformOnboardingContext)
+  const { businessId, business } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const [formData, setFormData] = useState<Partial<FormDataTypes>>({})
   const [sending, setSending] = useState(false)
   const [error, setError] = useState<string | undefined>()
+
+  // Populate form with existing business data
+  useEffect(() => {
+    if (Object.keys(formData).length > 0) {
+      return
+    }
+
+    setFormData(buildDefaultValues(business))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [business])
 
   const updateFormData = (
     fieldName: string,
     value: string | BaseSelectOption | undefined,
   ) => {
-    setFormData(prevFormData => ({ ...prevFormData, [fieldName]: value }))
+    setFormData(prevFormData => ({ ...prevFormData, [fieldName]: typeof value === 'object' ? value.value : value }))
   }
 
   const submitForm = async() => {
@@ -55,6 +109,9 @@ export const PlatformOnboardingForm = () => {
       setSending(false)
     }
   }
+
+  const entityTypes = buildSelectOptions(ENTITY_TYPES)
+  const usStates = buildSelectOptions(US_STATES)
 
   return (
     <div className='Layer__platform__onboarding__form-wrapper'>
@@ -150,32 +207,34 @@ export const PlatformOnboardingForm = () => {
           <InputGroup name='dba' label='DBA (optional)'>
             <Input
               name='dba'
-              placeholder='01/02/2000'
-              value={formData.email}
+              placeholder='Alternative name'
+              value={formData.dba}
               onChange={e =>
                 updateFormData('dba', (e.target as HTMLInputElement).value)
               }
             />
           </InputGroup>
-          <InputGroup name='entity' label='Entity type'>
+          <InputGroup name='entity_type' label='Entity type'>
             <Select
-              value={formData.entity}
-              onChange={sel => updateFormData('entity', sel)}
+              options={entityTypes}
+              value={findSelectOption(entityTypes, formData.entity_type)}
+              onChange={sel => updateFormData('entity_type', sel)}
             />
           </InputGroup>
           <div className='Layer__platform__onboarding__input-group--inline'>
-            <InputGroup name='state' label='State'>
+            <InputGroup name='us_state' label='State'>
               <Select
-                value={formData.state}
-                onChange={sel => updateFormData('state', sel)}
+                options={usStates}
+                value={formData.us_state && findSelectOption(usStates, formData.us_state)}
+                onChange={sel => updateFormData('us_state', sel)}
               />
             </InputGroup>
-            <InputGroup name='taxId' label='Tax ID number (optional)'>
+            <InputGroup name='tin' label='Tax ID number (optional)'>
               <Input
-                name='taxId'
-                value={formData.taxId}
+                name='tin'
+                value={formData.tin}
                 onChange={e =>
-                  updateFormData('taxId', (e.target as HTMLInputElement).value)
+                  updateFormData('tin', (e.target as HTMLInputElement).value)
                 }
               />
             </InputGroup>

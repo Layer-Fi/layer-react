@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { FormDataTypes } from '../components/PlatformOnboardingForm/PlatformOnboardingForm'
 
 export const usePlatformOnboarding = () => {
-  const [currentStep, setCurrentStep] = useState<number>(2)
+  const [currentStep, setCurrentStep] = useState<number>(1)
+  const [formData, setFormData] = useState<Partial<FormDataTypes>>({})
 
   const nextStep = () => setCurrentStep(prevStep => prevStep + 1)
   const prevStep = () => setCurrentStep(prevStep => Math.max(prevStep - 1, 0))
@@ -10,5 +12,7 @@ export const usePlatformOnboarding = () => {
     currentStep,
     nextStep,
     prevStep,
+    formData,
+    setFormData,
   }
 }

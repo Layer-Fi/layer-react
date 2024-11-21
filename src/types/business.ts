@@ -15,3 +15,17 @@ export interface Business {
   updated_at?: string
   us_state?: string
 }
+
+export const ENTITY_TYPES = [
+  'GP',
+  'LLC',
+  'LLP',
+  'LP',
+  'SP',
+  'Corp',
+  'PC',
+  'PLLC',
+  'Nonprofit',
+  'Co-op',
+  'Joint Venture',
+]
