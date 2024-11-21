@@ -60,18 +60,6 @@ async function moveStyles(baseDir, { withMap = false } = {}) {
         : null
     ].filter(Boolean)
   );
-
-  // Preserve legacy directory structure for deep imports
-  await mkdir(`${OUT_DIR}/styles`, { recursive: true })
-  await Promise.all(
-    [
-      copyFile(`${OUT_DIR}/index.css`, `${OUT_DIR}/styles/index.css`),
-      withMap
-        ? copyFile(`${OUT_DIR}/index.css.map`, `${OUT_DIR}/styles/index.css.map`)
-        : null
-    ].filter(Boolean)
-  );
-
   await rm(`${baseDir}/styles`, { recursive: true })
 }
 
