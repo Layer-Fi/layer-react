@@ -13,13 +13,13 @@ import { View } from '../../components/View'
 import { PlatformOnboardingContext } from '../../contexts/PlatformOnboardingContext'
 import { usePlatformOnboarding } from '../../hooks/usePlatformOnboarding'
 import { LinkAccounts } from '../../components/LinkAccounts/LinkAccounts'
-import { ONBOARDING_CALENDLY_CALENDAR } from '../../config/calendar'
 
 interface StringOverrides {
   header?: string
 }
 
 export interface PlatformOnboardingViewProps {
+  calendarUrl: string
   stringOverrides?: StringOverrides
 }
 
@@ -33,6 +33,7 @@ export const PlatformOnboardingView = (props: PlatformOnboardingViewProps) => {
 }
 
 const PlatformOnboarding = ({
+  calendarUrl,
   stringOverrides,
 }: PlatformOnboardingViewProps) => {
   const { currentStep, prevStep, nextStep } = useContext(
@@ -92,7 +93,7 @@ const PlatformOnboarding = ({
       </div>
       {currentStep === 0 && <PlatformOnboardingGuide />}
       {currentStep === 3 && (
-        <OnboardingCalendar calendarUrl={ONBOARDING_CALENDLY_CALENDAR} onScheduled={nextStep} />
+        <OnboardingCalendar calendarUrl={calendarUrl} onScheduled={nextStep} />
       )}
     </View>
   )

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FormDataTypes } from '../components/PlatformOnboardingForm/PlatformOnboardingForm'
+import { FormDataTypes } from '../components/PlatformOnboardingForm/types'
 
 export const usePlatformOnboarding = () => {
   const [currentStep, setCurrentStep] = useState<number>(0)

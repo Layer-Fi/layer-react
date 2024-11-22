@@ -4,9 +4,11 @@ import { PlatformOnboardingViewProps } from '../../views/PlatformOnboardingView/
 import { Button } from '../Button'
 import { Heading, Text, TextSize } from '../Typography'
 
+type PlatformOnboardingGetStartedProps = Pick<PlatformOnboardingViewProps, 'stringOverrides'>
+
 export const PlatformOnboardingGetStarted = ({
   stringOverrides,
-}: PlatformOnboardingViewProps) => {
+}: PlatformOnboardingGetStartedProps) => {
   const { nextStep } = useContext(PlatformOnboardingContext)
   return (
     <div className='Layer__platform__onboarding__header'>

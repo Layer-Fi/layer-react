@@ -1,5 +1,6 @@
 /**
  * @TODO call Layer API instead of Calendly API
+ * Optionally, ignore events older than X hours (based on the end date)
  */
 import { useEffect, useState } from 'react'
 import { useLayerContext } from '../contexts/LayerContext'

@@ -8,71 +8,18 @@ import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useAuth } from '../../hooks/useAuth'
-import { Business } from '../../types'
 import { US_STATES } from '../../types/location'
 import { ENTITY_TYPES } from '../../types/business'
-
-export interface FormDataTypes {
-  firstName: string
-  lastName: string
-  email: string
-  phone_number: string
-  legal_name: string
-  dba?: string
-  entity_type?: string
-  us_state?: string
-  tin: string
-}
-
-const buildDefaultValues = (business?: Business) => {
-  if (!business) {
-    return {} as Partial<FormDataTypes>
-  }
-
-  const data: Partial<FormDataTypes> = {}
-
-  if (business.legal_name) {
-    data.legal_name = business.legal_name
-  }
-
-  if (business.phone_number) {
-    data.phone_number = business.phone_number
-  }
-
-  if (business.entity_type) {
-    data.entity_type = business.entity_type
-  }
-
-  if (business.us_state) {
-    data.us_state = business.us_state
-  }
-
-  if (business.tin) {
-    data.tin = business.tin
-  }
-
-  return data
-}
-
-const buildSelectOptions = (strings: string[]) => strings.map(s => ({
-  label: s,
-  value: s,
-}))
-
-const findSelectOption = (options: BaseSelectOption[], value?: string) => {
-  if (!value) {
-    return undefined
-  }
-
-  return options.find(o => (o.value as string).toLowerCase() === value.toLowerCase())
-}
+import { buildDefaultValues, buildSelectOptions, findSelectOption, formatPhoneNumber, validateFormFields } from './utils'
+import { FormDataTypes } from './types'
 
 export const PlatformOnboardingForm = () => {
   const { nextStep, formData, setFormData } = useContext(PlatformOnboardingContext)
   const { businessId, business } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
-
+  
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({ 'aaa': 'asx'})
   const [sending, setSending] = useState(false)
   const [error, setError] = useState<string | undefined>()
 
@@ -90,11 +37,34 @@ export const PlatformOnboardingForm = () => {
     fieldName: string,
     value: string | BaseSelectOption | undefined,
   ) => {
-    setFormData(prevFormData => ({ ...prevFormData, [fieldName]: typeof value === 'object' ? value.value : value }))
+    if (formErrors[fieldName]) {
+      clearError(fieldName)
+    }
+    setFormData((prevFormData: Partial<FormDataTypes>) => 
+      ({ ...prevFormData, [fieldName]: typeof value === 'object' ? value.value : value })
+    )
+  }
+
+  const clearError = (key: string) => {
+    const newErrors = { ...formErrors }
+    delete newErrors[key]
+    setFormErrors(newErrors)
+  }
+
+  const validate = () => {
+    const newErrors = validateFormFields(formData)
+
+    setFormErrors(newErrors)
+
+    return Object.keys(newErrors).length === 0
   }
 
   const submitForm = async() => {
     try {
+      if (!validate()) {
+        setError('Please correct the errors above.')
+        return
+      }
       setSending(true)
       setError(undefined)
       await Layer.updateBusiness(apiUrl, auth?.access_token, {
@@ -133,30 +103,34 @@ export const PlatformOnboardingForm = () => {
         </Text>
         <div className='Layer__platform__onboarding__form--inputs'>
           <div className='Layer__platform__onboarding__input-group--inline'>
-            <InputGroup name='firstName' label='First name'>
+            <InputGroup name='first_name' label='First name'>
               <Input
-                name='firstName'
+                name='first_name'
                 placeholder='John'
-                value={formData.firstName}
+                value={formData.first_name}
                 onChange={e =>
                   updateFormData(
-                    'firstName',
+                    'first_name',
                     (e.target as HTMLInputElement).value,
                   )
                 }
+                isInvalid={Boolean(formErrors.first_name)}
+                errorMessage={formErrors.first_name}
               />
             </InputGroup>
-            <InputGroup name='lastName' label='Last name'>
+            <InputGroup name='last_name' label='Last name'>
               <Input
-                name='lastName'
+                name='last_name'
                 placeholder='Doe'
-                value={formData.lastName}
+                value={formData.last_name}
                 onChange={e =>
                   updateFormData(
-                    'lastName',
+                    'last_name',
                     (e.target as HTMLInputElement).value,
                   )
                 }
+                isInvalid={Boolean(formErrors.last_name)}
+                errorMessage={formErrors.last_name}
               />
             </InputGroup>
           </div>
@@ -171,6 +145,8 @@ export const PlatformOnboardingForm = () => {
               onChange={e =>
                 updateFormData('email', (e.target as HTMLInputElement).value)
               }
+              isInvalid={Boolean(formErrors.email)}
+              errorMessage={formErrors.email}
             />
           </InputGroup>
           <InputGroup
@@ -182,8 +158,10 @@ export const PlatformOnboardingForm = () => {
               placeholder='1-212-456-7890'
               value={formData.phone_number}
               onChange={e =>
-                updateFormData('phone_number', (e.target as HTMLInputElement).value)
+                updateFormData('phone_number', formatPhoneNumber((e.target as HTMLInputElement).value))
               }
+              isInvalid={Boolean(formErrors.phone_number)}
+              errorMessage={formErrors.phone_number}
             />
           </InputGroup>
         </div>
@@ -202,6 +180,8 @@ export const PlatformOnboardingForm = () => {
                   (e.target as HTMLInputElement).value,
                 )
               }
+              isInvalid={Boolean(formErrors.legal_name)}
+              errorMessage={formErrors.legal_name}
             />
           </InputGroup>
           <InputGroup name='dba' label='DBA (optional)'>
@@ -212,6 +192,8 @@ export const PlatformOnboardingForm = () => {
               onChange={e =>
                 updateFormData('dba', (e.target as HTMLInputElement).value)
               }
+              isInvalid={Boolean(formErrors.dba)}
+              errorMessage={formErrors.dba}
             />
           </InputGroup>
           <InputGroup name='entity_type' label='Entity type'>
@@ -236,6 +218,8 @@ export const PlatformOnboardingForm = () => {
                 onChange={e =>
                   updateFormData('tin', (e.target as HTMLInputElement).value)
                 }
+                isInvalid={Boolean(formErrors.tin)}
+                errorMessage={formErrors.tin}
               />
             </InputGroup>
           </div>
