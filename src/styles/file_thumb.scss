@@ -38,10 +38,9 @@
 }
 
 .Layer__file-thumb__main {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: var(--spacing-2xs);
-  align-items: flex-start;
-  justify-content: flex-start;
 }
 
 .Layer__file-thumb__actions {
@@ -119,4 +118,8 @@
 
 .Layer__file-thumb__details__error {
   color: var(--color-danger);
+}
+
+.Layer__file-thumb__details__name {
+  word-break: break-word;
 }

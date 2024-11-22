@@ -156,9 +156,9 @@ export const BankTransactionMobileListItem = ({
 
   useEffect(() => {
     if (
-      editable &&
-      bankTransaction.recently_categorized &&
-      shouldHideAfterCategorize(bankTransaction)
+      editable
+      && bankTransaction.recently_categorized
+      && shouldHideAfterCategorize(bankTransaction)
     ) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
@@ -221,16 +221,16 @@ export const BankTransactionMobileListItem = ({
           </div>
         </div>
       </span>
-      {categorizationEnabled(mode) ? (
-        <div
-          className={`${className}__expanded-row`}
-          style={{ height: !open || removeAnim ? 0 : height }}
-        >
-          {open && (
-            <div
-              className={`${className}__expanded-row__content`}
-              ref={formRowRef}
-            >
+      <div
+        className={`${className}__expanded-row`}
+        style={{ height: !open || removeAnim ? 0 : height }}
+      >
+        {open && (
+          <div
+            className={`${className}__expanded-row__content`}
+            ref={formRowRef}
+          >
+            {categorizationEnabled(mode) ? (
               <div className={`${className}__toggle-row`}>
                 <Toggle
                   name={`purpose-${bankTransaction.id}`}
@@ -240,19 +240,16 @@ export const BankTransactionMobileListItem = ({
                       value: 'business',
                       label: 'Business',
                       style: { minWidth: 84 },
-                      disabled: !categorizationEnabled(mode),
                     },
                     {
                       value: 'personal',
                       label: 'Personal',
                       style: { minWidth: 84 },
-                      disabled: !categorizationEnabled(mode),
                     },
                     {
                       value: 'more',
                       label: 'More',
                       style: { minWidth: 84 },
-                      disabled: !categorizationEnabled(mode),
                     },
                   ]}
                   selected={purpose}
@@ -260,20 +257,19 @@ export const BankTransactionMobileListItem = ({
                 />
                 <CloseButton onClick={() => close()} />
               </div>
-              <BankTransactionMobileForms
-                purpose={purpose}
-                bankTransaction={bankTransaction}
-                showTooltips={showTooltips}
-                showReceiptUploads={showReceiptUploads}
-                showDescriptions={showDescriptions}
-                isOpen={open}
-              />
-            </div>
-          )}
-        </div>
-      ) : (
-        <></>
-      )}
+            ) : null}
+            <BankTransactionMobileForms
+              purpose={purpose}
+              bankTransaction={bankTransaction}
+              showCategorization={categorizationEnabled(mode)}
+              showTooltips={showTooltips}
+              showReceiptUploads={showReceiptUploads}
+              showDescriptions={showDescriptions}
+              isOpen={open}
+            />
+          </div>
+        )}
+      </div>
     </li>
   )
 }

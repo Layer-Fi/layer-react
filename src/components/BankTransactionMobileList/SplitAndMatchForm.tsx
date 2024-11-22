@@ -8,6 +8,7 @@ import { SplitForm } from './SplitForm'
 interface SplitAndMatchFormProps {
   bankTransaction: BankTransaction
   showTooltips: boolean
+  showCategorization?: boolean
   showReceiptUploads?: boolean
   showDescriptions?: boolean
 }

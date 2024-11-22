@@ -43,11 +43,13 @@ type RowState = {
 export const SplitForm = ({
   bankTransaction,
   showTooltips,
+  showCategorization,
   showReceiptUploads,
   showDescriptions,
 }: {
   bankTransaction: BankTransaction
   showTooltips: boolean
+  showCategorization?: boolean
   showReceiptUploads?: boolean
   showDescriptions?: boolean
 }) => {
@@ -60,41 +62,41 @@ export const SplitForm = ({
 
   const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
   const defaultCategory =
-    bankTransaction.category ||
-    (hasSuggestions(bankTransaction.categorization_flow) &&
-      bankTransaction.categorization_flow?.suggestions?.[0])
+    bankTransaction.category
+    || (hasSuggestions(bankTransaction.categorization_flow)
+      && bankTransaction.categorization_flow?.suggestions?.[0])
 
   const [rowState, updateRowState] = useState<RowState>({
     splits: bankTransaction.category?.entries
       ? bankTransaction.category?.entries.map(c => {
-          return c.type === 'ExclusionSplitEntry'
-            ? {
-                amount: c.amount || 0,
-                inputValue: formatMoney(c.amount),
-                category: mapCategoryToExclusionOption(c.category),
-              }
-            : {
-                amount: c.amount || 0,
-                inputValue: formatMoney(c.amount),
-                category: mapCategoryToOption(c.category),
-              }
-        })
+        return c.type === 'ExclusionSplitEntry'
+          ? {
+            amount: c.amount || 0,
+            inputValue: formatMoney(c.amount),
+            category: mapCategoryToExclusionOption(c.category),
+          }
+          : {
+            amount: c.amount || 0,
+            inputValue: formatMoney(c.amount),
+            category: mapCategoryToOption(c.category),
+          }
+      })
       : [
-          {
-            amount: bankTransaction.amount,
-            inputValue: formatMoney(bankTransaction.amount),
-            category: defaultCategory
-              ? mapCategoryToOption(defaultCategory)
-              : undefined,
-          },
-          {
-            amount: 0,
-            inputValue: '0.00',
-            category: defaultCategory
-              ? mapCategoryToOption(defaultCategory)
-              : undefined,
-          },
-        ],
+        {
+          amount: bankTransaction.amount,
+          inputValue: formatMoney(bankTransaction.amount),
+          category: defaultCategory
+            ? mapCategoryToOption(defaultCategory)
+            : undefined,
+        },
+        {
+          amount: 0,
+          inputValue: '0.00',
+          category: defaultCategory
+            ? mapCategoryToOption(defaultCategory)
+            : undefined,
+        },
+      ],
     description: '',
     file: undefined,
   })
@@ -208,84 +210,88 @@ export const SplitForm = ({
       bankTransaction.id,
       rowState.splits.length === 1 && rowState?.splits[0].category
         ? ({
-            type: 'Category',
-            category: getCategorizePayload(rowState?.splits[0].category),
-          } as SingleCategoryUpdate)
+          type: 'Category',
+          category: getCategorizePayload(rowState?.splits[0].category),
+        } as SingleCategoryUpdate)
         : ({
-            type: 'Split',
-            entries: rowState.splits.map(split => ({
-              category: split.category
-                ? getCategorizePayload(split.category)
-                : '',
-              amount: split.amount,
-            })),
-          } as SplitCategoryUpdate),
+          type: 'Split',
+          entries: rowState.splits.map(split => ({
+            category: split.category
+              ? getCategorizePayload(split.category)
+              : '',
+            amount: split.amount,
+          })),
+        } as SplitCategoryUpdate),
       true,
     )
   }
 
   return (
     <div>
-      <Text weight={TextWeight.bold} size={TextSize.sm}>
-        Split transaction
-      </Text>
-      <div className='Layer__bank-transactions__table-cell__header'>
-        <Text size={TextSize.sm}>Category</Text>
-        <Text size={TextSize.sm}>Amount</Text>
-      </div>
-      <div className='Layer__bank-transactions__splits-inputs'>
-        {rowState.splits.map((split, index) => (
-          <div
-            className='Layer__bank-transactions__table-cell--split-entry'
-            key={`split-${index}`}
-          >
-            <div className='Layer__bank-transactions__table-cell--split-entry__right-col'>
-              <CategorySelect
-                bankTransaction={bankTransaction}
-                name={`category-${bankTransaction.id}`}
-                value={split.category}
-                onChange={value => changeCategory(index, value)}
-                className='Layer__category-menu--full'
-                disabled={bankTransaction.processing}
-                excludeMatches
-                asDrawer
-                showTooltips={showTooltips}
-              />
-            </div>
-            <Input
-              type='text'
-              name={`split-${index}`}
-              className={classNames(
-                'Layer__split-amount-input',
-                index === 0 && 'Layer__split-amount-input--first',
-              )}
-              disabled={index === 0}
-              onChange={updateAmounts(index)}
-              value={split.inputValue}
-              onBlur={onBlur}
-              isInvalid={split.amount < 0}
-              errorMessage='Negative values are not allowed'
-              inputMode='numeric'
-            />
-            {index > 0 && (
-              <Button
-                className='Layer__bank-transactions__table-cell--split-entry__merge-btn'
-                onClick={() => removeSplit(index)}
-                rightIcon={<Trash size={16} />}
-                variant={ButtonVariant.secondary}
-                iconOnly={true}
-              />
-            )}
+      {showCategorization ? (
+        <>
+          <Text weight={TextWeight.bold} size={TextSize.sm}>
+            Split transaction
+          </Text>
+          <div className='Layer__bank-transactions__table-cell__header'>
+            <Text size={TextSize.sm}>Category</Text>
+            <Text size={TextSize.sm}>Amount</Text>
           </div>
-        ))}
-        <TextButton
-          onClick={addSplit}
-          disabled={rowState.splits.length > 5 || isLoading}
-          className='Layer__add-new-split'
-        >
-          Add new split
-        </TextButton>
-      </div>
+          <div className='Layer__bank-transactions__splits-inputs'>
+            {rowState.splits.map((split, index) => (
+              <div
+                className='Layer__bank-transactions__table-cell--split-entry'
+                key={`split-${index}`}
+              >
+                <div className='Layer__bank-transactions__table-cell--split-entry__right-col'>
+                  <CategorySelect
+                    bankTransaction={bankTransaction}
+                    name={`category-${bankTransaction.id}`}
+                    value={split.category}
+                    onChange={value => changeCategory(index, value)}
+                    className='Layer__category-menu--full'
+                    disabled={bankTransaction.processing}
+                    excludeMatches
+                    asDrawer
+                    showTooltips={showTooltips}
+                  />
+                </div>
+                <Input
+                  type='text'
+                  name={`split-${index}`}
+                  className={classNames(
+                    'Layer__split-amount-input',
+                    index === 0 && 'Layer__split-amount-input--first',
+                  )}
+                  disabled={index === 0}
+                  onChange={updateAmounts(index)}
+                  value={split.inputValue}
+                  onBlur={onBlur}
+                  isInvalid={split.amount < 0}
+                  errorMessage='Negative values are not allowed'
+                  inputMode='numeric'
+                />
+                {index > 0 && (
+                  <Button
+                    className='Layer__bank-transactions__table-cell--split-entry__merge-btn'
+                    onClick={() => removeSplit(index)}
+                    rightIcon={<Trash size={16} />}
+                    variant={ButtonVariant.secondary}
+                    iconOnly={true}
+                  />
+                )}
+              </div>
+            ))}
+            <TextButton
+              onClick={addSplit}
+              disabled={rowState.splits.length > 5 || isLoading}
+              className='Layer__add-new-split'
+            >
+              Add new split
+            </TextButton>
+          </div>
+        </>
+      ): null}
       {showDescriptions && (
         <InputGroup
           className='Layer__bank-transaction-mobile-list-item__description'

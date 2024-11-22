@@ -11,6 +11,7 @@ interface BankTransactionMobileFormsProps {
   purpose: Purpose
   bankTransaction: BankTransaction
   showTooltips: boolean
+  showCategorization?: boolean
   showReceiptUploads?: boolean
   showDescriptions?: boolean
   isOpen?: boolean
@@ -20,6 +21,7 @@ export const BankTransactionMobileForms = ({
   purpose,
   bankTransaction,
   showTooltips,
+  showCategorization,
   showReceiptUploads,
   showDescriptions,
   isOpen,
@@ -30,6 +32,7 @@ export const BankTransactionMobileForms = ({
         return (
           <BusinessForm
             bankTransaction={bankTransaction}
+            showCategorization={showCategorization}
             showTooltips={showTooltips}
             showReceiptUploads={showReceiptUploads}
             showDescriptions={showDescriptions}

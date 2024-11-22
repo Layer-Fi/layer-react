@@ -120,7 +120,7 @@ export const listBankTransactionDocuments = get<{
   errors: unknown
 }>(
   ({ businessId, bankTransactionId }) =>
-    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents?content_disposition=INLINE`,
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents?content_disposition=ATTACHMENT`,
 )
 
 export const getBankTransactionDocument = get<{
@@ -128,7 +128,7 @@ export const getBankTransactionDocument = get<{
   errors: unknown
 }>(
   ({ businessId, bankTransactionId, documentId }) =>
-    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents/${documentId}?content_disposition=INLINE`,
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents/${documentId}?content_disposition=ATTACHMENT`,
 )
 
 export const archiveBankTransactionDocument = post<{
@@ -141,26 +141,26 @@ export const archiveBankTransactionDocument = post<{
 
 export const uploadBankTransactionDocument =
   (baseUrl: string, accessToken?: string) =>
-  ({
-    businessId,
-    bankTransactionId,
-    file,
-    documentType,
-  }: {
-    businessId: string
-    bankTransactionId: string
-    file: File
-    documentType: string
-  }) => {
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('documentType', documentType)
+    ({
+      businessId,
+      bankTransactionId,
+      file,
+      documentType,
+    }: {
+      businessId: string
+      bankTransactionId: string
+      file: File
+      documentType: string
+    }) => {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('documentType', documentType)
 
-    const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents`
-    return postWithFormData<{ data: FileMetadata; errors: unknown }>(
-      endpoint,
-      formData,
-      baseUrl,
-      accessToken,
-    )
-  }
+      const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents`
+      return postWithFormData<{ data: FileMetadata; errors: unknown }>(
+        endpoint,
+        formData,
+        baseUrl,
+        accessToken,
+      )
+    }
