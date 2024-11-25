@@ -1,40 +1,40 @@
-import { FileMetadata } from '../../types/file_upload'
-import { TaskTypes } from '../../types/tasks'
-import { get, post, postWithFormData } from './authenticated_http'
+import { FileMetadata } from "../../types/file_upload";
+import { TaskTypes } from "../../types/tasks";
+import { get, post, postWithFormData } from "./authenticated_http";
 
 export const getTasks = get<{ data: TaskTypes[] }>(
-  ({ businessId }) => `/v1/businesses/${businessId}/tasks`,
-)
+  ({ businessId }) => `/v1/businesses/${businessId}/tasks`
+);
 
 export const submitResponseToTask = post<{ data: TaskTypes }>(
   ({ businessId, taskId }) =>
-    `/v1/businesses/${businessId}/tasks/${taskId}/user-response`,
-)
+    `/v1/businesses/${businessId}/tasks/${taskId}/user-response`
+);
 
 export const markTaskAsComplete = post<{ data: TaskTypes }>(
   ({ businessId, taskId }) =>
-    `/v1/businesses/${businessId}/tasks/${taskId}/complete`,
-)
+    `/v1/businesses/${businessId}/tasks/${taskId}/complete`
+);
 
 export const completeTaskWithUpload =
   (baseUrl: string, accessToken?: string) =>
   ({
     businessId,
     taskId,
-    file,
+    files,
   }: {
-    businessId: string
-    taskId: string
-    file: File
+    businessId: string;
+    taskId: string;
+    files: File[];
   }) => {
-    const formData = new FormData()
-    formData.append('file', file)
+    const formData = new FormData();
+    files.forEach((file) => formData.append("file", file));
 
-    const endpoint = `/v1/businesses/${businessId}/tasks/${taskId}/upload`
+    const endpoint = `/v1/businesses/${businessId}/tasks/${taskId}/upload`;
     return postWithFormData<{ data: FileMetadata; errors: unknown }>(
       endpoint,
       formData,
       baseUrl,
-      accessToken,
-    )
-  }
+      accessToken
+    );
+  };

@@ -22,7 +22,7 @@ export const TasksListItem = ({
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [userResponse, setUserResponse] = useState(task.user_response || "");
 
-  const { submitResponseToTask, uploadDocumentForTask } =
+  const { submitResponseToTask, uploadDocumentsForTask } =
     useContext(TasksContext);
 
   const taskBodyClassName = classNames(
@@ -86,8 +86,8 @@ export const TasksListItem = ({
             <div className="Layer__tasks-list-item__actions">
               {task.user_response_type === "UPLOAD_DOCUMENT" ? (
                 <FileInput
-                  onUpload={(file: File) => {
-                    uploadDocumentForTask(task.id, file);
+                  onUpload={(files: File[]) => {
+                    uploadDocumentsForTask(task.id, files);
                     setIsOpen(false);
                     goToNextPageIfAllComplete(task);
                   }}

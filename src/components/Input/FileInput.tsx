@@ -5,7 +5,7 @@ import { ButtonVariant } from "../Button/Button";
 
 export interface FileInputProps {
   text?: string;
-  onUpload?: (file: File) => void;
+  onUpload?: (files: File[]) => void;
   disabled?: boolean;
   secondary?: boolean;
   iconOnly?: boolean;
@@ -30,8 +30,8 @@ export const FileInput = ({
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0 && onUpload) {
-      const fileUploaded = event.target.files[0];
-      onUpload(fileUploaded);
+      const filesUploaded = Array.from(event.target.files);
+      onUpload(filesUploaded);
     }
   };
 
