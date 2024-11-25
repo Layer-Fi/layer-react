@@ -5,20 +5,13 @@
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
   font-variant-numeric: lining-nums proportional-nums;
-  font-feature-settings:
-    'cv10' on,
-    'cv05' on,
-    'cv08' on,
-    'ss03' on;
+  font-feature-settings: "cv10" on, "cv05" on, "cv08" on, "ss03" on;
   cursor: pointer;
   min-height: 36px;
   box-sizing: border-box;
-  box-shadow:
-    0px 0px 0px 1px var(--color-base-300),
-    0px 1px 1px 0px rgba(0, 0, 0, 0.04),
-    0px 2px 3px 0px rgba(0, 0, 0, 0.04),
-    0px 3px 4px 0px rgba(0, 0, 0, 0.02),
-    0px 4px 5px 0px rgba(0, 0, 0, 0.01);
+  box-shadow: 0px 0px 0px 1px var(--color-base-300),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.04), 0px 2px 3px 0px rgba(0, 0, 0, 0.04),
+    0px 3px 4px 0px rgba(0, 0, 0, 0.02), 0px 4px 5px 0px rgba(0, 0, 0, 0.01);
   transition: all 100ms ease-out;
   padding: 0 var(--spacing-md);
   text-decoration: none;
@@ -123,15 +116,13 @@
   }
 
   &:hover {
-    box-shadow:
-      0px 0px 0px 1px var(--color-base-300),
+    box-shadow: 0px 0px 0px 1px var(--color-base-300),
       0px 1px 2px 0px var(--base-transparent-6);
   }
 
   &:visited,
   &:active {
-    box-shadow:
-      0px 0px 0px 1px var(--color-base-800),
+    box-shadow: 0px 0px 0px 1px var(--color-base-800),
       0px 0px 0px 3px var(--color-base-300);
   }
 
@@ -139,6 +130,7 @@
     box-shadow: none;
     background-color: var(--color-base-200);
     color: var(--color-base-500);
+    cursor: not-allowed;
 
     .Layer__btn-icon {
       background-color: transparent;
@@ -259,11 +251,7 @@
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
   font-variant-numeric: lining-nums proportional-nums;
-  font-feature-settings:
-    'cv10' on,
-    'cv05' on,
-    'cv08' on,
-    'ss03' on;
+  font-feature-settings: "cv10" on, "cv05" on, "cv08" on, "ss03" on;
   padding: 0;
   cursor: pointer;
   box-sizing: border-box;
@@ -276,8 +264,7 @@
 
   &.Layer__icon-btn--border {
     color: var(--color-base-800);
-    box-shadow:
-      0px 0px 0px 1px var(--color-base-300),
+    box-shadow: 0px 0px 0px 1px var(--color-base-300),
       0px 1px 1px 0px var(--base-transparent-4),
       0px 2px 3px 0px var(--base-transparent-4),
       0px 3px 4px 0px var(--base-transparent-2),
@@ -285,8 +272,7 @@
 
     &:hover {
       background-color: var(--color-base-0);
-      box-shadow:
-        0px 0px 0px 1px var(--color-base-300),
+      box-shadow: 0px 0px 0px 1px var(--color-base-300),
         0px 1px 2px 0px var(--base-transparent-6);
     }
   }
@@ -301,8 +287,7 @@
   }
 
   &.Layer__icon-btn--border {
-    box-shadow:
-      0px 4px 5px 0px var(--base-transparent-1),
+    box-shadow: 0px 4px 5px 0px var(--base-transparent-1),
       0px 3px 4px 0px var(--base-transparent-2),
       0px 2px 3px 0px var(--base-transparent-4),
       0px 1px 1px 0px var(--base-transparent-4),
@@ -382,8 +367,7 @@
 
     &:focus,
     :active {
-      box-shadow:
-        0px 0px 0px 1px var(--color-base-0),
+      box-shadow: 0px 0px 0px 1px var(--color-base-0),
         0px 0px 0px 3px var(--color-base-0);
       outline: var(--color-base-0);
     }
