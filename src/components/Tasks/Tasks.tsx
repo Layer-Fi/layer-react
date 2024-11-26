@@ -15,6 +15,7 @@ import { TasksList } from '../TasksList'
 import { TasksPending } from '../TasksPending'
 import { TasksMonthSelector } from '../TasksMonthSelector/TasksMonthSelector'
 import classNames from 'classnames'
+import { endOfYear, getYear, startOfYear } from 'date-fns'
 
 export type UseTasksContextType = ReturnType<typeof useTasks>
 export const UseTasksContext = createContext<UseTasksContextType>({
@@ -23,6 +24,10 @@ export const UseTasksContext = createContext<UseTasksContextType>({
   loadedStatus: 'initial',
   isValidating: undefined,
   error: undefined,
+  currentDate: new Date(),
+  setCurrentDate: () => {},
+  dateRange: { startDate: startOfYear(new Date()), endDate: endOfYear(new Date())},
+  setDateRange: () => {},
   refetch: () => { },
   submitResponseToTask: () => { },
   uploadDocumentForTask: () => { },
@@ -83,9 +88,8 @@ export const TasksComponent = ({
   collapsedWhenComplete?: boolean
   stringOverrides?: TasksStringOverrides
 }) => {
-  // @TODO Move to date picker
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const { isLoading, loadedStatus, data, monthlyData } = useContext(TasksContext)
+  const { isLoading, loadedStatus, data, monthlyData, currentDate, setCurrentDate, dateRange } = useContext(TasksContext)
+
   const allComplete = useMemo(() => {
     if (!data) {
       return undefined
@@ -111,6 +115,7 @@ export const TasksComponent = ({
     ) {
       setOpen(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allComplete])
 
   return (
@@ -133,8 +138,8 @@ export const TasksComponent = ({
           </div>
         ) : (
           <>
-            <TasksMonthSelector tasks={monthlyData} onClick={setCurrentDate} currentDate={currentDate} />
-            {data.length > 0 && <TasksPending />}
+            <TasksMonthSelector tasks={monthlyData} currentDate={currentDate} onClick={setCurrentDate} year={getYear(dateRange.startDate)} />
+            <TasksPending />
             <TasksList />
           </>
         )}

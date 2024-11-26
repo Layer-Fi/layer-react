@@ -5,15 +5,16 @@ import { Text, TextSize } from '../Typography'
 import CheckIcon from '../../icons/Check'
 import AlertCircle from '../../icons/AlertCircle'
 
-const TaskMonthTile = ({ monthData, onClick, active }: TaskMonthTileProps) => {
+const TaskMonthTile = ({ monthData, onClick, active, disabled }: TaskMonthTileProps) => {
     const isCompleted = monthData.total === monthData.completed
     const baseClass = classNames(
         'Layer__tasks-month-selector__month',
         isCompleted && 'Layer__tasks-month-selector__month--completed',
         active && 'Layer__tasks-month-selector__month--active',
+        disabled && 'Layer__tasks-month-selector__month--disabled',
     )
     return (
-        <div className={baseClass} onClick={() => onClick(monthData.startDate)}>
+        <div className={baseClass} onClick={() => !disabled && onClick(monthData.startDate)}>
             <Text size={TextSize.sm} className='Layer__tasks-month-selector__month__str'>
                 {monthData.monthStr}
             </Text>

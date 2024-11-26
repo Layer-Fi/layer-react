@@ -2,8 +2,20 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--spacing-xs);
-    padding: var(--spacing-xs);
+    padding: var(--spacing-md);
     container-type: inline-size;
+
+    @container (min-width: 800px) {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    @container (max-width: 400px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @container (max-width: 300px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 .Layer__tasks-month-selector__month {
@@ -27,8 +39,17 @@
         box-shadow: 0px 0px 0px 1px var(--color-base-800), 0px 0px 0px 3px var(--color-base-300);
     }
 
+    &.Layer__tasks-month-selector__month--disabled {
+        color: var(--color-base-500);
+        cursor: not-allowed;
+    }
+
     &:hover {
         box-shadow: 0px 0px 0px 1px var(--color-base-500), 0px 0px 0px 3px var(--color-base-300);
+    }
+
+    .Layer__tasks-month-selector__month__str {
+        min-width: 24px;
     }
 }
 

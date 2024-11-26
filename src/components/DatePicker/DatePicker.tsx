@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, type FC } from 'react'
+import React, { useEffect, useMemo, useRef, useState, type FC } from 'react'
 import * as RDP from 'react-datepicker'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
@@ -10,6 +10,7 @@ import type {
   DatePickerModeSelectorProps,
 } from './ModeSelector/DatePickerModeSelector'
 import classNames from 'classnames'
+import { endOfDay, endOfMonth, endOfYear } from 'date-fns'
 
 /**
  * @see https://github.com/Hacker0x01/react-datepicker/issues/1333#issuecomment-2363284612
@@ -20,10 +21,13 @@ const ReactDatePicker = (((RDP.default as any).default as any)
   || (RDP as any)) as typeof RDP.default
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
+type NavigateArrows = 'desktop' | 'mobile'
+
 interface DatePickerProps {
   mode: DatePickerMode
   selected: Date | [Date | null, Date | null]
   onChange: (date: Date | [Date, Date | null]) => void
+  disabled?: boolean
   allowedModes?: ReadonlyArray<DatePickerMode>
   dateFormat?: string
   timeIntervals?: number
@@ -36,7 +40,7 @@ interface DatePickerProps {
   currentDateOption?: boolean
   minDate?: Date
   maxDate?: Date
-  navigateArrows?: boolean
+  navigateArrows?: NavigateArrows[]
   onChangeMode?: (mode: DatePickerMode) => void
   slots?: {
     ModeSelector: FC<DatePickerModeSelectorProps>
@@ -65,9 +69,14 @@ const getDefaultRangeDate = (
 const isRangeMode = (mode: DatePickerProps['mode']) =>
   mode === 'dayRangePicker' || mode === 'monthRangePicker'
 
+const showNavigateArrows = (navigateArrows?: NavigateArrows[], isDesktop?: boolean) => {
+  return (navigateArrows && ((isDesktop && navigateArrows.includes('desktop')) || (!isDesktop && navigateArrows.includes('mobile'))))
+}
+
 export const DatePicker = ({
   selected,
   onChange,
+  disabled,
   mode = 'dayPicker',
   allowedModes,
   dateFormat = mode === 'monthPicker' || mode === 'monthRangePicker'
@@ -85,7 +94,7 @@ export const DatePicker = ({
   minDate,
   maxDate = new Date(),
   currentDateOption = true,
-  navigateArrows = mode === 'monthPicker',
+  navigateArrows = mode === 'monthPicker' ? ['mobile'] : undefined,
   onChangeMode,
   slots,
   ...props
@@ -156,7 +165,7 @@ export const DatePicker = ({
   const wrapperClassNames = classNames(
     'Layer__datepicker__wrapper',
     mode === 'timePicker' && 'Layer__datepicker__time__wrapper',
-    navigateArrows && 'Layer__datepicker__wrapper--arrows',
+    showNavigateArrows(navigateArrows, isDesktop) && 'Layer__datepicker__wrapper--arrows',
   )
 
   const datePickerWrapperClassNames = classNames(
@@ -198,6 +207,11 @@ export const DatePicker = ({
         && selectedDates.getMonth() === currentDate.getMonth()
         && selectedDates.getFullYear() === currentDate.getFullYear()
       )
+    } else if (mode === 'yearPicker') {
+      return (
+        selectedDates instanceof Date
+        && selectedDates.getFullYear() === currentDate.getFullYear()
+      )
     }
     return false
   }
@@ -210,12 +224,43 @@ export const DatePicker = ({
       setSelectedDates(
         new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
       )
+    } else if (mode === 'yearPicker') {
+      setSelectedDates(
+        new Date(currentDate.getFullYear(), 0, 1),
+      )
     }
   }
 
-  const isTodayOrAfter = Boolean(
-    selectedDates instanceof Date && selectedDates >= new Date(),
-  )
+  const isTodayOrAfter = useMemo(() => {
+    switch(mode) {
+      case 'dayPicker':
+        return Boolean(
+          selectedDates instanceof Date && (
+            endOfDay(selectedDates) >= endOfDay(new Date()) || endOfDay(selectedDates) >= maxDate
+          ),
+        )
+      case 'monthPicker':
+        return Boolean(
+          selectedDates instanceof Date && (
+            endOfMonth(selectedDates) >= endOfMonth(new Date())
+            || endOfMonth(selectedDates) >= maxDate
+          ),
+        )
+      case 'yearPicker':
+        return Boolean(
+          selectedDates instanceof Date && (
+            endOfYear(selectedDates) >= endOfYear(new Date()) || endOfYear(selectedDates) >= maxDate
+          ),
+        )
+      default:
+        return Boolean(
+          selectedDates instanceof Date && (
+            selectedDates >= new Date() || selectedDates >= maxDate
+          ),
+        )
+    }
+    
+  }, [selectedDates, maxDate, mode])
 
   const isBeforeMinDate = Boolean(
     minDate && selectedDates instanceof Date && selectedDates <= minDate,
@@ -235,6 +280,14 @@ export const DatePicker = ({
         new Date(
           (selectedDates as Date).setMonth(
             (selectedDates as Date).getMonth() + value,
+          ),
+        ),
+      )
+    } else if (mode === 'yearPicker') {
+      setSelectedDates(
+        new Date(
+          (selectedDates as Date).setFullYear(
+            (selectedDates as Date).getFullYear() + value,
           ),
         ),
       )
@@ -286,6 +339,7 @@ export const DatePicker = ({
         showMonthYearPicker={
           mode === 'monthPicker' || mode === 'monthRangePicker'
         }
+        showYearPicker={mode === 'yearPicker'}
         dateFormat={dateFormat}
         renderDayContents={day => (
           <span className='Layer__datepicker__day-contents'>{day}</span>
@@ -327,6 +381,7 @@ export const DatePicker = ({
             pickerRef.current.setOpen(!pickerRef.current.isCalendarOpen())
           }
         }}
+        disabled={disabled}
         {...props}
       >
         {ModeSelector && (
@@ -343,7 +398,7 @@ export const DatePicker = ({
           />
         )}
       </ReactDatePicker>
-      {navigateArrows && !isDesktop && (
+      {showNavigateArrows(navigateArrows, isDesktop) && (
         <>
           <Button
             aria-label='Previous Date'
@@ -353,7 +408,7 @@ export const DatePicker = ({
             )}
             onClick={() => changeDate(-1)}
             variant={ButtonVariant.secondary}
-            disabled={isBeforeMinDate}
+            disabled={isBeforeMinDate || disabled}
           >
             <ChevronLeft className='Layer__datepicker__button-icon' size={16} />
           </Button>
@@ -367,7 +422,7 @@ export const DatePicker = ({
                 : undefined,
             )}
             onClick={() => changeDate(1)}
-            disabled={isTodayOrAfter}
+            disabled={isTodayOrAfter || disabled}
           >
             <ChevronRight
               className='Layer__datepicker__button-icon'
@@ -377,12 +432,12 @@ export const DatePicker = ({
         </>
       )}
       {currentDateOption
-        && (mode === 'dayPicker' || mode === 'monthPicker') && (
+        && (mode === 'dayPicker' || mode === 'monthPicker' || mode === 'yearPicker') && (
         <Button
           className='Layer__datepicker__current-button'
           onClick={setCurrentDate}
           variant={ButtonVariant.secondary}
-          disabled={isCurrentDate()}
+          disabled={isCurrentDate() || disabled}
         >
           {mode === 'dayPicker' ? 'Today' : 'Current'}
         </Button>

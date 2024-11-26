@@ -8,23 +8,35 @@ import { mockData } from './mockData'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { addMonths, endOfYear, getMonth, getYear, parseISO, startOfYear } from 'date-fns'
+import { endOfYear, formatISO, getMonth, getYear, parseISO, startOfYear } from 'date-fns'
 
-type UseTasks = () => {
+type UseTasks = (props?: UseTasksProps) => {
   data?: Task[]
   monthlyData?: TasksMonthly[]
   isLoading?: boolean
   loadedStatus?: LoadedStatus
   isValidating?: boolean
   error?: unknown
+  currentDate: Date
+  setCurrentDate: (date: Date) => void
+  dateRange: { startDate: Date, endDate: Date }
+  setDateRange: (props: { startDate: Date, endDate: Date }) => void
   refetch: () => void
   submitResponseToTask: (taskId: string, userResponse: string) => void
   uploadDocumentForTask: (taskId: string, file: File) => void
 }
 
+type UseTasksProps = {
+  startDate?: Date,
+  endDate?: Date
+}
+
 const DEBUG_MODE = false
 
-export const useTasks: UseTasks = () => {
+export const useTasks: UseTasks = ({
+  startDate: initialStartDate = startOfYear(new Date()),
+  endDate: initialEndDate = endOfYear(new Date())
+}: UseTasksProps = {}) => {
   const [loadedStatus, setLoadedStatus] = useState<LoadedStatus>('initial')
 
   const { businessId, read, syncTimestamps, hasBeenTouched } = useLayerContext()
@@ -32,35 +44,25 @@ export const useTasks: UseTasks = () => {
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  // @TODO - read from DatePicker or do as state
-  const startDate = startOfYear(new Date())
-  const endDate = endOfYear(new Date())
+  const [dateRange, setDateRange] = useState({ startDate: initialStartDate, endDate: initialEndDate })
+  const [currentDate, setCurrentDate] = useState(new Date())
 
-  const queryKey = businessId && auth?.access_token && `tasks-${businessId}-${startDate}-${endDate}`
-
+  const queryKey = businessId && auth?.access_token && `tasks-${businessId}-${dateRange.startDate}-${dateRange.endDate}`
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,
     Layer.getTasks(apiUrl, auth?.access_token, {
-      // @TODO enable when API ready
-      // params: { businessId, startDate: formatISO(startDate.valueOf()), endDate: formatISO(endDate.valueOf()) },
-      params: { businessId },
+      params: { businessId, startDate: formatISO(dateRange.startDate.valueOf()), endDate: formatISO(dateRange.endDate.valueOf()) },
     }),
   )
-
-  // @TODO - temporary function
-  function addRandomMonths(date: Date): Date {
-    const randomMonths = Math.floor(Math.random() * 11) - 5
-    return addMonths(date, randomMonths)
-  }
 
   const monthlyData = useMemo(() => {
     // Group tasks monthly
     if (data?.data) {
       const grouped = data.data.reduce((acc, task) => {
-        const createdAt = task.effective_date ? parseISO(task.effective_date) : parseISO(task.created_at)
-        const year = getYear(createdAt)
-        const month = getMonth(addRandomMonths(createdAt)) + 1
+        const effectiveDate = task.effective_date ? parseISO(task.effective_date) : parseISO(task.created_at)
+        const year = getYear(effectiveDate)
+        const month = getMonth(effectiveDate)
 
         const key = `${year}-${month}`
 
@@ -97,6 +99,7 @@ export const useTasks: UseTasks = () => {
     } else if (!isLoading && loadedStatus === 'loading') {
       setLoadedStatus('complete')
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading])
 
   const refetch = () => mutate()
@@ -132,12 +135,14 @@ export const useTasks: UseTasks = () => {
     if (queryKey && (isLoading || isValidating)) {
       read(DataModel.TASKS, queryKey)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isValidating])
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncTimestamps])
 
   return {
@@ -147,6 +152,10 @@ export const useTasks: UseTasks = () => {
     loadedStatus,
     isValidating,
     error,
+    currentDate,
+    setCurrentDate,
+    dateRange,
+    setDateRange,
     refetch,
     submitResponseToTask,
     uploadDocumentForTask,
