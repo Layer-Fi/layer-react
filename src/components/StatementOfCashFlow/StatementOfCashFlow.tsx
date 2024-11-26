@@ -17,6 +17,7 @@ import { View } from '../View'
 import { STATEMENT_OF_CASH_FLOW_ROWS } from './constants'
 import { endOfMonth, startOfDay, startOfMonth, subWeeks } from 'date-fns'
 import { CashflowStatementDownloadButton } from './download/CashflowStatementDownloadButton'
+import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
@@ -56,6 +57,7 @@ const StatementOfCashFlowView = ({
     startDate,
     endDate,
   )
+  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   const [datePickerMode, setDatePickerMode] = useState<DatePickerMode>(
     deprecated_datePickerMode ?? defaultDatePickerMode,
@@ -113,6 +115,7 @@ const StatementOfCashFlowView = ({
     <TableProvider>
       <View
         type='panel'
+        ref={containerRef}
         header={
           <Header>
             <HeaderRow>
@@ -121,6 +124,7 @@ const StatementOfCashFlowView = ({
                 <CashflowStatementDownloadButton
                   startDate={startDate}
                   endDate={endDate}
+                  iconOnly={view === 'mobile'}
                 />
               </HeaderCol>
             </HeaderRow>

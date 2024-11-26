@@ -2,8 +2,7 @@ import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { BalanceSheetContext } from '../../contexts/BalanceSheetContext'
 import { TableProvider } from '../../contexts/TableContext'
 import { useBalanceSheet } from '../../hooks/useBalanceSheet'
-import { useElementViewSize } from '../../hooks/useElementViewSize'
-import { View as ViewType } from '../../types/general'
+import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
 import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker'
 import { BalanceSheetExpandAllButton } from '../BalanceSheetExpandAllButton'
 import { BalanceSheetTable } from '../BalanceSheetTable'
@@ -54,11 +53,7 @@ const BalanceSheetView = ({
 }: BalanceSheetViewProps) => {
   const [effectiveDate, setEffectiveDate] = useState(startOfDay(new Date()))
   const { data, isLoading, refetch } = useBalanceSheet(effectiveDate)
-
-  const [view, setView] = useState<ViewType>('desktop')
-  const containerRef = useElementViewSize<HTMLDivElement>(newView =>
-    setView(newView),
-  )
+  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   useEffect(() => {
     // Refetch only if selected effectiveDate and data's effectiveDate are different

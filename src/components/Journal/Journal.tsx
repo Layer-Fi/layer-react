@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { JournalContext } from '../../contexts/JournalContext'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
-import { useElementViewSize } from '../../hooks/useElementViewSize'
+import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
 import { useJournal } from '../../hooks/useJournal'
-import { View } from '../../types/general'
 import { Container } from '../Container'
 import { JournalTable } from '../JournalTable'
 import { JournalTableStringOverrides } from '../JournalTable/JournalTableWithPanel'
@@ -48,11 +47,7 @@ const JournalContent = ({
   config = JOURNAL_CONFIG,
   stringOverrides,
 }: JournalProps) => {
-  const [view, setView] = useState<View>('desktop')
-
-  const containerRef = useElementViewSize<HTMLDivElement>(newView =>
-    setView(newView),
-  )
+  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
     <Container name='journal' ref={containerRef} asWidget={asWidget}>

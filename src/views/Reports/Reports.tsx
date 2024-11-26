@@ -11,7 +11,7 @@ import { StatementOfCashFlow } from '../../components/StatementOfCashFlow'
 import { StatementOfCashFlowStringOverrides } from '../../components/StatementOfCashFlow/StatementOfCashFlow'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
-import { useElementViewSize } from '../../hooks/useElementViewSize'
+import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
 import { View as ViewType } from '../../types/general'
 import type { TimeRangePickerConfig } from './reportTypes'
 
@@ -54,21 +54,21 @@ const getOptions = (enabledReports: ReportType[]) => {
   return [
     enabledReports.includes('profitAndLoss')
       ? {
-          value: 'profitAndLoss',
-          label: 'Profit & Loss',
-        }
+        value: 'profitAndLoss',
+        label: 'Profit & Loss',
+      }
       : null,
     enabledReports.includes('balanceSheet')
       ? {
-          value: 'balanceSheet',
-          label: 'Balance Sheet',
-        }
+        value: 'balanceSheet',
+        label: 'Balance Sheet',
+      }
       : null,
     enabledReports.includes('statementOfCashFlow')
       ? {
-          value: 'statementOfCashFlow',
-          label: 'Statement of Cash Flow',
-        }
+        value: 'statementOfCashFlow',
+        label: 'Statement of Cash Flow',
+      }
       : null,
   ].filter(o => !!o) as ReportOption[]
 }
@@ -83,11 +83,7 @@ export const Reports = ({
   statementOfCashFlowConfig,
 }: ReportsProps) => {
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
-  const [view, setView] = useState<ViewBreakpoint>('desktop')
-
-  const containerRef = useElementViewSize<HTMLDivElement>(newView =>
-    setView(newView),
-  )
+  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   const options = getOptions(enabledReports)
   const defaultTitle =
