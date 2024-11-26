@@ -90,7 +90,15 @@ export const TasksComponent = ({
   collapsedWhenComplete?: boolean
   stringOverrides?: TasksStringOverrides
 }) => {
-  const { isLoading, loadedStatus, data, monthlyData, currentDate, setCurrentDate, dateRange } = useContext(TasksContext)
+  const {
+    isLoading,
+    loadedStatus,
+    data,
+    monthlyData,
+    currentDate,
+    setCurrentDate,
+    dateRange
+  } = useContext(TasksContext)
 
   const allComplete = useMemo(() => {
     if (!data) {
@@ -139,7 +147,12 @@ export const TasksComponent = ({
           </div>
         ) : (
           <>
-            <TasksMonthSelector tasks={monthlyData} currentDate={currentDate} onClick={setCurrentDate} year={getYear(dateRange.startDate)} />
+            <TasksMonthSelector
+              tasks={monthlyData}
+              currentDate={currentDate}
+              onClick={setCurrentDate}
+              year={getYear(dateRange.startDate)}
+            />
             <TasksPending />
             <TasksList />
           </>
