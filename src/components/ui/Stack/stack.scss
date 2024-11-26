@@ -1,6 +1,12 @@
-.Layer__VStack {
+.Layer__Stack {
   display: flex;
-  flex-direction: column;
+
+  $directions: row, column;
+  @each $direction in $directions {
+    &[data-direction="#{$direction}"] {
+      flex-direction: $direction;
+    }
+  }
 
   $alignments: start, center, end;
   @each $alignment in $alignments {

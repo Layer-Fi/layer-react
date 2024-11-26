@@ -1,5 +1,18 @@
 import { StatementOfCashFlow } from '../../types'
+import type { S3PresignedUrl } from '../../types/general'
+import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { get } from './authenticated_http'
+
+type GetStatementOfCashFlowParams ={
+  businessId: string
+  startDate: string
+  endDate: string
+}
+
+type GetStatementOfCashFlowReturn = {
+  data?: StatementOfCashFlow
+  error?: unknown
+}
 
 export const getStatementOfCashFlow = get<
   GetStatementOfCashFlowReturn,
@@ -11,14 +24,13 @@ export const getStatementOfCashFlow = get<
     )}&end_date=${encodeURIComponent(endDate)}`,
 )
 
-export type GetStatementOfCashFlowReturn = {
-  data?: StatementOfCashFlow
-  error?: unknown
-}
+export const getCashflowStatementCSV = get<
+  { data: S3PresignedUrl },
+  GetStatementOfCashFlowParams
+>(
+  ({ businessId, startDate, endDate }) => {
+    const parameters = toDefinedSearchParameters({ startDate, endDate })
 
-export interface GetStatementOfCashFlowParams
-  extends Record<string, string | undefined> {
-  businessId: string
-  startDate: string
-  endDate: string
-}
+    return `/v1/businesses/${businessId}/reports/cashflow-statement/exports/csv?${parameters}`
+  }
+)

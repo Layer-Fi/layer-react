@@ -16,6 +16,7 @@ import { StatementOfCashFlowTableStringOverrides } from '../StatementOfCashFlowT
 import { View } from '../View'
 import { STATEMENT_OF_CASH_FLOW_ROWS } from './constants'
 import { endOfMonth, startOfDay, startOfMonth, subWeeks } from 'date-fns'
+import { CashflowStatementDownloadButton } from './download/CashflowStatementDownloadButton'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
@@ -116,6 +117,12 @@ const StatementOfCashFlowView = ({
           <Header>
             <HeaderRow>
               <HeaderCol>{datePicker}</HeaderCol>
+              <HeaderCol>
+                <CashflowStatementDownloadButton
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              </HeaderCol>
             </HeaderRow>
           </Header>
         }

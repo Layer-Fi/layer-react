@@ -8,12 +8,16 @@ export type StackProps = PropsWithChildren<{
   slot?: string
 }>
 
-const CLASS_NAME = 'Layer__VStack'
+type InternalStackProps = StackProps & {
+  direction: 'row' | 'column'
+}
 
-export function VStack({ align, children, gap, justify, ...restProps }: StackProps) {
+const CLASS_NAME = 'Layer__Stack'
+
+function Stack({ align, children, direction, gap, justify, ...restProps }: InternalStackProps) {
   const dataProperties = useMemo(
-    () => toDataProperties({ align, gap, justify }),
-    [align, gap, justify],
+    () => toDataProperties({ align, gap, justify, direction }),
+    [align, direction, gap, justify],
   )
 
   return (
@@ -21,4 +25,12 @@ export function VStack({ align, children, gap, justify, ...restProps }: StackPro
       {children}
     </div>
   )
+}
+
+export function VStack(props: StackProps) {
+  return <Stack {...props} direction='column' />
+}
+
+export function HStack(props: StackProps) {
+  return <Stack {...props} direction='row' />
 }
