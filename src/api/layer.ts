@@ -58,6 +58,8 @@ import {
   getTasks,
   submitResponseToTask,
   completeTaskWithUpload,
+  deleteTaskUploads,
+  updateUploadDocumentTaskDescription,
 } from './layer/tasks'
 
 export const Layer = {
@@ -99,6 +101,8 @@ export const Layer = {
   getTasks,
   completeTaskWithUpload,
   submitResponseToTask,
+  deleteTaskUploads,
+  updateUploadDocumentTaskDescription,
   breakPlaidItemConnection,
   syncConnection,
   updateConnectionStatus,

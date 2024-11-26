@@ -127,10 +127,12 @@
 
         .Layer__tasks-list-item__body {
           padding-right: var(--spacing-md);
-          padding-left: var(--spacing-md);
+          padding-left: var(--spacing-3xl);
+          margin-left: var(--spacing-3xs);
           padding-bottom: 0;
           height: 0;
           opacity: 0;
+          overflow: hidden;
           transition: all 0.2s ease-out;
 
           .Layer__tasks-list-item__body-info {
@@ -143,6 +145,24 @@
 
             .Layer__tasks-list-item__actions {
               margin-top: var(--spacing-xs);
+            }
+
+            .Layer__tasks-list__link-list {
+              padding-top: var(--spacing-md);
+            }
+
+            .Layer__tasks-list__link-list-header {
+              font-size: var(--text-sm);
+            }
+
+            .Layer__tasks-list-item__link {
+              color: var(--color-primary);
+              font-size: var(--text-sm);
+            }
+
+            .Layer__tasks-list__links-list {
+              margin: 0;
+              padding: var(--spacing-3xs) 0 var(--spacing-sm) var(--spacing-md);
             }
           }
 

@@ -17,7 +17,9 @@ type UseTasks = () => {
   error?: unknown
   refetch: () => void
   submitResponseToTask: (taskId: string, userResponse: string) => void
-  uploadDocumentsForTask: (taskId: string, files: File[]) => void
+  uploadDocumentsForTask: (taskId: string, files: File[], description?: string) => Promise<void>
+  deleteUploadsForTask: (taskId: string) => void
+  updateDocUploadTaskDescription: (taskId: string, userResponse: string) => void
 }
 
 const DEBUG_MODE = false
@@ -49,15 +51,16 @@ export const useTasks: UseTasks = () => {
 
   const refetch = () => mutate()
 
-  const uploadDocumentsForTask = (taskId: string, files: File[]) => {
+  const uploadDocumentsForTask = async (taskId: string, files: File[], description?: string) => {
     const uploadDocuments = Layer.completeTaskWithUpload(
       apiUrl,
       auth?.access_token,
     )
-    uploadDocuments({
+    await uploadDocuments({
       businessId,
       taskId,
       files,
+      description
     }).then(refetch)
   }
 
@@ -70,6 +73,24 @@ export const useTasks: UseTasks = () => {
     }
 
     Layer.submitResponseToTask(apiUrl, auth?.access_token, {
+      params: { businessId, taskId },
+      body: data,
+    }).then(() => refetch())
+  }
+
+  const deleteUploadsForTask = (taskId: string) => {
+    Layer.deleteTaskUploads(apiUrl, auth?.access_token, {
+      params: { businessId, taskId },
+    }).then(() => refetch())
+  }
+
+  const updateDocUploadTaskDescription = (taskId: string, userResponse: string) => {
+    const data = {
+      type: 'FreeResponse',
+      user_response: userResponse,
+    }
+
+    Layer.updateUploadDocumentTaskDescription(apiUrl, auth?.access_token, {
       params: { businessId, taskId },
       body: data,
     }).then(() => refetch())
@@ -97,5 +118,7 @@ export const useTasks: UseTasks = () => {
     refetch,
     submitResponseToTask,
     uploadDocumentsForTask,
+    deleteUploadsForTask,
+    updateDocUploadTaskDescription,
   }
 }

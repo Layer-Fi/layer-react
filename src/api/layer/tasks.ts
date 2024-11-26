@@ -11,9 +11,19 @@ export const submitResponseToTask = post<{ data: TaskTypes }>(
     `/v1/businesses/${businessId}/tasks/${taskId}/user-response`,
 )
 
+export const updateUploadDocumentTaskDescription = post<{ data: TaskTypes }>(
+  ({ businessId, taskId }) =>
+    `/v1/businesses/${businessId}/tasks/${taskId}/upload/update-description`,
+)
+
 export const markTaskAsComplete = post<{ data: TaskTypes }>(
   ({ businessId, taskId }) =>
     `/v1/businesses/${businessId}/tasks/${taskId}/complete`,
+)
+
+export const deleteTaskUploads = post<{ data: TaskTypes }>(
+  ({ businessId, taskId }) =>
+    `/v1/businesses/${businessId}/tasks/${taskId}/upload/delete`,
 )
 
 export const completeTaskWithUpload =
@@ -22,13 +32,16 @@ export const completeTaskWithUpload =
     businessId,
     taskId,
     files,
+    description,
   }: {
     businessId: string
     taskId: string
     files: File[]
+    description?: string
   }) => {
     const formData = new FormData()
     files.forEach(file => formData.append('file', file))
+    description && formData.append('description', description)
 
     const endpoint = `/v1/businesses/${businessId}/tasks/${taskId}/upload`
     return postWithFormData<{ data: FileMetadata; errors: unknown }>(

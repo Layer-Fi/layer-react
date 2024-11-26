@@ -1,5 +1,17 @@
 import { DocumentType } from './file_upload'
 
+interface PresignedUrl {
+  presignedUrl: string
+  // add the other fields if/when necessary
+}
+
+interface Document {
+  document_type: DocumentType
+  file_name: string,
+  presigned_url: PresignedUrl
+  // add the other fields if/when necessary
+}
+
 export interface TaskTypes {
   id: string
   question: string
@@ -15,6 +27,7 @@ export interface TaskTypes {
   created_at: string
   updated_at: string
   document_type: DocumentType
+  documents: Document[]
 }
 
 export type TasksStatusType = 'COMPLETED' | 'TODO' | 'USER_MARKED_COMPLETED'
