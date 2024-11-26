@@ -60,41 +60,41 @@ export const SplitForm = ({
 
   const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
   const defaultCategory =
-    bankTransaction.category ||
-    (hasSuggestions(bankTransaction.categorization_flow) &&
-      bankTransaction.categorization_flow?.suggestions?.[0])
+    bankTransaction.category
+    || (hasSuggestions(bankTransaction.categorization_flow)
+      && bankTransaction.categorization_flow?.suggestions?.[0])
 
   const [rowState, updateRowState] = useState<RowState>({
     splits: bankTransaction.category?.entries
       ? bankTransaction.category?.entries.map(c => {
-          return c.type === 'ExclusionSplitEntry'
-            ? {
-                amount: c.amount || 0,
-                inputValue: formatMoney(c.amount),
-                category: mapCategoryToExclusionOption(c.category),
-              }
-            : {
-                amount: c.amount || 0,
-                inputValue: formatMoney(c.amount),
-                category: mapCategoryToOption(c.category),
-              }
-        })
+        return c.type === 'ExclusionSplitEntry'
+          ? {
+            amount: c.amount || 0,
+            inputValue: formatMoney(c.amount),
+            category: mapCategoryToExclusionOption(c.category),
+          }
+          : {
+            amount: c.amount || 0,
+            inputValue: formatMoney(c.amount),
+            category: mapCategoryToOption(c.category),
+          }
+      })
       : [
-          {
-            amount: bankTransaction.amount,
-            inputValue: formatMoney(bankTransaction.amount),
-            category: defaultCategory
-              ? mapCategoryToOption(defaultCategory)
-              : undefined,
-          },
-          {
-            amount: 0,
-            inputValue: '0.00',
-            category: defaultCategory
-              ? mapCategoryToOption(defaultCategory)
-              : undefined,
-          },
-        ],
+        {
+          amount: bankTransaction.amount,
+          inputValue: formatMoney(bankTransaction.amount),
+          category: defaultCategory
+            ? mapCategoryToOption(defaultCategory)
+            : undefined,
+        },
+        {
+          amount: 0,
+          inputValue: '0.00',
+          category: defaultCategory
+            ? mapCategoryToOption(defaultCategory)
+            : undefined,
+        },
+      ],
     description: '',
     file: undefined,
   })
@@ -208,18 +208,18 @@ export const SplitForm = ({
       bankTransaction.id,
       rowState.splits.length === 1 && rowState?.splits[0].category
         ? ({
-            type: 'Category',
-            category: getCategorizePayload(rowState?.splits[0].category),
-          } as SingleCategoryUpdate)
+          type: 'Category',
+          category: getCategorizePayload(rowState?.splits[0].category),
+        } as SingleCategoryUpdate)
         : ({
-            type: 'Split',
-            entries: rowState.splits.map(split => ({
-              category: split.category
-                ? getCategorizePayload(split.category)
-                : '',
-              amount: split.amount,
-            })),
-          } as SplitCategoryUpdate),
+          type: 'Split',
+          entries: rowState.splits.map(split => ({
+            category: split.category
+              ? getCategorizePayload(split.category)
+              : '',
+            amount: split.amount,
+          })),
+        } as SplitCategoryUpdate),
       true,
     )
   }
@@ -327,7 +327,7 @@ export const SplitForm = ({
       <div className='Layer__bank-transaction-mobile-list-item__actions'>
         {showReceiptUploads && (
           <FileInput
-            onUpload={receiptsRef.current?.uploadReceipt}
+            onUpload={(files: File[]) => receiptsRef.current?.uploadReceipt(files[0])}
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}

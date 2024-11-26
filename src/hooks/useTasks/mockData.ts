@@ -16,6 +16,7 @@ export const mockData: TaskTypes[] = [
     created_at: '2024-09-12T05:56:49.360176Z',
     updated_at: '2024-09-12T05:56:49.360176Z',
     document_type: 'LOAN_STATEMENT',
+    document: [],
   },
   {
     id: 'f49e6eb2-52d4-4872-b34a-2baf387b8593',
@@ -32,5 +33,6 @@ export const mockData: TaskTypes[] = [
     created_at: '2024-09-12T05:56:49.360176Z',
     updated_at: '2024-09-12T05:56:49.360176Z',
     document_type: 'BANK_STATEMENT',
+    document: []
   },
 ]

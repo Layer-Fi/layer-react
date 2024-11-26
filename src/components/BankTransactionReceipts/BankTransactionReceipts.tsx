@@ -37,12 +37,12 @@ export interface BankTransactionReceiptsHandle {
 
 const openReceiptInNewTab =
   (url: string, index: number) =>
-  (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    e.preventDefault()
-    const newWindow = window.open('', '_blank')
+    (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      e.preventDefault()
+      const newWindow = window.open('', '_blank')
 
-    if (newWindow) {
-      newWindow.document.write(`
+      if (newWindow) {
+        newWindow.document.write(`
         <html>
           <head>
             <title>Receipt ${index + 1}</title>
@@ -52,8 +52,8 @@ const openReceiptInNewTab =
           </body>
         </html>
       `)
+      }
     }
-  }
 
 const BankTransactionReceiptsWithProvider = forwardRef<
   BankTransactionReceiptsHandle,
@@ -99,7 +99,7 @@ const BankTransactionReceipts = forwardRef<
           </Text>
         ) : null}
         {!hideUploadButtons && (!receiptUrls || receiptUrls.length === 0) ? (
-          <FileInput onUpload={uploadReceipt} text='Upload receipt' />
+          <FileInput onUpload={(files) => uploadReceipt(files[0])} text='Upload receipt' />
         ) : null}
         {receiptUrls.map((url, index) => (
           <FileThumb
@@ -122,15 +122,15 @@ const BankTransactionReceipts = forwardRef<
             onDelete={() => url.id && archiveDocument(url)}
           />
         ))}
-        {!hideUploadButtons &&
-        receiptUrls.length > 0 &&
-        receiptUrls.length < MAX_RECEIPTS_COUNT ? (
-          <FileInput
-            secondary
-            onUpload={uploadReceipt}
-            text='Add next receipt'
-          />
-        ) : null}
+        {!hideUploadButtons
+        && receiptUrls.length > 0
+        && receiptUrls.length < MAX_RECEIPTS_COUNT ? (
+            <FileInput
+              secondary
+              onUpload={(files: File[]) => uploadReceipt(files[0])}
+              text='Add next receipt'
+            />
+          ) : null}
       </div>
     )
   },

@@ -27,7 +27,7 @@ export interface TaskTypes {
   created_at: string
   updated_at: string
   document_type: DocumentType
-  documents: Document[]
+  document: Document[]
 }
 
 export type TasksStatusType = 'COMPLETED' | 'TODO' | 'USER_MARKED_COMPLETED'

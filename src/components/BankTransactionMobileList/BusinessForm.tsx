@@ -48,11 +48,11 @@ export const BusinessForm = ({
 
   const options = useMemo(() => {
     const options =
-      bankTransaction?.categorization_flow?.type ===
-      CategorizationType.ASK_FROM_SUGGESTIONS
+      bankTransaction?.categorization_flow?.type
+      === CategorizationType.ASK_FROM_SUGGESTIONS
         ? bankTransaction.categorization_flow.suggestions.map(x =>
-            mapCategoryToOption(x),
-          )
+          mapCategoryToOption(x),
+        )
         : []
 
     if (selectedCategory && !options.find(x => x.id === selectedCategory?.id)) {
@@ -94,8 +94,8 @@ export const BusinessForm = ({
       openDrawer()
     } else {
       if (
-        selectedCategory &&
-        category.value.payload?.id === selectedCategory.value.payload?.id
+        selectedCategory
+        && category.value.payload?.id === selectedCategory.value.payload?.id
       ) {
         setSelectedCategory(undefined)
       } else {
@@ -115,13 +115,13 @@ export const BusinessForm = ({
 
     const payload = selectedCategory?.value?.payload?.id
       ? {
-          type: 'AccountId' as const,
-          id: selectedCategory.value.payload.id,
-        }
+        type: 'AccountId' as const,
+        id: selectedCategory.value.payload.id,
+      }
       : {
-          type: 'StableName' as const,
-          stable_name: selectedCategory.value.payload?.stable_name || '',
-        }
+        type: 'StableName' as const,
+        stable_name: selectedCategory.value.payload?.stable_name || '',
+      }
 
     categorizeBankTransaction(
       bankTransaction.id,
@@ -182,7 +182,7 @@ export const BusinessForm = ({
       <div className='Layer__bank-transaction-mobile-list-item__actions'>
         {showReceiptUploads && (
           <FileInput
-            onUpload={receiptsRef.current?.uploadReceipt}
+            onUpload={(files: File[]) => receiptsRef.current?.uploadReceipt(files[0])}
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}
