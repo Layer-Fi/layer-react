@@ -9,5 +9,7 @@ export const TasksContext = createContext<TasksContextType>({
   error: undefined,
   refetch: () => {},
   submitResponseToTask: () => {},
-  uploadDocumentForTask: () => {},
+  updateDocUploadTaskDescription: () => {},
+  uploadDocumentsForTask: () => Promise.resolve(),
+  deleteUploadsForTask: () => {},
 })

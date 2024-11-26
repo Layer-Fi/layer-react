@@ -24,7 +24,9 @@ export const UseTasksContext = createContext<UseTasksContextType>({
   error: undefined,
   refetch: () => {},
   submitResponseToTask: () => {},
-  uploadDocumentForTask: () => {},
+  uploadDocumentsForTask: () => Promise.resolve(),
+  deleteUploadsForTask: () => {},
+  updateDocUploadTaskDescription: () => {},
 })
 
 export const useTasksContext = () => useContext(UseTasksContext)
@@ -101,14 +103,14 @@ export const TasksComponent = ({
 
   useEffect(() => {
     if (
-      allComplete &&
-      open &&
-      collapsedWhenComplete &&
-      loadedStatus === 'complete'
+      allComplete
+      && open
+      && collapsedWhenComplete
+      && loadedStatus === 'complete'
     ) {
       setOpen(false)
     }
-  }, [allComplete])
+  }, [allComplete, collapsedWhenComplete, loadedStatus, open])
 
   return (
     <div className='Layer__tasks-component'>

@@ -17,7 +17,9 @@ type UseTasks = () => {
   error?: unknown
   refetch: () => void
   submitResponseToTask: (taskId: string, userResponse: string) => void
-  uploadDocumentForTask: (taskId: string, file: File) => void
+  uploadDocumentsForTask: (taskId: string, files: File[], description?: string) => Promise<void>
+  deleteUploadsForTask: (taskId: string) => void
+  updateDocUploadTaskDescription: (taskId: string, userResponse: string) => void
 }
 
 const DEBUG_MODE = false
@@ -49,15 +51,16 @@ export const useTasks: UseTasks = () => {
 
   const refetch = () => mutate()
 
-  const uploadDocumentForTask = (taskId: string, file: File) => {
-    const uploadDocument = Layer.completeTaskWithUpload(
+  const uploadDocumentsForTask = async (taskId: string, files: File[], description?: string) => {
+    const uploadDocuments = Layer.completeTaskWithUpload(
       apiUrl,
       auth?.access_token,
     )
-    uploadDocument({
+    await uploadDocuments({
       businessId,
       taskId,
-      file,
+      files,
+      description
     }).then(refetch)
   }
 
@@ -70,6 +73,24 @@ export const useTasks: UseTasks = () => {
     }
 
     Layer.submitResponseToTask(apiUrl, auth?.access_token, {
+      params: { businessId, taskId },
+      body: data,
+    }).then(() => refetch())
+  }
+
+  const deleteUploadsForTask = (taskId: string) => {
+    Layer.deleteTaskUploads(apiUrl, auth?.access_token, {
+      params: { businessId, taskId },
+    }).then(() => refetch())
+  }
+
+  const updateDocUploadTaskDescription = (taskId: string, userResponse: string) => {
+    const data = {
+      type: 'FreeResponse',
+      user_response: userResponse,
+    }
+
+    Layer.updateUploadDocumentTaskDescription(apiUrl, auth?.access_token, {
       params: { businessId, taskId },
       body: data,
     }).then(() => refetch())
@@ -96,6 +117,8 @@ export const useTasks: UseTasks = () => {
     error,
     refetch,
     submitResponseToTask,
-    uploadDocumentForTask,
+    uploadDocumentsForTask,
+    deleteUploadsForTask,
+    updateDocUploadTaskDescription,
   }
 }
