@@ -1,16 +1,14 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import { View } from '../../types/general'
 
-export const useElementViewSize = <T extends HTMLElement>(
-  callback: (view: View) => void,
-) => {
-  const ref = useRef<T>(null)
+export const useElementViewSize = <T extends HTMLElement>() => {
+  const containerRef = useRef<T>(null)
   const [view, setView] = useState<View>('desktop')
   const resizeTimeout = useRef<number | null>(null)
 
   useLayoutEffect(() => {
-    const element = ref?.current
+    const element = containerRef?.current
 
     if (!element) {
       return
@@ -27,9 +25,9 @@ export const useElementViewSize = <T extends HTMLElement>(
           if (width >= BREAKPOINTS.TABLET && view !== 'desktop') {
             setView('desktop')
           } else if (
-            width <= BREAKPOINTS.TABLET &&
-            width > BREAKPOINTS.MOBILE &&
-            view !== 'tablet'
+            width <= BREAKPOINTS.TABLET
+            && width > BREAKPOINTS.MOBILE
+            && view !== 'tablet'
           ) {
             setView('tablet')
           } else if (width < BREAKPOINTS.MOBILE && view !== 'mobile') {
@@ -46,11 +44,7 @@ export const useElementViewSize = <T extends HTMLElement>(
         clearTimeout(resizeTimeout.current)
       }
     }
-  }, [callback, ref, view])
+  }, [containerRef, view])
 
-  useEffect(() => {
-    callback(view)
-  }, [view, callback])
-
-  return ref
+  return { view, containerRef }
 }
