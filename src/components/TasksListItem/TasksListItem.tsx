@@ -93,16 +93,16 @@ export const TasksListItem = ({
                   }}
                   text='Upload file'
                   disabled={
-                    task.completed_at != null ||
-                    task.user_marked_completed_at != null ||
-                    task.archived_at != null
+                    task.completed_at != null
+                    || task.user_marked_completed_at != null
+                    || task.archived_at != null
                   }
                 />
               ) : (
                 <Button
                   disabled={
-                    userResponse.length === 0 ||
-                    userResponse === task.user_response
+                    userResponse.length === 0
+                    || userResponse === task.user_response
                   }
                   variant={ButtonVariant.secondary}
                   onClick={() => {

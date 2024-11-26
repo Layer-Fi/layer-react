@@ -44,7 +44,10 @@ export const useTasks: UseTasks = ({
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const [dateRange, setDateRange] = useState({ startDate: initialStartDate, endDate: initialEndDate })
+  const [dateRange, setDateRange] = useState({
+    startDate: initialStartDate,
+    endDate: initialEndDate
+  })
   const [currentDate, setCurrentDate] = useState(new Date())
 
   const queryKey = businessId && auth?.access_token && `tasks-${businessId}-${dateRange.startDate}-${dateRange.endDate}`
@@ -52,7 +55,11 @@ export const useTasks: UseTasks = ({
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,
     Layer.getTasks(apiUrl, auth?.access_token, {
-      params: { businessId, startDate: formatISO(dateRange.startDate.valueOf()), endDate: formatISO(dateRange.endDate.valueOf()) },
+      params: {
+        businessId,
+        startDate: formatISO(dateRange.startDate.valueOf()),
+        endDate: formatISO(dateRange.endDate.valueOf()),
+      },
     }),
   )
 
@@ -60,7 +67,9 @@ export const useTasks: UseTasks = ({
     // Group tasks monthly
     if (data?.data) {
       const grouped = data.data.reduce((acc, task) => {
-        const effectiveDate = task.effective_date ? parseISO(task.effective_date) : parseISO(task.created_at)
+        const effectiveDate = task.effective_date
+          ? parseISO(task.effective_date)
+          : parseISO(task.created_at)
         const year = getYear(effectiveDate)
         const month = getMonth(effectiveDate)
 

@@ -48,7 +48,14 @@ export const TasksHeader = ({
   open?: boolean
   toggleContent: () => void
 }) => {
-  const { data: tasks, loadedStatus, refetch, error, dateRange, setDateRange } = useContext(TasksContext)
+  const {
+    data: tasks,
+    loadedStatus,
+    refetch,
+    error,
+    dateRange,
+    setDateRange
+  } = useContext(TasksContext)
   const { business } = useLayerContext()
 
   const completedTasks = tasks?.filter(task => isComplete(task.status)).length
@@ -90,7 +97,10 @@ export const TasksHeader = ({
             selected={dateRange.startDate}
             onChange={dates => {
               if (!Array.isArray(dates)) {
-                setDateRange({ startDate: startOfYear(dates as Date), endDate: endOfYear(dates as Date)})
+                setDateRange({
+                  startDate: startOfYear(dates as Date),
+                  endDate: endOfYear(dates as Date)
+                })
               }
             }}
             dateFormat='YYYY'
@@ -101,11 +111,11 @@ export const TasksHeader = ({
             navigateArrows={['mobile', 'desktop']}
             disabled={minDate && getYear(minDate) === getYear(new Date())}
           />
-            {collapsable && (
-              <div className='Layer__tasks-header__left-col__expand'>
-                <ExpandButton onClick={toggleContent} collapsed={!open} />
-              </div>
-            )}
+          {collapsable && (
+            <div className='Layer__tasks-header__left-col__expand'>
+              <ExpandButton onClick={toggleContent} collapsed={!open} />
+            </div>
+          )}
         </div>
       </div>
     </div>
