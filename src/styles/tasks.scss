@@ -11,8 +11,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-md) var(--spacing-lg);
-    border-radius: 8px;
+    padding: var(--spacing-md);
+    box-sizing: border-box;
+    min-height: 72px;
+    border-top: 1px solid var(--color-base-300);
 
     .Layer__tasks-pending-bar {
       display: flex;
@@ -43,14 +45,67 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--spacing-md);
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: var(--spacing-md);
     border-bottom: 1px solid var(--color-base-300);
+    container-type: inline-size;
+
+    .Layer__expand {
+      min-width: 36px;
+      min-height: 36px;
+    }
+  }
+
+  .Layer__tasks-header--collapsable {
+    .Layer__tasks-header__left-col__title {
+      width: 100%;
+    }
+
+    .Layer__tasks-header__left-col__controls {
+      width: 100%;
+    }
+
+    .Layer__tasks-header__left-col .Layer__tasks-header__left-col__title {
+      justify-content: space-between;
+    }
   }
 
   .Layer__tasks-header__left-col {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    flex: 1;
+
+    .Layer__tasks-header__left-col__title {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: var(--spacing-md);
+      flex-wrap: wrap;
+      min-height: 27px;
+
+      & > .Layer__text {
+        white-space: nowrap;
+      }
+    }
+
+    .Layer__datepicker__wrapper--arrows .react-datepicker__input-container {
+      max-width: 80px;
+    }
+  }
+
+  .Layer__tasks-header__left-col__controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  .Layer__tasks-header__right-col {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     gap: var(--spacing-md);
   }
 

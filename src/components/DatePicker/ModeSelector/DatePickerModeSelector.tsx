@@ -7,6 +7,7 @@ export type RangePickerMode =
   | 'dayRangePicker'
   | 'monthRangePicker'
   | 'monthPicker'
+  | 'yearPicker'
 
 export type DatePickerMode = SingularPickerMode | RangePickerMode
 
@@ -18,6 +19,7 @@ const DATE_RANGE_MODE_CONFIG: Record<DatePickerMode, { label: string }> = {
   dayRangePicker: { label: 'Select dates' },
   monthPicker: { label: 'Month' },
   monthRangePicker: { label: 'Select months' },
+  yearPicker: { label: 'Year' },
 }
 
 function toToggleOptions(allowedModes: ReadonlyArray<DatePickerMode>) {
