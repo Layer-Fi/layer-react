@@ -21,7 +21,7 @@ const ReactDatePicker = (((RDP.default as any).default as any)
   || (RDP as any)) as typeof RDP.default
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
-type NavigateArrows = 'desktop' | 'mobile'
+type NavigationArrows = 'desktop' | 'mobile'
 
 interface DatePickerProps {
   mode: DatePickerMode
@@ -40,7 +40,7 @@ interface DatePickerProps {
   currentDateOption?: boolean
   minDate?: Date
   maxDate?: Date
-  navigateArrows?: NavigateArrows[]
+  navigateArrows?: NavigationArrows[]
   onChangeMode?: (mode: DatePickerMode) => void
   slots?: {
     ModeSelector: FC<DatePickerModeSelectorProps>
@@ -69,7 +69,7 @@ const getDefaultRangeDate = (
 const isRangeMode = (mode: DatePickerProps['mode']) =>
   mode === 'dayRangePicker' || mode === 'monthRangePicker'
 
-const showNavigateArrows = (navigateArrows?: NavigateArrows[], isDesktop?: boolean) => {
+const showNavigationArrows = (navigateArrows?: NavigationArrows[], isDesktop?: boolean) => {
   return (navigateArrows && ((isDesktop && navigateArrows.includes('desktop')) || (!isDesktop && navigateArrows.includes('mobile'))))
 }
 
@@ -165,7 +165,7 @@ export const DatePicker = ({
   const wrapperClassNames = classNames(
     'Layer__datepicker__wrapper',
     mode === 'timePicker' && 'Layer__datepicker__time__wrapper',
-    showNavigateArrows(navigateArrows, isDesktop) && 'Layer__datepicker__wrapper--arrows',
+    showNavigationArrows(navigateArrows, isDesktop) && 'Layer__datepicker__wrapper--arrows',
   )
 
   const datePickerWrapperClassNames = classNames(
@@ -398,7 +398,7 @@ export const DatePicker = ({
           />
         )}
       </ReactDatePicker>
-      {showNavigateArrows(navigateArrows, isDesktop) && (
+      {showNavigationArrows(navigateArrows, isDesktop) && (
         <>
           <Button
             aria-label='Previous Date'

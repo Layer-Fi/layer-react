@@ -31,6 +31,7 @@ const TasksEmptyState = () => (
 export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
   const { data: rawData, error, currentDate } = useContext(TasksContext)
 
+  // Collect tasks for selected month (currentDate)
   const tasks = useMemo(() => {
     return rawData?.filter(x => {
       const d = x.effective_date ? parseISO(x.effective_date) : parseISO(x.created_at)
@@ -49,6 +50,7 @@ export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
       : firstPageWithIincompleteTasks + 1,
   )
 
+  // Sort tasks by completion status and paginate
   const sortedTasks = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize

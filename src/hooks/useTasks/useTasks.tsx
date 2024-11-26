@@ -65,8 +65,8 @@ export const useTasks: UseTasks = ({
     }),
   )
 
+  // Group tasks monthly
   const monthlyData = useMemo(() => {
-    // Group tasks monthly
     if (data?.data) {
       const grouped = data.data.reduce((acc, task) => {
         const effectiveDate = task.effective_date
