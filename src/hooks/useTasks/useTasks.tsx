@@ -17,7 +17,7 @@ type UseTasks = () => {
   error?: unknown
   refetch: () => void
   submitResponseToTask: (taskId: string, userResponse: string) => void
-  uploadDocumentForTask: (taskId: string, file: File) => void
+  uploadDocumentsForTask: (taskId: string, files: File[]) => void
 }
 
 const DEBUG_MODE = false
@@ -49,15 +49,15 @@ export const useTasks: UseTasks = () => {
 
   const refetch = () => mutate()
 
-  const uploadDocumentForTask = (taskId: string, file: File) => {
-    const uploadDocument = Layer.completeTaskWithUpload(
+  const uploadDocumentsForTask = (taskId: string, files: File[]) => {
+    const uploadDocuments = Layer.completeTaskWithUpload(
       apiUrl,
       auth?.access_token,
     )
-    uploadDocument({
+    uploadDocuments({
       businessId,
       taskId,
-      file,
+      files,
     }).then(refetch)
   }
 
@@ -96,6 +96,6 @@ export const useTasks: UseTasks = () => {
     error,
     refetch,
     submitResponseToTask,
-    uploadDocumentForTask,
+    uploadDocumentsForTask,
   }
 }

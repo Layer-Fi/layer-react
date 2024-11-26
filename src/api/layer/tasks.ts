@@ -21,14 +21,14 @@ export const completeTaskWithUpload =
   ({
     businessId,
     taskId,
-    file,
+    files,
   }: {
     businessId: string
     taskId: string
-    file: File
+    files: File[]
   }) => {
     const formData = new FormData()
-    formData.append('file', file)
+    files.forEach(file => formData.append('file', file))
 
     const endpoint = `/v1/businesses/${businessId}/tasks/${taskId}/upload`
     return postWithFormData<{ data: FileMetadata; errors: unknown }>(
