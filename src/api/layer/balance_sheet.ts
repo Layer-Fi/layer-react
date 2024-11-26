@@ -1,5 +1,17 @@
 import { BalanceSheet } from '../../types'
+import type { S3PresignedUrl } from '../../types/general'
 import { get } from './authenticated_http'
+import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
+
+type GetBalanceSheetParams = {
+  businessId: string
+  effectiveDate: string
+}
+
+type GetBalanceSheetReturn = {
+  data?: BalanceSheet
+  error?: unknown
+}
 
 export const getBalanceSheet = get<
   GetBalanceSheetReturn,
@@ -11,13 +23,15 @@ export const getBalanceSheet = get<
     )}`,
 )
 
-export type GetBalanceSheetReturn = {
-  data?: BalanceSheet
-  error?: unknown
-}
+export const getBalanceSheetCSV = get<
+  { data: S3PresignedUrl },
+  GetBalanceSheetParams
+>(
+  ({ businessId, effectiveDate }) => {
+    const parameters = toDefinedSearchParameters({ effectiveDate })
 
-export interface GetBalanceSheetParams
-  extends Record<string, string | undefined> {
-  businessId: string
-  effectiveDate: string
-}
+    return `/v1/businesses/${businessId}/reports/balance-sheet/exports/csv?${parameters}`
+  }
+)
+
+

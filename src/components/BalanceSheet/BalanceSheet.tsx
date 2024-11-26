@@ -14,6 +14,7 @@ import { Loader } from '../Loader'
 import { View } from '../View'
 import { BALANCE_SHEET_ROWS } from './constants'
 import { format, parse, startOfDay } from 'date-fns'
+import { BalanceSheetDownloadButton } from './download/BalanceSheetDownloadButton'
 
 export interface BalanceSheetStringOverrides {
   balanceSheetTable?: BalanceSheetTableStringOverrides
@@ -62,11 +63,11 @@ const BalanceSheetView = ({
   useEffect(() => {
     // Refetch only if selected effectiveDate and data's effectiveDate are different
     const d1 =
-      effectiveDate &&
-      format(startOfDay(effectiveDate), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
+      effectiveDate
+      && format(startOfDay(effectiveDate), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
     const d2 =
-      data?.effective_date &&
-      format(
+      data?.effective_date
+      && format(
         startOfDay(
           parse(data.effective_date, 'yyyy-MM-dd\'T\'HH:mm:ssXXX', new Date()),
         ),
@@ -133,11 +134,15 @@ const BalanceSheetView = ({
                   setEffectiveDate={setEffectiveDate}
                 />
               </HeaderCol>
-              {withExpandAllButton && (
-                <HeaderCol>
+              <HeaderCol>
+                {withExpandAllButton && (
                   <BalanceSheetExpandAllButton view={view} />
-                </HeaderCol>
-              )}
+                )}
+                <BalanceSheetDownloadButton
+                  effectiveDate={effectiveDate}
+                  iconOnly={view === 'mobile'}
+                />
+              </HeaderCol>
             </HeaderRow>
           </Header>
         }
