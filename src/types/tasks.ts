@@ -1,6 +1,6 @@
 import { DocumentType } from './file_upload'
 
-export interface TaskTypes {
+export interface Task {
   id: string
   question: string
   status: TasksStatusType
@@ -14,6 +14,7 @@ export interface TaskTypes {
   completed_at: string | null
   created_at: string
   updated_at: string
+  effective_date: string
   document_type: DocumentType
 }
 
@@ -24,4 +25,12 @@ const COMPLETED_TASK_TYPES = ['COMPLETED', 'USER_MARKED_COMPLETED']
 
 export function isComplete(taskType: TasksStatusType) {
   return COMPLETED_TASK_TYPES.includes(taskType)
+}
+
+export interface TasksMonthly {
+  year: number;
+  month: number;
+  total: number;
+  completed: number;
+  tasks: Task[];
 }

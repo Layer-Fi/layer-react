@@ -30,6 +30,9 @@
 @import '../components/utility/index.scss';
 @import '../components/LinkedAccounts/ConfirmationModal/linkedAccountToConfirm.scss';
 
+// @TODO Is it the right way?
+@import '../components/TasksMonthSelector/tasksMonthSelector.scss';
+
 @import './ledger_account.scss';
 @import './balance_sheet.scss';
 @import './statement_of_cash.scss';

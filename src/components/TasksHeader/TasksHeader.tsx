@@ -8,6 +8,11 @@ import { isComplete } from '../../types/tasks'
 import { Badge, BadgeVariant } from '../Badge'
 import { ExpandButton } from '../Button'
 import { Text, TextSize } from '../Typography'
+import { DatePicker } from '../DatePicker'
+import { endOfYear, getYear, startOfYear } from 'date-fns'
+import { useLayerContext } from '../../contexts/LayerContext'
+import { getEarliestDateToBrowse } from '../../utils/business'
+import classNames from 'classnames'
 
 const ICONS = {
   loading: {
@@ -43,42 +48,76 @@ export const TasksHeader = ({
   open?: boolean
   toggleContent: () => void
 }) => {
-  const { data: tasks, loadedStatus, refetch, error } = useContext(TasksContext)
+  const {
+    data: tasks,
+    loadedStatus,
+    refetch,
+    error,
+    dateRange,
+    setDateRange
+  } = useContext(TasksContext)
+  const { business } = useLayerContext()
 
   const completedTasks = tasks?.filter(task => isComplete(task.status)).length
 
   const badgeVariant =
     completedTasks === tasks?.length ? ICONS.done : ICONS.pending
 
+  const minDate = getEarliestDateToBrowse(business)
+
   return (
-    <div className='Layer__tasks-header'>
+    <div className={classNames('Layer__tasks-header', collapsable && 'Layer__tasks-header--collapsable')}>
       <div className='Layer__tasks-header__left-col'>
-        <Text size={TextSize.lg}>{tasksHeader}</Text>
-        {loadedStatus !== 'complete' && !open ? (
-          <Badge variant={ICONS.loading.badge} icon={ICONS.loading.icon}>
-            {ICONS.loading.text}
-          </Badge>
-        ) : loadedStatus === 'complete' && (!tasks || error) ? (
-          <Badge
-            onClick={() => refetch()}
-            variant={ICONS.refresh.badge}
-            icon={ICONS.refresh.icon}
-          >
-            {ICONS.refresh.text}
-          </Badge>
-        ) : loadedStatus === 'complete' ? (
-          <Badge variant={badgeVariant.badge} icon={badgeVariant.icon}>
-            {badgeVariant.text}
-          </Badge>
-        ) : open ? null : (
-          <Badge variant={badgeVariant.badge} icon={badgeVariant.icon}>
-            {badgeVariant.text}
-          </Badge>
-        )}
+        <div className='Layer__tasks-header__left-col__title'>
+          <Text size={TextSize.lg}>{tasksHeader}</Text>
+          {loadedStatus !== 'complete' && !open ? (
+            <Badge variant={ICONS.loading.badge} icon={ICONS.loading.icon}>
+              {ICONS.loading.text}
+            </Badge>
+          ) : loadedStatus === 'complete' && !open && (!tasks || error) ? (
+            <Badge
+              onClick={() => refetch()}
+              variant={ICONS.refresh.badge}
+              icon={ICONS.refresh.icon}
+            >
+              {ICONS.refresh.text}
+            </Badge>
+          ) : loadedStatus === 'complete' && !open ? (
+            <Badge variant={badgeVariant.badge} icon={badgeVariant.icon}>
+              {badgeVariant.text}
+            </Badge>
+          ) : open ? null : (
+            <Badge variant={badgeVariant.badge} icon={badgeVariant.icon}>
+              {badgeVariant.text}
+            </Badge>
+          )}
+        </div>
+        <div className='Layer__tasks-header__left-col__controls'>
+          <DatePicker
+            selected={dateRange.startDate}
+            onChange={dates => {
+              if (!Array.isArray(dates)) {
+                setDateRange({
+                  startDate: startOfYear(dates as Date),
+                  endDate: endOfYear(dates as Date)
+                })
+              }
+            }}
+            dateFormat='YYYY'
+            mode='yearPicker'
+            minDate={minDate}
+            maxDate={endOfYear(new Date())}
+            currentDateOption={false}
+            navigateArrows={['mobile', 'desktop']}
+            disabled={minDate && getYear(minDate) === getYear(new Date())}
+          />
+          {collapsable && (
+            <div className='Layer__tasks-header__left-col__expand'>
+              <ExpandButton onClick={toggleContent} collapsed={!open} />
+            </div>
+          )}
+        </div>
       </div>
-      {collapsable && (
-        <ExpandButton onClick={toggleContent} collapsed={!open} />
-      )}
     </div>
   )
 }
