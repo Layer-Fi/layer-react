@@ -102,6 +102,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
   const { data: summaryData } = useProfitAndLossLTM({
     currentDate: startDate ? startDate : startOfMonth(new Date()),
     tagFilter: tagFilter,
+    period: 'month',
   })
 
   const changeDateRange = ({

@@ -42,6 +42,7 @@ export function TransactionsToReview({
   const { data, loaded, error, refetch } = useProfitAndLossLTM({
     currentDate: dateRange ? dateRange.startDate : startOfMonth(new Date()),
     tagFilter,
+    period: 'month',
   })
 
   useEffect(() => {
@@ -56,8 +57,8 @@ export function TransactionsToReview({
     if (data && dateRange) {
       const monthTx = data.filter(
         x =>
-          x.month - 1 === getMonth(dateRange.startDate) &&
-          x.year === getYear(dateRange.startDate),
+          x.month - 1 === getMonth(dateRange.startDate)
+          && x.year === getYear(dateRange.startDate),
       )
       if (monthTx.length > 0) {
         setToReview(monthTx[0].uncategorized_transactions)

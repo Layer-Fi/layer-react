@@ -57,6 +57,7 @@ export const ProfitAndLossChart = ({
   const { data, loaded, pullData } = useProfitAndLossLTM({
     currentDate: startOfMonth(Date.now()),
     tagFilter: tagFilter,
+    period,
   })
 
   const [compactView, setCompactView] = useState<CompactView>('lg')

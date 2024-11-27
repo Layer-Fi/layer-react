@@ -75,6 +75,8 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     return buildDates({ currentDate: date })
   }, [date, businessId, tagFilter, reportingBasis])
 
+  console.log('period', period)
+
   const queryKey =
     businessId
     && Boolean(startYear)
