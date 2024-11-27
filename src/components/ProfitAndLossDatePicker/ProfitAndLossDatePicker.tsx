@@ -9,18 +9,47 @@ import {
 } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { ProfitAndLoss } from '../ProfitAndLoss'
-import { endOfMonth, startOfMonth } from 'date-fns'
+import { endOfMonth, endOfQuarter, endOfYear, startOfMonth, startOfQuarter, startOfYear } from 'date-fns'
+import { Select } from '../Input'
+import { Period } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 
-export type ProfitAndLossDatePickerProps = TimeRangePickerConfig
+export type ProfitAndLossDatePickerProps = TimeRangePickerConfig & { enablePeriods?: boolean }
+
+const PERIOD_OPTIONS = [
+  { label: 'Compare 12 months', value: 'month' },
+  { label: 'Compare quarter', value: 'quarter' },
+  { label: 'Compare year', value: 'year' },
+]
+
+const getDateRange = (date: Date, mode: DatePickerMode) => {
+  switch(mode) {
+    case 'quarterPicker':
+      return {
+        startDate: startOfQuarter(date),
+        endDate: endOfQuarter(date),
+      }
+    case 'yearPicker':
+      return {
+        startDate: startOfYear(date),
+        endDate: endOfYear(date),
+      }
+    default:
+      return {
+        startDate: startOfMonth(date),
+        endDate: endOfMonth(date),
+      }
+  }
+}
 
 export const ProfitAndLossDatePicker = ({
   allowedDatePickerModes,
   datePickerMode: deprecated_datePickerMode,
   defaultDatePickerMode,
   customDateRanges,
+  enablePeriods = false,
 }: ProfitAndLossDatePickerProps) => {
   const { business } = useLayerContext()
-  const { changeDateRange, dateRange } = useContext(ProfitAndLoss.Context)
+  const { changeDateRange, dateRange, period, setPeriod } = useContext(ProfitAndLoss.Context)
   const { refetch, compareMode, compareMonths } = useContext(
     ProfitAndLoss.ComparisonContext,
   )
@@ -67,25 +96,50 @@ export const ProfitAndLossDatePicker = ({
   }
 
   return (
-    <DatePicker
-      mode={datePickerMode}
-      customDateRanges={customDateRanges}
-      allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
-      onChangeMode={setDatePickerMode}
-      selected={dateRange.startDate}
-      onChange={date => {
-        if (!Array.isArray(date)) {
-          getComparisonData(date)
-          changeDateRange({
-            startDate: startOfMonth(date),
-            endDate: endOfMonth(date),
-          })
-        }
-      }}
-      minDate={minDate}
-      slots={{
-        ModeSelector: DatePickerModeSelector,
-      }}
-    />
+    <>
+      {enablePeriods && (
+        <div className='Layer__period-select__container'>
+          <Select
+            options={PERIOD_OPTIONS}
+            value={PERIOD_OPTIONS.find(x => x.value === period)}
+            onChange={(val) => {
+              setPeriod(val.value as Period)
+              switch(val.value) {
+                case 'month':
+                  setDatePickerMode('monthPicker')
+                  break
+                case 'quarter':
+                  setDatePickerMode('quarterPicker')
+                  break
+                case 'year':
+                  setDatePickerMode('yearPicker')
+                  break
+
+                default:
+                  break
+              }
+            }}
+          />
+        </div>
+      )}
+
+      <DatePicker
+        mode={datePickerMode}
+        customDateRanges={customDateRanges}
+        allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
+        onChangeMode={setDatePickerMode}
+        selected={dateRange.startDate}
+        onChange={date => {
+          if (!Array.isArray(date)) {
+            getComparisonData(date)
+            changeDateRange(getDateRange(date, datePickerMode))
+          }
+        }}
+        minDate={minDate}
+        slots={{
+          ModeSelector: DatePickerModeSelector,
+        }}
+      />
+    </>
   )
 }

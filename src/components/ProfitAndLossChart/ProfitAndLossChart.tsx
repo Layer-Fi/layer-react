@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useMemo, useState, type FunctionComponent
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import {
-  ProfitAndLossSummaryData,
   useProfitAndLossLTM,
 } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
@@ -13,10 +12,7 @@ import { ChartStateCard } from './ChartStateCard'
 import { Indicator } from './Indicator'
 import classNames from 'classnames'
 import {
-  add,
-  differenceInMonths,
   endOfMonth,
-  format,
   startOfMonth,
   sub,
 } from 'date-fns'
@@ -38,98 +34,9 @@ import {
 } from 'recharts'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 import { Props as LegendProps } from 'recharts/types/component/DefaultLegendContent'
+import { collectData, formatYAxisValue, getBarSizing, getChartWindow, getLoadingValue, hasAnyData } from './utils'
 
-const getChartWindow = ({
-  chartWindow,
-  currentYear,
-  currentMonth,
-}: {
-  chartWindow: { start: Date; end: Date }
-  currentYear: number
-  currentMonth: number
-}) => {
-  const today = startOfMonth(Date.now())
-  const yearAgo = sub(today, { months: 11 })
-  const current = startOfMonth(new Date(currentYear, currentMonth - 1, 1))
-
-  if (
-    differenceInMonths(startOfMonth(chartWindow.start), current) < 0
-    && differenceInMonths(startOfMonth(chartWindow.end), current) > 1
-  ) {
-    return chartWindow
-  }
-
-  if (differenceInMonths(startOfMonth(chartWindow.start), current) === 0) {
-    return {
-      start: startOfMonth(sub(current, { months: 1 })),
-      end: endOfMonth(add(current, { months: 11 })),
-    }
-  }
-
-  if (
-    differenceInMonths(endOfMonth(chartWindow.end), endOfMonth(current))
-      === 1
-    && differenceInMonths(today, current) >= 1
-  ) {
-    return {
-      start: startOfMonth(sub(current, { months: 10 })),
-      end: endOfMonth(add(current, { months: 2 })),
-    }
-  }
-
-  if (
-    differenceInMonths(current, startOfMonth(chartWindow.end)) === 0
-    && differenceInMonths(current, startOfMonth(today)) > 0
-  ) {
-    return {
-      start: startOfMonth(sub(current, { months: 11 })),
-      end: endOfMonth(add(current, { months: 1 })),
-    }
-  }
-
-  if (current >= yearAgo) {
-    return {
-      start: startOfMonth(yearAgo),
-      end: endOfMonth(today),
-    }
-  }
-
-  if (Number(current) > Number(chartWindow.end)) {
-    return {
-      start: startOfMonth(sub(current, { months: 12 })),
-      end: endOfMonth(current),
-    }
-  }
-
-  if (differenceInMonths(current, startOfMonth(chartWindow.start)) < 0) {
-    return {
-      start: startOfMonth(current),
-      end: endOfMonth(add(current, { months: 11 })),
-    }
-  }
-
-  return chartWindow
-}
-
-const getLoadingValue = (data?: ProfitAndLossSummaryData[]) => {
-  if (!data) {
-    return 10000
-  }
-
-  let max = 0
-
-  data.forEach(x => {
-    const current = Math.max(
-      Math.abs(x.income),
-      Math.abs(Math.abs((x?.income || 0) - (x?.netProfit || 0))),
-    )
-    if (current > max) {
-      max = current
-    }
-  })
-
-  return max === 0 ? 10000 : max * 0.6
-}
+export type CompactView = 'xs' | 'md' | 'lg'
 
 export interface Props {
   forceRerenderOnDataChange?: boolean
@@ -143,11 +50,16 @@ export const ProfitAndLossChart = ({
   forceRerenderOnDataChange = false,
   tagFilter = undefined,
 }: Props) => {
-  const [compactView, setCompactView] = useState(false)
-  const barSize = compactView ? 10 : 20
-
   const { getColor, business } = useLayerContext()
-  const { changeDateRange, dateRange } = useContext(PNL.Context)
+  const { changeDateRange, dateRange, period } = useContext(PNL.Context)
+  const { data: linkedAccounts } = useLinkedAccounts()
+
+  const { data, loaded, pullData } = useProfitAndLossLTM({
+    currentDate: startOfMonth(Date.now()),
+    tagFilter: tagFilter,
+  })
+
+  const [compactView, setCompactView] = useState<CompactView>('lg')
   const [localDateRange, setLocalDateRange] = useState(dateRange)
   const [customCursorSize, setCustomCursorSize] = useState({
     width: 0,
@@ -159,6 +71,7 @@ export const ProfitAndLossChart = ({
     start: startOfMonth(sub(Date.now(), { months: 11 })),
     end: endOfMonth(Date.now()),
   })
+  const [animateFrom, setAnimateFrom] = useState(-1)
 
   const selectionMonth = useMemo(
     () => ({
@@ -168,36 +81,7 @@ export const ProfitAndLossChart = ({
     [localDateRange],
   )
 
-  useEffect(() => {
-    if (
-      Number(dateRange.startDate) !== Number(localDateRange.startDate)
-      || Number(dateRange.endDate) !== Number(localDateRange.endDate)
-    ) {
-      setLocalDateRange(dateRange)
-    }
-  }, [dateRange])
-
-  const { data, loaded, pullData } = useProfitAndLossLTM({
-    currentDate: startOfMonth(Date.now()),
-    tagFilter: tagFilter,
-  })
-
-  const anyData = useMemo(() => {
-    return Boolean(
-      data?.find(
-        x =>
-          x.income !== 0
-          || x.costOfGoodsSold !== 0
-          || x.grossProfit !== 0
-          || x.operatingExpenses !== 0
-          || x.profitBeforeTaxes !== 0
-          || x.taxes !== 0
-          || x.totalExpenses !== 0,
-      ),
-    )
-  }, [data])
-
-  const { data: linkedAccounts } = useLinkedAccounts()
+  const anyData = useMemo(() => hasAnyData(data), [data])
 
   const isSyncing = useMemo(
     () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
@@ -205,6 +89,16 @@ export const ProfitAndLossChart = ({
   )
 
   const loadingValue = useMemo(() => getLoadingValue(data), [data])
+
+  useEffect(() => {
+    if (
+      Number(dateRange.startDate) !== Number(localDateRange.startDate)
+      || Number(dateRange.endDate) !== Number(localDateRange.endDate)
+    ) {
+      setLocalDateRange(dateRange)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateRange])
 
   useEffect(() => {
     if (loaded === 'complete' && data) {
@@ -216,7 +110,7 @@ export const ProfitAndLossChart = ({
             < Number(localDateRange.endDate),
       )
 
-      if (!foundCurrent) {
+      if (!foundCurrent && theData?.length > 1) {
         const newDate = startOfMonth(localDateRange.startDate)
         pullData(newDate)
         return
@@ -230,13 +124,14 @@ export const ProfitAndLossChart = ({
             < Number(sub(localDateRange.endDate, { months: 1 })),
       )
 
-      if (!foundBefore) {
+      if (!foundBefore && theData?.length > 1) {
         const newDate = startOfMonth(
           sub(localDateRange.startDate, { months: 1 }),
         )
         pullData(newDate)
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localDateRange])
 
   useEffect(() => {
@@ -252,6 +147,7 @@ export const ProfitAndLossChart = ({
     ) {
       setChartWindow(newChartWindow)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localDateRange])
 
   useEffect(() => {
@@ -262,99 +158,20 @@ export const ProfitAndLossChart = ({
     }
   }, [loaded])
 
-  const getMonthName = (pnl: ProfitAndLossSummaryData | undefined) =>
-    pnl
-      ? format(
-        new Date(pnl.year, pnl.month - 1, 1),
-        compactView ? 'LLLLL' : 'LLL',
-      )
-      : ''
-
-  const summarizePnL = (pnl: ProfitAndLossSummaryData | undefined) => ({
-    name: getMonthName(pnl),
-    revenue: pnl?.income || 0,
-    revenueUncategorized: pnl?.uncategorizedInflows || 0,
-    expenses: -(pnl?.totalExpenses || 0),
-    expensesUncategorized: -(pnl?.uncategorizedOutflows || 0),
-    totalExpensesInverse: pnl?.totalExpensesInverse || 0,
-    uncategorizedOutflowsInverse: pnl?.uncategorizedOutflowsInverse || 0,
-    netProfit: pnl?.netProfit || 0,
-    selected:
-      !!pnl
-      && pnl.month === selectionMonth.month + 1
-      && pnl.year === selectionMonth.year,
-    year: pnl?.year,
-    month: pnl?.month,
-    base: 0,
-    loading: pnl?.isLoading ? loadingValue : 0,
-    loadingExpenses: pnl?.isLoading ? -loadingValue : 0,
-  })
-
-  const theData = useMemo(() => {
-    if (loaded !== 'complete' || (loaded === 'complete' && !anyData)) {
-      const loadingData = []
-      const today = Date.now()
-      for (let i = 11; i >= 0; i--) {
-        const currentDate = sub(today, { months: i })
-        loadingData.push({
-          name: format(currentDate, compactView ? 'LLLLL' : 'LLL'),
-          revenue: 0,
-          revenueUncategorized: 0,
-          totalExpensesInverse: 0,
-          uncategorizedOutflowsInverse: 0,
-          expenses: 0,
-          expensesUncategorized: 0,
-          netProfit: 0,
-          selected: false,
-          year: currentDate.getFullYear(),
-          month: currentDate.getMonth() + 1,
-          loading: 1000 * Math.pow(-1, i + 1) * (((i + 1) % 12) + 1) + 90000,
-          loadingExpenses:
-            -1000 * Math.pow(-1, i + 1) * (((i + 1) % 2) + 1) - 90000,
-          base: 0,
-        })
-      }
-      return loadingData
-    }
-
-    return data
-      ?.map(x => {
-        const totalExpenses = x.totalExpenses || 0
-        if (totalExpenses < 0 || x.uncategorizedOutflows < 0) {
-          return {
-            ...x,
-            totalExpenses: totalExpenses < 0 ? 0 : totalExpenses,
-            uncategorizedOutflows:
-              x.uncategorizedOutflows < 0 ? 0 : x.uncategorizedOutflows,
-            totalExpensesInverse: totalExpenses < 0 ? -totalExpenses : 0,
-            uncategorizedOutflowsInverse:
-              x.uncategorizedOutflows < 0 ? -x.uncategorizedOutflows : 0,
-          }
-        }
-
-        return x
-      })
-      ?.filter(
-        x =>
-          differenceInMonths(
-            startOfMonth(new Date(x.year, x.month - 1, 1)),
-            chartWindow.start,
-          ) >= 0
-          && differenceInMonths(
-            startOfMonth(new Date(x.year, x.month - 1, 1)),
-            chartWindow.start,
-          ) < 12
-          && differenceInMonths(
-            chartWindow.end,
-            startOfMonth(new Date(x.year, x.month - 1, 1)),
-          ) >= 0
-          && differenceInMonths(
-            chartWindow.end,
-            startOfMonth(new Date(x.year, x.month - 1, 1)),
-          ) <= 12,
-      )
-      .map(x => summarizePnL(x))
-  }, [selectionMonth, chartWindow, data, loaded, compactView])
+  /** @TODO temp */
+  const len = period === 'year' ? 1 : period === 'quarter' ? 4 : 12
+  const theData = useMemo(() => collectData({
+    data,
+    loaded,
+    loadingValue,
+    anyData,
+    chartWindow,
+    compactView,
+    selectionMonth,
+  }).slice(0, len),
+  [data, loaded, loadingValue, anyData, chartWindow, compactView, selectionMonth, len]
+  )
+  // }), [selectionMonth, chartWindow, data, loaded, compactView])
 
   const onClick: CategoricalChartFunc = ({ activePayload }) => {
     if (loaded !== 'complete' || !anyData) {
@@ -422,32 +239,6 @@ export const ProfitAndLossChart = ({
     }
 
     return null
-  }
-
-  const formatYAxisValue = (value?: string | number) => {
-    if (!value) {
-      return value
-    }
-
-    try {
-      let suffix = ''
-      const base = Number(value) / 100
-      let val = base
-
-      if (Math.abs(base) >= 1000000000) {
-        suffix = 'B'
-        val = base / 1000000000
-      } else if (Math.abs(base) >= 1000000) {
-        suffix = 'M'
-        val = base / 1000000
-      } else if (Math.abs(base) >= 1000) {
-        suffix = 'k'
-        val = base / 1000
-      }
-      return `${val}${suffix}`
-    } catch (_err) {
-      return value
-    }
   }
 
   const renderLegend = (props: LegendProps) => {
@@ -539,7 +330,7 @@ export const ProfitAndLossChart = ({
         fill='#F7F8FA'
         stroke='none'
         x={points[0].x - width / 2}
-        y={points[0].y}
+        y={points[0].y - 12}
         width={width}
         height={height}
         radius={6}
@@ -548,7 +339,10 @@ export const ProfitAndLossChart = ({
     )
   }
 
-  const [animateFrom, setAnimateFrom] = useState(-1)
+  const [barSize, barMargin] = useMemo(() => 
+    getBarSizing((theData ?? []).length, compactView),
+  [compactView, theData]
+  )
 
   return (
     <div className='Layer__chart-wrapper'>
@@ -561,13 +355,18 @@ export const ProfitAndLossChart = ({
         width='100%'
         height='100%'
         onResize={width => {
-          if (width && width < 620 && !compactView) {
-            setCompactView(true)
+          if (width && width < 500 && compactView !== 'xs') {
+            setCompactView('xs')
             return
           }
 
-          if (width && width >= 620 && compactView) {
-            setCompactView(false)
+          if (width && width >= 500 && width < 680 && compactView !== 'md') {
+            setCompactView('md')
+            return
+          }
+
+          if (width && width >= 680 && compactView !== 'lg') {
+            setCompactView('lg')
             return
           }
         }}
@@ -650,6 +449,7 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='loading'
             barSize={barSize}
+            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -664,6 +464,7 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='loadingExpenses'
             barSize={barSize}
+            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -678,6 +479,7 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='totalExpensesInverse'
             barSize={barSize}
+            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -697,6 +499,7 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='revenue'
             barSize={barSize}
+            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             className='Layer__profit-and-loss-chart__bar--income'
@@ -712,6 +515,7 @@ export const ProfitAndLossChart = ({
                   customCursorSize={customCursorSize}
                   animateFrom={animateFrom}
                   setAnimateFrom={setAnimateFrom}
+                  barMargin={barMargin}
                 />
               }
             />
@@ -731,6 +535,7 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='uncategorizedOutflowsInverse'
             barSize={barSize}
+            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -750,6 +555,7 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='revenueUncategorized'
             barSize={barSize}
+            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -766,6 +572,7 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='expenses'
             barSize={barSize}
+            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             className='Layer__profit-and-loss-chart__bar--expenses'
@@ -786,6 +593,7 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='expensesUncategorized'
             barSize={barSize}
+            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}

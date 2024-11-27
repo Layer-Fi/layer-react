@@ -40,6 +40,8 @@ const PNLContext = createContext<PNLContextType>({
     revenue: undefined,
   },
   tagFilter: undefined,
+  period: 'month',
+  setPeriod: () => {},
 })
 
 type Props = PropsWithChildren & {

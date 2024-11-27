@@ -9,6 +9,8 @@ import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
+type Period = 'month' | 'quarter' | 'year'
+
 type UseProfitAndLossLTMProps = {
   currentDate: Date
   tagFilter?: {
@@ -16,6 +18,7 @@ type UseProfitAndLossLTMProps = {
     values: string[]
   }
   reportingBasis?: ReportingBasis
+  period?: Period
 }
 
 export interface ProfitAndLossSummaryData extends ProfitAndLossSummary {
@@ -53,13 +56,10 @@ const buildMonthsArray = (startDate: Date, endDate: Date) => {
   return dates
 }
 
-/**
- * Hooks fetch Last Twelve Months sending 12 requests (one for each month).
- * Implementation is not perfect, but we cannot use loops and arrays with hooks.
- */
 export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
-  { currentDate, tagFilter, reportingBasis }: UseProfitAndLossLTMProps = {
+  { currentDate, tagFilter, reportingBasis, period }: UseProfitAndLossLTMProps = {
     currentDate: startOfMonth(Date.now()),
+    period: 'month',
   },
 ) => {
   const { businessId, syncTimestamps, read, hasBeenTouched } =
@@ -76,16 +76,18 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
   }, [date, businessId, tagFilter, reportingBasis])
 
   const queryKey =
-    businessId &&
-    Boolean(startYear) &&
-    Boolean(startMonth) &&
-    Boolean(endYear) &&
-    Boolean(endMonth) &&
-    auth?.access_token &&
-    `profit-and-loss-summaries-${businessId}-${startYear.toString()}-${startMonth.toString()}-${tagFilter?.key}-${tagFilter?.values?.join(
+    businessId
+    && Boolean(startYear)
+    && Boolean(startMonth)
+    && Boolean(endYear)
+    && Boolean(endMonth)
+    && period
+    && auth?.access_token
+    && `profit-and-loss-summaries-${businessId}-${period}-${startYear.toString()}-${startMonth.toString()}-${tagFilter?.key}-${tagFilter?.values?.join(
       ',',
     )}-${reportingBasis}`
 
+  /** @TODO - add period to the API query */
   const {
     data: rawData,
     isLoading,
@@ -146,8 +148,8 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
       setData(
         newData.sort(
           (a, b) =>
-            Number(new Date(a.year, a.month, 1)) -
-            Number(new Date(b.year, b.month, 1)),
+            Number(new Date(a.year, a.month, 1))
+            - Number(new Date(b.year, b.month, 1)),
         ),
       )
     }
@@ -168,8 +170,8 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
       setData(
         newData.sort(
           (a, b) =>
-            Number(new Date(a.year, a.month, 1)) -
-            Number(new Date(b.year, b.month, 1)),
+            Number(new Date(a.year, a.month, 1))
+            - Number(new Date(b.year, b.month, 1)),
         ),
       )
     }

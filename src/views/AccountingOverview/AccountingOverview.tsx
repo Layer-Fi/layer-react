@@ -80,7 +80,7 @@ export const AccountingOverview = ({
           <Header>
             <HeaderRow>
               <HeaderCol>
-                <ProfitAndLoss.DatePicker />
+                <ProfitAndLoss.DatePicker enablePeriods={true} />
               </HeaderCol>
             </HeaderRow>
           </Header>

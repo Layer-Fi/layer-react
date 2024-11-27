@@ -74,7 +74,11 @@ export const DatePicker = ({
     ? 'MMM, yyyy'
     : mode === 'timePicker'
       ? 'h:mm aa'
-      : 'MMM d, yyyy',
+      : mode === 'yearPicker'
+        ? 'yyyy'
+        : mode === 'quarterPicker'
+          ? '\'Q\'Q yyyy'
+          : 'MMM d, yyyy',
   timeIntervals = 15,
   timeCaption,
   placeholderText: _placeholderText,
@@ -286,6 +290,8 @@ export const DatePicker = ({
         showMonthYearPicker={
           mode === 'monthPicker' || mode === 'monthRangePicker'
         }
+        showQuarterYearPicker={mode === 'quarterPicker'}
+        showYearPicker={mode === 'yearPicker'}
         dateFormat={dateFormat}
         renderDayContents={day => (
           <span className='Layer__datepicker__day-contents'>{day}</span>

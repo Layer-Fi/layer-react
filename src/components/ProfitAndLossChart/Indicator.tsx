@@ -15,8 +15,11 @@ type Props = BaseProps & {
   setAnimateFrom: (x: number) => void
   customCursorSize: { width: number; height: number }
   setCustomCursorSize: (width: number, height: number, x: number) => void
+  barMargin?: number
 }
+
 const emptyViewBox = { x: 0, y: 0, width: 0, height: 0 }
+
 export const Indicator = ({
   className,
   animateFrom,
@@ -24,17 +27,18 @@ export const Indicator = ({
   customCursorSize,
   setCustomCursorSize,
   viewBox = {},
+  barMargin = 6,
 }: Props) => {
   const [opacityIndicator, setOpacityIndicator] = useState(0)
 
   const { x: animateTo = 0, width = 0 } =
     'x' in viewBox ? viewBox : emptyViewBox
-  const margin = width > 12 ? 12 : 6
+  const margin = barMargin
   const boxWidth = width + margin
   const xOffset = boxWidth / 2
   const borderRadius = 6
   const rectWidth = `${boxWidth}px`
-  const rectHeight = 'calc(100% - 38px)'
+  const rectHeight = 'calc(100% - 8px)'
 
   // useEffect callbacks run after the browser paints
   useEffect(() => {
@@ -46,6 +50,7 @@ export const Indicator = ({
     setTimeout(() => {
       setOpacityIndicator(1)
     }, 200)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animateTo])
 
   if (!className?.match(/selected/)) {
@@ -57,15 +62,14 @@ export const Indicator = ({
       const refRectWidth = ref.getBoundingClientRect().width
       const refRectHeight = ref.getBoundingClientRect().height
       if (
-        customCursorSize.width !== refRectWidth ||
-        customCursorSize.height !== refRectHeight
+        customCursorSize.width !== refRectWidth
+        || customCursorSize.height !== refRectHeight
       ) {
-        setCustomCursorSize(refRectWidth, refRectHeight, actualX - xOffset)
+        setCustomCursorSize(refRectWidth, refRectHeight, animateTo - xOffset)
       }
     }
   }
 
-  const actualX = animateFrom === -1 ? animateTo : animateFrom
   return (
     <rect
       ref={rectRef}
@@ -75,8 +79,8 @@ export const Indicator = ({
       style={{
         width: rectWidth,
         // @ts-expect-error -- y is fine but x apparently isn't!
-        x: actualX - xOffset / 2 + margin / 4,
-        y: 22,
+        x: animateTo - margin / 2,
+        y: 4,
         height: rectHeight,
         opacity: opacityIndicator,
       }}
