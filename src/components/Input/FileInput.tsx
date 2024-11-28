@@ -45,7 +45,7 @@ export const FileInput = ({
         </TextButton>
         <input
           type='file'
-          {...(allowMultipleUploads && { multiple: true})}
+          multiple={allowMultipleUploads}
           onChange={onChange}
           ref={hiddenFileInput}
           style={{ display: 'none' }}
@@ -67,7 +67,7 @@ export const FileInput = ({
       </Button>
       <input
         type='file'
-        {...(allowMultipleUploads && { multiple: true})}
+        multiple={allowMultipleUploads}
         onChange={onChange}
         ref={hiddenFileInput}
         style={{ display: 'none' }}

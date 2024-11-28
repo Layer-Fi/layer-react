@@ -21,15 +21,15 @@ interface PersonalFormProps {
 
 const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
   if (
-    bankTransaction.categorization_status === CategorizationStatus.MATCHED ||
-    bankTransaction?.categorization_status === CategorizationStatus.SPLIT
+    bankTransaction.categorization_status === CategorizationStatus.MATCHED
+    || bankTransaction?.categorization_status === CategorizationStatus.SPLIT
   ) {
     return false
   }
 
   return Boolean(
-    bankTransaction.category &&
-      Object.values(PersonalCategories).includes(
+    bankTransaction.category
+      && Object.values(PersonalCategories).includes(
         bankTransaction.category.display_name as PersonalCategories,
       ),
   )
@@ -118,7 +118,7 @@ export const PersonalForm = ({
       <div className='Layer__bank-transaction-mobile-list-item__actions'>
         {showReceiptUploads && (
           <FileInput
-            onUpload={receiptsRef.current?.uploadReceipt}
+            onUpload={(files) => receiptsRef.current?.uploadReceipt(files[0])}
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}

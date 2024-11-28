@@ -186,7 +186,7 @@ export const BusinessForm = ({
       <div className='Layer__bank-transaction-mobile-list-item__actions'>
         {showReceiptUploads && (
           <FileInput
-            onUpload={receiptsRef.current?.uploadReceipt}
+            onUpload={(files) => receiptsRef.current?.uploadReceipt(files[0])}
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}

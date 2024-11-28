@@ -28,9 +28,9 @@ export const MatchForm = ({
     useBankTransactionsContext()
   const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
   const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
-    isAlreadyMatched(bankTransaction) ??
-      (bankTransaction.suggested_matches &&
-      bankTransaction.suggested_matches?.length > 0
+    isAlreadyMatched(bankTransaction)
+      ?? (bankTransaction.suggested_matches
+      && bankTransaction.suggested_matches?.length > 0
         ? bankTransaction.suggested_matches[0].id
         : undefined),
   )
@@ -64,8 +64,8 @@ export const MatchForm = ({
     if (!selectedMatchId) {
       setFormError('Select an option to match the transaction')
     } else if (
-      selectedMatchId &&
-      selectedMatchId !== isAlreadyMatched(bankTransaction)
+      selectedMatchId
+      && selectedMatchId !== isAlreadyMatched(bankTransaction)
     ) {
       onMatchSubmit(selectedMatchId)
     }
@@ -127,7 +127,7 @@ export const MatchForm = ({
       <div className='Layer__bank-transaction-mobile-list-item__actions'>
         {showReceiptUploads && (
           <FileInput
-            onUpload={receiptsRef.current?.uploadReceipt}
+            onUpload={(files) => receiptsRef.current?.uploadReceipt(files[0])}
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}
@@ -136,10 +136,10 @@ export const MatchForm = ({
         <Button
           fullWidth={true}
           disabled={
-            !selectedMatchId ||
-            isLoading ||
-            bankTransaction.processing ||
-            selectedMatchId === isAlreadyMatched(bankTransaction)
+            !selectedMatchId
+            || isLoading
+            || bankTransaction.processing
+            || selectedMatchId === isAlreadyMatched(bankTransaction)
           }
           onClick={save}
         >
