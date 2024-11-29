@@ -6,7 +6,7 @@ import {
 } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
 import { isDateAllowedToBrowse } from '../../utils/business'
-import { ProfitAndLoss as PNL, ProfitAndLoss } from '../ProfitAndLoss'
+import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { Heading, HeadingSize, Text } from '../Typography'
 import { ChartStateCard } from './ChartStateCard'
 import { Indicator } from './Indicator'
@@ -35,7 +35,7 @@ import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalCh
 import { collectData, formatYAxisValue, getBarSizing, getChartWindow, getLoadingValue, hasAnyData } from './utils'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 
-export type CompactView = 'xs' | 'md' | 'lg'
+export type ViewSize = 'xs' | 'md' | 'lg'
 
 export interface Props {
   title?: string
@@ -65,7 +65,7 @@ export const ProfitAndLossChart = ({
     period,
   })
 
-  const [compactView, setCompactView] = useState<CompactView>('lg')
+  const [viewSize, setViewSize] = useState<ViewSize>('lg')
   const [localDateRange, setLocalDateRange] = useState(dateRange)
   const [customCursorSize, setCustomCursorSize] = useState({
     width: 0,
@@ -172,13 +172,13 @@ export const ProfitAndLossChart = ({
     loadingValue,
     anyData,
     chartWindow,
-    compactView,
+    viewSize,
     selectionMonth,
   }).slice(0, len),
-  [data, loaded, loadingValue, anyData, chartWindow, compactView, selectionMonth, len]
+  [data, loaded, loadingValue, anyData, chartWindow, viewSize, selectionMonth, len]
   )
   // @TODO - Tom
-  // }), [selectionMonth, chartWindow, data, loaded, compactView])
+  // }), [selectionMonth, chartWindow, data, loaded, viewSize])
 
   const onClick: CategoricalChartFunc = ({ activePayload }) => {
     if (loaded !== 'complete' || !anyData) {
@@ -289,8 +289,8 @@ export const ProfitAndLossChart = ({
   }
 
   const [barSize, barMargin] = useMemo(() => 
-    getBarSizing((theData ?? []).length, compactView),
-  [compactView, theData]
+    getBarSizing((theData ?? []).length, viewSize),
+  [viewSize, theData]
   )
 
   return (
@@ -302,7 +302,7 @@ export const ProfitAndLossChart = ({
           </HeaderCol>
           {!withDatePicker && (
             <HeaderCol>
-              <ProfitAndLoss.ChartLegend />
+              <PNL.ChartLegend />
             </HeaderCol>
           )}
         </HeaderRow>
@@ -310,15 +310,15 @@ export const ProfitAndLossChart = ({
           <>
             <HeaderRow>
               <HeaderCol>
-                <ProfitAndLoss.DatePicker enablePeriods={enablePeriods} />
+                <PNL.DatePicker enablePeriods={enablePeriods} />
               </HeaderCol>
               <HeaderCol className='Layer__profit-and-loss__chart-header__legend-col'>
-                <ProfitAndLoss.ChartLegend />
+                <PNL.ChartLegend />
               </HeaderCol>
             </HeaderRow>
             <HeaderRow className='Layer__profit-and-loss__chart-header__legend-row'>
               <HeaderCol>
-                <ProfitAndLoss.ChartLegend />
+                <PNL.ChartLegend />
               </HeaderCol>
             </HeaderRow>
           </>
@@ -333,18 +333,18 @@ export const ProfitAndLossChart = ({
         width='100%'
         height='100%'
         onResize={width => {
-          if (width && width < 500 && compactView !== 'xs') {
-            setCompactView('xs')
+          if (width && width < 500 && viewSize !== 'xs') {
+            setViewSize('xs')
             return
           }
 
-          if (width && width >= 500 && width < 680 && compactView !== 'md') {
-            setCompactView('md')
+          if (width && width >= 500 && width < 680 && viewSize !== 'md') {
+            setViewSize('md')
             return
           }
 
-          if (width && width >= 680 && compactView !== 'lg') {
-            setCompactView('lg')
+          if (width && width >= 680 && viewSize !== 'lg') {
+            setViewSize('lg')
             return
           }
         }}
@@ -405,7 +405,6 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='loading'
             barSize={barSize}
-            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -420,7 +419,6 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='loadingExpenses'
             barSize={barSize}
-            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -435,7 +433,6 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='totalExpensesInverse'
             barSize={barSize}
-            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -455,7 +452,6 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='revenue'
             barSize={barSize}
-            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             className='Layer__profit-and-loss-chart__bar--income'
@@ -491,7 +487,6 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='uncategorizedOutflowsInverse'
             barSize={barSize}
-            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -511,7 +506,6 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='revenueUncategorized'
             barSize={barSize}
-            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}
@@ -528,7 +522,6 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='expenses'
             barSize={barSize}
-            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             className='Layer__profit-and-loss-chart__bar--expenses'
@@ -549,7 +542,6 @@ export const ProfitAndLossChart = ({
           <Bar
             dataKey='expensesUncategorized'
             barSize={barSize}
-            maxBarSize={300}
             isAnimationActive={barAnimActive}
             animationDuration={100}
             radius={[2, 2, 0, 0]}

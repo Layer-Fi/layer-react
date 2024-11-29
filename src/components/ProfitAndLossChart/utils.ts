@@ -8,7 +8,7 @@ import {
 } from 'date-fns'
 import { ProfitAndLossSummaryData } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { LoadedStatus } from '../../types/general'
-import { CompactView } from './ProfitAndLossChart'
+import { ViewSize } from './ProfitAndLossChart'
 
 // Find start and end date for the chart
 export const getChartWindow = ({
@@ -105,12 +105,12 @@ export const getLoadingValue = (data?: ProfitAndLossSummaryData[]) => {
   return max === 0 ? 10000 : max * 0.6
 }
 
-// Get full or shorten month name based on the view size (full / compact)
-export const getMonthName = (pnl: ProfitAndLossSummaryData | undefined, compactView: CompactView) =>
+// Get full or shorten month name based on the view size
+export const getMonthName = (pnl: ProfitAndLossSummaryData | undefined, viewSize: ViewSize) =>
   pnl
     ? format(
       new Date(pnl.year, pnl.month - 1, 1),
-      compactView !== 'lg' ? 'LLLLL' : 'LLL',
+      viewSize !== 'lg' ? 'LLLLL' : 'LLL',
     )
     : ''
 
@@ -119,9 +119,9 @@ export const summarizePnL = (
   pnl: ProfitAndLossSummaryData | undefined,
   loadingValue: number,
   selectionMonth: { month: number; year: number },
-  compactView: CompactView,
+  viewSize: ViewSize,
 ) => ({
-  name: getMonthName(pnl, compactView),
+  name: getMonthName(pnl, viewSize),
   revenue: pnl?.income || 0,
   revenueUncategorized: pnl?.uncategorizedInflows || 0,
   expenses: -(pnl?.totalExpenses || 0),
@@ -191,7 +191,7 @@ export const collectData = ({
   loadingValue,
   anyData,
   chartWindow,
-  compactView,
+  viewSize,
   selectionMonth,
 }: {
   data: ProfitAndLossSummaryData[]
@@ -201,7 +201,7 @@ export const collectData = ({
     start: Date;
     end: Date;
   }
-  compactView: CompactView
+  viewSize: ViewSize
   loadingValue: number
   selectionMonth: {
     year: number;
@@ -214,7 +214,7 @@ export const collectData = ({
     for (let i = 11; i >= 0; i--) {
       const currentDate = sub(today, { months: i })
       loadingData.push({
-        name: format(currentDate, compactView !== 'lg' ? 'LLLLL' : 'LLL'),
+        name: format(currentDate, viewSize !== 'lg' ? 'LLLLL' : 'LLL'),
         revenue: 0,
         revenueUncategorized: 0,
         totalExpensesInverse: 0,
@@ -270,11 +270,11 @@ export const collectData = ({
             startOfMonth(new Date(x.year, x.month - 1, 1)),
           ) <= 12,
     )
-    .map(x => summarizePnL(x, loadingValue, selectionMonth, compactView))
+    .map(x => summarizePnL(x, loadingValue, selectionMonth, viewSize))
 }
 
 // Returns [barSize, margin] for chart based on number of bars and view mode
-export const getBarSizing = (itemsLength: number, view: CompactView) => {
+export const getBarSizing = (itemsLength: number, view: ViewSize) => {
   const divider = view === 'xs' ? 2 : view === 'md' ? 1.5 : 1
   let base = Math.round(240 / divider)
 

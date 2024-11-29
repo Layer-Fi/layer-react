@@ -138,6 +138,7 @@ export const DatePicker = ({
     } catch (_err) {
       return
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected])
 
   useEffect(() => {
@@ -149,12 +150,14 @@ export const DatePicker = ({
     } else {
       setPickerDate(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDates])
 
   useEffect(() => {
     if (isRangeMode(mode)) {
       setSelectedDates([startDate, endDate])
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate])
 
   const wrapperClassNames = classNames(

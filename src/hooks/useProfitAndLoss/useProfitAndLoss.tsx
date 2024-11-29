@@ -198,6 +198,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, startDate, filters, sidebarScope, summaryData])
 
   const { filteredDataExpenses, filteredTotalExpenses } = useMemo(() => {
@@ -261,6 +262,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, startDate, filters, sidebarScope, summaryData])
 
   return {
