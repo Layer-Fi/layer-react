@@ -1,5 +1,11 @@
 @import '../components/DatePicker/ModeSelector/date-picker-mode-selector.scss';
 
+.Layer__datepicker__container {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
 .Layer__datepicker__wrapper,
 #Layer__datepicker__portal {
   display: inline-flex;

@@ -12,9 +12,9 @@
   }
 }
 
-.Layer__component .recharts-responsive-container.Layer__chart-container {
-  padding-top: 42px;
-}
+// .Layer__component .recharts-responsive-container.Layer__chart-container {
+//   padding-top: 42px;
+// }
 
 .Layer__chart-wrapper {
   position: relative;
@@ -23,6 +23,21 @@
 .Layer__chart-container {
   min-height: 300px;
 }
+
+// .Layer__chart-header {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   padding: var(--spacing-md) var(--spacing-xl);
+
+//   & .Layer__chart-legend-list {
+//     justify-self: flex-end;
+//   }
+
+//   @container (max-width: 1400px) {
+//     padding: var(--spacing-md);
+//   }
+// }
 
 .Layer__chart-legend-list {
   margin: 0;

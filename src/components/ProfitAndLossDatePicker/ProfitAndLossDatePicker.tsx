@@ -96,7 +96,7 @@ export const ProfitAndLossDatePicker = ({
   }
 
   return (
-    <>
+    <div className='Layer__datepicker__container'>
       {enablePeriods && (
         <div className='Layer__period-select__container'>
           <Select
@@ -140,6 +140,6 @@ export const ProfitAndLossDatePicker = ({
           ModeSelector: DatePickerModeSelector,
         }}
       />
-    </>
+    </div>
   )
 }

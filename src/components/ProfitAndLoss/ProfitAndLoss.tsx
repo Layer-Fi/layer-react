@@ -5,6 +5,7 @@ import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparis
 import { ReportingBasis } from '../../types'
 import { Container } from '../Container'
 import { ProfitAndLossChart } from '../ProfitAndLossChart'
+import { ProfitAndLossChartLegend } from '../ProfitAndLossChartLegend/ProfitAndLossChartLegend'
 import { ProfitAndLossCompareOptions } from '../ProfitAndLossCompareOptions'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
@@ -76,6 +77,7 @@ const ProfitAndLoss = ({
 }
 
 ProfitAndLoss.Chart = ProfitAndLossChart
+ProfitAndLoss.ChartLegend = ProfitAndLossChartLegend
 ProfitAndLoss.Context = PNLContext
 ProfitAndLoss.ComparisonContext = PNLComparisonContext
 ProfitAndLoss.DatePicker = ProfitAndLossDatePicker

@@ -6,8 +6,8 @@ import {
 } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
 import { isDateAllowedToBrowse } from '../../utils/business'
-import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
-import { Text } from '../Typography'
+import { ProfitAndLoss as PNL, ProfitAndLoss } from '../ProfitAndLoss'
+import { Heading, HeadingSize, Text } from '../Typography'
 import { ChartStateCard } from './ChartStateCard'
 import { Indicator } from './Indicator'
 import classNames from 'classnames'
@@ -22,7 +22,6 @@ import {
   Bar,
   LabelList,
   CartesianGrid,
-  Legend,
   ResponsiveContainer,
   Tooltip,
   TooltipProps,
@@ -33,12 +32,15 @@ import {
   ReferenceLine,
 } from 'recharts'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
-import { Props as LegendProps } from 'recharts/types/component/DefaultLegendContent'
 import { collectData, formatYAxisValue, getBarSizing, getChartWindow, getLoadingValue, hasAnyData } from './utils'
+import { Header, HeaderCol, HeaderRow } from '../Header'
 
 export type CompactView = 'xs' | 'md' | 'lg'
 
 export interface Props {
+  title?: string
+  withDatePicker?: boolean
+  enablePeriods?: boolean
   forceRerenderOnDataChange?: boolean
   tagFilter?: {
     key: string
@@ -47,6 +49,9 @@ export interface Props {
 }
 
 export const ProfitAndLossChart = ({
+  title,
+  withDatePicker = false,
+  enablePeriods,
   forceRerenderOnDataChange = false,
   tagFilter = undefined,
 }: Props) => {
@@ -172,6 +177,7 @@ export const ProfitAndLossChart = ({
   }).slice(0, len),
   [data, loaded, loadingValue, anyData, chartWindow, compactView, selectionMonth, len]
   )
+  // @TODO - Tom
   // }), [selectionMonth, chartWindow, data, loaded, compactView])
 
   const onClick: CategoricalChartFunc = ({ activePayload }) => {
@@ -242,64 +248,6 @@ export const ProfitAndLossChart = ({
     return null
   }
 
-  const renderLegend = (props: LegendProps) => {
-    return (
-      <ul className='Layer__chart-legend-list'>
-        {props.payload?.map((entry, idx) => {
-          if (entry.id === 'UncategorizedLegend') {
-            return (
-              <li
-                key={`legend-item-${idx}`}
-                className={`recharts-legend-item legend-item-${idx}`}
-              >
-                <svg
-                  className='recharts-surface'
-                  width='15'
-                  height='15'
-                  viewBox='0 0 15 15'
-                  style={{
-                    display: 'inline-block',
-                    verticalAlign: 'middle',
-                    marginRight: 4,
-                  }}
-                >
-                  <circle
-                    cx='7'
-                    cy='7'
-                    r='7'
-                    fill='url(#layer-bar-stripe-pattern-dark)'
-                  />
-                </svg>
-                {entry.value}
-              </li>
-            )
-          }
-          return (
-            <li
-              key={`legend-item-${idx}`}
-              className={`recharts-legend-item legend-item-${idx}`}
-            >
-              <svg
-                className='recharts-surface'
-                width='15'
-                height='15'
-                viewBox='0 0 15 15'
-                style={{
-                  display: 'inline-block',
-                  verticalAlign: 'middle',
-                  marginRight: 4,
-                }}
-              >
-                <circle cx='7' cy='7' r='7' />
-              </svg>
-              {entry.value}
-            </li>
-          )
-        })}
-      </ul>
-    )
-  }
-
   const CustomizedYTick = (
     {
       verticalAnchor: _verticalAnchor,
@@ -346,7 +294,36 @@ export const ProfitAndLossChart = ({
   )
 
   return (
-    <div className='Layer__chart-wrapper'>
+    <div className='Layer__chart-wrapper Layer__profit-and-loss__chart'>
+      <Header className={classNames('Layer__profit-and-loss__chart-header', withDatePicker && enablePeriods ? 'Layer__profit-and-loss__chart-header--with-date-picker-extended' : withDatePicker ? 'Layer__profit-and-loss__chart-header--with-date-picker' : 'Layer__profit-and-loss__chart-header--no-date-picker')}>
+        <HeaderRow>
+          <HeaderCol>
+            <Heading size={HeadingSize.view}>{title}</Heading>
+          </HeaderCol>
+          {!withDatePicker && (
+            <HeaderCol>
+              <ProfitAndLoss.ChartLegend />
+            </HeaderCol>
+          )}
+        </HeaderRow>
+        {withDatePicker && (
+          <>
+            <HeaderRow>
+              <HeaderCol>
+                <ProfitAndLoss.DatePicker enablePeriods={enablePeriods} />
+              </HeaderCol>
+              <HeaderCol className='Layer__profit-and-loss__chart-header__legend-col'>
+                <ProfitAndLoss.ChartLegend />
+              </HeaderCol>
+            </HeaderRow>
+            <HeaderRow className='Layer__profit-and-loss__chart-header__legend-row'>
+              <HeaderCol>
+                <ProfitAndLoss.ChartLegend />
+              </HeaderCol>
+            </HeaderRow>
+          </>
+        )}
+      </Header>
       <ResponsiveContainer
         key={forceRerenderOnDataChange ? JSON.stringify(theData) : 'pnl-chart'}
         className={classNames(
@@ -422,31 +399,9 @@ export const ProfitAndLossChart = ({
             stroke={getColor(200)?.hex ?? '#fff'}
             strokeDasharray='5 5'
           />
-          <Legend
-            verticalAlign='top'
-            align='right'
-            content={renderLegend}
-            payload={[
-              {
-                value: 'Revenue',
-                type: 'circle',
-                id: 'IncomeLegend',
-              },
-              {
-                value: 'Expenses',
-                type: 'circle',
-                id: 'ExpensesLegend',
-              },
-              {
-                value: 'Uncategorized',
-                type: 'circle',
-                id: 'UncategorizedLegend',
-              },
-            ]}
-          />
           <XAxis dataKey='name' xAxisId='revenue' tickLine={false} />
           <XAxis dataKey='name' xAxisId='expenses' tickLine={false} hide />
-          <YAxis tick={CustomizedYTick} />
+          <YAxis tick={CustomizedYTick} width={40}/>
           <Bar
             dataKey='loading'
             barSize={barSize}
