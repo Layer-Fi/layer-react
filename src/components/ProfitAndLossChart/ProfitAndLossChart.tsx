@@ -294,36 +294,42 @@ export const ProfitAndLossChart = ({
   )
 
   return (
-    <div className='Layer__chart-wrapper Layer__profit-and-loss__chart'>
-      <Header className={classNames('Layer__profit-and-loss__chart-header', withDatePicker && enablePeriods ? 'Layer__profit-and-loss__chart-header--with-date-picker-extended' : withDatePicker ? 'Layer__profit-and-loss__chart-header--with-date-picker' : 'Layer__profit-and-loss__chart-header--no-date-picker')}>
-        <HeaderRow>
-          <HeaderCol>
-            <Heading size={HeadingSize.view}>{title}</Heading>
-          </HeaderCol>
-          {!withDatePicker && (
+    <div className={classNames('Layer__chart-wrapper Layer__profit-and-loss__chart', !title && !withDatePicker ? 'Layer__profit-and-loss__chart--with-floating-legend' : undefined)}>
+      {title || withDatePicker ? (
+        <Header className={classNames('Layer__profit-and-loss__chart-header', withDatePicker && enablePeriods ? 'Layer__profit-and-loss__chart-header--with-date-picker-extended' : withDatePicker ? 'Layer__profit-and-loss__chart-header--with-date-picker' : 'Layer__profit-and-loss__chart-header--no-date-picker')}>
+          <HeaderRow>
             <HeaderCol>
-              <PNL.ChartLegend />
+              <Heading size={HeadingSize.view}>{title}</Heading>
             </HeaderCol>
+            {!withDatePicker && (
+              <HeaderCol>
+                <PNL.ChartLegend />
+              </HeaderCol>
+            )}
+          </HeaderRow>
+          {withDatePicker && (
+            <>
+              <HeaderRow>
+                <HeaderCol>
+                  <PNL.DatePicker enablePeriods={enablePeriods} />
+                </HeaderCol>
+                <HeaderCol className='Layer__profit-and-loss__chart-header__legend-col'>
+                  <PNL.ChartLegend />
+                </HeaderCol>
+              </HeaderRow>
+              <HeaderRow className='Layer__profit-and-loss__chart-header__legend-row'>
+                <HeaderCol>
+                  <PNL.ChartLegend />
+                </HeaderCol>
+              </HeaderRow>
+            </>
           )}
-        </HeaderRow>
-        {withDatePicker && (
-          <>
-            <HeaderRow>
-              <HeaderCol>
-                <PNL.DatePicker enablePeriods={enablePeriods} />
-              </HeaderCol>
-              <HeaderCol className='Layer__profit-and-loss__chart-header__legend-col'>
-                <PNL.ChartLegend />
-              </HeaderCol>
-            </HeaderRow>
-            <HeaderRow className='Layer__profit-and-loss__chart-header__legend-row'>
-              <HeaderCol>
-                <PNL.ChartLegend />
-              </HeaderCol>
-            </HeaderRow>
-          </>
-        )}
-      </Header>
+        </Header>
+      ) : (
+        <div className='Layer__profit-and-loss__chart__floating-legend'>
+          <PNL.ChartLegend />
+        </div>
+      )}
       <ResponsiveContainer
         key={forceRerenderOnDataChange ? JSON.stringify(theData) : 'pnl-chart'}
         className={classNames(

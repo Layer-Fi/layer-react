@@ -116,7 +116,6 @@ export const AccountingOverview = ({
         >
           <ProfitAndLoss.Chart
             title={stringOverrides?.header || 'Profit & Loss'}
-            withDatePicker
             tagFilter={
               tagFilter
                 ? { key: tagFilter.tagKey, values: tagFilter.tagValues }

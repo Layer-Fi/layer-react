@@ -414,6 +414,18 @@
   padding-top: var(--spacing-md);
 }
 
+.Layer__profit-and-loss__chart__floating-legend {
+  position: relative;
+  top: 12px;
+  right: var(--spacing-md);
+  height: 0;
+}
+
+.Layer__profit-and-loss__chart.Layer__profit-and-loss__chart--with-floating-legend
+.Layer__chart-container.recharts-responsive-container {
+  padding-top: var(--spacing-xl);
+}
+
 .Layer__chart-container--loading .Layer__profit-and-loss-chart__bar--expenses {
   fill: var(--color-base-50);
   animation: layer_chart_bar_loading_anim 2s linear infinite;
