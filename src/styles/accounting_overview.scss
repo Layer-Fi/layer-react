@@ -6,19 +6,17 @@
   max-width: 1406px;
 }
 
-.Layer__component.Layer__accounting-overview-profit-and-loss
-  .recharts-responsive-container {
-  margin-top: -42px;
+.accounting-overview-profit-and-loss-chart-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .Layer__accounting-overview-profit-and-loss-charts > .Layer__toggle {
   display: none;
-}
-
-@container (max-width: 1023px) {
-  .Layer__accounting-overview-profit-and-loss .recharts-legend-wrapper {
-    margin-top: -40px;
-  }
 }
 
 @container (max-width: 796px) {

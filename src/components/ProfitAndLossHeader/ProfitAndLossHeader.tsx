@@ -9,6 +9,7 @@ export interface ProfitAndLossHeaderProps {
   text?: string
   className?: string
   headingClassName?: string
+  size?: 'primary' | 'secondary' | 'view'
   withDatePicker?: boolean
 }
 
@@ -16,6 +17,7 @@ export const ProfitAndLossHeader = ({
   text,
   className,
   headingClassName,
+  size = 'view',
   withDatePicker,
 }: ProfitAndLossHeaderProps) => {
   const { data: linkedAccounts } = useLinkedAccounts()
@@ -28,7 +30,7 @@ export const ProfitAndLossHeader = ({
   return (
     <Header className={className}>
       <span className='Layer__component-header__title-wrapper'>
-        <Heading size={HeadingSize.secondary} className={headingClassName}>
+        <Heading size={HeadingSize[size]} className={headingClassName}>
           {text || 'Profit & Loss'}
         </Heading>
         {isSyncing && <SyncingBadge />}

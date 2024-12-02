@@ -74,7 +74,11 @@ export const DatePicker = ({
     ? 'MMM, yyyy'
     : mode === 'timePicker'
       ? 'h:mm aa'
-      : 'MMM d, yyyy',
+      : mode === 'yearPicker'
+        ? 'yyyy'
+        : mode === 'quarterPicker'
+          ? '\'Q\'Q yyyy'
+          : 'MMM d, yyyy',
   timeIntervals = 15,
   timeCaption,
   placeholderText: _placeholderText,
@@ -134,6 +138,7 @@ export const DatePicker = ({
     } catch (_err) {
       return
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected])
 
   useEffect(() => {
@@ -145,12 +150,14 @@ export const DatePicker = ({
     } else {
       setPickerDate(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDates])
 
   useEffect(() => {
     if (isRangeMode(mode)) {
       setSelectedDates([startDate, endDate])
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate])
 
   const wrapperClassNames = classNames(
@@ -286,6 +293,8 @@ export const DatePicker = ({
         showMonthYearPicker={
           mode === 'monthPicker' || mode === 'monthRangePicker'
         }
+        showQuarterYearPicker={mode === 'quarterPicker'}
+        showYearPicker={mode === 'yearPicker'}
         dateFormat={dateFormat}
         renderDayContents={day => (
           <span className='Layer__datepicker__day-contents'>{day}</span>

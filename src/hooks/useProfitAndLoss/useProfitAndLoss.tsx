@@ -24,6 +24,8 @@ export type PnlTagFilter = {
   values: string[]
 }
 
+export type Period = 'month' | 'quarter' | 'year'
+
 type Props = {
   startDate?: Date
   endDate?: Date
@@ -60,6 +62,8 @@ type UseProfitAndLoss = (props?: Props) => {
   sortBy: (scope: Scope, field: string, direction?: SortDirection) => void
   setFilterTypes: (scope: Scope, types: string[]) => void
   tagFilter?: PnlTagFilter
+  period: Period
+  setPeriod: (period: Period) => void
 }
 
 export const useProfitAndLoss: UseProfitAndLoss = (
@@ -79,6 +83,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
   const [endDate, setEndDate] = useState(
     initialEndDate || endOfMonth(Date.now()),
   )
+  const [period, setPeriod] = useState<Period>('month')
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
     expenses: undefined,
     revenue: undefined,
@@ -97,6 +102,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
   const { data: summaryData } = useProfitAndLossLTM({
     currentDate: startDate ? startDate : startOfMonth(new Date()),
     tagFilter: tagFilter,
+    period: 'month',
   })
 
   const changeDateRange = ({
@@ -138,9 +144,9 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const items = collectRevenueItems(data)
     const filtered = items.map(x => {
       if (
-        filters['revenue']?.types &&
-        filters['revenue']!.types!.length > 0 &&
-        !filters['revenue']?.types?.includes(x.type)
+        filters['revenue']?.types
+        && filters['revenue']!.types!.length > 0
+        && !filters['revenue']?.types?.includes(x.type)
       ) {
         return {
           ...x,
@@ -192,6 +198,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, startDate, filters, sidebarScope, summaryData])
 
   const { filteredDataExpenses, filteredTotalExpenses } = useMemo(() => {
@@ -201,9 +208,9 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const items = collectExpensesItems(data)
     const filtered = items.map(x => {
       if (
-        filters['expenses']?.types &&
-        filters['expenses']!.types!.length > 0 &&
-        !filters['expenses']?.types?.includes(x.type)
+        filters['expenses']?.types
+        && filters['expenses']!.types!.length > 0
+        && !filters['expenses']?.types?.includes(x.type)
       ) {
         return {
           ...x,
@@ -255,6 +262,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, startDate, filters, sidebarScope, summaryData])
 
   return {
@@ -275,5 +283,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     filters,
     setFilterTypes,
     tagFilter,
+    period,
+    setPeriod,
   }
 }

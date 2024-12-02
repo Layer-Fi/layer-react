@@ -1,6 +1,5 @@
 import React, { ReactNode, useState } from 'react'
 import { Container } from '../../components/Container'
-import { Header, HeaderCol, HeaderRow } from '../../components/Header'
 import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -46,7 +45,7 @@ export interface AccountingOverviewProps {
 
 type PnlToggleOption = 'revenue' | 'expenses'
 
-export const AccountingOverview = ({
+export const AccountingOverviewV2 = ({
   title = 'Accounting overview',
   showTitle = true,
   enableOnboarding = false,
@@ -76,21 +75,33 @@ export const AccountingOverview = ({
       <View
         title={title}
         showHeader={showTitle}
-        header={
-          <Header>
-            <HeaderRow>
-              <HeaderCol>
-                <ProfitAndLoss.DatePicker />
-              </HeaderCol>
-            </HeaderRow>
-          </Header>
-        }
       >
         {enableOnboarding && (
           <Onboarding
             onTransactionsToReviewClick={onTransactionsToReviewClick}
             onboardingStepOverride={onboardingStepOverride}
           />
+        )}
+        <Container
+          name='accounting-overview-profit-and-loss'
+          asWidget
+          elevated={true}
+        >
+          <ProfitAndLoss.Chart
+            title='Profit & Loss'
+            withDatePicker={true}
+            enablePeriods={true}
+            tagFilter={
+              tagFilter
+                ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+                : undefined
+            }
+          />
+        </Container>
+        {middleBanner && (
+          <Container name='accounting-overview-middle-banner'>
+            {middleBanner}
+          </Container>
         )}
         <Internal_ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
@@ -109,25 +120,6 @@ export const AccountingOverview = ({
           }}
           variants={profitAndLossSummariesVariants}
         />
-        <Container
-          name='accounting-overview-profit-and-loss'
-          asWidget
-          elevated={true}
-        >
-          <ProfitAndLoss.Chart
-            title={stringOverrides?.header || 'Profit & Loss'}
-            tagFilter={
-              tagFilter
-                ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
-                : undefined
-            }
-          />
-        </Container>
-        {middleBanner && (
-          <Container name='accounting-overview-middle-banner'>
-            {middleBanner}
-          </Container>
-        )}
         <div className='Layer__accounting-overview-profit-and-loss-charts'>
           <Toggle
             name='pnl-detailed-charts'

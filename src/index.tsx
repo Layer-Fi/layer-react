@@ -46,7 +46,7 @@ export { BookkeepingUpsellBar } from './components/UpsellBanner'
 ======================= Composite Views =======================
 */
 export { BookkeepingOverview } from './views/BookkeepingOverview'
-export { AccountingOverview } from './views/AccountingOverview'
+export { AccountingOverview, AccountingOverviewV2 } from './views/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts'
 export { GeneralLedgerView } from './views/GeneralLedger'
 export { ProjectProfitabilityView } from './views/ProjectProfitability'
