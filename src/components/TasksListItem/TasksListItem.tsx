@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { TasksContext } from '../../contexts/TasksContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Check from '../../icons/Check'
@@ -21,9 +21,12 @@ export const TasksListItem = ({
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [userResponse, setUserResponse] = useState(task.user_response || '')
+  const [selectedFiles, setSelectedFiles] = useState<File[]>()
 
-  const { submitResponseToTask, uploadDocumentForTask } =
-    useContext(TasksContext)
+  const {
+    submitResponseToTask, uploadDocumentsForTask, deleteUploadsForTask,
+    updateDocUploadTaskDescription,
+  } = useContext(TasksContext)
 
   const taskBodyClassName = classNames(
     'Layer__tasks-list-item__body',
@@ -46,6 +49,55 @@ export const TasksListItem = ({
   useEffect(() => {
     setIsOpen(defaultOpen)
   }, [defaultOpen])
+
+  const uploadDocumentAction = useMemo(() => {
+    if (task.user_response_type === 'UPLOAD_DOCUMENT') {
+      if (task.status === 'TODO') {
+        if (!selectedFiles) {
+          return <FileInput
+            onUpload={(files: File[]) => {
+              setSelectedFiles(files)
+            }}
+            text='Select file(s)'
+            allowMultipleUploads
+          />
+        } else {
+          return <Button
+            variant={ButtonVariant.secondary}
+            onClick={async () => {
+              await uploadDocumentsForTask(task.id, selectedFiles, userResponse)
+              setIsOpen(false)
+              goToNextPageIfAllComplete(task)
+              setSelectedFiles(undefined)
+            }}
+          >
+            Submit
+          </Button>
+        }
+      } else if (task.status === 'USER_MARKED_COMPLETED') {
+        if (task.user_response && task.user_response != userResponse) {
+          return <Button
+            variant={ButtonVariant.secondary}
+            onClick={() => {
+              updateDocUploadTaskDescription(task.id, userResponse)
+            }}
+          >
+            Update
+          </Button>
+        } else {
+          return <Button
+            variant={ButtonVariant.secondary}
+            onClick={() => {
+              deleteUploadsForTask(task.id)
+            }}
+          >
+            Delete Uploads
+          </Button>
+        }
+      } else { return null }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [task, selectedFiles, userResponse])
 
   return (
     <div className='Layer__tasks-list-item-wrapper'>
@@ -75,34 +127,36 @@ export const TasksListItem = ({
         <div className={taskBodyClassName}>
           <div className='Layer__tasks-list-item__body-info'>
             <Text size={TextSize.sm}>{task.question}</Text>
-            {task.user_response_type === 'FREE_RESPONSE' ? (
-              <Textarea
-                value={userResponse}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                  setUserResponse(e.target.value)
-                }
-              />
+            <Textarea
+              value={userResponse}
+              placeholder={task.user_response_type === 'UPLOAD_DOCUMENT' ? 'Optional description' : ''}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                setUserResponse(e.target.value)
+              }
+            />
+            {task.user_response_type === 'UPLOAD_DOCUMENT' ? (
+              <div className='Layer__tasks-list__link-list'>
+                {selectedFiles ? (
+                  <div className='Layer__tasks-list__link-list-header'>Selected Files:</div>
+                ) : task.documents ? (
+                  <div className='Layer__tasks-list__link-list-header'>Uploaded Files:</div>
+                ) : null}
+                <ul className='Layer__tasks-list__links-list'>
+                  {task.documents?.map((document, idx) => (
+                    <li key={`uploaded-doc-name-${idx}`}><a className='Layer__tasks-list-item__link' href={document.presigned_url.presignedUrl}>{document.file_name}</a></li>
+                  ))}
+                  {selectedFiles?.map((file, idx) => (
+                    <li key={`selected-file-name-${idx}`}><a className='Layer__tasks-list-item__link'>{file.name}</a></li>
+                  ))}
+                </ul>
+              </div>
             ) : null}
             <div className='Layer__tasks-list-item__actions'>
-              {task.user_response_type === 'UPLOAD_DOCUMENT' ? (
-                <FileInput
-                  onUpload={(file: File) => {
-                    uploadDocumentForTask(task.id, file)
-                    setIsOpen(false)
-                    goToNextPageIfAllComplete(task)
-                  }}
-                  text='Upload file'
-                  disabled={
-                    task.completed_at != null ||
-                    task.user_marked_completed_at != null ||
-                    task.archived_at != null
-                  }
-                />
-              ) : (
+              {task.user_response_type === 'UPLOAD_DOCUMENT' ? uploadDocumentAction : (
                 <Button
                   disabled={
-                    userResponse.length === 0 ||
-                    userResponse === task.user_response
+                    userResponse.length === 0
+                    || userResponse === task.user_response
                   }
                   variant={ButtonVariant.secondary}
                   onClick={() => {
@@ -111,7 +165,7 @@ export const TasksListItem = ({
                     goToNextPageIfAllComplete(task)
                   }}
                 >
-                  {userResponse && userResponse.length === 0
+                  {task.user_response && task.user_response !== userResponse
                     ? 'Update'
                     : 'Save'}
                 </Button>

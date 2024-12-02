@@ -1,4 +1,12 @@
 import { DocumentType } from './file_upload'
+import { S3PresignedUrl } from './general'
+
+interface Document {
+  document_type: DocumentType
+  file_name: string,
+  presigned_url: S3PresignedUrl
+  // add the other fields if/when necessary
+}
 
 export interface TaskTypes {
   id: string
@@ -15,6 +23,7 @@ export interface TaskTypes {
   created_at: string
   updated_at: string
   document_type: DocumentType
+  documents: Document[]
 }
 
 export type TasksStatusType = 'COMPLETED' | 'TODO' | 'USER_MARKED_COMPLETED'

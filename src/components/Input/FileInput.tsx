@@ -5,11 +5,12 @@ import { ButtonVariant } from '../Button/Button'
 
 export interface FileInputProps {
   text?: string
-  onUpload?: (file: File) => void
+  onUpload?: (files: File[]) => void
   disabled?: boolean
   secondary?: boolean
   iconOnly?: boolean
   icon?: React.ReactNode
+  allowMultipleUploads?: boolean
 }
 
 export const FileInput = ({
@@ -19,6 +20,7 @@ export const FileInput = ({
   secondary,
   iconOnly = false,
   icon,
+  allowMultipleUploads = false,
 }: FileInputProps) => {
   const hiddenFileInput = useRef<HTMLInputElement>(null)
 
@@ -30,8 +32,8 @@ export const FileInput = ({
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0 && onUpload) {
-      const fileUploaded = event.target.files[0]
-      onUpload(fileUploaded)
+      const filesUploaded = Array.from(event.target.files)
+      onUpload(filesUploaded)
     }
   }
 
@@ -43,6 +45,7 @@ export const FileInput = ({
         </TextButton>
         <input
           type='file'
+          multiple={allowMultipleUploads}
           onChange={onChange}
           ref={hiddenFileInput}
           style={{ display: 'none' }}
@@ -64,6 +67,7 @@ export const FileInput = ({
       </Button>
       <input
         type='file'
+        multiple={allowMultipleUploads}
         onChange={onChange}
         ref={hiddenFileInput}
         style={{ display: 'none' }}
