@@ -34,6 +34,11 @@ const sharedConfig = {
   minify: false,
   tsconfig: './tsconfig.json',
   target: 'es2016',
+  loader: {
+    '.ttf': 'file',
+  },
+  assetNames: 'assets/fonts/[name]',
+  publicPath: 'esm', // url prefix for assets when referenced in the final bundle
   external: [
     ...Object.keys(peerDependencies || {}),
     ...Object.keys(dependencies || {}),

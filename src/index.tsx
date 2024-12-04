@@ -17,6 +17,7 @@ export { BankTransactions } from './components/BankTransactions'
 export { Quickbooks } from './components/Quickbooks'
 
 /* ------------------ Reporting ------------------ */
+export { ProfitAndLossPDFGenerator } from './components/ProfitAndLossPDFGenerator'
 export { ProfitAndLoss } from './components/ProfitAndLoss'
 /* Profit and loss contains 6 sub-components:
  * - Chart
