@@ -88,9 +88,9 @@ export const BankTransactionListItem = ({
 
   useEffect(() => {
     if (
-      editable &&
-      bankTransaction.recently_categorized &&
-      shouldHideAfterCategorize(bankTransaction)
+      editable
+      && bankTransaction.recently_categorized
+      && shouldHideAfterCategorize(bankTransaction)
     ) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
@@ -126,9 +126,9 @@ export const BankTransactionListItem = ({
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    bankTransaction.recently_categorized &&
-      editable &&
-      shouldHideAfterCategorize(bankTransaction)
+    bankTransaction.recently_categorized
+      && editable
+      && shouldHideAfterCategorize(bankTransaction)
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',

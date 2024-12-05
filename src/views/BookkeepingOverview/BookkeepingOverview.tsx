@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Container } from '../../components/Container'
+import { MeetingReminder } from '../../components/OnboardingCall/MeetingReminder'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
@@ -56,15 +57,23 @@ export const BookkeepingOverview = ({
           viewClassName='Layer__bookkeeping-overview--view'
           title={stringOverrides?.title || title || 'Bookkeeping overview'}
           withSidebar={width > 1100}
-          sidebar={<TasksComponent stringOverrides={stringOverrides?.tasks} />}
           showHeader={showTitle}
+          sidebar={
+            <>
+              <MeetingReminder />
+              <TasksComponent stringOverrides={stringOverrides?.tasks} />
+            </>
+          }
         >
           {width <= 1100 && (
-            <TasksComponent
-              collapsable
-              collapsedWhenComplete
-              stringOverrides={stringOverrides?.tasks}
-            />
+            <>
+              <MeetingReminder />
+              <TasksComponent
+                collapsable
+                collapsedWhenComplete
+                stringOverrides={stringOverrides?.tasks}
+              />
+            </>
           )}
           <Container
             name='bookkeeping-overview-profit-and-loss'
@@ -102,8 +111,8 @@ export const BookkeepingOverview = ({
             <Container
               name={classNames(
                 'bookkeeping-overview-profit-and-loss-chart',
-                pnlToggle !== 'revenue' &&
-                  'bookkeeping-overview-profit-and-loss-chart--hidden',
+                pnlToggle !== 'revenue'
+                  && 'bookkeeping-overview-profit-and-loss-chart--hidden',
               )}
             >
               <ProfitAndLoss.DetailedCharts
@@ -115,8 +124,8 @@ export const BookkeepingOverview = ({
             <Container
               name={classNames(
                 'bookkeeping-overview-profit-and-loss-chart',
-                pnlToggle !== 'expenses' &&
-                  'bookkeeping-overview-profit-and-loss-chart--hidden',
+                pnlToggle !== 'expenses'
+                  && 'bookkeeping-overview-profit-and-loss-chart--hidden',
               )}
             >
               <ProfitAndLoss.DetailedCharts

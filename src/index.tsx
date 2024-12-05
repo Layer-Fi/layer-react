@@ -37,7 +37,7 @@ export { Journal } from './components/Journal'
 export { Tasks } from './components/Tasks'
 
 /* --------------------- Onboarding ------------------------ */
-export { LinkAccounts } from './components/PlatformOnboarding'
+export { LinkAccounts } from './components/LinkAccounts'
 
 /* --------------------- Banners -------------------------- */
 export { BookkeepingUpsellBar } from './components/UpsellBanner'
@@ -52,6 +52,7 @@ export { GeneralLedgerView } from './views/GeneralLedger'
 export { ProjectProfitabilityView } from './views/ProjectProfitability'
 export { Reports } from './views/Reports'
 export { ProfitAndLossView } from './components/ProfitAndLossView'
+export { PlatformOnboardingView } from './views/PlatformOnboardingView'
 
 /*
 ======================= Hooks & Contexts =======================
