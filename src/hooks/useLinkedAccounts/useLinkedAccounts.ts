@@ -98,6 +98,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     if (!isLoading && loadingStatus === 'loading') {
       setLoadingStatus('complete')
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading])
 
   /**
@@ -340,12 +341,14 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     if (queryKey && (isLoading || isValidating)) {
       read(DataModel.LINKED_ACCOUNTS, queryKey)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isValidating])
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
       refetchAccounts()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncTimestamps])
 
   return {

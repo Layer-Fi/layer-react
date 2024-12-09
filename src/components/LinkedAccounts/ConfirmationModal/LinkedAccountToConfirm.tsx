@@ -1,41 +1,117 @@
-import React from 'react'
+import React, { forwardRef, useImperativeHandle, useState } from 'react'
+import { isEqual, startOfDay } from 'date-fns'
+import classNames from 'classnames'
 import type { LinkedAccount } from '../../../types/linked_accounts'
 import { Heading } from '../../ui/Typography/Heading'
 import { P } from '../../ui/Typography/Text'
-import { VStack } from '../../ui/Stack/Stack'
+import { VStack, Stack } from '../../ui/Stack/Stack'
 import { Checkbox } from  '../../ui/Checkbox/Checkbox'
+import { Input, InputGroup } from '../../Input'
+import { DatePicker } from '../../DatePicker'
+import InstitutionIcon from '../../../icons/InstitutionIcon'
+
+export type LinkAccountForm = {
+  account: LinkedAccount
+  isConfirmed: boolean
+  openingDate?: Date
+  openingBalance?: number
+}
+
+export type LinkAccountToConfirmRef = {
+  getData: () => LinkAccountForm
+}
 
 type LinkedAccountConfirmationProps = {
   account: LinkedAccount
-  isConfirmed: boolean
-  onChangeConfirmed: (isConfirmed: boolean) => void
+  defaultValue: LinkAccountForm
+  compact?: boolean
 }
 
 const CLASS_NAME = 'Layer__LinkedAccountToConfirm'
 
-export function LinkedAccountToConfirm({
+const LinkedAccountToConfirm = forwardRef(({
   account,
-  isConfirmed,
-  onChangeConfirmed,
-}: LinkedAccountConfirmationProps) {
+  defaultValue,
+  compact,
+}: LinkedAccountConfirmationProps,
+ref) => {
+  const [formState, setFormState] = useState<LinkAccountForm>(defaultValue)
+  
+  useImperativeHandle(ref, () => ({
+    getData: () => formState,
+  }))
+
   return (
-    <div className={CLASS_NAME}>
-      <VStack>
-        <Heading level={3} size='sm'>{account.external_account_name}</Heading>
-        <P slot='mask'>
-          ••• {account.mask}
-        </P>
-        <P slot='institution'>
-          {account.institution.name}
-        </P>
+    <div className={classNames(CLASS_NAME, compact && `${CLASS_NAME}--compact`)}>
+      {!compact && (
+        <VStack justify='start'>
+          {account.institution?.logo != undefined ? (
+            <img
+              width={32}
+              height={32}
+              src={`data:image/png;base64,${account.institution.logo}`}
+              alt={
+                account.institution?.name
+                  ? account.institution?.name
+                  : account.external_account_name
+              }
+            />
+          ) : (
+            <InstitutionIcon />
+          )}
+        </VStack>
+      )}
+      <VStack gap='sm' className={`${CLASS_NAME}__main-col`}>
+        <VStack gap='3xs'>
+          <Heading level={3} size='sm'>{account.external_account_name}</Heading>
+          <P slot='mask'>
+            ••• {account.mask}
+          </P>
+          <P slot='institution'>
+            {account.institution.name}
+          </P>
+        </VStack>
+
+        <Stack direction={compact ? 'column' : 'row'} gap='sm' align='start' className={`${CLASS_NAME}__form`}>
+          <InputGroup label='Opening date'>
+            <DatePicker
+              mode='dayPicker'
+              onChange={v => {
+                if (!formState.openingDate || !isEqual(formState.openingDate, v as Date)) {
+                  setFormState({ ...formState, openingDate: (v as Date) })
+                }
+              }}
+              selected={formState.openingDate ?? startOfDay(new Date())}
+              currentDateOption={false}
+            />
+          </InputGroup>
+          <InputGroup label='Opening balance'>
+            <Input
+              name='openingBalance' defaultValue={formState.openingBalance} onChange={e => {
+                try {
+                  /**
+               * @TODO better handling here
+               */
+                  const v = Number((e.target as HTMLInputElement).value)
+                  setFormState({ ...formState, openingBalance: v })
+                } catch(_err) {
+                  console.debug('format issue')
+                }
+              }} />
+          </InputGroup>
+        </Stack>
       </VStack>
-      <VStack justify='center'>
+      <VStack justify='start'>
         <Checkbox
-          isSelected={isConfirmed}
-          onChange={onChangeConfirmed}
+          isSelected={formState.isConfirmed}
+          onChange={v => setFormState({ ...formState, isConfirmed: v })}
           aria-label='Confirm Account Inclusion'
         />
-      </VStack>
+      </VStack> 
     </div>
   )
-}
+})
+
+LinkedAccountToConfirm.displayName = 'LinkedAccountToConfirm'
+
+export { LinkedAccountToConfirm }

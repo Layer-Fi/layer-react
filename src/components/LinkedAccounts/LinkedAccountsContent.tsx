@@ -57,7 +57,7 @@ export const LinkedAccountsContent = ({
           </div>
         </div>
       </div>
-      <LinkedAccountsConfirmationModal />
+      <LinkedAccountsConfirmationModal compact={true} />
     </>
   )
 }

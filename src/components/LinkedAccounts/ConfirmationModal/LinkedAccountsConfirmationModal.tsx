@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Modal } from '../../ui/Modal/Modal'
 import { ModalContextBar, ModalHeading, ModalActions, ModalContent, ModalDescription } from '../../ui/Modal/ModalSlots'
 import useSWRMutation from 'swr/mutation'
@@ -7,9 +7,8 @@ import { Button } from '../../ui/Button/Button'
 import { VStack } from '../../ui/Stack/Stack'
 import { useLinkedAccounts } from '../../../hooks/useLinkedAccounts'
 import { useAccountConfirmationStore } from '../../../providers/AccountConfirmationStoreProvider'
-import { getAccountsNeedingConfirmation } from '../../../hooks/useLinkedAccounts/useLinkedAccounts'
 import { ConditionalList } from '../../utility/ConditionalList'
-import { LinkedAccountToConfirm } from './LinkedAccountToConfirm'
+import { LinkAccountForm, LinkAccountToConfirmRef, LinkedAccountToConfirm } from './LinkedAccountToConfirm'
 import { Layer } from '../../../api/layer'
 import type { Awaitable } from '../../../types/utility/promises'
 import { P } from '../../ui/Typography/Text'
@@ -17,7 +16,13 @@ import { useAuth } from '../../../hooks/useAuth'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { LoadingSpinner } from '../../ui/Loading/LoadingSpinner'
 
-type AccountConfirmExcludeFormState = Record<string, boolean>
+type AccountConfirmExcludeFormState = LinkAccountForm[]
+
+type LinkedAccountsConfirmationModalStringOverrides = {
+  title?: string
+  description?: string
+  buttonText?: string
+}
 
 function useConfirmAndExcludeMultiple(
   formState: AccountConfirmExcludeFormState,
@@ -60,8 +65,55 @@ function useConfirmAndExcludeMultiple(
   return useSWRMutation(
     `/v1/businesses/${businessId}/external-accounts/bulk`,
     () => Promise.all(
-      Object.entries(formState).map(([ accountId, isConfirmed ]) =>
+      formState.map(({ account: { id: accountId }, isConfirmed }) =>
         isConfirmed ? confirm(accountId) : exclude(accountId)
+      )
+    )
+      .then(() => onSuccess())
+      .then(() => true as const),
+    {
+      revalidate: false,
+      throwOnError: false,
+    }
+  )
+}
+
+function useUpdateOpeningBalanceAndDate(
+  formState: AccountConfirmExcludeFormState,
+  { onSuccess }: { onSuccess: () => Awaitable<unknown> }
+) {
+  const { data: _auth } = useAuth()
+  const { businessId } = useLayerContext()
+
+  const updateData = ({
+    account: { id: _accountId },
+    openingBalance: _openingBalance,
+    openingDate: _openingDate,
+  }: LinkAccountForm) => {
+    /**
+     * @TODO - add API call to update opening balances and dates
+    */
+    // return Layer.----(
+    //   auth?.apiUrl ?? '',
+    //   auth?.access_token,
+    //   {
+    //     params: {
+    //       businessId,
+    //       accountId,
+    //     },
+    //     body: {
+    //       is_irrelevant: true,
+    //     }
+    //   }
+    // )
+    return Promise.resolve()
+  }
+
+  return useSWRMutation(
+    `/v1/businesses/${businessId}/external-accounts/balances`,
+    () => Promise.all(
+      formState.map((item) =>
+        updateData(item)
       )
     )
       .then(() => onSuccess())
@@ -92,10 +144,10 @@ function getButtonLabel(
 }
 
 function getFormComponentLabels(formState: AccountConfirmExcludeFormState) {
-  const values = Object.values(formState)
+  const values = formState
 
   const totalCount = values.length
-  const confirmedCount = values.filter(Boolean).length
+  const confirmedCount = values.filter(x => x.isConfirmed).length
 
   const buttonLabel = getButtonLabel({ totalCount, confirmedCount })
   const descriptionLabel = totalCount > 1
@@ -110,7 +162,10 @@ function getFormComponentLabels(formState: AccountConfirmExcludeFormState) {
 
 function useLinkedAccountsConfirmationModal() {
   const { data, refetchAccounts } = useLinkedAccounts()
-  const accountsNeedingConfirmation = getAccountsNeedingConfirmation(data ?? [])
+  /**
+   * @TODO revert changes below
+   */
+  const accountsNeedingConfirmation = data ?? [] //getAccountsNeedingConfirmation(data ?? [])
 
   const {
     visibility,
@@ -176,26 +231,66 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
   )
 }
 
-function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
+function LinkedAccountsConfirmationModalContent({
+  onClose,
+  enableConfirmExclude = true,
+  enableOpeningBalanceAndDate = true,
+  compact,
+  stringOverrides,
+}: {
+  onClose: () => void
+  enableConfirmExclude?: boolean
+  enableOpeningBalanceAndDate?: boolean
+  compact?: boolean
+  stringOverrides?: LinkedAccountsConfirmationModalStringOverrides
+}) {
   const { accounts, onDismiss, onFinish, refetchAccounts } = useLinkedAccountsConfirmationModal()
 
-  const [ formState, setFormState ] = useState(() => Object.fromEntries(
-    accounts.map(({ id }) => [ id, true ])
-  ))
+  const childRefs = useRef<LinkAccountToConfirmRef[]>([])
 
-  const { trigger, isMutating, error } = useConfirmAndExcludeMultiple(formState, {
+  const [ formState, setFormState ] = useState<LinkAccountForm[]>([])
+
+  const {
+    trigger: triggerConfirmAndExclude,
+    isMutating: isMutatingConfirmAndExclude,
+    error: errorConfirmAndExclude
+  } = useConfirmAndExcludeMultiple(formState, {
     onSuccess: refetchAccounts
   })
-  const hasError = Boolean(error)
+
+  const {
+    trigger: triggerBalanceUpdate,
+    isMutating: isMutatingBalanceUpdate,
+    error: errorBalanceUpdate
+  } = useUpdateOpeningBalanceAndDate(formState, {
+    onSuccess: refetchAccounts
+  })
+
+  const hasError = Boolean(errorConfirmAndExclude) || Boolean(errorBalanceUpdate)
+  const isMutating = Boolean(isMutatingConfirmAndExclude) || Boolean(isMutatingBalanceUpdate)
+
+  useEffect(() => {
+    if (formState.length > 0) {
+      saveData()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formState])
 
   const handleDismiss = () => {
     onDismiss()
     onClose()
   }
 
-  const handleFinish = async () => {
-    const success = await trigger()
-    if (success) {
+  const handleFinish = () => {
+    const data = childRefs.current.map(ref => ref.getData())
+    setFormState(data)
+  }
+
+  const saveData = async () => {
+    const successConfirmAndExclude = enableConfirmExclude ? await triggerConfirmAndExclude() : true
+    const successBalanceUpdate = enableOpeningBalanceAndDate ? await triggerBalanceUpdate() : true
+
+    if (successConfirmAndExclude && successBalanceUpdate) {
       onFinish()
       onClose()
     }
@@ -207,10 +302,10 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     <>
       <ModalContextBar onClose={handleDismiss} />
       <ModalHeading pbe='2xs'>
-        Confirm Business Accounts
+        {stringOverrides?.title ?? 'Confirm Business Accounts'}
       </ModalHeading>
       <ModalDescription pbe='md'>
-        {descriptionLabel}
+        {stringOverrides?.description ?? descriptionLabel}
       </ModalDescription>
       <ModalContent>
         <ConditionalList
@@ -224,17 +319,13 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
           }
           Container={({ children }) => <VStack gap='md'>{children}</VStack>}
         >
-          {({ item }) =>
+          {({ item }, index) =>
             <LinkedAccountToConfirm
+              ref={(el: LinkAccountToConfirmRef) => childRefs.current[index] = el}
               key={item.id}
               account={item}
-              isConfirmed={formState[item.id] ?? false}
-              onChangeConfirmed={
-                (isConfirmed) => setFormState((currentState) => ({
-                  ...currentState,
-                  [item.id]: isConfirmed
-                }))
-              }
+              defaultValue={{ account: item, isConfirmed: true }}
+              compact={compact}
             />
           }
         </ConditionalList>
@@ -258,7 +349,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
             )
             : (
               <Button size='lg' onPress={handleFinish} isPending={isMutating}>
-                {buttonLabel}
+                {stringOverrides?.buttonText ?? buttonLabel}
               </Button>
             )
           }
@@ -268,7 +359,17 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
   )
 }
 
-export function LinkedAccountsConfirmationModal() {
+export function LinkedAccountsConfirmationModal({
+  enableConfirmExclude = true,
+  enableOpeningBalanceAndDate = true,
+  compact,
+  stringOverrides,
+}: {
+  stringOverrides?: LinkedAccountsConfirmationModalStringOverrides
+  compact?: boolean
+  enableConfirmExclude?: boolean
+  enableOpeningBalanceAndDate?: boolean
+}) {
   const { preloadIsOpen, mainIsOpen } = useLinkedAccountsConfirmationModal()
 
   return (
@@ -276,7 +377,15 @@ export function LinkedAccountsConfirmationModal() {
       {({ close }) =>
         preloadIsOpen
           ? <LinkedAccountsConfirmationModalPreloadedContent onClose={close} />
-          : <LinkedAccountsConfirmationModalContent onClose={close} />
+          : (
+            <LinkedAccountsConfirmationModalContent
+              onClose={close}
+              stringOverrides={stringOverrides}
+              enableConfirmExclude={enableConfirmExclude}
+              enableOpeningBalanceAndDate={enableOpeningBalanceAndDate}
+              compact={compact}
+            />
+          )
       }
     </Modal>
   )
