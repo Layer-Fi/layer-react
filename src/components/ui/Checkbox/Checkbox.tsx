@@ -10,7 +10,7 @@ export function Checkbox({children, ...props}: Omit<CheckboxProps, 'className'>)
       {() =>
         <>
           <div slot='checkbox'>
-            <Check />
+            <Check size={16} />
           </div>
           {children}
         </>
