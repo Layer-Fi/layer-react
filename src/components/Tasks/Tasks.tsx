@@ -125,7 +125,7 @@ export const TasksComponent = ({
     ) {
       setOpen(false)
     }
-  }, [allComplete, collapsedWhenComplete, loadedStatus, open])
+  }, [allComplete])
 
   return (
     <div className='Layer__tasks-component'>
