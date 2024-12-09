@@ -4,6 +4,43 @@
   padding-inline: var(--spacing-md);
   padding-block: var(--spacing-sm);
 
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  gap: var(--spacing-sm);
+
+  .Layer__datepicker__wrapper .react-datepicker__input-container input {
+    max-width: none;
+    width: 100%;
+  }
+
+  &.Layer__LinkedAccountToConfirm--compact {
+    .Layer__input-group {
+      width: 100%;
+      max-width: 180px;
+
+      .Layer__input-tooltip input {
+        width: 100%;
+      }
+    }
+  }
+
+  &:not(.Layer__LinkedAccountToConfirm--compact) {
+    .Layer__input-group {
+      width: 50%;
+      max-width: 180px;
+
+      .Layer__input-label {
+        white-space: nowrap;
+      }
+    }
+  }
 }
+
+.Layer__LinkedAccountToConfirm__main-col {
+  flex: 1;
+}
+
+.Layer__LinkedAccountToConfirm__form {
+  padding-top: var(--spacing-xs);
+  border-top: 1px solid var(--border-color);
+}
+
