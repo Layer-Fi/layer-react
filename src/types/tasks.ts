@@ -1,14 +1,14 @@
 import { DocumentType } from './file_upload'
 import { S3PresignedUrl } from './general'
 
-interface Document {
+type Document = {
   document_type: DocumentType
   file_name: string,
   presigned_url: S3PresignedUrl
   // add the other fields if/when necessary
 }
 
-export interface TaskTypes {
+export type Task = {
   id: string
   question: string
   status: TasksStatusType
@@ -22,6 +22,7 @@ export interface TaskTypes {
   completed_at: string | null
   created_at: string
   updated_at: string
+  effective_date: string
   document_type: DocumentType
   documents: Document[]
 }
@@ -33,4 +34,12 @@ const COMPLETED_TASK_TYPES = ['COMPLETED', 'USER_MARKED_COMPLETED']
 
 export function isComplete(taskType: TasksStatusType) {
   return COMPLETED_TASK_TYPES.includes(taskType)
+}
+
+export type TasksMonthly = {
+  year: number
+  month: number
+  total: number
+  completed: number
+  tasks: Task[]
 }

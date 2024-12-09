@@ -1,10 +1,11 @@
 import React, { useContext, useMemo, useState } from 'react'
 import { TasksContext } from '../../contexts/TasksContext'
 import SmileIcon from '../../icons/SmileIcon'
-import { isComplete, TaskTypes } from '../../types/tasks'
+import { isComplete, Task } from '../../types/tasks'
 import { Pagination } from '../Pagination'
 import { TasksListItem } from '../TasksListItem'
 import { ErrorText, Text, TextSize } from '../Typography'
+import { endOfMonth, isAfter, isBefore, parseISO, startOfMonth } from 'date-fns'
 
 function paginateArray<T>(array: T[], chunkSize: number = 10): T[][] {
   const result: T[][] = []
@@ -28,7 +29,15 @@ const TasksEmptyState = () => (
 )
 
 export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
-  const { data: tasks, error } = useContext(TasksContext)
+  const { data: rawData, error, currentDate } = useContext(TasksContext)
+
+  // Collect tasks for selected month (currentDate)
+  const tasks = useMemo(() => {
+    return rawData?.filter(x => {
+      const d = x.effective_date ? parseISO(x.effective_date) : parseISO(x.created_at)
+      return !isBefore(d, startOfMonth(currentDate)) && !isAfter(d, endOfMonth(currentDate))
+    })
+  }, [rawData, currentDate])
 
   const firstPageWithIincompleteTasks = paginateArray(
     tasks || [],
@@ -41,17 +50,19 @@ export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
       : firstPageWithIincompleteTasks + 1,
   )
 
+  // Sort tasks by completion status and paginate
   const sortedTasks = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
-    return tasks?.slice(firstPageIndex, lastPageIndex)
+    return tasks?.sort(x => isComplete(x.status) ? 1 : -1).slice(firstPageIndex, lastPageIndex)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasks, currentPage])
 
   const indexFirstIncomplete = sortedTasks?.findIndex(
     task => !isComplete(task.status),
   )
 
-  const goToNextPage = (task: TaskTypes) => {
+  const goToNextPage = (task: Task) => {
     const allComplete = sortedTasks
       ?.filter(taskInList => taskInList.id !== task.id)
       .every(task => isComplete(task.status))
