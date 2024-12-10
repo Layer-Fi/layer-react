@@ -6,18 +6,39 @@ import {
 } from '../../types/profit_and_loss'
 import { get, post } from './authenticated_http'
 
+function buildUrl(
+  baseUrl: string,
+  params: Record<string, string | number | null | undefined>
+): string {
+  const queryString = Object.entries(params)
+    .filter(([_, value]) => value != null && value != undefined)
+    .map(
+      ([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
+    )
+    .join('&');
+
+  return queryString ? `${baseUrl}?${queryString}` : baseUrl;
+}
+
 export const getProfitAndLoss = get<{
   data?: ProfitAndLoss
   error?: unknown
 }>(
-  ({ businessId, startDate, endDate, tagKey, tagValues, reportingBasis }) =>
-    `/v1/businesses/${businessId}/reports/profit-and-loss?start_date=${
-      startDate ? encodeURIComponent(startDate) : ''
-    }&end_date=${endDate ? encodeURIComponent(endDate) : ''}${
-      reportingBasis ? `&reporting_basis=${reportingBasis}` : ''
-    }${tagKey ? `&tag_key=${tagKey}` : ''}${
-      tagValues ? `&tag_values=${tagValues}` : ''
-    }`,
+  ({ businessId, startDate, endDate, tagKey,
+    tagValues, reportingBasis, structure, month, year }) =>
+      buildUrl(
+        `/v1/businesses/${businessId}/reports/profit-and-loss`,
+        {
+          start_date: startDate,
+          end_date: endDate,
+          reporting_basis: reportingBasis,
+          tag_key: tagKey,
+          tag_values: tagValues,
+          structure,
+          month,
+          year,
+        }
+      )
 )
 
 export const compareProfitAndLoss = post<{

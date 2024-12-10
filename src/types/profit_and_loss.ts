@@ -1,4 +1,8 @@
+import { MONTHS, STRUCTURES } from '../components/ProfitAndLossPDFGenerator/util'
 import { LineItem } from './line_item'
+
+export type Month = typeof MONTHS[number];
+export type Structure = typeof STRUCTURES[number];
 
 export interface ProfitAndLoss {
   type: 'Profit_And_Loss'
@@ -76,3 +80,5 @@ export interface ProfitAndLossSummaries {
   type: 'Profit_And_Loss_Summaries'
   months: ProfitAndLossSummary[]
 }
+
+export type DisplayType = 'labels' | 'values' | 'month-over-month'
