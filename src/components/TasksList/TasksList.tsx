@@ -66,7 +66,9 @@ export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
     const allComplete = sortedTasks
       ?.filter(taskInList => taskInList.id !== task.id)
       .every(task => isComplete(task.status))
-    if (allComplete) {
+    const hasMorePages = sortedTasks ? sortedTasks.length > pageSize * currentPage : false
+
+    if (allComplete && hasMorePages) {
       setCurrentPage(currentPage + 1)
     }
   }
