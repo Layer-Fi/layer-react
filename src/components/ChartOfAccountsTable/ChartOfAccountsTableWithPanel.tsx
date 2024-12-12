@@ -34,6 +34,7 @@ export const ChartOfAccountsTableWithPanel = ({
   asWidget = false,
   withDateControl = false,
   withExpandAllButton = false,
+  showAddAccountButton = true,
   stringOverrides,
   templateAccountsEditable,
 }: {
@@ -42,6 +43,7 @@ export const ChartOfAccountsTableWithPanel = ({
   asWidget?: boolean
   withDateControl?: boolean
   withExpandAllButton?: boolean
+  showAddAccountButton?: boolean
   stringOverrides?: ChartOfAccountsTableStringOverrides
   templateAccountsEditable?: boolean
 }) => {
@@ -109,16 +111,18 @@ export const ChartOfAccountsTableWithPanel = ({
             <AccountBalancesDownloadButton
               iconOnly={['mobile', 'tablet'].includes(view)}
             />
-            <Button
-              onClick={() => addAccount()}
-              disabled={isLoading}
-              iconOnly={['mobile', 'tablet'].includes(view)}
-              leftIcon={
-                ['mobile', 'tablet'].includes(view) && <PlusIcon size={14} />
-              }
-            >
-              {stringOverrides?.addAccountButtonText || 'Add Account'}
-            </Button>
+            {showAddAccountButton && (
+              <Button
+                onClick={() => addAccount()}
+                disabled={isLoading}
+                iconOnly={['mobile', 'tablet'].includes(view)}
+                leftIcon={
+                  ['mobile', 'tablet'].includes(view) && <PlusIcon size={14} />
+                }
+              >
+                {stringOverrides?.addAccountButtonText || 'Add Account'}
+              </Button>
+            )}
           </HeaderCol>
         </HeaderRow>
       </Header>
