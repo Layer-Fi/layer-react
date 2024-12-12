@@ -54,47 +54,69 @@ export const TasksListItem = ({
     if (task.user_response_type === 'UPLOAD_DOCUMENT') {
       if (task.status === 'TODO') {
         if (!selectedFiles) {
-          return <FileInput
-            onUpload={(files: File[]) => {
-              setSelectedFiles(files)
-            }}
-            text='Select file(s)'
-            allowMultipleUploads
-          />
-        } else {
-          return <Button
-            variant={ButtonVariant.secondary}
-            onClick={async () => {
-              await uploadDocumentsForTask(task.id, selectedFiles, userResponse)
-              setIsOpen(false)
-              goToNextPageIfAllComplete(task)
-              setSelectedFiles(undefined)
-            }}
-          >
-            Submit
-          </Button>
+          return (
+            <FileInput
+              onUpload={(files: File[]) => {
+                setSelectedFiles(files)
+              }}
+              text='Select file(s)'
+              allowMultipleUploads
+            />
+          )
         }
-      } else if (task.status === 'USER_MARKED_COMPLETED') {
+        else {
+          return (
+            <>
+              <Button
+                variant={ButtonVariant.secondary}
+                onClick={async () => {
+                  setSelectedFiles(undefined)
+                }}
+              >
+                Deselect Files
+              </Button>
+              <Button
+                variant={ButtonVariant.primary}
+                onClick={async () => {
+                  await uploadDocumentsForTask(task.id, selectedFiles, userResponse)
+                  setIsOpen(false)
+                  goToNextPageIfAllComplete(task)
+                  setSelectedFiles(undefined)
+                }}
+              >
+                Submit
+              </Button>
+            </>
+          )
+        }
+      }
+      else if (task.status === 'USER_MARKED_COMPLETED') {
         if (task.user_response && task.user_response != userResponse) {
-          return <Button
-            variant={ButtonVariant.secondary}
-            onClick={() => {
-              updateDocUploadTaskDescription(task.id, userResponse)
-            }}
-          >
-            Update
-          </Button>
-        } else {
-          return <Button
-            variant={ButtonVariant.secondary}
-            onClick={() => {
-              deleteUploadsForTask(task.id)
-            }}
-          >
-            Delete Uploads
-          </Button>
+          return (
+            <Button
+              variant={ButtonVariant.secondary}
+              onClick={() => {
+                updateDocUploadTaskDescription(task.id, userResponse)
+              }}
+            >
+              Update
+            </Button>
+          )
         }
-      } else { return null }
+        else {
+          return (
+            <Button
+              variant={ButtonVariant.secondary}
+              onClick={() => {
+                deleteUploadsForTask(task.id)
+              }}
+            >
+              Delete Uploads
+            </Button>
+          )
+        }
+      }
+      else { return null }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [task, selectedFiles, userResponse])
@@ -108,11 +130,13 @@ export const TasksListItem = ({
         >
           <div className={taskHeadClassName}>
             <div className='Layer__tasks-list-item__head-info__status'>
-              {isComplete(task.status) ? (
-                <Check size={12} />
-              ) : (
-                <AlertCircle size={12} />
-              )}
+              {isComplete(task.status)
+                ? (
+                  <Check size={12} />
+                )
+                : (
+                  <AlertCircle size={12} />
+                )}
             </div>
             <Text size={TextSize.md}>{task.title}</Text>
           </div>
@@ -131,45 +155,52 @@ export const TasksListItem = ({
               value={userResponse}
               placeholder={task.user_response_type === 'UPLOAD_DOCUMENT' ? 'Optional description' : ''}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                setUserResponse(e.target.value)
-              }
+                setUserResponse(e.target.value)}
             />
-            {task.user_response_type === 'UPLOAD_DOCUMENT' ? (
-              <div className='Layer__tasks-list__link-list'>
-                {selectedFiles ? (
-                  <div className='Layer__tasks-list__link-list-header'>Selected Files:</div>
-                ) : task.documents ? (
-                  <div className='Layer__tasks-list__link-list-header'>Uploaded Files:</div>
-                ) : null}
-                <ul className='Layer__tasks-list__links-list'>
-                  {task.documents?.map((document, idx) => (
-                    <li key={`uploaded-doc-name-${idx}`}><a className='Layer__tasks-list-item__link' href={document.presigned_url.presignedUrl}>{document.file_name}</a></li>
-                  ))}
-                  {selectedFiles?.map((file, idx) => (
-                    <li key={`selected-file-name-${idx}`}><a className='Layer__tasks-list-item__link'>{file.name}</a></li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
+            {task.user_response_type === 'UPLOAD_DOCUMENT'
+              ? (
+                <div className='Layer__tasks-list__link-list'>
+                  {selectedFiles
+                    ? (
+                      <div className='Layer__tasks-list__link-list-header'>Selected Files:</div>
+                    )
+                    : task.documents
+                      ? (
+                        <div className='Layer__tasks-list__link-list-header'>Uploaded Files:</div>
+                      )
+                      : null}
+                  <ul className='Layer__tasks-list__links-list'>
+                    {task.documents?.map((document, idx) => (
+                      <li key={`uploaded-doc-name-${idx}`}><a className='Layer__tasks-list-item__link' href={document.presigned_url.presignedUrl}>{document.file_name}</a></li>
+                    ))}
+                    {selectedFiles?.map((file, idx) => (
+                      <li key={`selected-file-name-${idx}`}><a className='Layer__tasks-list-item__link'>{file.name}</a></li>
+                    ))}
+                  </ul>
+                </div>
+              )
+              : null}
             <div className='Layer__tasks-list-item__actions'>
-              {task.user_response_type === 'UPLOAD_DOCUMENT' ? uploadDocumentAction : (
-                <Button
-                  disabled={
-                    userResponse.length === 0
-                    || userResponse === task.user_response
-                  }
-                  variant={ButtonVariant.secondary}
-                  onClick={() => {
-                    submitResponseToTask(task.id, userResponse)
-                    setIsOpen(false)
-                    goToNextPageIfAllComplete(task)
-                  }}
-                >
-                  {task.user_response && task.user_response !== userResponse
-                    ? 'Update'
-                    : 'Save'}
-                </Button>
-              )}
+              {task.user_response_type === 'UPLOAD_DOCUMENT'
+                ? uploadDocumentAction
+                : (
+                  <Button
+                    disabled={
+                      userResponse.length === 0
+                      || userResponse === task.user_response
+                    }
+                    variant={ButtonVariant.secondary}
+                    onClick={() => {
+                      submitResponseToTask(task.id, userResponse)
+                      setIsOpen(false)
+                      goToNextPageIfAllComplete(task)
+                    }}
+                  >
+                    {task.user_response && task.user_response !== userResponse
+                      ? 'Update'
+                      : 'Save'}
+                  </Button>
+                )}
             </div>
           </div>
         </div>
