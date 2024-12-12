@@ -83,11 +83,12 @@ export const ProfitAndLossTableComponent = ({
             withExpandIcon={expandable}
             fullWidth={!!setSidebarScope}
           >
-            {lineItem.display_name}{' '}
+            {lineItem.display_name}
+            {' '}
             {setSidebarScope && (
               <span
                 className='Layer__profit-and-loss-row__detailed-chart-btn'
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation()
                   setSidebarScope && setSidebarScope(scope ?? 'expenses')
                 }}
@@ -102,13 +103,13 @@ export const ProfitAndLossTableComponent = ({
         </TableRow>
         {expanded && lineItem.line_items
           ? lineItem.line_items.map((child, i) =>
-              renderLineItem(
-                child,
-                depth + 1,
-                child.display_name + '-' + rowIndex,
-                i,
-              ),
-            )
+            renderLineItem(
+              child,
+              depth + 1,
+              child.display_name + '-' + rowIndex,
+              i,
+            ),
+          )
           : null}
       </React.Fragment>
     )
@@ -179,16 +180,20 @@ export const ProfitAndLossTableComponent = ({
           undefined,
           'summation',
         )}
-        {data.personal_expenses ? (
-          <React.Fragment>
-            {renderLineItem(data.personal_expenses, 0, 'personal_expenses', 7)}
-          </React.Fragment>
-        ) : null}
-        {data.other_outflows ? (
-          <React.Fragment>
-            {renderLineItem(data.other_outflows, 0, 'other_outflows', 6)}
-          </React.Fragment>
-        ) : null}
+        {data.personal_expenses
+          ? (
+            <React.Fragment>
+              {renderLineItem(data.personal_expenses, 0, 'personal_expenses', 7)}
+            </React.Fragment>
+          )
+          : null}
+        {data.other_outflows
+          ? (
+            <React.Fragment>
+              {renderLineItem(data.other_outflows, 0, 'other_outflows', 6)}
+            </React.Fragment>
+          )
+          : null}
       </TableBody>
     </Table>
   )

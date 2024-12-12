@@ -43,7 +43,7 @@ export const mapCategoryToOption = (category: Category): Option => ({
 })
 
 export const flattenCategories = (categories: Category[]): Option[] => {
-  const categoryOptions = (categories || []).flatMap(category => {
+  const categoryOptions = (categories || []).flatMap((category) => {
     if (category?.subCategories && category?.subCategories?.length > 0) {
       if (category?.subCategories?.every(c => c.subCategories === undefined)) {
         return [
@@ -72,15 +72,15 @@ export const getAssignedValue = (
   bankTransaction: BankTransaction,
 ): Option | undefined => {
   if (
-    bankTransaction.categorization_status === CategorizationStatus.MATCHED ||
-    bankTransaction?.categorization_status === CategorizationStatus.SPLIT
+    bankTransaction.categorization_status === CategorizationStatus.MATCHED
+    || bankTransaction?.categorization_status === CategorizationStatus.SPLIT
   ) {
     return
   }
 
   if (
-    bankTransaction.category &&
-    bankTransaction.category.type != 'Exclusion'
+    bankTransaction.category
+    && bankTransaction.category.type != 'Exclusion'
   ) {
     return mapCategoryToOption(bankTransaction.category)
   }

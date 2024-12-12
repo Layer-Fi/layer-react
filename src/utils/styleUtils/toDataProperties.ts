@@ -13,9 +13,9 @@ export function toDataProperties<T extends Record<string, unknown>>(input: T) {
     Object.entries(input)
       .map(([key, value]) => {
         if (
-          typeof value !== 'string' &&
-          typeof value !== 'number' &&
-          value !== true
+          typeof value !== 'string'
+          && typeof value !== 'number'
+          && value !== true
         ) {
           return null
         }

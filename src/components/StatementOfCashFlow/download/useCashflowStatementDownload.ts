@@ -25,7 +25,7 @@ function buildKey({
       businessId,
       startDate,
       endDate,
-      tags: [ '#cashflow-statement', '#exports', '#csv' ]
+      tags: ['#cashflow-statement', '#exports', '#csv'],
     }
   }
 }
@@ -59,7 +59,7 @@ export function useCashflowStatementDownload({
           businessId,
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),
-        }
+        },
       })().then(({ data }) => {
       if (onSuccess) {
         return onSuccess(data)

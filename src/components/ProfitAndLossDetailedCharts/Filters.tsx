@@ -32,11 +32,11 @@ export const Filters = ({
         classNamePrefix='Layer__select'
         value={
           sidebarScope && filters[sidebarScope]?.types
-            ? sidebarScope &&
-              filters[sidebarScope]?.types?.map(x => ({
-                value: x,
-                label: x,
-              }))
+            ? sidebarScope
+            && filters[sidebarScope]?.types?.map(x => ({
+              value: x,
+              label: x,
+            }))
             : []
         }
         isMulti
@@ -45,9 +45,9 @@ export const Filters = ({
           [...new Set(filteredData?.map(x => x.type))].map(x => ({
             label: x,
             value: x,
-          })) as unknown as readonly { value: string; label: string }[]
+          })) as unknown as readonly { value: string, label: string }[]
         }
-        onChange={selected => {
+        onChange={(selected) => {
           setFilterTypes(
             sidebarScope ?? 'expenses',
             selected.map(x => x.value),

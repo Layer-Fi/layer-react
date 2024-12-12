@@ -61,7 +61,7 @@ export const ChartOfAccountsForm = ({
   return (
     <form
       className='Layer__form'
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault()
         submitForm()
       }}
@@ -88,7 +88,7 @@ export const ChartOfAccountsForm = ({
               <RetryButton
                 type='submit'
                 processing={sendingForm}
-                error={'Check connection and retry in few seconds.'}
+                error='Check connection and retry in few seconds.'
                 disabled={sendingForm}
               >
                 {stringOverrides?.retryButton || 'Retry'}
@@ -121,7 +121,8 @@ export const ChartOfAccountsForm = ({
         <div className='Layer__chart-of-accounts__form-edit-entry'>
           <Text weight={TextWeight.bold}>{entry.name}</Text>
           <Text weight={TextWeight.bold}>
-            ${centsToDollars(entry.balance || 0)}
+            $
+            {centsToDollars(entry.balance || 0)}
           </Text>
         </div>
       )}
@@ -152,8 +153,7 @@ export const ChartOfAccountsForm = ({
             errorMessage={form?.errors?.find(x => x.field === 'name')?.message}
             disabled={sendingForm}
             onChange={e =>
-              changeFormData('name', (e.target as HTMLInputElement).value)
-            }
+              changeFormData('name', (e.target as HTMLInputElement).value)}
           />
         </InputGroup>
         <InputGroup
@@ -168,9 +168,9 @@ export const ChartOfAccountsForm = ({
             isInvalid={Boolean(form?.errors?.find(x => x.field === 'type'))}
             errorMessage={form?.errors?.find(x => x.field === 'type')?.message}
             disabled={
-              sendingForm ||
-              form.action === 'edit' ||
-              form.data.parent !== undefined
+              sendingForm
+              || form.action === 'edit'
+              || form.data.parent !== undefined
             }
           />
         </InputGroup>
@@ -222,7 +222,7 @@ export const ChartOfAccountsForm = ({
             <RetryButton
               type='submit'
               processing={sendingForm}
-              error={'Check connection and retry in few seconds.'}
+              error='Check connection and retry in few seconds.'
               disabled={sendingForm}
             >
               {stringOverrides?.retryButton || 'Retry'}

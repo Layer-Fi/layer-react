@@ -34,7 +34,7 @@ export type BankTransactionsMode = 'bookkeeping-client' | 'self-serve'
 
 export const categorizationEnabled: (
   mode: BankTransactionsMode,
-) => boolean = mode => {
+) => boolean = (mode) => {
   if (mode === 'bookkeeping-client') {
     return false
   }
@@ -100,7 +100,7 @@ const BankTransactionsContent = ({
   hideHeader = false,
   stringOverrides,
 }: BankTransactionsProps) => {
-  const [ defaultDateRange ] = useState(() => ({
+  const [defaultDateRange] = useState(() => ({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   }))
@@ -161,25 +161,29 @@ const BankTransactionsContent = ({
           ...inputFilters,
           categorizationStatus: DisplayState.review,
         })
-      } else if (
-        !inputFilters?.categorizationStatus &&
-        !categorizationEnabled(mode)
+      }
+      else if (
+        !inputFilters?.categorizationStatus
+        && !categorizationEnabled(mode)
       ) {
         setFilters({
           ...filters,
           ...inputFilters,
           categorizationStatus: DisplayState.categorized,
         })
-      } else {
+      }
+      else {
         setFilters({ ...filters, ...inputFilters })
       }
-    } else if (!inputFilters?.categorizationStatus && categorizeView) {
+    }
+    else if (!inputFilters?.categorizationStatus && categorizeView) {
       setFilters({
         categorizationStatus: DisplayState.review,
       })
-    } else if (
-      !inputFilters?.categorizationStatus &&
-      !categorizationEnabled(mode)
+    }
+    else if (
+      !inputFilters?.categorizationStatus
+      && !categorizationEnabled(mode)
     ) {
       setFilters({
         categorizationStatus: DisplayState.categorized,
@@ -239,13 +243,15 @@ const BankTransactionsContent = ({
       if (newShift !== shiftStickyHeader) {
         debounceShiftStickyHeader(newShift)
       }
-    } else if (size?.height > 0 && shiftStickyHeader !== 0) {
+    }
+    else if (size?.height > 0 && shiftStickyHeader !== 0) {
       debounceShiftStickyHeader(0)
     }
 
     if (size.width > BREAKPOINTS.TABLET && listView) {
       setListView(false)
-    } else if (size.width <= BREAKPOINTS.TABLET && !listView) {
+    }
+    else if (size.width <= BREAKPOINTS.TABLET && !listView) {
       setListView(true)
     }
 
@@ -256,9 +262,9 @@ const BankTransactionsContent = ({
     display === DisplayState.review || display === DisplayState.all
 
   const isLastPage =
-    data &&
-    !hasMore &&
-    Math.ceil((data?.length || 0) / pageSize) === currentPage
+    data
+    && !hasMore
+    && Math.ceil((data?.length || 0) / pageSize) === currentPage
 
   return (
     <Container
@@ -284,7 +290,7 @@ const BankTransactionsContent = ({
           withDatePicker={monthlyView}
           listView={listView}
           dateRange={{ ...defaultDateRange, ...filters?.dateRange }}
-          setDateRange={v => {
+          setDateRange={(v) => {
             if (monthlyView) {
               setFilters({ ...filters, dateRange: v })
             }
@@ -318,49 +324,57 @@ const BankTransactionsContent = ({
         </div>
       )}
 
-      {!isLoading && listView && mobileComponent !== 'mobileList' ? (
-        <BankTransactionList
-          mode={mode}
-          bankTransactions={bankTransactions}
-          editable={editable}
-          removeTransaction={removeTransaction}
-          containerWidth={containerWidth}
-          stringOverrides={stringOverrides?.bankTransactionCTAs}
-          showDescriptions={showDescriptions}
-          showReceiptUploads={showReceiptUploads}
-          showTooltips={showTooltips}
-        />
-      ) : null}
+      {!isLoading && listView && mobileComponent !== 'mobileList'
+        ? (
+          <BankTransactionList
+            mode={mode}
+            bankTransactions={bankTransactions}
+            editable={editable}
+            removeTransaction={removeTransaction}
+            containerWidth={containerWidth}
+            stringOverrides={stringOverrides?.bankTransactionCTAs}
+            showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
+          />
+        )
+        : null}
 
-      {!isLoading && listView && mobileComponent === 'mobileList' ? (
-        <BankTransactionMobileList
-          bankTransactions={bankTransactions}
-          editable={editable}
-          mode={mode}
-          removeTransaction={removeTransaction}
-          initialLoad={initialLoad}
-          showTooltips={showTooltips}
-          showReceiptUploads={showReceiptUploads}
-          showDescriptions={showDescriptions}
-        />
-      ) : null}
+      {!isLoading && listView && mobileComponent === 'mobileList'
+        ? (
+          <BankTransactionMobileList
+            bankTransactions={bankTransactions}
+            editable={editable}
+            mode={mode}
+            removeTransaction={removeTransaction}
+            initialLoad={initialLoad}
+            showTooltips={showTooltips}
+            showReceiptUploads={showReceiptUploads}
+            showDescriptions={showDescriptions}
+          />
+        )
+        : null}
 
-      {listView && isLoading ? (
-        <div className='Layer__bank-transactions__list-loader'>
-          <Loader />
-        </div>
-      ) : null}
+      {listView && isLoading
+        ? (
+          <div className='Layer__bank-transactions__list-loader'>
+            <Loader />
+          </div>
+        )
+        : null}
 
-      {!isSyncing || listView ? (
-        <DataStates
-          bankTransactions={bankTransactions}
-          isLoading={isLoading}
-          isValidating={isValidating}
-          error={error}
-          refetch={refetch}
-          editable={editable}
-        />
-      ) : null}
+      {!isSyncing || listView
+        ? (
+          <DataStates
+            bankTransactions={bankTransactions}
+            isLoading={isLoading}
+            isValidating={isValidating}
+            error={error}
+            refetch={refetch}
+            editable={editable}
+          />
+        )
+        : null}
 
       {!monthlyView && (
         <div className='Layer__bank-transactions__pagination'>

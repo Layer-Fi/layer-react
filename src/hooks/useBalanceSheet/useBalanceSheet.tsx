@@ -24,10 +24,10 @@ export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
   const dateString = format(startOfDay(date), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
 
   const queryKey =
-    businessId &&
-    dateString &&
-    auth?.access_token &&
-    `balance-sheet-${businessId}-${dateString}`
+    businessId
+    && dateString
+    && auth?.access_token
+    && `balance-sheet-${businessId}-${dateString}`
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,

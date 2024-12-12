@@ -15,7 +15,8 @@ const DrawerBackground = ({
       isOpen ? 'open' : ''
     }`}
     onClick={onClose}
-  ></div>
+  >
+  </div>
 )
 
 export const Drawer = ({

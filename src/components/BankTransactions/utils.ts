@@ -13,9 +13,9 @@ export const filterVisibility = (
   )
 
   return (
-    scope === DisplayState.all ||
-    (scope === DisplayState.review && inReview) ||
-    (scope === DisplayState.categorized && categorized)
+    scope === DisplayState.all
+    || (scope === DisplayState.review && inReview)
+    || (scope === DisplayState.categorized && categorized)
   )
 }
 

@@ -93,14 +93,18 @@ const BankTransactionReceipts = forwardRef<
 
     return (
       <div className={`${classNamePrefix}__file-upload`}>
-        {receiptUrls && receiptUrls.length > 0 && label ? (
-          <Text size={TextSize.sm} className='Layer__file-upload__label'>
-            {label}
-          </Text>
-        ) : null}
-        {!hideUploadButtons && (!receiptUrls || receiptUrls.length === 0) ? (
-          <FileInput onUpload={(files) => uploadReceipt(files[0])} text='Upload receipt' />
-        ) : null}
+        {receiptUrls && receiptUrls.length > 0 && label
+          ? (
+            <Text size={TextSize.sm} className='Layer__file-upload__label'>
+              {label}
+            </Text>
+          )
+          : null}
+        {!hideUploadButtons && (!receiptUrls || receiptUrls.length === 0)
+          ? (
+            <FileInput onUpload={files => uploadReceipt(files[0])} text='Upload receipt' />
+          )
+          : null}
         {receiptUrls.map((url, index) => (
           <FileThumb
             key={index}
@@ -124,13 +128,15 @@ const BankTransactionReceipts = forwardRef<
         ))}
         {!hideUploadButtons
         && receiptUrls.length > 0
-        && receiptUrls.length < MAX_RECEIPTS_COUNT ? (
+        && receiptUrls.length < MAX_RECEIPTS_COUNT
+          ? (
             <FileInput
               secondary
-              onUpload={(files) => uploadReceipt(files[0])}
+              onUpload={files => uploadReceipt(files[0])}
               text='Add next receipt'
             />
-          ) : null}
+          )
+          : null}
       </div>
     )
   },

@@ -43,7 +43,7 @@ export const Pagination = ({
   return (
     <ul className='Layer__pagination'>
       <li
-        key={'page-prev'}
+        key='page-prev'
         className={classnames(
           'Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--previous',
           {
@@ -85,17 +85,19 @@ export const Pagination = ({
           </li>
         )
       })}
-      {hasMore && fetchMore ? (
-        <li
-          key={'page-has-more'}
-          className='Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--next'
-          onClick={fetchMore}
-        >
-          ...
-        </li>
-      ) : null}
+      {hasMore && fetchMore
+        ? (
+          <li
+            key='page-has-more'
+            className='Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--next'
+            onClick={fetchMore}
+          >
+            ...
+          </li>
+        )
+        : null}
       <li
-        key={'page-last'}
+        key='page-last'
         className={classnames(
           'Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--next',
           {

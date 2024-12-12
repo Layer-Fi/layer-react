@@ -42,30 +42,34 @@ export const ActionableList = <T,>({
           <div className='Layer__actionable-list__content'>
             <Text size={TextSize.sm}>{x.label}</Text>
             {
-              /*TODO: Replace 'See all categories' with something more generic*/
-              showDescriptions &&
-                x.description &&
-                x.label !== 'See all categories' && (
-                  <Text
-                    className='Layer__actionable-list__content-description'
-                    size={TextSize.sm}
-                  >
-                    {x.description}
-                  </Text>
-                )
+              /* TODO: Replace 'See all categories' with something more generic */
+              showDescriptions
+              && x.description
+              && x.label !== 'See all categories' && (
+                <Text
+                  className='Layer__actionable-list__content-description'
+                  size={TextSize.sm}
+                >
+                  {x.description}
+                </Text>
+              )
             }
           </div>
-          {!x.asLink && selectedId && selectedId === x.id ? (
-            <span className='Layer__actionable-list__select Layer__actionable-list__select--selected'>
-              <CheckIcon
-                size={14}
-                className='Layer__actionable-list__selected-icon'
-              />
-            </span>
-          ) : null}
-          {!x.asLink && (!selectedId || selectedId !== x.id) ? (
-            <span className='Layer__actionable-list__select' />
-          ) : null}
+          {!x.asLink && selectedId && selectedId === x.id
+            ? (
+              <span className='Layer__actionable-list__select Layer__actionable-list__select--selected'>
+                <CheckIcon
+                  size={14}
+                  className='Layer__actionable-list__selected-icon'
+                />
+              </span>
+            )
+            : null}
+          {!x.asLink && (!selectedId || selectedId !== x.id)
+            ? (
+              <span className='Layer__actionable-list__select' />
+            )
+            : null}
           {x.asLink && (
             <ChevronRight
               size={16}

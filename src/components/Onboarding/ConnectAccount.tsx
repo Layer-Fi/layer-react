@@ -50,14 +50,14 @@ export const ConnectAccount = ({
           iconBox={<PlaidIcon />}
           title='Connect accounts'
           description='Import data with one simple integration.'
-          button={
+          button={(
             <Button
               onClick={() => addConnection('PLAID')}
               rightIcon={<LinkIcon size={12} />}
             >
               Connect
             </Button>
-          }
+          )}
         />
       </>
     )
@@ -71,25 +71,30 @@ export const ConnectAccount = ({
         title='Account linked successfully'
         description='Your transactions are now available on the platform, to see all data on the charts, categorise transactions.'
       />
-      {onTransactionsToReviewClick && transactionsToReview > 0 ? (
-        <ActionableRow
-          icon={<FolderIcon size={12} />}
-          title={
-            <Text>
-              Categorise transactions{' '}
-              <Badge
-                variant={BadgeVariant.WARNING}
-                size={BadgeSize.SMALL}
-                icon={<BellIcon size={12} />}
-              >
-                {transactionsToReview} pending
-              </Badge>
-            </Text>
-          }
-          description='Once your data is on the platform categorize them in Bank Transactions tab'
-          onClick={() => onTransactionsToReviewClick()}
-        />
-      ) : null}
+      {onTransactionsToReviewClick && transactionsToReview > 0
+        ? (
+          <ActionableRow
+            icon={<FolderIcon size={12} />}
+            title={(
+              <Text>
+                Categorise transactions
+                {' '}
+                <Badge
+                  variant={BadgeVariant.WARNING}
+                  size={BadgeSize.SMALL}
+                  icon={<BellIcon size={12} />}
+                >
+                  {transactionsToReview}
+                  {' '}
+                  pending
+                </Badge>
+              </Text>
+            )}
+            description='Once your data is on the platform categorize them in Bank Transactions tab'
+            onClick={() => onTransactionsToReviewClick()}
+          />
+        )
+        : null}
     </>
   )
 }

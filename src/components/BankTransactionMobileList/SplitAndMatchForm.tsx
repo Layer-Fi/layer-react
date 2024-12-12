@@ -50,20 +50,24 @@ export const SplitAndMatchForm = ({
           showDescriptions={showDescriptions}
         />
       )}
-      {anyMatch && formType === Purpose.match ? (
-        <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>
-          <TextButton onClick={() => setFormType(Purpose.categorize)}>
-            or split transaction
-          </TextButton>
-        </div>
-      ) : null}
-      {anyMatch && formType === Purpose.categorize ? (
-        <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>
-          <TextButton onClick={() => setFormType(Purpose.match)}>
-            or find match
-          </TextButton>
-        </div>
-      ) : null}
+      {anyMatch && formType === Purpose.match
+        ? (
+          <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>
+            <TextButton onClick={() => setFormType(Purpose.categorize)}>
+              or split transaction
+            </TextButton>
+          </div>
+        )
+        : null}
+      {anyMatch && formType === Purpose.categorize
+        ? (
+          <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>
+            <TextButton onClick={() => setFormType(Purpose.match)}>
+              or find match
+            </TextButton>
+          </div>
+        )
+        : null}
     </div>
   )
 }

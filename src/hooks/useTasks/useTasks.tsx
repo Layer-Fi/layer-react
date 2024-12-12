@@ -29,7 +29,7 @@ type UseTasks = (props?: UseTasksProps) => {
 }
 
 type UseTasksProps = {
-  startDate?: Date,
+  startDate?: Date
   endDate?: Date
 }
 
@@ -37,7 +37,7 @@ const DEBUG_MODE = false
 
 export const useTasks: UseTasks = ({
   startDate: initialStartDate = startOfYear(new Date()),
-  endDate: initialEndDate = endOfYear(new Date())
+  endDate: initialEndDate = endOfYear(new Date()),
 }: UseTasksProps = {}) => {
   const [loadedStatus, setLoadedStatus] = useState<LoadedStatus>('initial')
 
@@ -48,7 +48,7 @@ export const useTasks: UseTasks = ({
 
   const [dateRange, setDateRange] = useState({
     startDate: initialStartDate,
-    endDate: initialEndDate
+    endDate: initialEndDate,
   })
   const [currentDate, setCurrentDate] = useState(new Date())
 
@@ -107,7 +107,8 @@ export const useTasks: UseTasks = ({
   useEffect(() => {
     if (isLoading && loadedStatus === 'initial') {
       setLoadedStatus('loading')
-    } else if (!isLoading && loadedStatus === 'loading') {
+    }
+    else if (!isLoading && loadedStatus === 'loading') {
       setLoadedStatus('complete')
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,7 +125,7 @@ export const useTasks: UseTasks = ({
       businessId,
       taskId,
       files,
-      description
+      description,
     }).then(refetch)
   }
 

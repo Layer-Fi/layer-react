@@ -80,7 +80,7 @@ const BalanceSheetView = ({
           <View
             type='panel'
             ref={containerRef}
-            header={
+            header={(
               <Header>
                 <HeaderRow>
                   <HeaderCol>
@@ -96,19 +96,21 @@ const BalanceSheetView = ({
                   )}
                 </HeaderRow>
               </Header>
-            }
-          >
-            {!data || isLoading ? (
-              <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-                <Loader />
-              </div>
-            ) : (
-              <BalanceSheetTable
-                data={data}
-                config={BALANCE_SHEET_ROWS}
-                stringOverrides={stringOverrides?.balanceSheetTable}
-              />
             )}
+          >
+            {!data || isLoading
+              ? (
+                <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
+                  <Loader />
+                </div>
+              )
+              : (
+                <BalanceSheetTable
+                  data={data}
+                  config={BALANCE_SHEET_ROWS}
+                  stringOverrides={stringOverrides?.balanceSheetTable}
+                />
+              )}
           </View>
         </Container>
       </TableProvider>
@@ -120,7 +122,7 @@ const BalanceSheetView = ({
       <View
         type='panel'
         ref={containerRef}
-        header={
+        header={(
           <Header>
             <HeaderRow>
               <HeaderCol>
@@ -140,19 +142,21 @@ const BalanceSheetView = ({
               </HeaderCol>
             </HeaderRow>
           </Header>
-        }
-      >
-        {!data || isLoading ? (
-          <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-            <Loader />
-          </div>
-        ) : (
-          <BalanceSheetTable
-            data={data}
-            config={BALANCE_SHEET_ROWS}
-            stringOverrides={stringOverrides?.balanceSheetTable}
-          />
         )}
+      >
+        {!data || isLoading
+          ? (
+            <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
+              <Loader />
+            </div>
+          )
+          : (
+            <BalanceSheetTable
+              data={data}
+              config={BALANCE_SHEET_ROWS}
+              stringOverrides={stringOverrides?.balanceSheetTable}
+            />
+          )}
       </View>
     </TableProvider>
   )

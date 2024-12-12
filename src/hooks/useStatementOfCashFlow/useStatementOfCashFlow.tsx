@@ -34,11 +34,11 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = (
   const endDateString = format(startOfDay(endDate), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
 
   const queryKey =
-    businessId &&
-    startDateString &&
-    endDateString &&
-    auth?.access_token &&
-    `statement-of-cash-${businessId}-${startDateString}-${endDateString}`
+    businessId
+    && startDateString
+    && endDateString
+    && auth?.access_token
+    && `statement-of-cash-${businessId}-${startDateString}-${endDateString}`
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,

@@ -80,11 +80,11 @@ export const Toggle = ({
     }
 
     const optionsNodes = [...toggleRef.current.children]
-      .map(x => {
+      .map((x) => {
         if (
-          x.className.includes('Layer__tooltip-trigger') &&
-          x.children &&
-          x.children.length > 0
+          x.className.includes('Layer__tooltip-trigger')
+          && x.children
+          && x.children.length > 0
         ) {
           return x.children[0]
         }
@@ -99,7 +99,8 @@ export const Toggle = ({
     optionsNodes.forEach((c, i) => {
       if (i < active) {
         shift = shift + (c as HTMLElement).offsetWidth
-      } else if (i === active) {
+      }
+      else if (i === active) {
         width = (c as HTMLElement).offsetWidth
       }
     })
@@ -172,7 +173,7 @@ const ToggleOption = ({
       <Tooltip>
         <TooltipTrigger>
           <label
-            className={'Layer__toggle-option'}
+            className='Layer__toggle-option'
             data-checked={checked}
             style={style}
           >
@@ -202,7 +203,7 @@ const ToggleOption = ({
 
   return (
     <label
-      className={'Layer__toggle-option'}
+      className='Layer__toggle-option'
       data-checked={checked}
       style={style}
     >

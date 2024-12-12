@@ -46,7 +46,8 @@ export const MatchFormMobile = ({
                   className={`${classNamePrefix}__match-item__amount`}
                   as='span'
                 >
-                  ${formatMoney(match.details.amount)}
+                  $
+                  {formatMoney(match.details.amount)}
                 </Text>
               </div>
               <div className={`${classNamePrefix}__match-item__details`}>
@@ -61,12 +62,14 @@ export const MatchFormMobile = ({
             </div>
 
             <div className={`${classNamePrefix}__match-item__col-status`}>
-              {selectedMatchId && selectedMatchId === match.id ? (
-                <CheckIcon
-                  size={16}
-                  className={`${classNamePrefix}__match-item__selected-icon`}
-                />
-              ) : null}
+              {selectedMatchId && selectedMatchId === match.id
+                ? (
+                  <CheckIcon
+                    size={16}
+                    className={`${classNamePrefix}__match-item__selected-icon`}
+                  />
+                )
+                : null}
             </div>
           </div>
         )

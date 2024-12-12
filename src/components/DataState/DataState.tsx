@@ -78,11 +78,13 @@ export const DataState = ({
           <Button
             variant={ButtonVariant.secondary}
             rightIcon={
-              isLoading ? (
-                <Loader size={14} className='Layer__anim--rotating' />
-              ) : (
-                <RefreshCcw size={12} />
-              )
+              isLoading
+                ? (
+                  <Loader size={14} className='Layer__anim--rotating' />
+                )
+                : (
+                  <RefreshCcw size={12} />
+                )
             }
             onClick={onRefresh}
             disabled={isLoading}

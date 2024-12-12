@@ -57,11 +57,11 @@ export const BankTransactionsTable = ({
   onRefresh,
 }: BankTransactionsTableProps) => {
   const showReceiptColumn =
-    (showReceiptUploads &&
-      bankTransactions?.some(
+    (showReceiptUploads
+      && bankTransactions?.some(
         transaction => transaction.document_ids?.length > 0,
-      )) ??
-    false
+      ))
+      ?? false
 
   const showReceiptDataProperties = useMemo(
     () => toDataProperties({ showReceiptUploadColumn: showReceiptColumn }),
@@ -79,75 +79,81 @@ export const BankTransactionsTable = ({
             {stringOverrides?.transactionsTable?.dateColumnHeaderText || 'Date'}
           </th>
           <th className='Layer__table-header Layer__bank-transactions__tx-col'>
-            {stringOverrides?.transactionsTable?.transactionColumnHeaderText ||
-              'Transaction'}
+            {stringOverrides?.transactionsTable?.transactionColumnHeaderText
+            || 'Transaction'}
           </th>
           <th className='Layer__table-header Layer__bank-transactions__account-col'>
-            {stringOverrides?.transactionsTable?.accountColumnHeaderText ||
-              'Account'}
+            {stringOverrides?.transactionsTable?.accountColumnHeaderText
+            || 'Account'}
           </th>
           <th
             className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'
             {...showReceiptDataProperties}
           >
-            {stringOverrides?.transactionsTable?.amountColumnHeaderText ||
-              'Amount'}
+            {stringOverrides?.transactionsTable?.amountColumnHeaderText
+            || 'Amount'}
           </th>
           <th
             className='Layer__table-header Layer__bank-transactions__documents-col'
             {...showReceiptDataProperties}
           />
-          {categorizeView && editable ? (
-            <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
-              {stringOverrides?.transactionsTable?.categorizeColumnHeaderText ||
-                'Categorize'}
-            </th>
-          ) : (
-            <th className='Layer__table-header Layer__table-cell__category-col'>
-              {stringOverrides?.transactionsTable?.categoryColumnHeaderText ||
-                'Category'}
-            </th>
-          )}
+          {categorizeView && editable
+            ? (
+              <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
+                {stringOverrides?.transactionsTable?.categorizeColumnHeaderText
+                || 'Categorize'}
+              </th>
+            )
+            : (
+              <th className='Layer__table-header Layer__table-cell__category-col'>
+                {stringOverrides?.transactionsTable?.categoryColumnHeaderText
+                || 'Category'}
+              </th>
+            )}
         </tr>
       </thead>
-      {isLoading && page && page === 1 ? (
-        <BankTransactionsLoader isLoading={true} showTooltips={showTooltips} />
-      ) : null}
+      {isLoading && page && page === 1
+        ? (
+          <BankTransactionsLoader isLoading={true} showTooltips={showTooltips} />
+        )
+        : null}
       <tbody>
-        {!isLoading &&
-          bankTransactions?.map(
-            (bankTransaction: BankTransaction, index: number) => (
-              <BankTransactionRow
-                initialLoad={initialLoad}
-                index={index}
-                editable={editable}
-                mode={mode}
-                key={bankTransaction.id}
-                dateFormat={DATE_FORMAT}
-                bankTransaction={bankTransaction}
-                removeTransaction={removeTransaction}
-                containerWidth={containerWidth}
-                showDescriptions={showDescriptions}
-                showReceiptUploads={showReceiptUploads}
-                showReceiptUploadColumn={showReceiptColumn}
-                showTooltips={showTooltips}
-                stringOverrides={stringOverrides?.bankTransactionCTAs}
-              />
-            ),
-          )}
-        {isSyncing &&
-        (lastPage ||
-          ((!bankTransactions || bankTransactions.length === 0) &&
-            page === 1)) ? (
-          <tr>
-            <td colSpan={3}>
-              <SyncingComponent
-                title='Syncing historical account data'
-                onRefresh={() => onRefresh && onRefresh()}
-              />
-            </td>
-          </tr>
-        ) : null}
+        {!isLoading
+        && bankTransactions?.map(
+          (bankTransaction: BankTransaction, index: number) => (
+            <BankTransactionRow
+              initialLoad={initialLoad}
+              index={index}
+              editable={editable}
+              mode={mode}
+              key={bankTransaction.id}
+              dateFormat={DATE_FORMAT}
+              bankTransaction={bankTransaction}
+              removeTransaction={removeTransaction}
+              containerWidth={containerWidth}
+              showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showReceiptUploadColumn={showReceiptColumn}
+              showTooltips={showTooltips}
+              stringOverrides={stringOverrides?.bankTransactionCTAs}
+            />
+          ),
+        )}
+        {isSyncing
+        && (lastPage
+          || ((!bankTransactions || bankTransactions.length === 0)
+            && page === 1))
+          ? (
+            <tr>
+              <td colSpan={3}>
+                <SyncingComponent
+                  title='Syncing historical account data'
+                  onRefresh={() => onRefresh && onRefresh()}
+                />
+              </td>
+            </tr>
+          )
+          : null}
       </tbody>
     </table>
   )

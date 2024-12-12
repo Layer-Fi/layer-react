@@ -8,32 +8,32 @@ import {
 
 export const LayerContext = createContext<
   LayerContextValues &
-    LayerContextHelpers & { setTheme: (theme: LayerThemeConfig) => void }
+  LayerContextHelpers & { setTheme: (theme: LayerThemeConfig) => void }
 >({
-  businessId: '',
-  business: undefined,
-  categories: [],
-  theme: undefined,
-  colors: {},
-  setTheme: () => undefined,
-  getColor: _shade => undefined,
-  setLightColor: () => undefined,
-  setDarkColor: () => undefined,
-  setTextColor: () => undefined,
-  setColors: () => undefined,
-  onboardingStep: undefined,
-  setOnboardingStep: () => undefined,
-  toasts: [],
-  addToast: (_toast: ToastProps) => undefined,
-  removeToast: () => undefined,
-  onError: () => undefined,
-  touch: () => undefined,
-  read: () => undefined,
-  syncTimestamps: {},
-  readTimestamps: {},
-  hasBeenTouched: () => false,
-  expireDataCaches: () => undefined,
-  eventCallbacks: {},
-})
+      businessId: '',
+      business: undefined,
+      categories: [],
+      theme: undefined,
+      colors: {},
+      setTheme: () => undefined,
+      getColor: _shade => undefined,
+      setLightColor: () => undefined,
+      setDarkColor: () => undefined,
+      setTextColor: () => undefined,
+      setColors: () => undefined,
+      onboardingStep: undefined,
+      setOnboardingStep: () => undefined,
+      toasts: [],
+      addToast: (_toast: ToastProps) => undefined,
+      removeToast: () => undefined,
+      onError: () => undefined,
+      touch: () => undefined,
+      read: () => undefined,
+      syncTimestamps: {},
+      readTimestamps: {},
+      hasBeenTouched: () => false,
+      expireDataCaches: () => undefined,
+      eventCallbacks: {},
+    })
 
 export const useLayerContext = () => useContext(LayerContext)

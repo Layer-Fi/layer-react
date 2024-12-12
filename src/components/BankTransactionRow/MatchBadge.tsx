@@ -19,15 +19,15 @@ export const MatchBadge = ({
   text = 'Match',
 }: MatchBadgeProps) => {
   if (
-    bankTransaction.categorization_status === CategorizationStatus.MATCHED &&
-    bankTransaction.match
+    bankTransaction.categorization_status === CategorizationStatus.MATCHED
+    && bankTransaction.match
   ) {
     const { date, amount } = bankTransaction.match.bank_transaction
 
     return (
       <Badge
         icon={<MinimizeTwo size={11} />}
-        tooltip={
+        tooltip={(
           <span className={`${classNamePrefix}__match-tooltip`}>
             <div className={`${classNamePrefix}__match-tooltip__date`}>
               {formatTime(parseISO(date), dateFormat)}
@@ -36,10 +36,11 @@ export const MatchBadge = ({
               {bankTransaction.match?.details?.description ?? ''}
             </div>
             <div className={`${classNamePrefix}__match-tooltip__amount`}>
-              ${formatMoney(amount)}
+              $
+              {formatMoney(amount)}
             </div>
           </span>
-        }
+        )}
       >
         {text}
       </Badge>

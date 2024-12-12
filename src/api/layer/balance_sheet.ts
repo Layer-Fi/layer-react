@@ -31,7 +31,5 @@ export const getBalanceSheetCSV = get<
     const parameters = toDefinedSearchParameters({ effectiveDate })
 
     return `/v1/businesses/${businessId}/reports/balance-sheet/exports/csv?${parameters}`
-  }
+  },
 )
-
-

@@ -31,33 +31,37 @@ export const DataStates = ({
 
   return (
     <>
-      {!isLoading &&
-      !error &&
-      (bankTransactions === undefined ||
-        (bankTransactions !== undefined && bankTransactions.length === 0)) ? (
-        <div className='Layer__table-state-container'>
-          <DataState
-            status={isLoading ? DataStateStatus.info : DataStateStatus.allDone}
-            title={title}
-            description={description}
-            onRefresh={showRefreshButton ? refetch : undefined}
-            isLoading={isValidating}
-            icon={!editable ? <InboxIcon /> : undefined}
-          />
-        </div>
-      ) : null}
+      {!isLoading
+      && !error
+      && (bankTransactions === undefined
+        || (bankTransactions !== undefined && bankTransactions.length === 0))
+        ? (
+          <div className='Layer__table-state-container'>
+            <DataState
+              status={isLoading ? DataStateStatus.info : DataStateStatus.allDone}
+              title={title}
+              description={description}
+              onRefresh={showRefreshButton ? refetch : undefined}
+              isLoading={isValidating}
+              icon={!editable ? <InboxIcon /> : undefined}
+            />
+          </div>
+        )
+        : null}
 
-      {!isLoading && error ? (
-        <div className='Layer__table-state-container'>
-          <DataState
-            status={DataStateStatus.failed}
-            title='Something went wrong'
-            description='We couldn’t load your data.'
-            onRefresh={refetch}
-            isLoading={isValidating}
-          />
-        </div>
-      ) : null}
+      {!isLoading && error
+        ? (
+          <div className='Layer__table-state-container'>
+            <DataState
+              status={DataStateStatus.failed}
+              title='Something went wrong'
+              description='We couldn’t load your data.'
+              onRefresh={refetch}
+              isLoading={isValidating}
+            />
+          </div>
+        )
+        : null}
     </>
   )
 }

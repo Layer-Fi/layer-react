@@ -47,13 +47,13 @@ export const BankTransactionsLoader = ({
       cols={
         isLoading
           ? [
-              { colSpan: 5, trimLastXRows: 4 },
-              { colSpan: 1, parts: 2 },
-            ]
+            { colSpan: 5, trimLastXRows: 4 },
+            { colSpan: 1, parts: 2 },
+          ]
           : [
-              { colSpan: 4 },
-              { colSpan: 1, colComponent: inactiveBankTransactionsActions },
-            ]
+            { colSpan: 4 },
+            { colSpan: 1, colComponent: inactiveBankTransactionsActions },
+          ]
       }
       height={20}
     />

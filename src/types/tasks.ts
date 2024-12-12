@@ -3,7 +3,7 @@ import { S3PresignedUrl } from './general'
 
 type Document = {
   document_type: DocumentType
-  file_name: string,
+  file_name: string
   presigned_url: S3PresignedUrl
   // add the other fields if/when necessary
 }

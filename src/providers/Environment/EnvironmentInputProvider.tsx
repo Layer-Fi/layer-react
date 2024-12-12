@@ -18,7 +18,7 @@ export function useEnvironment() {
     apiUrl,
     authUrl,
     scope,
-    usePlaidSandbox: defaultUsePlaidSandbox
+    usePlaidSandbox: defaultUsePlaidSandbox,
   } = EnvironmentConfigs[environment]
 
   return {
@@ -26,7 +26,7 @@ export function useEnvironment() {
     apiUrl,
     authUrl,
     scope,
-    usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox
+    usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox,
   }
 }
 

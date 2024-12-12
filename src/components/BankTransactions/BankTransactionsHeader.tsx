@@ -69,12 +69,15 @@ const DownloadButton = ({
       if (result?.data?.presignedUrl) {
         window.location.href = result.data.presignedUrl
         setRequestFailed(false)
-      } else {
+      }
+      else {
         setRequestFailed(true)
       }
-    } catch (e) {
+    }
+    catch (e) {
       setRequestFailed(true)
-    } finally {
+    }
+    finally {
       setIsDownloading(false)
     }
   }
@@ -134,21 +137,23 @@ export const BankTransactionsHeader = ({
             />
           )}
         </div>
-        {withDatePicker && dateRange && setDateRange ? (
-          <DatePicker
-            mode='monthPicker'
-            selected={dateRange.startDate}
-            onChange={date => {
-              if (!Array.isArray(date)) {
-                setDateRange({
-                  startDate: startOfMonth(date),
-                  endDate: endOfMonth(date),
-                })
-              }
-            }}
-            minDate={getEarliestDateToBrowse(business)}
-          />
-        ) : null}
+        {withDatePicker && dateRange && setDateRange
+          ? (
+            <DatePicker
+              mode='monthPicker'
+              selected={dateRange.startDate}
+              onChange={(date) => {
+                if (!Array.isArray(date)) {
+                  setDateRange({
+                    startDate: startOfMonth(date),
+                    endDate: endOfMonth(date),
+                  })
+                }
+              }}
+              minDate={getEarliestDateToBrowse(business)}
+            />
+          )
+          : null}
       </div>
       <div className='Layer__header__actions-wrapper'>
         <div className='Layer__header__actions Layer__justify--space-between'>

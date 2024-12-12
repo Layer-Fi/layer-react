@@ -26,32 +26,32 @@ function ModalContextBar({ onClose }: ModalContextBarProps) {
   )
 }
 
-
 const ModalHeading = forwardRef<
   HTMLHeadingElement,
   Omit<ComponentProps<typeof Heading>, 'level' | 'slot'>
->((props, ref) =>
+>((props, ref) => (
   <Heading
     {...props}
     slot='title'
     level={2}
     ref={ref}
   />
+),
 )
 ModalHeading.displayName = 'ModalHeading'
 
 const ModalDescription = forwardRef<
   HTMLParagraphElement,
   Omit<ComponentProps<typeof P>, 'slot'>
->((props, ref) =>
+>((props, ref) => (
   <P
     {...props}
     slot='description'
     ref={ref}
   />
+),
 )
 ModalDescription.displayName = 'ModalDescription'
-
 
 const MODAL_CONTENT_CLASS_NAME = 'Layer__ModalContent'
 

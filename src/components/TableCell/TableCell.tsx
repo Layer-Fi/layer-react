@@ -57,7 +57,8 @@ export const TableCell = ({
             size={16}
           />
         )}
-        {isCurrency ? amountString : children}{' '}
+        {isCurrency ? amountString : children}
+        {' '}
       </span>
     </td>
   )

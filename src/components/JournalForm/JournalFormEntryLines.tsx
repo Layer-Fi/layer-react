@@ -54,7 +54,11 @@ export const JournalFormEntryLines = ({
               className='Layer__journal__form__input-group__title'
               size={TextSize.lg}
             >
-              Add {humanizeEnum(direction)} Account
+              Add
+              {' '}
+              {humanizeEnum(direction)}
+              {' '}
+              Account
             </Text>
             {entrylineItems?.map((item, idx) => {
               if (item.direction !== direction) {
@@ -84,8 +88,7 @@ export const JournalFormEntryLines = ({
                             (e.target as HTMLInputElement).value,
                           ),
                           idx,
-                        )
-                      }
+                        )}
                       isInvalid={Boolean(
                         form?.errors?.lineItems.find(
                           x => x.id === idx && x.field === 'amount',
@@ -115,8 +118,7 @@ export const JournalFormEntryLines = ({
                           sel,
                           idx,
                           accountsData?.accounts,
-                        )
-                      }
+                        )}
                       isInvalid={Boolean(
                         form?.errors?.lineItems.find(
                           x => x.id === idx && x.field === 'account',
@@ -139,8 +141,8 @@ export const JournalFormEntryLines = ({
                 </div>
               )
             })}
-            {(config.form.addEntryLinesLimit === undefined ||
-              config.form.addEntryLinesLimit > entrylineItems?.length) && (
+            {(config.form.addEntryLinesLimit === undefined
+              || config.form.addEntryLinesLimit > entrylineItems?.length) && (
               <TextButton
                 className='Layer__journal__add-entry-line'
                 onClick={() => addEntryLine(direction as Direction)}

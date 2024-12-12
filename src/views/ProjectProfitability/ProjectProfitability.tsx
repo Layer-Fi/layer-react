@@ -51,22 +51,22 @@ export const ProjectProfitabilityView = ({
   ) => {
     return selectValue.some(
       value =>
-        value.tagKey === option.tagKey &&
-        JSON.stringify(value.tagValues) === JSON.stringify(option.tagValues),
+        value.tagKey === option.tagKey
+        && JSON.stringify(value.tagValues) === JSON.stringify(option.tagValues),
     )
   }
 
   const getTagFilter = (
     tagFilter: TagOption | null,
-  ): { key: string; values: string[] } | undefined => {
-    return tagFilter &&
-      tagFilter.tagKey &&
-      tagFilter.tagValues &&
-      tagFilter.tagValues.length > 0
+  ): { key: string, values: string[] } | undefined => {
+    return tagFilter
+      && tagFilter.tagKey
+      && tagFilter.tagValues
+      && tagFilter.tagValues.length > 0
       ? {
-          key: tagFilter.tagKey,
-          values: tagFilter.tagValues,
-        }
+        key: tagFilter.tagKey,
+        values: tagFilter.tagValues,
+      }
       : undefined
   }
 
@@ -107,12 +107,12 @@ export const ProjectProfitabilityView = ({
           defaultValue={valueOptions.length > 0 ? valueOptions[0] : undefined}
           value={valueOptions.find(
             option =>
-              tagFilter &&
-              option.tagKey === tagFilter.tagKey &&
-              JSON.stringify(option.tagValues) ===
-                JSON.stringify(tagFilter.tagValues),
+              tagFilter
+              && option.tagKey === tagFilter.tagKey
+              && JSON.stringify(option.tagValues)
+              === JSON.stringify(tagFilter.tagValues),
           )}
-          onChange={selectedOption => {
+          onChange={(selectedOption) => {
             setTagFilter(selectedOption)
             setPnlTagFilter(getTagFilter(selectedOption))
           }}

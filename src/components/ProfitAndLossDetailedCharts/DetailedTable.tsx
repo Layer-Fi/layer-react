@@ -42,7 +42,7 @@ export const mapTypesToColors = (
   const typeToLastOpacity: Record<string, number> = {}
   let colorIndex = 0
 
-  return data.map(obj => {
+  return data.map((obj) => {
     const type = obj.name ?? obj.type
 
     if (type === 'Uncategorized') {
@@ -56,7 +56,8 @@ export const mapTypesToColors = (
       typeToColor[type] = colorList[colorIndex % colorList.length]
       colorIndex++
       typeToLastOpacity[type] = 1
-    } else {
+    }
+    else {
       typeToLastOpacity[type] -= 0.1
     }
 
@@ -137,8 +138,8 @@ export const DetailedTable = ({
       'Layer__sortable-col',
       sidebarScope && filters[sidebarScope]?.sortBy === column
         ? `sort--${
-            (sidebarScope && filters[sidebarScope]?.sortDirection) ?? 'desc'
-          }`
+          (sidebarScope && filters[sidebarScope]?.sortDirection) ?? 'desc'
+        }`
         : '',
     )
   }
@@ -155,14 +156,16 @@ export const DetailedTable = ({
                 className={buildColClass('category')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'category')}
               >
-                {stringOverrides?.categoryColumnHeader || 'Category'}{' '}
+                {stringOverrides?.categoryColumnHeader || 'Category'}
+                {' '}
                 <SortArrows className='Layer__sort-arrows' />
               </th>
               <th
                 className={buildColClass('type')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'type')}
               >
-                {stringOverrides?.typeColumnHeader || 'Type'}{' '}
+                {stringOverrides?.typeColumnHeader || 'Type'}
+                {' '}
                 <SortArrows className='Layer__sort-arrows' />
               </th>
               <th></th>
@@ -170,7 +173,8 @@ export const DetailedTable = ({
                 className={buildColClass('value')}
                 onClick={() => sortBy(sidebarScope ?? 'expenses', 'value')}
               >
-                {stringOverrides?.valueColumnHeader || 'Value'}{' '}
+                {stringOverrides?.valueColumnHeader || 'Value'}
+                {' '}
                 <SortArrows className='Layer__sort-arrows' />
               </th>
             </tr>
@@ -193,10 +197,14 @@ export const DetailedTable = ({
                   >
                     <td className='category-col'>{item.display_name}</td>
                     <td className='type-col'>{item.type}</td>
-                    <td className='value-col'>${formatMoney(item.value)}</td>
+                    <td className='value-col'>
+                      $
+                      {formatMoney(item.value)}
+                    </td>
                     <td className='share-col'>
                       <span className='share-cell-content'>
-                        {formatPercent(item.share)}%
+                        {formatPercent(item.share)}
+                        %
                         <ValueIcon
                           item={item}
                           typeColorMapping={typeColorMapping}

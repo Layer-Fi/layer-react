@@ -22,7 +22,8 @@ export const SplitTooltipDetails = ({
               {entry.category.display_name}
             </span>
             <span className={`${classNamePrefix}__split-tooltip__value`}>
-              ${formatMoney(entry.amount)}
+              $
+              {formatMoney(entry.amount)}
             </span>
           </li>
         ))}

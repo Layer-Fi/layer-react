@@ -14,7 +14,8 @@ export const useTableExpandRow = () => {
     if (expandedAllRows) {
       setIsOpen([])
       return setExpandedAllRows(false)
-    } else {
+    }
+    else {
       return setExpandedAllRows(true)
     }
   }

@@ -56,7 +56,7 @@ export const useReceipts: UseReceipts = ({
       },
     )
     const result = await listBankTransactionDocuments()
-    const retrievedDocs = result.data.documentUrls.map((docUrl) => ({
+    const retrievedDocs = result.data.documentUrls.map(docUrl => ({
       id: docUrl.documentId,
       url: docUrl.presignedUrl,
       type: docUrl.fileType,
@@ -96,18 +96,19 @@ export const useReceipts: UseReceipts = ({
       await fetchDocuments()
       // Update the bank transaction with the new document id
       if (
-        updateBankTransaction &&
-        result?.data?.id &&
-        bankTransaction?.document_ids &&
-        bankTransaction.document_ids.length === 0
+        updateBankTransaction
+        && result?.data?.id
+        && bankTransaction?.document_ids
+        && bankTransaction.document_ids.length === 0
       ) {
         updateBankTransaction({
           ...bankTransaction,
           document_ids: [result.data.id],
         })
       }
-    } catch (_err) {
-      const newReceiptUrls = receipts.map(url => {
+    }
+    catch (_err) {
+      const newReceiptUrls = receipts.map((url) => {
         if (url.id === id) {
           return {
             ...url,
@@ -128,9 +129,10 @@ export const useReceipts: UseReceipts = ({
     try {
       if (document.error) {
         setReceiptUrls(receiptUrls.filter(url => url.id !== document.id))
-      } else {
+      }
+      else {
         setReceiptUrls(
-          receiptUrls.map(url => {
+          receiptUrls.map((url) => {
             if (url.id === document.id) {
               return {
                 ...url,
@@ -150,9 +152,10 @@ export const useReceipts: UseReceipts = ({
         })
         fetchDocuments()
       }
-    } catch (_err) {
+    }
+    catch (_err) {
       setReceiptUrls(
-        receiptUrls.map(url => {
+        receiptUrls.map((url) => {
           if (url.id === document.id) {
             return {
               ...url,

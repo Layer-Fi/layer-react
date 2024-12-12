@@ -56,8 +56,8 @@ export function TransactionsToReview({
     if (data && dateRange) {
       const monthTx = data.filter(
         x =>
-          x.month - 1 === getMonth(dateRange.startDate) &&
-          x.year === getYear(dateRange.startDate),
+          x.month - 1 === getMonth(dateRange.startDate)
+          && x.year === getYear(dateRange.startDate),
       )
       if (monthTx.length > 0) {
         setToReview(monthTx[0].uncategorized_transactions)
@@ -82,36 +82,44 @@ export function TransactionsToReview({
         </ProfitAndLossSummariesHeading>
         {loaded === 'initial' || loaded === 'loading' ? <BadgeLoader /> : null}
 
-        {loaded === 'complete' && error ? (
-          <Badge
-            variant={BadgeVariant.ERROR}
-            size={BadgeSize.SMALL}
-            icon={<RefreshCcw size={12} />}
-            onClick={() => refetch()}
-          >
-            Refresh
-          </Badge>
-        ) : null}
+        {loaded === 'complete' && error
+          ? (
+            <Badge
+              variant={BadgeVariant.ERROR}
+              size={BadgeSize.SMALL}
+              icon={<RefreshCcw size={12} />}
+              onClick={() => refetch()}
+            >
+              Refresh
+            </Badge>
+          )
+          : null}
 
-        {loaded === 'complete' && !error && toReview > 0 ? (
-          <Badge
-            variant={BadgeVariant.WARNING}
-            size={BadgeSize.SMALL}
-            icon={<BellIcon size={12} />}
-          >
-            {toReview} pending
-          </Badge>
-        ) : null}
+        {loaded === 'complete' && !error && toReview > 0
+          ? (
+            <Badge
+              variant={BadgeVariant.WARNING}
+              size={BadgeSize.SMALL}
+              icon={<BellIcon size={12} />}
+            >
+              {toReview}
+              {' '}
+              pending
+            </Badge>
+          )
+          : null}
 
-        {loaded === 'complete' && !error && toReview === 0 ? (
-          <Badge
-            variant={BadgeVariant.SUCCESS}
-            size={BadgeSize.SMALL}
-            icon={<CheckIcon size={12} />}
-          >
-            All done
-          </Badge>
-        ) : null}
+        {loaded === 'complete' && !error && toReview === 0
+          ? (
+            <Badge
+              variant={BadgeVariant.SUCCESS}
+              size={BadgeSize.SMALL}
+              icon={<CheckIcon size={12} />}
+            >
+              All done
+            </Badge>
+          )
+          : null}
       </VStack>
       <IconButton icon={<ChevronRight />} withBorder onClick={onClick} />
     </div>

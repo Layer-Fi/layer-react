@@ -26,7 +26,7 @@ export const Table = ({
       )
       const newChildrenKeys: string[] = []
 
-      const newChildrenArray = currentChildren.filter(el => {
+      const newChildrenArray = currentChildren.filter((el) => {
         if (el && el.key) {
           newChildrenKeys.push(el.key)
         }

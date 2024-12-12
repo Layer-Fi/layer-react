@@ -35,11 +35,14 @@ export const Link = ({
   let justifyContent = 'center'
   if (justify) {
     justifyContent = justify
-  } else if (leftIcon && rightIcon) {
+  }
+  else if (leftIcon && rightIcon) {
     justifyContent = 'space-between'
-  } else if (rightIcon) {
+  }
+  else if (rightIcon) {
     justifyContent = 'space-between'
-  } else if (leftIcon) {
+  }
+  else if (leftIcon) {
     justifyContent = 'start'
   }
 
@@ -54,14 +57,14 @@ export const Link = ({
   )
 
   const startAnimation = () =>
-    linkRef.current &&
-    [...linkRef.current.getElementsByClassName('animateOnHover')].forEach(el =>
+    linkRef.current
+    && [...linkRef.current.getElementsByClassName('animateOnHover')].forEach(el =>
       (el as SVGAnimateElement).beginElement(),
     )
 
   const stopAnimation = () =>
-    linkRef.current &&
-    [...linkRef.current.getElementsByClassName('animateOnHover')].forEach(el =>
+    linkRef.current
+    && [...linkRef.current.getElementsByClassName('animateOnHover')].forEach(el =>
       (el as SVGAnimateElement).endElement(),
     )
 

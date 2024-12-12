@@ -58,16 +58,16 @@ export const StatementOfCashFlowTable = ({
             {(!expandable || (expandable && !expanded)) && lineItem.value}
           </TableCell>
         </TableRow>
-        {expanded &&
-          lineItem.line_items &&
-          lineItem.line_items.map((subItem, subIdx) =>
-            renderLineItem(
-              subItem,
-              depth + 1,
-              rowKey + ':' + subItem.name,
-              subIdx,
-            ),
-          )}
+        {expanded
+        && lineItem.line_items
+        && lineItem.line_items.map((subItem, subIdx) =>
+          renderLineItem(
+            subItem,
+            depth + 1,
+            rowKey + ':' + subItem.name,
+            subIdx,
+          ),
+        )}
         {expanded && expandable && (
           <TableRow
             rowKey={rowKey + '-' + rowIndex + '--summation'}
@@ -101,16 +101,17 @@ export const StatementOfCashFlowTable = ({
           if (row.type === 'line_item') {
             return (
               <React.Fragment key={row.lineItem}>
-                {data[row.lineItem as keyof StatementOfCashFlow] &&
-                  renderLineItem(
-                    data[row.lineItem as keyof StatementOfCashFlow] as LineItem,
-                    0,
-                    row.lineItem ? row.lineItem : '',
-                    idx,
-                  )}
+                {data[row.lineItem as keyof StatementOfCashFlow]
+                && renderLineItem(
+                  data[row.lineItem as keyof StatementOfCashFlow] as LineItem,
+                  0,
+                  row.lineItem ? row.lineItem : '',
+                  idx,
+                )}
               </React.Fragment>
             )
-          } else {
+          }
+          else {
             return (
               <TableRow
                 key={row.name + '-' + idx}

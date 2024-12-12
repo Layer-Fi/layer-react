@@ -85,8 +85,8 @@ export const TextWithTooltip = ({
   const compareSize = () => {
     if (textElementRef.current) {
       const compare =
-        textElementRef.current.children[0].scrollWidth >
-        textElementRef.current.children[0].clientWidth
+        textElementRef.current.children[0].scrollWidth
+        > textElementRef.current.children[0].clientWidth
       setHover(compare)
     }
   }

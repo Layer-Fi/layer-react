@@ -5,9 +5,9 @@ import { isWithinInterval, parseISO } from 'date-fns'
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
   return Boolean(
-    (bankTransaction?.suggested_matches &&
-      bankTransaction?.suggested_matches?.length > 0) ||
-      bankTransaction?.match,
+    (bankTransaction?.suggested_matches
+      && bankTransaction?.suggested_matches?.length > 0)
+    || bankTransaction?.match,
   )
 }
 
@@ -38,13 +38,14 @@ export const countTransactionsToReview = ({
         start: dateRange.startDate,
         end: dateRange.endDate,
       }
-      return transactions.filter(tx => {
+      return transactions.filter((tx) => {
         try {
           return (
-            filterVisibility(DisplayState.review, tx) &&
-            isWithinInterval(parseISO(tx.date), dateRangeInterval)
+            filterVisibility(DisplayState.review, tx)
+            && isWithinInterval(parseISO(tx.date), dateRangeInterval)
           )
-        } catch (_err) {
+        }
+        catch (_err) {
           return false
         }
       }).length
@@ -58,9 +59,9 @@ export const countTransactionsToReview = ({
 
 export const getCategorizePayload = (category: CategoryOption) => {
   if (
-    category?.payload &&
-    'id' in category.payload &&
-    category.payload.type == 'ExclusionNested'
+    category?.payload
+    && 'id' in category.payload
+    && category.payload.type == 'ExclusionNested'
   ) {
     return {
       type: 'Exclusion' as const,

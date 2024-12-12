@@ -87,7 +87,8 @@ const validateNormality = (formData?: ChartOfAccountsForm) => {
       field: 'normality',
       message: 'Must be selected',
     }
-  } else if (!['DEBIT', 'CREDIT'].includes(stringValueNormality)) {
+  }
+  else if (!['DEBIT', 'CREDIT'].includes(stringValueNormality)) {
     return {
       field: 'normality',
       message: 'Must be selected',
@@ -164,9 +165,9 @@ export const useChartOfAccounts = (
   )
 
   const queryKey =
-    businessId &&
-    auth?.access_token &&
-    `chart-of-accounts-${businessId}-${startDate?.valueOf()}-${endDate?.valueOf()}`
+    businessId
+    && auth?.access_token
+    && `chart-of-accounts-${businessId}-${startDate?.valueOf()}-${endDate?.valueOf()}`
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,
@@ -192,9 +193,11 @@ export const useChartOfAccounts = (
       })
       await refetch()
       setForm(undefined)
-    } catch (_err) {
+    }
+    catch (_err) {
       setApiError('Submit failed. Please, check your connection and try again.')
-    } finally {
+    }
+    finally {
       setSendingForm(false)
       touch(DataModel.CHART_OF_ACCOUNTS)
     }
@@ -215,9 +218,11 @@ export const useChartOfAccounts = (
       })
       await refetch()
       setForm(undefined)
-    } catch (_err) {
+    }
+    catch (_err) {
       setApiError('Submit failed. Please, check your connection and try again.')
-    } finally {
+    }
+    finally {
       setSendingForm(false)
       touch(DataModel.CHART_OF_ACCOUNTS)
     }
@@ -243,15 +248,15 @@ export const useChartOfAccounts = (
       name: form.data.name ?? '',
       stable_name: form.data.stable_name
         ? {
-            type: 'StableName' as const,
-            stable_name: form.data.stable_name,
-          }
+          type: 'StableName' as const,
+          stable_name: form.data.stable_name,
+        }
         : undefined,
       parent_id: form.data.parent
         ? {
-            type: 'AccountId' as const,
-            id: form.data.parent.value as string,
-          }
+          type: 'AccountId' as const,
+          id: form.data.parent.value as string,
+        }
         : undefined,
       account_type: (form.data.type as BaseSelectOption).value.toString(),
       account_subtype: form.data.subType?.value.toString(),
@@ -300,9 +305,9 @@ export const useChartOfAccounts = (
       data: {
         parent: parent
           ? {
-              value: parent.id,
-              label: parent.name,
-            }
+            value: parent.id,
+            label: parent.name,
+          }
           : undefined,
         stable_name: found.stable_name,
         name: found.name,
@@ -313,9 +318,9 @@ export const useChartOfAccounts = (
 
         subType: found.account_subtype
           ? {
-              value: found.account_subtype?.value,
-              label: found.account_subtype?.display_name,
-            }
+            value: found.account_subtype?.value,
+            label: found.account_subtype?.display_name,
+          }
           : undefined,
         normality: NORMALITY_OPTIONS.find(
           normalityOption => normalityOption.value == found.normality,
@@ -362,9 +367,9 @@ export const useChartOfAccounts = (
             /* If the parent has a subtype, inherit it */
             subType: foundParent.account_subtype
               ? {
-                  value: foundParent.account_subtype?.value,
-                  label: foundParent.account_subtype?.display_name,
-                }
+                value: foundParent.account_subtype?.value,
+                label: foundParent.account_subtype?.display_name,
+              }
               : undefined,
 
             /* Inherit the parent's normality */

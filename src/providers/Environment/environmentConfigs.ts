@@ -1,4 +1,4 @@
-const ENVIRONMENTS = [ 'production', 'sandbox', 'staging', 'internalStaging' ] as const
+const ENVIRONMENTS = ['production', 'sandbox', 'staging', 'internalStaging'] as const
 export type Environment = typeof ENVIRONMENTS[number]
 
 type EnvironmentConfig = {
