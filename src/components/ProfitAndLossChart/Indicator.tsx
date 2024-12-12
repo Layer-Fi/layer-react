@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { Props as BaseProps } from 'recharts/types/component/Label'
 
-// This component does not always exist. It gets recreated each time the
-// selected month changes on the chart. As a result, the coordinates are not
-// persistent and so resist CSS animation. That way we work around this is by
-// telling the parent component what its X value is. The parent renders using
-// that X as the "animateFrom" value. This then tells the paren its new X,
-// which becomes the new "animateFrom", set using useState setter, which causes
-// a render, which causes the new `animateFrom` to be passed in, which causes a
-// change in the X coordinate, which causes a transition to trigger.
+/*
+ * This component does not always exist. It gets recreated each time the
+ * selected month changes on the chart.
+ *
+ * The component intentionally breaks the rules of hooks.
+ *
+ * The coordinates are not persistent, so they resist CSS animation; we need a "double-render"
+ * of the component for animation.
+ */
 
 type Props = BaseProps & {
   animateFrom: number
   setAnimateFrom: (x: number) => void
-  customCursorSize: { width: number; height: number }
+  customCursorSize: { width: number, height: number }
   setCustomCursorSize: (width: number, height: number, x: number) => void
 }
 const emptyViewBox = { x: 0, y: 0, width: 0, height: 0 }
@@ -25,6 +26,11 @@ export const Indicator = ({
   setCustomCursorSize,
   viewBox = {},
 }: Props) => {
+  if (!className?.match(/selected/)) {
+    return null
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [opacityIndicator, setOpacityIndicator] = useState(0)
 
   const { x: animateTo = 0, width = 0 } =
@@ -36,7 +42,7 @@ export const Indicator = ({
   const rectWidth = `${boxWidth}px`
   const rectHeight = 'calc(100% - 38px)'
 
-  // useEffect callbacks run after the browser paints
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (Math.abs(animateTo - animateFrom) < 30) {
       setOpacityIndicator(0)
@@ -48,17 +54,13 @@ export const Indicator = ({
     }, 200)
   }, [animateTo])
 
-  if (!className?.match(/selected/)) {
-    return null
-  }
-
   const rectRef = (ref: SVGRectElement | null) => {
     if (ref) {
       const refRectWidth = ref.getBoundingClientRect().width
       const refRectHeight = ref.getBoundingClientRect().height
       if (
-        customCursorSize.width !== refRectWidth ||
-        customCursorSize.height !== refRectHeight
+        customCursorSize.width !== refRectWidth
+        || customCursorSize.height !== refRectHeight
       ) {
         setCustomCursorSize(refRectWidth, refRectHeight, actualX - xOffset)
       }
