@@ -43,7 +43,10 @@ export const completeTaskWithUpload =
     }) => {
       const formData = new FormData()
       files.forEach(file => formData.append('file', file))
-      description && formData.append('description', description)
+
+      if (description) {
+        formData.append('description', description)
+      }
 
       const endpoint = `/v1/businesses/${businessId}/tasks/${taskId}/upload`
       return postWithFormData<{ data: FileMetadata, errors: unknown }>(

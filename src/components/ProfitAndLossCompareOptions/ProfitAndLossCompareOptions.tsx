@@ -80,7 +80,7 @@ export const ProfitAndLossCompareOptions = ({
       setMonths(1)
     }
     else if (months !== compareMonths) {
-      setCompareMonths && setCompareMonths(months)
+      setCompareMonths?.(months)
     }
   }, [months])
 
@@ -89,7 +89,7 @@ export const ProfitAndLossCompareOptions = ({
       setToggle(compareOptions?.length > 0 ? compareOptions : [defaultOption])
     }
     else if (JSON.stringify(toggle) !== JSON.stringify(compareOptions)) {
-      setCompareOptions && setCompareOptions(toggle)
+      setCompareOptions?.(toggle)
     }
   }, [toggle])
 

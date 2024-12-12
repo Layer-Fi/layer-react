@@ -12,8 +12,6 @@ type UseQuickbooks = () => {
   quickbooksIsLinked: boolean | null
 }
 
-const DEBUG = true
-
 export const useQuickbooks: UseQuickbooks = () => {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
@@ -56,7 +54,6 @@ export const useQuickbooks: UseQuickbooks = () => {
   }
 
   const syncFromQuickbooks = () => {
-    DEBUG && console.debug('Triggering sync from Quickbooks...')
     setIsSyncingFromQuickbooks(true)
     try {
       Layer.syncFromQuickbooks(apiUrl, auth?.access_token, {
@@ -69,7 +66,6 @@ export const useQuickbooks: UseQuickbooks = () => {
   }
 
   const fetchIsSyncingFromQuickbooks = async () => {
-    DEBUG && console.debug('Fetching status of sync from Quickbooks...')
     const isSyncing = (
       await Layer.statusOfSyncFromQuickbooks(apiUrl, auth?.access_token, {
         params: { businessId },

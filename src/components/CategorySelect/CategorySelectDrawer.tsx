@@ -59,13 +59,14 @@ const CategorySelectDrawerContent = ({
 }) => (
   <BusinessCategories
     select={(option) => {
-      option.value.payload
-      && onSelect({
-        type: OptionActionType.CATEGORY,
-        payload: {
-          ...option.value.payload,
-        },
-      } satisfies CategoryOption)
+      if (option.value.payload) {
+        onSelect({
+          type: OptionActionType.CATEGORY,
+          payload: {
+            ...option.value.payload,
+          },
+        } satisfies CategoryOption)
+      }
     }}
     selectedId={selected?.payload?.id}
     showTooltips={showTooltips}

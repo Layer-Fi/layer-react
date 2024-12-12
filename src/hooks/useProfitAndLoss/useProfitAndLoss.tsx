@@ -103,8 +103,12 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     startDate: newStartDate,
     endDate: newEndDate,
   }: Partial<DateRange>) => {
-    newStartDate && setStartDate(newStartDate)
-    newEndDate && setEndDate(newEndDate)
+    if (newStartDate) {
+      setStartDate(newStartDate)
+    }
+    if (newEndDate) {
+      setEndDate(newEndDate)
+    }
   }
 
   const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {

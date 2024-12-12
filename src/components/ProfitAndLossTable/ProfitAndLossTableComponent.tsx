@@ -90,7 +90,7 @@ export const ProfitAndLossTableComponent = ({
                 className='Layer__profit-and-loss-row__detailed-chart-btn'
                 onClick={(e) => {
                   e.stopPropagation()
-                  setSidebarScope && setSidebarScope(scope ?? 'expenses')
+                  setSidebarScope?.(scope ?? 'expenses')
                 }}
               >
                 <PieChart />

@@ -74,7 +74,7 @@ export const ProfitAndLossDownloadButton = ({
         setRequestFailed(true)
       }
     }
-    catch (e) {
+    catch {
       setRequestFailed(true)
     }
     finally {

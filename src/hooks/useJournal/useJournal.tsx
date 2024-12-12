@@ -386,7 +386,8 @@ export const useJournal: UseJournal = () => {
     changeFormData,
     submitForm,
     cancelForm: () => {
-      setForm(undefined), setSelectedEntryId(undefined)
+      setForm(undefined)
+      setSelectedEntryId(undefined)
     },
     setForm,
     sendingForm,

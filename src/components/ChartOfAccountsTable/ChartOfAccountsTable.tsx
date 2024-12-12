@@ -128,7 +128,9 @@ export const ChartOfAccountsTableContent = ({
             withExpandIcon={expandable}
             onClick={(e) => {
               e.stopPropagation()
-              expandable && setIsOpen(rowKey)
+              if (expandable) {
+                setIsOpen(rowKey)
+              }
             }}
           >
             {account.name}

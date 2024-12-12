@@ -393,8 +393,12 @@ export const useChartOfAccounts = (
     startDate: newStartDate,
     endDate: newEndDate,
   }: Partial<DateRange>) => {
-    newStartDate && setStartDate(newStartDate)
-    newEndDate && setEndDate(newEndDate)
+    if (newStartDate) {
+      setStartDate(newStartDate)
+    }
+    if (newEndDate) {
+      setEndDate(newEndDate)
+    }
   }
 
   const refetch = () => mutate()
