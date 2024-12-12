@@ -23,8 +23,11 @@ export const TableRow: React.FC<TableRowProps> = ({
       onClick(e)
     }
     else {
-      if (variant === 'summation' || !expandable) return
-      handleExpand && handleExpand()
+      if (variant === 'summation' || !expandable) {
+        return
+      }
+
+      handleExpand?.()
     }
   }
 

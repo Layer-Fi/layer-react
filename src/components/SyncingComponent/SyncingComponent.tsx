@@ -41,7 +41,7 @@ export const SyncingComponent = ({
   hideContent = false,
 }: SyncingComponentProps) => {
   const handleRefresh = () => {
-    onRefresh && onRefresh()
+    onRefresh?.()
   }
 
   const timeSyncInfo = () => {

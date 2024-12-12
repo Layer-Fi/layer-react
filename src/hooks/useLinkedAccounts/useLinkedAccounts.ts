@@ -17,10 +17,6 @@ export function getAccountsNeedingConfirmation(linkedAccounts: ReadonlyArray<Lin
   )
 }
 
-function accountNeedsConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
-  return getAccountsNeedingConfirmation(linkedAccounts).length > 0
-}
-
 type UseLinkedAccounts = () => {
   data?: LinkedAccount[]
   isLoading: boolean
@@ -41,11 +37,7 @@ type UseLinkedAccounts = () => {
   breakConnection: (source: AccountSource, connectionExternalId: string) => void
 }
 
-const DEBUG = false
 const USE_MOCK_RESPONSE_DATA = false
-
-const MAX_POLLING_ATTEMPTS = 5
-const POLLING_INTERVAL = 1000
 
 type LinkMode = 'update' | 'add'
 
@@ -233,7 +225,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const unlinkAccount = async (source: AccountSource, accountId: string) => {
-    DEBUG && console.debug('unlinking account')
     if (source === 'PLAID') {
       await Layer.unlinkAccount(apiUrl, auth?.access_token, {
         params: { businessId, accountId: accountId },
@@ -249,7 +240,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const confirmAccount = async (source: AccountSource, accountId: string) => {
-    DEBUG && console.debug('confirming account')
     if (source === 'PLAID') {
       await Layer.confirmAccount(apiUrl, auth?.access_token, {
         params: {
@@ -268,7 +258,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const excludeAccount = async (source: AccountSource, accountId: string) => {
-    DEBUG && console.debug('excluding account')
     if (source === 'PLAID') {
       await Layer.excludeAccount(apiUrl, auth?.access_token, {
         params: {
@@ -297,7 +286,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     source: AccountSource,
     connectionExternalId: string,
   ) => {
-    DEBUG && console.debug('Breaking sandbox plaid item connection')
     if (source === 'PLAID') {
       await Layer.breakPlaidItemConnection(apiUrl, auth?.access_token, {
         params: {
@@ -316,26 +304,22 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const refetchAccounts = async () => {
-    DEBUG && console.debug('refetching accounts...')
     await mutate()
   }
 
   const syncAccounts = async () => {
-    DEBUG && console.debug('resyncing accounts...')
     await Layer.syncConnection(apiUrl, auth?.access_token, {
       params: { businessId },
     })
   }
 
   const updateConnectionStatus = async () => {
-    DEBUG && console.debug('updating connection status...')
     await Layer.updateConnectionStatus(apiUrl, auth?.access_token, {
       params: { businessId },
     })
   }
 
   const unlinkPlaidItem = async (plaidItemPlaidId: string) => {
-    DEBUG && console.debug('unlinking plaid item')
     await Layer.unlinkPlaidItem(apiUrl, auth?.access_token, {
       params: { businessId, plaidItemPlaidId },
     })

@@ -35,7 +35,10 @@ export function EnvironmentInputProvider({
   environment,
   usePlaidSandbox,
 }: PropsWithChildren<EnvironmentInputShape>) {
-  const memoizedValue = useMemo(() => ({ environment, usePlaidSandbox }), [environment, usePlaidSandbox])
+  const memoizedValue = useMemo(
+    () => ({ environment, usePlaidSandbox }),
+    [environment, usePlaidSandbox],
+  )
 
   return (
     <AuthInputContext.Provider value={memoizedValue}>

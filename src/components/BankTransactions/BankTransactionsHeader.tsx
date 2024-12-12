@@ -74,7 +74,7 @@ const DownloadButton = ({
         setRequestFailed(true)
       }
     }
-    catch (e) {
+    catch {
       setRequestFailed(true)
     }
     finally {

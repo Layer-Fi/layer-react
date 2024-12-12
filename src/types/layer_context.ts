@@ -116,14 +116,14 @@ export type LayerContextAction =
     payload: { colors: LayerContextValues['colors'] }
   }
   | {
-      type: LayerContextActionName.setToast
-      payload: { toast: ToastProps }
-    }
+    type: LayerContextActionName.setToast
+    payload: { toast: ToastProps }
+  }
   | {
-      type: LayerContextActionName.removeToast
-      payload: { toast: ToastProps }
-    }
+    type: LayerContextActionName.removeToast
+    payload: { toast: ToastProps }
+  }
   | {
-      type: LayerContextActionName.setToastExit
-      payload: { toast: ToastProps }
-    }
+    type: LayerContextActionName.setToastExit
+    payload: { toast: ToastProps }
+  }

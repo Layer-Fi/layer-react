@@ -1,12 +1,12 @@
 import React, { useState, createContext, type PropsWithChildren, useContext } from 'react'
 import { createStore, useStore } from 'zustand'
 
-const ACCOUNT_CONFIRMATION_VISIBILITY = [
+const _ACCOUNT_CONFIRMATION_VISIBILITY = [
   'PRELOADED',
   'DEFAULT',
   'DISMISSED',
 ] as const
-type AccountConfirmationVisibility = typeof ACCOUNT_CONFIRMATION_VISIBILITY[number]
+type AccountConfirmationVisibility = typeof _ACCOUNT_CONFIRMATION_VISIBILITY[number]
 
 type AccountConfirmationStoreShape = {
   visibility: AccountConfirmationVisibility

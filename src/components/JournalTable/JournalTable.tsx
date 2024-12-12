@@ -99,7 +99,9 @@ const JournalTableContent = ({
             onClick={(e) => {
               e.stopPropagation()
 
-              expandable && setIsOpen(rowKey)
+              if (expandable) {
+                setIsOpen(rowKey)
+              }
             }}
           >
             {entryNumber(row)}

@@ -122,7 +122,6 @@ export const useBankTransactions: UseBankTransactions = (
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const { scope = undefined } = params ?? {}
   const [filters, setTheFilters] = useState<BankTransactionFilters | undefined>(
     buildInitialFilters(params ?? {}),
   )
@@ -140,6 +139,7 @@ export const useBankTransactions: UseBankTransactions = (
   const [active, setActive] = useState(false)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const getKey = (index: number, prevData: any) => {
     if (!auth?.access_token || !active) {
       return [false, undefined]
@@ -388,7 +388,11 @@ export const useBankTransactions: UseBankTransactions = (
         )
         if (newTransferBT) {
           newTransferBT.recently_categorized = true
-          newTransferBT.match = bt // This gets the wrong leg of the transfer, but the one we want isn't returned by the api call.
+
+          // This gets the wrong leg of the transfer, but the one we want isn't returned
+          // by the api call.
+          newTransferBT.match = bt
+
           newTransferBT.categorization_status = CategorizationStatus.MATCHED
           updateOneLocal(newTransferBT)
         }
