@@ -73,7 +73,7 @@ export const TasksListItem = ({
                   setSelectedFiles(undefined)
                 }}
               >
-                Deselect Files
+                Cancel
               </Button>
               <Button
                 variant={ButtonVariant.primary}
