@@ -20,6 +20,7 @@ export interface ChartOfAccountsProps {
   withDateControl?: boolean
   withExpandAllButton?: boolean
   stringOverrides?: ChartOfAccountsStringOverrides
+  showAddAccountButton?: boolean
   templateAccountsEditable?: boolean
   showReversalEntries?: boolean
 }
@@ -46,29 +47,33 @@ const ChartOfAccountsContent = ({
   withExpandAllButton,
   stringOverrides,
   templateAccountsEditable,
+  showAddAccountButton,
 }: ChartOfAccountsProps) => {
   const { accountId } = useContext(LedgerAccountsContext)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
     <Container name='chart-of-accounts' ref={containerRef} asWidget={asWidget}>
-      {accountId ? (
-        <LedgerAccount
-          view={view}
-          containerRef={containerRef}
-          stringOverrides={stringOverrides?.ledgerAccount}
-        />
-      ) : (
-        <ChartOfAccountsTable
-          asWidget={asWidget}
-          withDateControl={withDateControl}
-          withExpandAllButton={withExpandAllButton}
-          view={view}
-          containerRef={containerRef}
-          stringOverrides={stringOverrides?.chartOfAccountsTable}
-          templateAccountsEditable={templateAccountsEditable}
-        />
-      )}
+      {accountId
+        ? (
+          <LedgerAccount
+            view={view}
+            containerRef={containerRef}
+            stringOverrides={stringOverrides?.ledgerAccount}
+          />
+        )
+        : (
+          <ChartOfAccountsTable
+            asWidget={asWidget}
+            withDateControl={withDateControl}
+            withExpandAllButton={withExpandAllButton}
+            view={view}
+            containerRef={containerRef}
+            showAddAccountButton={showAddAccountButton}
+            stringOverrides={stringOverrides?.chartOfAccountsTable}
+            templateAccountsEditable={templateAccountsEditable}
+          />
+        )}
     </Container>
   )
 }
