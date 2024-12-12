@@ -13,6 +13,7 @@ import { Pagination } from '../Pagination'
 import { Panel } from '../Panel'
 import { Heading, HeadingSize } from '../Typography'
 import { JournalTable } from './JournalTable'
+import { JournalEntriesDownloadButton } from '../Journal/download/JournalEntriesDownloadButton'
 
 export interface JournalTableStringOverrides {
   componentTitle?: string
@@ -63,13 +64,13 @@ export const JournalTableWithPanel = ({
 
   return (
     <Panel
-      sidebar={
+      sidebar={(
         <JournalSidebar
           parentRef={containerRef}
           config={config}
           stringOverrides={stringOverrides?.journalForm}
         />
-      }
+      )}
       sidebarIsOpen={Boolean(selectedEntryId)}
       parentRef={containerRef}
     >
@@ -101,6 +102,9 @@ export const JournalTableWithPanel = ({
             </Heading>
           </HeaderCol>
           <HeaderCol>
+            <JournalEntriesDownloadButton
+              iconOnly={['mobile', 'tablet'].includes(view)}
+            />
             <Button
               onClick={() => addEntry()}
               disabled={isLoading}
@@ -113,7 +117,7 @@ export const JournalTableWithPanel = ({
         </HeaderRow>
       </Header>
 
-      {data && <JournalTable view={'desktop'} data={data} />}
+      {data && <JournalTable view='desktop' data={data} />}
 
       {data && (
         <div className='Layer__journal__pagination'>
@@ -136,23 +140,27 @@ export const JournalTableWithPanel = ({
         </div>
       )}
 
-      {error ? (
-        <div className='Layer__table-state-container'>
-          <DataState
-            status={DataStateStatus.failed}
-            title='Something went wrong'
-            description='We couldn’t load your data.'
-            onRefresh={() => refetch()}
-            isLoading={isValidating || isLoading}
-          />
-        </div>
-      ) : null}
+      {error
+        ? (
+          <div className='Layer__table-state-container'>
+            <DataState
+              status={DataStateStatus.failed}
+              title='Something went wrong'
+              description='We couldn’t load your data.'
+              onRefresh={() => refetch()}
+              isLoading={isValidating || isLoading}
+            />
+          </div>
+        )
+        : null}
 
-      {(!data || isLoading) && !error ? (
-        <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-          <Loader />
-        </div>
-      ) : null}
+      {(!data || isLoading) && !error
+        ? (
+          <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
+            <Loader />
+          </div>
+        )
+        : null}
     </Panel>
   )
 }
