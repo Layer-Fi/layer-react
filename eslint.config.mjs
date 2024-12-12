@@ -24,6 +24,7 @@ export default tsEslint.config([
     plugins: {
       'react-hooks': reactHooksPlugin,
     },
+    rules: reactHooksPlugin.configs.recommended.rules,
   },
   {
     plugins: {
