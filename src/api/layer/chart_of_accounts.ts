@@ -6,6 +6,7 @@ import {
   LedgerAccountsEntry,
 } from '../../types'
 import { ChartWithBalances } from '../../types/chart_of_accounts'
+import { S3PresignedUrl } from '../../types/general'
 import { LedgerAccountLineItems } from '../../types/ledger_accounts'
 import { get, post, put } from './authenticated_http'
 
@@ -39,4 +40,8 @@ export const getLedgerAccountsLines = get<{ data: LedgerAccountLineItems }>(
 export const getLedgerAccountsEntry = get<{ data: LedgerAccountsEntry }>(
   ({ businessId, entryId }) =>
     `/v1/businesses/${businessId}/ledger/entries/${entryId}`,
+)
+
+export const getLedgerAccountBalancesCSV = get<{ data: S3PresignedUrl }>(
+  ({ businessId }) => `/v1/businesses/${businessId}/ledger/balances/exports/csv`,
 )

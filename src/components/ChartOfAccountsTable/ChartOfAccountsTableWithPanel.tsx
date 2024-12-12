@@ -12,6 +12,7 @@ import { Loader } from '../Loader'
 import { Panel } from '../Panel'
 import { Heading, HeadingSize } from '../Typography'
 import { ChartOfAccountsTable } from './ChartOfAccountsTable'
+import { AccountBalancesDownloadButton } from '../ChartOfAccounts/download/AccountBalancesDownloadButton'
 
 const COMPONENT_NAME = 'chart-of-accounts'
 export type ExpandActionState = undefined | 'expanded' | 'collapsed'
@@ -19,6 +20,7 @@ export type ExpandActionState = undefined | 'expanded' | 'collapsed'
 export interface ChartOfAccountsTableStringOverrides {
   headerText?: string
   addAccountButtonText?: string
+  csvDownloadButtonText?: string
   nameColumnHeader?: string
   typeColumnHeader?: string
   balanceColumnHeader?: string
@@ -53,12 +55,12 @@ export const ChartOfAccountsTableWithPanel = ({
 
   return (
     <Panel
-      sidebar={
+      sidebar={(
         <ChartOfAccountsSidebar
           parentRef={containerRef}
           stringOverrides={stringOverrides?.chartOfAccountsForm}
         />
-      }
+      )}
       sidebarIsOpen={Boolean(form)}
       parentRef={containerRef}
     >
@@ -81,28 +83,32 @@ export const ChartOfAccountsTableWithPanel = ({
               size={HeadingSize.secondary}
               className={`Layer__${COMPONENT_NAME}__subtitle`}
             >
-              {withDateControl || withExpandAllButton ? (
-                <div className='Layer__header__actions-col'>
-                  {withDateControl && <ChartOfAccountsDatePicker />}
-                  {withExpandAllButton && (
-                    <ExpandCollapseButton
-                      iconOnly={view === 'mobile'}
-                      onClick={() =>
-                        setExpandAll(
-                          !expandAll || expandAll === 'collapsed'
-                            ? 'expanded'
-                            : 'collapsed',
-                        )
-                      }
-                      expanded={!(!expandAll || expandAll === 'collapsed')}
-                      variant={ButtonVariant.secondary}
-                    />
-                  )}
-                </div>
-              ) : null}
+              {withDateControl || withExpandAllButton
+                ? (
+                  <div className='Layer__header__actions-col'>
+                    {withDateControl && <ChartOfAccountsDatePicker />}
+                    {withExpandAllButton && (
+                      <ExpandCollapseButton
+                        iconOnly={view === 'mobile'}
+                        onClick={() =>
+                          setExpandAll(
+                            !expandAll || expandAll === 'collapsed'
+                              ? 'expanded'
+                              : 'collapsed',
+                          )}
+                        expanded={!(!expandAll || expandAll === 'collapsed')}
+                        variant={ButtonVariant.secondary}
+                      />
+                    )}
+                  </div>
+                )
+                : null}
             </Heading>
           </HeaderCol>
           <HeaderCol>
+            <AccountBalancesDownloadButton
+              iconOnly={['mobile', 'tablet'].includes(view)}
+            />
             <Button
               onClick={() => addAccount()}
               disabled={isLoading}
@@ -130,35 +136,41 @@ export const ChartOfAccountsTableWithPanel = ({
         />
       )}
 
-      {error ? (
-        <div className='Layer__table-state-container'>
-          <DataState
-            status={DataStateStatus.failed}
-            title='Something went wrong'
-            description='We couldn’t load your data.'
-            onRefresh={() => refetch()}
-            isLoading={isValidating || isLoading}
-          />
-        </div>
-      ) : null}
+      {error
+        ? (
+          <div className='Layer__table-state-container'>
+            <DataState
+              status={DataStateStatus.failed}
+              title='Something went wrong'
+              description='We couldn’t load your data.'
+              onRefresh={() => refetch()}
+              isLoading={isValidating || isLoading}
+            />
+          </div>
+        )
+        : null}
 
-      {(!data || isLoading) && !error ? (
-        <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-          <Loader />
-        </div>
-      ) : null}
+      {(!data || isLoading) && !error
+        ? (
+          <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
+            <Loader />
+          </div>
+        )
+        : null}
 
-      {!isLoading && !error && data?.accounts.length === 0 ? (
-        <div className='Layer__table-state-container'>
-          <DataState
-            status={DataStateStatus.info}
-            title='Accounts were not found'
-            description='New account can be created with "Add Account".'
-            onRefresh={() => refetch()}
-            isLoading={isValidating}
-          />
-        </div>
-      ) : null}
+      {!isLoading && !error && data?.accounts.length === 0
+        ? (
+          <div className='Layer__table-state-container'>
+            <DataState
+              status={DataStateStatus.info}
+              title='Accounts were not found'
+              description='New account can be created with "Add Account".'
+              onRefresh={() => refetch()}
+              isLoading={isValidating}
+            />
+          </div>
+        )
+        : null}
     </Panel>
   )
 }
