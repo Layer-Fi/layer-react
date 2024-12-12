@@ -69,12 +69,15 @@ export const ProfitAndLossDownloadButton = ({
       if (result?.data?.presignedUrl) {
         window.location.href = result.data.presignedUrl
         setRequestFailed(false)
-      } else {
+      }
+      else {
         setRequestFailed(true)
       }
-    } catch (e) {
+    }
+    catch (e) {
       setRequestFailed(true)
-    } finally {
+    }
+    finally {
       setIsDownloading(false)
     }
   }

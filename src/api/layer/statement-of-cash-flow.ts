@@ -3,7 +3,7 @@ import type { S3PresignedUrl } from '../../types/general'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { get } from './authenticated_http'
 
-type GetStatementOfCashFlowParams ={
+type GetStatementOfCashFlowParams = {
   businessId: string
   startDate: string
   endDate: string
@@ -32,5 +32,5 @@ export const getCashflowStatementCSV = get<
     const parameters = toDefinedSearchParameters({ startDate, endDate })
 
     return `/v1/businesses/${businessId}/reports/cashflow-statement/exports/csv?${parameters}`
-  }
+  },
 )

@@ -33,8 +33,8 @@ export const APIErrorNotifications = ({
     if (
       notificationsCache.find(
         n =>
-          n.timestamp === timestamp &&
-          n.bankTransactionId !== bankTransaction.id,
+          n.timestamp === timestamp
+          && n.bankTransactionId !== bankTransaction.id,
       )
     ) {
       return
@@ -51,8 +51,8 @@ export const APIErrorNotifications = ({
     const timestamps = notificationsCache.map(({ timestamp }) => timestamp)
     notificationsCache = notificationsCache.filter(
       ({ bankTransactionId, timestamp }, index) =>
-        !ids.includes(bankTransactionId, index + 1) &&
-        !timestamps.includes(timestamp, index + 1),
+        !ids.includes(bankTransactionId, index + 1)
+        && !timestamps.includes(timestamp, index + 1),
     )
     setNotifications(notificationsCache.concat())
   }

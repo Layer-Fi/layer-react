@@ -21,7 +21,7 @@ async function requestOAuthToken({
   return fetch(authUrl, {
     method: 'POST',
     headers: {
-      Authorization: 'Basic ' + globalThis.btoa(appId + ':' + appSecret),
+      'Authorization': 'Basic ' + globalThis.btoa(appId + ':' + appSecret),
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: new URLSearchParams({
@@ -50,7 +50,7 @@ function buildKey({
       apiUrl,
       businessAccessToken,
       mode: 'explicit' as const,
-      tags: [ '#auth' ],
+      tags: ['#auth'],
     }
   }
 
@@ -62,7 +62,7 @@ function buildKey({
       authUrl,
       scope,
       mode: 'client' as const,
-      tags: [ '#auth' ],
+      tags: ['#auth'],
     }
   }
 
@@ -99,7 +99,7 @@ export function useAuth() {
 
       const { apiUrl, appId, appSecret, authUrl, scope } = key
       return requestOAuthToken({ appId, appSecret, authUrl, scope })
-        .then((data) => ({ apiUrl, ...data }))
+        .then(data => ({ apiUrl, ...data }))
     },
     {
       refreshInterval: (latestData) => {
@@ -108,7 +108,7 @@ export function useAuth() {
         }
 
         return (latestData.expires_in / 2) * 1000
-      }
-    }
+      },
+    },
   )
 }

@@ -18,7 +18,7 @@ export type SidebarScope = Scope | undefined
 
 type Periods = {
   type: 'Comparison_Months'
-  months: Array<{ year: number; month: number }>
+  months: Array<{ year: number, month: number }>
 }
 
 type TagFilter = Array<{
@@ -48,7 +48,7 @@ type UseProfitAndLossComparison = (props: Props) => {
   getProfitAndLossComparisonCsv: (
     dateRange: DateRange,
     moneyFormat?: MoneyFormat,
-  ) => Promise<{ data?: S3PresignedUrl; error?: unknown }>
+  ) => Promise<{ data?: S3PresignedUrl, error?: unknown }>
 }
 
 let initialFetchDone = false
@@ -58,7 +58,7 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
 }: Props) => {
   const lastQuery =
     useRef<
-      Promise<{ data?: ProfitAndLossComparison | undefined; error?: unknown }>
+      Promise<{ data?: ProfitAndLossComparison | undefined, error?: unknown }>
     >()
 
   const [compareMode, setCompareMode] = useState(false)
@@ -79,29 +79,31 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
 
   useEffect(() => {
     if (
-      compareMonths > 1 ||
-      compareOptions.filter(x => x.displayName).length > 0
+      compareMonths > 1
+      || compareOptions.filter(x => x.displayName).length > 0
     ) {
       if (compareMode === false) {
         setCompareMode(true)
       }
-    } else {
+    }
+    else {
       setCompareMode(false)
     }
   }, [compareMonths, compareOptions])
 
   const prepareFiltersBody = (compareOptions: TagComparisonOption[]) => {
     const tagFilters: TagFilter = []
-    compareOptions.map(option => {
+    compareOptions.map((option) => {
       if (option.tagFilterConfig.tagFilters === 'None') {
         tagFilters.push({
           required_tags: [],
           structure: option.tagFilterConfig.structure,
         })
-      } else {
+      }
+      else {
         const tagFilter = option.tagFilterConfig.tagFilters
         tagFilters.push({
-          required_tags: tagFilter.tagValues.map(tagValue => {
+          required_tags: tagFilter.tagValues.map((tagValue) => {
             return {
               key: tagFilter.tagKey,
               value: tagValue,
@@ -142,7 +144,8 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
   const refetch = (dateRange: DateRange, actAsInitial?: boolean) => {
     if (actAsInitial && !initialFetchDone) {
       fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
-    } else if (!actAsInitial) {
+    }
+    else if (!actAsInitial) {
       fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
     }
   }
@@ -180,7 +183,8 @@ export const useProfitAndLossComparison: UseProfitAndLossComparison = ({
           setIsLoading(false)
           setIsValidating(false)
         }
-      } catch (err) {
+      }
+      catch (err) {
         setError(err)
         setData(undefined)
         setIsLoading(false)

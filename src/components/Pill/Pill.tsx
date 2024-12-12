@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react'
 
 type PillKind = 'default' | 'info' | 'success' | 'warning' | 'error'
 
-type Props = PropsWithChildren & { kind?: PillKind; onHover?: () => void }
+type Props = PropsWithChildren & { kind?: PillKind, onHover?: () => void }
 
 export const Pill = ({ children, kind = 'default', onHover }: Props) => (
   <span

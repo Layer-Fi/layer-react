@@ -48,20 +48,20 @@ export const OnboardingContent = ({
 
   useEffect(() => {
     if (
-      data &&
-      data?.length === 0 &&
-      loadingStatus === 'complete' &&
-      !onboardingStep
+      data
+      && data?.length === 0
+      && loadingStatus === 'complete'
+      && !onboardingStep
     ) {
       setOnboardingStep('connectAccount')
       return
     }
 
     if (
-      data &&
-      data.length > 0 &&
-      loadingStatus === 'complete' &&
-      onboardingStep === 'connectAccount'
+      data
+      && data.length > 0
+      && loadingStatus === 'complete'
+      && onboardingStep === 'connectAccount'
     ) {
       setOnboardingStep('complete')
     }

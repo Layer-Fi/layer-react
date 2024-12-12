@@ -60,7 +60,8 @@ const useMemoText = ({ bankTransaction, isActive }: MemoTextProps) => {
       )
       const result = await getBankTransactionMetadata()
       if (result.data.memo) setMemoText(result.data.memo)
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error)
     }
   }
@@ -78,7 +79,8 @@ const useMemoText = ({ bankTransaction, isActive }: MemoTextProps) => {
           },
         })
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error)
     }
   }

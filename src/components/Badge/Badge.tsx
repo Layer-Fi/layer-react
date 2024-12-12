@@ -54,13 +54,15 @@ export const Badge = ({
     </>
   )
 
-  content = onClick ? (
-    <button role='button' {...baseProps}>
-      {content}
-    </button>
-  ) : (
-    <span {...baseProps}>{content}</span>
-  )
+  content = onClick
+    ? (
+      <button role='button' {...baseProps}>
+        {content}
+      </button>
+    )
+    : (
+      <span {...baseProps}>{content}</span>
+    )
 
   if (tooltip) {
     return (

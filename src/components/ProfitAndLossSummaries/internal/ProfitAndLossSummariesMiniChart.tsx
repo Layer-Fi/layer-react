@@ -42,9 +42,9 @@ export function toMiniChartData({
   }
 
   if (
-    !items ||
-    items.length === 0 ||
-    !items.find(x => Math.abs(x.value) !== 0)
+    !items
+    || items.length === 0
+    || !items.find(x => Math.abs(x.value) !== 0)
   ) {
     return CHART_PLACEHOLDER
   }
@@ -104,7 +104,7 @@ export function ProfitAndLossSummariesMiniChart({
           return (
             <Cell
               key={`cell-${index}`}
-              className={'Layer__profit-and-loss-detailed-charts__pie'}
+              className='Layer__profit-and-loss-detailed-charts__pie'
               fill={
                 entry.name === 'placeholder' ? '#e6e6e6' : colorConfig.color
               }

@@ -33,7 +33,7 @@ export const ProfitAndLossReport = ({
   return (
     <View
       type='panel'
-      header={
+      header={(
         <Header>
           <HeaderRow>
             <HeaderCol>
@@ -44,12 +44,14 @@ export const ProfitAndLossReport = ({
                   defaultDatePickerMode={defaultDatePickerMode}
                   customDateRanges={customDateRanges}
                 />
-                {comparisonConfig && view === 'desktop' ? (
-                  <ProfitAndLoss.CompareOptions
-                    tagComparisonOptions={comparisonConfig.tagComparisonOptions}
-                    defaultTagFilter={comparisonConfig.defaultTagFilter}
-                  />
-                ) : null}
+                {comparisonConfig && view === 'desktop'
+                  ? (
+                    <ProfitAndLoss.CompareOptions
+                      tagComparisonOptions={comparisonConfig.tagComparisonOptions}
+                      defaultTagFilter={comparisonConfig.defaultTagFilter}
+                    />
+                  )
+                  : null}
               </>
             </HeaderCol>
             <HeaderCol>
@@ -61,26 +63,28 @@ export const ProfitAndLossReport = ({
               />
             </HeaderCol>
           </HeaderRow>
-          {comparisonConfig && view !== 'desktop' ? (
-            <HeaderRow>
-              <HeaderCol>
-                <ProfitAndLoss.CompareOptions
-                  tagComparisonOptions={comparisonConfig.tagComparisonOptions}
-                  defaultTagFilter={comparisonConfig.defaultTagFilter}
-                />
-              </HeaderCol>
-            </HeaderRow>
-          ) : null}
+          {comparisonConfig && view !== 'desktop'
+            ? (
+              <HeaderRow>
+                <HeaderCol>
+                  <ProfitAndLoss.CompareOptions
+                    tagComparisonOptions={comparisonConfig.tagComparisonOptions}
+                    defaultTagFilter={comparisonConfig.defaultTagFilter}
+                  />
+                </HeaderCol>
+              </HeaderRow>
+            )
+            : null}
         </Header>
-      }
+      )}
     >
       <Panel
-        sidebar={
+        sidebar={(
           <ProfitAndLoss.DetailedCharts
             showDatePicker={false}
             stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
           />
-        }
+        )}
         sidebarIsOpen={Boolean(sidebarScope)}
         parentRef={parentRef}
       >

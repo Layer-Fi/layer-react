@@ -45,11 +45,11 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
   const { data: auth } = useAuth()
 
   const queryKey =
-    businessId &&
-    startDate &&
-    endDate &&
-    auth?.access_token &&
-    `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
+    businessId
+    && startDate
+    && endDate
+    && auth?.access_token
+    && `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
       ',',
     )}-${reportingBasis}`
 

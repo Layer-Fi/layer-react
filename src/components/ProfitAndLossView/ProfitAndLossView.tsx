@@ -47,11 +47,11 @@ const ProfitAndLossPanel = ({
 
   return (
     <Panel
-      sidebar={
+      sidebar={(
         <ProfitAndLossDetailedCharts
           stringOverrides={stringOverrides?.profitAndLossDetailedCharts}
         />
-      }
+      )}
       sidebarIsOpen={Boolean(sidebarScope)}
       parentRef={containerRef}
     >

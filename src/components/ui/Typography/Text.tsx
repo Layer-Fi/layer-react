@@ -16,7 +16,7 @@ const P = forwardRef<HTMLParagraphElement, PropsWithChildren<TextProps>>(
     const dataProperties = useMemo(() => toDataProperties({
       align,
       pbe,
-      size
+      size,
     }), [align, pbe, size])
 
     return (
@@ -24,7 +24,7 @@ const P = forwardRef<HTMLParagraphElement, PropsWithChildren<TextProps>>(
         {children}
       </p>
     )
-  }
+  },
 )
 P.displayName = 'P'
 

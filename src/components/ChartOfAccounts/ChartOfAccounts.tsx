@@ -52,23 +52,25 @@ const ChartOfAccountsContent = ({
 
   return (
     <Container name='chart-of-accounts' ref={containerRef} asWidget={asWidget}>
-      {accountId ? (
-        <LedgerAccount
-          view={view}
-          containerRef={containerRef}
-          stringOverrides={stringOverrides?.ledgerAccount}
-        />
-      ) : (
-        <ChartOfAccountsTable
-          asWidget={asWidget}
-          withDateControl={withDateControl}
-          withExpandAllButton={withExpandAllButton}
-          view={view}
-          containerRef={containerRef}
-          stringOverrides={stringOverrides?.chartOfAccountsTable}
-          templateAccountsEditable={templateAccountsEditable}
-        />
-      )}
+      {accountId
+        ? (
+          <LedgerAccount
+            view={view}
+            containerRef={containerRef}
+            stringOverrides={stringOverrides?.ledgerAccount}
+          />
+        )
+        : (
+          <ChartOfAccountsTable
+            asWidget={asWidget}
+            withDateControl={withDateControl}
+            withExpandAllButton={withExpandAllButton}
+            view={view}
+            containerRef={containerRef}
+            stringOverrides={stringOverrides?.chartOfAccountsTable}
+            templateAccountsEditable={templateAccountsEditable}
+          />
+        )}
     </Container>
   )
 }

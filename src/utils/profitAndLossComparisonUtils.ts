@@ -19,13 +19,15 @@ export const getComparisonValue = (
   if (depth === 0) {
     if (typeof cellData === 'string' || typeof cellData === 'number') {
       return cellData
-    } else {
+    }
+    else {
       return cellData?.value !== undefined ? cellData.value : ''
     }
-  } else if (
-    typeof cellData === 'object' &&
-    cellData !== null &&
-    'line_items' in cellData
+  }
+  else if (
+    typeof cellData === 'object'
+    && cellData !== null
+    && 'line_items' in cellData
   ) {
     for (const item of cellData.line_items || []) {
       const result = getComparisonLineItemValue(item, name, depth)
@@ -47,7 +49,8 @@ const getComparisonLineItemValue = (
     if (lineItem.display_name === name) {
       return lineItem.value !== undefined ? lineItem.value : ''
     }
-  } else if (lineItem.line_items && lineItem.line_items.length > 0) {
+  }
+  else if (lineItem.line_items && lineItem.line_items.length > 0) {
     for (const childLineItem of lineItem.line_items) {
       const result = getComparisonLineItemValue(childLineItem, name, depth - 1)
       if (result !== '') {
@@ -65,7 +68,7 @@ export const mergeComparisonLineItemsAtDepth = (
   const map = new Map<string, LineItem>()
 
   const mergeItems = (items: LineItem[]) => {
-    items.forEach(item => {
+    items.forEach((item) => {
       if (!map.has(item.display_name)) {
         map.set(item.display_name, { ...item, line_items: [] })
       }

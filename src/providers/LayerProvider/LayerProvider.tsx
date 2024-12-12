@@ -33,7 +33,7 @@ export const LayerProvider = ({
   usePlaidSandbox,
   ...restProps
 }: PropsWithChildren<LayerProviderProps>) => {
-  const [ cache ] = useState(() => new Map())
+  const [cache] = useState(() => new Map())
 
   return (
     <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>

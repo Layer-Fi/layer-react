@@ -21,7 +21,8 @@ export const TableRow: React.FC<TableRowProps> = ({
   ) => {
     if (onClick) {
       onClick(e)
-    } else {
+    }
+    else {
       if (variant === 'summation' || !expandable) return
       handleExpand && handleExpand()
     }
@@ -32,11 +33,11 @@ export const TableRow: React.FC<TableRowProps> = ({
     !isHeadRow && `Layer__table-row--depth-${depth}`,
     !isHeadRow && `Layer__table-row--variant-${variant}`,
     selected && 'Layer__table-row--selected',
-    !isHeadRow &&
-      expandable &&
-      (isExpanded
-        ? 'Layer__table-row--expanded'
-        : 'Layer__table-row--collapsed'),
+    !isHeadRow
+    && expandable
+    && (isExpanded
+      ? 'Layer__table-row--expanded'
+      : 'Layer__table-row--collapsed'),
   ])
 
   return (

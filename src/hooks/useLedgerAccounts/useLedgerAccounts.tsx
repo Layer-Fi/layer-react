@@ -36,10 +36,10 @@ export const useLedgerAccounts: UseLedgerAccounts = (
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
 
   const queryKey =
-    businessId &&
-    accountId &&
-    auth?.access_token &&
-    `ledger-accounts-lines-${businessId}-${accountId}`
+    businessId
+    && accountId
+    && auth?.access_token
+    && `ledger-accounts-lines-${businessId}-${accountId}`
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,
@@ -59,10 +59,10 @@ export const useLedgerAccounts: UseLedgerAccounts = (
     isValidating: isValdiatingEntry,
     error: errorEntry,
   } = useSWR(
-    businessId &&
-      selectedEntryId &&
-      auth?.access_token &&
-      `ledger-accounts-entry-${businessId}-${selectedEntryId}}`,
+    businessId
+    && selectedEntryId
+    && auth?.access_token
+    && `ledger-accounts-entry-${businessId}-${selectedEntryId}}`,
     Layer.getLedgerAccountsEntry(apiUrl, auth?.access_token, {
       params: { businessId, entryId: selectedEntryId },
     }),

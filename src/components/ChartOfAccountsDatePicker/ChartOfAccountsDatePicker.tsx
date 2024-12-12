@@ -10,7 +10,7 @@ export const ChartOfAccountsDatePicker = () => {
     <DatePicker
       mode='monthPicker'
       selected={dateRange.startDate}
-      onChange={date => {
+      onChange={(date) => {
         if (!Array.isArray(date)) {
           changeDateRange({
             startDate: startOfMonth(date),

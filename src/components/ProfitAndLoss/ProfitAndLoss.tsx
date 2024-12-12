@@ -63,11 +63,13 @@ const ProfitAndLoss = ({
   return (
     <PNLContext.Provider value={contextData}>
       <PNLComparisonContext.Provider value={comparisonContextData}>
-        {asContainer ? (
-          <Container name='profit-and-loss'>{children}</Container>
-        ) : (
-          children
-        )}
+        {asContainer
+          ? (
+            <Container name='profit-and-loss'>{children}</Container>
+          )
+          : (
+            children
+          )}
       </PNLComparisonContext.Provider>
     </PNLContext.Provider>
   )

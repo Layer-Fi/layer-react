@@ -29,10 +29,10 @@ export const MatchForm = ({
   const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
   const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
     isAlreadyMatched(bankTransaction)
-      ?? (bankTransaction.suggested_matches
+    ?? (bankTransaction.suggested_matches
       && bankTransaction.suggested_matches?.length > 0
-        ? bankTransaction.suggested_matches[0].id
-        : undefined),
+      ? bankTransaction.suggested_matches[0].id
+      : undefined),
   )
   const [formError, setFormError] = useState<string | undefined>()
   const [showRetry, setShowRetry] = useState(false)
@@ -40,7 +40,8 @@ export const MatchForm = ({
   useEffect(() => {
     if (bankTransaction.error) {
       setShowRetry(true)
-    } else if (showRetry) {
+    }
+    else if (showRetry) {
       setShowRetry(false)
     }
   }, [bankTransaction.error])
@@ -63,7 +64,8 @@ export const MatchForm = ({
 
     if (!selectedMatchId) {
       setFormError('Select an option to match the transaction')
-    } else if (
+    }
+    else if (
       selectedMatchId
       && selectedMatchId !== isAlreadyMatched(bankTransaction)
     ) {
@@ -81,7 +83,7 @@ export const MatchForm = ({
         classNamePrefix='Layer__bank-transaction-mobile-list-item'
         bankTransaction={bankTransaction}
         selectedMatchId={selectedMatchId}
-        setSelectedMatchId={id => {
+        setSelectedMatchId={(id) => {
           setFormError(undefined)
           setSelectedMatchId(id)
         }}
@@ -102,8 +104,7 @@ export const MatchForm = ({
             placeholder='Add description'
             value={memoText}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              setMemoText(e.target.value)
-            }
+              setMemoText(e.target.value)}
           />
         </InputGroup>
       )}
@@ -127,7 +128,7 @@ export const MatchForm = ({
       <div className='Layer__bank-transaction-mobile-list-item__actions'>
         {showReceiptUploads && (
           <FileInput
-            onUpload={(files) => receiptsRef.current?.uploadReceipt(files[0])}
+            onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}
@@ -149,11 +150,13 @@ export const MatchForm = ({
         </Button>
       </div>
       {formError && <ErrorText>{formError}</ErrorText>}
-      {bankTransaction.error && showRetry ? (
-        <ErrorText>
-          Approval failed. Check connection and retry in few seconds.
-        </ErrorText>
-      ) : null}
+      {bankTransaction.error && showRetry
+        ? (
+          <ErrorText>
+            Approval failed. Check connection and retry in few seconds.
+          </ErrorText>
+        )
+        : null}
     </div>
   )
 }

@@ -10,7 +10,7 @@ export const TasksContext = createContext<TasksContextType>({
   error: undefined,
   currentDate: new Date(),
   setCurrentDate: () => {},
-  dateRange: { startDate: startOfYear(new Date()), endDate: endOfYear(new Date())},
+  dateRange: { startDate: startOfYear(new Date()), endDate: endOfYear(new Date()) },
   setDateRange: () => {},
   refetch: () => {},
   submitResponseToTask: () => {},

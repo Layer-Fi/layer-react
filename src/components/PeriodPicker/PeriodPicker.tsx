@@ -27,9 +27,9 @@ interface PeriodPickerProps {
 }
 
 const periodLabelMap: Record<PeriodPickerOption, string> = {
-  month: 'Month',
-  quarter: 'Quarter',
-  year: 'Year',
+  'month': 'Month',
+  'quarter': 'Quarter',
+  'year': 'Year',
   '2_months': '2 months',
   '3_months': '3 months',
   '6_months': '6 months',
@@ -67,7 +67,7 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
 
   const getStartEndDate = (
     option: PeriodPickerOption,
-  ): { start_date: string; end_date: string } => {
+  ): { start_date: string, end_date: string } => {
     const currentDate = new Date()
     let startDate: Date
     let endDate: Date
@@ -232,8 +232,8 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
+      dropdownRef.current
+      && !dropdownRef.current.contains(event.target as Node)
     ) {
       setIsOpen(false)
     }

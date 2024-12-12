@@ -82,12 +82,13 @@ const JournalTableContent = ({
           isExpanded={expanded}
           handleExpand={() => setIsOpen(rowKey)}
           selected={selectedEntryId === row.id}
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation()
 
             if (selectedEntryId === row.id) {
               closeSelectedEntry()
-            } else {
+            }
+            else {
               setSelectedEntryId(row.id)
             }
           }}
@@ -95,7 +96,7 @@ const JournalTableContent = ({
         >
           <TableCell
             withExpandIcon={expandable}
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation()
 
               expandable && setIsOpen(rowKey)
@@ -107,55 +108,63 @@ const JournalTableContent = ({
             {row.entry_at && formatTime(parseISO(row.entry_at), DATE_FORMAT)}
           </TableCell>
           <TableCell>{humanizeEnum(row.entry_type)}</TableCell>
-          <TableCell>({row.line_items.length})</TableCell>
-          <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-            {'line_items' in row &&
-              Math.abs(
-                row.line_items
-                  .filter(item => item.direction === 'DEBIT')
-                  .map(item => item.amount)
-                  .reduce((a, b) => a + b, 0),
-              )}
+          <TableCell>
+            (
+            {row.line_items.length}
+            )
           </TableCell>
           <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-            {'line_items' in row &&
-              Math.abs(
-                row.line_items
-                  .filter(item => item.direction === 'CREDIT')
-                  .map(item => item.amount)
-                  .reduce((a, b) => a + b, 0),
-              )}
+            {'line_items' in row
+            && Math.abs(
+              row.line_items
+                .filter(item => item.direction === 'DEBIT')
+                .map(item => item.amount)
+                .reduce((a, b) => a + b, 0),
+            )}
+          </TableCell>
+          <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+            {'line_items' in row
+            && Math.abs(
+              row.line_items
+                .filter(item => item.direction === 'CREDIT')
+                .map(item => item.amount)
+                .reduce((a, b) => a + b, 0),
+            )}
           </TableCell>
         </TableRow>
-        {expandable &&
-          expanded &&
-          row.line_items.map((subItem, subIdx) => (
-            <TableRow
-              key={rowKey + '-' + index + '-' + subIdx}
-              rowKey={rowKey + '-' + index + '-' + subIdx}
-              depth={depth + 1}
-              selected={selectedEntryId === row.id}
-            >
-              <TableCell />
-              <TableCell />
-              <TableCell />
-              <TableCell>{accountName(subItem)}</TableCell>
-              {subItem.direction === 'DEBIT' && subItem.amount >= 0 ? (
+        {expandable
+        && expanded
+        && row.line_items.map((subItem, subIdx) => (
+          <TableRow
+            key={rowKey + '-' + index + '-' + subIdx}
+            rowKey={rowKey + '-' + index + '-' + subIdx}
+            depth={depth + 1}
+            selected={selectedEntryId === row.id}
+          >
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell>{accountName(subItem)}</TableCell>
+            {subItem.direction === 'DEBIT' && subItem.amount >= 0
+              ? (
                 <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
                   {subItem.amount}
                 </TableCell>
-              ) : (
+              )
+              : (
                 <TableCell />
               )}
-              {subItem.direction === 'CREDIT' && subItem.amount >= 0 ? (
+            {subItem.direction === 'CREDIT' && subItem.amount >= 0
+              ? (
                 <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
                   {subItem.amount}
                 </TableCell>
-              ) : (
+              )
+              : (
                 <TableCell />
               )}
-            </TableRow>
-          ))}
+          </TableRow>
+        ))}
       </React.Fragment>
     )
   }

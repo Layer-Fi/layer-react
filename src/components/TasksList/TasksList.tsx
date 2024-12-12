@@ -23,7 +23,9 @@ const TasksEmptyState = () => (
     </div>
     <Text size={TextSize.sm}>
       There are no pending tasks!
-      <br /> Great job!
+      <br />
+      {' '}
+      Great job!
     </Text>
   </div>
 )
@@ -33,7 +35,7 @@ export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
 
   // Collect tasks for selected month (currentDate)
   const tasks = useMemo(() => {
-    return rawData?.filter(x => {
+    return rawData?.filter((x) => {
       const d = x.effective_date ? parseISO(x.effective_date) : parseISO(x.created_at)
       return !isBefore(d, startOfMonth(currentDate)) && !isAfter(d, endOfMonth(currentDate))
     })
@@ -75,38 +77,42 @@ export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
 
   return (
     <div className='Layer__tasks-list'>
-      {sortedTasks && sortedTasks.length > 0 ? (
-        <>
-          {sortedTasks.map((task, index) => (
-            <TasksListItem
-              key={task.id}
-              task={task}
-              goToNextPageIfAllComplete={goToNextPage}
-              defaultOpen={index === indexFirstIncomplete}
-            />
-          ))}
-          {tasks && tasks.length >= 10 && (
-            <div className='Layer__tasks__pagination'>
-              <Pagination
-                currentPage={currentPage}
-                totalCount={tasks?.length || 0}
-                pageSize={pageSize}
-                onPageChange={page => setCurrentPage(page)}
+      {sortedTasks && sortedTasks.length > 0
+        ? (
+          <>
+            {sortedTasks.map((task, index) => (
+              <TasksListItem
+                key={task.id}
+                task={task}
+                goToNextPageIfAllComplete={goToNextPage}
+                defaultOpen={index === indexFirstIncomplete}
               />
-            </div>
-          )}
-        </>
-      ) : (
-        <>
-          {error ? (
-            <ErrorText>
-              Approval failed. Check connection and retry in few seconds.
-            </ErrorText>
-          ) : (
-            <TasksEmptyState />
-          )}
-        </>
-      )}
+            ))}
+            {tasks && tasks.length >= 10 && (
+              <div className='Layer__tasks__pagination'>
+                <Pagination
+                  currentPage={currentPage}
+                  totalCount={tasks?.length || 0}
+                  pageSize={pageSize}
+                  onPageChange={page => setCurrentPage(page)}
+                />
+              </div>
+            )}
+          </>
+        )
+        : (
+          <>
+            {error
+              ? (
+                <ErrorText>
+                  Approval failed. Check connection and retry in few seconds.
+                </ErrorText>
+              )
+              : (
+                <TasksEmptyState />
+              )}
+          </>
+        )}
     </div>
   )
 }

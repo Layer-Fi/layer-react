@@ -36,10 +36,10 @@ export const ProfitAndLossCompareTable = ({
 
   useEffect(() => {
     if (
-      dateRange?.startDate &&
-      dateRange?.endDate &&
-      !comparisonData &&
-      !isLoading
+      dateRange?.startDate
+      && dateRange?.endDate
+      && !comparisonData
+      && !isLoading
     ) {
       refetch(
         {
@@ -72,10 +72,10 @@ export const ProfitAndLossCompareTable = ({
       data ? data : []
 
     if (!lineItem) {
-      comparisonData.forEach(item => {
+      comparisonData.forEach((item) => {
         if (
-          rowKey in item.pnl &&
-          item.pnl[rowKey as keyof ProfitAndLossComparisonPnl] !== null
+          rowKey in item.pnl
+          && item.pnl[rowKey as keyof ProfitAndLossComparisonPnl] !== null
         ) {
           rowData.push(item.pnl[rowKey as keyof ProfitAndLossComparisonPnl])
         }
@@ -121,14 +121,14 @@ export const ProfitAndLossCompareTable = ({
         </TableRow>
         {expanded && lineItem?.line_items
           ? lineItem.line_items.map(child =>
-              renderRow(
-                child.display_name,
-                depth + 1,
-                child.display_name,
-                child,
-                rowData as (string | number | LineItem)[],
-              ),
-            )
+            renderRow(
+              child.display_name,
+              depth + 1,
+              child.display_name,
+              child,
+              rowData as (string | number | LineItem)[],
+            ),
+          )
           : null}
       </React.Fragment>
     )
@@ -145,10 +145,10 @@ export const ProfitAndLossCompareTable = ({
                 <TableCell key={option + '-' + i} primary isHeaderCell>
                   {option.displayName}
                 </TableCell>
-                {compareMonths &&
-                  Array.from({ length: compareMonths - 1 }, (_, index) => (
-                    <TableCell key={option + '-' + index} isHeaderCell />
-                  ))}
+                {compareMonths
+                && Array.from({ length: compareMonths - 1 }, (_, index) => (
+                  <TableCell key={option + '-' + index} isHeaderCell />
+                ))}
               </React.Fragment>
             ))}
           </TableRow>
@@ -158,31 +158,33 @@ export const ProfitAndLossCompareTable = ({
         {compareMonths && (
           <TableRow rowKey=''>
             <TableCell isHeaderCell />
-            {compareOptions && compareOptions.length > 0 ? (
-              compareOptions.map((option, i) => (
-                <React.Fragment key={option + '-' + i}>
+            {compareOptions && compareOptions.length > 0
+              ? (
+                compareOptions.map((option, i) => (
+                  <React.Fragment key={option + '-' + i}>
+                    {generatComparisonMonths(
+                      dateRange.startDate,
+                      compareMonths,
+                    ).map((month: string, index: number) => (
+                      <TableCell key={option + '-' + index} isHeaderCell>
+                        {month}
+                      </TableCell>
+                    ))}
+                  </React.Fragment>
+                ))
+              )
+              : (
+                <React.Fragment key='total-1'>
                   {generatComparisonMonths(
                     dateRange.startDate,
                     compareMonths,
                   ).map((month: string, index: number) => (
-                    <TableCell key={option + '-' + index} isHeaderCell>
+                    <TableCell key={'total-' + index + '-cell'} isHeaderCell>
                       {month}
                     </TableCell>
                   ))}
                 </React.Fragment>
-              ))
-            ) : (
-              <React.Fragment key={'total-1'}>
-                {generatComparisonMonths(
-                  dateRange.startDate,
-                  compareMonths,
-                ).map((month: string, index: number) => (
-                  <TableCell key={'total-' + index + '-cell'} isHeaderCell>
-                    {month}
-                  </TableCell>
-                ))}
-              </React.Fragment>
-            )}
+              )}
           </TableRow>
         )}
         {renderRow('income', 0, 'Income')}

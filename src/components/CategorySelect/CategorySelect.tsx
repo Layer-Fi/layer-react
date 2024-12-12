@@ -110,16 +110,16 @@ export const mapSuggestedMatchToOption = (
 
 const DropdownIndicator:
   | React.ComponentType<
-      DropdownIndicatorProps<CategoryOption, false, GroupBase<CategoryOption>>
-    >
+    DropdownIndicatorProps<CategoryOption, false, GroupBase<CategoryOption>>
+  >
   | null
-  | undefined = props => {
-  return (
-    <components.DropdownIndicator {...props}>
-      <ChevronDown />
-    </components.DropdownIndicator>
-  )
-}
+  | undefined = (props) => {
+    return (
+      <components.DropdownIndicator {...props}>
+        <ChevronDown />
+      </components.DropdownIndicator>
+    )
+  }
 
 const GroupHeading = (
   props: GroupHeadingProps<CategoryOption, false, GroupBase<CategoryOption>>,
@@ -154,8 +154,8 @@ const Option = (
       >
         <div className='Layer__select__option-content__match__main-row'>
           <span className='Layer__select__option-content__match__date'>
-            {props.data.payload.date &&
-              formatTime(parseISO(props.data.payload.date), DATE_FORMAT)}
+            {props.data.payload.date
+            && formatTime(parseISO(props.data.payload.date), DATE_FORMAT)}
           </span>
           <span className='Layer__select__option-content__match__description'>
             {props.data.payload.display_name}
@@ -163,7 +163,8 @@ const Option = (
         </div>
         <div className='Layer__select__option-content__match__amount-row'>
           <span className='Layer__select__option-content__match__amount'>
-            ${formatMoney(props.data.payload.amount)}
+            $
+            {formatMoney(props.data.payload.amount)}
           </span>
         </div>
       </components.Option>
@@ -176,15 +177,17 @@ const Option = (
       className={`Layer__select__option-menu-content ${props.className}`}
     >
       <div className='Layer__select__option-menu--name'>
-        {props.isSelected ? (
-          <span className='Layer__select__option-menu-content-check'>
-            <Check size={16} />
-          </span>
-        ) : (
-          <span className='Layer__select__option-menu-content-check'>
-            <div style={{ width: 16, height: 16 }} />
-          </span>
-        )}
+        {props.isSelected
+          ? (
+            <span className='Layer__select__option-menu-content-check'>
+              <Check size={16} />
+            </span>
+          )
+          : (
+            <span className='Layer__select__option-menu-content-check'>
+              <div style={{ width: 16, height: 16 }} />
+            </span>
+          )}
         <div>{props.data.payload.display_name}</div>
       </div>
       {props.showTooltips && props.data.payload.description && (
@@ -236,7 +239,7 @@ function flattenCategories(
       getLeafCategories(subCategory),
     )
   }
-  return categories.map(category => {
+  return categories.map((category) => {
     return {
       label: category.display_name,
       options: getLeafCategories(category).map(x => mapCategoryToOption(x)),
@@ -262,7 +265,7 @@ export const CategorySelect = ({
       ? [
           {
             label: 'Match',
-            options: bankTransaction.suggested_matches.map(x => {
+            options: bankTransaction.suggested_matches.map((x) => {
               return {
                 type: OptionActionType.MATCH,
                 payload: {
@@ -275,12 +278,12 @@ export const CategorySelect = ({
               } satisfies CategoryOption
             }),
           } satisfies GroupBase<CategoryOption>,
-        ]
+      ]
       : []
 
   const suggestedOptions =
-    bankTransaction?.categorization_flow?.type ===
-    CategorizationType.ASK_FROM_SUGGESTIONS
+    bankTransaction?.categorization_flow?.type
+    === CategorizationType.ASK_FROM_SUGGESTIONS
       ? [
           {
             label: 'Suggestions',
@@ -288,7 +291,7 @@ export const CategorySelect = ({
               mapCategoryToOption(x),
             ),
           } satisfies GroupBase<CategoryOption>,
-        ]
+      ]
       : []
 
   const categoryOptions = flattenCategories(categories)
@@ -302,9 +305,9 @@ export const CategorySelect = ({
 
   const selected = value
     ? value
-    : !excludeMatches &&
-        matchOptions?.length === 1 &&
-        matchOptions[0].options.length === 1
+    : !excludeMatches
+      && matchOptions?.length === 1
+      && matchOptions[0].options.length === 1
       ? matchOptions[0].options[0]
       : undefined
 
@@ -366,8 +369,7 @@ export const CategorySelect = ({
       isDisabled={disabled}
       isOptionDisabled={option => option.disabled ?? false}
       isOptionSelected={option =>
-        selected?.payload.display_name == option.payload.display_name
-      }
+        selected?.payload.display_name == option.payload.display_name}
     />
   )
 }

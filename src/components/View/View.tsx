@@ -53,13 +53,15 @@ const View = forwardRef<HTMLDivElement, ViewProps>(
             {header ?? headerControls}
           </ViewHeader>
         )}
-        {withSidebar ? (
-          <Panel sidebarIsOpen={true} sidebar={sidebar} defaultSidebarHeight>
+        {withSidebar
+          ? (
+            <Panel sidebarIsOpen={true} sidebar={sidebar} defaultSidebarHeight>
+              <div className='Layer__view-main'>{children}</div>
+            </Panel>
+          )
+          : (
             <div className='Layer__view-main'>{children}</div>
-          </Panel>
-        ) : (
-          <div className='Layer__view-main'>{children}</div>
-        )}
+          )}
       </div>
     )
   },

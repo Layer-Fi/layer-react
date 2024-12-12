@@ -77,46 +77,47 @@ const StatementOfCashFlowView = ({
   }
 
   const datePicker =
-    datePickerMode === 'monthPicker' ? (
-      <DatePicker
-        selected={startDate}
-        onChange={dates => {
-          if (!Array.isArray(dates)) {
-            const date = dates as Date
-            handleDateChange([startOfMonth(date), endOfMonth(date)])
-          }
-        }}
-        dateFormat='MMM'
-        mode={datePickerMode}
-        allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
-        onChangeMode={setDatePickerMode}
-        slots={{
-          ModeSelector: DatePickerModeSelector,
-        }}
-      />
-    ) : (
-      <DatePicker
-        selected={[startDate, endDate]}
-        customDateRanges={customDateRanges}
-        onChange={dates =>
-          handleDateChange(dates as [Date | null, Date | null])
-        }
-        dateFormat='MMM d'
-        mode={datePickerMode}
-        allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
-        onChangeMode={setDatePickerMode}
-        slots={{
-          ModeSelector: DatePickerModeSelector,
-        }}
-      />
-    )
+    datePickerMode === 'monthPicker'
+      ? (
+        <DatePicker
+          selected={startDate}
+          onChange={(dates) => {
+            if (!Array.isArray(dates)) {
+              const date = dates as Date
+              handleDateChange([startOfMonth(date), endOfMonth(date)])
+            }
+          }}
+          dateFormat='MMM'
+          mode={datePickerMode}
+          allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
+          onChangeMode={setDatePickerMode}
+          slots={{
+            ModeSelector: DatePickerModeSelector,
+          }}
+        />
+      )
+      : (
+        <DatePicker
+          selected={[startDate, endDate]}
+          customDateRanges={customDateRanges}
+          onChange={dates =>
+            handleDateChange(dates as [Date | null, Date | null])}
+          dateFormat='MMM d'
+          mode={datePickerMode}
+          allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
+          onChangeMode={setDatePickerMode}
+          slots={{
+            ModeSelector: DatePickerModeSelector,
+          }}
+        />
+      )
 
   return (
     <TableProvider>
       <View
         type='panel'
         ref={containerRef}
-        header={
+        header={(
           <Header>
             <HeaderRow>
               <HeaderCol>{datePicker}</HeaderCol>
@@ -129,19 +130,21 @@ const StatementOfCashFlowView = ({
               </HeaderCol>
             </HeaderRow>
           </Header>
-        }
-      >
-        {!data || isLoading ? (
-          <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-            <Loader />
-          </div>
-        ) : (
-          <StatementOfCashFlowTable
-            data={data}
-            config={STATEMENT_OF_CASH_FLOW_ROWS}
-            stringOverrides={stringOverrides?.statementOfCashFlowTable}
-          />
         )}
+      >
+        {!data || isLoading
+          ? (
+            <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
+              <Loader />
+            </div>
+          )
+          : (
+            <StatementOfCashFlowTable
+              data={data}
+              config={STATEMENT_OF_CASH_FLOW_ROWS}
+              stringOverrides={stringOverrides?.statementOfCashFlowTable}
+            />
+          )}
       </View>
     </TableProvider>
   )

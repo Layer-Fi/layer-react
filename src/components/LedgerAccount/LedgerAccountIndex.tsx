@@ -101,11 +101,11 @@ export const LedgerAccount = ({
 
   return (
     <Panel
-      sidebar={
+      sidebar={(
         <LedgerAccountEntryDetails
           stringOverrides={stringOverrides?.ledgerEntryDetail}
         />
-      }
+      )}
       sidebarIsOpen={Boolean(selectedEntryId)}
       parentRef={containerRef}
       className='Layer__ledger-account__panel'
@@ -133,7 +133,8 @@ export const LedgerAccount = ({
                     className='Layer__ledger-account__balance-value'
                     size={TextSize.sm}
                   >
-                    ${centsToDollars(account?.balance || 0)}
+                    $
+                    {centsToDollars(account?.balance || 0)}
                   </Text>
                 </div>
               </div>
@@ -147,28 +148,28 @@ export const LedgerAccount = ({
               {view === 'desktop' && (
                 <>
                   <th className='Layer__table-header'>
-                    {stringOverrides?.ledgerEntriesTable?.dateColumnHeader ||
-                      'Date'}
+                    {stringOverrides?.ledgerEntriesTable?.dateColumnHeader
+                    || 'Date'}
                   </th>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable
                       ?.journalIdColumnHeader || 'Journal id #'}
                   </th>
                   <th className='Layer__table-header'>
-                    {stringOverrides?.ledgerEntriesTable?.sourceColumnHeader ||
-                      'Source'}
+                    {stringOverrides?.ledgerEntriesTable?.sourceColumnHeader
+                    || 'Source'}
                   </th>
                 </>
               )}
               {view !== 'mobile' && (
                 <>
                   <th className='Layer__table-header Layer__table-cell--amount'>
-                    {stringOverrides?.ledgerEntriesTable?.debitColumnHeader ||
-                      'Debit'}
+                    {stringOverrides?.ledgerEntriesTable?.debitColumnHeader
+                    || 'Debit'}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
-                    {stringOverrides?.ledgerEntriesTable?.creditColumnHeader ||
-                      'Credit'}
+                    {stringOverrides?.ledgerEntriesTable?.creditColumnHeader
+                    || 'Credit'}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable
@@ -206,34 +207,40 @@ export const LedgerAccount = ({
           </div>
         )}
 
-        {error ? (
-          <div className='Layer__table-state-container'>
-            <DataState
-              status={DataStateStatus.failed}
-              title='Something went wrong'
-              description='We couldn’t load your data.'
-              onRefresh={() => refetch()}
-              isLoading={isValidating || isLoading}
-            />
-          </div>
-        ) : null}
+        {error
+          ? (
+            <div className='Layer__table-state-container'>
+              <DataState
+                status={DataStateStatus.failed}
+                title='Something went wrong'
+                description='We couldn’t load your data.'
+                onRefresh={() => refetch()}
+                isLoading={isValidating || isLoading}
+              />
+            </div>
+          )
+          : null}
 
-        {(!data || isLoading) && !error ? (
-          <div className={'Layer__ledger-account__loader-container'}>
-            <Loader />
-          </div>
-        ) : null}
+        {(!data || isLoading) && !error
+          ? (
+            <div className='Layer__ledger-account__loader-container'>
+              <Loader />
+            </div>
+          )
+          : null}
 
-        {!isLoading && !error && data?.length === 0 ? (
-          <div className='Layer__table-state-container'>
-            <DataState
-              status={DataStateStatus.info}
-              title='No records found'
-              onRefresh={() => refetch()}
-              isLoading={isValidating}
-            />
-          </div>
-        ) : null}
+        {!isLoading && !error && data?.length === 0
+          ? (
+            <div className='Layer__table-state-container'>
+              <DataState
+                status={DataStateStatus.info}
+                title='No records found'
+                onRefresh={() => refetch()}
+                isLoading={isValidating}
+              />
+            </div>
+          )
+          : null}
       </div>
     </Panel>
   )

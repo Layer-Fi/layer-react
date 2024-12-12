@@ -74,16 +74,16 @@ export const BalanceSheetTable = ({
             {(!expandable || (expandable && !expanded)) && lineItem.value}
           </TableCell>
         </TableRow>
-        {showChildren &&
-          lineItem.line_items &&
-          lineItem.line_items.map((subItem, subIdx) =>
-            renderLineItem(
-              subItem,
-              depth + 1,
-              rowKey + ':' + subItem.name,
-              subIdx,
-            ),
-          )}
+        {showChildren
+        && lineItem.line_items
+        && lineItem.line_items.map((subItem, subIdx) =>
+          renderLineItem(
+            subItem,
+            depth + 1,
+            rowKey + ':' + subItem.name,
+            subIdx,
+          ),
+        )}
         {showChildren && expandable && (
           <TableRow
             rowKey={rowKey + '-' + rowIndex + '--summation'}
@@ -115,13 +115,13 @@ export const BalanceSheetTable = ({
       <TableBody>
         {config.map((row, idx) => (
           <React.Fragment key={row.lineItem}>
-            {data[row.lineItem as keyof BalanceSheet] &&
-              renderLineItem(
-                data[row.lineItem as keyof BalanceSheet] as LineItem,
-                0,
-                row.lineItem,
-                idx,
-              )}
+            {data[row.lineItem as keyof BalanceSheet]
+            && renderLineItem(
+              data[row.lineItem as keyof BalanceSheet] as LineItem,
+              0,
+              row.lineItem,
+              idx,
+            )}
           </React.Fragment>
         ))}
       </TableBody>

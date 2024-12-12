@@ -41,7 +41,7 @@ export const Panel = ({
         sidebarIsOpen && 'Layer__panel--open',
       )}
     >
-      <div className={'Layer__panel__content'}>
+      <div className='Layer__panel__content'>
         {header}
         {children}
       </div>
@@ -51,9 +51,9 @@ export const Panel = ({
           style={
             !defaultSidebarHeight
               ? {
-                  maxHeight:
+                maxHeight:
                     sidebarHeight > 0 && sidebarIsOpen ? sidebarHeight : 0,
-                }
+              }
               : {}
           }
         >

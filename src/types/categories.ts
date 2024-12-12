@@ -43,17 +43,17 @@ export type Categorization = AutoCategorization | SuggestedCategorization
 
 export type AccountIdentifierPayloadObject =
   | {
-      type: 'StableName'
-      stable_name: string
-    }
+    type: 'StableName'
+    stable_name: string
+  }
   | {
-      type: 'AccountId'
-      id: string
-    }
+    type: 'AccountId'
+    id: string
+  }
   | {
-      type: 'Exclusion'
-      exclusion_type: string
-    }
+    type: 'Exclusion'
+    exclusion_type: string
+  }
 
 export type SingleCategoryUpdate = {
   type: 'Category'
@@ -73,8 +73,8 @@ export function hasSuggestions(
   categorization: Categorization | null,
 ): categorization is SuggestedCategorization {
   return (
-    categorization != null &&
-    (categorization as SuggestedCategorization).suggestions !== undefined &&
-    (categorization as SuggestedCategorization).suggestions.length > 0
+    categorization != null
+    && (categorization as SuggestedCategorization).suggestions !== undefined
+    && (categorization as SuggestedCategorization).suggestions.length > 0
   )
 }

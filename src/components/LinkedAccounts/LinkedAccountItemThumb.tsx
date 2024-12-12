@@ -6,7 +6,7 @@ import { LinkedAccountThumb } from '../LinkedAccountThumb'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 function accountNeedsUniquenessConfirmation({
-  notifications
+  notifications,
 }: Pick<LinkedAccount, 'notifications'>) {
   return notifications?.some(({ type }) => type === 'CONFIRM_UNIQUE')
 }
@@ -59,7 +59,8 @@ export const LinkedAccountItemThumb = ({
         },
       ],
     }
-  } else if (account.connection_needs_repair_as_of) {
+  }
+  else if (account.connection_needs_repair_as_of) {
     pillConfig = {
       text: 'Fix account',
       config: [
@@ -135,7 +136,8 @@ export const LinkedAccountItemThumb = ({
             account.external_account_source,
             account.connection_external_id,
           )
-        } else {
+        }
+        else {
           console.warn('Account doesn\'t have defined connection_external_id')
         }
       },

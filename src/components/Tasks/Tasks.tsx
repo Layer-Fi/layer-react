@@ -31,7 +31,7 @@ export const UseTasksContext = createContext<UseTasksContextType>({
   updateDocUploadTaskDescription: () => {},
   currentDate: new Date(),
   setCurrentDate: () => {},
-  dateRange: { startDate: startOfYear(new Date()), endDate: endOfYear(new Date())},
+  dateRange: { startDate: startOfYear(new Date()), endDate: endOfYear(new Date()) },
   setDateRange: () => {},
 })
 
@@ -97,7 +97,7 @@ export const TasksComponent = ({
     monthlyData,
     currentDate,
     setCurrentDate,
-    dateRange
+    dateRange,
   } = useContext(TasksContext)
 
   const allComplete = useMemo(() => {
@@ -141,22 +141,24 @@ export const TasksComponent = ({
           !open && 'Layer__tasks__content--collapsed',
         )}
       >
-        {isLoading || !data ? (
-          <div className='Layer__tasks__loader-container'>
-            <Loader />
-          </div>
-        ) : (
-          <>
-            <TasksMonthSelector
-              tasks={monthlyData}
-              currentDate={currentDate}
-              onClick={setCurrentDate}
-              year={getYear(dateRange.startDate)}
-            />
-            <TasksPending />
-            <TasksList />
-          </>
-        )}
+        {isLoading || !data
+          ? (
+            <div className='Layer__tasks__loader-container'>
+              <Loader />
+            </div>
+          )
+          : (
+            <>
+              <TasksMonthSelector
+                tasks={monthlyData}
+                currentDate={currentDate}
+                onClick={setCurrentDate}
+                year={getYear(dateRange.startDate)}
+              />
+              <TasksPending />
+              <TasksList />
+            </>
+          )}
       </div>
     </div>
   )

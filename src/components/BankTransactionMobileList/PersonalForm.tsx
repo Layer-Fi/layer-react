@@ -29,9 +29,9 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
 
   return Boolean(
     bankTransaction.category
-      && Object.values(PersonalCategories).includes(
-        bankTransaction.category.display_name as PersonalCategories,
-      ),
+    && Object.values(PersonalCategories).includes(
+      bankTransaction.category.display_name as PersonalCategories,
+    ),
   )
 }
 
@@ -93,8 +93,7 @@ export const PersonalForm = ({
             placeholder='Add description'
             value={memoText}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              setMemoText(e.target.value)
-            }
+              setMemoText(e.target.value)}
           />
         </InputGroup>
       )}
@@ -118,7 +117,7 @@ export const PersonalForm = ({
       <div className='Layer__bank-transaction-mobile-list-item__actions'>
         {showReceiptUploads && (
           <FileInput
-            onUpload={(files) => receiptsRef.current?.uploadReceipt(files[0])}
+            onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}
@@ -136,11 +135,13 @@ export const PersonalForm = ({
               : 'Categorize as Personal'}
         </Button>
       </div>
-      {bankTransaction.error && showRetry ? (
-        <ErrorText>
-          Approval failed. Check connection and retry in few seconds.
-        </ErrorText>
-      ) : null}
+      {bankTransaction.error && showRetry
+        ? (
+          <ErrorText>
+            Approval failed. Check connection and retry in few seconds.
+          </ErrorText>
+        )
+        : null}
     </div>
   )
 }

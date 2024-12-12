@@ -4,7 +4,7 @@ import { reportError } from '../../models/ErrorHandler'
 
 const CUSTOM_PREFIX = 'Layer-'
 const CUSTOM_HEADERS = {
-  [`${CUSTOM_PREFIX}React-Version`]: packageVersion
+  [`${CUSTOM_PREFIX}React-Version`]: packageVersion,
 } as const
 
 export type HTTPVerb = 'get' | 'put' | 'post' | 'patch' | 'options' | 'delete'
@@ -27,7 +27,7 @@ export const get =
       (): Promise<Return> =>
         fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
           headers: {
-            Authorization: 'Bearer ' + (accessToken || ''),
+            'Authorization': 'Bearer ' + (accessToken || ''),
             'Content-Type': 'application/json',
             ...CUSTOM_HEADERS,
           },
@@ -58,7 +58,7 @@ export const request =
       ): Promise<Return> =>
         fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
           headers: {
-            Authorization: 'Bearer ' + (accessToken || ''),
+            'Authorization': 'Bearer ' + (accessToken || ''),
             'Content-Type': 'application/json',
             'Cache-Control': 'no-cache',
             ...CUSTOM_HEADERS,
@@ -144,7 +144,8 @@ const tryToReadErrorsFromResponse = async (res?: Response) => {
   try {
     const data = await res?.json()
     return data?.errors ?? []
-  } catch (_err) {
+  }
+  catch (_err) {
     return []
   }
 }

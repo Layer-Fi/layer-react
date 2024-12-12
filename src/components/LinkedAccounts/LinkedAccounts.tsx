@@ -56,23 +56,27 @@ export const LinkedAccountsComponent = ({
           <Loader />
         </div>
       )}
-      {error && !isLoading ? (
-        <DataState
-          status={DataStateStatus.failed}
-          title='Something went wrong'
-          description='We couldn’t load your data.'
-          onRefresh={() => refetchAccounts()}
-          isLoading={isValidating}
-        />
-      ) : null}
-      {!error && !isLoading ? (
-        <LinkedAccountsContent
-          asWidget={asWidget}
-          showLedgerBalance={showLedgerBalance}
-          showUnlinkItem={showUnlinkItem}
-          showBreakConnection={showBreakConnection}
-        />
-      ) : null}
+      {error && !isLoading
+        ? (
+          <DataState
+            status={DataStateStatus.failed}
+            title='Something went wrong'
+            description='We couldn’t load your data.'
+            onRefresh={() => refetchAccounts()}
+            isLoading={isValidating}
+          />
+        )
+        : null}
+      {!error && !isLoading
+        ? (
+          <LinkedAccountsContent
+            asWidget={asWidget}
+            showLedgerBalance={showLedgerBalance}
+            showUnlinkItem={showUnlinkItem}
+            showBreakConnection={showBreakConnection}
+          />
+        )
+        : null}
     </Container>
   )
 }

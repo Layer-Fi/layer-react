@@ -47,13 +47,15 @@ export function ProfitAndLossSummariesSummary({
       <ProfitAndLossSummariesHeading variants={variants}>
         {label}
       </ProfitAndLossSummariesHeading>
-      {isLoading ? (
-        <SkeletonLoader />
-      ) : (
-        <span className={AMOUNT_CLASS_NAME} {...amountDataProperties}>
-          {formatMoney(Math.abs(amount))}
-        </span>
-      )}
+      {isLoading
+        ? (
+          <SkeletonLoader />
+        )
+        : (
+          <span className={AMOUNT_CLASS_NAME} {...amountDataProperties}>
+            {formatMoney(Math.abs(amount))}
+          </span>
+        )}
     </div>
   )
 }

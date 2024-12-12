@@ -4,13 +4,13 @@ import { ProfitAndLoss } from '../types/profit_and_loss'
 
 const doesLineItemQualifies = (item: LineItem) => {
   return !(
-    item.is_contra ||
-    item.value === undefined ||
-    item.value === null ||
-    isNaN(item.value) ||
-    item.value === -Infinity ||
-    item.value === Infinity ||
-    item.value < 0
+    item.is_contra
+    || item.value === undefined
+    || item.value === null
+    || isNaN(item.value)
+    || item.value === -Infinity
+    || item.value === Infinity
+    || item.value < 0
   )
 }
 
@@ -21,7 +21,7 @@ const collectSubItems = (type: string, item?: LineItem | null) => {
 
   const items: LineBaseItem[] = []
 
-  item?.line_items?.forEach(item => {
+  item?.line_items?.forEach((item) => {
     if (doesLineItemQualifies(item)) {
       items.push({
         name: item.name,
@@ -64,7 +64,7 @@ export const applyShare = (
   items: LineBaseItem[],
   total: number,
 ): LineBaseItem[] => {
-  return items.map(item => {
+  return items.map((item) => {
     if (total === 0) {
       return item
     }

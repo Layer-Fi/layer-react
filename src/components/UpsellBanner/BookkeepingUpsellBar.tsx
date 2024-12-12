@@ -31,15 +31,19 @@ export const BookkeepingUpsellBar = ({
           </Text>
         </div>
       </div>
-      {onClick ? (
-        <Button variant={ButtonVariant.secondary} onClick={onClick}>
-          Schedule a demo
-        </Button>
-      ) : href ? (
-        <Link href={href} target='_blank' variant={ButtonVariant.secondary}>
-          Schedule a demo
-        </Link>
-      ) : null}
+      {onClick
+        ? (
+          <Button variant={ButtonVariant.secondary} onClick={onClick}>
+            Schedule a demo
+          </Button>
+        )
+        : href
+          ? (
+            <Link href={href} target='_blank' variant={ButtonVariant.secondary}>
+              Schedule a demo
+            </Link>
+          )
+          : null}
     </div>
   )
 }

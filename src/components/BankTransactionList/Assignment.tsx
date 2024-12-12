@@ -15,8 +15,8 @@ export interface AssignmentProps {
 
 export const Assignment = ({ bankTransaction }: AssignmentProps) => {
   if (
-    bankTransaction.match &&
-    bankTransaction.categorization_status === CategorizationStatus.MATCHED
+    bankTransaction.match
+    && bankTransaction.categorization_status === CategorizationStatus.MATCHED
   ) {
     return (
       <>
@@ -31,8 +31,8 @@ export const Assignment = ({ bankTransaction }: AssignmentProps) => {
             parseISO(bankTransaction.match.bank_transaction.date),
             DATE_FORMAT,
           )}, ${
-            bankTransaction.match.bank_transaction.description ??
-            bankTransaction.match?.details?.description
+            bankTransaction.match.bank_transaction.description
+            ?? bankTransaction.match?.details?.description
           }`}
         </Text>
       </>
@@ -44,12 +44,12 @@ export const Assignment = ({ bankTransaction }: AssignmentProps) => {
       <>
         <Badge
           icon={<Scissors size={11} />}
-          tooltip={
+          tooltip={(
             <SplitTooltipDetails
               classNamePrefix='Layer__bank-transaction-list-item'
               category={bankTransaction.category}
             />
-          }
+          )}
         >
           Split
         </Badge>

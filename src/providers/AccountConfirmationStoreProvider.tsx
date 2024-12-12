@@ -4,7 +4,7 @@ import { createStore, useStore } from 'zustand'
 const ACCOUNT_CONFIRMATION_VISIBILITY = [
   'PRELOADED',
   'DEFAULT',
-  'DISMISSED'
+  'DISMISSED',
 ] as const
 type AccountConfirmationVisibility = typeof ACCOUNT_CONFIRMATION_VISIBILITY[number]
 
@@ -24,8 +24,8 @@ const AccountConfirmationStoreContext = createContext(
       dismiss: () => {},
       preload: () => {},
       reset: () => {},
-    }
-  }))
+    },
+  })),
 )
 
 export function useAccountConfirmationStore() {
@@ -52,14 +52,14 @@ export function AccountConfirmationStoreProvider({
   initialVisibility = 'DEFAULT',
 }: AccountConfirmationStoreProviderProps) {
   const [store] = useState(() =>
-    createStore<AccountConfirmationStoreShape>((set) => ({
+    createStore<AccountConfirmationStoreShape>(set => ({
       visibility: initialVisibility,
       actions: {
-        dismiss: () => set((state) => ({ ...state, visibility: 'DISMISSED' })),
-        preload: () => set((state) => ({ ...state, visibility: 'PRELOADED' })),
-        reset: () => set((state) => ({ ...state, visibility: 'DEFAULT' })),
-      }
-    }))
+        dismiss: () => set(state => ({ ...state, visibility: 'DISMISSED' })),
+        preload: () => set(state => ({ ...state, visibility: 'PRELOADED' })),
+        reset: () => set(state => ({ ...state, visibility: 'DEFAULT' })),
+      },
+    })),
   )
 
   return (

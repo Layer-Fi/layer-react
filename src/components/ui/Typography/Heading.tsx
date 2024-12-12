@@ -15,12 +15,14 @@ const Heading = forwardRef<
 >(({ size, pbe, ...restProps }, ref) => {
   const dataProperties = useMemo(() => toDataProperties({ size, pbe }), [size, pbe])
 
-  return <ReactAriaHeading
-    {...restProps}
-    {...dataProperties}
-    className={HEADING_CLASS_NAME}
-    ref={ref}
-  />
+  return (
+    <ReactAriaHeading
+      {...restProps}
+      {...dataProperties}
+      className={HEADING_CLASS_NAME}
+      ref={ref}
+    />
+  )
 })
 Heading.displayName = 'Heading'
 

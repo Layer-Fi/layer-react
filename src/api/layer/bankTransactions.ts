@@ -58,7 +58,7 @@ export const getBankTransactions = get<
 )
 
 export const categorizeBankTransaction = put<
-  { data: BankTransaction; errors: unknown },
+  { data: BankTransaction, errors: unknown },
   CategoryUpdate
 >(
   ({ businessId, bankTransactionId }) =>
@@ -66,8 +66,8 @@ export const categorizeBankTransaction = put<
 )
 
 export const matchBankTransaction = put<
-  { data: BankTransactionMatch; errors: unknown },
-  { match_id: string; type: BankTransactionMatchType }
+  { data: BankTransactionMatch, errors: unknown },
+  { match_id: string, type: BankTransactionMatchType }
 >(
   ({ businessId, bankTransactionId }) =>
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/match`,
@@ -108,7 +108,7 @@ export const getBankTransactionMetadata = get<{
 )
 
 export const updateBankTransactionMetadata = put<
-  { data: BankTransactionMetadata; errors: unknown },
+  { data: BankTransactionMetadata, errors: unknown },
   { memo: string }
 >(
   ({ businessId, bankTransactionId }) =>
@@ -157,7 +157,7 @@ export const uploadBankTransactionDocument =
       formData.append('documentType', documentType)
 
       const endpoint = `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/documents`
-      return postWithFormData<{ data: FileMetadata; errors: unknown }>(
+      return postWithFormData<{ data: FileMetadata, errors: unknown }>(
         endpoint,
         formData,
         baseUrl,

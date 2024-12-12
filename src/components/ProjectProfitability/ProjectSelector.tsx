@@ -13,7 +13,7 @@ export function ProjectSelector() {
       placeholder='Select a project...'
       value={activeValue ?? null}
       isClearable
-      onChange={selectedOption => {
+      onChange={(selectedOption) => {
         setActiveValue({ key: 'project', activeValue: selectedOption?.value })
       }}
     />

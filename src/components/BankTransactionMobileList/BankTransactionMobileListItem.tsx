@@ -120,7 +120,8 @@ export const BankTransactionMobileListItem = ({
       if (editable && shouldHideAfterCategorize(bankTransaction)) {
         setRemoveAnim(true)
         openNext()
-      } else {
+      }
+      else {
         close()
       }
     }
@@ -149,7 +150,8 @@ export const BankTransactionMobileListItem = ({
       }, index * 20)
 
       return () => clearTimeout(timeoutId)
-    } else {
+    }
+    else {
       setShowComponent(true)
     }
   }, [])
@@ -230,34 +232,36 @@ export const BankTransactionMobileListItem = ({
             className={`${className}__expanded-row__content`}
             ref={formRowRef}
           >
-            {categorizationEnabled(mode) ? (
-              <div className={`${className}__toggle-row`}>
-                <Toggle
-                  name={`purpose-${bankTransaction.id}`}
-                  size={ToggleSize.xsmall}
-                  options={[
-                    {
-                      value: 'business',
-                      label: 'Business',
-                      style: { minWidth: 84 },
-                    },
-                    {
-                      value: 'personal',
-                      label: 'Personal',
-                      style: { minWidth: 84 },
-                    },
-                    {
-                      value: 'more',
-                      label: 'More',
-                      style: { minWidth: 84 },
-                    },
-                  ]}
-                  selected={purpose}
-                  onChange={onChangePurpose}
-                />
-                <CloseButton onClick={() => close()} />
-              </div>
-            ) : null}
+            {categorizationEnabled(mode)
+              ? (
+                <div className={`${className}__toggle-row`}>
+                  <Toggle
+                    name={`purpose-${bankTransaction.id}`}
+                    size={ToggleSize.xsmall}
+                    options={[
+                      {
+                        value: 'business',
+                        label: 'Business',
+                        style: { minWidth: 84 },
+                      },
+                      {
+                        value: 'personal',
+                        label: 'Personal',
+                        style: { minWidth: 84 },
+                      },
+                      {
+                        value: 'more',
+                        label: 'More',
+                        style: { minWidth: 84 },
+                      },
+                    ]}
+                    selected={purpose}
+                    onChange={onChangePurpose}
+                  />
+                  <CloseButton onClick={() => close()} />
+                </div>
+              )
+              : null}
             <BankTransactionMobileForms
               purpose={purpose}
               bankTransaction={bankTransaction}

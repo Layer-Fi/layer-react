@@ -21,22 +21,24 @@ const Button = forwardRef<
     children,
     ...restProps
   },
-  ref
+  ref,
 ) => {
   const dataProperties = useMemo(() => toDataProperties({
     icon,
     size,
-    variant
+    variant,
   }), [icon, size, variant])
 
-  return <ReactAriaButton
-    {...restProps}
-    {...dataProperties}
-    className={BUTTON_CLASS_NAME}
-    ref={ref}
-  >
-    {children}
-  </ReactAriaButton>
+  return (
+    <ReactAriaButton
+      {...restProps}
+      {...dataProperties}
+      className={BUTTON_CLASS_NAME}
+      ref={ref}
+    >
+      {children}
+    </ReactAriaButton>
+  )
 })
 Button.displayName = 'IconButton'
 
