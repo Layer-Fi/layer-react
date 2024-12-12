@@ -15,12 +15,16 @@
     "./index.css": "./dist/index.css",
     "./dist/styles/index.css": "./dist/index.css"
   },
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "build": "node bin/build.js",
+    "build:clean": "rm -rf ./dist && npm run build",
     "dev": "node bin/build.js -- --watch",
-    "prepack": "npm run typecheck && npm run build",
+    "prepack": "npm run typecheck && npm run build:clean",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
