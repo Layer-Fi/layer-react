@@ -105,8 +105,7 @@ export const LinkedAccountThumb = ({
                   ? account.institution?.name
                   : account.external_account_name}
               </Text>
-              {/** @TODO remove !addOpeningBankBalance */}
-              {!pillConfig && (addOpeningBankBalance || !addOpeningBankBalance) ? (
+              {!pillConfig && addOpeningBankBalance ? (
                 <Pill kind='info' onClick={() => setShowOpeningBalanceModal(true)}>
                   <PlusIcon size={14} /> Add opening balance
                 </Pill>

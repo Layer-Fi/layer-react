@@ -331,6 +331,7 @@ export const DatePicker = ({
             : undefined
         }
         onChange={handleDateChange}
+        disabled={disabled}
         calendarClassName={calendarClassNames}
         popperClassName={popperClassNames}
         enableTabLoop={false}
@@ -381,7 +382,6 @@ export const DatePicker = ({
             pickerRef.current.setOpen(!pickerRef.current.isCalendarOpen())
           }
         }}
-        disabled={disabled}
         {...props}
       >
         {ModeSelector && (

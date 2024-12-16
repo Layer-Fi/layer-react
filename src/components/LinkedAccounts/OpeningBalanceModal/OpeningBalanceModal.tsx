@@ -14,6 +14,7 @@ import { useAuth } from '../../../hooks/useAuth'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { LinkedAccount } from '../../../types/linked_accounts'
 import { Layer } from '../../../api/layer'
+import { getActivationDate } from '../../../utils/business'
 
 type OpeningBalanceModalStringOverrides = {
   title?: string
@@ -53,8 +54,8 @@ export function useUpdateOpeningBalanceAndDate(
     `/v1/businesses/${businessId}/external-accounts/opening-balance`,
     () => Promise.all(
       formState.map((item) => {
-        if (item.openingBalance && item.openingDate) {
-          updateData(item)
+        if (item.openingBalance && item.openingDate && item.isConfirmed) {
+          return updateData(item)
         }
       }
       )
@@ -78,6 +79,7 @@ function LinkedAccountsOpeningBalanceModalContent({
   account: LinkedAccount
   stringOverrides?: OpeningBalanceModalStringOverrides
 }) {
+  const { business } = useLayerContext()
   const { refetchAccounts } = useLinkedAccounts()
 
   const childRefs = useRef<ConfirmAndOpeningBalanceFormRef[]>([])
@@ -142,7 +144,7 @@ function LinkedAccountsOpeningBalanceModalContent({
               ref={(el: ConfirmAndOpeningBalanceFormRef) => childRefs.current[index] = el}
               key={item.id}
               account={item}
-              defaultValue={{ account: item, isConfirmed: true }}
+              defaultValue={{ account: item, isConfirmed: true, openingDate: getActivationDate(business) }}
               compact={true}
               disableConfirmExclude={true}
             />

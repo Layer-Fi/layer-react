@@ -1,5 +1,6 @@
 import React, { HTMLProps } from 'react'
 import { Input } from './Input'
+import classNames from 'classnames'
 
 export interface AmountInputProps extends Omit<HTMLProps<HTMLInputElement>, 'onChange'> {
   isInvalid?: boolean
@@ -13,8 +14,14 @@ export interface AmountInputProps extends Omit<HTMLProps<HTMLInputElement>, 'onC
  */
 export const AmountInput = ({
   onChange,
+  className,
   ...props
 }: AmountInputProps) => {
+  const baseClassName = classNames(
+    'Layer__amount-input',
+    className,
+  )
+
   const onInputChange = (e: React.FormEvent<HTMLInputElement>) => {
     try {
       onChange && onChange((e.target as HTMLInputElement).value.replace(/[^\d.]/g, ''))
@@ -24,6 +31,6 @@ export const AmountInput = ({
   }
 
   return (
-    <Input onChange={onInputChange} {...props} />
+    <Input type='number' className={baseClassName} onChange={onInputChange} {...props} />
   )
 }

@@ -17,6 +17,7 @@ import { useLayerContext } from '../../../contexts/LayerContext'
 import { LoadingSpinner } from '../../ui/Loading/LoadingSpinner'
 import { useUpdateOpeningBalanceAndDate } from '../OpeningBalanceModal/OpeningBalanceModal'
 import { getAccountsNeedingConfirmation } from '../../../hooks/useLinkedAccounts/useLinkedAccounts'
+import { getActivationDate } from '../../../utils/business'
 
 type AccountConfirmExcludeFormState = ConfirmAndOpeningBalanceFormData[]
 
@@ -117,10 +118,6 @@ function getFormComponentLabels(formState: AccountConfirmExcludeFormState) {
 
 function useLinkedAccountsConfirmationModal() {
   const { data, refetchAccounts } = useLinkedAccounts()
-  /**
-   * @TODO revert changes below
-   */
-  // const accountsNeedingConfirmation = data ?? [] //getAccountsNeedingConfirmation(data ?? [])
   const accountsNeedingConfirmation = getAccountsNeedingConfirmation(data ?? [])
 
   const {
@@ -200,6 +197,7 @@ function LinkedAccountsConfirmationModalContent({
   compact?: boolean
   stringOverrides?: LinkedAccountsConfirmationModalStringOverrides
 }) {
+  const { business } = useLayerContext()
   const { accounts, onDismiss, onFinish, refetchAccounts } = useLinkedAccountsConfirmationModal()
 
   const childRefs = useRef<ConfirmAndOpeningBalanceFormRef[]>([])
@@ -280,7 +278,7 @@ function LinkedAccountsConfirmationModalContent({
               ref={(el: ConfirmAndOpeningBalanceFormRef) => childRefs.current[index] = el}
               key={item.id}
               account={item}
-              defaultValue={{ account: item, isConfirmed: true }}
+              defaultValue={{ account: item, isConfirmed: true, openingDate: getActivationDate(business) }}
               compact={compact}
             />
           }

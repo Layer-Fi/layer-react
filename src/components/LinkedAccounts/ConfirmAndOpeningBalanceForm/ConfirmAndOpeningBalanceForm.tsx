@@ -86,13 +86,18 @@ ref) => {
               }}
               selected={formState.openingDate ?? startOfDay(new Date())}
               currentDateOption={false}
+              disabled={!formState.isConfirmed}
             />
           </InputGroup>
           <InputGroup label='Opening balance'>
             <AmountInput
-              name='openingBalance' defaultValue={formState.openingBalance} onChange={value => 
+              name='openingBalance'
+              defaultValue={formState.openingBalance}
+              onChange={value => 
                 setFormState({ ...formState, openingBalance: value })
-              } />
+              }
+              disabled={!formState.isConfirmed}
+            />
           </InputGroup>
         </Stack>
       </VStack>
