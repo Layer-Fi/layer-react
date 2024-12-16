@@ -11,34 +11,34 @@ import { AmountInput } from '../../Input/AmountInput'
 import { DatePicker } from '../../DatePicker'
 import InstitutionIcon from '../../../icons/InstitutionIcon'
 
-export type LinkAccountForm = {
+export type ConfirmAndOpeningBalanceFormData = {
   account: LinkedAccount
   isConfirmed: boolean
   openingDate?: Date
-  openingBalance?: number
+  openingBalance?: string
 }
 
-export type LinkAccountToConfirmRef = {
-  getData: () => LinkAccountForm
+export type ConfirmAndOpeningBalanceFormRef = {
+  getData: () => ConfirmAndOpeningBalanceFormData
 }
 
-type LinkedAccountConfirmationProps = {
+type ConfirmAndOpeningBalanceFormProps = {
   account: LinkedAccount
-  defaultValue: LinkAccountForm
+  defaultValue: ConfirmAndOpeningBalanceFormData
   compact?: boolean
   disableConfirmExclude?: boolean
 }
 
-const CLASS_NAME = 'Layer__LinkedAccountToConfirm'
+const CLASS_NAME = 'Layer__confirm-and-opening-balance-form'
 
-const LinkedAccountToConfirm = forwardRef(({
+const ConfirmAndOpeningBalanceForm = forwardRef(({
   account,
   defaultValue,
   compact,
   disableConfirmExclude = false,
-}: LinkedAccountConfirmationProps,
+}: ConfirmAndOpeningBalanceFormProps,
 ref) => {
-  const [formState, setFormState] = useState<LinkAccountForm>(defaultValue)
+  const [formState, setFormState] = useState<ConfirmAndOpeningBalanceFormData>(defaultValue)
   
   useImperativeHandle(ref, () => ({
     getData: () => formState,
@@ -109,6 +109,6 @@ ref) => {
   )
 })
 
-LinkedAccountToConfirm.displayName = 'LinkedAccountToConfirm'
+ConfirmAndOpeningBalanceForm.displayName = 'ConfirmAndOpeningBalanceForm'
 
-export { LinkedAccountToConfirm }
+export { ConfirmAndOpeningBalanceForm }

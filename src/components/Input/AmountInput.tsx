@@ -5,7 +5,7 @@ export interface AmountInputProps extends Omit<HTMLProps<HTMLInputElement>, 'onC
   isInvalid?: boolean
   errorMessage?: string
   leftText?: string
-  onChange?: (value?: number) => void
+  onChange?: (value?: string) => void
 }
 
 /** @TODO this component is oversimplified.
@@ -17,7 +17,7 @@ export const AmountInput = ({
 }: AmountInputProps) => {
   const onInputChange = (e: React.FormEvent<HTMLInputElement>) => {
     try {
-      onChange && onChange(Number((e.target as HTMLInputElement).value))
+      onChange && onChange((e.target as HTMLInputElement).value.replace(/[^\d.]/g, ''))
     } catch {
       return
     }

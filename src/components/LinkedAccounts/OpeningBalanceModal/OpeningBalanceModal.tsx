@@ -7,7 +7,7 @@ import { Button } from '../../ui/Button/Button'
 import { VStack } from '../../ui/Stack/Stack'
 import { useLinkedAccounts } from '../../../hooks/useLinkedAccounts'
 import { ConditionalList } from '../../utility/ConditionalList'
-import { LinkAccountForm, LinkAccountToConfirmRef, LinkedAccountToConfirm } from '../ConfirmationModal/LinkedAccountToConfirm'
+import { ConfirmAndOpeningBalanceFormData, ConfirmAndOpeningBalanceFormRef, ConfirmAndOpeningBalanceForm } from '../ConfirmAndOpeningBalanceForm/ConfirmAndOpeningBalanceForm'
 import type { Awaitable } from '../../../types/utility/promises'
 import { P } from '../../ui/Typography/Text'
 import { useAuth } from '../../../hooks/useAuth'
@@ -22,7 +22,7 @@ type OpeningBalanceModalStringOverrides = {
 }
 
 export function useUpdateOpeningBalanceAndDate(
-  formState: LinkAccountForm[],
+  formState: ConfirmAndOpeningBalanceFormData[],
   { onSuccess }: { onSuccess: () => Awaitable<unknown> }
 ) {
   const { data: auth } = useAuth()
@@ -32,7 +32,7 @@ export function useUpdateOpeningBalanceAndDate(
     account: { id: accountId },
     openingBalance: openingBalance,
     openingDate: openingDate,
-  }: LinkAccountForm) => {
+  }: ConfirmAndOpeningBalanceFormData) => {
     return Layer.updateOpeningBalance(
       auth?.apiUrl ?? '',
       auth?.access_token,
@@ -68,6 +68,7 @@ export function useUpdateOpeningBalanceAndDate(
   )
 }
 
+
 function LinkedAccountsOpeningBalanceModalContent({
   onClose,
   account,
@@ -79,9 +80,9 @@ function LinkedAccountsOpeningBalanceModalContent({
 }) {
   const { refetchAccounts } = useLinkedAccounts()
 
-  const childRefs = useRef<LinkAccountToConfirmRef[]>([])
+  const childRefs = useRef<ConfirmAndOpeningBalanceFormRef[]>([])
 
-  const [ formState, setFormState ] = useState<LinkAccountForm[]>([])
+  const [ formState, setFormState ] = useState<ConfirmAndOpeningBalanceFormData[]>([])
 
   const {
     trigger,
@@ -137,8 +138,8 @@ function LinkedAccountsOpeningBalanceModalContent({
           Container={({ children }) => <VStack gap='md'>{children}</VStack>}
         >
           {({ item }, index) =>
-            <LinkedAccountToConfirm
-              ref={(el: LinkAccountToConfirmRef) => childRefs.current[index] = el}
+            <ConfirmAndOpeningBalanceForm
+              ref={(el: ConfirmAndOpeningBalanceFormRef) => childRefs.current[index] = el}
               key={item.id}
               account={item}
               defaultValue={{ account: item, isConfirmed: true }}

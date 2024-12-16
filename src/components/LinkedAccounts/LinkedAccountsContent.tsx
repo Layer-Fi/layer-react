@@ -5,7 +5,6 @@ import { Text, TextSize } from '../Typography'
 import { LinkedAccountItemThumb } from './LinkedAccountItemThumb'
 import classNames from 'classnames'
 import { LinkedAccountsConfirmationModal } from '../LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'
-import { LinkedAccount } from '../../types/linked_accounts'
 
 interface LinkedAccountsDataProps {
   asWidget?: boolean

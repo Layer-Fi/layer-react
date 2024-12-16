@@ -1,4 +1,4 @@
-.Layer__LinkedAccountToConfirm {
+.Layer__confirm-and-opening-balance-form {
   background-color: var(--bg-subtle);
 
   padding-inline: var(--spacing-md);
@@ -12,7 +12,7 @@
     width: 100%;
   }
 
-  &.Layer__LinkedAccountToConfirm--compact {
+  &.Layer__confirm-and-opening-balance-form--compact {
     .Layer__input-group {
       width: 100%;
       max-width: 180px;
@@ -23,7 +23,7 @@
     }
   }
 
-  &:not(.Layer__LinkedAccountToConfirm--compact) {
+  &:not(.Layer__confirm-and-opening-balance-form--compact) {
     .Layer__input-group {
       width: 50%;
       max-width: 180px;
@@ -35,11 +35,11 @@
   }
 }
 
-.Layer__LinkedAccountToConfirm__main-col {
+.Layer__confirm-and-opening-balance-form__main-col {
   flex: 1;
 }
 
-.Layer__LinkedAccountToConfirm__form {
+.Layer__confirm-and-opening-balance-form__form {
   padding-top: var(--spacing-xs);
   border-top: 1px solid var(--border-color);
 }

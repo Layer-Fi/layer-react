@@ -59,7 +59,8 @@ export const LinkedAccountItemThumb = ({
         },
       ],
     }
-  } else if (account.connection_needs_repair_as_of) {
+    /** @TODO temporary - remove */
+  } else if (account.connection_needs_repair_as_of || true) {
     pillConfig = {
       text: 'Fix account',
       config: [
