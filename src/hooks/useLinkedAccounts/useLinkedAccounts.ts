@@ -17,10 +17,6 @@ export function getAccountsNeedingConfirmation(linkedAccounts: ReadonlyArray<Lin
   )
 }
 
-function accountNeedsConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
-  return getAccountsNeedingConfirmation(linkedAccounts).length > 0
-}
-
 type UseLinkedAccounts = () => {
   data?: LinkedAccount[]
   isLoading: boolean
@@ -43,9 +39,6 @@ type UseLinkedAccounts = () => {
 
 const DEBUG = false
 const USE_MOCK_RESPONSE_DATA = false
-
-const MAX_POLLING_ATTEMPTS = 5
-const POLLING_INTERVAL = 1000
 
 type LinkMode = 'update' | 'add'
 

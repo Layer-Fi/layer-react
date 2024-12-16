@@ -38,6 +38,7 @@ import {
   breakPlaidItemConnection,
   syncConnection,
   updateConnectionStatus,
+  updateOpeningBalance,
 } from './layer/linked_accounts'
 import {
   getProfitAndLoss,
@@ -98,6 +99,7 @@ export const Layer = {
   unlinkPlaidItem,
   confirmAccount,
   excludeAccount,
+  updateOpeningBalance,
   getTasks,
   completeTaskWithUpload,
   submitResponseToTask,

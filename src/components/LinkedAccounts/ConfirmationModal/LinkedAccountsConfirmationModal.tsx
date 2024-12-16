@@ -15,6 +15,8 @@ import { P } from '../../ui/Typography/Text'
 import { useAuth } from '../../../hooks/useAuth'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { LoadingSpinner } from '../../ui/Loading/LoadingSpinner'
+import { getAccountsNeedingConfirmation } from '../../../hooks/useLinkedAccounts/useLinkedAccounts'
+import { useUpdateOpeningBalanceAndDate } from '../OpeningBalanceModal/OpeningBalanceModal'
 
 type AccountConfirmExcludeFormState = LinkAccountForm[]
 
@@ -78,53 +80,6 @@ function useConfirmAndExcludeMultiple(
   )
 }
 
-function useUpdateOpeningBalanceAndDate(
-  formState: AccountConfirmExcludeFormState,
-  { onSuccess }: { onSuccess: () => Awaitable<unknown> }
-) {
-  const { data: _auth } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const updateData = ({
-    account: { id: _accountId },
-    openingBalance: _openingBalance,
-    openingDate: _openingDate,
-  }: LinkAccountForm) => {
-    /**
-     * @TODO - add API call to update opening balances and dates
-    */
-    // return Layer.----(
-    //   auth?.apiUrl ?? '',
-    //   auth?.access_token,
-    //   {
-    //     params: {
-    //       businessId,
-    //       accountId,
-    //     },
-    //     body: {
-    //       is_irrelevant: true,
-    //     }
-    //   }
-    // )
-    return Promise.resolve()
-  }
-
-  return useSWRMutation(
-    `/v1/businesses/${businessId}/external-accounts/balances`,
-    () => Promise.all(
-      formState.map((item) =>
-        updateData(item)
-      )
-    )
-      .then(() => onSuccess())
-      .then(() => true as const),
-    {
-      revalidate: false,
-      throwOnError: false,
-    }
-  )
-}
-
 function getButtonLabel(
   { totalCount, confirmedCount }: { totalCount: number, confirmedCount: number }
 ) {
@@ -165,7 +120,8 @@ function useLinkedAccountsConfirmationModal() {
   /**
    * @TODO revert changes below
    */
-  const accountsNeedingConfirmation = data ?? [] //getAccountsNeedingConfirmation(data ?? [])
+  // const accountsNeedingConfirmation = data ?? [] //getAccountsNeedingConfirmation(data ?? [])
+  const accountsNeedingConfirmation = getAccountsNeedingConfirmation(data ?? [])
 
   const {
     visibility,

@@ -48,6 +48,7 @@ export type LinkedAccount = {
   connection_external_id?: string
   connection_needs_repair_as_of: string | null
   is_syncing: boolean
+  opening_account_balance_missing?: boolean
 }
 
 export type LinkedAccounts = {

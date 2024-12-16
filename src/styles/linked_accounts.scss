@@ -146,8 +146,8 @@
   background: var(--color-base-0);
   border: 1px solid var(--color-base-100);
   box-sizing: border-box;
-  width: 286px;
-  height: 136px;
+  width: 300px;
+  height: 170px;
   justify-content: space-between;
 
   &.--show-ledger-balance {
@@ -180,25 +180,47 @@
 
     .account-institution {
       color: var(--color-base-500);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .topbar-details {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-4xs);
+      gap: var(--spacing-2xs);
       justify-content: stretch;
+      width: 100%;
+    }
+
+    .topbar-details-main {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .topbar-details-main__name {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar-details-secondary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 27px;
     }
 
     .topbar-logo {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 52px;
-      height: 28px;
+      width: 36px;
+      height: 36px;
       padding: var(--spacing-3xs) 0;
       background: var(--color-base-0);
       color: var(--color-base-200);
       border-radius: var(--border-radius-3xs);
+      box-sizing: border-box;
     }
 
     .account-name {

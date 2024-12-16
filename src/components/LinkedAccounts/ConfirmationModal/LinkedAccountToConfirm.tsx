@@ -6,7 +6,8 @@ import { Heading } from '../../ui/Typography/Heading'
 import { P } from '../../ui/Typography/Text'
 import { VStack, Stack } from '../../ui/Stack/Stack'
 import { Checkbox } from  '../../ui/Checkbox/Checkbox'
-import { Input, InputGroup } from '../../Input'
+import { InputGroup } from '../../Input'
+import { AmountInput } from '../../Input/AmountInput'
 import { DatePicker } from '../../DatePicker'
 import InstitutionIcon from '../../../icons/InstitutionIcon'
 
@@ -25,6 +26,7 @@ type LinkedAccountConfirmationProps = {
   account: LinkedAccount
   defaultValue: LinkAccountForm
   compact?: boolean
+  disableConfirmExclude?: boolean
 }
 
 const CLASS_NAME = 'Layer__LinkedAccountToConfirm'
@@ -33,6 +35,7 @@ const LinkedAccountToConfirm = forwardRef(({
   account,
   defaultValue,
   compact,
+  disableConfirmExclude = false,
 }: LinkedAccountConfirmationProps,
 ref) => {
   const [formState, setFormState] = useState<LinkAccountForm>(defaultValue)
@@ -86,28 +89,22 @@ ref) => {
             />
           </InputGroup>
           <InputGroup label='Opening balance'>
-            <Input
-              name='openingBalance' defaultValue={formState.openingBalance} onChange={e => {
-                try {
-                  /**
-               * @TODO better handling here
-               */
-                  const v = Number((e.target as HTMLInputElement).value)
-                  setFormState({ ...formState, openingBalance: v })
-                } catch(_err) {
-                  console.debug('format issue')
-                }
-              }} />
+            <AmountInput
+              name='openingBalance' defaultValue={formState.openingBalance} onChange={value => 
+                setFormState({ ...formState, openingBalance: value })
+              } />
           </InputGroup>
         </Stack>
       </VStack>
-      <VStack justify='start'>
-        <Checkbox
-          isSelected={formState.isConfirmed}
-          onChange={v => setFormState({ ...formState, isConfirmed: v })}
-          aria-label='Confirm Account Inclusion'
-        />
-      </VStack> 
+      {!disableConfirmExclude && (
+        <VStack justify='start'>
+          <Checkbox
+            isSelected={formState.isConfirmed}
+            onChange={v => setFormState({ ...formState, isConfirmed: v })}
+            aria-label='Confirm Account Inclusion'
+          />
+        </VStack> 
+      )}
     </div>
   )
 })
