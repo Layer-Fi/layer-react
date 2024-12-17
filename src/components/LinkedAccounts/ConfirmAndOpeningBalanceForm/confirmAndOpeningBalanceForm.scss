@@ -1,0 +1,46 @@
+.Layer__confirm-and-opening-balance-form {
+  background-color: var(--bg-subtle);
+
+  padding-inline: var(--spacing-md);
+  padding-block: var(--spacing-sm);
+
+  display: flex;
+  gap: var(--spacing-sm);
+
+  .Layer__datepicker__wrapper .react-datepicker__input-container input {
+    max-width: none;
+    width: 100%;
+  }
+
+  &.Layer__confirm-and-opening-balance-form--compact {
+    .Layer__input-group {
+      width: 100%;
+      max-width: 180px;
+
+      .Layer__input-tooltip input {
+        width: 100%;
+      }
+    }
+  }
+
+  &:not(.Layer__confirm-and-opening-balance-form--compact) {
+    .Layer__input-group {
+      width: 50%;
+      max-width: 180px;
+
+      .Layer__input-label {
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.Layer__confirm-and-opening-balance-form__main-col {
+  flex: 1;
+}
+
+.Layer__confirm-and-opening-balance-form__form {
+  padding-top: var(--spacing-xs);
+  border-top: 1px solid var(--border-color);
+}
+

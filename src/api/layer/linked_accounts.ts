@@ -83,6 +83,23 @@ export const unlinkConnection = post<
     `/v1/businesses/${businessId}/plaid/external-accounts/connection/${connectionId}/archive`,
 )
 
+type UpdateOpeningBalanceBody = {
+  effective_at?: string
+  balance?: string
+}
+
+export const updateOpeningBalance = post<
+  never,
+  UpdateOpeningBalanceBody,
+  {
+    businessId: string
+    accountId: string
+  }
+>(
+  ({ businessId, accountId }) =>
+    `/v1/businesses/${businessId}/external-accounts/${accountId}/opening-balance`,
+)
+
 export const unlinkAccount = post<
   Record<string, unknown>,
   Record<string, unknown>,
