@@ -20,55 +20,45 @@ type ActionableItemProps = {
   onClick?: () => void
 }
 
-export const Heading = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Header>
-      <Text size={TextSize.sm} weight={TextWeight.bold} className='Layer__dropdown-menu__actionable-item__heading'>
-        {children}
-      </Text>
-    </Header>
-  )
-}
-
-export const Separator = () => {
-  return (
-    <AriaSeparator className='Layer__dropdown-menu__separator' />
-  )
-}
-
-export const ActionableItem = ({ leftIcon, children, rightIcon, onClick }: ActionableItemProps) => {
-  return (
-    <AriaMenuItem onAction={onClick} className='Layer__dropdown-menu__actionable-item'>
-      {leftIcon && (
-        <div className='Layer__dropdown-menu__actionable-item__left-icon'>
-          {leftIcon}
-        </div>
-      )}
-      <Text size={TextSize.sm} className='Layer__dropdown-menu__actionable-item__text'>
-        {children}
-      </Text>
-      {rightIcon && (
-        <div className='Layer__dropdown-menu__actionable-item__right-icon'>
-          {rightIcon}
-        </div>
-      )}
-    </AriaMenuItem>
-  )
-}
-
-export const MenuList = ({ children }: { children: React.ReactNode | React.ReactNode[] }) => {
-  return (
-    <Menu>
+export const Heading = ({ children }: { children: React.ReactNode }) => (
+  <Header>
+    <Text size={TextSize.sm} weight={TextWeight.bold} className='Layer__dropdown-menu__actionable-item__heading'>
       {children}
-    </Menu>
-  )
-}
+    </Text>
+  </Header>
+)
 
-export const MenuItem = ({ children, onClick }: MenuItemProps) => {
-  return (
-    <AriaMenuItem onAction={onClick}>{children}</AriaMenuItem>
-  )
-}
+export const Separator = () => (
+  <AriaSeparator className='Layer__dropdown-menu__separator' />
+)
+
+export const ActionableItem = ({ leftIcon, children, rightIcon, onClick }: ActionableItemProps) => (
+  <AriaMenuItem onAction={onClick} className='Layer__dropdown-menu__actionable-item'>
+    {leftIcon && (
+      <div className='Layer__dropdown-menu__actionable-item__left-icon'>
+        {leftIcon}
+      </div>
+    )}
+    <Text size={TextSize.sm} className='Layer__dropdown-menu__actionable-item__text'>
+      {children}
+    </Text>
+    {rightIcon && (
+      <div className='Layer__dropdown-menu__actionable-item__right-icon'>
+        {rightIcon}
+      </div>
+    )}
+  </AriaMenuItem>
+)
+
+export const MenuList = ({ children }: { children: React.ReactNode | React.ReactNode[] }) => (
+  <Menu>
+    {children}
+  </Menu>
+)
+
+export const MenuItem = ({ children, onClick }: MenuItemProps) => (
+  <AriaMenuItem onAction={onClick}>{children}</AriaMenuItem>
+)
 
 export const DropdownMenu = ({ children, ariaLabel }: DropdownMenuProps) => {
   return (
