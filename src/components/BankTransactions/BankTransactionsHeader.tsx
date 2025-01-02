@@ -15,10 +15,7 @@ import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { P } from '../ui/Typography/Text'
-import { HoverMenu } from '../HoverMenu'
-import MoreVertical from '../../icons/MoreVertical'
-import { useQuickbooks } from '../../hooks/useQuickbooks'
+import { BankTransactionsHeaderMoreOptions } from './BankTransactionsHeaderMoreOptions'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -73,12 +70,15 @@ const DownloadButton = ({
       if (result?.data?.presignedUrl) {
         window.location.href = result.data.presignedUrl
         setRequestFailed(false)
-      } else {
+      }
+      else {
         setRequestFailed(true)
       }
-    } catch (e) {
+    }
+    catch {
       setRequestFailed(true)
-    } finally {
+    }
+    finally {
       setIsDownloading(false)
     }
   }
@@ -91,41 +91,6 @@ const DownloadButton = ({
       requestFailed={requestFailed}
       text={downloadButtonTextOverride ?? 'Download'}
     />
-  )
-}
-
-const MoreOptions = () => {
-  const config = [{
-    name: 'Connect next business account',
-    action: () => {
-      console.log('connect next business account')
-    }
-  },
-  {
-    name: 'Connect Quickbooks',
-    action: () => {
-      console.log('connect quickbooks')
-    }
-  }
-  ]
-  const {
-    syncFromQuickbooks,
-    isSyncingFromQuickbooks,
-    quickbooksIsLinked,
-    linkQuickbooks,
-    unlinkQuickbooks,
-  } = useQuickbooks()
-  
-  return (
-    <>
-    <HoverMenu config={config}>
-      <MoreVertical size={16} />
-    </HoverMenu>
-    <button onClick={async () => {
-      const authorizationUrl = await linkQuickbooks()
-      window.location.href = authorizationUrl
-    }}>Connect</button>
-    </>
   )
 }
 
@@ -173,21 +138,23 @@ export const BankTransactionsHeader = ({
             />
           )}
         </div>
-        {withDatePicker && dateRange && setDateRange ? (
-          <DatePicker
-            mode='monthPicker'
-            selected={dateRange.startDate}
-            onChange={date => {
-              if (!Array.isArray(date)) {
-                setDateRange({
-                  startDate: startOfMonth(date),
-                  endDate: endOfMonth(date),
-                })
-              }
-            }}
-            minDate={getEarliestDateToBrowse(business)}
-          />
-        ) : null}
+        {withDatePicker && dateRange && setDateRange
+          ? (
+            <DatePicker
+              mode='monthPicker'
+              selected={dateRange.startDate}
+              onChange={(date) => {
+                if (!Array.isArray(date)) {
+                  setDateRange({
+                    startDate: startOfMonth(date),
+                    endDate: endOfMonth(date),
+                  })
+                }
+              }}
+              minDate={getEarliestDateToBrowse(business)}
+            />
+          )
+          : null}
       </div>
       <div className='Layer__header__actions-wrapper'>
         <div className='Layer__header__actions Layer__justify--space-between'>
@@ -208,12 +175,12 @@ export const BankTransactionsHeader = ({
             />
           )}
 
-          <div style={{ display: 'flex', gap: 12, zIndex: 1000, isolation: 'isolate', position: 'relative'}}>
+          <div style={{ display: 'flex', gap: 12, zIndex: 1000, isolation: 'isolate', position: 'relative' }}>
             <DownloadButton
               downloadButtonTextOverride={stringOverrides?.downloadButton}
               iconOnly={listView}
             />
-            <MoreOptions />
+            <BankTransactionsHeaderMoreOptions />
           </div>
         </div>
       </div>
