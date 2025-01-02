@@ -106,41 +106,6 @@ const DownloadButton = ({
   )
 }
 
-const MoreOptions = () => {
-  const config = [{
-    name: 'Connect next business account',
-    action: () => {
-      console.log('connect next business account')
-    }
-  },
-  {
-    name: 'Connect Quickbooks',
-    action: () => {
-      console.log('connect quickbooks')
-    }
-  }
-  ]
-  const {
-    syncFromQuickbooks,
-    isSyncingFromQuickbooks,
-    quickbooksIsLinked,
-    linkQuickbooks,
-    unlinkQuickbooks,
-  } = useQuickbooks()
-  
-  return (
-    <>
-    <HoverMenu config={config}>
-      <MoreVertical size={16} />
-    </HoverMenu>
-    <button onClick={async () => {
-      const authorizationUrl = await linkQuickbooks()
-      window.location.href = authorizationUrl
-    }}>Connect</button>
-    </>
-  )
-}
-
 export const BankTransactionsHeader = ({
   shiftStickyHeader,
   asWidget,
