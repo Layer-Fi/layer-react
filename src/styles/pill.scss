@@ -20,3 +20,16 @@
   background-color: var(--color-info-error-bg);
   color: var(--color-info-error-fg);
 }
+
+.Layer__pill--info {
+  background-color: var(--color-info-bg);
+  color: var(--color-info-fg);
+}
+
+.Layer__pill--actionable {
+  cursor: pointer;
+}
+
+.Layer__pill--actionable:hover {
+  opacity: 0.7;
+}

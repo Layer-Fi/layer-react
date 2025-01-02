@@ -13,12 +13,8 @@ import { useAccountConfirmationStoreActions } from '../../providers/AccountConfi
 
 export function getAccountsNeedingConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
   return linkedAccounts.filter(
-    ({ notifications }) => notifications?.some(({ type }) => type === 'CONFIRM_RELEVANT')
+    ({ notifications }) => notifications?.some(({ type }) => type === 'CONFIRM_RELEVANT'),
   )
-}
-
-function accountNeedsConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
-  return getAccountsNeedingConfirmation(linkedAccounts).length > 0
 }
 
 type UseLinkedAccounts = () => {
@@ -36,6 +32,8 @@ type UseLinkedAccounts = () => {
   unlinkAccount: (source: AccountSource, accountId: string) => void
   confirmAccount: (source: AccountSource, accountId: string) => void
   excludeAccount: (source: AccountSource, accountId: string) => void
+  accountsToAddOpeningBalance: LinkedAccount[]
+  setAccountsToAddOpeningBalance: (accounts: LinkedAccount[]) => void
 
   // Only works in non-production environments for test purposes
   breakConnection: (source: AccountSource, connectionExternalId: string) => void
@@ -43,9 +41,6 @@ type UseLinkedAccounts = () => {
 
 const DEBUG = false
 const USE_MOCK_RESPONSE_DATA = false
-
-const MAX_POLLING_ATTEMPTS = 5
-const POLLING_INTERVAL = 1000
 
 type LinkMode = 'update' | 'add'
 
@@ -62,12 +57,14 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const { data: auth } = useAuth()
   const {
     preload: preloadAccountConfirmation,
-    reset: resetAccountConfirmation
+    reset: resetAccountConfirmation,
   } = useAccountConfirmationStoreActions()
 
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
+  const [accountsToAddOpeningBalance, setAccountsToAddOpeningBalance] =
+    useState<LinkedAccount[]>([])
 
   const queryKey = businessId && auth?.access_token && `linked-accounts-${businessId}`
 
@@ -166,7 +163,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       if (linkMode == 'add') {
         // Note: a sync is kicked off in the backend in this endpoint
         exchangePlaidPublicToken(publicToken, metadata)
-      } else {
+      }
+      else {
         // Refresh the account connections, which should remove the error
         // pills from any broken accounts
         await updateConnectionStatus()
@@ -194,7 +192,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const addConnection = (source: AccountSource) => {
     if (source === 'PLAID') {
       fetchPlaidLinkToken()
-    } else {
+    }
+    else {
       console.error(
         `Adding a connection with source ${source} not yet supported`,
       )
@@ -207,7 +206,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   ) => {
     if (source === 'PLAID') {
       await fetchPlaidUpdateModeLinkToken(connectionExternalId)
-    } else {
+    }
+    else {
       console.error(
         `Repairing a connection with source ${source} not yet supported`,
       )
@@ -221,7 +221,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     if (source === 'PLAID') {
       await unlinkPlaidItem(connectionExternalId)
       await refetchAccounts()
-    } else {
+    }
+    else {
       console.error(
         `Removing a connection with source ${source} not yet supported`,
       )
@@ -236,7 +237,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       })
       await refetchAccounts()
       touch(DataModel.LINKED_ACCOUNTS)
-    } else {
+    }
+    else {
       console.error(
         `Unlinking an account with source ${source} not yet supported`,
       )
@@ -254,7 +256,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       })
       await refetchAccounts()
       touch(DataModel.LINKED_ACCOUNTS)
-    } else {
+    }
+    else {
       console.error(
         `Confirming an account with source ${source} not yet supported`,
       )
@@ -271,11 +274,12 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         },
         body: {
           is_duplicate: true,
-        }
+        },
       })
       await refetchAccounts()
       touch(DataModel.LINKED_ACCOUNTS)
-    } else {
+    }
+    else {
       console.error(
         `Excluding an account with source ${source} not yet supported`,
       )
@@ -300,7 +304,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       })
       await refetchAccounts()
       touch(DataModel.LINKED_ACCOUNTS)
-    } else {
+    }
+    else {
       console.error(
         `Breaking a sandbox connection with source ${source} not yet supported`,
       )
@@ -366,5 +371,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     breakConnection,
     syncAccounts,
     updateConnectionStatus,
+    accountsToAddOpeningBalance,
+    setAccountsToAddOpeningBalance,
   }
 }

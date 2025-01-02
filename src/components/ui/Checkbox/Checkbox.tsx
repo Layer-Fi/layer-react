@@ -13,7 +13,7 @@ export function Checkbox({ children, ...props }: CheckboxProps) {
       {withRenderProp(children, node => (
         <>
           <div slot='checkbox'>
-            <Check />
+            <Check size={16} />
           </div>
           {node}
         </>

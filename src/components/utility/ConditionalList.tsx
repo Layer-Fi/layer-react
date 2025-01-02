@@ -19,7 +19,7 @@ export function ConditionalList<T>({
   Empty,
   Container,
   Loading,
-  children
+  children,
 }: ConditionalListProps<T>) {
   if (isLoading) {
     return Loading
@@ -28,7 +28,7 @@ export function ConditionalList<T>({
     return Empty
   }
 
-  const listItems = list.map((item) => children({ item }))
+  const listItems = list.map((item, index) => children({ item }, index))
 
   return Container ? <Container>{listItems}</Container> : listItems
 }

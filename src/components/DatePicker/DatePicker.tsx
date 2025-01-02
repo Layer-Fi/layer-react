@@ -61,7 +61,8 @@ const getDefaultRangeDate = (
     }
 
     return null
-  } catch (_err) {
+  }
+  catch (_err) {
     return null
   }
 }
@@ -102,8 +103,8 @@ export const DatePicker = ({
   const { ModeSelector } = slots ?? {}
 
   const pickerRef = useRef<{
-    setOpen: (open: boolean, skipSetBlur?: boolean) => void;
-    isCalendarOpen: () => boolean;
+    setOpen: (open: boolean, skipSetBlur?: boolean) => void
+    isCalendarOpen: () => boolean
   }>(null)
 
   const [updatePickerDate, setPickerDate] = useState<boolean>(false)
@@ -126,7 +127,7 @@ export const DatePicker = ({
       if (
         !isRangeMode(mode)
         && (selected as Date | null)?.getTime()
-          !== (selectedDates as Date | null)?.getTime()
+        !== (selectedDates as Date | null)?.getTime()
       ) {
         setSelectedDates(selected)
         return
@@ -140,7 +141,8 @@ export const DatePicker = ({
           setEndDate(selected[1])
         }
       }
-    } catch (_err) {
+    }
+    catch (_err) {
       return
     }
   }, [selected])
@@ -151,7 +153,8 @@ export const DatePicker = ({
       && (!isRangeMode(mode) || (isRangeMode(mode) && !updatePickerDate))
     ) {
       onChange(selectedDates as Date | [Date, Date])
-    } else {
+    }
+    else {
       setPickerDate(false)
     }
   }, [selectedDates])
@@ -201,13 +204,15 @@ export const DatePicker = ({
         selectedDates instanceof Date
         && selectedDates.toDateString() === currentDate.toDateString()
       )
-    } else if (mode === 'monthPicker') {
+    }
+    else if (mode === 'monthPicker') {
       return (
         selectedDates instanceof Date
         && selectedDates.getMonth() === currentDate.getMonth()
         && selectedDates.getFullYear() === currentDate.getFullYear()
       )
-    } else if (mode === 'yearPicker') {
+    }
+    else if (mode === 'yearPicker') {
       return (
         selectedDates instanceof Date
         && selectedDates.getFullYear() === currentDate.getFullYear()
@@ -220,11 +225,13 @@ export const DatePicker = ({
     const currentDate = new Date()
     if (mode === 'dayPicker') {
       setSelectedDates(currentDate)
-    } else if (mode === 'monthPicker') {
+    }
+    else if (mode === 'monthPicker') {
       setSelectedDates(
         new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
       )
-    } else if (mode === 'yearPicker') {
+    }
+    else if (mode === 'yearPicker') {
       setSelectedDates(
         new Date(currentDate.getFullYear(), 0, 1),
       )
@@ -232,7 +239,7 @@ export const DatePicker = ({
   }
 
   const isTodayOrAfter = useMemo(() => {
-    switch(mode) {
+    switch (mode) {
       case 'dayPicker':
         return Boolean(
           selectedDates instanceof Date && (
@@ -259,7 +266,6 @@ export const DatePicker = ({
           ),
         )
     }
-    
   }, [selectedDates, maxDate, mode])
 
   const isBeforeMinDate = Boolean(
@@ -275,7 +281,8 @@ export const DatePicker = ({
           ),
         ),
       )
-    } else if (mode === 'monthPicker') {
+    }
+    else if (mode === 'monthPicker') {
       setSelectedDates(
         new Date(
           (selectedDates as Date).setMonth(
@@ -283,7 +290,8 @@ export const DatePicker = ({
           ),
         ),
       )
-    } else if (mode === 'yearPicker') {
+    }
+    else if (mode === 'yearPicker') {
       setSelectedDates(
         new Date(
           (selectedDates as Date).setFullYear(
@@ -308,7 +316,8 @@ export const DatePicker = ({
       setStartDate(firstSelectedDate)
       setEndDate(firstSelectedDate)
       setSelectedDates([firstSelectedDate, firstSelectedDate])
-    } else {
+    }
+    else {
       setStartDate(null)
       setEndDate(null)
       setSelectedDates(firstSelectedDate)
@@ -432,7 +441,7 @@ export const DatePicker = ({
         </>
       )}
       {currentDateOption
-        && (mode === 'dayPicker' || mode === 'monthPicker' || mode === 'yearPicker') && (
+      && (mode === 'dayPicker' || mode === 'monthPicker' || mode === 'yearPicker') && (
         <Button
           className='Layer__datepicker__current-button'
           onClick={setCurrentDate}
