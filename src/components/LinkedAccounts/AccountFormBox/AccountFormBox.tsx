@@ -22,7 +22,7 @@ export type AccountFormBoxRef = {
 type AccountFormProps = {
   account: LinkedAccount
   defaultValue: AccountFormBoxData
-  disableConfirmExclude: boolean
+  disableConfirmExclude?: boolean
 }
 
 const CLASS_NAME = 'Layer__caobfb'
