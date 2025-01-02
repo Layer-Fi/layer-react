@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import React, { forwardRef, type ComponentProps, type PropsWithChildren } from 'react'
 import {
   Dialog as ReactAriaDialog,
@@ -13,26 +14,28 @@ const MODAL_OVERLAY_CLASS_NAMES = `Layer__Portal ${MODAL_OVERLAY_CLASS_NAME}`
 const ModalOverlay = forwardRef<
   HTMLElementTagNameMap['div'],
   Omit<ModalOverlayProps, 'className'>
->((props, ref) =>
+>((props, ref) => (
   <ReactAriaModalOverlay
     {...props}
     className={MODAL_OVERLAY_CLASS_NAMES}
     ref={ref}
   />
+),
 )
 ModalOverlay.displayName = 'ModalOverlay'
 
 const MODAL_CLASS_NAME = 'Layer__Modal'
 const InternalModal = forwardRef<
   HTMLElementTagNameMap['div'],
-  PropsWithChildren
->(({ children }, ref) =>
+  PropsWithChildren<{ compact?: boolean }>
+>(({ compact, children }, ref) => (
   <ReactAriaModal
-    className={MODAL_CLASS_NAME}
+    className={classNames(MODAL_CLASS_NAME, compact && 'Layer__Modal--compact')}
     ref={ref}
   >
     {children}
   </ReactAriaModal>
+),
 )
 InternalModal.displayName = 'Modal'
 
@@ -40,12 +43,13 @@ const DIALOG_CLASS_NAME = 'Layer__Dialog'
 const Dialog = forwardRef<
   HTMLElement,
   Omit<DialogProps, 'className'>
->((props, ref) =>
+>((props, ref) => (
   <ReactAriaDialog
     {...props}
     className={DIALOG_CLASS_NAME}
     ref={ref}
   />
+),
 )
 Dialog.displayName = 'Dialog'
 
@@ -58,16 +62,17 @@ type AllowedDialogProps = Pick<
   'children'
 >
 
-type ModalProps = AllowedModalProps & AllowedDialogProps
+type ModalProps = AllowedModalProps & AllowedDialogProps & { compact?: boolean }
 
 export function Modal({
   isOpen,
+  compact,
   onOpenChange,
-  children
+  children,
 }: ModalProps) {
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange}>
-      <InternalModal>
+      <InternalModal compact={compact}>
         <Dialog role='dialog'>
           {children}
         </Dialog>

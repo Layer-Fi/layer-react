@@ -78,3 +78,16 @@ export const convertCurrencyToNumber = (amount: string): string =>
     .replace(/(\..*)\./g, '$1')
     .replace(/(\.\d{2})\d+/, '$1')
     .replace(/^0(?!\.)/, '')
+
+export const convertToCents = (amount?: number | string): number | undefined => {
+  try {
+    if (amount === undefined || amount === null) {
+      return undefined
+    }
+
+    return Number(amount) * 100
+  }
+  catch {
+    return undefined
+  }
+}

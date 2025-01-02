@@ -6,7 +6,7 @@ import { LinkedAccountThumb } from '../LinkedAccountThumb'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 function accountNeedsUniquenessConfirmation({
-  notifications
+  notifications,
 }: Pick<LinkedAccount, 'notifications'>) {
   return notifications?.some(({ type }) => type === 'CONFIRM_UNIQUE')
 }
@@ -33,6 +33,7 @@ export const LinkedAccountItemThumb = ({
     confirmAccount,
     excludeAccount,
     breakConnection,
+    setAccountsToAddOpeningBalance,
   } = useContext(LinkedAccountsContext)
   const { environment } = useEnvironment()
 
@@ -59,7 +60,8 @@ export const LinkedAccountItemThumb = ({
         },
       ],
     }
-  } else if (account.connection_needs_repair_as_of) {
+  }
+  else if (account.connection_needs_repair_as_of) {
     pillConfig = {
       text: 'Fix account',
       config: [
@@ -121,6 +123,18 @@ export const LinkedAccountItemThumb = ({
     })
   }
 
+  /**
+   * @TODO switch to the proper API field
+   */
+  if (!account.opening_account_balance_missing) {
+    additionalConfigs.push({
+      name: 'Add opening balance',
+      action: async () => {
+        setAccountsToAddOpeningBalance([account])
+      },
+    })
+  }
+
   if (
     environment === 'staging'
     && !account.connection_needs_repair_as_of
@@ -135,7 +149,8 @@ export const LinkedAccountItemThumb = ({
             account.external_account_source,
             account.connection_external_id,
           )
-        } else {
+        }
+        else {
           console.warn('Account doesn\'t have defined connection_external_id')
         }
       },
