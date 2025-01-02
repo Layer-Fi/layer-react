@@ -126,7 +126,7 @@ export const LinkedAccountItemThumb = ({
   /**
    * @TODO switch to the proper API field
    */
-  if (!account.opening_account_balance_missing) {
+  if (account.opening_account_balance_missing) {
     additionalConfigs.push({
       name: 'Add opening balance',
       action: async () => {
