@@ -6,6 +6,7 @@ import { DataState, DataStateStatus } from '../DataState'
 import { Loader } from '../Loader'
 import { Heading, HeadingSize } from '../Typography'
 import { LinkedAccountsContent } from './LinkedAccountsContent'
+import { OpeningBalanceModal } from './OpeningBalanceModal/OpeningBalanceModal'
 
 const COMPONENT_NAME = 'linked-accounts'
 
@@ -36,9 +37,14 @@ export const LinkedAccountsComponent = ({
   showBreakConnection = false,
   stringOverrides,
 }: LinkedAccountsProps) => {
-  const { isLoading, error, isValidating, refetchAccounts } = useContext(
-    LinkedAccountsContext,
-  )
+  const {
+    isLoading,
+    error,
+    isValidating,
+    refetchAccounts,
+    accountsToAddOpeningBalance,
+    setAccountsToAddOpeningBalance,
+  } = useContext(LinkedAccountsContext)
 
   return (
     <Container name={COMPONENT_NAME} elevated={elevated}>
@@ -56,23 +62,31 @@ export const LinkedAccountsComponent = ({
           <Loader />
         </div>
       )}
-      {error && !isLoading ? (
-        <DataState
-          status={DataStateStatus.failed}
-          title='Something went wrong'
-          description='We couldn’t load your data.'
-          onRefresh={() => refetchAccounts()}
-          isLoading={isValidating}
-        />
-      ) : null}
-      {!error && !isLoading ? (
-        <LinkedAccountsContent
-          asWidget={asWidget}
-          showLedgerBalance={showLedgerBalance}
-          showUnlinkItem={showUnlinkItem}
-          showBreakConnection={showBreakConnection}
-        />
-      ) : null}
+      {error && !isLoading
+        ? (
+          <DataState
+            status={DataStateStatus.failed}
+            title='Something went wrong'
+            description='We couldn’t load your data.'
+            onRefresh={() => refetchAccounts()}
+            isLoading={isValidating}
+          />
+        )
+        : null}
+      {!error && !isLoading
+        ? (
+          <LinkedAccountsContent
+            asWidget={asWidget}
+            showLedgerBalance={showLedgerBalance}
+            showUnlinkItem={showUnlinkItem}
+            showBreakConnection={showBreakConnection}
+          />
+        )
+        : null}
+      <OpeningBalanceModal
+        accounts={accountsToAddOpeningBalance}
+        onClose={() => setAccountsToAddOpeningBalance([])}
+      />
     </Container>
   )
 }

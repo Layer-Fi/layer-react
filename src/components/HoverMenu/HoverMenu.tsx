@@ -21,8 +21,8 @@ export const HoverMenu = ({ children, config }: HoverMenuProps) => {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
-        hoverMenuRef.current &&
-        !hoverMenuRef.current.contains(event.target as Node)
+        hoverMenuRef.current
+        && !hoverMenuRef.current.contains(event.target as Node)
       ) {
         setOpenMenu(false)
       }
@@ -50,21 +50,21 @@ export const HoverMenu = ({ children, config }: HoverMenuProps) => {
       </div>
       <div className='Layer__hover-menu__list-wrapper'>
         <ul className='Layer__hover-menu__list'>
-          {config &&
-            config.length > 0 &&
-            config.map(item => (
-              <li
-                key={`hover-menu-${item.name}`}
-                className='Layer__hover-menu__list-item'
+          {config
+          && config.length > 0
+          && config.map(item => (
+            <li
+              key={`hover-menu-${item.name}`}
+              className='Layer__hover-menu__list-item'
+            >
+              <button
+                className='Layer__hover-menu__list-item-button'
+                onClick={item.action}
               >
-                <button
-                  className='Layer__hover-menu__list-item-button'
-                  onClick={item.action}
-                >
-                  {item.name}
-                </button>
-              </li>
-            ))}
+                {item.name}
+              </button>
+            </li>
+          ))}
         </ul>
       </div>
     </div>

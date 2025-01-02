@@ -40,6 +40,7 @@ import {
   breakPlaidItemConnection,
   syncConnection,
   updateConnectionStatus,
+  updateOpeningBalance,
 } from './layer/linked_accounts'
 import {
   getProfitAndLoss,
@@ -110,6 +111,7 @@ export const Layer = {
   breakPlaidItemConnection,
   syncConnection,
   updateConnectionStatus,
+  updateOpeningBalance,
   getStatementOfCashFlow,
   syncFromQuickbooks,
   statusOfSyncFromQuickbooks,
