@@ -37,6 +37,7 @@ export const useQuickbooks: UseQuickbooks = () => {
       clearInterval(syncStatusIntervalRef.current)
       syncStatusIntervalRef.current = null
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSyncingFromQuickbooks])
 
   // Determine whether there exists an active Quickbooks connection or not
@@ -44,6 +45,7 @@ export const useQuickbooks: UseQuickbooks = () => {
     if (auth?.access_token) {
       fetchQuickbooksConnectionStatus()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth?.access_token])
 
   const fetchQuickbooksConnectionStatus = async () => {
@@ -56,7 +58,10 @@ export const useQuickbooks: UseQuickbooks = () => {
   }
 
   const syncFromQuickbooks = () => {
-    DEBUG && console.debug('Triggering sync from Quickbooks...')
+    if (DEBUG) {
+      console.debug('Triggering sync from Quickbooks...')
+    }
+
     setIsSyncingFromQuickbooks(true)
     try {
       Layer.syncFromQuickbooks(apiUrl, auth?.access_token, {
@@ -69,7 +74,10 @@ export const useQuickbooks: UseQuickbooks = () => {
   }
 
   const fetchIsSyncingFromQuickbooks = async () => {
-    DEBUG && console.debug('Fetching status of sync from Quickbooks...')
+    if (DEBUG) {
+      console.debug('Fetching status of sync from Quickbooks...')
+    }
+
     const isSyncing = (
       await Layer.statusOfSyncFromQuickbooks(apiUrl, auth?.access_token, {
         params: { businessId },

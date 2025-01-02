@@ -12,7 +12,7 @@
 .Layer__dropdown-menu__popover {
     outline: none;
     &[data-entering] {
-        animation: slide 120ms;
+        animation: popover-slide 120ms;
     }
 
     &:focus-visible {
@@ -20,7 +20,7 @@
     }
 }
 
-@keyframes slide {
+@keyframes popover-slide {
     from {
       transform: translateY(-20px);
       opacity: 0;
