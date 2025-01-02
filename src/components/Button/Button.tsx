@@ -42,11 +42,14 @@ export const Button = ({
   let justifyContent = 'center'
   if (justify) {
     justifyContent = justify
-  } else if (leftIcon && rightIcon) {
+  }
+  else if (leftIcon && rightIcon) {
     justifyContent = 'space-between'
-  } else if (rightIcon) {
+  }
+  else if (rightIcon) {
     justifyContent = 'space-between'
-  } else if (leftIcon) {
+  }
+  else if (leftIcon) {
     justifyContent = 'start'
   }
 
@@ -62,14 +65,14 @@ export const Button = ({
   )
 
   const startAnimation = () =>
-    buttonRef.current &&
-    [...buttonRef.current.getElementsByClassName('animateOnHover')].forEach(
+    buttonRef.current
+    && [...buttonRef.current.getElementsByClassName('animateOnHover')].forEach(
       el => (el as SVGAnimateElement).beginElement(),
     )
 
   const stopAnimation = () =>
-    buttonRef.current &&
-    [...buttonRef.current.getElementsByClassName('animateOnHover')].forEach(
+    buttonRef.current
+    && [...buttonRef.current.getElementsByClassName('animateOnHover')].forEach(
       el => (el as SVGAnimateElement).endElement(),
     )
 
@@ -82,11 +85,13 @@ export const Button = ({
             iconAsPrimary && 'Layer__btn-icon--primary',
           )}
         >
-          {isProcessing ? (
-            <LoaderIcon size={12} className='Layer__anim--rotating' />
-          ) : (
-            leftIcon
-          )}
+          {isProcessing
+            ? (
+              <LoaderIcon size={12} className='Layer__anim--rotating' />
+            )
+            : (
+              leftIcon
+            )}
         </span>
       )}
       {!iconOnly && <span className='Layer__btn-text'>{children}</span>}
@@ -97,11 +102,13 @@ export const Button = ({
             iconAsPrimary && 'Layer__btn-icon--primary',
           )}
         >
-          {isProcessing ? (
-            <LoaderIcon size={12} className='Layer__anim--rotating' />
-          ) : (
-            rightIcon
-          )}
+          {isProcessing
+            ? (
+              <LoaderIcon size={12} className='Layer__anim--rotating' />
+            )
+            : (
+              rightIcon
+            )}
         </span>
       )}
     </span>
@@ -115,18 +122,20 @@ export const Button = ({
       onMouseLeave={stopAnimation}
       ref={buttonRef}
     >
-      {tooltip ? (
-        <Tooltip offset={12}>
-          <TooltipTrigger>{content}</TooltipTrigger>
-          {tooltip && (
-            <TooltipContent className='Layer__tooltip'>
-              {tooltip}
-            </TooltipContent>
-          )}
-        </Tooltip>
-      ) : (
-        content
-      )}
+      {tooltip
+        ? (
+          <Tooltip offset={12}>
+            <TooltipTrigger>{content}</TooltipTrigger>
+            {tooltip && (
+              <TooltipContent className='Layer__tooltip'>
+                {tooltip}
+              </TooltipContent>
+            )}
+          </Tooltip>
+        )
+        : (
+          content
+        )}
     </button>
   )
 }

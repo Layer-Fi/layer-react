@@ -20,9 +20,6 @@ import { VStack } from '../ui/Stack/Stack'
 import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/useBankTransactionsDownload'
 import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
-import { HoverMenu } from '../HoverMenu'
-import MoreVertical from '../../icons/MoreVertical'
-import { useQuickbooks } from '../../hooks/useQuickbooks'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -105,41 +102,6 @@ const DownloadButton = ({
         text={downloadButtonTextOverride ?? 'Download'}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
-    </>
-  )
-}
-
-const MoreOptions = () => {
-  const config = [{
-    name: 'Connect next business account',
-    action: () => {
-      console.log('connect next business account')
-    }
-  },
-  {
-    name: 'Connect Quickbooks',
-    action: () => {
-      console.log('connect quickbooks')
-    }
-  }
-  ]
-  const {
-    syncFromQuickbooks,
-    isSyncingFromQuickbooks,
-    quickbooksIsLinked,
-    linkQuickbooks,
-    unlinkQuickbooks,
-  } = useQuickbooks()
-  
-  return (
-    <>
-    <HoverMenu config={config}>
-      <MoreVertical size={16} />
-    </HoverMenu>
-    <button onClick={async () => {
-      const authorizationUrl = await linkQuickbooks()
-      window.location.href = authorizationUrl
-    }}>Connect</button>
     </>
   )
 }
