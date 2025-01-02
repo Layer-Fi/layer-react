@@ -46,12 +46,14 @@
   block-size: auto;
   max-block-size: 90dvb;
 
-  &.Layer__Modal--compact {
-    inline-size: min(24rem, 90dvi);
-    block-size: min(24rem, 90dvb);
-  }
-
   [slot=content] {
     flex: 1;
+  }
+}
+
+.Layer__Modal--compact {
+  .Layer__Dialog {
+    inline-size: min(24rem, 90dvi);
+    block-size: min(24rem, 90dvb);
   }
 }
