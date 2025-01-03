@@ -25,12 +25,12 @@
     "build:clean": "rm -rf ./dist && npm run build",
     "dev": "node bin/build.js -- --watch",
     "prepack": "npm run typecheck && npm run build:clean",
-    "lint": "eslint . && stylelint .",
+    "lint": "eslint . && stylelint '**/*.{css,scss}'",
     "lint:eslint": "eslint .",
-    "lint:stylelint": "stylelint .",
-    "lint:fix": "eslint . --fix && stylelint . --fix",
+    "lint:stylelint": "stylelint '**/*.{css,scss}'",
+    "lint:fix": "eslint . --fix && stylelint '**/*.{css,scss}' --fix",
     "lint:fix:eslint": "eslint . --fix",
-    "lint:fix:stylelint": "stylelint . --fix"
+    "lint:fix:stylelint": "stylelint '**/*.{css,scss}' --fix"
   },
   "repository": {
     "type": "git",
