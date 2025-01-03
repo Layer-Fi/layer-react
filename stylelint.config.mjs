@@ -2,6 +2,8 @@ export default {
   // Define the files to lint
   files: ['src/**/*.scss', 'src/**/*.css'],
 
+  plugins: ['@stylistic/stylelint-plugin'],
+
   // Extend the standard and SCSS configurations
   extends: ['stylelint-config-standard', 'stylelint-config-standard-scss'],
 
@@ -37,5 +39,17 @@ export default {
 
     // Prohibit duplicate selectors
     'no-duplicate-selectors': true,
+
+    // Indentation
+    '@stylistic/indentation': 2,
+
+    '@stylistic/max-empty-lines': 1,
+
+    '@stylistic/no-eol-whitespace': true,
+
+    '@stylistic/no-missing-end-of-source-newline': true,
+
+    // Require a space after colon in declarations
+    '@stylistic/declaration-colon-space-after': 'always',
   },
 }

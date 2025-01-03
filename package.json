@@ -26,7 +26,11 @@
     "dev": "node bin/build.js -- --watch",
     "prepack": "npm run typecheck && npm run build:clean",
     "lint": "eslint . && stylelint .",
-    "lint:fix": "eslint . --fix && stylelint . --fix"
+    "lint:eslint": "eslint .",
+    "lint:stylelint": "stylelint .",
+    "lint:fix": "eslint . --fix && stylelint . --fix",
+    "lint:fix:eslint": "eslint . --fix",
+    "lint:fix:stylelint": "stylelint . --fix"
   },
   "repository": {
     "type": "git",
@@ -49,6 +53,7 @@
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^2.10.0",
+    "@stylistic/stylelint-plugin": "^3.1.1",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.5.1",
