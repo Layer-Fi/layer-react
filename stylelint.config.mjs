@@ -22,6 +22,7 @@ export default {
     'length-zero-no-unit': true,
     'custom-property-pattern': '^[a-z0-9-]+$',
     'no-duplicate-selectors': true,
+    'no-descending-specificity': null,
     '@stylistic/indentation': 2,
     '@stylistic/max-empty-lines': 1,
     '@stylistic/no-eol-whitespace': true,
