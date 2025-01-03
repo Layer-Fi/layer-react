@@ -2,6 +2,8 @@
 
 .Layer__datepicker__wrapper,
 #Layer__datepicker__portal {
+  position: relative;
+  z-index: 101;
   display: inline-flex;
   align-items: center;
   max-height: 36px;
@@ -26,6 +28,7 @@
 
   & > div {
     max-width: 100%;
+    width: 100%;
   }
 
   .Layer__datepicker__next-button {
