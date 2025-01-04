@@ -18,6 +18,7 @@ export interface GeneralLedgerStringOverrides {
 export interface ChartOfAccountsOptions {
   templateAccountsEditable?: boolean
   showReversalEntries?: boolean
+  showAddAccountButton?: boolean
 }
 export interface GeneralLedgerProps {
   title?: string // deprecated
@@ -46,8 +47,8 @@ export const GeneralLedgerView = ({
             {
               value: 'chartOfAccounts',
               label:
-                stringOverrides?.chartOfAccountsToggleOption ||
-                'Chart of accounts',
+                stringOverrides?.chartOfAccountsToggleOption
+                || 'Chart of accounts',
             },
             {
               value: 'journal',
@@ -58,19 +59,22 @@ export const GeneralLedgerView = ({
           onChange={opt => setActiveTab(opt.target.value)}
         />
 
-        {activeTab === 'chartOfAccounts' ? (
-          <ChartOfAccounts
-            asWidget
-            withExpandAllButton
-            stringOverrides={stringOverrides?.chartOfAccounts}
-            templateAccountsEditable={
-              chartOfAccountsOptions?.templateAccountsEditable
-            }
-            showReversalEntries={chartOfAccountsOptions?.showReversalEntries}
-          />
-        ) : (
-          <Journal stringOverrides={stringOverrides?.journal} />
-        )}
+        {activeTab === 'chartOfAccounts'
+          ? (
+            <ChartOfAccounts
+              asWidget
+              withExpandAllButton
+              showAddAccountButton={chartOfAccountsOptions?.showAddAccountButton}
+              stringOverrides={stringOverrides?.chartOfAccounts}
+              templateAccountsEditable={
+                chartOfAccountsOptions?.templateAccountsEditable
+              }
+              showReversalEntries={chartOfAccountsOptions?.showReversalEntries}
+            />
+          )
+          : (
+            <Journal stringOverrides={stringOverrides?.journal} />
+          )}
       </View>
     </ProfitAndLoss>
   )
