@@ -33,7 +33,7 @@ export const LinkedAccountItemThumb = ({
     confirmAccount,
     excludeAccount,
     breakConnection,
-    setAccountsToAddOpeningBalance,
+    setAccountsToAddOpeningBalanceInModal,
   } = useContext(LinkedAccountsContext)
   const { environment } = useEnvironment()
 
@@ -130,7 +130,7 @@ export const LinkedAccountItemThumb = ({
     additionalConfigs.push({
       name: 'Add opening balance',
       action: async () => {
-        setAccountsToAddOpeningBalance([account])
+        setAccountsToAddOpeningBalanceInModal([account])
       },
     })
   }

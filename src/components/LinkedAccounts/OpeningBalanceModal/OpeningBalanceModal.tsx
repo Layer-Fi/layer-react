@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Modal } from '../../ui/Modal/Modal'
 import { ModalContextBar, ModalHeading, ModalActions, ModalContent, ModalDescription } from '../../ui/Modal/ModalSlots'
 import { Button } from '../../ui/Button/Button'
@@ -12,6 +12,7 @@ import { getActivationDate } from '../../../utils/business'
 import { AccountFormBox, AccountFormBoxData, AccountFormBoxRef } from '../AccountFormBox/AccountFormBox'
 import { useUpdateOpeningBalanceAndDate } from './useUpdateOpeningBalanceAndDate'
 import { convertToCents } from '../../../utils/format'
+import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext'
 
 type OpeningBalanceModalStringOverrides = {
   title?: string
@@ -126,26 +127,27 @@ function LinkedAccountsOpeningBalanceModalContent({
 }
 
 export function OpeningBalanceModal({
-  accounts,
-  onClose,
   stringOverrides,
 }: {
-  accounts?: LinkedAccount[]
-  onClose: () => void
   stringOverrides?: OpeningBalanceModalStringOverrides
 }) {
-  if (!accounts?.length) {
+  const {
+    accountsToAddOpeningBalanceInModal,
+    setAccountsToAddOpeningBalanceInModal,
+  } = useContext(LinkedAccountsContext)
+
+  if (!accountsToAddOpeningBalanceInModal?.length) {
     return null
   }
 
   return (
-    <Modal isOpen={Boolean(accounts.length)}>
+    <Modal isOpen={Boolean(accountsToAddOpeningBalanceInModal.length)} size='lg'>
       {({ close }) => (
         <LinkedAccountsOpeningBalanceModalContent
-          accounts={accounts}
+          accounts={accountsToAddOpeningBalanceInModal}
           onClose={() => {
             close()
-            onClose()
+            setAccountsToAddOpeningBalanceInModal([])
           }}
           stringOverrides={stringOverrides}
         />

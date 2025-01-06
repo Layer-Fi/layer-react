@@ -32,8 +32,8 @@ type UseLinkedAccounts = () => {
   unlinkAccount: (source: AccountSource, accountId: string) => void
   confirmAccount: (source: AccountSource, accountId: string) => void
   excludeAccount: (source: AccountSource, accountId: string) => void
-  accountsToAddOpeningBalance: LinkedAccount[]
-  setAccountsToAddOpeningBalance: (accounts: LinkedAccount[]) => void
+  accountsToAddOpeningBalanceInModal: LinkedAccount[]
+  setAccountsToAddOpeningBalanceInModal: (accounts: LinkedAccount[]) => void
 
   // Only works in non-production environments for test purposes
   breakConnection: (source: AccountSource, connectionExternalId: string) => void
@@ -63,7 +63,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
-  const [accountsToAddOpeningBalance, setAccountsToAddOpeningBalance] =
+  const [accountsToAddOpeningBalanceInModal, setAccountsToAddOpeningBalanceInModal] =
     useState<LinkedAccount[]>([])
 
   const queryKey = businessId && auth?.access_token && `linked-accounts-${businessId}`
@@ -371,7 +371,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     breakConnection,
     syncAccounts,
     updateConnectionStatus,
-    accountsToAddOpeningBalance,
-    setAccountsToAddOpeningBalance,
+    accountsToAddOpeningBalanceInModal,
+    setAccountsToAddOpeningBalanceInModal,
   }
 }
