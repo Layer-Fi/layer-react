@@ -2,7 +2,6 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: var(--spacing-xs);
 
   cursor: pointer;
 
@@ -19,6 +18,10 @@
 
   svg {
     transition: all 200ms;
+  }
+
+  &[data-labeled] {
+    gap: var(--spacing-xs);
   }
 
   &[data-pressed] [slot=checkbox] {
