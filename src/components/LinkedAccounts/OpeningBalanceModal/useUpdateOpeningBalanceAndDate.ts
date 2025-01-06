@@ -17,6 +17,10 @@ export function useUpdateOpeningBalanceAndDate(
     openingBalance: openingBalance,
     openingDate: openingDate,
   }: AccountFormBoxData) => {
+    if (!openingDate || !openingBalance) {
+      return
+    }
+
     return Layer.updateOpeningBalance(
       auth?.apiUrl ?? '',
       auth?.access_token,
@@ -26,8 +30,8 @@ export function useUpdateOpeningBalanceAndDate(
           accountId,
         },
         body: {
-          effective_at: openingDate?.toISOString(),
-          balance: openingBalance ? openingBalance.toString() : undefined,
+          effective_at: openingDate.toISOString(),
+          balance: openingBalance,
         },
       },
     )

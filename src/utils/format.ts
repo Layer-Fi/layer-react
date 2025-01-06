@@ -88,7 +88,7 @@ export const convertCurrencyToNumber = (amount: string): string =>
  */
 export const convertToCents = (amount?: number | string): number | undefined => {
   try {
-    if (amount === undefined || amount === null) {
+    if (amount === undefined) {
       return undefined
     }
 

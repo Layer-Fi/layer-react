@@ -210,7 +210,7 @@ export function LinkedAccountsConfirmationModal() {
   const { preloadIsOpen, mainIsOpen } = useLinkedAccountsConfirmationModal()
 
   return (
-    <Modal isOpen={preloadIsOpen || mainIsOpen} compact={true}>
+    <Modal isOpen={preloadIsOpen || mainIsOpen}>
       {({ close }) =>
         preloadIsOpen
           ? <LinkedAccountsConfirmationModalPreloadedContent onClose={close} />

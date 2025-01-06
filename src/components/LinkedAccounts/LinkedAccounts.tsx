@@ -42,8 +42,6 @@ export const LinkedAccountsComponent = ({
     error,
     isValidating,
     refetchAccounts,
-    accountsToAddOpeningBalance,
-    setAccountsToAddOpeningBalance,
   } = useContext(LinkedAccountsContext)
 
   return (
@@ -83,10 +81,7 @@ export const LinkedAccountsComponent = ({
           />
         )
         : null}
-      <OpeningBalanceModal
-        accounts={accountsToAddOpeningBalance}
-        onClose={() => setAccountsToAddOpeningBalance([])}
-      />
+      <OpeningBalanceModal />
     </Container>
   )
 }

@@ -1,5 +1,4 @@
-import classNames from 'classnames'
-import React, { forwardRef, type ComponentProps, type PropsWithChildren } from 'react'
+import React, { forwardRef, useMemo, type ComponentProps, type PropsWithChildren } from 'react'
 import {
   Dialog as ReactAriaDialog,
   type DialogProps,
@@ -7,6 +6,9 @@ import {
   ModalOverlay as ReactAriaModalOverlay,
   type ModalOverlayProps,
 } from 'react-aria-components'
+import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+
+type ModalSize = 'md' | 'lg'
 
 const MODAL_OVERLAY_CLASS_NAME = 'Layer__ModalOverlay'
 const MODAL_OVERLAY_CLASS_NAMES = `Layer__Portal ${MODAL_OVERLAY_CLASS_NAME}`
@@ -27,30 +29,35 @@ ModalOverlay.displayName = 'ModalOverlay'
 const MODAL_CLASS_NAME = 'Layer__Modal'
 const InternalModal = forwardRef<
   HTMLElementTagNameMap['div'],
-  PropsWithChildren<{ compact?: boolean }>
->(({ compact, children }, ref) => (
+  PropsWithChildren
+>(({ children }, ref) => (
   <ReactAriaModal
-    className={classNames(MODAL_CLASS_NAME, compact && 'Layer__Modal--compact')}
+    className={MODAL_CLASS_NAME}
     ref={ref}
   >
     {children}
   </ReactAriaModal>
 ),
 )
+
 InternalModal.displayName = 'Modal'
 
 const DIALOG_CLASS_NAME = 'Layer__Dialog'
 const Dialog = forwardRef<
   HTMLElement,
-  Omit<DialogProps, 'className'>
->((props, ref) => (
-  <ReactAriaDialog
-    {...props}
-    className={DIALOG_CLASS_NAME}
-    ref={ref}
-  />
-),
-)
+  Omit<DialogProps, 'className'> & { size?: ModalSize }
+>(({ size, ...props }, ref) => {
+  const dataProperties = useMemo(() => toDataProperties({ size }), [size])
+  return (
+    <ReactAriaDialog
+      {...props}
+      {...dataProperties}
+      className={DIALOG_CLASS_NAME}
+      ref={ref}
+    />
+  )
+})
+
 Dialog.displayName = 'Dialog'
 
 type AllowedModalProps = Pick<
@@ -62,18 +69,18 @@ type AllowedDialogProps = Pick<
   'children'
 >
 
-type ModalProps = AllowedModalProps & AllowedDialogProps & { compact?: boolean }
+type ModalProps = AllowedModalProps & AllowedDialogProps & { size?: 'md' | 'lg' }
 
 export function Modal({
   isOpen,
-  compact,
+  size = 'md',
   onOpenChange,
   children,
 }: ModalProps) {
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange}>
-      <InternalModal compact={compact}>
-        <Dialog role='dialog'>
+      <InternalModal>
+        <Dialog role='dialog' size={size}>
           {children}
         </Dialog>
       </InternalModal>
