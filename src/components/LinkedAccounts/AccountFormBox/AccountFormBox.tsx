@@ -1,47 +1,55 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react'
+import React, { useMemo } from 'react'
 import { LinkedAccount } from '../../../types/linked_accounts'
 import InstitutionIcon from '../../../icons/InstitutionIcon'
 import { Checkbox } from '../../ui/Checkbox/Checkbox'
-import { Text, TextSize } from '../../Typography'
+import { ErrorText, Text, TextSize } from '../../Typography'
 import { InputGroup } from '../../Input'
 import { AmountInput } from '../../Input/AmountInput'
 import { DatePicker } from '../../DatePicker'
 import { isEqual, startOfDay } from 'date-fns'
 import classNames from 'classnames'
+import { ErrorType } from '../OpeningBalanceModal/useUpdateOpeningBalanceAndDate'
+import CheckCircle from '../../../icons/CheckCircle'
 
 export type AccountFormBoxData = {
   account: LinkedAccount
   isConfirmed: boolean
   openingDate?: Date
   openingBalance?: string
-}
-
-export type AccountFormBoxRef = {
-  getData: () => AccountFormBoxData
+  saved?: boolean
 }
 
 type AccountFormProps = {
   account: LinkedAccount
   defaultValue: AccountFormBoxData
   disableConfirmExclude?: boolean
+  errors?: ErrorType[]
+  onChange: (val: AccountFormBoxData) => void
 }
 
 const CLASS_NAME = 'Layer__caobfb'
 
-const AccountFormBox = forwardRef(({
+export const AccountFormBox = ({
   account,
   defaultValue,
   disableConfirmExclude = false,
-}: AccountFormProps,
-ref) => {
-  const [formState, setFormState] = useState<AccountFormBoxData>(defaultValue)
+  onChange,
+  errors = [],
+}: AccountFormProps) => {
+  const formState = defaultValue
 
-  useImperativeHandle(ref, () => ({
-    getData: () => formState,
-  }))
+  const dataProps = useMemo(() => {
+    if (defaultValue.saved) {
+      return {
+        'data-saved': true,
+      }
+    }
+
+    return {}
+  }, [defaultValue.saved])
 
   return (
-    <div className={classNames(CLASS_NAME, formState.isConfirmed && `${CLASS_NAME}--confirmed`)}>
+    <div {...dataProps} className={classNames(CLASS_NAME, formState.isConfirmed && `${CLASS_NAME}--confirmed`)}>
       <div className={`${CLASS_NAME}__icon-col`}>
         {account.institution?.logo != undefined
           ? (
@@ -87,7 +95,7 @@ ref) => {
               mode='dayPicker'
               onChange={(v) => {
                 if (!formState.openingDate || !isEqual(formState.openingDate, v as Date)) {
-                  setFormState({ ...formState, openingDate: (v as Date) })
+                  onChange({ ...formState, openingDate: (v as Date) })
                 }
               }}
               selected={formState.openingDate ?? startOfDay(new Date())}
@@ -100,25 +108,32 @@ ref) => {
               name='openingBalance'
               defaultValue={formState.openingBalance}
               onChange={value =>
-                setFormState({ ...formState, openingBalance: value })}
+                onChange({ ...formState, openingBalance: value })}
               disabled={!disableConfirmExclude && !formState.isConfirmed}
+              isInvalid={errors.includes('MISSING_BALANCE')}
+              errorMessage='Field is required'
             />
           </InputGroup>
         </div>
+        {errors.includes('API_ERROR') && (
+          <ErrorText>
+            An error occurred while saving data.
+            You will have an opportunity to try again later.
+          </ErrorText>
+        )}
       </div>
       {!disableConfirmExclude && (
         <div className={`${CLASS_NAME}__confirm-col`}>
           <Checkbox
             isSelected={formState.isConfirmed}
-            onChange={v => setFormState({ ...formState, isConfirmed: v })}
+            onChange={v => onChange({ ...formState, isConfirmed: v })}
             aria-label='Confirm Account Inclusion'
           />
         </div>
       )}
+      <div className={`${CLASS_NAME}__success-banner`}>
+        <CheckCircle size={36} />
+      </div>
     </div>
   )
-})
-
-AccountFormBox.displayName = 'AccountFormBox'
-
-export { AccountFormBox }
+}
