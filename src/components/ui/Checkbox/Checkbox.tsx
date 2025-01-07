@@ -1,20 +1,23 @@
 import { Check } from 'lucide-react'
-import React from 'react'
-import { Checkbox as ReactAriaCheckbox, type CheckboxProps} from 'react-aria-components'
+import React, { ReactNode } from 'react'
+import { Checkbox as ReactAriaCheckbox, type CheckboxProps as AriaCheckboxProps } from 'react-aria-components'
+import { withRenderProp } from '../../utility/withRenderProp'
 
 const CLASS_NAME = 'Layer__Checkbox'
 
-export function Checkbox({children, ...props}: Omit<CheckboxProps, 'className'>) {
+type CheckboxProps = Omit<AriaCheckboxProps, 'className'>
+
+export function Checkbox({ children, ...props }: CheckboxProps) {
   return (
     <ReactAriaCheckbox {...props} className={CLASS_NAME}>
-      {() =>
+      {withRenderProp(children, node => (
         <>
           <div slot='checkbox'>
             <Check />
           </div>
-          {children}
+          {node}
         </>
-      }
+      ))}
     </ReactAriaCheckbox>
   )
 }
