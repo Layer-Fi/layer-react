@@ -43,7 +43,10 @@ function LinkedAccountsOpeningBalanceModalContent({
   )))
 
   const { bulkUpdate, isLoading, errors } = useUpdateOpeningBalanceAndDate({
-    onSuccess: refetchAccounts,
+    onSuccess: () => {
+      refetchAccounts()
+      onClose()
+    },
   })
 
   const handleDismiss = () => {
@@ -54,7 +57,7 @@ function LinkedAccountsOpeningBalanceModalContent({
     onClose()
   }
 
-  const handleFinish = async () => {
+  const handleSubmit = async () => {
     const savedIds = await bulkUpdate(
       formsData
         .filter(item => !item.saved)
@@ -102,7 +105,7 @@ function LinkedAccountsOpeningBalanceModalContent({
       </ModalContent>
       <ModalActions>
         <VStack gap='md'>
-          <Button size='lg' onPress={handleFinish} isPending={isLoading}>
+          <Button size='lg' onPress={handleSubmit} isPending={isLoading}>
             {stringOverrides?.buttonText ?? 'Submit'}
           </Button>
         </VStack>
