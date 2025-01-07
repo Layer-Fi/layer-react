@@ -95,8 +95,14 @@ export function useUpdateOpeningBalanceAndDate(
             return
           }
 
-          await trigger(item)
-          savedIds.push(item.account.id)
+          const result = await trigger(item)
+          if (result) {
+            savedIds.push(item.account.id)
+          }
+          else {
+            newErrors[item.account.id] = ['API_ERROR']
+          }
+
           return
         }
         catch {
