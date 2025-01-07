@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { AccountFormBox, AccountFormBoxData, AccountFormBoxRef } from '../AccountFormBox/AccountFormBox'
+import React, { useState } from 'react'
+import { AccountFormBox, AccountFormBoxData } from '../AccountFormBox/AccountFormBox'
 import { LinkedAccount } from '../../../types/linked_accounts'
 import { getActivationDate } from '../../../utils/business'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { Button } from '../../Button'
 import { useUpdateOpeningBalanceAndDate } from '../OpeningBalanceModal/useUpdateOpeningBalanceAndDate'
 import { useConfirmAndExcludeMultiple } from '../ConfirmationModal/useConfirmAndExcludeMultiple'
-import { ErrorMessage } from '../../ui/ErrorMessage/ErrorMessage'
 import { convertToCents } from '../../../utils/format'
 
 type LinkedAccountsOnboardingFormProps = {
@@ -19,47 +18,40 @@ export const LinkedAccountsOnboardingForm = ({
   onSuccess,
 }: LinkedAccountsOnboardingFormProps) => {
   const { business } = useLayerContext()
-  const childRefs = useRef<AccountFormBoxRef[]>([])
-  const [formState, setFormState] = useState<AccountFormBoxData[]>([])
+  const [formsData, setFormsData] = useState<AccountFormBoxData[]>([])
 
   const {
-    trigger: triggerOpeningBalance,
-    isMutating: isMutatingOpeningBalance,
-    error: errorOpeningBalance,
-  } = useUpdateOpeningBalanceAndDate(formState, { onSuccess: () => {} })
+    bulkUpdate: updateOpeningBalance,
+    isLoading: isMutatingOpeningBalance,
+    errors: errorsOpeningBalance,
+  } = useUpdateOpeningBalanceAndDate({ onSuccess: () => {} })
 
+  /** @TODO handle errors */
   const {
     trigger: triggerConfirmAccount,
     isMutating: isMutatingConfirmAccount,
-    error: errorConfirmAccount,
   } = useConfirmAndExcludeMultiple(
-    Object.fromEntries(formState.map(({ account: { id }, isConfirmed }) => [id, isConfirmed])),
+    Object.fromEntries(formsData.map(({ account: { id }, isConfirmed }) => [id, isConfirmed])),
     { onSuccess: () => {} },
   )
 
-  const hasError = errorOpeningBalance || errorConfirmAccount
   const isMutating = isMutatingOpeningBalance || isMutatingConfirmAccount
 
-  useEffect(() => {
-    if (formState.length > 0) {
-      saveData()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formState])
-
-  const handleSubmit = () => {
-    const data = childRefs.current.map(ref => ref.getData()).map(item => ({
-      ...item,
-      openingBalance: convertToCents(item.openingBalance)?.toString(),
-    }))
-    setFormState(data)
-  }
-
-  const saveData = async () => {
+  const handleSubmit = async () => {
     const successConfirmAccount = await triggerConfirmAccount()
-    const successBalanceUpdate = await triggerOpeningBalance()
+    const savedIds = await updateOpeningBalance(
+      formsData
+        .filter(item => !item.saved && !item.isConfirmed)
+        .map(item => ({
+          ...item,
+          openingBalance: convertToCents(item.openingBalance)?.toString(),
+        })))
 
-    if (successBalanceUpdate && successConfirmAccount) {
+    setFormsData(formsData.map(
+      item => ({ ...item, saved: item.saved || savedIds.includes(item.account.id) }),
+    ))
+
+    if (successConfirmAccount && savedIds.length === formsData.length) {
       onSuccess()
     }
   }
@@ -68,7 +60,6 @@ export const LinkedAccountsOnboardingForm = ({
     <div className='Layer__laof'>
       {accounts?.map((account, index) => (
         <AccountFormBox
-          ref={(el: AccountFormBoxRef) => childRefs.current[index] = el}
           key={index}
           account={account}
           defaultValue={{
@@ -77,9 +68,12 @@ export const LinkedAccountsOnboardingForm = ({
             openingDate: getActivationDate(business),
           }}
           disableConfirmExclude={false}
+          onChange={v => setFormsData(formsData.map(
+            item => item.account.id === v.account.id ? v : item,
+          ))}
+          errors={errorsOpeningBalance[account.id]}
         />
       ))}
-      <ErrorMessage>{hasError && 'Something went wrong'}</ErrorMessage>
       <Button
         onClick={handleSubmit}
         disabled={isMutating}

@@ -1,15 +1,13 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Modal } from '../../ui/Modal/Modal'
 import { ModalContextBar, ModalHeading, ModalActions, ModalContent, ModalDescription } from '../../ui/Modal/ModalSlots'
 import { Button } from '../../ui/Button/Button'
 import { VStack } from '../../ui/Stack/Stack'
 import { useLinkedAccounts } from '../../../hooks/useLinkedAccounts'
-import { ConditionalList } from '../../utility/ConditionalList'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { LinkedAccount } from '../../../types/linked_accounts'
-import { Text, TextSize } from '../../Typography/Text'
 import { getActivationDate } from '../../../utils/business'
-import { AccountFormBox, AccountFormBoxData, AccountFormBoxRef } from '../AccountFormBox/AccountFormBox'
+import { AccountFormBox, AccountFormBoxData } from '../AccountFormBox/AccountFormBox'
 import { useUpdateOpeningBalanceAndDate } from './useUpdateOpeningBalanceAndDate'
 import { convertToCents } from '../../../utils/format'
 import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext'
@@ -32,43 +30,46 @@ function LinkedAccountsOpeningBalanceModalContent({
   const { business } = useLayerContext()
   const { refetchAccounts } = useLinkedAccounts()
 
-  const childRefs = useRef<AccountFormBoxRef[]>([])
+  // Mark if any data has been successfully saved with API
+  // so the refetchAccounts should be called on onClose
+  const [touched, setTouched] = useState(false)
 
-  const [formState, setFormState] = useState<AccountFormBoxData[]>([])
+  const [formsData, setFormsData] = useState<AccountFormBoxData[]>(accounts.map(item => (
+    {
+      account: item,
+      isConfirmed: true,
+      openingDate: getActivationDate(business),
+    }
+  )))
 
-  const {
-    trigger,
-    isMutating,
-    error: hasError,
-  } = useUpdateOpeningBalanceAndDate(formState, {
+  const { bulkUpdate, isLoading, errors } = useUpdateOpeningBalanceAndDate({
     onSuccess: refetchAccounts,
   })
 
-  useEffect(() => {
-    if (formState.length > 0) {
-      saveData()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formState])
-
   const handleDismiss = () => {
+    if (touched) {
+      refetchAccounts()
+    }
+
     onClose()
   }
 
-  const handleFinish = () => {
-    const data = childRefs.current.map(ref => ref.getData()).map(item => ({
-      ...item,
-      openingBalance: convertToCents(item.openingBalance)?.toString(),
-    }))
-    setFormState(data)
-  }
+  const handleFinish = async () => {
+    const savedIds = await bulkUpdate(
+      formsData
+        .filter(item => !item.saved)
+        .map(item => ({
+          ...item,
+          openingBalance: convertToCents(item.openingBalance)?.toString(),
+        })))
 
-  const saveData = async () => {
-    const successBalanceUpdate = await trigger()
-
-    if (successBalanceUpdate) {
-      onClose()
+    if (savedIds.length > 0) {
+      setTouched(true)
     }
+
+    setFormsData(formsData.map(
+      item => ({ ...item, saved: item.saved || savedIds.includes(item.account.id) }),
+    ))
   }
 
   return (
@@ -83,41 +84,25 @@ function LinkedAccountsOpeningBalanceModalContent({
             {stringOverrides?.description}
           </ModalDescription>
         )}
-        <ConditionalList
-          list={accounts}
-          Empty={(
-            <VStack slot='center'>
-              <Text>
-                You can close this modal.
-              </Text>
-            </VStack>
-          )}
-          Container={({ children }) => <VStack gap='md'>{children}</VStack>}
-        >
-          {({ item }, index) => (
+        <VStack gap='md'>
+          {formsData.map(item => (
             <AccountFormBox
-              ref={(el: AccountFormBoxRef) => childRefs.current[index] = el}
-              key={item.id}
-              account={item}
-              defaultValue={{
-                account: item,
-                isConfirmed: true,
-                openingDate: getActivationDate(business),
-              }}
+              key={item.account.id}
+              account={item.account}
+              defaultValue={item}
               disableConfirmExclude={true}
+              errors={errors[item.account.id]}
+              onChange={v => setFormsData(formsData.map(
+                item => item.account.id === v.account.id ? v : item,
+              ))}
             />
+          ),
           )}
-        </ConditionalList>
+        </VStack>
       </ModalContent>
       <ModalActions>
         <VStack gap='md'>
-          {hasError && (
-            <Text size={TextSize.sm}>
-              An error occurred while add opening balance.
-              You will have an opportunity to try again later.
-            </Text>
-          )}
-          <Button size='lg' onPress={handleFinish} isPending={isMutating}>
+          <Button size='lg' onPress={handleFinish} isPending={isLoading}>
             {stringOverrides?.buttonText ?? 'Submit'}
           </Button>
         </VStack>
