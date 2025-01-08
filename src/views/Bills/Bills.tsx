@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Bills } from '../../components/Bills'
+import { Bills } from '../../components/Bills/Bills'
 import { Header } from '../../components/Container'
 import { DatePicker } from '../../components/DatePicker'
 import { HeaderRow, HeaderCol } from '../../components/Header'
@@ -31,7 +31,7 @@ export const BillsView = ({
       title={stringOverrides?.title || 'Bills'}
       showHeader={showTitle}
       viewClassName='Layer__bills__view'
-      header={
+      header={(
         <Header>
           <HeaderRow>
             <HeaderCol>
@@ -44,7 +44,7 @@ export const BillsView = ({
             </HeaderCol>
           </HeaderRow>
         </Header>
-      }
+      )}
     >
       <Bills activeTab={activeTab} setActiveTab={setActiveTab} />
     </View>

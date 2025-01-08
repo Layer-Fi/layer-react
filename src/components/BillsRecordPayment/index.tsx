@@ -1,1 +1,0 @@
-export { BillsRecordPayment } from './BillsRecordPayment'
