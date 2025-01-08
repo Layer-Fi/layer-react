@@ -8,9 +8,9 @@ import { useLayerContext } from '../../../contexts/LayerContext'
 import { LinkedAccount } from '../../../types/linked_accounts'
 import { getActivationDate } from '../../../utils/business'
 import { AccountFormBox, AccountFormBoxData } from '../AccountFormBox/AccountFormBox'
-import { useUpdateOpeningBalanceAndDate } from './useUpdateOpeningBalanceAndDate'
-import { convertToCents } from '../../../utils/format'
+import { useBulkSetOpeningBalance } from './useUpdateOpeningBalanceAndDate'
 import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext'
+import { startOfYear } from 'date-fns'
 
 type OpeningBalanceModalStringOverrides = {
   title?: string
@@ -30,34 +30,34 @@ function LinkedAccountsOpeningBalanceModalContent({
   const { business } = useLayerContext()
   const { refetchAccounts } = useLinkedAccounts()
 
-  const [formsData, setFormsData] = useState<AccountFormBoxData[]>(accounts.map(item => (
+  const [formsData, setFormsData] = useState<Record<
+    string,
+    AccountFormBoxData & { account: LinkedAccount }>
+  >(
+    () => Object.fromEntries(
+      accounts.map(account => [
+        account.id,
+        {
+          account,
+          openingDate: getActivationDate(business) ?? startOfYear(new Date()),
+          openingBalance: 0,
+        },
+      ]),
+    ),
+  )
+
+  const {
+    trigger,
+    isMutating,
+  } = useBulkSetOpeningBalance(
+    formsData,
     {
-      account: item,
-      isConfirmed: true,
-      openingDate: getActivationDate(business),
-    }
-  )))
-
-  const { bulkUpdate, isLoading, errors } = useUpdateOpeningBalanceAndDate({
-    onSuccess: () => {
-      refetchAccounts()
-      onClose()
+      onSuccess: async () => {
+        await refetchAccounts()
+        onClose()
+      },
     },
-  })
-
-  const handleSubmit = async () => {
-    const savedIds = await bulkUpdate(
-      formsData
-        .filter(item => !item.saved)
-        .map(item => ({
-          ...item,
-          openingBalance: convertToCents(item.openingBalance)?.toString(),
-        })))
-
-    setFormsData(formsData.map(
-      item => ({ ...item, saved: item.saved || savedIds.includes(item.account.id) }),
-    ))
-  }
+  )
 
   return (
     <>
@@ -67,16 +67,16 @@ function LinkedAccountsOpeningBalanceModalContent({
       </ModalHeading>
       <ModalContent>
         <VStack gap='md'>
-          {formsData.map(item => (
+          {Object.values(formsData).map(({ account, openingBalance, openingDate }) => (
             <AccountFormBox
-              key={item.account.id}
-              account={item.account}
-              defaultValue={item}
-              disableConfirmExclude={true}
-              errors={errors[item.account.id]}
-              onChange={v => setFormsData(formsData.map(
-                item => item.account.id === v.account.id ? v : item,
-              ))}
+              key={account.id}
+              account={account}
+              value={{ openingBalance, openingDate }}
+              onChange={newValue => setFormsData(
+                currentFormsData => ({
+                  ...currentFormsData,
+                  [account.id]: { ...currentFormsData[account.id], ...newValue } }),
+              )}
             />
           ),
           )}
@@ -84,7 +84,7 @@ function LinkedAccountsOpeningBalanceModalContent({
       </ModalContent>
       <ModalActions>
         <VStack gap='md'>
-          <Button size='lg' onPress={handleSubmit} isPending={isLoading}>
+          <Button size='lg' onPress={() => { void trigger() }} isPending={isMutating}>
             {stringOverrides?.buttonText ?? 'Submit'}
           </Button>
         </VStack>
@@ -112,7 +112,6 @@ export function OpeningBalanceModal({
   return (
     <Modal
       isOpen={shouldShowModal}
-      isDismissable
       onOpenChange={(isOpen) => {
         if (!isOpen) {
           setAccountsToAddOpeningBalanceInModal([])

@@ -10,10 +10,6 @@
     transition: all 0.25s ease-in-out;
     transition-delay: 0.8s;
     max-height: 280px;
-
-    &.Layer__caobfb--confirmed {
-        background-color: var(--color-base-50);
-    }
 }
 
 .Layer__caobfb__icon-col {
@@ -86,10 +82,4 @@
     @container (max-width: 440px) {
         flex-direction: column;
     }
-}
-
-.Layer__caobfb__confirm-col {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-end;
 }

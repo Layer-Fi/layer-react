@@ -63,7 +63,7 @@ Dialog.displayName = 'Dialog'
 
 type AllowedModalOverlayProps = Pick<
   ComponentProps<typeof ModalOverlay>,
-  'isDismissable' | 'isOpen' | 'onOpenChange'
+  'isOpen' | 'onOpenChange'
 >
 type AllowedInternalModalProps = Pick<
   ComponentProps<typeof InternalModal>,
@@ -77,14 +77,13 @@ type AllowedDialogProps = Pick<
 type ModalProps = AllowedModalOverlayProps & AllowedInternalModalProps & AllowedDialogProps
 
 export function Modal({
-  isDismissable,
   isOpen,
   size = 'md',
   onOpenChange,
   children,
 }: ModalProps) {
   return (
-    <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={isDismissable}>
+    <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange}>
       <InternalModal size={size}>
         <Dialog role='dialog'>
           {children}

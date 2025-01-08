@@ -23,7 +23,7 @@ export const updateConnectionStatus = post<
 
 type UpdateOpeningBalanceBody = {
   effective_at: string
-  balance: string
+  balance: number
 }
 
 export const updateOpeningBalance = post<

@@ -15,11 +15,17 @@ import { endOfDay, endOfMonth, endOfYear } from 'date-fns'
 /**
  * @see https://github.com/Hacker0x01/react-datepicker/issues/1333#issuecomment-2363284612
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any,
+     @typescript-eslint/no-unnecessary-type-assertion,
+     @typescript-eslint/no-unsafe-member-access,
+*/
 const ReactDatePicker = (((RDP.default as any).default as any)
   || (RDP.default as any)
   || (RDP as any)) as typeof RDP.default
-/* eslint-enable @typescript-eslint/no-explicit-any */
+/* eslint-enable @typescript-eslint/no-explicit-any,
+     @typescript-eslint/no-unnecessary-type-assertion,
+     @typescript-eslint/no-unsafe-member-access,
+*/
 
 type NavigationArrows = 'desktop' | 'mobile'
 
@@ -134,10 +140,10 @@ export const DatePicker = ({
       }
 
       if (isRangeMode(mode) && Array.isArray(selected)) {
-        if ((startDate as Date | null)?.getTime() !== selected[0]?.getTime()) {
+        if ((startDate)?.getTime() !== selected[0]?.getTime()) {
           setStartDate(selected[0])
         }
-        if ((endDate as Date | null)?.getTime() !== selected[1]?.getTime()) {
+        if ((endDate)?.getTime() !== selected[1]?.getTime()) {
           setEndDate(selected[1])
         }
       }
