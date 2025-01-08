@@ -1,12 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { BillsContext } from '../../contexts/BillsContext'
-import CloseIcon from '../../icons/CloseIcon'
 import {
   Button,
   ButtonVariant,
   CloseButton,
-  IconButton,
-  SubmitButton,
 } from '../Button'
 import { Header } from '../Container'
 import { DatePicker } from '../DatePicker'
@@ -83,15 +80,13 @@ export const BillsRecordPayment = ({
                 type='number'
                 value={amount}
                 onChange={e =>
-                  setAmount(Number((e.target as HTMLInputElement).value))
-                }
+                  setAmount(Number((e.target as HTMLInputElement).value))}
               />
               <Input
                 type='number'
                 value={amount}
                 onChange={e =>
-                  setAmount(Number((e.target as HTMLInputElement).value))
-                }
+                  setAmount(Number((e.target as HTMLInputElement).value))}
               />
             </InputGroup>
           </div>
@@ -105,7 +100,10 @@ export const BillsRecordPayment = ({
 
           <div className='Layer__bills__record-payment__total'>
             <Text size={TextSize.md}>Total</Text>
-            <Text size={TextSize.md}>${amount.toFixed(2)}</Text>
+            <Text size={TextSize.md}>
+              $
+              {amount.toFixed(2)}
+            </Text>
           </div>
 
           <div className='Layer__bills__record-payment__submit-container'>
