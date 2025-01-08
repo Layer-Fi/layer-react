@@ -1,12 +1,10 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { BillsContext } from '../../contexts/BillsContext'
 import { useBills } from '../../hooks/useBills'
-import { useElementSize } from '../../hooks/useElementSize'
-import { useElementViewSize } from '../../hooks/useElementViewSize'
-import { View } from '../../types/general'
-import { BillsDetails } from '../BillsDetails'
-import { BillsTable } from '../BillsTable'
-import { BillsTableStringOverrides } from '../BillsTable/BillsTableWithPanel'
+import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
+import { BillsDetails } from './BillsDetails'
+import { BillsTable } from './BillsTable'
+import { BillsTableStringOverrides } from './BillsTableWithPanel'
 import { Container } from '../Container'
 
 export interface BillsStringOverrides {
@@ -40,12 +38,9 @@ const BillsContent = ({
   activeTab,
   setActiveTab,
 }: BillsProps) => {
-  const [view, setView] = useState<View>('desktop')
   const { billDetailsId } = useContext(BillsContext)
 
-  const containerRef = useElementViewSize<HTMLDivElement>(newView =>
-    setView(newView),
-  )
+  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
     <Container
@@ -54,17 +49,21 @@ const BillsContent = ({
       asWidget={asWidget}
       transparentBg
     >
-      {billDetailsId ? (
-        <BillsDetails billDetailsId={billDetailsId} />
-      ) : (
-        <BillsTable
-          view={view}
-          containerRef={containerRef}
-          stringOverrides={stringOverrides?.billsTable}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        />
-      )}
+      {billDetailsId
+        ? (
+          <BillsDetails billDetailsId={billDetailsId} />
+        )
+        : (
+          <BillsTable
+            view={view}
+            stringOverrides={stringOverrides?.billsTable}
+            activeTab={activeTab}
+            data={[]}
+            bulkRecordPayment={false}
+            selectedEntries={[]}
+            setSelectedEntries={() => {}}
+          />
+        )}
     </Container>
   )
 }

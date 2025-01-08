@@ -1,16 +1,16 @@
 import React, { useContext } from 'react'
 import { BillsContext } from '../../contexts/BillsContext'
 import { TableProvider } from '../../contexts/TableContext'
-import { BillType } from '../../hooks/useBills/useBills'
+import { BillType } from '../../hooks/useBills'
 import ChevronRight from '../../icons/ChevronRight'
 import { View } from '../../types/general'
 import { TableCellAlign } from '../../types/table'
 import { convertNumberToCurrency } from '../../utils/format'
 import { ButtonVariant, IconButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import { DueStatus } from '../DueStatus'
+import { DueStatus } from '../DueStatus/DueStatus'
 import { Checkbox } from '../Input'
-import { CheckboxSize, CheckboxVariant } from '../Input/Checkbox'
+import { CheckboxSize } from '../Input/Checkbox'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { BillsTableStringOverrides } from './BillsTableWithPanel'
 
@@ -77,7 +77,8 @@ const BillsTableContent = ({
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.checked) {
         setSelectedEntries([...selectedEntries, entry])
-      } else {
+      }
+      else {
         setSelectedEntries(
           selectedEntries.filter(e => e.vendor !== entry.vendor),
         )
@@ -96,7 +97,7 @@ const BillsTableContent = ({
               <Checkbox
                 boxSize={CheckboxSize.LARGE}
                 checked={isSelected}
-                onChange={e => {
+                onChange={(e) => {
                   handleCheckboxChange(e)
                 }}
                 className='Layer__bills-table__checkbox'
@@ -119,24 +120,27 @@ const BillsTableContent = ({
             className='Layer__bills-table__actions-col'
           >
             <div className='Layer__bills__status-with-actions'>
-              {activeTab === 'unpaid' ? (
-                <SubmitButton
-                  onClick={e => {
-                    e.stopPropagation()
+              {activeTab === 'unpaid'
+                ? (
+                  <SubmitButton
+                    onClick={(e) => {
+                      e.stopPropagation()
 
-                    if (selectedEntryId === rowKey) {
-                      closeSelectedEntry()
-                    } else {
-                      setSelectedEntryId(rowKey)
-                    }
-                  }}
-                  active={true}
-                  action={SubmitAction.UPDATE}
-                  variant={ButtonVariant.secondary}
-                >
-                  {stringOverrides?.recordPaymentButtonText || 'Record payment'}
-                </SubmitButton>
-              ) : null}
+                      if (selectedEntryId === rowKey) {
+                        closeSelectedEntry()
+                      }
+                      else {
+                        setSelectedEntryId(rowKey)
+                      }
+                    }}
+                    active={true}
+                    action={SubmitAction.UPDATE}
+                    variant={ButtonVariant.secondary}
+                  >
+                    {stringOverrides?.recordPaymentButtonText || 'Record payment'}
+                  </SubmitButton>
+                )
+                : null}
               <IconButton
                 icon={<ChevronRight />}
                 onClick={() => {

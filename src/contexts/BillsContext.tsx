@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { useBills } from '../../hooks/useBills'
+import { useBills } from '../hooks/useBills'
 
 export type BillsContextType = ReturnType<typeof useBills>
 export const BillsContext = createContext<BillsContextType>({
