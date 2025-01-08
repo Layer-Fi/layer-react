@@ -1,7 +1,7 @@
 import React, { RefObject, useContext, useState } from 'react'
 import { BillsContext } from '../../contexts/BillsContext'
-import { BillsPaymentRecorded } from '../BillsPaymentRecorded'
-import { BillsRecordPayment } from '../BillsRecordPayment'
+import { BillsPaymentRecorded } from './BillsPaymentRecorded'
+import { BillsRecordPayment } from './BillsRecordPayment'
 
 export const BillsSidebar = ({
   parentRef,
@@ -18,7 +18,8 @@ export const BillsSidebar = ({
     if (selectedEntryId) {
       if (!isPaymentRecorded) {
         setRecordedPayments([...recordedPayments, selectedEntryId])
-      } else {
+      }
+      else {
         setRecordedPayments(
           recordedPayments.filter(id => id !== selectedEntryId),
         )
@@ -26,9 +27,11 @@ export const BillsSidebar = ({
     }
   }
 
-  return isPaymentRecorded ? (
-    <BillsPaymentRecorded />
-  ) : (
-    <BillsRecordPayment setPaymentRecorded={setPaymentRecorded} />
-  )
+  return isPaymentRecorded
+    ? (
+      <BillsPaymentRecorded />
+    )
+    : (
+      <BillsRecordPayment setPaymentRecorded={setPaymentRecorded} />
+    )
 }

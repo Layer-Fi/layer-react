@@ -1,8 +1,8 @@
 import React, { RefObject, useContext, useMemo, useState } from 'react'
 import { BillsContext } from '../../contexts/BillsContext'
-import { BillType } from '../../hooks/useBills/useBills'
+import { BillType } from '../../hooks/useBills'
 import { View } from '../../types/general'
-import { BillsSidebar } from '../BillsSidebar'
+import { BillsSidebar } from './BillsSidebar'
 import { Button } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Select } from '../Input'
@@ -86,27 +86,29 @@ export const BillsTableWithPanel = ({
         {activeTab === 'unpaid' && (
           <HeaderRow>
             <HeaderCol style={{ paddingLeft: 0, paddingRight: 0 }}>
-              {bulkRecordPayment ? (
-                <Select
-                  options={data?.map(entry => ({
-                    value: entry.vendor,
-                    label: entry.vendor,
-                  }))}
-                  onChange={selectedOption => {
-                    const selectedEntry = data?.find(
-                      entry => entry.vendor === selectedOption.value,
-                    )
-                    if (selectedEntry) {
-                      setSelectedEntries([...selectedEntries, selectedEntry])
-                    }
-                  }}
-                  placeholder='Select vendor to record bulk payment'
-                />
-              ) : (
-                <Button onClick={() => setBulkRecordPayment(true)}>
-                  Bulk record payments
-                </Button>
-              )}
+              {bulkRecordPayment
+                ? (
+                  <Select
+                    options={data?.map(entry => ({
+                      value: entry.vendor,
+                      label: entry.vendor,
+                    }))}
+                    onChange={(selectedOption) => {
+                      const selectedEntry = data?.find(
+                        entry => entry.vendor === selectedOption.value,
+                      )
+                      if (selectedEntry) {
+                        setSelectedEntries([...selectedEntries, selectedEntry])
+                      }
+                    }}
+                    placeholder='Select vendor to record bulk payment'
+                  />
+                )
+                : (
+                  <Button onClick={() => setBulkRecordPayment(true)}>
+                    Bulk record payments
+                  </Button>
+                )}
             </HeaderCol>
           </HeaderRow>
         )}
@@ -114,7 +116,7 @@ export const BillsTableWithPanel = ({
 
       {data && (
         <BillsTable
-          view={'desktop'}
+          view='desktop'
           data={data}
           activeTab={activeTab}
           bulkRecordPayment={bulkRecordPayment}
