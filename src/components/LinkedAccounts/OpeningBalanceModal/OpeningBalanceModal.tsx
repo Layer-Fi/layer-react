@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Modal } from '../../ui/Modal/Modal'
-import { ModalContextBar, ModalHeading, ModalActions, ModalContent, ModalDescription } from '../../ui/Modal/ModalSlots'
+import { ModalContextBar, ModalHeading, ModalActions, ModalContent } from '../../ui/Modal/ModalSlots'
 import { Button } from '../../ui/Button/Button'
 import { VStack } from '../../ui/Stack/Stack'
 import { useLinkedAccounts } from '../../../hooks/useLinkedAccounts'
@@ -30,10 +30,6 @@ function LinkedAccountsOpeningBalanceModalContent({
   const { business } = useLayerContext()
   const { refetchAccounts } = useLinkedAccounts()
 
-  // Mark if any data has been successfully saved with API
-  // so the refetchAccounts should be called on onClose
-  const [touched, setTouched] = useState(false)
-
   const [formsData, setFormsData] = useState<AccountFormBoxData[]>(accounts.map(item => (
     {
       account: item,
@@ -49,14 +45,6 @@ function LinkedAccountsOpeningBalanceModalContent({
     },
   })
 
-  const handleDismiss = () => {
-    if (touched) {
-      refetchAccounts()
-    }
-
-    onClose()
-  }
-
   const handleSubmit = async () => {
     const savedIds = await bulkUpdate(
       formsData
@@ -66,10 +54,6 @@ function LinkedAccountsOpeningBalanceModalContent({
           openingBalance: convertToCents(item.openingBalance)?.toString(),
         })))
 
-    if (savedIds.length > 0) {
-      setTouched(true)
-    }
-
     setFormsData(formsData.map(
       item => ({ ...item, saved: item.saved || savedIds.includes(item.account.id) }),
     ))
@@ -77,16 +61,11 @@ function LinkedAccountsOpeningBalanceModalContent({
 
   return (
     <>
-      <ModalContextBar onClose={handleDismiss} />
+      <ModalContextBar onClose={onClose} />
+      <ModalHeading pbe='lg'>
+        {stringOverrides?.title ?? 'Add Opening Balance'}
+      </ModalHeading>
       <ModalContent>
-        <ModalHeading pbe='lg'>
-          {stringOverrides?.title ?? 'Add opening balance'}
-        </ModalHeading>
-        {stringOverrides?.description && (
-          <ModalDescription pbe='lg'>
-            {stringOverrides?.description}
-          </ModalDescription>
-        )}
         <VStack gap='md'>
           {formsData.map(item => (
             <AccountFormBox
@@ -124,19 +103,27 @@ export function OpeningBalanceModal({
     setAccountsToAddOpeningBalanceInModal,
   } = useContext(LinkedAccountsContext)
 
-  if (!accountsToAddOpeningBalanceInModal?.length) {
+  const shouldShowModal = Boolean(accountsToAddOpeningBalanceInModal.length)
+
+  if (!shouldShowModal) {
     return null
   }
 
   return (
-    <Modal isOpen={Boolean(accountsToAddOpeningBalanceInModal.length)} size='lg'>
+    <Modal
+      isOpen={shouldShowModal}
+      isDismissable
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          setAccountsToAddOpeningBalanceInModal([])
+        }
+      }}
+      size='lg'
+    >
       {({ close }) => (
         <LinkedAccountsOpeningBalanceModalContent
           accounts={accountsToAddOpeningBalanceInModal}
-          onClose={() => {
-            close()
-            setAccountsToAddOpeningBalanceInModal([])
-          }}
+          onClose={close}
           stringOverrides={stringOverrides}
         />
       )}

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { LinkedAccount } from '../../../types/linked_accounts'
 import InstitutionIcon from '../../../icons/InstitutionIcon'
 import { Checkbox } from '../../ui/Checkbox/Checkbox'
@@ -9,7 +9,6 @@ import { DatePicker } from '../../DatePicker'
 import { isEqual, startOfDay } from 'date-fns'
 import classNames from 'classnames'
 import { ErrorType } from '../OpeningBalanceModal/useUpdateOpeningBalanceAndDate'
-import CheckCircle from '../../../icons/CheckCircle'
 
 export type AccountFormBoxData = {
   account: LinkedAccount
@@ -38,18 +37,8 @@ export const AccountFormBox = ({
 }: AccountFormProps) => {
   const formState = defaultValue
 
-  const dataProps = useMemo(() => {
-    if (defaultValue.saved) {
-      return {
-        'data-saved': true,
-      }
-    }
-
-    return {}
-  }, [defaultValue.saved])
-
   return (
-    <div {...dataProps} className={classNames(CLASS_NAME, formState.isConfirmed && `${CLASS_NAME}--confirmed`)}>
+    <div className={classNames(CLASS_NAME, formState.isConfirmed && `${CLASS_NAME}--confirmed`)}>
       <div className={`${CLASS_NAME}__icon-col`}>
         {account.institution?.logo != undefined
           ? (
@@ -131,9 +120,6 @@ export const AccountFormBox = ({
           />
         </div>
       )}
-      <div className={`${CLASS_NAME}__success-banner`}>
-        <CheckCircle size={36} />
-      </div>
     </div>
   )
 }

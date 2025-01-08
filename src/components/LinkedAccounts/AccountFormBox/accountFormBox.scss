@@ -93,33 +93,3 @@
     align-items: flex-start;
     justify-content: flex-end;
 }
-
-.Layer__caobfb__success-banner {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    opacity: 0;
-    z-index: -1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-sm);
-    background-color: var(--color-base-50);
-    transition: opacity 0.12s ease-in-out;
-    color: var(--color-info-success-fg);
-}
-
-.Layer__caobfb[data-saved] {
-    max-height: 0;
-    padding: 0;
-    border-width: 0;
-    overflow: hidden;
-
-    .Layer__caobfb__success-banner {
-        opacity: 1;
-        z-index: 101;
-    }
-}

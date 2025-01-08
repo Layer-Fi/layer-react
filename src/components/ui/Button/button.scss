@@ -28,6 +28,12 @@
     &[data-hovered] {
       background-color: var(--button-bg-active);
     }
+
+    &[data-focus-visible] {
+      outline-style: solid;
+      outline-offset: 0.12rem;
+      outline-color: var(--button-bg-default);
+    }
   }
 
   &[data-variant=ghost] {
@@ -40,6 +46,11 @@
       background-color: var(--button-bg-ghost-active);
       color: var(--button-fg-ghost-active);
       border-color: var(--button-outline-ghost-active);
+    }
+
+    &[data-focus-visible] {
+      outline-style: solid;
+      outline-color: var(--button-outline-ghost-active);
     }
   }
 

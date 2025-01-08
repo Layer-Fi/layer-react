@@ -22,6 +22,14 @@
 }
 
 .Layer__Modal {
+  inline-size: min(24rem, 90dvi);
+  block-size: min(24rem, 90dvb);
+
+  &[data-size=lg] {
+    inline-size: min(36rem, 90dvi);
+    block-size: min(36rem, 90dvb);
+  }
+
   &[data-entering] {
     animation-duration: 300ms;
   }
@@ -42,16 +50,7 @@
   display: flex;
   flex-direction: column;
 
-  inline-size: min(24rem, 90dvi);
-  block-size: min(24rem, 90dvb);  
-
   [slot=content] {
     flex: 1;
-  }
-
-  &[data-size='lg'] {
-    inline-size: min(42rem, 90dvi);
-    block-size: auto;
-    max-block-size: 90dvb;
   }
 }

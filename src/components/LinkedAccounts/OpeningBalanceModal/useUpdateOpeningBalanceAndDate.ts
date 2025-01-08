@@ -26,7 +26,7 @@ function buildKey({
 }
 
 export function useUpdateOpeningBalanceAndDate(
-  { onSuccess }: { onSuccess: () => Awaitable<unknown> },
+  { onSuccess }: { onSuccess?: () => Awaitable<void> },
 ) {
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, ErrorType[]>>({})
@@ -116,7 +116,7 @@ export function useUpdateOpeningBalanceAndDate(
       setErrors(newErrors)
 
       if (Object.keys(newErrors).length === 0) {
-        onSuccess()
+        await onSuccess?.()
       }
 
       return savedIds
