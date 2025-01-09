@@ -27,8 +27,7 @@
     "prepack": "npm run typecheck && npm run build:clean",
     "lint": "eslint . && stylelint '**/*.{css,scss}'",
     "lint:eslint": "eslint .",
-    "lint:stylelint": "stylelint '**/*.{css,scss}'",
-    "release": "release-it"
+    "lint:stylelint": "stylelint '**/*.{css,scss}'"
   },
   "repository": {
     "type": "git",
