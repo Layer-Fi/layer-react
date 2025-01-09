@@ -16,6 +16,11 @@
   height: 21px;
   background-color: var(--color-base-100);
   border-radius: 50%;
+
+  &.Layer__loader--info {
+    background-color: var(--color-info-bg);
+    color: var(--color-info-fg);
+  }
 }
 
 .Layer__loader--with-bg {

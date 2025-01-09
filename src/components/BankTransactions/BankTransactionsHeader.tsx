@@ -15,6 +15,7 @@ import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { BankTransactionsHeaderMoreOptions } from './BankTransactionsHeaderMoreOptions'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -69,12 +70,15 @@ const DownloadButton = ({
       if (result?.data?.presignedUrl) {
         window.location.href = result.data.presignedUrl
         setRequestFailed(false)
-      } else {
+      }
+      else {
         setRequestFailed(true)
       }
-    } catch (e) {
+    }
+    catch {
       setRequestFailed(true)
-    } finally {
+    }
+    finally {
       setIsDownloading(false)
     }
   }
@@ -134,21 +138,23 @@ export const BankTransactionsHeader = ({
             />
           )}
         </div>
-        {withDatePicker && dateRange && setDateRange ? (
-          <DatePicker
-            mode='monthPicker'
-            selected={dateRange.startDate}
-            onChange={date => {
-              if (!Array.isArray(date)) {
-                setDateRange({
-                  startDate: startOfMonth(date),
-                  endDate: endOfMonth(date),
-                })
-              }
-            }}
-            minDate={getEarliestDateToBrowse(business)}
-          />
-        ) : null}
+        {withDatePicker && dateRange && setDateRange
+          ? (
+            <DatePicker
+              mode='monthPicker'
+              selected={dateRange.startDate}
+              onChange={(date) => {
+                if (!Array.isArray(date)) {
+                  setDateRange({
+                    startDate: startOfMonth(date),
+                    endDate: endOfMonth(date),
+                  })
+                }
+              }}
+              minDate={getEarliestDateToBrowse(business)}
+            />
+          )
+          : null}
       </div>
       <div className='Layer__header__actions-wrapper'>
         <div className='Layer__header__actions Layer__justify--space-between'>
@@ -169,10 +175,13 @@ export const BankTransactionsHeader = ({
             />
           )}
 
-          <DownloadButton
-            downloadButtonTextOverride={stringOverrides?.downloadButton}
-            iconOnly={listView}
-          />
+          <div style={{ display: 'flex', gap: 12, zIndex: 1000, isolation: 'isolate', position: 'relative' }}>
+            <DownloadButton
+              downloadButtonTextOverride={stringOverrides?.downloadButton}
+              iconOnly={listView}
+            />
+            <BankTransactionsHeaderMoreOptions />
+          </div>
         </div>
       </div>
     </Header>
