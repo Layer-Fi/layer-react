@@ -1,3 +1,4 @@
+import React from 'react'
 import { LinkedAccount } from '../../../types/linked_accounts'
 import InstitutionIcon from '../../../icons/InstitutionIcon'
 import { Text, TextSize } from '../../Typography'
@@ -5,11 +6,7 @@ import { InputGroup } from '../../Input'
 import { AmountInput } from '../../Input/AmountInput'
 import { DatePicker } from '../../DatePicker'
 import { isEqual } from 'date-fns'
-import { dollarsToCents, centsToDollars } from '../../../models/Money'
-
-function centsToDollarsWithoutCommas(cents: number = NaN): string {
-  return centsToDollars(cents).replaceAll(',', '')
-}
+import { dollarsToCents, centsToDollarsWithoutCommas } from '../../../models/Money'
 
 export type AccountFormBoxData = {
   openingDate: Date
