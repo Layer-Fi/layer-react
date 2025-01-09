@@ -3,7 +3,7 @@ import { BalanceSheetContext } from '../../contexts/BalanceSheetContext'
 import { TableProvider } from '../../contexts/TableContext'
 import { useBalanceSheet } from '../../hooks/useBalanceSheet'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
-import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker'
+import { BalanceSheetDatePicker } from '../BalanceSheetDatePicker/BalanceSheetDatePicker'
 import { BalanceSheetExpandAllButton } from '../BalanceSheetExpandAllButton'
 import { BalanceSheetTable } from '../BalanceSheetTable'
 import { BalanceSheetTableStringOverrides } from '../BalanceSheetTable/BalanceSheetTable'
@@ -12,8 +12,8 @@ import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Loader } from '../Loader'
 import { View } from '../View'
 import { BALANCE_SHEET_ROWS } from './constants'
-import { format, parse, startOfDay } from 'date-fns'
 import { BalanceSheetDownloadButton } from './download/BalanceSheetDownloadButton'
+import { useGlobalDate } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export interface BalanceSheetStringOverrides {
   balanceSheetTable?: BalanceSheetTableStringOverrides
@@ -51,27 +51,9 @@ const BalanceSheetView = ({
   asWidget = false,
   stringOverrides,
 }: BalanceSheetViewProps) => {
-  const [effectiveDate, setEffectiveDate] = useState(startOfDay(new Date()))
-  const { data, isLoading, refetch } = useBalanceSheet(effectiveDate)
+  const { date: effectiveDate } = useGlobalDate()
+  const { data, isLoading } = useBalanceSheet(effectiveDate)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
-
-  useEffect(() => {
-    // Refetch only if selected effectiveDate and data's effectiveDate are different
-    const d1 =
-      effectiveDate
-      && format(startOfDay(effectiveDate), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
-    const d2 =
-      data?.effective_date
-      && format(
-        startOfDay(
-          parse(data.effective_date, 'yyyy-MM-dd\'T\'HH:mm:ssXXX', new Date()),
-        ),
-        'yyyy-MM-dd\'T\'HH:mm:ssXXX',
-      )
-    if (d1 && (!d2 || (d2 && d2 !== d1))) {
-      refetch()
-    }
-  }, [effectiveDate])
 
   if (asWidget) {
     return (
@@ -80,14 +62,11 @@ const BalanceSheetView = ({
           <View
             type='panel'
             ref={containerRef}
-            header={
+            header={(
               <Header>
                 <HeaderRow>
                   <HeaderCol>
-                    <BalanceSheetDatePicker
-                      effectiveDate={effectiveDate}
-                      setEffectiveDate={setEffectiveDate}
-                    />
+                    <BalanceSheetDatePicker />
                   </HeaderCol>
                   {withExpandAllButton && (
                     <HeaderCol>
@@ -96,19 +75,21 @@ const BalanceSheetView = ({
                   )}
                 </HeaderRow>
               </Header>
-            }
-          >
-            {!data || isLoading ? (
-              <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-                <Loader />
-              </div>
-            ) : (
-              <BalanceSheetTable
-                data={data}
-                config={BALANCE_SHEET_ROWS}
-                stringOverrides={stringOverrides?.balanceSheetTable}
-              />
             )}
+          >
+            {!data || isLoading
+              ? (
+                <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
+                  <Loader />
+                </div>
+              )
+              : (
+                <BalanceSheetTable
+                  data={data}
+                  config={BALANCE_SHEET_ROWS}
+                  stringOverrides={stringOverrides?.balanceSheetTable}
+                />
+              )}
           </View>
         </Container>
       </TableProvider>
@@ -120,14 +101,11 @@ const BalanceSheetView = ({
       <View
         type='panel'
         ref={containerRef}
-        header={
+        header={(
           <Header>
             <HeaderRow>
               <HeaderCol>
-                <BalanceSheetDatePicker
-                  effectiveDate={effectiveDate}
-                  setEffectiveDate={setEffectiveDate}
-                />
+                <BalanceSheetDatePicker />
               </HeaderCol>
               <HeaderCol>
                 {withExpandAllButton && (
@@ -140,19 +118,21 @@ const BalanceSheetView = ({
               </HeaderCol>
             </HeaderRow>
           </Header>
-        }
-      >
-        {!data || isLoading ? (
-          <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-            <Loader />
-          </div>
-        ) : (
-          <BalanceSheetTable
-            data={data}
-            config={BALANCE_SHEET_ROWS}
-            stringOverrides={stringOverrides?.balanceSheetTable}
-          />
         )}
+      >
+        {!data || isLoading
+          ? (
+            <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
+              <Loader />
+            </div>
+          )
+          : (
+            <BalanceSheetTable
+              data={data}
+              config={BALANCE_SHEET_ROWS}
+              stringOverrides={stringOverrides?.balanceSheetTable}
+            />
+          )}
       </View>
     </TableProvider>
   )

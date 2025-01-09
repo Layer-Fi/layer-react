@@ -1,91 +1,78 @@
-import React, { useContext, useState } from 'react'
+import React, { useCallback, useContext } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { DatePicker } from '../DatePicker'
-import {
-  DatePickerMode,
-  DEFAULT_ALLOWED_PICKER_MODES,
-} from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { useGlobalDateRangePicker } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
 
 export type ProfitAndLossDatePickerProps = TimeRangePickerConfig
 
 export const ProfitAndLossDatePicker = ({
   allowedDatePickerModes,
-  datePickerMode: deprecated_datePickerMode,
-  defaultDatePickerMode,
   customDateRanges,
+  defaultDatePickerMode,
 }: ProfitAndLossDatePickerProps) => {
   const { business } = useLayerContext()
-  const { changeDateRange, dateRange } = useContext(ProfitAndLoss.Context)
-  const { refetch, compareMode, compareMonths } = useContext(
-    ProfitAndLoss.ComparisonContext,
-  )
+  const { refetch, compareMode, compareMonths } = useContext(ProfitAndLoss.ComparisonContext)
 
-  const [datePickerMode, setDatePickerMode] = useState<DatePickerMode>(
-    defaultDatePickerMode ?? deprecated_datePickerMode ?? 'monthPicker',
-  )
-
-  const getComparisonData = (date: Date) => {
+  const getComparisonData = useCallback((date: Date) => {
     if (compareMode && compareMonths > 0) {
       refetch({
         startDate: startOfMonth(date),
         endDate: endOfMonth(date),
       })
     }
-  }
+  }, [compareMode, compareMonths, refetch])
+
+  const {
+    allowedDateRangePickerModes,
+    dateFormat,
+    rangeMode,
+    selected,
+    setSelected,
+    setRangeMode,
+  } = useGlobalDateRangePicker({
+    allowedDatePickerModes,
+    defaultDatePickerMode,
+    /*
+     * This is preserves a hack - we need to improve the data-loading for the
+     * comparison PnL.
+     */
+    onSetMonth: getComparisonData,
+  })
 
   const minDate = getEarliestDateToBrowse(business)
 
-  if (datePickerMode === 'dayRangePicker') {
-    return (
-      <DatePicker
-        mode={datePickerMode}
-        customDateRanges={customDateRanges}
-        allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
-        onChangeMode={setDatePickerMode}
-        selected={[dateRange.startDate, dateRange.endDate]}
-        onChange={dateSet => {
-          const dates = dateSet as [Date | null, Date | null]
-          if (dates.length === 2 && !!dates[0] && !!dates[1]) {
-            changeDateRange({
-              startDate: dates[0],
-              endDate: dates[1],
-            })
-          }
-        }}
-        minDate={minDate}
-        dateFormat='MMM d'
-        slots={{
-          ModeSelector: DatePickerModeSelector,
-        }}
-      />
-    )
-  }
-
   return (
     <DatePicker
-      mode={datePickerMode}
-      customDateRanges={customDateRanges}
-      allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
-      onChangeMode={setDatePickerMode}
-      selected={dateRange.startDate}
-      onChange={date => {
-        if (!Array.isArray(date)) {
-          getComparisonData(date)
-          changeDateRange({
-            startDate: startOfMonth(date),
-            endDate: endOfMonth(date),
-          })
+      selected={selected}
+      onChange={(dates) => {
+        if (dates instanceof Date) {
+          setSelected({ start: dates, end: dates })
+
+          return
+        }
+
+        const [start, end] = dates
+
+        setSelected({ start, end: end ?? start })
+      }}
+      mode={rangeMode}
+      allowedModes={allowedDateRangePickerModes}
+      onChangeMode={(rangeMode) => {
+        if (rangeMode !== 'dayPicker') {
+          setRangeMode({ rangeMode })
         }
       }}
-      minDate={minDate}
       slots={{
         ModeSelector: DatePickerModeSelector,
       }}
+      dateFormat={dateFormat}
+      customDateRanges={customDateRanges}
+      minDate={minDate}
     />
   )
 }

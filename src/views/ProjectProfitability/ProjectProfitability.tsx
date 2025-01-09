@@ -2,15 +2,13 @@ import React, { useState } from 'react'
 import Select, { Options } from 'react-select'
 import { BankTransactions } from '../../components/BankTransactions'
 import { Container } from '../../components/Container'
-import {
-  RangePickerMode,
-} from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { PnlTagFilter } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { DisplayState, MoneyFormat } from '../../types'
 import { AccountingOverview } from '../AccountingOverview'
+import type { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type TagOption = {
   label: string
@@ -26,7 +24,7 @@ export interface ProjectProfitabilityProps {
   valueOptions: TagOption[]
   showTitle?: boolean
   stringOverrides?: ProjectsStringOverrides
-  datePickerMode?: RangePickerMode
+  datePickerMode?: DateRangePickerMode
   csvMoneyFormat?: MoneyFormat
 }
 
@@ -51,22 +49,22 @@ export const ProjectProfitabilityView = ({
   ) => {
     return selectValue.some(
       value =>
-        value.tagKey === option.tagKey &&
-        JSON.stringify(value.tagValues) === JSON.stringify(option.tagValues),
+        value.tagKey === option.tagKey
+        && JSON.stringify(value.tagValues) === JSON.stringify(option.tagValues),
     )
   }
 
   const getTagFilter = (
     tagFilter: TagOption | null,
-  ): { key: string; values: string[] } | undefined => {
-    return tagFilter &&
-      tagFilter.tagKey &&
-      tagFilter.tagValues &&
-      tagFilter.tagValues.length > 0
+  ): { key: string, values: string[] } | undefined => {
+    return tagFilter
+      && tagFilter.tagKey
+      && tagFilter.tagValues
+      && tagFilter.tagValues.length > 0
       ? {
-          key: tagFilter.tagKey,
-          values: tagFilter.tagValues,
-        }
+        key: tagFilter.tagKey,
+        values: tagFilter.tagValues,
+      }
       : undefined
   }
 
@@ -107,12 +105,12 @@ export const ProjectProfitabilityView = ({
           defaultValue={valueOptions.length > 0 ? valueOptions[0] : undefined}
           value={valueOptions.find(
             option =>
-              tagFilter &&
-              option.tagKey === tagFilter.tagKey &&
-              JSON.stringify(option.tagValues) ===
-                JSON.stringify(tagFilter.tagValues),
+              tagFilter
+              && option.tagKey === tagFilter.tagKey
+              && JSON.stringify(option.tagValues)
+              === JSON.stringify(tagFilter.tagValues),
           )}
-          onChange={selectedOption => {
+          onChange={(selectedOption) => {
             setTagFilter(selectedOption)
             setPnlTagFilter(getTagFilter(selectedOption))
           }}

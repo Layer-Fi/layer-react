@@ -1,20 +1,13 @@
 import React from 'react'
 import { Toggle } from '../../Toggle'
 import { ToggleSize } from '../../Toggle/Toggle'
+import type { DatePickerMode, DateRangePickerMode } from '../../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
-export type SingularPickerMode = 'dayPicker' | 'timePicker'
-export type RangePickerMode =
-  | 'dayRangePicker'
-  | 'monthRangePicker'
-  | 'monthPicker'
-  | 'yearPicker'
-
-export type DatePickerMode = SingularPickerMode | RangePickerMode
+export type UnifiedPickerMode = DatePickerMode | DateRangePickerMode
 
 export const DEFAULT_ALLOWED_PICKER_MODES = ['monthPicker'] as const
 
-const DATE_RANGE_MODE_CONFIG: Record<DatePickerMode, { label: string }> = {
-  timePicker: { label: 'Time' },
+const UNIFIED_PICKER_MODE_CONFIG: Record<UnifiedPickerMode, { label: string }> = {
   dayPicker: { label: 'Day' },
   dayRangePicker: { label: 'Select dates' },
   monthPicker: { label: 'Month' },
@@ -22,17 +15,17 @@ const DATE_RANGE_MODE_CONFIG: Record<DatePickerMode, { label: string }> = {
   yearPicker: { label: 'Year' },
 }
 
-function toToggleOptions(allowedModes: ReadonlyArray<DatePickerMode>) {
+function toToggleOptions(allowedModes: ReadonlyArray<UnifiedPickerMode>) {
   return allowedModes.map(mode => ({
-    label: DATE_RANGE_MODE_CONFIG[mode].label,
+    label: UNIFIED_PICKER_MODE_CONFIG[mode].label,
     value: mode,
   }))
 }
 
 export type DatePickerModeSelectorProps = {
-  mode: DatePickerMode
-  allowedModes: ReadonlyArray<DatePickerMode>
-  onChangeMode: (mode: DatePickerMode) => void
+  mode: UnifiedPickerMode
+  allowedModes: ReadonlyArray<UnifiedPickerMode>
+  onChangeMode: (mode: UnifiedPickerMode) => void
 }
 
 export function DatePickerModeSelector({
@@ -52,7 +45,7 @@ export function DatePickerModeSelector({
         selected={mode}
         options={toToggleOptions(allowedModes)}
         onChange={({ target: { value } }) => {
-          const mode = value as DatePickerMode
+          const mode = value as UnifiedPickerMode
           if (allowedModes.includes(mode)) {
             onChangeMode?.(mode)
           }

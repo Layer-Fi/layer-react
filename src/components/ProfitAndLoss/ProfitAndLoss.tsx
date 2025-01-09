@@ -29,7 +29,6 @@ const PNLContext = createContext<PNLContextType>({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   },
-  changeDateRange: () => {},
   refetch: () => {},
   sidebarScope: undefined,
   setSidebarScope: () => {},
@@ -63,11 +62,13 @@ const ProfitAndLoss = ({
   return (
     <PNLContext.Provider value={contextData}>
       <PNLComparisonContext.Provider value={comparisonContextData}>
-        {asContainer ? (
-          <Container name='profit-and-loss'>{children}</Container>
-        ) : (
-          children
-        )}
+        {asContainer
+          ? (
+            <Container name='profit-and-loss'>{children}</Container>
+          )
+          : (
+            children
+          )}
       </PNLComparisonContext.Provider>
     </PNLContext.Provider>
   )

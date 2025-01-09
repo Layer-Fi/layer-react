@@ -1,15 +1,15 @@
 import type { CustomDateRange } from '../../components/DatePicker/DatePickerOptions'
-import type { RangePickerMode } from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
+import type { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import type { MoneyFormat } from '../../types'
 
 export type TimeRangePickerConfig = {
   /**
    * @deprecated Use `defaultDatePickerMode` instead
    */
-  datePickerMode?: RangePickerMode
-  defaultDatePickerMode?: RangePickerMode
+  datePickerMode?: DateRangePickerMode
+  defaultDatePickerMode?: DateRangePickerMode
 
-  allowedDatePickerModes?: ReadonlyArray<RangePickerMode>
+  allowedDatePickerModes?: ReadonlyArray<DateRangePickerMode>
   csvMoneyFormat?: MoneyFormat
   customDateRanges?: CustomDateRange[]
 }

@@ -1,11 +1,9 @@
 import { useMemo, useState } from 'react'
 import {
-  ProfitAndLoss,
   DateRange,
   ReportingBasis,
   SortDirection,
 } from '../../types'
-import { LineBaseItem } from '../../types/line_item'
 import {
   collectExpensesItems,
   collectRevenueItems,
@@ -13,7 +11,7 @@ import {
 } from '../../utils/profitAndLossUtils'
 import { useProfitAndLossLTM } from './useProfitAndLossLTM'
 import { useProfitAndLossQuery } from './useProfitAndLossQuery'
-import { startOfMonth, endOfMonth } from 'date-fns'
+import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -24,9 +22,7 @@ export type PnlTagFilter = {
   values: string[]
 }
 
-type Props = {
-  startDate?: Date
-  endDate?: Date
+type UseProfitAndLossOptions = {
   tagFilter?: PnlTagFilter
   reportingBasis?: ReportingBasis
 }
@@ -42,43 +38,12 @@ export type ProfitAndLossFilters = Record<
   ProfitAndLossFilter | undefined
 >
 
-type UseProfitAndLoss = (props?: Props) => {
-  data: ProfitAndLoss | undefined
-  filteredDataRevenue: LineBaseItem[]
-  filteredTotalRevenue?: number
-  filteredDataExpenses: LineBaseItem[]
-  filteredTotalExpenses?: number
-  isLoading: boolean
-  isValidating: boolean
-  error: unknown
-  dateRange: DateRange
-  changeDateRange: (dateRange: Partial<DateRange>) => void
-  refetch: () => void
-  sidebarScope: SidebarScope
-  setSidebarScope: (view: SidebarScope) => void
-  filters: ProfitAndLossFilters
-  sortBy: (scope: Scope, field: string, direction?: SortDirection) => void
-  setFilterTypes: (scope: Scope, types: string[]) => void
-  tagFilter?: PnlTagFilter
-}
+export const useProfitAndLoss = ({
+  tagFilter,
+  reportingBasis,
+}: UseProfitAndLossOptions) => {
+  const { start, end } = useGlobalDateRange()
 
-export const useProfitAndLoss: UseProfitAndLoss = (
-  {
-    startDate: initialStartDate,
-    endDate: initialEndDate,
-    tagFilter,
-    reportingBasis,
-  }: Props = {
-    startDate: startOfMonth(new Date()),
-    endDate: endOfMonth(new Date()),
-  },
-) => {
-  const [startDate, setStartDate] = useState(
-    initialStartDate || startOfMonth(Date.now()),
-  )
-  const [endDate, setEndDate] = useState(
-    initialEndDate || endOfMonth(Date.now()),
-  )
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
     expenses: undefined,
     revenue: undefined,
@@ -88,24 +53,16 @@ export const useProfitAndLoss: UseProfitAndLoss = (
 
   const { data, isLoading, isValidating, error, refetch } =
     useProfitAndLossQuery({
-      startDate,
-      endDate,
+      startDate: start,
+      endDate: end,
       tagFilter,
       reportingBasis,
     })
 
   const { data: summaryData } = useProfitAndLossLTM({
-    currentDate: startDate ? startDate : startOfMonth(new Date()),
+    currentDate: start,
     tagFilter: tagFilter,
   })
-
-  const changeDateRange = ({
-    startDate: newStartDate,
-    endDate: newEndDate,
-  }: Partial<DateRange>) => {
-    newStartDate && setStartDate(newStartDate)
-    newEndDate && setEndDate(newEndDate)
-  }
 
   const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {
     setFilters({
@@ -136,11 +93,11 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       return { filteredDataRevenue: [], filteredTotalRevenue: undefined }
     }
     const items = collectRevenueItems(data)
-    const filtered = items.map(x => {
+    const filtered = items.map((x) => {
       if (
-        filters['revenue']?.types &&
-        filters['revenue']!.types!.length > 0 &&
-        !filters['revenue']?.types?.includes(x.type)
+        filters['revenue']?.types
+        && filters['revenue']!.types!.length > 0
+        && !filters['revenue']?.types?.includes(x.type)
       ) {
         return {
           ...x,
@@ -151,8 +108,8 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       return x
     })
 
-    const month = startDate.getMonth() + 1
-    const year = startDate.getFullYear()
+    const month = start.getMonth() + 1
+    const year = start.getFullYear()
     const found = summaryData.find(x => x.month === month && x.year === year)
     if (found && (found.uncategorizedInflows ?? 0) > 0) {
       filtered.push({
@@ -192,18 +149,18 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
-  }, [data, startDate, filters, sidebarScope, summaryData])
+  }, [data, start, filters, summaryData])
 
   const { filteredDataExpenses, filteredTotalExpenses } = useMemo(() => {
     if (!data) {
       return { filteredDataExpenses: [], filteredTotalExpenses: undefined }
     }
     const items = collectExpensesItems(data)
-    const filtered = items.map(x => {
+    const filtered = items.map((x) => {
       if (
-        filters['expenses']?.types &&
-        filters['expenses']!.types!.length > 0 &&
-        !filters['expenses']?.types?.includes(x.type)
+        filters['expenses']?.types
+        && filters['expenses']!.types!.length > 0
+        && !filters['expenses']?.types?.includes(x.type)
       ) {
         return {
           ...x,
@@ -214,8 +171,8 @@ export const useProfitAndLoss: UseProfitAndLoss = (
       return x
     })
 
-    const month = startDate.getMonth() + 1
-    const year = startDate.getFullYear()
+    const month = start.getMonth() + 1
+    const year = start.getFullYear()
     const found = summaryData.find(x => x.month === month && x.year === year)
     if (found && (found.uncategorizedOutflows ?? 0) > 0) {
       filtered.push({
@@ -255,7 +212,7 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     const withShare = applyShare(sorted, total)
 
     return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
-  }, [data, startDate, filters, sidebarScope, summaryData])
+  }, [data, start, filters, summaryData])
 
   return {
     data,
@@ -266,9 +223,8 @@ export const useProfitAndLoss: UseProfitAndLoss = (
     isLoading,
     isValidating,
     error: error,
-    dateRange: { startDate, endDate },
+    dateRange: { startDate: start, endDate: end },
     refetch,
-    changeDateRange,
     sidebarScope,
     setSidebarScope,
     sortBy,

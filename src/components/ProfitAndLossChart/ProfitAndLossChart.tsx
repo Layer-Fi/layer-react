@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState, type FunctionComponent } from 'react'
+import React, { useEffect, useMemo, useState, type FunctionComponent } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import {
@@ -7,7 +7,6 @@ import {
 } from '../../hooks/useProfitAndLoss/useProfitAndLossLTM'
 import { centsToDollars } from '../../models/Money'
 import { isDateAllowedToBrowse } from '../../utils/business'
-import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import { Text } from '../Typography'
 import { ChartStateCard } from './ChartStateCard'
 import { Indicator } from './Indicator'
@@ -38,13 +37,17 @@ import {
 } from 'recharts'
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 import { Props as LegendProps } from 'recharts/types/component/DefaultLegendContent'
+import {
+  useGlobalDateRange,
+  useGlobalDateRangeActions,
+} from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 const getChartWindow = ({
   chartWindow,
   currentYear,
   currentMonth,
 }: {
-  chartWindow: { start: Date; end: Date }
+  chartWindow: { start: Date, end: Date }
   currentYear: number
   currentMonth: number
 }) => {
@@ -68,7 +71,7 @@ const getChartWindow = ({
 
   if (
     differenceInMonths(endOfMonth(chartWindow.end), endOfMonth(current))
-      === 1
+    === 1
     && differenceInMonths(today, current) >= 1
   ) {
     return {
@@ -118,7 +121,7 @@ const getLoadingValue = (data?: ProfitAndLossSummaryData[]) => {
 
   let max = 0
 
-  data.forEach(x => {
+  data.forEach((x) => {
     const current = Math.max(
       Math.abs(x.income),
       Math.abs(Math.abs((x?.income || 0) - (x?.netProfit || 0))),
@@ -147,7 +150,12 @@ export const ProfitAndLossChart = ({
   const barSize = compactView ? 10 : 20
 
   const { getColor, business } = useLayerContext()
-  const { changeDateRange, dateRange } = useContext(PNL.Context)
+
+  const { start, end } = useGlobalDateRange()
+  const { setMonth } = useGlobalDateRangeActions()
+
+  const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
+
   const [localDateRange, setLocalDateRange] = useState(dateRange)
   const [customCursorSize, setCustomCursorSize] = useState({
     width: 0,
@@ -211,9 +219,9 @@ export const ProfitAndLossChart = ({
       const foundCurrent = data.find(
         x =>
           Number(startOfMonth(new Date(x.year, x.month - 1, 1)))
-            >= Number(localDateRange.startDate)
+          >= Number(localDateRange.startDate)
           && Number(startOfMonth(new Date(x.year, x.month - 1, 1)))
-            < Number(localDateRange.endDate),
+          < Number(localDateRange.endDate),
       )
 
       if (!foundCurrent) {
@@ -225,9 +233,9 @@ export const ProfitAndLossChart = ({
       const foundBefore = data.find(
         x =>
           Number(startOfMonth(new Date(x.year, x.month - 1, 1)))
-            >= Number(sub(localDateRange.startDate, { months: 1 }))
+          >= Number(sub(localDateRange.startDate, { months: 1 }))
           && Number(startOfMonth(new Date(x.year, x.month - 1, 1)))
-            < Number(sub(localDateRange.endDate, { months: 1 })),
+          < Number(sub(localDateRange.endDate, { months: 1 })),
       )
 
       if (!foundBefore) {
@@ -318,7 +326,7 @@ export const ProfitAndLossChart = ({
     }
 
     return data
-      ?.map(x => {
+      ?.map((x) => {
         const totalExpenses = x.totalExpenses || 0
         if (totalExpenses < 0 || x.uncategorizedOutflows < 0) {
           return {
@@ -363,16 +371,12 @@ export const ProfitAndLossChart = ({
 
     if (activePayload && activePayload.length > 0) {
       const { year, month } = activePayload[0].payload
-      const isMonthAllowed = isDateAllowedToBrowse(
-        new Date(year, month - 1, 1),
-        business,
-      )
+
+      const selectedDate = new Date(year, month - 1, 1)
+      const isMonthAllowed = isDateAllowedToBrowse(selectedDate, business)
 
       if (isMonthAllowed) {
-        changeDateRange({
-          startDate: new Date(year, month - 1, 1),
-          endDate: endOfMonth(new Date(year, month - 1, 1)),
-        })
+        setMonth({ start: selectedDate })
       }
     }
   }
@@ -387,36 +391,43 @@ export const ProfitAndLossChart = ({
 
       return (
         <div className='Layer__chart__tooltip'>
-          {loaded !== 'complete' ? (
-            <Text>Loading...</Text>
-          ) : !anyData ? (
-            <Text>No data yet</Text>
-          ) : (
-            <ul className='Layer__chart__tooltip-list'>
-              <li>
-                <label className='Layer__chart__tooltip-label'>Revenue</label>
-                <span className='Layer__chart__tooltip-value'>
-                  ${centsToDollars(revenue)}
-                </span>
-              </li>
-              <li>
-                <label className='Layer__chart__tooltip-label'>Expenses</label>
-                <span className='Layer__chart__tooltip-value'>
-                  ${centsToDollars(Math.abs(expenses))}
-                </span>
-              </li>
-              <li>
-                <label className='Layer__chart__tooltip-label'>
-                  Net Profit
-                </label>
-                <span
-                  className={`Layer__chart__tooltip-value ${netProfitClass}`}
-                >
-                  ${centsToDollars(netProfit)}
-                </span>
-              </li>
-            </ul>
-          )}
+          {loaded !== 'complete'
+            ? (
+              <Text>Loading...</Text>
+            )
+            : !anyData
+              ? (
+                <Text>No data yet</Text>
+              )
+              : (
+                <ul className='Layer__chart__tooltip-list'>
+                  <li>
+                    <label className='Layer__chart__tooltip-label'>Revenue</label>
+                    <span className='Layer__chart__tooltip-value'>
+                      $
+                      {centsToDollars(revenue)}
+                    </span>
+                  </li>
+                  <li>
+                    <label className='Layer__chart__tooltip-label'>Expenses</label>
+                    <span className='Layer__chart__tooltip-value'>
+                      $
+                      {centsToDollars(Math.abs(expenses))}
+                    </span>
+                  </li>
+                  <li>
+                    <label className='Layer__chart__tooltip-label'>
+                      Net Profit
+                    </label>
+                    <span
+                      className={`Layer__chart__tooltip-value ${netProfitClass}`}
+                    >
+                      $
+                      {centsToDollars(netProfit)}
+                    </span>
+                  </li>
+                </ul>
+              )}
         </div>
       )
     }
@@ -437,15 +448,18 @@ export const ProfitAndLossChart = ({
       if (Math.abs(base) >= 1000000000) {
         suffix = 'B'
         val = base / 1000000000
-      } else if (Math.abs(base) >= 1000000) {
+      }
+      else if (Math.abs(base) >= 1000000) {
         suffix = 'M'
         val = base / 1000000
-      } else if (Math.abs(base) >= 1000) {
+      }
+      else if (Math.abs(base) >= 1000) {
         suffix = 'k'
         val = base / 1000
       }
       return `${val}${suffix}`
-    } catch (_err) {
+    }
+    catch (_err) {
       return value
     }
   }
@@ -530,7 +544,7 @@ export const ProfitAndLossChart = ({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const CustomizedCursor: FunctionComponent<any> = (
-    { points }: { points: [{ x: number, y: number }] }
+    { points }: { points: [{ x: number, y: number }] },
   ) => {
     const { width, height } = customCursorSize
 
@@ -560,7 +574,7 @@ export const ProfitAndLossChart = ({
         )}
         width='100%'
         height='100%'
-        onResize={width => {
+        onResize={(width) => {
           if (width && width < 620 && !compactView) {
             setCompactView(true)
             return
@@ -656,7 +670,7 @@ export const ProfitAndLossChart = ({
             className={classNames(
               'Layer__profit-and-loss-chart__bar--loading',
               loaded !== 'complete'
-                && 'Layer__profit-and-loss-chart__bar--loading-anim',
+              && 'Layer__profit-and-loss-chart__bar--loading-anim',
             )}
             xAxisId='revenue'
             stackId='revenue'
@@ -670,7 +684,7 @@ export const ProfitAndLossChart = ({
             className={classNames(
               'Layer__profit-and-loss-chart__bar--loading',
               loaded !== 'complete'
-                && 'Layer__profit-and-loss-chart__bar--loading-anim',
+              && 'Layer__profit-and-loss-chart__bar--loading-anim',
             )}
             xAxisId='expenses'
             stackId='expenses'
@@ -685,7 +699,7 @@ export const ProfitAndLossChart = ({
             xAxisId='revenue'
             stackId='revenue'
           >
-            {theData?.map(entry => {
+            {theData?.map((entry) => {
               return (
                 <Cell
                   key={entry.name}
@@ -704,18 +718,17 @@ export const ProfitAndLossChart = ({
             stackId='revenue'
           >
             <LabelList
-              content={
+              content={(
                 <Indicator
                   setCustomCursorSize={(width, height, x) =>
-                    setCustomCursorSize({ width, height, x })
-                  }
+                    setCustomCursorSize({ width, height, x })}
                   customCursorSize={customCursorSize}
                   animateFrom={animateFrom}
                   setAnimateFrom={setAnimateFrom}
                 />
-              }
+              )}
             />
-            {theData?.map(entry => {
+            {theData?.map((entry) => {
               return (
                 <Cell
                   key={entry.name}
@@ -738,7 +751,7 @@ export const ProfitAndLossChart = ({
             xAxisId='revenue'
             stackId='revenue'
           >
-            {theData?.map(entry => {
+            {theData?.map((entry) => {
               return (
                 <Cell
                   key={entry.name}
@@ -757,7 +770,7 @@ export const ProfitAndLossChart = ({
             xAxisId='revenue'
             stackId='revenue'
           >
-            {theData?.map(entry => {
+            {theData?.map((entry) => {
               return (
                 <Cell key={entry.name} fill='url(#layer-bar-stripe-pattern)' />
               )
@@ -793,7 +806,7 @@ export const ProfitAndLossChart = ({
             xAxisId='expenses'
             stackId='expenses'
           >
-            {theData?.map(entry => {
+            {theData?.map((entry) => {
               return (
                 <Cell
                   key={entry.name}

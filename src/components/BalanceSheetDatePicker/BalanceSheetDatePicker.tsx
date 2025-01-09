@@ -1,22 +1,20 @@
 import React from 'react'
 import { DatePicker } from '../DatePicker'
+import { useGlobalDate, useGlobalDateActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
-export type BalanceSheetDatePickerProps = {
-  effectiveDate: Date
-  setEffectiveDate: (date: Date) => void
-}
+export function BalanceSheetDatePicker() {
+  const { date, mode } = useGlobalDate()
+  const { set } = useGlobalDateActions()
 
-export const BalanceSheetDatePicker = ({
-  effectiveDate,
-  setEffectiveDate,
-}: BalanceSheetDatePickerProps) => {
   return (
-    <>
-      <DatePicker
-        selected={effectiveDate}
-        onChange={date => date && setEffectiveDate(date as Date)}
-        mode='dayPicker'
-      />
-    </>
+    <DatePicker
+      selected={date}
+      onChange={(date) => {
+        if (date instanceof Date) {
+          set({ date })
+        }
+      }}
+      mode={mode}
+    />
   )
 }

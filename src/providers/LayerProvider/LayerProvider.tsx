@@ -7,6 +7,7 @@ import type { Environment } from '../Environment/environmentConfigs'
 import { AuthInputProvider } from '../AuthInputProvider'
 import { EnvironmentInputProvider } from '../Environment/EnvironmentInputProvider'
 import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
+import { GlobalDateStoreProvider } from '../GlobalDateStore/GlobalDateStoreProvider'
 
 export type EventCallbacks = {
   onTransactionCategorized?: (bankTransactionId: string) => void
@@ -33,7 +34,7 @@ export const LayerProvider = ({
   usePlaidSandbox,
   ...restProps
 }: PropsWithChildren<LayerProviderProps>) => {
-  const [ cache ] = useState(() => new Map())
+  const [cache] = useState(() => new Map())
 
   return (
     <SWRConfig value={{ ...DEFAULT_SWR_CONFIG, provider: () => cache }}>
@@ -43,7 +44,9 @@ export const LayerProvider = ({
           appSecret={appSecret}
           businessAccessToken={businessAccessToken}
         >
-          <BusinessProvider {...restProps} />
+          <GlobalDateStoreProvider>
+            <BusinessProvider {...restProps} />
+          </GlobalDateStoreProvider>
         </AuthInputProvider>
       </EnvironmentInputProvider>
     </SWRConfig>
