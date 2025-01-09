@@ -1,0 +1,22 @@
+{
+    "git": {
+      "commitMessage": "chore: release v${version}",
+      "tagName": "v${version}",
+      "push": true,
+      "requireCommits": true
+    },
+    "github": {
+      "release": true,
+      "releaseName": "Release ${version}",
+      "tokenRef": "GITHUB_TOKEN",
+      "commitArgs": ["-S"],
+      "tagArgs": ["-s"]
+    },
+    "npm": {
+      "publish": true
+    },
+    "hooks": {
+      "after:bump": ["npm run build"],
+      "after:release": "echo Successfully created a release v${version}"
+    }
+  }
