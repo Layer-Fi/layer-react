@@ -45,7 +45,7 @@ export const BillsTable = ({
 )
 
 const BillsTableContent = ({
-  data,
+  view,
   stringOverrides,
   bulkRecordPayment,
   selectedEntries,
@@ -61,6 +61,7 @@ const BillsTableContent = ({
   activeTab: string
 }) => {
   const {
+    data,
     selectedEntryId,
     setSelectedEntryId,
     closeSelectedEntry,
