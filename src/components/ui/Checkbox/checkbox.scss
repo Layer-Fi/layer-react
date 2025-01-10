@@ -1,8 +1,6 @@
 .Layer__Checkbox {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  display: inline-flex;
   align-items: center;
-  gap: var(--spacing-xs);
 
   cursor: pointer;
 
@@ -35,5 +33,9 @@
       color: var(--bg-default);
       background-color: var(--fg-default);
     }
+  }
+
+  &[data-labeled] {
+    gap: var(--spacing-xs);
   }
 }
