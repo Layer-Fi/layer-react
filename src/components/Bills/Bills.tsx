@@ -4,7 +4,7 @@ import { useBills } from '../../hooks/useBills'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
 import { BillsDetails } from './BillsDetails'
 import { BillsTable } from './BillsTable'
-import { BillsTableStringOverrides } from './BillsTableWithPanel'
+import { BillsTableStringOverrides, BillsTableWithPanel } from './BillsTableWithPanel'
 import { Container } from '../Container'
 
 export interface BillsStringOverrides {
@@ -54,14 +54,12 @@ const BillsContent = ({
           <BillsDetails billDetailsId={billDetailsId} />
         )
         : (
-          <BillsTable
+          <BillsTableWithPanel
+            containerRef={containerRef}
             view={view}
             stringOverrides={stringOverrides?.billsTable}
             activeTab={activeTab}
-            data={[]}
-            bulkRecordPayment={false}
-            selectedEntries={[]}
-            setSelectedEntries={() => {}}
+            setActiveTab={setActiveTab}
           />
         )}
     </Container>
