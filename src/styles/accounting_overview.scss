@@ -1,4 +1,4 @@
-@import '../views/AccountingOverview/internal/transactions_to_review.scss';
+@forward '../views/AccountingOverview/internal/transactions_to_review';
 
 .Layer__accounting-overview-profit-and-loss-charts {
   display: flex;
