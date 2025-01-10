@@ -10,7 +10,7 @@ import { dollarsToCents, centsToDollarsWithoutCommas } from '../../../models/Mon
 
 export type AccountFormBoxData = {
   openingDate: Date
-  openingBalance: number
+  openingBalance: number | null
 }
 
 type AccountFormProps = {
@@ -85,9 +85,16 @@ export const AccountFormBox = ({
           <InputGroup label='Opening balance'>
             <AmountInput
               name='openingBalance'
-              value={centsToDollarsWithoutCommas(openingBalance)}
+              value={openingBalance === null
+                ? undefined
+                : centsToDollarsWithoutCommas(openingBalance)}
               onChange={balanceAsString =>
-                onChange({ ...value, openingBalance: dollarsToCents(balanceAsString ?? '0') })}
+                onChange({
+                  ...value,
+                  openingBalance: balanceAsString === undefined
+                    ? null
+                    : dollarsToCents(balanceAsString),
+                })}
             />
           </InputGroup>
         </div>

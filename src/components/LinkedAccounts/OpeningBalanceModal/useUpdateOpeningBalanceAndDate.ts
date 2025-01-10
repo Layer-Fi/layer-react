@@ -4,7 +4,7 @@ import type { Awaitable } from '../../../types/utility/promises'
 import { useAuth } from '../../../hooks/useAuth'
 import { useLayerContext } from '../../../contexts/LayerContext'
 
-type SetOpeningBalanceData = { [accountId: string]: { openingDate: Date, openingBalance: number } }
+type SetOpeningBalanceData = Record<string, { openingDate: Date, openingBalance: number }>
 
 function buildKey({
   access_token: accessToken,
@@ -24,7 +24,7 @@ function buildKey({
       businessId,
       data,
       tags: ['#linked-accounts', '#opening-balance'],
-    }
+    } as const
   }
 }
 

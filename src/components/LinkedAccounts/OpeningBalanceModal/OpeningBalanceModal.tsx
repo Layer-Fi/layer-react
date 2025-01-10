@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import { Modal } from '../../ui/Modal/Modal'
 import { ModalContextBar, ModalHeading, ModalActions, ModalContent } from '../../ui/Modal/ModalSlots'
 import { Button } from '../../ui/Button/Button'
@@ -11,6 +11,16 @@ import { AccountFormBox, AccountFormBoxData } from '../AccountFormBox/AccountFor
 import { useBulkSetOpeningBalance } from './useUpdateOpeningBalanceAndDate'
 import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext'
 import { startOfYear } from 'date-fns'
+
+function getDataWithDefinedOpeningBalance<T extends { openingBalance: number | null }>(
+  data: Record<string, T>,
+): Record<string, T & { openingBalance: number }> {
+  const filteredData = Object.fromEntries(
+    Object.entries(data).filter(([_accountId, { openingBalance }]) => openingBalance != null),
+  )
+
+  return filteredData as Record<string, T & { openingBalance: number }>
+}
 
 type OpeningBalanceModalStringOverrides = {
   title?: string
@@ -40,17 +50,26 @@ function LinkedAccountsOpeningBalanceModalContent({
         {
           account,
           openingDate: getActivationDate(business) ?? startOfYear(new Date()),
-          openingBalance: 0,
+          openingBalance: null,
         },
       ]),
     ),
   )
 
+  const { filteredData, isSubmitDisabled } = useMemo(() => {
+    const filteredData = getDataWithDefinedOpeningBalance(formsData)
+
+    return {
+      filteredData,
+      isSubmitDisabled: Object.keys(filteredData).length !== Object.keys(formsData).length,
+    }
+  }, [formsData])
+
   const {
     trigger,
     isMutating,
   } = useBulkSetOpeningBalance(
-    formsData,
+    filteredData,
     {
       onSuccess: async () => {
         await refetchAccounts()
@@ -84,7 +103,12 @@ function LinkedAccountsOpeningBalanceModalContent({
       </ModalContent>
       <ModalActions>
         <VStack gap='md'>
-          <Button size='lg' onPress={() => { void trigger() }} isPending={isMutating}>
+          <Button
+            size='lg'
+            onPress={() => { void trigger() }}
+            isPending={isMutating}
+            isDisabled={isSubmitDisabled}
+          >
             {stringOverrides?.buttonText ?? 'Submit'}
           </Button>
         </VStack>
