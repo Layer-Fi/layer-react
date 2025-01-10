@@ -1,4 +1,4 @@
-@import "../components/ProfitAndLossSummaries/profit_and_loss_summaries.scss";
+@forward "../components/ProfitAndLossSummaries/profit_and_loss_summaries";
 
 .Layer__component-container .Layer__profit-and-loss {
   display: flex;

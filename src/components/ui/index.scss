@@ -1,8 +1,8 @@
-@import './Button/button.scss';
-@import './Loading/loadingSpinner.scss';
-@import './Checkbox/checkbox.scss';
-@import './Typography/heading.scss';
-@import './Typography/text.scss';
-@import './Modal/modal.scss';
-@import './Modal/modalSlots.scss';
-@import './Stack/stack.scss';
+@forward './Button/button';
+@forward './Loading/loadingSpinner';
+@forward './Checkbox/checkbox';
+@forward './Typography/heading';
+@forward './Typography/text';
+@forward './Modal/modal';
+@forward './Modal/modalSlots';
+@forward './Stack/stack';
