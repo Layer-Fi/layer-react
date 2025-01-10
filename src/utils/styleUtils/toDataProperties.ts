@@ -13,14 +13,14 @@ export function toDataProperties<T extends Record<string, unknown>>(input: T) {
     Object.entries(input)
       .map(([key, value]) => {
         if (
-          typeof value !== 'string' &&
-          typeof value !== 'number' &&
-          value !== true
+          typeof value !== 'string'
+          && typeof value !== 'number'
+          && value !== true
         ) {
           return null
         }
 
-        return [`data-${key}`, value] as const
+        return [`data-${key.toLowerCase()}`, value] as const
       })
       .filter((entry): entry is Exclude<typeof entry, null> => entry !== null),
   )
