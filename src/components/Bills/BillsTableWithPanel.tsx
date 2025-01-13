@@ -1,15 +1,15 @@
-import React, { RefObject, useContext, useMemo, useState } from 'react'
-import { BillsContext } from '../../contexts/BillsContext'
-import { BillType } from '../../hooks/useBills'
+import React, { RefObject, useMemo, useState } from 'react'
+import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { View } from '../../types/general'
 import { BillsSidebar } from './BillsSidebar'
-import { Button } from '../Button'
+import { Button, CloseButton } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Select } from '../Input'
 import { Pagination } from '../Pagination'
 import { Panel } from '../Panel'
 import { Toggle } from '../Toggle'
 import { BillsTable } from './BillsTable'
+import { BillsTab } from './Bills'
 
 export interface BillsTableStringOverrides {
   componentTitle?: string
@@ -38,14 +38,18 @@ export const BillsTableWithPanel = ({
   containerRef: RefObject<HTMLDivElement>
   pageSize?: number
   stringOverrides?: BillsTableStringOverrides
-  activeTab: string
-  setActiveTab: (id: string) => void
+  activeTab: BillsTab
+  setActiveTab: (id: BillsTab) => void
 }) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const { data: rawData, selectedEntryId } = useContext(BillsContext)
-  const [bulkRecordPayment, setBulkRecordPayment] = useState(false)
-  const [selectedEntries, setSelectedEntries] = useState<BillType[]>([])
+  const { data: rawData } = useBillsContext()
+  const {
+    bulkSelectionActive,
+    setBulkSelectionActive,
+    showRecordPaymentForm,
+  } = useBillsRecordPaymentContext()
 
+  /** @TODO - temp pagiantion - based on the API, consider moving to Bills context */
   const data = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
@@ -55,7 +59,7 @@ export const BillsTableWithPanel = ({
   return (
     <Panel
       sidebar={<BillsSidebar parentRef={containerRef} />}
-      sidebarIsOpen={Boolean(selectedEntryId)}
+      sidebarIsOpen={showRecordPaymentForm}
       parentRef={containerRef}
     >
       <Header
@@ -79,33 +83,33 @@ export const BillsTableWithPanel = ({
                 },
               ]}
               selected={activeTab}
-              onChange={opt => setActiveTab(opt.target.value)}
+              onChange={opt => setActiveTab(opt.target.value as BillsTab)}
             />
           </HeaderCol>
         </HeaderRow>
         {activeTab === 'unpaid' && (
           <HeaderRow>
             <HeaderCol style={{ paddingLeft: 0, paddingRight: 0 }}>
-              {bulkRecordPayment
+              {bulkSelectionActive
                 ? (
-                  <Select
-                    options={data?.map(entry => ({
-                      value: entry.vendor,
-                      label: entry.vendor,
-                    }))}
-                    onChange={(selectedOption) => {
-                      const selectedEntry = data?.find(
-                        entry => entry.vendor === selectedOption.value,
-                      )
-                      if (selectedEntry) {
-                        setSelectedEntries([...selectedEntries, selectedEntry])
-                      }
-                    }}
-                    placeholder='Select vendor to record bulk payment'
-                  />
+                  <>
+                    <Select
+                      options={data?.map(entry => ({
+                        value: entry.vendor,
+                        label: entry.vendor,
+                      }))}
+                      onChange={(selectedOption) => {
+                        const selectedEntry = data?.find(
+                          entry => entry.vendor === selectedOption.value,
+                        )
+                      }}
+                      placeholder='Select vendor to record bulk payment'
+                    />
+                    <CloseButton onClick={() => setBulkSelectionActive(false)} />
+                  </>
                 )
                 : (
-                  <Button onClick={() => setBulkRecordPayment(true)}>
+                  <Button onClick={() => setBulkSelectionActive(true)}>
                     Bulk record payments
                   </Button>
                 )}
@@ -117,11 +121,7 @@ export const BillsTableWithPanel = ({
       {data && (
         <BillsTable
           view='desktop'
-          data={data}
           activeTab={activeTab}
-          bulkRecordPayment={bulkRecordPayment}
-          selectedEntries={selectedEntries}
-          setSelectedEntries={setSelectedEntries}
         />
       )}
 

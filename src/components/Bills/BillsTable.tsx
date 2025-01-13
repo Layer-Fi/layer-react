@@ -1,7 +1,7 @@
-import React, { useContext } from 'react'
-import { BillsContext } from '../../contexts/BillsContext'
+import React from 'react'
+import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { TableProvider } from '../../contexts/TableContext'
-import { BillType } from '../../hooks/useBills'
+import { Bill } from '../../hooks/useBills'
 import ChevronRight from '../../icons/ChevronRight'
 import { View } from '../../types/general'
 import { TableCellAlign } from '../../types/table'
@@ -16,29 +16,17 @@ import { BillsTableStringOverrides } from './BillsTableWithPanel'
 
 export const BillsTable = ({
   view,
-  data,
   stringOverrides,
-  bulkRecordPayment,
-  selectedEntries,
-  setSelectedEntries,
   activeTab,
 }: {
   view: View
-  data: BillType[]
   stringOverrides?: BillsTableStringOverrides
-  bulkRecordPayment: boolean
-  selectedEntries: BillType[]
-  setSelectedEntries: (entries: BillType[]) => void
   activeTab: string
 }) => (
   <TableProvider>
     <BillsTableContent
       view={view}
-      data={data}
       stringOverrides={stringOverrides}
-      bulkRecordPayment={bulkRecordPayment}
-      selectedEntries={selectedEntries}
-      setSelectedEntries={setSelectedEntries}
       activeTab={activeTab}
     />
   </TableProvider>
@@ -47,42 +35,39 @@ export const BillsTable = ({
 const BillsTableContent = ({
   view,
   stringOverrides,
-  bulkRecordPayment,
-  selectedEntries,
-  setSelectedEntries,
   activeTab,
 }: {
   view: View
-  data: BillType[]
   stringOverrides?: BillsTableStringOverrides
-  bulkRecordPayment: boolean
-  selectedEntries: BillType[]
-  setSelectedEntries: (entries: BillType[]) => void
   activeTab: string
 }) => {
   const {
     data,
-    selectedEntryId,
-    setSelectedEntryId,
-    closeSelectedEntry,
     setBillDetailsId,
-  } = useContext(BillsContext)
+  } = useBillsContext()
+
+  const {
+    billsToPay,
+    addBill,
+    removeBill,
+    bulkSelectionActive,
+    setShowRecordPaymentForm,
+  } = useBillsRecordPaymentContext()
 
   const renderBillsRow = (
-    entry: BillType,
+    entry: Bill,
     index: number,
     rowKey: string,
     depth: number,
   ) => {
-    const isSelected = selectedEntries.some(e => e.vendor === entry.vendor)
+    const isSelected = Boolean(billsToPay.find(record => record.bill?.id === entry.id))
+
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.checked) {
-        setSelectedEntries([...selectedEntries, entry])
+      if (e.target.checked && !isSelected) {
+        addBill(entry)
       }
       else {
-        setSelectedEntries(
-          selectedEntries.filter(e => e.vendor !== entry.vendor),
-        )
+        removeBill(entry)
       }
     }
 
@@ -90,11 +75,11 @@ const BillsTableContent = ({
       <React.Fragment key={rowKey + '-' + index}>
         <TableRow
           rowKey={rowKey + '-' + index}
-          selected={selectedEntryId === rowKey}
+          selected={isSelected}
           depth={depth}
         >
           <TableCell primary>
-            {bulkRecordPayment && activeTab === 'unpaid' && (
+            {bulkSelectionActive && activeTab === 'unpaid' && (
               <Checkbox
                 boxSize={CheckboxSize.LARGE}
                 checked={isSelected}
@@ -127,11 +112,12 @@ const BillsTableContent = ({
                     onClick={(e) => {
                       e.stopPropagation()
 
-                      if (selectedEntryId === rowKey) {
-                        closeSelectedEntry()
+                      if (billsToPay.map(x => x.bill?.id).includes(rowKey)) {
+                        setShowRecordPaymentForm(false)
                       }
                       else {
-                        setSelectedEntryId(rowKey)
+                        addBill(entry)
+                        setShowRecordPaymentForm(true)
                       }
                     }}
                     active={true}

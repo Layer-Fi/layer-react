@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { BillsContext } from '../../contexts/BillsContext'
+import React from 'react'
+import { useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import Check from '../../icons/Check'
 import { Button, ButtonVariant, CloseButton } from '../Button'
 import { Header } from '../Container'
@@ -14,7 +14,7 @@ export const BillsPaymentRecorded = ({
     header?: string
   }
 }) => {
-  const { closeSelectedEntry } = useContext(BillsContext)
+  const { setShowRecordPaymentForm } = useBillsRecordPaymentContext()
 
   // Mock data - replace with actual data from your context or props
   const paymentDetails = {
@@ -53,7 +53,7 @@ export const BillsPaymentRecorded = ({
             </Heading>
           </HeaderCol>
           <HeaderCol className='actions'>
-            <CloseButton type='button' onClick={() => closeSelectedEntry()} />
+            <CloseButton type='button' onClick={() => setShowRecordPaymentForm(false)} />
           </HeaderCol>
         </HeaderRow>
       </Header>
