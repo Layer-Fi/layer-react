@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { BillsContext } from '../../contexts/BillsContext'
+import React, { useState } from 'react'
+import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import {
   Button,
   ButtonVariant,
@@ -8,24 +8,31 @@ import {
 import { Header } from '../Container'
 import { DatePicker } from '../DatePicker'
 import { HeaderRow, HeaderCol } from '../Header'
-import { InputGroup, Input, StaticValue } from '../Input'
+import { InputGroup, Input, StaticValue, Select } from '../Input'
 import { JournalFormStringOverrides } from '../JournalForm/JournalForm'
 import { Heading, HeadingSize, TextSize, Text } from '../Typography'
 
 export const BillsRecordPayment = ({
   stringOverrides,
-  setPaymentRecorded,
 }: {
   stringOverrides?: JournalFormStringOverrides
-  setPaymentRecorded: (paymentRecorded: boolean) => void
 }) => {
-  const { closeSelectedEntry, selectedEntryId } = useContext(BillsContext)
+  const {
+    billsToPay,
+    addBill,
+    setBill,
+    setAmountByIndex,
+    setShowRecordPaymentForm,
+  } = useBillsRecordPaymentContext()
+  /** @TODO - we don't want to use all bills here, another API call to get all bills by vendor? */
+  const { data } = useBillsContext()
   const [paymentDate, setPaymentDate] = useState(new Date())
-  const [amount, setAmount] = useState(80)
+
+  const totalAmount = billsToPay.reduce((acc, record) => acc + (record.amount ?? 0), 0)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setPaymentRecorded(true)
+    /** @TODO - call API */
   }
 
   return (
@@ -38,7 +45,7 @@ export const BillsRecordPayment = ({
             </Heading>
           </HeaderCol>
           <HeaderCol className='actions'>
-            <CloseButton onClick={() => closeSelectedEntry()} />
+            <CloseButton onClick={() => setShowRecordPaymentForm(false)} />
           </HeaderCol>
         </HeaderRow>
       </Header>
@@ -73,27 +80,39 @@ export const BillsRecordPayment = ({
           >
             Add amount
           </Heading>
-
-          <div className='Layer__bills__record-payment__amount-row'>
-            <InputGroup inline={true}>
-              <Input
-                type='number'
-                value={amount}
-                onChange={e =>
-                  setAmount(Number((e.target as HTMLInputElement).value))}
-              />
-              <Input
-                type='number'
-                value={amount}
-                onChange={e =>
-                  setAmount(Number((e.target as HTMLInputElement).value))}
-              />
-            </InputGroup>
-          </div>
+          {billsToPay.map((record, index) => (
+            <div key={index} className='Layer__bills__record-payment__amount-row'>
+              <InputGroup inline={true}>
+                <Select
+                  options={data.map(record => ({
+                    label: `${record.dueDate} ${record.billAmount}/?`,
+                    value: record,
+                  }))}
+                  value={record.bill && {
+                    label: `${record.bill.dueDate} ${record.bill.billAmount}/?`,
+                    value: record.bill,
+                  }}
+                  onChange={(option) => {
+                    if (option.value) {
+                      setBill(option.value, index)
+                    }
+                  }}
+                />
+                {/** @TODO - use AmountInput from another PR  */}
+                <Input
+                  type='number'
+                  value={record.amount}
+                  onChange={e =>
+                    setAmountByIndex(index, Number((e.target as HTMLInputElement).value))}
+                />
+              </InputGroup>
+            </div>
+          ))}
 
           <Button
             variant={ButtonVariant.secondary}
             className='Layer__bills__record-payment__add-bill'
+            onClick={() => addBill()}
           >
             Add bill
           </Button>
@@ -102,7 +121,7 @@ export const BillsRecordPayment = ({
             <Text size={TextSize.md}>Total</Text>
             <Text size={TextSize.md}>
               $
-              {amount.toFixed(2)}
+              {totalAmount}
             </Text>
           </div>
 

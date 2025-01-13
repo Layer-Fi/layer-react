@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Bills } from '../../components/Bills/Bills'
+import { Bills, BillsTab } from '../../components/Bills/Bills'
 import { Header } from '../../components/Container'
 import { DatePicker } from '../../components/DatePicker'
 import { HeaderRow, HeaderCol } from '../../components/Header'
@@ -24,7 +24,7 @@ export const BillsView = ({
   showTitle = true,
   stringOverrides,
 }: BillsProps) => {
-  const [activeTab, setActiveTab] = useState('unpaid')
+  const [activeTab, setActiveTab] = useState<BillsTab>('unpaid')
 
   return (
     <View

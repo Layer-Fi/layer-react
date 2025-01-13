@@ -1,5 +1,5 @@
-import React, { RefObject, useContext, useState } from 'react'
-import { BillsContext } from '../../contexts/BillsContext'
+import React, { RefObject, useState } from 'react'
+import { useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { BillsPaymentRecorded } from './BillsPaymentRecorded'
 import { BillsRecordPayment } from './BillsRecordPayment'
 
@@ -8,30 +8,14 @@ export const BillsSidebar = ({
 }: {
   parentRef?: RefObject<HTMLDivElement>
 }) => {
-  const { selectedEntryId } = useContext(BillsContext)
-  const [recordedPayments, setRecordedPayments] = useState<string[]>([])
+  // const { afterSucess } = useBillsRecordPaymentContext()
+  const paymentsSaved = false
 
-  const isPaymentRecorded =
-    selectedEntryId && recordedPayments.includes(selectedEntryId)
-
-  const setPaymentRecorded = () => {
-    if (selectedEntryId) {
-      if (!isPaymentRecorded) {
-        setRecordedPayments([...recordedPayments, selectedEntryId])
-      }
-      else {
-        setRecordedPayments(
-          recordedPayments.filter(id => id !== selectedEntryId),
-        )
-      }
-    }
-  }
-
-  return isPaymentRecorded
+  return paymentsSaved
     ? (
       <BillsPaymentRecorded />
     )
     : (
-      <BillsRecordPayment setPaymentRecorded={setPaymentRecorded} />
+      <BillsRecordPayment />
     )
 }
