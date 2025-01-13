@@ -654,7 +654,7 @@
   box-shadow: -8px 0px 20px -2px rgb(255 255 255 / 64%);
 
   right: 430px;
-  &[data-showreceiptuploadcolumn] {
+  &[data-show-receipt-upload-column] {
     right: 494px;
   }
 }
@@ -663,7 +663,7 @@
     padding-left: 0px;
     padding-right: 0px;
 
-    &[data-showreceiptuploadcolumn] {
+    &[data-show-receipt-upload-column] {
       padding-left: 16px;
       padding-right: 16px;
     }
@@ -683,7 +683,7 @@
   min-width: 0px;
   max-width: 0px;
 
-  &[data-showreceiptuploadcolumn] {
+  &[data-show-receipt-upload-column] {
     width: 64px;
     min-width: 64px;
     max-width: 64px;
