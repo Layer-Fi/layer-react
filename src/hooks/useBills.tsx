@@ -35,7 +35,7 @@ export const useBills: UseBills = () => {
     {
       id: '2',
       vendor: 'PG&E',
-      dueDate: '08/01/2024',
+      dueDate: '10/01/2024',
       billAmount: 86.44,
       openBalance: 86.44,
       status: '2024-10-09',
@@ -43,7 +43,7 @@ export const useBills: UseBills = () => {
     {
       id: '3',
       vendor: 'Norton Lumber...',
-      dueDate: '08/01/2024',
+      dueDate: '11/01/2024',
       billAmount: 86.44,
       openBalance: 16.44,
       status: '2024-10-11',
@@ -51,7 +51,7 @@ export const useBills: UseBills = () => {
     {
       id: '4',
       vendor: 'Robertson & Anderson.',
-      dueDate: '08/01/2024',
+      dueDate: '08/02/2024',
       billAmount: 86.44,
       openBalance: 8.0,
       status: '2024-10-12',
@@ -59,7 +59,7 @@ export const useBills: UseBills = () => {
     {
       id: '5',
       vendor: 'Bob\'s Burgers...',
-      dueDate: '08/01/2024',
+      dueDate: '14/03/2024',
       billAmount: 86.44,
       openBalance: 86.44,
       status: '2024-10-14',
@@ -83,7 +83,7 @@ export const useBills: UseBills = () => {
     {
       id: '8',
       vendor: 'Diego\'s Road...',
-      dueDate: '08/01/2024',
+      dueDate: '14/03/2024',
       billAmount: 86.44,
       openBalance: 86.44,
       status: '2024-12-15',
