@@ -29,47 +29,52 @@ ModalOverlay.displayName = 'ModalOverlay'
 const MODAL_CLASS_NAME = 'Layer__Modal'
 const InternalModal = forwardRef<
   HTMLElementTagNameMap['div'],
-  PropsWithChildren
->(({ children }, ref) => (
-  <ReactAriaModal
-    className={MODAL_CLASS_NAME}
-    ref={ref}
-  >
-    {children}
-  </ReactAriaModal>
-),
-)
+  PropsWithChildren<{ size?: ModalSize }>
+>(({ children, size }, ref) => {
+  const dataProperties = useMemo(() => toDataProperties({ size }), [size])
+
+  return (
+    <ReactAriaModal
+      {...dataProperties}
+      className={MODAL_CLASS_NAME}
+      ref={ref}
+    >
+      {children}
+    </ReactAriaModal>
+  )
+})
 
 InternalModal.displayName = 'Modal'
 
 const DIALOG_CLASS_NAME = 'Layer__Dialog'
 const Dialog = forwardRef<
   HTMLElement,
-  Omit<DialogProps, 'className'> & { size?: ModalSize }
->(({ size, ...props }, ref) => {
-  const dataProperties = useMemo(() => toDataProperties({ size }), [size])
-  return (
-    <ReactAriaDialog
-      {...props}
-      {...dataProperties}
-      className={DIALOG_CLASS_NAME}
-      ref={ref}
-    />
-  )
-})
+  Omit<DialogProps, 'className'>
+>(({ ...props }, ref) => (
+  <ReactAriaDialog
+    {...props}
+    className={DIALOG_CLASS_NAME}
+    ref={ref}
+  />
+),
+)
 
 Dialog.displayName = 'Dialog'
 
-type AllowedModalProps = Pick<
+type AllowedModalOverlayProps = Pick<
   ComponentProps<typeof ModalOverlay>,
   'isOpen' | 'onOpenChange'
+>
+type AllowedInternalModalProps = Pick<
+  ComponentProps<typeof InternalModal>,
+  'size'
 >
 type AllowedDialogProps = Pick<
   ComponentProps<typeof Dialog>,
   'children'
 >
 
-type ModalProps = AllowedModalProps & AllowedDialogProps & { size?: 'md' | 'lg' }
+type ModalProps = AllowedModalOverlayProps & AllowedInternalModalProps & AllowedDialogProps
 
 export function Modal({
   isOpen,
@@ -79,8 +84,8 @@ export function Modal({
 }: ModalProps) {
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange}>
-      <InternalModal>
-        <Dialog role='dialog' size={size}>
+      <InternalModal size={size}>
+        <Dialog role='dialog'>
           {children}
         </Dialog>
       </InternalModal>
