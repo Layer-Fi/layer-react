@@ -24,6 +24,11 @@ export const useBillsRecordPayment = () => {
       return
     }
 
+    // Ignore duplicate bills
+    if (bill?.id && billsToPay.find(x => x.bill?.id === bill.id)) {
+      return
+    }
+
     setBillsToPay(prev => [
       ...prev.slice(0, index),
       { bill, amount: prev[index].amount },
@@ -32,6 +37,11 @@ export const useBillsRecordPayment = () => {
   }
 
   const addBill = (bill?: Bill) => {
+    // Ignore duplicate bills
+    if (bill?.id && billsToPay.find(x => x.bill?.id === bill.id)) {
+      return
+    }
+
     setBillsToPay(prev => [...prev, { bill, amount: undefined }])
   }
 
