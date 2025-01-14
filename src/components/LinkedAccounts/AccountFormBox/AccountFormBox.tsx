@@ -7,9 +7,8 @@ import { InputGroup } from '../../Input'
 import { AmountInput } from '../../Input/AmountInput'
 import { DatePicker } from '../../DatePicker'
 import { isEqual, startOfDay } from 'date-fns'
-import classNames from 'classnames'
-import { ErrorType } from '../OpeningBalanceModal/useUpdateOpeningBalanceAndDate'
 import CheckCircle from '../../../icons/CheckCircle'
+import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 
 export type AccountFormBoxData = {
   account: LinkedAccount
@@ -21,35 +20,32 @@ export type AccountFormBoxData = {
 
 type AccountFormProps = {
   account: LinkedAccount
-  defaultValue: AccountFormBoxData
+  value: AccountFormBoxData
+  isSaved?: boolean
   disableConfirmExclude?: boolean
-  errors?: ErrorType[]
-  onChange: (val: AccountFormBoxData) => void
+  errors?: string[]
+  onChange: (value: AccountFormBoxData) => void
 }
 
 const CLASS_NAME = 'Layer__caobfb'
 
 export const AccountFormBox = ({
   account,
-  defaultValue,
+  value,
+  isSaved = false,
   disableConfirmExclude = false,
   onChange,
   errors = [],
 }: AccountFormProps) => {
-  const formState = defaultValue
-
-  const dataProps = useMemo(() => {
-    if (defaultValue.saved) {
-      return {
-        'data-saved': true,
-      }
-    }
-
-    return {}
-  }, [defaultValue.saved])
+  const dataProps = useMemo(() => (
+    toDataProperties({
+      saved: isSaved,
+      confirmed: value.isConfirmed,
+    })
+  ), [isSaved, value.isConfirmed])
 
   return (
-    <div {...dataProps} className={classNames(CLASS_NAME, formState.isConfirmed && `${CLASS_NAME}--confirmed`)}>
+    <div {...dataProps} className={CLASS_NAME}>
       <div className={`${CLASS_NAME}__icon-col`}>
         {account.institution?.logo != undefined
           ? (
@@ -94,22 +90,22 @@ export const AccountFormBox = ({
             <DatePicker
               mode='dayPicker'
               onChange={(v) => {
-                if (!formState.openingDate || !isEqual(formState.openingDate, v as Date)) {
-                  onChange({ ...formState, openingDate: (v as Date) })
+                if (!value.openingDate || !isEqual(value.openingDate, v as Date)) {
+                  onChange({ ...value, openingDate: (v as Date) })
                 }
               }}
-              selected={formState.openingDate ?? startOfDay(new Date())}
+              selected={value.openingDate ?? startOfDay(new Date())}
               currentDateOption={false}
-              disabled={!disableConfirmExclude && !formState.isConfirmed}
+              disabled={!disableConfirmExclude && !value.isConfirmed}
             />
           </InputGroup>
           <InputGroup label='Opening balance'>
             <AmountInput
               name='openingBalance'
-              defaultValue={formState.openingBalance}
-              onChange={value =>
-                onChange({ ...formState, openingBalance: value })}
-              disabled={!disableConfirmExclude && !formState.isConfirmed}
+              defaultValue={value.openingBalance}
+              onChange={newValue =>
+                onChange({ ...value, openingBalance: newValue })}
+              disabled={!disableConfirmExclude && !value.isConfirmed}
               isInvalid={errors.includes('MISSING_BALANCE')}
               errorMessage='Field is required'
             />
@@ -125,8 +121,8 @@ export const AccountFormBox = ({
       {!disableConfirmExclude && (
         <div className={`${CLASS_NAME}__confirm-col`}>
           <Checkbox
-            isSelected={formState.isConfirmed}
-            onChange={v => onChange({ ...formState, isConfirmed: v })}
+            isSelected={value.isConfirmed}
+            onChange={v => onChange({ ...value, isConfirmed: v })}
             aria-label='Confirm Account Inclusion'
           />
         </div>

@@ -4,11 +4,18 @@ import { LinkedAccount } from '../../types/linked_accounts'
 import { LinkedAccountOptions } from '../LinkedAccountOptions'
 import { LinkedAccountThumb } from '../LinkedAccountThumb'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import type { HoverMenuProps } from '../HoverMenu'
 
 function accountNeedsUniquenessConfirmation({
   notifications,
 }: Pick<LinkedAccount, 'notifications'>) {
   return notifications?.some(({ type }) => type === 'CONFIRM_UNIQUE')
+}
+
+function accountMissingOpeningBalance({
+  notifications,
+}: Pick<LinkedAccount, 'notifications'>) {
+  return notifications?.some(({ type }) => type === 'OPENING_BALANCE_MISSING')
 }
 
 export interface LinkedAccountItemThumbProps {
@@ -83,7 +90,7 @@ export const LinkedAccountItemThumb = ({
     }
   }
 
-  const additionalConfigs = [
+  const additionalConfigs: HoverMenuProps['config'] = [
     {
       name: 'Unlink account',
       action: async () => {
@@ -123,13 +130,10 @@ export const LinkedAccountItemThumb = ({
     })
   }
 
-  /**
-   * @TODO switch to the proper API field
-   */
-  if (account.opening_account_balance_missing) {
+  if (accountMissingOpeningBalance(account)) {
     additionalConfigs.push({
       name: 'Add opening balance',
-      action: async () => {
+      action: () => {
         setAccountsToAddOpeningBalanceInModal([account])
       },
     })
