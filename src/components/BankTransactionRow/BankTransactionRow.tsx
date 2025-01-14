@@ -127,7 +127,8 @@ export const BankTransactionRow = ({
       }, index * 10)
 
       return () => clearTimeout(timeoutId)
-    } else {
+    }
+    else {
       setShowComponent(true)
     }
   }, [])
@@ -140,9 +141,9 @@ export const BankTransactionRow = ({
 
   useEffect(() => {
     if (
-      editable &&
-      bankTransaction.recently_categorized &&
-      shouldHideAfterCategorize(bankTransaction)
+      editable
+      && bankTransaction.recently_categorized
+      && shouldHideAfterCategorize(bankTransaction)
     ) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
@@ -183,9 +184,9 @@ export const BankTransactionRow = ({
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    bankTransaction.recently_categorized &&
-      editable &&
-      shouldHideAfterCategorize(bankTransaction)
+    bankTransaction.recently_categorized
+    && editable
+    && shouldHideAfterCategorize(bankTransaction)
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
@@ -194,7 +195,7 @@ export const BankTransactionRow = ({
   )
 
   const showReceiptDataProperties = useMemo(
-    () => toDataProperties({ showReceiptUploadColumn }),
+    () => toDataProperties({ 'show-receipt-upload-column': showReceiptUploadColumn }),
     [showReceiptUploadColumn],
   )
 
@@ -275,43 +276,46 @@ export const BankTransactionRow = ({
           <span
             className={`${className}__actions-container Layer__table-cell-content`}
           >
-            {!categorized && !open ? (
-              <CategorySelect
-                bankTransaction={bankTransaction}
-                name={`category-${bankTransaction.id}`}
-                value={selectedCategory}
-                onChange={category => {
-                  setSelectedCategory(category)
-                  setShowRetry(false)
-                }}
-                disabled={bankTransaction.processing}
-                showTooltips={showTooltips}
-              />
-            ) : null}
-            {categorized && !open ? (
-              <Text as='span' className={`${className}__category-text`}>
-                {bankTransaction.categorization_status ===
-                  CategorizationStatus.SPLIT && (
-                  <>
-                    <Badge
-                      icon={<Scissors size={11} />}
-                      tooltip={
-                        <SplitTooltipDetails
-                          classNamePrefix={className}
-                          category={bankTransaction.category}
-                        />
-                      }
-                    >
-                      Split
-                    </Badge>
-                    <span className={`${className}__category-text__text`}>
-                      {extractDescriptionForSplit(bankTransaction.category)}
-                    </span>
-                  </>
-                )}
-                {bankTransaction?.categorization_status ===
-                  CategorizationStatus.MATCHED &&
-                  bankTransaction?.match && (
+            {!categorized && !open
+              ? (
+                <CategorySelect
+                  bankTransaction={bankTransaction}
+                  name={`category-${bankTransaction.id}`}
+                  value={selectedCategory}
+                  onChange={(category) => {
+                    setSelectedCategory(category)
+                    setShowRetry(false)
+                  }}
+                  disabled={bankTransaction.processing}
+                  showTooltips={showTooltips}
+                />
+              )
+              : null}
+            {categorized && !open
+              ? (
+                <Text as='span' className={`${className}__category-text`}>
+                  {bankTransaction.categorization_status
+                  === CategorizationStatus.SPLIT && (
+                    <>
+                      <Badge
+                        icon={<Scissors size={11} />}
+                        tooltip={(
+                          <SplitTooltipDetails
+                            classNamePrefix={className}
+                            category={bankTransaction.category}
+                          />
+                        )}
+                      >
+                        Split
+                      </Badge>
+                      <span className={`${className}__category-text__text`}>
+                        {extractDescriptionForSplit(bankTransaction.category)}
+                      </span>
+                    </>
+                  )}
+                  {bankTransaction?.categorization_status
+                  === CategorizationStatus.MATCHED
+                  && bankTransaction?.match && (
                     <>
                       <MatchBadge
                         classNamePrefix={className}
@@ -326,71 +330,76 @@ export const BankTransactionRow = ({
                       </span>
                     </>
                   )}
-                {bankTransaction?.categorization_status !==
-                  CategorizationStatus.MATCHED &&
-                  bankTransaction?.categorization_status !==
-                    CategorizationStatus.SPLIT && (
+                  {bankTransaction?.categorization_status
+                  !== CategorizationStatus.MATCHED
+                  && bankTransaction?.categorization_status
+                  !== CategorizationStatus.SPLIT && (
                     <span className={`${className}__category-text__text`}>
                       {bankTransaction?.category?.display_name}
                     </span>
                   )}
-              </Text>
-            ) : null}
-            {!categorized && !open && showRetry ? (
-              <RetryButton
-                onClick={() => {
-                  if (!bankTransaction.processing) {
-                    save()
-                  }
-                }}
-                className='Layer__bank-transaction__retry-btn'
-                processing={bankTransaction.processing}
-                error={
-                  'Approval failed. Check connection and retry in few seconds.'
-                }
-              >
-                Retry
-              </RetryButton>
-            ) : null}
-            {open && bankTransaction.error ? (
-              <Text
-                as='span'
-                size={TextSize.md}
-                className='Layer__unsaved-info'
-              >
-                <span>Unsaved</span>
-                <AlertCircle size={12} />
-              </Text>
-            ) : null}
-            {(!categorized && (open || (!open && !showRetry))) ||
-            (categorizationEnabled(mode) && categorized && open) ? (
-              <SubmitButton
-                onClick={() => {
-                  if (!bankTransaction.processing) {
-                    save()
-                  }
-                }}
-                className='Layer__bank-transaction__submit-btn'
-                processing={bankTransaction.processing}
-                active={open}
-                action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-              >
-                {categorized
-                  ? stringOverrides?.updateButtonText || 'Update'
-                  : stringOverrides?.approveButtonText || 'Confirm'}
-              </SubmitButton>
-            ) : null}
+                </Text>
+              )
+              : null}
+            {!categorized && !open && showRetry
+              ? (
+                <RetryButton
+                  onClick={() => {
+                    if (!bankTransaction.processing) {
+                      save()
+                    }
+                  }}
+                  className='Layer__bank-transaction__retry-btn'
+                  processing={bankTransaction.processing}
+                  error='Approval failed. Check connection and retry in few seconds.'
+                >
+                  Retry
+                </RetryButton>
+              )
+              : null}
+            {open && bankTransaction.error
+              ? (
+                <Text
+                  as='span'
+                  size={TextSize.md}
+                  className='Layer__unsaved-info'
+                >
+                  <span>Unsaved</span>
+                  <AlertCircle size={12} />
+                </Text>
+              )
+              : null}
+            {(!categorized && (open || (!open && !showRetry)))
+            || (categorizationEnabled(mode) && categorized && open)
+              ? (
+                <SubmitButton
+                  onClick={() => {
+                    if (!bankTransaction.processing) {
+                      save()
+                    }
+                  }}
+                  className='Layer__bank-transaction__submit-btn'
+                  processing={bankTransaction.processing}
+                  active={open}
+                  action={categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+                >
+                  {categorized
+                    ? stringOverrides?.updateButtonText || 'Update'
+                    : stringOverrides?.approveButtonText || 'Confirm'}
+                </SubmitButton>
+              )
+              : null}
             <IconButton
               onClick={toggleOpen}
               className='Layer__bank-transaction-row__expand-button'
               active={open}
-              icon={
+              icon={(
                 <ChevronDownFill
                   className={`Layer__chevron ${
                     open ? 'Layer__chevron__up' : 'Layer__chevron__down'
                   }`}
                 />
-              }
+              )}
             />
           </span>
         </td>
