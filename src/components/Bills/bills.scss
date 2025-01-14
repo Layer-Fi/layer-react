@@ -2,11 +2,14 @@
   .Layer__bills__main-datepicker input {
     min-width: 180px;
   }
+
   .Layer__view-main {
     padding: 0;
   }
+
   .Layer__bills__sidebar__header {
     padding: 0;
+
     .Layer__header__row {
       min-height: 72px;
     }
@@ -48,16 +51,19 @@
     align-items: flex-start;
     width: 100%;
   }
+
   .Layer__bills__header {
     border-radius: 0;
     background: transparent;
   }
+
   .Layer__header__col {
     .Layer__input-tooltip {
       min-width: 250px;
       flex: 1;
     }
   }
+
   .Layer__bills__status-with-actions {
     display: flex;
     align-items: center;
@@ -129,6 +135,7 @@
       }
     }
   }
+
   .Layer__bill-details__category-row {
     display: flex;
     align-items: center;
@@ -138,12 +145,15 @@
       &:nth-child(1) {
         flex: 2;
       }
+
       &:nth-child(2) {
         flex: 1;
       }
+
       &:nth-child(3) {
         flex: 2;
       }
+
       &:nth-child(4),
       &:nth-child(5),
       &:nth-child(6) {
@@ -151,10 +161,12 @@
       }
     }
   }
+
   .Layer__checkbox-wrapper {
     display: inline-flex;
     align-items: center;
   }
+
   .Layer__textarea {
     min-height: 100px;
   }
@@ -203,12 +215,21 @@
 
   &__amount-row {
     display: flex;
-    align-items: center;
-    gap: 16px;
+    gap: var(--spacing-4xs);
+  }
+
+  &__amount-row .Layer__input-group {
+    display: grid;
+    grid-template-columns: 66% 33%;
+    gap: 0;
     margin-bottom: var(--spacing-md);
 
-    .Layer__input-group {
-      flex: 1;
+    *:first-child {
+      padding-right: var(--spacing-xs);
+    }
+
+    *:last-child {
+      padding-left: var(--spacing-xs);
     }
   }
 
@@ -246,17 +267,27 @@
   }
 }
 
+.Layer__bills__record-payment__select-label {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.Layer__bills__record-payment__select-label__bill-amount {
+  color: var(--color-base-500);
+}
+
 .Layer__bills .Layer__panel__sidebar .Layer__panel__sidebar-content {
   width: 100%;
 }
 
 .Layer__bills .Layer__panel__sidebar-content .Layer__form,
 .Layer__bills
-  .Layer__panel__sidebar-content
-  .Layer__bills__payment-recorded__content,
+.Layer__panel__sidebar-content
+.Layer__bills__payment-recorded__content,
 .Layer__bills
-  .Layer__panel__sidebar-content
-  .Layer__bills__payment-recorded__bills {
+.Layer__panel__sidebar-content
+.Layer__bills__payment-recorded__bills {
   max-width: 480px;
   margin: auto;
 }
@@ -267,6 +298,7 @@
     margin: auto;
     border-bottom-width: 0;
   }
+
   .Layer__bills .Layer__panel__sidebar-content .Layer__bills__sidebar__header {
     border-bottom: 1px solid var(--border-color);
   }
@@ -308,9 +340,11 @@
     td,
     th {
       padding: var(--spacing-3xs) var(--spacing-3xs);
+
       &:first-child {
         padding-left: 0;
       }
+
       &:last-child {
         padding-right: 0;
       }
