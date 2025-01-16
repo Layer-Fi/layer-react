@@ -223,12 +223,13 @@
     grid-template-columns: 66% 33%;
     gap: 0;
     margin-bottom: var(--spacing-md);
+    margin-right: var(--spacing-xs);
 
-    *:first-child {
+    & > :first-child {
       padding-right: var(--spacing-xs);
     }
 
-    *:last-child {
+    & > :last-child {
       padding-left: var(--spacing-xs);
     }
   }
