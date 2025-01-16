@@ -18,7 +18,7 @@ export function useEnvironment() {
     apiUrl,
     authUrl,
     scope,
-    usePlaidSandbox: defaultUsePlaidSandbox
+    usePlaidSandbox: defaultUsePlaidSandbox,
   } = EnvironmentConfigs[environment]
 
   return {
@@ -26,7 +26,7 @@ export function useEnvironment() {
     apiUrl,
     authUrl,
     scope,
-    usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox
+    usePlaidSandbox: usePlaidSandbox ?? defaultUsePlaidSandbox,
   }
 }
 
@@ -35,7 +35,10 @@ export function EnvironmentInputProvider({
   environment,
   usePlaidSandbox,
 }: PropsWithChildren<EnvironmentInputShape>) {
-  const memoizedValue = useMemo(() => ({ environment, usePlaidSandbox }), [environment, usePlaidSandbox])
+  const memoizedValue = useMemo(
+    () => ({ environment, usePlaidSandbox }),
+    [environment, usePlaidSandbox],
+  )
 
   return (
     <AuthInputContext.Provider value={memoizedValue}>

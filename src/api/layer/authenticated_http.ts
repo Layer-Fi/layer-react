@@ -1,11 +1,20 @@
 import { version as packageVersion } from '../../../package.json'
-import { APIError } from '../../models/APIError'
+import { APIError, APIErrorMessage } from '../../models/APIError'
 import { reportError } from '../../models/ErrorHandler'
 
 const CUSTOM_PREFIX = 'Layer-'
 const CUSTOM_HEADERS = {
-  [`${CUSTOM_PREFIX}React-Version`]: packageVersion
+  [`${CUSTOM_PREFIX}React-Version`]: packageVersion,
 } as const
+
+type APIResponseError = {
+  description?: string
+  type?: string
+}
+
+type FailedAPIResponse = {
+  errors?: APIResponseError[]
+}
 
 export type HTTPVerb = 'get' | 'put' | 'post' | 'patch' | 'options' | 'delete'
 
@@ -27,14 +36,14 @@ export const get =
       (): Promise<Return> =>
         fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
           headers: {
-            Authorization: 'Bearer ' + (accessToken || ''),
+            'Authorization': 'Bearer ' + (accessToken || ''),
             'Content-Type': 'application/json',
             ...CUSTOM_HEADERS,
           },
           method: 'GET',
         })
           .then(res => handleResponse<Return>(res))
-          .catch(error => handleException(error))
+          .catch((error: Error | APIError) => handleException(error))
 
 export const request =
   (verb: Exclude<HTTPVerb, 'get'>) =>
@@ -58,7 +67,7 @@ export const request =
       ): Promise<Return> =>
         fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {
           headers: {
-            Authorization: 'Bearer ' + (accessToken || ''),
+            'Authorization': 'Bearer ' + (accessToken || ''),
             'Content-Type': 'application/json',
             'Cache-Control': 'no-cache',
             ...CUSTOM_HEADERS,
@@ -67,7 +76,7 @@ export const request =
           body: JSON.stringify(options?.body),
         })
           .then(res => handleResponse<Return>(res))
-          .catch(error => handleException(error))
+          .catch((error: Error | APIError) => handleException(error))
 
 export const post = request('post')
 export const put = request('put')
@@ -89,12 +98,12 @@ export const postWithFormData = <
     body: formData,
   })
     .then(res => handleResponse<Return>(res))
-    .catch(error => handleException(error))
+    .catch((error: Error | APIError) => handleException(error))
 }
 
 const handleResponse = async <Return>(res: Response) => {
   if (!res.ok) {
-    const errors = await tryToReadErrorsFromResponse(res)
+    const errors = await tryToReadErrorsFromResponse()
     const apiError = new APIError(
       'An error occurred while fetching the data from API.',
       res.status,
@@ -103,12 +112,12 @@ const handleResponse = async <Return>(res: Response) => {
     throw apiError
   }
 
-  const parsedResponse = await res.json()
-  if (parsedResponse && 'errors' in parsedResponse) {
+  const parsedResponse = (await res.json()) as Return | FailedAPIResponse
+  if (parsedResponse && 'errors' in (parsedResponse as FailedAPIResponse)) {
     const apiError = new APIError(
       'Errors in the API response.',
       res.status,
-      parsedResponse.errors ?? [],
+      ((parsedResponse as FailedAPIResponse).errors ?? []) as APIErrorMessage[],
     )
     throw apiError
   }
@@ -116,7 +125,7 @@ const handleResponse = async <Return>(res: Response) => {
   return parsedResponse as Return
 }
 
-const handleException = async (error: Error | APIError) => {
+const handleException = (error: Error | APIError) => {
   if (error.name === 'APIError') {
     reportError({
       type: (error as APIError).code === 401 ? 'unauthenticated' : 'api',
@@ -142,9 +151,10 @@ const handleException = async (error: Error | APIError) => {
 
 const tryToReadErrorsFromResponse = async (res?: Response) => {
   try {
-    const data = await res?.json()
+    const data = (await res?.json()) as FailedAPIResponse
     return data?.errors ?? []
-  } catch (_err) {
+  }
+  catch (_err) {
     return []
   }
 }

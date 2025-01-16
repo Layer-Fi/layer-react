@@ -76,7 +76,7 @@ export const AccountingOverview = ({
       <View
         title={title}
         showHeader={showTitle}
-        header={
+        header={(
           <Header>
             <HeaderRow>
               <HeaderCol>
@@ -84,7 +84,7 @@ export const AccountingOverview = ({
               </HeaderCol>
             </HeaderRow>
           </Header>
-        }
+        )}
       >
         {enableOnboarding && (
           <Onboarding
@@ -150,7 +150,7 @@ export const AccountingOverview = ({
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
               pnlToggle !== 'revenue'
-                && 'accounting-overview-profit-and-loss-chart--hidden',
+              && 'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts
@@ -164,7 +164,7 @@ export const AccountingOverview = ({
             name={classNames(
               'accounting-overview-profit-and-loss-chart',
               pnlToggle !== 'expenses'
-                && 'accounting-overview-profit-and-loss-chart--hidden',
+              && 'accounting-overview-profit-and-loss-chart--hidden',
             )}
           >
             <ProfitAndLoss.DetailedCharts

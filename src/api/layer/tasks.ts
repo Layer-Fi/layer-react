@@ -4,8 +4,8 @@ import { get, post, postWithFormData } from './authenticated_http'
 
 export const getTasks = get<{ data: Task[] }>(
   ({ businessId, startDate, endDate }) => `/v1/businesses/${businessId}/tasks?${
-      startDate ? `&start_date=${encodeURIComponent(startDate)}` : ''
-    }${endDate ? `&end_date=${encodeURIComponent(endDate)}` : ''}`,
+    startDate ? `&start_date=${encodeURIComponent(startDate)}` : ''
+  }${endDate ? `&end_date=${encodeURIComponent(endDate)}` : ''}`,
 )
 
 export const submitResponseToTask = post<{ data: Task }>(
@@ -30,26 +30,28 @@ export const deleteTaskUploads = post<{ data: Task }>(
 
 export const completeTaskWithUpload =
   (baseUrl: string, accessToken?: string) =>
-  ({
-    businessId,
-    taskId,
-    files,
-    description,
-  }: {
-    businessId: string
-    taskId: string
-    files: File[]
-    description?: string
-  }) => {
-    const formData = new FormData()
-    files.forEach(file => formData.append('file', file))
-    description && formData.append('description', description)
+    ({
+      businessId,
+      taskId,
+      files,
+      description,
+    }: {
+      businessId: string
+      taskId: string
+      files: File[]
+      description?: string
+    }) => {
+      const formData = new FormData()
+      files.forEach(file => formData.append('file', file))
+      if (description) {
+        formData.append('description', description)
+      }
 
-    const endpoint = `/v1/businesses/${businessId}/tasks/${taskId}/upload`
-    return postWithFormData<{ data: FileMetadata; errors: unknown }>(
-      endpoint,
-      formData,
-      baseUrl,
-      accessToken,
-    )
-  }
+      const endpoint = `/v1/businesses/${businessId}/tasks/${taskId}/upload`
+      return postWithFormData<{ data: FileMetadata, errors: unknown }>(
+        endpoint,
+        formData,
+        baseUrl,
+        accessToken,
+      )
+    }

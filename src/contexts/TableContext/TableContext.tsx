@@ -20,11 +20,12 @@ export const TableProvider: React.FC<TableProviderProps> = ({ children }) => {
   const [expandedAllRows, setExpandedAllRows] = useState(false)
 
   const toggleRow = (rowKey: string) => {
-    setExpandedRowsState(prevRows => {
+    setExpandedRowsState((prevRows) => {
       const rows = [...prevRows]
       if (rows.includes(rowKey)) {
         rows.splice(rows.indexOf(rowKey), 1)
-      } else {
+      }
+      else {
         rows.push(rowKey)
       }
       return rows

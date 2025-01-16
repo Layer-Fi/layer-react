@@ -1,4 +1,4 @@
-export interface APIErrorMessage {
+export type APIErrorMessage = {
   type?: string
   description?: string
 }

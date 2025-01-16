@@ -10,7 +10,7 @@ function toSnakeCase(input: string) {
 type ParameterValues = Date | string | number | boolean
 
 export function toDefinedSearchParameters(
-  input: Record<string, ParameterValues | null | undefined>
+  input: Record<string, ParameterValues | null | undefined>,
 ) {
   const definedParameters = Object.fromEntries(
     Object.entries(input)
@@ -30,7 +30,7 @@ export function toDefinedSearchParameters(
         return [key, value] as const
       })
       .filter((entry): entry is Exclude<typeof entry, null> => entry !== null)
-      .map(([key, value]) => [toSnakeCase(key), value])
+      .map(([key, value]) => [toSnakeCase(key), value]),
   )
 
   return new URLSearchParams(definedParameters)

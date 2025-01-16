@@ -1,5 +1,4 @@
-const ENVIRONMENTS = [ 'production', 'sandbox', 'staging', 'internalStaging' ] as const
-export type Environment = typeof ENVIRONMENTS[number]
+export type Environment = 'production' | 'sandbox' | 'staging' | 'internalStaging'
 
 type EnvironmentConfig = {
   apiUrl: string

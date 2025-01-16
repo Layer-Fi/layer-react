@@ -8,7 +8,8 @@ export const getActivationDate = (business?: Business) => {
     }
 
     return
-  } catch (_err) {
+  }
+  catch (_err) {
     return
   }
 }

@@ -40,7 +40,8 @@ const parseTextColorFromTheme = (color?: ColorConfig) => {
     }
 
     return {}
-  } catch (_err) {
+  }
+  catch (_err) {
     return {}
   }
 }
@@ -91,7 +92,8 @@ const parseColorFromTheme = (colorName: string, color?: ColorConfig) => {
     }
 
     return {}
-  } catch (_err) {
+  }
+  catch (_err) {
     return {}
   }
 }
@@ -144,7 +146,8 @@ const parseColorFromThemeToHsl = (
     }
 
     return
-  } catch (_err) {
+  }
+  catch (_err) {
     return
   }
 }
@@ -182,7 +185,7 @@ const hexToRgb = (hex: string) => {
   const values = hex
     .replace(
       /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
-      (m, r, g, b) => '#' + r + r + g + g + b + b,
+      (_m, r, g, b) => '#' + r + r + g + g + b + b,
     )
     .substring(1)
     .match(/.{2}/g)
@@ -266,7 +269,8 @@ const hslToRgb = (hsl: ColorHSLNumberConfig): ColorRGBNumberConfig => {
 
   if (hsl.s === 0) {
     r = g = b = l
-  } else {
+  }
+  else {
     const q = l < 0.5 ? l * (1 + s) : l + s - l * s
     const p = 2 * l - q
     r = hueToRgb(p, q, hsl.h + 1.0 / 3.0)
