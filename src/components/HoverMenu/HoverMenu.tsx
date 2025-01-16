@@ -1,12 +1,13 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
+import type { Awaitable } from '../../types/utility/promises'
 
-export interface HoverMenuProps {
+export type HoverMenuProps = {
   children: ReactNode
-  config: {
+  config: Array<{
     name: string
-    action: () => void
-  }[]
+    action: () => Awaitable<void>
+  }>
 }
 
 export const HoverMenu = ({ children, config }: HoverMenuProps) => {

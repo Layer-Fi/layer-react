@@ -5,11 +5,11 @@ import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
 type UseQuickbooks = () => {
-  linkQuickbooks: () => Promise<string>;
-  unlinkQuickbooks: () => void;
-  syncFromQuickbooks: () => void;
-  isSyncingFromQuickbooks: boolean;
-  quickbooksIsLinked: boolean | null;
+  linkQuickbooks: () => Promise<string>
+  unlinkQuickbooks: () => void
+  syncFromQuickbooks: () => void
+  isSyncingFromQuickbooks: boolean
+  quickbooksIsLinked: boolean | null
 }
 
 const DEBUG = true
@@ -22,9 +22,9 @@ export const useQuickbooks: UseQuickbooks = () => {
   const [isSyncingFromQuickbooks, setIsSyncingFromQuickbooks] =
     useState<boolean>(false)
   const [quickbooksIsLinked, setQuickbooksIsLinked] = useState<boolean | null>(
-    null
+    null,
   )
-  const syncStatusIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const syncStatusIntervalRef = useRef<number | null>(null)
 
   // Poll the server to determine when the Quickbooks sync is complete
   useEffect(() => {
@@ -32,7 +32,8 @@ export const useQuickbooks: UseQuickbooks = () => {
       const interval = setInterval(() => fetchIsSyncingFromQuickbooks(), 2000)
       syncStatusIntervalRef.current = interval
       return () => clearInterval(interval)
-    } else if (!isSyncingFromQuickbooks && syncStatusIntervalRef.current) {
+    }
+    else if (!isSyncingFromQuickbooks && syncStatusIntervalRef.current) {
       clearInterval(syncStatusIntervalRef.current)
       syncStatusIntervalRef.current = null
     }
@@ -61,7 +62,8 @@ export const useQuickbooks: UseQuickbooks = () => {
       Layer.syncFromQuickbooks(apiUrl, auth?.access_token, {
         params: { businessId },
       })
-    } catch {
+    }
+    catch {
       setIsSyncingFromQuickbooks(false)
     }
   }

@@ -11,6 +11,7 @@ export type AccountSource = EnumWithUnknownValues<'PLAID' | 'STRIPE'>
 const _KNOWN_ACCOUNT_NOTIFICATION_TYPES = [
   'CONFIRM_RELEVANT',
   'CONFIRM_UNIQUE',
+  'OPENING_BALANCE_MISSING',
 ] as const
 type KnownAccountNotificationType = typeof _KNOWN_ACCOUNT_NOTIFICATION_TYPES[number]
 
@@ -48,8 +49,6 @@ export type LinkedAccount = {
   connection_external_id?: string
   connection_needs_repair_as_of: string | null
   is_syncing: boolean
-  /** @TODO adjust to the API response */
-  opening_account_balance_missing?: boolean
 }
 
 export type LinkedAccounts = {
