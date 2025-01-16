@@ -2,7 +2,7 @@ import React, { RefObject, useMemo, useState } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { View } from '../../types/general'
 import { BillsSidebar } from './BillsSidebar'
-import { Button, CloseButton } from '../Button'
+import { Button, CloseButton, IconButton } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Select } from '../Input'
 import { Pagination } from '../Pagination'
@@ -10,6 +10,7 @@ import { Panel } from '../Panel'
 import { Toggle } from '../Toggle'
 import { BillsTable } from './BillsTable'
 import { BillsTab } from './Bills'
+import CloseIcon from '../../icons/CloseIcon'
 
 export interface BillsTableStringOverrides {
   componentTitle?: string
@@ -105,7 +106,10 @@ export const BillsTableWithPanel = ({
                       }}
                       placeholder='Select vendor to record bulk payment'
                     />
-                    <CloseButton onClick={() => setBulkSelectionActive(false)} />
+                    <IconButton
+                      icon={<CloseIcon />}
+                      onClick={() => setBulkSelectionActive(false)}
+                    />
                   </>
                 )
                 : (
