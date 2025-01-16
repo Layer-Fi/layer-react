@@ -16,7 +16,7 @@ export default tsEslint.config([
     ],
   },
   js.configs.recommended,
-  tsEslint.configs.recommended,
+  tsEslint.configs.recommendedTypeChecked,
   stylisticPlugin.configs['recommended-flat'],
   reactPlugin.configs.flat.recommended,
   reactPlugin.configs.flat['jsx-runtime'],
@@ -30,11 +30,15 @@ export default tsEslint.config([
     plugins: {
       'unused-imports': unusedImportsPlugin,
     },
+  },
+  {
     languageOptions: {
       globals: {
         ...globals['shared-node-browser'],
       },
       parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
         ecmaFeatures: {
           jsx: true,
         },

@@ -1,0 +1,122 @@
+.Layer__caobfb {
+  padding-inline: var(--spacing-md);
+  padding-block: var(--spacing-sm);
+  position: relative;
+  display: flex;
+  gap: var(--spacing-sm);
+  border-radius: var(--border-radius-xs);
+  border: 1px solid var(--color-base-100);
+  container-type: inline-size;
+  transition: all 0.25s ease-in-out;
+  transition-delay: 0.8s;
+  max-height: 280px;
+
+  &[data-confirmed='true'] {
+    background-color: var(--color-base-50);
+  }
+}
+
+.Layer__caobfb__icon-col {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.Layer__caobfb__details-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
+  color: var(--color-base-700);
+  flex: 1;
+}
+
+.Layer__caobfb__details-col__details {
+  padding-bottom: var(--spacing-sm);
+}
+
+.Layer__caobfb__details-col__name {
+  display: flex;
+  gap: var(--spacing-3xs);
+  width: 100%;
+  max-width: 500px;
+}
+
+.Layer__caobfb__details-col__name__institution-name {
+  color: var(--color-base-500);
+  max-width: 50%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.Layer__caobfb__details-col__name__account-name {
+  color: var(--color-base-1000);
+  max-width: 50%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.Layer__caobfb__details-col__inputs {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  padding: var(--spacing-sm) 0;
+  border-top: 1px solid var(--color-base-200);
+
+  .Layer__input-group {
+    width: 100%;
+
+    .Layer__input {
+      width: 100%;
+    }
+
+    .Layer__datepicker {
+      width: 100%;
+    }
+
+    .react-datepicker__input-container {
+      input {
+        width: calc(100% - 2px);
+        max-width: unset;
+      }
+    }
+  }
+
+  @container (max-width: 440px) {
+    flex-direction: column;
+  }
+}
+
+.Layer__caobfb__confirm-col {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.Layer__caobfb__success-banner {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  z-index: -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm);
+  background-color: var(--color-base-50);
+  transition: opacity 0.12s ease-in-out;
+  color: var(--color-info-success-fg);
+}
+
+.Layer__caobfb[data-saved] {
+  max-height: 0;
+  padding: 0;
+  border-width: 0;
+  overflow: hidden;
+
+  .Layer__caobfb__success-banner {
+    opacity: 1;
+    z-index: 101;
+  }
+}

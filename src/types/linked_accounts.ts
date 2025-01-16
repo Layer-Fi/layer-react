@@ -11,6 +11,7 @@ export type AccountSource = EnumWithUnknownValues<'PLAID' | 'STRIPE'>
 const _KNOWN_ACCOUNT_NOTIFICATION_TYPES = [
   'CONFIRM_RELEVANT',
   'CONFIRM_UNIQUE',
+  'OPENING_BALANCE_MISSING',
 ] as const
 type KnownAccountNotificationType = typeof _KNOWN_ACCOUNT_NOTIFICATION_TYPES[number]
 

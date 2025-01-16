@@ -78,3 +78,23 @@ export const convertCurrencyToNumber = (amount: string): string =>
     .replace(/(\..*)\./g, '$1')
     .replace(/(\.\d{2})\d+/, '$1')
     .replace(/^0(?!\.)/, '')
+
+/**
+ * Convert amount to cents by multiplying by 100.
+ * For example:
+ * 100.00 -> 10000
+ * 100.01 -> 10001
+ * 100.001 -> 10000
+ */
+export const convertToCents = (amount?: number | string): number | undefined => {
+  try {
+    if (amount === undefined) {
+      return undefined
+    }
+
+    return Math.round(Number(amount) * 100)
+  }
+  catch {
+    return undefined
+  }
+}

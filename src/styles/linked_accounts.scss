@@ -180,6 +180,9 @@
 
     .account-institution {
       color: var(--color-base-500);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .topbar-details {

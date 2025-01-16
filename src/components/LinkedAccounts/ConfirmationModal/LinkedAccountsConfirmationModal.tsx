@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { Modal } from '../../ui/Modal/Modal'
 import { ModalContextBar, ModalHeading, ModalActions, ModalContent, ModalDescription } from '../../ui/Modal/ModalSlots'
-import useSWRMutation from 'swr/mutation'
-
 import { Button } from '../../ui/Button/Button'
 import { VStack } from '../../ui/Stack/Stack'
 import { useLinkedAccounts } from '../../../hooks/useLinkedAccounts'
@@ -10,71 +8,12 @@ import { useAccountConfirmationStore } from '../../../providers/AccountConfirmat
 import { getAccountsNeedingConfirmation } from '../../../hooks/useLinkedAccounts/useLinkedAccounts'
 import { ConditionalList } from '../../utility/ConditionalList'
 import { LinkedAccountToConfirm } from './LinkedAccountToConfirm'
-import { Layer } from '../../../api/layer'
-import type { Awaitable } from '../../../types/utility/promises'
 import { P } from '../../ui/Typography/Text'
-import { useAuth } from '../../../hooks/useAuth'
-import { useLayerContext } from '../../../contexts/LayerContext'
 import { LoadingSpinner } from '../../ui/Loading/LoadingSpinner'
-
-type AccountConfirmExcludeFormState = Record<string, boolean>
-
-function useConfirmAndExcludeMultiple(
-  formState: AccountConfirmExcludeFormState,
-  { onSuccess }: { onSuccess: () => Awaitable<unknown> }
-) {
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const exclude = (accountId: string) => {
-    return Layer.excludeAccount(
-      auth?.apiUrl ?? '',
-      auth?.access_token,
-      {
-        params: {
-          businessId,
-          accountId,
-        },
-        body: {
-          is_irrelevant: true,
-        }
-      }
-    )
-  }
-  const confirm = (accountId: string) => {
-    return Layer.confirmAccount(
-      auth?.apiUrl ?? '',
-      auth?.access_token,
-      {
-        params: {
-          businessId,
-          accountId,
-        },
-        body: {
-          is_relevant: true,
-        }
-      }
-    )
-  }
-
-  return useSWRMutation(
-    `/v1/businesses/${businessId}/external-accounts/bulk`,
-    () => Promise.all(
-      Object.entries(formState).map(([ accountId, isConfirmed ]) =>
-        isConfirmed ? confirm(accountId) : exclude(accountId)
-      )
-    )
-      .then(() => onSuccess())
-      .then(() => true as const),
-    {
-      revalidate: false,
-      throwOnError: false,
-    }
-  )
-}
+import { useConfirmAndExcludeMultiple, AccountConfirmExcludeFormState } from './useConfirmAndExcludeMultiple'
 
 function getButtonLabel(
-  { totalCount, confirmedCount }: { totalCount: number, confirmedCount: number }
+  { totalCount, confirmedCount }: { totalCount: number, confirmedCount: number },
 ) {
   if (confirmedCount === totalCount) {
     return totalCount > 1
@@ -104,7 +43,7 @@ function getFormComponentLabels(formState: AccountConfirmExcludeFormState) {
 
   return {
     buttonLabel,
-    descriptionLabel
+    descriptionLabel,
   }
 }
 
@@ -114,7 +53,7 @@ function useLinkedAccountsConfirmationModal() {
 
   const {
     visibility,
-    actions: { dismiss: dismissAccountConfirmation, reset: resetAccountConfirmation }
+    actions: { dismiss: dismissAccountConfirmation, reset: resetAccountConfirmation },
   } = useAccountConfirmationStore()
 
   const preloadIsOpen = visibility === 'PRELOADED'
@@ -179,12 +118,12 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
 function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
   const { accounts, onDismiss, onFinish, refetchAccounts } = useLinkedAccountsConfirmationModal()
 
-  const [ formState, setFormState ] = useState(() => Object.fromEntries(
-    accounts.map(({ id }) => [ id, true ])
+  const [formState, setFormState] = useState(() => Object.fromEntries(
+    accounts.map(({ id }) => [id, true]),
   ))
 
   const { trigger, isMutating, error } = useConfirmAndExcludeMultiple(formState, {
-    onSuccess: refetchAccounts
+    onSuccess: refetchAccounts,
   })
   const hasError = Boolean(error)
 
@@ -215,28 +154,28 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
       <ModalContent>
         <ConditionalList
           list={accounts}
-          Empty={
+          Empty={(
             <VStack slot='center'>
               <P align='center'>
                 There are no accounts to confirm. You may close this modal.
               </P>
             </VStack>
-          }
+          )}
           Container={({ children }) => <VStack gap='md'>{children}</VStack>}
         >
-          {({ item }) =>
+          {({ item }) => (
             <LinkedAccountToConfirm
               key={item.id}
               account={item}
               isConfirmed={formState[item.id] ?? false}
               onChangeConfirmed={
-                (isConfirmed) => setFormState((currentState) => ({
+                isConfirmed => setFormState(currentState => ({
                   ...currentState,
-                  [item.id]: isConfirmed
+                  [item.id]: isConfirmed,
                 }))
               }
             />
-          }
+          )}
         </ConditionalList>
       </ModalContent>
       <ModalActions>
@@ -260,8 +199,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
               <Button size='lg' onPress={handleFinish} isPending={isMutating}>
                 {buttonLabel}
               </Button>
-            )
-          }
+            )}
         </VStack>
       </ModalActions>
     </>
@@ -276,8 +214,7 @@ export function LinkedAccountsConfirmationModal() {
       {({ close }) =>
         preloadIsOpen
           ? <LinkedAccountsConfirmationModalPreloadedContent onClose={close} />
-          : <LinkedAccountsConfirmationModalContent onClose={close} />
-      }
+          : <LinkedAccountsConfirmationModalContent onClose={close} />}
     </Modal>
   )
 }

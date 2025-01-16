@@ -1,6 +1,5 @@
 .Layer__UI__Button {
   all: unset;
-
   align-items: center;
   appearance: none;
   border-radius: var(--btn-border-radius);
@@ -21,7 +20,7 @@
     block-size: 2rem;
   }
 
-  &[data-variant=solid] {
+  &[data-variant="solid"] {
     background-color: var(--button-bg-default);
     color: var(--button-fg-default);
 
@@ -30,10 +29,15 @@
     }
   }
 
-  &[data-variant=ghost] {
+  &[data-focus-visible] {
+    outline-style: solid;
+    outline-offset: 0.12rem;
+    outline-color: var(--button-bg-default);
+  }
+
+  &[data-variant="ghost"] {
     background-color: transparent;
     color: var(--button-fg-ghost);
-
     border: 2px solid transparent;
 
     &[data-hovered] {
@@ -41,9 +45,14 @@
       color: var(--button-fg-ghost-active);
       border-color: var(--button-outline-ghost-active);
     }
+
+    &[data-focus-visible] {
+      outline-style: solid;
+      outline-color: var(--button-outline-ghost-active);
+    }
   }
 
-  &[data-size=lg] {
+  &[data-size="lg"] {
     min-block-size: 2.25rem;
     font-size: var(--text-lg);
   }

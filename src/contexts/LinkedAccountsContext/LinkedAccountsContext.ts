@@ -18,4 +18,6 @@ export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
   confirmAccount: () => {},
   breakConnection: () => {},
   syncAccounts: () => {},
+  accountsToAddOpeningBalanceInModal: [],
+  setAccountsToAddOpeningBalanceInModal: () => {},
 })

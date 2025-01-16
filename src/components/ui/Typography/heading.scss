@@ -2,7 +2,7 @@
   all: unset;
 
   font-weight: bold;
-  font-size: var(--text-heading);
+  font-size: var(--text-heading-secondary);
 
   &[data-size="sm"] {
     font-size: var(--text-heading-sm);

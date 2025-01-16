@@ -21,6 +21,23 @@ export const updateConnectionStatus = post<
     `/v1/businesses/${businessId}/external-accounts/update-connection-status`,
 )
 
+type UpdateOpeningBalanceBody = {
+  effective_at: string
+  balance: number
+}
+
+export const updateOpeningBalance = post<
+  never,
+  UpdateOpeningBalanceBody,
+  {
+    businessId: string
+    accountId: string
+  }
+>(
+  ({ businessId, accountId }) =>
+    `/v1/businesses/${businessId}/external-accounts/${accountId}/opening-balance`,
+)
+
 export const getLinkedAccounts = get<
   { data: LinkedAccounts },
   {
@@ -86,7 +103,7 @@ export const unlinkConnection = post<
 export const unlinkAccount = post<
   Record<string, unknown>,
   Record<string, unknown>,
-  { businessId: string; accountId: string }
+  { businessId: string, accountId: string }
 >(
   ({ businessId, accountId }) =>
     `/v1/businesses/${businessId}/external-accounts/${accountId}/archive`,
