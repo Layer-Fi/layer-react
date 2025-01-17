@@ -1,4 +1,3 @@
-import React from 'react'
 import { DownloadButton } from '../../Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '../../utility/InvisibleDownload'
 import { useCashflowStatementDownload } from './useCashflowStatementDownload'

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useElementSize } from '../../hooks/useElementSize'
 import FileIcon from '../../icons/File'
@@ -120,7 +120,8 @@ export const BankTransactionMobileListItem = ({
       if (editable && shouldHideAfterCategorize(bankTransaction)) {
         setRemoveAnim(true)
         openNext()
-      } else {
+      }
+      else {
         close()
       }
     }
@@ -149,7 +150,8 @@ export const BankTransactionMobileListItem = ({
       }, index * 20)
 
       return () => clearTimeout(timeoutId)
-    } else {
+    }
+    else {
       setShowComponent(true)
     }
   }, [])
@@ -166,7 +168,7 @@ export const BankTransactionMobileListItem = ({
     }
   }, [bankTransaction.recently_categorized])
 
-  const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) =>
+  const onChangePurpose = (event: ChangeEvent<HTMLInputElement>) =>
     setPurpose(event.target.value as Purpose)
 
   const categorized = isCategorized(bankTransaction)
@@ -230,34 +232,36 @@ export const BankTransactionMobileListItem = ({
             className={`${className}__expanded-row__content`}
             ref={formRowRef}
           >
-            {categorizationEnabled(mode) ? (
-              <div className={`${className}__toggle-row`}>
-                <Toggle
-                  name={`purpose-${bankTransaction.id}`}
-                  size={ToggleSize.xsmall}
-                  options={[
-                    {
-                      value: 'business',
-                      label: 'Business',
-                      style: { minWidth: 84 },
-                    },
-                    {
-                      value: 'personal',
-                      label: 'Personal',
-                      style: { minWidth: 84 },
-                    },
-                    {
-                      value: 'more',
-                      label: 'More',
-                      style: { minWidth: 84 },
-                    },
-                  ]}
-                  selected={purpose}
-                  onChange={onChangePurpose}
-                />
-                <CloseButton onClick={() => close()} />
-              </div>
-            ) : null}
+            {categorizationEnabled(mode)
+              ? (
+                <div className={`${className}__toggle-row`}>
+                  <Toggle
+                    name={`purpose-${bankTransaction.id}`}
+                    size={ToggleSize.xsmall}
+                    options={[
+                      {
+                        value: 'business',
+                        label: 'Business',
+                        style: { minWidth: 84 },
+                      },
+                      {
+                        value: 'personal',
+                        label: 'Personal',
+                        style: { minWidth: 84 },
+                      },
+                      {
+                        value: 'more',
+                        label: 'More',
+                        style: { minWidth: 84 },
+                      },
+                    ]}
+                    selected={purpose}
+                    onChange={onChangePurpose}
+                  />
+                  <CloseButton onClick={() => close()} />
+                </div>
+              )
+              : null}
             <BankTransactionMobileForms
               purpose={purpose}
               bankTransaction={bankTransaction}

@@ -1,4 +1,4 @@
-import React from 'react'
+import { Fragment, ReactNode } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { StatementOfCashFlow } from '../../types'
 import { LineItem } from '../../types/line_item'
@@ -34,12 +34,12 @@ export const StatementOfCashFlowTable = ({
     depth: number = 0,
     rowKey: string,
     rowIndex: number,
-  ): React.ReactNode => {
+  ): ReactNode => {
     const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
     const expanded = expandable ? isOpen(rowKey) : true
 
     return (
-      <React.Fragment key={rowKey + '-' + rowIndex}>
+      <Fragment key={rowKey + '-' + rowIndex}>
         <TableRow
           rowKey={rowKey + '-' + rowIndex}
           expandable={expandable}
@@ -58,16 +58,16 @@ export const StatementOfCashFlowTable = ({
             {(!expandable || (expandable && !expanded)) && lineItem.value}
           </TableCell>
         </TableRow>
-        {expanded &&
-          lineItem.line_items &&
-          lineItem.line_items.map((subItem, subIdx) =>
-            renderLineItem(
-              subItem,
-              depth + 1,
-              rowKey + ':' + subItem.name,
-              subIdx,
-            ),
-          )}
+        {expanded
+        && lineItem.line_items
+        && lineItem.line_items.map((subItem, subIdx) =>
+          renderLineItem(
+            subItem,
+            depth + 1,
+            rowKey + ':' + subItem.name,
+            subIdx,
+          ),
+        )}
         {expanded && expandable && (
           <TableRow
             rowKey={rowKey + '-' + rowIndex + '--summation'}
@@ -80,7 +80,7 @@ export const StatementOfCashFlowTable = ({
             </TableCell>
           </TableRow>
         )}
-      </React.Fragment>
+      </Fragment>
     )
   }
 
@@ -100,17 +100,18 @@ export const StatementOfCashFlowTable = ({
         {config.map((row, idx) => {
           if (row.type === 'line_item') {
             return (
-              <React.Fragment key={row.lineItem}>
-                {data[row.lineItem as keyof StatementOfCashFlow] &&
-                  renderLineItem(
-                    data[row.lineItem as keyof StatementOfCashFlow] as LineItem,
-                    0,
-                    row.lineItem ? row.lineItem : '',
-                    idx,
-                  )}
-              </React.Fragment>
+              <Fragment key={row.lineItem}>
+                {data[row.lineItem as keyof StatementOfCashFlow]
+                && renderLineItem(
+                  data[row.lineItem as keyof StatementOfCashFlow] as LineItem,
+                  0,
+                  row.lineItem ? row.lineItem : '',
+                  idx,
+                )}
+              </Fragment>
             )
-          } else {
+          }
+          else {
             return (
               <TableRow
                 key={row.name + '-' + idx}

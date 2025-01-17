@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { DrawerContext } from '../../contexts/DrawerContext'
 import ChevronDown from '../../icons/ChevronDown'
 import { BusinessCategories } from '../BankTransactionMobileList/BusinessCategories'

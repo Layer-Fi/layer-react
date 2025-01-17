@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
@@ -88,9 +88,9 @@ export const BankTransactionListItem = ({
 
   useEffect(() => {
     if (
-      editable &&
-      bankTransaction.recently_categorized &&
-      shouldHideAfterCategorize(bankTransaction)
+      editable
+      && bankTransaction.recently_categorized
+      && shouldHideAfterCategorize(bankTransaction)
     ) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
@@ -126,9 +126,9 @@ export const BankTransactionListItem = ({
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
-    bankTransaction.recently_categorized &&
-      editable &&
-      shouldHideAfterCategorize(bankTransaction)
+    bankTransaction.recently_categorized
+    && editable
+    && shouldHideAfterCategorize(bankTransaction)
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
@@ -195,58 +195,64 @@ export const BankTransactionListItem = ({
         />
       </span>
       <span className={`${className}__base-row`}>
-        {!categorized ? (
-          <CategorySelect
-            bankTransaction={bankTransaction}
-            name={`category-${bankTransaction.id}`}
-            value={selectedCategory}
-            onChange={category => {
-              setShowRetry(false)
-              setSelectedCategory(category)
-            }}
-            disabled={bankTransaction.processing}
-            showTooltips={showTooltips}
-          />
-        ) : null}
+        {!categorized
+          ? (
+            <CategorySelect
+              bankTransaction={bankTransaction}
+              name={`category-${bankTransaction.id}`}
+              value={selectedCategory}
+              onChange={(category) => {
+                setShowRetry(false)
+                setSelectedCategory(category)
+              }}
+              disabled={bankTransaction.processing}
+              showTooltips={showTooltips}
+            />
+          )
+          : null}
         {categorized ? <Assignment bankTransaction={bankTransaction} /> : null}
-        {!categorized && !showRetry ? (
-          <SubmitButton
-            onClick={() => {
-              if (!bankTransaction.processing) {
-                save()
-              }
-            }}
-            className='Layer__bank-transaction__submit-btn'
-            processing={bankTransaction.processing}
-            action={!categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-          >
-            {!categorized
-              ? stringOverrides?.approveButtonText || 'Approve'
-              : stringOverrides?.updateButtonText || 'Update'}
-          </SubmitButton>
-        ) : null}
-        {!categorized && showRetry ? (
-          <RetryButton
-            onClick={() => {
-              if (!bankTransaction.processing) {
-                save()
-              }
-            }}
-            className='Layer__bank-transaction__retry-btn'
-            processing={bankTransaction.processing}
-            error={
-              'Approval failed. Check connection and retry in few seconds.'
-            }
-          >
-            Retry
-          </RetryButton>
-        ) : null}
+        {!categorized && !showRetry
+          ? (
+            <SubmitButton
+              onClick={() => {
+                if (!bankTransaction.processing) {
+                  save()
+                }
+              }}
+              className='Layer__bank-transaction__submit-btn'
+              processing={bankTransaction.processing}
+              action={!categorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+            >
+              {!categorized
+                ? stringOverrides?.approveButtonText || 'Approve'
+                : stringOverrides?.updateButtonText || 'Update'}
+            </SubmitButton>
+          )
+          : null}
+        {!categorized && showRetry
+          ? (
+            <RetryButton
+              onClick={() => {
+                if (!bankTransaction.processing) {
+                  save()
+                }
+              }}
+              className='Layer__bank-transaction__retry-btn'
+              processing={bankTransaction.processing}
+              error='Approval failed. Check connection and retry in few seconds.'
+            >
+              Retry
+            </RetryButton>
+          )
+          : null}
       </span>
-      {bankTransaction.error && showRetry ? (
-        <ErrorText>
-          Approval failed. Check connection and retry in few seconds.
-        </ErrorText>
-      ) : null}
+      {bankTransaction.error && showRetry
+        ? (
+          <ErrorText>
+            Approval failed. Check connection and retry in few seconds.
+          </ErrorText>
+        )
+        : null}
     </li>
   )
 }

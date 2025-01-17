@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'

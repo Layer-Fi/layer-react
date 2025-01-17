@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle } from 'react'
+import { forwardRef, useImperativeHandle } from 'react'
 import { useReceiptsContext } from '../../contexts/ReceiptsContext/ReceiptsContext'
 import { ReceiptsProvider } from '../../providers/ReceiptsProvider'
 import { BankTransaction } from '../../types'

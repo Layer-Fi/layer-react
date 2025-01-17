@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactNode } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import classNames from 'classnames'
 
 interface HeaderColProps {

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from 'react'
+import { PropsWithChildren, useState } from 'react'
 import { LayerError } from '../../models/ErrorHandler'
 import { BusinessProvider } from '../../providers/BusinessProvider/BusinessProvider'
 import { LayerThemeConfig } from '../../types/layer_context'

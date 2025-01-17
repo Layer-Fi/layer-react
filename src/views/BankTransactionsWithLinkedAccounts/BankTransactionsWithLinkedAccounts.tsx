@@ -1,4 +1,3 @@
-import React from 'react'
 import { BankTransactions } from '../../components/BankTransactions'
 import {
   BankTransactionsMode,

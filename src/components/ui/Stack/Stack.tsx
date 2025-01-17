@@ -1,4 +1,4 @@
-import React, { useMemo, type PropsWithChildren } from 'react'
+import { useMemo, type PropsWithChildren } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 
 export type StackProps = PropsWithChildren<{

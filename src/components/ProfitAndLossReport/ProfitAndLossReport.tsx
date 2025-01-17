@@ -1,4 +1,4 @@
-import React, { RefObject, useContext } from 'react'
+import { RefObject, useContext } from 'react'
 import { View as ViewType } from '../../types/general'
 import { ReportsStringOverrides } from '../../views/Reports/Reports'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'

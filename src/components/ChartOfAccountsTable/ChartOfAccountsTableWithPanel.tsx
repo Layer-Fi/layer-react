@@ -1,4 +1,4 @@
-import React, { RefObject, useContext, useState } from 'react'
+import { RefObject, useContext, useState } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import PlusIcon from '../../icons/Plus'
 import { View } from '../../types/general'

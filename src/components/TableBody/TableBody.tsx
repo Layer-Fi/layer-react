@@ -1,4 +1,3 @@
-import React from 'react'
 import { TableBodyProps } from '../../types/table'
 
 export const TableBody = ({ children }: TableBodyProps) => {

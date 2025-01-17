@@ -1,4 +1,3 @@
-import React from 'react'
 import { StatementOfCashFlowContext } from '../../contexts/StatementOfCashContext'
 import { TableProvider } from '../../contexts/TableContext'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow'

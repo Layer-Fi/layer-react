@@ -1,4 +1,3 @@
-import React from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
 import {

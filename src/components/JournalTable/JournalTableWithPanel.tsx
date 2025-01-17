@@ -1,4 +1,4 @@
-import React, { RefObject, useContext, useMemo, useState } from 'react'
+import { RefObject, useContext, useMemo, useState } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import PlusIcon from '../../icons/PlusIcon'
 import { View } from '../../types/general'

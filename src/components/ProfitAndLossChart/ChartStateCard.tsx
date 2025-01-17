@@ -1,4 +1,3 @@
-import React from 'react'
 import BarChart2Icon from '../../icons/BarChart2'
 import { IconBox } from '../IconBox'
 import { Text, TextSize, TextWeight } from '../Typography'

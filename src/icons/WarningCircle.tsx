@@ -1,4 +1,3 @@
-import React from 'react'
 import { IconSvgProps } from './types'
 
 const WarningCircle = ({ size = 18, ...props }: IconSvgProps) => (

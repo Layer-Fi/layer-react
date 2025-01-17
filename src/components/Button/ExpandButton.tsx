@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes } from 'react'
+import { ButtonHTMLAttributes } from 'react'
 import BackArrow from '../../icons/BackArrow'
 import classNames from 'classnames'
 

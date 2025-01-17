@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, type ReactNode } from 'react'
+import { useContext, useMemo, type ReactNode } from 'react'
 import type { Variants } from '../../utils/styleUtils/sizeVariants'
 import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import {

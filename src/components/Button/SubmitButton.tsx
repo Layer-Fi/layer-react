@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes } from 'react'
+import { ButtonHTMLAttributes } from 'react'
 import AlertCircle from '../../icons/AlertCircle'
 import CheckCircle from '../../icons/CheckCircle'
 import Loader from '../../icons/Loader'

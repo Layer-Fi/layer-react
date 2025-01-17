@@ -1,5 +1,4 @@
 import { PropsWithChildren, useMemo } from 'react'
-import React from 'react'
 import type { Variants } from '../../../utils/styleUtils/sizeVariants'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 

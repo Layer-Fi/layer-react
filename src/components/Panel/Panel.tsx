@@ -1,4 +1,4 @@
-import React, { ReactNode, RefObject, useEffect, useState } from 'react'
+import { ReactNode, RefObject, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
 export interface PanelProps {

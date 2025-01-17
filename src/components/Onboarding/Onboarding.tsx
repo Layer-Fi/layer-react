@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { LinkedAccountsProvider } from '../../providers/LinkedAccountsProvider'

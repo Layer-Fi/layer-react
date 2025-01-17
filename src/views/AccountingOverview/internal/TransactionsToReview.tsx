@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Badge } from '../../../components/Badge'
 import { BadgeSize, BadgeVariant } from '../../../components/Badge/Badge'
 import { BadgeLoader } from '../../../components/BadgeLoader'

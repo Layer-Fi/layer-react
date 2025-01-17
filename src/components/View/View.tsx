@@ -1,4 +1,4 @@
-import React, { forwardRef, ReactNode } from 'react'
+import { forwardRef, ReactNode } from 'react'
 import { ViewHeader } from '../../components/ViewHeader'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { parseStylesFromThemeConfig } from '../../utils/colors'

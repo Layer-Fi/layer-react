@@ -1,4 +1,4 @@
-import React, { RefObject, useContext, useRef } from 'react'
+import { RefObject, useContext, useRef } from 'react'
 import { Container } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
 import { Panel } from '../Panel'

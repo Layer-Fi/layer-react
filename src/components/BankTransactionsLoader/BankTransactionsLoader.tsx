@@ -1,4 +1,4 @@
-import React from 'react'
+
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { BankTransaction } from '../../types'
 import { IconButton, SubmitButton } from '../Button'

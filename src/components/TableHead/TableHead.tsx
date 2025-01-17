@@ -1,4 +1,3 @@
-import React from 'react'
 import { TableHeadProps } from '../../types/table'
 
 export const TableHead = ({ children }: TableHeadProps) => {

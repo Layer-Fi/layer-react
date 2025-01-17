@@ -1,4 +1,4 @@
-import React, { RefObject, useState } from 'react'
+import { RefObject, useState } from 'react'
 import { BalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Container } from '../../components/Container'

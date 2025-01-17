@@ -1,4 +1,3 @@
-import React from 'react'
 import { IconSvgProps } from './types'
 
 const Paperclip = ({ size = 20, ...props }: IconSvgProps) => {

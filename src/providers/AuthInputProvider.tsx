@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, type PropsWithChildren } from 'react'
+import { createContext, useContext, useMemo, type PropsWithChildren } from 'react'
 
 type AuthInputShape = {
   appId?: string

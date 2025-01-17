@@ -1,4 +1,3 @@
-import React from 'react'
 import { IconSvgProps } from './types'
 
 const MoreVertical = ({ size = 18, ...props }: IconSvgProps) => {

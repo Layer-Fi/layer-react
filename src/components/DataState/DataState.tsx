@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import AlertOctagon from '../../icons/AlertOctagon'
 import CheckCircle from '../../icons/CheckCircle'
 import Loader from '../../icons/Loader'

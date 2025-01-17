@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react'
+import { PropsWithChildren } from 'react'
 import ChevronDown from '../../icons/ChevronDown'
 
 type Props = PropsWithChildren

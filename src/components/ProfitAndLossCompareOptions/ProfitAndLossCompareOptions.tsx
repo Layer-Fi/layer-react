@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { MultiSelect, Select } from '../Input'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import type { StylesConfig } from 'react-select'

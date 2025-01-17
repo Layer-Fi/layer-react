@@ -1,4 +1,4 @@
-import React, { ErrorInfo, Component, type PropsWithChildren } from 'react'
+import { ErrorInfo, Component, type PropsWithChildren } from 'react'
 import { LayerError, reportError } from '../../models/ErrorHandler'
 import { ErrorBoundaryMessage } from './ErrorBoundaryMessage'
 

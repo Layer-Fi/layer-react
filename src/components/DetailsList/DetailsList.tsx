@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { Header } from '../Container'
 import { Heading, HeadingSize } from '../Typography'
 import classNames from 'classnames'

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { TASKS_CHARTS_COLORS } from '../../config/charts'
 import { TasksContext } from '../../contexts/TasksContext'
 import { isComplete } from '../../types/tasks'

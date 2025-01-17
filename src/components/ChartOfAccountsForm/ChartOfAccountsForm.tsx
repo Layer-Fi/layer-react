@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { centsToDollars } from '../../models/Money'

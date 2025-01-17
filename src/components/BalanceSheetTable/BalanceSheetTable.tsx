@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { Fragment, ReactNode, useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { BalanceSheet, LineItem } from '../../types'
 import { TableCellAlign } from '../../types/table'
@@ -42,7 +42,7 @@ export const BalanceSheetTable = ({
     depth: number = 0,
     rowKey: string,
     rowIndex: number,
-  ): React.ReactNode => {
+  ): ReactNode => {
     const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
 
     const expanded = expandable ? isOpen(rowKey) : true
@@ -54,7 +54,7 @@ export const BalanceSheetTable = ({
     }
 
     return (
-      <React.Fragment key={rowKey + '-' + rowIndex}>
+      <Fragment key={rowKey + '-' + rowIndex}>
         <TableRow
           rowKey={rowKey + '-' + rowIndex}
           expandable={expandable}
@@ -74,16 +74,16 @@ export const BalanceSheetTable = ({
             {(!expandable || (expandable && !expanded)) && lineItem.value}
           </TableCell>
         </TableRow>
-        {showChildren &&
-          lineItem.line_items &&
-          lineItem.line_items.map((subItem, subIdx) =>
-            renderLineItem(
-              subItem,
-              depth + 1,
-              rowKey + ':' + subItem.name,
-              subIdx,
-            ),
-          )}
+        {showChildren
+        && lineItem.line_items
+        && lineItem.line_items.map((subItem, subIdx) =>
+          renderLineItem(
+            subItem,
+            depth + 1,
+            rowKey + ':' + subItem.name,
+            subIdx,
+          ),
+        )}
         {showChildren && expandable && (
           <TableRow
             rowKey={rowKey + '-' + rowIndex + '--summation'}
@@ -96,7 +96,7 @@ export const BalanceSheetTable = ({
             </TableCell>
           </TableRow>
         )}
-      </React.Fragment>
+      </Fragment>
     )
   }
 
@@ -114,15 +114,15 @@ export const BalanceSheetTable = ({
       </TableHead>
       <TableBody>
         {config.map((row, idx) => (
-          <React.Fragment key={row.lineItem}>
-            {data[row.lineItem as keyof BalanceSheet] &&
-              renderLineItem(
-                data[row.lineItem as keyof BalanceSheet] as LineItem,
-                0,
-                row.lineItem,
-                idx,
-              )}
-          </React.Fragment>
+          <Fragment key={row.lineItem}>
+            {data[row.lineItem as keyof BalanceSheet]
+            && renderLineItem(
+              data[row.lineItem as keyof BalanceSheet] as LineItem,
+              0,
+              row.lineItem,
+              idx,
+            )}
+          </Fragment>
         ))}
       </TableBody>
     </Table>

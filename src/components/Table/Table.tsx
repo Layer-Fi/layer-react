@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { TableProps } from '../../types/table'
 import classNames from 'classnames'
 

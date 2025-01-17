@@ -1,4 +1,3 @@
-import React from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types'
@@ -37,7 +36,8 @@ export const MatchForm = ({
           className={`${classNamePrefix}__match-table__status ${
             bankTransaction.match ? '' : 'no-match'
           }`}
-        ></div>
+        >
+        </div>
       </div>
 
       {bankTransaction.suggested_matches?.map((match, idx) => {
@@ -68,7 +68,8 @@ export const MatchForm = ({
                 {formatTime(parseISO(match.details.date), DATE_FORMAT)}
               </span>
               <span className='amount-next-to-date'>
-                ${formatMoney(match.details.amount)}
+                $
+                {formatMoney(match.details.amount)}
               </span>
             </div>
             <div className={`${classNamePrefix}__match-table__desc`}>
@@ -91,7 +92,8 @@ export const MatchForm = ({
               )}
             </div>
             <div className={`${classNamePrefix}__match-table__amount`}>
-              ${formatMoney(match.details.amount)}
+              $
+              {formatMoney(match.details.amount)}
             </div>
 
             <div

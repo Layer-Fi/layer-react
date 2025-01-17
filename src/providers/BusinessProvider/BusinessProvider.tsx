@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useReducer, useEffect, Reducer } from 'react'
+import { PropsWithChildren, useReducer, useEffect, Reducer } from 'react'
 import { Layer } from '../../api/layer'
 import { GlobalWidgets } from '../../components/GlobalWidgets'
 import { ToastProps } from '../../components/Toast/Toast'

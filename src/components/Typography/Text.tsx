@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef, useState, useEffect } from 'react'
+import { ReactNode, useRef, useState, useEffect } from 'react'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import classNames from 'classnames'
 

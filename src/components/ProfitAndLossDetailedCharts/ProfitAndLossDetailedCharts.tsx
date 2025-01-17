@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import XIcon from '../../icons/X'
 import { humanizeTitle } from '../../utils/profitAndLossUtils'

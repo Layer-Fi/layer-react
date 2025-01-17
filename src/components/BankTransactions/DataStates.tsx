@@ -1,4 +1,4 @@
-import React from 'react'
+
 import InboxIcon from '../../icons/Inbox'
 import { BankTransaction } from '../../types'
 import { DataState, DataStateStatus } from '../DataState'

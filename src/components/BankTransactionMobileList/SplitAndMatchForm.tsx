@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { BankTransaction } from '../../types'
 import { hasMatch } from '../../utils/bankTransactions'
 import { TextButton } from '../Button'

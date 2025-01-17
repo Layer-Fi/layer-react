@@ -1,4 +1,4 @@
-import React, { RefObject, useContext } from 'react'
+import { RefObject, useContext } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import { JournalConfig } from '../Journal/Journal'
 import { JournalEntryDetails } from '../JournalEntryDetails'

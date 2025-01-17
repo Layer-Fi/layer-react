@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import { Modal } from '../../ui/Modal/Modal'
 import { ModalContextBar, ModalHeading, ModalActions, ModalContent } from '../../ui/Modal/ModalSlots'
 import { Button } from '../../ui/Button/Button'

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { ChartOfAccounts } from '../../components/ChartOfAccounts'
 import { ChartOfAccountsStringOverrides } from '../../components/ChartOfAccounts/ChartOfAccounts'
 import { Journal } from '../../components/Journal'

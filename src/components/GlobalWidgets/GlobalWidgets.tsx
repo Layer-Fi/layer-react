@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { DrawerContext } from '../../contexts/DrawerContext'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import { Drawer } from '../Drawer'
