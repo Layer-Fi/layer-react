@@ -31,7 +31,7 @@ export const BillsDetails = ({ bill }: { bill: Bill }) => {
       onSubmit={(e) => {
         e.preventDefault()
         e.stopPropagation()
-        form.handleSubmit()
+        void form.handleSubmit()
       }}
     >
       <Header className='Layer__bills-account__header'>
@@ -144,7 +144,7 @@ export const BillsDetails = ({ bill }: { bill: Bill }) => {
               </InputGroup>
               <InputGroup inline={true} label='Bill date'>
                 <DatePicker
-                  mode='dayPicker'
+                  displayMode='dayPicker'
                   selected={new Date('2024-08-01')}
                   onChange={() => {}}
                   dateFormat='MM/dd/yyyy'
@@ -165,7 +165,7 @@ export const BillsDetails = ({ bill }: { bill: Bill }) => {
                   return (
                     <InputGroup inline={true} label='Due date'>
                       <DatePicker
-                        mode='dayPicker'
+                        displayMode='dayPicker'
                         selected={a}
                         onChange={(d) => {
                           const x = d as Date
