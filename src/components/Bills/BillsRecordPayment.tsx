@@ -62,11 +62,11 @@ export const BillsRecordPayment = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    recordPayment()
+    void recordPayment()
   }
 
   return (
-    <div className='Layer__bills__record-payment' onSubmit={handleSubmit}>
+    <div className='Layer__bills__record-payment'>
       <Header className='Layer__bills__sidebar__header'>
         <HeaderRow>
           <HeaderCol>
@@ -80,7 +80,7 @@ export const BillsRecordPayment = ({
         </HeaderRow>
       </Header>
 
-      <form className='Layer__form'>
+      <form className='Layer__form' onSubmit={handleSubmit}>
         <div className='Layer__bills__record-payment__base-details'>
           <InputGroup
             label='Vendor'
@@ -98,7 +98,7 @@ export const BillsRecordPayment = ({
             <DatePicker
               selected={paymentDate}
               onChange={date => setPaymentDate(date as Date)}
-              mode='dayPicker'
+              displayMode='dayPicker'
             />
           </InputGroup>
         </div>

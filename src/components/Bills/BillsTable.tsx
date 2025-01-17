@@ -3,7 +3,6 @@ import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/Bi
 import { TableProvider } from '../../contexts/TableContext'
 import { Bill } from '../../types/bills'
 import ChevronRight from '../../icons/ChevronRight'
-import { View } from '../../types/general'
 import { TableCellAlign } from '../../types/table'
 import { convertNumberToCurrency } from '../../utils/format'
 import { ButtonVariant, IconButton, SubmitButton } from '../Button'
