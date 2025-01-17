@@ -14,9 +14,9 @@ export const BillsPaymentRecorded = ({
     header?: string
   }
 }) => {
-  const { setShowRecordPaymentForm } = useBillsRecordPaymentContext()
+  const { closeRecordPayment } = useBillsRecordPaymentContext()
 
-  // Mock data - replace with actual data from your context or props
+  /** @TODO eplace with actual data - from API response OR state? */
   const paymentDetails = {
     vendor: 'PG&E',
     paymentDate: 'Nov 5, 2023',
@@ -53,7 +53,7 @@ export const BillsPaymentRecorded = ({
             </Heading>
           </HeaderCol>
           <HeaderCol className='actions'>
-            <CloseButton type='button' onClick={() => setShowRecordPaymentForm(false)} />
+            <CloseButton type='button' onClick={closeRecordPayment} />
           </HeaderCol>
         </HeaderRow>
       </Header>

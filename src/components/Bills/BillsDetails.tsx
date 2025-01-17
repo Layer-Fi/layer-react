@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { BillsContext } from '../../contexts/BillsContext'
+import React from 'react'
+import { useBillsContext } from '../../contexts/BillsContext'
 import { BackButton, Button, ButtonVariant } from '../Button'
 import { DatePicker } from '../DatePicker/DatePicker'
 import { Header, HeaderRow, HeaderCol } from '../Header'
@@ -8,21 +8,32 @@ import { Checkbox, CheckboxVariant } from '../Input/Checkbox'
 import { Select } from '../Input/Select'
 import { Textarea } from '../Textarea'
 import { TextWeight, TextSize, Text } from '../Typography'
+import { useBillForm } from './useBillForm'
 import classNames from 'classnames'
+import { Bill } from '../../types'
+import { convertNumberToCurrency } from '../../utils/format'
+import { formatISO, parseISO } from 'date-fns'
 
-export const BillsDetails = ({
-  billDetailsId,
-}: {
-  billDetailsId: string | undefined
-}) => {
-  const { closeBillDetails } = useContext(BillsContext)
+export const BillsDetails = ({ bill }: { bill: Bill }) => {
+  const { billInDetails, closeBillDetails } = useBillsContext()
+  const { form } = useBillForm(bill)
+
   const baseClassName = classNames(
     'Layer__bills-account__index',
-    billDetailsId && 'open',
+    billInDetails && 'open',
   )
 
+  console.log('form', form)
+
   return (
-    <div className={baseClassName}>
+    <form
+      className={baseClassName}
+      onSubmit={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        form.handleSubmit()
+      }}
+    >
       <Header className='Layer__bills-account__header'>
         <HeaderRow>
           <HeaderCol>
@@ -60,7 +71,7 @@ export const BillsDetails = ({
                 size={TextSize.lg}
                 className='Layer__bill-details__summary__value'
               >
-                $86.44
+                {convertNumberToCurrency(bill.total_amount)}
               </Text>
             </div>
             <div>
@@ -95,7 +106,7 @@ export const BillsDetails = ({
             </div>
           </div>
           <div className='Layer__bill-details__action'>
-            <Button onClick={() => console.log('Record payment')}>
+            <Button type='submit'>
               Record payment
             </Button>
           </div>
@@ -113,10 +124,8 @@ export const BillsDetails = ({
               </InputGroup>
               <InputGroup inline={true} label='Adress'>
                 <Textarea
-                  value={`Jenny Robertson
-Robertson & Associates
-P.O. Box 147
-Bayshore, CA 94326`}
+                  value={bill.vendor?.address_string}
+                  disabled={true}
                 />
               </InputGroup>
             </div>
@@ -146,14 +155,30 @@ Bayshore, CA 94326`}
               <InputGroup inline={true} label='Bill no.'>
                 <Input value='2' />
               </InputGroup>
-              <InputGroup inline={true} label='Due date'>
-                <DatePicker
-                  mode='dayPicker'
-                  selected={new Date('2024-08-01')}
-                  onChange={() => {}}
-                  dateFormat='MM/dd/yyyy'
-                />
-              </InputGroup>
+              <form.Field
+                name='due_date'
+              >
+                {(field) => {
+                  // @TODO - can this conversion be done better?
+                  const a = field.state.value ? parseISO(field.state.value) : new Date()
+                  a.setHours(0, 0, 0, 0)
+                  return (
+                    <InputGroup inline={true} label='Due date'>
+                      <DatePicker
+                        mode='dayPicker'
+                        selected={a}
+                        onChange={(d) => {
+                          const x = d as Date
+                          x.setHours(0, 0, 0, 0)
+                          field.handleChange(formatISO(x))
+                        }}
+                        dateFormat='MM/dd/yyyy'
+                      />
+                    </InputGroup>
+                  )
+                }}
+              </form.Field>
+
             </div>
           </div>
         </div>
@@ -165,50 +190,89 @@ Bayshore, CA 94326`}
             </Text>
           </div>
 
-          <div className='Layer__bill-details__category-row'>
-            <Select
-              value='Legal & Professional Fees:Acco...'
-              options={[
-                {
-                  label: 'Legal & Professional Fees',
-                  options: ['Legal & Professional Fees:Acco...'],
-                },
-              ]}
-              onChange={() => {}}
-            />
-            <Input value='$ 26.44' />
-            <Input placeholder='Description' />
-            <Checkbox label='Tax' variant={CheckboxVariant.DARK} />
-            <Checkbox checked label='Billable' variant={CheckboxVariant.DARK} />
-          </div>
+          <form.Field name='line_items' mode='array'>
+            {(field) => {
+              return (
+                <div>
+                  {field.state.value?.map((_, i) => {
+                    return (
+                      <div key={i} className='Layer__bill-details__category-row'>
+                        <form.Field name={`line_items[${i}].product`}>
+                          {(subField) => {
+                            return (
+                              <Select
+                                value='Legal & Professional Fees:Acco...'
+                                options={[
+                                  {
+                                    label: 'Legal & Professional Fees',
+                                    options: ['Legal & Professional Fees:Acco...'],
+                                  },
+                                ]}
+                                onChange={e => subField.handleChange(e)}
+                              />
+                            )
+                          }}
+                        </form.Field>
+                        <form.Field key={i} name={`line_items[${i}].total_amount`}>
+                          {(subField) => {
+                            return (
+                              <Input
+                                value={subField.state.value}
+                                onChange={e =>
+                                  subField.handleChange(
+                                    Number((e.target as HTMLInputElement).value))}
+                                placeholder='Description'
+                              />
+                            )
+                          }}
+                        </form.Field>
 
-          <div className='Layer__bill-details__category-row'>
-            <Select
-              value='Legal & Professional Fees:Acco...'
-              options={[
-                {
-                  label: 'Legal & Professional Fees',
-                  options: ['Legal & Professional Fees:Acco...'],
-                },
-              ]}
-              onChange={() => {}}
-            />
-            <Input value='$ 26.44' />
-            <Input placeholder='Description' />
-            <Checkbox checked label='Tax' variant={CheckboxVariant.DARK} />
-            <Checkbox label='Billable' variant={CheckboxVariant.DARK} />
-          </div>
+                        <form.Field key={i} name={`line_items[${i}].description`}>
+                          {(subField) => {
+                            return (
+                              <Input
+                                value={subField.state.value}
+                                onChange={e =>
+                                  subField.handleChange((e.target as HTMLInputElement).value)}
+                                placeholder='Description'
+                              />
+                            )
+                          }}
+                        </form.Field>
 
-          <div className='Layer__bill-details__category__add-next'>
-            <Button
-              variant={ButtonVariant.secondary}
-              onClick={() => console.log('Add next')}
-            >
-              Add next
-            </Button>
-          </div>
+                        <form.Field key={i} name={`line_items[${i}].description`}>
+                          {(subField) => {
+                            return (
+                              <Checkbox checked label='Tax' variant={CheckboxVariant.DARK} />
+                            )
+                          }}
+                        </form.Field>
+
+                        <form.Field key={i} name={`line_items[${i}].description`}>
+                          {(subField) => {
+                            return (
+                              <Checkbox label='Billable' variant={CheckboxVariant.DARK} />
+                            )
+                          }}
+                        </form.Field>
+                      </div>
+                    )
+                  })}
+                  <div className='Layer__bill-details__category__add-next'>
+                    <Button
+                      variant={ButtonVariant.secondary}
+                      onClick={() => field.pushValue({})}
+                    >
+                      Add next
+                    </Button>
+                  </div>
+                </div>
+              )
+            }}
+
+          </form.Field>
         </div>
       </div>
-    </div>
+    </form>
   )
 }
