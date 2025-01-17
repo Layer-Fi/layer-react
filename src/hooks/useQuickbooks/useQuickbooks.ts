@@ -12,8 +12,6 @@ type UseQuickbooks = () => {
   quickbooksIsLinked: boolean | null
 }
 
-const DEBUG = true
-
 export const useQuickbooks: UseQuickbooks = () => {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
@@ -42,7 +40,7 @@ export const useQuickbooks: UseQuickbooks = () => {
   // Determine whether there exists an active Quickbooks connection or not
   useEffect(() => {
     if (auth?.access_token) {
-      fetchQuickbooksConnectionStatus()
+      void fetchQuickbooksConnectionStatus()
     }
   }, [auth?.access_token])
 
@@ -56,20 +54,15 @@ export const useQuickbooks: UseQuickbooks = () => {
   }
 
   const syncFromQuickbooks = () => {
-    DEBUG && console.debug('Triggering sync from Quickbooks...')
     setIsSyncingFromQuickbooks(true)
-    try {
-      Layer.syncFromQuickbooks(apiUrl, auth?.access_token, {
-        params: { businessId },
-      })
-    }
-    catch {
-      setIsSyncingFromQuickbooks(false)
-    }
+
+    void Layer.syncFromQuickbooks(apiUrl, auth?.access_token, {
+      params: { businessId },
+    })
+      .finally(() => setIsSyncingFromQuickbooks(false))
   }
 
   const fetchIsSyncingFromQuickbooks = async () => {
-    DEBUG && console.debug('Fetching status of sync from Quickbooks...')
     const isSyncing = (
       await Layer.statusOfSyncFromQuickbooks(apiUrl, auth?.access_token, {
         params: { businessId },
@@ -86,11 +79,11 @@ export const useQuickbooks: UseQuickbooks = () => {
     return res.data.redirect_url
   }
 
-  const unlinkQuickbooks = async () => {
-    await Layer.unlinkQuickbooksConnection(apiUrl, auth?.access_token, {
+  const unlinkQuickbooks = () => {
+    void Layer.unlinkQuickbooksConnection(apiUrl, auth?.access_token, {
       params: { businessId },
     })
-    fetchQuickbooksConnectionStatus()
+      .then(() => fetchQuickbooksConnectionStatus())
   }
 
   return {

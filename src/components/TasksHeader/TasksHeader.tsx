@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { TasksContext } from '../../contexts/TasksContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Check from '../../icons/Check'
@@ -54,7 +54,7 @@ export const TasksHeader = ({
     refetch,
     error,
     dateRange,
-    setDateRange
+    setDateRange,
   } = useContext(TasksContext)
   const { business } = useLayerContext()
 
@@ -70,41 +70,49 @@ export const TasksHeader = ({
       <div className='Layer__tasks-header__left-col'>
         <div className='Layer__tasks-header__left-col__title'>
           <Text size={TextSize.lg}>{tasksHeader}</Text>
-          {loadedStatus !== 'complete' && !open ? (
-            <Badge variant={ICONS.loading.badge} icon={ICONS.loading.icon}>
-              {ICONS.loading.text}
-            </Badge>
-          ) : loadedStatus === 'complete' && !open && (!tasks || error) ? (
-            <Badge
-              onClick={() => refetch()}
-              variant={ICONS.refresh.badge}
-              icon={ICONS.refresh.icon}
-            >
-              {ICONS.refresh.text}
-            </Badge>
-          ) : loadedStatus === 'complete' && !open ? (
-            <Badge variant={badgeVariant.badge} icon={badgeVariant.icon}>
-              {badgeVariant.text}
-            </Badge>
-          ) : open ? null : (
-            <Badge variant={badgeVariant.badge} icon={badgeVariant.icon}>
-              {badgeVariant.text}
-            </Badge>
-          )}
+          {loadedStatus !== 'complete' && !open
+            ? (
+              <Badge variant={ICONS.loading.badge} icon={ICONS.loading.icon}>
+                {ICONS.loading.text}
+              </Badge>
+            )
+            : loadedStatus === 'complete' && !open && (!tasks || error)
+              ? (
+                <Badge
+                  onClick={() => refetch()}
+                  variant={ICONS.refresh.badge}
+                  icon={ICONS.refresh.icon}
+                >
+                  {ICONS.refresh.text}
+                </Badge>
+              )
+              : loadedStatus === 'complete' && !open
+                ? (
+                  <Badge variant={badgeVariant.badge} icon={badgeVariant.icon}>
+                    {badgeVariant.text}
+                  </Badge>
+                )
+                : open
+                  ? null
+                  : (
+                    <Badge variant={badgeVariant.badge} icon={badgeVariant.icon}>
+                      {badgeVariant.text}
+                    </Badge>
+                  )}
         </div>
         <div className='Layer__tasks-header__left-col__controls'>
           <DatePicker
             selected={dateRange.startDate}
-            onChange={dates => {
+            onChange={(dates) => {
               if (!Array.isArray(dates)) {
                 setDateRange({
-                  startDate: startOfYear(dates as Date),
-                  endDate: endOfYear(dates as Date)
+                  startDate: startOfYear(dates),
+                  endDate: endOfYear(dates),
                 })
               }
             }}
             dateFormat='YYYY'
-            mode='yearPicker'
+            displayMode='yearPicker'
             minDate={minDate}
             maxDate={endOfYear(new Date())}
             currentDateOption={false}

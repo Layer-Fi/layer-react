@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, createContext } from 'react'
+import { PropsWithChildren, createContext } from 'react'
 import { PNLComparisonContext } from '../../contexts/ProfitAndLossComparisonContext'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison'
@@ -63,11 +63,13 @@ const ProfitAndLoss = ({
   return (
     <PNLContext.Provider value={contextData}>
       <PNLComparisonContext.Provider value={comparisonContextData}>
-        {asContainer ? (
-          <Container name='profit-and-loss'>{children}</Container>
-        ) : (
-          children
-        )}
+        {asContainer
+          ? (
+            <Container name='profit-and-loss'>{children}</Container>
+          )
+          : (
+            children
+          )}
       </PNLComparisonContext.Provider>
     </PNLContext.Provider>
   )

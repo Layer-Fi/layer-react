@@ -54,7 +54,7 @@ export const DatePickerOptions = ({
   setSelectedDate,
 }: {
   customDateRanges?: CustomDateRange[]
-  setSelectedDate: (dates: [Date | null, Date | null]) => void
+  setSelectedDate: (dates: [Date, Date | null]) => void
 }) => {
   const optionsComponents: React.ReactNode[] = []
 
