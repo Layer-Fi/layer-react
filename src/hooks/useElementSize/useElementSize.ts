@@ -22,7 +22,7 @@ export const useElementSize = <T extends HTMLElement>(
       return
     }
 
-    const observer = new ResizeObserver(entries => {
+    const observer = new ResizeObserver((entries) => {
       if (resizeTimeout.current) {
         clearTimeout(resizeTimeout.current)
       }

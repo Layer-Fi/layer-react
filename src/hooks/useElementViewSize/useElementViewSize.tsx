@@ -14,7 +14,7 @@ export const useElementViewSize = <T extends HTMLElement>() => {
       return
     }
 
-    const observer = new ResizeObserver(_entries => {
+    const observer = new ResizeObserver((_entries) => {
       if (resizeTimeout.current) {
         clearTimeout(resizeTimeout.current)
       }
@@ -24,13 +24,15 @@ export const useElementViewSize = <T extends HTMLElement>() => {
         if (width) {
           if (width >= BREAKPOINTS.TABLET && view !== 'desktop') {
             setView('desktop')
-          } else if (
+          }
+          else if (
             width <= BREAKPOINTS.TABLET
             && width > BREAKPOINTS.MOBILE
             && view !== 'tablet'
           ) {
             setView('tablet')
-          } else if (width < BREAKPOINTS.MOBILE && view !== 'mobile') {
+          }
+          else if (width < BREAKPOINTS.MOBILE && view !== 'mobile') {
             setView('mobile')
           }
         }

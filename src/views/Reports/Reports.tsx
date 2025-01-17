@@ -39,7 +39,7 @@ export interface ReportsProps {
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
-type ReportOption = { value: ReportType; label: string }
+type ReportOption = { value: ReportType, label: string }
 export interface ReportsPanelProps {
   containerRef: RefObject<HTMLDivElement>
   openReport: ReportType
