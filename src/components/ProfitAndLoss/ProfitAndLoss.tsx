@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, createContext } from 'react'
+import { PropsWithChildren, createContext } from 'react'
 import { PNLComparisonContext } from '../../contexts/ProfitAndLossComparisonContext'
 import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
 import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison'
@@ -29,6 +29,7 @@ const PNLContext = createContext<PNLContextType>({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   },
+  changeDateRange: () => {},
   refetch: () => {},
   sidebarScope: undefined,
   setSidebarScope: () => {},

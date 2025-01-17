@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
-  DateRange,
   ReportingBasis,
   SortDirection,
+  type DateRange,
 } from '../../types'
 import {
   collectExpensesItems,
@@ -11,7 +11,10 @@ import {
 } from '../../utils/profitAndLossUtils'
 import { useProfitAndLossLTM } from './useProfitAndLossLTM'
 import { useProfitAndLossQuery } from './useProfitAndLossQuery'
-import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import {
+  useGlobalDateRange,
+  useGlobalDateRangeActions,
+} from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -43,6 +46,13 @@ export const useProfitAndLoss = ({
   reportingBasis,
 }: UseProfitAndLossOptions) => {
   const { start, end } = useGlobalDateRange()
+  const { setRange } = useGlobalDateRangeActions()
+
+  const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
+  const changeDateRange = useCallback(
+    ({ startDate: start, endDate: end }: DateRange) => setRange({ start, end }),
+    [setRange],
+  )
 
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
     expenses: undefined,
@@ -96,7 +106,7 @@ export const useProfitAndLoss = ({
     const filtered = items.map((x) => {
       if (
         filters['revenue']?.types
-        && filters['revenue']!.types!.length > 0
+        && filters['revenue'].types.length > 0
         && !filters['revenue']?.types?.includes(x.type)
       ) {
         return {
@@ -159,7 +169,7 @@ export const useProfitAndLoss = ({
     const filtered = items.map((x) => {
       if (
         filters['expenses']?.types
-        && filters['expenses']!.types!.length > 0
+        && filters['expenses'].types.length > 0
         && !filters['expenses']?.types?.includes(x.type)
       ) {
         return {
@@ -223,7 +233,8 @@ export const useProfitAndLoss = ({
     isLoading,
     isValidating,
     error: error,
-    dateRange: { startDate: start, endDate: end },
+    dateRange,
+    changeDateRange,
     refetch,
     sidebarScope,
     setSidebarScope,
