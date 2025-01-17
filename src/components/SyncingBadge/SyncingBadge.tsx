@@ -1,4 +1,3 @@
-import React from 'react'
 import Loader from '../../icons/Loader'
 import { Badge, BadgeVariant } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'

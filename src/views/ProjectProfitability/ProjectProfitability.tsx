@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Select, { Options } from 'react-select'
 import { BankTransactions } from '../../components/BankTransactions'
 import { Container } from '../../components/Container'

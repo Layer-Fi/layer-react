@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { centsToDollars } from '../../models/Money'

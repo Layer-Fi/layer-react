@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { Toggle } from '../../Toggle'
 import { ToggleSize } from '../../Toggle/Toggle'
 import type { DatePickerMode, DateRangePickerMode } from '../../../providers/GlobalDateStore/GlobalDateStoreProvider'

@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { Category } from '../../types'
 

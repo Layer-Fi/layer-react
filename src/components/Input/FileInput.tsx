@@ -1,4 +1,4 @@
-import React, { useRef, ChangeEvent } from 'react'
+import { useRef, ChangeEvent } from 'react'
 import UploadCloud from '../../icons/UploadCloud'
 import { Button, TextButton } from '../Button'
 import { ButtonVariant } from '../Button/Button'

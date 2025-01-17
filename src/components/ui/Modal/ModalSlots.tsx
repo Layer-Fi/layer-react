@@ -1,4 +1,4 @@
-import React, { forwardRef, type ComponentProps, type PropsWithChildren } from 'react'
+import { forwardRef, type ComponentProps, type PropsWithChildren } from 'react'
 import { X } from 'lucide-react'
 import { Button } from '../Button/Button'
 import { Heading } from '../Typography/Heading'

@@ -1,9 +1,8 @@
-import React from 'react'
 import type { LinkedAccount } from '../../../types/linked_accounts'
 import { Heading } from '../../ui/Typography/Heading'
 import { P } from '../../ui/Typography/Text'
 import { VStack } from '../../ui/Stack/Stack'
-import { Checkbox } from  '../../ui/Checkbox/Checkbox'
+import { Checkbox } from '../../ui/Checkbox/Checkbox'
 
 type LinkedAccountConfirmationProps = {
   account: LinkedAccount
@@ -23,7 +22,9 @@ export function LinkedAccountToConfirm({
       <VStack>
         <Heading level={3} size='sm'>{account.external_account_name}</Heading>
         <P slot='mask'>
-          ••• {account.mask}
+          •••
+          {' '}
+          {account.mask}
         </P>
         <P slot='institution'>
           {account.institution.name}

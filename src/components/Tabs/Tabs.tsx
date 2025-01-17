@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactNode, useEffect, useState } from 'react'
+import { ChangeEvent, ReactNode, useEffect, useState } from 'react'
 import { useElementSize } from '../../hooks/useElementSize'
 import { Tab } from './Tab'
 import classNames from 'classnames'

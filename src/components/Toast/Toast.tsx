@@ -1,4 +1,3 @@
-import React from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import classNames from 'classnames'
 

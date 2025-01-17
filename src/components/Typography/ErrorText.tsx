@@ -1,4 +1,3 @@
-import React from 'react'
 import { TextProps, Text } from './Text'
 import classNames from 'classnames'
 

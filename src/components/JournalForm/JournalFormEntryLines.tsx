@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { JournalContext } from '../../contexts/JournalContext'
 import Trash from '../../icons/Trash'

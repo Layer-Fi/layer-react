@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { Header } from '../Container'

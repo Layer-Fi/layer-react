@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react'
+import { PropsWithChildren } from 'react'
 import classNames from 'classnames'
 
 type PillKind = 'default' | 'info' | 'success' | 'warning' | 'error'

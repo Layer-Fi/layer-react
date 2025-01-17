@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { ActionableList } from '../ActionableList'
 import { Text, TextWeight } from '../Typography'

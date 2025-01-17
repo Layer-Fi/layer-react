@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { forwardRef, type ComponentProps } from 'react'
 import { Heading as ReactAriaHeading } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'

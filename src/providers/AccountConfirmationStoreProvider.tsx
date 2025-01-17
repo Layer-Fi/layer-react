@@ -1,4 +1,4 @@
-import React, { useState, createContext, type PropsWithChildren, useContext } from 'react'
+import { useState, createContext, type PropsWithChildren, useContext } from 'react'
 import { createStore, useStore } from 'zustand'
 
 type AccountConfirmationVisibility = 'PRELOADED' | 'DEFAULT' | 'DISMISSED'

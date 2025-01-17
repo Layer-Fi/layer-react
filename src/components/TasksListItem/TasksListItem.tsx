@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { TasksContext } from '../../contexts/TasksContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Check from '../../icons/Check'

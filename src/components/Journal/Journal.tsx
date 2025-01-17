@@ -1,4 +1,3 @@
-import React from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { JournalContext } from '../../contexts/JournalContext'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'

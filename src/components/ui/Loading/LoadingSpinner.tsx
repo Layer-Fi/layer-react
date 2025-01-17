@@ -1,4 +1,3 @@
-import React from 'react'
 import { LoaderCircle, type LucideProps } from 'lucide-react'
 
 const CLASS_NAME = 'Layer__LoadingSpinner'

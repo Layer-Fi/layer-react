@@ -92,6 +92,7 @@ export default tsEslint.config([
           ignoreRestSiblings: true,
         },
       ],
+      'unused-imports/no-unused-imports': 'error',
 
       'react/prop-types': 'off',
     },

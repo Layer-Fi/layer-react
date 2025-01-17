@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
 import { runDelayedSync } from '../../utils/delay/runDelayed'
 
 type InvisibleDownloadHandle = {
@@ -9,7 +9,7 @@ export function useInvisibleDownload() {
   const invisibleDownloadRef = useRef<InvisibleDownloadHandle>(null)
 
   const triggerInvisibleDownload = useCallback((options: { url: string }) => {
-    invisibleDownloadRef.current?.trigger(options)
+    void invisibleDownloadRef.current?.trigger(options)
   }, [])
 
   return { invisibleDownloadRef, triggerInvisibleDownload }

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { SkeletonLoader } from '../SkeletonLoader'
 import { Text, TextSize, TextWeight } from '../Typography'
 

@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { DATE_FORMAT, TIME_FORMAT } from '../../config/general'
 import { Text, TextSize, TextWeight } from '../Typography'
 import { parseISO, format as formatTime } from 'date-fns'

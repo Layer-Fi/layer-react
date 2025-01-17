@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode } from 'react'
+import { createContext, useState, ReactNode } from 'react'
 import { TableContextProps } from '../../types/table'
 
 const defaultValue: TableContextProps = {

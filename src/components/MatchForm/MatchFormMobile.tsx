@@ -1,4 +1,3 @@
-import React from 'react'
 import { MONTH_DAY_FORMAT } from '../../config/general'
 import CheckIcon from '../../icons/Check'
 import { centsToDollars as formatMoney } from '../../models/Money'
@@ -46,7 +45,8 @@ export const MatchFormMobile = ({
                   className={`${classNamePrefix}__match-item__amount`}
                   as='span'
                 >
-                  ${formatMoney(match.details.amount)}
+                  $
+                  {formatMoney(match.details.amount)}
                 </Text>
               </div>
               <div className={`${classNamePrefix}__match-item__details`}>
@@ -61,12 +61,14 @@ export const MatchFormMobile = ({
             </div>
 
             <div className={`${classNamePrefix}__match-item__col-status`}>
-              {selectedMatchId && selectedMatchId === match.id ? (
-                <CheckIcon
-                  size={16}
-                  className={`${classNamePrefix}__match-item__selected-icon`}
-                />
-              ) : null}
+              {selectedMatchId && selectedMatchId === match.id
+                ? (
+                  <CheckIcon
+                    size={16}
+                    className={`${classNamePrefix}__match-item__selected-icon`}
+                  />
+                )
+                : null}
             </div>
           </div>
         )

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { LinkedAccount } from '../../types/linked_accounts'
 import { LinkedAccountOptions } from '../LinkedAccountOptions'

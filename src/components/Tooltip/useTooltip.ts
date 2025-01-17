@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useMemo, useState, createContext, useContext } from 'react'
 import { TooltipOptions } from './Tooltip'
 import {
   useFloating,
@@ -16,10 +16,10 @@ import {
 
 export type ContextType = ReturnType<typeof useTooltip> | null
 
-export const TooltipContext = React.createContext<ContextType>(null)
+export const TooltipContext = createContext<ContextType>(null)
 
 export const useTooltipContext = () => {
-  const context = React.useContext(TooltipContext)
+  const context = useContext(TooltipContext)
 
   if (context == null) {
     throw new Error('Tooltip components must be wrapped in <Tooltip />')
@@ -81,7 +81,7 @@ export const useTooltip = ({
     duration: 300,
   })
 
-  return React.useMemo(
+  return useMemo(
     () => ({
       open,
       setOpen,

@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react'
+import { RefObject } from 'react'
 import { ChartOfAccountsForm } from '../ChartOfAccountsForm'
 import { ChartOfAccountsFormStringOverrides } from '../ChartOfAccountsForm/ChartOfAccountsForm'
 

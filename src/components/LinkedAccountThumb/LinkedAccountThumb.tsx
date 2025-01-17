@@ -1,4 +1,3 @@
-import React from 'react'
 import InstitutionIcon from '../../icons/InstitutionIcon'
 import LoaderIcon from '../../icons/Loader'
 import { centsToDollars as formatMoney } from '../../models/Money'

@@ -1,4 +1,3 @@
-import React from 'react'
 import { useQuickbooks } from '../../hooks/useQuickbooks'
 
 const Quickbooks = () => {
@@ -13,7 +12,8 @@ const Quickbooks = () => {
   return (
     <div>
       <div>
-        Quickbooks OAuth connection status:{' '}
+        Quickbooks OAuth connection status:
+        {' '}
         {quickbooksIsLinked === undefined
           ? ''
           : quickbooksIsLinked
@@ -32,10 +32,12 @@ const Quickbooks = () => {
           Link Quickbooks
         </button>
       )}
-      {quickbooksIsLinked === true &&
-        (isSyncingFromQuickbooks ? (
+      {quickbooksIsLinked === true
+      && (isSyncingFromQuickbooks
+        ? (
           'Syncing data from Quickbooks...'
-        ) : (
+        )
+        : (
           <div>
             <button onClick={syncFromQuickbooks}>Sync Quickbooks</button>
             <button onClick={unlinkQuickbooks}>Unlink Quickbooks</button>

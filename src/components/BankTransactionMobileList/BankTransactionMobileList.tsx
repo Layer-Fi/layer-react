@@ -1,4 +1,3 @@
-import React from 'react'
 import { BankTransaction } from '../../types'
 import { BankTransactionsMode } from '../BankTransactions/BankTransactions'
 import { BankTransactionMobileListItem } from './BankTransactionMobileListItem'

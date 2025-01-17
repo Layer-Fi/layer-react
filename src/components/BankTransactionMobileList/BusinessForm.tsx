@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { DrawerContext } from '../../contexts/DrawerContext'
 import PaperclipIcon from '../../icons/Paperclip'
@@ -94,13 +94,15 @@ export const BusinessForm = ({
   const onCategorySelect = (category: Option) => {
     if (category.value.type === 'SELECT_CATEGORY') {
       openDrawer()
-    } else {
+    }
+    else {
       if (
         selectedCategory
         && category.value.payload?.id === selectedCategory.value.payload?.id
       ) {
         setSelectedCategory(undefined)
-      } else {
+      }
+      else {
         setSelectedCategory(category)
       }
     }
@@ -137,14 +139,16 @@ export const BusinessForm = ({
 
   return (
     <div className='Layer__bank-transaction-mobile-list-item__business-form'>
-      {showCategorization ? (
-        <ActionableList<Option['value']>
-          options={options}
-          onClick={onCategorySelect}
-          selectedId={selectedCategory?.id}
-          showDescriptions={showTooltips}
-        />
-      ) : null}
+      {showCategorization
+        ? (
+          <ActionableList<Option['value']>
+            options={options}
+            onClick={onCategorySelect}
+            selectedId={selectedCategory?.id}
+            showDescriptions={showTooltips}
+          />
+        )
+        : null}
       {showDescriptions && (
         <InputGroup
           className='Layer__bank-transaction-mobile-list-item__description'
@@ -160,9 +164,8 @@ export const BusinessForm = ({
             name='description'
             placeholder='Add description'
             value={memoText}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              setMemoText(e.target.value)
-            }
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+              setMemoText(e.target.value)}
           />
         </InputGroup>
       )}
@@ -186,40 +189,46 @@ export const BusinessForm = ({
       <div className='Layer__bank-transaction-mobile-list-item__actions'>
         {showReceiptUploads && (
           <FileInput
-            onUpload={(files) => receiptsRef.current?.uploadReceipt(files[0])}
+            onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}
           />
         )}
-        {options.length === 0 ? (
-          <Button
-            onClick={openDrawer}
-            fullWidth={true}
-            variant={ButtonVariant.secondary}
-          >
-            Select category
-          </Button>
-        ) : null}
-        {options.length > 0 ? (
-          <Button
-            onClick={save}
-            disabled={
-              !selectedCategory || isLoading || bankTransaction.processing
-            }
-            fullWidth={true}
-          >
-            {isLoading || bankTransaction.processing
-              ? 'Confirming...'
-              : 'Confirm'}
-          </Button>
-        ) : null}
+        {options.length === 0
+          ? (
+            <Button
+              onClick={openDrawer}
+              fullWidth={true}
+              variant={ButtonVariant.secondary}
+            >
+              Select category
+            </Button>
+          )
+          : null}
+        {options.length > 0
+          ? (
+            <Button
+              onClick={save}
+              disabled={
+                !selectedCategory || isLoading || bankTransaction.processing
+              }
+              fullWidth={true}
+            >
+              {isLoading || bankTransaction.processing
+                ? 'Confirming...'
+                : 'Confirm'}
+            </Button>
+          )
+          : null}
       </div>
-      {bankTransaction.error && showRetry ? (
-        <ErrorText>
-          Approval failed. Check connection and retry in few seconds.
-        </ErrorText>
-      ) : null}
+      {bankTransaction.error && showRetry
+        ? (
+          <ErrorText>
+            Approval failed. Check connection and retry in few seconds.
+          </ErrorText>
+        )
+        : null}
     </div>
   )
 }

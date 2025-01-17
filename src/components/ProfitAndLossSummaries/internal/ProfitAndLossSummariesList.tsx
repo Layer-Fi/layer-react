@@ -1,4 +1,4 @@
-import React, { useMemo, type PropsWithChildren } from 'react'
+import { useMemo, type PropsWithChildren } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 
 const LIST_ITEM_CLASS_NAME = 'Layer__ProfitAndLossSummariesListItem'

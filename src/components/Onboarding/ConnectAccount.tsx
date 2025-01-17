@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { useBankTransactions } from '../../hooks/useBankTransactions'
 import BellIcon from '../../icons/Bell'

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'

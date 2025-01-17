@@ -1,4 +1,4 @@
-import React from 'react'
+
 import DownloadCloud from '../../icons/DownloadCloud'
 import { Button, ButtonProps, ButtonVariant } from './Button'
 import { RetryButton } from './RetryButton'

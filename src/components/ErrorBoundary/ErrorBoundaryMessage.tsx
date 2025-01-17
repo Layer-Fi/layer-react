@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { DataState, DataStateStatus } from '../DataState'
 
 export const ErrorBoundaryMessage = () => {

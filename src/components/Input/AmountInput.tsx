@@ -1,4 +1,4 @@
-import React from 'react'
+
 import classNames from 'classnames'
 import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'

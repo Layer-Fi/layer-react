@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, type FunctionComponent } from 'react'
+import { useEffect, useMemo, useState, type FunctionComponent } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import {

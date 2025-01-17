@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import PlusIcon from '../../icons/PlusIcon'
 import { Text, TextSize } from '../Typography'

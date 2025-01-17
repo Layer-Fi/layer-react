@@ -1,4 +1,4 @@
-import React, { forwardRef, useMemo, type ComponentProps, type PropsWithChildren } from 'react'
+import { forwardRef, useMemo, type ComponentProps, type PropsWithChildren } from 'react'
 import {
   Dialog as ReactAriaDialog,
   type DialogProps,

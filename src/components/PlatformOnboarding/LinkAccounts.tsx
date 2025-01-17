@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import LinkIcon from '../../icons/Link'
 import PlaidIcon from '../../icons/PlaidIcon'

@@ -1,4 +1,4 @@
-import React from 'react'
+
 import CollapseIcon from '../../icons/Collapse'
 import ExpandIcon from '../../icons/Expand'
 import { Button, ButtonVariant } from './Button'

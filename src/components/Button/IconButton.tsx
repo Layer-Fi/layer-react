@@ -1,4 +1,4 @@
-import React, {
+import {
   ButtonHTMLAttributes,
   ReactNode,
 } from 'react'

@@ -1,4 +1,4 @@
-import React, { HTMLProps } from 'react'
+import { HTMLProps } from 'react'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import classNames from 'classnames'
 

@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, ReactNode, useRef } from 'react'
+import { ButtonHTMLAttributes, ReactNode, useRef } from 'react'
 import LoaderIcon from '../../icons/Loader'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import classNames from 'classnames'

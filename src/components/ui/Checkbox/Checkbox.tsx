@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react'
-import React, { ReactNode, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Checkbox as ReactAriaCheckbox, type CheckboxProps as AriaCheckboxProps } from 'react-aria-components'
 import { withRenderProp } from '../../utility/withRenderProp'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'

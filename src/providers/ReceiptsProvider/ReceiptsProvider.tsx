@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { ReceiptsContext } from '../../contexts/ReceiptsContext'
 import { useReceipts } from '../../hooks/useReceipts'
 import { BankTransaction } from '../../types'

@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes } from 'react'
+import { ButtonHTMLAttributes } from 'react'
 import CloseIcon from '../../icons/CloseIcon'
 import classNames from 'classnames'
 

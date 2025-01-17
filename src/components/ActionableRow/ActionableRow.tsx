@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import ChevronRightIcon from '../../icons/ChevronRight'
 import { IconButton } from '../Button'
 import { Text } from '../Typography'
@@ -69,13 +69,15 @@ export const ActionableRow = ({
       </div>
       <div className='Layer__actionable_row__action'>
         {button && button}
-        {!button && onClick ? (
-          <IconButton
-            onClick={onClick}
-            icon={<ChevronRightIcon size={11} />}
-            withBorder
-          />
-        ) : null}
+        {!button && onClick
+          ? (
+            <IconButton
+              onClick={onClick}
+              icon={<ChevronRightIcon size={11} />}
+              withBorder
+            />
+          )
+          : null}
       </div>
     </div>
   )

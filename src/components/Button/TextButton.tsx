@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes } from 'react'
+import { ButtonHTMLAttributes } from 'react'
 import classNames from 'classnames'
 
 export type TextButtonProps = ButtonHTMLAttributes<HTMLButtonElement>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { Fragment, useContext, useEffect, useState } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { TableProvider } from '../../contexts/TableContext'
@@ -76,7 +76,8 @@ export const ChartOfAccountsTableContent = ({
   useEffect(() => {
     if (expandAll === 'expanded') {
       setIsOpen(accountsRowKeys)
-    } else if (expandAll === 'collapsed') {
+    }
+    else if (expandAll === 'collapsed') {
       setIsOpen([])
     }
   }, [expandAll])
@@ -91,7 +92,7 @@ export const ChartOfAccountsTableContent = ({
       accounts: LedgerAccountBalance[],
       rowKey: string,
     ) => {
-      accounts.map(account => {
+      accounts.map((account) => {
         if (account.sub_accounts.length > 0) {
           setAccountsRowKeys(prev => [...prev, `${rowKey}-${account.id}`])
           searchRowsToExpand(account.sub_accounts, `${rowKey}-${account.id}`)
@@ -112,12 +113,12 @@ export const ChartOfAccountsTableContent = ({
     const expanded = expandable ? isOpen(rowKey) : true
 
     return (
-      <React.Fragment key={rowKey + '-' + index}>
+      <Fragment key={rowKey + '-' + index}>
         <TableRow
           rowKey={rowKey + '-' + index}
           expandable={expandable}
           isExpanded={expanded}
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation()
             setAccountId(account.id)
           }}
@@ -125,7 +126,7 @@ export const ChartOfAccountsTableContent = ({
         >
           <TableCell
             withExpandIcon={expandable}
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation()
               expandable && setIsOpen(rowKey)
             }}
@@ -142,7 +143,7 @@ export const ChartOfAccountsTableContent = ({
                 rightIcon={<Edit2 size={12} />}
                 iconOnly={true}
                 disabled={!templateAccountsEditable && !!account.stable_name}
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
                   editAccount(account.id)
@@ -158,18 +159,18 @@ export const ChartOfAccountsTableContent = ({
             </span>
           </TableCell>
         </TableRow>
-        {expandable &&
-          expanded &&
-          account.sub_accounts.map((subItem, subIdx) => {
-            const subRowKey = `${rowKey}-${subItem.id}`
-            return renderChartOfAccountsDesktopRow(
-              subItem,
-              subIdx,
-              subRowKey,
-              depth + 1,
-            )
-          })}
-      </React.Fragment>
+        {expandable
+        && expanded
+        && account.sub_accounts.map((subItem, subIdx) => {
+          const subRowKey = `${rowKey}-${subItem.id}`
+          return renderChartOfAccountsDesktopRow(
+            subItem,
+            subIdx,
+            subRowKey,
+            depth + 1,
+          )
+        })}
+      </Fragment>
     )
   }
 
@@ -193,15 +194,15 @@ export const ChartOfAccountsTableContent = ({
         </TableRow>
       </TableHead>
       <TableBody>
-        {!error &&
-          data.accounts.map((account, idx) =>
-            renderChartOfAccountsDesktopRow(
-              account,
-              idx,
-              `coa-row-${account.id}`,
-              0,
-            ),
-          )}
+        {!error
+        && data.accounts.map((account, idx) =>
+          renderChartOfAccountsDesktopRow(
+            account,
+            idx,
+            `coa-row-${account.id}`,
+            0,
+          ),
+        )}
       </TableBody>
     </Table>
   )

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction, CategorizationStatus } from '../../types'

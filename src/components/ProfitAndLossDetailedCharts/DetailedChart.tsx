@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { LineBaseItem } from '../../types/line_item'

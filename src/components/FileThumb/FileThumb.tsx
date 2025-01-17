@@ -1,4 +1,4 @@
-import React from 'react'
+
 import DownloadCloud from '../../icons/DownloadCloud'
 import EyeIcon from '../../icons/Eye'
 import LoaderIcon from '../../icons/Loader'

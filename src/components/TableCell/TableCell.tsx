@@ -1,4 +1,3 @@
-import React from 'react'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { centsToDollars } from '../../models/Money'
 import { TableCellProps } from '../../types/table'
@@ -57,7 +56,8 @@ export const TableCell = ({
             size={16}
           />
         )}
-        {isCurrency ? amountString : children}{' '}
+        {isCurrency ? amountString : children}
+        {' '}
       </span>
     </td>
   )

@@ -1,4 +1,3 @@
-import React from 'react'
 import LoaderIcon from '../../icons/Loader'
 
 export interface SmallLoaderProps {

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { TableProvider } from '../../contexts/TableContext'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { ProfitAndLossCompareTable } from './ProfitAndLossCompareTable'

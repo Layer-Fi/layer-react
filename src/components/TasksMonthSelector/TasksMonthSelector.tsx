@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { endOfMonth, format, getMonth, getYear, isAfter, isBefore, set, startOfMonth } from 'date-fns'
 import { MonthData, TasksMonthSelectorProps } from './types'
 import { TaskMonthTile } from './TaskMonthTile'

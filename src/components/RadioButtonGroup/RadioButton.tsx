@@ -1,10 +1,10 @@
-import React from 'react'
+import type { ChangeEvent } from 'react'
 
 type Props = {
   checked: boolean
   label: string
   name: string
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
   value: string
   disabled?: boolean
   size: 'small' | 'large'

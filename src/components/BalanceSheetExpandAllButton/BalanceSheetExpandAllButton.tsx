@@ -1,4 +1,3 @@
-import React from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { View } from '../../types/general'
 import { ExpandCollapseButton } from '../Button'

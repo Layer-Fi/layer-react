@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'

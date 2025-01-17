@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from 'react'
+import { type PropsWithChildren } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { AccountConfirmationStoreProvider } from '../AccountConfirmationStoreProvider'

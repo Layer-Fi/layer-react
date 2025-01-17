@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { ButtonProps } from '../Button/Button'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import classNames from 'classnames'
@@ -54,13 +54,15 @@ export const Badge = ({
     </>
   )
 
-  content = onClick ? (
-    <button role='button' {...baseProps}>
-      {content}
-    </button>
-  ) : (
-    <span {...baseProps}>{content}</span>
-  )
+  content = onClick
+    ? (
+      <button role='button' {...baseProps}>
+        {content}
+      </button>
+    )
+    : (
+      <span {...baseProps}>{content}</span>
+    )
 
   if (tooltip) {
     return (

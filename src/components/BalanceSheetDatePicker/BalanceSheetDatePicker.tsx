@@ -1,4 +1,3 @@
-import React from 'react'
 import { DatePicker } from '../DatePicker'
 import { useGlobalDate, useGlobalDateActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 

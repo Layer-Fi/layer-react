@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes } from 'react'
+import { ButtonHTMLAttributes } from 'react'
 import RefreshCcw from '../../icons/RefreshCcw'
 import { Button, ButtonVariant } from './Button'
 import classNames from 'classnames'

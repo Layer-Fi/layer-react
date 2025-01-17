@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Props as BaseProps } from 'recharts/types/component/Label'
 
 /*

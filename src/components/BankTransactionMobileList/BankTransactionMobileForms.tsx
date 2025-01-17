@@ -1,4 +1,3 @@
-import React from 'react'
 import { ReceiptsProvider } from '../../providers/ReceiptsProvider'
 import { BankTransaction } from '../../types'
 import { Purpose } from './BankTransactionMobileListItem'

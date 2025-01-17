@@ -1,4 +1,3 @@
-import React from 'react'
 import RefreshCcw from '../../icons/RefreshCcw'
 import { IconButton } from '../Button'
 import { SmallLoader } from '../Loader'
@@ -59,11 +58,13 @@ export const SyncingComponent = ({
       )}
     >
       <div className='Layer__syncing-component__actions'>
-        {inProgress ? (
-          <SmallLoader />
-        ) : (
-          <IconButton icon={<RefreshCcw />} onClick={handleRefresh} />
-        )}
+        {inProgress
+          ? (
+            <SmallLoader />
+          )
+          : (
+            <IconButton icon={<RefreshCcw />} onClick={handleRefresh} />
+          )}
       </div>
       {!hideContent && (
         <div className='Layer__syncing-component__content'>
