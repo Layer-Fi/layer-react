@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react'
+import { useCallback, useContext } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
@@ -30,10 +30,10 @@ export const ProfitAndLossDatePicker = ({
   const {
     allowedDateRangePickerModes,
     dateFormat,
-    rangeMode,
+    rangeDisplayMode,
     selected,
     setSelected,
-    setRangeMode,
+    setRangeDisplayMode,
   } = useGlobalDateRangePicker({
     allowedDatePickerModes,
     defaultDatePickerMode,
@@ -60,11 +60,11 @@ export const ProfitAndLossDatePicker = ({
 
         setSelected({ start, end: end ?? start })
       }}
-      mode={rangeMode}
+      displayMode={rangeDisplayMode}
       allowedModes={allowedDateRangePickerModes}
-      onChangeMode={(rangeMode) => {
-        if (rangeMode !== 'dayPicker') {
-          setRangeMode({ rangeMode })
+      onChangeMode={(rangeDisplayMode) => {
+        if (rangeDisplayMode !== 'dayPicker') {
+          setRangeDisplayMode({ rangeDisplayMode })
         }
       }}
       slots={{

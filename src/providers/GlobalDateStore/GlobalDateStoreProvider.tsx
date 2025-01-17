@@ -12,7 +12,7 @@ import {
   subMonths,
   subYears,
 } from 'date-fns'
-import React, { useState, createContext, type PropsWithChildren, useContext } from 'react'
+import { useState, createContext, type PropsWithChildren, useContext } from 'react'
 import { createStore, useStore } from 'zustand'
 import { safeAssertUnreachable } from '../../utils/switch/safeAssertUnreachable'
 import { useStoreWithDateSelected } from '../../utils/zustand/useStoreWithDateSelected'
@@ -105,19 +105,19 @@ type GlobalDateStoreShape = {
   start: Date
   end: Date
 
-  mode: DatePickerMode
-  rangeMode: DateRangePickerMode
+  displayMode: DatePickerMode
+  rangeDisplayMode: DateRangePickerMode
 
   actions: {
-    set(options: { date: Date }): void
+    set: (options: { date: Date }) => void
 
     setRange: (options: { start: Date, end: Date }) => void
-    setRangeMode(options: { rangeMode: DateRangePickerMode }): void
-    setRangeWithExplicitMode: (
+    setRangeDisplayMode: (options: { rangeDisplayMode: DateRangePickerMode }) => void
+    setRangeWithExplicitDisplayMode: (
       options: {
         start: Date
         end: Date
-        rangeMode: DateRangePickerMode
+        rangeDisplayMode: DateRangePickerMode
       }
     ) => void
     setMonth: (options: { start: Date }) => void
@@ -134,37 +134,37 @@ function buildStore() {
       set({
         start: startOfDay(start),
         end: endOfDay(end),
-        rangeMode: 'dayRangePicker',
+        rangeDisplayMode: 'dayRangePicker',
       })
     })
     const setMonth = ({ start }: { start: Date }) => {
       set({
         start: startOfMonth(start),
         end: endOfMonth(start),
-        rangeMode: 'monthPicker',
+        rangeDisplayMode: 'monthPicker',
       })
     }
     const setMonthRange = withCorrectedRange(({ start, end }) => {
       set({
         start: startOfMonth(start),
         end: endOfMonth(end),
-        rangeMode: 'monthRangePicker',
+        rangeDisplayMode: 'monthRangePicker',
       })
     })
     const setYear = ({ start }: { start: Date }) => {
       set({
         start: startOfMonth(start),
         end: endOfMonth(start),
-        rangeMode: 'yearPicker',
+        rangeDisplayMode: 'yearPicker',
       })
     }
 
-    const setRangeWithExplicitMode = ({
+    const setRangeWithExplicitDisplayMode = ({
       start,
       end,
-      rangeMode,
-    }: { start: Date, end: Date, rangeMode: DateRangePickerMode }) => {
-      switch (rangeMode) {
+      rangeDisplayMode,
+    }: { start: Date, end: Date, rangeDisplayMode: DateRangePickerMode }) => {
+      switch (rangeDisplayMode) {
         case 'dayRangePicker':
           setRange({ start, end })
           break
@@ -178,7 +178,7 @@ function buildStore() {
           setYear({ start })
           break
         default:
-          safeAssertUnreachable(rangeMode, 'Invalid range mode')
+          safeAssertUnreachable(rangeDisplayMode, 'Invalid range displayMode')
       }
     }
 
@@ -186,33 +186,37 @@ function buildStore() {
       start: startOfMonth(now),
       end: endOfMonth(now),
 
-      mode: 'dayPicker',
-      rangeMode: 'monthPicker',
+      displayMode: 'dayPicker',
+      rangeDisplayMode: 'monthPicker',
 
       actions: {
         set: ({ date }) => {
-          set(({ start: currentStart, end: currentEnd, rangeMode: currentRangeMode }) => {
+          set(({
+            start: currentStart,
+            end: currentEnd,
+            rangeDisplayMode: currentRangeDisplayMode,
+          }) => {
             const newEnd = endOfDay(date)
 
             return {
-              start: RANGE_MODE_LOOKUP[currentRangeMode].getShiftedStart({
+              start: RANGE_MODE_LOOKUP[currentRangeDisplayMode].getShiftedStart({
                 currentStart,
                 currentEnd,
                 newEnd,
               }),
               end: newEnd,
-              rangeMode: 'dayRangePicker',
+              rangeDisplayMode: 'dayRangePicker',
             }
           })
         },
 
         setRange,
-        setRangeMode: ({ rangeMode }) => {
+        setRangeDisplayMode: ({ rangeDisplayMode }) => {
           const { start, end } = get()
 
-          setRangeWithExplicitMode({ rangeMode, start, end })
+          setRangeWithExplicitDisplayMode({ rangeDisplayMode, start, end })
         },
-        setRangeWithExplicitMode,
+        setRangeWithExplicitDisplayMode,
         setMonth,
         setMonthRange,
         setYear,
@@ -228,9 +232,9 @@ export function useGlobalDate() {
 
   const date = useStoreWithDateSelected(store, ({ end }) => end)
 
-  const mode = useStore(store, ({ mode }) => mode)
+  const displayMode = useStore(store, ({ displayMode }) => displayMode)
 
-  return { date, mode }
+  return { date, displayMode }
 }
 
 export function useGlobalDateActions() {
@@ -247,12 +251,12 @@ export function useGlobalDateRange() {
   const start = useStoreWithDateSelected(store, ({ start }) => start)
   const end = useStoreWithDateSelected(store, ({ end }) => end)
 
-  const rangeMode = useStore(store, ({ rangeMode }) => rangeMode)
+  const rangeDisplayMode = useStore(store, ({ rangeDisplayMode }) => rangeDisplayMode)
 
   return {
     start,
     end,
-    rangeMode,
+    rangeDisplayMode,
   }
 }
 
@@ -260,16 +264,26 @@ export function useGlobalDateRangeActions() {
   const store = useContext(GlobalDateStoreContext)
 
   const setRange = useStore(store, ({ actions: { setRange } }) => setRange)
-  const setRangeMode = useStore(store, ({ actions: { setRangeMode } }) => setRangeMode)
-  const setRangeWithExplicitMode = useStore(
+  const setRangeDisplayMode = useStore(
     store,
-    ({ actions: { setRangeWithExplicitMode } }) => setRangeWithExplicitMode,
+    ({ actions: { setRangeDisplayMode } }) => setRangeDisplayMode,
+  )
+  const setRangeWithExplicitDisplayMode = useStore(
+    store,
+    ({ actions: { setRangeWithExplicitDisplayMode } }) => setRangeWithExplicitDisplayMode,
   )
   const setMonth = useStore(store, ({ actions: { setMonth } }) => setMonth)
   const setMonthRange = useStore(store, ({ actions: { setMonthRange } }) => setMonthRange)
   const setYear = useStore(store, ({ actions: { setYear } }) => setYear)
 
-  return { setRange, setRangeMode, setRangeWithExplicitMode, setMonth, setMonthRange, setYear }
+  return {
+    setRange,
+    setRangeDisplayMode,
+    setRangeWithExplicitDisplayMode,
+    setMonth,
+    setMonthRange,
+    setYear,
+  }
 }
 
 type GlobalDateStoreProviderProps = PropsWithChildren

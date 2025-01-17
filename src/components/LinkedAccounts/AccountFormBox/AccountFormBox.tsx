@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { LinkedAccount } from '../../../types/linked_accounts'
 import InstitutionIcon from '../../../icons/InstitutionIcon'
 import { Checkbox } from '../../ui/Checkbox/Checkbox'
@@ -88,7 +88,7 @@ export const AccountFormBox = ({
         <div className={`${CLASS_NAME}__details-col__inputs`}>
           <InputGroup label='Opening date'>
             <DatePicker
-              mode='dayPicker'
+              displayMode='dayPicker'
               onChange={(v) => {
                 if (!value.openingDate || !isEqual(value.openingDate, v as Date)) {
                   onChange({ ...value, openingDate: (v as Date) })

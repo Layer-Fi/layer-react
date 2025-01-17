@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
 import { DatePicker } from '../DatePicker'
@@ -37,7 +37,7 @@ export const JournalForm = ({
   return (
     <form
       className='Layer__form'
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault()
         submitForm()
       }}
@@ -62,7 +62,7 @@ export const JournalForm = ({
               <RetryButton
                 type='submit'
                 processing={sendingForm}
-                error={'Check connection and retry in few seconds.'}
+                error='Check connection and retry in few seconds.'
                 disabled={sendingForm}
               >
                 {stringOverrides?.retryButton || 'Retry'}
@@ -98,12 +98,12 @@ export const JournalForm = ({
               selected={
                 form?.data.entry_at ? new Date(form?.data.entry_at) : new Date()
               }
-              onChange={date => {
+              onChange={(date) => {
                 if (!Array.isArray(date)) {
                   changeFormData('entry_at', date.toISOString())
                 }
               }}
-              mode='dayPicker'
+              displayMode='dayPicker'
               placeholderText='Select date'
               currentDateOption={false}
             />
@@ -111,12 +111,12 @@ export const JournalForm = ({
               selected={
                 form?.data.entry_at ? new Date(form?.data.entry_at) : new Date()
               }
-              onChange={date => {
+              onChange={(date) => {
                 if (!Array.isArray(date)) {
                   changeFormData('entry_at', date.toISOString())
                 }
               }}
-              mode='timePicker'
+              displayMode='timePicker'
               placeholderText='Select time'
               currentDateOption={false}
             />
@@ -138,8 +138,7 @@ export const JournalForm = ({
             placeholder='Add description'
             value={form?.data.memo}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              changeFormData('memo', e.target.value)
-            }
+              changeFormData('memo', e.target.value)}
             disabled={sendingForm}
           />
         </InputGroup>
@@ -157,7 +156,7 @@ export const JournalForm = ({
           <RetryButton
             type='submit'
             processing={sendingForm}
-            error={'Check connection and retry in few seconds.'}
+            error='Check connection and retry in few seconds.'
             disabled={sendingForm}
           >
             {stringOverrides?.retryButton || 'Retry'}

@@ -30,7 +30,7 @@ const ReactDatePicker = (((RDP.default as any).default as any)
 type NavigationArrows = 'desktop' | 'mobile'
 
 interface DatePickerProps {
-  mode: UnifiedPickerMode | 'timePicker'
+  displayMode: UnifiedPickerMode | 'timePicker'
   selected: Date | [Date, Date | null]
   onChange: (date: Date | [Date, Date | null]) => void
   disabled?: boolean
@@ -53,8 +53,8 @@ interface DatePickerProps {
   }
 }
 
-const isRangeMode = (mode: DatePickerProps['mode']) =>
-  mode === 'dayRangePicker' || mode === 'monthRangePicker'
+const isRangeMode = (displayMode: DatePickerProps['displayMode']) =>
+  displayMode === 'dayRangePicker' || displayMode === 'monthRangePicker'
 
 const showNavigationArrows = (navigateArrows?: NavigationArrows[], isDesktop?: boolean) => {
   return (navigateArrows && ((isDesktop && navigateArrows.includes('desktop')) || (!isDesktop && navigateArrows.includes('mobile'))))
@@ -64,11 +64,11 @@ export const DatePicker = ({
   selected,
   onChange,
   disabled,
-  mode = 'dayPicker',
+  displayMode = 'dayPicker',
   allowedModes,
-  dateFormat = mode === 'monthPicker' || mode === 'monthRangePicker'
+  dateFormat = displayMode === 'monthPicker' || displayMode === 'monthRangePicker'
     ? 'MMM, yyyy'
-    : mode === 'timePicker'
+    : displayMode === 'timePicker'
       ? 'h:mm aa'
       : 'MMM d, yyyy',
   timeIntervals = 15,
@@ -81,7 +81,7 @@ export const DatePicker = ({
   minDate,
   maxDate = new Date(),
   currentDateOption = true,
-  navigateArrows = mode === 'monthPicker' ? ['mobile'] : undefined,
+  navigateArrows = displayMode === 'monthPicker' ? ['mobile'] : undefined,
   onChangeMode,
   slots,
   ...props
@@ -95,43 +95,43 @@ export const DatePicker = ({
 
   const pickerMode = useMemo(() => {
     if (!allowedModes) {
-      return mode
+      return displayMode
     }
 
-    if (mode === 'timePicker') {
-      return mode
+    if (displayMode === 'timePicker') {
+      return displayMode
     }
 
-    if (allowedModes.includes(mode)) {
-      return mode
+    if (allowedModes.includes(displayMode)) {
+      return displayMode
     }
 
-    return allowedModes[0] ?? mode
-  }, [mode, allowedModes])
+    return allowedModes[0] ?? displayMode
+  }, [displayMode, allowedModes])
 
   const [firstDate, secondDate] = useMemo(() => {
     if (selected instanceof Date) {
       return [selected, null] as const
     }
 
-    if (isRangeMode(mode)) {
+    if (isRangeMode(displayMode)) {
       return selected
     }
 
     return [selected[0], null] as const
-  }, [selected, mode])
+  }, [selected, displayMode])
 
   const { isDesktop } = useSizeClass()
 
   const wrapperClassNames = classNames(
     'Layer__datepicker__wrapper',
-    mode === 'timePicker' && 'Layer__datepicker__time__wrapper',
+    displayMode === 'timePicker' && 'Layer__datepicker__time__wrapper',
     showNavigationArrows(navigateArrows, isDesktop) && 'Layer__datepicker__wrapper--arrows',
   )
 
   const datePickerWrapperClassNames = classNames(
     'Layer__datepicker',
-    mode === 'timePicker' && 'Layer__datepicker__time',
+    displayMode === 'timePicker' && 'Layer__datepicker__time',
     wrapperClassName,
   )
   const calendarClassNames = classNames(
@@ -140,7 +140,7 @@ export const DatePicker = ({
   )
   const popperClassNames = classNames(
     'Layer__datepicker__popper',
-    mode === 'timePicker' && 'Layer__datepicker__time__popper',
+    displayMode === 'timePicker' && 'Layer__datepicker__time__popper',
     popperClassName,
   )
 
@@ -215,7 +215,7 @@ export const DatePicker = ({
   }
 
   const isTodayOrAfter = useMemo(() => {
-    switch (mode) {
+    switch (displayMode) {
       case 'dayPicker':
         return firstDate >= endOfDay(new Date()) || firstDate >= maxDate
       case 'monthPicker':
@@ -231,7 +231,7 @@ export const DatePicker = ({
       default:
         return false
     }
-  }, [firstDate, maxDate, mode])
+  }, [firstDate, maxDate, displayMode])
 
   const isBeforeMinDate = Boolean(minDate && firstDate <= minDate)
 
@@ -266,18 +266,18 @@ export const DatePicker = ({
         // @ts-expect-error = There is no good way to define the type of the ref
         ref={pickerRef}
         wrapperClassName={datePickerWrapperClassNames}
-        startDate={isRangeMode(mode)
+        startDate={isRangeMode(displayMode)
           ? (isMidSelection
             ? internalStart
             : firstDate)
           : undefined}
-        endDate={isRangeMode(mode)
+        endDate={isRangeMode(displayMode)
           ? (isMidSelection
             ? internalEnd
             : secondDate)
           : undefined}
         selected={
-          mode !== 'dayRangePicker' && mode !== 'monthRangePicker'
+          displayMode !== 'dayRangePicker' && displayMode !== 'monthRangePicker'
             ? firstDate
             : undefined
         }
@@ -286,7 +286,7 @@ export const DatePicker = ({
         popperClassName={popperClassNames}
         enableTabLoop={false}
         popperPlacement='bottom-start'
-        selectsRange={isRangeMode(mode)}
+        selectsRange={isRangeMode(displayMode)}
         showMonthYearPicker={
           pickerMode === 'monthPicker' || pickerMode === 'monthRangePicker'
         }

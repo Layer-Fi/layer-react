@@ -3,7 +3,7 @@ import { DatePicker } from '../DatePicker'
 import { useGlobalDate, useGlobalDateActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export function BalanceSheetDatePicker() {
-  const { date, mode } = useGlobalDate()
+  const { date, displayMode } = useGlobalDate()
   const { set } = useGlobalDateActions()
 
   return (
@@ -14,7 +14,7 @@ export function BalanceSheetDatePicker() {
           set({ date })
         }
       }}
-      mode={mode}
+      displayMode={displayMode}
     />
   )
 }

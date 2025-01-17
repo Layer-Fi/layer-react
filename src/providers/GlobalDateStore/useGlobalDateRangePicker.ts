@@ -18,20 +18,24 @@ export function useGlobalDateRangePicker({
   defaultDatePickerMode?: DateRangePickerMode
   onSetMonth?: (startOfMonth: Date) => void
 }) {
-  const { start, end, rangeMode } = useGlobalDateRange()
-  const { setMonth, setRangeWithExplicitMode, setRangeMode } = useGlobalDateRangeActions()
+  const { start, end, rangeDisplayMode } = useGlobalDateRange()
+  const {
+    setMonth,
+    setRangeWithExplicitDisplayMode,
+    setRangeDisplayMode,
+  } = useGlobalDateRangeActions()
 
   const allowedDateRangePickerModes = getArrayWithAtLeastOneOrFallback(
     allowedDatePickerModes ?? (defaultDatePickerMode ? [defaultDatePickerMode] : []),
     DEFAULT_ALLOWED_PICKER_MODES,
   )
 
-  const desiredRangeMode = allowedDateRangePickerModes.includes(rangeMode)
-    ? rangeMode
+  const desiredRangeMode = allowedDateRangePickerModes.includes(rangeDisplayMode)
+    ? rangeDisplayMode
     : allowedDateRangePickerModes[0]
 
   const { dateFormat, selected } = useMemo(() => {
-    if (rangeMode === 'monthPicker') {
+    if (rangeDisplayMode === 'monthPicker') {
       return {
         selected: start,
         dateFormat: undefined,
@@ -49,7 +53,7 @@ export function useGlobalDateRangePicker({
   }, [
     start,
     end,
-    rangeMode,
+    rangeDisplayMode,
   ])
 
   const { setSelected } = useMemo(() => {
@@ -65,22 +69,22 @@ export function useGlobalDateRangePicker({
 
     return {
       setSelected: ({ start, end }: { start: Date, end: Date }) => {
-        setRangeWithExplicitMode({ start, end, rangeMode: desiredRangeMode })
+        setRangeWithExplicitDisplayMode({ start, end, rangeDisplayMode: desiredRangeMode })
       },
     } as const
   }, [
     desiredRangeMode,
     onSetMonth,
     setMonth,
-    setRangeWithExplicitMode,
+    setRangeWithExplicitDisplayMode,
   ])
 
   return {
     allowedDateRangePickerModes,
     dateFormat,
-    rangeMode,
+    rangeDisplayMode,
     selected,
     setSelected,
-    setRangeMode,
+    setRangeDisplayMode,
   }
 }

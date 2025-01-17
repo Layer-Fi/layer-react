@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, DisplayState } from '../../types'
@@ -69,12 +69,15 @@ const DownloadButton = ({
       if (result?.data?.presignedUrl) {
         window.location.href = result.data.presignedUrl
         setRequestFailed(false)
-      } else {
+      }
+      else {
         setRequestFailed(true)
       }
-    } catch (e) {
+    }
+    catch (e) {
       setRequestFailed(true)
-    } finally {
+    }
+    finally {
       setIsDownloading(false)
     }
   }
@@ -134,21 +137,23 @@ export const BankTransactionsHeader = ({
             />
           )}
         </div>
-        {withDatePicker && dateRange && setDateRange ? (
-          <DatePicker
-            mode='monthPicker'
-            selected={dateRange.startDate}
-            onChange={date => {
-              if (!Array.isArray(date)) {
-                setDateRange({
-                  startDate: startOfMonth(date),
-                  endDate: endOfMonth(date),
-                })
-              }
-            }}
-            minDate={getEarliestDateToBrowse(business)}
-          />
-        ) : null}
+        {withDatePicker && dateRange && setDateRange
+          ? (
+            <DatePicker
+              displayMode='monthPicker'
+              selected={dateRange.startDate}
+              onChange={(date) => {
+                if (!Array.isArray(date)) {
+                  setDateRange({
+                    startDate: startOfMonth(date),
+                    endDate: endOfMonth(date),
+                  })
+                }
+              }}
+              minDate={getEarliestDateToBrowse(business)}
+            />
+          )
+          : null}
       </div>
       <div className='Layer__header__actions-wrapper'>
         <div className='Layer__header__actions Layer__justify--space-between'>

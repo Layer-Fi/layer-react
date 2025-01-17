@@ -1,4 +1,3 @@
-import React from 'react'
 import { DatePickerModeSelector } from '../../DatePicker/ModeSelector/DatePickerModeSelector'
 import type { TimeRangePickerConfig } from '../../../views/Reports/reportTypes'
 import { DatePicker } from '../../DatePicker'
@@ -21,9 +20,9 @@ export function StatementOfCashFlowDatePicker({
   const {
     allowedDateRangePickerModes,
     dateFormat,
-    rangeMode,
+    rangeDisplayMode,
     selected,
-    setRangeMode,
+    setRangeDisplayMode,
     setSelected,
   } = useGlobalDateRangePicker({ allowedDatePickerModes, defaultDatePickerMode })
 
@@ -34,7 +33,7 @@ export function StatementOfCashFlowDatePicker({
       selected={selected}
       onChange={(dates) => {
         if (dates instanceof Date) {
-          if (rangeMode === 'monthPicker') {
+          if (rangeDisplayMode === 'monthPicker') {
             setSelected({ start: dates, end: dates })
           }
 
@@ -45,11 +44,11 @@ export function StatementOfCashFlowDatePicker({
 
         setSelected({ start, end: end ?? start })
       }}
-      mode={rangeMode}
+      displayMode={rangeDisplayMode}
       allowedModes={allowedDateRangePickerModes}
-      onChangeMode={(rangeMode) => {
-        if (rangeMode !== 'dayPicker') {
-          setRangeMode({ rangeMode })
+      onChangeMode={(rangeDisplayMode) => {
+        if (rangeDisplayMode !== 'dayPicker') {
+          setRangeDisplayMode({ rangeDisplayMode })
         }
       }}
       slots={{
