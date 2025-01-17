@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { DATE_FORMAT } from '../../config/general'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import {
   Button,
@@ -12,21 +13,28 @@ import { HeaderRow, HeaderCol } from '../Header'
 import { InputGroup, Input, StaticValue, Select } from '../Input'
 import { JournalFormStringOverrides } from '../JournalForm/JournalForm'
 import { Heading, HeadingSize, TextSize, Text } from '../Typography'
-import { Bill } from '../../hooks/useBills'
+import { Bill } from '../../types/bills'
 import CloseIcon from '../../icons/CloseIcon'
+import { parseISO, format as formatTime } from 'date-fns'
+import { convertNumberToCurrency } from '../../utils/format'
+
+/** @TODO - temp - remove after rebase */
+const convertFromCents = (amount: number) => {
+  return amount / 100
+}
 
 const buildLabel = (bill: Bill, amount?: number) => {
   return (
     <span className='Layer__bills__record-payment__select-label'>
       <span className='Layer__bills__record-payment__select-label__date'>
-        {bill.dueDate}
+        {formatTime(parseISO(bill.due_at), DATE_FORMAT)}
       </span>
       <span className='Layer__bills__record-payment__select-label__value'>
         <span className='Layer__bills__record-payment__select-label__bill-amount'>
-          {bill.billAmount}
+          {convertNumberToCurrency(convertFromCents(bill.total_amount))}
           /
         </span>
-        {(bill.openBalance ?? 0) + (amount ?? 0)}
+        {convertNumberToCurrency(convertFromCents((bill.outstanding_balance ?? 0) + (amount ?? 0)))}
       </span>
     </span>
   )
@@ -42,8 +50,9 @@ export const BillsRecordPayment = ({
     addBill,
     setBill,
     setAmountByIndex,
-    setShowRecordPaymentForm,
     removeBillByIndex,
+    recordPayment,
+    closeRecordPayment,
   } = useBillsRecordPaymentContext()
   /** @TODO - we don't want to use all bills here, another API call to get all bills by vendor? */
   const { data } = useBillsContext()
@@ -53,7 +62,7 @@ export const BillsRecordPayment = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    /** @TODO - call API */
+    recordPayment()
   }
 
   return (
@@ -66,7 +75,7 @@ export const BillsRecordPayment = ({
             </Heading>
           </HeaderCol>
           <HeaderCol className='actions'>
-            <CloseButton onClick={() => setShowRecordPaymentForm(false)} />
+            <CloseButton onClick={closeRecordPayment} />
           </HeaderCol>
         </HeaderRow>
       </Header>

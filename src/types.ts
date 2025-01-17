@@ -42,7 +42,8 @@ export {
 } from './types/ledger_accounts'
 export { SortDirection } from './types/general'
 export { Business } from './types/business'
-
+export { Bill } from './types/bills'
+export { TransactionTag } from './types/tags'
 export interface FormError {
   field: string
   message: string

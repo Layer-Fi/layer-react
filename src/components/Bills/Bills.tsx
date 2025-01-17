@@ -1,9 +1,10 @@
 import React, { useContext } from 'react'
-import { BillsContext, BillsProvider } from '../../contexts/BillsContext'
+import { BillsProvider, useBillsContext } from '../../contexts/BillsContext'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
 import { BillsDetails } from './BillsDetails'
 import { BillsTableStringOverrides, BillsTableWithPanel } from './BillsTableWithPanel'
 import { Container } from '../Container'
+import { useBills } from '../../hooks/useBills'
 
 export type BillsStringOverrides = {
   billsTable?: BillsTableStringOverrides
@@ -11,33 +12,24 @@ export type BillsStringOverrides = {
   unpaidToggleOption?: string
 }
 
-export type BillsTab = 'paid' | 'unpaid'
-
 export type BillsProps = {
   asWidget?: boolean
   stringOverrides?: BillsStringOverrides
-  activeTab: BillsTab
-  setActiveTab: (tab: BillsTab) => void
 }
 
 export const Bills = (props: BillsProps) => (
   <BillsProvider>
-    <BillsContent
-      activeTab={props.activeTab}
-      setActiveTab={props.setActiveTab}
-    />
+    <BillsContent {...props} />
   </BillsProvider>
 )
 
 const BillsContent = ({
   asWidget,
   stringOverrides,
-  activeTab,
-  setActiveTab,
 }: BillsProps) => {
-  const { billDetailsId } = useContext(BillsContext)
+  const { billInDetails } = useBillsContext()
 
-  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
+  const { containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
     <Container
@@ -46,17 +38,14 @@ const BillsContent = ({
       asWidget={asWidget}
       transparentBg
     >
-      {billDetailsId
+      {billInDetails
         ? (
-          <BillsDetails billDetailsId={billDetailsId} />
+          <BillsDetails bill={billInDetails} />
         )
         : (
           <BillsTableWithPanel
             containerRef={containerRef}
-            view={view}
             stringOverrides={stringOverrides?.billsTable}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
           />
         )}
     </Container>

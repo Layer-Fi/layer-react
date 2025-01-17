@@ -9,9 +9,11 @@ type BillsProviderProps = {
 export type BillsContextType = ReturnType<typeof useBills>
 export const BillsContext = createContext<BillsContextType>({
   data: [],
-  billDetailsId: undefined,
-  setBillDetailsId: () => {},
+  billInDetails: undefined,
+  setBillInDetails: () => {},
   closeBillDetails: () => {},
+  status: 'UNPAID',
+  setStatus: () => {},
 })
 
 export type BillsRecordPaymentContextType = ReturnType<typeof useBillsRecordPayment>
@@ -31,6 +33,9 @@ export const BillsRecordPaymentContext = createContext<BillsRecordPaymentContext
   setShowRecordPaymentForm: () => {},
   bulkSelectionActive: false,
   setBulkSelectionActive: () => {},
+  recordPayment: () => Promise.resolve(),
+  dataSaved: false,
+  closeRecordPayment: () => {},
 })
 
 export const useBillsContext = () => useContext(BillsContext)

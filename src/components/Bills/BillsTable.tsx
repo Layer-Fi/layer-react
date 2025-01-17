@@ -1,7 +1,7 @@
 import React from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { TableProvider } from '../../contexts/TableContext'
-import { Bill } from '../../hooks/useBills'
+import { Bill } from '../../types/bills'
 import ChevronRight from '../../icons/ChevronRight'
 import { View } from '../../types/general'
 import { TableCellAlign } from '../../types/table'
@@ -15,35 +15,26 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { BillsTableStringOverrides } from './BillsTableWithPanel'
 
 export const BillsTable = ({
-  view,
   stringOverrides,
-  activeTab,
 }: {
-  view: View
   stringOverrides?: BillsTableStringOverrides
-  activeTab: string
 }) => (
   <TableProvider>
     <BillsTableContent
-      view={view}
       stringOverrides={stringOverrides}
-      activeTab={activeTab}
     />
   </TableProvider>
 )
 
 const BillsTableContent = ({
-  view,
   stringOverrides,
-  activeTab,
 }: {
-  view: View
   stringOverrides?: BillsTableStringOverrides
-  activeTab: string
 }) => {
   const {
     data,
-    setBillDetailsId,
+    setBillInDetails,
+    status,
   } = useBillsContext()
 
   const {
@@ -79,7 +70,7 @@ const BillsTableContent = ({
           depth={depth}
         >
           <TableCell primary>
-            {bulkSelectionActive && activeTab === 'unpaid' && (
+            {bulkSelectionActive && status === 'UNPAID' && (
               <Checkbox
                 boxSize={CheckboxSize.LARGE}
                 checked={isSelected}
@@ -89,24 +80,24 @@ const BillsTableContent = ({
                 className='Layer__bills-table__checkbox'
               />
             )}
-            {entry.vendor}
+            {entry.vendor?.company_name ?? 'Missing vendor'}
           </TableCell>
-          <TableCell>{entry.dueDate}</TableCell>
+          <TableCell>{entry.due_at}</TableCell>
           <TableCell primary>
-            {convertNumberToCurrency(entry.billAmount)}
+            {convertNumberToCurrency(entry.total_amount)}
           </TableCell>
           <TableCell primary>
-            {convertNumberToCurrency(entry.openBalance)}
+            {convertNumberToCurrency(entry.outstanding_balance)}
           </TableCell>
           <TableCell className='Layer__bills-table__status-col'>
-            <DueStatus dueDate={entry.status} />
+            <DueStatus dueDate={entry.due_at} />
           </TableCell>
           <TableCell
             align={TableCellAlign.RIGHT}
             className='Layer__bills-table__actions-col'
           >
             <div className='Layer__bills__status-with-actions'>
-              {activeTab === 'unpaid'
+              {status === 'UNPAID'
                 ? (
                   <SubmitButton
                     onClick={(e) => {
@@ -131,7 +122,7 @@ const BillsTableContent = ({
               <IconButton
                 icon={<ChevronRight />}
                 onClick={() => {
-                  setBillDetailsId(rowKey)
+                  setBillInDetails(entry)
                 }}
               />
             </div>

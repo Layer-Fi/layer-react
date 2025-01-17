@@ -1,6 +1,5 @@
 import React, { RefObject, useMemo, useState } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
-import { View } from '../../types/general'
 import { BillsSidebar } from './BillsSidebar'
 import { Button, CloseButton, IconButton } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'
@@ -9,8 +8,8 @@ import { Pagination } from '../Pagination'
 import { Panel } from '../Panel'
 import { Toggle } from '../Toggle'
 import { BillsTable } from './BillsTable'
-import { BillsTab } from './Bills'
 import CloseIcon from '../../icons/CloseIcon'
+import { BillStatusFilter } from '../../types/bills'
 
 export interface BillsTableStringOverrides {
   componentTitle?: string
@@ -30,20 +29,14 @@ const COMPONENT_NAME = 'bills'
 export const BillsTableWithPanel = ({
   containerRef,
   pageSize = 15,
-  activeTab,
-  setActiveTab,
   stringOverrides,
-  view,
 }: {
-  view: View
   containerRef: RefObject<HTMLDivElement>
   pageSize?: number
   stringOverrides?: BillsTableStringOverrides
-  activeTab: BillsTab
-  setActiveTab: (id: BillsTab) => void
 }) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const { data: rawData } = useBillsContext()
+  const { data: rawData, status, setStatus } = useBillsContext()
   const {
     bulkSelectionActive,
     setBulkSelectionActive,
@@ -75,20 +68,20 @@ export const BillsTableWithPanel = ({
               name='bills-tabs'
               options={[
                 {
-                  value: 'unpaid',
+                  value: 'UNPAID',
                   label: stringOverrides?.unpaidToggleOption || 'Unpaid',
                 },
                 {
-                  value: 'paid',
+                  value: 'PAID',
                   label: stringOverrides?.paidToggleOption || 'Paid',
                 },
               ]}
-              selected={activeTab}
-              onChange={opt => setActiveTab(opt.target.value as BillsTab)}
+              selected={status}
+              onChange={opt => setStatus(opt.target.value as BillStatusFilter)}
             />
           </HeaderCol>
         </HeaderRow>
-        {activeTab === 'unpaid' && (
+        {status === 'UNPAID' && (
           <HeaderRow>
             <HeaderCol style={{ paddingLeft: 0, paddingRight: 0 }}>
               {bulkSelectionActive
@@ -123,10 +116,7 @@ export const BillsTableWithPanel = ({
       </Header>
 
       {data && (
-        <BillsTable
-          view='desktop'
-          activeTab={activeTab}
-        />
+        <BillsTable />
       )}
 
       {data && (

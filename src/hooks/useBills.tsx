@@ -1,99 +1,83 @@
 import { useState } from 'react'
-
-export type Bill = {
-  id: string
-  vendor: string
-  dueDate: string
-  billAmount: number
-  openBalance: number
-  status: string
-}
+import { useLayerContext } from '../contexts/LayerContext'
+import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
+import { useAuth } from './useAuth'
+import { Layer } from '../api/layer'
+import useSWR from 'swr'
+import { BILLS_MOCK_PAID, BILLS_MOCK_UNPAID } from './useBillsMOCK'
+import { Bill, BillStatusFilter } from '../types/bills'
 
 type UseBills = () => {
   data: Bill[]
-  billDetailsId?: string
-  setBillDetailsId: (id: string | undefined) => void
+  billInDetails?: Bill
+  setBillInDetails: (bill: Bill | undefined) => void
   closeBillDetails: () => void
+  status: BillStatusFilter
+  setStatus: (status: BillStatusFilter) => void
 }
 
 export const useBills: UseBills = () => {
-  const [billDetailsId, setBillDetailsId] = useState<string | undefined>()
+  const [status, setStatus] = useState<BillStatusFilter>('UNPAID')
+  const [billInDetails, setBillInDetails] = useState<Bill | undefined>()
+
   const closeBillDetails = () => {
-    setBillDetailsId(undefined)
+    setBillInDetails(undefined)
   }
 
-  // Mock data based on the image
-  const data: Bill[] = [
-    {
-      id: '1',
-      vendor: 'PG&E',
-      dueDate: '08/01/2024',
-      billAmount: 86.44,
-      openBalance: 86.44,
-      status: '2024-09-15',
-    },
-    {
-      id: '2',
-      vendor: 'PG&E',
-      dueDate: '10/01/2024',
-      billAmount: 86.44,
-      openBalance: 86.44,
-      status: '2024-10-09',
-    },
-    {
-      id: '3',
-      vendor: 'Norton Lumber...',
-      dueDate: '11/01/2024',
-      billAmount: 86.44,
-      openBalance: 16.44,
-      status: '2024-10-11',
-    },
-    {
-      id: '4',
-      vendor: 'Robertson & Anderson.',
-      dueDate: '08/02/2024',
-      billAmount: 86.44,
-      openBalance: 8.0,
-      status: '2024-10-12',
-    },
-    {
-      id: '5',
-      vendor: 'Bob\'s Burgers...',
-      dueDate: '14/03/2024',
-      billAmount: 86.44,
-      openBalance: 86.44,
-      status: '2024-10-14',
-    },
-    {
-      id: '6',
-      vendor: 'Diego\'s Road...',
-      dueDate: '08/01/2024',
-      billAmount: 86.44,
-      openBalance: 86.44,
-      status: '2024-10-25',
-    },
-    {
-      id: '7',
-      vendor: 'Diego\'s Road...',
-      dueDate: '08/01/2024',
-      billAmount: 86.44,
-      openBalance: 86.44,
-      status: '2024-11-15',
-    },
-    {
-      id: '8',
-      vendor: 'Diego\'s Road...',
-      dueDate: '14/03/2024',
-      billAmount: 86.44,
-      openBalance: 86.44,
-      status: '2024-12-15',
-    },
-  ]
+  /**
+   * @TODO move vendors to another hook and context(?)
+   * Uncomment both when API is ready
+   */
+  // const {
+  //   businessId,
+  //   touch,
+  //   read,
+  //   syncTimestamps,
+  //   hasBeenTouched,
+  // } = useLayerContext()
+  // const { apiUrl } = useEnvironment()
+  // const { data: auth } = useAuth()
+
+  // const queryKey =
+  //   businessId
+  //   && auth?.access_token
+  //   && `vendors-${businessId}`
+
+  // const { data: rawData, isLoading, isValidating, error, mutate } = useSWR(
+  //   queryKey,
+  //   Layer.getVendors(apiUrl, auth?.access_token, {
+  //     params: { businessId },
+  //   }),
+  // )
+
+  // const queryKey =
+  //   businessId
+  //   && auth?.access_token
+  //   && `bills-${businessId}-`
+  // @TODO - add dates from date picker
+  // `bills-${businessId}-${startDate?.valueOf()}-${endDate?.valueOf()}`
+
+  // const { data: rawData, isLoading, isValidating, error, mutate } = useSWR(
+  //   queryKey,
+  //   Layer.getBills(apiUrl, auth?.access_token, {
+  //     params: {
+  //       businessId,
+  //       // startDate:
+  //       //   withDates && startDate ? formatISO(startDate.valueOf()) : undefined,
+  //       // endDate:
+  //       //   withDates && endDate ? formatISO(endDate.valueOf()) : undefined,
+  //     },
+  //   }),
+  // )
+
+  const data = status === 'PAID' ? BILLS_MOCK_PAID : BILLS_MOCK_UNPAID
 
   return {
     data,
-    billDetailsId,
-    setBillDetailsId,
+    billInDetails,
+    setBillInDetails,
     closeBillDetails,
+    status,
+    setStatus,
   }
 }

@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
-import { Bill } from './useBills'
-
-/** @TODO move somewhere else, ie. types/* */
-export type Vendor = {
-  id: string
-  name: string
-}
+import { Bill } from '../types/bills'
+import { sleep } from '../utils/helpers'
+import { Vendor } from '../types/vendors'
 
 export type BillsRecordPaymentFormRecord = {
   bill?: Bill
@@ -18,6 +14,7 @@ export const useBillsRecordPayment = () => {
   const [vendor, setVendor] = useState<Vendor | undefined>()
   const [paymentDate, setPaymentDate] = useState<Date>(new Date())
   const [billsToPay, setBillsToPay] = useState<BillsRecordPaymentFormRecord[]>([])
+  const [dataSaved, setDataSaved] = useState(false)
 
   const setBill = (bill: Bill, index: number) => {
     if (index < 0 || index >= billsToPay.length) {
@@ -61,6 +58,23 @@ export const useBillsRecordPayment = () => {
     setBillsToPay(prev => prev.map((bill, i) => i === index ? { ...bill, amount } : bill))
   }
 
+  const recordPayment = async () => {
+    /** @TODO - call API */
+    await sleep(500)
+    /** @TODO - temporarily so we can jump to summary */
+    setDataSaved(true)
+  }
+
+  const closeRecordPayment = () => {
+    if (dataSaved) {
+      setDataSaved(false)
+      setPaymentDate(new Date())
+      setVendor(undefined)
+      setBillsToPay([])
+    }
+    setShowRecordPaymentForm(false)
+  }
+
   return {
     billsToPay,
     setBill,
@@ -77,5 +91,8 @@ export const useBillsRecordPayment = () => {
     setShowRecordPaymentForm,
     bulkSelectionActive,
     setBulkSelectionActive,
+    recordPayment,
+    dataSaved,
+    closeRecordPayment,
   }
 }
