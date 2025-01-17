@@ -1,4 +1,4 @@
-import React, { RefObject, useState } from 'react'
+import React, { RefObject } from 'react'
 import { useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { BillsPaymentRecorded } from './BillsPaymentRecorded'
 import { BillsRecordPayment } from './BillsRecordPayment'
@@ -8,10 +8,9 @@ export const BillsSidebar = ({
 }: {
   parentRef?: RefObject<HTMLDivElement>
 }) => {
-  // const { afterSucess } = useBillsRecordPaymentContext()
-  const paymentsSaved = false
+  const { dataSaved } = useBillsRecordPaymentContext()
 
-  return paymentsSaved
+  return dataSaved
     ? (
       <BillsPaymentRecorded />
     )
