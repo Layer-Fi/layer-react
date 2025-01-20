@@ -104,7 +104,7 @@ export const getBankTransactionMetadata = get<{
   errors: unknown
 }>(
   ({ businessId, bankTransactionId }) =>
-    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}2/metadata`,
+    `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/metadata`,
 )
 
 export const updateBankTransactionMetadata = put<
