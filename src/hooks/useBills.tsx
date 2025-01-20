@@ -6,6 +6,8 @@ import { Layer } from '../api/layer'
 import useSWR from 'swr'
 import { BILLS_MOCK_PAID, BILLS_MOCK_UNPAID } from './useBillsMOCK'
 import { Bill, BillStatusFilter } from '../types/bills'
+import { DateRange } from '../types'
+import { endOfMonth, startOfMonth, sub } from 'date-fns'
 
 type UseBills = () => {
   data: Bill[]
@@ -14,11 +16,17 @@ type UseBills = () => {
   closeBillDetails: () => void
   status: BillStatusFilter
   setStatus: (status: BillStatusFilter) => void
+  dateRange: DateRange
+  setDateRange: (dateRange: DateRange) => void
 }
 
 export const useBills: UseBills = () => {
   const [status, setStatus] = useState<BillStatusFilter>('UNPAID')
   const [billInDetails, setBillInDetails] = useState<Bill | undefined>()
+  const [dateRange, setDateRange] = useState<DateRange>({
+    startDate: sub(startOfMonth(new Date()), { years: 1 }),
+    endDate: endOfMonth(new Date()),
+  })
 
   const closeBillDetails = () => {
     setBillInDetails(undefined)
@@ -79,5 +87,7 @@ export const useBills: UseBills = () => {
     closeBillDetails,
     status,
     setStatus,
+    dateRange,
+    setDateRange,
   }
 }

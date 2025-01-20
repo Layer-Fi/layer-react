@@ -75,7 +75,7 @@ export const BillsRecordPayment = ({
             </Heading>
           </HeaderCol>
           <HeaderCol className='actions'>
-            <CloseButton onClick={closeRecordPayment} />
+            <CloseButton type='button' onClick={closeRecordPayment} />
           </HeaderCol>
         </HeaderRow>
       </Header>
@@ -150,6 +150,7 @@ export const BillsRecordPayment = ({
           ))}
 
           <Button
+            type='button'
             variant={ButtonVariant.secondary}
             className='Layer__bills__record-payment__add-bill'
             onClick={() => addBill()}

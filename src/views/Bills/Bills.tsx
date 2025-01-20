@@ -1,9 +1,10 @@
 import React from 'react'
 import { Bills } from '../../components/Bills/Bills'
 import { Header } from '../../components/Container'
-import { DatePicker } from '../../components/DatePicker'
 import { HeaderRow, HeaderCol } from '../../components/Header'
 import { View } from '../../components/View'
+import { BillsProvider } from '../../contexts/BillsContext'
+import { BillsDatePicker } from '../../components/Bills/BillsDatePicker'
 
 export interface BillsStringOverrides {
   title?: string
@@ -15,15 +16,21 @@ export interface ChartOfAccountsOptions {
   templateAccountsEditable?: boolean
 }
 
-export interface BillsProps {
+export interface BillsViewProps {
   showTitle?: boolean
   stringOverrides?: BillsStringOverrides
 }
 
-export const BillsView = ({
+export const BillsView = (props: BillsViewProps) => (
+  <BillsProvider>
+    <BillsViewContent {...props} />
+  </BillsProvider>
+)
+
+const BillsViewContent = ({
   showTitle = true,
   stringOverrides,
-}: BillsProps) => {
+}: Omit<BillsViewProps, 'context'>) => {
   return (
     <View
       title={stringOverrides?.title || 'Bills'}
@@ -33,18 +40,13 @@ export const BillsView = ({
         <Header>
           <HeaderRow>
             <HeaderCol>
-              <DatePicker
-                displayMode='monthRangePicker'
-                selected={new Date()}
-                onChange={() => {}}
-                wrapperClassName='Layer__bills__main-datepicker'
-              />
+              <BillsDatePicker />
             </HeaderCol>
           </HeaderRow>
         </Header>
       )}
     >
-      <Bills />
+      <Bills context={false} />
     </View>
   )
 }

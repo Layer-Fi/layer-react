@@ -12,15 +12,22 @@ export type BillsStringOverrides = {
 }
 
 export type BillsProps = {
+  context?: boolean
   asWidget?: boolean
   stringOverrides?: BillsStringOverrides
 }
 
-export const Bills = (props: BillsProps) => (
-  <BillsProvider>
-    <BillsContent {...props} />
-  </BillsProvider>
-)
+export const Bills = ({ context = true, ...props }: BillsProps) => {
+  if (context) {
+    return (
+      <BillsProvider>
+        <BillsContent {...props} />
+      </BillsProvider>
+    )
+  }
+
+  return <BillsContent {...props} />
+}
 
 const BillsContent = ({
   asWidget,
@@ -39,7 +46,7 @@ const BillsContent = ({
     >
       {billInDetails
         ? (
-          <BillsDetails bill={billInDetails} />
+          <BillsDetails containerRef={containerRef} bill={billInDetails} />
         )
         : (
           <BillsTableWithPanel

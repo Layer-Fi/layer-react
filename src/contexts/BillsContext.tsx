@@ -1,6 +1,7 @@
 import React, { createContext, ReactNode, useContext } from 'react'
 import { useBills } from '../hooks/useBills'
 import { useBillsRecordPayment } from '../hooks/useBillsRecordPayment'
+import { endOfMonth, startOfMonth } from 'date-fns'
 
 type BillsProviderProps = {
   children: ReactNode
@@ -14,6 +15,8 @@ export const BillsContext = createContext<BillsContextType>({
   closeBillDetails: () => {},
   status: 'UNPAID',
   setStatus: () => {},
+  dateRange: { startDate: startOfMonth(new Date()), endDate: endOfMonth(new Date()) },
+  setDateRange: () => {},
 })
 
 export type BillsRecordPaymentContextType = ReturnType<typeof useBillsRecordPayment>
@@ -36,6 +39,7 @@ export const BillsRecordPaymentContext = createContext<BillsRecordPaymentContext
   recordPayment: () => Promise.resolve(),
   dataSaved: false,
   closeRecordPayment: () => {},
+  recordPaymentForBill: () => {},
 })
 
 export const useBillsContext = () => useContext(BillsContext)

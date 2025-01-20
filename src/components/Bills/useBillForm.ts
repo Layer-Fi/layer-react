@@ -15,6 +15,8 @@ export type BillForm = {
   due_date?: string // OR DATE
   terms?: string
   line_items?: Partial<BillLineItem>[]
+  tax?: boolean // not supported by API?
+  billable?: boolean // not supported by API?
 }
 
 export const useBillForm = (bill: Bill) => {
@@ -30,6 +32,8 @@ export const useBillForm = (bill: Bill) => {
       due_date: bill.due_at,
       terms: '', // @TODO match to updated API
       line_items: bill.line_items,
+      // tax: false, // @TODO match to updated API
+      // billable: false, // @TODO match to updated API
     },
     onSubmit: async ({ value }) => {
       console.log('onSubmit - sending...', value)
