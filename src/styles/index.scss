@@ -25,8 +25,8 @@
 @forward './view';
 @forward '../components/ui/index';
 @forward '../components/utility/index';
-@forward '../components/DueStatus/due_status';
 @forward '../components/Bills/bills';
+@forward '../components/DueStatus/due_status';
 @forward '../components/LinkedAccounts/ConfirmationModal/linkedAccountToConfirm';
 @forward '../components/LinkedAccounts/AccountFormBox/AccountFormBox';
 @forward '../components/TasksMonthSelector/tasksMonthSelector';

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Bill } from '../types/bills'
 import { sleep } from '../utils/helpers'
 import { Vendor } from '../types/vendors'
+import { parseISO } from 'date-fns'
 
 export type BillsRecordPaymentFormRecord = {
   bill?: Bill
@@ -58,6 +59,13 @@ export const useBillsRecordPayment = () => {
     setBillsToPay(prev => prev.map((bill, i) => i === index ? { ...bill, amount } : bill))
   }
 
+  const recordPaymentForBill = (bill: Bill) => {
+    setVendor(bill.vendor)
+    setPaymentDate(bill.due_at ? parseISO(bill.due_at) : new Date())
+    setBillsToPay([{ bill, amount: bill.total_amount }])
+    setShowRecordPaymentForm(true)
+  }
+
   const recordPayment = async () => {
     /** @TODO - call API */
     await sleep(500)
@@ -94,5 +102,6 @@ export const useBillsRecordPayment = () => {
     recordPayment,
     dataSaved,
     closeRecordPayment,
+    recordPaymentForBill,
   }
 }

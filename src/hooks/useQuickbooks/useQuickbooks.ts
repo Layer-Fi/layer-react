@@ -27,7 +27,8 @@ export const useQuickbooks: UseQuickbooks = () => {
   // Poll the server to determine when the Quickbooks sync is complete
   useEffect(() => {
     if (isSyncingFromQuickbooks && syncStatusIntervalRef.current === null) {
-      const interval = window.setInterval(() => fetchIsSyncingFromQuickbooks(), 2000)
+      const interval = setInterval(
+        () => void fetchIsSyncingFromQuickbooks(), 2000) as unknown as number
       syncStatusIntervalRef.current = interval
       return () => clearInterval(interval)
     }
