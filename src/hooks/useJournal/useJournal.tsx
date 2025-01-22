@@ -33,7 +33,7 @@ type UseJournal = () => {
     name: string,
     value: string | BaseSelectOption | undefined | number,
     lineItemIndex?: number,
-    accounts?: LedgerAccountBalance[] | undefined,
+    accounts?: LedgerAccountBalance[],
   ) => void
   submitForm: () => void
   cancelForm: () => void
@@ -54,9 +54,9 @@ export interface JournalFormTypes {
   data: NewFormJournalEntry
   errors?:
     | {
-        entry: FormError[]
-        lineItems: FormErrorWithId[]
-      }
+      entry: FormError[]
+      lineItems: FormErrorWithId[]
+    }
     | undefined
 }
 
@@ -106,9 +106,11 @@ export const useJournal: UseJournal = () => {
       await refetch()
       closeSelectedEntry()
       setForm(undefined)
-    } catch (_err) {
+    }
+    catch (_err) {
       setApiError('Submit failed. Please, check your connection and try again.')
-    } finally {
+    }
+    finally {
       setSendingForm(false)
       touch(DataModel.BANK_TRANSACTIONS)
     }
@@ -119,7 +121,7 @@ export const useJournal: UseJournal = () => {
     setForm({
       action: 'new',
       data: {
-        entry_at: '',
+        entry_at: (new Date()).toISOString(),
         created_by: 'Test API Integration',
         memo: '',
         line_items: [
@@ -155,7 +157,7 @@ export const useJournal: UseJournal = () => {
     fieldName: string,
     value: string | BaseSelectOption | undefined | number,
     lineItemIndex?: number,
-    accounts?: LedgerAccountBalance[] | undefined,
+    accounts?: LedgerAccountBalance[],
   ) => {
     if (!form) {
       return null
@@ -187,15 +189,16 @@ export const useJournal: UseJournal = () => {
               name: foundParent.name,
               subType: foundParent.account_subtype
                 ? {
-                    value: foundParent.account_subtype.value,
-                    label: foundParent.account_subtype.display_name,
-                  }
+                  value: foundParent.account_subtype.value,
+                  label: foundParent.account_subtype.display_name,
+                }
                 : undefined,
             },
           }
           lineItems[lineItemIndex] = newLineItem
         }
-      } else {
+      }
+      else {
         const newLineItem = {
           ...lineItem,
           [fieldName]: value,
@@ -211,7 +214,8 @@ export const useJournal: UseJournal = () => {
           line_items: lineItems,
         },
       }
-    } else {
+    }
+    else {
       newFormData = {
         ...form,
         data: {
