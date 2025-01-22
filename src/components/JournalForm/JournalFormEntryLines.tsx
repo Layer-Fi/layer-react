@@ -1,5 +1,4 @@
-import { useContext } from 'react'
-import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
+import { useContext, useMemo } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import Trash from '../../icons/Trash'
 import { Direction, JournalEntryLineItem } from '../../types'
@@ -12,10 +11,21 @@ import {
 } from '../../utils/format'
 import { BadgeVariant } from '../Badge'
 import { IconButton, TextButton } from '../Button'
-import { useParentOptions } from '../ChartOfAccountsForm/useParentOptions'
 import { InputWithBadge, InputGroup, Select } from '../Input'
 import { JournalConfig } from '../Journal/Journal'
 import { Text, TextSize } from '../Typography'
+import { useAllCategories } from '../../hooks/categories/useAllCategories'
+
+type WithSubCategories = { subCategories?: Array<WithSubCategories> }
+
+function recursiveFlattenCategories<T extends WithSubCategories>(accounts: Array<T>): Array<T> {
+  const flattenedResult = accounts.flatMap(a => [
+    a,
+    recursiveFlattenCategories((a.subCategories ?? [])),
+  ]).flat()
+
+  return flattenedResult as Array<T>
+}
 
 export const JournalFormEntryLines = ({
   entrylineItems,
@@ -32,15 +42,59 @@ export const JournalFormEntryLines = ({
     name: string,
     value: string | BaseSelectOption | number | undefined,
     lineItemIndex: number,
-    accounts?: LedgerAccountBalance[] | undefined,
+    accounts?: LedgerAccountBalance[],
   ) => void
   sendingForm: boolean
   config: JournalConfig
 }) => {
-  const { data: accountsData } = useContext(ChartOfAccountsContext)
+  const { data } = useAllCategories()
   const { form } = useContext(JournalContext)
 
-  const parentOptions = useParentOptions(accountsData)
+  const { flattenedCategories, parentOptions } = useMemo(() => {
+    const flattenedCategories = recursiveFlattenCategories(data ?? [])
+
+    const parentOptions = flattenedCategories
+      .sort((a, b) => (a.display_name.localeCompare(b.display_name)))
+      .map(({ display_name, id }) => {
+        return {
+          label: display_name,
+          value: id,
+        }
+      })
+
+    return { flattenedCategories, parentOptions }
+  }, [data])
+
+  const handleChangeParent = ({
+    lineItemIndex,
+    value,
+  }: { lineItemIndex: number, value: BaseSelectOption }) => {
+    const relevantCategory = flattenedCategories.find(x => x.id === value.value)
+
+    if (!relevantCategory) {
+      return
+    }
+
+    return changeFormData(
+      'parent',
+      value,
+      lineItemIndex,
+      [
+        {
+          id: relevantCategory.id,
+          name: relevantCategory.display_name,
+          stable_name: relevantCategory.stable_name ?? '',
+          account_type: {
+            value: relevantCategory.id,
+            display_name: relevantCategory.display_name,
+          },
+          sub_accounts: [],
+          balance: 0,
+          normality: Direction.DEBIT,
+        },
+      ],
+    )
+  }
 
   return (
     <>
@@ -54,7 +108,11 @@ export const JournalFormEntryLines = ({
               className='Layer__journal__form__input-group__title'
               size={TextSize.lg}
             >
-              Add {humanizeEnum(direction)} Account
+              Add
+              {' '}
+              {humanizeEnum(direction)}
+              {' '}
+              Account
             </Text>
             {entrylineItems?.map((item, idx) => {
               if (item.direction !== direction) {
@@ -84,8 +142,7 @@ export const JournalFormEntryLines = ({
                             (e.target as HTMLInputElement).value,
                           ),
                           idx,
-                        )
-                      }
+                        )}
                       isInvalid={Boolean(
                         form?.errors?.lineItems.find(
                           x => x.id === idx && x.field === 'amount',
@@ -109,14 +166,11 @@ export const JournalFormEntryLines = ({
                         value: item.account_identifier.id,
                         label: item.account_identifier.name,
                       }}
-                      onChange={sel =>
-                        changeFormData(
-                          'parent',
-                          sel,
-                          idx,
-                          accountsData?.accounts,
-                        )
-                      }
+                      onChange={value =>
+                        handleChangeParent({
+                          lineItemIndex: idx,
+                          value,
+                        })}
                       isInvalid={Boolean(
                         form?.errors?.lineItems.find(
                           x => x.id === idx && x.field === 'account',
@@ -139,8 +193,8 @@ export const JournalFormEntryLines = ({
                 </div>
               )
             })}
-            {(config.form.addEntryLinesLimit === undefined ||
-              config.form.addEntryLinesLimit > entrylineItems?.length) && (
+            {(config.form.addEntryLinesLimit === undefined
+              || config.form.addEntryLinesLimit > entrylineItems?.length) && (
               <TextButton
                 className='Layer__journal__add-entry-line'
                 onClick={() => addEntryLine(direction as Direction)}
