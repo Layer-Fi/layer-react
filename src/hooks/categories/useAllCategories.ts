@@ -17,8 +17,9 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
+      mode: 'ALL',
       tags: ['#categories'],
-    }
+    } as const
   }
 }
 
@@ -31,13 +32,13 @@ export function useAllCategories() {
       ...auth,
       businessId,
     }),
-    ({ accessToken, apiUrl, businessId }) => getCategories(
+    ({ accessToken, apiUrl, businessId, mode }) => getCategories(
       apiUrl,
       accessToken,
       {
         params: {
           businessId,
-          mode: 'ALL',
+          mode,
         },
       })().then(({ data }) => data.categories),
   )
