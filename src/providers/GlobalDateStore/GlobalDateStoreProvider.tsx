@@ -5,6 +5,7 @@ import {
   endOfDay,
   endOfMonth,
   endOfYear,
+  min,
   startOfDay,
   startOfMonth,
   startOfYear,
@@ -34,6 +35,10 @@ function startOfNextDay(date: Date | number) {
   return startOfDay(addDays(date, 1))
 }
 
+function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())) {
+  return min([date, cutoff])
+}
+
 type CommonShiftOptions = { currentStart: Date }
 type PreShiftOptions = CommonShiftOptions & { currentEnd: Date, newEnd: Date }
 type PostShiftOptions = CommonShiftOptions & { shiftedCurrentEnd: Date, shiftedNewEnd: Date }
@@ -41,7 +46,7 @@ type PostShiftOptions = CommonShiftOptions & { shiftedCurrentEnd: Date, shiftedN
 function withShiftedEnd<T>(fn: (options: PostShiftOptions) => T) {
   return ({ currentStart, currentEnd, newEnd }: PreShiftOptions) => {
     const shiftedCurrentEnd = startOfNextDay(currentEnd)
-    const shiftedNewEnd = startOfNextDay(newEnd)
+    const shiftedNewEnd = clampToPresentOrPast(startOfNextDay(newEnd), startOfNextDay(new Date()))
 
     return fn({ currentStart, shiftedCurrentEnd, shiftedNewEnd })
   }
@@ -54,14 +59,14 @@ const RANGE_MODE_LOOKUP = {
       const fullDayCount = differenceInDays(shiftedCurrentEnd, currentStart)
       return subDays(shiftedNewEnd, fullDayCount)
     }),
-    getEnd: ({ end }: { end: Date }) => end,
+    getEnd: ({ end }: { end: Date }) => clampToPresentOrPast(endOfDay(end)),
   },
   monthPicker: {
     getStart: ({ start }: { start: Date }) => startOfMonth(start),
     getShiftedStart: withShiftedEnd(({ shiftedNewEnd }) => {
       return subMonths(shiftedNewEnd, 1)
     }),
-    getEnd: ({ end }: { end: Date }) => endOfMonth(end),
+    getEnd: ({ end }: { end: Date }) => clampToPresentOrPast(endOfMonth(end)),
   },
   monthRangePicker: {
     getStart: ({ start }: { start: Date }) => startOfMonth(start),
@@ -69,14 +74,14 @@ const RANGE_MODE_LOOKUP = {
       const fullMonthCount = differenceInMonths(shiftedCurrentEnd, currentStart)
       return subMonths(shiftedNewEnd, fullMonthCount)
     }),
-    getEnd: ({ end }: { end: Date }) => endOfMonth(end),
+    getEnd: ({ end }: { end: Date }) => clampToPresentOrPast(endOfMonth(end)),
   },
   yearPicker: {
     getStart: ({ start }: { start: Date }) => startOfYear(start),
     getShiftedStart: withShiftedEnd(({ shiftedNewEnd }) => {
       return subYears(shiftedNewEnd, 1)
     }),
-    getEnd: ({ end }: { end: Date }) => endOfYear(end),
+    getEnd: ({ end }: { end: Date }) => clampToPresentOrPast(endOfYear(end)),
   },
 } satisfies Record<
   DateRangePickerMode,
@@ -132,29 +137,29 @@ function buildStore() {
   return createStore<GlobalDateStoreShape>((set, get) => {
     const setRange = withCorrectedRange(({ start, end }) => {
       set({
-        start: startOfDay(start),
-        end: endOfDay(end),
+        start: RANGE_MODE_LOOKUP.dayRangePicker.getStart({ start }),
+        end: RANGE_MODE_LOOKUP.dayRangePicker.getEnd({ end }),
         rangeDisplayMode: 'dayRangePicker',
       })
     })
     const setMonth = ({ start }: { start: Date }) => {
       set({
-        start: startOfMonth(start),
-        end: endOfMonth(start),
+        start: RANGE_MODE_LOOKUP.monthPicker.getStart({ start }),
+        end: RANGE_MODE_LOOKUP.monthPicker.getEnd({ end: start }),
         rangeDisplayMode: 'monthPicker',
       })
     }
     const setMonthRange = withCorrectedRange(({ start, end }) => {
       set({
-        start: startOfMonth(start),
-        end: endOfMonth(end),
+        start: RANGE_MODE_LOOKUP.monthRangePicker.getStart({ start }),
+        end: RANGE_MODE_LOOKUP.monthRangePicker.getEnd({ end }),
         rangeDisplayMode: 'monthRangePicker',
       })
     })
     const setYear = ({ start }: { start: Date }) => {
       set({
-        start: startOfMonth(start),
-        end: endOfMonth(start),
+        start: RANGE_MODE_LOOKUP.yearPicker.getStart({ start }),
+        end: RANGE_MODE_LOOKUP.yearPicker.getEnd({ end: start }),
         rangeDisplayMode: 'yearPicker',
       })
     }
@@ -184,7 +189,7 @@ function buildStore() {
 
     return {
       start: startOfMonth(now),
-      end: endOfMonth(now),
+      end: clampToPresentOrPast(endOfMonth(now)),
 
       displayMode: 'dayPicker',
       rangeDisplayMode: 'monthPicker',
@@ -196,7 +201,7 @@ function buildStore() {
             end: currentEnd,
             rangeDisplayMode: currentRangeDisplayMode,
           }) => {
-            const newEnd = endOfDay(date)
+            const newEnd = RANGE_MODE_LOOKUP.dayRangePicker.getEnd({ end: date })
 
             return {
               start: RANGE_MODE_LOOKUP[currentRangeDisplayMode].getShiftedStart({
