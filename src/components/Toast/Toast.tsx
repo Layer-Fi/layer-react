@@ -29,7 +29,6 @@ const Toast = (props: ToastProps & { isExiting: boolean }) => {
 
 export const ToastsContainer = () => {
   const { toasts } = useLayerContext()
-  console.log('toasts', toasts)
 
   return (
     <div className='Layer__toasts-container'>
