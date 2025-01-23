@@ -82,7 +82,7 @@ export const BankTransactionMobileListItem = ({
   const [removeAnim, setRemoveAnim] = useState(false)
   const [purpose, setPurpose] = useState<Purpose>(
     bankTransaction.category
-      ? bankTransaction.category.type === 'Exclusion'
+      ? bankTransaction.category.type === 'ExclusionNested'
         ? Purpose.personal
         : bankTransaction.categorization_status === CategorizationStatus.SPLIT
           ? Purpose.more

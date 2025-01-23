@@ -5,7 +5,7 @@ import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
 import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, CategorizationStatus, Category } from '../../types'
+import { BankTransaction, CategorizationStatus } from '../../types'
 import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
@@ -32,6 +32,7 @@ import { MatchBadge } from './MatchBadge'
 import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import type { CategoryWithEntries } from '../../types/bank_transactions'
 
 type Props = {
   index: number
@@ -51,7 +52,7 @@ type Props = {
 
 export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
 
-export const extractDescriptionForSplit = (category: Category) => {
+export const extractDescriptionForSplit = (category: CategoryWithEntries) => {
   if (!category.entries) {
     return ''
   }
