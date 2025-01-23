@@ -1,21 +1,31 @@
-import React, { RefObject } from 'react'
+import { RefObject, useMemo } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { BackButton, Button, ButtonVariant } from '../Button'
 import { DatePicker } from '../DatePicker/DatePicker'
 import { Header, HeaderRow, HeaderCol } from '../Header'
 import { Input, InputGroup } from '../Input'
-import { Checkbox, CheckboxVariant } from '../Input/Checkbox' // @TODO use/merge with ui/Checkbox?
 import { Select } from '../Input/Select'
 import { Textarea } from '../Textarea'
 import { TextWeight, TextSize, Text } from '../Typography'
 import { useBillForm } from './useBillForm'
 import classNames from 'classnames'
-import { Bill } from '../../types'
-import { convertNumberToCurrency } from '../../utils/format'
+import { Bill, Category } from '../../types'
+import { formatDate } from '../../utils/format'
 import { formatISO, parseISO } from 'date-fns'
 import { Panel } from '../Panel'
 import { BillsSidebar } from './BillsSidebar'
 import { BillTerms, UnpaidStatuses } from '../../types/bills'
+import { SelectVendor } from '../Vendors/SelectVendor'
+import { CategorySelect, mapCategoryToOption } from '../CategorySelect/CategorySelect'
+import { useLayerContext } from '../../contexts/LayerContext'
+import { AmountInput } from '../Input/AmountInput'
+import { getVendorName } from '../../utils/vendors'
+import { DATE_FORMAT_SHORT } from '../../config/general'
+import { BillSummary } from './BillSummary'
+
+const findCategoryById = (id: string, categories: Category[]) => {
+  return categories.find(category => category.id === id)
+}
 
 export const BillsDetails = ({
   bill,
@@ -24,102 +34,61 @@ export const BillsDetails = ({
   bill: Bill
   containerRef: RefObject<HTMLDivElement>
 }) => {
+  const { categories } = useLayerContext()
   const { billInDetails, closeBillDetails } = useBillsContext()
   const { showRecordPaymentForm, recordPaymentForBill } = useBillsRecordPaymentContext()
-  const { form } = useBillForm(bill)
-
-  const isDirty = form.state.isDirty || form.state.isTouched
+  const { form, isDirty } = useBillForm(bill)
 
   const baseClassName = classNames(
     'Layer__bills-account__index',
     billInDetails && 'open',
   )
 
-  return (
-    <form
-      className={baseClassName}
-      onSubmit={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        void form.handleSubmit()
-      }}
-    >
-      <Panel
-        sidebar={<BillsSidebar parentRef={containerRef} />}
-        sidebarIsOpen={showRecordPaymentForm}
-        parentRef={containerRef}
-      >
-        <Header className='Layer__bills-account__header'>
-          <HeaderRow>
-            <HeaderCol>
-              <BackButton onClick={() => closeBillDetails()} />
-              <div className='Layer__bills-account__title-container'>
-                <Text
-                  weight={TextWeight.bold}
-                  className='Layer__bills-account__title'
-                >
-                  Bill details
-                </Text>
-                <Text
-                  size={TextSize.sm}
-                  className='Layer__bills-account__header__date'
-                >
-                  PG&E 08/01/2024
-                </Text>
-              </div>
-            </HeaderCol>
-          </HeaderRow>
-        </Header>
+  const disabled = useMemo(() => {
+    return billInDetails?.status.includes('PAID')
+  }, [billInDetails])
 
+  return (
+    <Panel
+      sidebar={<BillsSidebar />}
+      sidebarIsOpen={showRecordPaymentForm}
+      parentRef={containerRef}
+      className={baseClassName}
+    >
+      <Header className='Layer__bills-account__header'>
+        <HeaderRow>
+          <HeaderCol>
+            <BackButton onClick={() => closeBillDetails()} />
+            <div className='Layer__bills-account__title-container'>
+              <Text
+                weight={TextWeight.bold}
+                className='Layer__bills-account__title'
+              >
+                Bill details
+              </Text>
+              <Text
+                size={TextSize.sm}
+                className='Layer__bills-account__header__date'
+              >
+                {getVendorName(bill.vendor)}
+                {' '}
+                {formatDate(bill.due_at, DATE_FORMAT_SHORT)}
+              </Text>
+            </div>
+          </HeaderCol>
+        </HeaderRow>
+      </Header>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          void form.handleSubmit()
+        }}
+      >
         <div className='Layer__bill-details__content'>
           <div className='Layer__bill-details__section Layer__bill-details__head'>
-            <div className='Layer__bill-details__summary'>
-              <div>
-                <Text
-                  size={TextSize.sm}
-                  className='Layer__bill-details__summary__label'
-                >
-                  Bill amount
-                </Text>
-                <Text
-                  weight={TextWeight.bold}
-                  size={TextSize.lg}
-                  className='Layer__bill-details__summary__value'
-                >
-                  {convertNumberToCurrency(bill.total_amount)}
-                </Text>
-              </div>
-              <div>
-                <Text
-                  size={TextSize.sm}
-                  className='Layer__bill-details__summary__label'
-                >
-                  Status
-                </Text>
-                <Text
-                  weight={TextWeight.bold}
-                  size={TextSize.lg}
-                  className='Layer__bill-details__summary__value'
-                >
-                  Paid
-                </Text>
-              </div>
-              <div>
-                <Text
-                  size={TextSize.sm}
-                  className='Layer__bill-details__summary__label'
-                >
-                  Paid on
-                </Text>
-                <Text
-                  weight={TextWeight.bold}
-                  size={TextSize.lg}
-                  className='Layer__bill-details__summary__value'
-                >
-                  08/01/2024
-                </Text>
-              </div>
-            </div>
+            <BillSummary bill={bill} />
             <div className='Layer__bill-details__action'>
               {UnpaidStatuses.includes(bill.status) && !showRecordPaymentForm
                 ? (
@@ -141,19 +110,26 @@ export const BillsDetails = ({
           <div className='Layer__bill-details__section'>
             <div className='Layer__bill-details__form-row'>
               <div className='Layer__bill-details__form-col'>
-                <InputGroup inline={true} label='Vendor'>
-                  <Select
-                    value='PG&E'
-                    options={[{ options: ['PG&E'], label: 'PG&E' }]}
-                    onChange={() => {}}
-                  />
-                </InputGroup>
-                <InputGroup inline={true} label='Adress'>
-                  <Textarea
-                    value={bill.vendor?.address_string}
-                    disabled={true}
-                  />
-                </InputGroup>
+                <form.Field name='vendor'>
+                  {field => (
+                    <>
+                      <InputGroup inline={true} label='Vendor'>
+                        <SelectVendor
+                          value={field.state.value ?? null}
+                          onChange={vendor => field.handleChange(vendor ?? undefined)}
+                          disabled={disabled}
+                        />
+                      </InputGroup>
+
+                      <InputGroup inline={true} label='Adress'>
+                        <Textarea
+                          value={field.state.value?.address_string}
+                          disabled={true}
+                        />
+                      </InputGroup>
+                    </>
+                  )}
+                </form.Field>
               </div>
             </div>
 
@@ -166,6 +142,7 @@ export const BillsDetails = ({
                         value={BillTerms.find(t => t.id === field.state.value)}
                         options={BillTerms}
                         onChange={x => field.handleChange(x.id)}
+                        disabled={disabled}
                       />
                     </InputGroup>
                   )}
@@ -178,6 +155,7 @@ export const BillsDetails = ({
                         selected={field.state.value ? parseISO(field.state.value) : new Date()}
                         onChange={e => field.handleChange(formatISO(e as Date))}
                         dateFormat='MM/dd/yyyy'
+                        disabled={disabled}
                       />
                     </InputGroup>
                   )}
@@ -190,6 +168,7 @@ export const BillsDetails = ({
                       <Input
                         value={field.state.value}
                         onChange={e => field.handleChange((e.target as HTMLInputElement).value)}
+                        disabled={disabled}
                       />
                     </InputGroup>
                   )}
@@ -211,6 +190,7 @@ export const BillsDetails = ({
                           }}
                           maxDate={null}
                           dateFormat='MM/dd/yyyy'
+                          disabled={disabled}
                         />
                       </InputGroup>
                     )
@@ -237,16 +217,17 @@ export const BillsDetails = ({
                         <div key={i} className='Layer__bill-details__category-row'>
                           <form.Field name={`line_items[${i}].product`}>
                             {(subField) => {
+                              const selectedCategory =
+                                subField.state.value
+                                  ? findCategoryById(subField.state.value, categories)
+                                  : undefined
+
                               return (
-                                <Select
-                                  value='Legal & Professional Fees:Acco...'
-                                  options={[
-                                    {
-                                      label: 'Legal & Professional Fees',
-                                      options: ['Legal & Professional Fees:Acco...'],
-                                    },
-                                  ]}
-                                  onChange={e => subField.handleChange(e)}
+                                <CategorySelect
+                                  value={selectedCategory && mapCategoryToOption(selectedCategory)}
+                                  onChange={e => subField.handleChange(e.payload.id)}
+                                  showTooltips={false}
+                                  disabled={disabled}
                                 />
                               )
                             }}
@@ -255,12 +236,11 @@ export const BillsDetails = ({
                           <form.Field name={`line_items[${i}].total_amount`}>
                             {(subField) => {
                               return (
-                                <Input
+                                <AmountInput
                                   value={subField.state.value}
-                                  onChange={e =>
-                                    subField.handleChange(
-                                      Number((e.target as HTMLInputElement).value))}
-                                  placeholder='Description'
+                                  onChange={e => subField.handleChange(Number(e))}
+                                  placeholder='Amount'
+                                  disabled={disabled}
                                 />
                               )
                             }}
@@ -274,23 +254,8 @@ export const BillsDetails = ({
                                   onChange={e =>
                                     subField.handleChange((e.target as HTMLInputElement).value)}
                                   placeholder='Description'
+                                  disabled={disabled}
                                 />
-                              )
-                            }}
-                          </form.Field>
-
-                          <form.Field name={`line_items[${i}].tax`}>
-                            {(subField) => {
-                              return (
-                                <Checkbox label='Tax' variant={CheckboxVariant.DARK} />
-                              )
-                            }}
-                          </form.Field>
-
-                          <form.Field name={`line_items[${i}].billable`}>
-                            {(subField) => {
-                              return (
-                                <Checkbox label='Billable' variant={CheckboxVariant.DARK} />
                               )
                             }}
                           </form.Field>
@@ -302,6 +267,7 @@ export const BillsDetails = ({
                         type='button'
                         variant={ButtonVariant.secondary}
                         onClick={() => field.pushValue({})}
+                        disabled={disabled}
                       >
                         Add next
                       </Button>
@@ -309,11 +275,10 @@ export const BillsDetails = ({
                   </div>
                 )
               }}
-
             </form.Field>
           </div>
         </div>
-      </Panel>
-    </form>
+      </form>
+    </Panel>
   )
 }
