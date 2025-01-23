@@ -15,16 +15,19 @@ import { InputWithBadge, InputGroup, Select } from '../Input'
 import { JournalConfig } from '../Journal/Journal'
 import { Text, TextSize } from '../Typography'
 import { useAllCategories } from '../../hooks/categories/useAllCategories'
+import { safeAssertUnreachable } from '../../utils/switch/safeAssertUnreachable'
 
-type WithSubCategories = { subCategories?: Array<WithSubCategories> }
+type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
 
-function recursiveFlattenCategories<T extends WithSubCategories>(accounts: Array<T>): Array<T> {
+function recursiveFlattenCategories<T extends WithSubCategories>(
+  accounts: ReadonlyArray<T>,
+): ReadonlyArray<T> {
   const flattenedResult = accounts.flatMap(a => [
     a,
     recursiveFlattenCategories((a.subCategories ?? [])),
   ]).flat()
 
-  return flattenedResult as Array<T>
+  return flattenedResult as ReadonlyArray<T>
 }
 
 export const JournalFormEntryLines = ({
@@ -53,12 +56,27 @@ export const JournalFormEntryLines = ({
   const { flattenedCategories, parentOptions } = useMemo(() => {
     const flattenedCategories = recursiveFlattenCategories(data ?? [])
 
-    const parentOptions = flattenedCategories
+    const parentOptions = [...flattenedCategories]
       .sort((a, b) => (a.display_name.localeCompare(b.display_name)))
-      .map(({ display_name, id }) => {
-        return {
-          label: display_name,
-          value: id,
+      .map((account) => {
+        switch (account.type) {
+          case 'AccountNested':
+            return {
+              label: account.display_name,
+              value: account.id,
+            }
+          case 'OptionalAccountNested':
+            return {
+              label: account.display_name,
+              value: account.stable_name,
+            }
+          case 'ExclusionNested':
+            return {
+              label: account.display_name,
+              value: account.id,
+            }
+          default:
+            safeAssertUnreachable(account, 'Unexpected account type')
         }
       })
 
@@ -69,11 +87,40 @@ export const JournalFormEntryLines = ({
     lineItemIndex,
     value,
   }: { lineItemIndex: number, value: BaseSelectOption }) => {
-    const relevantCategory = flattenedCategories.find(x => x.id === value.value)
+    const relevantCategory = flattenedCategories.find((x) => {
+      switch (x.type) {
+        case 'AccountNested':
+          return x.id === value.value
+        case 'OptionalAccountNested':
+          return x.stable_name === value.value
+        case 'ExclusionNested':
+          return x.id === value.value
+        default:
+          safeAssertUnreachable(x, 'Unexpected account type')
+      }
+    })
 
     if (!relevantCategory) {
       return
     }
+
+    const baseFields = relevantCategory.type === 'OptionalAccountNested'
+      ? {
+        id: relevantCategory.stable_name,
+        stable_name: relevantCategory.stable_name,
+        account_type: {
+          value: relevantCategory.stable_name,
+          display_name: relevantCategory.display_name,
+        },
+      }
+      : {
+        id: relevantCategory.id,
+        stable_name: ('stable_name' in relevantCategory) ? relevantCategory.stable_name ?? '' : '',
+        account_type: {
+          value: relevantCategory.id,
+          display_name: relevantCategory.display_name,
+        },
+      }
 
     return changeFormData(
       'parent',
@@ -81,13 +128,8 @@ export const JournalFormEntryLines = ({
       lineItemIndex,
       [
         {
-          id: relevantCategory.id,
+          ...baseFields,
           name: relevantCategory.display_name,
-          stable_name: relevantCategory.stable_name ?? '',
-          account_type: {
-            value: relevantCategory.id,
-            display_name: relevantCategory.display_name,
-          },
           sub_accounts: [],
           balance: 0,
           normality: Direction.DEBIT,
