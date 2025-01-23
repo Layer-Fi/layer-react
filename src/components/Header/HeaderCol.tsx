@@ -1,14 +1,23 @@
-import { CSSProperties, ReactNode } from 'react'
+import { CSSProperties, ReactNode, useMemo } from 'react'
 import classNames from 'classnames'
+import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 
 interface HeaderColProps {
   className?: string
   style?: CSSProperties
+  noPadding?: boolean
   children: ReactNode
 }
 
-export const HeaderCol = ({ className, children, style }: HeaderColProps) => (
-  <div className={classNames('Layer__header__col', className)} style={style}>
-    {children}
-  </div>
-)
+export const HeaderCol = ({ className, children, style, noPadding = false }: HeaderColProps) => {
+  const dataProperties = useMemo(
+    () => toDataProperties({ 'no-padding': noPadding }),
+    [noPadding],
+  )
+
+  return (
+    <div {...dataProperties} className={classNames('Layer__header__col', className)} style={style}>
+      {children}
+    </div>
+  )
+}

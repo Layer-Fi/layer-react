@@ -16,6 +16,7 @@ export const TableCell = ({
   onClick,
   style,
   width,
+  nowrap,
 }: TableCellProps) => {
   const amount = typeof children === 'number' ? children : 0
   const isPositive = amount >= 0
@@ -24,10 +25,12 @@ export const TableCell = ({
   const cellClassNames = classNames(
     'Layer__table-cell',
     (primary || isHeaderCell) && 'Layer__table-cell--primary',
+    isHeaderCell && 'Layer__table-header',
     isCurrency && 'Layer__table-cell-amount',
     isCurrency && isPositive && 'Layer__table-cell-amount--positive',
     isCurrency && !isPositive && 'Layer__table-cell-amount--negative',
     align && `Layer__table-cell--${align}`,
+    nowrap && 'Layer__table-cell--nowrap',
     className,
   )
 

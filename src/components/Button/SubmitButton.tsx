@@ -14,6 +14,7 @@ export interface SubmitButtonProps
   error?: boolean | string
   active?: boolean
   iconOnly?: boolean
+  variant?: ButtonProps['variant']
   action?: SubmitAction
   noIcon?: boolean
   tooltip?: ButtonProps['tooltip']
@@ -78,6 +79,7 @@ export const SubmitButton = ({
   children,
   action = SubmitAction.SAVE,
   noIcon,
+  variant = ButtonVariant.primary,
   ...props
 }: SubmitButtonProps) => {
   const baseClassName = classNames(
@@ -89,7 +91,7 @@ export const SubmitButton = ({
     <Button
       {...props}
       className={baseClassName}
-      variant={ButtonVariant.primary}
+      variant={variant}
       disabled={processing || disabled}
       rightIcon={buildRightIcon({ processing, error, action, noIcon })}
       iconAsPrimary={true}
