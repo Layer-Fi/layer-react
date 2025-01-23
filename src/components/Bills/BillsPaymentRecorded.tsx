@@ -1,4 +1,4 @@
-import React from 'react'
+import { useMemo } from 'react'
 import { useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import Check from '../../icons/Check'
 import { Button, ButtonVariant, CloseButton } from '../Button'
@@ -6,6 +6,9 @@ import { Header } from '../Container'
 import { HeaderRow, HeaderCol } from '../Header'
 import { InputGroup, StaticValue } from '../Input'
 import { Heading, HeadingSize, Text, TextSize } from '../Typography'
+import { getVendorName } from '../../utils/vendors'
+import { convertNumberToCurrency, formatDate } from '../../utils/format'
+import { isBillPaid } from '../../utils/bills'
 
 export const BillsPaymentRecorded = ({
   stringOverrides,
@@ -14,34 +17,21 @@ export const BillsPaymentRecorded = ({
     header?: string
   }
 }) => {
-  const { closeRecordPayment } = useBillsRecordPaymentContext()
+  const {
+    billsToPay,
+    closeRecordPayment,
+    paymentDate,
+    vendor,
+    payRemainingBalance,
+  } = useBillsRecordPaymentContext()
 
-  /** @TODO eplace with actual data - from API response OR state? */
-  const paymentDetails = {
-    vendor: 'PG&E',
-    paymentDate: 'Nov 5, 2023',
-    totalPaid: '$172.88',
-    billsPaid: [
-      {
-        date: '08/01/2024',
-        amountPaid: '$86.44',
-        openBalance: '$0.00',
-        isPaid: true,
-      },
-      {
-        date: '08/01/2024',
-        amountPaid: '$86.44',
-        openBalance: '$10.00',
-        isPaid: false,
-      },
-      {
-        date: '07/14/2024',
-        amountPaid: '$10.00',
-        openBalance: '$0.00',
-        isPaid: true,
-      },
-    ],
-  }
+  const totalPaid = useMemo(() => billsToPay.reduce((acc, record) =>
+    acc + (record.amount !== undefined ? Number(record.amount) : 0), 0),
+  [billsToPay])
+
+  const anyUnpaid = useMemo(() =>
+    billsToPay.some(record => record.bill?.status !== 'PAID'),
+  [billsToPay])
 
   return (
     <div className='Layer__bills__payment-recorded'>
@@ -60,13 +50,13 @@ export const BillsPaymentRecorded = ({
       <div className='Layer__bills__payment-recorded__content'>
         <div className='Layer__bills__payment-recorded__summary'>
           <InputGroup inline={true} label='Vendor'>
-            <StaticValue>{paymentDetails.vendor}</StaticValue>
+            <StaticValue>{getVendorName(vendor)}</StaticValue>
           </InputGroup>
           <InputGroup inline={true} label='Payment date'>
-            <StaticValue>{paymentDetails.paymentDate}</StaticValue>
+            <StaticValue>{formatDate(paymentDate)}</StaticValue>
           </InputGroup>
           <InputGroup inline={true} label='Total paid'>
-            <StaticValue>{paymentDetails.totalPaid}</StaticValue>
+            <StaticValue>{convertNumberToCurrency(totalPaid)}</StaticValue>
           </InputGroup>
         </div>
       </div>
@@ -84,42 +74,46 @@ export const BillsPaymentRecorded = ({
               <th className='Layer__bills__payment-recorded__open-balance-col'>
                 <Text size={TextSize.sm}>Open balance</Text>
               </th>
+              <th />
             </tr>
           </thead>
           <tbody>
-            {paymentDetails.billsPaid.map((bill, index) => (
+            {billsToPay.map((record, index) => (
               <tr
                 key={index}
                 className='Layer__bills__payment-recorded__bill-row'
               >
                 <td>
-                  <Text>{bill.date}</Text>
+                  <Text>{formatDate(record.bill?.due_at)}</Text>
                 </td>
                 <td>
                   <Text className='Layer__bills__payment-recorded__amount-paid-col'>
-                    {bill.amountPaid}
+                    {convertNumberToCurrency(Number(record.amount))}
                   </Text>
                 </td>
                 <td className='Layer__bills__payment-recorded__open-balance-col'>
-                  <Text className={bill.isPaid ? 'paid' : 'unpaid'}>
-                    {bill.openBalance}
+                  <Text as='span' status={isBillPaid(record.bill?.status) ? 'success' : 'error'}>
+                    {convertNumberToCurrency(record.bill?.outstanding_balance)}
                   </Text>
                 </td>
-                <td>
-                  {bill.isPaid && <Check size={18} className='paid-icon' />}
+                <td className='Layer__bills__payment-recorded__paid-icon-col'>
+                  {record.bill?.status !== 'PAID' && <Check size={18} />}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <div className='Layer__bills__payment-recorded__submit-container'>
-          <Button
-            variant={ButtonVariant.secondary}
-            className='Layer__bills__payment-recorded__record-balance'
-          >
-            Record remaining balance
-          </Button>
-        </div>
+        {anyUnpaid && (
+          <div className='Layer__bills__payment-recorded__submit-container'>
+            <Button
+              variant={ButtonVariant.secondary}
+              className='Layer__bills__payment-recorded__record-balance'
+              onClick={payRemainingBalance}
+            >
+              Record remaining balance
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   )

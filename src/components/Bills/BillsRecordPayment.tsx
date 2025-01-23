@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useMemo } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import {
@@ -10,20 +10,29 @@ import {
 import { Header } from '../Container'
 import { DatePicker } from '../DatePicker'
 import { HeaderRow, HeaderCol } from '../Header'
-import { InputGroup, Input, StaticValue, Select } from '../Input'
+import { InputGroup, StaticValue, Select } from '../Input'
 import { JournalFormStringOverrides } from '../JournalForm/JournalForm'
 import { Heading, HeadingSize, TextSize, Text } from '../Typography'
 import { Bill } from '../../types/bills'
 import CloseIcon from '../../icons/CloseIcon'
 import { parseISO, format as formatTime } from 'date-fns'
 import { convertNumberToCurrency } from '../../utils/format'
+import { getVendorName } from '../../utils/vendors'
+import { AmountInput } from '../Input/AmountInput'
+import { BillsRecordPaymentFormRecord } from '../../hooks/useBillsRecordPayment'
 
 /** @TODO - temp - remove after rebase */
 const convertFromCents = (amount: number) => {
   return amount / 100
 }
 
-const buildLabel = (bill: Bill, amount?: number) => {
+const buildLabel = (bill: Bill, amount?: string) => {
+  const amountNumber = amount !== undefined ? Number(amount) : 0
+  const totalAmount = convertNumberToCurrency(convertFromCents(bill.total_amount))
+  const currentAmount = convertNumberToCurrency(
+    convertFromCents((bill.outstanding_balance ?? 0)) + amountNumber,
+  )
+
   return (
     <span className='Layer__bills__record-payment__select-label'>
       <span className='Layer__bills__record-payment__select-label__date'>
@@ -31,13 +40,25 @@ const buildLabel = (bill: Bill, amount?: number) => {
       </span>
       <span className='Layer__bills__record-payment__select-label__value'>
         <span className='Layer__bills__record-payment__select-label__bill-amount'>
-          {convertNumberToCurrency(convertFromCents(bill.total_amount))}
+          {currentAmount}
           /
         </span>
-        {convertNumberToCurrency(convertFromCents((bill.outstanding_balance ?? 0) + (amount ?? 0)))}
+        {totalAmount}
       </span>
     </span>
   )
+}
+
+const getAvailableBills = (
+  data: Bill[],
+  billsToPay: BillsRecordPaymentFormRecord[],
+  vendorId?: string,
+) => {
+  return data.filter(b => (
+    b.status !== 'PAID'
+    && !billsToPay.find(x => x.bill?.id === b.id)
+    && (vendorId ? b.vendor?.id === vendorId : true)
+  ))
 }
 
 export const BillsRecordPayment = ({
@@ -53,12 +74,17 @@ export const BillsRecordPayment = ({
     removeBillByIndex,
     recordPayment,
     closeRecordPayment,
+    paymentDate,
+    setPaymentDate,
+    vendor,
   } = useBillsRecordPaymentContext()
-  /** @TODO - we don't want to use all bills here, another API call to get all bills by vendor? */
   const { data } = useBillsContext()
-  const [paymentDate, setPaymentDate] = useState(new Date())
+  const availableBills = useMemo(() =>
+    getAvailableBills(data, billsToPay, vendor?.id),
+  [data, billsToPay, vendor])
 
-  const totalAmount = billsToPay.reduce((acc, record) => acc + (record.amount ?? 0), 0)
+  const totalAmount = billsToPay.reduce((acc, record) =>
+    acc + (record.amount !== undefined ? Number(record.amount) : 0), 0)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -87,7 +113,7 @@ export const BillsRecordPayment = ({
             className='Layer__bills__record-payment__vendor'
             inline={true}
           >
-            <StaticValue>PG&E</StaticValue>
+            <StaticValue>{vendor && getVendorName(vendor)}</StaticValue>
           </InputGroup>
 
           <InputGroup
@@ -114,17 +140,17 @@ export const BillsRecordPayment = ({
             <div key={index} className='Layer__bills__record-payment__amount-row'>
               <InputGroup inline={true}>
                 <Select
-                  options={data.map(b => ({
+                  options={availableBills.map(b => ({
                     label: buildLabel(
                       b,
-                      billsToPay.find(x => x.bill?.id === b.id)?.amount ?? 0,
+                      billsToPay.find(x => x.bill?.id === b.id)?.amount,
                     ),
                     value: b,
                   }))}
                   value={record.bill && {
                     label: buildLabel(
                       record.bill,
-                      billsToPay.find(x => x.bill?.id === record.bill?.id)?.amount ?? 0,
+                      billsToPay.find(x => x.bill?.id === record.bill?.id)?.amount,
                     ),
                     value: record.bill,
                   }}
@@ -134,12 +160,9 @@ export const BillsRecordPayment = ({
                     }
                   }}
                 />
-                {/** @TODO - use AmountInput from another PR  */}
-                <Input
-                  type='number'
+                <AmountInput
                   value={record.amount}
-                  onChange={e =>
-                    setAmountByIndex(index, Number((e.target as HTMLInputElement).value))}
+                  onChange={value => setAmountByIndex(index, value)}
                 />
               </InputGroup>
               <IconButton
@@ -161,8 +184,7 @@ export const BillsRecordPayment = ({
           <div className='Layer__bills__record-payment__total'>
             <Text size={TextSize.md}>Total</Text>
             <Text size={TextSize.md}>
-              $
-              {totalAmount}
+              {convertNumberToCurrency(totalAmount)}
             </Text>
           </div>
 

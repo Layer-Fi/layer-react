@@ -1,4 +1,3 @@
-import React from 'react'
 import { DatePicker } from '../DatePicker/DatePicker'
 import { useBillsContext } from '../../contexts/BillsContext'
 
