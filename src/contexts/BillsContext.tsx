@@ -17,6 +17,8 @@ export const BillsContext = createContext<BillsContextType>({
   setStatus: () => {},
   dateRange: { startDate: startOfMonth(new Date()), endDate: endOfMonth(new Date()) },
   setDateRange: () => {},
+  vendor: null,
+  setVendor: () => {},
 })
 
 export type BillsRecordPaymentContextType = ReturnType<typeof useBillsRecordPayment>
@@ -35,11 +37,13 @@ export const BillsRecordPaymentContext = createContext<BillsRecordPaymentContext
   showRecordPaymentForm: false,
   setShowRecordPaymentForm: () => {},
   bulkSelectionActive: false,
-  setBulkSelectionActive: () => {},
+  openBulkSelection: () => {},
+  closeBulkSelection: () => {},
   recordPayment: () => Promise.resolve(),
   dataSaved: false,
   closeRecordPayment: () => {},
   recordPaymentForBill: () => {},
+  payRemainingBalance: () => {},
 })
 
 export const useBillsContext = () => useContext(BillsContext)
