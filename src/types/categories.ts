@@ -14,12 +14,12 @@ type BaseCategory = {
   subCategories: Array<Category> | null
   description: string | null
 }
-export type AccountNestedCategory = {
+type AccountNestedCategory = {
   type: 'AccountNested'
   id: string
   stable_name: string | null
 } & BaseCategory
-export type OptionalAccountNestedCategory = {
+type OptionalAccountNestedCategory = {
   type: 'OptionalAccountNested'
   stable_name: string
 } & BaseCategory

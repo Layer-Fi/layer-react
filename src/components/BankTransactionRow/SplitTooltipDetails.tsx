@@ -1,13 +1,12 @@
-
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { Category } from '../../types'
+import type { CategoryWithEntries } from '../../types/bank_transactions'
 
 export const SplitTooltipDetails = ({
   classNamePrefix,
   category,
 }: {
   classNamePrefix: string
-  category: Category
+  category: CategoryWithEntries
 }) => {
   if (!category.entries) {
     return
@@ -22,7 +21,8 @@ export const SplitTooltipDetails = ({
               {entry.category.display_name}
             </span>
             <span className={`${classNamePrefix}__split-tooltip__value`}>
-              ${formatMoney(entry.amount)}
+              $
+              {formatMoney(entry.amount)}
             </span>
           </li>
         ))}

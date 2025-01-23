@@ -16,7 +16,7 @@ export enum DisplayState {
   categorized = 'categorized',
 }
 
-type CategoryWithEntries = Category & { entries?: Array<CategoryEntry> }
+export type CategoryWithEntries = Category & { entries?: Array<CategoryEntry> }
 type CategoryEntry = {
   type?: string
   amount?: number
@@ -40,7 +40,7 @@ export interface BankTransaction extends Record<string, unknown> {
   amount: number
   direction: Direction
   counterparty_name: string
-  category: Array<CategoryWithEntries>
+  category: CategoryWithEntries
   categorization_status: CategorizationStatus
   categorization_flow: Categorization | null
   categorization_method: string
