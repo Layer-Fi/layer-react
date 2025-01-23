@@ -164,8 +164,10 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     const defaultCategory =
       bankTransaction.category
-      || (hasSuggestions(bankTransaction.categorization_flow)
-        && bankTransaction.categorization_flow?.suggestions?.[0])
+        ? bankTransaction.category
+        : hasSuggestions(bankTransaction.categorization_flow)
+          ? bankTransaction.categorization_flow?.suggestions.at(0)
+          : undefined
 
     const [rowState, updateRowState] = useState<RowState>({
       splits: bankTransaction.category?.entries
@@ -186,7 +188,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
           {
             amount: bankTransaction.amount,
             inputValue: formatMoney(bankTransaction.amount),
-            category: mapCategoryToOption(defaultCategory),
+            category: defaultCategory ? mapCategoryToOption(defaultCategory) : undefined,
           },
         ],
       description: '',
@@ -201,7 +203,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
           {
             amount: 0,
             inputValue: '0.00',
-            category: mapCategoryToOption(defaultCategory),
+            category: defaultCategory ? mapCategoryToOption(defaultCategory) : undefined,
           },
         ],
       })
