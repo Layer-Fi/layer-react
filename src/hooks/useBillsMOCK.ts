@@ -1,4 +1,5 @@
 import { Bill } from '../types/bills'
+import { VENDORS_MOCK } from './useVendorsMOCK'
 
 export const BILLS_MOCK_PAID: Bill[] = [
   {
@@ -8,8 +9,8 @@ export const BILLS_MOCK_PAID: Bill[] = [
     external_id: 'EXT001',
     status: 'PAID',
     received_at: '2024-01-15T10:00:00Z',
-    due_at: '2024-02-15T10:00:00Z',
-    paid_at: '2024-02-01T15:30:00Z',
+    due_at: '2025-02-15T10:00:00Z',
+    paid_at: '2025-02-01T15:30:00Z',
     bill_number: 'INV-2024-001',
     line_items: [
       {
@@ -44,7 +45,7 @@ export const BILLS_MOCK_PAID: Bill[] = [
         ],
         amount: 280.50,
         processor: 'Stripe',
-        imported_at: '2024-02-01T15:31:00Z',
+        imported_at: '2025-01-23T15:31:00Z',
         transaction_tags: [
           {
             id: 'tt001',
@@ -67,6 +68,7 @@ export const BILLS_MOCK_PAID: Bill[] = [
         updated_at: '2024-01-15T10:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[0],
   },
   {
     id: 'b002',
@@ -76,7 +78,7 @@ export const BILLS_MOCK_PAID: Bill[] = [
     status: 'PAID',
     received_at: '2024-01-20T10:00:00Z',
     due_at: '2024-02-20T10:00:00Z',
-    paid_at: '2024-02-10T13:30:00Z',
+    paid_at: '2025-01-21T13:30:00Z',
     bill_number: 'INV-2024-002',
     line_items: [
       {
@@ -128,6 +130,7 @@ export const BILLS_MOCK_PAID: Bill[] = [
         updated_at: '2024-01-20T10:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[0],
   },
   {
     id: 'b003',
@@ -195,6 +198,7 @@ export const BILLS_MOCK_PAID: Bill[] = [
         updated_at: '2024-01-25T11:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[0],
   },
   {
     id: 'b004',
@@ -256,6 +260,7 @@ export const BILLS_MOCK_PAID: Bill[] = [
         updated_at: '2024-01-30T14:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[1],
   },
   {
     id: 'b005',
@@ -264,7 +269,7 @@ export const BILLS_MOCK_PAID: Bill[] = [
     external_id: 'EXT005',
     status: 'PAID',
     received_at: '2024-02-01T09:00:00Z',
-    due_at: '2024-03-03T09:00:00Z',
+    due_at: '2025-01-23T09:00:00Z',
     paid_at: '2024-02-25T11:30:00Z',
     bill_number: 'INV-2024-005',
     line_items: [
@@ -317,6 +322,7 @@ export const BILLS_MOCK_PAID: Bill[] = [
         updated_at: '2024-02-01T09:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[2],
   },
   {
     id: 'b006',
@@ -384,6 +390,7 @@ export const BILLS_MOCK_PAID: Bill[] = [
         updated_at: '2024-02-05T13:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[3],
   },
   {
     id: 'b007',
@@ -451,6 +458,7 @@ export const BILLS_MOCK_PAID: Bill[] = [
         updated_at: '2024-02-10T15:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[4],
   },
 ]
 
@@ -480,7 +488,7 @@ export const BILLS_MOCK_UNPAID: Bill[] = [
     ],
     subtotal: 500000,
     total_amount: 550000,
-    outstanding_balance: 550000,
+    outstanding_balance: 40000,
     payment_allocations: [],
     imported_at: '2025-03-01T09:01:00Z',
     updated_at: '2024-03-01T09:01:00Z',
@@ -493,6 +501,7 @@ export const BILLS_MOCK_UNPAID: Bill[] = [
         updated_at: '2024-03-01T09:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[0],
   },
   {
     id: 'b009',
@@ -532,6 +541,7 @@ export const BILLS_MOCK_UNPAID: Bill[] = [
         updated_at: '2024-03-02T10:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[1],
   },
   {
     id: 'b010',
@@ -540,7 +550,7 @@ export const BILLS_MOCK_UNPAID: Bill[] = [
     external_id: 'EXT010',
     status: 'SENT',
     received_at: '2024-03-03T11:00:00Z',
-    due_at: '2024-04-02T11:00:00Z',
+    due_at: '2025-01-22T11:00:00Z',
     bill_number: 'INV-2024-010',
     line_items: [
       {
@@ -578,6 +588,7 @@ export const BILLS_MOCK_UNPAID: Bill[] = [
         updated_at: '2024-03-03T11:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[1],
   },
   {
     id: 'b011',
@@ -586,7 +597,7 @@ export const BILLS_MOCK_UNPAID: Bill[] = [
     external_id: 'EXT011',
     status: 'SENT',
     received_at: '2024-03-04T13:00:00Z',
-    due_at: '2024-04-03T13:00:00Z',
+    due_at: '2025-01-23T13:00:00Z',
     bill_number: 'INV-2024-011',
     line_items: [
       {
@@ -624,6 +635,7 @@ export const BILLS_MOCK_UNPAID: Bill[] = [
         updated_at: '2024-03-04T13:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[2],
   },
   {
     id: 'b012',
@@ -632,7 +644,7 @@ export const BILLS_MOCK_UNPAID: Bill[] = [
     external_id: 'EXT012',
     status: 'SENT',
     received_at: '2024-03-05T14:00:00Z',
-    due_at: '2024-04-04T14:00:00Z',
+    due_at: '2025-01-24T14:00:00Z',
     bill_number: 'INV-2024-012',
     line_items: [
       {
@@ -670,6 +682,7 @@ export const BILLS_MOCK_UNPAID: Bill[] = [
         updated_at: '2024-03-05T14:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[5],
   },
   {
     id: 'b013',
@@ -716,5 +729,6 @@ export const BILLS_MOCK_UNPAID: Bill[] = [
         updated_at: '2024-03-06T15:01:00Z',
       },
     ],
+    vendor: VENDORS_MOCK[10],
   },
 ]

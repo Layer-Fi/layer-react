@@ -1,3 +1,4 @@
+/** @TODO remove or merge with other checkbox component */
 import React from 'react'
 import classNames from 'classnames'
 

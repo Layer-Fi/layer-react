@@ -1,15 +1,15 @@
-import React, { RefObject, useMemo, useState } from 'react'
+import { RefObject, useMemo, useState } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { BillsSidebar } from './BillsSidebar'
-import { Button, CloseButton, IconButton } from '../Button'
+import { Button, IconButton } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'
-import { Select } from '../Input'
 import { Pagination } from '../Pagination'
 import { Panel } from '../Panel'
 import { Toggle } from '../Toggle'
 import { BillsTable } from './BillsTable'
 import CloseIcon from '../../icons/CloseIcon'
 import { BillStatusFilter } from '../../types/bills'
+import { SelectVendor } from '../Vendors/SelectVendor'
 
 export interface BillsTableStringOverrides {
   componentTitle?: string
@@ -36,11 +36,14 @@ export const BillsTableWithPanel = ({
   stringOverrides?: BillsTableStringOverrides
 }) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const { data: rawData, status, setStatus } = useBillsContext()
+  const { data: rawData, status, setStatus, vendor, setVendor } = useBillsContext()
   const {
     bulkSelectionActive,
-    setBulkSelectionActive,
+    openBulkSelection,
+    closeBulkSelection,
     showRecordPaymentForm,
+    setShowRecordPaymentForm,
+    billsToPay,
   } = useBillsRecordPaymentContext()
 
   /** @TODO - temp pagiantion - based on the API, consider moving to Bills context */
@@ -48,11 +51,15 @@ export const BillsTableWithPanel = ({
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
     return rawData?.slice(firstPageIndex, lastPageIndex)
-  }, [rawData, currentPage])
+  }, [currentPage, pageSize, rawData])
+
+  const anyBillToPaySelected = useMemo(() => {
+    return billsToPay.length > 0
+  }, [billsToPay])
 
   return (
     <Panel
-      sidebar={<BillsSidebar parentRef={containerRef} />}
+      sidebar={<BillsSidebar />}
       sidebarIsOpen={showRecordPaymentForm}
       parentRef={containerRef}
     >
@@ -63,7 +70,7 @@ export const BillsTableWithPanel = ({
         rounded
       >
         <HeaderRow>
-          <HeaderCol style={{ paddingLeft: 0, paddingRight: 0 }}>
+          <HeaderCol noPadding>
             <Toggle
               name='bills-tabs'
               options={[
@@ -83,33 +90,39 @@ export const BillsTableWithPanel = ({
         </HeaderRow>
         {status === 'UNPAID' && (
           <HeaderRow>
-            <HeaderCol style={{ paddingLeft: 0, paddingRight: 0 }}>
+            <HeaderCol noPadding>
               {bulkSelectionActive
                 ? (
                   <>
-                    <Select
-                      options={data?.map(entry => ({
-                        value: entry.vendor,
-                        label: entry.vendor,
-                      }))}
-                      onChange={(selectedOption) => {
-                        const selectedEntry = data?.find(
-                          entry => entry.vendor === selectedOption.value,
-                        )
-                      }}
+                    <SelectVendor
+                      value={vendor}
+                      onChange={setVendor}
                       placeholder='Select vendor to record bulk payment'
                     />
                     <IconButton
                       icon={<CloseIcon />}
-                      onClick={() => setBulkSelectionActive(false)}
+                      onClick={() => {
+                        setVendor(null)
+                        closeBulkSelection()
+                      }}
                     />
                   </>
                 )
                 : (
-                  <Button onClick={() => setBulkSelectionActive(true)}>
+                  <Button onClick={openBulkSelection}>
                     Bulk record payments
                   </Button>
                 )}
+            </HeaderCol>
+            <HeaderCol noPadding>
+              {bulkSelectionActive && (
+                <Button
+                  onClick={() => setShowRecordPaymentForm(true)}
+                  disabled={!anyBillToPaySelected}
+                >
+                  Record payment
+                </Button>
+              )}
             </HeaderCol>
           </HeaderRow>
         )}

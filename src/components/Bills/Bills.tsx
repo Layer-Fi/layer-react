@@ -1,4 +1,3 @@
-import React from 'react'
 import { BillsProvider, useBillsContext } from '../../contexts/BillsContext'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
 import { BillsDetails } from './BillsDetails'

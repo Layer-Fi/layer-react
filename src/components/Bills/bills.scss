@@ -35,6 +35,16 @@
   }
 }
 
+.Layer__bills-table__vendor-col {
+  max-inline-size: 20cqi;
+}
+
+.Layer__bill-details__action {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
 .Layer__bills-table__checkbox {
   margin-right: var(--spacing-xs);
 }
@@ -42,6 +52,11 @@
 .Layer__bills {
   .Layer__panel {
     position: sticky;
+  }
+
+  .Layer__panel__content {
+    min-height: 500px;
+    max-height: 100vh;
   }
 
   .Layer__bills-account__title-container {
@@ -133,6 +148,11 @@
       label {
         max-width: 120px;
       }
+
+      .Layer__datepicker__wrapper {
+        width: 100%;
+        margin-left: 2px;
+      }
     }
   }
 
@@ -140,24 +160,14 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-bottom: var(--spacing-sm);
+    max-width: 1025px;
 
     > * {
-      &:nth-child(1) {
-        flex: 2;
-      }
+      flex: 1;
 
-      &:nth-child(2) {
-        flex: 1;
-      }
-
-      &:nth-child(3) {
-        flex: 2;
-      }
-
-      &:nth-child(4),
-      &:nth-child(5),
-      &:nth-child(6) {
-        flex: 0 0 auto;
+      .Layer__input {
+        width: 100%;
       }
     }
   }
@@ -234,6 +244,14 @@
     }
   }
 
+  &__amount-row .Layer__select {
+    font-size: 12px;
+
+    .Layer__select__value-container {
+      padding-right: 0;
+    }
+  }
+
   &__amount-display {
     min-width: 80px;
     text-align: right;
@@ -272,6 +290,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  font-size: 12px;
 }
 
 .Layer__bills__record-payment__select-label__bill-amount {
@@ -360,18 +379,10 @@
     text-align: right;
   }
 
-  &__bill-row {
-    .paid {
-      color: var(--color-success);
-    }
-
-    .unpaid {
-      color: var(--color-error);
-    }
-
-    .paid-icon {
-      color: var(--color-success);
-    }
+  &__paid-icon-col {
+    color: var(--color-success);
+    text-align: center;
+    padding-top: 5px;
   }
 
   &__amount-paid-col {

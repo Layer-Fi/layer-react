@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useLayerContext } from '../contexts/LayerContext'
 import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
 import { useAuth } from './useAuth'
@@ -8,6 +8,7 @@ import { BILLS_MOCK_PAID, BILLS_MOCK_UNPAID } from './useBillsMOCK'
 import { Bill, BillStatusFilter } from '../types/bills'
 import { DateRange } from '../types'
 import { endOfMonth, startOfMonth, sub } from 'date-fns'
+import { Vendor } from '../types/vendors'
 
 type UseBills = () => {
   data: Bill[]
@@ -18,10 +19,13 @@ type UseBills = () => {
   setStatus: (status: BillStatusFilter) => void
   dateRange: DateRange
   setDateRange: (dateRange: DateRange) => void
+  vendor: Vendor | null
+  setVendor: (vendor: Vendor | null) => void
 }
 
 export const useBills: UseBills = () => {
   const [status, setStatus] = useState<BillStatusFilter>('UNPAID')
+  const [vendor, setVendor] = useState<Vendor | null>(null)
   const [billInDetails, setBillInDetails] = useState<Bill | undefined>()
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: sub(startOfMonth(new Date()), { years: 1 }),
@@ -78,7 +82,14 @@ export const useBills: UseBills = () => {
   //   }),
   // )
 
-  const data = status === 'PAID' ? BILLS_MOCK_PAID : BILLS_MOCK_UNPAID
+  const data = useMemo(() => {
+    const collection = status === 'PAID' ? BILLS_MOCK_PAID : BILLS_MOCK_UNPAID
+    if (vendor) {
+      return collection.filter(bill => bill.vendor?.id === vendor.id)
+    }
+
+    return collection
+  }, [status, vendor])
 
   return {
     data,
@@ -89,5 +100,7 @@ export const useBills: UseBills = () => {
     setStatus,
     dateRange,
     setDateRange,
+    vendor,
+    setVendor,
   }
 }

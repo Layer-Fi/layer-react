@@ -1,15 +1,12 @@
+import { useState } from 'react'
 import { Bill, BillLineItem } from '../../types/bills'
 import { sleep } from '../../utils/helpers'
 import { useForm } from '@tanstack/react-form'
-
-export type VendorOption = {
-  id: string
-  name: string
-}
+import { Vendor } from '../../types/vendors'
 
 export type BillForm = {
   bill_number?: string
-  vendor?: VendorOption
+  vendor?: Vendor
   vendor_address?: string // read-only
   received_at?: string // OR DATE
   due_date?: string // OR DATE
@@ -20,13 +17,12 @@ export type BillForm = {
 }
 
 export const useBillForm = (bill: Bill) => {
+  const [isDirty, setIsDirty] = useState(false)
+
   const form = useForm<BillForm>({
     defaultValues: {
       bill_number: bill.bill_number,
-      vendor: bill.vendor && {
-        id: bill.vendor.id,
-        name: bill.vendor.company_name ?? '', // @TODO - build function to compose name
-      },
+      vendor: bill.vendor,
       vendor_address: bill.vendor?.address_string,
       received_at: bill.received_at,
       due_date: bill.due_at,
@@ -41,7 +37,10 @@ export const useBillForm = (bill: Bill) => {
     },
   })
 
-  console.log('bill.due_at', bill.due_at)
+  // Watching form.state.isDirty doesn't work as expected.
+  // It's not updated when the form is dirty.
+  // This `subscribe` and isDirty state are the workaround for this issue.
+  form.store.subscribe(state => setIsDirty(state.currentVal.isDirty))
 
-  return { form }
+  return { form, isDirty }
 }

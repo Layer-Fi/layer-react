@@ -24,7 +24,7 @@ import { useCategories } from '../../hooks/categories/useCategories'
 
 type Props = {
   name?: string
-  bankTransaction: BankTransaction
+  bankTransaction?: BankTransaction
   value: CategoryOption | undefined
   onChange: (newValue: CategoryOption) => void
   disabled?: boolean
