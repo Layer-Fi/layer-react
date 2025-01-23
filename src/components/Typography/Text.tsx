@@ -3,7 +3,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import classNames from 'classnames'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 
-export type TextStatus = 'success' | 'error' | 'warning'
+export type TextStatus = 'success' | 'error' | 'warning' | 'disabled'
 
 export enum TextSize {
   lg = 'lg',

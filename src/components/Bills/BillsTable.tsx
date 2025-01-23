@@ -76,11 +76,7 @@ const BillsTableContent = ({
                 disabled={isSelectionDisabled}
               />
             )}
-            <Text
-              as='span'
-              ellipsis
-              className={isSelectionDisabled ? 'Layer__text--disabled' : ''}
-            >
+            <Text as='span' ellipsis status={isSelectionDisabled ? 'disabled' : ''}>
               {getVendorName(entry.vendor)}
             </Text>
           </TableCell>
