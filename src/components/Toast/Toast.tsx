@@ -27,17 +27,15 @@ const Toast = (props: ToastProps & { isExiting: boolean }) => {
   )
 }
 
-export const ToastsContainer = forwardRef(function ToastsContainer(
-  _props,
-  ref: ForwardedRef<HTMLDivElement>,
-) {
+export const ToastsContainer = () => {
   const { toasts } = useLayerContext()
+  console.log('toasts', toasts)
 
   return (
-    <div ref={ref} className='Layer__toasts-container'>
+    <div className='Layer__toasts-container'>
       {toasts.map((toast, idx) => (
         <Toast key={`layer-toast-${idx}`} {...toast} />
       ))}
     </div>
   )
-})
+}
