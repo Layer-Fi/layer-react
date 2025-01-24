@@ -136,41 +136,45 @@ export const BillsRecordPayment = ({
           >
             Add amount
           </Heading>
-          {billsToPay.map((record, index) => (
-            <div key={index} className='Layer__bills__record-payment__amount-row'>
-              <InputGroup inline={true}>
-                <Select
-                  options={availableBills.map(b => ({
-                    label: buildLabel(
-                      b,
-                      billsToPay.find(x => x.bill?.id === b.id)?.amount,
-                    ),
-                    value: b,
-                  }))}
-                  value={record.bill && {
-                    label: buildLabel(
-                      record.bill,
-                      billsToPay.find(x => x.bill?.id === record.bill?.id)?.amount,
-                    ),
-                    value: record.bill,
-                  }}
-                  onChange={(option) => {
-                    if (option.value) {
-                      setBill(option.value, index)
-                    }
-                  }}
+
+          <div className='Layer__bills__record-payment__amount-rows'>
+            {billsToPay.map((record, index) => (
+              <div key={index} className='Layer__bills__record-payment__amount-row'>
+                <InputGroup inline={true}>
+                  <Select
+                    options={availableBills.map(b => ({
+                      label: buildLabel(
+                        b,
+                        billsToPay.find(x => x.bill?.id === b.id)?.amount,
+                      ),
+                      value: b,
+                    }))}
+                    value={record.bill && {
+                      label: buildLabel(
+                        record.bill,
+                        billsToPay.find(x => x.bill?.id === record.bill?.id)?.amount,
+                      ),
+                      value: record.bill,
+                    }}
+                    onChange={(option) => {
+                      if (option.value) {
+                        setBill(option.value, index)
+                      }
+                    }}
+                  />
+                  <AmountInput
+                    value={record.amount}
+                    onChange={value => setAmountByIndex(index, value)}
+                  />
+                </InputGroup>
+                <IconButton
+                  type='button'
+                  icon={<CloseIcon />}
+                  onClick={() => removeBillByIndex(index)}
                 />
-                <AmountInput
-                  value={record.amount}
-                  onChange={value => setAmountByIndex(index, value)}
-                />
-              </InputGroup>
-              <IconButton
-                icon={<CloseIcon />}
-                onClick={() => removeBillByIndex(index)}
-              />
-            </div>
-          ))}
+              </div>
+            ))}
+          </div>
 
           <Button
             type='button'

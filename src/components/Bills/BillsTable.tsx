@@ -14,7 +14,8 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { BillsTableStringOverrides } from './BillsTableWithPanel'
 import { getVendorName } from '../../utils/vendors'
 import { Text } from '../Typography'
-import { isBillPaid } from '../../utils/bills'
+import { isBillPaid, isBillUnpaid } from '../../utils/bills'
+import classNames from 'classnames'
 
 export const BillsTable = ({
   stringOverrides,
@@ -76,7 +77,7 @@ const BillsTableContent = ({
                 disabled={isSelectionDisabled}
               />
             )}
-            <Text as='span' ellipsis status={isSelectionDisabled ? 'disabled' : ''}>
+            <Text as='span' ellipsis status={isSelectionDisabled ? 'disabled' : undefined}>
               {getVendorName(entry.vendor)}
             </Text>
           </TableCell>
@@ -84,9 +85,11 @@ const BillsTableContent = ({
           <TableCell primary>
             {convertCentsToCurrency(entry.total_amount)}
           </TableCell>
-          <TableCell primary nowrap>
-            {convertCentsToCurrency(entry.outstanding_balance)}
-          </TableCell>
+          {status === 'UNPAID' && (
+            <TableCell primary nowrap>
+              {convertCentsToCurrency(entry.outstanding_balance)}
+            </TableCell>
+          )}
           <TableCell className='Layer__bills-table__status-col' nowrap>
             <DueStatus
               dueDate={entry.due_at}
@@ -97,7 +100,10 @@ const BillsTableContent = ({
           {!showRecordPaymentForm && (
             <TableCell
               align={TableCellAlign.RIGHT}
-              className='Layer__bills-table__actions-col'
+              className={classNames(
+                'Layer__bills-table__actions-col',
+                status === 'PAID' ? 'Layer__bills-table__actions-col--narrow' : '',
+              )}
             >
               <div className='Layer__bills__status-with-actions'>
                 {status === 'UNPAID'
@@ -149,9 +155,11 @@ const BillsTableContent = ({
           <TableCell nowrap>
             {stringOverrides?.billAmountColumnHeader || 'Bill amount'}
           </TableCell>
-          <TableCell nowrap>
-            {stringOverrides?.openBalanceColumnHeader || 'Open balance'}
-          </TableCell>
+          {status === 'UNPAID' && (
+            <TableCell nowrap>
+              {stringOverrides?.openBalanceColumnHeader || 'Open balance'}
+            </TableCell>
+          )}
           <TableCell nowrap>
             {stringOverrides?.statusColumnHeader || 'Status'}
           </TableCell>
