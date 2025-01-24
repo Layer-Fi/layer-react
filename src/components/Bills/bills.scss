@@ -107,10 +107,37 @@
     flex: 1;
     max-width: 600px;
     box-sizing: border-box;
-  }
 
-  .Layer__bill-details__summary__label {
-    color: var(--color-base-600);
+    .Layer__bill-details__summary__label {
+      color: var(--color-base-600);
+    }
+
+    @container (max-width: 759px) {
+      flex-direction: column;
+      gap: var(--spacing-xs);
+
+      & > div {
+        display: flex;
+        gap: var(--spacing-xs);
+        align-items: center;
+      }
+
+      .Layer__bill-details__summary__label {
+        min-width: 82px;
+        width: 132px;
+      }
+
+      .Layer__bill-details__summary__value {
+        font-size: var(--text-md);
+      }
+    }
+
+    @container (max-width: 499px) {
+      .Layer__bill-details__summary__label {
+        min-width: auto;
+        width: 82px;
+      }
+    }
   }
 
   .Layer__bills-table__actions-col {
@@ -120,6 +147,11 @@
     @container (min-width: 1400px) {
       max-width: 280px;
       width: 280px;
+    }
+
+    &--narrow {
+      max-width: 80px;
+      width: 80px;
     }
 
     .Layer__btn {
@@ -150,8 +182,12 @@
       }
 
       .Layer__datepicker__wrapper {
-        width: 100%;
-        margin-left: 2px;
+        flex: 1;
+
+        input {
+          width: 100%;
+          max-width: unset;
+        }
       }
     }
   }
@@ -184,6 +220,52 @@
 
 .Layer__bill-details__category__add-next {
   display: flex;
+}
+
+.Layer__bill-details__form-row {
+  .Layer__bill-details__form-col {
+    .Layer__input-label {
+      width: 130px;
+    }
+  }
+}
+
+@container (max-width: 759px) {
+  .Layer__bills .Layer__bill-details__form-row {
+    flex-direction: column;
+    row-gap: 0;
+
+    .Layer__bill-details__form-col {
+      width: 100%;
+      max-width: 720px;
+    }
+  }
+
+  .Layer__bills  .Layer__bill-details__category-row {
+    flex-direction: column;
+    max-width: 500px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-xs);
+    padding-bottom: var(--spacing-xs);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .Layer__input-tooltip {
+      width: 100%;
+    }
+  }
+}
+
+@container (max-width: 499px) {
+  .Layer__bills .Layer__bill-details__form-row {
+    .Layer__bill-details__form-col {
+      .Layer__input-group {
+        flex-direction: column;
+      }
+    }
+  }
 }
 
 .Layer__bills-account__index {
@@ -282,6 +364,29 @@
 
     &__amount {
       padding: var(--spacing-xl);
+    }
+  }
+
+  @container (max-width: 499px) {
+    .Layer__bills__record-payment__amount-row {
+      border-bottom: 1px solid var(--border-color);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .Layer__icon-btn {
+        margin-top: var(--spacing-sm);
+      }
+
+      .Layer__input-group {
+        display: flex;
+        flex-direction: column;
+
+        .Layer__input-tooltip {
+          padding: 0;
+        }
+      }
     }
   }
 }
@@ -404,5 +509,108 @@
     &__bills {
       padding: var(--spacing-xl);
     }
+  }
+}
+
+.Layer__bills-list {
+  margin: 0;
+  padding: 0;
+}
+
+.Layer__bills-list-item {
+  list-style: none;
+  display: flex;
+  padding: var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-bottom-width: 0;
+  transform: scale(0.92);
+  opacity: 0;
+  transition: all 120ms ease-in-out;
+
+  &:last-child {
+    border-bottom-width: 1px;
+  }
+
+  &.Layer__bills-list-item--show {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &[data-disabled] {
+    opacity: 0.5;
+  }
+
+  &[data-selected] {
+    background-color: var(--color-base-0);
+  }
+}
+
+.Layer__bills-list-item__checkbox {
+  width: 0;
+  transition: width 120ms cubic-bezier(0.215, 0.610, 0.355, 1);
+  overflow: hidden;
+  padding-top: var(--spacing-3xs);
+
+  .Layer__bills-table__checkbox {
+    opacity: 0;
+    transition: opacity 120ms cubic-bezier(0.215, 0.610, 0.355, 1);
+    transition-delay: 60ms;
+  }
+
+  &[data-status='open'] {
+    width: 40px;
+
+    .Layer__bills-table__checkbox {
+      opacity: 1;
+    }
+  }
+
+}
+
+.Layer__bills-list-item__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3xs);
+  flex: 1;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.Layer__bills-list-item__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.Layer__bills-list-item__topbar__date {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3xs);
+}
+
+.Layer__bills-list-item__topbar__separator {
+  height: 10px;
+  width: 1px;
+  background-color: var(--border-color);
+}
+
+.Layer__bills-list-item__main {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.Layer__bills-list-item__bottombar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  min-height: 40px;
+  padding-right: 2px;
+}
+
+@container (max-width: 499px) {
+  .Layer__bills-list-item .Layer__text.Layer__bills-list-item__main__vendor {
+    font-size: var(--text-md);
   }
 }
