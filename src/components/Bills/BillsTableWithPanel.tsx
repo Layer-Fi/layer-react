@@ -10,6 +10,8 @@ import { BillsTable } from './BillsTable'
 import CloseIcon from '../../icons/CloseIcon'
 import { BillStatusFilter } from '../../types/bills'
 import { SelectVendor } from '../Vendors/SelectVendor'
+import { useSizeClass } from '../../hooks/useWindowSize'
+import { BillsList } from './BillsList'
 
 export interface BillsTableStringOverrides {
   componentTitle?: string
@@ -45,6 +47,8 @@ export const BillsTableWithPanel = ({
     setShowRecordPaymentForm,
     billsToPay,
   } = useBillsRecordPaymentContext()
+
+  const { isDesktop } = useSizeClass()
 
   /** @TODO - temp pagiantion - based on the API, consider moving to Bills context */
   const data = useMemo(() => {
@@ -114,22 +118,28 @@ export const BillsTableWithPanel = ({
                   </Button>
                 )}
             </HeaderCol>
-            <HeaderCol noPadding>
-              {bulkSelectionActive && (
-                <Button
-                  onClick={() => setShowRecordPaymentForm(true)}
-                  disabled={!anyBillToPaySelected}
-                >
-                  Record payment
-                </Button>
-              )}
-            </HeaderCol>
+            {isDesktop && (
+              <HeaderCol noPadding>
+                {bulkSelectionActive && (
+                  <Button
+                    onClick={() => setShowRecordPaymentForm(true)}
+                    disabled={!anyBillToPaySelected}
+                  >
+                    Record payment
+                  </Button>
+                )}
+              </HeaderCol>
+            )}
           </HeaderRow>
         )}
       </Header>
 
-      {data && (
+      {isDesktop && data && (
         <BillsTable />
+      )}
+
+      {!isDesktop && data && (
+        <BillsList />
       )}
 
       {data && (
