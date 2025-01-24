@@ -55,7 +55,13 @@ export const Toggle = ({
   const [currentWidth, setCurrentWidth] = useState(0)
   const [thumbPos, setThumbPos] = useState({ left: 0, width: 0 })
   const [initialized, setInitialized] = useState(false)
-  const [activeOption, setActiveOption] = useState(selected || options[0].value)
+  const [activeOption, setActiveOption] = useState(
+    selected
+      ? selected
+      : options.length > 0
+        ? options[0].value
+        : undefined,
+  )
 
   const toggleRef = useElementSize<HTMLDivElement>((_a, _b, c) => {
     if (c.width && c?.width !== currentWidth) {

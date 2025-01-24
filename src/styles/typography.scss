@@ -2,6 +2,7 @@
   color: var(--text-color-primary);
   font-size: var(--text-heading);
   font-weight: var(--font-weight-bold);
+  font-variation-settings: 'wght' var(--font-weight-bold);
   line-height: 140%;
   letter-spacing: -0.12px;
   margin: 0;
@@ -13,6 +14,7 @@
   color: var(--text-color-primary);
   font-size: var(--text-heading-sm);
   font-weight: var(--font-weight-bold);
+  font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
 .Layer__heading--view,
@@ -20,6 +22,7 @@
   color: var(--text-color-primary);
   font-size: var(--text-heading-view);
   font-weight: var(--font-weight-bold);
+  font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
 .Layer__heading--page,
@@ -27,6 +30,7 @@
   color: var(--text-color-primary);
   font-size: var(--text-heading-page);
   font-weight: var(--font-weight-bold);
+  font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
 .Layer__text {
@@ -56,7 +60,7 @@
 .Layer__text--bold,
 .Layer__text.Layer__text--bold {
   font-weight: var(--font-weight-bold);
-  font-variation-settings: 'wght' 540;
+  font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
 .Layer__text--error {
