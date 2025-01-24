@@ -1,12 +1,26 @@
 import { TransactionTag } from './tags'
 import { Vendor } from './vendors'
 
-export type BillStatus = 'SENT' | 'PARTIALLY_PAID' | 'PAID' | 'VOIDED'
+const UNPAID_STATUS_MAP = {
+  SENT: 'SENT',
+  PARTIALLY_PAID: 'PARTIALLY_PAID',
+} as const
+export type UnpaidStatuses = typeof UNPAID_STATUS_MAP[keyof typeof UNPAID_STATUS_MAP]
+export const UNPAID_STATUSES = [UNPAID_STATUS_MAP.SENT, UNPAID_STATUS_MAP.PARTIALLY_PAID]
 
-export type BillStatusFilter = 'PAID' | 'UNPAID'
+const PAID_STATUS_MAP = {
+  PAID: 'PAID',
+} as const
+export type PaidStatuses = typeof PAID_STATUS_MAP[keyof typeof PAID_STATUS_MAP]
+export const PAID_STATUS = PAID_STATUS_MAP.PAID
 
-export const UnpaidStatuses = ['SENT', 'PARTIALLY_PAID']
-export const PaidStatuses = ['PAID']
+const VOIDED_STATUS_MAP = {
+  VOIDED: 'VOIDED',
+} as const
+export type VoidedStatuses = typeof VOIDED_STATUS_MAP[keyof typeof VOIDED_STATUS_MAP]
+export const VOIDED_STATUS = VOIDED_STATUS_MAP.VOIDED
+
+export type BillStatus = UnpaidStatuses | PaidStatuses | VoidedStatuses
 
 type BillTerm = 'DUE_ON_RECEIPT' | 'NET_10' | 'NET_15' | 'NET_30' | 'NET_60'
 
@@ -51,8 +65,8 @@ export type Bill = {
   transaction_tags: TransactionTag[]
   type: 'Bill'
   updated_at: string
-  voided_at?: string
-  vendor?: Vendor
+  voided_at: string
+  vendor: Vendor
 }
 
 type BillLineItem = {
