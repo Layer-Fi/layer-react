@@ -1,4 +1,4 @@
-import { Bill, PAID_STATUS, UNPAID_STATUSES, UnpaidStatuses } from '../types/bills'
+import { Bill, BillStatus, PAID_STATUS, UNPAID_STATUSES } from '../types/bills'
 
 export const isBillPaid = (status?: Bill['status']) => PAID_STATUS === status
 
@@ -7,5 +7,5 @@ export const isBillUnpaid = (status?: Bill['status']) => {
     return false
   }
 
-  return UNPAID_STATUSES.includes(status as UnpaidStatuses)
+  return ([...UNPAID_STATUSES] as BillStatus[]).includes(status)
 }
