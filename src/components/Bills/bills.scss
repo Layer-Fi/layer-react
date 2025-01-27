@@ -9,10 +9,6 @@
 
   .Layer__bills__sidebar__header {
     padding: 0;
-
-    .Layer__header__row {
-      min-height: 72px;
-    }
   }
 
   .Layer__bills.Layer__component {
@@ -25,13 +21,8 @@
   }
 
   .Layer__bills__header .Layer__header__row {
-    padding: 0 var(--spacing-md);
     transition: padding 120ms ease-out;
     box-sizing: border-box;
-
-    @container (min-width: 1400px) {
-      padding: 0 var(--spacing-xl);
-    }
   }
 }
 
@@ -43,6 +34,12 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+
+  @container (max-width: 499px) {
+    .Layer__btn {
+      width: 100%;
+    }
+  }
 }
 
 .Layer__bills-table__checkbox {
@@ -92,6 +89,7 @@
     @container (min-width: 1400px) {
       padding: var(--spacing-md) var(--spacing-xl);
     }
+
   }
 
   .Layer__bill-details__head {
@@ -99,14 +97,20 @@
     justify-content: space-between;
     width: 100%;
     box-sizing: border-box;
+    gap: var(--spacing-xl);
+
+    @container (max-width: 499px) {
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
   }
 
   .Layer__bill-details__summary {
     display: flex;
     justify-content: space-between;
-    flex: 1;
-    max-width: 600px;
+    min-width: 400px;
     box-sizing: border-box;
+    gap: var(--spacing-sm);
 
     .Layer__bill-details__summary__label {
       color: var(--color-base-600);
@@ -115,6 +119,7 @@
     @container (max-width: 759px) {
       flex-direction: column;
       gap: var(--spacing-xs);
+      min-width: unset;
 
       & > div {
         display: flex;
@@ -133,6 +138,14 @@
     }
 
     @container (max-width: 499px) {
+      & > div {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--spacing-xs);
+      }
+
       .Layer__bill-details__summary__label {
         min-width: auto;
         width: 82px;
@@ -178,7 +191,7 @@
       padding: var(--spacing-xs) 0;
 
       label {
-        max-width: 120px;
+        max-width: 100px;
       }
 
       .Layer__datepicker__wrapper {
@@ -188,6 +201,12 @@
           width: 100%;
           max-width: unset;
         }
+      }
+
+      @container (max-width: 499px) {
+        padding-top: 0;
+        padding-bottom: 0;
+        gap: 0;
       }
     }
   }
@@ -220,14 +239,6 @@
 
 .Layer__bill-details__category__add-next {
   display: flex;
-}
-
-.Layer__bill-details__form-row {
-  .Layer__bill-details__form-col {
-    .Layer__input-label {
-      width: 130px;
-    }
-  }
 }
 
 @container (max-width: 759px) {
@@ -264,6 +275,25 @@
       .Layer__input-group {
         flex-direction: column;
       }
+    }
+  }
+}
+
+@container (max-width: 499px) {
+  .Layer__bill-details__save-btn {
+    display: none;
+  }
+}
+
+.Layer__bill-details__save-btn--mobile {
+  display: none;
+
+  @container (max-width: 499px) {
+    display: flex;
+    padding: var(--spacing-md);
+
+    .Layer__btn {
+      width: 100%;
     }
   }
 }
