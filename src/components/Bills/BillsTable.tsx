@@ -16,6 +16,7 @@ import { getVendorName } from '../../utils/vendors'
 import { Text } from '../Typography'
 import { isBillPaid, isBillUnpaid } from '../../utils/bills'
 import classNames from 'classnames'
+import { DATE_FORMAT_SHORT } from '../../config/general'
 
 export const BillsTable = ({
   stringOverrides,
@@ -81,7 +82,7 @@ const BillsTableContent = ({
               {getVendorName(entry.vendor)}
             </Text>
           </TableCell>
-          <TableCell nowrap>{formatDate(entry.due_at)}</TableCell>
+          <TableCell nowrap>{formatDate(entry.due_at, DATE_FORMAT_SHORT)}</TableCell>
           <TableCell primary>
             {convertCentsToCurrency(entry.total_amount)}
           </TableCell>

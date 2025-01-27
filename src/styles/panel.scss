@@ -72,6 +72,14 @@
   }
 }
 
+@container (min-width: 1025px) {
+  .Layer__panel__sidebar.Layer__panel__sidebar--floating {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
 @container (max-width: 1024px) {
   .Layer__panel__sidebar {
     position: absolute;
