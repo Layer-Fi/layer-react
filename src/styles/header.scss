@@ -24,6 +24,26 @@
   justify-content: space-between;
   gap: var(--spacing-sm);
   border-bottom: 1px solid var(--border-color);
+  padding: 0 var(--spacing-md);
+  box-sizing: border-box;
+
+  &[data-direction='col'] {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+    gap: var(--spacing-sm);
+
+    .Layer__header__col {
+      padding-top: 0;
+      padding-bottom: 0;
+      min-height: 36px;
+    }
+  }
+
+  @container (min-width: 1400px) {
+    padding: 0 var(--spacing-xl);
+  }
 }
 
 .Layer__header__col {

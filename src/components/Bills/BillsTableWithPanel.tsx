@@ -46,9 +46,10 @@ export const BillsTableWithPanel = ({
     showRecordPaymentForm,
     setShowRecordPaymentForm,
     billsToPay,
+    setVendor: setRecordPaymentVendor,
   } = useBillsRecordPaymentContext()
 
-  const { isDesktop } = useSizeClass()
+  const { isDesktop, isMobile } = useSizeClass()
 
   /** @TODO - temp pagiantion - based on the API, consider moving to Bills context */
   const data = useMemo(() => {
@@ -93,14 +94,17 @@ export const BillsTableWithPanel = ({
           </HeaderCol>
         </HeaderRow>
         {status === 'UNPAID' && (
-          <HeaderRow>
+          <HeaderRow direction={isMobile ? 'col' : 'row'}>
             <HeaderCol noPadding>
               {bulkSelectionActive
                 ? (
                   <>
                     <SelectVendor
                       value={vendor}
-                      onChange={setVendor}
+                      onChange={(vendor) => {
+                        setVendor(vendor)
+                        setRecordPaymentVendor(vendor ?? undefined)
+                      }}
                       placeholder='Select vendor to record bulk payment'
                     />
                     <IconButton
@@ -118,16 +122,16 @@ export const BillsTableWithPanel = ({
                   </Button>
                 )}
             </HeaderCol>
-            {isDesktop && (
+
+            {bulkSelectionActive && (
               <HeaderCol noPadding>
-                {bulkSelectionActive && (
-                  <Button
-                    onClick={() => setShowRecordPaymentForm(true)}
-                    disabled={!anyBillToPaySelected}
-                  >
-                    Record payment
-                  </Button>
-                )}
+                <Button
+                  onClick={() => setShowRecordPaymentForm(true)}
+                  disabled={!anyBillToPaySelected}
+                >
+                  Record payment
+                </Button>
+
               </HeaderCol>
             )}
           </HeaderRow>
