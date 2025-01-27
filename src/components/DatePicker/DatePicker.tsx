@@ -45,7 +45,7 @@ interface DatePickerProps {
   popperClassName?: string
   currentDateOption?: boolean
   minDate?: Date
-  maxDate?: Date
+  maxDate?: Date | null
   navigateArrows?: NavigationArrows[]
   onChangeMode?: (mode: UnifiedPickerMode) => void
   slots?: {
@@ -217,16 +217,16 @@ export const DatePicker = ({
   const isTodayOrAfter = useMemo(() => {
     switch (displayMode) {
       case 'dayPicker':
-        return firstDate >= endOfDay(new Date()) || firstDate >= maxDate
+        return firstDate >= endOfDay(new Date()) || (maxDate && firstDate >= maxDate)
       case 'monthPicker':
         return (
           endOfMonth(firstDate) >= endOfMonth(new Date())
-          || endOfMonth(firstDate) >= maxDate
+          || (maxDate && endOfMonth(firstDate) >= maxDate)
         )
       case 'yearPicker':
         return (
           endOfYear(firstDate) >= endOfYear(new Date())
-          || endOfYear(firstDate) >= maxDate
+          || (maxDate && endOfYear(firstDate) >= maxDate)
         )
       default:
         return false

@@ -1,5 +1,6 @@
 .Layer__table {
   width: 100%;
+  border-collapse: separate;
   border-spacing: 0;
 
   &.Layer__table__seperate-rows {
@@ -34,8 +35,7 @@
     font-size: var(--text-sm);
     font-weight: var(--font-weight-normal);
     font-variant-numeric: lining-nums proportional-nums;
-    font-feature-settings:
-      'cv10' on,
+    font-feature-settings: 'cv10' on,
       'cv05' on,
       'cv08' on,
       'ss03' on;
@@ -48,6 +48,11 @@
 
     .Layer__table-cell {
       border-top: none;
+    }
+
+    .Layer__table-cell-content {
+      color: var(--text-color-secondary);
+      font-size: var(--text-sm);
     }
 
     &.Layer__table-header--primary {
@@ -76,6 +81,7 @@
   .Layer__table-row--selected {
     .Layer__table-cell:first-child {
       position: relative;
+
       &::after {
         content: '';
         display: block;
@@ -138,10 +144,15 @@
     text-align: left;
     color: var(--text-color-secondary);
     border-top: 1px solid var(--border-color);
+    height: var(--spacing-5xl);
     padding: 0;
 
+    &.Layer__table-cell--nowrap {
+      white-space: nowrap;
+    }
+
     &.Layer__table-cell--primary {
-      color: var(--color-base-800);
+      color: var(--color-base-900);
       font-weight: var(--font-weight-bold);
     }
 
@@ -168,11 +179,12 @@
       display: flex;
       align-items: center;
       height: 100%;
-      top: 0px;
+      top: 0;
       padding: var(--spacing-sm) var(--spacing-md);
       box-sizing: border-box;
       transition: all var(--transition-speed) ease-out;
       position: relative;
+
       .Layer__table-row--expand-icon {
         transition: transform 0.1s ease-in-out;
         width: 16px;
@@ -191,8 +203,8 @@
 }
 
 .Layer__table-row--active
-  .Layer__table-cell:first-child
-  .Layer__table-cell-content:before {
+.Layer__table-cell:first-child
+.Layer__table-cell-content::before {
   content: '';
   background-color: var(--color-base-400);
   height: 100%;
@@ -222,8 +234,7 @@
   &.Layer__table-row--collapsed {
     .Layer__table-cell {
       & > .Layer__table-cell-content {
-        transition:
-          height 60ms ease-out,
+        transition: height 60ms ease-out,
           opacity 50ms ease-in-out,
           padding 50ms ease-in-out;
       }
@@ -241,23 +252,23 @@
 }
 
 .Layer__table.with-cell-separators
-  > tbody
-  > tr
-  > td:first-child
-  .Layer__table-cell-content::after,
+> tbody
+> tr
+> td:first-child
+.Layer__table-cell-content::after,
 .Layer__table.with-cell-separators
-  > tbody
-  > tr
-  > td:last-child
-  .Layer__table-cell-content::after,
+> tbody
+> tr
+> td:last-child
+.Layer__table-cell-content::after,
 .Layer__table.with-cell-separators
-  > thead
-  > tr
-  > th:first-child.Layer__table-header::after,
+> thead
+> tr
+> th:first-child.Layer__table-header::after,
 .Layer__table.with-cell-separators
-  > thead
-  > tr
-  > th:last-child.Layer__table-header::after {
+> thead
+> tr
+> th:last-child.Layer__table-header::after {
   display: none;
 }
 
@@ -276,56 +287,12 @@
   height: calc(100% - 160px);
 }
 
-.Layer__table-row--active
-  .Layer__table-cell:first-child
-  .Layer__table-cell-content:before {
-  content: '';
-  background-color: var(--color-base-400);
-  height: 100%;
-  width: 4px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-}
-
-.Layer__table--hover-effect .Layer__table-row:hover {
-  background-color: var(--color-base-50);
-  cursor: pointer;
-}
-
-.Layer__table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #e2e2e2;
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #999;
-  }
-}
-
 .Layer__table-header {
   color: var(--text-color-secondary);
   font-size: var(--text-sm);
   font-weight: var(--font-weight-normal);
   font-variant-numeric: lining-nums proportional-nums;
-  font-feature-settings:
-    'cv10' on,
+  font-feature-settings: 'cv10' on,
     'cv05' on,
     'cv08' on,
     'ss03' on;
@@ -344,48 +311,19 @@
 
 .Layer__table-cell--primary,
 .Layer__table-cell--primary .Layer__table-cell-content {
-  color: var(--color-base-800);
+  color: var(--color-base-900);
   font-weight: var(--font-weight-bold);
-}
-
-.Layer__table-cell {
-  font-size: var(--text-md);
-  text-align: left;
-  color: var(--text-color-secondary);
-  border-top: 1px solid var(--border-color);
-  height: var(--spacing-5xl);
-  padding: 0;
 }
 
 .Layer__table-cell-content {
   display: flex;
   align-items: center;
   height: 100%;
-  top: 0px;
+  top: 0;
   padding: var(--spacing-sm) var(--spacing-md);
   box-sizing: border-box;
   transition: all var(--transition-speed) ease-out;
   position: relative;
-}
-
-.Layer__table-cell-content-indentation {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-}
-
-.Layer__table-row--active
-  .Layer__table-cell:first-child
-  .Layer__table-cell-content:before {
-  content: '';
-  background-color: var(--color-base-400);
-  height: 100%;
-  width: 4px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
 }
 
 .Layer__table--hover-effect .Layer__table-row:hover {
@@ -399,45 +337,9 @@
   text-align: right;
 }
 
-.Layer__table.with-cell-separators
-  > tbody
-  > tr
-  > td:first-child
-  .Layer__table-cell-content::after,
-.Layer__table.with-cell-separators
-  > tbody
-  > tr
-  > td:last-child
-  .Layer__table-cell-content::after,
-.Layer__table.with-cell-separators
-  > thead
-  > tr
-  > th:first-child.Layer__table-header::after,
-.Layer__table.with-cell-separators
-  > thead
-  > tr
-  > th:last-child.Layer__table-header::after {
-  display: none;
-}
-
-.Layer__table-state-container {
-  padding: var(--spacing-2xl) var(--spacing-sm);
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: calc(100vh - 200px);
-}
-
-.Layer__component--as-widget .Layer__table-state-container {
-  height: calc(100% - 160px);
-}
-
 .Layer__bank-transaction-row--removing {
   .Layer__table-cell-content {
-    max-height: 0px;
+    max-height: 0;
     top: 1px;
     padding-top: 0;
     padding-bottom: 0;
@@ -457,46 +359,10 @@
   }
 }
 
-.Layer__table-row--hidden .Layer__table-cell {
-  border-top-width: 0;
-}
-
-.Layer__table-cell {
-  height: auto;
-
-  & > .Layer__table-cell-content {
-    overflow: hidden;
-    transition: all 50ms ease-out;
-  }
-}
-
-.Layer__table-row {
-  transition: all 100ms ease-in-out;
-
-  &.Layer__table-row--collapsed {
-    .Layer__table-cell {
-      & > .Layer__table-cell-content {
-        transition:
-          height 60ms ease-out,
-          opacity 50ms ease-in-out,
-          padding 50ms ease-in-out;
-      }
-    }
-  }
-}
-
-.Layer__table-row.Layer__table-row--with-show:not(.initial-load) {
-  opacity: 0.5;
-
-  &.show {
-    transition: opacity 50ms ease-out;
-    opacity: 1;
-  }
-}
-
 .Layer__table-row.Layer__table-row--anim-starting-state {
   opacity: 0;
-  height: 0px;
+  height: 0;
+
   td {
     .Layer__table-cell-content {
       opacity: 0;
@@ -522,6 +388,7 @@ tbody {
 
 .Layer__table-row.Layer__table-row--anim-complete-state {
   height: var(--spacing-5xl);
+
   td {
     .Layer__table-cell-content {
       opacity: 1;
@@ -538,6 +405,7 @@ tbody {
 
 .Layer__table-wrapper--bottom-spacing {
   padding-bottom: var(--spacing-lg);
+
   .Layer__table {
     border-bottom: 1px solid var(--border-color);
   }

@@ -7,7 +7,7 @@
 .Layer__header--sticky {
   position: sticky;
   top: 0;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgb(255 255 255 / 50%);
   backdrop-filter: blur(6px);
   z-index: 10;
 }
@@ -33,10 +33,15 @@
   padding: var(--spacing-md);
   min-height: 68px;
   box-sizing: border-box;
+
+  &[data-no-padding='true'] {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 @container (min-width: 1400px) {
   .Layer__header__col {
-    padding: var(--spacing-md) var(--spacing-xl);
+    padding: var(--spacing-sm) var(--spacing-xl);
   }
 }

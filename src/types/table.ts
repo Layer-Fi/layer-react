@@ -50,6 +50,7 @@ export interface TableCellProps {
   isHeaderCell?: boolean
   align?: TableCellAlign
   primary?: boolean
+  nowrap?: boolean
   withExpandIcon?: boolean
   fullWidth?: boolean
   width?: string

@@ -1,6 +1,7 @@
 import { ReactNode, useRef, useState, useEffect } from 'react'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import classNames from 'classnames'
+import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 
 export enum TextSize {
   lg = 'lg',
@@ -18,6 +19,8 @@ export enum TextUseTooltip {
   always = 'always',
 }
 
+export type TextStatus = 'success' | 'error' | 'warning'
+
 export interface TextTooltipOptions {
   contentClassName?: string
   offset?: number
@@ -30,9 +33,11 @@ export interface TextProps {
   children: ReactNode
   size?: TextSize
   weight?: TextWeight
+  status?: TextStatus
   htmlFor?: string
   withTooltip?: TextUseTooltip
   tooltipOptions?: TextTooltipOptions
+  ellipsis?: boolean
 }
 
 export const Text = ({
@@ -42,8 +47,12 @@ export const Text = ({
   size = TextSize.md,
   weight = TextWeight.normal,
   withTooltip,
+  ellipsis,
+  status,
   ...props
 }: TextProps) => {
+  const dataProperties = toDataProperties({ status, ellipsis })
+
   const baseClassName = classNames(
     `Layer__text Layer__text--${size} Layer__text--${weight}`,
     className,
@@ -57,6 +66,7 @@ export const Text = ({
         size={size}
         weight={weight}
         withTooltip={withTooltip}
+        {...dataProperties}
         {...props}
       >
         {children}
@@ -65,7 +75,7 @@ export const Text = ({
   }
 
   return (
-    <Component {...props} className={baseClassName}>
+    <Component {...props} {...dataProperties} className={baseClassName}>
       {children}
     </Component>
   )
@@ -85,8 +95,8 @@ export const TextWithTooltip = ({
   const compareSize = () => {
     if (textElementRef.current) {
       const compare =
-        textElementRef.current.children[0].scrollWidth >
-        textElementRef.current.children[0].clientWidth
+        textElementRef.current.children[0].scrollWidth
+        > textElementRef.current.children[0].clientWidth
       setHover(compare)
     }
   }
