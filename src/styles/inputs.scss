@@ -4,7 +4,6 @@
 
 .Layer__checkbox {
   appearance: none;
-  -webkit-appearance: none;
   width: 14px;
   height: 14px;
   border: 2px solid var(--color-base-300);
@@ -16,7 +15,7 @@
 
   &:hover {
     border-color: var(--color-info-success);
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 5%);
   }
 
   &:checked {
@@ -47,7 +46,7 @@
   height: 20px;
 
   &:hover {
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 0 2px rgb(0 0 0 / 5%);
   }
 
   &:checked {
@@ -63,7 +62,7 @@
 .Layer__checkbox--dark .Layer__checkbox {
   &:hover {
     border-color: var(--color-base-800);
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 0 2px rgb(0 0 0 / 5%);
   }
 
   &:checked {
@@ -116,6 +115,7 @@
 
 .Layer__amount-input {
   text-align: right;
+  font-size: 20px;
 }
 
 .Layer__textarea {

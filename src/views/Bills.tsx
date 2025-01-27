@@ -1,10 +1,8 @@
-import React from 'react'
-import { Bills } from '../../components/Bills/Bills'
-import { Header } from '../../components/Container'
-import { HeaderRow, HeaderCol } from '../../components/Header'
-import { View } from '../../components/View'
-import { BillsProvider } from '../../contexts/BillsContext'
-import { BillsDatePicker } from '../../components/Bills/BillsDatePicker'
+import { Bills } from '../components/Bills/Bills'
+import { HeaderRow, HeaderCol } from '../components/Header'
+import { View } from '../components/View'
+import { BillsProvider } from '../contexts/BillsContext'
+import { BillsDatePicker } from '../components/Bills/BillsDatePicker'
 
 export interface BillsStringOverrides {
   title?: string
@@ -37,13 +35,11 @@ const BillsViewContent = ({
       showHeader={showTitle}
       viewClassName='Layer__bills__view'
       header={(
-        <Header>
-          <HeaderRow>
-            <HeaderCol>
-              <BillsDatePicker />
-            </HeaderCol>
-          </HeaderRow>
-        </Header>
+        <HeaderRow>
+          <HeaderCol>
+            <BillsDatePicker />
+          </HeaderCol>
+        </HeaderRow>
       )}
     >
       <Bills context={false} />
