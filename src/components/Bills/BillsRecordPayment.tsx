@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { DATE_FORMAT } from '../../config/general'
+import { DATE_FORMAT_SHORT } from '../../config/general'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import {
   Button,
@@ -36,7 +36,7 @@ const buildLabel = (bill: Bill, amount?: string) => {
   return (
     <span className='Layer__bills__record-payment__select-label'>
       <span className='Layer__bills__record-payment__select-label__date'>
-        {formatTime(parseISO(bill.due_at), DATE_FORMAT)}
+        {formatTime(parseISO(bill.due_at), DATE_FORMAT_SHORT)}
       </span>
       <span className='Layer__bills__record-payment__select-label__value'>
         <span className='Layer__bills__record-payment__select-label__bill-amount'>
