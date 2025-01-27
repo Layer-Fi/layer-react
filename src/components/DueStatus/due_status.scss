@@ -1,0 +1,35 @@
+.Layer__due-status {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+
+  &[data-status='overdue'] {
+    .Layer__due-status__title {
+      color: var(--color-info-error);
+    }
+  }
+
+  &[data-status='today'] {
+    .Layer__due-status__title {
+      color: var(--color-info-warning);
+    }
+  }
+
+  &[data-status='paid'] {
+    .Layer__due-status__title {
+      color: var(--color-info-success);
+    }
+  }
+
+  &[data-status='soon'] {
+    .Layer__due-status__title {
+      color: var(--color-base-800);
+    }
+  }
+
+  &[data-status='before'] {
+    .Layer__due-status__title {
+      color: var(--color-base-800);
+    }
+  }
+}
