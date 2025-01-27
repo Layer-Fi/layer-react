@@ -99,7 +99,7 @@ export const BillsDetails = ({
                 : null}
               {isDirty && !showRecordPaymentForm
                 ? (
-                  <Button type='submit'>
+                  <Button type='submit' className='Layer__bill-details__save-btn'>
                     Save
                   </Button>
                 )
@@ -277,6 +277,13 @@ export const BillsDetails = ({
               }}
             </form.Field>
           </div>
+          {isDirty && !showRecordPaymentForm && (
+            <div className='Layer__bill-details__save-btn--mobile'>
+              <Button type='submit'>
+                Save
+              </Button>
+            </div>
+          )}
         </div>
       </form>
     </Panel>
