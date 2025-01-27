@@ -8,13 +8,12 @@ import { convertCentsToCurrency, formatDate } from '../../utils/format'
 import { ButtonVariant, IconButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { DueStatus } from '../DueStatus/DueStatus'
-import { Checkbox } from '../Input'
-import { CheckboxSize } from '../Input/Checkbox'
+import { Checkbox, CheckboxSize } from '../Input/Checkbox'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { BillsTableStringOverrides } from './BillsTableWithPanel'
 import { getVendorName } from '../../utils/vendors'
 import { Text } from '../Typography'
-import { isBillPaid, isBillUnpaid } from '../../utils/bills'
+import { isBillPaid } from '../../utils/bills'
 import classNames from 'classnames'
 import { DATE_FORMAT_SHORT } from '../../config/general'
 
@@ -76,6 +75,7 @@ const BillsTableContent = ({
                 }}
                 className='Layer__bills-table__checkbox'
                 disabled={isSelectionDisabled}
+                tooltip={isSelectionDisabled ? 'You can only select bills from the same vendor' : undefined}
               />
             )}
             <Text as='span' ellipsis status={isSelectionDisabled ? 'disabled' : undefined}>

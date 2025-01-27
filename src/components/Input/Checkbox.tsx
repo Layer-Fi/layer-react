@@ -1,6 +1,6 @@
 /** @TODO remove or merge with other checkbox component */
-import React from 'react'
 import classNames from 'classnames'
+import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 
 export enum CheckboxVariant {
   DEFAULT = 'default',
@@ -20,6 +20,7 @@ export interface CheckboxProps
   labelClassName?: string
   variant?: CheckboxVariant
   boxSize?: CheckboxSize
+  tooltip?: string
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -29,6 +30,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   labelClassName,
   variant = CheckboxVariant.DEFAULT,
   boxSize = CheckboxSize.MEDIUM,
+  tooltip,
   ...props
 }) => {
   const checkboxClasses = classNames('Layer__checkbox', checkboxClassName)
@@ -42,8 +44,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 
   return (
     <div className={wrapperClasses}>
-      <input type='checkbox' className={checkboxClasses} {...props} />
-      {label && <label className={labelClasses}>{label}</label>}
+      <Tooltip disabled={!tooltip}>
+        <TooltipTrigger className='Layer__input-tooltip'>
+          <input type='checkbox' className={checkboxClasses} {...props} />
+          {label && <label className={labelClasses}>{label}</label>}
+        </TooltipTrigger>
+        <TooltipContent className='Layer__tooltip'>{tooltip}</TooltipContent>
+      </Tooltip>
     </div>
   )
 }
