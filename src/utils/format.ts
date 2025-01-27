@@ -1,3 +1,6 @@
+import { parseISO, format as formatDateFns } from 'date-fns'
+import { DATE_FORMAT } from '../config/general'
+
 /**
  * Capitalize first letter of the given text.
  */
@@ -62,7 +65,7 @@ export const humanizeEnum = (text: string) => {
 }
 
 export const convertNumberToCurrency = (amount: number | undefined): string => {
-  if (!amount) return ''
+  if (typeof amount !== 'number' || isNaN(amount)) return ''
 
   const formattedValue = amount.toLocaleString('en-US')
 
@@ -96,5 +99,56 @@ export const convertToCents = (amount?: number | string): number | undefined => 
   }
   catch {
     return undefined
+  }
+}
+
+/**
+ * Convert amount from cents to dollars.
+ * For example:
+ * 10000 -> 100
+ * 10001 -> 100.01
+ */
+export const convertFromCents = (amount?: number | string): number | undefined => {
+  try {
+    if (amount === undefined) {
+      return undefined
+    }
+
+    return Number((Number(amount) / 100).toFixed(2))
+  }
+  catch {
+    return undefined
+  }
+}
+
+/**
+ * Convert cents amount to currency in dollars.
+ */
+export const convertCentsToCurrency = (amount?: number | string): string | undefined => {
+  try {
+    if (amount === undefined) {
+      return undefined
+    }
+
+    return convertNumberToCurrency(convertFromCents(amount))
+  }
+  catch {
+    return undefined
+  }
+}
+
+/**
+ * Format date to a given format. By default, it uses the DATE_FORMAT.
+ */
+export const formatDate = (date?: string | Date, dateFormat: string = DATE_FORMAT): string => {
+  try {
+    if (!date) {
+      return ''
+    }
+
+    return formatDateFns(date instanceof Date ? date : parseISO(date), dateFormat)
+  }
+  catch {
+    return ''
   }
 }
