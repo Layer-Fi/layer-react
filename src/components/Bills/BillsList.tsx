@@ -14,6 +14,7 @@ import { Text, TextSize } from '../Typography'
 import { BillsTableStringOverrides } from './BillsTableWithPanel'
 import classNames from 'classnames'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import { DATE_FORMAT_SHORT } from '../../config/general'
 
 export const BillsList = ({
   stringOverrides,
@@ -111,9 +112,9 @@ const BillsListItem = ({
         <span className='Layer__bills-list-item__topbar'>
           <span className='Layer__bills-list-item__topbar__date'>
             <Text as='span' size={TextSize.sm}>
-              {formatDate(bill.due_at)}
+              {formatDate(bill.due_at, DATE_FORMAT_SHORT)}
             </Text>
-            <span className='Layer__bills-list-item__topbar__separator' />
+            <span className='Layer__bills-list-item__separator' />
             <DueStatus
               dueDate={bill.due_at}
               paidAt={bill.paid_at}
@@ -127,46 +128,58 @@ const BillsListItem = ({
           <Text size={TextSize.lg} ellipsis className='Layer__bills-list-item__main__vendor'>
             {getVendorName(bill.vendor)}
           </Text>
+          <span className='Layer__bills-list-item__main__amount'>
+            <BillAmount bill={bill} />
+          </span>
         </span>
-        <span className='Layer__bills-list-item__bottombar'>
-          <span className='Layer__bills-list-item__bottombar__amount'>
-            {bill.total_amount !== bill.outstanding_balance
-            && bill.outstanding_balance !== 0
+        {bill.outstanding_balance !== 0 && (
+          <span className='Layer__bills-list-item__bottombar'>
+            <span className='Layer__bills-list-item__bottombar__amount'>
+              <BillAmount bill={bill} />
+            </span>
+            {status === 'UNPAID'
               ? (
-                <Text as='span' status='disabled'>
-                  {convertCentsToCurrency(bill.total_amount - bill.outstanding_balance)}
-                  {' '}
-                  /
-                  {' '}
-                </Text>
+                <SubmitButton
+                  onClick={(e) => {
+                    e.stopPropagation()
+
+                    if (billsToPay.map(x => x.bill?.id).includes(rowKey)) {
+                      setShowRecordPaymentForm(false)
+                    }
+                    else {
+                      addBill(bill)
+                      setShowRecordPaymentForm(true)
+                    }
+                  }}
+                  active={true}
+                  action={SubmitAction.UPDATE}
+                  variant={ButtonVariant.secondary}
+                >
+                  {stringOverrides?.recordPaymentButtonText || 'Record payment'}
+                </SubmitButton>
               )
               : null}
-            <Text as='span'>{convertCentsToCurrency(bill.total_amount)}</Text>
           </span>
-          {status === 'UNPAID'
-            ? (
-              <SubmitButton
-                onClick={(e) => {
-                  e.stopPropagation()
-
-                  if (billsToPay.map(x => x.bill?.id).includes(rowKey)) {
-                    setShowRecordPaymentForm(false)
-                  }
-                  else {
-                    addBill(bill)
-                    setShowRecordPaymentForm(true)
-                  }
-                }}
-                active={true}
-                action={SubmitAction.UPDATE}
-                variant={ButtonVariant.secondary}
-              >
-                {stringOverrides?.recordPaymentButtonText || 'Record payment'}
-              </SubmitButton>
-            )
-            : null}
-        </span>
+        )}
       </span>
     </li>
   )
 }
+
+const BillAmount = ({ bill }: { bill: Bill }) => (
+  <>
+    {bill.outstanding_balance !== 0
+      ? (
+        <>
+          <Text as='span' status='disabled'>
+            {convertCentsToCurrency(bill.outstanding_balance)}
+          </Text>
+          <span className='Layer__bills-list-item__separator' />
+        </>
+      )
+      : null}
+    <Text as='span'>
+      {convertCentsToCurrency(bill.total_amount)}
+    </Text>
+  </>
+)

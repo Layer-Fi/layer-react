@@ -54,6 +54,7 @@ export const BillsDetails = ({
       sidebarIsOpen={showRecordPaymentForm}
       parentRef={containerRef}
       className={baseClassName}
+      floating={true}
     >
       <Header className='Layer__bills-account__header'>
         <HeaderRow>

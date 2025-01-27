@@ -53,7 +53,6 @@
 
   .Layer__panel__content {
     min-height: 500px;
-    max-height: 100vh;
   }
 
   .Layer__bills-account__title-container {
@@ -619,15 +618,28 @@
   gap: var(--spacing-3xs);
 }
 
-.Layer__bills-list-item__topbar__separator {
-  height: 10px;
-  width: 1px;
-  background-color: var(--border-color);
-}
-
 .Layer__bills-list-item__main {
   max-width: 100%;
   overflow: hidden;
+  display: flex;
+  gap: var(--spacing-3xs);
+  align-items: center;
+  justify-content: space-between;
+
+  .Layer__bills-list-item__main__amount {
+    font-size: var(--text-sm);
+    display: none;
+    align-items: center;
+
+    @container (max-width: 499px) {
+      display: flex;
+      gap: var(--spacing-3xs);
+
+      .Layer__text {
+        font-size: var(--text-md);
+      }
+    }
+  }
 }
 
 .Layer__bills-list-item__bottombar {
@@ -637,6 +649,31 @@
   gap: var(--spacing-sm);
   min-height: 40px;
   padding-right: 2px;
+
+  @container (max-width: 499px) {
+    padding: 0 2px;
+    padding-top: var(--spacing-xs);
+
+    .Layer__btn {
+      width: 100%;
+    }
+  }
+
+  .Layer__bills-list-item__bottombar__amount {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3xs);
+
+    @container (max-width: 499px) {
+      display: none;
+    }
+  }
+}
+
+.Layer__bills-list-item__separator {
+  height: 10px;
+  width: 1px;
+  background-color: var(--color-base-400);
 }
 
 @container (max-width: 499px) {
