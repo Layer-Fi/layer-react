@@ -65,11 +65,11 @@ export type Bill = {
   transaction_tags: TransactionTag[]
   type: 'Bill'
   updated_at: string
-  voided_at: string
+  voided_at: string | null
   vendor: Vendor
 }
 
-type BillLineItem = {
+export type BillLineItem = {
   account_identifier: string
   bill_id: string
   description: string

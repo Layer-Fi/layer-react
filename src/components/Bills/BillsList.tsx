@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import ChevronRight from '../../icons/ChevronRight'
 import { Bill } from '../../types'
-import { isBillPaid } from '../../utils/bills'
 import { convertCentsToCurrency, formatDate } from '../../utils/format'
 import { getVendorName } from '../../utils/vendors'
 import { ButtonVariant } from '../Button/Button'
@@ -76,6 +75,7 @@ const BillsListItem = ({
   const dataProps = toDataProperties({
     selected: isSelected,
     disabled: isSelectionDisabled,
+    status: status.toLowerCase(),
   })
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,7 +118,6 @@ const BillsListItem = ({
             <DueStatus
               dueDate={bill.due_at}
               paidAt={bill.paid_at}
-              paid={isBillPaid(bill.status)}
               size='sm'
             />
           </span>

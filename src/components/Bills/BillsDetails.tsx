@@ -14,7 +14,7 @@ import { formatDate } from '../../utils/format'
 import { formatISO, parseISO } from 'date-fns'
 import { Panel } from '../Panel'
 import { BillsSidebar } from './BillsSidebar'
-import { BillTerms, UnpaidStatuses } from '../../types/bills'
+import { BillTerms } from '../../types/bills'
 import { SelectVendor } from '../Vendors/SelectVendor'
 import { CategorySelect, mapCategoryToOption } from '../CategorySelect/CategorySelect'
 import { useLayerContext } from '../../contexts/LayerContext'
@@ -22,9 +22,10 @@ import { AmountInput } from '../Input/AmountInput'
 import { getVendorName } from '../../utils/vendors'
 import { DATE_FORMAT_SHORT } from '../../config/general'
 import { BillSummary } from './BillSummary'
+import { isBillUnpaid } from '../../utils/bills'
 
 const findCategoryById = (id: string, categories: Category[]) => {
-  return categories.find(category => category.id === id)
+  return categories.find(category => (category.type === 'AccountNested' && category.id === id) || (category.type === 'OptionalAccountNested' && category.stable_name === id))
 }
 
 export const BillsDetails = ({
@@ -91,7 +92,7 @@ export const BillsDetails = ({
           <div className='Layer__bill-details__section Layer__bill-details__head'>
             <BillSummary bill={bill} />
             <div className='Layer__bill-details__action'>
-              {UnpaidStatuses.includes(bill.status) && !showRecordPaymentForm
+              {isBillUnpaid(bill.status) && !showRecordPaymentForm
                 ? (
                   <Button type='button' onClick={() => recordPaymentForBill(bill)}>
                     Record payment
@@ -216,7 +217,7 @@ export const BillsDetails = ({
                     {field.state.value?.map((_, i) => {
                       return (
                         <div key={i} className='Layer__bill-details__category-row'>
-                          <form.Field name={`line_items[${i}].product`}>
+                          <form.Field name={`line_items[${i}].account_identifier`}>
                             {(subField) => {
                               const selectedCategory =
                                 subField.state.value

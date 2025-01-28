@@ -8,7 +8,6 @@
     align-items: center;
     gap: var(--spacing-3xs);
   }
-}
 
   &[data-status='overdue'] {
     .Layer__due-status__title {
