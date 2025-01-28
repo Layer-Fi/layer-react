@@ -24,7 +24,7 @@ import { parseISO, format as formatTime } from 'date-fns'
 
 type Props = {
   name?: string
-  bankTransaction: BankTransaction
+  bankTransaction?: BankTransaction
   value: CategoryOption | undefined
   onChange: (newValue: CategoryOption) => void
   disabled?: boolean

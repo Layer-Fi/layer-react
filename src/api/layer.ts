@@ -11,6 +11,7 @@ import {
   getBankTransactionDocument,
   archiveBankTransactionDocument,
 } from './layer/bankTransactions'
+import { getBills } from './layer/bills'
 import { getBusiness } from './layer/business'
 import { getCategories } from './layer/categories'
 import {
@@ -64,6 +65,7 @@ import {
   deleteTaskUploads,
   updateUploadDocumentTaskDescription,
 } from './layer/tasks'
+import { getVendors } from './layer/vendors'
 
 export const Layer = {
   getBusiness,
@@ -80,6 +82,7 @@ export const Layer = {
   archiveBankTransactionDocument,
   updateBankTransactionMetadata,
   uploadBankTransactionDocument,
+  getBills,
   getCategories,
   getChartOfAccounts,
   getLedgerAccountBalances,
@@ -118,4 +121,5 @@ export const Layer = {
   statusOfQuickbooksConnection,
   initQuickbooksOAuth,
   unlinkQuickbooksConnection,
+  getVendors,
 }

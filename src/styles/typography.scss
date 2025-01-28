@@ -79,6 +79,10 @@
   color: var(--color-success);
 }
 
+.Layer__text[data-status='disabled'] {
+  color: var(--color-base-500);
+}
+
 .Layer__text[data-ellipsis] {
   white-space: nowrap;
   overflow: hidden;
