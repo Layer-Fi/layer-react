@@ -16,21 +16,16 @@ import { Heading, HeadingSize, TextSize, Text } from '../Typography'
 import { Bill } from '../../types/bills'
 import CloseIcon from '../../icons/CloseIcon'
 import { parseISO, format as formatTime } from 'date-fns'
-import { convertNumberToCurrency } from '../../utils/format'
+import { convertFromCents, convertNumberToCurrency } from '../../utils/format'
 import { getVendorName } from '../../utils/vendors'
 import { AmountInput } from '../Input/AmountInput'
 import { BillsRecordPaymentFormRecord } from '../../hooks/useBillsRecordPayment'
 
-/** @TODO - temp - remove after rebase */
-const convertFromCents = (amount: number) => {
-  return amount / 100
-}
-
 const buildLabel = (bill: Bill, amount?: string) => {
   const amountNumber = amount !== undefined ? Number(amount) : 0
-  const totalAmount = convertNumberToCurrency(convertFromCents(bill.total_amount))
+  const totalAmount = convertNumberToCurrency(convertFromCents(bill.total_amount) ?? 0)
   const currentAmount = convertNumberToCurrency(
-    convertFromCents((bill.outstanding_balance ?? 0)) + amountNumber,
+    (convertFromCents(bill.outstanding_balance) ?? 0) + amountNumber,
   )
 
   return (

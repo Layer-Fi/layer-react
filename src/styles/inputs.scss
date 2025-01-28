@@ -695,10 +695,11 @@
   }
 }
 
-// @media screen and (resolution >= 2dppx) { @TODO - test both
-/* stylelint-disable-next-line media-feature-name-no-vendor-prefix */
-// @media screen and (min-device-pixel-ratio: 2) and (width <= 759px) {
-@media screen and (resolution >= 2dppx) and (width <= 759px) {
+.Layer__input--static-value {
+  padding: 0 calc(var(--spacing-xs) + 1px);
+}
+
+@media screen and (resolution >= 2dppx) {
   .Layer__component {
     .Layer__textarea,
     .Layer__select__control,
@@ -713,8 +714,4 @@
       min-height: 36px;
     }
   }
-}
-
-.Layer__input--static-value {
-  padding: 0 calc(var(--spacing-xs) + 1px);
 }
