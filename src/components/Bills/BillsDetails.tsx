@@ -28,6 +28,12 @@ const findCategoryById = (id: string, categories: Category[]) => {
   return categories.find(category => (category.type === 'AccountNested' && category.id === id) || (category.type === 'OptionalAccountNested' && category.stable_name === id))
 }
 
+const convertToInputDate = (date?: string) => {
+  const d = date ? parseISO(date) : new Date()
+  d.setHours(0, 0, 0, 0)
+  return d
+}
+
 export const BillsDetails = ({
   bill,
   containerRef,
@@ -154,7 +160,7 @@ export const BillsDetails = ({
                     <InputGroup inline={true} label='Bill date'>
                       <DatePicker
                         displayMode='dayPicker'
-                        selected={field.state.value ? parseISO(field.state.value) : new Date()}
+                        selected={convertToInputDate(field.state.value)}
                         onChange={e => field.handleChange(formatISO(e as Date))}
                         dateFormat='MM/dd/yyyy'
                         disabled={disabled}
@@ -176,27 +182,22 @@ export const BillsDetails = ({
                   )}
                 </form.Field>
                 <form.Field name='due_date'>
-                  {(field) => {
-                  // @TODO - can this conversion be done better?
-                    const a = field.state.value ? parseISO(field.state.value) : new Date()
-                    a.setHours(0, 0, 0, 0)
-                    return (
-                      <InputGroup inline={true} label='Due date'>
-                        <DatePicker
-                          displayMode='dayPicker'
-                          selected={a}
-                          onChange={(d) => {
-                            const x = d as Date
-                            x.setHours(0, 0, 0, 0)
-                            field.handleChange(formatISO(x))
-                          }}
-                          maxDate={null}
-                          dateFormat='MM/dd/yyyy'
-                          disabled={disabled}
-                        />
-                      </InputGroup>
-                    )
-                  }}
+                  {field => (
+                    <InputGroup inline={true} label='Due date'>
+                      <DatePicker
+                        displayMode='dayPicker'
+                        selected={convertToInputDate(field.state.value)}
+                        onChange={(d) => {
+                          const x = d as Date
+                          x.setHours(0, 0, 0, 0)
+                          field.handleChange(formatISO(x))
+                        }}
+                        maxDate={null}
+                        dateFormat='MM/dd/yyyy'
+                        disabled={disabled}
+                      />
+                    </InputGroup>
+                  )}
                 </form.Field>
 
               </div>

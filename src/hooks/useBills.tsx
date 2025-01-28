@@ -34,31 +34,8 @@ export const useBills: UseBills = () => {
   }
 
   /**
-   * @TODO move vendors to another hook and context(?)
-   * Uncomment both when API is ready
+   * @TODO Uncomment when API is ready
    */
-  // const {
-  //   businessId,
-  //   touch,
-  //   read,
-  //   syncTimestamps,
-  //   hasBeenTouched,
-  // } = useLayerContext()
-  // const { apiUrl } = useEnvironment()
-  // const { data: auth } = useAuth()
-
-  // const queryKey =
-  //   businessId
-  //   && auth?.access_token
-  //   && `vendors-${businessId}`
-
-  // const { data: rawData, isLoading, isValidating, error, mutate } = useSWR(
-  //   queryKey,
-  //   Layer.getVendors(apiUrl, auth?.access_token, {
-  //     params: { businessId },
-  //   }),
-  // )
-
   // const queryKey =
   //   businessId
   //   && auth?.access_token
