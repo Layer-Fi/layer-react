@@ -421,6 +421,10 @@
 
         .Layer__datepicker__calendar {
           bottom: 0;
+
+          @media screen and (resolution >= 2dppx) {
+            padding-bottom: 96px;
+          }
         }
       }
     }
@@ -688,12 +692,10 @@
   }
 }
 
-/* stylelint-disable-next-line media-feature-name-no-vendor-prefix */
-@media screen and (-webkit-min-device-pixel-ratio: 2) and (width <= 759px) {
+@media screen and (resolution >= 2dppx) {
   .Layer__component .react-datepicker__input-container input {
     font-size: 16px;
     min-height: 36px;
     max-height: 36px;
-
   }
 }
