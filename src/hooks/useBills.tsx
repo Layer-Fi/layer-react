@@ -1,14 +1,11 @@
 import { useMemo, useState } from 'react'
-import { useLayerContext } from '../contexts/LayerContext'
-import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
-import { useAuth } from './useAuth'
-import { Layer } from '../api/layer'
-import useSWR from 'swr'
 import { BILLS_MOCK_PAID, BILLS_MOCK_UNPAID } from './useBillsMOCK'
-import { Bill, BillStatusFilter } from '../types/bills'
+import { Bill } from '../types/bills'
 import { DateRange } from '../types'
 import { endOfMonth, startOfMonth, sub } from 'date-fns'
 import { Vendor } from '../types/vendors'
+
+export type BillStatusFilter = 'PAID' | 'UNPAID'
 
 type UseBills = () => {
   data: Bill[]
