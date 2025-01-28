@@ -642,6 +642,14 @@
   }
 }
 
+@container (min-width: 499px) {
+  .Layer__bills-list-item[data-status='paid'] .Layer__bills-list-item__main__amount {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3xs);
+  }
+}
+
 .Layer__bills-list-item__bottombar {
   display: flex;
   align-items: center;

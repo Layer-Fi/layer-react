@@ -16,7 +16,6 @@ export interface SubmitButtonProps
   active?: boolean
   variant?: ButtonProps['variant']
   iconOnly?: boolean
-  variant?: ButtonProps['variant']
   action?: SubmitAction
   noIcon?: boolean
   tooltip?: ButtonProps['tooltip']
