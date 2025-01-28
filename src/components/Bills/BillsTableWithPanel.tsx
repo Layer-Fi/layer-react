@@ -131,7 +131,6 @@ export const BillsTableWithPanel = ({
                 >
                   Record payment
                 </Button>
-
               </HeaderCol>
             )}
           </HeaderRow>
