@@ -3,8 +3,6 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import classNames from 'classnames'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 
-export type TextStatus = 'success' | 'error' | 'warning' | 'disabled'
-
 export enum TextSize {
   lg = 'lg',
   md = 'md',
@@ -20,6 +18,8 @@ export enum TextUseTooltip {
   whenTruncated = 'whenTruncated',
   always = 'always',
 }
+
+export type TextStatus = 'success' | 'error' | 'warning' | 'disabled'
 
 export interface TextTooltipOptions {
   contentClassName?: string

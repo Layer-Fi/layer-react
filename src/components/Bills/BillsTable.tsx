@@ -61,6 +61,23 @@ const BillsTableContent = ({
       }
     }
 
+    const onRecordPaymentClick = (e: React.MouseEvent) => {
+      e.stopPropagation()
+
+      if (billsToPay.map(x => x.bill?.id).includes(rowKey)) {
+        setShowRecordPaymentForm(false)
+      }
+      else {
+        addBill(entry)
+        setShowRecordPaymentForm(true)
+      }
+    }
+
+    const actionsColClassName = classNames(
+      'Layer__bills-table__actions-col',
+      status === 'PAID' ? 'Layer__bills-table__actions-col--narrow' : '',
+    )
+
     return (
       <Fragment key={rowKey + '-' + index}>
         <TableRow rowKey={rowKey + '-' + index} depth={depth}>
@@ -69,9 +86,7 @@ const BillsTableContent = ({
               <Checkbox
                 boxSize={CheckboxSize.LARGE}
                 checked={isSelected}
-                onChange={(e) => {
-                  handleCheckboxChange(e)
-                }}
+                onChange={handleCheckboxChange}
                 className='Layer__bills-table__checkbox'
                 disabled={isSelectionDisabled}
                 tooltip={isSelectionDisabled ? 'You can only select bills from the same vendor' : undefined}
@@ -81,44 +96,33 @@ const BillsTableContent = ({
               {getVendorName(entry.vendor)}
             </Text>
           </TableCell>
+
           <TableCell nowrap>{formatDate(entry.due_at, DATE_FORMAT_SHORT)}</TableCell>
+
           <TableCell primary>
             {convertCentsToCurrency(entry.total_amount)}
           </TableCell>
+
           {status === 'UNPAID' && (
             <TableCell primary nowrap>
               {convertCentsToCurrency(entry.outstanding_balance)}
             </TableCell>
           )}
+
           <TableCell className='Layer__bills-table__status-col' nowrap>
-            <DueStatus
-              dueDate={entry.due_at}
-              paidAt={entry.paid_at}
-            />
+            <DueStatus dueDate={entry.due_at} paidAt={entry.paid_at} />
           </TableCell>
+
           {!showRecordPaymentForm && (
             <TableCell
               align={TableCellAlign.RIGHT}
-              className={classNames(
-                'Layer__bills-table__actions-col',
-                status === 'PAID' ? 'Layer__bills-table__actions-col--narrow' : '',
-              )}
+              className={actionsColClassName}
             >
               <div className='Layer__bills__status-with-actions'>
                 {status === 'UNPAID'
                   ? (
                     <SubmitButton
-                      onClick={(e) => {
-                        e.stopPropagation()
-
-                        if (billsToPay.map(x => x.bill?.id).includes(rowKey)) {
-                          setShowRecordPaymentForm(false)
-                        }
-                        else {
-                          addBill(entry)
-                          setShowRecordPaymentForm(true)
-                        }
-                      }}
+                      onClick={onRecordPaymentClick}
                       active={true}
                       action={SubmitAction.UPDATE}
                       variant={ButtonVariant.secondary}
@@ -129,9 +133,7 @@ const BillsTableContent = ({
                   : null}
                 <IconButton
                   icon={<ChevronRight />}
-                  onClick={() => {
-                    setBillInDetails(entry)
-                  }}
+                  onClick={() => { setBillInDetails(entry) }}
                 />
               </div>
             </TableCell>

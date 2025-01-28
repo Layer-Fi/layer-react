@@ -27,7 +27,7 @@ const Toast = (props: ToastProps & { isExiting: boolean }) => {
   )
 }
 
-export const ToastsContainer = () => {
+export function ToastsContainer() {
   const { toasts } = useLayerContext()
 
   return (

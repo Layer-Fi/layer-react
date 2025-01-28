@@ -296,11 +296,6 @@
   height: calc(100% - 160px);
 }
 
-.Layer__table--hover-effect .Layer__table-row:hover {
-  background-color: var(--color-base-50);
-  cursor: pointer;
-}
-
 .Layer__table-header {
   color: var(--text-color-secondary);
   font-size: var(--text-sm);
@@ -338,6 +333,11 @@
   box-sizing: border-box;
   transition: all var(--transition-speed) ease-out;
   position: relative;
+}
+
+.Layer__table--hover-effect .Layer__table-row:hover {
+  background-color: var(--color-base-50);
+  cursor: pointer;
 }
 
 .Layer__table-header.Layer__table-cell--amount,
