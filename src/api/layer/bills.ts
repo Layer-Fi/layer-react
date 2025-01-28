@@ -1,4 +1,4 @@
-import { Bill, BillPayment } from '../../types/bills'
+import { Bill } from '../../types/bills'
 import { get } from './authenticated_http'
 
 export const getBills = get<{ data: Bill[] }>(

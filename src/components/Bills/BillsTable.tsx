@@ -13,7 +13,6 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { BillsTableStringOverrides } from './BillsTableWithPanel'
 import { getVendorName } from '../../utils/vendors'
 import { Text } from '../Typography'
-import { isBillPaid } from '../../utils/bills'
 import classNames from 'classnames'
 import { DATE_FORMAT_SHORT } from '../../config/general'
 
@@ -95,7 +94,6 @@ const BillsTableContent = ({
             <DueStatus
               dueDate={entry.due_at}
               paidAt={entry.paid_at}
-              paid={isBillPaid(entry.status)}
             />
           </TableCell>
           {!showRecordPaymentForm && (
