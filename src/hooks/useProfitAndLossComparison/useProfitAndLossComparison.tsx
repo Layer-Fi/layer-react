@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { Layer } from '../../api/layer'
 import { TagComparisonOption } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { useLayerContext } from '../../contexts/LayerContext'
@@ -57,20 +57,6 @@ export function useProfitAndLossComparison({
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  useEffect(() => {
-    if (
-      compareMonths > 1
-      || compareOptions.filter(x => x.displayName).length > 0
-    ) {
-      if (compareMode === false) {
-        setCompareMode(true)
-      }
-    }
-    else {
-      setCompareMode(false)
-    }
-  }, [compareMonths, compareOptions])
-
   const prepareFiltersBody = (compareOptions: TagComparisonOption[]) => {
     const tagFilters: TagFilter = []
     compareOptions.map((option) => {
@@ -123,10 +109,10 @@ export function useProfitAndLossComparison({
 
   const refetch = (dateRange: DateRange, actAsInitial?: boolean) => {
     if (actAsInitial && !initialFetchDone) {
-      fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
+      void fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
     }
     else if (!actAsInitial) {
-      fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
+      void fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
     }
   }
 
