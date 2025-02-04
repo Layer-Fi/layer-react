@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { MultiSelect, Select } from '../Input'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import type { StylesConfig } from 'react-select'
+import { useGlobalDateRangePicker } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
 
 export interface ProfitAndLossCompareOptionsProps {
   tagComparisonOptions: TagComparisonOption[]
@@ -40,6 +41,7 @@ export const ProfitAndLossCompareOptions = ({
   const {
     setCompareMonths,
     setCompareOptions,
+    setCompareMode,
     compareMode,
     refetch,
     compareMonths,
@@ -47,6 +49,8 @@ export const ProfitAndLossCompareOptions = ({
   } = useContext(ProfitAndLoss.ComparisonContext)
 
   const { dateRange } = useContext(ProfitAndLoss.Context)
+
+  const { rangeDisplayMode } = useGlobalDateRangePicker({})
 
   const [initialDone, setInitialDone] = useState(false)
 
@@ -75,12 +79,20 @@ export const ProfitAndLossCompareOptions = ({
     compareOptions?.length > 0 ? compareOptions : [defaultOption],
   )
 
+  const isCompareDisabled = rangeDisplayMode !== 'monthPicker'
+
+  useEffect(() => {
+    if (isCompareDisabled === compareMode) {
+      setCompareMode(!isCompareDisabled)
+    }
+  }, [isCompareDisabled, compareMode, setCompareMode])
+
   useEffect(() => {
     if (months === 0 && toggle.length > 1) {
       setMonths(1)
     }
-    else if (months !== compareMonths) {
-      setCompareMonths && setCompareMonths(months)
+    else if (months !== compareMonths && setCompareMonths) {
+      setCompareMonths(months)
     }
   }, [months])
 
@@ -88,8 +100,8 @@ export const ProfitAndLossCompareOptions = ({
     if (toggle.length === 0) {
       setToggle(compareOptions?.length > 0 ? compareOptions : [defaultOption])
     }
-    else if (JSON.stringify(toggle) !== JSON.stringify(compareOptions)) {
-      setCompareOptions && setCompareOptions(toggle)
+    else if (JSON.stringify(toggle) !== JSON.stringify(compareOptions) && setCompareOptions) {
+      setCompareOptions(toggle)
     }
   }, [toggle])
 
@@ -121,6 +133,7 @@ export const ProfitAndLossCompareOptions = ({
             )
         }
         placeholder='Compare months'
+        disabled={isCompareDisabled}
       />
       <MultiSelect
         options={tagComparisonSelectOptions}
@@ -147,6 +160,7 @@ export const ProfitAndLossCompareOptions = ({
         })}
         placeholder='Select views'
         styles={selectStyles}
+        disabled={isCompareDisabled}
       />
     </div>
   )
