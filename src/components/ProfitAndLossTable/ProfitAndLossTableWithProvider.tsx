@@ -11,15 +11,18 @@ export const ProfitAndLossTableWithProvider = (
   props: ProfitAndLossTableProps,
 ) => {
   const { compareMode } = useContext(ProfitAndLoss.ComparisonContext)
+
   return (
     <TableProvider>
-      {compareMode ? (
-        <div className='Layer__compare__table__wrapper'>
-          <ProfitAndLossCompareTable {...props} />
-        </div>
-      ) : (
-        <ProfitAndLossTableComponent {...props} />
-      )}
+      {compareMode
+        ? (
+          <div className='Layer__compare__table__wrapper'>
+            <ProfitAndLossCompareTable {...props} />
+          </div>
+        )
+        : (
+          <ProfitAndLossTableComponent {...props} />
+        )}
     </TableProvider>
   )
 }
