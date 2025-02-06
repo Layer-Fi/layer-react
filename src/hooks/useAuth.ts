@@ -102,6 +102,7 @@ export function useAuth() {
         .then(data => ({ apiUrl, ...data }))
     },
     {
+      keepPreviousData: true,
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
       refreshInterval: (latestData) => {
