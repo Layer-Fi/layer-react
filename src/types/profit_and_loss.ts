@@ -1,3 +1,5 @@
+import type { ReportingBasis } from '../types'
+import { ReadonlyArrayWithAtLeastOne } from '../utils/array/getArrayWithAtLeastOneOrFallback'
 import { LineItem } from './line_item'
 
 export interface ProfitAndLoss {
@@ -36,6 +38,27 @@ export interface ProfitAndLossComparisonPnl {
   other_outflows?: LineItem | null
   personal_expenses?: LineItem | null
   fully_categorized: boolean
+}
+
+type ProfitAndLossComparisonPeriods = {
+  type: 'Comparison_Months'
+  months: ReadonlyArrayWithAtLeastOne<{ year: number, month: number }>
+} | {
+  type: 'Comparison_Years'
+  years: ReadonlyArrayWithAtLeastOne<{ year: number }>
+} | {
+  type: 'Comparison_Date_Ranges'
+  date_ranges: ReadonlyArrayWithAtLeastOne<{ start_date: string, end_date: string }>
+}
+
+type ProfitAndLossComparisonTags = {
+  required_tags?: ReadonlyArray<{ key: string, value: string }>
+}
+
+export type ProfitAndLossComparisonRequestBody = {
+  periods: ProfitAndLossComparisonPeriods
+  tag_filters?: ReadonlyArrayWithAtLeastOne<ProfitAndLossComparisonTags>
+  reporting_basis?: ReportingBasis
 }
 
 export interface ProfitAndLossComparisonItem {
