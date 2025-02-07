@@ -1,3 +1,5 @@
+import type { EnumWithUnknownValues } from './types/utility/enumWithUnknownValues'
+
 export { OAuthResponse } from './types/authentication'
 export {
   LayerContextValues,
@@ -61,6 +63,7 @@ export type DateRange<T = Date> = {
   endDate: T
 }
 
-export type ReportingBasis = 'CASH' | 'ACCRUAL'
+type StrictReportingBasis = 'CASH' | 'CASH_COLLECTED' | 'ACCRUAL'
+export type ReportingBasis = EnumWithUnknownValues<StrictReportingBasis>
 
 export type MoneyFormat = 'CENTS' | 'DOLLAR_STRING'

@@ -9,23 +9,12 @@ import {
 import { startOfMonth, subMonths, getYear, getMonth } from 'date-fns'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { range } from '../../utils/array/range'
+import { isArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
 
 export type Scope = 'expenses' | 'revenue'
 
 export type SidebarScope = Scope | undefined
-
-type Periods = {
-  type: 'Comparison_Months'
-  months: Array<{ year: number, month: number }>
-}
-
-type TagFilter = Array<{
-  required_tags: Array<{
-    key: string
-    value: string
-  }>
-  structure?: string
-}>
 
 type Props = {
   reportingBasis?: ReportingBasis
@@ -72,53 +61,66 @@ export function useProfitAndLossComparison({
   }, [compareMonths, compareOptions])
 
   const prepareFiltersBody = (compareOptions: TagComparisonOption[]) => {
-    const tagFilters: TagFilter = []
-    compareOptions.map((option) => {
-      if (option.tagFilterConfig.tagFilters === 'None') {
-        tagFilters.push({
-          required_tags: [],
-          structure: option.tagFilterConfig.structure,
-        })
+    const noneFilters = compareOptions.filter(
+      ({ tagFilterConfig: { tagFilters } }) => tagFilters === 'None')
+
+    const tagFilters = compareOptions.flatMap(({ tagFilterConfig: { tagFilters } }) => {
+      if (tagFilters === 'None') {
+        return null
       }
-      else {
-        const tagFilter = option.tagFilterConfig.tagFilters
-        tagFilters.push({
-          required_tags: tagFilter.tagValues.map((tagValue) => {
-            return {
-              key: tagFilter.tagKey,
-              value: tagValue,
-            }
-          }),
-          structure: option.tagFilterConfig.structure,
-        })
+
+      if (tagFilters.tagValues.length === 0) {
+        return { required_tags: [] }
       }
-    })
-    return tagFilters
+
+      return tagFilters.tagValues.map(tagValue => ({
+        required_tags: [{
+          key: tagFilters.tagKey,
+          value: tagValue,
+        }],
+      }))
+    }).filter(item => item !== null)
+
+    if (tagFilters.length === 0) {
+      return
+    }
+
+    const allFilters = [
+      noneFilters.length > 0
+        ? { required_tags: [] }
+        : null,
+      ...tagFilters,
+    ].filter(item => item !== null)
+
+    return isArrayWithAtLeastOne(allFilters) ? allFilters : undefined
   }
 
   const preparePeriodsBody = (dateRange: DateRange, compareMonths: number) => {
-    const periods: Periods = {
-      type: 'Comparison_Months',
-      months: [],
-    }
     const adjustedStartDate = startOfMonth(dateRange.startDate)
 
-    for (let i = 0; i < compareMonths; i++) {
-      const currentMonth = subMonths(adjustedStartDate, i)
-      periods.months.push({
+    const rawMonths = range(0, compareMonths).map((index) => {
+      const currentMonth = subMonths(adjustedStartDate, index)
+
+      return {
         year: getYear(currentMonth),
         month: getMonth(currentMonth) + 1,
-      })
-    }
-
-    periods.months.sort((a, b) => {
-      if (a.year !== b.year) {
-        return a.year - b.year
       }
-      return a.month - b.month
     })
 
-    return periods
+    const sortedMonths = rawMonths.sort((a, b) => {
+      if (a.year === b.year) {
+        return a.month - b.month
+      }
+
+      return a.year - b.year
+    })
+
+    return isArrayWithAtLeastOne(sortedMonths)
+      ? {
+        type: 'Comparison_Months' as const,
+        months: sortedMonths,
+      }
+      : undefined
   }
 
   const refetch = (dateRange: DateRange, actAsInitial?: boolean) => {
@@ -144,6 +146,13 @@ export function useProfitAndLossComparison({
       initialFetchDone = true
       try {
         const periods = preparePeriodsBody(dateRange, compareMonths)
+
+        if (!periods) {
+          setIsLoading(false)
+          setIsValidating(false)
+          return
+        }
+
         const tagFilters = prepareFiltersBody(compareOptions)
         const request = Layer.compareProfitAndLoss(apiUrl, auth?.access_token, {
           params: {

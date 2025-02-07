@@ -1,7 +1,8 @@
 import { ProfitAndLoss } from '../../types'
 import { S3PresignedUrl } from '../../types/general'
-import {
+import type {
   ProfitAndLossComparison,
+  ProfitAndLossComparisonRequestBody,
   ProfitAndLossSummaries,
 } from '../../types/profit_and_loss'
 import { get, post } from './authenticated_http'
@@ -20,10 +21,13 @@ export const getProfitAndLoss = get<{
     }`,
 )
 
-export const compareProfitAndLoss = post<{
-  data?: ProfitAndLossComparison
-  error?: unknown
-}>(
+export const compareProfitAndLoss = post<
+  {
+    data?: ProfitAndLossComparison
+    error?: unknown
+  },
+  ProfitAndLossComparisonRequestBody
+>(
   ({ businessId }) =>
     `/v1/businesses/${businessId}/reports/profit-and-loss-comparison`,
 )
