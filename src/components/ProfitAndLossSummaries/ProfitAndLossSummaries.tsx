@@ -50,25 +50,21 @@ export function Internal_ProfitAndLossSummaries({
   variants,
 }: Internal_ProfitAndLossSummariesProps) {
   const {
-    data: storedData,
+    data,
     isLoading,
     setSidebarScope,
     sidebarScope,
   } = useContext(PNL.Context)
 
-  const dataItem = Array.isArray(storedData)
-    ? storedData[storedData.length - 1]
-    : storedData
-
   const { revenueChartData, expensesChartData } = useMemo(
     () => ({
-      revenueChartData: toMiniChartData({ scope: 'revenue', data: dataItem }),
-      expensesChartData: toMiniChartData({ scope: 'expenses', data: dataItem }),
+      revenueChartData: toMiniChartData({ scope: 'revenue', data }),
+      expensesChartData: toMiniChartData({ scope: 'expenses', data }),
     }),
-    [dataItem],
+    [data],
   )
 
-  const data = dataItem ? dataItem : { income: { value: NaN }, net_profit: NaN }
+  const effectiveData = data ?? { income: { value: 0 }, net_profit: 0 }
 
   const { unstable_AdditionalListItems = [] } = slots ?? {}
   const listItemCount = unstable_AdditionalListItems.length + 3
@@ -82,7 +78,7 @@ export function Internal_ProfitAndLossSummaries({
         >
           <ProfitAndLossSummariesSummary
             label={stringOverrides?.revenueLabel || revenueLabel || 'Revenue'}
-            amount={data.income.value}
+            amount={effectiveData.income.value ?? 0}
             isLoading={isLoading}
             slots={{
               Chart: (
@@ -102,7 +98,7 @@ export function Internal_ProfitAndLossSummaries({
         >
           <ProfitAndLossSummariesSummary
             label={stringOverrides?.revenueLabel || revenueLabel || 'Expenses'}
-            amount={(data?.income?.value ?? NaN) - data.net_profit}
+            amount={(effectiveData?.income?.value ?? 0) - effectiveData.net_profit}
             isLoading={isLoading}
             slots={{
               Chart: (
@@ -119,7 +115,7 @@ export function Internal_ProfitAndLossSummaries({
         <ProfitAndLossSummariesListItem>
           <ProfitAndLossSummariesSummary
             label={stringOverrides?.netProfitLabel || 'Net Profit'}
-            amount={data.net_profit}
+            amount={data?.net_profit ?? 0}
             variants={variants}
             isLoading={isLoading}
           />

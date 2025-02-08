@@ -1,30 +1,29 @@
-import { forwardRef, useMemo } from 'react'
+import { forwardRef, type ComponentPropsWithoutRef } from 'react'
 import type { PropsWithChildren } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 
-const P_CLASS_NAME = 'Layer__P'
+const CLASS_NAME = 'Layer__P'
 
 type TextProps = {
-  slot?: string
   size?: 'xs' | 'sm' | 'md' | 'lg'
   pbe?: 'xs' | 'sm' | 'md' | 'lg'
   align?: 'center'
-}
+} & Pick<ComponentPropsWithoutRef<'p'>, 'slot'>
 
 const P = forwardRef<HTMLParagraphElement, PropsWithChildren<TextProps>>(
   ({ align, children, pbe, size, ...restProps }, ref) => {
-    const dataProperties = useMemo(() => toDataProperties({
+    const dataProperties = toDataProperties({
       align,
       pbe,
-      size
-    }), [align, pbe, size])
+      size,
+    })
 
     return (
-      <p {...restProps} {...dataProperties} className={P_CLASS_NAME} ref={ref}>
+      <p {...restProps} {...dataProperties} className={CLASS_NAME} ref={ref}>
         {children}
       </p>
     )
-  }
+  },
 )
 P.displayName = 'P'
 

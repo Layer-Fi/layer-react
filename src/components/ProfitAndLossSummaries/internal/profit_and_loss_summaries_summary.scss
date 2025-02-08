@@ -13,6 +13,16 @@
     min-block-size: 6rem;
     column-gap: var(--spacing-md);
   }
+
+  [slot=heading] {
+    grid-area: heading;
+    align-self: end;
+  }
+
+  [slot=amount] {
+    grid-area: amount;
+    align-self: start;
+  }
 }
 
 .Layer__ProfitAndLossSummariesSummaryChartArea {
@@ -21,25 +31,4 @@
   align-content: center;
   border-radius: var(--border-radius-xs);
   background: var(--color-base-50);
-}
-
-.Layer__ProfitAndLossSummariesSummaryAmount {
-  grid-area: amount;
-
-  font-size: var(--text-lg);
-  font-weight: var(--font-weight-bold);
-
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-
-  &[data-size="lg"] {
-    font-size: var(--text-heading);
-  }
-
-  &[data-positive]::before {
-    content: "$";
-  }
-  &[data-negative]::before {
-    content: "-$"
-  }
 }
