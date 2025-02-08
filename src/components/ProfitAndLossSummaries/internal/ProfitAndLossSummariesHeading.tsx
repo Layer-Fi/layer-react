@@ -1,23 +1,16 @@
-import { PropsWithChildren, useMemo } from 'react'
+import type { PropsWithChildren } from 'react'
 import type { Variants } from '../../../utils/styleUtils/sizeVariants'
-import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
-
-type ProfitAndLossSummariesHeadingProps = {
-  variants?: Variants
-} & PropsWithChildren
-
-const HEADING_CLASS_NAME = 'Layer__ProfitAndLossSummariesSummaryHeading'
+import { Heading } from '../../ui/Typography/Heading'
 
 export function ProfitAndLossSummariesHeading({
   variants,
   children,
-}: ProfitAndLossSummariesHeadingProps) {
+}: PropsWithChildren<{ variants?: Pick<Variants, 'size'> }>) {
   const { size = 'sm' } = variants ?? {}
-  const labelDataProperties = useMemo(() => toDataProperties({ size }), [size])
 
   return (
-    <h3 className={HEADING_CLASS_NAME} {...labelDataProperties}>
+    <Heading level={3} size={size} slot='heading'>
       {children}
-    </h3>
+    </Heading>
   )
 }
