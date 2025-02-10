@@ -1,3 +1,5 @@
+import { DatePickerMode } from './providers/GlobalDateStore/GlobalDateStoreProvider'
+
 export { OAuthResponse } from './types/authentication'
 export {
   LayerContextValues,
@@ -64,3 +66,28 @@ export type DateRange<T = Date> = {
 export type ReportingBasis = 'CASH' | 'ACCRUAL'
 
 export type MoneyFormat = 'CENTS' | 'DOLLAR_STRING'
+
+export type DateMode =
+  | 'DAY'
+  | 'DAY_RANGE'
+  | 'MONTH'
+  | 'MONTH_RANGE'
+  | 'QAURTER'
+  | 'YEAR'
+  | 'YEAR_TO_DATE'
+
+export type DatePeriod =
+  | 'DAY'
+  | 'MONTH'
+  | 'QUARTER'
+  | 'YEAR'
+  | 'YEAR_TO_DATE'
+  | 'CUSTOM'
+
+export type DateState = {
+  startDate: Date
+  endDate: Date
+  // period: DatePeriod
+  mode: DatePickerMode // @TODO - make something more generic and unify with DatePickerMode
+  supportedModes?: DatePickerMode[]
+}

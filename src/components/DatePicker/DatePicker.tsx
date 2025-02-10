@@ -11,6 +11,8 @@ import type {
 } from './ModeSelector/DatePickerModeSelector'
 import classNames from 'classnames'
 import { endOfDay, endOfMonth, endOfYear } from 'date-fns'
+import { useGlobalDate } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useDate } from '../../hooks/useDate'
 
 /**
  * @see https://github.com/Hacker0x01/react-datepicker/issues/1333#issuecomment-2363284612
@@ -31,7 +33,8 @@ type NavigationArrows = 'desktop' | 'mobile'
 
 interface DatePickerProps {
   displayMode: UnifiedPickerMode | 'timePicker'
-  selected: Date | [Date, Date | null]
+  selected?: Date | [Date, Date | null]
+  defaultSelected?: Date | [Date, Date | null]
   onChange: (date: Date | [Date, Date | null]) => void
   disabled?: boolean
   allowedModes?: ReadonlyArray<UnifiedPickerMode>
@@ -48,6 +51,7 @@ interface DatePickerProps {
   maxDate?: Date | null
   navigateArrows?: NavigationArrows[]
   onChangeMode?: (mode: UnifiedPickerMode) => void
+  syncWithGlobalDate?: boolean
   slots?: {
     ModeSelector: FC<DatePickerModeSelectorProps>
   }
@@ -62,6 +66,7 @@ const showNavigationArrows = (navigateArrows?: NavigationArrows[], isDesktop?: b
 
 export const DatePicker = ({
   selected,
+  defaultSelected,
   onChange,
   disabled,
   displayMode = 'dayPicker',
@@ -83,10 +88,75 @@ export const DatePicker = ({
   currentDateOption = true,
   navigateArrows = displayMode === 'monthPicker' ? ['mobile'] : undefined,
   onChangeMode,
+  syncWithGlobalDate,
   slots,
   ...props
 }: DatePickerProps) => {
   const { ModeSelector } = slots ?? {}
+
+  const { startDate: globalStartDate, endDate: globalEndDate } = useGlobalDate()
+  const globalDateRange = { startDate: globalStartDate, endDate: globalEndDate }
+
+  const defaultValues = useMemo(() => {
+    if (syncWithGlobalDate) {
+      return {
+        startDate: globalDateRange.startDate,
+        endDate: globalDateRange.endDate,
+      }
+    }
+
+    if (defaultSelected && isRangeMode(displayMode)) {
+      return {
+        startDate: (defaultSelected as [Date, Date])[0],
+        endDate: (defaultSelected as [Date, Date])[1],
+      }
+    }
+
+    if (defaultSelected) {
+      return {
+        startDate: defaultSelected as Date,
+        endDate: endOfDay(defaultSelected as Date),
+      }
+    }
+
+    if (!selected) {
+      return {}
+    }
+
+    if (
+      isRangeMode(displayMode)
+      && (selected as [Date, Date])[0]
+      && (selected as [Date, Date])[1]
+    ) {
+      return {
+        startDate: (selected as [Date, Date])[0],
+        endDate: (selected as [Date, Date])[1],
+      }
+    }
+    return {
+      startDate: selected as Date,
+      endDate: endOfDay(selected as Date),
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // To track prev vs new value in the useEffect
+  // const dateRef = useRef<DateState | null>(null)
+
+  // const dateContext = useDate(defaultValues)
+
+  const { date, setDate } = useDate({
+    startDate: defaultValues.startDate,
+    endDate: defaultValues.endDate,
+  })
+
+  const [selectingDates, setSelectingDates] = useState<boolean>(false)
+  const [startDate, setStartDate] = useState<Date | null>(
+    date.startDate ?? new Date(),
+  )
+  const [endDate, setEndDate] = useState<Date | null>(
+    date.endDate ?? endOfDay(new Date()),
+  )
 
   const pickerRef = useRef<{
     setOpen: (open: boolean, skipSetBlur?: boolean) => void
@@ -109,17 +179,17 @@ export const DatePicker = ({
     return allowedModes[0] ?? displayMode
   }, [displayMode, allowedModes])
 
-  const [firstDate, secondDate] = useMemo(() => {
-    if (selected instanceof Date) {
-      return [selected, null] as const
-    }
+  // const [firstDate, secondDate] = useMemo(() => {
+  //   if (selected instanceof Date) {
+  //     return [selected, null] as const
+  //   }
 
-    if (isRangeMode(displayMode)) {
-      return selected
-    }
+  //   if (isRangeMode(displayMode)) {
+  //     return selected
+  //   }
 
-    return [selected[0], null] as const
-  }, [selected, displayMode])
+  //   return [selected[0], null] as const
+  // }, [selected, displayMode])
 
   const { isDesktop } = useSizeClass()
 
@@ -183,14 +253,14 @@ export const DatePicker = ({
 
     switch (pickerMode) {
       case 'dayPicker':
-        return firstDate.toDateString() === currentDate.toDateString()
+        return startDate?.toDateString() === currentDate.toDateString()
       case 'monthPicker':
         return (
-          firstDate.getMonth() === currentDate.getMonth()
-          && firstDate.getFullYear() === currentDate.getFullYear()
+          startDate?.getMonth() === currentDate.getMonth()
+          && startDate?.getFullYear() === currentDate.getFullYear()
         )
       case 'yearPicker':
-        return firstDate.getFullYear() === currentDate.getFullYear()
+        return startDate?.getFullYear() === currentDate.getFullYear()
       default:
         return false
     }
@@ -215,36 +285,44 @@ export const DatePicker = ({
   }
 
   const isTodayOrAfter = useMemo(() => {
+    if (!startDate) {
+      return false
+    }
+
     switch (displayMode) {
       case 'dayPicker':
-        return firstDate >= endOfDay(new Date()) || (maxDate && firstDate >= maxDate)
+        return startDate >= endOfDay(new Date()) || (maxDate && startDate >= maxDate)
       case 'monthPicker':
         return (
-          endOfMonth(firstDate) >= endOfMonth(new Date())
-          || (maxDate && endOfMonth(firstDate) >= maxDate)
+          endOfMonth(startDate) >= endOfMonth(new Date())
+          || (maxDate && endOfMonth(startDate) >= maxDate)
         )
       case 'yearPicker':
         return (
-          endOfYear(firstDate) >= endOfYear(new Date())
-          || (maxDate && endOfYear(firstDate) >= maxDate)
+          endOfYear(startDate) >= endOfYear(new Date())
+          || (maxDate && endOfYear(startDate) >= maxDate)
         )
       default:
         return false
     }
-  }, [firstDate, maxDate, displayMode])
+  }, [startDate, maxDate, displayMode])
 
-  const isBeforeMinDate = Boolean(minDate && firstDate <= minDate)
+  const isBeforeMinDate = Boolean(minDate && startDate && startDate <= minDate)
 
   const handleNavigateDate = (value: number) => {
+    if (!startDate) {
+      return
+    }
+
     switch (pickerMode) {
       case 'dayPicker':
-        onChange(new Date(firstDate.setDate(firstDate.getDate() + value)))
+        onChange(new Date(startDate.setDate(startDate.getDate() + value)))
         break
       case 'monthPicker':
-        onChange(new Date(firstDate.setMonth(firstDate.getMonth() + value)))
+        onChange(new Date(startDate.setMonth(startDate.getMonth() + value)))
         break
       case 'yearPicker':
-        onChange(new Date(firstDate.setFullYear(firstDate.getFullYear() + value)))
+        onChange(new Date(startDate.setFullYear(startDate.getFullYear() + value)))
         break
       default:
         break
@@ -266,21 +344,9 @@ export const DatePicker = ({
         // @ts-expect-error = There is no good way to define the type of the ref
         ref={pickerRef}
         wrapperClassName={datePickerWrapperClassNames}
-        startDate={isRangeMode(displayMode)
-          ? (isMidSelection
-            ? internalStart
-            : firstDate)
-          : undefined}
-        endDate={isRangeMode(displayMode)
-          ? (isMidSelection
-            ? internalEnd
-            : secondDate)
-          : undefined}
-        selected={
-          displayMode !== 'dayRangePicker' && displayMode !== 'monthRangePicker'
-            ? firstDate
-            : undefined
-        }
+        startDate={startDate}
+        endDate={isRangeMode(displayMode) ? endDate : undefined}
+        selected={startDate}
         onChange={handleDateChange}
         calendarClassName={calendarClassNames}
         popperClassName={popperClassNames}

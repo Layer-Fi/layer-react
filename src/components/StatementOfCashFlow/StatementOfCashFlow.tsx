@@ -10,8 +10,11 @@ import { View } from '../View'
 import { STATEMENT_OF_CASH_FLOW_ROWS } from './constants'
 import { CashflowStatementDownloadButton } from './download/CashflowStatementDownloadButton'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
-import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { StatementOfCashFlowDatePicker } from './datePicker/StatementOfCashFlowDatePicker'
+import { useState } from 'react'
+import { endOfMonth, startOfDay, startOfMonth, subWeeks } from 'date-fns'
+import { DatePicker } from '../DatePicker/DatePicker'
+import { DatePickerModeSelector, DEFAULT_ALLOWED_PICKER_MODES } from '../DatePicker/ModeSelector/DatePickerModeSelector'
+import { DatePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
@@ -41,9 +44,62 @@ const StatementOfCashFlowView = ({
   allowedDatePickerModes,
   customDateRanges,
 }: StatementOfCashFlowViewProps) => {
-  const { start, end } = useGlobalDateRange()
-  const { data, isLoading } = useStatementOfCashFlow(start, end)
+  // @TODO mover to useStatementOfCashFlow or new hook??
+  const [startDate, setStartDate] = useState(
+    startOfDay(subWeeks(new Date(), 4)),
+  )
+  const [endDate, setEndDate] = useState(startOfDay(new Date()))
+  const { data, isLoading } = useStatementOfCashFlow(startDate, endDate)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
+
+  const [datePickerMode, setDatePickerMode] = useState<DatePickerMode>(
+    'monthPicker',
+  )
+
+  const handleDateChange = (dates: [Date | null, Date | null]) => {
+    if (dates[0]) {
+      setStartDate(startOfDay(dates[0]))
+    }
+    if (dates[1]) {
+      setEndDate(startOfDay(dates[1]))
+    }
+  }
+
+  const datePicker =
+    datePickerMode === 'monthPicker'
+      ? (
+        <DatePicker
+          defaultSelected={startDate}
+          onChange={(dates) => {
+            if (!Array.isArray(dates)) {
+              const date = dates
+              handleDateChange([startOfMonth(date), endOfMonth(date)])
+            }
+          }}
+          dateFormat='MMM'
+          displayMode={datePickerMode}
+          allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
+          onChangeMode={setDatePickerMode}
+          slots={{
+            ModeSelector: DatePickerModeSelector,
+          }}
+        />
+      )
+      : (
+        <DatePicker
+          defaultSelected={[startDate, endDate]}
+          customDateRanges={customDateRanges}
+          onChange={dates =>
+            handleDateChange(dates as [Date | null, Date | null])}
+          dateFormat='MMM d'
+          displayMode={datePickerMode}
+          allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
+          onChangeMode={setDatePickerMode}
+          slots={{
+            ModeSelector: DatePickerModeSelector,
+          }}
+        />
+      )
 
   return (
     <TableProvider>
@@ -54,15 +110,16 @@ const StatementOfCashFlowView = ({
           <Header>
             <HeaderRow>
               <HeaderCol>
-                <StatementOfCashFlowDatePicker
+                {/* <StatementOfCashFlowDatePicker
                   allowedDatePickerModes={allowedDatePickerModes}
                   customDateRanges={customDateRanges}
-                />
+                /> */}
+                {datePicker}
               </HeaderCol>
               <HeaderCol>
                 <CashflowStatementDownloadButton
-                  startDate={start}
-                  endDate={end}
+                  startDate={startDate}
+                  endDate={endDate}
                   iconOnly={view === 'mobile'}
                 />
               </HeaderCol>
