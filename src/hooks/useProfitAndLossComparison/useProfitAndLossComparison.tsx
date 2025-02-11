@@ -8,7 +8,7 @@ import {
 } from '../../types/profit_and_loss'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { prepareFiltersBody, preparePeriodsBody } from './utils'
 
 export type Scope = 'expenses' | 'revenue'
@@ -34,7 +34,7 @@ export function useProfitAndLossComparison({
   const [compareOptions, setCompareOptions] = useState<TagComparisonOption[]>(
     [],
   )
-  const [rangeDisplayMode, setRangeDisplayMode] = useState<DateRangePickerMode>('monthPicker')
+  const { rangeDisplayMode } = useGlobalDateRange()
   const [data, setData] = useState<ProfitAndLossComparison | undefined>(
     undefined,
   )
@@ -136,8 +136,6 @@ export function useProfitAndLossComparison({
     setComparePeriods,
     compareOptions,
     setCompareOptions,
-    rangeDisplayMode,
-    setRangeDisplayMode,
     refetch,
     getProfitAndLossComparisonCsv,
   }

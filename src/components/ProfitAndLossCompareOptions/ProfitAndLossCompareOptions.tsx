@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { MultiSelect, Select } from '../Input'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import type { StylesConfig } from 'react-select'
+import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export interface ProfitAndLossCompareOptionsProps {
   tagComparisonOptions: TagComparisonOption[]
@@ -35,7 +36,7 @@ const selectStyles = {
 
 const ALLOWED_COMPARE_MODES = ['monthPicker', 'yearPicker']
 
-const isAnyNoneDefaultTag = (compareOptions?: TagComparisonOption[]) => {
+const hasNoneDefaultTag = (compareOptions?: TagComparisonOption[]) => {
   return compareOptions?.some(option => option.tagFilterConfig.tagFilters !== 'None')
 }
 
@@ -51,8 +52,9 @@ export const ProfitAndLossCompareOptions = ({
     refetch,
     comparePeriods,
     compareOptions,
-    rangeDisplayMode,
   } = useContext(ProfitAndLoss.ComparisonContext)
+
+  const { rangeDisplayMode } = useGlobalDateRange()
 
   const { dateRange } = useContext(ProfitAndLoss.Context)
 
@@ -86,7 +88,7 @@ export const ProfitAndLossCompareOptions = ({
     }
 
     if (
-      (comparePeriods > 1 || isAnyNoneDefaultTag(compareOptions))
+      (comparePeriods > 1 || hasNoneDefaultTag(compareOptions))
       && !compareMode
       && !isCompareDisabled
     ) {
@@ -94,7 +96,7 @@ export const ProfitAndLossCompareOptions = ({
       return
     }
 
-    if (comparePeriods < 2 && !isAnyNoneDefaultTag(compareOptions) && compareMode) {
+    if (comparePeriods < 2 && !hasNoneDefaultTag(compareOptions) && compareMode) {
       setCompareMode(false)
       return
     }
