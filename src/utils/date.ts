@@ -3,6 +3,7 @@ import {
   areIntervalsOverlapping,
   endOfDay,
   endOfMonth,
+  isEqual,
   startOfDay,
   startOfMonth,
 } from 'date-fns'
@@ -24,6 +25,17 @@ export const resolveDateToDate = (
   }
 
   return buildDateStateFromRefDate(refDate, targetDate)
+}
+
+export const areDateRangesEqual = (
+  { startDate: startDate1, endDate: endDate1 }: Partial<DateState>,
+  { startDate: startDate2, endDate: endDate2 }: Partial<DateState>,
+) => {
+  if (!startDate1 || !startDate2 || !endDate1 || !endDate2) {
+    return false
+  }
+
+  return isEqual(startDate1, startDate2) && isEqual(endDate1, endDate2)
 }
 
 const isSameMode = ({ mode: mode1 }: DateState, { mode: mode2 }: DateState) =>

@@ -1,46 +1,48 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { StatementOfCashFlow } from '../../types'
+import { DateRange, StatementOfCashFlow } from '../../types'
 import { DataModel } from '../../types/general'
 import { format, startOfDay } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 
-type UseStatementOfCashFlow = (
-  startDate?: Date,
-  endDate?: Date,
-) => {
+type UseStatementOfCashFlow = () => {
   data: StatementOfCashFlow | undefined
+  date?: DateRange
+  setDate: (date: DateRange) => void
   isLoading: boolean
-  error: unknown
   refetch: () => void
 }
 
-export const useStatementOfCashFlow: UseStatementOfCashFlow = (
-  startDate: Date = new Date(),
-  endDate: Date = new Date(),
-) => {
+export const useStatementOfCashFlow: UseStatementOfCashFlow = () => {
+  const [date, setDate] = useState<DateRange | undefined>(undefined)
+
   const { businessId, read, syncTimestamps, hasBeenTouched } =
     useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const startDateString = format(
-    startOfDay(startDate),
+    startOfDay(date?.startDate ?? new Date()),
     'yyyy-MM-dd\'T\'HH:mm:ssXXX',
   )
-  const endDateString = format(startOfDay(endDate), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
+  const endDateString = format(
+    startOfDay(date?.endDate ?? new Date()),
+    'yyyy-MM-dd\'T\'HH:mm:ssXXX',
+  )
 
   const queryKey =
-    businessId &&
-    startDateString &&
-    endDateString &&
-    auth?.access_token &&
-    `statement-of-cash-${businessId}-${startDateString}-${endDateString}`
+    businessId
+    && startDateString
+    && endDateString
+    && auth?.access_token
+    && `statement-of-cash-${businessId}-${startDateString}-${endDateString}`
 
-  const { data, isLoading, isValidating, error, mutate } = useSWR(
+  console.log('queryKey', queryKey)
+
+  const { data, isLoading, isValidating, mutate } = useSWR(
     queryKey,
     Layer.getStatementOfCashFlow(apiUrl, auth?.access_token, {
       params: {
@@ -51,22 +53,22 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = (
     }),
   )
 
-  const refetch = () => {
-    mutate()
-  }
+  const refetch = useCallback(() => {
+    void mutate()
+  }, [mutate])
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
     if (queryKey && (isLoading || isValidating)) {
       read(DataModel.STATEMENT_OF_CASH_FLOWS, queryKey)
     }
-  }, [isLoading, isValidating])
+  }, [queryKey, isLoading, isValidating, read])
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
-  }, [syncTimestamps, startDateString, endDateString])
+  }, [syncTimestamps, startDateString, endDateString, queryKey, refetch, hasBeenTouched])
 
-  return { data: data?.data, isLoading, error, refetch }
+  return { data: data?.data, date, setDate, isLoading, refetch }
 }

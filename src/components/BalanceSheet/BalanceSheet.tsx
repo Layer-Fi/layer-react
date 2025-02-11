@@ -51,7 +51,6 @@ const BalanceSheetView = ({
   asWidget = false,
   stringOverrides,
 }: BalanceSheetViewProps) => {
-  // @TODO - move to useBalanceSheet?
   const [effectiveDate, setEffectiveDate] = useState(startOfDay(new Date()))
   const { data, isLoading } = useBalanceSheet(effectiveDate)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()

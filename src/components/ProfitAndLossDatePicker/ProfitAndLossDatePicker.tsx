@@ -1,76 +1,62 @@
-import { useCallback, useContext } from 'react'
+import { useContext } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
-import { DatePicker } from '../DatePicker'
-import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { ProfitAndLoss } from '../ProfitAndLoss'
-import { endOfMonth, startOfMonth } from 'date-fns'
-import { useGlobalDateRangePicker } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
+import { useDate } from '../../hooks/useDate'
+import { endOfDay, endOfMonth, startOfMonth } from 'date-fns'
+import { DatePicker } from '../DatePicker'
+import { DatePickerModeSelector, DEFAULT_ALLOWED_PICKER_MODES } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 
 export type ProfitAndLossDatePickerProps = TimeRangePickerConfig
 
 export const ProfitAndLossDatePicker = ({
-  allowedDatePickerModes,
   customDateRanges,
-  defaultDatePickerMode,
+  allowedDatePickerModes,
 }: ProfitAndLossDatePickerProps) => {
   const { business } = useLayerContext()
-  const { refetch, compareMode, compareMonths } = useContext(ProfitAndLoss.ComparisonContext)
+  const { refetch } = useContext(ProfitAndLoss.ComparisonContext)
 
-  const getComparisonData = useCallback((date: Date) => {
-    if (compareMode && compareMonths > 0) {
-      refetch({
-        startDate: startOfMonth(date),
-        endDate: endOfMonth(date),
-      })
-    }
-  }, [compareMode, compareMonths, refetch])
-
-  const {
-    allowedDateRangePickerModes,
-    dateFormat,
-    rangeDisplayMode,
-    selected,
-    setSelected,
-    setRangeDisplayMode,
-  } = useGlobalDateRangePicker({
-    allowedDatePickerModes,
-    defaultDatePickerMode,
-    /*
-     * This is preserves a hack - we need to improve the data-loading for the
-     * comparison PnL.
-     */
-    onSetMonth: getComparisonData,
+  /** @TODO - try to read from global state first if not set.
+   * Also, it may require to have context-provider to encapsulate all subcomponents */
+  const { date, setDate } = useDate({
+    startDate: startOfMonth(new Date()),
+    endDate: endOfMonth(new Date()),
   })
+
+  // useEffect(() => {
+  //   refetch({
+  //     startDate: date.startDate,
+  //     endDate: date.endDate,
+  //   })
+  // }, [date.startDate, date.endDate, refetch])
 
   const minDate = getEarliestDateToBrowse(business)
 
   return (
     <DatePicker
-      selected={selected}
+      defaultSelected={[date.startDate, date.endDate]}
       onChange={(dates) => {
         if (dates instanceof Date) {
-          setSelected({ start: dates, end: dates })
+          setDate({ startDate: dates, endDate: endOfDay(dates) })
 
           return
         }
 
         const [start, end] = dates
 
-        setSelected({ start, end: end ?? start })
+        setDate({ startDate: start, endDate: end ?? endOfDay(start) })
       }}
-      displayMode={rangeDisplayMode}
-      allowedModes={allowedDateRangePickerModes}
+      displayMode={date.mode}
+      allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
       onChangeMode={(rangeDisplayMode) => {
         if (rangeDisplayMode !== 'dayPicker') {
-          setRangeDisplayMode({ rangeDisplayMode })
+          setDate({ mode: rangeDisplayMode })
         }
       }}
       slots={{
         ModeSelector: DatePickerModeSelector,
       }}
-      dateFormat={dateFormat}
       customDateRanges={customDateRanges}
       minDate={minDate}
     />

@@ -2,13 +2,16 @@ import { useState } from 'react'
 import { DateState } from '../types'
 import { resolveDateToDate } from '../utils/date'
 import { endOfMonth, isAfter, isBefore, startOfMonth } from 'date-fns'
+import { useGlobalDate } from '../providers/GlobalDateStore/GlobalDateStoreProvider'
 
-type UseDate = (props: Partial<DateState>) => {
+export type UseDateProps = Partial<DateState> & {
+  syncWithGlobalDate?: boolean
+}
+
+type UseDate = (props: UseDateProps) => {
   date: DateState
   setDate: (date: Partial<DateState>) => boolean
 }
-
-export type UseDateProps = Partial<DateState>
 
 export const useDate: UseDate = ({
   startDate: initialStartDate,
@@ -16,10 +19,13 @@ export const useDate: UseDate = ({
   //   period: initialPeriod,
   mode: initialMode,
   supportedModes,
+  syncWithGlobalDate,
 }: UseDateProps) => {
+  const { startDate: globalStartDate, endDate: globalEndDate } = useGlobalDate()
+
   const [dateState, setDateState] = useState<DateState>({
-    startDate: initialStartDate ?? startOfMonth(new Date()),
-    endDate: initialEndDate ?? endOfMonth(new Date()),
+    startDate: syncWithGlobalDate ? globalStartDate : initialStartDate ?? startOfMonth(new Date()),
+    endDate: syncWithGlobalDate ? globalEndDate : initialEndDate ?? endOfMonth(new Date()),
     // period: initialPeriod ?? 'MONTH',
     mode: initialMode ?? 'monthPicker',
     supportedModes: supportedModes ?? ['monthPicker'],

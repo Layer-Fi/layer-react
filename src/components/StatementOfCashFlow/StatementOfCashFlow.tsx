@@ -10,11 +10,8 @@ import { View } from '../View'
 import { STATEMENT_OF_CASH_FLOW_ROWS } from './constants'
 import { CashflowStatementDownloadButton } from './download/CashflowStatementDownloadButton'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
-import { useState } from 'react'
-import { endOfMonth, startOfDay, startOfMonth, subWeeks } from 'date-fns'
-import { DatePicker } from '../DatePicker/DatePicker'
-import { DatePickerModeSelector, DEFAULT_ALLOWED_PICKER_MODES } from '../DatePicker/ModeSelector/DatePickerModeSelector'
-import { DatePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useContext, useEffect } from 'react'
+import { StatementOfCashFlowDatePicker } from './datePicker/StatementOfCashFlowDatePicker'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
@@ -45,61 +42,72 @@ const StatementOfCashFlowView = ({
   customDateRanges,
 }: StatementOfCashFlowViewProps) => {
   // @TODO mover to useStatementOfCashFlow or new hook??
-  const [startDate, setStartDate] = useState(
-    startOfDay(subWeeks(new Date(), 4)),
-  )
-  const [endDate, setEndDate] = useState(startOfDay(new Date()))
-  const { data, isLoading } = useStatementOfCashFlow(startDate, endDate)
+  // const [startDate, setStartDate] = useState(
+
+  // )
+  // const [endDate, setEndDate] = useState(startOfDay(new Date()))
+
+  const { data, date, isLoading } = useContext(StatementOfCashFlowContext)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
-  const [datePickerMode, setDatePickerMode] = useState<DatePickerMode>(
-    'monthPicker',
-  )
+  useEffect(() => {
+    console.log('---- ', date)
+  }, [date])
 
-  const handleDateChange = (dates: [Date | null, Date | null]) => {
-    if (dates[0]) {
-      setStartDate(startOfDay(dates[0]))
-    }
-    if (dates[1]) {
-      setEndDate(startOfDay(dates[1]))
-    }
-  }
+  // const [datePickerMode, setDatePickerMode] = useState<DatePickerMode>(
+  //   'monthPicker',
+  // )
 
-  const datePicker =
-    datePickerMode === 'monthPicker'
-      ? (
-        <DatePicker
-          defaultSelected={startDate}
-          onChange={(dates) => {
-            if (!Array.isArray(dates)) {
-              const date = dates
-              handleDateChange([startOfMonth(date), endOfMonth(date)])
-            }
-          }}
-          dateFormat='MMM'
-          displayMode={datePickerMode}
-          allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
-          onChangeMode={setDatePickerMode}
-          slots={{
-            ModeSelector: DatePickerModeSelector,
-          }}
-        />
-      )
-      : (
-        <DatePicker
-          defaultSelected={[startDate, endDate]}
-          customDateRanges={customDateRanges}
-          onChange={dates =>
-            handleDateChange(dates as [Date | null, Date | null])}
-          dateFormat='MMM d'
-          displayMode={datePickerMode}
-          allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
-          onChangeMode={setDatePickerMode}
-          slots={{
-            ModeSelector: DatePickerModeSelector,
-          }}
-        />
-      )
+  // const handleDateChange = (dates: [Date | null, Date | null]) => {
+  //   if (dates[0] && dates[1]) {
+  //     setDate({ startDate: startOfDay(dates[0]), endDate: startOfDay(dates[1]) })
+  //   }
+  //   else if (dates[0]) {
+  //     setDate({ startDate: startOfDay(dates[0]) })
+  //   }
+  //   else if (dates[1]) {
+  //     setDate({ endDate: startOfDay(dates[1]) })
+  //   }
+  // }
+
+  // const datePicker =
+  //   datePickerMode === 'monthPicker'
+  //     ? (
+  //       <DatePicker
+  //         defaultSelected={date.startDate}
+  //         onChange={(dates) => {
+  //           if (!Array.isArray(dates)) {
+  //             const date = dates
+  //             console.log('on date picker change', date)
+  //             handleDateChange([startOfMonth(date), endOfMonth(date)])
+  //           }
+  //         }}
+  //         dateFormat='MMM'
+  //         displayMode={datePickerMode}
+  //         allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
+  //         onChangeMode={setDatePickerMode}
+  //         slots={{
+  //           ModeSelector: DatePickerModeSelector,
+  //         }}
+  //       />
+  //     )
+  //     : (
+  //       <DatePicker
+  //         defaultSelected={[date.startDate, date.endDate]}
+  //         customDateRanges={customDateRanges}
+  //         onChange={(dates) => {
+  //           console.log('on date picker change 2', dates)
+  //           handleDateChange(dates as [Date | null, Date | null])
+  //         }}
+  //         dateFormat='MMM d'
+  //         displayMode={datePickerMode}
+  //         allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
+  //         onChangeMode={setDatePickerMode}
+  //         slots={{
+  //           ModeSelector: DatePickerModeSelector,
+  //         }}
+  //       />
+  //     )
 
   return (
     <TableProvider>
@@ -110,18 +118,22 @@ const StatementOfCashFlowView = ({
           <Header>
             <HeaderRow>
               <HeaderCol>
-                {/* <StatementOfCashFlowDatePicker
+                <StatementOfCashFlowDatePicker
                   allowedDatePickerModes={allowedDatePickerModes}
                   customDateRanges={customDateRanges}
-                /> */}
-                {datePicker}
+                  defaultDatePickerMode='monthPicker'
+                />
               </HeaderCol>
               <HeaderCol>
-                <CashflowStatementDownloadButton
-                  startDate={startDate}
-                  endDate={endDate}
-                  iconOnly={view === 'mobile'}
-                />
+                {date?.startDate && date?.endDate
+                  ? (
+                    <CashflowStatementDownloadButton
+                      startDate={date.startDate}
+                      endDate={date.endDate}
+                      iconOnly={view === 'mobile'}
+                    />
+                  )
+                  : null}
               </HeaderCol>
             </HeaderRow>
           </Header>
