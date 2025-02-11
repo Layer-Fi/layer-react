@@ -8,8 +8,6 @@ export const PNLComparisonContext = createContext<PNLComparisonContextType>({
   isLoading: true,
   isValidating: false,
   error: undefined,
-  rangeDisplayMode: 'monthPicker',
-  setRangeDisplayMode: () => {},
   compareMode: false,
   setCompareMode: () => {},
   comparePeriods: 0,
