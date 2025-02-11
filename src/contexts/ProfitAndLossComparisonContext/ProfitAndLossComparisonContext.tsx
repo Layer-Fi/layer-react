@@ -8,10 +8,12 @@ export const PNLComparisonContext = createContext<PNLComparisonContextType>({
   isLoading: true,
   isValidating: false,
   error: undefined,
+  rangeDisplayMode: 'monthPicker',
+  setRangeDisplayMode: () => {},
   compareMode: false,
   setCompareMode: () => {},
-  compareMonths: 0,
-  setCompareMonths: () => {},
+  comparePeriods: 0,
+  setComparePeriods: () => {},
   compareOptions: [],
   setCompareOptions: function (): void {
     throw new Error('Function not implemented.')
