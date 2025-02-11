@@ -38,8 +38,8 @@ import {
 import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart'
 import { Props as LegendProps } from 'recharts/types/component/DefaultLegendContent'
 import {
-  useGlobalDateRange,
-  useGlobalDateRangeActions,
+  useGlobalDate,
+  useGlobalDateActions,
 } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 const getChartWindow = ({
@@ -151,12 +151,10 @@ export const ProfitAndLossChart = ({
 
   const { getColor, business } = useLayerContext()
 
-  const { start, end, rangeDisplayMode } = useGlobalDateRange()
-  const { setMonth } = useGlobalDateRangeActions()
+  const { startDate, endDate } = useGlobalDate()
+  const { setDate } = useGlobalDateActions()
 
-  const showIndicator = rangeDisplayMode === 'monthPicker'
-
-  const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
+  const dateRange = useMemo(() => ({ startDate, endDate }), [startDate, endDate])
 
   const [localDateRange, setLocalDateRange] = useState(dateRange)
   const [customCursorSize, setCustomCursorSize] = useState({
@@ -372,13 +370,15 @@ export const ProfitAndLossChart = ({
     }
 
     if (activePayload && activePayload.length > 0) {
-      const { year, month } = activePayload[0].payload
+      /** @TODO fix this */
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const { year, month } = activePayload[0].payload as { year: number, month: number }
 
       const selectedDate = new Date(year, month - 1, 1)
       const isMonthAllowed = isDateAllowedToBrowse(selectedDate, business)
 
       if (isMonthAllowed) {
-        setMonth({ start: selectedDate })
+        setDate({ startDate: startOfMonth(selectedDate), endDate: endOfMonth(selectedDate) })
       }
     }
   }

@@ -1,5 +1,7 @@
 import {
+  endOfDay,
   endOfMonth,
+  min,
   startOfMonth,
 } from 'date-fns'
 import { useState, createContext, type PropsWithChildren, useContext } from 'react'
@@ -22,26 +24,9 @@ export type DateRangePickerMode = typeof _RANGE_PICKER_MODES[number]
 
 export type DatePickerMode = DayDatePickerMode | DateRangePickerMode
 
-// function startOfNextDay(date: Date | number) {
-//   return startOfDay(addDays(date, 1))
-// }
-
-// function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())) {
-//   return min([date, cutoff])
-// }
-
-// type CommonShiftOptions = { currentStart: Date }
-// type PreShiftOptions = CommonShiftOptions & { currentEnd: Date, newEnd: Date }
-// type PostShiftOptions = CommonShiftOptions & { shiftedCurrentEnd: Date, shiftedNewEnd: Date }
-
-// function withShiftedEnd<T>(fn: (options: PostShiftOptions) => T) {
-//   return ({ currentStart, currentEnd, newEnd }: PreShiftOptions) => {
-//     const shiftedCurrentEnd = startOfNextDay(currentEnd)
-//  const shiftedNewEnd = clampToPresentOrPast(startOfNextDay(newEnd), startOfNextDay(new Date()))
-
-//     return fn({ currentStart, shiftedCurrentEnd, shiftedNewEnd })
-//   }
-// }
+function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())) {
+  return min([date, cutoff])
+}
 
 type GlobalDateStoreShape = {
   startDate: DateState['startDate']
@@ -49,7 +34,7 @@ type GlobalDateStoreShape = {
   mode: DateState['mode']
 
   actions: {
-    setDate: (options: { date: Partial<DateState> }) => void
+    setDate: (options: Partial<DateState>) => void
   }
 }
 
@@ -59,19 +44,20 @@ function buildStore() {
   return createStore<GlobalDateStoreShape>((set) => {
     return {
       startDate: startOfMonth(now),
-      // end: clampToPresentOrPast(endOfMonth(now)),
-      endDate: endOfMonth(now),
+      endDate: clampToPresentOrPast(endOfMonth(now)),
 
       mode: 'monthPicker',
 
       actions: {
-        setDate: ({ date }) => {
+        setDate: ({ startDate, endDate, mode }: Partial<DateState>) => {
           set(({
             mode: currentDisplayMode,
           }) => {
+            /** @TODO - validate if startDate is before endDate etc. If not, ignore */
             return {
-              ...date,
-              mode: date.mode ?? currentDisplayMode,
+              startDate,
+              endDate,
+              mode: mode ?? currentDisplayMode,
             }
           })
         },
@@ -90,7 +76,7 @@ export function useGlobalDate() {
 
   const mode = useStore(store, ({ mode }) => mode)
 
-  return { startDate, endDate, mode }
+  return { startDate, endDate, dateRange: { startDate, endDate }, mode }
 }
 
 export function useGlobalDateActions() {

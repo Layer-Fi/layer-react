@@ -12,8 +12,8 @@ import {
 import { useProfitAndLossLTM } from './useProfitAndLossLTM'
 import { useProfitAndLossQuery } from './useProfitAndLossQuery'
 import {
-  useGlobalDateRange,
-  useGlobalDateRangeActions,
+  useGlobalDate,
+  useGlobalDateActions,
 } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type Scope = 'expenses' | 'revenue'
@@ -45,13 +45,13 @@ export const useProfitAndLoss = ({
   tagFilter,
   reportingBasis,
 }: UseProfitAndLossOptions) => {
-  const { start, end } = useGlobalDateRange()
-  const { setRange } = useGlobalDateRangeActions()
+  const { startDate, endDate } = useGlobalDate()
+  const { setDate } = useGlobalDateActions()
 
-  const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
+  const dateRange = useMemo(() => ({ startDate, endDate }), [startDate, endDate])
   const changeDateRange = useCallback(
-    ({ startDate: start, endDate: end }: DateRange) => setRange({ start, end }),
-    [setRange],
+    ({ startDate: start, endDate: end }: DateRange) => setDate({ startDate: start, endDate: end }),
+    [setDate],
   )
 
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
@@ -63,14 +63,14 @@ export const useProfitAndLoss = ({
 
   const { data, isLoading, isValidating, error, refetch } =
     useProfitAndLossQuery({
-      startDate: start,
-      endDate: end,
+      startDate,
+      endDate,
       tagFilter,
       reportingBasis,
     })
 
   const { data: summaryData } = useProfitAndLossLTM({
-    currentDate: start,
+    currentDate: startDate,
     tagFilter: tagFilter,
   })
 
@@ -118,8 +118,8 @@ export const useProfitAndLoss = ({
       return x
     })
 
-    const month = start.getMonth() + 1
-    const year = start.getFullYear()
+    const month = startDate.getMonth() + 1
+    const year = startDate.getFullYear()
     const found = summaryData.find(x => x.month === month && x.year === year)
     if (found && (found.uncategorizedInflows ?? 0) > 0) {
       filtered.push({
@@ -159,7 +159,7 @@ export const useProfitAndLoss = ({
     const withShare = applyShare(sorted, total)
 
     return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
-  }, [data, start, filters, summaryData])
+  }, [data, startDate, filters, summaryData])
 
   const { filteredDataExpenses, filteredTotalExpenses } = useMemo(() => {
     if (!data) {
@@ -181,8 +181,8 @@ export const useProfitAndLoss = ({
       return x
     })
 
-    const month = start.getMonth() + 1
-    const year = start.getFullYear()
+    const month = startDate.getMonth() + 1
+    const year = startDate.getFullYear()
     const found = summaryData.find(x => x.month === month && x.year === year)
     if (found && (found.uncategorizedOutflows ?? 0) > 0) {
       filtered.push({
@@ -222,7 +222,7 @@ export const useProfitAndLoss = ({
     const withShare = applyShare(sorted, total)
 
     return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
-  }, [data, start, filters, summaryData])
+  }, [data, startDate, filters, summaryData])
 
   return {
     data,

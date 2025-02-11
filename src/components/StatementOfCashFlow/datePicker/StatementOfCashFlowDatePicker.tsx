@@ -1,5 +1,10 @@
 import type { TimeRangePickerConfig } from '../../../views/Reports/reportTypes'
 import { useLayerContext } from '../../../contexts/LayerContext'
+import { useContext } from 'react'
+import { StatementOfCashFlowContext } from '../../../contexts/StatementOfCashContext'
+import { DatePicker } from '../../DatePicker'
+import { DatePickerModeSelector } from '../../DatePicker/ModeSelector/DatePickerModeSelector'
+import { getEarliestDateToBrowse } from '../../../utils/business'
 
 type StatementOfCashFlowDatePickerProps = Pick<
   TimeRangePickerConfig,
@@ -12,49 +17,30 @@ export function StatementOfCashFlowDatePicker({
   defaultDatePickerMode,
 }: StatementOfCashFlowDatePickerProps) {
   const { business } = useLayerContext()
+  const { setDate } = useContext(StatementOfCashFlowContext)
 
-  return null
+  const minDate = getEarliestDateToBrowse(business)
 
-  // const {
-  //   allowedDateRangePickerModes,
-  //   dateFormat,
-  //   rangeDisplayMode,
-  //   selected,
-  //   setRangeDisplayMode,
-  //   setSelected,
-  // } = useGlobalDateRangePicker({ allowedDatePickerModes, defaultDatePickerMode })
+  return (
+    <DatePicker
+      onChange={(dates) => {
+        if (dates instanceof Date) {
+          setDate({ startDate: dates, endDate: dates })
 
-  // const minDate = getEarliestDateToBrowse(business)
+          return
+        }
 
-  // return (
-  //   <DatePicker
-  //     selected={selected}
-  //     onChange={(dates) => {
-  //       if (dates instanceof Date) {
-  //         if (rangeDisplayMode === 'monthPicker') {
-  //           setSelected({ start: dates, end: dates })
-  //         }
+        const [start, end] = dates
 
-  //         return
-  //       }
-
-  //       const [start, end] = dates
-
-  //       setSelected({ start, end: end ?? start })
-  //     }}
-  //     displayMode={rangeDisplayMode}
-  //     allowedModes={allowedDateRangePickerModes}
-  //     onChangeMode={(rangeDisplayMode) => {
-  //       if (rangeDisplayMode !== 'dayPicker') {
-  //         setRangeDisplayMode({ rangeDisplayMode })
-  //       }
-  //     }}
-  //     slots={{
-  //       ModeSelector: DatePickerModeSelector,
-  //     }}
-  //     dateFormat={dateFormat}
-  //     customDateRanges={customDateRanges}
-  //     minDate={minDate}
-  //   />
-  // )
+        setDate({ startDate: start, endDate: end ?? start })
+      }}
+      displayMode={defaultDatePickerMode}
+      allowedModes={allowedDatePickerModes}
+      slots={{
+        ModeSelector: DatePickerModeSelector,
+      }}
+      customDateRanges={customDateRanges}
+      minDate={minDate}
+    />
+  )
 }
