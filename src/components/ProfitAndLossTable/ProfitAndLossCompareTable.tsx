@@ -12,6 +12,7 @@ import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import { Table, TableBody, TableHead, TableRow, TableCell } from '../Table'
 import { ProfitAndLossTableStringOverrides } from './ProfitAndLossTableComponent'
 import classNames from 'classnames'
+import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 interface ProfilAndLostCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides
@@ -26,32 +27,14 @@ export const ProfitAndLossCompareTable = ({
     isLoading,
     comparePeriods,
     compareOptions,
-    rangeDisplayMode,
-    refetch,
   } = useContext(ProfitAndLoss.ComparisonContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
+  const { rangeDisplayMode } = useGlobalDateRange()
 
   useEffect(() => {
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useEffect(() => {
-    if (
-      dateRange?.startDate
-      && dateRange?.endDate
-      && !comparisonData
-      && !isLoading
-    ) {
-      refetch(
-        {
-          startDate: dateRange.startDate,
-          endDate: dateRange.endDate,
-        },
-        true,
-      )
-    }
-  }, [dateRange, comparisonData, isLoading, refetch])
 
   if (isLoading || comparisonData === undefined) {
     return (
