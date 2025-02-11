@@ -49,28 +49,11 @@ export const ProfitAndLossCompareOptions = ({
     setCompareOptions,
     setCompareMode,
     compareMode,
-    refetch,
     comparePeriods,
     compareOptions,
   } = useContext(ProfitAndLoss.ComparisonContext)
 
   const { rangeDisplayMode } = useGlobalDateRange()
-
-  const { dateRange } = useContext(ProfitAndLoss.Context)
-
-  const [initialDone, setInitialDone] = useState(false)
-
-  useEffect(() => {
-    if (initialDone && compareMode) {
-      refetch({
-        startDate: dateRange.startDate,
-        endDate: dateRange.endDate,
-      })
-    }
-    else {
-      setInitialDone(true)
-    }
-  }, [compareMode, compareOptions, comparePeriods])
 
   const [periods, setPeriods] = useState<number>(
     comparePeriods !== 0 ? comparePeriods : 1,
