@@ -1,13 +1,35 @@
+import { DateRangePickerMode } from '../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { LineItem } from '../types'
-import { format, subMonths } from 'date-fns'
+import { format, subMonths, subYears } from 'date-fns'
 
-export const generatComparisonMonths = (
+export const generateComparisonPeriods = (
+  startDate: Date, numberOfPeriods: number, rangeDisplayMode: DateRangePickerMode,
+) => {
+  switch (rangeDisplayMode) {
+    case 'yearPicker':
+      return generatComparisonYears(startDate, numberOfPeriods)
+    default:
+      return generatComparisonMonths(startDate, numberOfPeriods)
+  }
+}
+
+const generatComparisonMonths = (
   startDate: number | Date,
   numberOfMonths: number,
 ) => {
   return Array.from({ length: numberOfMonths }, (_, index) => {
     const currentMonth = subMonths(startDate, numberOfMonths - index - 1)
     return format(currentMonth, 'MMM')
+  })
+}
+
+const generatComparisonYears = (
+  startDate: number | Date,
+  numberOfYears: number,
+) => {
+  return Array.from({ length: numberOfYears }, (_, index) => {
+    const currentMonth = subYears(startDate, numberOfYears - index - 1)
+    return format(currentMonth, 'yyyy')
   })
 }
 
@@ -19,13 +41,15 @@ export const getComparisonValue = (
   if (depth === 0) {
     if (typeof cellData === 'string' || typeof cellData === 'number') {
       return cellData
-    } else {
+    }
+    else {
       return cellData?.value !== undefined ? cellData.value : ''
     }
-  } else if (
-    typeof cellData === 'object' &&
-    cellData !== null &&
-    'line_items' in cellData
+  }
+  else if (
+    typeof cellData === 'object'
+    && cellData !== null
+    && 'line_items' in cellData
   ) {
     for (const item of cellData.line_items || []) {
       const result = getComparisonLineItemValue(item, name, depth)
@@ -47,7 +71,8 @@ const getComparisonLineItemValue = (
     if (lineItem.display_name === name) {
       return lineItem.value !== undefined ? lineItem.value : ''
     }
-  } else if (lineItem.line_items && lineItem.line_items.length > 0) {
+  }
+  else if (lineItem.line_items && lineItem.line_items.length > 0) {
     for (const childLineItem of lineItem.line_items) {
       const result = getComparisonLineItemValue(childLineItem, name, depth - 1)
       if (result !== '') {
@@ -65,7 +90,7 @@ export const mergeComparisonLineItemsAtDepth = (
   const map = new Map<string, LineItem>()
 
   const mergeItems = (items: LineItem[]) => {
-    items.forEach(item => {
+    items.forEach((item) => {
       if (!map.has(item.display_name)) {
         map.set(item.display_name, { ...item, line_items: [] })
       }

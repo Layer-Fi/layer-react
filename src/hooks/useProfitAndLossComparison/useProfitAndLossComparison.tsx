@@ -6,11 +6,10 @@ import { DateRange, MoneyFormat, ReportingBasis } from '../../types'
 import {
   ProfitAndLossComparison,
 } from '../../types/profit_and_loss'
-import { startOfMonth, subMonths, getYear, getMonth } from 'date-fns'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { range } from '../../utils/array/range'
-import { isArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
+import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { prepareFiltersBody, preparePeriodsBody } from './utils'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -31,10 +30,11 @@ export function useProfitAndLossComparison({
     >()
 
   const [compareMode, setCompareMode] = useState(false)
-  const [compareMonths, setCompareMonths] = useState(0)
+  const [comparePeriods, setComparePeriods] = useState(0)
   const [compareOptions, setCompareOptions] = useState<TagComparisonOption[]>(
     [],
   )
+  const [rangeDisplayMode, setRangeDisplayMode] = useState<DateRangePickerMode>('monthPicker')
   const [data, setData] = useState<ProfitAndLossComparison | undefined>(
     undefined,
   )
@@ -46,75 +46,12 @@ export function useProfitAndLossComparison({
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const prepareFiltersBody = (compareOptions: TagComparisonOption[]) => {
-    const noneFilters = compareOptions.filter(
-      ({ tagFilterConfig: { tagFilters } }) => tagFilters === 'None')
-
-    const tagFilters = compareOptions.flatMap(({ tagFilterConfig: { tagFilters } }) => {
-      if (tagFilters === 'None') {
-        return null
-      }
-
-      if (tagFilters.tagValues.length === 0) {
-        return { required_tags: [] }
-      }
-
-      return tagFilters.tagValues.map(tagValue => ({
-        required_tags: [{
-          key: tagFilters.tagKey,
-          value: tagValue,
-        }],
-      }))
-    }).filter(item => item !== null)
-
-    if (tagFilters.length === 0) {
-      return
-    }
-
-    const allFilters = [
-      noneFilters.length > 0
-        ? { required_tags: [] }
-        : null,
-      ...tagFilters,
-    ].filter(item => item !== null)
-
-    return isArrayWithAtLeastOne(allFilters) ? allFilters : undefined
-  }
-
-  const preparePeriodsBody = (dateRange: DateRange, compareMonths: number) => {
-    const adjustedStartDate = startOfMonth(dateRange.startDate)
-
-    const rawMonths = range(0, compareMonths).map((index) => {
-      const currentMonth = subMonths(adjustedStartDate, index)
-
-      return {
-        year: getYear(currentMonth),
-        month: getMonth(currentMonth) + 1,
-      }
-    })
-
-    const sortedMonths = rawMonths.sort((a, b) => {
-      if (a.year === b.year) {
-        return a.month - b.month
-      }
-
-      return a.year - b.year
-    })
-
-    return isArrayWithAtLeastOne(sortedMonths)
-      ? {
-        type: 'Comparison_Months' as const,
-        months: sortedMonths,
-      }
-      : undefined
-  }
-
   const refetch = (dateRange: DateRange, actAsInitial?: boolean) => {
     if (actAsInitial && !initialFetchDone) {
-      void fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
+      void fetchPnLComparisonData(dateRange, comparePeriods, compareOptions)
     }
     else if (!actAsInitial) {
-      void fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
+      void fetchPnLComparisonData(dateRange, comparePeriods, compareOptions)
     }
   }
 
@@ -131,7 +68,7 @@ export function useProfitAndLossComparison({
       setIsValidating(true)
       initialFetchDone = true
       try {
-        const periods = preparePeriodsBody(dateRange, compareMonths)
+        const periods = preparePeriodsBody(dateRange, compareMonths, rangeDisplayMode)
 
         if (!periods) {
           setIsLoading(false)
@@ -166,19 +103,14 @@ export function useProfitAndLossComparison({
         setIsValidating(false)
       }
     },
-    [
-      apiUrl,
-      auth,
-      businessId,
-      reportingBasis,
-    ],
+    [auth?.access_token, businessId, apiUrl, rangeDisplayMode, reportingBasis],
   )
 
   const getProfitAndLossComparisonCsv = (
     dateRange: DateRange,
     moneyFormat?: MoneyFormat,
   ) => {
-    const periods = preparePeriodsBody(dateRange, compareMonths)
+    const periods = preparePeriodsBody(dateRange, comparePeriods, rangeDisplayMode)
     const tagFilters = prepareFiltersBody(compareOptions)
     return Layer.profitAndLossComparisonCsv(apiUrl, auth?.access_token, {
       params: {
@@ -200,10 +132,12 @@ export function useProfitAndLossComparison({
     error,
     compareMode,
     setCompareMode,
-    compareMonths,
-    setCompareMonths,
+    comparePeriods,
+    setComparePeriods,
     compareOptions,
     setCompareOptions,
+    rangeDisplayMode,
+    setRangeDisplayMode,
     refetch,
     getProfitAndLossComparisonCsv,
   }

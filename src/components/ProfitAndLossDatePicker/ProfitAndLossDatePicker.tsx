@@ -16,24 +16,29 @@ export const ProfitAndLossDatePicker = ({
   defaultDatePickerMode,
 }: ProfitAndLossDatePickerProps) => {
   const { business } = useLayerContext()
-  const { refetch, compareMode, compareMonths } = useContext(ProfitAndLoss.ComparisonContext)
+  const {
+    refetch,
+    compareMode,
+    comparePeriods,
+    rangeDisplayMode,
+    setRangeDisplayMode,
+  } = useContext(ProfitAndLoss.ComparisonContext)
 
   const getComparisonData = useCallback((date: Date) => {
-    if (compareMode && compareMonths > 0) {
+    if (compareMode && comparePeriods > 0) {
       refetch({
         startDate: startOfMonth(date),
         endDate: endOfMonth(date),
       })
     }
-  }, [compareMode, compareMonths, refetch])
+  }, [compareMode, comparePeriods, refetch])
 
   const {
     allowedDateRangePickerModes,
     dateFormat,
-    rangeDisplayMode,
     selected,
     setSelected,
-    setRangeDisplayMode,
+    setRangeDisplayMode: setGlobalRangeDisplayMode,
   } = useGlobalDateRangePicker({
     allowedDatePickerModes,
     defaultDatePickerMode,
@@ -64,7 +69,8 @@ export const ProfitAndLossDatePicker = ({
       allowedModes={allowedDateRangePickerModes}
       onChangeMode={(rangeDisplayMode) => {
         if (rangeDisplayMode !== 'dayPicker') {
-          setRangeDisplayMode({ rangeDisplayMode })
+          setRangeDisplayMode(rangeDisplayMode)
+          setGlobalRangeDisplayMode({ rangeDisplayMode })
         }
       }}
       slots={{
