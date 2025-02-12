@@ -3,6 +3,7 @@ import {
   ChangeEvent,
   ReactNode,
   useEffect,
+  useMemo,
   useState,
 } from 'react'
 import { useElementSize } from '../../hooks/useElementSize'
@@ -55,13 +56,13 @@ export const Toggle = ({
   const [currentWidth, setCurrentWidth] = useState(0)
   const [thumbPos, setThumbPos] = useState({ left: 0, width: 0 })
   const [initialized, setInitialized] = useState(false)
-  const [activeOption, setActiveOption] = useState(
-    selected
+  const activeOption = useMemo(() => {
+    return selected
       ? selected
       : options.length > 0
         ? options[0].value
-        : undefined,
-  )
+        : undefined
+  }, [selected, options])
 
   const toggleRef = useElementSize<HTMLDivElement>((_a, _b, c) => {
     if (c.width && c?.width !== currentWidth) {
@@ -76,8 +77,6 @@ export const Toggle = ({
   )
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value
-    setActiveOption(newValue)
     updateThumbPosition(Number(e.target.getAttribute('data-idx') ?? 0))
     onChange(e)
   }
