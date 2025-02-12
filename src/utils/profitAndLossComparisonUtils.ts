@@ -7,13 +7,13 @@ export const generateComparisonPeriods = (
 ) => {
   switch (rangeDisplayMode) {
     case 'yearPicker':
-      return generatComparisonYears(startDate, numberOfPeriods)
+      return generateComparisonYears(startDate, numberOfPeriods)
     default:
-      return generatComparisonMonths(startDate, numberOfPeriods)
+      return generateComparisonMonths(startDate, numberOfPeriods)
   }
 }
 
-const generatComparisonMonths = (
+const generateComparisonMonths = (
   startDate: number | Date,
   numberOfMonths: number,
 ) => {
@@ -23,7 +23,7 @@ const generatComparisonMonths = (
   })
 }
 
-const generatComparisonYears = (
+const generateComparisonYears = (
   startDate: number | Date,
   numberOfYears: number,
 ) => {

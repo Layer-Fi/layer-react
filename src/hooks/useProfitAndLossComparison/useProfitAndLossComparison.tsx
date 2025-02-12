@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { TagComparisonOption } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { useLayerContext } from '../../contexts/LayerContext'
@@ -17,6 +17,12 @@ type Props = {
   reportingBasis?: ReportingBasis
 }
 
+const ALLOWED_COMPARE_MODES = ['monthPicker', 'yearPicker']
+
+const hasNoneDefaultTag = (compareOptions?: TagComparisonOption[]) => {
+  return compareOptions?.some(option => option.tagFilterConfig.tagFilters !== 'None')
+}
+
 function buildKey({
   access_token: accessToken,
   apiUrl,
@@ -24,7 +30,7 @@ function buildKey({
   periods,
   tagFilters,
   reportingBasis,
-  compareMode,
+  compareModeActive,
 }: {
   access_token?: string
   apiUrl?: string
@@ -32,9 +38,9 @@ function buildKey({
   periods: string
   tagFilters: string
   reportingBasis?: ReportingBasis
-  compareMode?: boolean
+  compareModeActive?: boolean
 }) {
-  if (accessToken && apiUrl && compareMode) {
+  if (accessToken && apiUrl && compareModeActive) {
     return {
       apiUrl,
       businessId,
@@ -48,13 +54,30 @@ function buildKey({
 export function useProfitAndLossComparison({
   reportingBasis,
 }: Props) {
-  const [compareMode, setCompareMode] = useState(false)
-  const [comparePeriods, setComparePeriods] = useState(0)
+  const [comparePeriods, setComparePeriods] = useState(1)
   const [compareOptions, setCompareOptions] = useState<TagComparisonOption[]>(
     [],
   )
   const { rangeDisplayMode, start, end } = useGlobalDateRange()
   const dateRange = { startDate: start, endDate: end }
+
+  const isCompareDisabled = !ALLOWED_COMPARE_MODES.includes(rangeDisplayMode)
+
+  const compareModeActive = useMemo(() => {
+    if (isCompareDisabled) {
+      return false
+    }
+
+    if ((comparePeriods > 1 || hasNoneDefaultTag(compareOptions)) && !isCompareDisabled) {
+      return true
+    }
+
+    if (comparePeriods < 2 && !hasNoneDefaultTag(compareOptions)) {
+      return false
+    }
+
+    return true
+  }, [isCompareDisabled, comparePeriods, compareOptions])
 
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
@@ -69,7 +92,7 @@ export function useProfitAndLossComparison({
     periods: JSON.stringify(periods),
     tagFilters: JSON.stringify(tagFilters),
     reportingBasis: reportingBasis,
-    compareMode,
+    compareModeActive,
   })
 
   const { data, isLoading, isValidating } = useSWR(
@@ -112,8 +135,8 @@ export function useProfitAndLossComparison({
     data: data?.pnls,
     isLoading,
     isValidating,
-    compareMode,
-    setCompareMode,
+    isCompareDisabled,
+    compareModeActive,
     comparePeriods,
     setComparePeriods,
     compareOptions,
