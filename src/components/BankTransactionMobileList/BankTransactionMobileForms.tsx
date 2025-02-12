@@ -27,7 +27,7 @@ export const BankTransactionMobileForms = ({
 }: BankTransactionMobileFormsProps) => {
   const getContent = () => {
     switch (purpose) {
-      case 'business':
+      case Purpose.business:
         return (
           <BusinessForm
             bankTransaction={bankTransaction}
@@ -37,7 +37,7 @@ export const BankTransactionMobileForms = ({
             showDescriptions={showDescriptions}
           />
         )
-      case 'personal':
+      case Purpose.personal:
         return (
           <PersonalForm
             bankTransaction={bankTransaction}
@@ -45,10 +45,11 @@ export const BankTransactionMobileForms = ({
             showDescriptions={showDescriptions}
           />
         )
-      case 'more':
+      case Purpose.more:
         return (
           <SplitAndMatchForm
             bankTransaction={bankTransaction}
+            showCategorization={showCategorization}
             showTooltips={showTooltips}
             showReceiptUploads={showReceiptUploads}
             showDescriptions={showDescriptions}
