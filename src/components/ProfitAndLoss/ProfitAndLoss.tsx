@@ -14,6 +14,7 @@ import { ProfitAndLossReport } from '../ProfitAndLossReport'
 import { ProfitAndLossSummaries } from '../ProfitAndLossSummaries'
 import { ProfitAndLossTable } from '../ProfitAndLossTable'
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { ProfitAndLossCompareConfig } from '../../types/profit_and_loss'
 
 type PNLContextType = ReturnType<typeof useProfitAndLoss>
 const PNLContext = createContext<PNLContextType>({
@@ -47,6 +48,7 @@ type Props = PropsWithChildren & {
     key: string
     values: string[]
   }
+  comparisonConfig?: ProfitAndLossCompareConfig
   reportingBasis?: ReportingBasis
   asContainer?: boolean
 }
@@ -54,11 +56,12 @@ type Props = PropsWithChildren & {
 const ProfitAndLoss = ({
   children,
   tagFilter,
+  comparisonConfig,
   reportingBasis,
   asContainer = true,
 }: Props) => {
   const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
-  const comparisonContextData = useProfitAndLossComparison({ reportingBasis })
+  const comparisonContextData = useProfitAndLossComparison({ comparisonConfig, reportingBasis })
 
   return (
     <PNLContext.Provider value={contextData}>

@@ -26,7 +26,7 @@ export const ProfitAndLossCompareTable = ({
     data: comparisonData,
     isLoading,
     comparePeriods,
-    compareOptions,
+    selectedCompareOptions,
   } = useContext(ProfitAndLoss.ComparisonContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
   const { rangeDisplayMode } = useGlobalDateRange()
@@ -122,10 +122,10 @@ export const ProfitAndLossCompareTable = ({
   return (
     <Table borderCollapse='collapse' bottomSpacing={false}>
       <TableHead>
-        {compareOptions && compareOptions.length > 1 && (
+        {selectedCompareOptions && selectedCompareOptions.length > 1 && (
           <TableRow rowKey=''>
             <TableCell isHeaderCell />
-            {compareOptions.map((option, i) => (
+            {selectedCompareOptions.map((option, i) => (
               <Fragment key={option.displayName + '-' + i}>
                 <TableCell key={option.displayName + '-' + i} primary isHeaderCell>
                   {option.displayName}
@@ -143,9 +143,9 @@ export const ProfitAndLossCompareTable = ({
         {comparePeriods && (
           <TableRow rowKey=''>
             <TableCell isHeaderCell />
-            {compareOptions && compareOptions.length > 0
+            {selectedCompareOptions && selectedCompareOptions.length > 0
               ? (
-                compareOptions.map((option, i) => (
+                selectedCompareOptions.map((option, i) => (
                   <Fragment key={option.displayName + '-' + i}>
                     {generateComparisonPeriods(
                       dateRange.startDate,

@@ -1,4 +1,3 @@
-import { TagFilterInput } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import {
   BankTransaction,
   CategoryUpdate,
@@ -8,6 +7,7 @@ import {
   Metadata,
 } from '../../types'
 import { LoadedStatus } from '../../types/general'
+import { TagFilterInput } from '../../types/tags'
 
 export interface NumericRangeFilter {
   min?: number
