@@ -5,21 +5,18 @@ import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
-import { ProfitAndLossCompareOptionsProps } from '../ProfitAndLossCompareOptions'
 import { View } from '../View'
 
 type ViewBreakpoint = ViewType | undefined
 
 export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
-  comparisonConfig?: ProfitAndLossCompareOptionsProps
   parentRef?: RefObject<HTMLDivElement>
   view?: ViewBreakpoint
 } & TimeRangePickerConfig
 
 export const ProfitAndLossReport = ({
   stringOverrides,
-  comparisonConfig,
   allowedDatePickerModes,
   datePickerMode,
   defaultDatePickerMode,
@@ -29,11 +26,12 @@ export const ProfitAndLossReport = ({
   view,
 }: ProfitAndLossReportProps) => {
   const { sidebarScope } = useContext(ProfitAndLoss.Context)
+  const { comparisonConfig } = useContext(ProfitAndLoss.ComparisonContext)
 
   return (
     <View
       type='panel'
-      header={
+      header={(
         <Header>
           <HeaderRow>
             <HeaderCol>
@@ -44,12 +42,11 @@ export const ProfitAndLossReport = ({
                   defaultDatePickerMode={defaultDatePickerMode}
                   customDateRanges={customDateRanges}
                 />
-                {comparisonConfig && view === 'desktop' ? (
-                  <ProfitAndLoss.CompareOptions
-                    tagComparisonOptions={comparisonConfig.tagComparisonOptions}
-                    defaultTagFilter={comparisonConfig.defaultTagFilter}
-                  />
-                ) : null}
+                {view === 'desktop'
+                  ? (
+                    <ProfitAndLoss.CompareOptions />
+                  )
+                  : null}
               </>
             </HeaderCol>
             <HeaderCol>
@@ -61,26 +58,25 @@ export const ProfitAndLossReport = ({
               />
             </HeaderCol>
           </HeaderRow>
-          {comparisonConfig && view !== 'desktop' ? (
-            <HeaderRow>
-              <HeaderCol>
-                <ProfitAndLoss.CompareOptions
-                  tagComparisonOptions={comparisonConfig.tagComparisonOptions}
-                  defaultTagFilter={comparisonConfig.defaultTagFilter}
-                />
-              </HeaderCol>
-            </HeaderRow>
-          ) : null}
+          {view !== 'desktop'
+            ? (
+              <HeaderRow>
+                <HeaderCol>
+                  <ProfitAndLoss.CompareOptions />
+                </HeaderCol>
+              </HeaderRow>
+            )
+            : null}
         </Header>
-      }
+      )}
     >
       <Panel
-        sidebar={
+        sidebar={(
           <ProfitAndLoss.DetailedCharts
             showDatePicker={false}
             stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
           />
-        }
+        )}
         sidebarIsOpen={Boolean(sidebarScope)}
         parentRef={parentRef}
       >

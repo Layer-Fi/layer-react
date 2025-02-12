@@ -7,16 +7,13 @@ export const PNLComparisonContext = createContext<PNLComparisonContextType>({
   data: undefined,
   isLoading: true,
   isValidating: false,
-  error: undefined,
-  compareMode: false,
-  setCompareMode: () => {},
-  compareMonths: 0,
-  setCompareMonths: () => {},
+  isCompareDisabled: false,
+  compareModeActive: false,
+  comparePeriods: 0,
+  setComparePeriods: () => {},
   compareOptions: [],
-  setCompareOptions: function (): void {
-    throw new Error('Function not implemented.')
-  },
-  refetch: function (): void {
+  selectedCompareOptions: [],
+  setSelectedCompareOptions: function (): void {
     throw new Error('Function not implemented.')
   },
   getProfitAndLossComparisonCsv: function (): Promise<{
@@ -25,4 +22,5 @@ export const PNLComparisonContext = createContext<PNLComparisonContextType>({
   }> {
     throw new Error('Function not implemented.')
   },
+  comparisonConfig: undefined,
 })

@@ -1,16 +1,14 @@
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useMemo, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { TagComparisonOption } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, MoneyFormat, ReportingBasis } from '../../types'
-import {
-  ProfitAndLossComparison,
-} from '../../types/profit_and_loss'
-import { startOfMonth, subMonths, getYear, getMonth } from 'date-fns'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { range } from '../../utils/array/range'
-import { isArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
+import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { prepareFiltersBody, preparePeriodsBody } from './utils'
+import useSWR from 'swr'
+import { MultiValue } from 'react-select'
+import { ProfitAndLossCompareConfig, TagComparisonOption } from '../../types/profit_and_loss'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -18,182 +16,127 @@ export type SidebarScope = Scope | undefined
 
 type Props = {
   reportingBasis?: ReportingBasis
+  comparisonConfig?: ProfitAndLossCompareConfig
 }
 
-let initialFetchDone = false
+const ALLOWED_COMPARE_MODES = ['monthPicker', 'yearPicker']
+
+const hasNoneDefaultTag = (compareOptions?: TagComparisonOption[]) => {
+  return compareOptions?.some(option => option.tagFilterConfig.tagFilters !== 'None')
+}
+
+function buildKey({
+  access_token: accessToken,
+  apiUrl,
+  businessId,
+  periods,
+  tagFilters,
+  reportingBasis,
+  compareModeActive,
+}: {
+  access_token?: string
+  apiUrl?: string
+  businessId: string
+  periods: string
+  tagFilters: string
+  reportingBasis?: ReportingBasis
+  compareModeActive?: boolean
+}) {
+  if (accessToken && apiUrl && compareModeActive) {
+    return {
+      apiUrl,
+      businessId,
+      periods,
+      tagFilters,
+      reportingBasis,
+    }
+  }
+}
 
 export function useProfitAndLossComparison({
   reportingBasis,
+  comparisonConfig,
 }: Props) {
-  const lastQuery =
-    useRef<
-      Promise<{ data?: ProfitAndLossComparison | undefined, error?: unknown }>
-    >()
+  const [comparePeriods, setComparePeriods] = useState(comparisonConfig?.defaultPeriods ?? 1)
+  const [selectedCompareOptions, setSelectedCompareOptionsState] = useState<TagComparisonOption[]>(
+    comparisonConfig?.defaultTagFilter ? [comparisonConfig?.defaultTagFilter] : [],
+  )
+  const { rangeDisplayMode, start, end } = useGlobalDateRange()
+  const dateRange = { startDate: start, endDate: end }
 
-  const [compareMode, setCompareMode] = useState(false)
-  const [compareMonths, setCompareMonths] = useState(0)
-  const [compareOptions, setCompareOptions] = useState<TagComparisonOption[]>(
-    [],
-  )
-  const [data, setData] = useState<ProfitAndLossComparison | undefined>(
-    undefined,
-  )
-  const [isLoading, setIsLoading] = useState(false)
-  const [isValidating, setIsValidating] = useState(false)
-  const [error, setError] = useState<unknown>(null)
+  const isCompareDisabled = !ALLOWED_COMPARE_MODES.includes(rangeDisplayMode)
+
+  const compareModeActive = useMemo(() => {
+    if (isCompareDisabled) {
+      return false
+    }
+
+    if ((comparePeriods > 1 || hasNoneDefaultTag(selectedCompareOptions)) && !isCompareDisabled) {
+      return true
+    }
+
+    if (comparePeriods < 2 && !hasNoneDefaultTag(selectedCompareOptions)) {
+      return false
+    }
+
+    return true
+  }, [isCompareDisabled, comparePeriods, selectedCompareOptions])
+
+  const setSelectedCompareOptions = (values: MultiValue<{ value: string, label: string }>) => {
+    const options: TagComparisonOption[] = values.map(option =>
+      comparisonConfig?.tagComparisonOptions.find(
+        t => JSON.stringify(t.tagFilterConfig) === option.value,
+      ),
+    ).filter(Boolean) as TagComparisonOption[]
+
+    if (options.length === 0 && comparisonConfig?.defaultTagFilter) {
+      // Set default option if nothing selected
+      setSelectedCompareOptionsState([comparisonConfig?.defaultTagFilter])
+    }
+    else {
+      setSelectedCompareOptionsState(options)
+    }
+  }
 
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  useEffect(() => {
-    if (
-      compareMonths > 1
-      || compareOptions.filter(x => x.displayName).length > 0
-    ) {
-      if (compareMode === false) {
-        setCompareMode(true)
-      }
-    }
-    else {
-      setCompareMode(false)
-    }
-  }, [compareMonths, compareOptions])
+  const periods = preparePeriodsBody(dateRange, comparePeriods, rangeDisplayMode)
+  const tagFilters = prepareFiltersBody(selectedCompareOptions)
 
-  const prepareFiltersBody = (compareOptions: TagComparisonOption[]) => {
-    const noneFilters = compareOptions.filter(
-      ({ tagFilterConfig: { tagFilters } }) => tagFilters === 'None')
+  const queryKey = buildKey({
+    ...auth,
+    businessId,
+    periods: JSON.stringify(periods),
+    tagFilters: JSON.stringify(tagFilters),
+    reportingBasis: reportingBasis,
+    compareModeActive,
+  })
 
-    const tagFilters = compareOptions.flatMap(({ tagFilterConfig: { tagFilters } }) => {
-      if (tagFilters === 'None') {
-        return null
-      }
-
-      if (tagFilters.tagValues.length === 0) {
-        return { required_tags: [] }
-      }
-
-      return tagFilters.tagValues.map(tagValue => ({
-        required_tags: [{
-          key: tagFilters.tagKey,
-          value: tagValue,
-        }],
-      }))
-    }).filter(item => item !== null)
-
-    if (tagFilters.length === 0) {
-      return
-    }
-
-    const allFilters = [
-      noneFilters.length > 0
-        ? { required_tags: [] }
-        : null,
-      ...tagFilters,
-    ].filter(item => item !== null)
-
-    return isArrayWithAtLeastOne(allFilters) ? allFilters : undefined
-  }
-
-  const preparePeriodsBody = (dateRange: DateRange, compareMonths: number) => {
-    const adjustedStartDate = startOfMonth(dateRange.startDate)
-
-    const rawMonths = range(0, compareMonths).map((index) => {
-      const currentMonth = subMonths(adjustedStartDate, index)
-
-      return {
-        year: getYear(currentMonth),
-        month: getMonth(currentMonth) + 1,
-      }
-    })
-
-    const sortedMonths = rawMonths.sort((a, b) => {
-      if (a.year === b.year) {
-        return a.month - b.month
-      }
-
-      return a.year - b.year
-    })
-
-    return isArrayWithAtLeastOne(sortedMonths)
-      ? {
-        type: 'Comparison_Months' as const,
-        months: sortedMonths,
-      }
-      : undefined
-  }
-
-  const refetch = (dateRange: DateRange, actAsInitial?: boolean) => {
-    if (actAsInitial && !initialFetchDone) {
-      fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
-    }
-    else if (!actAsInitial) {
-      fetchPnLComparisonData(dateRange, compareMonths, compareOptions)
-    }
-  }
-
-  const fetchPnLComparisonData = useCallback(
-    async (
-      dateRange: DateRange,
-      compareMonths: number,
-      compareOptions: TagComparisonOption[],
-    ) => {
-      if (!auth?.access_token || !businessId || !apiUrl) {
-        return
-      }
-      setIsLoading(true)
-      setIsValidating(true)
-      initialFetchDone = true
-      try {
-        const periods = preparePeriodsBody(dateRange, compareMonths)
-
-        if (!periods) {
-          setIsLoading(false)
-          setIsValidating(false)
-          return
-        }
-
-        const tagFilters = prepareFiltersBody(compareOptions)
-        const request = Layer.compareProfitAndLoss(apiUrl, auth?.access_token, {
-          params: {
-            businessId,
-          },
-          body: {
-            periods,
-            tag_filters: tagFilters,
-            reporting_basis: reportingBasis,
-          },
-        })
-        lastQuery.current = request
-        const results = await request
-        if (lastQuery.current === request) {
-          setData(results.data)
-          setError(null)
-          setIsLoading(false)
-          setIsValidating(false)
-        }
-      }
-      catch (err) {
-        setError(err)
-        setData(undefined)
-        setIsLoading(false)
-        setIsValidating(false)
-      }
+  const { data, isLoading, isValidating } = useSWR(
+    queryKey,
+    async () => {
+      const response = await Layer.compareProfitAndLoss(apiUrl, auth?.access_token, {
+        params: {
+          businessId,
+        },
+        body: {
+          periods: periods!,
+          tag_filters: tagFilters,
+          reporting_basis: reportingBasis,
+        },
+      })
+      return response.data
     },
-    [
-      apiUrl,
-      auth,
-      businessId,
-      reportingBasis,
-    ],
   )
 
   const getProfitAndLossComparisonCsv = (
     dateRange: DateRange,
     moneyFormat?: MoneyFormat,
   ) => {
-    const periods = preparePeriodsBody(dateRange, compareMonths)
-    const tagFilters = prepareFiltersBody(compareOptions)
+    const periods = preparePeriodsBody(dateRange, comparePeriods, rangeDisplayMode)
+    const tagFilters = prepareFiltersBody(selectedCompareOptions)
     return Layer.profitAndLossComparisonCsv(apiUrl, auth?.access_token, {
       params: {
         businessId,
@@ -211,14 +154,14 @@ export function useProfitAndLossComparison({
     data: data?.pnls,
     isLoading,
     isValidating,
-    error,
-    compareMode,
-    setCompareMode,
-    compareMonths,
-    setCompareMonths,
-    compareOptions,
-    setCompareOptions,
-    refetch,
+    isCompareDisabled,
+    compareModeActive,
+    comparePeriods,
+    setComparePeriods,
+    compareOptions: comparisonConfig?.tagComparisonOptions ?? [],
+    selectedCompareOptions,
+    setSelectedCompareOptions,
     getProfitAndLossComparisonCsv,
+    comparisonConfig,
   }
 }

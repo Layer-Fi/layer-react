@@ -1,6 +1,7 @@
 import type { ReportingBasis } from '../types'
 import { ReadonlyArrayWithAtLeastOne } from '../utils/array/getArrayWithAtLeastOneOrFallback'
 import { LineItem } from './line_item'
+import { TagViewConfig } from './tags'
 
 export interface ProfitAndLoss {
   type: 'Profit_And_Loss'
@@ -17,6 +18,17 @@ export interface ProfitAndLoss {
   other_outflows?: LineItem | null
   personal_expenses?: LineItem | null
   fully_categorized: boolean
+}
+
+export interface TagComparisonOption {
+  displayName: string
+  tagFilterConfig: TagViewConfig
+}
+
+export interface ProfitAndLossCompareConfig {
+  tagComparisonOptions: TagComparisonOption[]
+  defaultTagFilter: TagComparisonOption
+  defaultPeriods?: number
 }
 
 export interface ProfitAndLossComparison {

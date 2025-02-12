@@ -3,7 +3,6 @@ import { BalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Container } from '../../components/Container'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
-import { ProfitAndLossCompareOptionsProps } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { PnLDownloadButtonStringOverrides } from '../../components/ProfitAndLossDownloadButton'
 import { ProfitAndLossTableStringOverrides } from '../../components/ProfitAndLossTable'
@@ -14,6 +13,7 @@ import { View } from '../../components/View'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
 import { View as ViewType } from '../../types/general'
 import type { TimeRangePickerConfig } from './reportTypes'
+import { ProfitAndLossCompareConfig } from '../../types/profit_and_loss'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -33,7 +33,7 @@ export interface ReportsProps {
   showTitle?: boolean
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
-  comparisonConfig?: ProfitAndLossCompareOptionsProps
+  comparisonConfig?: ProfitAndLossCompareConfig
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
 }
@@ -44,7 +44,6 @@ export interface ReportsPanelProps {
   containerRef: RefObject<HTMLDivElement>
   openReport: ReportType
   stringOverrides?: ReportsStringOverrides
-  comparisonConfig?: ProfitAndLossCompareOptionsProps
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
   view: ViewBreakpoint
@@ -107,12 +106,11 @@ export const Reports = ({
         </div>
       )}
       <Container name='reports' ref={containerRef}>
-        <ProfitAndLoss asContainer={false}>
+        <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig}>
           <ReportsPanel
             containerRef={containerRef}
             openReport={activeTab}
             stringOverrides={stringOverrides}
-            comparisonConfig={comparisonConfig}
             profitAndLossConfig={profitAndLossConfig}
             statementOfCashFlowConfig={statementOfCashFlowConfig}
             view={view}
@@ -127,7 +125,6 @@ const ReportsPanel = ({
   containerRef,
   openReport,
   stringOverrides,
-  comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
   view,
@@ -137,7 +134,6 @@ const ReportsPanel = ({
       {openReport === 'profitAndLoss' && (
         <ProfitAndLoss.Report
           stringOverrides={stringOverrides}
-          comparisonConfig={comparisonConfig}
           parentRef={containerRef}
           view={view}
           {...profitAndLossConfig}

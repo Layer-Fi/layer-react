@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Layer } from "../../api/layer";
-import { TagFilterInput } from "../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions";
+import { TagFilterInput } from "../../types/tags";
 import { useLayerContext } from "../../contexts/LayerContext";
 import {
   BankTransaction,

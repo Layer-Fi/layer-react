@@ -3,7 +3,7 @@ import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { LineItem } from '../../types'
 import { ProfitAndLossComparisonPnl } from '../../types/profit_and_loss'
 import {
-  generatComparisonMonths,
+  generateComparisonPeriods,
   getComparisonValue,
   mergeComparisonLineItemsAtDepth,
 } from '../../utils/profitAndLossComparisonUtils'
@@ -12,6 +12,7 @@ import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import { Table, TableBody, TableHead, TableRow, TableCell } from '../Table'
 import { ProfitAndLossTableStringOverrides } from './ProfitAndLossTableComponent'
 import classNames from 'classnames'
+import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 interface ProfilAndLostCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides
@@ -24,32 +25,16 @@ export const ProfitAndLossCompareTable = ({
   const {
     data: comparisonData,
     isLoading,
-    compareMonths,
-    compareOptions,
-    refetch,
+    comparePeriods,
+    selectedCompareOptions,
   } = useContext(ProfitAndLoss.ComparisonContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
+  const { rangeDisplayMode } = useGlobalDateRange()
 
   useEffect(() => {
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useEffect(() => {
-    if (
-      dateRange?.startDate
-      && dateRange?.endDate
-      && !comparisonData
-      && !isLoading
-    ) {
-      refetch(
-        {
-          startDate: dateRange.startDate,
-          endDate: dateRange.endDate,
-        },
-        true,
-      )
-    }
-  }, [dateRange, comparisonData])
 
   if (isLoading || comparisonData === undefined) {
     return (
@@ -137,17 +122,17 @@ export const ProfitAndLossCompareTable = ({
   return (
     <Table borderCollapse='collapse' bottomSpacing={false}>
       <TableHead>
-        {compareOptions && compareOptions.length > 1 && (
+        {selectedCompareOptions && selectedCompareOptions.length > 1 && (
           <TableRow rowKey=''>
             <TableCell isHeaderCell />
-            {compareOptions.map((option, i) => (
-              <Fragment key={option + '-' + i}>
-                <TableCell key={option + '-' + i} primary isHeaderCell>
+            {selectedCompareOptions.map((option, i) => (
+              <Fragment key={option.displayName + '-' + i}>
+                <TableCell key={option.displayName + '-' + i} primary isHeaderCell>
                   {option.displayName}
                 </TableCell>
-                {compareMonths
-                && Array.from({ length: compareMonths - 1 }, (_, index) => (
-                  <TableCell key={option + '-' + index} isHeaderCell />
+                {comparePeriods
+                && Array.from({ length: comparePeriods - 1 }, (_, index) => (
+                  <TableCell key={option.displayName + '-' + index} isHeaderCell />
                 ))}
               </Fragment>
             ))}
@@ -155,18 +140,19 @@ export const ProfitAndLossCompareTable = ({
         )}
       </TableHead>
       <TableBody>
-        {compareMonths && (
+        {comparePeriods && (
           <TableRow rowKey=''>
             <TableCell isHeaderCell />
-            {compareOptions && compareOptions.length > 0
+            {selectedCompareOptions && selectedCompareOptions.length > 0
               ? (
-                compareOptions.map((option, i) => (
-                  <Fragment key={option + '-' + i}>
-                    {generatComparisonMonths(
+                selectedCompareOptions.map((option, i) => (
+                  <Fragment key={option.displayName + '-' + i}>
+                    {generateComparisonPeriods(
                       dateRange.startDate,
-                      compareMonths,
+                      comparePeriods,
+                      rangeDisplayMode,
                     ).map((month: string, index: number) => (
-                      <TableCell key={option + '-' + index} isHeaderCell>
+                      <TableCell key={option.displayName + '-' + index} isHeaderCell>
                         {month}
                       </TableCell>
                     ))}
@@ -175,9 +161,10 @@ export const ProfitAndLossCompareTable = ({
               )
               : (
                 <Fragment key='total-1'>
-                  {generatComparisonMonths(
+                  {generateComparisonPeriods(
                     dateRange.startDate,
-                    compareMonths,
+                    comparePeriods,
+                    rangeDisplayMode,
                   ).map((month: string, index: number) => (
                     <TableCell key={'total-' + index + '-cell'} isHeaderCell>
                       {month}
