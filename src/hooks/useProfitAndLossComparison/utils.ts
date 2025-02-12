@@ -2,8 +2,8 @@ import { getMonth, getYear, startOfMonth, startOfYear, subMonths, subYears } fro
 import { DateRange } from '../../types'
 import { range } from '../../utils/array/range'
 import { isArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
-import { TagComparisonOption } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { TagComparisonOption } from '../../types/profit_and_loss'
 
 export function prepareFiltersBody(compareOptions: TagComparisonOption[]) {
   const noneFilters = compareOptions.filter(

@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { Layer } from '../../api/layer'
-import { TagComparisonOption } from '../../components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, MoneyFormat, ReportingBasis } from '../../types'
 import { useAuth } from '../useAuth'
@@ -8,6 +7,8 @@ import { useEnvironment } from '../../providers/Environment/EnvironmentInputProv
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { prepareFiltersBody, preparePeriodsBody } from './utils'
 import useSWR from 'swr'
+import { MultiValue } from 'react-select'
+import { ProfitAndLossCompareConfig, TagComparisonOption } from '../../types/profit_and_loss'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -15,6 +16,7 @@ export type SidebarScope = Scope | undefined
 
 type Props = {
   reportingBasis?: ReportingBasis
+  comparisonConfig?: ProfitAndLossCompareConfig
 }
 
 const ALLOWED_COMPARE_MODES = ['monthPicker', 'yearPicker']
@@ -53,10 +55,11 @@ function buildKey({
 
 export function useProfitAndLossComparison({
   reportingBasis,
+  comparisonConfig,
 }: Props) {
-  const [comparePeriods, setComparePeriods] = useState(1)
-  const [compareOptions, setCompareOptions] = useState<TagComparisonOption[]>(
-    [],
+  const [comparePeriods, setComparePeriods] = useState(comparisonConfig?.defaultPeriods ?? 1)
+  const [selectedCompareOptions, setSelectedCompareOptionsState] = useState<TagComparisonOption[]>(
+    comparisonConfig?.defaultTagFilter ? [comparisonConfig?.defaultTagFilter] : [],
   )
   const { rangeDisplayMode, start, end } = useGlobalDateRange()
   const dateRange = { startDate: start, endDate: end }
@@ -68,23 +71,39 @@ export function useProfitAndLossComparison({
       return false
     }
 
-    if ((comparePeriods > 1 || hasNoneDefaultTag(compareOptions)) && !isCompareDisabled) {
+    if ((comparePeriods > 1 || hasNoneDefaultTag(selectedCompareOptions)) && !isCompareDisabled) {
       return true
     }
 
-    if (comparePeriods < 2 && !hasNoneDefaultTag(compareOptions)) {
+    if (comparePeriods < 2 && !hasNoneDefaultTag(selectedCompareOptions)) {
       return false
     }
 
     return true
-  }, [isCompareDisabled, comparePeriods, compareOptions])
+  }, [isCompareDisabled, comparePeriods, selectedCompareOptions])
+
+  const setSelectedCompareOptions = (values: MultiValue<{ value: string, label: string }>) => {
+    const options: TagComparisonOption[] = values.map(option =>
+      comparisonConfig?.tagComparisonOptions.find(
+        t => JSON.stringify(t.tagFilterConfig) === option.value,
+      ),
+    ).filter(Boolean) as TagComparisonOption[]
+
+    if (options.length === 0 && comparisonConfig?.defaultTagFilter) {
+      // Set default option if nothing selected
+      setSelectedCompareOptionsState([comparisonConfig?.defaultTagFilter])
+    }
+    else {
+      setSelectedCompareOptionsState(options)
+    }
+  }
 
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
   const periods = preparePeriodsBody(dateRange, comparePeriods, rangeDisplayMode)
-  const tagFilters = prepareFiltersBody(compareOptions)
+  const tagFilters = prepareFiltersBody(selectedCompareOptions)
 
   const queryKey = buildKey({
     ...auth,
@@ -117,7 +136,7 @@ export function useProfitAndLossComparison({
     moneyFormat?: MoneyFormat,
   ) => {
     const periods = preparePeriodsBody(dateRange, comparePeriods, rangeDisplayMode)
-    const tagFilters = prepareFiltersBody(compareOptions)
+    const tagFilters = prepareFiltersBody(selectedCompareOptions)
     return Layer.profitAndLossComparisonCsv(apiUrl, auth?.access_token, {
       params: {
         businessId,
@@ -139,8 +158,10 @@ export function useProfitAndLossComparison({
     compareModeActive,
     comparePeriods,
     setComparePeriods,
-    compareOptions,
-    setCompareOptions,
+    compareOptions: comparisonConfig?.tagComparisonOptions ?? [],
+    selectedCompareOptions,
+    setSelectedCompareOptions,
     getProfitAndLossComparisonCsv,
+    comparisonConfig,
   }
 }
