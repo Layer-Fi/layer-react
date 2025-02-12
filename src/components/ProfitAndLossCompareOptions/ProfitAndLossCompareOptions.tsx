@@ -1,12 +1,13 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo } from 'react'
 import { MultiSelect, Select } from '../Input'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
-import type { StylesConfig } from 'react-select'
+import type { MultiValue, StylesConfig } from 'react-select'
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export interface ProfitAndLossCompareOptionsProps {
   tagComparisonOptions: TagComparisonOption[]
   defaultTagFilter: TagComparisonOption
+  defaultPeriods?: number
 }
 
 export interface TagComparisonOption {
@@ -34,74 +35,52 @@ const selectStyles = {
   },
 } satisfies StylesConfig<TagComparisonOption, true>
 
-const ALLOWED_COMPARE_MODES = ['monthPicker', 'yearPicker']
-
-const hasNoneDefaultTag = (compareOptions?: TagComparisonOption[]) => {
-  return compareOptions?.some(option => option.tagFilterConfig.tagFilters !== 'None')
-}
-
 export const ProfitAndLossCompareOptions = ({
   tagComparisonOptions,
   defaultTagFilter: defaultOption,
+  defaultPeriods = 1,
 }: ProfitAndLossCompareOptionsProps) => {
   const {
     setComparePeriods,
     setCompareOptions,
-    setCompareMode,
-    compareMode,
+    isCompareDisabled,
     comparePeriods,
     compareOptions,
   } = useContext(ProfitAndLoss.ComparisonContext)
 
   const { rangeDisplayMode } = useGlobalDateRange()
 
-  const [periods, setPeriods] = useState<number>(
-    comparePeriods !== 0 ? comparePeriods : 1,
-  )
-  const [toggle, setToggle] = useState<TagComparisonOption[]>(
-    compareOptions?.length > 0 ? compareOptions : [defaultOption],
+  const periods = useMemo<number>(
+    () => comparePeriods !== 0 ? comparePeriods : 1,
+    [comparePeriods],
   )
 
-  const isCompareDisabled = !ALLOWED_COMPARE_MODES.includes(rangeDisplayMode)
-
   useEffect(() => {
-    if (isCompareDisabled && compareMode) {
-      setCompareMode(false)
-      return
+    // Set default values in hooks if any is missing.
+    if (comparePeriods < 1) {
+      setComparePeriods(defaultPeriods)
     }
+    if (compareOptions.length === 0) {
+      setCompareOptions([defaultOption])
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-    if (
-      (comparePeriods > 1 || hasNoneDefaultTag(compareOptions))
-      && !compareMode
-      && !isCompareDisabled
-    ) {
-      setCompareMode(true)
-      return
-    }
+  const setCompareOptionnsInternal = (values: MultiValue<{ value: string, label: string }>) => {
+    const options: TagComparisonOption[] = values.map(option =>
+      tagComparisonOptions.find(
+        t => JSON.stringify(t.tagFilterConfig) === option.value,
+      ),
+    ).filter(Boolean) as TagComparisonOption[]
 
-    if (comparePeriods < 2 && !hasNoneDefaultTag(compareOptions) && compareMode) {
-      setCompareMode(false)
-      return
+    if (options.length === 0) {
+      // Set default option if nothing selected
+      setCompareOptions([defaultOption])
     }
-  }, [isCompareDisabled, compareMode, comparePeriods, compareOptions, setCompareMode])
-
-  useEffect(() => {
-    if (periods === 0 && toggle.length > 1) {
-      setPeriods(1)
+    else {
+      setCompareOptions(options)
     }
-    else if (periods !== comparePeriods && setComparePeriods) {
-      setComparePeriods(periods)
-    }
-  }, [periods])
-
-  useEffect(() => {
-    if (toggle.length === 0) {
-      setToggle(compareOptions?.length > 0 ? compareOptions : [defaultOption])
-    }
-    else if (JSON.stringify(toggle) !== JSON.stringify(compareOptions) && setCompareOptions) {
-      setCompareOptions(toggle)
-    }
-  }, [toggle, compareOptions, setCompareOptions, defaultOption])
+  }
 
   const timeComparisonOptions = [
     { value: 1, label: rangeDisplayMode === 'monthPicker' ? 'This month' : 'This year' },
@@ -122,13 +101,11 @@ export const ProfitAndLossCompareOptions = ({
     <div className='Layer__compare__options'>
       <Select
         options={timeComparisonOptions}
-        onChange={e => setPeriods(e && e.value ? e.value : 0)}
+        onChange={e => setComparePeriods(e && e.value ? e.value : 1)}
         value={
-          comparePeriods === 0
-            ? null
-            : timeComparisonOptions.find(
-              option => option.value === comparePeriods,
-            )
+          timeComparisonOptions.find(
+            option => option.value === periods,
+          )
         }
         placeholder={rangeDisplayMode === 'yearPicker' ? 'Compare years' : 'Compare months'}
         disabled={isCompareDisabled}
@@ -136,17 +113,12 @@ export const ProfitAndLossCompareOptions = ({
       <MultiSelect
         options={tagComparisonSelectOptions}
         onChange={(e) => {
-          setToggle(
-            e
-              .map(option =>
-                tagComparisonOptions.find(
-                  t => JSON.stringify(t.tagFilterConfig) === option.value,
-                ),
-              )
-              .filter(Boolean) as TagComparisonOption[],
+          setCompareOptionnsInternal(
+            e,
+
           )
         }}
-        defaultValue={toggle?.map(option => ({
+        defaultValue={compareOptions?.map(option => ({
           value: JSON.stringify(option.tagFilterConfig),
           label: option.displayName,
         }))}
