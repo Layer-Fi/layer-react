@@ -1,16 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-
+import { useEffect, useMemo, useState } from 'react'
 import { endOfDay, endOfMonth, endOfYear } from 'date-fns'
-import { useGlobalDate, useGlobalDateActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useDateContext } from '../../contexts/DateContext'
 import { DatePickerProps } from './types'
 import { isRangeMode } from './utils'
-import { DateState } from '../../types'
-import { areDateRangesEqual } from '../../utils/date'
-import { formatDate } from '../../utils/format'
+import { useDateRange } from '../../hooks/useDateRange'
+import { DatePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export function useDatePickerState({
-  selected,
+  selected: initialSelected,
+  defaultSelected,
   onChange,
   displayMode = 'dayPicker',
   allowedModes,
@@ -19,6 +16,7 @@ export function useDatePickerState({
   syncWithGlobalDate,
 }: Pick<DatePickerProps,
 'selected'
+| 'defaultSelected'
 | 'onChange'
 | 'displayMode'
 | 'allowedModes'
@@ -27,15 +25,39 @@ export function useDatePickerState({
 | 'syncWithGlobalDate'
 >) {
   // To track prev vs new value in the useEffect
-  const dateRef = useRef<DateState | null>(null)
+  // const dateRef = useRef<DateRangeState | null>(null)
 
-  const { startDate: globalStartDate, endDate: globalEndDate } = useGlobalDate()
-  const { setDate: setGlobalDate } = useGlobalDateActions()
-  const globalDateRange = { startDate: globalStartDate, endDate: globalEndDate }
-  const { date, setDate } = useDateContext()
+  // const { startDate: globalStartDate, endDate: globalEndDate } = useGlobalDate()
+  // const { setDate: setGlobalDate } = useGlobalDateActions()
+  // const globalDateRange = { startDate: globalStartDate, endDate: globalEndDate }
 
-  // Disable circular global date update when setting `date` from global date
-  const [readingFromGlobal, setReadingFromGlobal] = useState(false)
+  // const { date, setDate } = useDateContext()
+
+  const selected = initialSelected ?? defaultSelected
+
+  const initialVal = {
+    startDate: selected && selected instanceof Date
+      ? selected
+      : selected && (selected as [Date, Date])[0] ? (selected as [Date, Date])[0] : new Date(),
+    endDate: selected && selected instanceof Date
+      ? selected
+      : selected && (selected as [Date, Date])[1]
+        ? (selected as [Date, Date])[1]
+        : endOfDay(new Date()),
+    mode: displayMode as DatePickerMode, // @TODO - unsafe - it doesn't handle TimePicker
+    syncWithGlobalDate,
+  }
+
+  const { date, setDate } = useDateRange(initialVal)
+
+  // const { date, setDate } = useDateRange(
+  //   buildDateStateInitialValue({
+  //     syncWithGlobalDate,
+  //     displayMode,
+  //     globalStartDate,
+  //     globalEndDate,
+  //     selected: selected ?? defaultSelected,
+  //   }))
 
   const [selectingInternalDates, setSelectingInternalDates] = useState<boolean>(false)
 
@@ -63,7 +85,6 @@ export function useDatePickerState({
   }, [displayMode, allowedModes])
 
   useEffect(() => {
-    console.log('UE 1 - selected')
     if (!selected) {
       return
     }
@@ -78,11 +99,12 @@ export function useDatePickerState({
       return
     }
 
-    setStartDate(selected as Date)
+    if (selected instanceof Date) {
+      setStartDate(selected)
+    }
   }, [displayMode, selected])
 
   useEffect(() => {
-    console.log('UE 2 - selectingDates')
     if (
       selectingInternalDates === false
       && startDate
@@ -90,92 +112,100 @@ export function useDatePickerState({
       && JSON.stringify({ s: date.startDate, e: date.endDate })
       !== JSON.stringify({ s: startDate, e: endDate })
     ) {
-      setDate({ startDate, endDate })
+      // setDate({ startDate, endDate })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectingInternalDates])
 
   useEffect(() => {
-    console.log('UE 3 - date')
-    // Ignore hook when prev and new values are actually the same,
-    // but because both are objects, useEffect doesn't recognize them as equal
-    if (JSON.stringify(dateRef.current) === JSON.stringify(date)) {
-      setReadingFromGlobal(false)
-      return
+    // @TODO - dayPicker still could be a range?
+    if (displayMode === 'dayPicker' || displayMode === 'timePicker') {
+      onChange?.(date.startDate)
     }
-
-    if (
-      syncWithGlobalDate
-      && date.startDate
-      && date.endDate
-      && JSON.stringify({ s: date.startDate, e: date.endDate })
-      !== JSON.stringify({
-        s: globalDateRange.startDate,
-        e: globalDateRange.endDate,
-      })
-    ) {
-      // Ignore updating global state after setting local date from global date
-      if (!readingFromGlobal) {
-        setGlobalDate({
-          startDate: date.startDate,
-          endDate: date.endDate,
-        })
-      }
+    else {
+      onChange?.([date.startDate, date.endDate])
     }
-
-    if (startDate !== date.startDate) {
-      setStartDate(date.startDate)
-    }
-
-    if (endDate !== date.endDate) {
-      setEndDate(date.endDate)
-    }
-
-    if (onChange) {
-      if (isRangeMode(displayMode)) {
-        onChange([date.startDate, date.endDate])
-      }
-      else {
-        onChange(date.startDate)
-      }
-    }
-
-    dateRef.current = date
-
-    // Clear the safety flag
-    setReadingFromGlobal(false)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date])
 
-  useEffect(() => {
-    if (
-      syncWithGlobalDate
-      && globalDateRange.startDate
-      && globalDateRange.endDate
-      && (!date || (date && !areDateRangesEqual(globalDateRange, date)))
-    ) {
-      console.log('UE 4 - globalDateRange', areDateRangesEqual(globalDateRange, date))
-      // Set this flag to stop propagating local date update into global date
-      // in the next useEffect(() => {...}, [date]) - to avoid circular hooks runs
-      setReadingFromGlobal(true)
+  // useEffect(() => {
+  //   console.log('UE 3 - date')
+  //   // Ignore hook when prev and new values are actually the same,
+  //   // but because both are objects, useEffect doesn't recognize them as equal
+  //   if (JSON.stringify(dateRef.current) === JSON.stringify(date)) {
+  //     setReadingFromGlobal(false)
+  //     return
+  //   }
 
-      setDate({
-        startDate: globalDateRange.startDate,
-        endDate: globalDateRange.endDate,
-      })
+  //   if (
+  //     syncWithGlobalDate
+  //     && date.startDate
+  //     && date.endDate
+  //     && JSON.stringify({ s: date.startDate, e: date.endDate })
+  //     !== JSON.stringify({
+  //       s: globalDateRange.startDate,
+  //       e: globalDateRange.endDate,
+  //     })
+  //   ) {
+  //     // Ignore updating global state after setting local date from global date
+  //     if (!readingFromGlobal) {
+  //       setGlobalDate({
+  //         startDate: date.startDate,
+  //         endDate: date.endDate,
+  //       })
+  //     }
+  //   }
 
-      setStartDate(globalDateRange.startDate)
-      setEndDate(globalDateRange.endDate)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalDateRange])
+  //   if (startDate !== date.startDate) {
+  //     setStartDate(date.startDate)
+  //   }
 
-  //   console.log('global', formatDate(globalDateRange.startDate), formatDate(globalDateRange.endDate), 'local', formatDate(date.startDate), formatDate(date.endDate))
+  //   if (endDate !== date.endDate) {
+  //     setEndDate(date.endDate)
+  //   }
 
-  console.log('global date', formatDate(globalStartDate), formatDate(globalEndDate))
+  //   if (onChange) {
+  //     if (isRangeMode(displayMode)) {
+  //       onChange([date.startDate, date.endDate])
+  //     }
+  //     else {
+  //       onChange(date.startDate)
+  //     }
+  //   }
+
+  //   dateRef.current = date
+
+  //   // Clear the safety flag
+  //   setReadingFromGlobal(false)
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [date])
+
+  // useEffect(() => {
+  //   if (
+  //     syncWithGlobalDate
+  //     && globalDateRange.startDate
+  //     && globalDateRange.endDate
+  //     && (!date || (date && !areDateRangesEqual(globalDateRange, date)))
+  //   ) {
+  //     console.log('UE 4 - globalDateRange', areDateRangesEqual(globalDateRange, date))
+  //     // Set this flag to stop propagating local date update into global date
+  //     // in the next useEffect(() => {...}, [date]) - to avoid circular hooks runs
+  //     setReadingFromGlobal(true)
+
+  //     setDate({
+  //       startDate: globalDateRange.startDate,
+  //       endDate: globalDateRange.endDate,
+  //     })
+
+  //     setStartDate(globalDateRange.startDate)
+  //     setEndDate(globalDateRange.endDate)
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [globalDateRange])
 
   const isCurrentDate = () => {
     const currentDate = new Date()
+    // @TODO - is the startDate a scalar always?
+    // console.log('isCurrentDate', startDate, currentDate)
 
     switch (pickerMode) {
       case 'dayPicker':

@@ -14,6 +14,5 @@ export const StatementOfCashFlowContext =
     },
     setDate: () => {},
     isLoading: false,
-    error: undefined,
     refetch: () => {},
   })

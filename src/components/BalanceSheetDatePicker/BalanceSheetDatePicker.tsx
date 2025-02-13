@@ -11,9 +11,10 @@ export function BalanceSheetDatePicker({
 }: BalanceSheetDatePickerProps) {
   return (
     <DatePicker
-      selected={effectiveDate}
+      defaultSelected={effectiveDate}
       onChange={date => date && setEffectiveDate(date as Date)}
       displayMode='dayPicker'
+      syncWithGlobalDate={true}
     />
   )
 }

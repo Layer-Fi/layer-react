@@ -21,20 +21,22 @@ export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const dateString = format(startOfDay(date), 'yyyy-MM-dd\'T\'HH:mm:ssXXX')
+  const pickedDate = date && date instanceof Date ? date : date ? date[0] : undefined
+
+  const dateString = pickedDate ? format(startOfDay(pickedDate), 'yyyy-MM-dd\'T\'HH:mm:ssXXX') : undefined
 
   const queryKey =
-    businessId &&
-    dateString &&
-    auth?.access_token &&
-    `balance-sheet-${businessId}-${dateString}`
+    businessId
+    && dateString
+    && auth?.access_token
+    && `balance-sheet-${businessId}-${dateString}`
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,
     Layer.getBalanceSheet(apiUrl, auth?.access_token, {
       params: {
         businessId,
-        effectiveDate: dateString,
+        effectiveDate: dateString ?? '',
       },
     }),
   )

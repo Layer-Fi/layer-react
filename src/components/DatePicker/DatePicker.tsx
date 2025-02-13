@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 import * as RDP from 'react-datepicker'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
@@ -10,12 +10,8 @@ import type {
 } from './ModeSelector/DatePickerModeSelector'
 import classNames from 'classnames'
 import { endOfDay } from 'date-fns'
-import { useGlobalDate } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useDate } from '../../hooks/useDate'
-import { DateContext } from '../../contexts/DateContext'
 import { DatePickerProps } from './types'
 import {
-  buildContextDefaultValues,
   getEndDateBasedOnMode,
   isRangeMode,
   showNavigationArrows,
@@ -37,21 +33,21 @@ const ReactDatePicker = (((RDP.default as any).default as any)
      @typescript-eslint/no-unsafe-member-access,
 */
 
-export const DatePicker = (props: DatePickerProps) => {
-  const { startDate, endDate } = useGlobalDate()
+// export const DatePicker = (props: DatePickerProps) => {
+//   const { startDate, endDate } = useGlobalDate()
 
-  const defaultValues = useMemo(() => buildContextDefaultValues(props, startDate, endDate), [])
+//   const defaultValues = useMemo(() => buildContextDefaultValues(props, startDate, endDate), [])
 
-  const dateContext = useDate(defaultValues)
+//   const dateContext = useDateRange(defaultValues)
 
-  return (
-    <DateContext.Provider value={dateContext}>
-      <DatePickerController {...props} />
-    </DateContext.Provider>
-  )
-}
+//   return (
+//     <DateContext.Provider value={dateContext}>
+//       <DatePickerController {...props} />
+//     </DateContext.Provider>
+//   )
+// }
 
-const DatePickerController = ({
+export const DatePicker = ({
   selected,
   defaultSelected,
   onChange,
@@ -75,7 +71,7 @@ const DatePickerController = ({
   currentDateOption = true,
   navigateArrows = displayMode === 'monthPicker' ? ['mobile'] : undefined,
   onChangeMode,
-  syncWithGlobalDate = true,
+  syncWithGlobalDate = false,
   slots,
   ...props
 }: DatePickerProps) => {
@@ -91,9 +87,9 @@ const DatePickerController = ({
     isCurrentDate,
     setCurrentDate,
     pickerMode,
-
   } = useDatePickerState({
     selected,
+    defaultSelected,
     onChange,
     displayMode,
     allowedModes,

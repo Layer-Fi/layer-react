@@ -41,6 +41,7 @@ export function StatementOfCashFlowDatePicker({
       }}
       customDateRanges={customDateRanges}
       minDate={minDate}
+      syncWithGlobalDate={true}
     />
   )
 }
