@@ -86,7 +86,7 @@ export type DatePeriod =
   | 'YEAR_TO_DATE'
   | 'CUSTOM'
 
-export type DateState = {
+export type DateRangeState = {
   startDate: Date
   endDate: Date
   // period: DatePeriod

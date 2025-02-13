@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, StatementOfCashFlow } from '../../types'
-import { DataModel } from '../../types/general'
 import { format, startOfDay } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { DataModel } from '../../types/general'
 
 type UseStatementOfCashFlow = () => {
   data: StatementOfCashFlow | undefined
@@ -40,8 +40,6 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = () => {
     && auth?.access_token
     && `statement-of-cash-${businessId}-${startDateString}-${endDateString}`
 
-  console.log('queryKey', queryKey)
-
   const { data, isLoading, isValidating, mutate } = useSWR(
     queryKey,
     Layer.getStatementOfCashFlow(apiUrl, auth?.access_token, {
@@ -62,10 +60,11 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = () => {
     if (queryKey && (isLoading || isValidating)) {
       read(DataModel.STATEMENT_OF_CASH_FLOWS, queryKey)
     }
-  }, [queryKey, isLoading, isValidating, read])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryKey, isLoading, isValidating])
 
   useEffect(() => {
-    if (queryKey && hasBeenTouched(queryKey)) {
+    if (queryKey && hasBeenTouched(queryKey) && startDateString && endDateString) {
       refetch()
     }
   }, [syncTimestamps, startDateString, endDateString, queryKey, refetch, hasBeenTouched])

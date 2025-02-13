@@ -1,6 +1,62 @@
 import { endOfDay, endOfMonth } from 'date-fns'
 import { DatePickerProps, NavigationArrows } from './types'
 
+export function buildDateStateInitialValue({
+  syncWithGlobalDate = true,
+  selected,
+  displayMode,
+  globalStartDate,
+  globalEndDate,
+}: {
+  syncWithGlobalDate?: DatePickerProps['syncWithGlobalDate']
+  selected?: Date | [Date, Date | null]
+  displayMode?: DatePickerProps['displayMode']
+  globalStartDate?: Date
+  globalEndDate?: Date
+}) {
+  if (syncWithGlobalDate) {
+    return {
+      startDate: globalStartDate,
+      endDate: globalEndDate,
+    }
+  }
+
+  if (selected && isRangeMode(displayMode)) {
+    return {
+      startDate: (selected as [Date, Date])[0],
+      endDate: (selected as [Date, Date])[1],
+    }
+  }
+
+  if (selected) {
+    return {
+      startDate: selected as Date,
+      endDate: endOfDay(selected as Date),
+    }
+  }
+
+  if (!selected) {
+    return {}
+  }
+
+  if (
+    isRangeMode(displayMode)
+    && (selected as [Date, Date])[0]
+    && (selected as [Date, Date])[1]
+  ) {
+    return {
+      startDate: (selected as [Date, Date])[0],
+      endDate: (selected as [Date, Date])[1],
+    }
+  }
+
+  return {
+    startDate: selected as Date,
+    endDate: endOfDay(selected as Date),
+  }
+}
+
+// @TODO remove this function
 export function buildContextDefaultValues({
   syncWithGlobalDate = true,
   selected,

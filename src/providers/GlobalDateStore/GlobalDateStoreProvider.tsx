@@ -7,7 +7,7 @@ import {
 import { useState, createContext, type PropsWithChildren, useContext } from 'react'
 import { createStore, useStore } from 'zustand'
 import { useStoreWithDateSelected } from '../../utils/zustand/useStoreWithDateSelected'
-import { DateState } from '../../types'
+import { DateRangeState } from '../../types'
 
 const _DATE_PICKER_MODES = [
   'dayPicker',
@@ -29,12 +29,12 @@ function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())
 }
 
 type GlobalDateStoreShape = {
-  startDate: DateState['startDate']
-  endDate: DateState['endDate']
-  mode: DateState['mode']
+  startDate: DateRangeState['startDate']
+  endDate: DateRangeState['endDate']
+  mode: DateRangeState['mode']
 
   actions: {
-    setDate: (options: Partial<DateState>) => void
+    setDate: (options: Partial<DateRangeState>) => void
   }
 }
 
@@ -49,7 +49,7 @@ function buildStore() {
       mode: 'monthPicker',
 
       actions: {
-        setDate: ({ startDate, endDate, mode }: Partial<DateState>) => {
+        setDate: ({ startDate, endDate, mode }: Partial<DateRangeState>) => {
           set(({
             mode: currentDisplayMode,
           }) => {

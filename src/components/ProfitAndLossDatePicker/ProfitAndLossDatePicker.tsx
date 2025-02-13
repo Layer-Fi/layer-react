@@ -1,12 +1,12 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { ProfitAndLoss } from '../ProfitAndLoss'
-import { useDate } from '../../hooks/useDate'
 import { endOfDay, endOfMonth, startOfMonth } from 'date-fns'
 import { DatePicker } from '../DatePicker'
 import { DatePickerModeSelector, DEFAULT_ALLOWED_PICKER_MODES } from '../DatePicker/ModeSelector/DatePickerModeSelector'
+import { DateRangeState } from '../../types'
 
 export type ProfitAndLossDatePickerProps = TimeRangePickerConfig
 
@@ -19,9 +19,15 @@ export const ProfitAndLossDatePicker = ({
 
   /** @TODO - try to read from global state first if not set.
    * Also, it may require to have context-provider to encapsulate all subcomponents */
-  const { date, setDate } = useDate({
+  // const { date, setDate } = useDate({
+  //   startDate: startOfMonth(new Date()),
+  //   endDate: endOfMonth(new Date()),
+  // })
+
+  const [date, setDate] = useState<DateRangeState>({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
+    mode: 'monthPicker',
   })
 
   // useEffect(() => {
@@ -38,20 +44,20 @@ export const ProfitAndLossDatePicker = ({
       defaultSelected={[date.startDate, date.endDate]}
       onChange={(dates) => {
         if (dates instanceof Date) {
-          setDate({ startDate: dates, endDate: endOfDay(dates) })
+          setDate({ startDate: dates, endDate: endOfDay(dates), mode: date.mode })
 
           return
         }
 
         const [start, end] = dates
 
-        setDate({ startDate: start, endDate: end ?? endOfDay(start) })
+        setDate({ startDate: start, endDate: end ?? endOfDay(start), mode: date.mode })
       }}
       displayMode={date.mode}
       allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
       onChangeMode={(rangeDisplayMode) => {
         if (rangeDisplayMode !== 'dayPicker') {
-          setDate({ mode: rangeDisplayMode })
+          setDate({ ...date, mode: rangeDisplayMode })
         }
       }}
       slots={{
@@ -59,6 +65,7 @@ export const ProfitAndLossDatePicker = ({
       }}
       customDateRanges={customDateRanges}
       minDate={minDate}
+      syncWithGlobalDate={true}
     />
   )
 }
