@@ -1,3 +1,4 @@
+import { BusinessForm } from '../../components/BusinessForm/BusinessForm'
 import { BankTransactions } from '../../components/BankTransactions'
 import {
   BankTransactionsStringOverrides,
@@ -57,6 +58,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         showBreakConnection={showBreakConnection}
         stringOverrides={stringOverrides?.linkedAccounts}
       />
+      <BusinessForm />
       <BankTransactions
         asWidget
         showDescriptions={showDescriptions}
