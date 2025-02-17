@@ -1,29 +1,18 @@
-import { ENTITY_TYPES } from '../../types/business'
-import { US_STATES } from '../../types/location'
 import { notEmpty, validateEmailFormat } from '../../utils/form'
-import { Input, InputGroup, Select } from '../Input'
-import { HStack, VStack } from '../ui/Stack/Stack'
+import { Input, InputGroup } from '../Input'
+import { HStack } from '../ui/Stack/Stack'
 import { useBusinessForm } from './useBusinessForm'
-import { findSelectOption } from './utils'
-import { Text, TextSize } from '../Typography/Text'
 import { SubmitButton } from '../Button'
+import { FormSection } from '../Input/FormSection'
+import { BusinessTypeSelect } from '../BusinessTypeSelect/BusinessTypeSelect'
+import { UsStateSelect } from '../UsStateSelect/UsStateSelect'
 
 export const BusinessForm = () => {
   const { form } = useBusinessForm()
 
-  const entityTypeOptions = ENTITY_TYPES.map(state => ({
-    label: state,
-    value: state,
-  }))
-
-  const usStateOptions = US_STATES.map(state => ({
-    label: state,
-    value: state,
-  }))
-
   return (
     <form
-      className='Layer__business-form'
+      className='Layer__form Layer__business-form'
       onSubmit={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -31,9 +20,7 @@ export const BusinessForm = () => {
       }}
     >
 
-      <VStack gap='sm'>
-        <Text size={TextSize.sm}>Contact information</Text>
-
+      <FormSection title='Contact information'>
         <HStack gap='sm'>
           <form.Field
             name='first_name'
@@ -125,11 +112,9 @@ export const BusinessForm = () => {
             </>
           )}
         </form.Field>
-      </VStack>
+      </FormSection>
 
-      <VStack gap='sm'>
-        <Text size={TextSize.sm}>Business information</Text>
-
+      <FormSection title='Business information'>
         <form.Field
           name='legal_name'
           validators={{
@@ -173,10 +158,9 @@ export const BusinessForm = () => {
           {field => (
             <>
               <InputGroup name='type' label='Entity type'>
-                <Select
-                  options={entityTypeOptions}
-                  value={findSelectOption(entityTypeOptions, field.state.value)}
-                  onChange={option => field.handleChange(option?.value as string)}
+                <BusinessTypeSelect
+                  value={field.state.value}
+                  onChange={value => field.handleChange(value)}
                 />
               </InputGroup>
             </>
@@ -188,10 +172,9 @@ export const BusinessForm = () => {
             {field => (
               <>
                 <InputGroup name='us_state' label='State'>
-                  <Select
-                    options={usStateOptions}
-                    value={findSelectOption(usStateOptions, field.state.value)}
-                    onChange={option => field.handleChange(option?.value as string)}
+                  <UsStateSelect
+                    value={field.state.value}
+                    onChange={value => field.handleChange(value)}
                   />
                 </InputGroup>
               </>
@@ -215,9 +198,9 @@ export const BusinessForm = () => {
             )}
           </form.Field>
         </HStack>
+      </FormSection>
 
-        <SubmitButton type='submit'>Save</SubmitButton>
-      </VStack>
+      <SubmitButton noIcon type='submit'>Save</SubmitButton>
     </form>
   )
 }
