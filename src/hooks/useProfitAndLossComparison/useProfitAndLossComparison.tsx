@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, MoneyFormat, ReportingBasis } from '../../types'
@@ -64,23 +64,20 @@ export function useProfitAndLossComparison({
   const { rangeDisplayMode, start, end } = useGlobalDateRange()
   const dateRange = { startDate: start, endDate: end }
 
-  const isCompareDisabled = !ALLOWED_COMPARE_MODES.includes(rangeDisplayMode)
+  const compareModeActive = useMemo(() => (
+    comparePeriods > 1 || selectedCompareOptions.length > 1
+    || (selectedCompareOptions.length === 1 && hasNoneDefaultTag(selectedCompareOptions))
+  ), [comparePeriods, selectedCompareOptions])
 
-  const compareModeActive = useMemo(() => {
-    if (isCompareDisabled) {
-      return false
+  const isPeriodsSelectEnabled = ALLOWED_COMPARE_MODES.includes(rangeDisplayMode)
+
+  useEffect(() => {
+    // Reset number of periods to compare to 1 if compare mode becomes inactive
+    // ie. due to unsupported date range picker mode
+    if (!isPeriodsSelectEnabled && comparePeriods > 1) {
+      setComparePeriods(1)
     }
-
-    if ((comparePeriods > 1 || hasNoneDefaultTag(selectedCompareOptions)) && !isCompareDisabled) {
-      return true
-    }
-
-    if (comparePeriods < 2 && !hasNoneDefaultTag(selectedCompareOptions)) {
-      return false
-    }
-
-    return true
-  }, [isCompareDisabled, comparePeriods, selectedCompareOptions])
+  }, [isPeriodsSelectEnabled, comparePeriods])
 
   const setSelectedCompareOptions = (values: MultiValue<{ value: string, label: string }>) => {
     const options: TagComparisonOption[] = values.map(option =>
@@ -154,7 +151,7 @@ export function useProfitAndLossComparison({
     data: data?.pnls,
     isLoading,
     isValidating,
-    isCompareDisabled,
+    isPeriodsSelectEnabled,
     compareModeActive,
     comparePeriods,
     setComparePeriods,

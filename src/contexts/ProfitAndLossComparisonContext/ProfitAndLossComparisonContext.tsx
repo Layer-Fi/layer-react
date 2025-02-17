@@ -7,7 +7,7 @@ export const PNLComparisonContext = createContext<PNLComparisonContextType>({
   data: undefined,
   isLoading: true,
   isValidating: false,
-  isCompareDisabled: false,
+  isPeriodsSelectEnabled: true,
   compareModeActive: false,
   comparePeriods: 0,
   setComparePeriods: () => {},
