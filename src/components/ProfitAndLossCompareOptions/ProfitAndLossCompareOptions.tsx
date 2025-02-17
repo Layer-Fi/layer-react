@@ -2,7 +2,7 @@ import { useContext, useMemo } from 'react'
 import { MultiSelect, Select } from '../Input'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import type { StylesConfig } from 'react-select'
-import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { DateRangePickerMode, useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TagComparisonOption } from '../../types/profit_and_loss'
 
 const selectStyles = {
@@ -14,11 +14,34 @@ const selectStyles = {
   },
 } satisfies StylesConfig<TagComparisonOption, true>
 
+function buildCompareOptions(rangeDisplayMode: DateRangePickerMode) {
+  switch (rangeDisplayMode) {
+    case 'monthPicker':
+      return [
+        { value: 1, label: 'This month' },
+        { value: 2, label: 'Last 2 months' },
+        { value: 3, label: 'Last 3 months' },
+      ]
+    case 'yearPicker':
+      return [
+        { value: 1, label: 'This year' },
+        { value: 2, label: 'Last 2 years' },
+        { value: 3, label: 'Last 3 years' },
+      ]
+    default:
+      return [
+        { value: 1, label: 'This period' },
+        { value: 2, label: 'Last 2 periods' },
+        { value: 3, label: 'Last 3 periods' },
+      ]
+  }
+}
+
 export const ProfitAndLossCompareOptions = () => {
   const {
     setComparePeriods,
     setSelectedCompareOptions,
-    isCompareDisabled,
+    isPeriodsSelectEnabled,
     comparePeriods,
     compareOptions,
     selectedCompareOptions,
@@ -32,11 +55,7 @@ export const ProfitAndLossCompareOptions = () => {
     [comparePeriods],
   )
 
-  const timeComparisonOptions = [
-    { value: 1, label: rangeDisplayMode === 'monthPicker' ? 'This month' : 'This year' },
-    { value: 2, label: rangeDisplayMode === 'monthPicker' ? 'Last 2 months' : 'Last 2 years' },
-    { value: 3, label: rangeDisplayMode === 'monthPicker' ? 'Last 3 months' : 'Last 3 years' },
-  ]
+  const timeComparisonOptions = buildCompareOptions(rangeDisplayMode)
 
   const tagComparisonSelectOptions = compareOptions.map(
     (tagComparisonOption) => {
@@ -62,7 +81,7 @@ export const ProfitAndLossCompareOptions = () => {
           )
         }
         placeholder={rangeDisplayMode === 'yearPicker' ? 'Compare years' : 'Compare months'}
-        disabled={isCompareDisabled}
+        disabled={!isPeriodsSelectEnabled}
       />
       <MultiSelect
         options={tagComparisonSelectOptions}
@@ -79,7 +98,6 @@ export const ProfitAndLossCompareOptions = () => {
         })}
         placeholder='Select views'
         styles={selectStyles}
-        disabled={isCompareDisabled}
       />
     </div>
   )

@@ -5,7 +5,7 @@ import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparis
 import { ReportingBasis } from '../../types'
 import { Container } from '../Container'
 import { ProfitAndLossChart } from '../ProfitAndLossChart'
-import { ProfitAndLossCompareOptions } from '../ProfitAndLossCompareOptions'
+import { ProfitAndLossCompareOptions } from '../ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
 import { ProfitAndLossDownloadButton } from '../ProfitAndLossDownloadButton'
