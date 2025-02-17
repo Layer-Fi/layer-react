@@ -1,9 +1,13 @@
-import { useMemo, useState } from 'react'
-import { BILLS_MOCK_PAID, BILLS_MOCK_UNPAID } from './useBillsMOCK'
+import { useState } from 'react'
 import { Bill } from '../types/bills'
 import { DateRange } from '../types'
-import { endOfMonth, startOfMonth, sub } from 'date-fns'
+import { endOfMonth, formatISO, startOfMonth, sub } from 'date-fns'
 import { Vendor } from '../types/vendors'
+import { useLayerContext } from '../contexts/LayerContext'
+import { useAuth } from './useAuth'
+import useSWR from 'swr'
+import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
+import { Layer } from '../api/layer'
 
 export type BillStatusFilter = 'PAID' | 'UNPAID'
 
@@ -21,6 +25,9 @@ type UseBills = () => {
 }
 
 export const useBills: UseBills = () => {
+  const { businessId } = useLayerContext()
+  const { data: auth } = useAuth()
+  const { apiUrl } = useEnvironment()
   const [status, setStatus] = useState<BillStatusFilter>('UNPAID')
   const [vendor, setVendor] = useState<Vendor | null>(null)
   const [billInDetails, setBillInDetails] = useState<Bill | undefined>()
@@ -33,40 +40,35 @@ export const useBills: UseBills = () => {
     setBillInDetails(undefined)
   }
 
-  /**
-   * @TODO Uncomment when API is ready
-   */
-  // const queryKey =
-  //   businessId
-  //   && auth?.access_token
-  //   && `bills-${businessId}-`
-  // @TODO - add dates from date picker
-  // `bills-${businessId}-${startDate?.valueOf()}-${endDate?.valueOf()}`
+  const queryKey = businessId
+    && auth?.access_token
+    && `bills-${businessId}-${dateRange.startDate.valueOf()}-${dateRange.endDate.valueOf()}-${status}`
 
-  // const { data: rawData, isLoading, isValidating, error, mutate } = useSWR(
-  //   queryKey,
-  //   Layer.getBills(apiUrl, auth?.access_token, {
-  //     params: {
-  //       businessId,
-  //       // startDate:
-  //       //   withDates && startDate ? formatISO(startDate.valueOf()) : undefined,
-  //       // endDate:
-  //       //   withDates && endDate ? formatISO(endDate.valueOf()) : undefined,
-  //     },
-  //   }),
-  // )
+  const { data: rawData, isLoading, isValidating, error, mutate } = useSWR(
+    queryKey,
+    Layer.getBills(apiUrl, auth?.access_token, {
+      params: {
+        businessId,
+        startDate: formatISO(dateRange.startDate.valueOf()),
+        endDate: formatISO(dateRange.endDate.valueOf()),
+        status,
+      },
+    }),
+  )
 
-  const data = useMemo(() => {
-    const collection = status === 'PAID' ? BILLS_MOCK_PAID : BILLS_MOCK_UNPAID
-    if (vendor) {
-      return collection.filter(bill => bill.vendor?.id === vendor.id)
-    }
+  const data = rawData?.data
 
-    return collection
-  }, [status, vendor])
+  // const data = useMemo(() => {
+  //   const collection = status === 'PAID' ? BILLS_MOCK_PAID : BILLS_MOCK_UNPAID
+  //   if (vendor) {
+  //     return collection.filter(bill => bill.vendor?.id === vendor.id)
+  //   }
+
+  //   return collection
+  // }, [status, vendor])
 
   return {
-    data,
+    data: data ?? [],
     billInDetails,
     setBillInDetails,
     closeBillDetails,
