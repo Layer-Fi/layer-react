@@ -29,10 +29,11 @@
 @forward '../components/LinkedAccounts/BasicLinkedAccount/basicLinkedAccount';
 @forward '../components/LinkedAccounts/AccountFormBox/AccountFormBox';
 @forward '../components/PlatformOnboarding/linkAccounts';
-@forward '../components/PlatformOnboarding/Container/linkAccountsListContainer.scss';
-@forward '../components/PlatformOnboarding/Steps/linkAccountsConfirmationStep.scss';
+@forward '../components/PlatformOnboarding/Container/linkAccountsListContainer';
+@forward '../components/PlatformOnboarding/Steps/linkAccountsConfirmationStep';
 @forward '../components/TasksMonthSelector/tasksMonthSelector';
 @forward '../components/ProgressSteps/ProgressSteps';
+@forward '../components/BusinessForm/business_form';
 @forward './ledger_account';
 @forward './balance_sheet';
 @forward './statement_of_cash';

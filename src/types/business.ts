@@ -15,3 +15,5 @@ export interface Business {
   updated_at?: string
   us_state?: string
 }
+
+export const ENTITY_TYPES = ['SOLE_PROP', 'C_CORP', 'LLC', 'S_CORP', 'PARTNERSHIP']
