@@ -1,9 +1,11 @@
 .Layer__bank-transactions {
   max-width: var(--max-component-width);
+  padding-bottom: var(--spacing-lg);
 
   .Layer__bank-transactions__table-wrapper {
     max-width: var(--max-component-width);
     overflow: auto;
+    margin-bottom: var(--spacing-lg);
   }
 }
 
@@ -501,6 +503,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  margin-bottom: var(--spacing-lg);
 }
 
 .Layer__bank-transaction-list-item {
