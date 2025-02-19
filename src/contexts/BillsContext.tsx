@@ -10,6 +10,10 @@ type BillsProviderProps = {
 export type BillsContextType = ReturnType<typeof useBills>
 export const BillsContext = createContext<BillsContextType>({
   data: [],
+  paginatedData: [],
+  currentPage: 1,
+  setCurrentPage: () => {},
+  pageSize: 15,
   billInDetails: undefined,
   setBillInDetails: () => {},
   closeBillDetails: () => {},
@@ -19,6 +23,11 @@ export const BillsContext = createContext<BillsContextType>({
   setDateRange: () => {},
   vendor: null,
   setVendor: () => {},
+  fetchMore: () => {},
+  hasMore: false,
+  isLoading: false,
+  isValidating: false,
+  error: undefined,
 })
 
 export type BillsRecordPaymentContextType = ReturnType<typeof useBillsRecordPayment>
