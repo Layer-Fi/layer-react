@@ -52,7 +52,7 @@ const getAvailableBills = (
   return data.filter(b => (
     b.status !== 'PAID'
     && !billsToPay.find(x => x.bill?.id === b.id)
-    && (vendorId ? b.vendor?.id === vendorId : true)
+    && (vendorId && b.vendor?.id === vendorId)
   ))
 }
 
