@@ -62,17 +62,6 @@
   padding: var(--spacing-md);
 }
 
-.Layer__ledger-account__pagination {
-  display: flex;
-  justify-content: flex-end;
-  padding: var(--spacing-md);
-  padding-bottom: 0;
-
-  .Layer__pagination {
-    margin-bottom: 0;
-  }
-}
-
 .Layer__ledger-account__entry-details__back-btn {
   display: none;
   background: var(--color-base-0);
@@ -121,8 +110,8 @@
 
 @container (max-width: 1024px) {
   .Layer__ledger-account__panel
-    .Layer__panel__sidebar
-    .Layer__panel__sidebar-content {
+  .Layer__panel__sidebar
+  .Layer__panel__sidebar-content {
     width: 100%;
   }
 
@@ -140,11 +129,11 @@
 
 @container (max-width: 499px) {
   .Layer__ledger-account__panel
-    .Layer__details-list
-    .Layer__details-list-item__label,
+  .Layer__details-list
+  .Layer__details-list-item__label,
   .Layer__ledger-account__panel
-    .Layer__details-list
-    .Layer__details-list-item__value {
+  .Layer__details-list
+  .Layer__details-list-item__value {
     padding: var(--spacing-xs);
   }
 
@@ -178,6 +167,7 @@
   .Layer__table-row.Layer__table-row--variant-summation {
     background-color: var(--color-base-0);
   }
+
   tr td:first-child {
     width: 75%;
   }
@@ -185,19 +175,19 @@
 
 @container (min-width: 1400px) {
   .Layer__ledger-account__entry-details__table
-    tr
-    td:first-child
-    .Layer__table-cell-content,
+  tr
+  td:first-child
+  .Layer__table-cell-content,
   .Layer__ledger-account__entry-details__table
-    tr
-    td:last-child
-    .Layer__table-cell-content,
+  tr
+  td:last-child
+  .Layer__table-cell-content,
   .Layer__ledger-account__entry-details__table
-    tr
-    th:first-child.Layer__table-header,
+  tr
+  th:first-child.Layer__table-header,
   .Layer__ledger-account__entry-details__table
-    tr
-    th:last-child.Layer__table-header {
+  tr
+  th:last-child.Layer__table-header {
     padding-left: var(--spacing-lg);
     padding-right: var(--spacing-lg);
   }
@@ -209,9 +199,11 @@
     .Layer__table-row.Layer__table-row--variant-summation {
       background-color: var(--color-base-0);
     }
+
     tr td {
       width: 30%;
     }
+
     tr td:first-child {
       width: 40%;
     }

@@ -120,14 +120,12 @@ export const JournalTableWithPanel = ({
       {data && <JournalTable view='desktop' data={data} />}
 
       {data && (
-        <div className='Layer__journal__pagination'>
-          <Pagination
-            currentPage={currentPage}
-            totalCount={rawData?.length || 0}
-            pageSize={pageSize}
-            onPageChange={page => setCurrentPage(page)}
-          />
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalCount={rawData?.length || 0}
+          pageSize={pageSize}
+          onPageChange={page => setCurrentPage(page)}
+        />
       )}
 
       {data?.length === 0 && !isLoading && !error && (
