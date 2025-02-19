@@ -1,9 +1,23 @@
+.Layer__pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-md);
+  position: sticky;
+  left: 0;
+
+  @container (min-width: 1400px) {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--spacing-md) var(--spacing-xl);
+  }
+}
+
 .Layer__pagination {
   display: inline-flex;
   list-style-type: none;
   padding: var(--spacing-4xs);
   background: var(--color-base-50);
-  box-shadow: 0px 0px 0px 1px var(--color-base-300);
+  box-shadow: 0 0 0 1px var(--color-base-300);
   border-radius: var(--border-radius-2xs);
   gap: 2px;
 
@@ -31,7 +45,7 @@
     &:hover {
       background-color: var(--color-base-0);
       color: var(--color-base-900);
-      box-shadow: 0px 0px 0px 1px var(--color-base-300);
+      box-shadow: 0 0 0 1px var(--color-base-300);
       cursor: pointer;
     }
 

@@ -787,22 +787,6 @@
   padding: 0;
 }
 
-.Layer__bank-transactions__pagination {
-  display: flex;
-  justify-content: flex-end;
-  padding: var(--spacing-md);
-  position: sticky;
-  left: 0;
-}
-
-@container (min-width: 1400px) {
-  .Layer__bank-transactions__pagination {
-    display: flex;
-    justify-content: flex-end;
-    padding: var(--spacing-md) var(--spacing-xl);
-  }
-}
-
 @container (max-width: 1108px) and (min-width: 701px) {
   .Layer__table.Layer__bank-transactions__table .Layer__table-cell__amount-col {
     border-left: 1px solid var(--border-color);

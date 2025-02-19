@@ -13,7 +13,20 @@ export interface PaginationProps {
   fetchMore?: () => void
 }
 
-export const Pagination = ({
+/**
+ * Pagination wrapped into container with spacing and positioning.
+ * Use PaginationContent component, if you want to render plain pagination element
+ * without spacings and positioning.
+ */
+export const Pagination = (props: PaginationProps) => {
+  return (
+    <div className='Layer__pagination-container'>
+      <PaginationContent {...props} />
+    </div>
+  )
+}
+
+export const PaginationContent = ({
   onPageChange,
   totalCount,
   siblingCount = 1,

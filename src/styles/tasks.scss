@@ -4,7 +4,7 @@
   height: 100%;
   overflow-y: auto;
   border-radius: 8px;
-  box-shadow: 0px 0px 0px 1px var(--color-base-300);
+  box-shadow: 0 0 0 1px var(--color-base-300);
   background-color: var(--color-base-0);
 
   .Layer__tasks-pending {
@@ -112,8 +112,7 @@
   .Layer__tasks__content {
     max-height: 1000px;
     opacity: 1;
-    transition:
-      max-height 0.18s ease-out,
+    transition: max-height 0.18s ease-out,
       opacity 0.2s ease-out;
   }
 
@@ -124,7 +123,7 @@
 
   .Layer__tasks-list {
     background-color: var(--color-base-0);
-    box-shadow: 0px 0px 0px 1px var(--color-base-300);
+    box-shadow: 0 0 0 1px var(--color-base-300);
 
     .Layer__tasks-list-item-wrapper {
       padding: var(--spacing-2xs);
@@ -173,7 +172,7 @@
             }
 
             &.Layer__tasks-list-item--pending
-              .Layer__tasks-list-item__head-info__status {
+            .Layer__tasks-list-item__head-info__status {
               color: var(--color-info-warning-fg);
               background: var(--color-info-warning-bg);
             }
@@ -261,19 +260,7 @@
     height: 32px;
     border-radius: 4px;
     background-color: var(--color-base-50);
-    box-shadow: 0px 0px 0px 1px var(--color-base-300);
-  }
-
-  .Layer__tasks__pagination {
-    display: flex;
-    justify-content: flex-end;
-    padding: var(--spacing-md) var(--spacing-sm);
-    margin: 0 var(--spacing-xs);
-    isolation: isolate;
-
-    ul {
-      margin: 0;
-    }
+    box-shadow: 0 0 0 1px var(--color-base-300);
   }
 }
 
@@ -283,21 +270,25 @@
   margin-left: -15px;
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (width <= 400px) {
   .Layer__tasks-component {
     padding: var(--spacing-xs) var(--spacing-sm);
+
     .Layer__tasks-pending {
       flex-direction: column;
       align-items: stretch;
       gap: var(--spacing-xs);
       padding: var(--spacing-md) 0;
+
       .Layer__tasks-pending-bar {
         justify-content: space-between;
       }
     }
+
     .Layer__badge {
       white-space: nowrap;
     }
+
     .Layer__tasks-header {
       padding: var(--spacing-md) 0;
     }
