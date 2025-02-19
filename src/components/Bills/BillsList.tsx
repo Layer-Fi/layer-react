@@ -20,7 +20,7 @@ export const BillsList = ({
 }: {
   stringOverrides?: BillsTableStringOverrides
 }) => {
-  const { data } = useBillsContext()
+  const { paginatedData: data } = useBillsContext()
 
   return (
     <ul className='Layer__bills-list'>

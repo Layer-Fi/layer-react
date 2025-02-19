@@ -1,9 +1,8 @@
-import { RefObject, useMemo, useState } from 'react'
+import { RefObject, useMemo } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { BillsSidebar } from './BillsSidebar'
 import { Button, IconButton } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'
-import { Pagination } from '../Pagination'
 import { Panel } from '../Panel'
 import { Toggle } from '../Toggle'
 import { BillsTable } from './BillsTable'
@@ -12,6 +11,7 @@ import { BillStatusFilter } from '../../hooks/useBills'
 import { SelectVendor } from '../Vendors/SelectVendor'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import { BillsList } from './BillsList'
+import { Pagination } from '../Pagination'
 
 export interface BillsTableStringOverrides {
   componentTitle?: string
@@ -30,15 +30,25 @@ const COMPONENT_NAME = 'bills'
 
 export const BillsTableWithPanel = ({
   containerRef,
-  pageSize = 15,
   stringOverrides,
 }: {
   containerRef: RefObject<HTMLDivElement>
-  pageSize?: number
   stringOverrides?: BillsTableStringOverrides
 }) => {
-  const [currentPage, setCurrentPage] = useState(1)
-  const { data: rawData, status, setStatus, vendor, setVendor } = useBillsContext()
+  const {
+    data: rawData,
+    paginatedData: data,
+    currentPage,
+    setCurrentPage,
+    status,
+    setStatus,
+    vendor,
+    setVendor,
+    fetchMore,
+    hasMore,
+    pageSize,
+  } = useBillsContext()
+
   const {
     bulkSelectionActive,
     openBulkSelection,
@@ -51,12 +61,7 @@ export const BillsTableWithPanel = ({
 
   const { isDesktop, isMobile } = useSizeClass()
 
-  /** @TODO - temp pagiantion - based on the API, consider moving to Bills context */
-  const data = useMemo(() => {
-    const firstPageIndex = (currentPage - 1) * pageSize
-    const lastPageIndex = firstPageIndex + pageSize
-    return rawData?.slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, pageSize, rawData])
+  const totalCount = useMemo(() => rawData?.length ?? 0, [rawData])
 
   const anyBillToPaySelected = useMemo(() => {
     return billsToPay.length > 0
@@ -146,14 +151,14 @@ export const BillsTableWithPanel = ({
       )}
 
       {data && (
-        <div className='Layer__bills__pagination'>
-          <Pagination
-            currentPage={currentPage}
-            totalCount={rawData?.length || 0}
-            pageSize={pageSize}
-            onPageChange={page => setCurrentPage(page)}
-          />
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalCount={totalCount}
+          pageSize={pageSize}
+          onPageChange={page => setCurrentPage(page)}
+          fetchMore={fetchMore}
+          hasMore={hasMore}
+        />
       )}
     </Panel>
   )

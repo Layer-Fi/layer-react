@@ -24,7 +24,7 @@ export const useBillForm = (bill: Bill) => {
       vendor_address: bill.vendor?.address_string,
       received_at: bill.received_at,
       due_date: bill.due_at,
-      terms: '',
+      terms: bill.terms,
       line_items: bill.line_items,
     },
     onSubmit: async ({ value }) => {

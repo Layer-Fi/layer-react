@@ -31,7 +31,7 @@ const BillsTableContent = ({
 }: {
   stringOverrides?: BillsTableStringOverrides
 }) => {
-  const { data, setBillInDetails, status } = useBillsContext()
+  const { paginatedData: data, setBillInDetails, status } = useBillsContext()
 
   const {
     billsToPay,

@@ -1,4 +1,4 @@
-import { RefObject, useMemo } from 'react'
+import { RefObject } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { BackButton, Button, ButtonVariant } from '../Button'
 import { DatePicker } from '../DatePicker/DatePicker'
@@ -51,9 +51,7 @@ export const BillsDetails = ({
     billInDetails && 'open',
   )
 
-  const disabled = useMemo(() => {
-    return billInDetails?.status.includes('PAID')
-  }, [billInDetails])
+  const disabled = billInDetails?.status.includes('PAID')
 
   return (
     <Panel
