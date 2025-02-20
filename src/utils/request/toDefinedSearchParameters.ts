@@ -7,31 +7,40 @@ function toSnakeCase(input: string) {
     .join('_')
 }
 
-type ParameterValues = Date | string | number | boolean
+function isStringArray(input: unknown): input is ReadonlyArray<string> {
+  return (
+    Array.isArray(input)
+    && (input.length === 0 || input.every(item => typeof item === 'string'))
+  )
+}
+
+type ParameterValues = Date | string | ReadonlyArray<string> | number | boolean
 
 export function toDefinedSearchParameters(
   input: Record<string, ParameterValues | null | undefined>,
 ) {
-  const definedParameters = Object.fromEntries(
-    Object.entries(input)
-      .map(([key, value]) => {
-        if (value === null || value === undefined) {
-          return null
-        }
+  const definedParameterPairs = Object.entries(input)
+    .flatMap(([key, value]) => {
+      if (value === null || value === undefined) {
+        return []
+      }
 
-        if (value instanceof Date) {
-          return [key, value.toISOString()] as const
-        }
+      if (value instanceof Date) {
+        return [[key, value.toISOString()]]
+      }
 
-        if (typeof value !== 'string') {
-          return [key, String(value)] as const
-        }
+      if (isStringArray(value)) {
+        return value.map(item => [key, item])
+      }
 
-        return [key, value] as const
-      })
-      .filter((entry): entry is Exclude<typeof entry, null> => entry !== null)
-      .map(([key, value]) => [toSnakeCase(key), value]),
-  )
+      if (typeof value !== 'string') {
+        return [[key, String(value)]]
+      }
 
-  return new URLSearchParams(definedParameters)
+      return [[key, value]]
+    })
+    .filter((entry): entry is Exclude<typeof entry, null> => entry !== null)
+    .map(([key, value]) => [toSnakeCase(key), value])
+
+  return new URLSearchParams(definedParameterPairs)
 }
