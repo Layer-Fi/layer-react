@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, MoneyFormat, ReportingBasis } from '../../types'
@@ -8,7 +8,7 @@ import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateSt
 import { prepareFiltersBody, preparePeriodsBody } from './utils'
 import useSWR from 'swr'
 import { MultiValue } from 'react-select'
-import { ProfitAndLossCompareConfig, TagComparisonOption } from '../../types/profit_and_loss'
+import { ProfitAndLossCompareConfig, TagComparisonOption, type ProfitAndLossComparisonRequestBody } from '../../types/profit_and_loss'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -19,10 +19,12 @@ type Props = {
   comparisonConfig?: ProfitAndLossCompareConfig
 }
 
-const ALLOWED_COMPARE_MODES = ['monthPicker', 'yearPicker']
+const COMPARE_MODES_SUPPORTING_MULTI_PERIOD = ['monthPicker', 'yearPicker']
 
-const hasNoneDefaultTag = (compareOptions?: TagComparisonOption[]) => {
-  return compareOptions?.some(option => option.tagFilterConfig.tagFilters !== 'None')
+const isNotOnlyNoneTag = (compareOptions?: TagComparisonOption[]) => {
+  return Boolean(
+    compareOptions?.some(option => option.tagFilterConfig.tagFilters !== 'None'),
+  )
 }
 
 function buildKey({
@@ -37,8 +39,8 @@ function buildKey({
   access_token?: string
   apiUrl?: string
   businessId: string
-  periods: string
-  tagFilters: string
+  periods?: ProfitAndLossComparisonRequestBody['periods']
+  tagFilters: ProfitAndLossComparisonRequestBody['tag_filters']
   reportingBasis?: ReportingBasis
   compareModeActive?: boolean
 }) {
@@ -64,20 +66,16 @@ export function useProfitAndLossComparison({
   const { rangeDisplayMode, start, end } = useGlobalDateRange()
   const dateRange = { startDate: start, endDate: end }
 
+  const isPeriodsSelectEnabled = COMPARE_MODES_SUPPORTING_MULTI_PERIOD.includes(rangeDisplayMode)
+  const effectiveComparePeriods = isPeriodsSelectEnabled
+    ? comparePeriods
+    : 1
+
   const compareModeActive = useMemo(() => (
-    comparePeriods > 1 || selectedCompareOptions.length > 1
-    || (selectedCompareOptions.length === 1 && hasNoneDefaultTag(selectedCompareOptions))
-  ), [comparePeriods, selectedCompareOptions])
-
-  const isPeriodsSelectEnabled = ALLOWED_COMPARE_MODES.includes(rangeDisplayMode)
-
-  useEffect(() => {
-    // Reset number of periods to compare to 1 if compare mode becomes inactive
-    // ie. due to unsupported date range picker mode
-    if (!isPeriodsSelectEnabled && comparePeriods > 1) {
-      setComparePeriods(1)
-    }
-  }, [isPeriodsSelectEnabled, comparePeriods])
+    effectiveComparePeriods > 1
+    || selectedCompareOptions.length > 1
+    || (selectedCompareOptions.length === 1 && isNotOnlyNoneTag(selectedCompareOptions))
+  ), [effectiveComparePeriods, selectedCompareOptions])
 
   const setSelectedCompareOptions = (values: MultiValue<{ value: string, label: string }>) => {
     const options: TagComparisonOption[] = values.map(option =>
@@ -99,15 +97,15 @@ export function useProfitAndLossComparison({
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const periods = preparePeriodsBody(dateRange, comparePeriods, rangeDisplayMode)
+  const periods = preparePeriodsBody(dateRange, effectiveComparePeriods, rangeDisplayMode)
   const tagFilters = prepareFiltersBody(selectedCompareOptions)
 
   const queryKey = buildKey({
     ...auth,
     businessId,
-    periods: JSON.stringify(periods),
-    tagFilters: JSON.stringify(tagFilters),
-    reportingBasis: reportingBasis,
+    periods,
+    tagFilters,
+    reportingBasis,
     compareModeActive,
   })
 
@@ -132,7 +130,7 @@ export function useProfitAndLossComparison({
     dateRange: DateRange,
     moneyFormat?: MoneyFormat,
   ) => {
-    const periods = preparePeriodsBody(dateRange, comparePeriods, rangeDisplayMode)
+    const periods = preparePeriodsBody(dateRange, effectiveComparePeriods, rangeDisplayMode)
     const tagFilters = prepareFiltersBody(selectedCompareOptions)
     return Layer.profitAndLossComparisonCsv(apiUrl, auth?.access_token, {
       params: {
@@ -153,7 +151,7 @@ export function useProfitAndLossComparison({
     isValidating,
     isPeriodsSelectEnabled,
     compareModeActive,
-    comparePeriods,
+    comparePeriods: effectiveComparePeriods,
     setComparePeriods,
     compareOptions: comparisonConfig?.tagComparisonOptions ?? [],
     selectedCompareOptions,
