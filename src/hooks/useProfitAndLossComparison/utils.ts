@@ -40,18 +40,7 @@ export function prepareFiltersBody(compareOptions: TagComparisonOption[]) {
   return isArrayWithAtLeastOne(allFilters) ? allFilters : undefined
 }
 
-export function preparePeriodsBody(
-  dateRange: DateRange, comparePeriods: number, rangeDisplayMode: DateRangePickerMode,
-) {
-  switch (rangeDisplayMode) {
-    case 'yearPicker':
-      return preparePeriodsBodyForYears(dateRange, comparePeriods)
-    default:
-      return preparePeriodsBodyForMonths(dateRange, comparePeriods)
-  }
-}
-
-export function preparePeriodsBodyForMonths(dateRange: DateRange, comparePeriods: number) {
+function preparePeriodsBodyForMonths(dateRange: DateRange, comparePeriods: number) {
   const adjustedStartDate = startOfMonth(dateRange.startDate)
 
   const rawPeriods = range(0, comparePeriods).map((index) => {
@@ -81,7 +70,7 @@ export function preparePeriodsBodyForMonths(dateRange: DateRange, comparePeriods
   }
 }
 
-export function preparePeriodsBodyForYears(dateRange: DateRange, comparePeriods: number) {
+function preparePeriodsBodyForYears(dateRange: DateRange, comparePeriods: number) {
   const adjustedStartDate = startOfYear(dateRange.startDate)
 
   const rawPeriods = range(0, comparePeriods).map((index) => {
@@ -103,5 +92,30 @@ export function preparePeriodsBodyForYears(dateRange: DateRange, comparePeriods:
   return {
     type: 'Comparison_Years' as const,
     years: sortedPeriods,
+  }
+}
+
+function preparePeriodsBodyForDateRange(dateRange: DateRange) {
+  return {
+    type: 'Comparison_Date_Ranges' as const,
+    date_ranges: [{
+      start_date: dateRange.startDate.toISOString(),
+      end_date: dateRange.endDate.toISOString(),
+    }],
+  } as const
+}
+
+export function preparePeriodsBody(
+  dateRange: DateRange,
+  comparePeriods: number,
+  rangeDisplayMode: DateRangePickerMode,
+) {
+  switch (rangeDisplayMode) {
+    case 'yearPicker':
+      return preparePeriodsBodyForYears(dateRange, comparePeriods)
+    case 'monthPicker':
+      return preparePeriodsBodyForMonths(dateRange, comparePeriods)
+    default:
+      return preparePeriodsBodyForDateRange(dateRange)
   }
 }
