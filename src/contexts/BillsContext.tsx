@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext } from 'react'
 import { useBills } from '../hooks/useBills'
-import { useBillsRecordPayment } from '../hooks/useBillsRecordPayment'
+import { useBillsRecordPayment } from '../components/Bills/useBillsRecordPayment'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 type BillsProviderProps = {
@@ -28,6 +28,8 @@ export const BillsContext = createContext<BillsContextType>({
   isLoading: false,
   isValidating: false,
   error: undefined,
+  refetch: () => {},
+  deletePayment: () => {},
 })
 
 export type BillsRecordPaymentContextType = ReturnType<typeof useBillsRecordPayment>
@@ -43,6 +45,8 @@ export const BillsRecordPaymentContext = createContext<BillsRecordPaymentContext
   setVendor: () => {},
   paymentDate: new Date(),
   setPaymentDate: () => {},
+  paymentMethod: 'ACH',
+  setPaymentMethod: () => {},
   showRecordPaymentForm: false,
   setShowRecordPaymentForm: () => {},
   bulkSelectionActive: false,
@@ -60,7 +64,7 @@ export const useBillsRecordPaymentContext = () => useContext(BillsRecordPaymentC
 
 export const BillsProvider: React.FC<BillsProviderProps> = ({ children }) => {
   const bills = useBills()
-  const billsRecordPayment = useBillsRecordPayment()
+  const billsRecordPayment = useBillsRecordPayment({ refetchAllBills: bills.refetch })
 
   return (
     <BillsContext.Provider value={bills}>

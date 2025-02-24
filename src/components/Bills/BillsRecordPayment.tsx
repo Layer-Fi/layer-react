@@ -1,6 +1,5 @@
-import { useMemo } from 'react'
 import { DATE_FORMAT_SHORT } from '../../config/general'
-import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
+import { useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import {
   Button,
   ButtonVariant,
@@ -13,19 +12,20 @@ import { HeaderRow, HeaderCol } from '../Header'
 import { InputGroup, StaticValue, Select } from '../Input'
 import { JournalFormStringOverrides } from '../JournalForm/JournalForm'
 import { Heading, HeadingSize, TextSize, Text } from '../Typography'
-import { Bill } from '../../types/bills'
+import { Bill, BillPaymentMethod, BillPaymentMethods } from '../../types/bills'
 import CloseIcon from '../../icons/CloseIcon'
 import { parseISO, format as formatTime } from 'date-fns'
 import { convertFromCents, convertNumberToCurrency } from '../../utils/format'
 import { getVendorName } from '../../utils/vendors'
 import { AmountInput } from '../Input/AmountInput'
-import { BillsRecordPaymentFormRecord } from '../../hooks/useBillsRecordPayment'
+import { useUnpaidBillsByVendor } from './useUnpaidBillsByVendor'
+import { useMemo } from 'react'
 
-const buildLabel = (bill: Bill, amount?: string) => {
+const buildLabel = (bill: Bill, amount?: string | null) => {
   const amountNumber = amount !== undefined ? Number(amount) : 0
   const totalAmount = convertNumberToCurrency(convertFromCents(bill.total_amount) ?? 0)
   const currentAmount = convertNumberToCurrency(
-    (convertFromCents(bill.outstanding_balance) ?? 0) + amountNumber,
+    (convertFromCents(bill.outstanding_balance) ?? 0) - amountNumber,
   )
 
   return (
@@ -44,18 +44,6 @@ const buildLabel = (bill: Bill, amount?: string) => {
   )
 }
 
-const getAvailableBills = (
-  data: Bill[],
-  billsToPay: BillsRecordPaymentFormRecord[],
-  vendorId?: string,
-) => {
-  return data.filter(b => (
-    b.status !== 'PAID'
-    && !billsToPay.find(x => x.bill?.id === b.id)
-    && (vendorId && b.vendor?.id === vendorId)
-  ))
-}
-
 export const BillsRecordPayment = ({
   stringOverrides,
 }: {
@@ -71,12 +59,15 @@ export const BillsRecordPayment = ({
     closeRecordPayment,
     paymentDate,
     setPaymentDate,
+    paymentMethod,
+    setPaymentMethod,
     vendor,
   } = useBillsRecordPaymentContext()
-  const { data } = useBillsContext()
+  const { data: rawAvailableBills } = useUnpaidBillsByVendor({ vendorId: vendor?.id })
+
   const availableBills = useMemo(() =>
-    getAvailableBills(data, billsToPay, vendor?.id),
-  [data, billsToPay, vendor])
+    rawAvailableBills.filter(b => !billsToPay.find(x => x.bill?.id === b.id)),
+  [rawAvailableBills, billsToPay])
 
   const totalAmount = billsToPay.reduce((acc, record) =>
     acc + (record.amount !== undefined ? Number(record.amount) : 0), 0)
@@ -85,6 +76,11 @@ export const BillsRecordPayment = ({
     e.preventDefault()
     void recordPayment()
   }
+
+  const paymentMethodOptions = Object.entries(BillPaymentMethods).map(([key, value]) => ({
+    label: value,
+    value: key,
+  }))
 
   return (
     <div className='Layer__bills__record-payment'>
@@ -120,6 +116,23 @@ export const BillsRecordPayment = ({
               selected={paymentDate}
               onChange={date => setPaymentDate(date as Date)}
               displayMode='dayPicker'
+            />
+          </InputGroup>
+
+          <InputGroup
+            label='Payment date'
+            className='Layer__bills__record-payment__date'
+            inline={true}
+          >
+            <Select
+              className='Layer__bills__record-payment__method'
+              options={paymentMethodOptions}
+              value={paymentMethodOptions.find(option => option.value === paymentMethod)}
+              onChange={(option) => {
+                if (option.value) {
+                  setPaymentMethod(option.value as BillPaymentMethod)
+                }
+              }}
             />
           </InputGroup>
         </div>

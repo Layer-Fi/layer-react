@@ -323,6 +323,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
+
+    .Layer__input-tooltip {
+      max-width: 233px;
+    }
   }
 
   &__amount {
@@ -501,6 +505,10 @@
 
       &:last-child {
         padding-right: 0;
+
+        svg {
+          vertical-align: text-bottom;
+        }
       }
     }
 

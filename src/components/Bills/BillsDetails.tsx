@@ -1,14 +1,13 @@
 import { RefObject } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
-import { BackButton, Button, ButtonVariant } from '../Button'
+import { BackButton, Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
 import { DatePicker } from '../DatePicker/DatePicker'
 import { Header, HeaderRow, HeaderCol } from '../Header'
 import { Input, InputGroup } from '../Input'
 import { Select } from '../Input/Select'
 import { Textarea } from '../Textarea'
-import { TextWeight, TextSize, Text } from '../Typography'
+import { TextWeight, TextSize, Text, ErrorText } from '../Typography'
 import { useBillForm } from './useBillForm'
-import classNames from 'classnames'
 import { Bill, Category } from '../../types'
 import { formatDate } from '../../utils/format'
 import { formatISO, parseISO } from 'date-fns'
@@ -16,16 +15,19 @@ import { Panel } from '../Panel'
 import { BillsSidebar } from './BillsSidebar'
 import { BillTerms } from '../../types/bills'
 import { SelectVendor } from '../Vendors/SelectVendor'
-import { CategorySelect, mapCategoryToOption } from '../CategorySelect/CategorySelect'
+import { CategorySelect } from '../CategorySelect/CategorySelect'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { AmountInput } from '../Input/AmountInput'
 import { getVendorName } from '../../utils/vendors'
 import { DATE_FORMAT_SHORT } from '../../config/general'
 import { BillSummary } from './BillSummary'
 import { isBillUnpaid } from '../../utils/bills'
+import { flattenCategories } from '../BankTransactionMobileList/utils'
 
 const findCategoryById = (id: string, categories: Category[]) => {
-  return categories.find(category => (category.type === 'AccountNested' && category.id === id) || (category.type === 'OptionalAccountNested' && category.stable_name === id))
+  return flattenCategories(categories).find(
+    category => (category.id === id),
+  )
 }
 
 const convertToInputDate = (date?: string) => {
@@ -42,23 +44,19 @@ export const BillsDetails = ({
   containerRef: RefObject<HTMLDivElement>
 }) => {
   const { categories } = useLayerContext()
-  const { billInDetails, closeBillDetails } = useBillsContext()
+  const { closeBillDetails } = useBillsContext()
   const { showRecordPaymentForm, recordPaymentForBill } = useBillsRecordPaymentContext()
-  const { form, isDirty } = useBillForm(bill)
+  const { form, isDirty, submitError, formErrorMap } = useBillForm(bill)
 
-  const baseClassName = classNames(
-    'Layer__bills-account__index',
-    billInDetails && 'open',
-  )
-
-  const disabled = billInDetails?.status.includes('PAID')
+  const { isSubmitting } = form.state
+  const disabled = !bill?.status.includes('PAID') || isSubmitting
 
   return (
     <Panel
       sidebar={<BillsSidebar />}
       sidebarIsOpen={showRecordPaymentForm}
       parentRef={containerRef}
-      className={baseClassName}
+      className='Layer__bills-account__index'
       floating={true}
     >
       <Header className='Layer__bills-account__header'>
@@ -91,12 +89,14 @@ export const BillsDetails = ({
           e.stopPropagation()
           void form.handleSubmit()
         }}
+
       >
         <div className='Layer__bill-details__content'>
           <div className='Layer__bill-details__section Layer__bill-details__head'>
             <BillSummary bill={bill} />
             <div className='Layer__bill-details__action'>
-              {isBillUnpaid(bill.status) && !showRecordPaymentForm
+              {/* @TEMP - invert logic for isBillUnpaid */}
+              {!isBillUnpaid(bill.status) && !showRecordPaymentForm
                 ? (
                   <Button type='button' onClick={() => recordPaymentForBill(bill)}>
                     Record payment
@@ -104,11 +104,29 @@ export const BillsDetails = ({
                 )
                 : null}
               {isDirty && !showRecordPaymentForm
-                ? (
-                  <Button type='submit' className='Layer__bill-details__save-btn'>
-                    Save
-                  </Button>
-                )
+                ? submitError
+                  ? (
+                    <RetryButton
+                      type='submit'
+                      processing={isSubmitting}
+                      disabled={isSubmitting}
+                      className='Layer__bill-details__save-btn'
+                      error={submitError}
+                    >
+                      Save
+                    </RetryButton>
+                  )
+                  : (
+                    <SubmitButton
+                      type='submit'
+                      processing={isSubmitting}
+                      disabled={isSubmitting}
+                      className='Layer__bill-details__save-btn'
+                      noIcon={true}
+                    >
+                      Save
+                    </SubmitButton>
+                  )
                 : null}
             </div>
           </div>
@@ -129,7 +147,7 @@ export const BillsDetails = ({
 
                       <InputGroup inline={true} label='Adress'>
                         <Textarea
-                          value={field.state.value?.address_string}
+                          value={field.state.value?.address_string ?? ''}
                           disabled={true}
                         />
                       </InputGroup>
@@ -179,7 +197,7 @@ export const BillsDetails = ({
                     </InputGroup>
                   )}
                 </form.Field>
-                <form.Field name='due_date'>
+                <form.Field name='due_at'>
                   {field => (
                     <InputGroup inline={true} label='Due date'>
                       <DatePicker
@@ -220,13 +238,20 @@ export const BillsDetails = ({
                             {(subField) => {
                               const selectedCategory =
                                 subField.state.value
-                                  ? findCategoryById(subField.state.value, categories)
+                                  ? findCategoryById(subField.state.value.id, categories)
                                   : undefined
 
                               return (
                                 <CategorySelect
-                                  value={selectedCategory && mapCategoryToOption(selectedCategory)}
-                                  onChange={e => subField.handleChange(e.payload.id)}
+                                  value={selectedCategory && selectedCategory.value.payload
+                                    ? {
+                                      type: selectedCategory.value.type,
+                                      payload: selectedCategory.value.payload,
+                                    }
+                                    : undefined}
+                                  onChange={e => subField.handleChange(
+                                    { type: 'AccountId', id: e.payload.id, product_name: e.payload.display_name },
+                                  )}
                                   showTooltips={false}
                                   disabled={disabled}
                                 />
@@ -239,8 +264,7 @@ export const BillsDetails = ({
                               return (
                                 <AmountInput
                                   value={subField.state.value}
-                                  onChange={e => subField.handleChange(Number(e))}
-                                  placeholder='Amount'
+                                  onChange={e => subField.handleChange(e)}
                                   disabled={disabled}
                                 />
                               )
@@ -277,12 +301,35 @@ export const BillsDetails = ({
                 )
               }}
             </form.Field>
+            {formErrorMap?.onSubmit === 'INVALID_TOTAL_AMOUNT' && (
+              <ErrorText>
+                Categories amount doesn&apos;t match the bill amount
+              </ErrorText>
+            )}
           </div>
           {isDirty && !showRecordPaymentForm && (
             <div className='Layer__bill-details__save-btn--mobile'>
-              <Button type='submit'>
-                Save
-              </Button>
+              {submitError
+                ? (
+                  <RetryButton
+                    type='submit'
+                    processing={isSubmitting}
+                    disabled={isSubmitting}
+                    error={submitError}
+                  >
+                    Save
+                  </RetryButton>
+                )
+                : (
+                  <SubmitButton
+                    type='submit'
+                    processing={isSubmitting}
+                    disabled={isSubmitting}
+                    noIcon={true}
+                  >
+                    Save
+                  </SubmitButton>
+                )}
             </div>
           )}
         </div>

@@ -228,7 +228,7 @@ const allCategoriesDivider: GroupBase<CategoryOption>[] = [
   },
 ]
 
-function flattenCategories(
+export function flattenCategories(
   categories: Category[],
 ): GroupBase<CategoryOption>[] {
   function getLeafCategories(category: Category): Category[] {
