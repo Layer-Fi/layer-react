@@ -26,7 +26,7 @@ export const Panel = ({
 
   useEffect(() => {
     if (parentRef?.current?.offsetHeight) {
-      setSidebarHeight(parentRef?.current?.offsetHeight - 1)
+      setSidebarHeight(parentRef?.current?.offsetHeight)
     }
   }, [parentRef, parentRef?.current?.offsetHeight, sidebarIsOpen])
 

@@ -14,13 +14,18 @@ import { BillsTableStringOverrides } from './BillsTableWithPanel'
 import classNames from 'classnames'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { DATE_FORMAT_SHORT } from '../../config/general'
+import { Loader } from '../Loader/Loader'
 
 export const BillsList = ({
   stringOverrides,
 }: {
   stringOverrides?: BillsTableStringOverrides
 }) => {
-  const { paginatedData: data } = useBillsContext()
+  const { paginatedData: data, isLoading, error } = useBillsContext()
+
+  if (isLoading && !error) {
+    return <Loader />
+  }
 
   return (
     <ul className='Layer__bills-list'>

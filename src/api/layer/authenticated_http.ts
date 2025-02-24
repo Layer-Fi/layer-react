@@ -103,7 +103,7 @@ export const postWithFormData = <
 
 const handleResponse = async <Return>(res: Response) => {
   if (!res.ok) {
-    const errors = await tryToReadErrorsFromResponse()
+    const errors = await tryToReadErrorsFromResponse(res)
     const apiError = new APIError(
       'An error occurred while fetching the data from API.',
       res.status,

@@ -1,19 +1,49 @@
-import { useEffect, useState } from 'react'
-import { Bill } from '../types/bills'
-import { sleep } from '../utils/helpers'
-import { Vendor } from '../types/vendors'
-import { convertFromCents } from '../utils/format'
+import { useEffect, useMemo, useState } from 'react'
+import { Bill, BillPayment, BillPaymentMethod } from '../../types/bills'
+import { Vendor } from '../../types/vendors'
+import { convertFromCents, convertToCents } from '../../utils/format'
+import { Layer } from '../../api/layer'
+import { useLayerContext } from '../../contexts/LayerContext'
+import { useAuth } from '../../hooks/useAuth'
+import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import useSWRMutation from 'swr/mutation'
 
 export type BillsRecordPaymentFormRecord = {
   bill?: Bill
-  amount?: string
+  amount?: string | null
 }
 
-export const useBillsRecordPayment = () => {
+function buildKey({
+  access_token: accessToken,
+  apiUrl,
+  businessId,
+  data,
+}: {
+  access_token?: string
+  apiUrl?: string
+  businessId: string
+  data: BillPayment
+}) {
+  if (accessToken && apiUrl) {
+    return {
+      accessToken,
+      apiUrl,
+      businessId,
+      data,
+      tags: ['#bills', '#bills-payment'],
+    } as const
+  }
+}
+
+export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: () => void }) => {
+  const { businessId } = useLayerContext()
+  const { data: auth } = useAuth()
+  const { apiUrl } = useEnvironment()
   const [showRecordPaymentForm, setShowRecordPaymentForm] = useState(false)
   const [bulkSelectionActive, setBulkSelectionActive] = useState(false)
   const [vendor, setVendor] = useState<Vendor | undefined>()
   const [paymentDate, setPaymentDate] = useState<Date>(new Date())
+  const [paymentMethod, setPaymentMethod] = useState<BillPaymentMethod>('ACH')
   const [billsToPay, setBillsToPay] = useState<BillsRecordPaymentFormRecord[]>([])
   const [dataSaved, setDataSaved] = useState(false)
 
@@ -82,7 +112,7 @@ export const useBillsRecordPayment = () => {
     setBillsToPay(prev => prev.map(bill => bill.bill?.id === billId ? { ...bill, amount } : bill))
   }
 
-  const setAmountByIndex = (index: number, amount?: string) => {
+  const setAmountByIndex = (index: number, amount?: string | null) => {
     setBillsToPay(prev => prev.map((bill, i) => i === index ? { ...bill, amount } : bill))
   }
 
@@ -93,22 +123,72 @@ export const useBillsRecordPayment = () => {
     setShowRecordPaymentForm(true)
   }
 
-  const recordPayment = async () => {
-    /** @TODO - call API */
-    await sleep(500)
-    /** @TODO - temporarily so we can jump to summary */
-    await refetchSavedBills()
-    setDataSaved(true)
-  }
+  const payload = useMemo(() => ({
+    bill_payment_allocations: billsToPay.map(item => ({
+      bill_id: item.bill?.id,
+      amount: Number(convertToCents(item.amount)),
+    })),
+    paid_at: new Date(paymentDate).toISOString(),
+    method: paymentMethod,
+    amount: Number(convertToCents(
+      billsToPay.reduce((acc, item) => acc + Number(item.amount), 0),
+    )),
+  }), [billsToPay, paymentDate, paymentMethod])
 
-  const refetchSavedBills = async () => {
-    /** @TODO - call API */
-    await sleep(500)
-    /**
-     * @TODO - update billsToPay by setting new outstanding balance and status
-     * probably overwritting each bill with a new bill will do the job
-     */
-  }
+  const createPaymentMutation = useSWRMutation(
+    () => buildKey({
+      access_token: auth?.access_token, apiUrl: auth?.apiUrl, businessId, data: payload,
+    }),
+    ({ accessToken, apiUrl, businessId, data }) => (
+      Layer.createBillPayment(apiUrl, accessToken, {
+        params: {
+          businessId,
+        },
+        body: data,
+      })
+    )
+      .then(async () => {
+        if (refetchAllBills) {
+          refetchAllBills()
+        }
+        await refetchSavedBills()
+      }),
+    {
+      revalidate: false,
+      throwOnError: false,
+    },
+  )
+
+  const recordPayment = async () => createPaymentMutation.trigger()
+
+  const refetchSavedBills = () =>
+    Promise.all(billsToPay.map(async (item) => {
+      if (!item.bill?.id) {
+        return
+      }
+
+      const response = await (Layer.getBill(apiUrl, auth?.access_token, {
+        params: {
+          businessId,
+          billId: item.bill.id,
+        },
+      })).call(false)
+
+      return response
+    })).then((responses) => {
+      const newBillsToPay = billsToPay.map((billToPay) => {
+        const found = responses.find(r => r?.data.id === billToPay.bill?.id)
+
+        if (found) {
+          return { ...billToPay, bill: found.data }
+        }
+
+        return billToPay
+      })
+
+      setBillsToPay(newBillsToPay)
+      setDataSaved(true)
+    })
 
   const closeRecordPayment = () => {
     if (dataSaved) {
@@ -141,6 +221,8 @@ export const useBillsRecordPayment = () => {
     setVendor,
     paymentDate,
     setPaymentDate,
+    paymentMethod,
+    setPaymentMethod,
     showRecordPaymentForm,
     setShowRecordPaymentForm,
     bulkSelectionActive,

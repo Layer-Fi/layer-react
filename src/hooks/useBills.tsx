@@ -9,10 +9,12 @@ import useSWRInfinite from 'swr/infinite'
 import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
 import { Layer } from '../api/layer'
 import { GetBillsReturn } from '../api/layer/bills'
+import { useSWRLoadingStatus } from './useSWRLoadingStatus'
+import { APIError } from '../models/APIError'
 
 export type BillStatusFilter = 'PAID' | 'UNPAID'
 
-const PAGE_SIZE = 2
+const PAGE_SIZE = 5
 
 type UseBills = () => {
   data: Bill[]
@@ -35,6 +37,8 @@ type UseBills = () => {
   isLoading: boolean
   isValidating: boolean
   error?: Error
+  refetch: () => void
+  deletePayment: () => void
 }
 
 export const useBills: UseBills = () => {
@@ -54,21 +58,17 @@ export const useBills: UseBills = () => {
     setBillInDetails(undefined)
   }
 
-  // const { data: rawData, isLoading, isValidating, error, mutate } = useSWR(
-  //   queryKey,
-  //   Layer.getBills(apiUrl, auth?.access_token, {
-  //     params: {
-  //       businessId,
-  //       startDate: formatISO(dateRange.startDate.valueOf()),
-  //       endDate: formatISO(dateRange.endDate.valueOf()),
-  //       status,
-  //       vendorId: vendor?.id,
-  //     },
-  //   }),
-  // )
+  // @TEMP delete payment
+  const deletePayment = () => {
+    void (Layer.deletePayment(apiUrl, auth?.access_token, {
+      params: {
+        businessId,
+        paymentId: '30e67e04-ae9a-4aa8-87bf-460641bbb3a6',
+      },
+    }))
+  }
 
   const getKey = (index: number, prevData: GetBillsReturn) => {
-    console.log('prevData', prevData)
     if (!auth?.access_token) {
       return [false, undefined]
     }
@@ -94,16 +94,15 @@ export const useBills: UseBills = () => {
 
   const {
     data: rawResponseData,
-    isLoading,
+    isLoading: isSWRLoading,
     isValidating,
     error,
-    mutate,
     size,
     setSize,
-  } = useSWRInfinite<GetBillsReturn, Error>( // @TODO - double-check if Error is correct
+    mutate,
+  } = useSWRInfinite<GetBillsReturn, APIError>(
     getKey,
     async ([_query, nextCursor]) => {
-      console.log('nextCursor', nextCursor)
       if (auth?.access_token) {
         return Layer.getBills(apiUrl, auth?.access_token, {
           params: {
@@ -111,7 +110,8 @@ export const useBills: UseBills = () => {
             cursor: nextCursor as string ?? '',
             startDate: dateRange.startDate.toISOString(),
             endDate: dateRange.endDate.toISOString(),
-            status,
+            // @TEMP
+            status: status === 'UNPAID' ? 'PARTIALLY_PAID' : 'PAID', // @TODO - handle also  RECEIVED PARTIALLY_PAID, PAID
             vendorId: vendor?.id,
           },
         }).call(false)
@@ -124,6 +124,15 @@ export const useBills: UseBills = () => {
       revalidateFirstPage: false,
     },
   )
+
+  const { isLoading } = useSWRLoadingStatus({
+    isLoading: isSWRLoading,
+    alreadyFetched: !!(
+      rawResponseData
+      && rawResponseData.length > 0
+      && rawResponseData[0].data
+    ),
+  })
 
   const data: Bill[] | undefined = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {
@@ -141,8 +150,6 @@ export const useBills: UseBills = () => {
     const lastPageIndex = firstPageIndex + PAGE_SIZE
     return data?.slice(firstPageIndex, lastPageIndex)
   }, [currentPage, data])
-
-  console.log('data', data, paginatedData)
 
   const lastMetadata = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {
@@ -170,14 +177,9 @@ export const useBills: UseBills = () => {
     }
   }
 
-  // const data = useMemo(() => {
-  //   const collection = status === 'PAID' ? BILLS_MOCK_PAID : BILLS_MOCK_UNPAID
-  //   if (vendor) {
-  //     return collection.filter(bill => bill.vendor?.id === vendor.id)
-  //   }
-
-  //   return collection
-  // }, [status, vendor])
+  const refetch = () => {
+    void mutate()
+  }
 
   return {
     data: data ?? [],
@@ -200,5 +202,7 @@ export const useBills: UseBills = () => {
     isLoading,
     isValidating,
     error,
+    refetch,
+    deletePayment,
   }
 }

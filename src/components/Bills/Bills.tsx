@@ -41,7 +41,6 @@ const BillsContent = ({
       name='bills'
       ref={containerRef}
       asWidget={asWidget}
-      transparentBg
     >
       {billInDetails
         ? (

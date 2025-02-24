@@ -15,6 +15,7 @@ import { getVendorName } from '../../utils/vendors'
 import { Text } from '../Typography'
 import classNames from 'classnames'
 import { DATE_FORMAT_SHORT } from '../../config/general'
+import { BillsTableLoader } from './BillsTableLoader'
 
 export const BillsTable = ({
   stringOverrides,
@@ -31,7 +32,7 @@ const BillsTableContent = ({
 }: {
   stringOverrides?: BillsTableStringOverrides
 }) => {
-  const { paginatedData: data, setBillInDetails, status } = useBillsContext()
+  const { paginatedData: data, setBillInDetails, status, isLoading, error } = useBillsContext()
 
   const {
     billsToPay,
@@ -47,7 +48,6 @@ const BillsTableContent = ({
     entry: Bill,
     index: number,
     rowKey: string,
-    depth: number,
   ) => {
     const isSelected = Boolean(billsToPay.find(record => record.bill?.id === entry.id))
     const isSelectionDisabled = bulkSelectionActive && vendor && vendor?.id !== entry.vendor?.id
@@ -80,7 +80,7 @@ const BillsTableContent = ({
 
     return (
       <Fragment key={rowKey + '-' + index}>
-        <TableRow rowKey={rowKey + '-' + index} depth={depth}>
+        <TableRow rowKey={rowKey + '-' + index} variant='main'>
           <TableCell primary nowrap className='Layer__bills-table__vendor-col'>
             {bulkSelectionActive && status === 'UNPAID' && (
               <Checkbox
@@ -169,9 +169,10 @@ const BillsTableContent = ({
       </TableHead>
       <TableBody>
         {data.map((entry, idx) =>
-          renderBillsRow(entry, idx, `bills-row-${idx}`, 0),
+          renderBillsRow(entry, idx, `bills-row-${idx}`),
         )}
       </TableBody>
+      {isLoading && !error ? <BillsTableLoader /> : null}
     </Table>
   )
 }

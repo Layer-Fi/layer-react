@@ -45,6 +45,7 @@
 
   .Layer__panel__sidebar-content {
     width: 480px;
+    min-width: 480px;
     height: 100%;
     opacity: 0.2;
     transition: opacity 180ms ease-in-out;

@@ -11,7 +11,7 @@ import {
   getBankTransactionDocument,
   archiveBankTransactionDocument,
 } from './layer/bankTransactions'
-import { getBills } from './layer/bills'
+import { getBills, getBill, deletePayment, updateBill, createBillPayment } from './layer/bills'
 import { getBusiness } from './layer/business'
 import { getCategories } from './layer/categories'
 import {
@@ -83,6 +83,10 @@ export const Layer = {
   updateBankTransactionMetadata,
   uploadBankTransactionDocument,
   getBills,
+  getBill,
+  deletePayment,
+  updateBill,
+  createBillPayment,
   getCategories,
   getChartOfAccounts,
   getLedgerAccountBalances,
