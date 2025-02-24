@@ -71,4 +71,17 @@
   &[data-labeled] {
     gap: var(--spacing-xs);
   }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px var(--color-info-success-bg);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+
+    &:hover {
+      border-color: var(--color-base-300);
+    }
+  }
 }
