@@ -53,7 +53,7 @@ export const useUnpaidBillsByVendor: UseUnpaidBillsByVendor = (
       Layer.getBills(apiUrl, accessToken, {
         params: {
           businessId,
-          status: 'RECEIVED', // @TODO - add also pariatlly_paid
+          status: 'PARTIALLY_PAID', // @TODO - add also pariatlly_paid
           vendorId,
           limit: '50',
         },

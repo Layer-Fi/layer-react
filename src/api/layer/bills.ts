@@ -39,11 +39,6 @@ export const getBill = get<{ data: Bill }, { businessId: string, billId: string 
   ({ businessId, billId }) => `/v1/businesses/${businessId}/bills/${billId}`,
 )
 
-/** @TODO - remove this */
-export const deletePayment = post<{ data: unknown }, Record<string, unknown>>(
-  ({ businessId, paymentId }) => `/v1/businesses/${businessId}/bills/bill-payments/${paymentId}/delete`,
-)
-
 export const updateBill = post<{ data: Bill }, Record<string, unknown>>(
   ({ businessId, billId }) => `/v1/businesses/${businessId}/bills/${billId}/update`,
 )

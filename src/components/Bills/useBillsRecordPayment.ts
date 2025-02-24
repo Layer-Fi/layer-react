@@ -233,5 +233,6 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
     closeRecordPayment,
     recordPaymentForBill,
     payRemainingBalance,
+    isLoading: createPaymentMutation.isMutating,
   }
 }
