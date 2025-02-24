@@ -8,7 +8,7 @@ import { ButtonVariant } from '../Button/Button'
 import { IconButton } from '../Button/IconButton'
 import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
 import { DueStatus } from '../DueStatus/DueStatus'
-import { Checkbox, CheckboxSize } from '../Input/Checkbox'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { Text, TextSize } from '../Typography'
 import { BillsTableStringOverrides } from './BillsTableWithPanel'
 import classNames from 'classnames'
@@ -83,8 +83,8 @@ const BillsListItem = ({
     status: status.toLowerCase(),
   })
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked && !isSelected) {
+  const handleCheckboxChange = (value: boolean) => {
+    if (value && !isSelected) {
       addBill(bill)
       return
     }
@@ -105,11 +105,10 @@ const BillsListItem = ({
       >
         {status === 'UNPAID' && (
           <Checkbox
-            boxSize={CheckboxSize.LARGE}
-            checked={isSelected}
+            isSelected={isSelected}
             onChange={e => handleCheckboxChange(e)}
             className='Layer__bills-table__checkbox'
-            disabled={isSelectionDisabled}
+            isDisabled={isSelectionDisabled}
           />
         )}
       </span>

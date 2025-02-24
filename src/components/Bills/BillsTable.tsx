@@ -8,7 +8,7 @@ import { convertCentsToCurrency, formatDate } from '../../utils/format'
 import { ButtonVariant, IconButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { DueStatus } from '../DueStatus/DueStatus'
-import { Checkbox, CheckboxSize } from '../Input/Checkbox'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { BillsTableStringOverrides } from './BillsTableWithPanel'
 import { getVendorName } from '../../utils/vendors'
@@ -52,8 +52,8 @@ const BillsTableContent = ({
     const isSelected = Boolean(billsToPay.find(record => record.bill?.id === entry.id))
     const isSelectionDisabled = bulkSelectionActive && vendor && vendor?.id !== entry.vendor?.id
 
-    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.checked && !isSelected) {
+    const handleCheckboxChange = (value: boolean) => {
+      if (value && !isSelected) {
         addBill(entry)
         return
       }
@@ -84,11 +84,10 @@ const BillsTableContent = ({
           <TableCell primary nowrap className='Layer__bills-table__vendor-col'>
             {bulkSelectionActive && status === 'UNPAID' && (
               <Checkbox
-                boxSize={CheckboxSize.LARGE}
-                checked={isSelected}
+                isSelected={isSelected}
                 onChange={handleCheckboxChange}
                 className='Layer__bills-table__checkbox'
-                disabled={isSelectionDisabled}
+                isDisabled={isSelectionDisabled}
                 tooltip={isSelectionDisabled ? 'You can only select bills from the same vendor' : undefined}
               />
             )}
