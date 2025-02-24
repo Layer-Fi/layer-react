@@ -56,7 +56,7 @@ export type Bill = {
   line_items: BillLineItem[]
   outstanding_balance: number
   paid_at?: string
-  payment_allocations: BillPaymentAllocation[]
+  payment_allocations: PaymentAllocation[]
   received_at: string
   status: BillStatus
   subtotal: number
@@ -88,7 +88,7 @@ export type BillLineItem = {
   discount_amount?: number
 }
 
-type BillPaymentAllocation = {
+type PaymentAllocation = {
   bill_id: string
   payment_id: string
   amount: number

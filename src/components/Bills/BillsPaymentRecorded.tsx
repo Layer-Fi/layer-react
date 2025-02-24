@@ -7,7 +7,7 @@ import { HeaderRow, HeaderCol } from '../Header'
 import { InputGroup, StaticValue } from '../Input'
 import { Heading, HeadingSize, Text, TextSize } from '../Typography'
 import { getVendorName } from '../../utils/vendors'
-import { convertNumberToCurrency, formatDate } from '../../utils/format'
+import { convertCentsToCurrency, convertNumberToCurrency, formatDate } from '../../utils/format'
 import { isBillPaid } from '../../utils/bills'
 
 export const BillsPaymentRecorded = ({
@@ -93,11 +93,11 @@ export const BillsPaymentRecorded = ({
                 </td>
                 <td className='Layer__bills__payment-recorded__open-balance-col'>
                   <Text as='span' status={isBillPaid(record.bill?.status) ? 'success' : 'error'}>
-                    {convertNumberToCurrency(record.bill?.outstanding_balance)}
+                    {convertCentsToCurrency(record.bill?.outstanding_balance)}
                   </Text>
                 </td>
                 <td className='Layer__bills__payment-recorded__paid-icon-col'>
-                  {record.bill?.status !== 'PAID' && <Check size={18} />}
+                  {record.bill?.status === 'PAID' && <Check size={18} />}
                 </td>
               </tr>
             ))}

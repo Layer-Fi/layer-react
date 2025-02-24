@@ -12,6 +12,7 @@ import { SelectVendor } from '../Vendors/SelectVendor'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import { BillsList } from './BillsList'
 import { Pagination } from '../Pagination'
+import { DataState, DataStateStatus } from '../DataState'
 
 export interface BillsTableStringOverrides {
   componentTitle?: string
@@ -47,6 +48,10 @@ export const BillsTableWithPanel = ({
     fetchMore,
     hasMore,
     pageSize,
+    error,
+    refetch,
+    isLoading,
+    deletePayment,
   } = useBillsContext()
 
   const {
@@ -96,6 +101,12 @@ export const BillsTableWithPanel = ({
               selected={status}
               onChange={opt => setStatus(opt.target.value as BillStatusFilter)}
             />
+            <button onClick={() => {
+              deletePayment()
+            }}
+            >
+              Delete payment
+            </button>
           </HeaderCol>
         </HeaderRow>
         {status === 'UNPAID' && (
@@ -109,6 +120,7 @@ export const BillsTableWithPanel = ({
                       onChange={(vendor) => {
                         setVendor(vendor)
                         setRecordPaymentVendor(vendor ?? undefined)
+                        setCurrentPage(1)
                       }}
                       placeholder='Select vendor to record bulk payment'
                     />
@@ -116,6 +128,7 @@ export const BillsTableWithPanel = ({
                       icon={<CloseIcon />}
                       onClick={() => {
                         setVendor(null)
+                        setCurrentPage(1)
                         closeBulkSelection()
                       }}
                     />
@@ -149,6 +162,30 @@ export const BillsTableWithPanel = ({
       {!isDesktop && data && (
         <BillsList />
       )}
+
+      {error && (
+        <DataState
+          status={DataStateStatus.failed}
+          onRefresh={refetch}
+          title='Something went wrong'
+          description='We couldn’t load your data.'
+          isLoading={isLoading}
+          spacing
+        />
+      )}
+
+      {!isLoading && !error && totalCount === 0
+        ? (
+          <DataState
+            status={DataStateStatus.info}
+            onRefresh={refetch}
+            title={status === 'UNPAID' ? 'No unpaid bills to display' : 'No bills to display'}
+            description={status === 'UNPAID' ? 'All unpaid bills will be displayed here' : 'All bills will be displayed here'}
+            isLoading={isLoading}
+            spacing
+          />
+        )
+        : null}
 
       {data && (
         <Pagination
