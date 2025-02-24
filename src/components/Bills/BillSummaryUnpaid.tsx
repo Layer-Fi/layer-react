@@ -8,39 +8,41 @@ interface BillSummaryUnpaidProps {
   bill: Bill
 }
 
-export const BillSummaryUnpaid = ({ bill }: BillSummaryUnpaidProps) => {
-  const difference: {
-    text: string
-    status?: TextStatus
-  } = useMemo(() => {
-    const d = parseISO(bill.due_at).setHours(0, 0, 0, 0)
+function buildDifference(due_at: Bill['due_at']): {
+  text: string
+  status?: TextStatus
+} {
+  const d = parseISO(due_at).setHours(0, 0, 0, 0)
 
-    if (isNaN(d)) {
-      return { text: '' }
-    }
+  if (isNaN(d)) {
+    return { text: '' }
+  }
 
-    const today = new Date().setHours(0, 0, 0, 0)
-    const daysDiff = differenceInDays(today, d)
+  const today = new Date().setHours(0, 0, 0, 0)
+  const daysDiff = differenceInDays(today, d)
 
-    if (daysDiff === 0) {
-      return {
-        text: 'Due today',
-        status: 'warning',
-      }
-    }
-
-    if (daysDiff > 0) {
-      return {
-        text: `${daysDiff} ${daysDiff === 1 ? 'day' : 'days'} overdue`,
-        status: 'error',
-      }
-    }
-
+  if (daysDiff === 0) {
     return {
-      text: `Due in ${Math.abs(daysDiff)} ${Math.abs(daysDiff) === 1 ? 'day' : 'days'}`,
-      status: daysDiff < 0 && daysDiff > -4 ? 'warning' : undefined,
+      text: 'Due today',
+      status: 'warning',
     }
-  }, [bill.due_at])
+  }
+
+  if (daysDiff > 0) {
+    return {
+      text: `${daysDiff} ${daysDiff === 1 ? 'day' : 'days'} overdue`,
+      status: 'error',
+    }
+  }
+
+  return {
+    text: `Due in ${Math.abs(daysDiff)} ${Math.abs(daysDiff) === 1 ? 'day' : 'days'}`,
+    status: daysDiff < 0 && daysDiff > -4 ? 'warning' : undefined,
+  }
+}
+
+export const BillSummaryUnpaid = ({ bill }: BillSummaryUnpaidProps) => {
+  const difference = useMemo(() => buildDifference(bill.due_at), [bill.due_at])
 
   return (
     <div className='Layer__bill-details__summary'>
