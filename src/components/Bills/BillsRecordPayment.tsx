@@ -62,6 +62,7 @@ export const BillsRecordPayment = ({
     paymentMethod,
     setPaymentMethod,
     vendor,
+    isLoading,
   } = useBillsRecordPaymentContext()
   const { data: rawAvailableBills } = useUnpaidBillsByVendor({ vendorId: vendor?.id })
 
@@ -204,6 +205,7 @@ export const BillsRecordPayment = ({
             <Button
               className='Layer__bills__record-payment__submit'
               type='submit'
+              disabled={isLoading}
             >
               Record payment
             </Button>
