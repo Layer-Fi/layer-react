@@ -29,7 +29,6 @@ export const BillsContext = createContext<BillsContextType>({
   isValidating: false,
   error: undefined,
   refetch: () => {},
-  deletePayment: () => {},
 })
 
 export type BillsRecordPaymentContextType = ReturnType<typeof useBillsRecordPayment>

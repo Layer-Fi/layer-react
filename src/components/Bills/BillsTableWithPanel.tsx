@@ -51,7 +51,6 @@ export const BillsTableWithPanel = ({
     error,
     refetch,
     isLoading,
-    deletePayment,
   } = useBillsContext()
 
   const {
@@ -101,12 +100,6 @@ export const BillsTableWithPanel = ({
               selected={status}
               onChange={opt => setStatus(opt.target.value as BillStatusFilter)}
             />
-            <button onClick={() => {
-              deletePayment()
-            }}
-            >
-              Delete payment
-            </button>
           </HeaderCol>
         </HeaderRow>
         {status === 'UNPAID' && (

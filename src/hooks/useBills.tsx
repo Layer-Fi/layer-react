@@ -38,7 +38,6 @@ type UseBills = () => {
   isValidating: boolean
   error?: Error
   refetch: () => void
-  deletePayment: () => void
 }
 
 export const useBills: UseBills = () => {
@@ -56,16 +55,6 @@ export const useBills: UseBills = () => {
 
   const closeBillDetails = () => {
     setBillInDetails(undefined)
-  }
-
-  // @TEMP delete payment
-  const deletePayment = () => {
-    void (Layer.deletePayment(apiUrl, auth?.access_token, {
-      params: {
-        businessId,
-        paymentId: '30e67e04-ae9a-4aa8-87bf-460641bbb3a6',
-      },
-    }))
   }
 
   const getKey = (index: number, prevData: GetBillsReturn) => {
@@ -203,6 +192,5 @@ export const useBills: UseBills = () => {
     isValidating,
     error,
     refetch,
-    deletePayment,
   }
 }
