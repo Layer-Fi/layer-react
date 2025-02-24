@@ -55,10 +55,10 @@ const BillsTableContent = ({
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.checked && !isSelected) {
         addBill(entry)
+        return
       }
-      else {
-        removeBill(entry)
-      }
+
+      removeBill(entry)
     }
 
     const onRecordPaymentClick = (e: React.MouseEvent) => {
@@ -66,11 +66,11 @@ const BillsTableContent = ({
 
       if (billsToPay.map(x => x.bill?.id).includes(rowKey)) {
         setShowRecordPaymentForm(false)
+        return
       }
-      else {
-        addBill(entry)
-        setShowRecordPaymentForm(true)
-      }
+
+      addBill(entry)
+      setShowRecordPaymentForm(true)
     }
 
     const actionsColClassName = classNames(

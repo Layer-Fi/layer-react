@@ -69,7 +69,6 @@ export const useBillForm = (bill: Bill) => {
         setSubmitError(undefined)
         const formattedValue = {
           ...value,
-          // @TODO - what format should be used here?
           due_at: value.due_at ? new Date(value.due_at).toISOString() : undefined,
           received_at: value.received_at ? new Date(value.received_at).toISOString() : undefined,
           line_items: value.line_items?.map(item => ({
@@ -95,8 +94,6 @@ export const useBillForm = (bill: Bill) => {
           body: formattedValue,
         })
 
-        // Reset the dirty state without changing the form values
-        // setIsDirty(false)
         form.reset(response.data, { keepDefaultValues: false })
         setBillInDetails(response.data)
         refetch()

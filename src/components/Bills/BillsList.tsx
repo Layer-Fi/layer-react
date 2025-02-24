@@ -86,10 +86,10 @@ const BillsListItem = ({
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked && !isSelected) {
       addBill(bill)
+      return
     }
-    else {
-      removeBill(bill)
-    }
+
+    removeBill(bill)
   }
 
   const liClassName = classNames(

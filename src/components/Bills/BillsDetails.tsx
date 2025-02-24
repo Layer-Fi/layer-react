@@ -95,8 +95,7 @@ export const BillsDetails = ({
           <div className='Layer__bill-details__section Layer__bill-details__head'>
             <BillSummary bill={bill} />
             <div className='Layer__bill-details__action'>
-              {/* @TEMP - invert logic for isBillUnpaid */}
-              {!isBillUnpaid(bill.status) && !showRecordPaymentForm
+              {isBillUnpaid(bill.status) && !showRecordPaymentForm
                 ? (
                   <Button type='button' onClick={() => recordPaymentForBill(bill)}>
                     Record payment
