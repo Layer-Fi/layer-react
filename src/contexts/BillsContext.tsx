@@ -56,6 +56,7 @@ export const BillsRecordPaymentContext = createContext<BillsRecordPaymentContext
   closeRecordPayment: () => {},
   recordPaymentForBill: () => {},
   payRemainingBalance: () => {},
+  isLoading: false,
 })
 
 export const useBillsContext = () => useContext(BillsContext)
