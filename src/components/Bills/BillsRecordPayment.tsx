@@ -5,17 +5,18 @@ import {
   ButtonVariant,
   CloseButton,
   IconButton,
+  RetryButton,
 } from '../Button'
 import { Header } from '../Container'
 import { DatePicker } from '../DatePicker'
 import { HeaderRow, HeaderCol } from '../Header'
 import { InputGroup, StaticValue, Select } from '../Input'
 import { JournalFormStringOverrides } from '../JournalForm/JournalForm'
-import { Heading, HeadingSize, TextSize, Text } from '../Typography'
+import { Heading, HeadingSize, TextSize, Text, ErrorText } from '../Typography'
 import { Bill, BillPaymentMethod, BillPaymentMethods } from '../../types/bills'
 import CloseIcon from '../../icons/CloseIcon'
 import { parseISO, format as formatTime } from 'date-fns'
-import { convertFromCents, convertNumberToCurrency } from '../../utils/format'
+import { convertFromCents, convertNumberToCurrency, convertToCents } from '../../utils/format'
 import { getVendorName } from '../../utils/vendors'
 import { AmountInput } from '../Input/AmountInput'
 import { useUnpaidBillsByVendor } from './useUnpaidBillsByVendor'
@@ -63,6 +64,7 @@ export const BillsRecordPayment = ({
     setPaymentMethod,
     vendor,
     isLoading,
+    apiError,
   } = useBillsRecordPaymentContext()
   const { data: rawAvailableBills } = useUnpaidBillsByVendor({ vendorId: vendor?.id })
 
@@ -174,6 +176,16 @@ export const BillsRecordPayment = ({
                   <AmountInput
                     value={record.amount}
                     onChange={value => setAmountByIndex(index, value)}
+                    onBlur={() => {
+                      if (record.amount && record.bill?.outstanding_balance) {
+                        const amount = convertToCents(record.amount)
+                        if (amount && amount > record.bill?.outstanding_balance)
+                          setAmountByIndex(
+                            index,
+                            convertFromCents(record.bill?.outstanding_balance ?? 0)?.toString(),
+                          )
+                      }
+                    }}
                   />
                 </InputGroup>
                 <IconButton
@@ -202,13 +214,30 @@ export const BillsRecordPayment = ({
           </div>
 
           <div className='Layer__bills__record-payment__submit-container'>
-            <Button
-              className='Layer__bills__record-payment__submit'
-              type='submit'
-              disabled={isLoading}
-            >
-              Record payment
-            </Button>
+            {apiError
+              ? (
+                <>
+                  <RetryButton
+                    type='submit'
+                    disabled={isLoading || totalAmount === 0}
+                    error='Something went wrong, try again'
+                  >
+                    Retry
+                  </RetryButton>
+                  <ErrorText>
+                    Something went wrong, please try again.
+                  </ErrorText>
+                </>
+              )
+              : (
+                <Button
+                  className='Layer__bills__record-payment__submit'
+                  type='submit'
+                  disabled={isLoading || totalAmount === 0}
+                >
+                  Record payment
+                </Button>
+              )}
           </div>
         </div>
       </form>

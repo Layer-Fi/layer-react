@@ -32,7 +32,7 @@ export const getBills = get<
     endDate ? `&received_at_end=${endDate}` : ''
   }${
     status ? `&status=${status}` : ''
-  }&limit=${limit}&sort_by=received_at&sort_order=DESC`, // @TEMP
+  }&limit=${limit}&sort_by=received_at&sort_order=DESC`,
 )
 
 export const getBill = get<{ data: Bill }, { businessId: string, billId: string }>(

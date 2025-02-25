@@ -57,6 +57,7 @@ export const BillsTableWithPanel = ({
     bulkSelectionActive,
     openBulkSelection,
     closeBulkSelection,
+    clearRecordPaymentSelection,
     showRecordPaymentForm,
     setShowRecordPaymentForm,
     billsToPay,
@@ -98,7 +99,13 @@ export const BillsTableWithPanel = ({
                 },
               ]}
               selected={status}
-              onChange={opt => setStatus(opt.target.value as BillStatusFilter)}
+              onChange={(opt) => {
+                setStatus(opt.target.value as BillStatusFilter)
+                if (opt.target.value === 'PAID') {
+                  clearRecordPaymentSelection()
+                }
+                setCurrentPage(1)
+              }}
             />
           </HeaderCol>
         </HeaderRow>

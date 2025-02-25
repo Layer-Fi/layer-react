@@ -7,6 +7,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import useSWRMutation from 'swr/mutation'
+import { APIError } from '../../models/APIError'
 
 export type BillsRecordPaymentFormRecord = {
   bill?: Bill
@@ -41,7 +42,7 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
   const { apiUrl } = useEnvironment()
   const [showRecordPaymentForm, setShowRecordPaymentForm] = useState(false)
   const [bulkSelectionActive, setBulkSelectionActive] = useState(false)
-  const [vendor, setVendor] = useState<Vendor | undefined>()
+  const [vendor, setVendorState] = useState<Vendor | undefined>()
   const [paymentDate, setPaymentDate] = useState<Date>(new Date())
   const [paymentMethod, setPaymentMethod] = useState<BillPaymentMethod>('ACH')
   const [billsToPay, setBillsToPay] = useState<BillsRecordPaymentFormRecord[]>([])
@@ -49,6 +50,13 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
 
   const openBulkSelection = () => {
     setBulkSelectionActive(true)
+  }
+
+  const setVendor = (newVendor?: Vendor) => {
+    if (vendor?.id !== newVendor?.id) {
+      setBillsToPay([])
+    }
+    setVendorState(newVendor)
   }
 
   const closeBulkSelection = () => {
@@ -64,6 +72,7 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
     if (showRecordPaymentForm && billsToPay.length === 0) {
       setShowRecordPaymentForm(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [billsToPay, vendor, showRecordPaymentForm])
 
   const setBill = (bill: Bill, index: number) => {
@@ -123,17 +132,21 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
     setShowRecordPaymentForm(true)
   }
 
-  const payload = useMemo(() => ({
-    bill_payment_allocations: billsToPay.map(item => ({
-      bill_id: item.bill?.id,
-      amount: Number(convertToCents(item.amount)),
-    })),
-    paid_at: new Date(paymentDate).toISOString(),
-    method: paymentMethod,
-    amount: Number(convertToCents(
-      billsToPay.reduce((acc, item) => acc + Number(item.amount), 0),
-    )),
-  }), [billsToPay, paymentDate, paymentMethod])
+  const payload = useMemo(() => {
+    const filteredBillsToPay = billsToPay.filter(item => item.amount && item.bill?.id)
+
+    return {
+      bill_payment_allocations: filteredBillsToPay.map(item => ({
+        bill_id: item.bill?.id,
+        amount: Number(convertToCents(item.amount)),
+      })),
+      paid_at: new Date(paymentDate).toISOString(),
+      method: paymentMethod,
+      amount: Number(convertToCents(
+        filteredBillsToPay.reduce((acc, item) => acc + Number(item.amount ?? 0), 0),
+      )),
+    }
+  }, [billsToPay, paymentDate, paymentMethod])
 
   const createPaymentMutation = useSWRMutation(
     () => buildKey({
@@ -184,7 +197,7 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
         }
 
         return billToPay
-      })
+      }).filter(item => item.amount && item.bill?.id)
 
       setBillsToPay(newBillsToPay)
       setDataSaved(true)
@@ -209,6 +222,13 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
     setDataSaved(false)
   }
 
+  const clearRecordPaymentSelection = () => {
+    setDataSaved(false)
+    setPaymentDate(new Date())
+    setVendor(undefined)
+    setBillsToPay([])
+  }
+
   return {
     billsToPay,
     setBill,
@@ -231,8 +251,10 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
     recordPayment,
     dataSaved,
     closeRecordPayment,
+    clearRecordPaymentSelection,
     recordPaymentForBill,
     payRemainingBalance,
     isLoading: createPaymentMutation.isMutating,
+    apiError: createPaymentMutation.error as APIError | undefined,
   }
 }
