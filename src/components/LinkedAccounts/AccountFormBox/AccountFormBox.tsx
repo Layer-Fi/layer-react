@@ -14,7 +14,7 @@ export type AccountFormBoxData = {
   account: LinkedAccount
   isConfirmed: boolean
   openingDate?: Date
-  openingBalance?: string | null
+  openingBalance?: string
   saved?: boolean
 }
 

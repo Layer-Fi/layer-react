@@ -174,8 +174,8 @@ export const BillsRecordPayment = ({
                     }}
                   />
                   <AmountInput
-                    value={record.amount}
-                    onChange={value => setAmountByIndex(index, value)}
+                    value={record.amount === null ? undefined : record.amount}
+                    onChange={value => setAmountByIndex(index, value === undefined ? null : value)}
                     onBlur={() => {
                       if (record.amount && record.bill?.outstanding_balance) {
                         const amount = convertToCents(record.amount)

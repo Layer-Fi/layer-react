@@ -268,8 +268,10 @@ export const BillsDetails = ({
                             {(subField) => {
                               return (
                                 <AmountInput
-                                  value={subField.state.value}
-                                  onChange={e => subField.handleChange(e)}
+                                  value={
+                                    subField.state.value === null ? undefined : subField.state.value
+                                  }
+                                  onChange={e => subField.handleChange(e === undefined ? null : e)}
                                   disabled={disabled}
                                 />
                               )
