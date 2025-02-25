@@ -121,6 +121,7 @@ export const AccountFormBox = ({
       {!disableConfirmExclude && (
         <div className={`${CLASS_NAME}__confirm-col`}>
           <Checkbox
+            size='lg'
             isSelected={value.isConfirmed}
             onChange={v => onChange({ ...value, isConfirmed: v })}
             aria-label='Confirm Account Inclusion'

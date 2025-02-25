@@ -27,11 +27,13 @@ export function LinkedAccountToConfirm({
           {account.mask}
         </P>
         <P slot='institution'>
-          {account.institution.name}
+          {account.institution?.name}
         </P>
       </VStack>
       <VStack justify='center'>
         <Checkbox
+          size='lg'
+          variant='dark'
           isSelected={isConfirmed}
           onChange={onChangeConfirmed}
           aria-label='Confirm Account Inclusion'
