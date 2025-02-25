@@ -6,6 +6,7 @@ import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 export interface DueStatusProps {
   dueDate: Date | string
   paidAt?: Date | string
+  size?: 'sm' | 'md'
 }
 
 const dueStatusTitle = (daysDiff: number, paid?: boolean) => {
@@ -80,7 +81,7 @@ const getDiff = (refDate: Date | string) => {
   return differenceInDays(today, d)
 }
 
-export const DueStatus = ({ dueDate, paidAt }: DueStatusProps) => {
+export const DueStatus = ({ dueDate, paidAt, size = 'md' }: DueStatusProps) => {
   const date = useMemo(() => {
     try {
       const diff = getDiff(paidAt ? paidAt : dueDate)
@@ -103,9 +104,13 @@ export const DueStatus = ({ dueDate, paidAt }: DueStatusProps) => {
   const dataProps = toDataProperties({ status: date.type })
 
   return (
-    <div {...dataProps} className='Layer__due-status'>
+    <div {...dataProps} className={`Layer__due-status Layer__due-status--${size}`}>
       {date.title && (
-        <Text className='Layer__due-status__title' weight={TextWeight.bold}>
+        <Text
+          className='Layer__due-status__title'
+          weight={TextWeight.bold}
+          size={size === 'sm' ? TextSize.sm : TextSize.md}
+        >
           {date.title}
         </Text>
       )}
