@@ -89,9 +89,9 @@ export const convertCurrencyToNumber = (amount: string): string =>
  * 100.01 -> 10001
  * 100.001 -> 10000
  */
-export const convertToCents = (amount?: number | string): number | undefined => {
+export const convertToCents = (amount?: number | string | null): number | undefined => {
   try {
-    if (amount === undefined) {
+    if (amount === undefined || amount === null) {
       return undefined
     }
 
@@ -108,9 +108,11 @@ export const convertToCents = (amount?: number | string): number | undefined => 
  * 10000 -> 100
  * 10001 -> 100.01
  */
-export const convertFromCents = (amount?: number | string): number | undefined => {
+export const convertFromCents = (
+  amount?: number | string | readonly string[] | null,
+): number | undefined => {
   try {
-    if (amount === undefined) {
+    if (amount === undefined || amount === null) {
       return undefined
     }
 
