@@ -20,7 +20,7 @@ export type BillForm = {
 }
 
 export const useBillForm = (bill: Bill) => {
-  const { businessId } = useLayerContext()
+  const { businessId, addToast } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
@@ -72,17 +72,18 @@ export const useBillForm = (bill: Bill) => {
           due_at: value.due_at ? new Date(value.due_at).toISOString() : undefined,
           received_at: value.received_at ? new Date(value.received_at).toISOString() : undefined,
           line_items: value.line_items?.map(item => ({
-            ...item,
             account_identifier: item.account_identifier
               ? {
                 type: item.account_identifier.type,
                 id: item.account_identifier.id,
               }
               : undefined,
-            product_name: item.account_identifier?.product_name,
-            total_amount: item.total_amount ? convertToCents(item.total_amount) : undefined,
-            subtotal: item.total_amount ? convertToCents(item.total_amount) : undefined,
+            description: item.description,
+            product_name: item.account_identifier?.product_name ?? item.product_name,
             unit_price: item.total_amount ? convertToCents(item.total_amount) : undefined,
+            quantity: '1.00',
+            discount_amount: 0,
+            sales_taxes: [],
           })),
         }
 
@@ -96,10 +97,11 @@ export const useBillForm = (bill: Bill) => {
 
         form.reset(response.data, { keepDefaultValues: false })
         setBillInDetails(response.data)
+        addToast({ content: 'The Bill has been updated!', type: 'success' })
         refetch()
       }
-      catch (err) {
-        setSubmitError(err instanceof Error ? err.message : 'Submit failed. Please try again.')
+      catch {
+        setSubmitError('Submit failed. Please try again.')
       }
     },
   })

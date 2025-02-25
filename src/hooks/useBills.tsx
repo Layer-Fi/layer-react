@@ -99,9 +99,8 @@ export const useBills: UseBills = () => {
             cursor: nextCursor as string ?? '',
             startDate: dateRange.startDate.toISOString(),
             endDate: dateRange.endDate.toISOString(),
-            // @TEMP
-            status: status === 'UNPAID' ? 'PARTIALLY_PAID' : 'PAID', // @TODO - handle also  RECEIVED PARTIALLY_PAID, PAID
-            vendorId: vendor?.id,
+            status: status === 'UNPAID' ? 'RECEIVED,PARTIALLY_PAID' : 'PAID',
+            vendorId: status === 'UNPAID' ? vendor?.id : undefined,
           },
         }).call(false)
       }

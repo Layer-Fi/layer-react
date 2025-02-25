@@ -15,18 +15,27 @@ import { Panel } from '../Panel'
 import { BillsSidebar } from './BillsSidebar'
 import { BillTerms } from '../../types/bills'
 import { SelectVendor } from '../Vendors/SelectVendor'
-import { CategorySelect } from '../CategorySelect/CategorySelect'
+import { CategorySelect, mapCategoryToOption } from '../CategorySelect/CategorySelect'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { AmountInput } from '../Input/AmountInput'
 import { getVendorName } from '../../utils/vendors'
 import { DATE_FORMAT_SHORT } from '../../config/general'
 import { BillSummary } from './BillSummary'
-import { isBillUnpaid } from '../../utils/bills'
-import { flattenCategories } from '../BankTransactionMobileList/utils'
+import { isBillPaid, isBillUnpaid } from '../../utils/bills'
+
+const flattenCategories = (cats: Category[]): Category[] => {
+  return cats.reduce((acc: Category[], category) => {
+    acc.push(category)
+    if (category.subCategories?.length) {
+      acc.push(...flattenCategories(category.subCategories))
+    }
+    return acc
+  }, [])
+}
 
 const findCategoryById = (id: string, categories: Category[]) => {
   return flattenCategories(categories).find(
-    category => (category.id === id),
+    category => ('id' in category && category.id === id),
   )
 }
 
@@ -49,7 +58,7 @@ export const BillsDetails = ({
   const { form, isDirty, submitError, formErrorMap } = useBillForm(bill)
 
   const { isSubmitting } = form.state
-  const disabled = !bill?.status.includes('PAID') || isSubmitting
+  const disabled = isBillPaid(bill.status) || isSubmitting
 
   return (
     <Panel
@@ -144,7 +153,7 @@ export const BillsDetails = ({
                         />
                       </InputGroup>
 
-                      <InputGroup inline={true} label='Adress'>
+                      <InputGroup inline={true} label='Address'>
                         <Textarea
                           value={field.state.value?.address_string ?? ''}
                           disabled={true}
@@ -242,11 +251,8 @@ export const BillsDetails = ({
 
                               return (
                                 <CategorySelect
-                                  value={selectedCategory && selectedCategory.value.payload
-                                    ? {
-                                      type: selectedCategory.value.type,
-                                      payload: selectedCategory.value.payload,
-                                    }
+                                  value={selectedCategory
+                                    ? mapCategoryToOption(selectedCategory)
                                     : undefined}
                                   onChange={e => subField.handleChange(
                                     { type: 'AccountId', id: e.payload.id, product_name: e.payload.display_name },

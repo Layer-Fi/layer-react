@@ -51,12 +51,14 @@ export const BillsRecordPaymentContext = createContext<BillsRecordPaymentContext
   bulkSelectionActive: false,
   openBulkSelection: () => {},
   closeBulkSelection: () => {},
+  clearRecordPaymentSelection: () => {},
   recordPayment: () => Promise.resolve(),
   dataSaved: false,
   closeRecordPayment: () => {},
   recordPaymentForBill: () => {},
   payRemainingBalance: () => {},
   isLoading: false,
+  apiError: undefined,
 })
 
 export const useBillsContext = () => useContext(BillsContext)
