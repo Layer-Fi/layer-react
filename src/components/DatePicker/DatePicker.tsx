@@ -326,11 +326,9 @@ export const DatePicker = ({
           }
         }}
         portalId='Layer__datepicker__portal'
-        onFocus={e => (e.target.readOnly = true)}
-        onInputClick={() => {
-          if (pickerRef.current && !isDesktop) {
-            pickerRef.current.setOpen(!pickerRef.current.isCalendarOpen())
-          }
+        onFocus={(e) => {
+          // Workaround for mobile devices to prevent the keyboard drawer from appearing
+          e.target.blur()
         }}
         disabled={disabled}
         {...props}
