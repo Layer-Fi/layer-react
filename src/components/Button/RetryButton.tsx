@@ -16,7 +16,7 @@ export const RetryButton = ({
   className,
   processing,
   disabled,
-  error: _error,
+  error,
   children,
   ...props
 }: RetryButtonProps) => {
@@ -34,6 +34,7 @@ export const RetryButton = ({
       disabled={processing || disabled}
       rightIcon={<RefreshCcw size={12} />}
       justify='center'
+      tooltip={error}
     >
       {children}
     </Button>
