@@ -387,7 +387,9 @@
 
   &__submit-container {
     display: flex;
-    justify-content: flex-end;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: var(--spacing-md);
   }
 
   @container (min-width: 1400px) {
