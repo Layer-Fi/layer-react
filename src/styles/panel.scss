@@ -23,7 +23,7 @@
 .Layer__panel .Layer__panel__content .Layer__component-header {
   top: 0;
   z-index: auto;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgb(255 255 255 / 50%);
   backdrop-filter: blur(6px);
   border-top-left-radius: var(--border-radius-sm);
   border-top-right-radius: var(--border-radius-sm);
@@ -32,7 +32,6 @@
 .Layer__panel__sidebar {
   width: 480px;
   max-width: 0;
-  position: -webkit-sticky;
   position: sticky;
   max-height: 0;
   top: 0;
@@ -42,13 +41,15 @@
   height: 100%;
   border-left: 1px solid var(--color-base-300);
   border-top-right-radius: var(--border-radius-sm);
-  z-index: 11;
+  z-index: 102;
 
   .Layer__panel__sidebar-content {
     width: 480px;
+    min-width: 480px;
     height: 100%;
     opacity: 0.2;
     transition: opacity 180ms ease-in-out;
+    background: var(--color-base-0);
   }
 }
 
@@ -56,6 +57,7 @@
   max-width: none;
   width: 100%;
   flex: 1;
+
   .Layer__panel__sidebar-content {
     width: 100%;
   }
@@ -71,6 +73,14 @@
   }
 }
 
+@container (min-width: 1025px) {
+  .Layer__panel__sidebar.Layer__panel__sidebar--floating {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
 @container (max-width: 1024px) {
   .Layer__panel__sidebar {
     position: absolute;
@@ -80,8 +90,7 @@
     border-radius: var(--border-radius-sm);
     opacity: 0.2;
     transform: translateY(-50px) scale(0.96);
-    transition:
-      transform 120ms ease-in-out,
+    transition: transform 120ms ease-in-out,
       opacity 120ms ease-in-out;
 
     .Layer__panel__sidebar-content {

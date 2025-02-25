@@ -9,6 +9,7 @@ export interface PanelProps {
   header?: ReactNode
   parentRef?: RefObject<HTMLDivElement>
   defaultSidebarHeight?: boolean
+  floating?: boolean
 }
 
 export const Panel = ({
@@ -19,18 +20,20 @@ export const Panel = ({
   sidebarIsOpen,
   parentRef,
   defaultSidebarHeight = false,
+  floating = false,
 }: PanelProps) => {
   const [sidebarHeight, setSidebarHeight] = useState(0)
 
   useEffect(() => {
     if (parentRef?.current?.offsetHeight) {
-      setSidebarHeight(parentRef?.current?.offsetHeight - 1)
+      setSidebarHeight(parentRef?.current?.offsetHeight)
     }
-  }, [parentRef?.current?.offsetHeight, sidebarIsOpen])
+  }, [parentRef, parentRef?.current?.offsetHeight, sidebarIsOpen])
 
   const sidebarClass = classNames(
     'Layer__panel__sidebar',
     defaultSidebarHeight && 'Layer__panel__sidebar--default',
+    floating && 'Layer__panel__sidebar--floating',
   )
 
   return (
@@ -41,7 +44,7 @@ export const Panel = ({
         sidebarIsOpen && 'Layer__panel--open',
       )}
     >
-      <div className={'Layer__panel__content'}>
+      <div className='Layer__panel__content'>
         {header}
         {children}
       </div>
@@ -51,9 +54,9 @@ export const Panel = ({
           style={
             !defaultSidebarHeight
               ? {
-                  maxHeight:
+                maxHeight:
                     sidebarHeight > 0 && sidebarIsOpen ? sidebarHeight : 0,
-                }
+              }
               : {}
           }
         >

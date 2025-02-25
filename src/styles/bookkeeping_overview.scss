@@ -4,17 +4,19 @@
   .Layer__panel .Layer__panel__content .Layer__component-header {
     z-index: 1;
   }
+
   .Layer__panel.Layer__panel--open .Layer__panel__content {
     border-right: none;
   }
+
   .Layer__panel__sidebar {
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: var(--spacing-lg);
     border-left: none;
     background: none;
   }
 }
 
-@media screen and (min-width: 1100px) {
+@media screen and (width >= 1100px) {
   .Layer__bookkeeping-overview--view {
     .Layer__panel__content {
       max-width: 1406px;
@@ -44,7 +46,6 @@
   top: 16px !important;
 }
 
-
 @container (max-width: 796px) {
   .Layer__bookkeeping-overview-profit-and-loss-chart {
     width: 100%;
@@ -65,7 +66,7 @@
 
 @container (max-width: 460px) {
   .Layer__component.Layer__bookkeeping-overview-profit-and-loss
-    .recharts-responsive-container {
+  .recharts-responsive-container {
     margin-top: -12px;
   }
 }

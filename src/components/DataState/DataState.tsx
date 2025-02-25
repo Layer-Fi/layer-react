@@ -5,6 +5,7 @@ import Loader from '../../icons/Loader'
 import RefreshCcw from '../../icons/RefreshCcw'
 import { Button, ButtonVariant } from '../Button'
 import { Text, TextSize, TextWeight } from '../Typography'
+import classNames from 'classnames'
 
 export enum DataStateStatus {
   allDone = 'allDone',
@@ -20,6 +21,7 @@ export interface DataStateProps {
   description?: string
   onRefresh?: () => void
   isLoading?: boolean
+  spacing?: boolean
 }
 
 const getIcon = (status: DataStateStatus, icon?: ReactNode) => {
@@ -58,9 +60,15 @@ export const DataState = ({
   onRefresh,
   isLoading,
   icon,
+  spacing,
 }: DataStateProps) => {
+  const baseClassName = classNames(
+    'Layer__data-state',
+    spacing && 'Layer__data-state--spacing',
+  )
+
   return (
-    <div className='Layer__data-state'>
+    <div className={baseClassName}>
       {getIcon(status, icon)}
       <Text
         as='span'
@@ -78,11 +86,13 @@ export const DataState = ({
           <Button
             variant={ButtonVariant.secondary}
             rightIcon={
-              isLoading ? (
-                <Loader size={14} className='Layer__anim--rotating' />
-              ) : (
-                <RefreshCcw size={12} />
-              )
+              isLoading
+                ? (
+                  <Loader size={14} className='Layer__anim--rotating' />
+                )
+                : (
+                  <RefreshCcw size={12} />
+                )
             }
             onClick={onRefresh}
             disabled={isLoading}

@@ -56,7 +56,7 @@ export type Bill = {
   line_items: BillLineItem[]
   outstanding_balance: number
   paid_at?: string
-  payment_allocations: BillPaymentAllocation[]
+  payment_allocations: PaymentAllocation[]
   received_at: string
   status: BillStatus
   subtotal: number
@@ -65,25 +65,31 @@ export type Bill = {
   transaction_tags: TransactionTag[]
   type: 'Bill'
   updated_at: string
-  voided_at: string
+  voided_at: string | null
   vendor: Vendor
 }
 
-type BillLineItem = {
-  account_identifier: string
+export type BillLineItem = {
+  account_identifier?: {
+    type: string
+    id: string
+    product_name?: string
+  }
   bill_id: string
   description: string
   external_id: string
   id: string
-  product: string
+  product_name: string
   quantity: number
   sales_taxes: SalesTax[] | null
+  sales_taxes_total?: number
   subtotal: number
-  total_amount: number
+  total_amount: number | string | null
   unit_price: number
+  discount_amount?: number
 }
 
-type BillPaymentAllocation = {
+type PaymentAllocation = {
   bill_id: string
   payment_id: string
   amount: number
@@ -99,4 +105,28 @@ type TaxAccount = {
   id?: string
   name?: string
   type?: string
+}
+
+export const BillPaymentMethods = {
+  ACH: 'ACH',
+  CASH: 'Cash',
+  CHECK: 'Check',
+  CREDIT_CARD: 'Credit card',
+  CREDIT_BALANCE: 'Credit balance',
+  OTHER: 'Other',
+} as const
+
+export type BillPaymentMethod = typeof BillPaymentMethods[keyof typeof BillPaymentMethods]
+
+type BillPaymentAllocation = {
+  amount: number
+  bill_id?: string
+  bill_external_id?: string
+}
+
+export type BillPayment = {
+  paid_at: string
+  method: BillPaymentMethod
+  amount: number
+  bill_payment_allocations: BillPaymentAllocation[]
 }

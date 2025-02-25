@@ -1,13 +1,14 @@
-
 import classNames from 'classnames'
 import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 
-export interface AmountInputProps extends Omit<CurrencyInputProps, 'onChange'> {
+export interface AmountInputProps extends Omit<CurrencyInputProps, 'onChange' | 'value' | 'defaultValue'> {
   onChange?: (value?: string) => void
   isInvalid?: boolean
   errorMessage?: string
   leftText?: string
+  value?: string | number
+  defaultValue?: string | number
 }
 
 export const AmountInput = ({
@@ -27,7 +28,6 @@ export const AmountInput = ({
   )
 
   return (
-
     <Tooltip disabled={!isInvalid || !errorMessage}>
       <TooltipTrigger className='Layer__input-tooltip'>
         <CurrencyInput
@@ -39,7 +39,7 @@ export const AmountInput = ({
           prefix='$'
           placeholder={placeholder}
           decimalsLimit={2}
-          onValueChange={onChange}
+          onValueChange={e => onChange?.(e)}
           className={baseClassName}
         />
         {leftText && <span className='Layer__input-left-text'>{leftText}</span>}

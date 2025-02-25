@@ -612,6 +612,10 @@
   }
 }
 
+.Layer__input--static-value {
+  padding: 0 calc(var(--spacing-xs) + 1px);
+}
+
 @media screen and (resolution >= 2dppx) {
   .Layer__component {
     .Layer__textarea,
@@ -627,8 +631,4 @@
       min-height: 36px;
     }
   }
-}
-
-.Layer__input--static-value {
-  padding: 0 calc(var(--spacing-xs) + 1px);
 }

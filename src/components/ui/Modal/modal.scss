@@ -18,8 +18,8 @@
 }
 
 .Layer__Modal {
-  inline-size: min(24rem, 90dvi);
-  block-size: min(24rem, 90dvb);
+  inline-size: min(32rem, 90dvi);
+  block-size: min(32rem, 90dvb);
 
   &[data-entering] {
     animation-duration: 300ms;
