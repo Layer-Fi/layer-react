@@ -56,7 +56,7 @@ export type Bill = {
   line_items: BillLineItem[]
   outstanding_balance: number
   paid_at?: string
-  payment_allocations: PaymentAllocation[]
+  payment_allocations: BillPaymentAllocation[]
   received_at: string
   status: BillStatus
   subtotal: number
@@ -73,7 +73,6 @@ export type BillLineItem = {
   account_identifier?: {
     type: string
     id: string
-    product_name?: string
   }
   bill_id: string
   description: string
@@ -89,7 +88,7 @@ export type BillLineItem = {
   discount_amount?: number
 }
 
-type PaymentAllocation = {
+type BillPaymentAllocation = {
   bill_id: string
   payment_id: string
   amount: number
@@ -118,7 +117,7 @@ export const BillPaymentMethods = {
 
 export type BillPaymentMethod = typeof BillPaymentMethods[keyof typeof BillPaymentMethods]
 
-type BillPaymentAllocation = {
+type BillPaymentPaymentAllocation = {
   amount: number
   bill_id?: string
   bill_external_id?: string
@@ -128,5 +127,5 @@ export type BillPayment = {
   paid_at: string
   method: BillPaymentMethod
   amount: number
-  bill_payment_allocations: BillPaymentAllocation[]
+  bill_payment_allocations: BillPaymentPaymentAllocation[]
 }
