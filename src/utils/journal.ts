@@ -23,7 +23,13 @@ export const getAccountIdentifierPayload = (
 }
 
 export const entryNumber = (
-  entry: JournalEntry | LedgerAccountsEntry | LedgerAccountLineItem,
+  entry: JournalEntry | LedgerAccountsEntry,
 ): string => {
   return entry.entry_number?.toString() ?? entry.id.substring(0, 5)
+}
+
+export const lineEntryNumber = (
+  ledgerEntryLine: LedgerAccountLineItem,
+): string => {
+  return ledgerEntryLine.entry_number?.toString() ?? ledgerEntryLine.entry_id.substring(0, 5)
 }

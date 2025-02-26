@@ -85,8 +85,8 @@ export const SourceDetailView = ({
           <DetailsListItem
             label={stringOverrides?.counterpartyLabel || 'Counterparty'}
           >
-            {transactionSource.counterparty ||
-              transactionSource.display_description}
+            {transactionSource.counterparty
+            || transactionSource.display_description}
           </DetailsListItem>
         </>
       )
@@ -245,10 +245,11 @@ export const LedgerAccountEntryDetails = ({
   const { totalDebit, totalCredit } = useMemo(() => {
     let totalDebit = 0
     let totalCredit = 0
-    entryData?.line_items?.forEach(item => {
+    entryData?.line_items?.forEach((item) => {
       if (item.direction === Direction.CREDIT) {
         totalCredit += item.amount || 0
-      } else if (item.direction === Direction.DEBIT) {
+      }
+      else if (item.direction === Direction.DEBIT) {
         totalDebit += item.amount || 0
       }
     })
@@ -268,8 +269,8 @@ export const LedgerAccountEntryDetails = ({
           </HeaderCol>
           <HeaderCol className='Layer__show-lg Layer__show-xl'>
             <Heading size={HeadingSize.secondary}>
-              {stringOverrides?.transactionSource?.header ||
-                'Transaction source'}
+              {stringOverrides?.transactionSource?.header
+              || 'Transaction source'}
             </Heading>
           </HeaderCol>
           <HeaderCol className='Layer__show-lg Layer__show-xl'>
@@ -282,7 +283,7 @@ export const LedgerAccountEntryDetails = ({
           stringOverrides?.transactionSource?.header || 'Transaction source'
         }
         titleClassName='Layer__hidden-lg Layer__hidden-xl'
-        actions={
+        actions={(
           <Button
             rightIcon={<XIcon />}
             iconOnly={true}
@@ -290,7 +291,7 @@ export const LedgerAccountEntryDetails = ({
             variant={ButtonVariant.secondary}
             className='Layer__details-list__close-btn'
           />
-        }
+        )}
       >
         <DetailsListItem
           label={
@@ -309,16 +310,16 @@ export const LedgerAccountEntryDetails = ({
         title={
           stringOverrides?.journalEntry?.header
             ? stringOverrides?.journalEntry?.header(
-                entryData ? entryNumber(entryData) : '',
-              )
+              entryData ? entryNumber(entryData) : '',
+            )
             : `Journal Entry ${entryData ? entryNumber(entryData) : ''}`
         }
         className='Layer__border-top'
       >
         <DetailsListItem
           label={
-            stringOverrides?.journalEntry?.details?.entryTypeLabel ||
-            'Entry type'
+            stringOverrides?.journalEntry?.details?.entryTypeLabel
+            || 'Entry type'
           }
           isLoading={isLoadingEntry}
         >
@@ -332,8 +333,8 @@ export const LedgerAccountEntryDetails = ({
         </DetailsListItem>
         <DetailsListItem
           label={
-            stringOverrides?.journalEntry?.details?.creationDateLabel ||
-            'Creation date'
+            stringOverrides?.journalEntry?.details?.creationDateLabel
+            || 'Creation date'
           }
           isLoading={isLoadingEntry}
         >
@@ -342,8 +343,8 @@ export const LedgerAccountEntryDetails = ({
         {entryData?.reversal_id && (
           <DetailsListItem
             label={
-              stringOverrides?.journalEntry?.details?.reversalLabel ||
-              'Reversal'
+              stringOverrides?.journalEntry?.details?.reversalLabel
+              || 'Reversal'
             }
             isLoading={isLoadingEntry}
           >
@@ -352,71 +353,75 @@ export const LedgerAccountEntryDetails = ({
         )}
       </DetailsList>
 
-      {!isLoadingEntry && !errorEntry ? (
-        <div className='Layer__ledger-account__entry-details__line-items'>
-          <Card>
-            <Table
-              componentName='ledger-account__entry-details'
-              borderCollapse='collapse'
-            >
-              <TableHead>
-                <TableRow rowKey='soc-flow-head-row' isHeadRow>
-                  <TableCell>
-                    {stringOverrides?.lineItemsTable?.lineItemsColumnHeader ||
-                      'Line items'}
-                  </TableCell>
-                  <TableCell align={TableCellAlign.RIGHT}>
-                    {stringOverrides?.lineItemsTable?.debitColumnHeader ||
-                      'Debit'}
-                  </TableCell>
-                  <TableCell align={TableCellAlign.RIGHT}>
-                    {stringOverrides?.lineItemsTable?.creditColumnHeader ||
-                      'Credit'}
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {entryData?.line_items?.map((item, index) => (
-                  <TableRow
-                    key={`ledger-line-item-${index}`}
-                    rowKey={`ledger-line-item-${index}`}
-                  >
-                    <TableCell>{item.account?.name || ''}</TableCell>
-                    <TableCell align={TableCellAlign.RIGHT}>
-                      {item.direction === Direction.DEBIT && (
-                        <Badge variant={BadgeVariant.WARNING}>
-                          ${centsToDollars(item.amount || 0)}
-                        </Badge>
-                      )}
+      {!isLoadingEntry && !errorEntry
+        ? (
+          <div className='Layer__ledger-account__entry-details__line-items'>
+            <Card>
+              <Table
+                componentName='ledger-account__entry-details'
+                borderCollapse='collapse'
+              >
+                <TableHead>
+                  <TableRow rowKey='soc-flow-head-row' isHeadRow>
+                    <TableCell>
+                      {stringOverrides?.lineItemsTable?.lineItemsColumnHeader
+                      || 'Line items'}
                     </TableCell>
                     <TableCell align={TableCellAlign.RIGHT}>
-                      {item.direction === Direction.CREDIT && (
-                        <Badge variant={BadgeVariant.SUCCESS}>
-                          ${centsToDollars(item.amount || 0)}
-                        </Badge>
-                      )}
+                      {stringOverrides?.lineItemsTable?.debitColumnHeader
+                      || 'Debit'}
+                    </TableCell>
+                    <TableCell align={TableCellAlign.RIGHT}>
+                      {stringOverrides?.lineItemsTable?.creditColumnHeader
+                      || 'Credit'}
                     </TableCell>
                   </TableRow>
-                ))}
-                <TableRow
-                  rowKey='ledger-line-item-summation'
-                  variant='summation'
-                >
-                  <TableCell primary>
-                    {stringOverrides?.lineItemsTable?.totalRowHeader || 'Total'}
-                  </TableCell>
-                  <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-                    {totalDebit || 0}
-                  </TableCell>
-                  <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-                    {totalCredit || 0}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Card>
-        </div>
-      ) : null}
+                </TableHead>
+                <TableBody>
+                  {entryData?.line_items?.map((item, index) => (
+                    <TableRow
+                      key={`ledger-line-item-${index}`}
+                      rowKey={`ledger-line-item-${index}`}
+                    >
+                      <TableCell>{item.account?.name || ''}</TableCell>
+                      <TableCell align={TableCellAlign.RIGHT}>
+                        {item.direction === Direction.DEBIT && (
+                          <Badge variant={BadgeVariant.WARNING}>
+                            $
+                            {centsToDollars(item.amount || 0)}
+                          </Badge>
+                        )}
+                      </TableCell>
+                      <TableCell align={TableCellAlign.RIGHT}>
+                        {item.direction === Direction.CREDIT && (
+                          <Badge variant={BadgeVariant.SUCCESS}>
+                            $
+                            {centsToDollars(item.amount || 0)}
+                          </Badge>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  <TableRow
+                    rowKey='ledger-line-item-summation'
+                    variant='summation'
+                  >
+                    <TableCell primary>
+                      {stringOverrides?.lineItemsTable?.totalRowHeader || 'Total'}
+                    </TableCell>
+                    <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+                      {totalDebit || 0}
+                    </TableCell>
+                    <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+                      {totalCredit || 0}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Card>
+          </div>
+        )
+        : null}
     </div>
   )
 }
