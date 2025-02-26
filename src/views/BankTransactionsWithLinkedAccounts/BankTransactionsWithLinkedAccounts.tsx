@@ -1,8 +1,8 @@
 import { BankTransactions } from '../../components/BankTransactions'
 import {
-  BankTransactionsMode,
   BankTransactionsStringOverrides,
 } from '../../components/BankTransactions/BankTransactions'
+import { BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
 import { MobileComponentType } from '../../components/BankTransactions/constants'
 import { LinkedAccounts } from '../../components/LinkedAccounts'
 import { View } from '../../components/View'
@@ -23,6 +23,9 @@ export interface BankTransactionsWithLinkedAccountsProps {
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   showTooltips?: boolean
+  /**
+   * @deprecated `mode` can be inferred the bookkeeping configuration of a business
+   */
   mode?: BankTransactionsMode
   mobileComponent?: MobileComponentType
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
@@ -35,7 +38,7 @@ export const BankTransactionsWithLinkedAccounts = ({
   showLedgerBalance = true,
   showUnlinkItem = false,
   showBreakConnection = false,
-  mode = 'self-serve',
+  mode,
   showDescriptions = true,
   showReceiptUploads = true,
   showTooltips = false,

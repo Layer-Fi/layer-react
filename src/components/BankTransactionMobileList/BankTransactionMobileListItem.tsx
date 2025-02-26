@@ -6,10 +6,7 @@ import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
-import {
-  BankTransactionsMode,
-  categorizationEnabled,
-} from '../BankTransactions/BankTransactions'
+
 import { isCategorized } from '../BankTransactions/utils'
 import { CloseButton } from '../Button'
 import { Toggle } from '../Toggle'
@@ -19,6 +16,8 @@ import { BankTransactionMobileForms } from './BankTransactionMobileForms'
 import { TransactionToOpenContext } from './TransactionToOpenContext'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
+import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 
 export interface BankTransactionMobileListItemProps {
   index: number
@@ -27,7 +26,6 @@ export interface BankTransactionMobileListItemProps {
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
   showTooltips: boolean
-  mode: BankTransactionsMode
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   isFirstItem?: boolean
@@ -58,7 +56,6 @@ export const BankTransactionMobileListItem = ({
   bankTransaction,
   removeTransaction,
   editable,
-  mode,
   initialLoad,
   showTooltips,
   isFirstItem = false,
@@ -70,7 +67,9 @@ export const BankTransactionMobileListItem = ({
     setTransactionIdToOpen,
     clearTransactionIdToOpen,
   } = useContext(TransactionToOpenContext)
+
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
+
   const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
     setHeight(height),
   )
@@ -171,6 +170,9 @@ export const BankTransactionMobileListItem = ({
   const onChangePurpose = (event: ChangeEvent<HTMLInputElement>) =>
     setPurpose(event.target.value as Purpose)
 
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+
   const categorized = isCategorized(bankTransaction)
 
   const className = 'Layer__bank-transaction-mobile-list-item'
@@ -232,7 +234,7 @@ export const BankTransactionMobileListItem = ({
             className={`${className}__expanded-row__content`}
             ref={formRowRef}
           >
-            {categorizationEnabled(mode)
+            {categorizationEnabled
               ? (
                 <div className={`${className}__toggle-row`}>
                   <Toggle
@@ -265,7 +267,7 @@ export const BankTransactionMobileListItem = ({
             <BankTransactionMobileForms
               purpose={purpose}
               bankTransaction={bankTransaction}
-              showCategorization={categorizationEnabled(mode)}
+              showCategorization={categorizationEnabled}
               showTooltips={showTooltips}
               showReceiptUploads={showReceiptUploads}
               showDescriptions={showDescriptions}

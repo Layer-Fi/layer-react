@@ -22,10 +22,7 @@ import {
 import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, hasMatch } from '../../utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
-import {
-  BankTransactionsMode,
-  categorizationEnabled,
-} from '../BankTransactions/BankTransactions'
+
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect'
@@ -44,6 +41,8 @@ import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
+import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -51,7 +50,6 @@ type Props = {
   close: () => void
   asListItem?: boolean
   submitBtnText?: string
-  mode: BankTransactionsMode
   containerWidth?: number
   categorized?: boolean
   showDescriptions: boolean
@@ -129,7 +127,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       submitBtnText = 'Save',
       containerWidth,
       showDescriptions,
-      mode,
       showReceiptUploads,
       showTooltips,
     },
@@ -434,6 +431,9 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       loadDocumentsAndMetadata()
     }, [])
 
+    const bookkeepingStatus = useEffectiveBookkeepingStatus()
+    const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+
     const className = 'Layer__expanded-bank-transaction-row'
     const shouldHide = !isOpen && isOver
 
@@ -449,7 +449,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
           ? null
           : (
             <span className={`${className}__wrapper`} ref={bodyRef}>
-              {categorizationEnabled(mode)
+              {categorizationEnabled
                 ? (
                   <div className={`${className}__content-toggle`}>
                     <Toggle
@@ -497,7 +497,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                         classNamePrefix={className}
                         bankTransaction={bankTransaction}
                         selectedMatchId={selectedMatchId}
-                        readOnly={!categorizationEnabled(mode)}
+                        readOnly={!categorizationEnabled}
                         setSelectedMatchId={(id) => {
                           setMatchFormError(undefined)
                           setSelectedMatchId(id)
@@ -527,7 +527,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               type='text'
                               name={`split-${index}${asListItem ? '-li' : ''}`}
                               disabled={
-                                index === 0 || !categorizationEnabled(mode)
+                                index === 0 || !categorizationEnabled
                               }
                               onChange={updateAmounts(index)}
                               value={split.inputValue}
@@ -547,7 +547,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                                 className='Layer__category-menu--full'
                                 disabled={
                                   bankTransaction.processing
-                                  || !categorizationEnabled(mode)
+                                  || !categorizationEnabled
                                 }
                                 excludeMatches
                                 showTooltips={showTooltips}
@@ -580,7 +580,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                             )}`}
                           />
                         )}
-                        {categorizationEnabled(mode)
+                        {categorizationEnabled
                           ? (
                             <div className={`${className}__splits-buttons`}>
                               {rowState.splits.length > 1
@@ -636,7 +636,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   />
                 )}
 
-                {asListItem && categorizationEnabled(mode)
+                {asListItem && categorizationEnabled
                   ? (
                     <div className={`${className}__submit-btn`}>
                       {bankTransaction.error

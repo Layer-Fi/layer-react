@@ -1,5 +1,4 @@
 import { BankTransaction } from '../../types'
-import { BankTransactionsMode } from '../BankTransactions/BankTransactions'
 import { BankTransactionMobileListItem } from './BankTransactionMobileListItem'
 import {
   useTransactionToOpen,
@@ -12,7 +11,6 @@ export interface BankTransactionMobileListProps {
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
   showTooltips: boolean
-  mode: BankTransactionsMode
   showReceiptUploads?: boolean
   showDescriptions?: boolean
 }
@@ -23,7 +21,6 @@ export const BankTransactionMobileList = ({
   editable,
   initialLoad,
   showTooltips,
-  mode,
   showReceiptUploads,
   showDescriptions,
 }: BankTransactionMobileListProps) => {
@@ -36,7 +33,6 @@ export const BankTransactionMobileList = ({
           (bankTransaction: BankTransaction, index: number) => (
             <BankTransactionMobileListItem
               index={index}
-              mode={mode}
               key={bankTransaction.id}
               bankTransaction={bankTransaction}
               showTooltips={showTooltips}

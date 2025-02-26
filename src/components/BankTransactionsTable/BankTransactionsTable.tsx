@@ -4,7 +4,6 @@ import { BankTransaction } from '../../types'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { BankTransactionRow } from '../BankTransactionRow'
 import {
-  BankTransactionsMode,
   BankTransactionsStringOverrides,
 } from '../BankTransactions/BankTransactions'
 import { BankTransactionsLoader } from '../BankTransactionsLoader'
@@ -23,7 +22,6 @@ interface BankTransactionsTableProps {
   bankTransactions?: BankTransaction[]
   editable: boolean
   categorizeView?: boolean
-  mode: BankTransactionsMode
   isLoading?: boolean
   initialLoad?: boolean
   containerWidth: number
@@ -43,7 +41,6 @@ export const BankTransactionsTable = ({
   editable,
   isLoading,
   bankTransactions,
-  mode,
   initialLoad,
   containerWidth,
   removeTransaction,
@@ -125,7 +122,6 @@ export const BankTransactionsTable = ({
               initialLoad={initialLoad}
               index={index}
               editable={editable}
-              mode={mode}
               key={bankTransaction.id}
               dateFormat={DATE_FORMAT}
               bankTransaction={bankTransaction}

@@ -12,7 +12,6 @@ import {
 import { getDefaultSelectedCategory } from '../BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionCTAStringOverrides,
-  BankTransactionsMode,
 } from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { RetryButton, SubmitButton } from '../Button'
@@ -31,7 +30,6 @@ type Props = {
   dateFormat: string
   bankTransaction: BankTransaction
   editable: boolean
-  mode: BankTransactionsMode
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
@@ -45,7 +43,6 @@ export const BankTransactionListItem = ({
   dateFormat,
   bankTransaction,
   editable,
-  mode,
   showDescriptions,
   showReceiptUploads,
   showTooltips,
@@ -179,7 +176,6 @@ export const BankTransactionListItem = ({
           ref={expandedRowRef}
           bankTransaction={bankTransaction}
           isOpen={open}
-          mode={mode}
           close={() => setOpen(false)}
           categorized={categorized}
           asListItem={true}

@@ -27,19 +27,11 @@ import { DataStates } from './DataStates'
 import { MobileComponentType } from './constants'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import type { LayerError } from '../../models/ErrorHandler'
+import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
+import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
+import { LegacyModeProvider, type BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
 
 const COMPONENT_NAME = 'bank-transactions'
-
-export type BankTransactionsMode = 'bookkeeping-client' | 'self-serve'
-
-export const categorizationEnabled: (
-  mode: BankTransactionsMode,
-) => boolean = (mode) => {
-  if (mode === 'bookkeeping-client') {
-    return false
-  }
-  return true
-}
 
 export interface BankTransactionsStringOverrides {
   bankTransactionCTAs?: BankTransactionCTAStringOverrides
@@ -55,6 +47,9 @@ export interface BankTransactionCTAStringOverrides {
 export interface BankTransactionsProps {
   asWidget?: boolean
   pageSize?: number
+  /**
+   * @deprecated `mode` can be inferred the bookkeeping configuration of a business
+   */
   mode?: BankTransactionsMode
   showDescriptions?: boolean
   showReceiptUploads?: boolean
@@ -73,6 +68,7 @@ export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
 
 export const BankTransactions = ({
   onError,
+  mode,
   ...props
 }: BankTransactionsWithErrorProps) => {
   const contextData = useBankTransactions({ monthlyView: props.monthlyView })
@@ -80,7 +76,9 @@ export const BankTransactions = ({
   return (
     <ErrorBoundary onError={onError}>
       <BankTransactionsContext.Provider value={contextData}>
-        <BankTransactionsContent {...props} />
+        <LegacyModeProvider overrideMode={mode}>
+          <BankTransactionsContent {...props} />
+        </LegacyModeProvider>
       </BankTransactionsContext.Provider>
     </ErrorBoundary>
   )
@@ -89,7 +87,6 @@ export const BankTransactions = ({
 const BankTransactionsContent = ({
   asWidget = false,
   pageSize = 20,
-  mode = 'self-serve',
   showDescriptions = true,
   showReceiptUploads = true,
   showTooltips = false,
@@ -110,7 +107,11 @@ const BankTransactionsContent = ({
 
   const [currentPage, setCurrentPage] = useState(1)
   const [initialLoad, setInitialLoad] = useState(true)
-  const categorizeView = categorizeViewProp ?? categorizationEnabled(mode)
+
+  const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
+
+  const categorizeView = categorizeViewProp ?? categorizationEnabled
 
   const {
     activate,
@@ -164,7 +165,7 @@ const BankTransactionsContent = ({
       }
       else if (
         !inputFilters?.categorizationStatus
-        && !categorizationEnabled(mode)
+        && !categorizationEnabled
       ) {
         setFilters({
           ...filters,
@@ -183,13 +184,13 @@ const BankTransactionsContent = ({
     }
     else if (
       !inputFilters?.categorizationStatus
-      && !categorizationEnabled(mode)
+      && !categorizationEnabled
     ) {
       setFilters({
         categorizationStatus: DisplayState.categorized,
       })
     }
-  }, [inputFilters, categorizeView, mode])
+  }, [inputFilters, categorizeView, categorizationEnabled])
 
   useEffect(() => {
     setCurrentPage(1)
@@ -282,7 +283,7 @@ const BankTransactionsContent = ({
         <BankTransactionsHeader
           shiftStickyHeader={shiftStickyHeader}
           asWidget={asWidget}
-          categorizedOnly={!categorizationEnabled(mode)}
+          categorizedOnly={!categorizationEnabled}
           categorizeView={categorizeView}
           display={display}
           onCategorizationDisplayChange={onCategorizationDisplayChange}
@@ -309,7 +310,6 @@ const BankTransactionsContent = ({
             isLoading={isLoading}
             isSyncing={isSyncing}
             bankTransactions={bankTransactions}
-            mode={mode}
             initialLoad={initialLoad}
             containerWidth={containerWidth}
             removeTransaction={removeTransaction}
@@ -327,7 +327,6 @@ const BankTransactionsContent = ({
       {!isLoading && listView && mobileComponent !== 'mobileList'
         ? (
           <BankTransactionList
-            mode={mode}
             bankTransactions={bankTransactions}
             editable={editable}
             removeTransaction={removeTransaction}
@@ -345,7 +344,6 @@ const BankTransactionsContent = ({
           <BankTransactionMobileList
             bankTransactions={bankTransactions}
             editable={editable}
-            mode={mode}
             removeTransaction={removeTransaction}
             initialLoad={initialLoad}
             showTooltips={showTooltips}
