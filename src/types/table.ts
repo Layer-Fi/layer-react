@@ -33,7 +33,7 @@ export interface TableRowProps {
   children: ReactNode
   depth?: number
   expandable?: boolean
-  variant?: 'expandable' | 'default' | 'summation'
+  variant?: 'expandable' | 'main' | 'default' | 'summation'
   withDivider?: boolean
   withDividerPosition?: 'top' | 'bottom'
   isExpanded?: boolean

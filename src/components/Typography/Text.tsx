@@ -19,7 +19,7 @@ export enum TextUseTooltip {
   always = 'always',
 }
 
-export type TextStatus = 'success' | 'error' | 'warning'
+export type TextStatus = 'success' | 'error' | 'warning' | 'disabled'
 
 export interface TextTooltipOptions {
   contentClassName?: string

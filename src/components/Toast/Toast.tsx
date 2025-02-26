@@ -6,10 +6,11 @@ export interface ToastProps {
   content: string
   duration?: number
   isExiting?: boolean
+  type?: 'success' | 'default'
 }
 
 const Toast = (props: ToastProps & { isExiting: boolean }) => {
-  const { id, content, isExiting } = props
+  const { id, content, isExiting, type = 'default' } = props
   const { removeToast } = useLayerContext()
 
   return (
@@ -18,7 +19,7 @@ const Toast = (props: ToastProps & { isExiting: boolean }) => {
       className={classNames('Layer__toast', {
         enter: !isExiting,
         exit: isExiting,
-      })}
+      }, `Layer__toast--${type}`)}
       onClick={() => removeToast(props)}
     >
       <p>{content}</p>
