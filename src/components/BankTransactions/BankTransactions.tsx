@@ -48,7 +48,7 @@ export interface BankTransactionsProps {
   asWidget?: boolean
   pageSize?: number
   /**
-   * @deprecated `mode` can be inferred the bookkeeping configuration of a business
+   * @deprecated `mode` can be inferred from the bookkeeping configuration of a business
    */
   mode?: BankTransactionsMode
   showDescriptions?: boolean

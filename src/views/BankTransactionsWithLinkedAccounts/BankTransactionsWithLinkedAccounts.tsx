@@ -24,7 +24,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   showReceiptUploads?: boolean
   showTooltips?: boolean
   /**
-   * @deprecated `mode` can be inferred the bookkeeping configuration of a business
+   * @deprecated `mode` can be inferred from the bookkeeping configuration of a business
    */
   mode?: BankTransactionsMode
   mobileComponent?: MobileComponentType
