@@ -56,9 +56,9 @@ export type JournalEntryLineItem = {
     name: string
     subType:
       | {
-          value: string
-          label: string
-        }
+        value: string
+        label: string
+      }
       | undefined
   }
   amount: number
