@@ -116,6 +116,15 @@
       cursor: pointer;
     }
 
+    &.Layer__table-row--variant-main {
+      background: var(--color-base-0);
+      transition: background 180ms ease-in-out;
+
+      &:hover {
+        background: var(--color-base-50);
+      }
+    }
+
     &.Layer__table-row--variant-default {
       background: var(--color-base-50);
     }

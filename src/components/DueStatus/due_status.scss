@@ -3,6 +3,12 @@
   flex-direction: column;
   white-space: nowrap;
 
+  &--sm {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-3xs);
+  }
+
   &[data-status='overdue'] {
     .Layer__due-status__title {
       color: var(--color-info-error);
