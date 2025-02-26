@@ -12,8 +12,6 @@ import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { Badge } from '../Badge'
 import {
   BankTransactionCTAStringOverrides,
-  BankTransactionsMode,
-  categorizationEnabled,
 } from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { SubmitButton, IconButton, RetryButton } from '../Button'
@@ -33,6 +31,8 @@ import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import type { CategoryWithEntries } from '../../types/bank_transactions'
+import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
+import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 
 type Props = {
   index: number
@@ -46,7 +46,6 @@ type Props = {
   showReceiptUploads: boolean
   showReceiptUploadColumn: boolean
   showTooltips: boolean
-  mode: BankTransactionsMode
   stringOverrides?: BankTransactionCTAStringOverrides
 }
 
@@ -84,7 +83,6 @@ export const BankTransactionRow = ({
   editable,
   dateFormat,
   bankTransaction,
-  mode,
   removeTransaction,
   containerWidth,
   initialLoad,
@@ -181,6 +179,9 @@ export const BankTransactionRow = ({
     })
     setOpen(false)
   }
+
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
 
   const categorized = isCategorized(bankTransaction)
 
@@ -374,7 +375,7 @@ export const BankTransactionRow = ({
               )
               : null}
             {(!categorized && (open || (!open && !showRetry)))
-            || (categorizationEnabled(mode) && categorized && open)
+            || (categorizationEnabled && categorized && open)
               ? (
                 <SubmitButton
                   onClick={() => {
@@ -415,7 +416,6 @@ export const BankTransactionRow = ({
             bankTransaction={bankTransaction}
             categorized={categorized}
             isOpen={open}
-            mode={mode}
             close={() => setOpen(false)}
             containerWidth={containerWidth}
             showDescriptions={showDescriptions}

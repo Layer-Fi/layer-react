@@ -71,7 +71,7 @@ export default tsEslint.config([
       '@stylistic/max-len': [
         'error',
         {
-          code: 100,
+          code: 160,
           ignoreUrls: true,
           ignoreStrings: true,
           ignoreTemplateLiterals: true,
