@@ -2,3 +2,29 @@
   width: 100%;
   max-width: 620px;
 }
+
+.Layer__business-form__name-fields {
+  display: flex;
+  gap: var(--spacing-sm);
+
+  @container (width < 400px) {
+    flex-direction: column;
+  }
+}
+
+.Layer__business-form__state-tin-fields {
+  display: flex;
+  gap: var(--spacing-sm);
+
+  .Layer__business-form__state {
+    max-width: 200px;
+  }
+
+  @container (width < 400px) {
+    flex-direction: column;
+
+    .Layer__business-form__state {
+      max-width: 100%;
+    }
+  }
+}

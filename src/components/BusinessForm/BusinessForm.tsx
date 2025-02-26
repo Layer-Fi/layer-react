@@ -1,14 +1,26 @@
 import { notEmpty, validateEmailFormat } from '../../utils/form'
 import { Input, InputGroup } from '../Input'
-import { HStack } from '../ui/Stack/Stack'
 import { useBusinessForm } from './useBusinessForm'
 import { SubmitButton } from '../Button'
 import { FormSection } from '../Input/FormSection'
-import { BusinessTypeSelect } from '../BusinessTypeSelect/BusinessTypeSelect'
-import { UsStateSelect } from '../UsStateSelect/UsStateSelect'
+import { BusinessTypeSelect } from '../Input/BusinessTypeSelect'
+import { USStateSelect } from '../Input/USStateSelect'
+import { PhoneInput } from '../Input/PhoneInput'
 
-export const BusinessForm = () => {
+export type BusinessFormStringOverrides = {
+  saveButton?: string
+}
+
+export type BusinessFormProps = {
+  stringOverrides?: BusinessFormStringOverrides
+}
+
+export const BusinessForm = ({
+  stringOverrides,
+}: BusinessFormProps) => {
   const { form } = useBusinessForm()
+
+  const { isSubmitting } = form.state
 
   return (
     <form
@@ -21,7 +33,7 @@ export const BusinessForm = () => {
     >
 
       <FormSection title='Contact information'>
-        <HStack gap='sm'>
+        <div className='Layer__business-form__name-fields'>
           <form.Field
             name='first_name'
             validators={{
@@ -66,7 +78,7 @@ export const BusinessForm = () => {
               </>
             )}
           </form.Field>
-        </HStack>
+        </div>
 
         <form.Field
           name='email'
@@ -100,13 +112,9 @@ export const BusinessForm = () => {
                 name='phone_number'
                 label='What’s the phone number you want to use for bookkeeping communication?'
               >
-                <Input
-                  name='phone_number'
-                  placeholder='1-212-456-7890'
+                <PhoneInput
                   value={field.state.value}
-                  onChange={e => field.handleChange((e.target as HTMLInputElement).value)}
-                  isInvalid={field.state.meta.errors.length > 0}
-                  errorMessage={field.state.meta.errors.join(', ')}
+                  onChange={value => field.handleChange(value)}
                 />
               </InputGroup>
             </>
@@ -154,10 +162,10 @@ export const BusinessForm = () => {
           )}
         </form.Field>
 
-        <form.Field name='type'>
+        <form.Field name='entity_type'>
           {field => (
             <>
-              <InputGroup name='type' label='Entity type'>
+              <InputGroup name='entity_type' label='Entity type'>
                 <BusinessTypeSelect
                   value={field.state.value}
                   onChange={value => field.handleChange(value)}
@@ -167,12 +175,12 @@ export const BusinessForm = () => {
           )}
         </form.Field>
 
-        <HStack gap='sm'>
+        <div className='Layer__business-form__state-tin-fields'>
           <form.Field name='us_state'>
             {field => (
               <>
-                <InputGroup name='us_state' label='State'>
-                  <UsStateSelect
+                <InputGroup name='us_state' label='State' className='Layer__business-form__state'>
+                  <USStateSelect
                     value={field.state.value}
                     onChange={value => field.handleChange(value)}
                   />
@@ -197,10 +205,16 @@ export const BusinessForm = () => {
               </>
             )}
           </form.Field>
-        </HStack>
+        </div>
       </FormSection>
 
-      <SubmitButton noIcon type='submit'>Save</SubmitButton>
+      <SubmitButton
+        type='submit'
+        disabled={isSubmitting}
+        noIcon
+      >
+        {stringOverrides?.saveButton ?? 'Save'}
+      </SubmitButton>
     </form>
   )
 }

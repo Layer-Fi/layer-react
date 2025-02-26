@@ -51,4 +51,6 @@ export const US_STATES = [
   'WISCONSIN',
   'WYOMING',
   'PUERTO_RICO',
-]
+] as const
+
+export type USState = (typeof US_STATES)[number]
