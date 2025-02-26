@@ -8,17 +8,20 @@ import classNames from 'classnames'
 
 const CLASS_NAME = 'Layer__Checkbox'
 
-type CheckboxVariant = 'default' | 'dark'
+type CheckboxVariant = 'default' | 'success'
 type CheckboxSize = 'md' | 'lg'
 
 type CheckboxProps = Omit<AriaCheckboxProps, 'className'> & {
   className?: string
   variant?: CheckboxVariant
   size?: CheckboxSize
+}
+
+type CheckboxWithTooltipProps = CheckboxProps & {
   tooltip?: string
 }
 
-export function Checkbox({ children, className, variant = 'default', size = 'md', tooltip, ...props }: CheckboxProps) {
+export function Checkbox({ children, className, variant = 'default', size = 'md', ...props }: CheckboxProps) {
   const dataProperties = useMemo(() => toDataProperties({
     size,
     variant,
@@ -26,23 +29,29 @@ export function Checkbox({ children, className, variant = 'default', size = 'md'
   }), [children, size, variant])
 
   return (
+    <ReactAriaCheckbox
+      {...dataProperties}
+      {...props}
+      className={classNames(CLASS_NAME, className)}
+    >
+      {withRenderProp(children, node => (
+        <>
+          <div slot='checkbox'>
+            <Check size={size === 'lg' ? 16 : 12} />
+          </div>
+          {node}
+        </>
+      ))}
+    </ReactAriaCheckbox>
+  )
+}
+
+export function CheckboxWithTooltip({ tooltip, ...props }: CheckboxWithTooltipProps) {
+  return (
     <div className='Layer__checkbox-wrapper'>
       <Tooltip disabled={!tooltip}>
         <TooltipTrigger className='Layer__input-tooltip'>
-          <ReactAriaCheckbox
-            {...dataProperties}
-            {...props}
-            className={classNames(CLASS_NAME, className)}
-          >
-            {withRenderProp(children, node => (
-              <>
-                <div slot='checkbox'>
-                  <Check size={size === 'lg' ? 16 : 12} />
-                </div>
-                {node}
-              </>
-            ))}
-          </ReactAriaCheckbox>
+          <Checkbox {...props} />
         </TooltipTrigger>
         <TooltipContent className='Layer__tooltip'>{tooltip}</TooltipContent>
       </Tooltip>

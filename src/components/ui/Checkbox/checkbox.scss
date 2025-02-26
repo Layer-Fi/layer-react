@@ -5,28 +5,33 @@
   position: relative;
 
   [slot="checkbox"] {
-    background-color: var(--color-base-50);
+    background-color: var(--checkbox-bg);
     color: transparent;
-    border: 2px solid var(--color-base-300);
-    border-radius: var(--border-radius-3xs);
+    border: 2px solid var(--checkbox-border-color);
+    border-radius: var(--checkbox-radius);
     display: grid;
     place-items: center;
-    width: 16px;
-    height: 16px;
+    width: var(--checkbox-size);
+    height: var(--checkbox-size);
+    transition: all 100ms ease-out;
+
+    &[data-hovered] {
+      box-shadow: 0 0 0 1px rgb(0 0 0 / 5%);
+    }
   }
 
   &[data-size="lg"] [slot="checkbox"] {
-    width: 24px;
-    height: 24px;
-    border-radius: var(--border-radius-2xs);
+    width: var(--checkbox-size-lg);
+    height: var(--checkbox-size-lg);
+    border-radius: var(--checkbox-radius-lg);
 
-    &:hover {
+    &[data-hovered] {
       box-shadow: 0 0 0 2px rgb(0 0 0 / 5%);
     }
   }
 
   svg {
-    transition: all 120ms;
+    transition: all 100ms ease-out;
   }
 
   &[data-pressed] [slot="checkbox"] {
@@ -38,36 +43,32 @@
     outline-offset: 2px;
   }
 
-  &[data-selected] {
+  &[data-selected] [slot="checkbox"] {
+    color: var(--checkbox-color-selected);
+    background-color: var(--checkbox-bg-selected);
+    border-color: var(--checkbox-border-color-selected);
+  }
+
+  &[data-selected][data-variant="success"] {
     [slot="checkbox"] {
-      color: var(--bg-default);
-      background-color: var(--color-info-success);
-      border-color: var(--color-info-success);
+      background-color: var(--checkbox-bg-success-selected);
+      border-color: var(--checkbox-border-color-success-selected);
     }
   }
 
-  &[data-selected][data-variant="dark"] {
+  &[data-disabled] {
+    cursor: not-allowed;
+
     [slot="checkbox"] {
-      color: var(--bg-default);
-      background-color: var(--fg-default);
-      border-color: var(--fg-default);
+      background-color: var(--checkbox-bg-disabled);
+
+      &[data-hovered] {
+        box-shadow: 0 0 0 1px rgb(0 0 0 / 2%);
+      }
     }
   }
 
   &[data-labeled] {
     gap: var(--spacing-xs);
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 1px var(--color-info-success-bg);
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-
-    &:hover {
-      border-color: var(--color-base-300);
-    }
   }
 }
