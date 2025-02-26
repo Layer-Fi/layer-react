@@ -1,8 +1,10 @@
+import { USState } from './location'
+
 export interface Business {
   id: string
   activation_at?: string
   archived_at?: string
-  entity_type?: string
+  entity_type?: EntityType
   external_id?: string
   imported_at?: string
   industry?: string
@@ -13,7 +15,15 @@ export interface Business {
   tin?: string
   type?: string
   updated_at?: string
-  us_state?: string
+  us_state?: USState
 }
 
-export const ENTITY_TYPES = ['SOLE_PROP', 'C_CORP', 'LLC', 'S_CORP', 'PARTNERSHIP']
+export const ENTITY_TYPES = [
+  { value: 'SOLE_PROP', label: 'Sole Proprietorship' },
+  { value: 'C_CORP', label: 'C Corporation' },
+  { value: 'LLC', label: 'Limited Liability Company' },
+  { value: 'S_CORP', label: 'S Corporation' },
+  { value: 'PARTNERSHIP', label: 'Partnership' },
+] as const
+
+export type EntityType = (typeof ENTITY_TYPES)[number]['value']
