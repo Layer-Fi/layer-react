@@ -1,3 +1,4 @@
+import { FormEvent, useMemo } from 'react'
 import { DATE_FORMAT_SHORT } from '../../config/general'
 import { useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import {
@@ -17,15 +18,14 @@ import { Heading, HeadingSize, TextSize, Text, ErrorText } from '../Typography'
 import { Bill, BillPaymentMethod, BillPaymentMethods } from '../../types/bills'
 import CloseIcon from '../../icons/CloseIcon'
 import { parseISO, format as formatTime } from 'date-fns'
-import { convertFromCents, convertNumberToCurrency, convertToCents } from '../../utils/format'
+import { convertCentsToCurrency, convertFromCents, convertNumberToCurrency, convertToCents } from '../../utils/format'
 import { getVendorName } from '../../utils/vendors'
 import { AmountInput } from '../Input/AmountInput'
 import { useUnpaidBillsByVendor } from './useUnpaidBillsByVendor'
-import { useMemo } from 'react'
 
 const buildLabel = (bill: Bill, amount?: string | null) => {
   const amountNumber = amount !== undefined ? Number(amount) : 0
-  const totalAmount = convertNumberToCurrency(convertFromCents(bill.total_amount) ?? 0)
+  const totalAmount = convertCentsToCurrency(bill.total_amount) ?? 0
   const currentAmount = convertNumberToCurrency(
     (convertFromCents(bill.outstanding_balance) ?? 0) - amountNumber,
   )
@@ -76,7 +76,7 @@ export const BillsRecordPayment = ({
   const totalAmount = billsToPay.reduce((acc, record) =>
     acc + (record.amount !== undefined ? Number(record.amount) : 0), 0)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     void recordPayment()
   }

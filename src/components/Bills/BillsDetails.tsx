@@ -19,7 +19,7 @@ import { CategorySelect, mapCategoryToOption } from '../CategorySelect/CategoryS
 import { useLayerContext } from '../../contexts/LayerContext'
 import { AmountInput } from '../Input/AmountInput'
 import { getVendorName } from '../../utils/vendors'
-import { DATE_FORMAT_SHORT } from '../../config/general'
+import { DATE_FORMAT_SHORT, DATE_FORMAT_SHORT_PADDED } from '../../config/general'
 import { BillSummary } from './BillSummary'
 import { isBillPaid, isBillUnpaid } from '../../utils/bills'
 
@@ -186,7 +186,7 @@ export const BillsDetails = ({
                         displayMode='dayPicker'
                         selected={convertToInputDate(field.state.value)}
                         onChange={e => field.handleChange(formatISO(e as Date))}
-                        dateFormat='MM/dd/yyyy'
+                        dateFormat={DATE_FORMAT_SHORT_PADDED}
                         disabled={disabled}
                       />
                     </InputGroup>
@@ -217,7 +217,7 @@ export const BillsDetails = ({
                           field.handleChange(formatISO(x))
                         }}
                         maxDate={null}
-                        dateFormat='MM/dd/yyyy'
+                        dateFormat={DATE_FORMAT_SHORT_PADDED}
                         disabled={disabled}
                       />
                     </InputGroup>
