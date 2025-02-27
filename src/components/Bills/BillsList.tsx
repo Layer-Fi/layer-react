@@ -105,6 +105,7 @@ const BillsListItem = ({
       >
         {status === 'UNPAID' && (
           <Checkbox
+            variant='success'
             isSelected={isSelected}
             onChange={e => handleCheckboxChange(e)}
             className='Layer__bills-table__checkbox'

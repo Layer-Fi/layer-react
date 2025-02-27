@@ -2,13 +2,11 @@ import classNames from 'classnames'
 import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 
-export interface AmountInputProps extends Omit<CurrencyInputProps, 'onChange' | 'value' | 'defaultValue'> {
+export interface AmountInputProps extends Omit<CurrencyInputProps, 'onChange'> {
   onChange?: (value?: string) => void
   isInvalid?: boolean
   errorMessage?: string
   leftText?: string
-  value?: string | number
-  defaultValue?: string | number
 }
 
 export const AmountInput = ({

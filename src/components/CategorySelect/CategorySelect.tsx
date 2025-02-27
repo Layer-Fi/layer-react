@@ -31,6 +31,7 @@ type Props = {
   className?: string
   showTooltips: boolean
   excludeMatches?: boolean
+  hideMainCategories?: string[]
   asDrawer?: boolean
 }
 
@@ -154,7 +155,7 @@ const Option = (
         <div className='Layer__select__option-content__match__main-row'>
           <span className='Layer__select__option-content__match__date'>
             {props.data.payload.date
-            && formatTime(parseISO(props.data.payload.date), DATE_FORMAT)}
+              && formatTime(parseISO(props.data.payload.date), DATE_FORMAT)}
           </span>
           <span className='Layer__select__option-content__match__description'>
             {props.data.payload.display_name}
@@ -228,7 +229,7 @@ const allCategoriesDivider: GroupBase<CategoryOption>[] = [
   },
 ]
 
-export function flattenCategories(
+function flattenCategories(
   categories: Category[],
 ): GroupBase<CategoryOption>[] {
   function getLeafCategories(category: Category): Category[] {
@@ -247,6 +248,14 @@ export function flattenCategories(
   })
 }
 
+function filterCategories(categories: Category[], hideMainCategories?: string[]) {
+  if (!hideMainCategories) {
+    return categories
+  }
+
+  return categories.filter(category => !hideMainCategories.includes(category.category))
+}
+
 export const CategorySelect = ({
   bankTransaction,
   name,
@@ -256,6 +265,7 @@ export const CategorySelect = ({
   className,
   showTooltips,
   excludeMatches = false,
+  hideMainCategories,
   asDrawer = false,
 }: Props) => {
   const { data: categories } = useCategories()

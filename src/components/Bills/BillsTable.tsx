@@ -8,7 +8,7 @@ import { convertCentsToCurrency, formatDate } from '../../utils/format'
 import { ButtonVariant, IconButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { DueStatus } from '../DueStatus/DueStatus'
-import { Checkbox } from '../ui/Checkbox/Checkbox'
+import { CheckboxWithTooltip } from '../ui/Checkbox/Checkbox'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { BillsTableStringOverrides } from './BillsTableWithPanel'
 import { getVendorName } from '../../utils/vendors'
@@ -83,7 +83,8 @@ const BillsTableContent = ({
         <TableRow rowKey={rowKey + '-' + index} variant='main'>
           <TableCell primary nowrap className='Layer__bills-table__vendor-col'>
             {bulkSelectionActive && status === 'UNPAID' && (
-              <Checkbox
+              <CheckboxWithTooltip
+                variant='success'
                 isSelected={isSelected}
                 onChange={handleCheckboxChange}
                 className='Layer__bills-table__checkbox'
