@@ -31,6 +31,7 @@ type Props = {
   className?: string
   showTooltips: boolean
   excludeMatches?: boolean
+  hideMainCategories?: string[]
   asDrawer?: boolean
 }
 
@@ -228,7 +229,7 @@ const allCategoriesDivider: GroupBase<CategoryOption>[] = [
   },
 ]
 
-export function flattenCategories(
+function flattenCategories(
   categories: Category[],
 ): GroupBase<CategoryOption>[] {
   function getLeafCategories(category: Category): Category[] {
@@ -247,6 +248,14 @@ export function flattenCategories(
   })
 }
 
+function filterCategories(categories: Category[], hideMainCategories?: string[]) {
+  if (!hideMainCategories) {
+    return categories
+  }
+
+  return categories.filter(category => !hideMainCategories.includes(category.category))
+}
+
 export const CategorySelect = ({
   bankTransaction,
   name,
@@ -256,9 +265,12 @@ export const CategorySelect = ({
   className,
   showTooltips,
   excludeMatches = false,
+  hideMainCategories,
   asDrawer = false,
 }: Props) => {
-  const { categories } = useLayerContext()
+  const { categories: rawCategories } = useLayerContext()
+
+  const categories = filterCategories(rawCategories, hideMainCategories)
 
   const matchOptions =
     !excludeMatches && bankTransaction?.suggested_matches

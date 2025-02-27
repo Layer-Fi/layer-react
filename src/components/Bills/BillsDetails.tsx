@@ -23,8 +23,8 @@ import { DATE_FORMAT_SHORT } from '../../config/general'
 import { BillSummary } from './BillSummary'
 import { isBillPaid, isBillUnpaid } from '../../utils/bills'
 
-const flattenCategories = (cats: Category[]): Category[] => {
-  return cats.reduce((acc: Category[], category) => {
+const flattenCategories = (categories: Category[]): Category[] => {
+  return categories.reduce((acc: Category[], category) => {
     acc.push(category)
     if (category.subCategories?.length) {
       acc.push(...flattenCategories(category.subCategories))
@@ -155,7 +155,7 @@ export const BillsDetails = ({
 
                       <InputGroup inline={true} label='Address'>
                         <Textarea
-                          value={field.state.value?.address_string ?? ''}
+                          value={field.state.value?.address_string ?? undefined}
                           disabled={true}
                         />
                       </InputGroup>
@@ -257,6 +257,7 @@ export const BillsDetails = ({
                                   onChange={e => subField.handleChange(
                                     { type: 'AccountId', id: e.payload.id, product_name: e.payload.display_name },
                                   )}
+                                  hideMainCategories={['REVENUE']}
                                   showTooltips={false}
                                   disabled={disabled}
                                 />

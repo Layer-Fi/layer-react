@@ -16,7 +16,13 @@ export type BillForm = {
   received_at?: string
   due_at?: string
   terms?: string
-  line_items?: (Partial<BillLineItem & { product_name?: string }>) []
+  line_items?: (Partial<BillLineItem & {
+    account_identifier?: {
+      type: string
+      id: string
+      product_name?: string
+    }
+  }>) []
 }
 
 export const useBillForm = (bill: Bill) => {

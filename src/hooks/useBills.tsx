@@ -9,12 +9,11 @@ import useSWRInfinite from 'swr/infinite'
 import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
 import { Layer } from '../api/layer'
 import { GetBillsReturn } from '../api/layer/bills'
-import { useSWRLoadingStatus } from './useSWRLoadingStatus'
 import { APIError } from '../models/APIError'
 
 export type BillStatusFilter = 'PAID' | 'UNPAID'
 
-const PAGE_SIZE = 5
+const PAGE_SIZE = 20
 
 type UseBills = () => {
   data: Bill[]
@@ -83,7 +82,7 @@ export const useBills: UseBills = () => {
 
   const {
     data: rawResponseData,
-    isLoading: isSWRLoading,
+    isLoading,
     isValidating,
     error,
     size,
@@ -112,15 +111,6 @@ export const useBills: UseBills = () => {
       revalidateFirstPage: false,
     },
   )
-
-  const { isLoading } = useSWRLoadingStatus({
-    isLoading: isSWRLoading,
-    alreadyFetched: !!(
-      rawResponseData
-      && rawResponseData.length > 0
-      && rawResponseData[0].data
-    ),
-  })
 
   const data: Bill[] | undefined = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {
