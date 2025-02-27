@@ -42,7 +42,7 @@ export type LinkedAccount = {
   institution: {
     name: string
     logo: string | null
-  }
+  } | null
   notifications?: ReadonlyArray<AccountNotification>
   mask?: string
   connection_id?: string
