@@ -60,15 +60,18 @@ export const useDateRange: UseDateRange = ({
   useEffect(() => {
     if (syncWithGlobalDate) {
       if (areDateRangesEqual(dateState, { startDate: globalStartDate, endDate: globalEndDate })) {
-        console.log('Sync to global - date are the same', resolvedDate, castedDate, finalDate, dateState)
+        // console.log('Sync to global - date are the same', resolvedDate, castedDate, finalDate, dateState)
+        console.log('Sync to global - date are the same')
         return
       }
-
-      console.log('Sync to global - date are NOT the same')
-      setGlobalDate({ startDate: dateState.startDate, endDate: dateState.endDate })
+      else {
+        console.log('Sync to global - date are NOT the same', 'global', { globalStartDate, globalEndDate }, 'local', dateState),
+        // console.log('Sync to global - date are NOT the same')
+        setGlobalDate({ startDate: dateState.startDate, endDate: dateState.endDate })
+      }
     }
 
-    console.log('onChange - dateState', dateState)
+    console.log('useDateRange -> call onChange to update local cmp state', dateState)
     onChange?.(dateState) // Trick with ref?
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateState])
@@ -81,7 +84,8 @@ export const useDateRange: UseDateRange = ({
         return
       }
 
-      console.log('Sync from global - date are NOT the same')
+      console.log('Sync from global - date are NOT the same', 'global', { globalStartDate, globalEndDate }, 'local', dateState.startDate)
+      // console.log('Sync from global - date are NOT the same')
       const newDate: DateRangeState = resolveDateToDate(
         {
           startDate: globalStartDate ?? dateState.startDate,

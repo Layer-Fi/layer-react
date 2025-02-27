@@ -25,6 +25,8 @@ export const useBalanceSheet: UseBalanceSheet = (date: Date = new Date()) => {
 
   const dateString = pickedDate ? format(startOfDay(pickedDate), 'yyyy-MM-dd\'T\'HH:mm:ssXXX') : undefined
 
+  console.log('useBalanceSheet - date', date)
+
   const queryKey =
     businessId
     && dateString
