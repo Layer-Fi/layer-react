@@ -1,6 +1,6 @@
 import { PropsWithChildren, createContext } from 'react'
 import { PNLComparisonContext } from '../../contexts/ProfitAndLossComparisonContext'
-import { useProfitAndLoss } from '../../hooks/useProfitAndLoss'
+import { useProfitAndLoss } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison'
 import { ReportingBasis } from '../../types'
 import { Container } from '../Container'
