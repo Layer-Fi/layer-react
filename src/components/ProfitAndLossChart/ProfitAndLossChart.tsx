@@ -151,8 +151,10 @@ export const ProfitAndLossChart = ({
 
   const { getColor, business } = useLayerContext()
 
-  const { start, end } = useGlobalDateRange()
+  const { start, end, rangeDisplayMode } = useGlobalDateRange()
   const { setMonth } = useGlobalDateRangeActions()
+
+  const showIndicator = rangeDisplayMode === 'monthPicker'
 
   const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
 
@@ -717,17 +719,21 @@ export const ProfitAndLossChart = ({
             xAxisId='revenue'
             stackId='revenue'
           >
-            <LabelList
-              content={(
-                <Indicator
-                  setCustomCursorSize={(width, height, x) =>
-                    setCustomCursorSize({ width, height, x })}
-                  customCursorSize={customCursorSize}
-                  animateFrom={animateFrom}
-                  setAnimateFrom={setAnimateFrom}
+            {showIndicator
+              ? (
+                <LabelList
+                  content={(
+                    <Indicator
+                      setCustomCursorSize={(width, height, x) =>
+                        setCustomCursorSize({ width, height, x })}
+                      customCursorSize={customCursorSize}
+                      animateFrom={animateFrom}
+                      setAnimateFrom={setAnimateFrom}
+                    />
+                  )}
                 />
-              )}
-            />
+              )
+              : null}
             {theData?.map((entry) => {
               return (
                 <Cell

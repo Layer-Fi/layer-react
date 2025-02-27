@@ -36,11 +36,9 @@ export const Indicator = ({
   const { x: animateTo = 0, width = 0 } =
     'x' in viewBox ? viewBox : emptyViewBox
   const margin = width > 12 ? 12 : 6
-  const boxWidth = width + margin
+  const boxWidth = width + (2 * margin)
   const xOffset = boxWidth / 2
   const borderRadius = 6
-  const rectWidth = `${boxWidth}px`
-  const rectHeight = 'calc(100% - 38px)'
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
@@ -75,11 +73,11 @@ export const Indicator = ({
       rx={borderRadius}
       ry={borderRadius}
       style={{
-        width: rectWidth,
-        // @ts-expect-error -- y is fine but x apparently isn't!
-        x: actualX - xOffset / 2 + margin / 4,
-        y: 22,
-        height: rectHeight,
+        width: `${boxWidth}px`,
+        // @ts-expect-error -- "y" is fine but "x" apparently isn't!
+        x: actualX - margin,
+        y: 16,
+        height: 'calc(100% - 30px)',
         opacity: opacityIndicator,
       }}
     />
