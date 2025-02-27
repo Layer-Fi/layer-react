@@ -37,7 +37,7 @@ export const AmountInput = ({
           prefix='$'
           placeholder={placeholder}
           decimalsLimit={2}
-          onValueChange={e => onChange?.(e)}
+          onValueChange={onChange}
           className={baseClassName}
         />
         {leftText && <span className='Layer__input-left-text'>{leftText}</span>}
