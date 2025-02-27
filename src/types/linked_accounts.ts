@@ -39,10 +39,10 @@ export type LinkedAccount = {
     created_at: string
   }
   current_ledger_balance: number
-  institution?: {
+  institution: {
     name: string
     logo: string | null
-  }
+  } | null
   notifications?: ReadonlyArray<AccountNotification>
   mask?: string
   connection_id?: string
