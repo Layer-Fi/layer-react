@@ -1,3 +1,5 @@
+import { isStringArray } from '../array/isStringArray'
+
 function toSnakeCase(input: string) {
   const segments = input
     .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g) ?? []
@@ -5,13 +7,6 @@ function toSnakeCase(input: string) {
   return segments
     .map(segment => segment.toLowerCase())
     .join('_')
-}
-
-function isStringArray(input: unknown): input is ReadonlyArray<string> {
-  return (
-    Array.isArray(input)
-    && (input.length === 0 || input.every(item => typeof item === 'string'))
-  )
 }
 
 type ParameterValues = Date | string | ReadonlyArray<string> | number | boolean
