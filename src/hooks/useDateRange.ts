@@ -36,14 +36,6 @@ export const useDateRange: UseDateRange = ({
     supportedModes: supportedModes ?? ['monthPicker'],
   }
 
-  // console.log('initialVal UE3',
-  //   initialVal,
-  //   { initialStartDate, initialEndDate, initialMode },
-  //   { globalStartDate, globalEndDate, globalMode },
-  //   castDateRangeToMode(
-  //     { startDate: initialVal.startDate, endDate: initialVal.endDate, mode: initialVal.mode },
-  //   ))
-
   const resolvedDate = resolveDateToDate({
     startDate: globalStartDate,
     endDate: globalEndDate,
@@ -57,20 +49,15 @@ export const useDateRange: UseDateRange = ({
   // Set initial state from global date, props or default to current month
   const [dateState, setDateState] = useState<DateRangeState>(finalDate)
 
-  // Disable circular global date update when setting `date` from global date
-  // const [readingFromGlobal, setReadingFromGlobal] = useState(false)
-
   // Sync to global date state
   useEffect(() => {
     if (syncWithGlobalDate) {
       if (areDateRangesEqual(dateState, { startDate: globalStartDate, endDate: globalEndDate })) {
-        // console.log('Sync to global - date are the same', resolvedDate, castedDate, finalDate, dateState)
-        console.log('Sync to global - date are the same')
+        // Dates are the same, no need to update global state
         return
       }
       else {
-        console.log('Sync to global - date are NOT the same', 'global', { globalStartDate, globalEndDate }, 'local', dateState)
-        // console.log('Sync to global - date are NOT the same')
+        // Dates are different, update global state
         setGlobalDate({
           startDate: dateState.startDate,
           endDate: dateState.endDate,
@@ -79,7 +66,7 @@ export const useDateRange: UseDateRange = ({
       }
     }
 
-    console.log('useDateRange -> call onChange to update local cmp state', dateState)
+    // Call onChange to update component state
     onChange?.(dateState) // Trick with ref?
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateState])
@@ -88,22 +75,21 @@ export const useDateRange: UseDateRange = ({
   useEffect(() => {
     if (syncWithGlobalDate) {
       if (areDateRangesEqual(dateState, { startDate: globalStartDate, endDate: globalEndDate })) {
-        console.log('Sync from global - date are the same (equal)')
+        // Dates are the same, no need to update local state
         return
       }
 
       if (areDatesOverlapping(dateState, { startDate: globalStartDate, endDate: globalEndDate })) {
-        console.log('Sync from global - date are the same (overlapping)')
+        // Dates are overlapping - no need to update local state
         return
       }
 
-      console.log('Sync from global - date are NOT the same', 'global', { globalStartDate, globalEndDate }, 'local', dateState.startDate)
-      // console.log('Sync from global - date are NOT the same')
+      // Dates are different, update local state
       const newDate: DateRangeState = resolveDateToDate(
         {
           startDate: globalStartDate ?? dateState.startDate,
           endDate: globalEndDate ?? dateState.endDate,
-          mode: dateState.mode, // @TODO - consider changing also local mode
+          mode: dateState.mode, // @TODO - change local mode if new mode is included in allowedModes
         },
         dateState,
       )
@@ -118,7 +104,6 @@ export const useDateRange: UseDateRange = ({
     startDate: newStartDate,
     endDate: newEndDate,
     mode: newMode,
-    // period: newPeriod,
   }: Partial<DateRangeState>) => {
     const newDate: DateRangeState = resolveDateToDate(
       {

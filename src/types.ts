@@ -89,7 +89,6 @@ export type DatePeriod =
 export type DateRangeState = {
   startDate: Date
   endDate: Date
-  // period: DatePeriod
-  mode: DatePickerMode // @TODO - make something more generic and unify with DatePickerMode
+  mode: DatePickerMode // @TODO - make something more generic and unify with DatePickerMode?
   supportedModes?: DatePickerMode[]
 }
