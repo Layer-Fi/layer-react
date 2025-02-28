@@ -24,12 +24,12 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = () => {
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const startDateString = format(
-    startOfDay(date?.startDate ?? new Date()),
+  const startDateString = date?.startDate && format(
+    startOfDay(date?.startDate),
     'yyyy-MM-dd\'T\'HH:mm:ssXXX',
   )
-  const endDateString = format(
-    startOfDay(date?.endDate ?? new Date()),
+  const endDateString = date?.endDate && format(
+    startOfDay(date?.endDate),
     'yyyy-MM-dd\'T\'HH:mm:ssXXX',
   )
 
@@ -45,8 +45,8 @@ export const useStatementOfCashFlow: UseStatementOfCashFlow = () => {
     Layer.getStatementOfCashFlow(apiUrl, auth?.access_token, {
       params: {
         businessId,
-        startDate: startDateString,
-        endDate: endDateString,
+        startDate: startDateString ?? '',
+        endDate: endDateString ?? '',
       },
     }),
   )

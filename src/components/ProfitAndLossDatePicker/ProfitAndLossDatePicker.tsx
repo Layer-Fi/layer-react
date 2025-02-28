@@ -7,6 +7,7 @@ import { endOfDay, endOfMonth, startOfMonth } from 'date-fns'
 import { DatePicker } from '../DatePicker'
 import { DatePickerModeSelector, DEFAULT_ALLOWED_PICKER_MODES } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { DateRangeState } from '../../types'
+import { clampToPresentOrPast } from '../../utils/date'
 
 export type ProfitAndLossDatePickerProps = TimeRangePickerConfig
 
@@ -26,7 +27,7 @@ export const ProfitAndLossDatePicker = ({
 
   const [date, setDate] = useState<DateRangeState>({
     startDate: startOfMonth(new Date()),
-    endDate: endOfMonth(new Date()),
+    endDate: clampToPresentOrPast(endOfMonth(new Date())),
     mode: 'monthPicker',
   })
 

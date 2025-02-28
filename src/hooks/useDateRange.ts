@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { DateRangeState } from '../types'
-import { areDateRangesEqual, castDateRangeToMode, resolveDateToDate } from '../utils/date'
+import { areDateRangesEqual, areDatesOverlapping, castDateRangeToMode, clampToPresentOrPast, resolveDateToDate } from '../utils/date'
 import { endOfMonth, isAfter, isBefore, startOfMonth } from 'date-fns'
 import { useGlobalDate, useGlobalDateActions } from '../providers/GlobalDateStore/GlobalDateStoreProvider'
 
@@ -26,8 +26,12 @@ export const useDateRange: UseDateRange = ({
   const { setDate: setGlobalDate } = useGlobalDateActions()
 
   const initialVal = {
-    startDate: syncWithGlobalDate ? globalStartDate : initialStartDate ?? startOfMonth(new Date()),
-    endDate: syncWithGlobalDate ? globalEndDate : initialEndDate ?? endOfMonth(new Date()),
+    startDate: syncWithGlobalDate
+      ? globalStartDate
+      : clampToPresentOrPast(initialStartDate ?? startOfMonth(new Date())),
+    endDate: syncWithGlobalDate
+      ? globalEndDate
+      : clampToPresentOrPast(initialEndDate ?? endOfMonth(new Date())),
     mode: initialMode ?? 'monthPicker',
     supportedModes: supportedModes ?? ['monthPicker'],
   }
@@ -65,9 +69,13 @@ export const useDateRange: UseDateRange = ({
         return
       }
       else {
-        console.log('Sync to global - date are NOT the same', 'global', { globalStartDate, globalEndDate }, 'local', dateState),
+        console.log('Sync to global - date are NOT the same', 'global', { globalStartDate, globalEndDate }, 'local', dateState)
         // console.log('Sync to global - date are NOT the same')
-        setGlobalDate({ startDate: dateState.startDate, endDate: dateState.endDate })
+        setGlobalDate({
+          startDate: dateState.startDate,
+          endDate: dateState.endDate,
+          mode: dateState.mode,
+        })
       }
     }
 
@@ -80,7 +88,12 @@ export const useDateRange: UseDateRange = ({
   useEffect(() => {
     if (syncWithGlobalDate) {
       if (areDateRangesEqual(dateState, { startDate: globalStartDate, endDate: globalEndDate })) {
-        console.log('Sync from global - date are the same')
+        console.log('Sync from global - date are the same (equal)')
+        return
+      }
+
+      if (areDatesOverlapping(dateState, { startDate: globalStartDate, endDate: globalEndDate })) {
+        console.log('Sync from global - date are the same (overlapping)')
         return
       }
 
