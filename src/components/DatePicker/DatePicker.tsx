@@ -33,20 +33,6 @@ const ReactDatePicker = (((RDP.default as any).default as any)
      @typescript-eslint/no-unsafe-member-access,
 */
 
-// export const DatePicker = (props: DatePickerProps) => {
-//   const { startDate, endDate } = useGlobalDate()
-
-//   const defaultValues = useMemo(() => buildContextDefaultValues(props, startDate, endDate), [])
-
-//   const dateContext = useDateRange(defaultValues)
-
-//   return (
-//     <DateContext.Provider value={dateContext}>
-//       <DatePickerController {...props} />
-//     </DateContext.Provider>
-//   )
-// }
-
 export const DatePicker = ({
   selected,
   defaultSelected,

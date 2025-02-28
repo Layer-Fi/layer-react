@@ -24,15 +24,6 @@ export function useDatePickerState({
 | 'maxDate'
 | 'syncWithGlobalDate'
 >) {
-  // To track prev vs new value in the useEffect
-  // const dateRef = useRef<DateRangeState | null>(null)
-
-  // const { startDate: globalStartDate, endDate: globalEndDate } = useGlobalDate()
-  // const { setDate: setGlobalDate } = useGlobalDateActions()
-  // const globalDateRange = { startDate: globalStartDate, endDate: globalEndDate }
-
-  // const { date, setDate } = useDateContext()
-
   const selected = initialSelected ?? defaultSelected
 
   const initialVal = {
@@ -49,15 +40,6 @@ export function useDatePickerState({
   }
 
   const { date, setDate } = useDateRange(initialVal)
-
-  // const { date, setDate } = useDateRange(
-  //   buildDateStateInitialValue({
-  //     syncWithGlobalDate,
-  //     displayMode,
-  //     globalStartDate,
-  //     globalEndDate,
-  //     selected: selected ?? defaultSelected,
-  //   }))
 
   const [selectingInternalDates, setSelectingInternalDates] = useState<boolean>(false)
 
@@ -112,6 +94,7 @@ export function useDatePickerState({
       && JSON.stringify({ s: date.startDate, e: date.endDate })
       !== JSON.stringify({ s: startDate, e: endDate })
     ) {
+      // @TODO - enable this
       // setDate({ startDate, endDate })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -125,87 +108,10 @@ export function useDatePickerState({
     else {
       onChange?.([date.startDate, date.endDate])
     }
-  }, [date])
-
-  // useEffect(() => {
-  //   console.log('UE 3 - date')
-  //   // Ignore hook when prev and new values are actually the same,
-  //   // but because both are objects, useEffect doesn't recognize them as equal
-  //   if (JSON.stringify(dateRef.current) === JSON.stringify(date)) {
-  //     setReadingFromGlobal(false)
-  //     return
-  //   }
-
-  //   if (
-  //     syncWithGlobalDate
-  //     && date.startDate
-  //     && date.endDate
-  //     && JSON.stringify({ s: date.startDate, e: date.endDate })
-  //     !== JSON.stringify({
-  //       s: globalDateRange.startDate,
-  //       e: globalDateRange.endDate,
-  //     })
-  //   ) {
-  //     // Ignore updating global state after setting local date from global date
-  //     if (!readingFromGlobal) {
-  //       setGlobalDate({
-  //         startDate: date.startDate,
-  //         endDate: date.endDate,
-  //       })
-  //     }
-  //   }
-
-  //   if (startDate !== date.startDate) {
-  //     setStartDate(date.startDate)
-  //   }
-
-  //   if (endDate !== date.endDate) {
-  //     setEndDate(date.endDate)
-  //   }
-
-  //   if (onChange) {
-  //     if (isRangeMode(displayMode)) {
-  //       onChange([date.startDate, date.endDate])
-  //     }
-  //     else {
-  //       onChange(date.startDate)
-  //     }
-  //   }
-
-  //   dateRef.current = date
-
-  //   // Clear the safety flag
-  //   setReadingFromGlobal(false)
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [date])
-
-  // useEffect(() => {
-  //   if (
-  //     syncWithGlobalDate
-  //     && globalDateRange.startDate
-  //     && globalDateRange.endDate
-  //     && (!date || (date && !areDateRangesEqual(globalDateRange, date)))
-  //   ) {
-  //     console.log('UE 4 - globalDateRange', areDateRangesEqual(globalDateRange, date))
-  //     // Set this flag to stop propagating local date update into global date
-  //     // in the next useEffect(() => {...}, [date]) - to avoid circular hooks runs
-  //     setReadingFromGlobal(true)
-
-  //     setDate({
-  //       startDate: globalDateRange.startDate,
-  //       endDate: globalDateRange.endDate,
-  //     })
-
-  //     setStartDate(globalDateRange.startDate)
-  //     setEndDate(globalDateRange.endDate)
-  //   }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [globalDateRange])
+  }, [date, onChange, displayMode])
 
   const isCurrentDate = () => {
     const currentDate = new Date()
-    // @TODO - is the startDate a scalar always?
-    // console.log('isCurrentDate', startDate, currentDate)
 
     switch (pickerMode) {
       case 'dayPicker':

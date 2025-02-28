@@ -1,11 +1,10 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
-import { ProfitAndLoss } from '../ProfitAndLoss'
 import { endOfDay, endOfMonth, startOfMonth } from 'date-fns'
 import { DatePicker } from '../DatePicker'
-import { DatePickerModeSelector, DEFAULT_ALLOWED_PICKER_MODES } from '../DatePicker/ModeSelector/DatePickerModeSelector'
+import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { DateRangeState } from '../../types'
 import { clampToPresentOrPast } from '../../utils/date'
 
@@ -16,27 +15,12 @@ export const ProfitAndLossDatePicker = ({
   allowedDatePickerModes,
 }: ProfitAndLossDatePickerProps) => {
   const { business } = useLayerContext()
-  const { refetch } = useContext(ProfitAndLoss.ComparisonContext)
-
-  /** @TODO - try to read from global state first if not set.
-   * Also, it may require to have context-provider to encapsulate all subcomponents */
-  // const { date, setDate } = useDate({
-  //   startDate: startOfMonth(new Date()),
-  //   endDate: endOfMonth(new Date()),
-  // })
 
   const [date, setDate] = useState<DateRangeState>({
     startDate: startOfMonth(new Date()),
     endDate: clampToPresentOrPast(endOfMonth(new Date())),
     mode: 'monthPicker',
   })
-
-  // useEffect(() => {
-  //   refetch({
-  //     startDate: date.startDate,
-  //     endDate: date.endDate,
-  //   })
-  // }, [date.startDate, date.endDate, refetch])
 
   const minDate = getEarliestDateToBrowse(business)
 
@@ -55,7 +39,7 @@ export const ProfitAndLossDatePicker = ({
         setDate({ startDate: start, endDate: end ?? endOfDay(start), mode: date.mode })
       }}
       displayMode={date.mode}
-      allowedModes={allowedDatePickerModes ?? DEFAULT_ALLOWED_PICKER_MODES}
+      allowedModes={allowedDatePickerModes}
       onChangeMode={(rangeDisplayMode) => {
         if (rangeDisplayMode !== 'dayPicker') {
           setDate({ ...date, mode: rangeDisplayMode })
