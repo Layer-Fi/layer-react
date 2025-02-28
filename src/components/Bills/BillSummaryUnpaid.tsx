@@ -4,7 +4,7 @@ import { convertFromCents, convertNumberToCurrency } from '../../utils/format'
 import { Text, TextSize, TextStatus, TextWeight } from '../Typography/Text'
 import { differenceInDays, parseISO } from 'date-fns'
 
-interface BillSummaryUnpaidProps {
+type BillSummaryUnpaidProps = {
   bill: Bill
 }
 

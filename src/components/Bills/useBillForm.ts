@@ -16,13 +16,7 @@ export type BillForm = {
   received_at?: string
   due_at?: string
   terms?: string
-  line_items?: (Partial<BillLineItem & {
-    account_identifier?: {
-      type: string
-      id: string
-      product_name?: string
-    }
-  }>) []
+  line_items?: (Partial<BillLineItem>) []
 }
 
 export const useBillForm = (bill: Bill) => {
@@ -85,7 +79,7 @@ export const useBillForm = (bill: Bill) => {
               }
               : undefined,
             description: item.description,
-            product_name: item.account_identifier?.product_name ?? item.product_name,
+            product_name: item.product_name,
             unit_price: item.total_amount ? convertToCents(item.total_amount) : undefined,
             quantity: '1.00',
             discount_amount: 0,

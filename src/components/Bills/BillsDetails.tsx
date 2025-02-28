@@ -255,7 +255,7 @@ export const BillsDetails = ({
                                     ? mapCategoryToOption(selectedCategory)
                                     : undefined}
                                   onChange={e => subField.handleChange(
-                                    { type: 'AccountId', id: e.payload.id, product_name: e.payload.display_name },
+                                    { type: 'AccountId', id: e.payload.id },
                                   )}
                                   hideMainCategories={['REVENUE']}
                                   showTooltips={false}
@@ -273,6 +273,20 @@ export const BillsDetails = ({
                                     subField.state.value === null ? undefined : subField.state.value
                                   }
                                   onChange={e => subField.handleChange(e === undefined ? null : e)}
+                                  disabled={disabled}
+                                />
+                              )
+                            }}
+                          </form.Field>
+
+                          <form.Field name={`line_items[${i}].product_name`}>
+                            {(subField) => {
+                              return (
+                                <Input
+                                  value={subField.state.value}
+                                  onChange={e =>
+                                    subField.handleChange((e.target as HTMLInputElement).value)}
+                                  placeholder='Product name'
                                   disabled={disabled}
                                 />
                               )

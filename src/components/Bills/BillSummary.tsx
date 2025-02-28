@@ -3,7 +3,7 @@ import { isBillPaid } from '../../utils/bills'
 import { BillSummaryPaid } from './BillSummaryPaid'
 import { BillSummaryUnpaid } from './BillSummaryUnpaid'
 
-interface BillSummaryProps {
+type BillSummaryProps = {
   bill: Bill
 }
 

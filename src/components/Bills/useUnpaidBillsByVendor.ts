@@ -1,4 +1,3 @@
-import { Bill } from '../../types/bills'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
@@ -27,22 +26,14 @@ function buildKey({
   }
 }
 
-type UseUnpaidBillsByVendor = ({ vendorId }: { vendorId?: string }) => {
-  data: Bill[]
-  isLaoding?: boolean
-}
-
-export const useUnpaidBillsByVendor: UseUnpaidBillsByVendor = (
+export const useUnpaidBillsByVendor = (
   { vendorId }: { vendorId?: string },
 ) => {
   const { businessId } = useLayerContext()
   const { data: auth } = useAuth()
   const { apiUrl } = useEnvironment()
 
-  const {
-    data,
-    isLoading,
-  } = useSWR(
+  return useSWR(
     () => buildKey({
       ...auth,
       apiUrl,
@@ -59,9 +50,4 @@ export const useUnpaidBillsByVendor: UseUnpaidBillsByVendor = (
         },
       })().then(response => response.data),
   )
-
-  return {
-    data: data ?? [],
-    isLoading,
-  }
 }

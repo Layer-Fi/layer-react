@@ -4,17 +4,17 @@ import { View } from '../components/View'
 import { BillsProvider } from '../contexts/BillsContext'
 import { BillsDatePicker } from '../components/Bills/BillsDatePicker'
 
-export interface BillsStringOverrides {
+export type BillsStringOverrides = {
   title?: string
   paidToggleOption?: string
   unpaidToggleOption?: string
 }
 
-export interface ChartOfAccountsOptions {
+export type ChartOfAccountsOptions = {
   templateAccountsEditable?: boolean
 }
 
-export interface BillsViewProps {
+export type BillsViewProps = {
   showTitle?: boolean
   stringOverrides?: BillsStringOverrides
 }
