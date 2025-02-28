@@ -1,13 +1,12 @@
 import {
-  endOfDay,
   endOfMonth,
-  min,
   startOfMonth,
 } from 'date-fns'
 import { useState, createContext, type PropsWithChildren, useContext } from 'react'
 import { createStore, useStore } from 'zustand'
 import { useStoreWithDateSelected } from '../../utils/zustand/useStoreWithDateSelected'
 import { DateRangeState } from '../../types'
+import { clampToPresentOrPast } from '../../utils/date'
 
 const _DATE_PICKER_MODES = [
   'dayPicker',
@@ -23,10 +22,6 @@ const _RANGE_PICKER_MODES = [
 export type DateRangePickerMode = typeof _RANGE_PICKER_MODES[number]
 
 export type DatePickerMode = DayDatePickerMode | DateRangePickerMode
-
-function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())) {
-  return min([date, cutoff])
-}
 
 type GlobalDateStoreShape = {
   startDate: DateRangeState['startDate']

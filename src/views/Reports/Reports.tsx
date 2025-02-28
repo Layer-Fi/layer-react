@@ -107,17 +107,15 @@ export const Reports = ({
         </div>
       )}
       <Container name='reports' ref={containerRef}>
-        <ProfitAndLoss asContainer={false}>
-          <ReportsPanel
-            containerRef={containerRef}
-            openReport={activeTab}
-            stringOverrides={stringOverrides}
-            comparisonConfig={comparisonConfig}
-            profitAndLossConfig={profitAndLossConfig}
-            statementOfCashFlowConfig={statementOfCashFlowConfig}
-            view={view}
-          />
-        </ProfitAndLoss>
+        <ReportsPanel
+          containerRef={containerRef}
+          openReport={activeTab}
+          stringOverrides={stringOverrides}
+          comparisonConfig={comparisonConfig}
+          profitAndLossConfig={profitAndLossConfig}
+          statementOfCashFlowConfig={statementOfCashFlowConfig}
+          view={view}
+        />
       </Container>
     </View>
   )
@@ -135,13 +133,15 @@ const ReportsPanel = ({
   return (
     <>
       {openReport === 'profitAndLoss' && (
-        <ProfitAndLoss.Report
-          stringOverrides={stringOverrides}
-          comparisonConfig={comparisonConfig}
-          parentRef={containerRef}
-          view={view}
-          {...profitAndLossConfig}
-        />
+        <ProfitAndLoss asContainer={false}>
+          <ProfitAndLoss.Report
+            stringOverrides={stringOverrides}
+            comparisonConfig={comparisonConfig}
+            parentRef={containerRef}
+            view={view}
+            {...profitAndLossConfig}
+          />
+        </ProfitAndLoss>
       )}
       {openReport === 'balanceSheet' && (
         <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} />

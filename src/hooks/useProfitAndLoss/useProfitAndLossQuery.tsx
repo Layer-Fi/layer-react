@@ -7,6 +7,7 @@ import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { clampToPresentOrPast } from '../../utils/date'
 
 type UseProfitAndLossQueryProps = {
   startDate: Date
@@ -36,7 +37,7 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
     reportingBasis,
   }: UseProfitAndLossQueryProps = {
     startDate: startOfMonth(new Date()),
-    endDate: endOfMonth(new Date()),
+    endDate: clampToPresentOrPast(endOfMonth(new Date())),
   },
 ) => {
   const { businessId, syncTimestamps, read, hasBeenTouched } =
@@ -45,11 +46,11 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
   const { data: auth } = useAuth()
 
   const queryKey =
-    businessId &&
-    startDate &&
-    endDate &&
-    auth?.access_token &&
-    `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
+    businessId
+    && startDate
+    && endDate
+    && auth?.access_token
+    && `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
       ',',
     )}-${reportingBasis}`
 

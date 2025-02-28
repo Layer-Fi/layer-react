@@ -5,10 +5,15 @@ import {
   endOfMonth,
   endOfYear,
   isEqual,
+  min,
   startOfDay,
   startOfMonth,
   startOfYear,
 } from 'date-fns'
+
+export function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())) {
+  return min([date, cutoff])
+}
 
 /**
  * Function finds the target DateState based on the reference DateState.
@@ -44,10 +49,14 @@ export const areDateRangesEqual = (
 const isSameMode = ({ mode: mode1 }: DateRangeState, { mode: mode2 }: DateRangeState) =>
   mode1 === mode2
 
-const areDatesOverlapping = (
-  { startDate: startDate1, endDate: endDate1 }: DateRangeState,
-  { startDate: startDate2, endDate: endDate2 }: DateRangeState,
+export const areDatesOverlapping = (
+  { startDate: startDate1, endDate: endDate1 }: Partial<DateRangeState>,
+  { startDate: startDate2, endDate: endDate2 }: Partial<DateRangeState>,
 ) => {
+  if (!startDate1 || !endDate1 || !startDate2 || !endDate2) {
+    return false
+  }
+
   return areIntervalsOverlapping(
     { start: startDate1, end: endDate1 },
     { start: startDate2, end: endDate2 },
@@ -69,25 +78,25 @@ const buildDateRangeStateFromRefDate = (
       return {
         ...targetDate,
         startDate: startOfDay(refDate.startDate),
-        endDate: endOfDay(refDate.endDate),
+        endDate: clampToPresentOrPast(endOfDay(refDate.endDate)),
       }
     case 'monthPicker':
       return {
         ...targetDate,
         startDate: startOfMonth(refDate.startDate),
-        endDate: endOfMonth(refDate.startDate),
+        endDate: clampToPresentOrPast(endOfMonth(refDate.startDate)),
       }
     case 'monthRangePicker':
       return {
         ...targetDate,
         startDate: startOfMonth(refDate.startDate),
-        endDate: endOfMonth(refDate.endDate),
+        endDate: clampToPresentOrPast(endOfMonth(refDate.endDate)),
       }
     case 'yearPicker':
       return {
         ...targetDate,
         startDate: startOfYear(refDate.startDate),
-        endDate: endOfYear(refDate.startDate),
+        endDate: clampToPresentOrPast(endOfYear(refDate.startDate)),
       }
     default:
       return targetDate
@@ -106,22 +115,22 @@ export const castDateRangeToMode = (
     case 'dayRangePicker':
       return {
         startDate: startOfDay(date.startDate),
-        endDate: endOfDay(date.endDate),
+        endDate: clampToPresentOrPast(endOfDay(date.endDate)),
       }
     case 'monthPicker':
       return {
         startDate: startOfMonth(date.startDate),
-        endDate: endOfMonth(date.startDate),
+        endDate: clampToPresentOrPast(endOfMonth(date.startDate)),
       }
     case 'monthRangePicker':
       return {
         startDate: startOfMonth(date.startDate),
-        endDate: endOfMonth(date.endDate),
+        endDate: clampToPresentOrPast(endOfMonth(date.endDate)),
       }
     case 'yearPicker':
       return {
         startDate: startOfYear(date.startDate),
-        endDate: endOfYear(date.startDate),
+        endDate: clampToPresentOrPast(endOfYear(date.startDate)),
       }
     default:
       return date

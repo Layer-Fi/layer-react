@@ -1,5 +1,6 @@
 import { endOfDay, endOfMonth } from 'date-fns'
 import { DatePickerProps, NavigationArrows } from './types'
+import { clampToPresentOrPast } from '../../utils/date'
 
 export function buildDateStateInitialValue({
   syncWithGlobalDate = true,
@@ -116,7 +117,7 @@ export function showNavigationArrows(navigateArrows?: NavigationArrows[], isDesk
 export function getEndDateBasedOnMode(startDate: Date, displayMode: DatePickerProps['displayMode']) {
   switch (displayMode) {
     case 'monthPicker':
-      return endOfMonth(startDate)
+      return clampToPresentOrPast(endOfMonth(startDate))
     default:
       return endOfDay(startDate)
   }
