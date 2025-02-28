@@ -14,7 +14,7 @@ import { BillsList } from './BillsList'
 import { Pagination } from '../Pagination'
 import { DataState, DataStateStatus } from '../DataState'
 
-export interface BillsTableStringOverrides {
+export type BillsTableStringOverrides = {
   componentTitle?: string
   componentSubtitle?: string
   vendorColumnHeader?: string

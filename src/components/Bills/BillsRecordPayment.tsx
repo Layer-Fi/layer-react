@@ -70,7 +70,7 @@ export const BillsRecordPayment = ({
   const { data: rawAvailableBills } = useUnpaidBillsByVendor({ vendorId: vendor?.id })
 
   const availableBills = useMemo(() =>
-    rawAvailableBills.filter(b => !billsToPay.find(x => x.bill?.id === b.id)),
+    rawAvailableBills?.filter(b => !billsToPay.find(x => x.bill?.id === b.id)),
   [rawAvailableBills, billsToPay])
 
   const totalAmount = billsToPay.reduce((acc, record) =>
@@ -154,7 +154,7 @@ export const BillsRecordPayment = ({
               <div key={index} className='Layer__bills__record-payment__amount-row'>
                 <InputGroup inline={true}>
                   <Select
-                    options={availableBills.map(b => ({
+                    options={availableBills?.map(b => ({
                       label: buildLabel(
                         b,
                         billsToPay.find(x => x.bill?.id === b.id)?.amount,

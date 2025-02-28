@@ -3,7 +3,7 @@ import { convertFromCents, convertNumberToCurrency, formatDate } from '../../uti
 import { Text, TextSize, TextWeight } from '../Typography/Text'
 import { DATE_FORMAT_SHORT } from '../../config/general'
 
-interface BillSummaryPaidProps {
+type BillSummaryPaidProps = {
   bill: Bill
 }
 
