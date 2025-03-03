@@ -6,6 +6,7 @@ import { FormSection } from '../Input/FormSection'
 import { BusinessTypeSelect } from '../Input/BusinessTypeSelect'
 import { USStateSelect } from '../Input/USStateSelect'
 import { PhoneInput } from '../Input/PhoneInput'
+import { isValidPhoneNumber } from 'libphonenumber-js'
 
 export type BusinessFormStringOverrides = {
   saveButton?: string
@@ -105,7 +106,12 @@ export const BusinessForm = ({
           )}
         </form.Field>
 
-        <form.Field name='phone_number'>
+        <form.Field
+          name='phone_number'
+          validators={{
+            onChange: ({ value }) => isValidPhoneNumber(value ?? '', 'US') ? undefined : 'Phone number is invalid',
+          }}
+        >
           {field => (
             <>
               <InputGroup
@@ -115,6 +121,8 @@ export const BusinessForm = ({
                 <PhoneInput
                   value={field.state.value}
                   onChange={value => field.handleChange(value)}
+                  isInvalid={field.state.meta.errors.length > 0}
+                  errorMessage={field.state.meta.errors.join(', ')}
                 />
               </InputGroup>
             </>
