@@ -54,10 +54,12 @@ export const useDateRange: UseDateRange = ({
     if (syncWithGlobalDate) {
       if (areDateRangesEqual(dateState, { startDate: globalStartDate, endDate: globalEndDate })) {
         // Dates are the same, no need to update global state
+        console.log('sync TO global - dates are the same - no need to update')
         return
       }
       else {
         // Dates are different, update global state
+        console.log('sync TO global - dates are different - update', dateState, { globalStartDate, globalEndDate })
         setGlobalDate({
           startDate: dateState.startDate,
           endDate: dateState.endDate,
@@ -76,15 +78,18 @@ export const useDateRange: UseDateRange = ({
     if (syncWithGlobalDate) {
       if (areDateRangesEqual(dateState, { startDate: globalStartDate, endDate: globalEndDate })) {
         // Dates are the same, no need to update local state
+        console.log('sync FROM global - dates are the same - no need to update')
         return
       }
 
       if (areDatesOverlapping(dateState, { startDate: globalStartDate, endDate: globalEndDate })) {
         // Dates are overlapping - no need to update local state
+        console.log('sync FROM global - dates are overlapping - no need to update')
         return
       }
 
       // Dates are different, update local state
+      console.log('sync FROM global - dates are different - update', dateState, { globalStartDate, globalEndDate })
       const newDate: DateRangeState = resolveDateToDate(
         {
           startDate: globalStartDate ?? dateState.startDate,

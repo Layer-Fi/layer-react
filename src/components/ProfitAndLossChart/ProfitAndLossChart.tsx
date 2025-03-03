@@ -151,10 +151,12 @@ export const ProfitAndLossChart = ({
 
   const { getColor, business } = useLayerContext()
 
-  const { startDate, endDate } = useGlobalDate()
+  const { mode, startDate, endDate } = useGlobalDate()
   const { setDate } = useGlobalDateActions()
 
   const dateRange = useMemo(() => ({ startDate, endDate }), [startDate, endDate])
+
+  const showIndicator = mode === 'monthPicker'
 
   const [localDateRange, setLocalDateRange] = useState(dateRange)
   const [customCursorSize, setCustomCursorSize] = useState({

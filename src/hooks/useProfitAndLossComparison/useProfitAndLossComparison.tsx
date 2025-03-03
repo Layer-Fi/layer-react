@@ -4,7 +4,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, MoneyFormat, ReportingBasis } from '../../types'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDate } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { prepareFiltersBody, preparePeriodsBody } from './utils'
 import useSWR from 'swr'
 import { MultiValue } from 'react-select'
@@ -63,10 +63,10 @@ export function useProfitAndLossComparison({
   const [selectedCompareOptions, setSelectedCompareOptionsState] = useState<TagComparisonOption[]>(
     comparisonConfig?.defaultTagFilter ? [comparisonConfig?.defaultTagFilter] : [],
   )
-  const { rangeDisplayMode, start, end } = useGlobalDateRange()
-  const dateRange = { startDate: start, endDate: end }
+  const { mode, startDate, endDate } = useGlobalDate()
+  const dateRange = { startDate, endDate }
 
-  const isPeriodsSelectEnabled = COMPARE_MODES_SUPPORTING_MULTI_PERIOD.includes(rangeDisplayMode)
+  const isPeriodsSelectEnabled = COMPARE_MODES_SUPPORTING_MULTI_PERIOD.includes(mode)
   const effectiveComparePeriods = isPeriodsSelectEnabled
     ? comparePeriods
     : 1
@@ -97,7 +97,7 @@ export function useProfitAndLossComparison({
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const periods = preparePeriodsBody(dateRange, effectiveComparePeriods, rangeDisplayMode)
+  const periods = preparePeriodsBody(dateRange, effectiveComparePeriods, mode)
   const tagFilters = prepareFiltersBody(selectedCompareOptions)
 
   const queryKey = buildKey({
@@ -130,7 +130,7 @@ export function useProfitAndLossComparison({
     dateRange: DateRange,
     moneyFormat?: MoneyFormat,
   ) => {
-    const periods = preparePeriodsBody(dateRange, effectiveComparePeriods, rangeDisplayMode)
+    const periods = preparePeriodsBody(dateRange, effectiveComparePeriods, mode)
     const tagFilters = prepareFiltersBody(selectedCompareOptions)
     return Layer.profitAndLossComparisonCsv(apiUrl, auth?.access_token, {
       params: {

@@ -19,6 +19,8 @@ type UseStatementOfCashFlow = () => {
 export const useStatementOfCashFlow: UseStatementOfCashFlow = () => {
   const [date, setDate] = useState<DateRange | undefined>(undefined)
 
+  console.log('useStatementOfCashFlow - date', date)
+
   const { businessId, read, syncTimestamps, hasBeenTouched } =
     useLayerContext()
   const { apiUrl } = useEnvironment()

@@ -12,7 +12,7 @@ import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import { Table, TableBody, TableHead, TableRow, TableCell } from '../Table'
 import { ProfitAndLossTableStringOverrides } from './ProfitAndLossTableComponent'
 import classNames from 'classnames'
-import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDate } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 interface ProfilAndLostCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides
@@ -29,7 +29,7 @@ export const ProfitAndLossCompareTable = ({
     selectedCompareOptions,
   } = useContext(ProfitAndLoss.ComparisonContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
-  const { rangeDisplayMode } = useGlobalDateRange()
+  const { mode } = useGlobalDate()
 
   useEffect(() => {
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
@@ -150,7 +150,7 @@ export const ProfitAndLossCompareTable = ({
                     {generateComparisonPeriods(
                       dateRange.startDate,
                       comparePeriods,
-                      rangeDisplayMode,
+                      mode,
                     ).map((month: string, index: number) => (
                       <TableCell key={option.displayName + '-' + index} isHeaderCell>
                         {month}
@@ -164,7 +164,7 @@ export const ProfitAndLossCompareTable = ({
                   {generateComparisonPeriods(
                     dateRange.startDate,
                     comparePeriods,
-                    rangeDisplayMode,
+                    mode,
                   ).map((month: string, index: number) => (
                     <TableCell key={'total-' + index + '-cell'} isHeaderCell>
                       {month}
