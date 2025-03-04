@@ -120,6 +120,10 @@ export const useDateRange: UseDateRange = ({
       dateState,
     )
 
+    if (JSON.stringify(newDate) === JSON.stringify(dateState)) {
+      return false
+    }
+
     if (
       newDate.startDate
       && newDate.endDate

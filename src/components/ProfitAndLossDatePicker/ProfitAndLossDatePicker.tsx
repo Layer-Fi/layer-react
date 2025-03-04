@@ -1,12 +1,10 @@
-import { useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
-import { endOfDay, endOfMonth, startOfMonth } from 'date-fns'
+import { endOfDay } from 'date-fns'
 import { DatePicker } from '../DatePicker'
 import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerModeSelector'
-import { DateRangeState } from '../../types'
-import { clampToPresentOrPast } from '../../utils/date'
+import { useDateRange } from '../../hooks/useDateRange'
 
 export type ProfitAndLossDatePickerProps = TimeRangePickerConfig
 
@@ -16,11 +14,7 @@ export const ProfitAndLossDatePicker = ({
 }: ProfitAndLossDatePickerProps) => {
   const { business } = useLayerContext()
 
-  const [date, setDate] = useState<DateRangeState>({
-    startDate: startOfMonth(new Date()),
-    endDate: clampToPresentOrPast(endOfMonth(new Date())),
-    mode: 'monthPicker',
-  })
+  const { date, setDate } = useDateRange({})
 
   const minDate = getEarliestDateToBrowse(business)
 

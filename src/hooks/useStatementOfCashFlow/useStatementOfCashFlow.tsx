@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, StatementOfCashFlow } from '../../types'
@@ -7,6 +7,7 @@ import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { DataModel } from '../../types/general'
+import { useDateRange } from '../useDateRange'
 
 type UseStatementOfCashFlow = () => {
   data: StatementOfCashFlow | undefined
@@ -17,9 +18,7 @@ type UseStatementOfCashFlow = () => {
 }
 
 export const useStatementOfCashFlow: UseStatementOfCashFlow = () => {
-  const [date, setDate] = useState<DateRange | undefined>(undefined)
-
-  console.log('useStatementOfCashFlow - date', date)
+  const { date, setDate } = useDateRange({})
 
   const { businessId, read, syncTimestamps, hasBeenTouched } =
     useLayerContext()

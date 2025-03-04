@@ -24,7 +24,6 @@ export function StatementOfCashFlowDatePicker({
   return (
     <DatePicker
       onChange={(dates) => {
-        console.log('StatementOfCashFlowDatePicker - onChange', dates)
         if (dates instanceof Date) {
           setDate({ startDate: dates, endDate: dates })
 
