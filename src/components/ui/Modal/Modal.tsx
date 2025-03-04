@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, type ComponentProps, type PropsWithChildren } from 'react'
+import { forwardRef, type ComponentProps, type PropsWithChildren } from 'react'
 import {
   Dialog as ReactAriaDialog,
   type DialogProps,
@@ -29,9 +29,9 @@ ModalOverlay.displayName = 'ModalOverlay'
 const MODAL_CLASS_NAME = 'Layer__Modal'
 const InternalModal = forwardRef<
   HTMLElementTagNameMap['div'],
-  PropsWithChildren<{ size?: ModalSize }>
->(({ children, size }, ref) => {
-  const dataProperties = useMemo(() => toDataProperties({ size }), [size])
+  PropsWithChildren<{ size?: ModalSize, flexBlock?: boolean }>
+>(({ children, flexBlock, size }, ref) => {
+  const dataProperties = toDataProperties({ size, 'flex-block': flexBlock })
 
   return (
     <ReactAriaModal
@@ -67,7 +67,7 @@ type AllowedModalOverlayProps = Pick<
 >
 type AllowedInternalModalProps = Pick<
   ComponentProps<typeof InternalModal>,
-  'size'
+  'flexBlock' | 'size'
 >
 type AllowedDialogProps = Pick<
   ComponentProps<typeof Dialog>,
@@ -79,12 +79,13 @@ type ModalProps = AllowedModalOverlayProps & AllowedInternalModalProps & Allowed
 export function Modal({
   isOpen,
   size = 'md',
+  flexBlock,
   onOpenChange,
   children,
 }: ModalProps) {
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange}>
-      <InternalModal size={size}>
+      <InternalModal flexBlock={flexBlock} size={size}>
         <Dialog role='dialog'>
           {children}
         </Dialog>
