@@ -1,7 +1,6 @@
-import type { LayerBranded } from '../../types/utility/branded'
+import type { EmailAddress, PhoneNumber } from '../../types/utility/branded'
 import type { EnumWithUnknownValues } from '../../types/utility/enumWithUnknownValues'
 
-type EmailAddress = LayerBranded<string, 'EmailAddress'>
 type RawEmailAddressEntity = {
   id: string
   email_address: EmailAddress
@@ -10,7 +9,6 @@ type EmailAddressEntity = Pick<RawEmailAddressEntity, 'id'> & {
   emailAddress: EmailAddress
 }
 
-type PhoneNumber = LayerBranded<string, 'PhoneNumber'>
 type RawPhoneNumberEntity = {
   id: string
   phone_number: PhoneNumber
