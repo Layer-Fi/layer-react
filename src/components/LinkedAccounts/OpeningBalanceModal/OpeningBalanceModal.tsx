@@ -172,6 +172,7 @@ export function OpeningBalanceModal({
     <Modal
       isOpen={shouldShowModal}
       size='lg'
+      flexBlock
       onOpenChange={(isOpen) => {
         if (!isOpen) {
           setAccountsToAddOpeningBalanceInModal([])
