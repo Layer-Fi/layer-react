@@ -103,7 +103,8 @@ export function useAuth() {
     },
     {
       keepPreviousData: true,
-      revalidateOnFocus: true,
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
       revalidateOnReconnect: true,
       refreshInterval: (latestData) => {
         if (!latestData) {
