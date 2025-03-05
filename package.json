@@ -72,6 +72,7 @@
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.8",
+    "@tanstack/react-form": "^1.0.0",
     "classnames": "^2.5.1",
     "date-fns": "^2.30.0",
     "lucide-react": "^0.454.0",

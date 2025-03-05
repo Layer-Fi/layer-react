@@ -1,0 +1,9 @@
+.Layer__AccountConfirmationEmptyList {
+  display: grid;
+  min-block-size: 24rem;
+
+  > [slot=center] {
+    align-self: center;
+    justify-self: center;
+  }
+}

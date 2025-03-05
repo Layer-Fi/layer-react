@@ -1,10 +1,13 @@
-import { useMemo, type PropsWithChildren } from 'react'
+import { type PropsWithChildren } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import type { Spacing } from '../sharedUITypes'
 
 export type StackProps = PropsWithChildren<{
-  gap?: '3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '5xl'
   align?: 'start' | 'center'
-  justify?: 'center'
+  gap?: Spacing
+  justify?: 'start' | 'center' | 'end'
+  pbs?: Spacing
+  pbe?: Spacing
   slot?: string
 }>
 
@@ -14,11 +17,8 @@ type InternalStackProps = StackProps & {
 
 const CLASS_NAME = 'Layer__Stack'
 
-function Stack({ align, children, direction, gap, justify, ...restProps }: InternalStackProps) {
-  const dataProperties = useMemo(
-    () => toDataProperties({ align, gap, justify, direction }),
-    [align, direction, gap, justify],
-  )
+function Stack({ align, children, direction, gap, justify, pbs, pbe, ...restProps }: InternalStackProps) {
+  const dataProperties = toDataProperties({ align, direction, gap, justify, pbs, pbe })
 
   return (
     <div {...restProps} {...dataProperties} className={CLASS_NAME}>

@@ -5,6 +5,16 @@
   font-weight: var(--font-weight-bold);
   font-size: var(--text-heading-secondary);
 
+  max-inline-size: 60rem;
+  text-wrap: pretty;
+
+  $spacings: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
+  @each $spacing in $spacings {
+    &[data-pbe="#{$spacing}"] {
+      padding-block-end: var(--spacing-#{$spacing});
+    }
+  }
+
   &[data-size="sm"] {
     font-size: var(--text-heading-sm);
   }
@@ -13,10 +23,15 @@
     font-size: var(--text-heading-secondary);
   }
 
-  $paddings: 2xs xs sm md lg;
-  @each $padding in $paddings {
-    &[data-pbe="#{$padding}"] {
-      padding-block-end: var(--spacing-#{$padding});
+  $alignments: left right justify;
+  @each $alignment in $alignments {
+    &[data-align=#{$alignment}] {
+      text-align: $alignment;
     }
+  }
+
+  &[data-align=center] {
+    text-align: center;
+    max-inline-size: unset;
   }
 }

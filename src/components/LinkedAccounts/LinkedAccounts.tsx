@@ -7,6 +7,7 @@ import { Loader } from '../Loader'
 import { Heading, HeadingSize } from '../Typography'
 import { LinkedAccountsContent } from './LinkedAccountsContent'
 import { OpeningBalanceModal } from './OpeningBalanceModal/OpeningBalanceModal'
+import { AccountConfirmationStoreProvider } from '../../providers/AccountConfirmationStoreProvider'
 
 const COMPONENT_NAME = 'linked-accounts'
 
@@ -23,9 +24,11 @@ export interface LinkedAccountsProps {
 
 export const LinkedAccounts = (props: LinkedAccountsProps) => {
   return (
-    <LinkedAccountsProvider>
-      <LinkedAccountsComponent {...props} />
-    </LinkedAccountsProvider>
+    <AccountConfirmationStoreProvider>
+      <LinkedAccountsProvider>
+        <LinkedAccountsComponent {...props} />
+      </LinkedAccountsProvider>
+    </AccountConfirmationStoreProvider>
   )
 }
 

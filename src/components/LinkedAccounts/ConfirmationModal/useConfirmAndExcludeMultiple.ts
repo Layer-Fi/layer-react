@@ -10,19 +10,16 @@ function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
-  data,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
-  data: AccountConfirmExcludeFormState
 }) {
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
-      data,
       tags: ['#bulk-confirm', '#bulk-exclude'],
     }
   }
@@ -80,10 +77,7 @@ function confirm({
   )
 }
 
-export function useConfirmAndExcludeMultiple(
-  data: AccountConfirmExcludeFormState,
-  { onSuccess }: { onSuccess: () => Awaitable<unknown> },
-) {
+export function useConfirmAndExcludeMultiple({ onSuccess }: { onSuccess?: () => Awaitable<unknown> }) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -92,16 +86,18 @@ export function useConfirmAndExcludeMultiple(
       access_token: auth?.access_token,
       apiUrl: auth?.apiUrl,
       businessId,
-      data,
     }),
-    ({ accessToken, apiUrl, businessId, data }) => Promise.all(
-      Object.entries(data).map(([accountId, isConfirmed]) =>
+    (
+      { accessToken, apiUrl, businessId },
+      { arg }: { arg: AccountConfirmExcludeFormState },
+    ) => Promise.all(
+      Object.entries(arg).map(([accountId, isConfirmed]) =>
         isConfirmed
           ? confirm({ accessToken, apiUrl, accountId, businessId })
           : exclude({ accessToken, apiUrl, accountId, businessId }),
       ),
     )
-      .then(() => onSuccess())
+      .then(() => onSuccess?.())
       .then(() => true as const),
     {
       revalidate: false,

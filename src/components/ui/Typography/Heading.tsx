@@ -1,18 +1,20 @@
 import { forwardRef, type ComponentProps } from 'react'
 import { Heading as ReactAriaHeading } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import type { Spacing } from '../sharedUITypes'
 
 type HeadingDataProps = {
+  align?: 'center'
+  pbe?: Spacing
   size?: 'sm' | 'lg'
-  pbe?: '2xs' | 'xs' | 'sm' | 'md' | 'lg'
 }
 
 const HEADING_CLASS_NAME = 'Layer__UI__Heading'
 const Heading = forwardRef<
   HTMLHeadingElement,
   Omit<ComponentProps<typeof ReactAriaHeading>, 'className'> & HeadingDataProps
->(({ pbe, size, ...restProps }, ref) => {
-  const dataProperties = toDataProperties({ pbe, size })
+>(({ align, pbe, size, ...restProps }, ref) => {
+  const dataProperties = toDataProperties({ pbe, size, align })
 
   return (
     <ReactAriaHeading
