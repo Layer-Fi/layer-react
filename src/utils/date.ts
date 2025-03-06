@@ -24,11 +24,14 @@ export const resolveDateToDate = (
   refDate: DateRangeState,
   targetDate: DateRangeState,
 ) => {
+  console.log('resolveDateToDate', refDate, targetDate)
   if (isSameMode(refDate, targetDate)) {
+    console.log('isSameMode')
     return refDate
   }
   else if (areDatesOverlapping(refDate, targetDate)) {
-    return targetDate
+    console.log('areDateOverlapping')
+    return refDate
   }
 
   return buildDateRangeStateFromRefDate(refDate, targetDate)
@@ -63,6 +66,9 @@ export const areDatesOverlapping = (
   )
 }
 
+/**
+ * @TODO - should try to change mode if supported
+ */
 const buildDateRangeStateFromRefDate = (
   refDate: DateRangeState,
   targetDate: DateRangeState,
@@ -85,6 +91,7 @@ const buildDateRangeStateFromRefDate = (
         ...targetDate,
         startDate: startOfMonth(refDate.startDate),
         endDate: clampToPresentOrPast(endOfMonth(refDate.startDate)),
+        mode: refDate.mode,
       }
     case 'monthRangePicker':
       return {
@@ -97,6 +104,7 @@ const buildDateRangeStateFromRefDate = (
         ...targetDate,
         startDate: startOfYear(refDate.startDate),
         endDate: clampToPresentOrPast(endOfYear(refDate.startDate)),
+        mode: targetDate.mode, // @TODO
       }
     default:
       return targetDate

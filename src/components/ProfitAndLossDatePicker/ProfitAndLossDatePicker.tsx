@@ -16,6 +16,8 @@ export const ProfitAndLossDatePicker = ({
 
   const { date, setDate } = useDateRange({})
 
+  console.log('date', date)
+
   const minDate = getEarliestDateToBrowse(business)
 
   return (
@@ -36,6 +38,7 @@ export const ProfitAndLossDatePicker = ({
       allowedModes={allowedDatePickerModes}
       onChangeMode={(rangeDisplayMode) => {
         if (rangeDisplayMode !== 'dayPicker') {
+          console.log('onmodechange', date)
           setDate({ ...date, mode: rangeDisplayMode })
         }
       }}

@@ -21,7 +21,7 @@ const _RANGE_PICKER_MODES = [
 ] as const
 export type DateRangePickerMode = typeof _RANGE_PICKER_MODES[number]
 
-export type DatePickerMode = DayDatePickerMode | DateRangePickerMode
+export type DatePickerMode = DayDatePickerMode | DateRangePickerMode | 'timePicker'
 
 type GlobalDateStoreShape = {
   startDate: DateRangeState['startDate']

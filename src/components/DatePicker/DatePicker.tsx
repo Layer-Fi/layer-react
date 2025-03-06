@@ -140,6 +140,7 @@ export const DatePicker = ({
       setDate({
         startDate: date as Date,
         endDate: getEndDateBasedOnMode(date as Date, displayMode),
+        mode: displayMode,
       })
     }
   }

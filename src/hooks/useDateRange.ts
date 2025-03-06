@@ -120,7 +120,17 @@ export const useDateRange: UseDateRange = ({
       dateState,
     )
 
-    if (JSON.stringify(newDate) === JSON.stringify(dateState)) {
+    console.log('newDate', newDate, newMode)
+    if (JSON.stringify({
+      startDate: newDate.startDate,
+      endDate: newDate.endDate,
+      mode: newDate.mode,
+    }) === JSON.stringify({
+      startDate: dateState.startDate,
+      endDate: dateState.endDate,
+      mode: dateState.mode,
+    })) {
+      console.log('newDate - EXIT')
       return false
     }
 
@@ -129,6 +139,7 @@ export const useDateRange: UseDateRange = ({
       && newDate.endDate
       && !isAfter(newDate.startDate, newDate.endDate)
     ) {
+      console.log('setDateState 1', newDate)
       setDateState(newDate)
       return true
     }
@@ -138,6 +149,7 @@ export const useDateRange: UseDateRange = ({
       && !newDate.endDate
       && !isAfter(newDate.startDate, dateState.endDate)
     ) {
+      console.log('setDateState 2', newDate)
       setDateState(newDate)
       return true
     }
@@ -147,9 +159,12 @@ export const useDateRange: UseDateRange = ({
       && newDate.endDate
       && !isBefore(newDate.endDate, dateState.startDate)
     ) {
+      console.log('setDateState 3', newDate)
       setDateState(newDate)
       return true
     }
+
+    console.log('NOT SETTTING NEW DATE')
 
     return false
   }
