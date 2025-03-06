@@ -10,7 +10,7 @@ import { View } from '../View'
 import { STATEMENT_OF_CASH_FLOW_ROWS } from './constants'
 import { CashflowStatementDownloadButton } from './download/CashflowStatementDownloadButton'
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
-import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useContext } from 'react'
 import { StatementOfCashFlowDatePicker } from './datePicker/StatementOfCashFlowDatePicker'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
@@ -41,8 +41,7 @@ const StatementOfCashFlowView = ({
   allowedDatePickerModes,
   customDateRanges,
 }: StatementOfCashFlowViewProps) => {
-  const { start, end } = useGlobalDateRange()
-  const { data, isLoading } = useStatementOfCashFlow(start, end)
+  const { data, date, isLoading } = useContext(StatementOfCashFlowContext)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
@@ -57,14 +56,19 @@ const StatementOfCashFlowView = ({
                 <StatementOfCashFlowDatePicker
                   allowedDatePickerModes={allowedDatePickerModes}
                   customDateRanges={customDateRanges}
+                  defaultDatePickerMode='monthPicker'
                 />
               </HeaderCol>
               <HeaderCol>
-                <CashflowStatementDownloadButton
-                  startDate={start}
-                  endDate={end}
-                  iconOnly={view === 'mobile'}
-                />
+                {date?.startDate && date?.endDate
+                  ? (
+                    <CashflowStatementDownloadButton
+                      startDate={date.startDate}
+                      endDate={date.endDate}
+                      iconOnly={view === 'mobile'}
+                    />
+                  )
+                  : null}
               </HeaderCol>
             </HeaderRow>
           </Header>

@@ -1,4 +1,5 @@
 import type { EnumWithUnknownValues } from './types/utility/enumWithUnknownValues'
+import { DatePickerMode } from './providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export { OAuthResponse } from './types/authentication'
 export {
@@ -67,3 +68,27 @@ type StrictReportingBasis = 'CASH' | 'CASH_COLLECTED' | 'ACCRUAL'
 export type ReportingBasis = EnumWithUnknownValues<StrictReportingBasis>
 
 export type MoneyFormat = 'CENTS' | 'DOLLAR_STRING'
+
+export type DateMode =
+  | 'DAY'
+  | 'DAY_RANGE'
+  | 'MONTH'
+  | 'MONTH_RANGE'
+  | 'QAURTER'
+  | 'YEAR'
+  | 'YEAR_TO_DATE'
+
+export type DatePeriod =
+  | 'DAY'
+  | 'MONTH'
+  | 'QUARTER'
+  | 'YEAR'
+  | 'YEAR_TO_DATE'
+  | 'CUSTOM'
+
+export type DateRangeState = {
+  startDate: Date
+  endDate: Date
+  mode: DatePickerMode // @TODO - make something more generic and unify with DatePickerMode?
+  supportedModes?: DatePickerMode[]
+}

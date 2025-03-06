@@ -95,26 +95,26 @@ export const JournalForm = ({
         <InputGroup name='date' label='Effective Date' inline={true}>
           <div className='Layer__journal__datepicker__wrapper'>
             <DatePicker
-              selected={
+              defaultSelected={
                 form?.data.entry_at ? new Date(form?.data.entry_at) : new Date()
               }
               onChange={(date) => {
-                if (!Array.isArray(date)) {
-                  changeFormData('entry_at', date.toISOString())
-                }
+                // if (!Array.isArray(date)) {
+                //   changeFormData('entry_at', date.toISOString())
+                // }
               }}
               displayMode='dayPicker'
               placeholderText='Select date'
               currentDateOption={false}
             />
             <DatePicker
-              selected={
+              defaultSelected={
                 form?.data.entry_at ? new Date(form?.data.entry_at) : new Date()
               }
               onChange={(date) => {
-                if (!Array.isArray(date)) {
-                  changeFormData('entry_at', date.toISOString())
-                }
+                // if (!Array.isArray(date)) {
+                //   changeFormData('entry_at', date.toISOString())
+                // }
               }}
               displayMode='timePicker'
               placeholderText='Select time'

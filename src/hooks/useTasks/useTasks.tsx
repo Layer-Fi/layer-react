@@ -9,6 +9,8 @@ import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { endOfYear, formatISO, getMonth, getYear, parseISO, startOfYear } from 'date-fns'
+import { useDateRange } from '../useDateRange'
+import { DatePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 type UseTasks = (props?: UseTasksProps) => {
   data?: Task[]
@@ -19,8 +21,8 @@ type UseTasks = (props?: UseTasksProps) => {
   error?: unknown
   currentDate: Date
   setCurrentDate: (date: Date) => void
-  dateRange: { startDate: Date, endDate: Date }
-  setDateRange: (props: { startDate: Date, endDate: Date }) => void
+  dateRange: { startDate: Date, endDate: Date, mode: DatePickerMode }
+  setDateRange: (props: { startDate: Date, endDate: Date, mode: DatePickerMode }) => void
   refetch: () => void
   submitResponseToTask: (taskId: string, userResponse: string) => void
   uploadDocumentsForTask: (taskId: string, files: File[], description?: string) => Promise<void>
@@ -29,7 +31,7 @@ type UseTasks = (props?: UseTasksProps) => {
 }
 
 type UseTasksProps = {
-  startDate?: Date,
+  startDate?: Date
   endDate?: Date
 }
 
@@ -37,7 +39,7 @@ const DEBUG_MODE = false
 
 export const useTasks: UseTasks = ({
   startDate: initialStartDate = startOfYear(new Date()),
-  endDate: initialEndDate = endOfYear(new Date())
+  endDate: initialEndDate = endOfYear(new Date()),
 }: UseTasksProps = {}) => {
   const [loadedStatus, setLoadedStatus] = useState<LoadedStatus>('initial')
 
@@ -46,13 +48,15 @@ export const useTasks: UseTasks = ({
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const [dateRange, setDateRange] = useState({
+  const { date: dateRange, setDate: setDateRange } = useDateRange({
     startDate: initialStartDate,
-    endDate: initialEndDate
+    endDate: initialEndDate,
+    mode: 'yearPicker',
+    syncWithGlobalDate: true,
   })
   const [currentDate, setCurrentDate] = useState(new Date())
 
-  const queryKey = businessId && auth?.access_token && `tasks-${businessId}-${dateRange.startDate}-${dateRange.endDate}`
+  const queryKey = businessId && auth?.access_token && `tasks-${businessId}-${dateRange.startDate.toISOString()}-${dateRange.endDate.toISOString()}`
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,
@@ -107,7 +111,8 @@ export const useTasks: UseTasks = ({
   useEffect(() => {
     if (isLoading && loadedStatus === 'initial') {
       setLoadedStatus('loading')
-    } else if (!isLoading && loadedStatus === 'loading') {
+    }
+    else if (!isLoading && loadedStatus === 'loading') {
       setLoadedStatus('complete')
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,7 +129,7 @@ export const useTasks: UseTasks = ({
       businessId,
       taskId,
       files,
-      description
+      description,
     }).then(refetch)
   }
 

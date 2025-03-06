@@ -3,7 +3,9 @@
 .Layer__datepicker__wrapper,
 #Layer__datepicker__portal {
   position: relative;
-  z-index: 101;
+
+  // z-index: 101;z-index
+  z-index: 105;
   display: inline-flex;
   align-items: center;
   max-height: 36px;

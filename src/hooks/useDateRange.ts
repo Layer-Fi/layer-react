@@ -1,0 +1,176 @@
+import { useEffect, useState } from 'react'
+import { DateRangeState } from '../types'
+import { areDateRangesEqual, areDatesOverlapping, castDateRangeToMode, clampToPresentOrPast, resolveDateToDate } from '../utils/date'
+import { endOfMonth, isAfter, isBefore, startOfMonth } from 'date-fns'
+import { useGlobalDate, useGlobalDateActions } from '../providers/GlobalDateStore/GlobalDateStoreProvider'
+
+export type UseDateRangeProps = Partial<DateRangeState> & {
+  syncWithGlobalDate?: boolean
+  onChange?: (date: DateRangeState) => void
+}
+
+type UseDateRange = (props: UseDateRangeProps) => {
+  date: DateRangeState
+  setDate: (date: Partial<DateRangeState>) => boolean
+}
+
+export const useDateRange: UseDateRange = ({
+  startDate: initialStartDate,
+  endDate: initialEndDate,
+  mode: initialMode,
+  supportedModes,
+  syncWithGlobalDate,
+  onChange,
+}: UseDateRangeProps) => {
+  const { startDate: globalStartDate, endDate: globalEndDate, mode: globalMode } = useGlobalDate()
+  const { setDate: setGlobalDate } = useGlobalDateActions()
+
+  const initialVal = {
+    startDate: syncWithGlobalDate
+      ? globalStartDate
+      : clampToPresentOrPast(initialStartDate ?? startOfMonth(new Date())),
+    endDate: syncWithGlobalDate
+      ? globalEndDate
+      : clampToPresentOrPast(initialEndDate ?? endOfMonth(new Date())),
+    mode: initialMode ?? 'monthPicker',
+    supportedModes: supportedModes ?? ['monthPicker'],
+  }
+
+  const resolvedDate = resolveDateToDate({
+    startDate: globalStartDate,
+    endDate: globalEndDate,
+    mode: globalMode,
+  }, initialVal)
+
+  const castedDate = castDateRangeToMode(resolvedDate)
+
+  const finalDate = { ...resolvedDate, ...castedDate }
+
+  // Set initial state from global date, props or default to current month
+  const [dateState, setDateState] = useState<DateRangeState>(finalDate)
+
+  // Sync to global date state
+  useEffect(() => {
+    if (syncWithGlobalDate) {
+      if (areDateRangesEqual(dateState, { startDate: globalStartDate, endDate: globalEndDate })) {
+        // Dates are the same, no need to update global state
+        console.log('sync TO global - dates are the same - no need to update')
+        return
+      }
+      else {
+        // Dates are different, update global state
+        console.log('sync TO global - dates are different - update', dateState, { globalStartDate, globalEndDate })
+        setGlobalDate({
+          startDate: dateState.startDate,
+          endDate: dateState.endDate,
+          mode: dateState.mode,
+        })
+      }
+    }
+
+    // Call onChange to update component state
+    onChange?.(dateState) // Trick with ref?
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateState])
+
+  // Sync from global date state
+  useEffect(() => {
+    if (syncWithGlobalDate) {
+      if (areDateRangesEqual(dateState, { startDate: globalStartDate, endDate: globalEndDate })) {
+        // Dates are the same, no need to update local state
+        console.log('sync FROM global - dates are the same - no need to update')
+        return
+      }
+
+      if (areDatesOverlapping(dateState, { startDate: globalStartDate, endDate: globalEndDate })) {
+        // Dates are overlapping - no need to update local state
+        console.log('sync FROM global - dates are overlapping - no need to update')
+        return
+      }
+
+      // Dates are different, update local state
+      console.log('sync FROM global - dates are different - update', dateState, { globalStartDate, globalEndDate })
+      const newDate: DateRangeState = resolveDateToDate(
+        {
+          startDate: globalStartDate ?? dateState.startDate,
+          endDate: globalEndDate ?? dateState.endDate,
+          mode: dateState.mode, // @TODO - change local mode if new mode is included in allowedModes
+        },
+        dateState,
+      )
+
+      setDate(newDate)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [globalStartDate, globalEndDate])
+
+  // Update the internal date state and resolve all cases like start after end.
+  const setDate = ({
+    startDate: newStartDate,
+    endDate: newEndDate,
+    mode: newMode,
+  }: Partial<DateRangeState>) => {
+    const newDate: DateRangeState = resolveDateToDate(
+      {
+        startDate: newStartDate ?? dateState.startDate,
+        endDate: newEndDate ?? dateState.endDate,
+        mode: newMode ?? dateState.mode,
+        supportedModes: supportedModes ?? dateState.supportedModes,
+      },
+      dateState,
+    )
+
+    console.log('newDate', newDate, newMode)
+    if (JSON.stringify({
+      startDate: newDate.startDate,
+      endDate: newDate.endDate,
+      mode: newDate.mode,
+    }) === JSON.stringify({
+      startDate: dateState.startDate,
+      endDate: dateState.endDate,
+      mode: dateState.mode,
+    })) {
+      console.log('newDate - EXIT')
+      return false
+    }
+
+    if (
+      newDate.startDate
+      && newDate.endDate
+      && !isAfter(newDate.startDate, newDate.endDate)
+    ) {
+      console.log('setDateState 1', newDate)
+      setDateState(newDate)
+      return true
+    }
+
+    if (
+      newDate.startDate
+      && !newDate.endDate
+      && !isAfter(newDate.startDate, dateState.endDate)
+    ) {
+      console.log('setDateState 2', newDate)
+      setDateState(newDate)
+      return true
+    }
+
+    if (
+      !newDate.startDate
+      && newDate.endDate
+      && !isBefore(newDate.endDate, dateState.startDate)
+    ) {
+      console.log('setDateState 3', newDate)
+      setDateState(newDate)
+      return true
+    }
+
+    console.log('NOT SETTTING NEW DATE')
+
+    return false
+  }
+
+  return {
+    date: dateState,
+    setDate: setDate,
+  }
+}

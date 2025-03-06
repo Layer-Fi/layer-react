@@ -1,9 +1,10 @@
-import { DatePickerModeSelector } from '../../DatePicker/ModeSelector/DatePickerModeSelector'
 import type { TimeRangePickerConfig } from '../../../views/Reports/reportTypes'
-import { DatePicker } from '../../DatePicker'
 import { useLayerContext } from '../../../contexts/LayerContext'
+import { useContext } from 'react'
+import { StatementOfCashFlowContext } from '../../../contexts/StatementOfCashContext'
+import { DatePicker } from '../../DatePicker'
+import { DatePickerModeSelector } from '../../DatePicker/ModeSelector/DatePickerModeSelector'
 import { getEarliestDateToBrowse } from '../../../utils/business'
-import { useGlobalDateRangePicker } from '../../../providers/GlobalDateStore/useGlobalDateRangePicker'
 
 type StatementOfCashFlowDatePickerProps = Pick<
   TimeRangePickerConfig,
@@ -16,47 +17,31 @@ export function StatementOfCashFlowDatePicker({
   defaultDatePickerMode,
 }: StatementOfCashFlowDatePickerProps) {
   const { business } = useLayerContext()
-
-  const {
-    allowedDateRangePickerModes,
-    dateFormat,
-    rangeDisplayMode,
-    selected,
-    setRangeDisplayMode,
-    setSelected,
-  } = useGlobalDateRangePicker({ allowedDatePickerModes, defaultDatePickerMode })
+  const { setDate } = useContext(StatementOfCashFlowContext)
 
   const minDate = getEarliestDateToBrowse(business)
 
   return (
     <DatePicker
-      selected={selected}
       onChange={(dates) => {
         if (dates instanceof Date) {
-          if (rangeDisplayMode === 'monthPicker') {
-            setSelected({ start: dates, end: dates })
-          }
+          setDate({ startDate: dates, endDate: dates })
 
           return
         }
 
         const [start, end] = dates
 
-        setSelected({ start, end: end ?? start })
+        setDate({ startDate: start, endDate: end ?? start })
       }}
-      displayMode={rangeDisplayMode}
-      allowedModes={allowedDateRangePickerModes}
-      onChangeMode={(rangeDisplayMode) => {
-        if (rangeDisplayMode !== 'dayPicker') {
-          setRangeDisplayMode({ rangeDisplayMode })
-        }
-      }}
+      displayMode={defaultDatePickerMode}
+      allowedModes={allowedDatePickerModes}
       slots={{
         ModeSelector: DatePickerModeSelector,
       }}
-      dateFormat={dateFormat}
       customDateRanges={customDateRanges}
       minDate={minDate}
+      syncWithGlobalDate={true}
     />
   )
 }

@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useState } from 'react'
 import { BalanceSheetContext } from '../../contexts/BalanceSheetContext'
 import { TableProvider } from '../../contexts/TableContext'
 import { useBalanceSheet } from '../../hooks/useBalanceSheet'
@@ -13,7 +13,7 @@ import { Loader } from '../Loader'
 import { View } from '../View'
 import { BALANCE_SHEET_ROWS } from './constants'
 import { BalanceSheetDownloadButton } from './download/BalanceSheetDownloadButton'
-import { useGlobalDate } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { startOfDay } from 'date-fns'
 
 export interface BalanceSheetStringOverrides {
   balanceSheetTable?: BalanceSheetTableStringOverrides
@@ -51,7 +51,7 @@ const BalanceSheetView = ({
   asWidget = false,
   stringOverrides,
 }: BalanceSheetViewProps) => {
-  const { date: effectiveDate } = useGlobalDate()
+  const [effectiveDate, setEffectiveDate] = useState(startOfDay(new Date()))
   const { data, isLoading } = useBalanceSheet(effectiveDate)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
@@ -66,7 +66,10 @@ const BalanceSheetView = ({
               <Header>
                 <HeaderRow>
                   <HeaderCol>
-                    <BalanceSheetDatePicker />
+                    <BalanceSheetDatePicker
+                      effectiveDate={effectiveDate}
+                      setEffectiveDate={setEffectiveDate}
+                    />
                   </HeaderCol>
                   {withExpandAllButton && (
                     <HeaderCol>
@@ -105,7 +108,10 @@ const BalanceSheetView = ({
           <Header>
             <HeaderRow>
               <HeaderCol>
-                <BalanceSheetDatePicker />
+                <BalanceSheetDatePicker
+                  effectiveDate={effectiveDate}
+                  setEffectiveDate={setEffectiveDate}
+                />
               </HeaderCol>
               <HeaderCol>
                 {withExpandAllButton && (

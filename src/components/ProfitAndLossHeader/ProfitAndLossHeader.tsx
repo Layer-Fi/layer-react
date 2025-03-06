@@ -33,7 +33,7 @@ export const ProfitAndLossHeader = ({
         </Heading>
         {isSyncing && <SyncingBadge />}
       </span>
-      {withDatePicker && <ProfitAndLoss.DatePicker />}
+      {withDatePicker && <ProfitAndLoss.DatePicker allowedDatePickerModes={['monthPicker']} />}
     </Header>
   )
 }

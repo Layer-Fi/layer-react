@@ -2,7 +2,7 @@ import { getMonth, getYear, startOfMonth, startOfYear, subMonths, subYears } fro
 import { DateRange } from '../../types'
 import { range } from '../../utils/array/range'
 import { isArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
-import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { DatePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TagComparisonOption } from '../../types/profit_and_loss'
 
 export function prepareFiltersBody(compareOptions: TagComparisonOption[]) {
@@ -108,7 +108,7 @@ function preparePeriodsBodyForDateRange(dateRange: DateRange) {
 export function preparePeriodsBody(
   dateRange: DateRange,
   comparePeriods: number,
-  rangeDisplayMode: DateRangePickerMode,
+  rangeDisplayMode: DatePickerMode,
 ) {
   switch (rangeDisplayMode) {
     case 'yearPicker':

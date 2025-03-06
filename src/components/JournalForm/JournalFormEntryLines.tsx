@@ -177,14 +177,18 @@ export const JournalFormEntryLines = ({
                           ? BadgeVariant.SUCCESS
                           : BadgeVariant.WARNING
                       }
-                      onChange={e =>
+                      onChange={(e) => {
+                        console.log('e', e, (e.target as HTMLInputElement).value, convertCurrencyToNumber(
+                          (e.target as HTMLInputElement).value,
+                        ))
                         changeFormData(
                           'amount',
                           convertCurrencyToNumber(
                             (e.target as HTMLInputElement).value,
                           ),
                           idx,
-                        )}
+                        )
+                      }}
                       isInvalid={Boolean(
                         form?.errors?.lineItems.find(
                           x => x.id === idx && x.field === 'amount',

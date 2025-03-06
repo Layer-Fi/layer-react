@@ -1,9 +1,9 @@
-import { DateRangePickerMode } from '../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { DatePickerMode } from '../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { LineItem } from '../types'
 import { format, subMonths, subYears } from 'date-fns'
 
 export const generateComparisonPeriods = (
-  startDate: Date, numberOfPeriods: number, rangeDisplayMode: DateRangePickerMode,
+  startDate: Date, numberOfPeriods: number, rangeDisplayMode: DatePickerMode,
 ) => {
   switch (rangeDisplayMode) {
     case 'yearPicker':

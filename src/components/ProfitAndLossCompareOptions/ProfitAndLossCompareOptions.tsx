@@ -2,7 +2,7 @@ import { useContext, useMemo } from 'react'
 import { MultiSelect, Select } from '../Input'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import type { StylesConfig } from 'react-select'
-import { DateRangePickerMode, useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { DatePickerMode, useGlobalDate } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TagComparisonOption } from '../../types/profit_and_loss'
 
 const selectStyles = {
@@ -14,7 +14,7 @@ const selectStyles = {
   },
 } satisfies StylesConfig<TagComparisonOption, true>
 
-function buildCompareOptions(rangeDisplayMode: DateRangePickerMode) {
+function buildCompareOptions(rangeDisplayMode: DatePickerMode) {
   switch (rangeDisplayMode) {
     case 'monthPicker':
       return [
@@ -48,14 +48,14 @@ export const ProfitAndLossCompareOptions = () => {
     comparisonConfig,
   } = useContext(ProfitAndLoss.ComparisonContext)
 
-  const { rangeDisplayMode } = useGlobalDateRange()
+  const { mode } = useGlobalDate()
 
   const periods = useMemo<number>(
     () => comparePeriods !== 0 ? comparePeriods : 1,
     [comparePeriods],
   )
 
-  const timeComparisonOptions = buildCompareOptions(rangeDisplayMode)
+  const timeComparisonOptions = buildCompareOptions(mode)
 
   const tagComparisonSelectOptions = compareOptions.map(
     (tagComparisonOption) => {
@@ -80,7 +80,7 @@ export const ProfitAndLossCompareOptions = () => {
             option => option.value === periods,
           )
         }
-        placeholder={rangeDisplayMode === 'yearPicker' ? 'Compare years' : 'Compare months'}
+        placeholder={mode === 'yearPicker' ? 'Compare years' : 'Compare months'}
         disabled={!isPeriodsSelectEnabled}
       />
       <MultiSelect

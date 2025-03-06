@@ -44,6 +44,7 @@ export interface ReportsPanelProps {
   containerRef: RefObject<HTMLDivElement>
   openReport: ReportType
   stringOverrides?: ReportsStringOverrides
+  comparisonConfig?: ProfitAndLossCompareConfig
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
   view: ViewBreakpoint
@@ -106,16 +107,15 @@ export const Reports = ({
         </div>
       )}
       <Container name='reports' ref={containerRef}>
-        <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig}>
-          <ReportsPanel
-            containerRef={containerRef}
-            openReport={activeTab}
-            stringOverrides={stringOverrides}
-            profitAndLossConfig={profitAndLossConfig}
-            statementOfCashFlowConfig={statementOfCashFlowConfig}
-            view={view}
-          />
-        </ProfitAndLoss>
+        <ReportsPanel
+          containerRef={containerRef}
+          openReport={activeTab}
+          stringOverrides={stringOverrides}
+          comparisonConfig={comparisonConfig}
+          profitAndLossConfig={profitAndLossConfig}
+          statementOfCashFlowConfig={statementOfCashFlowConfig}
+          view={view}
+        />
       </Container>
     </View>
   )
@@ -127,17 +127,20 @@ const ReportsPanel = ({
   stringOverrides,
   profitAndLossConfig,
   statementOfCashFlowConfig,
+  comparisonConfig,
   view,
 }: ReportsPanelProps) => {
   return (
     <>
       {openReport === 'profitAndLoss' && (
-        <ProfitAndLoss.Report
-          stringOverrides={stringOverrides}
-          parentRef={containerRef}
-          view={view}
-          {...profitAndLossConfig}
-        />
+        <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig}>
+          <ProfitAndLoss.Report
+            stringOverrides={stringOverrides}
+            parentRef={containerRef}
+            view={view}
+            {...profitAndLossConfig}
+          />
+        </ProfitAndLoss>
       )}
       {openReport === 'balanceSheet' && (
         <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} />

@@ -19,10 +19,11 @@ export const ChartOfAccountsContext = createContext<ChartOfAccountsContextType>(
     cancelForm: () => {},
     changeFormData: () => {},
     submitForm: () => {},
-    dateRange: {
+    date: {
       startDate: startOfMonth(new Date()),
       endDate: endOfMonth(new Date()),
+      mode: 'monthPicker',
     },
-    changeDateRange: () => {},
+    setDate: () => false,
   },
 )

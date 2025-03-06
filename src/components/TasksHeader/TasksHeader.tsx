@@ -102,12 +102,20 @@ export const TasksHeader = ({
         </div>
         <div className='Layer__tasks-header__left-col__controls'>
           <DatePicker
-            selected={dateRange.startDate}
+            defaultSelected={[dateRange.startDate, dateRange.endDate]}
             onChange={(dates) => {
               if (!Array.isArray(dates)) {
                 setDateRange({
                   startDate: startOfYear(dates),
                   endDate: endOfYear(dates),
+                  mode: 'yearPicker',
+                })
+              }
+              else if (dates.length === 2 && dates[0] && dates[1]) {
+                setDateRange({
+                  startDate: startOfYear(dates[0]),
+                  endDate: endOfYear(dates[1]),
+                  mode: 'yearPicker',
                 })
               }
             }}

@@ -1,19 +1,20 @@
 import { DatePicker } from '../DatePicker'
-import { useGlobalDate, useGlobalDateActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
-export function BalanceSheetDatePicker() {
-  const { date, displayMode } = useGlobalDate()
-  const { set } = useGlobalDateActions()
+export type BalanceSheetDatePickerProps = {
+  effectiveDate: Date
+  setEffectiveDate: (date: Date) => void
+}
 
+export function BalanceSheetDatePicker({
+  effectiveDate,
+  setEffectiveDate,
+}: BalanceSheetDatePickerProps) {
   return (
     <DatePicker
-      selected={date}
-      onChange={(date) => {
-        if (date instanceof Date) {
-          set({ date })
-        }
-      }}
-      displayMode={displayMode}
+      defaultSelected={effectiveDate}
+      onChange={date => date && setEffectiveDate(date as Date)}
+      displayMode='dayPicker'
+      syncWithGlobalDate={true}
     />
   )
 }

@@ -1,16 +1,22 @@
-import { useMemo, useRef, useState, type FC } from 'react'
+import { useRef } from 'react'
 import * as RDP from 'react-datepicker'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
 import { Button, ButtonVariant } from '../Button'
-import { CustomDateRange, DatePickerOptions } from './DatePickerOptions'
+import { DatePickerOptions } from './DatePickerOptions'
 import type {
   UnifiedPickerMode,
-  DatePickerModeSelectorProps,
 } from './ModeSelector/DatePickerModeSelector'
 import classNames from 'classnames'
-import { endOfDay, endOfMonth, endOfYear } from 'date-fns'
+import { endOfDay } from 'date-fns'
+import { DatePickerProps } from './types'
+import {
+  getEndDateBasedOnMode,
+  isRangeMode,
+  showNavigationArrows,
+} from './utils'
+import { useDatePickerState } from './useDatePickerState'
 
 /**
  * @see https://github.com/Hacker0x01/react-datepicker/issues/1333#issuecomment-2363284612
@@ -27,41 +33,9 @@ const ReactDatePicker = (((RDP.default as any).default as any)
      @typescript-eslint/no-unsafe-member-access,
 */
 
-type NavigationArrows = 'desktop' | 'mobile'
-
-interface DatePickerProps {
-  displayMode: UnifiedPickerMode | 'timePicker'
-  selected: Date | [Date, Date | null]
-  onChange: (date: Date | [Date, Date | null]) => void
-  disabled?: boolean
-  allowedModes?: ReadonlyArray<UnifiedPickerMode>
-  dateFormat?: string
-  timeIntervals?: number
-  timeCaption?: string
-  placeholderText?: string
-  customDateRanges?: CustomDateRange[]
-  wrapperClassName?: string
-  calendarClassName?: string
-  popperClassName?: string
-  currentDateOption?: boolean
-  minDate?: Date
-  maxDate?: Date | null
-  navigateArrows?: NavigationArrows[]
-  onChangeMode?: (mode: UnifiedPickerMode) => void
-  slots?: {
-    ModeSelector: FC<DatePickerModeSelectorProps>
-  }
-}
-
-const isRangeMode = (displayMode: DatePickerProps['displayMode']) =>
-  displayMode === 'dayRangePicker' || displayMode === 'monthRangePicker'
-
-const showNavigationArrows = (navigateArrows?: NavigationArrows[], isDesktop?: boolean) => {
-  return (navigateArrows && ((isDesktop && navigateArrows.includes('desktop')) || (!isDesktop && navigateArrows.includes('mobile'))))
-}
-
 export const DatePicker = ({
   selected,
+  defaultSelected,
   onChange,
   disabled,
   displayMode = 'dayPicker',
@@ -83,43 +57,39 @@ export const DatePicker = ({
   currentDateOption = true,
   navigateArrows = displayMode === 'monthPicker' ? ['mobile'] : undefined,
   onChangeMode,
+  syncWithGlobalDate = false,
   slots,
   ...props
 }: DatePickerProps) => {
+  const {
+    setDate,
+    startDate,
+    endDate,
+    setStartDate,
+    setEndDate,
+    setSelectingInternalDates,
+    isTodayOrAfter,
+    isBeforeMinDate,
+    isCurrentDate,
+    setCurrentDate,
+    pickerMode,
+  } = useDatePickerState({
+    selected,
+    defaultSelected,
+    onChange,
+    displayMode,
+    allowedModes,
+    minDate,
+    maxDate,
+    syncWithGlobalDate,
+  })
+
   const { ModeSelector } = slots ?? {}
 
   const pickerRef = useRef<{
     setOpen: (open: boolean, skipSetBlur?: boolean) => void
     isCalendarOpen: () => boolean
   }>(null)
-
-  const pickerMode = useMemo(() => {
-    if (!allowedModes) {
-      return displayMode
-    }
-
-    if (displayMode === 'timePicker') {
-      return displayMode
-    }
-
-    if (allowedModes.includes(displayMode)) {
-      return displayMode
-    }
-
-    return allowedModes[0] ?? displayMode
-  }, [displayMode, allowedModes])
-
-  const [firstDate, secondDate] = useMemo(() => {
-    if (selected instanceof Date) {
-      return [selected, null] as const
-    }
-
-    if (isRangeMode(displayMode)) {
-      return selected
-    }
-
-    return [selected[0], null] as const
-  }, [selected, displayMode])
 
   const { isDesktop } = useSizeClass()
 
@@ -144,111 +114,60 @@ export const DatePicker = ({
     popperClassName,
   )
 
-  const [internalStart, setInternalStart] = useState<Date | null>(null)
-  const [internalEnd, setInternalEnd] = useState<Date | null>(null)
-
-  const isMidSelection = internalStart !== null && internalEnd === null
-
-  const handleDateChange = (selectedDate: Date | [Date, Date | null]) => {
-    if (selectedDate instanceof Date) {
-      onChange(selectedDate)
-      return
-    }
-
-    const [start, end] = selectedDate
-
-    if (!end) {
-      if (isRangeMode(pickerMode)) {
-        setInternalStart(start)
-        setInternalEnd(null)
+  const handleDateChange = (date: Date | [Date | null, Date | null]) => {
+    if (date && Array.isArray(date) && isRangeMode(displayMode)) {
+      const [s, e] = date
+      if (!e) {
+        setSelectingInternalDates(true)
+        if (s) {
+          setStartDate(s)
+        }
+        setEndDate(null)
       }
       else {
-        onChange(start)
+        if (s) {
+          setStartDate(s)
+        }
+        if (e) {
+          setEndDate(e)
+        }
+        setSelectingInternalDates(false)
       }
+    }
+    else if (date && !isRangeMode(displayMode)) {
+      setStartDate(date as Date)
+      setEndDate(endOfDay(date as Date))
+      setDate({
+        startDate: date as Date,
+        endDate: getEndDateBasedOnMode(date as Date, displayMode),
+        mode: displayMode,
+      })
+    }
+  }
+
+  const handleNavigateDate = (value: number) => {
+    if (!startDate) {
       return
     }
 
-    onChange([start, end])
-    setInternalStart(null)
-    setInternalEnd(null)
+    switch (pickerMode) {
+      case 'dayPicker':
+        onChange?.(new Date(startDate.setDate(startDate.getDate() + value)))
+        break
+      case 'monthPicker':
+        onChange?.(new Date(startDate.setMonth(startDate.getMonth() + value)))
+        break
+      case 'yearPicker':
+        onChange?.(new Date(startDate.setFullYear(startDate.getFullYear() + value)))
+        break
+      default:
+        break
+    }
   }
 
   const handleSetCustomDate = (selectedCustomDate: Date | [Date, Date | null]) => {
     handleDateChange(selectedCustomDate)
     pickerRef.current?.setOpen(false)
-  }
-
-  const isCurrentDate = () => {
-    const currentDate = new Date()
-
-    switch (pickerMode) {
-      case 'dayPicker':
-        return firstDate.toDateString() === currentDate.toDateString()
-      case 'monthPicker':
-        return (
-          firstDate.getMonth() === currentDate.getMonth()
-          && firstDate.getFullYear() === currentDate.getFullYear()
-        )
-      case 'yearPicker':
-        return firstDate.getFullYear() === currentDate.getFullYear()
-      default:
-        return false
-    }
-  }
-
-  const setCurrentDate = () => {
-    const currentDate = new Date()
-
-    switch (pickerMode) {
-      case 'dayPicker':
-        onChange(currentDate)
-        break
-      case 'monthPicker':
-        onChange(currentDate)
-        break
-      case 'yearPicker':
-        onChange(currentDate)
-        break
-      default:
-        break
-    }
-  }
-
-  const isTodayOrAfter = useMemo(() => {
-    switch (displayMode) {
-      case 'dayPicker':
-        return firstDate >= endOfDay(new Date()) || (maxDate && firstDate >= maxDate)
-      case 'monthPicker':
-        return (
-          endOfMonth(firstDate) >= endOfMonth(new Date())
-          || (maxDate && endOfMonth(firstDate) >= maxDate)
-        )
-      case 'yearPicker':
-        return (
-          endOfYear(firstDate) >= endOfYear(new Date())
-          || (maxDate && endOfYear(firstDate) >= maxDate)
-        )
-      default:
-        return false
-    }
-  }, [firstDate, maxDate, displayMode])
-
-  const isBeforeMinDate = Boolean(minDate && firstDate <= minDate)
-
-  const handleNavigateDate = (value: number) => {
-    switch (pickerMode) {
-      case 'dayPicker':
-        onChange(new Date(firstDate.setDate(firstDate.getDate() + value)))
-        break
-      case 'monthPicker':
-        onChange(new Date(firstDate.setMonth(firstDate.getMonth() + value)))
-        break
-      case 'yearPicker':
-        onChange(new Date(firstDate.setFullYear(firstDate.getFullYear() + value)))
-        break
-      default:
-        break
-    }
   }
 
   const handleChangeMode = (selectedMode: UnifiedPickerMode) => {
@@ -266,21 +185,9 @@ export const DatePicker = ({
         // @ts-expect-error = There is no good way to define the type of the ref
         ref={pickerRef}
         wrapperClassName={datePickerWrapperClassNames}
-        startDate={isRangeMode(displayMode)
-          ? (isMidSelection
-            ? internalStart
-            : firstDate)
-          : undefined}
-        endDate={isRangeMode(displayMode)
-          ? (isMidSelection
-            ? internalEnd
-            : secondDate)
-          : undefined}
-        selected={
-          displayMode !== 'dayRangePicker' && displayMode !== 'monthRangePicker'
-            ? firstDate
-            : undefined
-        }
+        startDate={startDate}
+        endDate={isRangeMode(displayMode) ? endDate : undefined}
+        selected={startDate}
         onChange={handleDateChange}
         calendarClassName={calendarClassNames}
         popperClassName={popperClassNames}
