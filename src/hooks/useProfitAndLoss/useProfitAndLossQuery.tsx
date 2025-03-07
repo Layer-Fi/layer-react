@@ -45,11 +45,11 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
   const { data: auth } = useAuth()
 
   const queryKey =
-    businessId &&
-    startDate &&
-    endDate &&
-    auth?.access_token &&
-    `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
+    businessId
+    && startDate
+    && endDate
+    && auth?.access_token
+    && `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
       ',',
     )}-${reportingBasis}`
 
@@ -64,8 +64,8 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
     Layer.getProfitAndLoss(apiUrl, auth?.access_token, {
       params: {
         businessId,
-        startDate: formatISO(startDate.valueOf()),
-        endDate: formatISO(endDate.valueOf()),
+        startDate: formatISO(startDate, { representation: 'date' }),
+        endDate: formatISO(endDate, { representation: 'date' }),
         tagKey: tagFilter?.key,
         tagValues: tagFilter?.values?.join(','),
         reportingBasis,
