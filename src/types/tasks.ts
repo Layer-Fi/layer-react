@@ -3,7 +3,7 @@ import { S3PresignedUrl } from './general'
 
 type Document = {
   document_type: DocumentType
-  file_name: string,
+  file_name: string
   presigned_url: S3PresignedUrl
   // add the other fields if/when necessary
 }
@@ -42,4 +42,11 @@ export type TasksMonthly = {
   total: number
   completed: number
   tasks: Task[]
+}
+
+export type TasksYearly = {
+  year: number
+  total: number
+  completed: number
+  months: TasksMonthly[]
 }

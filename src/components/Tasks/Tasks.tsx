@@ -94,6 +94,7 @@ export const TasksComponent = ({
     loadedStatus,
     data,
     monthlyData,
+    yearlyData,
     currentDate,
     setCurrentDate,
     dateRange,

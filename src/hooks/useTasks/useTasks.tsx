@@ -3,17 +3,18 @@ import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { LoadedStatus } from '../../types/general'
 import { DataModel } from '../../types/general'
-import { isComplete, Task, TasksMonthly } from '../../types/tasks'
+import { isComplete, Task, TasksMonthly, TasksYearly } from '../../types/tasks'
 import { mockData } from './mockData'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { endOfYear, formatISO, getMonth, getYear, parseISO, startOfYear } from 'date-fns'
-import { useNotifications } from '../notifications/useNotifications'
+import { getActivationDate } from '../../utils/business'
 
 type UseTasks = (props?: UseTasksProps) => {
   data?: Task[]
   monthlyData?: TasksMonthly[]
+  yearlyData?: TasksYearly[]
   isLoading?: boolean
   loadedStatus?: LoadedStatus
   isValidating?: boolean
@@ -43,13 +44,11 @@ export const useTasks: UseTasks = ({
 }: UseTasksProps = {}) => {
   const [loadedStatus, setLoadedStatus] = useState<LoadedStatus>('initial')
 
-  const { businessId, read, syncTimestamps, hasBeenTouched } = useLayerContext()
+  const { business, businessId, read, syncTimestamps, hasBeenTouched } = useLayerContext()
+  const activationDate = getActivationDate(business)
 
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
-
-  /** @TODO - maybe we should put this into global store or context? */
-  const { data: notifications, isLoading: notificationsLoading } = useNotifications()
 
   const [dateRange, setDateRange] = useState({
     startDate: initialStartDate,
@@ -57,15 +56,18 @@ export const useTasks: UseTasks = ({
   })
   const [currentDate, setCurrentDate] = useState(new Date())
 
-  const queryKey = businessId && auth?.access_token && `tasks-${businessId}-${dateRange.startDate.toISOString()}-${dateRange.endDate.toISOString()}`
+  const queryKey = businessId && activationDate && auth?.access_token && `tasks-${businessId}-${activationDate.toISOString()}`
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,
     Layer.getTasks(apiUrl, auth?.access_token, {
       params: {
         businessId,
-        startDate: formatISO(dateRange.startDate.valueOf()),
-        endDate: formatISO(dateRange.endDate.valueOf()),
+        // startDate: formatISO(dateRange.startDate.valueOf()),
+        // endDate: formatISO(dateRange.endDate.valueOf()),
+        /** Get the whole history of tasks */
+        startDate: activationDate ? formatISO(activationDate.valueOf()) : undefined,
+        endDate: formatISO((new Date()).valueOf()),
       },
     }),
   )
@@ -107,6 +109,39 @@ export const useTasks: UseTasks = ({
     }
 
     return []
+  }, [data])
+
+  const yearlyData = useMemo(() => {
+    if (monthlyData) {
+      const grouped = monthlyData.reduce((acc, record) => {
+        if (!acc[record.year]) {
+          acc[record.year] = {
+            year: record.year,
+            total: 0,
+            completed: 0,
+            months: [],
+          }
+        }
+
+        acc[record.year].total += record.total
+        acc[record.year].completed += record.completed
+        acc[record.year].months.push(record)
+
+        return acc
+      }, {} as Record<string, TasksYearly>)
+
+      return Object.values(grouped)
+    }
+
+    return []
+  }, [monthlyData])
+
+  const unresolvedTasks = useMemo(() => {
+    if (data?.data) {
+      return data.data.filter(x => !isComplete(x.status)).length
+    }
+
+    return
   }, [data])
 
   useEffect(() => {
@@ -184,10 +219,11 @@ export const useTasks: UseTasks = ({
   return {
     data: DEBUG_MODE ? mockData : data?.data,
     monthlyData,
-    isLoading: isLoading || notificationsLoading,
+    yearlyData,
+    isLoading,
     loadedStatus,
     isValidating,
-    unresolvedTasks: notifications?.data?.todo_tasks,
+    unresolvedTasks,
     error,
     currentDate,
     setCurrentDate,
