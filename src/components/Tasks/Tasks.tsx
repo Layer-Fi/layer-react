@@ -123,7 +123,6 @@ export const TasksComponent = ({
       return
     }
 
-    /** @TODO This auto-collapse won't work anymore because we don't refetch the tasks after submitting a response */
     if (
       allComplete
       && open
@@ -147,6 +146,7 @@ export const TasksComponent = ({
         collapsable={collapsable}
         open={open}
         toggleContent={() => setOpen(!open)}
+        highlightYears={yearlyData?.map(x => x.year)}
       />
       <div
         className={classNames(
