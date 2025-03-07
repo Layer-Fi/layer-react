@@ -1,3 +1,4 @@
+import { formatISO } from 'date-fns'
 import { isStringArray } from '../array/isStringArray'
 
 function toSnakeCase(input: string) {
@@ -21,7 +22,7 @@ export function toDefinedSearchParameters(
       }
 
       if (value instanceof Date) {
-        return [[key, value.toISOString()]]
+        return [[key, formatISO(value, { representation: 'date' })]]
       }
 
       if (isStringArray(value)) {
