@@ -3,7 +3,7 @@
 .Layer__datepicker__wrapper,
 #Layer__datepicker__portal {
   position: relative;
-  z-index: 101;
+  z-index: 105;
   display: inline-flex;
   align-items: center;
   max-height: 36px;
@@ -698,4 +698,35 @@
     min-height: 36px;
     max-height: 36px;
   }
+}
+
+.Layer__datepicker__date-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-info-warning);
+  margin-left: 12px;
+}
+
+.Layer__datepicker__date-dot--on-arrow-next {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-info-warning);
+  display: flex;
+  position: absolute;
+  right: 2px;
+  top: -2px;
+}
+
+.Layer__datepicker__date-dot--on-arrow-back {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-info-warning);
+  display: flex;
+  position: absolute;
+  left: 2px;
+  top: -2px;
 }

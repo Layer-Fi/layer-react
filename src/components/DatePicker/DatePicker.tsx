@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type FC } from 'react'
+import { ReactNode, useMemo, useRef, useState, type FC } from 'react'
 import * as RDP from 'react-datepicker'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
@@ -51,6 +51,9 @@ interface DatePickerProps {
   slots?: {
     ModeSelector: FC<DatePickerModeSelectorProps>
   }
+  renderYearContent?: (year: number) => ReactNode
+  badgeOnNavigationArrowBack?: boolean
+  badgeOnNavigationArrowNext?: boolean
 }
 
 const isRangeMode = (displayMode: DatePickerProps['displayMode']) =>
@@ -82,6 +85,8 @@ export const DatePicker = ({
   maxDate = new Date(),
   currentDateOption = true,
   navigateArrows = displayMode === 'monthPicker' ? ['mobile'] : undefined,
+  badgeOnNavigationArrowBack = false,
+  badgeOnNavigationArrowNext = false,
   onChangeMode,
   slots,
   ...props
@@ -362,6 +367,9 @@ export const DatePicker = ({
             disabled={isBeforeMinDate || disabled}
           >
             <ChevronLeft className='Layer__datepicker__button-icon' size={16} />
+            {badgeOnNavigationArrowBack && (
+              <span className='Layer__datepicker__date-dot--on-arrow-back' />
+            )}
           </Button>
           <Button
             aria-label='Next Date'
@@ -379,6 +387,9 @@ export const DatePicker = ({
               className='Layer__datepicker__button-icon'
               size={16}
             />
+            {badgeOnNavigationArrowNext && (
+              <span className='Layer__datepicker__date-dot--on-arrow-next' />
+            )}
           </Button>
         </>
       )}
