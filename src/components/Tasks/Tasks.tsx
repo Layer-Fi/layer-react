@@ -8,7 +8,6 @@ import {
 } from 'react'
 import { TasksContext } from '../../contexts/TasksContext'
 import { useTasks } from '../../hooks/useTasks'
-import { isComplete } from '../../types/tasks'
 import { Loader } from '../Loader'
 import { TasksHeader } from '../TasksHeader'
 import { TasksList } from '../TasksList'
@@ -24,14 +23,14 @@ export const UseTasksContext = createContext<UseTasksContextType>({
   loadedStatus: 'initial',
   isValidating: undefined,
   error: undefined,
-  refetch: () => {},
+  refetch: () => Promise.resolve({ data: [] }),
   submitResponseToTask: () => {},
   uploadDocumentsForTask: () => Promise.resolve(),
   deleteUploadsForTask: () => {},
   updateDocUploadTaskDescription: () => {},
   currentDate: new Date(),
   setCurrentDate: () => {},
-  dateRange: { startDate: startOfYear(new Date()), endDate: endOfYear(new Date())},
+  dateRange: { startDate: startOfYear(new Date()), endDate: endOfYear(new Date()) },
   setDateRange: () => {},
 })
 
@@ -97,26 +96,33 @@ export const TasksComponent = ({
     monthlyData,
     currentDate,
     setCurrentDate,
-    dateRange
+    dateRange,
+    unresolvedTasks,
   } = useContext(TasksContext)
 
   const allComplete = useMemo(() => {
-    if (!data) {
+    if (isLoading || !data || unresolvedTasks === undefined) {
       return undefined
     }
 
-    if (data && !isLoading) {
-      return Boolean(data.every(x => isComplete(x.status)))
+    if (!isLoading && unresolvedTasks === 0) {
+      return true
     }
 
     return false
-  }, [data, isLoading])
+  }, [data, isLoading, unresolvedTasks])
 
   const [open, setOpen] = useState(
-    defaultCollapsed || collapsedWhenComplete ? false : true,
+    collapsable && allComplete === false ? true : defaultCollapsed || collapsedWhenComplete ? false : true,
   )
 
   useEffect(() => {
+    if (collapsable && allComplete === false) {
+      setOpen(true)
+      return
+    }
+
+    /** @TODO This auto-collapse won't work anymore because we don't refetch the tasks after submitting a response */
     if (
       allComplete
       && open
@@ -125,10 +131,16 @@ export const TasksComponent = ({
     ) {
       setOpen(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allComplete])
 
   return (
-    <div className='Layer__tasks-component'>
+    <div
+      className={classNames(
+        'Layer__tasks-component',
+        collapsable && 'Layer__tasks-component--collapsable',
+      )}
+    >
       <TasksHeader
         tasksHeader={stringOverrides?.header || tasksHeader}
         collapsable={collapsable}
@@ -141,22 +153,24 @@ export const TasksComponent = ({
           !open && 'Layer__tasks__content--collapsed',
         )}
       >
-        {isLoading || !data ? (
-          <div className='Layer__tasks__loader-container'>
-            <Loader />
-          </div>
-        ) : (
-          <>
-            <TasksMonthSelector
-              tasks={monthlyData}
-              currentDate={currentDate}
-              onClick={setCurrentDate}
-              year={getYear(dateRange.startDate)}
-            />
-            <TasksPending />
-            <TasksList />
-          </>
-        )}
+        {isLoading || !data
+          ? (
+            <div className='Layer__tasks__loader-container'>
+              <Loader />
+            </div>
+          )
+          : (
+            <>
+              <TasksMonthSelector
+                tasks={monthlyData}
+                currentDate={currentDate}
+                onClick={setCurrentDate}
+                year={getYear(dateRange.startDate)}
+              />
+              <TasksPending />
+              <TasksList />
+            </>
+          )}
       </div>
     </div>
   )
