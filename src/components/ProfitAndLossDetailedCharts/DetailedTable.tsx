@@ -144,6 +144,9 @@ export const DetailedTable = ({
   }
 
   const typeColorMapping = mapTypesToColors(filteredData, chartColorsList)
+  const positiveTotal = filteredData
+    .filter(x => !x.hidden && x.value > 0)
+    .reduce((sum, x) => sum + x.value, 0)
 
   return (
     <div className='details-container'>
@@ -182,6 +185,7 @@ export const DetailedTable = ({
             {filteredData
               .filter(x => !x.hidden)
               .map((item, idx) => {
+                const share = item.value > 0 ? item.value / positiveTotal : 0
                 return (
                   <tr
                     key={`pl-side-table-item-${idx}`}
@@ -202,8 +206,7 @@ export const DetailedTable = ({
                     </td>
                     <td className='share-col'>
                       <span className='share-cell-content'>
-                        {formatPercent(item.share)}
-                        %
+                        {item.value < 0 ? '-' : `${formatPercent(share)}%`}
                         <ValueIcon
                           item={item}
                           typeColorMapping={typeColorMapping}
