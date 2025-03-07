@@ -3,6 +3,8 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { sleep } from '../../utils/helpers'
 import { USState } from '../../types/location'
 import { EntityType } from '../../types/business'
+import { useBusinessPersonnel } from '../../hooks/businessPersonnel/useBusinessPersonnel'
+import { useCreateBusinessPersonnel } from '../../hooks/businessPersonnel/useCreateBusinessPersonnel'
 
 type BusinessFormData = {
   first_name?: string
@@ -18,6 +20,12 @@ type BusinessFormData = {
 
 export const useBusinessForm = () => {
   const { business } = useLayerContext()
+
+  const { trigger: createBusinessPersonnel } = useCreateBusinessPersonnel()
+
+  const { data: personnel } = useBusinessPersonnel()
+  console.log('personnel', personnel)
+
   const form = useForm<
     BusinessFormData,
     FormValidateOrFn<BusinessFormData>,
@@ -29,7 +37,9 @@ export const useBusinessForm = () => {
     FormAsyncValidateOrFn<BusinessFormData>,
     FormAsyncValidateOrFn < BusinessFormData >> ({
     defaultValues: {
-      phone_number: business?.phone_number,
+      first_name: personnel?.[0]?.fullName,
+      phone_number: personnel?.[0]?.phoneNumbers?.[0]?.phoneNumber,
+      email: personnel?.[0]?.emailAddresses?.[0]?.emailAddress,
       legal_name: business?.legal_name,
       entity_type: business?.entity_type,
       us_state: business?.us_state,
@@ -37,7 +47,19 @@ export const useBusinessForm = () => {
     },
     onSubmit: async ({ value }) => {
       console.log('onSubmit - sending...', value)
-      await sleep(3000)
+      await sleep(1000)
+
+      await createBusinessPersonnel({
+        full_name: `${value.first_name} ${value.last_name}`,
+        email_addresses: value.email ? [{ email_address: value.email }] : [],
+        phone_numbers: value.phone_number ? [{ phone_number: value.phone_number }] : [],
+        preferred_name: null,
+        external_id: null,
+        roles: [{ role: 'OWNER' }],
+      })
+
+      // @TODO - update personnel
+      // @TODO - update business
     },
   })
 
