@@ -66,39 +66,35 @@ export const LinkAccountsContent = ({
     <div className='Layer__link-accounts Layer__component'>
       {title && <Heading size={HeadingSize.view}>{title}</Heading>}
 
-      {data && data.length === 0
-        ? (
-          <div className='Layer__link-accounts__data-status-container'>
-            {!hideLoading && loadingStatus !== 'complete' ? <Loader /> : null}
+      {data && data.length === 0 ? (
+        <div className='Layer__link-accounts__data-status-container'>
+          {!hideLoading && loadingStatus !== 'complete' ? <Loader /> : null}
 
-            {Boolean(error) && (
-              <DataState
-                status={DataStateStatus.failed}
-                title='Failed to load accounts'
-                description='Please try again later'
-                onRefresh={refetchAccounts}
-              />
-            )}
-          </div>
-        )
-        : null}
+          {Boolean(error) && (
+            <DataState
+              status={DataStateStatus.failed}
+              title='Failed to load accounts'
+              description='Please try again later'
+              onRefresh={refetchAccounts}
+            />
+          )}
+        </div>
+      ) : null}
 
-      {data && data.length > 0
-        ? (
-          <div className='Layer__link-accounts__list'>
-            {data?.map((account, index) => (
-              <LinkedAccountItemThumb
-                key={index}
-                account={account}
-                showLedgerBalance={showLedgerBalance}
-                showUnlinkItem={showUnlinkItem}
-                showBreakConnection={showBreakConnection}
-                asWidget={asWidget}
-              />
-            ))}
-          </div>
-        )
-        : null}
+      {data && data.length > 0 ? (
+        <div className='Layer__link-accounts__list'>
+          {data?.map((account, index) => (
+            <LinkedAccountItemThumb
+              key={index}
+              account={account}
+              showLedgerBalance={showLedgerBalance}
+              showUnlinkItem={showUnlinkItem}
+              showBreakConnection={showBreakConnection}
+              asWidget={asWidget}
+            />
+          ))}
+        </div>
+      ) : null}
       <ActionableRow
         iconBox={<PlaidIcon />}
         title={
@@ -107,7 +103,7 @@ export const LinkAccountsContent = ({
             : 'Connect accounts'
         }
         description='Import data with one simple integration.'
-        button={(
+        button={
           <Button
             onClick={() => addConnection('PLAID')}
             rightIcon={<LinkIcon size={12} />}
@@ -115,27 +111,25 @@ export const LinkAccountsContent = ({
           >
             {data && data.length > 0 ? 'Connect next' : 'Connect'}
           </Button>
-        )}
+        }
       />
       <LinkedAccountsConfirmationModal />
 
-      {onBack || onNext
-        ? (
-          <div className='Layer__link-accounts__footer'>
-            {onBack && (
-              <Button onClick={onBack} variant={ButtonVariant.secondary}>
-                {stringOverrides?.backButtonText ?? 'Back'}
-              </Button>
-            )}
-            {onNext && (
-              <Button onClick={onNext}>
-                {stringOverrides?.nextButtonText
+      {onBack || onNext ? (
+        <div className='Layer__link-accounts__footer'>
+          {onBack && (
+            <Button onClick={onBack} variant={ButtonVariant.secondary}>
+              {stringOverrides?.backButtonText ?? 'Back'}
+            </Button>
+          )}
+          {onNext && (
+            <Button onClick={onNext}>
+              {stringOverrides?.nextButtonText
                 || 'I’m done connecting my business accounts'}
-              </Button>
-            )}
-          </div>
-        )
-        : null}
+            </Button>
+          )}
+        </div>
+      ) : null}
     </div>
   )
 }

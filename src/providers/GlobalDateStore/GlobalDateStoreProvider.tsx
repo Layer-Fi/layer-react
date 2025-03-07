@@ -5,7 +5,6 @@ import {
   endOfDay,
   endOfMonth,
   endOfYear,
-  formatISO,
   min,
   startOfDay,
   startOfMonth,
@@ -18,23 +17,6 @@ import { useState, createContext, type PropsWithChildren, useContext } from 'rea
 import { createStore, useStore } from 'zustand'
 import { safeAssertUnreachable } from '../../utils/switch/safeAssertUnreachable'
 import { useStoreWithDateSelected } from '../../utils/zustand/useStoreWithDateSelected'
-
-// Utility function to convert Date to YYYY-MM-DD string
-const toLocalDateString = (date: Date): string => formatISO(date.valueOf(), { representation: 'date' })
-
-// Hook to get date range as strings
-export function useGlobalDateRangeAsStrings() {
-  const store = useContext(GlobalDateStoreContext)
-  const { start, end } = useStore(store, state => ({
-    start: state.start,
-    end: state.end,
-  }))
-
-  return {
-    startString: toLocalDateString(start),
-    endString: toLocalDateString(end),
-  }
-}
 
 const _DATE_PICKER_MODES = [
   'dayPicker',
