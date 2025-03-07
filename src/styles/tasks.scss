@@ -7,7 +7,11 @@
   box-shadow: 0 0 0 1px var(--color-base-300);
   background-color: var(--color-base-0);
 
-  .Layer__tasks-pending {
+  &.Layer__tasks-component--collapsable {
+    overflow-y: hidden;
+  }
+
+  .layer__tasks-pending {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -270,7 +274,7 @@
   margin-left: -15px;
 }
 
-@media screen and (width <= 400px) {
+@container (width <= 400px) {
   .Layer__tasks-component {
     padding: var(--spacing-xs) var(--spacing-sm);
 

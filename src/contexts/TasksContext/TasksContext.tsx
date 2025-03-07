@@ -12,7 +12,7 @@ export const TasksContext = createContext<TasksContextType>({
   setCurrentDate: () => {},
   dateRange: { startDate: startOfYear(new Date()), endDate: endOfYear(new Date()) },
   setDateRange: () => {},
-  refetch: () => {},
+  refetch: () => Promise.resolve({ data: [] }),
   submitResponseToTask: () => {},
   updateDocUploadTaskDescription: () => {},
   uploadDocumentsForTask: () => Promise.resolve(),

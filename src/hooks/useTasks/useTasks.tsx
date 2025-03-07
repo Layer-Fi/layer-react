@@ -9,6 +9,7 @@ import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { endOfYear, formatISO, getMonth, getYear, parseISO, startOfYear } from 'date-fns'
+import { useNotifications } from '../notifications/useNotifications'
 
 type UseTasks = (props?: UseTasksProps) => {
   data?: Task[]
@@ -21,15 +22,16 @@ type UseTasks = (props?: UseTasksProps) => {
   setCurrentDate: (date: Date) => void
   dateRange: { startDate: Date, endDate: Date }
   setDateRange: (props: { startDate: Date, endDate: Date }) => void
-  refetch: () => void
+  refetch: () => Promise<{ data: Task[] } | undefined>
   submitResponseToTask: (taskId: string, userResponse: string) => void
   uploadDocumentsForTask: (taskId: string, files: File[], description?: string) => Promise<void>
   deleteUploadsForTask: (taskId: string) => void
   updateDocUploadTaskDescription: (taskId: string, userResponse: string) => void
+  unresolvedTasks?: number
 }
 
 type UseTasksProps = {
-  startDate?: Date,
+  startDate?: Date
   endDate?: Date
 }
 
@@ -37,7 +39,7 @@ const DEBUG_MODE = false
 
 export const useTasks: UseTasks = ({
   startDate: initialStartDate = startOfYear(new Date()),
-  endDate: initialEndDate = endOfYear(new Date())
+  endDate: initialEndDate = endOfYear(new Date()),
 }: UseTasksProps = {}) => {
   const [loadedStatus, setLoadedStatus] = useState<LoadedStatus>('initial')
 
@@ -46,13 +48,16 @@ export const useTasks: UseTasks = ({
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
+  /** @TODO - maybe we should put this into global store or context? */
+  const { data: notifications, isLoading: notificationsLoading } = useNotifications()
+
   const [dateRange, setDateRange] = useState({
     startDate: initialStartDate,
-    endDate: initialEndDate
+    endDate: initialEndDate,
   })
   const [currentDate, setCurrentDate] = useState(new Date())
 
-  const queryKey = businessId && auth?.access_token && `tasks-${businessId}-${dateRange.startDate}-${dateRange.endDate}`
+  const queryKey = businessId && auth?.access_token && `tasks-${businessId}-${dateRange.startDate.toISOString()}-${dateRange.endDate.toISOString()}`
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,
@@ -107,7 +112,8 @@ export const useTasks: UseTasks = ({
   useEffect(() => {
     if (isLoading && loadedStatus === 'initial') {
       setLoadedStatus('loading')
-    } else if (!isLoading && loadedStatus === 'loading') {
+    }
+    else if (!isLoading && loadedStatus === 'loading') {
       setLoadedStatus('complete')
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,7 +130,7 @@ export const useTasks: UseTasks = ({
       businessId,
       taskId,
       files,
-      description
+      description,
     }).then(refetch)
   }
 
@@ -136,14 +142,14 @@ export const useTasks: UseTasks = ({
       user_response: userResponse,
     }
 
-    Layer.submitResponseToTask(apiUrl, auth?.access_token, {
+    void Layer.submitResponseToTask(apiUrl, auth?.access_token, {
       params: { businessId, taskId },
       body: data,
     }).then(() => refetch())
   }
 
   const deleteUploadsForTask = (taskId: string) => {
-    Layer.deleteTaskUploads(apiUrl, auth?.access_token, {
+    void Layer.deleteTaskUploads(apiUrl, auth?.access_token, {
       params: { businessId, taskId },
     }).then(() => refetch())
   }
@@ -154,7 +160,7 @@ export const useTasks: UseTasks = ({
       user_response: userResponse,
     }
 
-    Layer.updateUploadDocumentTaskDescription(apiUrl, auth?.access_token, {
+    void Layer.updateUploadDocumentTaskDescription(apiUrl, auth?.access_token, {
       params: { businessId, taskId },
       body: data,
     }).then(() => refetch())
@@ -170,7 +176,7 @@ export const useTasks: UseTasks = ({
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
-      refetch()
+      void refetch()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncTimestamps])
@@ -178,9 +184,10 @@ export const useTasks: UseTasks = ({
   return {
     data: DEBUG_MODE ? mockData : data?.data,
     monthlyData,
-    isLoading,
+    isLoading: isLoading || notificationsLoading,
     loadedStatus,
     isValidating,
+    unresolvedTasks: notifications?.data?.todo_tasks,
     error,
     currentDate,
     setCurrentDate,
