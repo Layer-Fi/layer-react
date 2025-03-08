@@ -5,23 +5,19 @@ import { get } from './authenticated_http'
 
 type GetStatementOfCashFlowParams = {
   businessId: string
-  startDate: string
-  endDate: string
-}
-
-type GetStatementOfCashFlowReturn = {
-  data?: StatementOfCashFlow
-  error?: unknown
+  startDate: Date
+  endDate: Date
 }
 
 export const getStatementOfCashFlow = get<
-  GetStatementOfCashFlowReturn,
+  { data: StatementOfCashFlow },
   GetStatementOfCashFlowParams
 >(
-  ({ businessId, startDate, endDate }: GetStatementOfCashFlowParams) =>
-    `/v1/businesses/${businessId}/reports/cashflow-statement?start_date=${encodeURIComponent(
-      startDate,
-    )}&end_date=${encodeURIComponent(endDate)}`,
+  ({ businessId, startDate, endDate }) => {
+    const parameters = toDefinedSearchParameters({ startDate, endDate })
+
+    return `/v1/businesses/${businessId}/reports/cashflow-statement?${parameters}`
+  },
 )
 
 export const getCashflowStatementCSV = get<

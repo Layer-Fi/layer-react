@@ -1,6 +1,7 @@
 import { version as packageVersion } from '../../../package.json'
 import { APIError, APIErrorMessage } from '../../models/APIError'
 import { reportError } from '../../models/ErrorHandler'
+import type { ParameterValues } from '../../utils/request/toDefinedSearchParameters'
 
 const CUSTOM_PREFIX = 'Layer-'
 const CUSTOM_HEADERS = {
@@ -21,9 +22,9 @@ export type HTTPVerb = 'get' | 'put' | 'post' | 'patch' | 'options' | 'delete'
 export const get =
   <
     Return extends Record<string, unknown> = Record<string, unknown>,
-    Params extends Record<string, string | undefined> = Record<
+    Params extends Record<string, ParameterValues | null | undefined> = Record<
       string,
-      string | undefined
+      ParameterValues | null | undefined
     >,
   >(
     url: (params: Params) => string,
