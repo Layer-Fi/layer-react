@@ -617,6 +617,7 @@
 }
 
 @media screen and (resolution >= 2dppx) {
+  .Layer__view,
   .Layer__component {
     .Layer__textarea,
     .Layer__select__control,
@@ -631,4 +632,30 @@
       min-height: 36px;
     }
   }
+}
+
+.Layer__form .Layer__form-section {
+  padding: var(--spacing-xl) 0;
+
+  .Layer__form-section__title {
+    padding: 0 var(--spacing-2xs);
+  }
+
+  .Layer__input-group {
+    width: 100%;
+  }
+
+  .Layer__input {
+    width: 100%;
+  }
+
+  @container (width > 500px) {
+    & > * {
+      max-width: 560px;
+    }
+  }
+}
+
+.Layer__form .Layer__form-section:not(:last-of-type) {
+  border-bottom: 1px solid var(--color-base-300);
 }
