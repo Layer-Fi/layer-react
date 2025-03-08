@@ -242,7 +242,9 @@ export const DetailedChart = ({
                           x => x.display_name === hoveredItem,
                         )
                         const positiveTotal = chartData.reduce((sum, x) => sum + x.value, 0)
-                        const share = item?.value > 0 ? item.value / positiveTotal : 0
+
+                        const value = item?.value ?? 0
+                        const share = value > 0 ? value / positiveTotal : 0
                         return (
                           <ChartText
                             {...positioningProps}
