@@ -1,4 +1,3 @@
-
 import classNames from 'classnames'
 import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
@@ -27,7 +26,6 @@ export const AmountInput = ({
   )
 
   return (
-
     <Tooltip disabled={!isInvalid || !errorMessage}>
       <TooltipTrigger className='Layer__input-tooltip'>
         <CurrencyInput

@@ -24,13 +24,14 @@ import { parseISO, format as formatTime } from 'date-fns'
 
 type Props = {
   name?: string
-  bankTransaction: BankTransaction
+  bankTransaction?: BankTransaction
   value: CategoryOption | undefined
   onChange: (newValue: CategoryOption) => void
   disabled?: boolean
   className?: string
   showTooltips: boolean
   excludeMatches?: boolean
+  hideMainCategories?: string[]
   asDrawer?: boolean
 }
 
@@ -247,6 +248,14 @@ function flattenCategories(
   })
 }
 
+function filterCategories(categories: Category[], hideMainCategories?: string[]) {
+  if (!hideMainCategories) {
+    return categories
+  }
+
+  return categories.filter(category => !hideMainCategories.includes(category.category))
+}
+
 export const CategorySelect = ({
   bankTransaction,
   name,
@@ -256,9 +265,12 @@ export const CategorySelect = ({
   className,
   showTooltips,
   excludeMatches = false,
+  hideMainCategories,
   asDrawer = false,
 }: Props) => {
-  const { categories } = useLayerContext()
+  const { categories: rawCategories } = useLayerContext()
+
+  const categories = filterCategories(rawCategories, hideMainCategories)
 
   const matchOptions =
     !excludeMatches && bankTransaction?.suggested_matches
