@@ -122,9 +122,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     accounts.map(({ id }) => [id, true]),
   ))
 
-  const { trigger, isMutating, error } = useConfirmAndExcludeMultiple(formState, {
-    onSuccess: refetchAccounts,
-  })
+  const { trigger, isMutating, error } = useConfirmAndExcludeMultiple({ onSuccess: refetchAccounts })
   const hasError = Boolean(error)
 
   const handleDismiss = () => {
@@ -133,7 +131,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
   }
 
   const handleFinish = async () => {
-    const success = await trigger()
+    const success = await trigger(formState)
     if (success) {
       onFinish()
       onClose()

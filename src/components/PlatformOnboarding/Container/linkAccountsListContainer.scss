@@ -1,0 +1,14 @@
+.Layer__LinkAccountsListContainer {
+  display: grid;
+
+  row-gap: var(--spacing-xs);
+  grid-auto-rows: 1fr;
+
+  overflow-y: auto;
+  max-block-size: max(24rem, 60dvh);
+
+  @container (min-width: 48rem) {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: var(--spacing-xs);
+  }
+}

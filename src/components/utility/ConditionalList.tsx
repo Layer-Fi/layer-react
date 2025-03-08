@@ -3,7 +3,7 @@ import type { PropsWithChildren } from 'react'
 type ConditionalListProps<T> = {
   list: ReadonlyArray<T>
   Empty: React.ReactNode
-  children: React.FC<{ item: T }>
+  children: React.FC<{ item: T, index: number }>
   Container?: React.FC<PropsWithChildren>
 } & ({
   isLoading: boolean
@@ -11,16 +11,27 @@ type ConditionalListProps<T> = {
 } | {
   isLoading?: never
   Loading?: never
+}) & ({
+  isError: boolean
+  Error: React.ReactNode
+} | {
+  isError?: never
+  Error?: never
 })
 
 export function ConditionalList<T>({
   list,
-  isLoading,
   Empty,
   Container,
+  isLoading,
   Loading,
+  isError,
+  Error,
   children,
 }: ConditionalListProps<T>) {
+  if (isError) {
+    return Error
+  }
   if (isLoading) {
     return Loading
   }
@@ -28,7 +39,7 @@ export function ConditionalList<T>({
     return Empty
   }
 
-  const listItems = list.map((item, index) => children({ item }, index))
+  const listItems = list.map((item, index) => children({ item, index }))
 
   return Container ? <Container>{listItems}</Container> : listItems
 }

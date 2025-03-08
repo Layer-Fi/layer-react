@@ -1,8 +1,7 @@
 import type { LinkedAccount } from '../../../types/linked_accounts'
-import { Heading } from '../../ui/Typography/Heading'
-import { P } from '../../ui/Typography/Text'
 import { VStack } from '../../ui/Stack/Stack'
 import { Checkbox } from '../../ui/Checkbox/Checkbox'
+import { BasicLinkedAccountContainer, BasicLinkedAccountContent } from '../BasicLinkedAccount/BasicLinkedAccount'
 
 type LinkedAccountConfirmationProps = {
   account: LinkedAccount
@@ -10,34 +9,23 @@ type LinkedAccountConfirmationProps = {
   onChangeConfirmed: (isConfirmed: boolean) => void
 }
 
-const CLASS_NAME = 'Layer__LinkedAccountToConfirm'
-
 export function LinkedAccountToConfirm({
   account,
   isConfirmed,
   onChangeConfirmed,
 }: LinkedAccountConfirmationProps) {
   return (
-    <div className={CLASS_NAME}>
-      <VStack>
-        <Heading level={3} size='sm'>{account.external_account_name}</Heading>
-        <P slot='mask'>
-          •••
-          {' '}
-          {account.mask}
-        </P>
-        <P slot='institution'>
-          {account.institution?.name}
-        </P>
-      </VStack>
+    <BasicLinkedAccountContainer isSelected={isConfirmed}>
+      <BasicLinkedAccountContent account={account} />
       <VStack justify='center'>
         <Checkbox
           size='lg'
+          variant='success'
           isSelected={isConfirmed}
           onChange={onChangeConfirmed}
           aria-label='Confirm Account Inclusion'
         />
       </VStack>
-    </div>
+    </BasicLinkedAccountContainer>
   )
 }

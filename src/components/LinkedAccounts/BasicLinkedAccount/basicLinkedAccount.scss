@@ -1,0 +1,14 @@
+.Layer__BasicLinkedAccountContainer {
+  padding-inline: var(--spacing-md);
+  padding-block: var(--spacing-sm);
+
+  border: 1px solid var(--outline-subtle);
+  border-radius: var(--border-radius-xs);
+
+  display: grid;
+  grid-template-columns: 1fr auto;
+
+  &[data-selected] {
+    background-color: var(--bg-subtle);
+  }
+}

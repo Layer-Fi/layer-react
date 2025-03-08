@@ -5,6 +5,7 @@ import { LinkedAccountsProvider } from '../../providers/LinkedAccountsProvider'
 import { OnboardingStep } from '../../types/layer_context'
 import { Container } from '../Container'
 import { ConnectAccount } from './ConnectAccount'
+import { AccountConfirmationStoreProvider } from '../../providers/AccountConfirmationStoreProvider'
 
 const COLLAPSED_STYLE = {
   maxHeight: 0,
@@ -26,9 +27,11 @@ export interface OnboardingProps {
 }
 
 export const Onboarding = (props: OnboardingProps) => (
-  <LinkedAccountsProvider>
-    <OnboardingContent {...props} />
-  </LinkedAccountsProvider>
+  <AccountConfirmationStoreProvider>
+    <LinkedAccountsProvider>
+      <OnboardingContent {...props} />
+    </LinkedAccountsProvider>
+  </AccountConfirmationStoreProvider>
 )
 
 export const OnboardingContent = ({
@@ -48,20 +51,20 @@ export const OnboardingContent = ({
 
   useEffect(() => {
     if (
-      data &&
-      data?.length === 0 &&
-      loadingStatus === 'complete' &&
-      !onboardingStep
+      data
+      && data?.length === 0
+      && loadingStatus === 'complete'
+      && !onboardingStep
     ) {
       setOnboardingStep('connectAccount')
       return
     }
 
     if (
-      data &&
-      data.length > 0 &&
-      loadingStatus === 'complete' &&
-      onboardingStep === 'connectAccount'
+      data
+      && data.length > 0
+      && loadingStatus === 'complete'
+      && onboardingStep === 'connectAccount'
     ) {
       setOnboardingStep('complete')
     }
