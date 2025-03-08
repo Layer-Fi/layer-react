@@ -10,7 +10,7 @@ function toSnakeCase(input: string) {
     .join('_')
 }
 
-type ParameterValues = Date | string | ReadonlyArray<string> | number | boolean
+export type ParameterValues = Date | string | ReadonlyArray<string> | number | boolean
 
 export function toDefinedSearchParameters(
   input: Record<string, ParameterValues | null | undefined>,

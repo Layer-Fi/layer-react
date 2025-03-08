@@ -5,22 +5,18 @@ import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchPa
 
 type GetBalanceSheetParams = {
   businessId: string
-  effectiveDate: string
-}
-
-type GetBalanceSheetReturn = {
-  data?: BalanceSheet
-  error?: unknown
+  effectiveDate: Date
 }
 
 export const getBalanceSheet = get<
-  GetBalanceSheetReturn,
+  { data: BalanceSheet },
   GetBalanceSheetParams
 >(
-  ({ businessId, effectiveDate }: GetBalanceSheetParams) =>
-    `/v1/businesses/${businessId}/reports/balance-sheet?effective_date=${encodeURIComponent(
-      effectiveDate,
-    )}`,
+  ({ businessId, effectiveDate }) => {
+    const parameters = toDefinedSearchParameters({ effectiveDate })
+
+    return `/v1/businesses/${businessId}/reports/balance-sheet?${parameters}`
+  },
 )
 
 export const getBalanceSheetCSV = get<
