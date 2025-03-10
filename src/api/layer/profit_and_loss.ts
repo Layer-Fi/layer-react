@@ -8,24 +8,33 @@ import type {
 import { get, post } from './authenticated_http'
 import { toLocalDateString } from '../../utils/time/timeUtils'
 
-type GetProfitAndLossParams = {
+type BaseProfitAndLossParams = {
   businessId: string
-  startDate: Date
-  endDate: Date
+  startDate?: Date
+  endDate?: Date
+  month?: string
+  year?: string
   tagKey?: string
   tagValues?: string
   reportingBasis?: string
 }
 
+type GetProfitAndLossParams = BaseProfitAndLossParams
+type GetProfitAndLossCsvParams = BaseProfitAndLossParams & {
+  moneyFormat?: string
+}
+
 export const getProfitAndLoss = (apiUrl: string, accessToken: string | undefined, params: GetProfitAndLossParams) => {
-  const { businessId, startDate, endDate, tagKey, tagValues, reportingBasis } = params
+  const { businessId, startDate, endDate, month, year, tagKey, tagValues, reportingBasis } = params
   return get<{
     data?: ProfitAndLoss
     error?: unknown
   }>(({ businessId }) =>
-    `/v1/businesses/${businessId}/reports/profit-and-loss?start_date=${encodeURIComponent(
-      toLocalDateString(startDate),
-    )}&end_date=${encodeURIComponent(toLocalDateString(endDate))}${
+    `/v1/businesses/${businessId}/reports/profit-and-loss?${
+      startDate ? `start_date=${encodeURIComponent(toLocalDateString(startDate))}` : ''
+    }${endDate ? `&end_date=${encodeURIComponent(toLocalDateString(endDate))}` : ''}${
+      month ? `&month=${month}` : ''
+    }${year ? `&year=${year}` : ''}${
       reportingBasis ? `&reporting_basis=${reportingBasis}` : ''
     }${tagKey ? `&tag_key=${tagKey}` : ''}${
       tagValues ? `&tag_values=${tagValues}` : ''
@@ -69,27 +78,15 @@ export const getProfitAndLossSummaries = get<{
     }${tagValues ? `&tag_values=${tagValues}` : ''}`,
 )
 
-type GetProfitAndLossCsvParams = {
-  businessId: string
-  startDate: Date
-  endDate: Date
-  month?: string
-  year?: string
-  tagKey?: string
-  tagValues?: string
-  reportingBasis?: string
-  moneyFormat?: string
-}
-
 export const getProfitAndLossCsv = (apiUrl: string, accessToken: string | undefined, params: GetProfitAndLossCsvParams) => {
   const { businessId, startDate, endDate, month, year, tagKey, tagValues, reportingBasis, moneyFormat } = params
   return get<{
     data?: S3PresignedUrl
     error?: unknown
   }>(({ businessId }) =>
-    `/v1/businesses/${businessId}/reports/profit-and-loss/exports/csv?start_date=${encodeURIComponent(
-      toLocalDateString(startDate),
-    )}&end_date=${encodeURIComponent(toLocalDateString(endDate))}${
+    `/v1/businesses/${businessId}/reports/profit-and-loss/exports/csv?${
+      startDate ? `start_date=${encodeURIComponent(toLocalDateString(startDate))}` : ''
+    }${endDate ? `&end_date=${encodeURIComponent(toLocalDateString(endDate))}` : ''}${
       month ? `&month=${month}` : ''
     }${year ? `&year=${year}` : ''}${
       reportingBasis ? `&reporting_basis=${reportingBasis}` : ''
