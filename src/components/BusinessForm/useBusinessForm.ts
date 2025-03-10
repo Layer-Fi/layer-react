@@ -1,10 +1,13 @@
-import { useForm, FormValidateOrFn, FormAsyncValidateOrFn } from '@tanstack/react-form'
+import { useForm, FormValidateOrFn, FormAsyncValidateOrFn, useStore } from '@tanstack/react-form'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { sleep } from '../../utils/helpers'
 import { USState } from '../../types/location'
 import { EntityType } from '../../types/business'
 import { useBusinessPersonnel } from '../../hooks/businessPersonnel/useBusinessPersonnel'
 import { useCreateBusinessPersonnel } from '../../hooks/businessPersonnel/useCreateBusinessPersonnel'
+import { BusinessPersonnel } from '../../hooks/businessPersonnel/types'
+import { useUpdateBusinessPersonnel } from '../../hooks/businessPersonnel/useUpdateBusinessPersonnel'
+import { useUpdateBusiness } from '../../hooks/business/useUpdateBusiness'
+import { useState } from 'react'
 
 type BusinessFormData = {
   first_name?: string
@@ -18,13 +21,26 @@ type BusinessFormData = {
   tin?: string
 }
 
+const getPerson = (personnel?: BusinessPersonnel[]) => {
+  const owners = personnel?.filter(p => p.roles.find(x => x.role === 'OWNER'))
+
+  if (owners && owners.length > 0) {
+    return owners[0]
+  }
+
+  return personnel?.[0]
+}
+
 export const useBusinessForm = () => {
   const { business } = useLayerContext()
-
-  const { trigger: createBusinessPersonnel } = useCreateBusinessPersonnel()
+  const [submitError, setSubmitError] = useState<string | undefined>(undefined)
 
   const { data: personnel } = useBusinessPersonnel()
-  console.log('personnel', personnel)
+  const person = getPerson(personnel)
+
+  const { trigger: createBusinessPersonnel } = useCreateBusinessPersonnel()
+  const { trigger: updateBusinessPersonnel } = useUpdateBusinessPersonnel({ businessPersonnelId: person?.id })
+  const { trigger: updateBusiness } = useUpdateBusiness()
 
   const form = useForm<
     BusinessFormData,
@@ -37,31 +53,51 @@ export const useBusinessForm = () => {
     FormAsyncValidateOrFn<BusinessFormData>,
     FormAsyncValidateOrFn < BusinessFormData >> ({
     defaultValues: {
-      first_name: personnel?.[0]?.fullName,
-      phone_number: personnel?.[0]?.phoneNumbers?.[0]?.phoneNumber,
-      email: personnel?.[0]?.emailAddresses?.[0]?.emailAddress,
-      legal_name: business?.legal_name,
-      entity_type: business?.entity_type,
-      us_state: business?.us_state,
+      first_name: person?.fullName ?? undefined,
+      phone_number: person?.phoneNumbers?.[0]?.phoneNumber as string | undefined,
+      email: person?.emailAddresses?.[0]?.emailAddress as string | undefined,
+      legal_name: business?.legal_name ?? undefined,
+      entity_type: business?.entity_type ?? undefined,
+      us_state: business?.us_state ?? undefined,
       tin: business?.tin,
     },
     onSubmit: async ({ value }) => {
-      console.log('onSubmit - sending...', value)
-      await sleep(1000)
+      try {
+        setSubmitError(undefined)
 
-      await createBusinessPersonnel({
-        full_name: `${value.first_name} ${value.last_name}`,
-        email_addresses: value.email ? [{ email_address: value.email }] : [],
-        phone_numbers: value.phone_number ? [{ phone_number: value.phone_number }] : [],
-        preferred_name: null,
-        external_id: null,
-        roles: [{ role: 'OWNER' }],
-      })
+        if (person) {
+          await updateBusinessPersonnel({
+            id: person.id,
+            full_name: `${value.first_name} ${value.last_name}`,
+            email_addresses: value.email ? [{ email_address: value.email }] : [],
+            phone_numbers: value.phone_number ? [{ phone_number: value.phone_number }] : [],
+          })
+        }
+        else {
+          await createBusinessPersonnel({
+            full_name: `${value.first_name} ${value.last_name}`,
+            email_addresses: value.email ? [{ email_address: value.email }] : [],
+            phone_numbers: value.phone_number ? [{ phone_number: value.phone_number }] : [],
+            preferred_name: null,
+            external_id: null,
+            roles: [{ role: 'OWNER' }],
+          })
+        }
 
-      // @TODO - update personnel
-      // @TODO - update business
+        await updateBusiness({
+          legal_name: value.legal_name,
+          entity_type: value.entity_type,
+          us_state: value.us_state,
+          tin: value.tin,
+        })
+      }
+      catch {
+        setSubmitError('Something went wrong. Please try again.')
+      }
     },
   })
 
-  return { form }
+  const isFormValid = useStore(form.store, state => state.isValid)
+
+  return { form, submitError, isFormValid }
 }

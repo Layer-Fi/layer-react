@@ -7,6 +7,7 @@ import { BusinessTypeSelect } from '../Input/BusinessTypeSelect'
 import { USStateSelect } from '../Input/USStateSelect'
 import { PhoneInput } from '../Input/PhoneInput'
 import { isValidPhoneNumber } from 'libphonenumber-js'
+import { ErrorText } from '../Typography'
 
 export type BusinessFormStringOverrides = {
   saveButton?: string
@@ -19,7 +20,7 @@ export type BusinessFormProps = {
 export const BusinessForm = ({
   stringOverrides,
 }: BusinessFormProps) => {
-  const { form } = useBusinessForm()
+  const { form, submitError, isFormValid } = useBusinessForm()
 
   const { isSubmitting } = form.state
 
@@ -32,7 +33,6 @@ export const BusinessForm = ({
         void form.handleSubmit()
       }}
     >
-
       <FormSection title='Contact information'>
         <div className='Layer__business-form__name-fields'>
           <form.Field
@@ -218,11 +218,19 @@ export const BusinessForm = ({
 
       <SubmitButton
         type='submit'
-        disabled={isSubmitting}
+        processing={isSubmitting}
         noIcon
+        withRetry
+        error={submitError}
       >
         {stringOverrides?.saveButton ?? 'Save'}
       </SubmitButton>
+
+      {!isFormValid && (
+        <ErrorText pb='xs'>
+          Please check all fields.
+        </ErrorText>
+      )}
     </form>
   )
 }

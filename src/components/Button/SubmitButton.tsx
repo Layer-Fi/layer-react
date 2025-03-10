@@ -6,6 +6,7 @@ import Save from '../../icons/Save'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import { Button, ButtonProps, ButtonVariant } from './Button'
 import classNames from 'classnames'
+import { RetryButton } from './RetryButton'
 
 export interface SubmitButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -18,6 +19,7 @@ export interface SubmitButtonProps
   action?: SubmitAction
   noIcon?: boolean
   tooltip?: ButtonProps['tooltip']
+  withRetry?: boolean
 }
 
 export enum SubmitAction {
@@ -80,12 +82,26 @@ export const SubmitButton = ({
   action = SubmitAction.SAVE,
   noIcon,
   variant = ButtonVariant.primary,
+  withRetry,
   ...props
 }: SubmitButtonProps) => {
   const baseClassName = classNames(
     active ? 'Layer__btn--active' : '',
     className,
   )
+
+  if (withRetry && error) {
+    return (
+      <RetryButton
+        {...props}
+        className={baseClassName}
+        disabled={processing || disabled}
+        error={typeof error === 'string' ? error : 'Something went wrong'}
+      >
+        {children}
+      </RetryButton>
+    )
+  }
 
   return (
     <Button
