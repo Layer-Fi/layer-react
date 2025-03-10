@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useRef, useState, type FC } from 'react'
+import { useMemo, useRef, useState, type FC } from 'react'
 import * as RDP from 'react-datepicker'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
@@ -10,7 +10,7 @@ import type {
   DatePickerModeSelectorProps,
 } from './ModeSelector/DatePickerModeSelector'
 import classNames from 'classnames'
-import { endOfDay, endOfMonth, endOfYear } from 'date-fns'
+import { endOfDay, endOfMonth, endOfYear, getYear } from 'date-fns'
 
 /**
  * @see https://github.com/Hacker0x01/react-datepicker/issues/1333#issuecomment-2363284612
@@ -51,9 +51,7 @@ interface DatePickerProps {
   slots?: {
     ModeSelector: FC<DatePickerModeSelectorProps>
   }
-  renderYearContent?: (year: number) => ReactNode
-  badgeOnNavigationArrowBack?: boolean
-  badgeOnNavigationArrowNext?: boolean
+  highlightYears?: number[]
 }
 
 const isRangeMode = (displayMode: DatePickerProps['displayMode']) =>
@@ -61,6 +59,55 @@ const isRangeMode = (displayMode: DatePickerProps['displayMode']) =>
 
 const showNavigationArrows = (navigateArrows?: NavigationArrows[], isDesktop?: boolean) => {
   return (navigateArrows && ((isDesktop && navigateArrows.includes('desktop')) || (!isDesktop && navigateArrows.includes('mobile'))))
+}
+
+const renderYearContent = (calendarYear: number, highlightYears?: number[]) => {
+  if (!highlightYears || !highlightYears.includes(calendarYear)) {
+    return (
+      <span className='Layer__datepicker__year-content'>
+        {calendarYear}
+      </span>
+    )
+  }
+
+  return (
+    <span className='Layer__datepicker__year-content'>
+      {calendarYear}
+      <span className='Layer__datepicker__date-dot' />
+    </span>
+  )
+}
+
+const highlightBackArrow = ({
+  currentDate,
+  modePicker,
+  highlightYears,
+}: {
+  currentDate: Date
+  modePicker: UnifiedPickerMode | 'timePicker'
+  highlightYears?: number[]
+}) => {
+  if (modePicker === 'yearPicker') {
+    return Boolean(highlightYears?.find(year => year < getYear(currentDate)))
+  }
+
+  return false
+}
+
+const highlightNextArrow = ({
+  currentDate,
+  modePicker,
+  highlightYears,
+}: {
+  currentDate: Date
+  modePicker: UnifiedPickerMode | 'timePicker'
+  highlightYears?: number[]
+}) => {
+  if (modePicker === 'yearPicker') {
+    return Boolean(highlightYears?.find(year => year > getYear(currentDate)))
+  }
+
+  return false
 }
 
 export const DatePicker = ({
@@ -85,8 +132,7 @@ export const DatePicker = ({
   maxDate = new Date(),
   currentDateOption = true,
   navigateArrows = displayMode === 'monthPicker' ? ['mobile'] : undefined,
-  badgeOnNavigationArrowBack = false,
-  badgeOnNavigationArrowNext = false,
+  highlightYears,
   onChangeMode,
   slots,
   ...props
@@ -336,6 +382,7 @@ export const DatePicker = ({
           e.target.blur()
         }}
         disabled={disabled}
+        renderYearContent={d => renderYearContent(d, highlightYears)}
         {...props}
       >
         {(ModeSelector && pickerMode !== 'timePicker')
@@ -367,8 +414,12 @@ export const DatePicker = ({
             disabled={isBeforeMinDate || disabled}
           >
             <ChevronLeft className='Layer__datepicker__button-icon' size={16} />
-            {badgeOnNavigationArrowBack && (
-              <span className='Layer__datepicker__date-dot--on-arrow-back' />
+            {highlightBackArrow({
+              currentDate: firstDate,
+              modePicker: pickerMode,
+              highlightYears,
+            }) && (
+              <span className='Layer__datepicker__nav-arrow-highlight' />
             )}
           </Button>
           <Button
@@ -387,8 +438,12 @@ export const DatePicker = ({
               className='Layer__datepicker__button-icon'
               size={16}
             />
-            {badgeOnNavigationArrowNext && (
-              <span className='Layer__datepicker__date-dot--on-arrow-next' />
+            {highlightNextArrow({
+              currentDate: firstDate,
+              modePicker: pickerMode,
+              highlightYears,
+            }) && (
+              <span className='Layer__datepicker__nav-arrow-highlight' />
             )}
           </Button>
         </>

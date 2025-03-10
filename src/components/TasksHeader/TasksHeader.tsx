@@ -81,7 +81,9 @@ export const TasksHeader = ({
             : loadedStatus === 'complete' && !open && (!tasks || error)
               ? (
                 <Badge
-                  onClick={() => refetch()}
+                  onClick={() => {
+                    void refetch()
+                  }}
                   variant={ICONS.refresh.badge}
                   icon={ICONS.refresh.icon}
                 >
@@ -120,19 +122,7 @@ export const TasksHeader = ({
             currentDateOption={false}
             navigateArrows={['mobile', 'desktop']}
             disabled={minDate && getYear(minDate) === getYear(new Date())}
-            renderYearContent={(date) => {
-              if (date && highlightYears?.includes(date)) {
-                return (
-                  <>
-                    {date}
-                    <span className='Layer__datepicker__date-dot' />
-                  </>
-                )
-              }
-              return <>{date}</>
-            }}
-            badgeOnNavigationArrowBack={Boolean(highlightYears?.find(year => year < getYear(dateRange.startDate)))}
-            badgeOnNavigationArrowNext={Boolean(highlightYears?.find(year => year > getYear(dateRange.startDate)))}
+            highlightYears={highlightYears}
           />
           {collapsable && (
             <div className='Layer__tasks-header__left-col__expand'>

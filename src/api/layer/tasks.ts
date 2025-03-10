@@ -1,12 +1,14 @@
 import { FileMetadata } from '../../types/file_upload'
 import { Task } from '../../types/tasks'
+import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { get, post, postWithFormData } from './authenticated_http'
 
 export const getTasks = get<{ data: Task[] }>(
-  ({ businessId, startDate, endDate }) => `/v1/businesses/${businessId}/tasks?${
-    startDate ? `&start_date=${encodeURIComponent(startDate)}` : ''
-  }${endDate ? `&end_date=${encodeURIComponent(endDate)}` : ''}`,
-)
+  ({ businessId, startDate, endDate }) => {
+    const parameters = toDefinedSearchParameters({ startDate, endDate })
+
+    return `/v1/businesses/${businessId}/tasks?${parameters}`
+  })
 
 export const submitResponseToTask = post<{ data: Task }>(
   ({ businessId, taskId }) =>
