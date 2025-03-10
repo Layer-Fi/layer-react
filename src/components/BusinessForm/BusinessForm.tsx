@@ -17,9 +17,7 @@ export type BusinessFormProps = {
   stringOverrides?: BusinessFormStringOverrides
 }
 
-export const BusinessForm = ({
-  stringOverrides,
-}: BusinessFormProps) => {
+export const BusinessForm = ({ stringOverrides }: BusinessFormProps) => {
   const { form, submitError, isFormValid } = useBusinessForm()
 
   const { isSubmitting } = form.state
