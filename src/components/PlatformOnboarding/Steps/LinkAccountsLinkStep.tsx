@@ -11,6 +11,7 @@ import { BasicLinkedAccountContainer, BasicLinkedAccountContent } from '../../Li
 import { LinkAccountsListContainer } from '../Container/LinkAccountsListContainer'
 import { P } from '../../ui/Typography/Text'
 import { Heading } from '../../ui/Typography/Heading'
+import pluralize from 'pluralize'
 
 export function LinkAccountsLinkStep() {
   const {
@@ -49,10 +50,10 @@ export function LinkAccountsLinkStep() {
           <VStack>
             <VStack gap='2xs' pbe='md'>
               <Heading level={3} size='sm'>
-                We&apos;ve found the below accounts
+                {`We've found ${pluralize('account', effectiveAccounts.length, true)}`}
               </Heading>
               <P variant='subtle'>
-                You&apos;ll have the chance to remove any accounts you don&apos;t use for your business in the next step.
+                {'You\'ll have the chance to remove any accounts you don\'t use for your business in the next step.'}
               </P>
             </VStack>
             <LinkAccountsListContainer>

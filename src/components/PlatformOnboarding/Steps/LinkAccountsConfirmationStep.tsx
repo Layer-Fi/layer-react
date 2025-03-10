@@ -37,8 +37,8 @@ function AccountConfirmationEmptyList() {
   return (
     <div className={CLASS_NAME}>
       <VStack slot='center' gap='xs'>
-        <Heading size='sm' align='center'>No Accounts Need Confirmation</Heading>
-        <P variant='subtle' align='center'>You are free to skip this step!</P>
+        <Heading size='sm' align='center'>Accounts Successfully Linked</Heading>
+        <P variant='subtle' align='center'>You can link more accounts at any time from the Bank Transactions section</P>
       </VStack>
     </div>
   )
@@ -85,7 +85,7 @@ export function LinkAccountsConfirmationStep() {
           Which accounts do you use for businesses?
         </Heading>
         <P variant='subtle'>
-          Please unselect any accounts you don&apos;t use for your business.
+          {'Please unselect any accounts you don\'t use for your business.'}
         </P>
       </VStack>
       <Field name='accounts' mode='array'>
