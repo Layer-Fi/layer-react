@@ -46,20 +46,18 @@ export const ProfitAndLossDownloadButton = ({
       apiUrl,
       auth?.access_token,
       {
-        params: {
-          businessId: businessId,
-          startDate: dateRange.startDate.toISOString(),
-          endDate: dateRange.endDate.toISOString(),
-          moneyFormat: moneyFormat,
-          tagKey:
-            tagFilter?.key && tagFilter.values.length > 0
-              ? tagFilter?.key
-              : undefined,
-          tagValues:
-            tagFilter?.key && tagFilter.values.length > 0
-              ? tagFilter?.values.join(',')
-              : undefined,
-        },
+        businessId: businessId,
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+        moneyFormat: moneyFormat,
+        tagKey:
+          tagFilter?.key && tagFilter.values.length > 0
+            ? tagFilter?.key
+            : undefined,
+        tagValues:
+          tagFilter?.key && tagFilter.values.length > 0
+            ? tagFilter?.values.join(',')
+            : undefined,
       },
     )
     try {
@@ -69,12 +67,15 @@ export const ProfitAndLossDownloadButton = ({
       if (result?.data?.presignedUrl) {
         window.location.href = result.data.presignedUrl
         setRequestFailed(false)
-      } else {
+      }
+      else {
         setRequestFailed(true)
       }
-    } catch (e) {
+    }
+    catch (_e) {
       setRequestFailed(true)
-    } finally {
+    }
+    finally {
       setIsDownloading(false)
     }
   }
