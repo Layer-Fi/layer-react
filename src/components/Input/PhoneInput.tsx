@@ -22,7 +22,7 @@ export const PhoneInput = ({
   return (
     <Input
       type='tel'
-      value={value}
+      value={value ? formatIncompletePhoneNumber(value, 'US') : undefined}
       onChange={handleChange}
       placeholder={placeholder}
       aria-label='Phone number input'
