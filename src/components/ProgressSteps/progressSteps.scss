@@ -15,15 +15,15 @@
       flex-direction: column;
       gap: var(--spacing-sm);
 
-      &.Layer__progress-steps--step-active {
+      &[data-active='true'] {
         .Layer__progress-steps--circle {
           &::after {
             border-color: var(--color-base-800);
-            transform: rotate(70deg);
+            transform: rotate(65deg);
           }
         }
 
-        &:not(.Layer__progress-steps--step-complete) {
+        &:not([data-complete='true']) {
           .Layer__progress-steps--label p {
             &::after {
               opacity: 1;
@@ -32,7 +32,7 @@
         }
       }
 
-      &.Layer__progress-steps--step-complete {
+      &[data-complete='true'] {
         .Layer__progress-steps--circle {
           border-color: var(--color-info-success-fg);
           background-color: var(--color-info-success-bg);
@@ -116,11 +116,11 @@
     position: absolute;
     transition: all 200ms ease;
   }
+}
 
-  &.Layer__progress-steps--step-line-filled {
-    &::after {
-      width: 100%;
-    }
+.Layer__progress-steps--step[data-complete='true'] {
+  .Layer__progress-steps--step-line::after {
+    width: 100%;
   }
 }
 
