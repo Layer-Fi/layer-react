@@ -1,135 +1,50 @@
-import { useContext, useMemo } from 'react'
-import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
-import LinkIcon from '../../icons/Link'
-import PlaidIcon from '../../icons/PlaidIcon'
+import { useContext } from 'react'
 import { LinkedAccountsProvider } from '../../providers/LinkedAccountsProvider'
-import { ActionableRow } from '../ActionableRow'
-import { Button, ButtonVariant } from '../Button'
-import { DataState, DataStateStatus } from '../DataState'
-import { LinkedAccountItemThumb } from '../LinkedAccounts'
-import { Loader } from '../Loader'
-import { Heading, HeadingSize } from '../Typography'
-import { LinkedAccountsConfirmationModal } from '../LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'
+import { LinkAccountsConfirmationStep } from './Steps/LinkAccountsConfirmationStep'
+import { LinkAccountsLinkStep } from './Steps/LinkAccountsLinkStep'
+import { Wizard } from '../Wizard/Wizard'
+import { Heading } from '../ui/Typography/Heading'
+import { getAccountsNeedingConfirmation } from '../../hooks/useLinkedAccounts/useLinkedAccounts'
+import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
+import type { Awaitable } from '../../types/utility/promises'
 
-export interface LinkAccountsStringOverrides {
-  backButtonText?: string
-  nextButtonText?: string
+type LinkAccountsProps = {
+  onComplete?: () => Awaitable<void>
 }
 
-export interface LinkAccountsProps {
-  title?: string
-  asWidget?: boolean
-  showLedgerBalance?: boolean
-  showUnlinkItem?: boolean
-  showBreakConnection?: boolean
-  hideLoading?: boolean
-  inBox?: boolean
-  stringOverrides?: LinkAccountsStringOverrides
-  onBack?: () => void
-  onNext?: () => void
-}
-
-export const LinkAccounts = ({ inBox, ...props }: LinkAccountsProps) => {
-  const content = useMemo(() => {
-    if (inBox) {
-      return (
-        <div className='Layer__link-accounts__box'>
-          <LinkAccountsContent {...props} />
-        </div>
-      )
-    }
-    return <LinkAccountsContent {...props} />
-  }, [inBox, props])
-
+export function LinkAccounts(props: LinkAccountsProps) {
   return (
     <LinkedAccountsProvider>
-      {content}
+      <LinkAccountsContent {...props} />
     </LinkedAccountsProvider>
   )
 }
 
-export const LinkAccountsContent = ({
-  title,
-  asWidget,
-  showLedgerBalance = true,
-  showUnlinkItem = false,
-  showBreakConnection = false,
-  hideLoading = false,
-  stringOverrides,
-  onBack,
-  onNext,
-}: LinkAccountsProps) => {
-  const { data, loadingStatus, error, refetchAccounts, addConnection } =
-    useContext(LinkedAccountsContext)
+function LinkAccountsContent({
+  onComplete,
+}: LinkAccountsProps) {
+  const { data: linkedAccounts, loadingStatus } = useContext(LinkedAccountsContext)
+
+  const linkedAccountsNeedingConfirmation = linkedAccounts
+    ? getAccountsNeedingConfirmation(linkedAccounts)
+    : []
+
+  const hideConfirmationStep = loadingStatus === 'complete' && linkedAccountsNeedingConfirmation.length === 0
 
   return (
-    <div className='Layer__link-accounts Layer__component'>
-      {title && <Heading size={HeadingSize.view}>{title}</Heading>}
-
-      {data && data.length === 0 ? (
-        <div className='Layer__link-accounts__data-status-container'>
-          {!hideLoading && loadingStatus !== 'complete' ? <Loader /> : null}
-
-          {Boolean(error) && (
-            <DataState
-              status={DataStateStatus.failed}
-              title='Failed to load accounts'
-              description='Please try again later'
-              onRefresh={refetchAccounts}
-            />
-          )}
-        </div>
-      ) : null}
-
-      {data && data.length > 0 ? (
-        <div className='Layer__link-accounts__list'>
-          {data?.map((account, index) => (
-            <LinkedAccountItemThumb
-              key={index}
-              account={account}
-              showLedgerBalance={showLedgerBalance}
-              showUnlinkItem={showUnlinkItem}
-              showBreakConnection={showBreakConnection}
-              asWidget={asWidget}
-            />
-          ))}
-        </div>
-      ) : null}
-      <ActionableRow
-        iconBox={<PlaidIcon />}
-        title={
-          data && data.length > 0
-            ? 'Connect my next business account'
-            : 'Connect accounts'
-        }
-        description='Import data with one simple integration.'
-        button={
-          <Button
-            onClick={() => addConnection('PLAID')}
-            rightIcon={<LinkIcon size={12} />}
-            disabled={loadingStatus !== 'complete'}
-          >
-            {data && data.length > 0 ? 'Connect next' : 'Connect'}
-          </Button>
-        }
-      />
-      <LinkedAccountsConfirmationModal />
-
-      {onBack || onNext ? (
-        <div className='Layer__link-accounts__footer'>
-          {onBack && (
-            <Button onClick={onBack} variant={ButtonVariant.secondary}>
-              {stringOverrides?.backButtonText ?? 'Back'}
-            </Button>
-          )}
-          {onNext && (
-            <Button onClick={onNext}>
-              {stringOverrides?.nextButtonText
-                || 'I’m done connecting my business accounts'}
-            </Button>
-          )}
-        </div>
-      ) : null}
-    </div>
+    <section className='Layer__link-accounts Layer__component'>
+      <Wizard
+        Header={(
+          <Heading level={2} pbe='md'>
+            Link your bank accounts and credit cards
+          </Heading>
+        )}
+        Footer={null}
+        onComplete={onComplete}
+      >
+        <LinkAccountsLinkStep />
+        {hideConfirmationStep ? null : <LinkAccountsConfirmationStep />}
+      </Wizard>
+    </section>
   )
 }

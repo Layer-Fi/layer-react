@@ -1,10 +1,9 @@
-import { ReactNode } from 'react'
+import type { PropsWithChildren } from 'react'
 import LoaderIcon from '../../icons/Loader'
 
-export interface LoaderProps {
-  children?: ReactNode
+type LoaderProps = PropsWithChildren<{
   size?: number
-}
+}>
 
 export const Loader = ({ children, size = 28 }: LoaderProps) => {
   return (

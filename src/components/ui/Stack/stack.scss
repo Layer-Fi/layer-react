@@ -22,10 +22,17 @@
     }
   }
 
-  $gaps: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
-  @each $gap in $gaps {
-    &[data-gap="#{$gap}"] {
-      gap: var(--spacing-#{$gap});
+  $spacings: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
+  @each $spacing in $spacings {
+    &[data-gap="#{$spacing}"] {
+      gap: var(--spacing-#{$spacing});
+    }
+
+    &[data-pbe="#{$spacing}"] {
+      padding-block-end: var(--spacing-#{$spacing});
+    }
+    &[data-pbs="#{$spacing}"] {
+      padding-block-start: var(--spacing-#{$spacing});
     }
   }
 }
