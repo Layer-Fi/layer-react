@@ -57,8 +57,8 @@ export function useCashflowStatementDownload({
       {
         params: {
           businessId,
-          startDate: startDate.toISOString(),
-          endDate: endDate.toISOString(),
+          startDate,
+          endDate,
         },
       })().then(({ data }) => {
       if (onSuccess) {

@@ -24,7 +24,7 @@ export const get =
     Return extends Record<string, unknown> = Record<string, unknown>,
     Params extends Record<string, ParameterValues | null | undefined> = Record<
       string,
-      ParameterValues | null | undefined
+      string | undefined
     >,
   >(
     url: (params: Params) => string,
@@ -53,7 +53,7 @@ export const request =
       Body extends Record<string, unknown> = Record<string, unknown>,
       Params extends Record<string, string | undefined> = Record<
         string,
-      string | undefined
+        string | undefined
       >,
     >(
       url: (params: Params) => string,
