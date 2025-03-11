@@ -42,11 +42,13 @@ export const TasksHeader = ({
   collapsable,
   open,
   toggleContent,
+  highlightYears,
 }: {
   tasksHeader?: string
   collapsable?: boolean
   open?: boolean
   toggleContent: () => void
+  highlightYears?: number[]
 }) => {
   const {
     data: tasks,
@@ -79,7 +81,9 @@ export const TasksHeader = ({
             : loadedStatus === 'complete' && !open && (!tasks || error)
               ? (
                 <Badge
-                  onClick={() => refetch()}
+                  onClick={() => {
+                    void refetch()
+                  }}
                   variant={ICONS.refresh.badge}
                   icon={ICONS.refresh.icon}
                 >
@@ -118,6 +122,7 @@ export const TasksHeader = ({
             currentDateOption={false}
             navigateArrows={['mobile', 'desktop']}
             disabled={minDate && getYear(minDate) === getYear(new Date())}
+            highlightYears={highlightYears}
           />
           {collapsable && (
             <div className='Layer__tasks-header__left-col__expand'>

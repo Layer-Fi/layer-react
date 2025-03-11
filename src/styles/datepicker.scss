@@ -3,7 +3,7 @@
 .Layer__datepicker__wrapper,
 #Layer__datepicker__portal {
   position: relative;
-  z-index: 101;
+  z-index: 105;
   display: inline-flex;
   align-items: center;
   max-height: 36px;
@@ -37,6 +37,10 @@
     padding: 0 var(--spacing-xs);
     box-shadow: none;
     border-left: 1px solid var(--input-border-color);
+
+    .Layer__btn-text {
+      position: relative;
+    }
   }
 
   .Layer__datepicker__prev-button {
@@ -44,6 +48,21 @@
     padding: 0 var(--spacing-xs);
     box-shadow: none;
     border-left: 1px solid var(--input-border-color);
+
+    .Layer__btn-text {
+      position: relative;
+    }
+  }
+
+  .Layer__datepicker__nav-arrow-highlight {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-info-warning);
+    display: flex;
+    position: absolute;
+    top: -4px;
+    right: -5px;
   }
 
   .Layer__datepicker__current-button {
@@ -79,7 +98,7 @@
   .Layer__datepicker__popper {
     min-width: 275px;
     max-width: 275px;
-    z-index: 99;
+    z-index: 105;
     border-radius: 8px;
 
     &.Layer__datepicker__time__popper {
@@ -439,7 +458,7 @@
 
     .react-datepicker__portal {
       align-items: flex-end;
-      z-index: 99;
+      z-index: 105;
       background-color: rgb(36 36 36 / 0%);
       transition: all 180ms ease-in-out;
 
@@ -698,4 +717,19 @@
     min-height: 36px;
     max-height: 36px;
   }
+}
+
+.Layer__datepicker__year-content {
+  position: relative;
+}
+
+.Layer__datepicker__date-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-info-warning);
+  right: -16px;
+  top: 50%;
+  transform: translateY(-50%);
 }
