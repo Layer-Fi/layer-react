@@ -3,7 +3,7 @@ import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { ProfitAndLoss, ReportingBasis } from '../../types'
 import { DataModel } from '../../types/general'
-import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
+import { startOfMonth, endOfMonth } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
@@ -45,11 +45,11 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
   const { data: auth } = useAuth()
 
   const queryKey =
-    businessId &&
-    startDate &&
-    endDate &&
-    auth?.access_token &&
-    `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
+    businessId
+    && startDate
+    && endDate
+    && auth?.access_token
+    && `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
       ',',
     )}-${reportingBasis}`
 
@@ -62,14 +62,12 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
   } = useSWR(
     queryKey,
     Layer.getProfitAndLoss(apiUrl, auth?.access_token, {
-      params: {
-        businessId,
-        startDate: formatISO(startDate.valueOf()),
-        endDate: formatISO(endDate.valueOf()),
-        tagKey: tagFilter?.key,
-        tagValues: tagFilter?.values?.join(','),
-        reportingBasis,
-      },
+      businessId,
+      startDate,
+      endDate,
+      tagKey: tagFilter?.key,
+      tagValues: tagFilter?.values?.join(','),
+      reportingBasis,
     }),
   )
 

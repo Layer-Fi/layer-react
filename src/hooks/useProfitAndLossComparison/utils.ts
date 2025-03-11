@@ -4,6 +4,7 @@ import { range } from '../../utils/array/range'
 import { isArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
 import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TagComparisonOption } from '../../types/profit_and_loss'
+import { toLocalDateString } from '../../utils/time/timeUtils'
 
 export function prepareFiltersBody(compareOptions: TagComparisonOption[]) {
   const noneFilters = compareOptions.filter(
@@ -99,8 +100,8 @@ function preparePeriodsBodyForDateRange(dateRange: DateRange) {
   return {
     type: 'Comparison_Date_Ranges' as const,
     date_ranges: [{
-      start_date: dateRange.startDate.toISOString(),
-      end_date: dateRange.endDate.toISOString(),
+      start_date: toLocalDateString(dateRange.startDate),
+      end_date: toLocalDateString(dateRange.endDate),
     }],
   } as const
 }
