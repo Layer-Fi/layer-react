@@ -22,7 +22,7 @@ function buildKey({
       apiUrl,
       businessId,
       effectiveDate,
-      tags: [ '#balance-sheet', '#exports', '#csv' ],
+      tags: ['#balance-sheet', '#exports', '#csv'],
     }
   }
 }
@@ -45,14 +45,14 @@ export function useBalanceSheetDownload({
       businessId,
       effectiveDate,
     }),
-    ({ accessToken, apiUrl, businessId, effectiveDate, }) => getBalanceSheetCSV(
+    ({ accessToken, apiUrl, businessId, effectiveDate }) => getBalanceSheetCSV(
       apiUrl,
       accessToken,
       {
         params: {
           businessId,
-          effectiveDate: effectiveDate.toISOString(),
-        }
+          effectiveDate,
+        },
       })().then(({ data }) => {
       if (onSuccess) {
         return onSuccess(data)

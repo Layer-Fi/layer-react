@@ -1,6 +1,4 @@
-import { StatementOfCashFlowContext } from '../../contexts/StatementOfCashContext'
 import { TableProvider } from '../../contexts/TableContext'
-import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Loader } from '../Loader'
@@ -12,6 +10,7 @@ import { CashflowStatementDownloadButton } from './download/CashflowStatementDow
 import { useElementViewSize } from '../../hooks/useElementViewSize/useElementViewSize'
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { StatementOfCashFlowDatePicker } from './datePicker/StatementOfCashFlowDatePicker'
+import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow/useStatementOfCashFlow'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
@@ -24,11 +23,8 @@ export type StatementOfCashFlowProps = {
 } & TimeRangePickerConfig
 
 export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
-  const cashContextData = useStatementOfCashFlow()
   return (
-    <StatementOfCashFlowContext.Provider value={cashContextData}>
-      <StatementOfCashFlowView {...props} />
-    </StatementOfCashFlowContext.Provider>
+    <StatementOfCashFlowView {...props} />
   )
 }
 
@@ -42,7 +38,7 @@ const StatementOfCashFlowView = ({
   customDateRanges,
 }: StatementOfCashFlowViewProps) => {
   const { start, end } = useGlobalDateRange()
-  const { data, isLoading } = useStatementOfCashFlow(start, end)
+  const { data, isLoading } = useStatementOfCashFlow({ startDate: start, endDate: end })
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
