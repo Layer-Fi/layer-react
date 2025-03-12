@@ -10,13 +10,13 @@ export function prepareFiltersBody(compareOptions: TagComparisonOption[]) {
   const noneFilters = compareOptions.filter(
     ({ tagFilterConfig: { tagFilters } }) => tagFilters === 'None')
 
-  const tagFilters = compareOptions.flatMap(({ tagFilterConfig: { tagFilters } }) => {
+  const tagFilters = compareOptions.flatMap(({ tagFilterConfig: { tagFilters, structure } }) => {
     if (tagFilters === 'None') {
       return null
     }
 
     if (tagFilters.tagValues.length === 0) {
-      return { required_tags: [] }
+      return { required_tags: [], structure }
     }
 
     return tagFilters.tagValues.map(tagValue => ({
@@ -24,6 +24,7 @@ export function prepareFiltersBody(compareOptions: TagComparisonOption[]) {
         key: tagFilters.tagKey,
         value: tagValue,
       }],
+      structure,
     }))
   }).filter(item => item !== null)
 
@@ -33,7 +34,7 @@ export function prepareFiltersBody(compareOptions: TagComparisonOption[]) {
 
   const allFilters = [
     noneFilters.length > 0
-      ? { required_tags: [] }
+      ? { required_tags: [], structure: noneFilters[0].tagFilterConfig.structure }
       : null,
     ...tagFilters,
   ].filter(item => item !== null)
