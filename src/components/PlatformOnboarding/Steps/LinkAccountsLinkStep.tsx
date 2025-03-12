@@ -12,6 +12,7 @@ import { LinkAccountsListContainer } from '../Container/LinkAccountsListContaine
 import { P } from '../../ui/Typography/Text'
 import { Heading } from '../../ui/Typography/Heading'
 import pluralize from 'pluralize'
+import ChevronRight from '../../../icons/ChevronRight'
 
 export function LinkAccountsLinkStep() {
   const {
@@ -33,7 +34,7 @@ export function LinkAccountsLinkStep() {
         Empty={(
           <VStack gap='2xs' pbe='md'>
             <P variant='subtle' size='lg'>
-              Connect your business bank accounts and credit cards to automatically import your business transactions.
+              Connect your bank accounts and credit cards to automatically import your business transactions.
             </P>
             <HStack pbs='lg' justify='center'>
               <Button
@@ -63,7 +64,7 @@ export function LinkAccountsLinkStep() {
               <Heading level={3} align='center'>
                 Do you use any other bank accounts or credit cards for your business?
               </Heading>
-              <HStack justify='center'>
+              <HStack justify='center' pbe='sm'>
                 <Button
                   onClick={() => { addConnection('PLAID') }}
                   rightIcon={<LinkIcon size={12} />}
@@ -96,8 +97,8 @@ export function LinkAccountsLinkStep() {
       {effectiveAccounts.length > 0
         ? (
           <HStack pbs='lg' justify='end' gap='sm'>
-            <Button onClick={() => { void next() }}>
-              I’m done connecting my business accounts
+            <Button onClick={() => { void next() }} rightIcon={<ChevronRight />}>
+              I’m done linking my banks
             </Button>
           </HStack>
         )
