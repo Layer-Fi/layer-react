@@ -90,16 +90,9 @@ function useLinkedAccountsConfirmationModal() {
 }
 
 function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose: () => void }) {
-  const { onDismiss } = useLinkedAccountsConfirmationModal()
-
-  const handleDismiss = () => {
-    onDismiss()
-    onClose()
-  }
-
   return (
     <>
-      <ModalContextBar onClose={handleDismiss} />
+      <ModalContextBar onClose={onClose} />
       <ModalHeading pbe='md'>
         Loading Your Accounts...
       </ModalHeading>
@@ -116,7 +109,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
 }
 
 function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
-  const { accounts, onDismiss, onFinish, refetchAccounts } = useLinkedAccountsConfirmationModal()
+  const { accounts, onFinish, refetchAccounts } = useLinkedAccountsConfirmationModal()
 
   const [formState, setFormState] = useState(() => Object.fromEntries(
     accounts.map(({ id }) => [id, true]),
@@ -124,11 +117,6 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
 
   const { trigger, isMutating, error } = useConfirmAndExcludeMultiple({ onSuccess: refetchAccounts })
   const hasError = Boolean(error)
-
-  const handleDismiss = () => {
-    onDismiss()
-    onClose()
-  }
 
   const handleFinish = async () => {
     const success = await trigger(formState)
@@ -142,7 +130,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
 
   return (
     <>
-      <ModalContextBar onClose={handleDismiss} />
+      <ModalContextBar onClose={onClose} />
       <ModalHeading pbe='2xs'>
         Confirm Business Accounts
       </ModalHeading>
@@ -205,10 +193,17 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
 }
 
 export function LinkedAccountsConfirmationModal() {
-  const { preloadIsOpen, mainIsOpen } = useLinkedAccountsConfirmationModal()
+  const { preloadIsOpen, mainIsOpen, onDismiss } = useLinkedAccountsConfirmationModal()
 
   return (
-    <Modal isOpen={preloadIsOpen || mainIsOpen}>
+    <Modal
+      isOpen={preloadIsOpen || mainIsOpen}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          onDismiss()
+        }
+      }}
+    >
       {({ close }) =>
         preloadIsOpen
           ? <LinkedAccountsConfirmationModalPreloadedContent onClose={close} />
