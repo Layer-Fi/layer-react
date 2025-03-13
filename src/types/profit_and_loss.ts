@@ -63,7 +63,8 @@ type ProfitAndLossComparisonPeriods = {
   date_ranges: ReadonlyArrayWithAtLeastOne<{ start_date: string, end_date: string }>
 }
 
-type ProfitAndLossComparisonTags = {
+export type ProfitAndLossComparisonTags = {
+  structure: string | undefined
   required_tags?: ReadonlyArray<{ key: string, value: string }>
 }
 
