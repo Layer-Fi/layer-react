@@ -1,4 +1,4 @@
-import { USState } from './location'
+import { USStateCode } from './location'
 
 export interface Business {
   id: string
@@ -15,7 +15,7 @@ export interface Business {
   tin?: string
   type?: string
   updated_at?: string
-  us_state?: USState
+  us_state?: USStateCode
 }
 
 export const ENTITY_TYPES = [

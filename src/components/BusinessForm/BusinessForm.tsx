@@ -34,17 +34,17 @@ export const BusinessForm = ({ stringOverrides }: BusinessFormProps) => {
       <FormSection title='Contact information'>
         <div className='Layer__business-form__name-fields'>
           <form.Field
-            name='first_name'
+            name='full_name'
             validators={{
-              onSubmit: ({ value }) => notEmpty(value) ? undefined : 'First name is required',
+              onSubmit: ({ value }) => notEmpty(value) ? undefined : 'Full name is required',
             }}
           >
             {field => (
               <>
-                <InputGroup name='first_name' label='First name'>
+                <InputGroup name='full_name' label='Full name'>
                   <Input
-                    name='first_name'
-                    placeholder='John'
+                    name='full_name'
+                    placeholder='John Doe'
                     value={field.state.value}
                     onChange={e =>
                       field.handleChange((e.target as HTMLInputElement).value)}
@@ -56,22 +56,15 @@ export const BusinessForm = ({ stringOverrides }: BusinessFormProps) => {
             )}
           </form.Field>
 
-          <form.Field
-            name='last_name'
-            validators={{
-              onSubmit: ({ value }) => notEmpty(value) ? undefined : 'Last name is required',
-            }}
-          >
+          <form.Field name='preferred_name'>
             {field => (
               <>
-                <InputGroup name='last_name' label='Last name'>
+                <InputGroup name='preferred_name' label='Preferred name'>
                   <Input
-                    name='last_name'
-                    placeholder='Doe'
+                    name='preferred_name'
+                    placeholder='John'
                     value={field.state.value}
                     onChange={e => field.handleChange((e.target as HTMLInputElement).value)}
-                    isInvalid={field.state.meta.errors.length > 0}
-                    errorMessage={field.state.meta.errors.join(', ')}
                   />
                 </InputGroup>
               </>
@@ -188,7 +181,7 @@ export const BusinessForm = ({ stringOverrides }: BusinessFormProps) => {
                 <InputGroup name='us_state' label='State' className='Layer__business-form__state'>
                   <USStateSelect
                     value={field.state.value}
-                    onChange={value => field.handleChange(value)}
+                    onChange={option => field.handleChange(option.value)}
                   />
                 </InputGroup>
               </>

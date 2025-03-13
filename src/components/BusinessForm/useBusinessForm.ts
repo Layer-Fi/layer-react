@@ -1,6 +1,6 @@
 import { useForm, FormValidateOrFn, FormAsyncValidateOrFn, useStore } from '@tanstack/react-form'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { USState } from '../../types/location'
+import { USStateCode } from '../../types/location'
 import { EntityType } from '../../types/business'
 import { useBusinessPersonnel } from '../../hooks/businessPersonnel/useBusinessPersonnel'
 import { useCreateBusinessPersonnel } from '../../hooks/businessPersonnel/useCreateBusinessPersonnel'
@@ -10,14 +10,14 @@ import { useUpdateBusiness } from '../../hooks/business/useUpdateBusiness'
 import { useState } from 'react'
 
 type BusinessFormData = {
-  first_name?: string
-  last_name?: string
+  full_name?: string
+  preferred_name?: string
   email?: string
   phone_number?: string
   legal_name?: string
   dba?: string
   entity_type?: EntityType
-  us_state?: USState
+  us_state?: USStateCode
   tin?: string
 }
 
@@ -53,7 +53,8 @@ export const useBusinessForm = () => {
     FormAsyncValidateOrFn<BusinessFormData>,
     FormAsyncValidateOrFn < BusinessFormData >> ({
     defaultValues: {
-      first_name: person?.fullName ?? undefined,
+      full_name: person?.fullName ?? undefined,
+      preferred_name: person?.preferredName ?? undefined,
       phone_number: person?.phoneNumbers?.[0]?.phoneNumber as string | undefined,
       email: person?.emailAddresses?.[0]?.emailAddress as string | undefined,
       legal_name: business?.legal_name ?? undefined,
@@ -68,20 +69,23 @@ export const useBusinessForm = () => {
         if (person) {
           await updateBusinessPersonnel({
             id: person.id,
-            full_name: `${value.first_name} ${value.last_name}`,
+            full_name: value.full_name,
+            preferred_name: value.preferred_name,
             email_addresses: value.email ? [{ email_address: value.email }] : [],
             phone_numbers: value.phone_number ? [{ phone_number: value.phone_number }] : [],
           })
         }
         else {
-          await createBusinessPersonnel({
-            full_name: `${value.first_name} ${value.last_name}`,
-            email_addresses: value.email ? [{ email_address: value.email }] : [],
-            phone_numbers: value.phone_number ? [{ phone_number: value.phone_number }] : [],
-            preferred_name: null,
-            external_id: null,
-            roles: [{ role: 'OWNER' }],
-          })
+          if (value.full_name) {
+            await createBusinessPersonnel({
+              full_name: value.full_name,
+              preferred_name: value.preferred_name ?? null,
+              email_addresses: value.email ? [{ email_address: value.email }] : [],
+              phone_numbers: value.phone_number ? [{ phone_number: value.phone_number }] : [],
+              external_id: null,
+              roles: [{ role: 'OWNER' }],
+            })
+          }
         }
 
         await updateBusiness({
