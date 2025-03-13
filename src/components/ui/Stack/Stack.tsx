@@ -1,6 +1,7 @@
 import { type PropsWithChildren } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import type { Spacing } from '../sharedUITypes'
+import classNames from 'classnames'
 
 export type StackProps = PropsWithChildren<{
   align?: 'start' | 'center'
@@ -9,6 +10,7 @@ export type StackProps = PropsWithChildren<{
   pbs?: Spacing
   pbe?: Spacing
   slot?: string
+  className?: string
 }>
 
 type InternalStackProps = StackProps & {
@@ -17,11 +19,11 @@ type InternalStackProps = StackProps & {
 
 const CLASS_NAME = 'Layer__Stack'
 
-function Stack({ align, children, direction, gap, justify, pbs, pbe, ...restProps }: InternalStackProps) {
+function Stack({ align, children, direction, gap, justify, pbs, pbe, className, ...restProps }: InternalStackProps) {
   const dataProperties = toDataProperties({ align, direction, gap, justify, pbs, pbe })
 
   return (
-    <div {...restProps} {...dataProperties} className={CLASS_NAME}>
+    <div {...restProps} {...dataProperties} className={classNames(CLASS_NAME, className)}>
       {children}
     </div>
   )

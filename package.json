@@ -76,6 +76,7 @@
     "@tanstack/react-form": "^1.0.0",
     "classnames": "^2.5.1",
     "date-fns": "^2.30.0",
+    "libphonenumber-js": "^1.12.4",
     "lucide-react": "^0.454.0",
     "pluralize": "^8.0.0",
     "react-aria-components": "^1.4.1",
