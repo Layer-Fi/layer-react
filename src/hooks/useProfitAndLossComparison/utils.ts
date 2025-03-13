@@ -3,29 +3,38 @@ import { DateRange } from '../../types'
 import { range } from '../../utils/array/range'
 import { isArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
 import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { TagComparisonOption } from '../../types/profit_and_loss'
+import { ProfitAndLossComparisonTags, TagComparisonOption } from '../../types/profit_and_loss'
 import { toLocalDateString } from '../../utils/time/timeUtils'
+import { ReadonlyArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
 
-export function prepareFiltersBody(compareOptions: TagComparisonOption[]) {
+export function prepareFiltersBody(compareOptions: TagComparisonOption[]): ReadonlyArrayWithAtLeastOne<ProfitAndLossComparisonTags> | undefined {
   const noneFilters = compareOptions.filter(
     ({ tagFilterConfig: { tagFilters } }) => tagFilters === 'None')
 
-  const tagFilters = compareOptions.flatMap(({ tagFilterConfig: { tagFilters } }) => {
+  const tagFilters = compareOptions.flatMap(({ tagFilterConfig: { tagFilters, structure } }) => {
     if (tagFilters === 'None') {
       return null
     }
 
     if (tagFilters.tagValues.length === 0) {
-      return { required_tags: [] }
+      const filter: ProfitAndLossComparisonTags = {
+        structure,
+        required_tags: [],
+      }
+      return filter
     }
 
-    return tagFilters.tagValues.map(tagValue => ({
-      required_tags: [{
-        key: tagFilters.tagKey,
-        value: tagValue,
-      }],
-    }))
-  }).filter(item => item !== null)
+    return tagFilters.tagValues.map((tagValue) => {
+      const filter: ProfitAndLossComparisonTags = {
+        structure,
+        required_tags: [{
+          key: tagFilters.tagKey,
+          value: tagValue,
+        }],
+      }
+      return filter
+    })
+  }).filter((item): item is ProfitAndLossComparisonTags => item !== null)
 
   if (tagFilters.length === 0) {
     return
@@ -33,10 +42,13 @@ export function prepareFiltersBody(compareOptions: TagComparisonOption[]) {
 
   const allFilters = [
     noneFilters.length > 0
-      ? { required_tags: [] }
+      ? {
+        structure: noneFilters[0].tagFilterConfig.structure,
+        required_tags: [],
+      } as ProfitAndLossComparisonTags
       : null,
     ...tagFilters,
-  ].filter(item => item !== null)
+  ].filter((item): item is ProfitAndLossComparisonTags => item !== null)
 
   return isArrayWithAtLeastOne(allFilters) ? allFilters : undefined
 }

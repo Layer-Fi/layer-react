@@ -8,7 +8,8 @@ import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateSt
 import { prepareFiltersBody, preparePeriodsBody } from './utils'
 import useSWR from 'swr'
 import { MultiValue } from 'react-select'
-import { ProfitAndLossCompareConfig, TagComparisonOption, type ProfitAndLossComparisonRequestBody } from '../../types/profit_and_loss'
+import { ProfitAndLossCompareConfig, ProfitAndLossComparisonTags, TagComparisonOption, type ProfitAndLossComparisonRequestBody } from '../../types/profit_and_loss'
+import { ReadonlyArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -40,7 +41,7 @@ function buildKey({
   apiUrl?: string
   businessId: string
   periods?: ProfitAndLossComparisonRequestBody['periods']
-  tagFilters: ProfitAndLossComparisonRequestBody['tag_filters']
+  tagFilters: ReadonlyArrayWithAtLeastOne<ProfitAndLossComparisonTags> | undefined
   reportingBasis?: ReportingBasis
   compareModeActive?: boolean
 }) {
