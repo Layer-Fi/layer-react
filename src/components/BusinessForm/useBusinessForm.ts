@@ -51,7 +51,8 @@ export const useBusinessForm = () => {
     FormAsyncValidateOrFn<BusinessFormData>,
     FormValidateOrFn<BusinessFormData>,
     FormAsyncValidateOrFn<BusinessFormData>,
-    FormAsyncValidateOrFn < BusinessFormData >> ({
+    FormAsyncValidateOrFn<BusinessFormData>,
+    FormAsyncValidateOrFn<BusinessFormData>> ({
     defaultValues: {
       full_name: person?.fullName ?? undefined,
       preferred_name: person?.preferredName ?? undefined,
