@@ -5,10 +5,19 @@ import { get } from '../../api/layer/authenticated_http'
 import type { EnumWithUnknownValues } from '../../types/utility/enumWithUnknownValues'
 import { useLegacyMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
 
-const BOOKKEEPING_STATUSES = ['NOT_PURCHASED', 'BOOKKEEPING_PAUSED', 'ACTIVE'] as const
+const BOOKKEEPING_STATUSES = [
+  'NOT_PURCHASED',
+  'ACTIVE',
+  'ONBOARDING',
+  'BOOKKEEPING_PAUSED',
+] as const
 
 export type BookkeepingStatus = typeof BOOKKEEPING_STATUSES[number]
 type RawBookkeepingStatus = EnumWithUnknownValues<BookkeepingStatus>
+
+export function isActiveBookkeepingStatus(status: BookkeepingStatus) {
+  return status === 'ACTIVE' || status === 'ONBOARDING'
+}
 
 function constrainToKnownBookkeepingStatus(status: string): BookkeepingStatus {
   if (BOOKKEEPING_STATUSES.includes(status as BookkeepingStatus)) {
@@ -43,7 +52,7 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      tags: ['#bookkeeping, #status'],
+      tags: ['#bookkeeping', '#status'],
     } as const
   }
 }
