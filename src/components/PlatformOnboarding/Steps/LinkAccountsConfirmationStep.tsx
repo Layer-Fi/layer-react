@@ -6,11 +6,11 @@ import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext'
 import { ConditionalList } from '../../utility/ConditionalList'
 import { LinkedAccountToConfirm } from '../../LinkedAccounts/ConfirmationModal/LinkedAccountToConfirm'
 import { useForm } from '@tanstack/react-form'
+import { getAccountsNeedingConfirmation } from '../../../hooks/useLinkedAccounts/useLinkedAccounts'
 import { Button, ButtonVariant } from '../../Button'
 import { useWizard } from '../../Wizard/Wizard'
 import { useConfirmAndExcludeMultiple } from '../../LinkedAccounts/ConfirmationModal/useConfirmAndExcludeMultiple'
 import { LinkAccountsListContainer } from '../Container/LinkAccountsListContainer'
-import { getAccountsNeedingConfirmation } from '../../../hooks/useLinkedAccounts/useLinkedAccounts'
 
 function getSubmitButtonText({
   totalCount,

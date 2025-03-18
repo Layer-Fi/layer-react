@@ -99,11 +99,9 @@ export function LinkAccountsLinkStep() {
         Loading={<Loader />}
       >
         {({ item: account }) => (
-          <>
-            <BasicLinkedAccountContainer key={account.id} isSelected>
-              <BasicLinkedAccountContent account={account} />
-            </BasicLinkedAccountContainer>
-          </>
+          <BasicLinkedAccountContainer key={account.id} isSelected>
+            <BasicLinkedAccountContent account={account} />
+          </BasicLinkedAccountContainer>
         )}
       </ConditionalList>
       {effectiveAccounts.length > 0
