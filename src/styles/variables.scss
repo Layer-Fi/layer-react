@@ -12,38 +12,31 @@
   // 1. BASE VARIABLES:
   --color-black: #1a1a1a;
   --color-white: white;
-  --color-blue: hsl(217 100% 92%);
-
+  --color-blue: hsl(217deg 100% 92%);
   --color-info: #0968f8;
   --color-info-bg: #d6e6ff;
   --color-info-fg: #0056d7;
-
-  --color-info-success: hsl(145, 45%, 42%);
-  --color-info-success-bg: hsl(145, 59%, 86%);
-  --color-info-success-fg: hsl(145, 63%, 29%);
-
-  --color-info-warning: hsl(43, 100%, 44%);
-  --color-info-warning-bg: hsl(43, 100%, 84%);
-  --color-info-warning-fg: hsl(43, 88%, 26%);
-
-  --color-info-error: hsl(0 76% 50%);
-  --color-info-error-bg: hsl(0 83% 86%);
-  --color-info-error-fg: hsl(0 88% 32%);
-
+  --color-info-success: hsl(145deg 45% 42%);
+  --color-info-success-bg: hsl(145deg 59% 86%);
+  --color-info-success-fg: hsl(145deg 63% 29%);
+  --color-info-warning: hsl(43deg 100% 44%);
+  --color-info-warning-bg: hsl(43deg 100% 84%);
+  --color-info-warning-fg: hsl(43deg 88% 26%);
+  --color-info-error: hsl(0deg 76% 50%);
+  --color-info-error-bg: hsl(0deg 83% 86%);
+  --color-info-error-fg: hsl(0deg 88% 32%);
   --color-dark-h: 0;
   --color-dark-s: 0%;
   --color-dark-l: 7%;
   --color-dark: hsl(
     var(--color-dark-h) var(--color-dark-s) var(--color-dark-l)
   );
-
   --color-light-h: 0;
   --color-light-s: 0%;
   --color-light-l: 90%;
   --color-light: hsl(
     var(--color-light-h) var(--color-light-s) var(--color-light-l)
   );
-
   --color-base-0: #fff;
   --color-base-50: hsl(var(--color-dark-h) 1% 98%);
   --color-base-100: hsl(var(--color-dark-h) 1% 96%);
@@ -56,62 +49,56 @@
   --color-base-800: hsl(var(--color-dark-h) 12% 20%);
   --color-base-900: var(--color-dark);
   --color-base-1000: hsl(var(--color-dark-h) 20% 7%);
-
   --max-component-width: 1408px;
-
-  --base-transparent-1: hsla(220, 43%, 11%, 0.01);
-
-  --base-transparent-2: hsla(220, 43%, 11%, 0.02);
-
-  --base-transparent-4: hsla(
-    var(--color-dark-h),
-    var(--color-dark-s),
-    var(--color-dark-l),
-    0.04
+  --base-transparent-1: hsl(220deg 43% 11% / 1%);
+  --base-transparent-2: hsl(220deg 43% 11% / 2%);
+  --base-transparent-4: hsl(
+    var(--color-dark-h)
+    var(--color-dark-s)
+    var(--color-dark-l) /
+    4%
   );
-  --base-transparent-5: hsla(
-    var(--color-dark-h),
-    var(--color-dark-s),
-    var(--color-dark-l),
-    0.05
+  --base-transparent-5: hsl(
+    var(--color-dark-h)
+    var(--color-dark-s)
+    var(--color-dark-l) /
+    5%
   );
-  --base-transparent-6: hsla(
-    var(--color-dark-h),
-    var(--color-dark-s),
-    var(--color-dark-l),
-    0.06
+  --base-transparent-6: hsl(
+    var(--color-dark-h)
+    var(--color-dark-s)
+    var(--color-dark-l) /
+    6%
   );
-  --base-transparent-8: hsla(
-    var(--color-dark-h),
-    var(--color-dark-s),
-    var(--color-dark-l),
-    0.08
+  --base-transparent-8: hsl(
+    var(--color-dark-h)
+    var(--color-dark-s)
+    var(--color-dark-l) /
+    8%
   );
-  --base-transparent-10: hsla(
-    var(--color-dark-h),
-    var(--color-dark-s),
-    var(--color-dark-l),
-    0.1
+  --base-transparent-10: hsl(
+    var(--color-dark-h)
+    var(--color-dark-s)
+    var(--color-dark-l) /
+    10%
   );
-  --base-transparent-12: hsla(
-    var(--color-dark-h),
-    var(--color-dark-s),
-    var(--color-dark-l),
-    0.12
+  --base-transparent-12: hsl(
+    var(--color-dark-h)
+    var(--color-dark-s)
+    var(--color-dark-l) /
+    12%
   );
-
-  --base-transparent-16: hsla(
-    var(--color-dark-h),
-    var(--color-dark-s),
-    var(--color-dark-l),
-    0.16
+  --base-transparent-16: hsl(
+    var(--color-dark-h)
+    var(--color-dark-s)
+    var(--color-dark-l) /
+    16%
   );
-
-  --base-transparent-16-light: hsla(
-    var(--color-light-h),
-    var(--color-light-s),
-    var(--color-light-l),
-    0.16
+  --base-transparent-16-light: hsl(
+    var(--color-light-h)
+    var(--color-light-s)
+    var(--color-light-l) /
+    16%
   );
 
   // 2. BASE CUSTOMIZATION
@@ -120,12 +107,12 @@
   --color-secondary: var(--color-base);
   --color-success: var(--color-info-success);
   --color-danger: var(--color-info-error);
-  --color-danger-dark: hsl(349, 30%, 30%);
-  --color-danger-light: hsla(
-    var(--color-info-error-h),
-    var(--color-info-error-s),
-    var(--color-info-error-l),
-    0.4
+  --color-danger-dark: hsl(349deg 30% 30%);
+  --color-danger-light: hsl(
+    var(--color-info-error-h)
+    var(--color-info-error-s)
+    var(--color-info-error-l) /
+    40%
   );
   --text-color-primary: var(--color-dark);
   --text-color-secondary: var(--color-base-600);
@@ -143,6 +130,7 @@
   --text-heading-page: var(--text-heading);
   --text-heading-view: var(--text-heading-secondary);
   --text-heading-sm: 16px;
+  --text-heading-xs: 14px;
   --font-weight-normal: 460;
   --font-weight-bold: 540;
   --spacing-4xs: 2px;
@@ -166,17 +154,13 @@
   --border-radius-sm: 12px;
   --border-radius: 16px;
   --border-radius-5xl: 52px;
-
   --text-color-transaction-credit: var(--color-info-success);
   --text-color-varying-amount: var(--color-base-700);
-
   --input-border-radius: var(--border-radius-2xs);
   --input-font-size: var(--text-md);
   --input-border-color: var(--color-base-300);
   --input-placeholder-color: var(--color-base-500);
-
   --label-color: var(--color-base-700);
-
   --btn-font-size: var(--text-md);
   --btn-border-radius: var(--border-radius-2xs);
   --btn-color: var(--color-black);
@@ -193,37 +177,27 @@
   --btn-secondary-bg-color: var(--color-white);
   --btn-tertiary-color: var(--color-black);
   --btn-tertiary-bg-color: var(--color-white);
-
   --badge-color: var(--color-base-900);
   --badge-fg-color: var(--color-base-900);
   --badge-bg-color: var(--color-base-400);
-
   --badge-color-info: var(--color-info);
   --badge-fg-color-info: var(--color-info-fg);
   --badge-bg-color-info: var(--color-info-bg);
-
   --badge-color-success: var(--color-info-success);
   --badge-fg-color-success: var(--color-info-success-fg);
   --badge-bg-color-success: var(--color-info-success-bg);
-
   --badge-color-warning: var(--color-info-warning);
   --badge-fg-color-warning: var(--color-info-warning-fg);
   --badge-bg-color-warning: var(--color-info-warning-bg);
-
   --badge-color-error: var(--color-info-error);
   --badge-fg-color-error: var(--color-info-error-fg);
   --badge-bg-color-error: var(--color-info-error-bg);
-
   --badge-border-radius: var(--border-radius-sm);
-
   --table-bg: var(--color-white);
-
   --tooltip-color: var(--color-white);
   --tooltip-bg-color: var(--color-base-800);
-
   --bar-color-income: var(--color-base-400);
   --bar-color-expenses: var(--color-base-900);
-
   --chart-indicator-color: var(--color-base-700);
 
   // LEGACY (?)
@@ -254,12 +228,9 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
-
-  font-feature-settings:
-    'cv10' on,
+  font-feature-settings: 'cv10' on,
     'cv01' on,
     'cv05' on,
     'cv08' on,

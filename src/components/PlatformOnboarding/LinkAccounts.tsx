@@ -35,7 +35,7 @@ function LinkAccountsContent({
     <section className='Layer__link-accounts Layer__component'>
       <Wizard
         Header={(
-          <Heading level={2} pbe='md'>
+          <Heading>
             Link your bank accounts and credit cards
           </Heading>
         )}
