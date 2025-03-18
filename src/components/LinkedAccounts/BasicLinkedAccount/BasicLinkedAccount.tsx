@@ -28,7 +28,7 @@ type BasicLinkedAccountLogoProps = {
 
 function BasicLinkedAccountLogo({ account }: BasicLinkedAccountLogoProps) {
   return (
-    <VStack justify='center'>
+    <VStack justify='center' className='Layer__BasicLinkedAccountLogo'>
       {account.institution?.logo
         ? (
           <img
@@ -43,7 +43,7 @@ function BasicLinkedAccountLogo({ account }: BasicLinkedAccountLogoProps) {
           />
         )
         : (
-          <InstitutionIcon size={28} />
+          <InstitutionIcon />
         )}
     </VStack>
   )
@@ -58,12 +58,12 @@ export function BasicLinkedAccountContent({ account }: BasicLinkedAccountContain
     <HStack gap='md'>
       <BasicLinkedAccountLogo account={account} />
       <VStack>
-        <Heading level={3} size='sm' pbe='2xs'>{account.external_account_name}</Heading>
+        <Heading level={3} size='xs' pbe='3xs'>{account.external_account_name}</Heading>
         <HStack gap='xs'>
-          <P>
+          <P size='sm'>
             {account.institution?.name}
           </P>
-          <P variant='subtle'>
+          <P variant='subtle' size='sm'>
             •••
             {' '}
             {account.mask}

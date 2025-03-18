@@ -9,10 +9,13 @@ import { HStack, VStack } from '../../ui/Stack/Stack'
 import { useWizard } from '../../Wizard/Wizard'
 import { BasicLinkedAccountContainer, BasicLinkedAccountContent } from '../../LinkedAccounts/BasicLinkedAccount/BasicLinkedAccount'
 import { LinkAccountsListContainer } from '../Container/LinkAccountsListContainer'
-import { P } from '../../ui/Typography/Text'
 import { Heading } from '../../ui/Typography/Heading'
+import { Text } from '../../Typography/Text'
 import pluralize from 'pluralize'
 import ChevronRight from '../../../icons/ChevronRight'
+import { ActionableRow } from '../../ActionableRow/ActionableRow'
+import PlaidIcon from '../../../icons/PlaidIcon'
+import { Separator } from '../../Separator/Separator'
 
 export function LinkAccountsLinkStep() {
   const {
@@ -32,19 +35,24 @@ export function LinkAccountsLinkStep() {
       <ConditionalList
         list={effectiveAccounts}
         Empty={(
-          <VStack gap='2xs' pbe='md'>
-            <P variant='subtle' size='lg'>
+          <VStack gap='xl' pbe='md'>
+            <Text status='disabled'>
               Connect your bank accounts and credit cards to automatically import your business transactions.
-            </P>
-            <HStack pbs='lg' justify='center'>
-              <Button
-                onClick={() => { addConnection('PLAID') }}
-                rightIcon={<LinkIcon size={12} />}
-                disabled={loadingStatus !== 'complete'}
-              >
-                Connect my bank
-              </Button>
-            </HStack>
+            </Text>
+            <ActionableRow
+              iconBox={<PlaidIcon />}
+              title='Connect my bank'
+              description='Import data with one simple integration.'
+              button={(
+                <Button
+                  onClick={() => addConnection('PLAID')}
+                  rightIcon={<LinkIcon size={12} />}
+                  disabled={loadingStatus !== 'complete'}
+                >
+                  Connect
+                </Button>
+              )}
+            />
           </VStack>
         )}
         Container={({ children }) => (
@@ -53,26 +61,28 @@ export function LinkAccountsLinkStep() {
               <Heading level={3} size='sm'>
                 {`We've found ${pluralize('account', effectiveAccounts.length, true)}`}
               </Heading>
-              <P variant='subtle'>
+              <Text status='disabled'>
                 {'You\'ll have the chance to remove any accounts you don\'t use for your business in the next step.'}
-              </P>
+              </Text>
             </VStack>
             <LinkAccountsListContainer>
               {children}
             </LinkAccountsListContainer>
-            <VStack pbs='xl' gap='sm'>
-              <Heading level={3} align='center'>
-                Do you use any other bank accounts or credit cards for your business?
-              </Heading>
-              <HStack justify='center' pbe='sm'>
-                <Button
-                  onClick={() => { addConnection('PLAID') }}
-                  rightIcon={<LinkIcon size={12} />}
-                  disabled={loadingStatus !== 'complete'}
-                >
-                  Link another bank
-                </Button>
-              </HStack>
+            <VStack pbs='xl'>
+              <ActionableRow
+                iconBox={<PlaidIcon />}
+                title='Connect my next bank account'
+                description='Import data with one simple integration.'
+                button={(
+                  <Button
+                    onClick={() => addConnection('PLAID')}
+                    rightIcon={<LinkIcon size={12} />}
+                    disabled={loadingStatus !== 'complete'}
+                  >
+                    Connect next
+                  </Button>
+                )}
+              />
             </VStack>
           </VStack>
         )}
@@ -89,18 +99,23 @@ export function LinkAccountsLinkStep() {
         Loading={<Loader />}
       >
         {({ item: account }) => (
-          <BasicLinkedAccountContainer key={account.id} isSelected>
-            <BasicLinkedAccountContent account={account} />
-          </BasicLinkedAccountContainer>
+          <>
+            <BasicLinkedAccountContainer key={account.id} isSelected>
+              <BasicLinkedAccountContent account={account} />
+            </BasicLinkedAccountContainer>
+          </>
         )}
       </ConditionalList>
       {effectiveAccounts.length > 0
         ? (
-          <HStack pbs='lg' justify='end' gap='sm'>
-            <Button onClick={() => { void next() }} rightIcon={<ChevronRight />}>
-              I’m done linking my banks
-            </Button>
-          </HStack>
+          <>
+            <Separator mbs='lg' mbe='lg' />
+            <HStack justify='start' gap='sm'>
+              <Button onClick={() => { void next() }} rightIcon={<ChevronRight />}>
+                I’m done linking my banks
+              </Button>
+            </HStack>
+          </>
         )
         : null}
     </>

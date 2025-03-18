@@ -19,6 +19,7 @@ export const ProgressSteps = ({ steps, currentStep }: ProgressStepsProps) => {
             className='Layer__progress-steps--step-wrapper'
           >
             <div className='Layer__progress-steps--step' {...dataProperties}>
+              {index < steps.length - 1 && <div className='Layer__progress-steps--step-line' />}
               <div className='Layer__progress-steps--circle'>
                 {index < currentStep && <Check size={10} />}
               </div>
@@ -26,7 +27,6 @@ export const ProgressSteps = ({ steps, currentStep }: ProgressStepsProps) => {
                 <Text size={TextSize.sm}>{step}</Text>
               </div>
             </div>
-            {index < steps.length - 1 && <div className='Layer__progress-steps--step-line' />}
           </div>
         )
       })}

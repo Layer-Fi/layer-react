@@ -38,6 +38,7 @@ export { Tasks } from './components/Tasks'
 
 /* --------------------- Onboarding ------------------------ */
 export { LinkAccounts } from './components/PlatformOnboarding/LinkAccounts'
+export { PlatformOnboarding } from './components/PlatformOnboarding/PlatformOnboarding'
 
 /* --------------------- Banners -------------------------- */
 export { BookkeepingUpsellBar } from './components/UpsellBanner'
