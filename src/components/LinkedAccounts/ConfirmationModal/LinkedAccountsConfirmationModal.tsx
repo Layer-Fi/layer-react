@@ -176,13 +176,13 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
                 <P size='sm'>
                   No data will be synced until you confirm.
                 </P>
-                <Button size='lg' onPress={handleDismiss}>
+                <Button size='lg' onPress={close}>
                   Close
                 </Button>
               </>
             )
             : (
-              <Button size='lg' onPress={handleFinish} isPending={isMutating}>
+              <Button size='lg' onPress={() => { void handleFinish() }} isPending={isMutating}>
                 {buttonLabel}
               </Button>
             )}
