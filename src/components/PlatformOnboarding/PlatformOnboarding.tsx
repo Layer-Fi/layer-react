@@ -4,16 +4,17 @@ import { ProgressSteps } from '../ProgressSteps/ProgressSteps'
 import { Button, ButtonVariant } from '../Button/Button'
 import { WelcomeStep, WelcomeStepFooter } from './Steps/WelcomeStep'
 import { SummaryStep } from './Steps/SummaryStep'
+import { BusinessInfoStep } from './Steps/BusinessInfoStep'
 
 const PLATFORM_ONBOARDING_STEPS = [
   {
     id: 'welcome',
     label: 'Get started',
   },
-  //   {
-  //     id: 'business-info',
-  //     label: 'Confirm your informations',
-  //   },
+  {
+    id: 'business-info',
+    label: 'Confirm your informations',
+  },
   {
     id: 'link-accounts',
     label: 'Connect accounts',
@@ -29,8 +30,8 @@ const PLATFORM_ONBOARDING_STEPS = [
   },
 ]
 
-// const defaultEnabledSteps = ['welcome', 'link-accounts', 'summary']
-const defaultEnabledSteps = ['link-accounts']
+const defaultEnabledSteps = ['welcome', 'business-info', 'link-accounts', 'summary']
+// const defaultEnabledSteps = ['link-accounts']
 
 type PlatformOnboardingStepKey = typeof PLATFORM_ONBOARDING_STEPS[number]['id']
 
@@ -74,6 +75,8 @@ export const PlatformOnboarding = ({ steps = defaultEnabledSteps }: PlatformOnbo
     switch (step) {
       case 'welcome':
         return <WelcomeStep onNext={nextStep} stepsEnabled={stepsList.map(s => s.id)} />
+      case 'business-info':
+        return <BusinessInfoStep onNext={nextStep} />
       case 'link-accounts':
         return <LinkAccounts onComplete={nextStep} />
       case 'summary':

@@ -15,10 +15,11 @@ export type BusinessFormStringOverrides = {
 
 export type BusinessFormProps = {
   stringOverrides?: BusinessFormStringOverrides
+  onSuccess?: () => void
 }
 
-export const BusinessForm = ({ stringOverrides }: BusinessFormProps) => {
-  const { form, submitError, isFormValid } = useBusinessForm()
+export const BusinessForm = ({ stringOverrides, onSuccess }: BusinessFormProps) => {
+  const { form, submitError, isFormValid } = useBusinessForm({ onSuccess })
 
   const { isSubmitting } = form.state
 

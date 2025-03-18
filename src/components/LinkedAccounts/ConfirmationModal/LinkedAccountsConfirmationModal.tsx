@@ -126,6 +126,10 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     }
   }
 
+  const handleDismiss = () => {
+    onClose()
+  }
+
   const { descriptionLabel, buttonLabel } = getFormComponentLabels(formState)
 
   return (

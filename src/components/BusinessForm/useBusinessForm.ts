@@ -31,7 +31,11 @@ const getPerson = (personnel?: BusinessPersonnel[]) => {
   return personnel?.[0]
 }
 
-export const useBusinessForm = () => {
+type UseBusinessFormProps = {
+  onSuccess?: () => void
+}
+
+export const useBusinessForm = ({ onSuccess }: UseBusinessFormProps) => {
   const { business } = useLayerContext()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
 
@@ -95,6 +99,8 @@ export const useBusinessForm = () => {
           us_state: value.us_state,
           tin: value.tin,
         })
+
+        onSuccess?.()
       }
       catch {
         setSubmitError('Something went wrong. Please try again.')
