@@ -6,7 +6,7 @@ import { DrawerContext } from '../../contexts/DrawerContext'
 import { LayerContext } from '../../contexts/LayerContext'
 import { useDataSync } from '../../hooks/useDataSync'
 import { useDrawer } from '../../hooks/useDrawer'
-import { errorHandler } from '../../models/ErrorHandler'
+import { errorHandler, LayerError } from '../../models/ErrorHandler'
 import {
   LayerContextValues,
   LayerContextAction,
@@ -110,7 +110,7 @@ export const BusinessProvider = ({
     {
       ...DEFAULT_SWR_CONFIG,
       provider: () => new Map(),
-      onSuccess: response => {
+      onSuccess: (response) => {
         if (response?.data?.categories?.length) {
           dispatch({
             type: Action.setCategories,
@@ -137,7 +137,7 @@ export const BusinessProvider = ({
     {
       ...DEFAULT_SWR_CONFIG,
       provider: () => new Map(),
-      onSuccess: response => {
+      onSuccess: (response) => {
         if (response?.data) {
           dispatch({
             type: Action.setBusiness,
@@ -224,7 +224,7 @@ export const BusinessProvider = ({
     }, toast.duration || 2000)
   }
 
-  const setColors = (colors?: { dark?: ColorConfig; light?: ColorConfig }) =>
+  const setColors = (colors?: { dark?: ColorConfig, light?: ColorConfig }) =>
     setTheme({
       ...(state.theme ?? {}),
       colors,
@@ -259,7 +259,7 @@ export const BusinessProvider = ({
         setOnboardingStep,
         addToast,
         removeToast,
-        onError: errorHandler.onError,
+        onError: (payload: LayerError) => errorHandler.onError(payload),
         touch,
         read,
         syncTimestamps,
