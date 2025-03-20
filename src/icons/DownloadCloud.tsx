@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { IconSvgProps } from './types'
 
 const DownloadCloud = ({ size = 18, ...props }: IconSvgProps) => (

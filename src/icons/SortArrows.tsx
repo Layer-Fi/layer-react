@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { IconSvgProps } from './types'
 
 const SortArrows = ({ size = 13, ...props }: IconSvgProps) => (
