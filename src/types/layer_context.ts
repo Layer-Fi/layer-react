@@ -28,7 +28,7 @@ export type LayerContextHelpers = {
   touch: (model: DataModel) => void
   read: (model: DataModel, cacheKey: string) => void
   syncTimestamps: Partial<Record<DataModel, number>>
-  readTimestamps: Partial<Record<string, { t: number; m: DataModel }>>
+  readTimestamps: Partial<Record<string, { t: number, m: DataModel }>>
   expireDataCaches: () => void
   hasBeenTouched: (cacheKey: string) => boolean
 }
@@ -96,34 +96,34 @@ export enum LayerContextActionName {
 
 export type LayerContextAction =
   | {
-      type: LayerContextActionName.setBusiness
-      payload: { business: LayerContextValues['business'] }
-    }
+    type: LayerContextActionName.setBusiness
+    payload: { business: LayerContextValues['business'] }
+  }
   | {
-      type: LayerContextActionName.setCategories
-      payload: { categories: LayerContextValues['categories'] }
-    }
+    type: LayerContextActionName.setCategories
+    payload: { categories: LayerContextValues['categories'] }
+  }
   | {
-      type: LayerContextActionName.setTheme
-      payload: { theme: LayerContextValues['theme'] }
-    }
+    type: LayerContextActionName.setTheme
+    payload: { theme: LayerContextValues['theme'] }
+  }
   | {
-      type: LayerContextActionName.setOnboardingStep
-      payload: { onboardingStep: LayerContextValues['onboardingStep'] }
-    }
+    type: LayerContextActionName.setOnboardingStep
+    payload: { onboardingStep: LayerContextValues['onboardingStep'] }
+  }
   | {
-      type: LayerContextActionName.setColors
-      payload: { colors: LayerContextValues['colors'] }
-    }
+    type: LayerContextActionName.setColors
+    payload: { colors: LayerContextValues['colors'] }
+  }
   | {
-      type: LayerContextActionName.setToast
-      payload: { toast: ToastProps }
-    }
+    type: LayerContextActionName.setToast
+    payload: { toast: ToastProps }
+  }
   | {
-      type: LayerContextActionName.removeToast
-      payload: { toast: ToastProps }
-    }
+    type: LayerContextActionName.removeToast
+    payload: { toast: ToastProps }
+  }
   | {
-      type: LayerContextActionName.setToastExit
-      payload: { toast: ToastProps }
-    }
+    type: LayerContextActionName.setToastExit
+    payload: { toast: ToastProps }
+  }
