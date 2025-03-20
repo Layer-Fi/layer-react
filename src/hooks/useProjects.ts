@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 
 type TagKey = string
 type TagOptionValue = string
-type TagCategoryOption = { label: string; value: TagOptionValue }
+type TagCategoryOption = { label: string, value: TagOptionValue }
 
 type TagState = Record<
   TagKey,
@@ -45,8 +45,8 @@ export function useTags() {
   const activeTag = Object.values(state).find(({ isActive }) => isActive)
 
   const setActiveValue = useCallback(
-    ({ key, activeValue }: { key: TagKey; activeValue?: TagOptionValue }) => {
-      setTagState(currentState => {
+    ({ key, activeValue }: { key: TagKey, activeValue?: TagOptionValue }) => {
+      setTagState((currentState) => {
         const tag = currentState[key]
 
         if (!tag) {

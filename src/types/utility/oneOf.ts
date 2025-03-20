@@ -8,7 +8,7 @@ type MergeTypes<Types extends Array<unknown>, Result = Record<never, never>> =
 export type OneOf<
   Types extends Array<unknown>,
   Result = never,
-  AllProperties = MergeTypes<Types>
+  AllProperties = MergeTypes<Types>,
 > = Types extends [infer Head, ...infer Remaining]
   ? OneOf<Remaining, Result | OnlyFirst<Head, AllProperties>, AllProperties>
   : Result

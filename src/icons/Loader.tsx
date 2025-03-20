@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { IconSvgProps } from './types'
 
 const Loader = ({ size = 18, ...props }: IconSvgProps) => (

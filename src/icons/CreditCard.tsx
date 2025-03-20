@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { IconSvgProps } from './types'
 
 const CreditCard = ({ size = 12, ...props }: IconSvgProps) => (

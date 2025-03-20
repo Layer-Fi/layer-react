@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { IconSvgProps } from './types'
 
 const ProgressIcon = ({ size = 12, ...props }: IconSvgProps) => (

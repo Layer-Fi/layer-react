@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { IconSvgProps } from './types'
 
 const Link = ({ size = 18, ...props }: IconSvgProps) => (
