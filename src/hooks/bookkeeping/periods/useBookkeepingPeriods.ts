@@ -11,11 +11,12 @@ import type { EnumWithUnknownValues } from '../../../types/utility/enumWithUnkno
 
 const BOOKKEEPING_PERIOD_STATUSES = [
   'BOOKKEEPING_NOT_PURCHASED',
-  'ONBOARDING',
-  'CLOSING_NOT_STARTED',
-  'CLOSING_IN_PROGRESS',
-  'PROVISIONALLY_COMPLETE',
-  'CLOSED',
+  'NOT_STARTED',
+  'IN_PROGRESS_NO_TASKS',
+  'IN_PROGRESS_OPEN_TASKS',
+  'CLOSED_IN_REVIEW',
+  'CLOSED_OPEN_TASKS',
+  'CLOSED_COMPLETE',
 ] as const
 
 export type BookkeepingPeriodStatus = typeof BOOKKEEPING_PERIOD_STATUSES[number]
