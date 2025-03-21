@@ -110,7 +110,7 @@ export function LinkAccountsConfirmationStep() {
           </ConditionalList>
         )}
       </Field>
-      <HStack pbs='lg' justify='end' gap='sm'>
+      <HStack pbs='lg' gap='sm'>
         <Button variant={ButtonVariant.secondary} onClick={previous}>
           Back
         </Button>

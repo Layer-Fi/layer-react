@@ -33,6 +33,18 @@
   font-variation-settings: 'wght' var(--font-weight-bold);
 }
 
+.Layer__heading--left {
+  align-self: flex-start;
+}
+
+.Layer__heading--center {
+  align-self: center;
+}
+
+.Layer__heading--right {
+  align-self: flex-end;
+}
+
 .Layer__text {
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);

@@ -13,6 +13,7 @@ export interface HeadingProps {
   className?: string
   children: ReactNode
   size?: HeadingSize
+  align?: 'left' | 'center' | 'right'
 }
 
 export const Heading = ({
@@ -20,9 +21,11 @@ export const Heading = ({
   className,
   children,
   size = HeadingSize.primary,
+  align = 'center',
 }: HeadingProps) => {
   const baseClassName = classNames(
     `Layer__heading Layer__heading--${size}`,
+    `Layer__heading--${align}`,
     className,
   )
 

@@ -46,6 +46,7 @@
 
       .Layer__progress-steps--label {
         padding-right: var(--spacing-lg);
+        white-space: nowrap;
 
         p {
           position: relative;

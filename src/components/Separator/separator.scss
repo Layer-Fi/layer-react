@@ -1,0 +1,17 @@
+.Layer__separator {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-base-300);
+
+  $spacings: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
+
+  @each $spacing in $spacings {
+    &[data-mbe="#{$spacing}"] {
+      margin-block-end: var(--spacing-#{$spacing});
+    }
+
+    &[data-mbs="#{$spacing}"] {
+      margin-block-start: var(--spacing-#{$spacing});
+    }
+  }
+}
