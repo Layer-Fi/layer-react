@@ -13,7 +13,7 @@ const MOCK_DATA: BookkeepingPeriod[] = [
     id: '2025-04',
     month: 4,
     year: 2025,
-    status: 'CLOSING_NOT_STARTED',
+    status: 'NOT_STARTED',
     tasks: [
       {
         id: 'task-1',
@@ -39,7 +39,7 @@ const MOCK_DATA: BookkeepingPeriod[] = [
     id: '2025-03',
     month: 3,
     year: 2025,
-    status: 'CLOSING_IN_PROGRESS',
+    status: 'IN_PROGRESS_NO_TASKS',
     tasks: [
       {
         id: 'task-2',
@@ -65,7 +65,7 @@ const MOCK_DATA: BookkeepingPeriod[] = [
     id: '2025-02',
     month: 2,
     year: 2025,
-    status: 'PROVISIONALLY_COMPLETE',
+    status: 'IN_PROGRESS_OPEN_TASKS',
     tasks: [
       {
         id: 'task-3',
@@ -91,7 +91,7 @@ const MOCK_DATA: BookkeepingPeriod[] = [
     id: '2025-01',
     month: 1,
     year: 2025,
-    status: 'CLOSED',
+    status: 'CLOSED_OPEN_TASKS',
     tasks: [
       {
         id: 'task-4',
@@ -117,7 +117,7 @@ const MOCK_DATA: BookkeepingPeriod[] = [
     id: '2023-12',
     month: 12,
     year: 2024,
-    status: 'CLOSED',
+    status: 'CLOSED_IN_REVIEW',
     tasks: [
       {
         id: 'task-5',
@@ -143,7 +143,7 @@ const MOCK_DATA: BookkeepingPeriod[] = [
     id: '2024-11',
     month: 11,
     year: 2024,
-    status: 'CLOSED',
+    status: 'CLOSED_COMPLETE',
     tasks: [
       {
         id: 'task-6',
@@ -169,7 +169,7 @@ const MOCK_DATA: BookkeepingPeriod[] = [
     id: '2024-10',
     month: 10,
     year: 2024,
-    status: 'CLOSED',
+    status: 'CLOSED_COMPLETE',
     tasks: [
       {
         id: 'task-7',

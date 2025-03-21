@@ -9,13 +9,14 @@ import {
 import { TasksContext } from '../../contexts/TasksContext'
 import { useTasks } from '../../hooks/useTasks'
 import { Loader } from '../Loader'
-import { TasksHeader } from '../TasksHeader'
-import { TasksList } from '../TasksList'
-import { TasksPending } from '../TasksPending'
-import { TasksMonthSelector } from '../TasksMonthSelector/TasksMonthSelector'
+import { TasksHeader } from './TasksHeader'
+import { TasksList } from './TasksList'
+import { TasksPending } from './TasksPending'
+import { TasksMonthSelector } from './TasksMonthSelector'
 import classNames from 'classnames'
 import { endOfYear, getYear, startOfYear } from 'date-fns'
 import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { TasksPanelNotification } from './TasksPanelNotification'
 
 export type UseTasksContextType = ReturnType<typeof useTasks>
 export const UseTasksContext = createContext<UseTasksContextType>({
@@ -153,6 +154,7 @@ export const TasksComponent = ({
         collapsable && 'Layer__tasks-component--collapsable',
       )}
     >
+      <TasksPanelNotification />
       <TasksHeader
         tasksHeader={stringOverrides?.header || tasksHeader}
         collapsable={collapsable}

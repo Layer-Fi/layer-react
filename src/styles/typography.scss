@@ -81,14 +81,26 @@
 
 .Layer__text[data-status='error'] {
   color: var(--color-danger);
+
+  &[data-invert='true'] {
+    color: var(--color-info-error-bg);
+  }
 }
 
 .Layer__text[data-status='warning'] {
   color: var(--color-info-warning-fg);
+
+  &[data-invert='true'] {
+    color: var(--color-info-warning-bg);
+  }
 }
 
 .Layer__text[data-status='success'] {
   color: var(--color-success);
+
+  &[data-invert='true'] {
+    color: var(--color-info-success-bg);
+  }
 }
 
 .Layer__text[data-status='disabled'] {
@@ -97,6 +109,10 @@
 
 .Layer__text[data-status='info'] {
   color: var(--color-info-fg);
+
+  &[data-invert='true'] {
+    color: var(--color-info-bg);
+  }
 }
 
 .Layer__text[data-ellipsis] {
