@@ -50,6 +50,17 @@ export const TasksListItem = ({
     setIsOpen(defaultOpen)
   }, [defaultOpen])
 
+  const submit = async () => {
+    if (!selectedFiles) {
+      return
+    }
+
+    await uploadDocumentsForTask(task.id, selectedFiles, userResponse)
+    setIsOpen(false)
+    goToNextPageIfAllComplete(task)
+    setSelectedFiles(undefined)
+  }
+
   const uploadDocumentAction = useMemo(() => {
     if (task.user_response_type === 'UPLOAD_DOCUMENT') {
       if (task.status === 'TODO') {
@@ -69,20 +80,13 @@ export const TasksListItem = ({
             <>
               <Button
                 variant={ButtonVariant.secondary}
-                onClick={async () => {
-                  setSelectedFiles(undefined)
-                }}
+                onClick={() => setSelectedFiles(undefined)}
               >
                 Cancel
               </Button>
               <Button
                 variant={ButtonVariant.primary}
-                onClick={async () => {
-                  await uploadDocumentsForTask(task.id, selectedFiles, userResponse)
-                  setIsOpen(false)
-                  goToNextPageIfAllComplete(task)
-                  setSelectedFiles(undefined)
-                }}
+                onClick={() => void submit()}
               >
                 Submit
               </Button>

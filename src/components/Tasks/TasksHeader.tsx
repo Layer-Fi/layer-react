@@ -68,6 +68,7 @@ export const TasksHeader = ({
   const minDate = getEarliestDateToBrowse(business)
 
   return (
+
     <div className={classNames('Layer__tasks-header', collapsable && 'Layer__tasks-header--collapsable')}>
       <div className='Layer__tasks-header__left-col'>
         <div className='Layer__tasks-header__left-col__title'>

@@ -3,7 +3,7 @@ import { Container } from '../../components/Container'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { TasksComponent, TasksProvider } from '../../components/Tasks'
+import { TasksComponent, TasksProvider } from '../../components/Tasks/Tasks'
 import { TasksStringOverrides } from '../../components/Tasks/Tasks'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
@@ -74,6 +74,7 @@ export const BookkeepingOverview = ({
             <ProfitAndLoss.Header
               text={stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
               withDatePicker
+              withStatus
             />
             <BookkeepingProfitAndLossSummariesContainer>
               <ProfitAndLoss.Summaries

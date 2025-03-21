@@ -1,21 +1,21 @@
 import { Task, TasksMonthly } from '../../types/tasks'
 
 export type TasksMonthSelectorProps = {
-  tasks?: TasksMonthly[],
+  tasks?: TasksMonthly[]
   currentDate: Date
   year: number
   onClick: (date: Date) => void
 }
 
 export type MonthData = {
-  year: number;
-  month: number;
-  total: number;
-  completed: number;
-  tasks: Task[];
-  monthStr: string;
-  startDate: Date;
-  endDate: Date;
+  year: number
+  month: number
+  total: number
+  completed: number
+  tasks: Task[]
+  monthStr: string
+  startDate: Date
+  endDate: Date
   disabled?: boolean
 }
 
