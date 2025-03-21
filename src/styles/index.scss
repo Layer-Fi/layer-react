@@ -31,7 +31,8 @@
 @forward '../components/PlatformOnboarding/linkAccounts';
 @forward '../components/PlatformOnboarding/Container/linkAccountsListContainer';
 @forward '../components/PlatformOnboarding/Steps/linkAccountsConfirmationStep';
-@forward '../components/TasksMonthSelector/tasksMonthSelector';
+@forward '../components/Tasks/tasks';
+@forward '../components/Tasks/tasksMonthSelector';
 @forward '../components/ProgressSteps/ProgressSteps';
 @forward '../components/BusinessForm/businessForm';
 @forward '../components/PlatformOnboarding/platformOnboarding';
@@ -51,7 +52,6 @@
 @forward './linked_accounts';
 @forward './linked_account_pill';
 @forward './loader';
-@forward './tasks';
 @forward './pagination';
 @forward './panel';
 @forward './period_picker';

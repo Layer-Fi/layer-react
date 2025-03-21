@@ -3,7 +3,7 @@ import { TasksContext } from '../../contexts/TasksContext'
 import SmileIcon from '../../icons/SmileIcon'
 import { isComplete, Task } from '../../types/tasks'
 import { Pagination } from '../Pagination'
-import { TasksListItem } from '../TasksListItem'
+import { TasksListItem } from './TasksListItem'
 import { ErrorText, Text, TextSize } from '../Typography'
 import { endOfMonth, isAfter, isBefore, parseISO, startOfMonth } from 'date-fns'
 

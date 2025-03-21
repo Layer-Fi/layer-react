@@ -34,7 +34,7 @@ export { ChartOfAccounts } from './components/ChartOfAccounts'
 export { Journal } from './components/Journal'
 
 /* ------------------ Account Operations ------------------ */
-export { Tasks } from './components/Tasks'
+export { Tasks } from './components/Tasks/Tasks'
 
 /* --------------------- Onboarding ------------------------ */
 export { LinkAccounts } from './components/PlatformOnboarding/LinkAccounts'
