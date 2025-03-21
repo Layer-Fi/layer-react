@@ -1,0 +1,28 @@
+.Layer__bookkeping-status {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3xs);
+}
+
+.Layer__bookkeping-status__icon-wrapper {
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-info-fg);
+  background: var(--color-info-bg);
+  margin-top: -1px;
+
+  &[data-status='warning'] {
+    color: var(--color-info-warning-fg);
+    background: var(--color-info-warning-bg);
+  }
+
+  &[data-status='success'] {
+    color: var(--color-info-success-fg);
+    background: var(--color-info-success-bg);
+  }
+}

@@ -15,6 +15,7 @@ import { TasksPending } from '../TasksPending'
 import { TasksMonthSelector } from '../TasksMonthSelector/TasksMonthSelector'
 import classNames from 'classnames'
 import { endOfYear, getYear, startOfYear } from 'date-fns'
+import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 
 export type UseTasksContextType = ReturnType<typeof useTasks>
 export const UseTasksContext = createContext<UseTasksContextType>({
@@ -117,6 +118,17 @@ export const TasksComponent = ({
     collapsable && allComplete === false ? true : defaultCollapsed || collapsedWhenComplete ? false : true,
   )
 
+  const { data: bookkeepingPeriods } = useBookkeepingPeriods()
+
+  const bookkeepingMonthStatus = useMemo(() => {
+    const currentMonth = currentDate.getMonth() + 1
+    const currentYear = currentDate.getFullYear()
+
+    return bookkeepingPeriods?.find(
+      period => period.year === currentYear && period.month === currentMonth,
+    )?.status
+  }, [bookkeepingPeriods, currentDate])
+
   useEffect(() => {
     if (collapsable && allComplete === false) {
       setOpen(true)
@@ -168,7 +180,9 @@ export const TasksComponent = ({
                 onClick={setCurrentDate}
                 year={getYear(dateRange.startDate)}
               />
-              <TasksPending />
+              <TasksPending
+                bookkeepingMonthStatus={bookkeepingMonthStatus}
+              />
               <TasksList />
             </>
           )}
