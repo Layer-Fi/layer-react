@@ -84,7 +84,7 @@
 }
 
 .Layer__text[data-status='warning'] {
-  color: var(--color-info-warning);
+  color: var(--color-info-warning-fg);
 }
 
 .Layer__text[data-status='success'] {
@@ -93,6 +93,10 @@
 
 .Layer__text[data-status='disabled'] {
   color: var(--color-base-500);
+}
+
+.Layer__text[data-status='info'] {
+  color: var(--color-info-fg);
 }
 
 .Layer__text[data-ellipsis] {

@@ -3,11 +3,195 @@ import { useLayerContext } from '../../../contexts/LayerContext'
 import { useAuth } from '../../useAuth'
 import { get } from '../../../api/layer/authenticated_http'
 import {
-  isActiveBookkeepingStatus,
   useBookkeepingStatus,
 } from '../useBookkeepingStatus'
 import type { Task } from '../../../types/tasks'
 import type { EnumWithUnknownValues } from '../../../types/utility/enumWithUnknownValues'
+
+const MOCK_DATA: BookkeepingPeriod[] = [
+  {
+    id: '2025-04',
+    month: 4,
+    year: 2025,
+    status: 'CLOSING_NOT_STARTED',
+    tasks: [
+      {
+        id: 'task-1',
+        title: 'Review April Transactions',
+        question: 'Please review all April transactions',
+        status: 'TODO',
+        transaction_id: null,
+        type: 'REVIEW',
+        user_marked_completed_at: null,
+        user_response: null,
+        user_response_type: 'FREE_RESPONSE',
+        archived_at: null,
+        completed_at: null,
+        created_at: '2025-04-01T00:00:00Z',
+        updated_at: '2025-04-01T00:00:00Z',
+        effective_date: '2025-04-01T00:00:00Z',
+        document_type: 'BANK_STATEMENT',
+        documents: [],
+      },
+    ],
+  },
+  {
+    id: '2025-03',
+    month: 3,
+    year: 2025,
+    status: 'CLOSING_IN_PROGRESS',
+    tasks: [
+      {
+        id: 'task-2',
+        title: 'March Bank Reconciliation',
+        question: 'Complete bank reconciliation for March',
+        status: 'TODO',
+        transaction_id: null,
+        type: 'RECONCILIATION',
+        user_marked_completed_at: null,
+        user_response: null,
+        user_response_type: 'FREE_RESPONSE',
+        archived_at: null,
+        completed_at: null,
+        created_at: '2025-03-01T00:00:00Z',
+        updated_at: '2025-03-01T00:00:00Z',
+        effective_date: '2025-03-01T00:00:00Z',
+        document_type: 'BANK_STATEMENT',
+        documents: [],
+      },
+    ],
+  },
+  {
+    id: '2025-02',
+    month: 2,
+    year: 2025,
+    status: 'PROVISIONALLY_COMPLETE',
+    tasks: [
+      {
+        id: 'task-3',
+        title: 'February Review',
+        question: 'Review February financial statements',
+        status: 'COMPLETED',
+        transaction_id: null,
+        type: 'REVIEW',
+        user_marked_completed_at: '2025-03-01T00:00:00Z',
+        user_response: 'Completed review of February statements',
+        user_response_type: 'FREE_RESPONSE',
+        archived_at: null,
+        completed_at: '2025-03-01T00:00:00Z',
+        created_at: '2025-02-01T00:00:00Z',
+        updated_at: '2025-03-01T00:00:00Z',
+        effective_date: '2025-02-01T00:00:00Z',
+        document_type: 'BANK_STATEMENT',
+        documents: [],
+      },
+    ],
+  },
+  {
+    id: '2025-01',
+    month: 1,
+    year: 2025,
+    status: 'CLOSED',
+    tasks: [
+      {
+        id: 'task-4',
+        title: 'January Review',
+        question: 'Review January financial statements',
+        status: 'COMPLETED',
+        transaction_id: null,
+        type: 'REVIEW',
+        user_marked_completed_at: '2025-02-01T00:00:00Z',
+        user_response: 'Completed review of January statements',
+        user_response_type: 'FREE_RESPONSE',
+        archived_at: null,
+        completed_at: '2025-02-01T00:00:00Z',
+        created_at: '2025-01-01T00:00:00Z',
+        updated_at: '2025-02-01T00:00:00Z',
+        effective_date: '2025-01-01T00:00:00Z',
+        document_type: 'BANK_STATEMENT',
+        documents: [],
+      },
+    ],
+  },
+  {
+    id: '2023-12',
+    month: 12,
+    year: 2024,
+    status: 'CLOSED',
+    tasks: [
+      {
+        id: 'task-5',
+        title: 'December Review',
+        question: 'Review December financial statements',
+        status: 'COMPLETED',
+        transaction_id: null,
+        type: 'REVIEW',
+        user_marked_completed_at: '2025-01-01T00:00:00Z',
+        user_response: 'Completed review of December statements',
+        user_response_type: 'FREE_RESPONSE',
+        archived_at: null,
+        completed_at: '2025-01-01T00:00:00Z',
+        created_at: '2024-12-01T00:00:00Z',
+        updated_at: '2024-01-01T00:00:00Z',
+        effective_date: '2024-12-01T00:00:00Z',
+        document_type: 'BANK_STATEMENT',
+        documents: [],
+      },
+    ],
+  },
+  {
+    id: '2024-11',
+    month: 11,
+    year: 2024,
+    status: 'CLOSED',
+    tasks: [
+      {
+        id: 'task-6',
+        title: 'November Review',
+        question: 'Review November financial statements',
+        status: 'COMPLETED',
+        transaction_id: null,
+        type: 'REVIEW',
+        user_marked_completed_at: '2024-12-01T00:00:00Z',
+        user_response: 'Completed review of November statements',
+        user_response_type: 'FREE_RESPONSE',
+        archived_at: null,
+        completed_at: '2024-12-01T00:00:00Z',
+        created_at: '2024-11-01T00:00:00Z',
+        updated_at: '2024-12-01T00:00:00Z',
+        effective_date: '2024-11-01T00:00:00Z',
+        document_type: 'BANK_STATEMENT',
+        documents: [],
+      },
+    ],
+  },
+  {
+    id: '2024-10',
+    month: 10,
+    year: 2024,
+    status: 'CLOSED',
+    tasks: [
+      {
+        id: 'task-7',
+        title: 'October Review',
+        question: 'Review October financial statements',
+        status: 'COMPLETED',
+        transaction_id: null,
+        type: 'REVIEW',
+        user_marked_completed_at: '2024-11-01T00:00:00Z',
+        user_response: 'Completed review of October statements',
+        user_response_type: 'FREE_RESPONSE',
+        archived_at: null,
+        completed_at: '2024-11-01T00:00:00Z',
+        created_at: '2024-10-01T00:00:00Z',
+        updated_at: '2024-11-01T00:00:00Z',
+        effective_date: '2023-10-01T00:00:00Z',
+        document_type: 'BANK_STATEMENT',
+        documents: [],
+      },
+    ],
+  },
+]
 
 const BOOKKEEPING_PERIOD_STATUSES = [
   'BOOKKEEPING_NOT_PURCHASED',
@@ -75,7 +259,9 @@ export function useBookkeepingPeriods() {
   const { businessId } = useLayerContext()
 
   const { data } = useBookkeepingStatus()
-  const isActive = data ? isActiveBookkeepingStatus(data.status) : false
+  /** @TODO - mock */
+  // const isActive = data ? isActiveBookkeepingStatus(data.status) : false
+  const isActive = true
 
   return useSWR(
     () => buildKey({
@@ -89,10 +275,16 @@ export function useBookkeepingPeriods() {
       { params: { businessId } },
     )()
       .then(
-        ({ data: { periods } }) => periods.map(period => ({
-          ...period,
-          status: constrainToKnownBookkeepingPeriodStatus(period.status),
-        })),
+        ({ data: { periods } }) => {
+          // periods.map(period => ({
+          //   ...period,
+          //   status: constrainToKnownBookkeepingPeriodStatus(period.status),
+          // }))
+          return MOCK_DATA.map(period => ({
+            ...period,
+            status: constrainToKnownBookkeepingPeriodStatus(period.status),
+          }))
+        },
       ),
   )
 }

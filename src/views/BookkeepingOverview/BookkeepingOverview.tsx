@@ -74,6 +74,7 @@ export const BookkeepingOverview = ({
             <ProfitAndLoss.Header
               text={stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
               withDatePicker
+              withStatus
             />
             <BookkeepingProfitAndLossSummariesContainer>
               <ProfitAndLoss.Summaries
