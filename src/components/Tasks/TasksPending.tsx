@@ -2,12 +2,14 @@ import { useContext, useMemo } from 'react'
 import { TASKS_CHARTS_COLORS } from '../../config/charts'
 import { TasksContext } from '../../contexts/TasksContext'
 import { isComplete } from '../../types/tasks'
-import { Text, TextSize } from '../Typography'
+import { Text, TextSize } from '../Typography/Text'
+import { Heading, HeadingSize } from '../Typography/Heading'
 import classNames from 'classnames'
 import { endOfMonth, format, isAfter, isBefore, parseISO, startOfMonth } from 'date-fns'
 import { Cell, Pie, PieChart } from 'recharts'
 import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import { BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingStatusDescription } from '../BookkeepingStatus/BookkeepingStatusDescription'
 
 export const TasksPending = ({ bookkeepingMonthStatus }: { bookkeepingMonthStatus?: BookkeepingPeriodStatus }) => {
   const { data: rawData, currentDate } = useContext(TasksContext)
@@ -39,9 +41,9 @@ export const TasksPending = ({ bookkeepingMonthStatus }: { bookkeepingMonthStatu
   )
 
   return (
-    <>
-      <div className='Layer__tasks-pending'>
-        <Text size={TextSize.lg}>{format(currentDate, 'MMMM')}</Text>
+    <div className='Layer__tasks-pending'>
+      <div className='Layer__tasks-pending-header'>
+        <Heading size={HeadingSize.secondary}>{format(currentDate, 'MMMM yyyy')}</Heading>
         {data && data?.length > 0
           ? (
             <div className='Layer__tasks-pending-bar'>
@@ -87,12 +89,13 @@ export const TasksPending = ({ bookkeepingMonthStatus }: { bookkeepingMonthStatu
           )
           : null}
       </div>
-      <div style={{ padding: 16, paddingTop: 0 }}>
+      <div className='Layer__tasks-pending-main'>
         {bookkeepingMonthStatus && (
-          <BookkeepingStatus status={bookkeepingMonthStatus} month={currentDate.getMonth()} />
+          <BookkeepingStatus status={bookkeepingMonthStatus} month={currentDate.getMonth()} emphasizeWarning />
         )}
-        <Text size={TextSize.sm} status='disabled'>{'We\'re working on your March books. No action is needed from you right now.'}</Text>
+        <BookkeepingStatusDescription status={bookkeepingMonthStatus} month={currentDate.getMonth()} />
       </div>
-    </>
+    </div>
+
   )
 }

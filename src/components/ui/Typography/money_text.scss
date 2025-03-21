@@ -1,14 +1,15 @@
 .Layer__MoneyText {
-  color: var(--color-base-700);
-
+  color: var(--color-base-900);
   overflow-x: hidden;
   text-overflow: ellipsis;
 
   &[data-bold] {
     font-weight: var(--font-weight-bold);
+    font-variation-settings: 'wght' var(--font-weight-bold);
   }
 
   $sizes: xs sm md lg;
+
   @each $size in $sizes {
     &[data-size="#{$size}"] {
       font-size: var(--text-#{$size});
@@ -18,6 +19,7 @@
   &[data-positive]::before {
     content: "$";
   }
+
   &[data-negative]::before {
     content: "-$"
   }

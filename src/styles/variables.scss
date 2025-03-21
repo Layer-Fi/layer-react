@@ -143,6 +143,8 @@
   --text-heading-page: var(--text-heading);
   --text-heading-view: var(--text-heading-secondary);
   --text-heading-sm: 16px;
+  --text-heading-xs: 14px;
+  --text-heading-2xs: 12px;
   --font-weight-normal: 460;
   --font-weight-bold: 540;
   --spacing-4xs: 2px;
@@ -209,6 +211,7 @@
   --badge-color-warning: var(--color-info-warning);
   --badge-fg-color-warning: var(--color-info-warning-fg);
   --badge-bg-color-warning: var(--color-info-warning-bg);
+  --badge-bg-color-warning-dark: #CA9204;
 
   --badge-color-error: var(--color-info-error);
   --badge-fg-color-error: var(--color-info-error-fg);

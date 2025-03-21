@@ -39,6 +39,7 @@ export interface TextProps {
   tooltipOptions?: TextTooltipOptions
   ellipsis?: boolean
   pb?: '4xs' | '3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg'
+  invertColor?: boolean
 }
 
 export const Text = ({
@@ -51,9 +52,10 @@ export const Text = ({
   ellipsis,
   status,
   pb,
+  invertColor,
   ...props
 }: TextProps) => {
-  const dataProperties = toDataProperties({ status, ellipsis, pb })
+  const dataProperties = toDataProperties({ status, ellipsis, pb, invert: invertColor })
 
   const baseClassName = classNames(
     `Layer__text Layer__text--${size} Layer__text--${weight}`,

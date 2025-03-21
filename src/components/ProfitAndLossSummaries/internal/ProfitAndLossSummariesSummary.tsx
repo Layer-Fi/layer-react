@@ -27,7 +27,7 @@ export function ProfitAndLossSummariesSummary({
   variants,
 }: ProfitAndLossSummariesSummaryProps) {
   const { Chart } = slots ?? {}
-  const { size = 'sm' } = variants ?? {}
+  const { size = '2xs' } = variants ?? {}
 
   const dataProperties = toDataProperties({ size })
 
@@ -42,7 +42,7 @@ export function ProfitAndLossSummariesSummary({
           <SkeletonLoader />
         )
         : (
-          <MoneySpan slot='amount' amount={amount} size='lg' />
+          <MoneySpan slot='amount' amount={amount} size='lg' bold />
         )}
     </div>
   )
