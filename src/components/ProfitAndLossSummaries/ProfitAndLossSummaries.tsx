@@ -10,6 +10,8 @@ import {
   toMiniChartData,
 } from './internal/ProfitAndLossSummariesMiniChart'
 import { ProfitAndLossSummariesSummary } from './internal/ProfitAndLossSummariesSummary'
+import { Button } from '../ui/Button/Button'
+import { HStack } from '../ui/Stack/Stack'
 
 export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string
@@ -71,6 +73,14 @@ export function Internal_ProfitAndLossSummaries({
 
   return (
     <section className={SECTION_CLASS_NAMES}>
+      <HStack gap='sm' pbs='sm' pbe='sm'>
+        <Button isPending>
+          Example
+        </Button>
+        <Button>
+          Example
+        </Button>
+      </HStack>
       <ProfitAndLossSummariesList itemCount={listItemCount}>
         <ProfitAndLossSummariesListItem
           isActive={sidebarScope === 'revenue'}
