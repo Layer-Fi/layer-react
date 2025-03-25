@@ -1,6 +1,31 @@
-import { forwardRef, useMemo } from 'react'
+import { forwardRef, type PropsWithChildren } from 'react'
 import { Button as ReactAriaButton, type ButtonProps } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { withRenderProp } from '../../utility/withRenderProp'
+import { LoadingSpinner } from '../Loading/LoadingSpinner'
+
+const CLASS_NAMES = {
+  SPINNER_CONTAINER: 'Layer__ButtonSpinnerContainer',
+  TRANSPARENT_CONTENT: 'Layer__ButtonTransparentContent',
+}
+
+function ButtonSpinner({ size }: { size: ButtonSize }) {
+  const dataProperties = toDataProperties({ size })
+
+  return (
+    <div {...dataProperties} className={CLASS_NAMES.SPINNER_CONTAINER}>
+      <LoadingSpinner size={size === 'lg' ? 20 : 16} />
+    </div>
+  )
+}
+
+function ButtonTransparentContent({ children }: PropsWithChildren) {
+  return (
+    <span className={CLASS_NAMES.TRANSPARENT_CONTENT}>
+      {children}
+    </span>
+  )
+}
 
 type ButtonVariant = 'solid' | 'ghost'
 type ButtonSize = 'md' | 'lg'
@@ -15,19 +40,20 @@ const Button = forwardRef<
   }
 >((
   {
+    children,
     icon,
     size = 'md',
     variant = 'solid',
-    children,
     ...restProps
   },
   ref,
 ) => {
-  const dataProperties = useMemo(() => toDataProperties({
+  const { isPending = false } = restProps
+  const dataProperties = toDataProperties({
     icon,
     size,
     variant,
-  }), [icon, size, variant])
+  })
 
   return (
     <ReactAriaButton
@@ -36,10 +62,23 @@ const Button = forwardRef<
       className={BUTTON_CLASS_NAME}
       ref={ref}
     >
-      {children}
+      {withRenderProp(children, (node) => {
+        if (isPending) {
+          return (
+            <>
+              <ButtonTransparentContent>
+                {node}
+              </ButtonTransparentContent>
+              <ButtonSpinner size={size} />
+            </>
+          )
+        }
+
+        return node
+      })}
     </ReactAriaButton>
   )
 })
-Button.displayName = 'IconButton'
+Button.displayName = 'Button'
 
 export { Button }

@@ -68,3 +68,20 @@
     background-color: var(--button-bg-disabled);
   }
 }
+
+.Layer__ButtonTransparentContent {
+  opacity: 0;
+  grid-row: 1 / -1;
+  grid-column: 1 / -1;
+}
+
+.Layer__ButtonSpinnerContainer {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  place-self: center;
+  height: 16px;
+
+  &[data-size='lg'] {
+    height: 20px;
+  }
+}
