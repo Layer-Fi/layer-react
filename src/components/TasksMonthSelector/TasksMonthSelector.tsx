@@ -32,11 +32,9 @@ const TasksMonthSelector = ({ tasks, year, currentDate, onClick }: TasksMonthSel
     return Array.from({ length: 12 }, (_, i) => {
       const startDate = set(
         new Date(),
-        { year, month: i, date: 1, hours: 0, minutes: 0, seconds: 0, milliseconds: 0 }
+        { year, month: i, date: 1, hours: 0, minutes: 0, seconds: 0, milliseconds: 0 },
       )
       const endDate = endOfMonth(startDate)
-      const disabled = (minDate && isBefore(startDate, minDate))
-            || isAfter(startDate, startOfMonth(new Date()))
       const taskData = tasks?.find(x => x.month === i && x.year === year) ?? {
         monthStr: format(startDate, 'MMM'),
         year,
@@ -45,12 +43,16 @@ const TasksMonthSelector = ({ tasks, year, currentDate, onClick }: TasksMonthSel
         endDate,
         ...DEFAULT_TASK_DATA,
       }
+
+      const disabled = taskData.total === 0
+        && ((minDate && isBefore(startDate, minDate))
+          || isAfter(startDate, startOfMonth(new Date())))
       return {
         monthStr: format(startDate, 'MMM'),
         startDate,
         endDate,
         disabled,
-        ...taskData
+        ...taskData,
       }
     })
   }, [tasks, year, minDate])
@@ -73,5 +75,3 @@ const TasksMonthSelector = ({ tasks, year, currentDate, onClick }: TasksMonthSel
 }
 
 export { TasksMonthSelector }
-
-
