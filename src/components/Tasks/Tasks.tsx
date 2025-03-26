@@ -1,69 +1,39 @@
 import {
-  createContext,
   ReactNode,
-  useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react'
-import { TasksContext } from '../../contexts/TasksContext'
-import { useTasks } from '../../hooks/useTasks'
+// import { useTasks } from '../../hooks/useTasks'
 import { Loader } from '../Loader'
 import { TasksHeader } from './TasksHeader'
 import { TasksList } from './TasksList'
 import { TasksPending } from './TasksPending'
 import { TasksMonthSelector } from './TasksMonthSelector'
 import classNames from 'classnames'
-import { endOfYear, getYear, startOfYear } from 'date-fns'
+import { getYear } from 'date-fns'
 import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { TasksPanelNotification } from './TasksPanelNotification'
-
-export type UseTasksContextType = ReturnType<typeof useTasks>
-export const UseTasksContext = createContext<UseTasksContextType>({
-  data: undefined,
-  isLoading: undefined,
-  loadedStatus: 'initial',
-  isValidating: undefined,
-  error: undefined,
-  refetch: () => Promise.resolve({ data: [] }),
-  submitResponseToTask: () => {},
-  uploadDocumentsForTask: () => Promise.resolve(),
-  deleteUploadsForTask: () => {},
-  updateDocUploadTaskDescription: () => {},
-  currentDate: new Date(),
-  setCurrentDate: () => {},
-  dateRange: { startDate: startOfYear(new Date()), endDate: endOfYear(new Date()) },
-  setDateRange: () => {},
-})
-
-export const useTasksContext = () => useContext(UseTasksContext)
+import { TasksYearsTabs } from './TasksYearsTabs'
+import { useTasks } from '../../hooks/useTasks'
+import { TasksContext, useTasksContext } from './TasksContext'
 
 export interface TasksStringOverrides {
   header?: string
 }
 
-export const Tasks = ({
-  collapsable = false,
-  defaultCollapsed = false,
-  collapsedWhenComplete,
-  tasksHeader, // deprecated
-  stringOverrides,
-}: {
+export type TasksProps = {
   tasksHeader?: string
   collapsable?: boolean
   defaultCollapsed?: boolean
   collapsedWhenComplete?: boolean
   stringOverrides?: TasksStringOverrides
-}) => {
+}
+
+export const Tasks = (props: TasksProps) => {
   return (
     <TasksProvider>
-      <TasksComponent
-        collapsable={collapsable}
-        defaultCollapsed={defaultCollapsed}
-        collapsedWhenComplete={collapsedWhenComplete}
-        tasksHeader={tasksHeader} // deprecated
-        stringOverrides={stringOverrides}
-      />
+      <TasksComponent {...props} />
     </TasksProvider>
   )
 }
@@ -91,29 +61,38 @@ export const TasksComponent = ({
   collapsedWhenComplete?: boolean
   stringOverrides?: TasksStringOverrides
 }) => {
+  // const {
+  //   isLoading,
+  //   loadedStatus,
+  //   data,
+  //   monthlyData,
+  //   yearlyData,
+  //   currentDate,
+  //   setCurrentDate,
+  //   dateRange,
+  //   unresolvedTasks,
+  // } = useContext(TasksContext)
+
+  // const allComplete = useMemo(() => {
+  //   if (isLoading || !data || unresolvedTasks === undefined) {
+  //     return undefined
+  //   }
+
+  //   if (!isLoading && unresolvedTasks === 0) {
+  //     return true
+  //   }
+
+  //   return false
+  // }, [data, isLoading, unresolvedTasks])
+
   const {
-    isLoading,
-    loadedStatus,
     data,
-    monthlyData,
-    yearlyData,
+    isLoading,
     currentDate,
     setCurrentDate,
-    dateRange,
-    unresolvedTasks,
-  } = useContext(TasksContext)
+  } = useTasksContext()
 
-  const allComplete = useMemo(() => {
-    if (isLoading || !data || unresolvedTasks === undefined) {
-      return undefined
-    }
-
-    if (!isLoading && unresolvedTasks === 0) {
-      return true
-    }
-
-    return false
-  }, [data, isLoading, unresolvedTasks])
+  const allComplete = false
 
   const [open, setOpen] = useState(
     collapsable && allComplete === false ? true : defaultCollapsed || collapsedWhenComplete ? false : true,
@@ -121,14 +100,16 @@ export const TasksComponent = ({
 
   const { data: bookkeepingPeriods } = useBookkeepingPeriods()
 
-  const bookkeepingMonthStatus = useMemo(() => {
-    const currentMonth = currentDate.getMonth() + 1
+  const periodData = useMemo(() => {
+    const currentMonthNumber = currentDate.getMonth() + 1
     const currentYear = currentDate.getFullYear()
 
     return bookkeepingPeriods?.find(
-      period => period.year === currentYear && period.month === currentMonth,
-    )?.status
+      period => period.year === currentYear && period.month === currentMonthNumber,
+    )
   }, [bookkeepingPeriods, currentDate])
+
+  const bookkeepingMonthStatus = periodData?.status
 
   useEffect(() => {
     if (collapsable && allComplete === false) {
@@ -140,7 +121,7 @@ export const TasksComponent = ({
       allComplete
       && open
       && collapsedWhenComplete
-      && loadedStatus === 'complete'
+      && !isLoading
     ) {
       setOpen(false)
     }
@@ -160,7 +141,6 @@ export const TasksComponent = ({
         collapsable={collapsable}
         open={open}
         toggleContent={() => setOpen(!open)}
-        highlightYears={yearlyData?.map(x => x.year)}
       />
       <div
         className={classNames(
@@ -176,11 +156,12 @@ export const TasksComponent = ({
           )
           : (
             <>
+              <TasksYearsTabs />
               <TasksMonthSelector
-                tasks={monthlyData}
+                tasks={bookkeepingPeriods}
                 currentDate={currentDate}
                 onClick={setCurrentDate}
-                year={getYear(dateRange.startDate)}
+                year={getYear(currentDate)}
               />
               <TasksPending
                 bookkeepingMonthStatus={bookkeepingMonthStatus}

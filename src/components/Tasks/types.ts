@@ -1,7 +1,9 @@
-import { Task, TasksMonthly } from '../../types/tasks'
+import { BookkeepingPeriod } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { Task } from '../../types/tasks'
 
 export type TasksMonthSelectorProps = {
-  tasks?: TasksMonthly[]
+  // tasks?: TasksMonthly[]
+  tasks?: BookkeepingPeriod[]
   currentDate: Date
   year: number
   onClick: (date: Date) => void
@@ -20,7 +22,7 @@ export type MonthData = {
 }
 
 export type TaskMonthTileProps = {
-  monthData: MonthData
+  data: BookkeepingPeriod
   active?: boolean
   disabled?: boolean
   onClick: TasksMonthSelectorProps['onClick']
