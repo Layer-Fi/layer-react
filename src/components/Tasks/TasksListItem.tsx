@@ -1,5 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
-import { TasksContext } from '../../contexts/TasksContext'
+import { useEffect, useMemo, useState } from 'react'
 import AlertCircle from '../../icons/AlertCircle'
 import Check from '../../icons/Check'
 import ChevronDownFill from '../../icons/ChevronDownFill'
@@ -9,6 +8,7 @@ import { FileInput } from '../Input'
 import { Textarea } from '../Textarea'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
+import { useTasksContext } from './TasksContext'
 
 export const TasksListItem = ({
   task,
@@ -26,7 +26,7 @@ export const TasksListItem = ({
   const {
     submitResponseToTask, uploadDocumentsForTask, deleteUploadsForTask,
     updateDocUploadTaskDescription,
-  } = useContext(TasksContext)
+  } = useTasksContext()
 
   const taskBodyClassName = classNames(
     'Layer__tasks-list-item__body',

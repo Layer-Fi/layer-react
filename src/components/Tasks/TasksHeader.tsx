@@ -1,15 +1,9 @@
-import { useContext } from 'react'
-import { TasksContext } from '../../contexts/TasksContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Check from '../../icons/Check'
 import ProgressIcon from '../../icons/ProgressIcon'
 import RefreshCcw from '../../icons/RefreshCcw'
-import { isComplete } from '../../types/tasks'
 import { Badge, BadgeVariant } from '../Badge'
-import { ExpandButton } from '../Button'
 import { Text, TextSize } from '../Typography'
-import { DatePicker } from '../DatePicker'
-import { endOfYear, getYear, startOfYear } from 'date-fns'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import classNames from 'classnames'
@@ -50,25 +44,21 @@ export const TasksHeader = ({
   toggleContent: () => void
   highlightYears?: number[]
 }) => {
-  const {
-    data: tasks,
-    loadedStatus,
-    refetch,
-    error,
-    dateRange,
-    setDateRange,
-  } = useContext(TasksContext)
   const { business } = useLayerContext()
 
-  const completedTasks = tasks?.filter(task => isComplete(task.status)).length
+  // const completedTasks = tasks?.filter(task => isComplete(task.status)).length
+  const completedTasks = 0
+  const loadedStatus = 'complete'
+  const refetch = () => {}
+  const tasks = undefined
+  const error = undefined
 
-  const badgeVariant =
-    completedTasks === tasks?.length ? ICONS.done : ICONS.pending
+  const badgeVariant = ICONS.done
+  // completedTasks === tasks?.length ? ICONS.done : ICONS.pending
 
   const minDate = getEarliestDateToBrowse(business)
 
   return (
-
     <div className={classNames('Layer__tasks-header', collapsable && 'Layer__tasks-header--collapsable')}>
       <div className='Layer__tasks-header__left-col'>
         <div className='Layer__tasks-header__left-col__title'>
@@ -104,32 +94,6 @@ export const TasksHeader = ({
                       {badgeVariant.text}
                     </Badge>
                   )}
-        </div>
-        <div className='Layer__tasks-header__left-col__controls'>
-          <DatePicker
-            selected={dateRange.startDate}
-            onChange={(dates) => {
-              if (!Array.isArray(dates)) {
-                setDateRange({
-                  startDate: startOfYear(dates),
-                  endDate: endOfYear(dates),
-                })
-              }
-            }}
-            dateFormat='YYYY'
-            displayMode='yearPicker'
-            minDate={minDate}
-            maxDate={endOfYear(new Date())}
-            currentDateOption={false}
-            navigateArrows={['mobile', 'desktop']}
-            disabled={minDate && getYear(minDate) === getYear(new Date())}
-            highlightYears={highlightYears}
-          />
-          {collapsable && (
-            <div className='Layer__tasks-header__left-col__expand'>
-              <ExpandButton onClick={toggleContent} collapsed={!open} />
-            </div>
-          )}
         </div>
       </div>
     </div>

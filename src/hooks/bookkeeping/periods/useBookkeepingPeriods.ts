@@ -214,7 +214,7 @@ function constrainToKnownBookkeepingPeriodStatus(status: string): BookkeepingPer
   return 'BOOKKEEPING_NOT_PURCHASED'
 }
 
-type BookkeepingPeriod = {
+export type BookkeepingPeriod = {
   id: string
   month: number
   year: number
@@ -282,6 +282,7 @@ export function useBookkeepingPeriods() {
           // }))
           return MOCK_DATA.map(period => ({
             ...period,
+            test: Math.random(),
             status: constrainToKnownBookkeepingPeriodStatus(period.status),
           }))
         },

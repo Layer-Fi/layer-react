@@ -19,7 +19,6 @@
 @forward './inputs';
 @forward './onboarding';
 @forward './table';
-@forward './tabs';
 @forward './typography';
 @forward './utils';
 @forward './view';
@@ -39,6 +38,7 @@
 @forward '../components/Separator/separator';
 @forward '../components/ProfitAndLossHeader/profitAndLossHeader';
 @forward '../components/BookkeepingStatus/bookkeepingStatus';
+@forward '../components/Tabs/tabs';
 @forward './ledger_account';
 @forward './balance_sheet';
 @forward './statement_of_cash';

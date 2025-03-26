@@ -58,7 +58,6 @@ import {
 } from './layer/quickbooks'
 import { getStatementOfCashFlow } from './layer/statement-of-cash-flow'
 import {
-  getTasks,
   submitResponseToTask,
   completeTaskWithUpload,
   deleteTaskUploads,
@@ -107,7 +106,6 @@ export const Layer = {
   unlinkPlaidItem,
   confirmAccount,
   excludeAccount,
-  getTasks,
   completeTaskWithUpload,
   submitResponseToTask,
   deleteTaskUploads,
