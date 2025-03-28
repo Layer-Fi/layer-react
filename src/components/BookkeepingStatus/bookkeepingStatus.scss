@@ -30,6 +30,13 @@
     }
   }
 
+  &[data-status='error'] {
+    .Layer__bookkeping-status__icon-wrapper {
+      color: var(--color-info-error-fg);
+      background: var(--color-info-error-bg);
+    }
+  }
+
   &[data-emphasize='true'][data-status='warning'] {
     padding: var(--spacing-xs);
     padding-bottom: var(--spacing-2xs);

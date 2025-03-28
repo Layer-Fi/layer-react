@@ -1,37 +1,36 @@
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import { Tabs } from '../Tabs'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useTasksContext } from './TasksContext'
+import { getDay, getMonth, getYear } from 'date-fns'
 
 export const TasksYearsTabs = () => {
-  const { start, end } = useGlobalDateRange()
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear().toString())
-  const { setYear } = useGlobalDateRangeActions()
+  const { currentMonthDate, setCurrentMonthDate, activationDate } = useTasksContext()
 
-  useEffect(() => {
-    setCurrentYear(end.getFullYear().toString())
-  }, [end])
+  const currentYear = getYear(currentMonthDate)
+
+  const setCurrentYear = (year: string) => {
+    const currentMonth = getMonth(currentMonthDate)
+    const currentDay = getDay(currentMonthDate)
+    setCurrentMonthDate(new Date(Number(year), currentMonth, currentDay))
+  }
+
+  const yearsList = useMemo(() => {
+    const startYear = getYear(activationDate ?? new Date())
+    const currentYear: number = new Date().getFullYear()
+    const count: number = currentYear - startYear + 1
+
+    return Array.from({ length: count }, (_, index) => ({
+      label: `${startYear + index}`,
+      value: `${startYear + index}`,
+    }))
+  }, [activationDate])
 
   return (
     <Tabs
       name='bookkeeping-year'
-      options={[
-        {
-          label: '2023',
-          value: '2023',
-        },
-        {
-          label: '2024',
-          value: '2024',
-        },
-        {
-          label: '2025',
-          value: '2025',
-        }]}
-      selected={currentYear}
-      onChange={(year) => {
-        setCurrentYear(year.target.value)
-        setYear({ start: new Date(Number(year.target.value), 0, 1) })
-      }}
+      options={yearsList}
+      selected={currentYear.toString()}
+      onChange={year => setCurrentYear(year.target.value)}
     />
   )
 }

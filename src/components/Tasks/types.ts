@@ -1,29 +1,21 @@
-import { BookkeepingPeriod } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { Task } from '../../types/tasks'
 
-export type TasksMonthSelectorProps = {
-  // tasks?: TasksMonthly[]
-  tasks?: BookkeepingPeriod[]
-  currentDate: Date
-  year: number
-  onClick: (date: Date) => void
-}
-
 export type MonthData = {
+  monthStr: string
+  date: Date
   year: number
   month: number
   total: number
   completed: number
-  tasks: Task[]
-  monthStr: string
-  startDate: Date
-  endDate: Date
+  status?: BookkeepingPeriodStatus
   disabled?: boolean
+  tasks: Task[]
 }
 
 export type TaskMonthTileProps = {
-  data: BookkeepingPeriod
+  data: MonthData
   active?: boolean
   disabled?: boolean
-  onClick: TasksMonthSelectorProps['onClick']
+  onClick: (date: Date) => void
 }

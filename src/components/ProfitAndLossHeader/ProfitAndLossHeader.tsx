@@ -4,9 +4,9 @@ import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { Header } from '../Container'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { SyncingBadge } from '../SyncingBadge'
-import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
+import { useBookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriodStatus'
 
 export interface ProfitAndLossHeaderProps {
   text?: string
@@ -21,27 +21,17 @@ export const ProfitAndLossHeader = ({
   className,
   headingClassName,
   withDatePicker,
-  withStatus,
+  withStatus = true,
 }: ProfitAndLossHeaderProps) => {
   const { data: linkedAccounts } = useLinkedAccounts()
-  const { data: bookkeepingPeriods } = useBookkeepingPeriods()
-
-  /** @TODO - is reading date from global date store correct? */
   const { end } = useGlobalDateRange()
+
+  const { status: bookkeepingMonthStatus } = useBookkeepingPeriodStatus({ currentMonthDate: end })
 
   const isSyncing = useMemo(
     () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
     [linkedAccounts],
   )
-
-  const bookkeepingMonthStatus = useMemo(() => {
-    const currentMonth = end.getMonth() + 1
-    const currentYear = end.getFullYear()
-
-    return bookkeepingPeriods?.find(
-      period => period.year === currentYear && period.month === currentMonth,
-    )?.status
-  }, [bookkeepingPeriods, end])
 
   return (
     <Header className={className}>

@@ -1,22 +1,17 @@
 import { useMemo } from 'react'
-import { getMonth, getYear, startOfMonth } from 'date-fns'
-import { TasksMonthSelectorProps } from './types'
+import { format, getMonth, getYear, isAfter, isBefore, set, startOfMonth } from 'date-fns'
+import { MonthData } from './types'
 import { TaskMonthTile } from './TaskMonthTile'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
-import { BookkeepingPeriod } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { useTasksContext } from './TasksContext'
 
-const DEFAULT_TASK_DATA = {
-  total: 0,
-  completed: 0,
-  tasks: [],
-}
+const isCurrentMonth = (period: MonthData, currentDate: Date) =>
+  getMonth(currentDate) === period.month - 1 && getYear(currentDate) === period.year
 
-const isCurrentMonth = (period: BookkeepingPeriod, currentDate: Date) =>
-  getMonth(currentDate) === period.month && getYear(currentDate) === period.year
-
-const TasksMonthSelector = ({ tasks, year, currentDate, onClick }: TasksMonthSelectorProps) => {
+const TasksMonthSelector = () => {
   const { business } = useLayerContext()
+  const { currentMonthDate, currentYearData, setCurrentMonthDate } = useTasksContext()
 
   const minDate = useMemo(() => {
     if (business) {
@@ -29,43 +24,43 @@ const TasksMonthSelector = ({ tasks, year, currentDate, onClick }: TasksMonthSel
     return
   }, [business])
 
-  // const months: MonthData[] = useMemo(() => {
-  //   return Array.from({ length: 12 }, (_, i) => {
-  //     const startDate = set(
-  //       new Date(),
-  //       { year, month: i, date: 1, hours: 0, minutes: 0, seconds: 0, milliseconds: 0 },
-  //     )
-  //     const endDate = endOfMonth(startDate)
-  //     const disabled = (minDate && isBefore(startDate, minDate))
-  //       || isAfter(startDate, startOfMonth(new Date()))
-  //     const taskData = tasks?.find(x => x.month === i && x.year === year) ?? {
-  //       monthStr: format(startDate, 'MMM'),
-  //       year,
-  //       month: i,
-  //       startDate,
-  //       endDate,
-  //       ...DEFAULT_TASK_DATA,
-  //     }
-  //     return {
-  //       monthStr: format(startDate, 'MMM'),
-  //       startDate,
-  //       endDate,
-  //       disabled,
-  //       ...taskData,
-  //     }
-  //   })
-  // }, [tasks, year, minDate])
+  const monthsData = useMemo(() => {
+    const year = getYear(currentMonthDate)
+    return Array.from({ length: 12 }, (_, i) => {
+      const date = set(
+        new Date(),
+        { year, month: i, date: 1, hours: 0, minutes: 0, seconds: 0, milliseconds: 0 },
+      )
+      const disabled = (minDate && isBefore(date, minDate))
+        || isAfter(date, startOfMonth(new Date()))
+
+      const taskData = currentYearData?.find(x => x.month === i + 1 && x.year === year) ?? {
+        year,
+        month: i + 1,
+        total: 0,
+        completed: 0,
+        tasks: [],
+      }
+
+      return {
+        monthStr: format(date, 'MMM'),
+        date,
+        disabled,
+        ...taskData,
+      } as MonthData
+    })
+  }, [currentYearData, currentMonthDate, minDate])
 
   return (
     <div className='Layer__tasks-month-selector'>
-      {tasks?.map((month, idx) => {
+      {monthsData?.map((monthData, idx) => {
         return (
           <TaskMonthTile
             key={idx}
-            onClick={onClick}
-            data={month}
-            active={isCurrentMonth(month, currentDate)}
-            // disabled={month.status === 'CLOSED_COMPLETE'}
+            onClick={setCurrentMonthDate}
+            data={monthData}
+            active={isCurrentMonth(monthData, currentMonthDate)}
+            disabled={monthData.disabled}
           />
         )
       })}

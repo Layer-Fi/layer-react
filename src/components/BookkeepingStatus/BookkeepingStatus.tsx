@@ -1,12 +1,12 @@
 import { ReactNode } from 'react'
 import { BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import AlertCircle from '../../icons/AlertCircle'
-import CheckCircle from '../../icons/CheckCircle'
 import Clock from '../../icons/Clock'
 import { Text } from '../Typography'
 import { TextSize, TextStatus } from '../Typography/Text'
 import { getMonthNameFromNumber } from '../../utils/date'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import CheckCircle from '../../icons/CheckCircle'
 
 type BookkeepingStatusProps = {
   month?: number
@@ -23,26 +23,30 @@ type InternalStatusConfig = {
 const buildStatus = (status: BookkeepingPeriodStatus, month: number): InternalStatusConfig => {
   const monthName = getMonthNameFromNumber(month)
 
-  /** @TODO - review the following assignments */
   switch (status) {
-    case 'IN_PROGRESS_NO_TASKS':
+    case 'IN_PROGRESS_AWAITING_BOOKKEEPER':
     case 'NOT_STARTED':
       return {
         label: 'Books in progress',
         color: 'info' as TextStatus,
         icon: <Clock size={12} />,
       }
-    case 'CLOSED_IN_REVIEW':
+    case 'CLOSING_IN_REVIEW':
       return {
         label: 'Books in review',
         color: 'info',
         icon: <Clock size={12} />,
       }
-    case 'IN_PROGRESS_OPEN_TASKS':
-    case 'CLOSED_OPEN_TASKS':
+    case 'IN_PROGRESS_AWAITING_CUSTOMER':
       return {
         label: `${monthName} books - Action required`,
         color: 'warning',
+        icon: <AlertCircle size={12} />,
+      }
+    case 'CLOSED_OPEN_TASKS':
+      return {
+        label: `${monthName} books - Action required`,
+        color: 'error',
         icon: <AlertCircle size={12} />,
       }
     case 'CLOSED_COMPLETE':
