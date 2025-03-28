@@ -202,7 +202,9 @@ export const ProfitAndLossChart = ({
           || x.operatingExpenses !== 0
           || x.profitBeforeTaxes !== 0
           || x.taxes !== 0
-          || x.totalExpenses !== 0,
+          || x.totalExpenses !== 0
+          || x.uncategorizedInflows !== 0
+          || x.uncategorizedOutflows !== 0,
       ),
     )
   }, [data])
