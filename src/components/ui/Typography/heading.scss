@@ -1,6 +1,6 @@
 .Layer__UI__Heading {
   all: unset;
-  color: var(--color-base-800);
+  color: var(--color-base-700);
   font-weight: var(--font-weight-bold);
   font-variation-settings: 'wght' var(--font-weight-bold);
   font-size: var(--text-heading-secondary);
@@ -15,12 +15,12 @@
     }
   }
 
-  &[data-size="xs"] {
-    font-size: var(--text-heading-xs);
-  }
+  $sizes: 2xs, xs, sm;
 
-  &[data-size="sm"] {
-    font-size: var(--text-heading-sm);
+  @each $size in $sizes {
+    &[data-size="#{$size}"] {
+      font-size: var(--text-heading-#{$size});
+    }
   }
 
   &[data-size="lg"] {

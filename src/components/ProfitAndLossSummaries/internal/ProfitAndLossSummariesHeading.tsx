@@ -6,7 +6,7 @@ export function ProfitAndLossSummariesHeading({
   variants,
   children,
 }: PropsWithChildren<{ variants?: Pick<Variants, 'size'> }>) {
-  const { size = 'sm' } = variants ?? {}
+  const { size = '2xs' } = variants ?? {}
 
   return (
     <Heading level={3} size={size} slot='heading'>

@@ -6,7 +6,7 @@ import type { Spacing } from '../sharedUITypes'
 type HeadingDataProps = {
   align?: 'center'
   pbe?: Spacing
-  size?: 'xs' | 'sm' | 'lg'
+  size?: '2xs' | 'xs' | 'sm' | 'lg'
 }
 
 const HEADING_CLASS_NAME = 'Layer__UI__Heading'

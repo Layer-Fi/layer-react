@@ -30,7 +30,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
     initialized ? 'Layer__tabs--initialized' : '',
   )
 
-  const elementRef = useElementSize<HTMLDivElement>((a, b, c) => {
+  const elementRef = useElementSize<HTMLDivElement>((_a, _b, c) => {
     if (c.width && c?.width !== currentWidth) {
       setCurrentWidth(c.width)
     }
@@ -56,12 +56,13 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
     optionsNodes.forEach((c, i) => {
       if (i < active) {
         shift = shift + (c as HTMLElement).offsetWidth + 8
-      } else if (i === active) {
+      }
+      else if (i === active) {
         width = (c as HTMLElement).offsetWidth
       }
     })
 
-    shift = shift + 1.5
+    shift = shift + 12
 
     setThumbPos({ left: shift, width })
   }
@@ -73,7 +74,14 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
     setTimeout(() => {
       setInitialized(true)
     }, 400)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    const selectedIndex = getSelectedIndex()
+    updateSelectPosition(selectedIndex)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedValue])
 
   const getSelectedIndex = () => {
     const selectedIndex = options.findIndex(

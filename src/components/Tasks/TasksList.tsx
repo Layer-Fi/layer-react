@@ -1,11 +1,11 @@
-import { useContext, useMemo, useState } from 'react'
-import { TasksContext } from '../../contexts/TasksContext'
+import { useMemo, useState } from 'react'
 import SmileIcon from '../../icons/SmileIcon'
+import { Text, TextSize } from '../Typography'
+import { BookkeepingPeriod } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { useTasksContext } from './TasksContext'
 import { isComplete, Task } from '../../types/tasks'
-import { Pagination } from '../Pagination'
-import { TasksListItem } from '../TasksListItem'
-import { ErrorText, Text, TextSize } from '../Typography'
-import { endOfMonth, isAfter, isBefore, parseISO, startOfMonth } from 'date-fns'
+import { TasksListItem } from './TasksListItem'
+import { Pagination } from '../Pagination/Pagination'
 
 function paginateArray<T>(array: T[], chunkSize: number = 10): T[][] {
   const result: T[][] = []
@@ -30,21 +30,15 @@ const TasksEmptyState = () => (
   </div>
 )
 
-export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
-  const { data: rawData, error, currentDate } = useContext(TasksContext)
+export const TasksList = ({ pageSize = 10 }: { data?: BookkeepingPeriod[], pageSize?: number }) => {
+  const { currentMonthData } = useTasksContext()
 
-  // Collect tasks for selected month (currentDate)
-  const tasks = useMemo(() => {
-    return rawData?.filter((x) => {
-      const d = x.effective_date ? parseISO(x.effective_date) : parseISO(x.created_at)
-      return !isBefore(d, startOfMonth(currentDate)) && !isAfter(d, endOfMonth(currentDate))
-    })
-  }, [rawData, currentDate])
+  const tasks = useMemo(() => currentMonthData?.tasks || [], [currentMonthData?.tasks])
 
   const firstPageWithIincompleteTasks = paginateArray(
-    tasks || [],
+    tasks as Task[],
     pageSize,
-  ).findIndex(page => page.some(task => !isComplete(task.status)))
+  ).findIndex(page => page.some(d => !isComplete(d.status)))
 
   const [currentPage, setCurrentPage] = useState(
     firstPageWithIincompleteTasks === -1
@@ -56,9 +50,9 @@ export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
   const sortedTasks = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
-    return tasks?.sort(x => isComplete(x.status) ? 1 : -1).slice(firstPageIndex, lastPageIndex)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasks, currentPage])
+
+    return (tasks as Task[]).sort(x => isComplete(x.status) ? 1 : -1).slice(firstPageIndex, lastPageIndex)
+  }, [currentPage, pageSize, tasks])
 
   const indexFirstIncomplete = sortedTasks?.findIndex(
     task => !isComplete(task.status),
@@ -99,17 +93,7 @@ export const TasksList = ({ pageSize = 10 }: { pageSize?: number }) => {
           </>
         )
         : (
-          <>
-            {error
-              ? (
-                <ErrorText>
-                  Approval failed. Check connection and retry in few seconds.
-                </ErrorText>
-              )
-              : (
-                <TasksEmptyState />
-              )}
-          </>
+          <TasksEmptyState />
         )}
     </div>
   )
