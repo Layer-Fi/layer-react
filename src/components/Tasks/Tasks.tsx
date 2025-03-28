@@ -1,7 +1,6 @@
 import {
   ReactNode,
   useEffect,
-  useMemo,
   useState,
 } from 'react'
 // import { useTasks } from '../../hooks/useTasks'
@@ -11,12 +10,10 @@ import { TasksList } from './TasksList'
 import { TasksPending } from './TasksPending'
 import { TasksMonthSelector } from './TasksMonthSelector'
 import classNames from 'classnames'
-import { getYear } from 'date-fns'
-import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { TasksPanelNotification } from './TasksPanelNotification'
 import { TasksYearsTabs } from './TasksYearsTabs'
-import { useTasks } from '../../hooks/useTasks'
 import { TasksContext, useTasksContext } from './TasksContext'
+import { useTasks } from '../../hooks/useTasks'
 
 export interface TasksStringOverrides {
   header?: string
@@ -61,6 +58,10 @@ export const TasksComponent = ({
   collapsedWhenComplete?: boolean
   stringOverrides?: TasksStringOverrides
 }) => {
+  const {
+    data,
+    isLoading,
+  } = useTasksContext()
   // const {
   //   isLoading,
   //   loadedStatus,
@@ -85,31 +86,11 @@ export const TasksComponent = ({
   //   return false
   // }, [data, isLoading, unresolvedTasks])
 
-  const {
-    data,
-    isLoading,
-    currentDate,
-    setCurrentDate,
-  } = useTasksContext()
-
   const allComplete = false
 
   const [open, setOpen] = useState(
     collapsable && allComplete === false ? true : defaultCollapsed || collapsedWhenComplete ? false : true,
   )
-
-  const { data: bookkeepingPeriods } = useBookkeepingPeriods()
-
-  const periodData = useMemo(() => {
-    const currentMonthNumber = currentDate.getMonth() + 1
-    const currentYear = currentDate.getFullYear()
-
-    return bookkeepingPeriods?.find(
-      period => period.year === currentYear && period.month === currentMonthNumber,
-    )
-  }, [bookkeepingPeriods, currentDate])
-
-  const bookkeepingMonthStatus = periodData?.status
 
   useEffect(() => {
     if (collapsable && allComplete === false) {
@@ -157,15 +138,8 @@ export const TasksComponent = ({
           : (
             <>
               <TasksYearsTabs />
-              <TasksMonthSelector
-                tasks={bookkeepingPeriods}
-                currentDate={currentDate}
-                onClick={setCurrentDate}
-                year={getYear(currentDate)}
-              />
-              <TasksPending
-                bookkeepingMonthStatus={bookkeepingMonthStatus}
-              />
+              <TasksMonthSelector />
+              <TasksPending />
               <TasksList />
             </>
           )}

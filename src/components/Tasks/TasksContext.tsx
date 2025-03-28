@@ -12,8 +12,11 @@ export const TasksContext = createContext<TasksContextType>({
   uploadDocumentsForTask: () => Promise.resolve(),
   deleteUploadsForTask: () => {},
   updateDocUploadTaskDescription: () => {},
-  currentDate: new Date(),
-  setCurrentDate: () => {},
+  currentMonthDate: new Date(),
+  setCurrentMonthDate: () => {},
+  activationDate: new Date(),
+  currentYearData: [],
+  currentMonthData: undefined,
 })
 
 export const useTasksContext = () => useContext(TasksContext)

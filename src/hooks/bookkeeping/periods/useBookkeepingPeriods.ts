@@ -3,11 +3,13 @@ import { useLayerContext } from '../../../contexts/LayerContext'
 import { useAuth } from '../../useAuth'
 import { get } from '../../../api/layer/authenticated_http'
 import {
+  isActiveBookkeepingStatus,
   useBookkeepingStatus,
 } from '../useBookkeepingStatus'
 import type { Task } from '../../../types/tasks'
 import type { EnumWithUnknownValues } from '../../../types/utility/enumWithUnknownValues'
 
+/** @TODO - mock */
 const MOCK_DATA: BookkeepingPeriod[] = [
   {
     id: '2025-04',
@@ -39,7 +41,7 @@ const MOCK_DATA: BookkeepingPeriod[] = [
     id: '2025-03',
     month: 3,
     year: 2025,
-    status: 'IN_PROGRESS_NO_TASKS',
+    status: 'IN_PROGRESS_AWAITING_CUSTOMER',
     tasks: [
       {
         id: 'task-2',
@@ -65,7 +67,7 @@ const MOCK_DATA: BookkeepingPeriod[] = [
     id: '2025-02',
     month: 2,
     year: 2025,
-    status: 'IN_PROGRESS_OPEN_TASKS',
+    status: 'IN_PROGRESS_AWAITING_BOOKKEEPER',
     tasks: [
       {
         id: 'task-3',
@@ -117,7 +119,7 @@ const MOCK_DATA: BookkeepingPeriod[] = [
     id: '2023-12',
     month: 12,
     year: 2024,
-    status: 'CLOSED_IN_REVIEW',
+    status: 'CLOSING_IN_REVIEW',
     tasks: [
       {
         id: 'task-5',
@@ -214,7 +216,11 @@ function constrainToKnownBookkeepingPeriodStatus(status: string): BookkeepingPer
   return 'BOOKKEEPING_NOT_PURCHASED'
 }
 
-export type BookkeepingPeriod = {
+export type BookkeepingPeriod = Omit<RawBookkeepingPeriod, 'status'> & {
+  status: BookkeepingPeriodStatus
+}
+
+type RawBookkeepingPeriod = {
   id: string
   month: number
   year: number
@@ -225,7 +231,7 @@ export type BookkeepingPeriod = {
 const getBookkeepingPeriods = get<
   {
     data: {
-      periods: ReadonlyArray<BookkeepingPeriod>
+      periods: ReadonlyArray<RawBookkeepingPeriod>
     }
   },
   { businessId: string }
@@ -259,9 +265,7 @@ export function useBookkeepingPeriods() {
   const { businessId } = useLayerContext()
 
   const { data } = useBookkeepingStatus()
-  /** @TODO - mock */
-  // const isActive = data ? isActiveBookkeepingStatus(data.status) : false
-  const isActive = true
+  const isActive = data ? isActiveBookkeepingStatus(data.status) : false
 
   return useSWR(
     () => buildKey({
@@ -276,10 +280,10 @@ export function useBookkeepingPeriods() {
     )()
       .then(
         ({ data: { periods } }) => {
-          // periods.map(period => ({
-          //   ...period,
-          //   status: constrainToKnownBookkeepingPeriodStatus(period.status),
-          // }))
+          const _a = periods.map(period => ({
+            ...period,
+            status: constrainToKnownBookkeepingPeriodStatus(period.status),
+          }))
           return MOCK_DATA.map(period => ({
             ...period,
             test: Math.random(),

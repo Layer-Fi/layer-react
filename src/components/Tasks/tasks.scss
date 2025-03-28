@@ -343,3 +343,30 @@
   padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-2xs) var(--spacing-md);
   background: linear-gradient(0deg, var(--base-transparent-10) 0%, var(--base-transparent-10) 100%), var(--color-info-warning);
 }
+
+.Layer__tasks-header__notification__text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.Layer__tasks-header__notification__button {
+  background: var(--color-info-warning-fg);
+  color: var(--color-info-warning-bg);
+  border: none;
+  padding: var(--spacing-3xs) var(--spacing-xs);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  font-variation-settings: 'wght' var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  transition: all 0.12s ease-in-out;
+
+  &:hover {
+    background: var(--color-base-1000);
+  }
+}

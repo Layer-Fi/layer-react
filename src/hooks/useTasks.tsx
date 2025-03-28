@@ -1,21 +1,24 @@
-import { useEffect } from 'react'
-import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { DataModel } from '../../types/general'
-import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { startOfMonth } from 'date-fns'
-import { getActivationDate } from '../../utils/business'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { BookkeepingPeriod, useBookkeepingPeriods } from '../bookkeeping/periods/useBookkeepingPeriods'
+import { useEffect, useMemo } from 'react'
+import { Layer } from '../api/layer'
+import { useLayerContext } from '../contexts/LayerContext'
+import { DataModel } from '../types/general'
+import { useAuth } from './useAuth'
+import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
+import { getMonth, getYear, startOfMonth } from 'date-fns'
+import { getActivationDate } from '../utils/business'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { BookkeepingPeriod, useBookkeepingPeriods } from './bookkeeping/periods/useBookkeepingPeriods'
 
 type UseTasks = () => {
   data?: BookkeepingPeriod[]
   isLoading?: boolean
   isValidating?: boolean
   error?: unknown
-  currentDate: Date
-  setCurrentDate: (date: Date) => void
+  currentMonthDate: Date
+  setCurrentMonthDate: (date: Date) => void
+  currentMonthData?: BookkeepingPeriod
+  currentYearData?: BookkeepingPeriod[]
+  activationDate?: Date
   refetch: () => void
   submitResponseToTask: (taskId: string, userResponse: string) => void
   uploadDocumentsForTask: (taskId: string, files: File[], description?: string) => Promise<void>
@@ -24,25 +27,40 @@ type UseTasks = () => {
 }
 
 export const useTasks: UseTasks = () => {
-  const { start } = useGlobalDateRange()
-  const { setMonth } = useGlobalDateRangeActions()
-
-  const { data, mutate, isLoading, isValidating, error } = useBookkeepingPeriods()
-
-  const currentDate = startOfMonth(start)
-
-  const setCurrentDate = (date: Date) => {
-    setMonth({ start: date })
-  }
-
-  // const [loadedStatus, setLoadedStatus] = useState<LoadedStatus>('initial')
-
   const { business, businessId, read, syncTimestamps, hasBeenTouched } = useLayerContext()
   const activationDate = getActivationDate(business)
 
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
-  // const [currentDate, setCurrentDate] = useState(new Date())
+
+  const { end } = useGlobalDateRange()
+  const { setMonth } = useGlobalDateRangeActions()
+
+  const { data, mutate, isLoading, isValidating, error } = useBookkeepingPeriods()
+
+  const currentMonthDate = startOfMonth(end)
+
+  const setCurrentMonthDate = (date: Date) => {
+    setMonth({ start: date })
+  }
+
+  const currentMonthData = useMemo(() => {
+    if (!data) {
+      return
+    }
+
+    return data.find(
+      period => period.year === getYear(currentMonthDate) && period.month === getMonth(currentMonthDate) + 1,
+    )
+  }, [data, currentMonthDate])
+
+  const currentYearData = useMemo(() => {
+    if (!data) {
+      return
+    }
+
+    return data.filter(period => period.year === getYear(currentMonthDate))
+  }, [data, currentMonthDate])
 
   const queryKey = businessId && activationDate && auth?.access_token && `tasks-${businessId}-${activationDate.toISOString()}`
 
@@ -195,8 +213,11 @@ export const useTasks: UseTasks = () => {
     isLoading,
     isValidating,
     error,
-    currentDate,
-    setCurrentDate,
+    currentMonthDate,
+    setCurrentMonthDate,
+    activationDate,
+    currentMonthData,
+    currentYearData,
     refetch: () => void mutate(),
     submitResponseToTask,
     uploadDocumentsForTask,
