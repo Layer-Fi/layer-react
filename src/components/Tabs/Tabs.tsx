@@ -3,6 +3,8 @@ import { useElementSize } from '../../hooks/useElementSize'
 import { Tab } from './Tab'
 import classNames from 'classnames'
 
+const STARTING_PADDING = 12
+
 interface Option {
   label: string
   value: string
@@ -27,7 +29,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
 
   const baseClassName = classNames(
     'Layer__tabs',
-    initialized ? 'Layer__tabs--initialized' : '',
+    initialized && 'Layer__tabs--initialized',
   )
 
   const elementRef = useElementSize<HTMLDivElement>((_a, _b, c) => {
@@ -62,7 +64,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
       }
     })
 
-    shift = shift + 12
+    shift = shift + STARTING_PADDING
 
     setThumbPos({ left: shift, width })
   }

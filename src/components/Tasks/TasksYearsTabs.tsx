@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Tabs } from '../Tabs'
+import { Tabs } from '../Tabs/Tabs'
 import { useTasksContext } from './TasksContext'
 import { getDay, getMonth, getYear } from 'date-fns'
 import { useBookkeepingYearsStatus } from '../../hooks/bookkeeping/periods/useBookkeepingYearsStatus'

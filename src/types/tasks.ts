@@ -35,18 +35,3 @@ const COMPLETED_TASK_TYPES = ['COMPLETED', 'USER_MARKED_COMPLETED']
 export function isComplete(taskType: TasksStatusType) {
   return COMPLETED_TASK_TYPES.includes(taskType)
 }
-
-// export type TasksMonthly = {
-//   year: number
-//   month: number
-//   total: number
-//   completed: number
-//   tasks: Task[]
-// }
-
-// export type TasksYearly = {
-//   year: number
-//   total: number
-//   completed: number
-//   months: TasksMonthly[]
-// }
