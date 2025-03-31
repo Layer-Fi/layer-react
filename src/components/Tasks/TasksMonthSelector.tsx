@@ -5,6 +5,7 @@ import { TaskMonthTile } from './TaskMonthTile'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { useTasksContext } from './TasksContext'
+import { isComplete } from '../../types/tasks'
 
 const isCurrentMonth = (period: MonthData, currentDate: Date) =>
   getMonth(currentDate) === period.month - 1 && getYear(currentDate) === period.year
@@ -37,15 +38,17 @@ const TasksMonthSelector = () => {
       const taskData = currentYearData?.find(x => x.month === i + 1 && x.year === year) ?? {
         year,
         month: i + 1,
-        total: 0,
-        completed: 0,
         tasks: [],
       }
+
+      const total: number = taskData.tasks?.length || 0
 
       return {
         monthStr: format(date, 'MMM'),
         date,
         disabled,
+        completed: taskData.tasks?.filter(task => isComplete(task.status)).length,
+        total,
         ...taskData,
       } as MonthData
     })

@@ -3,7 +3,7 @@ import { useBookkeepingPeriods } from './useBookkeepingPeriods'
 import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { getActivationDate } from '../../../utils/business'
 import { getYear } from 'date-fns'
-import { Task } from '../../../types/tasks'
+import { isComplete, Task } from '../../../types/tasks'
 
 export const useBookkeepingYearsStatus = () => {
   const { business } = useLayerContext()
@@ -21,8 +21,7 @@ export const useBookkeepingYearsStatus = () => {
     })).map((d) => {
       const tasks = data?.filter(period => period.year === d.year).reduce((acc, period) => acc.concat(period.tasks ?? []), [] as Task[])
 
-      /** @TODO - mock */
-      const unresolvedTasks = currentYear - 2021 // tasks?.filter(task => !isComplete(task.status)).length
+      const unresolvedTasks = tasks?.filter(task => !isComplete(task.status)).length
 
       return {
         ...d,

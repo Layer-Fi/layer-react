@@ -3,7 +3,6 @@ import {
   useEffect,
   useState,
 } from 'react'
-// import { useTasks } from '../../hooks/useTasks'
 import { Loader } from '../Loader'
 import { TasksHeader } from './TasksHeader'
 import { TasksList } from './TasksList'
@@ -62,29 +61,6 @@ export const TasksComponent = ({
     data,
     isLoading,
   } = useTasksContext()
-  // const {
-  //   isLoading,
-  //   loadedStatus,
-  //   data,
-  //   monthlyData,
-  //   yearlyData,
-  //   currentDate,
-  //   setCurrentDate,
-  //   dateRange,
-  //   unresolvedTasks,
-  // } = useContext(TasksContext)
-
-  // const allComplete = useMemo(() => {
-  //   if (isLoading || !data || unresolvedTasks === undefined) {
-  //     return undefined
-  //   }
-
-  //   if (!isLoading && unresolvedTasks === 0) {
-  //     return true
-  //   }
-
-  //   return false
-  // }, [data, isLoading, unresolvedTasks])
 
   const allComplete = false
 

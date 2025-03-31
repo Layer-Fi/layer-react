@@ -2,9 +2,12 @@ import { useMemo } from 'react'
 import { Tabs } from '../Tabs'
 import { useTasksContext } from './TasksContext'
 import { getDay, getMonth, getYear } from 'date-fns'
+import { useBookkeepingYearsStatus } from '../../hooks/bookkeeping/periods/useBookkeepingYearsStatus'
+import { TaskStatusBadge } from './TaskStatusBadge'
 
 export const TasksYearsTabs = () => {
-  const { currentMonthDate, setCurrentMonthDate, activationDate } = useTasksContext()
+  const { currentMonthDate, setCurrentMonthDate } = useTasksContext()
+  const { yearStatuses } = useBookkeepingYearsStatus()
 
   const currentYear = getYear(currentMonthDate)
 
@@ -15,15 +18,23 @@ export const TasksYearsTabs = () => {
   }
 
   const yearsList = useMemo(() => {
-    const startYear = getYear(activationDate ?? new Date())
-    const currentYear: number = new Date().getFullYear()
-    const count: number = currentYear - startYear + 1
+    return yearStatuses?.sort((a, b) => a.year - b.year)
+      .map((y) => {
+        return {
+          value: `${y.year}`,
+          label: `${y.year}`,
+          badge: !y.completed && y.unresolvedTasks
+            ? (
+              <TaskStatusBadge
+                status={y.unresolvedTasks ? 'IN_PROGRESS_AWAITING_CUSTOMER' : 'CLOSED_COMPLETE'}
+                tasksCount={y.unresolvedTasks}
+              />
+            )
+            : null,
 
-    return Array.from({ length: count }, (_, index) => ({
-      label: `${startYear + index}`,
-      value: `${startYear + index}`,
-    }))
-  }, [activationDate])
+        }
+      })
+  }, [yearStatuses])
 
   return (
     <Tabs

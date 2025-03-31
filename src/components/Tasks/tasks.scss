@@ -297,13 +297,10 @@
 
 @container (width <= 400px) {
   .Layer__tasks-component {
-    padding: var(--spacing-xs) var(--spacing-sm);
-
     .Layer__tasks-pending {
       flex-direction: column;
       align-items: stretch;
       gap: var(--spacing-xs);
-      padding: var(--spacing-md) 0;
 
       .Layer__tasks-pending-bar {
         justify-content: space-between;
@@ -312,10 +309,6 @@
 
     .Layer__badge {
       white-space: nowrap;
-    }
-
-    .Layer__tasks-header {
-      padding: var(--spacing-md) 0;
     }
   }
 
@@ -337,6 +330,7 @@
 
 .Layer__tasks-header__notification {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-xs);
@@ -349,6 +343,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--spacing-xs);
+  white-space: nowrap;
 }
 
 .Layer__tasks-header__notification__button {
@@ -365,8 +360,62 @@
   align-items: center;
   gap: var(--spacing-xs);
   transition: all 0.12s ease-in-out;
+  white-space: nowrap;
 
   &:hover {
     background: var(--color-base-1000);
+  }
+}
+
+.Layer__tasks__badge {
+  display: flex;
+  align-items: center;
+  font-size: var(--text-xs);
+  background: var(--color-info-warning);
+  color: var(--color-info-warning-bg);
+  padding: var(--spacing-3xs) var(--border-radius-2xs);
+  border-radius: var(--border-radius-3xs);
+  gap: var(--spacing-3xs);
+  white-space: nowrap;
+
+  &[data-icononly] {
+    border-radius: 50%;
+    gap: 0;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+  }
+
+  .Layer__text {
+    line-height: 10px;
+  }
+
+  .Layer__tasks__badge__icon-wrapper {
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &[data-status='info'] {
+    color: var(--color-info-fg);
+    background: var(--color-info-bg);
+  }
+
+  &[data-status='warning'] {
+    color: var(--color-info-warning-bg);
+    background: var(--color-info-warning);
+  }
+
+  &[data-status='success'] {
+    color: var(--color-info-success-fg);
+    background: var(--color-info-success-bg);
+  }
+
+  &[data-status='error'] {
+    color: var(--color-info-error);
+    background: var(--color-info-error-bg);
   }
 }

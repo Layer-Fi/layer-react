@@ -1,18 +1,16 @@
 import { TaskMonthTileProps } from './types'
 import classNames from 'classnames'
 import { Text, TextSize } from '../Typography'
-import CheckIcon from '../../icons/Check'
-import AlertCircle from '../../icons/AlertCircle'
-import { isComplete } from '../../types/tasks'
+import { TaskStatusBadge } from './TaskStatusBadge'
 
 const TaskMonthTile = ({ data, onClick, active, disabled }: TaskMonthTileProps) => {
-  const completedTasks = data.tasks?.filter(task => isComplete(task.status)).length
-  const allTasks = data.tasks?.length
-  const isCompleted = completedTasks === allTasks
+  // const completedTasks = data.tasks?.filter(task => isComplete(task.status)).length
+  // const allTasks = data.tasks?.length
+  // const isCompleted = completedTasks === allTasks
 
   const baseClass = classNames(
     'Layer__tasks-month-selector__month',
-    isCompleted && 'Layer__tasks-month-selector__month--completed',
+    // isCompleted && 'Layer__tasks-month-selector__month--completed',
     active && 'Layer__tasks-month-selector__month--active',
     disabled && 'Layer__tasks-month-selector__month--disabled',
   )
@@ -22,7 +20,10 @@ const TaskMonthTile = ({ data, onClick, active, disabled }: TaskMonthTileProps) 
       <Text size={TextSize.sm} className='Layer__tasks-month-selector__month__str'>
         {data.monthStr}
       </Text>
-      <Text size={TextSize.sm} className='Layer__tasks-month-selector__month__total'>
+      {data.status && (
+        <TaskStatusBadge status={data.status} tasksCount={data.total - data.completed} />
+      )}
+      {/* <Text size={TextSize.sm} className='Layer__tasks-month-selector__month__total'>
         {allTasks > 0 && isCompleted
           ? (
             allTasks
@@ -43,7 +44,7 @@ const TaskMonthTile = ({ data, onClick, active, disabled }: TaskMonthTileProps) 
             <AlertCircle size={12} />
           </span>
         )
-        : null}
+        : null} */}
     </div>
   )
 }
