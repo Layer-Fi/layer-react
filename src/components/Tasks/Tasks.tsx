@@ -93,12 +93,7 @@ export const TasksComponent = ({
       )}
     >
       <TasksPanelNotification />
-      <TasksHeader
-        tasksHeader={stringOverrides?.header || tasksHeader}
-        collapsable={collapsable}
-        open={open}
-        toggleContent={() => setOpen(!open)}
-      />
+      <TasksHeader tasksHeader={stringOverrides?.header || tasksHeader} />
       <div
         className={classNames(
           'Layer__tasks__content',
