@@ -11,6 +11,7 @@ interface TabProps {
   disabledMessage?: string
   leftIcon?: ReactNode
   index: number
+  badge?: ReactNode
 }
 
 export const Tab = ({
@@ -23,12 +24,13 @@ export const Tab = ({
   disabled,
   disabledMessage = 'Disabled',
   index,
+  badge,
 }: TabProps) => {
   if (disabled) {
     return (
       <Tooltip>
         <TooltipTrigger>
-          <label className={'Layer__tabs-option'} data-checked={checked}>
+          <label className='Layer__tabs-option' data-checked={checked}>
             <input
               type='radio'
               checked={checked}
@@ -43,6 +45,7 @@ export const Tab = ({
                 <span className='Layer__tabs-option__icon'>{leftIcon}</span>
               )}
               <span>{label}</span>
+              {badge}
             </span>
           </label>
         </TooltipTrigger>
@@ -54,7 +57,7 @@ export const Tab = ({
   }
 
   return (
-    <label className={'Layer__tabs-option'} data-checked={checked}>
+    <label className='Layer__tabs-option' data-checked={checked}>
       <input
         type='radio'
         checked={checked}
@@ -69,6 +72,7 @@ export const Tab = ({
           <span className='Layer__tabs-option__icon'>{leftIcon}</span>
         )}
         <span>{label}</span>
+        {badge}
       </span>
     </label>
   )
