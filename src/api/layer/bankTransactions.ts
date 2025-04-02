@@ -1,4 +1,4 @@
-import { CategoryUpdate, BankTransaction, Metadata } from '../../types'
+import { CategoryUpdate, BankTransaction } from '../../types'
 import {
   BankTransactionMatch,
   BankTransactionMatchType,
@@ -7,26 +7,31 @@ import {
 } from '../../types/bank_transactions'
 import { FileMetadata } from '../../types/file_upload'
 import { S3PresignedUrl } from '../../types/general'
+import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { get, put, postWithFormData, post } from './authenticated_http'
 
 export type GetBankTransactionsReturn = {
-  data?: BankTransaction[]
-  meta?: Metadata
-  error?: unknown
+  data: ReadonlyArray<BankTransaction>
+  meta: {
+    pagination: {
+      cursor?: string
+      has_more: boolean
+    }
+  }
 }
 
-export interface GetBankTransactionsParams
-  extends Record<string, string | undefined> {
+type GetBankTransactionsParams = {
   businessId: string
   cursor?: string
-  categorized?: string
+  categorized?: boolean
   direction?: 'INFLOW' | 'OUTFLOW'
-  startDate?: string
-  endDate?: string
-  tagFilterString?: string
+  startDate?: Date
+  endDate?: Date
+  tagFilterQueryString?: string
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
 }
+
 export const getBankTransactions = get<
   GetBankTransactionsReturn,
   GetBankTransactionsParams
@@ -40,21 +45,21 @@ export const getBankTransactions = get<
     endDate,
     sortBy = 'date',
     sortOrder = 'DESC',
-    tagFilterString,
-  }: GetBankTransactionsParams) =>
-    `/v1/businesses/${businessId}/bank-transactions?${
-      cursor !== undefined && cursor !== '' ? `cursor=${cursor}&` : ''
-    }${
-      categorized !== undefined && categorized !== ''
-        ? `categorized=${categorized}&`
-        : ''
-    }${direction !== undefined ? `direction=${direction}&` : ''}${
-      startDate !== undefined && startDate !== ''
-        ? `start_date=${startDate}&`
-        : ''
-    }${endDate !== undefined && endDate !== '' ? `end_date=${endDate}&` : ''}${
-      tagFilterString ? tagFilterString : ''
-    }sort_by=${sortBy}&sort_order=${sortOrder}&limit=200`,
+    tagFilterQueryString,
+  }: GetBankTransactionsParams) => {
+    const parameters = toDefinedSearchParameters({
+      cursor,
+      categorized,
+      direction,
+      startDate,
+      endDate,
+      sortBy,
+      sortOrder,
+      limit: 200,
+    })
+
+    return `/v1/businesses/${businessId}/bank-transactions?${parameters}${tagFilterQueryString ? `&${tagFilterQueryString}` : ''}`
+  },
 )
 
 export const categorizeBankTransaction = put<

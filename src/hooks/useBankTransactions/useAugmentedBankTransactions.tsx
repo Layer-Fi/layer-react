@@ -6,10 +6,10 @@ import {
   BankTransaction,
   CategorizationStatus,
   CategoryUpdate,
-  Direction,
 } from '../../types'
 import {
   BankTransactionMatchType,
+  Direction,
   DisplayState,
 } from '../../types/bank_transactions'
 import { DataModel, LoadedStatus } from '../../types/general'
@@ -25,9 +25,9 @@ import {
   collectAccounts,
 } from './utils'
 import { endOfMonth, startOfMonth } from 'date-fns'
-import useSWRInfinite from 'swr/infinite'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBankTransactions } from './useBankTransactions'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
@@ -135,32 +135,7 @@ export const useAugmentedBankTransactions = (
     return DisplayState.categorized
   }, [filters?.categorizationStatus])
 
-  const [active, setActive] = useState(false)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
-
-  const getKey = (index: number, prevData: any) => {
-    if (!auth?.access_token || !active) {
-      return [false, undefined]
-    }
-
-    if (index === 0) {
-      return [
-        businessId
-        && auth?.access_token
-        && `${filtersSettingString(filters)}-${businessId}`,
-        undefined,
-      ]
-    }
-
-    return [
-      businessId
-      && auth?.access_token
-      && `${filtersSettingString(filters)}-${businessId}-${
-        prevData?.meta?.pagination?.cursor
-      }`,
-      prevData?.meta?.pagination?.cursor.toString(),
-    ]
-  }
 
   const {
     data: rawResponseData,
@@ -170,44 +145,21 @@ export const useAugmentedBankTransactions = (
     mutate,
     size,
     setSize,
-  } = useSWRInfinite(
-    getKey,
-    async ([_query, nextCursor]) => {
-      if (auth?.access_token) {
-        return Layer.getBankTransactions(apiUrl, auth?.access_token, {
-          params: {
-            businessId,
-            cursor: nextCursor ?? '',
-            categorized: filters?.categorizationStatus
-              ? filters?.categorizationStatus === DisplayState.categorized
-                ? 'true'
-                : filters?.categorizationStatus === DisplayState.review
-                  ? 'false'
-                  : ''
-              : '',
-            direction:
-              filters?.direction?.length === 1
-                ? filters.direction[0] === Direction.CREDIT
-                  ? 'INFLOW'
-                  : 'OUTFLOW'
-                : undefined,
-            startDate:
-              filters?.dateRange?.startDate?.toISOString() ?? undefined,
-            endDate: filters?.dateRange?.endDate?.toISOString() ?? undefined,
-            tagFilterString: filters?.tagFilter
-              ? tagFilterToQueryString(filters?.tagFilter)
-              : undefined,
-          },
-        }).call(false)
-      }
-
-      return {}
-    },
-    {
-      initialSize: 1,
-      revalidateFirstPage: false,
-    },
-  )
+  } = useBankTransactions({
+    startDate: filters?.dateRange?.startDate,
+    endDate: filters?.dateRange?.endDate,
+    tagFilterQueryString: filters?.tagFilter ? tagFilterToQueryString(filters.tagFilter) : undefined,
+    direction: filters?.direction?.length === 1
+      ? filters.direction[0] === Direction.CREDIT
+        ? 'INFLOW'
+        : 'OUTFLOW'
+      : undefined,
+    categorized: filters?.categorizationStatus
+      ? filters.categorizationStatus !== DisplayState.all
+        ? filters.categorizationStatus === DisplayState.categorized
+        : undefined
+      : undefined,
+  })
 
   const data: BankTransaction[] | undefined = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {
@@ -256,10 +208,6 @@ export const useAugmentedBankTransactions = (
       return
     }
   }, [isLoading])
-
-  const activate = () => {
-    setActive(true)
-  }
 
   const setFilters = (value?: Partial<BankTransactionFilters>) => {
     setTheFilters({
@@ -546,7 +494,6 @@ export const useAugmentedBankTransactions = (
     filters,
     setFilters,
     accountsList,
-    activate,
     display,
     fetchMore,
     hasMore,

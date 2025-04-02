@@ -35,7 +35,7 @@ export function toDefinedSearchParameters(
 
       return [[key, value]]
     })
-    .filter((entry): entry is Exclude<typeof entry, null> => entry !== null)
+    .filter(([_, value]) => value !== '')
     .map(([key, value]) => [toSnakeCase(key), value])
 
   return new URLSearchParams(definedParameterPairs)
