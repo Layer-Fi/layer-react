@@ -4,7 +4,7 @@ import {
   BankTransactionsContext,
   useBankTransactionsContext,
 } from '../../contexts/BankTransactionsContext'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useIsVisible } from '../../hooks/useIsVisible'
@@ -71,7 +71,7 @@ export const BankTransactions = ({
   mode,
   ...props
 }: BankTransactionsWithErrorProps) => {
-  const contextData = useBankTransactions({ monthlyView: props.monthlyView })
+  const contextData = useAugmentedBankTransactions({ monthlyView: props.monthlyView })
 
   return (
     <ErrorBoundary onError={onError}>

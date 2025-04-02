@@ -1,6 +1,6 @@
 import { useContext, useMemo } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import BellIcon from '../../icons/Bell'
 import CreditCardIcon from '../../icons/CreditCard'
 import FolderIcon from '../../icons/Folder'
@@ -28,7 +28,7 @@ export const ConnectAccount = ({
   onTransactionsToReviewClick,
 }: ConnectAccountProps) => {
   const { addConnection } = useContext(LinkedAccountsContext)
-  const { data, isLoading } = useBankTransactions({
+  const { data, isLoading } = useAugmentedBankTransactions({
     scope: DisplayState.review,
   })
 
@@ -50,14 +50,14 @@ export const ConnectAccount = ({
           iconBox={<PlaidIcon />}
           title='Connect accounts'
           description='Import data with one simple integration.'
-          button={
+          button={(
             <Button
               onClick={() => addConnection('PLAID')}
               rightIcon={<LinkIcon size={12} />}
             >
               Connect
             </Button>
-          }
+          )}
         />
       </>
     )
@@ -69,27 +69,32 @@ export const ConnectAccount = ({
         status={DataStateStatus.success}
         icon={<SunriseIcon size={12} />}
         title='Account linked successfully'
-        description='Your transactions are now available on the platform, to see all data on the charts, categorise transactions.'
+        description='Your transactions are now available on the platform, to see all data on the charts, categorize transactions.'
       />
-      {onTransactionsToReviewClick && transactionsToReview > 0 ? (
-        <ActionableRow
-          icon={<FolderIcon size={12} />}
-          title={
-            <Text>
-              Categorise transactions{' '}
-              <Badge
-                variant={BadgeVariant.WARNING}
-                size={BadgeSize.SMALL}
-                icon={<BellIcon size={12} />}
-              >
-                {transactionsToReview} pending
-              </Badge>
-            </Text>
-          }
-          description='Once your data is on the platform categorize them in Bank Transactions tab'
-          onClick={() => onTransactionsToReviewClick()}
-        />
-      ) : null}
+      {onTransactionsToReviewClick && transactionsToReview > 0
+        ? (
+          <ActionableRow
+            icon={<FolderIcon size={12} />}
+            title={(
+              <Text>
+                Categorize transactions
+                {' '}
+                <Badge
+                  variant={BadgeVariant.WARNING}
+                  size={BadgeSize.SMALL}
+                  icon={<BellIcon size={12} />}
+                >
+                  {transactionsToReview}
+                  {' '}
+                  pending
+                </Badge>
+              </Text>
+            )}
+            description='Once your data is on the platform categorize them in Bank Transactions tab'
+            onClick={() => onTransactionsToReviewClick()}
+          />
+        )
+        : null}
     </>
   )
 }

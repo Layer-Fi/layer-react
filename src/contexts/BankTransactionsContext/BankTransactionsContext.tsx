@@ -1,8 +1,8 @@
 import { createContext, useContext } from 'react'
-import { useBankTransactions } from '../../hooks/useBankTransactions'
+import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import { DisplayState } from '../../types'
 
-export type BankTransactionsContextType = ReturnType<typeof useBankTransactions>
+export type BankTransactionsContextType = ReturnType<typeof useAugmentedBankTransactions>
 export const BankTransactionsContext =
   createContext<BankTransactionsContextType>({
     data: undefined,
@@ -25,6 +25,7 @@ export const BankTransactionsContext =
     display: DisplayState.review,
     fetchMore: () => {},
     hasMore: false,
+    accountsList: [],
   })
 
 export const useBankTransactionsContext = () =>
