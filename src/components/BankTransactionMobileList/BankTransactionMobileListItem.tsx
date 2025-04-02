@@ -116,7 +116,7 @@ export const BankTransactionMobileListItem = ({
 
   useEffect(() => {
     if (!removeAnim && bankTransaction.recently_categorized) {
-      if (editable && shouldHideAfterCategorize(bankTransaction)) {
+      if (editable && shouldHideAfterCategorize()) {
         setRemoveAnim(true)
         openNext()
       }
@@ -159,7 +159,7 @@ export const BankTransactionMobileListItem = ({
     if (
       editable
       && bankTransaction.recently_categorized
-      && shouldHideAfterCategorize(bankTransaction)
+      && shouldHideAfterCategorize()
     ) {
       setTimeout(() => {
         removeTransaction(bankTransaction)
