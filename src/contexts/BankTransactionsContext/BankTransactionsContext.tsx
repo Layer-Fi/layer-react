@@ -16,12 +16,14 @@ export const BankTransactionsContext =
     filters: undefined,
     setFilters: () => {},
     metadata: {
-      pagination: undefined,
+      pagination: {
+        cursor: undefined,
+        has_more: false,
+      },
     },
     updateOneLocal: () => undefined,
     shouldHideAfterCategorize: () => false,
     removeAfterCategorize: () => undefined,
-    activate: () => undefined,
     display: DisplayState.review,
     fetchMore: () => {},
     hasMore: false,

@@ -1,6 +1,5 @@
 import { getBalanceSheet } from './layer/balance_sheet'
 import {
-  getBankTransactions,
   categorizeBankTransaction,
   matchBankTransaction,
   getBankTransactionsCsv,
@@ -74,7 +73,6 @@ export const Layer = {
   createAccount,
   updateAccount,
   getBalanceSheet,
-  getBankTransactions,
   getBankTransactionsCsv,
   getBankTransactionMetadata,
   listBankTransactionDocuments,

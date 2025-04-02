@@ -114,7 +114,6 @@ const BankTransactionsContent = ({
   const categorizeView = categorizeViewProp ?? categorizationEnabled
 
   const {
-    activate,
     data,
     isLoading,
     loadingStatus,
@@ -135,10 +134,6 @@ const BankTransactionsContent = ({
     () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
     [linkedAccounts],
   )
-
-  useEffect(() => {
-    activate()
-  }, [])
 
   useEffect(() => {
     // Reset date range when switching from monthly view to non-monthly view
