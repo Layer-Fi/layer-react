@@ -46,7 +46,7 @@ const View = forwardRef<HTMLDivElement, ViewProps>(
     return (
       <div className={viewClassNames} style={{ ...styles }} ref={ref}>
         {notification && (
-          <div className='Layer__view-notification'>
+          <div className='Layer__view-notifications'>
             {notification}
           </div>
         )}
