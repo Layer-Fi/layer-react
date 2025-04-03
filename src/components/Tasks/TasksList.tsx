@@ -32,7 +32,7 @@ const TasksEmptyState = () => (
   </div>
 )
 
-export const TasksList = ({ pageSize = 10 }: { data?: BookkeepingPeriod[], pageSize?: number }) => {
+export const TasksList = ({ pageSize = 10, mobile }: { data?: BookkeepingPeriod[], pageSize?: number, mobile?: boolean }) => {
   const { currentMonthData } = useTasksContext()
   const [showMobilePanel, setShowMobilePanel] = useState(false)
 
@@ -72,39 +72,66 @@ export const TasksList = ({ pageSize = 10 }: { data?: BookkeepingPeriod[], pageS
     }
   }
 
+  if (mobile) {
+    // Get only unresolved tasks - and up to X tasks
+    const unresolvedTasks = sortedTasks?.filter(task => !isComplete(task.status)).slice(0, 3)
+    const totalTasks = sortedTasks?.length
+
+    return (
+      <div className='Layer__tasks-list'>
+        {unresolvedTasks.map((task, index) => (
+          <TasksListItem
+            key={task.id}
+            task={task}
+            goToNextPageIfAllComplete={goToNextPage}
+            defaultOpen={index === indexFirstIncomplete}
+          />
+        ))}
+        {totalTasks > unresolvedTasks.length && (
+          <div style={{ textAlign: 'center', padding: '12px 24px' }}>
+            <Button onClick={() => setShowMobilePanel(true)} fullWidth>
+              Show all tasks (
+              {totalTasks}
+              )
+            </Button>
+          </div>
+        )}
+        <MobilePanel
+          open={showMobilePanel}
+          onClose={() => setShowMobilePanel(false)}
+          header={<p>Tasks</p>}
+        >
+          {sortedTasks && sortedTasks.length > 0
+            ? (
+              <div className='Layer__tasks-list'>
+                {sortedTasks.map((task, index) => (
+                  <TasksListItem
+                    key={task.id}
+                    task={task}
+                    goToNextPageIfAllComplete={goToNextPage}
+                    defaultOpen={index === indexFirstIncomplete}
+                  />
+                ))}
+                {tasks && tasks.length >= 10 && (
+                  <Pagination
+                    currentPage={currentPage}
+                    totalCount={tasks?.length || 0}
+                    pageSize={pageSize}
+                    onPageChange={page => setCurrentPage(page)}
+                  />
+                )}
+              </div>
+            )
+            : (
+              <TasksEmptyState />
+            )}
+        </MobilePanel>
+      </div>
+    )
+  }
+
   return (
     <div className='Layer__tasks-list'>
-      <Button onClick={() => setShowMobilePanel(true)}>Show all tasks</Button>
-      <MobilePanel
-        open={showMobilePanel}
-        onClose={() => setShowMobilePanel(false)}
-        header={<p>Tasks</p>}
-      >
-        {sortedTasks && sortedTasks.length > 0
-          ? (
-            <div className='Layer__tasks-list'>
-              {sortedTasks.map((task, index) => (
-                <TasksListItem
-                  key={task.id}
-                  task={task}
-                  goToNextPageIfAllComplete={goToNextPage}
-                  defaultOpen={index === indexFirstIncomplete}
-                />
-              ))}
-              {tasks && tasks.length >= 10 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalCount={tasks?.length || 0}
-                  pageSize={pageSize}
-                  onPageChange={page => setCurrentPage(page)}
-                />
-              )}
-            </div>
-          )
-          : (
-            <TasksEmptyState />
-          )}
-      </MobilePanel>
       {sortedTasks && sortedTasks.length > 0
         ? (
           <>

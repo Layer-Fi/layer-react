@@ -15,7 +15,7 @@
   .Layer__input-tooltip {
     flex: 1;
 
-    // min-width: 100px;
+    // min-width: 100px;min-widthmin-width
   }
 
   .Layer__compare__switch__options {
@@ -523,4 +523,9 @@
     justify-content: flex-start;
     padding-right: var(--spacing-lg);
   }
+}
+
+.Layer__profit-and-loss-header-row-text {
+  max-width: 350px;
+  text-align: right;
 }
