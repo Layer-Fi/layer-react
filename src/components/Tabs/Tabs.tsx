@@ -3,6 +3,8 @@ import { useElementSize } from '../../hooks/useElementSize'
 import { Tab } from './Tab'
 import classNames from 'classnames'
 
+const STARTING_PADDING = 12
+
 interface Option {
   label: string
   value: string
@@ -27,10 +29,10 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
 
   const baseClassName = classNames(
     'Layer__tabs',
-    initialized ? 'Layer__tabs--initialized' : '',
+    initialized && 'Layer__tabs--initialized',
   )
 
-  const elementRef = useElementSize<HTMLDivElement>((a, b, c) => {
+  const elementRef = useElementSize<HTMLDivElement>((_a, _b, c) => {
     if (c.width && c?.width !== currentWidth) {
       setCurrentWidth(c.width)
     }
@@ -56,12 +58,13 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
     optionsNodes.forEach((c, i) => {
       if (i < active) {
         shift = shift + (c as HTMLElement).offsetWidth + 8
-      } else if (i === active) {
+      }
+      else if (i === active) {
         width = (c as HTMLElement).offsetWidth
       }
     })
 
-    shift = shift + 1.5
+    shift = shift + STARTING_PADDING
 
     setThumbPos({ left: shift, width })
   }
@@ -73,7 +76,14 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
     setTimeout(() => {
       setInitialized(true)
     }, 400)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    const selectedIndex = getSelectedIndex()
+    updateSelectPosition(selectedIndex)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedValue, currentWidth])
 
   const getSelectedIndex = () => {
     const selectedIndex = options.findIndex(
@@ -87,20 +97,22 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
   }
 
   return (
-    <div className={baseClassName} ref={elementRef}>
-      {options.map((option, index) => (
-        <Tab
-          {...option}
-          key={option.value}
-          name={name}
-          checked={selectedValue === option.value}
-          onChange={handleChange}
-          disabled={option.disabled ?? false}
-          disabledMessage={option.disabledMessage}
-          index={index}
-        />
-      ))}
-      <span className='Layer__tabs__thumb' style={{ ...thumbPos }} />
+    <div className='Layer__tabs__container'>
+      <div className={baseClassName} ref={elementRef}>
+        {options.map((option, index) => (
+          <Tab
+            {...option}
+            key={option.value}
+            name={name}
+            checked={selectedValue === option.value}
+            onChange={handleChange}
+            disabled={option.disabled ?? false}
+            disabledMessage={option.disabledMessage}
+            index={index}
+          />
+        ))}
+        <span className='Layer__tabs__thumb' style={{ ...thumbPos }} />
+      </div>
     </div>
   )
 }

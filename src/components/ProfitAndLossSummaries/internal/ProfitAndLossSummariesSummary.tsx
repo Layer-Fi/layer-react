@@ -8,6 +8,7 @@ import { ProfitAndLossSummariesHeading } from './ProfitAndLossSummariesHeading'
 const CLASS_NAME = 'Layer__ProfitAndLossSummariesSummary'
 
 const CHART_AREA_CLASS_NAME = 'Layer__ProfitAndLossSummariesSummaryChartArea'
+const CHART_AREA_EMPTY_FRAME_CLASS_NAME = 'Layer__ProfitAndLossSummariesSummaryChartAreaEmptyFrame'
 
 type ProfitAndLossSummariesSummaryProps = {
   label: string
@@ -27,22 +28,22 @@ export function ProfitAndLossSummariesSummary({
   variants,
 }: ProfitAndLossSummariesSummaryProps) {
   const { Chart } = slots ?? {}
-  const { size = 'sm' } = variants ?? {}
+  const { size = '2xs' } = variants ?? {}
 
   const dataProperties = toDataProperties({ size })
 
   return (
     <div className={CLASS_NAME} {...dataProperties}>
-      {Chart && <div className={CHART_AREA_CLASS_NAME}>{Chart}</div>}
+      {Chart ? <div className={CHART_AREA_CLASS_NAME}>{Chart}</div> : <div className={CHART_AREA_EMPTY_FRAME_CLASS_NAME} />}
       <ProfitAndLossSummariesHeading variants={variants}>
         {label}
       </ProfitAndLossSummariesHeading>
       {isLoading
         ? (
-          <SkeletonLoader />
+          <SkeletonLoader height='20px' />
         )
         : (
-          <MoneySpan slot='amount' amount={amount} size='lg' />
+          <MoneySpan slot='amount' amount={amount} size='lg' bold />
         )}
     </div>
   )
