@@ -23,12 +23,14 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
     case 'IN_PROGRESS_AWAITING_CUSTOMER':
       return {
         label: pluralize('task', tasksCount, true),
+        labelShort: `${tasksCount}`,
         color: 'warning' as TextStatus,
         icon: <AlertCircle size={12} />,
       }
     case 'CLOSED_OPEN_TASKS':
       return {
         label: pluralize('task', tasksCount, true),
+        labelShort: `${tasksCount}`,
         color: 'error' as TextStatus,
         icon: <AlertCircle size={12} />,
       }
@@ -54,7 +56,12 @@ export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) =>
       <span className='Layer__tasks__badge__icon-wrapper' data-status={badgeConfig.color}>
         {badgeConfig.icon}
       </span>
-      <Text size={TextSize.sm} status={badgeConfig.color} invertColor={true} weight={TextWeight.bold}>{badgeConfig.label}</Text>
+      {badgeConfig.label && (
+        <Text className='Layer__tasks__badge__label' size={TextSize.sm} status={badgeConfig.color} invertColor={true} weight={TextWeight.bold}>{badgeConfig.label}</Text>
+      )}
+      {badgeConfig.labelShort && (
+        <Text className='Layer__tasks__badge__label-short' size={TextSize.sm} status={badgeConfig.color} invertColor={true} weight={TextWeight.bold}>{badgeConfig.labelShort}</Text>
+      )}
     </span>
   )
 }

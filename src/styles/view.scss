@@ -1,4 +1,6 @@
 .Layer__view {
+  position: relative;
+
   .Layer__view-main {
     padding: var(--spacing-lg);
     display: flex;
@@ -9,6 +11,7 @@
 
     .Layer__toggle {
       border-radius: 6px;
+
       .Layer__toggle-option input + span {
         border-radius: 6px;
       }
@@ -59,6 +62,7 @@
   .Layer__view-header--paddings {
     .Layer__view-header__content {
       padding: var(--spacing-md);
+
       .Layer__view-header__children {
         gap: var(--spacing-md);
       }
@@ -74,6 +78,7 @@
     .Layer__view-main {
       padding: 0;
     }
+
     .Layer__view-header {
       position: relative;
       z-index: 1;
@@ -83,5 +88,17 @@
     .Layer__view-header__content {
       max-width: 1406px;
     }
+  }
+}
+
+.Layer__view-notification {
+  padding: var(--spacing-xs) var(--spacing-md);
+  background-color: var(--color-info-warning);
+  border-top-left-radius: var(--border-radius-2xs);
+  border-top-right-radius: var(--border-radius-2xs);
+
+  p {
+    margin: 0;
+    color: #fff;
   }
 }
