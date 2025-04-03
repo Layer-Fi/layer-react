@@ -6,6 +6,7 @@ import { getBankTransactions, type GetBankTransactionsReturn } from '../../api/l
 type UseBankTransactionsOptions = {
   categorized?: boolean
   direction?: 'INFLOW' | 'OUTFLOW'
+  descriptionFilter?: string
   startDate?: Date
   endDate?: Date
   tagFilterQueryString?: string
@@ -18,6 +19,7 @@ function keyLoader(
     apiUrl,
     businessId,
     categorized,
+    descriptionFilter,
     direction,
     startDate,
     endDate,
@@ -35,16 +37,19 @@ function keyLoader(
       businessId,
       categorized,
       cursor: previousPageData ? previousPageData.meta.pagination.cursor : undefined,
+      descriptionFilter,
       direction,
       startDate,
       endDate,
       tagFilterQueryString,
-    }
+      tags: ['#bank-transactions'],
+    } as const
   }
 }
 
 export function useBankTransactions({
   categorized,
+  descriptionFilter,
   direction,
   startDate,
   endDate,
@@ -60,20 +65,35 @@ export function useBankTransactions({
         ...data,
         businessId,
         categorized,
+        descriptionFilter,
         direction,
         startDate,
         endDate,
         tagFilterQueryString,
       },
     ),
-    ({ accessToken, apiUrl, businessId, cursor, startDate, endDate, tagFilterQueryString }) => {
+    ({
+      accessToken,
+      apiUrl,
+      businessId,
+      categorized,
+      cursor,
+      direction,
+      descriptionFilter,
+      startDate,
+      endDate,
+      tagFilterQueryString,
+    }) => {
       return getBankTransactions(
         apiUrl,
         accessToken,
         {
           params: {
             businessId,
+            categorized,
             cursor,
+            descriptionFilter,
+            direction,
             startDate,
             endDate,
             tagFilterQueryString,

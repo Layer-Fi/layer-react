@@ -24,6 +24,7 @@ type GetBankTransactionsParams = {
   businessId: string
   cursor?: string
   categorized?: boolean
+  descriptionFilter?: string
   direction?: 'INFLOW' | 'OUTFLOW'
   startDate?: Date
   endDate?: Date
@@ -40,6 +41,7 @@ export const getBankTransactions = get<
     businessId,
     cursor,
     categorized,
+    descriptionFilter,
     direction,
     startDate,
     endDate,
@@ -50,6 +52,7 @@ export const getBankTransactions = get<
     const parameters = toDefinedSearchParameters({
       cursor,
       categorized,
+      descriptionFilter,
       direction,
       startDate,
       endDate,
