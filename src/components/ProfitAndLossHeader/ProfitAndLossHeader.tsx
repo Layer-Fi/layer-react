@@ -4,7 +4,7 @@ import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { Header } from '../Container'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { SyncingBadge } from '../SyncingBadge'
-import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDate } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import { useBookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriodStatus'
 
@@ -24,9 +24,9 @@ export const ProfitAndLossHeader = ({
   withStatus = true,
 }: ProfitAndLossHeaderProps) => {
   const { data: linkedAccounts } = useLinkedAccounts()
-  const { end } = useGlobalDateRange()
+  const { date } = useGlobalDate()
 
-  const { status: bookkeepingMonthStatus } = useBookkeepingPeriodStatus({ currentMonthDate: end })
+  const { status: bookkeepingMonthStatus } = useBookkeepingPeriodStatus({ currentMonthDate: date })
 
   const isSyncing = useMemo(
     () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
@@ -42,7 +42,7 @@ export const ProfitAndLossHeader = ({
         {isSyncing && <SyncingBadge />}
         {withStatus && bookkeepingMonthStatus && (
           <span className='Layer__profit-and-loss-header__bookkeeping-status'>
-            <BookkeepingStatus status={bookkeepingMonthStatus} month={end.getMonth()} />
+            <BookkeepingStatus status={bookkeepingMonthStatus} month={date.getMonth()} />
           </span>
         )}
       </span>

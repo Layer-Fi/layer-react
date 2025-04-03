@@ -6,39 +6,22 @@ import { useAuth } from './useAuth'
 import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
 import { getMonth, getYear, startOfMonth } from 'date-fns'
 import { getActivationDate } from '../utils/business'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { BookkeepingPeriod, useBookkeepingPeriods } from './bookkeeping/periods/useBookkeepingPeriods'
+import { useGlobalDate, useGlobalDateRangeActions } from '../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useBookkeepingPeriods } from './bookkeeping/periods/useBookkeepingPeriods'
 
-type UseTasks = () => {
-  data?: BookkeepingPeriod[]
-  isLoading?: boolean
-  isValidating?: boolean
-  error?: unknown
-  currentMonthDate: Date
-  setCurrentMonthDate: (date: Date) => void
-  currentMonthData?: BookkeepingPeriod
-  currentYearData?: BookkeepingPeriod[]
-  activationDate?: Date
-  refetch: () => void
-  submitResponseToTask: (taskId: string, userResponse: string) => void
-  uploadDocumentsForTask: (taskId: string, files: File[], description?: string) => Promise<void>
-  deleteUploadsForTask: (taskId: string) => void
-  updateDocUploadTaskDescription: (taskId: string, userResponse: string) => void
-}
-
-export const useTasks: UseTasks = () => {
+export const useTasks = () => {
   const { business, businessId, read, syncTimestamps, hasBeenTouched } = useLayerContext()
   const activationDate = getActivationDate(business)
 
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const { end } = useGlobalDateRange()
+  const { date } = useGlobalDate()
   const { setMonth } = useGlobalDateRangeActions()
 
   const { data, mutate, isLoading, isValidating, error } = useBookkeepingPeriods()
 
-  const currentMonthDate = startOfMonth(end)
+  const currentMonthDate = startOfMonth(date)
 
   const setCurrentMonthDate = (date: Date) => {
     setMonth({ start: date })

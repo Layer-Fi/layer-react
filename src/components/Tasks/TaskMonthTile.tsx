@@ -1,7 +1,14 @@
-import { TaskMonthTileProps } from './types'
 import { Text, TextSize } from '../Typography'
 import { TaskStatusBadge } from './TaskStatusBadge'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import { MonthData } from './types'
+
+export type TaskMonthTileProps = {
+  data: MonthData
+  active?: boolean
+  disabled?: boolean
+  onClick: (date: Date) => void
+}
 
 export const TaskMonthTile = ({ data, onClick, active, disabled }: TaskMonthTileProps) => {
   const dataProperties = toDataProperties({ active, disabled })
