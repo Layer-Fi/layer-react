@@ -52,7 +52,7 @@ export const TasksComponent = ({
   stringOverrides,
 }: {
   tasksHeader?: string
-  collapsable?: boolean
+  collapsable?: boolean // @TODO - rename to mobile?
   defaultCollapsed?: boolean
   collapsedWhenComplete?: boolean
   stringOverrides?: TasksStringOverrides
@@ -111,7 +111,7 @@ export const TasksComponent = ({
               <TasksYearsTabs />
               <TasksMonthSelector />
               <TasksPending />
-              <TasksList />
+              <TasksList mobile={collapsable} />
             </>
           )}
       </div>

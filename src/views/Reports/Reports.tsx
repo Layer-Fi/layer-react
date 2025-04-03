@@ -36,6 +36,7 @@ export interface ReportsProps {
   comparisonConfig?: ProfitAndLossCompareConfig
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
+  redirectToBookkeepingTasks?: () => void
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -47,6 +48,7 @@ export interface ReportsPanelProps {
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
   view: ViewBreakpoint
+  redirectToBookkeepingTasks?: () => void
 }
 
 const getOptions = (enabledReports: ReportType[]) => {
@@ -80,6 +82,7 @@ export const Reports = ({
   comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
+  redirectToBookkeepingTasks,
 }: ReportsProps) => {
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
@@ -114,6 +117,7 @@ export const Reports = ({
             profitAndLossConfig={profitAndLossConfig}
             statementOfCashFlowConfig={statementOfCashFlowConfig}
             view={view}
+            redirectToBookkeepingTasks={redirectToBookkeepingTasks}
           />
         </ProfitAndLoss>
       </Container>
@@ -128,6 +132,7 @@ const ReportsPanel = ({
   profitAndLossConfig,
   statementOfCashFlowConfig,
   view,
+  redirectToBookkeepingTasks,
 }: ReportsPanelProps) => {
   return (
     <>
@@ -136,6 +141,7 @@ const ReportsPanel = ({
           stringOverrides={stringOverrides}
           parentRef={containerRef}
           view={view}
+          redirectToBookkeepingTasks={redirectToBookkeepingTasks}
           {...profitAndLossConfig}
         />
       )}
