@@ -1,3 +1,4 @@
+import pluralize from 'pluralize'
 import { useBookkeepingYearsStatus } from '../../hooks/bookkeeping/periods/useBookkeepingYearsStatus'
 import AlertCircle from '../../icons/AlertCircle'
 import ArrowRightCircle from '../../icons/ArrowRightCircle'
@@ -19,10 +20,8 @@ export const TasksPanelNotification = () => {
           <AlertCircle size={11} />
         </Text>
         <Text size={TextSize.sm} weight={TextWeight.bold} status='warning' invertColor>
-          {anyPreviousYearIncomplete.unresolvedTasks}
-          {' '}
-          open tasks in
-          {' '}
+          {pluralize('open task', anyPreviousYearIncomplete.unresolvedTasks, true)}
+          {' in '}
           {anyPreviousYearIncomplete.year}
         </Text>
       </div>

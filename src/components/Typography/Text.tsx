@@ -55,7 +55,7 @@ export const Text = ({
   invertColor,
   ...props
 }: TextProps) => {
-  const dataProperties = toDataProperties({ status, ellipsis, pb, invert: invertColor })
+  const dataProperties = toDataProperties({ status, ellipsis, pb, inverted: invertColor })
 
   const baseClassName = classNames(
     `Layer__text Layer__text--${size} Layer__text--${weight}`,

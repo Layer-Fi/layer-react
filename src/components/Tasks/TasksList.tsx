@@ -7,7 +7,7 @@ import { isComplete, Task } from '../../types/tasks'
 import { TasksListItem } from './TasksListItem'
 import { Pagination } from '../Pagination/Pagination'
 
-function paginateArray<T>(array: T[], chunkSize: number = 10): T[][] {
+function paginateArray<T>(array: ReadonlyArray<T>, chunkSize: number = 10): T[][] {
   const result: T[][] = []
   for (let i = 0; i < array.length; i += chunkSize) {
     const chunk = array.slice(i, i + chunkSize)
@@ -35,15 +35,15 @@ export const TasksList = ({ pageSize = 10 }: { data?: BookkeepingPeriod[], pageS
 
   const tasks = useMemo(() => currentMonthData?.tasks || [], [currentMonthData?.tasks])
 
-  const firstPageWithIincompleteTasks = paginateArray(
-    tasks as Task[],
+  const firstPageWithIncompleteTasks = paginateArray(
+    tasks,
     pageSize,
   ).findIndex(page => page.some(d => !isComplete(d.status)))
 
   const [currentPage, setCurrentPage] = useState(
-    firstPageWithIincompleteTasks === -1
+    firstPageWithIncompleteTasks === -1
       ? 1
-      : firstPageWithIincompleteTasks + 1,
+      : firstPageWithIncompleteTasks + 1,
   )
 
   // Sort tasks by completion status and paginate

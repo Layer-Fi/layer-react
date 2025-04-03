@@ -12,10 +12,3 @@ export type MonthData = {
   disabled?: boolean
   tasks: Task[]
 }
-
-export type TaskMonthTileProps = {
-  data: MonthData
-  active?: boolean
-  disabled?: boolean
-  onClick: (date: Date) => void
-}
