@@ -15,6 +15,7 @@ export interface ViewProps {
   withSidebar?: boolean
   sidebar?: ReactNode
   viewClassName?: string
+  notification?: ReactNode
 }
 
 const View = forwardRef<HTMLDivElement, ViewProps>(
@@ -29,6 +30,7 @@ const View = forwardRef<HTMLDivElement, ViewProps>(
       withSidebar = false,
       sidebar,
       viewClassName,
+      notification,
     },
     ref,
   ) => {
@@ -43,6 +45,11 @@ const View = forwardRef<HTMLDivElement, ViewProps>(
 
     return (
       <div className={viewClassNames} style={{ ...styles }} ref={ref}>
+        {notification && (
+          <div className='Layer__view-notification'>
+            {notification}
+          </div>
+        )}
         {showHeader && (
           <ViewHeader
             title={title}
@@ -53,13 +60,15 @@ const View = forwardRef<HTMLDivElement, ViewProps>(
             {header ?? headerControls}
           </ViewHeader>
         )}
-        {withSidebar ? (
-          <Panel sidebarIsOpen={true} sidebar={sidebar} defaultSidebarHeight>
+        {withSidebar
+          ? (
+            <Panel sidebarIsOpen={true} sidebar={sidebar} defaultSidebarHeight>
+              <div className='Layer__view-main'>{children}</div>
+            </Panel>
+          )
+          : (
             <div className='Layer__view-main'>{children}</div>
-          </Panel>
-        ) : (
-          <div className='Layer__view-main'>{children}</div>
-        )}
+          )}
       </div>
     )
   },

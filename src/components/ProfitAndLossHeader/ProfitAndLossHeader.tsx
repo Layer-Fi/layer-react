@@ -35,8 +35,8 @@ export const ProfitAndLossHeader = ({
 
   return (
     <Header className={className}>
-      <span className='Layer__component-header__title-wrapper'>
-        <Heading size={HeadingSize.secondary} className={headingClassName}>
+      <span className='Layer__component-header__title-wrapper Layer__profit-and-loss__header'>
+        <Heading size={HeadingSize.secondary} className={headingClassName} align='left'>
           {text || 'Profit & Loss'}
         </Heading>
         {isSyncing && <SyncingBadge />}

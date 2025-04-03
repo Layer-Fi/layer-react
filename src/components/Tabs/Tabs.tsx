@@ -83,7 +83,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
     const selectedIndex = getSelectedIndex()
     updateSelectPosition(selectedIndex)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedValue])
+  }, [selectedValue, currentWidth])
 
   const getSelectedIndex = () => {
     const selectedIndex = options.findIndex(
@@ -97,20 +97,22 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
   }
 
   return (
-    <div className={baseClassName} ref={elementRef}>
-      {options.map((option, index) => (
-        <Tab
-          {...option}
-          key={option.value}
-          name={name}
-          checked={selectedValue === option.value}
-          onChange={handleChange}
-          disabled={option.disabled ?? false}
-          disabledMessage={option.disabledMessage}
-          index={index}
-        />
-      ))}
-      <span className='Layer__tabs__thumb' style={{ ...thumbPos }} />
+    <div className='Layer__tabs__container'>
+      <div className={baseClassName} ref={elementRef}>
+        {options.map((option, index) => (
+          <Tab
+            {...option}
+            key={option.value}
+            name={name}
+            checked={selectedValue === option.value}
+            onChange={handleChange}
+            disabled={option.disabled ?? false}
+            disabledMessage={option.disabledMessage}
+            index={index}
+          />
+        ))}
+        <span className='Layer__tabs__thumb' style={{ ...thumbPos }} />
+      </div>
     </div>
   )
 }
