@@ -31,6 +31,7 @@ export const ProfitAndLossReport = ({
   return (
     <View
       type='panel'
+      notification={<p>Notification</p>}
       header={(
         <Header>
           <HeaderRow>

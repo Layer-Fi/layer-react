@@ -29,6 +29,7 @@
   padding: 0 var(--spacing-sm);
   background: var(--color-base-0);
   box-shadow: 0 1px 2px 0 var(--base-transparent-6), 0 0 0 1px var(--color-base-300);
+  container-type: inline-size;
 
   &[data-active] {
     box-shadow: 0 0 0 1px var(--color-base-800), 0 0 0 3px var(--color-base-300);

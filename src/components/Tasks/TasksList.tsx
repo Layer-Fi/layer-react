@@ -6,6 +6,8 @@ import { useTasksContext } from './TasksContext'
 import { isComplete, Task } from '../../types/tasks'
 import { TasksListItem } from './TasksListItem'
 import { Pagination } from '../Pagination/Pagination'
+import { Button } from '../Button/Button'
+import { MobilePanel } from '../MobilePanel/MobilePanel'
 
 function paginateArray<T>(array: ReadonlyArray<T>, chunkSize: number = 10): T[][] {
   const result: T[][] = []
@@ -32,6 +34,7 @@ const TasksEmptyState = () => (
 
 export const TasksList = ({ pageSize = 10 }: { data?: BookkeepingPeriod[], pageSize?: number }) => {
   const { currentMonthData } = useTasksContext()
+  const [showMobilePanel, setShowMobilePanel] = useState(false)
 
   const tasks = useMemo(() => currentMonthData?.tasks || [], [currentMonthData?.tasks])
 
@@ -71,6 +74,37 @@ export const TasksList = ({ pageSize = 10 }: { data?: BookkeepingPeriod[], pageS
 
   return (
     <div className='Layer__tasks-list'>
+      <Button onClick={() => setShowMobilePanel(true)}>Show all tasks</Button>
+      <MobilePanel
+        open={showMobilePanel}
+        onClose={() => setShowMobilePanel(false)}
+        header={<p>Tasks</p>}
+      >
+        {sortedTasks && sortedTasks.length > 0
+          ? (
+            <div className='Layer__tasks-list'>
+              {sortedTasks.map((task, index) => (
+                <TasksListItem
+                  key={task.id}
+                  task={task}
+                  goToNextPageIfAllComplete={goToNextPage}
+                  defaultOpen={index === indexFirstIncomplete}
+                />
+              ))}
+              {tasks && tasks.length >= 10 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalCount={tasks?.length || 0}
+                  pageSize={pageSize}
+                  onPageChange={page => setCurrentPage(page)}
+                />
+              )}
+            </div>
+          )
+          : (
+            <TasksEmptyState />
+          )}
+      </MobilePanel>
       {sortedTasks && sortedTasks.length > 0
         ? (
           <>
