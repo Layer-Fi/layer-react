@@ -58,11 +58,7 @@ export const BookkeepingOverview = ({
         showHeader={showTitle}
       >
         {width <= 1100 && (
-          <Tasks
-            collapsable
-            collapsedWhenComplete
-            stringOverrides={stringOverrides?.tasks}
-          />
+          <Tasks mobile stringOverrides={stringOverrides?.tasks} />
         )}
         <Container
           name='bookkeeping-overview-profit-and-loss'

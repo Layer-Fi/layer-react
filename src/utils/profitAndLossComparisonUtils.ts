@@ -19,7 +19,7 @@ const generateComparisonMonths = (
 ) => {
   return Array.from({ length: numberOfMonths }, (_, index) => {
     const currentMonth = subMonths(startDate, numberOfMonths - index - 1)
-    return format(currentMonth, 'MMM')
+    return { date: currentMonth, label: format(currentMonth, 'MMM') }
   })
 }
 
@@ -29,7 +29,7 @@ const generateComparisonYears = (
 ) => {
   return Array.from({ length: numberOfYears }, (_, index) => {
     const currentMonth = subYears(startDate, numberOfYears - index - 1)
-    return format(currentMonth, 'yyyy')
+    return { date: currentMonth, label: format(currentMonth, 'yyyy') }
   })
 }
 
