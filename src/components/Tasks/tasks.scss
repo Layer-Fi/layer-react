@@ -6,10 +6,6 @@
   border-radius: 8px;
   box-shadow: 0 0 0 1px var(--color-base-300);
   background-color: var(--color-base-0);
-
-  &.Layer__tasks-component--collapsable {
-    overflow-y: hidden;
-  }
 }
 
 .Layer__tasks-pending {
