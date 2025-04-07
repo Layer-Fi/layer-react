@@ -13,6 +13,8 @@ import { View } from '../View'
 import { BALANCE_SHEET_ROWS } from './constants'
 import { BalanceSheetDownloadButton } from './download/BalanceSheetDownloadButton'
 import { useGlobalDate } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { BookkeepingStatusPanelNotification } from '../BookkeepingStatus/BookkeepingStatusPanelNotification'
+import { BookkeepingStatusReportRow } from '../BookkeepingStatus/BookkeepingStatusReportRow'
 
 export interface BalanceSheetStringOverrides {
   balanceSheetTable?: BalanceSheetTableStringOverrides
@@ -22,12 +24,14 @@ export type BalanceSheetViewProps = PropsWithChildren & {
   withExpandAllButton?: boolean
   asWidget?: boolean
   stringOverrides?: BalanceSheetStringOverrides
+  redirectToBookkeepingTasks?: () => void
 }
 
 export type BalanceSheetProps = PropsWithChildren & {
   effectiveDate?: Date
   asWidget?: boolean
   stringOverrides?: BalanceSheetStringOverrides
+  redirectToBookkeepingTasks?: () => void
 }
 
 const COMPONENT_NAME = 'balance-sheet'
@@ -46,6 +50,7 @@ const BalanceSheetView = ({
   withExpandAllButton = true,
   asWidget = false,
   stringOverrides,
+  redirectToBookkeepingTasks,
 }: BalanceSheetViewProps) => {
   const { date: effectiveDate } = useGlobalDate()
   const { data, isLoading } = useBalanceSheet({ effectiveDate })
@@ -70,8 +75,10 @@ const BalanceSheetView = ({
                     </HeaderCol>
                   )}
                 </HeaderRow>
+                <BookkeepingStatusReportRow currentDate={effectiveDate} redirectToBookkeepingTasks={redirectToBookkeepingTasks} />
               </Header>
             )}
+            notification={<BookkeepingStatusPanelNotification onClick={redirectToBookkeepingTasks} />}
           >
             {!data || isLoading
               ? (
@@ -113,8 +120,10 @@ const BalanceSheetView = ({
                 />
               </HeaderCol>
             </HeaderRow>
+            <BookkeepingStatusReportRow currentDate={effectiveDate} redirectToBookkeepingTasks={redirectToBookkeepingTasks} />
           </Header>
         )}
+        notification={<BookkeepingStatusPanelNotification onClick={redirectToBookkeepingTasks} />}
       >
         {!data || isLoading
           ? (

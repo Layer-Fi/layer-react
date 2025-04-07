@@ -1,7 +1,5 @@
 import {
   ReactNode,
-  useEffect,
-  useState,
 } from 'react'
 import { Loader } from '../Loader'
 import { TasksHeader } from './TasksHeader'
@@ -45,16 +43,12 @@ export const TasksProvider = ({ children }: { children: ReactNode }) => {
 }
 
 export const TasksComponent = ({
-  collapsable = false,
-  defaultCollapsed = false,
-  collapsedWhenComplete,
+  mobile = false,
   tasksHeader, // deprecated
   stringOverrides,
 }: {
   tasksHeader?: string
-  collapsable?: boolean // @TODO - rename to mobile?
-  defaultCollapsed?: boolean
-  collapsedWhenComplete?: boolean
+  mobile?: boolean
   stringOverrides?: TasksStringOverrides
 }) => {
   const {
@@ -62,36 +56,8 @@ export const TasksComponent = ({
     isLoading,
   } = useTasksContext()
 
-  const allComplete = false
-
-  const [open, setOpen] = useState(
-    collapsable && allComplete === false ? true : defaultCollapsed || collapsedWhenComplete ? false : true,
-  )
-
-  useEffect(() => {
-    if (collapsable && allComplete === false) {
-      setOpen(true)
-      return
-    }
-
-    if (
-      allComplete
-      && open
-      && collapsedWhenComplete
-      && !isLoading
-    ) {
-      setOpen(false)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allComplete])
-
   return (
-    <div
-      className={classNames(
-        'Layer__tasks-component',
-        collapsable && 'Layer__tasks-component--collapsable',
-      )}
-    >
+    <div className='Layer__tasks-component'>
       <TasksPanelNotification />
       <TasksHeader tasksHeader={stringOverrides?.header || tasksHeader} />
       <div
@@ -111,7 +77,7 @@ export const TasksComponent = ({
               <TasksYearsTabs />
               <TasksMonthSelector />
               <TasksPending />
-              <TasksList mobile={collapsable} />
+              <TasksList mobile={mobile} />
             </>
           )}
       </div>

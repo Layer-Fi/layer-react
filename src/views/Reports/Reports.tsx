@@ -146,11 +146,12 @@ const ReportsPanel = ({
         />
       )}
       {openReport === 'balanceSheet' && (
-        <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} />
+        <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} redirectToBookkeepingTasks={redirectToBookkeepingTasks} />
       )}
       {openReport === 'statementOfCashFlow' && (
         <StatementOfCashFlow
           stringOverrides={stringOverrides?.statementOfCashflow}
+          redirectToBookkeepingTasks={redirectToBookkeepingTasks}
           {...statementOfCashFlowConfig}
         />
       )}

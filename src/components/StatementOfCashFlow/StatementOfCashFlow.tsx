@@ -11,6 +11,8 @@ import { useElementViewSize } from '../../hooks/useElementViewSize/useElementVie
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { StatementOfCashFlowDatePicker } from './datePicker/StatementOfCashFlowDatePicker'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow/useStatementOfCashFlow'
+import { BookkeepingStatusPanelNotification } from '../BookkeepingStatus/BookkeepingStatusPanelNotification'
+import { BookkeepingStatusReportRow } from '../BookkeepingStatus/BookkeepingStatusReportRow'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
@@ -20,6 +22,7 @@ export interface StatementOfCashFlowStringOverrides {
 
 export type StatementOfCashFlowProps = {
   stringOverrides?: StatementOfCashFlowStringOverrides
+  redirectToBookkeepingTasks?: () => void
 } & TimeRangePickerConfig
 
 export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
@@ -30,12 +33,14 @@ export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
 
 type StatementOfCashFlowViewProps = {
   stringOverrides?: StatementOfCashFlowStringOverrides
+  redirectToBookkeepingTasks?: () => void
 } & TimeRangePickerConfig
 
 const StatementOfCashFlowView = ({
   stringOverrides,
   allowedDatePickerModes,
   customDateRanges,
+  redirectToBookkeepingTasks,
 }: StatementOfCashFlowViewProps) => {
   const { start, end } = useGlobalDateRange()
   const { data, isLoading } = useStatementOfCashFlow({ startDate: start, endDate: end })
@@ -63,8 +68,10 @@ const StatementOfCashFlowView = ({
                 />
               </HeaderCol>
             </HeaderRow>
+            <BookkeepingStatusReportRow currentDate={start} redirectToBookkeepingTasks={redirectToBookkeepingTasks} />
           </Header>
         )}
+        notification={<BookkeepingStatusPanelNotification onClick={redirectToBookkeepingTasks} />}
       >
         {!data || isLoading
           ? (

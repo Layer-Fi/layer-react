@@ -1,0 +1,24 @@
+.Layer__bookkeeping-status-report-row {
+  @container (max-width: 760px) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--spacing-md);
+
+    .Layer__bookkeeping-status-report-row-text {
+      text-align: left;
+      max-width: 300px;
+    }
+
+    .Layer__header__col {
+      min-height: 0;
+      width: 100%;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+.Layer__bookkeeping-status-report-row-text {
+  max-width: 350px;
+  text-align: right;
+}
