@@ -32,20 +32,22 @@ export const BookkeepingStatusPanelNotification = ({ onClick }: BookkeepingStatu
           {anyPreviousYearIncomplete.year}
         </Text>
       </div>
-      <button
-        className='Layer__tasks-header__notification__button'
-        onClick={() => {
-          const newDate = new Date(date)
-          newDate.setFullYear(anyPreviousYearIncomplete.year)
-          setMonth({ start: startOfMonth(newDate) })
-          onClick?.()
-        }}
-      >
-        <Text size={TextSize.sm} weight={TextWeight.bold}>
-          View and complete
-        </Text>
-        <ArrowRightCircle size={14} />
-      </button>
+      {onClick && (
+        <button
+          className='Layer__tasks-header__notification__button'
+          onClick={() => {
+            const newDate = new Date(date)
+            newDate.setFullYear(anyPreviousYearIncomplete.year)
+            setMonth({ start: startOfMonth(newDate) })
+            onClick?.()
+          }}
+        >
+          <Text size={TextSize.sm} weight={TextWeight.bold}>
+            View and complete
+          </Text>
+          <ArrowRightCircle size={14} />
+        </button>
+      )}
     </div>
   )
 }

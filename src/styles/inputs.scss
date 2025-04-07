@@ -618,7 +618,8 @@
 
 @media screen and (resolution >= 2dppx) {
   .Layer__view,
-  .Layer__component {
+  .Layer__component,
+  .Layer__Portal, {
     .Layer__textarea,
     .Layer__select__control,
     .Layer__input {

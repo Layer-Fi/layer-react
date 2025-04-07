@@ -7,9 +7,10 @@ type BookkeepingStatusProps = {
   month?: number
   status?: BookkeepingPeriodStatus
   emphasizeWarning?: boolean
+  iconOnly?: boolean
 }
 
-export const BookkeepingStatus = ({ status, month, emphasizeWarning }: BookkeepingStatusProps) => {
+export const BookkeepingStatus = ({ status, month, emphasizeWarning, iconOnly }: BookkeepingStatusProps) => {
   if (!status || month === undefined) {
     return
   }
@@ -28,7 +29,9 @@ export const BookkeepingStatus = ({ status, month, emphasizeWarning }: Bookkeepi
       <span className='Layer__bookkeping-status__icon-wrapper' data-status={statusConfig.color}>
         {statusConfig.icon}
       </span>
-      <Text size={TextSize.sm} status={statusConfig.color} invertColor={emphasize}>{statusConfig.label}</Text>
+      {!iconOnly && (
+        <Text size={TextSize.sm} status={statusConfig.color} invertColor={emphasize}>{statusConfig.label}</Text>
+      )}
     </span>
   )
 }

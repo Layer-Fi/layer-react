@@ -18,9 +18,7 @@ export interface TasksStringOverrides {
 
 export type TasksProps = {
   tasksHeader?: string
-  collapsable?: boolean
-  defaultCollapsed?: boolean
-  collapsedWhenComplete?: boolean
+  mobile?: boolean
   stringOverrides?: TasksStringOverrides
 }
 
@@ -47,8 +45,8 @@ export const TasksComponent = ({
   tasksHeader, // deprecated
   stringOverrides,
 }: {
-  tasksHeader?: string
   mobile?: boolean
+  tasksHeader?: string
   stringOverrides?: TasksStringOverrides
 }) => {
   const {

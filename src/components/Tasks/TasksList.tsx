@@ -6,8 +6,7 @@ import { useTasksContext } from './TasksContext'
 import { isComplete, Task } from '../../types/tasks'
 import { TasksListItem } from './TasksListItem'
 import { Pagination } from '../Pagination/Pagination'
-import { Button } from '../Button/Button'
-import { MobilePanel } from '../MobilePanel/MobilePanel'
+import { TasksListMobile } from './TasksListMobile'
 
 function paginateArray<T>(array: ReadonlyArray<T>, chunkSize: number = 10): T[][] {
   const result: T[][] = []
@@ -34,7 +33,6 @@ const TasksEmptyState = () => (
 
 export const TasksList = ({ pageSize = 10, mobile }: { data?: BookkeepingPeriod[], pageSize?: number, mobile?: boolean }) => {
   const { currentMonthData } = useTasksContext()
-  const [showMobilePanel, setShowMobilePanel] = useState(false)
 
   const tasks = useMemo(() => currentMonthData?.tasks || [], [currentMonthData?.tasks])
 
@@ -72,61 +70,19 @@ export const TasksList = ({ pageSize = 10, mobile }: { data?: BookkeepingPeriod[
     }
   }
 
-  if (mobile) {
-    // Get only unresolved tasks - and up to X tasks
-    const unresolvedTasks = sortedTasks?.filter(task => !isComplete(task.status)).slice(0, 3)
-    const totalTasks = sortedTasks?.length
+  console.log('mobile', mobile)
 
+  if (mobile) {
     return (
-      <div className='Layer__tasks-list'>
-        {unresolvedTasks.map((task, index) => (
-          <TasksListItem
-            key={task.id}
-            task={task}
-            goToNextPageIfAllComplete={goToNextPage}
-            defaultOpen={index === indexFirstIncomplete}
-          />
-        ))}
-        {totalTasks > unresolvedTasks.length && (
-          <div style={{ textAlign: 'center', padding: '12px 24px' }}>
-            <Button onClick={() => setShowMobilePanel(true)} fullWidth>
-              Show all tasks (
-              {totalTasks}
-              )
-            </Button>
-          </div>
-        )}
-        <MobilePanel
-          open={showMobilePanel}
-          onClose={() => setShowMobilePanel(false)}
-          header={<p>Tasks</p>}
-        >
-          {sortedTasks && sortedTasks.length > 0
-            ? (
-              <div className='Layer__tasks-list'>
-                {sortedTasks.map((task, index) => (
-                  <TasksListItem
-                    key={task.id}
-                    task={task}
-                    goToNextPageIfAllComplete={goToNextPage}
-                    defaultOpen={index === indexFirstIncomplete}
-                  />
-                ))}
-                {tasks && tasks.length >= 10 && (
-                  <Pagination
-                    currentPage={currentPage}
-                    totalCount={tasks?.length || 0}
-                    pageSize={pageSize}
-                    onPageChange={page => setCurrentPage(page)}
-                  />
-                )}
-              </div>
-            )
-            : (
-              <TasksEmptyState />
-            )}
-        </MobilePanel>
-      </div>
+      <TasksListMobile
+        tasksCount={tasks.length}
+        sortedTasks={sortedTasks}
+        goToNextPage={goToNextPage}
+        indexFirstIncomplete={indexFirstIncomplete}
+        currentPage={currentPage}
+        pageSize={pageSize}
+        setCurrentPage={setCurrentPage}
+      />
     )
   }
 
@@ -137,7 +93,7 @@ export const TasksList = ({ pageSize = 10, mobile }: { data?: BookkeepingPeriod[
           <>
             {sortedTasks.map((task, index) => (
               <TasksListItem
-                key={task.id}
+                key={index}
                 task={task}
                 goToNextPageIfAllComplete={goToNextPage}
                 defaultOpen={index === indexFirstIncomplete}

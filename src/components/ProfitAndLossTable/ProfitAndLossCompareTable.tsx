@@ -13,6 +13,9 @@ import { Table, TableBody, TableHead, TableRow, TableCell } from '../Table'
 import { ProfitAndLossTableStringOverrides } from './ProfitAndLossTableComponent'
 import classNames from 'classnames'
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
+import { HStack } from '../ui/Stack/Stack'
 
 interface ProfilAndLostCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides
@@ -30,6 +33,7 @@ export const ProfitAndLossCompareTable = ({
   } = useContext(ProfitAndLoss.ComparisonContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
   const { rangeDisplayMode } = useGlobalDateRange()
+  const { data: bookkeepingPeriods } = useBookkeepingPeriods()
 
   useEffect(() => {
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
@@ -44,6 +48,25 @@ export const ProfitAndLossCompareTable = ({
         <Loader />
       </div>
     )
+  }
+
+  const getBookkeepingPeriodStatus = (date: Date) => {
+    if (!bookkeepingPeriods || rangeDisplayMode !== 'monthPicker') {
+      return
+    }
+
+    const currentMonth = date.getMonth() + 1
+    const currentYear = date.getFullYear()
+
+    const period = bookkeepingPeriods?.find(
+      period => period.year === currentYear && period.month === currentMonth,
+    )
+
+    if (!period) {
+      return
+    }
+
+    return <BookkeepingStatus status={period.status} month={currentMonth} iconOnly />
   }
 
   const renderRow = (
@@ -151,9 +174,13 @@ export const ProfitAndLossCompareTable = ({
                       dateRange.startDate,
                       comparePeriods,
                       rangeDisplayMode,
-                    ).map((month: string, index: number) => (
+                    ).map((month, index) => (
                       <TableCell key={option.displayName + '-' + index} isHeaderCell>
-                        {month}
+                        <HStack gap='2xs'>
+                          {month.label}
+                          {' '}
+                          {getBookkeepingPeriodStatus(month.date)}
+                        </HStack>
                       </TableCell>
                     ))}
                   </Fragment>
@@ -165,9 +192,9 @@ export const ProfitAndLossCompareTable = ({
                     dateRange.startDate,
                     comparePeriods,
                     rangeDisplayMode,
-                  ).map((month: string, index: number) => (
+                  ).map((month, index) => (
                     <TableCell key={'total-' + index + '-cell'} isHeaderCell>
-                      {month}
+                      {month.label}
                     </TableCell>
                   ))}
                 </Fragment>
