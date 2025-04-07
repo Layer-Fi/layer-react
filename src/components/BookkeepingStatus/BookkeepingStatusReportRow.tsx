@@ -21,7 +21,7 @@ export const BookkeepingStatusReportRow = ({ currentDate, redirectToBookkeepingT
     return null
   }
 
-  const unresolvedTasksCount = data?.tasks.filter(task => isComplete(task.status)).length
+  const unresolvedTasksCount = data?.tasks.filter(task => !isComplete(task.status)).length
 
   const buildAction = () => {
     switch (status) {

@@ -70,8 +70,6 @@ export const TasksList = ({ pageSize = 10, mobile }: { data?: BookkeepingPeriod[
     }
   }
 
-  console.log('mobile', mobile)
-
   if (mobile) {
     return (
       <TasksListMobile
