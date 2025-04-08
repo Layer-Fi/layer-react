@@ -56,11 +56,32 @@ export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) =>
       <span className='Layer__tasks__badge__icon-wrapper' data-status={badgeConfig.color}>
         {badgeConfig.icon}
       </span>
+      {
+        /*
+         * The labels are both rendered, BUT only one is visible at a time (controlled by container query)
+         */
+      }
       {badgeConfig.label && (
-        <Text className='Layer__tasks__badge__label' size={TextSize.sm} status={badgeConfig.color} invertColor={true} weight={TextWeight.bold}>{badgeConfig.label}</Text>
+        <Text
+          className='Layer__tasks__badge__label'
+          size={TextSize.sm}
+          status={badgeConfig.color}
+          invertColor
+          weight={TextWeight.bold}
+        >
+          {badgeConfig.label}
+        </Text>
       )}
       {badgeConfig.labelShort && (
-        <Text className='Layer__tasks__badge__label-short' size={TextSize.sm} status={badgeConfig.color} invertColor={true} weight={TextWeight.bold}>{badgeConfig.labelShort}</Text>
+        <Text
+          className='Layer__tasks__badge__label-short'
+          size={TextSize.sm}
+          status={badgeConfig.color}
+          invertColor
+          weight={TextWeight.bold}
+        >
+          {badgeConfig.labelShort}
+        </Text>
       )}
     </span>
   )
