@@ -5,7 +5,7 @@ import { Onboarding } from '../../components/Onboarding'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import {
-  Internal_ProfitAndLossSummaries,
+  ProfitAndLossSummaries,
   ProfitAndLossSummariesStringOverrides,
 } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Toggle } from '../../components/Toggle'
@@ -13,7 +13,6 @@ import { View } from '../../components/View'
 import { OnboardingStep } from '../../types/layer_context'
 import type { Variants } from '../../utils/styleUtils/sizeVariants'
 import { TagOption } from '../ProjectProfitability/ProjectProfitability'
-import { TransactionsToReview } from './internal/TransactionsToReview'
 import classNames from 'classnames'
 
 interface AccountingOverviewStringOverrides {
@@ -92,21 +91,10 @@ export const AccountingOverview = ({
             onboardingStepOverride={onboardingStepOverride}
           />
         )}
-        <Internal_ProfitAndLossSummaries
+        <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
           chartColorsList={chartColorsList}
-          slots={{
-            unstable_AdditionalListItems: showTransactionsToReview
-              ? [
-                <TransactionsToReview
-                  key='transactions-to-review'
-                  usePnlDateRange={true}
-                  onClick={onTransactionsToReviewClick}
-                  variants={profitAndLossSummariesVariants}
-                />,
-              ]
-              : undefined,
-          }}
+          onTransactionsToReviewClick={onTransactionsToReviewClick}
           variants={profitAndLossSummariesVariants}
         />
         <Container
