@@ -10,6 +10,7 @@ import {
   toMiniChartData,
 } from './internal/ProfitAndLossSummariesMiniChart'
 import { ProfitAndLossSummariesSummary } from './internal/ProfitAndLossSummariesSummary'
+import { TransactionsToReview } from '../../views/AccountingOverview/internal/TransactionsToReview'
 
 export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string
@@ -20,7 +21,7 @@ export interface ProfitAndLossSummariesStringOverrides {
 const SECTION_CLASS_NAME = 'Layer__ProfitAndLossSummaries'
 const SECTION_CLASS_NAMES = `${SECTION_CLASS_NAME} Layer__component`
 
-type ProfitAndLossSummariesProps = {
+type CommonProfitAndLossSummariesProps = {
   actionable?: boolean
   stringOverrides?: ProfitAndLossSummariesStringOverrides
   chartColorsList?: string[]
@@ -35,13 +36,13 @@ type ProfitAndLossSummariesProps = {
   vertical?: boolean
 }
 
-type Internal_ProfitAndLossSummariesProps = {
+type Internal_ProfitAndLossSummariesProps = CommonProfitAndLossSummariesProps & {
   slots?: {
     unstable_AdditionalListItems?: [ReactNode]
   }
-} & ProfitAndLossSummariesProps
+}
 
-export function Internal_ProfitAndLossSummaries({
+function Internal_ProfitAndLossSummaries({
   actionable = false,
   revenueLabel,
   stringOverrides,
@@ -130,5 +131,29 @@ export function Internal_ProfitAndLossSummaries({
   )
 }
 
-export const ProfitAndLossSummaries = (props: ProfitAndLossSummariesProps) =>
-  Internal_ProfitAndLossSummaries(props)
+type ProfitAndLossSummariesProps = CommonProfitAndLossSummariesProps & {
+  onTransactionsToReviewClick?: () => void
+}
+
+export function ProfitAndLossSummaries({
+  onTransactionsToReviewClick,
+  ...restProps
+}: ProfitAndLossSummariesProps) {
+  return (
+    <Internal_ProfitAndLossSummaries
+      {...restProps}
+      slots={{
+        unstable_AdditionalListItems: onTransactionsToReviewClick
+          ? [
+            <TransactionsToReview
+              key='transactions-to-review'
+              usePnlDateRange
+              variants={restProps.variants}
+              onClick={onTransactionsToReviewClick}
+            />,
+          ]
+          : undefined,
+      }}
+    />
+  )
+}
