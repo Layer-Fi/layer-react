@@ -11,6 +11,11 @@ import { TasksPanelNotification } from './TasksPanelNotification'
 import { TasksYearsTabs } from './TasksYearsTabs'
 import { TasksContext, useTasksContext } from './TasksContext'
 import { useTasks } from '../../hooks/useTasks'
+import { ConditionalBlock } from '../utility/ConditionalBlock'
+import { TasksEmptyContainer } from './container/TasksEmptyContainer'
+import { P } from '../ui/Typography/Text'
+import { Heading } from '../ui/Typography/Heading'
+import { VStack } from '../ui/Stack/Stack'
 
 export interface TasksStringOverrides {
   header?: string
@@ -64,13 +69,28 @@ export const TasksComponent = ({
           !open && 'Layer__tasks__content--collapsed',
         )}
       >
-        {isLoading || !data
-          ? (
-            <div className='Layer__tasks__loader-container'>
+        <ConditionalBlock
+          data={data}
+          isLoading={isLoading}
+          Loading={(
+            <TasksEmptyContainer>
               <Loader />
-            </div>
-          )
-          : (
+            </TasksEmptyContainer>
+          )}
+          Inactive={(
+            <TasksEmptyContainer>
+              <VStack gap='sm' align='center'>
+                <Heading size='xs' level={4}>
+                  Not Enrolled in Bookkeeping
+                </Heading>
+                <P>
+                  If you believe this is an error, please contact support.
+                </P>
+              </VStack>
+            </TasksEmptyContainer>
+          )}
+        >
+          {() => (
             <>
               <TasksYearsTabs />
               <TasksMonthSelector />
@@ -78,6 +98,7 @@ export const TasksComponent = ({
               <TasksList mobile={mobile} />
             </>
           )}
+        </ConditionalBlock>
       </div>
     </div>
   )

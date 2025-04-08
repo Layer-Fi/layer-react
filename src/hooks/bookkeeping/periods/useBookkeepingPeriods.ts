@@ -3,11 +3,11 @@ import { useLayerContext } from '../../../contexts/LayerContext'
 import { useAuth } from '../../useAuth'
 import { get } from '../../../api/layer/authenticated_http'
 import {
-  isActiveBookkeepingStatus,
   useBookkeepingStatus,
 } from '../useBookkeepingStatus'
 import type { Task } from '../../../types/tasks'
 import type { EnumWithUnknownValues } from '../../../types/utility/enumWithUnknownValues'
+import { isActiveOrPausedBookkeepingStatus } from '../../../utils/bookkeeping/bookkeepingStatusFilters'
 
 const BOOKKEEPING_PERIOD_STATUSES = [
   'BOOKKEEPING_NOT_PURCHASED',
@@ -57,14 +57,14 @@ function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
-  isActive,
+  isActiveOrPaused,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
-  isActive: boolean
+  isActiveOrPaused: boolean
 }) {
-  if (accessToken && apiUrl && isActive) {
+  if (accessToken && apiUrl && isActiveOrPaused) {
     return {
       accessToken,
       apiUrl,
@@ -79,13 +79,13 @@ export function useBookkeepingPeriods() {
   const { businessId } = useLayerContext()
 
   const { data } = useBookkeepingStatus()
-  const isActive = data ? isActiveBookkeepingStatus(data.status) : false
+  const isActiveOrPaused = data ? isActiveOrPausedBookkeepingStatus(data.status) : false
 
   return useSWR(
     () => buildKey({
       ...auth,
       businessId,
-      isActive,
+      isActiveOrPaused,
     }),
     ({ accessToken, apiUrl, businessId }) => getBookkeepingPeriods(
       apiUrl,

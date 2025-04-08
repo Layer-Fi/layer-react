@@ -15,10 +15,6 @@ const BOOKKEEPING_STATUSES = [
 export type BookkeepingStatus = typeof BOOKKEEPING_STATUSES[number]
 type RawBookkeepingStatus = EnumWithUnknownValues<BookkeepingStatus>
 
-export function isActiveBookkeepingStatus(status: BookkeepingStatus) {
-  return status === 'ACTIVE' || status === 'ONBOARDING'
-}
-
 function constrainToKnownBookkeepingStatus(status: string): BookkeepingStatus {
   if (BOOKKEEPING_STATUSES.includes(status as BookkeepingStatus)) {
     return status as BookkeepingStatus
