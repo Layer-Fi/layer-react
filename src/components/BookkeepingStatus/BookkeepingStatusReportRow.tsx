@@ -11,10 +11,10 @@ import { HeaderCol } from '../Header/HeaderCol'
 
 type BookkeepingStatusReportRowProps = {
   currentDate: Date
-  redirectToBookkeepingTasks?: () => void
+  onViewBookkeepingTasks?: () => void
 }
 
-export const BookkeepingStatusReportRow = ({ currentDate, redirectToBookkeepingTasks }: BookkeepingStatusReportRowProps) => {
+export const BookkeepingStatusReportRow = ({ currentDate, onViewBookkeepingTasks }: BookkeepingStatusReportRowProps) => {
   const { status, data } = useBookkeepingPeriodStatus({ currentMonthDate: currentDate })
 
   if (!status) {
@@ -40,9 +40,9 @@ export const BookkeepingStatusReportRow = ({ currentDate, redirectToBookkeepingT
             <Text size={TextSize.sm} status='disabled' className='Layer__bookkeeping-status-report-row-text'>
               {`Bookkeeping team is preparing your ${format(currentDate, 'MMMM')} report. You have ${pluralize('task', unresolvedTasksCount, true)} awaiting your response.`}
             </Text>
-            {redirectToBookkeepingTasks && unresolvedTasksCount !== undefined && unresolvedTasksCount > 0
+            {onViewBookkeepingTasks && unresolvedTasksCount !== undefined && unresolvedTasksCount > 0
               ? (
-                <Button onClick={redirectToBookkeepingTasks}>{`Complete ${format(currentDate, 'MMMM')} tasks`}</Button>
+                <Button onClick={onViewBookkeepingTasks}>{`Complete ${format(currentDate, 'MMMM')} tasks`}</Button>
               )
               : null}
           </>

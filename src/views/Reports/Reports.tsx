@@ -36,7 +36,7 @@ export interface ReportsProps {
   comparisonConfig?: ProfitAndLossCompareConfig
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
-  redirectToBookkeepingTasks?: () => void
+  onViewBookkeepingTasks?: () => void
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -48,7 +48,7 @@ export interface ReportsPanelProps {
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
   view: ViewBreakpoint
-  redirectToBookkeepingTasks?: () => void
+  onViewBookkeepingTasks?: () => void
 }
 
 const getOptions = (enabledReports: ReportType[]) => {
@@ -82,7 +82,7 @@ export const Reports = ({
   comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
-  redirectToBookkeepingTasks,
+  onViewBookkeepingTasks,
 }: ReportsProps) => {
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
@@ -117,7 +117,7 @@ export const Reports = ({
             profitAndLossConfig={profitAndLossConfig}
             statementOfCashFlowConfig={statementOfCashFlowConfig}
             view={view}
-            redirectToBookkeepingTasks={redirectToBookkeepingTasks}
+            onViewBookkeepingTasks={onViewBookkeepingTasks}
           />
         </ProfitAndLoss>
       </Container>
@@ -132,7 +132,7 @@ const ReportsPanel = ({
   profitAndLossConfig,
   statementOfCashFlowConfig,
   view,
-  redirectToBookkeepingTasks,
+  onViewBookkeepingTasks,
 }: ReportsPanelProps) => {
   return (
     <>
@@ -141,17 +141,17 @@ const ReportsPanel = ({
           stringOverrides={stringOverrides}
           parentRef={containerRef}
           view={view}
-          redirectToBookkeepingTasks={redirectToBookkeepingTasks}
+          onViewBookkeepingTasks={onViewBookkeepingTasks}
           {...profitAndLossConfig}
         />
       )}
       {openReport === 'balanceSheet' && (
-        <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} redirectToBookkeepingTasks={redirectToBookkeepingTasks} />
+        <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} onViewBookkeepingTasks={onViewBookkeepingTasks} />
       )}
       {openReport === 'statementOfCashFlow' && (
         <StatementOfCashFlow
           stringOverrides={stringOverrides?.statementOfCashflow}
-          redirectToBookkeepingTasks={redirectToBookkeepingTasks}
+          onViewBookkeepingTasks={onViewBookkeepingTasks}
           {...statementOfCashFlowConfig}
         />
       )}

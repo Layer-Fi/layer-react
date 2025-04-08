@@ -25,8 +25,8 @@ export const BookkeepingStatus = ({ status, month, emphasizeWarning, iconOnly }:
   const dataProperties = toDataProperties({ status: statusConfig.color, emphasize })
 
   return (
-    <span className='Layer__bookkeping-status' {...dataProperties}>
-      <span className='Layer__bookkeping-status__icon-wrapper' data-status={statusConfig.color}>
+    <span className='Layer__bookkeeping-status' {...dataProperties}>
+      <span className='Layer__bookkeeping-status__icon-wrapper' data-status={statusConfig.color}>
         {statusConfig.icon}
       </span>
       {!iconOnly && (

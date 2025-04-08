@@ -4,13 +4,13 @@
   left: 0;
   width: 100dvw;
   height: 100dvh;
-  z-index: -1;
   opacity: 0;
   transition: opacity 180ms ease-out;
   filter: blur(6px);
   display: flex;
   flex-direction: column;
   background-color: var(--color-base-50);
+  z-index: -1;
 
   &[data-open] {
     z-index: var(--z-index-mobile-panel);

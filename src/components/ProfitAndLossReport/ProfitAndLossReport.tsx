@@ -15,7 +15,7 @@ export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
   parentRef?: RefObject<HTMLDivElement>
   view?: ViewBreakpoint
-  redirectToBookkeepingTasks?: () => void
+  onViewBookkeepingTasks?: () => void
 } & TimeRangePickerConfig
 
 export const ProfitAndLossReport = ({
@@ -27,7 +27,7 @@ export const ProfitAndLossReport = ({
   csvMoneyFormat,
   parentRef,
   view,
-  redirectToBookkeepingTasks,
+  onViewBookkeepingTasks,
 }: ProfitAndLossReportProps) => {
   const { sidebarScope, dateRange } = useContext(ProfitAndLoss.Context)
   const { comparisonConfig } = useContext(ProfitAndLoss.ComparisonContext)
@@ -35,7 +35,7 @@ export const ProfitAndLossReport = ({
   return (
     <View
       type='panel'
-      notification={<BookkeepingStatusPanelNotification onClick={redirectToBookkeepingTasks} />}
+      notification={<BookkeepingStatusPanelNotification onClick={onViewBookkeepingTasks} />}
       header={(
         <Header>
           <HeaderRow>
@@ -72,7 +72,7 @@ export const ProfitAndLossReport = ({
               </HeaderRow>
             )
             : null}
-          <BookkeepingStatusReportRow currentDate={dateRange.startDate} redirectToBookkeepingTasks={redirectToBookkeepingTasks} />
+          <BookkeepingStatusReportRow currentDate={dateRange.startDate} onViewBookkeepingTasks={onViewBookkeepingTasks} />
         </Header>
       )}
     >
