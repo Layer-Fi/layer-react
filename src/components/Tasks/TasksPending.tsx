@@ -8,9 +8,16 @@ import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import classNames from 'classnames'
 import { isComplete } from '../../types/tasks'
 import { BookkeepingStatusDescription } from '../BookkeepingStatus/BookkeepingStatusDescription'
+import { useLayerContext } from '../../contexts/LayerContext'
+import { isBusinessHistoricalMonth } from '../../utils/business'
 
 export const TasksPending = () => {
   const { currentMonthData, currentMonthDate } = useTasksContext()
+  const { business } = useLayerContext()
+
+  const defaultStatus = isBusinessHistoricalMonth(currentMonthDate, business)
+    ? 'IN_PROGRESS_AWAITING_BOOKKEEPER'
+    : undefined
 
   const completedTasks = currentMonthData?.tasks?.filter(task => isComplete(task.status)).length
 
@@ -81,12 +88,14 @@ export const TasksPending = () => {
           : null}
       </div>
       <div className='Layer__tasks-pending-main'>
-        {currentMonthData && (
-          <>
-            <BookkeepingStatus status={currentMonthData.status} month={currentMonthDate.getMonth()} emphasizeWarning />
-            <BookkeepingStatusDescription status={currentMonthData.status} month={currentMonthDate.getMonth()} />
-          </>
-        )}
+        {currentMonthData || defaultStatus
+          ? (
+            <>
+              <BookkeepingStatus status={currentMonthData?.status ?? defaultStatus} month={currentMonthDate.getMonth()} emphasizeWarning />
+              <BookkeepingStatusDescription status={currentMonthData?.status ?? defaultStatus} month={currentMonthDate.getMonth()} />
+            </>
+          )
+          : null}
       </div>
     </div>
   )

@@ -7,7 +7,8 @@ import pluralize from 'pluralize'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 
 type TaskStatusBadgeProps = {
-  status: BookkeepingPeriod['status']
+  status?: BookkeepingPeriod['status']
+  defaultStatus?: BookkeepingPeriod['status']
   tasksCount?: number
 }
 
@@ -40,8 +41,12 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
   }
 }
 
-export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) => {
-  const badgeConfig = buildBadgeConfig(status, tasksCount)
+export const TaskStatusBadge = ({ status, tasksCount, defaultStatus }: TaskStatusBadgeProps) => {
+  if (!status && !defaultStatus) {
+    return
+  }
+
+  const badgeConfig = buildBadgeConfig(status ?? defaultStatus, tasksCount)
 
   if (!badgeConfig) {
     return

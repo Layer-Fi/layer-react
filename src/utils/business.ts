@@ -1,5 +1,5 @@
 import { Business } from '../types'
-import { differenceInCalendarMonths, parseISO, startOfMonth } from 'date-fns'
+import { differenceInCalendarMonths, isAfter, isBefore, parseISO, startOfMonth } from 'date-fns'
 
 export const getActivationDate = (business?: Business) => {
   try {
@@ -36,4 +36,18 @@ export const isDateAllowedToBrowse = (date: Date, business?: Business) => {
   }
 
   return differenceInCalendarMonths(startOfMonth(date), activationDate) >= 0
+}
+
+export const isBusinessHistoricalMonth = (date: Date, business?: Business) => {
+  if (!business) {
+    return false
+  }
+
+  const earliestDateToBrowse = getEarliestDateToBrowse(business)
+
+  if (!earliestDateToBrowse) {
+    return false
+  }
+
+  return !isBefore(startOfMonth(date), earliestDateToBrowse) && !isAfter(startOfMonth(date), startOfMonth(new Date()))
 }
