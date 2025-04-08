@@ -21,10 +21,9 @@ export const BookkeepingStatusPanelNotification = ({ onClick }: BookkeepingStatu
   return (
     <div className='Layer__tasks-header__notification'>
       <div className='Layer__tasks-header__notification__text'>
-        <Text status='warning' invertColor>
+        <Text size={TextSize.sm} status='warning' invertColor>
           <AlertCircle size={11} />
-        </Text>
-        <Text size={TextSize.sm} weight={TextWeight.bold} status='warning' invertColor>
+          {' '}
           {anyPreviousYearIncomplete.unresolvedTasks}
           {' '}
           open tasks in

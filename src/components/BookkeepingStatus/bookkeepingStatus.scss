@@ -1,10 +1,10 @@
-.Layer__bookkeping-status {
+.Layer__bookkeeping-status {
   white-space: nowrap;
   display: flex;
   align-items: center;
   gap: var(--spacing-3xs);
 
-  .Layer__bookkeping-status__icon-wrapper {
+  .Layer__bookkeeping-status__icon-wrapper {
     border-radius: 50%;
     width: 16px;
     height: 16px;
@@ -17,21 +17,21 @@
   }
 
   &[data-status='warning'] {
-    .Layer__bookkeping-status__icon-wrapper {
+    .Layer__bookkeeping-status__icon-wrapper {
       color: var(--color-info-warning-fg);
       background: var(--color-info-warning-bg);
     }
   }
 
   &[data-status='success'] {
-    .Layer__bookkeping-status__icon-wrapper {
+    .Layer__bookkeeping-status__icon-wrapper {
       color: var(--color-info-success-fg);
       background: var(--color-info-success-bg);
     }
   }
 
   &[data-status='error'] {
-    .Layer__bookkeping-status__icon-wrapper {
+    .Layer__bookkeeping-status__icon-wrapper {
       color: var(--color-info-error-fg);
       background: var(--color-info-error-bg);
     }
@@ -44,7 +44,7 @@
     color: var(--color-info-warning-bg);
     background: var(--badge-bg-color-warning-dark);
 
-    .Layer__bookkeping-status__icon-wrapper {
+    .Layer__bookkeeping-status__icon-wrapper {
       color: var(--color-info-warning-bg);
       background: var(--badge-bg-color-warning-dark);
     }

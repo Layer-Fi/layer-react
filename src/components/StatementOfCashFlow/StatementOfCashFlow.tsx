@@ -22,7 +22,7 @@ export interface StatementOfCashFlowStringOverrides {
 
 export type StatementOfCashFlowProps = {
   stringOverrides?: StatementOfCashFlowStringOverrides
-  redirectToBookkeepingTasks?: () => void
+  onViewBookkeepingTasks?: () => void
 } & TimeRangePickerConfig
 
 export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
@@ -33,14 +33,14 @@ export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
 
 type StatementOfCashFlowViewProps = {
   stringOverrides?: StatementOfCashFlowStringOverrides
-  redirectToBookkeepingTasks?: () => void
+  onViewBookkeepingTasks?: () => void
 } & TimeRangePickerConfig
 
 const StatementOfCashFlowView = ({
   stringOverrides,
   allowedDatePickerModes,
   customDateRanges,
-  redirectToBookkeepingTasks,
+  onViewBookkeepingTasks,
 }: StatementOfCashFlowViewProps) => {
   const { start, end } = useGlobalDateRange()
   const { data, isLoading } = useStatementOfCashFlow({ startDate: start, endDate: end })
@@ -68,10 +68,10 @@ const StatementOfCashFlowView = ({
                 />
               </HeaderCol>
             </HeaderRow>
-            <BookkeepingStatusReportRow currentDate={start} redirectToBookkeepingTasks={redirectToBookkeepingTasks} />
+            <BookkeepingStatusReportRow currentDate={start} onViewBookkeepingTasks={onViewBookkeepingTasks} />
           </Header>
         )}
-        notification={<BookkeepingStatusPanelNotification onClick={redirectToBookkeepingTasks} />}
+        notification={<BookkeepingStatusPanelNotification onClick={onViewBookkeepingTasks} />}
       >
         {!data || isLoading
           ? (
