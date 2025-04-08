@@ -6,8 +6,6 @@ import AlertCircle from '../../icons/AlertCircle'
 import Clock from '../../icons/Clock'
 import CheckCircle from '../../icons/CheckCircle'
 import { safeAssertUnreachable } from '../../utils/switch/safeAssertUnreachable'
-import { isComplete, Task } from '../../types/tasks'
-import { compareAsc } from 'date-fns'
 
 type InternalStatusConfig = {
   label: string
@@ -61,18 +59,4 @@ export const buildStatus = (status: BookkeepingPeriodStatus, month: number): Int
     default:
       return safeAssertUnreachable(status, 'Unexpected bookkeeping status in BookkeepingStatus')
   }
-}
-
-export function findLatestUnresolvedTask(tasks: Task[]) {
-  const unresolvedTasks = tasks.filter(task => !isComplete(task.status)).sort((a, b) => {
-    const aDate = new Date(a.effective_date)
-    const bDate = new Date(b.effective_date)
-    return compareAsc(aDate, bDate)
-  })
-
-  if (unresolvedTasks.length === 0) {
-    return
-  }
-
-  return unresolvedTasks[0]
 }
