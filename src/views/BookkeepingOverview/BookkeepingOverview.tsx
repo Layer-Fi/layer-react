@@ -10,6 +10,7 @@ import { useWindowSize } from '../../hooks/useWindowSize'
 import { Variants } from '../../utils/styleUtils/sizeVariants'
 import { BookkeepingProfitAndLossSummariesContainer } from './internal/BookkeepingProfitAndLossSummariesContainer'
 import classNames from 'classnames'
+import { useKeepInMobileViewport } from '../../hooks/useKeepInMobileViewport'
 
 export interface BookkeepingOverviewProps {
   showTitle?: boolean
@@ -48,6 +49,12 @@ export const BookkeepingOverview = ({
 
   const profitAndLossSummariesVariants = slotProps?.profitAndLoss?.summaries?.variants
 
+  const {
+    upperContentRef,
+    targetElementRef,
+    upperElementInFocus,
+  } = useKeepInMobileViewport()
+
   return (
     <ProfitAndLoss asContainer={false}>
       <View
@@ -57,27 +64,45 @@ export const BookkeepingOverview = ({
         sidebar={<Tasks stringOverrides={stringOverrides?.tasks} />}
         showHeader={showTitle}
       >
-        {width <= 1100 && (
-          <Tasks mobile stringOverrides={stringOverrides?.tasks} />
-        )}
-        <Container
-          name='bookkeeping-overview-profit-and-loss'
-          asWidget
-          elevated={true}
+        <div
+          ref={upperContentRef}
+          onTouchStart={() => upperElementInFocus.current = true}
+          onMouseLeave={() => upperElementInFocus.current = true}
+          onClick={() => upperElementInFocus.current = true}
         >
-          <ProfitAndLoss.Header
-            text={stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
-            withDatePicker
-            withStatus
-          />
-          <BookkeepingProfitAndLossSummariesContainer>
-            <ProfitAndLoss.Summaries
-              stringOverrides={stringOverrides?.profitAndLoss?.summaries}
-              variants={profitAndLossSummariesVariants}
+          {width <= 1100 && (
+            <Tasks mobile stringOverrides={stringOverrides?.tasks} />
+          )}
+        </div>
+        <div
+          ref={targetElementRef}
+          onTouchStart={() => upperElementInFocus.current = false}
+          onMouseLeave={() => upperElementInFocus.current = false}
+          onClick={() => upperElementInFocus.current = false}
+        >
+          <Container
+            name='bookkeeping-overview-profit-and-loss'
+            asWidget
+            elevated={true}
+            style={{
+              position: 'relative',
+              zIndex: 2,
+            }}
+          >
+            <ProfitAndLoss.Header
+              text={stringOverrides?.profitAndLoss?.header || 'Profit & Loss'}
+              withDatePicker
+              withStatus
             />
-          </BookkeepingProfitAndLossSummariesContainer>
-          <ProfitAndLoss.Chart />
-        </Container>
+            <BookkeepingProfitAndLossSummariesContainer>
+              <ProfitAndLoss.Summaries
+                stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+                variants={profitAndLossSummariesVariants}
+              />
+            </BookkeepingProfitAndLossSummariesContainer>
+            <ProfitAndLoss.Chart />
+          </Container>
+        </div>
         <div className='Layer__bookkeeping-overview-profit-and-loss-charts'>
           <Toggle
             name='pnl-detailed-charts'
