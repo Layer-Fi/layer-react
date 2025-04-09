@@ -1,6 +1,6 @@
 import AlertCircle from '../../icons/AlertCircle'
 import Clock from '../../icons/Clock'
-import { Text, TextSize, TextStatus, TextWeight } from '../Typography/Text'
+import { Text, TextSize, TextWeight } from '../Typography/Text'
 import CheckCircle from '../../icons/CheckCircle'
 import { BookkeepingPeriod } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import pluralize from 'pluralize'
@@ -17,26 +17,28 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
     case 'NOT_STARTED':
     case 'CLOSING_IN_REVIEW':
       return {
-        color: 'info' as TextStatus,
+        color: 'info' as const,
         icon: <Clock size={12} />,
+        label: tasksCount ? pluralize('task', tasksCount, true) : undefined,
+        labelShort: tasksCount ? `${tasksCount}` : undefined,
       }
     case 'IN_PROGRESS_AWAITING_CUSTOMER':
       return {
+        color: 'warning' as const,
         label: pluralize('task', tasksCount, true),
         labelShort: `${tasksCount}`,
-        color: 'warning' as TextStatus,
         icon: <AlertCircle size={12} />,
       }
     case 'CLOSED_OPEN_TASKS':
       return {
+        color: 'error' as const,
         label: pluralize('task', tasksCount, true),
         labelShort: `${tasksCount}`,
-        color: 'error' as TextStatus,
         icon: <AlertCircle size={12} />,
       }
     case 'CLOSED_COMPLETE':
       return {
-        color: 'success' as TextStatus,
+        color: 'success' as const,
         icon: <CheckCircle size={12} />,
       }
   }
@@ -66,7 +68,7 @@ export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) =>
           className='Layer__tasks__badge__label'
           size={TextSize.sm}
           status={badgeConfig.color}
-          invertColor
+          invertColor={badgeConfig.color === 'warning'}
           weight={TextWeight.bold}
         >
           {badgeConfig.label}
@@ -77,7 +79,7 @@ export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) =>
           className='Layer__tasks__badge__label-short'
           size={TextSize.sm}
           status={badgeConfig.color}
-          invertColor
+          invertColor={badgeConfig.color === 'warning'}
           weight={TextWeight.bold}
         >
           {badgeConfig.labelShort}
