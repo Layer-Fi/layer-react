@@ -86,7 +86,11 @@ export const TasksPending = () => {
         {currentMonthData && (
           <>
             <BookkeepingStatus status={currentMonthData.status} month={currentMonthDate.getMonth()} emphasizeWarning />
-            <BookkeepingStatusDescription status={currentMonthData.status} month={currentMonthDate.getMonth()} />
+            <BookkeepingStatusDescription
+              status={currentMonthData.status}
+              month={currentMonthDate.getMonth()}
+              incompleteTasksCount={incompleteTaskCount}
+            />
           </>
         )}
       </div>

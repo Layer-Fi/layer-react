@@ -1,7 +1,7 @@
 import { BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { Text, TextSize } from '../Typography/Text'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
-import { buildStatus } from './utils'
+import { getBookkeepingStatusConfig } from './utils'
 
 type BookkeepingStatusProps = {
   month?: number
@@ -15,8 +15,7 @@ export const BookkeepingStatus = ({ status, month, emphasizeWarning, iconOnly }:
     return
   }
 
-  const statusConfig = buildStatus(status, month)
-
+  const statusConfig = getBookkeepingStatusConfig({ status, month })
   if (!statusConfig) {
     return
   }
@@ -30,7 +29,13 @@ export const BookkeepingStatus = ({ status, month, emphasizeWarning, iconOnly }:
         {statusConfig.icon}
       </span>
       {!iconOnly && (
-        <Text size={TextSize.sm} status={statusConfig.color} invertColor={emphasize}>{statusConfig.label}</Text>
+        <Text
+          size={TextSize.sm}
+          status={statusConfig.color}
+          invertColor={emphasize}
+        >
+          {statusConfig.label}
+        </Text>
       )}
     </span>
   )

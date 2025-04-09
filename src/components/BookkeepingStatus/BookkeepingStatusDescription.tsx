@@ -1,18 +1,22 @@
 import { BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { Text, TextSize } from '../Typography/Text'
-import { buildStatus } from './utils'
+import { getBookkeepingStatusConfig } from './utils'
 
 type BookkeepingStatusDescriptionProps = {
-  month?: number
-  status?: BookkeepingPeriodStatus
+  month: number
+  status: BookkeepingPeriodStatus
+  incompleteTasksCount: number
 }
 
-export const BookkeepingStatusDescription = ({ month, status }: BookkeepingStatusDescriptionProps) => {
-  if (!status || month === undefined) {
-    return
+export const BookkeepingStatusDescription = ({ month, status, incompleteTasksCount }: BookkeepingStatusDescriptionProps) => {
+  const statusConfig = getBookkeepingStatusConfig({ status, month, incompleteTasksCount })
+  if (!statusConfig) {
+    return null
   }
 
   return (
-    <Text size={TextSize.sm} status='disabled'>{buildStatus(status, month)?.description}</Text>
+    <Text size={TextSize.sm} status='disabled'>
+      {statusConfig.description}
+    </Text>
   )
 }
