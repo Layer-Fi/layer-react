@@ -6,27 +6,29 @@ import { Heading, HeadingSize } from '../Typography/Heading'
 import { Text, TextSize } from '../Typography/Text'
 import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import classNames from 'classnames'
-import { isComplete } from '../../types/tasks'
 import { BookkeepingStatusDescription } from '../BookkeepingStatus/BookkeepingStatusDescription'
+import { getCompletedTasks, getIncompleteTasks } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 
 export const TasksPending = () => {
   const { currentMonthData, currentMonthDate } = useTasksContext()
 
-  const completedTasks = currentMonthData?.tasks?.filter(task => isComplete(task.status)).length
+  const totalTaskCount = currentMonthData?.tasks?.length ?? 0
+  const completedTaskCount = getCompletedTasks(currentMonthData?.tasks ?? []).length
+  const incompleteTaskCount = getIncompleteTasks(currentMonthData?.tasks ?? []).length
 
   const chartData = [
     {
       name: 'done',
-      value: completedTasks,
+      value: completedTaskCount,
     },
     {
       name: 'pending',
-      value: currentMonthData?.tasks?.filter(task => !isComplete(task.status)).length,
+      value: incompleteTaskCount,
     },
   ]
 
   const taskStatusClassName = classNames(
-    completedTasks && completedTasks > 0
+    completedTaskCount > 0
       ? 'Layer__tasks-pending-bar__status--done'
       : 'Layer__tasks-pending-bar__status--pending',
   )
@@ -39,9 +41,9 @@ export const TasksPending = () => {
           ? (
             <div className='Layer__tasks-pending-bar'>
               <Text size={TextSize.sm}>
-                <span className={taskStatusClassName}>{completedTasks}</span>
+                <span className={taskStatusClassName}>{completedTaskCount}</span>
                 /
-                {currentMonthData?.tasks?.length}
+                {totalTaskCount}
                 {' '}
                 done
               </Text>

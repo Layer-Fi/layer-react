@@ -5,9 +5,10 @@ import { get } from '../../../api/layer/authenticated_http'
 import {
   useBookkeepingStatus,
 } from '../useBookkeepingStatus'
-import type { Task } from '../../../types/tasks'
+import type { RawTask } from '../../../types/tasks'
 import type { EnumWithUnknownValues } from '../../../types/utility/enumWithUnknownValues'
 import { isActiveOrPausedBookkeepingStatus } from '../../../utils/bookkeeping/bookkeepingStatusFilters'
+import { getUserVisibleTasks } from '../../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 
 const BOOKKEEPING_PERIOD_STATUSES = [
   'BOOKKEEPING_NOT_PURCHASED',
@@ -39,7 +40,7 @@ type RawBookkeepingPeriod = {
   month: number
   year: number
   status: RawBookkeepingPeriodStatus
-  tasks: ReadonlyArray<Task>
+  tasks: ReadonlyArray<RawTask>
 }
 
 const getBookkeepingPeriods = get<
@@ -97,6 +98,7 @@ export function useBookkeepingPeriods() {
           periods.map(period => ({
             ...period,
             status: constrainToKnownBookkeepingPeriodStatus(period.status),
+            tasks: getUserVisibleTasks(period.tasks),
           })),
       ),
   )

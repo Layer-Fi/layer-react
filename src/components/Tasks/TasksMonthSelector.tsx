@@ -5,7 +5,7 @@ import { TaskMonthTile } from './TaskMonthTile'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { useTasksContext } from './TasksContext'
-import { isComplete } from '../../types/tasks'
+import { getCompletedTasks } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 
 const isCurrentMonth = (period: MonthData, currentDate: Date) =>
   getMonth(currentDate) === period.month - 1 && getYear(currentDate) === period.year
@@ -47,10 +47,10 @@ const TasksMonthSelector = () => {
         monthStr: format(date, 'MMM'),
         date,
         disabled,
-        completed: taskData.tasks?.filter(task => isComplete(task.status)).length,
+        completed: getCompletedTasks(taskData.tasks).length,
         total,
         ...taskData,
-      } as MonthData
+      } satisfies MonthData
     })
   }, [currentYearData, currentMonthDate, minDate])
 

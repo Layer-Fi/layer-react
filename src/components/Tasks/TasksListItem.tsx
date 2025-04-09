@@ -1,26 +1,25 @@
 import { useEffect, useMemo, useState } from 'react'
-import AlertCircle from '../../icons/AlertCircle'
-import Check from '../../icons/Check'
 import ChevronDownFill from '../../icons/ChevronDownFill'
-import { isComplete, Task } from '../../types/tasks'
 import { Button, ButtonVariant } from '../Button'
 import { FileInput } from '../Input'
 import { Textarea } from '../Textarea'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
 import { useTasksContext } from './TasksContext'
+import { isCompletedTask, type UserVisibleTask } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { getIconForTask } from '../../utils/bookkeeping/tasks/getBookkeepingTaskStatusIcon'
 
 export const TasksListItem = ({
   task,
   goToNextPageIfAllComplete,
   defaultOpen,
 }: {
-  task: Task
-  goToNextPageIfAllComplete: (task: Task) => void
+  task: UserVisibleTask
+  goToNextPageIfAllComplete: (task: UserVisibleTask) => void
   defaultOpen: boolean
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen)
-  const [userResponse, setUserResponse] = useState(task.user_response || '')
+  const [userResponse, setUserResponse] = useState(task.user_response ?? '')
   const [selectedFiles, setSelectedFiles] = useState<File[]>()
 
   const {
@@ -31,12 +30,12 @@ export const TasksListItem = ({
   const taskBodyClassName = classNames(
     'Layer__tasks-list-item__body',
     isOpen && 'Layer__tasks-list-item__body--expanded',
-    isComplete(task.status) && 'Layer__tasks-list-item--completed',
+    isCompletedTask(task) && 'Layer__tasks-list-item--completed',
   )
 
   const taskHeadClassName = classNames(
     'Layer__tasks-list-item__head-info',
-    isComplete(task.status)
+    isCompletedTask(task)
       ? 'Layer__tasks-list-item--completed'
       : 'Layer__tasks-list-item--pending',
   )
@@ -134,13 +133,7 @@ export const TasksListItem = ({
         >
           <div className={taskHeadClassName}>
             <div className='Layer__tasks-list-item__head-info__status'>
-              {isComplete(task.status)
-                ? (
-                  <Check size={12} />
-                )
-                : (
-                  <AlertCircle size={12} />
-                )}
+              {getIconForTask(task)}
             </div>
             <Text size={TextSize.md}>{task.title}</Text>
           </div>
