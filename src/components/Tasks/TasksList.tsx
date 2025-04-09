@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react'
 import SmileIcon from '../../icons/SmileIcon'
 import { Text, TextSize } from '../Typography'
-import { BookkeepingPeriod } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { useTasksContext } from './TasksContext'
-import { isComplete, Task } from '../../types/tasks'
+import { RawTask } from '../../types/tasks'
 import { TasksListItem } from './TasksListItem'
 import { Pagination } from '../Pagination/Pagination'
 import { TasksListMobile } from './TasksListMobile'
+import { isCompletedTask, isIncompleteTask } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 
 function paginateArray<T>(array: ReadonlyArray<T>, chunkSize: number = 10): T[][] {
   const result: T[][] = []
@@ -31,15 +31,20 @@ const TasksEmptyState = () => (
   </div>
 )
 
-export const TasksList = ({ pageSize = 10, mobile }: { data?: BookkeepingPeriod[], pageSize?: number, mobile?: boolean }) => {
+type TasksListProps = {
+  pageSize?: number
+  mobile?: boolean
+}
+
+export function TasksList({ pageSize = 10, mobile }: TasksListProps) {
   const { currentMonthData } = useTasksContext()
 
-  const tasks = useMemo(() => currentMonthData?.tasks || [], [currentMonthData?.tasks])
+  const tasks = useMemo(() => currentMonthData?.tasks ?? [], [currentMonthData?.tasks])
 
   const firstPageWithIncompleteTasks = paginateArray(
     tasks,
     pageSize,
-  ).findIndex(page => page.some(d => !isComplete(d.status)))
+  ).findIndex(page => page.some(task => isIncompleteTask(task)))
 
   const [currentPage, setCurrentPage] = useState(
     firstPageWithIncompleteTasks === -1
@@ -52,17 +57,28 @@ export const TasksList = ({ pageSize = 10, mobile }: { data?: BookkeepingPeriod[
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
 
-    return (tasks as Task[]).sort(x => isComplete(x.status) ? 1 : -1).slice(firstPageIndex, lastPageIndex)
+    return [...tasks]
+      .sort((taskA, taskB) => {
+        if (isCompletedTask(taskA) && isIncompleteTask(taskB)) {
+          return 1
+        }
+
+        if (isIncompleteTask(taskA) && isCompletedTask(taskB)) {
+          return -1
+        }
+
+        return 0
+      })
+      .slice(firstPageIndex, lastPageIndex)
   }, [currentPage, pageSize, tasks])
 
-  const indexFirstIncomplete = sortedTasks?.findIndex(
-    task => !isComplete(task.status),
-  )
+  const indexFirstIncomplete = sortedTasks?.findIndex(task => isIncompleteTask(task))
 
-  const goToNextPage = (task: Task) => {
+  const goToNextPage = (task: Pick<RawTask, 'id' | 'status'>) => {
     const allComplete = sortedTasks
       ?.filter(taskInList => taskInList.id !== task.id)
-      .every(task => isComplete(task.status))
+      .every(task => isCompletedTask(task))
+
     const hasMorePages = sortedTasks ? sortedTasks.length > pageSize * currentPage : false
 
     if (allComplete && hasMorePages) {

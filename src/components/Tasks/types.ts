@@ -1,5 +1,5 @@
 import { BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
-import { Task } from '../../types/tasks'
+import type { UserVisibleTask } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 
 export type MonthData = {
   monthStr: string
@@ -10,5 +10,5 @@ export type MonthData = {
   completed: number
   status?: BookkeepingPeriodStatus
   disabled?: boolean
-  tasks: Task[]
+  tasks: ReadonlyArray<UserVisibleTask>
 }

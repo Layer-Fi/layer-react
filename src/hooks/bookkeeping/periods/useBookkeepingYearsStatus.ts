@@ -3,7 +3,7 @@ import { useBookkeepingPeriods } from './useBookkeepingPeriods'
 import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { getActivationDate } from '../../../utils/business'
 import { getYear } from 'date-fns'
-import { isComplete, Task } from '../../../types/tasks'
+import { isIncompleteTask, type UserVisibleTask } from '../../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 
 export const useBookkeepingYearsStatus = () => {
   const { business } = useLayerContext()
@@ -19,9 +19,11 @@ export const useBookkeepingYearsStatus = () => {
     return Array.from({ length: count }, (_, index) => ({
       year: startYear + index,
     })).map((d) => {
-      const tasks = data?.filter(period => period.year === d.year).reduce((acc, period) => acc.concat(period.tasks ?? []), [] as Task[])
+      const tasks = data
+        ?.filter(period => period.year === d.year)
+        .reduce((acc, period) => acc.concat(period.tasks), [] as Array<UserVisibleTask>)
 
-      const unresolvedTasks = tasks?.filter(task => !isComplete(task.status)).length
+      const unresolvedTasks = tasks?.filter(task => isIncompleteTask(task)).length
 
       return {
         ...d,

@@ -1,23 +1,18 @@
 import { FileMetadata } from '../../types/file_upload'
-import { Task } from '../../types/tasks'
+import { RawTask } from '../../types/tasks'
 import { post, postWithFormData } from './authenticated_http'
 
-export const submitResponseToTask = post<{ data: Task }>(
+export const submitResponseToTask = post<{ data: RawTask }>(
   ({ businessId, taskId }) =>
     `/v1/businesses/${businessId}/tasks/${taskId}/user-response`,
 )
 
-export const updateUploadDocumentTaskDescription = post<{ data: Task }>(
+export const updateUploadDocumentTaskDescription = post<{ data: RawTask }>(
   ({ businessId, taskId }) =>
     `/v1/businesses/${businessId}/tasks/${taskId}/upload/update-description`,
 )
 
-export const markTaskAsComplete = post<{ data: Task }>(
-  ({ businessId, taskId }) =>
-    `/v1/businesses/${businessId}/tasks/${taskId}/complete`,
-)
-
-export const deleteTaskUploads = post<{ data: Task }>(
+export const deleteTaskUploads = post<{ data: RawTask }>(
   ({ businessId, taskId }) =>
     `/v1/businesses/${businessId}/tasks/${taskId}/upload/delete`,
 )

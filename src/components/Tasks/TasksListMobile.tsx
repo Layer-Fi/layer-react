@@ -2,16 +2,16 @@ import { Button } from '../Button/Button'
 import { MobilePanel } from '../MobilePanel/MobilePanel'
 import { TextButton } from '../Button'
 import { useState } from 'react'
-import { isComplete, Task } from '../../types/tasks'
 import { TasksListItem } from './TasksListItem'
 import { Pagination } from '../Pagination/Pagination'
+import { getIncompleteTasks, type UserVisibleTask } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 
 const MOBILE_SHOW_UNRESOLVED_TASKS_COUNT = 2
 
 type TasksListMobileProps = {
   tasksCount: number
-  sortedTasks: Task[]
-  goToNextPage: (task: Task) => void
+  sortedTasks: ReadonlyArray<UserVisibleTask>
+  goToNextPage: (task: UserVisibleTask) => void
   indexFirstIncomplete: number
   currentPage: number
   pageSize: number
@@ -29,7 +29,7 @@ export const TasksListMobile = ({
 }: TasksListMobileProps) => {
   const [showMobilePanel, setShowMobilePanel] = useState(false)
 
-  const unresolvedTasks = sortedTasks?.filter(task => !isComplete(task.status)).slice(0, MOBILE_SHOW_UNRESOLVED_TASKS_COUNT)
+  const unresolvedTasks = getIncompleteTasks(sortedTasks).slice(0, MOBILE_SHOW_UNRESOLVED_TASKS_COUNT)
   const totalTasks = sortedTasks?.length
 
   return (

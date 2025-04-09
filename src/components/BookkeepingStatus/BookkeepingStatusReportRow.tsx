@@ -5,9 +5,9 @@ import { format, getMonth } from 'date-fns'
 import { VStack } from '../ui/Stack/Stack'
 import { Button } from '../Button'
 import pluralize from 'pluralize'
-import { isComplete } from '../../types/tasks'
 import { HeaderRow } from '../Header/HeaderRow'
 import { HeaderCol } from '../Header/HeaderCol'
+import { isIncompleteTask } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 
 type BookkeepingStatusReportRowProps = {
   currentDate: Date
@@ -21,7 +21,7 @@ export const BookkeepingStatusReportRow = ({ currentDate, onViewBookkeepingTasks
     return null
   }
 
-  const unresolvedTasksCount = data?.tasks.filter(task => !isComplete(task.status)).length
+  const unresolvedTasksCount = data?.tasks.filter(task => isIncompleteTask(task)).length
 
   const buildAction = () => {
     switch (status) {

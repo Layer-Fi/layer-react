@@ -5,13 +5,12 @@ type Document = {
   document_type: DocumentType
   file_name: string
   presigned_url: S3PresignedUrl
-  // add the other fields if/when necessary
 }
 
-export type Task = {
+export type RawTask = {
   id: string
   question: string
-  status: TasksStatusType
+  status: TasksStatus
   title: string
   transaction_id: string | null
   type: string
@@ -27,11 +26,12 @@ export type Task = {
   documents: Document[]
 }
 
-export type TasksStatusType = 'COMPLETED' | 'TODO' | 'USER_MARKED_COMPLETED'
+const _TASKS_STATUSES = [
+  'TODO',
+  'USER_MARKED_COMPLETED',
+  'COMPLETED',
+  'ARCHIVED',
+] as const
+
+export type TasksStatus = typeof _TASKS_STATUSES[number]
 export type TasksResponseType = 'FREE_RESPONSE' | 'UPLOAD_DOCUMENT'
-
-const COMPLETED_TASK_TYPES = ['COMPLETED', 'USER_MARKED_COMPLETED']
-
-export function isComplete(taskType: TasksStatusType) {
-  return COMPLETED_TASK_TYPES.includes(taskType)
-}
