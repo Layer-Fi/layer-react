@@ -49,11 +49,7 @@ export const BookkeepingOverview = ({
 
   const profitAndLossSummariesVariants = slotProps?.profitAndLoss?.summaries?.variants
 
-  const {
-    upperContentRef,
-    targetElementRef,
-    upperElementInFocus,
-  } = useKeepInMobileViewport()
+  const { upperContentRef, targetElementRef, upperElementInFocus } = useKeepInMobileViewport()
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -64,22 +60,12 @@ export const BookkeepingOverview = ({
         sidebar={<Tasks stringOverrides={stringOverrides?.tasks} />}
         showHeader={showTitle}
       >
-        <div
-          ref={upperContentRef}
-          onTouchStart={() => upperElementInFocus.current = true}
-          onMouseLeave={() => upperElementInFocus.current = true}
-          onClick={() => upperElementInFocus.current = true}
-        >
+        <div ref={upperContentRef} onPointerEnter={() => upperElementInFocus.current = true}>
           {width <= 1100 && (
             <Tasks mobile stringOverrides={stringOverrides?.tasks} />
           )}
         </div>
-        <div
-          ref={targetElementRef}
-          onTouchStart={() => upperElementInFocus.current = false}
-          onMouseLeave={() => upperElementInFocus.current = false}
-          onClick={() => upperElementInFocus.current = false}
-        >
+        <div ref={targetElementRef} onPointerEnter={() => upperElementInFocus.current = false}>
           <Container
             name='bookkeeping-overview-profit-and-loss'
             asWidget
