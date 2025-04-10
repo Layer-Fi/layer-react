@@ -23,7 +23,11 @@ import { ErrorText, Text } from '../Typography'
 import { TextUseTooltip } from '../Typography/Text'
 import { Assignment } from './Assignment'
 import classNames from 'classnames'
-import { parseISO, format as formatTime } from 'date-fns'
+import { parseISO, format as formatTime, getMonth, format } from 'date-fns'
+import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
+import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip/Tooltip'
+import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 
 type Props = {
   index: number
@@ -68,6 +72,9 @@ export const BankTransactionListItem = ({
   }
 
   const [showComponent, setShowComponent] = useState(false)
+
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -191,7 +198,7 @@ export const BankTransactionListItem = ({
         />
       </span>
       <span className={`${className}__base-row`}>
-        {!categorized
+        {categorizationEnabled && !categorized
           ? (
             <CategorySelect
               bankTransaction={bankTransaction}
@@ -207,7 +214,7 @@ export const BankTransactionListItem = ({
           )
           : null}
         {categorized ? <Assignment bankTransaction={bankTransaction} /> : null}
-        {!categorized && !showRetry
+        {categorizationEnabled && !categorized && !showRetry
           ? (
             <SubmitButton
               onClick={() => {
@@ -225,7 +232,7 @@ export const BankTransactionListItem = ({
             </SubmitButton>
           )
           : null}
-        {!categorized && showRetry
+        {categorizationEnabled && !categorized && showRetry
           ? (
             <RetryButton
               onClick={() => {
@@ -239,6 +246,20 @@ export const BankTransactionListItem = ({
             >
               Retry
             </RetryButton>
+          )
+          : null}
+        {!categorizationEnabled && !categorized
+          ? (
+            <Tooltip offset={12}>
+              <TooltipTrigger><BookkeepingStatus status='IN_PROGRESS_AWAITING_BOOKKEEPER' month={getMonth(new Date(bankTransaction.date))} /></TooltipTrigger>
+              <TooltipContent className='Layer__tooltip' width='md'>
+                Bookkeeping team is preparing your
+                {' '}
+                {format(new Date(bankTransaction.date), 'MMMM')}
+                {' '}
+                report. The report can change and current numbers might not be final.
+              </TooltipContent>
+            </Tooltip>
           )
           : null}
       </span>
