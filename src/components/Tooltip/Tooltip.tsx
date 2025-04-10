@@ -9,6 +9,7 @@ import {
 import { TooltipContext, useTooltip, useTooltipContext } from './useTooltip'
 import { useMergeRefs, FloatingPortal } from '@floating-ui/react'
 import type { Placement } from '@floating-ui/react'
+import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 
 export interface TooltipOptions {
   initialOpen?: boolean
@@ -68,14 +69,16 @@ export const TooltipTrigger = forwardRef<
   )
 })
 
-type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'>
+type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'> & { width?: 'md' }
 
 export const TooltipContent = forwardRef<
   HTMLDivElement,
   TooltipContentProps
->(function TooltipContent({ className, ...props }, propRef) {
+>(function TooltipContent({ className, width, ...props }, propRef) {
   const context = useTooltipContext()
   const ref = useMergeRefs([context.refs.setFloating, propRef])
+
+  const dataProperties = toDataProperties({ width })
 
   if (!context.open || context.disabled) return null
 
@@ -87,6 +90,7 @@ export const TooltipContent = forwardRef<
         style={{
           ...context.floatingStyles,
         }}
+        {...dataProperties}
         {...context.getFloatingProps(props)}
       >
         <div className='Layer__tooltip-content' style={{ ...context.styles }}>

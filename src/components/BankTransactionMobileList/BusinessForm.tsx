@@ -206,7 +206,7 @@ export const BusinessForm = ({
             </Button>
           )
           : null}
-        {options.length > 0
+        {showCategorization && options.length > 0
           ? (
             <Button
               onClick={save}
