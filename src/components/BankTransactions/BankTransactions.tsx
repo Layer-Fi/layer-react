@@ -151,7 +151,15 @@ const BankTransactionsContent = ({
 
   useEffect(() => {
     if (JSON.stringify(inputFilters) !== JSON.stringify(filters)) {
-      if (!inputFilters?.categorizationStatus && categorizeView) {
+      if (!categorizationEnabled) {
+        /** @TODO - this needs better handling to request all transactions when bookkeeping */
+        setFilters({
+          ...filters,
+          ...inputFilters,
+          categorizationStatus: DisplayState.all,
+        })
+      }
+      else if (!inputFilters?.categorizationStatus && categorizeView) {
         setFilters({
           ...filters,
           ...inputFilters,
