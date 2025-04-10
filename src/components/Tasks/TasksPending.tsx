@@ -85,7 +85,7 @@ export const TasksPending = () => {
       <div className='Layer__tasks-pending-main'>
         {currentMonthData && (
           <>
-            <BookkeepingStatus status={currentMonthData.status} month={currentMonthDate.getMonth()} emphasizeWarning />
+            <BookkeepingStatus status={currentMonthData.status} month={currentMonthDate.getMonth()} />
             <BookkeepingStatusDescription
               status={currentMonthData.status}
               month={currentMonthDate.getMonth()}

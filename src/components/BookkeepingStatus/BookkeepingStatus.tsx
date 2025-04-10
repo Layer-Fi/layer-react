@@ -6,11 +6,10 @@ import { getBookkeepingStatusConfig } from './utils'
 type BookkeepingStatusProps = {
   month?: number
   status?: BookkeepingPeriodStatus
-  emphasizeWarning?: boolean
   iconOnly?: boolean
 }
 
-export const BookkeepingStatus = ({ status, month, emphasizeWarning, iconOnly }: BookkeepingStatusProps) => {
+export const BookkeepingStatus = ({ status, month, iconOnly }: BookkeepingStatusProps) => {
   if (!status || month === undefined) {
     return
   }
@@ -20,8 +19,7 @@ export const BookkeepingStatus = ({ status, month, emphasizeWarning, iconOnly }:
     return
   }
 
-  const emphasize = statusConfig.color === 'warning' && emphasizeWarning
-  const dataProperties = toDataProperties({ status: statusConfig.color, emphasize })
+  const dataProperties = toDataProperties({ status: statusConfig.color })
 
   return (
     <span className='Layer__bookkeeping-status' {...dataProperties}>
@@ -32,7 +30,6 @@ export const BookkeepingStatus = ({ status, month, emphasizeWarning, iconOnly }:
         <Text
           size={TextSize.sm}
           status={statusConfig.color}
-          invertColor={emphasize}
         >
           {statusConfig.label}
         </Text>

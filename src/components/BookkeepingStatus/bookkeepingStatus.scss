@@ -36,17 +36,4 @@
       background: var(--color-info-error-bg);
     }
   }
-
-  &[data-emphasize='true'][data-status='warning'] {
-    padding: var(--spacing-xs);
-    padding-bottom: var(--spacing-2xs);
-    border-radius: var(--border-radius-3xs);
-    color: var(--color-info-warning-bg);
-    background: var(--badge-bg-color-warning-dark);
-
-    .Layer__bookkeeping-status__icon-wrapper {
-      color: var(--color-info-warning-bg);
-      background: var(--badge-bg-color-warning-dark);
-    }
-  }
 }

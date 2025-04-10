@@ -35,43 +35,36 @@ export function getBookkeepingStatusConfig({
   switch (status) {
     case 'IN_PROGRESS_AWAITING_BOOKKEEPER':
     case 'NOT_STARTED':
+    case 'CLOSING_IN_REVIEW': {
       return {
         label: 'Books in progress',
         description: `We're working on your ${monthName} books. ${actionPhrase}`,
         color: 'info',
         icon: <Clock size={12} />,
       }
-    case 'CLOSING_IN_REVIEW':
-      return {
-        label: 'Books in review',
-        description: `We're working on your ${monthName} books. ${actionPhrase}`,
-        color: 'info',
-        icon: <Clock size={12} />,
-      }
+    }
     case 'IN_PROGRESS_AWAITING_CUSTOMER':
+    case 'CLOSED_OPEN_TASKS': {
       return {
-        label: `${monthName} books - Action required`,
+        label: 'Action required',
         description: `Please respond to the below tasks to help us complete your ${monthName} books.`,
         color: 'warning',
         icon: <AlertCircle size={12} />,
       }
-    case 'CLOSED_OPEN_TASKS':
-      return {
-        label: `${monthName} books - Action required`,
-        description: `Please respond to the below tasks to help us complete your ${monthName} books.`,
-        color: 'error',
-        icon: <AlertCircle size={12} />,
-      }
-    case 'CLOSED_COMPLETE':
+    }
+    case 'CLOSED_COMPLETE': {
       return {
         label: 'Books completed',
         description: `Your ${monthName} books are complete and ready to view!`,
         color: 'success',
         icon: <CheckCircle size={12} />,
       }
-    case 'BOOKKEEPING_NOT_PURCHASED':
+    }
+    case 'BOOKKEEPING_NOT_PURCHASED': {
       return
-    default:
+    }
+    default: {
       return safeAssertUnreachable(status, 'Unexpected bookkeeping status in BookkeepingStatus')
+    }
   }
 }
