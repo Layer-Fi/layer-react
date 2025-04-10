@@ -9,6 +9,7 @@ import {
 import { useElementSize } from '../../hooks/useElementSize'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import classNames from 'classnames'
+import { Span } from '../ui/Typography/Text'
 
 export interface Option {
   label: string
@@ -203,7 +204,7 @@ const ToggleOption = ({
               {leftIcon && (
                 <span className='Layer__toggle-option__icon'>{leftIcon}</span>
               )}
-              <span>{label}</span>
+              <Span noWrap>{label}</Span>
             </span>
           </label>
         </TooltipTrigger>
@@ -229,7 +230,7 @@ const ToggleOption = ({
         {leftIcon && (
           <span className='Layer__toggle-option__icon'>{leftIcon}</span>
         )}
-        <span>{label}</span>
+        <Span noWrap>{label}</Span>
       </span>
     </label>
   )

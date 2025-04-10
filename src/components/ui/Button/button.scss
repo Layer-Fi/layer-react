@@ -6,8 +6,6 @@
   cursor: pointer;
   display: inline-grid;
   min-inline-size: 0;
-  min-block-size: 2rem;
-  padding-inline: var(--spacing-md);
   justify-content: center;
   outline: none;
   user-select: none;
@@ -17,7 +15,6 @@
   &[data-icon] {
     padding-inline: 0;
     inline-size: 2rem;
-    block-size: 2rem;
   }
 
   &[data-variant="solid"] {
@@ -52,8 +49,19 @@
     }
   }
 
+  &[data-size="sm"] {
+    min-block-size: 1.5rem;
+    padding-inline: var(--spacing-xs);
+    font-size: var(--text-sm);
+  }
+  &[data-size="md"] {
+    min-block-size: 2rem;
+    padding-inline: var(--spacing-md);
+    font-size: var(--text-md);
+  }
   &[data-size="lg"] {
     min-block-size: 2.25rem;
+    padding-inline: var(--spacing-lg);
     font-size: var(--text-lg);
   }
 

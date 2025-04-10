@@ -35,13 +35,11 @@ import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookke
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 
 type Props = {
-  index: number
   editable: boolean
   dateFormat: string
   bankTransaction: BankTransaction
   removeTransaction: (bt: BankTransaction) => void
   containerWidth?: number
-  initialLoad?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
   showReceiptUploadColumn: boolean
@@ -79,13 +77,11 @@ export const getDefaultSelectedCategory = (
 let clickTimer = Date.now()
 
 export const BankTransactionRow = ({
-  index = 0,
   editable,
   dateFormat,
   bankTransaction,
   removeTransaction,
   containerWidth,
-  initialLoad,
   showDescriptions,
   showReceiptUploads,
   showReceiptUploadColumn,
@@ -119,21 +115,6 @@ export const BankTransactionRow = ({
       }
     },
   }
-
-  const [showComponent, setShowComponent] = useState(false)
-
-  useEffect(() => {
-    if (initialLoad) {
-      const timeoutId = setTimeout(() => {
-        setShowComponent(true)
-      }, index * 10)
-
-      return () => clearTimeout(timeoutId)
-    }
-    else {
-      setShowComponent(true)
-    }
-  }, [])
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -195,8 +176,7 @@ export const BankTransactionRow = ({
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
-    initialLoad ? 'initial-load' : '',
-    showComponent ? 'show' : '',
+    'show',
   )
 
   const showReceiptDataProperties = useMemo(

@@ -1,0 +1,35 @@
+.Layer__TransactionsActions {
+  display: grid;
+
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--spacing-xs);
+  grid-template-areas:
+    "toggle . download"
+    "search search search"
+  ;
+
+  @container (min-width: 640px) {
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 2fr) auto;
+    grid-template-areas: "toggle . search download";
+  }
+
+  @container (min-width: 780px) {
+    grid-template-columns: auto minmax(0, 2fr) minmax(0, 3fr) auto;
+    grid-template-areas: "toggle . search download";
+  }
+
+  @container (min-width: 1024px) {
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) auto;
+    grid-template-areas: "toggle . search download";
+  }
+
+  > [slot=toggle] {
+    grid-area: toggle;
+  }
+  > [slot=search] {
+    grid-area: search;
+  }
+  > [slot=download] {
+    grid-area: download;
+  }
+}

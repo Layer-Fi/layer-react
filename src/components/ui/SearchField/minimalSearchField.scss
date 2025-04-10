@@ -1,0 +1,39 @@
+.Layer__MinimalSearchField {
+  display: grid;
+  grid-template-areas: "input clear-button";
+  grid-template-columns: 1fr auto;
+  align-items: center;
+
+  border: none;
+
+  & > [slot=input] {
+    grid-area: input;
+
+    border: none;
+    outline: none;
+
+    /*
+     * The background on mobile is grey by default.
+     */
+    background: none;
+
+    min-block-size: 1.5rem;
+
+    padding-inline: var(--spacing-3xs);
+
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-decoration {
+      -webkit-appearance: none;
+    }
+  }
+  &[data-empty] > [slot=input] {
+    grid-column: 1 / -1;
+  }
+
+  & > [slot=clear-button] {
+    grid-area: clear-button;
+  }
+  &[data-empty] > [slot=clear-button] {
+    display: none;
+  }
+}
