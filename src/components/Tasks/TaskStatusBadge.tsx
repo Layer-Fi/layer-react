@@ -5,6 +5,7 @@ import CheckCircle from '../../icons/CheckCircle'
 import { BookkeepingPeriod } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import pluralize from 'pluralize'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import { safeAssertUnreachable } from '../../utils/switch/safeAssertUnreachable'
 
 type TaskStatusBadgeProps = {
   status: BookkeepingPeriod['status']
@@ -15,32 +16,35 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
   switch (status) {
     case 'IN_PROGRESS_AWAITING_BOOKKEEPER':
     case 'NOT_STARTED':
-    case 'CLOSING_IN_REVIEW':
+    case 'CLOSING_IN_REVIEW': {
       return {
         color: 'info' as const,
         icon: <Clock size={12} />,
         label: tasksCount ? pluralize('task', tasksCount, true) : undefined,
         labelShort: tasksCount ? `${tasksCount}` : undefined,
       }
+    }
     case 'IN_PROGRESS_AWAITING_CUSTOMER':
+    case 'CLOSED_OPEN_TASKS': {
       return {
         color: 'warning' as const,
-        label: pluralize('task', tasksCount, true),
-        labelShort: `${tasksCount}`,
+        label: tasksCount ? pluralize('task', tasksCount, true) : undefined,
+        labelShort: tasksCount ? `${tasksCount}` : undefined,
         icon: <AlertCircle size={12} />,
       }
-    case 'CLOSED_OPEN_TASKS':
-      return {
-        color: 'error' as const,
-        label: pluralize('task', tasksCount, true),
-        labelShort: `${tasksCount}`,
-        icon: <AlertCircle size={12} />,
-      }
-    case 'CLOSED_COMPLETE':
+    }
+    case 'CLOSED_COMPLETE': {
       return {
         color: 'success' as const,
         icon: <CheckCircle size={12} />,
       }
+    }
+    case 'BOOKKEEPING_NOT_PURCHASED': {
+      return
+    }
+    default: {
+      safeAssertUnreachable(status, 'Unexpected bookkeeping status in TaskStatusBadge')
+    }
   }
 }
 
