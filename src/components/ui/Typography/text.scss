@@ -1,4 +1,6 @@
-.Layer__P {
+.Layer__Label,
+.Layer__P,
+.Layer__Span {
   margin: 0;
 
   color: var(--color-base-700);
@@ -9,6 +11,10 @@
 
   &[data-variant=subtle] {
     color: var(--fg-subtle)
+  }
+
+  &[data-no-wrap] {
+    white-space: nowrap;
   }
 
   $sizes: xs sm md lg;

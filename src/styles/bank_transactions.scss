@@ -67,16 +67,6 @@
   }
 }
 
-.Layer__header__actions-wrapper {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-.Layer__header__actions {
-  width: 100%;
-}
-
 .Layer__bank-transactions__list-loader {
   padding: var(--spacing-lg) var(--spacing-md);
 }
@@ -90,8 +80,9 @@
   z-index: 1;
   left: 0;
   display: flex;
+  flex-direction: column;
   width: 100%;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .Layer__bank-transactions__header__content {
@@ -108,8 +99,6 @@
 
 .Layer__bank-transactions__header.Layer__bank-transactions__header--mobile {
   background-color: transparent;
-  max-width: 414px;
-  margin: auto;
 }
 
 .Layer__bank-transactions__header.Layer__bank-transactions__header--mobile,

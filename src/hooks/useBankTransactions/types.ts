@@ -15,12 +15,13 @@ export interface AccountItem {
   name: string
 }
 
-export interface BankTransactionFilters {
+export type BankTransactionFilters = {
   amount?: NumericRangeFilter
   account?: string[]
   direction?: Direction[]
   categorizationStatus?: DisplayState
   dateRange?: Partial<DateRange>
+  descriptionFilter?: string
   tagFilter?: TagFilterInput
 }
 
