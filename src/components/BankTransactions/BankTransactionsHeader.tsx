@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useCallback, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, DisplayState } from '../../types'
@@ -15,6 +15,11 @@ import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useDebounce } from '../../hooks/useDebounce/useDebounce'
+import { TransactionsSearchField } from '../domain/transactions/searchField/TransactionsSearchField'
+import { TransactionsActions } from '../domain/transactions/actions/TransactionsActions'
+import { VStack } from '../ui/Stack/Stack'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -36,6 +41,34 @@ export interface BankTransactionsHeaderProps {
 export interface BankTransactionsHeaderStringOverrides {
   header?: string
   downloadButton?: string
+}
+
+type TransactionsSearchProps = {
+  slot?: string
+}
+
+function TransactionsSearch({ slot }: TransactionsSearchProps) {
+  const { filters, setFilters } = useBankTransactionsContext()
+
+  const [localSearch, setLocalSearch] = useState(() => filters?.descriptionFilter ?? '')
+
+  const debouncedSetDescription = useDebounce((value: string) => {
+    setFilters({ descriptionFilter: value })
+  })
+
+  const handleSearch = useCallback((value: string) => {
+    setLocalSearch(value)
+
+    void debouncedSetDescription(value)
+  }, [debouncedSetDescription])
+
+  return (
+    <TransactionsSearchField
+      slot={slot}
+      value={localSearch}
+      onChange={handleSearch}
+    />
+  )
 }
 
 const DownloadButton = ({
@@ -74,7 +107,7 @@ const DownloadButton = ({
         setRequestFailed(true)
       }
     }
-    catch (e) {
+    catch {
       setRequestFailed(true)
     }
     finally {
@@ -155,9 +188,9 @@ export const BankTransactionsHeader = ({
           )
           : null}
       </div>
-      <div className='Layer__header__actions-wrapper'>
-        <div className='Layer__header__actions Layer__justify--space-between'>
-          {!categorizedOnly && categorizeView && (
+      <TransactionsActions>
+        {(!categorizedOnly && categorizeView) && (
+          <VStack slot='toggle' justify='center'>
             <Toggle
               name='bank-transaction-display'
               size={
@@ -172,14 +205,16 @@ export const BankTransactionsHeader = ({
               selected={display}
               onChange={onCategorizationDisplayChange}
             />
-          )}
-
+          </VStack>
+        )}
+        <TransactionsSearch slot='search' />
+        <VStack slot='download' justify='center'>
           <DownloadButton
             downloadButtonTextOverride={stringOverrides?.downloadButton}
             iconOnly={listView}
           />
-        </div>
-      </div>
+        </VStack>
+      </TransactionsActions>
     </Header>
   )
 }
