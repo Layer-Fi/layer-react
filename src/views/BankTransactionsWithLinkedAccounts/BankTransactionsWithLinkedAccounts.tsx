@@ -6,6 +6,7 @@ import { BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyM
 import { MobileComponentType } from '../../components/BankTransactions/constants'
 import { LinkedAccounts } from '../../components/LinkedAccounts'
 import { View } from '../../components/View'
+import { CategorySelect } from '../../components/CategorySelect2/CategorySelect'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {
   title?: string
@@ -57,6 +58,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         showBreakConnection={showBreakConnection}
         stringOverrides={stringOverrides?.linkedAccounts}
       />
+      <CategorySelect />
       <BankTransactions
         asWidget
         showDescriptions={showDescriptions}
