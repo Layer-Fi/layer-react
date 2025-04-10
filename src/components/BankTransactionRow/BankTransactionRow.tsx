@@ -33,6 +33,7 @@ import { parseISO, format as formatTime } from 'date-fns'
 import type { CategoryWithEntries } from '../../types/bank_transactions'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 
 type Props = {
   index: number
@@ -204,6 +205,8 @@ export const BankTransactionRow = ({
     [showReceiptUploadColumn],
   )
 
+  console.log('categorizationEnabled', categorizationEnabled)
+
   return (
     <>
       <tr className={rowClassName}>
@@ -281,7 +284,7 @@ export const BankTransactionRow = ({
           <span
             className={`${className}__actions-container Layer__table-cell-content`}
           >
-            {!categorized && !open
+            {categorizationEnabled && !categorized && !open
               ? (
                 <CategorySelect
                   bankTransaction={bankTransaction}
@@ -346,7 +349,7 @@ export const BankTransactionRow = ({
                 </Text>
               )
               : null}
-            {!categorized && !open && showRetry
+            {categorizationEnabled && !categorized && !open && showRetry
               ? (
                 <RetryButton
                   onClick={() => {
@@ -374,7 +377,7 @@ export const BankTransactionRow = ({
                 </Text>
               )
               : null}
-            {(!categorized && (open || (!open && !showRetry)))
+            {(!categorized && categorizationEnabled && (open || (!open && !showRetry)))
             || (categorizationEnabled && categorized && open)
               ? (
                 <SubmitButton
@@ -392,6 +395,19 @@ export const BankTransactionRow = ({
                     ? stringOverrides?.updateButtonText || 'Update'
                     : stringOverrides?.approveButtonText || 'Confirm'}
                 </SubmitButton>
+              )
+              : null}
+            {!categorizationEnabled && !categorized
+              ? (
+                <Tooltip offset={12}>
+                  <TooltipTrigger>
+                    <AlertCircle size={12} />
+                    <Text>In progress</Text>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Bookkeeping team is preparing your March report. The report can change and current numbers might not be final.
+                  </TooltipContent>
+                </Tooltip>
               )
               : null}
             <IconButton
