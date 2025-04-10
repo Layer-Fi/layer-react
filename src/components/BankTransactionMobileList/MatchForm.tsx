@@ -17,10 +17,12 @@ export const MatchForm = ({
   bankTransaction,
   showReceiptUploads,
   showDescriptions,
+  showCategorization,
 }: {
   bankTransaction: BankTransaction
   showReceiptUploads?: boolean
   showDescriptions?: boolean
+  showCategorization?: boolean
 }) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
@@ -62,6 +64,10 @@ export const MatchForm = ({
       saveMemoText()
     }
 
+    if (!showCategorization) {
+      return
+    }
+
     if (!selectedMatchId) {
       setFormError('Select an option to match the transaction')
     }
@@ -81,6 +87,7 @@ export const MatchForm = ({
       </Text>
       <MatchFormMobile
         classNamePrefix='Layer__bank-transaction-mobile-list-item'
+        readOnly={!showCategorization}
         bankTransaction={bankTransaction}
         selectedMatchId={selectedMatchId}
         setSelectedMatchId={(id) => {
@@ -134,20 +141,22 @@ export const MatchForm = ({
             icon={<PaperclipIcon />}
           />
         )}
-        <Button
-          fullWidth={true}
-          disabled={
-            !selectedMatchId
-            || isLoading
-            || bankTransaction.processing
-            || selectedMatchId === isAlreadyMatched(bankTransaction)
-          }
-          onClick={save}
-        >
-          {isLoading || bankTransaction.processing
-            ? 'Saving...'
-            : 'Approve match'}
-        </Button>
+        {showCategorization && (
+          <Button
+            fullWidth={true}
+            disabled={
+              !selectedMatchId
+              || isLoading
+              || bankTransaction.processing
+              || selectedMatchId === isAlreadyMatched(bankTransaction)
+            }
+            onClick={save}
+          >
+            {isLoading || bankTransaction.processing
+              ? 'Saving...'
+              : 'Approve match'}
+          </Button>
+        )}
       </div>
       {formError && <ErrorText>{formError}</ErrorText>}
       {bankTransaction.error && showRetry

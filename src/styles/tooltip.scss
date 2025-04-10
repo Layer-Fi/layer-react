@@ -3,6 +3,10 @@
   width: max-content;
   max-width: calc(100vw - 10px);
   z-index: 100;
+
+  &[data-width='md'] {
+    max-width: 256px;
+  }
 }
 
 .Layer__tooltip .Layer__tooltip-content {
@@ -24,10 +28,12 @@
 .Layer__actionable-list__tooltip-content {
   z-index: 99999;
   top: 100px !important;
-  // pointer-events: none;
+
+  // pointer-events: none;pointer-events
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
   .Layer__tooltip-content {
     margin-right: auto;
     max-width: 220px;

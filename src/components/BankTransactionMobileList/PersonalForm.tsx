@@ -17,6 +17,7 @@ interface PersonalFormProps {
   bankTransaction: BankTransaction
   showReceiptUploads?: boolean
   showDescriptions?: boolean
+  showCategorization?: boolean
 }
 
 const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
@@ -29,9 +30,9 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
 
   return Boolean(
     bankTransaction.category
-      && Object.values(PersonalCategories).includes(
-        bankTransaction.category.display_name as PersonalCategories,
-      ),
+    && Object.values(PersonalCategories).includes(
+      bankTransaction.category.display_name as PersonalCategories,
+    ),
   )
 }
 
@@ -39,6 +40,7 @@ export const PersonalForm = ({
   bankTransaction,
   showReceiptUploads,
   showDescriptions,
+  showCategorization,
 }: PersonalFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
@@ -56,6 +58,10 @@ export const PersonalForm = ({
   const save = () => {
     if (showDescriptions && memoText !== undefined) {
       saveMemoText()
+    }
+
+    if (!showCategorization) {
+      return
     }
 
     categorizeBankTransaction(
@@ -93,8 +99,7 @@ export const PersonalForm = ({
             placeholder='Add description'
             value={memoText}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              setMemoText(e.target.value)
-            }
+              setMemoText(e.target.value)}
           />
         </InputGroup>
       )}
@@ -118,29 +123,35 @@ export const PersonalForm = ({
       <div className='Layer__bank-transaction-mobile-list-item__actions'>
         {showReceiptUploads && (
           <FileInput
-            onUpload={(files) => receiptsRef.current?.uploadReceipt(files[0])}
+            onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}
           />
         )}
-        <Button
-          fullWidth={true}
-          disabled={alreadyAssigned || isLoading || bankTransaction.processing}
-          onClick={save}
-        >
-          {isLoading || bankTransaction.processing
-            ? 'Saving...'
-            : alreadyAssigned
-              ? 'Saved as Personal'
-              : 'Categorize as Personal'}
-        </Button>
+        {showCategorization
+          ? (
+            <Button
+              fullWidth={true}
+              disabled={alreadyAssigned || isLoading || bankTransaction.processing}
+              onClick={save}
+            >
+              {isLoading || bankTransaction.processing
+                ? 'Saving...'
+                : alreadyAssigned
+                  ? 'Saved as Personal'
+                  : 'Categorize as Personal'}
+            </Button>
+          )
+          : null}
       </div>
-      {bankTransaction.error && showRetry ? (
-        <ErrorText>
-          Approval failed. Check connection and retry in few seconds.
-        </ErrorText>
-      ) : null}
+      {bankTransaction.error && showRetry
+        ? (
+          <ErrorText>
+            Approval failed. Check connection and retry in few seconds.
+          </ErrorText>
+        )
+        : null}
     </div>
   )
 }

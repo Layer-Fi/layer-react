@@ -342,13 +342,15 @@ export const SplitForm = ({
             icon={<PaperclipIcon />}
           />
         )}
-        <Button
-          fullWidth={true}
-          onClick={save}
-          disabled={isLoading || bankTransaction.processing}
-        >
-          {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
-        </Button>
+        {showCategorization && (
+          <Button
+            fullWidth={true}
+            onClick={save}
+            disabled={isLoading || bankTransaction.processing}
+          >
+            {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
+          </Button>
+        )}
       </div>
       {formError && <ErrorText>{formError}</ErrorText>}
       {bankTransaction.error && showRetry

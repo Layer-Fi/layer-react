@@ -12,6 +12,7 @@ export const MatchFormMobile = ({
   selectedMatchId,
   setSelectedMatchId,
   matchFormError,
+  readOnly,
 }: MatchFormProps) => {
   return (
     <div className={`${classNamePrefix}__match-list`}>
@@ -26,6 +27,10 @@ export const MatchFormMobile = ({
                 : '',
             )}
             onClick={() => {
+              if (readOnly) {
+                return
+              }
+
               if (selectedMatchId === match.id) {
                 setSelectedMatchId(undefined)
                 return
