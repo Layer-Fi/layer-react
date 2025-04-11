@@ -5,9 +5,12 @@ import { FileInput } from '../Input'
 import { Textarea } from '../Textarea'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
-import { useTasksContext } from './TasksContext'
 import { isCompletedTask, type UserVisibleTask } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { getIconForTask } from '../../utils/bookkeeping/tasks/getBookkeepingTaskStatusIcon'
+import { useSubmitUserResponseForTask } from '../../hooks/bookkeeping/periods/tasks/useSubmitResponseForTask'
+import { useUploadDocumentsForTask } from '../../hooks/bookkeeping/periods/tasks/useUploadDocumentsForTask'
+import { useDeleteUploadsOnTask } from '../../hooks/bookkeeping/periods/tasks/useDeleteUploadsOnTask'
+import { useUpdateTaskUploadDescription } from '../../hooks/bookkeeping/periods/tasks/useUpdateTaskUploadDescription'
 
 export const TasksListItem = ({
   task,
@@ -22,10 +25,10 @@ export const TasksListItem = ({
   const [userResponse, setUserResponse] = useState(task.user_response ?? '')
   const [selectedFiles, setSelectedFiles] = useState<File[]>()
 
-  const {
-    submitResponseToTask, uploadDocumentsForTask, deleteUploadsForTask,
-    updateDocUploadTaskDescription,
-  } = useTasksContext()
+  const { trigger: handleSubmitUserResponseForTask } = useSubmitUserResponseForTask()
+  const { trigger: handleUploadDocumentsForTask } = useUploadDocumentsForTask()
+  const { trigger: handleDeleteUploadsOnTask } = useDeleteUploadsOnTask()
+  const { trigger: handleUpdateTaskUploadDescription } = useUpdateTaskUploadDescription()
 
   const taskBodyClassName = classNames(
     'Layer__tasks-list-item__body',
@@ -54,7 +57,12 @@ export const TasksListItem = ({
       return
     }
 
-    await uploadDocumentsForTask(task.id, selectedFiles, userResponse)
+    await handleUploadDocumentsForTask({
+      taskId: task.id,
+      files: selectedFiles,
+      description: userResponse,
+    })
+
     setIsOpen(false)
     goToNextPageIfAllComplete(task)
     setSelectedFiles(undefined)
@@ -99,7 +107,10 @@ export const TasksListItem = ({
             <Button
               variant={ButtonVariant.secondary}
               onClick={() => {
-                updateDocUploadTaskDescription(task.id, userResponse)
+                void handleUpdateTaskUploadDescription({
+                  taskId: task.id,
+                  description: userResponse,
+                })
               }}
             >
               Update
@@ -111,7 +122,9 @@ export const TasksListItem = ({
             <Button
               variant={ButtonVariant.secondary}
               onClick={() => {
-                deleteUploadsForTask(task.id)
+                void handleDeleteUploadsOnTask({
+                  taskId: task.id,
+                })
               }}
             >
               Delete Uploads
@@ -188,9 +201,11 @@ export const TasksListItem = ({
                     }
                     variant={ButtonVariant.secondary}
                     onClick={() => {
-                      submitResponseToTask(task.id, userResponse)
-                      setIsOpen(false)
-                      goToNextPageIfAllComplete(task)
+                      void handleSubmitUserResponseForTask({ taskId: task.id, userResponse })
+                        .then(() => {
+                          setIsOpen(false)
+                          goToNextPageIfAllComplete(task)
+                        })
                     }}
                   >
                     {task.user_response && task.user_response !== userResponse

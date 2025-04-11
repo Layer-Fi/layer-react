@@ -106,35 +106,39 @@ function withCorrectedRange<TDateRange extends DateRange, TOut>(fn: (options: TD
   }
 }
 
-type GlobalDateStoreShape = {
+type GlobalDateState = {
   start: Date
   end: Date
 
   displayMode: DatePickerMode
   rangeDisplayMode: DateRangePickerMode
-
-  actions: {
-    set: (options: { date: Date }) => void
-
-    setRange: (options: { start: Date, end: Date }) => void
-    setRangeDisplayMode: (options: { rangeDisplayMode: DateRangePickerMode }) => void
-    setRangeWithExplicitDisplayMode: (
-      options: {
-        start: Date
-        end: Date
-        rangeDisplayMode: DateRangePickerMode
-      }
-    ) => void
-    setMonth: (options: { start: Date }) => void
-    setMonthRange: (options: { start: Date, end: Date }) => void
-    setYear: (options: { start: Date }) => void
-  }
 }
+
+type GlobalDateActions = {
+  set: (options: { date: Date }) => void
+
+  setRange: (options: { start: Date, end: Date }) => void
+  setRangeDisplayMode: (options: { rangeDisplayMode: DateRangePickerMode }) => void
+  setRangeWithExplicitDisplayMode: (
+    options: {
+      start: Date
+      end: Date
+      rangeDisplayMode: DateRangePickerMode
+    }
+  ) => void
+  setMonth: (options: { start: Date }) => void
+  setMonthRange: (options: { start: Date, end: Date }) => void
+  setYear: (options: { start: Date }) => void
+
+  setMonthByPeriod: (options: { monthNumber: number, yearNumber: number }) => void
+}
+
+type GlobalDateStore = GlobalDateState & { actions: GlobalDateActions }
 
 function buildStore() {
   const now = new Date()
 
-  return createStore<GlobalDateStoreShape>((set, get) => {
+  return createStore<GlobalDateStore>((set, get) => {
     const setRange = withCorrectedRange(({ start, end }) => {
       set({
         start: RANGE_MODE_LOOKUP.dayRangePicker.getStart({ start }),
@@ -214,7 +218,6 @@ function buildStore() {
             }
           })
         },
-
         setRange,
         setRangeDisplayMode: ({ rangeDisplayMode }) => {
           const { start, end } = get()
@@ -225,6 +228,12 @@ function buildStore() {
         setMonth,
         setMonthRange,
         setYear,
+
+        setMonthByPeriod: ({ monthNumber, yearNumber }) => {
+          const effectiveMonthNumber = Math.min(Math.max(monthNumber, 1), 12)
+
+          setMonth({ start: new Date(yearNumber, effectiveMonthNumber - 1, 1) })
+        },
       },
     }
   })
@@ -289,6 +298,14 @@ export function useGlobalDateRangeActions() {
     setMonthRange,
     setYear,
   }
+}
+
+export function useGlobalDatePeriodAlignedActions() {
+  const store = useContext(GlobalDateStoreContext)
+
+  const setMonthByPeriod = useStore(store, ({ actions: { setMonthByPeriod } }) => setMonthByPeriod)
+
+  return { setMonthByPeriod }
 }
 
 type GlobalDateStoreProviderProps = PropsWithChildren

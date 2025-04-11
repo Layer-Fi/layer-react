@@ -11,8 +11,6 @@ import { useElementViewSize } from '../../hooks/useElementViewSize/useElementVie
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { StatementOfCashFlowDatePicker } from './datePicker/StatementOfCashFlowDatePicker'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow/useStatementOfCashFlow'
-import { BookkeepingStatusPanelNotification } from '../BookkeepingStatus/BookkeepingStatusPanelNotification'
-import { BookkeepingStatusReportRow } from '../BookkeepingStatus/BookkeepingStatusReportRow'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
@@ -20,10 +18,9 @@ export interface StatementOfCashFlowStringOverrides {
   statementOfCashFlowTable?: StatementOfCashFlowTableStringOverrides
 }
 
-export type StatementOfCashFlowProps = {
+export type StatementOfCashFlowProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
-  onViewBookkeepingTasks?: () => void
-} & TimeRangePickerConfig
+}
 
 export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
   return (
@@ -31,16 +28,14 @@ export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
   )
 }
 
-type StatementOfCashFlowViewProps = {
+type StatementOfCashFlowViewProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
-  onViewBookkeepingTasks?: () => void
-} & TimeRangePickerConfig
+}
 
 const StatementOfCashFlowView = ({
   stringOverrides,
   allowedDatePickerModes,
   customDateRanges,
-  onViewBookkeepingTasks,
 }: StatementOfCashFlowViewProps) => {
   const { start, end } = useGlobalDateRange()
   const { data, isLoading } = useStatementOfCashFlow({ startDate: start, endDate: end })
@@ -68,10 +63,8 @@ const StatementOfCashFlowView = ({
                 />
               </HeaderCol>
             </HeaderRow>
-            <BookkeepingStatusReportRow currentDate={start} onViewBookkeepingTasks={onViewBookkeepingTasks} />
           </Header>
         )}
-        notification={<BookkeepingStatusPanelNotification onClick={onViewBookkeepingTasks} />}
       >
         {!data || isLoading
           ? (

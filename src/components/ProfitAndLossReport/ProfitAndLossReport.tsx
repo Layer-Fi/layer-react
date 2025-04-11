@@ -6,8 +6,6 @@ import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { View } from '../View'
-import { BookkeepingStatusPanelNotification } from '../BookkeepingStatus/BookkeepingStatusPanelNotification'
-import { BookkeepingStatusReportRow } from '../BookkeepingStatus/BookkeepingStatusReportRow'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -15,7 +13,6 @@ export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
   parentRef?: RefObject<HTMLDivElement>
   view?: ViewBreakpoint
-  onViewBookkeepingTasks?: () => void
 } & TimeRangePickerConfig
 
 export const ProfitAndLossReport = ({
@@ -27,15 +24,13 @@ export const ProfitAndLossReport = ({
   csvMoneyFormat,
   parentRef,
   view,
-  onViewBookkeepingTasks,
 }: ProfitAndLossReportProps) => {
-  const { sidebarScope, dateRange } = useContext(ProfitAndLoss.Context)
+  const { sidebarScope } = useContext(ProfitAndLoss.Context)
   const { comparisonConfig } = useContext(ProfitAndLoss.ComparisonContext)
 
   return (
     <View
       type='panel'
-      notification={<BookkeepingStatusPanelNotification onClick={onViewBookkeepingTasks} />}
       header={(
         <Header>
           <HeaderRow>
@@ -72,7 +67,6 @@ export const ProfitAndLossReport = ({
               </HeaderRow>
             )
             : null}
-          <BookkeepingStatusReportRow currentDate={dateRange.startDate} onViewBookkeepingTasks={onViewBookkeepingTasks} />
         </Header>
       )}
     >

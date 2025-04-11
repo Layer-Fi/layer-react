@@ -4,9 +4,8 @@ import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { Header } from '../Container'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { SyncingBadge } from '../SyncingBadge'
-import { useGlobalDate } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
-import { useBookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriodStatus'
+import { useActiveBookkeepingPeriod } from '../../hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
 
 export interface ProfitAndLossHeaderProps {
   text?: string
@@ -24,9 +23,9 @@ export const ProfitAndLossHeader = ({
   withStatus = true,
 }: ProfitAndLossHeaderProps) => {
   const { data: linkedAccounts } = useLinkedAccounts()
-  const { date } = useGlobalDate()
 
-  const { status: bookkeepingMonthStatus } = useBookkeepingPeriodStatus({ currentMonthDate: date })
+  const { activePeriod } = useActiveBookkeepingPeriod()
+  const activePeriodStatus = activePeriod?.status
 
   const isSyncing = useMemo(
     () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
@@ -40,9 +39,9 @@ export const ProfitAndLossHeader = ({
           {text || 'Profit & Loss'}
         </Heading>
         {isSyncing && <SyncingBadge />}
-        {withStatus && bookkeepingMonthStatus && (
+        {withStatus && activePeriodStatus && (
           <span className='Layer__profit-and-loss-header__bookkeeping-status'>
-            <BookkeepingStatus status={bookkeepingMonthStatus} month={date.getMonth()} />
+            <BookkeepingStatus status={activePeriodStatus} monthNumber={activePeriod.month} />
           </span>
         )}
       </span>

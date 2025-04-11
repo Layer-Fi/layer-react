@@ -66,7 +66,7 @@ export const ProfitAndLossCompareTable = ({
       return
     }
 
-    return <BookkeepingStatus status={period.status} month={currentMonth} iconOnly />
+    return <BookkeepingStatus status={period.status} monthNumber={currentMonth} iconOnly />
   }
 
   const renderRow = (

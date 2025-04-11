@@ -2,39 +2,54 @@ import { useMemo } from 'react'
 import { format, getMonth, getYear, set } from 'date-fns'
 import { MonthData } from './types'
 import { TaskMonthTile } from './TaskMonthTile'
-import { useTasksContext } from './TasksContext'
 import { getCompletedTasks } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
-const isCurrentMonth = (period: MonthData, currentDate: Date) =>
-  getMonth(currentDate) === period.month - 1 && getYear(currentDate) === period.year
+function useActiveYearBookkeepingPeriods() {
+  const { date } = useGlobalDate()
+  const { data } = useBookkeepingPeriods()
 
-const TasksMonthSelector = () => {
-  const { currentMonthDate, currentYearData, setCurrentMonthDate } = useTasksContext()
+  const activeYear = getYear(date)
+
+  const periodsInActiveYear = useMemo(() => {
+    return data?.filter(period => period.year === activeYear)
+  }, [data, activeYear])
+
+  return { periodsInActiveYear }
+}
+
+function TasksMonthSelector() {
+  const { date } = useGlobalDate()
+  const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
+
+  const { periodsInActiveYear } = useActiveYearBookkeepingPeriods()
+
+  const activeMonthNumber = getMonth(date) + 1
+  const activeYear = getYear(date)
 
   const monthsData = useMemo(() => {
-    const year = getYear(currentMonthDate)
-
-    return Array.from({ length: 12 }, (_, i) => {
+    return Array.from({ length: 12 }, (_, index) => {
       const date = set(
         new Date(),
-        { year, month: i, date: 1, hours: 0, minutes: 0, seconds: 0, milliseconds: 0 },
+        { year: activeYear, month: index, date: 1, hours: 0, minutes: 0, seconds: 0, milliseconds: 0 },
       )
 
-      const existingTaskData = currentYearData?.find(x => x.month === i + 1 && x.year === year)
+      const existingTaskData = periodsInActiveYear?.find(({ month }) => month === index + 1)
       const taskData = existingTaskData
         ? {
           ...existingTaskData,
-          disabled: existingTaskData.status === 'BOOKKEEPING_NOT_PURCHASED',
+          disabled: false,
         }
         : {
-          year,
-          month: i + 1,
+          year: activeYear,
+          month: index + 1,
           tasks: [],
-          status: 'BOOKKEEPING_NOT_PURCHASED' as const,
+          status: 'BOOKKEEPING_NOT_ACTIVE' as const,
           disabled: true,
         }
 
-      const total: number = taskData.tasks?.length || 0
+      const total = taskData.tasks?.length ?? 0
 
       return {
         monthStr: format(date, 'MMM'),
@@ -44,7 +59,7 @@ const TasksMonthSelector = () => {
         ...taskData,
       } satisfies MonthData
     })
-  }, [currentYearData, currentMonthDate])
+  }, [periodsInActiveYear, activeYear])
 
   return (
     <div className='Layer__tasks-month-selector'>
@@ -52,9 +67,12 @@ const TasksMonthSelector = () => {
         return (
           <TaskMonthTile
             key={idx}
-            onClick={setCurrentMonthDate}
+            onClick={() => setMonthByPeriod({
+              yearNumber: monthData.year,
+              monthNumber: monthData.month,
+            })}
             data={monthData}
-            active={isCurrentMonth(monthData, currentMonthDate)}
+            active={monthData.month === activeMonthNumber}
             disabled={monthData.disabled}
           />
         )

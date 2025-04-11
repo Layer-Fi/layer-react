@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react'
 import SmileIcon from '../../icons/SmileIcon'
 import { Text, TextSize } from '../Typography'
-import { useTasksContext } from './TasksContext'
 import { RawTask } from '../../types/tasks'
 import { TasksListItem } from './TasksListItem'
 import { Pagination } from '../Pagination/Pagination'
 import { TasksListMobile } from './TasksListMobile'
 import { isCompletedTask, isIncompleteTask } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { useActiveBookkeepingPeriod } from '../../hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
 
 function paginateArray<T>(array: ReadonlyArray<T>, chunkSize: number = 10): T[][] {
   const result: T[][] = []
@@ -37,9 +37,9 @@ type TasksListProps = {
 }
 
 export function TasksList({ pageSize = 10, mobile }: TasksListProps) {
-  const { currentMonthData } = useTasksContext()
+  const { activePeriod } = useActiveBookkeepingPeriod()
 
-  const tasks = useMemo(() => currentMonthData?.tasks ?? [], [currentMonthData?.tasks])
+  const tasks = useMemo(() => activePeriod?.tasks ?? [], [activePeriod?.tasks])
 
   const firstPageWithIncompleteTasks = paginateArray(
     tasks,

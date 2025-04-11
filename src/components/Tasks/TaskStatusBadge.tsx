@@ -39,7 +39,7 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
         icon: <CheckCircle size={12} />,
       }
     }
-    case 'BOOKKEEPING_NOT_PURCHASED': {
+    case 'BOOKKEEPING_NOT_ACTIVE': {
       return
     }
     default: {
