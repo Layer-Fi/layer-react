@@ -57,12 +57,6 @@ import {
   unlinkQuickbooksConnection,
 } from './layer/quickbooks'
 import { getStatementOfCashFlow } from './layer/statement-of-cash-flow'
-import {
-  submitResponseToTask,
-  completeTaskWithUpload,
-  deleteTaskUploads,
-  updateUploadDocumentTaskDescription,
-} from './layer/tasks'
 import { getVendors } from './layer/vendors'
 
 export const Layer = {
@@ -106,10 +100,6 @@ export const Layer = {
   unlinkPlaidItem,
   confirmAccount,
   excludeAccount,
-  completeTaskWithUpload,
-  submitResponseToTask,
-  deleteTaskUploads,
-  updateUploadDocumentTaskDescription,
   breakPlaidItemConnection,
   syncConnection,
   updateConnectionStatus,

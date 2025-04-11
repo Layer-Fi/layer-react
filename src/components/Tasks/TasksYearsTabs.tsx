@@ -1,20 +1,25 @@
 import { useMemo } from 'react'
 import { Tabs } from '../Tabs/Tabs'
-import { useTasksContext } from './TasksContext'
-import { getDay, getMonth, getYear } from 'date-fns'
 import { useBookkeepingYearsStatus } from '../../hooks/bookkeeping/periods/useBookkeepingYearsStatus'
 import { TaskStatusBadge } from './TaskStatusBadge'
+import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { getMonth } from 'date-fns'
 
 export const TasksYearsTabs = () => {
-  const { currentMonthDate, setCurrentMonthDate } = useTasksContext()
+  const { date } = useGlobalDate()
+  const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
+
+  const activeYear = date.getFullYear()
+
   const { yearStatuses } = useBookkeepingYearsStatus()
 
-  const currentYear = getYear(currentMonthDate)
-
   const setCurrentYear = (year: string) => {
-    const currentMonth = getMonth(currentMonthDate)
-    const currentDay = getDay(currentMonthDate)
-    setCurrentMonthDate(new Date(Number(year), currentMonth, currentDay))
+    const currentMonth = getMonth(date)
+
+    setMonthByPeriod({
+      monthNumber: currentMonth + 1,
+      yearNumber: Number(year),
+    })
   }
 
   const yearsList = useMemo(() => {
@@ -40,7 +45,7 @@ export const TasksYearsTabs = () => {
     <Tabs
       name='bookkeeping-year'
       options={yearsList}
-      selected={currentYear.toString()}
+      selected={activeYear.toString()}
       onChange={year => setCurrentYear(year.target.value)}
     />
   )

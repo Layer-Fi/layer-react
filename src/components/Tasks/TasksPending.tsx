@@ -1,6 +1,5 @@
 import { Cell, Pie, PieChart } from 'recharts'
 import { TASKS_CHARTS_COLORS } from '../../config/charts'
-import { useTasksContext } from './TasksContext'
 import { format } from 'date-fns'
 import { Heading, HeadingSize } from '../Typography/Heading'
 import { Text, TextSize } from '../Typography/Text'
@@ -8,13 +7,16 @@ import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import classNames from 'classnames'
 import { BookkeepingStatusDescription } from '../BookkeepingStatus/BookkeepingStatusDescription'
 import { getCompletedTasks, getIncompleteTasks } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { useActiveBookkeepingPeriod } from '../../hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
+import { useGlobalDate } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export const TasksPending = () => {
-  const { currentMonthData, currentMonthDate } = useTasksContext()
+  const { date } = useGlobalDate()
+  const { activePeriod } = useActiveBookkeepingPeriod()
 
-  const totalTaskCount = currentMonthData?.tasks?.length ?? 0
-  const completedTaskCount = getCompletedTasks(currentMonthData?.tasks ?? []).length
-  const incompleteTaskCount = getIncompleteTasks(currentMonthData?.tasks ?? []).length
+  const totalTaskCount = activePeriod?.tasks?.length ?? 0
+  const completedTaskCount = getCompletedTasks(activePeriod?.tasks ?? []).length
+  const incompleteTaskCount = getIncompleteTasks(activePeriod?.tasks ?? []).length
 
   const chartData = [
     {
@@ -36,8 +38,8 @@ export const TasksPending = () => {
   return (
     <div className='Layer__tasks-pending'>
       <div className='Layer__tasks-pending-header'>
-        <Heading size={HeadingSize.secondary}>{format(currentMonthDate, 'MMMM yyyy')}</Heading>
-        {currentMonthData?.tasks && currentMonthData?.tasks?.length > 0
+        <Heading size={HeadingSize.secondary}>{format(date, 'MMMM yyyy')}</Heading>
+        {activePeriod?.tasks && activePeriod.tasks.length > 0
           ? (
             <div className='Layer__tasks-pending-bar'>
               <Text size={TextSize.sm}>
@@ -83,12 +85,12 @@ export const TasksPending = () => {
           : null}
       </div>
       <div className='Layer__tasks-pending-main'>
-        {currentMonthData && (
+        {activePeriod && (
           <>
-            <BookkeepingStatus status={currentMonthData.status} month={currentMonthDate.getMonth()} />
+            <BookkeepingStatus status={activePeriod.status} monthNumber={activePeriod.month} />
             <BookkeepingStatusDescription
-              status={currentMonthData.status}
-              month={currentMonthDate.getMonth()}
+              status={activePeriod.status}
+              monthNumber={activePeriod.month}
               incompleteTasksCount={incompleteTaskCount}
             />
           </>

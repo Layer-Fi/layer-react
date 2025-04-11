@@ -6,6 +6,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { useSWRConfig } from 'swr'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { BUSINESS_PERSONNEL_TAG_KEY } from './useBusinessPersonnel'
+import { useCallback } from 'react'
 
 type CreateBusinessPersonnelBody = Pick<
   RawBusinessPersonnel,
@@ -70,17 +71,30 @@ export function useCreateBusinessPersonnel() {
 
   const { trigger: originalTrigger } = mutationResponse
 
-  return Object.assign(
-    mutationResponse,
-    {
-      trigger: async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-        const data = await originalTrigger(...triggerParameters)
+  const stableProxiedTrigger = useCallback(
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+      const result = await originalTrigger(...triggerParameters)
 
-        if (data) {
-          await mutate(key => withSWRKeyTags(key, tags => tags.includes(BUSINESS_PERSONNEL_TAG_KEY)))
-        }
+      if (result) {
+        await mutate(key => withSWRKeyTags(
+          key,
+          tags => tags.includes(BUSINESS_PERSONNEL_TAG_KEY),
+        ))
+      }
 
-        return data
-      },
-    })
+      return result
+    },
+    [originalTrigger, mutate],
+  )
+
+  return new Proxy(mutationResponse, {
+    get(target, prop) {
+      if (prop === 'trigger') {
+        return stableProxiedTrigger
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
 }

@@ -3,13 +3,13 @@ import { Text, TextSize } from '../Typography/Text'
 import { getBookkeepingStatusConfig } from './utils'
 
 type BookkeepingStatusDescriptionProps = {
-  month: number
+  monthNumber: number
   status: BookkeepingPeriodStatus
   incompleteTasksCount: number
 }
 
-export const BookkeepingStatusDescription = ({ month, status, incompleteTasksCount }: BookkeepingStatusDescriptionProps) => {
-  const statusConfig = getBookkeepingStatusConfig({ status, month, incompleteTasksCount })
+export const BookkeepingStatusDescription = ({ monthNumber, status, incompleteTasksCount }: BookkeepingStatusDescriptionProps) => {
+  const statusConfig = getBookkeepingStatusConfig({ status, monthNumber, incompleteTasksCount })
   if (!statusConfig) {
     return null
   }

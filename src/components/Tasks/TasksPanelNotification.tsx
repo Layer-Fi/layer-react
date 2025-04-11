@@ -3,13 +3,13 @@ import { useBookkeepingYearsStatus } from '../../hooks/bookkeeping/periods/useBo
 import AlertCircle from '../../icons/AlertCircle'
 import ArrowRightCircle from '../../icons/ArrowRightCircle'
 import { Text, TextSize, TextWeight } from '../Typography/Text'
-import { useTasksContext } from './TasksContext'
+import { useGlobalDatePeriodAlignedActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export const TasksPanelNotification = () => {
-  const { currentMonthDate, setCurrentMonthDate } = useTasksContext()
-  const { anyPreviousYearIncomplete } = useBookkeepingYearsStatus()
+  const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
+  const { anyPreviousYearIncomplete, earliestIncompletePeriod } = useBookkeepingYearsStatus()
 
-  if (!anyPreviousYearIncomplete) {
+  if (!anyPreviousYearIncomplete || !earliestIncompletePeriod) {
     return null
   }
 
@@ -28,9 +28,10 @@ export const TasksPanelNotification = () => {
       <button
         className='Layer__tasks-header__notification__button'
         onClick={() => {
-          const date = new Date(currentMonthDate)
-          date.setFullYear(anyPreviousYearIncomplete.year)
-          setCurrentMonthDate(date)
+          setMonthByPeriod({
+            monthNumber: earliestIncompletePeriod.month,
+            yearNumber: earliestIncompletePeriod.year,
+          })
         }}
       >
         <Text size={TextSize.sm} weight={TextWeight.bold}>

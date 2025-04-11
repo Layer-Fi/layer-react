@@ -36,7 +36,6 @@ export interface ReportsProps {
   comparisonConfig?: ProfitAndLossCompareConfig
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
-  onViewBookkeepingTasks?: () => void
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -48,7 +47,6 @@ export interface ReportsPanelProps {
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
   view: ViewBreakpoint
-  onViewBookkeepingTasks?: () => void
 }
 
 const getOptions = (enabledReports: ReportType[]) => {
@@ -82,7 +80,6 @@ export const Reports = ({
   comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
-  onViewBookkeepingTasks,
 }: ReportsProps) => {
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
@@ -117,7 +114,6 @@ export const Reports = ({
             profitAndLossConfig={profitAndLossConfig}
             statementOfCashFlowConfig={statementOfCashFlowConfig}
             view={view}
-            onViewBookkeepingTasks={onViewBookkeepingTasks}
           />
         </ProfitAndLoss>
       </Container>
@@ -132,7 +128,6 @@ const ReportsPanel = ({
   profitAndLossConfig,
   statementOfCashFlowConfig,
   view,
-  onViewBookkeepingTasks,
 }: ReportsPanelProps) => {
   return (
     <>
@@ -141,17 +136,15 @@ const ReportsPanel = ({
           stringOverrides={stringOverrides}
           parentRef={containerRef}
           view={view}
-          onViewBookkeepingTasks={onViewBookkeepingTasks}
           {...profitAndLossConfig}
         />
       )}
       {openReport === 'balanceSheet' && (
-        <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} onViewBookkeepingTasks={onViewBookkeepingTasks} />
+        <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} />
       )}
       {openReport === 'statementOfCashFlow' && (
         <StatementOfCashFlow
           stringOverrides={stringOverrides?.statementOfCashflow}
-          onViewBookkeepingTasks={onViewBookkeepingTasks}
           {...statementOfCashFlowConfig}
         />
       )}

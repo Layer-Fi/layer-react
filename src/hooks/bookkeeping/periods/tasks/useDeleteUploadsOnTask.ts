@@ -1,15 +1,11 @@
-import useSWRMutation from 'swr/mutation'
-import { useAuth } from '../useAuth'
-import { useLayerContext } from '../../contexts/LayerContext'
-import {
-  updateBusiness,
-  type UpdateBusinessBody,
-} from '../../api/layer/business'
 import { useSWRConfig } from 'swr'
-import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
+import useSWRMutation from 'swr/mutation'
+import { useAuth } from '../../../useAuth'
+import { useLayerContext } from '../../../../contexts/LayerContext'
+import { deleteUploadsOnTask } from '../../../../api/layer/tasks'
+import { withSWRKeyTags } from '../../../../utils/swr/withSWRKeyTags'
+import { BOOKKEEPING_PERIODS_TAG_KEY } from '../useBookkeepingPeriods'
 import { useCallback } from 'react'
-
-export const BUSINESS_TAG_KEY = 'business'
 
 function buildKey({
   access_token: accessToken,
@@ -20,37 +16,40 @@ function buildKey({
   apiUrl?: string
   businessId: string
 }) {
-  if (accessToken && apiUrl && businessId) {
+  if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
-      tags: [`${BUSINESS_TAG_KEY}:${businessId}`],
+      tags: ['#delete-uploads-on-task'],
     } as const
   }
 }
 
-export function useUpdateBusiness() {
-  const { data } = useAuth()
+type UseDeleteUploadsOnTaskArg = {
+  taskId: string
+}
+
+export function useDeleteUploadsOnTask() {
+  const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
 
   const mutationResponse = useSWRMutation(
     () => buildKey({
-      ...data,
+      ...auth,
       businessId,
     }),
     (
       { accessToken, apiUrl, businessId },
-      { arg: body }: { arg: UpdateBusinessBody },
-    ) => updateBusiness(
+      { arg: { taskId } }: { arg: UseDeleteUploadsOnTaskArg },
+    ) => deleteUploadsOnTask(
       apiUrl,
       accessToken,
       {
-        params: { businessId },
-        body,
+        params: { businessId, taskId },
       },
-    ).then(({ data }) => data),
+    ),
     {
       revalidate: false,
       throwOnError: false,
@@ -64,9 +63,9 @@ export function useUpdateBusiness() {
       const result = await originalTrigger(...triggerParameters)
 
       if (result) {
-        await mutate(key => withSWRKeyTags(
+        void mutate(key => withSWRKeyTags(
           key,
-          tags => tags.includes(BUSINESS_TAG_KEY),
+          tags => tags.includes(BOOKKEEPING_PERIODS_TAG_KEY),
         ))
       }
 
