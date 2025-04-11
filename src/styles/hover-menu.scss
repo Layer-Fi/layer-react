@@ -60,7 +60,7 @@
         display: flex;
         align-items: center;
 
-        .Layer__hover-menu__list-item-button {
+      .Layer__hover-menu__list-item-button {
           text-align: start;
           background: none;
           border: none;
@@ -70,6 +70,7 @@
           font-family: inherit;
           font-feature-settings: inherit;
           font-weight: 500;
+          width: 100%;
           line-height: normal;
           letter-spacing: -0.06px;
           cursor: pointer;
