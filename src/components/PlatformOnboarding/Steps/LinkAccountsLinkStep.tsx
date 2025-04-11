@@ -15,7 +15,6 @@ import pluralize from 'pluralize'
 import ChevronRight from '../../../icons/ChevronRight'
 import { ActionableRow } from '../../ActionableRow/ActionableRow'
 import { Separator } from '../../Separator/Separator'
-import BankIcon from '../../../icons/BankIcon'
 
 export function LinkAccountsLinkStep() {
   const {
@@ -40,6 +39,7 @@ export function LinkAccountsLinkStep() {
               Connect your bank accounts and credit cards to automatically import your business transactions.
             </Text>
             <ActionableRow
+              buttonPosition='left'
               button={(
                 <Button
                   onClick={() => addConnection('PLAID')}
@@ -67,7 +67,7 @@ export function LinkAccountsLinkStep() {
             </LinkAccountsListContainer>
             <VStack pbs='xl'>
               <ActionableRow
-                icon={<BankIcon size={14} />}
+                buttonPosition='left'
                 title='Do you use any other bank accounts or credit cards for your business?'
                 button={(
                   <Button
