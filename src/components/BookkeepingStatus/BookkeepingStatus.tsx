@@ -4,17 +4,17 @@ import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { getBookkeepingStatusConfig } from './utils'
 
 type BookkeepingStatusProps = {
-  month?: number
+  monthNumber?: number
   status?: BookkeepingPeriodStatus
   iconOnly?: boolean
 }
 
-export const BookkeepingStatus = ({ status, month, iconOnly }: BookkeepingStatusProps) => {
-  if (!status || month === undefined) {
+export const BookkeepingStatus = ({ status, monthNumber, iconOnly }: BookkeepingStatusProps) => {
+  if (!status || monthNumber === undefined) {
     return
   }
 
-  const statusConfig = getBookkeepingStatusConfig({ status, month })
+  const statusConfig = getBookkeepingStatusConfig({ status, monthNumber })
   if (!statusConfig) {
     return
   }

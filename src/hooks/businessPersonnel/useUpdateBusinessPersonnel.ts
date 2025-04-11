@@ -8,6 +8,7 @@ import {
   updateBusinessPersonnel,
   type UpdateBusinessPersonnelBody,
 } from '../../api/layer/businessPersonnel/updateBusinessPersonnel'
+import { useCallback } from 'react'
 
 function buildKey({
   access_token: accessToken,
@@ -64,17 +65,30 @@ export function useUpdateBusinessPersonnel({ businessPersonnelId }: { businessPe
 
   const { trigger: originalTrigger } = mutationResponse
 
-  return Object.assign(
-    mutationResponse,
-    {
-      trigger: async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-        const data = await originalTrigger(...triggerParameters)
+  const stableProxiedTrigger = useCallback(
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+      const result = await originalTrigger(...triggerParameters)
 
-        if (data) {
-          await mutate(key => withSWRKeyTags(key, tags => tags.includes(BUSINESS_PERSONNEL_TAG_KEY)))
-        }
+      if (result) {
+        await mutate(key => withSWRKeyTags(
+          key,
+          tags => tags.includes(BUSINESS_PERSONNEL_TAG_KEY),
+        ))
+      }
 
-        return data
-      },
-    })
+      return result
+    },
+    [originalTrigger, mutate],
+  )
+
+  return new Proxy(mutationResponse, {
+    get(target, prop) {
+      if (prop === 'trigger') {
+        return stableProxiedTrigger
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
 }

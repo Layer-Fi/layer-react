@@ -34,6 +34,9 @@ const getBookkeepingStatus = get<
   return `/v1/businesses/${businessId}/bookkeeping/status`
 })
 
+export const BOOKKEEPING_TAG_KEY = '#bookkeeping'
+const BOOKKEEPING_STATUS_TAG_KEY = '#bookkeeping-status'
+
 function buildKey({
   access_token: accessToken,
   apiUrl,
@@ -48,7 +51,7 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      tags: ['#bookkeeping', '#status'],
+      tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_STATUS_TAG_KEY],
     } as const
   }
 }

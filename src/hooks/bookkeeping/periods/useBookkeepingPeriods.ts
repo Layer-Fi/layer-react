@@ -3,15 +3,17 @@ import { useLayerContext } from '../../../contexts/LayerContext'
 import { useAuth } from '../../useAuth'
 import { get } from '../../../api/layer/authenticated_http'
 import {
+  BOOKKEEPING_TAG_KEY,
   useBookkeepingStatus,
 } from '../useBookkeepingStatus'
 import type { RawTask } from '../../../types/tasks'
 import type { EnumWithUnknownValues } from '../../../types/utility/enumWithUnknownValues'
 import { isActiveOrPausedBookkeepingStatus } from '../../../utils/bookkeeping/bookkeepingStatusFilters'
 import { getUserVisibleTasks } from '../../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { isActiveBookkeepingPeriod } from '../../../utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
 
 const BOOKKEEPING_PERIOD_STATUSES = [
-  'BOOKKEEPING_NOT_PURCHASED',
+  'BOOKKEEPING_NOT_ACTIVE',
   'NOT_STARTED',
   'IN_PROGRESS_AWAITING_BOOKKEEPER',
   'IN_PROGRESS_AWAITING_CUSTOMER',
@@ -28,7 +30,7 @@ function constrainToKnownBookkeepingPeriodStatus(status: string): BookkeepingPer
     return status as BookkeepingPeriodStatus
   }
 
-  return 'BOOKKEEPING_NOT_PURCHASED'
+  return 'BOOKKEEPING_NOT_ACTIVE'
 }
 
 export type BookkeepingPeriod = Omit<RawBookkeepingPeriod, 'status'> & {
@@ -54,6 +56,8 @@ const getBookkeepingPeriods = get<
   return `/v1/businesses/${businessId}/bookkeeping/periods`
 })
 
+export const BOOKKEEPING_PERIODS_TAG_KEY = '#bookkeeping-periods'
+
 function buildKey({
   access_token: accessToken,
   apiUrl,
@@ -70,7 +74,7 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      tags: ['#bookkeeping', '#periods'],
+      tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],
     } as const
   }
 }
@@ -79,10 +83,10 @@ export function useBookkeepingPeriods() {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
-  const { data } = useBookkeepingStatus()
+  const { data, isLoading: isLoadingBookkeepingStatus } = useBookkeepingStatus()
   const isActiveOrPaused = data ? isActiveOrPausedBookkeepingStatus(data.status) : false
 
-  return useSWR(
+  const swrResponse = useSWR(
     () => buildKey({
       ...auth,
       businessId,
@@ -95,11 +99,24 @@ export function useBookkeepingPeriods() {
     )()
       .then(
         ({ data: { periods } }) =>
-          periods.map(period => ({
-            ...period,
-            status: constrainToKnownBookkeepingPeriodStatus(period.status),
-            tasks: getUserVisibleTasks(period.tasks),
-          })),
+          periods
+            .map(period => ({
+              ...period,
+              status: constrainToKnownBookkeepingPeriodStatus(period.status),
+              tasks: getUserVisibleTasks(period.tasks),
+            }))
+            .filter(period => isActiveBookkeepingPeriod(period)),
       ),
   )
+
+  return new Proxy(swrResponse, {
+    get(target, prop) {
+      if (prop === 'isLoading') {
+        return isLoadingBookkeepingStatus || swrResponse.isLoading
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
 }

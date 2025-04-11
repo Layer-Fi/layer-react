@@ -1,12 +1,22 @@
-/** Get month name from number. Index starts from 0 (January = 0, December = 11) */
-export const getMonthNameFromNumber = (month: number): string => {
-  if (month > 11) {
+const monthNames = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+
+export const getMonthNameFromNumber = (monthNumber: number): string => {
+  if (monthNumber < 1 || monthNumber > 12) {
     return ''
   }
 
-  const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
-  ]
-  return monthNames[month]
+  return monthNames.at(monthNumber - 1) ?? ''
 }
