@@ -10,7 +10,7 @@ import { useWindowSize } from '../../hooks/useWindowSize'
 import { Variants } from '../../utils/styleUtils/sizeVariants'
 import { BookkeepingProfitAndLossSummariesContainer } from './internal/BookkeepingProfitAndLossSummariesContainer'
 import classNames from 'classnames'
-import { useKeepInMobileViewport } from '../../hooks/useKeepInMobileViewport'
+import { useKeepInMobileViewport } from './useKeepInMobileViewport'
 
 export interface BookkeepingOverviewProps {
   showTitle?: boolean
@@ -60,12 +60,12 @@ export const BookkeepingOverview = ({
         sidebar={<Tasks stringOverrides={stringOverrides?.tasks} />}
         showHeader={showTitle}
       >
-        <div ref={upperContentRef} onPointerEnter={() => upperElementInFocus.current = true}>
+        <div ref={upperContentRef} onClick={() => upperElementInFocus.current = true}>
           {width <= 1100 && (
             <Tasks mobile stringOverrides={stringOverrides?.tasks} />
           )}
         </div>
-        <div ref={targetElementRef} onPointerEnter={() => upperElementInFocus.current = false}>
+        <div ref={targetElementRef} onClick={() => upperElementInFocus.current = false}>
           <Container
             name='bookkeeping-overview-profit-and-loss'
             asWidget

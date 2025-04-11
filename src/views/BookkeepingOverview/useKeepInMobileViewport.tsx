@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 
+const TASKS_MOBILE_VIEWPORT_WIDTH = 1100
+
 export const useKeepInMobileViewport = () => {
   const upperContentRef = useRef<HTMLDivElement>(null)
   const targetElementRef = useRef<HTMLDivElement>(null)
@@ -25,11 +27,12 @@ export const useKeepInMobileViewport = () => {
 
         // Only adjust if size actually changed and we're scrolled down enough
         // that the target element is in or near the viewport
-        if (sizeDelta !== 0 && currentTargetPosition < window.innerHeight) {
+        if (sizeDelta !== 0 && window.innerWidth <= TASKS_MOBILE_VIEWPORT_WIDTH) {
           const positionDelta = currentTargetPosition - lastKnownTargetPositionRef.current
 
           // Adjust scroll to maintain target element position but only if the upper element is not in "focus"
           if (upperElementInFocus.current === false) {
+            console.log('scroll', positionDelta)
             window.scrollBy(0, positionDelta)
           }
 
