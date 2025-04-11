@@ -32,7 +32,6 @@ export const useKeepInMobileViewport = () => {
 
           // Adjust scroll to maintain target element position but only if the upper element is not in "focus"
           if (upperElementInFocus.current === false) {
-            console.log('scroll', positionDelta)
             window.scrollBy(0, positionDelta)
           }
 
