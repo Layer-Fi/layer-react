@@ -38,18 +38,15 @@ export function LinkAccountsLinkStep() {
             <Text status='disabled'>
               Connect your bank accounts and credit cards to automatically import your business transactions.
             </Text>
-            <ActionableRow
-              buttonPosition='left'
-              button={(
-                <Button
-                  onClick={() => addConnection('PLAID')}
-                  rightIcon={<LinkIcon size={12} />}
-                  disabled={loadingStatus !== 'complete'}
-                >
-                  Connect my bank
-                </Button>
-              )}
-            />
+            <Button
+              onClick={() => addConnection('PLAID')}
+              rightIcon={<LinkIcon size={12} />}
+              disabled={loadingStatus !== 'complete'}
+              fullWidth={false}
+              style={{ maxWidth: 'fit-content' }}
+            >
+              Connect my bank
+            </Button>
           </VStack>
         )}
         Container={({ children }) => (
@@ -67,13 +64,14 @@ export function LinkAccountsLinkStep() {
             </LinkAccountsListContainer>
             <VStack pbs='xl'>
               <ActionableRow
-                buttonPosition='left'
                 title='Do you use any other bank accounts or credit cards for your business?'
                 button={(
                   <Button
                     onClick={() => addConnection('PLAID')}
                     rightIcon={<LinkIcon size={12} />}
                     disabled={loadingStatus !== 'complete'}
+                    fullWidth={false}
+                    style={{ width: 'auto', minWidth: 'fit-content' }}
                   >
                     Link another bank
                   </Button>
