@@ -7,26 +7,6 @@
   border-radius: var(--XS, 8px);
   background: var(--color-base-0);
   box-shadow: 0px 0px 0px 1px var(--color-base-300);
-
-  &.Layer__actionable_row--button-left {
-    flex-direction: row;
-
-    .Layer__actionable_row__main {
-      flex: 1;
-    }
-
-    .Layer__actionable_row__action {
-      margin-right: var(--spacing-sm);
-    }
-  }
-
-  &.Layer__actionable_row--button-right {
-    flex-direction: row;
-
-    .Layer__actionable_row__action {
-      margin-left: var(--spacing-sm);
-    }
-  }
 }
 
 .Layer__actionable_row__main {
@@ -49,10 +29,4 @@
 .Layer__actionable_row__description {
   color: var(--color-base-500);
   font-size: var(--text-sm);
-}
-
-.Layer__actionable_row__action {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
