@@ -3,8 +3,6 @@ import ChevronRightIcon from '../../icons/ChevronRight'
 import { IconButton } from '../Button'
 import { Text } from '../Typography'
 
-type ButtonPosition = 'left' | 'right'
-
 interface ActionableRowProps {
   icon?: ReactNode
   iconBox?: ReactNode
@@ -12,7 +10,6 @@ interface ActionableRowProps {
   description?: string | ReactNode
   button?: ReactNode
   onClick?: () => void
-  buttonPosition?: ButtonPosition
 }
 
 const renderIcon = (icon?: ReactNode, iconBox?: ReactNode) => {
@@ -60,26 +57,9 @@ export const ActionableRow = ({
   description,
   button,
   onClick,
-  buttonPosition = 'right',
 }: ActionableRowProps) => {
-  const actionButton = (
-    <div className='Layer__actionable_row__action'>
-      {button && button}
-      {!button && onClick
-        ? (
-          <IconButton
-            onClick={onClick}
-            icon={<ChevronRightIcon size={11} />}
-            withBorder
-          />
-        )
-        : null}
-    </div>
-  )
-
   return (
-    <div className={`Layer__actionable_row Layer__actionable_row--button-${buttonPosition}`}>
-      {buttonPosition === 'left' && actionButton}
+    <div className='Layer__actionable_row'>
       <div className='Layer__actionable_row__main'>
         {renderIcon(icon, iconBox)}
         <div className='Layer__actionable_row__main__text'>
@@ -87,7 +67,18 @@ export const ActionableRow = ({
           {renderDescription(description)}
         </div>
       </div>
-      {buttonPosition === 'right' && actionButton}
+      <div className='Layer__actionable_row__action'>
+        {button && button}
+        {!button && onClick
+          ? (
+            <IconButton
+              onClick={onClick}
+              icon={<ChevronRightIcon size={11} />}
+              withBorder
+            />
+          )
+          : null}
+      </div>
     </div>
   )
 }
