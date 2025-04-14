@@ -81,7 +81,7 @@ export const matchBankTransaction = put<
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/match`,
 )
 
-export interface GetBankTransactionsCsvParams
+export interface GetBankTransactionsExportParams
   extends Record<string, string | undefined> {
   businessId: string
   startDate?: string
@@ -97,8 +97,23 @@ export const getBankTransactionsCsv = get<{
   error?: unknown
 }>((params: Record<string, string | undefined>) => {
   const { businessId, startDate, endDate, categorized, category, month, year } =
-    params as GetBankTransactionsCsvParams // Type assertion here for clarity
+    params as GetBankTransactionsExportParams // Type assertion here for clarity
   return `/v1/businesses/${businessId}/reports/transactions/exports/csv?${
+    startDate ? `start_date=${encodeURIComponent(startDate)}&` : ''
+  }${endDate ? `end_date=${encodeURIComponent(endDate)}&` : ''}${
+    month ? `month=${encodeURIComponent(month)}&` : ''
+  }${year ? `year=${encodeURIComponent(year)}&` : ''}${
+    categorized ? `categorized=${categorized}&` : ''
+  }${category ? `category=${encodeURIComponent(category)}&` : ''}`
+})
+
+export const getBankTransactionsExcel = get<{
+  data?: S3PresignedUrl
+  error?: unknown
+}>((params: Record<string, string | undefined>) => {
+  const { businessId, startDate, endDate, categorized, category, month, year } =
+    params as GetBankTransactionsExportParams // Type assertion here for clarity
+  return `/v1/businesses/${businessId}/reports/transactions/exports/excel?${
     startDate ? `start_date=${encodeURIComponent(startDate)}&` : ''
   }${endDate ? `end_date=${encodeURIComponent(endDate)}&` : ''}${
     month ? `month=${encodeURIComponent(month)}&` : ''

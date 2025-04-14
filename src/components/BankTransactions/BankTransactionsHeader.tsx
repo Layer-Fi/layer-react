@@ -54,7 +54,7 @@ const DownloadButton = ({
   const handleClick = async () => {
     setIsDownloading(true)
     const currentYear = new Date().getFullYear().toString()
-    const getBankTransactionsCsv = Layer.getBankTransactionsCsv(
+    const getBankTransactionsExcel = Layer.getBankTransactionsExcel(
       apiUrl,
       auth?.access_token,
       {
@@ -65,7 +65,7 @@ const DownloadButton = ({
       },
     )
     try {
-      const result = await getBankTransactionsCsv()
+      const result = await getBankTransactionsExcel()
       if (result?.data?.presignedUrl) {
         window.location.href = result.data.presignedUrl
         setRequestFailed(false)

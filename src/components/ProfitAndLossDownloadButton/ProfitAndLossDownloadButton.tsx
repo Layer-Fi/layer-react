@@ -42,7 +42,7 @@ export const ProfitAndLossDownloadButton = ({
 
   const handleClick = async () => {
     setIsDownloading(true)
-    const getProfitAndLossCsv = Layer.getProfitAndLossCsv(
+    const getProfitAndLossExcel = Layer.getProfitAndLossExcel(
       apiUrl,
       auth?.access_token,
       {
@@ -63,7 +63,7 @@ export const ProfitAndLossDownloadButton = ({
     try {
       const result = useComparisonPnl
         ? await getProfitAndLossComparisonCsv(dateRange, moneyFormat)
-        : await getProfitAndLossCsv()
+        : await getProfitAndLossExcel()
       if (result?.data?.presignedUrl) {
         window.location.href = result.data.presignedUrl
         setRequestFailed(false)

@@ -1,8 +1,9 @@
-import { getBalanceSheet } from './layer/balance_sheet'
+import { getBalanceSheet, getBalanceSheetCSV, getBalanceSheetExcel } from './layer/balance_sheet'
 import {
   categorizeBankTransaction,
   matchBankTransaction,
   getBankTransactionsCsv,
+  getBankTransactionsExcel,
   getBankTransactionMetadata,
   updateBankTransactionMetadata,
   listBankTransactionDocuments,
@@ -46,6 +47,7 @@ import {
   getProfitAndLoss,
   getProfitAndLossSummaries,
   getProfitAndLossCsv,
+  getProfitAndLossExcel,
   compareProfitAndLoss,
   profitAndLossComparisonCsv,
 } from './layer/profit_and_loss'
@@ -66,7 +68,10 @@ export const Layer = {
   createAccount,
   updateAccount,
   getBalanceSheet,
+  getBalanceSheetCSV,
+  getBalanceSheetExcel,
   getBankTransactionsCsv,
+  getBankTransactionsExcel,
   getBankTransactionMetadata,
   listBankTransactionDocuments,
   getBankTransactionDocument,
@@ -86,6 +91,7 @@ export const Layer = {
   getProfitAndLoss,
   getProfitAndLossSummaries,
   getProfitAndLossCsv,
+  getProfitAndLossExcel,
   getLinkedAccounts,
   getJournal,
   getJournalEntriesCSV,
