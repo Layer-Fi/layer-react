@@ -14,7 +14,6 @@ import { Text } from '../../Typography/Text'
 import pluralize from 'pluralize'
 import ChevronRight from '../../../icons/ChevronRight'
 import { ActionableRow } from '../../ActionableRow/ActionableRow'
-import PlaidIcon from '../../../icons/PlaidIcon'
 import { Separator } from '../../Separator/Separator'
 
 export function LinkAccountsLinkStep() {
@@ -39,20 +38,15 @@ export function LinkAccountsLinkStep() {
             <Text status='disabled'>
               Connect your bank accounts and credit cards to automatically import your business transactions.
             </Text>
-            <ActionableRow
-              iconBox={<PlaidIcon />}
-              title='Connect my bank'
-              description='Import data with one simple integration.'
-              button={(
-                <Button
-                  onClick={() => addConnection('PLAID')}
-                  rightIcon={<LinkIcon size={12} />}
-                  disabled={loadingStatus !== 'complete'}
-                >
-                  Connect
-                </Button>
-              )}
-            />
+            <Button
+              onClick={() => addConnection('PLAID')}
+              rightIcon={<LinkIcon size={12} />}
+              disabled={loadingStatus !== 'complete'}
+              fullWidth={false}
+              style={{ maxWidth: 'fit-content' }}
+            >
+              Connect my bank
+            </Button>
           </VStack>
         )}
         Container={({ children }) => (
@@ -70,16 +64,16 @@ export function LinkAccountsLinkStep() {
             </LinkAccountsListContainer>
             <VStack pbs='xl'>
               <ActionableRow
-                iconBox={<PlaidIcon />}
-                title='Connect my next bank account'
-                description='Import data with one simple integration.'
+                title='Do you use any other bank accounts or credit cards for your business?'
                 button={(
                   <Button
                     onClick={() => addConnection('PLAID')}
                     rightIcon={<LinkIcon size={12} />}
                     disabled={loadingStatus !== 'complete'}
+                    fullWidth={false}
+                    style={{ width: 'auto', minWidth: 'fit-content' }}
                   >
-                    Connect next
+                    Link another bank
                   </Button>
                 )}
               />
