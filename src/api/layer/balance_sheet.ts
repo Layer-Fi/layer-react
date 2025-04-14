@@ -29,3 +29,14 @@ export const getBalanceSheetCSV = get<
     return `/v1/businesses/${businessId}/reports/balance-sheet/exports/csv?${parameters}`
   },
 )
+
+export const getBalanceSheetExcel = get<
+  { data: S3PresignedUrl },
+  GetBalanceSheetParams
+>(
+  ({ businessId, effectiveDate }) => {
+    const parameters = toDefinedSearchParameters({ effectiveDate })
+
+    return `/v1/businesses/${businessId}/reports/balance-sheet/exports/excel?${parameters}`
+  },
+)

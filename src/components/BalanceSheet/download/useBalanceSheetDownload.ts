@@ -1,7 +1,7 @@
 import useSWRMutation from 'swr/mutation'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { useAuth } from '../../../hooks/useAuth'
-import { getBalanceSheetCSV } from '../../../api/layer/balance_sheet'
+import { getBalanceSheetExcel } from '../../../api/layer/balance_sheet'
 import type { S3PresignedUrl } from '../../../types/general'
 import type { Awaitable } from '../../../types/utility/promises'
 
@@ -22,7 +22,7 @@ function buildKey({
       apiUrl,
       businessId,
       effectiveDate,
-      tags: ['#balance-sheet', '#exports', '#csv'],
+      tags: ['#balance-sheet', '#exports', '#excel'],
     }
   }
 }
@@ -45,7 +45,7 @@ export function useBalanceSheetDownload({
       businessId,
       effectiveDate,
     }),
-    ({ accessToken, apiUrl, businessId, effectiveDate }) => getBalanceSheetCSV(
+    ({ accessToken, apiUrl, businessId, effectiveDate }) => getBalanceSheetExcel(
       apiUrl,
       accessToken,
       {
