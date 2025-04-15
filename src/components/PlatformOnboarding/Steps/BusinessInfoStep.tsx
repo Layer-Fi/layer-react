@@ -6,7 +6,7 @@ type BusinessInfoStepProps = {
   onNext: () => void
 }
 
-const defaultTitle = 'We’ll use this information to contact you whenever we have questions on your books.'
+const defaultTitle = 'Confirm your information'
 
 export const BusinessInfoStep = ({ title = defaultTitle, onNext }: BusinessInfoStepProps) => {
   return (

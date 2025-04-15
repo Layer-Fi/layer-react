@@ -13,13 +13,16 @@ export type BusinessFormStringOverrides = {
   saveButton?: string
 }
 
+export type BusinessFormVariant = 'lightweight' | 'full'
+
 export type BusinessFormProps = {
   stringOverrides?: BusinessFormStringOverrides
   onSuccess?: () => void
+  variant?: BusinessFormVariant
 }
 
-export const BusinessForm = ({ stringOverrides, onSuccess }: BusinessFormProps) => {
-  const { form, submitError, isFormValid } = useBusinessForm({ onSuccess })
+export const BusinessForm = ({ stringOverrides, onSuccess, variant = 'lightweight' }: BusinessFormProps) => {
+  const { form, submitError, isFormValid } = useBusinessForm({ onSuccess, variant })
 
   const { isSubmitting } = form.state
 
@@ -57,20 +60,22 @@ export const BusinessForm = ({ stringOverrides, onSuccess }: BusinessFormProps) 
             )}
           </form.Field>
 
-          <form.Field name='preferred_name'>
-            {field => (
-              <>
-                <InputGroup name='preferred_name' label='Preferred name'>
-                  <Input
-                    name='preferred_name'
-                    placeholder='John'
-                    value={field.state.value}
-                    onChange={e => field.handleChange((e.target as HTMLInputElement).value)}
-                  />
-                </InputGroup>
-              </>
-            )}
-          </form.Field>
+          {variant === 'full' && (
+            <form.Field name='preferred_name'>
+              {field => (
+                <>
+                  <InputGroup name='preferred_name' label='Preferred name'>
+                    <Input
+                      name='preferred_name'
+                      placeholder='John'
+                      value={field.state.value}
+                      onChange={e => field.handleChange((e.target as HTMLInputElement).value)}
+                    />
+                  </InputGroup>
+                </>
+              )}
+            </form.Field>
+          )}
         </div>
 
         <form.Field
@@ -83,7 +88,7 @@ export const BusinessForm = ({ stringOverrides, onSuccess }: BusinessFormProps) 
             <>
               <InputGroup
                 name='email'
-                label='What’s the email you want to use for bookkeeping communication?'
+                label='Email'
               >
                 <Input
                   name='email'
@@ -108,7 +113,7 @@ export const BusinessForm = ({ stringOverrides, onSuccess }: BusinessFormProps) 
             <>
               <InputGroup
                 name='phone_number'
-                label='What’s the phone number you want to use for bookkeeping communication?'
+                label='Phone'
               >
                 <PhoneInput
                   value={field.state.value}
@@ -131,27 +136,10 @@ export const BusinessForm = ({ stringOverrides, onSuccess }: BusinessFormProps) 
         >
           {field => (
             <>
-              <InputGroup name='legal_name' label='Company'>
+              <InputGroup name='legal_name' label='Company name'>
                 <Input
                   name='legal_name'
                   placeholder='Company'
-                  value={field.state.value}
-                  onChange={e => field.handleChange((e.target as HTMLInputElement).value)}
-                  isInvalid={field.state.meta.errors.length > 0}
-                  errorMessage={field.state.meta.errors.join(', ')}
-                />
-              </InputGroup>
-            </>
-          )}
-        </form.Field>
-
-        <form.Field name='dba'>
-          {field => (
-            <>
-              <InputGroup name='dba' label='DBA (optional)'>
-                <Input
-                  name='dba'
-                  placeholder='Alternative name'
                   value={field.state.value}
                   onChange={e => field.handleChange((e.target as HTMLInputElement).value)}
                   isInvalid={field.state.meta.errors.length > 0}
@@ -189,22 +177,24 @@ export const BusinessForm = ({ stringOverrides, onSuccess }: BusinessFormProps) 
             )}
           </form.Field>
 
-          <form.Field name='tin'>
-            {field => (
-              <>
-                <InputGroup name='tin' label='Tax ID number (optional)'>
-                  <Input
-                    name='tin'
-                    placeholder='Tax ID number'
-                    value={field.state.value}
-                    onChange={e => field.handleChange((e.target as HTMLInputElement).value)}
-                    isInvalid={field.state.meta.errors.length > 0}
-                    errorMessage={field.state.meta.errors.join(', ')}
-                  />
-                </InputGroup>
-              </>
-            )}
-          </form.Field>
+          {variant === 'full' && (
+            <form.Field name='tin'>
+              {field => (
+                <>
+                  <InputGroup name='tin' label='Tax ID number (optional)'>
+                    <Input
+                      name='tin'
+                      placeholder='Tax ID number'
+                      value={field.state.value}
+                      onChange={e => field.handleChange((e.target as HTMLInputElement).value)}
+                      isInvalid={field.state.meta.errors.length > 0}
+                      errorMessage={field.state.meta.errors.join(', ')}
+                    />
+                  </InputGroup>
+                </>
+              )}
+            </form.Field>
+          )}
         </div>
       </FormSection>
 
@@ -215,7 +205,7 @@ export const BusinessForm = ({ stringOverrides, onSuccess }: BusinessFormProps) 
         withRetry
         error={submitError}
       >
-        {stringOverrides?.saveButton ?? 'Save'}
+        {stringOverrides?.saveButton ?? 'Next'}
       </SubmitButton>
 
       {!isFormValid && (

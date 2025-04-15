@@ -8,6 +8,7 @@ import { BusinessPersonnel } from '../../hooks/businessPersonnel/types'
 import { useUpdateBusinessPersonnel } from '../../hooks/businessPersonnel/useUpdateBusinessPersonnel'
 import { useUpdateBusiness } from '../../hooks/business/useUpdateBusiness'
 import { useState } from 'react'
+import { BusinessFormVariant } from './BusinessForm'
 
 type BusinessFormData = {
   full_name?: string
@@ -33,9 +34,10 @@ const getPerson = (personnel?: BusinessPersonnel[]) => {
 
 type UseBusinessFormProps = {
   onSuccess?: () => void
+  variant?: BusinessFormVariant
 }
 
-export const useBusinessForm = ({ onSuccess }: UseBusinessFormProps) => {
+export const useBusinessForm = ({ onSuccess, variant = 'lightweight' }: UseBusinessFormProps) => {
   const { business } = useLayerContext()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
 
@@ -59,13 +61,13 @@ export const useBusinessForm = ({ onSuccess }: UseBusinessFormProps) => {
     FormAsyncValidateOrFn<BusinessFormData>> ({
     defaultValues: {
       full_name: person?.fullName ?? undefined,
-      preferred_name: person?.preferredName ?? undefined,
+      preferred_name: variant === 'full' ? (person?.preferredName ?? undefined) : undefined,
       phone_number: person?.phoneNumbers?.[0]?.phoneNumber as string | undefined,
       email: person?.emailAddresses?.[0]?.emailAddress as string | undefined,
       legal_name: business?.legal_name ?? undefined,
       entity_type: business?.entity_type ?? undefined,
       us_state: business?.us_state ?? undefined,
-      tin: business?.tin,
+      tin: variant === 'full' ? business?.tin : undefined,
     },
     onSubmit: async ({ value }) => {
       try {
@@ -75,7 +77,7 @@ export const useBusinessForm = ({ onSuccess }: UseBusinessFormProps) => {
           await updateBusinessPersonnel({
             id: person.id,
             full_name: value.full_name,
-            preferred_name: value.preferred_name,
+            preferred_name: variant === 'full' ? value.preferred_name : undefined,
             email_addresses: value.email ? [{ email_address: value.email }] : [],
             phone_numbers: value.phone_number ? [{ phone_number: value.phone_number }] : [],
           })
@@ -84,7 +86,7 @@ export const useBusinessForm = ({ onSuccess }: UseBusinessFormProps) => {
           if (value.full_name) {
             await createBusinessPersonnel({
               full_name: value.full_name,
-              preferred_name: value.preferred_name ?? null,
+              preferred_name: variant === 'full' ? (value.preferred_name ?? null) : null,
               email_addresses: value.email ? [{ email_address: value.email }] : [],
               phone_numbers: value.phone_number ? [{ phone_number: value.phone_number }] : [],
               external_id: null,
@@ -97,7 +99,7 @@ export const useBusinessForm = ({ onSuccess }: UseBusinessFormProps) => {
           legal_name: value.legal_name,
           entity_type: value.entity_type,
           us_state: value.us_state,
-          tin: value.tin,
+          tin: variant === 'full' ? value.tin : undefined,
         })
 
         onSuccess?.()

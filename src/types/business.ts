@@ -20,10 +20,10 @@ export interface Business {
 
 export const ENTITY_TYPES = [
   { value: 'SOLE_PROP', label: 'Sole Proprietorship' },
-  { value: 'C_CORP', label: 'C Corporation' },
   { value: 'LLC', label: 'Limited Liability Company' },
   { value: 'S_CORP', label: 'S Corporation' },
   { value: 'PARTNERSHIP', label: 'Partnership' },
+  { value: 'C_CORP', label: 'C Corporation' },
 ] as const
 
 export type EntityType = (typeof ENTITY_TYPES)[number]['value']

@@ -13,7 +13,7 @@ const PLATFORM_ONBOARDING_STEPS = [
   },
   {
     id: 'business-info',
-    label: 'Confirm your informations',
+    label: 'Confirm your information',
   },
   {
     id: 'link-accounts',
