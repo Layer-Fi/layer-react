@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { LinkAccounts } from './LinkAccounts'
 import { ProgressSteps } from '../ProgressSteps/ProgressSteps'
-import { Button, ButtonVariant } from '../Button/Button'
 import { WelcomeStep, WelcomeStepFooter } from './Steps/WelcomeStep'
 import { SummaryStep } from './Steps/SummaryStep'
 import { BusinessInfoStep } from './Steps/BusinessInfoStep'
@@ -34,7 +33,7 @@ type PlatformOnboardingProps = {
 export const PlatformOnboarding = ({ onComplete }: PlatformOnboardingProps) => {
   const [step, setStep] = useState<PlatformOnboardingStepKey>(PLATFORM_ONBOARDING_STEPS[0].id)
 
-  const isFirstStep = PLATFORM_ONBOARDING_STEPS[0].id === step
+  // We'll handle the back button visibility in each step component
 
   const nextStep = () => {
     const currentStepIndex = PLATFORM_ONBOARDING_STEPS.findIndex(s => s.id === step)
@@ -62,33 +61,27 @@ export const PlatformOnboarding = ({ onComplete }: PlatformOnboardingProps) => {
       case 'welcome':
         return <WelcomeStep onNext={nextStep} stepsEnabled={PLATFORM_ONBOARDING_STEPS.map(s => s.id)} />
       case 'business-info':
-        return <BusinessInfoStep onNext={nextStep} />
+        return <BusinessInfoStep onNext={nextStep} onBack={previousStep} />
       case 'link-accounts':
-        return <LinkAccounts onComplete={nextStep} />
+        return <LinkAccounts onComplete={nextStep} onBack={previousStep} />
       case 'summary':
         return <SummaryStep onNext={nextStep} />
     }
   }
 
   const renderStepFooter = () => {
-    if (step === 'welcome') {
-      return <WelcomeStepFooter />
+    switch (step) {
+      case 'welcome':
+        return <WelcomeStepFooter />
+      default:
+        return null
     }
   }
 
   return (
     <div className='Layer__component Layer__platform-onboarding'>
       <div className='Layer__platform-onboarding-layout'>
-        {!isFirstStep && (
-          <div className='Layer__platform-onboarding__back-button-container'>
-            <Button
-              onClick={previousStep}
-              variant={ButtonVariant.secondary}
-            >
-              Back
-            </Button>
-          </div>
-        )}
+        {/* Back button is now handled in the steps */}
         <div className='Layer__platfom-onboarding-layout__box'>
           {PLATFORM_ONBOARDING_STEPS.length > 1 && (
             <ProgressSteps
