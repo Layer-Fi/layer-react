@@ -1,21 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import SmileIcon from '../../icons/SmileIcon'
 import { Text, TextSize } from '../Typography'
-import { RawTask } from '../../types/tasks'
 import { TasksListItem } from './TasksListItem'
 import { Pagination } from '../Pagination/Pagination'
 import { TasksListMobile } from './TasksListMobile'
 import { isCompletedTask, isIncompleteTask } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '../../hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
-
-function paginateArray<T>(array: ReadonlyArray<T>, chunkSize: number = 10): T[][] {
-  const result: T[][] = []
-  for (let i = 0; i < array.length; i += chunkSize) {
-    const chunk = array.slice(i, i + chunkSize)
-    result.push(chunk)
-  }
-  return result
-}
+import { usePaginatedList } from '../../hooks/array/usePaginatedList'
 
 const TasksEmptyState = () => (
   <div className='Layer__tasks-empty-state'>
@@ -36,28 +27,13 @@ type TasksListProps = {
   mobile?: boolean
 }
 
-export function TasksList({ pageSize = 10, mobile }: TasksListProps) {
+export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
   const { activePeriod } = useActiveBookkeepingPeriod()
 
-  const tasks = useMemo(() => activePeriod?.tasks ?? [], [activePeriod?.tasks])
-
-  const firstPageWithIncompleteTasks = paginateArray(
-    tasks,
-    pageSize,
-  ).findIndex(page => page.some(task => isIncompleteTask(task)))
-
-  const [currentPage, setCurrentPage] = useState(
-    firstPageWithIncompleteTasks === -1
-      ? 1
-      : firstPageWithIncompleteTasks + 1,
-  )
-
-  // Sort tasks by completion status and paginate
   const sortedTasks = useMemo(() => {
-    const firstPageIndex = (currentPage - 1) * pageSize
-    const lastPageIndex = firstPageIndex + pageSize
+    const tasksInPeriod = activePeriod?.tasks ?? []
 
-    return [...tasks]
+    return tasksInPeriod
       .sort((taskA, taskB) => {
         if (isCompletedTask(taskA) && isIncompleteTask(taskB)) {
           return 1
@@ -69,33 +45,22 @@ export function TasksList({ pageSize = 10, mobile }: TasksListProps) {
 
         return 0
       })
-      .slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, pageSize, tasks])
+  }, [activePeriod?.tasks])
+
+  const { pageItems, pageIndex, next, set } = usePaginatedList(sortedTasks, pageSize)
 
   const indexFirstIncomplete = sortedTasks?.findIndex(task => isIncompleteTask(task))
-
-  const goToNextPage = (task: Pick<RawTask, 'id' | 'status'>) => {
-    const allComplete = sortedTasks
-      ?.filter(taskInList => taskInList.id !== task.id)
-      .every(task => isCompletedTask(task))
-
-    const hasMorePages = sortedTasks ? sortedTasks.length > pageSize * currentPage : false
-
-    if (allComplete && hasMorePages) {
-      setCurrentPage(currentPage + 1)
-    }
-  }
 
   if (mobile) {
     return (
       <TasksListMobile
-        tasksCount={tasks.length}
-        sortedTasks={sortedTasks}
-        goToNextPage={goToNextPage}
+        tasksCount={sortedTasks.length}
+        sortedTasks={pageItems}
+        goToNextPage={next}
         indexFirstIncomplete={indexFirstIncomplete}
-        currentPage={currentPage}
+        currentPage={pageIndex + 1}
         pageSize={pageSize}
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={pageNumber => set(pageNumber - 1)}
       />
     )
   }
@@ -105,20 +70,20 @@ export function TasksList({ pageSize = 10, mobile }: TasksListProps) {
       {sortedTasks && sortedTasks.length > 0
         ? (
           <>
-            {sortedTasks.map((task, index) => (
+            {pageItems.map((task, index) => (
               <TasksListItem
                 key={index}
                 task={task}
-                goToNextPageIfAllComplete={goToNextPage}
+                goToNextPageIfAllComplete={next}
                 defaultOpen={index === indexFirstIncomplete}
               />
             ))}
-            {tasks && tasks.length >= 10 && (
+            {sortedTasks.length > pageSize && (
               <Pagination
-                currentPage={currentPage}
-                totalCount={tasks?.length || 0}
+                currentPage={pageIndex + 1}
+                totalCount={sortedTasks.length}
                 pageSize={pageSize}
-                onPageChange={page => setCurrentPage(page)}
+                onPageChange={pageNumber => set(pageNumber - 1)}
               />
             )}
           </>

@@ -30,7 +30,6 @@ export const TasksListMobile = ({
   const [showMobilePanel, setShowMobilePanel] = useState(false)
 
   const unresolvedTasks = getIncompleteTasks(sortedTasks).slice(0, MOBILE_SHOW_UNRESOLVED_TASKS_COUNT)
-  const totalTasks = sortedTasks?.length
 
   return (
     <div className='Layer__tasks-list'>
@@ -42,19 +41,19 @@ export const TasksListMobile = ({
           defaultOpen={index === indexFirstIncomplete}
         />
       ))}
-      {unresolvedTasks.length === 0 && totalTasks > 0
+      {unresolvedTasks.length === 0 && tasksCount > 0
         ? (
           <div style={{ textAlign: 'center', padding: '12px 24px' }}>
             <TextButton onClick={() => setShowMobilePanel(true)}>Show completed tasks</TextButton>
           </div>
         )
         : null}
-      {unresolvedTasks.length !== 0 && totalTasks > unresolvedTasks.length
+      {unresolvedTasks.length !== 0 && tasksCount > unresolvedTasks.length
         ? (
           <div style={{ textAlign: 'center', padding: '12px 24px' }}>
             <Button onClick={() => setShowMobilePanel(true)} fullWidth>
               Show all tasks (
-              {totalTasks}
+              {tasksCount}
               )
             </Button>
           </div>
@@ -76,7 +75,7 @@ export const TasksListMobile = ({
                 defaultOpen={index === indexFirstIncomplete}
               />
             ))}
-            {tasksCount >= 10 && (
+            {tasksCount > pageSize && (
               <Pagination
                 currentPage={currentPage}
                 totalCount={tasksCount}
