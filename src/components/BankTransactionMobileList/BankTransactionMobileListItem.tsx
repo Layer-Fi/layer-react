@@ -15,11 +15,10 @@ import { Text } from '../Typography'
 import { BankTransactionMobileForms } from './BankTransactionMobileForms'
 import { TransactionToOpenContext } from './TransactionToOpenContext'
 import classNames from 'classnames'
-import { parseISO, format as formatTime, format, getMonth } from 'date-fns'
+import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip/Tooltip'
-import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
+import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 
 export interface BankTransactionMobileListItemProps {
   index: number
@@ -206,25 +205,13 @@ export const BankTransactionMobileListItem = ({
               <span>{!categorized && bankTransaction.account_name}</span>
               {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
             </Text>
-            {categorized && open && (
+            {categorized && (
               <Text as='span' className={`${className}__categorized-name`}>
                 {bankTransaction.account_name}
               </Text>
             )}
-            {/* @TODO - not sure if needed */}
             {!categorizationEnabled && !categorized
-              ? (
-                <Tooltip offset={12}>
-                  <TooltipTrigger><BookkeepingStatus status='IN_PROGRESS_AWAITING_BOOKKEEPER' month={getMonth(new Date(bankTransaction.date))} /></TooltipTrigger>
-                  <TooltipContent className='Layer__tooltip' width='md'>
-                    Bookkeeping team is preparing your
-                    {' '}
-                    {format(new Date(bankTransaction.date), 'MMMM')}
-                    {' '}
-                    report. The report can change and current numbers might not be final.
-                  </TooltipContent>
-                </Tooltip>
-              )
+              ? <BankTransactionProcessingInfo />
               : null}
           </div>
           <div className={`${className}__heading__amount`}>

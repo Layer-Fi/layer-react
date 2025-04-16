@@ -626,6 +626,20 @@
   }
 }
 
+.Layer__bank-transaction-list-item__processing-info {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  color: var(--text-color-primary);
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  box-sizing: border-box;
+
+  .Layer__tooltip-trigger {
+    flex: 0 auto;
+  }
+}
+
 .Layer__expanded-bank-transaction-row__submit-btn {
   box-sizing: border-box;
   padding: var(--spacing-md);

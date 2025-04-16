@@ -23,11 +23,10 @@ import { ErrorText, Text } from '../Typography'
 import { TextUseTooltip } from '../Typography/Text'
 import { Assignment } from './Assignment'
 import classNames from 'classnames'
-import { parseISO, format as formatTime, getMonth, format } from 'date-fns'
+import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip/Tooltip'
-import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
+import { BankTransactionProcessingInfo } from './BankTransactionProcessingInfo'
 
 type Props = {
   index: number
@@ -178,6 +177,13 @@ export const BankTransactionListItem = ({
           {formatMoney(bankTransaction.amount)}
         </span>
       </span>
+      {!categorizationEnabled && !categorized
+        ? (
+          <span className={`${className}__processing-info`}>
+            <BankTransactionProcessingInfo />
+          </span>
+        )
+        : null}
       <span className={`${className}__expanded-row`}>
         <ExpandedBankTransactionRow
           ref={expandedRowRef}
@@ -246,20 +252,6 @@ export const BankTransactionListItem = ({
             >
               Retry
             </RetryButton>
-          )
-          : null}
-        {!categorizationEnabled && !categorized
-          ? (
-            <Tooltip offset={12}>
-              <TooltipTrigger><BookkeepingStatus status='IN_PROGRESS_AWAITING_BOOKKEEPER' month={getMonth(new Date(bankTransaction.date))} /></TooltipTrigger>
-              <TooltipContent className='Layer__tooltip' width='md'>
-                Bookkeeping team is preparing your
-                {' '}
-                {format(new Date(bankTransaction.date), 'MMMM')}
-                {' '}
-                report. The report can change and current numbers might not be final.
-              </TooltipContent>
-            </Tooltip>
           )
           : null}
       </span>
