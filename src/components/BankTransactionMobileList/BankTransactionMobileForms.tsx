@@ -4,7 +4,7 @@ import { Purpose } from './BankTransactionMobileListItem'
 import { BusinessForm } from './BusinessForm'
 import { PersonalForm } from './PersonalForm'
 import { SplitAndMatchForm } from './SplitAndMatchForm'
-import { MemoTextProvider } from './useMemoText'
+import { BankTransactionMemoProvider } from '../BankTransactions/BankTransactionMemo/useBankTransactionMemo'
 
 interface BankTransactionMobileFormsProps {
   purpose: Purpose
@@ -62,11 +62,11 @@ export const BankTransactionMobileForms = ({
 
   return (
     <ReceiptsProvider bankTransaction={bankTransaction} isActive={isOpen}>
-      <MemoTextProvider bankTransaction={bankTransaction} isActive={isOpen}>
+      <BankTransactionMemoProvider bankTransactionId={bankTransaction.id} isActive={isOpen}>
         <div className='Layer__bank-transaction-mobile-list-item__form-container'>
           {getContent()}
         </div>
-      </MemoTextProvider>
+      </BankTransactionMemoProvider>
     </ReceiptsProvider>
   )
 }

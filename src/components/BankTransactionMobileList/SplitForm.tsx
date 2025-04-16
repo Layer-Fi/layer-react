@@ -22,11 +22,10 @@ import {
   mapCategoryToExclusionOption,
   mapCategoryToOption,
 } from '../CategorySelect/CategorySelect'
-import { FileInput, Input, InputGroup } from '../Input'
-import { Textarea } from '../Textarea'
+import { FileInput, Input } from '../Input'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
-import { useMemoTextContext } from './useMemoText'
 import classNames from 'classnames'
+import { BankTransactionMemoInContext } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
 
 type Split = {
   amount: number
@@ -60,7 +59,6 @@ export const SplitForm = ({
     isLoading,
   } = useBankTransactionsContext()
 
-  const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
   const defaultCategory =
     bankTransaction.category
     || (hasSuggestions(bankTransaction.categorization_flow)
@@ -192,10 +190,6 @@ export const SplitForm = ({
   }
 
   const save = async () => {
-    if (showDescriptions && memoText !== undefined) {
-      saveMemoText()
-    }
-
     if (!validateSplit(rowState)) {
       if (rowState.splits.length > 1) {
         setFormError(
@@ -296,26 +290,7 @@ export const SplitForm = ({
           </>
         )
         : null}
-      {showDescriptions && (
-        <InputGroup
-          className='Layer__bank-transaction-mobile-list-item__description'
-          name='description'
-        >
-          <Text
-            size={TextSize.sm}
-            className='Layer__bank-transaction-mobile-list-item__description__label'
-          >
-            Description
-          </Text>
-          <Textarea
-            name='description'
-            placeholder='Add description'
-            value={memoText}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              setMemoText(e.target.value)}
-          />
-        </InputGroup>
-      )}
+      {showDescriptions && <BankTransactionMemoInContext />}
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',
