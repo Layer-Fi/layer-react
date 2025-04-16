@@ -39,6 +39,7 @@ import classNames from 'classnames'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionMemo } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
+import { VStack } from '../ui/Stack/Stack'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -557,7 +558,9 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
                 {showDescriptions && isOpen
                   ? (
-                    <BankTransactionMemo bankTransactionId={bankTransaction.id} />
+                    <VStack pis='md' pie='md'>
+                      <BankTransactionMemo bankTransactionId={bankTransaction.id} />
+                    </VStack>
                   )
                   : null}
 

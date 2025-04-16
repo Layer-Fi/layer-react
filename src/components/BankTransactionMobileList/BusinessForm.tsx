@@ -14,6 +14,7 @@ import { BusinessCategories } from './BusinessCategories'
 import { Option, mapCategoryToOption, getAssignedValue } from './utils'
 import classNames from 'classnames'
 import { BankTransactionMemoInContext } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
+import { VStack } from '../ui/Stack/Stack'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
@@ -143,7 +144,11 @@ export const BusinessForm = ({
           />
         )
         : null}
-      {showDescriptions && <BankTransactionMemoInContext />}
+      {showDescriptions && (
+        <VStack pbe='md'>
+          <BankTransactionMemoInContext />
+        </VStack>
+      )}
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',

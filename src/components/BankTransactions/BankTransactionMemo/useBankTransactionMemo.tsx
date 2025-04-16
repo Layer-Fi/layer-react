@@ -11,7 +11,6 @@ import { useBankTransactionMetadata } from '../../../hooks/useBankTransactions/u
 
 interface BankTransactionMemoProps {
   bankTransactionId: BankTransaction['id']
-  isActive?: boolean
 }
 
 interface BankTransactionMemoProviderProps extends BankTransactionMemoProps {
@@ -28,48 +27,17 @@ export const BankTransactionMemoContext = createContext<BankTransactionMemoConte
 
 export const useBankTransactionMemoContext = () => useContext(BankTransactionMemoContext)
 
-export const useBankTransactionMemo = ({ bankTransactionId, isActive }: BankTransactionMemoProps) => {
+export const useBankTransactionMemo = ({ bankTransactionId }: BankTransactionMemoProps) => {
   const [memo, setMemo] = useState<string | undefined>()
 
   const { trigger: updateBankTransactionMetadata } = useUpdateBankTransactionMetadata({ bankTransactionId })
   const { data: bankTransactionMetadata } = useBankTransactionMetadata({ bankTransactionId })
 
-  console.log('bankTransactionMetadata', bankTransactionMetadata)
-
   useEffect(() => {
     if (bankTransactionMetadata) {
-      console.log('set memo', bankTransactionMetadata.memo)
       setMemo(bankTransactionMetadata.memo ?? undefined)
     }
   }, [bankTransactionMetadata])
-
-  // useEffect(() => {
-  //   // Fetch documents details when the row is being opened and the documents are not yet loaded
-  //   const fetchMemos = async () => {
-  //     try {
-  //       const getBankTransactionMetadata = Layer.getBankTransactionMetadata(
-  //         apiUrl,
-  //         auth?.access_token,
-  //         {
-  //           params: {
-  //             businessId: businessId,
-  //             bankTransactionId,
-  //           },
-  //         },
-  //       )
-  //       const result = await getBankTransactionMetadata()
-  //       if (result.data.memo) setMemo(result.data.memo)
-  //     }
-  //     catch (error) {
-  //       console.error(error)
-  //     }
-  //   }
-
-  //   if (isActive && !isLoaded) {
-  //     void fetchMemos()
-  //     setIsLoaded(true)
-  //   }
-  // }, [isActive, isLoaded, bankTransactionId, apiUrl, auth?.access_token, businessId])
 
   const save = async () => {
     try {
@@ -92,9 +60,8 @@ export const useBankTransactionMemo = ({ bankTransactionId, isActive }: BankTran
 export const BankTransactionMemoProvider = ({
   children,
   bankTransactionId,
-  isActive = true,
 }: BankTransactionMemoProviderProps) => {
-  const contextData = useBankTransactionMemo({ bankTransactionId, isActive })
+  const contextData = useBankTransactionMemo({ bankTransactionId })
 
   return (
     <BankTransactionMemoContext.Provider value={contextData}>
