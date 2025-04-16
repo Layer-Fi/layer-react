@@ -7,9 +7,7 @@ import {
   useRef,
   TransitionEvent,
 } from 'react'
-import { Layer } from '../../api/layer'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import { useLayerContext } from '../../contexts/LayerContext'
 import AlertCircle from '../../icons/AlertCircle'
 import Scissors from '../../icons/ScissorsFullOpen'
 import Trash from '../../icons/Trash'
@@ -31,18 +29,16 @@ import {
   mapCategoryToExclusionOption,
   mapCategoryToOption,
 } from '../CategorySelect/CategorySelect'
-import { InputGroup, Input } from '../Input'
+import { Input } from '../Input'
 import { MatchForm } from '../MatchForm'
-import { Textarea } from '../Textarea'
 import { Toggle } from '../Toggle'
 import { ToggleSize } from '../Toggle/Toggle'
 import { Text, ErrorText, TextSize } from '../Typography'
 import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
-import { useAuth } from '../../hooks/useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
+import { BankTransactionMemo } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -152,12 +148,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [height, setHeight] = useState<string | number>(0)
     const [isOver, setOver] = useState(false)
     const bodyRef = useRef<HTMLSpanElement>(null)
-    const [memoText, setMemoText] = useState<string | undefined>()
     const [isLoaded, setIsLoaded] = useState(false)
-
-    const { businessId } = useLayerContext()
-    const { apiUrl } = useEnvironment()
-    const { data: auth } = useAuth()
 
     const defaultCategory =
       bankTransaction.category
@@ -287,18 +278,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }
 
     const save = async () => {
-      if (showDescriptions && memoText != undefined) {
-        await Layer.updateBankTransactionMetadata(apiUrl, auth?.access_token, {
-          params: {
-            businessId: businessId,
-            bankTransactionId: bankTransaction.id,
-          },
-          body: {
-            memo: memoText,
-          },
-        })
-      }
-
       if (purpose === Purpose.match) {
         if (!selectedMatchId) {
           setMatchFormError('Select an option to match the transaction')
@@ -347,21 +326,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       close()
     }
 
-    const fetchMemos = async () => {
-      const getBankTransactionMetadata = Layer.getBankTransactionMetadata(
-        apiUrl,
-        auth?.access_token,
-        {
-          params: {
-            businessId: businessId,
-            bankTransactionId: bankTransaction.id,
-          },
-        },
-      )
-      const result = await getBankTransactionMetadata()
-      if (result.data.memo) setMemoText(result.data.memo)
-    }
-
     // Call this save action after clicking save in parent component:
     useImperativeHandle(ref, () => ({
       save,
@@ -400,17 +364,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     )
 
     useEffect(() => {
-      // Fetch documents details when the row is being opened and the documents are not yet loaded
-      if (isOpen && isLoaded) {
-        fetchMemos()
-      }
-    }, [isOpen])
-
-    useEffect(() => {
-      if (!isLoaded) {
-        return
-      }
-
       setHeight(getDivHeight())
       setOver(false)
 
@@ -420,16 +373,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         })
       }
     }, [getDivHeight, isOpen])
-
-    useEffect(() => {
-      const loadDocumentsAndMetadata = async () => {
-        if (showDescriptions && isOpen) await fetchMemos()
-
-        setIsLoaded(true)
-        setOver(true)
-      }
-      loadDocumentsAndMetadata()
-    }, [])
 
     const bookkeepingStatus = useEffectiveBookkeepingStatus()
     const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
@@ -612,20 +555,11 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   </div>
                 </div>
 
-                {showDescriptions && (
-                  <InputGroup
-                    className={`${className}__description`}
-                    name='description'
-                  >
-                    <Textarea
-                      name='description'
-                      placeholder='Add description'
-                      value={memoText}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                        setMemoText(e.target.value)}
-                    />
-                  </InputGroup>
-                )}
+                {showDescriptions && isOpen
+                  ? (
+                    <BankTransactionMemo bankTransactionId={bankTransaction.id} />
+                  )
+                  : null}
 
                 {showReceiptUploads && (
                   <BankTransactionReceiptsWithProvider
@@ -654,7 +588,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       <SubmitButton
                         onClick={() => {
                           if (!bankTransaction.processing) {
-                            save()
+                            void save()
                           }
                         }}
                         className='Layer__bank-transaction__submit-btn'

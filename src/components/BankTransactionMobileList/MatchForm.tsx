@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction } from '../../types'
@@ -6,12 +6,11 @@ import { hasReceipts, isAlreadyMatched } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button } from '../Button'
-import { FileInput, InputGroup } from '../Input'
+import { FileInput } from '../Input'
 import { MatchFormMobile } from '../MatchForm'
-import { Textarea } from '../Textarea'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
-import { useMemoTextContext } from './useMemoText'
 import classNames from 'classnames'
+import { BankTransactionMemoInContext } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
 
 export const MatchForm = ({
   bankTransaction,
@@ -28,7 +27,7 @@ export const MatchForm = ({
 
   const { match: matchBankTransaction, isLoading } =
     useBankTransactionsContext()
-  const { memoText, setMemoText, saveMemoText } = useMemoTextContext()
+
   const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
     isAlreadyMatched(bankTransaction)
     ?? (bankTransaction.suggested_matches
@@ -60,10 +59,6 @@ export const MatchForm = ({
   }
 
   const save = async () => {
-    if (showDescriptions && memoText !== undefined) {
-      saveMemoText()
-    }
-
     if (!showCategorization) {
       return
     }
@@ -95,26 +90,7 @@ export const MatchForm = ({
           setSelectedMatchId(id)
         }}
       />
-      {showDescriptions && (
-        <InputGroup
-          className='Layer__bank-transaction-mobile-list-item__description'
-          name='description'
-        >
-          <Text
-            size={TextSize.sm}
-            className='Layer__bank-transaction-mobile-list-item__description__label'
-          >
-            Description
-          </Text>
-          <Textarea
-            name='description'
-            placeholder='Add description'
-            value={memoText}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-              setMemoText(e.target.value)}
-          />
-        </InputGroup>
-      )}
+      {showDescriptions && <BankTransactionMemoInContext />}
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',
