@@ -11,6 +11,7 @@ import { MatchFormMobile } from '../MatchForm'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { BankTransactionMemoInContext } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
+import { VStack } from '../ui/Stack/Stack'
 
 export const MatchForm = ({
   bankTransaction,
@@ -90,7 +91,11 @@ export const MatchForm = ({
           setSelectedMatchId(id)
         }}
       />
-      {showDescriptions && <BankTransactionMemoInContext />}
+      {showDescriptions && (
+        <VStack pbe='md'>
+          <BankTransactionMemoInContext />
+        </VStack>
+      )}
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',

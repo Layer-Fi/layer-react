@@ -11,6 +11,7 @@ import { ErrorText } from '../Typography'
 import { PersonalCategories } from './constants'
 import classNames from 'classnames'
 import { BankTransactionMemoInContext } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
+import { VStack } from '../ui/Stack/Stack'
 
 interface PersonalFormProps {
   bankTransaction: BankTransaction
@@ -77,7 +78,11 @@ export const PersonalForm = ({
 
   return (
     <div className='Layer__bank-transaction-mobile-list-item__personal-form'>
-      {showDescriptions && <BankTransactionMemoInContext />}
+      {showDescriptions && (
+        <VStack pbe='md'>
+          <BankTransactionMemoInContext />
+        </VStack>
+      )}
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',
