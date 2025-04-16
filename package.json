@@ -84,7 +84,7 @@
     "react-datepicker": "^6.9.0",
     "react-plaid-link": "^3.5.1",
     "react-select": "^5.8.0",
-    "recharts": "^2.10.1",
+    "recharts": "^2.15.2",
     "swr": "^2.2.4",
     "zustand": "^5.0.1"
   }
