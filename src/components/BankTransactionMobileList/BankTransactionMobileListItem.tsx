@@ -172,7 +172,7 @@ export const BankTransactionMobileListItem = ({
     setPurpose(event.target.value as Purpose)
 
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = !isCategorizationEnabledForStatus(bookkeepingStatus)
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
 
   const categorized = isCategorized(bankTransaction)
 

@@ -62,8 +62,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
         showTooltips={showTooltips}
-        // mobileComponent={mobileComponent}
-        mobileComponent='mobileList'
+        mobileComponent={mobileComponent}
         mode={mode}
         stringOverrides={stringOverrides?.bankTransactions}
       />
