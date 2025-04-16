@@ -29,12 +29,11 @@ import { TextSize, TextUseTooltip } from '../Typography/Text'
 import { MatchBadge } from './MatchBadge'
 import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
-import { parseISO, format as formatTime, getMonth, format } from 'date-fns'
+import { parseISO, format as formatTime } from 'date-fns'
 import type { CategoryWithEntries } from '../../types/bank_transactions'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
-import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
+import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 
 type Props = {
   index: number
@@ -397,18 +396,7 @@ export const BankTransactionRow = ({
               )
               : null}
             {!categorizationEnabled && !categorized
-              ? (
-                <Tooltip offset={12}>
-                  <TooltipTrigger><BookkeepingStatus status='IN_PROGRESS_AWAITING_BOOKKEEPER' month={getMonth(new Date(bankTransaction.date))} /></TooltipTrigger>
-                  <TooltipContent className='Layer__tooltip' width='md'>
-                    Bookkeeping team is preparing your
-                    {' '}
-                    {format(new Date(bankTransaction.date), 'MMMM')}
-                    {' '}
-                    report. The report can change and current numbers might not be final.
-                  </TooltipContent>
-                </Tooltip>
-              )
+              ? <BankTransactionProcessingInfo />
               : null}
             <IconButton
               onClick={toggleOpen}

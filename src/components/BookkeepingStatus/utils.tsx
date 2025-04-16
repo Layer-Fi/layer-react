@@ -17,7 +17,7 @@ type InternalStatusConfig = {
 
 type BookkeepingStatusConfigOptions = {
   status: BookkeepingPeriodStatus
-  monthNumber: number
+  monthNumber?: number
   incompleteTasksCount?: number
 }
 
@@ -26,7 +26,7 @@ export function getBookkeepingStatusConfig({
   monthNumber,
   incompleteTasksCount,
 }: BookkeepingStatusConfigOptions): InternalStatusConfig | undefined {
-  const monthName = getMonthNameFromNumber(monthNumber)
+  const monthName = monthNumber !== undefined ? getMonthNameFromNumber(monthNumber) : ''
 
   const actionPhrase = incompleteTasksCount !== undefined && incompleteTasksCount > 0
     ? `Please complete the ${pluralize('open task', incompleteTasksCount, true)}.`

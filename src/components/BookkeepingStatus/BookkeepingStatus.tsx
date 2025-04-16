@@ -6,11 +6,12 @@ import { getBookkeepingStatusConfig } from './utils'
 type BookkeepingStatusProps = {
   monthNumber?: number
   status?: BookkeepingPeriodStatus
+  text?: string
   iconOnly?: boolean
 }
 
-export const BookkeepingStatus = ({ status, monthNumber, iconOnly }: BookkeepingStatusProps) => {
-  if (!status || monthNumber === undefined) {
+export const BookkeepingStatus = ({ status, text, monthNumber, iconOnly }: BookkeepingStatusProps) => {
+  if (!status) {
     return
   }
 
@@ -31,7 +32,7 @@ export const BookkeepingStatus = ({ status, monthNumber, iconOnly }: Bookkeeping
           size={TextSize.sm}
           status={statusConfig.color}
         >
-          {statusConfig.label}
+          {text ?? statusConfig.label}
         </Text>
       )}
     </span>
