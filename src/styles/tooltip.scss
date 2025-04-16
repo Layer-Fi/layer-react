@@ -28,8 +28,6 @@
 .Layer__actionable-list__tooltip-content {
   z-index: 99999;
   top: 100px !important;
-
-  // pointer-events: none;pointer-events
   display: flex;
   flex-direction: column;
   align-items: flex-start;
