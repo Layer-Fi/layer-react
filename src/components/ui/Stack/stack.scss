@@ -2,6 +2,7 @@
   display: flex;
 
   $directions: row, column;
+
   @each $direction in $directions {
     &[data-direction="#{$direction}"] {
       flex-direction: $direction;
@@ -9,6 +10,7 @@
   }
 
   $alignments: start, center, end;
+
   @each $alignment in $alignments {
     &[data-align="#{$alignment}"] {
       align-items: $alignment;
@@ -16,6 +18,7 @@
   }
 
   $justifications: start, center, end;
+
   @each $justification in $justifications {
     &[data-justify="#{$justification}"] {
       justify-content: $justification;
@@ -23,6 +26,7 @@
   }
 
   $spacings: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
+
   @each $spacing in $spacings {
     &[data-gap="#{$spacing}"] {
       gap: var(--spacing-#{$spacing});
@@ -33,6 +37,13 @@
     }
     &[data-pbs="#{$spacing}"] {
       padding-block-start: var(--spacing-#{$spacing});
+    }
+
+    &[data-pie="#{$spacing}"] {
+      padding-inline-end: var(--spacing-#{$spacing});
+    }
+    &[data-pis="#{$spacing}"] {
+      padding-inline-start: var(--spacing-#{$spacing});
     }
   }
 }
