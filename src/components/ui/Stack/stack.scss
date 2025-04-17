@@ -1,6 +1,10 @@
 .Layer__Stack {
   display: flex;
 
+  &[data-fluid] {
+    flex: 1;
+  }
+
   $directions: row, column;
 
   @each $direction in $directions {

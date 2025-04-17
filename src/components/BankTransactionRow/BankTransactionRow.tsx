@@ -34,6 +34,7 @@ import type { CategoryWithEntries } from '../../types/bank_transactions'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
+import { VStack } from '../ui/Stack/Stack'
 
 type Props = {
   index: number
@@ -396,7 +397,7 @@ export const BankTransactionRow = ({
               )
               : null}
             {!categorizationEnabled && !categorized
-              ? <BankTransactionProcessingInfo />
+              ? <VStack pis='xs' fluid><BankTransactionProcessingInfo /></VStack>
               : null}
             <IconButton
               onClick={toggleOpen}
