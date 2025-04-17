@@ -151,16 +151,14 @@ const BankTransactionsContent = ({
 
   useEffect(() => {
     if (JSON.stringify(inputFilters) !== JSON.stringify(filters)) {
-      /** @TODO - Do we want to default filters to fetch categorized and uncategorized transactions when categorization is disabled? */
-      /* if (!categorizationEnabled) {
+      if (effectiveBookkeepingStatus === 'ACTIVE') {
         setFilters({
           ...filters,
           ...inputFilters,
           categorizationStatus: DisplayState.all,
         })
       }
-      else if (... */
-      if (!inputFilters?.categorizationStatus && categorizeView) {
+      else if (!inputFilters?.categorizationStatus && categorizeView) {
         setFilters({
           ...filters,
           ...inputFilters,
