@@ -4,20 +4,18 @@ export const range = (start: number, end: number) => {
 }
 
 export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(
-  fnc: F,
+  fn: F,
   timeout = 300,
 ) => {
   let timer: ReturnType<typeof setTimeout>
-  return (...args: Parameters<F>) => {
-    clearTimeout(timer)
-    timer = setTimeout(() => {
-      fnc.apply(this, args)
-    }, timeout)
-  }
-}
 
-export const sleep = (time: number) => {
-  return new Promise(resolve => setTimeout(resolve, time))
+  return (...args: Parameters<F>): Promise<ReturnType<F>> => {
+    clearTimeout(timer)
+
+    return new Promise((resolve) => {
+      timer = setTimeout(() => resolve(fn(...args)), timeout)
+    })
+  }
 }
 
 /**

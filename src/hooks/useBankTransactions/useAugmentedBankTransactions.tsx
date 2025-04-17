@@ -12,7 +12,7 @@ import {
   Direction,
   DisplayState,
 } from '../../types/bank_transactions'
-import { DataModel, LoadedStatus } from '../../types/general'
+import { DataModel } from '../../types/general'
 import { useLinkedAccounts } from '../useLinkedAccounts'
 import {
   BankTransactionFilters,
@@ -135,8 +135,6 @@ export const useAugmentedBankTransactions = (
     return DisplayState.categorized
   }, [filters?.categorizationStatus])
 
-  const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
-
   const {
     data: rawResponseData,
     isLoading,
@@ -146,19 +144,20 @@ export const useAugmentedBankTransactions = (
     size,
     setSize,
   } = useBankTransactions({
-    startDate: filters?.dateRange?.startDate,
-    endDate: filters?.dateRange?.endDate,
-    tagFilterQueryString: filters?.tagFilter ? tagFilterToQueryString(filters.tagFilter) : undefined,
-    direction: filters?.direction?.length === 1
-      ? filters.direction[0] === Direction.CREDIT
-        ? 'INFLOW'
-        : 'OUTFLOW'
-      : undefined,
     categorized: filters?.categorizationStatus
       ? filters.categorizationStatus !== DisplayState.all
         ? filters.categorizationStatus === DisplayState.categorized
         : undefined
       : undefined,
+    descriptionFilter: filters?.descriptionFilter,
+    direction: filters?.direction?.length === 1
+      ? filters.direction[0] === Direction.CREDIT
+        ? 'INFLOW'
+        : 'OUTFLOW'
+      : undefined,
+    startDate: filters?.dateRange?.startDate,
+    endDate: filters?.dateRange?.endDate,
+    tagFilterQueryString: filters?.tagFilter ? tagFilterToQueryString(filters.tagFilter) : undefined,
   })
 
   const data: BankTransaction[] | undefined = useMemo(() => {
@@ -196,18 +195,6 @@ export const useAugmentedBankTransactions = (
     () => (data ? collectAccounts(data) : []),
     [data],
   )
-
-  useEffect(() => {
-    if (isLoading && loadingStatus === 'initial') {
-      setLoadingStatus('loading')
-      return
-    }
-
-    if (!isLoading && loadingStatus === 'loading') {
-      setLoadingStatus('complete')
-      return
-    }
-  }, [isLoading])
 
   const setFilters = (value?: Partial<BankTransactionFilters>) => {
     setTheFilters({
@@ -434,10 +421,10 @@ export const useAugmentedBankTransactions = (
 
   const transactionsNotSynced = useMemo(
     () =>
-      loadingStatus === 'complete'
+      isLoading === false
       && anyAccountSyncing
       && (!data || data?.length === 0),
-    [data, anyAccountSyncing, loadingStatus],
+    [data, anyAccountSyncing, isLoading],
   )
 
   let intervalId: ReturnType<typeof setInterval> | undefined = undefined
@@ -481,7 +468,6 @@ export const useAugmentedBankTransactions = (
   return {
     data: filteredData,
     metadata: lastMetadata,
-    loadingStatus,
     isLoading,
     isValidating,
     refetch,

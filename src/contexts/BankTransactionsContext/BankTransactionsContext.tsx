@@ -7,7 +7,6 @@ export const BankTransactionsContext =
   createContext<BankTransactionsContextType>({
     data: undefined,
     isLoading: false,
-    loadingStatus: 'initial',
     isValidating: false,
     error: undefined,
     refetch: () => {},

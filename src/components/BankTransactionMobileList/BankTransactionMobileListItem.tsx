@@ -20,11 +20,9 @@ import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookke
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 
 export interface BankTransactionMobileListItemProps {
-  index: number
   bankTransaction: BankTransaction
   editable: boolean
   removeTransaction: (bt: BankTransaction) => void
-  initialLoad?: boolean
   showTooltips: boolean
   showDescriptions?: boolean
   showReceiptUploads?: boolean
@@ -52,11 +50,9 @@ const getAssignedValue = (bankTransaction: BankTransaction) => {
 }
 
 export const BankTransactionMobileListItem = ({
-  index = 0,
   bankTransaction,
   removeTransaction,
   editable,
-  initialLoad,
   showTooltips,
   isFirstItem = false,
   showDescriptions,
@@ -91,7 +87,6 @@ export const BankTransactionMobileListItem = ({
         : Purpose.business,
   )
   const [open, setOpen] = useState(isFirstItem)
-  const [showComponent, setShowComponent] = useState(!initialLoad)
   const [height, setHeight] = useState(0)
   const [headingHeight, setHeadingHeight] = useState(63)
 
@@ -143,19 +138,6 @@ export const BankTransactionMobileListItem = ({
   }
 
   useEffect(() => {
-    if (initialLoad) {
-      const timeoutId = setTimeout(() => {
-        setShowComponent(true)
-      }, index * 20)
-
-      return () => clearTimeout(timeoutId)
-    }
-    else {
-      setShowComponent(true)
-    }
-  }, [])
-
-  useEffect(() => {
     if (
       editable
       && bankTransaction.recently_categorized
@@ -181,7 +163,7 @@ export const BankTransactionMobileListItem = ({
     className,
     removeAnim ? 'Layer__bank-transaction-row--removing' : '',
     open ? openClassName : '',
-    showComponent ? 'show' : '',
+    'show',
   )
 
   return (

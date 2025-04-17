@@ -29,9 +29,8 @@ export const BankTransactionList = ({
   return (
     <ul className='Layer__bank-transactions__list'>
       {bankTransactions?.map(
-        (bankTransaction: BankTransaction, index: number) => (
+        (bankTransaction: BankTransaction) => (
           <BankTransactionListItem
-            index={index}
             key={bankTransaction.id}
             dateFormat={DATE_FORMAT}
             bankTransaction={bankTransaction}

@@ -106,7 +106,6 @@ const BankTransactionsContent = ({
   const isVisible = useIsVisible(scrollPaginationRef)
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [initialLoad, setInitialLoad] = useState(true)
 
   const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
@@ -116,7 +115,6 @@ const BankTransactionsContent = ({
   const {
     data,
     isLoading,
-    loadingStatus,
     error,
     isValidating,
     refetch,
@@ -191,15 +189,6 @@ const BankTransactionsContent = ({
     setCurrentPage(1)
   }, [filters])
 
-  useEffect(() => {
-    if (loadingStatus === 'complete') {
-      const timeoutLoad = setTimeout(() => {
-        setInitialLoad(false)
-      }, 1000)
-      return () => clearTimeout(timeoutLoad)
-    }
-  }, [loadingStatus])
-
   const bankTransactions = useMemo(() => {
     if (monthlyView) {
       return data
@@ -237,11 +226,11 @@ const BankTransactionsContent = ({
     if (size?.height && size?.height >= 90) {
       const newShift = -Math.floor(size.height / 2) + 6
       if (newShift !== shiftStickyHeader) {
-        debounceShiftStickyHeader(newShift)
+        void debounceShiftStickyHeader(newShift)
       }
     }
     else if (size?.height > 0 && shiftStickyHeader !== 0) {
-      debounceShiftStickyHeader(0)
+      void debounceShiftStickyHeader(0)
     }
 
     if (size.width > BREAKPOINTS.TABLET && listView) {
@@ -251,7 +240,7 @@ const BankTransactionsContent = ({
       setListView(true)
     }
 
-    debounceContainerWidth(size?.width)
+    void debounceContainerWidth(size?.width)
   })
 
   const editable =
@@ -261,6 +250,8 @@ const BankTransactionsContent = ({
     data
     && !hasMore
     && Math.ceil((data?.length || 0) / pageSize) === currentPage
+
+  const isLoadingWithoutData = isLoading && !data
 
   return (
     <Container
@@ -292,7 +283,7 @@ const BankTransactionsContent = ({
             }
           }}
           stringOverrides={stringOverrides?.bankTransactionsHeader}
-          isDataLoading={isLoading}
+          isDataLoading={isLoadingWithoutData}
           isSyncing={isSyncing}
         />
       )}
@@ -302,10 +293,9 @@ const BankTransactionsContent = ({
           <BankTransactionsTable
             categorizeView={categorizeView}
             editable={editable}
-            isLoading={isLoading}
+            isLoading={isLoadingWithoutData}
             isSyncing={isSyncing}
             bankTransactions={bankTransactions}
-            initialLoad={initialLoad}
             containerWidth={containerWidth}
             removeTransaction={removeTransaction}
             showDescriptions={showDescriptions}
@@ -319,7 +309,7 @@ const BankTransactionsContent = ({
         </div>
       )}
 
-      {!isLoading && listView && mobileComponent !== 'mobileList'
+      {!isLoadingWithoutData && listView && mobileComponent !== 'mobileList'
         ? (
           <BankTransactionList
             bankTransactions={bankTransactions}
@@ -334,13 +324,12 @@ const BankTransactionsContent = ({
         )
         : null}
 
-      {!isLoading && listView && mobileComponent === 'mobileList'
+      {!isLoadingWithoutData && listView && mobileComponent === 'mobileList'
         ? (
           <BankTransactionMobileList
             bankTransactions={bankTransactions}
             editable={editable}
             removeTransaction={removeTransaction}
-            initialLoad={initialLoad}
             showTooltips={showTooltips}
             showReceiptUploads={showReceiptUploads}
             showDescriptions={showDescriptions}
@@ -348,7 +337,7 @@ const BankTransactionsContent = ({
         )
         : null}
 
-      {listView && isLoading
+      {listView && isLoadingWithoutData
         ? (
           <div className='Layer__bank-transactions__list-loader'>
             <Loader />
@@ -360,7 +349,7 @@ const BankTransactionsContent = ({
         ? (
           <DataStates
             bankTransactions={bankTransactions}
-            isLoading={isLoading}
+            isLoading={isLoadingWithoutData}
             isValidating={isValidating}
             error={error}
             refetch={refetch}
