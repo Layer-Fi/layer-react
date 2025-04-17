@@ -33,6 +33,8 @@ import { parseISO, format as formatTime } from 'date-fns'
 import type { CategoryWithEntries } from '../../types/bank_transactions'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
+import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
+import { VStack } from '../ui/Stack/Stack'
 
 type Props = {
   index: number
@@ -281,7 +283,7 @@ export const BankTransactionRow = ({
           <span
             className={`${className}__actions-container Layer__table-cell-content`}
           >
-            {!categorized && !open
+            {categorizationEnabled && !categorized && !open
               ? (
                 <CategorySelect
                   bankTransaction={bankTransaction}
@@ -346,7 +348,7 @@ export const BankTransactionRow = ({
                 </Text>
               )
               : null}
-            {!categorized && !open && showRetry
+            {categorizationEnabled && !categorized && !open && showRetry
               ? (
                 <RetryButton
                   onClick={() => {
@@ -374,7 +376,7 @@ export const BankTransactionRow = ({
                 </Text>
               )
               : null}
-            {(!categorized && (open || (!open && !showRetry)))
+            {(!categorized && categorizationEnabled && (open || (!open && !showRetry)))
             || (categorizationEnabled && categorized && open)
               ? (
                 <SubmitButton
@@ -393,6 +395,9 @@ export const BankTransactionRow = ({
                     : stringOverrides?.approveButtonText || 'Confirm'}
                 </SubmitButton>
               )
+              : null}
+            {!categorizationEnabled && !categorized
+              ? <VStack pis='xs' fluid><BankTransactionProcessingInfo /></VStack>
               : null}
             <IconButton
               onClick={toggleOpen}

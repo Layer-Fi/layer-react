@@ -50,9 +50,10 @@ export const SplitAndMatchForm = ({
           bankTransaction={bankTransaction}
           showReceiptUploads={showReceiptUploads}
           showDescriptions={showDescriptions}
+          showCategorization={showCategorization}
         />
       )}
-      {anyMatch && formType === Purpose.match
+      {showCategorization && anyMatch && formType === Purpose.match
         ? (
           <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>
             <TextButton onClick={() => setFormType(Purpose.categorize)}>
@@ -61,7 +62,7 @@ export const SplitAndMatchForm = ({
           </div>
         )
         : null}
-      {anyMatch && formType === Purpose.categorize
+      {showCategorization && anyMatch && formType === Purpose.categorize
         ? (
           <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>
             <TextButton onClick={() => setFormType(Purpose.match)}>

@@ -24,6 +24,9 @@ import { TextUseTooltip } from '../Typography/Text'
 import { Assignment } from './Assignment'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
+import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
+import { BankTransactionProcessingInfo } from './BankTransactionProcessingInfo'
 
 type Props = {
   index: number
@@ -68,6 +71,9 @@ export const BankTransactionListItem = ({
   }
 
   const [showComponent, setShowComponent] = useState(false)
+
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -171,6 +177,13 @@ export const BankTransactionListItem = ({
           {formatMoney(bankTransaction.amount)}
         </span>
       </span>
+      {!categorizationEnabled && !categorized
+        ? (
+          <span className={`${className}__processing-info`}>
+            <BankTransactionProcessingInfo />
+          </span>
+        )
+        : null}
       <span className={`${className}__expanded-row`}>
         <ExpandedBankTransactionRow
           ref={expandedRowRef}
@@ -191,7 +204,7 @@ export const BankTransactionListItem = ({
         />
       </span>
       <span className={`${className}__base-row`}>
-        {!categorized
+        {categorizationEnabled && !categorized
           ? (
             <CategorySelect
               bankTransaction={bankTransaction}
@@ -207,7 +220,7 @@ export const BankTransactionListItem = ({
           )
           : null}
         {categorized ? <Assignment bankTransaction={bankTransaction} /> : null}
-        {!categorized && !showRetry
+        {categorizationEnabled && !categorized && !showRetry
           ? (
             <SubmitButton
               onClick={() => {
@@ -225,7 +238,7 @@ export const BankTransactionListItem = ({
             </SubmitButton>
           )
           : null}
-        {!categorized && showRetry
+        {categorizationEnabled && !categorized && showRetry
           ? (
             <RetryButton
               onClick={() => {

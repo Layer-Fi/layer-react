@@ -18,6 +18,7 @@ import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
+import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 
 export interface BankTransactionMobileListItemProps {
   index: number
@@ -204,11 +205,14 @@ export const BankTransactionMobileListItem = ({
               <span>{!categorized && bankTransaction.account_name}</span>
               {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
             </Text>
-            {categorized && open && (
+            {categorized && (
               <Text as='span' className={`${className}__categorized-name`}>
                 {bankTransaction.account_name}
               </Text>
             )}
+            {!categorizationEnabled && !categorized
+              ? <BankTransactionProcessingInfo />
+              : null}
           </div>
           <div className={`${className}__heading__amount`}>
             <span
