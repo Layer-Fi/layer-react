@@ -7,13 +7,7 @@ export const BankTransactionMemo = ({ bankTransactionId }: { bankTransactionId: 
   const form = useBankTransactionMemo({ bankTransactionId })
 
   return (
-    <form
-      onBlur={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        void form.handleSubmit()
-      }}
-    >
+    <form onBlur={() => void form.handleSubmit()}>
       <form.Field name='memo'>
         {field => (
           <InputGroup
