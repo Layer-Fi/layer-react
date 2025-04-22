@@ -30,6 +30,7 @@ export interface BookkeepingOverviewProps {
       }
     }
   }
+  reconnectAccountsOnClick?: () => void
   /**
    * @deprecated Use `stringOverrides.title` instead
    */
@@ -41,15 +42,18 @@ type PnlToggleOption = 'revenue' | 'expenses'
 export const BookkeepingOverview = ({
   title,
   showTitle = true,
+  reconnectAccountsOnClick,
   stringOverrides,
   slotProps,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
 
-  const profitAndLossSummariesVariants = slotProps?.profitAndLoss?.summaries?.variants
+  const profitAndLossSummariesVariants =
+    slotProps?.profitAndLoss?.summaries?.variants
 
-  const { upperContentRef, targetElementRef, upperElementInFocus } = useKeepInMobileViewport()
+  const { upperContentRef, targetElementRef, upperElementInFocus } =
+    useKeepInMobileViewport()
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -57,15 +61,30 @@ export const BookkeepingOverview = ({
         viewClassName='Layer__bookkeeping-overview--view'
         title={stringOverrides?.title || title || 'Bookkeeping overview'}
         withSidebar={width > 1100}
-        sidebar={<Tasks stringOverrides={stringOverrides?.tasks} />}
+        sidebar={(
+          <Tasks
+            stringOverrides={stringOverrides?.tasks}
+            reconnectAccountsOnClick={reconnectAccountsOnClick}
+          />
+        )}
         showHeader={showTitle}
       >
-        <div ref={upperContentRef} onClick={() => upperElementInFocus.current = true}>
+        <div
+          ref={upperContentRef}
+          onClick={() => (upperElementInFocus.current = true)}
+        >
           {width <= 1100 && (
-            <Tasks mobile stringOverrides={stringOverrides?.tasks} />
+            <Tasks
+              mobile
+              stringOverrides={stringOverrides?.tasks}
+              reconnectAccountsOnClick={reconnectAccountsOnClick}
+            />
           )}
         </div>
-        <div ref={targetElementRef} onClick={() => upperElementInFocus.current = false}>
+        <div
+          ref={targetElementRef}
+          onClick={() => (upperElementInFocus.current = false)}
+        >
           <Container
             name='bookkeeping-overview-profit-and-loss'
             asWidget

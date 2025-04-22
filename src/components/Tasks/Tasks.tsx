@@ -24,18 +24,22 @@ type TasksProps = {
   tasksHeader?: string
   mobile?: boolean
   stringOverrides?: TasksStringOverrides
+  reconnectAccountsOnClick?: () => void
 }
 
 export function Tasks({
   mobile = false,
   tasksHeader,
+  reconnectAccountsOnClick,
   stringOverrides,
 }: TasksProps) {
   const { data, isLoading } = useBookkeepingPeriods()
 
   return (
     <div className='Layer__tasks-component'>
-      <TasksPanelNotification />
+      <TasksPanelNotification
+        reconnectAccountsOnClick={reconnectAccountsOnClick}
+      />
       <TasksHeader tasksHeader={stringOverrides?.header || tasksHeader} />
       <div
         className={classNames(
@@ -57,9 +61,7 @@ export function Tasks({
                 <Heading size='xs' level={4}>
                   Not Enrolled in Bookkeeping
                 </Heading>
-                <P>
-                  If you believe this is an error, please contact support.
-                </P>
+                <P>If you believe this is an error, please contact support.</P>
               </VStack>
             </TasksEmptyContainer>
           )}
