@@ -6,6 +6,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { useSWRConfig } from 'swr'
 import { GET_BANK_TRANSACTION_METADATA_TAG_KEY } from './useBankTransactionsMetadata'
+import { useCallback } from 'react'
 
 export type UpdateBankTransactionMetadataBody = { memo: string }
 
@@ -68,16 +69,30 @@ export function useUpdateBankTransactionMetadata({ bankTransactionId, onSuccess 
 
   const { trigger: originalTrigger } = mutationResponse
 
-  return Object.assign(
-    mutationResponse,
-    {
-      trigger: async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-        const data = await originalTrigger(...triggerParameters)
-        if (data) {
-          await mutate(key => withSWRKeyTags(key, tags => tags.includes(GET_BANK_TRANSACTION_METADATA_TAG_KEY)))
-        }
+  const stableProxiedTrigger = useCallback(
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+      const result = await originalTrigger(...triggerParameters)
 
-        return data
-      },
-    })
+      if (result) {
+        await mutate(key => withSWRKeyTags(
+          key,
+          tags => tags.includes(GET_BANK_TRANSACTION_METADATA_TAG_KEY),
+        ))
+      }
+
+      return result
+    },
+    [originalTrigger, mutate],
+  )
+
+  return new Proxy(mutationResponse, {
+    get(target, prop) {
+      if (prop === 'trigger') {
+        return stableProxiedTrigger
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
 }

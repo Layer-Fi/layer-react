@@ -13,7 +13,7 @@ import { ErrorText } from '../Typography'
 import { BusinessCategories } from './BusinessCategories'
 import { Option, mapCategoryToOption, getAssignedValue } from './utils'
 import classNames from 'classnames'
-import { BankTransactionMemoInContext } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
+import { BankTransactionMemo } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
 import { VStack } from '../ui/Stack/Stack'
 
 interface BusinessFormProps {
@@ -146,7 +146,7 @@ export const BusinessForm = ({
         : null}
       {showDescriptions && (
         <VStack pbe='md'>
-          <BankTransactionMemoInContext />
+          <BankTransactionMemo bankTransactionId={bankTransaction.id} />
         </VStack>
       )}
       <div

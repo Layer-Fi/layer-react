@@ -25,7 +25,7 @@ import {
 import { FileInput, Input } from '../Input'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
-import { BankTransactionMemoInContext } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
+import { BankTransactionMemo } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
 import { VStack } from '../ui/Stack/Stack'
 
 type Split = {
@@ -293,7 +293,7 @@ export const SplitForm = ({
         : null}
       {showDescriptions && (
         <VStack pbe='md'>
-          <BankTransactionMemoInContext />
+          <BankTransactionMemo bankTransactionId={bankTransaction.id} />
         </VStack>
       )}
       <div
