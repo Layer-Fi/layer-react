@@ -10,7 +10,7 @@ import { FileInput } from '../Input'
 import { MatchFormMobile } from '../MatchForm'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
-import { BankTransactionMemoInContext } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
+import { BankTransactionMemo } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
 import { VStack } from '../ui/Stack/Stack'
 
 export const MatchForm = ({
@@ -93,7 +93,7 @@ export const MatchForm = ({
       />
       {showDescriptions && (
         <VStack pbe='md'>
-          <BankTransactionMemoInContext />
+          <BankTransactionMemo bankTransactionId={bankTransaction.id} />
         </VStack>
       )}
       <div

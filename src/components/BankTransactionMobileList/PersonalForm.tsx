@@ -10,7 +10,7 @@ import { FileInput } from '../Input'
 import { ErrorText } from '../Typography'
 import { PersonalCategories } from './constants'
 import classNames from 'classnames'
-import { BankTransactionMemoInContext } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
+import { BankTransactionMemo } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
 import { VStack } from '../ui/Stack/Stack'
 
 interface PersonalFormProps {
@@ -80,7 +80,7 @@ export const PersonalForm = ({
     <div className='Layer__bank-transaction-mobile-list-item__personal-form'>
       {showDescriptions && (
         <VStack pbe='md'>
-          <BankTransactionMemoInContext />
+          <BankTransactionMemo bankTransactionId={bankTransaction.id} />
         </VStack>
       )}
       <div

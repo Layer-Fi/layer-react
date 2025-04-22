@@ -1,41 +1,35 @@
 import { InputGroup } from '../../Input/InputGroup'
 import { Textarea } from '../../Textarea'
 import { BankTransaction } from '../../../types/bank_transactions'
-import { BankTransactionMemoProvider, useBankTransactionMemo, useBankTransactionMemoContext } from './useBankTransactionMemo'
+import { useBankTransactionMemo } from './useBankTransactionMemo'
 
 export const BankTransactionMemo = ({ bankTransactionId }: { bankTransactionId: BankTransaction['id'] }) => {
+  const form = useBankTransactionMemo({ bankTransactionId })
+
   return (
-    <BankTransactionMemoProvider bankTransactionId={bankTransactionId}>
-      <BankTransactionMemoInContext />
-    </BankTransactionMemoProvider>
-  )
-}
-
-export const BankTransactionMemoInContext = () => {
-  const { memo, setMemo, save } = useBankTransactionMemoContext()
-
-  return <BankTransactionMemoComponent memo={memo} setMemo={setMemo} save={save} />
-}
-
-export const BankTransactionMemoComponent = ({
-  memo,
-  setMemo,
-  save,
-}: ReturnType<typeof useBankTransactionMemo>) => {
-  return (
-    <InputGroup
-      className='Layer__bank-transaction-memo-input-group'
-      name='description'
-      label='Description'
+    <form
+      onBlur={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        void form.handleSubmit()
+      }}
     >
-      <Textarea
-        name='description'
-        placeholder='Add description'
-        value={memo}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-          setMemo(e.target.value)}
-        onBlur={() => void save()}
-      />
-    </InputGroup>
+      <form.Field name='memo'>
+        {field => (
+          <InputGroup
+            className='Layer__bank-transaction-memo-input-group'
+            name='memo'
+            label='Description'
+          >
+            <Textarea
+              name='memo'
+              placeholder='Add description'
+              value={field.state.value ?? undefined}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
+            />
+          </InputGroup>
+        )}
+      </form.Field>
+    </form>
   )
 }

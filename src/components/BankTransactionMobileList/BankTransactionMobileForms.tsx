@@ -4,7 +4,6 @@ import { Purpose } from './BankTransactionMobileListItem'
 import { BusinessForm } from './BusinessForm'
 import { PersonalForm } from './PersonalForm'
 import { SplitAndMatchForm } from './SplitAndMatchForm'
-import { BankTransactionMemoProvider } from '../BankTransactions/BankTransactionMemo/useBankTransactionMemo'
 
 interface BankTransactionMobileFormsProps {
   purpose: Purpose
@@ -62,11 +61,9 @@ export const BankTransactionMobileForms = ({
 
   return (
     <ReceiptsProvider bankTransaction={bankTransaction} isActive={isOpen}>
-      <BankTransactionMemoProvider bankTransactionId={bankTransaction.id}>
-        <div className='Layer__bank-transaction-mobile-list-item__form-container'>
-          {getContent()}
-        </div>
-      </BankTransactionMemoProvider>
+      <div className='Layer__bank-transaction-mobile-list-item__form-container'>
+        {getContent()}
+      </div>
     </ReceiptsProvider>
   )
 }
