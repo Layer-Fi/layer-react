@@ -11,14 +11,17 @@ export const useBankTransactionMemo = ({ bankTransactionId }: BankTransactionMem
   const { trigger: updateBankTransactionMetadata } = useUpdateBankTransactionMetadata({ bankTransactionId })
   const { data: bankTransactionMetadata } = useBankTransactionMetadata({ bankTransactionId })
 
-  return useForm({
+  const form = useForm({
     defaultValues: {
       memo: bankTransactionMetadata?.memo,
     },
     onSubmit: async ({ value }) => {
-      if (value.memo !== undefined) {
+      if (value.memo !== undefined && form.state.isDirty) {
         await updateBankTransactionMetadata({ memo: value.memo ?? '' })
+        form.reset(value)
       }
     },
   })
+
+  return form
 }
