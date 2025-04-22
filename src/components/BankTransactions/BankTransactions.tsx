@@ -1,3 +1,4 @@
+import { debounce } from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import {
@@ -10,7 +11,6 @@ import { useElementSize } from '../../hooks/useElementSize'
 import { useIsVisible } from '../../hooks/useIsVisible'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { BankTransaction, DisplayState } from '../../types'
-import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList'
 import { BankTransactionsTable } from '../BankTransactionsTable'
