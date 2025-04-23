@@ -13,13 +13,17 @@ const _KNOWN_ACCOUNT_NOTIFICATION_TYPES = [
   'CONFIRM_UNIQUE',
   'OPENING_BALANCE_MISSING',
 ] as const
-type KnownAccountNotificationType = typeof _KNOWN_ACCOUNT_NOTIFICATION_TYPES[number]
+type KnownAccountNotificationType =
+  (typeof _KNOWN_ACCOUNT_NOTIFICATION_TYPES)[number]
 
 const _KNOWN_ACCOUNT_NOTIFICATION_SCOPES = ['USER'] as const
-type KnownAccountNotificationScope = typeof _KNOWN_ACCOUNT_NOTIFICATION_SCOPES[number]
+type KnownAccountNotificationScope =
+  (typeof _KNOWN_ACCOUNT_NOTIFICATION_SCOPES)[number]
 
-type AccountNotificationType = EnumWithUnknownValues<KnownAccountNotificationType>
-type AccountNotificationScope = EnumWithUnknownValues<KnownAccountNotificationScope>
+type AccountNotificationType =
+  EnumWithUnknownValues<KnownAccountNotificationType>
+type AccountNotificationScope =
+  EnumWithUnknownValues<KnownAccountNotificationScope>
 
 type AccountNotification = {
   type: AccountNotificationType
@@ -55,3 +59,102 @@ export type LinkedAccounts = {
   type: string
   external_accounts: Array<LinkedAccount>
 }
+
+export type FinancialAccountInstitution = {
+  id: string
+  name: string
+  logo: string | null
+}
+
+export type BankAccount = {
+  id: string
+  account_name: string | null
+  ledger_account_id: string
+  notes: string | null
+  institution: FinancialAccountInstitution | null
+  account_type: AccountType
+  account_subtype: AccountSubtype
+  notify_when_disconnected: boolean
+  is_disconnected: boolean
+  archived_at: string | null
+  external_accounts: LinkedAccount[]
+}
+
+export type AccountType = 'DEPOSITORY' | 'CREDIT' | 'LOAN'
+
+export type AccountSubtype =
+  | '_401A'
+  | '_401K'
+  | '_403B'
+  | '_457B'
+  | '_529'
+  | 'BROKERAGE'
+  | 'CASH_ISA'
+  | 'CRYPTO_EXCHANGE'
+  | 'EDUCATION_SAVINGS_ACCOUNT'
+  | 'EBT'
+  | 'FIXED_ANNUITY'
+  | 'GIC'
+  | 'HEALTH_REIMBURSEMENT_ARRANGEMENT'
+  | 'HSA'
+  | 'ISA'
+  | 'IRA'
+  | 'LIF'
+  | 'LIFE_INSURANCE'
+  | 'LIRA'
+  | 'LRIF'
+  | 'LRSP'
+  | 'NON_CUSTODIAL_WALLET'
+  | 'NON_TAXABLE_BROKERAGE_ACCOUNT'
+  | 'OTHER'
+  | 'OTHER_INSURANCE'
+  | 'OTHER_ANNUITY'
+  | 'PRIF'
+  | 'RDSP'
+  | 'RESP'
+  | 'RLIF'
+  | 'RRIF'
+  | 'PENSION'
+  | 'PROFIT_SHARING_PLAN'
+  | 'RETIREMENT'
+  | 'ROTH'
+  | 'ROTH_401K'
+  | 'RRSP'
+  | 'SEP_IRA'
+  | 'SIMPLE_IRA'
+  | 'SIPP'
+  | 'STOCK_PLAN'
+  | 'THRIFT_SAVINGS_PLAN'
+  | 'TFSA'
+  | 'TRUST'
+  | 'UGMA'
+  | 'UTMA'
+  | 'VARIABLE_ANNUITY'
+  | 'CREDIT_CARD'
+  | 'PAYPAL'
+  | 'CD'
+  | 'CHECKING'
+  | 'SAVINGS'
+  | 'MONEY_MARKET'
+  | 'PREPAID'
+  | 'AUTO'
+  | 'BUSINESS'
+  | 'COMMERCIAL'
+  | 'CONSTRUCTION'
+  | 'CONSUMER'
+  | 'HOME_EQUITY'
+  | 'LOAN'
+  | 'MORTGAGE'
+  | 'OVERDRAFT'
+  | 'LINE_OF_CREDIT'
+  | 'STUDENT'
+  | 'CASH_MANAGEMENT'
+  | 'KEOGH'
+  | 'MUTUAL_FUND'
+  | 'RECURRING'
+  | 'REWARDS'
+  | 'SAFE_DEPOSIT'
+  | 'SARSEP'
+  | 'PAYROLL'
+  | 'NULL'
+  | 'ENUM_UNKNOWN'
