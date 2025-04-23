@@ -30,7 +30,7 @@ export interface BookkeepingOverviewProps {
       }
     }
   }
-  reconnectAccountsOnClick?: () => void
+  onClickReconnectAccounts?: () => void
   /**
    * @deprecated Use `stringOverrides.title` instead
    */
@@ -42,7 +42,7 @@ type PnlToggleOption = 'revenue' | 'expenses'
 export const BookkeepingOverview = ({
   title,
   showTitle = true,
-  reconnectAccountsOnClick,
+  onClickReconnectAccounts,
   stringOverrides,
   slotProps,
 }: BookkeepingOverviewProps) => {
@@ -64,7 +64,7 @@ export const BookkeepingOverview = ({
         sidebar={(
           <Tasks
             stringOverrides={stringOverrides?.tasks}
-            reconnectAccountsOnClick={reconnectAccountsOnClick}
+            onClickReconnectAccounts={onClickReconnectAccounts}
           />
         )}
         showHeader={showTitle}
@@ -77,7 +77,7 @@ export const BookkeepingOverview = ({
             <Tasks
               mobile
               stringOverrides={stringOverrides?.tasks}
-              reconnectAccountsOnClick={reconnectAccountsOnClick}
+              onClickReconnectAccounts={onClickReconnectAccounts}
             />
           )}
         </div>

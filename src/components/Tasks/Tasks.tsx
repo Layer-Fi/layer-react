@@ -24,13 +24,13 @@ type TasksProps = {
   tasksHeader?: string
   mobile?: boolean
   stringOverrides?: TasksStringOverrides
-  reconnectAccountsOnClick?: () => void
+  onClickReconnectAccounts?: () => void
 }
 
 export function Tasks({
   mobile = false,
   tasksHeader,
-  reconnectAccountsOnClick,
+  onClickReconnectAccounts,
   stringOverrides,
 }: TasksProps) {
   const { data, isLoading } = useBookkeepingPeriods()
@@ -38,7 +38,7 @@ export function Tasks({
   return (
     <div className='Layer__tasks-component'>
       <TasksPanelNotification
-        reconnectAccountsOnClick={reconnectAccountsOnClick}
+        onClickReconnectAccounts={onClickReconnectAccounts}
       />
       <TasksHeader tasksHeader={stringOverrides?.header || tasksHeader} />
       <div

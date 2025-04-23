@@ -7,11 +7,11 @@ import { useGlobalDatePeriodAlignedActions } from '../../providers/GlobalDateSto
 import { useBankAccounts } from '../../hooks/bookkeeping/useBankAccounts'
 
 type TasksPanelNotificationProps = {
-  reconnectAccountsOnClick?: () => void
+  onClickReconnectAccounts?: () => void
 }
 
 export const TasksPanelNotification = ({
-  reconnectAccountsOnClick,
+  onClickReconnectAccounts,
 }: TasksPanelNotificationProps) => {
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
   const { anyPreviousYearIncomplete, earliestIncompletePeriod } =
@@ -32,21 +32,21 @@ export const TasksPanelNotification = ({
               : `${disconnectedAccountsRequiringNotification} bank accounts are disconnected`}
           </Text>
         </div>
-        <button
-          className='Layer__tasks-header__notification__button'
-          onClick={() => {
-            reconnectAccountsOnClick?.()
-          }}
-        >
-          <Text size={TextSize.sm} weight={TextWeight.bold}>
-            Reconnect bank
-            {' '}
-            {disconnectedAccountsRequiringNotification === 1
-              ? 'account'
-              : 'accounts'}
-          </Text>
-          <ArrowRightCircle size={14} />
-        </button>
+        {onClickReconnectAccounts && (
+          <button
+            className='Layer__tasks-header__notification__button'
+            onClick={() => {
+              onClickReconnectAccounts()
+            }}
+          >
+            <Text size={TextSize.sm} weight={TextWeight.bold}>
+              Reconnect
+              {' '}
+              {pluralize('account', disconnectedAccountsRequiringNotification)}
+            </Text>
+            <ArrowRightCircle size={14} />
+          </button>
+        )}
       </div>
     )
   }

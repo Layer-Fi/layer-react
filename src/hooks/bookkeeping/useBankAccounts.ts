@@ -30,6 +30,9 @@ function buildKey({
   }
 }
 
+export const requiresNotification = (bankAccount: BankAccount): boolean =>
+  bankAccount.is_disconnected && bankAccount.notify_when_disconnected
+
 export const useBankAccounts = () => {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
@@ -47,7 +50,7 @@ export const useBankAccounts = () => {
   )
 
   const disconnectedAccountsRequiringNotification = (data?.data ?? []).filter(
-    account => account.is_disconnected && account.notify_when_disconnected,
+    account => requiresNotification(account)
   ).length
 
   return {
