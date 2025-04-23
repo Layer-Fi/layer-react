@@ -1,8 +1,8 @@
 export const STATEMENT_OF_CASH_FLOW_ROWS = [
   {
-    name: 'FinancingActivities',
-    displayName: 'Financing Activities',
-    lineItem: 'financing_activities',
+    name: 'OperatingActivities',
+    displayName: 'Operating Activities',
+    lineItem: 'operating_activities',
     type: 'line_item',
     summarize: true,
   },
@@ -14,9 +14,9 @@ export const STATEMENT_OF_CASH_FLOW_ROWS = [
     summarize: true,
   },
   {
-    name: 'OperatingActivities',
-    displayName: 'Operating Activities',
-    lineItem: 'operating_activities',
+    name: 'FinancingActivities',
+    displayName: 'Financing Activities',
+    lineItem: 'financing_activities',
     type: 'line_item',
     summarize: true,
   },
@@ -24,6 +24,13 @@ export const STATEMENT_OF_CASH_FLOW_ROWS = [
     name: 'PeriodNetCashIncrease',
     displayName: 'Net Cash Increase For Period',
     lineItem: 'period_net_cash_increase',
+    type: 'summary_value',
+    summarize: false,
+  },
+  {
+    name: 'CashAtBeginningOfPeriod',
+    displayName: 'Cash at Beginning of Period',
+    lineItem: 'cash_at_beginning_of_period',
     type: 'summary_value',
     summarize: false,
   },
