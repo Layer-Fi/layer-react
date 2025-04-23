@@ -40,7 +40,7 @@ export interface BankTransaction extends Record<string, unknown> {
   amount: number
   direction: Direction
   counterparty_name: string
-  category: CategoryWithEntries
+  category: CategoryWithEntries | null
   categorization_status: CategorizationStatus
   categorization_flow: Categorization | null
   categorization_method: string
