@@ -54,8 +54,8 @@ type Props = {
 
 export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
 
-export const extractDescriptionForSplit = (category: CategoryWithEntries) => {
-  if (!category.entries) {
+export const extractDescriptionForSplit = (category: CategoryWithEntries | null) => {
+  if (!category || !category.entries) {
     return ''
   }
 
