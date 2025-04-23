@@ -35,13 +35,16 @@ import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookke
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { VStack } from '../ui/Stack/Stack'
+import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 
 type Props = {
+  index: number
   editable: boolean
   dateFormat: string
   bankTransaction: BankTransaction
   removeTransaction: (bt: BankTransaction) => void
   containerWidth?: number
+  initialLoad?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
   showReceiptUploadColumn: boolean
@@ -79,11 +82,13 @@ export const getDefaultSelectedCategory = (
 let clickTimer = Date.now()
 
 export const BankTransactionRow = ({
+  index,
   editable,
   dateFormat,
   bankTransaction,
   removeTransaction,
   containerWidth,
+  initialLoad,
   showDescriptions,
   showReceiptUploads,
   showReceiptUploadColumn,
@@ -168,6 +173,8 @@ export const BankTransactionRow = ({
 
   const categorized = isCategorized(bankTransaction)
 
+  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
+
   const className = 'Layer__bank-transaction-row'
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
@@ -178,7 +185,8 @@ export const BankTransactionRow = ({
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
-    'show',
+    initialLoad ? 'initial-load' : '',
+    isVisible ? 'show' : '',
   )
 
   const showReceiptDataProperties = useMemo(

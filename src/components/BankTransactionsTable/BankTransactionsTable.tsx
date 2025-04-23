@@ -115,10 +115,11 @@ export const BankTransactionsTable = ({
       <tbody>
         {!isLoading
         && bankTransactions?.map(
-          (bankTransaction: BankTransaction) => (
+          (bankTransaction: BankTransaction, index: number) => (
             <BankTransactionRow
-              editable={editable}
               key={bankTransaction.id}
+              index={index}
+              editable={editable}
               dateFormat={DATE_FORMAT}
               bankTransaction={bankTransaction}
               removeTransaction={removeTransaction}

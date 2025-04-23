@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { debounce } from '../../utils/helpers'
+import { debounce } from 'lodash'
+
+const DEFAULT_WAIT = 300
+const DEFAULT_MAX_WAIT = 2 * DEFAULT_WAIT
 
 export function useDebounce<F extends (...args: Parameters<F>) => ReturnType<F>>(fn: F) {
   const internalFnRef = useRef(fn)
@@ -13,7 +16,11 @@ export function useDebounce<F extends (...args: Parameters<F>) => ReturnType<F>>
       internalFnRef.current(...args)
     }
 
-    return debounce(internalFn)
+    return debounce(
+      internalFn,
+      DEFAULT_WAIT,
+      { maxWait: DEFAULT_MAX_WAIT },
+    )
   }, [])
 
   return debouncedCallback
