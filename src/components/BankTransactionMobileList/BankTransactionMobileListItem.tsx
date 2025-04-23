@@ -19,11 +19,14 @@ import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
+import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 
 export interface BankTransactionMobileListItemProps {
+  index: number
   bankTransaction: BankTransaction
   editable: boolean
   removeTransaction: (bt: BankTransaction) => void
+  initialLoad?: boolean
   showTooltips: boolean
   showDescriptions?: boolean
   showReceiptUploads?: boolean
@@ -51,9 +54,11 @@ const getAssignedValue = (bankTransaction: BankTransaction) => {
 }
 
 export const BankTransactionMobileListItem = ({
+  index,
   bankTransaction,
   removeTransaction,
   editable,
+  initialLoad,
   showTooltips,
   isFirstItem = false,
   showDescriptions,
@@ -158,13 +163,15 @@ export const BankTransactionMobileListItem = ({
 
   const categorized = isCategorized(bankTransaction)
 
+  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
+
   const className = 'Layer__bank-transaction-mobile-list-item'
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
     removeAnim ? 'Layer__bank-transaction-row--removing' : '',
     open ? openClassName : '',
-    'show',
+    isVisible ? 'show' : '',
   )
 
   return (
