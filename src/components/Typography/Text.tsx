@@ -7,6 +7,7 @@ export enum TextSize {
   lg = 'lg',
   md = 'md',
   sm = 'sm',
+  xs = 'xs',
 }
 
 export enum TextWeight {
@@ -40,6 +41,7 @@ export interface TextProps {
   ellipsis?: boolean
   pb?: '4xs' | '3xs' | '2xs' | 'xs' | 'sm' | 'md' | 'lg'
   invertColor?: boolean
+  slot?: string
 }
 
 export const Text = ({

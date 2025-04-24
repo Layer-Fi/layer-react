@@ -23,12 +23,12 @@ import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
 
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import { CategorySelect } from '../CategorySelect'
+import { CategorySelect } from '../CategorySelect/CategorySelect'
 import {
   CategoryOption,
   mapCategoryToExclusionOption,
   mapCategoryToOption,
-} from '../CategorySelect/CategorySelect'
+} from '../CategorySelectLegacy/CategorySelect'
 import { Input } from '../Input'
 import { MatchForm } from '../MatchForm'
 import { Toggle } from '../Toggle'

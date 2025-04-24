@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { DrawerContext } from '../../contexts/DrawerContext'
 import ChevronDown from '../../icons/ChevronDown'
 import { BusinessCategories } from '../BankTransactionMobileList/BusinessCategories'
-import { CategoryOption, OptionActionType } from './types'
+import { CategoryOption, OptionActionType } from './CategorySelect'
 import classNames from 'classnames'
 
 interface CategorySelectDrawerProps {
@@ -37,7 +37,8 @@ export const CategorySelectDrawer = ({
             onSelect={onDrawerCategorySelect}
             showTooltips
           />,
-        )}
+        )
+      }
     >
       {selected?.payload?.display_name ?? 'Select...'}
       <ChevronDown
@@ -58,14 +59,14 @@ const CategorySelectDrawerContent = ({
   showTooltips: boolean
 }) => (
   <BusinessCategories
-    select={(option) => {
-      option.value.payload
-      && onSelect({
-        type: OptionActionType.CATEGORY,
-        payload: {
-          ...option.value.payload,
-        },
-      } satisfies CategoryOption)
+    select={option => {
+      option.value.payload &&
+        onSelect({
+          type: OptionActionType.CATEGORY,
+          payload: {
+            ...option.value.payload,
+          },
+        } satisfies CategoryOption)
     }}
     selectedId={selected?.payload?.id}
     showTooltips={showTooltips}

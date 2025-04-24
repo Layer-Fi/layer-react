@@ -16,11 +16,10 @@ import {
 import { isCategorized } from '../BankTransactions/utils'
 import { SubmitButton, IconButton, RetryButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import { CategorySelect } from '../CategorySelect'
 import {
   mapCategoryToOption,
   mapSuggestedMatchToOption,
-} from '../CategorySelect/CategorySelect'
+} from '../CategorySelectLegacy/CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '../IconBox'
@@ -36,6 +35,7 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { VStack } from '../ui/Stack/Stack'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
+import { CategorySelect } from '../CategorySelect/CategorySelect'
 
 type Props = {
   index: number

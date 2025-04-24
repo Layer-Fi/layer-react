@@ -16,12 +16,12 @@ import { getCategorizePayload, hasReceipts } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button, ButtonVariant, TextButton } from '../Button'
-import { CategorySelect } from '../CategorySelect'
+import { CategorySelect } from '../CategorySelect/CategorySelect'
 import {
   CategoryOption,
   mapCategoryToExclusionOption,
   mapCategoryToOption,
-} from '../CategorySelect/CategorySelect'
+} from '../CategorySelectLegacy/CategorySelect'
 import { FileInput, Input } from '../Input'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
