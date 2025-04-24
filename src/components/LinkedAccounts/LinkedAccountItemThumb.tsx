@@ -2,9 +2,10 @@ import { useContext } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { LinkedAccount } from '../../types/linked_accounts'
 import { LinkedAccountOptions } from '../LinkedAccountOptions'
-import { LinkedAccountThumb } from '../LinkedAccountThumb'
+import { LinkedAccountThumb } from '../LinkedAccountThumb/LinkedAccountThumb'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import type { HoverMenuProps } from '../HoverMenu'
+import { LinkedAccountPill } from '../LinkedAccountPill/LinkedAccountPill'
 
 function accountNeedsUniquenessConfirmation({
   notifications,
@@ -170,7 +171,11 @@ export const LinkedAccountItemThumb = ({
         account={account}
         asWidget={asWidget}
         showLedgerBalance={showLedgerBalance}
-        pillConfig={pillConfig}
+        slots={{
+          Pill: pillConfig
+            ? <LinkedAccountPill label={pillConfig.text} items={pillConfig.config} />
+            : null,
+        }}
       />
     </LinkedAccountOptions>
   )

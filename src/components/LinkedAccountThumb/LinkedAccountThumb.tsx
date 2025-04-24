@@ -2,7 +2,6 @@ import InstitutionIcon from '../../icons/InstitutionIcon'
 import LoaderIcon from '../../icons/Loader'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { LinkedAccount } from '../../types/linked_accounts'
-import { LinkedAccountPill } from '../LinkedAccountPill'
 import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
 
@@ -10,9 +9,8 @@ export interface LinkedAccountThumbProps {
   account: LinkedAccount
   asWidget?: boolean
   showLedgerBalance?: boolean
-  pillConfig?: {
-    text: string
-    config: { name: string, action: () => void }[]
+  slots: {
+    Pill: React.ReactNode
   }
 }
 
@@ -29,7 +27,7 @@ export const LinkedAccountThumb = ({
   account,
   asWidget,
   showLedgerBalance,
-  pillConfig,
+  slots,
 }: LinkedAccountThumbProps) => {
   const linkedAccountThumbClassName = classNames(
     'Layer__linked-account-thumb',
@@ -45,19 +43,11 @@ export const LinkedAccountThumb = ({
     !(showLedgerBalance || account.is_syncing) && '--hide-ledger-balance',
   )
 
-  let bankBalance: React.ReactNode
-  if (pillConfig) {
-    bankBalance = (
-      <LinkedAccountPill text={pillConfig.text} config={pillConfig.config} />
-    )
-  }
-  else {
-    bankBalance = (
-      <Text as='span' className='account-balance'>
-        {`${formatMoney(account.latest_balance_timestamp?.balance)}`}
-      </Text>
-    )
-  }
+  const bankBalance = slots.Pill ?? (
+    <Text as='span' className='account-balance'>
+      {`${formatMoney(account.latest_balance_timestamp?.balance)}`}
+    </Text>
+  )
 
   return (
     <div className={linkedAccountThumbClassName}>

@@ -1,1 +1,0 @@
-export { LinkedAccountThumb } from './LinkedAccountThumb'

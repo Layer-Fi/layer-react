@@ -1,25 +1,49 @@
 import AlertCircle from '../../icons/AlertCircle'
-import { HoverMenu } from '../HoverMenu'
-import { Pill } from '../Pill/Pill'
+import { MenuTrigger, Popover } from 'react-aria-components'
+import { Pill } from '../ui/Pill/Pill'
+import { Menu, MenuItem } from '../ui/Menu/Menu'
+import { Span } from '../ui/Typography/Text'
+import { useState } from 'react'
 
-type Props = {
-  text: string
-  config: { name: string, action: () => void }[]
+type LinkedAccountPillProps = {
+  label: string
+  items: ReadonlyArray<{
+    action: () => void
+    name: string
+  }>
 }
 
-export const LinkedAccountPill = ({ text, config }: Props) => {
+export function LinkedAccountPill({ label, items }: LinkedAccountPillProps) {
+  const [isOpen, setIsOpen] = useState(false)
+
   return (
-    <>
-      <Pill kind='error'>
+    <MenuTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
+      <Pill
+        status='error'
+        onPress={() => setIsOpen(true)}
+        onHoverStart={() => setIsOpen(true)}
+      >
         <AlertCircle size={14} />
-        {' '}
-        {text}
-        <div className='Layer__linked-accounts-pill__options-overlay'>
-          <HoverMenu config={config}>
-            <div className='Layer__linked-accounts-pill__invisible-spacer' />
-          </HoverMenu>
-        </div>
+        {label}
       </Pill>
-    </>
+      <Popover
+        className='Layer__Portal'
+        placement='bottom end'
+      >
+        <Menu>
+          {items.map(({ action, name }, index) => (
+            <MenuItem
+              key={index}
+              onAction={action}
+              textValue={name}
+            >
+              <Span slot='label' size='sm'>
+                {name}
+              </Span>
+            </MenuItem>
+          ))}
+        </Menu>
+      </Popover>
+    </MenuTrigger>
   )
 }
