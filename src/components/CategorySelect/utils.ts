@@ -1,5 +1,5 @@
 import { BankTransaction, CategorizationType, Category } from '../../types'
-import { CategoryWithEntries } from '../../types/bank_transactions'
+import { CategoryWithEntries, SuggestedMatch } from '../../types/bank_transactions'
 import { CategoryOption, CategoryWithHide, OptionActionType } from './types'
 
 export function flattenCategories(
@@ -33,6 +33,38 @@ export function mapCategoryToOption(category: CategoryWithEntries): CategoryOpti
       stable_name: ('stable_name' in category) ? category.stable_name ?? '' : '',
       entries: category.entries,
       subCategories: category.subCategories,
+    },
+  }
+}
+
+export const mapCategoryToExclusionOption = (
+  category: CategoryWithEntries & { type: 'ExclusionNested' },
+): CategoryOption => {
+  return {
+    type: OptionActionType.CATEGORY,
+    payload: {
+      id: category.id,
+      option_type: OptionActionType.CATEGORY,
+      display_name: category.display_name,
+      type: 'ExclusionNested',
+      stable_name: '',
+      entries: category.entries,
+      subCategories: category.subCategories,
+    },
+  }
+}
+
+export const mapSuggestedMatchToOption = (
+  record: SuggestedMatch,
+): CategoryOption => {
+  return {
+    type: OptionActionType.MATCH,
+    payload: {
+      id: record.id,
+      option_type: OptionActionType.MATCH,
+      display_name: record.details.description,
+      amount: record.details.amount,
+      subCategories: null,
     },
   }
 }

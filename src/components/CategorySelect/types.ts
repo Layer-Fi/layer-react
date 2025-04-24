@@ -21,7 +21,7 @@ export type CategoryOptionPayload = {
 }
 
 export type CategoryOption = {
-  type: string // 'category' | 'match'
+  type: string
   disabled?: boolean
   payload: CategoryOptionPayload
 }

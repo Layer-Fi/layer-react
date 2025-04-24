@@ -10,16 +10,12 @@ import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { Badge } from '../Badge'
-import {
-  BankTransactionCTAStringOverrides,
-} from '../BankTransactions/BankTransactions'
+import { BankTransactionCTAStringOverrides } from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { SubmitButton, IconButton, RetryButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import {
-  mapCategoryToOption,
-  mapSuggestedMatchToOption,
-} from '../CategorySelectLegacy/CategorySelect'
+import { CategorySelect } from '../CategorySelect/CategorySelect'
+import { mapCategoryToOption, mapSuggestedMatchToOption } from '../CategorySelect/utils'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '../IconBox'
@@ -35,7 +31,6 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { VStack } from '../ui/Stack/Stack'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
-import { CategorySelect } from '../CategorySelect/CategorySelect'
 
 type Props = {
   index: number
