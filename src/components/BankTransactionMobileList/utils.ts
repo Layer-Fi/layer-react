@@ -7,7 +7,7 @@ import { hasSuggestions } from '../../types/categories'
 import {
   CategoryOptionPayload,
   OptionActionType,
-} from '../CategorySelectLegacy/CategorySelect'
+} from '../CategorySelect/types'
 
 export interface Option {
   label: string
