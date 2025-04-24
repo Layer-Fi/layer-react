@@ -20,15 +20,11 @@ import {
 import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, hasMatch } from '../../utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
-
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
 import { CategorySelect } from '../CategorySelect/CategorySelect'
-import {
-  CategoryOption,
-  mapCategoryToExclusionOption,
-  mapCategoryToOption,
-} from '../CategorySelectLegacy/CategorySelect'
+import { CategoryOption } from '../CategorySelect/types'
+import { mapCategoryToExclusionOption, mapCategoryToOption } from '../CategorySelect/utils'
 import { Input } from '../Input'
 import { MatchForm } from '../MatchForm'
 import { Toggle } from '../Toggle'

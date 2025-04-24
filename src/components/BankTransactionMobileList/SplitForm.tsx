@@ -17,11 +17,11 @@ import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect/CategorySelect'
+import { CategoryOption } from '../CategorySelect/types'
 import {
-  CategoryOption,
   mapCategoryToExclusionOption,
   mapCategoryToOption,
-} from '../CategorySelectLegacy/CategorySelect'
+} from '../CategorySelect/utils'
 import { FileInput, Input } from '../Input'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
