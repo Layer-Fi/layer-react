@@ -13,8 +13,10 @@ import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { BankTransaction, DisplayState } from '../../types'
 import { BankTransactionList } from '../BankTransactionList'
 import { BankTransactionMobileList } from '../BankTransactionMobileList/BankTransactionMobileList'
-import { BankTransactionsTable } from '../BankTransactionsTable'
-import { BankTransactionsTableStringOverrides } from '../BankTransactionsTable/BankTransactionsTable'
+import {
+  BankTransactionsTable,
+  type BankTransactionsTableStringOverrides,
+} from '../BankTransactionsTable/BankTransactionsTable'
 import { Container } from '../Container'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { Loader } from '../Loader'
@@ -23,7 +25,7 @@ import {
   BankTransactionsHeader,
   BankTransactionsHeaderStringOverrides,
 } from './BankTransactionsHeader'
-import { DataStates } from './DataStates'
+import { BankTransactionsTableEmptyStates } from './BankTransactionsTableEmptyState'
 import { MobileComponentType } from './constants'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import type { LayerError } from '../../models/ErrorHandler'
@@ -116,7 +118,6 @@ const BankTransactionsContent = ({
     data,
     isLoading,
     error,
-    isValidating,
     refetch,
     setFilters,
     filters,
@@ -354,13 +355,12 @@ const BankTransactionsContent = ({
 
       {!isSyncing || listView
         ? (
-          <DataStates
-            bankTransactions={bankTransactions}
-            isLoading={isLoadingWithoutData}
-            isValidating={isValidating}
-            error={error}
-            refetch={refetch}
-            editable={editable}
+          <BankTransactionsTableEmptyStates
+            hasVisibleTransactions={(bankTransactions?.length ?? 0) > 0}
+            isCategorizationMode={editable}
+            isError={Boolean(error)}
+            isFiltered={Boolean(filters?.descriptionFilter)}
+            isLoadingWithoutData={isLoadingWithoutData}
           />
         )
         : null}
