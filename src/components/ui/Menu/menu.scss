@@ -1,0 +1,40 @@
+.Layer__Menu {
+  max-block-size: inherit;
+  min-inline-size: 9rem;
+  overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3xs);
+
+  padding: var(--spacing-3xs);
+
+  border: 1px solid var(--border-color);
+  border-radius: var(--spacing-xs);
+
+  background: white;
+
+  outline: none;
+}
+
+.Layer__MenuItem {
+  display: flex;
+  align-items: center;
+  padding-inline: var(--spacing-xs);
+  padding-block: var(--spacing-3xs);
+
+  border-radius: var(--spacing-2xs);
+
+  outline: none;
+
+  cursor: pointer;
+
+  &[data-focused] {
+    background: var(--color-base-50);
+    color: var(--color-base-800);
+  }
+  &[data-focus-visible] {
+    outline: 1px solid var(--color-base-100);
+    outline-offset: 1px;
+  }
+}

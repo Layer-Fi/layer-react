@@ -34,7 +34,7 @@ export default tsEslint.config([
   {
     languageOptions: {
       globals: {
-        ...globals['shared-node-browser'],
+        ...globals['browser'],
       },
       parserOptions: {
         projectService: true,
@@ -50,9 +50,12 @@ export default tsEslint.config([
       },
     },
     rules: {
-      'no-console': ['error', {
-        allow: ['warn', 'error', 'debug'],
-      }],
+      'no-console': [
+        'error',
+        {
+          allow: ['warn', 'error', 'debug'],
+        }
+      ],
 
       '@stylistic/quotes': ['error', 'single', { avoidEscape: false }],
       '@stylistic/jsx-quotes': ['error', 'prefer-single'],

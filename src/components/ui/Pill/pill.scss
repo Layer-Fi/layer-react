@@ -1,0 +1,35 @@
+.Layer__Pill {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+
+  border: none;
+  outline: none;
+
+  cursor: pointer;
+
+  font-size: var(--text-sm);
+
+  background-color: var(--badge-bg-color);
+  color: var(--badge-color);
+
+  border-radius: var(--badge-border-radius);
+  padding: var(--spacing-2xs) var(--spacing-sm);
+
+  white-space: nowrap;
+  user-select: none;
+
+  & svg {
+    margin-right: 0.25rem;
+  }
+
+  &[data-status="error"] {
+    background-color: var(--color-info-error-bg);
+    color: var(--color-info-error-fg);
+
+    &[data-focus-visible] {
+      outline: 1px solid var(--color-info-error-bg);
+      outline-offset: 1px;
+    }
+  }
+}

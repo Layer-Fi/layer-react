@@ -5,8 +5,7 @@
   gap: var(--spacing-xs);
   grid-template-areas:
     "toggle . download"
-    "search search search"
-  ;
+    "search search search";
 
   @container (min-width: 640px) {
     grid-template-columns: auto minmax(0, 1fr) minmax(0, 2fr) auto;
@@ -23,13 +22,15 @@
     grid-template-areas: "toggle . search download";
   }
 
-  > [slot=toggle] {
+  > [slot="toggle"] {
     grid-area: toggle;
   }
-  > [slot=search] {
+
+  > [slot="search"] {
     grid-area: search;
   }
-  > [slot=download] {
+
+  > [slot="download"] {
     grid-area: download;
   }
 }
