@@ -12,7 +12,6 @@ import pluralize from 'pluralize'
 import ChevronDown from '../../icons/ChevronDown'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip/Tooltip'
 import InfoIcon from '../../icons/InfoIcon'
-import Plus from '../../icons/Plus'
 import { parseISO, format as formatTime } from 'date-fns'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { DATE_FORMAT } from '../../config/general'
@@ -39,12 +38,13 @@ const MenuSection = ({ children }: { children: ReactNode }) => (
   <div className='Layer__category-select__menu-section'>{children}</div>
 )
 
+/* @TODO - unlock when Adding category is available
 const MenuItem = ({ text, icon }: { text: string, icon?: ReactNode }) => (
   <div className='Layer__category-select__menu-item'>
     <Text>{text}</Text>
     {icon}
   </div>
-)
+) */
 
 type CategoryListProps = {
   option: CategoryWithHide
@@ -103,7 +103,7 @@ const CategoryList = ({ option, level = 0, accountName, onSelect, selected, show
             ...option,
             option_type: 'category' as OptionActionType,
             subCategories: option.subCategories as Category[],
-            id: 'id' in option ? option.id : '',
+            id: 'id' in option ? option.id : undefined,
             stable_name: 'stable_name' in option ? option.stable_name : undefined,
           } as CategoryOptionPayload,
         })
@@ -168,6 +168,9 @@ export const CategorySelect = ({
     onChange(newValue)
   }
 
+  /* @TODO - Experimental: use mobile drawer when window size is small, or when touch only device, or when high resolution display
+  const shouldUseMobileExperience = useMobileExperience()
+  if (asDrawer || shouldUseMobileExperience) { */
   if (asDrawer) {
     return (
       <CategorySelectDrawer
@@ -292,8 +295,9 @@ export const CategorySelect = ({
           </MenuSection>
 
           {/*
-              @TODO - When adding new categories is ready */}
+            @TODO - When adding new categories is ready
           <MenuItem text='Add new category' icon={<Plus size={11} />} />
+          */}
 
         </Popover>
       </DialogTrigger>
