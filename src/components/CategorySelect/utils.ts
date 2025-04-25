@@ -37,9 +37,7 @@ export function mapCategoryToOption(category: CategoryWithEntries): CategoryOpti
   }
 }
 
-export const mapCategoryToExclusionOption = (
-  category: CategoryWithEntries & { type: 'ExclusionNested' },
-): CategoryOption => {
+export function mapCategoryToExclusionOption(category: CategoryWithEntries & { type: 'ExclusionNested' }): CategoryOption {
   return {
     type: OptionActionType.CATEGORY,
     payload: {
@@ -54,9 +52,7 @@ export const mapCategoryToExclusionOption = (
   }
 }
 
-export const mapSuggestedMatchToOption = (
-  record: SuggestedMatch,
-): CategoryOption => {
+export function mapSuggestedMatchToOption(record: SuggestedMatch): CategoryOption {
   return {
     type: OptionActionType.MATCH,
     payload: {
@@ -97,7 +93,7 @@ export function buildSuggestedOptions(bankTransaction: BankTransaction, searchPh
   return
 }
 
-export const filterCategories = (cats: Category[], searchPhrase: string): Category[] => {
+export function filterCategories(cats: Category[], searchPhrase: string): CategoryWithHide[] {
   return cats
     .map((cat) => {
       // Check if current category matches
@@ -110,7 +106,7 @@ export const filterCategories = (cats: Category[], searchPhrase: string): Catego
 
       // Determine if all subcategories are hidden
       const allSubcategoriesHidden = filteredSubcategories
-        ? filteredSubcategories.every(subCat => (subCat as CategoryWithHide).hide)
+        ? filteredSubcategories.every(subCat => subCat.hide)
         : false
 
       // If current category matches or has matching subcategories, include it
@@ -126,5 +122,39 @@ export const filterCategories = (cats: Category[], searchPhrase: string): Catego
         subCategories: filteredSubcategories,
         hide: true,
       }
-    }) as Category[] // @TODO this is wrong
+    })
+}
+
+export function findParentCategory(categories: Category[], targetCategory: string): Category | null {
+  function searchInCategory(category: Category): Category | null {
+    if (category.subCategories) {
+      for (const subCategory of category.subCategories) {
+        if ('id' in subCategory && subCategory.id === targetCategory) {
+          return category
+        }
+      }
+
+      for (const subCategory of category.subCategories) {
+        const result = searchInCategory(subCategory)
+        if (result) {
+          return result
+        }
+      }
+    }
+
+    return null
+  }
+
+  for (const category of categories) {
+    if ('id' in category && category.id === targetCategory) {
+      return null
+    }
+
+    const result = searchInCategory(category)
+    if (result) {
+      return result
+    }
+  }
+
+  return null
 }
