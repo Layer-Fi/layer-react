@@ -2,8 +2,6 @@ import { getBalanceSheet, getBalanceSheetCSV, getBalanceSheetExcel } from './lay
 import {
   categorizeBankTransaction,
   matchBankTransaction,
-  getBankTransactionsCsv,
-  getBankTransactionsExcel,
   getBankTransactionMetadata,
   updateBankTransactionMetadata,
   listBankTransactionDocuments,
@@ -70,8 +68,6 @@ export const Layer = {
   getBalanceSheet,
   getBalanceSheetCSV,
   getBalanceSheetExcel,
-  getBankTransactionsCsv,
-  getBankTransactionsExcel,
   getBankTransactionMetadata,
   listBankTransactionDocuments,
   getBankTransactionDocument,

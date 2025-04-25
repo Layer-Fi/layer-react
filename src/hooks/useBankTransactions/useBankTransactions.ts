@@ -3,7 +3,7 @@ import { useAuth } from '../useAuth'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getBankTransactions, type GetBankTransactionsReturn } from '../../api/layer/bankTransactions'
 
-type UseBankTransactionsOptions = {
+export type UseBankTransactionsOptions = {
   categorized?: boolean
   direction?: 'INFLOW' | 'OUTFLOW'
   descriptionFilter?: string
@@ -92,6 +92,7 @@ export function useBankTransactions({
             businessId,
             categorized,
             cursor,
+            limit: 200,
             descriptionFilter,
             direction,
             startDate,

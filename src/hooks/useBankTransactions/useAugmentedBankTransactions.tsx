@@ -27,7 +27,7 @@ import {
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useBankTransactions } from './useBankTransactions'
+import { useBankTransactions, type UseBankTransactionsOptions } from './useBankTransactions'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
@@ -106,6 +106,27 @@ const buildInitialFilters = ({
   return initialFilters
 }
 
+export function bankTransactionFiltersToHookOptions(
+  filters?: BankTransactionFilters,
+): UseBankTransactionsOptions {
+  return {
+    categorized: filters?.categorizationStatus
+      ? filters.categorizationStatus !== DisplayState.all
+        ? filters.categorizationStatus === DisplayState.categorized
+        : undefined
+      : undefined,
+    descriptionFilter: filters?.descriptionFilter,
+    direction: filters?.direction?.length === 1
+      ? filters.direction[0] === Direction.CREDIT
+        ? 'INFLOW'
+        : 'OUTFLOW'
+      : undefined,
+    startDate: filters?.dateRange?.startDate,
+    endDate: filters?.dateRange?.endDate,
+    tagFilterQueryString: filters?.tagFilter ? tagFilterToQueryString(filters.tagFilter) : undefined,
+  }
+}
+
 export const useAugmentedBankTransactions = (
   params?: UseBankTransactionsParams,
 ) => {
@@ -143,22 +164,9 @@ export const useAugmentedBankTransactions = (
     mutate,
     size,
     setSize,
-  } = useBankTransactions({
-    categorized: filters?.categorizationStatus
-      ? filters.categorizationStatus !== DisplayState.all
-        ? filters.categorizationStatus === DisplayState.categorized
-        : undefined
-      : undefined,
-    descriptionFilter: filters?.descriptionFilter,
-    direction: filters?.direction?.length === 1
-      ? filters.direction[0] === Direction.CREDIT
-        ? 'INFLOW'
-        : 'OUTFLOW'
-      : undefined,
-    startDate: filters?.dateRange?.startDate,
-    endDate: filters?.dateRange?.endDate,
-    tagFilterQueryString: filters?.tagFilter ? tagFilterToQueryString(filters.tagFilter) : undefined,
-  })
+  } = useBankTransactions(
+    bankTransactionFiltersToHookOptions(filters),
+  )
 
   const data: BankTransaction[] | undefined = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {

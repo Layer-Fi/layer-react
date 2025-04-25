@@ -20,9 +20,8 @@ export type GetBankTransactionsReturn = {
   }
 }
 
-type GetBankTransactionsParams = {
+type GetBankTransactionsBaseParams = {
   businessId: string
-  cursor?: string
   categorized?: boolean
   descriptionFilter?: string
   direction?: 'INFLOW' | 'OUTFLOW'
@@ -32,10 +31,14 @@ type GetBankTransactionsParams = {
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
 }
+type GetBankTransactionsPaginatedParams = GetBankTransactionsBaseParams & {
+  cursor?: string
+  limit?: number
+}
 
 export const getBankTransactions = get<
   GetBankTransactionsReturn,
-  GetBankTransactionsParams
+  GetBankTransactionsPaginatedParams
 >(
   ({
     businessId,
@@ -43,12 +46,13 @@ export const getBankTransactions = get<
     categorized,
     descriptionFilter,
     direction,
+    limit,
     startDate,
     endDate,
     sortBy = 'date',
     sortOrder = 'DESC',
     tagFilterQueryString,
-  }: GetBankTransactionsParams) => {
+  }: GetBankTransactionsPaginatedParams) => {
     const parameters = toDefinedSearchParameters({
       cursor,
       categorized,
@@ -58,7 +62,7 @@ export const getBankTransactions = get<
       endDate,
       sortBy,
       sortOrder,
-      limit: 200,
+      limit,
     })
 
     return `/v1/businesses/${businessId}/bank-transactions?${parameters}${tagFilterQueryString ? `&${tagFilterQueryString}` : ''}`
@@ -81,45 +85,32 @@ export const matchBankTransaction = put<
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/match`,
 )
 
-export interface GetBankTransactionsExportParams
-  extends Record<string, string | undefined> {
-  businessId: string
-  startDate?: string
-  endDate?: string
-  categorized?: 'true' | 'false'
-  category?: string
-  month?: string
-  year?: string
-}
+type GetBankTransactionsExportParams = GetBankTransactionsBaseParams
 
-export const getBankTransactionsCsv = get<{
-  data?: S3PresignedUrl
-  error?: unknown
-}>((params: Record<string, string | undefined>) => {
-  const { businessId, startDate, endDate, categorized, category, month, year } =
-    params as GetBankTransactionsExportParams // Type assertion here for clarity
-  return `/v1/businesses/${businessId}/reports/transactions/exports/csv?${
-    startDate ? `start_date=${encodeURIComponent(startDate)}&` : ''
-  }${endDate ? `end_date=${encodeURIComponent(endDate)}&` : ''}${
-    month ? `month=${encodeURIComponent(month)}&` : ''
-  }${year ? `year=${encodeURIComponent(year)}&` : ''}${
-    categorized ? `categorized=${categorized}&` : ''
-  }${category ? `category=${encodeURIComponent(category)}&` : ''}`
-})
+export const getBankTransactionsExcel = get<
+  { data: S3PresignedUrl },
+  GetBankTransactionsExportParams
+>(({
+  businessId,
+  categorized,
+  descriptionFilter,
+  direction,
+  startDate,
+  endDate,
+  sortBy = 'date',
+  sortOrder = 'DESC',
+}: GetBankTransactionsExportParams) => {
+  const parameters = toDefinedSearchParameters({
+    categorized,
+    descriptionFilter,
+    direction,
+    startDate,
+    endDate,
+    sortBy,
+    sortOrder,
+  })
 
-export const getBankTransactionsExcel = get<{
-  data?: S3PresignedUrl
-  error?: unknown
-}>((params: Record<string, string | undefined>) => {
-  const { businessId, startDate, endDate, categorized, category, month, year } =
-    params as GetBankTransactionsExportParams // Type assertion here for clarity
-  return `/v1/businesses/${businessId}/reports/transactions/exports/excel?${
-    startDate ? `start_date=${encodeURIComponent(startDate)}&` : ''
-  }${endDate ? `end_date=${encodeURIComponent(endDate)}&` : ''}${
-    month ? `month=${encodeURIComponent(month)}&` : ''
-  }${year ? `year=${encodeURIComponent(year)}&` : ''}${
-    categorized ? `categorized=${categorized}&` : ''
-  }${category ? `category=${encodeURIComponent(category)}&` : ''}`
+  return `/v1/businesses/${businessId}/reports/transactions/exports/excel?${parameters}`
 })
 
 export const getBankTransactionMetadata = get<{
