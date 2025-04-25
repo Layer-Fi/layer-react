@@ -31,8 +31,8 @@ export const BankTransactionList = ({
       {bankTransactions?.map(
         (bankTransaction: BankTransaction, index: number) => (
           <BankTransactionListItem
-            index={index}
             key={bankTransaction.id}
+            index={index}
             dateFormat={DATE_FORMAT}
             bankTransaction={bankTransaction}
             editable={editable}

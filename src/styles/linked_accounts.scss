@@ -190,6 +190,7 @@
       flex-direction: column;
       gap: var(--spacing-4xs);
       justify-content: stretch;
+      min-width: 0;
     }
 
     .topbar-logo {

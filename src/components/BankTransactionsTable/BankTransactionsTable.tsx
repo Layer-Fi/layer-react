@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { BankTransaction } from '../../types'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
-import { BankTransactionRow } from '../BankTransactionRow'
+import { BankTransactionRow } from '../BankTransactionRow/BankTransactionRow'
 import {
   BankTransactionsStringOverrides,
 } from '../BankTransactions/BankTransactions'
@@ -23,7 +23,6 @@ interface BankTransactionsTableProps {
   editable: boolean
   categorizeView?: boolean
   isLoading?: boolean
-  initialLoad?: boolean
   containerWidth: number
   removeTransaction: (bt: BankTransaction) => void
   showDescriptions?: boolean
@@ -41,7 +40,6 @@ export const BankTransactionsTable = ({
   editable,
   isLoading,
   bankTransactions,
-  initialLoad,
   containerWidth,
   removeTransaction,
   showDescriptions = false,
@@ -119,10 +117,9 @@ export const BankTransactionsTable = ({
         && bankTransactions?.map(
           (bankTransaction: BankTransaction, index: number) => (
             <BankTransactionRow
-              initialLoad={initialLoad}
+              key={bankTransaction.id}
               index={index}
               editable={editable}
-              key={bankTransaction.id}
               dateFormat={DATE_FORMAT}
               bankTransaction={bankTransaction}
               removeTransaction={removeTransaction}

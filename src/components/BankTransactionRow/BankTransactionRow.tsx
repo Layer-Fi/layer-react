@@ -35,6 +35,7 @@ import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookke
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { VStack } from '../ui/Stack/Stack'
+import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 
 type Props = {
   index: number
@@ -53,8 +54,8 @@ type Props = {
 
 export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
 
-export const extractDescriptionForSplit = (category: CategoryWithEntries) => {
-  if (!category.entries) {
+export const extractDescriptionForSplit = (category: CategoryWithEntries | null) => {
+  if (!category || !category.entries) {
     return ''
   }
 
@@ -81,7 +82,7 @@ export const getDefaultSelectedCategory = (
 let clickTimer = Date.now()
 
 export const BankTransactionRow = ({
-  index = 0,
+  index,
   editable,
   dateFormat,
   bankTransaction,
@@ -121,21 +122,6 @@ export const BankTransactionRow = ({
       }
     },
   }
-
-  const [showComponent, setShowComponent] = useState(false)
-
-  useEffect(() => {
-    if (initialLoad) {
-      const timeoutId = setTimeout(() => {
-        setShowComponent(true)
-      }, index * 10)
-
-      return () => clearTimeout(timeoutId)
-    }
-    else {
-      setShowComponent(true)
-    }
-  }, [])
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -187,6 +173,8 @@ export const BankTransactionRow = ({
 
   const categorized = isCategorized(bankTransaction)
 
+  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
+
   const className = 'Layer__bank-transaction-row'
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
@@ -198,7 +186,7 @@ export const BankTransactionRow = ({
       : '',
     open ? openClassName : '',
     initialLoad ? 'initial-load' : '',
-    showComponent ? 'show' : '',
+    isVisible ? 'show' : '',
   )
 
   const showReceiptDataProperties = useMemo(

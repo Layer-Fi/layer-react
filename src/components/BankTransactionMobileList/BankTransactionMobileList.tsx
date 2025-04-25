@@ -32,8 +32,8 @@ export const BankTransactionMobileList = ({
         {bankTransactions?.map(
           (bankTransaction: BankTransaction, index: number) => (
             <BankTransactionMobileListItem
-              index={index}
               key={bankTransaction.id}
+              index={index}
               bankTransaction={bankTransaction}
               showTooltips={showTooltips}
               editable={editable}

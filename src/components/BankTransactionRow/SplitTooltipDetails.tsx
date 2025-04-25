@@ -6,9 +6,9 @@ export const SplitTooltipDetails = ({
   category,
 }: {
   classNamePrefix: string
-  category: CategoryWithEntries
+  category: CategoryWithEntries | null
 }) => {
-  if (!category.entries) {
+  if (!category || !category.entries) {
     return
   }
 

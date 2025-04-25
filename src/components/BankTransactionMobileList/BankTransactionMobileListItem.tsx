@@ -19,6 +19,7 @@ import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
+import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 
 export interface BankTransactionMobileListItemProps {
   index: number
@@ -53,7 +54,7 @@ const getAssignedValue = (bankTransaction: BankTransaction) => {
 }
 
 export const BankTransactionMobileListItem = ({
-  index = 0,
+  index,
   bankTransaction,
   removeTransaction,
   editable,
@@ -92,7 +93,6 @@ export const BankTransactionMobileListItem = ({
         : Purpose.business,
   )
   const [open, setOpen] = useState(isFirstItem)
-  const [showComponent, setShowComponent] = useState(!initialLoad)
   const [height, setHeight] = useState(0)
   const [headingHeight, setHeadingHeight] = useState(63)
 
@@ -144,19 +144,6 @@ export const BankTransactionMobileListItem = ({
   }
 
   useEffect(() => {
-    if (initialLoad) {
-      const timeoutId = setTimeout(() => {
-        setShowComponent(true)
-      }, index * 20)
-
-      return () => clearTimeout(timeoutId)
-    }
-    else {
-      setShowComponent(true)
-    }
-  }, [])
-
-  useEffect(() => {
     if (
       editable
       && bankTransaction.recently_categorized
@@ -176,13 +163,15 @@ export const BankTransactionMobileListItem = ({
 
   const categorized = isCategorized(bankTransaction)
 
+  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
+
   const className = 'Layer__bank-transaction-mobile-list-item'
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
     removeAnim ? 'Layer__bank-transaction-row--removing' : '',
     open ? openClassName : '',
-    showComponent ? 'show' : '',
+    isVisible ? 'show' : '',
   )
 
   return (

@@ -1,3 +1,4 @@
+import { debounce } from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import {
@@ -10,11 +11,12 @@ import { useElementSize } from '../../hooks/useElementSize'
 import { useIsVisible } from '../../hooks/useIsVisible'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { BankTransaction, DisplayState } from '../../types'
-import { debounce } from '../../utils/helpers'
 import { BankTransactionList } from '../BankTransactionList'
-import { BankTransactionMobileList } from '../BankTransactionMobileList'
-import { BankTransactionsTable } from '../BankTransactionsTable'
-import { BankTransactionsTableStringOverrides } from '../BankTransactionsTable/BankTransactionsTable'
+import { BankTransactionMobileList } from '../BankTransactionMobileList/BankTransactionMobileList'
+import {
+  BankTransactionsTable,
+  type BankTransactionsTableStringOverrides,
+} from '../BankTransactionsTable/BankTransactionsTable'
 import { Container } from '../Container'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { Loader } from '../Loader'
@@ -23,7 +25,7 @@ import {
   BankTransactionsHeader,
   BankTransactionsHeaderStringOverrides,
 } from './BankTransactionsHeader'
-import { DataStates } from './DataStates'
+import { BankTransactionsTableEmptyStates } from './BankTransactionsTableEmptyState'
 import { MobileComponentType } from './constants'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import type { LayerError } from '../../models/ErrorHandler'
@@ -106,7 +108,6 @@ const BankTransactionsContent = ({
   const isVisible = useIsVisible(scrollPaginationRef)
 
   const [currentPage, setCurrentPage] = useState(1)
-  const [initialLoad, setInitialLoad] = useState(true)
 
   const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
@@ -116,9 +117,7 @@ const BankTransactionsContent = ({
   const {
     data,
     isLoading,
-    loadingStatus,
     error,
-    isValidating,
     refetch,
     setFilters,
     filters,
@@ -198,15 +197,6 @@ const BankTransactionsContent = ({
     setCurrentPage(1)
   }, [filters])
 
-  useEffect(() => {
-    if (loadingStatus === 'complete') {
-      const timeoutLoad = setTimeout(() => {
-        setInitialLoad(false)
-      }, 1000)
-      return () => clearTimeout(timeoutLoad)
-    }
-  }, [loadingStatus])
-
   const bankTransactions = useMemo(() => {
     if (monthlyView) {
       return data
@@ -244,11 +234,11 @@ const BankTransactionsContent = ({
     if (size?.height && size?.height >= 90) {
       const newShift = -Math.floor(size.height / 2) + 6
       if (newShift !== shiftStickyHeader) {
-        debounceShiftStickyHeader(newShift)
+        void debounceShiftStickyHeader(newShift)
       }
     }
     else if (size?.height > 0 && shiftStickyHeader !== 0) {
-      debounceShiftStickyHeader(0)
+      void debounceShiftStickyHeader(0)
     }
 
     if (size.width > BREAKPOINTS.TABLET && listView) {
@@ -258,7 +248,7 @@ const BankTransactionsContent = ({
       setListView(true)
     }
 
-    debounceContainerWidth(size?.width)
+    void debounceContainerWidth(size?.width)
   })
 
   const editable =
@@ -268,6 +258,8 @@ const BankTransactionsContent = ({
     data
     && !hasMore
     && Math.ceil((data?.length || 0) / pageSize) === currentPage
+
+  const isLoadingWithoutData = isLoading && !data
 
   return (
     <Container
@@ -299,7 +291,7 @@ const BankTransactionsContent = ({
             }
           }}
           stringOverrides={stringOverrides?.bankTransactionsHeader}
-          isDataLoading={isLoading}
+          isDataLoading={isLoadingWithoutData}
           isSyncing={isSyncing}
         />
       )}
@@ -309,10 +301,9 @@ const BankTransactionsContent = ({
           <BankTransactionsTable
             categorizeView={categorizeView}
             editable={editable}
-            isLoading={isLoading}
+            isLoading={isLoadingWithoutData}
             isSyncing={isSyncing}
             bankTransactions={bankTransactions}
-            initialLoad={initialLoad}
             containerWidth={containerWidth}
             removeTransaction={removeTransaction}
             showDescriptions={showDescriptions}
@@ -326,7 +317,7 @@ const BankTransactionsContent = ({
         </div>
       )}
 
-      {!isLoading && listView && mobileComponent !== 'mobileList'
+      {!isLoadingWithoutData && listView && mobileComponent !== 'mobileList'
         ? (
           <BankTransactionList
             bankTransactions={bankTransactions}
@@ -341,13 +332,12 @@ const BankTransactionsContent = ({
         )
         : null}
 
-      {!isLoading && listView && mobileComponent === 'mobileList'
+      {!isLoadingWithoutData && listView && mobileComponent === 'mobileList'
         ? (
           <BankTransactionMobileList
             bankTransactions={bankTransactions}
             editable={editable}
             removeTransaction={removeTransaction}
-            initialLoad={initialLoad}
             showTooltips={showTooltips}
             showReceiptUploads={showReceiptUploads}
             showDescriptions={showDescriptions}
@@ -355,7 +345,7 @@ const BankTransactionsContent = ({
         )
         : null}
 
-      {listView && isLoading
+      {listView && isLoadingWithoutData
         ? (
           <div className='Layer__bank-transactions__list-loader'>
             <Loader />
@@ -365,13 +355,12 @@ const BankTransactionsContent = ({
 
       {!isSyncing || listView
         ? (
-          <DataStates
-            bankTransactions={bankTransactions}
-            isLoading={isLoading}
-            isValidating={isValidating}
-            error={error}
-            refetch={refetch}
-            editable={editable}
+          <BankTransactionsTableEmptyStates
+            hasVisibleTransactions={(bankTransactions?.length ?? 0) > 0}
+            isCategorizationMode={editable}
+            isError={Boolean(error)}
+            isFiltered={Boolean(filters?.descriptionFilter)}
+            isLoadingWithoutData={isLoadingWithoutData}
           />
         )
         : null}

@@ -148,6 +148,8 @@
 .Layer__btn--secondary {
   color: var(--btn-secondary-color);
   background: var(--btn-secondary-bg-color);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
 }
 
 .Layer__btn--tertiary {

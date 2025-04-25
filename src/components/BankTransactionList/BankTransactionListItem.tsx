@@ -27,6 +27,7 @@ import { parseISO, format as formatTime } from 'date-fns'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from './BankTransactionProcessingInfo'
+import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 
 type Props = {
   index: number
@@ -42,7 +43,7 @@ type Props = {
 }
 
 export const BankTransactionListItem = ({
-  index = 0,
+  index,
   dateFormat,
   bankTransaction,
   editable,
@@ -70,18 +71,10 @@ export const BankTransactionListItem = ({
     setOpen(!open)
   }
 
-  const [showComponent, setShowComponent] = useState(false)
-
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setShowComponent(true)
-    }, index * 80)
-
-    return () => clearTimeout(timeoutId)
-  }, [])
+  const { isVisible } = useDelayedVisibility({ delay: index * 80 })
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -135,7 +128,7 @@ export const BankTransactionListItem = ({
       ? 'Layer__bank-transaction-row--removing'
       : '',
     open ? openClassName : '',
-    showComponent ? 'show' : '',
+    isVisible ? 'show' : '',
   )
 
   return (

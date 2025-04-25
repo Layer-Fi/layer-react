@@ -102,6 +102,7 @@ export function useBankTransactions({
       )()
     },
     {
+      keepPreviousData: true,
       revalidateFirstPage: false,
       initialSize: 1,
     },
