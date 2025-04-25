@@ -30,7 +30,7 @@ export const STATEMENT_OF_CASH_FLOW_ROWS = [
   {
     name: 'CashAtBeginningOfPeriod',
     displayName: 'Cash at Beginning of Period',
-    lineItem: 'cash_at_beginning_of_period',
+    lineItem: 'cash_at_start_of_period',
     type: 'summary_value',
     summarize: false,
   },
