@@ -21,6 +21,7 @@ export function TransactionsSearchField({ slot, ...restProps }: TransactionsSear
         {...restProps}
         slot='search'
         placeholder='Search transactions'
+        aria-label='Search transactions'
       />
     </Group>
   )

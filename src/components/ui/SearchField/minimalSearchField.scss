@@ -6,8 +6,10 @@
 
   border: none;
 
-  & > [slot=input] {
+  & > [slot="input"] {
     grid-area: input;
+
+    font-family: var(--font-family);
 
     border: none;
     outline: none;
@@ -23,17 +25,19 @@
 
     &::-webkit-search-cancel-button,
     &::-webkit-search-decoration {
-      -webkit-appearance: none;
+      appearance: none;
     }
   }
-  &[data-empty] > [slot=input] {
+
+  &[data-empty] > [slot="input"] {
     grid-column: 1 / -1;
   }
 
-  & > [slot=clear-button] {
+  & > [slot="clear-button"] {
     grid-area: clear-button;
   }
-  &[data-empty] > [slot=clear-button] {
+
+  &[data-empty] > [slot="clear-button"] {
     display: none;
   }
 }
