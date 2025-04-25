@@ -5,11 +5,13 @@ import {
   isValidElement,
   cloneElement,
   type Ref,
+  HTMLAttributes,
 } from 'react'
 import { TooltipContext, useTooltip, useTooltipContext } from './useTooltip'
 import { useMergeRefs, FloatingPortal } from '@floating-ui/react'
 import type { Placement } from '@floating-ui/react'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import classNames from 'classnames'
 
 export interface TooltipOptions {
   initialOpen?: boolean
@@ -49,9 +51,9 @@ export const TooltipTrigger = forwardRef<
       context.getReferenceProps({
         ref,
         ...props,
-        ...children.props,
+        ...(children.props as HTMLProps<HTMLElement>),
         'data-state': context.open ? 'open' : 'closed',
-      }),
+      } as HTMLAttributes<HTMLElement>),
     )
   }
 
@@ -86,7 +88,7 @@ export const TooltipContent = forwardRef<
     <FloatingPortal>
       <div
         ref={ref}
-        className={className}
+        className={classNames('Layer__tooltip', className)}
         style={{
           ...context.floatingStyles,
         }}
