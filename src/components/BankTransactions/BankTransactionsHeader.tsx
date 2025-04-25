@@ -1,5 +1,4 @@
 import { ChangeEvent, useCallback, useState } from 'react'
-import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, DisplayState } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
@@ -13,13 +12,14 @@ import { Heading, HeadingSize } from '../Typography'
 import { MobileComponentType } from './constants'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
-import { useAuth } from '../../hooks/useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useDebounce } from '../../hooks/useDebounce/useDebounce'
 import { TransactionsSearchField } from '../domain/transactions/searchField/TransactionsSearchField'
 import { TransactionsActions } from '../domain/transactions/actions/TransactionsActions'
 import { VStack } from '../ui/Stack/Stack'
+import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/useBankTransactionsDownload'
+import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
+import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -78,51 +78,31 @@ const DownloadButton = ({
   downloadButtonTextOverride?: string
   iconOnly?: boolean
 }) => {
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
+  const { filters } = useBankTransactionsContext()
 
-  const [requestFailed, setRequestFailed] = useState(false)
-  const [isDownloading, setIsDownloading] = useState(false)
-  const handleClick = async () => {
-    setIsDownloading(true)
-    const currentYear = new Date().getFullYear().toString()
-    const getBankTransactionsExcel = Layer.getBankTransactionsExcel(
-      apiUrl,
-      auth?.access_token,
-      {
-        params: {
-          businessId: businessId,
-          year: currentYear,
-        },
-      },
-    )
-    try {
-      const result = await getBankTransactionsExcel()
-      if (result?.data?.presignedUrl) {
-        window.location.href = result.data.presignedUrl
-        setRequestFailed(false)
-      }
-      else {
-        setRequestFailed(true)
-      }
-    }
-    catch {
-      setRequestFailed(true)
-    }
-    finally {
-      setIsDownloading(false)
-    }
+  const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
+  const { trigger, isMutating, error } = useBankTransactionsDownload()
+
+  const handleClick = () => {
+    void trigger(bankTransactionFiltersToHookOptions(filters))
+      .then((result) => {
+        if (result?.presignedUrl) {
+          triggerInvisibleDownload({ url: result.presignedUrl })
+        }
+      })
   }
 
   return (
-    <DownloadButtonComponent
-      iconOnly={iconOnly}
-      onClick={handleClick}
-      isDownloading={isDownloading}
-      requestFailed={requestFailed}
-      text={downloadButtonTextOverride ?? 'Download'}
-    />
+    <>
+      <DownloadButtonComponent
+        iconOnly={iconOnly}
+        onClick={handleClick}
+        isDownloading={isMutating}
+        requestFailed={Boolean(error)}
+        text={downloadButtonTextOverride ?? 'Download'}
+      />
+      <InvisibleDownload ref={invisibleDownloadRef} />
+    </>
   )
 }
 
