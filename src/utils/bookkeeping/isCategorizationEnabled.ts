@@ -1,13 +1,11 @@
 import type { BookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 
 export function isCategorizationEnabledForStatus(status: BookkeepingStatus) {
-  return true
-  /** @TODO */
-  // switch (status) {
-  //   case 'NOT_PURCHASED':
-  //   case 'BOOKKEEPING_PAUSED':
-  //     return true
-  //   case 'ACTIVE':
-  //     return false
-  // }
+  switch (status) {
+    case 'NOT_PURCHASED':
+    case 'BOOKKEEPING_PAUSED':
+      return true
+    case 'ACTIVE':
+      return false
+  }
 }
