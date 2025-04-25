@@ -24,6 +24,7 @@ export interface BadgeProps {
   size?: BadgeSize
   variant?: BadgeVariant
   hoverable?: boolean
+  slot?: string
 }
 
 export const Badge = ({
@@ -34,6 +35,7 @@ export const Badge = ({
   size = BadgeSize.MEDIUM,
   variant = BadgeVariant.DEFAULT,
   hoverable = false,
+  slot,
 }: BadgeProps) => {
   const baseProps = {
     className: classNames(
@@ -44,6 +46,7 @@ export const Badge = ({
       `Layer__badge--${variant}`,
     ),
     onClick,
+    slot,
     children,
   }
 

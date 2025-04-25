@@ -26,4 +26,7 @@ export type CategoryOption = {
   payload: CategoryOptionPayload
 }
 
-export type CategoryWithHide = Category & { hide?: boolean }
+export type CategoryWithHide = Omit<Category, 'subCategories'> & {
+  subCategories?: CategoryWithHide[]
+  hide?: boolean
+}
