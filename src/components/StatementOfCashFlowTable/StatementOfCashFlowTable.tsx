@@ -120,7 +120,7 @@ export const StatementOfCashFlowTable = ({
               >
                 <TableCell primary>{row.displayName}</TableCell>
                 <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
-                  {row.lineItem}
+                  {data[row.lineItem as keyof StatementOfCashFlow] as number}
                 </TableCell>
               </TableRow>
             )
