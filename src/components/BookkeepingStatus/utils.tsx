@@ -5,7 +5,7 @@ import { TextStatus } from '../Typography/Text'
 import AlertCircle from '../../icons/AlertCircle'
 import Clock from '../../icons/Clock'
 import CheckCircle from '../../icons/CheckCircle'
-import { safeAssertUnreachable } from '../../utils/switch/safeAssertUnreachable'
+import { safeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import pluralize from 'pluralize'
 
 type InternalStatusConfig = {
@@ -64,7 +64,11 @@ export function getBookkeepingStatusConfig({
       return
     }
     default: {
-      return safeAssertUnreachable(status, 'Unexpected bookkeeping status in BookkeepingStatus')
+      return safeAssertUnreachable({
+        value: status,
+        message: 'Unexpected bookkeeping status in BookkeepingStatus',
+        fallbackValue: undefined,
+      })
     }
   }
 }
