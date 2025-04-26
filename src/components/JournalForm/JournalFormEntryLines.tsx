@@ -15,7 +15,7 @@ import { InputWithBadge, InputGroup, Select } from '../Input'
 import { JournalConfig } from '../Journal/Journal'
 import { Text, TextSize } from '../Typography'
 import { useAllCategories } from '../../hooks/categories/useAllCategories'
-import { safeAssertUnreachable } from '../../utils/switch/safeAssertUnreachable'
+import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 
 type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
 
@@ -76,7 +76,10 @@ export const JournalFormEntryLines = ({
               value: account.id,
             }
           default:
-            safeAssertUnreachable(account, 'Unexpected account type')
+            unsafeAssertUnreachable({
+              value: account,
+              message: 'Unexpected account type',
+            })
         }
       })
 
@@ -87,16 +90,19 @@ export const JournalFormEntryLines = ({
     lineItemIndex,
     value,
   }: { lineItemIndex: number, value: BaseSelectOption }) => {
-    const relevantCategory = flattenedCategories.find((x) => {
-      switch (x.type) {
+    const relevantCategory = flattenedCategories.find((category) => {
+      switch (category.type) {
         case 'AccountNested':
-          return x.id === value.value
+          return category.id === value.value
         case 'OptionalAccountNested':
-          return x.stable_name === value.value
+          return category.stable_name === value.value
         case 'ExclusionNested':
-          return x.id === value.value
+          return category.id === value.value
         default:
-          safeAssertUnreachable(x, 'Unexpected account type')
+          unsafeAssertUnreachable({
+            value: category,
+            message: 'Unexpected account type',
+          })
       }
     })
 

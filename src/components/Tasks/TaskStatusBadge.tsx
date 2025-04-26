@@ -5,7 +5,7 @@ import CheckCircle from '../../icons/CheckCircle'
 import { BookkeepingPeriod } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import pluralize from 'pluralize'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
-import { safeAssertUnreachable } from '../../utils/switch/safeAssertUnreachable'
+import { safeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 
 type TaskStatusBadgeProps = {
   status: BookkeepingPeriod['status']
@@ -43,7 +43,11 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
       return
     }
     default: {
-      safeAssertUnreachable(status, 'Unexpected bookkeeping status in TaskStatusBadge')
+      return safeAssertUnreachable({
+        value: status,
+        message: 'Unexpected bookkeeping status in `TaskStatusBadge`',
+        fallbackValue: undefined,
+      })
     }
   }
 }

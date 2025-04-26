@@ -15,7 +15,7 @@ import {
 } from 'date-fns'
 import { useState, createContext, type PropsWithChildren, useContext } from 'react'
 import { createStore, useStore } from 'zustand'
-import { safeAssertUnreachable } from '../../utils/switch/safeAssertUnreachable'
+import { safeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { useStoreWithDateSelected } from '../../utils/zustand/useStoreWithDateSelected'
 
 const _DATE_PICKER_MODES = [
@@ -187,7 +187,10 @@ function buildStore() {
           setYear({ start })
           break
         default:
-          safeAssertUnreachable(rangeDisplayMode, 'Invalid range displayMode')
+          safeAssertUnreachable({
+            value: rangeDisplayMode,
+            message: 'Invalid `rangeDisplayMode`',
+          })
       }
     }
 
