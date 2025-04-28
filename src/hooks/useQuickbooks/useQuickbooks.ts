@@ -27,7 +27,7 @@ export const useQuickbooks: UseQuickbooks = () => {
   // Poll the server to determine when the Quickbooks sync is complete
   useEffect(() => {
     if (isSyncingFromQuickbooks && syncStatusIntervalRef.current === null) {
-      const interval = window.setInterval(() => fetchIsSyncingFromQuickbooks(), 2000)
+      const interval = window.setInterval(() => void fetchIsSyncingFromQuickbooks(), 2000)
       syncStatusIntervalRef.current = interval
       return () => clearInterval(interval)
     }
@@ -35,6 +35,7 @@ export const useQuickbooks: UseQuickbooks = () => {
       clearInterval(syncStatusIntervalRef.current)
       syncStatusIntervalRef.current = null
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSyncingFromQuickbooks])
 
   // Determine whether there exists an active Quickbooks connection or not
@@ -42,6 +43,7 @@ export const useQuickbooks: UseQuickbooks = () => {
     if (auth?.access_token) {
       void fetchQuickbooksConnectionStatus()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth?.access_token])
 
   const fetchQuickbooksConnectionStatus = async () => {

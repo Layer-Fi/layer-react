@@ -9,6 +9,7 @@ import { hasReceipts } from '../../utils/bankTransactions'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { Awaitable } from '../../types/utility/promises'
 
 export interface UseReceiptsProps {
   bankTransaction: BankTransaction
@@ -17,8 +18,8 @@ export interface UseReceiptsProps {
 
 type UseReceipts = (props: UseReceiptsProps) => {
   receiptUrls: DocumentWithStatus[]
-  uploadReceipt: (file: File) => void
-  archiveDocument: (document: DocumentWithStatus) => void
+  uploadReceipt: (file: File) => Awaitable<void>
+  archiveDocument: (document: DocumentWithStatus) => Awaitable<void>
 }
 
 const readDate = (date?: string) => {
@@ -40,8 +41,9 @@ export const useReceipts: UseReceipts = ({
   useEffect(() => {
     // Fetch documents details when the row is being opened and the documents are not yet loaded
     if (isActive && receiptUrls.length === 0 && hasReceipts(bankTransaction)) {
-      fetchDocuments()
+      void fetchDocuments()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive])
 
   const fetchDocuments = async () => {
@@ -56,7 +58,7 @@ export const useReceipts: UseReceipts = ({
       },
     )
     const result = await listBankTransactionDocuments()
-    const retrievedDocs = result.data.documentUrls.map((docUrl) => ({
+    const retrievedDocs = result.data.documentUrls.map(docUrl => ({
       id: docUrl.documentId,
       url: docUrl.presignedUrl,
       type: docUrl.fileType,
@@ -96,18 +98,19 @@ export const useReceipts: UseReceipts = ({
       await fetchDocuments()
       // Update the bank transaction with the new document id
       if (
-        updateBankTransaction &&
-        result?.data?.id &&
-        bankTransaction?.document_ids &&
-        bankTransaction.document_ids.length === 0
+        updateBankTransaction
+        && result?.data?.id
+        && bankTransaction?.document_ids
+        && bankTransaction.document_ids.length === 0
       ) {
         updateBankTransaction({
           ...bankTransaction,
           document_ids: [result.data.id],
         })
       }
-    } catch (_err) {
-      const newReceiptUrls = receipts.map(url => {
+    }
+    catch (_err) {
+      const newReceiptUrls = receipts.map((url) => {
         if (url.id === id) {
           return {
             ...url,
@@ -128,9 +131,10 @@ export const useReceipts: UseReceipts = ({
     try {
       if (document.error) {
         setReceiptUrls(receiptUrls.filter(url => url.id !== document.id))
-      } else {
+      }
+      else {
         setReceiptUrls(
-          receiptUrls.map(url => {
+          receiptUrls.map((url) => {
             if (url.id === document.id) {
               return {
                 ...url,
@@ -148,11 +152,12 @@ export const useReceipts: UseReceipts = ({
             documentId: document.id,
           },
         })
-        fetchDocuments()
+        void fetchDocuments()
       }
-    } catch (_err) {
+    }
+    catch (_err) {
       setReceiptUrls(
-        receiptUrls.map(url => {
+        receiptUrls.map((url) => {
           if (url.id === document.id) {
             return {
               ...url,
