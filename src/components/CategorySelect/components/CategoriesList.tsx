@@ -76,16 +76,14 @@ export const CategoriesList = ({ option, level = 0, accountName, onSelect, selec
         <Text>{option?.display_name}</Text>
 
         {option.description && (
-          <div slot='tooltip' onClick={e => e.stopPropagation()}>
-            <Tooltip>
-              <TooltipTrigger>
-                <InfoIcon />
-              </TooltipTrigger>
-              <TooltipContent>
-                {option.description ?? 'Test'}
-              </TooltipContent>
-            </Tooltip>
-          </div>
+          <Tooltip slot='tooltip'>
+            <TooltipTrigger>
+              <InfoIcon />
+            </TooltipTrigger>
+            <TooltipContent>
+              {option.description}
+            </TooltipContent>
+          </Tooltip>
         )}
       </div>
 
