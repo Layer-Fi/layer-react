@@ -1,6 +1,8 @@
 import { DATE_FORMAT } from '../../config/general'
+import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types'
+import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { MatchBadge } from '../BankTransactionRow/MatchBadge'
 import { Text, TextUseTooltip, ErrorText } from '../Typography'
 import classNames from 'classnames'
@@ -23,6 +25,24 @@ export const MatchForm = ({
   matchFormError,
   readOnly = false,
 }: MatchFormProps) => {
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizedEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+
+  const {
+    suggested_matches: suggestedMatches = [],
+    match,
+  } = bankTransaction
+
+  const effectiveSuggestedMatches = categorizedEnabled
+    ? suggestedMatches.filter(
+      ({ details: { id } }) => id === match?.details.id,
+    )
+    : suggestedMatches
+
+  if (categorizedEnabled && effectiveSuggestedMatches.length === 0) {
+    return null
+  }
+
   return (
     <div className={`${classNamePrefix}__match-table`}>
       <div className={`${classNamePrefix}__match-table__header`}>
@@ -32,21 +52,17 @@ export const MatchForm = ({
         </div>
         <div className={`${classNamePrefix}__match-table__amount`}>Amount</div>
 
-        <div
-          className={`${classNamePrefix}__match-table__status ${
-            bankTransaction.match ? '' : 'no-match'
-          }`}
-        >
+        <div className={`${classNamePrefix}__match-table__status ${match ? '' : 'no-match'}`}>
         </div>
       </div>
 
-      {bankTransaction.suggested_matches?.map((match, idx) => {
+      {effectiveSuggestedMatches.map((suggestedMatch) => {
         return (
           <div
-            key={idx}
+            key={suggestedMatch.id}
             className={classNames(
               `${classNamePrefix}__match-row`,
-              match.id === selectedMatchId
+              suggestedMatch.id === selectedMatchId
                 ? `${classNamePrefix}__match-row--selected`
                 : '',
             )}
@@ -54,22 +70,22 @@ export const MatchForm = ({
               if (readOnly === true) {
                 return
               }
-              if (selectedMatchId === match.id) {
+              if (selectedMatchId === suggestedMatch.id) {
                 setSelectedMatchId(undefined)
                 return
               }
-              setSelectedMatchId(match.id)
+              setSelectedMatchId(suggestedMatch.id)
             }}
           >
             <div
               className={`Layer__nowrap ${classNamePrefix}__match-table__date`}
             >
               <span>
-                {formatTime(parseISO(match.details.date), DATE_FORMAT)}
+                {formatTime(parseISO(suggestedMatch.details.date), DATE_FORMAT)}
               </span>
               <span className='amount-next-to-date'>
                 $
-                {formatMoney(match.details.amount)}
+                {formatMoney(suggestedMatch.details.amount)}
               </span>
             </div>
             <div className={`${classNamePrefix}__match-table__desc`}>
@@ -78,9 +94,9 @@ export const MatchForm = ({
                 withTooltip={TextUseTooltip.whenTruncated}
                 as='span'
               >
-                {match.details.description}
+                {suggestedMatch.details.description}
               </Text>
-              {match.details.id === bankTransaction.match?.details.id && (
+              {suggestedMatch.details.id === bankTransaction.match?.details.id && (
                 <span className='match-badge'>
                   <MatchBadge
                     classNamePrefix={classNamePrefix}
@@ -93,7 +109,7 @@ export const MatchForm = ({
             </div>
             <div className={`${classNamePrefix}__match-table__amount`}>
               $
-              {formatMoney(match.details.amount)}
+              {formatMoney(suggestedMatch.details.amount)}
             </div>
 
             <div
@@ -101,7 +117,7 @@ export const MatchForm = ({
                 bankTransaction.match ? '' : 'no-match'
               }`}
             >
-              {match.details.id === bankTransaction.match?.details.id && (
+              {suggestedMatch.details.id === match?.details.id && (
                 <MatchBadge
                   classNamePrefix={classNamePrefix}
                   bankTransaction={bankTransaction}
