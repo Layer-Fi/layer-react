@@ -4,7 +4,6 @@
   flex-direction: column;
   list-style: none;
   overflow: hidden;
-  max-width: 414px;
   margin: auto;
 }
 
@@ -12,7 +11,8 @@
   padding: 0;
   margin: var(--spacing-2xs) var(--spacing-md);
   background: var(--color-base-0);
-  box-shadow: 0 2px 2px 0 var(--color-base-200),
+  box-shadow:
+    0 2px 2px 0 var(--color-base-200),
     0 4px 4px 0 var(--color-base-100);
   border-radius: var(--border-radius-sm);
   opacity: 0;
@@ -31,7 +31,8 @@
 
   &.show.Layer__bank-transaction-row--removing {
     opacity: 0;
-    transition: all 500ms ease-in-out,
+    transition:
+      all 500ms ease-in-out,
       opacity 80ms ease-out;
     overflow: hidden;
     margin-top: 0;

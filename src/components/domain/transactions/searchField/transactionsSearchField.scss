@@ -1,8 +1,10 @@
 .Layer__TransactionsSearchField {
   display: grid;
-  grid-template-areas: 'icon search';
+  grid-template-areas: "icon search";
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
+
+  background: var(--color-base-0);
 
   border-radius: var(--border-radius-2xs);
   border: 1px solid var(--border-color);
@@ -12,12 +14,13 @@
     outline: 2px solid var(--outline-subtle);
   }
 
-  & > [slot=icon] {
+  & > [slot="icon"] {
     grid-area: icon;
     inline-size: 2rem;
     block-size: 2rem;
   }
-  & > [slot=search] {
+
+  & > [slot="search"] {
     grid-area: search;
   }
 }
