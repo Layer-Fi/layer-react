@@ -22,7 +22,6 @@ export interface TooltipOptions {
   offset?: number
   shift?: { padding?: number }
   slot?: string
-  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
 }
 
 export const Tooltip = ({
