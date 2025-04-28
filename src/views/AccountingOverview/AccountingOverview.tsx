@@ -33,7 +33,6 @@ export interface AccountingOverviewProps {
   chartColorsList?: string[]
   stringOverrides?: AccountingOverviewStringOverrides
   tagFilter?: TagOption
-  showTransactionsToReview?: boolean
   slotProps?: {
     profitAndLoss?: {
       summaries?: {
@@ -55,7 +54,6 @@ export const AccountingOverview = ({
   chartColorsList,
   stringOverrides,
   tagFilter = undefined,
-  showTransactionsToReview = true,
   slotProps,
 }: AccountingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
