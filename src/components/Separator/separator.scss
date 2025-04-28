@@ -14,4 +14,9 @@
       margin-block-start: var(--spacing-#{$spacing});
     }
   }
+
+  &[data-direction="horizontal"] {
+    width: 1px;
+    height: unset;
+  }
 }

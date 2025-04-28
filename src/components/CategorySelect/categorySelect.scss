@@ -12,7 +12,7 @@
   display: grid;
   width: 100%;
   grid-template-columns: minmax(0, auto) 1fr auto;
-  grid-template-areas: 'badge value icon';
+  grid-template-areas: "badge value icon";
   gap: var(--spacing-xs);
   align-items: center;
   text-align: left;
@@ -25,7 +25,7 @@
     outline-color: var(--color-base-600);
   }
 
-  [slot='match-badge'] {
+  [slot="match-badge"] {
     grid-area: badge;
     margin-top: -4px;
     margin-left: -4px;
@@ -33,11 +33,11 @@
     height: 27px;
   }
 
-  [slot='value'] {
+  [slot="value"] {
     grid-area: value;
   }
 
-  [slot='icon'] {
+  [slot="icon"] {
     grid-area: icon;
   }
 }
@@ -50,13 +50,13 @@
   overflow: auto;
   overscroll-behavior: none;
 
-  [slot='listbox'] [slot='header'] {
+  [slot="listbox"] [slot="header"] {
     color: var(--color-base-600);
     font-size: 12px;
     padding: var(--spacing-xs) var(--spacing-lg);
   }
 
-  & > [role='dialog']:focus-visible {
+  & > [role="dialog"]:focus-visible {
     outline-color: var(--color-base-300);
   }
 }
@@ -91,14 +91,20 @@
   padding: var(--spacing-xs) var(--spacing-lg);
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
-  grid-template-areas: 'label icon';
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr auto 16px;
+  grid-template-areas: "label tooltip icon";
 
-  [slot='label'] {
+  [slot="label"] {
     grid-area: label;
+    max-width: 360px;
+    overflow: hidden;
   }
 
-  [slot='icon'] {
+  [slot="tooltip"] {
+    grid-area: tooltip;
+  }
+
+  [slot="icon"] {
     grid-area: icon;
   }
 
@@ -129,8 +135,8 @@
 
 .Layer__category-select__list-item {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 100px) auto 16px;
-  grid-template-areas: 'name account tooltip icon';
+  grid-template-columns: minmax(0, 1fr) minmax(0, 120px) 16px;
+  grid-template-areas: "name account icon";
   box-sizing: border-box;
   align-items: center;
   width: 100%;
@@ -148,20 +154,18 @@
     outline: none;
   }
 
-  [slot='name'] {
+  [slot="name"] {
     grid-area: name;
+    display: flex;
+    gap: var(--spacing-xs);
   }
 
-  [slot='account'] {
+  [slot="account"] {
     text-align: right;
     grid-area: account;
   }
 
-  [slot='tooltip'] {
-    grid-area: tooltip;
-  }
-
-  [slot='icon'] {
+  [slot="icon"] {
     grid-area: icon;
   }
 }
