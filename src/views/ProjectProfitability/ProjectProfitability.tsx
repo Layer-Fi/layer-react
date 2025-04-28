@@ -124,7 +124,6 @@ export const ProjectProfitabilityView = ({
               tagFilter={tagFilter ? tagFilter : undefined}
               onTransactionsToReviewClick={() => setActiveTab('transactions')}
               enableOnboarding={false}
-              showTransactionsToReview={false}
               showTitle={false}
             />
           )}
