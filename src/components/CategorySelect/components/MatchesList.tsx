@@ -41,16 +41,14 @@ export const MatchesList = ({ matches, onSelect, value }: MatchesListProps) => {
               </VStack>
 
               {option.payload.description && (
-                <span slot='tooltip'>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <InfoIcon />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      {option.payload.description}
-                    </TooltipContent>
-                  </Tooltip>
-                </span>
+                <Tooltip slot='tooltip'>
+                  <TooltipTrigger>
+                    <InfoIcon />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {option.payload.description}
+                  </TooltipContent>
+                </Tooltip>
               )}
 
               {value?.payload?.id === option.payload.id && (
