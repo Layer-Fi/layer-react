@@ -413,6 +413,10 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) 0;
+
+  &:empty {
+    display: none;
+  }
 }
 
 .Layer__bank-transaction-row__table-cell--amount-credit,

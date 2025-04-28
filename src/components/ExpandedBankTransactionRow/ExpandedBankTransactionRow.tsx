@@ -149,7 +149,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [height, setHeight] = useState<string | number>(0)
     const [isOver, setOver] = useState(false)
     const bodyRef = useRef<HTMLSpanElement>(null)
-    const [isLoaded, setIsLoaded] = useState(false)
 
     const defaultCategory =
       bankTransaction.category
@@ -378,6 +377,10 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const bookkeepingStatus = useEffectiveBookkeepingStatus()
     const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
 
+    const effectiveSplits = categorizationEnabled
+      ? rowState.splits
+      : []
+
     const className = 'Layer__expanded-bank-transaction-row'
     const shouldHide = !isOpen && isOver
 
@@ -462,7 +465,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   >
                     <div className={`${className}__content-panel-container`}>
                       <div className={`${className}__splits-inputs`}>
-                        {rowState.splits.map((split, index) => (
+                        {effectiveSplits.map((split, index) => (
                           <div
                             className={`${className}__table-cell--split-entry`}
                             key={`split-${index}`}
@@ -511,13 +514,13 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                       </div>
                       {splitFormError && <ErrorText>{splitFormError}</ErrorText>}
                       <div className={`${className}__total-and-btns`}>
-                        {rowState.splits.length > 1 && (
+                        {effectiveSplits.length > 1 && (
                           <Input
                             disabled={true}
                             leftText='Total'
                             inputMode='numeric'
                             value={`$${formatMoney(
-                              rowState.splits.reduce(
+                              effectiveSplits.reduce(
                                 (x, { amount }) => x + amount,
                                 0,
                               ),
@@ -527,7 +530,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                         {categorizationEnabled
                           ? (
                             <div className={`${className}__splits-buttons`}>
-                              {rowState.splits.length > 1
+                              {effectiveSplits.length > 1
                                 ? (
                                   <TextButton
                                     onClick={addSplit}
