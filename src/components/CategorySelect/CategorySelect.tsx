@@ -57,9 +57,6 @@ export const CategorySelect = ({
     onChange(newValue)
   }
 
-  /* @TODO - Experimental: use mobile drawer when window size is small, or when touch only device, or when high resolution display
-  const shouldUseMobileExperience = useMobileExperience()
-  if (asDrawer || shouldUseMobileExperience) { */
   if (asDrawer) {
     return (
       <CategorySelectDrawer
