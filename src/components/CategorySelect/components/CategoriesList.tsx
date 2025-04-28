@@ -72,24 +72,26 @@ export const CategoriesList = ({ option, level = 0, accountName, onSelect, selec
         })
       }}
     >
-      <Text slot='name'>{option?.display_name}</Text>
+      <div slot='name'>
+        <Text>{option?.display_name}</Text>
+
+        {option.description && (
+          <div slot='tooltip' onClick={e => e.stopPropagation()}>
+            <Tooltip>
+              <TooltipTrigger>
+                <InfoIcon />
+              </TooltipTrigger>
+              <TooltipContent>
+                {option.description ?? 'Test'}
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        )}
+      </div>
 
       <span slot='account'>
         <Text size={TextSize.sm} status='disabled' ellipsis>{accountName}</Text>
       </span>
-
-      {option.description && (
-        <div className='Layer__select__option-menu--tooltip' slot='tooltip' onClick={e => e.stopPropagation()}>
-          <Tooltip>
-            <TooltipTrigger>
-              <InfoIcon />
-            </TooltipTrigger>
-            <TooltipContent>
-              {option.description}
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      )}
 
       {'id' in option && selected?.payload.id === option.id && (
         <CheckIcon slot='icon' size={12} />
