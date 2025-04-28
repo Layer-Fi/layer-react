@@ -34,20 +34,22 @@ export function BankTransactionsTableEmptyStates({
     }
 
     if (!hasVisibleTransactions && !isFiltered) {
-      <DataState
-        status={DataStateStatus.allDone}
-        title={
-          isCategorizationMode
-            ? 'You are up to date with transactions!'
-            : 'You have no categorized transactions'
-        }
-        description={
-          isCategorizationMode
-            ? 'All uncategorized transactions will be displayed here'
-            : 'All transactions will be displayed here once reviewed'
-        }
-        icon={isCategorizationMode ? undefined : <InboxIcon />}
-      />
+      return (
+        <DataState
+          status={DataStateStatus.allDone}
+          title={
+            isCategorizationMode
+              ? 'You are up to date with transactions!'
+              : 'You have no categorized transactions'
+          }
+          description={
+            isCategorizationMode
+              ? 'All uncategorized transactions will be displayed here'
+              : 'All transactions will be displayed here once reviewed'
+          }
+          icon={isCategorizationMode ? undefined : <InboxIcon />}
+        />
+      )
     }
 
     if (!hasVisibleTransactions && isFiltered) {
