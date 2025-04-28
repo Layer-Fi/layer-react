@@ -26,20 +26,20 @@ export const MatchForm = ({
   readOnly = false,
 }: MatchFormProps) => {
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizedEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
 
   const {
     suggested_matches: suggestedMatches = [],
     match,
   } = bankTransaction
 
-  const effectiveSuggestedMatches = categorizedEnabled
-    ? suggestedMatches.filter(
+  const effectiveSuggestedMatches = categorizationEnabled
+    ? suggestedMatches
+    : suggestedMatches.filter(
       ({ details: { id } }) => id === match?.details.id,
     )
-    : suggestedMatches
 
-  if (categorizedEnabled && effectiveSuggestedMatches.length === 0) {
+  if (!categorizationEnabled && effectiveSuggestedMatches.length === 0) {
     return null
   }
 
