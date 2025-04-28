@@ -6,6 +6,8 @@ import { VStack } from '../../ui/Stack/Stack'
 import { findParentCategory } from '../utils'
 import { Category } from '../../../types'
 import CheckIcon from '../../../icons/Check'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../Tooltip/Tooltip'
+import InfoIcon from '../../../icons/InfoIcon'
 
 type SuggestionsListProps = {
   suggestions?: CategoryOption[]
@@ -34,6 +36,20 @@ export const SuggestionsList = ({ suggestions, categories, onSelect, value }: Su
                   {findParentCategory(categories, option.payload.id)?.display_name}
                 </Text>
               </VStack>
+
+              {option.payload.description && (
+                <span slot='tooltip'>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {option.payload.description}
+                    </TooltipContent>
+                  </Tooltip>
+                </span>
+              )}
+
               {value?.payload?.id === option.payload.id && (
                 <span slot='icon'>
                   <CheckIcon size={12} />

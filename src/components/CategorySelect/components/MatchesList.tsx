@@ -3,10 +3,13 @@ import { Text, TextSize } from '../../Typography'
 import { parseISO, format as formatTime } from 'date-fns'
 import { centsToDollars as formatMoney } from '../../../models/Money'
 import { DATE_FORMAT } from '../../../config/general'
-import { VStack } from '../../ui/Stack/Stack'
+import { HStack, VStack } from '../../ui/Stack/Stack'
 import CheckIcon from '../../../icons/Check'
 import { MenuSection } from './MenuSection'
 import { CategoryOption } from '../types'
+import { HSeparator } from '../../Separator/Separator'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../Tooltip/Tooltip'
+import InfoIcon from '../../../icons/InfoIcon'
 
 type MatchesListProps = {
   matches?: CategoryOption[]
@@ -29,16 +32,27 @@ export const MatchesList = ({ matches, onSelect, value }: MatchesListProps) => {
           {matches?.map((option, index) => (
             <ListBoxItem className='Layer__category-select__ms-list-item' key={index} textValue={option.payload.display_name} onAction={() => onSelect(option)}>
               <VStack slot='label'>
-                <Text slot='date-and-amount' size={TextSize.sm}>
-                  {option.payload.date && formatTime(parseISO(option.payload.date), DATE_FORMAT)}
-                  {' '}
-                  |
-                  {' '}
-                  $
-                  {formatMoney(option.payload.amount)}
-                </Text>
-                <Text slot='name'>{option.payload.display_name}</Text>
+                <Text slot='name' ellipsis>{option.payload.display_name}</Text>
+                <HStack slot='date-and-amount' gap='xs'>
+                  <Text size={TextSize.sm} status='disabled'>{option.payload.date && formatTime(parseISO(option.payload.date), DATE_FORMAT)}</Text>
+                  <HSeparator />
+                  <Text size={TextSize.sm}>{`$${formatMoney(option.payload.amount)}`}</Text>
+                </HStack>
               </VStack>
+
+              {option.payload.description && (
+                <span slot='tooltip'>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <InfoIcon />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {option.payload.description}
+                    </TooltipContent>
+                  </Tooltip>
+                </span>
+              )}
+
               {value?.payload?.id === option.payload.id && (
                 <span slot='icon'>
                   <CheckIcon size={12} />
