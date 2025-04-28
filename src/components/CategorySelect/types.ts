@@ -1,5 +1,5 @@
 import { Category } from '../../types/categories'
-import { type CategoryWithEntries } from '../../types/bank_transactions'
+import { BankTransaction, type CategoryWithEntries } from '../../types/bank_transactions'
 
 export enum OptionActionType {
   CATEGORY = 'category',
@@ -29,4 +29,16 @@ export type CategoryOption = {
 export type CategoryWithHide = Omit<Category, 'subCategories'> & {
   subCategories?: CategoryWithHide[]
   hide?: boolean
+}
+
+export type CategorySelectProps = {
+  name?: string
+  bankTransaction: BankTransaction
+  value: CategoryOption | undefined
+  onChange: (newValue: CategoryOption) => void
+  disabled?: boolean
+  className?: string
+  showTooltips: boolean
+  excludeMatches?: boolean
+  asDrawer?: boolean
 }
