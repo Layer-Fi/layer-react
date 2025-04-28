@@ -81,7 +81,7 @@
     "libphonenumber-js": "^1.12.4",
     "lucide-react": "^0.454.0",
     "pluralize": "^8.0.0",
-    "react-aria-components": "^1.4.1",
+    "react-aria-components": "^1.8.0",
     "react-currency-input-field": "^3.9.0",
     "react-datepicker": "^6.9.0",
     "react-plaid-link": "^3.5.1",
