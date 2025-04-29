@@ -47,7 +47,7 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
       })
   }, [activePeriod?.tasks])
 
-  const { pageItems, pageIndex, next, set } = usePaginatedList(sortedTasks, pageSize)
+  const { pageItems, pageIndex, set } = usePaginatedList(sortedTasks, pageSize)
 
   const indexFirstIncomplete = sortedTasks?.findIndex(task => isIncompleteTask(task))
 
@@ -56,7 +56,6 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
       <TasksListMobile
         tasksCount={sortedTasks.length}
         sortedTasks={pageItems}
-        goToNextPage={next}
         indexFirstIncomplete={indexFirstIncomplete}
         currentPage={pageIndex + 1}
         pageSize={pageSize}
@@ -74,7 +73,6 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
               <TasksListItem
                 key={task.id}
                 task={task}
-                goToNextPageIfAllComplete={next}
                 defaultOpen={index === indexFirstIncomplete}
               />
             ))}

@@ -11,7 +11,6 @@ const MOBILE_SHOW_UNRESOLVED_TASKS_COUNT = 2
 type TasksListMobileProps = {
   tasksCount: number
   sortedTasks: ReadonlyArray<UserVisibleTask>
-  goToNextPage: (task: UserVisibleTask) => void
   indexFirstIncomplete: number
   currentPage: number
   pageSize: number
@@ -21,7 +20,6 @@ type TasksListMobileProps = {
 export const TasksListMobile = ({
   tasksCount,
   sortedTasks,
-  goToNextPage,
   indexFirstIncomplete,
   currentPage,
   pageSize,
@@ -37,7 +35,6 @@ export const TasksListMobile = ({
         <TasksListItem
           key={index}
           task={task}
-          goToNextPageIfAllComplete={goToNextPage}
           defaultOpen={index === indexFirstIncomplete}
         />
       ))}
@@ -71,7 +68,6 @@ export const TasksListMobile = ({
               <TasksListItem
                 key={index}
                 task={task}
-                goToNextPageIfAllComplete={goToNextPage}
                 defaultOpen={index === indexFirstIncomplete}
               />
             ))}
