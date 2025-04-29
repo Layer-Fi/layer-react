@@ -14,11 +14,9 @@ import { useUpdateTaskUploadDescription } from '../../hooks/bookkeeping/periods/
 
 export const TasksListItem = ({
   task,
-  goToNextPageIfAllComplete,
   defaultOpen,
 }: {
   task: UserVisibleTask
-  goToNextPageIfAllComplete: (task: UserVisibleTask) => void
   defaultOpen: boolean
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen)
@@ -64,7 +62,6 @@ export const TasksListItem = ({
     })
 
     setIsOpen(false)
-    goToNextPageIfAllComplete(task)
     setSelectedFiles(undefined)
   }
 
@@ -204,7 +201,6 @@ export const TasksListItem = ({
                       void handleSubmitUserResponseForTask({ taskId: task.id, userResponse })
                         .then(() => {
                           setIsOpen(false)
-                          goToNextPageIfAllComplete(task)
                         })
                     }}
                   >
