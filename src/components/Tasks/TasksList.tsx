@@ -72,7 +72,7 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
           <>
             {pageItems.map((task, index) => (
               <TasksListItem
-                key={index}
+                key={task.id}
                 task={task}
                 goToNextPageIfAllComplete={next}
                 defaultOpen={index === indexFirstIncomplete}
