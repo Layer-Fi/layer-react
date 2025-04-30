@@ -2,7 +2,7 @@ import { ChangeEvent, useCallback, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, DisplayState } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
-import { DownloadButton as DownloadButtonComponent } from '../Button'
+import { Button, DownloadButton as DownloadButtonComponent } from '../Button'
 import { Header } from '../Container'
 import { DatePicker } from '../DatePicker'
 import { SyncingComponent } from '../SyncingComponent'
@@ -16,10 +16,11 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import { useDebounce } from '../../hooks/useDebounce/useDebounce'
 import { TransactionsSearchField } from '../domain/transactions/searchField/TransactionsSearchField'
 import { TransactionsActions } from '../domain/transactions/actions/TransactionsActions'
-import { VStack } from '../ui/Stack/Stack'
+import { HStack, VStack } from '../ui/Stack/Stack'
 import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/useBankTransactionsDownload'
 import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
+import { useBankTransactionsPanelContext } from './BankTransactionsPanel'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -122,6 +123,7 @@ export const BankTransactionsHeader = ({
   isSyncing,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
+  const { openCategoryForm } = useBankTransactionsPanelContext()
 
   return (
     <Header
@@ -188,12 +190,14 @@ export const BankTransactionsHeader = ({
           </VStack>
         )}
         <TransactionsSearch slot='search' />
-        <VStack slot='download' justify='center'>
+        <HStack slot='download' justify='center'>
           <DownloadButton
             downloadButtonTextOverride={stringOverrides?.downloadButton}
             iconOnly={listView}
           />
-        </VStack>
+          {/* TODO: Temporary button to open the category form */}
+          <Button onClick={openCategoryForm}>Add Category</Button>
+        </HStack>
       </TransactionsActions>
     </Header>
   )
