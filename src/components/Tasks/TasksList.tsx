@@ -49,7 +49,7 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
 
   const { pageItems, pageIndex, set } = usePaginatedList(sortedTasks, pageSize)
 
-  const indexFirstIncomplete = sortedTasks?.findIndex(task => isIncompleteTask(task))
+  const indexFirstIncomplete = pageItems?.findIndex(task => isIncompleteTask(task))
 
   if (mobile) {
     return (
