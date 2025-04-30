@@ -28,7 +28,7 @@ export const Input = ({
         <input {...props} className={baseClassName} />
         {leftText && <span className='Layer__input-left-text'>{leftText}</span>}
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+      <TooltipContent>{errorMessage}</TooltipContent>
     </Tooltip>
   )
 }

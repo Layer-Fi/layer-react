@@ -1,4 +1,3 @@
-
 import classNames from 'classnames'
 import CurrencyInput, { CurrencyInputProps } from 'react-currency-input-field'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
@@ -44,7 +43,7 @@ export const AmountInput = ({
         />
         {leftText && <span className='Layer__input-left-text'>{leftText}</span>}
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+      <TooltipContent>{errorMessage}</TooltipContent>
     </Tooltip>
   )
 }

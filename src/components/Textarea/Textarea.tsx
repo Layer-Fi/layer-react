@@ -24,7 +24,7 @@ export const Textarea = ({
       <TooltipTrigger className='Layer__input-tooltip'>
         <textarea {...props} className={baseClassName} />
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+      <TooltipContent>{errorMessage}</TooltipContent>
     </Tooltip>
   )
 }

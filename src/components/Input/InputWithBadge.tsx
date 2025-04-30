@@ -36,7 +36,7 @@ export const InputWithBadge = ({
         </div>
         {leftText && <span className='Layer__input-left-text'>{leftText}</span>}
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+      <TooltipContent>{errorMessage}</TooltipContent>
     </Tooltip>
   )
 }

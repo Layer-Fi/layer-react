@@ -74,7 +74,7 @@ export const MultiSelect = <T,>({
           isMulti={true}
         />
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+      <TooltipContent>{errorMessage}</TooltipContent>
     </Tooltip>
   )
 }
