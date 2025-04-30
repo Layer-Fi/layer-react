@@ -121,11 +121,6 @@ export const TextWithTooltip = ({
 
   const [hoverStatus, setHover] = useState(false)
 
-  const contentClassName = classNames(
-    'Layer__tooltip',
-    tooltipOptions?.contentClassName,
-  )
-
   return (
     <Tooltip
       disabled={!hoverStatus}
@@ -137,7 +132,7 @@ export const TextWithTooltip = ({
           {children}
         </Component>
       </TooltipTrigger>
-      <TooltipContent className={contentClassName}>{children}</TooltipContent>
+      <TooltipContent className={tooltipOptions?.contentClassName}>{children}</TooltipContent>
     </Tooltip>
   )
 }

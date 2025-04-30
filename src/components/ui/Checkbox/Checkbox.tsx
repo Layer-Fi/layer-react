@@ -53,7 +53,7 @@ export function CheckboxWithTooltip({ tooltip, ...props }: CheckboxWithTooltipPr
         <TooltipTrigger className='Layer__input-tooltip'>
           <Checkbox {...props} />
         </TooltipTrigger>
-        <TooltipContent className='Layer__tooltip'>{tooltip}</TooltipContent>
+        <TooltipContent>{tooltip}</TooltipContent>
       </Tooltip>
     </div>
   )

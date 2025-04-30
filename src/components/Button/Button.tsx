@@ -119,9 +119,7 @@ export const Button = ({
         <Tooltip offset={12}>
           <TooltipTrigger>{content}</TooltipTrigger>
           {tooltip && (
-            <TooltipContent className='Layer__tooltip'>
-              {tooltip}
-            </TooltipContent>
+            <TooltipContent>{tooltip}</TooltipContent>
           )}
         </Tooltip>
       ) : (
