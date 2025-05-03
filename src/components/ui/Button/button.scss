@@ -14,7 +14,6 @@
 
   &[data-icon] {
     padding-inline: 0;
-    inline-size: 2rem;
   }
 
   &[data-variant="solid"] {
@@ -50,19 +49,48 @@
   }
 
   &[data-size="sm"] {
-    min-block-size: 1.5rem;
-    padding-inline: var(--spacing-xs);
+    --min-size: 1.5rem;
+
+    min-block-size: var(--min-size);
     font-size: var(--text-sm);
+
+    &[data-icon] {
+      min-inline-size: var(--min-size);
+    }
+
+    &:not([data-icon]) {
+      padding-inline: var(--spacing-xs);
+    }
   }
+
   &[data-size="md"] {
-    min-block-size: 2rem;
-    padding-inline: var(--spacing-md);
+    --min-size: 2rem;
+
+    min-block-size: var(--min-size);
     font-size: var(--text-md);
+
+    &[data-icon] {
+      min-inline-size: var(--min-size);
+    }
+
+    &:not([data-icon]) {
+      padding-inline: var(--spacing-md);
+    }
   }
+
   &[data-size="lg"] {
-    min-block-size: 2.25rem;
-    padding-inline: var(--spacing-lg);
+    --min-size: 2.25rem;
+
+    min-block-size: var(--min-size);
     font-size: var(--text-lg);
+
+    &[data-icon] {
+      min-inline-size: var(--min-size);
+    }
+
+    &:not([data-icon]) {
+      padding-inline: var(--spacing-lg);
+    }
   }
 
   &[data-disabled] {
@@ -89,7 +117,7 @@
   place-self: center;
   height: 16px;
 
-  &[data-size='lg'] {
+  &[data-size="lg"] {
     height: 20px;
   }
 }

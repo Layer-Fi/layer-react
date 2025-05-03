@@ -10,69 +10,62 @@ type ModalContextBarProps = {
   onClose?: () => void
 }
 
-function ModalContextBar({ onClose }: ModalContextBarProps) {
+export function ModalContextBar({ onClose }: ModalContextBarProps) {
   return (
     <div className={MODAL_CONTEXT_BAR_CLASS_NAME}>
       <Button
         icon
+        size='sm'
         variant='ghost'
         slot='close'
         onPress={onClose}
         aria-label='Close Modal'
       >
-        <X />
+        <X size={24} />
       </Button>
     </div>
   )
 }
 
-
-const ModalHeading = forwardRef<
+export const ModalHeading = forwardRef<
   HTMLHeadingElement,
   Omit<ComponentProps<typeof Heading>, 'level' | 'slot'>
->((props, ref) =>
-  <Heading
-    {...props}
-    slot='title'
-    level={2}
-    ref={ref}
-  />
-)
-ModalHeading.displayName = 'ModalHeading'
+>(function ModalHeading(props, ref) {
+  return (
+    <Heading
+      {...props}
+      slot='title'
+      level={2}
+      ref={ref}
+    />
+  )
+})
 
-const ModalDescription = forwardRef<
+export const ModalDescription = forwardRef<
   HTMLParagraphElement,
   Omit<ComponentProps<typeof P>, 'slot'>
->((props, ref) =>
-  <P
-    {...props}
-    slot='description'
-    ref={ref}
-  />
-)
-ModalDescription.displayName = 'ModalDescription'
-
+>(function ModalDescription(props, ref) {
+  return (
+    <P
+      {...props}
+      slot='description'
+      ref={ref}
+    />
+  )
+})
 
 const MODAL_CONTENT_CLASS_NAME = 'Layer__ModalContent'
 
-function ModalContent({ children }: PropsWithChildren) {
+export function ModalContent({ children }: PropsWithChildren) {
   return <div className={MODAL_CONTENT_CLASS_NAME}>{children}</div>
 }
 
 const MODAL_ACTIONS_CLASS_NAME = 'Layer__ModalActions'
 
-function ModalActions({ children }: PropsWithChildren) {
+export function ModalActions({ children }: PropsWithChildren) {
   return (
     <div className={MODAL_ACTIONS_CLASS_NAME}>
       {children}
     </div>
   )
-}
-
-export {
-  ModalContextBar,
-  ModalHeading,
-  ModalDescription,
-  ModalContent,
-  ModalActions,
 }
