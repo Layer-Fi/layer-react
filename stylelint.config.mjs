@@ -36,6 +36,7 @@ export default {
     'custom-property-pattern': '^[a-z0-9-]+$',
     'no-duplicate-selectors': true,
     'no-descending-specificity': null,
+    'declaration-block-no-redundant-longhand-properties': null,
 
     '@stylistic/declaration-colon-space-after': 'always-single-line',
     '@stylistic/indentation': 2,
