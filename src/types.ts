@@ -32,6 +32,7 @@ export {
   Account,
   NewAccount,
   EditAccount,
+  NewChildAccount,
 } from './types/chart_of_accounts'
 export {
   LedgerAccountLineItems as LedgerAccounts,

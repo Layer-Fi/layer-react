@@ -3,6 +3,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { getCategories } from '../../api/layer/categories'
 
+export const CATEGORIES_TAG_KEY = '#categories'
 function buildKey({
   access_token: accessToken,
   apiUrl,
@@ -18,7 +19,7 @@ function buildKey({
       apiUrl,
       businessId,
       mode: 'ALL',
-      tags: ['#categories'],
+      tags: [CATEGORIES_TAG_KEY],
     } as const
   }
 }

@@ -3,6 +3,7 @@ import {
   ChartOfAccounts,
   NewAccount,
   EditAccount,
+  NewChildAccount,
   LedgerAccountsEntry,
 } from '../../types'
 import { ChartWithBalances } from '../../types/chart_of_accounts'
@@ -28,6 +29,10 @@ export const createAccount = post<{ data: Account }, NewAccount>(
 export const updateAccount = put<{ data: Account }, EditAccount>(
   ({ businessId, accountId }) =>
     `/v1/businesses/${businessId}/ledger/accounts/${accountId}`,
+)
+
+export const createChildAccount = post<{ data: Account }, NewChildAccount>(
+  ({ businessId, accountId }) => `/v1/businesses/${businessId}/ledger/accounts/${accountId}/create-child-account`,
 )
 
 export const getLedgerAccountsLines = get<{ data: LedgerAccountLineItems }>(
