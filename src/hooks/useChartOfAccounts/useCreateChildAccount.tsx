@@ -6,31 +6,29 @@ import { useSWRConfig } from 'swr'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { useCallback } from 'react'
 import { NewChildAccount } from '../../types/chart_of_accounts'
-
-export const CREATE_CHILD_ACCOUNT_TAG_KEY = '#create-child-account'
+import { CATEGORIES_TAG_KEY } from '../categories/useAllCategories'
 
 function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
-  accountId,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
-  accountId: string
 }) {
-  if (accessToken && apiUrl && businessId && accountId) {
+  if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
-      tags: [`${CREATE_CHILD_ACCOUNT_TAG_KEY}:${accountId}`],
+      tags: ['#create-child-account'],
     } as const
   }
 }
 
-export function useCreateChildAccount({ accountId }: { accountId: string }) {
+type NewChildAccountWithParentAccountId = NewChildAccount & { accountId: string }
+export function useCreateChildAccount() {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
@@ -39,17 +37,16 @@ export function useCreateChildAccount({ accountId }: { accountId: string }) {
     () => buildKey({
       ...data,
       businessId,
-      accountId,
     }),
     (
       { accessToken, apiUrl, businessId },
-      { arg: body }: { arg: NewChildAccount },
+      { arg: { accountId, ...requestBody } }: { arg: NewChildAccountWithParentAccountId },
     ) => createChildAccount(apiUrl, accessToken, {
       params: {
         businessId,
         accountId,
       },
-      body,
+      body: requestBody,
     },
     ).then(({ data }) => data),
     {
@@ -67,7 +64,7 @@ export function useCreateChildAccount({ accountId }: { accountId: string }) {
       if (result) {
         await mutate(key => withSWRKeyTags(
           key,
-          tags => tags.includes(CREATE_CHILD_ACCOUNT_TAG_KEY),
+          tags => tags.includes(CATEGORIES_TAG_KEY),
         ))
       }
 
