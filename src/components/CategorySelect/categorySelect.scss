@@ -19,6 +19,10 @@
     }
   }
 
+  [data-focused="true"] [slot="trigger"] {
+    border-color: var(--color-base-600);
+  }
+
   [slot="trigger-input"] {
     box-sizing: border-box;
     overflow: hidden;
