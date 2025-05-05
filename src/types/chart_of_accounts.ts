@@ -81,3 +81,11 @@ export type EditAccount = {
   account_type: string
   account_subtype?: string
 }
+
+export type NewChildAccount = {
+  name: string
+  stable_name?: {
+    type: 'StableName'
+    stable_name: string
+  }
+}
