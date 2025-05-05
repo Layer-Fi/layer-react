@@ -18,7 +18,7 @@ export const SplitTooltipDetails = ({
         {category.entries.map((entry, idx) => (
           <li key={idx}>
             <span className={`${classNamePrefix}__split-tooltip__label`}>
-              {entry.category?.display_name}
+              {entry.category.display_name}
             </span>
             <span className={`${classNamePrefix}__split-tooltip__value`}>
               $
