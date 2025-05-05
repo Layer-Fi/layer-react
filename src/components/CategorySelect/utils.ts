@@ -1,6 +1,6 @@
 import { BankTransaction, CategorizationType, Category } from '../../types'
 import { CategoryWithEntries, SuggestedMatch } from '../../types/bank_transactions'
-import { CategoryOption, CategoryWithHide, OptionActionType } from './types'
+import { CategoryOption, OptionActionType } from './types'
 
 export function flattenCategories(
   categories: Category[],
@@ -21,6 +21,19 @@ export function flattenCategories(
   })
 }
 
+export const getKeysMap = (categories: CategoryOption[], accKeysMap?: Map<string, CategoryOption>) => {
+  const keysMap = accKeysMap ?? new Map<string, CategoryOption>()
+
+  categories.forEach((category) => {
+    keysMap.set(category.payload.id, category)
+    if (category.payload.subCategories) {
+      getKeysMap(category.payload.subCategories, keysMap)
+    }
+  })
+
+  return keysMap
+}
+
 export function mapCategoryToOption(category: CategoryWithEntries): CategoryOption {
   return {
     type: OptionActionType.CATEGORY,
@@ -32,7 +45,7 @@ export function mapCategoryToOption(category: CategoryWithEntries): CategoryOpti
       description: category.description ?? undefined,
       stable_name: ('stable_name' in category) ? category.stable_name ?? '' : '',
       entries: category.entries,
-      subCategories: category.subCategories,
+      subCategories: category.subCategories?.map(x => mapCategoryToOption(x)) ?? null,
     },
   }
 }
@@ -47,7 +60,7 @@ export function mapCategoryToExclusionOption(category: CategoryWithEntries & { t
       type: 'ExclusionNested',
       stable_name: '',
       entries: category.entries,
-      subCategories: category.subCategories,
+      subCategories: category.subCategories?.map(x => mapCategoryToOption(x)) ?? null,
     },
   }
 }
@@ -65,7 +78,7 @@ export function mapSuggestedMatchToOption(record: SuggestedMatch): CategoryOptio
   }
 }
 
-export function buildMatchOptions(bankTransaction: BankTransaction, excludeMatches?: boolean, searchPhrase?: string) {
+export function buildMatchOptions(bankTransaction: BankTransaction, excludeMatches?: boolean) {
   if (excludeMatches || !bankTransaction?.suggested_matches) {
     return
   }
@@ -82,47 +95,24 @@ export function buildMatchOptions(bankTransaction: BankTransaction, excludeMatch
         subCategories: null,
       },
     } satisfies CategoryOption
-  }).filter(x => x.payload.display_name.toLowerCase().includes(searchPhrase?.toLowerCase() ?? ''))
+  })
 }
 
-export function buildSuggestedOptions(bankTransaction: BankTransaction, searchPhrase?: string) {
+export function buildSuggestedOptions(bankTransaction: BankTransaction) {
   if (bankTransaction?.categorization_flow?.type === CategorizationType.ASK_FROM_SUGGESTIONS) {
-    return bankTransaction.categorization_flow.suggestions.map(x => mapCategoryToOption(x)).filter(x => x.payload.display_name.toLowerCase().includes(searchPhrase?.toLowerCase() ?? ''))
+    return bankTransaction.categorization_flow.suggestions.map(x => mapCategoryToOption(x))
   }
 
   return
 }
 
-export function filterCategories(cats: Category[], searchPhrase: string): CategoryWithHide[] {
-  return cats
-    .map((cat) => {
-      // Check if current category matches
-      const matchesSearch = cat.display_name.toLowerCase().includes(searchPhrase)
-
-      // Filter subcategories if they exist
-      const filteredSubcategories = cat.subCategories
-        ? filterCategories(cat.subCategories, searchPhrase)
-        : undefined
-
-      // Determine if all subcategories are hidden
-      const allSubcategoriesHidden = filteredSubcategories
-        ? filteredSubcategories.every(subCat => subCat.hide)
-        : false
-
-      // If current category matches or has matching subcategories, include it
-      if (matchesSearch || (filteredSubcategories && filteredSubcategories.length > 0 && !allSubcategoriesHidden)) {
-        return {
-          ...cat,
-          subCategories: filteredSubcategories,
-        }
-      }
-
-      return {
-        ...cat,
-        subCategories: filteredSubcategories,
-        hide: true,
-      }
-    })
+export function buildAllCategories(categories: Category[]) {
+  return categories.map((category) => {
+    return {
+      label: category.display_name,
+      options: [mapCategoryToOption(category)],
+    }
+  })
 }
 
 export function findParentCategory(categories: Category[], targetCategory: string): Category | null {
@@ -157,4 +147,13 @@ export function findParentCategory(categories: Category[], targetCategory: strin
   }
 
   return null
+}
+
+export function isSelected(option: CategoryOption, selected?: CategoryOption) {
+  if (!selected) {
+    return false
+  }
+
+  return ('id' in option.payload && option.payload.id && option.payload.id === selected?.payload.id)
+    || ('stable_name' in option.payload && option.payload.stable_name && option.payload.stable_name === selected?.payload.stable_name)
 }

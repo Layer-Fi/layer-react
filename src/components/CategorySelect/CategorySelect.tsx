@@ -1,28 +1,17 @@
-import { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import classNames from 'classnames'
 import { useCategories } from '../../hooks/categories/useCategories'
-import { Button, Popover, DialogTrigger, ListBox, ListBoxSection } from 'react-aria-components'
-import { Input } from '../Input/Input'
-import { CategoryOption, CategorySelectProps, CategoryWithHide } from './types'
-import { buildMatchOptions, buildSuggestedOptions, filterCategories } from './utils'
-import { Text } from '../Typography'
+import { Popover, ComboBox, ListBox, Header, Key } from 'react-aria-components'
+import { CategorySelectProps } from './types'
+import { buildAllCategories, buildMatchOptions, buildSuggestedOptions, getKeysMap } from './utils'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
+import { Text, TextSize } from '../Typography/Text'
 import pluralize from 'pluralize'
-import ChevronDown from '../../icons/ChevronDown'
-import { Badge, BadgeSize } from '../Badge/Badge'
-import MinimizeTwo from '../../icons/MinimizeTwo'
-import { CategoriesList } from './components/CategoriesList'
-import { MatchesList } from './components/MatchesList'
-import { MenuSection } from './components/MenuSection'
 import { SuggestionsList } from './components/SuggestionsList'
-
-/* @TODO - uncomment when adding category is available
-const MenuItem = ({ text, icon }: { text: string, icon?: ReactNode }) => (
-  <div className='Layer__category-select__menu-item'>
-    <Text>{text}</Text>
-    {icon}
-  </div>
-) */
+import { MatchesList } from './components/MatchesList'
+import { ListSection } from './components/ListSection'
+import { CategoriesList } from './components/CategoriesList'
+import { ComboBoxInput } from './components/ComboBoxInput'
 
 export const CategorySelect = ({
   bankTransaction,
@@ -35,26 +24,32 @@ export const CategorySelect = ({
   excludeMatches = false,
   asDrawer = false,
 }: CategorySelectProps) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [search, setSearch] = useState('')
-
   const { data: categories } = useCategories()
 
-  const matches = buildMatchOptions(bankTransaction, excludeMatches, search)
-  const suggestions = buildSuggestedOptions(bankTransaction, search)
-  const allCategories = useMemo<CategoryWithHide[]>(() => {
-    if (!search) return categories as CategoryWithHide[]
+  const matches = buildMatchOptions(bankTransaction, excludeMatches)
+  const suggestions = buildSuggestedOptions(bankTransaction)
+  const allCategories = buildAllCategories(categories)
 
-    return filterCategories(categories, search.toLowerCase())
-  }, [search, categories])
+  const allKeys = useMemo(() => {
+    const categoriesKeysMap = getKeysMap(allCategories.flatMap(group => group.options))
+    const matchKeysMap = getKeysMap(matches ?? [])
+
+    return new Map([...categoriesKeysMap, ...matchKeysMap])
+  }, [allCategories, matches])
 
   const placeholder = matches && matches.length > 1
     ? pluralize('possible match', matches.length, true)
     : 'Categorize or match...'
 
-  const onSelect = (newValue: CategoryOption) => {
-    setIsOpen(false)
-    onChange(newValue)
+  const onSelectionChange = (key: Key | null) => {
+    if (!key) {
+      return
+    }
+
+    const selectedOption = allKeys.get((key as string).replace('suggestion-', '').replace('match-', ''))
+    if (selectedOption) {
+      onChange(selectedOption)
+    }
   }
 
   if (asDrawer) {
@@ -69,75 +64,41 @@ export const CategorySelect = ({
 
   return (
     <div className={classNames('Layer__category-select', className)}>
-      <DialogTrigger isOpen={isOpen} onOpenChange={v => setIsOpen(v)}>
-        <Button aria-label='Menu' className='Layer__category-select__trigger-btn' isDisabled={disabled}>
-          {value?.type === 'match' && (
-            <Badge slot='match-badge' size={BadgeSize.SMALL} icon={<MinimizeTwo size={11} />}>
-              Match
-            </Badge>
-          )}
-          <Text slot='value' ellipsis>
-            {value?.payload.display_name ?? placeholder}
-          </Text>
-          <ChevronDown slot='icon'size={16} />
-        </Button>
-        <input type='hidden' name={name} value={value?.payload.display_name} aria-hidden='true' />
+      <ComboBox
+        defaultInputValue={value?.payload.display_name}
+        isDisabled={disabled}
+        onSelectionChange={onSelectionChange}
+        aria-label='Categorize'
+      >
+        <ComboBoxInput name={name} placeholder={placeholder} value={value} />
         <Popover className='Layer__category-select__popover'>
-          <Input
-            placeholder='Search category'
-            className='Layer__category-select__search-input'
-            value={search}
-            onChange={e => setSearch((e.target as HTMLInputElement).value)}
-            aria-label='Search category'
-          />
+          <ListBox>
+            <MatchesList matches={matches} selected={value} />
 
-          <MatchesList
-            matches={matches}
-            onSelect={onSelect}
-            value={value}
-          />
+            <SuggestionsList suggestions={suggestions} categories={categories} selected={value} />
 
-          <SuggestionsList
-            suggestions={suggestions}
-            categories={categories}
-            onSelect={onSelect}
-            value={value}
-          />
-
-          <MenuSection>
-            <ListBox
-              items={allCategories as unknown as CategoryWithHide[]}
-              className='Layer__category-select__all-categories'
-              aria-label='All categories'
-            >
-              {section => (
-                <ListBoxSection
-                  className='Layer__category-select__list-box-section'
-                  id={`${section.type}-${section.category}`}
-                  style={{
-                    display: section.hide ? 'none' : 'flex',
-                  }}
-                >
-                  <CategoriesList
-                    option={section}
-                    level={0}
-                    accountName={section.display_name}
-                    onSelect={onSelect}
-                    selected={value}
-                    showTooltips={showTooltips}
-                  />
-                </ListBoxSection>
-              )}
-            </ListBox>
-          </MenuSection>
-
-          {/*
-            @TODO - When adding new categories is ready
-          <MenuItem text='Add new category' icon={<Plus size={11} />} />
-          */}
-
+            <ListSection>
+              {allCategories.map((categoriesGroup, i) => (
+                <React.Fragment key={`${categoriesGroup.label}-${i}-categories`}>
+                  <Header slot='header'>
+                    <Text size={TextSize.xs} status='disabled'>{categoriesGroup.label}</Text>
+                  </Header>
+                  {categoriesGroup.options.map(categoryOption => (
+                    <CategoriesList
+                      key={`${categoryOption.payload?.id ?? categoryOption.payload?.stable_name}`}
+                      option={categoryOption}
+                      selected={value}
+                      level={0}
+                      accountName={categoryOption.payload.display_name}
+                      showTooltips={showTooltips}
+                    />
+                  ))}
+                </React.Fragment>
+              ))}
+            </ListSection>
+          </ListBox>
         </Popover>
-      </DialogTrigger>
+      </ComboBox>
     </div>
   )
 }
