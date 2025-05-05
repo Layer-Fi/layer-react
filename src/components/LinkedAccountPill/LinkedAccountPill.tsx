@@ -21,7 +21,6 @@ export function LinkedAccountPill({ label, items }: LinkedAccountPillProps) {
       <Pill
         status='error'
         onPress={() => setIsOpen(true)}
-        onHoverStart={() => setIsOpen(true)}
       >
         <AlertCircle size={14} />
         {label}

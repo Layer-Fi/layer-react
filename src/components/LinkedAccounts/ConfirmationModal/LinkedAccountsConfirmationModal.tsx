@@ -56,8 +56,9 @@ function useLinkedAccountsConfirmationModal() {
     actions: { dismiss: dismissAccountConfirmation, reset: resetAccountConfirmation },
   } = useAccountConfirmationStore()
 
-  const preloadIsOpen = visibility === 'PRELOADED'
-  const mainIsOpen = accountsNeedingConfirmation.length > 0
+  const isDismissed = visibility === 'DISMISSED'
+  const preloadIsOpen = !isDismissed && visibility === 'PRELOADED'
+  const mainIsOpen = !isDismissed && accountsNeedingConfirmation.length > 0
 
   const baseInfo = {
     accounts: accountsNeedingConfirmation,
