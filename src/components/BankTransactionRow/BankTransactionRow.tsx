@@ -54,7 +54,7 @@ export const extractDescriptionForSplit = (category: CategoryWithEntries | null)
     return ''
   }
 
-  return category.entries.map(c => c.category.display_name).join(', ')
+  return category?.entries.map(c => c.category.display_name).join(', ')
 }
 
 export const getDefaultSelectedCategory = (

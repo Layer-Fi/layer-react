@@ -1,63 +1,65 @@
-import { ListBox, ListBoxSection, Header, ListBoxItem } from 'react-aria-components'
+import { Header, ListBoxItem } from 'react-aria-components'
 import { Text, TextSize } from '../../Typography'
-import { MenuSection } from './MenuSection'
 import { CategoryOption } from '../types'
 import { VStack } from '../../ui/Stack/Stack'
-import { findParentCategory } from '../utils'
+import { findParentCategory, isSelected } from '../utils'
 import { Category } from '../../../types'
 import CheckIcon from '../../../icons/Check'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../Tooltip/Tooltip'
 import InfoIcon from '../../../icons/InfoIcon'
+import { ListSection } from './ListSection'
 
 type SuggestionsListProps = {
   suggestions?: CategoryOption[]
   categories?: Category[]
-  onSelect: (option: CategoryOption) => void
-  value: CategoryOption | undefined
+  selected?: CategoryOption
 }
 
-export const SuggestionsList = ({ suggestions, categories, onSelect, value }: SuggestionsListProps) => {
+export const SuggestionsList = ({ suggestions, categories, selected }: SuggestionsListProps) => {
   if (!categories || !suggestions || suggestions.length === 0) {
     return
   }
 
   return (
-    <MenuSection>
-      <ListBox slot='listbox' aria-label='Suggestions'>
-        <ListBoxSection>
-          <Header slot='header'>
-            <Text size={TextSize.xs} status='disabled'>Suggestions</Text>
-          </Header>
-          {suggestions.map((option, index) => (
-            <ListBoxItem className='Layer__category-select__ms-list-item' key={index} textValue={option.payload.display_name} onAction={() => onSelect(option)}>
-              <VStack slot='label'>
-                <Text slot='name'>{option.payload.display_name}</Text>
-                <Text slot='account' size={TextSize.sm}>
-                  {findParentCategory(categories, option.payload.id)?.display_name}
-                </Text>
-              </VStack>
+    <ListSection aria-label='Suggestions'>
+      <Header slot='header'>
+        <Text size={TextSize.xs} status='disabled'>Suggestions</Text>
+      </Header>
+      {suggestions.map((option, index) => (
+        <ListBoxItem
+          key={index}
+          id={`suggestion-${option.payload.id}`}
+          className='Layer__category-select__ms-list-item'
+          textValue={option.payload.display_name}
+        >
 
-              {option.payload.description && (
-                <Tooltip slot='tooltip'>
-                  <TooltipTrigger>
-                    <InfoIcon />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {option.payload.description}
-                  </TooltipContent>
-                </Tooltip>
-              )}
+          <VStack slot='label'>
+            <Text slot='name'>
+              {option.payload.display_name}
+            </Text>
+            <Text slot='account' size={TextSize.sm} status='disabled'>
+              {findParentCategory(categories, option.payload.id)?.display_name}
+            </Text>
+          </VStack>
 
-              {value?.payload?.id === option.payload.id && (
-                <span slot='icon'>
-                  <CheckIcon size={12} />
-                </span>
-              )}
-            </ListBoxItem>
-          ),
+          {option.payload.description && (
+            <Tooltip slot='tooltip'>
+              <TooltipTrigger>
+                <InfoIcon />
+              </TooltipTrigger>
+              <TooltipContent>
+                {option.payload.description}
+              </TooltipContent>
+            </Tooltip>
           )}
-        </ListBoxSection>
-      </ListBox>
-    </MenuSection>
+
+          {isSelected(option, selected) && (
+            <span slot='icon'>
+              <CheckIcon size={16} />
+            </span>
+          )}
+        </ListBoxItem>
+      ))}
+    </ListSection>
   )
 }

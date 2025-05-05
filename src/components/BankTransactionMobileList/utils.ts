@@ -9,13 +9,17 @@ import {
   OptionActionType,
 } from '../CategorySelect/types'
 
+export type OptionPayload = Omit<CategoryOptionPayload, 'subCategories'> & {
+  subCategories?: Option[] | null
+}
+
 export interface Option {
   label: string
   id: string
   description?: string
   value: {
     type: 'CATEGORY' | 'SELECT_CATEGORY' | 'GROUP'
-    payload?: CategoryOptionPayload
+    payload?: OptionPayload
     items?: Option[]
   }
   asLink?: boolean
@@ -36,7 +40,7 @@ export const mapCategoryToOption = (category: CategoryWithEntries): Option => ({
       description: category.description ?? undefined,
       stable_name: ('stable_name' in category) ? category.stable_name ?? '' : '',
       entries: category.entries,
-      subCategories: category.subCategories,
+      subCategories: category.subCategories?.map(x => mapCategoryToOption(x)),
     },
   },
 })

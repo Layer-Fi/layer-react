@@ -1,4 +1,3 @@
-import { Category } from '../../types/categories'
 import { BankTransaction, type CategoryWithEntries } from '../../types/bank_transactions'
 
 export enum OptionActionType {
@@ -17,18 +16,13 @@ export type CategoryOptionPayload = {
   type?: string
   stable_name?: string
   entries?: CategoryWithEntries['entries']
-  subCategories: Category[] | null
+  subCategories: CategoryOption[] | null
 }
 
 export type CategoryOption = {
   type: string
   disabled?: boolean
   payload: CategoryOptionPayload
-}
-
-export type CategoryWithHide = Omit<Category, 'subCategories'> & {
-  subCategories?: CategoryWithHide[]
-  hide?: boolean
 }
 
 export type CategorySelectProps = {
