@@ -50,11 +50,11 @@ type Props = {
 export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
 
 export const extractDescriptionForSplit = (category: CategoryWithEntries) => {
-  if (!category.entries) {
+  if (!category?.entries) {
     return ''
   }
 
-  return category.entries.map(c => c.category.display_name).join(', ')
+  return category?.entries.map(c => c.category.display_name).join(', ')
 }
 
 export const getDefaultSelectedCategory = (

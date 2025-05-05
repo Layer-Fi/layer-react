@@ -5,6 +5,7 @@ import {
 import type { CategoryWithEntries } from '../../types/bank_transactions'
 import { hasSuggestions } from '../../types/categories'
 import {
+  CategoryOption,
   CategoryOptionPayload,
   OptionActionType,
 } from '../CategorySelect/types'
@@ -36,7 +37,7 @@ export const mapCategoryToOption = (category: CategoryWithEntries): Option => ({
       description: category.description ?? undefined,
       stable_name: ('stable_name' in category) ? category.stable_name ?? '' : '',
       entries: category.entries,
-      subCategories: category.subCategories,
+      subCategories: category.subCategories as CategoryOption[] | null,
     },
   },
 })

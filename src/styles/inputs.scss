@@ -505,6 +505,9 @@
   min-height: 36px;
   align-items: center;
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &:hover {
     color: var(--text-color-primary);

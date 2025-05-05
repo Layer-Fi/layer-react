@@ -39,7 +39,7 @@ export const Tooltip = ({
 export const TooltipTrigger = forwardRef<
   HTMLElement,
   HTMLProps<HTMLElement> & { asChild?: boolean }
->(function TooltipTrigger({ children, asChild = false, ...props }, propRef) {
+>(function TooltipTrigger({ children, asChild = false, slot, ...props }, propRef) {
   const context = useTooltipContext()
   const childrenRef = (isValidElement(children) && 'ref' in children)
     ? children.ref as Ref<unknown>
@@ -65,6 +65,7 @@ export const TooltipTrigger = forwardRef<
       className={`Layer__tooltip-trigger Layer__tooltip-trigger--${
         context.open ? 'open' : 'closed'
       }`}
+      slot={slot}
       {...context.getReferenceProps(props)}
     >
       {children}
