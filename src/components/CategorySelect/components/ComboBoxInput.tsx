@@ -1,4 +1,5 @@
-import { Button } from 'react-aria-components'
+import { useContext } from 'react'
+import { Button, ComboBoxStateContext } from 'react-aria-components'
 import { Input } from '../../Input/Input'
 import { CategoryOption } from '../types'
 import ChevronDownIcon from '../../../icons/ChevronDown'
@@ -13,6 +14,8 @@ type ComboBoxInputProps = {
 }
 
 export const ComboBoxInput = ({ name, placeholder, value }: ComboBoxInputProps) => {
+  const comboboxState = useContext(ComboBoxStateContext)
+
   const dataProps = toDataProperties({ match: value?.type === 'match' })
 
   return (
@@ -22,7 +25,18 @@ export const ComboBoxInput = ({ name, placeholder, value }: ComboBoxInputProps) 
           Match
         </Badge>
       )}
-      <Input slot='trigger-input' name={name} placeholder={placeholder} aria-label='Categorize' />
+      <Input
+        slot='trigger-input'
+        name={name}
+        placeholder={placeholder}
+        aria-label='Categorize'
+        onFocus={() => comboboxState?.setInputValue('')}
+        onBlur={() => {
+          if (value?.payload.display_name) {
+            comboboxState?.setInputValue(value?.payload.display_name)
+          }
+        }}
+      />
       <Button slot='trigger-button'>
         <ChevronDownIcon />
       </Button>
