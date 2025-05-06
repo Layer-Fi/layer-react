@@ -12,7 +12,6 @@ export const LayerContext = createContext<
 >({
       businessId: '',
       business: undefined,
-      categories: [],
       theme: undefined,
       colors: {},
       setTheme: () => undefined,

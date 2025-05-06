@@ -6,7 +6,7 @@ import { useSWRConfig } from 'swr'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { useCallback } from 'react'
 import { NewChildAccount } from '../../types/chart_of_accounts'
-import { CATEGORIES_TAG_KEY } from '../categories/useAllCategories'
+import { CATEGORIES_TAG_KEY } from '../categories/useCategories'
 
 function buildKey({
   access_token: accessToken,
