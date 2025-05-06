@@ -2,6 +2,8 @@ import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchPa
 import { Category } from '../../types'
 import { get } from './authenticated_http'
 
+export type CategoriesListMode = 'ALL' | 'EXPENSES' | 'DEFAULT'
+
 export const getCategories = get<
   {
     data: {
@@ -11,7 +13,7 @@ export const getCategories = get<
   },
   {
     businessId: string
-    mode?: 'ALL'
+    mode?: CategoriesListMode
   }
 >(({ businessId, mode }) => {
   const parameters = toDefinedSearchParameters({ mode })
