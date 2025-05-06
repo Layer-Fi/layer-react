@@ -14,7 +14,7 @@ import { IconButton, TextButton } from '../Button'
 import { InputWithBadge, InputGroup, Select } from '../Input'
 import { JournalConfig } from '../Journal/Journal'
 import { Text, TextSize } from '../Typography'
-import { useAllCategories } from '../../hooks/categories/useAllCategories'
+import { useCategories } from '../../hooks/categories/useCategories'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 
 type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
@@ -50,11 +50,11 @@ export const JournalFormEntryLines = ({
   sendingForm: boolean
   config: JournalConfig
 }) => {
-  const { data } = useAllCategories()
+  const { data: categories } = useCategories({ mode: 'ALL' })
   const { form } = useContext(JournalContext)
 
   const { flattenedCategories, parentOptions } = useMemo(() => {
-    const flattenedCategories = recursiveFlattenCategories(data ?? [])
+    const flattenedCategories = recursiveFlattenCategories(categories ?? [])
 
     const parentOptions = [...flattenedCategories]
       .sort((a, b) => (a.display_name.localeCompare(b.display_name)))
@@ -84,7 +84,7 @@ export const JournalFormEntryLines = ({
       })
 
     return { flattenedCategories, parentOptions }
-  }, [data])
+  }, [categories])
 
   const handleChangeParent = ({
     lineItemIndex,

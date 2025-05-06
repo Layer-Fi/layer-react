@@ -4,27 +4,34 @@ import { useAuth } from '../useAuth'
 import { getCategories } from '../../api/layer/categories'
 
 export const CATEGORIES_TAG_KEY = '#categories'
+
 function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
+  mode,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
+  mode?: 'ALL'
 }) {
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
-      mode: 'ALL',
+      mode,
       tags: [CATEGORIES_TAG_KEY],
     } as const
   }
 }
 
-export function useAllCategories() {
+type UseCategoriesOptions = {
+  mode?: 'ALL'
+}
+
+export function useCategories({ mode }: UseCategoriesOptions = {}) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -32,6 +39,7 @@ export function useAllCategories() {
     () => buildKey({
       ...auth,
       businessId,
+      mode,
     }),
     ({ accessToken, apiUrl, businessId, mode }) => getCategories(
       apiUrl,

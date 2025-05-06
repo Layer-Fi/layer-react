@@ -32,7 +32,6 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
 ) => {
   switch (action.type) {
     case Action.setBusiness:
-    case Action.setCategories:
     case Action.setTheme:
     case Action.setOnboardingStep:
     case Action.setColors:
@@ -82,7 +81,6 @@ export const BusinessProvider = ({
   const [state, dispatch] = useReducer(reducer, {
     businessId,
     business: undefined,
-    categories: [],
     theme,
     colors,
     onboardingStep: undefined,
@@ -101,33 +99,6 @@ export const BusinessProvider = ({
 
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
-
-  const { data: categoriesData } = useSWR(
-    businessId && auth?.access_token && `categories-${businessId}`,
-    Layer.getCategories(apiUrl, auth?.access_token, {
-      params: { businessId },
-    }),
-    {
-      ...DEFAULT_SWR_CONFIG,
-      provider: () => new Map(),
-      onSuccess: (response) => {
-        if (response?.data?.categories?.length) {
-          dispatch({
-            type: Action.setCategories,
-            payload: { categories: response.data.categories || [] },
-          })
-        }
-      },
-    },
-  )
-  useEffect(() => {
-    if (categoriesData?.data?.categories?.length) {
-      dispatch({
-        type: Action.setCategories,
-        payload: { categories: categoriesData.data.categories || [] },
-      })
-    }
-  }, [categoriesData])
 
   const { data: businessData } = useSWR(
     businessId && auth?.access_token && `business-${businessId}`,
