@@ -1,7 +1,10 @@
 import useSWR from 'swr'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
-import { getCategories } from '../../api/layer/categories'
+import {
+  getCategories,
+  type CategoriesListMode,
+} from '../../api/layer/categories'
 
 export const CATEGORIES_TAG_KEY = '#categories'
 
@@ -14,7 +17,7 @@ function buildKey({
   access_token?: string
   apiUrl?: string
   businessId: string
-  mode?: 'ALL'
+  mode?: CategoriesListMode
 }) {
   if (accessToken && apiUrl) {
     return {
@@ -28,7 +31,7 @@ function buildKey({
 }
 
 type UseCategoriesOptions = {
-  mode?: 'ALL'
+  mode?: CategoriesListMode
 }
 
 export function useCategories({ mode }: UseCategoriesOptions = {}) {
