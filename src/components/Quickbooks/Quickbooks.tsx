@@ -21,7 +21,7 @@ const Quickbooks = () => {
             : 'not connected'}
       </div>
       <br />
-      {quickbooksIsConnected === null && 'Loading...'}
+      {quickbooksIsConnected === undefined && 'Loading...'}
       {quickbooksIsConnected === false && (
         <button
           onClick={async () => {
