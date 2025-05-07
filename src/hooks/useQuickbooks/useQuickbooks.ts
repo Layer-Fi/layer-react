@@ -3,13 +3,15 @@ import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import type { StatusOfQuickbooksConnection } from '../../types/quickbooks'
 
 type UseQuickbooks = () => {
   linkQuickbooks: () => Promise<string>
   unlinkQuickbooks: () => void
   syncFromQuickbooks: () => void
   isSyncingFromQuickbooks: boolean
-  quickbooksIsLinked: boolean | null
+  quickbooksIsConnected: StatusOfQuickbooksConnection['is_connected'] | undefined
+  quickbooksLastSyncedAt: StatusOfQuickbooksConnection['last_synced_at'] | undefined
 }
 
 export const useQuickbooks: UseQuickbooks = () => {
@@ -17,11 +19,8 @@ export const useQuickbooks: UseQuickbooks = () => {
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const [isSyncingFromQuickbooks, setIsSyncingFromQuickbooks] =
-    useState<boolean>(false)
-  const [quickbooksIsLinked, setQuickbooksIsLinked] = useState<boolean | null>(
-    null,
-  )
+  const [isSyncingFromQuickbooks, setIsSyncingFromQuickbooks] = useState<boolean>(false)
+  const [quickbooksConnectionStatus, setQuickbooksConnectionStatus] = useState<StatusOfQuickbooksConnection | undefined>(undefined)
   const syncStatusIntervalRef = useRef<number | null>(null)
 
   // Poll the server to determine when the Quickbooks sync is complete
@@ -47,12 +46,12 @@ export const useQuickbooks: UseQuickbooks = () => {
   }, [auth?.access_token])
 
   const fetchQuickbooksConnectionStatus = async () => {
-    const isConnected = (
+    const newQuickbooksConnectionStatus = (
       await Layer.statusOfQuickbooksConnection(apiUrl, auth?.access_token, {
         params: { businessId },
       })()
-    ).data.is_connected
-    setQuickbooksIsLinked(isConnected)
+    ).data
+    setQuickbooksConnectionStatus(newQuickbooksConnectionStatus)
   }
 
   const syncFromQuickbooks = () => {
@@ -91,7 +90,8 @@ export const useQuickbooks: UseQuickbooks = () => {
   return {
     isSyncingFromQuickbooks,
     syncFromQuickbooks,
-    quickbooksIsLinked,
+    quickbooksIsConnected: quickbooksConnectionStatus?.is_connected,
+    quickbooksLastSyncedAt: quickbooksConnectionStatus?.last_synced_at,
     linkQuickbooks,
     unlinkQuickbooks,
   }
