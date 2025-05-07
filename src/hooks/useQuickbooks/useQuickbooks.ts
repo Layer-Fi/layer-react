@@ -39,13 +39,15 @@ export const useQuickbooks: UseQuickbooks = () => {
         params: { businessId },
       })()
     ).data.is_syncing
+    const wasSyncing = wasSyncingFromQuickbooksRef.current
+    
+    wasSyncingFromQuickbooksRef.current = isSyncing
     setIsSyncingFromQuickbooks(isSyncing)
 
     // If we completed the sync, fetch a fresh Quickbooks connection status
-    if (!isSyncing && wasSyncingFromQuickbooksRef.current) {
+    if (!isSyncing && wasSyncing) {
       await fetchQuickbooksConnectionStatus()
     }
-    wasSyncingFromQuickbooksRef.current = isSyncing
   }, [apiUrl, auth?.access_token, businessId, setIsSyncingFromQuickbooks, fetchQuickbooksConnectionStatus])
 
   // Poll the server to determine when the Quickbooks sync is complete
