@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
@@ -22,6 +22,31 @@ export const useQuickbooks: UseQuickbooks = () => {
   const [isSyncingFromQuickbooks, setIsSyncingFromQuickbooks] = useState<boolean>(false)
   const [quickbooksConnectionStatus, setQuickbooksConnectionStatus] = useState<StatusOfQuickbooksConnection | undefined>(undefined)
   const syncStatusIntervalRef = useRef<number | null>(null)
+  const wasSyncingFromQuickbooksRef = useRef<boolean>(false)
+
+  const fetchQuickbooksConnectionStatus = useCallback(async () => {
+    const newQuickbooksConnectionStatus = (
+      await Layer.statusOfQuickbooksConnection(apiUrl, auth?.access_token, {
+        params: { businessId },
+      })()
+    ).data
+    setQuickbooksConnectionStatus(newQuickbooksConnectionStatus)
+  }, [apiUrl, auth?.access_token, businessId, setQuickbooksConnectionStatus])
+
+  const fetchIsSyncingFromQuickbooks = useCallback(async () => {
+    const isSyncing = (
+      await Layer.statusOfSyncFromQuickbooks(apiUrl, auth?.access_token, {
+        params: { businessId },
+      })()
+    ).data.is_syncing
+    setIsSyncingFromQuickbooks(isSyncing)
+
+    // If we completed the sync, fetch a fresh Quickbooks connection status
+    if (!isSyncing && wasSyncingFromQuickbooksRef.current) {
+      await fetchQuickbooksConnectionStatus()
+    }
+    wasSyncingFromQuickbooksRef.current = isSyncing
+  }, [apiUrl, auth?.access_token, businessId, setIsSyncingFromQuickbooks, fetchQuickbooksConnectionStatus])
 
   // Poll the server to determine when the Quickbooks sync is complete
   useEffect(() => {
@@ -34,25 +59,14 @@ export const useQuickbooks: UseQuickbooks = () => {
       clearInterval(syncStatusIntervalRef.current)
       syncStatusIntervalRef.current = null
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSyncingFromQuickbooks])
+  }, [fetchIsSyncingFromQuickbooks, isSyncingFromQuickbooks])
 
   // Determine whether there exists an active Quickbooks connection or not
   useEffect(() => {
     if (auth?.access_token) {
       void fetchQuickbooksConnectionStatus()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth?.access_token])
-
-  const fetchQuickbooksConnectionStatus = async () => {
-    const newQuickbooksConnectionStatus = (
-      await Layer.statusOfQuickbooksConnection(apiUrl, auth?.access_token, {
-        params: { businessId },
-      })()
-    ).data
-    setQuickbooksConnectionStatus(newQuickbooksConnectionStatus)
-  }
+  }, [auth?.access_token, fetchQuickbooksConnectionStatus])
 
   const syncFromQuickbooks = () => {
     setIsSyncingFromQuickbooks(true)
@@ -63,29 +77,20 @@ export const useQuickbooks: UseQuickbooks = () => {
       .finally(() => setIsSyncingFromQuickbooks(false))
   }
 
-  const fetchIsSyncingFromQuickbooks = async () => {
-    const isSyncing = (
-      await Layer.statusOfSyncFromQuickbooks(apiUrl, auth?.access_token, {
-        params: { businessId },
-      })()
-    ).data.is_syncing
-    setIsSyncingFromQuickbooks(isSyncing)
-  }
-
-  const linkQuickbooks = async () => {
+  const linkQuickbooks = useCallback(async () => {
     const res = await Layer.initQuickbooksOAuth(apiUrl, auth?.access_token, {
       params: { businessId },
     })
 
     return res.data.redirect_url
-  }
+  }, [apiUrl, auth?.access_token, businessId])
 
-  const unlinkQuickbooks = () => {
+  const unlinkQuickbooks = useCallback(() => {
     void Layer.unlinkQuickbooksConnection(apiUrl, auth?.access_token, {
       params: { businessId },
     })
       .then(() => fetchQuickbooksConnectionStatus())
-  }
+  }, [apiUrl, auth?.access_token, businessId, fetchQuickbooksConnectionStatus])
 
   return {
     isSyncingFromQuickbooks,
