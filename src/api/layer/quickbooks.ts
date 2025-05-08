@@ -1,4 +1,4 @@
-import { StatusOfSyncFromQuickbooks } from '../../types/quickbooks'
+import type { StatusOfQuickbooksConnection, StatusOfSyncFromQuickbooks } from '../../types/quickbooks'
 import { get, post } from './authenticated_http'
 
 export const syncFromQuickbooks = post<
@@ -37,9 +37,7 @@ export const unlinkQuickbooksConnection = post<
  */
 export const statusOfQuickbooksConnection = get<
   {
-    data: {
-      is_connected: boolean
-    }
+    data: StatusOfQuickbooksConnection
   },
   { businessId: string }
 >(

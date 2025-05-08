@@ -4,7 +4,7 @@ const Quickbooks = () => {
   const {
     syncFromQuickbooks,
     isSyncingFromQuickbooks,
-    quickbooksIsLinked,
+    quickbooksIsConnected,
     linkQuickbooks,
     unlinkQuickbooks,
   } = useQuickbooks()
@@ -14,15 +14,15 @@ const Quickbooks = () => {
       <div>
         Quickbooks OAuth connection status:
         {' '}
-        {quickbooksIsLinked === undefined
+        {quickbooksIsConnected === undefined
           ? ''
-          : quickbooksIsLinked
+          : quickbooksIsConnected
             ? 'established'
             : 'not connected'}
       </div>
       <br />
-      {quickbooksIsLinked === null && 'Loading...'}
-      {quickbooksIsLinked === false && (
+      {quickbooksIsConnected === undefined && 'Loading...'}
+      {quickbooksIsConnected === false && (
         <button
           onClick={async () => {
             const authorizationUrl = await linkQuickbooks()
@@ -32,7 +32,7 @@ const Quickbooks = () => {
           Link Quickbooks
         </button>
       )}
-      {quickbooksIsLinked === true
+      {quickbooksIsConnected === true
       && (isSyncingFromQuickbooks
         ? (
           'Syncing data from Quickbooks...'
