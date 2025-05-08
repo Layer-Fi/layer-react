@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import classNames from 'classnames'
 import { useCategories } from '../../hooks/categories/useCategories'
 import { Popover, ComboBox, ListBox, Header, Key } from 'react-aria-components'
@@ -71,29 +71,26 @@ export const CategorySelect = ({
         aria-label='Categorize'
       >
         <ComboBoxInput name={name} placeholder={placeholder} value={value} />
-        <Popover className='Layer__category-select__popover'>
+        <Popover className='Layer__category-select__popover' placement='bottom end'>
           <ListBox>
             <MatchesList matches={matches} selected={value} />
 
             <SuggestionsList suggestions={suggestions} categories={categories} selected={value} />
 
             <ListSection>
-              {allCategories.map((categoriesGroup, i) => (
-                <React.Fragment key={`${categoriesGroup.label}-${i}-categories`}>
-                  <Header slot='header'>
-                    <Text size={TextSize.xs} status='disabled'>{categoriesGroup.label}</Text>
-                  </Header>
-                  {categoriesGroup.options.map(categoryOption => (
-                    <CategoriesList
-                      key={`${categoryOption.payload?.id ?? categoryOption.payload?.stable_name}`}
-                      option={categoryOption}
-                      selected={value}
-                      level={0}
-                      accountName={categoryOption.payload.display_name}
-                      showTooltips={showTooltips}
-                    />
-                  ))}
-                </React.Fragment>
+              <Header slot='header'>
+                <Text size={TextSize.xs} status='disabled'>All categories</Text>
+              </Header>
+              {allCategories.map(categoriesGroup => (
+                categoriesGroup.options.map(categoryOption => (
+                  <CategoriesList
+                    key={`${categoryOption.payload?.id ?? categoryOption.payload?.stable_name}`}
+                    option={categoryOption}
+                    selected={value}
+                    level={0}
+                    showTooltips={showTooltips}
+                  />
+                ))
               ))}
             </ListSection>
           </ListBox>

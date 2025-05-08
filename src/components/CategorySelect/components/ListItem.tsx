@@ -1,5 +1,5 @@
 import { ListBoxItem } from 'react-aria-components'
-import { Text, TextSize } from '../../Typography'
+import { Text } from '../../Typography'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../Tooltip/Tooltip'
 import InfoIcon from '../../../icons/InfoIcon'
 import CheckIcon from '../../../icons/Check'
@@ -13,12 +13,11 @@ const INDENT_BIAS = 24
 export type ListItemProps = {
   option: CategoryOption
   level?: number
-  accountName: string
   showTooltips: boolean
   selected?: CategoryOption
 }
 
-export const ListItem = ({ option, level = 0, accountName, showTooltips, selected }: ListItemProps) => {
+export const ListItem = ({ option, level = 0, showTooltips, selected }: ListItemProps) => {
   return (
     <ListBoxItem
       className='Layer__category-select__list-item'
@@ -42,10 +41,6 @@ export const ListItem = ({ option, level = 0, accountName, showTooltips, selecte
           </Tooltip>
         )}
       </div>
-
-      <span slot='account'>
-        <Text size={TextSize.sm} status='disabled' ellipsis>{accountName}</Text>
-      </span>
 
       {isSelected(option, selected) && (
         <CheckIcon slot='icon' size={16} />
