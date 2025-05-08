@@ -566,8 +566,6 @@ export const ProfitAndLossChart = ({
     )
   }
 
-  const [animateFrom, setAnimateFrom] = useState(-1)
-
   return (
     <div className='Layer__chart-wrapper'>
       <ResponsiveContainer
@@ -726,11 +724,8 @@ export const ProfitAndLossChart = ({
                 <LabelList
                   content={(
                     <Indicator
-                      setCustomCursorSize={(width, height, x) =>
-                        setCustomCursorSize({ width, height, x })}
+                      setCustomCursorSize={(width, height, x) => setCustomCursorSize({ width, height, x })}
                       customCursorSize={customCursorSize}
-                      animateFrom={animateFrom}
-                      setAnimateFrom={setAnimateFrom}
                     />
                   )}
                 />
