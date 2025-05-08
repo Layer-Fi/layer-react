@@ -4,13 +4,14 @@
   appearance: none;
   border-radius: var(--btn-border-radius);
   cursor: pointer;
-  display: inline-grid;
+  display: inline-flex;
   min-inline-size: 0;
   justify-content: center;
   outline: none;
   user-select: none;
   white-space: nowrap;
   vertical-align: middle;
+  gap: 0.5rem;
 
   &[data-icon] {
     padding-inline: 0;
