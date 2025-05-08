@@ -38,7 +38,7 @@ export const Badge = ({
   const baseProps = {
     className: classNames(
       'Layer__badge',
-      hoverable && !tooltip ? 'Layer__badge--with-hover' : '',
+      ((onClick || hoverable) && !tooltip) ? 'Layer__badge--with-hover' : '',
       onClick || tooltip ? 'Layer__badge--clickable' : '',
       `Layer__badge--${size}`,
       `Layer__badge--${variant}`,
