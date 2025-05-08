@@ -30,7 +30,11 @@ export const ComboBoxInput = ({ name, placeholder, value }: ComboBoxInputProps) 
         name={name}
         placeholder={placeholder}
         aria-label='Categorize'
-        onFocus={() => comboboxState?.setInputValue('')}
+        onFocus={() => {
+          if (!comboboxState?.isOpen && !comboboxState?.isFocused) {
+            comboboxState?.setInputValue('')
+          }
+        }}
         onBlur={() => {
           if (value?.payload.display_name) {
             comboboxState?.setInputValue(value?.payload.display_name)

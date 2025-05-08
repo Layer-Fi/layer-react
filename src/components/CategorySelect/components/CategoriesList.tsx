@@ -4,12 +4,11 @@ import { ListItem } from './ListItem'
 type CategoriesListProps = {
   option: CategoryOption
   level: number
-  accountName: string
   showTooltips: CategorySelectProps['showTooltips']
   selected?: CategoryOption
 }
 
-export const CategoriesList = ({ option, level = 0, accountName, showTooltips, selected }: CategoriesListProps) => {
+export const CategoriesList = ({ option, level = 0, showTooltips, selected }: CategoriesListProps) => {
   if (!option) {
     return null
   }
@@ -20,7 +19,6 @@ export const CategoriesList = ({ option, level = 0, accountName, showTooltips, s
         <ListItem
           option={option}
           level={level}
-          accountName={accountName}
           showTooltips={showTooltips}
           selected={selected}
         />
@@ -30,7 +28,6 @@ export const CategoriesList = ({ option, level = 0, accountName, showTooltips, s
             key={`${o.payload.display_name}-${i}-categories`}
             option={o}
             level={level + 1}
-            accountName={option.payload.display_name}
             showTooltips={showTooltips}
             selected={selected}
           />
@@ -43,7 +40,6 @@ export const CategoriesList = ({ option, level = 0, accountName, showTooltips, s
     <ListItem
       option={option}
       level={level}
-      accountName={accountName}
       showTooltips={showTooltips}
       selected={selected}
     />
