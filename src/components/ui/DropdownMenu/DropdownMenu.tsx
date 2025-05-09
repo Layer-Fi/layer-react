@@ -1,71 +1,58 @@
-import React from 'react'
-import { Menu, MenuItem as AriaMenuItem, Button, MenuTrigger, Popover, Separator as AriaSeparator, Header, Dialog } from 'react-aria-components'
-import CogIcon from '../../../icons/Cog'
+import React, { PropsWithChildren } from 'react'
+import { Menu, MenuItem as AriaMenuItem, MenuTrigger, Popover, Separator as AriaSeparator, Header, Dialog } from 'react-aria-components'
 import { Text, TextSize, TextWeight } from '../../Typography'
 
-type DropdownMenuProps = {
-  children: React.ReactNode[]
+type DropdownMenuProps = PropsWithChildren<{
+  className?: string
   ariaLabel?: string
-}
+  slots: {
+    Trigger: React.FC
+  }
+  slotProps?: {
+    Dialog?: {
+      width?: number
+    }
+  }
+}>
 
-type MenuItemProps = {
-  children: React.ReactNode
+type MenuItemProps = PropsWithChildren<{
+  isDisabled?: boolean
   onClick?: () => void
-}
+}>
 
-type ActionableItemProps = {
-  leftIcon?: React.ReactNode
-  children: React.ReactNode
-  rightIcon?: React.ReactNode
-  onClick?: () => void
-}
-
-export const Heading = ({ children }: { children: React.ReactNode }) => (
+export const Heading = ({ children }: PropsWithChildren<{}>) => (
   <Header>
-    <Text size={TextSize.sm} weight={TextWeight.bold} className='Layer__dropdown-menu__actionable-item__heading'>
+    <Text size={TextSize.sm} weight={TextWeight.bold} className='Layer__dropdown-menu__menu-item__heading'>
       {children}
     </Text>
   </Header>
 )
 
 export const Separator = () => (
-  <AriaSeparator className='Layer__dropdown-menu__separator' />
+  <AriaSeparator className='Layer__dropdown-menu__separator Layer__variables' />
 )
 
-export const ActionableItem = ({ leftIcon, children, rightIcon, onClick }: ActionableItemProps) => (
-  <AriaMenuItem onAction={onClick} className='Layer__dropdown-menu__actionable-item'>
-    {leftIcon && (
-      <div className='Layer__dropdown-menu__actionable-item__left-icon'>
-        {leftIcon}
-      </div>
-    )}
-    <Text size={TextSize.sm} className='Layer__dropdown-menu__actionable-item__text'>
-      {children}
-    </Text>
-    {rightIcon && (
-      <div className='Layer__dropdown-menu__actionable-item__right-icon'>
-        {rightIcon}
-      </div>
-    )}
+export const MenuItem = ({ children, onClick, isDisabled }: MenuItemProps) => (
+  <AriaMenuItem onAction={onClick} isDisabled={isDisabled} className='Layer__dropdown-menu__menu-item'>
+    {children}
   </AriaMenuItem>
 )
 
 export const MenuList = ({ children }: { children: React.ReactNode | React.ReactNode[] }) => (
-  <Menu>
+  <Menu className='Layer__dropdown-menu__menu-list'>
     {children}
   </Menu>
 )
 
-export const MenuItem = ({ children, onClick }: MenuItemProps) => (
-  <AriaMenuItem onAction={onClick}>{children}</AriaMenuItem>
-)
+export const DropdownMenu = ({ children, ariaLabel, slots, slotProps }: DropdownMenuProps) => {
+  const { Trigger } = slots;
+  const width = slotProps?.Dialog?.width;
 
-export const DropdownMenu = ({ children, ariaLabel }: DropdownMenuProps) => {
   return (
     <MenuTrigger>
-      <Button aria-label='Menu' className='Layer__btn Layer__dropdown-btn'><CogIcon /></Button>
+      <Trigger aria-label='Menu'/>
       <Popover placement='bottom right' className='Layer__dropdown-menu__popover Layer__variables'>
-        <Dialog className='Layer__dropdown-menu__menu' aria-label={ariaLabel}>
+        <Dialog className='Layer__dropdown-menu__menu' aria-label={ariaLabel} style={{ width }} >
           {children}
         </Dialog>
       </Popover>
