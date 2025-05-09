@@ -12,18 +12,18 @@ const INDENT_BIAS = 24
 
 export type ListItemProps = {
   option: CategoryOption
-  level?: number
+  indentationLevel?: number
   showTooltips: boolean
   selected?: CategoryOption
   isDisabled?: boolean
 }
 
-export const ListItem = ({ option, level = 0, showTooltips, selected, isDisabled }: ListItemProps) => {
+export const ListItem = ({ option, indentationLevel = 0, showTooltips, selected, isDisabled }: ListItemProps) => {
   return (
     <ListBoxItem
       className='Layer__category-select__list-item'
       style={{
-        paddingLeft: `${(Math.min(MAX_INDENT_LEVEL, level) * INDENT_SIZE) + INDENT_BIAS}px`,
+        paddingLeft: `${(Math.min(MAX_INDENT_LEVEL, indentationLevel) * INDENT_SIZE) + INDENT_BIAS}px`,
       }}
       textValue={option?.payload?.display_name}
       id={option?.payload?.id ?? option?.payload?.stable_name}

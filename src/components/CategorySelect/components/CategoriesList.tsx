@@ -5,12 +5,13 @@ import { Text, TextSize } from '../../Typography'
 
 type CategoriesListProps = {
   option: CategoryOption
-  level: number
+  level?: number
+  indentationLevel?: number
   showTooltips: CategorySelectProps['showTooltips']
   selected?: CategoryOption
 }
 
-export const CategoriesList = ({ option, level = 0, showTooltips, selected }: CategoriesListProps) => {
+export const CategoriesList = ({ option, level = 0, indentationLevel = 0, showTooltips, selected }: CategoriesListProps) => {
   if (!option) {
     return null
   }
@@ -29,10 +30,15 @@ export const CategoriesList = ({ option, level = 0, showTooltips, selected }: Ca
             key={`${o.payload.display_name}-${i}-categories`}
             option={o}
             level={level + 1}
+            indentationLevel={level}
             showTooltips={showTooltips}
             selected={selected}
           />
         ))}
+
+        <ListBoxItem isDisabled={true} textValue='' className='Layer__category-select__separator'>
+          <span slot='separator-line' />
+        </ListBoxItem>
       </>
     )
   }
@@ -42,7 +48,7 @@ export const CategoriesList = ({ option, level = 0, showTooltips, selected }: Ca
       <>
         <ListItem
           option={option}
-          level={level}
+          indentationLevel={indentationLevel}
           showTooltips={showTooltips}
           selected={selected}
           isDisabled={level === 0}
@@ -53,6 +59,7 @@ export const CategoriesList = ({ option, level = 0, showTooltips, selected }: Ca
             key={`${o.payload.display_name}-${i}-categories`}
             option={o}
             level={level + 1}
+            indentationLevel={indentationLevel + 1}
             showTooltips={showTooltips}
             selected={selected}
           />
@@ -64,7 +71,7 @@ export const CategoriesList = ({ option, level = 0, showTooltips, selected }: Ca
   return (
     <ListItem
       option={option}
-      level={level}
+      indentationLevel={indentationLevel}
       showTooltips={showTooltips}
       selected={selected}
     />
