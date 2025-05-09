@@ -21,6 +21,7 @@ export const CategoriesList = ({ option, level = 0, showTooltips, selected }: Ca
           level={level}
           showTooltips={showTooltips}
           selected={selected}
+          isDisabled={level === 0}
         />
 
         {option.payload?.subCategories?.map((o, i) => (

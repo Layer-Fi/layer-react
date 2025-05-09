@@ -24,9 +24,11 @@ export const MatchesList = ({ matches, selected }: MatchesListProps) => {
 
   return (
     <ListSection>
-      <Header slot='header'>
-        <Text size={TextSize.xs} status='disabled'>Match</Text>
-      </Header>
+      <ListBoxItem isDisabled={true}>
+        <Header slot='header'>
+          <Text size={TextSize.xs} status='disabled'>Match</Text>
+        </Header>
+      </ListBoxItem>
       {matches?.map((option, index) => (
         <ListBoxItem
           className='Layer__category-select__ms-list-item'
