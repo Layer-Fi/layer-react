@@ -49,6 +49,7 @@ export const IntegrationsQuickbooksItemThumb = () => {
               variant={BadgeVariant.INFO}
               onClick={syncFromQuickbooks}
               size={BadgeSize.SMALL}
+              hoverable
             >
               Sync
             </Badge>
