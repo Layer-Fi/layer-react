@@ -10,17 +10,12 @@ import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { Badge } from '../Badge'
-import {
-  BankTransactionCTAStringOverrides,
-} from '../BankTransactions/BankTransactions'
+import { BankTransactionCTAStringOverrides } from '../BankTransactions/BankTransactions'
 import { isCategorized } from '../BankTransactions/utils'
 import { SubmitButton, IconButton, RetryButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import { CategorySelect } from '../CategorySelect'
-import {
-  mapCategoryToOption,
-  mapSuggestedMatchToOption,
-} from '../CategorySelect/CategorySelect'
+import { CategorySelect } from '../CategorySelect/CategorySelect'
+import { mapCategoryToOption, mapSuggestedMatchToOption } from '../CategorySelect/utils'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '../IconBox'
@@ -59,7 +54,7 @@ export const extractDescriptionForSplit = (category: CategoryWithEntries | null)
     return ''
   }
 
-  return category.entries.map(c => c.category.display_name).join(', ')
+  return category?.entries.map(c => c.category.display_name).join(', ')
 }
 
 export const getDefaultSelectedCategory = (
