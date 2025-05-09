@@ -12,6 +12,7 @@ export { Onboarding } from './components/Onboarding'
 /* ------------------ Bank Accounts & Transactions ------------------ */
 export { LinkedAccounts } from './components/LinkedAccounts'
 export { BankTransactions } from './components/BankTransactions'
+export { Integrations } from './components/Integrations/Integrations'
 
 /* ------------------- Third Party Accounting Systems --------------- */
 export { Quickbooks } from './components/Quickbooks'

@@ -22,11 +22,6 @@
     cursor: pointer;
     min-height: 21px;
     border-width: 0;
-
-    &:hover {
-      background-color: var(--badge-fg-color);
-      color: var(--badge-bg-color);
-    }
   }
 
   .Layer__badge__icon {
@@ -62,6 +57,11 @@
     &.Layer__badge--default {
       background-color: var(--badge-color);
       color: var(--badge-bg-color);
+    }
+
+    &.Layer__badge--info {
+      background-color: var(--badge-color-info);
+      color: var(--badge-bg-color-info);
     }
 
     &.Layer__badge--success {

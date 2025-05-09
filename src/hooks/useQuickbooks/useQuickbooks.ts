@@ -40,7 +40,6 @@ export const useQuickbooks: UseQuickbooks = () => {
       })()
     ).data.is_syncing
     const wasSyncing = wasSyncingFromQuickbooksRef.current
-    
     wasSyncingFromQuickbooksRef.current = isSyncing
     setIsSyncingFromQuickbooks(isSyncing)
 
@@ -70,14 +69,14 @@ export const useQuickbooks: UseQuickbooks = () => {
     }
   }, [auth?.access_token, fetchQuickbooksConnectionStatus])
 
-  const syncFromQuickbooks = () => {
+  const syncFromQuickbooks = useCallback(() => {
     setIsSyncingFromQuickbooks(true)
+    wasSyncingFromQuickbooksRef.current = true
 
     void Layer.syncFromQuickbooks(apiUrl, auth?.access_token, {
       params: { businessId },
     })
-      .finally(() => setIsSyncingFromQuickbooks(false))
-  }
+  }, [apiUrl, auth?.access_token, businessId, setIsSyncingFromQuickbooks])
 
   const linkQuickbooks = useCallback(async () => {
     const res = await Layer.initQuickbooksOAuth(apiUrl, auth?.access_token, {

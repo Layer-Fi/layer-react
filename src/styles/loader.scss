@@ -16,6 +16,26 @@
   height: 21px;
   background-color: var(--color-base-100);
   border-radius: 50%;
+
+  &.Layer__loader--info {
+    background-color: var(--color-info-bg);
+    color: var(--color-info-fg);
+  }
+
+  &.Layer__loader--success {
+    background-color: var(--color-info-success-bg);
+    color: var(--color-info-success-fg);
+  }
+
+  &.Layer__loader--error {
+    background-color: var(--color-info-error-bg);
+    color: var(--color-info-error-fg);
+  }
+
+  &.Layer__loader--warning {
+    background-color: var(--color-info-warning-bg);
+    color: var(--color-info-warning-fg);
+  }
 }
 
 .Layer__loader--with-bg {
