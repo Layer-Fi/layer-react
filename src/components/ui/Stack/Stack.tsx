@@ -39,3 +39,5 @@ export function VStack(props: StackProps) {
 export function HStack(props: StackProps) {
   return <Stack {...props} direction='row' />
 }
+
+export const Spacer = () => <div className='Layer__Spacer' />
