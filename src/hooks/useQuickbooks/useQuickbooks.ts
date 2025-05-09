@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
@@ -40,7 +40,6 @@ export const useQuickbooks: UseQuickbooks = () => {
       })()
     ).data.is_syncing
     const wasSyncing = wasSyncingFromQuickbooksRef.current
-
     wasSyncingFromQuickbooksRef.current = isSyncing
     setIsSyncingFromQuickbooks(isSyncing)
 
@@ -94,18 +93,12 @@ export const useQuickbooks: UseQuickbooks = () => {
       .then(() => fetchQuickbooksConnectionStatus())
   }, [apiUrl, auth?.access_token, businessId, fetchQuickbooksConnectionStatus])
 
-  return useMemo(() => ({
+  return {
     isSyncingFromQuickbooks,
     syncFromQuickbooks,
     quickbooksIsConnected: quickbooksConnectionStatus?.is_connected,
     quickbooksLastSyncedAt: quickbooksConnectionStatus?.last_synced_at,
     linkQuickbooks,
     unlinkQuickbooks,
-  }), [
-    isSyncingFromQuickbooks,
-    syncFromQuickbooks,
-    quickbooksConnectionStatus,
-    linkQuickbooks,
-    unlinkQuickbooks,
-  ])
+  }
 }
