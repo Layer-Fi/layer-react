@@ -44,18 +44,16 @@
   padding-top: 0;
 }
 
-@container (min-width: 1400px) {
-  .Layer__linked-accounts__loader-container {
-    min-height: 103px;
-  }
+.Layer__linked-accounts__loader-container {
+  min-height: 120px;
+}
 
-  .Layer__linked-accounts__header {
-    padding: var(--spacing-lg);
-  }
+.Layer__linked-accounts__header {
+  padding: var(--spacing-lg);
+}
 
-  .Layer__linked-accounts__list {
-    padding: var(--spacing-lg);
-  }
+.Layer__linked-accounts__list {
+  padding: var(--spacing-lg);
 }
 
 .Layer__linked-accounts__new-account {
@@ -149,6 +147,15 @@
   width: 286px;
   height: 136px;
   justify-content: space-between;
+
+  &.Layer__integrations-quickbooks-item-thumb {
+    box-shadow: none;
+    
+    .topbar {
+      flex: 1;
+      margin-bottom: var(--spacing-4xs);
+    }
+  }
 
   &.--show-ledger-balance {
     height: 154px;
