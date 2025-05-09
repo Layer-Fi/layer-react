@@ -105,7 +105,7 @@
     height: 16px;
   }
 
-  &:hover {
+  &:not([data-disabled="true"]):hover {
     background-color: var(--color-base-50);
   }
 
@@ -127,7 +127,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 
-  &:hover {
+  &:not([data-disabled="true"]):hover {
     background-color: var(--color-base-50);
   }
 

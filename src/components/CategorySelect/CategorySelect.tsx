@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import classNames from 'classnames'
 import { useCategories } from '../../hooks/categories/useCategories'
-import { Popover, ComboBox, ListBox, Header, Key } from 'react-aria-components'
+import { Popover, ComboBox, ListBox, Header, Key, ListBoxItem } from 'react-aria-components'
 import { CategorySelectProps } from './types'
 import { buildAllCategories, buildMatchOptions, buildSuggestedOptions, getKeysMap } from './utils'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
@@ -28,7 +28,7 @@ export const CategorySelect = ({
 
   const matches = buildMatchOptions(bankTransaction, excludeMatches)
   const suggestions = buildSuggestedOptions(bankTransaction)
-  const allCategories = buildAllCategories(categories)
+  const allCategories = buildAllCategories(categories ?? [])
 
   const allKeys = useMemo(() => {
     const categoriesKeysMap = getKeysMap(allCategories.flatMap(group => group.options))
@@ -78,9 +78,11 @@ export const CategorySelect = ({
             <SuggestionsList suggestions={suggestions} categories={categories} selected={value} />
 
             <ListSection>
-              <Header slot='header'>
-                <Text size={TextSize.xs} status='disabled'>All categories</Text>
-              </Header>
+              <ListBoxItem isDisabled={true}>
+                <Header slot='header'>
+                  <Text size={TextSize.xs} status='disabled'>All categories</Text>
+                </Header>
+              </ListBoxItem>
               {allCategories.map(categoriesGroup => (
                 categoriesGroup.options.map(categoryOption => (
                   <CategoriesList

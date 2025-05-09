@@ -15,9 +15,10 @@ export type ListItemProps = {
   level?: number
   showTooltips: boolean
   selected?: CategoryOption
+  isDisabled?: boolean
 }
 
-export const ListItem = ({ option, level = 0, showTooltips, selected }: ListItemProps) => {
+export const ListItem = ({ option, level = 0, showTooltips, selected, isDisabled }: ListItemProps) => {
   return (
     <ListBoxItem
       className='Layer__category-select__list-item'
@@ -26,6 +27,7 @@ export const ListItem = ({ option, level = 0, showTooltips, selected }: ListItem
       }}
       textValue={option?.payload?.display_name}
       id={option?.payload?.id ?? option?.payload?.stable_name}
+      isDisabled={isDisabled}
     >
       <div slot='name'>
         <Text>{option?.payload?.display_name}</Text>
