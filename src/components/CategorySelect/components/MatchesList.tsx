@@ -24,9 +24,9 @@ export const MatchesList = ({ matches, selected }: MatchesListProps) => {
 
   return (
     <ListSection>
-      <ListBoxItem isDisabled={true}>
+      <ListBoxItem isDisabled={true} textValue=''>
         <Header slot='header'>
-          <Text size={TextSize.xs} status='disabled'>Match</Text>
+          <Text size={TextSize.xs}>Match</Text>
         </Header>
       </ListBoxItem>
       {matches?.map((option, index) => (
