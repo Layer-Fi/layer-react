@@ -1,4 +1,3 @@
-import React from 'react'
 import { useContext, useMemo } from 'react'
 import QuickbooksIcon from '../../../icons/QuickbooksIcon'
 import { Badge, BadgeVariant } from '../../Badge'
@@ -21,46 +20,46 @@ export const IntegrationsQuickbooksItemThumb = () => {
 
   const menuConfig = useMemo(() => {
     return [
-        {
-          name: 'Unlink account',
-          action: async () => {
-            if (
-              confirm('Please confirm you wish to disconnect from Quickbooks')
-            ) {
-              await unlinkQuickbooks()
-            }
-          },
+      {
+        name: 'Unlink account',
+        action: () => {
+          if (
+            confirm('Please confirm you wish to disconnect from Quickbooks')
+          ) {
+            unlinkQuickbooks()
+          }
         },
-      ];
-  }, [unlinkQuickbooks]);
+      },
+    ]
+  }, [unlinkQuickbooks])
 
   return (
     <LinkedAccountOptions config={menuConfig}>
-    <Card className='Layer__linked-account-thumb Layer__integrations-quickbooks-item-thumb'>
-      <div className="topbar">
-        <HStack gap='xs'>
-          <Text size={TextSize.md}>Quickbooks</Text>
-          {isSyncingFromQuickbooks 
-            ? <BadgeLoader variant={BadgeVariant.INFO} />
-            : (
-            <Badge
-              aria-role='button'
-              icon={<RefreshCcw size={12} />}
-              variant={BadgeVariant.INFO}
-              onClick={syncFromQuickbooks}
-              size={BadgeSize.SMALL}
-              hoverable
-            >
-              Sync
-            </Badge>
-          )}
-        </HStack>
-        <div className='topbar-logo'>
-          <QuickbooksIcon size={28}/>
+      <Card className='Layer__linked-account-thumb Layer__integrations-quickbooks-item-thumb'>
+        <div className='topbar'>
+          <HStack gap='xs'>
+            <Text size={TextSize.md}>Quickbooks</Text>
+            {isSyncingFromQuickbooks
+              ? <BadgeLoader variant={BadgeVariant.INFO} />
+              : (
+                <Badge
+                  aria-role='button'
+                  icon={<RefreshCcw size={12} />}
+                  variant={BadgeVariant.INFO}
+                  onClick={syncFromQuickbooks}
+                  size={BadgeSize.SMALL}
+                  hoverable
+                >
+                  Sync
+                </Badge>
+              )}
+          </HStack>
+          <div className='topbar-logo'>
+            <QuickbooksIcon size={28} />
+          </div>
         </div>
-      </div>
-      <IntegrationsQuickbooksItemThumbFooter />
-    </Card>
+        <IntegrationsQuickbooksItemThumbFooter />
+      </Card>
     </LinkedAccountOptions>
   )
 }

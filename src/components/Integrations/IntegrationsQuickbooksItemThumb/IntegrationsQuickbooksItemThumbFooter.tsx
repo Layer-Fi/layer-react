@@ -1,19 +1,11 @@
-import React from 'react'
-import { useContext, useMemo } from 'react'
-import QuickbooksIcon from '../../../icons/QuickbooksIcon'
-import { Badge, BadgeVariant } from '../../Badge'
+import { useContext } from 'react'
 import { BadgeLoader } from '../../BadgeLoader'
-import RefreshCcw from '../../../icons/RefreshCcw'
-import { BadgeSize } from '../../Badge/Badge'
-import { DateTime } from '../../DateTime'
 import { HStack, Spacer, VStack } from '../../ui/Stack/Stack'
-import { Card } from '../../Card/Card'
 import { Text, TextSize } from '../../Typography'
 import { QuickbooksContext } from '../../../contexts/QuickbooksContext/QuickbooksContext'
-import CheckIcon from '../../../icons/Check'
 import { format } from 'date-fns'
 
-const formatLastSyncedAt = (datetime: string) => `${format(datetime, 'MMMM d, yyyy')}\nat\n${format(datetime, 'h:mm a')}`;
+const formatLastSyncedAt = (datetime: string) => `${format(datetime, 'MMMM d, yyyy')}\nat\n${format(datetime, 'h:mm a')}`
 
 export const IntegrationsQuickbooksItemThumbFooter = () => {
   const {
@@ -27,7 +19,7 @@ export const IntegrationsQuickbooksItemThumbFooter = () => {
         <VStack>
           <Text size={TextSize.sm}>Syncing account data</Text>
           <Text size={TextSize.sm} className='syncing-data-description'>
-             This may take up to 5 minutes
+            This may take up to 5 minutes
           </Text>
         </VStack>
         <Spacer />
@@ -60,7 +52,7 @@ export const IntegrationsQuickbooksItemThumbFooter = () => {
         </Text>
       </VStack>
       <Spacer />
-      <BadgeLoader variant='warning'/>
+      <BadgeLoader variant='warning' />
     </HStack>
-  ) 
+  )
 }

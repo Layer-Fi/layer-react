@@ -9,7 +9,12 @@ import { Button } from '../../ui/Button/Button'
 import { Spacer } from '../../ui/Stack/Stack'
 import { QuickbooksContext } from '../../../contexts/QuickbooksContext/QuickbooksContext'
 
-const MenuTriggerButton = () => <Button variant='ghost'>Manage<Cog size={16}/></Button>
+const MenuTriggerButton = () => (
+  <Button variant='ghost'>
+    Manage
+    <Cog size={16} />
+  </Button>
+)
 
 export const IntegrationsConnectMenu = () => {
   const {
@@ -17,40 +22,40 @@ export const IntegrationsConnectMenu = () => {
     linkQuickbooks,
   } = useContext(QuickbooksContext)
 
-  const initiateQuickbooksOAuth = useCallback(
-    async () => {
-      const authorizationUrl = await linkQuickbooks()
-      window.location.href = authorizationUrl
-    }, 
-  []);
+  const initiateQuickbooksOAuth = useCallback(async () => {
+    const authorizationUrl = await linkQuickbooks()
+    window.location.href = authorizationUrl
+  }, [linkQuickbooks])
 
   return (
-    <DropdownMenu 
-      ariaLabel='Connect Integration' 
+    <DropdownMenu
+      ariaLabel='Connect Integration'
       slots={{ Trigger: MenuTriggerButton }}
       slotProps={{ Dialog: { width: 280 } }}
     >
       <Heading>Integrations</Heading>
       <MenuList>
-        {quickbooksIsConnected ? (
-          <MenuItem key='quickbooks-connected' isDisabled>
-            <QuickbooksIcon size={20} />
-            <Text size={TextSize.sm}>
+        {quickbooksIsConnected
+          ? (
+            <MenuItem key='quickbooks-connected' isDisabled>
+              <QuickbooksIcon size={20} />
+              <Text size={TextSize.sm}>
                 Quickbooks connected
-            </Text>
-            <Spacer/>
-            <CheckIcon size={16} />
-          </MenuItem>
-        ) : (
-          <MenuItem key='connect-quickbooks' onClick={initiateQuickbooksOAuth}>
-            <QuickbooksIcon size={20} />
-            <Text size={TextSize.sm}>
-              Connect Quickbooks
-            </Text>
-            <Spacer/>
-            <LinkIcon size={12} />
-          </MenuItem>
-        )}
+              </Text>
+              <Spacer />
+              <CheckIcon size={16} />
+            </MenuItem>
+          )
+          : (
+            <MenuItem key='connect-quickbooks' onClick={initiateQuickbooksOAuth}>
+              <QuickbooksIcon size={20} />
+              <Text size={TextSize.sm}>
+                Connect Quickbooks
+              </Text>
+              <Spacer />
+              <LinkIcon size={12} />
+            </MenuItem>
+          )}
       </MenuList>
     </DropdownMenu>
   )

@@ -20,7 +20,7 @@ type MenuItemProps = PropsWithChildren<{
   onClick?: () => void
 }>
 
-export const Heading = ({ children }: PropsWithChildren<{}>) => (
+export const Heading = ({ children }: PropsWithChildren) => (
   <Header>
     <Text size={TextSize.sm} weight={TextWeight.bold} className='Layer__dropdown-menu__menu-item__heading'>
       {children}
@@ -45,14 +45,14 @@ export const MenuList = ({ children }: { children: React.ReactNode | React.React
 )
 
 export const DropdownMenu = ({ children, ariaLabel, slots, slotProps }: DropdownMenuProps) => {
-  const { Trigger } = slots;
-  const width = slotProps?.Dialog?.width;
+  const { Trigger } = slots
+  const width = slotProps?.Dialog?.width
 
   return (
     <MenuTrigger>
-      <Trigger aria-label='Menu'/>
+      <Trigger aria-label='Menu' />
       <Popover placement='bottom right' className='Layer__dropdown-menu__popover Layer__variables'>
-        <Dialog className='Layer__dropdown-menu__menu' aria-label={ariaLabel} style={{ width }} >
+        <Dialog className='Layer__dropdown-menu__menu' aria-label={ariaLabel} style={{ width }}>
           {children}
         </Dialog>
       </Popover>

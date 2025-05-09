@@ -30,7 +30,7 @@ export const IntegrationsComponent = ({
   stringOverrides,
 }: IntegrationsProps) => {
   const { quickbooksIsConnected } = useContext(QuickbooksContext)
-  const isLoading = quickbooksIsConnected === undefined;
+  const isLoading = quickbooksIsConnected === undefined
 
   return (
     <Container name={COMPONENT_NAME} elevated={elevated}>
@@ -49,13 +49,12 @@ export const IntegrationsComponent = ({
         </div>
       )}
       {!isLoading && !quickbooksIsConnected && (
-          <DataState
-            status={DataStateStatus.info}
-            title='No active integrations'
-          />
-        )
-      }
-      {quickbooksIsConnected &&  <IntegrationsContent />}
+        <DataState
+          status={DataStateStatus.info}
+          title='No active integrations'
+        />
+      )}
+      {quickbooksIsConnected && <IntegrationsContent />}
     </Container>
   )
 }
