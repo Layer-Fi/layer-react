@@ -67,7 +67,7 @@
   }
 
   [slot="header"] {
-    font-size: 12px;
+    font-size: var(--text-sm);
     text-transform: uppercase;
     padding: var(--spacing-xs) var(--spacing-lg);
   }
