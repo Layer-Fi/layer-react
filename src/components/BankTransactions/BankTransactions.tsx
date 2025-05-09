@@ -32,6 +32,7 @@ import type { LayerError } from '../../models/ErrorHandler'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { LegacyModeProvider, type BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
+import { BankTransactionsPanel } from './BankTransactionsPanel'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -273,110 +274,112 @@ const BankTransactionsContent = ({
       asWidget={asWidget}
       ref={containerRef}
     >
-      {!hideHeader && (
-        <BankTransactionsHeader
-          shiftStickyHeader={shiftStickyHeader}
-          asWidget={asWidget}
-          categorizedOnly={!categorizationEnabled}
-          categorizeView={categorizeView}
-          display={display}
-          onCategorizationDisplayChange={onCategorizationDisplayChange}
-          mobileComponent={mobileComponent}
-          withDatePicker={monthlyView}
-          listView={listView}
-          dateRange={{ ...defaultDateRange, ...filters?.dateRange }}
-          setDateRange={(v) => {
-            if (monthlyView) {
-              setFilters({ ...filters, dateRange: v })
-            }
-          }}
-          stringOverrides={stringOverrides?.bankTransactionsHeader}
-          isDataLoading={isLoadingWithoutData}
-          isSyncing={isSyncing}
-        />
-      )}
-
-      {!listView && (
-        <div className='Layer__bank-transactions__table-wrapper'>
-          <BankTransactionsTable
+      <BankTransactionsPanel containerRef={containerRef}>
+        {!hideHeader && (
+          <BankTransactionsHeader
+            shiftStickyHeader={shiftStickyHeader}
+            asWidget={asWidget}
+            categorizedOnly={!categorizationEnabled}
             categorizeView={categorizeView}
-            editable={editable}
-            isLoading={isLoadingWithoutData}
+            display={display}
+            onCategorizationDisplayChange={onCategorizationDisplayChange}
+            mobileComponent={mobileComponent}
+            withDatePicker={monthlyView}
+            listView={listView}
+            dateRange={{ ...defaultDateRange, ...filters?.dateRange }}
+            setDateRange={(v) => {
+              if (monthlyView) {
+                setFilters({ ...filters, dateRange: v })
+              }
+            }}
+            stringOverrides={stringOverrides?.bankTransactionsHeader}
+            isDataLoading={isLoadingWithoutData}
             isSyncing={isSyncing}
-            bankTransactions={bankTransactions}
-            containerWidth={containerWidth}
-            removeTransaction={removeTransaction}
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
-            page={currentPage}
-            stringOverrides={stringOverrides}
-            lastPage={isLastPage}
-            onRefresh={refetch}
           />
-        </div>
-      )}
+        )}
 
-      {!isLoadingWithoutData && listView && mobileComponent !== 'mobileList'
-        ? (
-          <BankTransactionList
-            bankTransactions={bankTransactions}
-            editable={editable}
-            removeTransaction={removeTransaction}
-            containerWidth={containerWidth}
-            stringOverrides={stringOverrides?.bankTransactionCTAs}
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
-          />
-        )
-        : null}
-
-      {!isLoadingWithoutData && listView && mobileComponent === 'mobileList'
-        ? (
-          <BankTransactionMobileList
-            bankTransactions={bankTransactions}
-            editable={editable}
-            removeTransaction={removeTransaction}
-            showTooltips={showTooltips}
-            showReceiptUploads={showReceiptUploads}
-            showDescriptions={showDescriptions}
-          />
-        )
-        : null}
-
-      {listView && isLoadingWithoutData
-        ? (
-          <div className='Layer__bank-transactions__list-loader'>
-            <Loader />
+        {!listView && (
+          <div className='Layer__bank-transactions__table-wrapper'>
+            <BankTransactionsTable
+              categorizeView={categorizeView}
+              editable={editable}
+              isLoading={isLoadingWithoutData}
+              isSyncing={isSyncing}
+              bankTransactions={bankTransactions}
+              containerWidth={containerWidth}
+              removeTransaction={removeTransaction}
+              showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
+              page={currentPage}
+              stringOverrides={stringOverrides}
+              lastPage={isLastPage}
+              onRefresh={refetch}
+            />
           </div>
-        )
-        : null}
+        )}
 
-      {!isSyncing || listView
-        ? (
-          <BankTransactionsTableEmptyStates
-            hasVisibleTransactions={(bankTransactions?.length ?? 0) > 0}
-            isCategorizationMode={editable}
-            isError={Boolean(error)}
-            isFiltered={Boolean(filters?.descriptionFilter)}
-            isLoadingWithoutData={isLoadingWithoutData}
+        {!isLoadingWithoutData && listView && mobileComponent !== 'mobileList'
+          ? (
+            <BankTransactionList
+              bankTransactions={bankTransactions}
+              editable={editable}
+              removeTransaction={removeTransaction}
+              containerWidth={containerWidth}
+              stringOverrides={stringOverrides?.bankTransactionCTAs}
+              showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
+            />
+          )
+          : null}
+
+        {!isLoadingWithoutData && listView && mobileComponent === 'mobileList'
+          ? (
+            <BankTransactionMobileList
+              bankTransactions={bankTransactions}
+              editable={editable}
+              removeTransaction={removeTransaction}
+              showTooltips={showTooltips}
+              showReceiptUploads={showReceiptUploads}
+              showDescriptions={showDescriptions}
+            />
+          )
+          : null}
+
+        {listView && isLoadingWithoutData
+          ? (
+            <div className='Layer__bank-transactions__list-loader'>
+              <Loader />
+            </div>
+          )
+          : null}
+
+        {!isSyncing || listView
+          ? (
+            <BankTransactionsTableEmptyStates
+              hasVisibleTransactions={(bankTransactions?.length ?? 0) > 0}
+              isCategorizationMode={editable}
+              isError={Boolean(error)}
+              isFiltered={Boolean(filters?.descriptionFilter)}
+              isLoadingWithoutData={isLoadingWithoutData}
+            />
+          )
+          : null}
+
+        {!monthlyView && (
+          <Pagination
+            currentPage={currentPage}
+            totalCount={data?.length || 0}
+            pageSize={pageSize}
+            onPageChange={page => setCurrentPage(page)}
+            fetchMore={fetchMore}
+            hasMore={hasMore}
           />
-        )
-        : null}
+        )}
 
-      {!monthlyView && (
-        <Pagination
-          currentPage={currentPage}
-          totalCount={data?.length || 0}
-          pageSize={pageSize}
-          onPageChange={page => setCurrentPage(page)}
-          fetchMore={fetchMore}
-          hasMore={hasMore}
-        />
-      )}
-
-      {monthlyView ? <div ref={scrollPaginationRef} /> : null}
+        {monthlyView ? <div ref={scrollPaginationRef} /> : null}
+      </BankTransactionsPanel>
     </Container>
   )
 }
