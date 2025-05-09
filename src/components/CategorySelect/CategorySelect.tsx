@@ -80,7 +80,7 @@ export const CategorySelect = ({
             <ListSection>
               <ListBoxItem isDisabled={true}>
                 <Header slot='header'>
-                  <Text size={TextSize.xs} status='disabled'>All categories</Text>
+                  <Text size={TextSize.xs}>All categories</Text>
                 </Header>
               </ListBoxItem>
               {allCategories.map(categoriesGroup => (
