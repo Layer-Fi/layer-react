@@ -3,9 +3,14 @@ import { BadgeLoader } from '../../BadgeLoader'
 import { HStack, Spacer, VStack } from '../../ui/Stack/Stack'
 import { Text, TextSize } from '../../Typography'
 import { QuickbooksContext } from '../../../contexts/QuickbooksContext/QuickbooksContext'
-import { format } from 'date-fns'
+import { format, isValid } from 'date-fns'
 
-const formatLastSyncedAt = (datetime: string) => `${format(datetime, 'MMMM d, yyyy')}\nat\n${format(datetime, 'h:mm a')}`
+const formatLastSyncedAt = (datetime: string) => {
+  const parsed = new Date(datetime)
+  if (!isValid(parsed)) return ''
+
+  return `${format(parsed, 'MMMM d, yyyy')} at ${format(parsed, 'h:mm a')}`
+}
 
 export const IntegrationsQuickbooksItemThumbFooter = () => {
   const {
