@@ -5,11 +5,11 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { DataModel, LoadedStatus } from '../../types/general'
 import { LinkedAccount, AccountSource } from '../../types/linked_accounts'
 import { LINKED_ACCOUNTS_MOCK_DATA } from './mockData'
-import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import type { Awaitable } from '../../types/utility/promises'
 import { useAccountConfirmationStoreActions } from '../../providers/AccountConfirmationStoreProvider'
+import { useListExternalAccounts } from './useListExternalAccounts'
 
 export function getAccountsNeedingConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
   return linkedAccounts.filter(
@@ -69,20 +69,15 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const queryKey = businessId && auth?.access_token && `linked-accounts-${businessId}`
 
   const {
-    data: responseData,
+    data: externalAccounts,
     isLoading,
     isValidating,
     error: responseError,
     mutate,
-  } = useSWR(
-    queryKey,
-    Layer.getLinkedAccounts(apiUrl, auth?.access_token, {
-      params: { businessId },
-    }),
-  )
+  } = useListExternalAccounts()
 
   useEffect(() => {
-    if (!isLoading && responseData?.data.external_accounts) {
+    if (!isLoading && externalAccounts) {
       setLoadingStatus('complete')
       return
     }
@@ -356,7 +351,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   return {
     data: USE_MOCK_RESPONSE_DATA
       ? mockResponseData.data
-      : (responseData?.data.external_accounts ?? []),
+      : (externalAccounts ?? []),
     isLoading,
     loadingStatus,
     isValidating,

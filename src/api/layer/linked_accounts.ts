@@ -38,7 +38,7 @@ export const updateOpeningBalance = post<
     `/v1/businesses/${businessId}/external-accounts/${accountId}/opening-balance`,
 )
 
-export const getLinkedAccounts = get<
+export const listExternalAccounts = get<
   { data: LinkedAccounts },
   {
     businessId: string

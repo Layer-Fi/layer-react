@@ -5,7 +5,7 @@ import { useEnvironment } from '../../providers/Environment/EnvironmentInputProv
 import { get } from '../../api/layer/authenticated_http'
 import { BankAccount } from '../../types/linked_accounts'
 
-const BANK_ACCOUNTS_TAG_KEY = '#bank-accounts'
+export const BANK_ACCOUNTS_TAG_KEY = '#bank-accounts'
 
 const getBankAccounts = get<{ data: BankAccount[] }, { businessId: string }>(
   ({ businessId }) => `/v1/businesses/${businessId}/bank-accounts`,
@@ -50,7 +50,7 @@ export const useBankAccounts = () => {
   )
 
   const disconnectedAccountsRequiringNotification = (data?.data ?? []).filter(
-    account => requiresNotification(account)
+    account => requiresNotification(account),
   ).length
 
   return {
