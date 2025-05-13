@@ -19,7 +19,7 @@ export const CategoriesList = ({ option, level = 0, indentationLevel = 0, showTo
   if (option?.payload?.subCategories && level === 0) {
     return (
       <>
-        <ListBoxItem isDisabled={true} textValue=''>
+        <ListBoxItem isDisabled={true} textValue=' '>
           <Header slot='header'>
             <Text size={TextSize.xs} status='disabled'>{option.payload.display_name}</Text>
           </Header>
@@ -36,7 +36,7 @@ export const CategoriesList = ({ option, level = 0, indentationLevel = 0, showTo
           />
         ))}
 
-        <ListBoxItem isDisabled={true} textValue='' className='Layer__category-select__separator'>
+        <ListBoxItem isDisabled={true} textValue=' ' className='Layer__category-select__separator'>
           <span slot='separator-line' />
         </ListBoxItem>
       </>
