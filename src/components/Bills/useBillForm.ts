@@ -35,6 +35,7 @@ export const useBillForm = (bill: Bill) => {
     FormAsyncValidateOrFn<BillForm>,
     FormValidateOrFn<BillForm>,
     FormAsyncValidateOrFn<BillForm>,
+    FormAsyncValidateOrFn<BillForm>,
     FormAsyncValidateOrFn<BillForm>
   >({
     defaultValues: {

@@ -8,7 +8,7 @@ import { Select } from '../Input/Select'
 import { Textarea } from '../Textarea'
 import { TextWeight, TextSize, Text, ErrorText } from '../Typography'
 import { useBillForm } from './useBillForm'
-import { Bill, Category } from '../../types'
+import type { Bill, Category } from '../../types'
 import { formatDate } from '../../utils/format'
 import { formatISO, parseISO } from 'date-fns'
 import { Panel } from '../Panel'
@@ -16,12 +16,12 @@ import { BillsSidebar } from './BillsSidebar'
 import { BillTerms } from '../../types/bills'
 import { SelectVendor } from '../Vendors/SelectVendor'
 import { CategorySelect, mapCategoryToOption } from '../CategorySelect/CategorySelect'
-import { useLayerContext } from '../../contexts/LayerContext'
 import { AmountInput } from '../Input/AmountInput'
 import { getVendorName } from '../../utils/vendors'
 import { DATE_FORMAT_SHORT, DATE_FORMAT_SHORT_PADDED } from '../../config/general'
 import { BillSummary } from './BillSummary'
 import { isBillPaid, isBillUnpaid } from '../../utils/bills'
+import { useCategories } from '../../hooks/categories/useCategories'
 
 const flattenCategories = (categories: Category[]): Category[] => {
   return categories.reduce((acc: Category[], category) => {
@@ -33,7 +33,11 @@ const flattenCategories = (categories: Category[]): Category[] => {
   }, [])
 }
 
-const findCategoryById = (id: string, categories: Category[]) => {
+const findCategoryById = (id: string, categories?: Category[]) => {
+  if (!categories) {
+    return undefined
+  }
+
   return flattenCategories(categories).find(
     category => ('id' in category && category.id === id),
   )
@@ -52,7 +56,7 @@ export const BillsDetails = ({
   bill: Bill
   containerRef: RefObject<HTMLDivElement>
 }) => {
-  const { categories } = useLayerContext()
+  const { data: categories } = useCategories()
   const { closeBillDetails } = useBillsContext()
   const { showRecordPaymentForm, recordPaymentForBill } = useBillsRecordPaymentContext()
   const { form, isDirty, submitError, formErrorMap } = useBillForm(bill)
