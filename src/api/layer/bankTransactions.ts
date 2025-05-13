@@ -70,16 +70,29 @@ export const getBankTransactions = get<
 )
 
 export const categorizeBankTransaction = put<
-  { data: BankTransaction, errors: unknown },
-  CategoryUpdate
+  { data: BankTransaction },
+  CategoryUpdate,
+  {
+    businessId: string
+    bankTransactionId: string
+  }
 >(
   ({ businessId, bankTransactionId }) =>
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/categorize`,
 )
 
+export type MatchBankTransactionBody = {
+  match_id: string
+  type: BankTransactionMatchType
+}
+
 export const matchBankTransaction = put<
-  { data: BankTransactionMatch, errors: unknown },
-  { match_id: string, type: BankTransactionMatchType }
+  { data: BankTransactionMatch },
+  MatchBankTransactionBody,
+  {
+    businessId: string
+    bankTransactionId: string
+  }
 >(
   ({ businessId, bankTransactionId }) =>
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/match`,
