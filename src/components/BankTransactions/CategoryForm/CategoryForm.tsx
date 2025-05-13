@@ -1,57 +1,58 @@
-import { useForm, FormValidateOrFn, FormAsyncValidateOrFn } from '@tanstack/react-form'
-import { CloseButton, RetryButton, SubmitButton } from '../../Button'
+import { useForm } from '@tanstack/react-form'
+import { Button, ButtonVariant, CloseButton, RetryButton, SubmitButton } from '../../Button'
 import { Header, HeaderCol, HeaderRow } from '../../Header'
-import { Heading, HeadingSize } from '../../Typography'
+import { ErrorText, Heading, HeadingSize } from '../../Typography'
 import { useBankTransactionsPanelContext } from '../BankTransactionsPanel'
-import { useCreateCategory } from './useCreateCategory'
 import { InputGroup } from '../../Input/InputGroup'
 import { Input } from '../../Input/Input'
-import { Textarea } from '../../Textarea'
 import { CategoryOption, CategorySelect } from '../../CategorySelect/CategorySelect'
 import { BankTransaction } from '../../../types/bank_transactions'
-import { VStack } from '../../ui/Stack/Stack'
+import { HStack, VStack } from '../../ui/Stack/Stack'
+import { useCreateChildAccount } from '../../../hooks/useChartOfAccounts'
+import { FormSection } from '../../Input/FormSection'
 
-export interface CategoryFormFields {
-  // parentCategory?: CategoryOption
+export type CategoryFormFields = {
   parentCategory?: unknown
   name?: string
-  description?: string
+}
+
+/* @TODO - having TS issue - replace this with regular CategoryOption after rebase */
+type CategoryOptionTemp = {
+  payload: {
+    id: string
+  }
 }
 
 export const CategoryForm = () => {
   const { closeCategoryForm } = useBankTransactionsPanelContext()
-  const { trigger: createCategory, isMutating, apiError } = useCreateCategory({
-    onSuccess: () => {
-      closeCategoryForm()
-    },
-  })
+  const { trigger: createChildAccount, isMutating, error } = useCreateChildAccount()
 
-  const form = useForm<
-    CategoryFormFields,
-    FormValidateOrFn<CategoryFormFields>,
-    FormValidateOrFn<CategoryFormFields>,
-    FormAsyncValidateOrFn<CategoryFormFields>,
-    FormValidateOrFn<CategoryFormFields>,
-    FormAsyncValidateOrFn<CategoryFormFields>,
-    FormValidateOrFn<CategoryFormFields>,
-    FormAsyncValidateOrFn<CategoryFormFields>,
-    FormAsyncValidateOrFn<CategoryFormFields>,
-    FormAsyncValidateOrFn<CategoryFormFields>> ({
+  const form = useForm({
     defaultValues: {
-      parentCategory: undefined,
-      name: undefined,
-      description: undefined,
+      parentCategory: undefined as CategoryOptionTemp | undefined,
+      name: '',
     },
     onSubmit: async ({ value }) => {
-      if (value.name !== undefined && form.state.isDirty) {
-        await createCategory()
-        form.reset(value)
+      try {
+        if (value.name !== undefined && form.state.isDirty && (value.parentCategory as CategoryOption).payload.id) {
+          await createChildAccount({ name: value.name, accountId: (value.parentCategory as CategoryOption).payload.id })
+          form.reset(value)
+          closeCategoryForm()
+        }
+      }
+      catch {
+        console.error('Submit error')
       }
     },
   })
 
   return (
-    <>
+    <form onSubmit={(e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      void form.handleSubmit()
+    }}
+    >
       <Header className='Layer__chart-of-accounts__sidebar__header'>
         <HeaderRow>
           <HeaderCol>
@@ -60,7 +61,7 @@ export const CategoryForm = () => {
             </Heading>
           </HeaderCol>
           <HeaderCol className='actions'>
-            {apiError && (
+            {error && (
               <RetryButton
                 type='submit'
                 processing={isMutating}
@@ -70,84 +71,106 @@ export const CategoryForm = () => {
                 Retry
               </RetryButton>
             )}
-            {!apiError && (
+            {!error && (
               <SubmitButton
-                type='button'
+                type='submit'
                 noIcon={true}
                 active={true}
                 disabled={isMutating}
-                onClick={() => void form.handleSubmit()}
               >
                 Save
               </SubmitButton>
             )}
 
-            {!apiError && (
-              <SubmitButton
-                type='button'
-                noIcon={true}
-                active={true}
-                disabled={isMutating}
-                onClick={() => void form.handleSubmit()}
-              >
-                Save & assign
-              </SubmitButton>
-            )}
-
-            <CloseButton onClick={closeCategoryForm} />
+            <CloseButton type='button' onClick={closeCategoryForm} />
           </HeaderCol>
         </HeaderRow>
       </Header>
-      <VStack pie='md' pis='md'>
-        {/** @TODO - resolve TS issue */}
-        <form.Field name='parentCategory'>
-          {field => (
-            <>
-              <InputGroup name='parentCategory' label='Parent'>
-                <CategorySelect
-                  value={field.state.value as CategoryOption | undefined}
-                  onChange={value => field.handleChange(value as unknown)}
-                  bankTransaction={{} as BankTransaction}
-                  showTooltips={true}
-                />
-              </InputGroup>
-            </>
+      <VStack pbe='sm' pbs='sm' pie='md' pis='md' fluid>
+        <FormSection>
+          {/** @TODO - resolve TS issue */}
+          <form.Field
+            name='parentCategory'
+            validators={{
+              onSubmit: ({ value }) => value ? undefined : 'Parent category is required',
+            }}
+          >
+            {field => (
+              <>
+                <InputGroup name='parentCategory' label='Parent'>
+                  {/* @TODO - replace with new CategorySelect and add invalid state */}
+                  <CategorySelect
+                    value={field.state.value as CategoryOption | undefined}
+                    onChange={value => field.handleChange(value)}
+                    bankTransaction={{} as BankTransaction}
+                    showTooltips={true}
+                  />
+                  {field.state.meta.errors.length > 0 && (
+                    <ErrorText>{field.state.meta.errors.join(', ')}</ErrorText>
+                  )}
+                </InputGroup>
+              </>
+            )}
+          </form.Field>
+
+          <form.Field
+            name='name'
+            validators={{
+              onSubmit: ({ value }) => value ? undefined : 'Name is required',
+            }}
+          >
+            {field => (
+              <>
+                <InputGroup name='name' label='Name'>
+                  <Input
+                    name='name'
+                    placeholder='Enter name...'
+                    value={field.state.value}
+                    onChange={e =>
+                      field.handleChange((e.target as HTMLInputElement).value)}
+                    isInvalid={field.state.meta.errors.length > 0}
+                    errorMessage={field.state.meta.errors.join(', ')}
+                    fluid
+                  />
+                  {field.state.meta.errors.length > 0 && (
+                    <ErrorText>{field.state.meta.errors.join(', ')}</ErrorText>
+                  )}
+                </InputGroup>
+              </>
+            )}
+          </form.Field>
+        </FormSection>
+        <HStack pbe='sm' pbs='md' justify='space-between' className='Layer__create-category__bottom-actions'>
+          <Button
+            type='button'
+            onClick={closeCategoryForm}
+            variant={ButtonVariant.secondary}
+            disabled={isMutating}
+          >
+            Cancel
+          </Button>
+          {error && (
+            <RetryButton
+              type='submit'
+              processing={isMutating}
+              error='Check connection and retry in few seconds.'
+              disabled={isMutating}
+            >
+              Retry
+            </RetryButton>
           )}
-        </form.Field>
-        <form.Field name='name'>
-          {field => (
-            <>
-              <InputGroup name='name' label='Name'>
-                <Input
-                  name='name'
-                  placeholder='Enter name...'
-                  value={field.state.value}
-                  onChange={e =>
-                    field.handleChange((e.target as HTMLInputElement).value)}
-                  isInvalid={field.state.meta.errors.length > 0}
-                  errorMessage={field.state.meta.errors.join(', ')}
-                />
-              </InputGroup>
-            </>
+          {!error && (
+            <SubmitButton
+              type='submit'
+              noIcon={true}
+              active={true}
+              disabled={isMutating}
+            >
+              Save
+            </SubmitButton>
           )}
-        </form.Field>
-        <form.Field name='description'>
-          {field => (
-            <>
-              <InputGroup name='description' label='Description'>
-                <Textarea
-                  name='Description'
-                  value={field.state.value}
-                  onChange={e =>
-                    field.handleChange((e.target as HTMLInputElement).value)}
-                  isInvalid={field.state.meta.errors.length > 0}
-                  errorMessage={field.state.meta.errors.join(', ')}
-                />
-              </InputGroup>
-            </>
-          )}
-        </form.Field>
+        </HStack>
       </VStack>
-    </>
+    </form>
   )
 }

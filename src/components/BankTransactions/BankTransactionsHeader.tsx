@@ -195,7 +195,7 @@ export const BankTransactionsHeader = ({
             downloadButtonTextOverride={stringOverrides?.downloadButton}
             iconOnly={listView}
           />
-          {/* TODO: Temporary button to open the category form */}
+          {/* @TODO: Temporary button to open the category form */}
           <Button onClick={openCategoryForm}>Add Category</Button>
         </HStack>
       </TransactionsActions>
