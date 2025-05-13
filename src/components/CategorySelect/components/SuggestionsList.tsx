@@ -22,11 +22,9 @@ export const SuggestionsList = ({ suggestions, categories, selected }: Suggestio
 
   return (
     <ListSection aria-label='Suggestions'>
-      <ListBoxItem isDisabled={true} textValue=''>
-        <Header slot='header'>
-          <Text size={TextSize.xs}>Suggestions</Text>
-        </Header>
-      </ListBoxItem>
+      <Header slot='header'>
+        <Text size={TextSize.xs}>Suggestions</Text>
+      </Header>
       {suggestions.map((option, index) => (
         <ListBoxItem
           key={index}

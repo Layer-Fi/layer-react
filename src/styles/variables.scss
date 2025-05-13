@@ -8,7 +8,6 @@
 .Layer__variables,
 .Layer__actionable-list__tooltip-content,
 .Layer__tasks-component,
-.Layer__category-select__popover,
 #Layer__datepicker__portal {
   // 1. BASE VARIABLES:
   --color-black: #1a1a1a;
@@ -200,6 +199,9 @@
   --table-bg: var(--color-white);
   --tooltip-color: var(--color-white);
   --tooltip-bg-color: var(--color-base-800);
+  --dropdown-screen-padding: var(--spacing-sm);
+  --dropdown-width-md: min(320px, calc(100svw - (var(--dropdown-screen-padding) * 2)));
+  --dropdown-max-width-md: calc(100svw - (var(--dropdown-screen-padding) * 2));
   --bar-color-income: var(--color-base-400);
   --bar-color-expenses: var(--color-base-900);
   --chart-indicator-color: var(--color-base-700);

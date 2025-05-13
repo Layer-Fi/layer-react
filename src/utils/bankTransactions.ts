@@ -1,5 +1,5 @@
 import { filterVisibility } from '../components/BankTransactions/utils'
-import { CategoryOption } from '../components/CategorySelect/types'
+import { type CategoryOption } from '../components/CategorySelect/types'
 import { BankTransaction, DateRange, Direction, DisplayState } from '../types'
 import { isWithinInterval, parseISO } from 'date-fns'
 

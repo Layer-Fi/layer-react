@@ -24,7 +24,7 @@ export const MatchesList = ({ matches, selected }: MatchesListProps) => {
 
   return (
     <ListSection>
-      <ListBoxItem isDisabled={true} textValue=''>
+      <ListBoxItem isDisabled={true} textValue=' '>
         <Header slot='header'>
           <Text size={TextSize.xs}>Match</Text>
         </Header>

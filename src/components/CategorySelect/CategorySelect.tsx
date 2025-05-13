@@ -71,14 +71,14 @@ export const CategorySelect = ({
         aria-label='Categorize'
       >
         <ComboBoxInput name={name} placeholder={placeholder} value={value} />
-        <Popover className='Layer__category-select__popover' placement='bottom end'>
+        <Popover className='Layer__category-select__popover Layer__Portal' placement='bottom end'>
           <ListBox>
             <MatchesList matches={matches} selected={value} />
 
             <SuggestionsList suggestions={suggestions} categories={categories} selected={value} />
 
             <ListSection>
-              <ListBoxItem isDisabled={true}>
+              <ListBoxItem isDisabled={true} textValue=' '>
                 <Header slot='header'>
                   <Text size={TextSize.xs}>All categories</Text>
                 </Header>
