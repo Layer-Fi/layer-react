@@ -19,7 +19,7 @@ export type BillsViewProps = {
   stringOverrides?: BillsStringOverrides
 }
 
-export const BillsView = (props: BillsViewProps) => (
+export const unstable_BillsView = (props: BillsViewProps) => (
   <BillsProvider>
     <BillsViewContent {...props} />
   </BillsProvider>

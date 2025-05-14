@@ -22,7 +22,7 @@ export const getBills = get<
   GetBillsReturn,
   GetBillsParams
 >(
-  ({ businessId, startDate, endDate, status, vendorId, cursor, limit = 200 }) => `/v1/businesses/${businessId}/bills?${
+  ({ businessId, startDate, endDate, status, vendorId, cursor, limit = 15 }) => `/v1/businesses/${businessId}/bills?${
     vendorId ? `&vendor_id=${vendorId}` : ''
   }${
     cursor ? `&cursor=${cursor}` : ''
