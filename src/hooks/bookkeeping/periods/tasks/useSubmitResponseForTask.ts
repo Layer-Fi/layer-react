@@ -67,19 +67,18 @@ export function useSubmitUserResponseForTask() {
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const result = await originalTrigger(...triggerParameters)
-
-      if (result) {
-        void mutate(key => withSWRKeyTags(
-          key,
-          tags => tags.includes(BOOKKEEPING_PERIODS_TAG_KEY),
-        ))
-      }
-
-      return result
-    },
-    [originalTrigger, mutate],
+    async (...triggerParameters: Parameters<typeof originalTrigger>) =>
+      originalTrigger(...triggerParameters)
+        .finally(() => {
+          void mutate(key => withSWRKeyTags(
+            key,
+            tags => tags.includes(BOOKKEEPING_PERIODS_TAG_KEY),
+          ))
+        }),
+    [
+      originalTrigger,
+      mutate,
+    ],
   )
 
   return new Proxy(mutationResponse, {
