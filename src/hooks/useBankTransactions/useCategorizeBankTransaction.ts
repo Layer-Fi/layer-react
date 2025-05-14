@@ -7,8 +7,6 @@ import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
-import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
-import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 
@@ -76,30 +74,25 @@ export function useCategorizeBankTransaction({
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const result = await originalTrigger(...triggerParameters)
-
-      if (result) {
-        await Promise.all([
-          mutate(key => withSWRKeyTags(
+    async (...triggerParameters: Parameters<typeof originalTrigger>) =>
+      originalTrigger(...triggerParameters)
+        .finally(() => {
+          void mutate(key => withSWRKeyTags(
             key,
-            tags => (
-              tags.includes(BANK_ACCOUNTS_TAG_KEY)
-              || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY)
-            ),
-          )),
+            tags => tags.includes(CATEGORIZE_BANK_TRANSACTION_TAG),
+          ))
           /**
            * SWR does not expose infinite queries through the matcher
            *
            * @see https://github.com/vercel/swr/blob/main/src/_internal/utils/mutate.ts#L78
            */
-          mutateBankTransactions(undefined, { revalidate: true }),
-        ])
-      }
-
-      return result
-    },
-    [originalTrigger, mutate, mutateBankTransactions],
+          void mutateBankTransactions(undefined, { revalidate: true })
+        }),
+    [
+      originalTrigger,
+      mutate,
+      mutateBankTransactions,
+    ],
   )
 
   return new Proxy(mutationResponse, {
