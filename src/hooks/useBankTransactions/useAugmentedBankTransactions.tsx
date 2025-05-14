@@ -3,6 +3,7 @@ import { TagFilterInput } from '../../types/tags'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
   BankTransaction,
+  CategorizationStatus,
   CategoryUpdate,
 } from '../../types'
 import {
@@ -263,7 +264,13 @@ export const useAugmentedBankTransactions = (
       bankTransactionId,
       ...newCategory,
     })
-      .then(() => {
+      .then((updatedTransaction) => {
+        updateOneLocal({
+          ...updatedTransaction,
+          processing: false,
+          recently_categorized: true,
+        })
+
         if (notify) {
           addToast({ content: 'Transaction confirmed' })
         }
@@ -290,18 +297,22 @@ export const useAugmentedBankTransactions = (
 
   const matchWithOptimisticUpdate = async (
     bankTransactionId: BankTransaction['id'],
-    matchId: BankTransaction['id'],
+    suggestedMatchId: string,
     notify?: boolean,
   ) => {
     const existingTransaction = data?.find(({ id }) => id === bankTransactionId)
 
     if (existingTransaction) {
-      updateOneLocal({ ...existingTransaction, processing: true, error: undefined })
+      updateOneLocal({
+        ...existingTransaction,
+        processing: true,
+        error: undefined,
+      })
     }
 
     const transferBankTransaction = data?.find(({ id, suggested_matches }) =>
       id !== bankTransactionId
-      && suggested_matches?.some(sm => sm.id === matchId),
+      && suggested_matches?.some(({ id }) => id === suggestedMatchId),
     )
 
     if (transferBankTransaction) {
@@ -314,10 +325,39 @@ export const useAugmentedBankTransactions = (
 
     return matchBankTransaction({
       bankTransactionId,
-      match_id: matchId,
+      match_id: suggestedMatchId,
       type: BankTransactionMatchType.CONFIRM_MATCH,
     })
-      .then(() => {
+      .then((match) => {
+        const matchedTransaction = data?.find(({ id }) => id === match.bank_transaction.id)
+
+        if (matchedTransaction) {
+          updateOneLocal({
+            ...matchedTransaction,
+            categorization_status: CategorizationStatus.MATCHED,
+            match,
+            processing: false,
+            recently_categorized: true,
+          })
+        }
+
+        const matchedTransferTransaction = data?.find(({ id, suggested_matches }) =>
+          id !== bankTransactionId
+          && suggested_matches?.some(({ id }) => id === suggestedMatchId),
+        )
+
+        if (matchedTransferTransaction) {
+          /*
+           * We do not have the corresponding `match` for the transfer, so this portion of
+           * the optimistic update is not as complete as the other.
+           */
+          updateOneLocal({
+            ...matchedTransferTransaction,
+            processing: false,
+            recently_categorized: true,
+          })
+        }
+
         if (notify) {
           addToast({ content: 'Transaction saved' })
         }
