@@ -33,9 +33,9 @@ export function getBookkeepingStatusConfig({
     : 'No action is needed from you right now.'
 
   switch (status) {
-    case 'IN_PROGRESS_AWAITING_BOOKKEEPER':
-    case 'NOT_STARTED':
-    case 'CLOSING_IN_REVIEW': {
+    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
+    case BookkeepingPeriodStatus.NOT_STARTED:
+    case BookkeepingPeriodStatus.CLOSING_IN_REVIEW: {
       return {
         label: 'Books in progress',
         description: `We're working on your ${monthName} books. ${actionPhrase}`,
@@ -43,8 +43,8 @@ export function getBookkeepingStatusConfig({
         icon: <Clock size={12} />,
       }
     }
-    case 'IN_PROGRESS_AWAITING_CUSTOMER':
-    case 'CLOSED_OPEN_TASKS': {
+    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER:
+    case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
       return {
         label: 'Action required',
         description: `Please respond to the below tasks to help us complete your ${monthName} books.`,
@@ -52,7 +52,7 @@ export function getBookkeepingStatusConfig({
         icon: <AlertCircle size={12} />,
       }
     }
-    case 'CLOSED_COMPLETE': {
+    case BookkeepingPeriodStatus.CLOSED_COMPLETE: {
       return {
         label: 'Books completed',
         description: `Your ${monthName} books are complete and ready to view!`,
@@ -60,7 +60,7 @@ export function getBookkeepingStatusConfig({
         icon: <CheckCircle size={12} />,
       }
     }
-    case 'BOOKKEEPING_NOT_ACTIVE': {
+    case BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE: {
       return
     }
     default: {
