@@ -449,21 +449,21 @@ export const DatePicker = ({
         </>
       )}
       {currentDateOption
-      && (
-        pickerMode === 'dayPicker'
-        || pickerMode === 'monthPicker'
-        || pickerMode === 'yearPicker'
-      )
-      && (
-        <Button
-          className='Layer__datepicker__current-button'
-          onClick={setCurrentDate}
-          variant={ButtonVariant.secondary}
-          disabled={isCurrentDate() || disabled}
-        >
-          {pickerMode === 'dayPicker' ? 'Today' : 'Current'}
-        </Button>
-      )}
+        && (
+          pickerMode === 'dayPicker'
+          || pickerMode === 'monthPicker'
+          || pickerMode === 'yearPicker'
+        )
+        && (
+          <Button
+            className='Layer__datepicker__current-button'
+            onClick={setCurrentDate}
+            variant={ButtonVariant.secondary}
+            disabled={isCurrentDate() || disabled}
+          >
+            {pickerMode === 'dayPicker' ? 'Today' : 'Current'}
+          </Button>
+        )}
     </div>
   )
 }

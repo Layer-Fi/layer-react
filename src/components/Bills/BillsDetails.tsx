@@ -1,6 +1,6 @@
 import { RefObject } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
-import { BackButton, Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
+import { BackButton, Button, ButtonVariant, IconButton, RetryButton, SubmitButton } from '../Button'
 import { DatePicker } from '../DatePicker/DatePicker'
 import { Header, HeaderRow, HeaderCol } from '../Header'
 import { Input, InputGroup } from '../Input'
@@ -22,6 +22,7 @@ import { DATE_FORMAT_SHORT, DATE_FORMAT_SHORT_PADDED } from '../../config/genera
 import { BillSummary } from './BillSummary'
 import { isBillPaid, isBillUnpaid } from '../../utils/bills'
 import { useCategories } from '../../hooks/categories/useCategories'
+import CloseIcon from '../../icons/CloseIcon'
 
 const flattenCategories = (categories: Category[]): Category[] => {
   return categories.reduce((acc: Category[], category) => {
@@ -310,6 +311,9 @@ export const BillsDetails = ({
                               )
                             }}
                           </form.Field>
+                          <div slot='delete-btn'>
+                            <IconButton type='button' icon={<CloseIcon />} onClick={() => field.removeValue(i)} />
+                          </div>
                         </div>
                       )
                     })}
