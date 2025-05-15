@@ -12,25 +12,29 @@ import { isActiveOrPausedBookkeepingStatus } from '../../../utils/bookkeeping/bo
 import { getUserVisibleTasks } from '../../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { isActiveBookkeepingPeriod } from '../../../utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
 
-const BOOKKEEPING_PERIOD_STATUSES = [
-  'BOOKKEEPING_NOT_ACTIVE',
-  'NOT_STARTED',
-  'IN_PROGRESS_AWAITING_BOOKKEEPER',
-  'IN_PROGRESS_AWAITING_CUSTOMER',
-  'CLOSING_IN_REVIEW',
-  'CLOSED_OPEN_TASKS',
-  'CLOSED_COMPLETE',
-] as const
+export enum BookkeepingPeriodStatus {
+  BOOKKEEPING_NOT_ACTIVE = 'BOOKKEEPING_NOT_ACTIVE',
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS_AWAITING_BOOKKEEPER = 'IN_PROGRESS_AWAITING_BOOKKEEPER',
+  IN_PROGRESS_AWAITING_CUSTOMER = 'IN_PROGRESS_AWAITING_CUSTOMER',
+  CLOSING_IN_REVIEW = 'CLOSING_IN_REVIEW',
+  CLOSED_OPEN_TASKS = 'CLOSED_OPEN_TASKS',
+  CLOSED_COMPLETE = 'CLOSED_COMPLETE',
+}
+const BOOKKEEPING_PERIOD_STATUSES: string[] = Object.values(BookkeepingPeriodStatus)
 
-export type BookkeepingPeriodStatus = typeof BOOKKEEPING_PERIOD_STATUSES[number]
 type RawBookkeepingPeriodStatus = EnumWithUnknownValues<BookkeepingPeriodStatus>
 
-function constrainToKnownBookkeepingPeriodStatus(status: string): BookkeepingPeriodStatus {
-  if (BOOKKEEPING_PERIOD_STATUSES.includes(status as BookkeepingPeriodStatus)) {
-    return status as BookkeepingPeriodStatus
+function isBookkeepingPeriodStatus(status: RawBookkeepingPeriodStatus): status is BookkeepingPeriodStatus {
+  return BOOKKEEPING_PERIOD_STATUSES.includes(status)
+}
+
+function constrainToKnownBookkeepingPeriodStatus(status: RawBookkeepingPeriodStatus): BookkeepingPeriodStatus {
+  if (isBookkeepingPeriodStatus(status)) {
+    return status
   }
 
-  return 'BOOKKEEPING_NOT_ACTIVE'
+  return BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE
 }
 
 export type BookkeepingPeriod = Omit<RawBookkeepingPeriod, 'status'> & {
