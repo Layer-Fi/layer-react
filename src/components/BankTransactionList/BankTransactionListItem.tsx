@@ -16,7 +16,7 @@ import {
 import { isCategorized } from '../BankTransactions/utils'
 import { RetryButton, SubmitButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
-import { CategorySelect } from '../CategorySelect'
+import { CategorySelect } from '../CategorySelect/CategorySelect'
 import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { ErrorText, Text } from '../Typography'
