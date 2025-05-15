@@ -6,6 +6,7 @@ import { BookkeepingPeriod } from '../../hooks/bookkeeping/periods/useBookkeepin
 import pluralize from 'pluralize'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { safeAssertUnreachable } from '../../utils/switch/assertUnreachable'
+import { CustomerFacingBookkeepingPeriodStatus, getCustomerFacingBookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/utils'
 
 type TaskStatusBadgeProps = {
   status: BookkeepingPeriod['status']
@@ -13,41 +14,32 @@ type TaskStatusBadgeProps = {
 }
 
 const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: TaskStatusBadgeProps['tasksCount']) => {
-  switch (status) {
-    case 'IN_PROGRESS_AWAITING_BOOKKEEPER':
-    case 'NOT_STARTED':
-    case 'CLOSING_IN_REVIEW': {
+    const hasOpenTasks = tasksCount !== undefined && tasksCount > 0
+    const customerFacingStatus = getCustomerFacingBookkeepingPeriodStatus(status, hasOpenTasks)
+
+  switch (customerFacingStatus) {
+    case CustomerFacingBookkeepingPeriodStatus.BOOKS_IN_PROGRESS: {
       return {
         color: 'info' as const,
         icon: <Clock size={12} />,
-        label: tasksCount ? pluralize('task', tasksCount, true) : undefined,
-        labelShort: tasksCount ? `${tasksCount}` : undefined,
       }
     }
-    case 'IN_PROGRESS_AWAITING_CUSTOMER':
-    case 'CLOSED_OPEN_TASKS': {
+    case CustomerFacingBookkeepingPeriodStatus.ACTION_REQUIRED: {
       return {
         color: 'warning' as const,
+        icon: <AlertCircle size={12} />,
         label: tasksCount ? pluralize('task', tasksCount, true) : undefined,
         labelShort: tasksCount ? `${tasksCount}` : undefined,
-        icon: <AlertCircle size={12} />,
       }
     }
-    case 'CLOSED_COMPLETE': {
+    case CustomerFacingBookkeepingPeriodStatus.BOOKS_COMPLETED: {
       return {
         color: 'success' as const,
         icon: <CheckCircle size={12} />,
       }
     }
-    case 'BOOKKEEPING_NOT_ACTIVE': {
-      return
-    }
     default: {
-      return safeAssertUnreachable({
-        value: status,
-        message: 'Unexpected bookkeeping status in `TaskStatusBadge`',
-        fallbackValue: undefined,
-      })
+      return undefined
     }
   }
 }

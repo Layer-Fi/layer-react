@@ -5,8 +5,7 @@ import { TextStatus } from '../Typography/Text'
 import AlertCircle from '../../icons/AlertCircle'
 import Clock from '../../icons/Clock'
 import CheckCircle from '../../icons/CheckCircle'
-import { safeAssertUnreachable } from '../../utils/switch/assertUnreachable'
-import pluralize from 'pluralize'
+import { CustomerFacingBookkeepingPeriodStatus, getCustomerFacingBookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/utils'
 
 type InternalStatusConfig = {
   label: string
@@ -27,24 +26,19 @@ export function getBookkeepingStatusConfig({
   incompleteTasksCount,
 }: BookkeepingStatusConfigOptions): InternalStatusConfig | undefined {
   const monthName = monthNumber !== undefined ? getMonthNameFromNumber(monthNumber) : ''
+  const hasOpenTasks = incompleteTasksCount !== undefined && incompleteTasksCount > 0
+  const customerFacingStatus = getCustomerFacingBookkeepingPeriodStatus(status, hasOpenTasks)
 
-  const actionPhrase = incompleteTasksCount !== undefined && incompleteTasksCount > 0
-    ? `Please complete the ${pluralize('open task', incompleteTasksCount, true)}.`
-    : 'No action is needed from you right now.'
-
-  switch (status) {
-    case 'IN_PROGRESS_AWAITING_BOOKKEEPER':
-    case 'NOT_STARTED':
-    case 'CLOSING_IN_REVIEW': {
+  switch (customerFacingStatus) {
+    case CustomerFacingBookkeepingPeriodStatus.BOOKS_IN_PROGRESS: {
       return {
         label: 'Books in progress',
-        description: `We're working on your ${monthName} books. ${actionPhrase}`,
+        description: `We're working on your ${monthName} books. No action is needed from you right now.`,
         color: 'info',
         icon: <Clock size={12} />,
       }
     }
-    case 'IN_PROGRESS_AWAITING_CUSTOMER':
-    case 'CLOSED_OPEN_TASKS': {
+    case CustomerFacingBookkeepingPeriodStatus.ACTION_REQUIRED: {
       return {
         label: 'Action required',
         description: `Please respond to the below tasks to help us complete your ${monthName} books.`,
@@ -52,7 +46,7 @@ export function getBookkeepingStatusConfig({
         icon: <AlertCircle size={12} />,
       }
     }
-    case 'CLOSED_COMPLETE': {
+    case CustomerFacingBookkeepingPeriodStatus.BOOKS_COMPLETED: {
       return {
         label: 'Books completed',
         description: `Your ${monthName} books are complete and ready to view!`,
@@ -60,15 +54,8 @@ export function getBookkeepingStatusConfig({
         icon: <CheckCircle size={12} />,
       }
     }
-    case 'BOOKKEEPING_NOT_ACTIVE': {
-      return
-    }
     default: {
-      return safeAssertUnreachable({
-        value: status,
-        message: 'Unexpected bookkeeping status in BookkeepingStatus',
-        fallbackValue: undefined,
-      })
+      return undefined
     }
   }
 }

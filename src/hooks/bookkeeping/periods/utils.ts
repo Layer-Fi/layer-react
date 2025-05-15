@@ -1,4 +1,4 @@
-import { BookkeepingPeriodStatus } from "./useBookkeepingPeriods"
+import { BookkeepingPeriodStatus } from './useBookkeepingPeriods'
 
 export enum CustomerFacingBookkeepingPeriodStatus {
   BOOKS_IN_PROGRESS = 'BOOKS_IN_PROGRESS',
@@ -14,12 +14,12 @@ export function getCustomerFacingBookkeepingPeriodStatus(status: BookkeepingPeri
     case BookkeepingPeriodStatus.CLOSING_IN_REVIEW:
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER: {
-      return hasOpenTasks 
+      return hasOpenTasks
         ? CustomerFacingBookkeepingPeriodStatus.ACTION_REQUIRED
         : CustomerFacingBookkeepingPeriodStatus.BOOKS_IN_PROGRESS
     }
     case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
-      return hasOpenTasks 
+      return hasOpenTasks
         ? CustomerFacingBookkeepingPeriodStatus.ACTION_REQUIRED
         : CustomerFacingBookkeepingPeriodStatus.BOOKS_COMPLETED
     }
