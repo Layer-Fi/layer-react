@@ -6,7 +6,7 @@ export enum CustomerFacingBookkeepingPeriodStatus {
   BOOKS_COMPLETED = 'BOOKS_COMPLETED',
 }
 
-export function getCustomerFacingBookkeepingPeriodStatus(status: BookkeepingPeriodStatus, hasOpenTasks: boolean) {
+export function getCustomerFacingBookkeepingPeriodStatus(status: BookkeepingPeriodStatus, hasOpenTasks: boolean): CustomerFacingBookkeepingPeriodStatus | undefined {
   switch (status) {
     case BookkeepingPeriodStatus.NOT_STARTED: {
       return CustomerFacingBookkeepingPeriodStatus.BOOKS_IN_PROGRESS
