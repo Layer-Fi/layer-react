@@ -74,20 +74,22 @@ export function useCategorizeBankTransaction({
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) =>
-      originalTrigger(...triggerParameters)
-        .finally(() => {
-          void mutate(key => withSWRKeyTags(
-            key,
-            tags => tags.includes(CATEGORIZE_BANK_TRANSACTION_TAG),
-          ))
-          /**
-           * SWR does not expose infinite queries through the matcher
-           *
-           * @see https://github.com/vercel/swr/blob/main/src/_internal/utils/mutate.ts#L78
-           */
-          void mutateBankTransactions(undefined, { revalidate: true })
-        }),
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+      const triggerResult = await originalTrigger(...triggerParameters)
+
+      void mutate(key => withSWRKeyTags(
+        key,
+        tags => tags.includes(CATEGORIZE_BANK_TRANSACTION_TAG),
+      ))
+      /**
+       * SWR does not expose infinite queries through the matcher
+       *
+       * @see https://github.com/vercel/swr/blob/main/src/_internal/utils/mutate.ts#L78
+       */
+      void mutateBankTransactions(undefined, { revalidate: true })
+
+      return triggerResult
+    },
     [
       originalTrigger,
       mutate,

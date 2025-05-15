@@ -72,14 +72,16 @@ export function useCreateBusinessPersonnel() {
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) =>
-      originalTrigger(...triggerParameters)
-        .finally(() => {
-          void mutate(key => withSWRKeyTags(
-            key,
-            tags => tags.includes(BUSINESS_PERSONNEL_TAG_KEY),
-          ))
-        }),
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+      const triggerResult = await originalTrigger(...triggerParameters)
+
+      void mutate(key => withSWRKeyTags(
+        key,
+        tags => tags.includes(BUSINESS_PERSONNEL_TAG_KEY),
+      ))
+
+      return triggerResult
+    },
     [
       originalTrigger,
       mutate,
