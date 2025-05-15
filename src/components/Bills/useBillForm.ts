@@ -69,9 +69,12 @@ export const useBillForm = (bill: Bill) => {
       try {
         setSubmitError(undefined)
         const formattedValue = {
-          ...value,
+          bill_number: value.bill_number,
+          terms: value.terms,
           due_at: value.due_at ? new Date(value.due_at).toISOString() : undefined,
           received_at: value.received_at ? new Date(value.received_at).toISOString() : undefined,
+          vendor_id: value.vendor?.id,
+          vendor_external_id: value.vendor?.external_id,
           line_items: value.line_items?.map(item => ({
             account_identifier: item.account_identifier
               ? {
