@@ -11,17 +11,13 @@ export function getCustomerFacingBookkeepingPeriodStatus(status: BookkeepingPeri
     case BookkeepingPeriodStatus.NOT_STARTED: {
       return CustomerFacingBookkeepingPeriodStatus.BOOKS_IN_PROGRESS
     }
+    case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS:
     case BookkeepingPeriodStatus.CLOSING_IN_REVIEW:
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER: {
       return hasOpenTasks
         ? CustomerFacingBookkeepingPeriodStatus.ACTION_REQUIRED
         : CustomerFacingBookkeepingPeriodStatus.BOOKS_IN_PROGRESS
-    }
-    case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
-      return hasOpenTasks
-        ? CustomerFacingBookkeepingPeriodStatus.ACTION_REQUIRED
-        : CustomerFacingBookkeepingPeriodStatus.BOOKS_COMPLETED
     }
     case BookkeepingPeriodStatus.CLOSED_COMPLETE: {
       return CustomerFacingBookkeepingPeriodStatus.BOOKS_COMPLETED
