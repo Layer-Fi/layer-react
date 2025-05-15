@@ -14,8 +14,8 @@ type TaskStatusBadgeProps = {
 }
 
 const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: TaskStatusBadgeProps['tasksCount']) => {
-    const hasOpenTasks = tasksCount !== undefined && tasksCount > 0
-    const customerFacingStatus = getCustomerFacingBookkeepingPeriodStatus(status, hasOpenTasks)
+  const hasOpenTasks = tasksCount !== undefined && tasksCount > 0
+  const customerFacingStatus = getCustomerFacingBookkeepingPeriodStatus(status, hasOpenTasks)
 
   switch (customerFacingStatus) {
     case CustomerFacingBookkeepingPeriodStatus.BOOKS_IN_PROGRESS: {
