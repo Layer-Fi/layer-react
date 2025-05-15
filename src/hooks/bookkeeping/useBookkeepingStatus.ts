@@ -86,8 +86,8 @@ export function useEffectiveBookkeepingStatus() {
   const { data } = useBookkeepingStatus()
 
   if (overrideMode === 'bookkeeping-client') {
-    return 'ACTIVE'
+    return BookkeepingStatus.ACTIVE
   }
 
-  return data?.status ?? 'NOT_PURCHASED'
+  return data?.status ?? BookkeepingStatus.NOT_PURCHASED
 }
