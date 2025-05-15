@@ -7,6 +7,8 @@ import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
+import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
+import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 
@@ -79,7 +81,8 @@ export function useCategorizeBankTransaction({
 
       void mutate(key => withSWRKeyTags(
         key,
-        tags => tags.includes(CATEGORIZE_BANK_TRANSACTION_TAG),
+        tags => tags.includes(BANK_ACCOUNTS_TAG_KEY)
+          || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY),
       ))
       /**
        * SWR does not expose infinite queries through the matcher
