@@ -2,11 +2,10 @@ import AlertCircle from '../../icons/AlertCircle'
 import Clock from '../../icons/Clock'
 import { Text, TextSize, TextWeight } from '../Typography/Text'
 import CheckCircle from '../../icons/CheckCircle'
-import { BookkeepingPeriod } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingPeriod, BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import pluralize from 'pluralize'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { safeAssertUnreachable } from '../../utils/switch/assertUnreachable'
-import { CustomerFacingBookkeepingPeriodStatus, getCustomerFacingBookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/utils'
 
 type TaskStatusBadgeProps = {
   status: BookkeepingPeriod['status']
@@ -14,32 +13,41 @@ type TaskStatusBadgeProps = {
 }
 
 const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: TaskStatusBadgeProps['tasksCount']) => {
-  const hasOpenTasks = tasksCount !== undefined && tasksCount > 0
-  const customerFacingStatus = getCustomerFacingBookkeepingPeriodStatus(status, hasOpenTasks)
-
-  switch (customerFacingStatus) {
-    case CustomerFacingBookkeepingPeriodStatus.BOOKS_IN_PROGRESS: {
+  switch (status) {
+    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
+    case BookkeepingPeriodStatus.NOT_STARTED:
+    case BookkeepingPeriodStatus.CLOSING_IN_REVIEW: {
       return {
         color: 'info' as const,
         icon: <Clock size={12} />,
-      }
-    }
-    case CustomerFacingBookkeepingPeriodStatus.ACTION_REQUIRED: {
-      return {
-        color: 'warning' as const,
-        icon: <AlertCircle size={12} />,
         label: tasksCount ? pluralize('task', tasksCount, true) : undefined,
         labelShort: tasksCount ? `${tasksCount}` : undefined,
       }
     }
-    case CustomerFacingBookkeepingPeriodStatus.BOOKS_COMPLETED: {
+    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER:
+    case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
+      return {
+        color: 'warning' as const,
+        label: tasksCount ? pluralize('task', tasksCount, true) : undefined,
+        labelShort: tasksCount ? `${tasksCount}` : undefined,
+        icon: <AlertCircle size={12} />,
+      }
+    }
+    case BookkeepingPeriodStatus.CLOSED_COMPLETE: {
       return {
         color: 'success' as const,
         icon: <CheckCircle size={12} />,
       }
     }
+    case BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE: {
+      return
+    }
     default: {
-      return undefined
+      return safeAssertUnreachable({
+        value: status,
+        message: 'Unexpected bookkeeping status in `TaskStatusBadge`',
+        fallbackValue: undefined,
+      })
     }
   }
 }
