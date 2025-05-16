@@ -74,7 +74,7 @@ type AllowedDialogProps = Pick<
   'children'
 >
 
-type ModalProps = AllowedModalOverlayProps & AllowedInternalModalProps & AllowedDialogProps
+export type ModalProps = AllowedModalOverlayProps & AllowedInternalModalProps & AllowedDialogProps
 
 export function Modal({
   isOpen,
