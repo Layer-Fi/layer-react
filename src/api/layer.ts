@@ -49,7 +49,6 @@ import {
 } from './layer/profit_and_loss'
 import {
   syncFromQuickbooks,
-  statusOfSyncFromQuickbooks,
   initQuickbooksOAuth,
   statusOfQuickbooksConnection,
   unlinkQuickbooksConnection,
@@ -104,7 +103,6 @@ export const Layer = {
   updateOpeningBalance,
   getStatementOfCashFlow,
   syncFromQuickbooks,
-  statusOfSyncFromQuickbooks,
   statusOfQuickbooksConnection,
   initQuickbooksOAuth,
   unlinkQuickbooksConnection,

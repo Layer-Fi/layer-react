@@ -1,4 +1,4 @@
-import type { StatusOfQuickbooksConnection, StatusOfSyncFromQuickbooks } from '../../types/quickbooks'
+import type { StatusOfQuickbooksConnection } from '../../types/quickbooks'
 import { get, post } from './authenticated_http'
 
 export const syncFromQuickbooks = post<
@@ -6,14 +6,6 @@ export const syncFromQuickbooks = post<
   Record<string, unknown>,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/quickbooks/sync-from`)
-
-export const statusOfSyncFromQuickbooks = get<
-  { data: StatusOfSyncFromQuickbooks },
-  { businessId: string }
->(
-  ({ businessId }) =>
-    `/v1/businesses/${businessId}/quickbooks/sync-from/status`,
-)
 
 export const initQuickbooksOAuth = post<
   {
