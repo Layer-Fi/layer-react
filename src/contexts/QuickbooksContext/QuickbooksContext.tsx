@@ -4,9 +4,7 @@ import { useQuickbooks } from '../../hooks/useQuickbooks'
 export type QuickbooksContextType = ReturnType<typeof useQuickbooks>
 export const QuickbooksContext = createContext<QuickbooksContextType>({
   linkQuickbooks: () => Promise.reject(new Error('QuickbooksContext used without Provider')),
-  unlinkQuickbooks: () => { throw new Error('QuickbooksContext used without Provider') },
+  unlinkQuickbooks: () => Promise.reject(new Error('QuickbooksContext used without Provider')),
   syncFromQuickbooks: () => { throw new Error('QuickbooksContext used without Provider') },
-  isSyncingFromQuickbooks: false,
-  quickbooksIsConnected: false,
-  quickbooksLastSyncedAt: undefined,
+  quickbooksConnectionStatus: undefined,
 })

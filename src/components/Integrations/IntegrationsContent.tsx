@@ -3,11 +3,11 @@ import { IntegrationsQuickbooksItemThumb } from './IntegrationsQuickbooksItemThu
 import { QuickbooksContext } from '../../contexts/QuickbooksContext/QuickbooksContext'
 
 export const IntegrationsContent = () => {
-  const { quickbooksIsConnected } = useContext(QuickbooksContext)
+  const { quickbooksConnectionStatus } = useContext(QuickbooksContext)
 
   return (
     <div className='Layer__linked-accounts__list'>
-      {quickbooksIsConnected && <IntegrationsQuickbooksItemThumb />}
+      {quickbooksConnectionStatus?.is_connected && <IntegrationsQuickbooksItemThumb />}
     </div>
   )
 }
