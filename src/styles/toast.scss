@@ -27,12 +27,13 @@
     }
 
     &.Layer__toast--success {
-      background: var(--color-info-success-bg);
+      background: var(--color-info-success);
       box-shadow: 0 0 0 1px var(--color-info-success);
+    }
 
-      p {
-        color: var(--color-info-success-fg);
-      }
+    &.Layer__toast--error {
+      background: var(--color-info-error);
+      box-shadow: 0 0 0 1px var(--color-info-error);
     }
   }
 }
