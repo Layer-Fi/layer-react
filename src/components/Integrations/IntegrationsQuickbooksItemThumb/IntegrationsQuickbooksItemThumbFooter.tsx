@@ -13,41 +13,35 @@ const formatLastSyncedAt = (datetime: string) => {
   return `${format(parsed, 'MMMM d, yyyy')} at ${format(parsed, 'h:mm a')}`
 }
 
-type FooterConfig = {
-  title: string
-  description?: string
-  badgeVariant: 'info' | 'error' | 'success'
-}
-
-const getFooterConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, lastSyncedAt?: string): FooterConfig => {
+const getFooterConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, lastSyncedAt?: string) => {
   switch (quickbooksUiState) {
     case QuickbooksConnectionSyncUiState.Syncing: {
       return {
         title: 'Syncing account data',
         description: 'This may take up to 5 minutes',
         badgeVariant: 'info',
-      }
+      } as const
     }
     case QuickbooksConnectionSyncUiState.SyncFailed: {
       return {
         title: 'Last sync failed at',
         description: formatLastSyncedAt(lastSyncedAt!),
         badgeVariant: 'error',
-      }
+      } as const
     }
     case QuickbooksConnectionSyncUiState.SyncSuccess: {
       return {
         title: 'Last synced on',
         description: formatLastSyncedAt(lastSyncedAt!),
         badgeVariant: 'success',
-      }
+      } as const
     }
     case QuickbooksConnectionSyncUiState.Connected:
     default: {
       return {
         title: 'Connected to QuickBooks',
         badgeVariant: 'success',
-      }
+      } as const
     }
   }
 }

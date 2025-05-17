@@ -17,13 +17,13 @@ function IntegrationsQuickbooksUnlinkConfirmationModalContent({ onClose }: { onC
   const onClickUnlinkQuickbooks = useCallback(() => {
     setIsProcessing(true)
     unlinkQuickbooks()
-    .then(() => {
-      onClose()
-    })
-    .catch(() => {
-      setHasFailed(true)
-      setIsProcessing(false)
-    })
+      .then(() => {
+        onClose()
+      })
+      .catch(() => {
+        setHasFailed(true)
+        setIsProcessing(false)
+      })
   }, [unlinkQuickbooks, onClose])
 
   return (
@@ -41,16 +41,25 @@ function IntegrationsQuickbooksUnlinkConfirmationModalContent({ onClose }: { onC
           <Button variant={ButtonVariant.secondary} onClick={onClose}>
             Cancel
           </Button>
-          {!hasFailed && (
-            <Button variant={ButtonVariant.primary} onClick={onClickUnlinkQuickbooks} isProcessing={isProcessing}>
-              Unlink QuickBooks
-            </Button>
-          )}
-          {hasFailed && (
-            <RetryButton onClick={onClickUnlinkQuickbooks} processing={isProcessing} error={unlinkErrorText}>
-              Retry Unlink QuickBooks
-            </RetryButton>
-          )}
+          {!hasFailed
+            ? (
+              <Button
+                variant={ButtonVariant.primary}
+                onClick={onClickUnlinkQuickbooks}
+                isProcessing={isProcessing}
+              >
+                Unlink QuickBooks
+              </Button>
+            )
+            : (
+              <RetryButton
+                onClick={onClickUnlinkQuickbooks}
+                processing={isProcessing}
+                error={unlinkErrorText}
+              >
+                Retry Unlink QuickBooks
+              </RetryButton>
+            )}
         </HStack>
       </ModalActions>
     </>

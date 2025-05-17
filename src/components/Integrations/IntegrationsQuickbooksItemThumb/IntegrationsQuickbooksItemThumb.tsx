@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import QuickbooksIcon from '../../../icons/QuickbooksIcon'
 import { Badge, BadgeVariant } from '../../Badge'
 import { BadgeLoader } from '../../BadgeLoader'
@@ -14,19 +14,13 @@ import { getQuickbooksConnectionSyncUiState, QuickbooksConnectionSyncUiState } f
 import { AlertCircle, CheckIcon } from 'lucide-react'
 import { IntegrationsQuickbooksUnlinkConfirmationModal } from './IntegrationsQuickbooksUnlinkConfirmationModal'
 
-type BadgeConfig = {
-  variant: BadgeVariant
-  text: string
-  icon: ReactNode
-}
-
-const getBadgeConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, hasSynced: boolean): BadgeConfig => {
+const getBadgeConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, hasSynced: boolean) => {
   if (!hasSynced) {
     return {
       variant: BadgeVariant.INFO,
       text: 'Sync',
       icon: <RefreshCcw size={12} />,
-    }
+    } as const
   }
 
   switch (quickbooksUiState) {
@@ -35,7 +29,7 @@ const getBadgeConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, hasS
         variant: BadgeVariant.ERROR,
         text: 'Retry Sync',
         icon: <AlertCircle size={12} />,
-      }
+      } as const
     }
     case QuickbooksConnectionSyncUiState.Connected:
     case QuickbooksConnectionSyncUiState.SyncSuccess: {
@@ -43,8 +37,7 @@ const getBadgeConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, hasS
         variant: BadgeVariant.SUCCESS,
         text: 'Synced',
         icon: <CheckIcon size={12} />,
-
-      }
+      } as const
     }
     default:
     case QuickbooksConnectionSyncUiState.Syncing: {
@@ -52,7 +45,7 @@ const getBadgeConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, hasS
         variant: BadgeVariant.INFO,
         text: 'Sync',
         icon: <RefreshCcw size={12} />,
-      }
+      } as const
     }
   }
 }
