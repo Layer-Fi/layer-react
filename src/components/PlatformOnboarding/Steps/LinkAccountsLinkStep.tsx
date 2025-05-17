@@ -3,9 +3,9 @@ import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext'
 import { Loader } from '../../Loader'
 import { DataState, DataStateStatus } from '../../DataState'
 import LinkIcon from '../../../icons/Link'
-import { Button } from '../../Button'
+import { Button, ButtonVariant } from '../../Button/Button'
 import { ConditionalList } from '../../utility/ConditionalList'
-import { HStack, VStack } from '../../ui/Stack/Stack'
+import { VStack } from '../../ui/Stack/Stack'
 import { useWizard } from '../../Wizard/Wizard'
 import { BasicLinkedAccountContainer, BasicLinkedAccountContent } from '../../LinkedAccounts/BasicLinkedAccount/BasicLinkedAccount'
 import { LinkAccountsListContainer } from '../Container/LinkAccountsListContainer'
@@ -16,7 +16,11 @@ import ChevronRight from '../../../icons/ChevronRight'
 import { ActionableRow } from '../../ActionableRow/ActionableRow'
 import { Separator } from '../../Separator/Separator'
 
-export function LinkAccountsLinkStep() {
+type LinkAccountsLinkStepProps = {
+  onBack?: () => void
+}
+
+export function LinkAccountsLinkStep({ onBack }: LinkAccountsLinkStepProps) {
   const {
     data,
     loadingStatus,
@@ -38,15 +42,22 @@ export function LinkAccountsLinkStep() {
             <Text status='disabled'>
               Connect your bank accounts and credit cards to automatically import your business transactions.
             </Text>
-            <Button
-              onClick={() => addConnection('PLAID')}
-              rightIcon={<LinkIcon size={12} />}
-              disabled={loadingStatus !== 'complete'}
-              fullWidth={false}
-              style={{ maxWidth: 'fit-content' }}
-            >
-              Connect my bank
-            </Button>
+            <div className='Layer__platform-onboarding__button-row'>
+              {onBack && (
+                <Button onClick={onBack} variant={ButtonVariant.secondary}>
+                  Back
+                </Button>
+              )}
+              <Button
+                onClick={() => addConnection('PLAID')}
+                rightIcon={<LinkIcon size={12} />}
+                disabled={loadingStatus !== 'complete'}
+                fullWidth={false}
+                style={{ maxWidth: 'fit-content' }}
+              >
+                Connect my bank
+              </Button>
+            </div>
           </VStack>
         )}
         Container={({ children }) => (
@@ -102,11 +113,16 @@ export function LinkAccountsLinkStep() {
         ? (
           <>
             <Separator mbs='lg' mbe='lg' />
-            <HStack justify='start' gap='sm'>
+            <div className='Layer__platform-onboarding__button-row'>
+              {onBack && (
+                <Button onClick={onBack} variant={ButtonVariant.secondary}>
+                  Back
+                </Button>
+              )}
               <Button onClick={() => { void next() }} rightIcon={<ChevronRight />}>
-                I’m done linking my banks
+                I'm done linking my banks
               </Button>
-            </HStack>
+            </div>
           </>
         )
         : null}
