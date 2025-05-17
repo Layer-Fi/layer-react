@@ -17,7 +17,7 @@ export interface IntegrationsProps {
   }
 }
 
-export const unstable_Integrations = (props: IntegrationsProps) => {
+export const Integrations = (props: IntegrationsProps) => {
   return (
     <QuickbooksContextProvider>
       <IntegrationsComponent {...props} />
