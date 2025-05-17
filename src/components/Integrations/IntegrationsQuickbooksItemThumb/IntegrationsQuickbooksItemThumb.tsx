@@ -15,9 +15,9 @@ import { AlertCircle, CheckIcon } from 'lucide-react'
 import { IntegrationsQuickbooksUnlinkConfirmationModal } from './IntegrationsQuickbooksUnlinkConfirmationModal'
 
 type BadgeConfig = {
-  variant: BadgeVariant;
-  text: string;
-  icon: ReactNode;
+  variant: BadgeVariant
+  text: string
+  icon: ReactNode
 }
 
 const getBadgeConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, hasSynced: boolean): BadgeConfig => {
@@ -25,16 +25,16 @@ const getBadgeConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, hasS
     return {
       variant: BadgeVariant.INFO,
       text: 'Sync',
-      icon: <RefreshCcw size={12} />
+      icon: <RefreshCcw size={12} />,
     }
   }
- 
+
   switch (quickbooksUiState) {
     case QuickbooksConnectionSyncUiState.SyncFailed: {
       return {
         variant: BadgeVariant.ERROR,
         text: 'Retry Sync',
-        icon: <AlertCircle size={12} />
+        icon: <AlertCircle size={12} />,
       }
     }
     case QuickbooksConnectionSyncUiState.Connected:
@@ -42,7 +42,7 @@ const getBadgeConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, hasS
       return {
         variant: BadgeVariant.SUCCESS,
         text: 'Synced',
-        icon: <CheckIcon size={12} />
+        icon: <CheckIcon size={12} />,
 
       }
     }
@@ -51,27 +51,27 @@ const getBadgeConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, hasS
       return {
         variant: BadgeVariant.INFO,
         text: 'Sync',
-        icon: <RefreshCcw size={12} />
+        icon: <RefreshCcw size={12} />,
       }
     }
   }
 }
 
 export const IntegrationsQuickbooksItemThumb = () => {
-  const { quickbooksConnectionStatus, syncFromQuickbooks, unlinkQuickbooks } = useContext(QuickbooksContext)
+  const { quickbooksConnectionStatus, syncFromQuickbooks } = useContext(QuickbooksContext)
   const [hasSynced, setHasSynced] = useState(false)
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false)
-  
+
   const onSync = useCallback(() => {
     setHasSynced(true)
     syncFromQuickbooks()
-  }, [])
+  }, [syncFromQuickbooks])
 
   const menuConfig = useMemo(() => {
     return [
       {
         name: 'Unlink account',
-        action: () => { 
+        action: () => {
           setIsConfirmationModalOpen(true)
         },
       },
@@ -109,7 +109,7 @@ export const IntegrationsQuickbooksItemThumb = () => {
         </div>
         <IntegrationsQuickbooksItemThumbFooter quickbooksUiState={quickbooksUiState} />
       </Card>
-      <IntegrationsQuickbooksUnlinkConfirmationModal isOpen={isConfirmationModalOpen} onOpenChange={setIsConfirmationModalOpen}/>
+      <IntegrationsQuickbooksUnlinkConfirmationModal isOpen={isConfirmationModalOpen} onOpenChange={setIsConfirmationModalOpen} />
     </LinkedAccountOptions>
   )
 }

@@ -1,5 +1,5 @@
 import { Modal, ModalProps } from '../../ui/Modal/Modal'
-import { ModalContextBar, ModalHeading, ModalActions, ModalContent, ModalDescription } from '../../ui/Modal/ModalSlots'
+import { ModalContextBar, ModalHeading, ModalActions, ModalContent } from '../../ui/Modal/ModalSlots'
 import { Button, ButtonVariant } from '../../Button/Button'
 import { HStack, Spacer } from '../../ui/Stack/Stack'
 import { P } from '../../ui/Typography/Text'
@@ -10,19 +10,21 @@ import { QuickbooksContext } from '../../../contexts/QuickbooksContext/Quickbook
 function IntegrationsQuickbooksUnlinkConfirmationModalContent({ onClose }: { onClose: () => void }) {
   const { unlinkQuickbooks } = useContext(QuickbooksContext)
 
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false)
   const [hasFailed, setHasFailed] = useState(false)
-  
+
   const unlinkErrorText = 'Unlink failed. Check connection and retry in few seconds.'
-  const onClickUnlinkQuickbooks = useCallback(async (e: React.MouseEvent) => {
+  const onClickUnlinkQuickbooks = useCallback(() => {
     setIsProcessing(true)
-    try {
-      await unlinkQuickbooks()
-    } catch {
+    unlinkQuickbooks()
+    .then(() => {
+      onClose()
+    })
+    .catch(() => {
       setHasFailed(true)
       setIsProcessing(false)
-    }   
-  }, [])
+    })
+  }, [unlinkQuickbooks, onClose])
 
   return (
     <>
@@ -59,9 +61,7 @@ type IntegrationsQuickbooksUnlinkConfirmationModalProps = Pick<ModalProps, 'isOp
 export function IntegrationsQuickbooksUnlinkConfirmationModal({ isOpen, onOpenChange }: IntegrationsQuickbooksUnlinkConfirmationModalProps) {
   return (
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange}>
-      {({ close }) =>
-        <IntegrationsQuickbooksUnlinkConfirmationModalContent onClose={close} />
-      }
+      {({ close }) => <IntegrationsQuickbooksUnlinkConfirmationModalContent onClose={close} />}
     </Modal>
   )
 }

@@ -25,15 +25,14 @@ export const IntegrationsConnectMenu = () => {
 
   const [isLinkQuickbooksError, setIsLinkQuickbooksError] = useState(false)
 
-  const initiateQuickbooksOAuth = useCallback(async () => {
-    try {
-      const authorizationUrl = await linkQuickbooks()
-      window.location.href = authorizationUrl
-    } catch {
-      setIsLinkQuickbooksError(true)
-      addToast({ content: 'Failed to connect QuickBooks', type: 'error' })
-    }
-}, [linkQuickbooks])
+  const initiateQuickbooksOAuth = useCallback(() => {
+    linkQuickbooks()
+      .then((res) => { window.location.href = res })
+      .catch(() => {
+        setIsLinkQuickbooksError(true)
+        addToast({ content: 'Failed to connect QuickBooks', type: 'error' })
+      })
+  }, [linkQuickbooks, addToast])
 
   return (
     <DropdownMenu
@@ -58,7 +57,7 @@ export const IntegrationsConnectMenu = () => {
             <MenuItem key='connect-quickbooks' onClick={initiateQuickbooksOAuth}>
               <QuickbooksIcon size={20} />
               <Text {...isLinkQuickbooksError && { status: 'error' }} size={TextSize.sm}>
-                { isLinkQuickbooksError ? 'Retry Connect QuickBooks': 'Connect QuickBooks' }
+                { isLinkQuickbooksError ? 'Retry Connect QuickBooks' : 'Connect QuickBooks' }
               </Text>
               <Spacer />
               <LinkIcon size={12} />

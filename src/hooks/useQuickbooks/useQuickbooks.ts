@@ -52,12 +52,12 @@ export const useQuickbooks: UseQuickbooks = () => {
   }, [auth?.access_token, fetchQuickbooksConnectionStatus])
 
   const handleSyncError = useCallback(() => {
-      setQuickbooksConnectionStatus({
-        is_connected: true,
-        is_syncing: false,
-        last_sync_status: QuickbooksConnectionLastSyncStatus.SYNC_FAILURE,
-        last_synced_at: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss")
-      })
+    setQuickbooksConnectionStatus({
+      is_connected: true,
+      is_syncing: false,
+      last_sync_status: QuickbooksConnectionLastSyncStatus.SYNC_FAILURE,
+      last_synced_at: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
+    })
   }, [])
 
   const syncFromQuickbooks = useCallback(() => {
@@ -69,7 +69,7 @@ export const useQuickbooks: UseQuickbooks = () => {
     void Layer.syncFromQuickbooks(apiUrl, auth?.access_token, {
       params: { businessId },
     }).catch(handleSyncError)
-  }, [apiUrl, auth?.access_token, businessId, quickbooksConnectionStatus])
+  }, [apiUrl, auth?.access_token, businessId, quickbooksConnectionStatus, handleSyncError])
 
   const linkQuickbooks = useCallback(async () => {
     return Layer.initQuickbooksOAuth(apiUrl, auth?.access_token, {

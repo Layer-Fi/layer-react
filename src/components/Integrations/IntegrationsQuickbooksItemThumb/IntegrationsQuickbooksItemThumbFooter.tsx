@@ -42,7 +42,7 @@ const getFooterConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, las
         badgeVariant: 'success',
       }
     }
-    case QuickbooksConnectionSyncUiState.Connected: 
+    case QuickbooksConnectionSyncUiState.Connected:
     default: {
       return {
         title: 'Connected to QuickBooks',
@@ -52,15 +52,15 @@ const getFooterConfig = (quickbooksUiState: QuickbooksConnectionSyncUiState, las
   }
 }
 
-type IntegrationsQuickbooksItemThumbFooterProps = { 
-  quickbooksUiState: QuickbooksConnectionSyncUiState 
+type IntegrationsQuickbooksItemThumbFooterProps = {
+  quickbooksUiState: QuickbooksConnectionSyncUiState
 }
 
 export const IntegrationsQuickbooksItemThumbFooter = ({ quickbooksUiState }: IntegrationsQuickbooksItemThumbFooterProps) => {
   const { quickbooksConnectionStatus } = useContext(QuickbooksContext)
-  if (!quickbooksConnectionStatus) return null;
-  
-  const { title, description, badgeVariant } = getFooterConfig(quickbooksUiState, quickbooksConnectionStatus?.last_synced_at)
+  if (!quickbooksConnectionStatus) return null
+
+  const { title, description, badgeVariant } = getFooterConfig(quickbooksUiState, quickbooksConnectionStatus.last_synced_at)
   return (
     <HStack className='loadingbar'>
       <VStack>
