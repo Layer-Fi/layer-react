@@ -47,6 +47,7 @@ function IntegrationsQuickbooksUnlinkConfirmationModalContent({ onClose }: { onC
                 variant={ButtonVariant.primary}
                 onClick={onClickUnlinkQuickbooks}
                 isProcessing={isProcessing}
+                disabled={isProcessing}
               >
                 Unlink QuickBooks
               </Button>
@@ -55,6 +56,7 @@ function IntegrationsQuickbooksUnlinkConfirmationModalContent({ onClose }: { onC
               <RetryButton
                 onClick={onClickUnlinkQuickbooks}
                 processing={isProcessing}
+                disabled={isProcessing}
                 error={unlinkErrorText}
               >
                 Retry Unlink QuickBooks
