@@ -12,7 +12,7 @@ export { Onboarding } from './components/Onboarding'
 /* ------------------ Bank Accounts & Transactions ------------------ */
 export { LinkedAccounts } from './components/LinkedAccounts'
 export { BankTransactions } from './components/BankTransactions'
-export { unstable_Integrations } from './components/Integrations/Integrations'
+export { Integrations } from './components/Integrations/Integrations'
 
 /* ------------------ Reporting ------------------ */
 export { ProfitAndLoss } from './components/ProfitAndLoss'
