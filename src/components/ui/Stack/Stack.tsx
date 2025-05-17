@@ -6,7 +6,7 @@ import classNames from 'classnames'
 export type StackProps = PropsWithChildren<{
   align?: 'start' | 'center'
   gap?: Spacing
-  justify?: 'start' | 'center' | 'end'
+  justify?: 'start' | 'center' | 'end' | 'space-between'
   pbs?: Spacing
   pbe?: Spacing
   pis?: Spacing
