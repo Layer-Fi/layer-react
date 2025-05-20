@@ -60,9 +60,7 @@ export const Toggle = ({
   const activeOption = useMemo(() => {
     return selected
       ? selected
-      : options.length > 0
-        ? options[0].value
-        : undefined
+      : options[0]?.value
   }, [selected, options])
 
   const toggleRef = useElementSize<HTMLDivElement>((_a, _b, c) => {
@@ -88,18 +86,18 @@ export const Toggle = ({
     }
 
     const optionsNodes = [...toggleRef.current.children]
-      .map((x) => {
+      .map((children) => {
         if (
-          x.className.includes('Layer__tooltip-trigger')
-          && x.children
-          && x.children.length > 0
+          children.className.includes('Layer__tooltip-trigger')
+          && children.children
+          && children.children.length > 0
         ) {
-          return x.children[0]
+          return children.children[0]
         }
 
-        return x
+        return children
       })
-      .filter(c => c.className.includes('Layer__toggle-option'))
+      .filter(children => children?.className.includes('Layer__toggle-option'))
 
     let shift = 0
     let width = thumbPos.width

@@ -28,13 +28,10 @@ export const MatchForm = ({
   const { match: matchBankTransaction, isLoading } =
     useBankTransactionsContext()
 
-  const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(
-    isAlreadyMatched(bankTransaction)
-    ?? (bankTransaction.suggested_matches
-      && bankTransaction.suggested_matches?.length > 0
-      ? bankTransaction.suggested_matches[0].id
-      : undefined),
+  const [selectedMatchId, setSelectedMatchId] = useState<string | undefined>(() =>
+    isAlreadyMatched(bankTransaction) ?? (bankTransaction.suggested_matches?.[0]?.id),
   )
+
   const [formError, setFormError] = useState<string | undefined>()
 
   const showRetry = Boolean(bankTransaction.error)
@@ -106,7 +103,13 @@ export const MatchForm = ({
       <div className='Layer__bank-transaction-mobile-list-item__actions'>
         {showReceiptUploads && (
           <FileInput
-            onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
+            onUpload={(files) => {
+              const firstFile = files[0]
+
+              if (firstFile) {
+                receiptsRef.current?.uploadReceipt(firstFile)
+              }
+            }}
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}

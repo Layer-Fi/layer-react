@@ -102,7 +102,17 @@ const BankTransactionReceipts = forwardRef<
           : null}
         {!hideUploadButtons && (!receiptUrls || receiptUrls.length === 0)
           ? (
-            <FileInput onUpload={files => void uploadReceipt(files[0])} text='Upload receipt' />
+            <FileInput
+              onUpload={(files) => {
+                const firstFile = files[0]
+                if (!firstFile) {
+                  return
+                }
+
+                void uploadReceipt(firstFile)
+              }}
+              text='Upload receipt'
+            />
           )
           : null}
         {receiptUrls.map((url, index) => (
@@ -132,7 +142,14 @@ const BankTransactionReceipts = forwardRef<
           ? (
             <FileInput
               secondary
-              onUpload={files => void uploadReceipt(files[0])}
+              onUpload={(files) => {
+                const firstFile = files[0]
+                if (!firstFile) {
+                  return
+                }
+
+                void uploadReceipt(firstFile)
+              }}
               text='Add next receipt'
             />
           )

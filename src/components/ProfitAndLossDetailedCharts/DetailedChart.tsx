@@ -113,7 +113,7 @@ export const DetailedChart = ({
                   animationEasing='ease-in-out'
                 >
                   {chartData.map((entry, index) => {
-                    let fill: string | undefined = typeColorMapping[index].color
+                    let fill: string | undefined = typeColorMapping[index]?.color
                     let active = true
                     if (hoveredItem && entry.name !== hoveredItem) {
                       active = false
@@ -135,7 +135,7 @@ export const DetailedChart = ({
                             ? 'url(#layer-pie-dots-pattern)'
                             : fill,
                         }}
-                        opacity={typeColorMapping[index].opacity}
+                        opacity={typeColorMapping[index]?.opacity ?? 1}
                         onMouseEnter={() => setHoveredItem(entry.name)}
                         onMouseLeave={() => setHoveredItem(undefined)}
                       />

@@ -213,7 +213,10 @@ export const PeriodPicker = ({ onSelect, defaultValue }: PeriodPickerProps) => {
     }
 
     return {
+      // @ts-expect-error Guaranteed to produce `YYYY-MM-DD`
       start_date: startDate.toISOString().split('T')[0],
+
+      // @ts-expect-error Guaranteed to produce `YYYY-MM-DD`
       end_date: endDate.toISOString().split('T')[0],
     }
   }
