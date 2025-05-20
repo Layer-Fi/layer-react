@@ -61,8 +61,10 @@ export function TransactionsToReview({
           x.month - 1 === getMonth(dateRange.startDate)
           && x.year === getYear(dateRange.startDate),
       )
-      if (monthTx.length > 0) {
-        setToReview(monthTx[0].uncategorized_transactions)
+
+      const firstMonth = monthTx[0]
+      if (firstMonth) {
+        setToReview(firstMonth.uncategorized_transactions)
       }
     }
   }

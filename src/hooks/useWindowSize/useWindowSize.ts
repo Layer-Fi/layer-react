@@ -2,7 +2,8 @@ import { useState, useLayoutEffect, useMemo } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 
 export const useWindowSize = () => {
-  const [size, setSize] = useState([0, 0])
+  const [size, setSize] = useState(() => [0, 0] as [number, number])
+
   useLayoutEffect(() => {
     function updateSize() {
       setSize([window.innerWidth, window.innerHeight])
@@ -14,6 +15,7 @@ export const useWindowSize = () => {
 
     return () => window.removeEventListener('resize', updateSize)
   }, [])
+
   return size
 }
 

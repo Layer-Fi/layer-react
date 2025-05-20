@@ -22,18 +22,24 @@ export const useElementSize = <T extends HTMLElement>(
       return
     }
 
-    const observer = new ResizeObserver((entries) => {
+    const observer = new ResizeObserver(([entry]) => {
+      if (!entry) {
+        return
+      }
+
       if (resizeTimeout.current) {
         clearTimeout(resizeTimeout.current)
       }
       resizeTimeout.current = window.setTimeout(() => {
-        const entry = entries[0]
-        callback(element, entry, {
-          width: element.offsetWidth,
-          height: element.offsetHeight,
-          clientWidth: element.clientWidth,
-          clientHeight: element.clientHeight,
-        })
+        callback(
+          element,
+          entry,
+          {
+            width: element.offsetWidth,
+            height: element.offsetHeight,
+            clientWidth: element.clientWidth,
+            clientHeight: element.clientHeight,
+          })
       }, 100)
     })
     observer.observe(element)

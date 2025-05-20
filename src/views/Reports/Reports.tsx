@@ -14,6 +14,7 @@ import { useElementViewSize } from '../../hooks/useElementViewSize/useElementVie
 import { View as ViewType } from '../../types/general'
 import type { TimeRangePickerConfig } from './reportTypes'
 import { ProfitAndLossCompareConfig } from '../../types/profit_and_loss'
+import type { ReadonlyArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -29,10 +30,13 @@ export interface ReportsStringOverrides {
 }
 
 export interface ReportsProps {
-  title?: string // deprecated
+  /**
+   * @deprecated Use `stringOverrides.title` instead
+   */
+  title?: string
   showTitle?: boolean
   stringOverrides?: ReportsStringOverrides
-  enabledReports?: ReportType[]
+  enabledReports?: ReadonlyArrayWithAtLeastOne<ReportType>
   comparisonConfig?: ProfitAndLossCompareConfig
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
@@ -49,7 +53,7 @@ export interface ReportsPanelProps {
   view: ViewBreakpoint
 }
 
-const getOptions = (enabledReports: ReportType[]) => {
+const getOptions = (enabledReports: ReadonlyArray<ReportType>) => {
   return [
     enabledReports.includes('profitAndLoss')
       ? {
@@ -88,7 +92,7 @@ export const Reports = ({
   const defaultTitle =
     enabledReports.length > 1
       ? 'Reports'
-      : options.find(option => (option.value = enabledReports[0]))?.label
+      : options.find(option => (option.value === enabledReports[0]))?.label
 
   return (
     <View
