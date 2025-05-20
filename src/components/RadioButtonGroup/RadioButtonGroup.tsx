@@ -21,7 +21,8 @@ export const RadioButtonGroup = ({
   onChange,
   selected,
 }: Props) => {
-  const selectedValue = selected || buttons[0].value
+  const selectedValue = selected ?? buttons[0]?.value
+
   return (
     <div
       className={`Layer__radio-button-group Layer__radio-button-group--size-${size}`}

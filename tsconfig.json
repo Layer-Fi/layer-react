@@ -19,6 +19,7 @@
 
    /* We are transpiling with esbuild, NOT TypeScript */
    "module": "preserve",
+   "moduleResolution": "bundler",
    "noEmit": true,
 
    /* Our code runs in the DOM */

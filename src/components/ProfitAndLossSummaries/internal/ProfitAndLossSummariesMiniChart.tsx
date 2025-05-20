@@ -98,7 +98,7 @@ export function ProfitAndLossSummariesMiniChart({
         animationEasing='ease-in-out'
       >
         {data.map((entry, index) => {
-          const colorConfig = typeColorMapping[index]
+          const colorConfig = typeColorMapping[index] ?? { color: '#e6e6e6', opacity: 1 }
 
           return (
             <Cell
