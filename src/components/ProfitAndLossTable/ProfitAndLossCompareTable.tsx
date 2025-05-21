@@ -97,7 +97,9 @@ export const ProfitAndLossCompareTable = ({
         rowData as LineItem[],
       )[0]
 
-      lineItem = 'display_name' in mergedLineItems ? mergedLineItems : undefined
+      lineItem = (mergedLineItems && 'display_name' in mergedLineItems)
+        ? mergedLineItems
+        : undefined
     }
 
     const expandable =
@@ -154,9 +156,9 @@ export const ProfitAndLossCompareTable = ({
                   {option.displayName}
                 </TableCell>
                 {comparePeriods
-                && Array.from({ length: comparePeriods - 1 }, (_, index) => (
-                  <TableCell key={option.displayName + '-' + index} isHeaderCell />
-                ))}
+                  && Array.from({ length: comparePeriods - 1 }, (_, index) => (
+                    <TableCell key={option.displayName + '-' + index} isHeaderCell />
+                  ))}
               </Fragment>
             ))}
           </TableRow>

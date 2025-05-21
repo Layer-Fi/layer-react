@@ -154,7 +154,7 @@ const Option = (
         <div className='Layer__select__option-content__match__main-row'>
           <span className='Layer__select__option-content__match__date'>
             {props.data.payload.date
-            && formatTime(parseISO(props.data.payload.date), DATE_FORMAT)}
+              && formatTime(parseISO(props.data.payload.date), DATE_FORMAT)}
           </span>
           <span className='Layer__select__option-content__match__description'>
             {props.data.payload.display_name}
@@ -306,15 +306,17 @@ export const CategorySelect = ({
 
   const selected = value
     ? value
-    : !excludeMatches
-      && matchOptions?.length === 1
-      && matchOptions[0].options.length === 1
+    : (
+      !excludeMatches
+      && matchOptions?.[0]?.options.length === 1
+    )
       ? matchOptions[0].options[0]
       : undefined
 
+  const matchOptionsCount = matchOptions?.[0]?.options.length ?? 0
   const placeholder =
-    matchOptions?.length === 1 && matchOptions[0].options.length > 1
-      ? `${matchOptions[0].options.length} possible matches...`
+    matchOptionsCount > 1
+      ? `${matchOptionsCount} possible matches...`
       : 'Categorize or match...'
 
   if (asDrawer) {

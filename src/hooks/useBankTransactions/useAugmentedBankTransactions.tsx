@@ -175,17 +175,12 @@ export const useAugmentedBankTransactions = (
     return undefined
   }, [rawResponseData])
 
-  const lastMetadata = useMemo(() => {
-    if (rawResponseData && rawResponseData.length > 0) {
-      return rawResponseData[rawResponseData.length - 1].meta
-    }
-
-    return undefined
-  }, [rawResponseData])
+  const lastMetadata = useMemo(() => rawResponseData?.[rawResponseData.length - 1]?.meta, [rawResponseData])
 
   const hasMore = useMemo(() => {
-    if (rawResponseData && rawResponseData.length > 0) {
-      const lastElement = rawResponseData[rawResponseData.length - 1]
+    const lastElement = rawResponseData?.[rawResponseData.length - 1]
+
+    if (lastElement) {
       return Boolean(
         lastElement.meta?.pagination?.cursor
         && lastElement.meta?.pagination?.has_more,
