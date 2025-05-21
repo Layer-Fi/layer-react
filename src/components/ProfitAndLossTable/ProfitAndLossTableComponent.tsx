@@ -142,8 +142,8 @@ export const ProfitAndLossTableComponent = ({
           0,
           'gross_profit',
           2,
-          'revenue',
-          setSidebarScope,
+          undefined,
+          undefined,
           'summation',
         )}
         {renderLineItem(
@@ -163,11 +163,17 @@ export const ProfitAndLossTableComponent = ({
           0,
           'profit_before_taxes',
           4,
-          'revenue',
-          setSidebarScope,
+          undefined,
+          undefined,
           'summation',
         )}
-        {renderLineItem(data.taxes, 0, 'taxes', 5, 'expenses', setSidebarScope)}
+        {renderLineItem(
+          data.taxes,
+          0,
+          'taxes',
+          5,
+          'expenses',
+        )}
         {renderLineItem(
           {
             value: data.net_profit,
