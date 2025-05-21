@@ -1,0 +1,699 @@
+.Layer__bills__view {
+  .Layer__bills__main-datepicker input {
+    min-width: 180px;
+  }
+
+  .Layer__view-main {
+    padding: 0;
+  }
+
+  .Layer__bills__sidebar__header {
+    padding: 0;
+  }
+
+  .Layer__bills.Layer__component {
+    max-width: 1456px;
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    border-radius: 0;
+    border-bottom-right-radius: var(--border-radius-xs);
+    padding-bottom: 0;
+  }
+
+  .Layer__bills__header .Layer__header__row {
+    transition: padding 120ms ease-out;
+    box-sizing: border-box;
+  }
+}
+
+.Layer__bills-table__vendor-col {
+  max-inline-size: 20cqi;
+}
+
+.Layer__bill-details__action {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+
+  @container (max-width: 499px) {
+    .Layer__btn {
+      width: 100%;
+    }
+  }
+}
+
+.Layer__bills-table__checkbox {
+  margin-right: var(--spacing-xs);
+}
+
+.Layer__bills {
+  .Layer__panel {
+    position: sticky;
+  }
+
+  .Layer__panel__content {
+    min-height: 500px;
+  }
+
+  .Layer__bills-account__title-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .Layer__bills__header {
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .Layer__header__col {
+    .Layer__input-tooltip {
+      min-width: 250px;
+      flex: 1;
+    }
+  }
+
+  .Layer__bills__status-with-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .Layer__bill-details__section {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+
+    @container (min-width: 1400px) {
+      padding: var(--spacing-md) var(--spacing-xl);
+    }
+  }
+
+  .Layer__bill-details__head {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    gap: var(--spacing-xl);
+
+    @container (max-width: 499px) {
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+  }
+
+  .Layer__bill-details__summary {
+    display: flex;
+    justify-content: space-between;
+    min-width: 400px;
+    box-sizing: border-box;
+    gap: var(--spacing-sm);
+
+    .Layer__bill-details__summary__label {
+      color: var(--color-base-600);
+    }
+
+    @container (max-width: 759px) {
+      flex-direction: column;
+      gap: var(--spacing-xs);
+      min-width: unset;
+
+      & > div {
+        display: flex;
+        gap: var(--spacing-xs);
+        align-items: center;
+      }
+
+      .Layer__bill-details__summary__label {
+        min-width: 82px;
+        width: 132px;
+      }
+
+      .Layer__bill-details__summary__value {
+        font-size: var(--text-md);
+      }
+    }
+
+    @container (max-width: 499px) {
+      & > div {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--spacing-xs);
+      }
+
+      .Layer__bill-details__summary__label {
+        min-width: auto;
+        width: 82px;
+      }
+    }
+  }
+
+  .Layer__bills-table__actions-col {
+    max-width: 250px;
+    width: 250px;
+
+    @container (min-width: 1400px) {
+      max-width: 280px;
+      width: 280px;
+    }
+
+    &--narrow {
+      max-width: 80px;
+      width: 80px;
+    }
+
+    .Layer__btn {
+      white-space: nowrap;
+    }
+  }
+
+  .Layer__bills-table__status-col {
+    max-width: 120px;
+    width: 120px;
+  }
+
+  .Layer__bill-details__form-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-lg);
+
+    .Layer__bill-details__form-col {
+      flex: 1;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-xs) 0;
+
+      label {
+        max-width: 100px;
+      }
+
+      .Layer__datepicker__wrapper {
+        flex: 1;
+
+        input {
+          width: 100%;
+          max-width: unset;
+        }
+      }
+
+      @container (max-width: 499px) {
+        padding-top: 0;
+        padding-bottom: 0;
+        gap: 0;
+      }
+    }
+  }
+
+  .Layer__bill-details__category-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: var(--spacing-sm);
+    max-width: 1025px;
+
+    > * {
+      flex: 1;
+
+      &[slot="delete-btn"] {
+        max-inline-size: 36px;
+      }
+
+      .Layer__input {
+        width: 100%;
+      }
+    }
+  }
+
+  .Layer__checkbox-wrapper {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .Layer__textarea {
+    min-height: 100px;
+  }
+}
+
+.Layer__bill-details__category__add-next {
+  display: flex;
+}
+
+@container (max-width: 759px) {
+  .Layer__bills .Layer__bill-details__form-row {
+    flex-direction: column;
+    row-gap: 0;
+
+    .Layer__bill-details__form-col {
+      width: 100%;
+      max-width: 720px;
+    }
+  }
+
+  .Layer__bills .Layer__bill-details__category-row {
+    flex-direction: column;
+    max-width: 500px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .Layer__input-tooltip {
+      width: 100%;
+    }
+  }
+}
+
+@container (max-width: 499px) {
+  .Layer__bills .Layer__bill-details__form-row {
+    .Layer__bill-details__form-col {
+      .Layer__input-group {
+        flex-direction: column;
+      }
+    }
+  }
+}
+
+@container (max-width: 499px) {
+  .Layer__bill-details__save-btn {
+    display: none;
+  }
+}
+
+.Layer__bill-details__save-btn--mobile {
+  display: none;
+
+  @container (max-width: 499px) {
+    display: flex;
+    padding: var(--spacing-md);
+
+    .Layer__btn {
+      width: 100%;
+    }
+  }
+}
+
+.Layer__bills-account__index {
+  background-color: var(--color-base-0);
+
+  .Layer__bill-details__section--category-details {
+    background-color: var(--color-base-50);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+}
+
+.Layer__bills-account__header__date {
+  color: var(--color-base-600);
+}
+
+.Layer__bills__record-payment {
+  label {
+    max-width: 33%;
+  }
+
+  &__base-details {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+
+    .Layer__input-tooltip {
+      max-width: 233px;
+    }
+  }
+
+  &__amount {
+    padding: var(--spacing-md);
+    padding-top: var(--spacing-xl);
+  }
+
+  &__amount-header {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  &__amount-row {
+    display: flex;
+    gap: var(--spacing-4xs);
+  }
+
+  &__amount-row .Layer__input-group {
+    display: grid;
+    grid-template-columns: 66% 33%;
+    gap: 0;
+    margin-bottom: var(--spacing-md);
+    margin-right: var(--spacing-xs);
+
+    & > :first-child {
+      padding-right: var(--spacing-xs);
+    }
+
+    & > :last-child {
+      padding-left: var(--spacing-xs);
+    }
+  }
+
+  &__amount-row .Layer__select {
+    font-size: 12px;
+
+    .Layer__select__value-container {
+      padding-right: 0;
+    }
+  }
+
+  &__amount-display {
+    min-width: 80px;
+    text-align: right;
+  }
+
+  &__add-bill {
+    margin-bottom: 16px;
+    width: 120px;
+  }
+
+  &__total {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-xl);
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  &__submit-container {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  @container (min-width: 1400px) {
+    &__base-details {
+      padding: var(--spacing-md) var(--spacing-xl);
+    }
+
+    &__amount {
+      padding: var(--spacing-xl);
+    }
+  }
+
+  @container (max-width: 499px) {
+    .Layer__bills__record-payment__amount-row {
+      border-bottom: 1px solid var(--border-color);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .Layer__icon-btn {
+        margin-top: var(--spacing-sm);
+      }
+
+      .Layer__input-group {
+        display: flex;
+        flex-direction: column;
+
+        .Layer__input-tooltip {
+          padding: 0;
+        }
+      }
+    }
+  }
+}
+
+.Layer__bills__record-payment__select-label {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.Layer__bills__record-payment__select-label__bill-amount {
+  color: var(--color-base-500);
+}
+
+.Layer__bills .Layer__panel__sidebar .Layer__panel__sidebar-content {
+  width: 100%;
+}
+
+.Layer__bills .Layer__panel__sidebar-content .Layer__form,
+.Layer__bills .Layer__panel__sidebar-content .Layer__bills__payment-recorded__content,
+.Layer__bills .Layer__panel__sidebar-content .Layer__bills__payment-recorded__bills {
+  max-width: 480px;
+  margin: auto;
+}
+
+@container (max-width: 1024px) {
+  .Layer__bills .Layer__panel__sidebar-content .Layer__header__row {
+    max-width: 480px;
+    margin: auto;
+    border-bottom-width: 0;
+  }
+
+  .Layer__bills .Layer__panel__sidebar-content .Layer__bills__sidebar__header {
+    border-bottom: 1px solid var(--border-color);
+  }
+}
+
+.Layer__bills__payment-recorded {
+  label {
+    max-width: 33%;
+  }
+
+  &__content {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    box-sizing: border-box;
+  }
+
+  &__bills {
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    color: var(--text-color-secondary);
+    box-sizing: border-box;
+  }
+
+  &__summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  &__bills-table {
+    border-collapse: collapse;
+    color: var(--text-color-secondary);
+
+    td,
+    th {
+      padding: var(--spacing-3xs) var(--spacing-3xs);
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+
+        svg {
+          vertical-align: text-bottom;
+        }
+      }
+    }
+
+    th:not(.Layer__bills__payment-recorded__open-balance-col) {
+      text-align: left;
+    }
+  }
+
+  &__open-balance-col {
+    text-align: right;
+  }
+
+  &__paid-icon-col {
+    color: var(--color-success);
+    text-align: center;
+    padding-top: 5px;
+  }
+
+  &__amount-paid-col {
+    color: var(--text-color-primary);
+  }
+
+  &__submit-container {
+    padding-top: var(--spacing-md);
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  @container (min-width: 1400px) {
+    &__content {
+      padding: var(--spacing-md) var(--spacing-xl);
+    }
+
+    &__bills {
+      padding: var(--spacing-xl);
+    }
+  }
+}
+
+.Layer__bills-list {
+  margin: 0;
+  padding: 0;
+}
+
+.Layer__bills-list-item {
+  list-style: none;
+  display: flex;
+  padding: var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-bottom-width: 0;
+  transform: scale(0.92);
+  opacity: 0;
+  transition: all 120ms ease-in-out;
+
+  &:last-child {
+    border-bottom-width: 1px;
+  }
+
+  &.Layer__bills-list-item--show {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &[data-disabled] {
+    opacity: 0.5;
+  }
+
+  &[data-selected] {
+    background-color: var(--color-base-0);
+  }
+}
+
+.Layer__bills-list-item__checkbox {
+  width: 0;
+  transition: width 120ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  overflow: hidden;
+  padding-top: var(--spacing-3xs);
+
+  .Layer__bills-table__checkbox {
+    opacity: 0;
+    transition: opacity 120ms cubic-bezier(0.215, 0.61, 0.355, 1);
+    transition-delay: 60ms;
+  }
+
+  &[data-status="open"] {
+    width: 40px;
+
+    .Layer__bills-table__checkbox {
+      opacity: 1;
+    }
+  }
+}
+
+.Layer__bills-list-item__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3xs);
+  flex: 1;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.Layer__bills-list-item__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.Layer__bills-list-item__topbar__date {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3xs);
+}
+
+.Layer__bills-list-item__main {
+  max-width: 100%;
+  overflow: hidden;
+  display: flex;
+  gap: var(--spacing-3xs);
+  align-items: center;
+  justify-content: space-between;
+
+  .Layer__bills-list-item__main__amount {
+    font-size: var(--text-sm);
+    display: none;
+    align-items: center;
+
+    @container (max-width: 499px) {
+      display: flex;
+      gap: var(--spacing-3xs);
+
+      .Layer__text {
+        font-size: var(--text-md);
+      }
+    }
+  }
+}
+
+@container (min-width: 499px) {
+  .Layer__bills-list-item[data-status="paid"] .Layer__bills-list-item__main__amount {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3xs);
+  }
+}
+
+.Layer__bills-list-item__bottombar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  min-height: 40px;
+  padding-right: 2px;
+
+  @container (max-width: 499px) {
+    padding: 0 2px;
+    padding-top: var(--spacing-xs);
+
+    .Layer__btn {
+      width: 100%;
+    }
+  }
+
+  .Layer__bills-list-item__bottombar__amount {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3xs);
+
+    @container (max-width: 499px) {
+      display: none;
+    }
+  }
+}
+
+.Layer__bills-list-item__separator {
+  height: 10px;
+  width: 1px;
+  background-color: var(--color-base-400);
+}
+
+@container (max-width: 499px) {
+  .Layer__bills-list-item .Layer__text.Layer__bills-list-item__main__vendor {
+    font-size: var(--text-md);
+  }
+}
