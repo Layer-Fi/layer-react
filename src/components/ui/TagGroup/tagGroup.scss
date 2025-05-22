@@ -1,0 +1,55 @@
+.Layer__TagGroup {
+  display: grid;
+}
+
+.Layer__TagList {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: minmax(0, 1fr);
+
+  &[data-column-count="2"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  gap: var(--spacing-xs);
+}
+
+.Layer__Tag {
+  display: grid;
+  grid-template-areas: "dimension value remove";
+  grid-template-columns: auto minmax(0, 1fr) auto;
+
+  gap: var(--spacing-2xs);
+
+  align-items: center;
+
+  min-inline-size: 0;
+  min-block-size: 2.5rem;
+
+  padding-inline: var(--spacing-xs);
+  padding-block: var(--spacing-3xs);
+
+  border-radius: var(--border-radius-2xs);
+  border: 1px solid var(--border-color);
+
+  background-color: var(--color-base-100);
+
+  color: var(--color-base-700);
+
+  &[slot="dimension"] {
+    grid-area: dimension;
+  }
+
+  &[slot="value"] {
+    grid-area: value;
+  }
+
+  &[slot="remove"] {
+    grid-area: remove;
+  }
+
+  &[data-focus-visible] {
+    outline: 1px solid var(--border-color);
+    outline-offset: 1px;
+  }
+}

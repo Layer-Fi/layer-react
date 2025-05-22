@@ -1,0 +1,13 @@
+.Layer__Popover {
+  display: grid;
+  inline-size: min(90svi, 40ch);
+
+  border-radius: var(--border-radius-xs);
+
+  background: var(--color-base-0);
+  border: 2px solid var(--border-color);
+
+  &[data-trigger="ComboBox"] {
+    min-inline-size: min(var(--trigger-width), 90svi);
+  }
+}

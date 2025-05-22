@@ -81,6 +81,7 @@ export const request =
 
 export const post = request('post')
 export const put = request('put')
+export const del = request('delete')
 
 export const postWithFormData = <
   Return extends Record<string, unknown> = Record<string, unknown>,

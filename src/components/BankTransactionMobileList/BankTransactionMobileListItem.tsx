@@ -27,10 +27,11 @@ export interface BankTransactionMobileListItemProps {
   editable: boolean
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
-  showTooltips: boolean
-  showDescriptions?: boolean
-  showReceiptUploads?: boolean
   isFirstItem?: boolean
+
+  showDescriptions: boolean
+  showReceiptUploads: boolean
+  showTooltips: boolean
 }
 
 export enum Purpose {
@@ -59,10 +60,11 @@ export const BankTransactionMobileListItem = ({
   removeTransaction,
   editable,
   initialLoad,
-  showTooltips,
   isFirstItem = false,
+
   showDescriptions,
   showReceiptUploads,
+  showTooltips,
 }: BankTransactionMobileListItemProps) => {
   const {
     transactionIdToOpen,
@@ -258,13 +260,14 @@ export const BankTransactionMobileListItem = ({
               )
               : null}
             <BankTransactionMobileForms
+              isOpen={open}
               purpose={purpose}
               bankTransaction={bankTransaction}
+
               showCategorization={categorizationEnabled}
-              showTooltips={showTooltips}
-              showReceiptUploads={showReceiptUploads}
               showDescriptions={showDescriptions}
-              isOpen={open}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
             />
           </div>
         )}

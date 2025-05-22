@@ -19,7 +19,6 @@ import {
   OnboardingStep,
 } from '../../types/layer_context'
 import { buildColorsPalette } from '../../utils/colors'
-import { BankTransactionsProvider } from '../BankTransactionsProvider'
 import { LayerProviderProps } from '../LayerProvider/LayerProvider'
 import useSWR from 'swr'
 import { useAuth } from '../../hooks/useAuth'
@@ -240,12 +239,10 @@ export const BusinessProvider = ({
         eventCallbacks,
       }}
     >
-      <BankTransactionsProvider>
-        <DrawerContext.Provider value={drawerContextData}>
-          {children}
-          <GlobalWidgets />
-        </DrawerContext.Provider>
-      </BankTransactionsProvider>
+      <DrawerContext.Provider value={drawerContextData}>
+        {children}
+        <GlobalWidgets />
+      </DrawerContext.Provider>
     </LayerContext.Provider>
   )
 }

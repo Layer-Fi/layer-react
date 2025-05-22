@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Select, { Options } from 'react-select'
-import { BankTransactions } from '../../components/BankTransactions'
+import { BankTransactions } from '../../components/BankTransactions/BankTransactions'
 import { Container } from '../../components/Container'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
