@@ -14,13 +14,14 @@ export default {
       true,
       {
         ignoreAtRules: [
-          'mixin',
-          'include',
-          'extend',
-          'if',
-          'else',
-          'for',
           'each',
+          'else',
+          'extend',
+          'for',
+          'forward',
+          'if',
+          'include',
+          'mixin',
           'while',
         ],
       },
@@ -141,26 +142,26 @@ export default {
       {
         groupName: "box-model-sizing",
         properties: [
-          "width",
-          "inline-size",
-          "min-width",
-          "min-inline-size",
-          "max-width",
-          "max-inline-size",
           "height",
           "block-size",
           "min-height",
           "min-block-size",
           "max-height",
-          "max-block-size"
+          "max-block-size",
+          "width",
+          "inline-size",
+          "min-width",
+          "min-inline-size",
+          "max-width",
+          "max-inline-size"
         ],
       },
       {
         groupName: "padding",
         properties: [
           "padding",
-          "padding-inline",
           "padding-block",
+          "padding-inline",
           "padding-top",
           "padding-right",
           "padding-bottom",
@@ -180,6 +181,7 @@ export default {
       {
         groupName: "border",
         properties: [
+          "border",
           "border-width",
           "border-block",
           "border-inline",
@@ -200,8 +202,8 @@ export default {
         groupName: "margin",
         properties: [
           "margin",
-          "margin-inline",
           "margin-block",
+          "margin-inline",
           "margin-top",
           "margin-right",
           "margin-bottom",

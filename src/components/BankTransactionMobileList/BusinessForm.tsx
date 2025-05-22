@@ -13,23 +13,22 @@ import { ErrorText } from '../Typography'
 import { BusinessCategories } from './BusinessCategories'
 import { Option, mapCategoryToOption, getAssignedValue } from './utils'
 import classNames from 'classnames'
-import { BankTransactionMemo } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
-import { VStack } from '../ui/Stack/Stack'
+import { BankTransactionTagsAndMemo } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionTagsAndMemo'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
-  showTooltips: boolean
   showCategorization?: boolean
-  showReceiptUploads?: boolean
-  showDescriptions?: boolean
+  showDescriptions: boolean
+  showReceiptUploads: boolean
+  showTooltips: boolean
 }
 
 export const BusinessForm = ({
   bankTransaction,
-  showTooltips,
   showCategorization,
-  showReceiptUploads,
   showDescriptions,
+  showReceiptUploads,
+  showTooltips,
 }: BusinessFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
@@ -144,11 +143,10 @@ export const BusinessForm = ({
           />
         )
         : null}
-      {showDescriptions && (
-        <VStack pbe='md'>
-          <BankTransactionMemo bankTransactionId={bankTransaction.id} />
-        </VStack>
-      )}
+      <BankTransactionTagsAndMemo
+        bankTransaction={bankTransaction}
+        showDescriptions={showDescriptions}
+      />
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',

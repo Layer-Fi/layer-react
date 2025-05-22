@@ -9,6 +9,7 @@ export type StackProps = PropsWithChildren<{
   justify?: 'start' | 'center' | 'end' | 'space-between'
   pbs?: Spacing
   pbe?: Spacing
+  pi?: Spacing
   pis?: Spacing
   pie?: Spacing
   fluid?: boolean
@@ -23,8 +24,32 @@ type InternalStackProps = StackProps & {
 const CLASS_NAME = 'Layer__Stack'
 
 const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
-  ({ align, children, direction, gap, justify, pbs, pbe, pis, pie, fluid, className, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({ align, direction, gap, justify, pbs, pbe, pis, pie, fluid })
+  function Stack({
+    align,
+    children,
+    className,
+    direction,
+    gap,
+    justify,
+    pbs,
+    pbe,
+    pis,
+    pie,
+    fluid,
+    ...restProps
+  },
+  ref
+) {
+    const dataProperties = toDataProperties({
+      align,
+      direction,
+      gap,
+      justify,
+      pbs,
+      pbe,
+      pie,
+      fluid
+    })
 
     return (
       <div
@@ -38,16 +63,17 @@ const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
     )
   },
 )
-Stack.displayName = 'Stack'
 
-export const VStack = forwardRef<HTMLDivElement, StackProps>((props, ref) => {
-  return <Stack {...props} ref={ref} direction='column' />
-})
-VStack.displayName = 'VStack'
+export const VStack = forwardRef<HTMLDivElement, StackProps>(
+  function VStack(props, ref) {
+    return <Stack {...props} ref={ref} direction='column' />
+  },
+)
 
-export const HStack = forwardRef<HTMLDivElement, StackProps>((props, ref) => {
-  return <Stack {...props} ref={ref} direction='row' />
-})
-HStack.displayName = 'HStack'
+export const HStack = forwardRef<HTMLDivElement, StackProps>(
+  function HStack(props, ref) {
+    return <Stack {...props} ref={ref} direction='row' />
+  }
+)
 
 export const Spacer = () => <div className='Layer__Spacer' />

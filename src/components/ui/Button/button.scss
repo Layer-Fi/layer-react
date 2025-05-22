@@ -1,17 +1,22 @@
 .Layer__UI__Button {
   all: unset;
+  display: inline-grid;
+
+  grid-template-rows: minmax(0, 1fr);
+  grid-auto-columns: auto;
+  grid-auto-flow: column;
+
+  gap: 0.5rem;
   align-items: center;
-  appearance: none;
-  border-radius: var(--btn-border-radius);
-  cursor: pointer;
-  display: inline-flex;
-  min-inline-size: 0;
   justify-content: center;
+  min-inline-size: 0;
+  border-radius: var(--btn-border-radius);
   outline: none;
+  cursor: pointer;
   user-select: none;
+  appearance: none;
   white-space: nowrap;
   vertical-align: middle;
-  gap: 0.5rem;
 
   &[data-icon] {
     padding-inline: 0;
@@ -35,7 +40,7 @@
   &[data-variant="ghost"] {
     background-color: transparent;
     color: var(--button-fg-ghost);
-    border: 2px solid transparent;
+    border: 1px solid transparent;
 
     &[data-hovered] {
       background-color: var(--button-bg-ghost-active);
@@ -95,14 +100,19 @@
   }
 
   &[data-disabled] {
+    background-color: var(--button-bg-disabled);
     cursor: not-allowed;
     color: var(--button-fg-disabled);
-    background-color: var(--button-bg-disabled);
   }
 
   &[data-pending] {
-    cursor: progress;
     background-color: var(--button-bg-disabled);
+
+    &[data-variant="ghost"] {
+      background-color: transparent;
+    }
+
+    cursor: progress;
   }
 }
 
@@ -113,10 +123,10 @@
 }
 
 .Layer__ButtonSpinnerContainer {
-  grid-column: 1 / -1;
   grid-row: 1 / -1;
-  place-self: center;
+  grid-column: 1 / -1;
   height: 16px;
+  place-self: center;
 
   &[data-size="lg"] {
     height: 20px;

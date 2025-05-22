@@ -1,0 +1,19 @@
+.Layer__UI__Input {
+  min-inline-size: 0;
+  padding-inline: var(--spacing-xs);
+
+  outline: none;
+
+  font-size: var(--input-font-size);
+  line-height: 140%;
+  font-family: var(--font-family);
+
+  vertical-align: middle;
+
+  &[data-placement="first-within-group"] {
+    border: none;
+
+    border-start-start-radius: inherit;
+    border-end-start-radius: inherit;
+  }
+}

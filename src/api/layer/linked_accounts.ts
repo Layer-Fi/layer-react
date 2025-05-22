@@ -45,13 +45,9 @@ export const listExternalAccounts = get<
   }
 >(({ businessId }) => `/v1/businesses/${businessId}/external-accounts`)
 
-type ConfirmAccountBodyBase = Partial<{
-  is_unique: boolean
-  is_relevant: boolean
-}>
 type ConfirmAccountBodyStrict = OneOf<[
-  { is_unique: true } & ConfirmAccountBodyBase,
-  { is_relevant: true } & ConfirmAccountBodyBase,
+  { is_unique: true },
+  { is_relevant: true },
 ]>
 
 export const confirmAccount = post<
@@ -66,13 +62,9 @@ export const confirmAccount = post<
     `/v1/businesses/${businessId}/external-accounts/${accountId}/confirm`,
 )
 
-type ExcludeAccountBodyBase = Partial<{
-  is_irrelevant: boolean
-  is_duplicate: boolean
-}>
 type ExcludeAccountBodyStrict = OneOf<[
-  { is_irrelevant: true } & ExcludeAccountBodyBase,
-  { is_duplicate: true } & ExcludeAccountBodyBase,
+  { is_irrelevant: true },
+  { is_duplicate: true },
 ]>
 
 export const excludeAccount = post<

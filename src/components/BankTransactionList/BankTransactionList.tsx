@@ -10,10 +10,11 @@ interface BankTransactionListProps {
   editable: boolean
   containerWidth: number
   removeTransaction: (bt: BankTransaction) => void
-  showDescriptions?: boolean
-  showReceiptUploads?: boolean
-  showTooltips: boolean
   stringOverrides?: BankTransactionCTAStringOverrides
+
+  showDescriptions: boolean
+  showReceiptUploads: boolean
+  showTooltips: boolean
 }
 
 export const BankTransactionList = ({
@@ -21,10 +22,11 @@ export const BankTransactionList = ({
   editable,
   removeTransaction,
   containerWidth,
-  showDescriptions = false,
-  showReceiptUploads = false,
-  showTooltips,
   stringOverrides,
+
+  showDescriptions,
+  showReceiptUploads,
+  showTooltips,
 }: BankTransactionListProps) => {
   return (
     <ul className='Layer__bank-transactions__list'>
@@ -38,10 +40,11 @@ export const BankTransactionList = ({
             editable={editable}
             removeTransaction={removeTransaction}
             containerWidth={containerWidth}
+            stringOverrides={stringOverrides}
+
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
-            stringOverrides={stringOverrides}
           />
         ),
       )}
