@@ -35,10 +35,6 @@ export const CategoriesList = ({ option, level = 0, indentationLevel = 0, showTo
             selected={selected}
           />
         ))}
-
-        <ListBoxItem isDisabled={true} textValue=' ' className='Layer__category-select__separator'>
-          <span slot='separator-line' />
-        </ListBoxItem>
       </>
     )
   }

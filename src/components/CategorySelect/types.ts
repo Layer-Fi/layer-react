@@ -14,6 +14,7 @@ export type CategoryOptionPayload = {
   date?: string
   amount?: number
   type?: string
+  category?: string
   stable_name?: string
   entries?: CategoryWithEntries['entries']
   subCategories: CategoryOption[] | null

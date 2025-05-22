@@ -24,7 +24,7 @@ export const CategorySelect = ({
   excludeMatches = false,
   asDrawer = false,
 }: CategorySelectProps) => {
-  const { data: categories } = useCategories()
+  const { data: categories } = useCategories({ mode: 'ALL' })
 
   const matches = buildMatchOptions(bankTransaction, excludeMatches)
   const suggestions = buildSuggestedOptions(bankTransaction)

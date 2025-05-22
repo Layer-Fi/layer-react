@@ -21,11 +21,15 @@ export function flattenCategories(
   })
 }
 
+export function buildKey(option: CategoryOption) {
+  return `${option?.payload?.id ?? option?.payload?.stable_name}-${option.payload.type})}`
+}
+
 export const getKeysMap = (categories: CategoryOption[], accKeysMap?: Map<string, CategoryOption>) => {
   const keysMap = accKeysMap ?? new Map<string, CategoryOption>()
 
   categories.forEach((category) => {
-    keysMap.set(category.payload.id, category)
+    keysMap.set(buildKey(category), category)
     if (category.payload.subCategories) {
       getKeysMap(category.payload.subCategories, keysMap)
     }

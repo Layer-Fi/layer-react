@@ -4,7 +4,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../../Tooltip/Tooltip'
 import InfoIcon from '../../../icons/InfoIcon'
 import CheckIcon from '../../../icons/Check'
 import { CategoryOption } from '../types'
-import { isSelected } from '../utils'
+import { buildKey, isSelected } from '../utils'
+import classNames from 'classnames'
 
 const MAX_INDENT_LEVEL = 3
 const INDENT_SIZE = 12
@@ -19,14 +20,16 @@ export type ListItemProps = {
 }
 
 export const ListItem = ({ option, indentationLevel = 0, showTooltips, selected, isDisabled }: ListItemProps) => {
+  const isItemSelected = isSelected(option, selected)
+
   return (
     <ListBoxItem
-      className='Layer__category-select__list-item'
+      className={classNames('Layer__category-select__list-item', isItemSelected && 'Layer__category-select__list-item--selected')}
       style={{
         paddingLeft: `${(Math.min(MAX_INDENT_LEVEL, indentationLevel) * INDENT_SIZE) + INDENT_BIAS}px`,
       }}
       textValue={option?.payload?.display_name}
-      id={option?.payload?.id ?? option?.payload?.stable_name}
+      id={buildKey(option)}
       isDisabled={isDisabled}
     >
       <div slot='name'>
@@ -44,7 +47,7 @@ export const ListItem = ({ option, indentationLevel = 0, showTooltips, selected,
         )}
       </div>
 
-      {isSelected(option, selected) && (
+      {isItemSelected && (
         <CheckIcon slot='icon' size={16} />
       )}
     </ListBoxItem>
