@@ -38,8 +38,7 @@ import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
-import { BankTransactionMemo } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
-import { VStack } from '../ui/Stack/Stack'
+import { BankTransactionTagsAndMemo } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionTagsAndMemo'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -49,6 +48,7 @@ type Props = {
   submitBtnText?: string
   containerWidth?: number
   categorized?: boolean
+
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
@@ -123,6 +123,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       asListItem = false,
       submitBtnText = 'Save',
       containerWidth,
+
       showDescriptions,
       showReceiptUploads,
       showTooltips,
@@ -559,13 +560,10 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   </div>
                 </div>
 
-                {showDescriptions && isOpen
-                  ? (
-                    <VStack pis='md' pie='md'>
-                      <BankTransactionMemo bankTransactionId={bankTransaction.id} />
-                    </VStack>
-                  )
-                  : null}
+                <BankTransactionTagsAndMemo
+                  bankTransaction={bankTransaction}
+                  showDescriptions={showDescriptions}
+                />
 
                 {showReceiptUploads && (
                   <BankTransactionReceiptsWithProvider

@@ -1,0 +1,139 @@
+import useSWRMutation from 'swr/mutation'
+import { useAuth } from '../../../../../hooks/useAuth'
+import { useLayerContext } from '../../../../../contexts/LayerContext'
+import { useCallback } from 'react'
+import { post } from '../../../../../api/layer/authenticated_http'
+import { useBankTransactionsInvalidator } from '../../../../../hooks/useBankTransactions/useBankTransactions'
+import { v4 as uuidv4 } from 'uuid'
+
+const TAG_BANK_TRANSACTION_TAG_KEY = '#tag-bank-transaction'
+
+type TagBankTransactionBody = {
+  key_values: ReadonlyArray<{
+    key: string
+    value: string
+  }>
+  transaction_ids: ReadonlyArray<string>
+}
+
+const tagBankTransaction = post<
+  Record<string, never>,
+  TagBankTransactionBody,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/tags`)
+
+function buildKey({
+  access_token: accessToken,
+  apiUrl,
+  businessId,
+  bankTransactionId,
+}: {
+  access_token?: string
+  apiUrl?: string
+  businessId: string
+  bankTransactionId: string
+}) {
+  if (accessToken && apiUrl) {
+    return {
+      accessToken,
+      apiUrl,
+      businessId,
+      bankTransactionId,
+      tags: [TAG_BANK_TRANSACTION_TAG_KEY],
+    } as const
+  }
+}
+
+type TagBankTransactionArg = {
+  key: string
+  value: string
+}
+
+type TagBankTransactionOptions = {
+  bankTransactionId: string
+}
+
+export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionOptions) {
+  const { data } = useAuth()
+  const { businessId } = useLayerContext()
+  const { invalidateBankTransactions } = useBankTransactionsInvalidator()
+
+  const mutationResponse = useSWRMutation(
+    () => buildKey({
+      ...data,
+      businessId,
+      bankTransactionId,
+    }),
+    (
+      { accessToken, apiUrl, businessId, bankTransactionId },
+      { arg: { key, value } }: { arg: TagBankTransactionArg },
+    ) => tagBankTransaction(
+      apiUrl,
+      accessToken,
+      {
+        params: { businessId },
+        body: {
+          key_values: [{ key, value }],
+          transaction_ids: [bankTransactionId],
+        },
+      },
+    ),
+    {
+      revalidate: false,
+      throwOnError: false,
+    },
+  )
+
+  const { trigger: originalTrigger } = mutationResponse
+
+  const stableProxiedTrigger = useCallback(
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+      const triggerResult = await originalTrigger(...triggerParameters)
+
+      void invalidateBankTransactions((bankTransaction) => {
+        if (bankTransaction.id === bankTransactionId) {
+          const { key, value } = triggerParameters[0]
+
+          const optimisticTagId = uuidv4()
+
+          const now = new Date()
+          const nowISOString = now.toISOString()
+
+          return {
+            ...bankTransaction,
+            transaction_tags: [
+              ...bankTransaction.transaction_tags,
+              {
+                id: optimisticTagId,
+                key,
+                value,
+                created_at: nowISOString,
+                updated_at: nowISOString,
+              },
+            ],
+          }
+        }
+
+        return bankTransaction
+      })
+
+      return triggerResult
+    },
+    [
+      bankTransactionId,
+      originalTrigger,
+      invalidateBankTransactions,
+    ],
+  )
+
+  return new Proxy(mutationResponse, {
+    get(target, prop) {
+      if (prop === 'trigger') {
+        return stableProxiedTrigger
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
+}

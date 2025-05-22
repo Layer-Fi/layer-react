@@ -4,7 +4,7 @@ import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import { withRenderProp } from '../../utility/withRenderProp'
 import { LoadingSpinner } from '../Loading/LoadingSpinner'
 
-const CLASS_NAMES = {
+const BUTTON_CLASS_NAMES = {
   SPINNER_CONTAINER: 'Layer__ButtonSpinnerContainer',
   TRANSPARENT_CONTENT: 'Layer__ButtonTransparentContent',
 }
@@ -13,7 +13,7 @@ function ButtonSpinner({ size }: { size: ButtonSize }) {
   const dataProperties = toDataProperties({ size })
 
   return (
-    <div {...dataProperties} className={CLASS_NAMES.SPINNER_CONTAINER}>
+    <div {...dataProperties} className={BUTTON_CLASS_NAMES.SPINNER_CONTAINER}>
       <LoadingSpinner size={size === 'lg' ? 20 : 16} />
     </div>
   )
@@ -21,7 +21,7 @@ function ButtonSpinner({ size }: { size: ButtonSize }) {
 
 function ButtonTransparentContent({ children }: PropsWithChildren) {
   return (
-    <span className={CLASS_NAMES.TRANSPARENT_CONTENT}>
+    <span className={BUTTON_CLASS_NAMES.TRANSPARENT_CONTENT}>
       {children}
     </span>
   )

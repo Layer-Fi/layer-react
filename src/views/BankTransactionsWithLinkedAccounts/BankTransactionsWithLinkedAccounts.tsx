@@ -1,6 +1,6 @@
-import { BankTransactions } from '../../components/BankTransactions'
 import {
-  BankTransactionsStringOverrides,
+  BankTransactions,
+  type BankTransactionsStringOverrides,
 } from '../../components/BankTransactions/BankTransactions'
 import { BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
 import { MobileComponentType } from '../../components/BankTransactions/constants'
@@ -17,12 +17,14 @@ export interface BankTransactionsWithLinkedAccountsProps {
   title?: string // deprecated
   showTitle?: boolean
   elevatedLinkedAccounts?: boolean
-  showLedgerBalance?: boolean
-  showUnlinkItem?: boolean
+
   showBreakConnection?: boolean
   showDescriptions?: boolean
+  showLedgerBalance?: boolean
   showReceiptUploads?: boolean
+  showTags?: boolean
   showTooltips?: boolean
+  showUnlinkItem?: boolean
   /**
    * @deprecated `mode` can be inferred from the bookkeeping configuration of a business
    */
@@ -35,13 +37,16 @@ export const BankTransactionsWithLinkedAccounts = ({
   title, // deprecated
   showTitle = true,
   elevatedLinkedAccounts = true,
-  showLedgerBalance = true,
-  showUnlinkItem = false,
-  showBreakConnection = false,
   mode,
+
+  showBreakConnection = false,
   showDescriptions = true,
+  showLedgerBalance = true,
   showReceiptUploads = true,
+  showTags = false,
   showTooltips = false,
+  showUnlinkItem = false,
+
   mobileComponent,
   stringOverrides,
 }: BankTransactionsWithLinkedAccountsProps) => {
@@ -61,6 +66,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         asWidget
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
+        showTags={showTags}
         showTooltips={showTooltips}
         mobileComponent={mobileComponent}
         mode={mode}

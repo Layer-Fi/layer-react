@@ -1,0 +1,61 @@
+.Layer__ListBox {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  max-block-size: 40ch;
+
+  padding-block: var(--spacing-sm);
+}
+
+.Layer__ListBoxSection {
+  display: flex;
+  flex-direction: column;
+
+  &:not(:first-of-type) {
+    padding-block-start: var(--spacing-xs);
+  }
+
+  &:not(:last-of-type) {
+    padding-block-end: var(--spacing-2xs);
+
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  & > [slot="header"] {
+    padding-inline: var(--spacing-sm);
+    padding-block-end: var(--spacing-2xs);
+  }
+
+  & > .Layer__ListBoxItem {
+    padding-inline: var(--spacing-sm);
+  }
+}
+
+.Layer__ListBoxItem {
+  padding-block: var(--spacing-2xs);
+
+  cursor: pointer;
+
+  &[data-hovered] {
+    background: var(--color-base-50);
+  }
+
+  &[data-focused] {
+    background: var(--color-base-50);
+  }
+
+  &[data-focus-visible] {
+    outline-offset: -1px;
+    outline: 2px solid var(--color-base-300);
+  }
+
+  &[data-selected] {
+    background: var(--color-base-100);
+  }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}

@@ -43,6 +43,9 @@
       padding-block-start: var(--spacing-#{$spacing});
     }
 
+    &[data-pi="#{$spacing}"] {
+      padding-inline: var(--spacing-#{$spacing});
+    }
     &[data-pie="#{$spacing}"] {
       padding-inline-end: var(--spacing-#{$spacing});
     }

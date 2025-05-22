@@ -44,6 +44,8 @@
 @forward "../components/Tabs/tabs";
 @forward "../components/MobilePanel/mobilePanel";
 @forward "../components/UploadTransactions/uploadTransactions";
+@forward "../features/features";
+@forward "../public/styles/publicReset";
 @forward "./ledger_account";
 @forward "./balance_sheet";
 @forward "./statement_of_cash";

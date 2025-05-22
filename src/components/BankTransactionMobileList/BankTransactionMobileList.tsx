@@ -10,9 +10,10 @@ export interface BankTransactionMobileListProps {
   editable: boolean
   removeTransaction: (bt: BankTransaction) => void
   initialLoad?: boolean
+
+  showDescriptions: boolean
+  showReceiptUploads: boolean
   showTooltips: boolean
-  showReceiptUploads?: boolean
-  showDescriptions?: boolean
 }
 
 export const BankTransactionMobileList = ({
@@ -20,9 +21,10 @@ export const BankTransactionMobileList = ({
   removeTransaction,
   editable,
   initialLoad,
-  showTooltips,
-  showReceiptUploads,
+
   showDescriptions,
+  showReceiptUploads,
+  showTooltips,
 }: BankTransactionMobileListProps) => {
   const transactionToOpenContextData = useTransactionToOpen()
 
@@ -35,13 +37,14 @@ export const BankTransactionMobileList = ({
               key={bankTransaction.id}
               index={index}
               bankTransaction={bankTransaction}
-              showTooltips={showTooltips}
               editable={editable}
               removeTransaction={removeTransaction}
               initialLoad={initialLoad}
               isFirstItem={index == 0}
-              showReceiptUploads={showReceiptUploads}
+
               showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
             />
           ),
         )}
