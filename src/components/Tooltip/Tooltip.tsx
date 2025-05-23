@@ -5,11 +5,14 @@ import {
   isValidElement,
   cloneElement,
   type Ref,
+  HTMLAttributes,
+  RefObject,
 } from 'react'
 import { TooltipContext, useTooltip, useTooltipContext } from './useTooltip'
 import { useMergeRefs, FloatingPortal } from '@floating-ui/react'
-import type { Placement } from '@floating-ui/react'
+import type { OffsetOptions, Placement } from '@floating-ui/react'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
+import classNames from 'classnames'
 
 export interface TooltipOptions {
   initialOpen?: boolean
@@ -17,8 +20,19 @@ export interface TooltipOptions {
   open?: boolean
   disabled?: boolean
   onOpenChange?: (open: boolean) => void
-  offset?: number
+  offset?: OffsetOptions
   shift?: { padding?: number }
+  slot?: string
+
+  /**
+   * @prop refHoriztontalAlignment
+   * It aligns the tooltip pop-up to the left/right edge of the reference element, ie. combobox menu.
+   * It won't shift tooltip pop-up if the gap between tooltip trigger and the edge of reference element is greater than tooltip width.
+   */
+  refHoriztontalAlignment?: {
+    refElement: RefObject<HTMLElement> | null
+    alignmentEdge?: 'start' | 'end'
+  }
 }
 
 export const Tooltip = ({
@@ -36,7 +50,7 @@ export const Tooltip = ({
 export const TooltipTrigger = forwardRef<
   HTMLElement,
   HTMLProps<HTMLElement> & { asChild?: boolean }
->(function TooltipTrigger({ children, asChild = false, ...props }, propRef) {
+>(function TooltipTrigger({ children, asChild = false, slot, ...props }, propRef) {
   const context = useTooltipContext()
   const childrenRef = (isValidElement(children) && 'ref' in children)
     ? children.ref as Ref<unknown>
@@ -49,9 +63,9 @@ export const TooltipTrigger = forwardRef<
       context.getReferenceProps({
         ref,
         ...props,
-        ...children.props,
+        ...(children.props as HTMLProps<HTMLElement>),
         'data-state': context.open ? 'open' : 'closed',
-      }),
+      } as HTMLAttributes<HTMLElement>),
     )
   }
 
@@ -62,6 +76,7 @@ export const TooltipTrigger = forwardRef<
       className={`Layer__tooltip-trigger Layer__tooltip-trigger--${
         context.open ? 'open' : 'closed'
       }`}
+      slot={slot}
       {...context.getReferenceProps(props)}
     >
       {children}
@@ -69,7 +84,7 @@ export const TooltipTrigger = forwardRef<
   )
 })
 
-type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'> & { width?: 'md' }
+type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'> & { width?: 'md' | 'lg' }
 
 export const TooltipContent = forwardRef<
   HTMLDivElement,
@@ -86,7 +101,7 @@ export const TooltipContent = forwardRef<
     <FloatingPortal>
       <div
         ref={ref}
-        className={className}
+        className={classNames('Layer__tooltip', className)}
         style={{
           ...context.floatingStyles,
         }}
