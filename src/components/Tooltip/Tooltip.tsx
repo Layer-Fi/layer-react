@@ -6,10 +6,11 @@ import {
   cloneElement,
   type Ref,
   HTMLAttributes,
+  RefObject,
 } from 'react'
 import { TooltipContext, useTooltip, useTooltipContext } from './useTooltip'
 import { useMergeRefs, FloatingPortal } from '@floating-ui/react'
-import type { Placement } from '@floating-ui/react'
+import type { OffsetOptions, Placement } from '@floating-ui/react'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import classNames from 'classnames'
 
@@ -19,9 +20,13 @@ export interface TooltipOptions {
   open?: boolean
   disabled?: boolean
   onOpenChange?: (open: boolean) => void
-  offset?: number
+  offset?: OffsetOptions
   shift?: { padding?: number }
   slot?: string
+  refHoriztontalAlignment?: {
+    refElement: RefObject<HTMLElement> | null
+    alignmentEdge?: 'start' | 'end'
+  }
 }
 
 export const Tooltip = ({
@@ -73,7 +78,7 @@ export const TooltipTrigger = forwardRef<
   )
 })
 
-type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'> & { width?: 'md' }
+type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'> & { width?: 'md' | 'lg' }
 
 export const TooltipContent = forwardRef<
   HTMLDivElement,

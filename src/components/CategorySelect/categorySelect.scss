@@ -137,6 +137,16 @@
       background-color: var(--color-base-100);
     }
   }
+
+  [slot="tooltip-trigger"] {
+    transition: opacity 0.12s ease-in-out;
+    opacity: 0;
+  }
+
+  &:hover [slot="tooltip-trigger"],
+  &[data-focused] [slot="tooltip-trigger"] {
+    opacity: 1;
+  }
 }
 
 .Layer__category-select__list-item {
@@ -174,7 +184,9 @@
 
   [slot="name"] {
     grid-area: name;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 16px 1fr;
+    justify-content: space-between;
     gap: var(--spacing-xs);
   }
 
@@ -185,6 +197,12 @@
   }
 
   [slot="tooltip-trigger"] {
-    display: inline-flex;
+    transition: opacity 0.12s ease-in-out;
+    opacity: 0;
+  }
+
+  &:hover [slot="tooltip-trigger"],
+  &[data-focused] [slot="tooltip-trigger"] {
+    opacity: 1;
   }
 }

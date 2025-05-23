@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { ListBoxItem } from 'react-aria-components'
 import { Text } from '../../Typography'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../Tooltip/Tooltip'
@@ -19,11 +20,18 @@ export type ListItemProps = {
   isDisabled?: boolean
 }
 
+const TOOLTIP_OFFSET = {
+  mainAxis: 10,
+  crossAxis: 20,
+}
+
 export const ListItem = ({ option, indentationLevel = 0, showTooltips, selected, isDisabled }: ListItemProps) => {
+  const elRef = useRef<HTMLDivElement>(null)
   const isItemSelected = isSelected(option, selected)
 
   return (
     <ListBoxItem
+      ref={elRef}
       className={classNames('Layer__category-select__list-item', isItemSelected && 'Layer__category-select__list-item--selected')}
       style={{
         paddingLeft: `${(Math.min(MAX_INDENT_LEVEL, indentationLevel) * INDENT_SIZE) + INDENT_BIAS}px`,
@@ -36,11 +44,18 @@ export const ListItem = ({ option, indentationLevel = 0, showTooltips, selected,
         <Text>{option?.payload?.display_name}</Text>
 
         {(showTooltips && option?.payload?.description) && (
-          <Tooltip>
+          <Tooltip
+            refHoriztontalAlignment={{
+              refElement: elRef,
+              alignmentEdge: 'start',
+            }}
+            offset={TOOLTIP_OFFSET}
+            placement='bottom-end'
+          >
             <TooltipTrigger slot='tooltip-trigger'>
               <InfoIcon />
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent width='lg'>
               {option?.payload?.description}
             </TooltipContent>
           </Tooltip>

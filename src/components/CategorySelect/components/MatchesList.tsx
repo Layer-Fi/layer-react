@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { Header, ListBoxItem } from 'react-aria-components'
 import { Text, TextSize } from '../../Typography'
 import { parseISO, format as formatTime } from 'date-fns'
@@ -17,6 +18,64 @@ type MatchesListProps = {
   selected?: CategoryOption
 }
 
+type ListBoxItemContentProps = {
+  option: CategoryOption
+  selected?: CategoryOption
+}
+
+const TOOLTIP_OFFSET = {
+  mainAxis: 10,
+  crossAxis: 20,
+}
+
+const ListBoxItemContent = ({ option, selected }: ListBoxItemContentProps) => {
+  const elRef = useRef<HTMLDivElement>(null)
+
+  return (
+    <ListBoxItem
+      ref={elRef}
+      className='Layer__category-select__ms-list-item'
+      id={`match-${option.payload.id}`}
+      textValue={option.payload.display_name}
+    >
+
+      <VStack slot='label'>
+        <Text slot='name' ellipsis>{option.payload.display_name}</Text>
+        <HStack slot='date-and-amount' gap='xs'>
+          <Text size={TextSize.sm} status='disabled'>{option.payload.date && formatTime(parseISO(option.payload.date), DATE_FORMAT)}</Text>
+          <HSeparator />
+          <Text size={TextSize.sm}>{`$${formatMoney(option.payload.amount)}`}</Text>
+        </HStack>
+      </VStack>
+
+      {option.payload.description && (
+        <Tooltip
+          slot='tooltip'
+          placement='bottom-end'
+          offset={TOOLTIP_OFFSET}
+          refHoriztontalAlignment={{
+            refElement: elRef,
+            alignmentEdge: 'end',
+          }}
+        >
+          <TooltipTrigger slot='tooltip-trigger'>
+            <InfoIcon />
+          </TooltipTrigger>
+          <TooltipContent width='lg'>
+            {option.payload.description}
+          </TooltipContent>
+        </Tooltip>
+      )}
+
+      {isSelected(option, selected) && (
+        <span slot='icon'>
+          <CheckIcon size={16} />
+        </span>
+      )}
+    </ListBoxItem>
+  )
+}
+
 export const MatchesList = ({ matches, selected }: MatchesListProps) => {
   if (!matches || matches.length === 0) {
     return
@@ -30,41 +89,8 @@ export const MatchesList = ({ matches, selected }: MatchesListProps) => {
         </Header>
       </ListBoxItem>
       {matches?.map((option, index) => (
-        <ListBoxItem
-          className='Layer__category-select__ms-list-item'
-          key={index}
-          id={`match-${option.payload.id}`}
-          textValue={option.payload.display_name}
-        >
-
-          <VStack slot='label'>
-            <Text slot='name' ellipsis>{option.payload.display_name}</Text>
-            <HStack slot='date-and-amount' gap='xs'>
-              <Text size={TextSize.sm} status='disabled'>{option.payload.date && formatTime(parseISO(option.payload.date), DATE_FORMAT)}</Text>
-              <HSeparator />
-              <Text size={TextSize.sm}>{`$${formatMoney(option.payload.amount)}`}</Text>
-            </HStack>
-          </VStack>
-
-          {option.payload.description && (
-            <Tooltip slot='tooltip'>
-              <TooltipTrigger>
-                <InfoIcon />
-              </TooltipTrigger>
-              <TooltipContent>
-                {option.payload.description}
-              </TooltipContent>
-            </Tooltip>
-          )}
-
-          {isSelected(option, selected) && (
-            <span slot='icon'>
-              <CheckIcon size={16} />
-            </span>
-          )}
-        </ListBoxItem>
-      ),
-      )}
+        <ListBoxItemContent key={index} option={option} selected={selected} />
+      ))}
     </ListSection>
   )
 }

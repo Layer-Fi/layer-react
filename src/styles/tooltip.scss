@@ -4,8 +4,12 @@
   max-width: calc(100vw - 10px);
   z-index: 110;
 
-  &[data-width='md'] {
+  &[data-width="md"] {
     max-width: 256px;
+  }
+
+  &[data-width="lg"] {
+    max-width: 320px;
   }
 }
 

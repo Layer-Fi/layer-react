@@ -12,6 +12,7 @@ import {
   useRole,
   useInteractions,
   useTransitionStyles,
+  MiddlewareState,
 } from '@floating-ui/react'
 
 export type ContextType = ReturnType<typeof useTooltip> | null
@@ -28,6 +29,39 @@ export const useTooltipContext = () => {
   return context
 }
 
+function calculateOffset(state: MiddlewareState, refHoriztontalAlignment: TooltipOptions['refHoriztontalAlignment'], offsetProp: TooltipOptions['offset']) {
+  if (refHoriztontalAlignment && refHoriztontalAlignment.refElement?.current) {
+    const { x: refX, width: refWidth } = refHoriztontalAlignment.refElement.current.getBoundingClientRect()
+
+    const crossShiftOffsetProps = typeof offsetProp === 'number' ? offsetProp : offsetProp && 'crossAxis' in offsetProp && offsetProp.crossAxis ? offsetProp.crossAxis : 0
+    const restProps = typeof offsetProp === 'object' ? offsetProp : {}
+
+    if (refHoriztontalAlignment.alignmentEdge === 'end' && state.rects.reference.x + state.rects.reference.width + state.rects.floating.width + crossShiftOffsetProps > refX + refWidth) {
+      return {
+        ...restProps,
+        crossAxis: refX + refWidth - state.rects.reference.x - state.rects.reference.width - crossShiftOffsetProps,
+      }
+    }
+
+    if (refHoriztontalAlignment.alignmentEdge !== 'end' && -(state.x - refX) + crossShiftOffsetProps > 0) {
+      return {
+        ...restProps,
+        crossAxis: -(state.x - refX) + crossShiftOffsetProps,
+      }
+    }
+  }
+
+  if (typeof offsetProp === 'object') {
+    return offsetProp
+  }
+
+  if (typeof offsetProp === 'number') {
+    return { crossAxis: offsetProp }
+  }
+
+  return {}
+}
+
 export const useTooltip = ({
   initialOpen = false,
   placement = 'top',
@@ -36,6 +70,7 @@ export const useTooltip = ({
   disabled,
   offset: offsetProp = 5,
   shift: shiftProp = { padding: 5 },
+  refHoriztontalAlignment,
 }: TooltipOptions = {}) => {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen)
 
@@ -48,7 +83,7 @@ export const useTooltip = ({
     onOpenChange: setOpen,
     whileElementsMounted: autoUpdate,
     middleware: [
-      offset(offsetProp),
+      offset(state => calculateOffset(state, refHoriztontalAlignment, offsetProp)),
       flip({
         crossAxis: placement.includes('-'),
         fallbackAxisSideDirection: 'start',
@@ -91,6 +126,6 @@ export const useTooltip = ({
       ...interactions,
       ...data,
     }),
-    [open, setOpen, interactions, data, styles, disabled],
+    [open, setOpen, interactions, data, styles, disabled, isMounted],
   )
 }
