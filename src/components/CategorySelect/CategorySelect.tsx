@@ -23,7 +23,7 @@ export const CategorySelect = ({
   showTooltips,
   excludeMatches = false,
   asDrawer = false,
-  mode,
+  mode = 'ALL',
 }: CategorySelectProps) => {
   const { data: categories } = useCategories({ mode })
 
