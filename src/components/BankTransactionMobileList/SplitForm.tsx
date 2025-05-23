@@ -17,7 +17,7 @@ import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect/CategorySelect'
-import { CategoryOption } from '../CategorySelect/types'
+import type { CategoryOption } from '../CategorySelect/types'
 import {
   mapCategoryToExclusionOption,
   mapCategoryToOption,

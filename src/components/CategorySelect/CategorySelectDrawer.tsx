@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { DrawerContext } from '../../contexts/DrawerContext'
 import ChevronDown from '../../icons/ChevronDown'
 import { BusinessCategories } from '../BankTransactionMobileList/BusinessCategories'
-import { CategoryOption, CategoryOptionPayload, OptionActionType } from './types'
+import { type CategoryOption, type CategoryOptionPayload, OptionActionType } from './types'
 import classNames from 'classnames'
 
 interface CategorySelectDrawerProps {

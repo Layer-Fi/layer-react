@@ -1,3 +1,4 @@
+import type { CategoriesListMode } from '../../api/layer/categories'
 import { BankTransaction, type CategoryWithEntries } from '../../types/bank_transactions'
 
 export enum OptionActionType {
@@ -36,4 +37,5 @@ export type CategorySelectProps = {
   showTooltips: boolean
   excludeMatches?: boolean
   asDrawer?: boolean
+  mode?: CategoriesListMode
 }
