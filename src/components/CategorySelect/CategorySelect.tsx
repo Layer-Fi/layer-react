@@ -70,7 +70,7 @@ export const CategorySelect = ({
         onSelectionChange={onSelectionChange}
         aria-label='Categorize'
       >
-        <ComboBoxInput name={name} placeholder={placeholder} value={value} />
+        <ComboBoxInput name={name} placeholder={value?.payload.display_name ?? placeholder} value={value} />
         <Popover className='Layer__category-select__popover Layer__Portal' placement='bottom end'>
           <ListBox>
             <MatchesList matches={matches} selected={value} />
