@@ -6,7 +6,6 @@ import InfoIcon from '../../../icons/InfoIcon'
 import CheckIcon from '../../../icons/Check'
 import { CategoryOption } from '../types'
 import { buildKey, isSelected } from '../utils'
-import classNames from 'classnames'
 
 const MAX_INDENT_LEVEL = 3
 const INDENT_SIZE = 12
@@ -32,7 +31,7 @@ export const ListItem = ({ option, indentationLevel = 0, showTooltips, selected,
   return (
     <ListBoxItem
       ref={elRef}
-      className={classNames('Layer__category-select__list-item', isItemSelected && 'Layer__category-select__list-item--selected')}
+      className='Layer__category-select__list-item'
       style={{
         paddingLeft: `${(Math.min(MAX_INDENT_LEVEL, indentationLevel) * INDENT_SIZE) + INDENT_BIAS}px`,
       }}

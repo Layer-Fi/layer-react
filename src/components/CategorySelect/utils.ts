@@ -158,6 +158,6 @@ export function isSelected(option: CategoryOption, selected?: CategoryOption) {
     return false
   }
 
-  return ('id' in option.payload && option.payload.id && option.payload.id === selected?.payload.id)
-    || ('stable_name' in option.payload && option.payload.stable_name && option.payload.stable_name === selected?.payload.stable_name)
+  return Boolean(('id' in option.payload && option.payload.id && option.payload.id === selected?.payload.id)
+    || ('stable_name' in option.payload && option.payload.stable_name && option.payload.stable_name === selected?.payload.stable_name))
 }

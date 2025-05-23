@@ -23,6 +23,12 @@ export interface TooltipOptions {
   offset?: OffsetOptions
   shift?: { padding?: number }
   slot?: string
+
+  /**
+   * @prop refHoriztontalAlignment
+   * It aligns the tooltip pop-up to the left/right edge of the reference element, ie. combobox menu.
+   * It won't shift tooltip pop-up if the gap between tooltip trigger and the edge of reference element is greater than tooltip width.
+   */
   refHoriztontalAlignment?: {
     refElement: RefObject<HTMLElement> | null
     alignmentEdge?: 'start' | 'end'

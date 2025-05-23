@@ -12,6 +12,7 @@ import { HSeparator } from '../../Separator/Separator'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../Tooltip/Tooltip'
 import InfoIcon from '../../../icons/InfoIcon'
 import { isSelected } from '../utils'
+import classNames from 'classnames'
 
 type MatchesListProps = {
   matches?: CategoryOption[]
@@ -30,11 +31,12 @@ const TOOLTIP_OFFSET = {
 
 const ListBoxItemContent = ({ option, selected }: ListBoxItemContentProps) => {
   const elRef = useRef<HTMLDivElement>(null)
+  const isItemSelected = isSelected(option, selected)
 
   return (
     <ListBoxItem
       ref={elRef}
-      className='Layer__category-select__ms-list-item'
+      className={classNames('Layer__category-select__ms-list-item', isItemSelected && 'Layer__category-select__list-item--selected')}
       id={`match-${option.payload.id}`}
       textValue={option.payload.display_name}
     >
@@ -67,7 +69,7 @@ const ListBoxItemContent = ({ option, selected }: ListBoxItemContentProps) => {
         </Tooltip>
       )}
 
-      {isSelected(option, selected) && (
+      {isItemSelected && (
         <span slot='icon'>
           <CheckIcon size={16} />
         </span>

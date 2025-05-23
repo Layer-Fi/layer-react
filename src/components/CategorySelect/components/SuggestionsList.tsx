@@ -9,6 +9,7 @@ import CheckIcon from '../../../icons/Check'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../Tooltip/Tooltip'
 import InfoIcon from '../../../icons/InfoIcon'
 import { ListSection } from './ListSection'
+import classNames from 'classnames'
 
 type SuggestionsListProps = {
   suggestions?: CategoryOption[]
@@ -29,15 +30,15 @@ const TOOLTIP_OFFSET = {
 
 const ListBoxItemContent = ({ option, categories, selected }: ListBoxItemContentProps) => {
   const elRef = useRef<HTMLDivElement>(null)
+  const isItemSelected = isSelected(option, selected)
 
   return (
     <ListBoxItem
       ref={elRef}
       id={`suggestion-${option.payload.id}`}
-      className='Layer__category-select__ms-list-item'
+      className={classNames('Layer__category-select__ms-list-item', isItemSelected && 'Layer__category-select__list-item--selected')}
       textValue={option.payload.display_name}
     >
-
       <VStack slot='label'>
         <Text slot='name'>
           {option.payload.display_name}
@@ -66,7 +67,7 @@ const ListBoxItemContent = ({ option, categories, selected }: ListBoxItemContent
         </Tooltip>
       )}
 
-      {isSelected(option, selected) && (
+      {isItemSelected && (
         <span slot='icon'>
           <CheckIcon size={16} />
         </span>
