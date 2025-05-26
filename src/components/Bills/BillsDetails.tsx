@@ -23,6 +23,7 @@ import { BillSummary } from './BillSummary'
 import { isBillPaid, isBillUnpaid } from '../../utils/bills'
 import { useCategories } from '../../hooks/categories/useCategories'
 import CloseIcon from '../../icons/CloseIcon'
+import { HStack } from '../ui/Stack/Stack'
 
 const flattenCategories = (categories: Category[]): Category[] => {
   return categories.reduce((acc: Category[], category) => {
@@ -107,10 +108,10 @@ export const BillsDetails = ({
       >
         <div className='Layer__bill-details__content'>
 
-          <div className='Layer__bill-details__section Layer__bill-details__head'>
+          <HStack gap='sm' justify={bill ? 'space-between' : 'end'} className='Layer__bill-details__section Layer__bill-details__head'>
             {bill && (<BillSummary bill={bill} />)}
 
-            <div className='Layer__bill-details__action'>
+            <HStack gap='sm' className='Layer__bill-details__action'>
               {bill && isBillUnpaid(bill.status) && !showRecordPaymentForm
                 ? (
                   <Button type='button' onClick={() => recordPaymentForBill(bill)}>
@@ -118,7 +119,7 @@ export const BillsDetails = ({
                   </Button>
                 )
                 : null}
-              {isDirty && !showRecordPaymentForm
+              {bill && isDirty && !showRecordPaymentForm
                 ? submitError
                   ? (
                     <RetryButton
@@ -143,8 +144,19 @@ export const BillsDetails = ({
                     </SubmitButton>
                   )
                 : null}
-            </div>
-          </div>
+              {!bill && (
+                <SubmitButton
+                  type='submit'
+                  processing={isSubmitting}
+                  disabled={isSubmitting || !isDirty}
+                  className='Layer__bill-details__save-btn'
+                  noIcon={true}
+                >
+                  Save
+                </SubmitButton>
+              )}
+            </HStack>
+          </HStack>
 
           <div className='Layer__bill-details__section'>
             <div className='Layer__bill-details__form-row'>

@@ -91,12 +91,6 @@
   }
 
   .Layer__bill-details__head {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    box-sizing: border-box;
-    gap: var(--spacing-xl);
-
     @container (max-width: 499px) {
       flex-direction: column;
       gap: var(--spacing-md);

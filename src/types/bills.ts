@@ -95,7 +95,7 @@ type BillPaymentAllocation = {
   transaction_tags: TransactionTag[]
 }
 
-export type SalesTax = {
+type SalesTax = {
   amount: number
   tax_account: TaxAccount
 }

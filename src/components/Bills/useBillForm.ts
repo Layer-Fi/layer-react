@@ -68,7 +68,6 @@ export const useBillForm = (bill?: EditableBill) => {
       },
     },
     onSubmit: async ({ value }) => {
-      console.log('onSubmit', value, value.received_at ? new Date(value.received_at).toISOString() : undefined)
       try {
         setSubmitError(undefined)
         const formattedValue = {

@@ -15,7 +15,6 @@ export const BillsContext = createContext<BillsContextType>({
   setCurrentPage: () => {},
   pageSize: 15,
   billInDetails: undefined,
-  setBillInDetails: () => {},
   openBillDetails: () => {},
   showBillInDetails: false,
   closeBillDetails: () => {},

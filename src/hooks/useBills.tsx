@@ -23,7 +23,6 @@ type UseBills = () => {
   pageSize: number
   metadata?: Metadata
   billInDetails?: Bill
-  setBillInDetails: (bill?: Bill) => void
   openBillDetails: (bill?: Bill) => void
   showBillInDetails: boolean
   closeBillDetails: () => void
@@ -176,7 +175,6 @@ export const useBills: UseBills = () => {
     pageSize: PAGE_SIZE,
     metadata: lastMetadata,
     billInDetails,
-    setBillInDetails,
     openBillDetails,
     closeBillDetails,
     showBillInDetails,
