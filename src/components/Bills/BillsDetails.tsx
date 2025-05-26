@@ -7,7 +7,7 @@ import { Input, InputGroup } from '../Input'
 import { Select } from '../Input/Select'
 import { Textarea } from '../Textarea'
 import { TextWeight, TextSize, Text, ErrorText } from '../Typography'
-import { useBillForm } from './useBillForm'
+import { EditableBill, useBillForm } from './useBillForm'
 import type { Bill, Category } from '../../types'
 import { formatDate } from '../../utils/format'
 import { formatISO, parseISO } from 'date-fns'
@@ -54,16 +54,16 @@ export const BillsDetails = ({
   bill,
   containerRef,
 }: {
-  bill: Bill
+  bill?: Bill
   containerRef: RefObject<HTMLDivElement>
 }) => {
   const { data: categories } = useCategories()
   const { closeBillDetails } = useBillsContext()
   const { showRecordPaymentForm, recordPaymentForBill } = useBillsRecordPaymentContext()
-  const { form, isDirty, submitError, formErrorMap } = useBillForm(bill)
+  const { form, isDirty, submitError, formErrorMap } = useBillForm({ ...bill } as EditableBill)
 
   const { isSubmitting } = form.state
-  const disabled = isBillPaid(bill.status) || isSubmitting
+  const disabled = isBillPaid(bill?.status) || isSubmitting
 
   return (
     <Panel
@@ -88,9 +88,9 @@ export const BillsDetails = ({
                 size={TextSize.sm}
                 className='Layer__bills-account__header__date'
               >
-                {getVendorName(bill.vendor)}
+                {getVendorName(bill?.vendor)}
                 {' '}
-                {formatDate(bill.due_at, DATE_FORMAT_SHORT)}
+                {formatDate(bill?.due_at, DATE_FORMAT_SHORT)}
               </Text>
             </div>
           </HeaderCol>
@@ -106,10 +106,12 @@ export const BillsDetails = ({
 
       >
         <div className='Layer__bill-details__content'>
+
           <div className='Layer__bill-details__section Layer__bill-details__head'>
-            <BillSummary bill={bill} />
+            {bill && (<BillSummary bill={bill} />)}
+
             <div className='Layer__bill-details__action'>
-              {isBillUnpaid(bill.status) && !showRecordPaymentForm
+              {bill && isBillUnpaid(bill.status) && !showRecordPaymentForm
                 ? (
                   <Button type='button' onClick={() => recordPaymentForBill(bill)}>
                     Record payment

@@ -43,6 +43,10 @@ export const updateBill = post<{ data: Bill }, Record<string, unknown>>(
   ({ businessId, billId }) => `/v1/businesses/${businessId}/bills/${billId}/update`,
 )
 
+export const createBill = post<{ data: Bill }, Record<string, unknown>>(
+  ({ businessId }) => `/v1/businesses/${businessId}/bills`,
+)
+
 export const createBillPayment = post<{ data: BillPayment }, BillPayment>(
   ({ businessId }) => `/v1/businesses/${businessId}/bills/bill-payments`,
 )

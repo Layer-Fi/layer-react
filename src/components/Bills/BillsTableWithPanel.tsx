@@ -51,6 +51,7 @@ export const BillsTableWithPanel = ({
     error,
     refetch,
     isLoading,
+    openBillDetails,
   } = useBillsContext()
 
   const {
@@ -141,16 +142,18 @@ export const BillsTableWithPanel = ({
                 )}
             </HeaderCol>
 
-            {bulkSelectionActive && (
-              <HeaderCol noPadding>
+            <HeaderCol noPadding>
+              <Button onClick={() => openBillDetails()}>New bill</Button>
+              {bulkSelectionActive && (
                 <Button
                   onClick={() => setShowRecordPaymentForm(true)}
                   disabled={!anyBillToPaySelected}
                 >
                   Record payment
                 </Button>
-              </HeaderCol>
-            )}
+              )}
+            </HeaderCol>
+
           </HeaderRow>
         )}
       </Header>

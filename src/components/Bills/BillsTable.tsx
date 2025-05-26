@@ -32,7 +32,7 @@ const BillsTableContent = ({
 }: {
   stringOverrides?: BillsTableStringOverrides
 }) => {
-  const { paginatedData: data, setBillInDetails, status, isLoading, error } = useBillsContext()
+  const { paginatedData: data, openBillDetails, status, isLoading, error } = useBillsContext()
 
   const {
     billsToPay,
@@ -133,7 +133,7 @@ const BillsTableContent = ({
                   : null}
                 <IconButton
                   icon={<ChevronRight />}
-                  onClick={() => { setBillInDetails(entry) }}
+                  onClick={() => { openBillDetails(entry) }}
                 />
               </div>
             </TableCell>

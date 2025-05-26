@@ -8,7 +8,7 @@ import { useAuth } from './useAuth'
 import useSWRInfinite from 'swr/infinite'
 import { useEnvironment } from '../providers/Environment/EnvironmentInputProvider'
 import { Layer } from '../api/layer'
-import { GetBillsReturn } from '../api/layer/bills'
+import type { GetBillsReturn } from '../api/layer/bills'
 import { APIError } from '../models/APIError'
 
 export type BillStatusFilter = 'PAID' | 'UNPAID'
@@ -23,7 +23,9 @@ type UseBills = () => {
   pageSize: number
   metadata?: Metadata
   billInDetails?: Bill
-  setBillInDetails: (bill: Bill | undefined) => void
+  setBillInDetails: (bill?: Bill) => void
+  openBillDetails: (bill?: Bill) => void
+  showBillInDetails: boolean
   closeBillDetails: () => void
   status: BillStatusFilter
   setStatus: (status: BillStatusFilter) => void
@@ -46,14 +48,21 @@ export const useBills: UseBills = () => {
   const [status, setStatus] = useState<BillStatusFilter>('UNPAID')
   const [vendor, setVendor] = useState<Vendor | null>(null)
   const [billInDetails, setBillInDetails] = useState<Bill | undefined>()
+  const [showBillInDetails, setShowBillInDetails] = useState(false)
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: sub(startOfMonth(new Date()), { years: 1 }),
     endDate: endOfMonth(new Date()),
   })
   const [currentPage, setCurrentPage] = useState(1)
 
+  const openBillDetails = (bill?: Bill) => {
+    setBillInDetails(bill)
+    setShowBillInDetails(true)
+  }
+
   const closeBillDetails = () => {
     setBillInDetails(undefined)
+    setShowBillInDetails(false)
   }
 
   const getKey = (index: number, prevData: GetBillsReturn) => {
@@ -168,7 +177,9 @@ export const useBills: UseBills = () => {
     metadata: lastMetadata,
     billInDetails,
     setBillInDetails,
+    openBillDetails,
     closeBillDetails,
+    showBillInDetails,
     status,
     setStatus,
     dateRange,

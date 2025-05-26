@@ -32,7 +32,7 @@ const BillsContent = ({
   asWidget,
   stringOverrides,
 }: BillsProps) => {
-  const { billInDetails } = useBillsContext()
+  const { showBillInDetails, billInDetails } = useBillsContext()
 
   const { containerRef } = useElementViewSize<HTMLDivElement>()
 
@@ -42,7 +42,7 @@ const BillsContent = ({
       ref={containerRef}
       asWidget={asWidget}
     >
-      {billInDetails
+      {showBillInDetails
         ? (
           <BillsDetails containerRef={containerRef} bill={billInDetails} />
         )
