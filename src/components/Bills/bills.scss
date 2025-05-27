@@ -215,6 +215,27 @@
 
       &[slot="delete-btn"] {
         max-inline-size: 36px;
+
+        [slot="mobile-button"] {
+          display: none;
+        }
+
+        [slot="desktop-button"] {
+          display: block;
+        }
+
+        @container (max-width: 499px) {
+          max-inline-size: unset;
+          padding: 0 var(--spacing-xs);
+
+          [slot="mobile-button"] {
+            display: block;
+          }
+
+          [slot="desktop-button"] {
+            display: none;
+          }
+        }
       }
 
       .Layer__input {
@@ -254,6 +275,7 @@
     border-bottom: 1px solid var(--border-color);
     margin-bottom: var(--spacing-lg);
     padding-bottom: var(--spacing-lg);
+    align-items: flex-start;
 
     &:last-child {
       border-bottom: none;

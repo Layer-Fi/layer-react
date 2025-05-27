@@ -1,6 +1,6 @@
 import { RefObject } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
-import { BackButton, Button, ButtonVariant, IconButton, RetryButton, SubmitButton } from '../Button'
+import { BackButton, Button, ButtonVariant, IconButton, RetryButton, SubmitButton, TextButton } from '../Button'
 import { DatePicker } from '../DatePicker/DatePicker'
 import { Header, HeaderRow, HeaderCol } from '../Header'
 import { Input, InputGroup } from '../Input'
@@ -24,6 +24,7 @@ import { isBillPaid, isBillUnpaid } from '../../utils/bills'
 import { useCategories } from '../../hooks/categories/useCategories'
 import CloseIcon from '../../icons/CloseIcon'
 import { HStack } from '../ui/Stack/Stack'
+import { notEmpty } from '../../utils/form'
 
 const flattenCategories = (categories: Category[]): Category[] => {
   return categories.reduce((acc: Category[], category) => {
@@ -61,7 +62,7 @@ export const BillsDetails = ({
   const { data: categories } = useCategories()
   const { closeBillDetails } = useBillsContext()
   const { showRecordPaymentForm, recordPaymentForBill } = useBillsRecordPaymentContext()
-  const { form, isDirty, submitError, formErrorMap } = useBillForm({ ...bill } as EditableBill)
+  const { form, isDirty, submitError, formErrorMap } = useBillForm((bill ? { ...bill } : {}) as EditableBill)
 
   const { isSubmitting } = form.state
   const disabled = isBillPaid(bill?.status) || isSubmitting
@@ -161,7 +162,10 @@ export const BillsDetails = ({
           <div className='Layer__bill-details__section'>
             <div className='Layer__bill-details__form-row'>
               <div className='Layer__bill-details__form-col'>
-                <form.Field name='vendor'>
+                <form.Field
+                  name='vendor'
+                  validators={{ onSubmit: ({ value }) => value ? undefined : 'Vendor is required' }}
+                >
                   {field => (
                     <>
                       <InputGroup inline={true} label='Vendor'>
@@ -169,6 +173,8 @@ export const BillsDetails = ({
                           value={field.state.value ?? null}
                           onChange={vendor => field.handleChange(vendor ?? undefined)}
                           disabled={disabled}
+                          isInvalid={field.state.meta.errors.length > 0}
+                          errorMessage={field.state.meta.errors.join(', ')}
                         />
                       </InputGroup>
 
@@ -263,6 +269,9 @@ export const BillsDetails = ({
                         <div key={i} className='Layer__bill-details__category-row'>
                           <form.Field name={`line_items[${i}].account_identifier`}>
                             {(subField) => {
+                              /**
+                               * @TODO after merging new categorize menu, add validation for the Category Select
+                               */
                               const selectedCategory =
                                 subField.state.value
                                   ? findCategoryById(subField.state.value.id, categories)
@@ -284,21 +293,31 @@ export const BillsDetails = ({
                             }}
                           </form.Field>
 
-                          <form.Field name={`line_items[${i}].total_amount`}>
+                          <form.Field
+                            name={`line_items[${i}].total_amount`}
+                            validators={{
+                              onSubmit: ({ value }) => notEmpty(value?.toString()) ? undefined : 'Unit price is required',
+                            }}
+                          >
                             {(subField) => {
                               return (
                                 <AmountInput
-                                  value={
-                                    subField.state.value === null ? undefined : subField.state.value
-                                  }
+                                  value={subField.state.value === null ? undefined : subField.state.value}
                                   onChange={e => subField.handleChange(e === undefined ? null : e)}
                                   disabled={disabled}
+                                  isInvalid={subField.state.meta.errors.length > 0}
+                                  errorMessage={subField.state.meta.errors.join(', ')}
                                 />
                               )
                             }}
                           </form.Field>
 
-                          <form.Field name={`line_items[${i}].product_name`}>
+                          <form.Field
+                            name={`line_items[${i}].product_name`}
+                            validators={{
+                              onSubmit: ({ value }) => notEmpty(value?.toString()) ? undefined : 'Product name is required',
+                            }}
+                          >
                             {(subField) => {
                               return (
                                 <Input
@@ -307,6 +326,8 @@ export const BillsDetails = ({
                                     subField.handleChange((e.target as HTMLInputElement).value)}
                                   placeholder='Product name'
                                   disabled={disabled}
+                                  isInvalid={subField.state.meta.errors.length > 0}
+                                  errorMessage={subField.state.meta.errors.join(', ')}
                                 />
                               )
                             }}
@@ -326,7 +347,8 @@ export const BillsDetails = ({
                             }}
                           </form.Field>
                           <div slot='delete-btn'>
-                            <IconButton type='button' icon={<CloseIcon />} onClick={() => field.removeValue(i)} />
+                            <IconButton type='button' slot='desktop-button' icon={<CloseIcon />} onClick={() => field.removeValue(i)} />
+                            <TextButton type='button' slot='mobile-button' onClick={() => field.removeValue(i)}>Remove item</TextButton>
                           </div>
                         </div>
                       )
@@ -348,6 +370,11 @@ export const BillsDetails = ({
             {formErrorMap?.onSubmit === 'INVALID_TOTAL_AMOUNT' && (
               <ErrorText>
                 Categories amount doesn&apos;t match the bill amount
+              </ErrorText>
+            )}
+            {formErrorMap?.onSubmit === 'MISSING_LINE_ITEMS' && (
+              <ErrorText>
+                Please add at least one line item
               </ErrorText>
             )}
           </div>

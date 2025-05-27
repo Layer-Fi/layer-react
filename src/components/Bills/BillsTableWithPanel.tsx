@@ -143,15 +143,18 @@ export const BillsTableWithPanel = ({
             </HeaderCol>
 
             <HeaderCol noPadding>
-              <Button onClick={() => openBillDetails()}>New bill</Button>
-              {bulkSelectionActive && (
-                <Button
-                  onClick={() => setShowRecordPaymentForm(true)}
-                  disabled={!anyBillToPaySelected}
-                >
-                  Record payment
-                </Button>
-              )}
+              {bulkSelectionActive
+                ? (
+                  <Button
+                    onClick={() => setShowRecordPaymentForm(true)}
+                    disabled={!anyBillToPaySelected}
+                  >
+                    Record payment
+                  </Button>
+                )
+                : (
+                  <Button onClick={() => openBillDetails()}>New bill</Button>
+                )}
             </HeaderCol>
 
           </HeaderRow>

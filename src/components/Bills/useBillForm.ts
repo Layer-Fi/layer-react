@@ -44,8 +44,8 @@ export const useBillForm = (bill?: EditableBill) => {
       bill_number: bill?.bill_number,
       vendor: bill?.vendor,
       vendor_address: bill?.vendor?.address_string,
-      received_at: bill?.received_at,
-      due_at: bill?.due_at,
+      received_at: bill?.received_at ?? new Date().toISOString(),
+      due_at: bill?.due_at ?? new Date().toISOString(),
       terms: bill?.terms,
       line_items: bill?.line_items?.map(item => ({
         ...item,
@@ -56,7 +56,10 @@ export const useBillForm = (bill?: EditableBill) => {
     },
     validators: {
       onSubmit: ({ value }) => {
-        if (value.line_items && bill?.id) {
+        if (!value.line_items) {
+          return 'MISSING_LINE_ITEMS'
+        }
+        else if (bill?.id) {
           const totalAmount = convertToCents(value.line_items.reduce(
             (acc, item) => acc + (Number(item.total_amount) || 0),
             0)) ?? 0
@@ -111,12 +114,12 @@ export const useBillForm = (bill?: EditableBill) => {
         }
 
         if (!response) {
-          return
+          throw new Error('Failed to create or update bill')
         }
 
         form.reset(response.data, { keepDefaultValues: false })
         openBillDetails(response.data)
-        addToast({ content: 'The Bill has been updated!', type: 'success' })
+        addToast({ content: bill?.id ? 'The Bill has been updated!' : 'The Bill has been created!', type: 'success' })
         refetch()
       }
       catch {
