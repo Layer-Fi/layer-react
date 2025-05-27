@@ -23,7 +23,7 @@ export const VOIDED_STATUS = VOIDED_STATUS_MAP.VOIDED
 
 export type BillStatus = UnpaidStatuses | PaidStatuses | VoidedStatuses
 
-type BillTerm = 'DUE_ON_RECEIPT' | 'NET_10' | 'NET_15' | 'NET_30' | 'NET_60'
+export type BillTerm = 'DUE_ON_RECEIPT' | 'NET_10' | 'NET_15' | 'NET_30' | 'NET_60'
 
 export const BillTerms: {
   id: BillTerm
@@ -96,7 +96,7 @@ type BillPaymentAllocation = {
   transaction_tags: TransactionTag[]
 }
 
-type SalesTax = {
+export type SalesTax = {
   amount: number
   tax_account: TaxAccount
 }

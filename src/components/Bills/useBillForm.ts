@@ -8,6 +8,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useAuth } from '../../hooks/useAuth'
 import { useBillsContext } from '../../contexts/BillsContext'
+import { SaveBillPayload } from '../../api/layer/bills'
 
 export type BillForm = {
   bill_number?: string
@@ -73,7 +74,7 @@ export const useBillForm = (bill?: EditableBill) => {
     onSubmit: async ({ value }) => {
       try {
         setSubmitError(undefined)
-        const formattedValue = {
+        const formattedValue: SaveBillPayload = {
           bill_number: value.bill_number,
           terms: value.terms,
           due_at: value.due_at ? new Date(value.due_at).toISOString() : undefined,
@@ -90,7 +91,7 @@ export const useBillForm = (bill?: EditableBill) => {
             description: item.description,
             product_name: item.product_name,
             unit_price: item.total_amount ? convertToCents(item.total_amount) : undefined,
-            quantity: '1.00',
+            quantity: 1,
             discount_amount: 0,
             sales_taxes: [],
           })),
