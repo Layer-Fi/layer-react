@@ -8,6 +8,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import useSWRMutation from 'swr/mutation'
 import { APIError } from '../../models/APIError'
+import { useBillsContext } from '../../contexts/BillsContext'
 
 export type BillsRecordPaymentFormRecord = {
   bill?: Bill
@@ -40,6 +41,7 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
   const { businessId } = useLayerContext()
   const { data: auth } = useAuth()
   const { apiUrl } = useEnvironment()
+  const { billInDetails, openBillDetails } = useBillsContext()
   const [showRecordPaymentForm, setShowRecordPaymentForm] = useState(false)
   const [bulkSelectionActive, setBulkSelectionActive] = useState(false)
   const [vendor, setVendorState] = useState<Vendor | undefined>()
@@ -128,7 +130,7 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
   const recordPaymentForBill = (bill: Bill) => {
     setVendor(bill.vendor)
     setPaymentDate(new Date())
-    setBillsToPay([{ bill, amount: convertFromCents(bill.total_amount)?.toString() }])
+    setBillsToPay([{ bill, amount: convertFromCents(bill.outstanding_balance ?? 0)?.toString() }])
     setShowRecordPaymentForm(true)
   }
 
@@ -198,6 +200,15 @@ export const useBillsRecordPayment = ({ refetchAllBills }: { refetchAllBills?: (
 
         return billToPay
       }).filter(item => item.amount && item.bill?.id)
+
+      // Update billInDetails
+      if (billInDetails) {
+        const updatedBillInDetails = newBillsToPay.find(item => item.bill?.id === billInDetails.id)
+
+        if (updatedBillInDetails) {
+          openBillDetails(updatedBillInDetails.bill)
+        }
+      }
 
       setBillsToPay(newBillsToPay)
       setDataSaved(true)

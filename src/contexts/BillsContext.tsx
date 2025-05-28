@@ -67,13 +67,23 @@ export const useBillsRecordPaymentContext = () => useContext(BillsRecordPaymentC
 
 export const BillsProvider: React.FC<BillsProviderProps> = ({ children }) => {
   const bills = useBills()
-  const billsRecordPayment = useBillsRecordPayment({ refetchAllBills: bills.refetch })
 
   return (
     <BillsContext.Provider value={bills}>
-      <BillsRecordPaymentContext.Provider value={billsRecordPayment}>
+      <BillContextWithRecordPayment>
         {children}
-      </BillsRecordPaymentContext.Provider>
+      </BillContextWithRecordPayment>
     </BillsContext.Provider>
+  )
+}
+
+const BillContextWithRecordPayment = ({ children }: { children: ReactNode }) => {
+  const bills = useBillsContext()
+  const billsRecordPayment = useBillsRecordPayment({ refetchAllBills: bills.refetch })
+
+  return (
+    <BillsRecordPaymentContext.Provider value={billsRecordPayment}>
+      {children}
+    </BillsRecordPaymentContext.Provider>
   )
 }
