@@ -14,12 +14,15 @@ export interface SelectProps<T> {
   options?: OptionsOrGroups<T, GroupBase<T>>
   className?: string
   classNamePrefix?: string
-  value?: T
-  onChange: (selected: T) => void
+  value?: T | null
+  onChange: (selected: T | null) => void
   disabled?: boolean
   placeholder?: string
   isInvalid?: boolean
   errorMessage?: string
+  inputId?: string
+  isLoading?: boolean
+  isClearable?: boolean
 }
 
 export const Select = <T,>({
@@ -33,6 +36,9 @@ export const Select = <T,>({
   placeholder,
   isInvalid,
   errorMessage,
+  inputId,
+  isLoading,
+  isClearable,
 }: SelectProps<T>) => {
   const baseClassName = classNames(
     'Layer__select',
@@ -50,17 +56,21 @@ export const Select = <T,>({
     <Tooltip disabled={!isInvalid || !errorMessage}>
       <TooltipTrigger className='Layer__input-tooltip'>
         <ReactSelect<T>
+          inputId={inputId}
           name={name}
           className={baseClassName}
           classNamePrefix={classNamePrefix}
           placeholder={placeholder ?? 'Select...'}
           options={options}
           value={value}
-          onChange={newValue => newValue && onChange(newValue)}
+          onChange={newValue => onChange(newValue)}
           menuPortalTarget={document.body}
           styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
           components={{ DropdownIndicator }}
+          isLoading={isLoading}
           isDisabled={disabled}
+          isClearable={isClearable}
+          escapeClearsValue={isClearable}
         />
       </TooltipTrigger>
       <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>

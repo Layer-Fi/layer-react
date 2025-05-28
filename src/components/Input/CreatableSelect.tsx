@@ -1,58 +1,46 @@
-import { useCallback } from 'react'
-import ReactSelect, {
+import { ReactNode, useCallback } from 'react'
+import {
   DropdownIndicatorProps,
   GroupBase,
-  MultiValue,
-  OptionsOrGroups,
-  StylesConfig,
   components,
 } from 'react-select'
+import BaseCreatableSelect, { type CreatableProps } from 'react-select/creatable'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import classNames from 'classnames'
+import { type SelectProps } from './Select'
 
-export interface SelectProps<T> {
-  name?: string
-  options?: OptionsOrGroups<T, GroupBase<T>>
-  className?: string
-  classNamePrefix?: string
-  value?: T[] | null
-  defaultValue?: T[]
-  onChange: (selected: MultiValue<T> | null) => void
-  disabled?: boolean
-  placeholder?: string
-  isInvalid?: boolean
-  errorMessage?: string
-  styles?: StylesConfig<T, true, GroupBase<T>>
-  inputId?: string
-  isLoading?: boolean
-  isClearable?: boolean
+export interface CreatableSelectProps<T> extends SelectProps<T> {
+  onCreateOption?: (inputValue: string) => void
+  isValidNewOption?: CreatableProps<T, false, GroupBase<T>>['isValidNewOption']
+  formatCreateLabel?: (inputValue: string) => ReactNode
 }
 
-export const MultiSelect = <T,>({
+export const CreatableSelect = <T,>({
   name,
   options,
   className,
   classNamePrefix = 'Layer__select',
   value,
-  defaultValue,
   onChange,
   disabled,
   placeholder,
   isInvalid,
   errorMessage,
-  styles,
+  onCreateOption,
+  isValidNewOption,
+  formatCreateLabel,
   inputId,
   isLoading,
   isClearable,
-}: SelectProps<T>) => {
+}: CreatableSelectProps<T>) => {
   const baseClassName = classNames(
     'Layer__select',
     isInvalid ? 'Layer__select--error' : '',
     className,
   )
 
-  const DropdownIndicator = useCallback((props: DropdownIndicatorProps<T, true>) => (
+  const DropdownIndicator = useCallback((props: DropdownIndicatorProps<T, false>) => (
     <components.DropdownIndicator {...props}>
       <ChevronDownFill />
     </components.DropdownIndicator>
@@ -61,7 +49,7 @@ export const MultiSelect = <T,>({
   return (
     <Tooltip disabled={!isInvalid || !errorMessage}>
       <TooltipTrigger className='Layer__input-tooltip'>
-        <ReactSelect<T, true>
+        <BaseCreatableSelect<T>
           inputId={inputId}
           name={name}
           className={baseClassName}
@@ -69,19 +57,17 @@ export const MultiSelect = <T,>({
           placeholder={placeholder ?? 'Select...'}
           options={options}
           value={value}
-          defaultValue={defaultValue}
           onChange={newValue => onChange(newValue)}
+          onCreateOption={onCreateOption}
+          isValidNewOption={isValidNewOption}
+          formatCreateLabel={formatCreateLabel}
           menuPortalTarget={document.body}
-          styles={{
-            menuPortal: base => ({ ...base, zIndex: 9999 }),
-            ...styles,
-          }}
+          styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
           components={{ DropdownIndicator }}
           isLoading={isLoading}
           isDisabled={disabled}
           isClearable={isClearable}
           escapeClearsValue={isClearable}
-          isMulti={true}
         />
       </TooltipTrigger>
       <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
