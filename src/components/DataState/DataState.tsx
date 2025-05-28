@@ -22,6 +22,8 @@ export interface DataStateProps {
   onRefresh?: () => void
   isLoading?: boolean
   spacing?: boolean
+  inline?: boolean
+  className?: string
 }
 
 const getIcon = (status: DataStateStatus, icon?: ReactNode) => {
@@ -61,26 +63,33 @@ export const DataState = ({
   isLoading,
   icon,
   spacing,
+  inline,
+  className,
 }: DataStateProps) => {
   const baseClassName = classNames(
-    'Layer__data-state',
-    spacing && 'Layer__data-state--spacing',
+    'Layer__data-state', {
+      'Layer__data-state--spacing': spacing,
+      'Layer__data-state--inline': inline
+    },
+    className
   )
 
   return (
     <div className={baseClassName}>
       {getIcon(status, icon)}
-      <Text
-        as='span'
-        size={TextSize.lg}
-        weight={TextWeight.bold}
-        className='Layer__data-state__title'
-      >
-        {title}
-      </Text>
-      <Text as='span' className='Layer__data-state__description'>
-        {description}
-      </Text>
+      <div>
+        <Text
+          as='span'
+          size={inline ? TextSize.sm : TextSize.lg}
+          weight={TextWeight.bold}
+          className='Layer__data-state__title'
+        >
+          {title}
+        </Text>
+        <Text as='span' size={inline ? TextSize.sm : TextSize.md} className='Layer__data-state__description'>
+          {description}
+        </Text>
+      </div>
       {onRefresh && (
         <span className='Layer__data-state__btn'>
           <Button
