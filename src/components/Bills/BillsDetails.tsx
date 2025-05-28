@@ -84,7 +84,7 @@ export const BillsDetails = ({
                 weight={TextWeight.bold}
                 className='Layer__bills-account__title'
               >
-                Bill details
+                {bill?.id ? 'Bill details' : 'New bill'}
               </Text>
               <Text
                 size={TextSize.sm}
