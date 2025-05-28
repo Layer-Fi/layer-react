@@ -25,6 +25,7 @@ import { useCategories } from '../../hooks/categories/useCategories'
 import CloseIcon from '../../icons/CloseIcon'
 import { HStack } from '../ui/Stack/Stack'
 import { notEmpty } from '../../utils/form'
+import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 
 const flattenCategories = (categories: Category[]): Category[] => {
   return categories.reduce((acc: Category[], category) => {
@@ -108,8 +109,7 @@ export const BillsDetails = ({
 
       >
         <div className='Layer__bill-details__content'>
-
-          <HStack gap='sm' justify={bill ? 'space-between' : 'end'} className='Layer__bill-details__section Layer__bill-details__head'>
+          <HStack gap='sm' justify={bill ? 'space-between' : 'end'} className='Layer__bill-details__section Layer__bill-details__head' {...toDataProperties({ newbill: !bill })}>
             {bill && (<BillSummary bill={bill} />)}
 
             <HStack gap='sm' className='Layer__bill-details__action'>

@@ -94,6 +94,10 @@
     @container (max-width: 499px) {
       flex-direction: column;
       gap: var(--spacing-md);
+
+      &[data-newbill] {
+        display: none;
+      }
     }
   }
 
