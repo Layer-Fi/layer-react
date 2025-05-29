@@ -12,7 +12,7 @@ import CloseIcon from '../../icons/CloseIcon'
 const validateCsvFile = (file: File) => {
   const validExtensions = ['.csv']
   const isValidExtension = validExtensions.some(ext =>
-    file.name.toLowerCase().endsWith(ext)
+    file.name.toLowerCase().endsWith(ext),
   )
 
   if (!isValidExtension) {
@@ -37,7 +37,7 @@ const FileRow = ({ file, onClearFile }: FileRowProps) => {
       <FileSpreadsheet size={24} />
       <P size='md'>{file.name}</P>
       <Spacer />
-      <IconButton icon={<CloseIcon size={16} />} onClick={onClearFile}/>
+      <IconButton icon={<CloseIcon size={16} />} onClick={onClearFile} />
     </HStack>
   )
 }
@@ -59,7 +59,7 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
     const files = e.target.files
     if (!files || files.length === 0) return
 
-    const fileArray = Array.from(files) 
+    const fileArray = Array.from(files)
     onDrop(fileArray)
   }
 
@@ -67,7 +67,7 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
     ([firstFile, ...restFiles]: File[], rejections: FileRejection[] = []) => {
       onFileSelected(undefined)
 
-      const hasTooManyFiles = rejections.some(r => r.errors.some(e => e.code === 'too-many-files'));
+      const hasTooManyFiles = rejections.some(r => r.errors.some(e => e.code === 'too-many-files'))
       if (restFiles.length > 0 || hasTooManyFiles) {
         setErrorMessage('Too many files selected')
         return
@@ -82,11 +82,12 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
       if (!maybeErrorMessage) {
         onFileSelected(firstFile)
         setErrorMessage(undefined)
-      } else {
+      }
+      else {
         setErrorMessage(maybeErrorMessage)
       }
     },
-    []
+    [onFileSelected],
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -117,7 +118,7 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
               Browse
             </button>
           </P>
-          <input type="file" ref={fileInputRef} style={{ display: 'none' }} accept=".csv" onChange={handleFileChange} />
+          <input type='file' ref={fileInputRef} style={{ display: 'none' }} accept='.csv' onChange={handleFileChange} />
         </HStack>
         <P size='sm' variant='subtle'>Upload file in CSV format</P>
         {errorMessage && (
@@ -130,7 +131,7 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
           />
         )}
       </VStack>
-      {file && <FileRow  file={file} onClearFile={() => onFileSelected(null)}/>}
+      {file && <FileRow file={file} onClearFile={() => onFileSelected(null)} />}
     </VStack>
   )
 }

@@ -1,4 +1,3 @@
-
 import { useCallback, useMemo, useState } from 'react'
 import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
 import { Label, P } from '../ui/Typography/Text'
@@ -17,7 +16,7 @@ import { CopyTemplateHeadersButtonGroup } from '../CsvUpload/CopyTemplateHeaders
 type AccountOption = {
   value: string
   label: string
-  created_account_name?: string 
+  created_account_name?: string
 }
 
 interface TemplateRow {
@@ -27,23 +26,25 @@ interface TemplateRow {
 }
 type TemplateHeader = keyof TemplateRow
 
-const templateHeaders: TemplateHeader[] = ['Date', 'Description', 'Amount'] 
+const templateHeaders: TemplateHeader[] = ['Date', 'Description', 'Amount']
 const templateExampleTransactions: TemplateRow[] = [
   {
     Date: new Date('2025-05-20'),
     Description: 'Grocery Store Purchase',
-    Amount: -76.23
+    Amount: -76.23,
   },
   {
     Date: new Date('2025-05-18'),
     Description: 'Monthly Interest',
-    Amount: 12.45
+    Amount: 12.45,
   },
-];
+]
 
 const formatCreateLabel = (inputValue: string) => (
   <span style={{ fontStyle: 'italic' }}>
-    + {inputValue ? `Create "${inputValue}"`: 'Create new account'}
+    +
+    {' '}
+    {inputValue ? `Create "${inputValue}"` : 'Create new account'}
   </span>
 )
 
@@ -51,13 +52,13 @@ export function UploadTransactionsSelectAccountStep() {
   const { data: customAccounts, isLoading: isLoadingCustomAccounts, error: customAccountsError } = useCustomAccounts()
   const [selectedAccount, setSelectedAccount] = useState<AccountOption | null>()
   const [file, setFile] = useState<File | null>()
-  
+
   const accountOptions = useMemo(() => {
     if (!customAccounts) return []
-    
+
     return customAccounts.map(account => ({
       value: account.id,
-      label: account.account_name
+      label: account.account_name,
     }))
   }, [customAccounts])
 
@@ -86,7 +87,7 @@ export function UploadTransactionsSelectAccountStep() {
 
   const inputClassName = classNames(
     'Layer__upload-transactions__select-account-name-input',
-    !!customAccountsError && 'Layer__upload-transactions__select-account-name-input--error'
+    !!customAccountsError && 'Layer__upload-transactions__select-account-name-input--error',
   )
 
   return (
@@ -95,9 +96,9 @@ export function UploadTransactionsSelectAccountStep() {
         <Label htmlFor='account_name'>
           Account name
         </Label>
-        <CreatableSelect 
+        <CreatableSelect
           inputId='account_name'
-          placeholder={!!customAccountsError ? 'Failed to load options' : 'Select or add...'}
+          placeholder={customAccountsError ? 'Failed to load options' : 'Select or add...'}
           options={accountOptions}
           onChange={onChange}
           onCreateOption={onCreateOption}
@@ -115,16 +116,16 @@ export function UploadTransactionsSelectAccountStep() {
           <CustomAccountForm initialAccountName={selectedAccount?.created_account_name ?? ''} onCancel={onCancel} onSuccess={onSuccess} />
         </VStack>
       )}
-      <CsvUpload file={file} onFileSelected={setFile}/>
-      <Separator/>
+      <CsvUpload file={file} onFileSelected={setFile} />
+      <Separator />
       <VStack gap='xs' className='Layer__upload-transactions__template-section'>
         <P size='sm'>Make sure to include the following columns</P>
         <HStack align='center'>
           <CopyTemplateHeadersButtonGroup templateHeaders={templateHeaders} />
           <Spacer />
-          <DownloadCsvTemplateButton 
+          <DownloadCsvTemplateButton
             className='Layer__upload-transactions__template-section__download-template-button'
-            fileName='upload_transactions.csv' 
+            fileName='upload_transactions.csv'
             csvProps={{ headers: templateHeaders, rows: templateExampleTransactions }}
           >
             Download template
@@ -133,10 +134,10 @@ export function UploadTransactionsSelectAccountStep() {
       </VStack>
       <HStack>
         <Spacer />
-        <Button 
-          rightIcon={<UploadCloud size={12}/>} 
+        <Button
+          rightIcon={<UploadCloud size={12} />}
           disabled={!selectedAccount || selectedAccount.value === 'new_account' || !file}
-        >   
+        >
           Upload transactions
         </Button>
       </HStack>

@@ -14,14 +14,14 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
     <section className='Layer__component'>
       <Wizard
         Header={(
-        <VStack gap='xs'>
-          <Heading>
-            Upload bank transactions
-          </Heading>
-          <P pbe='xl' size='sm' variant='subtle'>
-            Add file downloaded from your bank account
-          </P>
-        </VStack>
+          <VStack gap='xs'>
+            <Heading>
+              Upload bank transactions
+            </Heading>
+            <P pbe='xl' size='sm' variant='subtle'>
+              Add file downloaded from your bank account
+            </P>
+          </VStack>
         )}
         Footer={null}
         onComplete={onComplete}

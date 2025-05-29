@@ -69,9 +69,9 @@ export const DataState = ({
   const baseClassName = classNames(
     'Layer__data-state', {
       'Layer__data-state--spacing': spacing,
-      'Layer__data-state--inline': inline
+      'Layer__data-state--inline': inline,
     },
-    className
+    className,
   )
 
   return (

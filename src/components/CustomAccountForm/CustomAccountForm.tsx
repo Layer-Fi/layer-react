@@ -2,7 +2,7 @@ import { useCallback, useEffect, FormEvent } from 'react'
 import { notEmpty } from '../../utils/form'
 import { Input, InputGroup, Select } from '../Input'
 import { useCustomAccountForm } from './useCustomAccountForm'
-import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
+import { Button, ButtonVariant, RetryButton } from '../Button'
 import { ErrorText } from '../Typography'
 import { Spacer, HStack, VStack } from '../../components/ui/Stack/Stack'
 import { type CustomAccount, CustomAccountSubtype } from '../../hooks/customAccounts/types'
@@ -32,8 +32,8 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
 
   useEffect(() => {
     form.setFieldValue('account_name', initialAccountName)
-  }, [initialAccountName])
-  
+  }, [form, initialAccountName])
+
   return (
     <form
       className='Layer__form'
@@ -84,7 +84,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           )}
         </form.Field>
 
-        <form.Field 
+        <form.Field
           name='account_type'
           validators={{
             onSubmit: ({ value }) => notEmpty(value) ? undefined : 'Account type is required',

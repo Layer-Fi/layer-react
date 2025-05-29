@@ -5,11 +5,11 @@ import { CustomAccount, CustomAccountSubtype, CustomAccountType } from '../../ho
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 
 export const getCustomAccountTypeFromSubtype = (subtype: CustomAccountSubtype): CustomAccountType => {
-  switch(subtype) {
+  switch (subtype) {
     case CustomAccountSubtype.CHECKING:
     case CustomAccountSubtype.SAVINGS:
       return CustomAccountType.DEPOSITORY
-    case CustomAccountSubtype.CREDIT_CARD: 
+    case CustomAccountSubtype.CREDIT_CARD:
       return CustomAccountType.CREDIT
     default:
       unsafeAssertUnreachable({
@@ -43,7 +43,7 @@ export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) =
     FormValidateOrFn<CustomAccountFormData>,
     FormAsyncValidateOrFn<CustomAccountFormData>,
     FormAsyncValidateOrFn<CustomAccountFormData>,
-    FormAsyncValidateOrFn<CustomAccountFormData>> ({
+    FormAsyncValidateOrFn<CustomAccountFormData>>({
     defaultValues: {
       account_name: undefined,
       institution_name: undefined,
