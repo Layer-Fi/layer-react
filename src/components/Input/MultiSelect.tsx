@@ -16,9 +16,9 @@ export interface SelectProps<T> {
   options?: OptionsOrGroups<T, GroupBase<T>>
   className?: string
   classNamePrefix?: string
-  value?: T[] | null
+  value?: T[]
   defaultValue?: T[]
-  onChange: (selected: MultiValue<T> | null) => void
+  onChange: (selected: MultiValue<T>) => void
   disabled?: boolean
   placeholder?: string
   isInvalid?: boolean
@@ -26,7 +26,6 @@ export interface SelectProps<T> {
   styles?: StylesConfig<T, true, GroupBase<T>>
   inputId?: string
   isLoading?: boolean
-  isClearable?: boolean
 }
 
 export const MultiSelect = <T,>({
@@ -44,7 +43,6 @@ export const MultiSelect = <T,>({
   styles,
   inputId,
   isLoading,
-  isClearable,
 }: SelectProps<T>) => {
   const baseClassName = classNames(
     'Layer__select',
@@ -70,7 +68,7 @@ export const MultiSelect = <T,>({
           options={options}
           value={value}
           defaultValue={defaultValue}
-          onChange={newValue => onChange(newValue)}
+          onChange={newValue => newValue && onChange(newValue)}
           menuPortalTarget={document.body}
           styles={{
             menuPortal: base => ({ ...base, zIndex: 9999 }),
@@ -79,8 +77,6 @@ export const MultiSelect = <T,>({
           components={{ DropdownIndicator }}
           isLoading={isLoading}
           isDisabled={disabled}
-          isClearable={isClearable}
-          escapeClearsValue={isClearable}
           isMulti={true}
         />
       </TooltipTrigger>

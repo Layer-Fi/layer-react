@@ -10,7 +10,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import classNames from 'classnames'
 import { type SelectProps } from './Select'
 
-export interface CreatableSelectProps<T> extends SelectProps<T> {
+export interface CreatableSelectProps<T> extends Omit<SelectProps<T>, 'value' | 'onChange'> {
+  value?: T | null
+  onChange: (selected: T | null) => void
+  isClearable?: boolean
   onCreateOption?: (inputValue: string) => void
   isValidNewOption?: CreatableProps<T, false, GroupBase<T>>['isValidNewOption']
   formatCreateLabel?: (inputValue: string) => ReactNode
