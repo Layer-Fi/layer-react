@@ -59,7 +59,7 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
 
 const LABEL_CLASS_NAME = 'Layer__Label'
 
-type LabelProps = Pick<ComponentPropsWithoutRef<'label'>, 'slot'>
+type LabelProps = Pick<ComponentPropsWithoutRef<'label'>, 'slot' | 'htmlFor'>
 
 export const Label = forwardRef<HTMLLabelElement, PropsWithChildren<LabelProps & TextStyleProps>>(
   function Label({ align, children, pbe, pbs, size, variant, ...restProps }, ref) {
