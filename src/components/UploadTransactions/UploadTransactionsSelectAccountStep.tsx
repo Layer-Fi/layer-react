@@ -50,8 +50,8 @@ const formatCreateLabel = (inputValue: string) => (
 
 export function UploadTransactionsSelectAccountStep() {
   const { data: customAccounts, isLoading: isLoadingCustomAccounts, error: customAccountsError } = useCustomAccounts()
-  const [selectedAccount, setSelectedAccount] = useState<AccountOption | null>()
-  const [file, setFile] = useState<File | null>()
+  const [selectedAccount, setSelectedAccount] = useState<AccountOption | null>(null)
+  const [file, setFile] = useState<File | null>(null)
 
   const accountOptions = useMemo(() => {
     if (!customAccounts) return []

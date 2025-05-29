@@ -53,8 +53,8 @@ export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) =
       try {
         if (value.account_name && value.institution_name && value.account_type) {
           const account = await createCustomAccount({
-            account_name: value.account_name,
-            institution_name: value.institution_name,
+            account_name: value.account_name.trim(),
+            institution_name: value.institution_name.trim(),
             account_type: getCustomAccountTypeFromSubtype(value.account_type),
             account_subtype: value.account_type,
             external_id: null,

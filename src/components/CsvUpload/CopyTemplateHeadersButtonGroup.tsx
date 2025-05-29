@@ -12,7 +12,7 @@ interface CopyTemplateHeadersButtonGroupProps {
 
 export const CopyTemplateHeadersButtonGroup = ({ templateHeaders }: CopyTemplateHeadersButtonGroupProps) => {
   return (
-    <HStack gap='3xs' className='Layer__csv-upload__copy_template_headers_button_group'>
+    <HStack gap='3xs' className='Layer__csv-upload__copy-template-headers-button-group'>
       {templateHeaders.map(header => (
         <Button
           key={header}

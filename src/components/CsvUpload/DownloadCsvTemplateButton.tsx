@@ -30,9 +30,9 @@ export const DownloadCsvTemplateButton = <T extends Record<string, any>>({ child
         }),
       ),
     ]
-    const csvContent = csvData.map(row => row.join(',')).join('\n')
+    const csvContent = csvData.map(row => row.map(value => `"${value.replace(/"/g, '""')}"`).join(',')).join('\n')
 
-    const blob = new Blob([csvContent], { type: 'text/csvcharset=utf-8' })
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)
 
     const link = document.createElement('a')

@@ -43,8 +43,8 @@ const FileRow = ({ file, onClearFile }: FileRowProps) => {
 }
 
 type CsvUploadProps = {
-  file: File | null | undefined
-  onFileSelected: (file: File | null | undefined) => void
+  file: File | null
+  onFileSelected: (file: File | null) => void
 }
 export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
@@ -65,15 +65,15 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
 
   const onDrop = useCallback(
     ([firstFile, ...restFiles]: File[], rejections: FileRejection[] = []) => {
-      onFileSelected(undefined)
-
       const hasTooManyFiles = rejections.some(r => r.errors.some(e => e.code === 'too-many-files'))
       if (restFiles.length > 0 || hasTooManyFiles) {
+        onFileSelected(null)
         setErrorMessage('Too many files selected')
         return
       }
 
       if (rejections.length > 0) {
+        onFileSelected(null)
         setErrorMessage('Unknown upload error')
         return
       }
@@ -84,6 +84,7 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
         setErrorMessage(undefined)
       }
       else {
+        onFileSelected(null)
         setErrorMessage(maybeErrorMessage)
       }
     },
