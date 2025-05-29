@@ -48,7 +48,7 @@ const formatCreateLabel = (inputValue: string) => (
   </span>
 )
 
-export function UploadTransactionsSelectAccountStep() {
+export function UploadTransactionsUploadCsvStep() {
   const { data: customAccounts, isLoading: isLoadingCustomAccounts, error: customAccountsError } = useCustomAccounts()
   const [selectedAccount, setSelectedAccount] = useState<AccountOption | null>(null)
   const [file, setFile] = useState<File | null>(null)

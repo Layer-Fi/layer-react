@@ -1,4 +1,4 @@
-import { UploadTransactionsSelectAccountStep } from './UploadTransactionsSelectAccountStep'
+import { UploadTransactionsUploadCsvStep } from './UploadTransactionsUploadCsvStep'
 import { Wizard } from '../Wizard/Wizard'
 import { Heading } from '../ui/Typography/Heading'
 import type { Awaitable } from '../../types/utility/promises'
@@ -26,7 +26,7 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
         Footer={null}
         onComplete={onComplete}
       >
-        <UploadTransactionsSelectAccountStep />
+        <UploadTransactionsUploadCsvStep />
       </Wizard>
     </section>
   )
