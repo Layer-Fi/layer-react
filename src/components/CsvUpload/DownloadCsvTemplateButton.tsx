@@ -1,33 +1,24 @@
 import { type PropsWithChildren } from 'react'
 import { Button } from '../Button'
 import { FileDownIcon } from 'lucide-react'
-import { format } from 'date-fns'
 
 interface DownloadCsvTemplateButtonProps<T> {
   csvProps: {
-    headers: (keyof T)[]
+    headers: { [K in keyof T]: string }
     rows?: T[]
   }
   fileName?: string
   className?: string
 }
 
-function isDate(val: unknown): val is Date {
-  return val instanceof Date
-}
-
-export const DownloadCsvTemplateButton = <T extends Record<string, any>>({ children, className, csvProps, fileName = 'template.csv' }: PropsWithChildren<DownloadCsvTemplateButtonProps<T>>) => {
+export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | number }>({ children, className, csvProps, fileName = 'template.csv' }: PropsWithChildren<DownloadCsvTemplateButtonProps<T>>) => {
   const { headers, rows = [] } = csvProps
   const handleDownload = () => {
     const csvData: string[][] = [
-      headers as string[],
+      Object.values(headers),
       ...rows.map((row: T) =>
-        headers.map((header: keyof T) => {
-          const value = row[header]
-          if (isDate(value)) return format(value, 'MM/dd/yyyy')
-          if (typeof value === 'number') return value.toString()
-          return value ?? ''
-        }),
+        (Object.keys(headers) as (keyof T)[])
+          .map(header => row[header] ? String(row[header]) : ''),
       ),
     ]
     const csvContent = csvData.map(row => row.map(value => `"${value.replace(/"/g, '""')}"`).join(',')).join('\n')
