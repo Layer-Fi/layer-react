@@ -131,12 +131,17 @@
   &:disabled {
     box-shadow: none;
     background-color: var(--color-base-200);
-    color: var(--color-base-500);
     cursor: not-allowed;
-
-    .Layer__btn-icon {
-      background-color: transparent;
-      color: var(--color-base-500);
+    
+    >.Layer__btn-content {
+      >.Layer__btn-text {
+        color: var(--color-base-500);
+      }
+      
+      >.Layer__btn-icon {
+        background-color: transparent;
+        color: var(--color-base-500);
+      }
     }
   }
 }
@@ -170,11 +175,6 @@
   &:hover .Layer__btn-icon {
     color: var(--btn-color-primary);
     background: transparent;
-  }
-
-  &:visited,
-  &:active {
-    box-shadow: 0 0 0 1px var(--color-base-800);
   }
 
   &:hover:not([disabled]),

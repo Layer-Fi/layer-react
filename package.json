@@ -84,6 +84,7 @@
     "react-aria-components": "^1.8.0",
     "react-currency-input-field": "^3.10.0",
     "react-datepicker": "^6.9.0",
+    "react-dropzone": "^14.3.8",
     "react-plaid-link": "^4.0.1",
     "react-select": "^5.10.1",
     "recharts": "^2.15.3",

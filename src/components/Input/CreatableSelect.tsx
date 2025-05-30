@@ -1,30 +1,25 @@
-import { useCallback } from 'react'
-import ReactSelect, {
+import { ReactNode, useCallback } from 'react'
+import {
   DropdownIndicatorProps,
   GroupBase,
-  OptionsOrGroups,
   components,
 } from 'react-select'
+import BaseCreatableSelect, { type CreatableProps } from 'react-select/creatable'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import classNames from 'classnames'
+import { type SelectProps } from './Select'
 
-export interface SelectProps<T> {
-  name?: string
-  options?: OptionsOrGroups<T, GroupBase<T>>
-  className?: string
-  classNamePrefix?: string
-  value?: T
-  onChange: (selected: T) => void
-  disabled?: boolean
-  placeholder?: string
-  isInvalid?: boolean
-  errorMessage?: string
-  inputId?: string
-  isLoading?: boolean
+export interface CreatableSelectProps<T> extends Omit<SelectProps<T>, 'value' | 'onChange'> {
+  value?: T | null
+  onChange: (selected: T | null) => void
+  isClearable?: boolean
+  onCreateOption?: (inputValue: string) => void
+  isValidNewOption?: CreatableProps<T, false, GroupBase<T>>['isValidNewOption']
+  formatCreateLabel?: (inputValue: string) => ReactNode
 }
 
-export const Select = <T,>({
+export const CreatableSelect = <T,>({
   name,
   options,
   className,
@@ -35,9 +30,13 @@ export const Select = <T,>({
   placeholder,
   isInvalid,
   errorMessage,
+  onCreateOption,
+  isValidNewOption,
+  formatCreateLabel,
   inputId,
   isLoading,
-}: SelectProps<T>) => {
+  isClearable,
+}: CreatableSelectProps<T>) => {
   const baseClassName = classNames(
     'Layer__select',
     isInvalid ? 'Layer__select--error' : '',
@@ -53,7 +52,7 @@ export const Select = <T,>({
   return (
     <Tooltip disabled={!isInvalid || !errorMessage}>
       <TooltipTrigger className='Layer__input-tooltip'>
-        <ReactSelect<T>
+        <BaseCreatableSelect<T>
           inputId={inputId}
           name={name}
           className={baseClassName}
@@ -61,12 +60,17 @@ export const Select = <T,>({
           placeholder={placeholder ?? 'Select...'}
           options={options}
           value={value}
-          onChange={newValue => newValue && onChange(newValue)}
+          onChange={newValue => onChange(newValue)}
+          onCreateOption={onCreateOption}
+          isValidNewOption={isValidNewOption}
+          formatCreateLabel={formatCreateLabel}
           menuPortalTarget={document.body}
           styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
           components={{ DropdownIndicator }}
           isLoading={isLoading}
           isDisabled={disabled}
+          isClearable={isClearable}
+          escapeClearsValue={isClearable}
         />
       </TooltipTrigger>
       <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>

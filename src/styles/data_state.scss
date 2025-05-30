@@ -52,3 +52,18 @@
   margin-bottom: var(--spacing-xl);
   color: var(--color-base-500);
 }
+
+.Layer__data-state--inline {
+  flex-direction: row;
+  gap: var(--spacing-xs);
+
+  .Layer__data-state__title,
+  .Layer__data-state__description {
+    text-align: left;
+    margin-bottom: 0;
+  }
+
+  .Layer__data-state__icon {
+    margin-bottom: 0;
+  }
+}
