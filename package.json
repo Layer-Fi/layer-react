@@ -76,6 +76,8 @@
   "dependencies": {
     "@floating-ui/react": "^0.27.8",
     "@tanstack/react-form": "^1.9.1",
+    "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.13.9",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
     "libphonenumber-js": "^1.12.7",

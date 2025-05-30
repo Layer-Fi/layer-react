@@ -52,3 +52,35 @@
   border-radius: var(--border-radius-3xs);
   background-color: var(--color-base-200);
 }
+
+.Layer__csv-upload__validate-csv-table__container {
+  overflow: auto;
+  position: relative;
+  max-height: 561px;
+}
+
+.Layer__csv-upload__validate-csv-table__thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--color-base-0);
+}
+
+.Layer__csv-upload__validate-csv-table__tbody {
+  position: relative;
+  width: 100%;
+}
+
+.Layer__csv-upload__validate-csv-table__row {
+  display: flex;
+  position: absolute;
+  width: 100%;
+}
+
+.Layer__csv-upload__validate-csv-table__cell {
+  display: flex;
+}
+
+.Layer__csv-upload__validate-csv-table__raw-field {
+  color: var(--color-danger)
+}
