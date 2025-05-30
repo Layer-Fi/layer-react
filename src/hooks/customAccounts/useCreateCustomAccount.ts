@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
-import type { CustomAccount, RawCustomAccount } from './types'
+import { type RawCustomAccount, mapRawCustomAccountToCustomAccount } from './types'
 import { useAuth } from '../useAuth'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useSWRConfig } from 'swr'
@@ -14,7 +14,7 @@ type CreateCustomAccountBody = Pick<
 >
 
 const createCustomAccount = post<
-  { data: CustomAccount },
+  { data: RawCustomAccount },
   CreateCustomAccountBody,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/custom-accounts`)
@@ -58,10 +58,9 @@ export function useCreateCustomAccount() {
         params: { businessId },
         body,
       },
-    ).then(({ data }) => data),
+    ).then(({ data }) => mapRawCustomAccountToCustomAccount(data)),
     {
       revalidate: false,
-      throwOnError: true,
     },
   )
 

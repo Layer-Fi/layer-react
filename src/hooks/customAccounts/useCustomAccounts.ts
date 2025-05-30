@@ -2,7 +2,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { get } from '../../api/layer/authenticated_http'
 import useSWR from 'swr'
-import { type RawCustomAccount } from './types'
+import { mapRawCustomAccountToCustomAccount, type RawCustomAccount } from './types'
 
 export const CUSTOM_ACCOUNTS_TAG_KEY = '#custom-accounts'
 
@@ -52,6 +52,6 @@ export function useCustomAccounts() {
       {
         params: { businessId },
       },
-    )().then(({ data }) => data?.custom_accounts),
+    )().then(({ data }) => data?.custom_accounts.map(account => mapRawCustomAccountToCustomAccount(account))),
   )
 }
