@@ -1,44 +1,24 @@
 import { useCallback, useMemo, useState } from 'react'
 import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
 import { Label, P } from '../ui/Typography/Text'
+import { SubmitButton } from '../Button'
 import { useCustomAccounts } from '../../hooks/customAccounts/useCustomAccounts'
 import { CreatableSelect } from '../Input/CreatableSelect'
 import { CustomAccountForm } from '../CustomAccountForm/CustomAccountForm'
 import { CsvUpload } from '../CsvUpload/CsvUpload'
-import { Button } from '../Button/Button'
-import UploadCloud from '../../icons/UploadCloud'
-import { type CustomAccount } from '../../hooks/customAccounts/types'
+import type { CustomAccount } from '../../hooks/customAccounts/types'
 import classNames from 'classnames'
 import { Separator } from '../Separator/Separator'
 import { DownloadCsvTemplateButton } from '../CsvUpload/DownloadCsvTemplateButton'
 import { CopyTemplateHeadersButtonGroup } from '../CsvUpload/CopyTemplateHeadersButtonGroup'
+import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '../../hooks/customAccounts/useCustomAccountParseCsv'
+import { templateHeaders, templateExampleTransactions } from './template'
 
 type AccountOption = {
   value: string
   label: string
-  created_account_name?: string
+  createdAccountName?: string
 }
-
-interface TemplateRow {
-  Date: Date
-  Description: string
-  Amount: number
-}
-type TemplateHeader = keyof TemplateRow
-
-const templateHeaders: TemplateHeader[] = ['Date', 'Description', 'Amount']
-const templateExampleTransactions: TemplateRow[] = [
-  {
-    Date: new Date('2025-05-20'),
-    Description: 'Grocery Store Purchase',
-    Amount: -76.23,
-  },
-  {
-    Date: new Date('2025-05-18'),
-    Description: 'Monthly Interest',
-    Amount: 12.45,
-  },
-]
 
 const formatCreateLabel = (inputValue: string) => (
   <span style={{ fontStyle: 'italic' }}>
@@ -48,42 +28,69 @@ const formatCreateLabel = (inputValue: string) => (
   </span>
 )
 
-export function UploadTransactionsUploadCsvStep() {
+interface UploadTransactionsUploadCsvStepProps {
+  selectedAccount: AccountOption | null
+  onSelectAccount: (account: AccountOption | null) => void
+
+  selectedFile: File | null
+  onSelectFile: (file: File | null) => void
+
+  onParseCsv: (parseCsvResponse: CustomAccountParseCsvResponse) => void
+}
+
+export function UploadTransactionsUploadCsvStep(
+  { selectedAccount, onSelectAccount, selectedFile, onSelectFile, onParseCsv }: UploadTransactionsUploadCsvStepProps,
+) {
   const { data: customAccounts, isLoading: isLoadingCustomAccounts, error: customAccountsError } = useCustomAccounts()
-  const [selectedAccount, setSelectedAccount] = useState<AccountOption | null>(null)
-  const [file, setFile] = useState<File | null>(null)
+  const { trigger: parseCsv, isMutating: isParsingCsv } = useCustomAccountParseCsv()
+  const [hasParseCsvError, setHasParseCsvError] = useState(false)
 
   const accountOptions = useMemo(() => {
     if (!customAccounts) return []
 
     return customAccounts.map(account => ({
       value: account.id,
-      label: account.account_name,
+      label: account.accountName,
     }))
   }, [customAccounts])
 
   const onChange = useCallback((option: AccountOption | null) => {
-    setSelectedAccount(option)
-  }, [])
+    onSelectAccount(option)
+  }, [onSelectAccount])
 
   const onCreateOption = useCallback((inputValue: string) => {
-    setSelectedAccount({
+    onSelectAccount({
       value: 'new_account',
       label: 'Create new account',
-      created_account_name: inputValue,
+      createdAccountName: inputValue,
     })
-  }, [])
+  }, [onSelectAccount])
 
-  const onCancel = useCallback(() => {
-    setSelectedAccount(null)
-  }, [])
+  const onCancelCreateAccount = useCallback(() => {
+    onSelectAccount(null)
+  }, [onSelectAccount])
 
-  const onSuccess = useCallback((account: CustomAccount) => {
-    setSelectedAccount({
+  const onCreateAccountSuccess = useCallback((account: CustomAccount) => {
+    onSelectAccount({
       value: account.id,
       label: account.accountName,
     })
-  }, [])
+  }, [onSelectAccount])
+
+  const onFileSelected = useCallback((file: File | null) => {
+    setHasParseCsvError(false)
+    onSelectFile(file)
+  }, [onSelectFile])
+
+  const onClickContinue = useCallback(() => {
+    if (!selectedAccount || selectedAccount.value === 'new_account' || !selectedFile) return
+
+    void parseCsv({
+      customAccountId: selectedAccount.value,
+      file: selectedFile,
+    }).then((res) => { if (res) onParseCsv(res) })
+      .catch(() => { setHasParseCsvError(true) })
+  }, [selectedAccount, selectedFile, parseCsv, onParseCsv])
 
   const inputClassName = classNames(
     'Layer__upload-transactions__select-account-name-input',
@@ -113,15 +120,19 @@ export function UploadTransactionsUploadCsvStep() {
       </HStack>
       {selectedAccount && selectedAccount.value === 'new_account' && (
         <VStack className='Layer__upload-transactions__create-account-form'>
-          <CustomAccountForm initialAccountName={selectedAccount?.created_account_name ?? ''} onCancel={onCancel} onSuccess={onSuccess} />
+          <CustomAccountForm
+            initialAccountName={selectedAccount?.createdAccountName ?? ''}
+            onCancel={onCancelCreateAccount}
+            onSuccess={onCreateAccountSuccess}
+          />
         </VStack>
       )}
-      <CsvUpload file={file} onFileSelected={setFile} />
+      <CsvUpload file={selectedFile} onFileSelected={onFileSelected} replaceDropTarget />
       <Separator />
       <VStack gap='xs' className='Layer__upload-transactions__template-section'>
         <P size='sm'>Make sure to include the following columns</P>
         <HStack align='center'>
-          <CopyTemplateHeadersButtonGroup templateHeaders={templateHeaders} />
+          <CopyTemplateHeadersButtonGroup headers={templateHeaders} />
           <Spacer />
           <DownloadCsvTemplateButton
             className='Layer__upload-transactions__template-section__download-template-button'
@@ -134,12 +145,17 @@ export function UploadTransactionsUploadCsvStep() {
       </VStack>
       <HStack>
         <Spacer />
-        <Button
-          rightIcon={<UploadCloud size={12} />}
-          disabled={!selectedAccount || selectedAccount.value === 'new_account' || !file}
+        <SubmitButton
+          tooltip={selectedFile && (!selectedAccount || selectedAccount.value === 'new_account') ? 'Select an account' : null}
+          disabled={!selectedAccount || selectedAccount.value === 'new_account' || !selectedFile}
+          processing={isParsingCsv}
+          error={hasParseCsvError}
+          onClick={onClickContinue}
+          withRetry
+          noIcon={!isParsingCsv}
         >
-          Upload transactions
-        </Button>
+          {hasParseCsvError ? 'Retry' : 'Continue'}
+        </SubmitButton>
       </HStack>
     </VStack>
   )
