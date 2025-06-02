@@ -68,7 +68,7 @@ export function UploadTransactionsValidateCsvStep(
             action={SubmitAction.UPLOAD}
             withRetry
           >
-            Upload transactions
+            {uploadTransactionsError ? 'Retry' : 'Upload transactions'}
           </SubmitButton>
         )}
       </HStack>
