@@ -47,6 +47,10 @@
   border: 1px solid var(--color-base-400);
 }
 
+.Layer__csv-upload__file-row--drop-target {
+  height: 6rem;
+}
+
 .Layer__csv-upload__copy-template-headers-button-group {
   padding: var(--spacing-3xs);
   border-radius: var(--border-radius-3xs);
@@ -54,33 +58,72 @@
 }
 
 .Layer__csv-upload__validate-csv-table__container {
+  max-height: calc(52px * 10 + 41px);
+  border-radius: var(--border-radius-3xs);
+  border: 1px solid var(--color-base-400);
+}
+
+.Layer__csv-upload__validate-csv-table__scroll_container {
   overflow: auto;
   position: relative;
-  max-height: 561px;
 }
 
 .Layer__csv-upload__validate-csv-table__thead {
-  position: sticky;
-  top: 0;
   z-index: 1;
-  background-color: var(--color-base-0);
+  background-color: var(--bg-subtle);
 }
 
-.Layer__csv-upload__validate-csv-table__tbody {
-  position: relative;
+.Layer__csv-upload__validate-csv-table__header-row {
+  display: flex;
   width: 100%;
 }
 
-.Layer__csv-upload__validate-csv-table__row {
+.Layer__table-header.Layer__csv-upload__validate-csv-table__header-cell {
+  padding: 0;
+  display: flex;
+  flex: 1 1 0;
+
+  &--row {
+    flex: 0 0 60px;
+  }
+}
+
+.Layer__csv-upload__validate-csv-table__header-cell-content {
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.Layer__table-row.Layer__csv-upload__validate-csv-table__row  {
   display: flex;
   position: absolute;
   width: 100%;
+
+  &--error {
+    background-color: var(--color-info-error-bg)
+  }
 }
 
-.Layer__csv-upload__validate-csv-table__cell {
-  display: flex;
+.Layer__table-cell.Layer__csv-upload__validate-csv-table__cell {
+  flex: 1 1 0%;
+  min-width: 0px;
+
+  &--row {
+     flex: 0 0 60px;
+  }
 }
 
-.Layer__csv-upload__validate-csv-table__raw-field {
-  color: var(--color-danger)
+.Layer__table .Layer__table-cell .Layer__table-cell-content.Layer__csv-upload__validate-csv-table__cell-content {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-content: center;
+  width: 100%;
+
+  &--error {
+    color: var(--color-danger)
+  }
+
+  &--row {
+    text-align: end;
+  }
 }

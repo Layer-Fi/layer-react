@@ -1,100 +1,124 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef } from 'react'
 import classNames from 'classnames'
-import { debounce } from 'lodash'
 import {
   useReactTable,
   getCoreRowModel,
+  getSortedRowModel,
   flexRender,
   ColumnDef,
   Table,
   Row,
+  CellContext,
 } from '@tanstack/react-table'
 import { PreviewCsv, PreviewRow } from './types'
 import { useVirtualizer, VirtualItem, Virtualizer } from '@tanstack/react-virtual'
+
+const ROW_HEIGHT = 52
+const BODY_HEIGHT = ROW_HEIGHT * 10
 
 interface ValidateCsvTableProps<T extends { [K in keyof T]: string | number }> {
   data: PreviewCsv<T>
   headers: { [K in keyof T]: string }
   formatters?: Partial<{ [K in keyof T]: (parsed: T[K]) => string }>
+  className?: string
 }
 
-export function ValidateCsvTable<T extends { [K in keyof T]: string | number }>({ data, headers, formatters }: ValidateCsvTableProps<T>) {
+export function ValidateCsvTable<T extends { [K in keyof T]: string | number }>({ data, headers, formatters, className }: ValidateCsvTableProps<T>) {
   const columns = useMemo<ColumnDef<PreviewRow<T>>[]>(
-    () =>
-      (Object.keys(headers) as (keyof T)[]).map(key => ({
+    () => {
+      const baseCellClassName = 'Layer__table-cell-content Layer__csv-upload__validate-csv-table__cell-content'
+      const columnDefs: ColumnDef<PreviewRow<T>>[] = [{
+        id: 'row',
+        accessorKey: 'row',
+        header: () => <span className='Layer__csv-upload__validate-csv-table__header-cell-content'>Row</span>,
+        cell: (info: CellContext<PreviewRow<T>, unknown>) => (
+          <span className={`${baseCellClassName} Layer__csv-upload__validate-csv-table__cell-content--row`}>
+            {info.row.index + 2}
+          </span>
+        ),
+      }]
+
+      columnDefs.push(...(Object.keys(headers) as (keyof T)[]).map(key => ({
+        id: key as string,
         accessorKey: key,
-        header: headers[key],
-        cell: (info) => {
+        header: () => <span className='Layer__csv-upload__validate-csv-table__header-cell-content'>{headers[key]}</span>,
+        cell: (info: CellContext<PreviewRow<T>, unknown>) => {
           const field = info.row.original[key]
 
           let value: string | number = field.raw
-          if (field.isValid) {
-            const parsedValue = field.parsed
+          if (field.is_valid) {
             const formatter = formatters?.[key]
-            value = formatter ? formatter(parsedValue as T[keyof T]) : parsedValue
+            value = formatter ? formatter(field.parsed as T[keyof T]) : field.parsed
           }
 
           const cellClassName = classNames(
-            'Layer__table-cell-content',
-            !field.isValid && 'Layer__csv-upload__validate-csv-table__raw-field',
+            baseCellClassName,
+            !field.is_valid && 'Layer__csv-upload__validate-csv-table__cell-content--error',
           )
           return <span className={cellClassName}>{value}</span>
         },
-      })),
+      })))
+
+      columnDefs.push({
+        id: 'is_valid',
+        accessorKey: 'is_valid',
+        header: 'is_valid',
+        sortingFn: (rowA, rowB, columnId) => {
+          const a = rowA.getValue(columnId)
+          const b = rowB.getValue(columnId)
+          return a === b ? 0 : a === false ? -1 : 1
+        },
+      })
+
+      return columnDefs
+    },
     [headers, formatters],
   )
 
-  const [columnSizing, setColumnSizing] = useState({})
-  const headerRefs = useRef<Record<string, HTMLDivElement | null>>({})
-  const setHeaderRef = (id: string) => (el: HTMLDivElement | null) => {
-    headerRefs.current[id] = el
-  }
+  const state = useMemo(() => ({
+    sorting: [{ id: 'is_valid', desc: false }],
+    columnVisibility: {
+      ['is_valid']: false,
+    },
+  }), [])
 
   const table = useReactTable({
     data,
     columns,
+    state,
     getCoreRowModel: getCoreRowModel(),
-    state: { columnSizing },
-    onColumnSizingChange: setColumnSizing,
-    enableColumnResizing: true,
-    columnResizeMode: 'onChange',
+    getSortedRowModel: getSortedRowModel(),
   })
-
-  const measureHeadersAndSetSizing = useCallback(() => {
-    const newSizing = Object.fromEntries(
-      table.getAllColumns().map(col => [
-        col.id,
-        headerRefs.current[col.id]?.offsetWidth ?? 150,
-      ]),
-    )
-    setColumnSizing(newSizing)
-  }, [table])
-
-  useLayoutEffect(() => {
-    measureHeadersAndSetSizing()
-
-    const debouncedMeasure = debounce(measureHeadersAndSetSizing, 50)
-
-    window.addEventListener('resize', debouncedMeasure)
-    return () => window.removeEventListener('resize', debouncedMeasure)
-  }, [measureHeadersAndSetSizing])
 
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div ref={tableContainerRef} className='Layer__csv-upload__validate-csv-table__container'>
+    <div className={`${className} Layer__csv-upload__validate-csv-table__container`}>
       <table className='Layer__table'>
         <thead className='Layer__csv-upload__validate-csv-table__thead'>
           {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <th ref={setHeaderRef(header.id)} key={header.id} className='Layer__table-header'>{flexRender(header.column.columnDef.header, header.getContext())}</th>
-              ))}
+            <tr key={headerGroup.id} className='Layer__csv-upload__validate-csv-table__header-row'>
+              {headerGroup.headers.map((header) => {
+                const headerCellClassName = classNames(
+                  'Layer__table-header',
+                  'Layer__csv-upload__validate-csv-table__header-cell',
+                  `Layer__csv-upload__validate-csv-table__header-cell--${header.id}`,
+                )
+                return (
+                  <th key={header.id} className={headerCellClassName}>
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  </th>
+                )
+              })}
             </tr>
           ))}
         </thead>
-        <ValidateCsvTableBody table={table} tableContainerRef={tableContainerRef} />
       </table>
+      <div ref={tableContainerRef} className='Layer__csv-upload__validate-csv-table__scroll_container'>
+        <table className='Layer__table'>
+          <ValidateCsvTableBody table={table} tableContainerRef={tableContainerRef} />
+        </table>
+      </div>
     </div>
   )
 }
@@ -109,7 +133,7 @@ function ValidateCsvTableBody<T extends { [K in keyof T]: string | number }>({ t
 
   const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLTableRowElement>({
     count: rows.length,
-    estimateSize: () => 52,
+    estimateSize: () => ROW_HEIGHT,
     getScrollElement: () => tableContainerRef.current,
     measureElement:
       typeof window !== 'undefined'
@@ -120,10 +144,10 @@ function ValidateCsvTableBody<T extends { [K in keyof T]: string | number }>({ t
   })
 
   return (
-    <tbody
-      style={{ height: `${rowVirtualizer.getTotalSize() + 1}px` }}
-      className='Layer__csv-upload__validate-csv-table__tbody'
-    >
+    <tbody>
+      <tr style={{ height: BODY_HEIGHT }}>
+        <td style={{ height: BODY_HEIGHT, padding: 0 }} colSpan={table.getAllColumns().length - 1} />
+      </tr>
       {rowVirtualizer.getVirtualItems().map((virtualRow) => {
         const row = rows[virtualRow.index]
         return (
@@ -146,21 +170,28 @@ interface ValidateCsvTableRowProps<T extends { [K in keyof T]: string | number }
 }
 
 function ValidateCsvTableRow<T extends { [K in keyof T]: string | number }>({ row, virtualRow, rowVirtualizer }: ValidateCsvTableRowProps<T>) {
+  const tableRowClassName = classNames(
+    'Layer__table-row',
+    'Layer__csv-upload__validate-csv-table__row',
+    !row.getValue('is_valid') && 'Layer__csv-upload__validate-csv-table__row--error',
+  )
+
   return (
     <tr
-      className='Layer__csv-upload__validate-csv-table__row Layer__table-row'
+      className={tableRowClassName}
       data-index={virtualRow.index}
       ref={node => rowVirtualizer.measureElement(node)}
       key={row.id}
-      style={{ transform: `translateY(${virtualRow.start}px)` }}
+      style={{ transform: `translateY(${virtualRow.start - BODY_HEIGHT}px)` }}
     >
       {row.getVisibleCells().map((cell) => {
+        const tableCellClassName = classNames(
+          'Layer__table-cell',
+          'Layer__csv-upload__validate-csv-table__cell',
+          `Layer__csv-upload__validate-csv-table__cell--${cell.column.columnDef.id}`,
+        )
         return (
-          <td
-            key={cell.id}
-            className='Layer__csv-upload__validate-csv-table__cell Layer__table-cell'
-            style={{ width: cell.column.getSize() }}
-          >
+          <td key={cell.id} className={tableCellClassName}>
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </td>
         )
