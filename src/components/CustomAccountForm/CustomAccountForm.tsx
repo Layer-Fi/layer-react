@@ -2,11 +2,10 @@ import { useCallback, useEffect, FormEvent } from 'react'
 import { notEmpty } from '../../utils/form'
 import { Input, InputGroup, Select } from '../Input'
 import { useCustomAccountForm } from './useCustomAccountForm'
-import { Button, ButtonVariant, RetryButton } from '../Button'
+import { Button, ButtonVariant, SubmitButton } from '../Button'
 import { ErrorText } from '../Typography'
 import { Spacer, HStack, VStack } from '../../components/ui/Stack/Stack'
 import { type CustomAccount, CustomAccountSubtype } from '../../hooks/customAccounts/types'
-import { Loader } from 'lucide-react'
 
 const accountTypeOptions = [
   { value: CustomAccountSubtype.CHECKING, label: 'Checking' },
@@ -123,28 +122,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
               Cancel
             </Button>
           )}
-          {!submitError
-            ? (
-              <Button
-                variant={ButtonVariant.primary}
-                type='submit'
-                isProcessing={isSubmitting}
-                disabled={isSubmitting}
-                rightIcon={isSubmitting && <Loader size={14} className='Layer__anim--rotating' />}
-              >
-                Submit
-              </Button>
-            )
-            : (
-              <RetryButton
-                type='submit'
-                processing={isSubmitting}
-                disabled={isSubmitting}
-                error={submitError}
-              >
-                Retry
-              </RetryButton>
-            )}
+          <SubmitButton type='submit' processing={isSubmitting} noIcon={!isSubmitting} withRetry error={submitError}>Submit</SubmitButton>
         </HStack>
       </VStack>
     </form>
