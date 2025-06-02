@@ -1,25 +1,27 @@
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
-import { type RawCustomAccount, mapRawCustomAccountToCustomAccount } from './types'
+import type { RawCustomTransaction } from './types'
 import { useAuth } from '../useAuth'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useSWRConfig } from 'swr'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from './useCustomAccounts'
-import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
-import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
+import { BANK_TRANSACTIONS_TAG_KEY } from '../useBankTransactions/useBankTransactions'
 
-type CreateCustomAccountBody = Pick<
-  RawCustomAccount,
-  'account_name' | 'account_type' | 'account_subtype' | 'institution_name' | 'external_id' | 'mask'
->
+type CreateCustomAccountTransactionsBody = {
+  transactions: RawCustomTransaction[]
+}
 
-const createCustomAccount = post<
-  { data: RawCustomAccount },
-  CreateCustomAccountBody,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/custom-accounts`)
+type CreateCustomAccountTransactionsArgs = CreateCustomAccountTransactionsBody & {
+  customAccountId: string
+}
+
+const createCustomAccountTransactions = post<
+  Record<string, unknown>,
+  CreateCustomAccountTransactionsBody,
+  { businessId: string, customAccountId: string }
+>(({ businessId, customAccountId }) => `/v1/businesses/${businessId}/custom-accounts/${customAccountId}/transactions`)
 
 function buildKey({
   access_token: accessToken,
@@ -35,12 +37,12 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:create`],
+      tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:create-transactions`],
     } as const
   }
 }
 
-export function useCreateCustomAccount() {
+export function useCreateCustomAccountTransactions() {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
@@ -52,17 +54,21 @@ export function useCreateCustomAccount() {
     }),
     (
       { accessToken, apiUrl, businessId },
-      { arg: body }: { arg: CreateCustomAccountBody },
-    ) => createCustomAccount(
+      { arg: { customAccountId, ...body } }: { arg: CreateCustomAccountTransactionsArgs },
+    ) => createCustomAccountTransactions(
       apiUrl,
       accessToken,
       {
-        params: { businessId },
+        params: {
+          businessId,
+          customAccountId,
+        },
         body,
       },
-    ).then(({ data }) => mapRawCustomAccountToCustomAccount(data)),
+    ).then(({ data }) => data),
     {
       revalidate: false,
+      throwOnError: false,
     },
   )
 
@@ -74,9 +80,7 @@ export function useCreateCustomAccount() {
 
       void mutate(key => withSWRKeyTags(
         key,
-        tags => tags.includes(CUSTOM_ACCOUNTS_TAG_KEY)
-          || tags.includes(BANK_ACCOUNTS_TAG_KEY)
-          || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY),
+        tags => tags.includes(BANK_TRANSACTIONS_TAG_KEY),
       ))
 
       return triggerResult
