@@ -1,12 +1,14 @@
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
-import type { CustomAccount, RawCustomAccount } from './types'
+import { type RawCustomAccount, mapRawCustomAccountToCustomAccount } from './types'
 import { useAuth } from '../useAuth'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useSWRConfig } from 'swr'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from './useCustomAccounts'
+import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
+import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
 
 type CreateCustomAccountBody = Pick<
   RawCustomAccount,
@@ -14,7 +16,7 @@ type CreateCustomAccountBody = Pick<
 >
 
 const createCustomAccount = post<
-  { data: CustomAccount },
+  { data: RawCustomAccount },
   CreateCustomAccountBody,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/custom-accounts`)
@@ -58,10 +60,9 @@ export function useCreateCustomAccount() {
         params: { businessId },
         body,
       },
-    ).then(({ data }) => data),
+    ).then(({ data }) => mapRawCustomAccountToCustomAccount(data)),
     {
       revalidate: false,
-      throwOnError: true,
     },
   )
 
@@ -73,7 +74,9 @@ export function useCreateCustomAccount() {
 
       void mutate(key => withSWRKeyTags(
         key,
-        tags => tags.includes(CUSTOM_ACCOUNTS_TAG_KEY),
+        tags => tags.includes(CUSTOM_ACCOUNTS_TAG_KEY)
+          || tags.includes(BANK_ACCOUNTS_TAG_KEY)
+          || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY),
       ))
 
       return triggerResult

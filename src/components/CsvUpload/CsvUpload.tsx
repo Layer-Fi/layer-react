@@ -9,6 +9,8 @@ import { DataState, DataStateStatus } from '../DataState/DataState'
 import { FileSpreadsheet } from 'lucide-react'
 import CloseIcon from '../../icons/CloseIcon'
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024
+
 const validateCsvFile = (file: File) => {
   const validExtensions = ['.csv']
   const isValidExtension = validExtensions.some(ext =>
@@ -20,8 +22,12 @@ const validateCsvFile = (file: File) => {
   }
 
   // Check MIME type if it exists
-  if (file.type && file.type !== 'text/csv' && file.type !== 'application/vnd.ms-excel') {
+  if (file.type && file.type !== 'text/csv' && file.type !== 'text/plain' && file.type !== 'application/vnd.ms-excel') {
     return `Invalid file type: ${file.type}`
+  }
+
+  if (file.size > MAX_FILE_SIZE) {
+    return 'File exceeds the size limit of 2MB'
   }
 
   return null
@@ -30,8 +36,25 @@ const validateCsvFile = (file: File) => {
 type FileRowProps = {
   file: File
   onClearFile: () => void
+  asDropTarget?: boolean
 }
-const FileRow = ({ file, onClearFile }: FileRowProps) => {
+
+const FileRow = ({ file, onClearFile, asDropTarget }: FileRowProps) => {
+  if (asDropTarget) {
+    return (
+      <VStack className='Layer__csv-upload__file-row Layer__csv-upload__file-row--drop-target'>
+        <HStack>
+          <Spacer />
+          <IconButton icon={<CloseIcon size={16} />} onClick={onClearFile} />
+        </HStack>
+        <HStack align='center' justify='center' gap='xs'>
+          <FileSpreadsheet size={24} />
+          <P size='md'>{file.name}</P>
+        </HStack>
+      </VStack>
+    )
+  }
+
   return (
     <HStack align='center' gap='xs' className='Layer__csv-upload__file-row'>
       <FileSpreadsheet size={24} />
@@ -45,8 +68,10 @@ const FileRow = ({ file, onClearFile }: FileRowProps) => {
 type CsvUploadProps = {
   file: File | null
   onFileSelected: (file: File | null) => void
+  replaceDropTarget?: boolean
 }
-export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
+
+export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: CsvUploadProps) => {
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -97,6 +122,10 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
     noClick: true,
     noKeyboard: true,
   })
+
+  if (file && replaceDropTarget) {
+    return <FileRow file={file} onClearFile={() => onFileSelected(null)} asDropTarget />
+  }
 
   return (
     <VStack gap='xs'>

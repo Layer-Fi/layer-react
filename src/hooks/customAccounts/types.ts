@@ -1,3 +1,5 @@
+import { Direction } from '../../types/bank_transactions'
+
 export enum CustomAccountSubtype {
   CHECKING = 'CHECKING',
   SAVINGS = 'SAVINGS',
@@ -34,4 +36,32 @@ export type CustomAccount = Pick<RawCustomAccount, 'id'> & {
   updatedAt: RawCustomAccount['updated_at']
   archivedAt: RawCustomAccount['archived_at']
   ledgerAccountId: RawCustomAccount['ledger_account_id']
+}
+
+export const mapRawCustomAccountToCustomAccount = (raw: RawCustomAccount): CustomAccount => ({
+  id: raw.id,
+  externalId: raw.external_id,
+  mask: raw.mask,
+  accountName: raw.account_name,
+  institutionName: raw.institution_name,
+  accountType: raw.account_type,
+  accountSubtype: raw.account_subtype,
+  createdAt: raw.created_at,
+  updatedAt: raw.updated_at,
+  archivedAt: raw.archived_at,
+  ledgerAccountId: raw.ledger_account_id,
+})
+
+export type RawCustomTransaction = {
+  external_id?: string | null
+  amount: number
+  direction: Direction
+  date: string
+  description: string
+}
+
+export interface CustomAccountTransactionRow {
+  date: string
+  description: string
+  amount: number
 }

@@ -7,20 +7,20 @@ const copyTextToClipboard = (text: string) => {
 }
 
 interface CopyTemplateHeadersButtonGroupProps {
-  templateHeaders: string[]
+  headers: Record<string, string>
 }
 
-export const CopyTemplateHeadersButtonGroup = ({ templateHeaders }: CopyTemplateHeadersButtonGroupProps) => {
+export const CopyTemplateHeadersButtonGroup = ({ headers }: CopyTemplateHeadersButtonGroupProps) => {
   return (
     <HStack gap='3xs' className='Layer__csv-upload__copy-template-headers-button-group'>
-      {templateHeaders.map(header => (
+      {Object.keys(headers).map(key => (
         <Button
-          key={header}
-          onClick={() => copyTextToClipboard(header)}
+          key={key}
+          onClick={() => copyTextToClipboard(headers[key])}
           rightIcon={<CopyIcon strokeWidth={1} size={12} />}
           variant={ButtonVariant.secondary}
         >
-          {header}
+          {headers[key]}
         </Button>
       ))}
     </HStack>

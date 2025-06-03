@@ -33,3 +33,22 @@
 .Layer__upload-transactions__template-section__download-template-button {
   max-height: 36px;
 }
+
+.Layer__upload-transactions__preview_table {
+  .Layer__csv-upload__validate-csv-table__cell--date,
+  .Layer__csv-upload__validate-csv-table__header-cell--date {
+    flex: 3 1 0;
+    min-width: 120px;
+  }
+
+  .Layer__csv-upload__validate-csv-table__cell--amount,
+  .Layer__csv-upload__validate-csv-table__header-cell--amount {
+    flex: 2 1 0;
+    min-width: 120px;
+  }
+
+  .Layer__csv-upload__validate-csv-table__cell--description,
+  .Layer__csv-upload__validate-csv-table__header-cell--description {
+    flex: 6 1 0;
+  }
+}
