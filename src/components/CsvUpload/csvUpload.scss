@@ -98,7 +98,7 @@
   width: 100%;
 
   &--error {
-    background-color: var(--color-info-error-bg)
+    background-color: var(--color-info-error-bg);
   }
 }
 
@@ -116,7 +116,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  align-content: center;
   width: 100%;
 
   &--error {

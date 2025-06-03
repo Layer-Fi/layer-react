@@ -97,6 +97,7 @@ export function UploadTransactionsUploadCsvStep(
     !!customAccountsError && 'Layer__upload-transactions__select-account-name-input--error',
   )
 
+  const hasSelectedAccount = selectedAccount && selectedAccount.value !== 'new_account'
   return (
     <VStack gap='lg'>
       <HStack fluid align='center' gap='lg' className='Layer__upload-transactions__select-account-name-field'>
@@ -121,7 +122,7 @@ export function UploadTransactionsUploadCsvStep(
       {selectedAccount && selectedAccount.value === 'new_account' && (
         <VStack className='Layer__upload-transactions__create-account-form'>
           <CustomAccountForm
-            initialAccountName={selectedAccount?.createdAccountName ?? ''}
+            initialAccountName={selectedAccount.createdAccountName ?? ''}
             onCancel={onCancelCreateAccount}
             onSuccess={onCreateAccountSuccess}
           />
@@ -146,8 +147,8 @@ export function UploadTransactionsUploadCsvStep(
       <HStack>
         <Spacer />
         <SubmitButton
-          tooltip={selectedFile && (!selectedAccount || selectedAccount.value === 'new_account') ? 'Select an account' : null}
-          disabled={!selectedAccount || selectedAccount.value === 'new_account' || !selectedFile}
+          tooltip={(selectedFile && !hasSelectedAccount) ? 'Select an account' : null}
+          disabled={!hasSelectedAccount || !selectedFile}
           processing={isParsingCsv}
           error={hasParseCsvError}
           onClick={onClickContinue}

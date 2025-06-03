@@ -1,13 +1,9 @@
-import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
 import type { RawCustomTransaction } from './types'
 import { useAuth } from '../useAuth'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { useSWRConfig } from 'swr'
-import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from './useCustomAccounts'
-import { BANK_TRANSACTIONS_TAG_KEY } from '../useBankTransactions/useBankTransactions'
 
 type CreateCustomAccountTransactionsBody = {
   transactions: RawCustomTransaction[]
@@ -45,9 +41,8 @@ function buildKey({
 export function useCreateCustomAccountTransactions() {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
-  const { mutate } = useSWRConfig()
 
-  const mutationResponse = useSWRMutation(
+  return useSWRMutation(
     () => buildKey({
       ...data,
       businessId,
@@ -71,34 +66,4 @@ export function useCreateCustomAccountTransactions() {
       throwOnError: false,
     },
   )
-
-  const { trigger: originalTrigger } = mutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      void mutate(key => withSWRKeyTags(
-        key,
-        tags => tags.includes(BANK_TRANSACTIONS_TAG_KEY),
-      ))
-
-      return triggerResult
-    },
-    [
-      originalTrigger,
-      mutate,
-    ],
-  )
-
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
 }
