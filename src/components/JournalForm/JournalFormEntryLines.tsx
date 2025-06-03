@@ -5,17 +5,16 @@ import { Direction, JournalEntryLineItem } from '../../types'
 import { LedgerAccountBalance } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
 import {
-  convertCurrencyToNumber,
-  convertNumberToCurrency,
   humanizeEnum,
 } from '../../utils/format'
-import { BadgeVariant } from '../Badge'
 import { IconButton, TextButton } from '../Button'
-import { InputWithBadge, InputGroup, Select } from '../Input'
+import { InputGroup, Select } from '../Input'
 import { JournalConfig } from '../Journal/Journal'
 import { Text, TextSize } from '../Typography'
 import { useCategories } from '../../hooks/categories/useCategories'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
+import { AmountInput } from '../Input/AmountInput'
+import { Badge, BadgeVariant } from '../Badge/Badge'
 
 type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
 
@@ -172,25 +171,20 @@ export const JournalFormEntryLines = ({
                   key={direction + '-' + idx}
                 >
                   <InputGroup name={direction} label='Amount' inline={true}>
-                    <InputWithBadge
+                    <AmountInput
                       name={direction}
-                      placeholder='$0.00'
-                      value={convertNumberToCurrency(item.amount)}
+                      onChange={value => changeFormData('amount', value, idx)}
+                      value={item.amount}
                       disabled={sendingForm}
-                      badge={humanizeEnum(direction)}
-                      variant={
-                        item.direction === 'CREDIT'
+                      allowNegativeValue={false}
+                      badge={(
+                        <Badge variant={item.direction === 'CREDIT'
                           ? BadgeVariant.SUCCESS
-                          : BadgeVariant.WARNING
-                      }
-                      onChange={e =>
-                        changeFormData(
-                          'amount',
-                          convertCurrencyToNumber(
-                            (e.target as HTMLInputElement).value,
-                          ),
-                          idx,
-                        )}
+                          : BadgeVariant.WARNING}
+                        >
+                          {humanizeEnum(direction)}
+                        </Badge>
+                      )}
                       isInvalid={Boolean(
                         form?.errors?.lineItems.find(
                           x => x.id === idx && x.field === 'amount',
