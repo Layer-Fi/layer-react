@@ -69,7 +69,7 @@ export const Select = <T,>({
           isDisabled={disabled}
         />
       </TooltipTrigger>
-      <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>
+      <TooltipContent>{errorMessage}</TooltipContent>
     </Tooltip>
   )
 }

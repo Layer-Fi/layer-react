@@ -54,7 +54,7 @@ const buildRightIcon = ({
         <TooltipTrigger>
           <AlertCircle size={14} />
         </TooltipTrigger>
-        <TooltipContent className='Layer__tooltip'>{error}</TooltipContent>
+        <TooltipContent>{error}</TooltipContent>
       </Tooltip>
     )
   }
