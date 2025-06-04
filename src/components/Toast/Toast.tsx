@@ -6,7 +6,7 @@ export interface ToastProps {
   content: string
   duration?: number
   isExiting?: boolean
-  type?: 'success' | 'default'
+  type?: 'success' | 'error' | 'default'
 }
 
 const Toast = (props: ToastProps & { isExiting: boolean }) => {

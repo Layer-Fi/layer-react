@@ -4,6 +4,7 @@ import { useBookkeepingYearsStatus } from '../../hooks/bookkeeping/periods/useBo
 import { TaskStatusBadge } from './TaskStatusBadge'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { getMonth } from 'date-fns'
+import { BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 
 export const TasksYearsTabs = () => {
   const { date } = useGlobalDate()
@@ -31,7 +32,7 @@ export const TasksYearsTabs = () => {
           badge: !y.completed && y.unresolvedTasks
             ? (
               <TaskStatusBadge
-                status={y.unresolvedTasks ? 'IN_PROGRESS_AWAITING_CUSTOMER' : 'CLOSED_COMPLETE'}
+                status={y.unresolvedTasks ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER : BookkeepingPeriodStatus.CLOSED_COMPLETE}
                 tasksCount={y.unresolvedTasks}
               />
             )

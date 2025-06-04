@@ -3,22 +3,23 @@
   display: inline-block;
 
   .Layer__dropdown-toggle {
-    box-shadow: 0px 1px 2px 0px var(--base-transparent-6),
-      0px 0px 0px 1px var(--color-base-300);
-    border-radius: var(--spacing-2xs);
-    padding: var(--spacing-3xs) var(--spacing-xs) var(--spacing-3xs);
-    min-height: var(--spacing-2xl);
-    min-width: 180px;
-    cursor: pointer;
-    text-align: left;
-    padding-left: var(--spacing-lm);
-    gap: 20px;
-    border: 1px solid transparent;
-    background-color: var(--color-white);
-    font-size: 14px;
     display: flex;
+    gap: 20px;
     align-items: center;
     justify-content: space-between;
+    min-width: 180px;
+    min-height: var(--spacing-2xl);
+    padding: var(--spacing-3xs) var(--spacing-xs) var(--spacing-3xs);
+    padding-left: var(--spacing-lm);
+    border-radius: var(--spacing-2xs);
+    box-shadow:
+      0 1px 2px 0 var(--base-transparent-6),
+      0 0 0 1px var(--color-base-300);
+    background-color: var(--color-white);
+    cursor: pointer;
+    font-size: 14px;
+    text-align: left;
+    border: 1px solid transparent;
 
     .Layer__chevron {
       display: flex;
@@ -31,16 +32,17 @@
   }
 
   .Layer__dropdown-menu {
-    margin-top: 5px;
     position: absolute;
+    z-index: 1000;
     top: 100%;
     left: 0;
-    box-shadow: 0px 1px 2px 0px var(--base-transparent-6),
-      0px 0px 0px 1px var(--color-base-300);
-    border-radius: var(--spacing-2xs);
-    background-color: var(--color-white);
     width: 256px;
-    z-index: 1000;
+    border-radius: var(--spacing-2xs);
+    box-shadow:
+      0 1px 2px 0 var(--base-transparent-6),
+      0 0 0 1px var(--color-base-300);
+    margin-top: 5px;
+    background-color: var(--color-white);
     opacity: 0;
     animation: fadeIn 0.3s forwards;
 
@@ -56,8 +58,8 @@
     }
 
     .Layer__compare-options-wrapper {
-      border-top: 1px solid var(--color-base-200);
       padding: var(--spacing-md) var(--spacing-sm) var(--spacing-sm);
+      border-top: 1px solid var(--color-base-200);
 
       &:first-child {
         border-top: transparent;
@@ -66,43 +68,43 @@
 
     .Layer__compare-options {
       display: grid;
-      grid-template-columns: 2fr 2fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
   .Layer__option {
-    cursor: pointer;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    font-size: 14px;
-    padding: 0px var(--spacing-xs);
-    max-height: 28px;
+    justify-content: space-between;
     min-height: 28px;
+    max-height: 28px;
+    padding: 0 var(--spacing-xs);
+    cursor: pointer;
+    font-size: 14px;
 
     &:hover {
+      max-width: max-content;
       border-radius: var(--spacing-3xs);
       background: var(--color-base-100);
-      max-width: max-content;
     }
 
     &.Layer__selected {
+      max-width: max-content;
       border-radius: var(--spacing-3xs);
       background: var(--color-base-100);
-      max-width: max-content;
     }
 
     .Layer__tick {
-      margin-left: 10px;
       padding-top: 2px;
+      margin-left: 10px;
       color: var(--color-base-900);
     }
   }
 
   .Layer__compare-header {
-    color: var(--color-base-500);
-    font-size: 11px;
-    padding: 0 0 var(--spacing-sm) var(--spacing-xs);
     position: relative;
+    padding: 0 0 var(--spacing-sm) var(--spacing-xs);
+    font-size: 11px;
+    color: var(--color-base-500);
   }
 }

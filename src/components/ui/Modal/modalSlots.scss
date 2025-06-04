@@ -1,9 +1,9 @@
 .Layer__ModalContextBar {
   display: grid;
-
-  grid-template-columns: auto 1fr auto;
-  column-gap: var(--spacing-md);
   grid-template-areas: "back logo close";
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  column-gap: var(--spacing-md);
+
   align-items: center;
 
   > [slot="back"] {
@@ -21,8 +21,8 @@
 
 .Layer__ModalContent {
   display: grid;
-  block-size: 100%;
   overflow-y: auto;
+  block-size: 100%;
 
   > [slot="center"] {
     align-self: center;

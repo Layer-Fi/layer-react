@@ -7,6 +7,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import { Button, ButtonProps, ButtonVariant } from './Button'
 import classNames from 'classnames'
 import { RetryButton } from './RetryButton'
+import { UploadCloud } from 'lucide-react'
 
 export interface SubmitButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -25,6 +26,7 @@ export interface SubmitButtonProps
 export enum SubmitAction {
   SAVE = 'save',
   UPDATE = 'update',
+  UPLOAD = 'upload',
 }
 
 const buildRightIcon = ({
@@ -55,6 +57,10 @@ const buildRightIcon = ({
         <TooltipContent className='Layer__tooltip'>{error}</TooltipContent>
       </Tooltip>
     )
+  }
+
+  if (action === SubmitAction.UPLOAD) {
+    return <UploadCloud size={12} />
   }
 
   if (action === SubmitAction.UPDATE) {

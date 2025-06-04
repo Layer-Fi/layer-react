@@ -1,11 +1,11 @@
-import type { BookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
+import { BookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 
-type ActiveBookkeepingStatus = 'ACTIVE' | 'ONBOARDING'
+type ActiveBookkeepingStatus = BookkeepingStatus.ACTIVE | BookkeepingStatus.ONBOARDING
 export function isActiveBookkeepingStatus(status: BookkeepingStatus): status is ActiveBookkeepingStatus {
-  return status === 'ACTIVE' || status === 'ONBOARDING'
+  return status === BookkeepingStatus.ACTIVE || status === BookkeepingStatus.ONBOARDING
 }
 
-type ActiveOrPausedBookkeepingStatus = ActiveBookkeepingStatus | 'BOOKKEEPING_PAUSED'
+type ActiveOrPausedBookkeepingStatus = ActiveBookkeepingStatus | BookkeepingStatus.BOOKKEEPING_PAUSED
 export function isActiveOrPausedBookkeepingStatus(status: BookkeepingStatus): status is ActiveOrPausedBookkeepingStatus {
-  return isActiveBookkeepingStatus(status) || status === 'BOOKKEEPING_PAUSED'
+  return isActiveBookkeepingStatus(status) || status === BookkeepingStatus.BOOKKEEPING_PAUSED
 }

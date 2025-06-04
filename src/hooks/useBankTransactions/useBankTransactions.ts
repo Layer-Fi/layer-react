@@ -3,6 +3,8 @@ import { useAuth } from '../useAuth'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getBankTransactions, type GetBankTransactionsReturn } from '../../api/layer/bankTransactions'
 
+export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
+
 export type UseBankTransactionsOptions = {
   categorized?: boolean
   direction?: 'INFLOW' | 'OUTFLOW'
@@ -42,7 +44,7 @@ function keyLoader(
       startDate,
       endDate,
       tagFilterQueryString,
-      tags: ['#bank-transactions'],
+      tags: [BANK_TRANSACTIONS_TAG_KEY],
     } as const
   }
 }

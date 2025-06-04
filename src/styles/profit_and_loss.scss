@@ -8,9 +8,9 @@
 
 .Layer__compare__options {
   display: flex;
+  gap: var(--spacing-md);
   align-items: center;
   justify-content: flex-start;
-  gap: var(--spacing-md);
 
   .Layer__input-tooltip {
     flex: 1;
@@ -18,9 +18,9 @@
 
   .Layer__compare__switch__options {
     display: flex;
+    gap: var(--spacing-md);
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-md);
   }
 }
 
@@ -29,19 +29,19 @@
 }
 
 .Layer__profit-and-loss__title {
-  font-size: 1.5rem;
-  font-weight: 600;
+  margin-right: 1.5rem;
   margin-bottom: 1.5rem;
   margin-left: 1.5rem;
-  margin-right: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .Layer__profit-and-loss-table {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   overflow: hidden;
-  background-color: var(--color-base-100);
   border-radius: var(--border-radius-sm);
+  background-color: var(--color-base-100);
 }
 
 .Layer__profit-and-loss-table__loader-container {
@@ -74,9 +74,9 @@
 
 .Layer__profit-and-loss-row__children {
   display: grid;
-  grid-column: span 2;
-  grid-template-columns: subgrid;
   grid-template-rows: 0fr;
+  grid-template-columns: subgrid;
+  grid-column: span 2;
   overflow: hidden;
   transition: grid-template-rows var(--transition-speed);
 }
@@ -86,16 +86,16 @@
 }
 
 .Layer__profit-and-loss-row__children--content {
-  min-height: 0;
   display: grid;
-  grid-column: span 2;
   grid-template-columns: subgrid;
+  grid-column: span 2;
+  min-height: 0;
 }
 
 .Layer__profit-and-loss-row__label {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 
   .Layer__profit-and-loss-row__label__title {
     display: flex;
@@ -103,21 +103,19 @@
   }
 
   svg.Layer__profit-and-loss-row__label__chevron {
-    color: var(--color-base-600);
     width: 1.25rem;
     height: 1.25rem;
     margin-right: 0.25rem;
+    color: var(--color-base-600);
     transition: transform var(--transition-speed);
     transform: rotate(-90deg);
   }
 }
 
 .Layer__profit-and-loss-row__label.Layer__profit-and-loss-row__label--display-children-true:hover,
-.Layer__profit-and-loss-row__label.Layer__profit-and-loss-row__label--display-children-true:hover
-+ .Layer__profit-and-loss-row__value,
+.Layer__profit-and-loss-row__label.Layer__profit-and-loss-row__label--display-children-true:hover + .Layer__profit-and-loss-row__value,
 .Layer__profit-and-loss-row__value.Layer__profit-and-loss-row__value--display-children-true:hover,
-.Layer__profit-and-loss-row__value.Layer__profit-and-loss-row__value--display-children-true:hover
-+ .Layer__profit-and-loss-row__label {
+.Layer__profit-and-loss-row__value.Layer__profit-and-loss-row__value--display-children-true:hover + .Layer__profit-and-loss-row__label {
   background: var(--color-base-50);
 }
 
@@ -133,8 +131,8 @@
 
 .Layer__profit-and-loss-row__value {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .Layer__profit-and-loss-row__label--display-children-true {
@@ -150,16 +148,13 @@
   font-weight: normal;
 
   svg.Layer__profit-and-loss-row__label__chevron {
-    visibility: hidden;
     display: none;
+    visibility: hidden;
   }
 }
 
-.Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value
-+ .Layer__profit-and-loss-row__label,
-.Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value
-+ .Layer__profit-and-loss-row__label
-+ .Layer__profit-and-loss-row__value {
+.Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value + .Layer__profit-and-loss-row__label,
+.Layer__profit-and-loss-row__value--variant-summation.Layer__profit-and-loss-row__value + .Layer__profit-and-loss-row__label + .Layer__profit-and-loss-row__value {
   border-top: 1px solid var(--color-base-300);
 }
 
@@ -188,29 +183,29 @@
 
 .Layer__profit-and-loss-row__value--amount-positive {
   .Layer__text::before {
-    content: '$';
+    content: "$";
   }
 }
 
 .Layer__profit-and-loss-row__value--amount-negative {
   .Layer__text::before {
-    content: '-$';
+    content: "-$";
   }
 }
 
 .Layer__profit-and-loss-row__label {
   .Layer__text {
-    color: var(--color-base-700);
-    font-weight: var(--font-weight-normal);
     margin: 0;
+    font-weight: var(--font-weight-normal);
+    color: var(--color-base-700);
   }
 }
 
 .Layer__profit-and-loss-row__label.Layer__profit-and-loss-row__label--depth-0 {
   .Layer__text {
-    color: var(--color-base-800);
-    font-weight: var(--font-weight-bold);
     margin: 0;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-base-800);
   }
 }
 
@@ -218,9 +213,9 @@
   padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) calc(var(--spacing-5xl) + var(--spacing-md));
 
   .Layer__text {
-    color: var(--color-base-700);
-    font-weight: var(--font-weight-normal);
     margin: 0;
+    font-weight: var(--font-weight-normal);
+    color: var(--color-base-700);
   }
 }
 
@@ -266,33 +261,34 @@
   display: flex;
   align-items: stretch;
   border-radius: var(--border-radius-sm);
-  box-shadow: 0 0 0 1px rgb(16 24 40 / 4%),
+  box-shadow:
+ 0 0 0 1px rgb(16 24 40 / 4%),
     0 2px 4px 0 rgb(16 24 40 / 6%),
     0 4px 12px 0 rgb(16 24 40 / 8%);
-  margin-left: var(--spacing-xl);
   margin-right: var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
+  margin-left: var(--spacing-xl);
 }
 
 .Layer__profit-and-loss__chart_with_summaries__summary-col {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-md);
   gap: var(--spacing-md) var(--spacing-md);
+  padding: var(--spacing-md);
 }
 
 .Layer__profit-and-loss__chart_with_summaries__chart-col {
   display: flex;
-  flex-direction: column;
   flex: 1;
+  flex-direction: column;
   padding: var(--spacing-md);
 }
 
 .Layer__profit-and-loss-row__children--content {
-  min-height: 0;
   display: grid;
-  grid-column: span 2;
   grid-template-columns: subgrid;
+  grid-column: span 2;
+  min-height: 0;
   background-color: var(--color-base-50);
 }
 
@@ -393,8 +389,7 @@
     padding-left: calc(var(--spacing-xl) + 6px);
   }
 
-  .Layer__component-container
-  .Layer__profit-and-loss-row__label--depth-0.Layer__profit-and-loss-row__label--variant-summation {
+  .Layer__component-container .Layer__profit-and-loss-row__label--depth-0.Layer__profit-and-loss-row__label--variant-summation {
     padding-left: calc(var(--spacing-xl) + 6px);
   }
 
@@ -419,44 +414,45 @@
 @container (max-width: 1023px) and (min-width: 760px) {
   .Layer__profit-and-loss__chart_with_summaries {
     flex-direction: column;
-    margin-left: var(--spacing-md);
     margin-right: var(--spacing-md);
     margin-bottom: var(--spacing-md);
+    margin-left: var(--spacing-md);
   }
 }
 
 @container (max-width: 759px) and (min-width: 500px) {
   .Layer__profit-and-loss__chart_with_summaries {
     flex-direction: column;
-    margin-left: 0;
+    box-shadow: none;
     margin-right: 0;
     margin-bottom: var(--spacing-md);
-    box-shadow: none;
+    margin-left: 0;
   }
 }
 
 @container (max-width: 500px) {
   .Layer__profit-and-loss__chart_with_summaries {
     flex-direction: column;
-    margin-left: 0;
+    box-shadow: none;
     margin-right: 0;
     margin-bottom: var(--spacing-md);
-    box-shadow: none;
+    margin-left: 0;
   }
 }
 
 .Layer__profit-and-loss-row__detailed-chart-btn {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-base-100);
-  color: var(--color-base-600);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
   margin-left: auto;
+  background: var(--color-base-100);
   cursor: pointer;
-  transition: color 150ms ease-out,
+  color: var(--color-base-600);
+  transition:
+ color 150ms ease-out,
     background-color 150ms ease-out;
 
   &:hover {
@@ -466,22 +462,22 @@
 }
 
 .Layer__profit-and-loss-chart__state-card {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: var(--spacing-md);
   align-items: center;
-  position: absolute;
-  background: #fff;
-  padding: var(--spacing-lg) var(--spacing-4xs);
+  justify-content: center;
   width: 260px;
   max-width: 70%;
   height: 120px;
-  left: 50%;
-  bottom: 0;
-  transform: translate(-50%, -60px);
+  padding: var(--spacing-lg) var(--spacing-4xs);
   border-radius: var(--border-radius-sm);
   box-shadow: 0 0 0 1px var(--base-transparent-4);
-  gap: var(--spacing-md);
+  background: #fff;
+  transform: translate(-50%, -60px);
 
   .Layer__icon-box {
     background-color: var(--color-base-100);
@@ -491,23 +487,23 @@
 .Layer__profit-and-loss-chart__state-card__text {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   gap: var(--spacing-4xs);
+  align-items: center;
+  justify-content: center;
 }
 
 .Layer__profit-and-loss-chart__state-card__description {
-  color: var(--text-color-secondary);
   text-align: center;
+  color: var(--text-color-secondary);
 }
 
 .Layer__compare__controls__wrapper {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-md);
   flex-grow: 1;
   flex-wrap: wrap;
+  gap: var(--spacing-md);
+  align-items: center;
+  justify-content: space-between;
 }
 
 .Layer__compare__table__wrapper {

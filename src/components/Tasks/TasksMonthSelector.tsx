@@ -3,7 +3,7 @@ import { format, getMonth, getYear, set } from 'date-fns'
 import { MonthData } from './types'
 import { TaskMonthTile } from './TaskMonthTile'
 import { getCompletedTasks } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 function useActiveYearBookkeepingPeriods() {
@@ -45,7 +45,7 @@ function TasksMonthSelector() {
           year: activeYear,
           month: index + 1,
           tasks: [],
-          status: 'BOOKKEEPING_NOT_ACTIVE' as const,
+          status: BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE,
           disabled: true,
         }
 

@@ -33,9 +33,7 @@ export function StatementOfCashFlowDatePicker({
       selected={selected}
       onChange={(dates) => {
         if (dates instanceof Date) {
-          if (rangeDisplayMode === 'monthPicker') {
-            setSelected({ start: dates, end: dates })
-          }
+          setSelected({ start: dates, end: dates })
 
           return
         }

@@ -1,7 +1,7 @@
 .Layer__MinimalSearchField {
   display: grid;
   grid-template-areas: "input clear-button";
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
 
   border: none;
@@ -9,9 +9,9 @@
   & > [slot="input"] {
     grid-area: input;
 
-    font-family: var(--font-family);
+    min-block-size: 1.5rem;
 
-    border: none;
+    padding-inline: var(--spacing-3xs);
     outline: none;
 
     /*
@@ -19,9 +19,9 @@
      */
     background: none;
 
-    min-block-size: 1.5rem;
+    font-family: var(--font-family);
 
-    padding-inline: var(--spacing-3xs);
+    border: none;
 
     &::-webkit-search-cancel-button,
     &::-webkit-search-decoration {
