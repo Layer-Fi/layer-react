@@ -67,9 +67,14 @@ export const humanizeEnum = (text: string) => {
 export const convertNumberToCurrency = (amount: number | undefined): string => {
   if (typeof amount !== 'number' || isNaN(amount)) return ''
 
-  const formattedValue = amount.toLocaleString('en-US')
+  const formattedValue = amount.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
 
-  return formattedValue.length > 0 ? `$${formattedValue}` : ''
+  return formattedValue
 }
 
 export const convertCurrencyToNumber = (amount: string): string =>
