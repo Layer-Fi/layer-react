@@ -1,13 +1,9 @@
-import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
 import type { RawCustomTransaction } from './types'
 import { useAuth } from '../useAuth'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { useSWRConfig } from 'swr'
-import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from './useCustomAccounts'
-import { BANK_TRANSACTIONS_TAG_KEY } from '../useBankTransactions/useBankTransactions'
 
 type CreateCustomAccountTransactionsBody = {
   transactions: RawCustomTransaction[]

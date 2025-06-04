@@ -90,8 +90,6 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number }>(
     getSortedRowModel: getSortedRowModel(),
   })
 
-  const tableContainerRef = useRef<HTMLDivElement>(null)
-
   return (
     <div className={`${className} Layer__csv-upload__validate-csv-table__container`}>
       <table className='Layer__table'>
@@ -114,27 +112,23 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number }>(
           ))}
         </thead>
       </table>
-      <div ref={tableContainerRef} className='Layer__csv-upload__validate-csv-table__scroll_container'>
-        <table className='Layer__table'>
-          <ValidateCsvTableBody table={table} tableContainerRef={tableContainerRef} />
-        </table>
-      </div>
+      <ValidateCsvTableBody table={table} />
     </div>
   )
 }
 
 interface ValidateCsvTableBodyProps<T extends { [K in keyof T]: string | number }> {
   table: Table<PreviewRow<T>>
-  tableContainerRef: React.RefObject<HTMLDivElement>
 }
 
-function ValidateCsvTableBody<T extends { [K in keyof T]: string | number }>({ table, tableContainerRef }: ValidateCsvTableBodyProps<T>) {
+function ValidateCsvTableBody<T extends { [K in keyof T]: string | number }>({ table }: ValidateCsvTableBodyProps<T>) {
   const { rows } = table.getRowModel()
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLTableRowElement>({
     count: rows.length,
     estimateSize: () => ROW_HEIGHT,
-    getScrollElement: () => tableContainerRef.current,
+    getScrollElement: () => containerRef.current,
     measureElement:
       typeof window !== 'undefined'
       && navigator.userAgent.indexOf('Firefox') === -1
@@ -144,22 +138,26 @@ function ValidateCsvTableBody<T extends { [K in keyof T]: string | number }>({ t
   })
 
   return (
-    <tbody>
-      <tr style={{ height: BODY_HEIGHT }}>
-        <td style={{ height: BODY_HEIGHT, padding: 0 }} colSpan={table.getAllColumns().length - 1} />
-      </tr>
-      {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-        const row = rows[virtualRow.index]
-        return (
-          <ValidateCsvTableRow
-            key={row.id}
-            row={row}
-            virtualRow={virtualRow}
-            rowVirtualizer={rowVirtualizer}
-          />
-        )
-      })}
-    </tbody>
+    <div ref={containerRef} className='Layer__csv-upload__validate-csv-table__scroll_container'>
+      <table className='Layer__table'>
+        <tbody>
+          <tr style={{ height: BODY_HEIGHT }}>
+            <td style={{ height: BODY_HEIGHT, padding: 0 }} colSpan={table.getAllColumns().length - 1} />
+          </tr>
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const row = rows[virtualRow.index]
+            return (
+              <ValidateCsvTableRow
+                key={row.id}
+                row={row}
+                virtualRow={virtualRow}
+                rowVirtualizer={rowVirtualizer}
+              />
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
   )
 }
 

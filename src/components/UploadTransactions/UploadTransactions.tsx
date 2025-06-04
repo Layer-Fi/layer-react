@@ -40,19 +40,20 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
     setParseCsvResponse(null)
   }, [])
 
-  const goBack = useCallback((step = 1) => setCurrentStep(currentStep - step), [currentStep])
-  const goForward = useCallback((step = 1) => setCurrentStep(currentStep + step), [currentStep])
-
   const onParseCsv = useCallback((parseCsvResponse: CustomAccountParseCsvResponse) => {
     setParseCsvResponse(parseCsvResponse)
-    goForward()
-  }, [goForward])
+    setCurrentStep(UploadTransactionsStep.ValidateCsv)
+  }, [])
+
+  const goRestartFlow = useCallback(() => {
+    setCurrentStep(UploadTransactionsStep.UploadCsv)
+  }, [])
 
   const onReupload = useCallback(() => {
     setFile(null)
     setParseCsvResponse(null)
-    goBack()
-  }, [goBack])
+    setCurrentStep(UploadTransactionsStep.UploadCsv)
+  }, [])
 
   return (
     <section className='Layer__component'>
@@ -101,7 +102,7 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
             <UploadTransactionsValidateCsvStep
               selectedAccountId={selectedAccount!.value}
               parseCsvResponse={parseCsvResponse!}
-              onGoBack={goBack}
+              onGoBack={goRestartFlow}
               onReupload={onReupload}
             />
           )}
