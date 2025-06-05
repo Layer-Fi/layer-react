@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from 'react'
+import { forwardRef, type PropsWithChildren } from 'react'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 import type { Spacing } from '../sharedUITypes'
 import classNames from 'classnames'
@@ -22,22 +22,32 @@ type InternalStackProps = StackProps & {
 
 const CLASS_NAME = 'Layer__Stack'
 
-function Stack({ align, children, direction, gap, justify, pbs, pbe, pis, pie, fluid, className, ...restProps }: InternalStackProps) {
-  const dataProperties = toDataProperties({ align, direction, gap, justify, pbs, pbe, pis, pie, fluid })
+const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
+  ({ align, children, direction, gap, justify, pbs, pbe, pis, pie, fluid, className, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ align, direction, gap, justify, pbs, pbe, pis, pie, fluid })
 
-  return (
-    <div {...restProps} {...dataProperties} className={classNames(CLASS_NAME, className)}>
-      {children}
-    </div>
-  )
-}
+    return (
+      <div
+        ref={ref}
+        {...restProps}
+        {...dataProperties}
+        className={classNames(CLASS_NAME, className)}
+      >
+        {children}
+      </div>
+    )
+  },
+)
+Stack.displayName = 'Stack'
 
-export function VStack(props: StackProps) {
-  return <Stack {...props} direction='column' />
-}
+export const VStack = forwardRef<HTMLDivElement, StackProps>((props, ref) => {
+  return <Stack {...props} ref={ref} direction='column' />
+})
+VStack.displayName = 'VStack'
 
-export function HStack(props: StackProps) {
-  return <Stack {...props} direction='row' />
-}
+export const HStack = forwardRef<HTMLDivElement, StackProps>((props, ref) => {
+  return <Stack {...props} ref={ref} direction='row' />
+})
+HStack.displayName = 'HStack'
 
 export const Spacer = () => <div className='Layer__Spacer' />

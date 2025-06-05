@@ -17,7 +17,7 @@ export interface IntegrationsProps {
   }
 }
 
-export const unstable_Integrations = (props: IntegrationsProps) => {
+export const Integrations = (props: IntegrationsProps) => {
   return (
     <QuickbooksContextProvider>
       <IntegrationsComponent {...props} />
@@ -29,8 +29,8 @@ export const IntegrationsComponent = ({
   elevated,
   stringOverrides,
 }: IntegrationsProps) => {
-  const { quickbooksIsConnected } = useContext(QuickbooksContext)
-  const isLoading = quickbooksIsConnected === undefined
+  const { quickbooksConnectionStatus } = useContext(QuickbooksContext)
+  const isLoading = quickbooksConnectionStatus === undefined
 
   return (
     <Container name={COMPONENT_NAME} elevated={elevated}>
@@ -48,13 +48,13 @@ export const IntegrationsComponent = ({
           <Loader />
         </div>
       )}
-      {!isLoading && !quickbooksIsConnected && (
+      {!isLoading && !quickbooksConnectionStatus.is_connected && (
         <DataState
           status={DataStateStatus.info}
           title='No active integrations'
         />
       )}
-      {quickbooksIsConnected && <IntegrationsContent />}
+      {quickbooksConnectionStatus?.is_connected && <IntegrationsContent />}
     </Container>
   )
 }

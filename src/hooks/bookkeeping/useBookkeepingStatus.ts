@@ -5,22 +5,26 @@ import { get } from '../../api/layer/authenticated_http'
 import type { EnumWithUnknownValues } from '../../types/utility/enumWithUnknownValues'
 import { useLegacyMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
 
-const BOOKKEEPING_STATUSES = [
-  'NOT_PURCHASED',
-  'ACTIVE',
-  'ONBOARDING',
-  'BOOKKEEPING_PAUSED',
-] as const
+export enum BookkeepingStatus {
+  NOT_PURCHASED = 'NOT_PURCHASED',
+  ACTIVE = 'ACTIVE',
+  ONBOARDING = 'ONBOARDING',
+  BOOKKEEPING_PAUSED = 'BOOKKEEPING_PAUSED',
+}
+const BOOKKEEPING_STATUSES: string[] = Object.values(BookkeepingStatus)
 
-export type BookkeepingStatus = typeof BOOKKEEPING_STATUSES[number]
 type RawBookkeepingStatus = EnumWithUnknownValues<BookkeepingStatus>
 
-function constrainToKnownBookkeepingStatus(status: string): BookkeepingStatus {
-  if (BOOKKEEPING_STATUSES.includes(status as BookkeepingStatus)) {
-    return status as BookkeepingStatus
+function isBookkeepingStatus(status: RawBookkeepingStatus): status is BookkeepingStatus {
+  return BOOKKEEPING_STATUSES.includes(status)
+}
+
+function constrainToKnownBookkeepingStatus(status: RawBookkeepingStatus): BookkeepingStatus {
+  if (isBookkeepingStatus(status)) {
+    return status
   }
 
-  return 'NOT_PURCHASED'
+  return BookkeepingStatus.NOT_PURCHASED
 }
 
 const getBookkeepingStatus = get<
@@ -82,8 +86,8 @@ export function useEffectiveBookkeepingStatus() {
   const { data } = useBookkeepingStatus()
 
   if (overrideMode === 'bookkeeping-client') {
-    return 'ACTIVE'
+    return BookkeepingStatus.ACTIVE
   }
 
-  return data?.status ?? 'NOT_PURCHASED'
+  return data?.status ?? BookkeepingStatus.NOT_PURCHASED
 }

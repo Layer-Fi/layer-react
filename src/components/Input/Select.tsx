@@ -20,6 +20,8 @@ export interface SelectProps<T> {
   placeholder?: string
   isInvalid?: boolean
   errorMessage?: string
+  inputId?: string
+  isLoading?: boolean
 }
 
 export const Select = <T,>({
@@ -33,6 +35,8 @@ export const Select = <T,>({
   placeholder,
   isInvalid,
   errorMessage,
+  inputId,
+  isLoading,
 }: SelectProps<T>) => {
   const baseClassName = classNames(
     'Layer__select',
@@ -50,6 +54,7 @@ export const Select = <T,>({
     <Tooltip disabled={!isInvalid || !errorMessage}>
       <TooltipTrigger className='Layer__input-tooltip'>
         <ReactSelect<T>
+          inputId={inputId}
           name={name}
           className={baseClassName}
           classNamePrefix={classNamePrefix}
@@ -60,6 +65,7 @@ export const Select = <T,>({
           menuPortalTarget={document.body}
           styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
           components={{ DropdownIndicator }}
+          isLoading={isLoading}
           isDisabled={disabled}
         />
       </TooltipTrigger>

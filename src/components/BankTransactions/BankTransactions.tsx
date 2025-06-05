@@ -29,7 +29,7 @@ import { BankTransactionsTableEmptyStates } from './BankTransactionsTableEmptySt
 import { MobileComponentType } from './constants'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import type { LayerError } from '../../models/ErrorHandler'
-import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
+import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { LegacyModeProvider, type BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
 
@@ -150,7 +150,7 @@ const BankTransactionsContent = ({
 
   useEffect(() => {
     if (JSON.stringify(inputFilters) !== JSON.stringify(filters)) {
-      if (effectiveBookkeepingStatus === 'ACTIVE') {
+      if (effectiveBookkeepingStatus === BookkeepingStatus.ACTIVE) {
         setFilters({
           ...filters,
           ...inputFilters,

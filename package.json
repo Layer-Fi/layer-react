@@ -1,6 +1,6 @@
 {
   "name": "@layerfi/components",
-  "version": "0.1.99-alpha-1",
+  "version": "0.1.102-alpha.2",
   "description": "Layer React Components",
   "main": "dist/cjs/index.cjs",
   "module": "dist/esm/index.mjs",
@@ -69,12 +69,15 @@
     "stylelint": "^16.19.1",
     "stylelint-config-standard": "^38.0.0",
     "stylelint-config-standard-scss": "^14.0.0",
+    "stylelint-order": "^7.0.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.0"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.8",
     "@tanstack/react-form": "^1.9.1",
+    "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.13.9",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
     "libphonenumber-js": "^1.12.7",
@@ -83,6 +86,7 @@
     "react-aria-components": "^1.8.0",
     "react-currency-input-field": "^3.10.0",
     "react-datepicker": "^6.9.0",
+    "react-dropzone": "^14.3.8",
     "react-plaid-link": "^4.0.1",
     "react-select": "^5.10.1",
     "recharts": "^2.15.3",

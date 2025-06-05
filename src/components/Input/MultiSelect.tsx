@@ -24,6 +24,8 @@ export interface SelectProps<T> {
   isInvalid?: boolean
   errorMessage?: string
   styles?: StylesConfig<T, true, GroupBase<T>>
+  inputId?: string
+  isLoading?: boolean
 }
 
 export const MultiSelect = <T,>({
@@ -39,6 +41,8 @@ export const MultiSelect = <T,>({
   isInvalid,
   errorMessage,
   styles,
+  inputId,
+  isLoading,
 }: SelectProps<T>) => {
   const baseClassName = classNames(
     'Layer__select',
@@ -56,6 +60,7 @@ export const MultiSelect = <T,>({
     <Tooltip disabled={!isInvalid || !errorMessage}>
       <TooltipTrigger className='Layer__input-tooltip'>
         <ReactSelect<T, true>
+          inputId={inputId}
           name={name}
           className={baseClassName}
           classNamePrefix={classNamePrefix}
@@ -70,6 +75,7 @@ export const MultiSelect = <T,>({
             ...styles,
           }}
           components={{ DropdownIndicator }}
+          isLoading={isLoading}
           isDisabled={disabled}
           isMulti={true}
         />

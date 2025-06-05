@@ -2,7 +2,7 @@ import AlertCircle from '../../icons/AlertCircle'
 import Clock from '../../icons/Clock'
 import { Text, TextSize, TextWeight } from '../Typography/Text'
 import CheckCircle from '../../icons/CheckCircle'
-import { BookkeepingPeriod } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { BookkeepingPeriod, BookkeepingPeriodStatus } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import pluralize from 'pluralize'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { safeAssertUnreachable } from '../../utils/switch/assertUnreachable'
@@ -14,9 +14,9 @@ type TaskStatusBadgeProps = {
 
 const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: TaskStatusBadgeProps['tasksCount']) => {
   switch (status) {
-    case 'IN_PROGRESS_AWAITING_BOOKKEEPER':
-    case 'NOT_STARTED':
-    case 'CLOSING_IN_REVIEW': {
+    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
+    case BookkeepingPeriodStatus.NOT_STARTED:
+    case BookkeepingPeriodStatus.CLOSING_IN_REVIEW: {
       return {
         color: 'info' as const,
         icon: <Clock size={12} />,
@@ -24,8 +24,8 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
         labelShort: tasksCount ? `${tasksCount}` : undefined,
       }
     }
-    case 'IN_PROGRESS_AWAITING_CUSTOMER':
-    case 'CLOSED_OPEN_TASKS': {
+    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER:
+    case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
       return {
         color: 'warning' as const,
         label: tasksCount ? pluralize('task', tasksCount, true) : undefined,
@@ -33,13 +33,13 @@ const buildBadgeConfig = (status: TaskStatusBadgeProps['status'], tasksCount: Ta
         icon: <AlertCircle size={12} />,
       }
     }
-    case 'CLOSED_COMPLETE': {
+    case BookkeepingPeriodStatus.CLOSED_COMPLETE: {
       return {
         color: 'success' as const,
         icon: <CheckCircle size={12} />,
       }
     }
-    case 'BOOKKEEPING_NOT_ACTIVE': {
+    case BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE: {
       return
     }
     default: {

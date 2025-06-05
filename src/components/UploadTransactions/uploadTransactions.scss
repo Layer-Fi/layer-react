@@ -1,0 +1,54 @@
+.Layer__upload-transactions__select-account-name-field {
+  >.Layer__input-tooltip {
+    flex: auto;
+  }
+}
+
+.Layer__upload-transactions__select-account-name-input {
+  &--error {
+    .Layer__select__control {
+      box-shadow:
+        0 0 0 1px var(--color-base-300),
+        0 0 0 2px var(--color-danger);
+    }
+    
+    .Layer__select__placeholder {
+      color: var(--color-danger);
+    }
+  }
+}
+
+.Layer__upload-transactions__create-account-form {
+  border-radius: var(--border-radius-3xs);
+  padding: var(--spacing-xs);
+  background: var(--color-base-100);
+}
+
+.Layer__upload-transactions__template-section {
+  border-radius: var(--border-radius-3xs);
+  border: 1px solid var(--color-base-400);
+  padding: var(--spacing-md);
+}
+
+.Layer__upload-transactions__template-section__download-template-button {
+  max-height: 36px;
+}
+
+.Layer__upload-transactions__preview_table {
+  .Layer__csv-upload__validate-csv-table__cell--date,
+  .Layer__csv-upload__validate-csv-table__header-cell--date {
+    flex: 3 1 0;
+    min-width: 120px;
+  }
+
+  .Layer__csv-upload__validate-csv-table__cell--amount,
+  .Layer__csv-upload__validate-csv-table__header-cell--amount {
+    flex: 2 1 0;
+    min-width: 120px;
+  }
+
+  .Layer__csv-upload__validate-csv-table__cell--description,
+  .Layer__csv-upload__validate-csv-table__header-cell--description {
+    flex: 6 1 0;
+  }
+}

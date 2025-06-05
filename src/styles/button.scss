@@ -5,14 +5,16 @@
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
   font-variant-numeric: lining-nums proportional-nums;
-  font-feature-settings: 'cv10' on,
-    'cv05' on,
-    'cv08' on,
-    'ss03' on;
+  font-feature-settings:
+    "cv10" on,
+    "cv05" on,
+    "cv08" on,
+    "ss03" on;
   cursor: pointer;
   min-height: 36px;
   box-sizing: border-box;
-  box-shadow: 0 0 0 1px var(--color-base-300),
+  box-shadow:
+    0 0 0 1px var(--color-base-300),
     0 1px 1px 0 rgb(0 0 0 / 4%),
     0 2px 3px 0 rgb(0 0 0 / 4%),
     0 3px 4px 0 rgb(0 0 0 / 2%),
@@ -75,6 +77,10 @@
     .Layer__btn-text {
       padding: 0 var(--spacing-md);
     }
+
+    .Layer__btn-content {
+      column-gap: 0;
+    }
   }
 
   .Layer__btn-content {
@@ -85,12 +91,6 @@
 
     &.Layer__justify--space-between {
       justify-content: space-between;
-    }
-  }
-
-  &.Layer__btn--with-primary-icon {
-    .Layer__btn-content {
-      column-gap: 0;
     }
   }
 
@@ -116,25 +116,32 @@
   }
 
   &:hover {
-    box-shadow: 0 0 0 1px var(--color-base-300),
+    box-shadow:
+      0 0 0 1px var(--color-base-300),
       0 1px 2px 0 var(--base-transparent-6);
   }
 
   &:visited,
   &:active {
-    box-shadow: 0 0 0 1px var(--color-base-800),
+    box-shadow:
+      0 0 0 1px var(--color-base-800),
       0 0 0 3px var(--color-base-300);
   }
 
   &:disabled {
     box-shadow: none;
     background-color: var(--color-base-200);
-    color: var(--color-base-500);
     cursor: not-allowed;
-
-    .Layer__btn-icon {
-      background-color: transparent;
-      color: var(--color-base-500);
+    
+    >.Layer__btn-content {
+      >.Layer__btn-text {
+        color: var(--color-base-500);
+      }
+      
+      >.Layer__btn-icon {
+        background-color: transparent;
+        color: var(--color-base-500);
+      }
     }
   }
 }
@@ -170,11 +177,6 @@
     background: transparent;
   }
 
-  &:visited,
-  &:active {
-    box-shadow: 0 0 0 1px var(--color-base-800);
-  }
-
   &:hover:not([disabled]),
   &.Layer__btn--active:not([disabled]) {
     .Layer__btn-icon {
@@ -188,6 +190,12 @@
       & .Layer__btn-icon--on-inactive {
         display: none;
       }
+    }
+  }
+
+  > .Layer__btn-content {
+    > .Layer__btn-text {
+      color: var(--btn-color-primary);
     }
   }
 }
@@ -254,10 +262,11 @@
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
   font-variant-numeric: lining-nums proportional-nums;
-  font-feature-settings: 'cv10' on,
-    'cv05' on,
-    'cv08' on,
-    'ss03' on;
+  font-feature-settings:
+    "cv10" on,
+    "cv05" on,
+    "cv08" on,
+    "ss03" on;
   padding: 0;
   cursor: pointer;
   box-sizing: border-box;
@@ -270,7 +279,8 @@
 
   &.Layer__icon-btn--border {
     color: var(--color-base-800);
-    box-shadow: 0 0 0 1px var(--color-base-300),
+    box-shadow:
+      0 0 0 1px var(--color-base-300),
       0 1px 1px 0 var(--base-transparent-4),
       0 2px 3px 0 var(--base-transparent-4),
       0 3px 4px 0 var(--base-transparent-2),
@@ -278,7 +288,8 @@
 
     &:hover {
       background-color: var(--color-base-0);
-      box-shadow: 0 0 0 1px var(--color-base-300),
+      box-shadow:
+        0 0 0 1px var(--color-base-300),
         0 1px 2px 0 var(--base-transparent-6);
     }
   }
@@ -361,8 +372,9 @@
     text-decoration: none;
 
     &:focus,
-    :active {
-      box-shadow: 0 0 0 1px var(--color-base-0),
+    &:active {
+      box-shadow:
+        0 0 0 1px var(--color-base-0),
         0 0 0 3px var(--color-base-0);
       outline: var(--color-base-0);
     }
