@@ -36,6 +36,9 @@
       gap: var(--spacing-#{$spacing});
     }
 
+    &[data-pb="#{$spacing}"] {
+      padding-block: var(--spacing-#{$spacing});
+    }
     &[data-pbe="#{$spacing}"] {
       padding-block-end: var(--spacing-#{$spacing});
     }

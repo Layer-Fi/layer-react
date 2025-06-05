@@ -3,7 +3,10 @@ import { useAuth } from '../../../../../hooks/useAuth'
 import { useLayerContext } from '../../../../../contexts/LayerContext'
 import { useCallback } from 'react'
 import { del } from '../../../../../api/layer/authenticated_http'
-import { useBankTransactionsInvalidator } from '../../../../../hooks/useBankTransactions/useBankTransactions'
+import {
+  useBankTransactionsInvalidator,
+  useBankTransactionsOptimisticUpdater,
+} from '../../../../../hooks/useBankTransactions/useBankTransactions'
 
 const REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY = '#remove-tag-from-bank-transaction'
 
@@ -50,6 +53,8 @@ type RemoveTagFromBankTransactionOptions = {
 export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTagFromBankTransactionOptions) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
+
+  const { optimisticallyUpdateBankTransactions } = useBankTransactionsOptimisticUpdater()
   const { invalidateBankTransactions } = useBankTransactionsInvalidator()
 
   const mutationResponse = useSWRMutation(
@@ -81,9 +86,9 @@ export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTag
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
+      const triggerResultPromise = originalTrigger(...triggerParameters)
 
-      void invalidateBankTransactions((bankTransaction) => {
+      void optimisticallyUpdateBankTransactions((bankTransaction) => {
         if (bankTransaction.id === bankTransactionId) {
           const { tagId } = triggerParameters[0]
 
@@ -98,11 +103,13 @@ export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTag
         return bankTransaction
       })
 
-      return triggerResult
+      return triggerResultPromise
+        .finally(() => { void invalidateBankTransactions() })
     },
     [
       bankTransactionId,
       originalTrigger,
+      optimisticallyUpdateBankTransactions,
       invalidateBankTransactions,
     ],
   )

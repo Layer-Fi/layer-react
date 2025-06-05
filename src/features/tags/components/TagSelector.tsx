@@ -1,4 +1,8 @@
-import { useId, type PropsWithChildren } from 'react'
+import {
+  useId,
+  useMemo,
+  type PropsWithChildren,
+} from 'react'
 import { Input } from '../../../components/ui/Input/Input'
 import { ListBox, ListBoxItem, ListBoxSection, ListBoxSectionHeader } from '../../../components/ui/ListBox/ListBox'
 import { Popover } from '../../../components/ui/Popover/Popover'
@@ -69,10 +73,14 @@ function TagSelectorSelection({
   onRemoveTag,
   isReadOnly,
 }: TagSelectorSelectionProps) {
+  if (selectedTags.length === 0) {
+    return null
+  }
+
   return (
     <TagGroup
       aria-label='Active Tags'
-      selectionMode='multiple'
+      selectionMode='none'
       onRemove={
         onRemoveTag
           ? (keys) => {
@@ -174,16 +182,22 @@ export function TagSelector({
   const { data, isLoading, isError } = useTagDimensions()
   const flattenedTagValues = useFlattenedTagValues(data)
 
-  const disabledTagValueIds = flattenedTagValues
-    .filter(({ dimensionLabel, valueLabel }) => {
-      const match = selectedTags.find(selectedTag =>
-        selectedTag.dimensionLabel === dimensionLabel
-        && selectedTag.valueLabel === valueLabel,
-      )
+  const disabledTagValueIds = useMemo(
+    () => flattenedTagValues
+      .filter(({ dimensionLabel, valueLabel }) => {
+        const match = selectedTags.find(selectedTag =>
+          selectedTag.dimensionLabel === dimensionLabel
+          && selectedTag.valueLabel === valueLabel,
+        )
 
-      return match !== undefined
-    })
-    .map(({ valueId }) => valueId)
+        return match !== undefined
+      })
+      .map(({ valueId }) => valueId),
+    [
+      flattenedTagValues,
+      selectedTags,
+    ],
+  )
 
   const handleAddTag = (valueId: string) => {
     const tagValue = flattenedTagValues.find(({ valueId: id }) => id === valueId)
@@ -233,6 +247,7 @@ export function TagSelector({
       <TagSelectorLayoutGroup>
         <ComboBox
           defaultItems={data ?? []}
+          allowsEmptyCollection
           menuTrigger='focus'
           aria-labelledby={labelId}
           isDisabled={shouldDisableComboBox}
@@ -267,15 +282,40 @@ export function TagSelector({
               </P>
             )
             : null}
-          <Popover>
-            <ListBox<TItemDerived>>
+          <Popover
+            /*
+             * This is necessary until a bug in `react-aria-components` is fixed
+             *
+             * @see {https://github.com/adobe/react-spectrum/pull/7742}
+             */
+            shouldFlip={false}
+            placement='bottom start'
+            crossOffset={-2}
+          >
+            <ListBox<TItemDerived>
+              renderEmptyState={() => (
+                <VStack pi='xs' pb='sm'>
+                  <P
+                    variant='subtle'
+                    nonAria
+                  >
+                    No matching tags found.
+                  </P>
+                </VStack>
+              )}
+            >
               {({
                 id: definitionId,
                 key: definitionLabel,
                 definedValues,
               }) => (
                 <ListBoxSection key={definitionId}>
-                  <ListBoxSectionHeader size='sm'>{definitionLabel}</ListBoxSectionHeader>
+                  <ListBoxSectionHeader
+                    pb='2xs'
+                    size='sm'
+                  >
+                    {definitionLabel}
+                  </ListBoxSectionHeader>
                   <Collection items={definedValues}>
                     {({
                       id: valueId,

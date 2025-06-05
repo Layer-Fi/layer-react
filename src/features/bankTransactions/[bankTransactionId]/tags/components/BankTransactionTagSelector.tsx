@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import type { BankTransaction } from '../../../../../types'
 import { makeTag, TagSelector, type Tag, type TagValue } from '../../../../tags/components/TagSelector'
 import { useTagBankTransaction } from '../api/useTagBankTransaction'
@@ -21,11 +21,14 @@ export function BankTransactionTagSelector({ bankTransaction }: BankTransactionT
     transaction_tags: transactionTags,
   } = bankTransaction
 
-  const selectedTags = transactionTags.map(({ id, key, value }) => makeTag({
-    id,
-    dimensionLabel: key,
-    valueLabel: value,
-  }))
+  const selectedTags = useMemo(
+    () => transactionTags.map(({ id, key, value }) => makeTag({
+      id,
+      dimensionLabel: key,
+      valueLabel: value,
+    })),
+    [transactionTags],
+  )
 
   const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId })
   const handleAddTag = useCallback((tag: TagValue) => {
