@@ -1,4 +1,4 @@
-import { Fragment, ReactNode } from 'react'
+import { Fragment, ReactNode, useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { StatementOfCashFlow } from '../../types'
 import { LineItem } from '../../types/line_item'
@@ -27,7 +27,14 @@ export const StatementOfCashFlowTable = ({
   config: StatementOfCashFlowRowProps[]
   stringOverrides?: StatementOfCashFlowTableStringOverrides
 }) => {
-  const { isOpen, setIsOpen } = useTableExpandRow()
+  const { isOpen, setIsOpen, expandedAllRows } = useTableExpandRow()
+  const allRowKeys: string[] = []
+
+  useEffect(() => {
+    if (expandedAllRows) {
+      setIsOpen(allRowKeys, true)
+    }
+  }, [expandedAllRows])
 
   const renderLineItem = (
     lineItem: LineItem,
@@ -38,12 +45,18 @@ export const StatementOfCashFlowTable = ({
     const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
     const expanded = expandable ? isOpen(rowKey) : true
 
+    const showChildren = expanded || expandedAllRows
+
+    if (expandable) {
+      allRowKeys.push(rowKey)
+    }
+
     return (
       <Fragment key={rowKey + '-' + rowIndex}>
         <TableRow
           rowKey={rowKey + '-' + rowIndex}
           expandable={expandable}
-          isExpanded={expanded}
+          isExpanded={showChildren}
           handleExpand={() => setIsOpen(rowKey)}
           depth={depth}
         >
@@ -58,17 +71,17 @@ export const StatementOfCashFlowTable = ({
             {(!expandable || (expandable && !expanded)) && lineItem.value}
           </TableCell>
         </TableRow>
-        {expanded
-        && lineItem.line_items
-        && lineItem.line_items.map((subItem, subIdx) =>
-          renderLineItem(
-            subItem,
-            depth + 1,
-            rowKey + ':' + subItem.name,
-            subIdx,
-          ),
-        )}
-        {expanded && expandable && (
+        {showChildren
+          && lineItem.line_items
+          && lineItem.line_items.map((subItem, subIdx) =>
+            renderLineItem(
+              subItem,
+              depth + 1,
+              rowKey + ':' + subItem.name,
+              subIdx,
+            ),
+          )}
+        {showChildren && expandable && (
           <TableRow
             rowKey={rowKey + '-' + rowIndex + '--summation'}
             depth={depth + 1}
@@ -102,12 +115,12 @@ export const StatementOfCashFlowTable = ({
             return (
               <Fragment key={row.lineItem}>
                 {data[row.lineItem as keyof StatementOfCashFlow]
-                && renderLineItem(
-                  data[row.lineItem as keyof StatementOfCashFlow] as LineItem,
-                  0,
-                  row.lineItem ? row.lineItem : '',
-                  idx,
-                )}
+                  && renderLineItem(
+                    data[row.lineItem as keyof StatementOfCashFlow] as LineItem,
+                    0,
+                    row.lineItem ? row.lineItem : '',
+                    idx,
+                  )}
               </Fragment>
             )
           }
