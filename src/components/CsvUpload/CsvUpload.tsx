@@ -9,11 +9,12 @@ import { DataState, DataStateStatus } from '../DataState/DataState'
 import { FileSpreadsheet } from 'lucide-react'
 import CloseIcon from '../../icons/CloseIcon'
 
+const VALID_EXTENSIONS = ['.csv']
+const VALID_FILE_TYPES = ['text/csv', 'text/plain', 'application/vnd.ms-excel']
 const MAX_FILE_SIZE = 2 * 1024 * 1024
 
 const validateCsvFile = (file: File) => {
-  const validExtensions = ['.csv']
-  const isValidExtension = validExtensions.some(ext =>
+  const isValidExtension = VALID_EXTENSIONS.some(ext =>
     file.name.toLowerCase().endsWith(ext),
   )
 
@@ -22,7 +23,7 @@ const validateCsvFile = (file: File) => {
   }
 
   // Check MIME type if it exists
-  if (file.type && file.type !== 'text/csv' && file.type !== 'text/plain' && file.type !== 'application/vnd.ms-excel') {
+  if (file.type && !VALID_FILE_TYPES.includes(file.type)) {
     return `Invalid file type: ${file.type}`
   }
 
