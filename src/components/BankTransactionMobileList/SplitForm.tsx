@@ -25,8 +25,7 @@ import {
 import { FileInput, Input } from '../Input'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
-import { BankTransactionMemo } from '../BankTransactions/BankTransactionMemo/BankTransactionMemo'
-import { VStack } from '../ui/Stack/Stack'
+import { BankTransactionTagsAndMemo } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionTagsAndMemo'
 
 type Split = {
   amount: number
@@ -291,11 +290,10 @@ export const SplitForm = ({
           </>
         )
         : null}
-      {showDescriptions && (
-        <VStack pbe='md'>
-          <BankTransactionMemo bankTransactionId={bankTransaction.id} />
-        </VStack>
-      )}
+      <BankTransactionTagsAndMemo
+        bankTransaction={bankTransaction}
+        showDescriptions={showDescriptions}
+      />
       <div
         className={classNames(
           'Layer__bank-transaction-mobile-list-item__receipts',

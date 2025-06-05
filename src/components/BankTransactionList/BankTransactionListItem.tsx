@@ -34,12 +34,13 @@ type Props = {
   dateFormat: string
   bankTransaction: BankTransaction
   editable: boolean
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
   removeTransaction: (bt: BankTransaction) => void
   containerWidth?: number
   stringOverrides?: BankTransactionCTAStringOverrides
+
+  showDescriptions: boolean
+  showReceiptUploads: boolean
+  showTooltips: boolean
 }
 
 export const BankTransactionListItem = ({
@@ -47,12 +48,13 @@ export const BankTransactionListItem = ({
   dateFormat,
   bankTransaction,
   editable,
-  showDescriptions,
-  showReceiptUploads,
-  showTooltips,
   containerWidth,
   removeTransaction,
   stringOverrides,
+
+  showDescriptions,
+  showReceiptUploads,
+  showTooltips,
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
@@ -191,6 +193,7 @@ export const BankTransactionListItem = ({
               : stringOverrides?.approveButtonText || 'Approve'
           }
           containerWidth={containerWidth}
+
           showDescriptions={showDescriptions}
           showReceiptUploads={showReceiptUploads}
           showTooltips={showTooltips}

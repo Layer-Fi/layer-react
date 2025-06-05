@@ -6,13 +6,14 @@ import { PersonalForm } from './PersonalForm'
 import { SplitAndMatchForm } from './SplitAndMatchForm'
 
 interface BankTransactionMobileFormsProps {
+  isOpen?: boolean
   purpose: Purpose
   bankTransaction: BankTransaction
-  showTooltips: boolean
+
   showCategorization?: boolean
-  showReceiptUploads?: boolean
-  showDescriptions?: boolean
-  isOpen?: boolean
+  showDescriptions: boolean
+  showReceiptUploads: boolean
+  showTooltips: boolean
 }
 
 export const BankTransactionMobileForms = ({

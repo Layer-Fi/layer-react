@@ -7,8 +7,10 @@ export type StackProps = PropsWithChildren<{
   align?: 'start' | 'center'
   gap?: Spacing
   justify?: 'start' | 'center' | 'end'
+  pb?: Spacing
   pbs?: Spacing
   pbe?: Spacing
+  pi?: Spacing
   pis?: Spacing
   pie?: Spacing
   fluid?: boolean
@@ -22,8 +24,35 @@ type InternalStackProps = StackProps & {
 
 const CLASS_NAME = 'Layer__Stack'
 
-function Stack({ align, children, direction, gap, justify, pbs, pbe, pis, pie, fluid, className, ...restProps }: InternalStackProps) {
-  const dataProperties = toDataProperties({ align, direction, gap, justify, pbs, pbe, pis, pie, fluid })
+function Stack({
+  align,
+  children,
+  direction,
+  gap,
+  justify,
+  pb,
+  pbs,
+  pbe,
+  pi,
+  pis,
+  pie,
+  fluid,
+  className,
+  ...restProps
+}: InternalStackProps) {
+  const dataProperties = toDataProperties({
+    align,
+    direction,
+    gap,
+    justify,
+    pb,
+    pbs,
+    pbe,
+    pi,
+    pis,
+    pie,
+    fluid,
+  })
 
   return (
     <div {...restProps} {...dataProperties} className={classNames(CLASS_NAME, className)}>

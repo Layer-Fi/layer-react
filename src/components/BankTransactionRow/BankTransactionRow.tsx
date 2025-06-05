@@ -290,7 +290,7 @@ export const BankTransactionRow = ({
               ? (
                 <Text as='span' className={`${className}__category-text`}>
                   {bankTransaction.categorization_status
-                  === CategorizationStatus.SPLIT && (
+                    === CategorizationStatus.SPLIT && (
                     <>
                       <Badge
                         icon={<Scissors size={11} />}
@@ -309,8 +309,8 @@ export const BankTransactionRow = ({
                     </>
                   )}
                   {bankTransaction?.categorization_status
-                  === CategorizationStatus.MATCHED
-                  && bankTransaction?.match && (
+                    === CategorizationStatus.MATCHED
+                    && bankTransaction?.match && (
                     <>
                       <MatchBadge
                         classNamePrefix={className}
@@ -326,9 +326,9 @@ export const BankTransactionRow = ({
                     </>
                   )}
                   {bankTransaction?.categorization_status
-                  !== CategorizationStatus.MATCHED
-                  && bankTransaction?.categorization_status
-                  !== CategorizationStatus.SPLIT && (
+                    !== CategorizationStatus.MATCHED
+                    && bankTransaction?.categorization_status
+                    !== CategorizationStatus.SPLIT && (
                     <span className={`${className}__category-text__text`}>
                       {bankTransaction?.category?.display_name}
                     </span>
@@ -365,7 +365,7 @@ export const BankTransactionRow = ({
               )
               : null}
             {(!categorized && categorizationEnabled && (open || (!open && !showRetry)))
-            || (categorizationEnabled && categorized && open)
+              || (categorizationEnabled && categorized && open)
               ? (
                 <SubmitButton
                   onClick={() => {

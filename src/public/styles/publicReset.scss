@@ -1,0 +1,14 @@
+/*
+ * `box-sizing` is not an inheritable property.
+ *
+ * This change enforces a sensible default value for all elements nested
+ * within a component exposed on the public API surface.
+ */
+.Layer__Public,
+.Layer__Public::before,
+.Layer__Public::after,
+.Layer__Public *,
+.Layer__Public *::before,
+.Layer__Public *::after {
+  box-sizing: border-box;
+}

@@ -32,6 +32,9 @@ import type { LayerError } from '../../models/ErrorHandler'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { LegacyModeProvider, type BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
+import { BankTransactionTagVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
+import classNames from 'classnames'
+import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimensions'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -53,9 +56,11 @@ export interface BankTransactionsProps {
    * @deprecated `mode` can be inferred from the bookkeeping configuration of a business
    */
   mode?: BankTransactionsMode
+
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   showTooltips?: boolean
+
   monthlyView?: boolean
   categorizeView?: boolean
   mobileComponent?: MobileComponentType
@@ -66,20 +71,26 @@ export interface BankTransactionsProps {
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
   onError?: (error: LayerError) => void
+  showTags?: boolean
 }
 
 export const BankTransactions = ({
   onError,
+  showTags = false,
   mode,
   ...props
 }: BankTransactionsWithErrorProps) => {
+  usePreloadTagDimensions({ isEnabled: showTags })
+
   const contextData = useAugmentedBankTransactions({ monthlyView: props.monthlyView })
 
   return (
     <ErrorBoundary onError={onError}>
       <BankTransactionsContext.Provider value={contextData}>
         <LegacyModeProvider overrideMode={mode}>
-          <BankTransactionsContent {...props} />
+          <BankTransactionTagVisibilityProvider showTags={showTags}>
+            <BankTransactionsContent {...props} />
+          </BankTransactionTagVisibilityProvider>
         </LegacyModeProvider>
       </BankTransactionsContext.Provider>
     </ErrorBoundary>
@@ -89,9 +100,11 @@ export const BankTransactions = ({
 const BankTransactionsContent = ({
   asWidget = false,
   pageSize = 20,
+
   showDescriptions = true,
   showReceiptUploads = true,
   showTooltips = false,
+
   monthlyView = false,
   categorizeView: categorizeViewProp,
   mobileComponent,
@@ -264,9 +277,12 @@ const BankTransactionsContent = ({
   return (
     <Container
       className={
-        display === DisplayState.review
-          ? 'Layer__bank-transactions--to-review'
-          : 'Layer__bank-transactions--categorized'
+        classNames(
+          'Layer__Public',
+          display === DisplayState.review
+            ? 'Layer__bank-transactions--to-review'
+            : 'Layer__bank-transactions--categorized',
+        )
       }
       transparentBg={listView && mobileComponent === 'mobileList'}
       name={COMPONENT_NAME}
@@ -306,13 +322,14 @@ const BankTransactionsContent = ({
             bankTransactions={bankTransactions}
             containerWidth={containerWidth}
             removeTransaction={removeTransaction}
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
             page={currentPage}
             stringOverrides={stringOverrides}
             lastPage={isLastPage}
             onRefresh={refetch}
+
+            showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
           />
         </div>
       )}
@@ -325,6 +342,7 @@ const BankTransactionsContent = ({
             removeTransaction={removeTransaction}
             containerWidth={containerWidth}
             stringOverrides={stringOverrides?.bankTransactionCTAs}
+
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
@@ -338,9 +356,10 @@ const BankTransactionsContent = ({
             bankTransactions={bankTransactions}
             editable={editable}
             removeTransaction={removeTransaction}
-            showTooltips={showTooltips}
-            showReceiptUploads={showReceiptUploads}
+
             showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
           />
         )
         : null}

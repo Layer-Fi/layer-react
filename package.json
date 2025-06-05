@@ -78,6 +78,7 @@
     "@tanstack/react-form": "^1.9.1",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
+    "effect": "^3.15.2",
     "libphonenumber-js": "^1.12.7",
     "lucide-react": "^0.507.0",
     "pluralize": "^8.0.0",
@@ -88,6 +89,7 @@
     "react-select": "^5.10.1",
     "recharts": "^2.15.3",
     "swr": "^2.3.3",
+    "uuid": "^11.1.0",
     "zustand": "^5.0.4"
   }
 }

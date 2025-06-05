@@ -1,5 +1,6 @@
 import { Categorization, CategorizationStatus, Category } from './categories'
 import { S3PresignedUrl } from './general'
+import type { TransactionTag } from './tags'
 
 export enum Direction {
   CREDIT = 'CREDIT',
@@ -49,6 +50,7 @@ export interface BankTransaction extends Record<string, unknown> {
   suggested_matches?: SuggestedMatch[]
   match?: BankTransactionMatch
   document_ids: string[]
+  transaction_tags: ReadonlyArray<TransactionTag>
 }
 
 export interface SuggestedMatch {

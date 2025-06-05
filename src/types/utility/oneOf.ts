@@ -1,4 +1,4 @@
-type OnlyFirst<First, Second> = First & { [Key in keyof Omit<Second, keyof First>]: never }
+type OnlyFirst<First, Second> = First & { [Key in keyof Omit<Second, keyof First>]?: never }
 
 type MergeTypes<Types extends Array<unknown>, Result = Record<never, never>> =
   Types extends [infer Head, ...infer Remaining]
