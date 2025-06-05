@@ -24,6 +24,7 @@
 @forward "./view";
 @forward "../components/ui/index";
 @forward "../components/utility/index";
+@forward "../components/CsvUpload/csvUpload";
 @forward "../components/domain/index";
 @forward "../components/DueStatus/due_status";
 @forward "../components/LinkedAccounts/BasicLinkedAccount/basicLinkedAccount";
@@ -42,6 +43,7 @@
 @forward "../components/BookkeepingStatus/bookkeepingStatus";
 @forward "../components/Tabs/tabs";
 @forward "../components/MobilePanel/mobilePanel";
+@forward "../components/UploadTransactions/uploadTransactions";
 @forward "./ledger_account";
 @forward "./balance_sheet";
 @forward "./statement_of_cash";
