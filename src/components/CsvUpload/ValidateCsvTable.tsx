@@ -33,7 +33,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number }>(
         header: () => <span className='Layer__csv-upload__validate-csv-table__header-cell-content'>Row</span>,
         cell: (info: CellContext<PreviewRow<T>, unknown>) => (
           <span className={`${baseCellClassName} Layer__csv-upload__validate-csv-table__cell-content--row`}>
-            {info.row.index + 2}
+            {info.row.original.row}
           </span>
         ),
       }]
