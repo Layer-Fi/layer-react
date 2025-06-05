@@ -7,6 +7,7 @@ export type StackProps = PropsWithChildren<{
   align?: 'start' | 'center'
   gap?: Spacing
   justify?: 'start' | 'center' | 'end' | 'space-between'
+  pb?: Spacing
   pbs?: Spacing
   pbe?: Spacing
   pi?: Spacing
@@ -31,6 +32,7 @@ const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
     direction,
     gap,
     justify,
+    pb,
     pbs,
     pbe,
     pis,
@@ -38,8 +40,8 @@ const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
     fluid,
     ...restProps
   },
-  ref
-) {
+  ref,
+  ) {
     const dataProperties = toDataProperties({
       align,
       direction,
@@ -48,7 +50,7 @@ const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
       pbs,
       pbe,
       pie,
-      fluid
+      fluid,
     })
 
     return (
@@ -73,7 +75,7 @@ export const VStack = forwardRef<HTMLDivElement, StackProps>(
 export const HStack = forwardRef<HTMLDivElement, StackProps>(
   function HStack(props, ref) {
     return <Stack {...props} ref={ref} direction='row' />
-  }
+  },
 )
 
 export const Spacer = () => <div className='Layer__Spacer' />

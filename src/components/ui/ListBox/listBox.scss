@@ -3,37 +3,27 @@
   flex-direction: column;
   overflow-y: auto;
 
-  max-block-size: 40ch;
-
-  padding-block: var(--spacing-sm);
+  max-block-size: 20rem;
 }
 
 .Layer__ListBoxSection {
   display: flex;
   flex-direction: column;
 
-  &:not(:first-of-type) {
-    padding-block-start: var(--spacing-xs);
-  }
+  padding-block: var(--spacing-xs);
 
   &:not(:last-of-type) {
-    padding-block-end: var(--spacing-2xs);
-
     border-bottom: 1px solid var(--border-color);
   }
 
-  & > [slot="header"] {
-    padding-inline: var(--spacing-sm);
-    padding-block-end: var(--spacing-2xs);
-  }
-
+  & > [slot="header"],
   & > .Layer__ListBoxItem {
     padding-inline: var(--spacing-sm);
   }
 }
 
 .Layer__ListBoxItem {
-  padding-block: var(--spacing-2xs);
+  padding-block: var(--spacing-xs);
 
   cursor: pointer;
 
