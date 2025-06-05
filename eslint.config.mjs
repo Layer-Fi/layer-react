@@ -17,7 +17,7 @@ export default tsEslint.config([
   },
   js.configs.recommended,
   tsEslint.configs.recommendedTypeChecked,
-  stylisticPlugin.configs['recommended-flat'],
+  stylisticPlugin.configs.recommended,
   reactPlugin.configs.flat.recommended,
   reactPlugin.configs.flat['jsx-runtime'],
   {

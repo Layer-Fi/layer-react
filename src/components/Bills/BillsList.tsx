@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import ChevronRight from '../../icons/ChevronRight'
 import { Bill } from '../../types'
@@ -15,6 +14,7 @@ import classNames from 'classnames'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { DATE_FORMAT_SHORT } from '../../config/general'
 import { Loader } from '../Loader/Loader'
+import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 
 export const BillsList = ({
   stringOverrides,
@@ -64,15 +64,7 @@ const BillsListItem = ({
     vendor,
   } = useBillsRecordPaymentContext()
 
-  const [showComponent, setShowComponent] = useState(false)
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setShowComponent(true)
-    }, index * 60)
-
-    return () => clearTimeout(timeoutId)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const { isVisible: showComponent } = useDelayedVisibility({ delay: index * 60 })
 
   const isSelected = Boolean(billsToPay.find(record => record.bill?.id === bill.id))
   const isSelectionDisabled = bulkSelectionActive && vendor && vendor?.id !== bill.vendor?.id

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction } from '../../types'
@@ -37,16 +37,8 @@ export const MatchForm = ({
       : undefined),
   )
   const [formError, setFormError] = useState<string | undefined>()
-  const [showRetry, setShowRetry] = useState(false)
 
-  useEffect(() => {
-    if (bankTransaction.error) {
-      setShowRetry(true)
-    }
-    else if (showRetry) {
-      setShowRetry(false)
-    }
-  }, [bankTransaction.error])
+  const showRetry = Boolean(bankTransaction.error)
 
   const onMatchSubmit = async (matchId: string) => {
     const foundMatch = bankTransaction.suggested_matches?.find(
@@ -140,7 +132,7 @@ export const MatchForm = ({
         )}
       </div>
       {formError && <ErrorText>{formError}</ErrorText>}
-      {bankTransaction.error && showRetry
+      {showRetry
         ? (
           <ErrorText>
             Approval failed. Check connection and retry in few seconds.

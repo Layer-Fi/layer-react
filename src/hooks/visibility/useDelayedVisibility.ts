@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export function useDelayedVisibility({
   delay,
@@ -7,17 +7,18 @@ export function useDelayedVisibility({
   delay: number
   initialVisibility?: boolean
 }) {
+  const delayValueRef = useRef(delay)
   const [isVisible, setIsVisible] = useState(initialVisibility)
 
   useEffect(
     () => {
-      const timer = setTimeout(() => {
-        setIsVisible(true)
-      }, delay)
+      const timer = setTimeout(
+        () => { setIsVisible(true) },
+        delayValueRef.current,
+      )
 
       return () => clearTimeout(timer)
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Intentionally run exactly once
     [],
   )
 
