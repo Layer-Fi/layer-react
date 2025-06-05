@@ -33,8 +33,8 @@ export const APIErrorNotifications = ({
     if (
       notificationsCache.find(
         n =>
-          n.timestamp === timestamp &&
-          n.bankTransactionId !== bankTransaction.id,
+          n.timestamp === timestamp
+          && n.bankTransactionId !== bankTransaction.id,
       )
     ) {
       return
@@ -51,8 +51,8 @@ export const APIErrorNotifications = ({
     const timestamps = notificationsCache.map(({ timestamp }) => timestamp)
     notificationsCache = notificationsCache.filter(
       ({ bankTransactionId, timestamp }, index) =>
-        !ids.includes(bankTransactionId, index + 1) &&
-        !timestamps.includes(timestamp, index + 1),
+        !ids.includes(bankTransactionId, index + 1)
+        && !timestamps.includes(timestamp, index + 1),
     )
     setNotifications(notificationsCache.concat())
   }
@@ -68,6 +68,7 @@ export const APIErrorNotifications = ({
     if (bankTransaction.error) {
       pushNotification(ERROR_TITLE, ERROR_MESSAGE)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.error])
 
   return (
@@ -105,6 +106,7 @@ const Notification = ({
     }, NOTIFICATION_TIME)
 
     return () => clearTimeout(timer)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const hideNotification = () => {

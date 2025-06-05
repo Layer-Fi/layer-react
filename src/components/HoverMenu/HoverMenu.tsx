@@ -52,20 +52,20 @@ export const HoverMenu = ({ children, config }: HoverMenuProps) => {
       <div className='Layer__hover-menu__list-wrapper'>
         <ul className='Layer__hover-menu__list'>
           {config
-          && config.length > 0
-          && config.map(item => (
-            <li
-              key={`hover-menu-${item.name}`}
-              className='Layer__hover-menu__list-item'
-            >
-              <button
-                className='Layer__hover-menu__list-item-button'
-                onClick={item.action}
+            && config.length > 0
+            && config.map(item => (
+              <li
+                key={`hover-menu-${item.name}`}
+                className='Layer__hover-menu__list-item'
               >
-                {item.name}
-              </button>
-            </li>
-          ))}
+                <button
+                  className='Layer__hover-menu__list-item-button'
+                  onClick={() => void item.action()}
+                >
+                  {item.name}
+                </button>
+              </li>
+            ))}
         </ul>
       </div>
     </div>
