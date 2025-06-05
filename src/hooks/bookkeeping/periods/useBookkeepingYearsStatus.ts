@@ -43,8 +43,8 @@ export const useBookkeepingYearsStatus = () => {
 
       return b.year - a.year
     })
-    .find(period => period.tasks.some(task => isIncompleteTask(task)))
-  , [data])
+    .find(period => period.tasks.some(task => isIncompleteTask(task))),
+  [data])
 
   const anyPreviousYearIncomplete = yearStatuses?.find(year => !year.completed && year.year < new Date().getFullYear())
 

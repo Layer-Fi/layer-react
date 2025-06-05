@@ -1,4 +1,3 @@
-
 import { DataState, DataStateStatus } from '../DataState'
 
 export const ErrorBoundaryMessage = () => {

@@ -86,7 +86,7 @@ export const SourceDetailView = ({
             label={stringOverrides?.counterpartyLabel || 'Counterparty'}
           >
             {transactionSource.counterparty
-            || transactionSource.display_description}
+              || transactionSource.display_description}
           </DetailsListItem>
         </>
       )
@@ -270,7 +270,7 @@ export const LedgerAccountEntryDetails = ({
           <HeaderCol className='Layer__show-lg Layer__show-xl'>
             <Heading size={HeadingSize.secondary}>
               {stringOverrides?.transactionSource?.header
-              || 'Transaction source'}
+                || 'Transaction source'}
             </Heading>
           </HeaderCol>
           <HeaderCol className='Layer__show-lg Layer__show-xl'>
@@ -365,15 +365,15 @@ export const LedgerAccountEntryDetails = ({
                   <TableRow rowKey='soc-flow-head-row' isHeadRow>
                     <TableCell>
                       {stringOverrides?.lineItemsTable?.lineItemsColumnHeader
-                      || 'Line items'}
+                        || 'Line items'}
                     </TableCell>
                     <TableCell align={TableCellAlign.RIGHT}>
                       {stringOverrides?.lineItemsTable?.debitColumnHeader
-                      || 'Debit'}
+                        || 'Debit'}
                     </TableCell>
                     <TableCell align={TableCellAlign.RIGHT}>
                       {stringOverrides?.lineItemsTable?.creditColumnHeader
-                      || 'Credit'}
+                        || 'Credit'}
                     </TableCell>
                   </TableRow>
                 </TableHead>

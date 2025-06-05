@@ -160,16 +160,16 @@ export const ChartOfAccountsTableContent = ({
           </TableCell>
         </TableRow>
         {expandable
-        && expanded
-        && account.sub_accounts.map((subItem, subIdx) => {
-          const subRowKey = `${rowKey}-${subItem.id}`
-          return renderChartOfAccountsDesktopRow(
-            subItem,
-            subIdx,
-            subRowKey,
-            depth + 1,
-          )
-        })}
+          && expanded
+          && account.sub_accounts.map((subItem, subIdx) => {
+            const subRowKey = `${rowKey}-${subItem.id}`
+            return renderChartOfAccountsDesktopRow(
+              subItem,
+              subIdx,
+              subRowKey,
+              depth + 1,
+            )
+          })}
       </Fragment>
     )
   }
@@ -195,14 +195,14 @@ export const ChartOfAccountsTableContent = ({
       </TableHead>
       <TableBody>
         {!error
-        && data.accounts.map((account, idx) =>
-          renderChartOfAccountsDesktopRow(
-            account,
-            idx,
-            `coa-row-${account.id}`,
-            0,
-          ),
-        )}
+          && data.accounts.map((account, idx) =>
+            renderChartOfAccountsDesktopRow(
+              account,
+              idx,
+              `coa-row-${account.id}`,
+              0,
+            ),
+          )}
       </TableBody>
     </Table>
   )

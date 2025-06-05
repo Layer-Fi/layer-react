@@ -149,7 +149,7 @@ export const LedgerAccount = ({
                 <>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable?.dateColumnHeader
-                    || 'Date'}
+                      || 'Date'}
                   </th>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable
@@ -157,7 +157,7 @@ export const LedgerAccount = ({
                   </th>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable?.sourceColumnHeader
-                    || 'Source'}
+                      || 'Source'}
                   </th>
                 </>
               )}
@@ -165,11 +165,11 @@ export const LedgerAccount = ({
                 <>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable?.debitColumnHeader
-                    || 'Debit'}
+                      || 'Debit'}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable?.creditColumnHeader
-                    || 'Credit'}
+                      || 'Credit'}
                   </th>
                   <th className='Layer__table-header Layer__table-cell--amount'>
                     {stringOverrides?.ledgerEntriesTable

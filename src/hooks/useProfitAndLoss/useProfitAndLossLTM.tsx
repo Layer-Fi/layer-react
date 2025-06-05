@@ -76,13 +76,13 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
   }, [date, businessId, tagFilter, reportingBasis])
 
   const queryKey =
-    businessId &&
-    Boolean(startYear) &&
-    Boolean(startMonth) &&
-    Boolean(endYear) &&
-    Boolean(endMonth) &&
-    auth?.access_token &&
-    `profit-and-loss-summaries-${businessId}-${startYear.toString()}-${startMonth.toString()}-${tagFilter?.key}-${tagFilter?.values?.join(
+    businessId
+    && Boolean(startYear)
+    && Boolean(startMonth)
+    && Boolean(endYear)
+    && Boolean(endMonth)
+    && auth?.access_token
+    && `profit-and-loss-summaries-${businessId}-${startYear.toString()}-${startMonth.toString()}-${tagFilter?.key}-${tagFilter?.values?.join(
       ',',
     )}-${reportingBasis}`
 
@@ -115,7 +115,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     const newPeriod = buildMonthsArray(sub(date, { years: 1 }), date)
 
     if (newData && newPeriod) {
-      newPeriod.forEach(x => {
+      newPeriod.forEach((x) => {
         if (
           !newData?.find(
             n => x.getMonth() + 1 === n.month && x.getFullYear() === n.year,
@@ -146,8 +146,8 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
       setData(
         newData.sort(
           (a, b) =>
-            Number(new Date(a.year, a.month, 1)) -
-            Number(new Date(b.year, b.month, 1)),
+            Number(new Date(a.year, a.month, 1))
+            - Number(new Date(b.year, b.month, 1)),
         ),
       )
     }
@@ -157,7 +157,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     const newData = rawData?.data?.months?.slice()
 
     if (data && newData) {
-      data.forEach(x => {
+      data.forEach((x) => {
         if (!newData?.find(n => x.month === n.month && x.year === n.year)) {
           newData.push({ ...x })
         }
@@ -168,8 +168,8 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
       setData(
         newData.sort(
           (a, b) =>
-            Number(new Date(a.year, a.month, 1)) -
-            Number(new Date(b.year, b.month, 1)),
+            Number(new Date(a.year, a.month, 1))
+            - Number(new Date(b.year, b.month, 1)),
         ),
       )
     }
@@ -197,7 +197,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
-      mutate()
+      void mutate()
     }
   }, [
     syncTimestamps,
@@ -210,7 +210,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
   ])
 
   const refetch = () => {
-    mutate()
+    void mutate()
   }
 
   return {

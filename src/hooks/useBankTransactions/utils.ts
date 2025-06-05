@@ -8,7 +8,7 @@ export const collectAccounts = (transactions?: BankTransaction[]) => {
     return accounts
   }
 
-  transactions.forEach(x => {
+  transactions.forEach((x) => {
     if (!accounts.find(y => y.id === x.source_account_id)) {
       accounts.push({
         id: x.source_account_id,
@@ -27,10 +27,10 @@ export const applyAmountFilter = (
   data?: BankTransaction[],
   filter?: NumericRangeFilter,
 ) => {
-  return data?.filter(x => {
+  return data?.filter((x) => {
     if (
-      (filter?.min || filter?.min === 0) &&
-      (filter?.max || filter?.max === 0)
+      (filter?.min || filter?.min === 0)
+      && (filter?.max || filter?.max === 0)
     ) {
       return x.amount >= filter.min * 100 && x.amount <= filter.max * 100
     }
@@ -60,9 +60,9 @@ export const applyCategorizationStatusFilter = (
 
   return data?.filter(
     tx =>
-      filterVisibility(filter, tx) ||
-      filter === DisplayState.all ||
-      (filter === DisplayState.review && tx.recently_categorized) ||
-      (filter === DisplayState.categorized && tx.recently_categorized),
+      filterVisibility(filter, tx)
+      || filter === DisplayState.all
+      || (filter === DisplayState.review && tx.recently_categorized)
+      || (filter === DisplayState.categorized && tx.recently_categorized),
   )
 }

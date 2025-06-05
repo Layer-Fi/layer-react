@@ -62,25 +62,25 @@ export const TasksListMobile = ({
         header={<p>Tasks</p>}
       >
         {sortedTasks && sortedTasks.length > 0
-        && (
-          <div className='Layer__tasks-list'>
-            {sortedTasks.map((task, index) => (
-              <TasksListItem
-                key={index}
-                task={task}
-                defaultOpen={index === indexFirstIncomplete}
-              />
-            ))}
-            {tasksCount > pageSize && (
-              <Pagination
-                currentPage={currentPage}
-                totalCount={tasksCount}
-                pageSize={pageSize}
-                onPageChange={page => setCurrentPage(page)}
-              />
-            )}
-          </div>
-        )}
+          && (
+            <div className='Layer__tasks-list'>
+              {sortedTasks.map((task, index) => (
+                <TasksListItem
+                  key={index}
+                  task={task}
+                  defaultOpen={index === indexFirstIncomplete}
+                />
+              ))}
+              {tasksCount > pageSize && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalCount={tasksCount}
+                  pageSize={pageSize}
+                  onPageChange={page => setCurrentPage(page)}
+                />
+              )}
+            </div>
+          )}
       </MobilePanel>
     </div>
   )

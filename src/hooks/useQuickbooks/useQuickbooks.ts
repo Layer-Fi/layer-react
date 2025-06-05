@@ -56,7 +56,7 @@ export const useQuickbooks: UseQuickbooks = () => {
       is_connected: true,
       is_syncing: false,
       last_sync_status: QuickbooksConnectionLastSyncStatus.SYNC_FAILURE,
-      last_synced_at: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
+      last_synced_at: format(new Date(), 'yyyy-MM-dd\'T\'HH:mm:ss'),
     })
   }, [])
 

@@ -79,13 +79,13 @@ export const LedgerAccountRow = ({
         <td className='Layer__table-cell Layer__table-cell--primary'>
           <span className='Layer__table-cell-content Layer__table-cell--amount'>
             {row.direction === Direction.DEBIT
-            && `$${centsToDollars(row?.amount || 0)}`}
+              && `$${centsToDollars(row?.amount || 0)}`}
           </span>
         </td>
         <td className='Layer__table-cell Layer__table-cell--primary'>
           <span className='Layer__table-cell-content Layer__table-cell--amount'>
             {row.direction === Direction.CREDIT
-            && `$${centsToDollars(row?.amount || 0)}`}
+              && `$${centsToDollars(row?.amount || 0)}`}
           </span>
         </td>
         <td className='Layer__table-cell Layer__table-cell--primary'>
@@ -139,7 +139,7 @@ export const LedgerAccountRow = ({
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
                   {' '}
                   {row.direction === Direction.DEBIT
-                  && `$${centsToDollars(row?.amount || 0)}`}
+                    && `$${centsToDollars(row?.amount || 0)}`}
                 </span>
               </div>
               <div className='Layer__ledger_account-table__balance-item'>
@@ -148,7 +148,7 @@ export const LedgerAccountRow = ({
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
                   {row.direction === Direction.CREDIT
-                  && `$${centsToDollars(row?.amount || 0)}`}
+                    && `$${centsToDollars(row?.amount || 0)}`}
                 </span>
               </div>
               <div className='Layer__ledger_account-table__balance-item'>
@@ -201,13 +201,13 @@ export const LedgerAccountRow = ({
       <td className='Layer__table-cell Layer__table-cell--primary'>
         <span className='Layer__table-cell-content Layer__table-cell--amount'>
           {row.direction === Direction.DEBIT
-          && `$${centsToDollars(row?.amount || 0)}`}
+            && `$${centsToDollars(row?.amount || 0)}`}
         </span>
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>
         <span className='Layer__table-cell-content Layer__table-cell--amount'>
           {row.direction === Direction.CREDIT
-          && `$${centsToDollars(row?.amount || 0)}`}
+            && `$${centsToDollars(row?.amount || 0)}`}
         </span>
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>

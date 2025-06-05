@@ -5,7 +5,7 @@ type UseDataSync = () => {
   touch: (model: DataModel) => void
   read: (model: DataModel, cacheKey: string) => void
   syncTimestamps: Partial<Record<DataModel, number>>
-  readTimestamps: Partial<Record<string, { t: number; m: DataModel }>>
+  readTimestamps: Partial<Record<string, { t: number, m: DataModel }>>
   hasBeenTouched: (cacheKey: string) => boolean
   resetCaches: () => void
 }
@@ -55,7 +55,7 @@ export const useDataSync: UseDataSync = () => {
     [DataModel.BANK_TRANSACTIONS]: initialTimestamp,
   })
   const [readTimestamps, setReadTimestamps] = useState<
-    Partial<Record<string, { t: number; m: DataModel }>>
+    Partial<Record<string, { t: number, m: DataModel }>>
   >({})
 
   const touch = (model: DataModel) => {
@@ -85,11 +85,11 @@ export const useDataSync: UseDataSync = () => {
     }
 
     return Boolean(
-      DEPENDENCIES[lastRead!.m]?.find(dep => {
+      DEPENDENCIES[lastRead.m]?.find((dep) => {
         return (
-          dep in syncTimestamps &&
-          Boolean(syncTimestamps[dep]) &&
-          (syncTimestamps[dep] as number) > (lastRead!.t as number)
+          dep in syncTimestamps
+          && Boolean(syncTimestamps[dep])
+          && (syncTimestamps[dep] as number) > (lastRead.t)
         )
       }),
     )
