@@ -1,5 +1,5 @@
 import { Metadata } from '../../types'
-import { Bill, BillPayment } from '../../types/bills'
+import { Bill, BillLineItem, BillPayment, SalesTax } from '../../types/bills'
 import { get, post } from './authenticated_http'
 
 export type GetBillsReturn = {
@@ -16,6 +16,17 @@ export interface GetBillsParams
   endDate?: string
   status?: string
   vendorId?: string
+}
+
+export type SaveBillPayload = {
+  bill_number?: string
+  terms?: string
+  due_at?: string
+  received_at?: string
+  vendor_id?: string
+  vendor_external_id?: string
+  sales_taxes?: SalesTax[]
+  line_items?: Partial<BillLineItem>[]
 }
 
 export const getBills = get<
@@ -39,8 +50,12 @@ export const getBill = get<{ data: Bill }, { businessId: string, billId: string 
   ({ businessId, billId }) => `/v1/businesses/${businessId}/bills/${billId}`,
 )
 
-export const updateBill = post<{ data: Bill }, Record<string, unknown>>(
+export const updateBill = post<{ data: Bill }, SaveBillPayload>(
   ({ businessId, billId }) => `/v1/businesses/${businessId}/bills/${billId}/update`,
+)
+
+export const createBill = post<{ data: Bill }, SaveBillPayload>(
+  ({ businessId }) => `/v1/businesses/${businessId}/bills`,
 )
 
 export const createBillPayment = post<{ data: BillPayment }, BillPayment>(

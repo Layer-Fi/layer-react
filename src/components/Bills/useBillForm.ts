@@ -8,6 +8,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useAuth } from '../../hooks/useAuth'
 import { useBillsContext } from '../../contexts/BillsContext'
+import { SaveBillPayload } from '../../api/layer/bills'
 
 export type BillForm = {
   bill_number?: string
@@ -19,12 +20,14 @@ export type BillForm = {
   line_items?: (Partial<BillLineItem>) []
 }
 
-export const useBillForm = (bill: Bill) => {
+export type EditableBill = Partial<Bill>
+
+export const useBillForm = (bill?: EditableBill) => {
   const { businessId, addToast } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
-  const { setBillInDetails, refetch } = useBillsContext()
+  const { openBillDetails, refetch } = useBillsContext()
 
   const form = useForm<
     BillForm,
@@ -39,13 +42,13 @@ export const useBillForm = (bill: Bill) => {
     FormAsyncValidateOrFn<BillForm>
   >({
     defaultValues: {
-      bill_number: bill.bill_number,
-      vendor: bill.vendor,
-      vendor_address: bill.vendor?.address_string,
-      received_at: bill.received_at,
-      due_at: bill.due_at,
-      terms: bill.terms,
-      line_items: bill.line_items.map(item => ({
+      bill_number: bill?.bill_number,
+      vendor: bill?.vendor,
+      vendor_address: bill?.vendor?.address_string,
+      received_at: bill?.received_at ?? new Date().toISOString(),
+      due_at: bill?.due_at ?? new Date().toISOString(),
+      terms: bill?.terms,
+      line_items: bill?.line_items?.map(item => ({
         ...item,
         total_amount: item.total_amount ? convertFromCents(item.total_amount) : undefined,
         subtotal: item.subtotal ? convertFromCents(item.subtotal) : undefined,
@@ -54,11 +57,14 @@ export const useBillForm = (bill: Bill) => {
     },
     validators: {
       onSubmit: ({ value }) => {
-        if (value.line_items) {
+        if (!value.line_items) {
+          return 'MISSING_LINE_ITEMS'
+        }
+        else if (bill?.id) {
           const totalAmount = convertToCents(value.line_items.reduce(
             (acc, item) => acc + (Number(item.total_amount) || 0),
             0)) ?? 0
-          if (totalAmount !== bill.total_amount) {
+          if (totalAmount !== bill?.total_amount) {
             return 'INVALID_TOTAL_AMOUNT'
           }
         }
@@ -68,7 +74,7 @@ export const useBillForm = (bill: Bill) => {
     onSubmit: async ({ value }) => {
       try {
         setSubmitError(undefined)
-        const formattedValue = {
+        const formattedValue: SaveBillPayload = {
           bill_number: value.bill_number,
           terms: value.terms,
           due_at: value.due_at ? new Date(value.due_at).toISOString() : undefined,
@@ -85,23 +91,36 @@ export const useBillForm = (bill: Bill) => {
             description: item.description,
             product_name: item.product_name,
             unit_price: item.total_amount ? convertToCents(item.total_amount) : undefined,
-            quantity: '1.00',
+            quantity: 1,
             discount_amount: 0,
             sales_taxes: [],
           })),
         }
 
-        const response = await Layer.updateBill(apiUrl, auth?.access_token, {
-          params: {
-            businessId,
-            billId: bill.id,
-          },
-          body: formattedValue,
-        })
+        let response
+        if (bill?.id) {
+          response = await Layer.updateBill(apiUrl, auth?.access_token, {
+            params: {
+              businessId,
+              billId: bill.id,
+            },
+            body: formattedValue,
+          })
+        }
+        else {
+          response = await Layer.createBill(apiUrl, auth?.access_token, {
+            params: { businessId },
+            body: formattedValue,
+          })
+        }
+
+        if (!response) {
+          throw new Error('Failed to create or update bill')
+        }
 
         form.reset(response.data, { keepDefaultValues: false })
-        setBillInDetails(response.data)
-        addToast({ content: 'The Bill has been updated!', type: 'success' })
+        openBillDetails(response.data)
+        addToast({ content: bill?.id ? 'The Bill has been updated!' : 'The Bill has been created!', type: 'success' })
         refetch()
       }
       catch {

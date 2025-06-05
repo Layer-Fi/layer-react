@@ -4,9 +4,10 @@ import { Vendor } from './vendors'
 const UNPAID_STATUS_MAP = {
   SENT: 'SENT',
   PARTIALLY_PAID: 'PARTIALLY_PAID',
+  RECEIVED: 'RECEIVED',
 } as const
 export type UnpaidStatuses = typeof UNPAID_STATUS_MAP[keyof typeof UNPAID_STATUS_MAP]
-export const UNPAID_STATUSES = [UNPAID_STATUS_MAP.SENT, UNPAID_STATUS_MAP.PARTIALLY_PAID]
+export const UNPAID_STATUSES = [UNPAID_STATUS_MAP.SENT, UNPAID_STATUS_MAP.PARTIALLY_PAID, UNPAID_STATUS_MAP.RECEIVED]
 
 const PAID_STATUS_MAP = {
   PAID: 'PAID',
@@ -22,7 +23,7 @@ export const VOIDED_STATUS = VOIDED_STATUS_MAP.VOIDED
 
 export type BillStatus = UnpaidStatuses | PaidStatuses | VoidedStatuses
 
-type BillTerm = 'DUE_ON_RECEIPT' | 'NET_10' | 'NET_15' | 'NET_30' | 'NET_60'
+export type BillTerm = 'DUE_ON_RECEIPT' | 'NET_10' | 'NET_15' | 'NET_30' | 'NET_60'
 
 export const BillTerms: {
   id: BillTerm
@@ -95,7 +96,7 @@ type BillPaymentAllocation = {
   transaction_tags: TransactionTag[]
 }
 
-type SalesTax = {
+export type SalesTax = {
   amount: number
   tax_account: TaxAccount
 }

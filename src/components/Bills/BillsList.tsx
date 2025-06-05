@@ -53,7 +53,7 @@ const BillsListItem = ({
   rowKey: string
   stringOverrides?: BillsTableStringOverrides
 }) => {
-  const { setBillInDetails, status } = useBillsContext()
+  const { openBillDetails, status } = useBillsContext()
 
   const {
     billsToPay,
@@ -126,7 +126,7 @@ const BillsListItem = ({
               size='sm'
             />
           </span>
-          <IconButton icon={<ChevronRight />} onClick={() => setBillInDetails(bill)} />
+          <IconButton icon={<ChevronRight />} onClick={() => openBillDetails(bill)} />
         </span>
         <span className='Layer__bills-list-item__main'>
           <Text size={TextSize.lg} ellipsis className='Layer__bills-list-item__main__vendor'>

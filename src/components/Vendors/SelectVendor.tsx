@@ -9,6 +9,8 @@ type SelectVendorProps = {
   disabled?: boolean
   placeholder?: string
   withContext?: boolean
+  isInvalid?: boolean
+  errorMessage?: string
 }
 
 export const SelectVendor = ({ withContext = true, ...props }: SelectVendorProps) => {
@@ -28,8 +30,8 @@ export const SelectVendor = ({ withContext = true, ...props }: SelectVendorProps
 const SelectVendorContent = ({
   value,
   onChange,
-  disabled,
   placeholder = 'Select vendor',
+  ...props
 }: Omit<SelectVendorProps, 'withContext'>) => {
   const { data } = useVendorsContext()
 
@@ -41,7 +43,7 @@ const SelectVendorContent = ({
         : null}
       onChange={selectedOption => onChange(selectedOption?.value ?? null)}
       placeholder={placeholder}
-      disabled={disabled}
+      {...props}
     />
   )
 }

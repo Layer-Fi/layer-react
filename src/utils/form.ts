@@ -1,4 +1,4 @@
-export const notEmpty = (value?: string) => {
+export const notEmpty = (value?: string | null) => {
   if (!value) {
     return false
   }
