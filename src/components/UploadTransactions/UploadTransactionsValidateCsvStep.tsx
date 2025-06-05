@@ -66,6 +66,7 @@ export function UploadTransactionsValidateCsvStep(
             onClick={onClickUploadTransactions}
             action={SubmitAction.UPLOAD}
             withRetry
+            iconAsPrimary={false}
           >
             {uploadTransactionsError ? 'Retry' : 'Upload transactions'}
           </SubmitButton>
