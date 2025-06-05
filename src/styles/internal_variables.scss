@@ -2,18 +2,24 @@
 .Layer__component,
 .Layer__Portal {
   /*
-   * Base
+   * Background
    */
   --bg-default: var(--color-base-0);
   --bg-subtle: var(--color-base-50);
   --bg-muted: var(--color-base-100);
 
+  /*
+   * Foreground
+   */
   --fg-default: var(--color-base-900);
   --fg-subtle: var(--color-base-500);
 
-  --outline-subtle: var(--color-base-100);
-  --outline-default: var(--color-base-200);
-  --outline-active: var(--color-base-400);
+  /*
+   * Outlines
+   */
+  --outline-subtle: var(--color-base-200);
+  --outline-default: var(--color-base-300);
+  --outline-active: var(--color-base-500);
 
   /*
    * Buttons
@@ -43,5 +49,4 @@
   --checkbox-radius-lg: var(--border-radius-2xs);
   --checkbox-bg-success-selected: var(--color-info-success);
   --checkbox-border-color-success-selected: var(--color-info-success);
-
 }

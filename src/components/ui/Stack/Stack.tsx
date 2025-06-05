@@ -7,6 +7,7 @@ export type StackProps = PropsWithChildren<{
   align?: 'start' | 'center'
   gap?: Spacing
   justify?: 'start' | 'center' | 'end'
+  pb?: Spacing
   pbs?: Spacing
   pbe?: Spacing
   pi?: Spacing
@@ -29,6 +30,7 @@ function Stack({
   direction,
   gap,
   justify,
+  pb,
   pbs,
   pbe,
   pi,
@@ -43,6 +45,7 @@ function Stack({
     direction,
     gap,
     justify,
+    pb,
     pbs,
     pbe,
     pi,

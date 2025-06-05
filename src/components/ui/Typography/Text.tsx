@@ -12,6 +12,7 @@ type TextStyleProps = {
   align?: 'center'
   ellipsis?: true
   noWrap?: true
+  pb?: Spacing
   pbe?: Spacing
   pbs?: Spacing
   size?: 'xs' | 'sm' | 'md' | 'lg'
@@ -31,6 +32,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
     ellipsis,
     nonAria,
     noWrap,
+    pb,
     pbe,
     pbs,
     size,
@@ -46,6 +48,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
       align,
       ellipsis,
       'no-wrap': noWrap,
+      pb,
       pbe,
       pbs,
       size,

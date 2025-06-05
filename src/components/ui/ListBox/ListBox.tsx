@@ -47,11 +47,18 @@ type ListBoxSectionProps<T extends Record<string, unknown>> = Omit<
 function InternalListBoxSection<
   T extends Record<string, unknown>,
 >(props: ListBoxSectionProps<T>, ref: ForwardedRef<HTMLDivElement>) {
+  /*
+   * This is a workaround for an issue where a ComboBox closes when clicking on
+   * a section.
+  */
+  const stopClickEventsRef = useStopClickEventsRefCallback()
+  const mergedRef = mergeRefs(stopClickEventsRef, ref)
+
   return (
     <ReactAriaListBoxSection
       {...props}
       className={LIST_BOX_SECTION_CLASS_NAME}
-      ref={ref}
+      ref={mergedRef}
     />
   )
 }
@@ -68,18 +75,11 @@ export const ListBoxSectionHeader = forwardRef<
   >
 >(
   function ListBoxSectionHeader({ children, ...restProps }, ref) {
-    /*
-    * This is a workaround for an issue where a ComboBox closes when clicking on
-    * a section header.
-    */
-    const stopClickEventsRef = useStopClickEventsRefCallback()
-    const mergedRef = mergeRefs(stopClickEventsRef, ref)
-
     return (
       <Header
         slot='header'
         {...restProps}
-        ref={mergedRef}
+        ref={ref}
       >
         {children}
       </Header>

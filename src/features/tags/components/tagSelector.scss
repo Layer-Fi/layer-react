@@ -11,12 +11,15 @@
   min-block-size: 2.5rem;
 
   border-radius: var(--input-border-radius);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--outline-default);
 
   background-color: var(--color-base-0);
 
+  &[data-focus-within] {
+    border-color: var(--outline-active);
+  }
+
   &[data-focus-visible] {
-    outline-offset: 1px;
-    outline: 1px solid var(--border-color);
+    outline: 2px solid var(--outline-default);
   }
 }
