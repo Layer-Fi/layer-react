@@ -36,10 +36,10 @@ export const useLedgerAccounts: UseLedgerAccounts = (
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
 
   const queryKey =
-    businessId &&
-    accountId &&
-    auth?.access_token &&
-    `ledger-accounts-lines-${businessId}-${accountId}`
+    businessId
+    && accountId
+    && auth?.access_token
+    && `ledger-accounts-lines-${businessId}-${accountId}`
 
   const { data, isLoading, isValidating, error, mutate } = useSWR(
     queryKey,
@@ -59,10 +59,10 @@ export const useLedgerAccounts: UseLedgerAccounts = (
     isValidating: isValdiatingEntry,
     error: errorEntry,
   } = useSWR(
-    businessId &&
-      selectedEntryId &&
-      auth?.access_token &&
-      `ledger-accounts-entry-${businessId}-${selectedEntryId}}`,
+    businessId
+    && selectedEntryId
+    && auth?.access_token
+    && `ledger-accounts-entry-${businessId}-${selectedEntryId}}`,
     Layer.getLedgerAccountsEntry(apiUrl, auth?.access_token, {
       params: { businessId, entryId: selectedEntryId },
     }),
@@ -72,7 +72,7 @@ export const useLedgerAccounts: UseLedgerAccounts = (
 
   const closeSelectedEntry = () => {
     setSelectedEntryId(undefined)
-    mutateEntryData()
+    void mutateEntryData()
   }
 
   // Refetch data if related models has been changed since last fetch
@@ -80,12 +80,14 @@ export const useLedgerAccounts: UseLedgerAccounts = (
     if (queryKey && (isLoading || isValidating)) {
       read(DataModel.LEDGER_ACCOUNTS, queryKey)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isValidating])
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
-      refetch()
+      void refetch()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncTimestamps, accountId])
 
   return {

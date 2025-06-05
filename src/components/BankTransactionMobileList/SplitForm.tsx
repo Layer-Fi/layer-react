@@ -325,7 +325,7 @@ export const SplitForm = ({
         {showCategorization && (
           <Button
             fullWidth={true}
-            onClick={save}
+            onClick={() => void save()}
             disabled={isLoading || bankTransaction.processing}
           >
             {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}

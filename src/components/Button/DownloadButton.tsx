@@ -26,7 +26,7 @@ export const DownloadButton = ({
   if (requestFailed) {
     return (
       <RetryButton
-        onClick={onClick}
+        onClick={() => void onClick?.()}
         className='Layer__download-retry-btn'
         error={errorText}
         disabled={isDownloading}
@@ -40,7 +40,7 @@ export const DownloadButton = ({
     <Button
       variant={iconOnly ? ButtonVariant.secondary : ButtonVariant.tertiary}
       rightIcon={<DownloadCloud size={12} />}
-      onClick={onClick}
+      onClick={() => void onClick?.()}
       disabled={isDownloading}
       iconAsPrimary={iconOnly}
       iconOnly={iconOnly}

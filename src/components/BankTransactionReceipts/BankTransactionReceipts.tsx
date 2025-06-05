@@ -127,8 +127,8 @@ const BankTransactionReceipts = forwardRef<
           />
         ))}
         {!hideUploadButtons
-        && receiptUrls.length > 0
-        && receiptUrls.length < MAX_RECEIPTS_COUNT
+          && receiptUrls.length > 0
+          && receiptUrls.length < MAX_RECEIPTS_COUNT
           ? (
             <FileInput
               secondary

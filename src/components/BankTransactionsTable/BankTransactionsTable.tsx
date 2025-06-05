@@ -75,18 +75,18 @@ export const BankTransactionsTable = ({
           </th>
           <th className='Layer__table-header Layer__bank-transactions__tx-col'>
             {stringOverrides?.transactionsTable?.transactionColumnHeaderText
-            || 'Transaction'}
+              || 'Transaction'}
           </th>
           <th className='Layer__table-header Layer__bank-transactions__account-col'>
             {stringOverrides?.transactionsTable?.accountColumnHeaderText
-            || 'Account'}
+              || 'Account'}
           </th>
           <th
             className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'
             {...showReceiptDataProperties}
           >
             {stringOverrides?.transactionsTable?.amountColumnHeaderText
-            || 'Amount'}
+              || 'Amount'}
           </th>
           <th
             className='Layer__table-header Layer__bank-transactions__documents-col'
@@ -96,13 +96,13 @@ export const BankTransactionsTable = ({
             ? (
               <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
                 {stringOverrides?.transactionsTable?.categorizeColumnHeaderText
-                || 'Categorize'}
+                  || 'Categorize'}
               </th>
             )
             : (
               <th className='Layer__table-header Layer__table-cell__category-col'>
                 {stringOverrides?.transactionsTable?.categoryColumnHeaderText
-                || 'Category'}
+                  || 'Category'}
               </th>
             )}
         </tr>
@@ -114,28 +114,28 @@ export const BankTransactionsTable = ({
         : null}
       <tbody>
         {!isLoading
-        && bankTransactions?.map(
-          (bankTransaction: BankTransaction, index: number) => (
-            <BankTransactionRow
-              key={bankTransaction.id}
-              index={index}
-              editable={editable}
-              dateFormat={DATE_FORMAT}
-              bankTransaction={bankTransaction}
-              removeTransaction={removeTransaction}
-              containerWidth={containerWidth}
-              showDescriptions={showDescriptions}
-              showReceiptUploads={showReceiptUploads}
-              showReceiptUploadColumn={showReceiptColumn}
-              showTooltips={showTooltips}
-              stringOverrides={stringOverrides?.bankTransactionCTAs}
-            />
-          ),
-        )}
+          && bankTransactions?.map(
+            (bankTransaction: BankTransaction, index: number) => (
+              <BankTransactionRow
+                key={bankTransaction.id}
+                index={index}
+                editable={editable}
+                dateFormat={DATE_FORMAT}
+                bankTransaction={bankTransaction}
+                removeTransaction={removeTransaction}
+                containerWidth={containerWidth}
+                showDescriptions={showDescriptions}
+                showReceiptUploads={showReceiptUploads}
+                showReceiptUploadColumn={showReceiptColumn}
+                showTooltips={showTooltips}
+                stringOverrides={stringOverrides?.bankTransactionCTAs}
+              />
+            ),
+          )}
         {isSyncing
-        && (lastPage
-          || ((!bankTransactions || bankTransactions.length === 0)
-            && page === 1))
+          && (lastPage
+            || ((!bankTransactions || bankTransactions.length === 0)
+              && page === 1))
           ? (
             <tr>
               <td colSpan={3}>

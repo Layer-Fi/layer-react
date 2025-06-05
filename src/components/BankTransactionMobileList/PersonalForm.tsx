@@ -59,7 +59,7 @@ export const PersonalForm = ({
       return
     }
 
-    categorizeBankTransaction(
+    void categorizeBankTransaction(
       bankTransaction.id,
       {
         type: 'Category',

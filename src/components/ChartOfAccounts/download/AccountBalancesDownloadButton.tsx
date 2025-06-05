@@ -1,4 +1,3 @@
-
 import { DownloadButton } from '../../Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '../../utility/InvisibleDownload'
 import { useAccountBalancesDownload } from './useAccountBalancesDownload'
@@ -25,7 +24,7 @@ export function AccountBalancesDownloadButton({
     <>
       <DownloadButton
         iconOnly={iconOnly}
-        onClick={() => { trigger() }}
+        onClick={() => { void trigger() }}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
         text='Download CSV'
