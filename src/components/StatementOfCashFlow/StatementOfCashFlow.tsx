@@ -11,6 +11,7 @@ import { useElementViewSize } from '../../hooks/useElementViewSize/useElementVie
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { StatementOfCashFlowDatePicker } from './datePicker/StatementOfCashFlowDatePicker'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow/useStatementOfCashFlow'
+import { StatementOfCashflowExpandAllButton } from './expand/StatementOfCashflowExpandAllButton'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
@@ -30,12 +31,14 @@ export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
 
 type StatementOfCashFlowViewProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
+  withExpandAllButton?: boolean
 }
 
 const StatementOfCashFlowView = ({
   stringOverrides,
   allowedDatePickerModes,
   customDateRanges,
+  withExpandAllButton = true,
 }: StatementOfCashFlowViewProps) => {
   const { start, end } = useGlobalDateRange()
   const { data, isLoading } = useStatementOfCashFlow({ startDate: start, endDate: end })
@@ -56,6 +59,11 @@ const StatementOfCashFlowView = ({
                 />
               </HeaderCol>
               <HeaderCol>
+                {withExpandAllButton && (
+                  <HeaderCol>
+                    <StatementOfCashflowExpandAllButton view={view} />
+                  </HeaderCol>
+                )}
                 <CashflowStatementDownloadButton
                   startDate={start}
                   endDate={end}
