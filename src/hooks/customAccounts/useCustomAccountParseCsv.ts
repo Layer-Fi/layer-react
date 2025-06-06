@@ -5,6 +5,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from './useCustomAccounts'
 import type { CustomAccountTransactionRow, RawCustomTransaction } from './types'
 import type { PreviewCsv } from '../../components/CsvUpload/types'
+import { APIError } from '../../models/APIError'
 
 type CustomAccountParseCsvArgs = {
   file: File
@@ -63,25 +64,31 @@ export function useCustomAccountParseCsv() {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
-  return useSWRMutation(
-    () => buildKey({
-      ...data,
-      businessId,
-    }),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: { customAccountId, file } }: { arg: CustomAccountParseCsvArgs },
-    ) => parseCsv(
-      apiUrl,
-      accessToken,
-      {
+  return useSWRMutation<
+    CustomAccountParseCsvResponse,
+    APIError,
+    () => ReturnType<typeof buildKey>,
+    CustomAccountParseCsvArgs
+  >
+      (
+      () => buildKey({
+        ...data,
         businessId,
-        customAccountId,
-        file,
+      }),
+      (
+        { accessToken, apiUrl, businessId },
+        { arg: { customAccountId, file } }: { arg: CustomAccountParseCsvArgs },
+      ) => parseCsv(
+        apiUrl,
+        accessToken,
+        {
+          businessId,
+          customAccountId,
+          file,
+        },
+      ).then(({ data }) => data),
+      {
+        revalidate: false,
       },
-    ).then(({ data }) => data),
-    {
-      revalidate: false,
-    },
-  )
+      )
 }

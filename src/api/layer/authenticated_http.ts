@@ -106,7 +106,7 @@ const handleResponse = async <Return>(res: Response) => {
   if (!res.ok) {
     const errors = await tryToReadErrorsFromResponse(res)
     const apiError = new APIError(
-      'An error occurred while fetching the data from API.',
+      'An error occurred while fetching data from the API.',
       res.status,
       errors,
     )
@@ -137,7 +137,7 @@ const handleException = (error: Error | APIError) => {
   }
 
   const apiError = new APIError(
-    'An error occurred while parsing the data from API.',
+    'An error occurred while parsing data from the API.',
     undefined,
     [],
   )

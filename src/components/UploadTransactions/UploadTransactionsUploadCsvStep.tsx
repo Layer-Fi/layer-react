@@ -15,7 +15,7 @@ import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '..
 import { templateHeaders, templateExampleTransactions } from './template'
 import { humanizeEnum } from '../../utils/format'
 
-type AccountOption = {
+export type AccountOption = {
   value: string
   label: string
   account: Partial<CustomAccount> & Pick<CustomAccount, 'accountName'>
@@ -56,7 +56,7 @@ export function UploadTransactionsUploadCsvStep(
   { selectedAccount, onSelectAccount, selectedFile, onSelectFile, onParseCsv }: UploadTransactionsUploadCsvStepProps,
 ) {
   const { data: customAccounts, isLoading: isLoadingCustomAccounts, error: customAccountsError } = useCustomAccounts()
-  const { trigger: parseCsv, isMutating: isParsingCsv } = useCustomAccountParseCsv()
+  const { trigger: parseCsv, isMutating: isParsingCsv, error: parseCsvError } = useCustomAccountParseCsv()
   const [hasParseCsvError, setHasParseCsvError] = useState(false)
 
   const accountOptions: AccountOption[] = useMemo(() => {
@@ -150,7 +150,7 @@ export function UploadTransactionsUploadCsvStep(
       <Separator />
       <VStack gap='xs' className='Layer__upload-transactions__template-section'>
         <P size='sm'>Click to copy the required column headers</P>
-        <HStack align='center'>
+        <HStack align='center' gap='xs'>
           <CopyTemplateHeadersButtonGroup headers={templateHeaders} />
           <Spacer />
           <DownloadCsvTemplateButton
@@ -161,7 +161,10 @@ export function UploadTransactionsUploadCsvStep(
           </DownloadCsvTemplateButton>
         </HStack>
       </VStack>
-      <HStack>
+      <HStack align='center' gap='xs'>
+        <HStack className='Layer__upload-transactions__parse-csv-error-message'>
+          {hasParseCsvError && <P status='error'>{parseCsvError?.getAllMessages()?.[0] || parseCsvError?.getMessage()}</P>}
+        </HStack>
         <Spacer />
         <SubmitButton
           tooltip={(selectedFile && !hasSelectedAccount) ? 'Select an account' : null}

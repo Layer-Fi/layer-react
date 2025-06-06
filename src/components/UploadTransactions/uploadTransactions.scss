@@ -29,6 +29,10 @@
   background: var(--color-base-100);
 }
 
+.Layer__upload-transactions__parse-csv-error-message {
+  max-width: 29rem;
+}
+
 .Layer__upload-transactions__template-section {
   border-radius: var(--border-radius-3xs);
   border: 1px solid var(--color-base-400);

@@ -4,7 +4,7 @@ import { Heading } from '../ui/Typography/Heading'
 import type { Awaitable } from '../../types/utility/promises'
 import { VStack } from '../ui/Stack/Stack'
 import { P } from '../ui/Typography/Text'
-import { UploadTransactionsUploadCsvStep } from './UploadTransactionsUploadCsvStep'
+import { type AccountOption, UploadTransactionsUploadCsvStep } from './UploadTransactionsUploadCsvStep'
 import { UploadTransactionsValidateCsvStep } from './UploadTransactionsValidateCsvStep'
 import { type CustomAccountParseCsvResponse } from '../../hooks/customAccounts/useCustomAccountParseCsv'
 
@@ -15,12 +15,6 @@ type UploadTransactionsProps = {
 enum UploadTransactionsStep {
   UploadCsv,
   ValidateCsv,
-}
-
-type AccountOption = {
-  value: string
-  label: string
-  createdAccountName?: string
 }
 
 export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
