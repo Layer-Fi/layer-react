@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
-import { Label, P } from '../ui/Typography/Text'
+import { Label, P, Span } from '../ui/Typography/Text'
 import { SubmitButton } from '../Button'
 import { useCustomAccounts } from '../../hooks/customAccounts/useCustomAccounts'
 import { CreatableSelect } from '../Input/CreatableSelect'
@@ -13,20 +13,34 @@ import { DownloadCsvTemplateButton } from '../CsvUpload/DownloadCsvTemplateButto
 import { CopyTemplateHeadersButtonGroup } from '../CsvUpload/CopyTemplateHeadersButtonGroup'
 import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '../../hooks/customAccounts/useCustomAccountParseCsv'
 import { templateHeaders, templateExampleTransactions } from './template'
+import { humanizeEnum } from '../../utils/format'
 
 type AccountOption = {
   value: string
   label: string
-  createdAccountName?: string
+  account: Partial<CustomAccount> & Pick<CustomAccount, 'accountName'>
+  __isNew__?: true
 }
 
-const formatCreateLabel = (inputValue: string) => (
-  <span style={{ fontStyle: 'italic' }}>
-    +
-    {' '}
-    {inputValue ? `Create "${inputValue}"` : 'Create account'}
-  </span>
-)
+const formatCreateLabel = (inputValue: string) => {
+  return inputValue ? `Create "${inputValue}"` : 'Create account'
+}
+
+const formatOptionLabel = (option: AccountOption) => {
+  if (option.account && !option.__isNew__) {
+    return (
+      <VStack>
+        <Span ellipsis>{option.account.accountName}</Span>
+        <Span size='sm' variant='subtle' noWrap>
+          {option.account.institutionName}
+          {' · '}
+          {humanizeEnum(option.account.accountSubtype!)}
+        </Span>
+      </VStack>
+    )
+  }
+  return <Span>{option.label}</Span>
+}
 
 interface UploadTransactionsUploadCsvStepProps {
   selectedAccount: AccountOption | null
@@ -45,12 +59,13 @@ export function UploadTransactionsUploadCsvStep(
   const { trigger: parseCsv, isMutating: isParsingCsv } = useCustomAccountParseCsv()
   const [hasParseCsvError, setHasParseCsvError] = useState(false)
 
-  const accountOptions = useMemo(() => {
+  const accountOptions: AccountOption[] = useMemo(() => {
     if (!customAccounts) return []
 
     return customAccounts.map(account => ({
       value: account.id,
       label: account.accountName,
+      account: account,
     }))
   }, [customAccounts])
 
@@ -62,7 +77,8 @@ export function UploadTransactionsUploadCsvStep(
     onSelectAccount({
       value: 'new_account',
       label: 'Create account',
-      createdAccountName: inputValue,
+      account: { accountName: inputValue },
+      __isNew__: true,
     })
   }, [onSelectAccount])
 
@@ -74,6 +90,7 @@ export function UploadTransactionsUploadCsvStep(
     onSelectAccount({
       value: account.id,
       label: account.accountName,
+      account,
     })
   }, [onSelectAccount])
 
@@ -108,6 +125,7 @@ export function UploadTransactionsUploadCsvStep(
           inputId='account_name'
           placeholder={customAccountsError ? 'Failed to load options' : 'Select account...'}
           options={accountOptions}
+          formatOptionLabel={formatOptionLabel}
           onChange={onChange}
           onCreateOption={onCreateOption}
           formatCreateLabel={formatCreateLabel}
@@ -122,7 +140,7 @@ export function UploadTransactionsUploadCsvStep(
       {selectedAccount && selectedAccount.value === 'new_account' && (
         <VStack className='Layer__upload-transactions__create-account-form'>
           <CustomAccountForm
-            initialAccountName={selectedAccount.createdAccountName ?? ''}
+            initialAccountName={selectedAccount.account.accountName}
             onCancel={onCancelCreateAccount}
             onSuccess={onCreateAccountSuccess}
           />

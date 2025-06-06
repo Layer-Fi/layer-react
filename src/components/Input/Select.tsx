@@ -1,6 +1,7 @@
-import { useCallback } from 'react'
+import { type ReactNode, useCallback } from 'react'
 import ReactSelect, {
   DropdownIndicatorProps,
+  FormatOptionLabelMeta,
   GroupBase,
   OptionsOrGroups,
   components,
@@ -22,6 +23,7 @@ export interface SelectProps<T> {
   errorMessage?: string
   inputId?: string
   isLoading?: boolean
+  formatOptionLabel?: (option: T, meta?: FormatOptionLabelMeta<T>) => ReactNode
 }
 
 export const Select = <T,>({
@@ -37,6 +39,7 @@ export const Select = <T,>({
   errorMessage,
   inputId,
   isLoading,
+  formatOptionLabel,
 }: SelectProps<T>) => {
   const baseClassName = classNames(
     'Layer__select',
@@ -60,6 +63,7 @@ export const Select = <T,>({
           classNamePrefix={classNamePrefix}
           placeholder={placeholder ?? 'Select...'}
           options={options}
+          formatOptionLabel={formatOptionLabel}
           value={value}
           onChange={newValue => newValue && onChange(newValue)}
           menuPortalTarget={document.body}

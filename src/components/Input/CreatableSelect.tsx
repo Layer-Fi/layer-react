@@ -17,6 +17,7 @@ export interface CreatableSelectProps<T> extends Omit<SelectProps<T>, 'value' | 
   onCreateOption?: (inputValue: string) => void
   isValidNewOption?: CreatableProps<T, false, GroupBase<T>>['isValidNewOption']
   formatCreateLabel?: (inputValue: string) => ReactNode
+  createOptionPosition?: 'first' | 'last'
 }
 
 export const CreatableSelect = <T,>({
@@ -30,12 +31,14 @@ export const CreatableSelect = <T,>({
   placeholder,
   isInvalid,
   errorMessage,
+  formatOptionLabel,
   onCreateOption,
   isValidNewOption,
   formatCreateLabel,
   inputId,
   isLoading,
   isClearable,
+  createOptionPosition = 'first',
 }: CreatableSelectProps<T>) => {
   const baseClassName = classNames(
     'Layer__select',
@@ -59,6 +62,7 @@ export const CreatableSelect = <T,>({
           classNamePrefix={classNamePrefix}
           placeholder={placeholder ?? 'Select...'}
           options={options}
+          formatOptionLabel={formatOptionLabel}
           value={value}
           onChange={newValue => onChange(newValue)}
           onCreateOption={onCreateOption}
@@ -71,6 +75,7 @@ export const CreatableSelect = <T,>({
           isDisabled={disabled}
           isClearable={isClearable}
           escapeClearsValue={isClearable}
+          createOptionPosition={createOptionPosition}
         />
       </TooltipTrigger>
       <TooltipContent className='Layer__tooltip'>{errorMessage}</TooltipContent>

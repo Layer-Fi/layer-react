@@ -5,6 +5,11 @@
 }
 
 .Layer__upload-transactions__select-account-name-input {
+  .Layer__select__control {
+    width: 24rem;
+    min-height: 44px;
+  }
+
   &--error {
     .Layer__select__control {
       box-shadow:
