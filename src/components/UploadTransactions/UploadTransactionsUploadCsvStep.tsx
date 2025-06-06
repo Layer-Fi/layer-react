@@ -24,7 +24,7 @@ const formatCreateLabel = (inputValue: string) => (
   <span style={{ fontStyle: 'italic' }}>
     +
     {' '}
-    {inputValue ? `Create "${inputValue}"` : 'Create new account'}
+    {inputValue ? `Create "${inputValue}"` : 'Create account'}
   </span>
 )
 
@@ -61,7 +61,7 @@ export function UploadTransactionsUploadCsvStep(
   const onCreateOption = useCallback((inputValue: string) => {
     onSelectAccount({
       value: 'new_account',
-      label: 'Create new account',
+      label: 'Create account',
       createdAccountName: inputValue,
     })
   }, [onSelectAccount])
@@ -100,13 +100,13 @@ export function UploadTransactionsUploadCsvStep(
   const hasSelectedAccount = selectedAccount && selectedAccount.value !== 'new_account'
   return (
     <VStack gap='lg'>
-      <HStack fluid align='center' gap='lg' className='Layer__upload-transactions__select-account-name-field'>
-        <Label htmlFor='account_name'>
-          Account name
+      <VStack gap='xs' className='Layer__upload-transactions__select-account-name-field'>
+        <Label size='md' htmlFor='account_name'>
+          Which account are these transactions from?
         </Label>
         <CreatableSelect
           inputId='account_name'
-          placeholder={customAccountsError ? 'Failed to load options' : 'Select or add...'}
+          placeholder={customAccountsError ? 'Failed to load options' : 'Select account...'}
           options={accountOptions}
           onChange={onChange}
           onCreateOption={onCreateOption}
@@ -118,7 +118,7 @@ export function UploadTransactionsUploadCsvStep(
           disabled={!!customAccountsError}
           className={inputClassName}
         />
-      </HStack>
+      </VStack>
       {selectedAccount && selectedAccount.value === 'new_account' && (
         <VStack className='Layer__upload-transactions__create-account-form'>
           <CustomAccountForm
@@ -131,7 +131,7 @@ export function UploadTransactionsUploadCsvStep(
       <CsvUpload file={selectedFile} onFileSelected={onFileSelected} replaceDropTarget />
       <Separator />
       <VStack gap='xs' className='Layer__upload-transactions__template-section'>
-        <P size='sm'>Make sure to include the following columns</P>
+        <P size='sm'>Click to copy the required column headers</P>
         <HStack align='center'>
           <CopyTemplateHeadersButtonGroup headers={templateHeaders} />
           <Spacer />

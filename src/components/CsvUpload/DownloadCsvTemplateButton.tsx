@@ -41,6 +41,7 @@ export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | n
       variant={ButtonVariant.secondary}
       rightIcon={<FileDownIcon size={12} />}
       onClick={handleDownload}
+      tooltip='Need help? Download an example CSV'
     >
       {children}
     </Button>

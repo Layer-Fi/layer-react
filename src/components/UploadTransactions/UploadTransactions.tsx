@@ -61,7 +61,7 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
         Header={(
           <VStack gap='xs'>
             <Heading>
-              {currentStep === UploadTransactionsStep.UploadCsv && 'Upload bank transactions'}
+              {currentStep === UploadTransactionsStep.UploadCsv && 'Upload transactions'}
               {currentStep === UploadTransactionsStep.ValidateCsv
                 && (isValid
                   ? 'Confirm transactions'
@@ -69,7 +69,7 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
                 )}
             </Heading>
             <P pbe='xl' size='sm' variant='subtle'>
-              {currentStep === UploadTransactionsStep.UploadCsv && 'Add file downloaded from your bank account'}
+              {currentStep === UploadTransactionsStep.UploadCsv && 'Import a file of transactions from your bank account or credit card'}
               {currentStep === UploadTransactionsStep.ValidateCsv
                 && (isValid
                   ? 'Confirm that the data from uploaded file matches what you see in your account'
