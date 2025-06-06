@@ -136,7 +136,6 @@ export function UploadTransactionsUploadCsvStep(
           <CopyTemplateHeadersButtonGroup headers={templateHeaders} />
           <Spacer />
           <DownloadCsvTemplateButton
-            className='Layer__upload-transactions__template-section__download-template-button'
             fileName='upload_transactions.csv'
             csvProps={{ headers: templateHeaders, rows: templateExampleTransactions }}
           >
