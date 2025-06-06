@@ -18,7 +18,7 @@ type TextStyleProps = {
   size?: 'xs' | 'sm' | 'md' | 'lg'
   status?: 'error'
   variant?: 'subtle'
-  weight?: 'bold'
+  weight?: 'normal' | 'bold'
 }
 
 type TextRenderingProps = {

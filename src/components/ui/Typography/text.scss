@@ -58,8 +58,12 @@
     }
   }
 
-  &[data-weight="bold"] {
-    font-weight: var(--font-weight-bold);
+  $weights: normal bold;
+
+  @each $weight in $weights {
+    &[data-weight=#{$weight}] {
+      font-weight: var(--font-weight-#{$weight});
+    }
   }
 }
 
