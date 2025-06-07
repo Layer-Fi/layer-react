@@ -144,14 +144,14 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
         <HStack align='center' gap='xs'>
           <UploadCloud size={12} />
           <P size='sm'>
-            {'Drag and drop a file, or '}
+            {'Drag and drop a file, or click '}
             <button className='Layer__csv-upload__browse-link' onClick={handleBrowseClick}>
               Browse
             </button>
           </P>
           <input type='file' ref={fileInputRef} style={{ display: 'none' }} accept='.csv' onChange={handleFileChange} />
         </HStack>
-        <P size='sm' variant='subtle'>Upload file in CSV format</P>
+        <P size='sm' variant='subtle'>File must be in CSV format</P>
         {errorMessage && (
           <DataState
             className='Layer__csv-upload__error-message'

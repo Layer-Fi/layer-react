@@ -1,23 +1,35 @@
+
+.Layer__Header,
 .Layer__Label,
 .Layer__P,
 .Layer__Span {
+  max-inline-size: min(80ch, 60rem);
   margin: 0;
-
-  color: var(--color-base-700);
   font-size: var(--text-md);
 
-  max-inline-size: min(80ch, 60rem);
+  color: var(--color-base-700);
   text-wrap: pretty;
 
-  &[data-variant=subtle] {
-    color: var(--fg-subtle)
+  &[data-variant="subtle"] {
+    color: var(--fg-subtle);
+  }
+
+  &[data-status="error"] {
+    color: var(--color-info-error);
   }
 
   &[data-no-wrap] {
     white-space: nowrap;
   }
 
+  &[data-ellipsis] {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   $sizes: xs sm md lg;
+
   @each $size in $sizes {
     &[data-size="#{$size}"] {
       font-size: var(--text-#{$size});
@@ -25,7 +37,11 @@
   }
 
   $spacings: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
+
   @each $spacing in $spacings {
+    &[data-pb="#{$spacing}"] {
+      padding-block: var(--spacing-#{$spacing});
+    }
     &[data-pbe="#{$spacing}"] {
       padding-block-end: var(--spacing-#{$spacing});
     }
@@ -35,9 +51,25 @@
   }
 
   $alignments: left center right justify;
+
   @each $alignment in $alignments {
     &[data-align=#{$alignment}] {
       text-align: $alignment;
     }
   }
+
+  $weights: normal bold;
+
+  @each $weight in $weights {
+    &[data-weight=#{$weight}] {
+      font-weight: var(--font-weight-#{$weight});
+    }
+  }
+}
+
+.Layer__Label {
+  /*
+   * A `label` is an inline element by default. This change allows us to apply padding.
+   */
+  display: inline-block;
 }

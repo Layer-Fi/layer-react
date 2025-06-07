@@ -21,6 +21,7 @@ export interface SubmitButtonProps
   noIcon?: boolean
   tooltip?: ButtonProps['tooltip']
   withRetry?: boolean
+  iconAsPrimary?: boolean
 }
 
 export enum SubmitAction {
@@ -89,6 +90,7 @@ export const SubmitButton = ({
   noIcon,
   variant = ButtonVariant.primary,
   withRetry,
+  iconAsPrimary = true,
   ...props
 }: SubmitButtonProps) => {
   const baseClassName = classNames(
@@ -116,7 +118,7 @@ export const SubmitButton = ({
       variant={variant}
       disabled={processing || disabled}
       rightIcon={buildRightIcon({ processing, error, action, noIcon })}
-      iconAsPrimary={true}
+      iconAsPrimary={iconAsPrimary}
     >
       {children}
     </Button>

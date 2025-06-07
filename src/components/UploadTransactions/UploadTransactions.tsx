@@ -3,8 +3,7 @@ import { Wizard } from '../Wizard/Wizard'
 import { Heading } from '../ui/Typography/Heading'
 import type { Awaitable } from '../../types/utility/promises'
 import { VStack } from '../ui/Stack/Stack'
-import { P } from '../ui/Typography/Text'
-import { UploadTransactionsUploadCsvStep } from './UploadTransactionsUploadCsvStep'
+import { type AccountOption, UploadTransactionsUploadCsvStep } from './UploadTransactionsUploadCsvStep'
 import { UploadTransactionsValidateCsvStep } from './UploadTransactionsValidateCsvStep'
 import { type CustomAccountParseCsvResponse } from '../../hooks/customAccounts/useCustomAccountParseCsv'
 
@@ -15,12 +14,6 @@ type UploadTransactionsProps = {
 enum UploadTransactionsStep {
   UploadCsv,
   ValidateCsv,
-}
-
-type AccountOption = {
-  value: string
-  label: string
-  createdAccountName?: string
 }
 
 export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
@@ -60,28 +53,22 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
       <Wizard
         Header={(
           <VStack gap='xs'>
-            <Heading>
-              {currentStep === UploadTransactionsStep.UploadCsv && 'Upload bank transactions'}
+            <Heading level={1}>
+              {currentStep === UploadTransactionsStep.UploadCsv && 'Upload transactions'}
               {currentStep === UploadTransactionsStep.ValidateCsv
                 && (isValid
-                  ? 'Confirm transactions'
-                  : 'Failed to parse transactions'
+                  ? 'Review transactions'
+                  : 'Some transactions couldn\'t be parsed'
                 )}
             </Heading>
-            <P pbe='xl' size='sm' variant='subtle'>
-              {currentStep === UploadTransactionsStep.UploadCsv && 'Add file downloaded from your bank account'}
+            <Heading level={2} pbe='xl' size='2xs' variant='subtle' weight='normal'>
+              {currentStep === UploadTransactionsStep.UploadCsv && 'Import a file of transactions from your bank account or credit card'}
               {currentStep === UploadTransactionsStep.ValidateCsv
                 && (isValid
-                  ? 'Confirm that the data from uploaded file matches what you see in your account'
-                  : (
-                    <span>
-                      There were errors while parsing the uploaded file.
-                      <br />
-                      Please ensure that the CSV conforms to the accepted format.
-                    </span>
-                  )
+                  ? 'All transactions were parsed successfully. Please review and confirm your transactions below to finalize the upload.'
+                  : 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.'
                 )}
-            </P>
+            </Heading>
           </VStack>
         )}
         Footer={null}

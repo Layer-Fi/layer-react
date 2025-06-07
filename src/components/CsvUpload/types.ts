@@ -7,7 +7,7 @@ export type PreviewCell<T> = {
 export type PreviewRow<T extends { [K in keyof T]: string | number }> = {
   [K in keyof T]: PreviewCell<T[K]>
 } & {
-  index: number
+  row: number
   is_valid: boolean
 }
 

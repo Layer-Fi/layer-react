@@ -122,7 +122,15 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
               Cancel
             </Button>
           )}
-          <SubmitButton type='submit' processing={isSubmitting} noIcon={!isSubmitting} withRetry error={submitError}>{submitError ? 'Retry' : 'Submit'}</SubmitButton>
+          <SubmitButton
+            type='submit'
+            processing={isSubmitting}
+            noIcon={!isSubmitting}
+            withRetry
+            error={submitError}
+          >
+            {submitError ? 'Retry' : 'Save Account'}
+          </SubmitButton>
         </HStack>
       </VStack>
     </form>

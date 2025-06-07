@@ -1,11 +1,10 @@
 import { useCallback } from 'react'
-import { RefreshCcw, UploadCloud } from 'lucide-react'
+import { RefreshCcw } from 'lucide-react'
 import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
 import { Button, ButtonVariant } from '../Button/Button'
 import { Separator } from '../Separator/Separator'
 import { useCreateCustomAccountTransactions } from '../../hooks/customAccounts/useCreateCustomAccountTransactions'
 import type { CustomAccountParseCsvResponse } from '../../hooks/customAccounts/useCustomAccountParseCsv'
-import type { Awaitable } from '../../types/utility/promises'
 import { ValidateCsvTable } from '../CsvUpload/ValidateCsvTable'
 import { templateHeaders } from './template'
 import { convertCentsToCurrency, formatDate } from '../../utils/format'
@@ -67,6 +66,7 @@ export function UploadTransactionsValidateCsvStep(
             onClick={onClickUploadTransactions}
             action={SubmitAction.UPLOAD}
             withRetry
+            iconAsPrimary={false}
           >
             {uploadTransactionsError ? 'Retry' : 'Upload transactions'}
           </SubmitButton>

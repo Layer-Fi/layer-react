@@ -1,11 +1,14 @@
 .Layer__UI__Heading {
   all: unset;
-  color: var(--color-base-700);
-  font-weight: var(--font-weight-bold);
-  font-variation-settings: 'wght' var(--font-weight-bold);
-  font-size: var(--text-heading-secondary);
   max-inline-size: 60rem;
+  font-size: var(--text-heading-secondary);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-base-700);
   text-wrap: pretty;
+
+  &[data-variant="subtle"] {
+    color: var(--fg-subtle);
+  }
 
   $spacings: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
 
@@ -36,7 +39,15 @@
   }
 
   &[data-align="center"] {
-    text-align: center;
     max-inline-size: unset;
+    text-align: center;
+  }
+
+  $weights: normal bold;
+
+  @each $weight in $weights {
+    &[data-weight=#{$weight}] {
+      font-weight: var(--font-weight-#{$weight});
+    }
   }
 }
