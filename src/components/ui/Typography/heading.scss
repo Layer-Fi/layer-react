@@ -1,9 +1,9 @@
 .Layer__UI__Heading {
   all: unset;
-  color: var(--color-base-700);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--text-heading-secondary);
   max-inline-size: 60rem;
+  font-size: var(--text-heading-secondary);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-base-700);
   text-wrap: pretty;
 
   &[data-variant="subtle"] {
@@ -39,8 +39,8 @@
   }
 
   &[data-align="center"] {
-    text-align: center;
     max-inline-size: unset;
+    text-align: center;
   }
 
   $weights: normal bold;
