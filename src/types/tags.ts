@@ -5,6 +5,10 @@ export type TransactionTag = {
   created_at: string
   updated_at: string
   deleted_at?: string
+
+  _local?: {
+    isOptimistic: boolean
+  }
 }
 
 export type TagFilterInput =
