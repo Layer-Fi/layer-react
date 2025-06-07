@@ -17,6 +17,8 @@ import X from '../../../icons/X'
 import { Schema } from 'effect'
 import { useFlattenedTagValues } from '../useFlattenedTagValues'
 import type { OneOf } from '../../../types/utility/oneOf'
+import { LoadingSpinner } from '../../../components/ui/Loading/LoadingSpinner'
+import { Square } from '../../../components/ui/Square/Square'
 
 const TAG_SELECTOR_CLASS_NAMES = {
   INPUT_GROUP: 'Layer__TagSelectorInputGroup',
@@ -55,6 +57,9 @@ const TagSchema = Schema.Data(
     id: Schema.UUID,
     dimensionLabel: Schema.NonEmptyTrimmedString,
     valueLabel: Schema.NonEmptyTrimmedString,
+    _local: Schema.Struct({
+      isOptimistic: Schema.Boolean,
+    }),
   }),
 )
 export const makeTag = Schema.decodeSync(TagSchema)
@@ -107,39 +112,52 @@ function TagSelectorSelection({
           id,
           dimensionLabel,
           valueLabel,
-        }) => (
-          <Tag key={id} id={id} textValue={`${dimensionLabel}: ${valueLabel}`}>
-            <Span
-              slot='dimension'
-              variant='subtle'
-              nonAria
-            >
-              {dimensionLabel}
-              :
-            </Span>
-            <Span
-              slot='value'
-              weight='bold'
-              ellipsis
-              size='lg'
-              nonAria
-            >
-              {valueLabel}
-            </Span>
-            {isReadOnly
-              ? null
-              : (
-                <Button
-                  slot='remove'
-                  icon
-                  variant='ghost'
-                  size='sm'
-                >
-                  <X />
-                </Button>
-              )}
-          </Tag>
-        )}
+          _local,
+        }) => {
+          const isOptimistic = _local?.isOptimistic ?? false
+
+          return (
+            <Tag key={id} id={id} textValue={`${dimensionLabel}: ${valueLabel}`}>
+              <Span
+                slot='dimension'
+                variant='subtle'
+                nonAria
+              >
+                {dimensionLabel}
+                :
+              </Span>
+              <Span
+                slot='value'
+                weight='bold'
+                ellipsis
+                size='lg'
+                nonAria
+              >
+                {valueLabel}
+              </Span>
+              {isReadOnly
+                ? null
+                : (
+                  isOptimistic
+                    ? (
+                      <Square size='sm'>
+                        <LoadingSpinner size={16} />
+                      </Square>
+                    )
+                    : (
+                      <Button
+                        slot='remove'
+                        icon
+                        variant='ghost'
+                        size='sm'
+                      >
+                        <X />
+                      </Button>
+                    )
+                )}
+            </Tag>
+          )
+        }}
       </TagList>
     </TagGroup>
   )
@@ -203,6 +221,19 @@ export function TagSelector({
     const tagValue = flattenedTagValues.find(({ valueId: id }) => id === valueId)
 
     if (tagValue === undefined) {
+      return
+    }
+
+    /*
+     * Even though we correctly supply `disabledKeys` to the ComboBox, it still allows
+     * pressing `Enter` on the same option multiple times.
+     */
+    const existingSelectedOption = selectedTags.find(
+      ({ dimensionLabel, valueLabel }) =>
+        tagValue.dimensionLabel === dimensionLabel
+        && tagValue.valueLabel === valueLabel,
+    )
+    if (existingSelectedOption) {
       return
     }
 

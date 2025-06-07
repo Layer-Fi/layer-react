@@ -1,0 +1,13 @@
+.Layer__Square {
+  display: grid;
+  place-items: center;
+
+  aspect-ratio: 1 / 1;
+
+  &[data-size="sm"] {
+    --min-size: 1.5rem;
+
+    min-block-size: var(--min-size);
+    min-inline-size: var(--min-size);
+  }
+}

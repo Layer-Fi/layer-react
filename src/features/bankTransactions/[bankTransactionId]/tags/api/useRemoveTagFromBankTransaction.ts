@@ -1,12 +1,13 @@
 import useSWRMutation from 'swr/mutation'
 import { useAuth } from '../../../../../hooks/useAuth'
 import { useLayerContext } from '../../../../../contexts/LayerContext'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { del } from '../../../../../api/layer/authenticated_http'
 import {
   useBankTransactionsInvalidator,
   useBankTransactionsOptimisticUpdater,
 } from '../../../../../hooks/useBankTransactions/useBankTransactions'
+import { debounce } from 'lodash'
 
 const REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY = '#remove-tag-from-bank-transaction'
 
@@ -42,6 +43,11 @@ function buildKey({
   }
 }
 
+const INVALIDATION_DEBOUNCE_OPTIONS = {
+  wait: 1000,
+  maxWait: 3000,
+}
+
 type RemoveTagFromBankTransactionArg = {
   tagId: string
 }
@@ -53,9 +59,6 @@ type RemoveTagFromBankTransactionOptions = {
 export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTagFromBankTransactionOptions) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
-
-  const { optimisticallyUpdateBankTransactions } = useBankTransactionsOptimisticUpdater()
-  const { invalidateBankTransactions } = useBankTransactionsInvalidator()
 
   const mutationResponse = useSWRMutation(
     () => buildKey({
@@ -82,6 +85,21 @@ export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTag
     },
   )
 
+  const { optimisticallyUpdateBankTransactions } = useBankTransactionsOptimisticUpdater()
+  const { invalidateBankTransactions } = useBankTransactionsInvalidator()
+
+  const debouncedInvalidateBankTransactions = useMemo(
+    () => debounce(
+      invalidateBankTransactions,
+      INVALIDATION_DEBOUNCE_OPTIONS.wait,
+      {
+        maxWait: INVALIDATION_DEBOUNCE_OPTIONS.maxWait,
+        trailing: true,
+      },
+    ),
+    [invalidateBankTransactions],
+  )
+
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
@@ -104,13 +122,13 @@ export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTag
       })
 
       return triggerResultPromise
-        .finally(() => { void invalidateBankTransactions() })
+        .finally(() => { void debouncedInvalidateBankTransactions() })
     },
     [
       bankTransactionId,
       originalTrigger,
       optimisticallyUpdateBankTransactions,
-      invalidateBankTransactions,
+      debouncedInvalidateBankTransactions,
     ],
   )
 
