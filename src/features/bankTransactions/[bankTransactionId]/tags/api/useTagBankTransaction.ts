@@ -1,13 +1,14 @@
 import useSWRMutation from 'swr/mutation'
 import { useAuth } from '../../../../../hooks/useAuth'
 import { useLayerContext } from '../../../../../contexts/LayerContext'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { post } from '../../../../../api/layer/authenticated_http'
 import {
   useBankTransactionsInvalidator,
   useBankTransactionsOptimisticUpdater,
 } from '../../../../../hooks/useBankTransactions/useBankTransactions'
 import { v4 as uuidv4 } from 'uuid'
+import { debounce } from 'lodash'
 
 const TAG_BANK_TRANSACTION_TAG_KEY = '#tag-bank-transaction'
 
@@ -47,6 +48,11 @@ function buildKey({
   }
 }
 
+const INVALIDATION_DEBOUNCE_OPTIONS = {
+  wait: 1000,
+  maxWait: 3000,
+}
+
 type TagBankTransactionArg = {
   key: string
   value: string
@@ -59,9 +65,6 @@ type TagBankTransactionOptions = {
 export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionOptions) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
-
-  const { optimisticallyUpdateBankTransactions } = useBankTransactionsOptimisticUpdater()
-  const { invalidateBankTransactions } = useBankTransactionsInvalidator()
 
   const mutationResponse = useSWRMutation(
     () => buildKey({
@@ -89,6 +92,21 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
     },
   )
 
+  const { optimisticallyUpdateBankTransactions } = useBankTransactionsOptimisticUpdater()
+  const { invalidateBankTransactions } = useBankTransactionsInvalidator()
+
+  const debouncedInvalidateBankTransactions = useMemo(
+    () => debounce(
+      invalidateBankTransactions,
+      INVALIDATION_DEBOUNCE_OPTIONS.wait,
+      {
+        maxWait: INVALIDATION_DEBOUNCE_OPTIONS.maxWait,
+        trailing: true,
+      },
+    ),
+    [invalidateBankTransactions],
+  )
+
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
@@ -114,6 +132,10 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
                 value,
                 created_at: nowISOString,
                 updated_at: nowISOString,
+
+                _local: {
+                  isOptimistic: true,
+                },
               },
             ],
           }
@@ -123,13 +145,13 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
       })
 
       return triggerResultPromise
-        .finally(() => { void invalidateBankTransactions() })
+        .finally(() => { void debouncedInvalidateBankTransactions() })
     },
     [
       bankTransactionId,
       originalTrigger,
       optimisticallyUpdateBankTransactions,
-      invalidateBankTransactions,
+      debouncedInvalidateBankTransactions,
     ],
   )
 
