@@ -10,6 +10,7 @@ import type { Awaitable } from '../../types/utility/promises'
 
 type LinkAccountsProps = {
   onComplete?: () => Awaitable<void>
+  onBack?: () => void
 }
 
 export function LinkAccounts(props: LinkAccountsProps) {
@@ -22,6 +23,7 @@ export function LinkAccounts(props: LinkAccountsProps) {
 
 function LinkAccountsContent({
   onComplete,
+  onBack,
 }: LinkAccountsProps) {
   const { data: linkedAccounts, loadingStatus } = useContext(LinkedAccountsContext)
 
@@ -42,7 +44,7 @@ function LinkAccountsContent({
         Footer={null}
         onComplete={onComplete}
       >
-        <LinkAccountsLinkStep />
+        <LinkAccountsLinkStep onBack={onBack} />
         {hideConfirmationStep ? null : <LinkAccountsConfirmationStep />}
       </Wizard>
     </section>

@@ -6,6 +6,7 @@ import { HStack, VStack } from '../../ui/Stack/Stack'
 
 type WelcomeStepProps = {
   onNext: () => void
+
   title?: string
   description?: string
   stepsEnabled?: string[]
@@ -41,7 +42,9 @@ export const WelcomeStep = ({ onNext, title = defaultTitle, description, stepsEn
         <Heading className='Layer__platform-onboarding__heading' align='left'>{title}</Heading>
         <Text status='disabled'>{buildDescription()}</Text>
       </div>
-      <Button onClick={onNext}>Get started</Button>
+      <div className='Layer__platform-onboarding__button-row'>
+        <Button onClick={onNext}>Get started</Button>
+      </div>
     </>
   )
 }
