@@ -16,6 +16,8 @@ export type CustomAccountParseCsvResponse = {
   is_valid: boolean
   new_transactions_request: { transactions: RawCustomTransaction[] }
   new_transactions_preview: PreviewCsv<CustomAccountTransactionRow>
+  invalid_transactions_count: number
+  total_transactions_count: number
 }
 
 function buildKey({

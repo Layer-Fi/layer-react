@@ -9,6 +9,7 @@ import { ValidateCsvTable } from '../CsvUpload/ValidateCsvTable'
 import { templateHeaders } from './template'
 import { convertCentsToCurrency, formatDate } from '../../utils/format'
 import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
+import { Badge, BadgeVariant } from '../Badge'
 
 interface UploadTransactionsValidateCsvStepProps {
   parseCsvResponse: CustomAccountParseCsvResponse
@@ -31,6 +32,8 @@ export function UploadTransactionsValidateCsvStep(
     is_valid: isValidCsv,
     new_transactions_preview: transactionsPreview,
     new_transactions_request: transactionsRequest,
+    invalid_transactions_count: invalidTransactionsCount,
+    total_transactions_count: totalTransactionsCount,
   } = parseCsvResponse
 
   const onClickUploadTransactions = useCallback(() => {
@@ -42,12 +45,23 @@ export function UploadTransactionsValidateCsvStep(
 
   return (
     <VStack gap='lg'>
-      <ValidateCsvTable
-        className='Layer__upload-transactions__preview_table'
-        data={transactionsPreview}
-        headers={templateHeaders}
-        formatters={formatters}
-      />
+      <VStack gap='xs'>
+        <HStack gap='xs'>
+          {!isValidCsv
+            && (
+              <Badge variant={BadgeVariant.ERROR}>
+                {`Invalid transactions: ${invalidTransactionsCount}`}
+              </Badge>
+            )}
+          <Badge>{`Total transactions: ${totalTransactionsCount}`}</Badge>
+        </HStack>
+        <ValidateCsvTable
+          className='Layer__upload-transactions__preview_table'
+          data={transactionsPreview}
+          headers={templateHeaders}
+          formatters={formatters}
+        />
+      </VStack>
       <Separator />
       <HStack gap='xs'>
         <Button onClick={onGoBack} variant={ButtonVariant.secondary}>Back</Button>
