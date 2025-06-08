@@ -7,6 +7,7 @@ import { startOfMonth, endOfMonth } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { APIError } from '../../models/APIError'
 
 type UseProfitAndLossQueryProps = {
   startDate: Date
@@ -26,6 +27,11 @@ type UseProfitAndLossQueryReturn = (props?: UseProfitAndLossQueryProps) => {
   refetch: () => void
   startDate: Date
   endDate: Date
+}
+
+type ProfitAndLossResponse = {
+  data?: ProfitAndLoss
+  error?: unknown
 }
 
 export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
@@ -59,7 +65,7 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
     isValidating,
     error: rawError,
     mutate,
-  } = useSWR(
+  } = useSWR<ProfitAndLossResponse, APIError>(
     queryKey,
     Layer.getProfitAndLoss(apiUrl, auth?.access_token, {
       businessId,
@@ -72,7 +78,7 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
   )
 
   const refetch = () => {
-    mutate()
+    void mutate()
   }
 
   // Refetch data if related models has been changed since last fetch
@@ -80,12 +86,14 @@ export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
     if (queryKey && (isLoading || isValidating)) {
       read(DataModel.PROFIT_AND_LOSS, queryKey)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isValidating])
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
       refetch()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncTimestamps, startDate, endDate, tagFilter, reportingBasis])
 
   return {

@@ -4,6 +4,7 @@ import { NORMALITY_OPTIONS } from '../../components/ChartOfAccountsForm/constant
 import { useLayerContext } from '../../contexts/LayerContext'
 import { FormError, DateRange, Direction, NewAccount } from '../../types'
 import {
+  ChartWithBalances,
   EditAccount,
   LedgerAccountBalance,
 } from '../../types/chart_of_accounts'
@@ -12,6 +13,7 @@ import { endOfMonth, formatISO, startOfMonth } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { APIError } from '../../models/APIError'
 
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []
@@ -169,7 +171,7 @@ export const useChartOfAccounts = (
     && auth?.access_token
     && `chart-of-accounts-${businessId}-${startDate?.valueOf()}-${endDate?.valueOf()}`
 
-  const { data, isLoading, isValidating, error, mutate } = useSWR(
+  const { data, isLoading, isValidating, error, mutate } = useSWR<{ data: ChartWithBalances }, APIError>(
     queryKey,
     Layer.getLedgerAccountBalances(apiUrl, auth?.access_token, {
       params: {

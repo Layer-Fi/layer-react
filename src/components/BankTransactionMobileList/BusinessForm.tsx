@@ -121,7 +121,7 @@ export const BusinessForm = ({
         stable_name: selectedCategory.value.payload?.stable_name || '',
       }
 
-    categorizeBankTransaction(
+    void categorizeBankTransaction(
       bankTransaction.id,
       {
         type: 'Category',

@@ -51,7 +51,7 @@ export const TooltipTrigger = forwardRef<
         ...props,
         ...children.props,
         'data-state': context.open ? 'open' : 'closed',
-      }),
+      } as HTMLProps<HTMLElement>),
     )
   }
 

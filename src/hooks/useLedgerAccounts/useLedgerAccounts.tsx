@@ -6,6 +6,7 @@ import { DataModel } from '../../types/general'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { APIError } from '../../models/APIError'
 
 type UseLedgerAccounts = (showReversalEntries: boolean) => {
   data?: LedgerAccounts
@@ -41,7 +42,7 @@ export const useLedgerAccounts: UseLedgerAccounts = (
     && auth?.access_token
     && `ledger-accounts-lines-${businessId}-${accountId}`
 
-  const { data, isLoading, isValidating, error, mutate } = useSWR(
+  const { data, isLoading, isValidating, error, mutate } = useSWR<{ data: LedgerAccounts }, APIError>(
     queryKey,
     Layer.getLedgerAccountsLines(apiUrl, auth?.access_token, {
       params: {
@@ -58,7 +59,7 @@ export const useLedgerAccounts: UseLedgerAccounts = (
     isLoading: isLoadingEntry,
     isValidating: isValdiatingEntry,
     error: errorEntry,
-  } = useSWR(
+  } = useSWR<{ data: LedgerAccountsEntry }, APIError>(
     businessId
     && selectedEntryId
     && auth?.access_token
@@ -68,7 +69,7 @@ export const useLedgerAccounts: UseLedgerAccounts = (
     }),
   )
 
-  const refetch = () => mutate()
+  const refetch = () => void mutate()
 
   const closeSelectedEntry = () => {
     setSelectedEntryId(undefined)
