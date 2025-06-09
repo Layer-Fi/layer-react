@@ -43,7 +43,7 @@ const getIcon = (status: DataStateStatus, icon?: ReactNode) => {
     case DataStateStatus.success:
       return (
         <span className='Layer__data-state__icon Layer__data-state__icon--success'>
-          {icon ?? <AlertOctagon size={12} />}
+          {icon ?? <CheckCircle size={12} />}
         </span>
       )
     default:

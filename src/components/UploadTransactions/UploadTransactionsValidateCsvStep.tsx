@@ -9,12 +9,15 @@ import { ValidateCsvTable } from '../CsvUpload/ValidateCsvTable'
 import { templateHeaders } from './template'
 import { convertCentsToCurrency, formatDate } from '../../utils/format'
 import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
+import { Badge, BadgeVariant } from '../Badge'
+import { useWizard } from '../Wizard/Wizard'
+import { BankTransaction } from '../../types'
 
 interface UploadTransactionsValidateCsvStepProps {
-  parseCsvResponse: CustomAccountParseCsvResponse
-  selectedAccountId: string
-  onGoBack: () => void
-  onReupload: () => void
+  parseCsvResponse: CustomAccountParseCsvResponse | null
+  selectedAccountId?: string
+  onSelectFile: (file: File | null) => void
+  onUploadTransactionsSuccess: (transactions: BankTransaction[]) => void
 }
 
 const formatters = {
@@ -23,37 +26,61 @@ const formatters = {
 }
 
 export function UploadTransactionsValidateCsvStep(
-  { parseCsvResponse, selectedAccountId, onGoBack, onReupload }: UploadTransactionsValidateCsvStepProps,
+  { parseCsvResponse, selectedAccountId, onSelectFile, onUploadTransactionsSuccess }: UploadTransactionsValidateCsvStepProps,
 ) {
+  const { previous, next } = useWizard()
   const { trigger: uploadTransactions, isMutating, error: uploadTransactionsError } = useCreateCustomAccountTransactions()
+
+  const onClickReupload = useCallback(() => {
+    onSelectFile(null)
+    previous()
+  }, [onSelectFile, previous])
 
   const {
     is_valid: isValidCsv,
     new_transactions_preview: transactionsPreview,
     new_transactions_request: transactionsRequest,
-  } = parseCsvResponse
+    invalid_transactions_count: invalidTransactionsCount,
+    total_transactions_count: totalTransactionsCount,
+  } = parseCsvResponse!
 
   const onClickUploadTransactions = useCallback(() => {
     void uploadTransactions({
       ...transactionsRequest,
-      customAccountId: selectedAccountId,
+      customAccountId: selectedAccountId!,
+    }).then((transactions) => {
+      if (transactions) {
+        onUploadTransactionsSuccess?.(transactions)
+        void next()
+      }
     })
-  }, [selectedAccountId, transactionsRequest, uploadTransactions])
+  }, [next, onUploadTransactionsSuccess, selectedAccountId, transactionsRequest, uploadTransactions])
 
   return (
     <VStack gap='lg'>
-      <ValidateCsvTable
-        className='Layer__upload-transactions__preview_table'
-        data={transactionsPreview}
-        headers={templateHeaders}
-        formatters={formatters}
-      />
+      <VStack gap='xs'>
+        <HStack gap='xs'>
+          {!isValidCsv
+            && (
+              <Badge variant={BadgeVariant.ERROR}>
+                {`Invalid transactions: ${invalidTransactionsCount}`}
+              </Badge>
+            )}
+          <Badge>{`Total transactions: ${totalTransactionsCount}`}</Badge>
+        </HStack>
+        <ValidateCsvTable
+          className='Layer__upload-transactions__preview_table'
+          data={transactionsPreview}
+          headers={templateHeaders}
+          formatters={formatters}
+        />
+      </VStack>
       <Separator />
       <HStack gap='xs'>
-        <Button onClick={onGoBack} variant={ButtonVariant.secondary}>Back</Button>
+        <Button onClick={() => { void previous() }} variant={ButtonVariant.secondary}>Back</Button>
         <Spacer />
         <Button
-          onClick={onReupload}
+          onClick={onClickReupload}
           rightIcon={<RefreshCcw size={12} />}
           variant={isValidCsv ? ButtonVariant.secondary : ButtonVariant.primary}
         >

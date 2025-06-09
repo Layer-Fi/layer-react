@@ -39,6 +39,12 @@
   padding: var(--spacing-md);
 }
 
+.Layer__upload-transactions__confirmation-step__data-state {
+  .Layer__data-state__description {
+    margin-bottom: 0;
+  }
+}
+
 .Layer__upload-transactions__preview_table {
   .Layer__csv-upload__validate-csv-table__cell--date,
   .Layer__csv-upload__validate-csv-table__header-cell--date {
