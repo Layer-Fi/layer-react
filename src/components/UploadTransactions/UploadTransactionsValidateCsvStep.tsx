@@ -10,12 +10,14 @@ import { templateHeaders } from './template'
 import { convertCentsToCurrency, formatDate } from '../../utils/format'
 import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
 import { Badge, BadgeVariant } from '../Badge'
+import { useWizard } from '../Wizard/Wizard'
+import { BankTransaction } from '../../types'
 
 interface UploadTransactionsValidateCsvStepProps {
   parseCsvResponse: CustomAccountParseCsvResponse
-  selectedAccountId: string
-  onGoBack: () => void
-  onReupload: () => void
+  selectedAccountId?: string
+  onSelectFile: (file: File | null) => void
+  onUploadTransactionsSuccess: (transactions: BankTransaction[]) => void
 }
 
 const formatters = {
@@ -24,9 +26,15 @@ const formatters = {
 }
 
 export function UploadTransactionsValidateCsvStep(
-  { parseCsvResponse, selectedAccountId, onGoBack, onReupload }: UploadTransactionsValidateCsvStepProps,
+  { parseCsvResponse, selectedAccountId, onSelectFile, onUploadTransactionsSuccess }: UploadTransactionsValidateCsvStepProps,
 ) {
+  const { previous, next } = useWizard()
   const { trigger: uploadTransactions, isMutating, error: uploadTransactionsError } = useCreateCustomAccountTransactions()
+
+  const onClickReupload = useCallback(() => {
+    onSelectFile(null)
+    previous()
+  }, [onSelectFile, previous])
 
   const {
     is_valid: isValidCsv,
@@ -39,9 +47,14 @@ export function UploadTransactionsValidateCsvStep(
   const onClickUploadTransactions = useCallback(() => {
     void uploadTransactions({
       ...transactionsRequest,
-      customAccountId: selectedAccountId,
+      customAccountId: selectedAccountId!,
+    }).then((transactions) => {
+      if (transactions) {
+        onUploadTransactionsSuccess?.(transactions)
+        void next()
+      }
     })
-  }, [selectedAccountId, transactionsRequest, uploadTransactions])
+  }, [next, onUploadTransactionsSuccess, selectedAccountId, transactionsRequest, uploadTransactions])
 
   return (
     <VStack gap='lg'>
@@ -64,10 +77,10 @@ export function UploadTransactionsValidateCsvStep(
       </VStack>
       <Separator />
       <HStack gap='xs'>
-        <Button onClick={onGoBack} variant={ButtonVariant.secondary}>Back</Button>
+        <Button onClick={() => { void previous() }} variant={ButtonVariant.secondary}>Back</Button>
         <Spacer />
         <Button
-          onClick={onReupload}
+          onClick={onClickReupload}
           rightIcon={<RefreshCcw size={12} />}
           variant={isValidCsv ? ButtonVariant.secondary : ButtonVariant.primary}
         >

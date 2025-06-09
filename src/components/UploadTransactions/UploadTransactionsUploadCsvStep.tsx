@@ -14,6 +14,7 @@ import { CopyTemplateHeadersButtonGroup } from '../CsvUpload/CopyTemplateHeaders
 import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '../../hooks/customAccounts/useCustomAccountParseCsv'
 import { templateHeaders, templateExampleTransactions } from './template'
 import { humanizeEnum } from '../../utils/format'
+import { useWizard } from '../Wizard/Wizard'
 
 export type AccountOption = {
   value: string
@@ -55,11 +56,12 @@ interface UploadTransactionsUploadCsvStepProps {
 export function UploadTransactionsUploadCsvStep(
   { selectedAccount, onSelectAccount, selectedFile, onSelectFile, onParseCsv }: UploadTransactionsUploadCsvStepProps,
 ) {
+  const { next } = useWizard()
   const { data: customAccounts, isLoading: isLoadingCustomAccounts, error: customAccountsError } = useCustomAccounts()
   const { trigger: parseCsv, isMutating: isParsingCsv, error: parseCsvError } = useCustomAccountParseCsv()
   const [hasParseCsvError, setHasParseCsvError] = useState(false)
 
-  const accountOptions: AccountOption[] = useMemo(() => {
+  const accountOptions = useMemo(() => {
     if (!customAccounts) return []
 
     return customAccounts.map(account => ({
@@ -69,10 +71,6 @@ export function UploadTransactionsUploadCsvStep(
     }))
   }, [customAccounts])
 
-  const onChange = useCallback((option: AccountOption | null) => {
-    onSelectAccount(option)
-  }, [onSelectAccount])
-
   const onCreateOption = useCallback((inputValue: string) => {
     onSelectAccount({
       value: 'new_account',
@@ -80,10 +78,6 @@ export function UploadTransactionsUploadCsvStep(
       account: { accountName: inputValue },
       __isNew__: true,
     })
-  }, [onSelectAccount])
-
-  const onCancelCreateAccount = useCallback(() => {
-    onSelectAccount(null)
   }, [onSelectAccount])
 
   const onCreateAccountSuccess = useCallback((account: CustomAccount) => {
@@ -105,9 +99,14 @@ export function UploadTransactionsUploadCsvStep(
     void parseCsv({
       customAccountId: selectedAccount.value,
       file: selectedFile,
-    }).then((res) => { if (res) onParseCsv(res) })
+    }).then((parsedCsv) => {
+      if (parsedCsv) {
+        onParseCsv(parsedCsv)
+        void next()
+      }
+    })
       .catch(() => { setHasParseCsvError(true) })
-  }, [selectedAccount, selectedFile, parseCsv, onParseCsv])
+  }, [selectedAccount, selectedFile, parseCsv, onParseCsv, next])
 
   const inputClassName = classNames(
     'Layer__upload-transactions__select-account-name-input',
@@ -126,7 +125,7 @@ export function UploadTransactionsUploadCsvStep(
           placeholder={customAccountsError ? 'Failed to load options' : 'Select account...'}
           options={accountOptions}
           formatOptionLabel={formatOptionLabel}
-          onChange={onChange}
+          onChange={onSelectAccount}
           onCreateOption={onCreateOption}
           formatCreateLabel={formatCreateLabel}
           isValidNewOption={() => true}
@@ -141,7 +140,7 @@ export function UploadTransactionsUploadCsvStep(
         <VStack className='Layer__upload-transactions__create-account-form'>
           <CustomAccountForm
             initialAccountName={selectedAccount.account.accountName}
-            onCancel={onCancelCreateAccount}
+            onCancel={() => onSelectAccount(null)}
             onSuccess={onCreateAccountSuccess}
           />
         </VStack>
