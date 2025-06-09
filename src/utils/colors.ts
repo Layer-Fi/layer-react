@@ -196,9 +196,9 @@ const hexToRgb = (hex: string) => {
   }
 
   return {
-    r: values[0],
-    g: values[1],
-    b: values[2],
+    r: values[0] ?? 0,
+    g: values[1] ?? 0,
+    b: values[2] ?? 0,
   }
 }
 
@@ -288,7 +288,7 @@ const hslToRgb = (hsl: ColorHSLNumberConfig): ColorRGBNumberConfig => {
 /**
  * Convert HSL to HEX
  */
-const hslToHex = (hsl: ColorHSLNumberConfig): string => {
+const hslToHex = (hsl: ColorHSLNumberConfig) => {
   const l = hsl.l / 100
   const s = hsl.s
   const a = (s * Math.min(l, 1 - l)) / 100
@@ -299,5 +299,5 @@ const hslToHex = (hsl: ColorHSLNumberConfig): string => {
       .toString(16)
       .padStart(2, '0')
   }
-  return `#${f(0)}${f(8)}${f(4)}`
+  return `#${f(0)}${f(8)}${f(4)}` as const
 }

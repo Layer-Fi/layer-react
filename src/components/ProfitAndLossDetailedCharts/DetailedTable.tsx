@@ -33,6 +33,11 @@ export interface TypeColorMapping {
   opacity: number
 }
 
+const DEFAULT_COLOR_MAPPING = {
+  color: '#EEEEF0',
+  opacity: 1,
+}
+
 export const mapTypesToColors = (
   data: LineBaseItem[],
   colorList: string[] = DEFAULT_CHART_COLOR_TYPE,
@@ -45,27 +50,31 @@ export const mapTypesToColors = (
     const type = obj.name ?? obj.type
 
     if (type === 'Uncategorized') {
-      return {
-        color: '#EEEEF0',
-        opacity: 1,
-      }
+      return DEFAULT_COLOR_MAPPING
     }
 
     if (!typeToColor[type]) {
-      typeToColor[type] = colorList[colorIndex % colorList.length]
+      const color = colorList[colorIndex % colorList.length]
+      if (color) {
+        typeToColor[type] = color
+      }
       colorIndex++
       typeToLastOpacity[type] = 1
     }
     else {
-      typeToLastOpacity[type] -= 0.1
+      if (typeToLastOpacity[type]) {
+        typeToLastOpacity[type] -= 0.1
+      }
     }
 
+    const color = typeToColor[type]
     const opacity = typeToLastOpacity[type]
 
-    return {
-      color: typeToColor[type],
-      opacity: opacity,
+    if (!color || !opacity) {
+      return DEFAULT_COLOR_MAPPING
     }
+
+    return { color, opacity }
   })
 }
 
@@ -115,8 +124,8 @@ const ValueIcon = ({
     <div
       className='share-icon'
       style={{
-        background: typeColorMapping[idx].color,
-        opacity: typeColorMapping[idx].opacity,
+        background: typeColorMapping[idx] ? typeColorMapping[idx].color : '#e6e6e6',
+        opacity: typeColorMapping[idx] ? typeColorMapping[idx].opacity : 1,
       }}
     />
   )
