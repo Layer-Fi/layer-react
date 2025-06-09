@@ -5,7 +5,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from 'react'
@@ -25,7 +24,8 @@ function useWizardStep({
 
   const goToStep = useCallback((stepIndex: number) => {
     setActiveStepIndex(stepIndex)
-  }, [])
+    onStepChange?.(stepIndex)
+  }, [onStepChange])
 
   const next = useCallback(async () => {
     if (activeStepIndex === stepCount - 1) {
@@ -33,19 +33,19 @@ function useWizardStep({
       return
     }
 
-    if (activeStepIndex < stepCount - 1) {
-      setActiveStepIndex(activeStepIndex + 1)
+    const nextIdx = activeStepIndex + 1
+    if (nextIdx <= stepCount - 1) {
+      setActiveStepIndex(nextIdx)
+      onStepChange?.(nextIdx)
     }
-  }, [stepCount, activeStepIndex, onComplete])
+  }, [activeStepIndex, stepCount, onComplete, onStepChange])
 
   const previous = useCallback(() => {
-    if (activeStepIndex > 0) {
-      setActiveStepIndex(activeStepIndex - 1)
+    const prevIdx = activeStepIndex - 1
+    if (prevIdx >= 0) {
+      setActiveStepIndex(prevIdx)
+      onStepChange?.(prevIdx)
     }
-  }, [activeStepIndex])
-
-  useEffect(() => {
-    onStepChange?.(activeStepIndex)
   }, [activeStepIndex, onStepChange])
 
   const effectiveStepIndex = Math.min(activeStepIndex, stepCount - 1)
