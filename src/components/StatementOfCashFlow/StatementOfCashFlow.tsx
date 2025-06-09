@@ -60,9 +60,7 @@ const StatementOfCashFlowView = ({
               </HeaderCol>
               <HeaderCol>
                 {withExpandAllButton && (
-                  <HeaderCol>
-                    <StatementOfCashflowExpandAllButton view={view} />
-                  </HeaderCol>
+                  <StatementOfCashflowExpandAllButton view={view} />
                 )}
                 <CashflowStatementDownloadButton
                   startDate={start}

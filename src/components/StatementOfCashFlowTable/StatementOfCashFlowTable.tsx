@@ -34,6 +34,8 @@ export const StatementOfCashFlowTable = ({
     if (expandedAllRows) {
       setIsOpen(allRowKeys, true)
     }
+  // Open all rows only when the expandedAllRows prop changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expandedAllRows])
 
   const renderLineItem = (
