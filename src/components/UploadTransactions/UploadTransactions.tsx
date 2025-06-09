@@ -94,7 +94,7 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
         />
         <UploadTransactionsValidateCsvStep
           selectedAccountId={selectedAccount?.value}
-          parseCsvResponse={parseCsvResponse!}
+          parseCsvResponse={parseCsvResponse}
           onSelectFile={onSelectFile}
           onUploadTransactionsSuccess={onUploadTransactionsSuccess}
         />

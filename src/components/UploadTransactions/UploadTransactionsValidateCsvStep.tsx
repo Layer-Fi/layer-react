@@ -14,7 +14,7 @@ import { useWizard } from '../Wizard/Wizard'
 import { BankTransaction } from '../../types'
 
 interface UploadTransactionsValidateCsvStepProps {
-  parseCsvResponse: CustomAccountParseCsvResponse
+  parseCsvResponse: CustomAccountParseCsvResponse | null
   selectedAccountId?: string
   onSelectFile: (file: File | null) => void
   onUploadTransactionsSuccess: (transactions: BankTransaction[]) => void
@@ -42,7 +42,7 @@ export function UploadTransactionsValidateCsvStep(
     new_transactions_request: transactionsRequest,
     invalid_transactions_count: invalidTransactionsCount,
     total_transactions_count: totalTransactionsCount,
-  } = parseCsvResponse
+  } = parseCsvResponse!
 
   const onClickUploadTransactions = useCallback(() => {
     void uploadTransactions({
