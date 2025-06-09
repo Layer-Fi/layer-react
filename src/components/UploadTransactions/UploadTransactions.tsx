@@ -16,7 +16,7 @@ type UploadTransactionsHeaderProps = {
 }
 
 function UploadTransactionsHeader({ currentStep, isValid }: UploadTransactionsHeaderProps) {
-  if (currentStep == UploadTransactionsStep.Confirmation) return null
+  if (currentStep === UploadTransactionsStep.Confirmation) return null
 
   return (
     <VStack gap='xs'>
