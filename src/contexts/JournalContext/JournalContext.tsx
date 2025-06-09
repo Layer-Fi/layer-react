@@ -6,7 +6,7 @@ export const JournalContext = createContext<JournalContextType>({
   data: undefined,
   isLoading: false,
   error: undefined,
-  refetch: () => {},
+  refetch: () => Promise.resolve({ data: [] }),
   selectedEntryId: undefined,
   setSelectedEntryId: () => {},
   closeSelectedEntry: () => {},
