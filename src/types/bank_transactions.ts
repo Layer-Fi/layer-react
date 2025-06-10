@@ -1,3 +1,5 @@
+import type { CustomerSchema } from '../features/customers/customersSchemas'
+import type { VendorSchema } from '../features/vendors/vendorsSchemas'
 import { Categorization, CategorizationStatus, Category } from './categories'
 import { S3PresignedUrl } from './general'
 import type { TransactionTag } from './tags'
@@ -51,6 +53,9 @@ export interface BankTransaction extends Record<string, unknown> {
   match?: BankTransactionMatch
   document_ids: string[]
   transaction_tags: ReadonlyArray<TransactionTag>
+
+  customer: typeof CustomerSchema.Encoded | null
+  vendor: typeof VendorSchema.Encoded | null
 }
 
 export interface SuggestedMatch {

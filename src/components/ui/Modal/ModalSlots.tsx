@@ -13,15 +13,15 @@ type ModalCloseButtonProps = {
 }
 
 export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalCloseButtonProps) => (
-  <div className={
-    classNames(MODAL_CLOSE_BUTTON_CLASS_NAME,
-      positionAbsolute && `${MODAL_CLOSE_BUTTON_CLASS_NAME}--position-absolute`,
-    )
-  }
+  <div
+    className={
+      classNames(MODAL_CLOSE_BUTTON_CLASS_NAME,
+        positionAbsolute && `${MODAL_CLOSE_BUTTON_CLASS_NAME}--position-absolute`,
+      )
+    }
   >
     <Button
       icon
-      size='sm'
       variant='ghost'
       slot='close'
       onPress={onClose}

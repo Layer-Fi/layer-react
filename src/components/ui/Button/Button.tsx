@@ -28,13 +28,14 @@ function ButtonTransparentContent({ children }: PropsWithChildren) {
 }
 
 type ButtonVariant = 'solid' | 'ghost'
-type ButtonSize = 'sm' | 'md'
+type ButtonSize = 'md'
 
 const BUTTON_CLASS_NAME = 'Layer__UI__Button'
 const Button = forwardRef<
   HTMLButtonElement,
   Omit<ButtonProps, 'className'> & {
     icon?: true
+    inset?: true
     size?: ButtonSize
     variant?: ButtonVariant
     persistentBorder?: boolean
@@ -43,9 +44,10 @@ const Button = forwardRef<
   {
     children,
     icon,
+    inset,
     size = 'md',
     variant = 'solid',
-    persistentBorder = false,
+    persistentBorder,
     ...restProps
   },
   ref,
@@ -53,6 +55,7 @@ const Button = forwardRef<
   const { isPending = false } = restProps
   const dataProperties = toDataProperties({
     icon,
+    inset,
     size,
     variant,
     'persistent-border': persistentBorder,

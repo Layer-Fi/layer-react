@@ -16,7 +16,7 @@
     border-bottom: 1px solid var(--border-color);
   }
 
-  & > [slot="header"],
+  & > [slot='header'],
   & > .Layer__ListBoxItem {
     padding-inline: var(--spacing-sm);
   }
@@ -42,7 +42,7 @@
 
   &[data-focus-visible] {
     outline-offset: -2px;
-    outline: 2px solid var(--outline-active);
+    outline: 2px solid var(--outline-default);
   }
 
   &[data-selected] {

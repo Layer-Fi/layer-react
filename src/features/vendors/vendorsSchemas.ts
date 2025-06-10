@@ -54,4 +54,10 @@ export const VendorSchema = Schema.Struct({
   status: TransformedVendorStatusSchema,
 
   memo: Schema.NullOr(Schema.String),
+
+  _local: Schema.Struct({
+    isOptimistic: Schema.Boolean,
+  }).pipe(Schema.optional),
 })
+
+export const encodeVendor = Schema.encodeSync(VendorSchema)

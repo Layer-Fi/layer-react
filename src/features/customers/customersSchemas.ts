@@ -54,4 +54,10 @@ export const CustomerSchema = Schema.Struct({
   status: TransformedCustomerStatusSchema,
 
   memo: Schema.NullOr(Schema.String),
+
+  _local: Schema.Struct({
+    isOptimistic: Schema.Boolean,
+  }).pipe(Schema.optional),
 })
+
+export const encodeCustomer = Schema.encodeSync(CustomerSchema)
