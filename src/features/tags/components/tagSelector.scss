@@ -3,23 +3,3 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--spacing-xs);
 }
-
-.Layer__TagSelectorInputGroup {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-
-  min-block-size: 2.5rem;
-
-  border-radius: var(--input-border-radius);
-  border: 1px solid var(--outline-default);
-
-  background-color: var(--color-base-0);
-
-  &[data-focus-within] {
-    border-color: var(--outline-active);
-  }
-
-  &[data-focus-visible] {
-    outline: 1px solid var(--outline-active);
-  }
-}

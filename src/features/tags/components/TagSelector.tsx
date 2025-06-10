@@ -9,33 +9,24 @@ import { Popover } from '../../../components/ui/Popover/Popover'
 import { Label, P, Span } from '../../../components/ui/Typography/Text'
 import { useTagDimensions } from '../api/useTagDimensions'
 import { Collection, ComboBox, Group } from 'react-aria-components'
-import { VStack } from '../../../components/ui/Stack/Stack'
+import { HStack, VStack } from '../../../components/ui/Stack/Stack'
 import { Button } from '../../../components/ui/Button/Button'
-import ChevronDown from '../../../icons/ChevronDown'
+import { X, ChevronDown } from 'lucide-react'
 import { Tag, TagGroup, TagList } from '../../../components/ui/TagGroup/TagGroup'
-import X from '../../../icons/X'
 import { Schema } from 'effect'
 import { useFlattenedTagValues } from '../useFlattenedTagValues'
 import type { OneOf } from '../../../types/utility/oneOf'
 import { LoadingSpinner } from '../../../components/ui/Loading/LoadingSpinner'
 import { Square } from '../../../components/ui/Square/Square'
+import { InputGroup } from '../../../components/ui/Input/InputGroup'
 
 const TAG_SELECTOR_CLASS_NAMES = {
-  INPUT_GROUP: 'Layer__TagSelectorInputGroup',
   LAYOUT_GROUP: 'Layer__TagSelectorLayoutGroup',
 } as const
 
 function TagSelectorLayoutGroup({ children }: PropsWithChildren) {
   return (
     <Group className={TAG_SELECTOR_CLASS_NAMES.LAYOUT_GROUP}>
-      {children}
-    </Group>
-  )
-}
-
-function TagSelectorInputGroup({ children }: PropsWithChildren) {
-  return (
-    <Group className={TAG_SELECTOR_CLASS_NAMES.INPUT_GROUP}>
       {children}
     </Group>
   )
@@ -140,7 +131,7 @@ function TagSelectorSelection({
                 : (
                   isOptimistic
                     ? (
-                      <Square size='sm'>
+                      <Square inset>
                         <LoadingSpinner size={16} />
                       </Square>
                     )
@@ -148,10 +139,10 @@ function TagSelectorSelection({
                       <Button
                         slot='remove'
                         icon
+                        inset
                         variant='ghost'
-                        size='sm'
                       >
-                        <X />
+                        <X size={16} />
                       </Button>
                     )
                 )}
@@ -246,9 +237,11 @@ export function TagSelector({
     ? TItem
     : never
 
-  const shouldHideComponent = !isLoading
+  const noDimensionsExist = !isLoading
     && data !== undefined
     && data.length === 0
+
+  const shouldHideComponent = noDimensionsExist || (isReadOnly && selectedTags.length === 0)
 
   if (shouldHideComponent) {
     /*
@@ -292,25 +285,28 @@ export function TagSelector({
           }}
           disabledKeys={disabledTagValueIds}
         >
-          <TagSelectorInputGroup>
+          <InputGroup>
             <Input
+              inset
               placeholder='Add a tag to this transaction...'
-              placement='first-within-group'
+              placement='first'
             />
-            <Button icon variant='ghost' isPending={isLoading}>
-              <ChevronDown />
+            <Button icon inset variant='ghost' isPending={isLoading}>
+              <ChevronDown size={16} />
             </Button>
-          </TagSelectorInputGroup>
+          </InputGroup>
           {isError
             ? (
-              <P
-                slot='errorMessage'
-                pbs='3xs'
-                size='xs'
-                status='error'
-              >
-                An error occurred while loading tag options.
-              </P>
+              <HStack justify='end'>
+                <P
+                  slot='errorMessage'
+                  pbs='3xs'
+                  size='xs'
+                  status='error'
+                >
+                  An error occurred while loading tag options.
+                </P>
+              </HStack>
             )
             : null}
           <Popover
@@ -321,7 +317,8 @@ export function TagSelector({
              */
             shouldFlip={false}
             placement='bottom start'
-            crossOffset={-2}
+            crossOffset={-10}
+            offset={10}
           >
             <ListBox<TItemDerived>
               renderEmptyState={() => (

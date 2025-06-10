@@ -3,8 +3,9 @@ import { useAuth } from '../useAuth'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { getBankTransactions, type GetBankTransactionsReturn } from '../../api/layer/bankTransactions'
 import { useGlobalInvalidator, useGlobalOptimisticUpdater } from '../../utils/swr/useGlobalInvalidator'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import type { BankTransaction } from '../../types'
+import { debounce } from 'lodash'
 
 export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
 
@@ -115,6 +116,11 @@ export function useBankTransactions({
   )
 }
 
+const INVALIDATION_DEBOUNCE_OPTIONS = {
+  wait: 1000,
+  maxWait: 3000,
+}
+
 export function useBankTransactionsInvalidator() {
   const { invalidate } = useGlobalInvalidator()
 
@@ -123,7 +129,22 @@ export function useBankTransactionsInvalidator() {
     [invalidate],
   )
 
-  return { invalidateBankTransactions }
+  const debouncedInvalidateBankTransactions = useMemo(
+    () => debounce(
+      invalidateBankTransactions,
+      INVALIDATION_DEBOUNCE_OPTIONS.wait,
+      {
+        maxWait: INVALIDATION_DEBOUNCE_OPTIONS.maxWait,
+        trailing: true,
+      },
+    ),
+    [invalidateBankTransactions],
+  )
+
+  return {
+    invalidateBankTransactions,
+    debouncedInvalidateBankTransactions,
+  }
 }
 
 export function useBankTransactionsOptimisticUpdater() {

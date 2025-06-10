@@ -10,7 +10,7 @@ import { FileInput } from '../Input'
 import { ErrorText } from '../Typography'
 import { PersonalCategories } from './constants'
 import classNames from 'classnames'
-import { BankTransactionTagsAndMemo } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionTagsAndMemo'
+import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 interface PersonalFormProps {
   bankTransaction: BankTransaction
@@ -77,7 +77,7 @@ export const PersonalForm = ({
 
   return (
     <div className='Layer__bank-transaction-mobile-list-item__personal-form'>
-      <BankTransactionTagsAndMemo
+      <BankTransactionFormFields
         bankTransaction={bankTransaction}
         showDescriptions={showDescriptions}
       />

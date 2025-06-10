@@ -9,7 +9,7 @@ import {
 } from 'react-aria-components'
 
 type TextStyleProps = {
-  align?: 'center'
+  align?: 'center' | 'right'
   ellipsis?: true
   noWrap?: true
   pb?: Spacing

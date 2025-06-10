@@ -1,0 +1,29 @@
+.Layer__InputGroup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--spacing-3xs);
+
+  align-items: center;
+
+  min-block-size: 2.25rem;
+
+  padding-inline-start: var(--spacing-xs);
+  padding-inline-end: var(--spacing-3xs);
+
+  border-radius: var(--input-border-radius);
+  border: 1px solid var(--outline-default);
+
+  background-color: var(--color-base-0);
+
+  &[data-focus-within] {
+    border-color: var(--outline-active);
+  }
+
+  &[data-focus-visible] {
+    outline: 1px solid var(--outline-default);
+  }
+
+  &[data-action-count='2'] {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+}

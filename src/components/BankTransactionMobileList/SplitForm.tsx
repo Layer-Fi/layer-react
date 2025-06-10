@@ -25,7 +25,7 @@ import {
 import { FileInput, Input } from '../Input'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
-import { BankTransactionTagsAndMemo } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionTagsAndMemo'
+import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 type Split = {
   amount: number
@@ -290,7 +290,7 @@ export const SplitForm = ({
           </>
         )
         : null}
-      <BankTransactionTagsAndMemo
+      <BankTransactionFormFields
         bankTransaction={bankTransaction}
         showDescriptions={showDescriptions}
       />

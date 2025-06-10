@@ -79,6 +79,7 @@ export const request =
           .then(res => handleResponse<Return>(res))
           .catch((error: Error | APIError) => handleException(error))
 
+export const patch = request('patch')
 export const post = request('post')
 export const put = request('put')
 export const del = request('delete')

@@ -1,6 +1,6 @@
 .Layer__Popover {
   display: grid;
-  inline-size: min(90svi, 40ch);
+  inline-size: min(90svi, 60ch);
 
   border-radius: var(--border-radius-xs);
   border: 2px solid var(--outline-default);
@@ -8,6 +8,11 @@
   background: var(--color-base-0);
 
   &[data-trigger="ComboBox"] {
-    min-inline-size: min(var(--trigger-width), 90svi);
+    inline-size:
+      clamp(
+        min(var(--trigger-width), 90svi),
+        calc(var(--trigger-width) * 1.5),
+        min(80ch, 90svi),
+      );
   }
 }
