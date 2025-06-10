@@ -27,13 +27,24 @@ type ListVendorsBaseParams = {
 type ListVendorsPaginatedParams = ListVendorsBaseParams & {
   cursor?: string
   limit?: number
+  query?: string
 }
 
 const listVendors = get<
   Record<string, unknown>,
   ListVendorsPaginatedParams
->(({ businessId, cursor, limit }) => {
-  const parameters = toDefinedSearchParameters({ cursor, limit })
+>(({
+  businessId,
+  cursor,
+  limit,
+  query,
+}) => {
+  const parameters = toDefinedSearchParameters({
+    cursor,
+    identityStatus: 'IDENTIFIED',
+    limit,
+    q: query,
+  })
 
   return `/v1/businesses/${businessId}/vendors?${parameters}`
 })
@@ -46,10 +57,12 @@ function keyLoader(
     access_token: accessToken,
     apiUrl,
     businessId,
+    query,
   }: {
     access_token?: string
     apiUrl?: string
     businessId: string
+    query?: string
   },
 ) {
   if (accessToken && apiUrl) {
@@ -58,6 +71,7 @@ function keyLoader(
       apiUrl,
       businessId,
       cursor: previousPageData?.meta.pagination.cursor ?? undefined,
+      query,
       tags: [VENDORS_TAG_KEY],
     } as const
   }
@@ -87,7 +101,11 @@ class ListVendorsSWRResponse {
   }
 }
 
-export function useListVendors() {
+type UseListVendorsParameters = {
+  query?: string
+}
+
+export function useListVendors({ query }: UseListVendorsParameters) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -97,6 +115,7 @@ export function useListVendors() {
       {
         ...data,
         businessId,
+        query,
       },
     ),
     ({
@@ -104,6 +123,7 @@ export function useListVendors() {
       apiUrl,
       businessId,
       cursor,
+      query,
     }) => listVendors(
       apiUrl,
       accessToken,
@@ -111,7 +131,8 @@ export function useListVendors() {
         params: {
           businessId,
           cursor,
-          limit: 200,
+          limit: 100,
+          query,
         },
       },
     )().then(Schema.decodeUnknownPromise(ListVendorsRawResultSchema)),

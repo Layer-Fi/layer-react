@@ -1,5 +1,4 @@
 .Layer__UI__Button {
-  all: unset;
   display: inline-grid;
 
   grid-template-rows: minmax(0, 1fr);
@@ -9,17 +8,33 @@
   gap: 0.5rem;
   align-items: center;
   justify-content: center;
+
+  --size: 2.25rem;
+
+  block-size: var(--size);
   min-inline-size: 0;
+
   border-radius: var(--btn-border-radius);
   outline: none;
   cursor: pointer;
   user-select: none;
+  font-size: var(--text-md);
   appearance: none;
   white-space: nowrap;
   vertical-align: middle;
 
+  &[data-inset] {
+    --size: 1.75rem;
+  }
+
   &[data-icon] {
+    min-inline-size: var(--size);
+
     padding-inline: 0;
+  }
+
+  &:not([data-icon]) {
+    padding-inline: var(--spacing-md);
   }
 
   &[data-focus-visible] {
@@ -30,7 +45,7 @@
     outline: 1px solid var(--outline-default);
   }
 
-  &[data-variant="solid"] {
+  &[data-variant='solid'] {
     background-color: var(--button-bg-default);
     color: var(--button-fg-default);
 
@@ -44,10 +59,19 @@
     }
   }
 
-  &[data-variant="ghost"] {
+  &[data-variant='ghost'] {
     border: 1px solid transparent;
-    background-color: var(--button-bg-ghost);
+    background-color: transparent;
     color: var(--button-fg-ghost);
+
+    &[data-pending],
+    &[data-disabled] {
+      background-color: transparent;
+    }
+
+    &[data-hovered] {
+      background-color: var(--base-transparent-2);
+    }
 
     &[data-persistent-border]:not([data-pressed]) {
       border-color: var(--button-border-color-ghost);
@@ -56,36 +80,6 @@
     &[data-pressed]:not([data-focus-visible]) {
       border-color: var(--button-border-color-ghost-active);
       outline: 2px solid var(--outline-default);
-    }
-  }
-
-  &[data-size="sm"] {
-    --min-size: 1.5rem;
-
-    min-block-size: var(--min-size);
-    font-size: var(--text-sm);
-
-    &[data-icon] {
-      min-inline-size: var(--min-size);
-    }
-
-    &:not([data-icon]) {
-      padding-inline: var(--spacing-xs);
-    }
-  }
-
-  &[data-size="md"] {
-    --min-size: 2.25rem;
-
-    min-block-size: var(--min-size);
-    font-size: var(--text-md);
-
-    &[data-icon] {
-      min-inline-size: var(--min-size);
-    }
-
-    &:not([data-icon]) {
-      padding-inline: var(--spacing-md);
     }
   }
 
@@ -111,10 +105,6 @@
 .Layer__ButtonSpinnerContainer {
   grid-row: 1 / -1;
   grid-column: 1 / -1;
-  height: 16px;
+  height: 1rem;
   place-self: center;
-
-  &[data-size="lg"] {
-    height: 20px;
-  }
 }

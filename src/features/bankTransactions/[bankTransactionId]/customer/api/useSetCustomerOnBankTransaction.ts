@@ -1,24 +1,12 @@
 import useSWRMutation from 'swr/mutation'
 import { useAuth } from '../../../../../hooks/useAuth'
 import { useLayerContext } from '../../../../../contexts/LayerContext'
+import { patch } from '../../../../../api/layer/authenticated_http'
+import { useBankTransactionsInvalidator, useBankTransactionsOptimisticUpdater } from '../../../../../hooks/useBankTransactions/useBankTransactions'
 import { useCallback } from 'react'
-import { del } from '../../../../../api/layer/authenticated_http'
-import {
-  useBankTransactionsInvalidator,
-  useBankTransactionsOptimisticUpdater,
-} from '../../../../../hooks/useBankTransactions/useBankTransactions'
+import { CustomerSchema, encodeCustomer } from '../../../../customers/customersSchemas'
 
-const REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY = '#remove-tag-from-bank-transaction'
-
-type RemoveTagFromBankTransactionBody = {
-  tag_ids: ReadonlyArray<string>
-}
-
-const removeTagFromBankTransaction = del<
-  Record<string, never>,
-  RemoveTagFromBankTransactionBody,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/tags`)
+const SET_CUSTOMER_ON_BANK_TRANSACTION_TAG_KEY = '#set-customer-on-bank-transaction'
 
 function buildKey({
   access_token: accessToken,
@@ -37,20 +25,38 @@ function buildKey({
       apiUrl,
       businessId,
       bankTransactionId,
-      tags: [REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY],
+      tags: [SET_CUSTOMER_ON_BANK_TRANSACTION_TAG_KEY],
     } as const
   }
 }
 
-type RemoveTagFromBankTransactionArg = {
-  tagId: string
+type SetCustomerOnBankTransactionBody = {
+  customer_id: string | null
 }
 
-type RemoveTagFromBankTransactionOptions = {
+const setCustomerOnBankTransaction = patch<
+  Record<string, never>,
+  SetCustomerOnBankTransactionBody,
+  {
+    businessId: string
+    bankTransactionId: string
+  }
+>(({
+  businessId,
+  bankTransactionId,
+}) => `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/metadata`)
+
+type SetCustomerOnBankTransactionArg = {
+  customer: typeof CustomerSchema.Type | null
+}
+
+type UseSetCustomerOnBankTransactionParameters = {
   bankTransactionId: string
 }
 
-export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTagFromBankTransactionOptions) {
+export function useSetCustomerOnBankTransaction({
+  bankTransactionId,
+}: UseSetCustomerOnBankTransactionParameters) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -61,15 +67,18 @@ export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTag
       bankTransactionId,
     }),
     (
-      { accessToken, apiUrl, businessId },
-      { arg: { tagId } }: { arg: RemoveTagFromBankTransactionArg },
-    ) => removeTagFromBankTransaction(
+      { accessToken, apiUrl, businessId, bankTransactionId },
+      { arg: { customer } }: { arg: SetCustomerOnBankTransactionArg },
+    ) => setCustomerOnBankTransaction(
       apiUrl,
       accessToken,
       {
-        params: { businessId },
+        params: {
+          businessId,
+          bankTransactionId,
+        },
         body: {
-          tag_ids: [tagId],
+          customer_id: customer?.id ?? null,
         },
       },
     ),
@@ -90,13 +99,13 @@ export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTag
 
       void optimisticallyUpdateBankTransactions((bankTransaction) => {
         if (bankTransaction.id === bankTransactionId) {
-          const { tagId } = triggerParameters[0]
+          const { customer } = triggerParameters[0]
 
           return {
             ...bankTransaction,
-            transaction_tags: bankTransaction.transaction_tags.filter(
-              tag => tag.id !== tagId,
-            ),
+            customer: customer
+              ? encodeCustomer(customer)
+              : null,
           }
         }
 

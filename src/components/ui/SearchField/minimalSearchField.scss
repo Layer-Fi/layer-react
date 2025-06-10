@@ -1,17 +1,17 @@
 .Layer__MinimalSearchField {
   display: grid;
-  grid-template-areas: "input clear-button";
+  grid-template-areas: 'input clear-button';
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
 
   border: none;
 
-  & > [slot="input"] {
+  & > [slot='input'] {
     grid-area: input;
 
-    min-block-size: 1.5rem;
-
     padding-inline: var(--spacing-3xs);
+
+    border: none;
     outline: none;
 
     /*
@@ -21,23 +21,21 @@
 
     font-family: var(--font-family);
 
-    border: none;
-
     &::-webkit-search-cancel-button,
     &::-webkit-search-decoration {
       appearance: none;
     }
   }
 
-  &[data-empty] > [slot="input"] {
+  &[data-empty] > [slot='input'] {
     grid-column: 1 / -1;
   }
 
-  & > [slot="clear-button"] {
+  & > [slot='clear-button'] {
     grid-area: clear-button;
   }
 
-  &[data-empty] > [slot="clear-button"] {
+  &[data-empty] > [slot='clear-button'] {
     display: none;
   }
 }

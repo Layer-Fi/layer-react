@@ -1,14 +1,13 @@
 import useSWRMutation from 'swr/mutation'
 import { useAuth } from '../../../../../hooks/useAuth'
 import { useLayerContext } from '../../../../../contexts/LayerContext'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { post } from '../../../../../api/layer/authenticated_http'
 import {
   useBankTransactionsInvalidator,
   useBankTransactionsOptimisticUpdater,
 } from '../../../../../hooks/useBankTransactions/useBankTransactions'
 import { v4 as uuidv4 } from 'uuid'
-import { debounce } from 'lodash'
 
 const TAG_BANK_TRANSACTION_TAG_KEY = '#tag-bank-transaction'
 
@@ -46,11 +45,6 @@ function buildKey({
       tags: [TAG_BANK_TRANSACTION_TAG_KEY],
     } as const
   }
-}
-
-const INVALIDATION_DEBOUNCE_OPTIONS = {
-  wait: 1000,
-  maxWait: 3000,
 }
 
 type TagBankTransactionArg = {
@@ -93,19 +87,7 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
   )
 
   const { optimisticallyUpdateBankTransactions } = useBankTransactionsOptimisticUpdater()
-  const { invalidateBankTransactions } = useBankTransactionsInvalidator()
-
-  const debouncedInvalidateBankTransactions = useMemo(
-    () => debounce(
-      invalidateBankTransactions,
-      INVALIDATION_DEBOUNCE_OPTIONS.wait,
-      {
-        maxWait: INVALIDATION_DEBOUNCE_OPTIONS.maxWait,
-        trailing: true,
-      },
-    ),
-    [invalidateBankTransactions],
-  )
+  const { debouncedInvalidateBankTransactions } = useBankTransactionsInvalidator()
 
   const { trigger: originalTrigger } = mutationResponse
 

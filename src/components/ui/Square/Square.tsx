@@ -4,12 +4,12 @@ import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 const CLASS_NAME = 'Layer__Square'
 
 type SquareProps = {
-  size?: 'sm'
+  inset?: true
 }
 
 export const Square = forwardRef<HTMLDivElement, PropsWithChildren<SquareProps>>(
-  function Square({ children, size = 'sm', ...restProps }, ref) {
-    const dataProperties = toDataProperties({ size })
+  function Square({ children, inset, ...restProps }, ref) {
+    const dataProperties = toDataProperties({ inset })
 
     return (
       <div

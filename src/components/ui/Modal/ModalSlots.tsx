@@ -15,7 +15,6 @@ export function ModalContextBar({ onClose }: ModalContextBarProps) {
     <div className={MODAL_CONTEXT_BAR_CLASS_NAME}>
       <Button
         icon
-        size='sm'
         variant='ghost'
         slot='close'
         onPress={onClose}
