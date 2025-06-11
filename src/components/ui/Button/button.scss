@@ -27,7 +27,7 @@
   }
 
   &[data-hovered]:not([data-pressed]):not([data-focus-visible]) {
-    outline: 1px solid var(--outline-default)
+    outline: 1px solid var(--outline-default);
   }
 
   &[data-variant="solid"] {
@@ -50,12 +50,12 @@
     border: 1px solid transparent;
 
     &[data-persistent-border]:not([data-pressed]) {
-      border-color: var(--button-border-color-ghost)
+      border-color: var(--button-border-color-ghost);
     }
 
     &[data-pressed] {
       border-color: var(--button-border-color-ghost-active);
-      outline: 2px solid var(--outline-default)
+      outline: 2px solid var(--outline-default);
     }
   }
 

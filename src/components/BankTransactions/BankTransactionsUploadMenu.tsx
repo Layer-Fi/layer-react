@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { DropdownMenu, Heading, MenuList, MenuItem } from '../ui/DropdownMenu/DropdownMenu'
 import { Text, TextSize } from '../Typography'
 import { Button } from '../ui/Button/Button'
@@ -16,14 +16,11 @@ const MenuTriggerButton = ({ iconOnly }: { iconOnly?: boolean }) => (
 
 export const BankTransactionsUploadMenu = ({ iconOnly }: { iconOnly?: boolean }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const onModalOpenChange = useCallback((isOpen: boolean) => {
-    setIsModalOpen(isOpen)
-  }, [])
 
   return (
     <>
       <DropdownMenu
-        ariaLabel='Manage transactions'
+        ariaLabel='Upload transactions'
         slots={{ Trigger: () => <MenuTriggerButton iconOnly={iconOnly} /> }}
         slotProps={{
           Dialog: { width: '18rem' },
@@ -31,7 +28,7 @@ export const BankTransactionsUploadMenu = ({ iconOnly }: { iconOnly?: boolean })
       >
         <Heading>Choose how to upload transactions</Heading>
         <MenuList>
-          <MenuItem key='upload-txns' onClick={() => onModalOpenChange(true)}>
+          <MenuItem key='upload-txns' onClick={() => setIsModalOpen(true)}>
             <VStack className='Layer__bank-transactions__header-menu__upload-transactions-icon'>
               <UploadCloud size={16} />
             </VStack>
@@ -43,7 +40,7 @@ export const BankTransactionsUploadMenu = ({ iconOnly }: { iconOnly?: boolean })
           </MenuItem>
         </MenuList>
       </DropdownMenu>
-      <BankTransactionsUploadModal isOpen={isModalOpen} onOpenChange={onModalOpenChange} />
+      <BankTransactionsUploadModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
     </>
   )
 }
