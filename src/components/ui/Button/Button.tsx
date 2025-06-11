@@ -14,7 +14,7 @@ function ButtonSpinner({ size }: { size: ButtonSize }) {
 
   return (
     <div {...dataProperties} className={BUTTON_CLASS_NAMES.SPINNER_CONTAINER}>
-      <LoadingSpinner size={size === 'lg' ? 20 : 16} />
+      <LoadingSpinner size={16} />
     </div>
   )
 }
@@ -28,7 +28,7 @@ function ButtonTransparentContent({ children }: PropsWithChildren) {
 }
 
 type ButtonVariant = 'solid' | 'ghost'
-type ButtonSize = 'sm' | 'md' | 'lg'
+type ButtonSize = 'sm' | 'md'
 
 const BUTTON_CLASS_NAME = 'Layer__UI__Button'
 const Button = forwardRef<
