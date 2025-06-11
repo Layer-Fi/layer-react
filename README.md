@@ -464,9 +464,6 @@ The full list of variables is listed in the [`variables.css`](https://github.com
 --tooltip-color: var(--color-white);
 --tooltip-bg-color: var(--color-base-800);
 
---bar-color-income: var(--color-base-400);
---bar-color-expenses: var(--color-base-900);
-
 --chart-indicator-color: var(--color-base-700);
 ```
 
