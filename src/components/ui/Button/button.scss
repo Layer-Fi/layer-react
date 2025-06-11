@@ -49,7 +49,7 @@
     color: var(--button-fg-ghost);
     border: 1px solid transparent;
 
-    &[data-icon]:not([data-pressed]) {
+    &[data-persistent-border]:not([data-pressed]) {
       border-color: var(--button-border-color-ghost)
     }
 

@@ -37,6 +37,7 @@ const Button = forwardRef<
     icon?: true
     size?: ButtonSize
     variant?: ButtonVariant
+    persistentBorder?: boolean
   }
 >((
   {
@@ -44,6 +45,7 @@ const Button = forwardRef<
     icon,
     size = 'md',
     variant = 'solid',
+    persistentBorder = false,
     ...restProps
   },
   ref,
@@ -53,6 +55,7 @@ const Button = forwardRef<
     icon,
     size,
     variant,
+    'persistent-border': persistentBorder,
   })
 
   return (
