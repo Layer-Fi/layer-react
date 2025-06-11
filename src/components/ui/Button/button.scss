@@ -38,9 +38,9 @@
       background-color: var(--button-bg-active);
     }
 
-    &[data-pressed] {
+    &[data-pressed]&:not([data-focus-visible]) {
       background-color: var(--button-bg-active);
-      outline: 2px solid var(--outline-default)
+      outline: 2px solid var(--outline-default);
     }
   }
 
@@ -53,7 +53,7 @@
       border-color: var(--button-border-color-ghost);
     }
 
-    &[data-pressed] {
+    &[data-pressed]&:not([data-focus-visible]) {
       border-color: var(--button-border-color-ghost-active);
       outline: 2px solid var(--outline-default);
     }
