@@ -35,214 +35,224 @@ export default {
       }
     ],
     'custom-property-pattern': '^[a-z0-9-]+$',
+    'custom-property-empty-line-before': [
+      'always',
+      {
+        'except': ['first-nested', 'after-custom-property'],
+        'ignore': ['after-comment']
+      }
+    ],
+
     'length-zero-no-unit': true,
     'no-descending-specificity': null,
     'no-duplicate-selectors': true,
+
     'selector-class-pattern': null,
+    'selector-id-pattern': null,
 
     'order/properties-order': [
       {
-        groupName: "all",
+        groupName: 'all',
         properties: [
-          "all"
+          'all'
         ],
       },
       {
-        groupName: "box-sizing",
+        groupName: 'box-sizing',
         properties: [
-          "box-sizing"
+          'box-sizing'
         ],
       },
       {
-        groupName: "positioning",
+        groupName: 'positioning',
         properties: [
-          "position",
-          "z-index",
-          "top",
-          "right",
-          "bottom",
-          "left",
-          "inset"
+          'position',
+          'z-index',
+          'top',
+          'right',
+          'bottom',
+          'left',
+          'inset'
         ],
       },
       {
-        groupName: "display",
+        groupName: 'display',
         properties: [
-          "display",
-          "visibility"
+          'display',
+          'visibility'
         ],
       },
       {
-        groupName: "flex",
+        groupName: 'flex',
         properties: [
-          "flex",
-          "flex-basis",
-          "flex-direction",
-          "flex-flow",
-          "flex-grow",
-          "flex-shrink",
-          "flex-wrap"
+          'flex',
+          'flex-basis',
+          'flex-direction',
+          'flex-flow',
+          'flex-grow',
+          'flex-shrink',
+          'flex-wrap'
         ],
       },
       {
-        groupName: "grid",
+        groupName: 'grid',
         properties: [
-          "grid",
-          "grid-area",
-          "grid-template",
-          "grid-template-areas",
-          "grid-template-rows",
-          "grid-template-columns",
-          "grid-row",
-          "grid-row-start",
-          "grid-row-end",
-          "grid-column",
-          "grid-column-start",
-          "grid-column-end",
-          "grid-auto-rows",
-          "grid-auto-columns",
-          "grid-auto-flow",
-          "grid-gap",
-          "grid-row-gap",
-          "grid-column-gap",
+          'grid',
+          'grid-area',
+          'grid-template',
+          'grid-template-areas',
+          'grid-template-rows',
+          'grid-template-columns',
+          'grid-row',
+          'grid-row-start',
+          'grid-row-end',
+          'grid-column',
+          'grid-column-start',
+          'grid-column-end',
+          'grid-auto-rows',
+          'grid-auto-columns',
+          'grid-auto-flow',
+          'grid-gap',
+          'grid-row-gap',
+          'grid-column-gap',
         ],
       },
       {
-        groupName: "gap",
+        groupName: 'gap',
         properties: [
-          "gap",
-          "row-gap",
-          "column-gap"
+          'gap',
+          'row-gap',
+          'column-gap'
         ],
       },
       {
-        groupName: "alignment",
+        groupName: 'alignment',
         properties: [
-          "align-content",
-          "align-items",
-          "align-self",
+          'align-content',
+          'align-items',
+          'align-self',
         ],
       },
       {
-        groupName: "justify",
+        groupName: 'justify',
         properties: [
-          "justify-content",
-          "justify-items",
-          "justify-self"
+          'justify-content',
+          'justify-items',
+          'justify-self'
         ],
       },
       {
-        groupName: "overflow",
+        groupName: 'overflow',
         properties: [
-          "overflow",
-          "overflow-x",
-          "overflow-y"
+          'overflow',
+          'overflow-x',
+          'overflow-y'
         ],
       },
       {
-        groupName: "box-model-sizing",
+        groupName: 'box-model-sizing',
         properties: [
-          "height",
-          "block-size",
-          "min-height",
-          "min-block-size",
-          "max-height",
-          "max-block-size",
-          "width",
-          "inline-size",
-          "min-width",
-          "min-inline-size",
-          "max-width",
-          "max-inline-size"
+          'height',
+          'block-size',
+          'min-height',
+          'min-block-size',
+          'max-height',
+          'max-block-size',
+          'width',
+          'inline-size',
+          'min-width',
+          'min-inline-size',
+          'max-width',
+          'max-inline-size'
         ],
       },
       {
-        groupName: "padding",
+        groupName: 'padding',
         properties: [
-          "padding",
-          "padding-block",
-          "padding-inline",
-          "padding-top",
-          "padding-right",
-          "padding-bottom",
-          "padding-left"
+          'padding',
+          'padding-block',
+          'padding-inline',
+          'padding-top',
+          'padding-right',
+          'padding-bottom',
+          'padding-left'
         ],
       },
       {
-        groupName: "border-radius",
+        groupName: 'border-radius',
         properties: [
-          "border-radius",
-          "border-top-left-radius",
-          "border-top-right-radius",
-          "border-bottom-right-radius",
-          "border-bottom-left-radius"
+          'border-radius',
+          'border-top-left-radius',
+          'border-top-right-radius',
+          'border-bottom-right-radius',
+          'border-bottom-left-radius'
         ],
       },
       {
-        groupName: "border",
+        groupName: 'border',
         properties: [
-          "border",
-          "border-width",
-          "border-block",
-          "border-inline",
-          "border-top",
-          "border-right",
-          "border-bottom",
-          "border-left"
+          'border',
+          'border-width',
+          'border-block',
+          'border-inline',
+          'border-top',
+          'border-right',
+          'border-bottom',
+          'border-left'
         ],
       },
       {
-        groupName: "effects",
+        groupName: 'effects',
         properties: [
-          "box-shadow",
-          "outline"
+          'box-shadow',
+          'outline'
         ],
       },
       {
-        groupName: "margin",
+        groupName: 'margin',
         properties: [
-          "margin",
-          "margin-block",
-          "margin-inline",
-          "margin-top",
-          "margin-right",
-          "margin-bottom",
-          "margin-left"
+          'margin',
+          'margin-block',
+          'margin-inline',
+          'margin-top',
+          'margin-right',
+          'margin-bottom',
+          'margin-left'
         ],
       },
       {
-        groupName: "background",
+        groupName: 'background',
         properties: [
-          "background",
-          "background-color",
-          "background-image",
-          "background-position",
-          "background-repeat",
-          "background-size",
-          "background-clip",
-          "background-origin",
-          "background-attachment"
+          'background',
+          'background-color',
+          'background-image',
+          'background-position',
+          'background-repeat',
+          'background-size',
+          'background-clip',
+          'background-origin',
+          'background-attachment'
         ],
       },
       {
-        groupName: "cursor",
+        groupName: 'cursor',
         properties: [
-          "cursor",
-          "user-select"
+          'cursor',
+          'user-select'
         ],
       },
       {
-        groupName: "typography",
+        groupName: 'typography',
         properties: [
-          "font-size",
-          "line-height",
-          "font-family",
-          "font-weight",
-          "font-style",
-          "text-align",
-          "text-transform",
-          "word-spacing",
-          "color"
+          'font-size',
+          'line-height',
+          'font-family',
+          'font-weight',
+          'font-style',
+          'text-align',
+          'text-transform',
+          'word-spacing',
+          'color'
         ],
       }
     ],
@@ -252,5 +262,6 @@ export default {
     '@stylistic/max-empty-lines': 1,
     '@stylistic/no-eol-whitespace': true,
     '@stylistic/no-missing-end-of-source-newline': true,
+    '@stylistic/string-quotes': 'single',
   },
 }

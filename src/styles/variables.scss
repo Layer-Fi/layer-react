@@ -9,7 +9,7 @@
 .Layer__actionable-list__tooltip-content,
 .Layer__tasks-component,
 #Layer__datepicker__portal {
-  // 1. BASE VARIABLES:
+  // Explicit Colors
   --color-black: #1a1a1a;
   --color-white: white;
   --color-blue: hsl(217deg 100% 92%);
@@ -28,97 +28,109 @@
   --color-dark-h: 0;
   --color-dark-s: 0%;
   --color-dark-l: 7%;
-  --color-dark: hsl(
-    var(--color-dark-h) var(--color-dark-s) var(--color-dark-l)
-  );
+  --color-dark:
+    hsl(
+      var(--color-dark-h)
+      var(--color-dark-s)
+      var(--color-dark-l)
+    );
   --color-light-h: 0;
   --color-light-s: 0%;
   --color-light-l: 90%;
-  --color-light: hsl(
-    var(--color-light-h) var(--color-light-s) var(--color-light-l)
-  );
+  --color-light:
+    hsl(
+      var(--color-light-h)
+      var(--color-light-s)
+      var(--color-light-l)
+    );
+
+  // Base Colors
   --color-base-0: #fff;
   --color-base-50: hsl(var(--color-dark-h) 1% 98%);
   --color-base-100: hsl(var(--color-dark-h) 1% 96%);
   --color-base-200: hsl(var(--color-dark-h) 1% 94%);
   --color-base-300: hsl(var(--color-dark-h) 2% 92%);
-  --color-base-400: var(--color-light);
-  --color-base-500: hsl(var(--color-dark-h) 2% 53%);
+  --color-base-400: hsl(var(--color-dark-h) 2% 80%);
+  --color-base-500: hsl(var(--color-dark-h) 3% 53%);
   --color-base-600: hsl(var(--color-dark-h) 7% 40%);
   --color-base-700: hsl(var(--color-dark-h) 9% 27%);
   --color-base-800: hsl(var(--color-dark-h) 12% 20%);
-  --color-base-900: var(--color-dark);
+  --color-base-900: hsl(var(--color-dark-h) 15% 14%);
   --color-base-1000: hsl(var(--color-dark-h) 20% 7%);
+
+  // View Sizing
   --max-component-width: 1408px;
+
+  // Transparency
   --base-transparent-1: hsl(220deg 43% 11% / 1%);
   --base-transparent-2: hsl(220deg 43% 11% / 2%);
-  --base-transparent-4: hsl(
-    var(--color-dark-h)
-    var(--color-dark-s)
-    var(--color-dark-l) /
-    4%
-  );
-  --base-transparent-5: hsl(
-    var(--color-dark-h)
-    var(--color-dark-s)
-    var(--color-dark-l) /
-    5%
-  );
-  --base-transparent-6: hsl(
-    var(--color-dark-h)
-    var(--color-dark-s)
-    var(--color-dark-l) /
-    6%
-  );
-  --base-transparent-8: hsl(
-    var(--color-dark-h)
-    var(--color-dark-s)
-    var(--color-dark-l) /
-    8%
-  );
-  --base-transparent-10: hsl(
-    var(--color-dark-h)
-    var(--color-dark-s)
-    var(--color-dark-l) /
-    10%
-  );
-  --base-transparent-12: hsl(
-    var(--color-dark-h)
-    var(--color-dark-s)
-    var(--color-dark-l) /
-    12%
-  );
-  --base-transparent-16: hsl(
-    var(--color-dark-h)
-    var(--color-dark-s)
-    var(--color-dark-l) /
-    16%
-  );
-  --base-transparent-16-light: hsl(
-    var(--color-light-h)
-    var(--color-light-s)
-    var(--color-light-l) /
-    16%
-  );
+  --base-transparent-4:
+    hsl(
+      var(--color-dark-h)
+      var(--color-dark-s)
+      var(--color-dark-l) / 4%
+    );
+  --base-transparent-5:
+    hsl(
+      var(--color-dark-h)
+      var(--color-dark-s)
+      var(--color-dark-l) / 5%
+    );
+  --base-transparent-6:
+    hsl(
+      var(--color-dark-h)
+      var(--color-dark-s)
+      var(--color-dark-l) / 6%
+    );
+  --base-transparent-8:
+    hsl(
+      var(--color-dark-h)
+      var(--color-dark-s)
+      var(--color-dark-l) / 8%
+    );
+  --base-transparent-10:
+    hsl(
+      var(--color-dark-h)
+      var(--color-dark-s)
+      var(--color-dark-l) / 10%
+    );
+  --base-transparent-12:
+    hsl(
+      var(--color-dark-h)
+      var(--color-dark-s)
+      var(--color-dark-l) / 12%
+    );
+  --base-transparent-16:
+    hsl(
+      var(--color-dark-h)
+      var(--color-dark-s)
+      var(--color-dark-l) / 16%
+    );
+  --base-transparent-16-light:
+    hsl(
+      var(--color-light-h)
+      var(--color-light-s)
+      var(--color-light-l) / 16%
+    );
 
-  // 2. BASE CUSTOMIZATION
+  // Customization
   --color-primary: var(--color-dark);
   --color-accent: var(--color-light);
   --color-secondary: var(--color-base);
   --color-success: var(--color-info-success);
   --color-danger: var(--color-info-error);
   --color-danger-dark: hsl(349deg 30% 30%);
-  --color-danger-light: hsl(
-    var(--color-info-error-h)
-    var(--color-info-error-s)
-    var(--color-info-error-l) /
-    40%
-  );
+  --color-danger-light:
+    hsl(
+      var(--color-info-error-h)
+      var(--color-info-error-s)
+      var(--color-info-error-l) / 40%
+    );
   --text-color-primary: var(--color-dark);
   --text-color-secondary: var(--color-base-600);
   --bg-element-focus: var(--color-base-50);
 
-  // 3. EXTENDED CUSTOMIZATION
+  // Extended Customization
   --font-family: 'InterVariable', 'Inter', sans-serif;
   --font-family-numeric: 'InterVariable', 'Inter', sans-serif;
   --text-xs: 11px;
@@ -190,8 +202,7 @@
   --badge-color-warning: var(--color-info-warning);
   --badge-fg-color-warning: var(--color-info-warning-fg);
   --badge-bg-color-warning: var(--color-info-warning-bg);
-  --badge-bg-color-warning-dark: #CA9204;
-
+  --badge-bg-color-warning-dark: #ca9204;
   --badge-color-error: var(--color-info-error);
   --badge-fg-color-error: var(--color-info-error-fg);
   --badge-bg-color-error: var(--color-info-error-bg);
@@ -199,8 +210,8 @@
   --table-bg: var(--color-white);
   --tooltip-color: var(--color-white);
   --tooltip-bg-color: var(--color-base-800);
-  --bar-color-income: var(--color-base-400);
-  --bar-color-expenses: var(--color-base-900);
+  --bar-color-income: var(--color-light);
+  --bar-color-expenses: var(--color-dark);
   --chart-indicator-color: var(--color-base-700);
   --z-index-mobile-panel: 106;
 
@@ -217,7 +228,6 @@
   --color-mischke: #d0d5dd;
   --color-zumthor: #e0e9ff;
   --active: var(--color-zumthor);
-  --border-color: var(--color-athens-gray);
   --buttons-border-color: var(--color-mischke);
   --button-color-dark: var(--color-fiord);
   --corner-radius: 0.5rem;
@@ -228,13 +238,14 @@
   --transition-speed: 0.25s;
 
   // 5. STYLES:
-  border: 0;
-  padding: 0;
-  margin: 0;
   box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  margin: 0;
   font-family: var(--font-family);
   font-weight: var(--font-weight-normal);
-  font-feature-settings: 'cv10' on,
+  font-feature-settings:
+    'cv10' on,
     'cv01' on,
     'cv05' on,
     'cv08' on,

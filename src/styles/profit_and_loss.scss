@@ -1,4 +1,4 @@
-@forward "../components/ProfitAndLossSummaries/profit_and_loss_summaries";
+@forward '../components/ProfitAndLossSummaries/profit_and_loss_summaries';
 
 .Layer__component-container .Layer__profit-and-loss {
   display: flex;
@@ -45,11 +45,8 @@
 }
 
 .Layer__profit-and-loss-table__loader-container {
-  padding: var(--spacing-2xl);
-}
-
-.Layer__profit-and-loss-table__loader-container {
   min-height: 950px;
+  padding: var(--spacing-2xl);
 }
 
 .Layer__profit-and-loss-table__outflows {
@@ -85,13 +82,6 @@
   grid-template-rows: 1fr;
 }
 
-.Layer__profit-and-loss-row__children--content {
-  display: grid;
-  grid-template-columns: subgrid;
-  grid-column: span 2;
-  min-height: 0;
-}
-
 .Layer__profit-and-loss-row__label {
   display: flex;
   align-items: center;
@@ -103,12 +93,18 @@
   }
 
   svg.Layer__profit-and-loss-row__label__chevron {
-    width: 1.25rem;
     height: 1.25rem;
+    width: 1.25rem;
     margin-right: 0.25rem;
     color: var(--color-base-600);
     transition: transform var(--transition-speed);
     transform: rotate(-90deg);
+  }
+
+  .Layer__text {
+    margin: 0;
+    font-weight: var(--font-weight-normal);
+    color: var(--color-base-700);
   }
 }
 
@@ -183,21 +179,13 @@
 
 .Layer__profit-and-loss-row__value--amount-positive {
   .Layer__text::before {
-    content: "$";
+    content: '$';
   }
 }
 
 .Layer__profit-and-loss-row__value--amount-negative {
   .Layer__text::before {
-    content: "-$";
-  }
-}
-
-.Layer__profit-and-loss-row__label {
-  .Layer__text {
-    margin: 0;
-    font-weight: var(--font-weight-normal);
-    color: var(--color-base-700);
+    content: '-$';
   }
 }
 
@@ -262,7 +250,7 @@
   align-items: stretch;
   border-radius: var(--border-radius-sm);
   box-shadow:
- 0 0 0 1px rgb(16 24 40 / 4%),
+    0 0 0 1px rgb(16 24 40 / 4%),
     0 2px 4px 0 rgb(16 24 40 / 6%),
     0 4px 12px 0 rgb(16 24 40 / 8%);
   margin-right: var(--spacing-xl);
@@ -341,19 +329,19 @@
 }
 
 #layer-bar-stripe-pattern rect {
-  fill: var(--color-base-400);
+  fill: var(--color-light);
 }
 
 #layer-bar-stripe-pattern line {
-  stroke: var(--color-base-400);
+  stroke: var(--color-light);
 }
 
 #layer-bar-stripe-pattern-dark rect {
-  fill: var(--color-base-900);
+  fill: var(--color-dark);
 }
 
 #layer-bar-stripe-pattern-dark line {
-  stroke: var(--color-base-900);
+  stroke: var(--color-dark);
 }
 
 #layer-pie-stripe-pattern rect {
@@ -444,15 +432,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
   height: 20px;
+  width: 20px;
   border-radius: 50%;
   margin-left: auto;
   background: var(--color-base-100);
   cursor: pointer;
   color: var(--color-base-600);
   transition:
- color 150ms ease-out,
+    color 150ms ease-out,
     background-color 150ms ease-out;
 
   &:hover {
@@ -470,9 +458,9 @@
   gap: var(--spacing-md);
   align-items: center;
   justify-content: center;
+  height: 120px;
   width: 260px;
   max-width: 70%;
-  height: 120px;
   padding: var(--spacing-lg) var(--spacing-4xs);
   border-radius: var(--border-radius-sm);
   box-shadow: 0 0 0 1px var(--base-transparent-4);
