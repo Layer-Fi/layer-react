@@ -20,6 +20,7 @@ import { VStack } from '../ui/Stack/Stack'
 import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/useBankTransactionsDownload'
 import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
+import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -193,6 +194,9 @@ export const BankTransactionsHeader = ({
             downloadButtonTextOverride={stringOverrides?.downloadButton}
             iconOnly={listView}
           />
+        </VStack>
+        <VStack slot='manage' justify='center'>
+          <BankTransactionsUploadMenu iconOnly={listView} />
         </VStack>
       </TransactionsActions>
     </Header>
