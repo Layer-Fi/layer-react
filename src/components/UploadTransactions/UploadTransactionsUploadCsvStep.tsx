@@ -149,12 +149,15 @@ export function UploadTransactionsUploadCsvStep(
       <Separator />
       <VStack gap='xs' className='Layer__upload-transactions__template-section'>
         <P size='sm'>Click to copy the required column headers</P>
-        <HStack align='center' gap='xs'>
-          <CopyTemplateHeadersButtonGroup headers={templateHeaders} />
-          <Spacer />
+        <HStack align='center' gap='xs' className='Layer__upload-transactions__template-section__button-row'>
+          <CopyTemplateHeadersButtonGroup
+            headers={templateHeaders}
+            className='Layer__upload-transactions__template-section__button-row-item'
+          />
           <DownloadCsvTemplateButton
             fileName='upload_transactions.csv'
             csvProps={{ headers: templateHeaders, rows: templateExampleTransactions }}
+            className='Layer__upload-transactions__template-section__button-row-item'
           >
             Download template
           </DownloadCsvTemplateButton>
