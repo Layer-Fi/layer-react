@@ -26,7 +26,7 @@
     outline: 1px auto -webkit-focus-ring-color;
   }
 
-  &[data-hovered]:not([data-pressed]):not([data-focus-visible]) {
+  &[data-hovered]:not([data-pressed], [data-focus-visible]) {
     outline: 1px solid var(--outline-default);
   }
 
@@ -38,22 +38,22 @@
       background-color: var(--button-bg-active);
     }
 
-    &[data-pressed]&:not([data-focus-visible]) {
-      background-color: var(--button-bg-active);
+    &[data-pressed]:not([data-focus-visible]) {
       outline: 2px solid var(--outline-default);
+      background-color: var(--button-bg-active);
     }
   }
 
   &[data-variant="ghost"] {
+    border: 1px solid transparent;
     background-color: var(--button-bg-ghost);
     color: var(--button-fg-ghost);
-    border: 1px solid transparent;
 
     &[data-persistent-border]:not([data-pressed]) {
       border-color: var(--button-border-color-ghost);
     }
 
-    &[data-pressed]&:not([data-focus-visible]) {
+    &[data-pressed]:not([data-focus-visible]) {
       border-color: var(--button-border-color-ghost-active);
       outline: 2px solid var(--outline-default);
     }
@@ -91,14 +91,14 @@
 
   &[data-disabled] {
     background-color: var(--button-bg-disabled);
-    color: var(--button-fg-disabled);
     cursor: not-allowed;
+    color: var(--button-fg-disabled);
   }
 
   &[data-pending] {
     background-color: var(--button-bg-disabled);
-    color: var(--button-fg-disabled);
     cursor: progress;
+    color: var(--button-fg-disabled);
   }
 }
 
