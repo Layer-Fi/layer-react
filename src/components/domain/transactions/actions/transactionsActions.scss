@@ -1,25 +1,47 @@
 .Layer__TransactionsActions {
   display: grid;
 
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: var(--spacing-xs);
   grid-template-areas:
-    "toggle . download manage"
-    "search search search search";
+    "toggle . download"
+    "search search search";
+
+  &--with-upload-menu {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "toggle . download upload"
+      "search search search search";
+  }
 
   @container (min-width: 640px) {
-    grid-template-columns: auto minmax(0, 2fr) minmax(0, 3fr) auto auto;
-    grid-template-areas: "toggle . search download manage";
+    grid-template-columns: auto minmax(0, 2fr) minmax(0, 3fr) auto;
+    grid-template-areas: "toggle . search download";
+    
+    &--with-upload-menu {
+      grid-template-columns: auto minmax(0, 2fr) minmax(0, 3fr) auto auto;
+      grid-template-areas: "toggle . search download upload";
+    }
   }
 
   @container (min-width: 780px) {
-    grid-template-columns: auto minmax(0, 3fr) minmax(0, 2fr) auto auto;
-    grid-template-areas: "toggle . search download manage";
+    grid-template-columns: auto minmax(0, 3fr) minmax(0, 2fr) auto;
+    grid-template-areas: "toggle . search download";
+
+    &--with-upload-menu {
+      grid-template-columns: auto minmax(0, 3fr) minmax(0, 2fr) auto auto;
+      grid-template-areas: "toggle . search download upload";
+    }
   }
 
   @container (min-width: 1024px) {
-    grid-template-columns: auto minmax(0, 3fr) minmax(0, 1fr) auto auto;
-    grid-template-areas: "toggle . search download manage";
+    grid-template-columns: auto minmax(0, 3fr) minmax(0, 1fr) auto;
+    grid-template-areas: "toggle . search download";
+
+    &--with-upload-menu {
+      grid-template-columns: auto minmax(0, 3fr) minmax(0, 1fr) auto auto;
+      grid-template-areas: "toggle . search download upload";
+    }
   }
 
   > [slot="toggle"] {
@@ -34,7 +56,7 @@
     grid-area: download;
   }
 
-  > [slot="manage"] {
-    grid-area: manage;
+  > [slot="upload"] {
+    grid-area: upload;
   }
 }

@@ -37,6 +37,7 @@ export interface BankTransactionsHeaderProps {
   isSyncing?: boolean
   setDateRange?: (value: DateRange) => void
   stringOverrides?: BankTransactionsHeaderStringOverrides
+  withUploadMenu?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -121,6 +122,7 @@ export const BankTransactionsHeader = ({
   setDateRange,
   stringOverrides,
   isSyncing,
+  withUploadMenu,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
 
@@ -169,7 +171,7 @@ export const BankTransactionsHeader = ({
           )
           : null}
       </div>
-      <TransactionsActions>
+      <TransactionsActions withUploadMenu={withUploadMenu}>
         {(!categorizedOnly && categorizeView) && (
           <VStack slot='toggle' justify='center'>
             <Toggle
@@ -195,9 +197,11 @@ export const BankTransactionsHeader = ({
             iconOnly={listView}
           />
         </VStack>
-        <VStack slot='manage' justify='center'>
-          <BankTransactionsUploadMenu iconOnly={listView} />
-        </VStack>
+        {withUploadMenu && (
+          <VStack slot='upload' justify='center'>
+            <BankTransactionsUploadMenu iconOnly={listView} />
+          </VStack>
+        )}
       </TransactionsActions>
     </Header>
   )

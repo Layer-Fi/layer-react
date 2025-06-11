@@ -60,6 +60,7 @@ export interface BankTransactionsProps {
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   showTooltips?: boolean
+  showUploadOptions?: boolean
 
   monthlyView?: boolean
   categorizeView?: boolean
@@ -104,6 +105,7 @@ const BankTransactionsContent = ({
   showDescriptions = true,
   showReceiptUploads = true,
   showTooltips = false,
+  showUploadOptions = false,
 
   monthlyView = false,
   categorizeView: categorizeViewProp,
@@ -309,6 +311,7 @@ const BankTransactionsContent = ({
           stringOverrides={stringOverrides?.bankTransactionsHeader}
           isDataLoading={isLoadingWithoutData}
           isSyncing={isSyncing}
+          withUploadMenu={showUploadOptions}
         />
       )}
 
