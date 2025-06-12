@@ -6,23 +6,28 @@ import { P } from '../Typography/Text'
 
 const MODAL_CONTEXT_BAR_CLASS_NAME = 'Layer__ModalContextBar'
 
-type ModalContextBarProps = {
+type ModalCloseButtonProps = {
   onClose?: () => void
 }
 
+export const ModalCloseButton = ({ onClose }: ModalCloseButtonProps) => (
+  <Button
+    icon
+    size='sm'
+    variant='ghost'
+    slot='close'
+    onPress={onClose}
+    aria-label='Close Modal'
+  >
+    <X size={24} />
+  </Button>
+)
+
+type ModalContextBarProps = ModalCloseButtonProps
 export function ModalContextBar({ onClose }: ModalContextBarProps) {
   return (
     <div className={MODAL_CONTEXT_BAR_CLASS_NAME}>
-      <Button
-        icon
-        size='sm'
-        variant='ghost'
-        slot='close'
-        onPress={onClose}
-        aria-label='Close Modal'
-      >
-        <X size={24} />
-      </Button>
+      <ModalCloseButton onClose={onClose} />
     </div>
   )
 }
