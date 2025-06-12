@@ -29,7 +29,7 @@ type UseLinkedAccounts = () => {
   updateConnectionStatus: () => void
   refetchAccounts: () => Awaitable<void>
   syncAccounts: () => void
-  unlinkAccount: (source: AccountSource, accountId: string) => void
+  unlinkAccount: (accountId: string) => void
   confirmAccount: (source: AccountSource, accountId: string) => void
   excludeAccount: (source: AccountSource, accountId: string) => void
   accountsToAddOpeningBalanceInModal: LinkedAccount[]
@@ -224,20 +224,13 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const unlinkAccount = async (source: AccountSource, accountId: string) => {
+  const unlinkAccount = async (accountId: string) => {
     DEBUG && console.debug('unlinking account')
-    if (source === 'PLAID') {
-      await Layer.unlinkAccount(apiUrl, auth?.access_token, {
-        params: { businessId, accountId: accountId },
-      })
-      await refetchAccounts()
-      touch(DataModel.LINKED_ACCOUNTS)
-    }
-    else {
-      console.error(
-        `Unlinking an account with source ${source} not yet supported`,
-      )
-    }
+    await Layer.unlinkAccount(apiUrl, auth?.access_token, {
+      params: { businessId, accountId: accountId },
+    })
+    await refetchAccounts()
+    touch(DataModel.LINKED_ACCOUNTS)
   }
 
   const confirmAccount = async (source: AccountSource, accountId: string) => {
