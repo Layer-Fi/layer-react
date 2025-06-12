@@ -38,6 +38,7 @@ export const LedgerAccountRow = ({
     else {
       setShowComponent(true)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (view === 'tablet') {

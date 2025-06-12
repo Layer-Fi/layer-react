@@ -13,7 +13,8 @@ const DrawerWidget = () => {
     if (!isMobile && !isTablet && content) {
       close()
     }
-  }, [isMobile])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile, isTablet])
 
   return (
     <Drawer isOpen={Boolean(content)} onClose={close}>

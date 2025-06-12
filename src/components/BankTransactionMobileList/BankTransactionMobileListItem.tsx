@@ -115,6 +115,7 @@ export const BankTransactionMobileListItem = ({
       setOpen(true)
       clearTransactionIdToOpen()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactionIdToOpen])
 
   useEffect(() => {
@@ -127,6 +128,7 @@ export const BankTransactionMobileListItem = ({
         close()
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     bankTransaction.recently_categorized,
     bankTransaction.category,
@@ -155,6 +157,7 @@ export const BankTransactionMobileListItem = ({
         removeTransaction(bankTransaction)
       }, 300)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
   const onChangePurpose = (event: ChangeEvent<HTMLInputElement>) =>

@@ -4,6 +4,7 @@ import { useAuth } from '../../../hooks/useAuth'
 import type { S3PresignedUrl } from '../../../types/general'
 import type { Awaitable } from '../../../types/utility/promises'
 import { getCashflowStatementCSV } from '../../../api/layer/statement-of-cash-flow'
+import { APIError } from '../../../models/APIError'
 
 function buildKey({
   access_token: accessToken,
@@ -36,6 +37,14 @@ type UseCashflowStatementDownloadOptions = {
   onSuccess?: (url: S3PresignedUrl) => Awaitable<unknown>
 }
 
+type MutationParams = () => {
+  accessToken: string
+  apiUrl: string
+  businessId: string
+  startDate: Date
+  endDate: Date
+} | undefined
+
 export function useCashflowStatementDownload({
   startDate,
   endDate,
@@ -44,7 +53,11 @@ export function useCashflowStatementDownload({
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
-  return useSWRMutation(
+  return useSWRMutation<
+    unknown,
+    Error | APIError,
+    MutationParams
+  >(
     () => buildKey({
       ...auth,
       businessId,

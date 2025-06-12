@@ -91,6 +91,7 @@ export const useTooltip = ({
       ...interactions,
       ...data,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [open, setOpen, interactions, data, styles, disabled],
   )
 }

@@ -81,27 +81,32 @@ export function useConfirmAndExcludeMultiple({ onSuccess }: { onSuccess?: () => 
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
-  return useSWRMutation(
-    () => buildKey({
-      access_token: auth?.access_token,
-      apiUrl: auth?.apiUrl,
-      businessId,
-    }),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg }: { arg: AccountConfirmExcludeFormState },
-    ) => Promise.all(
-      Object.entries(arg).map(([accountId, isConfirmed]) =>
-        isConfirmed
-          ? confirm({ accessToken, apiUrl, accountId, businessId })
-          : exclude({ accessToken, apiUrl, accountId, businessId }),
-      ),
-    )
-      .then(() => onSuccess?.())
-      .then(() => true as const),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
+  return useSWRMutation<
+    boolean,
+    Error,
+    () => ReturnType<typeof buildKey> | undefined,
+    AccountConfirmExcludeFormState
+  >(
+      () => buildKey({
+        access_token: auth?.access_token,
+        apiUrl: auth?.apiUrl,
+        businessId,
+      }),
+      (
+        { accessToken, apiUrl, businessId },
+        { arg }: { arg: AccountConfirmExcludeFormState },
+      ) => Promise.all(
+        Object.entries(arg).map(([accountId, isConfirmed]) =>
+          isConfirmed
+            ? confirm({ accessToken, apiUrl, accountId, businessId })
+            : exclude({ accessToken, apiUrl, accountId, businessId }),
+        ),
+      )
+        .then(() => onSuccess?.())
+        .then(() => true as const),
+      {
+        revalidate: false,
+        throwOnError: false,
+      },
+      )
 }

@@ -31,7 +31,6 @@ type Props = {
   className?: string
   showTooltips: boolean
   excludeMatches?: boolean
-  hideMainCategories?: string[]
   asDrawer?: boolean
 }
 
@@ -142,7 +141,7 @@ const Option = (
     showTooltips: boolean
   },
 ) => {
-  if (props.data.payload.option_type === 'hidden') {
+  if (props.data.payload.option_type === OptionActionType.HIDDEN) {
     return null
   }
 
@@ -248,14 +247,6 @@ function flattenCategories(
   })
 }
 
-function filterCategories(categories: Category[], hideMainCategories?: string[]) {
-  if (!hideMainCategories) {
-    return categories
-  }
-
-  return categories.filter(category => !hideMainCategories.includes(category.category))
-}
-
 export const CategorySelect = ({
   bankTransaction,
   name,
@@ -265,7 +256,6 @@ export const CategorySelect = ({
   className,
   showTooltips,
   excludeMatches = false,
-  hideMainCategories,
   asDrawer = false,
 }: Props) => {
   const { data: categories } = useCategories()

@@ -145,7 +145,7 @@ export const JournalFormEntryLines = ({
 
   return (
     <>
-      {['DEBIT', 'CREDIT'].map((direction, idx) => {
+      {[Direction.DEBIT, Direction.CREDIT].map((direction, idx) => {
         return (
           <div
             key={'Layer__journal__form__input-group-' + idx}
@@ -178,7 +178,7 @@ export const JournalFormEntryLines = ({
                       disabled={sendingForm}
                       allowNegativeValue={false}
                       badge={(
-                        <Badge variant={item.direction === 'CREDIT'
+                        <Badge variant={item.direction === Direction.CREDIT
                           ? BadgeVariant.SUCCESS
                           : BadgeVariant.WARNING}
                         >
@@ -239,7 +239,7 @@ export const JournalFormEntryLines = ({
               || config.form.addEntryLinesLimit > entrylineItems?.length) && (
               <TextButton
                 className='Layer__journal__add-entry-line'
-                onClick={() => addEntryLine(direction as Direction)}
+                onClick={() => addEntryLine(direction)}
               >
                 Add next account
               </TextButton>

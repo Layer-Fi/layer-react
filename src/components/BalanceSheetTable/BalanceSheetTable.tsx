@@ -31,10 +31,12 @@ export const BalanceSheetTable = ({
     if (expandedAllRows) {
       setIsOpen(allRowKeys, true)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expandedAllRows])
 
   useEffect(() => {
     setIsOpen(['assets'])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const renderLineItem = (

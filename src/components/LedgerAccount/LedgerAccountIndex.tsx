@@ -84,6 +84,7 @@ export const LedgerAccount = ({
     return flattenAccounts(accountData?.accounts || []).find(
       x => x.id === accountId,
     )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId])
 
   const data = useMemo(() => {
@@ -92,6 +93,7 @@ export const LedgerAccount = ({
     return rawData
       ?.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
       ?.slice(firstPageIndex, lastPageIndex)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rawData, currentPage])
 
   const close = () => {

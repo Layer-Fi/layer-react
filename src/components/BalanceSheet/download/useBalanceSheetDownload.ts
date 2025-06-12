@@ -4,6 +4,7 @@ import { useAuth } from '../../../hooks/useAuth'
 import { getBalanceSheetExcel } from '../../../api/layer/balance_sheet'
 import type { S3PresignedUrl } from '../../../types/general'
 import type { Awaitable } from '../../../types/utility/promises'
+import { APIError } from '../../../models/APIError'
 
 function buildKey({
   access_token: accessToken,
@@ -32,6 +33,13 @@ type UseBalanceSheetOptions = {
   onSuccess?: (url: S3PresignedUrl) => Awaitable<unknown>
 }
 
+type MutationParams = () => {
+  accessToken: string
+  apiUrl: string
+  businessId: string
+  effectiveDate: Date
+} | undefined
+
 export function useBalanceSheetDownload({
   effectiveDate,
   onSuccess,
@@ -39,7 +47,11 @@ export function useBalanceSheetDownload({
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
-  return useSWRMutation(
+  return useSWRMutation<
+    unknown,
+    Error | APIError,
+    MutationParams
+  >(
     () => buildKey({
       ...auth,
       businessId,

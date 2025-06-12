@@ -60,6 +60,7 @@ export const JournalTableWithPanel = ({
     return rawData
       ?.sort((a, b) => Date.parse(b.entry_at) - Date.parse(a.entry_at))
       ?.slice(firstPageIndex, lastPageIndex)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rawData, currentPage])
 
   return (
@@ -145,7 +146,7 @@ export const JournalTableWithPanel = ({
               status={DataStateStatus.failed}
               title='Something went wrong'
               description='We couldn’t load your data.'
-              onRefresh={() => refetch()}
+              onRefresh={() => void refetch()}
               isLoading={isValidating || isLoading}
             />
           </div>
