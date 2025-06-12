@@ -10,7 +10,7 @@ type DropdownMenuProps = PropsWithChildren<{
   }
   slotProps?: {
     Dialog?: {
-      width?: number
+      width?: number | string
     }
   }
 }>

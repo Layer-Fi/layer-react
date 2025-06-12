@@ -78,7 +78,7 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
   }, [])
 
   return (
-    <section className='Layer__component'>
+    <section className='Layer__component Layer__upload-transactions'>
       <Wizard
         Header={<UploadTransactionsHeader currentStep={currentStep} isValid={isValid} />}
         Footer={null}

@@ -16,10 +16,11 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import { useDebounce } from '../../hooks/useDebounce/useDebounce'
 import { TransactionsSearchField } from '../domain/transactions/searchField/TransactionsSearchField'
 import { TransactionsActions } from '../domain/transactions/actions/TransactionsActions'
-import { VStack } from '../ui/Stack/Stack'
+import { HStack, VStack } from '../ui/Stack/Stack'
 import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/useBankTransactionsDownload'
 import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
+import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -36,6 +37,7 @@ export interface BankTransactionsHeaderProps {
   isSyncing?: boolean
   setDateRange?: (value: DateRange) => void
   stringOverrides?: BankTransactionsHeaderStringOverrides
+  withUploadMenu?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -120,6 +122,7 @@ export const BankTransactionsHeader = ({
   setDateRange,
   stringOverrides,
   isSyncing,
+  withUploadMenu,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
 
@@ -188,12 +191,13 @@ export const BankTransactionsHeader = ({
           </VStack>
         )}
         <TransactionsSearch slot='search' />
-        <VStack slot='download' justify='center'>
+        <HStack slot='download-upload' justify='center' gap='xs'>
           <DownloadButton
             downloadButtonTextOverride={stringOverrides?.downloadButton}
             iconOnly={listView}
           />
-        </VStack>
+          {withUploadMenu && <BankTransactionsUploadMenu iconOnly={listView} />}
+        </HStack>
       </TransactionsActions>
     </Header>
   )

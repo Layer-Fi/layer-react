@@ -13,7 +13,7 @@ import { PreviewCsv, PreviewRow } from './types'
 import { useVirtualizer, VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 
 const ROW_HEIGHT = 52
-const MAX_NUM_ROWS = 10
+const MAX_NUM_ROWS = 8
 const HEADER_HEIGHT = 41
 const CONTAINER_HEIGHT = ROW_HEIGHT * MAX_NUM_ROWS + HEADER_HEIGHT - 1
 

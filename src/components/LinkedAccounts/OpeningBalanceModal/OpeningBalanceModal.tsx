@@ -143,7 +143,7 @@ function LinkedAccountsOpeningBalanceModalContent({
       </ModalContent>
       <ModalActions>
         <VStack gap='md'>
-          <Button size='lg' onPress={() => void trigger()} isPending={isMutating}>
+          <Button onPress={() => void trigger()} isPending={isMutating}>
             {stringOverrides?.buttonText ?? 'Submit'}
           </Button>
         </VStack>
