@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import { LinkedAccount } from '../../types/linked_accounts'
 import { LinkedAccountOptions } from '../LinkedAccountOptions'
@@ -6,6 +6,7 @@ import { LinkedAccountThumb } from '../LinkedAccountThumb/LinkedAccountThumb'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import type { HoverMenuProps } from '../HoverMenu'
 import { LinkedAccountPill } from '../LinkedAccountPill/LinkedAccountPill'
+import { UnlinkAccountConfirmationModal } from './UnlinkAccountConfirmationModal/UnlinkAccountConfirmationModal'
 
 function accountNeedsUniquenessConfirmation({
   notifications,
@@ -35,7 +36,6 @@ export const LinkedAccountItemThumb = ({
   showBreakConnection,
 }: LinkedAccountItemThumbProps) => {
   const {
-    unlinkAccount,
     removeConnection,
     repairConnection,
     confirmAccount,
@@ -44,6 +44,7 @@ export const LinkedAccountItemThumb = ({
     setAccountsToAddOpeningBalanceInModal,
   } = useContext(LinkedAccountsContext)
   const { environment } = useEnvironment()
+  const [isUnlinkConfirmationModalOpen, setIsUnlinkConfirmationModalOpen] = useState(false)
 
   let pillConfig
   if (accountNeedsUniquenessConfirmation(account)) {
@@ -52,17 +53,17 @@ export const LinkedAccountItemThumb = ({
       config: [
         {
           name: 'Mark as a duplicate account',
-          action: async () => {
+          action: () => {
             // TODO: trigger some sort of loading spinner here
-            await excludeAccount(account.external_account_source, account.id)
+            void excludeAccount(account.external_account_source, account.id)
             // TODO: turn off loading spinner
           },
         },
         {
           name: 'Mark as not a duplicate account',
-          action: async () => {
+          action: () => {
             // TODO: trigger some sort of loading spinner here
-            await confirmAccount(account.external_account_source, account.id)
+            void confirmAccount(account.external_account_source, account.id)
             // TODO: turn off loading spinner
           },
         },
@@ -75,11 +76,11 @@ export const LinkedAccountItemThumb = ({
       config: [
         {
           name: 'Repair connection',
-          action: async () => {
+          action: () => {
             if (account.connection_external_id) {
               // TODO: trigger some sort of loading spinner here
               // An account is "broken" when its connection is broken
-              await repairConnection(
+              void repairConnection(
                 account.external_account_source,
                 account.connection_external_id,
               )
@@ -94,15 +95,8 @@ export const LinkedAccountItemThumb = ({
   const additionalConfigs: HoverMenuProps['config'] = [
     {
       name: 'Unlink account',
-      action: async () => {
-        // TODO: replace with better confirm dialog
-        if (
-          confirm('Please confirm you wish to remove this financial account')
-        ) {
-          // TODO: trigger some sort of loading spinner here
-          await unlinkAccount(account.external_account_source, account.id)
-        }
-        // TODO: turn off loading spinner
+      action: () => {
+        setIsUnlinkConfirmationModalOpen(true)
       },
     },
   ]
@@ -110,7 +104,7 @@ export const LinkedAccountItemThumb = ({
   if (showUnlinkItem) {
     additionalConfigs.push({
       name: `Unlink all accounts under this ${account.institution?.name} connection`,
-      action: async () => {
+      action: () => {
         // TODO: replace with better confirm dialog
         if (
           account.connection_external_id
@@ -121,7 +115,7 @@ export const LinkedAccountItemThumb = ({
           )
         ) {
           // TODO: trigger some sort of loading spinner here
-          await removeConnection(
+          void removeConnection(
             account.external_account_source,
             account.connection_external_id,
           )
@@ -148,9 +142,9 @@ export const LinkedAccountItemThumb = ({
   ) {
     additionalConfigs.push({
       name: 'Break connection (test utility)',
-      action: async () => {
+      action: () => {
         if (account.connection_external_id) {
-          await breakConnection(
+          void breakConnection(
             account.external_account_source,
             account.connection_external_id,
           )
@@ -177,6 +171,13 @@ export const LinkedAccountItemThumb = ({
             : null,
         }}
       />
+      {isUnlinkConfirmationModalOpen && (
+        <UnlinkAccountConfirmationModal
+          isOpen
+          onOpenChange={setIsUnlinkConfirmationModalOpen}
+          accountId={account.id}
+        />
+      )}
     </LinkedAccountOptions>
   )
 }
