@@ -1,11 +1,11 @@
 import { Modal, ModalProps } from '../../ui/Modal/Modal'
-import { ModalContextBar } from '../../ui/Modal/ModalSlots'
+import { ModalCloseButton } from '../../ui/Modal/ModalSlots'
 import { UploadTransactions } from '../../UploadTransactions/UploadTransactions'
 
 function BankTransactionsUploadModalContent({ onClose }: { onClose: () => void }) {
   return (
     <>
-      <ModalContextBar onClose={onClose} />
+      <ModalCloseButton onClose={onClose} positionAbsolute />
       <UploadTransactions onComplete={onClose} />
     </>
   )
