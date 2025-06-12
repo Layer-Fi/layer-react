@@ -77,7 +77,7 @@ export function BaseConfirmationModal({
               <SubmitButton
                 onClick={() => onClickConfirm(close)}
                 processing={isProcessing}
-                error={getErrorMessage(error, errorText) as string}
+                error={getErrorMessage(error, errorText) ?? ''}
                 withRetry
                 noIcon={!isProcessing}
               >

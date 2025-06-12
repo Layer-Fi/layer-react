@@ -227,7 +227,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const unlinkAccount = async (accountId: string) => {
     DEBUG && console.debug('unlinking account')
     await Layer.unlinkAccount(apiUrl, auth?.access_token, {
-      params: { businessId, accountId: accountId },
+      params: { businessId, accountId },
     })
     await refetchAccounts()
     touch(DataModel.LINKED_ACCOUNTS)

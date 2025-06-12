@@ -14,7 +14,7 @@ export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, accountId
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       title='Unlink account'
-      description='This account will stop syncing new data, and any unmatched transactions will be deleted.'
+      description='This account will stop syncing new data, and any unmatched transactions will be permanently deleted.'
       onConfirm={() => unlinkAccount(accountId)}
       confirmLabel='Unlink Account'
       errorText='Unlink failed. Please check your connection and try again in a few seconds.'
