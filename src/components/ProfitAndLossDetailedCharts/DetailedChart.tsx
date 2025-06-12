@@ -57,6 +57,7 @@ export const DetailedChart = ({
         type: x.type,
       }
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredData, isLoading])
 
   const noValue = chartData.length === 0 || !chartData.find(x => x.value !== 0)

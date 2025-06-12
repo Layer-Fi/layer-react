@@ -15,7 +15,7 @@ export function ProfitAndLossSummariesListItem({
 }: ProfitAndLossSummariesListItemProps) {
   const dataProperties = useMemo(
     () => toDataProperties({ active: isActive, clickable: !!onClick }),
-    [isActive],
+    [isActive, onClick],
   )
 
   return (

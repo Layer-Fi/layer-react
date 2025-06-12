@@ -185,6 +185,7 @@ export const ProfitAndLossChart = ({
     ) {
       setLocalDateRange(dateRange)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateRange])
 
   const { data, loaded, pullData } = useProfitAndLossLTM({
@@ -249,6 +250,7 @@ export const ProfitAndLossChart = ({
         pullData(newDate)
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localDateRange])
 
   useEffect(() => {
@@ -264,6 +266,7 @@ export const ProfitAndLossChart = ({
     ) {
       setChartWindow(newChartWindow)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localDateRange])
 
   useEffect(() => {
@@ -366,6 +369,7 @@ export const ProfitAndLossChart = ({
           ) <= 12,
       )
       .map(x => summarizePnL(x))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectionMonth, chartWindow, data, loaded, compactView])
 
   const onClick: CategoricalChartFunc = ({ activePayload }) => {

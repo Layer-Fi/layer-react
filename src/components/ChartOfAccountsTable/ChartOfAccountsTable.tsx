@@ -80,6 +80,7 @@ export const ChartOfAccountsTableContent = ({
     else if (expandAll === 'collapsed') {
       setIsOpen([])
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expandAll])
 
   useEffect(() => {
@@ -101,6 +102,7 @@ export const ChartOfAccountsTableContent = ({
     }
 
     searchRowsToExpand(data.accounts, 'coa-row')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const renderChartOfAccountsDesktopRow = (
@@ -128,7 +130,9 @@ export const ChartOfAccountsTableContent = ({
             withExpandIcon={expandable}
             onClick={(e) => {
               e.stopPropagation()
-              expandable && setIsOpen(rowKey)
+              if (expandable) {
+                setIsOpen(rowKey)
+              }
             }}
           >
             {account.name}

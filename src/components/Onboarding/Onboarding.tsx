@@ -42,7 +42,7 @@ export const OnboardingContent = ({
 
   useEffect(() => {
     setOnboardingStep(onboardingStepOverride)
-  }, [onboardingStepOverride])
+  }, [onboardingStepOverride, setOnboardingStep])
 
   const [style, setStyle] = useState(
     onboardingStep ? EXPANDED_STYLE : COLLAPSED_STYLE,
@@ -68,6 +68,7 @@ export const OnboardingContent = ({
     ) {
       setOnboardingStep('complete')
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, loadingStatus])
 
   useEffect(() => {
@@ -76,6 +77,7 @@ export const OnboardingContent = ({
         setStyle(EXPANDED_STYLE)
       }, 500)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onboardingStep])
 
   if (!onboardingStep) {

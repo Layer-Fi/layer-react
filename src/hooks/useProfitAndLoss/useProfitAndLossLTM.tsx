@@ -3,11 +3,12 @@ import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { ReportingBasis } from '../../types'
 import { DataModel, LoadedStatus } from '../../types/general'
-import { ProfitAndLossSummary } from '../../types/profit_and_loss'
+import { ProfitAndLossSummaries, ProfitAndLossSummary } from '../../types/profit_and_loss'
 import { startOfMonth, sub } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { APIError } from '../../models/APIError'
 
 type UseProfitAndLossLTMProps = {
   currentDate: Date
@@ -73,6 +74,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
 
   const { startYear, startMonth, endYear, endMonth } = useMemo(() => {
     return buildDates({ currentDate: date })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date, businessId, tagFilter, reportingBasis])
 
   const queryKey =
@@ -92,7 +94,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     isValidating,
     error,
     mutate,
-  } = useSWR(
+  } = useSWR<{ data?: ProfitAndLossSummaries, error?: unknown }, APIError>(
     queryKey,
     Layer.getProfitAndLossSummaries(apiUrl, auth?.access_token, {
       params: {
@@ -151,6 +153,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
         ),
       )
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startYear, startMonth, tagFilter])
 
   useEffect(() => {
@@ -173,6 +176,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
         ),
       )
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rawData])
 
   useEffect(() => {
@@ -184,6 +188,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     if (!isLoading && rawData) {
       setLoaded('complete')
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, isLoading])
 
   const pullData = (date: Date) => setDate(date)
@@ -193,12 +198,14 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     if (queryKey && (isLoading || isValidating)) {
       read(DataModel.PROFIT_AND_LOSS, queryKey)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isValidating])
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
       void mutate()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     syncTimestamps,
     startYear,

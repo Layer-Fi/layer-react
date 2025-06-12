@@ -285,7 +285,6 @@ export const BillsDetails = ({
                                   onChange={e => subField.handleChange(
                                     { type: 'AccountId', id: e.payload.id },
                                   )}
-                                  hideMainCategories={['REVENUE']}
                                   showTooltips={false}
                                   disabled={disabled}
                                 />

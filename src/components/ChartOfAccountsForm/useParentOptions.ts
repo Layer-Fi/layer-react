@@ -10,11 +10,11 @@ export const useParentOptions = (
     () =>
       flattenAccounts(data?.accounts || [])
         .sort((a, b) => (a?.name && b?.name ? a.name.localeCompare(b.name) : 0))
-        .map(x => {
+        .map((x) => {
           return {
             label: x.name,
             value: x.id,
           }
         }),
-    [data?.accounts?.length],
+    [data?.accounts],
   )

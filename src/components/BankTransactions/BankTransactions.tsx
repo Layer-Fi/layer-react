@@ -154,6 +154,7 @@ const BankTransactionsContent = ({
     if (!monthlyView && filters?.dateRange) {
       setFilters({ ...filters, dateRange: undefined })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monthlyView])
 
   useEffect(() => {
@@ -161,6 +162,7 @@ const BankTransactionsContent = ({
     if (monthlyView && isVisible && !isLoading && hasMore) {
       fetchMore()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monthlyView, isVisible, isLoading, hasMore])
 
   useEffect(() => {
@@ -206,6 +208,7 @@ const BankTransactionsContent = ({
         categorizationStatus: DisplayState.categorized,
       })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputFilters, categorizeView, categorizationEnabled])
 
   useEffect(() => {
@@ -227,11 +230,9 @@ const BankTransactionsContent = ({
   ) => {
     setFilters({
       categorizationStatus:
-        event.target.value === DisplayState.categorized
-          ? DisplayState.categorized
-          : event.target.value === DisplayState.all
-            ? DisplayState.all
-            : DisplayState.review,
+        Object.values(DisplayState).includes(event.target.value as DisplayState)
+          ? (event.target.value as DisplayState)
+          : DisplayState.all,
     })
     setCurrentPage(1)
   }

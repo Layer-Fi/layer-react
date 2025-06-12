@@ -390,17 +390,17 @@ export const useAugmentedBankTransactions = (
           data: page.data?.filter(bt => bt.id !== bankTransaction.id),
         }
       })
-      mutate(updatedData, { revalidate: false })
+      void mutate(updatedData, { revalidate: false })
     }
   }
 
   const refetch = () => {
-    mutate()
+    void mutate()
   }
 
   const fetchMore = () => {
     if (hasMore) {
-      setSize(size + 1)
+      void setSize(size + 1)
     }
   }
 
@@ -413,12 +413,14 @@ export const useAugmentedBankTransactions = (
     if (isLoading || isValidating) {
       read(DataModel.BANK_TRANSACTIONS, getCacheKey(filters))
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isValidating])
 
   useEffect(() => {
     if (hasBeenTouched(getCacheKey(filters))) {
       refetch()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncTimestamps, filters])
 
   const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
@@ -447,8 +449,9 @@ export const useAugmentedBankTransactions = (
   useEffect(() => {
     if (refreshTrigger !== -1) {
       refetch()
-      refetchAccounts()
+      void refetchAccounts()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger])
 
   useEffect(() => {

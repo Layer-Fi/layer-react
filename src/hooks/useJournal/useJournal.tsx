@@ -366,12 +366,14 @@ export const useJournal: UseJournal = () => {
     if (queryKey && (isLoading || isValidating)) {
       read(DataModel.JOURNAL, queryKey)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isValidating])
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
       void refetch()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncTimestamps])
 
   return {

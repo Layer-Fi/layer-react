@@ -94,6 +94,7 @@ export const BankTransactionListItem = ({
         removeTransaction(bankTransaction)
       }, 300)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
   const save = () => {
