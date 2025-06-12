@@ -7,21 +7,20 @@ import { ChevronRight } from 'lucide-react'
 import UploadCloud from '../../icons/UploadCloud'
 import { BankTransactionsUploadModal } from './BankTransactionsUploadModal/BankTransactionsUploadModal'
 
-const MenuTriggerButton = ({ iconOnly }: { iconOnly?: boolean }) => (
-  <Button variant='ghost' {...(iconOnly && { icon: true })} persistentBorder={iconOnly}>
-    {!iconOnly && 'Upload'}
+const MenuTriggerButton = () => (
+  <Button variant='ghost' icon persistentBorder>
     <UploadCloud size={12} />
   </Button>
 )
 
-export const BankTransactionsUploadMenu = ({ iconOnly }: { iconOnly?: boolean }) => {
+export const BankTransactionsUploadMenu = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
     <>
       <DropdownMenu
         ariaLabel='Upload transactions'
-        slots={{ Trigger: () => <MenuTriggerButton iconOnly={iconOnly} /> }}
+        slots={{ Trigger: MenuTriggerButton }}
         slotProps={{
           Dialog: { width: '18rem' },
         }}

@@ -196,7 +196,7 @@ export const BankTransactionsHeader = ({
             downloadButtonTextOverride={stringOverrides?.downloadButton}
             iconOnly={listView}
           />
-          {withUploadMenu && <BankTransactionsUploadMenu iconOnly={listView} />}
+          {withUploadMenu && <BankTransactionsUploadMenu />}
         </HStack>
       </TransactionsActions>
     </Header>
