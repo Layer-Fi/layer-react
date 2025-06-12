@@ -2,10 +2,7 @@ import {
   forwardRef,
   useImperativeHandle,
   useState,
-  useCallback,
-  useEffect,
   useRef,
-  TransitionEvent,
 } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
@@ -147,8 +144,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     )
     const [matchFormError, setMatchFormError] = useState<string | undefined>()
     const [splitFormError, setSplitFormError] = useState<string | undefined>()
-    const [height, setHeight] = useState<string | number>(0)
-    const [isOver, setOver] = useState(false)
     const bodyRef = useRef<HTMLSpanElement>(null)
 
     const defaultCategory =
@@ -344,37 +339,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       close()
     }
 
-    const getDivHeight = useCallback(() => {
-      const { height } = bodyRef.current
-        ? bodyRef.current.getBoundingClientRect()
-        : { height: undefined }
-
-      return height || 0
-    }, [])
-
-    const handleTransitionEnd = useCallback(
-      (e: TransitionEvent<HTMLSpanElement>) => {
-        if (e.propertyName === 'height') {
-          setHeight(isOpen ? 'auto' : 0)
-          if (!isOpen) {
-            setOver(true)
-          }
-        }
-      },
-      [isOpen],
-    )
-
-    useEffect(() => {
-      setHeight(getDivHeight())
-      setOver(false)
-
-      if (!isOpen) {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => setHeight(0))
-        })
-      }
-    }, [getDivHeight, isOpen])
-
     const bookkeepingStatus = useEffectiveBookkeepingStatus()
     const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
 
@@ -383,17 +347,14 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       : []
 
     const className = 'Layer__expanded-bank-transaction-row'
-    const shouldHide = !isOpen && isOver
 
     return (
       <span
         className={`${className} ${className}--${
           isOpen ? 'expanded' : 'collapsed'
         }`}
-        style={{ height }}
-        onTransitionEnd={handleTransitionEnd}
       >
-        {shouldHide
+        {!isOpen
           ? null
           : (
             <span className={`${className}__wrapper`} ref={bodyRef}>
