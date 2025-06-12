@@ -29,6 +29,15 @@ const accountName = (
   return ''
 }
 
+const calculateAmount = (entry: JournalEntry, direction: Direction) => (
+  Math.abs(
+    entry.line_items
+      .filter(item => item.direction === direction)
+      .map(item => item.amount)
+      .reduce((a, b) => a + b, 0),
+  )
+)
+
 export const JournalTable = ({
   view,
   data,
@@ -118,22 +127,10 @@ const JournalTableContent = ({
             )
           </TableCell>
           <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-            {'line_items' in row
-              && Math.abs(
-                row.line_items
-                  .filter(item => item.direction === Direction.DEBIT)
-                  .map(item => item.amount)
-                  .reduce((a, b) => a + b, 0),
-              )}
+            {'line_items' in row && calculateAmount(row, Direction.DEBIT)}
           </TableCell>
           <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-            {'line_items' in row
-              && Math.abs(
-                row.line_items
-                  .filter(item => item.direction === Direction.CREDIT)
-                  .map(item => item.amount)
-                  .reduce((a, b) => a + b, 0),
-              )}
+            {'line_items' in row && calculateAmount(row, Direction.CREDIT)}
           </TableCell>
         </TableRow>
         {expandable
