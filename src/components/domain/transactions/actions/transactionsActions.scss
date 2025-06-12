@@ -1,47 +1,26 @@
 .Layer__TransactionsActions {
   display: grid;
+  grid-template-areas:
+    "toggle . download-upload"
+    "search search search";
 
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: var(--spacing-xs);
-  grid-template-areas:
-    "toggle . download"
-    "search search search";
-
-  &--with-upload-menu {
-    grid-template-columns: auto minmax(0, 1fr) auto auto;
-    grid-template-areas:
-      "toggle . download upload"
-      "search search search search";
-  }
+  align-items: center;
 
   @container (min-width: 640px) {
-    grid-template-columns: auto minmax(0, 2fr) minmax(0, 3fr) auto;
-    grid-template-areas: "toggle . search download";
-    
-    &--with-upload-menu {
-      grid-template-columns: auto minmax(0, 2fr) minmax(0, 3fr) auto auto;
-      grid-template-areas: "toggle . search download upload";
-    }
+    grid-template-areas: "toggle . search download-upload";
+    grid-template-columns: auto minmax(0, 2fr) minmax(15rem, 3fr) auto;
   }
 
   @container (min-width: 780px) {
-    grid-template-columns: auto minmax(0, 3fr) minmax(0, 2fr) auto;
-    grid-template-areas: "toggle . search download";
-
-    &--with-upload-menu {
-      grid-template-columns: auto minmax(0, 3fr) minmax(0, 2fr) auto auto;
-      grid-template-areas: "toggle . search download upload";
-    }
+    grid-template-areas: "toggle . search download-upload";
+    grid-template-columns: auto minmax(0, 3fr) minmax(15rem, 2fr) auto;
   }
 
   @container (min-width: 1024px) {
-    grid-template-columns: auto minmax(0, 3fr) minmax(0, 1fr) auto;
-    grid-template-areas: "toggle . search download";
-
-    &--with-upload-menu {
-      grid-template-columns: auto minmax(0, 3fr) minmax(0, 1fr) auto auto;
-      grid-template-areas: "toggle . search download upload";
-    }
+    grid-template-areas: "toggle . search download-upload";
+    grid-template-columns: auto minmax(0, 3fr) minmax(15rem, 1fr) auto;
   }
 
   > [slot="toggle"] {
@@ -52,11 +31,7 @@
     grid-area: search;
   }
 
-  > [slot="download"] {
-    grid-area: download;
-  }
-
-  > [slot="upload"] {
-    grid-area: upload;
+  > [slot="download-upload"] {
+    grid-area: download-upload;
   }
 }
