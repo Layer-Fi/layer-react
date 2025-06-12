@@ -79,25 +79,28 @@ export function UploadTransactionsValidateCsvStep(
       <HStack gap='xs'>
         <Button onClick={() => { void previous() }} variant={ButtonVariant.secondary}>Back</Button>
         <Spacer />
-        <Button
-          onClick={onClickReupload}
-          rightIcon={<RefreshCcw size={12} />}
-          variant={isValidCsv ? ButtonVariant.secondary : ButtonVariant.primary}
-        >
-          Reupload
-        </Button>
-        {isValidCsv && (
-          <SubmitButton
-            processing={isMutating}
-            error={!!uploadTransactionsError}
-            onClick={onClickUploadTransactions}
-            action={SubmitAction.UPLOAD}
-            withRetry
-            iconAsPrimary={false}
-          >
-            {uploadTransactionsError ? 'Retry' : 'Upload transactions'}
-          </SubmitButton>
-        )}
+        {isValidCsv
+          ? (
+            <SubmitButton
+              processing={isMutating}
+              error={!!uploadTransactionsError}
+              onClick={onClickUploadTransactions}
+              action={SubmitAction.UPLOAD}
+              withRetry
+              iconAsPrimary={false}
+            >
+              {uploadTransactionsError ? 'Retry' : 'Upload transactions'}
+            </SubmitButton>
+          )
+          : (
+            <Button
+              onClick={onClickReupload}
+              rightIcon={<RefreshCcw size={12} />}
+              variant={ButtonVariant.primary}
+            >
+              Reupload
+            </Button>
+          )}
       </HStack>
     </VStack>
   )
