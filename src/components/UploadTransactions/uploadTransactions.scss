@@ -1,6 +1,6 @@
 .Layer__upload-transactions {
   container-type: inline-size;
-  
+
   .Layer__upload-transactions__select-account-name-field {
     >.Layer__input-tooltip {
       flex: auto;
@@ -10,7 +10,6 @@
   .Layer__upload-transactions__select-account-name-input {
     .Layer__select__control {
       width: 24rem;
-      min-height: 44px;
     }
 
     &--error {
@@ -19,7 +18,7 @@
           0 0 0 1px var(--color-base-300),
           0 0 0 2px var(--color-danger);
       }
-      
+
       .Layer__select__placeholder {
         color: var(--color-danger);
       }
@@ -27,8 +26,8 @@
   }
 
   .Layer__upload-transactions__create-account-form {
-    border-radius: var(--border-radius-3xs);
     padding: var(--spacing-xs);
+    border-radius: var(--border-radius-3xs);
     background: var(--color-base-100);
   }
 
@@ -37,9 +36,9 @@
   }
 
   .Layer__upload-transactions__template-section {
-    border-radius: var(--border-radius-3xs);
-    border: 1px solid var(--color-base-400);
     padding: var(--spacing-md);
+    border-radius: var(--border-radius-3xs);
+    border: 1px solid var(--color-base-300);
   }
 
   .Layer__upload-transactions__template-section__button-row {
@@ -72,7 +71,7 @@
     .Layer__csv-upload__validate-csv-table__cell--amount,
     .Layer__csv-upload__validate-csv-table__header-cell--amount {
       min-width: 120px;
-      
+
       .Layer__csv-upload__validate-csv-table__header-cell-content {
         margin-left: auto;
       }
