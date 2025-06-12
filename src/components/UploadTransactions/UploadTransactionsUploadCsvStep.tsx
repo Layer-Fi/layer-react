@@ -15,6 +15,7 @@ import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '..
 import { templateHeaders, templateExampleTransactions } from './template'
 import { humanizeEnum } from '../../utils/format'
 import { useWizard } from '../Wizard/Wizard'
+import type { FormatOptionLabelMeta } from 'react-select'
 
 export type AccountOption = {
   value: string
@@ -27,16 +28,19 @@ const formatCreateLabel = (inputValue: string) => {
   return inputValue ? `Create "${inputValue}"` : 'Create account'
 }
 
-const formatOptionLabel = (option: AccountOption) => {
+const formatOptionLabel = (option: AccountOption, meta: FormatOptionLabelMeta<AccountOption>) => {
   if (option.account && !option.__isNew__) {
     return (
       <VStack>
         <Span ellipsis>{option.account.accountName}</Span>
-        <Span size='sm' variant='subtle' noWrap>
-          {option.account.institutionName}
-          {' · '}
-          {humanizeEnum(option.account.accountSubtype!)}
-        </Span>
+        {meta.context === 'menu'
+          && (
+            <Span size='sm' variant='subtle' noWrap>
+              {option.account.institutionName}
+              {' · '}
+              {humanizeEnum(option.account.accountSubtype!)}
+            </Span>
+          )}
       </VStack>
     )
   }
