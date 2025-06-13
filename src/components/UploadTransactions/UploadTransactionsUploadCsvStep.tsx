@@ -97,8 +97,9 @@ export function UploadTransactionsUploadCsvStep(
     onSelectFile(file)
   }, [onSelectFile])
 
+  const isCreatingNewAccount = selectedAccount && selectedAccount.value === 'new_account'
   const onClickContinue = useCallback(() => {
-    if (!selectedAccount || selectedAccount.value === 'new_account' || !selectedFile) return
+    if (!selectedAccount || isCreatingNewAccount || !selectedFile) return
 
     void parseCsv({
       customAccountId: selectedAccount.value,
@@ -110,14 +111,14 @@ export function UploadTransactionsUploadCsvStep(
       }
     })
       .catch(() => { setHasParseCsvError(true) })
-  }, [selectedAccount, selectedFile, parseCsv, onParseCsv, next])
+  }, [selectedAccount, isCreatingNewAccount, selectedFile, parseCsv, onParseCsv, next])
 
   const inputClassName = classNames(
     'Layer__upload-transactions__select-account-name-input',
     !!customAccountsError && 'Layer__upload-transactions__select-account-name-input--error',
   )
 
-  const hasSelectedAccount = selectedAccount && selectedAccount.value !== 'new_account'
+  const hasSelectedAccount = selectedAccount && !isCreatingNewAccount
   return (
     <VStack gap='lg'>
       <VStack gap='xs' className='Layer__upload-transactions__select-account-name-field'>
@@ -140,7 +141,7 @@ export function UploadTransactionsUploadCsvStep(
           className={inputClassName}
         />
       </VStack>
-      {selectedAccount && selectedAccount.value === 'new_account' && (
+      {isCreatingNewAccount && (
         <VStack className='Layer__upload-transactions__create-account-form'>
           <CustomAccountForm
             initialAccountName={selectedAccount.account.accountName}
@@ -149,41 +150,45 @@ export function UploadTransactionsUploadCsvStep(
           />
         </VStack>
       )}
-      <CsvUpload file={selectedFile} onFileSelected={onFileSelected} replaceDropTarget />
-      <Separator />
-      <VStack gap='xs' className='Layer__upload-transactions__template-section'>
-        <P size='sm'>Click to copy the required column headers</P>
-        <HStack align='center' gap='xs' className='Layer__upload-transactions__template-section__button-row'>
-          <CopyTemplateHeadersButtonGroup
-            headers={templateHeaders}
-            className='Layer__upload-transactions__template-section__button-row-item'
-          />
-          <DownloadCsvTemplateButton
-            fileName='upload_transactions.csv'
-            csvProps={{ headers: templateHeaders, rows: templateExampleTransactions }}
-            className='Layer__upload-transactions__template-section__button-row-item'
-          >
-            Download template
-          </DownloadCsvTemplateButton>
-        </HStack>
-      </VStack>
-      <HStack align='center' gap='xs'>
-        <HStack className='Layer__upload-transactions__parse-csv-error-message'>
-          {hasParseCsvError && <P status='error'>{parseCsvError?.getAllMessages()?.[0] || parseCsvError?.getMessage()}</P>}
-        </HStack>
-        <Spacer />
-        <SubmitButton
-          tooltip={(selectedFile && !hasSelectedAccount) ? 'Select an account' : null}
-          disabled={!hasSelectedAccount || !selectedFile}
-          processing={isParsingCsv}
-          error={hasParseCsvError}
-          onClick={onClickContinue}
-          withRetry
-          noIcon={!isParsingCsv}
-        >
-          {hasParseCsvError ? 'Retry' : 'Continue'}
-        </SubmitButton>
-      </HStack>
+      {!isCreatingNewAccount && (
+        <>
+          <CsvUpload file={selectedFile} onFileSelected={onFileSelected} replaceDropTarget />
+          <Separator />
+          <VStack gap='xs' className='Layer__upload-transactions__template-section'>
+            <P size='sm'>Click to copy the required column headers</P>
+            <HStack align='center' gap='xs' className='Layer__upload-transactions__template-section__button-row'>
+              <CopyTemplateHeadersButtonGroup
+                headers={templateHeaders}
+                className='Layer__upload-transactions__template-section__button-row-item'
+              />
+              <DownloadCsvTemplateButton
+                fileName='upload_transactions.csv'
+                csvProps={{ headers: templateHeaders, rows: templateExampleTransactions }}
+                className='Layer__upload-transactions__template-section__button-row-item'
+              >
+                Download template
+              </DownloadCsvTemplateButton>
+            </HStack>
+          </VStack>
+          <HStack align='center' gap='xs'>
+            <HStack className='Layer__upload-transactions__parse-csv-error-message'>
+              {hasParseCsvError && <P status='error'>{parseCsvError?.getAllMessages()?.[0] || parseCsvError?.getMessage()}</P>}
+            </HStack>
+            <Spacer />
+            <SubmitButton
+              tooltip={(selectedFile && !hasSelectedAccount) ? 'Select an account' : null}
+              disabled={!hasSelectedAccount || !selectedFile}
+              processing={isParsingCsv}
+              error={hasParseCsvError}
+              onClick={onClickContinue}
+              withRetry
+              noIcon={!isParsingCsv}
+            >
+              {hasParseCsvError ? 'Retry' : 'Continue'}
+            </SubmitButton>
+          </HStack>
+        </>
+      )}
     </VStack>
   )
 }
