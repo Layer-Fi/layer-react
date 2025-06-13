@@ -1,5 +1,12 @@
 .Layer__custom-account-form {
-  .Layer__custom-account-form__input {
-    width: 100%;
+  .Layer__custom-account-form__field {
+    >.Layer__input-tooltip {
+      display: flex;
+      flex: 1 1;
+
+      >.Layer__custom-account-form__input {
+        flex: 1 1;
+      }
+    }
   }
 }
