@@ -1,8 +1,9 @@
 import type { SWRConfiguration } from 'swr'
 
 export const DEFAULT_SWR_CONFIG = {
-  refreshInterval: 0,
+  refreshInterval: 10 * 60 * 1000, // 10 minutes
+  revalidateIfStale: true,
   revalidateOnFocus: false,
   revalidateOnReconnect: false,
-  revalidateIfStale: false,
+  revalidateOnMount: false,
 } as const satisfies SWRConfiguration
