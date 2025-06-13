@@ -47,7 +47,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         >
           {field => (
             <>
-              <InputGroup name='account_name' label='Account name'>
+              <InputGroup name='account_name' label='Account name' className='Layer__custom-account-form__field'>
                 <Input
                   className='Layer__custom-account-form__input'
                   name='account_name'
@@ -71,7 +71,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         >
           {field => (
             <>
-              <InputGroup name='institution_name' label='Institution name'>
+              <InputGroup name='institution_name' label='Institution name' className='Layer__custom-account-form__field'>
                 <Input
                   className='Layer__custom-account-form__input'
                   name='institution_name'
@@ -95,7 +95,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         >
           {field => (
             <>
-              <InputGroup name='account_type' label='Account type'>
+              <InputGroup name='account_type' label='Account type' className='Layer__custom-account-form__field'>
                 <Select
                   className='Layer__custom-account-form__input'
                   name='account_type'
