@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-const TagDimensionStrictnessSchema = Schema.Literal(
+export const TagDimensionStrictnessSchema = Schema.Literal(
   'BALANCING',
   'NON_BALANCING',
 )
@@ -21,7 +21,7 @@ const TransformedTagDimensionStrictnessSchema = Schema.transform(
   },
 )
 
-const TagValueSchema = Schema.Struct({
+export const TagValueDefinitionSchema = Schema.Struct({
   id: Schema.UUID,
   value: Schema.NonEmptyTrimmedString,
 })
@@ -30,6 +30,6 @@ export const TagDimensionSchema = Schema.Struct({
   id: Schema.UUID,
   key: Schema.NonEmptyTrimmedString,
   strictness: TransformedTagDimensionStrictnessSchema,
-  definedValues: Schema.propertySignature(Schema.Array(TagValueSchema))
+  definedValues: Schema.propertySignature(Schema.Array(TagValueDefinitionSchema))
     .pipe(Schema.fromKey('defined_values')),
 })

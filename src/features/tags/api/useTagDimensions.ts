@@ -6,7 +6,7 @@ import { get } from '../../../api/layer/authenticated_http'
 import { Schema } from 'effect'
 import { TagDimensionSchema } from '../tagSchemas'
 
-const TAG_DIMENSIONS_TAG_KEY = '#tag-dimensions'
+export const TAG_DIMENSIONS_TAG_KEY = '#tag-dimensions'
 
 function buildKey({
   access_token: accessToken,
