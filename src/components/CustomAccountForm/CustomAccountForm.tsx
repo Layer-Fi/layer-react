@@ -35,7 +35,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
 
   return (
     <form
-      className='Layer__form'
+      className='Layer__form Layer__custom-account-form'
       onSubmit={onSubmit}
     >
       <VStack gap='xs'>
@@ -47,9 +47,11 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         >
           {field => (
             <>
-              <InputGroup name='account_name' label='Account name' inline>
+              <InputGroup name='account_name' label='Account name' className='Layer__custom-account-form__field'>
                 <Input
+                  className='Layer__custom-account-form__input'
                   name='account_name'
+                  placeholder='Enter account name...'
                   value={field.state.value}
                   onChange={e =>
                     field.handleChange((e.target as HTMLInputElement).value)}
@@ -69,9 +71,11 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         >
           {field => (
             <>
-              <InputGroup name='institution_name' label='Institution name' inline>
+              <InputGroup name='institution_name' label='Institution name' className='Layer__custom-account-form__field'>
                 <Input
+                  className='Layer__custom-account-form__input'
                   name='institution_name'
+                  placeholder='Enter institution name...'
                   value={field.state.value}
                   onChange={e =>
                     field.handleChange((e.target as HTMLInputElement).value)}
@@ -91,9 +95,11 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         >
           {field => (
             <>
-              <InputGroup name='account_type' label='Account type' inline>
+              <InputGroup name='account_type' label='Account type' className='Layer__custom-account-form__field'>
                 <Select
+                  className='Layer__custom-account-form__input'
                   name='account_type'
+                  placeholder='Select account type...'
                   options={accountTypeOptions}
                   value={accountTypeOptions.find(opt => opt.value === field.state.value) || null}
                   onChange={option => field.handleChange(option?.value)}
@@ -105,7 +111,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           )}
         </form.Field>
 
-        <HStack gap='xs'>
+        <HStack gap='xs' pbs='xs'>
           {!isFormValid && (
             <ErrorText pb='xs'>
               Please check all fields.
