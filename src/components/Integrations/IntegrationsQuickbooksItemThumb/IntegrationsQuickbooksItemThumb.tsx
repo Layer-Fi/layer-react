@@ -102,7 +102,7 @@ export const IntegrationsQuickbooksItemThumb = () => {
         </div>
         <IntegrationsQuickbooksItemThumbFooter quickbooksUiState={quickbooksUiState} />
       </Card>
-      <IntegrationsQuickbooksUnlinkConfirmationModal isOpen={isConfirmationModalOpen} onOpenChange={setIsConfirmationModalOpen} />
+      {isConfirmationModalOpen && <IntegrationsQuickbooksUnlinkConfirmationModal isOpen onOpenChange={setIsConfirmationModalOpen} />}
     </LinkedAccountOptions>
   )
 }

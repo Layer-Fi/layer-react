@@ -1,3 +1,10 @@
+.Layer__ModalCloseButton {
+  &--position-absolute {
+    position: absolute;
+    align-self: end;
+  }
+}
+
 .Layer__ModalContextBar {
   display: grid;
   grid-template-areas: "back logo close";

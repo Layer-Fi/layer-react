@@ -3,6 +3,34 @@ import { X } from 'lucide-react'
 import { Button } from '../Button/Button'
 import { Heading } from '../Typography/Heading'
 import { P } from '../Typography/Text'
+import classNames from 'classnames'
+
+const MODAL_CLOSE_BUTTON_CLASS_NAME = 'Layer__ModalCloseButton'
+
+type ModalCloseButtonProps = {
+  onClose?: () => void
+  positionAbsolute?: boolean
+}
+
+export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalCloseButtonProps) => (
+  <div className={
+    classNames(MODAL_CLOSE_BUTTON_CLASS_NAME,
+      positionAbsolute && `${MODAL_CLOSE_BUTTON_CLASS_NAME}--position-absolute`,
+    )
+  }
+  >
+    <Button
+      icon
+      size='sm'
+      variant='ghost'
+      slot='close'
+      onPress={onClose}
+      aria-label='Close Modal'
+    >
+      <X size={24} />
+    </Button>
+  </div>
+)
 
 const MODAL_CONTEXT_BAR_CLASS_NAME = 'Layer__ModalContextBar'
 
@@ -13,16 +41,7 @@ type ModalContextBarProps = {
 export function ModalContextBar({ onClose }: ModalContextBarProps) {
   return (
     <div className={MODAL_CONTEXT_BAR_CLASS_NAME}>
-      <Button
-        icon
-        size='sm'
-        variant='ghost'
-        slot='close'
-        onPress={onClose}
-        aria-label='Close Modal'
-      >
-        <X size={24} />
-      </Button>
+      <ModalCloseButton onClose={onClose} />
     </div>
   )
 }
