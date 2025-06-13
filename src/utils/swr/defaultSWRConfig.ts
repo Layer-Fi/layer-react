@@ -5,5 +5,4 @@ export const DEFAULT_SWR_CONFIG = {
   revalidateIfStale: true,
   revalidateOnFocus: false,
   revalidateOnReconnect: false,
-  revalidateOnMount: false,
 } as const satisfies SWRConfiguration
