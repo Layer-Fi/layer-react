@@ -18,8 +18,8 @@
   /*
    * Outlines
    */
-  --outline-subtle: var(--color-base-200);
-  --outline-default: var(--color-base-300);
+  --outline-subtle: var(--color-base-300);
+  --outline-default: var(--color-base-400);
   --outline-active: var(--color-base-500);
 
   /*
@@ -27,15 +27,10 @@
    */
   --button-bg-default: var(--color-base-1000);
   --button-fg-default: var(--color-base-0);
-  
   --button-bg-active: var(--color-base-800);
-
   --button-fg-disabled: var(--color-base-500);
   --button-bg-disabled: var(--color-base-200);
-
-  --button-bg-ghost: var(--color-base-0);
   --button-fg-ghost: var(--color-base-800);
-
   --button-border-color-ghost: var(--color-base-300);
   --button-border-color-ghost-active: var(--color-base-800);
 

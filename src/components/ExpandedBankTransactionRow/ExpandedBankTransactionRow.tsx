@@ -35,7 +35,7 @@ import { APIErrorNotifications } from './APIErrorNotifications'
 import classNames from 'classnames'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
-import { BankTransactionTagsAndMemo } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionTagsAndMemo'
+import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -521,7 +521,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   </div>
                 </div>
 
-                <BankTransactionTagsAndMemo
+                <BankTransactionFormFields
                   bankTransaction={bankTransaction}
                   showDescriptions={showDescriptions}
                 />

@@ -5,12 +5,13 @@ import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 const CLASS_NAME = 'Layer__UI__Input'
 
 type InputProps = Omit<ComponentProps<typeof ReactAriaInput>, 'className'> & {
-  placement?: 'first-within-group'
+  inset?: true
+  placement?: 'first'
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  function Input({ placement, ...restProps }, ref) {
-    const dataProperties = toDataProperties({ placement })
+  function Input({ inset, placement, ...restProps }, ref) {
+    const dataProperties = toDataProperties({ inset, placement })
 
     return (
       <ReactAriaInput

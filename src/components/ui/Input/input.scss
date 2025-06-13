@@ -10,9 +10,13 @@
 
   vertical-align: middle;
 
-  &[data-placement="first-within-group"] {
-    border: none;
+  &[data-inset] {
+    padding-inline: 0;
 
+    border: none;
+  }
+
+  &[data-placement='first'] {
     border-start-start-radius: inherit;
     border-end-start-radius: inherit;
   }

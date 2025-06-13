@@ -18,7 +18,7 @@ export function MinimalSearchField({
   return (
     <ReactAriaSearchField {...restProps} className={CLASS_NAME}>
       <ReactAriaInput slot='input' placeholder={placeholder} />
-      <Button slot='clear-button' variant='ghost' size='sm'>
+      <Button slot='clear-button' inset variant='ghost'>
         Clear
       </Button>
     </ReactAriaSearchField>

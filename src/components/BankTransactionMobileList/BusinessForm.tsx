@@ -13,7 +13,7 @@ import { ErrorText } from '../Typography'
 import { BusinessCategories } from './BusinessCategories'
 import { Option, mapCategoryToOption, getAssignedValue } from './utils'
 import classNames from 'classnames'
-import { BankTransactionTagsAndMemo } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionTagsAndMemo'
+import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
@@ -143,7 +143,7 @@ export const BusinessForm = ({
           />
         )
         : null}
-      <BankTransactionTagsAndMemo
+      <BankTransactionFormFields
         bankTransaction={bankTransaction}
         showDescriptions={showDescriptions}
       />

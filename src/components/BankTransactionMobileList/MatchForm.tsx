@@ -10,7 +10,7 @@ import { FileInput } from '../Input'
 import { MatchFormMobile } from '../MatchForm'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
-import { BankTransactionTagsAndMemo } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionTagsAndMemo'
+import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
 export const MatchForm = ({
   bankTransaction,
@@ -82,7 +82,7 @@ export const MatchForm = ({
           setSelectedMatchId(id)
         }}
       />
-      <BankTransactionTagsAndMemo
+      <BankTransactionFormFields
         bankTransaction={bankTransaction}
         showDescriptions={showDescriptions}
       />
