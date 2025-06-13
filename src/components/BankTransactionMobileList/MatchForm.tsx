@@ -50,7 +50,7 @@ export const MatchForm = ({
     await matchBankTransaction(bankTransaction.id, foundMatch.id, true)
   }
 
-  const save = async () => {
+  const save = () => {
     if (!showCategorization) {
       return
     }
@@ -62,7 +62,7 @@ export const MatchForm = ({
       selectedMatchId
       && selectedMatchId !== isAlreadyMatched(bankTransaction)
     ) {
-      onMatchSubmit(selectedMatchId)
+      void onMatchSubmit(selectedMatchId)
     }
     return
   }

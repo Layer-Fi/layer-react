@@ -2,9 +2,17 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { get } from '../../api/layer/authenticated_http'
 import useSWR from 'swr'
-import { mapRawCustomAccountToCustomAccount, type RawCustomAccount } from './types'
+import { CustomAccount, mapRawCustomAccountToCustomAccount, type RawCustomAccount } from './types'
+import { APIError } from '../../models/APIError'
 
 export const CUSTOM_ACCOUNTS_TAG_KEY = '#custom-accounts'
+
+type KeyType = {
+  accessToken: string
+  apiUrl: string
+  businessId: string
+  tags: readonly [typeof CUSTOM_ACCOUNTS_TAG_KEY]
+}
 
 function buildKey({
   access_token: accessToken,
@@ -14,7 +22,7 @@ function buildKey({
   access_token?: string
   apiUrl?: string
   businessId: string
-}) {
+}): KeyType | undefined {
   if (accessToken && apiUrl) {
     return {
       accessToken,
@@ -41,12 +49,12 @@ export function useCustomAccounts() {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
-  return useSWR(
+  return useSWR<CustomAccount[], APIError>(
     () => buildKey({
       ...data,
       businessId,
     }),
-    ({ accessToken, apiUrl, businessId }) => getCustomAccounts(
+    ({ accessToken, apiUrl, businessId }: KeyType) => getCustomAccounts(
       apiUrl,
       accessToken,
       {

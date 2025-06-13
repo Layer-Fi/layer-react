@@ -24,7 +24,7 @@ export function CashflowStatementDownloadButton({
     <>
       <DownloadButton
         iconOnly={iconOnly}
-        onClick={() => { trigger() }}
+        onClick={() => { void trigger() }}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
         text='Download'

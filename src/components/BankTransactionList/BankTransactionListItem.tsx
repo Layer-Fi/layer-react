@@ -108,11 +108,11 @@ export const BankTransactionListItem = ({
     }
 
     if (selectedCategory.type === 'match') {
-      matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
+      void matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
       return
     }
 
-    categorizeBankTransaction(bankTransaction.id, {
+    void categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: getCategorizePayload(selectedCategory),
     })

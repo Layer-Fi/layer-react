@@ -15,6 +15,8 @@ import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { APIError } from '../../models/APIError'
+import { Awaitable } from '../../types/utility/promises'
 
 type UseJournal = () => {
   data?: JournalEntry[]
@@ -24,11 +26,11 @@ type UseJournal = () => {
   isValidatingEntry?: boolean
   error?: unknown
   errorEntry?: unknown
-  refetch: () => void
+  refetch: () => Awaitable<{ data: JournalEntry[] } | undefined>
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void
   closeSelectedEntry: () => void
-  create: (newJournalEntry: NewApiJournalEntry) => void
+  create: (newJournalEntry: NewApiJournalEntry) => Awaitable<void>
   changeFormData: (
     name: string,
     value: string | BaseSelectOption | undefined | number,
@@ -81,7 +83,7 @@ export const useJournal: UseJournal = () => {
   const queryKey =
     businessId && auth?.access_token && `journal-lines-${businessId}`
 
-  const { data, isLoading, isValidating, error, mutate } = useSWR(
+  const { data, isLoading, isValidating, error, mutate } = useSWR<{ data: JournalEntry[] }, APIError>(
     queryKey,
     Layer.getJournal(apiUrl, auth?.access_token, {
       params: { businessId },
@@ -294,7 +296,7 @@ export const useJournal: UseJournal = () => {
     }
 
     if (form?.data) {
-      create({
+      void create({
         ...form.data,
         line_items: form.data.line_items?.map(line => ({
           ...line,
@@ -368,7 +370,7 @@ export const useJournal: UseJournal = () => {
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
-      refetch()
+      void refetch()
     }
   }, [syncTimestamps])
 
@@ -386,7 +388,8 @@ export const useJournal: UseJournal = () => {
     changeFormData,
     submitForm,
     cancelForm: () => {
-      setForm(undefined), setSelectedEntryId(undefined)
+      setForm(undefined)
+      setSelectedEntryId(undefined)
     },
     setForm,
     sendingForm,

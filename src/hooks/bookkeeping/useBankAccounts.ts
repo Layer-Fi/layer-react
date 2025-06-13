@@ -4,8 +4,16 @@ import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { get } from '../../api/layer/authenticated_http'
 import { BankAccount } from '../../types/linked_accounts'
+import { APIError } from '../../models/APIError'
 
 export const BANK_ACCOUNTS_TAG_KEY = '#bank-accounts'
+
+type KeyType = {
+  accessToken: string
+  apiUrl: string
+  businessId: string
+  tags: readonly [typeof BANK_ACCOUNTS_TAG_KEY]
+}
 
 const getBankAccounts = get<{ data: BankAccount[] }, { businessId: string }>(
   ({ businessId }) => `/v1/businesses/${businessId}/bank-accounts`,
@@ -19,7 +27,7 @@ function buildKey({
   access_token?: string
   apiUrl?: string
   businessId: string
-}) {
+}): KeyType | undefined {
   if (accessToken && apiUrl) {
     return {
       accessToken,
@@ -38,14 +46,14 @@ export const useBankAccounts = () => {
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading } = useSWR<{ data: BankAccount[] }, APIError>(
     () =>
       buildKey({
         ...auth,
         apiUrl,
         businessId,
       }),
-    ({ accessToken, apiUrl, businessId }) =>
+    ({ accessToken, apiUrl, businessId }: KeyType) =>
       getBankAccounts(apiUrl, accessToken, { params: { businessId } })(),
   )
 
