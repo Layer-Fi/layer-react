@@ -1,11 +1,11 @@
 .Layer__csv-upload {
-  height: 6rem;
-  border-radius: var(--spacing-3xs);
-  padding: var(--spacing-xs);
-  background: var(--color-base-100);
-  border: 1px dashed var(--color-base-400);
-  transition: border-color 0.5s, background-color 0.5s;
   position: relative;
+  height: 6rem;
+  padding: var(--spacing-xs);
+  border-radius: var(--spacing-3xs);
+  border: 1px dashed var(--color-base-300);
+  background: var(--color-base-100);
+  transition: border-color 0.5s, background-color 0.5s;
 
   &--drag-active {
     background: var(--color-base-200);
@@ -41,10 +41,10 @@
 
 .Layer__csv-upload__file-row {
   height: 2rem;
-  border-radius: var(--border-radius-3xs);
   padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-3xs);
+  border: 1px solid var(--color-base-300);
   background: var(--color-base-100);
-  border: 1px solid var(--color-base-400);
 }
 
 .Layer__csv-upload__file-row--drop-target {
@@ -63,17 +63,17 @@
 }
 
 .Layer__csv-upload__validate-csv-table__container {
+  position: relative;
+  overflow: auto;
   border-radius: var(--border-radius-3xs);
   border: 1px solid var(--border-color);
-  overflow: auto;
-  position: relative;
   outline-offset: 1px;
 }
 
 .Layer__csv-upload__validate-csv-table__header {
-  top: 0;
   position: sticky;
   z-index: 1;
+  top: 0;
   background-color: var(--bg-subtle);
 }
 
@@ -83,12 +83,12 @@
 }
 
 .Layer__table-header.Layer__csv-upload__validate-csv-table__header-cell {
-  padding: 0;
+  box-sizing: border-box;
   display: flex;
   flex: 1 1 0;
-  border-left: 1px solid var(--border-color);
+  padding: 0;
   border-bottom: 1px solid var(--border-color);
-  box-sizing: border-box;
+  border-left: 1px solid var(--border-color);
 
   &--row {
     flex: 0 0 68px;
@@ -104,10 +104,10 @@
   }
 }
 
-.Layer__table-row.Layer__csv-upload__validate-csv-table__row  {
+.Layer__table-row.Layer__csv-upload__validate-csv-table__row {
+  position: absolute;
   display: flex;
   width: 100%;
-  position: absolute;
 
   &--error {
     background-color: var(--color-info-error-bg);
@@ -119,24 +119,24 @@
 }
 
 .Layer__table-cell.Layer__csv-upload__validate-csv-table__cell {
-  flex: 1 1 0%;
-  min-width: 0px;
-  border-left: 1px solid var(--border-color);
   box-sizing: border-box;
+  flex: 1 1 0%;
+  min-width: 0;
+  border-left: 1px solid var(--border-color);
 
   &--row {
-     flex: 0 0 68px;
-     border-left: none;
+    flex: 0 0 68px;
+    border-left: none;
   }
 }
 
 .Layer__table .Layer__table-cell .Layer__table-cell-content.Layer__csv-upload__validate-csv-table__cell-content {
   display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   align-content: center;
+  overflow: hidden;
   width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 
   &--error {
     color: var(--color-info-error-fg);
