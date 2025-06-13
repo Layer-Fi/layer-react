@@ -2,7 +2,7 @@ import { ChangeEvent, useCallback, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DateRange, DisplayState } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
-import { DownloadButton as DownloadButtonComponent } from '../Button'
+import { ButtonVariant, DownloadButton as DownloadButtonComponent } from '../Button'
 import { Header } from '../Container'
 import { DatePicker } from '../DatePicker'
 import { SyncingComponent } from '../SyncingComponent'
@@ -97,6 +97,7 @@ const DownloadButton = ({
   return (
     <>
       <DownloadButtonComponent
+        variant={ButtonVariant.secondary}
         iconOnly={iconOnly}
         onClick={handleClick}
         isDownloading={isMutating}
