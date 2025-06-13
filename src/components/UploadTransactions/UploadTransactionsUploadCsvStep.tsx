@@ -28,12 +28,12 @@ const formatCreateLabel = (inputValue: string) => {
   return inputValue ? `Create "${inputValue}"` : 'Create account'
 }
 
-const formatOptionLabel = (option: AccountOption, meta: FormatOptionLabelMeta<AccountOption>) => {
+const formatOptionLabel = (option: AccountOption, meta?: FormatOptionLabelMeta<AccountOption>) => {
   if (option.account && !option.__isNew__) {
     return (
       <VStack>
         <Span ellipsis>{option.account.accountName}</Span>
-        {meta.context === 'menu'
+        {meta?.context === 'menu'
           && (
             <Span size='sm' variant='subtle' noWrap>
               {option.account.institutionName}
