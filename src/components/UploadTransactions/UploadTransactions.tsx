@@ -32,7 +32,7 @@ function UploadTransactionsHeader({ currentStep, isValid }: UploadTransactionsHe
         {currentStep === UploadTransactionsStep.UploadCsv && 'Import a file of transactions from your bank account or credit card'}
         {currentStep === UploadTransactionsStep.ValidateCsv
           && (isValid
-            ? 'All transactions were parsed successfully. Please review and confirm your transactions below to finalize the upload.'
+            ? 'All transactions were parsed successfully. Click “Upload transactions” to finalize the import.'
             : 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.'
           )}
       </Heading>
