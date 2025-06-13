@@ -11,6 +11,7 @@ interface DownloadButtonProps {
   retryText?: string
   errorText?: string
   tooltip?: ButtonProps['tooltip']
+  variant?: ButtonVariant
 }
 
 export const DownloadButton = ({
@@ -22,6 +23,7 @@ export const DownloadButton = ({
   text = 'Download',
   retryText = 'Retry',
   errorText = 'Download failed. Check connection and retry in few seconds.',
+  variant = iconOnly ? ButtonVariant.secondary : ButtonVariant.tertiary,
 }: DownloadButtonProps) => {
   if (requestFailed) {
     return (
@@ -38,7 +40,7 @@ export const DownloadButton = ({
   }
   return (
     <Button
-      variant={iconOnly ? ButtonVariant.secondary : ButtonVariant.tertiary}
+      variant={variant}
       rightIcon={<DownloadCloud size={12} />}
       onClick={() => void onClick?.()}
       disabled={isDownloading}
