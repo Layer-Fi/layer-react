@@ -24,19 +24,19 @@ type UseLinkedAccounts = () => {
   isValidating: boolean
   error: unknown
   addConnection: (source: AccountSource) => void
-  removeConnection: (source: AccountSource, sourceId: string) => void // means, "unlink institution"
-  repairConnection: (source: AccountSource, sourceId: string) => void
-  updateConnectionStatus: () => void
+  removeConnection: (source: AccountSource, sourceId: string) => Awaitable<void> // means, "unlink institution"
+  repairConnection: (source: AccountSource, sourceId: string) => Awaitable<void>
+  updateConnectionStatus: () => Awaitable<void>
   refetchAccounts: () => Awaitable<void>
-  syncAccounts: () => void
-  unlinkAccount: (source: AccountSource, accountId: string) => void
-  confirmAccount: (source: AccountSource, accountId: string) => void
-  excludeAccount: (source: AccountSource, accountId: string) => void
+  syncAccounts: () => Awaitable<void>
+  unlinkAccount: (source: AccountSource, accountId: string) => Awaitable<void>
+  confirmAccount: (source: AccountSource, accountId: string) => Awaitable<void>
+  excludeAccount: (source: AccountSource, accountId: string) => Awaitable<void>
   accountsToAddOpeningBalanceInModal: LinkedAccount[]
   setAccountsToAddOpeningBalanceInModal: (accounts: LinkedAccount[]) => void
 
   // Only works in non-production environments for test purposes
-  breakConnection: (source: AccountSource, connectionExternalId: string) => void
+  breakConnection: (source: AccountSource, connectionExternalId: string) => Awaitable<void>
 }
 
 const DEBUG = false
@@ -90,6 +90,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     if (!isLoading && loadingStatus === 'loading') {
       setLoadingStatus('complete')
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading])
 
   /**
@@ -157,13 +158,13 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     ) => {
       if (linkMode == 'add') {
         // Note: a sync is kicked off in the backend in this endpoint
-        exchangePlaidPublicToken(publicToken, metadata)
+        void exchangePlaidPublicToken(publicToken, metadata)
       }
       else {
         // Refresh the account connections, which should remove the error
         // pills from any broken accounts
         await updateConnectionStatus()
-        refetchAccounts()
+        void refetchAccounts()
         setLinkMode('add')
         touch(DataModel.LINKED_ACCOUNTS)
       }
@@ -186,7 +187,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const addConnection = (source: AccountSource) => {
     if (source === 'PLAID') {
-      fetchPlaidLinkToken()
+      void fetchPlaidLinkToken()
     }
     else {
       console.error(
@@ -225,7 +226,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const unlinkAccount = async (source: AccountSource, accountId: string) => {
-    DEBUG && console.debug('unlinking account')
+    if (DEBUG) {
+      console.debug('unlinking account')
+    }
+
     if (source === 'PLAID') {
       await Layer.unlinkAccount(apiUrl, auth?.access_token, {
         params: { businessId, accountId: accountId },
@@ -241,7 +245,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const confirmAccount = async (source: AccountSource, accountId: string) => {
-    DEBUG && console.debug('confirming account')
+    if (DEBUG) {
+      console.debug('confirming account')
+    }
+
     if (source === 'PLAID') {
       await Layer.confirmAccount(apiUrl, auth?.access_token, {
         params: {
@@ -260,7 +267,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const excludeAccount = async (source: AccountSource, accountId: string) => {
-    DEBUG && console.debug('excluding account')
+    if (DEBUG) {
+      console.debug('excluding account')
+    }
+
     if (source === 'PLAID') {
       await Layer.excludeAccount(apiUrl, auth?.access_token, {
         params: {
@@ -289,7 +299,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     source: AccountSource,
     connectionExternalId: string,
   ) => {
-    DEBUG && console.debug('Breaking sandbox plaid item connection')
+    if (DEBUG) {
+      console.debug('Breaking sandbox plaid item connection')
+    }
+
     if (source === 'PLAID') {
       await Layer.breakPlaidItemConnection(apiUrl, auth?.access_token, {
         params: {
@@ -308,26 +321,38 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const refetchAccounts = async () => {
-    DEBUG && console.debug('refetching accounts...')
+    if (DEBUG) {
+      console.debug('refetching accounts...')
+    }
+
     await mutate()
   }
 
   const syncAccounts = async () => {
-    DEBUG && console.debug('resyncing accounts...')
+    if (DEBUG) {
+      console.debug('resyncing accounts...')
+    }
+
     await Layer.syncConnection(apiUrl, auth?.access_token, {
       params: { businessId },
     })
   }
 
   const updateConnectionStatus = async () => {
-    DEBUG && console.debug('updating connection status...')
+    if (DEBUG) {
+      console.debug('updating connection status...')
+    }
+
     await Layer.updateConnectionStatus(apiUrl, auth?.access_token, {
       params: { businessId },
     })
   }
 
   const unlinkPlaidItem = async (plaidItemPlaidId: string) => {
-    DEBUG && console.debug('unlinking plaid item')
+    if (DEBUG) {
+      console.debug('unlinking plaid item')
+    }
+
     await Layer.unlinkPlaidItem(apiUrl, auth?.access_token, {
       params: { businessId, plaidItemPlaidId },
     })
@@ -340,12 +365,14 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     if (queryKey && (isLoading || isValidating)) {
       read(DataModel.LINKED_ACCOUNTS, queryKey)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isValidating])
 
   useEffect(() => {
     if (queryKey && hasBeenTouched(queryKey)) {
-      refetchAccounts()
+      void refetchAccounts()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncTimestamps])
 
   return {

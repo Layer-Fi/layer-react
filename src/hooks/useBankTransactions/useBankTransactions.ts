@@ -5,6 +5,7 @@ import { getBankTransactions, type GetBankTransactionsReturn } from '../../api/l
 import { useGlobalInvalidator, useGlobalOptimisticUpdater } from '../../utils/swr/useGlobalInvalidator'
 import { useCallback } from 'react'
 import type { BankTransaction } from '../../types'
+import { APIError } from '../../models/APIError'
 
 export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
 
@@ -17,24 +18,32 @@ export type UseBankTransactionsOptions = {
   tagFilterQueryString?: string
 }
 
+type KeyLoaderParams = UseBankTransactionsOptions & {
+  access_token?: string
+  apiUrl?: string
+  businessId: string
+}
+
+type KeyLoaderReturn = {
+  accessToken: string
+  apiUrl: string
+  businessId: string
+  categorized?: boolean
+  cursor?: string
+  descriptionFilter?: string
+  direction?: 'INFLOW' | 'OUTFLOW'
+  startDate?: Date
+  endDate?: Date
+  tagFilterQueryString?: string
+  tags: string[]
+}
+
 function keyLoader(
   previousPageData: GetBankTransactionsReturn | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    categorized,
-    descriptionFilter,
-    direction,
-    startDate,
-    endDate,
-    tagFilterQueryString,
-  }: UseBankTransactionsOptions & {
-    access_token?: string
-    apiUrl?: string
-    businessId: string
-  },
-) {
+  params: KeyLoaderParams,
+): KeyLoaderReturn | null {
+  const { access_token: accessToken, apiUrl, businessId, categorized, descriptionFilter, direction, startDate, endDate, tagFilterQueryString } = params
+
   if (accessToken && apiUrl) {
     return {
       accessToken,
@@ -48,8 +57,9 @@ function keyLoader(
       endDate,
       tagFilterQueryString,
       tags: [BANK_TRANSACTIONS_TAG_KEY],
-    } as const
+    }
   }
+  return null
 }
 
 export function useBankTransactions({
@@ -63,32 +73,26 @@ export function useBankTransactions({
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
-  return useSWRInfinite(
-    (_index, previousPageData: GetBankTransactionsReturn | null) => keyLoader(
-      previousPageData,
-      {
-        ...data,
-        businessId,
-        categorized,
-        descriptionFilter,
-        direction,
-        startDate,
-        endDate,
-        tagFilterQueryString,
-      },
-    ),
-    ({
-      accessToken,
-      apiUrl,
-      businessId,
-      categorized,
-      cursor,
-      direction,
-      descriptionFilter,
-      startDate,
-      endDate,
-      tagFilterQueryString,
-    }) => {
+  return useSWRInfinite<GetBankTransactionsReturn, APIError>(
+    (_index: number, previousPageData: GetBankTransactionsReturn | null) => {
+      const key = keyLoader(
+        previousPageData,
+        {
+          ...data,
+          businessId,
+          categorized,
+          descriptionFilter,
+          direction,
+          startDate,
+          endDate,
+          tagFilterQueryString,
+        },
+      )
+      return key
+    },
+    (params: KeyLoaderReturn) => {
+      if (!params) throw new Error('Invalid parameters')
+      const { accessToken, apiUrl, businessId, categorized, cursor, direction, descriptionFilter, startDate, endDate, tagFilterQueryString } = params
       return getBankTransactions(
         apiUrl,
         accessToken,

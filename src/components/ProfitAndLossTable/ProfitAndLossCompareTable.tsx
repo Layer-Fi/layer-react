@@ -154,9 +154,9 @@ export const ProfitAndLossCompareTable = ({
                   {option.displayName}
                 </TableCell>
                 {comparePeriods
-                && Array.from({ length: comparePeriods - 1 }, (_, index) => (
-                  <TableCell key={option.displayName + '-' + index} isHeaderCell />
-                ))}
+                  && Array.from({ length: comparePeriods - 1 }, (_, index) => (
+                    <TableCell key={option.displayName + '-' + index} isHeaderCell />
+                  ))}
               </Fragment>
             ))}
           </TableRow>

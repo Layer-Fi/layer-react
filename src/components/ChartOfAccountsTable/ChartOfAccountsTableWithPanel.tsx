@@ -147,7 +147,7 @@ export const ChartOfAccountsTableWithPanel = ({
               status={DataStateStatus.failed}
               title='Something went wrong'
               description='We couldn’t load your data.'
-              onRefresh={() => refetch()}
+              onRefresh={() => void refetch()}
               isLoading={isValidating || isLoading}
             />
           </div>
@@ -169,7 +169,7 @@ export const ChartOfAccountsTableWithPanel = ({
               status={DataStateStatus.info}
               title='Accounts were not found'
               description='New account can be created with "Add Account".'
-              onRefresh={() => refetch()}
+              onRefresh={() => void refetch()}
               isLoading={isValidating}
             />
           </div>
