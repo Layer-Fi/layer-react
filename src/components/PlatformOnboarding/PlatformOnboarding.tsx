@@ -89,7 +89,7 @@ export const PlatformOnboarding = ({ onComplete }: PlatformOnboardingProps) => {
             </Button>
           </div>
         )}
-        <div className='Layer__platfom-onboarding-layout__box'>
+        <div className='Layer__platform-onboarding-layout__box'>
           {PLATFORM_ONBOARDING_STEPS.length > 1 && (
             <ProgressSteps
               steps={PLATFORM_ONBOARDING_STEPS.map(step => step.label)}
