@@ -29,7 +29,7 @@ type UseLinkedAccounts = () => {
   updateConnectionStatus: () => void
   refetchAccounts: () => Awaitable<void>
   syncAccounts: () => void
-  unlinkAccount: (accountId: string) => void
+  unlinkAccount: (source: AccountSource, userCreated: boolean, accountId: string) => void
   confirmAccount: (source: AccountSource, accountId: string) => void
   excludeAccount: (source: AccountSource, accountId: string) => void
   accountsToAddOpeningBalanceInModal: LinkedAccount[]
@@ -224,13 +224,25 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
-  const unlinkAccount = async (accountId: string) => {
+  const unlinkAccount = async (source: AccountSource, userCreated: boolean, accountId: string) => {
     DEBUG && console.debug('unlinking account')
-    await Layer.unlinkAccount(apiUrl, auth?.access_token, {
-      params: { businessId, accountId },
-    })
-    await refetchAccounts()
-    touch(DataModel.LINKED_ACCOUNTS)
+    if (source === 'PLAID' || (source === 'CUSTOM' && userCreated)) {
+      await Layer.unlinkAccount(apiUrl, auth?.access_token, {
+        params: { businessId, accountId },
+      })
+      await refetchAccounts()
+      touch(DataModel.LINKED_ACCOUNTS)
+    }
+    else if (source === 'CUSTOM') {
+      console.error(
+        'Deleting a custom account that is not user-created is not yet supported',
+      )
+    }
+    else {
+      console.error(
+        `Unlinking an account with source ${source} not yet supported`,
+      )
+    }
   }
 
   const confirmAccount = async (source: AccountSource, accountId: string) => {

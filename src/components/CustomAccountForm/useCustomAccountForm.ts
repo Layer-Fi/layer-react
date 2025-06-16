@@ -59,6 +59,7 @@ export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) =
             account_subtype: value.account_type,
             external_id: null,
             mask: null,
+            user_created: true,
           })
           setSubmitError(undefined)
           onSuccess?.(account)

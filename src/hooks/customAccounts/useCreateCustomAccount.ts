@@ -12,7 +12,13 @@ import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalA
 
 type CreateCustomAccountBody = Pick<
   RawCustomAccount,
-  'account_name' | 'account_type' | 'account_subtype' | 'institution_name' | 'external_id' | 'mask'
+  'account_name'
+  | 'account_type'
+  | 'account_subtype'
+  | 'institution_name'
+  | 'external_id'
+  | 'mask'
+  | 'user_created'
 >
 
 const createCustomAccount = post<

@@ -92,14 +92,20 @@ export const LinkedAccountItemThumb = ({
     }
   }
 
-  const additionalConfigs: HoverMenuProps['config'] = [
-    {
-      name: 'Unlink account',
+  const additionalConfigs: HoverMenuProps['config'] = []
+
+  const canUnlinkAccount =
+    account.external_account_source === 'PLAID'
+    || (account.external_account_source === 'CUSTOM' && account.user_created)
+
+  if (canUnlinkAccount) {
+    additionalConfigs.push({
+      name: account.external_account_source === 'CUSTOM' ? 'Delete account' : 'Unlink account',
       action: () => {
         setIsUnlinkConfirmationModalOpen(true)
       },
-    },
-  ]
+    })
+  }
 
   if (showUnlinkItem) {
     additionalConfigs.push({
@@ -175,7 +181,7 @@ export const LinkedAccountItemThumb = ({
         <UnlinkAccountConfirmationModal
           isOpen
           onOpenChange={setIsUnlinkConfirmationModalOpen}
-          accountId={account.id}
+          account={account}
         />
       )}
     </LinkedAccountOptions>
