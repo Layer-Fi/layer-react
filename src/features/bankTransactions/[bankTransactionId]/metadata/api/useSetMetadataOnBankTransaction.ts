@@ -2,11 +2,12 @@ import useSWRMutation from 'swr/mutation'
 import { useAuth } from '../../../../../hooks/useAuth'
 import { useLayerContext } from '../../../../../contexts/LayerContext'
 import { patch } from '../../../../../api/layer/authenticated_http'
-import { useBankTransactionsInvalidator, useBankTransactionsOptimisticUpdater } from '../../../../../hooks/useBankTransactions/useBankTransactions'
 import { useCallback } from 'react'
-import { CustomerSchema, encodeCustomer } from '../../../../customers/customersSchemas'
+import { useBankTransactionsInvalidator, useBankTransactionsOptimisticUpdater } from '../../../../../hooks/useBankTransactions/useBankTransactions'
+import { encodeVendor, type VendorSchema } from '../../../../vendors/vendorsSchemas'
+import { encodeCustomer, type CustomerSchema } from '../../../../customers/customersSchemas'
 
-const SET_CUSTOMER_ON_BANK_TRANSACTION_TAG_KEY = '#set-customer-on-bank-transaction'
+const SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY = '#set-metadata-on-bank-transaction'
 
 function buildKey({
   access_token: accessToken,
@@ -25,18 +26,19 @@ function buildKey({
       apiUrl,
       businessId,
       bankTransactionId,
-      tags: [SET_CUSTOMER_ON_BANK_TRANSACTION_TAG_KEY],
+      tags: [SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY],
     } as const
   }
 }
 
-type SetCustomerOnBankTransactionBody = {
+type SetMetadataOnBankTransactionBody = {
+  vendor_id: string | null
   customer_id: string | null
 }
 
-const setCustomerOnBankTransaction = patch<
+const setMetadataOnBankTransaction = patch<
   Record<string, never>,
-  SetCustomerOnBankTransactionBody,
+  SetMetadataOnBankTransactionBody,
   {
     businessId: string
     bankTransactionId: string
@@ -46,17 +48,18 @@ const setCustomerOnBankTransaction = patch<
   bankTransactionId,
 }) => `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/metadata`)
 
-type SetCustomerOnBankTransactionArg = {
+type SetMetadataOnBankTransactionArg = {
+  vendor: typeof VendorSchema.Type | null
   customer: typeof CustomerSchema.Type | null
 }
 
-type UseSetCustomerOnBankTransactionParameters = {
+type UseSetMetadataOnBankTransactionParameters = {
   bankTransactionId: string
 }
 
-export function useSetCustomerOnBankTransaction({
+export function useSetMetadataOnBankTransaction({
   bankTransactionId,
-}: UseSetCustomerOnBankTransactionParameters) {
+}: UseSetMetadataOnBankTransactionParameters) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -68,8 +71,8 @@ export function useSetCustomerOnBankTransaction({
     }),
     (
       { accessToken, apiUrl, businessId, bankTransactionId },
-      { arg: { customer } }: { arg: SetCustomerOnBankTransactionArg },
-    ) => setCustomerOnBankTransaction(
+      { arg: { vendor, customer } }: { arg: SetMetadataOnBankTransactionArg },
+    ) => setMetadataOnBankTransaction(
       apiUrl,
       accessToken,
       {
@@ -78,6 +81,7 @@ export function useSetCustomerOnBankTransaction({
           bankTransactionId,
         },
         body: {
+          vendor_id: vendor?.id ?? null,
           customer_id: customer?.id ?? null,
         },
       },
@@ -88,8 +92,8 @@ export function useSetCustomerOnBankTransaction({
     },
   )
 
-  const { optimisticallyUpdateBankTransactions } = useBankTransactionsOptimisticUpdater()
   const { debouncedInvalidateBankTransactions } = useBankTransactionsInvalidator()
+  const { optimisticallyUpdateBankTransactions } = useBankTransactionsOptimisticUpdater()
 
   const { trigger: originalTrigger } = mutationResponse
 
@@ -97,14 +101,17 @@ export function useSetCustomerOnBankTransaction({
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResultPromise = originalTrigger(...triggerParameters)
 
+      const { customer, vendor } = triggerParameters[0]
+
       void optimisticallyUpdateBankTransactions((bankTransaction) => {
         if (bankTransaction.id === bankTransactionId) {
-          const { customer } = triggerParameters[0]
-
           return {
             ...bankTransaction,
             customer: customer
               ? encodeCustomer(customer)
+              : null,
+            vendor: vendor
+              ? encodeVendor(vendor)
               : null,
           }
         }

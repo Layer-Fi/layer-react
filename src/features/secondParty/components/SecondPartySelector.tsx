@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { ComboBox, Collection } from 'react-aria-components'
 import { useListCustomers } from '../../customers/api/useListCustomers'
 import { useListVendors } from '../../vendors/api/useListVendors'
@@ -11,7 +11,7 @@ import { InputGroup } from '../../../components/ui/Input/InputGroup'
 import { Popover } from '../../../components/ui/Popover/Popover'
 import { ListBox, ListBoxItem, ListBoxSection, ListBoxSectionHeader } from '../../../components/ui/ListBox/ListBox'
 import { HStack, VStack } from '../../../components/ui/Stack/Stack'
-import { useDebounce } from '../../../hooks/useDebounce/useDebounce'
+import { useDebouncedSearchInput } from '../../../hooks/search/useDebouncedSearchQuery'
 
 type SecondParty = typeof SecondPartySchema.Type
 
@@ -39,30 +39,19 @@ export function SecondPartySelector({
   isMutating,
   isReadOnly,
 }: SecondPartySelectorProps) {
-  const [inputValue, setInputValue] = useState(() => {
-    if (selectedSecondParty === null) {
-      return ''
-    }
+  const {
+    inputValue,
+    searchQuery,
+    handleInputChange,
+  } = useDebouncedSearchInput({
+    initialInputState: () => {
+      if (selectedSecondParty === null) {
+        return ''
+      }
 
-    return getSecondPartyName(selectedSecondParty)
-  })
-  const [searchQuery, setSearchQuery] = useState('')
-
-  const debouncedSetSearchQuery = useDebounce(
-    useCallback(
-      (value: string) => { setSearchQuery(value) },
-      [],
-    ),
-  )
-
-  const handleInputChange = useCallback(
-    (value: string) => {
-      setInputValue(value)
-
-      debouncedSetSearchQuery(value)
+      return getSecondPartyName(selectedSecondParty)
     },
-    [debouncedSetSearchQuery],
-  )
+  })
 
   const effectiveSearchQuery = searchQuery === ''
     ? undefined
@@ -119,8 +108,12 @@ export function SecondPartySelector({
       }
 
       if (key === null) {
-        setInputValue('')
-        onSelectedSecondPartyChange(null)
+        handleInputChange('')
+
+        if (selectedSecondPartyId) {
+          onSelectedSecondPartyChange(null)
+        }
+
         return
       }
 
@@ -134,7 +127,7 @@ export function SecondPartySelector({
           onSelectedSecondPartyChange(selectedCustomerWithType)
         }
 
-        setInputValue(
+        handleInputChange(
           getSecondPartyName(selectedCustomerWithType),
         )
 
@@ -151,7 +144,7 @@ export function SecondPartySelector({
           onSelectedSecondPartyChange(selectedVendorWithType)
         }
 
-        setInputValue(
+        handleInputChange(
           getSecondPartyName(selectedVendorWithType),
         )
 
@@ -161,6 +154,7 @@ export function SecondPartySelector({
     [
       items,
       selectedSecondPartyId,
+      handleInputChange,
       onSelectedSecondPartyChange,
     ],
   )
@@ -231,7 +225,8 @@ export function SecondPartySelector({
               icon
               inset
               variant='ghost'
-              onClick={() => handleSelectionChange(null)}
+              isDisabled={shouldDisableComboBox}
+              onPress={() => handleSelectionChange(null)}
             >
               <X size={16} />
             </Button>
@@ -241,7 +236,7 @@ export function SecondPartySelector({
           icon
           inset
           variant='ghost'
-          isPending={isLoading || isMutating}
+          isPending={isLoadingWithoutFallback || isMutating}
         >
           <ChevronDown size={16} />
         </Button>
