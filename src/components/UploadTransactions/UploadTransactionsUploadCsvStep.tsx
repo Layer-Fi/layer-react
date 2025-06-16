@@ -61,7 +61,11 @@ export function UploadTransactionsUploadCsvStep(
   { selectedAccount, onSelectAccount, selectedFile, onSelectFile, onParseCsv }: UploadTransactionsUploadCsvStepProps,
 ) {
   const { next } = useWizard()
-  const { data: customAccounts, isLoading: isLoadingCustomAccounts, error: customAccountsError } = useCustomAccounts()
+  const {
+    data: customAccounts,
+    isLoading: isLoadingCustomAccounts,
+    error: customAccountsError,
+  } = useCustomAccounts({ userCreated: true })
   const { trigger: parseCsv, isMutating: isParsingCsv, error: parseCsvError } = useCustomAccountParseCsv()
   const [hasParseCsvError, setHasParseCsvError] = useState(false)
 

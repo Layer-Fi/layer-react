@@ -10,16 +10,19 @@ function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
+  userCreated,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
+  userCreated?: boolean
 }) {
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
+      userCreated,
       tags: [CUSTOM_ACCOUNTS_TAG_KEY],
     } as const
   }
@@ -34,10 +37,21 @@ const getCustomAccounts = get<
   },
   {
     businessId: string
+    userCreated?: boolean
   }
->(({ businessId }) => `/v1/businesses/${businessId}/custom-accounts/`)
+>(({ businessId, userCreated }) => {
+  const baseUrl = `/v1/businesses/${businessId}/custom-accounts`
 
-export function useCustomAccounts() {
+  if (userCreated !== undefined) {
+    return `${baseUrl}?user_created=${userCreated}`
+  }
+  return baseUrl
+})
+
+type useCustomAccountsParams = {
+  userCreated?: boolean
+}
+export function useCustomAccounts({ userCreated }: useCustomAccountsParams = {}) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -45,12 +59,13 @@ export function useCustomAccounts() {
     () => buildKey({
       ...data,
       businessId,
+      userCreated,
     }),
-    ({ accessToken, apiUrl, businessId }) => getCustomAccounts(
+    ({ accessToken, apiUrl, businessId, userCreated }) => getCustomAccounts(
       apiUrl,
       accessToken,
       {
-        params: { businessId },
+        params: { businessId, userCreated },
       },
     )().then(({ data }) => data?.custom_accounts.map(account => mapRawCustomAccountToCustomAccount(account))),
   )

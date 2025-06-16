@@ -23,6 +23,7 @@ export type RawCustomAccount = {
   updated_at: string | null
   archived_at: string | null
   ledger_account_id: string
+  user_created: boolean
 }
 
 export type CustomAccount = Pick<RawCustomAccount, 'id'> & {
@@ -36,6 +37,7 @@ export type CustomAccount = Pick<RawCustomAccount, 'id'> & {
   updatedAt: RawCustomAccount['updated_at']
   archivedAt: RawCustomAccount['archived_at']
   ledgerAccountId: RawCustomAccount['ledger_account_id']
+  userCreated: RawCustomAccount['user_created']
 }
 
 export const mapRawCustomAccountToCustomAccount = (raw: RawCustomAccount): CustomAccount => ({
@@ -50,6 +52,7 @@ export const mapRawCustomAccountToCustomAccount = (raw: RawCustomAccount): Custo
   updatedAt: raw.updated_at,
   archivedAt: raw.archived_at,
   ledgerAccountId: raw.ledger_account_id,
+  userCreated: raw.user_created,
 })
 
 export type RawCustomTransaction = {

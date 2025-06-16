@@ -53,6 +53,7 @@ export type LinkedAccount = {
   connection_external_id?: string
   connection_needs_repair_as_of: string | null
   is_syncing: boolean
+  user_created: boolean
 }
 
 export type LinkedAccounts = {

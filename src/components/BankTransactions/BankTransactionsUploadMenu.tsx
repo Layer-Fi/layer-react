@@ -39,7 +39,7 @@ export const BankTransactionsUploadMenu = () => {
           </MenuItem>
         </MenuList>
       </DropdownMenu>
-      <BankTransactionsUploadModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
+      {isModalOpen && <BankTransactionsUploadModal isOpen onOpenChange={setIsModalOpen} />}
     </>
   )
 }

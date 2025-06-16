@@ -1,8 +1,8 @@
 .Layer__linked-accounts {
-  min-height: 150px;
   box-sizing: border-box;
-  overflow: visible;
   z-index: 1;
+  overflow: visible;
+  min-height: 150px;
   max-width: var(--max-component-width);
 
   &::-webkit-scrollbar {
@@ -21,19 +21,19 @@
 }
 
 .Layer__linked-accounts__header {
-  padding: var(--spacing-md);
   position: sticky;
   left: 0;
+  padding: var(--spacing-md);
 }
 
 .Layer__linked-accounts__list {
-  padding: var(--spacing-md);
   display: flex;
   flex-wrap: wrap;
-  align-items: stretch;
   gap: var(--spacing-md);
+  align-items: stretch;
+  padding: var(--spacing-md);
 
-  @media screen and (max-width: 650px) {
+  @media screen and (width <= 650px) {
     flex-wrap: nowrap;
     overflow-x: scroll;
     overflow-y: hidden;
@@ -57,16 +57,19 @@
 }
 
 .Layer__linked-accounts__new-account {
-  cursor: pointer;
+  box-sizing: border-box;
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  flex: 1;
-  max-width: 272px;
   min-height: 136px;
+
+  min-width: 286px;
+  max-width: 272px;
   padding: var(--spacing-2xs);
   border-radius: var(--border-radius-sm);
   background: var(--base-transparent-1);
+  cursor: pointer;
   transition: all 0.15s ease-out;
 
   &.--as-widget {
@@ -85,18 +88,16 @@
     }
   }
 
-  min-width: 286px;
-  box-sizing: border-box;
-
   .Layer__linked-accounts__new-account-label {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-wrap: wrap;
     gap: var(--spacing-xs);
-    color: var(--color-base-500);
+    align-items: center;
+    justify-content: center;
     text-align: center;
+    color: var(--color-base-500);
     transition: all 0.15s ease-out;
+
     span {
       line-height: normal;
     }
@@ -111,50 +112,46 @@
 
 .skeleton-loader {
   position: relative;
-  padding: 1rem;
-  background: white;
-  border-radius: var(--border-radius-base);
   overflow: hidden;
+  padding: 1rem;
+  border-radius: var(--border-radius-base);
+  background: white;
 }
 
 .skeleton-loader::after {
-  display: block;
-  content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  display: block;
   height: 100%;
+  width: 100%;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgb(255 255 255 / 100%),
+      transparent
+    );
+  content: "";
   transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 1),
-    transparent
-  );
   animation: skeletonSweep 1.5s infinite;
 }
 
 .Layer__linked-account-thumb {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-4xs);
+  gap: var(--spacing-3xs);
+  justify-content: space-between;
+  height: 136px;
+  width: 286px;
   padding: var(--spacing-2xs);
   border-radius: var(--border-radius-sm);
-  background: var(--color-base-0);
   border: 1px solid var(--color-base-100);
-  box-sizing: border-box;
-  width: 286px;
-  height: 136px;
-  justify-content: space-between;
+  background: var(--color-base-0);
 
   &.Layer__integrations-quickbooks-item-thumb {
     box-shadow: none;
-    
-    .topbar {
-      flex: 1;
-      margin-bottom: var(--spacing-4xs);
-    }
   }
 
   &.--show-ledger-balance {
@@ -162,33 +159,34 @@
   }
 
   .topbar {
-    min-width: 272px;
+    box-sizing: border-box;
     display: flex;
+    flex: 1;
     align-items: flex-start;
     justify-content: space-between;
-    background: var(--color-base-50);
-    color: var(--text-color-primary);
+    min-width: 272px;
+    padding: var(--spacing-xs);
     border-top-left-radius: var(--border-radius-xs);
     border-top-right-radius: var(--border-radius-xs);
-    border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    padding: var(--spacing-xs);
-    box-sizing: border-box;
+    border-bottom-left-radius: 0;
+    background: var(--color-base-50);
+    color: var(--text-color-primary);
 
     &.--hide-ledger-balance {
       padding-bottom: var(--spacing-sm);
     }
 
     &.--is-syncing {
-      color: var(--color-base-500);
-      background: none;
       z-index: 50;
+      background: none;
+      color: var(--color-base-500);
     }
 
     .account-institution {
+      overflow: hidden;
       color: var(--color-base-500);
       white-space: nowrap;
-      overflow: hidden;
       text-overflow: ellipsis;
     }
 
@@ -204,20 +202,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 52px;
       height: 28px;
+      width: 52px;
       padding: var(--spacing-3xs) 0;
+      border-radius: var(--border-radius-3xs);
       background: var(--color-base-0);
       color: var(--color-base-200);
-      border-radius: var(--border-radius-3xs);
     }
 
     .account-name {
       flex: 1;
+      overflow: hidden;
+      width: 200px;
       text-overflow: ellipsis;
       white-space: nowrap;
-      width: 200px;
-      overflow: hidden;
     }
   }
 
@@ -226,27 +224,27 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--color-base-50);
     padding: 0 var(--spacing-xs);
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    border-bottom-left-radius: var(--border-radius-xs);
     border-bottom-right-radius: var(--border-radius-xs);
+    border-bottom-left-radius: var(--border-radius-xs);
+    background: var(--color-base-50);
 
     .account-balance-text {
-      color: var(--color-base-500);
       padding: var(--spacing-sm) 0;
+      color: var(--color-base-500);
     }
   }
 
   .loadingbar {
+    z-index: 100;
     display: flex;
-    padding: var(--spacing-xs);
-    border-bottom-left-radius: var(--border-radius-xs);
-    border-bottom-right-radius: var(--border-radius-xs);
     gap: var(--spacing-xs);
     align-items: center;
-    z-index: 100;
+    padding: var(--spacing-xs);
+    border-bottom-right-radius: var(--border-radius-xs);
+    border-bottom-left-radius: var(--border-radius-xs);
 
     .loading-text {
       flex: 1;
@@ -254,13 +252,13 @@
     }
 
     .loading-wrapper {
-      width: 28px;
-      height: 28px;
-      background: var(--color-blue);
-      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      height: 28px;
+      width: 28px;
+      border-radius: 50%;
+      background: var(--color-blue);
     }
 
     .syncing-data-description {
@@ -281,26 +279,26 @@
   }
 
   &.--is-syncing {
-    background: hsla(200 11% 96%);
+    background: hsl(200deg 11% 96%);
   }
 
   &.--as-widget {
     gap: var(--spacing-2xs);
 
     .topbar {
-      border-bottom-left-radius: var(--border-radius-xs);
       border-bottom-right-radius: var(--border-radius-xs);
+      border-bottom-left-radius: var(--border-radius-xs);
     }
 
     .account-number {
       display: flex;
       align-items: center;
       justify-content: center;
+      height: 20px;
       padding: var(--spacing-3xs) var(--spacing-xs);
+      border-radius: var(--border-radius-xs);
       background: var(--color-base-50);
       color: var(--color-base-500);
-      border-radius: var(--border-radius-xs);
-      height: 20px;
     }
 
     .bottombar {
@@ -328,36 +326,38 @@
   }
 
   .Layer__linked-accounts__options-overlay {
-    opacity: 0;
-    touch-action: none;
     position: absolute;
     z-index: 99;
     top: var(--spacing-2xs);
     right: var(--spacing-2xs);
-    width: 74px;
-    height: 54px;
     display: flex;
     justify-content: flex-end;
-    transition: 0.15s all ease-out;
+    height: 54px;
+    width: 74px;
     border-top-right-radius: var(--border-radius-sm);
-    background: linear-gradient(
-      270deg,
-      #f8f8fa 1.52%,
-      rgba(248, 248, 250, 0) 99.75%
-    );
+    background:
+      linear-gradient(
+        270deg,
+        #f8f8fa 1.52%,
+        rgb(248 248 250 / 0%) 99.75%
+      );
+    opacity: 0;
+    touch-action: none;
+    transition: 0.15s all ease-out;
 
     .Layer__linked-accounts__options-overlay-button {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
       height: 24px;
+      width: 24px;
+      border-radius: var(--spacing-2xs);
+      border: none;
+      box-shadow:
+        0 0 8px 0
+        var(--base-transparent-12, rgb(16 24 40 / 12%));
       margin: var(--spacing-xs);
       background: var(--color-base-0);
-      border: none;
-      box-shadow: 0px 0px 8px 0px
-        var(--base-transparent-12, rgba(16, 24, 40, 0.12));
-      border-radius: var(--spacing-2xs);
       cursor: pointer;
       transform: translate3d(5px, -5px, 0);
       transition: 0.15s all ease-out;
