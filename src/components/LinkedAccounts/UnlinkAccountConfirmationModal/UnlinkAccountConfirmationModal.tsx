@@ -37,7 +37,7 @@ export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, account }
       onOpenChange={onOpenChange}
       title={modalContent.title}
       description={modalContent.description}
-      onConfirm={() => unlinkAccount(account.external_account_external_id, account.user_created, account.id)}
+      onConfirm={() => unlinkAccount(account.external_account_source, account.user_created, account.id)}
       confirmLabel={modalContent.confirmLabel}
       errorText={modalContent.errorText}
     />
