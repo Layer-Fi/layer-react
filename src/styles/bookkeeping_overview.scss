@@ -1,4 +1,4 @@
-@forward "../views/BookkeepingOverview/internal/bookkeeping_profit_and_loss_summaries_container";
+@forward '../views/BookkeepingOverview/internal/bookkeeping_profit_and_loss_summaries_container';
 
 .Layer__bookkeeping-overview--view {
   .Layer__panel .Layer__panel__content .Layer__component-header {
@@ -69,8 +69,7 @@
 }
 
 @container (max-width: 460px) {
-  .Layer__component.Layer__bookkeeping-overview-profit-and-loss
-  .recharts-responsive-container {
+  .Layer__component.Layer__bookkeeping-overview-profit-and-loss .recharts-responsive-container {
     margin-top: -12px;
   }
 }

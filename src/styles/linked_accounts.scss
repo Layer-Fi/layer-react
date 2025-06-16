@@ -48,14 +48,6 @@
   min-height: 120px;
 }
 
-.Layer__linked-accounts__header {
-  padding: var(--spacing-lg);
-}
-
-.Layer__linked-accounts__list {
-  padding: var(--spacing-lg);
-}
-
 .Layer__linked-accounts__new-account {
   box-sizing: border-box;
   display: flex;
@@ -104,7 +96,7 @@
   }
 }
 
-@keyframes skeletonSweep {
+@keyframes skeleton-sweep {
   100% {
     transform: translateX(100%);
   }
@@ -132,7 +124,7 @@
       rgb(255 255 255 / 100%),
       transparent
     );
-  content: "";
+  content: '';
   transform: translateX(-100%);
   animation: skeletonSweep 1.5s infinite;
 }

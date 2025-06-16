@@ -285,7 +285,7 @@
 }
 
 .Layer__profit-and-loss-chart__bar--loading-anim {
-  animation: layer_chart_bar_loading_anim 2s linear infinite;
+  animation: layer-chart-bar-loading-anim 2s linear infinite;
 }
 
 .Layer__profit-and-loss-chart__bar--income {
@@ -298,15 +298,15 @@
 
 .Layer__chart-container--loading .Layer__profit-and-loss-chart__bar--expenses {
   fill: var(--color-base-50);
-  animation: layer_chart_bar_loading_anim 2s linear infinite;
+  animation: layer-chart-bar-loading-anim 2s linear infinite;
 }
 
 .Layer__chart-container--loading .Layer__profit-and-loss-chart__bar--income {
   fill: var(--color-base-100);
-  animation: layer_chart_bar_loading_anim 2s linear infinite;
+  animation: layer-chart-bar-loading-anim 2s linear infinite;
 }
 
-@keyframes layer_chart_bar_loading_anim {
+@keyframes layer-chart-bar-loading-anim {
   0% {
     fill: var(--color-base-50);
   }

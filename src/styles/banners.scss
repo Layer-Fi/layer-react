@@ -2,18 +2,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 52px;
+  padding: var(--spacing-3xs) var(--spacing-sm);
+  border-radius: var(--border-radius-xs);
+  box-shadow: 0 0 0 3px var(--color-base-300);
   background-color: var(--color-base-800);
   color: var(--color-base-50);
-  border-radius: var(--border-radius-xs);
-  padding: var(--spacing-3xs) var(--spacing-sm);
-  min-height: 52px;
-  box-shadow: 0px 0px 0px 3px var(--color-base-300);
 }
 
 .Layer__bar-banner__left-col {
   display: flex;
-  align-items: center;
   gap: var(--spacing-md);
+  align-items: center;
 }
 
 .Layer__bar-banner__text-container__desc {
@@ -23,8 +23,8 @@
 @container (max-width: 560px) {
   .Layer__bar-banner--bookkeeping {
     flex-direction: column;
-    align-items: flex-start;
     gap: var(--spacing-sm);
+    align-items: flex-start;
     padding: var(--spacing-sm);
 
     .Layer__icon-box {
