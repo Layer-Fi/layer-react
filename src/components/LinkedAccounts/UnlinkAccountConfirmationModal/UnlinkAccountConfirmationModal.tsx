@@ -39,7 +39,7 @@ export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, account }
       description={modalContent.description}
       onConfirm={() => unlinkAccount(account.external_account_external_id, account.user_created, account.id)}
       confirmLabel={modalContent.confirmLabel}
-      errorText='Unlink failed. Please check your connection and try again in a few seconds.'
+      errorText={modalContent.errorText}
     />
   )
 }
