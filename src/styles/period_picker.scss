@@ -7,11 +7,12 @@
     gap: 20px;
     align-items: center;
     justify-content: space-between;
-    min-width: 180px;
     min-height: var(--spacing-2xl);
+    min-width: 180px;
     padding: var(--spacing-3xs) var(--spacing-xs) var(--spacing-3xs);
     padding-left: var(--spacing-lm);
     border-radius: var(--spacing-2xs);
+    border: 1px solid transparent;
     box-shadow:
       0 1px 2px 0 var(--base-transparent-6),
       0 0 0 1px var(--color-base-300);
@@ -19,7 +20,6 @@
     cursor: pointer;
     font-size: 14px;
     text-align: left;
-    border: 1px solid transparent;
 
     .Layer__chevron {
       display: flex;
@@ -44,9 +44,9 @@
     margin-top: 5px;
     background-color: var(--color-white);
     opacity: 0;
-    animation: fadeIn 0.3s forwards;
+    animation: fade-in 0.3s forwards;
 
-    @keyframes fadeIn {
+    @keyframes fade-in {
       to {
         opacity: 1;
       }

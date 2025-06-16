@@ -1,12 +1,12 @@
 .Layer__ModalOverlay {
-  display: grid;
-  place-items: center;
   position: fixed;
-  inset: 0;
-  max-inline-size: 100dvi;
-  max-block-size: 100dvh;
-  background: rgba(0 0 0 / 50%);
   z-index: 100;
+  inset: 0;
+  display: grid;
+  max-block-size: 100dvh;
+  max-inline-size: 100dvi;
+  background: rgb(0 0 0 / 50%);
+  place-items: center;
 
   &[data-entering] {
     animation-duration: 150ms;
@@ -18,11 +18,10 @@
 }
 
 .Layer__Modal {
-  inline-size: min(36rem, 90dvi);
-  max-inline-size: 90dvi;
-
   block-size: min(42rem, 90dvb);
   max-block-size: 90dvb;
+  inline-size: min(36rem, 90dvi);
+  max-inline-size: 90dvi;
 
   &[data-entering] {
     animation-duration: 300ms;
@@ -42,15 +41,15 @@
 }
 
 .Layer__Dialog {
-  outline: none;
-  background-color: white;
+  display: flex;
+  flex-direction: column;
   block-size: 100%;
   padding: var(--spacing-md);
   border-radius: var(--border-radius-2xs);
-  display: flex;
-  flex-direction: column;
+  outline: none;
+  background-color: white;
 
-  [slot="content"] {
+  [slot='content'] {
     flex: 1;
   }
 }

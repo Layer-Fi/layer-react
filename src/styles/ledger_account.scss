@@ -1,6 +1,6 @@
 .Layer__ledger-account__index {
-  background-color: var(--color-base-0);
   width: 100%;
+  background-color: var(--color-base-0);
 }
 
 .Layer__ledger-account__panel {
@@ -24,23 +24,23 @@
 }
 
 .Layer__ledger-account__entry-details__header {
-  background: var(--color-base-0);
   border-top-left-radius: var(--border-radius-sm);
   border-top-right-radius: var(--border-radius-sm);
+  background: var(--color-base-0);
 }
 
 .Layer__ledger-account__title-container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: flex-start;
+  justify-content: flex-start;
   width: 100%;
 }
 
 .Layer__ledger-account__balance-container {
   display: flex;
-  align-items: center;
   gap: var(--spacing-xs);
+  align-items: center;
 }
 
 .Layer__ledger-account__balance-label {
@@ -49,8 +49,8 @@
 
 .Layer__ledger-account__entry-details__back-btn {
   display: flex;
-  align-items: center;
   gap: var(--spacing-md);
+  align-items: center;
   padding-bottom: var(--spacing-md);
 }
 
@@ -64,24 +64,24 @@
 
 .Layer__ledger-account__entry-details__back-btn {
   display: none;
-  background: var(--color-base-0);
   padding-top: var(--spacing-xl);
-  padding-left: var(--spacing-xl);
   padding-right: var(--spacing-xl);
+  padding-left: var(--spacing-xl);
+  background: var(--color-base-0);
 }
 
 .Layer__ledger-account-table__tablet-main-col {
   .Layer__table-cell-content {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: var(--spacing-xs);
+    align-items: flex-start;
   }
 
   .Layer__ledger-account-table__tablet-main-col__date {
     display: flex;
-    align-items: center;
     gap: var(--spacing-xs);
+    align-items: center;
   }
 }
 
@@ -92,15 +92,15 @@
 .Layer__ledger_account-table__balances-mobile {
   display: flex;
   flex-direction: column;
-  width: 100%;
   gap: var(--spacing-xs);
+  width: 100%;
 }
 
 .Layer__ledger_account-table__balance-item {
   display: flex;
-  width: 100%;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 
   .Layer__ledger_account-table__balances-mobile__value {
     font-weight: var(--font-weight-bold);
@@ -109,9 +109,7 @@
 }
 
 @container (max-width: 1024px) {
-  .Layer__ledger-account__panel
-  .Layer__panel__sidebar
-  .Layer__panel__sidebar-content {
+  .Layer__ledger-account__panel .Layer__panel__sidebar .Layer__panel__sidebar-content {
     width: 100%;
   }
 
@@ -122,18 +120,14 @@
 
 @container (min-width: 500px) and (max-width: 1024px) {
   .Layer__ledger-account__panel .Layer__details-list .Layer__component-header {
-    padding-left: var(--spacing-xl);
     padding-right: var(--spacing-xl);
+    padding-left: var(--spacing-xl);
   }
 }
 
 @container (max-width: 499px) {
-  .Layer__ledger-account__panel
-  .Layer__details-list
-  .Layer__details-list-item__label,
-  .Layer__ledger-account__panel
-  .Layer__details-list
-  .Layer__details-list-item__value {
+  .Layer__ledger-account__panel .Layer__details-list .Layer__details-list-item__label,
+  .Layer__ledger-account__panel .Layer__details-list .Layer__details-list-item__value {
     padding: var(--spacing-xs);
   }
 
@@ -142,13 +136,13 @@
   }
 
   .Layer__ledger-account__entry-details__line-items {
-    padding-left: 0;
-    padding-right: 0;
     padding-top: 0;
+    padding-right: 0;
+    padding-left: 0;
 
     .Layer__card {
-      box-shadow: none;
       border-radius: 0;
+      box-shadow: none;
     }
   }
 
@@ -157,8 +151,8 @@
   }
 
   .Layer__ledger-account__entry-details__back-btn {
-    padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
+    padding-left: var(--spacing-md);
   }
 }
 
@@ -174,22 +168,12 @@
 }
 
 @container (min-width: 1400px) {
-  .Layer__ledger-account__entry-details__table
-  tr
-  td:first-child
-  .Layer__table-cell-content,
-  .Layer__ledger-account__entry-details__table
-  tr
-  td:last-child
-  .Layer__table-cell-content,
-  .Layer__ledger-account__entry-details__table
-  tr
-  th:first-child.Layer__table-header,
-  .Layer__ledger-account__entry-details__table
-  tr
-  th:last-child.Layer__table-header {
-    padding-left: var(--spacing-lg);
+  .Layer__ledger-account__entry-details__table tr td:first-child .Layer__table-cell-content,
+  .Layer__ledger-account__entry-details__table tr td:last-child .Layer__table-cell-content,
+  .Layer__ledger-account__entry-details__table tr th:first-child.Layer__table-header,
+  .Layer__ledger-account__entry-details__table tr th:last-child.Layer__table-header {
     padding-right: var(--spacing-lg);
+    padding-left: var(--spacing-lg);
   }
 }
 

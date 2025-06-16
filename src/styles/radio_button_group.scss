@@ -1,17 +1,17 @@
 .Layer__radio-button-group {
   display: flex;
-  font-size: 1rem;
-  align-items: center;
   flex: 1;
+  align-items: center;
   justify-content: flex-end;
   padding-top: 0.5rem;
+  font-size: 1rem;
 }
 
 /* BEM does not work for this, since it's tuned for this markup */
 .Layer__radio-button-group__radio-button {
+  position: relative;
   display: flex;
   flex-direction: row;
-  position: relative;
 }
 
 .Layer__radio-button-group__radio-button input {
@@ -22,9 +22,9 @@
 
 .Layer__radio-button-group__radio-button div {
   padding: 0.6rem 1rem;
+  border-radius: 0;
   border: 1px solid var(--buttons-border-color);
   border-right: 0;
-  border-radius: 0;
   font-weight: 600;
 }
 
@@ -51,4 +51,3 @@
 .Layer__radio-button-group__radio-button input:checked + div {
   background: var(--active);
 }
-

@@ -1,18 +1,18 @@
 .Layer__Checkbox {
+  position: relative;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-  position: relative;
 
-  [slot="checkbox"] {
+  [slot='checkbox'] {
+    display: grid;
+    height: var(--checkbox-size);
+    width: var(--checkbox-size);
+    border-radius: var(--checkbox-radius);
+    border: 2px solid var(--checkbox-border-color);
     background-color: var(--checkbox-bg);
     color: transparent;
-    border: 2px solid var(--checkbox-border-color);
-    border-radius: var(--checkbox-radius);
-    display: grid;
     place-items: center;
-    width: var(--checkbox-size);
-    height: var(--checkbox-size);
     transition: all 100ms ease-out;
 
     &[data-hovered] {
@@ -20,9 +20,9 @@
     }
   }
 
-  &[data-size="lg"] [slot="checkbox"] {
-    width: var(--checkbox-size-lg);
+  &[data-size='lg'] [slot='checkbox'] {
     height: var(--checkbox-size-lg);
+    width: var(--checkbox-size-lg);
     border-radius: var(--checkbox-radius-lg);
 
     &[data-hovered] {
@@ -34,23 +34,23 @@
     transition: all 100ms ease-out;
   }
 
-  &[data-pressed] [slot="checkbox"] {
+  &[data-pressed] [slot='checkbox'] {
     border-color: var(--outline-active);
   }
 
-  &[data-focus-visible] [slot="checkbox"] {
+  &[data-focus-visible] [slot='checkbox'] {
     outline: 1px solid var(--outline-active);
     outline-offset: 2px;
   }
 
-  &[data-selected] [slot="checkbox"] {
-    color: var(--checkbox-color-selected);
+  &[data-selected] [slot='checkbox'] {
     background-color: var(--checkbox-bg-selected);
+    color: var(--checkbox-color-selected);
     border-color: var(--checkbox-border-color-selected);
   }
 
-  &[data-selected][data-variant="success"] {
-    [slot="checkbox"] {
+  &[data-selected][data-variant='success'] {
+    [slot='checkbox'] {
       background-color: var(--checkbox-bg-success-selected);
       border-color: var(--checkbox-border-color-success-selected);
     }
@@ -59,7 +59,7 @@
   &[data-disabled] {
     cursor: not-allowed;
 
-    [slot="checkbox"] {
+    [slot='checkbox'] {
       background-color: var(--checkbox-bg-disabled);
 
       &[data-hovered] {

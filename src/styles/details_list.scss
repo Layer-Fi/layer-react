@@ -4,8 +4,8 @@
 }
 
 .Layer__details-list__actions > .Layer__details-list__close-btn {
-  width: 36px;
   height: 36px;
+  width: 36px;
   padding: 0;
 
   @container (max-width: 1024px) {
@@ -36,25 +36,25 @@
 
 .Layer__details-list-item {
   box-sizing: border-box;
-  padding: 0 var(--spacing-md);
   display: flex;
   align-items: center;
+  padding: 0 var(--spacing-md);
 }
 
 .Layer__details-list-item__label {
   box-sizing: border-box;
-  padding: var(--spacing-xs) var(--spacing-md);
   width: 140px;
   min-width: 140px;
   max-width: 140px;
-  color: var(--color-base-600);
+  padding: var(--spacing-xs) var(--spacing-md);
   font-size: 12px;
-  font-weight: var(--font-weight-normal);
   line-height: 140%;
+  font-weight: var(--font-weight-normal);
+  color: var(--color-base-600);
 }
 
 .Layer__details-list-item__value {
   box-sizing: border-box;
-  padding: var(--spacing-xs) var(--spacing-md);
   flex: 1;
+  padding: var(--spacing-xs) var(--spacing-md);
 }

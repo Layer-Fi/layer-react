@@ -1,63 +1,64 @@
 .Layer__dropdown-menu__popover {
-    outline: none;
-    &[data-entering] {
-        animation: popover-slide 120ms;
-    }
+  outline: none;
 
-    &:focus-visible {
-        outline: none;
-    }
+  &[data-entering] {
+    animation: popover-slide 120ms;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 @keyframes popover-slide {
-    from {
-      transform: translateY(-20px);
-      opacity: 0;
-    }
-  
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
   }
 
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .Layer__dropdown-menu__menu {
-    padding-top: var(--spacing-xs);
-    padding-bottom: var(--spacing-xs);
-    background: var(--color-base-0);
-    border-radius: var(--border-radius-xs);
-    box-shadow: 0px 0px 0px 1px rgba(25, 25, 25, 0.06), 0px 4px 12px 0px rgba(17, 17, 17, 0.01), 0px 2px 4px 0px rgba(25, 25, 25, 0.06);
+  padding-top: var(--spacing-xs);
+  padding-bottom: var(--spacing-xs);
+  border-radius: var(--border-radius-xs);
+  box-shadow: 0 0 0 1px rgb(25 25 25 / 6%), 0 4px 12px 0 rgb(17 17 17 / 1%), 0 2px 4px 0 rgb(25 25 25 / 6%);
+  background: var(--color-base-0);
 }
 
 .Layer__dropdown-menu__menu-item {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    padding: var(--spacing-xs);
-    border-radius: var(--border-radius-3xs);
-    box-shadow: 0px 0px 0px 1px var(--base-transparent-4);
-    margin: var(--spacing-3xs) var(--spacing-xs);
-    cursor: pointer;
-    transition: background-color 0.1s ease-in-out;
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-3xs);
+  box-shadow: 0 0 0 1px var(--base-transparent-4);
+  margin: var(--spacing-3xs) var(--spacing-xs);
+  cursor: pointer;
+  transition: background-color 0.1s ease-in-out;
 
-    &:hover,
-    &:focus-visible {
-        background-color: var(--color-base-50);
-    }
+  &:hover,
+  &:focus-visible {
+    background-color: var(--color-base-50);
+  }
 }
 
 .Layer__dropdown-menu__menu-list {
-    padding-bottom: var(--spacing-3xs);
+  padding-bottom: var(--spacing-3xs);
 }
 
 .Layer__dropdown-menu__separator {
-    height: 1px;
-    width: 100%;
-    margin: var(--spacing-xs) 0;
-    background-color: var(--color-base-200);
+  height: 1px;
+  width: 100%;
+  margin: var(--spacing-xs) 0;
+  background-color: var(--color-base-200);
 }
 
 .Layer__dropdown-menu__menu-item__heading {
-    padding: var(--spacing-xs) var(--spacing-md);
-    color: var(--text-color-secondary);
+  padding: var(--spacing-xs) var(--spacing-md);
+  color: var(--text-color-secondary);
 }

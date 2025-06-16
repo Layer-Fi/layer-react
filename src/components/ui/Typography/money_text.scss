@@ -1,6 +1,6 @@
 .Layer__MoneyText {
-  color: var(--color-base-700);
   overflow-x: hidden;
+  color: var(--color-base-700);
   text-overflow: ellipsis;
 
   &[data-bold] {
@@ -17,10 +17,10 @@
   }
 
   &[data-positive]::before {
-    content: "$";
+    content: '$';
   }
 
   &[data-negative]::before {
-    content: "-$"
+    content: '-$';
   }
 }

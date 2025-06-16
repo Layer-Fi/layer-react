@@ -1,21 +1,21 @@
 .Layer__loader {
-  width: 100%;
+  box-sizing: border-box;
   display: flex;
+  gap: 8px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  width: 100%;
   padding: var(--spacing-md);
-  color: var(--text-color-primary);
   font-size: var(--text-sm);
-  box-sizing: border-box;
+  color: var(--text-color-primary);
 }
 
 .Layer__loader--as-badge {
-  padding: 0;
-  width: 21px;
   height: 21px;
-  background-color: var(--color-base-100);
+  width: 21px;
+  padding: 0;
   border-radius: 50%;
+  background-color: var(--color-base-100);
 
   &.Layer__loader--info {
     background-color: var(--color-info-bg);
@@ -39,27 +39,27 @@
 }
 
 .Layer__loader--with-bg {
-  background-color: var(--color-base-400);
-  color: var(--text-color-primary);
   padding: 0;
   border-radius: 50%;
+  background-color: var(--color-base-400);
+  color: var(--text-color-primary);
 }
 
 .Layer__skeleton-loader__row {
+  height: 63px;
   padding: 0 var(--spacing-md);
   border-bottom: 1px solid var(--border-color);
-  height: 63px;
 }
 
 .Layer__skeleton-loader__row__group {
   display: flex;
-  align-items: center;
   gap: var(--spacing-sm);
+  align-items: center;
 }
 
 .Layer__skeleton-loader {
-  width: 100%;
   height: 12px;
+  width: 100%;
   border-radius: 4px;
 }
 
@@ -70,28 +70,29 @@
 }
 
 .Layer__anim--skeleton-loading {
-  background: var(--color-base-100);
-  background: linear-gradient(
-    110deg,
-    var(--color-base-50) 0%,
-    var(--color-base-0) 28%,
-    var(--color-base-50) 50%,
-    var(--color-base-50) 100%
-  );
   border-radius: 4px;
+  background: var(--color-base-100);
+  background:
+    linear-gradient(
+      110deg,
+      var(--color-base-50) 0%,
+      var(--color-base-0) 28%,
+      var(--color-base-50) 50%,
+      var(--color-base-50) 100%
+    );
   background-size: 200% 100%;
   animation: 1.5s shine linear infinite;
 }
 
 .Layer__syncing-component {
   display: flex;
-  align-items: center;
   gap: var(--spacing-md);
+  align-items: center;
   padding: var(--spacing-md);
 
   &.Layer__syncing-component--with-border {
-    border-left: 1px solid var(--border-color);
     padding: 0 var(--spacing-md);
+    border-left: 1px solid var(--border-color);
     margin-left: var(--spacing-md);
   }
 
@@ -99,26 +100,30 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-4xs);
+
     .Layer__syncing-component__title {
-      color: var(--text-color-primary);
       font-size: var(--text-sm);
       font-weight: 540;
+      color: var(--text-color-primary);
     }
+
     .Layer__syncing-component__message {
-      color: var(--color-base-500);
       font-size: var(--text-sm);
       font-weight: 460;
+      color: var(--color-base-500);
     }
   }
 
   .Layer__icon-btn {
-    color: var(--color-base-1000);
     box-shadow:
-      0px 1px 2px 0px var(--base-transparent-6, rgba(17, 17, 17, 0.06)),
-      0px 0px 0px 1px var(--base-300, #eaeaea);
+      0 1px 2px 0 var(--base-transparent-6, rgb(17 17 17 / 6%)),
+      0 0 0 1px var(--base-300, #eaeaea);
+    color: var(--color-base-1000);
+
     svg {
       transition: transform 0.3s ease;
     }
+
     &:hover {
       svg {
         transform: rotate(180deg);
@@ -127,10 +132,9 @@
   }
 }
 
-.Layer__bank-transactions__header--mobile
-  .Layer__syncing-component.Layer__syncing-component--with-border {
-  border-width: 0;
+.Layer__bank-transactions__header--mobile .Layer__syncing-component.Layer__syncing-component--with-border {
   padding: 0;
   padding-left: var(--spacing-sm);
+  border-width: 0;
   margin-left: 0;
 }

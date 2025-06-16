@@ -219,14 +219,14 @@
     > * {
       flex: 1;
 
-      &[slot="delete-btn"] {
+      &[slot='delete-btn'] {
         max-inline-size: 36px;
 
-        [slot="mobile-button"] {
+        [slot='mobile-button'] {
           display: none;
         }
 
-        [slot="desktop-button"] {
+        [slot='desktop-button'] {
           display: block;
         }
 
@@ -234,11 +234,11 @@
           max-inline-size: unset;
           padding: 0 var(--spacing-xs);
 
-          [slot="mobile-button"] {
+          [slot='mobile-button'] {
             display: block;
           }
 
-          [slot="desktop-button"] {
+          [slot='desktop-button'] {
             display: none;
           }
         }
@@ -617,7 +617,7 @@
     transition-delay: 60ms;
   }
 
-  &[data-status="open"] {
+  &[data-status='open'] {
     width: 40px;
 
     .Layer__bills-table__checkbox {
@@ -673,7 +673,7 @@
 }
 
 @container (min-width: 499px) {
-  .Layer__bills-list-item[data-status="paid"] .Layer__bills-list-item__main__amount {
+  .Layer__bills-list-item[data-status='paid'] .Layer__bills-list-item__main__amount {
     display: flex;
     gap: var(--spacing-3xs);
     align-items: center;
@@ -709,8 +709,8 @@
 }
 
 .Layer__bills-list-item__separator {
-  width: 1px;
   height: 10px;
+  width: 1px;
   background-color: var(--color-base-400);
 }
 
