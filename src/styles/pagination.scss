@@ -12,12 +12,14 @@
   gap: var(--spacing-4xs);
   align-items: center;
   height: 2.25rem;
+
+  padding-inline-start: var(--spacing-4xs);
+  padding-inline-end: var(--spacing-4xs);
+
   border-radius: var(--border-radius-2xs);
   border: 1px solid var(--color-base-300);
   background: var(--color-base-50);
   list-style-type: none;
-  padding-inline-start: var(--spacing-4xs);
-  padding-inline-end: var(--spacing-4xs);
 
   .Layer__pagination__selected-item {
     .Layer__UI__Button {

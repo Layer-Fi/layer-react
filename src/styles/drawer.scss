@@ -1,12 +1,12 @@
 .Layer__drawer-background {
   position: fixed;
-  display: none;
+  z-index: 1000;
   top: 0;
-  left: 0;
   right: 0;
   bottom: 0;
+  left: 0;
+  display: none;
   opacity: 0;
-  z-index: 1000;
   transition:
     background 0.2s ease-in-out,
     opacity 0.2s ease-in-out;
@@ -23,34 +23,34 @@
 }
 
 .Layer__drawer {
+  box-sizing: border-box;
   position: fixed;
-  display: flex;
+  z-index: 9999;
+  right: 0;
   bottom: -100%;
   left: 0;
-  right: 0;
-  z-index: 9999;
-  background: var(--color-base-0);
-  width: 100%;
-  max-height: 80%;
+  display: flex;
   overflow-y: auto;
+  max-height: 80%;
+  width: 100%;
   padding: 0 14px;
-  border-radius: var(--spacing-md) var(--spacing-md) 0px 0px;
-  transition: bottom 0.2s ease-in-out;
+  border-radius: var(--spacing-md) var(--spacing-md) 0 0;
   border: 28px solid var(--color-base-0);
-  border-left: 14px solid var(--color-base-0);
   border-right: 14px solid var(--color-base-0);
-  box-sizing: border-box;
+  border-left: 14px solid var(--color-base-0);
+  background: var(--color-base-0);
+  transition: bottom 0.2s ease-in-out;
 
   &::after {
     position: absolute;
-    content: '';
-    width: 37px;
-    height: 5px;
-    background-color: var(--color-base-50);
+    top: 0;
     left: 50%;
-    transform: translateX(-50%);
-    top: 0px;
+    height: 5px;
+    width: 37px;
     border-radius: 80px;
+    background-color: var(--color-base-50);
+    content: '';
+    transform: translateX(-50%);
   }
 
   &.open:not(.closing) {
@@ -58,13 +58,13 @@
   }
 }
 
-@media (min-width: 414px) {
+@media (width >= 414px) {
   .Layer__drawer {
     max-height: calc(82% - 32px);
     max-width: 414px;
-    margin-left: auto;
-    margin-right: auto;
     border-radius: var(--spacing-md);
+    margin-right: auto;
+    margin-left: auto;
 
     &.open:not(.closing) {
       bottom: 32px;

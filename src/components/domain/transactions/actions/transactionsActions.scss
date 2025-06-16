@@ -1,37 +1,37 @@
 .Layer__TransactionsActions {
   display: grid;
   grid-template-areas:
-    "toggle . download-upload"
-    "search search search";
+    'toggle . download-upload'
+    'search search search';
 
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: var(--spacing-xs);
   align-items: center;
 
   @container (min-width: 640px) {
-    grid-template-areas: "toggle . search download-upload";
+    grid-template-areas: 'toggle . search download-upload';
     grid-template-columns: auto minmax(0, 2fr) minmax(15rem, 3fr) auto;
   }
 
   @container (min-width: 780px) {
-    grid-template-areas: "toggle . search download-upload";
+    grid-template-areas: 'toggle . search download-upload';
     grid-template-columns: auto minmax(0, 3fr) minmax(15rem, 2fr) auto;
   }
 
   @container (min-width: 1024px) {
-    grid-template-areas: "toggle . search download-upload";
+    grid-template-areas: 'toggle . search download-upload';
     grid-template-columns: auto minmax(0, 3fr) minmax(15rem, 1fr) auto;
   }
 
-  > [slot="toggle"] {
+  > [slot='toggle'] {
     grid-area: toggle;
   }
 
-  > [slot="search"] {
+  > [slot='search'] {
     grid-area: search;
   }
 
-  > [slot="download-upload"] {
+  > [slot='download-upload'] {
     grid-area: download-upload;
   }
 }

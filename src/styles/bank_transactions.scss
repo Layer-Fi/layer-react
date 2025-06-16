@@ -110,7 +110,7 @@
   }
 }
 
-.Layer__bank-transactions__header--with-date-picker.Layer__bank-transactions__header--mobile .Layer__datepicker__wrapper {
+.Layer__bank-transactions__header--with-date-picker .Layer__bank-transactions__header--mobile .Layer__datepicker__wrapper {
   margin-right: 4px;
 }
 
@@ -794,6 +794,7 @@
         box-sizing: border-box;
         display: block;
         overflow: hidden;
+        max-width: 100%;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
@@ -1433,7 +1434,7 @@
   }
 }
 
-@keyframes fade-in {
+@keyframes fade-in-bank-transaction-row {
   from {
     opacity: 0;
     transform: scale(0.5);
@@ -1445,7 +1446,7 @@
   }
 }
 
-@keyframes fade-out {
+@keyframes fade-out-bank-transaction-row {
   from {
     height: 56px;
     padding-top: 12px;
@@ -1464,11 +1465,11 @@
 }
 
 .notification-enter {
-  animation: fade-in var(--transition-speed) forwards;
+  animation: fade-in-bank-transaction-row var(--transition-speed) forwards;
 }
 
 .notification-exit {
-  animation: fade-out var(--transition-speed) forwards;
+  animation: fade-out-bank-transaction-row var(--transition-speed) forwards;
 }
 
 .Layer__expanded-bank-transaction-row__splits-inputs + .Layer__text--error {

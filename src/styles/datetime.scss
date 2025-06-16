@@ -1,12 +1,12 @@
 .Layer__datetime {
   display: inline-flex;
-  align-items: center;
   gap: var(--spacing-md);
+  align-items: center;
 }
 
 .Layer__datetime__date {
-  color: var(--color-base-800);
   min-width: 75px;
+  color: var(--color-base-800);
 }
 
 .Layer__datetime__time {

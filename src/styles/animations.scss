@@ -1,7 +1,8 @@
-@keyframes Layer__rotate {
+@keyframes rotate-360 {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

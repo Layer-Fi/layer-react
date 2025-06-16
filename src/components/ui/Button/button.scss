@@ -148,4 +148,8 @@
   grid-column: 1 / -1;
   height: 1rem;
   place-self: center;
+
+  &[data-size='lg'] {
+    height: 20px;
+  }
 }
