@@ -13,6 +13,8 @@ export default tsEslint.config([
       'build/*',
       'dist/*',
       'bin/*',
+      'eslint.config.mjs',
+      'stylelint.config.mjs',
     ],
   },
   js.configs.recommended,

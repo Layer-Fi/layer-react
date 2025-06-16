@@ -27,7 +27,7 @@ export const ProfitAndLossTableComponent = ({
   stringOverrides,
 }: ProfitAndLossTableProps) => {
   const {
-    data: actualData,
+    data: currentData,
     isLoading,
     setSidebarScope,
   } = useContext(ProfitAndLoss.Context)
@@ -35,14 +35,13 @@ export const ProfitAndLossTableComponent = ({
 
   useEffect(() => {
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
+  // Open selected rows on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const currentData = Array.isArray(actualData)
-    ? actualData[actualData.length - 1]
-    : actualData
   const data = !currentData || isLoading ? emptyPNL : currentData
 
-  if (isLoading || actualData === undefined) {
+  if (isLoading || currentData === undefined) {
     return (
       <div
         className={classNames(
@@ -128,7 +127,7 @@ export const ProfitAndLossTableComponent = ({
           'revenue',
           setSidebarScope,
         )}
-        {renderLineItem(
+        {data.cost_of_goods_sold && renderLineItem(
           data.cost_of_goods_sold,
           0,
           'cost_of_goods_sold',
