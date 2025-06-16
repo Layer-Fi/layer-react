@@ -471,6 +471,7 @@ export const useAugmentedBankTransactions = (
         clearInterval(intervalId.current)
       }
     }
+    // Refetch accounts also when transactionsNotSynced changes its status
   }, [anyAccountSyncing, transactionsNotSynced, pollIntervalMs])
 
   useTriggerOnChange(data, anyAccountSyncing, (_) => {
