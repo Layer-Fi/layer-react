@@ -1,8 +1,8 @@
 .Layer__data-state {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 
   &.Layer__data-state--spacing {
     padding: var(--spacing-xl);
@@ -13,13 +13,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
   height: 32px;
-  box-shadow: 0 0 0 1px var(--color-base-300);
+  width: 32px;
   border-radius: var(--spacing-3xs);
+  box-shadow: 0 0 0 1px var(--color-base-300);
+  margin-bottom: var(--spacing-md);
   background: transparent;
   color: var(--text-color-primary);
-  margin-bottom: var(--spacing-md);
 }
 
 .Layer__data-state__icon--neutral {
@@ -42,14 +42,14 @@
 .Layer__data-state__title {
   display: block;
   margin-bottom: var(--spacing-2xs);
-  color: var(--color-base-700);
   text-align: center;
+  color: var(--color-base-700);
 }
 
 .Layer__data-state__description {
   display: block;
-  text-align: center;
   margin-bottom: var(--spacing-xl);
+  text-align: center;
   color: var(--color-base-500);
 }
 
@@ -59,8 +59,8 @@
 
   .Layer__data-state__title,
   .Layer__data-state__description {
-    text-align: left;
     margin-bottom: 0;
+    text-align: left;
   }
 
   .Layer__data-state__icon {

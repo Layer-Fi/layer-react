@@ -30,7 +30,7 @@
     outline: 1px solid var(--outline-default);
   }
 
-  &[data-variant="solid"] {
+  &[data-variant='solid'] {
     background-color: var(--button-bg-default);
     color: var(--button-fg-default);
 
@@ -44,7 +44,7 @@
     }
   }
 
-  &[data-variant="ghost"] {
+  &[data-variant='ghost'] {
     border: 1px solid transparent;
     background-color: var(--button-bg-ghost);
     color: var(--button-fg-ghost);
@@ -59,7 +59,7 @@
     }
   }
 
-  &[data-size="sm"] {
+  &[data-size='sm'] {
     --min-size: 1.5rem;
 
     min-block-size: var(--min-size);
@@ -74,7 +74,7 @@
     }
   }
 
-  &[data-size="md"] {
+  &[data-size='md'] {
     --min-size: 2.25rem;
 
     min-block-size: var(--min-size);
@@ -114,7 +114,7 @@
   height: 16px;
   place-self: center;
 
-  &[data-size="lg"] {
+  &[data-size='lg'] {
     height: 20px;
   }
 }

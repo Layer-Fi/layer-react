@@ -1,23 +1,23 @@
 .Layer__ProfitAndLossSummariesSummary {
   display: grid;
-  min-block-size: 3rem;
+  grid-template-areas:
+    'chart heading'
+    'chart amount';
   grid-template-columns: auto minmax(0, 1fr);
   gap: var(--spacing-3xs) var(--spacing-xs);
-  grid-template-areas: 'chart heading'
-    'chart amount'
-  ;
+  min-block-size: 3rem;
 
-  &[data-size="lg"] {
-    min-block-size: 6rem;
+  &[data-size='lg'] {
     column-gap: var(--spacing-md);
+    min-block-size: 6rem;
   }
 
-  [slot="heading"] {
+  [slot='heading'] {
     grid-area: heading;
     align-self: end;
   }
 
-  [slot="amount"] {
+  [slot='amount'] {
     grid-area: amount;
     align-self: start;
   }

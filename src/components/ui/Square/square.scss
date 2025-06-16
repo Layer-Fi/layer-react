@@ -4,7 +4,7 @@
 
   aspect-ratio: 1 / 1;
 
-  &[data-size="sm"] {
+  &[data-size='sm'] {
     --min-size: 1.5rem;
 
     min-block-size: var(--min-size);

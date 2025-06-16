@@ -16,7 +16,7 @@
     border-bottom: 1px solid var(--border-color);
   }
 
-  & > [slot="header"],
+  & > [slot='header'],
   & > .Layer__ListBoxItem {
     padding-inline: var(--spacing-sm);
   }

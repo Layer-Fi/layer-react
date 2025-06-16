@@ -6,7 +6,7 @@
   color: var(--color-base-700);
   text-wrap: pretty;
 
-  &[data-variant="subtle"] {
+  &[data-variant='subtle'] {
     color: var(--fg-subtle);
   }
 
@@ -26,7 +26,7 @@
     }
   }
 
-  &[data-size="lg"] {
+  &[data-size='lg'] {
     font-size: var(--text-heading-secondary);
   }
 
@@ -38,7 +38,7 @@
     }
   }
 
-  &[data-align="center"] {
+  &[data-align='center'] {
     max-inline-size: unset;
     text-align: center;
   }
