@@ -147,35 +147,37 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
+  const plainLinkOnSuccess = async (
+    publicToken: string,
+    metadata: PlaidLinkOnSuccessMetadata,
+  ) => {
+    if (linkMode == 'add') {
+      // Note: a sync is kicked off in the backend in this endpoint
+      void exchangePlaidPublicToken(publicToken, metadata)
+    }
+    else {
+      // Refresh the account connections, which should remove the error
+      // pills from any broken accounts
+      await updateConnectionStatus()
+      void refetchAccounts()
+      setLinkMode('add')
+      touch(DataModel.LINKED_ACCOUNTS)
+    }
+  }
+
   const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
     token: linkToken,
 
     // If in update mode, we don't need to exchange the public token for an access token.
     // The existing access token will automatically become valid again
-    onSuccess: async (
-      publicToken: string,
-      metadata: PlaidLinkOnSuccessMetadata,
-    ) => {
-      if (linkMode == 'add') {
-        // Note: a sync is kicked off in the backend in this endpoint
-        void exchangePlaidPublicToken(publicToken, metadata)
-      }
-      else {
-        // Refresh the account connections, which should remove the error
-        // pills from any broken accounts
-        await updateConnectionStatus()
-        void refetchAccounts()
-        setLinkMode('add')
-        touch(DataModel.LINKED_ACCOUNTS)
-      }
-    },
+    onSuccess: (publicToken, metadata) => { void plainLinkOnSuccess(publicToken, metadata) },
     onExit: () => setLinkMode('add'),
     env: usePlaidSandbox ? 'sandbox' : undefined,
   })
 
   useEffect(() => {
     if (plaidLinkReady) {
-      plaidLinkStart()
+      (plaidLinkStart as () => void)()
     }
   }, [plaidLinkStart, plaidLinkReady])
 

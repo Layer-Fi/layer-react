@@ -42,6 +42,13 @@ import {
   useGlobalDateRangeActions,
 } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
+type ActivePayload = {
+  payload: {
+    year: number
+    month: number
+  }
+}
+
 const getChartWindow = ({
   chartWindow,
   currentYear,
@@ -378,7 +385,7 @@ export const ProfitAndLossChart = ({
     }
 
     if (activePayload && activePayload.length > 0) {
-      const { year, month } = activePayload[0].payload
+      const { year, month } = (activePayload[0] as ActivePayload).payload
 
       const selectedDate = new Date(year, month - 1, 1)
       const isMonthAllowed = isDateAllowedToBrowse(selectedDate, business)

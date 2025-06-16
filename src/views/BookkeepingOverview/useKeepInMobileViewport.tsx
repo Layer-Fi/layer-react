@@ -10,6 +10,8 @@ export const useKeepInMobileViewport = () => {
   const upperElementInFocus = useRef<boolean | null>(false)
 
   useEffect(() => {
+    const currentUpperContent = upperContentRef.current
+
     if (!upperContentRef.current || !targetElementRef.current) return
 
     lastKnownSizeRef.current = upperContentRef.current.getBoundingClientRect().height
@@ -61,8 +63,8 @@ export const useKeepInMobileViewport = () => {
     window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => {
-      if (upperContentRef.current) {
-        resizeObserver.unobserve(upperContentRef.current)
+      if (currentUpperContent) {
+        resizeObserver.unobserve(currentUpperContent)
       }
       window.removeEventListener('scroll', handleScroll)
     }

@@ -441,7 +441,7 @@ export const useAugmentedBankTransactions = (
     [data, anyAccountSyncing, isLoading],
   )
 
-  let intervalId: ReturnType<typeof setInterval> | undefined = undefined
+  const intervalId = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
 
   // calling `refetch()` directly in the `setInterval` didn't trigger actual request to API.
   // But it works when called from `useEffect`
@@ -456,25 +456,27 @@ export const useAugmentedBankTransactions = (
 
   useEffect(() => {
     if (anyAccountSyncing) {
-      intervalId = setInterval(() => {
+      intervalId.current = setInterval(() => {
         setRefreshTrigger(Math.random())
       }, pollIntervalMs)
     }
     else {
-      if (intervalId) {
-        clearInterval(intervalId)
+      if (intervalId.current) {
+        clearInterval(intervalId.current)
       }
     }
 
     return () => {
-      if (intervalId) {
-        clearInterval(intervalId)
+      if (intervalId.current) {
+        clearInterval(intervalId.current)
       }
     }
   }, [anyAccountSyncing, transactionsNotSynced, pollIntervalMs])
 
   useTriggerOnChange(data, anyAccountSyncing, (_) => {
-    clearInterval(intervalId)
+    if (intervalId.current) {
+      clearInterval(intervalId.current)
+    }
     setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
     eventCallbacks?.onTransactionsFetched?.()
     touch(DataModel.BANK_TRANSACTIONS)
