@@ -35,8 +35,12 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm install
 
-      - name: Run eslint # TODO split later into eslint and stylelint
-        run: npm run lint
+      - name: Run eslint
+        run: npm run lint:eslint
+
+      # TODO: enable after cleaning up styles
+      #- name: Run stylelint
+      #  run: npm run lint:stylelint
 
       - name: Run typecheck
         run: npm run typecheck
