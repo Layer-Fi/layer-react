@@ -26,4 +26,8 @@
   &[data-action-count='2'] {
     grid-template-columns: minmax(0, 1fr) auto auto;
   }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+  }
 }

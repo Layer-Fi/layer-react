@@ -69,10 +69,6 @@
       background-color: transparent;
     }
 
-    &[data-hovered] {
-      background-color: var(--base-transparent-2);
-    }
-
     &[data-persistent-border]:not([data-pressed]) {
       border-color: var(--button-border-color-ghost);
     }

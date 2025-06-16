@@ -7,7 +7,7 @@
 
   background: var(--color-base-0);
 
-  &[data-trigger="ComboBox"] {
+  &[data-trigger='ComboBox'] {
     inline-size:
       clamp(
         min(var(--trigger-width), 90svi),
