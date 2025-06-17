@@ -1,8 +1,8 @@
 import { BankTransactionMemo } from '../../../../components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
 import { VStack } from '../../../../components/ui/Stack/Stack'
 import type { BankTransaction } from '../../../../types'
-import { BankTransactionSecondPartySelector } from '../secondParty/components/BankTransactionSecondPartySelector'
-import { useBankTransactionSecondPartyVisibility } from '../secondParty/components/BankTransactionSecondPartyVisibilityProvider'
+import { BankTransactionCustomerVendorSelector } from '../customerVendor/components/BankTransactionCustomerVendorSelector'
+import { useBankTransactionCustomerVendorVisibility } from '../customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 import { BankTransactionTagSelector } from '../tags/components/BankTransactionTagSelector'
 import { useBankTransactionTagVisibility } from '../tags/components/BankTransactionTagVisibilityProvider'
 
@@ -19,16 +19,16 @@ export function BankTransactionFormFields({
   showDescriptions,
 }: BankTransactionFormFieldProps) {
   const { showTags } = useBankTransactionTagVisibility()
-  const { showSecondParty } = useBankTransactionSecondPartyVisibility()
+  const { showCustomerVendor } = useBankTransactionCustomerVendorVisibility()
 
-  if (!showTags && !showSecondParty && !showDescriptions) {
+  if (!showTags && !showCustomerVendor && !showDescriptions) {
     return null
   }
 
   return (
     <VStack pi='md' gap='md'>
-      {showSecondParty
-        ? <BankTransactionSecondPartySelector bankTransaction={bankTransaction} />
+      {showCustomerVendor
+        ? <BankTransactionCustomerVendorSelector bankTransaction={bankTransaction} />
         : null}
       {showTags
         ? <BankTransactionTagSelector bankTransaction={bankTransaction} />

@@ -1,18 +1,18 @@
 import { useCallback, useMemo } from 'react'
 import type { BankTransaction } from '../../../../../types'
-import { SecondPartySelector } from '../../../../secondParty/components/SecondPartySelector'
-import { decodeSecondParty, type SecondPartySchema } from '../../../../secondParty/secondPartySchemas'
+import { CustomerVendorSelector } from '../../../../customerVendor/components/CustomerVendorSelector'
+import { decodeCustomerVendor, type CustomerVendorSchema } from '../../../../customerVendor/customerVendorSchemas'
 import { unsafeAssertUnreachable } from '../../../../../utils/switch/assertUnreachable'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '../../../../../hooks/bookkeeping/useBookkeepingStatus'
 import { useSetMetadataOnBankTransaction } from '../../metadata/api/useSetMetadataOnBankTransaction'
 
-type BankTransactionSecondPartySelectorProps = {
+type BankTransactionCustomerVendorSelectorProps = {
   bankTransaction: Pick<BankTransaction, 'id' | 'customer' | 'vendor'>
 }
 
-export function BankTransactionSecondPartySelector({
+export function BankTransactionCustomerVendorSelector({
   bankTransaction,
-}: BankTransactionSecondPartySelectorProps) {
+}: BankTransactionCustomerVendorSelectorProps) {
   const {
     id: bankTransactionId,
     customer,
@@ -22,19 +22,19 @@ export function BankTransactionSecondPartySelector({
   const status = useEffectiveBookkeepingStatus()
   const isReadOnly = status === BookkeepingStatus.ACTIVE
 
-  const selectedSecondParty = useMemo(
+  const selectedCustomerVendor = useMemo(
     () => {
       if (customer) {
-        return decodeSecondParty({
+        return decodeCustomerVendor({
           ...customer,
-          secondPartyType: 'CUSTOMER',
+          customerVendorType: 'CUSTOMER',
         })
       }
 
       if (vendor) {
-        return decodeSecondParty({
+        return decodeCustomerVendor({
           ...vendor,
-          secondPartyType: 'VENDOR',
+          customerVendorType: 'VENDOR',
         })
       }
 
@@ -48,9 +48,9 @@ export function BankTransactionSecondPartySelector({
 
   const { trigger, isMutating } = useSetMetadataOnBankTransaction({ bankTransactionId })
 
-  const triggerSetSecondParty = useCallback(
-    (secondParty: typeof SecondPartySchema.Type | null) => {
-      if (secondParty === null) {
+  const triggerSetCustomerVendor = useCallback(
+    (customerVendor: typeof CustomerVendorSchema.Type | null) => {
+      if (customerVendor === null) {
         void trigger({
           customer: null,
           vendor: null,
@@ -59,10 +59,10 @@ export function BankTransactionSecondPartySelector({
         return
       }
 
-      switch (secondParty.secondPartyType) {
+      switch (customerVendor.customerVendorType) {
         case 'CUSTOMER':
           void trigger({
-            customer: secondParty,
+            customer: customerVendor,
             vendor: null,
           })
 
@@ -71,14 +71,14 @@ export function BankTransactionSecondPartySelector({
         case 'VENDOR':
           void trigger({
             customer: null,
-            vendor: secondParty,
+            vendor: customerVendor,
           })
 
           break
 
         default:
           unsafeAssertUnreachable({
-            value: secondParty,
+            value: customerVendor,
             message: 'Unexpected second party type',
           })
       }
@@ -86,12 +86,12 @@ export function BankTransactionSecondPartySelector({
     [trigger],
   )
 
-  const selectedValueIsOptimistic = Boolean(selectedSecondParty?._local?.isOptimistic)
+  const selectedValueIsOptimistic = Boolean(selectedCustomerVendor?._local?.isOptimistic)
 
   return (
-    <SecondPartySelector
-      selectedSecondParty={selectedSecondParty}
-      onSelectedSecondPartyChange={triggerSetSecondParty}
+    <CustomerVendorSelector
+      selectedCustomerVendor={selectedCustomerVendor}
+      onSelectedCustomerVendorChange={triggerSetCustomerVendor}
       isMutating={isMutating || selectedValueIsOptimistic}
       isReadOnly={isReadOnly}
     />

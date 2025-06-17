@@ -35,7 +35,7 @@ import { LegacyModeProvider, type BankTransactionsMode } from '../../providers/L
 import { BankTransactionTagVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
 import classNames from 'classnames'
 import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimensions'
-import { BankTransactionSecondPartyVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/secondParty/components/BankTransactionSecondPartyVisibilityProvider'
+import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -74,13 +74,13 @@ export interface BankTransactionsProps {
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
   onError?: (error: LayerError) => void
   showTags?: boolean
-  showSecondParty?: boolean
+  showCustomerVendor?: boolean
 }
 
 export const BankTransactions = ({
   onError,
   showTags = false,
-  showSecondParty = false,
+  showCustomerVendor = false,
   mode,
   ...props
 }: BankTransactionsWithErrorProps) => {
@@ -93,9 +93,9 @@ export const BankTransactions = ({
       <BankTransactionsContext.Provider value={contextData}>
         <LegacyModeProvider overrideMode={mode}>
           <BankTransactionTagVisibilityProvider showTags={showTags}>
-            <BankTransactionSecondPartyVisibilityProvider showSecondParty={showSecondParty}>
+            <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
               <BankTransactionsContent {...props} />
-            </BankTransactionSecondPartyVisibilityProvider>
+            </BankTransactionCustomerVendorVisibilityProvider>
           </BankTransactionTagVisibilityProvider>
         </LegacyModeProvider>
       </BankTransactionsContext.Provider>

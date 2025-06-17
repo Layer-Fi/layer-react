@@ -6,50 +6,50 @@ import { Label, P, Span } from '../../../components/ui/Typography/Text'
 import { Input } from '../../../components/ui/Input/Input'
 import { Button } from '../../../components/ui/Button/Button'
 import { X, ChevronDown } from 'lucide-react'
-import { type SecondPartySchema } from '../secondPartySchemas'
+import type { CustomerVendorSchema } from '../customerVendorSchemas'
 import { InputGroup } from '../../../components/ui/Input/InputGroup'
 import { Popover } from '../../../components/ui/Popover/Popover'
 import { ListBox, ListBoxItem, ListBoxSection, ListBoxSectionHeader } from '../../../components/ui/ListBox/ListBox'
 import { HStack, VStack } from '../../../components/ui/Stack/Stack'
 import { useDebouncedSearchInput } from '../../../hooks/search/useDebouncedSearchQuery'
 
-type SecondParty = typeof SecondPartySchema.Type
+type CustomerVendor = typeof CustomerVendorSchema.Type
 
-function getSecondPartyName(
-  secondParty: Pick<SecondParty, 'individualName' | 'companyName' | 'externalId' | 'secondPartyType'>,
+function getCustomerVendorName(
+  customerVendor: Pick<CustomerVendor, 'individualName' | 'companyName' | 'externalId' | 'customerVendorType'>,
 ) {
-  return secondParty.individualName
-    ?? secondParty.companyName
-    ?? secondParty.externalId
-    ?? `Unknown ${secondParty.secondPartyType === 'CUSTOMER' ? 'Customer' : 'Vendor'}`
+  return customerVendor.individualName
+    ?? customerVendor.companyName
+    ?? customerVendor.externalId
+    ?? `Unknown ${customerVendor.customerVendorType === 'CUSTOMER' ? 'Customer' : 'Vendor'}`
 }
 
-type SecondPartySelectorProps = {
-  selectedSecondParty: SecondParty | null
-  onSelectedSecondPartyChange: (secondParty: SecondParty | null) => void
+type CustomerVendorSelectorProps = {
+  selectedCustomerVendor: CustomerVendor | null
+  onSelectedCustomerVendorChange: (customerVendor: CustomerVendor | null) => void
 
   isMutating?: boolean
   isReadOnly?: boolean
 }
 
-export function SecondPartySelector({
-  selectedSecondParty,
-  onSelectedSecondPartyChange,
+export function CustomerVendorSelector({
+  selectedCustomerVendor,
+  onSelectedCustomerVendorChange,
 
   isMutating,
   isReadOnly,
-}: SecondPartySelectorProps) {
+}: CustomerVendorSelectorProps) {
   const {
     inputValue,
     searchQuery,
     handleInputChange,
   } = useDebouncedSearchInput({
     initialInputState: () => {
-      if (selectedSecondParty === null) {
+      if (selectedCustomerVendor === null) {
         return ''
       }
 
-      return getSecondPartyName(selectedSecondParty)
+      return getCustomerVendorName(selectedCustomerVendor)
     },
   })
 
@@ -99,7 +99,7 @@ export function SecondPartySelector({
     ],
   )
 
-  const selectedSecondPartyId = selectedSecondParty?.id
+  const selectedCustomerVendorId = selectedCustomerVendor?.id
 
   const handleSelectionChange = useCallback(
     (key: string | number | null) => {
@@ -110,8 +110,8 @@ export function SecondPartySelector({
       if (key === null) {
         handleInputChange('')
 
-        if (selectedSecondPartyId) {
-          onSelectedSecondPartyChange(null)
+        if (selectedCustomerVendorId) {
+          onSelectedCustomerVendorChange(null)
         }
 
         return
@@ -121,14 +121,14 @@ export function SecondPartySelector({
       const selectedCustomer = customers.find(({ id }) => id === key)
 
       if (selectedCustomer) {
-        const selectedCustomerWithType = { ...selectedCustomer, secondPartyType: 'CUSTOMER' } as const
+        const selectedCustomerWithType = { ...selectedCustomer, customerVendorType: 'CUSTOMER' } as const
 
-        if (selectedCustomer.id !== selectedSecondPartyId) {
-          onSelectedSecondPartyChange(selectedCustomerWithType)
+        if (selectedCustomer.id !== selectedCustomerVendorId) {
+          onSelectedCustomerVendorChange(selectedCustomerWithType)
         }
 
         handleInputChange(
-          getSecondPartyName(selectedCustomerWithType),
+          getCustomerVendorName(selectedCustomerWithType),
         )
 
         return
@@ -138,14 +138,14 @@ export function SecondPartySelector({
       const selectedVendor = vendors.find(({ id }) => id === key)
 
       if (selectedVendor) {
-        const selectedVendorWithType = { ...selectedVendor, secondPartyType: 'VENDOR' } as const
+        const selectedVendorWithType = { ...selectedVendor, customerVendorType: 'VENDOR' } as const
 
-        if (selectedVendor.id !== selectedSecondPartyId) {
-          onSelectedSecondPartyChange(selectedVendorWithType)
+        if (selectedVendor.id !== selectedCustomerVendorId) {
+          onSelectedCustomerVendorChange(selectedVendorWithType)
         }
 
         handleInputChange(
-          getSecondPartyName(selectedVendorWithType),
+          getCustomerVendorName(selectedVendorWithType),
         )
 
         return
@@ -153,9 +153,9 @@ export function SecondPartySelector({
     },
     [
       items,
-      selectedSecondPartyId,
+      selectedCustomerVendorId,
       handleInputChange,
-      onSelectedSecondPartyChange,
+      onSelectedCustomerVendorChange,
     ],
   )
 
@@ -171,7 +171,7 @@ export function SecondPartySelector({
     && customerPages.every(({ data }) => data.length === 0)
     && vendorPages.every(({ data }) => data.length === 0)
 
-  const shouldHideComponent = noSecondPartiesExist || (isReadOnly && selectedSecondParty === null)
+  const shouldHideComponent = noSecondPartiesExist || (isReadOnly && selectedCustomerVendor === null)
 
   if (shouldHideComponent) {
     /*
@@ -196,7 +196,7 @@ export function SecondPartySelector({
   return (
     <ComboBox
       items={items}
-      selectedKey={selectedSecondParty?.id ?? null}
+      selectedKey={selectedCustomerVendor?.id ?? null}
       inputValue={inputValue}
 
       isDisabled={shouldDisableComboBox}
@@ -212,13 +212,13 @@ export function SecondPartySelector({
       >
         Customer or Vendor
       </Label>
-      <InputGroup actionCount={selectedSecondParty === null ? 1 : 2}>
+      <InputGroup actionCount={selectedCustomerVendor === null ? 1 : 2}>
         <Input
           inset
           placeholder='Add a customer or vendor...'
           placement='first'
         />
-        {selectedSecondParty !== null
+        {selectedCustomerVendor !== null
           ? (
             <Button
               slot={null}
@@ -297,11 +297,11 @@ export function SecondPartySelector({
                   companyName,
                   externalId,
                 }) => {
-                  const effectiveName = getSecondPartyName({
+                  const effectiveName = getCustomerVendorName({
                     individualName,
                     companyName,
                     externalId,
-                    secondPartyType: sectionId,
+                    customerVendorType: sectionId,
                   })
 
                   return (
