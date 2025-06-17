@@ -51,9 +51,9 @@
 
 .Layer__textarea {
   box-sizing: border-box;
+  min-height: 100px;
 
   width: 100%;
-  min-height: 100px;
 
   padding: var(--spacing-xs);
   border-radius: var(--input-border-radius);
@@ -158,18 +158,18 @@
   position: relative;
   display: flex;
   align-items: center;
-  width: max-content;
   height: 38px;
+  width: max-content;
   padding: 2px;
   border-radius: 52px;
   box-shadow: 0 0 0 1px var(--color-base-300);
   margin: 1px;
   background: var(--color-base-100);
   cursor: pointer;
+  user-select: none;
   isolation: isolate;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
-  user-select: none;
 
   .Layer__toggle-option-content {
     display: flex;
@@ -270,8 +270,8 @@
   z-index: 1;
   top: 1px;
   left: 0;
-  width: 100px;
   height: 36px;
+  width: 100px;
   padding: 8px 16px;
   border-radius: 52px;
   box-shadow:
@@ -305,10 +305,10 @@
   font-weight: var(--font-weight-normal);
   font-variant-numeric: lining-nums proportional-nums;
   font-feature-settings:
-    "cv10" on,
-    "cv05" on,
-    "cv08" on,
-    "ss03" on;
+    'cv10' on,
+    'cv05' on,
+    'cv08' on,
+    'ss03' on;
 
   & .Layer__select__control {
     min-height: 36px;
@@ -373,10 +373,10 @@
     color: var(--color-base-500);
     font-variant-numeric: lining-nums proportional-nums;
     font-feature-settings:
-      "cv10" on,
-      "cv05" on,
-      "cv08" on,
-      "ss03" on;
+      'cv10' on,
+      'cv05' on,
+      'cv08' on,
+      'ss03' on;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -515,8 +515,8 @@
   display: flex;
   flex: 1;
   align-items: center;
-  width: 100%;
   min-height: 36px;
+  width: 100%;
   padding: 8px;
   border-radius: var(--input-border-radius);
   border: 1px solid var(--border-color);
@@ -586,7 +586,7 @@
 }
 
 .Layer__profit-and-loss-date-picker__button-icon path {
-  stroke: var(--text-color);
+  stroke: var(--color-base-900);
 }
 
 .Layer__profit-and-loss-date-picker__label {
@@ -616,8 +616,8 @@
   z-index: 2;
   right: -10px;
   bottom: 1px;
-  width: 120px;
   height: 100%;
+  width: 120px;
   background: linear-gradient(-90deg, #fff 50%, rgb(255 255 255 / 0%) 100%);
 }
 
