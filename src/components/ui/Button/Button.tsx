@@ -27,7 +27,7 @@ function ButtonTransparentContent({ children }: PropsWithChildren) {
   )
 }
 
-type ButtonVariant = 'solid' | 'ghost'
+type ButtonVariant = 'solid' | 'ghost' | 'outlined'
 type ButtonSize = 'md'
 
 const BUTTON_CLASS_NAME = 'Layer__UI__Button'

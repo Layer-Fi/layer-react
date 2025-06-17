@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from 'react'
 import { Modal } from '../../ui/Modal/Modal'
-import { ModalContextBar, ModalHeading, ModalActions, ModalContent } from '../../ui/Modal/ModalSlots'
+import { ModalHeading, ModalActions, ModalContent, ModalTitleWithClose } from '../../ui/Modal/ModalSlots'
 import { Button } from '../../ui/Button/Button'
 import { VStack } from '../../ui/Stack/Stack'
 import { useLinkedAccounts } from '../../../hooks/useLinkedAccounts'
@@ -119,11 +119,15 @@ function LinkedAccountsOpeningBalanceModalContent({
 
   return (
     <>
-      <ModalContextBar onClose={handleDismiss} />
+      <ModalTitleWithClose
+        heading={(
+          <ModalHeading pbe='lg' size='xl'>
+            {stringOverrides?.title ?? 'Add opening balance'}
+          </ModalHeading>
+        )}
+        onClose={handleDismiss}
+      />
       <ModalContent>
-        <ModalHeading pbe='lg'>
-          {stringOverrides?.title ?? 'Add opening balance'}
-        </ModalHeading>
         <VStack gap='md'>
           {formsData.map(item => (
             <AccountFormBox

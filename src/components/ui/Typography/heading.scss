@@ -1,12 +1,16 @@
 .Layer__UI__Heading {
-  all: unset;
   max-inline-size: 60rem;
+
+  margin: 0;
+
   font-size: var(--text-heading-secondary);
+  font-family: var(--font-family);
   font-weight: var(--font-weight-bold);
+
   color: var(--color-base-700);
   text-wrap: pretty;
 
-  &[data-variant="subtle"] {
+  &[data-variant='subtle'] {
     color: var(--fg-subtle);
   }
 
@@ -26,8 +30,12 @@
     }
   }
 
-  &[data-size="lg"] {
+  &[data-size='lg'] {
     font-size: var(--text-heading-secondary);
+  }
+
+  &[data-size='xl'] {
+    font-size: var(--text-heading);
   }
 
   $alignments: left right justify;
@@ -38,7 +46,7 @@
     }
   }
 
-  &[data-align="center"] {
+  &[data-align='center'] {
     max-inline-size: unset;
     text-align: center;
   }

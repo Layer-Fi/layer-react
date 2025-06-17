@@ -6,7 +6,7 @@ import type { Spacing } from '../sharedUITypes'
 type HeadingDataProps = {
   align?: 'center'
   pbe?: Spacing
-  size?: '2xs' | 'xs' | 'sm' | 'lg'
+  size?: '2xs' | 'xs' | 'sm' | 'lg' | 'xl'
   variant?: 'subtle'
   weight?: 'normal' | 'bold'
 }

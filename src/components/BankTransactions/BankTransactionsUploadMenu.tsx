@@ -8,7 +8,7 @@ import UploadCloud from '../../icons/UploadCloud'
 import { BankTransactionsUploadModal } from './BankTransactionsUploadModal/BankTransactionsUploadModal'
 
 const MenuTriggerButton = () => (
-  <Button variant='ghost' icon persistentBorder>
+  <Button variant='outlined' icon>
     <UploadCloud size={12} />
   </Button>
 )
