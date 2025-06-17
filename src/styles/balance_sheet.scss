@@ -1,6 +1,6 @@
 .Layer__balance-sheet {
+  border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
-  border-radius: var(--corner-radius);
   background-color: var(--background-color);
 
   * {
@@ -16,7 +16,7 @@
   .Layer__balance-sheet__title {
     display: inline;
     flex: 1;
-    font-size: var(--text-heading);
     margin: 0;
+    font-size: var(--text-heading);
   }
 }
