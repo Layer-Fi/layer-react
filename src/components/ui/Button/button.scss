@@ -9,19 +9,25 @@
   align-items: center;
   justify-content: center;
 
-  --size: 2.25rem;
-
   block-size: var(--size);
   min-inline-size: 0;
+
+  padding-inline: var(--spacing-md);
 
   border-radius: var(--btn-border-radius);
   outline: none;
   cursor: pointer;
   user-select: none;
+
   font-size: var(--text-md);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-normal);
+
   appearance: none;
   white-space: nowrap;
   vertical-align: middle;
+
+  --size: 2.25rem;
 
   &[data-inset] {
     --size: 1.75rem;
@@ -33,10 +39,6 @@
     padding-inline: 0;
   }
 
-  &:not([data-icon]) {
-    padding-inline: var(--spacing-md);
-  }
-
   &[data-focus-visible] {
     outline: 1px auto -webkit-focus-ring-color;
   }
@@ -45,9 +47,63 @@
     outline: 1px solid var(--outline-default);
   }
 
+  &[data-disabled] {
+    cursor: not-allowed;
+  }
+
+  &[data-pending] {
+    cursor: progress;
+  }
+
+  &[data-variant='ghost'] {
+    border: none;
+
+    background-color: transparent;
+    color: var(--button-fg-ghost);
+
+    &[data-pending],
+    &[data-disabled] {
+      background-color: transparent;
+      color: var(--button-fg-disabled);
+    }
+
+    &[data-pressed]:not([data-focus-visible]) {
+      border-color: var(--button-border-color-ghost-active);
+      outline: 2px solid var(--outline-default);
+    }
+  }
+
+  &[data-variant='outlined'] {
+    border: 1px solid var(--button-border-color-ghost);
+
+    background-color: transparent;
+    color: var(--button-fg-ghost);
+
+    &[data-pending],
+    &[data-disabled] {
+      background-color: transparent;
+      color: var(--button-fg-disabled);
+    }
+
+    &[data-hovered]:not([data-pressed]) {
+      border-color: var(--button-border-color-ghost-active);
+    }
+
+    &[data-pressed]:not([data-focus-visible]) {
+      border-color: var(--button-border-color-ghost-active);
+      outline: 2px solid var(--outline-default);
+    }
+  }
+
   &[data-variant='solid'] {
     background-color: var(--button-bg-default);
     color: var(--button-fg-default);
+
+    &[data-disabled],
+    &[data-pending] {
+      background-color: var(--button-bg-disabled);
+      color: var(--button-fg-disabled);
+    }
 
     &[data-hovered]:not([data-pressed]) {
       background-color: var(--button-bg-active);
@@ -57,38 +113,6 @@
       outline: 2px solid var(--outline-default);
       background-color: var(--button-bg-active);
     }
-  }
-
-  &[data-variant='ghost'] {
-    border: 1px solid transparent;
-    background-color: transparent;
-    color: var(--button-fg-ghost);
-
-    &[data-pending],
-    &[data-disabled] {
-      background-color: transparent;
-    }
-
-    &[data-persistent-border]:not([data-pressed]) {
-      border-color: var(--button-border-color-ghost);
-    }
-
-    &[data-pressed]:not([data-focus-visible]) {
-      border-color: var(--button-border-color-ghost-active);
-      outline: 2px solid var(--outline-default);
-    }
-  }
-
-  &[data-disabled] {
-    background-color: var(--button-bg-disabled);
-    cursor: not-allowed;
-    color: var(--button-fg-disabled);
-  }
-
-  &[data-pending] {
-    background-color: var(--button-bg-disabled);
-    cursor: progress;
-    color: var(--button-fg-disabled);
   }
 }
 

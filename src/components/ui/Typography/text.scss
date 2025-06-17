@@ -5,15 +5,16 @@
   max-inline-size: min(80ch, 60rem);
   margin: 0;
   font-size: var(--text-md);
+  font-family: var(--font-family);
 
   color: var(--color-base-700);
   text-wrap: pretty;
 
-  &[data-variant="subtle"] {
+  &[data-variant='subtle'] {
     color: var(--fg-subtle);
   }
 
-  &[data-status="error"] {
+  &[data-status='error'] {
     color: var(--color-info-error);
   }
 

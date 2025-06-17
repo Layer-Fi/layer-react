@@ -5,23 +5,17 @@
   }
 }
 
-.Layer__ModalContextBar {
+.Layer__ModalTitleWithClose {
   display: grid;
-  grid-template-areas: "back logo close";
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  column-gap: var(--spacing-md);
+  grid-template-areas: 'title close';
+  grid-template-columns: 1fr auto;
+  gap: var(--spacing-sm);
 
-  align-items: center;
-
-  > [slot="back"] {
-    grid-area: back;
+  > [slot='title'] {
+    grid-area: title;
   }
 
-  > [slot="logo"] {
-    grid-area: logo;
-  }
-
-  > [slot="close"] {
+  > [slot='close'] {
     grid-area: close;
   }
 }
@@ -31,7 +25,7 @@
   overflow-y: auto;
   block-size: 100%;
 
-  > [slot="center"] {
+  > [slot='center'] {
     align-self: center;
     justify-self: center;
   }

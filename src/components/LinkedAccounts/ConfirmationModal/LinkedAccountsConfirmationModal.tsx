@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Modal } from '../../ui/Modal/Modal'
-import { ModalContextBar, ModalHeading, ModalActions, ModalContent, ModalDescription } from '../../ui/Modal/ModalSlots'
+import { ModalHeading, ModalActions, ModalContent, ModalDescription, ModalTitleWithClose } from '../../ui/Modal/ModalSlots'
 import { Button } from '../../ui/Button/Button'
 import { VStack } from '../../ui/Stack/Stack'
 import { useLinkedAccounts } from '../../../hooks/useLinkedAccounts'
@@ -93,10 +93,14 @@ function useLinkedAccountsConfirmationModal() {
 function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose: () => void }) {
   return (
     <>
-      <ModalContextBar onClose={onClose} />
-      <ModalHeading pbe='md'>
-        Loading Your Accounts...
-      </ModalHeading>
+      <ModalTitleWithClose
+        heading={(
+          <ModalHeading pbe='2xs' size='xl'>
+            Loading Your Accounts...
+          </ModalHeading>
+        )}
+        onClose={onClose}
+      />
       <ModalContent>
         <VStack slot='center' align='center' gap='md'>
           <LoadingSpinner size={48} />
@@ -131,10 +135,14 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
 
   return (
     <>
-      <ModalContextBar onClose={onClose} />
-      <ModalHeading pbe='2xs'>
-        Confirm Business Accounts
-      </ModalHeading>
+      <ModalTitleWithClose
+        heading={(
+          <ModalHeading pbe='2xs' size='xl'>
+            Confirm Business Accounts
+          </ModalHeading>
+        )}
+        onClose={onClose}
+      />
       <ModalDescription pbe='md'>
         {descriptionLabel}
       </ModalDescription>

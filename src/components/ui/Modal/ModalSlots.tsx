@@ -1,4 +1,4 @@
-import { forwardRef, type ComponentProps, type PropsWithChildren } from 'react'
+import { forwardRef, type ComponentProps, type PropsWithChildren, type ReactElement } from 'react'
 import { X } from 'lucide-react'
 import { Button } from '../Button/Button'
 import { Heading } from '../Typography/Heading'
@@ -22,6 +22,7 @@ export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalClo
   >
     <Button
       icon
+      inset
       variant='ghost'
       slot='close'
       onPress={onClose}
@@ -32,19 +33,34 @@ export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalClo
   </div>
 )
 
-const MODAL_CONTEXT_BAR_CLASS_NAME = 'Layer__ModalContextBar'
-
-type ModalContextBarProps = {
+type ModalTitleWithCloseProps = {
+  heading: ReactElement
   onClose?: () => void
 }
 
-export function ModalContextBar({ onClose }: ModalContextBarProps) {
+export const ModalTitleWithClose = forwardRef<
+  HTMLElementTagNameMap['div'],
+  ModalTitleWithCloseProps
+>(function ModalTitleWithClose({ heading, onClose }, ref) {
   return (
-    <div className={MODAL_CONTEXT_BAR_CLASS_NAME}>
-      <ModalCloseButton onClose={onClose} />
+    <div
+      className='Layer__ModalTitleWithClose'
+      ref={ref}
+    >
+      {heading}
+      <Button
+        icon
+        inset
+        variant='ghost'
+        slot='close'
+        onPress={onClose}
+        aria-label='Close Modal'
+      >
+        <X size={16} />
+      </Button>
     </div>
   )
-}
+})
 
 export const ModalHeading = forwardRef<
   HTMLHeadingElement,
