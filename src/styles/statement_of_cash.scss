@@ -1,6 +1,6 @@
 .Layer__statement-of-cash-flow {
+  border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
-  border-radius: var(--corner-radius);
   background-color: var(--background-color);
 
   .Layer__panel_view-header__controls {
@@ -20,8 +20,8 @@
   .Layer__statement-of-cash-flow__title {
     display: inline;
     flex: 1;
-    font-size: var(--text-heading);
     margin: 0;
+    font-size: var(--text-heading);
   }
 
   @container (max-width: 800px) {
@@ -34,11 +34,13 @@
   @container (max-width: 540px) {
     .Layer__statement-of-cash-flow__header {
       flex-direction: row;
-      gap: var(--spacing-sm);
       flex-wrap: wrap;
+      gap: var(--spacing-sm);
+
       .Layer__statement-of-cash-flow__actions {
         flex-wrap: wrap;
       }
+
       .Layer__statement-of-cash-flow__actions__date-picker {
         flex-wrap: wrap;
         gap: var(--spacing-xs);
@@ -52,16 +54,19 @@
   flex: 1;
   flex-direction: row;
   padding: var(--spacing-sm) var(--spacing-md);
+
   &.Layer__statement-of-cash-flow__header--no-title {
     .Layer__statement-of-cash-flow__actions {
       flex: 1;
     }
   }
+
   .Layer__statement-of-cash-flow__actions {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     gap: var(--spacing-xs);
+    justify-content: space-between;
+
     .Layer__statement-of-cash-flow__actions__date-picker {
       display: flex;
       flex-direction: row;
