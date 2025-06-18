@@ -85,10 +85,6 @@
       color: var(--button-fg-disabled);
     }
 
-    &[data-hovered]:not([data-pressed]) {
-      border-color: var(--button-border-color-ghost-active);
-    }
-
     &[data-pressed]:not([data-focus-visible]) {
       border-color: var(--button-border-color-ghost-active);
       outline: 2px solid var(--outline-default);
