@@ -1,4 +1,5 @@
 .Layer__UI__Button {
+  all: unset;
   display: inline-grid;
 
   grid-template-rows: minmax(0, 1fr);
@@ -83,10 +84,6 @@
     &[data-disabled] {
       background-color: transparent;
       color: var(--button-fg-disabled);
-    }
-
-    &[data-hovered]:not([data-pressed]) {
-      border-color: var(--button-border-color-ghost-active);
     }
 
     &[data-pressed]:not([data-focus-visible]) {
