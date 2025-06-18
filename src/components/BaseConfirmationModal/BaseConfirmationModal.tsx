@@ -3,8 +3,8 @@ import { Modal, ModalProps } from '../ui/Modal/Modal'
 import {
   ModalHeading,
   ModalActions,
-  ModalCloseButton,
   ModalDescription,
+  ModalTitleWithClose,
 } from '../ui/Modal/ModalSlots'
 import { Button, ButtonVariant } from '../Button/Button'
 import { HStack, Spacer } from '../ui/Stack/Stack'
@@ -63,10 +63,14 @@ export function BaseConfirmationModal({
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} role='alertdialog'>
       {({ close }) => (
         <>
-          <HStack justify='space-between' align='start'>
-            <ModalHeading pbe='2xs'>{title}</ModalHeading>
-            <ModalCloseButton />
-          </HStack>
+          <ModalTitleWithClose
+            heading={(
+              <ModalHeading pbe='2xs' size='lg'>
+                {title}
+              </ModalHeading>
+            )}
+            onClose={close}
+          />
           <ModalDescription>{description}</ModalDescription>
           <ModalActions>
             <HStack gap='md'>
