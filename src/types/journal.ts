@@ -2,12 +2,12 @@ import { Account } from '../types'
 import { Direction } from './bank_transactions'
 import { AccountIdentifierPayloadObject } from './categories'
 import { LedgerEntrySource } from './ledger_accounts'
+import type { TransactionTag } from './tags'
 
 export interface JournalEntry {
   id: string
   business_id: string
   ledger_id: string
-  agent: string
   entry_type: string
   entry_number: number
   date: string
@@ -16,6 +16,7 @@ export interface JournalEntry {
   reversal_id: string | null
   line_items: JournalEntryLine[]
   source?: LedgerEntrySource
+  transaction_tags: ReadonlyArray<TransactionTag>
 }
 
 export interface JournalEntryLine {

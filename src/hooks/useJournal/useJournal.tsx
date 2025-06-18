@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { Direction, FormError, FormErrorWithId } from '../../types'
@@ -12,12 +12,12 @@ import {
 } from '../../types/journal'
 import { getAccountIdentifierPayload } from '../../utils/journal'
 import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
-import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useListLedgerEntries } from '../../features/ledger/entries/api/useListLedgerEntries'
 
 type UseJournal = () => {
-  data?: JournalEntry[]
+  data?: ReadonlyArray<JournalEntry>
   isLoading?: boolean
   isLoadingEntry?: boolean
   isValidating?: boolean
@@ -64,9 +64,6 @@ export const useJournal: UseJournal = () => {
   const {
     businessId,
     touch,
-    read,
-    syncTimestamps,
-    hasBeenTouched,
   } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
@@ -78,15 +75,7 @@ export const useJournal: UseJournal = () => {
   const [sendingForm, setSendingForm] = useState(false)
   const [apiError, setApiError] = useState<string | undefined>(undefined)
 
-  const queryKey =
-    businessId && auth?.access_token && `journal-lines-${businessId}`
-
-  const { data, isLoading, isValidating, error, mutate } = useSWR(
-    queryKey,
-    Layer.getJournal(apiUrl, auth?.access_token, {
-      params: { businessId },
-    }),
-  )
+  const { data, isLoading, isValidating, error, mutate } = useListLedgerEntries()
 
   const refetch = () => mutate()
 
@@ -359,21 +348,8 @@ export const useJournal: UseJournal = () => {
       params: { businessId, entryId },
     })
 
-  // Refetch data if related models has been changed since last fetch
-  useEffect(() => {
-    if (queryKey && (isLoading || isValidating)) {
-      read(DataModel.JOURNAL, queryKey)
-    }
-  }, [isLoading, isValidating])
-
-  useEffect(() => {
-    if (queryKey && hasBeenTouched(queryKey)) {
-      refetch()
-    }
-  }, [syncTimestamps])
-
   return {
-    data: data?.data,
+    data,
     isLoading,
     isValidating,
     error,

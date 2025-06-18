@@ -54,13 +54,19 @@ export const JournalTableWithPanel = ({
     addEntry,
   } = useContext(JournalContext)
 
-  const data = useMemo(() => {
-    const firstPageIndex = (currentPage - 1) * pageSize
-    const lastPageIndex = firstPageIndex + pageSize
-    return rawData
-      ?.sort((a, b) => Date.parse(b.entry_at) - Date.parse(a.entry_at))
-      ?.slice(firstPageIndex, lastPageIndex)
-  }, [rawData, currentPage])
+  const data = useMemo(
+    () => {
+      const firstPageIndex = (currentPage - 1) * pageSize
+      const lastPageIndex = firstPageIndex + pageSize
+
+      return rawData?.slice(firstPageIndex, lastPageIndex)
+    },
+    [
+      rawData,
+      currentPage,
+      pageSize,
+    ],
+  )
 
   return (
     <Panel
