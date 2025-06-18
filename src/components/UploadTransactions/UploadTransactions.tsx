@@ -20,7 +20,7 @@ function UploadTransactionsHeader({ currentStep, isValid }: UploadTransactionsHe
 
   return (
     <VStack gap='xs'>
-      <Heading level={1}>
+      <Heading level={1} size='xl' pie='2xl'>
         {currentStep === UploadTransactionsStep.UploadCsv && 'Upload transactions'}
         {currentStep === UploadTransactionsStep.ValidateCsv
           && (isValid
@@ -28,7 +28,7 @@ function UploadTransactionsHeader({ currentStep, isValid }: UploadTransactionsHe
             : 'Some transactions couldn\'t be parsed'
           )}
       </Heading>
-      <Heading level={2} pbe='xl' size='2xs' variant='subtle' weight='normal'>
+      <Heading level={2} pbe='xl' size='xs' variant='subtle' weight='normal'>
         {currentStep === UploadTransactionsStep.UploadCsv && 'Import a file of transactions from your bank account or credit card'}
         {currentStep === UploadTransactionsStep.ValidateCsv
           && (isValid

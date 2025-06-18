@@ -9,7 +9,7 @@
 
   .Layer__upload-transactions__select-account-name-input {
     .Layer__select__control {
-      width: 24rem;
+      max-width: 24rem;
     }
 
     &--error {
@@ -46,11 +46,21 @@
     justify-content: space-between;
   }
 
-  @container (max-width: 576px) {
+  @container (max-width: 36rem) {
     .Layer__upload-transactions__template-section__button-row {
       flex-direction: column;
 
       >.Layer__upload-transactions__template-section__button-row-item {
+        width: 100%;
+      }
+    }
+  }
+
+  @container (max-width: 30rem) {
+    .Layer__upload-transactions__confirmation-step__button-row {
+      flex-direction: column;
+
+      >.Layer__upload-transactions__confirmation-step__button-row-item {
         width: 100%;
       }
     }
@@ -65,12 +75,12 @@
   .Layer__upload-transactions__preview_table {
     .Layer__csv-upload__validate-csv-table__cell--date,
     .Layer__csv-upload__validate-csv-table__header-cell--date {
-      min-width: 120px;
+      min-width: 7.5rem;
     }
 
     .Layer__csv-upload__validate-csv-table__cell--amount,
     .Layer__csv-upload__validate-csv-table__header-cell--amount {
-      min-width: 120px;
+      min-width: 7.5rem;
 
       .Layer__csv-upload__validate-csv-table__header-cell-content {
         margin-left: auto;
@@ -84,6 +94,7 @@
     .Layer__csv-upload__validate-csv-table__cell--description,
     .Layer__csv-upload__validate-csv-table__header-cell--description {
       flex: 3 1 0;
+      min-width: 12rem;
     }
   }
 }

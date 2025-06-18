@@ -71,7 +71,7 @@ type AllowedInternalModalProps = Pick<
 >
 type AllowedDialogProps = Pick<
   ComponentProps<typeof Dialog>,
-  'children' | 'role'
+  'children' | 'role' | 'aria-label'
 >
 
 export type ModalProps = AllowedModalOverlayProps & AllowedInternalModalProps & AllowedDialogProps
@@ -82,12 +82,13 @@ export function Modal({
   flexBlock,
   onOpenChange,
   children,
+  'aria-label': ariaLabel,
   role,
 }: ModalProps) {
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange}>
       <InternalModal flexBlock={flexBlock} size={size}>
-        <Dialog role={role ?? 'dialog'}>
+        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel}>
           {children}
         </Dialog>
       </InternalModal>

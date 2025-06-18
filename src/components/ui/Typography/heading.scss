@@ -22,6 +22,12 @@
     }
   }
 
+  @each $spacing in $spacings {
+    &[data-pie="#{$spacing}"] {
+      padding-inline-end: var(--spacing-#{$spacing});
+    }
+  }
+
   $sizes: 2xs, xs, sm;
 
   @each $size in $sizes {
