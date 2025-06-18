@@ -21,7 +21,6 @@ import {
   getLedgerAccountBalancesCSV,
 } from './layer/chart_of_accounts'
 import {
-  getJournal,
   createJournalEntries,
   reverseJournalEntry,
   getJournalEntriesCSV,
@@ -85,7 +84,6 @@ export const Layer = {
   getProfitAndLossSummaries,
   getProfitAndLossCsv,
   getProfitAndLossExcel,
-  getJournal,
   getJournalEntriesCSV,
   reverseJournalEntry,
   compareProfitAndLoss,

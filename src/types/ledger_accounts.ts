@@ -3,7 +3,6 @@ import { BankTransaction, Direction } from './bank_transactions'
 export type LedgerAccountLineItems = LedgerAccountLineItem[]
 
 export interface LedgerAccountsEntry {
-  agent?: string
   business_id: string
   date: string
   entry_at: string
@@ -13,7 +12,6 @@ export interface LedgerAccountsEntry {
   invoice?: Record<string, string> // @TODO - fix after having API ready
   ledger_id: string
   line_items: LedgerAccountLineItem[]
-  manual_entry?: boolean // @TODO - is it correct
   reversal_id?: string
   reversal_of_id?: string
   type: string
