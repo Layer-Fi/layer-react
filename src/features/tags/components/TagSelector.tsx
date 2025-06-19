@@ -19,9 +19,11 @@ import type { OneOf } from '../../../types/utility/oneOf'
 import { LoadingSpinner } from '../../../components/ui/Loading/LoadingSpinner'
 import { Square } from '../../../components/ui/Square/Square'
 import { InputGroup } from '../../../components/ui/Input/InputGroup'
+import { Check } from 'lucide-react'
 
 const TAG_SELECTOR_CLASS_NAMES = {
   LAYOUT_GROUP: 'Layer__TagSelectorLayoutGroup',
+  CHECK_ICON: 'Layer__TagSelectorCheckIcon',
 } as const
 
 function TagSelectorLayoutGroup({ children }: PropsWithChildren) {
@@ -119,9 +121,7 @@ function TagSelectorSelection({
               </Span>
               <Span
                 slot='value'
-                weight='bold'
                 ellipsis
-                size='lg'
                 nonAria
               >
                 {valueLabel}
@@ -354,7 +354,10 @@ export function TagSelector({
                         id={valueId}
                         textValue={`${definitionLabel} ${valueLabel}`}
                       >
-                        <Span slot='label' weight='bold'>{valueLabel}</Span>
+                        <HStack gap='2xs'>
+                          <Check size={16} className={TAG_SELECTOR_CLASS_NAMES.CHECK_ICON} />
+                          <Span slot='label' weight='bold'>{valueLabel}</Span>
+                        </HStack>
                       </ListBoxItem>
                     )}
                   </Collection>
