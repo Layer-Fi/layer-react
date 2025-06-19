@@ -20,6 +20,9 @@
     &[data-pbe="#{$spacing}"] {
       padding-block-end: var(--spacing-#{$spacing});
     }
+    &[data-pie="#{$spacing}"] {
+      padding-inline-end: var(--spacing-#{$spacing});
+    }
   }
 
   $sizes: 2xs, xs, sm;

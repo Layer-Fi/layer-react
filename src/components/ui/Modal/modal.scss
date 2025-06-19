@@ -4,9 +4,6 @@
   inset: 0;
   display: grid;
 
-  max-block-size: 100lvh;
-  max-inline-size: 100lvi;
-
   background: rgb(0 0 0 / 50%);
   place-items: center;
 
@@ -20,10 +17,8 @@
 }
 
 .Layer__Modal {
-  block-size: min(42rem, 90svb);
-  max-block-size: 90svb;
-  inline-size: min(36rem, 90svi);
-  max-inline-size: 90svi;
+  block-size: min(42rem, 90%);
+  inline-size: min(36rem, 90%);
 
   &[data-entering] {
     animation-duration: 300ms;
@@ -38,7 +33,7 @@
   }
 
   &[data-size='lg'] {
-    inline-size: min(42rem, 90svi);
+    inline-size: min(42rem, 90%);
   }
 }
 

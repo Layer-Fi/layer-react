@@ -14,7 +14,7 @@ function BankTransactionsUploadModalContent({ onClose }: { onClose: () => void }
 type BankTransactionsUploadModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'>
 export function BankTransactionsUploadModal({ isOpen, onOpenChange }: BankTransactionsUploadModalProps) {
   return (
-    <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} size='lg'>
+    <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} size='lg' aria-label='Upload transactions'>
       {({ close }) => <BankTransactionsUploadModalContent onClose={close} />}
     </Modal>
   )

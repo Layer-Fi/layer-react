@@ -6,6 +6,7 @@ import type { Spacing } from '../sharedUITypes'
 type HeadingDataProps = {
   align?: 'center'
   pbe?: Spacing
+  pie?: Spacing
   size?: '2xs' | 'xs' | 'sm' | 'lg' | 'xl'
   variant?: 'subtle'
   weight?: 'normal' | 'bold'
@@ -15,8 +16,8 @@ const HEADING_CLASS_NAME = 'Layer__UI__Heading'
 const Heading = forwardRef<
   HTMLHeadingElement,
   Omit<ComponentProps<typeof ReactAriaHeading>, 'className'> & HeadingDataProps
->(({ align, pbe, size, variant, weight, ...restProps }, ref) => {
-  const dataProperties = toDataProperties({ pbe, size, align, variant, weight })
+>(({ align, pie, pbe, size, variant, weight, ...restProps }, ref) => {
+  const dataProperties = toDataProperties({ pbe, pie, size, align, variant, weight })
 
   return (
     <ReactAriaHeading

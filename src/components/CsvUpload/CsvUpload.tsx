@@ -4,10 +4,10 @@ import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
 import { P } from '../ui/Typography/Text'
 import UploadCloud from '../../icons/UploadCloud'
 import classNames from 'classnames'
-import { IconButton } from '../Button'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { FileSpreadsheet } from 'lucide-react'
 import CloseIcon from '../../icons/CloseIcon'
+import { Button } from '../ui/Button/Button'
 
 const VALID_EXTENSIONS = ['.csv']
 const VALID_FILE_TYPES = ['text/csv', 'text/plain', 'application/vnd.ms-excel']
@@ -46,7 +46,9 @@ const FileRow = ({ file, onClearFile, asDropTarget }: FileRowProps) => {
       <VStack className='Layer__csv-upload__file-row Layer__csv-upload__file-row--drop-target'>
         <HStack>
           <Spacer />
-          <IconButton icon={<CloseIcon size={16} />} onClick={onClearFile} />
+          <Button variant='ghost' inset icon onClick={onClearFile}>
+            <CloseIcon size={16} />
+          </Button>
         </HStack>
         <HStack align='center' justify='center' gap='xs'>
           <FileSpreadsheet size={24} />
@@ -61,7 +63,9 @@ const FileRow = ({ file, onClearFile, asDropTarget }: FileRowProps) => {
       <FileSpreadsheet size={24} />
       <P size='md'>{file.name}</P>
       <Spacer />
-      <IconButton icon={<CloseIcon size={16} />} onClick={onClearFile} />
+      <Button variant='ghost' inset icon onClick={onClearFile}>
+        <CloseIcon size={16} />
+      </Button>
     </HStack>
   )
 }

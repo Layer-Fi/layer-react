@@ -30,12 +30,21 @@ export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTran
         description={`${pluralize('transaction', uploadedTransactionsCount, true)} ${uploadedTransactionsCount === 1 ? 'has' : 'have'} been uploaded to your account.`}
       />
       <Separator />
-      <HStack gap='xs'>
+      <HStack gap='xs' className='Layer__upload-transactions__confirmation-step__button-row'>
         <Spacer />
-        <Button onClick={goRestartFlow} variant={ButtonVariant.secondary} rightIcon={<UploadCloud size={12} />}>
+        <Button
+          onClick={goRestartFlow}
+          variant={ButtonVariant.secondary}
+          rightIcon={<UploadCloud size={12} />}
+          className='Layer__upload-transactions__confirmation-step__button-row-item'
+        >
           Upload another file
         </Button>
-        <Button onClick={() => { void next() }} rightIcon={<ChevronRight />}>
+        <Button
+          onClick={() => { void next() }}
+          rightIcon={<ChevronRight />}
+          className='Layer__upload-transactions__confirmation-step__button-row-item'
+        >
           I’m done uploading transactions
         </Button>
       </HStack>
