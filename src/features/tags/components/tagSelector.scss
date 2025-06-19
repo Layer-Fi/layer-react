@@ -7,7 +7,7 @@
 .Layer__ListBoxItem {
   &:not([data-disabled]) {
     .Layer__TagSelectorCheckIcon {
-      color: transparent;
+      visibility: hidden;
     }
   }
 }
