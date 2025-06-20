@@ -58,13 +58,19 @@ function keyLoader(
     apiUrl,
     businessId,
     query,
+    isEnabled,
   }: {
     access_token?: string
     apiUrl?: string
     businessId: string
     query?: string
+    isEnabled?: boolean
   },
 ) {
+  if (!isEnabled) {
+    return
+  }
+
   if (accessToken && apiUrl) {
     return {
       accessToken,
@@ -103,9 +109,10 @@ class ListVendorsSWRResponse {
 
 type UseListVendorsParameters = {
   query?: string
+  isEnabled?: boolean
 }
 
-export function useListVendors({ query }: UseListVendorsParameters) {
+export function useListVendors({ query, isEnabled = true }: UseListVendorsParameters = {}) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -116,6 +123,7 @@ export function useListVendors({ query }: UseListVendorsParameters) {
         ...data,
         businessId,
         query,
+        isEnabled,
       },
     ),
     ({
@@ -144,4 +152,12 @@ export function useListVendors({ query }: UseListVendorsParameters) {
   )
 
   return new ListVendorsSWRResponse(swrResponse)
+}
+
+export function usePreloadVendors(parameters?: UseListVendorsParameters) {
+  /*
+   * This will initiate a network request to fill the cache, but will not
+   * cause a re-render when `data` changes.
+   */
+  useListVendors(parameters)
 }

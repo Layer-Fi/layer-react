@@ -23,11 +23,12 @@ type ListCustomersRawResult = typeof ListCustomersRawResultSchema.Type
 
 type ListCustomersBaseParams = {
   businessId: string
+  query?: string
 }
+
 type ListCustomersPaginatedParams = ListCustomersBaseParams & {
   cursor?: string
   limit?: number
-  query?: string
 }
 
 const listCustomers = get<
@@ -58,13 +59,19 @@ function keyLoader(
     apiUrl,
     businessId,
     query,
+    isEnabled,
   }: {
     access_token?: string
     apiUrl?: string
     businessId: string
     query?: string
+    isEnabled?: boolean
   },
 ) {
+  if (!isEnabled) {
+    return
+  }
+
   if (accessToken && apiUrl) {
     return {
       accessToken,
@@ -103,9 +110,10 @@ class ListCustomersSWRResponse {
 
 type UseListCustomersParams = {
   query?: string
+  isEnabled?: boolean
 }
 
-export function useListCustomers({ query }: UseListCustomersParams) {
+export function useListCustomers({ query, isEnabled = true }: UseListCustomersParams = {}) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -116,6 +124,7 @@ export function useListCustomers({ query }: UseListCustomersParams) {
         ...data,
         businessId,
         query,
+        isEnabled,
       },
     ),
     ({
@@ -144,4 +153,12 @@ export function useListCustomers({ query }: UseListCustomersParams) {
   )
 
   return new ListCustomersSWRResponse(swrResponse)
+}
+
+export function usePreloadCustomers(parameters?: UseListCustomersParams) {
+  /*
+   * This will initiate a network request to fill the cache, but will not
+   * cause a re-render when `data` changes.
+   */
+  useListCustomers(parameters)
 }
