@@ -310,15 +310,10 @@ export function TagSelector({
             )
             : null}
           <Popover
-            /*
-             * This is necessary until a bug in `react-aria-components` is fixed
-             *
-             * @see {https://github.com/adobe/react-spectrum/pull/7742}
-             */
-            shouldFlip={false}
             placement='bottom start'
             crossOffset={-10}
             offset={10}
+            isNonModal
           >
             <ListBox<TItemDerived>
               renderEmptyState={() => (
