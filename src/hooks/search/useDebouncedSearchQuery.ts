@@ -40,6 +40,6 @@ export function useDebouncedSearchInput({
   return {
     inputValue,
     searchQuery,
-    handleInputChange,
+    onInputChange: handleInputChange,
   }
 }

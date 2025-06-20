@@ -3,7 +3,6 @@ import { ComboBox, Collection } from 'react-aria-components'
 import { useListCustomers } from '../../customers/api/useListCustomers'
 import { useListVendors } from '../../vendors/api/useListVendors'
 import { Label, P, Span } from '../../../components/ui/Typography/Text'
-import { Input } from '../../../components/ui/Input/Input'
 import { Button } from '../../../components/ui/Button/Button'
 import { X, ChevronDown } from 'lucide-react'
 import type { CustomerVendorSchema } from '../customerVendorSchemas'
@@ -12,16 +11,17 @@ import { Popover } from '../../../components/ui/Popover/Popover'
 import { ListBox, ListBoxItem, ListBoxSection, ListBoxSectionHeader } from '../../../components/ui/ListBox/ListBox'
 import { HStack, VStack } from '../../../components/ui/Stack/Stack'
 import { useDebouncedSearchInput } from '../../../hooks/search/useDebouncedSearchQuery'
+import { Input } from '../../../components/ui/Input/Input'
 
 type CustomerVendor = typeof CustomerVendorSchema.Type
 
 function getCustomerVendorName(
-  customerVendor: Pick<CustomerVendor, 'individualName' | 'companyName' | 'externalId' | 'customerVendorType'>,
+  customerVendor: Pick<CustomerVendor, 'individualName' | 'companyName' | 'externalId'>,
 ) {
   return customerVendor.individualName
     ?? customerVendor.companyName
     ?? customerVendor.externalId
-    ?? `Unknown ${customerVendor.customerVendorType === 'CUSTOMER' ? 'Customer' : 'Vendor'}`
+    ?? 'Unknown'
 }
 
 type CustomerVendorSelectorProps = {
@@ -42,7 +42,7 @@ export function CustomerVendorSelector({
   const {
     inputValue,
     searchQuery,
-    handleInputChange,
+    onInputChange,
   } = useDebouncedSearchInput({
     initialInputState: () => {
       if (selectedCustomerVendor === null) {
@@ -53,7 +53,14 @@ export function CustomerVendorSelector({
     },
   })
 
-  const effectiveSearchQuery = searchQuery === ''
+  const selectedCustomerVendorName = selectedCustomerVendor
+    ? getCustomerVendorName(selectedCustomerVendor)
+    : undefined
+
+  const inputValueMatchesSelectedCustomerVendor = selectedCustomerVendor
+    && inputValue === selectedCustomerVendorName
+
+  const effectiveSearchQuery = searchQuery === '' || inputValueMatchesSelectedCustomerVendor
     ? undefined
     : searchQuery
 
@@ -70,28 +77,20 @@ export function CustomerVendorSelector({
 
   const items = useMemo(
     () => {
-      const customersSection = customerPages
-        ? {
-          label: 'Customers',
-          id: 'CUSTOMER',
-          secondParties: customerPages.flatMap(({ data }) => data),
-        } as const
-        : null
+      const customersSection = {
+        label: 'Customers',
+        id: 'CUSTOMER',
+        secondParties: customerPages?.flatMap(({ data }) => data) ?? [],
+      } as const
 
-      const vendorsSection = vendorPages
-        ? {
-          label: 'Vendors',
-          id: 'VENDOR',
-          secondParties: vendorPages.flatMap(({ data }) => data),
-        } as const
-        : null
+      const vendorsSection = {
+        label: 'Vendors',
+        id: 'VENDOR',
+        secondParties: vendorPages?.flatMap(({ data }) => data) ?? [],
+      } as const
 
       return [customersSection, vendorsSection]
-        .filter(
-          (section): section is NonNullable<typeof section> =>
-            section !== null
-            && section.secondParties.length > 0,
-        )
+        .filter(section => section.secondParties.length > 0)
     },
     [
       customerPages,
@@ -108,12 +107,14 @@ export function CustomerVendorSelector({
       }
 
       if (key === null) {
-        handleInputChange('')
-
         if (selectedCustomerVendorId) {
           onSelectedCustomerVendorChange(null)
         }
 
+        return
+      }
+
+      if (selectedCustomerVendor && key === selectedCustomerVendorId) {
         return
       }
 
@@ -126,10 +127,6 @@ export function CustomerVendorSelector({
         if (selectedCustomer.id !== selectedCustomerVendorId) {
           onSelectedCustomerVendorChange(selectedCustomerWithType)
         }
-
-        handleInputChange(
-          getCustomerVendorName(selectedCustomerWithType),
-        )
 
         return
       }
@@ -144,17 +141,13 @@ export function CustomerVendorSelector({
           onSelectedCustomerVendorChange(selectedVendorWithType)
         }
 
-        handleInputChange(
-          getCustomerVendorName(selectedVendorWithType),
-        )
-
         return
       }
     },
     [
       items,
+      selectedCustomerVendor,
       selectedCustomerVendorId,
-      handleInputChange,
       onSelectedCustomerVendorChange,
     ],
   )
@@ -197,14 +190,13 @@ export function CustomerVendorSelector({
     <ComboBox
       items={items}
       selectedKey={selectedCustomerVendor?.id ?? null}
-      inputValue={inputValue}
 
       isDisabled={shouldDisableComboBox}
       allowsEmptyCollection
       menuTrigger='focus'
 
       onSelectionChange={handleSelectionChange}
-      onInputChange={handleInputChange}
+      onInputChange={onInputChange}
     >
       <Label
         pbe='3xs'
@@ -301,7 +293,6 @@ export function CustomerVendorSelector({
                     individualName,
                     companyName,
                     externalId,
-                    customerVendorType: sectionId,
                   })
 
                   return (
