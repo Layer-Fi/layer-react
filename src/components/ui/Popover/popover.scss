@@ -1,5 +1,6 @@
 .Layer__Popover {
   display: grid;
+  overflow-y: auto;
   inline-size: min(90svi, 60ch);
 
   border-radius: var(--border-radius-xs);
@@ -11,7 +12,7 @@
     inline-size:
       clamp(
         min(var(--trigger-width), 90svi),
-        calc(var(--trigger-width) * 1.5),
+        calc(var(--trigger-width) + 1rem),
         min(80ch, 90svi),
       );
   }

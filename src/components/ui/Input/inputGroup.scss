@@ -11,16 +11,14 @@
   padding-inline-end: var(--spacing-3xs);
 
   border-radius: var(--input-border-radius);
-  border: 1px solid var(--outline-default);
+  border: 1px solid var(--color-base-300);
 
   background-color: var(--color-base-0);
 
-  &[data-focus-within] {
-    border-color: var(--outline-active);
-  }
-
+  &[data-focus-within],
   &[data-focus-visible] {
-    outline: 1px solid var(--outline-default);
+    border-color: var(--color-base-800);
+    outline: 2px solid var(--outline-default);
   }
 
   &[data-action-count='2'] {
