@@ -257,8 +257,8 @@ export function CustomerVendorSelector({
         : null}
       <Popover
         placement='bottom start'
-        crossOffset={-10}
-        offset={10}
+        crossOffset={-12}
+        offset={12}
         isNonModal
       >
         <ListBox<TItemDerived>

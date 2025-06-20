@@ -312,7 +312,7 @@ export function TagSelector({
           <Popover
             placement='bottom start'
             crossOffset={-10}
-            offset={10}
+            offset={12}
             isNonModal
           >
             <ListBox<TItemDerived>
