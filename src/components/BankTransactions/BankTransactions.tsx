@@ -36,6 +36,8 @@ import { BankTransactionTagVisibilityProvider } from '../../features/bankTransac
 import classNames from 'classnames'
 import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimensions'
 import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
+import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
+import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -85,6 +87,8 @@ export const BankTransactions = ({
   ...props
 }: BankTransactionsWithErrorProps) => {
   usePreloadTagDimensions({ isEnabled: showTags })
+  usePreloadCustomers({ isEnabled: showCustomerVendor })
+  usePreloadVendors({ isEnabled: showCustomerVendor })
 
   const contextData = useAugmentedBankTransactions({ monthlyView: props.monthlyView })
 
