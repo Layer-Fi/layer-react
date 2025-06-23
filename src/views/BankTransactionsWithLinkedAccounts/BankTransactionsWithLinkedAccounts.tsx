@@ -22,7 +22,6 @@ export interface BankTransactionsWithLinkedAccountsProps {
   showDescriptions?: boolean
   showLedgerBalance?: boolean
   showReceiptUploads?: boolean
-  showCustomerVendor?: boolean
   showTags?: boolean
   showTooltips?: boolean
   showUnlinkItem?: boolean
@@ -45,7 +44,6 @@ export const BankTransactionsWithLinkedAccounts = ({
   showDescriptions = true,
   showLedgerBalance = true,
   showReceiptUploads = true,
-  showCustomerVendor = false,
   showTags = false,
   showTooltips = false,
   showUnlinkItem = false,
@@ -70,7 +68,6 @@ export const BankTransactionsWithLinkedAccounts = ({
         asWidget
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
-        showCustomerVendor={showCustomerVendor}
         showTags={showTags}
         showTooltips={showTooltips}
         showUploadOptions={showUploadOptions}
