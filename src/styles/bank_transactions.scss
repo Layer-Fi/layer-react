@@ -1229,14 +1229,6 @@
     }
   }
 
-  .Layer__expanded-bank-transaction-row__match-row--selected:hover {
-    border: 1px solid (--var-color-base-800);
-
-    & > div {
-      border-width: 0;
-    }
-  }
-
   .Layer__expanded-bank-transaction-row__match-table__date {
     display: flex;
     justify-content: space-between;

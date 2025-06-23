@@ -377,11 +377,11 @@
 
   .Layer__datepicker__popper {
     min-width: auto;
-    max-width: auto;
+    max-width: none;
 
     .react-datepicker__month-container {
       min-width: auto;
-      max-width: auto;
+      max-width: none;
     }
   }
 
