@@ -31,22 +31,6 @@
   }
 
   .Layer__table-header {
-    position: relative;
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--text-sm);
-    line-height: 140%;
-    font-weight: var(--font-weight-normal);
-    text-align: left;
-    color: var(--text-color-secondary);
-    font-variant-numeric: lining-nums proportional-nums;
-    font-feature-settings:
-      'cv10' on,
-      'cv05' on,
-      'cv08' on,
-      'ss03' on;
-    text-overflow: ellipsis;
-    letter-spacing: -0.06px;
-
     .Layer__table-cell {
       border-top: none;
     }
