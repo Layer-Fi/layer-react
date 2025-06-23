@@ -47,27 +47,12 @@
   color: var(--color-base-600);
 }
 
-.Layer__ledger-account__entry-details__back-btn {
-  display: flex;
-  gap: var(--spacing-md);
-  align-items: center;
-  padding-bottom: var(--spacing-md);
-}
-
 .Layer__ledger-account__entry-details__title-container > .Layer__text {
   font-size: 24px;
 }
 
 .Layer__ledger-account__entry-details__line-items {
   padding: var(--spacing-md);
-}
-
-.Layer__ledger-account__entry-details__back-btn {
-  display: none;
-  padding-top: var(--spacing-xl);
-  padding-right: var(--spacing-xl);
-  padding-left: var(--spacing-xl);
-  background: var(--color-base-0);
 }
 
 .Layer__ledger-account-table__tablet-main-col {
