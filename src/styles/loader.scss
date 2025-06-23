@@ -71,7 +71,6 @@
 
 .Layer__anim--skeleton-loading {
   border-radius: 4px;
-  background: var(--color-base-100);
   background:
     linear-gradient(
       110deg,
@@ -133,8 +132,7 @@
 }
 
 .Layer__bank-transactions__header--mobile .Layer__syncing-component.Layer__syncing-component--with-border {
-  padding: 0;
-  padding-left: var(--spacing-sm);
+  padding: 0 0 0 var(--spacing-sm);
   border-width: 0;
   margin-left: 0;
 }

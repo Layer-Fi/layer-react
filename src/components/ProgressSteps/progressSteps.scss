@@ -76,9 +76,8 @@
         height: 12px;
         width: 12px;
         border-radius: 100%;
-        border: 1px var(--color-base-500);
+        border: 1px dashed var(--color-base-500);
         background-color: var(--color-base-50);
-        border-style: dashed;
         transition: all 200ms ease;
 
         &::after {
@@ -89,9 +88,8 @@
           height: 12px;
           width: 12px;
           border-radius: 100%;
-          border: 1px var(--color-base-500);
+          border: 1px dashed var(--color-base-500);
           content: '';
-          border-style: dashed;
           transition: all 200ms ease;
         }
       }
