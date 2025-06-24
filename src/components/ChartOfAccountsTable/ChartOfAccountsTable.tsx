@@ -164,7 +164,7 @@ export const ChartOfAccountsTableContent = ({
               <Button
                 variant={ButtonVariant.secondary}
                 rightIcon={<Edit2 size={14} />}
-                iconOnly={true}
+                iconOnly
                 disabled={isNonEditable}
                 onClick={onClickEdit}
                 tooltip={isNonEditable ? 'This account cannot be modified' : undefined}
@@ -174,7 +174,7 @@ export const ChartOfAccountsTableContent = ({
               <Button
                 variant={ButtonVariant.secondary}
                 rightIcon={<List size={14} />}
-                iconOnly={true}
+                iconOnly
                 onClick={onClickView}
               >
                 View
