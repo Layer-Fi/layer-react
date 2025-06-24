@@ -124,11 +124,6 @@
       text-decoration: underline;
     }
 
-    &[data-disabled],
-    &[data-pending] {
-      cursor: not-allowed;
-    }
-
     &[data-pressed]:not([data-focus-visible]) {
       text-decoration: none;
     }
