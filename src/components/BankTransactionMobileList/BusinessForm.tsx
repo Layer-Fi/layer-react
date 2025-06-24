@@ -5,7 +5,7 @@ import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction, CategorizationType } from '../../types'
 import { hasReceipts } from '../../utils/bankTransactions'
 import { ActionableList } from '../ActionableList'
-import { BankTransactionReceipts } from '../BankTransactionReceipts'
+import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button, ButtonVariant } from '../Button'
 import { FileInput } from '../Input'
@@ -157,6 +157,7 @@ export const BusinessForm = ({
       >
         {showReceiptUploads && (
           <BankTransactionReceipts
+            bankTransactionId={bankTransaction.id}
             label='Receipts'
             ref={receiptsRef}
             floatingActions={false}

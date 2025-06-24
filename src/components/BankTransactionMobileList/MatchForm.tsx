@@ -3,7 +3,7 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction } from '../../types'
 import { hasReceipts, isAlreadyMatched } from '../../utils/bankTransactions'
-import { BankTransactionReceipts } from '../BankTransactionReceipts'
+import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button } from '../Button'
 import { FileInput } from '../Input'
@@ -97,6 +97,7 @@ export const MatchForm = ({
         {showReceiptUploads && (
           <BankTransactionReceipts
             ref={receiptsRef}
+            bankTransactionId={bankTransaction.id}
             floatingActions={false}
             hideUploadButtons={true}
             label='Receipts'

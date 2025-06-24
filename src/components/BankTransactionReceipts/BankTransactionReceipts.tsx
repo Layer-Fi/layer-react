@@ -1,10 +1,12 @@
-import { forwardRef, useImperativeHandle } from 'react'
-import { useReceiptsContext } from '../../contexts/ReceiptsContext/ReceiptsContext'
-import { ReceiptsProvider } from '../../providers/ReceiptsProvider'
+import { forwardRef, useCallback, useImperativeHandle } from 'react'
 import { BankTransaction } from '../../types'
 import { FileThumb } from '../FileThumb'
 import { FileInput } from '../Input'
 import { Text, TextSize } from '../Typography'
+import { useListDocumentsOnBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/documents/api/useListDocumentsOnBankTransaction'
+import { useUploadDocumentOnBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/documents/api/useUploadDocumentOnBankTransaction'
+import { useArchiveDocumentOnBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/documents/api/useArchiveDocumentOnBankTransaction'
+import { formatISO } from 'date-fns'
 
 const MAX_RECEIPTS_COUNT = 10
 
@@ -19,6 +21,7 @@ export interface DocumentWithStatus {
 }
 
 export interface BankTransactionReceiptsProps {
+  bankTransactionId: string
   classNamePrefix?: string
   floatingActions?: boolean
   hideUploadButtons?: boolean
@@ -55,80 +58,82 @@ const openReceiptInNewTab =
       }
     }
 
-const BankTransactionReceiptsWithProvider = forwardRef<
-  BankTransactionReceiptsHandle,
-  BankTransactionReceiptsWithProviderProps
->(({ bankTransaction, isActive, ...props }, ref) => {
-  return (
-    <ReceiptsProvider bankTransaction={bankTransaction} isActive={isActive}>
-      <BankTransactionReceipts {...props} ref={ref} />
-    </ReceiptsProvider>
-  )
-})
-
-BankTransactionReceiptsWithProvider.displayName =
-  'BankTransactionReceiptsWithProvider'
-
-export { BankTransactionReceiptsWithProvider }
-
-const BankTransactionReceipts = forwardRef<
+export const BankTransactionReceipts = forwardRef<
   BankTransactionReceiptsHandle,
   BankTransactionReceiptsProps
 >(
-  (
+  function BankTransactionReceipts(
     {
+      bankTransactionId,
       classNamePrefix = 'Layer',
       floatingActions = false,
       hideUploadButtons = false,
       label,
     },
     ref,
-  ) => {
-    const { receiptUrls, uploadReceipt, archiveDocument } = useReceiptsContext()
+  ) {
+    const { data: documents } = useListDocumentsOnBankTransaction({ bankTransactionId })
+
+    const { trigger: uploadDocument } = useUploadDocumentOnBankTransaction({ bankTransactionId })
+    const { trigger: archiveDocument } = useArchiveDocumentOnBankTransaction({ bankTransactionId })
+
+    const uploadReceipt = useCallback(
+      (file: File) => {
+        void uploadDocument({
+          file,
+          documentType: 'RECEIPT',
+        })
+      },
+      [uploadDocument],
+    )
 
     // Call this save action after clicking save in parent component:
     useImperativeHandle(ref, () => ({
       uploadReceipt,
     }))
 
+    const hasDocuments = documents && documents.length > 0
+    const documentCount = documents?.length ?? 0
+
     return (
       <div className={`${classNamePrefix}__file-upload`}>
-        {receiptUrls && receiptUrls.length > 0 && label
+        {hasDocuments && label
           ? (
             <Text size={TextSize.sm} className='Layer__file-upload__label'>
               {label}
             </Text>
           )
           : null}
-        {!hideUploadButtons && (!receiptUrls || receiptUrls.length === 0)
+        {!hideUploadButtons && (!hasDocuments)
           ? (
             <FileInput onUpload={files => void uploadReceipt(files[0])} text='Upload receipt' />
           )
           : null}
-        {receiptUrls.map((url, index) => (
+        {documents?.map(({ presignedUrl, fileType, fileName, createdAt, documentId }, index) => (
           <FileThumb
             key={index}
-            url={url.url}
-            type={url.type}
+            url={presignedUrl}
+            type={fileType}
             floatingActions={floatingActions}
-            uploadPending={url.status === 'pending'}
-            deletePending={url.status === 'deleting'}
-            name={url.name ?? `Receipt ${index + 1}`}
-            date={url.date}
-            enableOpen={url.type === 'application/pdf'}
+            name={fileName || `Receipt ${index + 1}`}
+            date={formatISO(createdAt)}
+            enableOpen={fileType === 'application/pdf'}
             onOpen={
-              url.url && url.type && url.type.startsWith('image/')
-                ? openReceiptInNewTab(url.url, index)
+              presignedUrl && fileType && fileType.startsWith('image/')
+                ? openReceiptInNewTab(presignedUrl, index)
                 : undefined
             }
             enableDownload
-            error={url.error}
-            onDelete={() => url.id && void archiveDocument(url)}
+            onDelete={() => {
+              if (documentId) {
+                void archiveDocument({ documentId })
+              }
+            }}
           />
         ))}
         {!hideUploadButtons
-          && receiptUrls.length > 0
-          && receiptUrls.length < MAX_RECEIPTS_COUNT
+          && documentCount > 0
+          && documentCount < MAX_RECEIPTS_COUNT
           ? (
             <FileInput
               secondary
@@ -141,7 +146,3 @@ const BankTransactionReceipts = forwardRef<
     )
   },
 )
-
-BankTransactionReceipts.displayName = 'BankTransactionReceipts'
-
-export { BankTransactionReceipts }

@@ -16,7 +16,7 @@ import {
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, hasMatch } from '../../utils/bankTransactions'
-import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
+import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
@@ -527,9 +527,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 />
 
                 {showReceiptUploads && (
-                  <BankTransactionReceiptsWithProvider
-                    bankTransaction={bankTransaction}
-                    isActive={isOpen}
+                  <BankTransactionReceipts
+                    bankTransactionId={bankTransaction.id}
                     classNamePrefix={className}
                     floatingActions={!asListItem}
                   />

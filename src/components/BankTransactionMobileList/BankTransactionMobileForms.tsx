@@ -1,4 +1,3 @@
-import { ReceiptsProvider } from '../../providers/ReceiptsProvider'
 import { BankTransaction } from '../../types'
 import { Purpose } from './BankTransactionMobileListItem'
 import { BusinessForm } from './BusinessForm'
@@ -6,7 +5,6 @@ import { PersonalForm } from './PersonalForm'
 import { SplitAndMatchForm } from './SplitAndMatchForm'
 
 interface BankTransactionMobileFormsProps {
-  isOpen?: boolean
   purpose: Purpose
   bankTransaction: BankTransaction
 
@@ -23,7 +21,6 @@ export const BankTransactionMobileForms = ({
   showCategorization,
   showReceiptUploads,
   showDescriptions,
-  isOpen,
 }: BankTransactionMobileFormsProps) => {
   const getContent = () => {
     switch (purpose) {
@@ -61,10 +58,9 @@ export const BankTransactionMobileForms = ({
   }
 
   return (
-    <ReceiptsProvider bankTransaction={bankTransaction} isActive={isOpen}>
-      <div className='Layer__bank-transaction-mobile-list-item__form-container'>
-        {getContent()}
-      </div>
-    </ReceiptsProvider>
+    <div className='Layer__bank-transaction-mobile-list-item__form-container'>
+      {getContent()}
+    </div>
+
   )
 }

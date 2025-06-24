@@ -5,7 +5,7 @@ import { useAuth } from '../../../../../hooks/useAuth'
 import { useBankTransactionsInvalidator } from '../../../../../hooks/useBankTransactions/useBankTransactions'
 import { postWithFormData } from '../../../../../api/layer/authenticated_http'
 
-const UPLOAD_BANK_TRANSACTION_DOCUMENT_TAG = '#upload-bank-transaction-document-tag'
+const UPLOAD_BANK_TRANSACTION_DOCUMENT_TAG = '#upload-bank-transaction-document'
 
 function buildKey({
   access_token: accessToken,
@@ -29,7 +29,7 @@ function buildKey({
   }
 }
 
-const uploadBankTransactionDocument = (
+const uploadDocumentOnBankTransaction = (
   baseUrl: string,
   accessToken: string,
   {
@@ -66,18 +66,18 @@ const uploadBankTransactionDocument = (
   )
 }
 
-type UploadBankTransactionDocumentArgs = {
+type UploadDocumentOnBankTransactionArgs = {
   file: File
   documentType: string
 }
 
-type UseUploadBankTransactionDocumentParameters = {
+type UseUploadDocumentOnBankTransactionParameters = {
   bankTransactionId: string
 }
 
-export function useUploadBankTransactionDocument({
+export function useUploadDocumentOnBankTransaction({
   bankTransactionId,
-}: UseUploadBankTransactionDocumentParameters) {
+}: UseUploadDocumentOnBankTransactionParameters) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -94,8 +94,8 @@ export function useUploadBankTransactionDocument({
         businessId,
         bankTransactionId,
       },
-      { arg: { file, documentType } }: { arg: UploadBankTransactionDocumentArgs },
-    ) => uploadBankTransactionDocument(
+      { arg: { file, documentType } }: { arg: UploadDocumentOnBankTransactionArgs },
+    ) => uploadDocumentOnBankTransaction(
       apiUrl,
       accessToken,
       {

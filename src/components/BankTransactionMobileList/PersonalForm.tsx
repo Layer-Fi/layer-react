@@ -3,7 +3,7 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction, CategorizationStatus } from '../../types'
 import { hasReceipts, isCredit } from '../../utils/bankTransactions'
-import { BankTransactionReceipts } from '../BankTransactionReceipts'
+import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button } from '../Button'
 import { FileInput } from '../Input'
@@ -92,6 +92,7 @@ export const PersonalForm = ({
         {showReceiptUploads && (
           <BankTransactionReceipts
             ref={receiptsRef}
+            bankTransactionId={bankTransaction.id}
             floatingActions={false}
             hideUploadButtons={true}
             label='Receipts'

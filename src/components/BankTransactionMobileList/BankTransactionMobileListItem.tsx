@@ -260,7 +260,6 @@ export const BankTransactionMobileListItem = ({
               )
               : null}
             <BankTransactionMobileForms
-              isOpen={open}
               purpose={purpose}
               bankTransaction={bankTransaction}
 

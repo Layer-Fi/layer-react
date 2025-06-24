@@ -13,7 +13,7 @@ import {
   hasSuggestions,
 } from '../../types/categories'
 import { getCategorizePayload, hasReceipts } from '../../utils/bankTransactions'
-import { BankTransactionReceipts } from '../BankTransactionReceipts'
+import { BankTransactionReceipts } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
@@ -305,6 +305,7 @@ export const SplitForm = ({
         {showReceiptUploads && (
           <BankTransactionReceipts
             ref={receiptsRef}
+            bankTransactionId={bankTransaction.id}
             floatingActions={false}
             hideUploadButtons={true}
             label='Receipts'
