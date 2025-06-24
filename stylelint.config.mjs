@@ -171,7 +171,11 @@ export default {
         properties: [
           'padding',
           'padding-block',
+          'padding-block-start',
+          'padding-block-end',
           'padding-inline',
+          'padding-inline-start',
+          'padding-inline-end',
           'padding-top',
           'padding-right',
           'padding-bottom',
@@ -182,10 +186,14 @@ export default {
         groupName: 'border-radius',
         properties: [
           'border-radius',
+          'border-start-start-radius',
+          'border-start-end-radius',
+          'border-end-start-radius',
+          'border-end-end-radius',
           'border-top-left-radius',
           'border-top-right-radius',
-          'border-bottom-right-radius',
-          'border-bottom-left-radius'
+          'border-bottom-left-radius',
+          'border-bottom-right-radius'
         ],
       },
       {
@@ -213,7 +221,11 @@ export default {
         properties: [
           'margin',
           'margin-block',
+          'margin-block-start',
+          'margin-block-end',
           'margin-inline',
+          'margin-inline-start',
+          'margin-inline-end',
           'margin-top',
           'margin-right',
           'margin-bottom',

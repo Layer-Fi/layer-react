@@ -5,6 +5,7 @@ import { withRenderProp } from '../../utility/withRenderProp'
 import { LoadingSpinner } from '../Loading/LoadingSpinner'
 
 const BUTTON_CLASS_NAMES = {
+  DEFAULT: 'Layer__UI__Button',
   SPINNER_CONTAINER: 'Layer__ButtonSpinnerContainer',
   TRANSPARENT_CONTENT: 'Layer__ButtonTransparentContent',
 }
@@ -30,7 +31,6 @@ function ButtonTransparentContent({ children }: PropsWithChildren) {
 type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'text'
 type ButtonSize = 'md'
 
-const BUTTON_CLASS_NAME = 'Layer__UI__Button'
 const Button = forwardRef<
   HTMLButtonElement,
   Omit<ButtonProps, 'className'> & {
@@ -65,7 +65,7 @@ const Button = forwardRef<
     <ReactAriaButton
       {...restProps}
       {...dataProperties}
-      className={BUTTON_CLASS_NAME}
+      className={BUTTON_CLASS_NAMES.DEFAULT}
       ref={ref}
     >
       {withRenderProp(children, (node) => {
