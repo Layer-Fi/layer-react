@@ -6,10 +6,10 @@
 
 .Layer__header--sticky {
   position: sticky;
+  z-index: 10;
   top: 0;
   background: rgb(255 255 255 / 50%);
   backdrop-filter: blur(6px);
-  z-index: 10;
 }
 
 .Layer__header--top-rounded {
@@ -18,27 +18,27 @@
 }
 
 .Layer__header__row {
+  box-sizing: border-box;
   display: flex;
-  width: 100%;
+  gap: var(--spacing-sm);
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-sm);
-  border-bottom: 1px solid var(--border-color);
+  width: 100%;
   padding: 0 var(--spacing-md);
-  box-sizing: border-box;
+  border-bottom: 1px solid var(--border-color);
 
   &[data-direction='col'] {
     flex-direction: column;
+    gap: var(--spacing-md);
     align-items: flex-start;
     padding-top: var(--spacing-md);
     padding-bottom: var(--spacing-md);
-    gap: var(--spacing-md);
 
     .Layer__header__col {
-      padding-top: 0;
-      padding-bottom: 0;
       min-height: 36px;
       width: 100%;
+      padding-top: 0;
+      padding-bottom: 0;
     }
   }
 
@@ -48,14 +48,14 @@
 }
 
 .Layer__header__col {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  min-height: 68px;
   box-sizing: border-box;
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  min-height: 68px;
 
   &[data-no-padding='true'] {
-    padding-left: 0;
     padding-right: 0;
+    padding-left: 0;
   }
 }
