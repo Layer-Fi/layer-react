@@ -2,7 +2,7 @@ import { forwardRef, type ComponentProps } from 'react'
 import { Input as ReactAriaInput } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 
-const CLASS_NAME = 'Layer__UI__Input'
+const INPUT_CLASS_NAME = 'Layer__UI__Input'
 
 type InputProps = Omit<ComponentProps<typeof ReactAriaInput>, 'className'> & {
   inset?: true
@@ -17,7 +17,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <ReactAriaInput
         {...restProps}
         {...dataProperties}
-        className={CLASS_NAME}
+        className={INPUT_CLASS_NAME}
         ref={ref}
       />
     )

@@ -26,7 +26,8 @@
   block-size: 2.25rem;
   min-inline-size: 0;
 
-  padding-inline: var(--spacing-xs);
+  padding-inline-start: var(--spacing-xs);
+  padding-inline-end: var(--spacing-3xs);
 
   border-radius: var(--border-radius-2xs);
   border: 1px solid var(--outline-default);

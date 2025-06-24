@@ -1,17 +1,10 @@
 import { useCallback, useMemo } from 'react'
-import { ComboBox, Collection } from 'react-aria-components'
 import { useListCustomers } from '../../customers/api/useListCustomers'
 import { useListVendors } from '../../vendors/api/useListVendors'
-import { Label, P, Span } from '../../../components/ui/Typography/Text'
-import { Input } from '../../../components/ui/Input/Input'
-import { Button } from '../../../components/ui/Button/Button'
-import { X, ChevronDown } from 'lucide-react'
 import type { CustomerVendorSchema } from '../customerVendorSchemas'
-import { InputGroup } from '../../../components/ui/Input/InputGroup'
-import { Popover } from '../../../components/ui/Popover/Popover'
-import { ListBox, ListBoxItem, ListBoxSection, ListBoxSectionHeader } from '../../../components/ui/ListBox/ListBox'
-import { HStack, VStack } from '../../../components/ui/Stack/Stack'
 import { useDebouncedSearchInput } from '../../../hooks/search/useDebouncedSearchQuery'
+import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
+import { P } from '../../../components/ui/Typography/Text'
 
 type CustomerVendor = typeof CustomerVendorSchema.Type
 
@@ -24,11 +17,36 @@ function getCustomerVendorName(
     ?? `Unknown ${customerVendor.customerVendorType === 'CUSTOMER' ? 'Customer' : 'Vendor'}`
 }
 
+class CustomerVendorAsOption {
+  private internalCustomerVendor: CustomerVendor
+
+  constructor(customerVendor: CustomerVendor) {
+    this.internalCustomerVendor = customerVendor
+  }
+
+  get original() {
+    return this.internalCustomerVendor
+  }
+
+  get label() {
+    return getCustomerVendorName(this.internalCustomerVendor)
+  }
+
+  get id() {
+    return this.internalCustomerVendor.id
+  }
+
+  get value() {
+    return this.internalCustomerVendor.id
+  }
+}
+
 type CustomerVendorSelectorProps = {
   selectedCustomerVendor: CustomerVendor | null
   onSelectedCustomerVendorChange: (customerVendor: CustomerVendor | null) => void
 
-  isMutating?: boolean
+  placeholder: string
+
   isReadOnly?: boolean
 }
 
@@ -36,21 +54,15 @@ export function CustomerVendorSelector({
   selectedCustomerVendor,
   onSelectedCustomerVendorChange,
 
-  isMutating,
+  placeholder,
+
   isReadOnly,
 }: CustomerVendorSelectorProps) {
   const {
-    inputValue,
     searchQuery,
     handleInputChange,
   } = useDebouncedSearchInput({
-    initialInputState: () => {
-      if (selectedCustomerVendor === null) {
-        return ''
-      }
-
-      return getCustomerVendorName(selectedCustomerVendor)
-    },
+    initialInputState: () => '',
   })
 
   const effectiveSearchQuery = searchQuery === ''
@@ -68,13 +80,15 @@ export function CustomerVendorSelector({
     isError: isErrorLoadingVendors,
   } = useListVendors({ query: effectiveSearchQuery })
 
-  const items = useMemo(
+  const groups = useMemo(
     () => {
       const customersSection = customerPages
         ? {
           label: 'Customers',
           id: 'CUSTOMER',
-          secondParties: customerPages.flatMap(({ data }) => data),
+          options: customerPages
+            .flatMap(({ data }) => data)
+            .map(customer => new CustomerVendorAsOption({ ...customer, customerVendorType: 'CUSTOMER' })),
         } as const
         : null
 
@@ -82,7 +96,9 @@ export function CustomerVendorSelector({
         ? {
           label: 'Vendors',
           id: 'VENDOR',
-          secondParties: vendorPages.flatMap(({ data }) => data),
+          options: vendorPages
+            .flatMap(({ data }) => data)
+            .map(vendor => new CustomerVendorAsOption({ ...vendor, customerVendorType: 'VENDOR' })),
         } as const
         : null
 
@@ -90,7 +106,7 @@ export function CustomerVendorSelector({
         .filter(
           (section): section is NonNullable<typeof section> =>
             section !== null
-            && section.secondParties.length > 0,
+            && section.options.length > 0,
         )
     },
     [
@@ -102,12 +118,8 @@ export function CustomerVendorSelector({
   const selectedCustomerVendorId = selectedCustomerVendor?.id
 
   const handleSelectionChange = useCallback(
-    (key: string | number | null) => {
-      if (typeof key === 'number') {
-        return
-      }
-
-      if (key === null) {
+    (selectedOption: { value: string } | null) => {
+      if (selectedOption === null) {
         handleInputChange('')
 
         if (selectedCustomerVendorId) {
@@ -117,46 +129,77 @@ export function CustomerVendorSelector({
         return
       }
 
-      const customers = items.find(({ id }) => id === 'CUSTOMER')?.secondParties ?? []
-      const selectedCustomer = customers.find(({ id }) => id === key)
+      const customers = groups.find(({ id }) => id === 'CUSTOMER')?.options ?? []
+      const selectedCustomer = customers.find(({ id }) => id === selectedOption.value)
 
       if (selectedCustomer) {
-        const selectedCustomerWithType = { ...selectedCustomer, customerVendorType: 'CUSTOMER' } as const
+        const selectedCustomerWithType = selectedCustomer.original
 
         if (selectedCustomer.id !== selectedCustomerVendorId) {
           onSelectedCustomerVendorChange(selectedCustomerWithType)
         }
 
-        handleInputChange(
-          getCustomerVendorName(selectedCustomerWithType),
-        )
+        handleInputChange('')
 
         return
       }
 
-      const vendors = items.find(({ id }) => id === 'VENDOR')?.secondParties ?? []
-      const selectedVendor = vendors.find(({ id }) => id === key)
+      const vendors = groups.find(({ id }) => id === 'VENDOR')?.options ?? []
+      const selectedVendor = vendors.find(({ id }) => id === selectedOption.value)
 
       if (selectedVendor) {
-        const selectedVendorWithType = { ...selectedVendor, customerVendorType: 'VENDOR' } as const
+        const selectedVendorWithType = selectedVendor.original
 
         if (selectedVendor.id !== selectedCustomerVendorId) {
           onSelectedCustomerVendorChange(selectedVendorWithType)
         }
 
-        handleInputChange(
-          getCustomerVendorName(selectedVendorWithType),
-        )
+        handleInputChange('')
 
         return
       }
     },
     [
-      items,
+      groups,
       selectedCustomerVendorId,
       handleInputChange,
       onSelectedCustomerVendorChange,
     ],
+  )
+
+  const selectedCustomerVendorForComboBox = useMemo(
+    () => {
+      if (selectedCustomerVendor === null) {
+        return null
+      }
+
+      return {
+        label: getCustomerVendorName(selectedCustomerVendor),
+        value: selectedCustomerVendor.id,
+      }
+    },
+    [selectedCustomerVendor],
+  )
+
+  const EmptyMessage = useMemo(
+    () => (
+      <P variant='subtle'>
+        No matching customer or vendor found
+      </P>
+    ),
+    [],
+  )
+
+  const ErrorMessage = useMemo(
+    () => (
+      <P
+        size='xs'
+        status='error'
+      >
+        An error occurred while loading customer and vendor options.
+      </P>
+    ),
+    [],
   )
 
   const isFiltered = effectiveSearchQuery !== undefined
@@ -182,10 +225,6 @@ export function CustomerVendorSelector({
     return null
   }
 
-  type TItemDerived = typeof items extends ReadonlyArray<infer TItem>
-    ? TItem
-    : never
-
   const isLoadingCustomersWithoutFallback = isLoadingCustomers && !customerPages
   const isLoadingVendorsWithoutFallback = isLoadingVendors && !vendorPages
 
@@ -195,130 +234,20 @@ export function CustomerVendorSelector({
 
   return (
     <ComboBox
-      items={items}
-      selectedKey={selectedCustomerVendor?.id ?? null}
-      inputValue={inputValue}
+      selectedValue={selectedCustomerVendorForComboBox}
+      onSelectedValueChange={handleSelectionChange}
 
-      isDisabled={shouldDisableComboBox}
-      allowsEmptyCollection
-      menuTrigger='focus'
+      groups={groups}
 
-      onSelectionChange={handleSelectionChange}
-      onInputChange={handleInputChange}
-    >
-      <Label
-        pbe='3xs'
-        size='sm'
-      >
-        Customer or Vendor
-      </Label>
-      <InputGroup actionCount={selectedCustomerVendor === null ? 1 : 2}>
-        <Input
-          inset
-          placeholder='Add a customer or vendor...'
-          placement='first'
-        />
-        {selectedCustomerVendor !== null
-          ? (
-            <Button
-              slot={null}
-              icon
-              inset
-              variant='ghost'
-              isDisabled={shouldDisableComboBox}
-              onPress={() => handleSelectionChange(null)}
-            >
-              <X size={16} />
-            </Button>
-          )
-          : null}
-        <Button
-          icon
-          inset
-          variant='ghost'
-          isPending={isLoadingWithoutFallback || isMutating}
-        >
-          <ChevronDown size={16} />
-        </Button>
-      </InputGroup>
-      {isError
-        ? (
-          <HStack justify='end'>
-            <P
-              slot='errorMessage'
-              pbs='3xs'
-              size='xs'
-              status='error'
-            >
-              An error occurred while loading customers and vendors
-            </P>
-          </HStack>
-        )
-        : null}
-      <Popover
-        /*
-         * This is necessary until a bug in `react-aria-components` is fixed
-         *
-         * @see {https://github.com/adobe/react-spectrum/pull/7742}
-         */
-        shouldFlip={false}
-        placement='bottom start'
-        crossOffset={-10}
-        offset={10}
-      >
-        <ListBox<TItemDerived>
-          renderEmptyState={() => (
-            <VStack pi='xs' pb='sm'>
-              <P
-                variant='subtle'
-                nonAria
-              >
-                No matching customer or vendor found
-              </P>
-            </VStack>
-          )}
-        >
-          {({
-            id: sectionId,
-            label: sectionLabel,
-            secondParties,
-          }) => (
-            <ListBoxSection key={sectionId}>
-              <ListBoxSectionHeader
-                pb='2xs'
-                size='sm'
-              >
-                {sectionLabel}
-              </ListBoxSectionHeader>
-              <Collection items={secondParties}>
-                {({
-                  id,
-                  individualName,
-                  companyName,
-                  externalId,
-                }) => {
-                  const effectiveName = getCustomerVendorName({
-                    individualName,
-                    companyName,
-                    externalId,
-                    customerVendorType: sectionId,
-                  })
+      onInputValueChange={handleInputChange}
 
-                  return (
-                    <ListBoxItem
-                      key={id}
-                      id={id}
-                      textValue={effectiveName}
-                    >
-                      <Span slot='label' weight='bold'>{effectiveName}</Span>
-                    </ListBoxItem>
-                  )
-                }}
-              </Collection>
-            </ListBoxSection>
-          )}
-        </ListBox>
-      </Popover>
-    </ComboBox>
+      label='Customer or Vendor'
+      placeholder={placeholder}
+      slots={{ EmptyMessage, ErrorMessage }}
+
+      isError={isError}
+      isDisabled={isReadOnly || shouldDisableComboBox}
+      isLoading={isLoadingCustomersWithoutFallback}
+    />
   )
 }
