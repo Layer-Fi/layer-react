@@ -27,7 +27,7 @@ function ButtonTransparentContent({ children }: PropsWithChildren) {
   )
 }
 
-type ButtonVariant = 'solid' | 'ghost' | 'outlined'
+type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'text'
 type ButtonSize = 'md'
 
 const BUTTON_CLASS_NAME = 'Layer__UI__Button'
@@ -38,7 +38,6 @@ const Button = forwardRef<
     inset?: true
     size?: ButtonSize
     variant?: ButtonVariant
-    persistentBorder?: boolean
   }
 >((
   {
@@ -47,7 +46,6 @@ const Button = forwardRef<
     inset,
     size = 'md',
     variant = 'solid',
-    persistentBorder,
     ...restProps
   },
   ref,
@@ -58,7 +56,6 @@ const Button = forwardRef<
     inset,
     size,
     variant,
-    'persistent-border': persistentBorder,
   })
 
   return (

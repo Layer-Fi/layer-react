@@ -111,6 +111,23 @@
       background-color: var(--button-bg-active);
     }
   }
+
+  &[data-variant='text'] {
+    --size: 1.75rem;
+
+    padding-inline: var(--spacing-xs);
+    border: none;
+    background-color: transparent;
+
+    &[data-hovered]:not([data-disabled], [data-pressed]) {
+      outline: none;
+      text-decoration: underline;
+    }
+
+    &[data-pressed]:not([data-focus-visible]) {
+      text-decoration: none;
+    }
+  }
 }
 
 .Layer__ButtonTransparentContent {

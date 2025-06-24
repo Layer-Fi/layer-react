@@ -10,14 +10,18 @@ import {
 } from '../../types/chart_of_accounts'
 import { View } from '../../types/general'
 import { Button, ButtonVariant } from '../Button'
+import { Button as UIButton } from '../ui/Button/Button'
 import { Table, TableBody } from '../Table'
 import { TableCell } from '../TableCell'
 import { TableHead } from '../TableHead'
 import { TableRow } from '../TableRow'
+import { TableCellAlign } from '../../types/table'
 import {
   ChartOfAccountsTableStringOverrides,
   ExpandActionState,
 } from './ChartOfAccountsTableWithPanel'
+import { HStack, Spacer } from '../ui/Stack/Stack'
+import { List } from 'lucide-react'
 
 export const ChartOfAccountsTable = ({
   view,
@@ -109,58 +113,77 @@ export const ChartOfAccountsTableContent = ({
     rowKey: string,
     depth: number,
   ) => {
-    const expandable = !!account.sub_accounts && account.sub_accounts.length > 0
-    const expanded = expandable ? isOpen(rowKey) : true
+    const hasSubAccounts = !!account.sub_accounts && account.sub_accounts.length > 0
+    const isExpanded = hasSubAccounts ? isOpen(rowKey) : true
+    const isNonEditable = !templateAccountsEditable && !!account.stable_name
+
+    const onClickRow = (e: React.MouseEvent) => {
+      e.stopPropagation()
+      if (hasSubAccounts) setIsOpen(rowKey)
+    }
+
+    const onClickAccountName = (e: React.MouseEvent) => {
+      e.stopPropagation()
+      setAccountId(account.id)
+    }
+
+    const onClickEdit = (e: React.MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      editAccount(account.id)
+    }
+
+    const onClickView = (e: React.MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      setAccountId(account.id)
+    }
 
     return (
       <Fragment key={rowKey + '-' + index}>
         <TableRow
           rowKey={rowKey + '-' + index}
-          expandable={expandable}
-          isExpanded={expanded}
-          onClick={(e) => {
-            e.stopPropagation()
-            setAccountId(account.id)
-          }}
+          expandable={hasSubAccounts}
+          isExpanded={isExpanded}
+          onClick={onClickRow}
           depth={depth}
         >
           <TableCell
-            withExpandIcon={expandable}
-            onClick={(e) => {
-              e.stopPropagation()
-              expandable && setIsOpen(rowKey)
-            }}
+            withExpandIcon={hasSubAccounts}
           >
-            {account.name}
+            <HStack gap='lg'>
+              {!hasSubAccounts && <Spacer />}
+              <UIButton variant='text' onClick={onClickAccountName}>{account.name}</UIButton>
+            </HStack>
           </TableCell>
           <TableCell>{account.account_type?.display_name}</TableCell>
           <TableCell>{account.account_subtype?.display_name}</TableCell>
           <TableCell isCurrency>{account.balance}</TableCell>
-          <TableCell>
-            <span className='Layer__coa__actions'>
+          <TableCell align={TableCellAlign.RIGHT}>
+            <HStack className='Layer__coa__actions' gap='xs'>
               <Button
                 variant={ButtonVariant.secondary}
-                rightIcon={<Edit2 size={12} />}
-                iconOnly={true}
-                disabled={!templateAccountsEditable && !!account.stable_name}
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  editAccount(account.id)
-                }}
-                tooltip={
-                  !templateAccountsEditable && account.stable_name
-                    ? 'System accounts cannot be modified'
-                    : undefined
-                }
+                rightIcon={<Edit2 size={14} />}
+                iconOnly
+                disabled={isNonEditable}
+                onClick={onClickEdit}
+                tooltip={isNonEditable ? 'This account cannot be modified' : undefined}
               >
                 Edit
               </Button>
-            </span>
+              <Button
+                variant={ButtonVariant.secondary}
+                rightIcon={<List size={14} />}
+                iconOnly
+                onClick={onClickView}
+              >
+                View
+              </Button>
+            </HStack>
           </TableCell>
         </TableRow>
-        {expandable
-          && expanded
+        {hasSubAccounts
+          && isExpanded
           && account.sub_accounts.map((subItem, subIdx) => {
             const subRowKey = `${rowKey}-${subItem.id}`
             return renderChartOfAccountsDesktopRow(
