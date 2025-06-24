@@ -38,8 +38,8 @@ export default {
     'custom-property-empty-line-before': [
       'always',
       {
-        'except': ['first-nested', 'after-custom-property'],
-        'ignore': ['after-comment']
+        'except': ['first-nested'],
+        'ignore': ['after-comment', 'after-custom-property']
       }
     ],
 
