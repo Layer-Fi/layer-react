@@ -245,9 +245,7 @@ export const useAugmentedBankTransactions = (
     void mutate(updatedData, { revalidate: false })
   }
 
-  const { trigger: categorizeBankTransaction } = useCategorizeBankTransaction({
-    mutateBankTransactions: mutate,
-  })
+  const { trigger: categorizeBankTransaction } = useCategorizeBankTransaction()
 
   const categorizeWithOptimisticUpdate = async (
     bankTransactionId: BankTransaction['id'],
@@ -291,9 +289,7 @@ export const useAugmentedBankTransactions = (
       })
   }
 
-  const { trigger: matchBankTransaction } = useMatchBankTransaction({
-    mutateBankTransactions: mutate,
-  })
+  const { trigger: matchBankTransaction } = useMatchBankTransaction()
 
   const matchWithOptimisticUpdate = async (
     bankTransactionId: BankTransaction['id'],

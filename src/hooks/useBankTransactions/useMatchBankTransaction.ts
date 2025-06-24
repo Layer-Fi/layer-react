@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
-import { matchBankTransaction, type GetBankTransactionsReturn, type MatchBankTransactionBody } from '../../api/layer/bankTransactions'
+import { matchBankTransaction, type MatchBankTransactionBody } from '../../api/layer/bankTransactions'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
-import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
+import { useBankTransactionsInvalidator } from './useBankTransactions'
 
 const MATCH_BANK_TRANSACTION_TAG = '#match-bank-transaction'
 
@@ -34,15 +34,7 @@ type MatchBankTransactionArgs = MatchBankTransactionBody & {
   bankTransactionId: string
 }
 
-type UseMatchBankTransactionOptions = {
-  mutateBankTransactions: SWRInfiniteKeyedMutator<
-    Array<GetBankTransactionsReturn>
-  >
-}
-
-export function useMatchBankTransaction({
-  mutateBankTransactions,
-}: UseMatchBankTransactionOptions) {
+export function useMatchBankTransaction() {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
@@ -72,32 +64,30 @@ export function useMatchBankTransaction({
     },
   )
 
+  const { invalidateBankTransactions } = useBankTransactionsInvalidator()
+
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
+      const triggerResultPromise = originalTrigger(...triggerParameters)
 
-      void mutate(key => withSWRKeyTags(
-        key,
-        tags => (
-          tags.includes(BANK_ACCOUNTS_TAG_KEY)
-          || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY)
-        ),
-      ))
-      /**
-       * SWR does not expose infinite queries through the matcher
-       *
-       * @see https://github.com/vercel/swr/blob/main/src/_internal/utils/mutate.ts#L78
-       */
-      void mutateBankTransactions(undefined, { revalidate: true })
-
-      return triggerResult
+      return triggerResultPromise
+        .finally(() => {
+          void invalidateBankTransactions()
+          void mutate(key => withSWRKeyTags(
+            key,
+            tags => (
+              tags.includes(BANK_ACCOUNTS_TAG_KEY)
+              || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY)
+            ),
+          ))
+        })
     },
     [
       originalTrigger,
       mutate,
-      mutateBankTransactions,
+      invalidateBankTransactions,
     ],
   )
 
