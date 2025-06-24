@@ -20,7 +20,6 @@ export const BankTransactionsContext =
         has_more: false,
       },
     },
-    updateOneLocal: () => undefined,
     shouldHideAfterCategorize: () => false,
     removeAfterCategorize: () => undefined,
     display: DisplayState.review,

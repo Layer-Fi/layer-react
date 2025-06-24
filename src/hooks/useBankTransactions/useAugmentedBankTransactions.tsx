@@ -486,7 +486,6 @@ export const useAugmentedBankTransactions = (
     error: responseError,
     categorize: categorizeWithOptimisticUpdate,
     match: matchWithOptimisticUpdate,
-    updateOneLocal,
     shouldHideAfterCategorize,
     removeAfterCategorize,
     filters,

@@ -2,24 +2,16 @@ import { useEffect, useState } from 'react'
 import { Layer } from '../../api/layer'
 import { DocumentWithStatus } from '../../components/BankTransactionReceipts/BankTransactionReceipts'
 import { DATE_FORMAT } from '../../config/general'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { BankTransaction } from '../../types'
 import { hasReceipts } from '../../utils/bankTransactions'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { Awaitable } from '../../types/utility/promises'
 
 export interface UseReceiptsProps {
   bankTransaction: BankTransaction
   isActive?: boolean
-}
-
-type UseReceipts = (props: UseReceiptsProps) => {
-  receiptUrls: DocumentWithStatus[]
-  uploadReceipt: (file: File) => Awaitable<void>
-  archiveDocument: (document: DocumentWithStatus) => Awaitable<void>
 }
 
 const readDate = (date?: string) => {
@@ -27,14 +19,13 @@ const readDate = (date?: string) => {
   return date && formatTime(parseISO(date), DATE_FORMAT)
 }
 
-export const useReceipts: UseReceipts = ({
+export const useReceipts = ({
   bankTransaction,
   isActive,
 }: UseReceiptsProps) => {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
-  const { updateOneLocal: updateBankTransaction } = useBankTransactionsContext()
 
   const [receiptUrls, setReceiptUrls] = useState<DocumentWithStatus[]>([])
 
