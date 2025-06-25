@@ -113,9 +113,16 @@
       var(--color-light-l) / 16%
     );
 
-  // Customization
   --color-primary: var(--color-dark);
   --color-accent: var(--color-light);
+
+  --bg-brand-primary: var(--color-primary);
+  --fg-brand-primary: var(--color-white);
+
+  --bg-brand-accent: var(--color-accent);
+  --fg-brand-accent: var(--color-white);
+
+  // Other Colors
   --color-secondary: var(--color-base);
   --color-success: var(--color-info-success);
   --color-danger: var(--color-info-error);
@@ -181,11 +188,11 @@
   --btn-color-primary: var(--color-white);
   --btn-bg-color-primary: var(--color-black);
   --btn-color-hover: var(--color-white);
-  --btn-bg-color-hover: var(--color-primary);
+  --btn-bg-color-hover: var(--color-base-1000);
   --btn-color-icon: var(--color-black);
   --btn-bg-color-icon: var(--color-base-50);
-  --btn-color-icon-hover: var(--color-primary);
-  --btn-bg-color-icon-hover: var(--color-accent);
+  --btn-color-icon-hover: var(--color-base-1000);
+  --btn-bg-color-icon-hover: var(--color-base-0);
   --btn-secondary-color: var(--color-black);
   --btn-secondary-bg-color: var(--color-white);
   --btn-tertiary-color: var(--color-black);
