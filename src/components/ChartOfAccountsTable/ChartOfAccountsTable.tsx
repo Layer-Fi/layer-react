@@ -20,7 +20,7 @@ import {
   ChartOfAccountsTableStringOverrides,
   ExpandActionState,
 } from './ChartOfAccountsTableWithPanel'
-import { HStack, Spacer } from '../ui/Stack/Stack'
+import { HStack } from '../ui/Stack/Stack'
 import { List } from 'lucide-react'
 
 export const ChartOfAccountsTable = ({
@@ -152,9 +152,8 @@ export const ChartOfAccountsTableContent = ({
           <TableCell
             withExpandIcon={hasSubAccounts}
           >
-            <HStack gap='lg'>
-              {!hasSubAccounts && <Spacer />}
-              <UIButton variant='text' onClick={onClickAccountName}>{account.name}</UIButton>
+            <HStack {...(!hasSubAccounts && { pis: 'lg' })} overflow='hidden'>
+              <UIButton variant='text' ellipsis onClick={onClickAccountName}>{account.name}</UIButton>
             </HStack>
           </TableCell>
           <TableCell>{depth != 0 && account.account_type?.display_name}</TableCell>
@@ -199,7 +198,14 @@ export const ChartOfAccountsTableContent = ({
   }
 
   return (
-    <Table>
+    <Table componentName='chart-of-accounts'>
+      <colgroup>
+        <col className='Layer__chart-of-accounts--name' />
+        <col className='Layer__chart-of-accounts--type' />
+        <col className='Layer__chart-of-accounts--subtype' />
+        <col className='Layer__chart-of-accounts--balance' />
+        <col className='Layer__chart-of-accounts--actions' />
+      </colgroup>
       <TableHead>
         <TableRow isHeadRow rowKey='charts-of-accounts-head-row'>
           <TableCell isHeaderCell>

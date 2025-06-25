@@ -7,6 +7,7 @@ export type StackProps = PropsWithChildren<{
   align?: 'start' | 'center'
   gap?: Spacing
   justify?: 'start' | 'center' | 'end' | 'space-between'
+  overflow?: 'scroll' | 'hidden' | 'auto' | 'clip' | 'visible'
   pb?: Spacing
   pbs?: Spacing
   pbe?: Spacing
@@ -32,6 +33,7 @@ const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
     direction,
     gap,
     justify,
+    overflow,
     pb,
     pbs,
     pbe,
@@ -48,6 +50,7 @@ const Stack = forwardRef<HTMLDivElement, InternalStackProps>(
       direction,
       gap,
       justify,
+      overflow,
       pb,
       pbs,
       pbe,

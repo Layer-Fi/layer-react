@@ -29,6 +29,14 @@
     }
   }
 
+  $overflows: scroll, hidden, auto, clip, visible;
+
+  @each $overflow in $overflows {
+    &[data-overflow="#{$overflow}"] {
+      overflow: $overflow;
+    }
+  }
+
   $spacings: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
 
   @each $spacing in $spacings {
