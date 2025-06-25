@@ -1,6 +1,9 @@
 import { createContext } from 'react'
-import { JournalEntry } from '../types/journal'
+import { JournalEntry, NewApiJournalEntry } from '../types/journal'
 import { JournalFormTypes } from '../hooks/useJournal/useJournal'
+import { BaseSelectOption } from '../types/general'
+import { LedgerAccountBalance } from '../types/chart_of_accounts'
+import { Direction } from '../types/bank_transactions'
 
 export interface JournalContextType {
   data?: ReadonlyArray<JournalEntry>
@@ -14,8 +17,13 @@ export interface JournalContextType {
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void
   closeSelectedEntry: () => void
-  create: (newJournalEntry: any) => void
-  changeFormData: (name: string, value: any, lineItemIndex?: number, accounts?: any[]) => void
+  create: (newJournalEntry: NewApiJournalEntry) => void
+  changeFormData: (
+    name: string, 
+    value: string | BaseSelectOption | undefined | number, 
+    lineItemIndex?: number, 
+    accounts?: LedgerAccountBalance[]
+  ) => void
   submitForm: () => void
   cancelForm: () => void
   addEntry: () => void
@@ -23,7 +31,7 @@ export interface JournalContextType {
   form?: JournalFormTypes
   apiError?: string
   setForm: (form?: JournalFormTypes) => void
-  addEntryLine: (direction: any) => void
+  addEntryLine: (direction: Direction) => void
   removeEntryLine: (index: number) => void
   reverseEntry: (entryId: string) => Promise<any>
   hasMore: boolean
