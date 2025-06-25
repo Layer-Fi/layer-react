@@ -1,27 +1,31 @@
 .Layer__badge {
+  box-sizing: border-box;
   display: inline-flex;
   gap: var(--spacing-3xs);
-  border-radius: var(--border-radius-5xl);
-  background-color: var(--badge-bg-color);
-  color: var(--badge-color);
-  padding: var(--spacing-3xs) var(--spacing-xs);
-  font-size: var(--text-sm);
   align-items: center;
-  transition: all var(--transition-speed) ease-in-out;
-  box-sizing: border-box;
   height: 27px;
 
+  padding: var(--spacing-3xs) var(--spacing-xs);
+  border-radius: var(--border-radius-5xl);
+
+  background-color: var(--badge-bg-color);
+
+  font-size: var(--text-sm);
+  color: var(--badge-color);
+
+  transition: all var(--transition-speed) ease-in-out;
+
   &.Layer__badge--small {
-    font-size: var(--text-xs);
-    padding: var(--spacing-3xs) var(--spacing-xs);
-    line-height: 1.1;
     height: 21px;
+    padding: var(--spacing-3xs) var(--spacing-xs);
+    font-size: var(--text-xs);
+    line-height: 1.1;
   }
 
   &.Layer__badge--clickable {
-    cursor: pointer;
     min-height: 21px;
     border-width: 0;
+    cursor: pointer;
   }
 
   .Layer__badge__icon {
