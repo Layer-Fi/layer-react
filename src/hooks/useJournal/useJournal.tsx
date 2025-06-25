@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { Direction, FormError, FormErrorWithId } from '../../types'
@@ -44,9 +44,9 @@ type UseJournal = () => {
   setForm: (form?: JournalFormTypes) => void
   addEntryLine: (direction: Direction) => void
   removeEntryLine: (index: number) => void
-  reverseEntry: (
-    entryId: string,
-  ) => ReturnType<typeof Layer.reverseJournalEntry>
+  reverseEntry: (entryId: string) => ReturnType<typeof Layer.reverseJournalEntry>
+  hasMore: boolean
+  fetchMore: () => void
 }
 
 export interface JournalFormTypes {
@@ -75,7 +75,42 @@ export const useJournal: UseJournal = () => {
   const [sendingForm, setSendingForm] = useState(false)
   const [apiError, setApiError] = useState<string | undefined>(undefined)
 
-  const { data, isLoading, isValidating, error, mutate } = useListLedgerEntries()
+  const { 
+    data: paginatedData, 
+    isLoading, 
+    isValidating, 
+    error, 
+    mutate, 
+    size, 
+    setSize 
+  } = useListLedgerEntries({
+    sort_by: 'entry_at',
+    sort_order: 'DESC',
+    limit: 150
+  })
+
+  const data = useMemo(() => {
+    if (!paginatedData) return undefined
+    
+    return paginatedData.flatMap(page => page.data) as ReadonlyArray<JournalEntry>
+  }, [paginatedData])
+
+  const hasMore = useMemo(() => {
+    if (paginatedData && paginatedData.length > 0) {
+      const lastPage = paginatedData[paginatedData.length - 1]
+      return Boolean(
+        lastPage.meta?.pagination.cursor &&
+        lastPage.meta?.pagination.has_more
+      )
+    }
+    return false
+  }, [paginatedData])
+
+  const fetchMore = useCallback(() => {
+    if (hasMore) {
+      setSize(size + 1)
+    }
+  }, [hasMore, setSize, size])
 
   const refetch = () => mutate()
 
@@ -371,5 +406,10 @@ export const useJournal: UseJournal = () => {
     addEntryLine,
     removeEntryLine,
     reverseEntry,
+    hasMore,
+    fetchMore,
+    isLoadingEntry: false,
+    isValidatingEntry: false,
+    errorEntry: undefined,
   }
 }
