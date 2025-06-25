@@ -136,7 +136,7 @@ export function useListLedgerEntries({
     )(),
     {
       keepPreviousData: true,
-      revalidateAll: false,
+      revalidateAll: true,
       revalidateFirstPage: false,
       initialSize: 1,
     },
