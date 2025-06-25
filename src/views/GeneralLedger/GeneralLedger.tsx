@@ -48,7 +48,7 @@ export const GeneralLedgerView = ({
               value: 'chartOfAccounts',
               label:
                 stringOverrides?.chartOfAccountsToggleOption
-                || 'Chart of accounts',
+                || 'Chart of Accounts',
             },
             {
               value: 'journal',
