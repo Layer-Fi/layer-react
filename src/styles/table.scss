@@ -251,15 +251,6 @@
   }
 }
 
-.Layer__table-row.Layer__table-row--with-show:not(.initial-load) {
-  opacity: 0.5;
-
-  &.show {
-    transition: opacity 50ms ease-out;
-    opacity: 1;
-  }
-}
-
 .Layer__table.with-cell-separators > tbody > tr > td:first-child .Layer__table-cell-content::after,
 .Layer__table.with-cell-separators > tbody > tr > td:last-child .Layer__table-cell-content::after,
 .Layer__table.with-cell-separators > thead > tr > th:first-child.Layer__table-header::after,
@@ -353,20 +344,6 @@
   }
 }
 
-.Layer__table-row.Layer__table-row--anim-starting-state {
-  opacity: 0;
-  height: 0;
-
-  td {
-    .Layer__table-cell-content {
-      height: 0%;
-      padding-top: 0;
-      padding-bottom: 0;
-      opacity: 0;
-    }
-  }
-}
-
 .Layer__table__empty-row {
   height: var(--spacing-2xs);
   border-top: 1px solid var(--color-base-200);
@@ -377,18 +354,6 @@
 tbody {
   .Layer__table__empty-row:first-child {
     display: none;
-  }
-}
-
-.Layer__table-row.Layer__table-row--anim-complete-state {
-  height: var(--spacing-5xl);
-
-  td {
-    .Layer__table-cell-content {
-      opacity: 1;
-      padding-top: var(--spacing-sm);
-      padding-bottom: var(--spacing-sm);
-    }
   }
 }
 

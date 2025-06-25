@@ -1,7 +1,7 @@
-import { Fragment, useContext, useEffect, useState } from 'react'
+import { Fragment, useContext, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
-import { TableProvider } from '../../contexts/TableContext'
+import { TableProvider } from '../../contexts/TableContext/TableContext'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import Edit2 from '../../icons/Edit2'
 import {
@@ -29,8 +29,6 @@ export const ChartOfAccountsTable = ({
   data,
   error,
   expandAll,
-  cumulativeIndex,
-  accountsLength,
   templateAccountsEditable = true,
 }: {
   view: View
@@ -38,8 +36,6 @@ export const ChartOfAccountsTable = ({
   stringOverrides?: ChartOfAccountsTableStringOverrides
   error?: unknown
   expandAll?: ExpandActionState
-  cumulativeIndex: number
-  accountsLength: number
   templateAccountsEditable?: boolean
 }) => (
   <TableProvider>
@@ -49,8 +45,6 @@ export const ChartOfAccountsTable = ({
       stringOverrides={stringOverrides}
       error={error}
       expandAll={expandAll}
-      cumulativeIndex={cumulativeIndex}
-      accountsLength={accountsLength}
       templateAccountsEditable={templateAccountsEditable}
     />
   </TableProvider>
@@ -68,44 +62,48 @@ export const ChartOfAccountsTableContent = ({
   stringOverrides?: ChartOfAccountsTableStringOverrides
   error?: unknown
   expandAll?: ExpandActionState
-  cumulativeIndex: number
-  accountsLength: number
   templateAccountsEditable: boolean
 }) => {
+  const hasMountedRef = useRef(false)
   const { setAccountId } = useContext(LedgerAccountsContext)
   const { editAccount } = useContext(ChartOfAccountsContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
-  const [accountsRowKeys, setAccountsRowKeys] = useState<string[]>([])
+
+  const expandableRowKeys = useMemo(() => {
+    const keys: string[] = []
+
+    const collect = (accounts: LedgerAccountBalance[], parentKey: string) => {
+      for (const account of accounts) {
+        const key = `${parentKey}-${account.id}`
+        if (account.sub_accounts.length > 0) {
+          keys.push(key)
+          collect(account.sub_accounts, key)
+        }
+      }
+    }
+
+    collect(data.accounts, 'coa-row')
+    return keys
+  }, [data.accounts])
+
+  useLayoutEffect(() => {
+    if (hasMountedRef.current) return
+
+    const defaultExpanded = data.accounts.map(
+      account => 'coa-row-' + account.id,
+    )
+    setIsOpen(defaultExpanded)
+    hasMountedRef.current = true
+  }, [])
 
   useEffect(() => {
     if (expandAll === 'expanded') {
-      setIsOpen(accountsRowKeys)
+      setIsOpen(expandableRowKeys)
     }
     else if (expandAll === 'collapsed') {
       setIsOpen([])
     }
   }, [expandAll])
-
-  useEffect(() => {
-    const defaultExpanded = data.accounts.map(
-      account => 'coa-row-' + account.id,
-    )
-    setIsOpen(defaultExpanded)
-
-    const searchRowsToExpand = (
-      accounts: LedgerAccountBalance[],
-      rowKey: string,
-    ) => {
-      accounts.map((account) => {
-        if (account.sub_accounts.length > 0) {
-          setAccountsRowKeys(prev => [...prev, `${rowKey}-${account.id}`])
-          searchRowsToExpand(account.sub_accounts, `${rowKey}-${account.id}`)
-        }
-      })
-    }
-
-    searchRowsToExpand(data.accounts, 'coa-row')
-  }, [])
 
   const renderChartOfAccountsDesktopRow = (
     account: LedgerAccountBalance,
@@ -114,7 +112,7 @@ export const ChartOfAccountsTableContent = ({
     depth: number,
   ) => {
     const hasSubAccounts = !!account.sub_accounts && account.sub_accounts.length > 0
-    const isExpanded = hasSubAccounts ? isOpen(rowKey) : true
+    const isExpanded = !hasSubAccounts || isOpen(rowKey)
     const isNonEditable = !templateAccountsEditable && !!account.stable_name
 
     const onClickRow = (e: React.MouseEvent) => {

@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect } from 'react'
+import { Fragment, useContext, useLayoutEffect } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { JournalContext } from '../../contexts/JournalContext'
 import { TableProvider } from '../../contexts/TableContext'
@@ -59,7 +59,7 @@ const JournalTableContent = ({
 
   const { isOpen, setIsOpen } = useTableExpandRow()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (data.length > 0) {
       setIsOpen(data.map(x => `journal-row-${x.id}`))
     }
@@ -72,7 +72,7 @@ const JournalTableContent = ({
     depth: number,
   ) => {
     const expandable = !!row.line_items && row.line_items.length > 0
-    const expanded = expandable ? isOpen(rowKey) : true
+    const expanded = !expandable || isOpen(rowKey)
 
     return (
       <Fragment key={rowKey + '-' + index}>
@@ -98,8 +98,7 @@ const JournalTableContent = ({
             withExpandIcon={expandable}
             onClick={(e) => {
               e.stopPropagation()
-
-              expandable && setIsOpen(rowKey)
+              if (expandable) setIsOpen(rowKey)
             }}
           >
             {entryNumber(row)}
@@ -115,56 +114,56 @@ const JournalTableContent = ({
           </TableCell>
           <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
             {'line_items' in row
-            && Math.abs(
-              row.line_items
-                .filter(item => item.direction === 'DEBIT')
-                .map(item => item.amount)
-                .reduce((a, b) => a + b, 0),
-            )}
+              && Math.abs(
+                row.line_items
+                  .filter(item => item.direction === 'DEBIT')
+                  .map(item => item.amount)
+                  .reduce((a, b) => a + b, 0),
+              )}
           </TableCell>
           <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
             {'line_items' in row
-            && Math.abs(
-              row.line_items
-                .filter(item => item.direction === 'CREDIT')
-                .map(item => item.amount)
-                .reduce((a, b) => a + b, 0),
-            )}
+              && Math.abs(
+                row.line_items
+                  .filter(item => item.direction === 'CREDIT')
+                  .map(item => item.amount)
+                  .reduce((a, b) => a + b, 0),
+              )}
           </TableCell>
         </TableRow>
         {expandable
-        && expanded
-        && row.line_items.map((subItem, subIdx) => (
-          <TableRow
-            key={rowKey + '-' + index + '-' + subIdx}
-            rowKey={rowKey + '-' + index + '-' + subIdx}
-            depth={depth + 1}
-            selected={selectedEntryId === row.id}
-          >
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell>{accountName(subItem)}</TableCell>
-            {subItem.direction === 'DEBIT' && subItem.amount >= 0
-              ? (
-                <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-                  {subItem.amount}
-                </TableCell>
-              )
-              : (
-                <TableCell />
-              )}
-            {subItem.direction === 'CREDIT' && subItem.amount >= 0
-              ? (
-                <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-                  {subItem.amount}
-                </TableCell>
-              )
-              : (
-                <TableCell />
-              )}
-          </TableRow>
-        ))}
+          && expanded
+          && row.line_items.map((subItem, subIdx) => (
+            <TableRow
+              key={rowKey + '-' + index + '-' + subIdx}
+              rowKey={rowKey + '-' + index + '-' + subIdx}
+              depth={depth + 1}
+              selected={selectedEntryId === row.id}
+            >
+              <TableCell />
+              <TableCell />
+              <TableCell />
+              <TableCell>{accountName(subItem)}</TableCell>
+              {subItem.direction === 'DEBIT' && subItem.amount >= 0
+                ? (
+                  <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+                    {subItem.amount}
+                  </TableCell>
+                )
+                : (
+                  <TableCell />
+                )}
+              {subItem.direction === 'CREDIT' && subItem.amount >= 0
+                ? (
+                  <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+                    {subItem.amount}
+                  </TableCell>
+                )
+                : (
+                  <TableCell />
+                )}
+            </TableRow>
+          ))}
       </Fragment>
     )
   }
