@@ -144,6 +144,11 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number }>(
           />
           {rowVirtualizer.getVirtualItems().map((virtualRow) => {
             const row = rows[virtualRow.index]
+
+            if (!row) {
+              return null
+            }
+
             return (
               <ValidateCsvTableRow key={row.id} row={row} virtualRow={virtualRow} rowVirtualizer={rowVirtualizer} />
             )
