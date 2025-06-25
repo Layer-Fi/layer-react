@@ -1,9 +1,8 @@
-import { RefObject, useContext } from 'react'
+import { useContext } from 'react'
 import { View as ViewType } from '../../types/general'
 import { ReportsStringOverrides } from '../../views/Reports/Reports'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { Header, HeaderCol, HeaderRow } from '../Header'
-import { Panel } from '../Panel'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { View } from '../View'
 
@@ -11,7 +10,6 @@ type ViewBreakpoint = ViewType | undefined
 
 export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
-  parentRef?: RefObject<HTMLDivElement>
   view?: ViewBreakpoint
 } & TimeRangePickerConfig
 
@@ -22,10 +20,8 @@ export const ProfitAndLossReport = ({
   defaultDatePickerMode,
   customDateRanges,
   csvMoneyFormat,
-  parentRef,
   view,
 }: ProfitAndLossReportProps) => {
-  const { sidebarScope } = useContext(ProfitAndLoss.Context)
   const { comparisonConfig } = useContext(ProfitAndLoss.ComparisonContext)
 
   return (
@@ -70,21 +66,10 @@ export const ProfitAndLossReport = ({
         </Header>
       )}
     >
-      <Panel
-        sidebar={(
-          <ProfitAndLoss.DetailedCharts
-            showDatePicker={false}
-            stringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-          />
-        )}
-        sidebarIsOpen={Boolean(sidebarScope)}
-        parentRef={parentRef}
-      >
-        <ProfitAndLoss.Table
-          asContainer={false}
-          stringOverrides={stringOverrides?.profitAndLoss?.table}
-        />
-      </Panel>
+      <ProfitAndLoss.Table
+        asContainer={false}
+        stringOverrides={stringOverrides?.profitAndLoss?.table}
+      />
     </View>
   )
 }
