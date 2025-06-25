@@ -147,6 +147,7 @@ export const ChartOfAccountsTableContent = ({
           isExpanded={isExpanded}
           onClick={onClickRow}
           depth={depth}
+          variant={depth === 0 ? 'expandable' : 'default'}
         >
           <TableCell
             withExpandIcon={hasSubAccounts}
@@ -156,8 +157,8 @@ export const ChartOfAccountsTableContent = ({
               <UIButton variant='text' onClick={onClickAccountName}>{account.name}</UIButton>
             </HStack>
           </TableCell>
-          <TableCell>{account.account_type?.display_name}</TableCell>
-          <TableCell>{account.account_subtype?.display_name}</TableCell>
+          <TableCell>{depth != 0 && account.account_type?.display_name}</TableCell>
+          <TableCell>{depth != 0 && account.account_subtype?.display_name}</TableCell>
           <TableCell isCurrency>{account.balance}</TableCell>
           <TableCell align={TableCellAlign.RIGHT}>
             <HStack className='Layer__coa__actions' gap='xs'>
