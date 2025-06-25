@@ -5,7 +5,11 @@ export type JournalContextType = ReturnType<typeof useJournal>
 export const JournalContext = createContext<JournalContextType>({
   data: undefined,
   isLoading: false,
+  isLoadingEntry: false,
+  isValidating: false,
+  isValidatingEntry: false,
   error: undefined,
+  errorEntry: undefined,
   refetch: () => {},
   selectedEntryId: undefined,
   setSelectedEntryId: () => {},
@@ -22,4 +26,6 @@ export const JournalContext = createContext<JournalContextType>({
   sendingForm: false,
   apiError: undefined,
   reverseEntry: () => Promise.resolve({}),
+  hasMore: false,
+  fetchMore: () => {},
 })

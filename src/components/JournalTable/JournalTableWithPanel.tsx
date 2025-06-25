@@ -1,4 +1,4 @@
-import { RefObject, useContext, useMemo, useState } from 'react'
+import { RefObject, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import PlusIcon from '../../icons/PlusIcon'
 import { View } from '../../types/general'
@@ -14,6 +14,9 @@ import { Panel } from '../Panel'
 import { Heading, HeadingSize } from '../Typography'
 import { JournalTable } from './JournalTable'
 import { JournalEntriesDownloadButton } from '../Journal/download/JournalEntriesDownloadButton'
+import { useIsVisible } from '../../hooks/useIsVisible'
+
+const COMPONENT_NAME = 'journal-table'
 
 export interface JournalTableStringOverrides {
   componentTitle?: string
@@ -25,10 +28,7 @@ export interface JournalTableStringOverrides {
   accountColumnHeader?: string
   debitColumnHeader?: string
   creditColumnHeader?: string
-  journalForm?: JournalFormStringOverrides
 }
-
-const COMPONENT_NAME = 'journal'
 
 export const JournalTableWithPanel = ({
   containerRef,
@@ -44,6 +44,7 @@ export const JournalTableWithPanel = ({
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const [currentPage, setCurrentPage] = useState(1)
+  
   const {
     data: rawData,
     isLoading,
@@ -52,31 +53,36 @@ export const JournalTableWithPanel = ({
     refetch,
     selectedEntryId,
     addEntry,
+    hasMore,
+    fetchMore,
   } = useContext(JournalContext)
 
   const data = useMemo(
     () => {
+      if (!rawData) return undefined
+
       const firstPageIndex = (currentPage - 1) * pageSize
       const lastPageIndex = firstPageIndex + pageSize
-
-      return rawData?.slice(firstPageIndex, lastPageIndex)
+      return rawData.slice(firstPageIndex, lastPageIndex)
     },
-    [
-      rawData,
-      currentPage,
-      pageSize,
-    ],
+    [rawData, currentPage, pageSize]
   )
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    if (rawData) {
+      const requestedItemIndex = (page - 1) * pageSize + pageSize - 1
+      const lastAvailableIndex = rawData.length - 1
+      if (requestedItemIndex > lastAvailableIndex && hasMore) {
+        fetchMore()
+      }
+    }
+  }
 
   return (
     <Panel
-      sidebar={(
-        <JournalSidebar
-          parentRef={containerRef}
-          config={config}
-          stringOverrides={stringOverrides?.journalForm}
-        />
-      )}
+      className={`Layer__${COMPONENT_NAME}`}
+      sidebar={<JournalSidebar parentRef={containerRef} config={config} />}
       sidebarIsOpen={Boolean(selectedEntryId)}
       parentRef={containerRef}
     >
@@ -123,14 +129,16 @@ export const JournalTableWithPanel = ({
         </HeaderRow>
       </Header>
 
-      {data && <JournalTable view='desktop' data={data} />}
+      {data && <JournalTable view={view} data={data} stringOverrides={stringOverrides} />}
 
       {data && (
         <Pagination
           currentPage={currentPage}
           totalCount={rawData?.length || 0}
           pageSize={pageSize}
-          onPageChange={page => setCurrentPage(page)}
+          onPageChange={handlePageChange}
+          hasMore={hasMore}
+          fetchMore={fetchMore}
         />
       )}
 

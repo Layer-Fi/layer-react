@@ -32,10 +32,6 @@
   overflow: auto;
 }
 
-.Layer__journal-table .Layer__table-cell-content::before {
-  background: var(--color-base-400);
-}
-
 .Layer__journal__arrow .Layer__table-cell-content {
   padding-right: 0 !important;
 }
