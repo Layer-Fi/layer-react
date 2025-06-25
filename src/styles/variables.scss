@@ -116,11 +116,15 @@
   --color-primary: var(--color-dark);
   --color-accent: var(--color-light);
 
-  --bg-brand-primary: var(--color-primary);
-  --fg-brand-primary: var(--color-white);
-
-  --bg-brand-accent: var(--color-accent);
-  --fg-brand-accent: var(--color-white);
+  /*
+   * The variables are not defined; they must explicitly overridden.
+   *
+   * --bg-brand-primary
+   * --fg-brand-primary
+   *
+   * --bg-brand-accent
+   * --fg-brand-accent
+   */
 
   // Other Colors
   --color-secondary: var(--color-base);
@@ -187,19 +191,25 @@
   --btn-bg-color: var(--color-white);
   --btn-color-primary: var(--color-white);
   --btn-bg-color-primary: var(--color-black);
-  --btn-color-hover: var(--color-white);
-  --btn-bg-color-hover: var(--color-base-1000);
+
+  --btn-color-hover: var(--fg-brand-primary, var(--color-white));
+  --btn-bg-color-hover: var(--bg-brand-primary, var(--color-primary));
+
   --btn-color-icon: var(--color-black);
   --btn-bg-color-icon: var(--color-base-50);
-  --btn-color-icon-hover: var(--color-base-1000);
-  --btn-bg-color-icon-hover: var(--color-base-0);
+
+  --btn-color-icon-hover: var(--fg-brand-accent, var(--color-primary));
+  --btn-bg-color-icon-hover: var(--bg-brand-accent, var(--color-accent));
+
   --btn-secondary-color: var(--color-black);
   --btn-secondary-bg-color: var(--color-white);
   --btn-tertiary-color: var(--color-black);
   --btn-tertiary-bg-color: var(--color-white);
-  --badge-color: var(--color-base-900);
-  --badge-fg-color: var(--color-base-900);
-  --badge-bg-color: var(--color-base-400);
+
+  --badge-color: var(--fg-brand-accent, var(--color-primary));
+  --badge-fg-color: var(--fg-brand-accent, var(--color-primary));
+  --badge-bg-color: var(--bg-brand-accent, var(--color-accent));
+
   --badge-color-info: var(--color-info);
   --badge-fg-color-info: var(--color-info-fg);
   --badge-bg-color-info: var(--color-info-bg);

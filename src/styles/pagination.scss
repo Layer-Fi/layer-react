@@ -1,9 +1,9 @@
 .Layer__pagination-container {
+  position: sticky;
+  left: 0;
   display: flex;
   justify-content: flex-end;
   padding: var(--spacing-md);
-  position: sticky;
-  left: 0;
 
   @container (min-width: 1400px) {
     display: flex;
@@ -14,45 +14,46 @@
 
 .Layer__pagination {
   display: inline-flex;
-  list-style-type: none;
-  padding: var(--spacing-4xs);
-  background: var(--color-base-50);
-  box-shadow: 0 0 0 1px var(--color-base-300);
-  border-radius: var(--border-radius-2xs);
   gap: 2px;
+  padding: var(--spacing-4xs);
+  border-radius: var(--border-radius-2xs);
+  box-shadow: 0 0 0 1px var(--color-base-300);
   margin: 0;
+  background: var(--color-base-50);
+  list-style-type: none;
 
   .Layer__pagination-item {
-    display: flex;
     box-sizing: border-box;
-    height: 32px;
-    width: 32px;
-    text-align: center;
+    display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--border-radius-3xs);
-    color: var(--color-base-700);
-    font-size: var(--text-md);
+    height: 32px;
+    width: 32px;
     min-width: 32px;
+    border-radius: var(--border-radius-3xs);
     border: 1px solid transparent;
+    font-size: var(--text-md);
+    text-align: center;
+    color: var(--color-base-700);
 
     &.Layer__pagination-dots:hover {
-      background-color: transparent;
-      color: var(--color-base-700);
       box-shadow: none;
+      background-color: transparent;
       cursor: default;
+      color: var(--color-base-700);
     }
 
     &:hover {
-      background-color: var(--color-base-0);
-      color: var(--color-base-900);
       box-shadow: 0 0 0 1px var(--color-base-300);
+      background-color: var(--color-base-0);
       cursor: pointer;
+      color: var(--color-base-900);
     }
 
     &.selected {
-      background-color: var(--color-base-400);
-      color: var(--color-base-900);
+      background-color: var(--bg-brand-accent, var(--color-accent));
+      color: var(--fg-brand-accent, var(--color-primary));
+
       border-color: var(--base-transparent-6);
     }
 
