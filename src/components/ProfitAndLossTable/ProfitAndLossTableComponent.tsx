@@ -1,7 +1,5 @@
 import { Fragment, useContext, useEffect } from 'react'
-import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
-import PieChart from '../../icons/PieChart'
 import { LineItem } from '../../types'
 import { TableCellAlign } from '../../types/table'
 import { Loader } from '../Loader'
@@ -29,18 +27,15 @@ export const ProfitAndLossTableComponent = ({
   const {
     data: actualData,
     isLoading,
-    setSidebarScope,
   } = useContext(ProfitAndLoss.Context)
+
   const { isOpen, setIsOpen } = useTableExpandRow()
 
   useEffect(() => {
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
   }, [])
 
-  const currentData = Array.isArray(actualData)
-    ? actualData[actualData.length - 1]
-    : actualData
-  const data = !currentData || isLoading ? emptyPNL : currentData
+  const data = !actualData || isLoading ? emptyPNL : actualData
 
   if (isLoading || actualData === undefined) {
     return (
@@ -55,15 +50,19 @@ export const ProfitAndLossTableComponent = ({
     )
   }
 
-  const renderLineItem = (
-    lineItem: LineItem,
-    depth: number,
-    rowKey: string,
-    rowIndex: number,
-    scope?: SidebarScope,
-    setSidebarScope?: (view: SidebarScope) => void,
-    variant?: 'default' | 'summation',
-  ): React.ReactNode => {
+  const renderLineItem = ({
+    lineItem,
+    depth,
+    rowKey,
+    rowIndex,
+    variant,
+  }: {
+    lineItem: LineItem
+    depth: number
+    rowKey: string
+    rowIndex: number
+    variant?: 'default' | 'summation'
+  }): React.ReactNode => {
     const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
 
     const expanded = expandable ? isOpen(rowKey) : true
@@ -81,21 +80,8 @@ export const ProfitAndLossTableComponent = ({
           <TableCell
             primary
             withExpandIcon={expandable}
-            fullWidth={!!setSidebarScope}
           >
             {lineItem.display_name}
-            {' '}
-            {setSidebarScope && (
-              <span
-                className='Layer__profit-and-loss-row__detailed-chart-btn'
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setSidebarScope && setSidebarScope(scope ?? 'expenses')
-                }}
-              >
-                <PieChart />
-              </span>
-            )}
           </TableCell>
           <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
             {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
@@ -103,12 +89,12 @@ export const ProfitAndLossTableComponent = ({
         </TableRow>
         {expanded && lineItem.line_items
           ? lineItem.line_items.map((child, i) =>
-            renderLineItem(
-              child,
-              depth + 1,
-              child.display_name + '-' + rowIndex,
-              i,
-            ),
+            renderLineItem({
+              lineItem: child,
+              depth: depth + 1,
+              rowKey: child.display_name + '-' + rowIndex,
+              rowIndex: i,
+            }),
           )
           : null}
       </Fragment>
@@ -118,79 +104,79 @@ export const ProfitAndLossTableComponent = ({
   return (
     <Table borderCollapse='collapse' bottomSpacing={false}>
       <TableBody>
-        {renderLineItem(
-          data.income,
-          0,
-          'income',
-          0,
-          'revenue',
-          setSidebarScope,
-        )}
-        {renderLineItem(
-          data.cost_of_goods_sold,
-          0,
-          'cost_of_goods_sold',
-          1,
-          'expenses',
-          setSidebarScope,
-        )}
-        {renderLineItem(
-          {
+        {renderLineItem({
+          lineItem: data.income,
+          depth: 0,
+          rowKey: 'income',
+          rowIndex: 0,
+        })}
+
+        {data.cost_of_goods_sold
+          ? renderLineItem({
+            lineItem: data.cost_of_goods_sold,
+            depth: 0,
+            rowKey: 'cost_of_goods_sold',
+            rowIndex: 1,
+          })
+          : null}
+        {renderLineItem({
+          lineItem: {
             value: data.gross_profit,
             display_name: stringOverrides?.grossProfitLabel || 'Gross Profit',
           },
-          0,
-          'gross_profit',
-          2,
-          undefined,
-          undefined,
-          'summation',
-        )}
-        {renderLineItem(
-          data.expenses,
-          0,
-          'expenses',
-          3,
-          'expenses',
-          setSidebarScope,
-        )}
-        {renderLineItem(
-          {
+          depth: 0,
+          rowKey: 'gross_profit',
+          rowIndex: 2,
+          variant: 'summation',
+        })}
+        {renderLineItem({
+          lineItem: data.expenses,
+          depth: 0,
+          rowKey: 'expenses',
+          rowIndex: 3,
+        })}
+        {renderLineItem({
+          lineItem: {
             value: data.profit_before_taxes,
             display_name:
               stringOverrides?.profitBeforeTaxesLabel || 'Profit Before Taxes',
           },
-          0,
-          'profit_before_taxes',
-          4,
-          undefined,
-          undefined,
-          'summation',
-        )}
-        {renderLineItem(
-          data.taxes,
-          0,
-          'taxes',
-          5,
-          'expenses',
-        )}
-        {renderLineItem(
-          {
+          depth: 0,
+          rowKey: 'profit_before_taxes',
+          rowIndex: 4,
+          variant: 'summation',
+        })}
+        {renderLineItem({
+          lineItem: data.taxes,
+          depth: 0,
+          rowKey: 'taxes',
+          rowIndex: 5,
+        })}
+        {renderLineItem({
+          lineItem: {
             value: data.net_profit,
             display_name: stringOverrides?.netProfitLabel || 'Net Profit',
           },
-          0,
-          'net_profit',
-          5,
-          undefined,
-          undefined,
-          'summation',
-        )}
+          depth: 0,
+          rowKey: 'net_profit',
+          rowIndex: 5,
+          variant: 'summation',
+        })}
         {data.personal_expenses
-          ? renderLineItem(data.personal_expenses, 0, 'personal_expenses', 7)
+          ? renderLineItem({
+            lineItem: data.personal_expenses,
+            depth: 0,
+            rowKey: 'personal_expenses',
+            rowIndex: 7,
+          })
           : null}
         {data.other_outflows
-          ? renderLineItem(data.other_outflows, 0, 'other_outflows', 6)
+          ? renderLineItem({
+            lineItem: data.other_outflows,
+            depth: 0,
+            rowKey: 'other_outflows',
+            rowIndex: 6,
+          })
           : null}
       </TableBody>
     </Table>
