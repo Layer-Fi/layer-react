@@ -280,6 +280,7 @@ export const ChartOfAccountsTableContent = ({
                 query: searchQuery,
                 isMatching: account.isMatching,
               })}
+          </TableCell>
           <TableCell>
             {depth != 0
               && highlightMatch({
