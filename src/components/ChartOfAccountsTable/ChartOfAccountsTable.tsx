@@ -23,6 +23,8 @@ import {
 import { HStack } from '../ui/Stack/Stack'
 import { List } from 'lucide-react'
 
+const SORTED_STABLE_NAMES = ['ASSETS', 'LIABILITIES', 'EQUITY', 'REVENUE', 'EXPENSES']
+
 export const ChartOfAccountsTable = ({
   view,
   stringOverrides,
@@ -68,6 +70,19 @@ export const ChartOfAccountsTableContent = ({
   const { setAccountId } = useContext(LedgerAccountsContext)
   const { editAccount } = useContext(ChartOfAccountsContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
+
+  const sortedAccounts = useMemo(() => {
+    return data.accounts.sort((a, b) => {
+      const indexA = SORTED_STABLE_NAMES.indexOf(a.stable_name)
+      const indexB = SORTED_STABLE_NAMES.indexOf(b.stable_name)
+
+      if (indexA === -1 && indexB === -1) return 0
+      if (indexA === -1) return 1
+      if (indexB === -1) return -1
+
+      return indexA - indexB
+    })
+  }, [data.accounts])
 
   const expandableRowKeys = useMemo(() => {
     const keys: string[] = []
@@ -223,7 +238,7 @@ export const ChartOfAccountsTableContent = ({
       </TableHead>
       <TableBody>
         {!error
-          && data.accounts.map((account, idx) =>
+          && sortedAccounts.map((account, idx) =>
             renderChartOfAccountsDesktopRow(
               account,
               idx,
