@@ -1,4 +1,5 @@
 .Layer__InputGroup {
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--spacing-3xs);
@@ -7,13 +8,13 @@
 
   min-block-size: 2.25rem;
 
-  padding-inline-start: var(--spacing-xs);
-  padding-inline-end: var(--spacing-3xs);
-
   border-radius: var(--input-border-radius);
   border: 1px solid var(--outline-default);
 
   background-color: var(--color-base-0);
+
+  padding-inline-start: var(--spacing-xs);
+  padding-inline-end: var(--spacing-3xs);
 
   &[data-focus-within] {
     border-color: var(--outline-active);

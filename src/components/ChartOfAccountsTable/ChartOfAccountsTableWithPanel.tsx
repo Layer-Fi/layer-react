@@ -13,6 +13,9 @@ import { Panel } from '../Panel'
 import { Heading, HeadingSize } from '../Typography'
 import { ChartOfAccountsTable } from './ChartOfAccountsTable'
 import { AccountBalancesDownloadButton } from '../ChartOfAccounts/download/AccountBalancesDownloadButton'
+import { HStack } from '../ui/Stack/Stack'
+import { SearchField } from '../SearchField/SearchField'
+import { useDebouncedSearchInput } from '../../hooks/search/useDebouncedSearchQuery'
 
 const COMPONENT_NAME = 'chart-of-accounts'
 export type ExpandActionState = undefined | 'expanded' | 'collapsed'
@@ -51,6 +54,7 @@ export const ChartOfAccountsTableWithPanel = ({
     useContext(ChartOfAccountsContext)
 
   const [expandAll, setExpandAll] = useState<ExpandActionState>()
+  const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
 
   return (
     <Panel
@@ -84,7 +88,7 @@ export const ChartOfAccountsTableWithPanel = ({
             >
               {withDateControl || withExpandAllButton
                 ? (
-                  <div className='Layer__header__actions-col'>
+                  <HStack align='center' gap='xs'>
                     {withDateControl && <ChartOfAccountsDatePicker />}
                     {withExpandAllButton && (
                       <ExpandCollapseButton
@@ -99,12 +103,13 @@ export const ChartOfAccountsTableWithPanel = ({
                         variant={ButtonVariant.secondary}
                       />
                     )}
-                  </div>
+                  </HStack>
                 )
                 : null}
             </Heading>
           </HeaderCol>
-          <HeaderCol>
+          <HeaderCol className='Layer__chart-of-accounts__actions'>
+            <SearchField label='Search accounts' value={inputValue} onChange={handleInputChange} />
             <AccountBalancesDownloadButton
               iconOnly={['mobile', 'tablet'].includes(view)}
             />
@@ -127,6 +132,7 @@ export const ChartOfAccountsTableWithPanel = ({
         <ChartOfAccountsTable
           view={view}
           data={data}
+          searchQuery={searchQuery}
           error={error}
           stringOverrides={stringOverrides}
           expandAll={expandAll}
@@ -152,20 +158,6 @@ export const ChartOfAccountsTableWithPanel = ({
         ? (
           <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
             <Loader />
-          </div>
-        )
-        : null}
-
-      {!isLoading && !error && data?.accounts.length === 0
-        ? (
-          <div className='Layer__table-state-container'>
-            <DataState
-              status={DataStateStatus.info}
-              title='Accounts were not found'
-              description='New account can be created with "Add Account".'
-              onRefresh={() => refetch()}
-              isLoading={isValidating}
-            />
           </div>
         )
         : null}

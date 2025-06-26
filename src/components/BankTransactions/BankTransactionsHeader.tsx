@@ -14,7 +14,7 @@ import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useDebounce } from '../../hooks/useDebounce/useDebounce'
-import { TransactionsSearchField } from '../domain/transactions/searchField/TransactionsSearchField'
+import { SearchField } from '../SearchField/SearchField'
 import { TransactionsActions } from '../domain/transactions/actions/TransactionsActions'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/useBankTransactionsDownload'
@@ -65,8 +65,9 @@ function TransactionsSearch({ slot }: TransactionsSearchProps) {
   }, [debouncedSetDescription])
 
   return (
-    <TransactionsSearchField
+    <SearchField
       slot={slot}
+      label='Search transactions'
       value={localSearch}
       onChange={handleSearch}
     />

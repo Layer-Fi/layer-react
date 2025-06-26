@@ -27,6 +27,12 @@
   max-width: 100%;
 }
 
+.Layer__chart-of-accounts__actions {
+  .Layer__SearchField {
+    width: 15rem;
+  }
+}
+
 .Layer__chart-of-accounts__table {
   table-layout: fixed;
 
@@ -50,6 +56,16 @@
 
     &--actions {
       width: 8rem;
+    }
+  }
+
+  .Layer__table-cell-content {
+    .Layer__Span {
+      color: var(--text-secondary);
+    }
+
+    .Layer__mark {
+      background-color: #fff2cc;
     }
   }
 }
