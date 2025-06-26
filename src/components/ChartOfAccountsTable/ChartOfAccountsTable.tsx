@@ -276,11 +276,10 @@ export const ChartOfAccountsTableContent = ({
           <TableCell>
             {depth != 0
               && highlightMatch({
-                text: account.account_type?.display_name,
+                text: account.account_type?.display_name || '',
                 query: searchQuery,
                 isMatching: account.isMatching,
               })}
-          </TableCell>
           <TableCell>
             {depth != 0
               && highlightMatch({
