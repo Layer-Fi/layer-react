@@ -24,6 +24,7 @@ import { List } from 'lucide-react'
 import { convertCentsToCurrency } from '../../utils/format'
 import { centsToDollars, centsToDollarsWithoutCommas } from '../../models/Money'
 import { Span } from '../ui/Typography/Text'
+import { DataState, DataStateStatus } from '../DataState/DataState'
 
 const SORTED_STABLE_NAMES = ['ASSETS', 'LIABILITIES', 'EQUITY', 'REVENUE', 'EXPENSES']
 const accountMatchesQuery = (account: LedgerAccountBalance, query: string) => {
@@ -329,6 +330,18 @@ export const ChartOfAccountsTableContent = ({
             })
           })}
       </Fragment>
+    )
+  }
+
+  if (filteredAccounts.length === 0) {
+    return (
+      <div className='Layer__table-state-container'>
+        <DataState
+          status={DataStateStatus.info}
+          title='No accounts found'
+          description='No accounts match the current filters. Click "Add Account" to create a new one.'
+        />
+      </div>
     )
   }
 

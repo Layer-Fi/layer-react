@@ -161,20 +161,6 @@ export const ChartOfAccountsTableWithPanel = ({
           </div>
         )
         : null}
-
-      {!isLoading && !error && data?.accounts.length === 0
-        ? (
-          <div className='Layer__table-state-container'>
-            <DataState
-              status={DataStateStatus.info}
-              title='Accounts were not found'
-              description='New account can be created with "Add Account".'
-              onRefresh={() => refetch()}
-              isLoading={isValidating}
-            />
-          </div>
-        )
-        : null}
     </Panel>
   )
 }
