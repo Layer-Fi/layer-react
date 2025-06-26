@@ -76,7 +76,7 @@ const highlightMatch = ({ text, query, isMatching }: { text: string, query: stri
   return (
     <Span ellipsis>
       {text.slice(0, matchStartIdx)}
-      <mark>{text.slice(matchStartIdx, matchEndIdx)}</mark>
+      <mark className='Layer__mark'>{text.slice(matchStartIdx, matchEndIdx)}</mark>
       {text.slice(matchEndIdx)}
     </Span>
   )
@@ -165,6 +165,7 @@ export const ChartOfAccountsTableContent = ({
   useEffect(() => {
     if (expandAll === undefined) return
 
+    // Manually toggle all entries expanded/collasped when the user clicks the Expand/Collapse All button
     setToggledKeys(
       Object.fromEntries(
         allRowKeys.map(key => [key, expandAll === 'expanded']),
@@ -172,6 +173,7 @@ export const ChartOfAccountsTableContent = ({
     )
   }, [expandAll])
 
+  // Clear all manually toggled expanded/collapsed rows when the search query changes
   useEffect(() => {
     setToggledKeys({})
   }, [searchQuery])
