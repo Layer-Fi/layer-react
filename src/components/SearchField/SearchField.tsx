@@ -20,7 +20,6 @@ export function SearchField({ slot = 'search', label, ...restProps }: SearchFiel
       </VStack>
       <MinimalSearchField
         {...restProps}
-        slot={slot}
         placeholder={label}
         aria-label={label}
       />
