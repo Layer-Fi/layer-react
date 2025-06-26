@@ -336,11 +336,27 @@
 
 @container (min-width: 1400px) {
   .Layer__table tr td:first-child .Layer__table-cell-content,
+  .Layer__table tr th:first-child.Layer__table-cell .Layer__table-cell-content {
+    padding-left: var(--spacing-xl);
+  }
+
   .Layer__table tr td:last-child .Layer__table-cell-content,
-  .Layer__table tr th:first-child.Layer__table-cell .Layer__table-cell-content,
   .Layer__table tr th:last-child.Layer__table-cell .Layer__table-cell-content {
     padding-right: var(--spacing-xl);
-    padding-left: var(--spacing-xl);
+  }
+}
+
+.Layer__table-row.Layer__table-row--anim-starting-state {
+  opacity: 0;
+  height: 0;
+
+  td {
+    .Layer__table-cell-content {
+      height: 0%;
+      padding-top: 0;
+      padding-bottom: 0;
+      opacity: 0;
+    }
   }
 }
 

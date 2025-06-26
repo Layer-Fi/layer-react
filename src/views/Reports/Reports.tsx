@@ -1,4 +1,4 @@
-import { RefObject, useState } from 'react'
+import { useState } from 'react'
 import { BalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Container } from '../../components/Container'
@@ -41,7 +41,6 @@ export interface ReportsProps {
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
 type ReportOption = { value: ReportType, label: string }
 export interface ReportsPanelProps {
-  containerRef: RefObject<HTMLDivElement>
   openReport: ReportType
   stringOverrides?: ReportsStringOverrides
   profitAndLossConfig?: TimeRangePickerConfig
@@ -108,7 +107,6 @@ export const Reports = ({
       <Container name='reports' ref={containerRef}>
         <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig}>
           <ReportsPanel
-            containerRef={containerRef}
             openReport={activeTab}
             stringOverrides={stringOverrides}
             profitAndLossConfig={profitAndLossConfig}
@@ -122,7 +120,6 @@ export const Reports = ({
 }
 
 const ReportsPanel = ({
-  containerRef,
   openReport,
   stringOverrides,
   profitAndLossConfig,
@@ -134,7 +131,6 @@ const ReportsPanel = ({
       {openReport === 'profitAndLoss' && (
         <ProfitAndLoss.Report
           stringOverrides={stringOverrides}
-          parentRef={containerRef}
           view={view}
           {...profitAndLossConfig}
         />

@@ -1,4 +1,4 @@
-import useSWR from 'swr'
+import useSWRInfinite from 'swr/infinite'
 import { useLayerContext } from '../../../../contexts/LayerContext'
 import { useAuth } from '../../../../hooks/useAuth'
 import { useEnvironment } from '../../../../providers/Environment/EnvironmentInputProvider'
@@ -7,57 +7,139 @@ import type { JournalEntry } from '../../../../types'
 import { useGlobalInvalidator, useGlobalOptimisticUpdater } from '../../../../utils/swr/useGlobalInvalidator'
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash'
+import { toDefinedSearchParameters } from '../../../../utils/request/toDefinedSearchParameters'
 
 export const LIST_LEDGER_ENTRIES_TAG_KEY = '#list-ledger-entries'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
+type GetLedgerEntriesParams = {
   businessId: string
-}) {
+  sort_by?: 'entry_at' | 'entry_number' | 'created_at'
+  sort_order?: 'ASC' | 'ASCENDING' | 'DESC' | 'DESCENDING' | 'DES'
+  cursor?: string
+  limit?: number
+  show_total_count?: boolean
+}
+
+type ListLedgerEntriesReturn = {
+  data: ReadonlyArray<JournalEntry>
+  meta?: {
+    pagination: {
+      cursor?: string
+      has_more: boolean
+      total_count?: number
+    }
+  }
+}
+
+export const listLedgerEntries = get<
+  ListLedgerEntriesReturn,
+  GetLedgerEntriesParams
+>(({ businessId, sort_by, sort_order, cursor, limit, show_total_count }) => {
+  const parameters = toDefinedSearchParameters({
+    sort_by,
+    sort_order,
+    cursor,
+    limit,
+    show_total_count,
+  })
+
+  return `/v1/businesses/${businessId}/ledger/entries?${parameters}`
+})
+
+function keyLoader(
+  previousPageData: ListLedgerEntriesReturn | null,
+  {
+    access_token: accessToken,
+    apiUrl,
+    businessId,
+    sort_by,
+    sort_order,
+    limit,
+    show_total_count,
+  }: {
+    access_token?: string
+    apiUrl?: string
+    businessId: string
+    sort_by?: 'entry_at' | 'entry_number' | 'created_at'
+    sort_order?: 'ASC' | 'ASCENDING' | 'DESC' | 'DESCENDING' | 'DES'
+    limit?: number
+    show_total_count?: boolean
+  },
+) {
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
+      cursor: previousPageData?.meta?.pagination.cursor,
+      sort_by,
+      sort_order,
+      limit,
+      show_total_count,
       tags: [LIST_LEDGER_ENTRIES_TAG_KEY],
     } as const
   }
 }
 
-type ListLedgerEntriesReturn = {
-  data: ReadonlyArray<JournalEntry>
+export type UseListLedgerEntriesOptions = {
+  sort_by?: 'entry_at' | 'entry_number' | 'created_at'
+  sort_order?: 'ASC' | 'ASCENDING' | 'DESC' | 'DESCENDING' | 'DES'
+  limit?: number
+  show_total_count?: boolean
 }
 
-export const listLedgerEntries = get<
-  ListLedgerEntriesReturn,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/ledger/entries`)
-
-export function useListLedgerEntries() {
+export function useListLedgerEntries({
+  sort_by,
+  sort_order,
+  limit,
+  show_total_count,
+}: UseListLedgerEntriesOptions = {}) {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  return useSWR(
-    () =>
-      buildKey({
+  return useSWRInfinite(
+    (index, previousPageData: ListLedgerEntriesReturn | null) => keyLoader(
+      previousPageData,
+      {
         ...auth,
         apiUrl,
         businessId,
-      }),
-    ({ accessToken, apiUrl, businessId }) => listLedgerEntries(
+        sort_by,
+        sort_order,
+        limit,
+        show_total_count,
+      },
+    ),
+    ({
+      accessToken,
+      apiUrl,
+      businessId,
+      cursor,
+      sort_by,
+      sort_order,
+      limit,
+      show_total_count,
+    }) => listLedgerEntries(
       apiUrl,
       accessToken,
       {
-        params: { businessId },
+        params: {
+          businessId,
+          sort_by,
+          sort_order,
+          cursor,
+          limit,
+          show_total_count,
+        },
       },
-    )()
-      .then(({ data }) => data),
+    )(),
+    {
+      keepPreviousData: true,
+      revalidateAll: false,
+      revalidateFirstPage: false,
+      initialSize: 1,
+    },
   )
 }
 
