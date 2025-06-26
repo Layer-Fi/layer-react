@@ -40,6 +40,13 @@
     padding-inline: 0;
   }
 
+  &[data-ellipsis] {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
   &[data-focus-visible] {
     outline: 1px auto -webkit-focus-ring-color;
   }

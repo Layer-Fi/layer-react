@@ -52,9 +52,6 @@ export const ChartOfAccountsTableWithPanel = ({
 
   const [expandAll, setExpandAll] = useState<ExpandActionState>()
 
-  const cumulativeIndex = 0
-  const accountsLength = data?.accounts.length ?? 0
-
   return (
     <Panel
       sidebar={(
@@ -114,7 +111,6 @@ export const ChartOfAccountsTableWithPanel = ({
             {showAddAccountButton && (
               <Button
                 onClick={() => addAccount()}
-                disabled={isLoading}
                 iconOnly={['mobile', 'tablet'].includes(view)}
                 leftIcon={
                   ['mobile', 'tablet'].includes(view) && <PlusIcon size={14} />
@@ -134,8 +130,6 @@ export const ChartOfAccountsTableWithPanel = ({
           error={error}
           stringOverrides={stringOverrides}
           expandAll={expandAll}
-          accountsLength={accountsLength}
-          cumulativeIndex={cumulativeIndex}
           templateAccountsEditable={templateAccountsEditable}
         />
       )}

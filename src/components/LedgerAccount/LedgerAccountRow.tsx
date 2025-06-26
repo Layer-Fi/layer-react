@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { centsToDollars } from '../../models/Money'
@@ -12,33 +12,16 @@ import { parseISO, format as formatTime } from 'date-fns'
 export interface LedgerAccountRowProps {
   row: LedgerAccountLineItem
   index: number
-  initialLoad?: boolean
   view: View
 }
 
 export const LedgerAccountRow = ({
   row,
   index,
-  initialLoad,
   view,
 }: LedgerAccountRowProps) => {
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
     useContext(LedgerAccountsContext)
-
-  const [showComponent, setShowComponent] = useState(false)
-
-  useEffect(() => {
-    if (initialLoad) {
-      const timeoutId = setTimeout(() => {
-        setShowComponent(true)
-      }, index * 10)
-
-      return () => clearTimeout(timeoutId)
-    }
-    else {
-      setShowComponent(true)
-    }
-  }, [])
 
   if (view === 'tablet') {
     return (
@@ -46,9 +29,6 @@ export const LedgerAccountRow = ({
         className={classNames(
           'Layer__table-row',
           row.entry_id === selectedEntryId && 'Layer__table-row--active',
-          initialLoad && 'initial-load',
-          'Layer__table-row--with-show',
-          showComponent ? 'show' : 'Layer__table-row--anim-starting-state',
         )}
         style={{ transitionDelay: `${15 * index}ms` }}
         onClick={() => {
@@ -103,9 +83,6 @@ export const LedgerAccountRow = ({
         className={classNames(
           'Layer__table-row',
           row.entry_id === selectedEntryId && 'Layer__table-row--active',
-          initialLoad && 'initial-load',
-          'Layer__table-row--with-show',
-          showComponent ? 'show' : 'Layer__table-row--anim-starting-state',
         )}
         style={{ transitionDelay: `${15 * index}ms` }}
         onClick={() => {
@@ -171,9 +148,6 @@ export const LedgerAccountRow = ({
       className={classNames(
         'Layer__table-row',
         row.entry_id === selectedEntryId && 'Layer__table-row--active',
-        initialLoad && 'initial-load',
-        'Layer__table-row--with-show',
-        showComponent ? 'show' : 'Layer__table-row--anim-starting-state',
       )}
       style={{ transitionDelay: `${15 * index}ms` }}
       onClick={() => {

@@ -1,7 +1,6 @@
 import {
   RefObject,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from 'react'
@@ -50,8 +49,6 @@ export const LedgerAccount = ({
   stringOverrides,
 }: LedgerAccountProps) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const [initialLoad, setInitialLoad] = useState(true)
-
   const { data: accountData } = useContext(ChartOfAccountsContext)
 
   const {
@@ -65,15 +62,6 @@ export const LedgerAccount = ({
     closeSelectedEntry,
     refetch,
   } = useContext(LedgerAccountsContext)
-
-  useEffect(() => {
-    if (!isLoading) {
-      const timeoutLoad = setTimeout(() => {
-        setInitialLoad(false)
-      }, 1000)
-      return () => clearTimeout(timeoutLoad)
-    }
-  }, [isLoading])
 
   const baseClassName = classNames(
     'Layer__ledger-account__index',
@@ -189,7 +177,6 @@ export const LedgerAccount = ({
                   key={x.id}
                   row={x}
                   index={index}
-                  initialLoad={initialLoad}
                   view={view}
                 />
               ))}

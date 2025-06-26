@@ -197,7 +197,7 @@
 
       .Layer__table-row--expand-icon {
         height: 16px;
-        width: 16px;
+        min-width: 16px;
         margin-right: 8px;
         transition: transform 0.1s ease-in-out;
       }
@@ -248,15 +248,6 @@
           padding 50ms ease-in-out;
       }
     }
-  }
-}
-
-.Layer__table-row.Layer__table-row--with-show:not(.initial-load) {
-  opacity: 0.5;
-
-  &.show {
-    transition: opacity 50ms ease-out;
-    opacity: 1;
   }
 }
 
@@ -379,18 +370,6 @@
 tbody {
   .Layer__table__empty-row:first-child {
     display: none;
-  }
-}
-
-.Layer__table-row.Layer__table-row--anim-complete-state {
-  height: var(--spacing-5xl);
-
-  td {
-    .Layer__table-cell-content {
-      opacity: 1;
-      padding-top: var(--spacing-sm);
-      padding-bottom: var(--spacing-sm);
-    }
   }
 }
 

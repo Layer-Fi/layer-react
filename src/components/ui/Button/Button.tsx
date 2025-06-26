@@ -34,6 +34,7 @@ const BUTTON_CLASS_NAME = 'Layer__UI__Button'
 const Button = forwardRef<
   HTMLButtonElement,
   Omit<ButtonProps, 'className'> & {
+    ellipsis?: true
     icon?: true
     inset?: true
     size?: ButtonSize
@@ -42,6 +43,7 @@ const Button = forwardRef<
 >((
   {
     children,
+    ellipsis,
     icon,
     inset,
     size = 'md',
@@ -52,6 +54,7 @@ const Button = forwardRef<
 ) => {
   const { isPending = false } = restProps
   const dataProperties = toDataProperties({
+    ellipsis,
     icon,
     inset,
     size,
