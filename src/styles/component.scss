@@ -10,18 +10,18 @@
   container-type: inline-size;
 
   &::-webkit-scrollbar {
-    width: 6px;
     height: 6px;
+    width: 6px;
   }
 
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
     border-radius: 4px;
+    background: #f1f1f1;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #e2e2e2;
     border-radius: 4px;
+    background: #e2e2e2;
   }
 
   &::-webkit-scrollbar-thumb:hover {
@@ -31,7 +31,8 @@
 
 .Layer__component.Layer__component--elevated {
   border-width: 0;
-  box-shadow: 0 4px 12px 0 var(--base-transparent-8),
+  box-shadow:
+    0 4px 12px 0 var(--base-transparent-8),
     0 2px 4px 0 var(--base-transparent-6),
     0 0 0 1px var(--base-transparent-4);
 }
@@ -43,13 +44,13 @@
 }
 
 .Layer__component-header {
-  padding: var(--spacing-md);
+  box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
   gap: var(--spacing-md);
-  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
 
   &.Layer__component-header--next-line-actions {
     flex-direction: column;
@@ -66,23 +67,17 @@
 }
 
 .Layer__component-header__title-wrapper {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
   position: relative;
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
 }
 
 .Layer__header__actions {
   display: flex;
+  gap: var(--spacing-sm);
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-sm);
-}
-
-.Layer__header__actions-col {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
 }
 
 @container (max-width: 760px) {
@@ -93,9 +88,9 @@
 
 @container (min-width: 1023px) {
   .Layer__component-header {
-    padding-left: var(--spacing-xl);
-    padding-right: var(--spacing-xl);
     padding-top: var(--spacing-xl);
+    padding-right: var(--spacing-xl);
+    padding-left: var(--spacing-xl);
   }
 }
 

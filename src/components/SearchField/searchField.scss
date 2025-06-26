@@ -1,0 +1,19 @@
+.Layer__SearchField {
+  display: grid;
+  grid-template-areas: 'icon search';
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0;
+
+  padding-inline-start: 0;
+  padding-inline-end: var(--spacing-3xs);
+
+  & > [slot='icon'] {
+    grid-area: icon;
+    block-size: 2rem;
+    inline-size: 2rem;
+  }
+
+  & > [slot='search'] {
+    grid-area: search;
+  }
+}
