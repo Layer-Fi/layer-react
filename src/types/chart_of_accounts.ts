@@ -56,6 +56,8 @@ export type LedgerAccountBalance = {
   sub_accounts: LedgerAccountBalance[]
 }
 
+export type AugmentedLedgerAccountBalance = LedgerAccountBalance & { isMatching?: true }
+
 export type NewAccount = {
   name: string
   normality: Direction
