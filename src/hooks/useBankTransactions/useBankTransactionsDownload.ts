@@ -45,7 +45,7 @@ export function useBankTransactionsDownload() {
         arg: {
           categorized,
           direction,
-          descriptionFilter,
+          query,
           startDate,
           endDate,
           tagFilterQueryString,
@@ -59,7 +59,7 @@ export function useBankTransactionsDownload() {
           params: {
             businessId,
             categorized,
-            descriptionFilter,
+            query,
             direction,
             startDate,
             endDate,

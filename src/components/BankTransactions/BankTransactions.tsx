@@ -388,7 +388,7 @@ const BankTransactionsContent = ({
             hasVisibleTransactions={(bankTransactions?.length ?? 0) > 0}
             isCategorizationMode={editable}
             isError={Boolean(error)}
-            isFiltered={Boolean(filters?.descriptionFilter)}
+            isFiltered={Boolean(filters?.query)}
             isLoadingWithoutData={isLoadingWithoutData}
           />
         )

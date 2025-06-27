@@ -114,12 +114,12 @@ export function bankTransactionFiltersToHookOptions(
         ? filters.categorizationStatus === DisplayState.categorized
         : undefined
       : undefined,
-    descriptionFilter: filters?.descriptionFilter,
     direction: filters?.direction?.length === 1
       ? filters.direction[0] === Direction.CREDIT
         ? 'INFLOW'
         : 'OUTFLOW'
       : undefined,
+    query: filters?.query,
     startDate: filters?.dateRange?.startDate,
     endDate: filters?.dateRange?.endDate,
     tagFilterQueryString: filters?.tagFilter ? tagFilterToQueryString(filters.tagFilter) : undefined,

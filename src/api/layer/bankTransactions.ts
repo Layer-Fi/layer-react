@@ -23,8 +23,8 @@ export type GetBankTransactionsReturn = {
 type GetBankTransactionsBaseParams = {
   businessId: string
   categorized?: boolean
-  descriptionFilter?: string
   direction?: 'INFLOW' | 'OUTFLOW'
+  query?: string
   startDate?: Date
   endDate?: Date
   tagFilterQueryString?: string
@@ -44,9 +44,9 @@ export const getBankTransactions = get<
     businessId,
     cursor,
     categorized,
-    descriptionFilter,
     direction,
     limit,
+    query,
     startDate,
     endDate,
     sortBy = 'date',
@@ -56,8 +56,8 @@ export const getBankTransactions = get<
     const parameters = toDefinedSearchParameters({
       cursor,
       categorized,
-      descriptionFilter,
       direction,
+      q: query,
       startDate,
       endDate,
       sortBy,
@@ -106,8 +106,8 @@ export const getBankTransactionsExcel = get<
 >(({
   businessId,
   categorized,
-  descriptionFilter,
   direction,
+  query,
   startDate,
   endDate,
   sortBy = 'date',
@@ -115,8 +115,8 @@ export const getBankTransactionsExcel = get<
 }: GetBankTransactionsExportParams) => {
   const parameters = toDefinedSearchParameters({
     categorized,
-    descriptionFilter,
     direction,
+    q: query,
     startDate,
     endDate,
     sortBy,
