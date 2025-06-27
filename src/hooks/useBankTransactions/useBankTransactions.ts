@@ -12,7 +12,7 @@ export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
 export type UseBankTransactionsOptions = {
   categorized?: boolean
   direction?: 'INFLOW' | 'OUTFLOW'
-  descriptionFilter?: string
+  query?: string
   startDate?: Date
   endDate?: Date
   tagFilterQueryString?: string
@@ -25,8 +25,8 @@ function keyLoader(
     apiUrl,
     businessId,
     categorized,
-    descriptionFilter,
     direction,
+    query,
     startDate,
     endDate,
     tagFilterQueryString,
@@ -43,8 +43,8 @@ function keyLoader(
       businessId,
       categorized,
       cursor: previousPageData ? previousPageData.meta.pagination.cursor : undefined,
-      descriptionFilter,
       direction,
+      query,
       startDate,
       endDate,
       tagFilterQueryString,
@@ -55,8 +55,8 @@ function keyLoader(
 
 export function useBankTransactions({
   categorized,
-  descriptionFilter,
   direction,
+  query,
   startDate,
   endDate,
   tagFilterQueryString,
@@ -71,8 +71,8 @@ export function useBankTransactions({
         ...data,
         businessId,
         categorized,
-        descriptionFilter,
         direction,
+        query,
         startDate,
         endDate,
         tagFilterQueryString,
@@ -85,7 +85,7 @@ export function useBankTransactions({
       categorized,
       cursor,
       direction,
-      descriptionFilter,
+      query,
       startDate,
       endDate,
       tagFilterQueryString,
@@ -98,9 +98,9 @@ export function useBankTransactions({
             businessId,
             categorized,
             cursor,
-            limit: 200,
-            descriptionFilter,
             direction,
+            limit: 200,
+            query,
             startDate,
             endDate,
             tagFilterQueryString,

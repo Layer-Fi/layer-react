@@ -21,7 +21,7 @@ export type BankTransactionFilters = {
   direction?: Direction[]
   categorizationStatus?: DisplayState
   dateRange?: Partial<DateRange>
-  descriptionFilter?: string
+  query?: string
   tagFilter?: TagFilterInput
 }
 

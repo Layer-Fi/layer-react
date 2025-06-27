@@ -52,10 +52,10 @@ type TransactionsSearchProps = {
 function TransactionsSearch({ slot }: TransactionsSearchProps) {
   const { filters, setFilters } = useBankTransactionsContext()
 
-  const [localSearch, setLocalSearch] = useState(() => filters?.descriptionFilter ?? '')
+  const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
 
   const debouncedSetDescription = useDebounce((value: string) => {
-    setFilters({ descriptionFilter: value })
+    setFilters({ query: value })
   })
 
   const handleSearch = useCallback((value: string) => {
