@@ -27,7 +27,7 @@ export class ErrorBoundary extends Component<
     return { hasError: true }
   }
 
-  componentDidCatch(error: Error, _info: ErrorInfo) {
+  override componentDidCatch(error: Error, _info: ErrorInfo) {
     if (this.onError) {
       this.onError({ type: 'render', payload: error })
     }
@@ -36,7 +36,7 @@ export class ErrorBoundary extends Component<
     }
   }
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       return <ErrorBoundaryMessage />
     }

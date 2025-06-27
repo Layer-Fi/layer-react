@@ -85,10 +85,11 @@ export const getAssignedValue = (
   }
 
   if (hasSuggestions(bankTransaction.categorization_flow)) {
-    const firstSuggestion = (
-      bankTransaction.categorization_flow
-    ).suggestions[0]
-    return mapCategoryToOption(firstSuggestion)
+    const firstSuggestion = bankTransaction.categorization_flow.suggestions[0]
+
+    if (firstSuggestion) {
+      return mapCategoryToOption(firstSuggestion)
+    }
   }
 
   return
