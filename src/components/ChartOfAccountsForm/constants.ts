@@ -216,7 +216,7 @@ export const EQUITY_LEDGER_ACCOUNT_SUBTYPES: BaseSelectOption[] = [
   },
   {
     value: 'OTHER_EQUITY',
-    label: 'Equities',
+    label: 'Other Equity',
   }
 ]
 
