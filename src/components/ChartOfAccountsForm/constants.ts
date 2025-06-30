@@ -98,7 +98,7 @@ export const ASSET_LEDGER_ACCOUNT_SUBTYPES: BaseSelectOption[] = [
   },
   {
     value: 'INTANGIBLE_ASSET',
-    label: 'Intangible Asset',
+    label: 'Intangible Assets',
   },
 ]
 
