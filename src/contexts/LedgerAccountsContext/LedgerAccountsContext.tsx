@@ -17,4 +17,6 @@ export const LedgerAccountsContext = createContext<LedgerAccountsContextType>({
   selectedEntryId: undefined,
   setSelectedEntryId: () => {},
   closeSelectedEntry: () => {},
+  hasMore: false,
+  fetchMore: () => {},
 })

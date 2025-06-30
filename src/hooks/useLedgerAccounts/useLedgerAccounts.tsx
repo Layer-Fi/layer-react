@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { LedgerAccounts, LedgerAccountsEntry } from '../../types'
@@ -6,6 +6,7 @@ import { DataModel } from '../../types/general'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useListLedgerAccountLines } from '../../features/ledger/accounts/[ledgerAccountId]/api/useListLedgerAccountLines'
 
 type UseLedgerAccounts = (showReversalEntries: boolean) => {
   data?: LedgerAccounts
@@ -22,6 +23,8 @@ type UseLedgerAccounts = (showReversalEntries: boolean) => {
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void
   closeSelectedEntry: () => void
+  hasMore: boolean
+  fetchMore: () => void
 }
 
 export const useLedgerAccounts: UseLedgerAccounts = (
@@ -35,22 +38,55 @@ export const useLedgerAccounts: UseLedgerAccounts = (
   const [accountId, setAccountId] = useState<string | undefined>()
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
 
-  const queryKey =
-    businessId
-    && accountId
-    && auth?.access_token
-    && `ledger-accounts-lines-${businessId}-${accountId}`
+  // Use the new paginated hook - always call it but with empty accountId when not available
+  const {
+    data: paginatedData,
+    isLoading: paginationIsLoading,
+    isValidating: paginationIsValidating,
+    error: paginationError,
+    mutate,
+    size,
+    setSize
+  } = useListLedgerAccountLines({
+    accountId: accountId || '',
+    include_child_account_lines: true,
+    sort_by: 'entry_at',
+    sort_order: 'DESC',
+    limit: 150
+  })
 
-  const { data, isLoading, isValidating, error, mutate } = useSWR(
-    queryKey,
-    Layer.getLedgerAccountsLines(apiUrl, auth?.access_token, {
-      params: {
-        businessId,
-        accountId,
-        includeReversals: showReversalEntries ? 'true' : undefined,
-      },
-    }),
-  )
+  // Only use the data when accountId is available
+  const shouldFetch = Boolean(accountId)
+
+  // Flatten paginated data into single array, applying reversal filter if needed
+  const data = useMemo(() => {
+    if (!paginatedData || !shouldFetch) return undefined
+
+    const flatData = paginatedData.flatMap(page => page.data) as LedgerAccounts
+
+    // Apply reversal filtering based on showReversalEntries parameter
+    if (showReversalEntries) {
+      return flatData
+    } else {
+      return flatData.filter(entry => !entry.entry_reversal_of && !entry.entry_reversed_by)
+    }
+  }, [paginatedData, shouldFetch, showReversalEntries])
+
+  const hasMore = useMemo(() => {
+    if (!shouldFetch || !paginatedData || paginatedData.length === 0) return false
+
+    const lastPage = paginatedData[paginatedData.length - 1]
+    return Boolean(
+      lastPage.meta?.pagination.cursor &&
+      lastPage.meta?.pagination.has_more
+    )
+  }, [paginatedData, shouldFetch])
+
+  const fetchMore = useCallback(() => {
+    if (hasMore && shouldFetch) {
+      setSize(size + 1)
+    }
+  }, [hasMore, setSize, size, shouldFetch])
 
   const {
     data: entryData,
@@ -75,29 +111,37 @@ export const useLedgerAccounts: UseLedgerAccounts = (
     void mutateEntryData()
   }
 
+  // Create a query key for the data model tracking (similar to original)
+  const queryKey = useMemo(() => {
+    return businessId
+      && accountId
+      && auth?.access_token
+      && `ledger-accounts-lines-${businessId}-${accountId}`
+  }, [businessId, accountId, auth?.access_token])
+
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
-    if (queryKey && (isLoading || isValidating)) {
+    if (queryKey && shouldFetch && (paginationIsLoading || paginationIsValidating)) {
       read(DataModel.LEDGER_ACCOUNTS, queryKey)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, isValidating])
+  }, [paginationIsLoading, paginationIsValidating, shouldFetch])
 
   useEffect(() => {
-    if (queryKey && hasBeenTouched(queryKey)) {
+    if (queryKey && shouldFetch && hasBeenTouched(queryKey)) {
       void refetch()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncTimestamps, accountId])
+  }, [syncTimestamps, accountId, shouldFetch])
 
   return {
-    data: data?.data,
+    data,
     entryData: entryData?.data,
-    isLoading,
+    isLoading: shouldFetch ? paginationIsLoading : false,
     isLoadingEntry,
-    isValidating,
-    isValdiatingEntry,
-    error,
+    isValidating: shouldFetch ? paginationIsValidating : false,
+    isValidatingEntry: isValdiatingEntry,
+    error: shouldFetch ? paginationError : undefined,
     errorEntry,
     refetch,
     accountId,
@@ -105,5 +149,7 @@ export const useLedgerAccounts: UseLedgerAccounts = (
     selectedEntryId,
     setSelectedEntryId,
     closeSelectedEntry,
+    hasMore,
+    fetchMore,
   }
 }

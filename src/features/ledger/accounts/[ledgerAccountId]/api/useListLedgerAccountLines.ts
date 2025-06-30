@@ -97,7 +97,7 @@ function keyLoader(
     show_total_count?: boolean
   },
 ) {
-  if (accessToken && apiUrl) {
+  if (accessToken && apiUrl && accountId) {
     return {
       accessToken,
       apiUrl,

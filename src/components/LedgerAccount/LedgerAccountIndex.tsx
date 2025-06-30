@@ -25,6 +25,7 @@ interface LedgerEntriesTableStringOverrides {
   dateColumnHeader?: string
   journalIdColumnHeader?: string
   sourceColumnHeader?: string
+  accountColumnHeader?: string
   debitColumnHeader?: string
   creditColumnHeader?: string
   runningBalanceColumnHeader?: string
@@ -61,6 +62,8 @@ export const LedgerAccount = ({
     selectedEntryId,
     closeSelectedEntry,
     refetch,
+    hasMore,
+    fetchMore,
   } = useContext(LedgerAccountsContext)
 
   const baseClassName = classNames(
@@ -75,12 +78,25 @@ export const LedgerAccount = ({
   }, [accountId])
 
   const data = useMemo(() => {
+    if (!rawData) return undefined
+
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
     return rawData
       ?.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
       ?.slice(firstPageIndex, lastPageIndex)
-  }, [rawData, currentPage])
+  }, [rawData, currentPage, pageSize])
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    if (rawData) {
+      const requestedItemIndex = (page - 1) * pageSize + pageSize - 1
+      const lastAvailableIndex = rawData.length - 1
+      if (requestedItemIndex > lastAvailableIndex && hasMore) {
+        fetchMore()
+      }
+    }
+  }
 
   const close = () => {
     setAccountId(undefined)
@@ -147,6 +163,10 @@ export const LedgerAccount = ({
                     {stringOverrides?.ledgerEntriesTable?.sourceColumnHeader
                       || 'Source'}
                   </th>
+                  <th className='Layer__table-header'>
+                    {stringOverrides?.ledgerEntriesTable?.accountColumnHeader
+                      || 'Account'}
+                  </th>
                 </>
               )}
               {view !== 'mobile' && (
@@ -168,18 +188,14 @@ export const LedgerAccount = ({
             </tr>
           </thead>
           <tbody>
-            {data
-              ?.filter(
-                entry => !entry.entry_reversal_of && !entry.entry_reversed_by,
-              )
-              ?.map((x, index) => (
-                <LedgerAccountRow
-                  key={x.id}
-                  row={x}
-                  index={index}
-                  view={view}
-                />
-              ))}
+            {data?.map((x, index) => (
+              <LedgerAccountRow
+                key={x.id}
+                row={x}
+                index={index}
+                view={view}
+              />
+            ))}
           </tbody>
         </table>
 
@@ -188,7 +204,9 @@ export const LedgerAccount = ({
             currentPage={currentPage}
             totalCount={rawData?.length || 0}
             pageSize={pageSize}
-            onPageChange={page => setCurrentPage(page)}
+            onPageChange={handlePageChange}
+            hasMore={hasMore}
+            fetchMore={fetchMore}
           />
         )}
 
