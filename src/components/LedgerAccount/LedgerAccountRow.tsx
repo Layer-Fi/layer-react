@@ -54,6 +54,9 @@ export const LedgerAccountRow = ({
               </Text>
             </div>
             <Text>{row.source?.display_description ?? ''}</Text>
+            <Text weight={TextWeight.normal}>
+              {row.account?.name ?? ''}
+            </Text>
           </span>
         </td>
         <td className='Layer__table-cell Layer__table-cell--primary'>
@@ -108,6 +111,9 @@ export const LedgerAccountRow = ({
               </Text>
             </div>
             <Text>{row.source?.display_description ?? ''}</Text>
+            <Text weight={TextWeight.normal}>
+              {row.account?.name ?? ''}
+            </Text>
             <div className='Layer__ledger_account-table__balances-mobile'>
               <div className='Layer__ledger_account-table__balance-item'>
                 <span className='Layer__ledger_account-table__balances-mobile__label'>
@@ -170,6 +176,11 @@ export const LedgerAccountRow = ({
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content'>
           {row.source?.display_description ?? ''}
+        </span>
+      </td>
+      <td className='Layer__table-cell'>
+        <span className='Layer__table-cell-content'>
+          {row.account?.name ?? ''}
         </span>
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>
