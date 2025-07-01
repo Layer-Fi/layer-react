@@ -58,18 +58,10 @@ export const useLedgerAccounts: UseLedgerAccounts = (
   // Only use the data when accountId is available
   const shouldFetch = Boolean(accountId)
 
-  // Flatten paginated data into single array, applying reversal filter if needed
   const data = useMemo(() => {
     if (!paginatedData || !shouldFetch) return undefined
+    return paginatedData.flatMap(page => page.data) as LedgerAccounts
 
-    const flatData = paginatedData.flatMap(page => page.data) as LedgerAccounts
-
-    // Apply reversal filtering based on showReversalEntries parameter
-    if (showReversalEntries) {
-      return flatData
-    } else {
-      return flatData.filter(entry => !entry.entry_reversal_of && !entry.entry_reversed_by)
-    }
   }, [paginatedData, shouldFetch, showReversalEntries])
 
   const hasMore = useMemo(() => {
