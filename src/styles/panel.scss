@@ -31,7 +31,8 @@
 
 .Layer__panel__sidebar {
   position: sticky;
-  z-index: 102;
+  z-index: 50;
+
   top: 0;
   overflow-x: hidden;
   height: 100%;
@@ -91,7 +92,7 @@
     opacity: 0.2;
     transform: translateY(-50px) scale(0.96);
     transition:
- transform 120ms ease-in-out,
+      transform 120ms ease-in-out,
       opacity 120ms ease-in-out;
 
     .Layer__panel__sidebar-content {
