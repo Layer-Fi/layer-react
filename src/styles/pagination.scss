@@ -1,81 +1,29 @@
 .Layer__pagination-container {
-  position: sticky;
-  left: 0;
-  display: flex;
-  justify-content: flex-end;
+  align-self: end;
   padding: var(--spacing-md);
 
   @container (min-width: 1400px) {
-    display: flex;
-    justify-content: flex-end;
     padding: var(--spacing-md) var(--spacing-xl);
   }
 }
 
 .Layer__pagination {
   display: inline-flex;
-  gap: 2px;
-  padding: var(--spacing-4xs);
+  gap: var(--spacing-4xs);
+  align-items: center;
+  height: 2.25rem;
   border-radius: var(--border-radius-2xs);
-  box-shadow: 0 0 0 1px var(--color-base-300);
-  margin: 0;
+  border: 1px solid var(--color-base-300);
   background: var(--color-base-50);
   list-style-type: none;
+  padding-inline-start: var(--spacing-4xs);
+  padding-inline-end: var(--spacing-4xs);
 
-  .Layer__pagination-item {
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 32px;
-    width: 32px;
-    min-width: 32px;
-    border-radius: var(--border-radius-3xs);
-    border: 1px solid transparent;
-    font-size: var(--text-md);
-    text-align: center;
-    color: var(--color-base-700);
-
-    &.Layer__pagination-dots:hover {
-      box-shadow: none;
-      background-color: transparent;
-      cursor: default;
-      color: var(--color-base-700);
-    }
-
-    &:hover {
-      box-shadow: 0 0 0 1px var(--color-base-300);
-      background-color: var(--color-base-0);
-      cursor: pointer;
-      color: var(--color-base-900);
-    }
-
-    &.selected {
+  .Layer__pagination__selected-item {
+    .Layer__UI__Button {
+      box-shadow: inset 0 0 0 1px  var(--base-transparent-6);
       background-color: var(--bg-brand-accent, var(--color-accent));
       color: var(--fg-brand-accent, var(--color-primary));
-
-      border-color: var(--base-transparent-6);
-    }
-
-    &.Layer__pagination-arrow {
-      color: var(--color-base-700);
-
-      &:hover {
-        color: var(--color-base-900);
-      }
-    }
-
-    &.disabled {
-      pointer-events: none;
-
-      .Layer__pagination-arrow {
-        color: var(--color-base-500);
-      }
-
-      &:hover {
-        background-color: transparent;
-        cursor: default;
-      }
     }
   }
 }

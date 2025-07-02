@@ -1,7 +1,9 @@
-import { usePagination, DOTS } from '../../hooks/usePagination'
+import classNames from 'classnames'
+import { usePaginationRange, Dots } from '../../hooks/usePaginationRange/usePaginationRange'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
-import classnames from 'classnames'
+import { Button } from '../ui/Button/Button'
+import type { ComponentProps } from 'react'
 
 export interface PaginationProps {
   currentPage: number
@@ -26,6 +28,20 @@ export const Pagination = (props: PaginationProps) => {
   )
 }
 
+type PaginationButtonProps = ComponentProps<typeof Button>
+const PaginationButton = ({ children, ...buttonProps }: PaginationButtonProps) => {
+  return (
+    <Button
+      inset
+      icon
+      variant='ghost'
+      {...buttonProps}
+    >
+      {children}
+    </Button>
+  )
+}
+
 export const PaginationContent = ({
   onPageChange,
   totalCount,
@@ -35,91 +51,80 @@ export const PaginationContent = ({
   hasMore,
   fetchMore,
 }: PaginationProps) => {
-  const paginationRange = usePagination({
+  const paginationRange = usePaginationRange({
     currentPage,
     totalCount,
     siblingCount,
     pageSize,
   })
 
-  if (!paginationRange) {
+  if (!paginationRange || currentPage === 0 || paginationRange.length < 2) {
     return null
   }
-
-  if (currentPage === 0 || paginationRange.length < 2) {
-    return null
-  }
-
   const lastPage = paginationRange[paginationRange.length - 1]
 
   return (
-    <ul className='Layer__pagination'>
-      <li
-        key='page-prev'
-        className={classnames(
-          'Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--previous',
-          {
-            disabled: currentPage === 1,
-          },
-        )}
-        onClick={() => onPageChange(currentPage - 1)}
-      >
-        <ChevronLeft size={12} />
-      </li>
-      {paginationRange.map((pageNumber, idx) => {
-        if (pageNumber === DOTS) {
+    <nav aria-label='Pagination'>
+      <ul className='Layer__pagination' role='list'>
+        <li key='page-prev'>
+          <PaginationButton
+            onClick={() => onPageChange(currentPage - 1)}
+            isDisabled={currentPage === 1}
+            aria-label='Previous page'
+          >
+            <ChevronLeft size={12} />
+          </PaginationButton>
+        </li>
+        {paginationRange.map((pageNumber) => {
+          if (pageNumber in Dots) {
+            return (
+              <li key={`page-${pageNumber}`}>
+                <PaginationButton
+                  isDisabled
+                  aria-hidden='true'
+                >
+                  &hellip;
+                </PaginationButton>
+              </li>
+            )
+          }
+
           return (
             <li
-              key={`${idx}-page-${pageNumber}`}
-              className='Layer__pagination-item Layer__pagination-dots'
+              key={`page-${pageNumber}`}
+              className={classNames(pageNumber === currentPage && 'Layer__pagination__selected-item')}
             >
-              &#8230;
+              <PaginationButton
+                aria-hidden='true'
+                onClick={() => onPageChange(Number(pageNumber))}
+              >
+                {pageNumber}
+              </PaginationButton>
             </li>
           )
-        }
-
-        return (
-          <li
-            key={`page-${pageNumber}`}
-            className={classnames('Layer__pagination-item', {
-              selected: pageNumber === currentPage,
-            })}
-            onClick={() => {
-              if (typeof pageNumber === 'number') {
-                onPageChange(pageNumber)
-                if (pageNumber === lastPage && hasMore && fetchMore) {
-                  fetchMore()
-                }
-              }
-            }}
+        })}
+        {hasMore && fetchMore
+          ? (
+            <li key='page-has-more'>
+              <PaginationButton
+                onClick={fetchMore}
+                aria-label='More results'
+              >
+                &hellip;
+              </PaginationButton>
+            </li>
+          )
+          : null}
+        <li key='page-next'>
+          <PaginationButton
+            onClick={() => onPageChange(currentPage + 1)}
+            isDisabled={currentPage === lastPage}
+            aria-label='Next page'
           >
-            {pageNumber}
-          </li>
-        )
-      })}
-      {hasMore && fetchMore
-        ? (
-          <li
-            key='page-has-more'
-            className='Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--next'
-            onClick={fetchMore}
-          >
-            ...
-          </li>
-        )
-        : null}
-      <li
-        key='page-last'
-        className={classnames(
-          'Layer__pagination-item Layer__pagination-arrow Layer__pagination-arrow--next',
-          {
-            disabled: currentPage === lastPage,
-          },
-        )}
-        onClick={() => onPageChange(currentPage + 1)}
-      >
-        <ChevronRight size={12} />
-      </li>
-    </ul>
+            <ChevronRight size={12} />
+          </PaginationButton>
+        </li>
+      </ul>
+    </nav>
   )
 }
