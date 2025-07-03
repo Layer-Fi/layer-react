@@ -247,13 +247,20 @@ export function ComboBox<T extends ComboBoxOption>({
 
   return (
     <VStack gap='3xs'>
-      <HStack justify='space-between'>
+      <HStack justify='space-between' align='baseline'>
         <Label
           size='sm'
           htmlFor={inputId}
         >
           {label}
         </Label>
+        {isMutating
+          ? (
+            <Span size='xs' variant='subtle'>
+              Saving...
+            </Span>
+          )
+          : null}
       </HStack>
       <Select
         inputId={inputId}
