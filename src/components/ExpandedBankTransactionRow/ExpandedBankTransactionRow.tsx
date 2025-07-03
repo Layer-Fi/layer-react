@@ -201,8 +201,11 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         return sum + amount
       }, 0)
       const remaining = bankTransaction.amount - splitTotal
-      newSplits[0].amount = remaining
-      newSplits[0].inputValue = formatMoney(remaining)
+
+      if (newSplits[0]) {
+        newSplits[0].amount = remaining
+        newSplits[0].inputValue = formatMoney(remaining)
+      }
 
       updateRowState({
         ...rowState,
@@ -222,7 +225,9 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
       // Limit to two digits after the decimal point
       if (parts.length === 2) {
-        sanitized = parts[0] + '.' + parts[1].slice(0, 2)
+        const secondPart = parts[1]?.slice(0, 2) ?? ''
+
+        sanitized = parts[0] + '.' + secondPart
       }
 
       return sanitized
@@ -240,10 +245,16 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         }, 0)
 
         const remaining = bankTransaction.amount - splitTotal
-        rowState.splits[rowNumber].amount = newAmount
-        rowState.splits[rowNumber].inputValue = newDisplaying
-        rowState.splits[0].amount = remaining
-        rowState.splits[0].inputValue = formatMoney(remaining)
+
+        if (rowState.splits[rowNumber]) {
+          rowState.splits[rowNumber].amount = newAmount
+          rowState.splits[rowNumber].inputValue = newDisplaying
+        }
+        if (rowState.splits[0]) {
+          rowState.splits[0].amount = remaining
+          rowState.splits[0].inputValue = formatMoney(remaining)
+        }
+
         updateRowState({ ...rowState })
         setSplitFormError(undefined)
       }
@@ -251,7 +262,16 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const onBlur = (event: React.FocusEvent<HTMLInputElement>) => {
       if (event.target.value === '') {
         const [_, index] = event.target.name.split('-')
-        rowState.splits[parseInt(index)].inputValue = '0.00'
+        if (!index) {
+          return
+        }
+
+        const parsedIndex = parseInt(index)
+
+        if (rowState.splits[parsedIndex]) {
+          rowState.splits[parsedIndex].inputValue = '0.00'
+        }
+
         updateRowState({ ...rowState })
         setSplitFormError(undefined)
       }
@@ -268,7 +288,10 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }
 
     const changeCategory = (index: number, newValue: CategoryOption) => {
-      rowState.splits[index].category = newValue
+      if (rowState.splits[index]) {
+        rowState.splits[index].category = newValue
+      }
+
       updateRowState({ ...rowState })
       setSplitFormError(undefined)
     }
@@ -302,12 +325,14 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         return
       }
 
+      const firstCategory = rowState.splits[0]?.category
+
       await categorizeBankTransaction(
         bankTransaction.id,
-        rowState.splits.length === 1 && rowState?.splits[0].category
+        rowState.splits.length === 1 && firstCategory
           ? ({
             type: 'Category',
-            category: getCategorizePayload(rowState?.splits[0].category),
+            category: getCategorizePayload(firstCategory),
           } as SingleCategoryUpdate)
           : ({
             type: 'Split',

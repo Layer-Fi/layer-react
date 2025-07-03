@@ -23,7 +23,7 @@ const PLATFORM_ONBOARDING_STEPS = [
     id: 'summary',
     label: 'Summary',
   },
-]
+] as const
 
 type PlatformOnboardingStepKey = typeof PLATFORM_ONBOARDING_STEPS[number]['id']
 
@@ -32,7 +32,7 @@ type PlatformOnboardingProps = {
 }
 
 export const PlatformOnboarding = ({ onComplete }: PlatformOnboardingProps) => {
-  const [step, setStep] = useState<PlatformOnboardingStepKey>(PLATFORM_ONBOARDING_STEPS[0].id)
+  const [step, setStep] = useState<PlatformOnboardingStepKey>(() => PLATFORM_ONBOARDING_STEPS[0].id)
 
   const isFirstStep = PLATFORM_ONBOARDING_STEPS[0].id === step
 

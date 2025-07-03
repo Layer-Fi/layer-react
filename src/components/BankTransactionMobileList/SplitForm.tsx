@@ -114,8 +114,11 @@ export const SplitForm = ({
       return sum + amount
     }, 0)
     const remaining = bankTransaction.amount - splitTotal
-    newSplits[0].amount = remaining
-    newSplits[0].inputValue = formatMoney(remaining)
+
+    if (newSplits[0]) {
+      newSplits[0].amount = remaining
+      newSplits[0].inputValue = formatMoney(remaining)
+    }
 
     updateRowState({
       ...rowState,
@@ -134,10 +137,16 @@ export const SplitForm = ({
         return sum + amount
       }, 0)
       const remaining = bankTransaction.amount - splitTotal
-      rowState.splits[rowNumber].amount = newAmount
-      rowState.splits[rowNumber].inputValue = newDisplaying
-      rowState.splits[0].amount = remaining
-      rowState.splits[0].inputValue = formatMoney(remaining)
+
+      if (rowState.splits[rowNumber]) {
+        rowState.splits[rowNumber].amount = newAmount
+        rowState.splits[rowNumber].inputValue = newDisplaying
+      }
+      if (rowState.splits[0]) {
+        rowState.splits[0].amount = remaining
+        rowState.splits[0].inputValue = formatMoney(remaining)
+      }
+
       updateRowState({ ...rowState })
       setFormError(undefined)
     }
@@ -145,14 +154,25 @@ export const SplitForm = ({
   const onBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     if (event.target.value === '') {
       const [_, index] = event.target.name.split('-')
-      rowState.splits[parseInt(index)].inputValue = '0.00'
+      if (!index) {
+        return
+      }
+
+      const parsedIndex = parseInt(index)
+
+      if (rowState.splits[parsedIndex]) {
+        rowState.splits[parsedIndex].inputValue = '0.00'
+      }
+
       updateRowState({ ...rowState })
       setFormError(undefined)
     }
   }
 
   const changeCategory = (index: number, newValue: CategoryOption) => {
-    rowState.splits[index].category = newValue
+    if (rowState.splits[index]) {
+      rowState.splits[index].category = newValue
+    }
     updateRowState({ ...rowState })
     setFormError(undefined)
   }
@@ -204,7 +224,7 @@ export const SplitForm = ({
 
     await categorizeBankTransaction(
       bankTransaction.id,
-      rowState.splits.length === 1 && rowState?.splits[0].category
+      rowState.splits.length === 1 && rowState?.splits[0]?.category
         ? ({
           type: 'Category',
           category: getCategorizePayload(rowState?.splits[0].category),
@@ -314,7 +334,14 @@ export const SplitForm = ({
       <div className='Layer__bank-transaction-mobile-list-item__actions'>
         {showReceiptUploads && (
           <FileInput
-            onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
+            onUpload={(files) => {
+              const firstFile = files[0]
+              if (!firstFile) {
+                return
+              }
+
+              receiptsRef.current?.uploadReceipt(firstFile)
+            }}
             text='Upload receipt'
             iconOnly={true}
             icon={<PaperclipIcon />}

@@ -71,6 +71,7 @@ export const getDefaultSelectedCategory = (
   if (
     hasSuggestions(bankTransaction.categorization_flow)
     && bankTransaction.categorization_flow.suggestions.length > 0
+    && bankTransaction.categorization_flow.suggestions[0]
   ) {
     return mapCategoryToOption(
       bankTransaction.categorization_flow.suggestions[0],
