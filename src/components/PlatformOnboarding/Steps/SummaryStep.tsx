@@ -10,7 +10,7 @@ type SummaryStepProps = {
 
 const defaultTitle = 'You’re all set!'
 const defaultDescription = 'We’re syncing your accounts. This process may take a while to complete.'
-const defaultNextBtnText = 'Go to dashboard'
+const defaultNextBtnText = 'Start categorizing'
 
 export const SummaryStep = ({ onNext, title = defaultTitle, description = defaultDescription, nextBtnText = defaultNextBtnText }: SummaryStepProps) => {
   return (
