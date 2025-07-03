@@ -75,7 +75,8 @@ export const listInvoices = get<
     showTotalCount,
   })
 
-  return `/v1/businesses/${businessId}/invoices?${parameters}`
+  const baseUrl = `/v1/businesses/${businessId}/invoices`
+  return parameters ? `${baseUrl}?${parameters}` : baseUrl
 })
 
 function keyLoader(
