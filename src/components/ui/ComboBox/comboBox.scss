@@ -104,6 +104,10 @@
      * `react-select` explicitly sets 'default'
      */
     cursor: pointer;
+
+    &--disabled {
+      cursor: not-allowed;
+    }
   }
 }
 
@@ -153,6 +157,10 @@
     &:hover {
       border: 2px solid var(--border-color);
     }
+  }
+
+  &--disabled {
+    opacity: 0.5;
   }
 }
 
