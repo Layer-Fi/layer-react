@@ -47,7 +47,7 @@ export const InvoiceLineItemSchema = Schema.Struct({
     Schema.fromKey('unit_price'),
   ),
 
-  quantity: Schema.String,
+  quantity: Schema.BigDecimal,
 
   subtotal: Schema.Number,
 
@@ -85,22 +85,22 @@ export const InvoiceSchema = Schema.Struct({
   status: TransformedInvoiceStatusSchema,
 
   sentAt: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.Date)),
     Schema.fromKey('sent_at'),
   ),
 
   dueAt: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.Date)),
     Schema.fromKey('due_at'),
   ),
 
   paidAt: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.Date)),
     Schema.fromKey('paid_at'),
   ),
 
   voidedAt: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.Date)),
     Schema.fromKey('voided_at'),
   ),
 
@@ -144,12 +144,12 @@ export const InvoiceSchema = Schema.Struct({
   ),
 
   importedAt: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.Date),
     Schema.fromKey('imported_at'),
   ),
 
   updatedAt: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.Date)),
     Schema.fromKey('updated_at'),
   ),
 
