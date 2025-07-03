@@ -10,7 +10,7 @@ import Select, {
   type NoticeProps,
 } from 'react-select'
 import { HStack, VStack } from '../Stack/Stack'
-import { Header, Label, P, Span } from '../Typography/Text'
+import { Header, P, Span } from '../Typography/Text'
 import { useId, useMemo, useRef, type ReactNode } from 'react'
 import type { OneOf } from '../../../types/utility/oneOf'
 import classNames from 'classnames'
@@ -50,6 +50,7 @@ const COMBO_BOX_CLASS_NAMES = {
 type ComboBoxOption = {
   label: string
   value: string
+  isDisabled?: boolean
 }
 
 function buildCustomGroupHeading() {
@@ -70,18 +71,29 @@ function buildCustomGroupHeading() {
   }
 }
 
-function buildCustomComboBoxOption() {
+type BuildCustomComboBoxOptionParameters = {
+  displayDisabledAsSelected?: boolean
+}
+
+function buildCustomComboBoxOption({
+  displayDisabledAsSelected,
+}: BuildCustomComboBoxOptionParameters) {
   return function CustomComboBoxOption<T extends ComboBoxOption>({
     children,
     ...restProps
   }: OptionProps<T, false, GroupBase<T>>) {
+    const { isSelected, isFocused, isDisabled } = restProps
+
+    const effectiveIsSelected = isSelected || (displayDisabledAsSelected && isDisabled)
+
     return (
       <components.Option
         {...restProps}
         className={classNames(
           COMBO_BOX_CLASS_NAMES.OPTION,
-          restProps.isFocused ? `${COMBO_BOX_CLASS_NAMES.OPTION}--focused` : undefined,
-          restProps.isSelected ? `${COMBO_BOX_CLASS_NAMES.OPTION}--selected` : undefined,
+          isFocused ? `${COMBO_BOX_CLASS_NAMES.OPTION}--focused` : undefined,
+          effectiveIsSelected ? `${COMBO_BOX_CLASS_NAMES.OPTION}--selected` : undefined,
+          isDisabled ? `${COMBO_BOX_CLASS_NAMES.OPTION}--disabled` : undefined,
         )}
       >
 
@@ -192,19 +204,22 @@ type ComboBoxProps<T extends ComboBoxOption> = {
   selectedValue: T | null
   onSelectedValueChange: (value: T | null) => void
 
-  onInputValueChange: (value: string) => void
+  onInputValueChange?: (value: string) => void
 
-  label: string
   placeholder: string
   slots: {
     EmptyMessage?: ReactNode
     ErrorMessage?: ReactNode
   }
 
+  inputId?: string
+
   isDisabled?: boolean
   isError?: boolean
   isLoading?: boolean
   isMutating?: boolean
+
+  displayDisabledAsSelected?: boolean
 } & OptionsOrGroups<T>
 
 export function ComboBox<T extends ComboBoxOption>({
@@ -216,19 +231,26 @@ export function ComboBox<T extends ComboBoxOption>({
 
   onInputValueChange,
 
-  label,
   placeholder,
   slots,
+
+  inputId,
 
   isDisabled,
   isError,
   isLoading,
   isMutating,
+
+  displayDisabledAsSelected,
 }: ComboBoxProps<T>) {
-  const inputId = useId()
+  const internalInputId = useId()
+  const effectiveInputId = inputId ?? internalInputId
 
   const CustomGroupHeadingRef = useRef(buildCustomGroupHeading())
-  const CustomComboBoxOptionRef = useRef(buildCustomComboBoxOption())
+  const CustomComboBoxOption = useMemo(
+    () => (buildCustomComboBoxOption({ displayDisabledAsSelected })),
+    [displayDisabledAsSelected],
+  )
 
   const { EmptyMessage, ErrorMessage } = slots ?? {}
 
@@ -247,23 +269,8 @@ export function ComboBox<T extends ComboBoxOption>({
 
   return (
     <VStack gap='3xs'>
-      <HStack justify='space-between' align='baseline'>
-        <Label
-          size='sm'
-          htmlFor={inputId}
-        >
-          {label}
-        </Label>
-        {isMutating
-          ? (
-            <Span size='xs' variant='subtle'>
-              Saving...
-            </Span>
-          )
-          : null}
-      </HStack>
       <Select
-        inputId={inputId}
+        inputId={effectiveInputId}
 
         value={selectedValue}
         onChange={onSelectedValueChange}
@@ -298,7 +305,7 @@ export function ComboBox<T extends ComboBoxOption>({
 
         components={{
           GroupHeading: CustomGroupHeadingRef.current,
-          Option: CustomComboBoxOptionRef.current,
+          Option: CustomComboBoxOption,
 
           Placeholder: CustomPlaceholder,
           NoOptionsMessage: CustomNoOptionsMessage,
