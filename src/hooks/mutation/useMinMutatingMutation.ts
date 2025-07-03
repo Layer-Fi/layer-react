@@ -4,7 +4,7 @@ import type { SWRMutationResponse } from 'swr/mutation'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { sleep } from '../../utils/helpers'
 
-const DEFAULT_MIN_LOADING_MS = 350
+const DEFAULT_MIN_LOADING_MS = 500
 
 type UseMinLoadingMutationOptions<TData, TError, TMutationKey extends Key, TExtraArg> = {
   swrMutationResponse: SWRMutationResponse<TData, TError, TMutationKey, TExtraArg>
