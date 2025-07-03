@@ -51,6 +51,11 @@ export const CustomerSchema = Schema.Struct({
     Schema.fromKey('office_phone'),
   ),
 
+  addressString: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('address_string'),
+  ),
+
   status: TransformedCustomerStatusSchema,
 
   memo: Schema.NullOr(Schema.String),
