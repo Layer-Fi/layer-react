@@ -6,6 +6,7 @@ import { useCallback } from 'react'
 import { useBankTransactionsInvalidator, useBankTransactionsOptimisticUpdater } from '../../../../../hooks/useBankTransactions/useBankTransactions'
 import { encodeVendor, type VendorSchema } from '../../../../vendors/vendorsSchemas'
 import { encodeCustomer, type CustomerSchema } from '../../../../customers/customersSchemas'
+import { useMinMutatingMutation } from '../../../../../hooks/mutation/useMinMutatingMutation'
 
 const SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY = '#set-metadata-on-bank-transaction'
 
@@ -130,7 +131,7 @@ export function useSetMetadataOnBankTransaction({
     ],
   )
 
-  return new Proxy(mutationResponse, {
+  const baseProxiedResponse = new Proxy(mutationResponse, {
     get(target, prop) {
       if (prop === 'trigger') {
         return stableProxiedTrigger
@@ -140,4 +141,6 @@ export function useSetMetadataOnBankTransaction({
       return Reflect.get(target, prop)
     },
   })
+
+  return useMinMutatingMutation({ swrMutationResponse: baseProxiedResponse })
 }

@@ -5,6 +5,7 @@ import Select, {
   type GroupHeadingProps,
   type ClearIndicatorProps,
   type DropdownIndicatorProps,
+  type LoadingIndicatorProps,
   type PlaceholderProps,
   type NoticeProps,
 } from 'react-select'
@@ -16,6 +17,7 @@ import classNames from 'classnames'
 import { PORTAL_CLASS_NAME } from '../Portal/Portal'
 import Check from '../../../icons/Check'
 import { ChevronDown, Lock, X } from 'lucide-react'
+import { LoadingSpinner } from '../Loading/LoadingSpinner'
 
 const COMBO_BOX_CLASS_NAMES = {
   CONTAINER: 'Layer__ComboBoxContainer',
@@ -41,6 +43,7 @@ const COMBO_BOX_CLASS_NAMES = {
   NO_OPTIONS_MESSAGE: 'Layer__ComboBoxNoOptionsMessage',
 
   CLEAR_INDICATOR: 'Layer__ComboBoxClearIndicator',
+  LOADING_INDICATOR: 'Layer__ComboBoxLoadingIndicator',
   DROPDOWN_INDICATOR: 'Layer__ComboBoxDropdownIndicator',
 }
 
@@ -105,6 +108,18 @@ function buildCustomClearIndicator() {
       >
         <X size={16} />
       </components.ClearIndicator>
+    )
+  }
+}
+
+function buildCustomLoadingIndicator() {
+  return function CustomLoadingIndicator<T extends ComboBoxOption>(
+    _props: LoadingIndicatorProps<T, false, GroupBase<T>>,
+  ) {
+    return (
+      <div className={COMBO_BOX_CLASS_NAMES.LOADING_INDICATOR}>
+        <LoadingSpinner size={16} />
+      </div>
     )
   }
 }
@@ -186,9 +201,10 @@ type ComboBoxProps<T extends ComboBoxOption> = {
     ErrorMessage?: ReactNode
   }
 
+  isDisabled?: boolean
   isError?: boolean
   isLoading?: boolean
-  isDisabled?: boolean
+  isMutating?: boolean
 } & OptionsOrGroups<T>
 
 export function ComboBox<T extends ComboBoxOption>({
@@ -204,9 +220,10 @@ export function ComboBox<T extends ComboBoxOption>({
   placeholder,
   slots,
 
+  isDisabled,
   isError,
   isLoading,
-  isDisabled,
+  isMutating,
 }: ComboBoxProps<T>) {
   const inputId = useId()
 
@@ -225,16 +242,19 @@ export function ComboBox<T extends ComboBoxOption>({
   )
 
   const CustomClearIndicatorRef = useRef(buildCustomClearIndicator())
+  const CustomLoadingIndicatorRef = useRef(buildCustomLoadingIndicator())
   const CustomDropdownIndicatorRef = useRef(buildCustomDropdownIndicator())
 
   return (
     <VStack gap='3xs'>
-      <Label
-        size='sm'
-        htmlFor={inputId}
-      >
-        {label}
-      </Label>
+      <HStack justify='space-between'>
+        <Label
+          size='sm'
+          htmlFor={inputId}
+        >
+          {label}
+        </Label>
+      </HStack>
       <Select
         inputId={inputId}
 
@@ -244,6 +264,7 @@ export function ComboBox<T extends ComboBoxOption>({
         options={options ?? groups}
 
         onInputChange={onInputValueChange}
+        escapeClearsValue
 
         placeholder={placeholder}
 
@@ -276,11 +297,12 @@ export function ComboBox<T extends ComboBoxOption>({
           NoOptionsMessage: CustomNoOptionsMessage,
 
           ClearIndicator: CustomClearIndicatorRef.current,
+          LoadingIndicator: CustomLoadingIndicatorRef.current,
           DropdownIndicator: CustomDropdownIndicatorRef.current,
         }}
         isClearable
         isDisabled={isDisabled}
-        isLoading={isLoading}
+        isLoading={isLoading || isMutating}
         isSearchable
       />
       {isError

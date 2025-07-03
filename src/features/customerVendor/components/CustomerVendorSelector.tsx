@@ -47,6 +47,7 @@ type CustomerVendorSelectorProps = {
 
   placeholder: string
 
+  isMutating?: boolean
   isReadOnly?: boolean
 }
 
@@ -56,6 +57,7 @@ export function CustomerVendorSelector({
 
   placeholder,
 
+  isMutating,
   isReadOnly,
 }: CustomerVendorSelectorProps) {
   const {
@@ -245,9 +247,10 @@ export function CustomerVendorSelector({
       placeholder={placeholder}
       slots={{ EmptyMessage, ErrorMessage }}
 
-      isError={isError}
       isDisabled={isReadOnly || shouldDisableComboBox}
-      isLoading={isLoadingCustomersWithoutFallback}
+      isError={isError}
+      isLoading={isLoadingWithoutFallback}
+      isMutating={isMutating}
     />
   )
 }

@@ -59,6 +59,19 @@
   cursor: pointer;
 }
 
+.Layer__ComboBoxLoadingIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  --size: 1.75rem;
+
+  block-size: var(--size);
+  inline-size: var(--size);
+
+  cursor: progress;
+}
+
 .Layer__ComboBoxDropdownIndicator {
   display: flex;
   align-items: center;
