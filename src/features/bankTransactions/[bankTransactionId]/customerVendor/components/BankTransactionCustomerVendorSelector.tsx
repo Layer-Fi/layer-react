@@ -46,7 +46,7 @@ export function BankTransactionCustomerVendorSelector({
     ],
   )
 
-  const { trigger } = useSetMetadataOnBankTransaction({ bankTransactionId })
+  const { trigger, isMutating } = useSetMetadataOnBankTransaction({ bankTransactionId })
 
   const triggerSetCustomerVendor = useCallback(
     (customerVendor: typeof CustomerVendorSchema.Type | null) => {
@@ -92,6 +92,7 @@ export function BankTransactionCustomerVendorSelector({
       onSelectedCustomerVendorChange={triggerSetCustomerVendor}
       placeholder='Set a customer or vendor on this transaction...'
       isReadOnly={isReadOnly}
+      isMutating={isMutating}
     />
   )
 }
