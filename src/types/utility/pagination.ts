@@ -9,14 +9,14 @@ enum SortOrder {
 }
 
 export type SortParams<T> = {
-  sort_by?: T
-  sort_order?: SortOrder
+  sortBy?: T
+  sortOrder?: SortOrder
 }
 
 export type PaginationParams = {
   cursor?: string
   limit?: number
-  show_total_count?: boolean
+  showTotalCount?: boolean
 }
 
 export const PaginatedResponseMetaSchema = Schema.Struct({

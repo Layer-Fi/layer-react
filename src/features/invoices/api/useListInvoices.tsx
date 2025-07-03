@@ -65,14 +65,14 @@ class ListInvoicesSWRResponse {
 export const listInvoices = get<
   ListInvoicesReturn,
   ListInvoicesParams
->(({ businessId, status, sort_by, sort_order, cursor, limit, show_total_count }) => {
+>(({ businessId, status, sortBy, sortOrder, cursor, limit, showTotalCount }) => {
   const parameters = toDefinedSearchParameters({
     status,
-    sort_by,
-    sort_order,
+    sortBy,
+    sortOrder,
     cursor,
     limit,
-    show_total_count,
+    showTotalCount,
   })
 
   return `/v1/businesses/${businessId}/invoices?${parameters}`
@@ -85,10 +85,10 @@ function keyLoader(
     apiUrl,
     businessId,
     status,
-    sort_by,
-    sort_order,
+    sortBy,
+    sortOrder,
     limit,
-    show_total_count,
+    showTotalCount,
   }: {
     access_token?: string
     apiUrl?: string
@@ -101,10 +101,10 @@ function keyLoader(
       businessId,
       status,
       cursor: previousPageData?.meta?.pagination.cursor,
-      sort_by,
-      sort_order,
+      sortBy,
+      sortOrder,
       limit,
-      show_total_count,
+      showTotalCount,
       tags: [LIST_INVOICES_TAG_KEY],
     } as const
   }
@@ -112,10 +112,10 @@ function keyLoader(
 
 export function useListInvoices({
   status,
-  sort_by,
-  sort_order,
+  sortBy,
+  sortOrder,
   limit,
-  show_total_count,
+  showTotalCount,
 }: ListInvoicesOptions = {}) {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
@@ -129,10 +129,10 @@ export function useListInvoices({
         apiUrl,
         businessId,
         status,
-        sort_by,
-        sort_order,
+        sortBy,
+        sortOrder,
         limit,
-        show_total_count,
+        showTotalCount,
       },
     ),
     ({
@@ -141,10 +141,10 @@ export function useListInvoices({
       businessId,
       cursor,
       status,
-      sort_by,
-      sort_order,
+      sortBy,
+      sortOrder,
       limit,
-      show_total_count,
+      showTotalCount,
     }) => listInvoices(
       apiUrl,
       accessToken,
@@ -152,18 +152,17 @@ export function useListInvoices({
         params: {
           businessId,
           status,
-          sort_by,
-          sort_order,
+          sortBy,
+          sortOrder,
           cursor,
           limit,
-          show_total_count,
+          showTotalCount,
         },
       },
     )().then(Schema.decodeUnknownPromise(ListInvoicesReturnSchema)),
     {
       keepPreviousData: true,
-      revalidateAll: false,
-      revalidateFirstPage: false,
+      revalidateAll: true,
       initialSize: 1,
     },
   )
@@ -209,13 +208,21 @@ export function useInvoicesOptimisticUpdater() {
     (
       transformInvoice: (invoice: Invoice) => Invoice,
     ) =>
-      optimisticUpdate<ListInvoicesReturn>(
+      optimisticUpdate<
+        Array<ListInvoicesReturn> | ListInvoicesReturn
+      >(
         tags => tags.includes(LIST_INVOICES_TAG_KEY),
         (currentData) => {
-          return {
-            ...currentData,
-            data: currentData.data.map(invoice => transformInvoice(invoice)),
+          const iterateOverPage = (page: ListInvoicesReturn): ListInvoicesReturn => ({
+            ...page,
+            data: page.data.map(invoice => transformInvoice(invoice)),
+          })
+
+          if (Array.isArray(currentData)) {
+            return currentData.map(iterateOverPage)
           }
+
+          return currentData
         },
       ),
     [optimisticUpdate],
