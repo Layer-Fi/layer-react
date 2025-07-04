@@ -1,25 +1,22 @@
 import {
+  useCallback,
   useId,
   useMemo,
   type PropsWithChildren,
 } from 'react'
-import { Input } from '../../../components/ui/Input/Input'
-import { ListBox, ListBoxItem, ListBoxSection, ListBoxSectionHeader } from '../../../components/ui/ListBox/ListBox'
-import { Popover } from '../../../components/ui/Popover/Popover'
-import { Label, P, Span } from '../../../components/ui/Typography/Text'
+import { Label, Span } from '../../../components/ui/Typography/Text'
 import { useTagDimensions } from '../api/useTagDimensions'
-import { Collection, ComboBox, Group } from 'react-aria-components'
-import { HStack, VStack } from '../../../components/ui/Stack/Stack'
+import { VStack } from '../../../components/ui/Stack/Stack'
 import { Button } from '../../../components/ui/Button/Button'
-import { X, ChevronDown } from 'lucide-react'
+import { X } from 'lucide-react'
 import { Tag, TagGroup, TagList } from '../../../components/ui/TagGroup/TagGroup'
 import { Schema } from 'effect'
 import { useFlattenedTagValues } from '../useFlattenedTagValues'
 import type { OneOf } from '../../../types/utility/oneOf'
 import { LoadingSpinner } from '../../../components/ui/Loading/LoadingSpinner'
 import { Square } from '../../../components/ui/Square/Square'
-import { InputGroup } from '../../../components/ui/Input/InputGroup'
-import { Check } from 'lucide-react'
+import { Group } from 'react-aria-components'
+import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
 
 const TAG_SELECTOR_CLASS_NAMES = {
   LAYOUT_GROUP: 'Layer__TagSelectorLayoutGroup',
@@ -155,17 +152,17 @@ function TagSelectorSelection({
 }
 
 type LabeledTagSelectorContainerProps = PropsWithChildren<{
-  labelId: string
+  forInputId?: string
 }>
 
 function LabeledTagSelectorContainer({
   children,
-  labelId,
+  forInputId,
 }: LabeledTagSelectorContainerProps) {
   return (
     <VStack gap='3xs'>
       <Label
-        id={labelId}
+        htmlFor={forInputId}
         size='sm'
       >
         Tags
@@ -177,65 +174,91 @@ function LabeledTagSelectorContainer({
 
 type TagSelectorProps = {
   selectedTags: ReadonlyArray<Tag>
-  isReadOnly?: boolean
   onAddTag: (tagValue: TagValue) => void
   onRemoveTag: (tag: Tag) => void
+
+  isReadOnly?: boolean
 }
 
 export function TagSelector({
   selectedTags,
-  isReadOnly,
   onAddTag,
   onRemoveTag,
+
+  isReadOnly,
 }: TagSelectorProps) {
   const { data, isLoading, isError } = useTagDimensions()
-  const flattenedTagValues = useFlattenedTagValues(data)
 
-  const disabledTagValueIds = useMemo(
-    () => flattenedTagValues
-      .filter(({ dimensionLabel, valueLabel }) => {
-        const match = selectedTags.find(selectedTag =>
-          selectedTag.dimensionLabel === dimensionLabel
-          && selectedTag.valueLabel === valueLabel,
-        )
-
-        return match !== undefined
-      })
-      .map(({ valueId }) => valueId),
+  const groups = useMemo(
+    () => data
+      ?.map(({ key: dimensionLabel, definedValues }) => {
+        return {
+          label: dimensionLabel,
+          options: definedValues.map(({ id: valueId, value: valueLabel }) => ({
+            label: valueLabel,
+            value: valueId,
+            isDisabled: selectedTags.some(
+              tagValue =>
+                tagValue.dimensionLabel === dimensionLabel
+                && tagValue.valueLabel === valueLabel,
+            ),
+          })),
+        }
+      }) ?? [],
     [
-      flattenedTagValues,
+      data,
       selectedTags,
     ],
   )
 
-  const handleAddTag = (valueId: string) => {
-    const tagValue = flattenedTagValues.find(({ valueId: id }) => id === valueId)
+  const flattenedTagValues = useFlattenedTagValues(data)
 
-    if (tagValue === undefined) {
-      return
-    }
+  const handleSelectedValueChange = useCallback(
+    (selectedValue: { value: string } | null) => {
+      if (selectedValue === null) {
+        return
+      }
 
-    /*
-     * Even though we correctly supply `disabledKeys` to the ComboBox, it still allows
-     * pressing `Enter` on the same option multiple times.
-     */
-    const existingSelectedOption = selectedTags.find(
-      ({ dimensionLabel, valueLabel }) =>
-        tagValue.dimensionLabel === dimensionLabel
-        && tagValue.valueLabel === valueLabel,
-    )
-    if (existingSelectedOption) {
-      return
-    }
+      const { value: valueId } = selectedValue
+      const tagValue = flattenedTagValues.find(({ valueId: id }) => id === valueId)
 
-    onAddTag(tagValue)
-  }
+      if (tagValue === undefined) {
+        return
+      }
 
-  const labelId = useId()
+      onAddTag(tagValue)
+    },
+    [
+      flattenedTagValues,
+      onAddTag,
+    ],
+  )
 
-  type TItemDerived = Exclude<typeof data, undefined> extends ReadonlyArray<infer TItem>
-    ? TItem
-    : never
+  const inputId = useId()
+
+  const EmptyMessage = useMemo(
+    () => (
+      <Span
+        variant='subtle'
+        nonAria
+      >
+        No matching tags found
+      </Span>
+    ),
+    [],
+  )
+  const ErrorMessage = useMemo(
+    () => (
+      <Span
+        size='xs'
+        status='error'
+        nonAria
+      >
+        An error occurred while loading tag options.
+      </Span>
+    ),
+    [],
+  )
 
   const noDimensionsExist = !isLoading
     && data !== undefined
@@ -253,9 +276,7 @@ export function TagSelector({
 
   if (isReadOnly) {
     return (
-      <LabeledTagSelectorContainer
-        labelId={labelId}
-      >
+      <LabeledTagSelectorContainer>
         <TagSelectorSelection
           isReadOnly
           selectedTags={selectedTags}
@@ -267,105 +288,27 @@ export function TagSelector({
   const shouldDisableComboBox = isLoading || isError
 
   return (
-    <LabeledTagSelectorContainer labelId={labelId}>
+    <LabeledTagSelectorContainer forInputId={inputId}>
       <TagSelectorLayoutGroup>
         <ComboBox
-          defaultItems={data ?? []}
-          allowsEmptyCollection
-          menuTrigger='focus'
-          aria-labelledby={labelId}
-          isDisabled={shouldDisableComboBox}
-          selectedKey={null}
-          onSelectionChange={(selectedKey) => {
-            if (selectedKey === null || typeof selectedKey !== 'string') {
-              return
-            }
+          selectedValue={null}
+          onSelectedValueChange={handleSelectedValueChange}
 
-            handleAddTag(selectedKey)
+          groups={groups}
+          inputId={inputId}
+
+          placeholder='Add a tag to this transaction...'
+          slots={{
+            EmptyMessage,
+            ErrorMessage,
           }}
-          disabledKeys={disabledTagValueIds}
-        >
-          <InputGroup>
-            <Input
-              inset
-              placeholder='Add a tag to this transaction...'
-              placement='first'
-            />
-            <Button icon inset variant='ghost' isPending={isLoading}>
-              <ChevronDown size={16} />
-            </Button>
-          </InputGroup>
-          {isError
-            ? (
-              <HStack justify='end'>
-                <P
-                  slot='errorMessage'
-                  pbs='3xs'
-                  size='xs'
-                  status='error'
-                >
-                  An error occurred while loading tag options.
-                </P>
-              </HStack>
-            )
-            : null}
-          <Popover
-            /*
-             * This is necessary until a bug in `react-aria-components` is fixed
-             *
-             * @see {https://github.com/adobe/react-spectrum/pull/7742}
-             */
-            shouldFlip={false}
-            placement='bottom start'
-            crossOffset={-10}
-            offset={10}
-          >
-            <ListBox<TItemDerived>
-              renderEmptyState={() => (
-                <VStack pi='xs' pb='sm'>
-                  <P
-                    variant='subtle'
-                    nonAria
-                  >
-                    No matching tags found.
-                  </P>
-                </VStack>
-              )}
-            >
-              {({
-                id: definitionId,
-                key: definitionLabel,
-                definedValues,
-              }) => (
-                <ListBoxSection key={definitionId}>
-                  <ListBoxSectionHeader
-                    pb='2xs'
-                    size='sm'
-                  >
-                    {definitionLabel}
-                  </ListBoxSectionHeader>
-                  <Collection items={definedValues}>
-                    {({
-                      id: valueId,
-                      value: valueLabel,
-                    }) => (
-                      <ListBoxItem
-                        key={valueId}
-                        id={valueId}
-                        textValue={`${definitionLabel} ${valueLabel}`}
-                      >
-                        <HStack gap='2xs'>
-                          <Check size={16} className={TAG_SELECTOR_CLASS_NAMES.CHECK_ICON} />
-                          <Span slot='label' weight='bold'>{valueLabel}</Span>
-                        </HStack>
-                      </ListBoxItem>
-                    )}
-                  </Collection>
-                </ListBoxSection>
-              )}
-            </ListBox>
-          </Popover>
-        </ComboBox>
+
+          isDisabled={shouldDisableComboBox}
+          isError={isError}
+          isLoading={isLoading}
+
+          displayDisabledAsSelected
+        />
         <TagSelectorSelection
           selectedTags={selectedTags}
           onRemoveTag={onRemoveTag}

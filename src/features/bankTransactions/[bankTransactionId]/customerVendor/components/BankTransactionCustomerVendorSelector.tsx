@@ -92,7 +92,7 @@ export function BankTransactionCustomerVendorSelector({
       onSelectedCustomerVendorChange={triggerSetCustomerVendor}
       placeholder='Set a customer or vendor on this transaction...'
       isReadOnly={isReadOnly}
-      isMutating={isMutating}
+      isMutating={isMutating || selectedCustomerVendor?._local?.isOptimistic}
     />
   )
 }

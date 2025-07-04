@@ -1,10 +1,12 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useId, useMemo } from 'react'
 import { useListCustomers } from '../../customers/api/useListCustomers'
 import { useListVendors } from '../../vendors/api/useListVendors'
 import type { CustomerVendorSchema } from '../customerVendorSchemas'
 import { useDebouncedSearchInput } from '../../../hooks/search/useDebouncedSearchQuery'
 import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
 import { P } from '../../../components/ui/Typography/Text'
+import { HStack, VStack } from '../../../components/ui/Stack/Stack'
+import { Label } from '../../../components/ui/Typography/Text'
 
 type CustomerVendor = typeof CustomerVendorSchema.Type
 
@@ -204,6 +206,8 @@ export function CustomerVendorSelector({
     [],
   )
 
+  const inputId = useId()
+
   const isFiltered = effectiveSearchQuery !== undefined
 
   const isLoading = isLoadingCustomers || isLoadingVendors
@@ -235,22 +239,41 @@ export function CustomerVendorSelector({
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   return (
-    <ComboBox
-      selectedValue={selectedCustomerVendorForComboBox}
-      onSelectedValueChange={handleSelectionChange}
+    <VStack gap='3xs'>
+      <HStack justify='space-between' align='baseline'>
+        <Label
+          htmlFor={inputId}
+          size='sm'
+        >
+          Customer or Vendor
+        </Label>
+        {isMutating
+          ? (
+            <P
+              size='xs'
+              variant='subtle'
+            >
+              Saving...
+            </P>
+          )
+          : null}
+      </HStack>
+      <ComboBox
+        selectedValue={selectedCustomerVendorForComboBox}
+        onSelectedValueChange={handleSelectionChange}
 
-      groups={groups}
+        groups={groups}
 
-      onInputValueChange={handleInputChange}
+        onInputValueChange={handleInputChange}
 
-      label='Customer or Vendor'
-      placeholder={placeholder}
-      slots={{ EmptyMessage, ErrorMessage }}
+        inputId={inputId}
+        placeholder={placeholder}
+        slots={{ EmptyMessage, ErrorMessage }}
 
-      isDisabled={isReadOnly || shouldDisableComboBox}
-      isError={isError}
-      isLoading={isLoadingWithoutFallback}
-      isMutating={isMutating}
-    />
+        isDisabled={isReadOnly || shouldDisableComboBox}
+        isError={isError}
+        isLoading={isLoadingWithoutFallback}
+      />
+    </VStack>
   )
 }
