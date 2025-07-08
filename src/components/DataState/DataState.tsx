@@ -46,6 +46,7 @@ const getIcon = (status: DataStateStatus, icon?: ReactNode) => {
           {icon ?? <CheckCircle size={12} />}
         </span>
       )
+    case DataStateStatus.allDone:
     default:
       return (
         <span className='Layer__data-state__icon Layer__data-state__icon--neutral'>

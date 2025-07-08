@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+import { Loader } from '../Loader/Loader'
 import {
   Table,
   TableHeader,
@@ -20,18 +22,62 @@ export type ColumnConfig<TData, TColumns extends string> = {
 
 export interface DataTableProps<TData, TColumns extends string> {
   columnConfig: ColumnConfig<TData, TColumns>
-  data: TData[]
+  data: TData[] | undefined
   componentName: string
   ariaLabel?: string
+  isLoading?: boolean
+  slots: {
+    EmptyState: React.FC
+  }
 }
 
 export const DataTable = <TData extends { id: string }, TColumns extends string>({
   columnConfig,
   data,
+  isLoading,
   componentName,
   ariaLabel = 'Table',
+  slots,
 }: DataTableProps<TData, TColumns>) => {
   const columns: Column<TData, TColumns>[] = Object.values(columnConfig)
+  const { EmptyState } = slots
+
+  const renderTableBody = useMemo(() => {
+    if (isLoading) {
+      return (
+        <Row>
+          <Cell colSpan={columns.length}>
+            <Loader />
+          </Cell>
+        </Row>
+      )
+    }
+
+    if (data?.length === 0) {
+      return (
+        <Row>
+          <Cell colSpan={columns.length}>
+            <EmptyState />
+          </Cell>
+        </Row>
+      )
+    }
+
+    const RowRenderer = (row: TData) => (
+      <Row key={row.id}>
+        {columns.map(col => (
+          <Cell
+            key={`${row.id}-${col.id}`}
+            className={`Layer__UI__Table-Cell__${componentName}--${col.id}`}
+          >
+            {col.cell(row)}
+          </Cell>
+        ))}
+      </Row>
+    )
+    RowRenderer.displayName = 'Row'
+    return RowRenderer
+  }, [isLoading, data, columns, EmptyState, componentName])
 
   return (
     <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`}>
@@ -43,15 +89,7 @@ export const DataTable = <TData extends { id: string }, TColumns extends string>
         )}
       </TableHeader>
       <TableBody items={data}>
-        {row => (
-          <Row key={row.id}>
-            {columns.map(col => (
-              <Cell key={`${row.id}-${col.id}`} className={`Layer__UI__Table-Cell__${componentName}--${col.id}`}>
-                {col.cell(row)}
-              </Cell>
-            ))}
-          </Row>
-        )}
+        {renderTableBody}
       </TableBody>
     </Table>
   )

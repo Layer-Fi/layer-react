@@ -11,7 +11,7 @@ const ChevronRightFill = ({ size = 18, ...props }: IconSvgProps) => (
   >
     <path d='M6.75 4.5L11.25 9L6.75 13.5' fill='currentColor' />
     <path
-      d='M6.75 4.5L11.25 9L6.75 13.5H6.75Z'
+      d='M6.75 4.5L11.25 9L6.75 13.5Z'
       stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'

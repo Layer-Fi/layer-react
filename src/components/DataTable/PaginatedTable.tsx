@@ -14,12 +14,15 @@ interface PaginatedTableProps<TData, TColumns extends string> extends DataTableP
   pageSize?: number
 }
 
+const EMPTY_ARRAY: never[] = []
 export function PaginatedTable<TData extends { id: string }, TColumns extends string>({
   data,
+  isLoading,
   columnConfig,
   componentName,
   ariaLabel = 'Paginated Table',
   pageSize = 20,
+  slots,
 }: PaginatedTableProps<TData, TColumns>) {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize })
   const columnHelper = createColumnHelper<TData>()
@@ -33,9 +36,8 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
     })
   })
 
-  const defaultData = useMemo(() => [], [])
   const table = useReactTable<TData>({
-    data: data ?? defaultData,
+    data: data ?? EMPTY_ARRAY,
     columns: columnDefs,
     state: { pagination },
     onPaginationChange: setPagination,
@@ -43,7 +45,7 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
     getCoreRowModel: getCoreRowModel(),
   })
 
-  const { rows } = table.getPaginationRowModel()
+  const { rows } = table.getRowModel()
   const rowData = useMemo(() => rows.map(r => r.original), [rows])
 
   const onPageChange = useCallback((page: number) => {
@@ -56,7 +58,9 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
         ariaLabel={ariaLabel}
         columnConfig={columnConfig}
         data={rowData}
+        isLoading={isLoading}
         componentName={componentName}
+        slots={slots}
       />
       <Pagination
         currentPage={table.getState().pagination.pageIndex + 1}

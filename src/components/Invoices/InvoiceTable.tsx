@@ -15,6 +15,10 @@ import AlertCircle from '../../icons/AlertCircle'
 import CheckCircle from '../../icons/CheckCircle'
 import { Button } from '../ui/Button/Button'
 import ChevronRightFill from '../../icons/ChevronRightFill'
+import { DataState, DataStateStatus } from '../DataState/DataState'
+import { HandCoins } from 'lucide-react'
+
+const COMPONENT_NAME = 'InvoiceTable'
 
 enum InvoiceColumns {
   SentAt = 'SentAt',
@@ -99,7 +103,7 @@ const getDueStatusConfig = (invoice: Invoice) => {
       }
 
       return {
-        text: 'Partially Written Off',
+        text: 'Sent',
         subText: `Due in ${pluralize('day', Math.abs(dueDifference), true)}`,
       }
     }
@@ -158,21 +162,37 @@ const columns: ColumnConfig<Invoice, InvoiceColumns> = {
   },
   [InvoiceColumns.Expand]: {
     id: InvoiceColumns.Expand,
-    cell: _row => <Button inset icon variant='ghost'><ChevronRightFill /></Button>,
+    cell: _row => <Button inset icon aria-label='View invoice' variant='ghost'><ChevronRightFill /></Button>,
   },
 }
 
-export const InvoicesTable = () => {
-  const invoicesPages = useListInvoices()
-  const invoices = invoicesPages.data?.flatMap(({ data }) => data) ?? []
+const InvoicesTableEmptyState = () => {
+  return (
+    <DataState
+      status={DataStateStatus.allDone}
+      title='No invoices yet'
+      description='Add your first invoice to start tracking what your customers owe you.'
+      icon={<HandCoins />}
+      spacing
+    />
+  )
+}
 
+export const InvoicesTable = () => {
+  const { data, isValidating } = useListInvoices()
+  const invoices = data?.flatMap(({ data }) => data)
+
+  const isInitialLoad = data === undefined
   return (
     <Container name='InvoiceTable'>
       <PaginatedTable
         ariaLabel='Invoices'
         data={invoices}
+        isLoading={isInitialLoad || isValidating}
         columnConfig={columns}
-        componentName='InvoiceTable'
+        pageSize={10}
+        componentName={COMPONENT_NAME}
+        slots={{ EmptyState: InvoicesTableEmptyState }}
       />
     </Container>
   )

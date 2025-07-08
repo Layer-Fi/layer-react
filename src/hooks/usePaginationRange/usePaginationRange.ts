@@ -21,6 +21,8 @@ export const usePaginationRange = ({
   siblingCount = 1,
   currentPage,
 }: UsePaginationProps): UsePaginationReturn => {
+  if (pageSize < 1) throw new Error('pageSize must be a positive integer >= 1')
+
   const paginationRange = useMemo(() => {
     const totalPageCount = Math.ceil(totalCount / pageSize)
     const staticRange = siblingCount * 2 + 3
@@ -31,16 +33,16 @@ export const usePaginationRange = ({
     }
 
     const leftRange =
-      currentPage <= siblingCount + 2
+      currentPage <= siblingCount + 3
         ? range(1, staticRange)
         : [1, Dots.DotsLeft]
 
-    const middleRange = currentPage > siblingCount + 2 && currentPage < totalPageCount - siblingCount - 1
+    const middleRange = currentPage > siblingCount + 3 && currentPage < totalPageCount - siblingCount - 2
       ? range(currentPage - siblingCount, currentPage + siblingCount)
       : []
 
     const rightRange =
-      currentPage >= totalPageCount - siblingCount - 1
+      currentPage >= totalPageCount - siblingCount - 2
         ? range(totalPageCount - staticRange + 1, totalPageCount)
         : [Dots.DotsRight, totalPageCount]
 
