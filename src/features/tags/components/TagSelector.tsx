@@ -20,7 +20,6 @@ import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
 
 const TAG_SELECTOR_CLASS_NAMES = {
   LAYOUT_GROUP: 'Layer__TagSelectorLayoutGroup',
-  CHECK_ICON: 'Layer__TagSelectorCheckIcon',
 } as const
 
 function TagSelectorLayoutGroup({ children }: PropsWithChildren) {
