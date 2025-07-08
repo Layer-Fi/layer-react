@@ -11,7 +11,7 @@
   block-size: var(--block-size);
 
   border-radius: var(--input-border-radius);
-  border: 1px solid var(--outline-default);
+  border: 1px solid var(--color-base-300);
 
   background-color: var(--color-base-0);
 
@@ -32,6 +32,16 @@
    */
   block-size: var(--block-size);
   min-block-size: var(--block-size);
+
+  &--focused {
+    /*
+     * This seems like the only workaround when the "unstyled" variant
+     * includes a (malicious) `outline: 0 !important`.
+     *
+     * @see {https://github.com/JedWatson/react-select/blob/2a913698ad3d7759fb8e6bc5dd8a7d839227da2f/packages/react-select/src/components/Control.tsx#L49}
+     */
+    outline: 2px solid var(--outline-default) !important;
+  }
 }
 
 .Layer__ComboBoxValueContainer {
@@ -136,9 +146,8 @@
   &--focused {
     background-color: var(--color-base-50);
 
-    &--selected,
     &:hover {
-      border: 2px solid var(--border-color);
+      border-color: var(--color-base-800);
     }
   }
 
@@ -153,14 +162,17 @@
       visibility: visible;
     }
 
-    &--focused,
     &:hover {
-      border: 2px solid var(--border-color);
+      border-color: var(--color-base-800);
     }
   }
 
   &--disabled {
     opacity: 0.5;
+
+    &:hover {
+      border-color: transparent;
+    }
   }
 }
 
