@@ -176,6 +176,9 @@ type TagSelectorProps = {
   onAddTag: (tagValue: TagValue) => void
   onRemoveTag: (tag: Tag) => void
 
+  placeholder?: string
+  menuPlacement?: 'top' | 'bottom'
+
   isReadOnly?: boolean
 }
 
@@ -183,6 +186,9 @@ export function TagSelector({
   selectedTags,
   onAddTag,
   onRemoveTag,
+
+  placeholder,
+  menuPlacement,
 
   isReadOnly,
 }: TagSelectorProps) {
@@ -295,8 +301,9 @@ export function TagSelector({
 
           groups={groups}
           inputId={inputId}
+          menuPlacement={menuPlacement}
 
-          placeholder='Add a tag to this transaction...'
+          placeholder={placeholder ?? 'Add a tag...'}
           slots={{
             EmptyMessage,
             ErrorMessage,

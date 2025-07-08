@@ -17,6 +17,9 @@ import { Header, HeaderCol, HeaderRow } from '../Header'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { Heading, HeadingSize } from '../Typography'
+import { JournalEntryTagSelector } from '../../features/ledger/entries/[ledgerEntryId]/tags/components/JournalEntryTagSelector'
+import { VStack } from '../ui/Stack/Stack'
+import { JournalEntryCustomerVendorSelector } from '../../features/ledger/entries/[ledgerEntryId]/customerVendor/components/JournalEntryCustomerVendorSelector'
 
 export const JournalEntryDetails = () => {
   const {
@@ -236,6 +239,26 @@ export const JournalEntryDetails = () => {
               </Button>
             </div>
           </div>
+        )
+        : null}
+
+      {entry
+        ? (
+          /**
+           * @see {BankTransactionFormFields}
+           *
+           * This could be extracted out into a component, especially if it needs to
+           * be conditionally rendered based on some props.
+           */
+          <VStack
+            className='Layer__border-top'
+            pi='md'
+            pb='md'
+            gap='md'
+          >
+            <JournalEntryCustomerVendorSelector journalEntry={entry} />
+            <JournalEntryTagSelector journalEntry={entry} />
+          </VStack>
         )
         : null}
     </div>

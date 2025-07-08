@@ -95,6 +95,14 @@
   cursor: pointer;
 }
 
+.Layer__ComboBoxMenuPortal {
+  /*
+   * We are limited by the default behavior of `react-select`, which imposes a `z-index: 1`
+   * on the menu portal and the portal by default.
+   */
+  z-index: 100 !important;
+}
+
 .Layer__ComboBoxMenu {
   border-radius: var(--border-radius-xs);
   border: 1px solid var(--border-color);

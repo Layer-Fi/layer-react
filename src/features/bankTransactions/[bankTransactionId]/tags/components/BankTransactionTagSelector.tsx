@@ -52,6 +52,7 @@ export function BankTransactionTagSelector({ bankTransaction }: BankTransactionT
     <TagSelector
       selectedTags={selectedTags}
       isReadOnly={isReadOnly}
+      placeholder='Add a tag to this transaction...'
       onAddTag={handleAddTag}
       onRemoveTag={handleRemoveTag}
     />
