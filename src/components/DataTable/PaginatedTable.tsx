@@ -10,8 +10,13 @@ import { useCallback, useMemo, useState } from 'react'
 import { VStack } from '../ui/Stack/Stack'
 import { Pagination } from '../Pagination'
 
-interface PaginatedTableProps<TData, TColumns extends string> extends DataTableProps<TData, TColumns> {
+interface PaginationProps {
   pageSize?: number
+  hasMore?: boolean
+  fetchMore?: () => void
+}
+interface PaginatedTableProps<TData, TColumns extends string> extends DataTableProps<TData, TColumns> {
+  paginationProps: PaginationProps
 }
 
 const EMPTY_ARRAY: never[] = []
@@ -21,9 +26,11 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
   columnConfig,
   componentName,
   ariaLabel = 'Paginated Table',
-  pageSize = 20,
+  paginationProps,
   slots,
 }: PaginatedTableProps<TData, TColumns>) {
+  const { pageSize = 20, hasMore, fetchMore } = paginationProps
+
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize })
   const columnHelper = createColumnHelper<TData>()
   const columns: Column<TData, TColumns>[] = Object.values(columnConfig)
@@ -43,6 +50,7 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
     onPaginationChange: setPagination,
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
+    autoResetPageIndex: false,
   })
 
   const { rows } = table.getRowModel()
@@ -67,6 +75,8 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
         onPageChange={onPageChange}
         pageSize={table.getState().pagination.pageSize}
         totalCount={table.getRowCount()}
+        hasMore={hasMore}
+        fetchMore={fetchMore}
       />
     </VStack>
   )

@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react'
 import { useListInvoices } from '../../features/invoices/api/useListInvoices'
 import { type Invoice, InvoiceStatus } from '../../features/invoices/invoiceSchemas'
 import { convertCentsToCurrency, formatDate } from '../../utils/format'
@@ -179,18 +180,32 @@ const InvoicesTableEmptyState = () => {
 }
 
 export const InvoicesTable = () => {
-  const { data, isValidating } = useListInvoices()
+  const { data, isLoading, size, setSize } = useListInvoices()
   const invoices = data?.flatMap(({ data }) => data)
+  const hasMore = data?.[data.length - 1].meta.pagination.hasMore
 
-  const isInitialLoad = data === undefined
+  const fetchMore = useCallback(() => {
+    if (hasMore) {
+      void setSize(size + 1)
+    }
+  }, [hasMore, setSize, size])
+
+  const paginationProps = useMemo(() => {
+    return {
+      pageSize: 10,
+      hasMore,
+      fetchMore,
+    }
+  }, [fetchMore, hasMore])
+
   return (
     <Container name='InvoiceTable'>
       <PaginatedTable
         ariaLabel='Invoices'
         data={invoices}
-        isLoading={isInitialLoad || isValidating}
+        isLoading={data === undefined || isLoading}
         columnConfig={columns}
-        pageSize={10}
+        paginationProps={paginationProps}
         componentName={COMPONENT_NAME}
         slots={{ EmptyState: InvoicesTableEmptyState }}
       />
