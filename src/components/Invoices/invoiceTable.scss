@@ -1,0 +1,37 @@
+.Layer__UI__Table__InvoiceTable {
+  table-layout: fixed;
+
+  .Layer__UI__Table-Column__InvoiceTable {
+    &--SentAt {
+      width: 15%;
+      min-width: 6.25rem;
+    }
+
+    &--InvoiceNo {
+      width: 10%;
+      min-width: 4rem;
+    }
+
+    &--Customer {
+      width: 35%;
+      min-width: 10rem;
+    }
+
+    &--Total {
+      text-align: end;
+      width: 15%;
+      min-width: 6rem;
+    }
+
+    &--Status {
+      width: 25%;
+      min-width: 8.25rem;
+    }
+  }
+
+  .Layer__UI__Table-Cell__InvoiceTable {
+    &--Total {
+      border-right: 1px solid var(--color-base-300);
+    }
+  }
+}

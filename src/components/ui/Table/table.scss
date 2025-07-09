@@ -1,0 +1,49 @@
+.Layer__UI__Table-Table {
+  border-collapse: collapse;
+}
+
+.Layer__UI__Table-TableHeader {
+  height: 3.25rem;
+
+  &:not(:last-child) .Layer__UI__Table-Column {
+    border-bottom: 1px solid var(--color-base-300);
+  }
+}
+
+.Layer__UI__Table-Row {
+  height: 3.25rem;
+
+  &:not(:last-child) .Layer__UI__Table-Cell {
+    border-bottom: 1px solid var(--color-base-300);
+  }
+}
+
+.Layer__UI__Table-Column {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-base-600);
+
+  &:first-child {
+    padding-left: var(--spacing-md);
+  }
+
+  &:last-child {
+    padding-right: var(--spacing-md);
+  }
+}
+
+.Layer__UI__Table-Cell {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-base-800);
+
+  &:first-child {
+    padding-left: var(--spacing-md);
+  }
+
+  &:last-child {
+    padding-right: var(--spacing-md);
+  }
+}

@@ -1,25 +1,25 @@
 import { Schema, pipe } from 'effect'
 import { CustomerSchema } from '../customers/customersSchemas'
 
-const InvoiceStatusSchema = Schema.Literal(
-  'VOIDED',
-  'PAID',
-  'WRITTEN_OFF',
-  'PARTIALLY_WRITTEN_OFF',
-  'PARTIALLY_PAID',
-  'SENT',
-)
-export type InvoiceStatus = typeof InvoiceStatusSchema.Type
+export enum InvoiceStatus {
+  Voided = 'VOIDED',
+  Paid = 'PAID',
+  WrittenOff = 'WRITTEN_OFF',
+  PartiallyWrittenOff = 'PARTIALLY_WRITTEN_OFF',
+  PartiallyPaid = 'PARTIALLY_PAID',
+  Sent = 'SENT',
+}
+const InvoiceStatusSchema = Schema.Enums(InvoiceStatus)
 
 export const TransformedInvoiceStatusSchema = Schema.transform(
   Schema.NonEmptyTrimmedString,
   Schema.typeSchema(InvoiceStatusSchema),
   {
     decode: (input) => {
-      if (InvoiceStatusSchema.literals.includes(input as InvoiceStatus)) {
+      if (Object.values(InvoiceStatusSchema.enums).includes(input as InvoiceStatus)) {
         return input as InvoiceStatus
       }
-      return 'SENT'
+      return InvoiceStatus.Sent
     },
     encode: input => input,
   },
@@ -134,12 +134,12 @@ export const InvoiceSchema = Schema.Struct({
   ),
 
   totalAmount: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Number)),
+    Schema.propertySignature(Schema.Number),
     Schema.fromKey('total_amount'),
   ),
 
   outstandingBalance: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Number)),
+    Schema.propertySignature(Schema.Number),
     Schema.fromKey('outstanding_balance'),
   ),
 

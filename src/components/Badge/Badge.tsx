@@ -17,13 +17,14 @@ export enum BadgeVariant {
 }
 
 export interface BadgeProps {
-  children: ReactNode
+  children?: ReactNode
   icon?: ReactNode
   onClick?: ButtonProps['onClick']
   tooltip?: ReactNode
   size?: BadgeSize
   variant?: BadgeVariant
   hoverable?: boolean
+  iconOnly?: boolean
 }
 
 export const Badge = ({
@@ -34,12 +35,14 @@ export const Badge = ({
   size = BadgeSize.MEDIUM,
   variant = BadgeVariant.DEFAULT,
   hoverable = false,
+  iconOnly = false,
 }: BadgeProps) => {
   const baseProps = {
     className: classNames(
       'Layer__badge',
       hoverable && !tooltip ? 'Layer__badge--with-hover' : '',
       onClick || tooltip ? 'Layer__badge--clickable' : '',
+      iconOnly ? 'Layer__badge--icon-only' : '',
       `Layer__badge--${size}`,
       `Layer__badge--${variant}`,
     ),
@@ -49,7 +52,7 @@ export const Badge = ({
 
   let content = (
     <>
-      {icon && <span className='Layer__badge__icon'>{icon}</span>}
+      {icon}
       {children}
     </>
   )

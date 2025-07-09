@@ -6,6 +6,7 @@ import RefreshCcw from '../../icons/RefreshCcw'
 import { Button, ButtonVariant } from '../Button'
 import { Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
+import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 
 export enum DataStateStatus {
   allDone = 'allDone',
@@ -46,12 +47,17 @@ const getIcon = (status: DataStateStatus, icon?: ReactNode) => {
           {icon ?? <CheckCircle size={12} />}
         </span>
       )
-    default:
+    case DataStateStatus.allDone:
       return (
         <span className='Layer__data-state__icon Layer__data-state__icon--neutral'>
           {icon ?? <CheckCircle size={12} />}
         </span>
       )
+    default:
+      unsafeAssertUnreachable({
+        value: status,
+        message: 'Unexpected DataStateStatus in DataState',
+      })
   }
 }
 

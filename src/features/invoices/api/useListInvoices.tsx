@@ -8,7 +8,7 @@ import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash'
 import { Schema } from 'effect'
 import { toDefinedSearchParameters } from '../../../utils/request/toDefinedSearchParameters'
-import { PaginatedResponseMetaSchema, type PaginationParams, type SortParams } from '../../../types/utility/pagination'
+import { PaginatedResponseMetaSchema, SortOrder, type PaginationParams, type SortParams } from '../../../types/utility/pagination'
 import { InvoiceStatus, InvoiceSchema, type Invoice } from '../invoiceSchemas'
 
 export const LIST_INVOICES_TAG_KEY = '#list-invoices'
@@ -47,6 +47,14 @@ class ListInvoicesSWRResponse {
 
   get data() {
     return this.swrResponse.data
+  }
+
+  get size() {
+    return this.swrResponse.size
+  }
+
+  get setSize() {
+    return this.swrResponse.setSize
   }
 
   get isLoading() {
@@ -117,7 +125,11 @@ export function useListInvoices({
   sortOrder,
   limit,
   showTotalCount,
-}: ListInvoicesOptions = {}) {
+}: ListInvoicesOptions = {
+  showTotalCount: true,
+  sortBy: SortBy.SentAt,
+  sortOrder: SortOrder.DESC,
+}) {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
@@ -163,7 +175,7 @@ export function useListInvoices({
     )().then(Schema.decodeUnknownPromise(ListInvoicesReturnSchema)),
     {
       keepPreviousData: true,
-      revalidateAll: true,
+      revalidateFirstPage: false,
       initialSize: 1,
     },
   )

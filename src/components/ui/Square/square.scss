@@ -5,7 +5,7 @@
   aspect-ratio: 1 / 1;
 
   &[data-inset] {
-    --min-size: 1.75rem;
+    --min-size: 2rem;
 
     min-block-size: var(--min-size);
     min-inline-size: var(--min-size);

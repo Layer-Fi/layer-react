@@ -1,6 +1,6 @@
 import { Schema, pipe } from 'effect'
 
-enum SortOrder {
+export enum SortOrder {
   ASC = 'ASC',
   ASCENDING = 'ASCENDING',
   DES = 'DES',
