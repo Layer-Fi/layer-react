@@ -1,0 +1,181 @@
+.Layer__ComboBoxContainer {
+  display: grid;
+}
+
+.Layer__ComboBoxControl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  --block-size: 2.25rem;
+
+  block-size: var(--block-size);
+
+  border-radius: var(--input-border-radius);
+  border: 1px solid var(--color-base-300);
+
+  background-color: var(--color-base-0);
+
+  &--focused {
+    border-color: var(--outline-active);
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+  }
+}
+
+.Layer__ComboBoxContainer > .Layer__ComboBoxControl {
+  /*
+   * This is intentional.
+   *
+   * The "unstyled" variant of react-select still forces a min-height on the control of 38 px.
+   */
+  block-size: var(--block-size);
+  min-block-size: var(--block-size);
+
+  &--focused {
+    /*
+     * This seems like the only workaround when the "unstyled" variant
+     * includes a (malicious) `outline: 0 !important`.
+     *
+     * @see {https://github.com/JedWatson/react-select/blob/2a913698ad3d7759fb8e6bc5dd8a7d839227da2f/packages/react-select/src/components/Control.tsx#L49}
+     */
+    outline: 2px solid var(--outline-default) !important;
+  }
+}
+
+.Layer__ComboBoxValueContainer {
+  padding-inline-start: var(--spacing-xs);
+
+  cursor: text;
+
+  font-size: var(--input-font-size);
+}
+
+.Layer__ComboBoxIndicatorsContainer {
+  padding-inline-end: var(--spacing-3xs);
+}
+
+.Layer__ComboBoxClearIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  --size: 1.75rem;
+
+  block-size: var(--size);
+  inline-size: var(--size);
+
+  cursor: pointer;
+}
+
+.Layer__ComboBoxLoadingIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  --size: 1.75rem;
+
+  block-size: var(--size);
+  inline-size: var(--size);
+
+  cursor: default;
+}
+
+.Layer__ComboBoxDropdownIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  --size: 1.75rem;
+
+  block-size: var(--size);
+  inline-size: var(--size);
+
+  cursor: pointer;
+}
+
+.Layer__ComboBoxMenu {
+  border-radius: var(--border-radius-xs);
+  border: 1px solid var(--border-color);
+
+  margin-block-start: var(--spacing-2xs);
+
+  background-color: var(--color-base-0);
+}
+
+.Layer__ComboBoxMenuList {
+  overflow-y: auto;
+
+  .Layer__ComboBoxOption {
+    /*
+     * This is intentionally done indirectly to increase specificity.
+     *
+     * `react-select` explicitly sets 'default'
+     */
+    cursor: pointer;
+
+    &--disabled {
+      cursor: not-allowed;
+    }
+  }
+}
+
+.Layer__ComboBoxGroup {
+  padding-block: var(--spacing-xs);
+
+  &:not(:last-of-type) {
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  > .Layer__ComboBoxGroupHeading {
+    padding-block: var(--spacing-3xs);
+    padding-inline: var(--spacing-sm);
+  }
+
+  > div > .Layer__ComboBoxOption {
+    padding-inline: var(--spacing-sm);
+  }
+}
+
+.Layer__ComboBoxOption {
+  padding-block: var(--spacing-xs);
+
+  border: 2px solid transparent;
+
+  &--focused {
+    background-color: var(--color-base-50);
+
+    &:hover {
+      border-color: var(--color-base-800);
+    }
+  }
+
+  .Layer__ComboBoxOptionCheckIcon {
+    visibility: hidden;
+  }
+
+  &--selected {
+    background-color: var(--color-base-50);
+
+    .Layer__ComboBoxOptionCheckIcon {
+      visibility: visible;
+    }
+
+    &:hover {
+      border-color: var(--color-base-800);
+    }
+  }
+
+  &--disabled {
+    opacity: 0.5;
+
+    &:hover {
+      border-color: transparent;
+    }
+  }
+}
+
+.Layer__ComboBoxNoOptionsMessage {
+  padding-block: var(--spacing-sm);
+}

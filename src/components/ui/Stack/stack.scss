@@ -13,7 +13,7 @@
     }
   }
 
-  $alignments: start, center, end;
+  $alignments: start, center, end, baseline;
 
   @each $alignment in $alignments {
     &[data-align="#{$alignment}"] {

@@ -8,20 +8,18 @@
 
   min-block-size: 2.25rem;
 
-  border-radius: var(--input-border-radius);
-  border: 1px solid var(--outline-default);
-
-  background-color: var(--color-base-0);
-
   padding-inline-start: var(--spacing-xs);
   padding-inline-end: var(--spacing-3xs);
 
-  &[data-focus-within] {
-    border-color: var(--outline-active);
-  }
+  border-radius: var(--input-border-radius);
+  border: 1px solid var(--color-base-300);
 
+  background-color: var(--color-base-0);
+
+  &[data-focus-within],
   &[data-focus-visible] {
-    outline: 1px solid var(--outline-default);
+    border-color: var(--color-base-800);
+    outline: 2px solid var(--outline-default);
   }
 
   &[data-action-count='2'] {

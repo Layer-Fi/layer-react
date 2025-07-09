@@ -86,14 +86,13 @@ export function BankTransactionCustomerVendorSelector({
     [trigger],
   )
 
-  const selectedValueIsOptimistic = Boolean(selectedCustomerVendor?._local?.isOptimistic)
-
   return (
     <CustomerVendorSelector
       selectedCustomerVendor={selectedCustomerVendor}
       onSelectedCustomerVendorChange={triggerSetCustomerVendor}
-      isMutating={isMutating || selectedValueIsOptimistic}
+      placeholder='Set a customer or vendor on this transaction...'
       isReadOnly={isReadOnly}
+      isMutating={isMutating || selectedCustomerVendor?._local?.isOptimistic}
     />
   )
 }

@@ -60,6 +60,7 @@ export interface BankTransactionsProps {
    */
   mode?: BankTransactionsMode
 
+  showCustomerVendor?: boolean
   showDescriptions?: boolean
   showReceiptUploads?: boolean
   showTooltips?: boolean
@@ -81,12 +82,13 @@ export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
 export const BankTransactions = ({
   onError,
   showTags = false,
+  showCustomerVendor = false,
   mode,
   ...props
 }: BankTransactionsWithErrorProps) => {
   usePreloadTagDimensions({ isEnabled: showTags })
-  usePreloadCustomers({ isEnabled: false })
-  usePreloadVendors({ isEnabled: false })
+  usePreloadCustomers({ isEnabled: showCustomerVendor })
+  usePreloadVendors({ isEnabled: showCustomerVendor })
 
   const contextData = useAugmentedBankTransactions({ monthlyView: props.monthlyView })
 
@@ -95,7 +97,7 @@ export const BankTransactions = ({
       <BankTransactionsContext.Provider value={contextData}>
         <LegacyModeProvider overrideMode={mode}>
           <BankTransactionTagVisibilityProvider showTags={showTags}>
-            <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={false}>
+            <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
               <BankTransactionsContent {...props} />
             </BankTransactionCustomerVendorVisibilityProvider>
           </BankTransactionTagVisibilityProvider>
