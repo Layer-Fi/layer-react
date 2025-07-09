@@ -109,10 +109,20 @@ export function useSetMetadataOnBankTransaction({
           return {
             ...bankTransaction,
             customer: customer
-              ? encodeCustomer(customer)
+              ? encodeCustomer({
+                ...customer,
+                _local: {
+                  isOptimistic: true,
+                },
+              })
               : null,
             vendor: vendor
-              ? encodeVendor(vendor)
+              ? encodeVendor({
+                ...vendor,
+                _local: {
+                  isOptimistic: true,
+                },
+              })
               : null,
           }
         }
@@ -121,7 +131,11 @@ export function useSetMetadataOnBankTransaction({
       })
 
       return triggerResultPromise
-        .finally(() => { void debouncedInvalidateBankTransactions() })
+        .finally(() => {
+          void debouncedInvalidateBankTransactions({
+            withPrecedingOptimisticUpdate: true,
+          })
+        })
     },
     [
       bankTransactionId,

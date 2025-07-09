@@ -163,7 +163,7 @@ export function useListInvoices({
     )().then(Schema.decodeUnknownPromise(ListInvoicesReturnSchema)),
     {
       keepPreviousData: true,
-      revalidateAll: true,
+      revalidateFirstPage: false,
       initialSize: 1,
     },
   )

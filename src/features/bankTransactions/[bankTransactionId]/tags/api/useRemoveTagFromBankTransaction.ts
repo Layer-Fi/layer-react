@@ -104,7 +104,11 @@ export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTag
       })
 
       return triggerResultPromise
-        .finally(() => { void debouncedInvalidateBankTransactions() })
+        .finally(() => {
+          void debouncedInvalidateBankTransactions({
+            withPrecedingOptimisticUpdate: true,
+          })
+        })
     },
     [
       bankTransactionId,

@@ -99,7 +99,7 @@ export function useListLedgerEntries({
   const { data: auth } = useAuth()
 
   return useSWRInfinite(
-    (index, previousPageData: ListLedgerEntriesReturn | null) => keyLoader(
+    (_index, previousPageData: ListLedgerEntriesReturn | null) => keyLoader(
       previousPageData,
       {
         ...auth,
@@ -136,7 +136,6 @@ export function useListLedgerEntries({
     )(),
     {
       keepPreviousData: true,
-      revalidateAll: false,
       revalidateFirstPage: false,
       initialSize: 1,
     },
