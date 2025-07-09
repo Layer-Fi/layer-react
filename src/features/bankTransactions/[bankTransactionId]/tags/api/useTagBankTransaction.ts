@@ -127,7 +127,11 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
       })
 
       return triggerResultPromise
-        .finally(() => { void debouncedInvalidateBankTransactions() })
+        .finally(() => {
+          void debouncedInvalidateBankTransactions({
+            withPrecedingOptimisticUpdate: true,
+          })
+        })
     },
     [
       bankTransactionId,

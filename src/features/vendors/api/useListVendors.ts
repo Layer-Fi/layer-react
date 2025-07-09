@@ -146,7 +146,7 @@ export function useListVendors({ query, isEnabled = true }: UseListVendorsParame
     )().then(Schema.decodeUnknownPromise(ListVendorsRawResultSchema)),
     {
       keepPreviousData: true,
-      revalidateAll: true,
+      revalidateFirstPage: false,
       initialSize: 1,
     },
   )

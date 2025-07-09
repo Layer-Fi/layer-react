@@ -110,7 +110,7 @@ export function useBankTransactions({
     },
     {
       keepPreviousData: true,
-      revalidateAll: true,
+      revalidateFirstPage: false,
       initialSize: 1,
     },
   )
@@ -121,11 +121,18 @@ const INVALIDATION_DEBOUNCE_OPTIONS = {
   maxWait: 3000,
 }
 
+type BankTransactionsInvalidateOptions = {
+  withPrecedingOptimisticUpdate?: boolean
+}
+
 export function useBankTransactionsInvalidator() {
   const { invalidate } = useGlobalInvalidator()
 
   const invalidateBankTransactions = useCallback(
-    () => invalidate(tags => tags.includes(BANK_TRANSACTIONS_TAG_KEY)),
+    (invalidateOptions?: BankTransactionsInvalidateOptions) => invalidate(
+      tags => tags.includes(BANK_TRANSACTIONS_TAG_KEY),
+      invalidateOptions,
+    ),
     [invalidate],
   )
 

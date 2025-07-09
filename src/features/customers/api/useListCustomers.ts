@@ -147,7 +147,7 @@ export function useListCustomers({ query, isEnabled = true }: UseListCustomersPa
     )().then(Schema.decodeUnknownPromise(ListCustomersRawResultSchema)),
     {
       keepPreviousData: true,
-      revalidateAll: true,
+      revalidateFirstPage: false,
       initialSize: 1,
     },
   )

@@ -5,11 +5,13 @@ import { withSWRKeyTags } from './withSWRKeyTags'
 type GetRelevantCacheKeysParameters = {
   cache: Cache<unknown>
   predicate: (tags: ReadonlyArray<string>) => boolean
+  withPrecedingOptimisticUpdate?: boolean
 }
 
 function getRelevantCacheKeys({
   cache,
   predicate,
+  withPrecedingOptimisticUpdate,
 }: GetRelevantCacheKeysParameters) {
   return Array.from(cache.keys())
     .map((key) => {
@@ -26,9 +28,25 @@ function getRelevantCacheKeys({
               .split(',')
               .map(tag => tag.replaceAll('"', ''))
 
-            return predicate(tags)
-              ? key
-              : undefined
+            const isMatch = predicate(tags)
+
+            if (isMatch) {
+              if ('_i' in data && !withPrecedingOptimisticUpdate) {
+                /*
+                 * This is an intentional, but nasty side-effect.
+                 *
+                 * We are diving into the deep internals of SWR to indicate that every page in the infinite query
+                 * should be fetched in the next revalidation cycle.
+                 *
+                 * @see {https://github.com/vercel/swr/blob/4e7e8ab6b1cce017d70b39b89becabaab3d2626a/src/infinite/index.ts#L175}
+                 */
+                data._i = true
+              }
+
+              return key
+            }
+
+            return undefined
           }
         }
 
@@ -40,14 +58,23 @@ function getRelevantCacheKeys({
     .filter(key => key !== undefined)
 }
 
+type GlobalInvalidateOptions = {
+  withPrecedingOptimisticUpdate?: boolean
+}
+
 export function useGlobalInvalidator() {
   const { mutate, cache } = useSWRConfig()
 
   const invalidate = useCallback(
     (
       predicate: (tags: ReadonlyArray<string>) => boolean,
+      { withPrecedingOptimisticUpdate }: GlobalInvalidateOptions = {},
     ) => Promise.all(
-      getRelevantCacheKeys({ cache, predicate })
+      getRelevantCacheKeys({
+        cache,
+        predicate,
+        withPrecedingOptimisticUpdate,
+      })
         .map(key => mutate(
           key,
           undefined,

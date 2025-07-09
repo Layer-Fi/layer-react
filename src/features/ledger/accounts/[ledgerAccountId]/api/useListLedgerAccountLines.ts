@@ -40,18 +40,18 @@ export const listLedgerAccountLines = get<
   ListLedgerAccountLinesReturn,
   GetLedgerAccountLinesParams
 >(({
-     businessId,
-     accountId,
-     include_entries_before_activation,
-     include_child_account_lines,
-     start_date,
-     end_date,
-     sort_by,
-     sort_order,
-     cursor,
-     limit,
-     show_total_count
-   }) => {
+  businessId,
+  accountId,
+  include_entries_before_activation,
+  include_child_account_lines,
+  start_date,
+  end_date,
+  sort_by,
+  sort_order,
+  cursor,
+  limit,
+  show_total_count,
+}) => {
   const parameters = toDefinedSearchParameters({
     include_entries_before_activation,
     include_child_account_lines,
@@ -145,7 +145,7 @@ export function useListLedgerAccountLines({
   const { data: auth } = useAuth()
 
   return useSWRInfinite(
-    (index, previousPageData: ListLedgerAccountLinesReturn | null) => keyLoader(
+    (_index, previousPageData: ListLedgerAccountLinesReturn | null) => keyLoader(
       previousPageData,
       {
         ...auth,
@@ -163,20 +163,20 @@ export function useListLedgerAccountLines({
       },
     ),
     ({
-       accessToken,
-       apiUrl,
-       businessId,
-       accountId,
-       cursor,
-       include_entries_before_activation,
-       include_child_account_lines,
-       start_date,
-       end_date,
-       sort_by,
-       sort_order,
-       limit,
-       show_total_count,
-     }) => listLedgerAccountLines(
+      accessToken,
+      apiUrl,
+      businessId,
+      accountId,
+      cursor,
+      include_entries_before_activation,
+      include_child_account_lines,
+      start_date,
+      end_date,
+      sort_by,
+      sort_order,
+      limit,
+      show_total_count,
+    }) => listLedgerAccountLines(
       apiUrl,
       accessToken,
       {
@@ -197,7 +197,6 @@ export function useListLedgerAccountLines({
     )(),
     {
       keepPreviousData: true,
-      revalidateAll: false,
       revalidateFirstPage: false,
       initialSize: 1,
     },
