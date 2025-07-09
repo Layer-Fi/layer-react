@@ -31,14 +31,6 @@
   &:last-child {
     padding-right: var(--spacing-md);
   }
-
-  $alignments: left, center, right;
-
-  @each $alignment in $alignments {
-    &[data-text-align="#{$alignment}"] {
-      text-align: $alignment;
-    }
-  }
 }
 
 .Layer__UI__Table-Cell {

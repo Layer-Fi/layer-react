@@ -57,9 +57,9 @@ export const Pagination = ({
         <ul className='Layer__pagination' role='list'>
           <li key='page-prev'>
             <PaginationButton
-              onClick={() => onPageChange(currentPage - 1)}
+              onPress={() => onPageChange(currentPage - 1)}
               isDisabled={currentPage === 1}
-              aria-label='Previous page'
+              aria-label='Go to previous page'
             >
               <ChevronLeft size={12} />
             </PaginationButton>
@@ -84,8 +84,8 @@ export const Pagination = ({
                 className={classNames(pageNumber === currentPage && 'Layer__pagination__selected-item')}
               >
                 <PaginationButton
-                  aria-hidden='true'
-                  onClick={() => onPageChange(Number(pageNumber))}
+                  onPress={() => onPageChange(Number(pageNumber))}
+                  aria-label={`Go to page ${pageNumber}`}
                 >
                   {pageNumber}
                 </PaginationButton>
@@ -96,8 +96,8 @@ export const Pagination = ({
             ? (
               <li key='page-has-more'>
                 <PaginationButton
-                  onClick={fetchMore}
-                  aria-label='More results'
+                  onPress={fetchMore}
+                  aria-label='Get more results'
                 >
                   &hellip;
                 </PaginationButton>
@@ -106,9 +106,9 @@ export const Pagination = ({
             : null}
           <li key='page-next'>
             <PaginationButton
-              onClick={() => onPageChange(currentPage + 1)}
+              onPress={() => onPageChange(currentPage + 1)}
               isDisabled={currentPage === lastPage}
-              aria-label='Next page'
+              aria-label='Go to next page'
             >
               <ChevronRight size={12} />
             </PaginationButton>

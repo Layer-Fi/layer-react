@@ -20,6 +20,13 @@ export type ColumnConfig<TData, TColumns extends string> = {
   [K in TColumns]: Column<TData, K>;
 }
 
+// DataTable has two type parameters - `TData` and `TColumns`
+// Neither type is a subset of the other, and each is defined as follows:
+// 1. `TData` is the shape of one row of data as it comes back from the API.
+// 2. `TColumns` is the set of the columns that are displayed in the table. Not every field in `TData`
+//  may have its own column, and there may be columns that are derived from multiple fields in `TData`.
+// The relationship between `TColumns` and `TData` is that every column specified by`TColumn` has a
+// `cell` render method in the `columnConfig` that takes a row of type `TData` and displays the cell.
 export interface DataTableProps<TData, TColumns extends string> {
   columnConfig: ColumnConfig<TData, TColumns>
   data: TData[] | undefined
@@ -43,7 +50,7 @@ export const DataTable = <TData extends { id: string }, TColumns extends string>
   const { EmptyState } = slots
 
   const renderTableBody = useMemo(() => {
-    if (isLoading) {
+    if (isLoading && data === undefined) {
       return (
         <Row>
           <Cell colSpan={columns.length}>
