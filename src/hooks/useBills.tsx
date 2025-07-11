@@ -139,7 +139,7 @@ export const useBills: UseBills = () => {
 
   const lastMetadata = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {
-      return rawResponseData[rawResponseData.length - 1].meta
+      return rawResponseData[rawResponseData.length - 1]?.meta
     }
 
     return undefined
@@ -149,8 +149,8 @@ export const useBills: UseBills = () => {
     if (rawResponseData && rawResponseData.length > 0) {
       const lastElement = rawResponseData[rawResponseData.length - 1]
       return Boolean(
-        lastElement.meta?.pagination?.cursor
-        && lastElement.meta?.pagination?.has_more,
+        lastElement?.meta?.pagination?.cursor
+        && lastElement.meta.pagination.has_more,
       )
     }
 

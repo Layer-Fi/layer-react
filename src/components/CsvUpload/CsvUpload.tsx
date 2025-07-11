@@ -108,6 +108,12 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
         return
       }
 
+      if (!firstFile) {
+        onFileSelected(null)
+        setErrorMessage(undefined)
+        return
+      }
+
       const maybeErrorMessage = validateCsvFile(firstFile)
       if (!maybeErrorMessage) {
         onFileSelected(firstFile)
