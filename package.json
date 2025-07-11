@@ -75,24 +75,24 @@
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.8",
-    "@tanstack/react-form": "^1.9.1",
+    "@tanstack/react-form": "^1.14.1",
     "@tanstack/react-table": "^8.21.3",
-    "@tanstack/react-virtual": "^3.13.9",
+    "@tanstack/react-virtual": "^3.13.12",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
-    "effect": "^3.16.3",
-    "libphonenumber-js": "^1.12.7",
+    "effect": "^3.16.12",
+    "libphonenumber-js": "^1.12.9",
     "lucide-react": "^0.507.0",
     "pluralize": "^8.0.0",
-    "react-aria-components": "^1.8.0",
+    "react-aria-components": "^1.10.1",
     "react-currency-input-field": "^3.10.0",
     "react-datepicker": "^6.9.0",
     "react-dropzone": "^14.3.8",
     "react-plaid-link": "^4.0.1",
-    "react-select": "^5.10.1",
+    "react-select": "^5.10.2",
     "recharts": "^2.15.3",
-    "swr": "^2.3.3",
+    "swr": "^2.3.4",
     "uuid": "^11.1.0",
-    "zustand": "^5.0.4"
+    "zustand": "^5.0.6"
   }
 }
