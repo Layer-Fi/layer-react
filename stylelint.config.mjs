@@ -188,12 +188,12 @@ export default {
           'border-radius',
           'border-start-start-radius',
           'border-start-end-radius',
-          'border-end-start-radius',
           'border-end-end-radius',
+          'border-end-start-radius',
           'border-top-left-radius',
           'border-top-right-radius',
-          'border-bottom-left-radius',
-          'border-bottom-right-radius'
+          'border-bottom-right-radius',
+          'border-bottom-left-radius'
         ],
       },
       {
