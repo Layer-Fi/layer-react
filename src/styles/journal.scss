@@ -1,7 +1,7 @@
 .Layer__component-container.Layer__journal {
+  position: relative;
   display: flex;
   align-items: stretch;
-  position: relative;
   overflow: auto;
 
   .Layer__table-state-container {
@@ -28,18 +28,15 @@
 }
 
 .Layer__journal__table-container {
-  max-width: 100%;
   overflow: auto;
+  max-width: 100%;
 }
 
 .Layer__journal__arrow .Layer__table-cell-content {
   padding-right: 0 !important;
 }
 
-.Layer__journal__table
-.Layer__table-cell
-.Layer__table-cell-content
-.Layer__table-cell-content::before {
+.Layer__journal__table .Layer__table-cell .Layer__table-cell-content .Layer__table-cell-content::before {
   height: 52px;
 }
 
@@ -59,8 +56,8 @@
 
 .Layer__journal__actions {
   display: flex;
-  align-items: center;
   gap: var(--spacing-sm);
+  align-items: center;
 }
 
 .Layer__table-cell.Layer__journal__arrow,
@@ -85,15 +82,13 @@
   font-weight: var(--font-weight-bold);
 }
 
-.Layer__journal__table
-.Layer__table-row--depth-0
-.Layer__table-cell.Layer__journal__arrow {
+.Layer__journal__table .Layer__table-row--depth-0 .Layer__table-cell.Layer__journal__arrow {
   font-weight: var(--font-weight-bold);
 }
 
 .Layer__journal__balance {
-  text-align: right;
   justify-content: flex-end;
+  text-align: right;
 }
 
 .Layer__table-cell.Layer__journal__actions {
@@ -101,11 +96,11 @@
 
   .Layer__table-cell-content {
     display: flex;
-    justify-content: flex-end;
+    gap: var(--spacing-xs);
     align-items: center;
+    justify-content: flex-end;
     padding-top: var(--spacing-3xs);
     padding-bottom: var(--spacing-3xs);
-    gap: var(--spacing-xs);
 
     & > .Layer__btn {
       opacity: 0;
@@ -116,12 +111,12 @@
   }
 
   .Layer__btn--icon-only {
-    width: 32px;
+    box-sizing: border-box;
     height: 32px;
     min-height: 32px;
     max-height: 32px;
+    width: 32px;
     padding: 0;
-    box-sizing: border-box;
   }
 }
 
@@ -129,10 +124,7 @@
   background-color: var(--color-base-50);
 }
 
-.Layer__journal__table
-.Layer__table-row:hover
-.Layer__journal__actions
-.Layer__btn {
+.Layer__journal__table .Layer__table-row:hover .Layer__journal__actions .Layer__btn {
   opacity: 1;
   visibility: visible;
   transform: scale(1);
@@ -166,11 +158,11 @@
 }
 
 .Layer__journal__form-edit-entry {
-  padding: var(--spacing-md) var(--spacing-xl);
   display: flex;
+  gap: var(--spacing-md);
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-xl);
 
   .Layer__text {
     margin: 0;
@@ -225,13 +217,13 @@
   }
 
   .Layer__journal__row---mobile {
-    visibility: visible;
     display: table-row;
+    visibility: visible;
   }
 
   .Layer__journal__row---desktop {
-    visibility: hidden;
     display: none;
+    visibility: hidden;
   }
 
   .Layer__journal__form-row {
@@ -258,8 +250,8 @@
 .Layer__journal__form__input-group__line-item {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-md) 0;
   gap: var(--spacing-2xs);
+  padding: var(--spacing-md) 0;
 
   &:not(:first-of-type) {
     border-top: 1px solid var(--color-base-300);
@@ -267,17 +259,18 @@
 }
 
 .Layer__remove__button {
-  box-shadow: 0 0 0 1px var(--input-border-color),
-    0 0 0 2px rgb(0 0 0 / 0%);
   padding: 8px;
+  box-shadow:
+    0 0 0 1px var(--input-border-color),
+    0 0 0 2px rgb(0 0 0 / 0%);
   margin-left: 8px;
 }
 
 .Layer__journal__form__input-group {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-xl);
   gap: var(--spacing-3xs);
+  padding: var(--spacing-xl);
 
   &__textarea {
     background: var(--color-base-50);
@@ -294,9 +287,9 @@
   .Layer__input-group {
     .Layer__journal__datepicker__wrapper {
       display: flex;
+      gap: var(--spacing-xs);
       align-items: center;
       justify-content: flex-end;
-      gap: var(--spacing-xs);
     }
   }
 
@@ -314,10 +307,10 @@
 }
 
 .Layer__journal__form__error-message {
-  padding: var(--spacing-4xs) var(--spacing-xl);
-  width: 100%;
-  text-align: right;
   box-sizing: border-box;
+  width: 100%;
+  padding: var(--spacing-4xs) var(--spacing-xl);
+  text-align: right;
   color: var(--color-danger);
 }
 
@@ -359,26 +352,22 @@
     .Layer__form .Layer__input-group,
     .Layer__form .Layer__journal__form__input-group__title,
     .Layer__form .Layer__journal__add-entry-line {
-      max-width: 600px;
       width: 100%;
+      max-width: 600px;
       margin: auto;
     }
 
     .Layer__form .Layer__header__col {
       width: 100%;
-      margin: auto;
-      padding: var(--spacing-md) var(--spacing-xl);
       max-width: calc(600px + (var(--spacing-xl) * 2));
+      padding: var(--spacing-md) var(--spacing-xl);
+      margin: auto;
     }
 
     .Layer__journal__bottom-actions {
       max-width: 600px;
       margin: auto;
     }
-  }
-
-  .Layer__journal .Layer__journal__sidebar__header .actions {
-    display: none;
   }
 
   .Layer__journal .Layer__journal__sidebar__header .actions {
@@ -404,8 +393,8 @@
 
 @container (min-width: 500px) and (max-width: 1024px) {
   .Layer__journal__panel .Layer__details-list .Layer__component-header {
-    padding-left: var(--spacing-xl);
     padding-right: var(--spacing-xl);
+    padding-left: var(--spacing-xl);
   }
 }
 
@@ -420,13 +409,13 @@
   }
 
   .Layer__journal__entry-details__line-items {
-    padding-left: 0;
-    padding-right: 0;
     padding-top: 0;
+    padding-right: 0;
+    padding-left: 0;
 
     .Layer__card {
-      box-shadow: none;
       border-radius: 0;
+      box-shadow: none;
     }
   }
 
@@ -435,8 +424,8 @@
   }
 
   .Layer__journal__entry-details__back-btn {
-    padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
+    padding-left: var(--spacing-md);
   }
 
   .Layer__input-group.Layer__input-group--inline {

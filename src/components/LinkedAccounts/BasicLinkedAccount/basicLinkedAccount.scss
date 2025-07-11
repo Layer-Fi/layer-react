@@ -1,9 +1,9 @@
 .Layer__BasicLinkedAccountContainer {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
+  padding-block: var(--spacing-xs);
 
   padding-inline: var(--spacing-xs) var(--spacing-md);
-  padding-block: var(--spacing-xs);
   border-radius: var(--border-radius-xs);
   border: 1px solid var(--outline-subtle);
 
@@ -16,8 +16,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
   height: 28px;
+  width: 52px;
   padding: var(--spacing-3xs) 0;
   border-radius: var(--border-radius-3xs);
   background: var(--color-base-0);

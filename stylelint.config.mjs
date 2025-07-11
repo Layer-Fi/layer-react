@@ -188,12 +188,12 @@ export default {
           'border-radius',
           'border-start-start-radius',
           'border-start-end-radius',
-          'border-end-start-radius',
           'border-end-end-radius',
+          'border-end-start-radius',
           'border-top-left-radius',
           'border-top-right-radius',
-          'border-bottom-left-radius',
-          'border-bottom-right-radius'
+          'border-bottom-right-radius',
+          'border-bottom-left-radius'
         ],
       },
       {
@@ -272,6 +272,7 @@ export default {
     '@stylistic/declaration-colon-space-after': 'always-single-line',
     '@stylistic/indentation': 2,
     '@stylistic/max-empty-lines': 1,
+    '@stylistic/max-line-length': 170,
     '@stylistic/no-eol-whitespace': true,
     '@stylistic/no-missing-end-of-source-newline': true,
     '@stylistic/string-quotes': 'single',
