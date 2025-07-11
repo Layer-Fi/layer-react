@@ -40,12 +40,26 @@
 
 .Layer__platform-onboarding-layout__footer {
   padding: var(--spacing-lg) 0;
-  max-width: 1200px;
+  max-width: 672px; /* Match the content width */
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 
   @container (width < 500px) {
     padding: var(--spacing-md) 0;
   }
+}
+
+.Layer__platform-onboarding__button-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: var(--spacing-lg);
+}
+
+.Layer__business-form .Layer__btn[type="submit"] {
+  display: none;
 }
 
 .Layer__platform-onboarding__welcome,
@@ -56,6 +70,11 @@
   align-items: flex-start;
   max-width: 510px;
   margin-bottom: var(--spacing-lg);
+}
+
+.Layer__platform-onboarding__welcome-footer {
+  margin-top: var(--spacing-md);
+  width: 100%;
 }
 
 .Layer__platform-onboarding__welcome-footer__content {
