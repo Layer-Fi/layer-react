@@ -17,6 +17,9 @@ import { Header, HeaderCol, HeaderRow } from '../Header'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { Heading, HeadingSize } from '../Typography'
+import { JournalEntryTagSelector } from '../../features/ledger/entries/[ledgerEntryId]/tags/components/JournalEntryTagSelector'
+import { VStack } from '../ui/Stack/Stack'
+import { JournalEntryCustomerVendorSelector } from '../../features/ledger/entries/[ledgerEntryId]/customerVendor/components/JournalEntryCustomerVendorSelector'
 
 export const JournalEntryDetails = () => {
   const {
@@ -55,10 +58,12 @@ export const JournalEntryDetails = () => {
       setReverseEntryProcessing(true)
       setReverseEntryError(undefined)
       await reverseEntry(entry.id)
-      await refetch()
-    } catch (_err) {
+      refetch()
+    }
+    catch (_err) {
       setReverseEntryError('Failed')
-    } finally {
+    }
+    finally {
       setReverseEntryProcessing(false)
     }
   }
@@ -79,10 +84,11 @@ export const JournalEntryDetails = () => {
           </HeaderCol>
         </HeaderRow>
       </Header>
+
       <DetailsList
         title='Transaction source'
         titleClassName='Layer__hidden-lg Layer__hidden-xl'
-        actions={
+        actions={(
           <Button
             rightIcon={<XIcon />}
             iconOnly={true}
@@ -90,7 +96,7 @@ export const JournalEntryDetails = () => {
             className='Layer__details-list__close-btn'
             variant={ButtonVariant.secondary}
           />
-        }
+        )}
       >
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
           <Badge>{entry?.source?.entity_name}</Badge>
@@ -99,6 +105,7 @@ export const JournalEntryDetails = () => {
           <SourceDetailView source={entry?.source} />
         )}
       </DetailsList>
+
       <DetailsList
         title={`Journal Entry ${entry ? entryNumber(entry) : ''}`}
         className='Layer__border-top'
@@ -118,115 +125,142 @@ export const JournalEntryDetails = () => {
           </DetailsListItem>
         )}
       </DetailsList>
-      {!isLoadingEntry && !errorEntry ? (
-        <div className='Layer__journal__entry-details__line-items'>
-          <Card>
-            <Table
-              componentName='journal__entry-details'
-              borderCollapse='collapse'
-            >
-              <TableHead>
-                <TableRow rowKey='soc-flow-head-row' isHeadRow>
-                  <TableCell>Line items</TableCell>
-                  <TableCell
-                    className='Layer__journal__debit-credit-col'
-                    align={TableCellAlign.RIGHT}
-                  >
-                    Debit
-                  </TableCell>
-                  <TableCell
-                    className='Layer__journal__debit-credit-col'
-                    align={TableCellAlign.RIGHT}
-                  >
-                    Credit
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sortedLineItems?.map((item, index) => (
-                  <TableRow
-                    key={`ledger-line-item-${index}`}
-                    rowKey={`ledger-line-item-${index}`}
-                  >
-                    <TableCell>{item.account.name}</TableCell>
+
+      {!isLoadingEntry && !errorEntry
+        ? (
+          <div className='Layer__journal__entry-details__line-items'>
+            <Card>
+              <Table
+                componentName='journal__entry-details'
+                borderCollapse='collapse'
+              >
+                <TableHead>
+                  <TableRow rowKey='soc-flow-head-row' isHeadRow>
+                    <TableCell>Line items</TableCell>
                     <TableCell
                       className='Layer__journal__debit-credit-col'
                       align={TableCellAlign.RIGHT}
                     >
-                      {item.direction === Direction.DEBIT && (
-                        <Badge variant={BadgeVariant.WARNING}>
-                          ${centsToDollars(item.amount || 0)}
-                        </Badge>
-                      )}
+                      Debit
                     </TableCell>
                     <TableCell
                       className='Layer__journal__debit-credit-col'
                       align={TableCellAlign.RIGHT}
                     >
-                      {item.direction === Direction.CREDIT && (
-                        <Badge variant={BadgeVariant.SUCCESS}>
-                          ${centsToDollars(item.amount || 0)}
-                        </Badge>
-                      )}
+                      Credit
                     </TableCell>
                   </TableRow>
-                ))}
-                <TableRow
-                  rowKey='ledger-line-item-summation'
-                  variant='summation'
-                >
-                  <TableCell primary>Total</TableCell>
-                  <TableCell
-                    isCurrency
-                    primary
-                    className='Layer__journal__debit-credit-col'
-                    align={TableCellAlign.RIGHT}
+                </TableHead>
+                <TableBody>
+                  {sortedLineItems?.map((item, index) => (
+                    <TableRow
+                      key={`ledger-line-item-${index}`}
+                      rowKey={`ledger-line-item-${index}`}
+                    >
+                      <TableCell>{item.account.name}</TableCell>
+                      <TableCell
+                        className='Layer__journal__debit-credit-col'
+                        align={TableCellAlign.RIGHT}
+                      >
+                        {item.direction === Direction.DEBIT && (
+                          <Badge variant={BadgeVariant.WARNING}>
+                            $
+                            {centsToDollars(item.amount || 0)}
+                          </Badge>
+                        )}
+                      </TableCell>
+                      <TableCell
+                        className='Layer__journal__debit-credit-col'
+                        align={TableCellAlign.RIGHT}
+                      >
+                        {item.direction === Direction.CREDIT && (
+                          <Badge variant={BadgeVariant.SUCCESS}>
+                            $
+                            {centsToDollars(item.amount || 0)}
+                          </Badge>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  <TableRow
+                    rowKey='ledger-line-item-summation'
+                    variant='summation'
                   >
-                    {entry?.line_items
-                      .filter(item => item.direction === 'DEBIT')
-                      .map(item => item.amount)
-                      .reduce((a, b) => a + b, 0) || 0}
-                  </TableCell>
-                  <TableCell
-                    isCurrency
-                    primary
-                    className='Layer__journal__debit-credit-col'
-                    align={TableCellAlign.RIGHT}
-                  >
-                    {entry?.line_items
-                      .filter(item => item.direction === 'CREDIT')
-                      .map(item => item.amount)
-                      .reduce((a, b) => a + b, 0) || 0}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Card>
+                    <TableCell primary>Total</TableCell>
+                    <TableCell
+                      isCurrency
+                      primary
+                      className='Layer__journal__debit-credit-col'
+                      align={TableCellAlign.RIGHT}
+                    >
+                      {entry?.line_items
+                        .filter(item => item.direction === Direction.DEBIT)
+                        .map(item => item.amount)
+                        .reduce((a, b) => a + b, 0) || 0}
+                    </TableCell>
+                    <TableCell
+                      isCurrency
+                      primary
+                      className='Layer__journal__debit-credit-col'
+                      align={TableCellAlign.RIGHT}
+                    >
+                      {entry?.line_items
+                        .filter(item => item.direction === Direction.CREDIT)
+                        .map(item => item.amount)
+                        .reduce((a, b) => a + b, 0) || 0}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Card>
 
-          <div className='Layer__journal__entry-details__reverse-btn-container'>
-            <Button
-              rightIcon={
-                reverseEntryError ? (
-                  <AlertCircle size={12} />
-                ) : (
-                  <RefreshCcw size={12} />
-                )
-              }
-              variant={ButtonVariant.secondary}
-              onClick={reverseEntryProcessing ? () => {} : onReverseEntry}
-              isProcessing={reverseEntryProcessing}
-              tooltip={
-                (Boolean(entry?.reversal_id) &&
-                  'This entry has already been reversed') ??
-                (reverseEntryError && 'Operation failed. Try again.')
-              }
-              disabled={Boolean(entry?.reversal_id)}
-            >
-              Reverse entry
-            </Button>
+            <div className='Layer__journal__entry-details__reverse-btn-container'>
+              <Button
+                rightIcon={
+                  reverseEntryError
+                    ? (
+                      <AlertCircle size={12} />
+                    )
+                    : (
+                      <RefreshCcw size={12} />
+                    )
+                }
+                variant={ButtonVariant.secondary}
+                onClick={reverseEntryProcessing ? () => {} : onReverseEntry}
+                isProcessing={reverseEntryProcessing}
+                tooltip={
+                  (Boolean(entry?.reversal_id)
+                    && 'This entry has already been reversed')
+                  ?? (reverseEntryError && 'Operation failed. Try again.')
+                }
+                disabled={Boolean(entry?.reversal_id)}
+              >
+                Reverse entry
+              </Button>
+            </div>
           </div>
-        </div>
-      ) : null}
+        )
+        : null}
+
+      {entry
+        ? (
+          /**
+           * @see {BankTransactionFormFields}
+           *
+           * This could be extracted out into a component, especially if it needs to
+           * be conditionally rendered based on some props.
+           */
+          <VStack
+            className='Layer__border-top'
+            pi='md'
+            pb='md'
+            gap='md'
+          >
+            <JournalEntryCustomerVendorSelector journalEntry={entry} />
+            <JournalEntryTagSelector journalEntry={entry} />
+          </VStack>
+        )
+        : null}
     </div>
   )
 }

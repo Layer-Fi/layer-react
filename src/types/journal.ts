@@ -1,3 +1,5 @@
+import type { CustomerSchema } from '../features/customers/customersSchemas'
+import type { VendorSchema } from '../features/vendors/vendorsSchemas'
 import { Account } from '../types'
 import { Direction } from './bank_transactions'
 import { AccountIdentifierPayloadObject } from './categories'
@@ -17,6 +19,9 @@ export interface JournalEntry {
   line_items: JournalEntryLine[]
   source?: LedgerEntrySource
   transaction_tags: ReadonlyArray<TransactionTag>
+
+  customer: typeof CustomerSchema.Encoded | null
+  vendor: typeof VendorSchema.Encoded | null
 }
 
 export interface JournalEntryLine {

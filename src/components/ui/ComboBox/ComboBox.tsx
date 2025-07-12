@@ -28,10 +28,8 @@ const COMBO_BOX_CLASS_NAMES = {
 
   INDICATORS_CONTAINER: 'Layer__ComboBoxIndicatorsContainer',
 
-  MENU: classNames(
-    PORTAL_CLASS_NAME,
-    'Layer__ComboBoxMenu',
-  ),
+  MENU_PORTAL: classNames('Layer__ComboBoxMenuPortal', PORTAL_CLASS_NAME),
+  MENU: 'Layer__ComboBoxMenu',
   MENU_LIST: 'Layer__ComboBoxMenuList',
 
   GROUP: 'Layer__ComboBoxGroup',
@@ -212,6 +210,7 @@ type ComboBoxProps<T extends ComboBoxOption> = {
     ErrorMessage?: ReactNode
   }
 
+  menuPlacement?: 'top' | 'bottom'
   inputId?: string
 
   isDisabled?: boolean
@@ -234,6 +233,7 @@ export function ComboBox<T extends ComboBoxOption>({
   placeholder,
   slots,
 
+  menuPlacement,
   inputId,
 
   isDisabled,
@@ -280,6 +280,7 @@ export function ComboBox<T extends ComboBoxOption>({
         onInputChange={onInputValueChange}
         escapeClearsValue
 
+        menuPlacement={menuPlacement}
         placeholder={placeholder}
 
         menuPortalTarget={document.body}
@@ -297,6 +298,7 @@ export function ComboBox<T extends ComboBoxOption>({
 
           indicatorsContainer: () => COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER,
 
+          menuPortal: () => COMBO_BOX_CLASS_NAMES.MENU_PORTAL,
           menu: () => COMBO_BOX_CLASS_NAMES.MENU,
           menuList: () => COMBO_BOX_CLASS_NAMES.MENU_LIST,
 

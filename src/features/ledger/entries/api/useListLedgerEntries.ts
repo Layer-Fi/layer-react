@@ -180,13 +180,29 @@ export function useLedgerEntriesOptimisticUpdater() {
     (
       transformJournalEntry: (entry: JournalEntry) => JournalEntry,
     ) =>
-      optimisticUpdate<ListLedgerEntriesReturn>(
+      optimisticUpdate<
+        ReadonlyArray<ListLedgerEntriesReturn> | ListLedgerEntriesReturn
+      >(
         tags => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY),
         (currentData) => {
-          return {
-            ...currentData,
-            data: currentData.data.map(entry => transformJournalEntry(entry)),
+          const iterateOverPage = (page: ListLedgerEntriesReturn) => {
+            return {
+              ...page,
+              data: page.data.map(txn => transformJournalEntry(txn)),
+            }
           }
+
+          if (Array.isArray(currentData)) {
+            return currentData.map(iterateOverPage)
+          }
+
+          /*
+           * The cache contains entries for both the single page and the list of page entries.
+           *
+           * To avoid duplicated work, we intentionally do not apply any transformation to
+           * the single page.
+           */
+          return currentData
         },
       ),
     [optimisticUpdate],

@@ -48,6 +48,7 @@ type CustomerVendorSelectorProps = {
   onSelectedCustomerVendorChange: (customerVendor: CustomerVendor | null) => void
 
   placeholder: string
+  menuPlacement?: 'top' | 'bottom'
 
   isMutating?: boolean
   isReadOnly?: boolean
@@ -58,6 +59,7 @@ export function CustomerVendorSelector({
   onSelectedCustomerVendorChange,
 
   placeholder,
+  menuPlacement,
 
   isMutating,
   isReadOnly,
@@ -268,6 +270,7 @@ export function CustomerVendorSelector({
 
         inputId={inputId}
         placeholder={placeholder}
+        menuPlacement={menuPlacement}
         slots={{ EmptyMessage, ErrorMessage }}
 
         isDisabled={isReadOnly || shouldDisableComboBox}
