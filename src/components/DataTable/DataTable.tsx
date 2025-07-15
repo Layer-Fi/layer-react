@@ -31,7 +31,7 @@ export interface DataTableProps<TData, TColumns extends string> {
   columnConfig: ColumnConfig<TData, TColumns>
   data: TData[] | undefined
   componentName: string
-  ariaLabel?: string
+  ariaLabel: string
   isLoading?: boolean
   slots: {
     EmptyState: React.FC
@@ -43,14 +43,14 @@ export const DataTable = <TData extends { id: string }, TColumns extends string>
   data,
   isLoading,
   componentName,
-  ariaLabel = 'Table',
+  ariaLabel,
   slots,
 }: DataTableProps<TData, TColumns>) => {
   const columns: Column<TData, TColumns>[] = Object.values(columnConfig)
   const { EmptyState } = slots
 
   const renderTableBody = useMemo(() => {
-    if (isLoading && data === undefined) {
+    if (isLoading) {
       return (
         <Row>
           <Cell colSpan={columns.length}>

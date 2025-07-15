@@ -25,7 +25,7 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
   isLoading,
   columnConfig,
   componentName,
-  ariaLabel = 'Paginated Table',
+  ariaLabel,
   paginationProps,
   slots,
 }: PaginatedTableProps<TData, TColumns>) {

@@ -19,6 +19,8 @@ type ListInvoicesBaseParams = {
 
 type ListInvoicesFilterParams = {
   status?: ReadonlyArray<InvoiceStatus>
+  dueAtStart?: Date
+  dueAtEnd?: Date
 }
 
 enum SortBy {
@@ -73,9 +75,11 @@ class ListInvoicesSWRResponse {
 export const listInvoices = get<
   ListInvoicesReturn,
   ListInvoicesParams
->(({ businessId, status, sortBy, sortOrder, cursor, limit, showTotalCount }) => {
+>(({ businessId, status, dueAtStart, dueAtEnd, sortBy, sortOrder, cursor, limit, showTotalCount }) => {
   const parameters = toDefinedSearchParameters({
     status,
+    dueAtStart,
+    dueAtEnd,
     sortBy,
     sortOrder,
     cursor,
@@ -94,6 +98,8 @@ function keyLoader(
     apiUrl,
     businessId,
     status,
+    dueAtStart,
+    dueAtEnd,
     sortBy,
     sortOrder,
     limit,
@@ -109,6 +115,8 @@ function keyLoader(
       apiUrl,
       businessId,
       status,
+      dueAtStart,
+      dueAtEnd,
       cursor: previousPageData?.meta?.pagination.cursor,
       sortBy,
       sortOrder,
@@ -121,15 +129,13 @@ function keyLoader(
 
 export function useListInvoices({
   status,
-  sortBy,
-  sortOrder,
+  dueAtStart,
+  dueAtEnd,
+  sortBy = SortBy.SentAt,
+  sortOrder = SortOrder.DESC,
   limit,
-  showTotalCount,
-}: ListInvoicesOptions = {
-  showTotalCount: true,
-  sortBy: SortBy.SentAt,
-  sortOrder: SortOrder.DESC,
-}) {
+  showTotalCount = true,
+}: ListInvoicesOptions = {}) {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
@@ -142,6 +148,8 @@ export function useListInvoices({
         apiUrl,
         businessId,
         status,
+        dueAtStart,
+        dueAtEnd,
         sortBy,
         sortOrder,
         limit,
@@ -165,6 +173,8 @@ export function useListInvoices({
         params: {
           businessId,
           status,
+          dueAtStart,
+          dueAtEnd,
           sortBy,
           sortOrder,
           cursor,
