@@ -288,7 +288,7 @@ export const InvoicesTable = () => {
   [])
 
   const InvoicesTableEmptyState = useCallback(() => {
-    const isFiltered = selectedInvoiceStatusOption && selectedInvoiceStatusOption != ALL_OPTION
+    const isFiltered = selectedInvoiceStatusOption && selectedInvoiceStatusOption !== ALL_OPTION
 
     return (
       <DataState
