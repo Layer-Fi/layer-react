@@ -18,7 +18,7 @@ import { Button } from '../ui/Button/Button'
 import ChevronRightFill from '../../icons/ChevronRightFill'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { HandCoins, Search } from 'lucide-react'
-import { DataTableFilters } from '../DataTable/DataTableFilters'
+import { DataTableHeader } from '../DataTable/DataTableHeader'
 import Plus from '../../icons/Plus'
 import { ComboBox } from '../ui/ComboBox/ComboBox'
 import { startOfToday, endOfYesterday } from 'date-fns'
@@ -307,7 +307,7 @@ export const InvoicesTable = () => {
 
   return (
     <Container name='InvoicesTable'>
-      <DataTableFilters
+      <DataTableHeader
         name='Invoices'
         slots={{
           HeaderActions: CreateInvoiceButton,
