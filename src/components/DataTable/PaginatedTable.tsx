@@ -23,6 +23,7 @@ const EMPTY_ARRAY: never[] = []
 export function PaginatedTable<TData extends { id: string }, TColumns extends string>({
   data,
   isLoading,
+  isError,
   columnConfig,
   componentName,
   ariaLabel,
@@ -67,17 +68,20 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
         columnConfig={columnConfig}
         data={rowData}
         isLoading={isLoading}
+        isError={isError}
         componentName={componentName}
         slots={slots}
       />
-      <Pagination
-        currentPage={table.getState().pagination.pageIndex + 1}
-        onPageChange={onPageChange}
-        pageSize={table.getState().pagination.pageSize}
-        totalCount={table.getRowCount()}
-        hasMore={hasMore}
-        fetchMore={fetchMore}
-      />
+      {!isError && !isLoading && (
+        <Pagination
+          currentPage={table.getState().pagination.pageIndex + 1}
+          onPageChange={onPageChange}
+          pageSize={table.getState().pagination.pageSize}
+          totalCount={table.getRowCount()}
+          hasMore={hasMore}
+          fetchMore={fetchMore}
+        />
+      )}
     </VStack>
   )
 }

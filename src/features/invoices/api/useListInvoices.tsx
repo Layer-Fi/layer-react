@@ -70,6 +70,10 @@ class ListInvoicesSWRResponse {
   get isError() {
     return this.swrResponse.error !== undefined
   }
+
+  get refetch() {
+    return this.swrResponse.mutate
+  }
 }
 
 export const listInvoices = get<

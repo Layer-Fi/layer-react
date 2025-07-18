@@ -17,9 +17,8 @@ import CheckCircle from '../../icons/CheckCircle'
 import { Button } from '../ui/Button/Button'
 import ChevronRightFill from '../../icons/ChevronRightFill'
 import { DataState, DataStateStatus } from '../DataState/DataState'
-import { HandCoins, Search } from 'lucide-react'
+import { HandCoins, Search, Plus } from 'lucide-react'
 import { DataTableHeader } from '../DataTable/DataTableHeader'
-import Plus from '../../icons/Plus'
 import { ComboBox } from '../ui/ComboBox/ComboBox'
 import { startOfToday, endOfYesterday } from 'date-fns'
 
@@ -238,7 +237,7 @@ export const InvoicesTable = () => {
     [selectedInvoiceStatusOption?.value],
   )
 
-  const { data, isLoading, size, setSize } = useListInvoices({ ...listInvoiceParams })
+  const { data, isLoading, isError, size, setSize, refetch } = useListInvoices({ ...listInvoiceParams })
   const invoices = data?.flatMap(({ data }) => data)
 
   const paginationMeta = data?.[data.length - 1].meta.pagination
@@ -306,6 +305,16 @@ export const InvoicesTable = () => {
     )
   }, [selectedInvoiceStatusOption])
 
+  const InvoicesTableErrorState = useCallback(() => (
+    <DataState
+      status={DataStateStatus.failed}
+      title='We couldn’t load your invoices'
+      description='An error occurred while loading your invoices. Please check your connection and try again.'
+      onRefresh={() => { void refetch() }}
+      spacing
+    />
+  ), [refetch])
+
   return (
     <Container name='InvoicesTable'>
       <DataTableHeader
@@ -319,10 +328,14 @@ export const InvoicesTable = () => {
         ariaLabel='Invoices'
         data={invoices}
         isLoading={data === undefined || isLoading}
+        isError={isError}
         columnConfig={columns}
         paginationProps={paginationProps}
         componentName={COMPONENT_NAME}
-        slots={{ EmptyState: InvoicesTableEmptyState }}
+        slots={{
+          EmptyState: InvoicesTableEmptyState,
+          ErrorState: InvoicesTableErrorState,
+        }}
       />
     </Container>
   )
