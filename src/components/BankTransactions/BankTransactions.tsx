@@ -429,7 +429,6 @@ const BankTransactionsContent = ({
           isSyncing={isSyncing}
           withUploadMenu={showUploadOptions}
           onBulkActionClick={handleBulkActionClick}
-
         />
       )}
 
@@ -447,7 +446,6 @@ const BankTransactionsContent = ({
             stringOverrides={stringOverrides}
             lastPage={isLastPage}
             onRefresh={refetch}
-
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}

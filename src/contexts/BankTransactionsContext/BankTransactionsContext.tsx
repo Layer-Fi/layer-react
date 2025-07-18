@@ -12,6 +12,7 @@ export const BankTransactionsContext =
     error: undefined,
     refetch: () => {},
     categorize: () => Promise.resolve(undefined),
+    categorizeMultiple: () => Promise.resolve({ successful: [], failed: [], successCount: 0, failureCount: 0 }),
     match: () => Promise.resolve(undefined),
     filters: undefined,
     setFilters: () => {},

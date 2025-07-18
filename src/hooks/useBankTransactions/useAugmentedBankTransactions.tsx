@@ -296,21 +296,32 @@ export const useAugmentedBankTransactions = (
     newCategory: CategoryUpdate,
     notify?: boolean,
   ) => {
-    // Step 1: Apply optimistic updates to all selected transactions
     const existingTransactions = bankTransactionIds
       .map(id => data?.find(({ id: txnId }) => txnId === id))
       .filter(Boolean) as BankTransaction[]
 
-    // Set all transactions to processing state (no optimistic category update since CategoryUpdate is complex)
-    existingTransactions.forEach((transaction) => {
-      updateOneLocal({
-        ...transaction,
-        processing: true,
-        error: undefined,
-      })
+    // Step 1: Set all transactions to processing state in a single update
+    const processingData = rawResponseData?.map((page) => {
+      return {
+        ...page,
+        data: page.data?.map(bt => {
+          const shouldUpdate = bankTransactionIds.includes(bt.id)
+          if (shouldUpdate) {
+            return {
+              ...bt,
+              processing: true,
+              error: undefined,
+            }
+          }
+          return bt
+        }),
+      }
     })
 
-    // Step 2: Fire all API calls in parallel
+    // Single mutate call for processing state
+    void mutate(processingData, { revalidate: false })
+
+    // Step 2: Make all API calls in parallel
     const apiPromises = bankTransactionIds.map(bankTransactionId =>
       categorizeBankTransaction({
         bankTransactionId,
@@ -324,10 +335,8 @@ export const useAugmentedBankTransactions = (
         })),
     )
 
-    // Step 3: Wait for all API calls to complete
     const results = await Promise.allSettled(apiPromises)
 
-    // Step 4: Process results and update UI accordingly
     const successfulResults: BankTransaction[] = []
     const failedResults: { id: string, error: string }[] = []
 
@@ -336,48 +345,57 @@ export const useAugmentedBankTransactions = (
         if (result.value.success) {
           const updatedTransaction = result.value.transaction
           successfulResults.push(updatedTransaction)
-
-          // Update successful transaction
-          updateOneLocal({
-            ...updatedTransaction,
-            processing: false,
-            recently_categorized: true,
-          })
         }
         else {
           failedResults.push({ id: result.value.id, error: result.value.error })
         }
       }
       else {
-        // Promise was rejected
         const bankTransactionId = bankTransactionIds[index]
         failedResults.push({ id: bankTransactionId, error: 'Request failed' })
       }
     })
 
-    // Step 5: Handle failed transactions - revert to original state
-    failedResults.forEach(({ id, error }) => {
-      const originalTransaction = existingTransactions.find(t => t.id === id)
-      if (originalTransaction) {
-        updateOneLocal({
-          ...originalTransaction,
-          processing: false,
-          error,
-        })
+    // Step 3: Build final state with all results in a single update
+    const finalData = rawResponseData?.map((page) => {
+      return {
+        ...page,
+        data: page.data?.map(bt => {
+          const successfulTransaction = successfulResults.find(st => st.id === bt.id)
+          if (successfulTransaction) {
+            return {
+              ...successfulTransaction,
+              processing: false,
+              recently_categorized: true,
+            }
+          }
+          
+          const failedTransaction = failedResults.find(ft => ft.id === bt.id)
+          if (failedTransaction) {
+            const originalTransaction = existingTransactions.find(t => t.id === bt.id)
+            if (originalTransaction) {
+              return {
+                ...originalTransaction,
+                processing: false,
+                error: failedTransaction.error,
+              }
+            }
+          }
+          
+          return bt
+        }),
       }
     })
 
-    // Step 6: Remove successfully categorized transactions from view if needed
-    successfulResults.forEach((transaction) => {
-      removeAfterCategorize(transaction)
-    })
+    // Single mutate call for final state
+    void mutate(finalData, { revalidate: false })
 
-    // Step 7: Trigger event callbacks for successful transactions
+    // Step 4: Trigger event callbacks for successful transactions
     successfulResults.forEach((transaction) => {
       eventCallbacks?.onTransactionCategorized?.(transaction.id)
     })
 
-    // Step 8: Show notification based on results
+    // Step 5: Show notification based on results
     if (notify) {
       const successCount = successfulResults.length
       const failureCount = failedResults.length
@@ -564,7 +582,7 @@ export const useAugmentedBankTransactions = (
   useEffect(() => {
     if (refreshTrigger !== -1) {
       refetch()
-      void refetchAccounts()
+      refetchAccounts()
     }
   }, [refreshTrigger])
 
