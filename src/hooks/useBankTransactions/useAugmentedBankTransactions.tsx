@@ -366,7 +366,7 @@ export const useAugmentedBankTransactions = (
             return {
               ...successfulTransaction,
               processing: false,
-              recently_categorized: true,
+              recently_categorized: false,  // Don't set true for bulk operations - we handle removal centrally
             }
           }
           
@@ -378,6 +378,7 @@ export const useAugmentedBankTransactions = (
                 ...originalTransaction,
                 processing: false,
                 error: failedTransaction.error,
+                recently_categorized: false,  // Don't trigger individual removal
               }
             }
           }
@@ -390,12 +391,25 @@ export const useAugmentedBankTransactions = (
     // Single mutate call for final state
     void mutate(finalData, { revalidate: false })
 
-    // Step 4: Trigger event callbacks for successful transactions
+    // Step 4: Handle bulk removal if needed
+    if (shouldHideAfterCategorize() && successfulResults.length > 0) {
+      setTimeout(() => {
+        const finalDataWithRemovals = rawResponseData?.map((page) => {
+          return {
+            ...page,
+            data: page.data?.filter(bt => !successfulResults.some(st => st.id === bt.id)),
+          }
+        })
+        void mutate(finalDataWithRemovals, { revalidate: false })
+      }, 300)
+    }
+
+    // Step 5: Trigger event callbacks for successful transactions
     successfulResults.forEach((transaction) => {
       eventCallbacks?.onTransactionCategorized?.(transaction.id)
     })
 
-    // Step 5: Show notification based on results
+    // Step 6: Show notification based on results
     if (notify) {
       const successCount = successfulResults.length
       const failureCount = failedResults.length
