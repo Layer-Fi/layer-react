@@ -32,7 +32,7 @@ import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import type { CategoryWithEntries } from '../../types/bank_transactions'
-import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
+import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { VStack } from '../ui/Stack/Stack'
@@ -189,6 +189,7 @@ export const BankTransactionRow = ({
 
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const isBookkeepingActive = bookkeepingStatus === BookkeepingStatus.ACTIVE
 
   const categorized = isCategorized(bankTransaction)
 
@@ -220,10 +221,12 @@ export const BankTransactionRow = ({
           className='Layer__table-cell Layer__bank-transactions__checkbox-col'
         >
           <span className='Layer__table-cell-content'>
-            <Checkbox 
-              isSelected={transactionIsSelected}
-              onChange={handleCheckboxChange}
-            />
+            {!isBookkeepingActive && (
+              <Checkbox 
+                isSelected={transactionIsSelected}
+                onChange={handleCheckboxChange}
+              />
+            )}
           </span>
         </td>
         <td

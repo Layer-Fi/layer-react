@@ -291,6 +291,123 @@ export const useAugmentedBankTransactions = (
       })
   }
 
+  const categorizeMultipleWithOptimisticUpdate = async (
+    bankTransactionIds: BankTransaction['id'][],
+    newCategory: CategoryUpdate,
+    notify?: boolean,
+  ) => {
+    // Step 1: Apply optimistic updates to all selected transactions
+    const existingTransactions = bankTransactionIds
+      .map(id => data?.find(({ id: txnId }) => txnId === id))
+      .filter(Boolean) as BankTransaction[]
+
+    // Set all transactions to processing state (no optimistic category update since CategoryUpdate is complex)
+    existingTransactions.forEach((transaction) => {
+      updateOneLocal({
+        ...transaction,
+        processing: true,
+        error: undefined,
+      })
+    })
+
+    // Step 2: Fire all API calls in parallel
+    const apiPromises = bankTransactionIds.map(bankTransactionId =>
+      categorizeBankTransaction({
+        bankTransactionId,
+        ...newCategory,
+      })
+        .then(updatedTransaction => ({ success: true as const, transaction: updatedTransaction, id: bankTransactionId }))
+        .catch((error: unknown) => ({
+          success: false as const,
+          error: error instanceof Error ? error.message : 'An unknown error occurred',
+          id: bankTransactionId,
+        })),
+    )
+
+    // Step 3: Wait for all API calls to complete
+    const results = await Promise.allSettled(apiPromises)
+
+    // Step 4: Process results and update UI accordingly
+    const successfulResults: BankTransaction[] = []
+    const failedResults: { id: string, error: string }[] = []
+
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        if (result.value.success) {
+          const updatedTransaction = result.value.transaction
+          successfulResults.push(updatedTransaction)
+
+          // Update successful transaction
+          updateOneLocal({
+            ...updatedTransaction,
+            processing: false,
+            recently_categorized: true,
+          })
+        }
+        else {
+          failedResults.push({ id: result.value.id, error: result.value.error })
+        }
+      }
+      else {
+        // Promise was rejected
+        const bankTransactionId = bankTransactionIds[index]
+        failedResults.push({ id: bankTransactionId, error: 'Request failed' })
+      }
+    })
+
+    // Step 5: Handle failed transactions - revert to original state
+    failedResults.forEach(({ id, error }) => {
+      const originalTransaction = existingTransactions.find(t => t.id === id)
+      if (originalTransaction) {
+        updateOneLocal({
+          ...originalTransaction,
+          processing: false,
+          error,
+        })
+      }
+    })
+
+    // Step 6: Remove successfully categorized transactions from view if needed
+    successfulResults.forEach((transaction) => {
+      removeAfterCategorize(transaction)
+    })
+
+    // Step 7: Trigger event callbacks for successful transactions
+    successfulResults.forEach((transaction) => {
+      eventCallbacks?.onTransactionCategorized?.(transaction.id)
+    })
+
+    // Step 8: Show notification based on results
+    if (notify) {
+      const successCount = successfulResults.length
+      const failureCount = failedResults.length
+      const totalCount = bankTransactionIds.length
+
+      if (successCount === totalCount) {
+        addToast({
+          content: `${successCount} transaction${successCount === 1 ? '' : 's'} categorized successfully`,
+        })
+      }
+      else if (successCount > 0) {
+        addToast({
+          content: `${successCount} of ${totalCount} transactions categorized. ${failureCount} failed.`,
+        })
+      }
+      else {
+        addToast({
+          content: 'Failed to categorize transactions. Please try again.',
+        })
+      }
+    }
+
+    return {
+      successful: successfulResults,
+      failed: failedResults,
+      successCount: successfulResults.length,
+      failureCount: failedResults.length,
+    }
+  }
+
   const { trigger: matchBankTransaction } = useMatchBankTransaction({
     mutateBankTransactions: mutate,
   })
@@ -390,12 +507,12 @@ export const useAugmentedBankTransactions = (
           data: page.data?.filter(bt => bt.id !== bankTransaction.id),
         }
       })
-      mutate(updatedData, { revalidate: false })
+      void mutate(updatedData, { revalidate: false })
     }
   }
 
   const refetch = () => {
-    mutate()
+    void mutate()
   }
 
   const fetchMore = () => {
@@ -447,7 +564,7 @@ export const useAugmentedBankTransactions = (
   useEffect(() => {
     if (refreshTrigger !== -1) {
       refetch()
-      refetchAccounts()
+      void refetchAccounts()
     }
   }, [refreshTrigger])
 
@@ -485,6 +602,7 @@ export const useAugmentedBankTransactions = (
     refetch,
     error: responseError,
     categorize: categorizeWithOptimisticUpdate,
+    categorizeMultiple: categorizeMultipleWithOptimisticUpdate,
     match: matchWithOptimisticUpdate,
     updateOneLocal,
     shouldHideAfterCategorize,

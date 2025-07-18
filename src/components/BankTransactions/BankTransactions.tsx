@@ -48,6 +48,7 @@ import classNames from 'classnames'
 import { CategorySelect, CategoryOption } from '../CategorySelect/CategorySelect'
 import { VStack } from '../ui/Stack/Stack'
 import { Text, TextSize, TextWeight } from '../Typography'
+import { getCategorizePayload } from '../../utils/bankTransactions'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -142,6 +143,9 @@ const BankTransactionsContent = ({
   const [isBulkActionModalOpen, setIsBulkActionModalOpen] = useState(false)
   const [selectedBulkCategory, setSelectedBulkCategory] = useState<CategoryOption | undefined>(undefined)
 
+  const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
+
   const handleBulkActionClick = () => {
     setIsBulkActionModalOpen(true)
   }
@@ -151,43 +155,54 @@ const BankTransactionsContent = ({
     setSelectedBulkCategory(undefined)
   }
 
-  const handleBulkCategorization = () => {
-    if (!selectedBulkCategory) {
-      console.log('No category selected for bulk action')
+  const handleBulkCategorization = async () => {
+    if (!selectedBulkCategory || !categorizeMultiple) {
+      console.error('No category selected for bulk action or categorizeMultiple not available')
       return
     }
 
     const selectedTransactionIds = bulkSelection.selectedTransactions.map(tx => tx.id)
     
-    console.log('Bulk categorization:', {
-      transactionIds: selectedTransactionIds,
-      transactionCount: selectedTransactionIds.length,
-      category: {
-        id: selectedBulkCategory.payload.id,
-        name: selectedBulkCategory.payload.display_name,
-        type: selectedBulkCategory.payload.type
-      },
-      affectedTransactions: bulkSelection.selectedTransactions.map(tx => ({
-        id: tx.id,
-        description: tx.description,
-        amount: tx.amount,
-        date: tx.date
-      }))
-    })
+    if (selectedTransactionIds.length === 0) {
+      console.error('No transactions selected for bulk categorization')
+      return
+    }
 
-    // TODO: Replace with actual API call
-    // For now, just close the modal and clear selections
-    handleBulkActionModalClose()
-    bulkSelection.clearSelection()
+    try {
+      // Convert CategoryOption to CategoryUpdate format
+      const categoryUpdate = {
+        type: 'Category' as const,
+        category: getCategorizePayload(selectedBulkCategory),
+      }
+
+      // Execute bulk categorization with notification
+      const result = await categorizeMultiple(
+        selectedTransactionIds,
+        categoryUpdate,
+        true, // show notification
+      )
+
+      console.log('Bulk categorization completed:', {
+        successful: result.successCount,
+        failed: result.failureCount,
+        total: selectedTransactionIds.length,
+      })
+
+      // Close modal and clear selections on any success
+      if (result.successCount > 0) {
+        handleBulkActionModalClose()
+        bulkSelection.clearSelection()
+      }
+    } catch (error) {
+      console.error('Bulk categorization failed:', error)
+      // Keep modal open on error so user can retry
+    }
   }
 
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
 
   const [currentPage, setCurrentPage] = useState(1)
-
-  const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
 
   const categorizeView = categorizeViewProp ?? categorizationEnabled
 
@@ -202,6 +217,7 @@ const BankTransactionsContent = ({
     hasMore,
     fetchMore,
     removeAfterCategorize,
+    categorizeMultiple,
   } = useBankTransactionsContext()
 
   const { data: linkedAccounts } = useLinkedAccounts()
@@ -413,6 +429,7 @@ const BankTransactionsContent = ({
           isSyncing={isSyncing}
           withUploadMenu={showUploadOptions}
           onBulkActionClick={handleBulkActionClick}
+
         />
       )}
 

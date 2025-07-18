@@ -12,6 +12,7 @@ import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { 
   useBankTransactionsBulkSelectionContext,
 } from '../../contexts/BankTransactionsContext'
+import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string
@@ -74,6 +75,9 @@ const BankTransactionsTableContent = ({
     openBulkSelection,
   } = useBankTransactionsBulkSelectionContext()
 
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const isBookkeepingActive = bookkeepingStatus === BookkeepingStatus.ACTIVE
+
   const showReceiptColumn =
     (showReceiptUploads
       && bankTransactions?.some(
@@ -118,12 +122,14 @@ const BankTransactionsTableContent = ({
           <th className='Layer__table-header Layer__bank-transactions__checkbox-col'>
             <span className='Layer__table-cell-content'>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Checkbox 
-                  isSelected={allSelected}
-                  isIndeterminate={indeterminate}
-                  onChange={handleSelectAll}
-                />
-                {selectedTransactions.length > 0 && (
+                {!isBookkeepingActive && (
+                  <Checkbox 
+                    isSelected={allSelected}
+                    isIndeterminate={indeterminate}
+                    onChange={handleSelectAll}
+                  />
+                )}
+                {!isBookkeepingActive && selectedTransactions.length > 0 && (
                   <span style={{
                     color: '#374151',
                     fontSize: '10px',
