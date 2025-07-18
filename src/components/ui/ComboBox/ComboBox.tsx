@@ -8,6 +8,7 @@ import Select, {
   type LoadingIndicatorProps,
   type PlaceholderProps,
   type NoticeProps,
+  type SingleValueProps,
 } from 'react-select'
 import { HStack, VStack } from '../Stack/Stack'
 import { Header, P, Span } from '../Typography/Text'
@@ -195,21 +196,43 @@ function buildCustomPlaceholder({ placeholder }: { placeholder: string }) {
   }
 }
 
+function buildCustomSingleValue({ SelectedValue }: { SelectedValue: ReactNode }) {
+  return function CustomSingleValue<T extends ComboBoxOption>({
+    children,
+    ...restProps
+  }: SingleValueProps<T, false, GroupBase<T>>) {
+    return (
+      <components.SingleValue
+        {...restProps}
+      >
+        {SelectedValue ?? children}
+      </components.SingleValue>
+    )
+  }
+}
 type OptionsOrGroups<T> = OneOf<[
   { options: ReadonlyArray<T> },
   { groups: ReadonlyArray<{ label: string, options: ReadonlyArray<T> }> },
 ]>
 
+type AriaLabelProps = Pick<
+  React.AriaAttributes,
+  'aria-label' | 'aria-labelledby' | 'aria-describedby'
+>
+
 type ComboBoxProps<T extends ComboBoxOption> = {
+  className?: string
+
   selectedValue: T | null
   onSelectedValueChange: (value: T | null) => void
 
   onInputValueChange?: (value: string) => void
 
   placeholder: string
-  slots: {
+  slots?: {
     EmptyMessage?: ReactNode
     ErrorMessage?: ReactNode
+    SelectedValue?: ReactNode
   }
 
   inputId?: string
@@ -219,10 +242,15 @@ type ComboBoxProps<T extends ComboBoxOption> = {
   isLoading?: boolean
   isMutating?: boolean
 
+  isSearchable?: boolean
+  isClearable?: boolean
+
   displayDisabledAsSelected?: boolean
-} & OptionsOrGroups<T>
+} & OptionsOrGroups<T> & AriaLabelProps
 
 export function ComboBox<T extends ComboBoxOption>({
+  className,
+
   selectedValue,
   onSelectedValueChange,
 
@@ -240,8 +268,12 @@ export function ComboBox<T extends ComboBoxOption>({
   isError,
   isLoading,
   isMutating,
+  isSearchable = true,
+  isClearable = true,
 
   displayDisabledAsSelected,
+
+  ...ariaProps
 }: ComboBoxProps<T>) {
   const internalInputId = useId()
   const effectiveInputId = inputId ?? internalInputId
@@ -252,7 +284,7 @@ export function ComboBox<T extends ComboBoxOption>({
     [displayDisabledAsSelected],
   )
 
-  const { EmptyMessage, ErrorMessage } = slots ?? {}
+  const { EmptyMessage, ErrorMessage, SelectedValue } = slots ?? {}
 
   const CustomNoOptionsMessage = useMemo(
     () => buildCustomNoOptionsMessage({ EmptyMessage }),
@@ -263,6 +295,11 @@ export function ComboBox<T extends ComboBoxOption>({
     [placeholder],
   )
 
+  const CustomSingleValue = useMemo(
+    () => buildCustomSingleValue({ SelectedValue }),
+    [SelectedValue],
+  )
+
   const CustomClearIndicatorRef = useRef(buildCustomClearIndicator())
   const CustomLoadingIndicatorRef = useRef(buildCustomLoadingIndicator())
   const CustomDropdownIndicatorRef = useRef(buildCustomDropdownIndicator())
@@ -271,6 +308,7 @@ export function ComboBox<T extends ComboBoxOption>({
     <VStack gap='3xs'>
       <Select
         inputId={effectiveInputId}
+        {...ariaProps}
 
         value={selectedValue}
         onChange={onSelectedValueChange}
@@ -285,6 +323,7 @@ export function ComboBox<T extends ComboBoxOption>({
         menuPortalTarget={document.body}
 
         unstyled
+        className={className}
         classNames={{
           container: () => COMBO_BOX_CLASS_NAMES.CONTAINER,
           control: ({ isFocused, isDisabled }) => classNames(
@@ -313,11 +352,13 @@ export function ComboBox<T extends ComboBoxOption>({
           ClearIndicator: CustomClearIndicatorRef.current,
           LoadingIndicator: CustomLoadingIndicatorRef.current,
           DropdownIndicator: CustomDropdownIndicatorRef.current,
+
+          SingleValue: CustomSingleValue,
         }}
-        isClearable
+        isClearable={isClearable}
         isDisabled={isDisabled}
         isLoading={isLoading || isMutating}
-        isSearchable
+        isSearchable={isSearchable}
       />
       {isError
         ? (

@@ -5,7 +5,7 @@ import { VStack } from '../ui/Stack/Stack'
 
 const CLASS_NAME = 'Layer__SearchField Layer__InputGroup'
 
-type SearchFieldProps = {
+export type SearchFieldProps = {
   value: string
   slot?: string
   onChange: (value: string) => void

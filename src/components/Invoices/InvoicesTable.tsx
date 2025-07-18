@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useListInvoices } from '../../features/invoices/api/useListInvoices'
 import { type Invoice, InvoiceStatus } from '../../features/invoices/invoiceSchemas'
 import { convertCentsToCurrency, formatDate } from '../../utils/format'
@@ -17,9 +17,12 @@ import CheckCircle from '../../icons/CheckCircle'
 import { Button } from '../ui/Button/Button'
 import ChevronRightFill from '../../icons/ChevronRightFill'
 import { DataState, DataStateStatus } from '../DataState/DataState'
-import { HandCoins } from 'lucide-react'
+import { HandCoins, Search, Plus } from 'lucide-react'
+import { DataTableHeader } from '../DataTable/DataTableHeader'
+import { ComboBox } from '../ui/ComboBox/ComboBox'
+import { startOfToday, endOfYesterday } from 'date-fns'
 
-const COMPONENT_NAME = 'InvoiceTable'
+const COMPONENT_NAME = 'InvoicesTable'
 
 enum InvoiceColumns {
   SentAt = 'SentAt',
@@ -29,6 +32,31 @@ enum InvoiceColumns {
   Status = 'Status',
   Expand = 'Expand',
 }
+
+enum InvoiceStatusFilter {
+  All = 'All',
+  Unpaid = 'Unpaid',
+  Overdue = 'Overdue',
+  Sent = 'Sent',
+  Paid = 'Paid',
+  WrittenOff = 'Written Off',
+  Voided = 'Voided',
+}
+
+type InvoiceStatusOption = {
+  label: string
+  value: InvoiceStatusFilter
+}
+const InvoiceStatusOptionConfig = {
+  [InvoiceStatusFilter.All]: { label: 'All', value: InvoiceStatusFilter.All },
+  [InvoiceStatusFilter.Unpaid]: { label: 'Unpaid', value: InvoiceStatusFilter.Unpaid },
+  [InvoiceStatusFilter.Overdue]: { label: 'Overdue', value: InvoiceStatusFilter.Overdue },
+  [InvoiceStatusFilter.Sent]: { label: 'Sent', value: InvoiceStatusFilter.Sent },
+  [InvoiceStatusFilter.Paid]: { label: 'Paid', value: InvoiceStatusFilter.Paid },
+  [InvoiceStatusFilter.Voided]: { label: 'Voided', value: InvoiceStatusFilter.Voided },
+  [InvoiceStatusFilter.WrittenOff]: { label: 'Written Off', value: InvoiceStatusFilter.WrittenOff },
+}
+const ALL_OPTION = InvoiceStatusOptionConfig[InvoiceStatusFilter.All]
 
 const AmountCell = ({ invoice }: { invoice: Invoice }) => {
   const totalAmount = convertCentsToCurrency(invoice.totalAmount)
@@ -167,22 +195,53 @@ const columns: ColumnConfig<Invoice, InvoiceColumns> = {
   },
 }
 
-const InvoicesTableEmptyState = () => {
-  return (
-    <DataState
-      status={DataStateStatus.allDone}
-      title='No invoices yet'
-      description='Add your first invoice to start tracking what your customers owe you.'
-      icon={<HandCoins />}
-      spacing
-    />
-  )
+const unpaidStatuses = [InvoiceStatus.Sent, InvoiceStatus.PartiallyPaid]
+const getListInvoiceParams = ({ statusFilter }: { statusFilter: InvoiceStatusFilter | undefined }) => {
+  if (!statusFilter) return {}
+
+  switch (statusFilter) {
+    case InvoiceStatusFilter.All:
+      return {}
+
+    case InvoiceStatusFilter.Unpaid:
+      return { status: unpaidStatuses }
+
+    case InvoiceStatusFilter.Overdue:
+      return { status: unpaidStatuses, dueAtEnd: endOfYesterday() }
+
+    case InvoiceStatusFilter.Sent:
+      return { status: unpaidStatuses, dueAtStart: startOfToday() }
+
+    case InvoiceStatusFilter.Paid:
+      return { status: [InvoiceStatus.Paid, InvoiceStatus.PartiallyWrittenOff] }
+
+    case InvoiceStatusFilter.WrittenOff:
+      return { status: [InvoiceStatus.WrittenOff, InvoiceStatus.PartiallyWrittenOff] }
+
+    case InvoiceStatusFilter.Voided:
+      return { status: [InvoiceStatus.Voided] }
+
+    default:
+      unsafeAssertUnreachable({
+        value: statusFilter,
+        message: 'Unexpected status filter',
+      })
+  }
 }
 
 export const InvoicesTable = () => {
-  const { data, isLoading, size, setSize } = useListInvoices()
+  const [selectedInvoiceStatusOption, setSelectedInvoiceStatusOption] = useState<InvoiceStatusOption | null>(ALL_OPTION)
+
+  const listInvoiceParams = useMemo(
+    () => getListInvoiceParams({ statusFilter: selectedInvoiceStatusOption?.value }),
+    [selectedInvoiceStatusOption?.value],
+  )
+
+  const { data, isLoading, isError, size, setSize, refetch } = useListInvoices({ ...listInvoiceParams })
   const invoices = data?.flatMap(({ data }) => data)
-  const hasMore = data?.[data.length - 1].meta.pagination.hasMore
+
+  const paginationMeta = data?.[data.length - 1].meta.pagination
+  const hasMore = paginationMeta?.hasMore
 
   const fetchMore = useCallback(() => {
     if (hasMore) {
@@ -198,16 +257,85 @@ export const InvoicesTable = () => {
     }
   }, [fetchMore, hasMore])
 
+  const options: InvoiceStatusOption[] = useMemo(() => Object.values(InvoiceStatusOptionConfig), [])
+
+  const SelectedValue = useMemo(() => {
+    const label = selectedInvoiceStatusOption?.label
+    return label ? `Status: ${label}` : 'Status'
+  }, [selectedInvoiceStatusOption?.label])
+
+  const StatusFilter = useCallback(() => (
+    <ComboBox
+      className='Layer__InvoicesTable__StatusFilter'
+      options={options}
+      onSelectedValueChange={option => setSelectedInvoiceStatusOption(option)}
+      selectedValue={selectedInvoiceStatusOption}
+      isSearchable={false}
+      isClearable={false}
+      placeholder='Status'
+      slots={{ SelectedValue }}
+      aria-label='Status Filter'
+    />
+  ),
+  [SelectedValue, options, selectedInvoiceStatusOption])
+
+  const CreateInvoiceButton = useCallback(() => (
+    <Button>
+      Create Invoice
+      <Plus size={16} />
+    </Button>
+  ),
+  [])
+
+  const InvoicesTableEmptyState = useCallback(() => {
+    const isFiltered = selectedInvoiceStatusOption && selectedInvoiceStatusOption !== ALL_OPTION
+
+    return (
+      <DataState
+        status={DataStateStatus.allDone}
+        title={isFiltered ? 'No results found' : 'No invoices yet'}
+        description={
+          isFiltered
+            ? 'We couldn’t find any invoices with the current filters. Try changing or clearing them to see more results.'
+            : 'Add your first invoice to start tracking what your customers owe you.'
+        }
+        icon={isFiltered ? <Search /> : <HandCoins />}
+        spacing
+      />
+    )
+  }, [selectedInvoiceStatusOption])
+
+  const InvoicesTableErrorState = useCallback(() => (
+    <DataState
+      status={DataStateStatus.failed}
+      title='We couldn’t load your invoices'
+      description='An error occurred while loading your invoices. Please check your connection and try again.'
+      onRefresh={() => { void refetch() }}
+      spacing
+    />
+  ), [refetch])
+
   return (
-    <Container name='InvoiceTable'>
+    <Container name='InvoicesTable'>
+      <DataTableHeader
+        name='Invoices'
+        slots={{
+          HeaderActions: CreateInvoiceButton,
+          HeaderFilters: StatusFilter,
+        }}
+      />
       <PaginatedTable
         ariaLabel='Invoices'
         data={invoices}
         isLoading={data === undefined || isLoading}
+        isError={isError}
         columnConfig={columns}
         paginationProps={paginationProps}
         componentName={COMPONENT_NAME}
-        slots={{ EmptyState: InvoicesTableEmptyState }}
+        slots={{
+          EmptyState: InvoicesTableEmptyState,
+          ErrorState: InvoicesTableErrorState,
+        }}
       />
     </Container>
   )

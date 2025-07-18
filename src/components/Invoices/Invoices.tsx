@@ -1,5 +1,5 @@
 import { View } from '../../components/View'
-import { InvoicesTable } from './InvoiceTable'
+import { InvoicesTable } from './InvoicesTable'
 
 interface InvoicesStringOverrides {
   title?: string

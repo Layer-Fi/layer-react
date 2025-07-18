@@ -87,15 +87,17 @@
   align-items: center;
   justify-content: center;
 
-  --size: 1.75rem;
-
   block-size: var(--size);
   inline-size: var(--size);
 
   cursor: pointer;
+  color: var(--color-base-600);
+
+  --size: 1.75rem;
 }
 
 .Layer__ComboBoxMenu {
+  overflow: hidden;
   border-radius: var(--border-radius-xs);
   border: 1px solid var(--border-color);
 
@@ -140,15 +142,12 @@
 
 .Layer__ComboBoxOption {
   padding-block: var(--spacing-xs);
+  padding-inline: var(--spacing-3xs);
 
   border: 2px solid transparent;
 
   &--focused {
-    background-color: var(--color-base-50);
-
-    &:hover {
-      border-color: var(--color-base-800);
-    }
+    background-color: var(--color-base-100);
   }
 
   .Layer__ComboBoxOptionCheckIcon {
@@ -156,23 +155,15 @@
   }
 
   &--selected {
-    background-color: var(--color-base-50);
+    background-color: var(--color-base-100);
 
     .Layer__ComboBoxOptionCheckIcon {
       visibility: visible;
-    }
-
-    &:hover {
-      border-color: var(--color-base-800);
     }
   }
 
   &--disabled {
     opacity: 0.5;
-
-    &:hover {
-      border-color: transparent;
-    }
   }
 }
 
