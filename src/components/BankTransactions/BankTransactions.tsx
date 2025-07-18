@@ -45,6 +45,9 @@ import { ModalHeading, ModalActions, ModalDescription, ModalTitleWithClose } fro
 import { Button, ButtonVariant } from '../Button'
 import { HStack, Spacer } from '../ui/Stack/Stack'
 import classNames from 'classnames'
+import { CategorySelect, CategoryOption } from '../CategorySelect/CategorySelect'
+import { VStack } from '../ui/Stack/Stack'
+import { Text, TextSize, TextWeight } from '../Typography'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -137,6 +140,7 @@ const BankTransactionsContent = ({
 
   const bulkSelection = useBankTransactionsBulkSelection()
   const [isBulkActionModalOpen, setIsBulkActionModalOpen] = useState(false)
+  const [selectedBulkCategory, setSelectedBulkCategory] = useState<CategoryOption | undefined>(undefined)
 
   const handleBulkActionClick = () => {
     setIsBulkActionModalOpen(true)
@@ -144,6 +148,37 @@ const BankTransactionsContent = ({
 
   const handleBulkActionModalClose = () => {
     setIsBulkActionModalOpen(false)
+    setSelectedBulkCategory(undefined)
+  }
+
+  const handleBulkCategorization = () => {
+    if (!selectedBulkCategory) {
+      console.log('No category selected for bulk action')
+      return
+    }
+
+    const selectedTransactionIds = bulkSelection.selectedTransactions.map(tx => tx.id)
+    
+    console.log('Bulk categorization:', {
+      transactionIds: selectedTransactionIds,
+      transactionCount: selectedTransactionIds.length,
+      category: {
+        id: selectedBulkCategory.payload.id,
+        name: selectedBulkCategory.payload.display_name,
+        type: selectedBulkCategory.payload.type
+      },
+      affectedTransactions: bulkSelection.selectedTransactions.map(tx => ({
+        id: tx.id,
+        description: tx.description,
+        amount: tx.amount,
+        date: tx.date
+      }))
+    })
+
+    // TODO: Replace with actual API call
+    // For now, just close the modal and clear selections
+    handleBulkActionModalClose()
+    bulkSelection.clearSelection()
   }
 
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
@@ -248,6 +283,43 @@ const BankTransactionsContent = ({
     const lastPageIndex = firstPageIndex + pageSize
     return data?.slice(firstPageIndex, lastPageIndex)
   }, [currentPage, data, monthlyView, pageSize])
+
+  // Aggregate suggestions from selected transactions
+  const aggregatedSuggestions = useMemo(() => {
+    const suggestionCounts = new Map<string, { category: any, count: number }>()
+    
+    // Helper function to generate unique key for categories
+    const getCategoryKey = (category: any) => {
+      if (category.type === 'AccountNested' || category.type === 'ExclusionNested') {
+        return `${category.type}-${category.id}`
+      } else if (category.type === 'OptionalAccountNested') {
+        return `${category.type}-${category.stable_name}`
+      }
+      return `${category.type}-${category.display_name}`
+    }
+    
+    // Use selected transactions to get relevant suggestions
+    bulkSelection.selectedTransactions.forEach(transaction => {
+      if (transaction.categorization_flow?.type === 'ASK_FROM_SUGGESTIONS') {
+        transaction.categorization_flow.suggestions.forEach(suggestion => {
+          const key = getCategoryKey(suggestion)
+          const existing = suggestionCounts.get(key)
+          
+          if (existing) {
+            existing.count += 1
+          } else {
+            suggestionCounts.set(key, { category: suggestion, count: 1 })
+          }
+        })
+      }
+    })
+    
+    // Sort by count (descending) and take top 5
+    return Array.from(suggestionCounts.values())
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5)
+      .map(item => item.category)
+  }, [bulkSelection.selectedTransactions])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -431,6 +503,7 @@ const BankTransactionsContent = ({
 
       <Modal 
         isOpen={isBulkActionModalOpen} 
+        size='lg'
         onOpenChange={(isOpen) => {
           // Prevent closing when clicking outside
           // Modal can only be closed programmatically via the X button
@@ -448,11 +521,48 @@ const BankTransactionsContent = ({
                 handleBulkActionModalClose()
               }}
             />
-            <ModalDescription>
-              You have {bulkSelection.selectedTransactions.length} transactions selected. Choose an action to perform on all selected transactions.
-            </ModalDescription>
+            <VStack gap='md'>
+              <ModalDescription>
+                You have {bulkSelection.selectedTransactions.length} transactions selected. Choose an action to perform on all selected transactions.
+              </ModalDescription>
+              
+              <VStack gap='sm'>
+                <Text size={TextSize.md} weight={TextWeight.bold}>
+                  Categorize All Selected Transactions
+                </Text>
+                <Text size={TextSize.sm}>
+                  Apply the same category to all {bulkSelection.selectedTransactions.length} selected transactions.
+                </Text>
+                
+                <div style={{ width: '100%' }}>
+                  <CategorySelect
+                    value={selectedBulkCategory}
+                    onChange={setSelectedBulkCategory}
+                    showTooltips={showTooltips}
+                    excludeMatches={true}
+                    className="Layer__bulk-category-select"
+                    externalSuggestions={aggregatedSuggestions}
+                  />
+                </div>
+              </VStack>
+            </VStack>
+            
             <ModalActions>
-              {/* Removed close button - modal can only be closed via X button */}
+              <HStack gap='sm' justify='end'>
+                <Button
+                  variant={ButtonVariant.secondary}
+                  onClick={handleBulkActionModalClose}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant={ButtonVariant.primary}
+                  onClick={handleBulkCategorization}
+                  disabled={!selectedBulkCategory}
+                >
+                  Categorize {bulkSelection.selectedTransactions.length} Transactions
+                </Button>
+              </HStack>
             </ModalActions>
           </>
         )}

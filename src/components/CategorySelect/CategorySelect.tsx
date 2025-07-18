@@ -33,6 +33,7 @@ type Props = {
   excludeMatches?: boolean
   hideMainCategories?: string[]
   asDrawer?: boolean
+  externalSuggestions?: Category[]
 }
 
 export enum OptionActionType {
@@ -267,6 +268,7 @@ export const CategorySelect = ({
   excludeMatches = false,
   hideMainCategories,
   asDrawer = false,
+  externalSuggestions,
 }: Props) => {
   const { data: categories } = useCategories()
 
@@ -301,6 +303,13 @@ export const CategorySelect = ({
             options: bankTransaction.categorization_flow.suggestions.map(x =>
               mapCategoryToOption(x),
             ),
+          } satisfies GroupBase<CategoryOption>,
+      ]
+      : externalSuggestions && externalSuggestions.length > 0
+      ? [
+          {
+            label: 'Suggestions',
+            options: externalSuggestions.map(x => mapCategoryToOption(x)),
           } satisfies GroupBase<CategoryOption>,
       ]
       : []
