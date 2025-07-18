@@ -275,6 +275,7 @@ export const InvoicesTable = () => {
       isClearable={false}
       placeholder='Status'
       slots={{ SelectedValue }}
+      aria-label='Status Filter'
     />
   ),
   [SelectedValue, options, selectedInvoiceStatusOption])

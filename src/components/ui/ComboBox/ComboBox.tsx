@@ -215,6 +215,11 @@ type OptionsOrGroups<T> = OneOf<[
   { groups: ReadonlyArray<{ label: string, options: ReadonlyArray<T> }> },
 ]>
 
+type AriaLabelProps = Pick<
+  React.AriaAttributes,
+  'aria-label' | 'aria-labelledby' | 'aria-describedby'
+>
+
 type ComboBoxProps<T extends ComboBoxOption> = {
   className?: string
 
@@ -241,7 +246,7 @@ type ComboBoxProps<T extends ComboBoxOption> = {
   isClearable?: boolean
 
   displayDisabledAsSelected?: boolean
-} & OptionsOrGroups<T>
+} & OptionsOrGroups<T> & AriaLabelProps
 
 export function ComboBox<T extends ComboBoxOption>({
   className,
@@ -267,6 +272,8 @@ export function ComboBox<T extends ComboBoxOption>({
   isClearable = true,
 
   displayDisabledAsSelected,
+
+  ...ariaProps
 }: ComboBoxProps<T>) {
   const internalInputId = useId()
   const effectiveInputId = inputId ?? internalInputId
@@ -301,6 +308,7 @@ export function ComboBox<T extends ComboBoxOption>({
     <VStack gap='3xs'>
       <Select
         inputId={effectiveInputId}
+        {...ariaProps}
 
         value={selectedValue}
         onChange={onSelectedValueChange}
