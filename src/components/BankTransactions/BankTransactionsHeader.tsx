@@ -12,7 +12,7 @@ import { Heading, HeadingSize } from '../Typography'
 import { MobileComponentType } from './constants'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useBankTransactionsContext, useBankTransactionsBulkSelectionContext } from '../../contexts/BankTransactionsContext'
 import { useDebounce } from '../../hooks/useDebounce/useDebounce'
 import { SearchField } from '../SearchField/SearchField'
 import { TransactionsActions } from '../domain/transactions/actions/TransactionsActions'
@@ -21,6 +21,7 @@ import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/use
 import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
+import { useMemo } from 'react'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -38,6 +39,7 @@ export interface BankTransactionsHeaderProps {
   setDateRange?: (value: DateRange) => void
   stringOverrides?: BankTransactionsHeaderStringOverrides
   withUploadMenu?: boolean
+  onBulkActionClick?: () => void
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -125,8 +127,11 @@ export const BankTransactionsHeader = ({
   stringOverrides,
   isSyncing,
   withUploadMenu,
+  onBulkActionClick,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
+  const { selectedTransactions, bulkSelectionActive, clearSelection } = useBankTransactionsBulkSelectionContext()
+  const hasSelectedTransactions = selectedTransactions.length > 0
 
   return (
     <Header
@@ -173,34 +178,96 @@ export const BankTransactionsHeader = ({
           )
           : null}
       </div>
-      <TransactionsActions>
-        {(!categorizedOnly && categorizeView) && (
-          <VStack slot='toggle' justify='center'>
-            <Toggle
-              name='bank-transaction-display'
-              size={
-                mobileComponent === 'mobileList'
-                  ? ToggleSize.small
-                  : ToggleSize.medium
-              }
-              options={[
-                { label: 'To Review', value: DisplayState.review },
-                { label: 'Categorized', value: DisplayState.categorized },
-              ]}
-              selected={display}
-              onChange={onCategorizationDisplayChange}
-            />
-          </VStack>
-        )}
-        <TransactionsSearch slot='search' />
-        <HStack slot='download-upload' justify='center' gap='xs'>
-          <DownloadButton
-            downloadButtonTextOverride={stringOverrides?.downloadButton}
-            iconOnly={listView}
-          />
-          {withUploadMenu && <BankTransactionsUploadMenu />}
-        </HStack>
-      </TransactionsActions>
+      <div className={hasSelectedTransactions ? 'Layer__transactions-actions--bulk-selection-active' : ''}>
+        <TransactionsActions>
+          {hasSelectedTransactions ? (
+            // Selection overlay content
+            <>
+              <VStack slot='toggle' justify='center'>
+                <span style={{ 
+                  fontSize: '14px', 
+                  fontWeight: 'bold', 
+                  color: '#374151',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <span style={{
+                    color: '#374151',
+                    fontSize: '14px',
+                    fontWeight: 'bold'
+                  }}>
+                    {selectedTransactions.length}
+                  </span>
+                  {selectedTransactions.length === 1 ? ' transaction selected' : ' transactions selected'}
+                </span>
+              </VStack>
+              <HStack slot='search' justify='center'>
+                <button
+                  onClick={clearSelection}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#f3f4f6',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    color: '#374151'
+                  }}
+                >
+                  Clear Selection
+                </button>
+              </HStack>
+              <HStack slot='download-upload' justify='center' gap='xs'>
+                <button
+                  onClick={onBulkActionClick}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#ef4444',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    color: 'white'
+                  }}
+                >
+                  Bulk Actions
+                </button>
+              </HStack>
+            </>
+          ) : (
+            // Default content
+            <>
+              {(!categorizedOnly && categorizeView) && (
+                <VStack slot='toggle' justify='center'>
+                  <Toggle
+                    name='bank-transaction-display'
+                    size={
+                      mobileComponent === 'mobileList'
+                        ? ToggleSize.small
+                        : ToggleSize.medium
+                    }
+                    options={[
+                      { label: 'To Review', value: DisplayState.review },
+                      { label: 'Categorized', value: DisplayState.categorized },
+                    ]}
+                    selected={display}
+                    onChange={onCategorizationDisplayChange}
+                  />
+                </VStack>
+              )}
+              <TransactionsSearch slot='search' />
+              <HStack slot='download-upload' justify='center' gap='xs'>
+                <DownloadButton
+                  downloadButtonTextOverride={stringOverrides?.downloadButton}
+                  iconOnly={listView}
+                />
+                {withUploadMenu && <BankTransactionsUploadMenu />}
+              </HStack>
+            </>
+          )}
+        </TransactionsActions>
+      </div>
     </Header>
   )
 }

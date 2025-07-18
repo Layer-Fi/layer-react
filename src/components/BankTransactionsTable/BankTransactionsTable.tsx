@@ -11,9 +11,7 @@ import { SyncingComponent } from '../SyncingComponent'
 import { Checkbox } from '../ui/Checkbox/Checkbox'
 import { 
   useBankTransactionsBulkSelectionContext,
-  BankTransactionsBulkSelectionContext,
 } from '../../contexts/BankTransactionsContext'
-import { useBankTransactionsBulkSelection } from '../../hooks/useBankTransactionsBulkSelection'
 
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string
@@ -43,15 +41,9 @@ interface BankTransactionsTableProps {
   onRefresh?: () => void
 }
 
-// Main component wrapper with bulk selection provider
+// Main component wrapper - bulk selection provider is now at BankTransactions level
 export const BankTransactionsTable = (props: BankTransactionsTableProps) => {
-  const bulkSelection = useBankTransactionsBulkSelection()
-
-  return (
-    <BankTransactionsBulkSelectionContext.Provider value={bulkSelection}>
-      <BankTransactionsTableContent {...props} />
-    </BankTransactionsBulkSelectionContext.Provider>
-  )
+  return <BankTransactionsTableContent {...props} />
 }
 
 // Internal component that uses the bulk selection context
@@ -77,6 +69,7 @@ const BankTransactionsTableContent = ({
     selectedTransactions,
     bulkSelectionActive,
     selectAll,
+    deselectAll,
     clearSelection,
     openBulkSelection,
   } = useBankTransactionsBulkSelectionContext()
@@ -105,7 +98,8 @@ const BankTransactionsTableContent = ({
 
   const handleSelectAll = () => {
     if (allSelected) {
-      clearSelection()
+      // Only deselect items on this page, not all selected items
+      deselectAll(availableTransactions)
     } else {
       selectAll(availableTransactions)
       if (!bulkSelectionActive) {
@@ -123,11 +117,22 @@ const BankTransactionsTableContent = ({
         <tr>
           <th className='Layer__table-header Layer__bank-transactions__checkbox-col'>
             <span className='Layer__table-cell-content'>
-              <Checkbox 
-                isSelected={allSelected}
-                isIndeterminate={indeterminate}
-                onChange={handleSelectAll}
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Checkbox 
+                  isSelected={allSelected}
+                  isIndeterminate={indeterminate}
+                  onChange={handleSelectAll}
+                />
+                {selectedTransactions.length > 0 && (
+                  <span style={{
+                    color: '#374151',
+                    fontSize: '10px',
+                    fontWeight: 'bold'
+                  }}>
+                    {selectedTransactions.length}
+                  </span>
+                )}
+              </div>
             </span>
           </th>
           <th className='Layer__table-header Layer__bank-transactions__date-col'>

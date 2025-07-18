@@ -121,6 +121,16 @@
   color: var(--color-base-500);
 }
 
+// Transactions actions styling when bulk selection is active
+.Layer__transactions-actions--bulk-selection-active {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+  background-color: var(--bg-element-focus);
+  border-radius: var(--border-radius-xs);
+  padding: var(--spacing-xs);
+  margin: var(--spacing-xs) 0;
+}
+
 .Layer__bank-transaction-row {
   transition: all var(--transition-speed) ease-in-out;
   opacity: 0.3;

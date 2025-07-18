@@ -40,7 +40,9 @@ export const BankTransactionsBulkSelectionContext = createContext<BankTransactio
   clearSelection: () => {},
   toggleTransaction: () => {},
   selectAll: () => {},
+  deselectAll: () => {},
   isSelected: () => false,
+  getPageSelectionState: () => ({ allSelected: false, someSelected: false, indeterminate: false }),
   openBulkSelection: () => {},
   closeBulkSelection: () => {},
 })

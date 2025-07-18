@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import {
   BankTransactionsContext,
+  BankTransactionsBulkSelectionContext,
   useBankTransactionsContext,
 } from '../../contexts/BankTransactionsContext'
 import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
@@ -38,6 +39,7 @@ import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimension
 import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
 import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
+import { useBankTransactionsBulkSelection } from '../../hooks/useBankTransactionsBulkSelection'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -127,6 +129,8 @@ const BankTransactionsContent = ({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   }))
+
+  const bulkSelection = useBankTransactionsBulkSelection()
 
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
@@ -286,20 +290,21 @@ const BankTransactionsContent = ({
   const isLoadingWithoutData = isLoading && !data
 
   return (
-    <Container
-      className={
-        classNames(
-          'Layer__Public',
-          display === DisplayState.review
-            ? 'Layer__bank-transactions--to-review'
-            : 'Layer__bank-transactions--categorized',
-        )
-      }
-      transparentBg={listView && mobileComponent === 'mobileList'}
-      name={COMPONENT_NAME}
-      asWidget={asWidget}
-      ref={containerRef}
-    >
+    <BankTransactionsBulkSelectionContext.Provider value={bulkSelection}>
+      <Container
+        className={
+          classNames(
+            'Layer__Public',
+            display === DisplayState.review
+              ? 'Layer__bank-transactions--to-review'
+              : 'Layer__bank-transactions--categorized',
+          )
+        }
+        transparentBg={listView && mobileComponent === 'mobileList'}
+        name={COMPONENT_NAME}
+        asWidget={asWidget}
+        ref={containerRef}
+      >
       {!hideHeader && (
         <BankTransactionsHeader
           shiftStickyHeader={shiftStickyHeader}
@@ -409,5 +414,6 @@ const BankTransactionsContent = ({
 
       {monthlyView ? <div ref={scrollPaginationRef} /> : null}
     </Container>
+    </BankTransactionsBulkSelectionContext.Provider>
   )
 }
