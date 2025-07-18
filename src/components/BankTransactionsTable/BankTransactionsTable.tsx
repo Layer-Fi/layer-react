@@ -8,6 +8,11 @@ import {
 } from '../BankTransactions/BankTransactions'
 import { BankTransactionsLoader } from '../BankTransactionsLoader'
 import { SyncingComponent } from '../SyncingComponent'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
+import { 
+  useBankTransactionsBulkSelectionContext,
+} from '../../contexts/BankTransactionsContext'
+import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string
@@ -37,7 +42,13 @@ interface BankTransactionsTableProps {
   onRefresh?: () => void
 }
 
-export const BankTransactionsTable = ({
+// Main component wrapper - bulk selection provider is now at BankTransactions level
+export const BankTransactionsTable = (props: BankTransactionsTableProps) => {
+  return <BankTransactionsTableContent {...props} />
+}
+
+// Internal component that uses the bulk selection context
+const BankTransactionsTableContent = ({
   categorizeView,
   editable,
   isLoading,
@@ -55,6 +66,18 @@ export const BankTransactionsTable = ({
   lastPage,
   onRefresh,
 }: BankTransactionsTableProps) => {
+  const {
+    selectedTransactions,
+    bulkSelectionActive,
+    selectAll,
+    deselectAll,
+    clearSelection,
+    openBulkSelection,
+  } = useBankTransactionsBulkSelectionContext()
+
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const isBookkeepingActive = bookkeepingStatus === BookkeepingStatus.ACTIVE
+
   const showReceiptColumn =
     (showReceiptUploads
       && bankTransactions?.some(
@@ -67,6 +90,28 @@ export const BankTransactionsTable = ({
     [showReceiptColumn],
   )
 
+  // Header checkbox logic
+  const availableTransactions = bankTransactions || []
+  const allSelected = availableTransactions.length > 0 && availableTransactions.every(t => 
+    selectedTransactions.some(selected => selected.id === t.id)
+  )
+  const someSelected = selectedTransactions.some(selected => 
+    availableTransactions.some(t => t.id === selected.id)
+  )
+  const indeterminate = someSelected && !allSelected
+
+  const handleSelectAll = () => {
+    if (allSelected) {
+      // Only deselect items on this page, not all selected items
+      deselectAll(availableTransactions)
+    } else {
+      selectAll(availableTransactions)
+      if (!bulkSelectionActive) {
+        openBulkSelection()
+      }
+    }
+  }
+
   return (
     <table
       width='100%'
@@ -74,6 +119,28 @@ export const BankTransactionsTable = ({
     >
       <thead>
         <tr>
+          <th className='Layer__table-header Layer__bank-transactions__checkbox-col'>
+            <span className='Layer__table-cell-content'>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {!isBookkeepingActive && (
+                  <Checkbox 
+                    isSelected={allSelected}
+                    isIndeterminate={indeterminate}
+                    onChange={handleSelectAll}
+                  />
+                )}
+                {!isBookkeepingActive && selectedTransactions.length > 0 && (
+                  <span style={{
+                    color: '#374151',
+                    fontSize: '10px',
+                    fontWeight: 'bold'
+                  }}>
+                    {selectedTransactions.length}
+                  </span>
+                )}
+              </div>
+            </span>
+          </th>
           <th className='Layer__table-header Layer__bank-transactions__date-col'>
             {stringOverrides?.transactionsTable?.dateColumnHeaderText || 'Date'}
           </th>
@@ -133,6 +200,7 @@ export const BankTransactionsTable = ({
                 showReceiptUploadColumn={showReceiptColumn}
                 showTooltips={showTooltips}
                 stringOverrides={stringOverrides?.bankTransactionCTAs}
+                allTransactions={bankTransactions}
               />
             ),
           )}
@@ -142,7 +210,7 @@ export const BankTransactionsTable = ({
               && page === 1))
           ? (
             <tr>
-              <td colSpan={3}>
+              <td colSpan={4}>
                 <SyncingComponent
                   title='Syncing historical account data'
                   onRefresh={() => onRefresh && onRefresh()}

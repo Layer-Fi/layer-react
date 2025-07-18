@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import {
   BankTransactionsContext,
+  BankTransactionsBulkSelectionContext,
   useBankTransactionsContext,
 } from '../../contexts/BankTransactionsContext'
 import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
@@ -32,12 +33,22 @@ import type { LayerError } from '../../models/ErrorHandler'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { LegacyModeProvider, type BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
-import { BankTransactionTagVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
+import { useBankTransactionsBulkSelection } from '../../hooks/useBankTransactionsBulkSelection'
+// Temporarily commented out - these files don't exist in the current codebase
+// import { BankTransactionTagVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
+// import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
+// import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimensions'
+// import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
+// import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
+import { Modal } from '../ui/Modal/Modal'
+import { ModalHeading, ModalActions, ModalDescription, ModalTitleWithClose } from '../ui/Modal/ModalSlots'
+import { Button, ButtonVariant } from '../Button'
+import { HStack, Spacer } from '../ui/Stack/Stack'
 import classNames from 'classnames'
-import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimensions'
-import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
-import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
-import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
+import { CategorySelect, CategoryOption } from '../CategorySelect/CategorySelect'
+import { VStack } from '../ui/Stack/Stack'
+import { Text, TextSize, TextWeight } from '../Typography'
+import { getCategorizePayload } from '../../utils/bankTransactions'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -86,9 +97,9 @@ export const BankTransactions = ({
   mode,
   ...props
 }: BankTransactionsWithErrorProps) => {
-  usePreloadTagDimensions({ isEnabled: showTags })
-  usePreloadCustomers({ isEnabled: showCustomerVendor })
-  usePreloadVendors({ isEnabled: showCustomerVendor })
+  // usePreloadTagDimensions({ isEnabled: showTags })
+  // usePreloadCustomers({ isEnabled: showCustomerVendor })
+  // usePreloadVendors({ isEnabled: showCustomerVendor })
 
   const contextData = useAugmentedBankTransactions({ monthlyView: props.monthlyView })
 
@@ -96,11 +107,11 @@ export const BankTransactions = ({
     <ErrorBoundary onError={onError}>
       <BankTransactionsContext.Provider value={contextData}>
         <LegacyModeProvider overrideMode={mode}>
-          <BankTransactionTagVisibilityProvider showTags={showTags}>
-            <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
-              <BankTransactionsContent {...props} />
-            </BankTransactionCustomerVendorVisibilityProvider>
-          </BankTransactionTagVisibilityProvider>
+          {/* <BankTransactionTagVisibilityProvider showTags={showTags}> */}
+          {/* <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}> */}
+          <BankTransactionsContent {...props} />
+          {/* </BankTransactionCustomerVendorVisibilityProvider> */}
+          {/* </BankTransactionTagVisibilityProvider> */}
         </LegacyModeProvider>
       </BankTransactionsContext.Provider>
     </ErrorBoundary>
@@ -128,13 +139,73 @@ const BankTransactionsContent = ({
     endDate: endOfMonth(new Date()),
   }))
 
+  const bulkSelection = useBankTransactionsBulkSelection()
+  const [isBulkActionModalOpen, setIsBulkActionModalOpen] = useState(false)
+  const [selectedBulkCategory, setSelectedBulkCategory] = useState<CategoryOption | undefined>(undefined)
+
+  const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
+  const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
+
+  const handleBulkActionClick = () => {
+    setIsBulkActionModalOpen(true)
+  }
+
+  const handleBulkActionModalClose = () => {
+    setIsBulkActionModalOpen(false)
+    setSelectedBulkCategory(undefined)
+    bulkSelection.clearSelection()
+  }
+
+  const handleBulkCategorization = async () => {
+    if (!selectedBulkCategory || !categorizeMultiple) {
+      console.error('No category selected for bulk action or categorizeMultiple not available')
+      return
+    }
+
+    const selectedTransactionIds = bulkSelection.selectedTransactions.map(tx => tx.id)
+    
+    if (selectedTransactionIds.length === 0) {
+      console.error('No transactions selected for bulk categorization')
+      return
+    }
+
+    const isUpdateMode = display === DisplayState.categorized
+    const actionType = isUpdateMode ? 'update' : 'confirm'
+
+    try {
+      // Convert CategoryOption to CategoryUpdate format
+      const categoryUpdate = {
+        type: 'Category' as const,
+        category: getCategorizePayload(selectedBulkCategory),
+      }
+
+      // Execute bulk categorization with notification
+      const result = await categorizeMultiple(
+        selectedTransactionIds,
+        categoryUpdate,
+        true, // show notification
+      )
+
+      console.log(`Bulk ${actionType} completed:`, {
+        successful: result.successCount,
+        failed: result.failureCount,
+        total: selectedTransactionIds.length,
+      })
+
+      // Close modal on any success
+      if (result.successCount > 0) {
+        handleBulkActionModalClose()
+      }
+    } catch (error) {
+      console.error(`Bulk ${actionType} failed:`, error)
+      // Keep modal open on error so user can retry
+    }
+  }
+
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
 
   const [currentPage, setCurrentPage] = useState(1)
-
-  const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
-  const categorizationEnabled = isCategorizationEnabledForStatus(effectiveBookkeepingStatus)
 
   const categorizeView = categorizeViewProp ?? categorizationEnabled
 
@@ -149,6 +220,7 @@ const BankTransactionsContent = ({
     hasMore,
     fetchMore,
     removeAfterCategorize,
+    categorizeMultiple,
   } = useBankTransactionsContext()
 
   const { data: linkedAccounts } = useLinkedAccounts()
@@ -231,6 +303,43 @@ const BankTransactionsContent = ({
     return data?.slice(firstPageIndex, lastPageIndex)
   }, [currentPage, data, monthlyView, pageSize])
 
+  // Aggregate suggestions from selected transactions
+  const aggregatedSuggestions = useMemo(() => {
+    const suggestionCounts = new Map<string, { category: any, count: number }>()
+    
+    // Helper function to generate unique key for categories
+    const getCategoryKey = (category: any) => {
+      if (category.type === 'AccountNested' || category.type === 'ExclusionNested') {
+        return `${category.type}-${category.id}`
+      } else if (category.type === 'OptionalAccountNested') {
+        return `${category.type}-${category.stable_name}`
+      }
+      return `${category.type}-${category.display_name}`
+    }
+    
+    // Use selected transactions to get relevant suggestions
+    bulkSelection.selectedTransactions.forEach(transaction => {
+      if (transaction.categorization_flow?.type === 'ASK_FROM_SUGGESTIONS') {
+        transaction.categorization_flow.suggestions.forEach(suggestion => {
+          const key = getCategoryKey(suggestion)
+          const existing = suggestionCounts.get(key)
+          
+          if (existing) {
+            existing.count += 1
+          } else {
+            suggestionCounts.set(key, { category: suggestion, count: 1 })
+          }
+        })
+      }
+    })
+    
+    // Sort by count (descending) and take top 5
+    return Array.from(suggestionCounts.values())
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5)
+      .map(item => item.category)
+  }, [bulkSelection.selectedTransactions])
+
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -286,20 +395,21 @@ const BankTransactionsContent = ({
   const isLoadingWithoutData = isLoading && !data
 
   return (
-    <Container
-      className={
-        classNames(
-          'Layer__Public',
-          display === DisplayState.review
-            ? 'Layer__bank-transactions--to-review'
-            : 'Layer__bank-transactions--categorized',
-        )
-      }
-      transparentBg={listView && mobileComponent === 'mobileList'}
-      name={COMPONENT_NAME}
-      asWidget={asWidget}
-      ref={containerRef}
-    >
+    <BankTransactionsBulkSelectionContext.Provider value={bulkSelection}>
+      <Container
+        className={
+          classNames(
+            'Layer__Public',
+            display === DisplayState.review
+              ? 'Layer__bank-transactions--to-review'
+              : 'Layer__bank-transactions--categorized',
+          )
+        }
+        transparentBg={listView && mobileComponent === 'mobileList'}
+        name={COMPONENT_NAME}
+        asWidget={asWidget}
+        ref={containerRef}
+      >
       {!hideHeader && (
         <BankTransactionsHeader
           shiftStickyHeader={shiftStickyHeader}
@@ -321,6 +431,7 @@ const BankTransactionsContent = ({
           isDataLoading={isLoadingWithoutData}
           isSyncing={isSyncing}
           withUploadMenu={showUploadOptions}
+          onBulkActionClick={handleBulkActionClick}
         />
       )}
 
@@ -338,7 +449,6 @@ const BankTransactionsContent = ({
             stringOverrides={stringOverrides}
             lastPage={isLastPage}
             onRefresh={refetch}
-
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
@@ -408,6 +518,74 @@ const BankTransactionsContent = ({
       )}
 
       {monthlyView ? <div ref={scrollPaginationRef} /> : null}
+
+      <Modal 
+        isOpen={isBulkActionModalOpen} 
+        size='lg'
+        onOpenChange={(isOpen) => {
+          // Prevent closing when clicking outside
+          // Modal can only be closed programmatically via the X button
+        }}
+      >
+        {({ close }) => (
+          <>
+            <ModalTitleWithClose
+              heading={
+                <ModalHeading size='lg'>
+                  {display === DisplayState.categorized ? 'Update Transactions' : 'Bulk Actions'}
+                </ModalHeading>
+              }
+              onClose={() => {
+                handleBulkActionModalClose()
+              }}
+            />
+            <VStack gap='md'>
+              <ModalDescription>
+                You have {bulkSelection.selectedTransactions.length} transactions selected. Choose an action to perform on all selected transactions.
+              </ModalDescription>
+              
+              <VStack gap='sm'>
+                <Text size={TextSize.md} weight={TextWeight.bold}>
+                  Categorize All Selected Transactions
+                </Text>
+                <Text size={TextSize.sm}>
+                  Apply the same category to all {bulkSelection.selectedTransactions.length} selected transactions.
+                </Text>
+                
+                <div style={{ width: '100%' }}>
+                  <CategorySelect
+                    value={selectedBulkCategory}
+                    onChange={setSelectedBulkCategory}
+                    showTooltips={showTooltips}
+                    excludeMatches={true}
+                    className="Layer__bulk-category-select"
+                    externalSuggestions={aggregatedSuggestions}
+                  />
+                </div>
+              </VStack>
+            </VStack>
+            
+            <ModalActions>
+              <HStack gap='sm' justify='end'>
+                <Button
+                  variant={ButtonVariant.secondary}
+                  onClick={handleBulkActionModalClose}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant={ButtonVariant.primary}
+                  onClick={handleBulkCategorization}
+                  disabled={!selectedBulkCategory}
+                >
+                  Categorize {bulkSelection.selectedTransactions.length} Transactions
+                </Button>
+              </HStack>
+            </ModalActions>
+          </>
+        )}
+      </Modal>
     </Container>
+    </BankTransactionsBulkSelectionContext.Provider>
   )
 }
