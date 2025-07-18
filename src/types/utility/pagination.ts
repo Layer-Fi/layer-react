@@ -14,13 +14,13 @@ export type SortParams<T> = {
 }
 
 export type PaginationParams = {
-  cursor?: string
+  cursor?: string | null
   limit?: number
   showTotalCount?: boolean
 }
 
 export const PaginatedResponseMetaSchema = Schema.Struct({
-  cursor: Schema.UndefinedOr(Schema.String),
+  cursor: Schema.NullOr(Schema.String),
 
   hasMore: pipe(
     Schema.propertySignature(Schema.Boolean),
