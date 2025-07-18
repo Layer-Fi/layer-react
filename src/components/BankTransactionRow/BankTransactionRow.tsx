@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useBankTransactionsBulkSelectionContext } from '../../contexts/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
@@ -36,6 +37,7 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { VStack } from '../ui/Stack/Stack'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
 
 type Props = {
   index: number
@@ -102,6 +104,14 @@ export const BankTransactionRow = ({
     match: matchBankTransaction,
     shouldHideAfterCategorize,
   } = useBankTransactionsContext()
+  
+  const {
+    isSelected,
+    toggleTransaction,
+    openBulkSelection,
+    bulkSelectionActive,
+  } = useBankTransactionsBulkSelectionContext()
+
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )
@@ -122,6 +132,15 @@ export const BankTransactionRow = ({
       }
     },
   }
+
+  const handleCheckboxChange = (checked: boolean) => {
+    if (!bulkSelectionActive) {
+      openBulkSelection()
+    }
+    toggleTransaction(bankTransaction)
+  }
+
+  const transactionIsSelected = isSelected(bankTransaction)
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -197,6 +216,16 @@ export const BankTransactionRow = ({
   return (
     <>
       <tr className={rowClassName}>
+        <td
+          className='Layer__table-cell Layer__bank-transactions__checkbox-col'
+        >
+          <span className='Layer__table-cell-content'>
+            <Checkbox 
+              isSelected={transactionIsSelected}
+              onChange={handleCheckboxChange}
+            />
+          </span>
+        </td>
         <td
           className='Layer__table-cell  Layer__bank-transaction-table__date-col'
           {...openRow}
@@ -403,7 +432,7 @@ export const BankTransactionRow = ({
         </td>
       </tr>
       <tr>
-        <td colSpan={6} className='Layer__bank-transaction-row__expanded-td'>
+        <td colSpan={7} className='Layer__bank-transaction-row__expanded-td'>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}

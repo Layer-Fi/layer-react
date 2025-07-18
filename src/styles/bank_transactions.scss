@@ -720,6 +720,15 @@
   max-width: var(--width);
 }
 
+
+.Layer__bank-transactions__checkbox-col {
+  box-sizing: border-box;
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  text-align: center;
+}
+
 .Layer__bank-transactions__date-col {
   box-sizing: border-box;
   width: 140px;

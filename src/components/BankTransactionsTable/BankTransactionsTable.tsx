@@ -8,6 +8,12 @@ import {
 } from '../BankTransactions/BankTransactions'
 import { BankTransactionsLoader } from '../BankTransactionsLoader'
 import { SyncingComponent } from '../SyncingComponent'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
+import { 
+  useBankTransactionsBulkSelectionContext,
+  BankTransactionsBulkSelectionContext,
+} from '../../contexts/BankTransactionsContext'
+import { useBankTransactionsBulkSelection } from '../../hooks/useBankTransactionsBulkSelection'
 
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string
@@ -37,7 +43,19 @@ interface BankTransactionsTableProps {
   onRefresh?: () => void
 }
 
-export const BankTransactionsTable = ({
+// Main component wrapper with bulk selection provider
+export const BankTransactionsTable = (props: BankTransactionsTableProps) => {
+  const bulkSelection = useBankTransactionsBulkSelection()
+
+  return (
+    <BankTransactionsBulkSelectionContext.Provider value={bulkSelection}>
+      <BankTransactionsTableContent {...props} />
+    </BankTransactionsBulkSelectionContext.Provider>
+  )
+}
+
+// Internal component that uses the bulk selection context
+const BankTransactionsTableContent = ({
   categorizeView,
   editable,
   isLoading,
@@ -55,6 +73,14 @@ export const BankTransactionsTable = ({
   lastPage,
   onRefresh,
 }: BankTransactionsTableProps) => {
+  const {
+    selectedTransactions,
+    bulkSelectionActive,
+    selectAll,
+    clearSelection,
+    openBulkSelection,
+  } = useBankTransactionsBulkSelectionContext()
+
   const showReceiptColumn =
     (showReceiptUploads
       && bankTransactions?.some(
@@ -67,6 +93,27 @@ export const BankTransactionsTable = ({
     [showReceiptColumn],
   )
 
+  // Header checkbox logic
+  const availableTransactions = bankTransactions || []
+  const allSelected = availableTransactions.length > 0 && availableTransactions.every(t => 
+    selectedTransactions.some(selected => selected.id === t.id)
+  )
+  const someSelected = selectedTransactions.some(selected => 
+    availableTransactions.some(t => t.id === selected.id)
+  )
+  const indeterminate = someSelected && !allSelected
+
+  const handleSelectAll = () => {
+    if (allSelected) {
+      clearSelection()
+    } else {
+      selectAll(availableTransactions)
+      if (!bulkSelectionActive) {
+        openBulkSelection()
+      }
+    }
+  }
+
   return (
     <table
       width='100%'
@@ -74,6 +121,15 @@ export const BankTransactionsTable = ({
     >
       <thead>
         <tr>
+          <th className='Layer__table-header Layer__bank-transactions__checkbox-col'>
+            <span className='Layer__table-cell-content'>
+              <Checkbox 
+                isSelected={allSelected}
+                isIndeterminate={indeterminate}
+                onChange={handleSelectAll}
+              />
+            </span>
+          </th>
           <th className='Layer__table-header Layer__bank-transactions__date-col'>
             {stringOverrides?.transactionsTable?.dateColumnHeaderText || 'Date'}
           </th>
@@ -142,7 +198,7 @@ export const BankTransactionsTable = ({
               && page === 1))
           ? (
             <tr>
-              <td colSpan={3}>
+              <td colSpan={4}>
                 <SyncingComponent
                   title='Syncing historical account data'
                   onRefresh={() => onRefresh && onRefresh()}

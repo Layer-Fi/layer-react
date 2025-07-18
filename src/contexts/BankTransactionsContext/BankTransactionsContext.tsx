@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react'
 import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
+import { useBankTransactionsBulkSelection } from '../../hooks/useBankTransactionsBulkSelection'
 import { DisplayState } from '../../types'
 
 export type BankTransactionsContextType = ReturnType<typeof useAugmentedBankTransactions>
@@ -29,5 +30,23 @@ export const BankTransactionsContext =
     accountsList: [],
   })
 
+// Bulk Selection Context
+export type BankTransactionsBulkSelectionContextType = ReturnType<typeof useBankTransactionsBulkSelection>
+export const BankTransactionsBulkSelectionContext = createContext<BankTransactionsBulkSelectionContextType>({
+  selectedTransactions: [],
+  bulkSelectionActive: false,
+  addTransaction: () => {},
+  removeTransaction: () => {},
+  clearSelection: () => {},
+  toggleTransaction: () => {},
+  selectAll: () => {},
+  isSelected: () => false,
+  openBulkSelection: () => {},
+  closeBulkSelection: () => {},
+})
+
 export const useBankTransactionsContext = () =>
   useContext(BankTransactionsContext)
+
+export const useBankTransactionsBulkSelectionContext = () =>
+  useContext(BankTransactionsBulkSelectionContext)
