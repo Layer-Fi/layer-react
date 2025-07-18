@@ -11,16 +11,15 @@ interface CountProps {
   totalCount?: string
 }
 
-interface ClearFiltersProps {
-  showClearFilters?: true
-  onClearFilters: () => void
+interface ClearFiltersButtonProps {
+  onClick: () => void
 }
 interface DataTableHeaderProps {
   name: string
+  count?: CountProps
   slotProps?: {
-    count?: CountProps
-    search?: SearchFieldProps
-    clearFilters?: ClearFiltersProps
+    SearchField?: SearchFieldProps
+    ClearFiltersButton?: ClearFiltersButtonProps
   }
   slots?: {
     HeaderActions?: React.FC
@@ -29,10 +28,8 @@ interface DataTableHeaderProps {
   }
 }
 
-export const DataTableHeader = ({ name, slotProps = {}, slots = {} }: DataTableHeaderProps) => {
-  const { count, search, clearFilters } = slotProps
+export const DataTableHeader = ({ name, count, slotProps = {}, slots = {} }: DataTableHeaderProps) => {
   const { showCount, totalCount } = count ?? {}
-  const { showClearFilters, onClearFilters } = clearFilters ?? {}
   const { Filters, HeaderActions, HeaderFilters } = slots
 
   return (
@@ -49,14 +46,18 @@ export const DataTableHeader = ({ name, slotProps = {}, slots = {} }: DataTableH
           {HeaderFilters && <HeaderFilters />}
         </HStack>
         <HStack pie='md' align='center' gap='3xs'>
-          {search && <SearchField {...search} />}
+          {slotProps.SearchField && <SearchField {...slotProps.SearchField} />}
           {HeaderActions && <HeaderActions />}
         </HStack>
       </HStack>
       {Filters && (
         <HStack pis='md' pie='md' justify='space-between' align='center' className='Layer__DataTableHeader__Filters'>
           <Filters />
-          {showClearFilters && <Button variant='outlined' onClick={onClearFilters}>Clear All Filters</Button>}
+          {slotProps.ClearFiltersButton && (
+            <Button variant='outlined' {...slotProps.ClearFiltersButton}>
+              Clear All Filters
+            </Button>
+          )}
         </HStack>
       )}
     </VStack>
