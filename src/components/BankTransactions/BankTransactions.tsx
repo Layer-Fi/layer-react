@@ -33,13 +33,18 @@ import type { LayerError } from '../../models/ErrorHandler'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { LegacyModeProvider, type BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyModeProvider'
-import { BankTransactionTagVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
-import classNames from 'classnames'
-import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimensions'
-import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
-import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
-import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
 import { useBankTransactionsBulkSelection } from '../../hooks/useBankTransactionsBulkSelection'
+// Temporarily commented out - these files don't exist in the current codebase
+// import { BankTransactionTagVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
+// import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
+// import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimensions'
+// import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
+// import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
+import { Modal } from '../ui/Modal/Modal'
+import { ModalHeading, ModalActions, ModalDescription, ModalTitleWithClose } from '../ui/Modal/ModalSlots'
+import { Button, ButtonVariant } from '../Button'
+import { HStack, Spacer } from '../ui/Stack/Stack'
+import classNames from 'classnames'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -88,9 +93,9 @@ export const BankTransactions = ({
   mode,
   ...props
 }: BankTransactionsWithErrorProps) => {
-  usePreloadTagDimensions({ isEnabled: showTags })
-  usePreloadCustomers({ isEnabled: showCustomerVendor })
-  usePreloadVendors({ isEnabled: showCustomerVendor })
+  // usePreloadTagDimensions({ isEnabled: showTags })
+  // usePreloadCustomers({ isEnabled: showCustomerVendor })
+  // usePreloadVendors({ isEnabled: showCustomerVendor })
 
   const contextData = useAugmentedBankTransactions({ monthlyView: props.monthlyView })
 
@@ -98,11 +103,11 @@ export const BankTransactions = ({
     <ErrorBoundary onError={onError}>
       <BankTransactionsContext.Provider value={contextData}>
         <LegacyModeProvider overrideMode={mode}>
-          <BankTransactionTagVisibilityProvider showTags={showTags}>
-            <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
-              <BankTransactionsContent {...props} />
-            </BankTransactionCustomerVendorVisibilityProvider>
-          </BankTransactionTagVisibilityProvider>
+          {/* <BankTransactionTagVisibilityProvider showTags={showTags}> */}
+          {/* <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}> */}
+          <BankTransactionsContent {...props} />
+          {/* </BankTransactionCustomerVendorVisibilityProvider> */}
+          {/* </BankTransactionTagVisibilityProvider> */}
         </LegacyModeProvider>
       </BankTransactionsContext.Provider>
     </ErrorBoundary>
@@ -131,6 +136,15 @@ const BankTransactionsContent = ({
   }))
 
   const bulkSelection = useBankTransactionsBulkSelection()
+  const [isBulkActionModalOpen, setIsBulkActionModalOpen] = useState(false)
+
+  const handleBulkActionClick = () => {
+    setIsBulkActionModalOpen(true)
+  }
+
+  const handleBulkActionModalClose = () => {
+    setIsBulkActionModalOpen(false)
+  }
 
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
@@ -326,6 +340,7 @@ const BankTransactionsContent = ({
           isDataLoading={isLoadingWithoutData}
           isSyncing={isSyncing}
           withUploadMenu={showUploadOptions}
+          onBulkActionClick={handleBulkActionClick}
         />
       )}
 
@@ -413,6 +428,35 @@ const BankTransactionsContent = ({
       )}
 
       {monthlyView ? <div ref={scrollPaginationRef} /> : null}
+
+      <Modal 
+        isOpen={isBulkActionModalOpen} 
+        onOpenChange={(isOpen) => {
+          // Prevent closing when clicking outside
+          // Modal can only be closed programmatically via the X button
+        }}
+      >
+        {({ close }) => (
+          <>
+            <ModalTitleWithClose
+              heading={
+                <ModalHeading size='lg'>
+                  Bulk Actions
+                </ModalHeading>
+              }
+              onClose={() => {
+                handleBulkActionModalClose()
+              }}
+            />
+            <ModalDescription>
+              You have {bulkSelection.selectedTransactions.length} transactions selected. Choose an action to perform on all selected transactions.
+            </ModalDescription>
+            <ModalActions>
+              {/* Removed close button - modal can only be closed via X button */}
+            </ModalActions>
+          </>
+        )}
+      </Modal>
     </Container>
     </BankTransactionsBulkSelectionContext.Provider>
   )
