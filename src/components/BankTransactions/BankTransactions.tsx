@@ -153,6 +153,7 @@ const BankTransactionsContent = ({
   const handleBulkActionModalClose = () => {
     setIsBulkActionModalOpen(false)
     setSelectedBulkCategory(undefined)
+    bulkSelection.clearSelection()
   }
 
   const handleBulkCategorization = async () => {
@@ -168,6 +169,9 @@ const BankTransactionsContent = ({
       return
     }
 
+    const isUpdateMode = display === DisplayState.categorized
+    const actionType = isUpdateMode ? 'update' : 'confirm'
+
     try {
       // Convert CategoryOption to CategoryUpdate format
       const categoryUpdate = {
@@ -182,19 +186,18 @@ const BankTransactionsContent = ({
         true, // show notification
       )
 
-      console.log('Bulk categorization completed:', {
+      console.log(`Bulk ${actionType} completed:`, {
         successful: result.successCount,
         failed: result.failureCount,
         total: selectedTransactionIds.length,
       })
 
-      // Close modal and clear selections on any success
+      // Close modal on any success
       if (result.successCount > 0) {
         handleBulkActionModalClose()
-        bulkSelection.clearSelection()
       }
     } catch (error) {
-      console.error('Bulk categorization failed:', error)
+      console.error(`Bulk ${actionType} failed:`, error)
       // Keep modal open on error so user can retry
     }
   }
@@ -529,7 +532,7 @@ const BankTransactionsContent = ({
             <ModalTitleWithClose
               heading={
                 <ModalHeading size='lg'>
-                  Bulk Actions
+                  {display === DisplayState.categorized ? 'Update Transactions' : 'Bulk Actions'}
                 </ModalHeading>
               }
               onClose={() => {

@@ -334,7 +334,7 @@ export const CategorySelect = ({
   const placeholder =
     matchOptions?.length === 1 && matchOptions[0].options.length > 1
       ? `${matchOptions[0].options.length} possible matches...`
-      : 'Categorize or match...'
+      : 'Categorize'
 
   if (asDrawer) {
     return (
