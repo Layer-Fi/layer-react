@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useBankTransactionsBulkSelectionContext } from '../../contexts/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
@@ -52,6 +52,7 @@ type Props = {
   showReceiptUploadColumn: boolean
   showTooltips: boolean
   stringOverrides?: BankTransactionCTAStringOverrides
+  allTransactions?: BankTransaction[]
 }
 
 export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
@@ -96,6 +97,7 @@ export const BankTransactionRow = ({
   showReceiptUploadColumn,
   showTooltips,
   stringOverrides,
+  allTransactions = [],
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
@@ -108,6 +110,7 @@ export const BankTransactionRow = ({
   const {
     isSelected,
     toggleTransaction,
+    handleCheckboxClick,
     openBulkSelection,
     bulkSelectionActive,
   } = useBankTransactionsBulkSelectionContext()
@@ -133,11 +136,46 @@ export const BankTransactionRow = ({
     },
   }
 
+  const shiftKeyRef = useRef(false)
+
+  // Track shift key state with keyboard listeners
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        shiftKeyRef.current = true
+      }
+    }
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        shiftKeyRef.current = false
+      }
+    }
+
+    // Add global keyboard listeners
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleKeyUp)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('keyup', handleKeyUp)
+    }
+  }, [])
+
   const handleCheckboxChange = (checked: boolean) => {
+    const wasShiftClick = shiftKeyRef.current
+    
     if (!bulkSelectionActive) {
       openBulkSelection()
     }
-    toggleTransaction(bankTransaction)
+    
+    if (wasShiftClick) {
+      // Handle shift+click range selection
+      handleCheckboxClick(bankTransaction, index, allTransactions, true)
+    } else {
+      // Handle regular click
+      toggleTransaction(bankTransaction, index)
+    }
   }
 
   const transactionIsSelected = isSelected(bankTransaction)

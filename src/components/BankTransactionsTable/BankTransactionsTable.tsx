@@ -200,6 +200,7 @@ const BankTransactionsTableContent = ({
                 showReceiptUploadColumn={showReceiptColumn}
                 showTooltips={showTooltips}
                 stringOverrides={stringOverrides?.bankTransactionCTAs}
+                allTransactions={bankTransactions}
               />
             ),
           )}

@@ -4,6 +4,7 @@ import { BankTransaction } from '../types'
 export const useBankTransactionsBulkSelection = () => {
   const [selectedTransactions, setSelectedTransactions] = useState<BankTransaction[]>([])
   const [bulkSelectionActive, setBulkSelectionActive] = useState(false)
+  const [lastClickedIndex, setLastClickedIndex] = useState<number | null>(null)
 
   const addTransaction = (transaction: BankTransaction) => {
     // Ignore duplicated transactions
@@ -19,14 +20,63 @@ export const useBankTransactionsBulkSelection = () => {
 
   const clearSelection = () => {
     setSelectedTransactions([])
+    setLastClickedIndex(null)
   }
 
-  const toggleTransaction = (transaction: BankTransaction) => {
+  const toggleTransaction = (transaction: BankTransaction, index?: number) => {
     const isSelected = selectedTransactions.find(t => t.id === transaction.id)
     if (isSelected) {
       removeTransaction(transaction)
     } else {
       addTransaction(transaction)
+    }
+    
+    // Update last clicked index
+    if (index !== undefined) {
+      setLastClickedIndex(index)
+    }
+  }
+
+  const selectRange = (
+    transactions: BankTransaction[],
+    startIndex: number,
+    endIndex: number,
+    shouldSelect: boolean = true
+  ) => {
+    const minIndex = Math.min(startIndex, endIndex)
+    const maxIndex = Math.max(startIndex, endIndex)
+    
+    const transactionsInRange = transactions.slice(minIndex, maxIndex + 1)
+    
+    if (shouldSelect) {
+      // Add all transactions in range that aren't already selected
+      const newSelections = transactionsInRange.filter(t => 
+        !selectedTransactions.some(selected => selected.id === t.id)
+      )
+      setSelectedTransactions(prev => [...prev, ...newSelections])
+    } else {
+      // Remove all transactions in range
+      const transactionIds = transactionsInRange.map(t => t.id)
+      setSelectedTransactions(prev => prev.filter(t => !transactionIds.includes(t.id)))
+    }
+  }
+
+  const handleCheckboxClick = (
+    transaction: BankTransaction,
+    index: number,
+    allTransactions: BankTransaction[],
+    isShiftClick: boolean = false
+  ) => {
+    const isCurrentlySelected = selectedTransactions.find(t => t.id === transaction.id)
+    
+    if (isShiftClick && lastClickedIndex !== null && lastClickedIndex !== index) {
+      // Shift+click: select/deselect range
+      const shouldSelect = !isCurrentlySelected
+      selectRange(allTransactions, lastClickedIndex, index, shouldSelect)
+      setLastClickedIndex(index)
+    } else {
+      // Regular click: toggle single transaction
+      toggleTransaction(transaction, index)
     }
   }
 
@@ -77,6 +127,7 @@ export const useBankTransactionsBulkSelection = () => {
     removeTransaction,
     clearSelection,
     toggleTransaction,
+    handleCheckboxClick,
     selectAll,
     deselectAll,
     isSelected,
