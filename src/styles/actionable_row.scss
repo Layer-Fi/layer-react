@@ -14,10 +14,6 @@
     flex-direction: column;
     align-items: stretch;
 
-    .Layer__actionable_row__main {
-      width: 100%;
-    }
-
     .Layer__actionable_row__action {
       justify-content: flex-end;
     }
@@ -28,7 +24,6 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  flex: 1;
 }
 
 .Layer__actionable_row__icon {
@@ -45,7 +40,7 @@
 .Layer__actionable_row__action {
   display: flex;
   align-items: center;
-  flex-shrink: 0; /* Prevent action area from shrinking, maintaining button sizes */
+  flex-shrink: 0;
 }
 
 .Layer__actionable_row__description {
