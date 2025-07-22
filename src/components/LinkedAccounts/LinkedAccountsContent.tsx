@@ -11,6 +11,7 @@ interface LinkedAccountsDataProps {
   showLedgerBalance?: boolean
   showUnlinkItem?: boolean
   showBreakConnection?: boolean
+  showAddAccount?: boolean
 }
 
 export const LinkedAccountsContent = ({
@@ -18,6 +19,7 @@ export const LinkedAccountsContent = ({
   showLedgerBalance,
   showUnlinkItem,
   showBreakConnection,
+  showAddAccount,
 }: LinkedAccountsDataProps) => {
   const { data, addConnection } = useContext(LinkedAccountsContext)
 
@@ -42,20 +44,22 @@ export const LinkedAccountsContent = ({
             asWidget={asWidget}
           />
         ))}
-        <div
-          role='button'
-          tabIndex={0}
-          aria-label='new-account'
-          onClick={() => addConnection('PLAID')}
-          className={linkedAccountsNewAccountClassName}
-        >
-          <div className='Layer__linked-accounts__new-account-label'>
-            <PlusIcon size={15} />
-            <Text as='span' size={'sm' as TextSize}>
-              Add Account
-            </Text>
+        {showAddAccount && (
+          <div
+            role='button'
+            tabIndex={0}
+            aria-label='new-account'
+            onClick={() => addConnection('PLAID')}
+            className={linkedAccountsNewAccountClassName}
+          >
+            <div className='Layer__linked-accounts__new-account-label'>
+              <PlusIcon size={15} />
+              <Text as='span' size={'sm' as TextSize}>
+                Add Account
+              </Text>
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <LinkedAccountsConfirmationModal />
     </>

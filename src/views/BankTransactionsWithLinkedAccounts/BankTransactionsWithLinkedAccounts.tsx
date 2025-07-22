@@ -27,6 +27,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   showTooltips?: boolean
   showUnlinkItem?: boolean
   showUploadOptions?: boolean
+  showAddAccount?: boolean
   /**
    * @deprecated `mode` can be inferred from the bookkeeping configuration of a business
    */
@@ -50,6 +51,7 @@ export const BankTransactionsWithLinkedAccounts = ({
   showTooltips = false,
   showUnlinkItem = false,
   showUploadOptions = false,
+  showAddAccount = true,
 
   mobileComponent,
   stringOverrides,
@@ -64,6 +66,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         showLedgerBalance={showLedgerBalance}
         showUnlinkItem={showUnlinkItem}
         showBreakConnection={showBreakConnection}
+        showAddAccount={showAddAccount}
         stringOverrides={stringOverrides?.linkedAccounts}
       />
       <BankTransactions
