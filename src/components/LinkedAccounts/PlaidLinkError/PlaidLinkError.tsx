@@ -42,7 +42,7 @@ export function PlaidLinkErrorContent({ onComplete, onPlaidLink }: PlaidLinkErro
           Link another bank
         </DeprecatedButton>
         <DeprecatedButton
-          onClick={() => { onComplete() }}
+          onClick={onComplete}
           rightIcon={<ChevronRight />}
           className='Layer__plaid-link-error__button-row-item'
         >
