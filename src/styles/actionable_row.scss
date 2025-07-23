@@ -10,7 +10,7 @@
   container-type: inline-size;
 
   /* Stack vertically when container is too narrow */
-  @container (max-width: 400px) {
+  @container (max-width: 30rem) {
     flex-direction: column;
     align-items: stretch;
 
@@ -39,8 +39,6 @@
 
 .Layer__actionable_row__action {
   display: flex;
-  align-items: center;
-  flex-shrink: 0;
 }
 
 .Layer__actionable_row__description {
