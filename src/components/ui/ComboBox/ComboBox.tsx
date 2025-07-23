@@ -180,11 +180,13 @@ function buildCustomNoOptionsMessage({ EmptyMessage }: BuildCustomNoOptionsMessa
   }
 }
 
-function buildCustomPlaceholder({ placeholder }: { placeholder: string }) {
+function buildCustomPlaceholder({ placeholder }: { placeholder?: string }) {
   return function CustomPlaceholder<T extends ComboBoxOption>({
     children,
     ...restProps
   }: PlaceholderProps<T, false, GroupBase<T>>) {
+    if (!placeholder) return null
+
     return (
       <components.Placeholder
         {...restProps}
@@ -228,7 +230,7 @@ type ComboBoxProps<T extends ComboBoxOption> = {
 
   onInputValueChange?: (value: string) => void
 
-  placeholder: string
+  placeholder?: string
   slots?: {
     EmptyMessage?: ReactNode
     ErrorMessage?: ReactNode
