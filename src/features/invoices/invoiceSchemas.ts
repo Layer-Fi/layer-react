@@ -68,6 +68,7 @@ export const InvoiceLineItemSchema = Schema.Struct({
 
   memo: Schema.NullOr(Schema.String),
 })
+export type InvoiceLineItem = typeof InvoiceLineItemSchema.Type
 
 export const InvoiceSchema = Schema.Struct({
   id: Schema.UUID,
@@ -155,32 +156,25 @@ export const InvoiceSchema = Schema.Struct({
 
   memo: Schema.NullOr(Schema.String),
 })
+export type Invoice = typeof InvoiceSchema.Type
 
 export const UpsertInvoiceTaxLineItemSchema = Schema.Struct({
-  amount: Schema.NumberFromString.pipe(Schema.int()),
+  amount: Schema.Number,
 })
 
 export const UpsertInvoiceLineItemSchema = Schema.Struct({
-  description: pipe(
-    Schema.propertySignature(Schema.UndefinedOr(Schema.String)),
-    Schema.fromKey('description'),
-  ),
+  description: Schema.String,
 
-  product: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('product'),
-  ),
+  product: Schema.String,
 
   unitPrice: pipe(
-    Schema.propertySignature(Schema.NumberFromString.pipe(Schema.int())),
+    Schema.propertySignature(Schema.Number),
     Schema.fromKey('unit_price'),
   ),
 
-  quantity: pipe(
-    Schema.propertySignature(Schema.BigDecimal),
-    Schema.fromKey('quantity'),
-  ),
+  quantity: Schema.BigDecimal,
 })
+export type UpsertInvoiceLineItem = typeof UpsertInvoiceLineItemSchema.Type
 
 export const UpsertInvoiceSchema = Schema.Struct({
   sentAt: pipe(
@@ -211,7 +205,7 @@ export const UpsertInvoiceSchema = Schema.Struct({
   ),
 
   additionalDiscount: pipe(
-    Schema.propertySignature(Schema.UndefinedOr(Schema.NumberFromString.pipe(Schema.int()))),
+    Schema.propertySignature(Schema.UndefinedOr(Schema.Number)),
     Schema.fromKey('additional_discount'),
   ),
 
@@ -220,6 +214,4 @@ export const UpsertInvoiceSchema = Schema.Struct({
     Schema.fromKey('additional_sales_taxes'),
   ),
 })
-
-export type Invoice = typeof InvoiceSchema.Type
 export type UpsertInvoice = typeof UpsertInvoiceSchema.Type
