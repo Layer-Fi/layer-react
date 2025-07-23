@@ -13,8 +13,10 @@ import { Heading } from '../../ui/Typography/Heading'
 import { Text } from '../../Typography/Text'
 import pluralize from 'pluralize'
 import ChevronRight from '../../../icons/ChevronRight'
-import { ActionableRow } from '../../ActionableRow/ActionableRow'
 import { Separator } from '../../Separator/Separator'
+import { ActionableRow } from '../../ActionableRow/ActionableRow'
+import { usePlaidLinkErrorStore } from '../../../providers/PlaidLinkErrorStoreProvider'
+import { PlaidLinkErrorModalContent } from '../../LinkedAccounts/PlaidLinkErrorModal/PlaidLinkErrorModal'
 
 export function LinkAccountsLinkStep() {
   const {
@@ -25,9 +27,17 @@ export function LinkAccountsLinkStep() {
     addConnection,
   } = useContext(LinkedAccountsContext)
 
+  const { isPlaidLinkError } = usePlaidLinkErrorStore()
+
   const { next } = useWizard()
 
   const effectiveAccounts = data ?? []
+
+  if (isPlaidLinkError) {
+    return (
+      <PlaidLinkErrorModalContent onComplete={() => { void next() }} />
+    )
+  }
 
   return (
     <>

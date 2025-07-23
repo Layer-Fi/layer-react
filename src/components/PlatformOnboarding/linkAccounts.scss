@@ -4,4 +4,20 @@
   gap: var(--spacing-md);
 
   container-type: inline-size;
+
+  @container (max-width: 26.25rem) {
+    .Layer__link-accounts__plaid-error__button-row {
+      flex-direction: column;
+
+      >.Layer__link-accounts__plaid-error__button-row-item {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.Layer__link-accounts__plaid-error__data-state {
+  .Layer__data-state__description {
+    margin-bottom: 0;
+  }
 }
