@@ -5,7 +5,7 @@ import { Text, TextSize } from '../Typography'
 import { LinkedAccountItemThumb } from './LinkedAccountItemThumb'
 import classNames from 'classnames'
 import { LinkedAccountsConfirmationModal } from '../LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'
-import { PlaidLinkErrorModal } from './PlaidLinkErrorModal/PlaidLinkErrorModal'
+import { PlaidLinkErrorModal } from './PlaidLinkError/PlaidLinkError'
 
 interface LinkedAccountsDataProps {
   asWidget?: boolean

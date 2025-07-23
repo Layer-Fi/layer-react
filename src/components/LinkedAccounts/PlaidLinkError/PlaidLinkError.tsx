@@ -12,24 +12,24 @@ import { AlertTriangle } from 'lucide-react'
 import LinkIcon from '../../../icons/Link'
 import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext/LinkedAccountsContext'
 
-type PlaidLinkErrorModalContentProps = {
+type PlaidLinkErrorContentProps = {
   onComplete: () => void
   onPlaidLink?: () => void
 }
-export function PlaidLinkErrorModalContent({ onComplete, onPlaidLink }: PlaidLinkErrorModalContentProps) {
+export function PlaidLinkErrorContent({ onComplete, onPlaidLink }: PlaidLinkErrorContentProps) {
   const { addConnection } = useContext(LinkedAccountsContext)
 
   return (
-    <VStack gap='lg'>
+    <VStack gap='lg' className='Layer__plaid-link-error__content'>
       <DataState
-        className='Layer__link-accounts__plaid-error__data-state'
+        className='Layer__plaid-link-error__data-state'
         status={DataStateStatus.failed}
         title='Something went wrong while connecting to your bank through Plaid'
         description='This may be a temporary issue. You can try again, or choose a different bank to link.'
         icon={<AlertTriangle size={14} />}
       />
       <Separator />
-      <HStack gap='xs' justify='end' className='Layer__link-accounts__plaid-error__button-row'>
+      <HStack gap='xs' justify='end' className='Layer__plaid-link-error__button-row'>
         <DeprecatedButton
           variant={ButtonVariant.secondary}
           onClick={() => {
@@ -37,14 +37,14 @@ export function PlaidLinkErrorModalContent({ onComplete, onPlaidLink }: PlaidLin
             onPlaidLink?.()
           }}
           rightIcon={<LinkIcon size={12} />}
-          className='Layer__link-accounts__plaid-error__button-row-item'
+          className='Layer__plaid-link-error__button-row-item'
         >
           Link another bank
         </DeprecatedButton>
         <DeprecatedButton
           onClick={() => { onComplete() }}
           rightIcon={<ChevronRight />}
-          className='Layer__link-accounts__plaid-error__button-row-item'
+          className='Layer__plaid-link-error__button-row-item'
         >
           I’m done linking my banks
         </DeprecatedButton>
@@ -68,7 +68,7 @@ export function PlaidLinkErrorModal() {
       {({ close }) => (
         <>
           <ModalCloseButton onClose={close} positionAbsolute />
-          <PlaidLinkErrorModalContent onComplete={close} onPlaidLink={close} />
+          <PlaidLinkErrorContent onComplete={close} onPlaidLink={close} />
         </>
       )}
     </Modal>

@@ -1,0 +1,19 @@
+.Layer__plaid-link-error__content {
+  container-type: inline-size;
+
+  .Layer__plaid-link-error__data-state {
+    .Layer__data-state__description {
+      margin-bottom: 0;
+    }
+  }
+
+  @container (max-width: 26.25rem) {
+    .Layer__plaid-link-error__button-row {
+      flex-direction: column;
+
+      >.Layer__plaid-link-error__button-row-item {
+        width: 100%;
+      }
+    }
+  }
+}

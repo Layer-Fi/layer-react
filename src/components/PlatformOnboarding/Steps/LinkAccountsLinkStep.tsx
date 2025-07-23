@@ -16,7 +16,7 @@ import ChevronRight from '../../../icons/ChevronRight'
 import { Separator } from '../../Separator/Separator'
 import { ActionableRow } from '../../ActionableRow/ActionableRow'
 import { usePlaidLinkErrorStore } from '../../../providers/PlaidLinkErrorStoreProvider'
-import { PlaidLinkErrorModalContent } from '../../LinkedAccounts/PlaidLinkErrorModal/PlaidLinkErrorModal'
+import { PlaidLinkErrorContent } from '../../LinkedAccounts/PlaidLinkError/PlaidLinkError'
 
 export function LinkAccountsLinkStep() {
   const {
@@ -35,7 +35,7 @@ export function LinkAccountsLinkStep() {
 
   if (isPlaidLinkError) {
     return (
-      <PlaidLinkErrorModalContent onComplete={() => { void next() }} />
+      <PlaidLinkErrorContent onComplete={() => { void next() }} />
     )
   }
 
