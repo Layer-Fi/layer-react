@@ -8,17 +8,20 @@ import { lineEntryNumber } from '../../utils/journal'
 import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import { LedgerAccountNodeType } from '../../types/chart_of_accounts'
 
 export interface LedgerAccountRowProps {
   row: LedgerAccountLineItem
   index: number
   view: View
+  nodeType?: LedgerAccountNodeType
 }
 
 export const LedgerAccountRow = ({
   row,
   index,
   view,
+  nodeType,
 }: LedgerAccountRowProps) => {
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
     useContext(LedgerAccountsContext)
@@ -54,9 +57,12 @@ export const LedgerAccountRow = ({
               </Text>
             </div>
             <Text>{row.source?.display_description ?? ''}</Text>
-            <Text weight={TextWeight.normal}>
-              {row.account?.name ?? ''}
-            </Text>
+            {nodeType !== LedgerAccountNodeType.Leaf
+              && (
+                <Text weight={TextWeight.normal}>
+                  {row.account?.name ?? ''}
+                </Text>
+              )}
           </span>
         </td>
         <td className='Layer__table-cell Layer__table-cell--primary'>
@@ -111,9 +117,12 @@ export const LedgerAccountRow = ({
               </Text>
             </div>
             <Text>{row.source?.display_description ?? ''}</Text>
-            <Text weight={TextWeight.normal}>
-              {row.account?.name ?? ''}
-            </Text>
+            {nodeType !== LedgerAccountNodeType.Leaf
+              && (
+                <Text weight={TextWeight.normal}>
+                  {row.account?.name ?? ''}
+                </Text>
+              )}
             <div className='Layer__ledger_account-table__balances-mobile'>
               <div className='Layer__ledger_account-table__balance-item'>
                 <span className='Layer__ledger_account-table__balances-mobile__label'>
@@ -178,11 +187,14 @@ export const LedgerAccountRow = ({
           {row.source?.display_description ?? ''}
         </span>
       </td>
-      <td className='Layer__table-cell'>
-        <span className='Layer__table-cell-content'>
-          {row.account?.name ?? ''}
-        </span>
-      </td>
+      {nodeType !== LedgerAccountNodeType.Leaf
+        && (
+          <td className='Layer__table-cell'>
+            <span className='Layer__table-cell-content'>
+              {row.account?.name ?? ''}
+            </span>
+          </td>
+        )}
       <td className='Layer__table-cell Layer__table-cell--primary'>
         <span className='Layer__table-cell-content Layer__table-cell--amount'>
           {row.direction === Direction.DEBIT

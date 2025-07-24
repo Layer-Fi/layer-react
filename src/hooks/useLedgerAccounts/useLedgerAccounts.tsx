@@ -7,6 +7,7 @@ import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useListLedgerAccountLines } from '../../features/ledger/accounts/[ledgerAccountId]/api/useListLedgerAccountLines'
+import type { LedgerAccountBalanceWithNodeType } from '../../types/chart_of_accounts'
 
 type UseLedgerAccounts = (showReversalEntries: boolean) => {
   data?: LedgerAccounts
@@ -18,8 +19,8 @@ type UseLedgerAccounts = (showReversalEntries: boolean) => {
   error?: unknown
   errorEntry?: unknown
   refetch: () => void
-  accountId?: string
-  setAccountId: (id?: string) => void
+  selectedAccount: LedgerAccountBalanceWithNodeType | undefined
+  setSelectedAccount: (account: LedgerAccountBalanceWithNodeType | undefined) => void
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void
   closeSelectedEntry: () => void
@@ -35,8 +36,9 @@ export const useLedgerAccounts: UseLedgerAccounts = (
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const [accountId, setAccountId] = useState<string | undefined>()
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
+  const [selectedAccount, setSelectedAccount] = useState<LedgerAccountBalanceWithNodeType | undefined>()
+  const selectedAccountId = selectedAccount?.id
 
   // Use the new paginated hook - always call it but with empty accountId when not available
   const {
@@ -46,22 +48,21 @@ export const useLedgerAccounts: UseLedgerAccounts = (
     error: paginationError,
     mutate,
     size,
-    setSize
+    setSize,
   } = useListLedgerAccountLines({
-    accountId: accountId || '',
+    accountId: selectedAccountId || '',
     include_child_account_lines: true,
     sort_by: 'entry_at',
     sort_order: 'DESC',
-    limit: 150
+    limit: 150,
   })
 
   // Only use the data when accountId is available
-  const shouldFetch = Boolean(accountId)
+  const shouldFetch = Boolean(selectedAccountId)
 
   const data = useMemo(() => {
     if (!paginatedData || !shouldFetch) return undefined
     return paginatedData.flatMap(page => page.data) as LedgerAccounts
-
   }, [paginatedData, shouldFetch, showReversalEntries])
 
   const hasMore = useMemo(() => {
@@ -69,8 +70,8 @@ export const useLedgerAccounts: UseLedgerAccounts = (
 
     const lastPage = paginatedData[paginatedData.length - 1]
     return Boolean(
-      lastPage.meta?.pagination.cursor &&
-      lastPage.meta?.pagination.has_more
+      lastPage.meta?.pagination.cursor
+      && lastPage.meta?.pagination.has_more,
     )
   }, [paginatedData, shouldFetch])
 
@@ -106,10 +107,10 @@ export const useLedgerAccounts: UseLedgerAccounts = (
   // Create a query key for the data model tracking (similar to original)
   const queryKey = useMemo(() => {
     return businessId
-      && accountId
+      && selectedAccountId
       && auth?.access_token
-      && `ledger-accounts-lines-${businessId}-${accountId}`
-  }, [businessId, accountId, auth?.access_token])
+      && `ledger-accounts-lines-${businessId}-${selectedAccountId}`
+  }, [businessId, selectedAccountId, auth?.access_token])
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
@@ -124,7 +125,7 @@ export const useLedgerAccounts: UseLedgerAccounts = (
       void refetch()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncTimestamps, accountId, shouldFetch])
+  }, [syncTimestamps, selectedAccountId, shouldFetch])
 
   return {
     data,
@@ -136,8 +137,8 @@ export const useLedgerAccounts: UseLedgerAccounts = (
     error: shouldFetch ? paginationError : undefined,
     errorEntry,
     refetch,
-    accountId,
-    setAccountId,
+    selectedAccount,
+    setSelectedAccount,
     selectedEntryId,
     setSelectedEntryId,
     closeSelectedEntry,

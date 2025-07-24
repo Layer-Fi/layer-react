@@ -91,3 +91,13 @@ export type NewChildAccount = {
     stable_name: string
   }
 }
+
+export enum LedgerAccountNodeType {
+  Leaf = 'Leaf',
+  Root = 'Root',
+  Parent = 'Parent',
+}
+
+export type LedgerAccountBalanceWithNodeType = LedgerAccountBalance & {
+  nodeType: LedgerAccountNodeType
+}

@@ -4,7 +4,7 @@ import { Heading, HeadingSize } from '../Typography'
 import classNames from 'classnames'
 
 export interface DetailsListProps {
-  title?: string
+  title?: ReactNode
   className?: string
   titleClassName?: string
   children: ReactNode
@@ -22,7 +22,9 @@ export const DetailsList = ({
     <div className={classNames('Layer__details-list', className)}>
       {title && (
         <Header className={titleClassName}>
-          <Heading size={HeadingSize.secondary}>{title}</Heading>
+          <Heading size={HeadingSize.secondary}>
+            {title}
+          </Heading>
           {actions && (
             <div className='Layer__details-list__actions'>{actions}</div>
           )}

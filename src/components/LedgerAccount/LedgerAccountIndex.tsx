@@ -4,9 +4,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
-import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
 import { centsToDollars } from '../../models/Money'
 import { View } from '../../types/general'
 import { BackButton } from '../Button'
@@ -20,6 +18,7 @@ import { Panel } from '../Panel'
 import { Text, TextSize, TextWeight } from '../Typography'
 import { LedgerAccountRow } from './LedgerAccountRow'
 import classNames from 'classnames'
+import { LedgerAccountNodeType } from '../../types/chart_of_accounts'
 
 interface LedgerEntriesTableStringOverrides {
   dateColumnHeader?: string
@@ -50,32 +49,26 @@ export const LedgerAccount = ({
   stringOverrides,
 }: LedgerAccountProps) => {
   const [currentPage, setCurrentPage] = useState(1)
-  const { data: accountData } = useContext(ChartOfAccountsContext)
 
   const {
     data: rawData,
     error,
     isLoading,
     isValidating,
-    accountId,
-    setAccountId,
+    selectedAccount,
+    setSelectedAccount,
     selectedEntryId,
     closeSelectedEntry,
     refetch,
     hasMore,
     fetchMore,
   } = useContext(LedgerAccountsContext)
-
   const baseClassName = classNames(
     'Layer__ledger-account__index',
-    accountId && 'open',
+    selectedAccount && 'open',
   )
 
-  const account = useMemo(() => {
-    return flattenAccounts(accountData?.accounts || []).find(
-      x => x.id === accountId,
-    )
-  }, [accountId])
+  const nodeType = selectedAccount?.nodeType
 
   const data = useMemo(() => {
     if (!rawData) return undefined
@@ -99,7 +92,7 @@ export const LedgerAccount = ({
   }
 
   const close = () => {
-    setAccountId(undefined)
+    setSelectedAccount(undefined)
     closeSelectedEntry()
   }
 
@@ -124,7 +117,7 @@ export const LedgerAccount = ({
                   weight={TextWeight.bold}
                   className='Layer__ledger-account__title'
                 >
-                  {account?.name ?? ''}
+                  {selectedAccount?.name ?? ''}
                 </Text>
                 <div className='Layer__ledger-account__balance-container'>
                   <Text
@@ -138,7 +131,7 @@ export const LedgerAccount = ({
                     size={TextSize.sm}
                   >
                     $
-                    {centsToDollars(account?.balance || 0)}
+                    {centsToDollars(selectedAccount?.balance || 0)}
                   </Text>
                 </div>
               </div>
@@ -157,16 +150,19 @@ export const LedgerAccount = ({
                   </th>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable
-                      ?.journalIdColumnHeader || 'Journal id #'}
+                      ?.journalIdColumnHeader || 'Journal ID #'}
                   </th>
                   <th className='Layer__table-header'>
                     {stringOverrides?.ledgerEntriesTable?.sourceColumnHeader
                       || 'Source'}
                   </th>
-                  <th className='Layer__table-header'>
-                    {stringOverrides?.ledgerEntriesTable?.accountColumnHeader
-                      || 'Account'}
-                  </th>
+                  {nodeType !== LedgerAccountNodeType.Leaf
+                    && (
+                      <th className='Layer__table-header'>
+                        {stringOverrides?.ledgerEntriesTable?.accountColumnHeader
+                          || 'Account'}
+                      </th>
+                    )}
                 </>
               )}
               {view !== 'mobile' && (
@@ -194,6 +190,7 @@ export const LedgerAccount = ({
                 row={x}
                 index={index}
                 view={view}
+                nodeType={nodeType}
               />
             ))}
           </tbody>
@@ -212,7 +209,7 @@ export const LedgerAccount = ({
 
         {error
           ? (
-            <div className='Layer__table-state-container'>
+            <div className='Layer__table-state-container Layer__border-top'>
               <DataState
                 status={DataStateStatus.failed}
                 title='Something went wrong'
@@ -234,12 +231,11 @@ export const LedgerAccount = ({
 
         {!isLoading && !error && data?.length === 0
           ? (
-            <div className='Layer__table-state-container'>
+            <div className='Layer__table-state-container Layer__border-top'>
               <DataState
                 status={DataStateStatus.info}
-                title='No records found'
-                onRefresh={() => refetch()}
-                isLoading={isValidating}
+                title='No ledger activity'
+                description='There are no ledger entries in this account.'
               />
             </div>
           )

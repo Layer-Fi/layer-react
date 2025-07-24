@@ -49,12 +49,12 @@ const ChartOfAccountsContent = ({
   templateAccountsEditable,
   showAddAccountButton,
 }: ChartOfAccountsProps) => {
-  const { accountId } = useContext(LedgerAccountsContext)
+  const { selectedAccount } = useContext(LedgerAccountsContext)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
     <Container name='chart-of-accounts' ref={containerRef} asWidget={asWidget}>
-      {accountId
+      {selectedAccount
         ? (
           <LedgerAccount
             view={view}
