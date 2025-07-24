@@ -27,7 +27,7 @@ export const convertCentsToBigDecimal = (cents: number): BD.BigDecimal => {
 
 export function formatBigDecimalToString(
   value: BD.BigDecimal,
-  maxLength: number = 10,
+  maxDecimalPlaces: number = 10,
 ): string {
   const normalizedBigDecimal = BD.normalize(value)
 
@@ -35,7 +35,7 @@ export function formatBigDecimalToString(
     'en-US',
     {
       minimumFractionDigits: 0,
-      maximumFractionDigits: maxLength,
+      maximumFractionDigits: maxDecimalPlaces,
     },
   )
 

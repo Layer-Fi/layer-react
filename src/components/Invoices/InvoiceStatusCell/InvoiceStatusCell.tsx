@@ -69,14 +69,14 @@ export const InvoiceStatusCell = ({ invoice, inline = false }: { invoice: Invoic
   const dueStatus = getDueStatusConfig(invoice, { inline })
 
   const Stack = inline ? HStack : VStack
-  const subText = inline ? `(${dueStatus.subText})` : dueStatus.subText
+  const subText = (inline && dueStatus.subText) ? `(${dueStatus.subText})` : dueStatus.subText
 
   return (
     <HStack gap='xs' align='center'>
       {dueStatus.badge}
       <Stack {...(inline && { gap: '3xs', align: 'center' })}>
         <Span>{dueStatus.text}</Span>
-        {dueStatus.subText && <Span variant='subtle' size='sm'>{subText}</Span>}
+        {subText && <Span variant='subtle' size='sm'>{subText}</Span>}
       </Stack>
     </HStack>
   )

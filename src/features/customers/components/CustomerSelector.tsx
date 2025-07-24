@@ -155,12 +155,12 @@ export function CustomerSelector({
 
   const isFiltered = effectiveSearchQuery !== undefined
 
-  const noSecondPartiesExist = !isLoading
+  const noCustomersExist = !isLoading
     && !isFiltered
     && data !== undefined
     && data.every(({ data }) => data.length === 0)
 
-  const shouldHideComponent = noSecondPartiesExist || (isReadOnly && selectedCustomer === null)
+  const shouldHideComponent = noCustomersExist || (isReadOnly && selectedCustomer === null)
 
   if (shouldHideComponent) {
     /*

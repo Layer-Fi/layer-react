@@ -14,7 +14,7 @@ type FormCurrencyFieldProps = {
 }
 
 const ZERO_CENTS_INPUT_VALUE = '0.00'
-const getCurrencyInputValueFromCents = (cents: number) => cents && !Number.isNaN(cents) ? centsToDollarsWithoutCommas(cents) : ZERO_CENTS_INPUT_VALUE
+const getCurrencyInputValueFromCents = (cents: number) => !Number.isNaN(cents) ? centsToDollarsWithoutCommas(cents) : ZERO_CENTS_INPUT_VALUE
 
 export function FormCurrencyField({ slotProps }: FormCurrencyFieldProps) {
   const field = useFieldContext<number>()
