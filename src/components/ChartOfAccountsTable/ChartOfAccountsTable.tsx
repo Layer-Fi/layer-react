@@ -6,6 +6,7 @@ import Edit2 from '../../icons/Edit2'
 import {
   ChartWithBalances,
   LedgerAccountBalance,
+  LedgerAccountNodeType,
   type AugmentedLedgerAccountBalance,
 } from '../../types/chart_of_accounts'
 import { View } from '../../types/general'
@@ -91,7 +92,7 @@ export const ChartOfAccountsTableContent = ({
   expandAll?: ExpandActionState
   templateAccountsEditable: boolean
 }) => {
-  const { setAccountId } = useContext(LedgerAccountsContext)
+  const { setSelectedAccount } = useContext(LedgerAccountsContext)
   const { editAccount } = useContext(ChartOfAccountsContext)
   const [toggledKeys, setToggledKeys] = useState<Record<string, boolean>>({})
 
@@ -145,6 +146,13 @@ export const ChartOfAccountsTableContent = ({
     const rowKey = `coa-row-${account.id}`
     const hasSubAccounts = !!account.sub_accounts && account.sub_accounts.length > 0
 
+    const nodeType =
+      depth === 0
+        ? LedgerAccountNodeType.Root
+        : hasSubAccounts
+          ? LedgerAccountNodeType.Parent
+          : LedgerAccountNodeType.Leaf
+
     const manuallyToggled = toggledKeys[rowKey]
 
     const isExpanded =
@@ -166,7 +174,7 @@ export const ChartOfAccountsTableContent = ({
 
     const onClickAccountName = (e: React.MouseEvent) => {
       e.stopPropagation()
-      setAccountId(account.id)
+      setSelectedAccount({ ...account, nodeType })
     }
 
     const onClickEdit = (e: React.MouseEvent) => {
@@ -178,7 +186,7 @@ export const ChartOfAccountsTableContent = ({
     const onClickView = (e: React.MouseEvent) => {
       e.preventDefault()
       e.stopPropagation()
-      setAccountId(account.id)
+      setSelectedAccount({ ...account, nodeType })
     }
 
     return (

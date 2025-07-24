@@ -29,6 +29,8 @@ import { TableCell } from '../TableCell'
 import { TableHead } from '../TableHead'
 import { TableRow } from '../TableRow'
 import { Heading, HeadingSize } from '../Typography'
+import { Span } from '../ui/Typography/Text'
+import { VStack } from '../ui/Stack/Stack'
 
 interface SourceDetailStringOverrides {
   sourceLabel?: string
@@ -312,7 +314,12 @@ export const LedgerAccountEntryDetails = ({
             ? stringOverrides?.journalEntry?.header(
               entryData ? entryNumber(entryData) : '',
             )
-            : `Journal Entry ${entryData ? entryNumber(entryData) : ''}`
+            : (
+              <VStack>
+                <Span>Journal Entry</Span>
+                {entryData && <Span variant='subtle' size='xs'>{`Journal ID #${entryNumber(entryData)}`}</Span>}
+              </VStack>
+            )
         }
         className='Layer__border-top'
       >
