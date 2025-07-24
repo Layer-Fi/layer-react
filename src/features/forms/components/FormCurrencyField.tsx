@@ -18,6 +18,7 @@ const getCurrencyInputValueFromCents = (cents: number) => cents && !Number.isNaN
 
 export function FormCurrencyField({ slotProps }: FormCurrencyFieldProps) {
   const field = useFieldContext<number>()
+  const label = slotProps.BaseFormTextField.label
 
   const { name, state, handleChange, handleBlur } = field
   const { value } = state
@@ -65,6 +66,7 @@ export function FormCurrencyField({ slotProps }: FormCurrencyFieldProps) {
           onBlur={onInputBlur}
           className='Layer__UI__Input'
           data-inset='true'
+          aria-label={label}
         />
       </InputGroup>
     </BaseFormTextField>

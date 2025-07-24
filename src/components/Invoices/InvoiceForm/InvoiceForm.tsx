@@ -106,7 +106,7 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                   >
                     {innerField => <innerField.FormCurrencyField slotProps={{ BaseFormTextField: { label: 'Amount', showLabel: index === 0 } }} />}
                   </form.AppField>
-                  <Button variant='outlined' icon onClick={() => field.removeValue(index)}><Trash size={16} /></Button>
+                  <Button variant='outlined' icon aria-label='Delete line item' onClick={() => field.removeValue(index)}><Trash size={16} /></Button>
                 </HStack>
               ))}
               <Button variant='outlined' onClick={() => field.pushValue(EMPTY_LINE_ITEM)}>

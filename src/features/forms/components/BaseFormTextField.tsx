@@ -31,8 +31,9 @@ export function BaseFormTextField<TData>({
   const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
   const shouldShowErrorMessage = showFieldError && errorMessage
 
+  const additionalAriaProps = !showLabel && { 'aria-label': label }
   return (
-    <TextField name={name} isInvalid={!isValid} inline={inline} className={className} textarea={isTextArea}>
+    <TextField name={name} isInvalid={!isValid} inline={inline} className={className} textarea={isTextArea} {...additionalAriaProps}>
       {showLabel && <Label size='sm' htmlFor={name} {...(!inline && { pbe: '3xs' })}>{label}</Label>}
       {children}
       {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
