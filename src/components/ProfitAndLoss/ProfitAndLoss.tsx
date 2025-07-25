@@ -15,6 +15,7 @@ import { ProfitAndLossSummaries } from '../ProfitAndLossSummaries/ProfitAndLossS
 import { ProfitAndLossTable } from '../ProfitAndLossTable'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { ProfitAndLossCompareConfig } from '../../types/profit_and_loss'
+import { ReportsModeStoreProvider } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 
 type PNLContextType = ReturnType<typeof useProfitAndLoss>
 const PNLContext = createContext<PNLContextType>({
@@ -30,7 +31,6 @@ const PNLContext = createContext<PNLContextType>({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   },
-  changeDateRange: () => {},
   refetch: () => {},
   sidebarScope: undefined,
   setSidebarScope: () => {},
@@ -51,9 +51,10 @@ type Props = PropsWithChildren & {
   comparisonConfig?: ProfitAndLossCompareConfig
   reportingBasis?: ReportingBasis
   asContainer?: boolean
+  withReportsModeProvider?: boolean
 }
 
-const ProfitAndLoss = ({
+const ProfitAndLossWithoutReportsModeProvider = ({
   children,
   tagFilter,
   comparisonConfig,
@@ -76,6 +77,19 @@ const ProfitAndLoss = ({
       </PNLComparisonContext.Provider>
     </PNLContext.Provider>
   )
+}
+
+const ProfitAndLossWithReportsModeProvider = (props: Props) => {
+  return (
+    <ReportsModeStoreProvider initialModes={{ ProfitAndLoss: 'monthPicker' }}>
+      <ProfitAndLossWithoutReportsModeProvider {...props} />
+    </ReportsModeStoreProvider>
+  )
+}
+
+const ProfitAndLoss = ({ withReportsModeProvider = true, ...restProps }: Props) => {
+  if (withReportsModeProvider) return <ProfitAndLossWithReportsModeProvider {...restProps} />
+  return <ProfitAndLossWithoutReportsModeProvider {...restProps} />
 }
 
 ProfitAndLoss.Chart = ProfitAndLossChart

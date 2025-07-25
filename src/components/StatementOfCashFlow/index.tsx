@@ -1,1 +1,1 @@
-export { StatementOfCashFlow } from './StatementOfCashFlow'
+export { StatementOfCashFlow, StandaloneStatementOfCashFlow } from './StatementOfCashFlow'

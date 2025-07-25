@@ -11,6 +11,8 @@ import { useElementViewSize } from '../../hooks/useElementViewSize/useElementVie
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { StatementOfCashFlowDatePicker } from './datePicker/StatementOfCashFlowDatePicker'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow/useStatementOfCashFlow'
+import { ReportKey, ReportsModeStoreProvider, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { getInitialDateRangePickerMode } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
@@ -20,6 +22,16 @@ export interface StatementOfCashFlowStringOverrides {
 
 export type StatementOfCashFlowProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
+}
+
+export const StandaloneStatementOfCashFlow = (props: StatementOfCashFlowProps) => {
+  const initialModeForStatementOfCashFlows = getInitialDateRangePickerMode(props)
+
+  return (
+    <ReportsModeStoreProvider initialModes={{ StatementOfCashFlows: initialModeForStatementOfCashFlows }}>
+      <StatementOfCashFlow {...props} />
+    </ReportsModeStoreProvider>
+  )
 }
 
 export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
@@ -35,9 +47,11 @@ type StatementOfCashFlowViewProps = TimeRangePickerConfig & {
 const StatementOfCashFlowView = ({
   stringOverrides,
   allowedDatePickerModes,
+  defaultDatePickerMode,
   customDateRanges,
 }: StatementOfCashFlowViewProps) => {
-  const { start, end } = useGlobalDateRange()
+  const displayMode = useReportModeWithFallback(ReportKey.StatementOfCashFlows, 'monthPicker')
+  const { start, end } = useGlobalDateRange({ displayMode })
   const { data, isLoading } = useStatementOfCashFlow({ startDate: start, endDate: end })
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
@@ -52,6 +66,7 @@ const StatementOfCashFlowView = ({
               <HeaderCol>
                 <StatementOfCashFlowDatePicker
                   allowedDatePickerModes={allowedDatePickerModes}
+                  defaultDatePickerMode={defaultDatePickerMode}
                   customDateRanges={customDateRanges}
                 />
               </HeaderCol>

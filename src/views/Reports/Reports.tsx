@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { BalanceSheet } from '../../components/BalanceSheet'
+import { BalanceSheet as EmbeddedBalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Container } from '../../components/Container'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { PnLDownloadButtonStringOverrides } from '../../components/ProfitAndLossDownloadButton'
 import { ProfitAndLossTableStringOverrides } from '../../components/ProfitAndLossTable'
-import { StatementOfCashFlow } from '../../components/StatementOfCashFlow'
+import { StatementOfCashFlow as EmbeddedStatementOfCashFlow } from '../../components/StatementOfCashFlow'
 import { StatementOfCashFlowStringOverrides } from '../../components/StatementOfCashFlow/StatementOfCashFlow'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
@@ -14,6 +14,9 @@ import { useElementViewSize } from '../../hooks/useElementViewSize/useElementVie
 import { View as ViewType } from '../../types/general'
 import type { TimeRangePickerConfig } from './reportTypes'
 import { ProfitAndLossCompareConfig } from '../../types/profit_and_loss'
+import { ReportKey, ReportsModeStoreProvider, type ReportModes } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { getInitialDateRangePickerMode } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
+import { ProfitAndLossReport as EmbeddedProfitAndLossReport } from '../../components/ProfitAndLossReport/ProfitAndLossReport'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -87,7 +90,16 @@ export const Reports = ({
   const defaultTitle =
     enabledReports.length > 1
       ? 'Reports'
-      : options.find(option => (option.value = enabledReports[0]))?.label
+      : options.find(option => (option.value === enabledReports[0]))?.label
+
+  const initialModeForProfitAndLoss = profitAndLossConfig ? getInitialDateRangePickerMode(profitAndLossConfig) : 'monthPicker'
+  const initialModeForStatementOfCashFlows = statementOfCashFlowConfig ? getInitialDateRangePickerMode(statementOfCashFlowConfig) : 'monthPicker'
+
+  const initialModes: ReportModes = {
+    [ReportKey.ProfitAndLoss]: initialModeForProfitAndLoss,
+    [ReportKey.BalanceSheet]: 'dayPicker',
+    [ReportKey.StatementOfCashFlows]: initialModeForStatementOfCashFlows,
+  }
 
   return (
     <View
@@ -105,15 +117,17 @@ export const Reports = ({
         </div>
       )}
       <Container name='reports' ref={containerRef}>
-        <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig}>
-          <ReportsPanel
-            openReport={activeTab}
-            stringOverrides={stringOverrides}
-            profitAndLossConfig={profitAndLossConfig}
-            statementOfCashFlowConfig={statementOfCashFlowConfig}
-            view={view}
-          />
-        </ProfitAndLoss>
+        <ReportsModeStoreProvider initialModes={initialModes}>
+          <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig} withReportsModeProvider={false}>
+            <ReportsPanel
+              openReport={activeTab}
+              stringOverrides={stringOverrides}
+              profitAndLossConfig={profitAndLossConfig}
+              statementOfCashFlowConfig={statementOfCashFlowConfig}
+              view={view}
+            />
+          </ProfitAndLoss>
+        </ReportsModeStoreProvider>
       </Container>
     </View>
   )
@@ -129,17 +143,17 @@ const ReportsPanel = ({
   return (
     <>
       {openReport === 'profitAndLoss' && (
-        <ProfitAndLoss.Report
+        <EmbeddedProfitAndLossReport
           stringOverrides={stringOverrides}
           view={view}
           {...profitAndLossConfig}
         />
       )}
       {openReport === 'balanceSheet' && (
-        <BalanceSheet stringOverrides={stringOverrides?.balanceSheet} />
+        <EmbeddedBalanceSheet stringOverrides={stringOverrides?.balanceSheet} />
       )}
       {openReport === 'statementOfCashFlow' && (
-        <StatementOfCashFlow
+        <EmbeddedStatementOfCashFlow
           stringOverrides={stringOverrides?.statementOfCashflow}
           {...statementOfCashFlowConfig}
         />

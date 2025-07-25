@@ -2,8 +2,9 @@ import { useContext, useMemo } from 'react'
 import { MultiSelect, Select } from '../Input'
 import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import type { StylesConfig } from 'react-select'
-import { DateRangePickerMode, useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TagComparisonOption } from '../../types/profit_and_loss'
+import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 
 const selectStyles = {
   valueContainer: (styles) => {
@@ -48,7 +49,7 @@ export const ProfitAndLossCompareOptions = () => {
     comparisonConfig,
   } = useContext(ProfitAndLoss.ComparisonContext)
 
-  const { rangeDisplayMode } = useGlobalDateRange()
+  const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
 
   const periods = useMemo<number>(
     () => comparePeriods !== 0 ? comparePeriods : 1,
