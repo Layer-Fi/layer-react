@@ -5,8 +5,6 @@ import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { View } from '../View'
-import { ReportsModeStoreProvider } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
-import { getInitialDateRangePickerMode } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -14,16 +12,6 @@ export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
   view?: ViewBreakpoint
 } & TimeRangePickerConfig
-
-export const StandaloneProfitAndLossReport = (props: ProfitAndLossReportProps) => {
-  const initialModeForProfitAndLossReport = getInitialDateRangePickerMode(props)
-
-  return (
-    <ReportsModeStoreProvider initialModes={{ ProfitAndLoss: initialModeForProfitAndLossReport }}>
-      <ProfitAndLossReport {...props} />
-    </ReportsModeStoreProvider>
-  )
-}
 
 export const ProfitAndLossReport = ({
   stringOverrides,

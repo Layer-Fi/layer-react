@@ -118,7 +118,7 @@ export const Reports = ({
       )}
       <Container name='reports' ref={containerRef}>
         <ReportsModeStoreProvider initialModes={initialModes}>
-          <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig}>
+          <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig} withReportsModeProvider={false}>
             <ReportsPanel
               openReport={activeTab}
               stringOverrides={stringOverrides}

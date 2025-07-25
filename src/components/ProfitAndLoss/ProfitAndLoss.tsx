@@ -10,11 +10,12 @@ import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
 import { ProfitAndLossDownloadButton } from '../ProfitAndLossDownloadButton'
 import { ProfitAndLossHeader } from '../ProfitAndLossHeader'
-import { StandaloneProfitAndLossReport } from '../ProfitAndLossReport/ProfitAndLossReport'
+import { ProfitAndLossReport } from '../ProfitAndLossReport/ProfitAndLossReport'
 import { ProfitAndLossSummaries } from '../ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossTable } from '../ProfitAndLossTable'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { ProfitAndLossCompareConfig } from '../../types/profit_and_loss'
+import { ReportsModeStoreProvider } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 
 type PNLContextType = ReturnType<typeof useProfitAndLoss>
 const PNLContext = createContext<PNLContextType>({
@@ -50,9 +51,10 @@ type Props = PropsWithChildren & {
   comparisonConfig?: ProfitAndLossCompareConfig
   reportingBasis?: ReportingBasis
   asContainer?: boolean
+  withReportsModeProvider?: boolean
 }
 
-const ProfitAndLoss = ({
+const ProfitAndLossWithoutReportsModeProvider = ({
   children,
   tagFilter,
   comparisonConfig,
@@ -77,6 +79,19 @@ const ProfitAndLoss = ({
   )
 }
 
+const ProfitAndLossWithReportsModeProvider = (props: Props) => {
+  return (
+    <ReportsModeStoreProvider initialModes={{ ProfitAndLoss: 'monthPicker' }}>
+      <ProfitAndLossWithoutReportsModeProvider {...props} />
+    </ReportsModeStoreProvider>
+  )
+}
+
+const ProfitAndLoss = ({ withReportsModeProvider = true, ...restProps }: Props) => {
+  if (withReportsModeProvider) return <ProfitAndLossWithReportsModeProvider {...restProps} />
+  return <ProfitAndLossWithoutReportsModeProvider {...restProps} />
+}
+
 ProfitAndLoss.Chart = ProfitAndLossChart
 ProfitAndLoss.Context = PNLContext
 ProfitAndLoss.ComparisonContext = PNLComparisonContext
@@ -86,6 +101,6 @@ ProfitAndLoss.Summaries = ProfitAndLossSummaries
 ProfitAndLoss.Table = ProfitAndLossTable
 ProfitAndLoss.DetailedCharts = ProfitAndLossDetailedCharts
 ProfitAndLoss.Header = ProfitAndLossHeader
-ProfitAndLoss.Report = StandaloneProfitAndLossReport
+ProfitAndLoss.Report = ProfitAndLossReport
 ProfitAndLoss.DownloadButton = ProfitAndLossDownloadButton
 export { ProfitAndLoss }
