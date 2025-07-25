@@ -52,6 +52,7 @@ export { ProjectProfitabilityView } from './views/ProjectProfitability'
 export { unstable_BillsView } from './views/Bills'
 export { Reports } from './views/Reports'
 export { ProfitAndLossView } from './components/ProfitAndLossView'
+export { unstable_Invoices } from './components/Invoices/Invoices'
 
 /*
 ======================= Hooks & Contexts =======================
