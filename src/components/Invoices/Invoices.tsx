@@ -10,7 +10,7 @@ export interface InvoicesProps {
   stringOverrides?: InvoicesStringOverrides
 }
 
-export const Invoices = ({
+export const unstable_Invoices = ({
   showTitle = true,
   stringOverrides,
 }: InvoicesProps) => {
