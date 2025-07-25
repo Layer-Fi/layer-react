@@ -10,6 +10,7 @@ import useSWR from 'swr'
 import { MultiValue } from 'react-select'
 import { ProfitAndLossCompareConfig, ProfitAndLossComparisonTags, TagComparisonOption, type ProfitAndLossComparisonRequestBody } from '../../types/profit_and_loss'
 import { ReadonlyArrayWithAtLeastOne } from '../../utils/array/getArrayWithAtLeastOneOrFallback'
+import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -64,8 +65,10 @@ export function useProfitAndLossComparison({
   const [selectedCompareOptions, setSelectedCompareOptionsState] = useState<TagComparisonOption[]>(
     comparisonConfig?.defaultTagFilter ? [comparisonConfig?.defaultTagFilter] : [],
   )
-  const { rangeDisplayMode, start, end } = useGlobalDateRange()
-  const dateRange = { startDate: start, endDate: end }
+
+  const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
+  const { start, end } = useGlobalDateRange({ displayMode: rangeDisplayMode })
+  const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
 
   const isPeriodsSelectEnabled = COMPARE_MODES_SUPPORTING_MULTI_PERIOD.includes(rangeDisplayMode)
   const effectiveComparePeriods = isPeriodsSelectEnabled

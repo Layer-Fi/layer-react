@@ -3,7 +3,10 @@ import type { TimeRangePickerConfig } from '../../../views/Reports/reportTypes'
 import { DatePicker } from '../../DatePicker'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { getEarliestDateToBrowse } from '../../../utils/business'
-import { useGlobalDateRangePicker } from '../../../providers/GlobalDateStore/useGlobalDateRangePicker'
+import { getAllowedDateRangePickerModes, useGlobalDateRangePicker } from '../../../providers/GlobalDateStore/useGlobalDateRangePicker'
+import { ReportKey, useReportMode, useReportModeActions } from '../../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { useCallback } from 'react'
+import type { DateRangePickerMode } from '../../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 type StatementOfCashFlowDatePickerProps = Pick<
   TimeRangePickerConfig,
@@ -17,38 +20,32 @@ export function StatementOfCashFlowDatePicker({
 }: StatementOfCashFlowDatePickerProps) {
   const { business } = useLayerContext()
 
+  const displayMode = useReportMode(ReportKey.StatementOfCashFlows)
+  const { setModeForReport } = useReportModeActions()
+
+  const setDisplayMode = useCallback((mode: DateRangePickerMode) => {
+    setModeForReport(ReportKey.StatementOfCashFlows, mode)
+  }, [setModeForReport])
+
   const {
-    allowedDateRangePickerModes,
     dateFormat,
     rangeDisplayMode,
-    selected,
-    setRangeDisplayMode,
-    setSelected,
-  } = useGlobalDateRangePicker({ allowedDatePickerModes, defaultDatePickerMode })
+    onChangeMode,
+    dateOrDateRange,
+    onChangeDateOrDateRange,
+  } = useGlobalDateRangePicker({ displayMode, setDisplayMode })
+
+  const cleanedAllowedModes = getAllowedDateRangePickerModes({ allowedDatePickerModes, defaultDatePickerMode })
 
   const minDate = getEarliestDateToBrowse(business)
 
   return (
     <DatePicker
-      selected={selected}
-      onChange={(dates) => {
-        if (dates instanceof Date) {
-          setSelected({ start: dates, end: dates })
-
-          return
-        }
-
-        const [start, end] = dates
-
-        setSelected({ start, end: end ?? start })
-      }}
+      selected={dateOrDateRange}
+      onChange={onChangeDateOrDateRange}
       displayMode={rangeDisplayMode}
-      allowedModes={allowedDateRangePickerModes}
-      onChangeMode={(rangeDisplayMode) => {
-        if (rangeDisplayMode !== 'dayPicker') {
-          setRangeDisplayMode({ rangeDisplayMode })
-        }
-      }}
+      allowedModes={cleanedAllowedModes}
+      onChangeMode={onChangeMode}
       slots={{
         ModeSelector: DatePickerModeSelector,
       }}

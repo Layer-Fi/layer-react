@@ -41,6 +41,7 @@ import {
   useGlobalDateRange,
   useGlobalDateRangeActions,
 } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 
 const getChartWindow = ({
   chartWindow,
@@ -151,7 +152,8 @@ export const ProfitAndLossChart = ({
 
   const { getColor, business } = useLayerContext()
 
-  const { start, end, rangeDisplayMode } = useGlobalDateRange()
+  const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
+  const { start, end } = useGlobalDateRange({ displayMode: rangeDisplayMode })
   const { setMonth } = useGlobalDateRangeActions()
 
   const showIndicator = rangeDisplayMode === 'monthPicker'

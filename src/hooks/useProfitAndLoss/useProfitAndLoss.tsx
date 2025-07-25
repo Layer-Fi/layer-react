@@ -1,8 +1,7 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   ReportingBasis,
   SortDirection,
-  type DateRange,
 } from '../../types'
 import {
   collectExpensesItems,
@@ -12,9 +11,10 @@ import {
 import { useProfitAndLossLTM } from './useProfitAndLossLTM'
 import { useProfitAndLossQuery } from './useProfitAndLossQuery'
 import {
+  DateRangePickerMode,
   useGlobalDateRange,
-  useGlobalDateRangeActions,
 } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 
 export type Scope = 'expenses' | 'revenue'
 
@@ -28,6 +28,7 @@ export type PnlTagFilter = {
 type UseProfitAndLossOptions = {
   tagFilter?: PnlTagFilter
   reportingBasis?: ReportingBasis
+  initialDateRangePickerMode?: DateRangePickerMode
 }
 
 type ProfitAndLossFilter = {
@@ -45,14 +46,9 @@ export const useProfitAndLoss = ({
   tagFilter,
   reportingBasis,
 }: UseProfitAndLossOptions) => {
-  const { start, end } = useGlobalDateRange()
-  const { setRange } = useGlobalDateRangeActions()
-
+  const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
+  const { start, end } = useGlobalDateRange({ displayMode: rangeDisplayMode })
   const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
-  const changeDateRange = useCallback(
-    ({ startDate: start, endDate: end }: DateRange) => setRange({ start, end }),
-    [setRange],
-  )
 
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
     expenses: undefined,
@@ -233,8 +229,6 @@ export const useProfitAndLoss = ({
     isLoading,
     isValidating,
     error: error,
-    dateRange,
-    changeDateRange,
     refetch,
     sidebarScope,
     setSidebarScope,
@@ -242,5 +236,6 @@ export const useProfitAndLoss = ({
     filters,
     setFilterTypes,
     tagFilter,
+    dateRange,
   }
 }

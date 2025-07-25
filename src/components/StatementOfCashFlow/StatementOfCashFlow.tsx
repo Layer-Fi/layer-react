@@ -11,6 +11,7 @@ import { useElementViewSize } from '../../hooks/useElementViewSize/useElementVie
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { StatementOfCashFlowDatePicker } from './datePicker/StatementOfCashFlowDatePicker'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow/useStatementOfCashFlow'
+import { ReportKey, useReportMode } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
@@ -35,9 +36,11 @@ type StatementOfCashFlowViewProps = TimeRangePickerConfig & {
 const StatementOfCashFlowView = ({
   stringOverrides,
   allowedDatePickerModes,
+  defaultDatePickerMode,
   customDateRanges,
 }: StatementOfCashFlowViewProps) => {
-  const { start, end } = useGlobalDateRange()
+  const displayMode = useReportMode(ReportKey.StatementOfCashFlows)
+  const { start, end } = useGlobalDateRange({ displayMode })
   const { data, isLoading } = useStatementOfCashFlow({ startDate: start, endDate: end })
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
@@ -52,6 +55,7 @@ const StatementOfCashFlowView = ({
               <HeaderCol>
                 <StatementOfCashFlowDatePicker
                   allowedDatePickerModes={allowedDatePickerModes}
+                  defaultDatePickerMode={defaultDatePickerMode}
                   customDateRanges={customDateRanges}
                 />
               </HeaderCol>

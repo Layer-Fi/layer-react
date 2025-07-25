@@ -14,6 +14,8 @@ import { useElementViewSize } from '../../hooks/useElementViewSize/useElementVie
 import { View as ViewType } from '../../types/general'
 import type { TimeRangePickerConfig } from './reportTypes'
 import { ProfitAndLossCompareConfig } from '../../types/profit_and_loss'
+import { ReportKey, ReportsModeStoreProvider, type ReportModes } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { getInitialDateRangePickerMode } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -89,6 +91,15 @@ export const Reports = ({
       ? 'Reports'
       : options.find(option => (option.value = enabledReports[0]))?.label
 
+  const initialModeForProfitAndLoss = profitAndLossConfig ? getInitialDateRangePickerMode(profitAndLossConfig) : 'monthPicker'
+  const initialModeForStatementOfCashFlows = statementOfCashFlowConfig ? getInitialDateRangePickerMode(statementOfCashFlowConfig) : 'monthPicker'
+
+  const initialModes: ReportModes = {
+    [ReportKey.ProfitAndLoss]: initialModeForProfitAndLoss,
+    [ReportKey.BalanceSheet]: 'dayPicker',
+    [ReportKey.StatementOfCashFlows]: initialModeForStatementOfCashFlows,
+  }
+
   return (
     <View
       title={stringOverrides?.title || title || defaultTitle}
@@ -105,15 +116,17 @@ export const Reports = ({
         </div>
       )}
       <Container name='reports' ref={containerRef}>
-        <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig}>
-          <ReportsPanel
-            openReport={activeTab}
-            stringOverrides={stringOverrides}
-            profitAndLossConfig={profitAndLossConfig}
-            statementOfCashFlowConfig={statementOfCashFlowConfig}
-            view={view}
-          />
-        </ProfitAndLoss>
+        <ReportsModeStoreProvider initialModes={initialModes}>
+          <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig}>
+            <ReportsPanel
+              openReport={activeTab}
+              stringOverrides={stringOverrides}
+              profitAndLossConfig={profitAndLossConfig}
+              statementOfCashFlowConfig={statementOfCashFlowConfig}
+              view={view}
+            />
+          </ProfitAndLoss>
+        </ReportsModeStoreProvider>
       </Container>
     </View>
   )

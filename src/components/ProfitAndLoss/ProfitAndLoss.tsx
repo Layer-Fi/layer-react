@@ -30,7 +30,6 @@ const PNLContext = createContext<PNLContextType>({
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),
   },
-  changeDateRange: () => {},
   refetch: () => {},
   sidebarScope: undefined,
   setSidebarScope: () => {},

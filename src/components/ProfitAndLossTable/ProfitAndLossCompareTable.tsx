@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect } from 'react'
+import { Fragment, useContext, useEffect, useMemo } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { LineItem } from '../../types'
 import { ProfitAndLossComparisonPnl } from '../../types/profit_and_loss'
@@ -16,6 +16,7 @@ import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateSt
 import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import { HStack } from '../ui/Stack/Stack'
+import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 
 interface ProfilAndLostCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides
@@ -24,7 +25,6 @@ interface ProfilAndLostCompareTableProps {
 export const ProfitAndLossCompareTable = ({
   stringOverrides,
 }: ProfilAndLostCompareTableProps) => {
-  const { dateRange } = useContext(ProfitAndLoss.Context)
   const {
     data: comparisonData,
     isLoading,
@@ -32,8 +32,11 @@ export const ProfitAndLossCompareTable = ({
     selectedCompareOptions,
   } = useContext(ProfitAndLoss.ComparisonContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
-  const { rangeDisplayMode } = useGlobalDateRange()
   const { data: bookkeepingPeriods } = useBookkeepingPeriods()
+
+  const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
+  const { start, end } = useGlobalDateRange({ displayMode: rangeDisplayMode })
+  const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
 
   useEffect(() => {
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
@@ -154,9 +157,9 @@ export const ProfitAndLossCompareTable = ({
                   {option.displayName}
                 </TableCell>
                 {comparePeriods
-                && Array.from({ length: comparePeriods - 1 }, (_, index) => (
-                  <TableCell key={option.displayName + '-' + index} isHeaderCell />
-                ))}
+                  && Array.from({ length: comparePeriods - 1 }, (_, index) => (
+                    <TableCell key={option.displayName + '-' + index} isHeaderCell />
+                  ))}
               </Fragment>
             ))}
           </TableRow>
