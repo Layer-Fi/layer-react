@@ -11,7 +11,6 @@ import {
 import { useProfitAndLossLTM } from './useProfitAndLossLTM'
 import { useProfitAndLossQuery } from './useProfitAndLossQuery'
 import {
-  DateRangePickerMode,
   useGlobalDateRange,
 } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
@@ -28,7 +27,6 @@ export type PnlTagFilter = {
 type UseProfitAndLossOptions = {
   tagFilter?: PnlTagFilter
   reportingBasis?: ReportingBasis
-  initialDateRangePickerMode?: DateRangePickerMode
 }
 
 type ProfitAndLossFilter = {

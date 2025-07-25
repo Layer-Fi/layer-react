@@ -23,9 +23,10 @@ export { ProfitAndLoss } from './components/ProfitAndLoss'
  * - Summaries
  * - Table
  * - DetailedCharts
+ * - Report
  */
-export { BalanceSheet } from './components/BalanceSheet'
-export { StatementOfCashFlow } from './components/StatementOfCashFlow'
+export { StandaloneBalanceSheet as BalanceSheet } from './components/BalanceSheet'
+export { StandaloneStatementOfCashFlow as StatementOfCashFlow } from './components/StatementOfCashFlow'
 
 /* ------------------ Ledger ------------------ */
 export { ChartOfAccounts } from './components/ChartOfAccounts'

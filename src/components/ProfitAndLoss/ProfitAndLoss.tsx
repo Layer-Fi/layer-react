@@ -10,7 +10,7 @@ import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
 import { ProfitAndLossDownloadButton } from '../ProfitAndLossDownloadButton'
 import { ProfitAndLossHeader } from '../ProfitAndLossHeader'
-import { ProfitAndLossReport } from '../ProfitAndLossReport/ProfitAndLossReport'
+import { StandaloneProfitAndLossReport } from '../ProfitAndLossReport/ProfitAndLossReport'
 import { ProfitAndLossSummaries } from '../ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossTable } from '../ProfitAndLossTable'
 import { endOfMonth, startOfMonth } from 'date-fns'
@@ -86,6 +86,6 @@ ProfitAndLoss.Summaries = ProfitAndLossSummaries
 ProfitAndLoss.Table = ProfitAndLossTable
 ProfitAndLoss.DetailedCharts = ProfitAndLossDetailedCharts
 ProfitAndLoss.Header = ProfitAndLossHeader
-ProfitAndLoss.Report = ProfitAndLossReport
+ProfitAndLoss.Report = StandaloneProfitAndLossReport
 ProfitAndLoss.DownloadButton = ProfitAndLossDownloadButton
 export { ProfitAndLoss }

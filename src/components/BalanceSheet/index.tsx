@@ -1,1 +1,1 @@
-export { BalanceSheet } from './BalanceSheet'
+export { BalanceSheet, StandaloneBalanceSheet } from './BalanceSheet'

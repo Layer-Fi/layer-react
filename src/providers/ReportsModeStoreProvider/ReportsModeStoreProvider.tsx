@@ -22,14 +22,16 @@ type ReportsModeStoreShape = {
   }
 }
 
+const defaultModeByReport: ReportModes = {
+  [ReportKey.ProfitAndLoss]: 'monthPicker',
+  // This one should never change, but is included for completeness
+  [ReportKey.BalanceSheet]: 'dayPicker',
+  [ReportKey.StatementOfCashFlows]: 'monthPicker',
+}
+
 const ReportsModeStoreContext = createContext(
   createStore<ReportsModeStoreShape>(() => ({
-    modeByReport: {
-      [ReportKey.ProfitAndLoss]: 'monthPicker',
-      // This one should never change, but is included for completeness
-      [ReportKey.BalanceSheet]: 'dayPicker',
-      [ReportKey.StatementOfCashFlows]: 'monthPicker',
-    },
+    modeByReport: defaultModeByReport,
     actions: {
       setModeForReport: () => {},
     },
@@ -53,14 +55,16 @@ export function useReportModeWithFallback<K extends ReportKey>(
   fallback: ReportModes[K],
 ): ReportModes[K] {
   const context = useContext(ReportsModeStoreContext)
+  console.error(context)
 
   const mode = useReportMode(report)
+  console.error(mode)
 
   return context ? mode : fallback
 }
 
 type ReportsModeStoreProviderProps = PropsWithChildren<{
-  initialModes: ReportModes
+  initialModes: Partial<ReportModes>
 }>
 
 export function ReportsModeStoreProvider({
@@ -69,7 +73,7 @@ export function ReportsModeStoreProvider({
 }: ReportsModeStoreProviderProps) {
   const [store] = useState(() =>
     createStore<ReportsModeStoreShape>(set => ({
-      modeByReport: initialModes,
+      modeByReport: { ...defaultModeByReport, ...initialModes },
       actions: {
         setModeForReport: (report, mode) =>
           set(state => ({

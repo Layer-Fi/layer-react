@@ -11,7 +11,8 @@ import { useElementViewSize } from '../../hooks/useElementViewSize/useElementVie
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { StatementOfCashFlowDatePicker } from './datePicker/StatementOfCashFlowDatePicker'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow/useStatementOfCashFlow'
-import { ReportKey, useReportMode } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { ReportKey, ReportsModeStoreProvider, useReportMode } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { getInitialDateRangePickerMode } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
 
@@ -21,6 +22,16 @@ export interface StatementOfCashFlowStringOverrides {
 
 export type StatementOfCashFlowProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
+}
+
+export const StandaloneStatementOfCashFlow = (props: StatementOfCashFlowProps) => {
+  const initialModeForStatementOfCashFlows = getInitialDateRangePickerMode(props)
+
+  return (
+    <ReportsModeStoreProvider initialModes={{ StatementOfCashFlows: initialModeForStatementOfCashFlows }}>
+      <StatementOfCashFlow {...props} />
+    </ReportsModeStoreProvider>
+  )
 }
 
 export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
@@ -33,7 +44,7 @@ type StatementOfCashFlowViewProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
 }
 
-const StatementOfCashFlowView = ({
+export const StatementOfCashFlowView = ({
   stringOverrides,
   allowedDatePickerModes,
   defaultDatePickerMode,
