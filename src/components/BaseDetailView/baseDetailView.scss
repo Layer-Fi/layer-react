@@ -1,0 +1,11 @@
+.Layer__BaseDetailView {
+  overflow: hidden;
+}
+
+.Layer__BaseDetailView__Header {
+  align-items: center;
+  height: 4.75rem;
+
+  padding-left: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}

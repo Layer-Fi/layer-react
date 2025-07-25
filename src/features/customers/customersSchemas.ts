@@ -64,5 +64,6 @@ export const CustomerSchema = Schema.Struct({
     isOptimistic: Schema.Boolean,
   }).pipe(Schema.optional),
 })
+export type Customer = typeof CustomerSchema.Type
 
 export const encodeCustomer = Schema.encodeSync(CustomerSchema)

@@ -1,26 +1,21 @@
 import { useCallback, useMemo, useState } from 'react'
-import { useListInvoices } from '../../features/invoices/api/useListInvoices'
-import { type Invoice, InvoiceStatus } from '../../features/invoices/invoiceSchemas'
-import { convertCentsToCurrency, formatDate } from '../../utils/format'
-import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
-import { Badge, BadgeVariant } from '../Badge'
-import { Container } from '../Container'
-import type { ColumnConfig } from '../DataTable/DataTable'
-import { PaginatedTable } from '../DataTable/PaginatedTable'
-import { HStack, VStack } from '../ui/Stack/Stack'
-import { Span } from '../ui/Typography/Text'
-import { getDueDifference } from '../../utils/time/timeUtils'
-import pluralize from 'pluralize'
-import { BadgeSize } from '../Badge/Badge'
-import AlertCircle from '../../icons/AlertCircle'
-import CheckCircle from '../../icons/CheckCircle'
-import { Button } from '../ui/Button/Button'
-import ChevronRightFill from '../../icons/ChevronRightFill'
-import { DataState, DataStateStatus } from '../DataState/DataState'
+import { useListInvoices } from '../../../features/invoices/api/useListInvoices'
+import { type Invoice, InvoiceStatus } from '../../../features/invoices/invoiceSchemas'
+import { convertCentsToCurrency, formatDate } from '../../../utils/format'
+import { unsafeAssertUnreachable } from '../../../utils/switch/assertUnreachable'
+import type { ColumnConfig } from '../../DataTable/DataTable'
+import { PaginatedTable } from '../../DataTable/PaginatedTable'
+import { VStack } from '../../ui/Stack/Stack'
+import { Span } from '../../ui/Typography/Text'
+import { Button } from '../../ui/Button/Button'
+import ChevronRightFill from '../../../icons/ChevronRightFill'
+import { DataState, DataStateStatus } from '../../DataState/DataState'
 import { HandCoins, Search, Plus } from 'lucide-react'
-import { DataTableHeader } from '../DataTable/DataTableHeader'
-import { ComboBox } from '../ui/ComboBox/ComboBox'
+import { DataTableHeader } from '../../DataTable/DataTableHeader'
+import { ComboBox } from '../../ui/ComboBox/ComboBox'
 import { startOfToday, endOfYesterday } from 'date-fns'
+import { InvoiceStatusCell } from '../InvoiceStatusCell/InvoiceStatusCell'
+import { Container } from '../../Container'
 
 const COMPONENT_NAME = 'InvoicesTable'
 
@@ -91,78 +86,12 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
   }
 }
 
-const getDueStatusConfig = (invoice: Invoice) => {
-  switch (invoice.status) {
-    case InvoiceStatus.WrittenOff: {
-      return { text: 'Written Off' }
-    }
-    case InvoiceStatus.PartiallyWrittenOff: {
-      return { text: 'Partially Written Off' }
-    }
-    case InvoiceStatus.Paid: {
-      return {
-        text: 'Paid',
-        badge: <Badge variant={BadgeVariant.SUCCESS} size={BadgeSize.SMALL} icon={<CheckCircle size={12} />} iconOnly />,
-      }
-    }
-    case InvoiceStatus.Voided: {
-      return { text: 'Voided' }
-    }
-    case InvoiceStatus.Sent:
-    case InvoiceStatus.PartiallyPaid: {
-      if (invoice.dueAt === null) {
-        return {
-          text: invoice.status === InvoiceStatus.PartiallyPaid ? 'Partially Paid' : 'Sent',
-        }
-      }
-
-      const dueDifference = getDueDifference(invoice.dueAt)
-      if (dueDifference === 0) {
-        return {
-          text: 'Due Today',
-        }
-      }
-
-      if (dueDifference < 0) {
-        return {
-          text: 'Overdue',
-          subText: `Due ${pluralize('day', Math.abs(dueDifference), true)} ago`,
-          badge: <Badge variant={BadgeVariant.WARNING} size={BadgeSize.SMALL} icon={<AlertCircle size={12} />} iconOnly />,
-        }
-      }
-
-      return {
-        text: 'Sent',
-        subText: `Due in ${pluralize('day', Math.abs(dueDifference), true)}`,
-      }
-    }
-    default: {
-      unsafeAssertUnreachable({
-        value: invoice.status,
-        message: 'Unexpected invoice status',
-      })
-    }
-  }
-}
-
-const StatusCell = ({ invoice }: { invoice: Invoice }) => {
-  const dueStatus = getDueStatusConfig(invoice)
-  return (
-    <HStack gap='xs' align='center'>
-      {dueStatus.badge}
-      <VStack>
-        <Span>{dueStatus.text}</Span>
-        <Span variant='subtle' size='sm'>{dueStatus.subText}</Span>
-      </VStack>
-    </HStack>
-  )
-}
-
 const getCustomerName = (invoice: Invoice) => {
   const { recipientName, customer } = invoice
   return recipientName || customer?.individualName || customer?.companyName
 }
-const columns: ColumnConfig<Invoice, InvoiceColumns> = {
+
+const getColumnConfig = (onSelectInvoice: InvoicesTableProps['onSelectInvoice']): ColumnConfig<Invoice, InvoiceColumns> => ({
   [InvoiceColumns.SentAt]: {
     id: InvoiceColumns.SentAt,
     header: 'Sent Date',
@@ -187,15 +116,19 @@ const columns: ColumnConfig<Invoice, InvoiceColumns> = {
   [InvoiceColumns.Status]: {
     id: InvoiceColumns.Status,
     header: 'Status',
-    cell: row => <StatusCell invoice={row} />,
+    cell: row => <InvoiceStatusCell invoice={row} />,
   },
   [InvoiceColumns.Expand]: {
     id: InvoiceColumns.Expand,
-    cell: _row => <Button inset icon aria-label='View invoice' variant='ghost'><ChevronRightFill /></Button>,
+    cell: row => (
+      <Button inset icon onPress={() => onSelectInvoice(row)} aria-label='View invoice' variant='ghost'>
+        <ChevronRightFill />
+      </Button>
+    ),
   },
-}
+})
 
-const unpaidStatuses = [InvoiceStatus.Sent, InvoiceStatus.PartiallyPaid]
+const UNPAID_STATUSES = [InvoiceStatus.Sent, InvoiceStatus.PartiallyPaid]
 const getListInvoiceParams = ({ statusFilter }: { statusFilter: InvoiceStatusFilter | undefined }) => {
   if (!statusFilter) return {}
 
@@ -204,13 +137,13 @@ const getListInvoiceParams = ({ statusFilter }: { statusFilter: InvoiceStatusFil
       return {}
 
     case InvoiceStatusFilter.Unpaid:
-      return { status: unpaidStatuses }
+      return { status: UNPAID_STATUSES }
 
     case InvoiceStatusFilter.Overdue:
-      return { status: unpaidStatuses, dueAtEnd: endOfYesterday() }
+      return { status: UNPAID_STATUSES, dueAtEnd: endOfYesterday() }
 
     case InvoiceStatusFilter.Sent:
-      return { status: unpaidStatuses, dueAtStart: startOfToday() }
+      return { status: UNPAID_STATUSES, dueAtStart: startOfToday() }
 
     case InvoiceStatusFilter.Paid:
       return { status: [InvoiceStatus.Paid, InvoiceStatus.PartiallyWrittenOff] }
@@ -229,7 +162,12 @@ const getListInvoiceParams = ({ statusFilter }: { statusFilter: InvoiceStatusFil
   }
 }
 
-export const InvoicesTable = () => {
+interface InvoicesTableProps {
+  onCreateInvoice: () => void
+  onSelectInvoice: (invoice: Invoice) => void
+}
+
+export const InvoicesTable = ({ onCreateInvoice, onSelectInvoice }: InvoicesTableProps) => {
   const [selectedInvoiceStatusOption, setSelectedInvoiceStatusOption] = useState<InvoiceStatusOption | null>(ALL_OPTION)
 
   const listInvoiceParams = useMemo(
@@ -280,12 +218,12 @@ export const InvoicesTable = () => {
   [SelectedValue, options, selectedInvoiceStatusOption])
 
   const CreateInvoiceButton = useCallback(() => (
-    <Button>
+    <Button onPress={onCreateInvoice}>
       Create Invoice
       <Plus size={16} />
     </Button>
   ),
-  [])
+  [onCreateInvoice])
 
   const InvoicesTableEmptyState = useCallback(() => {
     const isFiltered = selectedInvoiceStatusOption && selectedInvoiceStatusOption !== ALL_OPTION
@@ -315,6 +253,8 @@ export const InvoicesTable = () => {
     />
   ), [refetch])
 
+  const columnConfig = useMemo(() => getColumnConfig(onSelectInvoice), [onSelectInvoice])
+
   return (
     <Container name='InvoicesTable'>
       <DataTableHeader
@@ -329,7 +269,7 @@ export const InvoicesTable = () => {
         data={invoices}
         isLoading={data === undefined || isLoading}
         isError={isError}
-        columnConfig={columns}
+        columnConfig={columnConfig}
         paginationProps={paginationProps}
         componentName={COMPONENT_NAME}
         slots={{

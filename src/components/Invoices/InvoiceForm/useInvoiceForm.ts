@@ -1,13 +1,52 @@
 import { useState } from 'react'
-import { useForm, FormValidateOrFn, FormAsyncValidateOrFn, useStore } from '@tanstack/react-form'
-import type { UpsertInvoice, Invoice } from '../../../features/invoices/invoiceSchemas'
+import { useStore } from '@tanstack/react-form'
+import { useAppForm } from '../../../features/forms/hooks/useForm'
+import { UpsertInvoiceSchema, type Invoice, type InvoiceLineItem } from '../../../features/invoices/invoiceSchemas'
 import { useUpsertInvoice, UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
+import { BigDecimal as BD, Schema } from 'effect'
+import { convertBigDecimalToCents, convertCentsToBigDecimal } from '../../../utils/bigDecimalUtils'
 
-type UseInvoiceFormProps =
-  | { onSuccess?: (invoice: Invoice) => void, mode: UpsertInvoiceMode.Create }
-  | { onSuccess?: (invoice: Invoice) => void, mode: UpsertInvoiceMode.Update, invoice: Invoice }
+export const EMPTY_LINE_ITEM = {
+  product: '',
+  description: '',
+  unitPrice: 0,
+  quantity: BD.fromBigInt(1n),
+  amount: 0,
+}
 
-// TODO: Add good default form values
+const DEFAULT_FORM_VALUES = {
+  invoiceNumber: '',
+  customer: null,
+  email: '',
+  address: '',
+  lineItems: [EMPTY_LINE_ITEM],
+}
+
+const getInvoiceLineItemAmount = (lineItem: InvoiceLineItem): number => {
+  const { unitPrice, quantity } = lineItem
+
+  return convertBigDecimalToCents(BD.multiply(quantity, convertCentsToBigDecimal(unitPrice)))
+}
+
+const getAugmentedInvoiceFormLineItem = (lineItem: InvoiceLineItem) => {
+  return {
+    ...lineItem,
+    amount: getInvoiceLineItemAmount(lineItem),
+  }
+}
+
+const getInvoiceFormDefaultValues = (invoice: Invoice) => ({
+  invoiceNumber: invoice.invoiceNumber,
+  customer: invoice.customer,
+  email: invoice.customer?.email,
+  address: invoice.customer?.addressString,
+  lineItems: invoice.lineItems.map(getAugmentedInvoiceFormLineItem),
+})
+
+ type UseInvoiceFormProps =
+   | { onSuccess?: (invoice: Invoice) => void, mode: UpsertInvoiceMode.Create }
+   | { onSuccess?: (invoice: Invoice) => void, mode: UpsertInvoiceMode.Update, invoice: Invoice }
+
 export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, mode } = props
@@ -15,21 +54,20 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const upsertInvoiceProps = mode === UpsertInvoiceMode.Update ? { mode, invoiceId: props.invoice.id } : { mode }
   const { trigger: upsertInvoice } = useUpsertInvoice(upsertInvoiceProps)
 
-  const form = useForm<
-    UpsertInvoice,
-    FormValidateOrFn<UpsertInvoice>,
-    FormValidateOrFn<UpsertInvoice>,
-    FormValidateOrFn<UpsertInvoice>,
-    FormValidateOrFn<UpsertInvoice>,
-    FormAsyncValidateOrFn<UpsertInvoice>,
-    FormValidateOrFn<UpsertInvoice>,
-    FormAsyncValidateOrFn<UpsertInvoice>,
-    FormAsyncValidateOrFn<UpsertInvoice>,
-    FormAsyncValidateOrFn<UpsertInvoice>
-  >({
+  const defaultValues = mode === UpsertInvoiceMode.Update
+    ? getInvoiceFormDefaultValues(props.invoice)
+    : DEFAULT_FORM_VALUES
+
+  const form = useAppForm({
+    defaultValues,
     onSubmit: async ({ value }) => {
       try {
-        const { data: invoice } = await upsertInvoice(value)
+        const payload = {
+          ...value,
+          customerId: value?.customer?.id,
+        }
+        const invoiceParams = Schema.validateSync(UpsertInvoiceSchema)(payload)
+        const { data: invoice } = await upsertInvoice(invoiceParams)
         setSubmitError(undefined)
         onSuccess?.(invoice)
       }

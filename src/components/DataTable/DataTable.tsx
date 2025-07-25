@@ -52,6 +52,7 @@ export const DataTable = <TData extends { id: string }, TColumns extends string>
   const columns: Column<TData, TColumns>[] = Object.values(columnConfig)
   const { EmptyState, ErrorState } = slots
 
+  const isEmptyTable = data?.length === 0
   const renderTableBody = useMemo(() => {
     if (isError) {
       return (
@@ -73,7 +74,7 @@ export const DataTable = <TData extends { id: string }, TColumns extends string>
       )
     }
 
-    if (data?.length === 0) {
+    if (isEmptyTable) {
       return (
         <Row>
           <Cell colSpan={columns.length}>
@@ -97,7 +98,7 @@ export const DataTable = <TData extends { id: string }, TColumns extends string>
     )
     RowRenderer.displayName = 'Row'
     return RowRenderer
-  }, [isLoading, data, columns, EmptyState, componentName])
+  }, [isError, isLoading, isEmptyTable, columns, ErrorState, EmptyState, componentName])
 
   return (
     <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`}>

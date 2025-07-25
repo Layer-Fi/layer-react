@@ -1,0 +1,32 @@
+.Layer__InvoiceForm {
+  min-width: 32rem;
+
+  .Layer__InvoiceForm__Field__Customer,
+  .Layer__InvoiceForm__Field__Email,
+  .Layer__InvoiceForm__Field__Address {
+    grid-template-columns: 8rem 24rem;
+  }
+
+  .Layer__InvoiceForm__LineItem {
+    display: grid;
+    grid-template-columns:
+      minmax(10rem, 1.5fr)
+      minmax(12rem, 2fr)
+      minmax(5rem, 0.75fr)
+      minmax(5rem, 0.75fr)
+      minmax(5rem, 0.75fr)
+      auto;
+
+    width: 100%;
+    min-width: 40rem;
+  }
+}
+
+.Layer__InvoiceForm__Metadata {
+  padding: var(--spacing-lg) var(--spacing-2xl);
+}
+
+.Layer__InvoiceForm__LineItems {
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  background-color: var(--color-base-50);
+}

@@ -1,0 +1,31 @@
+.Layer__UI__FieldError {
+  padding-block-start: var(--spacing-3xs);
+
+  font-size: var(--text-xs);
+  color: var(--color-danger);
+}
+
+.Layer__UI__TextField {
+  display: grid;
+
+  grid-template-areas:
+    'label'
+    'input'
+    'errorMessage';
+
+  &[data-inline] {
+    grid-template-areas:
+      'label input'
+      '. errorMessage';
+
+    align-items: center;
+
+    &[data-textarea] {
+      align-items: start;
+    }
+  }
+
+  > [slot='errorMessage'] {
+    grid-area: errorMessage;
+  }
+}
