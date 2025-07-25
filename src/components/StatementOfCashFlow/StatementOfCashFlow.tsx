@@ -44,7 +44,7 @@ type StatementOfCashFlowViewProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
 }
 
-export const StatementOfCashFlowView = ({
+const StatementOfCashFlowView = ({
   stringOverrides,
   allowedDatePickerModes,
   defaultDatePickerMode,
