@@ -4,7 +4,7 @@ import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { DatePicker } from '../DatePicker'
 import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { getAllowedDateRangePickerModes, useGlobalDateRangePicker } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
-import { ReportKey, useReportMode, useReportModeActions } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { ReportKey, useReportModeActions, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import { useCallback } from 'react'
 import { type DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
@@ -17,7 +17,8 @@ export const ProfitAndLossDatePicker = ({
 }: ProfitAndLossDatePickerProps) => {
   const { business } = useLayerContext()
 
-  const displayMode = useReportMode(ReportKey.ProfitAndLoss)
+  const displayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
+
   const { setModeForReport } = useReportModeActions()
 
   const setDisplayMode = useCallback((mode: DateRangePickerMode) => {

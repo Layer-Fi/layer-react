@@ -31,14 +31,14 @@ const defaultModeByReport: ReportModes = {
 
 const ReportsModeStoreContext = createContext(
   createStore<ReportsModeStoreShape>(() => ({
-    modeByReport: defaultModeByReport,
+    modeByReport: {} as ReportModes,
     actions: {
       setModeForReport: () => {},
     },
   })),
 )
 
-export function useReportMode<K extends ReportKey>(report: K): ReportModes[K] {
+export function useReportMode<K extends ReportKey>(report: K): ReportModes[K] | undefined {
   const store = useContext(ReportsModeStoreContext)
   return useStore(store, state => state.modeByReport[report])
 }
@@ -54,13 +54,9 @@ export function useReportModeWithFallback<K extends ReportKey>(
   report: K,
   fallback: ReportModes[K],
 ): ReportModes[K] {
-  const context = useContext(ReportsModeStoreContext)
-  console.error(context)
-
   const mode = useReportMode(report)
-  console.error(mode)
 
-  return context ? mode : fallback
+  return mode ?? fallback
 }
 
 type ReportsModeStoreProviderProps = PropsWithChildren<{

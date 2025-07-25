@@ -1,11 +1,11 @@
 import { DatePicker } from '../DatePicker'
 import { useGlobalDate, useGlobalDateActions } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { ReportKey, useReportMode } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 
 export function BalanceSheetDatePicker() {
   const { date } = useGlobalDate()
   const { setDate } = useGlobalDateActions()
-  const displayMode = useReportMode(ReportKey.BalanceSheet)
+  const displayMode = useReportModeWithFallback(ReportKey.BalanceSheet, 'dayPicker')
 
   return (
     <DatePicker

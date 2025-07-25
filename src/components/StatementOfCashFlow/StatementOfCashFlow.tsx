@@ -11,7 +11,7 @@ import { useElementViewSize } from '../../hooks/useElementViewSize/useElementVie
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { StatementOfCashFlowDatePicker } from './datePicker/StatementOfCashFlowDatePicker'
 import { useStatementOfCashFlow } from '../../hooks/useStatementOfCashFlow/useStatementOfCashFlow'
-import { ReportKey, ReportsModeStoreProvider, useReportMode } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { ReportKey, ReportsModeStoreProvider, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import { getInitialDateRangePickerMode } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
 
 const COMPONENT_NAME = 'statement-of-cash-flow'
@@ -50,7 +50,7 @@ export const StatementOfCashFlowView = ({
   defaultDatePickerMode,
   customDateRanges,
 }: StatementOfCashFlowViewProps) => {
-  const displayMode = useReportMode(ReportKey.StatementOfCashFlows)
+  const displayMode = useReportModeWithFallback(ReportKey.StatementOfCashFlows, 'monthPicker')
   const { start, end } = useGlobalDateRange({ displayMode })
   const { data, isLoading } = useStatementOfCashFlow({ startDate: start, endDate: end })
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
