@@ -41,7 +41,6 @@ export const ProfitAndLossDatePicker = ({
     onChangeMode,
     dateOrDateRange,
     onChangeDateOrDateRange,
-    dateFormat,
   } = useGlobalDateRangePicker({ displayMode, setDisplayMode })
 
   const minDate = getEarliestDateToBrowse(business)
@@ -55,7 +54,6 @@ export const ProfitAndLossDatePicker = ({
       slots={{
         ModeSelector: DatePickerModeSelector,
       }}
-      dateFormat={dateFormat}
       customDateRanges={customDateRanges}
       minDate={minDate}
     />

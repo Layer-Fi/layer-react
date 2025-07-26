@@ -28,7 +28,6 @@ export function StatementOfCashFlowDatePicker({
   }, [setModeForReport])
 
   const {
-    dateFormat,
     rangeDisplayMode,
     onChangeMode,
     dateOrDateRange,
@@ -49,7 +48,6 @@ export function StatementOfCashFlowDatePicker({
       slots={{
         ModeSelector: DatePickerModeSelector,
       }}
-      dateFormat={dateFormat}
       customDateRanges={customDateRanges}
       minDate={minDate}
     />
