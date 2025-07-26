@@ -56,6 +56,6 @@
 
 .Layer__details-list-item__value {
   box-sizing: border-box;
-  flex: 1;
+  display: flex;
   padding: var(--spacing-xs) var(--spacing-md);
 }

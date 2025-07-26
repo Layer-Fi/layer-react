@@ -28,9 +28,9 @@ export const DetailsListItem = ({
   return (
     <li className='Layer__details-list-item'>
       <label className='Layer__details-list-item__label'>{label}</label>
-      <span className='Layer__details-list-item__value'>
+      <div className='Layer__details-list-item__value'>
         {isLoading ? <SkeletonLoader /> : renderValue(children)}
-      </span>
+      </div>
     </li>
   )
 }
