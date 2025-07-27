@@ -114,15 +114,13 @@ const highlightNextArrow = ({
 const getDateFormat = (mode: UnifiedPickerMode | 'timePicker') => {
   switch (mode) {
     case 'dayPicker':
-      return 'MMMM d, yyyy'
-    case 'monthPicker':
-      return 'MMMM yyyy'
-    case 'yearPicker':
-      return 'yyyy'
-    case 'monthRangePicker':
-      return 'MMM yyyy'
     case 'dayRangePicker':
       return 'MMM d, yyyy'
+    case 'monthPicker':
+    case 'monthRangePicker':
+      return 'MMM yyyy'
+    case 'yearPicker':
+      return 'yyyy'
     case 'timePicker':
       return 'h:mm aa'
     default:
