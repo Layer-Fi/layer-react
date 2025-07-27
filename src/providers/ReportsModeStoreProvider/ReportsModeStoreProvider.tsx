@@ -16,6 +16,7 @@ export type ReportModes = {
 type MutableReportKey = Exclude<ReportKey, ReportKey.BalanceSheet>
 
 type ReportsModeStoreShape = {
+  resetPnLModeToDefaultOnMount: boolean
   modeByReport: ReportModes
   actions: {
     setModeForReport: <K extends MutableReportKey>(report: K, mode: ReportModes[K]) => void
@@ -31,12 +32,18 @@ const defaultModeByReport: ReportModes = {
 
 const ReportsModeStoreContext = createContext(
   createStore<ReportsModeStoreShape>(() => ({
+    resetPnLModeToDefaultOnMount: true,
     modeByReport: {} as ReportModes,
     actions: {
       setModeForReport: () => {},
     },
   })),
 )
+
+export function useReportModeStore() {
+  const store = useContext(ReportsModeStoreContext)
+  return useStore(store)
+}
 
 export function useReportMode<K extends ReportKey>(report: K): ReportModes[K] | undefined {
   const store = useContext(ReportsModeStoreContext)
@@ -61,15 +68,18 @@ export function useReportModeWithFallback<K extends ReportKey>(
 
 type ReportsModeStoreProviderProps = PropsWithChildren<{
   initialModes: Partial<ReportModes>
+  resetPnLModeToDefaultOnMount?: boolean
 }>
 
 export function ReportsModeStoreProvider({
   children,
   initialModes,
+  resetPnLModeToDefaultOnMount = true,
 }: ReportsModeStoreProviderProps) {
   const [store] = useState(() =>
     createStore<ReportsModeStoreShape>(set => ({
       modeByReport: { ...defaultModeByReport, ...initialModes },
+      resetPnLModeToDefaultOnMount,
       actions: {
         setModeForReport: (report, mode) =>
           set(state => ({
