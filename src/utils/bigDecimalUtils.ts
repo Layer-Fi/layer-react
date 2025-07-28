@@ -1,6 +1,8 @@
 import { BigDecimal as BD } from 'effect'
 
 export const BIG_DECIMAL_ZERO = BD.fromBigInt(0n)
+export const DECIMAL_CHARS_REGEX = /^[\d.,-]+$/
+export const NON_NEGATIVE_DECIMAL_CHARS_REGEX = /^[\d.,]+$/
 
 /**
  * Converts a BigDecimal dollar amount to its equivalent in cents as a number.

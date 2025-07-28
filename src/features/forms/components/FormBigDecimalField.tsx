@@ -4,7 +4,7 @@ import { InputGroup } from '../../../components/ui/Input/InputGroup'
 import { BigDecimal as BD, Option } from 'effect'
 import type { BigDecimal as BigDecimalType } from 'effect/BigDecimal'
 import { Input } from '../../../components/ui/Input/Input'
-import { BIG_DECIMAL_ZERO, formatBigDecimalToString } from '../../../utils/bigDecimalUtils'
+import { BIG_DECIMAL_ZERO, DECIMAL_CHARS_REGEX, NON_NEGATIVE_DECIMAL_CHARS_REGEX, formatBigDecimalToString } from '../../../utils/bigDecimalUtils'
 import { BaseFormTextField, type BaseFormTextFieldProps } from './BaseFormTextField'
 
 type FormBigDecimalFieldProps = {
@@ -49,7 +49,10 @@ export function FormBigDecimalField({
   }, [inputValue, handleBlur, handleChange, maxInputLength])
 
   // Don't allow the user to type anything other than numeric characters, commas, decimals, etc
-  const allowedChars = useMemo(() => allowNegative ? /^[\d.,-]+$/ : /^[\d.,]+$/, [allowNegative])
+  const allowedChars = useMemo(() =>
+    allowNegative ? DECIMAL_CHARS_REGEX : NON_NEGATIVE_DECIMAL_CHARS_REGEX,
+  [allowNegative])
+
   const onBeforeInput = useCallback((e: React.FormEvent<HTMLInputElement> & { data: string | null }) => {
     if (e.data && !allowedChars.test(e.data)) {
       e.preventDefault()
