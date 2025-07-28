@@ -7,19 +7,16 @@ import { Input } from '../../../components/ui/Input/Input'
 import { BIG_DECIMAL_ZERO, DECIMAL_CHARS_REGEX, NON_NEGATIVE_DECIMAL_CHARS_REGEX, formatBigDecimalToString } from '../../../utils/bigDecimalUtils'
 import { BaseFormTextField, type BaseFormTextFieldProps } from './BaseFormTextField'
 
-type FormBigDecimalFieldProps = {
-  slotProps: {
-    BaseFormTextField: Omit<BaseFormTextFieldProps, 'inputMode'>
-  }
+type FormBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode'> & {
   maxInputLength?: number
   allowNegative?: boolean
 }
 
 const DEFAULT_MAX_INPUT_LENGTH = 10
 export function FormBigDecimalField({
-  slotProps,
   maxInputLength = DEFAULT_MAX_INPUT_LENGTH,
   allowNegative = false,
+  ...restProps
 }: FormBigDecimalFieldProps) {
   const field = useFieldContext<BigDecimalType>()
 
@@ -73,7 +70,7 @@ export function FormBigDecimalField({
   }, [value, maxInputLength])
 
   return (
-    <BaseFormTextField {...slotProps.BaseFormTextField} inputMode='decimal'>
+    <BaseFormTextField {...restProps} inputMode='decimal'>
       <InputGroup>
         <Input
           inset

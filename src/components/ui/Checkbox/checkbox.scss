@@ -1,70 +1,87 @@
 .Layer__Checkbox {
+  position: relative;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-  position: relative;
 
-  [slot="checkbox"] {
-    background-color: var(--checkbox-bg);
-    color: transparent;
-    border: 2px solid var(--checkbox-border-color);
-    border-radius: var(--checkbox-radius);
+  [slot='checkbox'] {
+    box-sizing: border-box;
     display: grid;
+
+    height: var(--size);
+    width: var(--size);
+
+    border-radius: var(--checkbox-radius);
+    border: 2px solid var(--outline-default);
+
+    background-color: var(--color-base-50);
+    color: transparent;
+
     place-items: center;
-    width: var(--checkbox-size);
-    height: var(--checkbox-size);
     transition: all 100ms ease-out;
 
-    &[data-hovered] {
-      box-shadow: 0 0 0 1px rgb(0 0 0 / 5%);
+    --size: 1rem;
+    --checkbox-radius: var(--border-radius-3xs);
+
+    &[data-pressed] {
+      border-color: var(--outline-active);
     }
   }
 
-  &[data-size="lg"] [slot="checkbox"] {
-    width: var(--checkbox-size-lg);
-    height: var(--checkbox-size-lg);
-    border-radius: var(--checkbox-radius-lg);
-
-    &[data-hovered] {
-      box-shadow: 0 0 0 2px rgb(0 0 0 / 5%);
-    }
+  &[data-size='lg'] [slot='checkbox'] {
+    --size: 1.5rem;
+    --checkbox-radius: var(--border-radius-2xs);
   }
 
   svg {
     transition: all 100ms ease-out;
   }
 
-  &[data-pressed] [slot="checkbox"] {
+  &[data-hovered] [slot='checkbox'],
+  &[data-pressed] [slot='checkbox'] {
     border-color: var(--outline-active);
   }
 
-  &[data-focus-visible] [slot="checkbox"] {
+  &[data-focus-visible] [slot='checkbox'] {
     outline: 1px solid var(--outline-active);
     outline-offset: 2px;
   }
 
-  &[data-selected] [slot="checkbox"] {
-    color: var(--checkbox-color-selected);
-    background-color: var(--checkbox-bg-selected);
-    border-color: var(--checkbox-border-color-selected);
+  &[data-selected] [slot='checkbox'] {
+    background-color: var(--fg-default);
+    color: var(--bg-default);
+    border-color: var(--fg-default);
   }
 
-  &[data-selected][data-variant="success"] {
-    [slot="checkbox"] {
-      background-color: var(--checkbox-bg-success-selected);
-      border-color: var(--checkbox-border-color-success-selected);
+  &[data-variant='success'] {
+    [slot='checkbox'] {
+      background-color: var(--color-info-success);
+    }
+  }
+
+  &[data-selected][data-variant='success'] {
+    [slot='checkbox'] {
+      border-color: var(--color-info-success);
+    }
+  }
+
+  &[data-variant='error'] {
+    [slot='checkbox'] {
+      border-color: var(--color-info-error);
+    }
+  }
+
+  &[data-selected][data-variant='error'] {
+    [slot='checkbox'] {
+      background-color: var(--color-info-error);
     }
   }
 
   &[data-disabled] {
     cursor: not-allowed;
 
-    [slot="checkbox"] {
-      background-color: var(--checkbox-bg-disabled);
-
-      &[data-hovered] {
-        box-shadow: 0 0 0 1px rgb(0 0 0 / 2%);
-      }
+    [slot='checkbox'] {
+      background-color: var(--color-base-200);
     }
   }
 

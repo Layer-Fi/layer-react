@@ -3,13 +3,9 @@ import { TextArea } from '../../../components/ui/Input/TextArea'
 import { useFieldContext } from '../hooks/useForm'
 import { BaseFormTextField, type BaseFormTextFieldProps } from './BaseFormTextField'
 
-type FormTextAreaFieldProps = {
-  slotProps: {
-    BaseFormTextField: BaseFormTextFieldProps
-  }
-}
+type FormTextAreaFieldProps = BaseFormTextFieldProps
 
-export function FormTextAreaField({ slotProps }: FormTextAreaFieldProps) {
+export function FormTextAreaField(props: FormTextAreaFieldProps) {
   const field = useFieldContext<string>()
 
   const { name, state, handleChange, handleBlur } = field
@@ -20,7 +16,7 @@ export function FormTextAreaField({ slotProps }: FormTextAreaFieldProps) {
   }, [handleChange])
 
   return (
-    <BaseFormTextField {...slotProps.BaseFormTextField}>
+    <BaseFormTextField {...props} isTextArea>
       <TextArea id={name} name={name} value={value} onChange={onChange} onBlur={handleBlur} />
     </BaseFormTextField>
   )

@@ -8,7 +8,7 @@ import classNames from 'classnames'
 
 const CLASS_NAME = 'Layer__Checkbox'
 
-type CheckboxVariant = 'default' | 'success'
+type CheckboxVariant = 'default' | 'success' | 'error'
 type CheckboxSize = 'md' | 'lg'
 
 type CheckboxProps = Omit<AriaCheckboxProps, 'className'> & {

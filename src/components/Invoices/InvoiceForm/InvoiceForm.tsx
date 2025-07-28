@@ -44,10 +44,10 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
           )}
         </form.Field>
         <form.AppField name='email'>
-          {field => <field.FormTextField slotProps={{ BaseFormTextField: { label: 'Email', inline: true, className: `${INVOICE_FORM_FIELD_CSS_PREFIX}__Email` } }} />}
+          {field => <field.FormTextField label='Email' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Email`} />}
         </form.AppField>
         <form.AppField name='address'>
-          {field => <field.FormTextAreaField slotProps={{ BaseFormTextField: { label: 'Billing address', inline: true, className: `${INVOICE_FORM_FIELD_CSS_PREFIX}__Address` } }} />}
+          {field => <field.FormTextAreaField label='Billing address' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Address`} />}
         </form.AppField>
       </VStack>
       <VStack className={`${INVOICE_FORM_CSS_PREFIX}__LineItems`} gap='xs'>
@@ -57,10 +57,10 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
               {field.state.value.map((_, index) => (
                 <HStack key={`lineItems[${index}]`} gap='xs' align='end' className={`${INVOICE_FORM_CSS_PREFIX}__LineItem`}>
                   <form.AppField name={`lineItems[${index}].product`}>
-                    {innerField => <innerField.FormTextField slotProps={{ BaseFormTextField: { label: 'Product', showLabel: index === 0 } }} />}
+                    {innerField => <innerField.FormTextField label='Product' showLabel={index === 0} />}
                   </form.AppField>
                   <form.AppField name={`lineItems[${index}].description`}>
-                    {innerField => <innerField.FormTextField slotProps={{ BaseFormTextField: { label: 'Description', showLabel: index === 0 } }} />}
+                    {innerField => <innerField.FormTextField label='Description' showLabel={index === 0} />}
                   </form.AppField>
                   <form.AppField
                     name={`lineItems[${index}].quantity`}
@@ -73,7 +73,7 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                       },
                     }}
                   >
-                    {innerField => <innerField.FormBigDecimalField slotProps={{ BaseFormTextField: { label: 'Quantity', showLabel: index === 0 } }} />}
+                    {innerField => <innerField.FormBigDecimalField label='Quantity' showLabel={index === 0} />}
                   </form.AppField>
                   <form.AppField
                     name={`lineItems[${index}].unitPrice`}
@@ -86,7 +86,7 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                       },
                     }}
                   >
-                    {innerField => <innerField.FormCurrencyField slotProps={{ BaseFormTextField: { label: 'Rate', showLabel: index === 0 } }} />}
+                    {innerField => <innerField.FormCurrencyField label='Rate' showLabel={index === 0} />}
                   </form.AppField>
                   <form.AppField
                     name={`lineItems[${index}].amount`}
@@ -104,7 +104,10 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                       },
                     }}
                   >
-                    {innerField => <innerField.FormCurrencyField slotProps={{ BaseFormTextField: { label: 'Amount', showLabel: index === 0 } }} />}
+                    {innerField => <innerField.FormCurrencyField label='Amount' showLabel={index === 0} />}
+                  </form.AppField>
+                  <form.AppField name={`lineItems[${index}].isTaxable`}>
+                    {innerField => <innerField.FormCheckboxField label='Tax' showLabel={index === 0} />}
                   </form.AppField>
                   <Button variant='outlined' icon aria-label='Delete line item' onClick={() => field.removeValue(index)}><Trash size={16} /></Button>
                 </HStack>

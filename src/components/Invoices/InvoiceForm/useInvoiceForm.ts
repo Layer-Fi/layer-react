@@ -12,6 +12,7 @@ export const EMPTY_LINE_ITEM = {
   unitPrice: 0,
   quantity: BD.fromBigInt(1n),
   amount: 0,
+  isTaxable: false,
 }
 
 const DEFAULT_FORM_VALUES = {
@@ -32,6 +33,7 @@ const getAugmentedInvoiceFormLineItem = (lineItem: InvoiceLineItem) => {
   return {
     ...lineItem,
     amount: getInvoiceLineItemAmount(lineItem),
+    isTaxable: lineItem.salesTaxTotal > 0,
   }
 }
 
