@@ -98,7 +98,6 @@ export const AccountingOverview = ({
         <Container
           name='accounting-overview-profit-and-loss'
           asWidget
-          elevated={true}
         >
           <ProfitAndLoss.Header
             text={stringOverrides?.header || 'Profit & Loss'}

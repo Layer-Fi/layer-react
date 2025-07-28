@@ -88,7 +88,6 @@ export const BookkeepingOverview = ({
           <Container
             name='bookkeeping-overview-profit-and-loss'
             asWidget
-            elevated={true}
             style={{
               position: 'relative',
               zIndex: 2,
