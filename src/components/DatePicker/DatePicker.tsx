@@ -11,6 +11,7 @@ import type {
 } from './ModeSelector/DatePickerModeSelector'
 import classNames from 'classnames'
 import { endOfDay, endOfMonth, endOfYear, getYear } from 'date-fns'
+import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 
 /**
  * @see https://github.com/Hacker0x01/react-datepicker/issues/1333#issuecomment-2363284612
@@ -110,17 +111,32 @@ const highlightNextArrow = ({
   return false
 }
 
+const getDateFormat = (mode: UnifiedPickerMode | 'timePicker') => {
+  switch (mode) {
+    case 'dayPicker':
+    case 'dayRangePicker':
+      return 'MMM d, yyyy'
+    case 'monthPicker':
+    case 'monthRangePicker':
+      return 'MMM yyyy'
+    case 'yearPicker':
+      return 'yyyy'
+    case 'timePicker':
+      return 'h:mm aa'
+    default:
+      unsafeAssertUnreachable({
+        value: mode,
+        message: 'Invalid datepicker mode',
+      })
+  }
+}
 export const DatePicker = ({
   selected,
   onChange,
   disabled,
   displayMode = 'dayPicker',
   allowedModes,
-  dateFormat = displayMode === 'monthPicker' || displayMode === 'monthRangePicker'
-    ? 'MMM, yyyy'
-    : displayMode === 'timePicker'
-      ? 'h:mm aa'
-      : 'MMM d, yyyy',
+  dateFormat = getDateFormat(displayMode),
   timeIntervals = 15,
   timeCaption,
   placeholderText: _placeholderText,

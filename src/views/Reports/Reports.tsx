@@ -117,7 +117,7 @@ export const Reports = ({
         </div>
       )}
       <Container name='reports' ref={containerRef}>
-        <ReportsModeStoreProvider initialModes={initialModes}>
+        <ReportsModeStoreProvider initialModes={initialModes} resetPnLModeToDefaultOnMount={false}>
           <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig} withReportsModeProvider={false}>
             <ReportsPanel
               openReport={activeTab}

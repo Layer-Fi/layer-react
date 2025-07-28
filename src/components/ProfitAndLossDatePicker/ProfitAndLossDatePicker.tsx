@@ -5,7 +5,7 @@ import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { DatePicker } from '../DatePicker'
 import { DatePickerModeSelector } from '../DatePicker/ModeSelector/DatePickerModeSelector'
 import { getAllowedDateRangePickerModes, getInitialDateRangePickerMode, useGlobalDateRangePicker } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
-import { ReportKey, useReportModeActions, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { ReportKey, useReportModeActions, useReportModeStore, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import { type DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 export type ProfitAndLossDatePickerProps = TimeRangePickerConfig
@@ -19,6 +19,7 @@ export const ProfitAndLossDatePicker = ({
   const { business } = useLayerContext()
 
   const displayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
+  const { resetPnLModeToDefaultOnMount } = useReportModeStore()
 
   const { setModeForReport } = useReportModeActions()
 
@@ -28,11 +29,11 @@ export const ProfitAndLossDatePicker = ({
 
   useEffect(() => {
     const initialDatePickerMode = getInitialDateRangePickerMode({ allowedDatePickerModes, defaultDatePickerMode })
-    if (!isMounted.current && displayMode !== initialDatePickerMode) {
+    if (!isMounted.current && resetPnLModeToDefaultOnMount && displayMode !== initialDatePickerMode) {
       setDisplayMode(initialDatePickerMode)
     }
     isMounted.current = true
-  }, [allowedDatePickerModes, defaultDatePickerMode, displayMode, setDisplayMode])
+  }, [resetPnLModeToDefaultOnMount, allowedDatePickerModes, defaultDatePickerMode, displayMode, setDisplayMode])
 
   const cleanedAllowedModes = getAllowedDateRangePickerModes({ allowedDatePickerModes, defaultDatePickerMode })
 
@@ -41,7 +42,6 @@ export const ProfitAndLossDatePicker = ({
     onChangeMode,
     dateOrDateRange,
     onChangeDateOrDateRange,
-    dateFormat,
   } = useGlobalDateRangePicker({ displayMode, setDisplayMode })
 
   const minDate = getEarliestDateToBrowse(business)
@@ -55,7 +55,6 @@ export const ProfitAndLossDatePicker = ({
       slots={{
         ModeSelector: DatePickerModeSelector,
       }}
-      dateFormat={dateFormat}
       customDateRanges={customDateRanges}
       minDate={minDate}
     />

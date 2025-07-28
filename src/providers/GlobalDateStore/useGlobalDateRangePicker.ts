@@ -40,7 +40,11 @@ export const getInitialDateRangePickerMode = ({
   return initialRangeDisplayMode
 }
 
-export type UseGlobalDateRangePickerProps = { displayMode: DateRangePickerMode, setDisplayMode: (displayMode: DateRangePickerMode) => void }
+export type UseGlobalDateRangePickerProps = {
+  displayMode: DateRangePickerMode
+  setDisplayMode: (displayMode: DateRangePickerMode) => void
+}
+
 export function useGlobalDateRangePicker({ displayMode, setDisplayMode }: UseGlobalDateRangePickerProps) {
   const { start, end } = useGlobalDateRange({ displayMode })
 
@@ -52,22 +56,16 @@ export function useGlobalDateRangePicker({ displayMode, setDisplayMode }: UseGlo
     }
   }, [setDisplayMode])
 
-  const { dateFormat, dateOrDateRange } = useMemo(() => {
+  const dateOrDateRange = useMemo(() => {
     if (displayMode === 'monthPicker') {
-      return {
-        dateOrDateRange: start,
-        dateFormat: undefined,
-      } as const
+      return start
     }
 
-    return {
-      /*
+    /*
        * This intentionally needs to be cast to a mutable array. The `DatePicker`
        * component should accept a readonly array, but that refactor is out of scope.
        */
-      dateOrDateRange: [start, end] as [Date, Date],
-      dateFormat: 'MMM d',
-    } as const
+    return [start, end] as [Date, Date]
   }, [
     start,
     end,
@@ -79,11 +77,10 @@ export function useGlobalDateRangePicker({ displayMode, setDisplayMode }: UseGlo
       ? { start: dates, end: dates }
       : { start: dates[0], end: dates[1] ?? dates[0] }
 
-    setRangeWithExplicitDisplayMode({ ...dateProps, rangeDisplayMode: displayMode })
+    setRangeWithExplicitDisplayMode({ ...dateProps, displayMode })
   }, [displayMode, setRangeWithExplicitDisplayMode])
 
   return {
-    dateFormat,
     rangeDisplayMode: displayMode,
     onChangeMode,
     dateOrDateRange,
