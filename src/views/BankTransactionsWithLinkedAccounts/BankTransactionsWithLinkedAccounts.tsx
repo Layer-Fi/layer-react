@@ -38,7 +38,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
 export const BankTransactionsWithLinkedAccounts = ({
   title, // deprecated
   showTitle = true,
-  elevatedLinkedAccounts = true,
+  elevatedLinkedAccounts = false,
   mode,
 
   showBreakConnection = false,

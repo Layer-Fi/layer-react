@@ -11,7 +11,6 @@ import { IntegrationsConnectMenu } from './IntegrationsConnectMenu/IntegrationsC
 const COMPONENT_NAME = 'integrations'
 
 export interface IntegrationsProps {
-  elevated?: boolean
   stringOverrides?: {
     title?: string
   }
@@ -26,14 +25,13 @@ export const Integrations = (props: IntegrationsProps) => {
 }
 
 export const IntegrationsComponent = ({
-  elevated,
   stringOverrides,
 }: IntegrationsProps) => {
   const { quickbooksConnectionStatus } = useContext(QuickbooksContext)
   const isLoading = quickbooksConnectionStatus === undefined
 
   return (
-    <Container name={COMPONENT_NAME} elevated={elevated}>
+    <Container name={COMPONENT_NAME}>
       <Header className='Layer__linked-accounts__header'>
         <Heading
           className='Layer__linked-accounts__title'

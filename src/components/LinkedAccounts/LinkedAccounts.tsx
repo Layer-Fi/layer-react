@@ -34,7 +34,7 @@ export const LinkedAccounts = (props: LinkedAccountsProps) => {
 
 export const LinkedAccountsComponent = ({
   asWidget,
-  elevated,
+  elevated = false,
   showLedgerBalance = true,
   showUnlinkItem = false,
   showBreakConnection = false,
@@ -69,7 +69,7 @@ export const LinkedAccountsComponent = ({
             status={DataStateStatus.failed}
             title='Something went wrong'
             description='We couldn’t load your data.'
-            onRefresh={() => refetchAccounts()}
+            onRefresh={() => void refetchAccounts()}
             isLoading={isValidating}
           />
         )
