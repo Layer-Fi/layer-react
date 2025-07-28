@@ -17,7 +17,6 @@ export interface LinkedAccountsProps {
   showLedgerBalance?: boolean
   showUnlinkItem?: boolean
   showBreakConnection?: boolean
-  showAddAccount?: boolean
   stringOverrides?: {
     title?: string
   }
@@ -39,7 +38,6 @@ export const LinkedAccountsComponent = ({
   showLedgerBalance = true,
   showUnlinkItem = false,
   showBreakConnection = false,
-  showAddAccount = true,
   stringOverrides,
 }: LinkedAccountsProps) => {
   const {
@@ -71,7 +69,7 @@ export const LinkedAccountsComponent = ({
             status={DataStateStatus.failed}
             title='Something went wrong'
             description='We couldn’t load your data.'
-            onRefresh={() => void refetchAccounts()}
+            onRefresh={() => refetchAccounts()}
             isLoading={isValidating}
           />
         )
@@ -83,7 +81,6 @@ export const LinkedAccountsComponent = ({
             showLedgerBalance={showLedgerBalance}
             showUnlinkItem={showUnlinkItem}
             showBreakConnection={showBreakConnection}
-            showAddAccount={showAddAccount}
           />
         )
         : null}
