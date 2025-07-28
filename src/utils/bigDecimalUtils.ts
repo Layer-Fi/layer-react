@@ -1,6 +1,8 @@
 import { BigDecimal as BD } from 'effect'
 
-export const BIG_DECIMAL_ZERO = BD.fromBigInt(0n)
+export const BIG_DECIMAL_ZERO = BD.fromBigInt(BigInt(0))
+export const BIG_DECIMAL_ONE = BD.fromBigInt(BigInt(1))
+export const BIG_DECIMAL_ONE_HUNDRED = BD.fromBigInt(BigInt(100))
 export const DECIMAL_CHARS_REGEX = /^[\d.,-]+$/
 export const NON_NEGATIVE_DECIMAL_CHARS_REGEX = /^[\d.,]+$/
 
@@ -10,7 +12,7 @@ export const NON_NEGATIVE_DECIMAL_CHARS_REGEX = /^[\d.,]+$/
  */
 export const convertBigDecimalToCents = (amount: BD.BigDecimal): number => {
   // Multiply the amount by 100 to get the value in cents
-  const scaled = BD.multiply(amount, BD.fromBigInt(100n))
+  const scaled = BD.multiply(amount, BIG_DECIMAL_ONE_HUNDRED)
 
   // Round to the nearest whole number (zero decimal places)
   const rounded = BD.round(scaled, { scale: 0 })
@@ -24,7 +26,7 @@ export const convertCentsToBigDecimal = (cents: number): BD.BigDecimal => {
   const decimalCents = BD.fromBigInt(BigInt(cents))
 
   // Divide by 100 to get the dollar amount
-  return BD.unsafeDivide(decimalCents, BD.fromBigInt(100n))
+  return BD.unsafeDivide(decimalCents, BIG_DECIMAL_ONE_HUNDRED)
 }
 
 export function formatBigDecimalToString(
