@@ -1,22 +1,16 @@
 import {
-  addDays,
-  differenceInDays,
-  differenceInMonths,
   endOfDay,
   endOfMonth,
   endOfYear,
   min,
-  startOfDay,
   startOfMonth,
   startOfYear,
-  subDays,
-  subMonths,
-  subYears,
 } from 'date-fns'
 import { useState, createContext, type PropsWithChildren, useContext } from 'react'
 import { createStore, useStore } from 'zustand'
 import { safeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { useStoreWithDateSelected } from '../../utils/zustand/useStoreWithDateSelected'
+import type { UnifiedPickerMode } from '../../components/DatePicker/ModeSelector/DatePickerModeSelector'
 
 const _DATE_PICKER_MODES = [
   'dayPicker',
@@ -34,64 +28,35 @@ export type DateRangePickerMode = typeof _RANGE_PICKER_MODES[number]
 export const isDateRangePickerMode = (mode: string): mode is DateRangePickerMode => {
   return _RANGE_PICKER_MODES.includes(mode as DateRangePickerMode)
 }
-
-function startOfNextDay(date: Date | number) {
-  return startOfDay(addDays(date, 1))
-}
-
 function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())) {
   return min([date, cutoff])
 }
 
-type CommonShiftOptions = { currentStart: Date }
-type PreShiftOptions = CommonShiftOptions & { currentEnd: Date, newEnd: Date }
-type PostShiftOptions = CommonShiftOptions & { shiftedCurrentEnd: Date, shiftedNewEnd: Date }
-
-function withShiftedEnd<T>(fn: (options: PostShiftOptions) => T) {
-  return ({ currentStart, currentEnd, newEnd }: PreShiftOptions) => {
-    const shiftedCurrentEnd = startOfNextDay(currentEnd)
-    const shiftedNewEnd = clampToPresentOrPast(startOfNextDay(newEnd), startOfNextDay(new Date()))
-
-    return fn({ currentStart, shiftedCurrentEnd, shiftedNewEnd })
-  }
-}
-
 const RANGE_MODE_LOOKUP = {
+  dayPicker: {
+    getStart: ({ start }: { start: Date }) => start,
+    getEnd: ({ end }: { end: Date }) => clampToPresentOrPast(endOfDay(end)),
+  },
   dayRangePicker: {
     getStart: ({ start }: { start: Date }) => start,
-    getShiftedStart: withShiftedEnd(({ currentStart, shiftedCurrentEnd, shiftedNewEnd }) => {
-      const fullDayCount = differenceInDays(shiftedCurrentEnd, currentStart)
-      return subDays(shiftedNewEnd, fullDayCount)
-    }),
     getEnd: ({ end }: { end: Date }) => clampToPresentOrPast(endOfDay(end)),
   },
   monthPicker: {
     getStart: ({ start }: { start: Date }) => startOfMonth(start),
-    getShiftedStart: withShiftedEnd(({ shiftedNewEnd }) => {
-      return subMonths(shiftedNewEnd, 1)
-    }),
     getEnd: ({ end }: { end: Date }) => clampToPresentOrPast(endOfMonth(end)),
   },
   monthRangePicker: {
     getStart: ({ start }: { start: Date }) => startOfMonth(start),
-    getShiftedStart: withShiftedEnd(({ currentStart, shiftedCurrentEnd, shiftedNewEnd }) => {
-      const fullMonthCount = differenceInMonths(shiftedCurrentEnd, currentStart)
-      return subMonths(shiftedNewEnd, fullMonthCount)
-    }),
     getEnd: ({ end }: { end: Date }) => clampToPresentOrPast(endOfMonth(end)),
   },
   yearPicker: {
     getStart: ({ start }: { start: Date }) => startOfYear(start),
-    getShiftedStart: withShiftedEnd(({ shiftedNewEnd }) => {
-      return subYears(shiftedNewEnd, 1)
-    }),
     getEnd: ({ end }: { end: Date }) => clampToPresentOrPast(endOfYear(end)),
   },
 } satisfies Record<
-  DateRangePickerMode,
+  UnifiedPickerMode,
   {
     getStart: ({ start }: { start: Date }) => Date
-    getShiftedStart: (options: { currentStart: Date, currentEnd: Date, newEnd: Date }) => Date
     getEnd: ({ end }: { end: Date }) => Date
   }
 >
@@ -116,16 +81,16 @@ type GlobalDateState = {
 }
 
 type GlobalDateActions = {
-  setDate: (options: { date: Date }) => void
-
-  setDateRange: (options: { start: Date, end: Date }) => void
   setRangeWithExplicitDisplayMode: (
     options: {
       start: Date
       end: Date
-      rangeDisplayMode: DateRangePickerMode
+      displayMode: UnifiedPickerMode
     }
   ) => void
+
+  setDate: (options: { date: Date }) => void
+  setDateRange: (options: { start: Date, end: Date }) => void
   setMonth: (options: { start: Date }) => void
   setMonthRange: (options: { start: Date, end: Date }) => void
   setYear: (options: { start: Date }) => void
@@ -139,6 +104,12 @@ function buildStore() {
   const now = new Date()
 
   return createStore<GlobalDateStore>((set) => {
+    const setDate = ({ date }: { date: Date }) => {
+      set({
+        start: RANGE_MODE_LOOKUP.dayPicker.getStart({ start: date }),
+        end: RANGE_MODE_LOOKUP.dayPicker.getEnd({ end: date }),
+      })
+    }
     const setDateRange = withCorrectedRange(({ start, end }) => {
       set({
         start: RANGE_MODE_LOOKUP.dayRangePicker.getStart({ start }),
@@ -167,9 +138,12 @@ function buildStore() {
     const setRangeWithExplicitDisplayMode = ({
       start,
       end,
-      rangeDisplayMode,
-    }: { start: Date, end: Date, rangeDisplayMode: DateRangePickerMode }) => {
-      switch (rangeDisplayMode) {
+      displayMode,
+    }: { start: Date, end: Date, displayMode: UnifiedPickerMode }) => {
+      switch (displayMode) {
+        case 'dayPicker':
+          setDate({ date: end })
+          break
         case 'dayRangePicker':
           setDateRange({ start, end })
           break
@@ -184,8 +158,8 @@ function buildStore() {
           break
         default:
           safeAssertUnreachable({
-            value: rangeDisplayMode,
-            message: 'Invalid `rangeDisplayMode`',
+            value: displayMode,
+            message: 'Invalid `displayMode`',
           })
       }
     }
@@ -195,23 +169,7 @@ function buildStore() {
       end: clampToPresentOrPast(endOfMonth(now)),
 
       actions: {
-        setDate: ({ date }) => {
-          set(({
-            start: currentStart,
-            end: currentEnd,
-          }) => {
-            const newEnd = RANGE_MODE_LOOKUP.dayRangePicker.getEnd({ end: date })
-
-            return {
-              start: RANGE_MODE_LOOKUP.dayRangePicker.getShiftedStart({
-                currentStart,
-                currentEnd,
-                newEnd,
-              }),
-              end: newEnd,
-            }
-          })
-        },
+        setDate,
         setRangeWithExplicitDisplayMode,
         setDateRange,
         setMonth,
