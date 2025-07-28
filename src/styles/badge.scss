@@ -1,6 +1,6 @@
-.Layer__badge {  
+.Layer__badge {
   --size: 27px;
-  
+
   box-sizing: border-box;
   display: inline-flex;
   gap: var(--spacing-3xs);
@@ -19,16 +19,22 @@
 
   &.Layer__badge--small {
     --size: 21px;
-    
-    padding: var(--spacing-3xs) var(--spacing-xs);
+
     font-size: var(--text-xs);
     line-height: 1.1;
   }
 
+  &.Layer__badge--xs {
+    --size: 17px;
+
+    font-size: var(--text-2xs);
+    line-height: 1;
+  }
+
   &.Layer__badge--icon-only {
-    padding: 0;
     justify-content: center;
     min-width: var(--size);
+    padding: 0;
   }
 
   &.Layer__badge--clickable {
@@ -36,7 +42,6 @@
     border-width: 0;
     cursor: pointer;
   }
-
 
   &.Layer__badge--default {
     background-color: var(--badge-bg-color);

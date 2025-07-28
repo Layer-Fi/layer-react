@@ -4,6 +4,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import classNames from 'classnames'
 
 export enum BadgeSize {
+  EXTRA_SMALL = 'xs',
   SMALL = 'small',
   MEDIUM = 'medium',
 }
