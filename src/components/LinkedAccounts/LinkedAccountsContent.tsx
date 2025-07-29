@@ -5,6 +5,7 @@ import { Text, TextSize } from '../Typography'
 import { LinkedAccountItemThumb } from './LinkedAccountItemThumb'
 import classNames from 'classnames'
 import { LinkedAccountsConfirmationModal } from '../LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'
+import { PlaidLinkErrorModal } from './PlaidLinkError/PlaidLinkError'
 
 interface LinkedAccountsDataProps {
   asWidget?: boolean
@@ -58,6 +59,7 @@ export const LinkedAccountsContent = ({
         </div>
       </div>
       <LinkedAccountsConfirmationModal />
+      <PlaidLinkErrorModal />
     </>
   )
 }

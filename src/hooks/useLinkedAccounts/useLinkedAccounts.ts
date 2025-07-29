@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
+import { PlaidLinkOnSuccessMetadata, PlaidLinkStableEvent, usePlaidLink } from 'react-plaid-link'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DataModel, LoadedStatus } from '../../types/general'
@@ -10,6 +10,7 @@ import { useEnvironment } from '../../providers/Environment/EnvironmentInputProv
 import type { Awaitable } from '../../types/utility/promises'
 import { useAccountConfirmationStoreActions } from '../../providers/AccountConfirmationStoreProvider'
 import { useListExternalAccounts } from './useListExternalAccounts'
+import { usePlaidLinkErrorStoreActions } from '../../providers/PlaidLinkErrorStoreProvider'
 
 export function getAccountsNeedingConfirmation(linkedAccounts: ReadonlyArray<LinkedAccount>) {
   return linkedAccounts.filter(
@@ -59,6 +60,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     preload: preloadAccountConfirmation,
     reset: resetAccountConfirmation,
   } = useAccountConfirmationStoreActions()
+  const {
+    record: recordPlaidLinkError,
+    dismiss: dismissPlaidLinkError,
+  } = usePlaidLinkErrorStoreActions()
 
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
@@ -146,6 +151,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     }
   }
 
+  const isPlaidLinkStableEvent = (value: string): value is PlaidLinkStableEvent => {
+    return Object.values(PlaidLinkStableEvent).includes(value as PlaidLinkStableEvent)
+  }
+
   const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
     token: linkToken,
 
@@ -155,6 +164,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       publicToken: string,
       metadata: PlaidLinkOnSuccessMetadata,
     ) => {
+      dismissPlaidLinkError()
+
       if (linkMode == 'add') {
         // Note: a sync is kicked off in the backend in this endpoint
         exchangePlaidPublicToken(publicToken, metadata)
@@ -166,6 +177,11 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
         refetchAccounts()
         setLinkMode('add')
         touch(DataModel.LINKED_ACCOUNTS)
+      }
+    },
+    onEvent: (eventName: PlaidLinkStableEvent | string) => {
+      if (isPlaidLinkStableEvent(eventName) && eventName === PlaidLinkStableEvent.ERROR) {
+        recordPlaidLinkError()
       }
     },
     onExit: () => setLinkMode('add'),
