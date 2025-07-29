@@ -4,13 +4,8 @@ import { useFieldContext } from '../hooks/useForm'
 import { InputGroup } from '../../../components/ui/Input/InputGroup'
 import { BaseFormTextField, type BaseFormTextFieldProps } from './BaseFormTextField'
 
-type FormTextFieldProps = {
-  slotProps: {
-    BaseFormTextField: BaseFormTextFieldProps
-  }
-}
-
-export function FormTextField({ slotProps }: FormTextFieldProps) {
+type FormTextFieldProps = BaseFormTextFieldProps
+export function FormTextField(props: FormTextFieldProps) {
   const field = useFieldContext<string>()
 
   const { name, state, handleChange, handleBlur } = field
@@ -21,7 +16,7 @@ export function FormTextField({ slotProps }: FormTextFieldProps) {
   }, [handleChange])
 
   return (
-    <BaseFormTextField {...slotProps.BaseFormTextField}>
+    <BaseFormTextField {...props}>
       <InputGroup>
         <Input inset id={name} name={name} value={value} onChange={onChange} onBlur={handleBlur} />
       </InputGroup>

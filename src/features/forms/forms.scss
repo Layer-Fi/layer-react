@@ -1,0 +1,31 @@
+.Layer__FormCheckboxField {
+  display: grid;
+  grid-template-areas:
+    'label'
+    'checkbox';
+
+  justify-content: center;
+
+  > [slot='checkbox'] {
+    grid-area: checkbox;
+    justify-self: center;
+
+    margin-block: var(--spacing-2xs);
+  }
+
+  > [slot='label'] {
+    grid-area: label;
+
+    padding-block-end: var(--spacing-3xs);
+  }
+
+  &--inline {
+    grid-template-areas: 'checkbox label';
+    gap: var(--spacing-3xs);
+    align-items: center;
+
+    > [slot='label'] {
+      padding-block-end: 0;
+    }
+  }
+}

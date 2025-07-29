@@ -35,20 +35,4 @@
 
   --button-border-color-ghost: var(--color-base-300);
   --button-border-color-ghost-active: var(--color-base-800);
-
-  /*
-   * Checkbox
-   */
-  --checkbox-bg: var(--bg-subtle);
-  --checkbox-size: 16px;
-  --checkbox-radius: var(--border-radius-3xs);
-  --checkbox-border-color: var(--color-base-300);
-  --checkbox-color-selected: var(--bg-default);
-  --checkbox-bg-selected: var(--fg-default);
-  --checkbox-border-color-selected: var(--fg-default);
-  --checkbox-bg-disabled: var(--color-base-200);
-  --checkbox-size-lg: 24px;
-  --checkbox-radius-lg: var(--border-radius-2xs);
-  --checkbox-bg-success-selected: var(--color-info-success);
-  --checkbox-border-color-success-selected: var(--color-info-success);
 }

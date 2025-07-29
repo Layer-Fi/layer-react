@@ -7,18 +7,14 @@ import { convertBigDecimalToCents } from '../../../utils/bigDecimalUtils'
 import { centsToDollarsWithoutCommas } from '../../../models/Money'
 import { BaseFormTextField, type BaseFormTextFieldProps } from './BaseFormTextField'
 
-type FormCurrencyFieldProps = {
-  slotProps: {
-    BaseFormTextField: Omit<BaseFormTextFieldProps, 'inputMode'>
-  }
-}
+type FormCurrencyFieldProps = Omit<BaseFormTextFieldProps, 'inputMode'>
 
 const ZERO_CENTS_INPUT_VALUE = '0.00'
 const getCurrencyInputValueFromCents = (cents: number) => !Number.isNaN(cents) ? centsToDollarsWithoutCommas(cents) : ZERO_CENTS_INPUT_VALUE
 
-export function FormCurrencyField({ slotProps }: FormCurrencyFieldProps) {
+export function FormCurrencyField(props: FormCurrencyFieldProps) {
   const field = useFieldContext<number>()
-  const label = slotProps.BaseFormTextField.label
+  const { label } = props
 
   const { name, state, handleChange, handleBlur } = field
   const { value } = state
@@ -49,7 +45,7 @@ export function FormCurrencyField({ slotProps }: FormCurrencyFieldProps) {
   }, [value])
 
   return (
-    <BaseFormTextField {...slotProps.BaseFormTextField}>
+    <BaseFormTextField {...props}>
       <InputGroup>
         <CurrencyInput
           name={name}

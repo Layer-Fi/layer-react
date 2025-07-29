@@ -3,7 +3,9 @@ import { FieldError, TextField, type TextFieldProps } from '../../../components/
 import { Label } from '../../../components/ui/Typography/Text'
 import { useFieldContext } from '../hooks/useForm'
 
-export interface BaseFormTextFieldProps {
+export type BaseFormTextFieldProps = Omit<InternalBaseFormTextFieldProps, 'isTextArea'>
+
+interface InternalBaseFormTextFieldProps {
   label: string
   className?: string
   inline?: boolean
@@ -21,7 +23,7 @@ export function BaseFormTextField<TData>({
   showFieldError = true,
   isTextArea = false,
   children,
-}: PropsWithChildren<BaseFormTextFieldProps>) {
+}: PropsWithChildren<InternalBaseFormTextFieldProps>) {
   const field = useFieldContext<TData>()
 
   const { name, state } = field
