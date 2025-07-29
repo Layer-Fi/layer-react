@@ -27,7 +27,7 @@ export function FormCheckboxField({
   const { errors, isValid } = meta
 
   const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
-  const tooltipProps = showErrorInTooltip && { tooltip: errorMessage }
+  const tooltipProps = showErrorInTooltip ? { tooltip: errorMessage } : {}
 
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
