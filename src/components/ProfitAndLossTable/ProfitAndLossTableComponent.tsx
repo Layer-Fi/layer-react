@@ -169,30 +169,27 @@ export const ProfitAndLossTableComponent = ({
           variant: 'summation',
         })}
         {data.personal_expenses
-          ? renderLineItem({
+          && renderLineItem({
             lineItem: data.personal_expenses,
             depth: 0,
             rowKey: 'personal_expenses',
             rowIndex: 7,
-          })
-          : null}
+          })}
         {data.other_outflows
-          ? renderLineItem({
+          && renderLineItem({
             lineItem: data.other_outflows,
             depth: 0,
             rowKey: 'other_outflows',
             rowIndex: 8,
-          })
-          : null}
+          })}
         {data.custom_line_items
-          ? renderLineItem({
+          && renderLineItem({
             lineItem: data.custom_line_items,
             depth: 0,
             rowKey: 'other_activity',
             rowIndex: 9,
             showValue: false,
-          })
-          : null}
+          })}
       </TableBody>
     </Table>
   )
