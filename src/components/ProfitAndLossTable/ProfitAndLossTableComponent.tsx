@@ -56,12 +56,14 @@ export const ProfitAndLossTableComponent = ({
     rowKey,
     rowIndex,
     variant,
+    showValue = true,
   }: {
     lineItem: LineItem
     depth: number
     rowKey: string
     rowIndex: number
     variant?: 'default' | 'summation'
+    showValue?: boolean
   }): React.ReactNode => {
     const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
 
@@ -83,9 +85,14 @@ export const ProfitAndLossTableComponent = ({
           >
             {lineItem.display_name}
           </TableCell>
-          <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-            {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
-          </TableCell>
+          {
+            showValue
+            && (
+              <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+                {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
+              </TableCell>
+            )
+          }
         </TableRow>
         {expanded && lineItem.line_items
           ? lineItem.line_items.map((child, i) =>
@@ -112,13 +119,12 @@ export const ProfitAndLossTableComponent = ({
         })}
 
         {data.cost_of_goods_sold
-          ? renderLineItem({
+          && renderLineItem({
             lineItem: data.cost_of_goods_sold,
             depth: 0,
             rowKey: 'cost_of_goods_sold',
             rowIndex: 1,
-          })
-          : null}
+          })}
         {renderLineItem({
           lineItem: {
             value: data.gross_profit,
@@ -184,6 +190,7 @@ export const ProfitAndLossTableComponent = ({
             depth: 0,
             rowKey: 'other_activity',
             rowIndex: 9,
+            showValue: false,
           })
           : null}
       </TableBody>
