@@ -32,7 +32,7 @@ export const ProfitAndLossTableComponent = ({
   const { isOpen, setIsOpen } = useTableExpandRow()
 
   useEffect(() => {
-    setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
+    setIsOpen(['income', 'cost_of_goods_sold', 'expenses', 'other_activity'])
   }, [])
 
   const data = !actualData || isLoading ? emptyPNL : actualData
@@ -159,7 +159,7 @@ export const ProfitAndLossTableComponent = ({
           },
           depth: 0,
           rowKey: 'net_profit',
-          rowIndex: 5,
+          rowIndex: 6,
           variant: 'summation',
         })}
         {data.personal_expenses
@@ -175,7 +175,15 @@ export const ProfitAndLossTableComponent = ({
             lineItem: data.other_outflows,
             depth: 0,
             rowKey: 'other_outflows',
-            rowIndex: 6,
+            rowIndex: 8,
+          })
+          : null}
+        {data.custom_line_items
+          ? renderLineItem({
+            lineItem: data.custom_line_items,
+            depth: 0,
+            rowKey: 'other_activity',
+            rowIndex: 9,
           })
           : null}
       </TableBody>

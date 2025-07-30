@@ -18,6 +18,7 @@ export interface ProfitAndLoss {
   other_outflows?: LineItem | null
   personal_expenses?: LineItem | null
   fully_categorized: boolean
+  custom_line_items: LineItem | null
 }
 
 export interface TagComparisonOption {
