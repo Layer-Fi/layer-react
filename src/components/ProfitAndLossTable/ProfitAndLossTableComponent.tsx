@@ -32,7 +32,7 @@ export const ProfitAndLossTableComponent = ({
   const { isOpen, setIsOpen } = useTableExpandRow()
 
   useEffect(() => {
-    setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
+    setIsOpen(['income', 'cost_of_goods_sold', 'expenses', 'other_activity'])
   }, [])
 
   const data = !actualData || isLoading ? emptyPNL : actualData
@@ -56,12 +56,14 @@ export const ProfitAndLossTableComponent = ({
     rowKey,
     rowIndex,
     variant,
+    showValue = true,
   }: {
     lineItem: LineItem
     depth: number
     rowKey: string
     rowIndex: number
     variant?: 'default' | 'summation'
+    showValue?: boolean
   }): React.ReactNode => {
     const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
 
@@ -83,9 +85,14 @@ export const ProfitAndLossTableComponent = ({
           >
             {lineItem.display_name}
           </TableCell>
-          <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-            {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
-          </TableCell>
+          {
+            showValue
+            && (
+              <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+                {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
+              </TableCell>
+            )
+          }
         </TableRow>
         {expanded && lineItem.line_items
           ? lineItem.line_items.map((child, i) =>
@@ -112,13 +119,12 @@ export const ProfitAndLossTableComponent = ({
         })}
 
         {data.cost_of_goods_sold
-          ? renderLineItem({
+          && renderLineItem({
             lineItem: data.cost_of_goods_sold,
             depth: 0,
             rowKey: 'cost_of_goods_sold',
             rowIndex: 1,
-          })
-          : null}
+          })}
         {renderLineItem({
           lineItem: {
             value: data.gross_profit,
@@ -159,25 +165,31 @@ export const ProfitAndLossTableComponent = ({
           },
           depth: 0,
           rowKey: 'net_profit',
-          rowIndex: 5,
+          rowIndex: 6,
           variant: 'summation',
         })}
         {data.personal_expenses
-          ? renderLineItem({
+          && renderLineItem({
             lineItem: data.personal_expenses,
             depth: 0,
             rowKey: 'personal_expenses',
             rowIndex: 7,
-          })
-          : null}
+          })}
         {data.other_outflows
-          ? renderLineItem({
+          && renderLineItem({
             lineItem: data.other_outflows,
             depth: 0,
             rowKey: 'other_outflows',
-            rowIndex: 6,
-          })
-          : null}
+            rowIndex: 8,
+          })}
+        {data.custom_line_items
+          && renderLineItem({
+            lineItem: data.custom_line_items,
+            depth: 0,
+            rowKey: 'other_activity',
+            rowIndex: 9,
+            showValue: false,
+          })}
       </TableBody>
     </Table>
   )
