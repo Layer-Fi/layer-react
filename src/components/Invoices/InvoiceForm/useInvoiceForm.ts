@@ -4,13 +4,13 @@ import { useAppForm } from '../../../features/forms/hooks/useForm'
 import { UpsertInvoiceSchema, type Invoice, type InvoiceLineItem } from '../../../features/invoices/invoiceSchemas'
 import { useUpsertInvoice, UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
 import { BigDecimal as BD, Schema } from 'effect'
-import { convertBigDecimalToCents, convertCentsToBigDecimal } from '../../../utils/bigDecimalUtils'
+import { BIG_DECIMAL_ONE, convertBigDecimalToCents, convertCentsToBigDecimal } from '../../../utils/bigDecimalUtils'
 
 export const EMPTY_LINE_ITEM = {
   product: '',
   description: '',
   unitPrice: 0,
-  quantity: BD.fromBigInt(1n),
+  quantity: BIG_DECIMAL_ONE,
   amount: 0,
   isTaxable: false,
 }

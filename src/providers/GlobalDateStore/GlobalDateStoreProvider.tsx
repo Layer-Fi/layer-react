@@ -34,7 +34,7 @@ function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())
 
 const RANGE_MODE_LOOKUP = {
   dayPicker: {
-    getStart: ({ start }: { start: Date }) => start,
+    getStart: ({ start }: { start: Date }) => startOfMonth(start),
     getEnd: ({ end }: { end: Date }) => clampToPresentOrPast(endOfDay(end)),
   },
   dayRangePicker: {

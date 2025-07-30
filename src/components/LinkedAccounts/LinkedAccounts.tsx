@@ -17,7 +17,6 @@ export interface LinkedAccountsProps {
   showLedgerBalance?: boolean
   showUnlinkItem?: boolean
   showBreakConnection?: boolean
-  showAddAccount?: boolean
   stringOverrides?: {
     title?: string
   }
@@ -35,11 +34,10 @@ export const LinkedAccounts = (props: LinkedAccountsProps) => {
 
 export const LinkedAccountsComponent = ({
   asWidget,
-  elevated,
+  elevated = false,
   showLedgerBalance = true,
   showUnlinkItem = false,
   showBreakConnection = false,
-  showAddAccount = true,
   stringOverrides,
 }: LinkedAccountsProps) => {
   const {
@@ -83,7 +81,6 @@ export const LinkedAccountsComponent = ({
             showLedgerBalance={showLedgerBalance}
             showUnlinkItem={showUnlinkItem}
             showBreakConnection={showBreakConnection}
-            showAddAccount={showAddAccount}
           />
         )
         : null}
