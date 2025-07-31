@@ -7,7 +7,7 @@ import { Button } from '../../ui/Button/Button'
 import { Plus, Trash } from 'lucide-react'
 import { BigDecimal as BD } from 'effect'
 import { CustomerSelector } from '../../../features/customers/components/CustomerSelector'
-import { convertBigDecimalToCents, safeDivide } from '../../../utils/bigDecimalUtils'
+import { convertBigDecimalToCents, safeDivide, negate } from '../../../utils/bigDecimalUtils'
 import { Span } from '../../ui/Typography/Text'
 import { convertCentsToCurrency } from '../../../utils/format'
 import type { PropsWithChildren } from 'react'
@@ -150,7 +150,7 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
             </VStack>
             <VStack className={`${INVOICE_FORM_CSS_PREFIX}__TotalFields`} fluid>
               <InvoiceFormTotalRow label='Subtotal' value={subtotal} />
-              <InvoiceFormTotalRow label='Discount' value={additionalDiscount}>
+              <InvoiceFormTotalRow label='Discount' value={negate(additionalDiscount)}>
                 <form.AppField name='discountRate'>
                   {field => <field.FormBigDecimalField label='Discount' showLabel={false} mode='percent' />}
                 </form.AppField>

@@ -2,6 +2,7 @@ import { BigDecimal as BD, Option } from 'effect'
 
 export const BIG_DECIMAL_ZERO = BD.fromBigInt(BigInt(0))
 export const BIG_DECIMAL_ONE = BD.fromBigInt(BigInt(1))
+export const BIG_DECIMAL_NEG_ONE = BD.fromBigInt(BigInt(-1))
 export const BIG_DECIMAL_ONE_HUNDRED = BD.fromBigInt(BigInt(100))
 
 export const buildDecimalCharRegex = ({
@@ -58,6 +59,10 @@ export const safeDivide = (dividend: BD.BigDecimal, divisor: BD.BigDecimal): BD.
   })
 
   return quotient
+}
+
+export const negate = (value: BD.BigDecimal): BD.BigDecimal => {
+  return BD.multiply(value, BIG_DECIMAL_NEG_ONE)
 }
 
 export function formatBigDecimalToString(
