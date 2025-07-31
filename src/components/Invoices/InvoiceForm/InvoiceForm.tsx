@@ -7,10 +7,37 @@ import { Button } from '../../ui/Button/Button'
 import { Plus, Trash } from 'lucide-react'
 import { BigDecimal as BD } from 'effect'
 import { CustomerSelector } from '../../../features/customers/components/CustomerSelector'
-import { BIG_DECIMAL_ZERO, convertBigDecimalToCents, convertCentsToBigDecimal } from '../../../utils/bigDecimalUtils'
+import { convertBigDecimalToCents, safeDivide, negate } from '../../../utils/bigDecimalUtils'
+import { Span } from '../../ui/Typography/Text'
+import { convertCentsToCurrency } from '../../../utils/format'
+import type { PropsWithChildren } from 'react'
+import classNames from 'classnames'
 
 const INVOICE_FORM_CSS_PREFIX = 'Layer__InvoiceForm'
 const INVOICE_FORM_FIELD_CSS_PREFIX = `${INVOICE_FORM_CSS_PREFIX}__Field`
+
+type InvoiceFormTotalRowProps = PropsWithChildren<{
+  label: string
+  value: BD.BigDecimal
+}>
+
+const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProps) => {
+  const className = classNames(
+    `${INVOICE_FORM_CSS_PREFIX}__TotalRow`,
+    children && `${INVOICE_FORM_CSS_PREFIX}__TotalRow--withField`,
+  )
+
+  return (
+    <HStack className={className} align='center' gap='md'>
+      <Span>{label}</Span>
+      {children}
+      <Span align='right'>
+        {convertCentsToCurrency(convertBigDecimalToCents(value))}
+      </Span>
+    </HStack>
+  )
+}
+
 export type InvoiceFormMode = { mode: UpsertInvoiceMode.Update, invoice: Invoice } | { mode: UpsertInvoiceMode.Create }
 export type InvoiceFormProps = InvoiceFormMode & {
   onSuccess?: (invoice: Invoice) => void
@@ -18,19 +45,19 @@ export type InvoiceFormProps = InvoiceFormMode & {
 
 export const InvoiceForm = (props: InvoiceFormProps) => {
   const { onSuccess, mode } = props
-  const { form } = useInvoiceForm(
+  const { form, subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal } = useInvoiceForm(
     { onSuccess, ...(mode === UpsertInvoiceMode.Update ? { mode, invoice: props.invoice } : { mode }) },
   )
 
   return (
     <Form className={INVOICE_FORM_CSS_PREFIX}>
-      <VStack className={`${INVOICE_FORM_CSS_PREFIX}__Metadata`} gap='xs'>
+      <VStack className={`${INVOICE_FORM_CSS_PREFIX}__Terms`} gap='xs'>
         <form.Field
           name='customer'
           listeners={{
             onChange: ({ value: customer }) => {
-              form.setFieldValue('email', customer?.email)
-              form.setFieldValue('address', customer?.addressString)
+              form.setFieldValue('email', customer?.email || '')
+              form.setFieldValue('address', customer?.addressString || '')
             },
           }}
         >
@@ -50,7 +77,7 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
           {field => <field.FormTextAreaField label='Billing address' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Address`} />}
         </form.AppField>
       </VStack>
-      <VStack className={`${INVOICE_FORM_CSS_PREFIX}__LineItems`} gap='xs'>
+      <VStack className={`${INVOICE_FORM_CSS_PREFIX}__LineItems`} gap='md'>
         <form.AppField name='lineItems' mode='array'>
           {field => (
             <VStack gap='xs' align='baseline'>
@@ -67,9 +94,9 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                     listeners={{
                       onBlur: ({ value: quantity }) => {
                         const unitPrice = form.getFieldValue(`lineItems[${index}].unitPrice`)
-                        const nextAmount = BD.multiply(convertCentsToBigDecimal(unitPrice), quantity)
+                        const nextAmount = BD.multiply(unitPrice, quantity)
 
-                        form.setFieldValue(`lineItems[${index}].amount`, convertBigDecimalToCents(nextAmount))
+                        form.setFieldValue(`lineItems[${index}].amount`, nextAmount)
                       },
                     }}
                   >
@@ -80,31 +107,26 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                     listeners={{
                       onBlur: ({ value: unitPrice }) => {
                         const quantity = form.getFieldValue(`lineItems[${index}].quantity`)
-                        const nextAmount = BD.multiply(convertCentsToBigDecimal(unitPrice), quantity)
+                        const nextAmount = BD.multiply(unitPrice, quantity)
 
-                        form.setFieldValue(`lineItems[${index}].amount`, convertBigDecimalToCents(nextAmount))
+                        form.setFieldValue(`lineItems[${index}].amount`, nextAmount)
                       },
                     }}
                   >
-                    {innerField => <innerField.FormCurrencyField label='Rate' showLabel={index === 0} />}
+                    {innerField => <innerField.FormBigDecimalField label='Rate' mode='currency' showLabel={index === 0} allowNegative />}
                   </form.AppField>
                   <form.AppField
                     name={`lineItems[${index}].amount`}
                     listeners={{
                       onBlur: ({ value: amount }) => {
                         const quantity = form.getFieldValue(`lineItems[${index}].quantity`)
+                        const nextUnitPrice = safeDivide(amount, quantity)
 
-                        let nextUnitPrice = BIG_DECIMAL_ZERO
-                        try {
-                          nextUnitPrice = BD.unsafeDivide(convertCentsToBigDecimal(amount), quantity)
-                        }
-                        catch { /* empty */ }
-
-                        form.setFieldValue(`lineItems[${index}].unitPrice`, convertBigDecimalToCents(nextUnitPrice))
+                        form.setFieldValue(`lineItems[${index}].unitPrice`, nextUnitPrice)
                       },
                     }}
                   >
-                    {innerField => <innerField.FormCurrencyField label='Amount' showLabel={index === 0} />}
+                    {innerField => <innerField.FormBigDecimalField label='Amount' mode='currency' showLabel={index === 0} allowNegative />}
                   </form.AppField>
                   <form.AppField name={`lineItems[${index}].isTaxable`}>
                     {innerField => <innerField.FormCheckboxField label='Tax' showLabel={index === 0} />}
@@ -119,6 +141,30 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
             </VStack>
           )}
         </form.AppField>
+        <VStack className={`${INVOICE_FORM_CSS_PREFIX}__Metadata`} pbs='md'>
+          <HStack justify='space-between' gap='xl'>
+            <VStack className={`${INVOICE_FORM_CSS_PREFIX}__AdditionalTextFields`}>
+              <form.AppField name='memo'>
+                {field => <field.FormTextAreaField label='Memo' />}
+              </form.AppField>
+            </VStack>
+            <VStack className={`${INVOICE_FORM_CSS_PREFIX}__TotalFields`} fluid>
+              <InvoiceFormTotalRow label='Subtotal' value={subtotal} />
+              <InvoiceFormTotalRow label='Discount' value={negate(additionalDiscount)}>
+                <form.AppField name='discountRate'>
+                  {field => <field.FormBigDecimalField label='Discount' showLabel={false} mode='percent' />}
+                </form.AppField>
+              </InvoiceFormTotalRow>
+              <InvoiceFormTotalRow label='Taxable subtotal' value={taxableSubtotal} />
+              <InvoiceFormTotalRow label='Tax rate' value={taxes}>
+                <form.AppField name='taxRate'>
+                  {field => <field.FormBigDecimalField label='Tax Rate' showLabel={false} mode='percent' />}
+                </form.AppField>
+              </InvoiceFormTotalRow>
+              <InvoiceFormTotalRow label='Total' value={grandTotal} />
+            </VStack>
+          </HStack>
+        </VStack>
       </VStack>
     </Form>
   )

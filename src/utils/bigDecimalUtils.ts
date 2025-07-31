@@ -1,10 +1,23 @@
-import { BigDecimal as BD } from 'effect'
+import { BigDecimal as BD, Option } from 'effect'
 
 export const BIG_DECIMAL_ZERO = BD.fromBigInt(BigInt(0))
 export const BIG_DECIMAL_ONE = BD.fromBigInt(BigInt(1))
+export const BIG_DECIMAL_NEG_ONE = BD.fromBigInt(BigInt(-1))
 export const BIG_DECIMAL_ONE_HUNDRED = BD.fromBigInt(BigInt(100))
-export const DECIMAL_CHARS_REGEX = /^[\d.,-]+$/
-export const NON_NEGATIVE_DECIMAL_CHARS_REGEX = /^[\d.,]+$/
+
+export const buildDecimalCharRegex = ({
+  allowNegative = true,
+  allowPercent = false,
+  allowDollar = false,
+} = {}): RegExp => {
+  let allowed = '\\d.,'
+
+  if (allowNegative) allowed += '\\-'
+  if (allowPercent) allowed += '%'
+  if (allowDollar) allowed += '\\$'
+
+  return new RegExp(`^[${allowed}]+$`)
+}
 
 /**
  * Converts a BigDecimal dollar amount to its equivalent in cents as a number.
@@ -29,16 +42,51 @@ export const convertCentsToBigDecimal = (cents: number): BD.BigDecimal => {
   return BD.unsafeDivide(decimalCents, BIG_DECIMAL_ONE_HUNDRED)
 }
 
+export const convertPercentToDecimal = (percent: BD.BigDecimal): BD.BigDecimal => {
+  return BD.unsafeDivide(percent, BIG_DECIMAL_ONE_HUNDRED)
+}
+
+export const roundDecimalToCents = (decimal: BD.BigDecimal): BD.BigDecimal => {
+  return BD.round(decimal, { scale: 2 })
+}
+
+export const safeDivide = (dividend: BD.BigDecimal, divisor: BD.BigDecimal): BD.BigDecimal => {
+  const maybeQuotient = BD.divide(dividend, divisor)
+
+  const quotient = Option.match(maybeQuotient, {
+    onNone: () => BIG_DECIMAL_ZERO,
+    onSome: innerQuotient => innerQuotient,
+  })
+
+  return quotient
+}
+
+export const negate = (value: BD.BigDecimal): BD.BigDecimal => {
+  return BD.multiply(value, BIG_DECIMAL_NEG_ONE)
+}
+
 export function formatBigDecimalToString(
   value: BD.BigDecimal,
-  maxDecimalPlaces: number = 10,
+  options: {
+    mode: 'percent' | 'currency' | 'decimal'
+    minDecimalPlaces: number
+    maxDecimalPlaces: number
+  } = {
+    mode: 'decimal',
+    minDecimalPlaces: 0,
+    maxDecimalPlaces: 3,
+  },
 ): string {
   const normalizedBigDecimal = BD.normalize(value)
+  const { mode, minDecimalPlaces, maxDecimalPlaces } = options
 
   const formatter = new Intl.NumberFormat(
     'en-US',
     {
-      minimumFractionDigits: 0,
+      style: 'decimal',
+      ...(mode === 'percent' && { style: 'percent' }),
+      ...(mode === 'currency' && { style: 'currency', currency: 'USD' }),
+      minimumFractionDigits: minDecimalPlaces,
       maximumFractionDigits: maxDecimalPlaces,
     },
   )
