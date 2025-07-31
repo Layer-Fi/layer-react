@@ -13,7 +13,6 @@ interface InternalBaseFormTextFieldProps {
   showFieldError?: boolean
   inputMode?: TextFieldProps['inputMode']
   isTextArea?: boolean
-  slot?: string
 }
 
 export function BaseFormTextField<TData>({

@@ -48,25 +48,11 @@
 
 .Layer__InvoiceForm__TotalRow {
   display: grid;
-  grid-template-areas: 'label total';
   grid-template-columns: auto 1fr;
 
   height: 2.5rem;
 
-  [slot='label'] {
-    grid-area: label;
-  }
-
-  [slot='field'] {
-    grid-area: field;
-  }
-
-  [slot='total'] {
-    grid-area: total;
-  }
-
   &--withField {
-    grid-template-areas: 'label field total';
     grid-template-columns:
       minmax(7.5rem, 1fr)
       7.5rem

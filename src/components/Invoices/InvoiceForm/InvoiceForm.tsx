@@ -29,9 +29,9 @@ const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProp
 
   return (
     <HStack className={className} align='center' gap='md'>
-      <Span slot='label'>{label}</Span>
+      <Span>{label}</Span>
       {children}
-      <Span slot='total' align='right'>
+      <Span align='right'>
         {convertCentsToCurrency(convertBigDecimalToCents(value))}
       </Span>
     </HStack>
