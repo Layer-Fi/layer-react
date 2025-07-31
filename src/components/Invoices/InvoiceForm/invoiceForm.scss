@@ -37,7 +37,7 @@
 }
 
 .Layer__InvoiceForm__TotalFields {
-  max-width: 30rem;
+  max-width: 28rem;
 }
 
 .Layer__InvoiceForm__AdditionalTextFields {
@@ -56,6 +56,6 @@
     grid-template-columns:
       minmax(7.5rem, 1fr)
       7.5rem
-      minmax(7.5rem, 1fr);
+      minmax(6rem, 0.8fr);
   }
 }
