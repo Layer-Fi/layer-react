@@ -93,7 +93,7 @@ export function FormBigDecimalField({
   // Keep the input value in sync with the form value if it ever changes first
   useEffect(() => {
     setInputValue(formatBigDecimalToString(value, formattingProps))
-  }, [value, maxDecimalPlaces, formattingProps])
+  }, [value, formattingProps])
 
   return (
     <BaseFormTextField {...restProps} inputMode='decimal'>
