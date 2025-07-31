@@ -45,10 +45,6 @@ export const convertPercentToDecimal = (percent: BD.BigDecimal): BD.BigDecimal =
   return BD.unsafeDivide(percent, BIG_DECIMAL_ONE_HUNDRED)
 }
 
-export const convertDecimalToPercent = (decimal: BD.BigDecimal): BD.BigDecimal => {
-  return BD.multiply(decimal, BIG_DECIMAL_ONE_HUNDRED)
-}
-
 export const roundDecimalToCents = (decimal: BD.BigDecimal): BD.BigDecimal => {
   return BD.round(decimal, { scale: 2 })
 }

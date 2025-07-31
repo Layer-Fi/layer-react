@@ -3,7 +3,7 @@ import { useFieldContext } from '../hooks/useForm'
 import { InputGroup } from '../../../components/ui/Input/InputGroup'
 import { BigDecimal as BD, Option } from 'effect'
 import { Input } from '../../../components/ui/Input/Input'
-import { BIG_DECIMAL_ZERO, buildDecimalCharRegex, convertDecimalToPercent, convertPercentToDecimal, formatBigDecimalToString } from '../../../utils/bigDecimalUtils'
+import { BIG_DECIMAL_ZERO, buildDecimalCharRegex, convertPercentToDecimal, formatBigDecimalToString } from '../../../utils/bigDecimalUtils'
 import { BaseFormTextField, type BaseFormTextFieldProps } from './BaseFormTextField'
 
 type FormBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode'> & {
@@ -64,11 +64,7 @@ export function FormBigDecimalField({
     handleChange(clamped)
     handleBlur()
 
-    const displayValue = mode === 'percent'
-      ? convertDecimalToPercent(clamped)
-      : clamped
-
-    setInputValue(formatBigDecimalToString(displayValue, formattingProps))
+    setInputValue(formatBigDecimalToString(clamped, formattingProps))
   }, [inputValue, mode, maxBigDecimalValue, handleChange, handleBlur, formattingProps])
 
   // Don't allow the user to type anything other than numeric characters, commas, decimals, etc

@@ -152,13 +152,13 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
               <InvoiceFormTotalRow label='Subtotal' value={subtotal} />
               <InvoiceFormTotalRow label='Discount' value={additionalDiscount}>
                 <form.AppField name='discountRate'>
-                  {field => <field.FormBigDecimalField slot='field' label='Discount' showLabel={false} mode='percent' />}
+                  {field => <field.FormBigDecimalField label='Discount' showLabel={false} mode='percent' />}
                 </form.AppField>
               </InvoiceFormTotalRow>
               <InvoiceFormTotalRow label='Taxable subtotal' value={taxableSubtotal} />
               <InvoiceFormTotalRow label='Tax rate' value={taxes}>
                 <form.AppField name='taxRate'>
-                  {field => <field.FormBigDecimalField slot='field' label='Tax Rate' showLabel={false} mode='percent' />}
+                  {field => <field.FormBigDecimalField label='Tax Rate' showLabel={false} mode='percent' />}
                 </form.AppField>
               </InvoiceFormTotalRow>
               <InvoiceFormTotalRow label='Total' value={grandTotal} />
