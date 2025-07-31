@@ -23,11 +23,53 @@
   }
 }
 
-.Layer__InvoiceForm__Metadata {
+.Layer__InvoiceForm__Terms {
   padding: var(--spacing-lg) var(--spacing-2xl);
 }
 
 .Layer__InvoiceForm__LineItems {
   padding: var(--spacing-lg) var(--spacing-2xl);
   background-color: var(--color-base-50);
+}
+
+.Layer__InvoiceForm__Metadata {
+  border-top: 1px solid var(--color-base-300);
+}
+
+.Layer__InvoiceForm__TotalFields {
+  max-width: 30rem;
+}
+
+.Layer__InvoiceForm__AdditionalTextFields {
+  flex: 1;
+  min-width: 20rem;
+  max-width: 32rem;
+}
+
+.Layer__InvoiceForm__TotalRow {
+  display: grid;
+  grid-template-areas: 'label total';
+  grid-template-columns: auto 1fr;
+
+  height: 2.5rem;
+
+  [slot='label'] {
+    grid-area: label;
+  }
+
+  [slot='field'] {
+    grid-area: field;
+  }
+
+  [slot='total'] {
+    grid-area: total;
+  }
+
+  &--withField {
+    grid-template-areas: 'label field total';
+    grid-template-columns:
+      minmax(7.5rem, 1fr)
+      7.5rem
+      minmax(7.5rem, 1fr);
+  }
 }

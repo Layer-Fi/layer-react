@@ -1,10 +1,10 @@
-import { forwardRef, type ComponentProps } from 'react'
-import { Input as ReactAriaInput } from 'react-aria-components'
+import { forwardRef } from 'react'
+import { Input as ReactAriaInput, InputProps as ReactAriaInputProps } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 
 const INPUT_CLASS_NAME = 'Layer__UI__Input'
 
-type InputProps = Omit<ComponentProps<typeof ReactAriaInput>, 'className'> & {
+type InputProps = Omit<ReactAriaInputProps, 'className'> & {
   inset?: true
   placement?: 'first'
 }
