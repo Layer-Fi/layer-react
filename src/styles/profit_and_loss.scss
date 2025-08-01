@@ -506,3 +506,51 @@
     padding-right: var(--spacing-lg);
   }
 }
+
+// Clickable cells styling for P&L table
+.Layer__profit-and-loss-table__clickable-cell {
+  cursor: pointer;
+  transition: text-decoration 150ms ease-out;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// P&L Detail Report styles
+.Layer__profit-and-loss-detail-report__header {
+  // Uses existing DetailReportHeader styles
+}
+
+.Layer__profit-and-loss-detail-report__content {
+  padding: var(--spacing-md);
+}
+
+.Layer__profit-and-loss-detail-report__loader-container {
+  min-height: 400px;
+  padding: var(--spacing-2xl);
+}
+
+.Layer__profit-and-loss-detail-report__error {
+  padding: var(--spacing-lg);
+  text-align: center;
+  color: var(--color-danger-600);
+}
+
+.Layer__profit-and-loss-detail-report__source-button {
+  background: none;
+  border: none;
+  color: var(--color-primary-600);
+  cursor: pointer;
+  text-decoration: none;
+  transition: text-decoration 150ms ease-out;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+  }
+}

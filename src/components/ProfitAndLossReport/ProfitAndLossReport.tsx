@@ -1,9 +1,10 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { View as ViewType } from '../../types/general'
 import { ReportsStringOverrides } from '../../views/Reports/Reports'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { ProfitAndLoss } from '../ProfitAndLoss'
+import { ProfitAndLossDetailReport } from '../ProfitAndLossDetailReport'
 import { View } from '../View'
 
 type ViewBreakpoint = ViewType | undefined
@@ -23,6 +24,18 @@ export const ProfitAndLossReport = ({
   view,
 }: ProfitAndLossReportProps) => {
   const { comparisonConfig } = useContext(ProfitAndLoss.ComparisonContext)
+  const [selectedLineItemName, setSelectedLineItemName] = useState<string | null>(null)
+  const [isDetailReportVisible, setIsDetailReportVisible] = useState(false)
+
+  const handleLineItemClick = (lineItemName: string) => {
+    setSelectedLineItemName(lineItemName)
+    setIsDetailReportVisible(true)
+  }
+
+  const handleCloseDetailReport = () => {
+    setIsDetailReportVisible(false)
+    setSelectedLineItemName(null)
+  }
 
   return (
     <View
@@ -69,7 +82,14 @@ export const ProfitAndLossReport = ({
       <ProfitAndLoss.Table
         asContainer={false}
         stringOverrides={stringOverrides?.profitAndLoss?.table}
+        onLineItemClick={handleLineItemClick}
       />
+      {isDetailReportVisible && selectedLineItemName && (
+        <ProfitAndLossDetailReport
+          lineItemName={selectedLineItemName}
+          onClose={handleCloseDetailReport}
+        />
+      )}
     </View>
   )
 }

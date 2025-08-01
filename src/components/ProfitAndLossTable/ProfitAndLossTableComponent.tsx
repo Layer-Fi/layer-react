@@ -18,11 +18,13 @@ export type ProfitAndLossTableProps = {
   lockExpanded?: boolean
   asContainer?: boolean
   stringOverrides?: ProfitAndLossTableStringOverrides
+  onLineItemClick?: (lineItemName: string) => void
 }
 
 export const ProfitAndLossTableComponent = ({
   asContainer,
   stringOverrides,
+  onLineItemClick,
 }: ProfitAndLossTableProps) => {
   const {
     data: actualData,
@@ -88,7 +90,13 @@ export const ProfitAndLossTableComponent = ({
           {
             showValue
             && (
-              <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
+              <TableCell 
+                isCurrency 
+                primary 
+                align={TableCellAlign.RIGHT}
+                className={onLineItemClick ? 'Layer__profit-and-loss-table__clickable-cell' : undefined}
+                onClick={onLineItemClick ? () => onLineItemClick(lineItem.display_name) : undefined}
+              >
                 {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
               </TableCell>
             )
