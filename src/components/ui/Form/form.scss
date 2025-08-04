@@ -5,7 +5,8 @@
   color: var(--color-danger);
 }
 
-.Layer__UI__TextField {
+.Layer__UI__TextField,
+.Layer__UI__DateField {
   display: grid;
 
   grid-template-areas:

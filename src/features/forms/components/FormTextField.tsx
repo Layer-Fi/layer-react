@@ -4,7 +4,7 @@ import { useFieldContext } from '../hooks/useForm'
 import { InputGroup } from '../../../components/ui/Input/InputGroup'
 import { BaseFormTextField, type BaseFormTextFieldProps } from './BaseFormTextField'
 
-type FormTextFieldProps = BaseFormTextFieldProps
+type FormTextFieldProps = Omit<BaseFormTextFieldProps, 'isTextArea'>
 export function FormTextField(props: FormTextFieldProps) {
   const field = useFieldContext<string>()
 
