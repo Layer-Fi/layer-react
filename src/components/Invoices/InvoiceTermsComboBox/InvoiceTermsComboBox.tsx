@@ -18,7 +18,7 @@ type InvoiceTermsOption = {
   label: string
   value: InvoiceTermsValues
 }
-const InvoiceStatusOptionConfig = {
+const InvoiceTermsOptionConfig = {
   [InvoiceTermsValues.Net10]: { label: 'Net 10', value: InvoiceTermsValues.Net10 },
   [InvoiceTermsValues.Net15]: { label: 'Net 15', value: InvoiceTermsValues.Net15 },
   [InvoiceTermsValues.Net30]: { label: 'Net 30', value: InvoiceTermsValues.Net30 },
@@ -26,7 +26,7 @@ const InvoiceStatusOptionConfig = {
   [InvoiceTermsValues.Net90]: { label: 'Net 90', value: InvoiceTermsValues.Net90 },
   [InvoiceTermsValues.Custom]: { label: 'Custom', value: InvoiceTermsValues.Custom },
 }
-const options = Object.values(InvoiceStatusOptionConfig)
+const options = Object.values(InvoiceTermsOptionConfig)
 
 export const getDurationInDaysFromTerms = (terms: InvoiceTermsValues) => {
   switch (terms) {
@@ -76,7 +76,7 @@ type InvoiceTermsComboBoxProps = {
 }
 
 export const InvoiceTermsComboBox = ({ value, onValueChange }: InvoiceTermsComboBoxProps) => {
-  const selectedOption = InvoiceStatusOptionConfig[value]
+  const selectedOption = InvoiceTermsOptionConfig[value]
   const onSelectedValueChange = useCallback((option: InvoiceTermsOption | null) => {
     onValueChange(option?.value || null)
   }, [onValueChange])

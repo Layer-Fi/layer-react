@@ -68,7 +68,6 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
     const dueAtChanged = getDueAtChanged(lastDueAtRef.current, newDueAt)
 
     if (dueAtChanged) {
-      const newDueAt = sentAt.add({ days: duration })
       form.setFieldValue('dueAt', newDueAt)
       lastDueAtRef.current = newDueAt
     }
@@ -186,7 +185,7 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                         const nextAmount = BD.multiply(unitPrice, quantity)
 
                         if (!BD.equals(amount, nextAmount)) {
-                          form.setFieldValue(`lineItems[${index}].amount`, withForceUpdate(amount))
+                          form.setFieldValue(`lineItems[${index}].amount`, withForceUpdate(nextAmount))
                         }
                       },
                     }}
@@ -202,7 +201,7 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                         const nextAmount = BD.multiply(unitPrice, quantity)
 
                         if (!BD.equals(amount, nextAmount)) {
-                          form.setFieldValue(`lineItems[${index}].amount`, withForceUpdate(amount))
+                          form.setFieldValue(`lineItems[${index}].amount`, withForceUpdate(nextAmount))
                         }
                       },
                     }}
