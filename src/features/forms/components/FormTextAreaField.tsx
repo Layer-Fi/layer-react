@@ -16,7 +16,14 @@ export function FormTextAreaField(props: FormTextAreaFieldProps) {
 
   return (
     <BaseFormTextField {...props} isTextArea>
-      <TextArea id={name} name={name} value={value} onChange={onChange} onBlur={handleBlur} />
+      <TextArea
+        slot='input'
+        id={name}
+        name={name}
+        value={value}
+        onChange={onChange}
+        onBlur={handleBlur}
+      />
     </BaseFormTextField>
   )
 }

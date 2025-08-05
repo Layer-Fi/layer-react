@@ -17,8 +17,15 @@ export function FormTextField(props: FormTextFieldProps) {
 
   return (
     <BaseFormTextField {...props}>
-      <InputGroup>
-        <Input inset id={name} name={name} value={value} onChange={onChange} onBlur={handleBlur} />
+      <InputGroup slot='input'>
+        <Input
+          id={name}
+          name={name}
+          value={value}
+          onChange={onChange}
+          onBlur={handleBlur}
+          inset
+        />
       </InputGroup>
     </BaseFormTextField>
   )

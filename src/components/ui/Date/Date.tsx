@@ -17,13 +17,14 @@ type DateFieldProps = ReactAriaDateFieldProps<ZonedDateTime> & {
 }
 
 export const DateField = forwardRef<HTMLDivElement, DateFieldProps>(
-  function DateField({ inline, className, ...restProps }, ref) {
-    const dataProperties = toDataProperties({ inline })
+  function DateField({ inline, className, isReadOnly, ...restProps }, ref) {
+    const dataProperties = toDataProperties({ inline, readonly: isReadOnly })
 
     return (
       <ReactAriaDateField
         {...dataProperties}
         {...restProps}
+        isReadOnly={isReadOnly}
         className={classNames(DATE_FIELD_CLASS_NAME, className)}
         ref={ref}
       />
@@ -52,13 +53,20 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
 )
 
 const DATE_SEGMENT_CLASS_NAME = 'Layer__UI__DateSegment'
-type DateSegmentProps = Omit<ReactAriaDateSegmentProps, 'className'>
+type DateSegmentProps = Omit<ReactAriaDateSegmentProps, 'className'> & {
+  isReadOnly?: boolean
+}
 
 export const DateSegment = forwardRef<HTMLDivElement, DateSegmentProps>(
-  function DateSegment(props, ref) {
+  function DateSegment({ isReadOnly, ...restProps }, ref) {
+    // Create a `data-interactive` property here rather than `data-readonly`, because `data-readonly` was
+    // being stripped by the base aria component and therefore not applied to the underlying DOM element.
+    const dataProperties = toDataProperties({ interactive: !isReadOnly })
+
     return (
       <ReactAriaDateSegment
-        {...props}
+        {...restProps}
+        {...dataProperties}
         className={DATE_SEGMENT_CLASS_NAME}
         ref={ref}
       />

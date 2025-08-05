@@ -10,4 +10,8 @@
   &[data-hovered] {
     background-color: var(--color-base-400);
   }
+
+  &:not([data-interactive]) {
+    background-color: transparent;
+  }
 }

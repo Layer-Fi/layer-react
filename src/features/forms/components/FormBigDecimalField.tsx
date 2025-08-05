@@ -112,7 +112,7 @@ export function FormBigDecimalField({
 
   return (
     <BaseFormTextField {...restProps} inputMode='decimal'>
-      <InputGroup>
+      <InputGroup slot='input'>
         <Input
           inset
           id={name}

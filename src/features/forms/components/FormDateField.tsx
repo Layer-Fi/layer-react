@@ -15,6 +15,7 @@ export function FormDateField({
   inline = false,
   showLabel = true,
   showFieldError = true,
+  isReadOnly = false,
 }: PropsWithChildren<FormDateFieldProps>) {
   const field = useFieldContext<ZonedDateTime | null>()
 
@@ -45,14 +46,24 @@ export function FormDateField({
       isInvalid={!isValid}
       inline={inline}
       className={className}
-      {...additionalAriaProps}
       onChange={setLocalDate}
       onBlur={onBlur}
+      isReadOnly={isReadOnly}
+      {...additionalAriaProps}
     >
-      {showLabel && <Label size='sm' htmlFor={name} {...(!inline && { pbe: '3xs' })}>{label}</Label>}
-      <InputGroup>
+      {showLabel && (
+        <Label
+          slot='label'
+          size='sm'
+          htmlFor={name}
+          {...(!inline && { pbe: '3xs' })}
+        >
+          {label}
+        </Label>
+      )}
+      <InputGroup slot='input'>
         <DateInput inset>
-          {segment => <DateSegment segment={segment} />}
+          {segment => <DateSegment isReadOnly={isReadOnly} segment={segment} />}
         </DateInput>
       </InputGroup>
       {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}

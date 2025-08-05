@@ -26,6 +26,12 @@
     }
   }
 
+  &[data-readonly] {
+    [slot='input'] {
+      background-color: var(--bg-muted);
+    }
+  }
+
   > [slot='errorMessage'] {
     grid-area: errorMessage;
   }

@@ -13,6 +13,7 @@ export function FormCheckboxField({
   inline = false,
   showLabel = true,
   showFieldError = true,
+  isReadOnly = false,
 }: PropsWithChildren<FormCheckboxFieldProps>) {
   const field = useFieldContext<boolean>()
 
@@ -41,6 +42,7 @@ export function FormCheckboxField({
       name={name}
       value={name}
       size='lg'
+      isReadOnly={isReadOnly}
       {...tooltipProps}
       {...additionalAriaProps}
       {...(!isValid && { variant: 'error' })}
