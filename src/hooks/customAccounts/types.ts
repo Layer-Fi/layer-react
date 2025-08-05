@@ -61,10 +61,13 @@ export type RawCustomTransaction = {
   direction: Direction
   date: string
   description: string
+  reference_number?: string | null
 }
 
 export interface CustomAccountTransactionRow {
   date: string
   description: string
   amount: number
+  external_id?: string | null
+  reference_number?: string | null
 }

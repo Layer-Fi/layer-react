@@ -19,14 +19,19 @@ const CONTAINER_HEIGHT = ROW_HEIGHT * MAX_NUM_ROWS + HEADER_HEIGHT - 1
 
 const CSS_PREFIX = 'Layer__csv-upload__validate-csv-table'
 
-interface ValidateCsvTableProps<T extends { [K in keyof T]: string | number }> {
+interface ValidateCsvTableProps<T extends { [K in keyof T]: string | number | null | undefined }> {
   data: PreviewCsv<T>
   headers: { [K in keyof T]: string }
   formatters?: Partial<{ [K in keyof T]: (parsed: T[K]) => string }>
   className?: string
 }
 
-export function ValidateCsvTable<T extends { [K in keyof T]: string | number }>({ data, headers, formatters, className }: ValidateCsvTableProps<T>) {
+export function ValidateCsvTable<T extends { [K in keyof T]: string | number | null | undefined }>({
+  data,
+  headers,
+  formatters,
+  className,
+}: ValidateCsvTableProps<T>) {
   const columns = useMemo<ColumnDef<PreviewRow<T>>[]>(
     () => {
       const columnDefs: ColumnDef<PreviewRow<T>>[] = [{
@@ -47,7 +52,20 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number }>(
         cell: (info: CellContext<PreviewRow<T>, unknown>) => {
           const field = info.row.original[key]
 
-          let value: string | number = field.raw
+          // Handle null/undefined fields for optional columns
+          if (!field) {
+            return (
+              <span className={classNames(
+                'Layer__table-cell-content',
+                `${CSS_PREFIX}__cell-content`,
+              )}
+              >
+                {/* Empty cell for null values */}
+              </span>
+            )
+          }
+
+          let value: string | number | null | undefined = field.raw
           if (field.is_valid) {
             const formatter = formatters?.[key]
             value = formatter ? formatter(field.parsed as T[keyof T]) : field.parsed
@@ -154,14 +172,17 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number }>(
   )
 }
 
-interface ValidateCsvTableRowProps<T extends { [K in keyof T]: string | number }> {
+interface ValidateCsvTableRowProps<T extends { [K in keyof T]: string | number | null | undefined }> {
   row: Row<PreviewRow<T>>
   virtualRow: VirtualItem
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
 }
 
-const ValidateCsvTableRow = <T extends { [K in keyof T]: string | number }>({ row, virtualRow, rowVirtualizer }: ValidateCsvTableRowProps<T>) =>
-
+const ValidateCsvTableRow = <T extends { [K in keyof T]: string | number | null | undefined }>({
+  row,
+  virtualRow,
+  rowVirtualizer,
+}: ValidateCsvTableRowProps<T>) =>
   (
     <tr
       className={classNames(
