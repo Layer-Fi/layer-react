@@ -1,10 +1,17 @@
 .Layer__InvoiceForm {
-  min-width: 32rem;
-
   .Layer__InvoiceForm__Field__Customer,
   .Layer__InvoiceForm__Field__Email,
   .Layer__InvoiceForm__Field__Address {
-    grid-template-columns: 8rem 24rem;
+    grid-template-columns: 8rem auto;
+    width: clamp(28rem, 100%, 44rem);
+  }
+
+  .Layer__InvoiceForm__Field__InvoiceNo,
+  .Layer__InvoiceForm__Field__Terms,
+  .Layer__InvoiceForm__Field__SentAt,
+  .Layer__InvoiceForm__Field__DueAt {
+    grid-template-columns: 8rem auto;
+    width: clamp(16rem, 100%, 24rem);
   }
 
   .Layer__InvoiceForm__LineItem {
@@ -19,11 +26,16 @@
       auto;
 
     width: 100%;
-    min-width: 45rem;
   }
+
+  min-width: 54rem;
 }
 
 .Layer__InvoiceForm__Terms {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+
+  max-width: 64rem;
   padding: var(--spacing-lg) var(--spacing-2xl);
 }
 
@@ -58,4 +70,9 @@
       7.5rem
       minmax(6rem, 0.8fr);
   }
+}
+
+.Layer__InvoiceForm__TermsComboBox {
+  display: grid;
+  align-items: center;
 }

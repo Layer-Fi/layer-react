@@ -3,8 +3,7 @@ import { TextArea } from '../../../components/ui/Input/TextArea'
 import { useFieldContext } from '../hooks/useForm'
 import { BaseFormTextField, type BaseFormTextFieldProps } from './BaseFormTextField'
 
-type FormTextAreaFieldProps = BaseFormTextFieldProps
-
+type FormTextAreaFieldProps = Omit<BaseFormTextFieldProps, 'isTextArea'>
 export function FormTextAreaField(props: FormTextAreaFieldProps) {
   const field = useFieldContext<string>()
 

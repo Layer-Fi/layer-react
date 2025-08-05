@@ -1,17 +1,11 @@
 import { BigDecimal as BD } from 'effect'
-import type { UpsertInvoiceLineItem, InvoiceLineItem } from '../../../features/invoices/invoiceSchemas'
+import type { InvoiceFormLineItem } from '../../../features/invoices/invoiceSchemas'
 import { BIG_DECIMAL_ZERO, roundDecimalToCents } from '../../../utils/bigDecimalUtils'
 
-type AugmentedInvoiceLineItem = (Omit<UpsertInvoiceLineItem | InvoiceLineItem, 'unitPrice'>) & {
-  unitPrice: BD.BigDecimal
-  amount: BD.BigDecimal
-  isTaxable: boolean
-}
-
-export const computeSubtotal = (lineItems: AugmentedInvoiceLineItem[]): BD.BigDecimal =>
+export const computeSubtotal = (lineItems: InvoiceFormLineItem[]): BD.BigDecimal =>
   lineItems.reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
 
-export const computeRawTaxableSubtotal = (lineItems: AugmentedInvoiceLineItem[]): BD.BigDecimal =>
+export const computeRawTaxableSubtotal = (lineItems: InvoiceFormLineItem[]): BD.BigDecimal =>
   lineItems
     .filter(item => item.isTaxable)
     .reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)

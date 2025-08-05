@@ -1,5 +1,7 @@
 import { Schema, pipe } from 'effect'
 import { CustomerSchema } from '../customers/customersSchemas'
+import { ZonedDateTimeFromSelf } from '../../utils/schema/utils'
+import { InvoiceTermsValues } from '../../components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 
 export enum InvoiceStatus {
   Voided = 'VOIDED',
@@ -215,3 +217,47 @@ export const UpsertInvoiceSchema = Schema.Struct({
   ),
 })
 export type UpsertInvoice = typeof UpsertInvoiceSchema.Type
+
+export const InvoiceFormLineItemSchema = Schema.Struct({
+  description: Schema.String,
+
+  product: Schema.String,
+
+  unitPrice: Schema.BigDecimal,
+
+  quantity: Schema.BigDecimal,
+
+  amount: Schema.BigDecimal,
+
+  isTaxable: Schema.Boolean,
+})
+export type InvoiceFormLineItem = typeof InvoiceFormLineItemSchema.Type
+
+const InvoiceTermsValuesSchema = Schema.Enums(InvoiceTermsValues)
+export const InvoiceFormSchema = Schema.Struct({
+  terms: InvoiceTermsValuesSchema,
+
+  sentAt: Schema.NullOr(ZonedDateTimeFromSelf),
+
+  dueAt: Schema.NullOr(ZonedDateTimeFromSelf),
+
+  invoiceNumber: Schema.String,
+
+  customer: Schema.NullOr(CustomerSchema),
+
+  email: Schema.String,
+
+  address: Schema.String,
+
+  lineItems: Schema.Array(InvoiceFormLineItemSchema),
+
+  discountRate: Schema.BigDecimal,
+
+  taxRate: Schema.BigDecimal,
+
+  memo: Schema.String,
+})
+export type InvoiceForm = Omit<typeof InvoiceFormSchema.Type, 'lineItems'> & {
+  // Purposefully allow lineItems to be mutable for `field.pushValue` in the form
+  lineItems: InvoiceFormLineItem[]
+}

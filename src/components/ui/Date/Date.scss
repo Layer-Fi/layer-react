@@ -1,0 +1,13 @@
+.Layer__UI__DateSegment {
+  padding: 1px;
+  border-radius: var(--border-radius-4xs);
+
+  &[data-focused] {
+    outline: none;
+    background-color: var(--color-base-400);
+  }
+
+  &[data-hovered] {
+    background-color: var(--color-base-400);
+  }
+}

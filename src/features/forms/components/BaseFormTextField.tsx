@@ -2,29 +2,23 @@ import type { PropsWithChildren } from 'react'
 import { FieldError, TextField, type TextFieldProps } from '../../../components/ui/Form/Form'
 import { Label } from '../../../components/ui/Typography/Text'
 import { useFieldContext } from '../hooks/useForm'
+import type { CommonFormFieldProps } from '../types'
 
-export type BaseFormTextFieldProps = Omit<InternalBaseFormTextFieldProps, 'isTextArea'>
-
-interface InternalBaseFormTextFieldProps {
-  label: string
-  className?: string
-  inline?: boolean
-  showLabel?: boolean
-  showFieldError?: boolean
+export type BaseFormTextFieldProps = CommonFormFieldProps & {
   inputMode?: TextFieldProps['inputMode']
   isTextArea?: boolean
 }
 
-export function BaseFormTextField<TData>({
+export function BaseFormTextField({
   label,
-  className,
   inline = false,
   showLabel = true,
   showFieldError = true,
   isTextArea = false,
+  className,
   children,
-}: PropsWithChildren<InternalBaseFormTextFieldProps>) {
-  const field = useFieldContext<TData>()
+}: PropsWithChildren<BaseFormTextFieldProps>) {
+  const field = useFieldContext<string>()
 
   const { name, state } = field
   const { meta } = state
@@ -35,7 +29,14 @@ export function BaseFormTextField<TData>({
 
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   return (
-    <TextField name={name} isInvalid={!isValid} inline={inline} className={className} textarea={isTextArea} {...additionalAriaProps}>
+    <TextField
+      name={name}
+      isInvalid={!isValid}
+      inline={inline}
+      className={className}
+      textarea={isTextArea}
+      {...additionalAriaProps}
+    >
       {showLabel && <Label size='sm' htmlFor={name} {...(!inline && { pbe: '3xs' })}>{label}</Label>}
       {children}
       {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
