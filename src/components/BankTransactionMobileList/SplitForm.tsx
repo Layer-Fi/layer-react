@@ -26,6 +26,7 @@ import { FileInput, Input } from '../Input'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
+import { MAX_SPLITS } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 
 type Split = {
   amount: number
@@ -281,7 +282,7 @@ export const SplitForm = ({
               ))}
               <TextButton
                 onClick={addSplit}
-                disabled={rowState.splits.length > 5 || isLoading}
+                disabled={rowState.splits.length > MAX_SPLITS || isLoading}
                 className='Layer__add-new-split'
               >
                 Add new split
