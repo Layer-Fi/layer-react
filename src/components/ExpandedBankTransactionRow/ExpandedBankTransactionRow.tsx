@@ -37,8 +37,6 @@ import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookke
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
 
-export const MAX_SPLITS = 20
-
 type Props = {
   bankTransaction: BankTransaction
   isOpen?: boolean
@@ -498,7 +496,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                                 ? (
                                   <TextButton
                                     onClick={addSplit}
-                                    disabled={rowState.splits.length > MAX_SPLITS}
                                   >
                                     Add new split
                                   </TextButton>
@@ -508,7 +505,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                                     onClick={addSplit}
                                     rightIcon={<Scissors size={14} />}
                                     variant={ButtonVariant.secondary}
-                                    disabled={rowState.splits.length > MAX_SPLITS}
                                   >
                                     Split
                                   </Button>
