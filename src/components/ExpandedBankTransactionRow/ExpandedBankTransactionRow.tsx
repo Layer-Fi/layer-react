@@ -496,7 +496,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                                 ? (
                                   <TextButton
                                     onClick={addSplit}
-                                    disabled={rowState.splits.length > 5}
                                   >
                                     Add new split
                                   </TextButton>
@@ -506,7 +505,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                                     onClick={addSplit}
                                     rightIcon={<Scissors size={14} />}
                                     variant={ButtonVariant.secondary}
-                                    disabled={rowState.splits.length > 5}
                                   >
                                     Split
                                   </Button>
