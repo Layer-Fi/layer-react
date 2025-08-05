@@ -48,11 +48,12 @@ const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProp
 
 export type InvoiceFormMode = { mode: UpsertInvoiceMode.Update, invoice: Invoice } | { mode: UpsertInvoiceMode.Create }
 export type InvoiceFormProps = InvoiceFormMode & {
+  isReadOnly: boolean
   onSuccess?: (invoice: Invoice) => void
 }
 
 export const InvoiceForm = (props: InvoiceFormProps) => {
-  const { onSuccess, mode } = props
+  const { onSuccess, isReadOnly, mode } = props
   const { form, subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal } = useInvoiceForm(
     { onSuccess, ...(mode === UpsertInvoiceMode.Update ? { mode, invoice: props.invoice } : { mode }) },
   )
@@ -91,20 +92,26 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                 className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Customer`}
                 selectedCustomer={field.state.value}
                 onSelectedCustomerChange={field.handleChange}
+                isReadOnly={isReadOnly}
                 inline
               />
             )}
           </form.Field>
           <form.AppField name='email'>
-            {field => <field.FormTextField label='Email' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Email`} />}
+            {field => (
+              <field.FormTextField label='Email' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Email`} isReadOnly />
+            )}
           </form.AppField>
           <form.AppField name='address'>
-            {field => <field.FormTextAreaField label='Billing address' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Address`} />}
+            {field => (
+              <field.FormTextAreaField label='Billing address' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__Address`} isReadOnly />
+            )}
           </form.AppField>
         </VStack>
         <VStack gap='xs'>
           <form.AppField name='invoiceNumber'>
-            {field => <field.FormTextField label='Invoice number' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} />}
+            {field =>
+              <field.FormTextField label='Invoice number' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} isReadOnly={isReadOnly} />}
           </form.AppField>
           <form.Field
             name='terms'
@@ -123,6 +130,7 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                     field.handleChange(value)
                   }
                 }}
+                isReadOnly={isReadOnly}
               />
             )}
           </form.Field>
@@ -135,7 +143,7 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
               },
             }}
           >
-            {field => <field.FormDateField label='Invoice date' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__SentAt`} />}
+            {field => <field.FormDateField label='Invoice date' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__SentAt`} isReadOnly={isReadOnly} />}
           </form.AppField>
           <form.AppField
             name='dueAt'
@@ -153,7 +161,9 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
               },
             }}
           >
-            {field => <field.FormDateField label='Due date' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__DueAt`} />}
+            {field => (
+              <field.FormDateField label='Due date' inline className={`${INVOICE_FORM_FIELD_CSS_PREFIX}__DueAt`} isReadOnly={isReadOnly} />
+            )}
           </form.AppField>
         </VStack>
       </HStack>
@@ -169,12 +179,19 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                  * momentarily undefined as they re-render due to re-indexing. Thus, we use indices here for now.
                  * See here for more information: https://github.com/TanStack/form/issues/1518.
                  */
-                <HStack key={index} gap='xs' align='end' className={`${INVOICE_FORM_CSS_PREFIX}__LineItem`}>
+                <HStack
+                  key={index}
+                  gap='xs'
+                  align='end'
+                  className={classNames(`${INVOICE_FORM_CSS_PREFIX}__LineItem`, isReadOnly && `${INVOICE_FORM_CSS_PREFIX}__LineItem--readonly`)}
+                >
                   <form.AppField name={`lineItems[${index}].product`}>
-                    {innerField => <innerField.FormTextField label='Product' showLabel={index === 0} />}
+                    {innerField =>
+                      <innerField.FormTextField label='Product' showLabel={index === 0} isReadOnly={isReadOnly} />}
                   </form.AppField>
                   <form.AppField name={`lineItems[${index}].description`}>
-                    {innerField => <innerField.FormTextField label='Description' showLabel={index === 0} />}
+                    {innerField =>
+                      <innerField.FormTextField label='Description' showLabel={index === 0} isReadOnly={isReadOnly} />}
                   </form.AppField>
                   <form.AppField
                     name={`lineItems[${index}].quantity`}
@@ -190,7 +207,8 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                       },
                     }}
                   >
-                    {innerField => <innerField.FormBigDecimalField label='Quantity' showLabel={index === 0} />}
+                    {innerField => (
+                      <innerField.FormBigDecimalField label='Quantity' showLabel={index === 0} isReadOnly={isReadOnly} />)}
                   </form.AppField>
                   <form.AppField
                     name={`lineItems[${index}].unitPrice`}
@@ -206,7 +224,7 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                       },
                     }}
                   >
-                    {innerField => <innerField.FormBigDecimalField label='Rate' mode='currency' showLabel={index === 0} allowNegative />}
+                    {innerField => <innerField.FormBigDecimalField label='Rate' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
                   </form.AppField>
                   <form.AppField
                     name={`lineItems[${index}].amount`}
@@ -222,18 +240,22 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                       },
                     }}
                   >
-                    {innerField => <innerField.FormBigDecimalField label='Amount' mode='currency' showLabel={index === 0} allowNegative />}
+                    {innerField => <innerField.FormBigDecimalField label='Amount' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
                   </form.AppField>
                   <form.AppField name={`lineItems[${index}].isTaxable`}>
-                    {innerField => <innerField.FormCheckboxField label='Tax' showLabel={index === 0} />}
+                    {innerField => <innerField.FormCheckboxField label='Tax' showLabel={index === 0} isReadOnly={isReadOnly} />}
                   </form.AppField>
-                  <Button variant='outlined' icon aria-label='Delete line item' onClick={() => field.removeValue(index)}><Trash size={16} /></Button>
+                  {!isReadOnly
+                    && <Button variant='outlined' icon aria-label='Delete line item' onClick={() => field.removeValue(index)}><Trash size={16} /></Button>}
                 </HStack>
               ))}
-              <Button variant='outlined' onClick={() => field.pushValue(getEmptyLineItem())}>
-                Add line item
-                <Plus size={16} />
-              </Button>
+              {!isReadOnly
+                && (
+                  <Button variant='outlined' onClick={() => field.pushValue(getEmptyLineItem())}>
+                    Add line item
+                    <Plus size={16} />
+                  </Button>
+                )}
             </VStack>
           )}
         </form.Field>
@@ -241,20 +263,20 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
           <HStack justify='space-between' gap='xl'>
             <VStack className={`${INVOICE_FORM_CSS_PREFIX}__AdditionalTextFields`}>
               <form.AppField name='memo'>
-                {field => <field.FormTextAreaField label='Memo' />}
+                {field => <field.FormTextAreaField label='Memo' isReadOnly={isReadOnly} />}
               </form.AppField>
             </VStack>
             <VStack className={`${INVOICE_FORM_CSS_PREFIX}__TotalFields`} fluid>
               <InvoiceFormTotalRow label='Subtotal' value={subtotal} />
               <InvoiceFormTotalRow label='Discount' value={negate(additionalDiscount)}>
                 <form.AppField name='discountRate'>
-                  {field => <field.FormBigDecimalField label='Discount' showLabel={false} mode='percent' />}
+                  {field => <field.FormBigDecimalField label='Discount' showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
                 </form.AppField>
               </InvoiceFormTotalRow>
               <InvoiceFormTotalRow label='Taxable subtotal' value={taxableSubtotal} />
               <InvoiceFormTotalRow label='Tax rate' value={taxes}>
                 <form.AppField name='taxRate'>
-                  {field => <field.FormBigDecimalField label='Tax Rate' showLabel={false} mode='percent' />}
+                  {field => <field.FormBigDecimalField label='Tax Rate' showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
                 </form.AppField>
               </InvoiceFormTotalRow>
               <InvoiceFormTotalRow label='Total' value={grandTotal} />

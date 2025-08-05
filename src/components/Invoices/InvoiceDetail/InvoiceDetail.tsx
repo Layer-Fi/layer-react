@@ -1,6 +1,6 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { BaseDetailView } from '../../BaseDetailView/BaseDetailView'
-import { InvoiceForm, type InvoiceFormMode, type InvoiceFormProps } from '../InvoiceForm/InvoiceForm'
+import { InvoiceForm, type InvoiceFormMode } from '../InvoiceForm/InvoiceForm'
 import { UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
 import { Heading } from '../../ui/Typography/Heading'
 import type { Invoice } from '../../../features/invoices/invoiceSchemas'
@@ -9,39 +9,66 @@ import { DataPoint } from '../../DataPoint/DataPoint'
 import { Span } from '../../ui/Typography/Text'
 import { convertCentsToCurrency } from '../../../utils/format'
 import { InvoiceStatusCell } from '../InvoiceStatusCell/InvoiceStatusCell'
+import { Button } from '../../ui/Button/Button'
+import { SquarePen } from 'lucide-react'
 
-export type InvoiceDetailProps = InvoiceFormProps & {
+export type InvoiceDetailProps = InvoiceFormMode & {
+  onSuccess?: (invoice: Invoice) => void
   onGoBack: () => void
 }
 
 export const InvoiceDetail = (props: InvoiceDetailProps) => {
-  const { onSuccess: _onSuccess, onGoBack, ...restProps } = props
+  const { onSuccess, onGoBack, ...restProps } = props
+  const [isReadOnly, setIsReadOnly] = useState(props.mode === UpsertInvoiceMode.Update)
 
   const Header = useCallback(() => {
-    return <InvoiceDetailHeader {...restProps} />
-  }, [restProps])
+    return <InvoiceDetailHeader isReadOnly={isReadOnly} setIsReadOnly={setIsReadOnly} {...restProps} />
+  }, [isReadOnly, restProps])
 
   return (
     <BaseDetailView slots={{ Header }} name='Invoice Detail View' onGoBack={onGoBack}>
       {restProps.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={restProps.invoice} />}
-      <InvoiceForm {...props} />
+      <InvoiceForm isReadOnly={isReadOnly} onSuccess={onSuccess} {...props} />
     </BaseDetailView>
   )
 }
 
-type InvoiceDetailHeaderProps = InvoiceFormMode
+type InvoiceDetailHeaderProps = InvoiceFormMode & {
+  isReadOnly: boolean
+  setIsReadOnly: (isReadOnly: boolean) => void
+}
 const InvoiceDetailHeader = (props: InvoiceDetailHeaderProps) => {
-  const { mode } = props
+  const { mode, isReadOnly, setIsReadOnly } = props
 
   if (mode === UpsertInvoiceMode.Create) {
-    return <Heading>Create Invoice</Heading>
+    return (
+      <HStack justify='space-between' align='center' fluid pie='md'>
+        <Heading>Create Invoice</Heading>
+        <Button>Review & Send</Button>
+      </HStack>
+    )
   }
 
   const invoice = props.invoice
   const { invoiceNumber } = invoice
 
   return (
-    <Heading>{invoiceNumber ? `Invoice ${invoiceNumber}` : 'View Invoice'}</Heading>
+    <HStack justify='space-between' align='center' fluid pie='md'>
+      <Heading>{invoiceNumber ? `Invoice ${invoiceNumber}` : 'View Invoice'}</Heading>
+      {isReadOnly
+        ? (
+          <Button onPress={() => { setIsReadOnly(false) }}>
+            Edit Invoice
+            <SquarePen size={14} />
+          </Button>
+
+        )
+        : (
+          <Button>
+            Review & Resend
+          </Button>
+        )}
+    </HStack>
   )
 }
 

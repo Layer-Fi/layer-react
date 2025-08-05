@@ -15,6 +15,7 @@ export function BaseFormTextField({
   showLabel = true,
   showFieldError = true,
   isTextArea = false,
+  isReadOnly = false,
   className,
   children,
 }: PropsWithChildren<BaseFormTextFieldProps>) {
@@ -35,9 +36,19 @@ export function BaseFormTextField({
       inline={inline}
       className={className}
       textarea={isTextArea}
+      isReadOnly={isReadOnly}
       {...additionalAriaProps}
     >
-      {showLabel && <Label size='sm' htmlFor={name} {...(!inline && { pbe: '3xs' })}>{label}</Label>}
+      {showLabel && (
+        <Label
+          slot='label'
+          size='sm'
+          htmlFor={name}
+          {...(!inline && { pbe: '3xs' })}
+        >
+          {label}
+        </Label>
+      )}
       {children}
       {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
     </TextField>

@@ -4,4 +4,5 @@ export interface CommonFormFieldProps {
   inline?: boolean
   showLabel?: boolean
   showFieldError?: boolean
+  isReadOnly?: boolean
 }

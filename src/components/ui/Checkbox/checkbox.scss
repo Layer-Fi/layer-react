@@ -37,6 +37,10 @@
     transition: all 100ms ease-out;
   }
 
+  &[data-readonly] [slot='checkbox'] {
+    background-color: var(--bg-muted);
+  }
+
   &[data-hovered] [slot='checkbox'],
   &[data-pressed] [slot='checkbox'] {
     border-color: var(--outline-active);
@@ -74,6 +78,13 @@
   &[data-selected][data-variant='error'] {
     [slot='checkbox'] {
       background-color: var(--color-info-error);
+    }
+  }
+
+  &[data-selected][data-readonly] {
+    [slot='checkbox'] {
+      border-color: var(--fg-subtle);
+      background-color: var(--fg-subtle);
     }
   }
 

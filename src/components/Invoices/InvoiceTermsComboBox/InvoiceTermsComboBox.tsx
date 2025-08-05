@@ -73,9 +73,10 @@ export const getInvoiceTermsFromDates = (sentAt: ZonedDateTime | null, dueAt: Zo
 type InvoiceTermsComboBoxProps = {
   value: InvoiceTermsValues
   onValueChange: (value: InvoiceTermsValues | null) => void
+  isReadOnly?: boolean
 }
 
-export const InvoiceTermsComboBox = ({ value, onValueChange }: InvoiceTermsComboBoxProps) => {
+export const InvoiceTermsComboBox = ({ value, onValueChange, isReadOnly }: InvoiceTermsComboBoxProps) => {
   const selectedOption = InvoiceTermsOptionConfig[value]
   const onSelectedValueChange = useCallback((option: InvoiceTermsOption | null) => {
     onValueChange(option?.value || null)
@@ -95,6 +96,7 @@ export const InvoiceTermsComboBox = ({ value, onValueChange }: InvoiceTermsCombo
         isSearchable={false}
         isClearable={false}
         inputId={inputId}
+        isReadOnly={isReadOnly}
       />
     </HStack>
   )

@@ -246,6 +246,7 @@ type ComboBoxProps<T extends ComboBoxOption> = {
 
   isSearchable?: boolean
   isClearable?: boolean
+  isReadOnly?: boolean
 
   displayDisabledAsSelected?: boolean
 } & OptionsOrGroups<T> & AriaLabelProps
@@ -270,8 +271,10 @@ export function ComboBox<T extends ComboBoxOption>({
   isError,
   isLoading,
   isMutating,
+
   isSearchable = true,
   isClearable = true,
+  isReadOnly = false,
 
   displayDisabledAsSelected,
 
@@ -332,11 +335,15 @@ export function ComboBox<T extends ComboBoxOption>({
             COMBO_BOX_CLASS_NAMES.CONTROL,
             isFocused && `${COMBO_BOX_CLASS_NAMES.CONTROL}--focused`,
             isDisabled && `${COMBO_BOX_CLASS_NAMES.CONTROL}--disabled`,
+            isReadOnly && `${COMBO_BOX_CLASS_NAMES.CONTROL}--readonly`,
           ),
           valueContainer: () => COMBO_BOX_CLASS_NAMES.VALUE_CONTAINER,
           placeholder: () => COMBO_BOX_CLASS_NAMES.PLACEHOLDER,
 
-          indicatorsContainer: () => COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER,
+          indicatorsContainer: () => classNames(
+            COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER,
+            isReadOnly && `${COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER}--readonly`,
+          ),
 
           menu: () => COMBO_BOX_CLASS_NAMES.MENU,
           menuList: () => COMBO_BOX_CLASS_NAMES.MENU_LIST,
@@ -357,10 +364,11 @@ export function ComboBox<T extends ComboBoxOption>({
 
           SingleValue: CustomSingleValue,
         }}
-        isClearable={isClearable}
+        isClearable={isClearable && !isReadOnly}
         isDisabled={isDisabled}
         isLoading={isLoading || isMutating}
-        isSearchable={isSearchable}
+        isSearchable={isSearchable && !isReadOnly}
+        openMenuOnClick={!isReadOnly}
       />
       {isError
         ? (
