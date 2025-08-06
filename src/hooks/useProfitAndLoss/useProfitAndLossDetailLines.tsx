@@ -33,8 +33,6 @@ type PnlDetailLinesOptions = PnlDetailLinesFilterParams
 
 type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesOptions
 
-// LedgerEntrySource schemas based on actual API response structure
-
 const TransactionLedgerEntrySourceSchema = Schema.Struct({
   display_description: Schema.String,
   entity_name: Schema.String,
