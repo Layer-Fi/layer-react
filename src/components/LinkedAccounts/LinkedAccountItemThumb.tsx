@@ -82,6 +82,7 @@ export const LinkedAccountItemThumb = ({
               // An account is "broken" when its connection is broken
               void repairConnection(
                 account.external_account_source,
+                account.reconnect_with_new_credentials,
                 account.connection_external_id,
               )
               // TODO: turn off loading spinner
