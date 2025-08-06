@@ -79,17 +79,20 @@ export const ProfitAndLossReport = ({
         </Header>
       )}
     >
-      <ProfitAndLoss.Table
-        asContainer={false}
-        stringOverrides={stringOverrides?.profitAndLoss?.table}
-        onLineItemClick={handleLineItemClick}
-      />
-      {isDetailReportVisible && selectedLineItemName && (
-        <ProfitAndLossDetailReport
-          lineItemName={selectedLineItemName}
-          onClose={handleCloseDetailReport}
-        />
-      )}
+      {isDetailReportVisible && selectedLineItemName
+        ? (
+          <ProfitAndLossDetailReport
+            lineItemName={selectedLineItemName}
+            onClose={handleCloseDetailReport}
+          />
+        )
+        : (
+          <ProfitAndLoss.Table
+            asContainer={false}
+            stringOverrides={stringOverrides?.profitAndLoss?.table}
+            onLineItemClick={handleLineItemClick}
+          />
+        )}
     </View>
   )
 }

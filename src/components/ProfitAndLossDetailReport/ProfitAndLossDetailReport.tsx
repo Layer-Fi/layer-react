@@ -1,44 +1,59 @@
-import { useContext, useState, useMemo } from 'react'
+import { useContext, useState, useMemo, useCallback } from 'react'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { useProfitAndLossDetailLines } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
-import { DetailReportHeader } from '../DetailReportHeader'
+import { DetailReportBreadcrumb } from '../DetailReportBreadcrumb'
 import { DataTable, type ColumnConfig } from '../DataTable/DataTable'
 import { centsToDollars } from '../../models/Money'
-import { Badge, BadgeVariant } from '../Badge'
+import { Badge } from '../Badge'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
+import { format } from 'date-fns'
 import type { LedgerEntrySource } from '../../types/ledger_accounts'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 
-// Define the line item type that includes the source (matching the schema return type)
+// Define the line item type that matches the actual API response structure
 type PnlDetailLine = {
   readonly id: string
-  readonly description?: string
+  readonly entry_id: string
+  readonly account: {
+    readonly id: string
+    readonly name: string
+    readonly stable_name: string
+    readonly normality: string
+    readonly account_type: {
+      readonly value: string
+      readonly display_name: string
+    }
+    readonly account_subtype: {
+      readonly value: string
+      readonly display_name: string
+    }
+  }
   readonly amount: number
+  readonly direction: 'CREDIT' | 'DEBIT'
   readonly date: string
   readonly source?: LedgerEntrySource
-  readonly account_name?: string
 }
 
 enum PnlDetailColumns {
-  Description = 'Description',
-  Date = 'Date', 
-  Source = 'Source',
+  Date = 'Date',
+  Type = 'Type',
   Account = 'Account',
+  Description = 'Description',
   Amount = 'Amount',
 }
 
 export interface ProfitAndLossDetailReportStringOverrides {
   title?: string
   backToListLabel?: string
-  descriptionColumnHeader?: string
   dateColumnHeader?: string
-  sourceColumnHeader?: string
+  typeColumnHeader?: string
   accountColumnHeader?: string
+  descriptionColumnHeader?: string
   amountColumnHeader?: string
   sourceDetailsTitle?: string
 }
@@ -50,18 +65,18 @@ export interface ProfitAndLossDetailReportProps {
 }
 
 const ErrorState = () => (
-  <DataState 
+  <DataState
     status={DataStateStatus.failed}
-    title="Error loading detail lines"
-    description="There was an error loading the profit and loss detail lines"
+    title='Error loading detail lines'
+    description='There was an error loading the profit and loss detail lines'
   />
 )
 
 const EmptyState = () => (
-  <DataState 
+  <DataState
     status={DataStateStatus.info}
-    title="No detail lines found"
-    description="There are no detail lines for this profit and loss item"
+    title='No detail lines found'
+    description='There are no detail lines for this profit and loss item'
   />
 )
 
@@ -74,6 +89,12 @@ export const ProfitAndLossDetailReport = ({
   const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
   const [selectedSource, setSelectedSource] = useState<LedgerEntrySource | null>(null)
 
+  const formatDateRange = (startDate: Date, endDate: Date) => {
+    const start = format(startDate, 'MMM d')
+    const end = format(endDate, 'MMM d')
+    return `${start} - ${end}`
+  }
+
   const { data, isLoading, error } = useProfitAndLossDetailLines({
     businessId,
     startDate: dateRange.startDate,
@@ -82,51 +103,56 @@ export const ProfitAndLossDetailReport = ({
     tagFilter,
   })
 
-  const handleSourceClick = (source: LedgerEntrySource) => {
+  const handleSourceClick = useCallback((source: LedgerEntrySource) => {
     setSelectedSource(source)
-  }
+  }, [])
 
   const handleBackToList = () => {
     setSelectedSource(null)
   }
 
   const columnConfig: ColumnConfig<PnlDetailLine, PnlDetailColumns> = useMemo(() => ({
-    [PnlDetailColumns.Description]: {
-      id: PnlDetailColumns.Description,
-      header: stringOverrides?.descriptionColumnHeader || 'Description',
-      cell: row => row.description || '-',
-      isRowHeader: true,
-    },
     [PnlDetailColumns.Date]: {
       id: PnlDetailColumns.Date,
       header: stringOverrides?.dateColumnHeader || 'Date',
-      cell: row => <DateTime value={row.date} />,
+      cell: row => <DateTime value={row.date} onlyDate />,
     },
-    [PnlDetailColumns.Source]: {
-      id: PnlDetailColumns.Source,
-      header: stringOverrides?.sourceColumnHeader || 'Source',
-      cell: row => row.source ? (
-        <button
-          type='button'
-          className='Layer__profit-and-loss-detail-report__source-button'
-          onClick={() => handleSourceClick(row.source!)}
-        >
-          {row.source.entity_name}
-        </button>
-      ) : '-',
+    [PnlDetailColumns.Type]: {
+      id: PnlDetailColumns.Type,
+      header: stringOverrides?.typeColumnHeader || 'Type',
+      cell: row => row.source
+        ? (
+          <button
+            type='button'
+            className='Layer__profit-and-loss-detail-report__type-button'
+            onClick={() => handleSourceClick(row.source!)}
+          >
+            <span className='Layer__profit-and-loss-detail-report__type-text'>
+              {row.source.type.replace('_Ledger_Entry_Source', '').replace(/_/g, ' ')}
+            </span>
+          </button>
+        )
+        : '-',
     },
     [PnlDetailColumns.Account]: {
       id: PnlDetailColumns.Account,
       header: stringOverrides?.accountColumnHeader || 'Account',
-      cell: row => row.account_name || '-',
+      cell: row => row.account.name || '-',
+    },
+    [PnlDetailColumns.Description]: {
+      id: PnlDetailColumns.Description,
+      header: stringOverrides?.descriptionColumnHeader || 'Description',
+      cell: row => row.source?.display_description || row.account.account_subtype.display_name || '-',
+      isRowHeader: true,
     },
     [PnlDetailColumns.Amount]: {
       id: PnlDetailColumns.Amount,
       header: stringOverrides?.amountColumnHeader || 'Amount',
       cell: row => (
-        <Badge variant={row.amount >= 0 ? BadgeVariant.SUCCESS : BadgeVariant.WARNING}>
-          ${centsToDollars(Math.abs(row.amount))}
-        </Badge>
+        <span className='Layer__profit-and-loss-detail-report__amount'>
+          $
+          {centsToDollars(Math.abs(row.amount))}
+        </span>
       ),
     },
   }), [stringOverrides, handleSourceClick])
@@ -134,27 +160,31 @@ export const ProfitAndLossDetailReport = ({
   if (selectedSource) {
     return (
       <div className='Layer__profit-and-loss-detail-report'>
-        <DetailReportHeader
-          title={stringOverrides?.sourceDetailsTitle || 'Transaction Details'}
+        <DetailReportBreadcrumb
+          breadcrumbs={['Reports', 'P&L', 'Transaction Details']}
+          subtitle={formatDateRange(dateRange.startDate, dateRange.endDate)}
           onClose={handleBackToList}
           className='Layer__profit-and-loss-detail-report__header'
         />
-        <DetailsList
-          title={stringOverrides?.sourceDetailsTitle || 'Transaction source'}
-        >
-          <DetailsListItem label='Source'>
-            <Badge>{selectedSource.entity_name}</Badge>
-          </DetailsListItem>
-          <SourceDetailView source={selectedSource} />
-        </DetailsList>
+        <div className='Layer__profit-and-loss-detail-report__content'>
+          <DetailsList
+            title={stringOverrides?.sourceDetailsTitle || 'Transaction source'}
+          >
+            <DetailsListItem label='Source'>
+              <Badge>{selectedSource.entity_name}</Badge>
+            </DetailsListItem>
+            <SourceDetailView source={selectedSource} />
+          </DetailsList>
+        </div>
       </div>
     )
   }
 
   return (
     <div className='Layer__profit-and-loss-detail-report'>
-      <DetailReportHeader
-        title={stringOverrides?.title || `${lineItemName} Details`}
+      <DetailReportBreadcrumb
+        breadcrumbs={['Reports', 'P&L', `${lineItemName} Details`]}
+        subtitle={formatDateRange(dateRange.startDate, dateRange.endDate)}
         onClose={onClose}
         className='Layer__profit-and-loss-detail-report__header'
       />

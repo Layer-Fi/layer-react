@@ -33,7 +33,7 @@ type PnlDetailLinesOptions = PnlDetailLinesFilterParams
 
 type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesOptions
 
-// LedgerEntrySource schemas based on existing TypeScript interfaces
+// LedgerEntrySource schemas based on actual API response structure
 
 const TransactionLedgerEntrySourceSchema = Schema.Struct({
   display_description: Schema.String,
@@ -41,11 +41,14 @@ const TransactionLedgerEntrySourceSchema = Schema.Struct({
   type: Schema.Literal('Transaction_Ledger_Entry_Source'),
   transaction_id: Schema.String,
   external_id: Schema.String,
-  account_name: Schema.String,
+  account_name: Schema.optional(Schema.String),
   date: Schema.String,
   amount: Schema.Number,
   direction: Schema.Enums(Direction),
   counterparty: Schema.optional(Schema.String),
+  memo: Schema.optional(Schema.NullOr(Schema.String)),
+  metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
+  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
 })
 
 const InvoiceLedgerEntrySourceSchema = Schema.Struct({
@@ -54,10 +57,14 @@ const InvoiceLedgerEntrySourceSchema = Schema.Struct({
   type: Schema.Literal('Invoice_Ledger_Entry_Source'),
   invoice_id: Schema.String,
   external_id: Schema.String,
-  invoice_number: Schema.String,
+  invoice_number: Schema.NullOr(Schema.String),
   recipient_name: Schema.String,
+  customer_description: Schema.optional(Schema.String),
   date: Schema.String,
   amount: Schema.Number,
+  memo: Schema.optional(Schema.NullOr(Schema.String)),
+  metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
+  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
 })
 
 const ManualLedgerEntrySourceSchema = Schema.Struct({
@@ -65,8 +72,10 @@ const ManualLedgerEntrySourceSchema = Schema.Struct({
   entity_name: Schema.String,
   type: Schema.Literal('Manual_Ledger_Entry_Source'),
   manual_entry_id: Schema.String,
-  memo: Schema.String,
+  memo: Schema.NullOr(Schema.String),
   created_by: Schema.String,
+  metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
+  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
 })
 
 const InvoicePaymentLedgerEntrySourceSchema = Schema.Struct({
@@ -75,8 +84,11 @@ const InvoicePaymentLedgerEntrySourceSchema = Schema.Struct({
   type: Schema.Literal('Invoice_Payment_Ledger_Entry_Source'),
   external_id: Schema.String,
   invoice_id: Schema.String,
-  invoice_number: Schema.String,
+  invoice_number: Schema.NullOr(Schema.String),
   amount: Schema.Number,
+  memo: Schema.optional(Schema.NullOr(Schema.String)),
+  metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
+  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
 })
 
 const RefundLedgerEntrySourceSchema = Schema.Struct({
@@ -87,6 +99,9 @@ const RefundLedgerEntrySourceSchema = Schema.Struct({
   refund_id: Schema.String,
   refunded_to_customer_amount: Schema.Number,
   recipient_name: Schema.String,
+  memo: Schema.optional(Schema.NullOr(Schema.String)),
+  metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
+  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
 })
 
 const RefundPaymentLedgerEntrySourceSchema = Schema.Struct({
@@ -98,13 +113,19 @@ const RefundPaymentLedgerEntrySourceSchema = Schema.Struct({
   refund_payment_id: Schema.String,
   refunded_to_customer_amount: Schema.Number,
   recipient_name: Schema.String,
+  memo: Schema.optional(Schema.NullOr(Schema.String)),
+  metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
+  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
 })
 
 const OpeningBalanceLedgerEntrySourceSchema = Schema.Struct({
   display_description: Schema.String,
   entity_name: Schema.String,
   type: Schema.Literal('Opening_Balance_Ledger_Entry_Source'),
-  account_name: Schema.String,
+  account_name: Schema.optional(Schema.String),
+  memo: Schema.optional(Schema.NullOr(Schema.String)),
+  metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
+  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
 })
 
 const PayoutLedgerEntrySourceSchema = Schema.Struct({
@@ -116,6 +137,9 @@ const PayoutLedgerEntrySourceSchema = Schema.Struct({
   paid_out_amount: Schema.Number,
   processor: Schema.String,
   completed_at: Schema.String,
+  memo: Schema.optional(Schema.NullOr(Schema.String)),
+  metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
+  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
 })
 
 const LedgerEntrySourceSchema = Schema.Union(
@@ -129,26 +153,45 @@ const LedgerEntrySourceSchema = Schema.Union(
   PayoutLedgerEntrySourceSchema,
 )
 
-const PnlDetailLinesReturnSchema = Schema.Struct({
+const AccountSchema = Schema.Struct({
+  id: Schema.String,
+  name: Schema.String,
+  stable_name: Schema.String,
+  normality: Schema.String,
+  account_type: Schema.Struct({
+    value: Schema.String,
+    display_name: Schema.String,
+  }),
+  account_subtype: Schema.Struct({
+    value: Schema.String,
+    display_name: Schema.String,
+  }),
+})
+
+const PnlDetailLinesDataSchema = Schema.Struct({
+  type: Schema.String,
   business_id: Schema.String,
   start_date: Schema.String,
   end_date: Schema.String,
   pnl_structure_line_item_name: Schema.String,
-  reporting_basis: Schema.optional(Schema.String),
-  pnl_structure: Schema.optional(Schema.String),
-  tag_filter: Schema.optional(Schema.Struct({
+  reporting_basis: Schema.optional(Schema.NullOr(Schema.String)),
+  pnl_structure: Schema.optional(Schema.NullOr(Schema.String)),
+  tag_filter: Schema.NullOr(Schema.Struct({
     key: Schema.String,
     values: Schema.Array(Schema.String),
   })),
   lines: Schema.Array(Schema.Struct({
     id: Schema.String,
-    description: Schema.optional(Schema.String),
+    entry_id: Schema.String,
+    account: AccountSchema,
     amount: Schema.Number,
+    direction: Schema.Enums(Direction),
     date: Schema.String,
     source: Schema.optional(LedgerEntrySourceSchema),
-    account_name: Schema.optional(Schema.String),
   })),
 })
+
+const PnlDetailLinesReturnSchema = PnlDetailLinesDataSchema
 
 type PnlDetailLinesReturn = typeof PnlDetailLinesReturnSchema.Type
 

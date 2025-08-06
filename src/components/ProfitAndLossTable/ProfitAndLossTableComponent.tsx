@@ -90,12 +90,12 @@ export const ProfitAndLossTableComponent = ({
           {
             showValue
             && (
-              <TableCell 
-                isCurrency 
-                primary 
+              <TableCell
+                isCurrency
+                primary
                 align={TableCellAlign.RIGHT}
-                className={onLineItemClick ? 'Layer__profit-and-loss-table__clickable-cell' : undefined}
-                onClick={onLineItemClick ? () => onLineItemClick(lineItem.display_name) : undefined}
+                className={onLineItemClick && variant !== 'summation' ? 'Layer__profit-and-loss-table__clickable-cell' : undefined}
+                onClick={onLineItemClick && variant !== 'summation' ? () => onLineItemClick(lineItem.name) : undefined}
               >
                 {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
               </TableCell>
@@ -135,6 +135,7 @@ export const ProfitAndLossTableComponent = ({
           })}
         {renderLineItem({
           lineItem: {
+            name: 'gross_profit',
             value: data.gross_profit,
             display_name: stringOverrides?.grossProfitLabel || 'Gross Profit',
           },
@@ -151,6 +152,7 @@ export const ProfitAndLossTableComponent = ({
         })}
         {renderLineItem({
           lineItem: {
+            name: 'profit_before_taxes',
             value: data.profit_before_taxes,
             display_name:
               stringOverrides?.profitBeforeTaxesLabel || 'Profit Before Taxes',
@@ -168,6 +170,7 @@ export const ProfitAndLossTableComponent = ({
         })}
         {renderLineItem({
           lineItem: {
+            name: 'net_profit',
             value: data.net_profit,
             display_name: stringOverrides?.netProfitLabel || 'Net Profit',
           },
