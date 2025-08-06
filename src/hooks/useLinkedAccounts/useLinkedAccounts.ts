@@ -25,7 +25,7 @@ type UseLinkedAccounts = () => {
   error: unknown
   addConnection: (source: AccountSource) => void
   removeConnection: (source: AccountSource, sourceId: string) => void // means, "unlink institution"
-  repairConnection: (source: AccountSource, reconnectWithNewCredentials: boolean, sourceId: string) => void
+  repairConnection: (source: AccountSource, sourceId: string) => void
   updateConnectionStatus: () => void
   refetchAccounts: () => Awaitable<void>
   syncAccounts: () => void
@@ -197,11 +197,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const repairConnection = async (
     source: AccountSource,
-    reconnectWithNewCredentials: boolean,
     connectionExternalId: string,
   ) => {
     if (source === 'PLAID') {
-      await (reconnectWithNewCredentials ? fetchPlaidLinkToken() : fetchPlaidUpdateModeLinkToken(connectionExternalId))
+      await fetchPlaidUpdateModeLinkToken(connectionExternalId)
     }
     else {
       console.error(
