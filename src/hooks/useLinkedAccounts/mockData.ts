@@ -25,6 +25,7 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
     connection_needs_repair_as_of: null,
     is_syncing: true,
     user_created: false,
+    reconnect_with_new_credentials: false,
   },
   {
     id: 'f98ec50a-c370-484d-a35b-d00207436075',
@@ -50,6 +51,7 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
     connection_needs_repair_as_of: null,
     is_syncing: false,
     user_created: false,
+    reconnect_with_new_credentials: false,
   },
   {
     id: '843f1748-fdaa-422d-a73d-2489a40c8dc7',
@@ -75,6 +77,7 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
     connection_needs_repair_as_of: '2024-03-06T16:44:35.715458Z',
     is_syncing: false,
     user_created: false,
+    reconnect_with_new_credentials: false,
   },
   {
     id: '8f430e29-e339-4d71-a08a-fce469c7a7c1',
@@ -100,5 +103,6 @@ export const LINKED_ACCOUNTS_MOCK_DATA: LinkedAccount[] = [
     connection_needs_repair_as_of: null,
     is_syncing: false,
     user_created: false,
+    reconnect_with_new_credentials: false,
   },
 ]

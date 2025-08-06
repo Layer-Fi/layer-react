@@ -54,6 +54,7 @@ export type LinkedAccount = {
   connection_needs_repair_as_of: string | null
   is_syncing: boolean
   user_created: boolean
+  reconnect_with_new_credentials: boolean
 }
 
 export type LinkedAccounts = {
