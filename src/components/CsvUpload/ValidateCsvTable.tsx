@@ -52,21 +52,9 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
         cell: (info: CellContext<PreviewRow<T>, unknown>) => {
           const field = info.row.original[key]
 
-          // Handle null/undefined fields for optional columns
-          if (!field) {
-            return (
-              <span className={classNames(
-                'Layer__table-cell-content',
-                `${CSS_PREFIX}__cell-content`,
-              )}
-              >
-                {/* Empty cell for null values */}
-              </span>
-            )
-          }
-
-          let value: string | number | null | undefined = field.raw
-          if (field.is_valid) {
+          let value: string | number | null | undefined = field?.raw
+          const isValid = field && field.is_valid
+          if (isValid) {
             const formatter = formatters?.[key]
             value = formatter ? formatter(field.parsed as T[keyof T]) : field.parsed
           }
@@ -74,7 +62,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
             <span className={classNames(
               'Layer__table-cell-content',
               `${CSS_PREFIX}__cell-content`,
-              !field.is_valid && `${CSS_PREFIX}__cell-content--error`,
+              !isValid && `${CSS_PREFIX}__cell-content--error`,
             )}
             >
               {value}

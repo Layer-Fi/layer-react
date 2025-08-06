@@ -28,25 +28,17 @@ const formatters = {
 }
 
 const generateDynamicHeaders = (transactionsPreview: PreviewCsv<CustomAccountTransactionRow>) => {
-  const dynamicHeaders = { ...templateHeaders }
-
   const hasExternalId = transactionsPreview.some(transaction =>
     transaction.external_id?.parsed != null,
   )
-
   const hasReferenceNumber = transactionsPreview.some(transaction =>
     transaction.reference_number?.parsed != null,
   )
-
-  if (hasExternalId) {
-    dynamicHeaders.external_id = 'External ID'
+  return {
+    ...(hasExternalId && { external_id: 'External ID' }),
+    ...(hasReferenceNumber && { reference_number: 'Reference No.' }),
+    ...templateHeaders,
   }
-
-  if (hasReferenceNumber) {
-    dynamicHeaders.reference_number = 'Reference No.'
-  }
-
-  return dynamicHeaders
 }
 
 export function UploadTransactionsValidateCsvStep(
