@@ -1,0 +1,168 @@
+// Clickable cells styling for P&L table
+.Layer__profit-and-loss-table__clickable-cell {
+  cursor: pointer;
+  transition: text-decoration 150ms ease-out;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// P&L Detail Report styles
+.Layer__profit-and-loss-detail-report {
+  width: 100%;
+
+  // CSS Variables for column widths - scoped to this component
+  --pnl-detail-date-col-width: 12%;
+  --pnl-detail-type-col-width: 12%;
+  --pnl-detail-account-col-width: 18%;
+  --pnl-detail-description-col-width: 28%;
+  --pnl-detail-amount-col-width: 15%;
+  --pnl-detail-balance-col-width: 15%;
+}
+
+// P&L Detail Report header uses existing DetailReportHeader styles
+
+.Layer__profit-and-loss-detail-report__content {
+  padding: var(--spacing-md);
+}
+
+.Layer__profit-and-loss-detail-report__error {
+  padding: var(--spacing-lg);
+  text-align: center;
+  color: var(--color-danger-600);
+}
+
+.Layer__profit-and-loss-detail-report__type-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+  }
+}
+
+// Table styling for P&L Detail Report following DataTable pattern
+.Layer__UI__Table__ProfitAndLossDetailReport {
+  table-layout: fixed;
+  width: 100%;
+
+  .Layer__UI__Table-Column__ProfitAndLossDetailReport {
+    &--Date {
+      width: var(--pnl-detail-date-col-width);
+      min-width: 7rem;
+      color: var(--color-base-600);
+    }
+
+    &--Type {
+      width: var(--pnl-detail-type-col-width);
+    }
+
+    &--Account {
+      width: var(--pnl-detail-account-col-width);
+      min-width: 10rem;
+    }
+
+    &--Description {
+      width: var(--pnl-detail-description-col-width);
+      min-width: 12rem;
+    }
+
+    &--Amount {
+      width: var(--pnl-detail-amount-col-width);
+      min-width: 7.5rem;
+      text-align: right;
+    }
+
+    &--Balance {
+      width: var(--pnl-detail-balance-col-width);
+      min-width: 7.5rem;
+      text-align: right;
+    }
+  }
+
+  .Layer__UI__Table-Cell__ProfitAndLossDetailReport {
+    &--Account {
+      color: var(--color-base-600);
+    }
+
+    &--Type {
+      font-size: 14px;
+
+      button {
+        font-size: inherit;
+        font-family: inherit;
+        font-weight: inherit;
+        font-feature-settings: inherit;
+      }
+    }
+
+    &--Amount {
+      text-align: right;
+      color: var(--color-base-800);
+    }
+
+    &--Balance {
+      text-align: right;
+      color: var(--color-base-800);
+    }
+  }
+}
+
+// Total row styling
+.Layer__profit-and-loss-detail-report__total-row {
+  display: grid;
+  grid-template-columns:
+    var(--pnl-detail-date-col-width)
+    var(--pnl-detail-type-col-width)
+    var(--pnl-detail-account-col-width)
+    var(--pnl-detail-description-col-width)
+    var(--pnl-detail-amount-col-width)
+    var(--pnl-detail-balance-col-width);
+  align-items: center;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-base-300);
+}
+
+.Layer__profit-and-loss-detail-report__total-label {
+  grid-column: 1; // Start at Date column
+  font-weight: 540;
+  font-size: 14px;
+  line-height: 140%;
+  text-align: left;
+  padding-left: var(--spacing-sm);
+  color: var(--color-base-800);
+}
+
+.Layer__profit-and-loss-detail-report__total-amount {
+  grid-column: 5; // Amount column position
+  font-weight: 580;
+  font-size: 14px;
+  line-height: 140%;
+  text-align: right;
+  color: var(--color-base-900);
+  padding-right: var(--spacing-sm);
+}
+
+// Full-page drawer component
+.Layer__full-page-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-base-0);
+  z-index: var(--z-index-modal, 1000);
+  animation: slideInFromRight 0.3s ease-out;
+  overflow-y: auto;
+}
+

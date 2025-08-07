@@ -9,6 +9,9 @@ interface DateTimeProps {
   timeFormat?: string
   onlyDate?: boolean
   onlyTime?: boolean
+  size?: TextSize
+  weight?: TextWeight
+  color?: string
 }
 
 export const DateTime = ({
@@ -18,6 +21,9 @@ export const DateTime = ({
   timeFormat,
   onlyDate,
   onlyTime,
+  size = TextSize.sm,
+  weight = TextWeight.bold,
+  color = 'base-800',
 }: DateTimeProps) => {
   if (format) {
     return (
@@ -35,9 +41,10 @@ export const DateTime = ({
       {!onlyTime && (
         <Text
           as='span'
-          weight={TextWeight.bold}
-          size={TextSize.sm}
+          weight={weight}
+          size={size}
           className='Layer__datetime__date'
+          data-color={color}
         >
           {date}
         </Text>
@@ -45,9 +52,10 @@ export const DateTime = ({
       {!onlyDate && (
         <Text
           as='span'
-          weight={TextWeight.bold}
-          size={TextSize.sm}
+          weight={weight}
+          size={size}
           className='Layer__datetime__time'
+          data-color={color}
         >
           {time}
         </Text>

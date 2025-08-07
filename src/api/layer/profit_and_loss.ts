@@ -144,7 +144,7 @@ export const getProfitAndLossDetailLines = (apiUrl: string, accessToken: string 
     `/v1/businesses/${businessId}/reports/profit-and-loss/lines?${
       startDate ? `start_date=${encodeURIComponent(toLocalDateString(startDate))}` : ''
     }${endDate ? `&end_date=${encodeURIComponent(toLocalDateString(endDate))}` : ''}${
-      pnlStructureLineItemName ? `&name=${encodeURIComponent(pnlStructureLineItemName)}` : ''
+      pnlStructureLineItemName ? `&line_item_name=${encodeURIComponent(pnlStructureLineItemName)}` : ''
     }${
       reportingBasis ? `&reporting_basis=${reportingBasis}` : ''
     }${tagKey ? `&tag_key=${tagKey}` : ''}${

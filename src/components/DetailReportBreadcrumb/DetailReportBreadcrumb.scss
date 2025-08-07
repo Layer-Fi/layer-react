@@ -19,7 +19,6 @@
 .Layer__detail-report-breadcrumb__path {
   display: flex;
   align-items: center;
-  // gap: var(--spacing-3xs);
   white-space: nowrap;
 
   > span {
@@ -30,7 +29,6 @@
 }
 
 .Layer__detail-report-breadcrumb__segment {
-  font-weight: var(--font-weight-bold);
   font-size: var(--text-md);
   color: var(--color-base-600);
   background: none;
@@ -58,7 +56,7 @@
 }
 
 .Layer__detail-report-breadcrumb__current {
-  font-weight: var(--font-weight-bold);
+  // font-weight: var(--font-weight-bold);
   font-size: var(--text-md);
   color: var(--text-color-primary);
 }

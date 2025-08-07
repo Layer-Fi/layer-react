@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: var(--spacing-xl);
 
   &.Layer__data-state--spacing {
     padding: var(--spacing-xl);

@@ -5,10 +5,33 @@
 }
 
 .Layer__datetime__date {
-  color: var(--color-base-800);
   min-width: 75px;
+
+  &[data-color="base-0"] { color: var(--color-base-0); }
+  &[data-color="base-50"] { color: var(--color-base-50); }
+  &[data-color="base-100"] { color: var(--color-base-100); }
+  &[data-color="base-200"] { color: var(--color-base-200); }
+  &[data-color="base-300"] { color: var(--color-base-300); }
+  &[data-color="base-400"] { color: var(--color-base-400); }
+  &[data-color="base-500"] { color: var(--color-base-500); }
+  &[data-color="base-600"] { color: var(--color-base-600); }
+  &[data-color="base-700"] { color: var(--color-base-700); }
+  &[data-color="base-800"] { color: var(--color-base-800); }
+  &[data-color="base-900"] { color: var(--color-base-900); }
+  &[data-color="base-1000"] { color: var(--color-base-1000); }
 }
 
 .Layer__datetime__time {
-  color: var(--color-base-600);
+  &[data-color="base-0"] { color: var(--color-base-0); }
+  &[data-color="base-50"] { color: var(--color-base-50); }
+  &[data-color="base-100"] { color: var(--color-base-100); }
+  &[data-color="base-200"] { color: var(--color-base-200); }
+  &[data-color="base-300"] { color: var(--color-base-300); }
+  &[data-color="base-400"] { color: var(--color-base-400); }
+  &[data-color="base-500"] { color: var(--color-base-500); }
+  &[data-color="base-600"] { color: var(--color-base-600); }
+  &[data-color="base-700"] { color: var(--color-base-700); }
+  &[data-color="base-800"] { color: var(--color-base-800); }
+  &[data-color="base-900"] { color: var(--color-base-900); }
+  &[data-color="base-1000"] { color: var(--color-base-1000); }
 }

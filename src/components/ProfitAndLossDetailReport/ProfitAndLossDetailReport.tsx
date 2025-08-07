@@ -3,15 +3,17 @@ import { ProfitAndLoss } from '../ProfitAndLoss'
 import { useProfitAndLossDetailLines } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
-import { DetailReportBreadcrumb, BreadcrumbItem } from '../DetailReportBreadcrumb'
+import { DetailReportBreadcrumb } from '../DetailReportBreadcrumb'
 import { DataTable, type ColumnConfig } from '../DataTable/DataTable'
 import { centsToDollars } from '../../models/Money'
 import { Badge } from '../Badge'
 import { DateTime } from '../DateTime'
+import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { format } from 'date-fns'
 import type { LedgerEntrySource } from '../../types/ledger_accounts'
+import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 
@@ -45,6 +47,7 @@ enum PnlDetailColumns {
   Account = 'Account',
   Description = 'Description',
   Amount = 'Amount',
+  Balance = 'Balance',
 }
 
 export interface ProfitAndLossDetailReportStringOverrides {
@@ -55,6 +58,7 @@ export interface ProfitAndLossDetailReportStringOverrides {
   accountColumnHeader?: string
   descriptionColumnHeader?: string
   amountColumnHeader?: string
+  balanceColumnHeader?: string
   sourceDetailsTitle?: string
 }
 
@@ -82,41 +86,6 @@ const EmptyState = () => (
   />
 )
 
-// Utility function to find the breadcrumb path for a line item in the P&L structure
-const findLineItemPath = (pnlData: any, targetLineItemName: string): BreadcrumbItem[] | null => {
-  if (!pnlData) return null
-
-  const searchInLineItem = (lineItem: any, path: BreadcrumbItem[]): BreadcrumbItem[] | null => {
-    if (!lineItem || typeof lineItem !== 'object') return null
-
-    // Check if this is the target line item
-    if (lineItem.name === targetLineItemName) {
-      return [...path, { name: lineItem.name, display_name: lineItem.display_name }]
-    }
-
-    // Search in nested line items
-    if (lineItem.line_items && Array.isArray(lineItem.line_items)) {
-      for (const childItem of lineItem.line_items) {
-        const result = searchInLineItem(childItem, [...path, { name: lineItem.name, display_name: lineItem.display_name }])
-        if (result) return result
-      }
-    }
-
-    return null
-  }
-
-  // Search through all properties of the P&L data to find LineItem objects
-  for (const [_key, value] of Object.entries(pnlData)) {
-    // Skip non-LineItem properties (like business_id, dates, calculated values)
-    if (value && typeof value === 'object' && 'name' in value && 'display_name' in value) {
-      const result = searchInLineItem(value, [])
-      if (result) return result
-    }
-  }
-
-  return null
-}
-
 export const ProfitAndLossDetailReport = ({
   lineItemName,
   breadcrumbPath,
@@ -125,21 +94,13 @@ export const ProfitAndLossDetailReport = ({
   stringOverrides,
 }: ProfitAndLossDetailReportProps) => {
   const { businessId } = useLayerContext()
-  const { tagFilter, dateRange, data: pnlData } = useContext(ProfitAndLoss.Context)
+  const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
   const [selectedSource, setSelectedSource] = useState<LedgerEntrySource | null>(null)
 
-  // Generate dynamic breadcrumbs based on P&L data structure
+  // Use the passed breadcrumb path or create a simple one if not provided
   const dynamicBreadcrumbs = useMemo(() => {
-    if (breadcrumbPath) {
-      // Find the current line item's display_name from P&L data
-      const foundPath = findLineItemPath(pnlData, lineItemName)
-      const currentItem = foundPath?.find(item => item.name === lineItemName)
-      return [...breadcrumbPath, { name: lineItemName, display_name: currentItem?.display_name || lineItemName }]
-    }
-
-    const foundPath = findLineItemPath(pnlData, lineItemName)
-    return foundPath || [{ name: lineItemName, display_name: lineItemName }]
-  }, [breadcrumbPath, pnlData, lineItemName])
+    return breadcrumbPath || [{ name: lineItemName, display_name: lineItemName }]
+  }, [breadcrumbPath, lineItemName])
 
   const formatDateRange = (startDate: Date, endDate: Date) => {
     const start = format(startDate, 'MMM d')
@@ -163,11 +124,39 @@ export const ProfitAndLossDetailReport = ({
     setSelectedSource(null)
   }
 
-  const columnConfig: ColumnConfig<PnlDetailLine, PnlDetailColumns> = useMemo(() => ({
+  // Process data: sort chronologically and calculate running balance
+  const processedData = useMemo(() => {
+    if (!data?.lines) return { lines: [], total: 0 }
+
+    // Sort lines chronologically (oldest first)
+    const sortedLines = [...(data.lines as PnlDetailLine[])]
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+
+    // Calculate running balance
+    let runningBalance = 0
+    const linesWithBalance = sortedLines.map((line) => {
+      const signedAmount = line.direction === 'CREDIT' ? line.amount : -line.amount
+      runningBalance += signedAmount
+      return {
+        ...line,
+        signedAmount,
+        runningBalance,
+      }
+    })
+
+    return {
+      lines: linesWithBalance,
+      total: runningBalance,
+    }
+  }, [data?.lines])
+
+  type ProcessedPnlDetailLine = PnlDetailLine & { signedAmount: number, runningBalance: number }
+
+  const columnConfig: ColumnConfig<ProcessedPnlDetailLine, PnlDetailColumns> = useMemo(() => ({
     [PnlDetailColumns.Date]: {
       id: PnlDetailColumns.Date,
       header: stringOverrides?.dateColumnHeader || 'Date',
-      cell: row => <DateTime value={row.date} onlyDate />,
+      cell: row => <DateTime value={row.date} onlyDate size={TextSize.md} weight={TextWeight.normal} color='base-600' />,
     },
     [PnlDetailColumns.Type]: {
       id: PnlDetailColumns.Type,
@@ -179,8 +168,8 @@ export const ProfitAndLossDetailReport = ({
             className='Layer__profit-and-loss-detail-report__type-button'
             onClick={() => handleSourceClick(row.source!)}
           >
-            <span className='Layer__profit-and-loss-detail-report__type-text'>
-              {row.source.type.replace('_Ledger_Entry_Source', '').replace(/_/g, ' ')}
+            <span>
+              {row.source.entity_name}
             </span>
           </button>
         )
@@ -200,12 +189,32 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Amount]: {
       id: PnlDetailColumns.Amount,
       header: stringOverrides?.amountColumnHeader || 'Amount',
-      cell: row => (
-        <span className='Layer__profit-and-loss-detail-report__amount'>
-          $
-          {centsToDollars(Math.abs(row.amount))}
-        </span>
-      ),
+      cell: (row) => {
+        const amount = centsToDollars(Math.abs(row.signedAmount))
+        const isNegative = row.signedAmount < 0
+        return (
+          <span className='Layer__profit-and-loss-detail-report__amount'>
+            {isNegative ? '-' : ''}
+            $
+            {amount}
+          </span>
+        )
+      },
+    },
+    [PnlDetailColumns.Balance]: {
+      id: PnlDetailColumns.Balance,
+      header: stringOverrides?.balanceColumnHeader || 'Balance',
+      cell: (row) => {
+        const amount = centsToDollars(Math.abs(row.runningBalance))
+        const isNegative = row.runningBalance < 0
+        return (
+          <span className='Layer__profit-and-loss-detail-report__amount'>
+            {isNegative ? '-' : ''}
+            $
+            {amount}
+          </span>
+        )
+      },
     },
   }), [stringOverrides, handleSourceClick])
 
@@ -244,11 +253,11 @@ export const ProfitAndLossDetailReport = ({
       />
 
       <div className='Layer__profit-and-loss-detail-report__content'>
-        <DataTable<PnlDetailLine, PnlDetailColumns>
+        <DataTable<ProcessedPnlDetailLine, PnlDetailColumns>
           componentName={COMPONENT_NAME}
           ariaLabel={`${lineItemName} detail lines`}
           columnConfig={columnConfig}
-          data={data?.lines as PnlDetailLine[] | undefined}
+          data={processedData.lines}
           isLoading={isLoading}
           isError={!!error}
           slots={{
@@ -256,6 +265,16 @@ export const ProfitAndLossDetailReport = ({
             ErrorState,
           }}
         />
+        {processedData.lines.length > 0 && (
+          <div className='Layer__profit-and-loss-detail-report__total-row'>
+            <div className='Layer__profit-and-loss-detail-report__total-label'>Total</div>
+            <div className='Layer__profit-and-loss-detail-report__total-amount'>
+              {processedData.total < 0 ? '-' : ''}
+              $
+              {centsToDollars(Math.abs(processedData.total))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

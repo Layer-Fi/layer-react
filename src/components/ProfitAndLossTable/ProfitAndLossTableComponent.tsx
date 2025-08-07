@@ -7,6 +7,7 @@ import { ProfitAndLoss } from '../ProfitAndLoss'
 import { Table, TableBody, TableCell, TableRow } from '../Table'
 import emptyPNL from './empty_profit_and_loss_report'
 import classNames from 'classnames'
+import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 
 export interface ProfitAndLossTableStringOverrides {
   grossProfitLabel?: string
@@ -18,7 +19,7 @@ export type ProfitAndLossTableProps = {
   lockExpanded?: boolean
   asContainer?: boolean
   stringOverrides?: ProfitAndLossTableStringOverrides
-  onLineItemClick?: (lineItemName: string) => void
+  onLineItemClick?: (lineItemName: string, breadcrumbPath: BreadcrumbItem[]) => void
 }
 
 export const ProfitAndLossTableComponent = ({
@@ -59,6 +60,7 @@ export const ProfitAndLossTableComponent = ({
     rowIndex,
     variant,
     showValue = true,
+    parentBreadcrumbs = [],
   }: {
     lineItem: LineItem
     depth: number
@@ -66,10 +68,16 @@ export const ProfitAndLossTableComponent = ({
     rowIndex: number
     variant?: 'default' | 'summation'
     showValue?: boolean
+    parentBreadcrumbs?: BreadcrumbItem[]
   }): React.ReactNode => {
     const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
-
     const expanded = expandable ? isOpen(rowKey) : true
+    
+    // Build breadcrumb path for this line item
+    const currentBreadcrumbs: BreadcrumbItem[] = [
+      ...parentBreadcrumbs,
+      { name: lineItem.name, display_name: lineItem.display_name }
+    ]
 
     return (
       <Fragment key={rowKey + '-' + rowIndex}>
@@ -95,7 +103,7 @@ export const ProfitAndLossTableComponent = ({
                 primary
                 align={TableCellAlign.RIGHT}
                 className={onLineItemClick && variant !== 'summation' ? 'Layer__profit-and-loss-table__clickable-cell' : undefined}
-                onClick={onLineItemClick && variant !== 'summation' ? () => onLineItemClick(lineItem.name) : undefined}
+                onClick={onLineItemClick && variant !== 'summation' ? () => onLineItemClick(lineItem.name, currentBreadcrumbs) : undefined}
               >
                 {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
               </TableCell>
@@ -109,6 +117,7 @@ export const ProfitAndLossTableComponent = ({
               depth: depth + 1,
               rowKey: child.display_name + '-' + rowIndex,
               rowIndex: i,
+              parentBreadcrumbs: currentBreadcrumbs,
             }),
           )
           : null}
