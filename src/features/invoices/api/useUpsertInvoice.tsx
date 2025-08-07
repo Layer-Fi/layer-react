@@ -4,7 +4,7 @@ import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation'
 import { post, put } from '../../../api/layer/authenticated_http'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { useAuth } from '../../../hooks/useAuth'
-import { InvoiceSchema, type UpsertInvoice } from '../invoiceSchemas'
+import { InvoiceSchema, type UpsertInvoiceSchema } from '../invoiceSchemas'
 import { Schema, Effect } from 'effect'
 
 const UPSERT_INVOICES_TAG_KEY = '#upsert-invoice'
@@ -14,15 +14,17 @@ export enum UpsertInvoiceMode {
   Update = 'Update',
 }
 
+type UpsertInvoiceBody = typeof UpsertInvoiceSchema.Encoded
+
 const createInvoice = post<
   UpsertInvoiceReturn,
-  UpsertInvoice,
+  UpsertInvoiceBody,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/invoices`)
 
 const updateInvoice = put<
   UpsertInvoiceReturn,
-  UpsertInvoice,
+  UpsertInvoiceBody,
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}`)
 
@@ -55,7 +57,7 @@ const UpsertInvoiceReturnSchema = Schema.Struct({
 type UpsertInvoiceReturn = typeof UpsertInvoiceReturnSchema.Type
 
 type UpsertInvoiceSWRMutationResponse =
-    SWRMutationResponse<UpsertInvoiceReturn, unknown, Key, UpsertInvoice>
+    SWRMutationResponse<UpsertInvoiceReturn, unknown, Key, UpsertInvoiceBody>
 
 class UpsertInvoiceSWRResponse {
   private swrResponse: UpsertInvoiceSWRMutationResponse
@@ -98,7 +100,7 @@ export type UpsertParams = CreateParams | UpdateParams
 type RequestArgs = {
   apiUrl: string
   accessToken: string
-  body: UpsertInvoice
+  body: UpsertInvoiceBody
 }
 
 type UpsertRequestFn = (args: RequestArgs) => Promise<UpsertInvoiceReturn>
@@ -127,7 +129,7 @@ function getRequestFn(
       throw new Error('Invalid params for upsert mode')
     }
 
-    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertInvoice }) =>
+    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertInvoiceBody }) =>
       updateInvoice(apiUrl, accessToken, { params, body })
   }
   else {
@@ -135,7 +137,7 @@ function getRequestFn(
       throw new Error('Invalid params for create mode')
     }
 
-    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertInvoice }) =>
+    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertInvoiceBody }) =>
       createInvoice(apiUrl, accessToken, { params, body })
   }
 }
@@ -159,7 +161,7 @@ export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
     }),
     (
       { accessToken, apiUrl, businessId, invoiceId },
-      { arg: body }: { arg: UpsertInvoice },
+      { arg: body }: { arg: UpsertInvoiceBody },
     ) => {
       const request = getRequestFn(mode, { businessId, invoiceId })
 
@@ -171,6 +173,7 @@ export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
     },
     {
       revalidate: false,
+      throwOnError: true,
     },
   )
 
