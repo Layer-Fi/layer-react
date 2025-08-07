@@ -11,7 +11,7 @@ interface DownloadCsvTemplateButtonProps<T> {
   className?: string
 }
 
-export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | number }>({ children, className, csvProps, fileName = 'template.csv' }: PropsWithChildren<DownloadCsvTemplateButtonProps<T>>) => {
+export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | number | null | undefined }>({ children, className, csvProps, fileName = 'template.csv' }: PropsWithChildren<DownloadCsvTemplateButtonProps<T>>) => {
   const { headers, rows = [] } = csvProps
   const handleDownload = () => {
     const csvData: string[][] = [

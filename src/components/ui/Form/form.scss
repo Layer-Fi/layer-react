@@ -5,7 +5,8 @@
   color: var(--color-danger);
 }
 
-.Layer__UI__TextField {
+.Layer__UI__TextField,
+.Layer__UI__DateField {
   display: grid;
 
   grid-template-areas:
@@ -22,6 +23,12 @@
 
     &[data-textarea] {
       align-items: start;
+    }
+  }
+
+  &[data-readonly] {
+    [slot='input'] {
+      background-color: var(--bg-muted);
     }
   }
 

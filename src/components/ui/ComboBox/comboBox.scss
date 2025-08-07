@@ -22,6 +22,10 @@
   &--disabled {
     cursor: not-allowed;
   }
+
+  &--readonly {
+    background-color: var(--bg-muted);
+  }
 }
 
 .Layer__ComboBoxContainer > .Layer__ComboBoxControl {
@@ -54,6 +58,10 @@
 
 .Layer__ComboBoxIndicatorsContainer {
   padding-inline-end: var(--spacing-3xs);
+
+  &--readonly {
+    visibility: hidden;
+  }
 }
 
 .Layer__ComboBoxClearIndicator {

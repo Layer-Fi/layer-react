@@ -1,35 +1,55 @@
 .Layer__InvoiceForm {
-  min-width: 32rem;
-
   .Layer__InvoiceForm__Field__Customer,
   .Layer__InvoiceForm__Field__Email,
   .Layer__InvoiceForm__Field__Address {
-    grid-template-columns: 8rem 24rem;
+    grid-template-columns: 8rem auto;
+    width: clamp(28rem, 100%, 44rem);
+  }
+
+  .Layer__InvoiceForm__Field__InvoiceNo,
+  .Layer__InvoiceForm__Field__Terms,
+  .Layer__InvoiceForm__Field__SentAt,
+  .Layer__InvoiceForm__Field__DueAt {
+    grid-template-columns: 8rem auto;
+    width: clamp(16rem, 100%, 24rem);
   }
 
   .Layer__InvoiceForm__LineItem {
     display: grid;
-    grid-template-columns:
+
+    --grid-cols-base:
       minmax(10rem, 1.5fr)
       minmax(12rem, 2fr)
       minmax(5rem, 0.75fr)
       minmax(6rem, 0.75fr)
       minmax(6rem, 0.75fr)
-      minmax(3rem, 0.25fr)
+      minmax(3rem, 0.25fr);
+
+    grid-template-columns:
+      var(--grid-cols-base)
       auto;
 
     width: 100%;
-    min-width: 45rem;
+
+    &--readonly {
+      grid-template-columns: var(--grid-cols-base);
+    }
   }
+
+  min-width: 54rem;
 }
 
 .Layer__InvoiceForm__Terms {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+
+  max-width: 64rem;
   padding: var(--spacing-lg) var(--spacing-2xl);
 }
 
 .Layer__InvoiceForm__LineItems {
   padding: var(--spacing-lg) var(--spacing-2xl);
-  background-color: var(--color-base-50);
+  background-color: var(--bg-subtle);
 }
 
 .Layer__InvoiceForm__Metadata {
@@ -58,4 +78,9 @@
       7.5rem
       minmax(6rem, 0.8fr);
   }
+}
+
+.Layer__InvoiceForm__TermsComboBox {
+  display: grid;
+  align-items: center;
 }

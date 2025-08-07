@@ -96,5 +96,15 @@
       flex: 3 1 0;
       min-width: 12rem;
     }
+
+    .Layer__csv-upload__validate-csv-table__cell--external_id,
+    .Layer__csv-upload__validate-csv-table__header-cell--external_id {
+      min-width: 7.5rem;
+    }
+
+    .Layer__csv-upload__validate-csv-table__cell--reference_number,
+    .Layer__csv-upload__validate-csv-table__header-cell--reference_number {
+      min-width: 7.5rem;
+    }
   }
 }

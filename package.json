@@ -75,7 +75,8 @@
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.8",
-    "@tanstack/react-form": "^1.9.1",
+    "@internationalized/date": "^3.8.2",
+    "@tanstack/react-form": "^1.15.2",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.9",
     "classnames": "^2.5.1",

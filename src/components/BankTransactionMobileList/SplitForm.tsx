@@ -281,7 +281,7 @@ export const SplitForm = ({
               ))}
               <TextButton
                 onClick={addSplit}
-                disabled={rowState.splits.length > 5 || isLoading}
+                disabled={isLoading}
                 className='Layer__add-new-split'
               >
                 Add new split
