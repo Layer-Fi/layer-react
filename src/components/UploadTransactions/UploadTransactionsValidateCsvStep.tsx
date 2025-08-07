@@ -12,7 +12,7 @@ import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
 import { Badge, BadgeVariant } from '../Badge'
 import { useWizard } from '../Wizard/Wizard'
 import { BankTransaction } from '../../types'
-import { CustomAccountTransactionRow } from '@layerfi/components/hooks/customAccounts/types'
+import { CustomAccountTransactionRow } from '../../hooks/customAccounts/types'
 import { PreviewCsv } from '../CsvUpload/types'
 
 interface UploadTransactionsValidateCsvStepProps {
