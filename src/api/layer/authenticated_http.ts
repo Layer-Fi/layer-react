@@ -114,7 +114,10 @@ const handleResponse = async <Return>(res: Response) => {
     )
     throw apiError
   }
-  if (res.status === 204) return null as Return
+
+  if (res.status === 204) {
+    return { data: {} } as Return
+  }
 
   const parsedResponse = (await res.json()) as Return | FailedAPIResponse
   if (parsedResponse && 'errors' in (parsedResponse as FailedAPIResponse)) {

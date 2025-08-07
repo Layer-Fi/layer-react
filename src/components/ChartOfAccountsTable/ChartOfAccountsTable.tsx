@@ -128,6 +128,21 @@ export const ChartOfAccountsTableContent = ({
     )
   }, [expandAll])
 
+  const onConfirmDelete = async () => {
+    if (!accountToDelete) return
+    await deleteAccount(accountToDelete.id)
+  }
+
+  const getDeleteButtonTooltip = (account: AugmentedLedgerAccountBalance) => {
+    if (account.is_deletable) {
+      return undefined
+    }
+    if (account.balance !== 0) {
+      return 'This account cannot be deleted because it has ledger entries'
+    }
+    return 'This account cannot be deleted because it is a required account'
+  }
+
   // Clear all manually toggled expanded/collapsed rows when the search query changes
   useEffect(() => {
     setToggledKeys({})
@@ -163,7 +178,7 @@ export const ChartOfAccountsTableContent = ({
       || (manuallyToggled !== false && (account.isMatching || depth === 0))
 
     const isNonEditable = !templateAccountsEditable && !!account.stable_name
-    const isDeletable = account.is_deletable
+    const isDeleteDisabled = !account.is_deletable
 
     const onClickRow = (e: React.MouseEvent) => {
       e.stopPropagation()
@@ -248,6 +263,15 @@ export const ChartOfAccountsTableContent = ({
           </TableCell>
           <TableCell align={TableCellAlign.RIGHT}>
             <HStack className='Layer__coa__actions' gap='xs'>
+
+              <Button
+                variant={ButtonVariant.secondary}
+                rightIcon={<List size={14} />}
+                iconOnly
+                onClick={onClickView}
+              >
+                View
+              </Button>
               <Button
                 variant={ButtonVariant.secondary}
                 rightIcon={<Edit2 size={14} />}
@@ -260,22 +284,14 @@ export const ChartOfAccountsTableContent = ({
               </Button>
               <Button
                 variant={ButtonVariant.secondary}
-                rightIcon={<List size={14} />}
+                rightIcon={<Trash2 size={14} />}
                 iconOnly
-                onClick={onClickView}
+                onClick={onClickDelete}
+                disabled={isDeleteDisabled}
+                tooltip={getDeleteButtonTooltip(account)}
               >
-                View
+                Delete
               </Button>
-              {isDeletable && (
-                <Button
-                  variant={ButtonVariant.secondary}
-                  rightIcon={<Trash2 size={14} />}
-                  iconOnly
-                  onClick={onClickDelete}
-                >
-                  Delete
-                </Button>
-              )}
             </HStack>
           </TableCell>
         </TableRow>
@@ -353,7 +369,7 @@ export const ChartOfAccountsTableContent = ({
         }}
         title={`Delete ${accountToDelete?.name}`}
         description='This account will be permanently removed from your Chart of Accounts.'
-        onConfirm={() => deleteAccount(accountToDelete?.id || '')}
+        onConfirm={onConfirmDelete}
         confirmLabel='Delete Account'
         cancelLabel='Cancel'
       />
