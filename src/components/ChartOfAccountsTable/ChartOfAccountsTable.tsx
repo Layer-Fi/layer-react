@@ -22,11 +22,12 @@ import {
   ExpandActionState,
 } from './ChartOfAccountsTableWithPanel'
 import { HStack } from '../ui/Stack/Stack'
-import { List } from 'lucide-react'
+import { List, Trash2 } from 'lucide-react'
 import { convertCentsToCurrency } from '../../utils/format'
 import { Span } from '../ui/Typography/Text'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { filterAccounts, getMatchedTextIndices, sortAccountsRecursive } from './utils/utils'
+import { BaseConfirmationModal } from '../BaseConfirmationModal/BaseConfirmationModal'
 
 const highlightMatch = ({ text, query, isMatching }: { text: string, query: string, isMatching?: boolean }): ReactNode => {
   const matchedTextIndices = getMatchedTextIndices({ text, query, isMatching })
@@ -93,8 +94,9 @@ export const ChartOfAccountsTableContent = ({
   templateAccountsEditable: boolean
 }) => {
   const { setSelectedAccount } = useContext(LedgerAccountsContext)
-  const { editAccount } = useContext(ChartOfAccountsContext)
+  const { editAccount, deleteAccount } = useContext(ChartOfAccountsContext)
   const [toggledKeys, setToggledKeys] = useState<Record<string, boolean>>({})
+  const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
 
   const sortedAccounts = useMemo(() => sortAccountsRecursive(data.accounts), [data.accounts])
 
@@ -161,6 +163,7 @@ export const ChartOfAccountsTableContent = ({
       || (manuallyToggled !== false && (account.isMatching || depth === 0))
 
     const isNonEditable = !templateAccountsEditable && !!account.stable_name
+    const isDeletable = account.is_deletable
 
     const onClickRow = (e: React.MouseEvent) => {
       e.stopPropagation()
@@ -187,6 +190,12 @@ export const ChartOfAccountsTableContent = ({
       e.preventDefault()
       e.stopPropagation()
       setSelectedAccount({ ...account, nodeType })
+    }
+
+    const onClickDelete = (e: React.MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      setAccountToDelete(account)
     }
 
     return (
@@ -257,6 +266,16 @@ export const ChartOfAccountsTableContent = ({
               >
                 View
               </Button>
+              {isDeletable && (
+                <Button
+                  variant={ButtonVariant.secondary}
+                  rightIcon={<Trash2 size={14} />}
+                  iconOnly
+                  onClick={onClickDelete}
+                >
+                  Delete
+                </Button>
+              )}
             </HStack>
           </TableCell>
         </TableRow>
@@ -287,42 +306,61 @@ export const ChartOfAccountsTableContent = ({
   }
 
   return (
-    <Table componentName='chart-of-accounts'>
-      <colgroup>
-        <col className='Layer__chart-of-accounts--name' />
-        <col className='Layer__chart-of-accounts--type' />
-        <col className='Layer__chart-of-accounts--subtype' />
-        <col className='Layer__chart-of-accounts--balance' />
-        <col className='Layer__chart-of-accounts--actions' />
-      </colgroup>
-      <TableHead>
-        <TableRow isHeadRow rowKey='charts-of-accounts-head-row'>
-          <TableCell isHeaderCell>
-            {stringOverrides?.nameColumnHeader || 'Name'}
-          </TableCell>
-          <TableCell isHeaderCell>
-            {stringOverrides?.typeColumnHeader || 'Type'}
-          </TableCell>
-          <TableCell isHeaderCell>
-            {stringOverrides?.subtypeColumnHeader || 'Sub-Type'}
-          </TableCell>
-          <TableCell isHeaderCell>
-            {stringOverrides?.balanceColumnHeader || 'Balance'}
-          </TableCell>
-          <TableCell isHeaderCell />
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {!error
-          && filteredAccounts.map((account, index) =>
-            renderChartOfAccountsDesktopRow({
-              account,
-              index,
-              depth: 0,
-              searchQuery,
-            }),
-          )}
-      </TableBody>
-    </Table>
+    <>
+      <Table componentName='chart-of-accounts'>
+        <colgroup>
+          <col className='Layer__chart-of-accounts--name' />
+          <col className='Layer__chart-of-accounts--type' />
+          <col className='Layer__chart-of-accounts--subtype' />
+          <col className='Layer__chart-of-accounts--balance' />
+          <col className='Layer__chart-of-accounts--actions' />
+        </colgroup>
+        <TableHead>
+          <TableRow isHeadRow rowKey='charts-of-accounts-head-row'>
+            <TableCell isHeaderCell>
+              {stringOverrides?.nameColumnHeader || 'Name'}
+            </TableCell>
+            <TableCell isHeaderCell>
+              {stringOverrides?.typeColumnHeader || 'Type'}
+            </TableCell>
+            <TableCell isHeaderCell>
+              {stringOverrides?.subtypeColumnHeader || 'Sub-Type'}
+            </TableCell>
+            <TableCell isHeaderCell>
+              {stringOverrides?.balanceColumnHeader || 'Balance'}
+            </TableCell>
+            <TableCell isHeaderCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {!error
+            && filteredAccounts.map((account, index) =>
+              renderChartOfAccountsDesktopRow({
+                account,
+                index,
+                depth: 0,
+                searchQuery,
+              }),
+            )}
+        </TableBody>
+      </Table>
+      <BaseConfirmationModal
+        isOpen={accountToDelete !== null}
+        onOpenChange={(isOpen: boolean) => {
+          if (isOpen) {
+            setAccountToDelete(accountToDelete)
+          }
+          else {
+            setAccountToDelete(null)
+          }
+        }}
+        title={`Delete ${accountToDelete?.name}`}
+        description='This account will be permanently removed from your Chart of Accounts.'
+        onConfirm={() => deleteAccount(accountToDelete?.id || '')}
+        confirmLabel='Delete Account'
+        cancelLabel='Cancel'
+      />
+    </>
+
   )
 }
