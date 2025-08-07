@@ -3,7 +3,7 @@ import { ProfitAndLoss } from '../ProfitAndLoss'
 import { useProfitAndLossDetailLines } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
-import { DetailReportBreadcrumb } from '../DetailReportBreadcrumb'
+import { DetailReportBreadcrumb, BreadcrumbItem } from '../DetailReportBreadcrumb'
 import { DataTable, type ColumnConfig } from '../DataTable/DataTable'
 import { centsToDollars } from '../../models/Money'
 import { Badge } from '../Badge'
@@ -60,7 +60,9 @@ export interface ProfitAndLossDetailReportStringOverrides {
 
 export interface ProfitAndLossDetailReportProps {
   lineItemName: string
+  breadcrumbPath?: BreadcrumbItem[]
   onClose: () => void
+  onBreadcrumbClick?: (lineItemName: string) => void
   stringOverrides?: ProfitAndLossDetailReportStringOverrides
 }
 
@@ -80,14 +82,64 @@ const EmptyState = () => (
   />
 )
 
+// Utility function to find the breadcrumb path for a line item in the P&L structure
+const findLineItemPath = (pnlData: any, targetLineItemName: string): BreadcrumbItem[] | null => {
+  if (!pnlData) return null
+
+  const searchInLineItem = (lineItem: any, path: BreadcrumbItem[]): BreadcrumbItem[] | null => {
+    if (!lineItem || typeof lineItem !== 'object') return null
+
+    // Check if this is the target line item
+    if (lineItem.name === targetLineItemName) {
+      return [...path, { name: lineItem.name, display_name: lineItem.display_name }]
+    }
+
+    // Search in nested line items
+    if (lineItem.line_items && Array.isArray(lineItem.line_items)) {
+      for (const childItem of lineItem.line_items) {
+        const result = searchInLineItem(childItem, [...path, { name: lineItem.name, display_name: lineItem.display_name }])
+        if (result) return result
+      }
+    }
+
+    return null
+  }
+
+  // Search through all properties of the P&L data to find LineItem objects
+  for (const [_key, value] of Object.entries(pnlData)) {
+    // Skip non-LineItem properties (like business_id, dates, calculated values)
+    if (value && typeof value === 'object' && 'name' in value && 'display_name' in value) {
+      const result = searchInLineItem(value, [])
+      if (result) return result
+    }
+  }
+
+  return null
+}
+
 export const ProfitAndLossDetailReport = ({
   lineItemName,
+  breadcrumbPath,
   onClose,
+  onBreadcrumbClick,
   stringOverrides,
 }: ProfitAndLossDetailReportProps) => {
   const { businessId } = useLayerContext()
-  const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
+  const { tagFilter, dateRange, data: pnlData } = useContext(ProfitAndLoss.Context)
   const [selectedSource, setSelectedSource] = useState<LedgerEntrySource | null>(null)
+
+  // Generate dynamic breadcrumbs based on P&L data structure
+  const dynamicBreadcrumbs = useMemo(() => {
+    if (breadcrumbPath) {
+      // Find the current line item's display_name from P&L data
+      const foundPath = findLineItemPath(pnlData, lineItemName)
+      const currentItem = foundPath?.find(item => item.name === lineItemName)
+      return [...breadcrumbPath, { name: lineItemName, display_name: currentItem?.display_name || lineItemName }]
+    }
+
+    const foundPath = findLineItemPath(pnlData, lineItemName)
+    return foundPath || [{ name: lineItemName, display_name: lineItemName }]
+  }, [breadcrumbPath, pnlData, lineItemName])
 
   const formatDateRange = (startDate: Date, endDate: Date) => {
     const start = format(startDate, 'MMM d')
@@ -161,9 +213,10 @@ export const ProfitAndLossDetailReport = ({
     return (
       <div className='Layer__profit-and-loss-detail-report'>
         <DetailReportBreadcrumb
-          breadcrumbs={['Reports', 'P&L', 'Transaction Details']}
+          breadcrumbs={dynamicBreadcrumbs}
           subtitle={formatDateRange(dateRange.startDate, dateRange.endDate)}
           onClose={handleBackToList}
+          onBreadcrumbClick={onBreadcrumbClick}
           className='Layer__profit-and-loss-detail-report__header'
         />
         <div className='Layer__profit-and-loss-detail-report__content'>
@@ -183,9 +236,10 @@ export const ProfitAndLossDetailReport = ({
   return (
     <div className='Layer__profit-and-loss-detail-report'>
       <DetailReportBreadcrumb
-        breadcrumbs={['Reports', 'P&L', `${lineItemName} Details`]}
+        breadcrumbs={dynamicBreadcrumbs}
         subtitle={formatDateRange(dateRange.startDate, dateRange.endDate)}
         onClose={onClose}
+        onBreadcrumbClick={onBreadcrumbClick}
         className='Layer__profit-and-loss-detail-report__header'
       />
 

@@ -84,6 +84,7 @@ export const ProfitAndLossReport = ({
           <ProfitAndLossDetailReport
             lineItemName={selectedLineItemName}
             onClose={handleCloseDetailReport}
+            onBreadcrumbClick={handleLineItemClick}
           />
         )
         : (

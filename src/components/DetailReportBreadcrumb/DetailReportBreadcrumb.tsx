@@ -1,11 +1,17 @@
-import { ReactNode } from 'react'
 import { BackButton } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'
+import ChevronRight from '../../icons/ChevronRight'
+
+export interface BreadcrumbItem {
+  name: string
+  display_name: string
+}
 
 export interface DetailReportBreadcrumbProps {
-  breadcrumbs: string[]
+  breadcrumbs: BreadcrumbItem[]
   subtitle?: string
   onClose: () => void
+  onBreadcrumbClick?: (lineItemName: string) => void
   className?: string
 }
 
@@ -13,6 +19,7 @@ export const DetailReportBreadcrumb = ({
   breadcrumbs,
   subtitle,
   onClose,
+  onBreadcrumbClick,
   className,
 }: DetailReportBreadcrumbProps) => {
   return (
@@ -25,18 +32,24 @@ export const DetailReportBreadcrumb = ({
               <div className='Layer__detail-report-breadcrumb__path'>
                 {breadcrumbs.map((crumb, index) => (
                   <span key={index}>
-                    <span
-                      className={
-                        index === breadcrumbs.length - 1
-                          ? 'Layer__detail-report-breadcrumb__current'
-                          : 'Layer__detail-report-breadcrumb__segment'
-                      }
-                    >
-                      {crumb}
-                    </span>
+                    {index === breadcrumbs.length - 1
+                      ? (
+                        <span className='Layer__detail-report-breadcrumb__current'>
+                          {crumb.display_name}
+                        </span>
+                      )
+                      : (
+                        <button
+                          className='Layer__detail-report-breadcrumb__segment'
+                          onClick={() => onBreadcrumbClick?.(crumb.name)}
+                          type='button'
+                        >
+                          {crumb.display_name}
+                        </button>
+                      )}
                     {index < breadcrumbs.length - 1 && (
                       <span className='Layer__detail-report-breadcrumb__separator'>
-                        &gt;
+                        <ChevronRight size={10} />
                       </span>
                     )}
                   </span>

@@ -1,7 +1,13 @@
 .Layer__detail-report-breadcrumb {
   display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-sm);
+  flex-direction: row;
+  align-items: center;
+  padding: var(--spacing-3xs);
+  gap: var(--spacing-md);
+  height: 44px;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
 }
 
 .Layer__detail-report-breadcrumb__content {
@@ -13,46 +19,51 @@
 .Layer__detail-report-breadcrumb__path {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  // gap: var(--spacing-3xs);
+  white-space: nowrap;
+
+  > span {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3xs);
+  }
 }
 
 .Layer__detail-report-breadcrumb__segment {
-  font-family: 'Inter';
-  font-weight: 540;
-  font-size: 14px;
-  line-height: 140%;
-  letter-spacing: -0.005em;
-  color: #3E4044;
-  font-variation-settings: 'slnt' 0;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-md);
+  color: var(--color-base-600);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-black);
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-info);
+    outline-offset: 1px;
+  }
 }
 
 .Layer__detail-report-breadcrumb__separator {
-  font-family: 'Inter';
-  font-weight: 540;
-  font-size: 14px;
-  line-height: 140%;
-  letter-spacing: -0.005em;
-  color: #818388;
-  font-variation-settings: 'slnt' 0;
-  margin: 0 var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-base-500);
 }
 
 .Layer__detail-report-breadcrumb__current {
-  font-family: 'Inter';
-  font-weight: 540;
-  font-size: 14px;
-  line-height: 140%;
-  letter-spacing: -0.005em;
-  color: #0D111A;
-  font-variation-settings: 'slnt' 0;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-md);
+  color: var(--text-color-primary);
 }
 
 .Layer__detail-report-breadcrumb__subtitle {
-  font-family: 'Inter';
-  font-weight: 460;
-  font-size: 12px;
-  line-height: 140%;
-  letter-spacing: -0.005em;
-  color: #5F6166;
-  font-variation-settings: 'slnt' 0;
+  font-size: var(--text-sm);
+  color: var(--text-color-secondary);
 }
