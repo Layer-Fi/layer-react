@@ -12,6 +12,8 @@ import { SubmitAction, SubmitButton } from '../Button/SubmitButton'
 import { Badge, BadgeVariant } from '../Badge'
 import { useWizard } from '../Wizard/Wizard'
 import { BankTransaction } from '../../types'
+import { CustomAccountTransactionRow } from '@layerfi/components/hooks/customAccounts/types'
+import { PreviewCsv } from '../CsvUpload/types'
 
 interface UploadTransactionsValidateCsvStepProps {
   parseCsvResponse: CustomAccountParseCsvResponse | null
@@ -23,6 +25,20 @@ interface UploadTransactionsValidateCsvStepProps {
 const formatters = {
   date: (parsed: string) => formatDate(parsed, 'MM/dd/yyyy'),
   amount: (parsed: number) => convertCentsToCurrency(parsed) ?? '',
+}
+
+const generateDynamicHeaders = (transactionsPreview: PreviewCsv<CustomAccountTransactionRow>) => {
+  const hasExternalId = transactionsPreview.some(transaction =>
+    transaction.external_id?.parsed != null,
+  )
+  const hasReferenceNumber = transactionsPreview.some(transaction =>
+    transaction.reference_number?.parsed != null,
+  )
+  return {
+    ...(hasExternalId && { external_id: 'External ID' }),
+    ...(hasReferenceNumber && { reference_number: 'Reference No.' }),
+    ...templateHeaders,
+  }
 }
 
 export function UploadTransactionsValidateCsvStep(
@@ -43,6 +59,8 @@ export function UploadTransactionsValidateCsvStep(
     invalid_transactions_count: invalidTransactionsCount,
     total_transactions_count: totalTransactionsCount,
   } = parseCsvResponse!
+
+  const dynamicHeaders = generateDynamicHeaders(transactionsPreview)
 
   const onClickUploadTransactions = useCallback(() => {
     void uploadTransactions({
@@ -71,7 +89,7 @@ export function UploadTransactionsValidateCsvStep(
         <ValidateCsvTable
           className='Layer__upload-transactions__preview_table'
           data={transactionsPreview}
-          headers={templateHeaders}
+          headers={dynamicHeaders}
           formatters={formatters}
         />
       </VStack>
