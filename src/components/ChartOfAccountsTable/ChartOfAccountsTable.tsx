@@ -347,10 +347,7 @@ export const ChartOfAccountsTableContent = ({
       <BaseConfirmationModal
         isOpen={accountToDelete !== null}
         onOpenChange={(isOpen: boolean) => {
-          if (isOpen) {
-            setAccountToDelete(accountToDelete)
-          }
-          else {
+          if (!isOpen) {
             setAccountToDelete(null)
           }
         }}
