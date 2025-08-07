@@ -1,6 +1,6 @@
-import { useCallback, useRef, type PropsWithChildren } from 'react'
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, type PropsWithChildren } from 'react'
 import classNames from 'classnames'
-import { getEmptyLineItem, useInvoiceForm } from './useInvoiceForm'
+import { useInvoiceForm } from './useInvoiceForm'
 import type { Invoice } from '../../../features/invoices/invoiceSchemas'
 import { UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
 import { Form } from '../../ui/Form/Form'
@@ -15,6 +15,10 @@ import { convertCentsToCurrency } from '../../../utils/format'
 import { getDurationInDaysFromTerms, InvoiceTermsComboBox, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { type ZonedDateTime } from '@internationalized/date'
 import { withForceUpdate } from '../../../features/forms/components/FormBigDecimalField'
+import { type InvoiceFormState, flattenValidationErrors, getEmptyLineItem } from './formUtils'
+import { DataState, DataStateStatus } from '../../DataState'
+import { AlertTriangle } from 'lucide-react'
+import { TextSize } from '../../Typography'
 
 const INVOICE_FORM_CSS_PREFIX = 'Layer__InvoiceForm'
 const INVOICE_FORM_FIELD_CSS_PREFIX = `${INVOICE_FORM_CSS_PREFIX}__Field`
@@ -50,14 +54,17 @@ export type InvoiceFormMode = { mode: UpsertInvoiceMode.Update, invoice: Invoice
 export type InvoiceFormProps = InvoiceFormMode & {
   isReadOnly: boolean
   onSuccess?: (invoice: Invoice) => void
+  onChangeFormState?: (formState: InvoiceFormState) => void
 }
 
-export const InvoiceForm = (props: InvoiceFormProps) => {
-  const { onSuccess, isReadOnly, mode } = props
-  const { form, subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal } = useInvoiceForm(
+export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
+  const { onSuccess, onChangeFormState, isReadOnly, mode } = props
+  const { form, formState, totals } = useInvoiceForm(
     { onSuccess, ...(mode === UpsertInvoiceMode.Update ? { mode, invoice: props.invoice } : { mode }) },
   )
-  const lastDueAtRef = useRef<ZonedDateTime | null>(form.getFieldValue('dueAt'))
+  const { subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal } = totals
+
+  const lastDueAtRef = useRef<ZonedDateTime | null>(null)
 
   const updateDueAtFromTermsAndSentAt = useCallback((terms: InvoiceTermsValues, sentAt: ZonedDateTime | null) => {
     if (sentAt == null) return
@@ -74,8 +81,43 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
     }
   }, [form])
 
+  // Prevents default browser form submission behavior since we're handling submission externally
+  // via a custom handler (e.g., onClick). This ensures accidental native submits (like pressing
+  // Enter or using a <button type="submit">) don’t trigger unexpected behavior.
+  const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }, [])
+
+  useImperativeHandle(ref, () => ({
+    submit: () => form.handleSubmit(),
+  }))
+
+  useEffect(() => {
+    onChangeFormState?.(formState)
+  }, [formState, onChangeFormState])
+
   return (
-    <Form className={INVOICE_FORM_CSS_PREFIX}>
+    <Form className={INVOICE_FORM_CSS_PREFIX} onSubmit={blockNativeOnSubmit}>
+      <form.Subscribe selector={state => state.errorMap}>
+        {(errorMap) => {
+          const validationErrors = flattenValidationErrors(errorMap)
+          if (validationErrors.length > 0) {
+            return (
+              <HStack className='Layer__InvoiceForm__FormError'>
+                <DataState
+                  className='Layer__InvoiceForm__FormError__DataState'
+                  icon={<AlertTriangle size={16} />}
+                  status={DataStateStatus.failed}
+                  title={validationErrors[0]}
+                  titleSize={TextSize.md}
+                  inline
+                />
+              </HStack>
+            )
+          }
+        }}
+      </form.Subscribe>
       <HStack gap='xl' className={`${INVOICE_FORM_CSS_PREFIX}__Terms`}>
         <VStack gap='xs'>
           <form.Field
@@ -187,7 +229,7 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
                 >
                   <form.AppField name={`lineItems[${index}].product`}>
                     {innerField =>
-                      <innerField.FormTextField label='Product' showLabel={index === 0} isReadOnly={isReadOnly} />}
+                      <innerField.FormTextField label='Product/Service' showLabel={index === 0} isReadOnly={isReadOnly} />}
                   </form.AppField>
                   <form.AppField name={`lineItems[${index}].description`}>
                     {innerField =>
@@ -286,4 +328,5 @@ export const InvoiceForm = (props: InvoiceFormProps) => {
       </VStack>
     </Form>
   )
-}
+})
+InvoiceForm.displayName = 'InvoiceForm'

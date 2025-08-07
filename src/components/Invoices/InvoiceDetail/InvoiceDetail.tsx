@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { BaseDetailView } from '../../BaseDetailView/BaseDetailView'
 import { InvoiceForm, type InvoiceFormMode } from '../InvoiceForm/InvoiceForm'
 import { UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
@@ -11,6 +11,7 @@ import { convertCentsToCurrency } from '../../../utils/format'
 import { InvoiceStatusCell } from '../InvoiceStatusCell/InvoiceStatusCell'
 import { Button } from '../../ui/Button/Button'
 import { SquarePen } from 'lucide-react'
+import type { InvoiceFormState } from '../InvoiceForm/formUtils'
 
 export type InvoiceDetailProps = InvoiceFormMode & {
   onSuccess?: (invoice: Invoice) => void
@@ -20,31 +21,59 @@ export type InvoiceDetailProps = InvoiceFormMode & {
 export const InvoiceDetail = (props: InvoiceDetailProps) => {
   const { onSuccess, onGoBack, ...restProps } = props
   const [isReadOnly, setIsReadOnly] = useState(props.mode === UpsertInvoiceMode.Update)
+  const formRef = useRef<{ submit: () => void }>(null)
+  const onSubmit = useCallback(() => formRef.current?.submit(), [])
+  const [formState, setFormState] = useState<InvoiceFormState>({
+    isFormValid: true,
+    isSubmitting: false,
+    submitError: undefined,
+  })
+
+  const onChangeFormState = useCallback((nextState: InvoiceFormState) => {
+    setFormState(nextState)
+  }, [])
 
   const Header = useCallback(() => {
-    return <InvoiceDetailHeader isReadOnly={isReadOnly} setIsReadOnly={setIsReadOnly} {...restProps} />
-  }, [isReadOnly, restProps])
+    return (
+      <InvoiceDetailHeader
+        onSubmit={onSubmit}
+        isReadOnly={isReadOnly}
+        formState={formState}
+        setIsReadOnly={setIsReadOnly}
+        {...restProps}
+      />
+    )
+  }, [onSubmit, isReadOnly, formState, restProps])
 
   return (
     <BaseDetailView slots={{ Header }} name='Invoice Detail View' onGoBack={onGoBack}>
       {restProps.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={restProps.invoice} />}
-      <InvoiceForm isReadOnly={isReadOnly} onSuccess={onSuccess} {...props} />
+      <InvoiceForm
+        isReadOnly={isReadOnly}
+        onSuccess={onSuccess}
+        onChangeFormState={onChangeFormState}
+        {...props}
+        ref={formRef}
+      />
     </BaseDetailView>
   )
 }
 
 type InvoiceDetailHeaderProps = InvoiceFormMode & {
+  onSubmit: () => void
   isReadOnly: boolean
+  formState: InvoiceFormState
   setIsReadOnly: (isReadOnly: boolean) => void
 }
 const InvoiceDetailHeader = (props: InvoiceDetailHeaderProps) => {
-  const { mode, isReadOnly, setIsReadOnly } = props
+  const { mode, onSubmit, formState, isReadOnly, setIsReadOnly } = props
+  const { isSubmitting } = formState
 
   if (mode === UpsertInvoiceMode.Create) {
     return (
       <HStack justify='space-between' align='center' fluid pie='md'>
         <Heading>Create Invoice</Heading>
-        <Button>Review & Send</Button>
+        <Button isPending={isSubmitting} onPress={onSubmit}>Review & Send</Button>
       </HStack>
     )
   }
@@ -64,9 +93,7 @@ const InvoiceDetailHeader = (props: InvoiceDetailHeaderProps) => {
 
         )
         : (
-          <Button>
-            Review & Resend
-          </Button>
+          <Button isPending={isSubmitting} onPress={onSubmit}>Review & Resend</Button>
         )}
     </HStack>
   )
