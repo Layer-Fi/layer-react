@@ -23,14 +23,12 @@
 }
 
 .Layer__data-state__icon--neutral {
-  box-shadow: 0 0 3px 0 rgb(23 51 45 / 4%) inset;
   box-shadow: none;
   background: var(--bg-muted);
   color: var(--fg-default);
 }
 
 .Layer__data-state__icon--success {
-  box-shadow: 0 0 3px 0 rgb(23 51 45 / 4%) inset;
   box-shadow: none;
   background: var(--color-info-success-bg);
   color: var(--color-info-success-fg);
@@ -38,7 +36,6 @@
 
 .Layer__data-state__icon--error {
   box-shadow: none;
-  background: transparent;
   background: var(--color-info-error-bg);
   color: var(--color-info-error-fg);
 }

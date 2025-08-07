@@ -119,11 +119,11 @@ export const validateOnSubmit = ({ value: invoice }: { value: InvoiceForm }) => 
   }
 
   if (invoice.sentAt === null) {
-    errors.push({ invoiceNumber: 'Invoice date is a required field.' })
+    errors.push({ sentAt: 'Invoice date is a required field.' })
   }
 
   if (invoice.dueAt === null) {
-    errors.push({ invoiceNumber: 'Due date is a required field.' })
+    errors.push({ dueAt: 'Due date is a required field.' })
   }
 
   if (invoice.lineItems.length === 0) {
@@ -132,8 +132,8 @@ export const validateOnSubmit = ({ value: invoice }: { value: InvoiceForm }) => 
 
   const emptyLineItem = getEmptyLineItem()
   invoice.lineItems.some((item) => {
-    if (!getIsEqualLineItems(item, emptyLineItem) && (item.product === null || item.description === null)) {
-      errors.push({ lineItems: 'Invoice has incomplete line items. Include required fields Product/Service and Description.' })
+    if (!getIsEqualLineItems(item, emptyLineItem) && (item.product === '')) {
+      errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field Product/Service.' })
       return true
     }
   })

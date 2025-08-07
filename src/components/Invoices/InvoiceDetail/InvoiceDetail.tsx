@@ -52,7 +52,7 @@ export const InvoiceDetail = (props: InvoiceDetailProps) => {
         isReadOnly={isReadOnly}
         onSuccess={onSuccess}
         onChangeFormState={onChangeFormState}
-        {...props}
+        {...restProps}
         ref={formRef}
       />
     </BaseDetailView>
