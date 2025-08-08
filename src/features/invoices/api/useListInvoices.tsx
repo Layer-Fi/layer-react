@@ -3,9 +3,8 @@ import { useLayerContext } from '../../../contexts/LayerContext'
 import { useAuth } from '../../../hooks/useAuth'
 import { useEnvironment } from '../../../providers/Environment/EnvironmentInputProvider'
 import { get } from '../../../api/layer/authenticated_http'
-import { useGlobalInvalidator, useGlobalOptimisticUpdater } from '../../../utils/swr/useGlobalInvalidator'
-import { useCallback, useMemo } from 'react'
-import { debounce } from 'lodash'
+import { useGlobalCacheActions } from '../../../utils/swr/useGlobalCacheActions'
+import { useCallback } from 'react'
 import { Schema } from 'effect'
 import { toDefinedSearchParameters } from '../../../utils/request/toDefinedSearchParameters'
 import { PaginatedResponseMetaSchema, SortOrder, type PaginationParams, type SortParams } from '../../../types/utility/pagination'
@@ -197,63 +196,33 @@ export function useListInvoices({
   return new ListInvoicesSWRResponse(swrResponse)
 }
 
-const INVALIDATION_DEBOUNCE_OPTIONS = {
-  wait: 1000,
-  maxWait: 3000,
-}
+const withUpdatedInvoice = (updated: Invoice) =>
+  (inv: Invoice): Invoice => inv.id === updated.id ? updated : inv
 
-export function useInvoicesInvalidator() {
-  const { invalidate } = useGlobalInvalidator()
+export function useInvoicesGlobalCacheActions() {
+  const { patchAndMaybeInvalidate, forceReload } = useGlobalCacheActions()
 
-  const invalidateInvoices = useCallback(
-    () => invalidate(tags => tags.includes(LIST_INVOICES_TAG_KEY)),
-    [invalidate],
-  )
+  const patchInvoiceByKey = useCallback((updatedInvoice: Invoice) =>
+    patchAndMaybeInvalidate<ListInvoicesReturn[] | ListInvoicesReturn | undefined>(
+      tags => tags.includes(LIST_INVOICES_TAG_KEY),
+      (currentData) => {
+        const iterateOverPage = (page: ListInvoicesReturn): ListInvoicesReturn => ({
+          ...page,
+          data: page.data.map(withUpdatedInvoice(updatedInvoice)),
+        })
 
-  const debouncedInvalidateInvoices = useMemo(
-    () => debounce(
-      invalidateInvoices,
-      INVALIDATION_DEBOUNCE_OPTIONS.wait,
-      {
-        maxWait: INVALIDATION_DEBOUNCE_OPTIONS.maxWait,
-        trailing: true,
+        return Array.isArray(currentData)
+          ? currentData.map(iterateOverPage)
+          : currentData
       },
     ),
-    [invalidateInvoices],
+  [patchAndMaybeInvalidate],
   )
 
-  return {
-    invalidateInvoices,
-    debouncedInvalidateInvoices,
-  }
-}
-
-export function useInvoicesOptimisticUpdater() {
-  const { optimisticUpdate } = useGlobalOptimisticUpdater()
-
-  const optimisticallyUpdateInvoices = useCallback(
-    (
-      transformInvoice: (invoice: Invoice) => Invoice,
-    ) =>
-      optimisticUpdate<
-        Array<ListInvoicesReturn> | ListInvoicesReturn
-      >(
-        tags => tags.includes(LIST_INVOICES_TAG_KEY),
-        (currentData) => {
-          const iterateOverPage = (page: ListInvoicesReturn): ListInvoicesReturn => ({
-            ...page,
-            data: page.data.map(invoice => transformInvoice(invoice)),
-          })
-
-          if (Array.isArray(currentData)) {
-            return currentData.map(iterateOverPage)
-          }
-
-          return currentData
-        },
-      ),
-    [optimisticUpdate],
+  const forceReloadInvoices = useCallback(
+    () => forceReload(tags => tags.includes(LIST_INVOICES_TAG_KEY)),
+    [forceReload],
   )
 
-  return { optimisticallyUpdateInvoices }
+  return { patchInvoiceByKey, forceReloadInvoices }
 }

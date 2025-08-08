@@ -133,7 +133,7 @@ export const validateOnSubmit = ({ value: invoice }: { value: InvoiceForm }) => 
   const emptyLineItem = getEmptyLineItem()
   invoice.lineItems.some((item) => {
     if (!getIsEqualLineItems(item, emptyLineItem) && (item.product === '')) {
-      errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field Product/Service.' })
+      errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field: Product/Service.' })
       return true
     }
   })
