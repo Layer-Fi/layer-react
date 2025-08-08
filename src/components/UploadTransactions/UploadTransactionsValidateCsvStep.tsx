@@ -27,7 +27,7 @@ const formatters = {
   amount: (parsed: number) => convertCentsToCurrency(parsed) ?? '',
 }
 
-const generateDynamicHeaders = (transactionsPreview: PreviewCsv<CustomAccountTransactionRow>) => {
+const generateDynamicHeaders = (transactionsPreview: PreviewCsv<CustomAccountTransactionRow>): { [K in keyof CustomAccountTransactionRow]: string } => {
   const hasExternalId = transactionsPreview.some(transaction =>
     transaction.external_id?.parsed != null,
   )
