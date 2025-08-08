@@ -9,9 +9,7 @@ export const templateHeaders: { [K in keyof CustomAccountTransactionRow]: string
 export const allHeaders: { [K in keyof CustomAccountTransactionRow]: string } = {
   external_id: 'External ID',
   reference_number: 'Reference Number',
-  date: 'Date',
-  description: 'Description',
-  amount: 'Amount',
+  ...templateHeaders,
 }
 
 export const templateExampleTransactions: CustomAccountTransactionRow[] = [
