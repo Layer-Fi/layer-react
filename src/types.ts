@@ -16,7 +16,24 @@ export {
   Direction,
   BankTransaction,
   DisplayState,
+  SuggestedMatch,
+  BankTransactionMatch,
 } from './types/bank_transactions'
+export {
+  ApiMatchDetails,
+  ManualJournalEntryMatchDetails,
+  RefundPaymentMatchDetails,
+  VendorRefundPaymentMatchDetails,
+  // InvoicePaymentMatchDetails,
+  PayoutMatchDetails,
+  VendorPayoutMatchDetails,
+  BillPaymentMatchDetails,
+  PayrollPaymentMatchDetails,
+  TransferMatchDetails,
+  SuggestedMatchWithTransaction,
+  SuggestedMatchesWithTransactions,
+  isTransferMatch,
+} from './types/match_details'
 export {
   CategorizationStatus,
   Category,

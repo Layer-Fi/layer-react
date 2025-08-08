@@ -9,9 +9,9 @@ import {
   LedgerEntrySource,
   ManualLedgerEntrySource,
   OpeningBalanceLedgerEntrySource,
-  PayoutLedgerEntrySource,
-  RefundLedgerEntrySource,
-  RefundPaymentLedgerEntrySource,
+  CustomerPayoutLedgerEntrySource,
+  CustomerRefundAllocationLedgerEntrySource,
+  CustomerRefundPaymentLedgerEntrySource,
   TransactionLedgerEntrySource,
 } from '../../types/ledger_accounts'
 import { TableCellAlign } from '../../types/table'
@@ -46,16 +46,6 @@ interface SourceDetailStringOverrides {
   processorLabel?: string
 }
 
-/*
-
-    @SerialName("Transaction_Ledger_Entry_Source")
-    @SerialName("Invoice_Ledger_Entry_Source")
-    @SerialName("Manual_Ledger_Entry_Source")
-    @SerialName("Invoice_Payment_Ledger_Entry_Source")
-    @SerialName("Refund_Ledger_Entry_Source")
-    @SerialName("Opening_Balance_Ledger_Entry_Source")
-    @SerialName("Payout_Ledger_Entry_Source")
-    */
 export const SourceDetailView = ({
   source,
   stringOverrides,
@@ -146,12 +136,12 @@ export const SourceDetailView = ({
         </>
       )
     }
-    case 'Refund_Ledger_Entry_Source': {
-      const refundSource = source as RefundLedgerEntrySource
+    case 'Refund_Allocation_Ledger_Entry_Source': {
+      const refundSource = source as CustomerRefundAllocationLedgerEntrySource
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(refundSource.refunded_to_customer_amount)}`}
+            {`$${centsToDollars(refundSource.amount)}`}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.recipientNameLabel || 'Recipient name'}
@@ -162,7 +152,7 @@ export const SourceDetailView = ({
       )
     }
     case 'Refund_Payment_Ledger_Entry_Source': {
-      const refundSource = source as RefundPaymentLedgerEntrySource
+      const refundSource = source as CustomerRefundPaymentLedgerEntrySource
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
@@ -189,7 +179,7 @@ export const SourceDetailView = ({
       )
     }
     case 'Payout_Ledger_Entry_Source': {
-      const payoutSource = source as PayoutLedgerEntrySource
+      const payoutSource = source as CustomerPayoutLedgerEntrySource
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>

@@ -75,23 +75,23 @@ export const useJournal: UseJournal = () => {
   const [sendingForm, setSendingForm] = useState(false)
   const [apiError, setApiError] = useState<string | undefined>(undefined)
 
-  const { 
-    data: paginatedData, 
-    isLoading, 
-    isValidating, 
-    error, 
-    mutate, 
-    size, 
-    setSize 
+  const {
+    data: paginatedData,
+    isLoading,
+    isValidating,
+    error,
+    mutate,
+    size,
+    setSize,
   } = useListLedgerEntries({
     sort_by: 'entry_at',
     sort_order: 'DESC',
-    limit: 150
+    limit: 150,
   })
 
   const data = useMemo(() => {
     if (!paginatedData) return undefined
-    
+
     return paginatedData.flatMap(page => page.data) as ReadonlyArray<JournalEntry>
   }, [paginatedData])
 
@@ -99,8 +99,8 @@ export const useJournal: UseJournal = () => {
     if (paginatedData && paginatedData.length > 0) {
       const lastPage = paginatedData[paginatedData.length - 1]
       return Boolean(
-        lastPage.meta?.pagination.cursor &&
-        lastPage.meta?.pagination.has_more
+        lastPage.meta?.pagination.cursor
+        && lastPage.meta?.pagination.has_more,
       )
     }
     return false

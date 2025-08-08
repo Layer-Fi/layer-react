@@ -57,7 +57,7 @@ export const JournalEntryDetails = () => {
       setReverseEntryProcessing(true)
       setReverseEntryError(undefined)
       await reverseEntry(entry.id)
-      await refetch()
+      refetch()
     }
     catch (_err) {
       setReverseEntryError('Failed')
@@ -195,7 +195,7 @@ export const JournalEntryDetails = () => {
                       align={TableCellAlign.RIGHT}
                     >
                       {entry?.line_items
-                        .filter(item => item.direction === 'DEBIT')
+                        .filter(item => item.direction === Direction.DEBIT)
                         .map(item => item.amount)
                         .reduce((a, b) => a + b, 0) || 0}
                     </TableCell>
@@ -206,7 +206,7 @@ export const JournalEntryDetails = () => {
                       align={TableCellAlign.RIGHT}
                     >
                       {entry?.line_items
-                        .filter(item => item.direction === 'CREDIT')
+                        .filter(item => item.direction === Direction.CREDIT)
                         .map(item => item.amount)
                         .reduce((a, b) => a + b, 0) || 0}
                     </TableCell>
