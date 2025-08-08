@@ -7,6 +7,7 @@ import { Heading } from '../ui/Typography/Heading'
 import { getAccountsNeedingConfirmation } from '../../hooks/useLinkedAccounts/useLinkedAccounts'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
 import type { Awaitable } from '../../types/utility/promises'
+import { PlaidLinkErrorStoreProvider } from '../../providers/PlaidLinkErrorStoreProvider'
 
 type LinkAccountsProps = {
   onComplete?: () => Awaitable<void>
@@ -14,9 +15,11 @@ type LinkAccountsProps = {
 
 export function LinkAccounts(props: LinkAccountsProps) {
   return (
-    <LinkedAccountsProvider>
-      <LinkAccountsContent {...props} />
-    </LinkedAccountsProvider>
+    <PlaidLinkErrorStoreProvider>
+      <LinkedAccountsProvider>
+        <LinkAccountsContent {...props} />
+      </LinkedAccountsProvider>
+    </PlaidLinkErrorStoreProvider>
   )
 }
 
