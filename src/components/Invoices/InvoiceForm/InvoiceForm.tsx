@@ -285,7 +285,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
                     {innerField => <innerField.FormBigDecimalField label='Amount' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
                   </form.AppField>
                   <form.AppField name={`lineItems[${index}].isTaxable`}>
-                    {innerField => <innerField.FormCheckboxField label='Tax' showLabel={index === 0} isReadOnly={isReadOnly} />}
+                    {innerField => <innerField.FormCheckboxField label='Taxable' showLabel={index === 0} isReadOnly={isReadOnly} />}
                   </form.AppField>
                   {!isReadOnly
                     && <Button variant='outlined' icon aria-label='Delete line item' onClick={() => field.removeValue(index)}><Trash size={16} /></Button>}
