@@ -200,10 +200,10 @@ const withUpdatedInvoice = (updated: Invoice) =>
   (inv: Invoice): Invoice => inv.id === updated.id ? updated : inv
 
 export function useInvoicesGlobalCacheActions() {
-  const { patchAndMaybeInvalidate, forceReload } = useGlobalCacheActions()
+  const { patchCache, forceReload } = useGlobalCacheActions()
 
   const patchInvoiceByKey = useCallback((updatedInvoice: Invoice) =>
-    patchAndMaybeInvalidate<ListInvoicesReturn[] | ListInvoicesReturn | undefined>(
+    patchCache<ListInvoicesReturn[] | ListInvoicesReturn | undefined>(
       tags => tags.includes(LIST_INVOICES_TAG_KEY),
       (currentData) => {
         const iterateOverPage = (page: ListInvoicesReturn): ListInvoicesReturn => ({
@@ -216,7 +216,7 @@ export function useInvoicesGlobalCacheActions() {
           : currentData
       },
     ),
-  [patchAndMaybeInvalidate],
+  [patchCache],
   )
 
   const forceReloadInvoices = useCallback(

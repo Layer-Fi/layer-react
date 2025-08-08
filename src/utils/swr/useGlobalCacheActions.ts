@@ -16,7 +16,7 @@ export function useGlobalCacheActions() {
         .map(key => mutate(key, undefined, { revalidate: true, populateCache: false })),
     ), [cache, mutate])
 
-  const patchAndMaybeInvalidate = useCallback(
+  const patchCache = useCallback(
     <unsafe_TData>(
       predicate: PredicateFn,
       transformData: (currentData?: unsafe_TData) => unsafe_TData,
@@ -63,8 +63,8 @@ export function useGlobalCacheActions() {
 
   return useMemo(() => ({
     invalidate,
-    forceReload,
+    patchCache,
     optimisticUpdate,
-    patchAndMaybeInvalidate,
-  }), [forceReload, invalidate, optimisticUpdate, patchAndMaybeInvalidate])
+    forceReload,
+  }), [invalidate, patchCache, optimisticUpdate, forceReload])
 }
