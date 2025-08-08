@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useBankTransactionsBulkSelectionContext } from '../../contexts/BankTransactionsContext'
 import AlertCircle from '../../icons/AlertCircle'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
@@ -31,11 +32,12 @@ import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import type { CategoryWithEntries } from '../../types/bank_transactions'
-import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
+import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { VStack } from '../ui/Stack/Stack'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
+import { Checkbox } from '../ui/Checkbox/Checkbox'
 
 type Props = {
   index: number
@@ -50,6 +52,7 @@ type Props = {
   showReceiptUploadColumn: boolean
   showTooltips: boolean
   stringOverrides?: BankTransactionCTAStringOverrides
+  allTransactions?: BankTransaction[]
 }
 
 export type LastSubmittedForm = 'simple' | 'match' | 'split' | undefined
@@ -94,6 +97,7 @@ export const BankTransactionRow = ({
   showReceiptUploadColumn,
   showTooltips,
   stringOverrides,
+  allTransactions = [],
 }: Props) => {
   const expandedRowRef = useRef<SaveHandle>(null)
   const [showRetry, setShowRetry] = useState(false)
@@ -102,6 +106,15 @@ export const BankTransactionRow = ({
     match: matchBankTransaction,
     shouldHideAfterCategorize,
   } = useBankTransactionsContext()
+  
+  const {
+    isSelected,
+    toggleTransaction,
+    handleCheckboxClick,
+    openBulkSelection,
+    bulkSelectionActive,
+  } = useBankTransactionsBulkSelectionContext()
+
   const [selectedCategory, setSelectedCategory] = useState(
     getDefaultSelectedCategory(bankTransaction),
   )
@@ -122,6 +135,50 @@ export const BankTransactionRow = ({
       }
     },
   }
+
+  const shiftKeyRef = useRef(false)
+
+  // Track shift key state with keyboard listeners
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        shiftKeyRef.current = true
+      }
+    }
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        shiftKeyRef.current = false
+      }
+    }
+
+    // Add global keyboard listeners
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleKeyUp)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('keyup', handleKeyUp)
+    }
+  }, [])
+
+  const handleCheckboxChange = (checked: boolean) => {
+    const wasShiftClick = shiftKeyRef.current
+    
+    if (!bulkSelectionActive) {
+      openBulkSelection()
+    }
+    
+    if (wasShiftClick) {
+      // Handle shift+click range selection
+      handleCheckboxClick(bankTransaction, index, allTransactions, true)
+    } else {
+      // Handle regular click
+      toggleTransaction(bankTransaction, index)
+    }
+  }
+
+  const transactionIsSelected = isSelected(bankTransaction)
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -170,6 +227,7 @@ export const BankTransactionRow = ({
 
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const isBookkeepingActive = bookkeepingStatus === BookkeepingStatus.ACTIVE
 
   const categorized = isCategorized(bankTransaction)
 
@@ -197,6 +255,18 @@ export const BankTransactionRow = ({
   return (
     <>
       <tr className={rowClassName}>
+        <td
+          className='Layer__table-cell Layer__bank-transactions__checkbox-col'
+        >
+          <span className='Layer__table-cell-content'>
+            {!isBookkeepingActive && (
+              <Checkbox 
+                isSelected={transactionIsSelected}
+                onChange={handleCheckboxChange}
+              />
+            )}
+          </span>
+        </td>
         <td
           className='Layer__table-cell  Layer__bank-transaction-table__date-col'
           {...openRow}
@@ -403,7 +473,7 @@ export const BankTransactionRow = ({
         </td>
       </tr>
       <tr>
-        <td colSpan={6} className='Layer__bank-transaction-row__expanded-td'>
+        <td colSpan={7} className='Layer__bank-transaction-row__expanded-td'>
           <ExpandedBankTransactionRow
             ref={expandedRowRef}
             bankTransaction={bankTransaction}
