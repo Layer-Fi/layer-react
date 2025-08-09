@@ -4,7 +4,7 @@ import { useAuth } from '../../../../hooks/useAuth'
 import { useEnvironment } from '../../../../providers/Environment/EnvironmentInputProvider'
 import { get } from '../../../../api/layer/authenticated_http'
 import type { JournalEntry } from '../../../../types'
-import { useGlobalInvalidator, useGlobalOptimisticUpdater } from '../../../../utils/swr/useGlobalInvalidator'
+import { useGlobalCacheActions } from '../../../../utils/swr/useGlobalCacheActions'
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash'
 import { toDefinedSearchParameters } from '../../../../utils/request/toDefinedSearchParameters'
@@ -148,7 +148,7 @@ const INVALIDATION_DEBOUNCE_OPTIONS = {
 }
 
 export function useLedgerEntriesInvalidator() {
-  const { invalidate } = useGlobalInvalidator()
+  const { invalidate } = useGlobalCacheActions()
 
   const invalidateLedgerEntries = useCallback(
     () => invalidate(tags => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY)),
@@ -174,7 +174,7 @@ export function useLedgerEntriesInvalidator() {
 }
 
 export function useLedgerEntriesOptimisticUpdater() {
-  const { optimisticUpdate } = useGlobalOptimisticUpdater()
+  const { optimisticUpdate } = useGlobalCacheActions()
 
   const optimisticallyUpdateLedgerEntries = useCallback(
     (

@@ -4,7 +4,7 @@ import { useAuth } from '../../../../../hooks/useAuth'
 import { useEnvironment } from '../../../../../providers/Environment/EnvironmentInputProvider'
 import { get } from '../../../../../api/layer/authenticated_http'
 import { LedgerAccountLineItem, LedgerAccountLineItems } from '../../../../../types/ledger_accounts'
-import { useGlobalInvalidator, useGlobalOptimisticUpdater } from '../../../../../utils/swr/useGlobalInvalidator'
+import { useGlobalCacheActions } from '../../../../../utils/swr/useGlobalCacheActions'
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash'
 import { toDefinedSearchParameters } from '../../../../../utils/request/toDefinedSearchParameters'
@@ -209,7 +209,7 @@ const INVALIDATION_DEBOUNCE_OPTIONS = {
 }
 
 export function useLedgerAccountLinesInvalidator() {
-  const { invalidate } = useGlobalInvalidator()
+  const { invalidate } = useGlobalCacheActions()
 
   const invalidateLedgerAccountLines = useCallback(
     () => invalidate(tags => tags.includes(LIST_LEDGER_ACCOUNT_LINES_TAG_KEY)),
@@ -235,7 +235,7 @@ export function useLedgerAccountLinesInvalidator() {
 }
 
 export function useLedgerAccountLinesOptimisticUpdater() {
-  const { optimisticUpdate } = useGlobalOptimisticUpdater()
+  const { optimisticUpdate } = useGlobalCacheActions()
 
   const optimisticallyUpdateLedgerAccountLines = useCallback(
     (

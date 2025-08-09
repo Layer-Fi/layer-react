@@ -31,10 +31,15 @@ const DECORATOR_CHARS_REGEX = /[,%$]/g
  *
  * Doing either the equality check or forced update to cause inequality is sufficient, but we do both to cover our bases.
  */
-export const withForceUpdate = (value: BD.BigDecimal): BD.BigDecimal => ({
-  ...value,
-  __forceUpdate: Symbol(),
-} as BD.BigDecimal)
+export const withForceUpdate = (value: BD.BigDecimal): BD.BigDecimal => {
+  // Define a new __forceUpdate property to ensure we still have access to the BigDecimal prototype.
+  return Object.defineProperty(value, '__forceUpdate', {
+    value: Symbol(),
+    enumerable: true,
+    configurable: true,
+    writable: false,
+  })
+}
 
 export function FormBigDecimalField({
   mode = 'decimal',

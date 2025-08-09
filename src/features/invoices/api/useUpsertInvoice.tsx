@@ -6,6 +6,7 @@ import { useLayerContext } from '../../../contexts/LayerContext'
 import { useAuth } from '../../../hooks/useAuth'
 import { InvoiceSchema, type UpsertInvoiceSchema } from '../invoiceSchemas'
 import { Schema, Effect } from 'effect'
+import { useInvoicesGlobalCacheActions } from './useListInvoices'
 
 const UPSERT_INVOICES_TAG_KEY = '#upsert-invoice'
 
@@ -179,17 +180,24 @@ export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
 
   const mutationResponse = new UpsertInvoiceSWRResponse(rawMutationResponse)
 
+  const { patchInvoiceByKey, forceReloadInvoices } = useInvoicesGlobalCacheActions()
+
   const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      // TODO: optimistically update and invalidate stale invoice
+      if (mode === UpsertInvoiceMode.Update) {
+        void patchInvoiceByKey(triggerResult.data)
+      }
+      else {
+        void forceReloadInvoices()
+      }
 
       return triggerResult
     },
-    [originalTrigger],
+    [mode, originalTrigger, patchInvoiceByKey, forceReloadInvoices],
   )
 
   return new Proxy(mutationResponse, {
