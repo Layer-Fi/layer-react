@@ -108,7 +108,7 @@ export const ProfitAndLossDetailReport = ({
     return `${start} - ${end}`
   }
 
-  const { data, isLoading, error } = useProfitAndLossDetailLines({
+  const { data, isLoading, isError } = useProfitAndLossDetailLines({
     businessId,
     startDate: dateRange.startDate,
     endDate: dateRange.endDate,
@@ -259,7 +259,7 @@ export const ProfitAndLossDetailReport = ({
           columnConfig={columnConfig}
           data={processedData.lines}
           isLoading={isLoading}
-          isError={!!error}
+          isError={isError}
           slots={{
             EmptyState,
             ErrorState,

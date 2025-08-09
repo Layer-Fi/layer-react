@@ -43,7 +43,6 @@ import {
   getProfitAndLossSummaries,
   getProfitAndLossCsv,
   getProfitAndLossExcel,
-  getProfitAndLossDetailLines,
   compareProfitAndLoss,
   profitAndLossComparisonCsv,
 } from './layer/profit_and_loss'
@@ -85,7 +84,6 @@ export const Layer = {
   getProfitAndLossSummaries,
   getProfitAndLossCsv,
   getProfitAndLossExcel,
-  getProfitAndLossDetailLines,
   getJournalEntriesCSV,
   reverseJournalEntry,
   compareProfitAndLoss,

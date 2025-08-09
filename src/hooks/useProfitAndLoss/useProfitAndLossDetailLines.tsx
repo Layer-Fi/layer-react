@@ -2,12 +2,13 @@ import useSWR, { type SWRResponse } from 'swr'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { Layer } from '../../api/layer'
 import { useGlobalInvalidator } from '../../utils/swr/useGlobalInvalidator'
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash'
+import { get } from '../../api/layer/authenticated_http'
 import { Schema } from 'effect'
 import { ReportingBasis, Direction } from '../../types'
+import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 
 export const LIST_PNL_DETAIL_LINES_TAG_KEY = '#list-pnl-detail-lines'
 
@@ -32,8 +33,6 @@ type PnlDetailLinesFilterParams = {
 type PnlDetailLinesOptions = PnlDetailLinesFilterParams
 
 type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesOptions
-
-// LedgerEntrySource schemas based on actual API response structure
 
 const TransactionLedgerEntrySourceSchema = Schema.Struct({
   display_description: Schema.String,
@@ -153,19 +152,38 @@ const LedgerEntrySourceSchema = Schema.Union(
   PayoutLedgerEntrySourceSchema,
 )
 
+const AccountTypeSchema = Schema.Struct({
+  value: Schema.String,
+  display_name: Schema.String,
+})
+
+const AccountSubtypeSchema = Schema.Struct({
+  value: Schema.String,
+  display_name: Schema.String,
+})
+
 const AccountSchema = Schema.Struct({
   id: Schema.String,
   name: Schema.String,
   stable_name: Schema.String,
   normality: Schema.String,
-  account_type: Schema.Struct({
-    value: Schema.String,
-    display_name: Schema.String,
-  }),
-  account_subtype: Schema.Struct({
-    value: Schema.String,
-    display_name: Schema.String,
-  }),
+  account_type: AccountTypeSchema,
+  account_subtype: AccountSubtypeSchema,
+})
+
+const TagFilterSchema = Schema.Struct({
+  key: Schema.String,
+  values: Schema.Array(Schema.String),
+})
+
+const PnlDetailLineSchema = Schema.Struct({
+  id: Schema.String,
+  entry_id: Schema.String,
+  account: AccountSchema,
+  amount: Schema.Number,
+  direction: Schema.Enums(Direction),
+  date: Schema.String,
+  source: Schema.optional(LedgerEntrySourceSchema),
 })
 
 const PnlDetailLinesDataSchema = Schema.Struct({
@@ -176,19 +194,8 @@ const PnlDetailLinesDataSchema = Schema.Struct({
   pnl_structure_line_item_name: Schema.String,
   reporting_basis: Schema.optional(Schema.NullOr(Schema.String)),
   pnl_structure: Schema.optional(Schema.NullOr(Schema.String)),
-  tag_filter: Schema.NullOr(Schema.Struct({
-    key: Schema.String,
-    values: Schema.Array(Schema.String),
-  })),
-  lines: Schema.Array(Schema.Struct({
-    id: Schema.String,
-    entry_id: Schema.String,
-    account: AccountSchema,
-    amount: Schema.Number,
-    direction: Schema.Enums(Direction),
-    date: Schema.String,
-    source: Schema.optional(LedgerEntrySourceSchema),
-  })),
+  tag_filter: Schema.NullOr(TagFilterSchema),
+  lines: Schema.Array(PnlDetailLineSchema),
 })
 
 const PnlDetailLinesReturnSchema = PnlDetailLinesDataSchema
@@ -216,10 +223,6 @@ class PnlDetailLinesSWRResponse {
 
   get isError() {
     return this.swrResponse.error !== undefined
-  }
-
-  get error() {
-    return this.swrResponse.error
   }
 
   get refetch() {
@@ -294,7 +297,7 @@ export function useProfitAndLossDetailLines({
       tagFilter,
       reportingBasis,
       pnlStructure,
-    }) => Layer.getProfitAndLossDetailLines(
+    }) => getProfitAndLossDetailLines(
       apiUrl,
       accessToken,
       {
@@ -345,4 +348,35 @@ export function usePnlDetailLinesInvalidator() {
     invalidatePnlDetailLines,
     debouncedInvalidatePnlDetailLines,
   }
+}
+
+type GetProfitAndLossDetailLinesParams = {
+  businessId: string
+  startDate: Date
+  endDate: Date
+  pnlStructureLineItemName: string
+  tagKey?: string
+  tagValues?: string
+  reportingBasis?: string
+  pnlStructure?: string
+}
+
+export const getProfitAndLossDetailLines = (apiUrl: string, accessToken: string | undefined, params: GetProfitAndLossDetailLinesParams) => {
+  const { businessId, startDate, endDate, pnlStructureLineItemName, tagKey, tagValues, reportingBasis, pnlStructure } = params
+  const queryParams = toDefinedSearchParameters({
+    startDate,
+    endDate,
+    lineItemName: pnlStructureLineItemName,
+    reportingBasis,
+    tagKey,
+    tagValues,
+    pnlStructure,
+  })
+
+  return get<{
+    data?: PnlDetailLinesReturn
+    params: GetProfitAndLossDetailLinesParams
+  }>(({ businessId }) =>
+    `/v1/businesses/${businessId}/reports/profit-and-loss/lines?${queryParams.toString()}`,
+  )(apiUrl, accessToken, { params: { businessId } })
 }

@@ -9,6 +9,7 @@ import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
+import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 
@@ -73,11 +74,13 @@ export function useCategorizeBankTransaction({
     },
   )
 
+  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
+      const triggerResult = originalTrigger(...triggerParameters)
 
       void mutate(key => withSWRKeyTags(
         key,
@@ -92,11 +95,13 @@ export function useCategorizeBankTransaction({
       void mutateBankTransactions(undefined, { revalidate: true })
 
       return triggerResult
+        .finally(() => { void invalidatePnlDetailLines() })
     },
     [
       originalTrigger,
       mutate,
       mutateBankTransactions,
+      invalidatePnlDetailLines,
     ],
   )
 

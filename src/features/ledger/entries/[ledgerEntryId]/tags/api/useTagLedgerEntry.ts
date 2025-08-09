@@ -5,6 +5,7 @@ import { useCallback } from 'react'
 import { post } from '../../../../../../api/layer/authenticated_http'
 import { useLedgerEntriesInvalidator, useLedgerEntriesOptimisticUpdater } from '../../../api/useListLedgerEntries'
 import { v4 as uuidv4 } from 'uuid'
+import { usePnlDetailLinesInvalidator } from '@layerfi/components/hooks/useProfitAndLoss/index'
 
 const TAG_LEDGER_ENTRY_TAG_KEY = '#tag-ledger-entry'
 
@@ -87,6 +88,7 @@ export function useTagLedgerEntry({ ledgerEntryId }: TagLedgerEntryOptions) {
 
   const { debouncedInvalidateLedgerEntries } = useLedgerEntriesInvalidator()
   const { optimisticallyUpdateLedgerEntries } = useLedgerEntriesOptimisticUpdater()
+  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
 
   const { trigger: originalTrigger } = mutationResponse
 
@@ -127,12 +129,14 @@ export function useTagLedgerEntry({ ledgerEntryId }: TagLedgerEntryOptions) {
 
       return triggerResultPromise
         .finally(() => { void debouncedInvalidateLedgerEntries() })
+        .finally(() => { void invalidatePnlDetailLines() })
     },
     [
       ledgerEntryId,
       originalTrigger,
       optimisticallyUpdateLedgerEntries,
       debouncedInvalidateLedgerEntries,
+      invalidatePnlDetailLines,
     ],
   )
 
