@@ -13,7 +13,7 @@ import { convertBigDecimalToCents, safeDivide, negate } from '../../../utils/big
 import { Span } from '../../ui/Typography/Text'
 import { convertCentsToCurrency } from '../../../utils/format'
 import { getDurationInDaysFromTerms, InvoiceTermsComboBox, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { type ZonedDateTime } from '@internationalized/date'
+import { ZonedDateTime, toCalendarDate, fromDate } from '@internationalized/date'
 import { withForceUpdate } from '../../../features/forms/components/FormBigDecimalField'
 import { type InvoiceFormState, flattenValidationErrors, getEmptyLineItem } from './formUtils'
 import { DataState, DataStateStatus } from '../../DataState'
@@ -31,7 +31,7 @@ type InvoiceFormTotalRowProps = PropsWithChildren<{
 const getDueAtChanged = (dueAt: ZonedDateTime | null, previousDueAt: ZonedDateTime | null) =>
   (dueAt === null && previousDueAt !== null)
   || (dueAt !== null && previousDueAt === null)
-  || (dueAt !== null && previousDueAt !== null && dueAt.compare(previousDueAt) !== 0)
+  || (dueAt !== null && previousDueAt !== null && toCalendarDate(dueAt).compare(toCalendarDate(previousDueAt)) !== 0)
 
 const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProps) => {
   const className = classNames(
@@ -64,7 +64,8 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   )
   const { subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal } = totals
 
-  const lastDueAtRef = useRef<ZonedDateTime | null>(null)
+  const initialLastDueAt = mode === UpsertInvoiceMode.Update && props.invoice.dueAt !== null ? fromDate(props.invoice.dueAt, 'UTC') : null
+  const lastDueAtRef = useRef<ZonedDateTime | null>(initialLastDueAt)
 
   const updateDueAtFromTermsAndSentAt = useCallback((terms: InvoiceTermsValues, sentAt: ZonedDateTime | null) => {
     if (sentAt == null) return
@@ -198,8 +199,8 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
 
                 if (terms !== InvoiceTermsValues.Custom && dueAtChanged) {
                   form.setFieldValue('terms', InvoiceTermsValues.Custom)
-                  lastDueAtRef.current = dueAt
                 }
+                lastDueAtRef.current = dueAt
               },
             }}
           >
