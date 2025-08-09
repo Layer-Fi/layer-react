@@ -1,9 +1,15 @@
 import { BigDecimal as BD } from 'effect'
-import type { InvoiceFormLineItem } from '../../../features/invoices/invoiceSchemas'
+import type { InvoiceForm, InvoiceFormLineItem } from '../../../features/invoices/invoiceSchemas'
 import { BIG_DECIMAL_ZERO, roundDecimalToCents } from '../../../utils/bigDecimalUtils'
 
-export const computeSubtotal = (lineItems: InvoiceFormLineItem[]): BD.BigDecimal =>
-  lineItems.reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
+export function computeSubtotal(lineItems: InvoiceFormLineItem[]): BD.BigDecimal
+export function computeSubtotal(lineItems: readonly InvoiceFormLineItem[]): BD.BigDecimal
+
+export function computeSubtotal(
+  lineItems: readonly InvoiceFormLineItem[],
+): BD.BigDecimal {
+  return lineItems.reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
+}
 
 export const computeRawTaxableSubtotal = (lineItems: InvoiceFormLineItem[]): BD.BigDecimal =>
   lineItems
@@ -60,6 +66,21 @@ export function computeGrandTotal({
 }) {
   const subtotalLessDiscounts = BD.subtract(subtotal, additionalDiscount)
   const grandTotal = BD.sum(subtotalLessDiscounts, taxes)
+
+  return grandTotal
+}
+
+export const getGrandTotalFromInvoice = (invoice: InvoiceForm): BD.BigDecimal => {
+  const { lineItems, discountRate, taxRate } = invoice
+
+  const subtotal = computeSubtotal(lineItems)
+  const rawTaxableSubtotal = computeRawTaxableSubtotal(lineItems)
+
+  const taxableSubtotal = computeTaxableSubtotal({ rawTaxableSubtotal, discountRate })
+  const taxes = computeTaxes({ taxableSubtotal, taxRate })
+
+  const additionalDiscount = computeAdditionalDiscount({ subtotal, discountRate })
+  const grandTotal = computeGrandTotal({ subtotal, additionalDiscount, taxes })
 
   return grandTotal
 }

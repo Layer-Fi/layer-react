@@ -24,6 +24,7 @@ export interface DataStateProps {
   isLoading?: boolean
   spacing?: boolean
   inline?: boolean
+  titleSize?: TextSize
   className?: string
 }
 
@@ -70,6 +71,7 @@ export const DataState = ({
   icon,
   spacing,
   inline,
+  titleSize = inline ? TextSize.sm : TextSize.lg,
   className,
 }: DataStateProps) => {
   const baseClassName = classNames(
@@ -86,7 +88,7 @@ export const DataState = ({
       <div>
         <Text
           as='span'
-          size={inline ? TextSize.sm : TextSize.lg}
+          size={titleSize}
           weight={TextWeight.bold}
           className='Layer__data-state__title'
         >

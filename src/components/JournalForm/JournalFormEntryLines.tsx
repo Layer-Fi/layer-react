@@ -134,6 +134,7 @@ export const JournalFormEntryLines = ({
       [
         {
           ...baseFields,
+          is_deletable: false,
           name: relevantCategory.display_name,
           sub_accounts: [],
           balance: 0,

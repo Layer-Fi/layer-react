@@ -53,6 +53,7 @@ export type LedgerAccountBalance = {
   account_subtype?: ApiAccountType
   normality: Direction
   balance: number
+  is_deletable: boolean
   sub_accounts: LedgerAccountBalance[]
 }
 

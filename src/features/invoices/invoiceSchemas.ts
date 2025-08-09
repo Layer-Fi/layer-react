@@ -1,7 +1,7 @@
 import { Schema, pipe } from 'effect'
 import { CustomerSchema } from '../customers/customersSchemas'
-import { ZonedDateTimeFromSelf } from '../../utils/schema/utils'
 import { InvoiceTermsValues } from '../../components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
+import { ZonedDateTimeFromSelf } from '../../utils/schema/utils'
 
 export enum InvoiceStatus {
   Voided = 'VOIDED',
@@ -175,6 +175,11 @@ export const UpsertInvoiceLineItemSchema = Schema.Struct({
   ),
 
   quantity: Schema.BigDecimal,
+
+  salesTaxes: pipe(
+    Schema.propertySignature(Schema.UndefinedOr(Schema.Array(UpsertInvoiceTaxLineItemSchema))),
+    Schema.fromKey('sales_taxes'),
+  ),
 })
 export type UpsertInvoiceLineItem = typeof UpsertInvoiceLineItemSchema.Type
 
@@ -209,11 +214,6 @@ export const UpsertInvoiceSchema = Schema.Struct({
   additionalDiscount: pipe(
     Schema.propertySignature(Schema.UndefinedOr(Schema.Number)),
     Schema.fromKey('additional_discount'),
-  ),
-
-  additionalSalesTaxes: pipe(
-    Schema.propertySignature(Schema.UndefinedOr(Schema.Array(UpsertInvoiceTaxLineItemSchema))),
-    Schema.fromKey('additional_sales_taxes'),
   ),
 })
 export type UpsertInvoice = typeof UpsertInvoiceSchema.Type

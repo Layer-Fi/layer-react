@@ -59,10 +59,6 @@
     cursor: not-allowed;
   }
 
-  &[data-pending] {
-    cursor: progress;
-  }
-
   &[data-variant='ghost'] {
     border: none;
 

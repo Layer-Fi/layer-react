@@ -12,7 +12,7 @@ import { Separator } from '../Separator/Separator'
 import { DownloadCsvTemplateButton } from '../CsvUpload/DownloadCsvTemplateButton'
 import { CopyTemplateHeadersButtonGroup } from '../CsvUpload/CopyTemplateHeadersButtonGroup'
 import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '../../hooks/customAccounts/useCustomAccountParseCsv'
-import { templateHeaders, templateExampleTransactions } from './template'
+import { templateHeaders, allHeaders, templateExampleTransactions } from './template'
 import { humanizeEnum } from '../../utils/format'
 import { useWizard } from '../Wizard/Wizard'
 import type { FormatOptionLabelMeta } from 'react-select'
@@ -168,7 +168,7 @@ export function UploadTransactionsUploadCsvStep(
                 />
                 <DownloadCsvTemplateButton
                   fileName='upload_transactions.csv'
-                  csvProps={{ headers: templateHeaders, rows: templateExampleTransactions }}
+                  csvProps={{ headers: allHeaders, rows: templateExampleTransactions }}
                   className='Layer__upload-transactions__template-section__button-row-item'
                 >
                   Download template
