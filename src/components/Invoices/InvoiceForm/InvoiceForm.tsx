@@ -241,7 +241,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
                       onBlur: ({ value: quantity }) => {
                         const amount = form.getFieldValue(`lineItems[${index}].amount`)
                         const unitPrice = form.getFieldValue(`lineItems[${index}].unitPrice`)
-                        const nextAmount = BD.multiply(unitPrice, quantity)
+                        const nextAmount = BD.round(BD.normalize(BD.multiply(unitPrice, quantity)), { scale: 2 })
 
                         if (!BD.equals(amount, nextAmount)) {
                           form.setFieldValue(`lineItems[${index}].amount`, withForceUpdate(nextAmount))
@@ -258,7 +258,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
                       onBlur: ({ value: unitPrice }) => {
                         const amount = form.getFieldValue(`lineItems[${index}].amount`)
                         const quantity = form.getFieldValue(`lineItems[${index}].quantity`)
-                        const nextAmount = BD.multiply(unitPrice, quantity)
+                        const nextAmount = BD.round(BD.normalize(BD.multiply(unitPrice, quantity)), { scale: 2 })
 
                         if (!BD.equals(amount, nextAmount)) {
                           form.setFieldValue(`lineItems[${index}].amount`, withForceUpdate(nextAmount))
@@ -274,7 +274,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
                       onBlur: ({ value: amount }) => {
                         const unitPrice = form.getFieldValue(`lineItems[${index}].unitPrice`)
                         const quantity = form.getFieldValue(`lineItems[${index}].quantity`)
-                        const nextUnitPrice = safeDivide(amount, quantity)
+                        const nextUnitPrice = BD.round(BD.normalize(safeDivide(amount, quantity)), { scale: 2 })
 
                         if (!BD.equals(unitPrice, nextUnitPrice)) {
                           form.setFieldValue(`lineItems[${index}].unitPrice`, withForceUpdate(nextUnitPrice))
