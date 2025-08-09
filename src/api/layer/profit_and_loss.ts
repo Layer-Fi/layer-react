@@ -24,6 +24,17 @@ type GetProfitAndLossCsvParams = BaseProfitAndLossParams & {
   moneyFormat?: string
 }
 
+type GetProfitAndLossDetailLinesParams = {
+  businessId: string
+  startDate: Date
+  endDate: Date
+  pnlStructureLineItemName: string
+  tagKey?: string
+  tagValues?: string
+  reportingBasis?: string
+  pnlStructure?: string
+}
+
 export const getProfitAndLoss = (apiUrl: string, accessToken: string | undefined, params: GetProfitAndLossParams) => {
   const { businessId, startDate, endDate, month, year, tagKey, tagValues, reportingBasis } = params
   return get<{
@@ -123,3 +134,21 @@ export const profitAndLossComparisonCsv = post<{
       moneyFormat ? moneyFormat : 'DOLLAR_STRING'
     }`,
 )
+
+export const getProfitAndLossDetailLines = (apiUrl: string, accessToken: string | undefined, params: GetProfitAndLossDetailLinesParams) => {
+  const { businessId, startDate, endDate, pnlStructureLineItemName, tagKey, tagValues, reportingBasis, pnlStructure } = params
+  return get<{
+    data?: unknown
+    error?: unknown
+  }>(({ businessId }) =>
+    `/v1/businesses/${businessId}/reports/profit-and-loss/lines?${
+      startDate ? `start_date=${encodeURIComponent(toLocalDateString(startDate))}` : ''
+    }${endDate ? `&end_date=${encodeURIComponent(toLocalDateString(endDate))}` : ''}${
+      pnlStructureLineItemName ? `&name=${encodeURIComponent(pnlStructureLineItemName)}` : ''
+    }${
+      reportingBasis ? `&reporting_basis=${reportingBasis}` : ''
+    }${tagKey ? `&tag_key=${tagKey}` : ''}${
+      tagValues ? `&tag_values=${tagValues}` : ''
+    }${pnlStructure ? `&pnl_structure=${pnlStructure}` : ''}`,
+  )(apiUrl, accessToken, { params: { businessId } })
+}
