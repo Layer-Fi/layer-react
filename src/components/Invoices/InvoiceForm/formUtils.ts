@@ -10,7 +10,7 @@ import {
 import { startOfToday } from 'date-fns'
 import { getLocalTimeZone, fromDate } from '@internationalized/date'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { isEqualWith } from 'lodash'
+import { isEqualWith, isString } from 'lodash'
 import { ValidationErrorMap } from '@tanstack/react-form'
 
 export type InvoiceFormState = {
@@ -104,6 +104,15 @@ const getIsEqualLineItems = (a: InvoiceFormLineItem, b: InvoiceFormLineItem) => 
     if (key === 'unitPrice' || key === 'quantity' || key === 'amount') {
       return BD.isBigDecimal(val1) && BD.isBigDecimal(val2) && BD.equals(val1, val2)
     }
+
+    if (key === 'product' || key === 'description') {
+      return isString(val1) && isString(val2) && val1.trim() === val2.trim()
+    }
+
+    if (key === 'isTaxable') {
+      return val1 === val2
+    }
+
     return undefined
   })
 }
@@ -126,13 +135,15 @@ export const validateOnSubmit = ({ value: invoice }: { value: InvoiceForm }) => 
     errors.push({ dueAt: 'Due date is a required field.' })
   }
 
-  if (invoice.lineItems.length === 0) {
+  const emptyLineItem = getEmptyLineItem()
+  const lineItemsWithoutEmptyRows = invoice.lineItems.filter(item => !getIsEqualLineItems(emptyLineItem, item))
+
+  if (lineItemsWithoutEmptyRows.length === 0) {
     errors.push({ lineItems: 'Invoice requires at least one line item.' })
   }
 
-  const emptyLineItem = getEmptyLineItem()
-  invoice.lineItems.some((item) => {
-    if (!getIsEqualLineItems(item, emptyLineItem) && (item.product === '')) {
+  lineItemsWithoutEmptyRows.some((item) => {
+    if (item.product.trim() === '') {
       errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field Product/Service.' })
       return true
     }
@@ -163,13 +174,13 @@ export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({
   customerId: form.customer?.id,
   dueAt: form.dueAt?.toDate(),
   sentAt: form.sentAt?.toDate(),
-  invoiceNumber: form.invoiceNumber || undefined,
-  memo: form.memo,
+  invoiceNumber: form.invoiceNumber.trim(),
+  memo: form.memo.trim(),
 
   lineItems: form.lineItems.map((item) => {
     const baseLineItem = {
-      description: item.description,
-      product: item.product,
+      description: item.description.trim(),
+      product: item.product.trim(),
       unitPrice: convertBigDecimalToCents(item.unitPrice),
       quantity: item.quantity,
     }
