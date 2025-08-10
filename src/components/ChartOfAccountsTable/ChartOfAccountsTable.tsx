@@ -140,6 +140,9 @@ export const ChartOfAccountsTableContent = ({
     if (account.balance !== 0) {
       return 'This account cannot be deleted because it has ledger entries'
     }
+    if (account.sub_accounts.length > 0) {
+      return 'This account cannot be deleted because it has sub-accounts'
+    }
     return 'This account cannot be deleted because it is a required account'
   }
 
