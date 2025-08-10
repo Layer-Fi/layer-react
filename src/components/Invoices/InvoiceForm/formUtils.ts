@@ -8,7 +8,7 @@ import {
   getGrandTotalFromInvoice,
 } from './totalsUtils'
 import { startOfToday } from 'date-fns'
-import { getLocalTimeZone, fromDate } from '@internationalized/date'
+import { getLocalTimeZone, fromDate, toCalendarDate } from '@internationalized/date'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { ValidationErrorMap } from '@tanstack/react-form'
 
@@ -99,24 +99,30 @@ export const getInvoiceFormInitialValues = (invoice: Invoice): InvoiceForm => {
 }
 
 export const validateOnSubmit = ({ value: invoice }: { value: InvoiceForm }) => {
+  const { customer, invoiceNumber, sentAt, dueAt, lineItems } = invoice
+
   const errors = []
-  if (invoice.customer === null) {
+  if (customer === null) {
     errors.push({ customer: 'Customer is a required field.' })
   }
 
-  if (!invoice.invoiceNumber.trim()) {
+  if (!invoiceNumber.trim()) {
     errors.push({ invoiceNumber: 'Invoice number is a required field.' })
   }
 
-  if (invoice.sentAt === null) {
+  if (sentAt === null) {
     errors.push({ sentAt: 'Invoice date is a required field.' })
   }
 
-  if (invoice.dueAt === null) {
+  if (dueAt === null) {
     errors.push({ dueAt: 'Due date is a required field.' })
   }
 
-  const nonEmptyLineItems = invoice.lineItems.filter(item => !InvoiceFormLineItemEquivalence(EMPTY_LINE_ITEM, item))
+  if (sentAt !== null && dueAt !== null && toCalendarDate(dueAt).compare(toCalendarDate(sentAt)) < 0) {
+    errors.push({ dueAt: 'Due date must be after invoice date.' })
+  }
+
+  const nonEmptyLineItems = lineItems.filter(item => !InvoiceFormLineItemEquivalence(EMPTY_LINE_ITEM, item))
 
   if (nonEmptyLineItems.length === 0) {
     errors.push({ lineItems: 'Invoice requires at least one non-empty line item.' })
