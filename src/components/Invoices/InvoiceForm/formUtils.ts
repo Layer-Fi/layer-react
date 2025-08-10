@@ -1,4 +1,4 @@
-import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, type InvoiceLineItem } from '../../../features/invoices/invoiceSchemas'
+import { InvoiceFormLineItemEquivalence, type Invoice, type InvoiceForm, type InvoiceFormLineItem, type InvoiceLineItem } from '../../../features/invoices/invoiceSchemas'
 import { BigDecimal as BD } from 'effect'
 import { BIG_DECIMAL_ZERO, BIG_DECIMAL_ONE, convertCentsToBigDecimal, safeDivide, convertBigDecimalToCents } from '../../../utils/bigDecimalUtils'
 import {
@@ -10,7 +10,6 @@ import {
 import { startOfToday } from 'date-fns'
 import { getLocalTimeZone, fromDate } from '@internationalized/date'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { isEqualWith, isString } from 'lodash'
 import { ValidationErrorMap } from '@tanstack/react-form'
 
 export type InvoiceFormState = {
@@ -99,24 +98,6 @@ export const getInvoiceFormInitialValues = (invoice: Invoice): InvoiceForm => {
   }
 }
 
-const getIsEqualLineItems = (a: InvoiceFormLineItem, b: InvoiceFormLineItem) => {
-  return isEqualWith(a, b, (val1, val2, key) => {
-    if (key === 'unitPrice' || key === 'quantity' || key === 'amount') {
-      return BD.isBigDecimal(val1) && BD.isBigDecimal(val2) && BD.equals(val1, val2)
-    }
-
-    if (key === 'product' || key === 'description') {
-      return isString(val1) && isString(val2) && val1.trim() === val2.trim()
-    }
-
-    if (key === 'isTaxable') {
-      return val1 === val2
-    }
-
-    return undefined
-  })
-}
-
 export const validateOnSubmit = ({ value: invoice }: { value: InvoiceForm }) => {
   const errors = []
   if (invoice.customer === null) {
@@ -136,13 +117,13 @@ export const validateOnSubmit = ({ value: invoice }: { value: InvoiceForm }) => 
   }
 
   const emptyLineItem = getEmptyLineItem()
-  const lineItemsWithoutEmptyRows = invoice.lineItems.filter(item => !getIsEqualLineItems(emptyLineItem, item))
+  const nonEmptyLineItems = invoice.lineItems.filter(item => !InvoiceFormLineItemEquivalence(emptyLineItem, item))
 
-  if (lineItemsWithoutEmptyRows.length === 0) {
-    errors.push({ lineItems: 'Invoice requires at least one line item.' })
+  if (nonEmptyLineItems.length === 0) {
+    errors.push({ lineItems: 'Invoice requires at least one non-empty line item.' })
   }
 
-  lineItemsWithoutEmptyRows.some((item) => {
+  nonEmptyLineItems.some((item) => {
     if (item.product.trim() === '') {
       errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field Product/Service.' })
       return true
