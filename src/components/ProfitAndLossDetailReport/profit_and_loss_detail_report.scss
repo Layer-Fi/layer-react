@@ -1,18 +1,14 @@
-// Clickable cells styling for P&L table
 .Layer__profit-and-loss-table__clickable-cell {
   cursor: pointer;
-  transition: text-decoration 150ms ease-out;
 
   &:hover {
     text-decoration: underline;
   }
 }
 
-// P&L Detail Report styles
 .Layer__profit-and-loss-detail-report {
   width: 100%;
 
-  // CSS Variables for column widths - scoped to this component
   --pnl-detail-date-col-width: 12%;
   --pnl-detail-type-col-width: 12%;
   --pnl-detail-account-col-width: 18%;
@@ -20,8 +16,6 @@
   --pnl-detail-amount-col-width: 15%;
   --pnl-detail-balance-col-width: 15%;
 }
-
-// P&L Detail Report header uses existing DetailReportHeader styles
 
 .Layer__profit-and-loss-detail-report__content {
   padding: var(--spacing-md);
@@ -49,7 +43,6 @@
   }
 }
 
-// Table styling for P&L Detail Report following DataTable pattern
 .Layer__UI__Table__ProfitAndLossDetailReport {
   table-layout: fixed;
   width: 100%;
@@ -94,7 +87,7 @@
     }
 
     &--Type {
-      font-size: 14px;
+      font-size: var(--text-md);
 
       button {
         font-size: inherit;
@@ -116,7 +109,6 @@
   }
 }
 
-// Total row styling
 .Layer__profit-and-loss-detail-report__total-row {
   display: grid;
   grid-template-columns:
@@ -132,9 +124,9 @@
 }
 
 .Layer__profit-and-loss-detail-report__total-label {
-  grid-column: 1; // Start at Date column
+  grid-column: 1;
   font-weight: 540;
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 140%;
   text-align: left;
   padding-left: var(--spacing-sm);
@@ -142,16 +134,15 @@
 }
 
 .Layer__profit-and-loss-detail-report__total-amount {
-  grid-column: 5; // Amount column position
+  grid-column: 5;
   font-weight: 580;
-  font-size: 14px;
+  font-size: var(--text-sm);
   line-height: 140%;
   text-align: right;
   color: var(--color-base-900);
   padding-right: var(--spacing-sm);
 }
 
-// Full-page drawer component
 .Layer__full-page-drawer {
   position: fixed;
   top: 0;
@@ -162,7 +153,6 @@
   height: 100%;
   background: var(--color-base-0);
   z-index: var(--z-index-modal, 1000);
-  animation: slideInFromRight 0.3s ease-out;
   overflow-y: auto;
 }
 

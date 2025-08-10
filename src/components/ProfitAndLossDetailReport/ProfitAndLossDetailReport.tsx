@@ -19,10 +19,10 @@ import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 
-// Use the schema-generated types directly
 type PnlDetailLine = typeof PnlDetailLineSchema.Type
 
-// Bridge function to convert from new schema type to old type for SourceDetailView
+/* Our source detail component expects an old schema.
+ * This converts for backwards compatibility until we switch that component to our new schemas with fixed variable types. */
 const convertSourceForDetailView = (source: typeof LedgerEntrySourceSchema.Type): LedgerEntrySource => {
   return {
     display_description: source.displayDescription,
@@ -87,7 +87,6 @@ export const ProfitAndLossDetailReport = ({
   const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
   const [selectedSource, setSelectedSource] = useState<typeof LedgerEntrySourceSchema.Type | null>(null)
 
-  // Use the passed breadcrumb path or create a simple one if not provided
   const dynamicBreadcrumbs = useMemo(() => {
     return breadcrumbPath || [{ name: lineItemName, display_name: lineItemName }]
   }, [breadcrumbPath, lineItemName])
@@ -114,11 +113,9 @@ export const ProfitAndLossDetailReport = ({
     setSelectedSource(null)
   }
 
-  // Process data: sort chronologically and calculate running balance
-  const processedData = useMemo(() => {
+  const rowsWithRunningBalance = useMemo(() => {
     if (!data?.lines) return { lines: [], total: 0 }
 
-    // Calculate running balance
     let runningBalance = 0
     const linesWithBalance = data.lines.map((line) => {
       const signedAmount = line.direction === Direction.CREDIT ? line.amount : -line.amount
@@ -243,7 +240,7 @@ export const ProfitAndLossDetailReport = ({
           componentName={COMPONENT_NAME}
           ariaLabel={`${lineItemName} detail lines`}
           columnConfig={columnConfig}
-          data={processedData.lines}
+          data={rowsWithRunningBalance.lines}
           isLoading={isLoading}
           isError={isError}
           slots={{
@@ -251,13 +248,13 @@ export const ProfitAndLossDetailReport = ({
             ErrorState,
           }}
         />
-        {processedData.lines.length > 0 && (
+        {rowsWithRunningBalance.lines.length > 0 && (
           <div className='Layer__profit-and-loss-detail-report__total-row'>
             <div className='Layer__profit-and-loss-detail-report__total-label'>Total</div>
             <div className='Layer__profit-and-loss-detail-report__total-amount'>
-              {processedData.total < 0 ? '-' : ''}
+              {rowsWithRunningBalance.total < 0 ? '-' : ''}
               $
-              {centsToDollars(Math.abs(processedData.total))}
+              {centsToDollars(Math.abs(rowsWithRunningBalance.total))}
             </div>
           </div>
         )}
