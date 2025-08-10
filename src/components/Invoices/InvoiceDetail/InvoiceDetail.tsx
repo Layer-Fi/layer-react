@@ -12,6 +12,7 @@ import { InvoiceStatusCell } from '../InvoiceStatusCell/InvoiceStatusCell'
 import { Button } from '../../ui/Button/Button'
 import { SquarePen } from 'lucide-react'
 import type { InvoiceFormState } from '../InvoiceForm/formUtils'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 
 export type InvoiceDetailProps = InvoiceFormMode & {
   onGoBack: () => void
@@ -19,6 +20,7 @@ export type InvoiceDetailProps = InvoiceFormMode & {
 
 export const InvoiceDetail = (props: InvoiceDetailProps) => {
   const { onGoBack, ...invoiceProps } = props
+  const { addToast } = useLayerContext()
   const formRef = useRef<{ submit: () => Promise<void> }>(null)
 
   const [invoiceState, setInvoiceState] = useState(invoiceProps)
@@ -27,7 +29,13 @@ export const InvoiceDetail = (props: InvoiceDetailProps) => {
   const onSuccess = useCallback((invoice: Invoice) => {
     setInvoiceState({ mode: UpsertInvoiceMode.Update, invoice })
     setIsReadOnly(true)
-  }, [])
+
+    const toastContent = invoiceState.mode === UpsertInvoiceMode.Update
+      ? 'Invoice updated successfully'
+      : 'Invoice created successfully'
+
+    addToast({ content: toastContent, type: 'success' })
+  }, [invoiceState.mode, addToast])
 
   const onSubmit = useCallback(() => void formRef.current?.submit(), [])
   const [formState, setFormState] = useState<InvoiceFormState>({
