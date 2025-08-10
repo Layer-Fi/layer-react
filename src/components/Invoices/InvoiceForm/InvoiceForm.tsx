@@ -15,7 +15,7 @@ import { convertCentsToCurrency } from '../../../utils/format'
 import { getDurationInDaysFromTerms, InvoiceTermsComboBox, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { type ZonedDateTime, toCalendarDate, fromDate } from '@internationalized/date'
 import { withForceUpdate } from '../../../features/forms/components/FormBigDecimalField'
-import { type InvoiceFormState, flattenValidationErrors, getEmptyLineItem } from './formUtils'
+import { type InvoiceFormState, flattenValidationErrors, EMPTY_LINE_ITEM } from './formUtils'
 import { DataState, DataStateStatus } from '../../DataState'
 import { AlertTriangle } from 'lucide-react'
 import { TextSize } from '../../Typography'
@@ -294,7 +294,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
               ))}
               {!isReadOnly
                 && (
-                  <Button variant='outlined' onClick={() => field.pushValue(getEmptyLineItem())}>
+                  <Button variant='outlined' onClick={() => field.pushValue(EMPTY_LINE_ITEM)}>
                     Add line item
                     <Plus size={16} />
                   </Button>
