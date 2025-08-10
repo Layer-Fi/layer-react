@@ -12,33 +12,23 @@ import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { format } from 'date-fns'
+import { LedgerEntrySourceSchema, PnlDetailLineSchema } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import type { LedgerEntrySource } from '../../types/ledger_accounts'
+import { Direction } from '../../types'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 
-// Define the line item type that matches the actual API response structure
-type PnlDetailLine = {
-  readonly id: string
-  readonly entry_id: string
-  readonly account: {
-    readonly id: string
-    readonly name: string
-    readonly stable_name: string
-    readonly normality: string
-    readonly account_type: {
-      readonly value: string
-      readonly display_name: string
-    }
-    readonly account_subtype: {
-      readonly value: string
-      readonly display_name: string
-    }
+// Use the schema-generated types directly
+type PnlDetailLine = typeof PnlDetailLineSchema.Type
+
+// Bridge function to convert from new schema type to old type for SourceDetailView
+const convertSourceForDetailView = (source: typeof LedgerEntrySourceSchema.Type): LedgerEntrySource => {
+  return {
+    display_description: source.displayDescription,
+    entity_name: source.entityName,
+    type: source.type,
   }
-  readonly amount: number
-  readonly direction: 'CREDIT' | 'DEBIT'
-  readonly date: string
-  readonly source?: LedgerEntrySource
 }
 
 enum PnlDetailColumns {
@@ -95,7 +85,7 @@ export const ProfitAndLossDetailReport = ({
 }: ProfitAndLossDetailReportProps) => {
   const { businessId } = useLayerContext()
   const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
-  const [selectedSource, setSelectedSource] = useState<LedgerEntrySource | null>(null)
+  const [selectedSource, setSelectedSource] = useState<typeof LedgerEntrySourceSchema.Type | null>(null)
 
   // Use the passed breadcrumb path or create a simple one if not provided
   const dynamicBreadcrumbs = useMemo(() => {
@@ -116,7 +106,7 @@ export const ProfitAndLossDetailReport = ({
     tagFilter,
   })
 
-  const handleSourceClick = useCallback((source: LedgerEntrySource) => {
+  const handleSourceClick = useCallback((source: typeof LedgerEntrySourceSchema.Type) => {
     setSelectedSource(source)
   }, [])
 
@@ -128,14 +118,10 @@ export const ProfitAndLossDetailReport = ({
   const processedData = useMemo(() => {
     if (!data?.lines) return { lines: [], total: 0 }
 
-    // Sort lines chronologically (oldest first)
-    const sortedLines = [...(data.lines as PnlDetailLine[])]
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-
     // Calculate running balance
     let runningBalance = 0
-    const linesWithBalance = sortedLines.map((line) => {
-      const signedAmount = line.direction === 'CREDIT' ? line.amount : -line.amount
+    const linesWithBalance = data.lines.map((line) => {
+      const signedAmount = line.direction === Direction.CREDIT ? line.amount : -line.amount
       runningBalance += signedAmount
       return {
         ...line,
@@ -169,7 +155,7 @@ export const ProfitAndLossDetailReport = ({
             onClick={() => handleSourceClick(row.source!)}
           >
             <span>
-              {row.source.entity_name}
+              {row.source.entityName}
             </span>
           </button>
         )
@@ -183,7 +169,7 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Description]: {
       id: PnlDetailColumns.Description,
       header: stringOverrides?.descriptionColumnHeader || 'Description',
-      cell: row => row.source?.display_description || row.account.account_subtype.display_name || '-',
+      cell: row => row.source?.displayDescription || row.account.accountSubtype.displayName || '-',
       isRowHeader: true,
     },
     [PnlDetailColumns.Amount]: {
@@ -233,9 +219,9 @@ export const ProfitAndLossDetailReport = ({
             title={stringOverrides?.sourceDetailsTitle || 'Transaction source'}
           >
             <DetailsListItem label='Source'>
-              <Badge>{selectedSource.entity_name}</Badge>
+              <Badge>{selectedSource.entityName}</Badge>
             </DetailsListItem>
-            <SourceDetailView source={selectedSource} />
+            <SourceDetailView source={convertSourceForDetailView(selectedSource)} />
           </DetailsList>
         </div>
       </div>

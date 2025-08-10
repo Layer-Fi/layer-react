@@ -6,7 +6,7 @@ import { useGlobalInvalidator } from '../../utils/swr/useGlobalInvalidator'
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash'
 import { get } from '../../api/layer/authenticated_http'
-import { Schema } from 'effect'
+import { Schema, pipe } from 'effect'
 import { ReportingBasis, Direction } from '../../types'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 
@@ -35,113 +35,266 @@ type PnlDetailLinesOptions = PnlDetailLinesFilterParams
 type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesOptions
 
 const TransactionLedgerEntrySourceSchema = Schema.Struct({
-  display_description: Schema.String,
-  entity_name: Schema.String,
+  displayDescription: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('display_description'),
+  ),
+  entityName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('entity_name'),
+  ),
   type: Schema.Literal('Transaction_Ledger_Entry_Source'),
-  transaction_id: Schema.String,
-  external_id: Schema.String,
-  account_name: Schema.optional(Schema.String),
+  transactionId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('transaction_id'),
+  ),
+  externalId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('external_id'),
+  ),
+  accountName: pipe(
+    Schema.optional(Schema.String),
+    Schema.fromKey('account_name'),
+  ),
   date: Schema.String,
   amount: Schema.Number,
   direction: Schema.Enums(Direction),
   counterparty: Schema.optional(Schema.String),
   memo: Schema.optional(Schema.NullOr(Schema.String)),
   metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
-  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
+  referenceNumber: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reference_number'),
+  ),
 })
 
 const InvoiceLedgerEntrySourceSchema = Schema.Struct({
-  display_description: Schema.String,
-  entity_name: Schema.String,
+  displayDescription: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('display_description'),
+  ),
+  entityName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('entity_name'),
+  ),
   type: Schema.Literal('Invoice_Ledger_Entry_Source'),
-  invoice_id: Schema.String,
-  external_id: Schema.String,
-  invoice_number: Schema.NullOr(Schema.String),
-  recipient_name: Schema.String,
-  customer_description: Schema.optional(Schema.String),
+  invoiceId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('invoice_id'),
+  ),
+  externalId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('external_id'),
+  ),
+  invoiceNumber: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('invoice_number'),
+  ),
+  recipientName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('recipient_name'),
+  ),
+  customerDescription: pipe(
+    Schema.optional(Schema.String),
+    Schema.fromKey('customer_description'),
+  ),
   date: Schema.String,
   amount: Schema.Number,
   memo: Schema.optional(Schema.NullOr(Schema.String)),
   metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
-  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
+  referenceNumber: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reference_number'),
+  ),
 })
 
 const ManualLedgerEntrySourceSchema = Schema.Struct({
-  display_description: Schema.String,
-  entity_name: Schema.String,
+  displayDescription: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('display_description'),
+  ),
+  entityName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('entity_name'),
+  ),
   type: Schema.Literal('Manual_Ledger_Entry_Source'),
-  manual_entry_id: Schema.String,
+  manualEntryId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('manual_entry_id'),
+  ),
   memo: Schema.NullOr(Schema.String),
-  created_by: Schema.String,
+  createdBy: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('created_by'),
+  ),
   metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
-  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
+  referenceNumber: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reference_number'),
+  ),
 })
 
 const InvoicePaymentLedgerEntrySourceSchema = Schema.Struct({
-  display_description: Schema.String,
-  entity_name: Schema.String,
+  displayDescription: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('display_description'),
+  ),
+  entityName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('entity_name'),
+  ),
   type: Schema.Literal('Invoice_Payment_Ledger_Entry_Source'),
-  external_id: Schema.String,
-  invoice_id: Schema.String,
-  invoice_number: Schema.NullOr(Schema.String),
+  externalId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('external_id'),
+  ),
+  invoiceId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('invoice_id'),
+  ),
+  invoiceNumber: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('invoice_number'),
+  ),
   amount: Schema.Number,
   memo: Schema.optional(Schema.NullOr(Schema.String)),
   metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
-  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
+  referenceNumber: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reference_number'),
+  ),
 })
 
 const RefundLedgerEntrySourceSchema = Schema.Struct({
-  display_description: Schema.String,
-  entity_name: Schema.String,
+  displayDescription: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('display_description'),
+  ),
+  entityName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('entity_name'),
+  ),
   type: Schema.Literal('Refund_Ledger_Entry_Source'),
-  external_id: Schema.String,
-  refund_id: Schema.String,
-  refunded_to_customer_amount: Schema.Number,
-  recipient_name: Schema.String,
+  externalId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('external_id'),
+  ),
+  refundId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('refund_id'),
+  ),
+  refundedToCustomerAmount: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('refunded_to_customer_amount'),
+  ),
+  recipientName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('recipient_name'),
+  ),
   memo: Schema.optional(Schema.NullOr(Schema.String)),
   metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
-  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
+  referenceNumber: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reference_number'),
+  ),
 })
 
 const RefundPaymentLedgerEntrySourceSchema = Schema.Struct({
-  display_description: Schema.String,
-  entity_name: Schema.String,
+  displayDescription: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('display_description'),
+  ),
+  entityName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('entity_name'),
+  ),
   type: Schema.Literal('Refund_Payment_Ledger_Entry_Source'),
-  external_id: Schema.String,
-  refund_id: Schema.String,
-  refund_payment_id: Schema.String,
-  refunded_to_customer_amount: Schema.Number,
-  recipient_name: Schema.String,
+  externalId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('external_id'),
+  ),
+  refundId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('refund_id'),
+  ),
+  refundPaymentId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('refund_payment_id'),
+  ),
+  refundedToCustomerAmount: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('refunded_to_customer_amount'),
+  ),
+  recipientName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('recipient_name'),
+  ),
   memo: Schema.optional(Schema.NullOr(Schema.String)),
   metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
-  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
+  referenceNumber: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reference_number'),
+  ),
 })
 
 const OpeningBalanceLedgerEntrySourceSchema = Schema.Struct({
-  display_description: Schema.String,
-  entity_name: Schema.String,
+  displayDescription: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('display_description'),
+  ),
+  entityName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('entity_name'),
+  ),
   type: Schema.Literal('Opening_Balance_Ledger_Entry_Source'),
-  account_name: Schema.optional(Schema.String),
+  accountName: pipe(
+    Schema.optional(Schema.String),
+    Schema.fromKey('account_name'),
+  ),
   memo: Schema.optional(Schema.NullOr(Schema.String)),
   metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
-  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
+  referenceNumber: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reference_number'),
+  ),
 })
 
 const PayoutLedgerEntrySourceSchema = Schema.Struct({
-  display_description: Schema.String,
-  entity_name: Schema.String,
+  displayDescription: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('display_description'),
+  ),
+  entityName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('entity_name'),
+  ),
   type: Schema.Literal('Payout_Ledger_Entry_Source'),
-  payout_id: Schema.String,
-  external_id: Schema.String,
-  paid_out_amount: Schema.Number,
+  payoutId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('payout_id'),
+  ),
+  externalId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('external_id'),
+  ),
+  paidOutAmount: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('paid_out_amount'),
+  ),
   processor: Schema.String,
-  completed_at: Schema.String,
+  completedAt: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('completed_at'),
+  ),
   memo: Schema.optional(Schema.NullOr(Schema.String)),
   metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
-  reference_number: Schema.optional(Schema.NullOr(Schema.String)),
+  referenceNumber: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reference_number'),
+  ),
 })
 
-const LedgerEntrySourceSchema = Schema.Union(
+export const LedgerEntrySourceSchema = Schema.Union(
   TransactionLedgerEntrySourceSchema,
   InvoiceLedgerEntrySourceSchema,
   ManualLedgerEntrySourceSchema,
@@ -154,21 +307,36 @@ const LedgerEntrySourceSchema = Schema.Union(
 
 const AccountTypeSchema = Schema.Struct({
   value: Schema.String,
-  display_name: Schema.String,
+  displayName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('display_name'),
+  ),
 })
 
 const AccountSubtypeSchema = Schema.Struct({
   value: Schema.String,
-  display_name: Schema.String,
+  displayName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('display_name'),
+  ),
 })
 
-const AccountSchema = Schema.Struct({
+export const AccountSchema = Schema.Struct({
   id: Schema.String,
   name: Schema.String,
-  stable_name: Schema.String,
+  stableName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('stable_name'),
+  ),
   normality: Schema.String,
-  account_type: AccountTypeSchema,
-  account_subtype: AccountSubtypeSchema,
+  accountType: pipe(
+    Schema.propertySignature(AccountTypeSchema),
+    Schema.fromKey('account_type'),
+  ),
+  accountSubtype: pipe(
+    Schema.propertySignature(AccountSubtypeSchema),
+    Schema.fromKey('account_subtype'),
+  ),
 })
 
 const TagFilterSchema = Schema.Struct({
@@ -176,9 +344,12 @@ const TagFilterSchema = Schema.Struct({
   values: Schema.Array(Schema.String),
 })
 
-const PnlDetailLineSchema = Schema.Struct({
+export const PnlDetailLineSchema = Schema.Struct({
   id: Schema.String,
-  entry_id: Schema.String,
+  entryId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('entry_id'),
+  ),
   account: AccountSchema,
   amount: Schema.Number,
   direction: Schema.Enums(Direction),
@@ -188,19 +359,40 @@ const PnlDetailLineSchema = Schema.Struct({
 
 const PnlDetailLinesDataSchema = Schema.Struct({
   type: Schema.String,
-  business_id: Schema.String,
-  start_date: Schema.String,
-  end_date: Schema.String,
-  pnl_structure_line_item_name: Schema.String,
-  reporting_basis: Schema.optional(Schema.NullOr(Schema.String)),
-  pnl_structure: Schema.optional(Schema.NullOr(Schema.String)),
-  tag_filter: Schema.NullOr(TagFilterSchema),
+  businessId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('business_id'),
+  ),
+  startDate: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('start_date'),
+  ),
+  endDate: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('end_date'),
+  ),
+  pnlStructureLineItemName: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('pnl_structure_line_item_name'),
+  ),
+  reportingBasis: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reporting_basis'),
+  ),
+  pnlStructure: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('pnl_structure'),
+  ),
+  tagFilter: pipe(
+    Schema.propertySignature(Schema.NullOr(TagFilterSchema)),
+    Schema.fromKey('tag_filter'),
+  ),
   lines: Schema.Array(PnlDetailLineSchema),
 })
 
 const PnlDetailLinesReturnSchema = PnlDetailLinesDataSchema
 
-type PnlDetailLinesReturn = typeof PnlDetailLinesReturnSchema.Type
+export type PnlDetailLinesReturn = typeof PnlDetailLinesReturnSchema.Type
 
 class PnlDetailLinesSWRResponse {
   private swrResponse: SWRResponse<PnlDetailLinesReturn>
