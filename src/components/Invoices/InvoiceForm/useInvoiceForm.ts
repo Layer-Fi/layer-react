@@ -14,11 +14,12 @@ import {
 } from './totalsUtils'
 import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, getInvoiceFormInitialValues, validateOnSubmit } from './formUtils'
 
+type onSuccessFn = (invoice: Invoice) => void
 type UseInvoiceFormProps =
-  | { onSuccess?: (invoice: Invoice) => void, mode: UpsertInvoiceMode.Create }
-  | { onSuccess?: (invoice: Invoice) => void, mode: UpsertInvoiceMode.Update, invoice: Invoice }
+  | { onSuccess: onSuccessFn, mode: UpsertInvoiceMode.Create }
+  | { onSuccess: onSuccessFn, mode: UpsertInvoiceMode.Update, invoice: Invoice }
 
-function isUpdateMode(props: UseInvoiceFormProps): props is { mode: UpsertInvoiceMode.Update, invoice: Invoice } {
+function isUpdateMode(props: UseInvoiceFormProps): props is { onSuccess: onSuccessFn, mode: UpsertInvoiceMode.Update, invoice: Invoice } {
   return props.mode === UpsertInvoiceMode.Update
 }
 
@@ -46,7 +47,7 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
       const { data: invoice } = await upsertInvoice(upsertInvoiceRequest)
 
       setSubmitError(undefined)
-      onSuccess?.(invoice)
+      onSuccess(invoice)
     }
     catch (e) {
       console.error(e)

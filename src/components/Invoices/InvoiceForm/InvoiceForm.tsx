@@ -53,7 +53,7 @@ const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProp
 export type InvoiceFormMode = { mode: UpsertInvoiceMode.Update, invoice: Invoice } | { mode: UpsertInvoiceMode.Create }
 export type InvoiceFormProps = InvoiceFormMode & {
   isReadOnly: boolean
-  onSuccess?: (invoice: Invoice) => void
+  onSuccess: (invoice: Invoice) => void
   onChangeFormState?: (formState: InvoiceFormState) => void
 }
 
