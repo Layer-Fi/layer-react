@@ -30,9 +30,7 @@ type PnlDetailLinesFilterParams = {
   pnlStructure?: string
 }
 
-type PnlDetailLinesOptions = PnlDetailLinesFilterParams
-
-type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesOptions
+type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParams
 
 const TransactionLedgerEntrySourceSchema = Schema.Struct({
   displayDescription: pipe(
@@ -390,9 +388,7 @@ const PnlDetailLinesDataSchema = Schema.Struct({
   lines: Schema.Array(PnlDetailLineSchema),
 })
 
-const PnlDetailLinesReturnSchema = PnlDetailLinesDataSchema
-
-export type PnlDetailLinesReturn = typeof PnlDetailLinesReturnSchema.Type
+export type PnlDetailLinesReturn = typeof PnlDetailLinesDataSchema.Type
 
 class PnlDetailLinesSWRResponse {
   private swrResponse: SWRResponse<PnlDetailLinesReturn>
@@ -462,7 +458,7 @@ export function useProfitAndLossDetailLines({
   tagFilter,
   reportingBasis,
   pnlStructure,
-}: PnlDetailLinesBaseParams & PnlDetailLinesOptions) {
+}: PnlDetailLinesBaseParams & PnlDetailLinesFilterParams) {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
@@ -502,7 +498,7 @@ export function useProfitAndLossDetailLines({
         reportingBasis,
         pnlStructure,
       },
-    )().then(response => response.data).then(Schema.decodeUnknownPromise(PnlDetailLinesReturnSchema)),
+    )().then(response => response.data).then(Schema.decodeUnknownPromise(PnlDetailLinesDataSchema)),
     {
       keepPreviousData: true,
     },
