@@ -59,7 +59,7 @@ export type InvoiceFormProps = InvoiceFormMode & {
 
 export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   const { onSuccess, onChangeFormState, isReadOnly, mode } = props
-  const { form, formState, totals } = useInvoiceForm(
+  const { form, formState, totals, submitError } = useInvoiceForm(
     { onSuccess, ...(mode === UpsertInvoiceMode.Update ? { mode, invoice: props.invoice } : { mode }) },
   )
   const { subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal } = totals
@@ -103,14 +103,14 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
       <form.Subscribe selector={state => state.errorMap}>
         {(errorMap) => {
           const validationErrors = flattenValidationErrors(errorMap)
-          if (validationErrors.length > 0) {
+          if (validationErrors.length > 0 || submitError) {
             return (
               <HStack className='Layer__InvoiceForm__FormError'>
                 <DataState
                   className='Layer__InvoiceForm__FormError__DataState'
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
-                  title={validationErrors[0]}
+                  title={validationErrors[0] || submitError}
                   titleSize={TextSize.md}
                   inline
                 />

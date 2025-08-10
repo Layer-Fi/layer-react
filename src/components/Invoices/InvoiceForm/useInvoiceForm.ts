@@ -105,6 +105,6 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   }), [additionalDiscount, grandTotal, subtotal, taxableSubtotal, taxes])
 
   return useMemo(() => (
-    { form, formState, totals }),
-  [form, formState, totals])
+    { form, formState, totals, submitError }),
+  [form, formState, totals, submitError])
 }
