@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState, useRef } from 'react'
-import { useStore } from '@tanstack/react-form'
+import { useStore, revalidateLogic } from '@tanstack/react-form'
 import { useAppForm } from '../../../features/forms/hooks/useForm'
 import { UpsertInvoiceSchema, type Invoice, type InvoiceForm } from '../../../features/invoices/invoiceSchemas'
 import { useUpsertInvoice, UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
@@ -12,7 +12,7 @@ import {
   computeTaxableSubtotal,
   computeTaxes,
 } from './totalsUtils'
-import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, getInvoiceFormInitialValues, validateOnSubmit } from './formUtils'
+import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, getInvoiceFormInitialValues, validateInvoiceForm } from './formUtils'
 
 type onSuccessFn = (invoice: Invoice) => void
 type UseInvoiceFormProps =
@@ -56,10 +56,19 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   }, [onSuccess, upsertInvoice])
 
   const validators = useMemo(() => ({
-    onSubmit: validateOnSubmit,
+    onDynamic: validateInvoiceForm,
   }), [])
 
-  const form = useAppForm<InvoiceForm>({ defaultValues, onSubmit, validators })
+  const form = useAppForm<InvoiceForm>({
+    defaultValues,
+    onSubmit,
+    validators,
+    validationLogic: revalidateLogic({
+      mode: 'submit',
+      modeAfterSubmission: 'submit',
+    }),
+    canSubmitWhenInvalid: true,
+  })
   const isFormValid = useStore(form.store, state => state.isValid)
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
 

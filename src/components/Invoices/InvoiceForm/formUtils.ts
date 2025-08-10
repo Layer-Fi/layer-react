@@ -98,7 +98,7 @@ export const getInvoiceFormInitialValues = (invoice: Invoice): InvoiceForm => {
   }
 }
 
-export const validateOnSubmit = ({ value: invoice }: { value: InvoiceForm }) => {
+export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) => {
   const { customer, invoiceNumber, sentAt, dueAt, lineItems } = invoice
 
   const errors = []
