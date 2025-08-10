@@ -14,7 +14,7 @@ interface FinancialEventIdentifiers {
   metadata?: Record<string, unknown>
 }
 
-interface BaseApiMatchDetails<TMetadata = unknown> {
+interface BaseMatchDetails<TMetadata = unknown> {
   id: string
   external_id?: string
   amount: number
@@ -25,49 +25,49 @@ interface BaseApiMatchDetails<TMetadata = unknown> {
   metadata?: TMetadata
 }
 
-export interface ManualJournalEntryMatchDetails<TMetadata = unknown> extends BaseApiMatchDetails<TMetadata> {
+export interface ManualJournalEntryMatchDetails<TMetadata = unknown> extends BaseMatchDetails<TMetadata> {
   type: 'Journal_Entry_Match'
 }
 
-export interface RefundPaymentMatchDetails<TMetadata = unknown> extends BaseApiMatchDetails<TMetadata> {
+export interface RefundPaymentMatchDetails<TMetadata = unknown> extends BaseMatchDetails<TMetadata> {
   type: 'Refund_Payment_Match'
   customer_refund_identifiers: FinancialEventIdentifiers
 }
 
-export interface VendorRefundPaymentMatchDetails<TMetadata = unknown> extends BaseApiMatchDetails<TMetadata> {
+export interface VendorRefundPaymentMatchDetails<TMetadata = unknown> extends BaseMatchDetails<TMetadata> {
   type: 'Vendor_Refund_Payment_Match'
   vendor_refund_identifiers: FinancialEventIdentifiers
 }
 
-export interface InvoicePaymentMatchDetails<TMetadata = unknown> extends BaseApiMatchDetails<TMetadata> {
+export interface InvoicePaymentMatchDetails<TMetadata = unknown> extends BaseMatchDetails<TMetadata> {
   type: 'Invoice_Match'
   invoice_identifiers: FinancialEventIdentifiers[]
 }
 
-export interface PayoutMatchDetails<TMetadata = unknown> extends BaseApiMatchDetails<TMetadata> {
+export interface PayoutMatchDetails<TMetadata = unknown> extends BaseMatchDetails<TMetadata> {
   type: 'Payout_Match'
 }
 
-export interface VendorPayoutMatchDetails<TMetadata = unknown> extends BaseApiMatchDetails<TMetadata> {
+export interface VendorPayoutMatchDetails<TMetadata = unknown> extends BaseMatchDetails<TMetadata> {
   type: 'Vendor_Payout_Match'
 }
 
-export interface BillPaymentMatchDetails<TMetadata = unknown> extends BaseApiMatchDetails<TMetadata> {
+export interface BillPaymentMatchDetails<TMetadata = unknown> extends BaseMatchDetails<TMetadata> {
   type: 'Bill_Match'
   bill_identifiers: FinancialEventIdentifiers[]
 }
 
-export interface PayrollPaymentMatchDetails<TMetadata = unknown> extends BaseApiMatchDetails<TMetadata> {
+export interface PayrollPaymentMatchDetails<TMetadata = unknown> extends BaseMatchDetails<TMetadata> {
   type: 'Payroll_Match'
 }
 
-export interface TransferMatchDetails<TMetadata = unknown> extends BaseApiMatchDetails<TMetadata> {
+export interface TransferMatchDetails<TMetadata = unknown> extends BaseMatchDetails<TMetadata> {
   type: 'Transfer_Match'
   from_account_name: string
   to_account_name: string
 }
 
-export type ApiMatchDetails<TMetadata = unknown> =
+export type MatchDetails<TMetadata = unknown> =
   | ManualJournalEntryMatchDetails<TMetadata>
   | RefundPaymentMatchDetails<TMetadata>
   | VendorRefundPaymentMatchDetails<TMetadata>

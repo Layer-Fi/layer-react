@@ -142,7 +142,7 @@ const Option = (
     showTooltips: boolean
   },
 ) => {
-  if (props.data.payload.option_type === 'hidden') {
+  if (props.data.payload.option_type === OptionActionType.HIDDEN) {
     return null
   }
 

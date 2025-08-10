@@ -6,6 +6,9 @@ import { useJournal } from '../../hooks/useJournal'
 import { Container } from '../Container'
 import { JournalTable } from '../JournalTable'
 import { JournalTableStringOverrides } from '../JournalTable/JournalTableWithPanel'
+import { LedgerEntrySource } from '../../types/ledger_accounts'
+import { SourceLink } from '../../types/utility/links'
+import { LedgerEntrySourceProvider } from '../../contexts/LedgerEntrySourceContext'
 
 export interface JournalConfig {
   form: {
@@ -21,6 +24,7 @@ export interface JournalProps {
   asWidget?: boolean
   config?: JournalConfig
   stringOverrides?: JournalStringOverrides
+  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySource) => SourceLink
 }
 
 export const JOURNAL_CONFIG: JournalConfig = {
@@ -35,7 +39,9 @@ export const Journal = (props: JournalProps) => {
   return (
     <ChartOfAccountsContext.Provider value={AccountsContextData}>
       <JournalContext.Provider value={JournalContextData}>
-        <JournalContent {...props} />
+        <LedgerEntrySourceProvider convertToSourceLink={props.convertLedgerEntrySourceToSourceLink}>
+          <JournalContent {...props} />
+        </LedgerEntrySourceProvider>
       </JournalContext.Provider>
     </ChartOfAccountsContext.Provider>
   )

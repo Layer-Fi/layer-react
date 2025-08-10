@@ -1,5 +1,6 @@
 import { useContext, useMemo, useState } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
+import { useLedgerEntrySourceContext } from '../../contexts/LedgerEntrySourceContext'
 import AlertCircle from '../../icons/AlertCircle'
 import RefreshCcw from '../../icons/RefreshCcw'
 import XIcon from '../../icons/X'
@@ -30,6 +31,7 @@ export const JournalEntryDetails = () => {
     reverseEntry,
     refetch,
   } = useContext(JournalContext)
+  const { convertToSourceLink } = useLedgerEntrySourceContext()
   const [reverseEntryProcessing, setReverseEntryProcessing] = useState(false)
   const [reverseEntryError, setReverseEntryError] = useState<string>()
 
@@ -99,7 +101,7 @@ export const JournalEntryDetails = () => {
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
           <Badge>{entry?.source?.entity_name}</Badge>
         </DetailsListItem>
-        {entry?.source?.display_description && (
+        {(entry?.source?.display_description || convertToSourceLink) && entry?.source && (
           <SourceDetailView source={entry?.source} />
         )}
       </DetailsList>

@@ -38,6 +38,9 @@ import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimension
 import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
 import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
+import { MatchDetailsProvider } from '../../contexts/MatchDetailsContext'
+import { MatchDetails } from '../../types/match_details'
+import { SourceLink } from '../../types/utility/links'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -72,6 +75,7 @@ export interface BankTransactionsProps {
   filters?: BankTransactionFilters
   hideHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
+  convertMatchDetailsToSourceLink?: (details: MatchDetails) => SourceLink
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -84,6 +88,7 @@ export const BankTransactions = ({
   showTags = false,
   showCustomerVendor = false,
   mode,
+  convertMatchDetailsToSourceLink,
   ...props
 }: BankTransactionsWithErrorProps) => {
   usePreloadTagDimensions({ isEnabled: showTags })
@@ -98,7 +103,9 @@ export const BankTransactions = ({
         <LegacyModeProvider overrideMode={mode}>
           <BankTransactionTagVisibilityProvider showTags={showTags}>
             <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
-              <BankTransactionsContent {...props} />
+              <MatchDetailsProvider convertToSourceLink={convertMatchDetailsToSourceLink}>
+                <BankTransactionsContent {...props} />
+              </MatchDetailsProvider>
             </BankTransactionCustomerVendorVisibilityProvider>
           </BankTransactionTagVisibilityProvider>
         </LegacyModeProvider>

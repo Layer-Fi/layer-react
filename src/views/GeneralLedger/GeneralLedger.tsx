@@ -6,6 +6,8 @@ import { JournalStringOverrides } from '../../components/Journal/Journal'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
+import { LedgerEntrySource } from '../../types/ledger_accounts'
+import { SourceLink } from '../../types/utility/links'
 
 export interface GeneralLedgerStringOverrides {
   title?: string
@@ -25,6 +27,7 @@ export interface GeneralLedgerProps {
   showTitle?: boolean
   stringOverrides?: GeneralLedgerStringOverrides
   chartOfAccountsOptions?: ChartOfAccountsOptions
+  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySource) => SourceLink
 }
 
 export const GeneralLedgerView = ({
@@ -32,6 +35,7 @@ export const GeneralLedgerView = ({
   showTitle = true,
   stringOverrides,
   chartOfAccountsOptions,
+  convertLedgerEntrySourceToSourceLink,
 }: GeneralLedgerProps) => {
   const [activeTab, setActiveTab] = useState('chartOfAccounts')
 
@@ -70,10 +74,14 @@ export const GeneralLedgerView = ({
                 chartOfAccountsOptions?.templateAccountsEditable
               }
               showReversalEntries={chartOfAccountsOptions?.showReversalEntries}
+              convertLedgerEntrySourceToSourceLink={convertLedgerEntrySourceToSourceLink}
             />
           )
           : (
-            <Journal stringOverrides={stringOverrides?.journal} />
+            <Journal
+              stringOverrides={stringOverrides?.journal}
+              convertLedgerEntrySourceToSourceLink={convertLedgerEntrySourceToSourceLink}
+            />
           )}
       </View>
     </ProfitAndLoss>

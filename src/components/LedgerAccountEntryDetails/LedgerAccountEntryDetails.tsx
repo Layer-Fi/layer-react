@@ -1,5 +1,6 @@
 import { useContext, useMemo } from 'react'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
+import { useLedgerEntrySourceContext } from '../../contexts/LedgerEntrySourceContext'
 import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
@@ -53,6 +54,7 @@ export const SourceDetailView = ({
   source: LedgerEntrySource
   stringOverrides?: SourceDetailStringOverrides
 }) => {
+  const { convertToSourceLink } = useLedgerEntrySourceContext()
   switch (source.type) {
     case 'Transaction_Ledger_Entry_Source': {
       const transactionSource = source as TransactionLedgerEntrySource
@@ -77,8 +79,16 @@ export const SourceDetailView = ({
           <DetailsListItem
             label={stringOverrides?.counterpartyLabel || 'Counterparty'}
           >
-            {transactionSource.counterparty
-              || transactionSource.display_description}
+            {transactionSource.counterparty || (convertToSourceLink && source ? (
+              <a
+                href={convertToSourceLink(source).href}
+                target={convertToSourceLink(source).target}
+              >
+                {convertToSourceLink(source).text}
+              </a>
+            ) : (
+              transactionSource.display_description
+            ))}
           </DetailsListItem>
         </>
       )
@@ -233,6 +243,7 @@ export const LedgerAccountEntryDetails = ({
 }) => {
   const { entryData, isLoadingEntry, closeSelectedEntry, errorEntry } =
     useContext(LedgerAccountsContext)
+  const { convertToSourceLink } = useLedgerEntrySourceContext()
 
   const { totalDebit, totalCredit } = useMemo(() => {
     let totalDebit = 0

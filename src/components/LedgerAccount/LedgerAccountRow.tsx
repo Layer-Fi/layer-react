@@ -9,6 +9,7 @@ import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { LedgerAccountNodeType } from '../../types/chart_of_accounts'
+import { useLedgerEntrySourceContext } from '../../contexts/LedgerEntrySourceContext'
 
 export interface LedgerAccountRowProps {
   row: LedgerAccountLineItem
@@ -25,6 +26,7 @@ export const LedgerAccountRow = ({
 }: LedgerAccountRowProps) => {
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
     useContext(LedgerAccountsContext)
+  const { convertToSourceLink } = useLedgerEntrySourceContext()
 
   if (view === 'tablet') {
     return (
@@ -56,7 +58,18 @@ export const LedgerAccountRow = ({
                 {lineEntryNumber(row)}
               </Text>
             </div>
-            <Text>{row.source?.display_description ?? ''}</Text>
+            <Text>
+              {convertToSourceLink && row.source ? (
+                <a
+                  href={convertToSourceLink(row.source).href}
+                  target={convertToSourceLink(row.source).target}
+                >
+                  {convertToSourceLink(row.source).text}
+                </a>
+              ) : (
+                row.source?.display_description ?? ''
+              )}
+            </Text>
             {nodeType !== LedgerAccountNodeType.Leaf
               && (
                 <Text weight={TextWeight.normal}>
@@ -116,7 +129,18 @@ export const LedgerAccountRow = ({
                 {lineEntryNumber(row)}
               </Text>
             </div>
-            <Text>{row.source?.display_description ?? ''}</Text>
+            <Text>
+              {convertToSourceLink && row.source ? (
+                <a
+                  href={convertToSourceLink(row.source).href}
+                  target={convertToSourceLink(row.source).target}
+                >
+                  {convertToSourceLink(row.source).text}
+                </a>
+              ) : (
+                row.source?.display_description ?? ''
+              )}
+            </Text>
             {nodeType !== LedgerAccountNodeType.Leaf
               && (
                 <Text weight={TextWeight.normal}>
@@ -184,7 +208,16 @@ export const LedgerAccountRow = ({
       </td>
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content'>
-          {row.source?.display_description ?? ''}
+          {convertToSourceLink && row.source ? (
+            <a
+              href={convertToSourceLink(row.source).href}
+              target={convertToSourceLink(row.source).target}
+            >
+              {convertToSourceLink(row.source).text}
+            </a>
+          ) : (
+            row.source?.display_description ?? ''
+          )}
         </span>
       </td>
       {nodeType !== LedgerAccountNodeType.Leaf

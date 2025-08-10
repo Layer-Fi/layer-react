@@ -20,6 +20,7 @@ import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookke
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
+import { useMatchDetailsContext } from '../../contexts/MatchDetailsContext'
 
 export interface BankTransactionMobileListItemProps {
   index: number
@@ -42,12 +43,20 @@ export enum Purpose {
 
 const DATE_FORMAT = 'LLL d'
 
-const getAssignedValue = (bankTransaction: BankTransaction) => {
+const getAssignedValue = (bankTransaction: BankTransaction, convertToSourceLink?: (details: any) => { href: string; text: string; target?: string }) => {
   if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
     return extractDescriptionForSplit(bankTransaction.category)
   }
 
   if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
+    if (convertToSourceLink && bankTransaction.match?.details) {
+      const sourceLink = convertToSourceLink(bankTransaction.match.details)
+      return (
+        <a href={sourceLink.href} target={sourceLink.target}>
+          {sourceLink.text}
+        </a>
+      )
+    }
     return bankTransaction.match?.details?.description
   }
 
@@ -73,6 +82,7 @@ export const BankTransactionMobileListItem = ({
   } = useContext(TransactionToOpenContext)
 
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
+  const { convertToSourceLink } = useMatchDetailsContext()
 
   const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
     setHeight(height),
@@ -191,7 +201,7 @@ export const BankTransactionMobileListItem = ({
             </Text>
             <Text as='span' className={`${className}__heading__account-name`}>
               {categorized && bankTransaction.categorization_status
-                ? getAssignedValue(bankTransaction)
+                ? getAssignedValue(bankTransaction, convertToSourceLink)
                 : null}
               <span>{!categorized && bankTransaction.account_name}</span>
               {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}

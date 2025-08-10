@@ -7,6 +7,7 @@ import { MatchBadge } from '../BankTransactionRow/MatchBadge'
 import { Text, TextUseTooltip, ErrorText } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import { useMatchDetailsContext } from '../../contexts/MatchDetailsContext'
 
 export interface MatchFormProps {
   classNamePrefix: string
@@ -27,6 +28,7 @@ export const MatchForm = ({
 }: MatchFormProps) => {
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const { convertToSourceLink } = useMatchDetailsContext()
 
   const {
     suggested_matches: suggestedMatches = [],
@@ -94,7 +96,16 @@ export const MatchForm = ({
                 withTooltip={TextUseTooltip.whenTruncated}
                 as='span'
               >
-                {suggestedMatch.details.description}
+                {convertToSourceLink ? (
+                  <a
+                    href={convertToSourceLink(suggestedMatch.details).href}
+                    target={convertToSourceLink(suggestedMatch.details).target}
+                  >
+                    {convertToSourceLink(suggestedMatch.details).text}
+                  </a>
+                ) : (
+                  suggestedMatch.details.description
+                )}
               </Text>
               {suggestedMatch.details.id === bankTransaction.match?.details.id && (
                 <span className='match-badge'>

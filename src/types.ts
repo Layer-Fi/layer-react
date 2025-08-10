@@ -20,7 +20,7 @@ export {
   BankTransactionMatch,
 } from './types/bank_transactions'
 export {
-  ApiMatchDetails,
+  MatchDetails,
   ManualJournalEntryMatchDetails,
   RefundPaymentMatchDetails,
   VendorRefundPaymentMatchDetails,
@@ -32,7 +32,6 @@ export {
   TransferMatchDetails,
   SuggestedMatchWithTransaction,
   SuggestedMatchesWithTransactions,
-  isTransferMatch,
 } from './types/match_details'
 export {
   CategorizationStatus,
