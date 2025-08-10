@@ -1,4 +1,4 @@
-import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, type InvoiceLineItem } from '../../../features/invoices/invoiceSchemas'
+import { InvoiceFormLineItemEquivalence, type Invoice, type InvoiceForm, type InvoiceFormLineItem, type InvoiceLineItem } from '../../../features/invoices/invoiceSchemas'
 import { BigDecimal as BD } from 'effect'
 import { BIG_DECIMAL_ZERO, BIG_DECIMAL_ONE, convertCentsToBigDecimal, safeDivide, convertBigDecimalToCents } from '../../../utils/bigDecimalUtils'
 import {
@@ -10,7 +10,6 @@ import {
 import { startOfToday } from 'date-fns'
 import { getLocalTimeZone, fromDate } from '@internationalized/date'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { isEqualWith } from 'lodash'
 import { ValidationErrorMap } from '@tanstack/react-form'
 
 export type InvoiceFormState = {
@@ -99,15 +98,6 @@ export const getInvoiceFormInitialValues = (invoice: Invoice): InvoiceForm => {
   }
 }
 
-const getIsEqualLineItems = (a: InvoiceFormLineItem, b: InvoiceFormLineItem) => {
-  return isEqualWith(a, b, (val1, val2, key) => {
-    if (key === 'unitPrice' || key === 'quantity' || key === 'amount') {
-      return BD.isBigDecimal(val1) && BD.isBigDecimal(val2) && BD.equals(val1, val2)
-    }
-    return undefined
-  })
-}
-
 export const validateOnSubmit = ({ value: invoice }: { value: InvoiceForm }) => {
   const errors = []
   if (invoice.customer === null) {
@@ -126,13 +116,15 @@ export const validateOnSubmit = ({ value: invoice }: { value: InvoiceForm }) => 
     errors.push({ dueAt: 'Due date is a required field.' })
   }
 
-  if (invoice.lineItems.length === 0) {
-    errors.push({ lineItems: 'Invoice requires at least one line item.' })
+  const emptyLineItem = getEmptyLineItem()
+  const nonEmptyLineItems = invoice.lineItems.filter(item => !InvoiceFormLineItemEquivalence(emptyLineItem, item))
+
+  if (nonEmptyLineItems.length === 0) {
+    errors.push({ lineItems: 'Invoice requires at least one non-empty line item.' })
   }
 
-  const emptyLineItem = getEmptyLineItem()
-  invoice.lineItems.some((item) => {
-    if (!getIsEqualLineItems(item, emptyLineItem) && (item.product === '')) {
+  nonEmptyLineItems.some((item) => {
+    if (item.product.trim() === '') {
       errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field Product/Service.' })
       return true
     }
@@ -163,13 +155,13 @@ export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({
   customerId: form.customer?.id,
   dueAt: form.dueAt?.toDate(),
   sentAt: form.sentAt?.toDate(),
-  invoiceNumber: form.invoiceNumber || undefined,
-  memo: form.memo,
+  invoiceNumber: form.invoiceNumber.trim(),
+  memo: form.memo.trim(),
 
   lineItems: form.lineItems.map((item) => {
     const baseLineItem = {
-      description: item.description,
-      product: item.product,
+      description: item.description.trim(),
+      product: item.product.trim(),
       unitPrice: convertBigDecimalToCents(item.unitPrice),
       quantity: item.quantity,
     }
