@@ -251,6 +251,13 @@ export const LedgerAccountEntryDetails = ({
     return { totalDebit, totalCredit }
   }, [entryData])
 
+  const sourceLink = useMemo(() => {
+    if (convertToSourceLink && entryData?.source) {
+      return convertToSourceLink(entryData.source)
+    }
+    return undefined
+  }, [convertToSourceLink, entryData?.source])
+
   return (
     <div className='Layer__ledger-account__entry-details'>
       <Header className='Layer__ledger-account__entry-details__header'>
@@ -294,13 +301,13 @@ export const LedgerAccountEntryDetails = ({
           isLoading={isLoadingEntry}
         >
           <Badge>
-            {(convertToSourceLink && entryData?.source && convertToSourceLink(entryData.source))
+            {sourceLink
               ? (
                 <a
-                  href={convertToSourceLink(entryData?.source)?.href}
-                  target={convertToSourceLink(entryData?.source)?.target}
+                  href={sourceLink.href}
+                  target={sourceLink.target}
                 >
-                  {convertToSourceLink(entryData?.source)?.text}
+                  {sourceLink.text}
                 </a>
               )
               : entryData?.source?.entity_name}

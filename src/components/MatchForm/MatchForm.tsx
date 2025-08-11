@@ -63,6 +63,7 @@ export const MatchForm = ({
       </div>
 
       {effectiveSuggestedMatches.map((suggestedMatch) => {
+        const sourceLink = convertToSourceLink ? convertToSourceLink(suggestedMatch.details) : null
         return (
           <div
             key={suggestedMatch.id}
@@ -117,13 +118,13 @@ export const MatchForm = ({
               $
               {formatMoney(suggestedMatch.details.amount)}
             </div>
-            { convertToSourceLink && (
+            { sourceLink && (
               <div className={`${classNamePrefix}__match-table__link`}>
                 <a
-                  href={convertToSourceLink(suggestedMatch.details).href}
-                  target={convertToSourceLink(suggestedMatch.details).target}
+                  href={sourceLink.href}
+                  target={sourceLink.target}
                 >
-                  {convertToSourceLink(suggestedMatch.details).text}
+                  {sourceLink.text}
                 </a>
               </div>
             )}

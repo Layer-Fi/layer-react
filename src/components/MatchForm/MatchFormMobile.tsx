@@ -19,6 +19,7 @@ export const MatchFormMobile = ({
   return (
     <div className={`${classNamePrefix}__match-list`}>
       {bankTransaction.suggested_matches?.map((match, idx) => {
+        const sourceLink = convertToSourceLink ? convertToSourceLink(match.details) : null
         return (
           <div
             key={idx}
@@ -57,16 +58,16 @@ export const MatchFormMobile = ({
                 </Text>
               </div>
               <div className={`${classNamePrefix}__match-item__details`}>
-                {convertToSourceLink
+                {sourceLink
                   ? (
                     <a
-                      href={convertToSourceLink(match.details).href}
-                      target={convertToSourceLink(match.details).target}
+                      href={sourceLink.href}
+                      target={sourceLink.target}
                       onClick={e => e.stopPropagation()}
                       className={`${classNamePrefix}__match-item__link`}
                     >
                       <Text size={TextSize.sm} as='span'>
-                        {convertToSourceLink(match.details).text}
+                        {sourceLink.text}
                       </Text>
                     </a>
                   )

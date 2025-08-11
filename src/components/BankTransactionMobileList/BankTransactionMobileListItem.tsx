@@ -3,7 +3,7 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import { useElementSize } from '../../hooks/useElementSize'
 import FileIcon from '../../icons/File'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, CategorizationStatus } from '../../types'
+import { BankTransaction, CategorizationStatus, MatchDetails } from '../../types'
 import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
 
@@ -21,6 +21,7 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { useMatchDetailsContext } from '../../contexts/MatchDetailsContext'
+import { SourceLink } from '../../types/utility/links'
 
 export interface BankTransactionMobileListItemProps {
   index: number
@@ -43,7 +44,10 @@ export enum Purpose {
 
 const DATE_FORMAT = 'LLL d'
 
-const getAssignedValue = (bankTransaction: BankTransaction, convertToSourceLink?: (details: any) => { href: string; text: string; target?: string }) => {
+const getAssignedValue = (
+  bankTransaction: BankTransaction,
+  convertToSourceLink?: (details: MatchDetails) => SourceLink,
+) => {
   if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
     return extractDescriptionForSplit(bankTransaction.category)
   }

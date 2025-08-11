@@ -9,7 +9,6 @@ import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { LedgerAccountNodeType } from '../../types/chart_of_accounts'
-import { useLedgerEntrySourceContext } from '../../contexts/LedgerEntrySourceContext'
 
 export interface LedgerAccountRowProps {
   row: LedgerAccountLineItem
@@ -26,7 +25,6 @@ export const LedgerAccountRow = ({
 }: LedgerAccountRowProps) => {
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
     useContext(LedgerAccountsContext)
-  const { convertToSourceLink } = useLedgerEntrySourceContext()
 
   if (view === 'tablet') {
     return (

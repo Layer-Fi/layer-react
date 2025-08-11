@@ -43,6 +43,13 @@ export const JournalEntryDetails = () => {
     return
   }, [data, selectedEntryId])
 
+  const sourceLink = useMemo(() => {
+    if (convertToSourceLink && entry?.source) {
+      return convertToSourceLink(entry.source)
+    }
+    return undefined
+  }, [convertToSourceLink, entry?.source])
+
   const sortedLineItems = useMemo(
     () =>
       entry?.line_items?.sort((a, b) =>
@@ -100,13 +107,13 @@ export const JournalEntryDetails = () => {
       >
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
           <Badge>
-            {(convertToSourceLink && entry?.source && convertToSourceLink(entry?.source))
+            {sourceLink
               ? (
                 <a
-                  href={convertToSourceLink(entry?.source)?.href}
-                  target={convertToSourceLink(entry?.source)?.target}
+                  href={sourceLink.href}
+                  target={sourceLink.target}
                 >
-                  {convertToSourceLink(entry?.source)?.text}
+                  {sourceLink.text}
                 </a>
               )
               : entry?.source?.entity_name}
