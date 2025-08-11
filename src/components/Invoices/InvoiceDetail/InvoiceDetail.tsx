@@ -27,14 +27,13 @@ export const InvoiceDetail = (props: InvoiceDetailProps) => {
   const [isReadOnly, setIsReadOnly] = useState(props.mode === UpsertInvoiceMode.Update)
 
   const onSuccess = useCallback((invoice: Invoice) => {
-    setInvoiceState({ mode: UpsertInvoiceMode.Update, invoice })
-    setIsReadOnly(true)
-
     const toastContent = invoiceState.mode === UpsertInvoiceMode.Update
       ? 'Invoice updated successfully'
       : 'Invoice created successfully'
-
     addToast({ content: toastContent, type: 'success' })
+
+    setInvoiceState({ mode: UpsertInvoiceMode.Update, invoice })
+    setIsReadOnly(true)
   }, [invoiceState.mode, addToast])
 
   const onSubmit = useCallback(() => void formRef.current?.submit(), [])
