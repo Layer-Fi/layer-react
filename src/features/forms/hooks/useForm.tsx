@@ -1,6 +1,7 @@
 import {
   createFormHookContexts,
   createFormHook,
+  useForm as internalUseForm,
   type FormOptions,
   type FormValidateOrFn,
   type FormAsyncValidateOrFn,
@@ -31,9 +32,11 @@ const { useAppForm: useInternalAppForm } = createFormHook({
   formContext,
 })
 
-export function useAppForm<T>(props: FormOptions<
+export function useAppForm<T extends Record<string, unknown>>(props: FormOptions<
   T,
   FormValidateOrFn<T>,
+  FormValidateOrFn<T>,
+  FormAsyncValidateOrFn<T>,
   FormValidateOrFn<T>,
   FormAsyncValidateOrFn<T>,
   FormValidateOrFn<T>,
@@ -44,4 +47,21 @@ export function useAppForm<T>(props: FormOptions<
   unknown
 >) {
   return useInternalAppForm(props)
+}
+
+export function useForm<T extends Record<string, unknown>>(props: FormOptions<
+  T,
+  FormValidateOrFn<T>,
+  FormValidateOrFn<T>,
+  FormAsyncValidateOrFn<T>,
+  FormValidateOrFn<T>,
+  FormAsyncValidateOrFn<T>,
+  FormValidateOrFn<T>,
+  FormAsyncValidateOrFn<T>,
+  FormValidateOrFn<T>,
+  FormAsyncValidateOrFn<T>,
+  FormAsyncValidateOrFn<T>,
+  unknown
+>) {
+  return internalUseForm(props)
 }

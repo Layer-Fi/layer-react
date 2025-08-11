@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Bill, BillLineItem } from '../../types/bills'
-import { useForm, FormValidateOrFn, FormAsyncValidateOrFn, useStore } from '@tanstack/react-form'
+import { useStore } from '@tanstack/react-form'
 import { Vendor } from '../../types/vendors'
 import { convertFromCents, convertToCents } from '../../utils/format'
 import { Layer } from '../../api/layer'
@@ -9,6 +9,7 @@ import { useEnvironment } from '../../providers/Environment/EnvironmentInputProv
 import { useAuth } from '../../hooks/useAuth'
 import { useBillsContext } from '../../contexts/BillsContext'
 import { SaveBillPayload } from '../../api/layer/bills'
+import { useForm } from '../../features/forms/hooks/useForm'
 
 export type BillForm = {
   bill_number?: string
@@ -29,18 +30,7 @@ export const useBillForm = (bill?: EditableBill) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { openBillDetails, refetch } = useBillsContext()
 
-  const form = useForm<
-    BillForm,
-    FormValidateOrFn<BillForm>,
-    FormValidateOrFn<BillForm>,
-    FormAsyncValidateOrFn<BillForm>,
-    FormValidateOrFn<BillForm>,
-    FormAsyncValidateOrFn<BillForm>,
-    FormValidateOrFn<BillForm>,
-    FormAsyncValidateOrFn<BillForm>,
-    FormAsyncValidateOrFn<BillForm>,
-    FormAsyncValidateOrFn<BillForm>
-  >({
+  const form = useForm<BillForm>({
     defaultValues: {
       bill_number: bill?.bill_number,
       vendor: bill?.vendor,

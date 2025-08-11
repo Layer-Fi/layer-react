@@ -76,9 +76,11 @@ export function FormBigDecimalField({
       onSome: value => value,
     })
 
+    const rounded = BD.round(decimal, { scale: maxDecimalPlaces })
+
     const adjustedForPercent = mode === 'percent'
-      ? convertPercentToDecimal(decimal)
-      : decimal
+      ? convertPercentToDecimal(rounded)
+      : rounded
 
     const normalized = BD.normalize(adjustedForPercent)
     const clamped = BD.min(normalized, maxBigDecimalValue)
@@ -89,7 +91,7 @@ export function FormBigDecimalField({
     handleBlur()
 
     setInputValue(formatBigDecimalToString(clamped, formattingProps))
-  }, [inputValue, mode, maxBigDecimalValue, value, handleBlur, formattingProps, handleChange])
+  }, [inputValue, mode, maxBigDecimalValue, maxDecimalPlaces, value, handleBlur, formattingProps, handleChange])
 
   // Don't allow the user to type anything other than numeric characters, commas, decimals, etc
   const allowedChars = useMemo(() =>

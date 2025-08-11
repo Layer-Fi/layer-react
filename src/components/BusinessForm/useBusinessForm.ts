@@ -1,4 +1,6 @@
-import { useForm, FormValidateOrFn, FormAsyncValidateOrFn, useStore } from '@tanstack/react-form'
+import { useState } from 'react'
+import { useStore } from '@tanstack/react-form'
+import { useForm } from '../../features/forms/hooks/useForm'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { USStateCode } from '../../types/location'
 import { EntityType } from '../../types/business'
@@ -7,7 +9,6 @@ import { useCreateBusinessPersonnel } from '../../hooks/businessPersonnel/useCre
 import { BusinessPersonnel } from '../../hooks/businessPersonnel/types'
 import { useUpdateBusinessPersonnel } from '../../hooks/businessPersonnel/useUpdateBusinessPersonnel'
 import { useUpdateBusiness } from '../../hooks/business/useUpdateBusiness'
-import { useState } from 'react'
 
 type BusinessFormData = {
   full_name?: string
@@ -46,17 +47,7 @@ export const useBusinessForm = ({ onSuccess }: UseBusinessFormProps) => {
   const { trigger: updateBusinessPersonnel } = useUpdateBusinessPersonnel({ businessPersonnelId: person?.id })
   const { trigger: updateBusiness } = useUpdateBusiness()
 
-  const form = useForm<
-    BusinessFormData,
-    FormValidateOrFn<BusinessFormData>,
-    FormValidateOrFn<BusinessFormData>,
-    FormAsyncValidateOrFn<BusinessFormData>,
-    FormValidateOrFn<BusinessFormData>,
-    FormAsyncValidateOrFn<BusinessFormData>,
-    FormValidateOrFn<BusinessFormData>,
-    FormAsyncValidateOrFn<BusinessFormData>,
-    FormAsyncValidateOrFn<BusinessFormData>,
-    FormAsyncValidateOrFn<BusinessFormData>> ({
+  const form = useForm<BusinessFormData>({
     defaultValues: {
       full_name: person?.fullName ?? undefined,
       preferred_name: person?.preferredName ?? undefined,

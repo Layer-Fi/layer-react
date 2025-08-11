@@ -45,6 +45,8 @@ export function BaseConfirmationModal({
       })
       .catch((e: APIError | Error) => {
         setError(e)
+      })
+      .finally(() => {
         setIsProcessing(false)
       })
   }, [onConfirm])
