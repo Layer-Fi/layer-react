@@ -9,10 +9,14 @@ import { Text, TextSize, TextWeight } from '../Typography'
 import { DetailedChart } from './DetailedChart'
 import { DetailedTable, DetailedTableStringOverrides } from './DetailedTable'
 import { Filters } from './Filters'
+import { DetailReportModal } from './DetailReportModal'
 import { format } from 'date-fns'
+import { LineBaseItem } from '../../types/line_item'
+import type { ProfitAndLossDetailReportProps } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 
 export interface ProfitAndLossDetailedChartsStringOverrides {
   detailedTableStringOverrides?: DetailedTableStringOverrides
+  detailReportStringOverrides?: ProfitAndLossDetailReportProps['stringOverrides']
 }
 
 export const ProfitAndLossDetailedCharts = ({
@@ -49,6 +53,13 @@ export const ProfitAndLossDetailedCharts = ({
     theScope === 'revenue' ? filteredTotalRevenue : filteredTotalExpenses
 
   const [hoveredItem, setHoveredItem] = useState<string | undefined>()
+  const [selectedItem, setSelectedItem] = useState<LineBaseItem | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleValueClick = (item: LineBaseItem) => {
+    setSelectedItem(item)
+    setIsModalOpen(true)
+  }
 
   return (
     <div className='Layer__profit-and-loss-detailed-charts'>
@@ -116,9 +127,17 @@ export const ProfitAndLossDetailedCharts = ({
             setHoveredItem={setHoveredItem}
             chartColorsList={chartColorsList}
             stringOverrides={stringOverrides?.detailedTableStringOverrides}
+            onValueClick={handleValueClick}
           />
         </div>
       </div>
+
+      <DetailReportModal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        selectedItem={selectedItem}
+        stringOverrides={stringOverrides?.detailReportStringOverrides}
+      />
     </div>
   )
 }

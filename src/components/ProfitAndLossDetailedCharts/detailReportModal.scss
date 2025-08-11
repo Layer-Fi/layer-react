@@ -1,0 +1,70 @@
+.Layer__DetailReportModalOverlay {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+
+  background: rgb(0 0 0 / 50%);
+  place-items: center;
+
+  &[data-entering] {
+    animation-duration: 150ms;
+  }
+
+  &[data-exiting] {
+    animation-duration: 150ms;
+  }
+}
+
+.Layer__DetailReportModal {
+  // Full screen modal dimensions
+  block-size: 100vh;
+  inline-size: 100vw;
+  max-block-size: 100vh;
+  max-inline-size: 100vw;
+
+  &[data-entering] {
+    animation-duration: 300ms;
+  }
+
+  &[data-exiting] {
+    animation-duration: 300ms;
+  }
+}
+
+.Layer__DetailReportDialog {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  inline-size: 100%;
+
+  outline: none;
+  background-color: white;
+
+  // Remove padding as the ProfitAndLossDetailReport handles its own spacing
+  padding: 0;
+}
+
+// Style for clickable value buttons in the DetailedTable
+.Layer__profit-and-loss-detailed-table__value-button {
+  all: unset;
+  cursor: default;
+  color: inherit;
+
+  &--clickable {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 150ms ease-out;
+
+    &:hover {
+      text-decoration-color: currentColor;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--focus-ring-color);
+      outline-offset: 2px;
+      border-radius: var(--border-radius-2xs);
+    }
+  }
+}

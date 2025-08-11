@@ -26,6 +26,7 @@ export interface DetailedTableProps {
   sortBy: (scope: Scope, field: string, direction?: SortDirection) => void
   chartColorsList?: string[]
   stringOverrides?: DetailedTableStringOverrides
+  onValueClick?: (item: LineBaseItem) => void
 }
 
 export interface TypeColorMapping {
@@ -131,6 +132,7 @@ export const DetailedTable = ({
   setHoveredItem,
   chartColorsList,
   stringOverrides,
+  onValueClick,
 }: DetailedTableProps) => {
   const buildColClass = (column: string) => {
     return classNames(
@@ -201,8 +203,18 @@ export const DetailedTable = ({
                     <td className='category-col'>{item.display_name}</td>
                     <td className='type-col'>{item.type}</td>
                     <td className='value-col'>
-                      $
-                      {formatMoney(item.value)}
+                      <button
+                        type='button'
+                        className={classNames(
+                          'Layer__profit-and-loss-detailed-table__value-button',
+                          onValueClick && 'Layer__profit-and-loss-detailed-table__value-button--clickable',
+                        )}
+                        onClick={() => onValueClick?.(item)}
+                        disabled={!onValueClick}
+                      >
+                        $
+                        {formatMoney(item.value)}
+                      </button>
                     </td>
                     <td className='share-col'>
                       <span className='share-cell-content'>
