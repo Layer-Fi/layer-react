@@ -4,7 +4,7 @@ import { useLayerContext } from '../../../../../../contexts/LayerContext'
 import { useCallback } from 'react'
 import { post } from '../../../../../../api/layer/authenticated_http'
 import { useLedgerEntriesInvalidator, useLedgerEntriesOptimisticUpdater } from '../../../api/useListLedgerEntries'
-import { usePnlDetailLinesInvalidator } from '@layerfi/components/hooks/useProfitAndLoss/index'
+import { usePnlDetailLinesInvalidator } from '../../../../../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 
 const REMOVE_TAG_FROM_LEDGER_ENTRY_TAG_KEY = '#remove-tag-from-ledger-entry'
 
@@ -113,6 +113,7 @@ export function useRemoveTagFromLedgerEntry({ ledgerEntryId }: RemoveTagFromLedg
       originalTrigger,
       optimisticallyUpdateLedgerEntries,
       debouncedInvalidateLedgerEntries,
+      invalidatePnlDetailLines,
     ],
   )
 

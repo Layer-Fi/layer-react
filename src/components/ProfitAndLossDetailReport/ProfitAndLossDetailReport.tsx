@@ -4,7 +4,8 @@ import { useProfitAndLossDetailLines } from '../../hooks/useProfitAndLoss/usePro
 import { useLayerContext } from '../../contexts/LayerContext'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { DetailReportBreadcrumb } from '../DetailReportBreadcrumb'
-import { DataTable, type ColumnConfig } from '../DataTable/DataTable'
+import { VirtualizedDataTable } from '../VirtualizedDataTable/VirtualizedDataTable'
+import type { ColumnConfig } from '../DataTable/DataTable'
 import { centsToDollars } from '../../models/Money'
 import { Badge } from '../Badge'
 import { DateTime } from '../DateTime'
@@ -236,7 +237,7 @@ export const ProfitAndLossDetailReport = ({
       />
 
       <div className='Layer__profit-and-loss-detail-report__content'>
-        <DataTable<ProcessedPnlDetailLine, PnlDetailColumns>
+        <VirtualizedDataTable<ProcessedPnlDetailLine, PnlDetailColumns>
           componentName={COMPONENT_NAME}
           ariaLabel={`${lineItemName} detail lines`}
           columnConfig={columnConfig}
