@@ -5,6 +5,7 @@ import { Text, ErrorText, TextSize } from '../Typography'
 import { MatchFormProps } from './MatchForm'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import { useMatchDetailsContext } from '../../contexts/MatchDetailsContext'
 
 export const MatchFormMobile = ({
   classNamePrefix,
@@ -14,6 +15,7 @@ export const MatchFormMobile = ({
   matchFormError,
   readOnly,
 }: MatchFormProps) => {
+  const { convertToSourceLink } = useMatchDetailsContext()
   return (
     <div className={`${classNamePrefix}__match-list`}>
       {bankTransaction.suggested_matches?.map((match, idx) => {
@@ -55,6 +57,20 @@ export const MatchFormMobile = ({
                 </Text>
               </div>
               <div className={`${classNamePrefix}__match-item__details`}>
+                {convertToSourceLink
+                  ? (
+                    <a
+                      href={convertToSourceLink(match.details).href}
+                      target={convertToSourceLink(match.details).target}
+                      onClick={e => e.stopPropagation()}
+                      className={`${classNamePrefix}__match-item__link`}
+                    >
+                      <Text size={TextSize.sm} as='span'>
+                        {convertToSourceLink(match.details).text}
+                      </Text>
+                    </a>
+                  )
+                  : <div></div>}
                 <Text
                   className={`${classNamePrefix}__match-item__date`}
                   size={TextSize.sm}

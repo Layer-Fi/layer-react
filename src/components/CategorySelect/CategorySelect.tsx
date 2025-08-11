@@ -13,14 +13,15 @@ import MinimizeTwo from '../../icons/MinimizeTwo'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationType, Category } from '../../types'
 import { SuggestedMatch, type CategoryWithEntries } from '../../types/bank_transactions'
+import { MatchDetails } from '../../types/match_details'
 import { Badge } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import { Text, TextSize } from '../Typography'
-import { CategorySelectDrawer } from './CategorySelectDrawer'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
+import { useMatchDetailsContext } from '../../contexts/MatchDetailsContext'
 
 type Props = {
   name?: string
@@ -52,6 +53,7 @@ export interface CategoryOptionPayload {
   stable_name?: string
   entries?: CategoryWithEntries['entries']
   subCategories: Category[] | null
+  details?: MatchDetails
 }
 
 export interface CategoryOption {
@@ -140,6 +142,7 @@ const GroupHeading = (
 const Option = (
   props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
     showTooltips: boolean
+    convertToSourceLink?: (details: MatchDetails) => { href: string; text: string; target?: string }
   },
 ) => {
   if (props.data.payload.option_type === OptionActionType.HIDDEN) {
@@ -147,6 +150,10 @@ const Option = (
   }
 
   if (props.data.type === 'match') {
+    const sourceLink = props.convertToSourceLink && props.data.payload.details 
+      ? props.convertToSourceLink(props.data.payload.details) 
+      : null
+
     return (
       <components.Option
         {...props}
@@ -160,6 +167,16 @@ const Option = (
           <span className='Layer__select__option-content__match__description'>
             {props.data.payload.display_name}
           </span>
+          {sourceLink && (
+            <a
+              href={sourceLink.href}
+              target={sourceLink.target}
+              onClick={(e) => e.stopPropagation()}
+              className='Layer__select__option-content__match__link'
+            >
+              {sourceLink.text}
+            </a>
+          )}
         </div>
         <div className='Layer__select__option-content__match__amount-row'>
           <span className='Layer__select__option-content__match__amount'>
@@ -269,6 +286,7 @@ export const CategorySelect = ({
   asDrawer = false,
 }: Props) => {
   const { data: categories } = useCategories()
+  const { convertToSourceLink } = useMatchDetailsContext()
 
   const matchOptions =
     !excludeMatches && bankTransaction?.suggested_matches
@@ -285,6 +303,7 @@ export const CategorySelect = ({
                   date: x.details.date,
                   amount: x.details.amount,
                   subCategories: null,
+                  details: x.details,
                 },
               } satisfies CategoryOption
             }),
@@ -374,7 +393,7 @@ export const CategorySelect = ({
         DropdownIndicator,
         GroupHeading,
         Option: optionProps => (
-          <Option {...optionProps} showTooltips={showTooltips} />
+          <Option {...optionProps} showTooltips={showTooltips} convertToSourceLink={convertToSourceLink} />
         ),
       }}
       isDisabled={disabled}

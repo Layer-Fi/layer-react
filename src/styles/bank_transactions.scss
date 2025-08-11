@@ -1148,8 +1148,9 @@
 
   .Layer__bank-transaction-mobile-list-item__match-item__details {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     color: var(--color-base-500);
+    width: 100%;
   }
 
   .Layer__bank-transaction-mobile-list-item__match-item__col-status {
