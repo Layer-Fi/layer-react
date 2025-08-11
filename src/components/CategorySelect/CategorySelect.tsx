@@ -22,6 +22,7 @@ import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
 import { useMatchDetailsContext } from '../../contexts/MatchDetailsContext'
+import { CategorySelectDrawer } from './CategorySelectDrawer'
 
 type Props = {
   name?: string
@@ -142,7 +143,7 @@ const GroupHeading = (
 const Option = (
   props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
     showTooltips: boolean
-    convertToSourceLink?: (details: MatchDetails) => { href: string; text: string; target?: string }
+    convertToSourceLink?: (details: MatchDetails) => { href: string, text: string, target?: string }
   },
 ) => {
   if (props.data.payload.option_type === OptionActionType.HIDDEN) {
@@ -150,8 +151,8 @@ const Option = (
   }
 
   if (props.data.type === 'match') {
-    const sourceLink = props.convertToSourceLink && props.data.payload.details 
-      ? props.convertToSourceLink(props.data.payload.details) 
+    const sourceLink = props.convertToSourceLink && props.data.payload.details
+      ? props.convertToSourceLink(props.data.payload.details)
       : null
 
     return (
@@ -171,7 +172,7 @@ const Option = (
             <a
               href={sourceLink.href}
               target={sourceLink.target}
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
               className='Layer__select__option-content__match__link'
             >
               {sourceLink.text}

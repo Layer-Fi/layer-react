@@ -1,6 +1,5 @@
 import { useContext, useMemo } from 'react'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
-import { useLedgerEntrySourceContext } from '../../contexts/LedgerEntrySourceContext'
 import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
@@ -32,6 +31,7 @@ import { TableRow } from '../TableRow'
 import { Heading, HeadingSize } from '../Typography'
 import { Span } from '../ui/Typography/Text'
 import { VStack } from '../ui/Stack/Stack'
+import { useLedgerEntrySourceContext } from '../../contexts/LedgerEntrySourceContext'
 
 interface SourceDetailStringOverrides {
   sourceLabel?: string
@@ -54,7 +54,6 @@ export const SourceDetailView = ({
   source: LedgerEntrySource
   stringOverrides?: SourceDetailStringOverrides
 }) => {
-  const { convertToSourceLink } = useLedgerEntrySourceContext()
   switch (source.type) {
     case 'Transaction_Ledger_Entry_Source': {
       const transactionSource = source as TransactionLedgerEntrySource
@@ -79,16 +78,8 @@ export const SourceDetailView = ({
           <DetailsListItem
             label={stringOverrides?.counterpartyLabel || 'Counterparty'}
           >
-            {transactionSource.counterparty || (convertToSourceLink && source ? (
-              <a
-                href={convertToSourceLink(source).href}
-                target={convertToSourceLink(source).target}
-              >
-                {convertToSourceLink(source).text}
-              </a>
-            ) : (
-              transactionSource.display_description
-            ))}
+            {transactionSource.counterparty
+              || transactionSource.display_description}
           </DetailsListItem>
         </>
       )
@@ -302,7 +293,18 @@ export const LedgerAccountEntryDetails = ({
           }
           isLoading={isLoadingEntry}
         >
-          <Badge>{entryData?.source?.entity_name}</Badge>
+          <Badge>
+            {(convertToSourceLink && entryData?.source && convertToSourceLink(entryData.source))
+              ? (
+                <a
+                  href={convertToSourceLink(entryData?.source)?.href}
+                  target={convertToSourceLink(entryData?.source)?.target}
+                >
+                  {convertToSourceLink(entryData?.source)?.text}
+                </a>
+              )
+              : entryData?.source?.entity_name}
+          </Badge>
         </DetailsListItem>
         {entryData?.source?.display_description && (
           <SourceDetailView source={entryData?.source} />

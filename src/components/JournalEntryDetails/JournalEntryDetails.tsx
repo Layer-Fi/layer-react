@@ -1,6 +1,5 @@
 import { useContext, useMemo, useState } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
-import { useLedgerEntrySourceContext } from '../../contexts/LedgerEntrySourceContext'
 import AlertCircle from '../../icons/AlertCircle'
 import RefreshCcw from '../../icons/RefreshCcw'
 import XIcon from '../../icons/X'
@@ -20,6 +19,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { Heading, HeadingSize } from '../Typography'
 import { VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
+import { useLedgerEntrySourceContext } from '../../contexts/LedgerEntrySourceContext'
 
 export const JournalEntryDetails = () => {
   const {
@@ -99,9 +99,20 @@ export const JournalEntryDetails = () => {
         )}
       >
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
-          <Badge>{entry?.source?.entity_name}</Badge>
+          <Badge>
+            {(convertToSourceLink && entry?.source && convertToSourceLink(entry?.source))
+              ? (
+                <a
+                  href={convertToSourceLink(entry?.source)?.href}
+                  target={convertToSourceLink(entry?.source)?.target}
+                >
+                  {convertToSourceLink(entry?.source)?.text}
+                </a>
+              )
+              : entry?.source?.entity_name}
+          </Badge>
         </DetailsListItem>
-        {(entry?.source?.display_description || convertToSourceLink) && entry?.source && (
+        {entry?.source?.display_description && entry?.source && (
           <SourceDetailView source={entry?.source} />
         )}
       </DetailsList>

@@ -26,7 +26,7 @@ export interface ChartOfAccountsProps {
   showAddAccountButton?: boolean
   templateAccountsEditable?: boolean
   showReversalEntries?: boolean
-  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySource) => SourceLink
+  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySource) => SourceLink | undefined
 }
 
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => {

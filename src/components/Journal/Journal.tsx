@@ -24,7 +24,7 @@ export interface JournalProps {
   asWidget?: boolean
   config?: JournalConfig
   stringOverrides?: JournalStringOverrides
-  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySource) => SourceLink
+  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySource) => SourceLink | undefined
 }
 
 export const JOURNAL_CONFIG: JournalConfig = {

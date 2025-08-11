@@ -27,7 +27,7 @@ export interface GeneralLedgerProps {
   showTitle?: boolean
   stringOverrides?: GeneralLedgerStringOverrides
   chartOfAccountsOptions?: ChartOfAccountsOptions
-  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySource) => SourceLink
+  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySource) => SourceLink | undefined
 }
 
 export const GeneralLedgerView = ({
