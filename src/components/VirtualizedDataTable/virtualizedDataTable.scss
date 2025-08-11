@@ -1,0 +1,49 @@
+.Layer__UI__VirtualizedTable__container {
+  position: relative;
+  overflow: auto;
+  padding-right: var(--spacing-sm);
+}
+
+.Layer__UI__VirtualizedTable__state-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Layer__UI__VirtualizedTable__header-row {
+  display: flex;
+  width: 100%;
+}
+
+.Layer__table-header.Layer__UI__VirtualizedTable__header-cell {
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 0 auto;
+  padding: 0;
+}
+
+.Layer__UI__VirtualizedTable__spacer {
+  // This spacer row maintains the tbody height for virtualization
+  // Height is set dynamically via inline style using getTotalSize()
+  visibility: hidden;
+  border: none;
+  position:absolute;
+}
+
+.Layer__table-row.Layer__UI__VirtualizedTable__row {
+  // Virtual rows use transform positioning like ValidateCsvTable
+  // Position and transform are set via inline styles for performance
+  position: absolute;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding-right: var(--spacing-sm);
+  box-sizing: border-box;
+}
+
+.Layer__table-cell.Layer__UI__VirtualizedTable__cell {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  align-content: center;
+  min-width: 0;
+}

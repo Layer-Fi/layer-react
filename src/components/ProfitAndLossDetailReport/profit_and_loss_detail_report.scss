@@ -72,21 +72,25 @@
       width: var(--pnl-detail-amount-col-width);
       min-width: 7.5rem;
       text-align: right;
+      justify-content: flex-end;
     }
 
     &--Balance {
       width: var(--pnl-detail-balance-col-width);
       min-width: 7.5rem;
       text-align: right;
+      justify-content: flex-end;
     }
   }
 
   .Layer__UI__Table-Cell__ProfitAndLossDetailReport {
-    &--Account {
-      color: var(--color-base-600);
+    &--Date {
+      width: var(--pnl-detail-date-col-width);
+      min-width: 7rem;
     }
 
     &--Type {
+      width: var(--pnl-detail-type-col-width);
       font-size: var(--text-md);
 
       button {
@@ -97,12 +101,27 @@
       }
     }
 
+    &--Account {
+      width: var(--pnl-detail-account-col-width);
+      min-width: 10rem;
+      color: var(--color-base-600);
+    }
+
+    &--Description {
+      width: var(--pnl-detail-description-col-width);
+      min-width: 12rem;
+    }
+
     &--Amount {
+      width: var(--pnl-detail-amount-col-width);
+      min-width: 7.5rem;
       text-align: right;
       color: var(--color-base-800);
     }
 
     &--Balance {
+      width: var(--pnl-detail-balance-col-width);
+      min-width: 7.5rem;
       text-align: right;
       color: var(--color-base-800);
     }
