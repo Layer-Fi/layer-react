@@ -53,9 +53,13 @@ export const MatchForm = ({
           Description
         </div>
         <div className={`${classNamePrefix}__match-table__amount`}>Amount</div>
+        { convertToSourceLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div> }
 
-        <div className={`${classNamePrefix}__match-table__status ${match ? '' : 'no-match'}`}>
-        </div>
+        { match && (
+          <div className={`${classNamePrefix}__match-table__status ${match ? '' : 'no-match'}`}>
+          </div>
+        )}
+
       </div>
 
       {effectiveSuggestedMatches.map((suggestedMatch) => {
@@ -96,16 +100,7 @@ export const MatchForm = ({
                 withTooltip={TextUseTooltip.whenTruncated}
                 as='span'
               >
-                {convertToSourceLink ? (
-                  <a
-                    href={convertToSourceLink(suggestedMatch.details).href}
-                    target={convertToSourceLink(suggestedMatch.details).target}
-                  >
-                    {convertToSourceLink(suggestedMatch.details).text}
-                  </a>
-                ) : (
-                  suggestedMatch.details.description
-                )}
+                {suggestedMatch.details.description}
               </Text>
               {suggestedMatch.details.id === bankTransaction.match?.details.id && (
                 <span className='match-badge'>
@@ -122,21 +117,35 @@ export const MatchForm = ({
               $
               {formatMoney(suggestedMatch.details.amount)}
             </div>
+            { convertToSourceLink && (
+              <div className={`${classNamePrefix}__match-table__link`}>
+                <a
+                  href={convertToSourceLink(suggestedMatch.details).href}
+                  target={convertToSourceLink(suggestedMatch.details).target}
+                >
+                  {convertToSourceLink(suggestedMatch.details).text}
+                </a>
+              </div>
+            )}
 
-            <div
-              className={`${classNamePrefix}__match-table__status ${
-                bankTransaction.match ? '' : 'no-match'
-              }`}
-            >
-              {suggestedMatch.details.id === match?.details.id && (
-                <MatchBadge
-                  classNamePrefix={classNamePrefix}
-                  bankTransaction={bankTransaction}
-                  dateFormat={DATE_FORMAT}
-                  text='Matched'
-                />
-              )}
-            </div>
+            {
+              bankTransaction.match && (
+                <div
+                  className={`${classNamePrefix}__match-table__status ${
+                    bankTransaction.match ? '' : 'no-match'
+                  }`}
+                >
+                  {suggestedMatch.details.id === match?.details.id && (
+                    <MatchBadge
+                      classNamePrefix={classNamePrefix}
+                      bankTransaction={bankTransaction}
+                      dateFormat={DATE_FORMAT}
+                      text='Matched'
+                    />
+                  )}
+                </div>
+              )
+            }
           </div>
         )
       })}

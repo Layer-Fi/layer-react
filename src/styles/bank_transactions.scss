@@ -953,12 +953,18 @@
   }
 
   .Layer__expanded-bank-transaction-row__match-table__amount {
+    width: 100px;
     padding: var(--spacing-xs) var(--spacing-sm);
-    text-align: right;
+  }
+
+  .Layer__expanded-bank-transaction-row__match-table__link {
+    width: 80px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    text-align: center;
   }
 
   .Layer__expanded-bank-transaction-row__match-table__status {
-    width: 90px;
+    width: 100px;
     text-align: right;
 
     &.no-match {
@@ -1016,17 +1022,13 @@
       border-left: 1px solid var(--color-base-300);
     }
 
-    &:nth-child(3) {
+    &:nth-child(3):last-of-type,
+    &:nth-child(4):last-of-type,
+    &:nth-child(5) {
       border-top-right-radius: var(--border-radius-2xs);
       border-bottom-right-radius: var(--border-radius-2xs);
       border-right: 1px solid var(--color-base-300);
     }
-  }
-
-  & > div:last-child,
-  &:hover > div:last-child {
-    border-color: transparent;
-    background-color: transparent;
   }
 
   &:hover > div {
@@ -1045,7 +1047,9 @@
       border-left: 1px solid var(--color-base-300);
     }
 
-    &:nth-child(3) {
+    &:nth-child(3):last-of-type,
+    &:nth-child(4):last-of-type,
+    &:nth-child(5) {
       border-top-right-radius: var(--border-radius-2xs);
       border-bottom-right-radius: var(--border-radius-2xs);
       border-right: 1px solid var(--color-base-300);
@@ -1069,13 +1073,10 @@
     border-left: 1px solid var(--color-base-800);
   }
 
-  & > div:nth-child(3) {
+  & > div:nth-child(3):last-of-type,
+  & > div:nth-child(4):last-of-type,
+  & > div:nth-child(5) {
     border-right: 1px solid var(--color-base-800);
-  }
-
-  & > div:last-child {
-    border-color: transparent;
-    background-color: transparent;
   }
 }
 
@@ -1091,13 +1092,10 @@
     border-left: 1px solid var(--color-base-500);
   }
 
-  & > div:nth-child(3) {
+  & > div:nth-child(3):last-of-type,
+  & > div:nth-child(4):last-of-type,
+  & > div:nth-child(5) {
     border-right: 1px solid var(--color-base-500);
-  }
-
-  & > div:last-child {
-    border-color: transparent;
-    background-color: transparent;
   }
 }
 
@@ -1128,7 +1126,7 @@
   gap: var(--spacing-sm);
   align-items: center;
   width: 100%;
-  padding: var(--spacing-xs) 0;
+  padding: var(--spacing-xs);
   border-bottom: 1px solid var(--color-base-50);
 
   .Layer__bank-transaction-mobile-list-item__match-item__name {
@@ -1163,6 +1161,7 @@
 }
 
 .Layer__bank-transaction-mobile-list-item__match-item.Layer__bank-transaction-mobile-list-item__match-item--selected {
+  background: var(--color-base-100);
   .Layer__bank-transaction-mobile-list-item__match-item__name {
     color: var(--color-base-1000);
   }
@@ -1200,10 +1199,14 @@
 
     & > div,
     & > div:first-child,
-    & > div:nth-child(3),
+    & > div:nth-child(3):last-of-type,
+    & > div:nth-child(4):last-of-type,
+    & > div:nth-child(5),
     &:hover > div,
     &:hover > div:first-child,
-    &:hover > div:nth-child(3) {
+    &:hover > div:nth-child(3):last-of-type,
+    &:hover > div:nth-child(4):last-of-type,
+    &:hover > div:nth-child(5) {
       border-width: 0;
     }
 
@@ -1519,11 +1522,6 @@
 
 @container (max-width: 480px) {
   .Layer__expanded-bank-transaction-row__total-and-btns {
-    & > .Layer__input-tooltip > .Layer__input:disabled {
-      box-shadow: none;
-      background-color: transparent;
-      border-color: transparent;
-    }
 
     & > .Layer__input-tooltip > .Layer__input-left-text {
       border-right-color: transparent;

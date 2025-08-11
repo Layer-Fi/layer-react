@@ -59,16 +59,18 @@ export const LedgerAccountRow = ({
               </Text>
             </div>
             <Text>
-              {convertToSourceLink && row.source ? (
-                <a
-                  href={convertToSourceLink(row.source).href}
-                  target={convertToSourceLink(row.source).target}
-                >
-                  {convertToSourceLink(row.source).text}
-                </a>
-              ) : (
-                row.source?.display_description ?? ''
-              )}
+              {convertToSourceLink && row.source
+                ? (
+                  <a
+                    href={convertToSourceLink(row.source).href}
+                    target={convertToSourceLink(row.source).target}
+                  >
+                    {convertToSourceLink(row.source).text}
+                  </a>
+                )
+                : (
+                  row.source?.display_description ?? ''
+                )}
             </Text>
             {nodeType !== LedgerAccountNodeType.Leaf
               && (
@@ -130,16 +132,18 @@ export const LedgerAccountRow = ({
               </Text>
             </div>
             <Text>
-              {convertToSourceLink && row.source ? (
-                <a
-                  href={convertToSourceLink(row.source).href}
-                  target={convertToSourceLink(row.source).target}
-                >
-                  {convertToSourceLink(row.source).text}
-                </a>
-              ) : (
-                row.source?.display_description ?? ''
-              )}
+              {convertToSourceLink && row.source
+                ? (
+                  <a
+                    href={convertToSourceLink(row.source).href}
+                    target={convertToSourceLink(row.source).target}
+                  >
+                    {convertToSourceLink(row.source).text}
+                  </a>
+                )
+                : (
+                  row.source?.display_description ?? ''
+                )}
             </Text>
             {nodeType !== LedgerAccountNodeType.Leaf
               && (
@@ -208,18 +212,25 @@ export const LedgerAccountRow = ({
       </td>
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content'>
-          {convertToSourceLink && row.source ? (
-            <a
-              href={convertToSourceLink(row.source).href}
-              target={convertToSourceLink(row.source).target}
-            >
-              {convertToSourceLink(row.source).text}
-            </a>
-          ) : (
-            row.source?.display_description ?? ''
-          )}
+          {row.source?.display_description ?? ''}
         </span>
       </td>
+      {
+        convertToSourceLink && row.source
+          ? (
+            <td className='Layer__table-cell'>
+              <span className='Layer__table-cell-content'>
+                <a
+                  href={convertToSourceLink(row.source).href}
+                  target={convertToSourceLink(row.source).target}
+                >
+                  {convertToSourceLink(row.source).text}
+                </a>
+              </span>
+            </td>
+          )
+          : <></>
+      }
       {nodeType !== LedgerAccountNodeType.Leaf
         && (
           <td className='Layer__table-cell'>
