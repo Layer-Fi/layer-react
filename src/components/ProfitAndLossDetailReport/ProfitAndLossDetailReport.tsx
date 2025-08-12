@@ -13,18 +13,16 @@ import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { format } from 'date-fns'
-import { LedgerEntrySourceSchema, PnlDetailLineSchema } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import type { LedgerEntrySource } from '../../types/ledger_accounts'
 import { Direction } from '../../types'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
+import type { PnlDetailLine, LedgerEntrySourceType } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 
-type PnlDetailLine = typeof PnlDetailLineSchema.Type
-
 /* Our source detail component expects an old schema.
  * This converts for backwards compatibility until we switch that component to our new schemas with fixed variable types. */
-const convertSourceForDetailView = (source: typeof LedgerEntrySourceSchema.Type): LedgerEntrySource => {
+const convertSourceForDetailView = (source: LedgerEntrySourceType): LedgerEntrySource => {
   return {
     display_description: source.displayDescription,
     entity_name: source.entityName,
@@ -43,7 +41,6 @@ enum PnlDetailColumns {
 
 export interface ProfitAndLossDetailReportStringOverrides {
   title?: string
-  backToListLabel?: string
   dateColumnHeader?: string
   typeColumnHeader?: string
   accountColumnHeader?: string
@@ -86,7 +83,7 @@ export const ProfitAndLossDetailReport = ({
 }: ProfitAndLossDetailReportProps) => {
   const { businessId } = useLayerContext()
   const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
-  const [selectedSource, setSelectedSource] = useState<typeof LedgerEntrySourceSchema.Type | null>(null)
+  const [selectedSource, setSelectedSource] = useState<LedgerEntrySourceType | null>(null)
 
   const dynamicBreadcrumbs = useMemo(() => {
     return breadcrumbPath || [{ name: lineItemName, display_name: lineItemName }]
@@ -106,7 +103,7 @@ export const ProfitAndLossDetailReport = ({
     tagFilter,
   })
 
-  const handleSourceClick = useCallback((source: typeof LedgerEntrySourceSchema.Type) => {
+  const handleSourceClick = useCallback((source: LedgerEntrySourceType) => {
     setSelectedSource(source)
   }, [])
 
@@ -114,11 +111,13 @@ export const ProfitAndLossDetailReport = ({
     setSelectedSource(null)
   }
 
+  type ProcessedPnlDetailLine = PnlDetailLine & { signedAmount: number, runningBalance: number }
+
   const rowsWithRunningBalance = useMemo(() => {
     if (!data?.lines) return { lines: [], total: 0 }
 
     let runningBalance = 0
-    const linesWithBalance = data.lines.map((line) => {
+    const linesWithBalance: ProcessedPnlDetailLine[] = data.lines.map((line) => {
       const signedAmount = line.direction === Direction.CREDIT ? line.amount : -line.amount
       runningBalance += signedAmount
       return {
@@ -134,8 +133,6 @@ export const ProfitAndLossDetailReport = ({
     }
   }, [data?.lines])
 
-  type ProcessedPnlDetailLine = PnlDetailLine & { signedAmount: number, runningBalance: number }
-
   const columnConfig: ColumnConfig<ProcessedPnlDetailLine, PnlDetailColumns> = useMemo(() => ({
     [PnlDetailColumns.Date]: {
       id: PnlDetailColumns.Date,
@@ -145,19 +142,22 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Type]: {
       id: PnlDetailColumns.Type,
       header: stringOverrides?.typeColumnHeader || 'Type',
-      cell: row => row.source
-        ? (
-          <button
-            type='button'
-            className='Layer__profit-and-loss-detail-report__type-button'
-            onClick={() => handleSourceClick(row.source!)}
-          >
-            <span>
-              {row.source.entityName}
-            </span>
-          </button>
-        )
-        : '-',
+      cell: (row) => {
+        const { source } = row
+        return source
+          ? (
+            <button
+              type='button'
+              className='Layer__profit-and-loss-detail-report__type-button'
+              onClick={() => handleSourceClick(source)}
+            >
+              <span>
+                {source.entityName}
+              </span>
+            </button>
+          )
+          : '-'
+      },
     },
     [PnlDetailColumns.Account]: {
       id: PnlDetailColumns.Account,

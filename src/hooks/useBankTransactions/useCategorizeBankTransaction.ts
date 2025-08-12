@@ -94,7 +94,7 @@ export function useCategorizeBankTransaction({
        */
       void mutateBankTransactions(undefined, { revalidate: true })
 
-      return triggerResult
+      return await triggerResult
         .finally(() => { void invalidatePnlDetailLines() })
     },
     [

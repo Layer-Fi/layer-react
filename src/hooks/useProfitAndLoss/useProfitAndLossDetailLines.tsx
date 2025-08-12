@@ -355,6 +355,9 @@ export const PnlDetailLineSchema = Schema.Struct({
   source: Schema.optional(LedgerEntrySourceSchema),
 })
 
+export type PnlDetailLine = typeof PnlDetailLineSchema.Type
+export type LedgerEntrySourceType = typeof LedgerEntrySourceSchema.Type
+
 const PnlDetailLinesDataSchema = Schema.Struct({
   type: Schema.String,
   businessId: pipe(

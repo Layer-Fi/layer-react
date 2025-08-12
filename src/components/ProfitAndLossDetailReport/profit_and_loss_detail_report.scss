@@ -145,7 +145,7 @@
 .Layer__profit-and-loss-detail-report__total-label {
   grid-column: 1;
   font-weight: 540;
-  font-size: var(--text-sm);
+  font-size: var(--text-md);
   line-height: 140%;
   text-align: left;
   padding-left: var(--spacing-sm);
@@ -155,7 +155,7 @@
 .Layer__profit-and-loss-detail-report__total-amount {
   grid-column: 5;
   font-weight: 580;
-  font-size: var(--text-sm);
+  font-size: var(--text-md);
   line-height: 140%;
   text-align: right;
   color: var(--color-base-900);

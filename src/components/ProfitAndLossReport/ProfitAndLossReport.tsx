@@ -89,7 +89,6 @@ export const ProfitAndLossReport = ({
             breadcrumbPath={selectedLineItem.breadcrumbPath}
             onClose={handleCloseDetailReport}
             onBreadcrumbClick={(lineItemName: string) => {
-              // For breadcrumb clicks, we need to reconstruct the path up to that point
               const clickedIndex = selectedLineItem.breadcrumbPath.findIndex(item => item.name === lineItemName)
               if (clickedIndex !== -1) {
                 const newBreadcrumbPath = selectedLineItem.breadcrumbPath.slice(0, clickedIndex + 1)

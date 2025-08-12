@@ -13,9 +13,9 @@ import { convertBigDecimalToCents, safeDivide, negate } from '../../../utils/big
 import { Span } from '../../ui/Typography/Text'
 import { convertCentsToCurrency } from '../../../utils/format'
 import { getDurationInDaysFromTerms, InvoiceTermsComboBox, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { type ZonedDateTime } from '@internationalized/date'
+import { type ZonedDateTime, toCalendarDate, fromDate } from '@internationalized/date'
 import { withForceUpdate } from '../../../features/forms/components/FormBigDecimalField'
-import { type InvoiceFormState, flattenValidationErrors, getEmptyLineItem } from './formUtils'
+import { type InvoiceFormState, flattenValidationErrors, EMPTY_LINE_ITEM } from './formUtils'
 import { DataState, DataStateStatus } from '../../DataState'
 import { AlertTriangle } from 'lucide-react'
 import { TextSize } from '../../Typography'
@@ -31,7 +31,7 @@ type InvoiceFormTotalRowProps = PropsWithChildren<{
 const getDueAtChanged = (dueAt: ZonedDateTime | null, previousDueAt: ZonedDateTime | null) =>
   (dueAt === null && previousDueAt !== null)
   || (dueAt !== null && previousDueAt === null)
-  || (dueAt !== null && previousDueAt !== null && dueAt.compare(previousDueAt) !== 0)
+  || (dueAt !== null && previousDueAt !== null && toCalendarDate(dueAt).compare(toCalendarDate(previousDueAt)) !== 0)
 
 const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProps) => {
   const className = classNames(
@@ -53,18 +53,19 @@ const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProp
 export type InvoiceFormMode = { mode: UpsertInvoiceMode.Update, invoice: Invoice } | { mode: UpsertInvoiceMode.Create }
 export type InvoiceFormProps = InvoiceFormMode & {
   isReadOnly: boolean
-  onSuccess?: (invoice: Invoice) => void
+  onSuccess: (invoice: Invoice) => void
   onChangeFormState?: (formState: InvoiceFormState) => void
 }
 
 export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   const { onSuccess, onChangeFormState, isReadOnly, mode } = props
-  const { form, formState, totals } = useInvoiceForm(
+  const { form, formState, totals, submitError } = useInvoiceForm(
     { onSuccess, ...(mode === UpsertInvoiceMode.Update ? { mode, invoice: props.invoice } : { mode }) },
   )
   const { subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal } = totals
 
-  const lastDueAtRef = useRef<ZonedDateTime | null>(null)
+  const initialLastDueAt = mode === UpsertInvoiceMode.Update && props.invoice.dueAt !== null ? fromDate(props.invoice.dueAt, 'UTC') : null
+  const lastDueAtRef = useRef<ZonedDateTime | null>(initialLastDueAt)
 
   const updateDueAtFromTermsAndSentAt = useCallback((terms: InvoiceTermsValues, sentAt: ZonedDateTime | null) => {
     if (sentAt == null) return
@@ -102,14 +103,14 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
       <form.Subscribe selector={state => state.errorMap}>
         {(errorMap) => {
           const validationErrors = flattenValidationErrors(errorMap)
-          if (validationErrors.length > 0) {
+          if (validationErrors.length > 0 || submitError) {
             return (
               <HStack className='Layer__InvoiceForm__FormError'>
                 <DataState
                   className='Layer__InvoiceForm__FormError__DataState'
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
-                  title={validationErrors[0]}
+                  title={validationErrors[0] || submitError}
                   titleSize={TextSize.md}
                   inline
                 />
@@ -198,8 +199,8 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
 
                 if (terms !== InvoiceTermsValues.Custom && dueAtChanged) {
                   form.setFieldValue('terms', InvoiceTermsValues.Custom)
-                  lastDueAtRef.current = dueAt
                 }
+                lastDueAtRef.current = dueAt
               },
             }}
           >
@@ -241,7 +242,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
                       onBlur: ({ value: quantity }) => {
                         const amount = form.getFieldValue(`lineItems[${index}].amount`)
                         const unitPrice = form.getFieldValue(`lineItems[${index}].unitPrice`)
-                        const nextAmount = BD.multiply(unitPrice, quantity)
+                        const nextAmount = BD.round(BD.normalize(BD.multiply(unitPrice, quantity)), { scale: 2 })
 
                         if (!BD.equals(amount, nextAmount)) {
                           form.setFieldValue(`lineItems[${index}].amount`, withForceUpdate(nextAmount))
@@ -258,7 +259,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
                       onBlur: ({ value: unitPrice }) => {
                         const amount = form.getFieldValue(`lineItems[${index}].amount`)
                         const quantity = form.getFieldValue(`lineItems[${index}].quantity`)
-                        const nextAmount = BD.multiply(unitPrice, quantity)
+                        const nextAmount = BD.round(BD.normalize(BD.multiply(unitPrice, quantity)), { scale: 2 })
 
                         if (!BD.equals(amount, nextAmount)) {
                           form.setFieldValue(`lineItems[${index}].amount`, withForceUpdate(nextAmount))
@@ -274,7 +275,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
                       onBlur: ({ value: amount }) => {
                         const unitPrice = form.getFieldValue(`lineItems[${index}].unitPrice`)
                         const quantity = form.getFieldValue(`lineItems[${index}].quantity`)
-                        const nextUnitPrice = safeDivide(amount, quantity)
+                        const nextUnitPrice = BD.round(BD.normalize(safeDivide(amount, quantity)), { scale: 2 })
 
                         if (!BD.equals(unitPrice, nextUnitPrice)) {
                           form.setFieldValue(`lineItems[${index}].unitPrice`, withForceUpdate(nextUnitPrice))
@@ -285,7 +286,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
                     {innerField => <innerField.FormBigDecimalField label='Amount' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
                   </form.AppField>
                   <form.AppField name={`lineItems[${index}].isTaxable`}>
-                    {innerField => <innerField.FormCheckboxField label='Tax' showLabel={index === 0} isReadOnly={isReadOnly} />}
+                    {innerField => <innerField.FormCheckboxField label='Taxable' showLabel={index === 0} isReadOnly={isReadOnly} />}
                   </form.AppField>
                   {!isReadOnly
                     && <Button variant='outlined' icon aria-label='Delete line item' onClick={() => field.removeValue(index)}><Trash size={16} /></Button>}
@@ -293,7 +294,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
               ))}
               {!isReadOnly
                 && (
-                  <Button variant='outlined' onClick={() => field.pushValue(getEmptyLineItem())}>
+                  <Button variant='outlined' onClick={() => field.pushValue(EMPTY_LINE_ITEM)}>
                     Add line item
                     <Plus size={16} />
                   </Button>
