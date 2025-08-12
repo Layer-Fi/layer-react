@@ -19,6 +19,7 @@ import { type InvoiceFormState, flattenValidationErrors, EMPTY_LINE_ITEM } from 
 import { DataState, DataStateStatus } from '../../DataState'
 import { AlertTriangle } from 'lucide-react'
 import { TextSize } from '../../Typography'
+import { useInvoiceDetail } from '../../../providers/InvoicesProvider/InvoicesProvider'
 
 const INVOICE_FORM_CSS_PREFIX = 'Layer__InvoiceForm'
 const INVOICE_FORM_FIELD_CSS_PREFIX = `${INVOICE_FORM_CSS_PREFIX}__Field`
@@ -51,20 +52,26 @@ const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProp
 }
 
 export type InvoiceFormMode = { mode: UpsertInvoiceMode.Update, invoice: Invoice } | { mode: UpsertInvoiceMode.Create }
-export type InvoiceFormProps = InvoiceFormMode & {
+export type InvoiceFormProps = {
   isReadOnly: boolean
   onSuccess: (invoice: Invoice) => void
   onChangeFormState?: (formState: InvoiceFormState) => void
 }
 
 export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
-  const { onSuccess, onChangeFormState, isReadOnly, mode } = props
+  const viewState: InvoiceFormMode = useInvoiceDetail()
+  const { mode } = viewState
+
+  const { onSuccess, onChangeFormState, isReadOnly } = props
   const { form, formState, totals, submitError } = useInvoiceForm(
-    { onSuccess, ...(mode === UpsertInvoiceMode.Update ? { mode, invoice: props.invoice } : { mode }) },
+    { onSuccess, ...viewState },
   )
   const { subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal } = totals
 
-  const initialLastDueAt = mode === UpsertInvoiceMode.Update && props.invoice.dueAt !== null ? fromDate(props.invoice.dueAt, 'UTC') : null
+  const initialLastDueAt = mode === UpsertInvoiceMode.Update
+    ? viewState.invoice.dueAt !== null ? fromDate(viewState.invoice.dueAt, 'UTC') : null
+    : null
+
   const lastDueAtRef = useRef<ZonedDateTime | null>(initialLastDueAt)
 
   const updateDueAtFromTermsAndSentAt = useCallback((terms: InvoiceTermsValues, sentAt: ZonedDateTime | null) => {
