@@ -36,6 +36,7 @@ export const LinkedAccountItemThumb = ({
   showBreakConnection,
 }: LinkedAccountItemThumbProps) => {
   const {
+    addConnection,
     removeConnection,
     repairConnection,
     confirmAccount,
@@ -80,10 +81,17 @@ export const LinkedAccountItemThumb = ({
             if (account.connection_external_id) {
               // TODO: trigger some sort of loading spinner here
               // An account is "broken" when its connection is broken
-              void repairConnection(
-                account.external_account_source,
-                account.connection_external_id,
-              )
+              if (account.reconnect_with_new_credentials) {
+                addConnection(
+                  account.external_account_source,
+                )
+              }
+              else {
+                repairConnection(
+                  account.external_account_source,
+                  account.connection_external_id,
+                )
+              }
               // TODO: turn off loading spinner
             }
           },

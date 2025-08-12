@@ -88,7 +88,7 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
 
 const getCustomerName = (invoice: Invoice) => {
   const { recipientName, customer } = invoice
-  return recipientName || customer?.individualName || customer?.companyName
+  return customer?.individualName || customer?.companyName || recipientName
 }
 
 const getColumnConfig = (onSelectInvoice: InvoicesTableProps['onSelectInvoice']): ColumnConfig<Invoice, InvoiceColumns> => ({

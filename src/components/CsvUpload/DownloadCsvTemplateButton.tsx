@@ -11,17 +11,17 @@ interface DownloadCsvTemplateButtonProps<T> {
   className?: string
 }
 
-export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | number }>({ children, className, csvProps, fileName = 'template.csv' }: PropsWithChildren<DownloadCsvTemplateButtonProps<T>>) => {
+export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | number | null | undefined }>({ children, className, csvProps, fileName = 'template.csv' }: PropsWithChildren<DownloadCsvTemplateButtonProps<T>>) => {
   const { headers, rows = [] } = csvProps
   const handleDownload = () => {
-    const csvData: string[][] = [
+    const csvData: (string | undefined)[][] = [
       Object.values(headers),
       ...rows.map((row: T) =>
         (Object.keys(headers) as (keyof T)[])
           .map(header => row[header] ? String(row[header]) : ''),
       ),
     ]
-    const csvContent = csvData.map(row => row.map(value => `"${value.replace(/"/g, '""')}"`).join(',')).join('\n')
+    const csvContent = csvData.map(row => row.map(value => value ? `"${value.replace(/"/g, '""')}"` : '').join(',')).join('\n')
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)

@@ -1,6 +1,6 @@
 {
   "name": "@layerfi/components",
-  "version": "0.1.106",
+  "version": "0.1.107-alpha",
   "description": "Layer React Components",
   "main": "dist/cjs/index.cjs",
   "module": "dist/esm/index.mjs",
@@ -75,7 +75,8 @@
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.8",
-    "@tanstack/react-form": "^1.9.1",
+    "@internationalized/date": "^3.8.2",
+    "@tanstack/react-form": "^1.19.0",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.9",
     "classnames": "^2.5.1",

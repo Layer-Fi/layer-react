@@ -1,10 +1,9 @@
-import { useMemo, useState } from 'react'
-import { useStore } from '@tanstack/react-form'
+import { useCallback, useMemo, useState, useRef } from 'react'
+import { useStore, revalidateLogic } from '@tanstack/react-form'
 import { useAppForm } from '../../../features/forms/hooks/useForm'
-import { UpsertInvoiceSchema, type Invoice, type InvoiceLineItem } from '../../../features/invoices/invoiceSchemas'
+import { UpsertInvoiceSchema, type Invoice, type InvoiceForm } from '../../../features/invoices/invoiceSchemas'
 import { useUpsertInvoice, UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
-import { BigDecimal as BD, Schema } from 'effect'
-import { BIG_DECIMAL_ZERO, BIG_DECIMAL_ONE, convertCentsToBigDecimal, safeDivide } from '../../../utils/bigDecimalUtils'
+import { Schema } from 'effect'
 import {
   computeAdditionalDiscount,
   computeGrandTotal,
@@ -12,75 +11,17 @@ import {
   computeSubtotal,
   computeTaxableSubtotal,
   computeTaxes,
-} from './utils'
+} from './totalsUtils'
+import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, getInvoiceFormInitialValues, validateInvoiceForm } from './formUtils'
 
-export const EMPTY_LINE_ITEM = {
-  product: '',
-  description: '',
-  unitPrice: BIG_DECIMAL_ZERO,
-  quantity: BIG_DECIMAL_ONE,
-  amount: BIG_DECIMAL_ZERO,
-  isTaxable: false,
+type onSuccessFn = (invoice: Invoice) => void
+type UseInvoiceFormProps =
+  | { onSuccess: onSuccessFn, mode: UpsertInvoiceMode.Create }
+  | { onSuccess: onSuccessFn, mode: UpsertInvoiceMode.Update, invoice: Invoice }
+
+function isUpdateMode(props: UseInvoiceFormProps): props is { onSuccess: onSuccessFn, mode: UpsertInvoiceMode.Update, invoice: Invoice } {
+  return props.mode === UpsertInvoiceMode.Update
 }
-
-const DEFAULT_FORM_VALUES = {
-  invoiceNumber: '',
-  customer: null,
-  email: '',
-  address: '',
-  lineItems: [EMPTY_LINE_ITEM],
-  memo: '',
-  discountRate: BIG_DECIMAL_ZERO,
-  additionalDiscount: BIG_DECIMAL_ZERO,
-  taxRate: BIG_DECIMAL_ZERO,
-}
-
-const getInvoiceLineItemAmount = (lineItem: InvoiceLineItem): BD.BigDecimal => {
-  const { unitPrice, quantity } = lineItem
-
-  return BD.multiply(quantity, convertCentsToBigDecimal(unitPrice))
-}
-
-const getAugmentedInvoiceLineItem = (lineItem: InvoiceLineItem) => {
-  return {
-    ...lineItem,
-    unitPrice: convertCentsToBigDecimal(lineItem.unitPrice),
-    amount: getInvoiceLineItemAmount(lineItem),
-    isTaxable: lineItem.salesTaxTotal > 0,
-  }
-}
-
-const getInvoiceFormDefaultValues = (invoice: Invoice) => {
-  const augmentedLineItems = invoice.lineItems.map(getAugmentedInvoiceLineItem)
-
-  const subtotal = computeSubtotal(augmentedLineItems)
-  const rawTaxableSubtotal = computeRawTaxableSubtotal(augmentedLineItems)
-
-  const additionalDiscount = convertCentsToBigDecimal(invoice.additionalDiscount)
-  const discountRate = safeDivide(additionalDiscount, subtotal)
-
-  const taxableSubtotal = computeTaxableSubtotal({ rawTaxableSubtotal, discountRate })
-
-  const taxes = augmentedLineItems.reduce(
-    (sum, item) =>
-      BD.sum(sum, convertCentsToBigDecimal(item.salesTaxTotal)), BIG_DECIMAL_ZERO)
-  const taxRate = safeDivide(taxes, taxableSubtotal)
-
-  return {
-    invoiceNumber: invoice.invoiceNumber || '',
-    customer: invoice.customer,
-    email: invoice.customer?.email || '',
-    address: invoice.customer?.addressString || '',
-    lineItems: augmentedLineItems,
-    discountRate,
-    additionalDiscount,
-    taxRate,
-  }
-}
-
- type UseInvoiceFormProps =
-   | { onSuccess?: (invoice: Invoice) => void, mode: UpsertInvoiceMode.Create }
-   | { onSuccess?: (invoice: Invoice) => void, mode: UpsertInvoiceMode.Update, invoice: Invoice }
 
 export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
@@ -89,39 +30,64 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const upsertInvoiceProps = mode === UpsertInvoiceMode.Update ? { mode, invoiceId: props.invoice.id } : { mode }
   const { trigger: upsertInvoice } = useUpsertInvoice(upsertInvoiceProps)
 
-  const defaultValues = mode === UpsertInvoiceMode.Update
-    ? getInvoiceFormDefaultValues(props.invoice)
-    : DEFAULT_FORM_VALUES
+  const defaultValuesRef = useRef<InvoiceForm>(
+    isUpdateMode(props)
+      ? getInvoiceFormInitialValues(props.invoice)
+      : getInvoiceFormDefaultValues(),
+  )
+  const defaultValues = defaultValuesRef.current
 
-  const form = useAppForm({
+  const onSubmit = useCallback(async ({ value }: { value: InvoiceForm }) => {
+    try {
+      // Convert the `InvoiceForm` schema to the request shape for `upsertInvoice`. This will
+      // throw an error if the request shape is not valid.
+      const upsertInvoiceParams = convertInvoiceFormToParams(value)
+      const upsertInvoiceRequest = Schema.encodeUnknownSync(UpsertInvoiceSchema)(upsertInvoiceParams)
+
+      const { data: invoice } = await upsertInvoice(upsertInvoiceRequest)
+
+      setSubmitError(undefined)
+      onSuccess(invoice)
+    }
+    catch (e) {
+      console.error(e)
+      setSubmitError('Something went wrong. Please try again.')
+    }
+  }, [onSuccess, upsertInvoice])
+
+  const validators = useMemo(() => ({
+    onDynamic: validateInvoiceForm,
+  }), [])
+
+  const form = useAppForm<InvoiceForm>({
     defaultValues,
-    onSubmit: async ({ value }) => {
-      try {
-        const payload = {
-          ...value,
-          customerId: value?.customer?.id,
-        }
-        const invoiceParams = Schema.validateSync(UpsertInvoiceSchema)(payload)
-        const { data: invoice } = await upsertInvoice(invoiceParams)
-        setSubmitError(undefined)
-        onSuccess?.(invoice)
-      }
-      catch {
-        setSubmitError('Something went wrong. Please try again.')
-      }
-    },
+    onSubmit,
+    validators,
+    validationLogic: revalidateLogic({
+      mode: 'submit',
+      modeAfterSubmission: 'submit',
+    }),
+    canSubmitWhenInvalid: true,
   })
-
   const isFormValid = useStore(form.store, state => state.isValid)
+  const isSubmitting = useStore(form.store, state => state.isSubmitting)
 
-  const lineItems = useStore(form.store, state => state.values.lineItems)
+  const formState = useMemo(() => ({
+    isFormValid,
+    isSubmitting,
+    submitError,
+  }), [isFormValid, isSubmitting, submitError])
+
   const discountRate = useStore(form.store, state => state.values.discountRate)
   const taxRate = useStore(form.store, state => state.values.taxRate)
 
-  const { subtotal, rawTaxableSubtotal } = useMemo(() => ({
-    subtotal: computeSubtotal(lineItems),
-    rawTaxableSubtotal: computeRawTaxableSubtotal(lineItems),
-  }), [lineItems])
+  const { subtotal, rawTaxableSubtotal } = useStore(form.store, (state) => {
+    const lineItems = state.values.lineItems
+    return {
+      subtotal: computeSubtotal(lineItems),
+      rawTaxableSubtotal: computeRawTaxableSubtotal(lineItems),
+    }
+  })
 
   const additionalDiscount = useMemo(() =>
     computeAdditionalDiscount({ subtotal, discountRate }),
@@ -143,5 +109,11 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   [subtotal, additionalDiscount, taxes],
   )
 
-  return { form, subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal, submitError, isFormValid }
+  const totals = useMemo(() => ({
+    subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal,
+  }), [additionalDiscount, grandTotal, subtotal, taxableSubtotal, taxes])
+
+  return useMemo(() => (
+    { form, formState, totals, submitError }),
+  [form, formState, totals, submitError])
 }

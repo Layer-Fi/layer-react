@@ -12,6 +12,7 @@ import { endOfMonth, formatISO, startOfMonth } from 'date-fns'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useDeleteAccountFromLedger } from '../../features/ledger/accounts/[ledgerAccountId]/api/useDeleteLedgerAccount'
 
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []
@@ -163,6 +164,7 @@ export const useChartOfAccounts = (
   const [endDate, setEndDate] = useState(
     initialEndDate ?? endOfMonth(Date.now()),
   )
+  const { trigger: originalTrigger } = useDeleteAccountFromLedger()
 
   const queryKey =
     businessId
@@ -286,6 +288,22 @@ export const useChartOfAccounts = (
         subType: undefined,
       },
     })
+
+  const deleteAccount = async (accountId: string) => {
+    try {
+      await originalTrigger({ accountId })
+    }
+    catch (_err) {
+      throw new Error('This account could not be deleted. Please check your connection and try again.')
+    }
+    touch(DataModel.CHART_OF_ACCOUNTS)
+    try {
+      await refetch()
+    }
+    catch (_err) {
+      throw new Error('Refetch failed. Please check your connection and try again.')
+    }
+  }
 
   const editAccount = (id: string) => {
     const allAccounts = flattenAccounts(data?.data?.accounts || [])
@@ -430,6 +448,7 @@ export const useChartOfAccounts = (
     apiError,
     addAccount,
     editAccount,
+    deleteAccount,
     cancelForm,
     changeFormData,
     submitForm,

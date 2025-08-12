@@ -215,30 +215,32 @@ export const JournalEntryDetails = () => {
               </Table>
             </Card>
 
-            <div className='Layer__journal__entry-details__reverse-btn-container'>
-              <Button
-                rightIcon={
-                  reverseEntryError
-                    ? (
-                      <AlertCircle size={12} />
-                    )
-                    : (
-                      <RefreshCcw size={12} />
-                    )
-                }
-                variant={ButtonVariant.secondary}
-                onClick={reverseEntryProcessing ? () => {} : onReverseEntry}
-                isProcessing={reverseEntryProcessing}
-                tooltip={
-                  (Boolean(entry?.reversal_id)
-                    && 'This entry has already been reversed')
-                  ?? (reverseEntryError && 'Operation failed. Try again.')
-                }
-                disabled={Boolean(entry?.reversal_id)}
-              >
-                Reverse entry
-              </Button>
-            </div>
+            {entry?.entry_type === 'MANUAL' && (
+              <div className='Layer__journal__entry-details__reverse-btn-container'>
+                <Button
+                  rightIcon={
+                    reverseEntryError
+                      ? (
+                        <AlertCircle size={12} />
+                      )
+                      : (
+                        <RefreshCcw size={12} />
+                      )
+                  }
+                  variant={ButtonVariant.secondary}
+                  onClick={reverseEntryProcessing ? () => {} : onReverseEntry}
+                  isProcessing={reverseEntryProcessing}
+                  tooltip={
+                    (Boolean(entry?.reversal_id)
+                      && 'This entry has already been reversed')
+                    ?? (reverseEntryError && 'Operation failed. Try again.')
+                  }
+                  disabled={Boolean(entry?.reversal_id)}
+                >
+                  Reverse entry
+                </Button>
+              </div>
+            )}
           </div>
         )
         : null}

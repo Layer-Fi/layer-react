@@ -16,6 +16,7 @@ export const ChartOfAccountsContext = createContext<ChartOfAccountsContextType>(
     apiError: undefined,
     addAccount: () => {},
     editAccount: () => {},
+    deleteAccount: () => Promise.resolve(undefined),
     cancelForm: () => {},
     changeFormData: () => {},
     submitForm: () => {},

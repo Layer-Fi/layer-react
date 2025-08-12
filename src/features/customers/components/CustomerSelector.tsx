@@ -153,24 +153,6 @@ export function CustomerSelector({
 
   const inputId = useId()
 
-  const isFiltered = effectiveSearchQuery !== undefined
-
-  const noCustomersExist = !isLoading
-    && !isFiltered
-    && data !== undefined
-    && data.every(({ data }) => data.length === 0)
-
-  const shouldHideComponent = noCustomersExist || (isReadOnly && selectedCustomer === null)
-
-  if (shouldHideComponent) {
-    /*
-     * If there are no existing customers, the selector is pointless.
-     *
-     * This behavior will change when we support directly adding customers.
-     */
-    return null
-  }
-
   const isLoadingWithoutFallback = isLoading && !data
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
@@ -189,9 +171,10 @@ export function CustomerSelector({
         placeholder={placeholder}
         slots={{ EmptyMessage, ErrorMessage }}
 
-        isDisabled={isReadOnly || shouldDisableComboBox}
+        isDisabled={shouldDisableComboBox}
         isError={isError}
         isLoading={isLoadingWithoutFallback}
+        isReadOnly={isReadOnly}
       />
     </VStack>
   )
