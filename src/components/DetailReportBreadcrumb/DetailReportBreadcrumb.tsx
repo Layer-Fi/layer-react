@@ -31,7 +31,7 @@ export const DetailReportBreadcrumb = ({
             <div className='Layer__detail-report-breadcrumb__content'>
               <div className='Layer__detail-report-breadcrumb__path'>
                 {breadcrumbs.map((crumb, index) => (
-                  <span key={index}>
+                  <span key={crumb.name}>
                     {index === breadcrumbs.length - 1
                       ? (
                         <span className='Layer__detail-report-breadcrumb__current'>

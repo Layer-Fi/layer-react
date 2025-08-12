@@ -40,7 +40,6 @@ enum PnlDetailColumns {
 
 export interface ProfitAndLossDetailReportStringOverrides {
   title?: string
-  backToListLabel?: string
   dateColumnHeader?: string
   typeColumnHeader?: string
   accountColumnHeader?: string
@@ -142,19 +141,22 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Type]: {
       id: PnlDetailColumns.Type,
       header: stringOverrides?.typeColumnHeader || 'Type',
-      cell: row => row.source
-        ? (
-          <button
-            type='button'
-            className='Layer__profit-and-loss-detail-report__type-button'
-            onClick={() => handleSourceClick(row.source!)}
-          >
-            <span>
-              {row.source.entityName}
-            </span>
-          </button>
-        )
-        : '-',
+      cell: (row) => {
+        const { source } = row
+        return source
+          ? (
+            <button
+              type='button'
+              className='Layer__profit-and-loss-detail-report__type-button'
+              onClick={() => handleSourceClick(source)}
+            >
+              <span>
+                {source.entityName}
+              </span>
+            </button>
+          )
+          : '-'
+      },
     },
     [PnlDetailColumns.Account]: {
       id: PnlDetailColumns.Account,
