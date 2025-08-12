@@ -12,17 +12,31 @@ import { InvoiceStatusCell } from '../InvoiceStatusCell/InvoiceStatusCell'
 import { Button } from '../../ui/Button/Button'
 import { SquarePen } from 'lucide-react'
 import type { InvoiceFormState } from '../InvoiceForm/formUtils'
+import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 
 export type InvoiceDetailProps = InvoiceFormMode & {
-  onSuccess?: (invoice: Invoice) => void
   onGoBack: () => void
 }
 
 export const InvoiceDetail = (props: InvoiceDetailProps) => {
-  const { onSuccess, onGoBack, ...restProps } = props
+  const { onGoBack, ...invoiceProps } = props
+  const { addToast } = useLayerContext()
+  const formRef = useRef<{ submit: () => Promise<void> }>(null)
+
+  const [invoiceState, setInvoiceState] = useState(invoiceProps)
   const [isReadOnly, setIsReadOnly] = useState(props.mode === UpsertInvoiceMode.Update)
-  const formRef = useRef<{ submit: () => void }>(null)
-  const onSubmit = useCallback(() => formRef.current?.submit(), [])
+
+  const onSuccess = useCallback((invoice: Invoice) => {
+    const toastContent = invoiceState.mode === UpsertInvoiceMode.Update
+      ? 'Invoice updated successfully'
+      : 'Invoice created successfully'
+    addToast({ content: toastContent, type: 'success' })
+
+    setInvoiceState({ mode: UpsertInvoiceMode.Update, invoice })
+    setIsReadOnly(true)
+  }, [invoiceState.mode, addToast])
+
+  const onSubmit = useCallback(() => void formRef.current?.submit(), [])
   const [formState, setFormState] = useState<InvoiceFormState>({
     isFormValid: true,
     isSubmitting: false,
@@ -40,19 +54,19 @@ export const InvoiceDetail = (props: InvoiceDetailProps) => {
         isReadOnly={isReadOnly}
         formState={formState}
         setIsReadOnly={setIsReadOnly}
-        {...restProps}
+        {...invoiceState}
       />
     )
-  }, [onSubmit, isReadOnly, formState, restProps])
+  }, [onSubmit, isReadOnly, formState, invoiceState])
 
   return (
     <BaseDetailView slots={{ Header }} name='Invoice Detail View' onGoBack={onGoBack}>
-      {restProps.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={restProps.invoice} />}
+      {invoiceState.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={invoiceState.invoice} />}
       <InvoiceForm
         isReadOnly={isReadOnly}
         onSuccess={onSuccess}
         onChangeFormState={onChangeFormState}
-        {...restProps}
+        {...invoiceState}
         ref={formRef}
       />
     </BaseDetailView>

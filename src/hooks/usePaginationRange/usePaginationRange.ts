@@ -25,24 +25,28 @@ export const usePaginationRange = ({
 
   const paginationRange = useMemo(() => {
     const totalPageCount = Math.ceil(totalCount / pageSize)
-    const staticRange = siblingCount * 2 + 3
-    if (totalCount === 0) return []
+    if (totalPageCount === 0) return []
 
-    if (totalPageCount <= staticRange) {
+    const staticRange = siblingCount * 2 + 3
+
+    if (totalPageCount <= staticRange + 2) {
       return range(1, totalPageCount)
     }
 
+    const showFullLeftRange = currentPage <= siblingCount + 3
+    const showFullRightRange = currentPage >= totalPageCount - siblingCount - 2
+
     const leftRange =
-      currentPage <= siblingCount + 3
+      showFullLeftRange
         ? range(1, staticRange)
         : [1, Dots.DotsLeft]
 
-    const middleRange = currentPage > siblingCount + 3 && currentPage < totalPageCount - siblingCount - 2
+    const middleRange = !showFullLeftRange && !showFullRightRange
       ? range(currentPage - siblingCount, currentPage + siblingCount)
       : []
 
     const rightRange =
-      currentPage >= totalPageCount - siblingCount - 2
+      showFullRightRange
         ? range(totalPageCount - staticRange + 1, totalPageCount)
         : [Dots.DotsRight, totalPageCount]
 

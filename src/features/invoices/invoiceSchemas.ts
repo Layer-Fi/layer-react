@@ -232,6 +232,7 @@ export const InvoiceFormLineItemSchema = Schema.Struct({
   isTaxable: Schema.Boolean,
 })
 export type InvoiceFormLineItem = typeof InvoiceFormLineItemSchema.Type
+export const InvoiceFormLineItemEquivalence = Schema.equivalence(InvoiceFormLineItemSchema)
 
 const InvoiceTermsValuesSchema = Schema.Enums(InvoiceTermsValues)
 export const InvoiceFormSchema = Schema.Struct({

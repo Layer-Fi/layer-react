@@ -1,4 +1,4 @@
-import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, type InvoiceLineItem } from '../../../features/invoices/invoiceSchemas'
+import { InvoiceFormLineItemEquivalence, type Invoice, type InvoiceForm, type InvoiceFormLineItem, type InvoiceLineItem } from '../../../features/invoices/invoiceSchemas'
 import { BigDecimal as BD } from 'effect'
 import { BIG_DECIMAL_ZERO, BIG_DECIMAL_ONE, convertCentsToBigDecimal, safeDivide, convertBigDecimalToCents } from '../../../utils/bigDecimalUtils'
 import {
@@ -8,9 +8,8 @@ import {
   getGrandTotalFromInvoice,
 } from './totalsUtils'
 import { startOfToday } from 'date-fns'
-import { getLocalTimeZone, fromDate } from '@internationalized/date'
+import { getLocalTimeZone, fromDate, toCalendarDate } from '@internationalized/date'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { isEqualWith } from 'lodash'
 import { ValidationErrorMap } from '@tanstack/react-form'
 
 export type InvoiceFormState = {
@@ -19,14 +18,14 @@ export type InvoiceFormState = {
   submitError: string | undefined
 }
 
-export const getEmptyLineItem = (): InvoiceFormLineItem => ({
+export const EMPTY_LINE_ITEM: InvoiceFormLineItem = {
   product: '',
   description: '',
   unitPrice: BIG_DECIMAL_ZERO,
   quantity: BIG_DECIMAL_ONE,
   amount: BIG_DECIMAL_ZERO,
   isTaxable: false,
-})
+}
 
 export const getInvoiceFormDefaultValues = (): InvoiceForm => {
   const sentAt = fromDate(startOfToday(), getLocalTimeZone())
@@ -40,7 +39,7 @@ export const getInvoiceFormDefaultValues = (): InvoiceForm => {
     customer: null,
     email: '',
     address: '',
-    lineItems: [getEmptyLineItem()],
+    lineItems: [EMPTY_LINE_ITEM],
     memo: '',
     discountRate: BIG_DECIMAL_ZERO,
     taxRate: BIG_DECIMAL_ZERO,
@@ -99,40 +98,38 @@ export const getInvoiceFormInitialValues = (invoice: Invoice): InvoiceForm => {
   }
 }
 
-const getIsEqualLineItems = (a: InvoiceFormLineItem, b: InvoiceFormLineItem) => {
-  return isEqualWith(a, b, (val1, val2, key) => {
-    if (key === 'unitPrice' || key === 'quantity' || key === 'amount') {
-      return BD.isBigDecimal(val1) && BD.isBigDecimal(val2) && BD.equals(val1, val2)
-    }
-    return undefined
-  })
-}
+export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) => {
+  const { customer, invoiceNumber, sentAt, dueAt, lineItems } = invoice
 
-export const validateOnSubmit = ({ value: invoice }: { value: InvoiceForm }) => {
   const errors = []
-  if (invoice.customer === null) {
+  if (customer === null) {
     errors.push({ customer: 'Customer is a required field.' })
   }
 
-  if (!invoice.invoiceNumber.trim()) {
+  if (!invoiceNumber.trim()) {
     errors.push({ invoiceNumber: 'Invoice number is a required field.' })
   }
 
-  if (invoice.sentAt === null) {
+  if (sentAt === null) {
     errors.push({ sentAt: 'Invoice date is a required field.' })
   }
 
-  if (invoice.dueAt === null) {
+  if (dueAt === null) {
     errors.push({ dueAt: 'Due date is a required field.' })
   }
 
-  if (invoice.lineItems.length === 0) {
-    errors.push({ lineItems: 'Invoice requires at least one line item.' })
+  if (sentAt !== null && dueAt !== null && toCalendarDate(dueAt).compare(toCalendarDate(sentAt)) < 0) {
+    errors.push({ dueAt: 'Due date must be after invoice date.' })
   }
 
-  const emptyLineItem = getEmptyLineItem()
-  invoice.lineItems.some((item) => {
-    if (!getIsEqualLineItems(item, emptyLineItem) && (item.product === '')) {
+  const nonEmptyLineItems = lineItems.filter(item => !InvoiceFormLineItemEquivalence(EMPTY_LINE_ITEM, item))
+
+  if (nonEmptyLineItems.length === 0) {
+    errors.push({ lineItems: 'Invoice requires at least one non-empty line item.' })
+  }
+
+  nonEmptyLineItems.some((item) => {
+    if (item.product.trim() === '') {
       errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field Product/Service.' })
       return true
     }
@@ -163,30 +160,32 @@ export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({
   customerId: form.customer?.id,
   dueAt: form.dueAt?.toDate(),
   sentAt: form.sentAt?.toDate(),
-  invoiceNumber: form.invoiceNumber || undefined,
-  memo: form.memo,
+  invoiceNumber: form.invoiceNumber.trim(),
+  memo: form.memo.trim(),
 
-  lineItems: form.lineItems.map((item) => {
-    const baseLineItem = {
-      description: item.description,
-      product: item.product,
-      unitPrice: convertBigDecimalToCents(item.unitPrice),
-      quantity: item.quantity,
-    }
-
-    return !BD.equals(form.taxRate, BIG_DECIMAL_ZERO) && item.isTaxable
-      ? {
-        ...baseLineItem,
-        salesTaxes: [
-          {
-            amount: convertBigDecimalToCents(
-              BD.multiply(item.amount, form.taxRate),
-            ),
-          },
-        ],
+  lineItems: form.lineItems
+    .filter(item => !InvoiceFormLineItemEquivalence(EMPTY_LINE_ITEM, item))
+    .map((item) => {
+      const baseLineItem = {
+        description: item.description.trim(),
+        product: item.product.trim(),
+        unitPrice: convertBigDecimalToCents(item.unitPrice),
+        quantity: item.quantity,
       }
-      : baseLineItem
-  }),
+
+      return !BD.equals(form.taxRate, BIG_DECIMAL_ZERO) && item.isTaxable
+        ? {
+          ...baseLineItem,
+          salesTaxes: [
+            {
+              amount: convertBigDecimalToCents(
+                BD.multiply(item.amount, form.taxRate),
+              ),
+            },
+          ],
+        }
+        : baseLineItem
+    }),
 
   ...(!BD.equals(form.discountRate, BIG_DECIMAL_ZERO) && {
     additionalDiscount: convertBigDecimalToCents(
