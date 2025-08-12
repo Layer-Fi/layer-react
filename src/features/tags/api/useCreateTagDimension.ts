@@ -7,7 +7,7 @@ import { useLayerContext } from '../../../contexts/LayerContext'
 import { Schema } from 'effect'
 import { useCallback } from 'react'
 import { withSWRKeyTags } from '../../../utils/swr/withSWRKeyTags'
-import { useGlobalInvalidator } from '../../../utils/swr/useGlobalInvalidator'
+import { useGlobalCacheActions } from '../../../utils/swr/useGlobalCacheActions'
 import { TAG_DIMENSIONS_TAG_KEY } from './useTagDimensions'
 
 const CREATE_TAG_DIMENSION_TAG_KEY = '#create-tag-dimension'
@@ -70,7 +70,7 @@ export function useCreateTagDimension() {
     ),
   )
 
-  const { invalidate } = useGlobalInvalidator()
+  const { invalidate } = useGlobalCacheActions()
 
   const { trigger: originalTrigger } = mutationResponse
 
