@@ -72,11 +72,10 @@ export const ProfitAndLossTableComponent = ({
   }): React.ReactNode => {
     const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
     const expanded = expandable ? isOpen(rowKey) : true
-    
-    // Build breadcrumb path for this line item
+
     const currentBreadcrumbs: BreadcrumbItem[] = [
       ...parentBreadcrumbs,
-      { name: lineItem.name, display_name: lineItem.display_name }
+      { name: lineItem.name, display_name: lineItem.display_name },
     ]
 
     return (

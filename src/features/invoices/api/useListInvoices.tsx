@@ -188,13 +188,12 @@ export function useListInvoices({
       },
     )().then(Schema.decodeUnknownPromise(ListInvoicesReturnSchema)),
     {
-      keepPreviousData: false,
+      keepPreviousData: true,
       revalidateFirstPage: false,
       initialSize: 1,
     },
   )
 
-  console.log(swrResponse)
   return new ListInvoicesSWRResponse(swrResponse)
 }
 
