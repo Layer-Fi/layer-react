@@ -5,7 +5,7 @@ import { useCallback } from 'react'
 import { post } from '../../../../../../api/layer/authenticated_http'
 import { useLedgerEntriesInvalidator, useLedgerEntriesOptimisticUpdater } from '../../../api/useListLedgerEntries'
 import { v4 as uuidv4 } from 'uuid'
-import { usePnlDetailLinesInvalidator } from '@layerfi/components/hooks/useProfitAndLoss/index'
+import { usePnlDetailLinesInvalidator } from '../../../../../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 
 const TAG_LEDGER_ENTRY_TAG_KEY = '#tag-ledger-entry'
 
