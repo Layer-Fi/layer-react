@@ -16,9 +16,9 @@ import { ComboBox } from '../../ui/ComboBox/ComboBox'
 import { startOfToday, endOfYesterday } from 'date-fns'
 import { InvoiceStatusCell } from '../InvoiceStatusCell/InvoiceStatusCell'
 import { Container } from '../../Container'
-import { useInvoiceTableQuery, useInvoiceNavigation } from '../../../providers/InvoicesProvider/InvoicesProvider'
+import { useInvoiceTableQuery, useInvoiceNavigation } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
 
-const COMPONENT_NAME = 'InvoicesTable'
+const COMPONENT_NAME = 'InvoiceTable'
 
 enum InvoiceColumns {
   SentAt = 'SentAt',
@@ -163,7 +163,7 @@ const getListInvoiceParams = ({ status }: { status: InvoiceStatusOption }) => {
   }
 }
 
-export const InvoicesTable = () => {
+export const InvoiceTable = () => {
   const { toCreateInvoice, toViewInvoice } = useInvoiceNavigation()
   const { query, setQuery } = useInvoiceTableQuery()
   const selectedInvoiceStatusOption = query.status
@@ -202,7 +202,7 @@ export const InvoicesTable = () => {
 
   const StatusFilter = useCallback(() => (
     <ComboBox
-      className='Layer__InvoicesTable__StatusFilter'
+      className='Layer__InvoiceTable__StatusFilter'
       options={options}
       onSelectedValueChange={option => option && setQuery({ status: option })}
       selectedValue={selectedInvoiceStatusOption}
@@ -223,7 +223,7 @@ export const InvoicesTable = () => {
   ),
   [toCreateInvoice])
 
-  const InvoicesTableEmptyState = useCallback(() => {
+  const InvoiceTableEmptyState = useCallback(() => {
     const isFiltered = selectedInvoiceStatusOption && selectedInvoiceStatusOption !== ALL_OPTION
 
     return (
@@ -241,7 +241,7 @@ export const InvoicesTable = () => {
     )
   }, [selectedInvoiceStatusOption])
 
-  const InvoicesTableErrorState = useCallback(() => (
+  const InvoiceTableErrorState = useCallback(() => (
     <DataState
       status={DataStateStatus.failed}
       title='We couldn’t load your invoices'
@@ -254,7 +254,7 @@ export const InvoicesTable = () => {
   const columnConfig = useMemo(() => getColumnConfig(toViewInvoice), [toViewInvoice])
 
   return (
-    <Container name='InvoicesTable'>
+    <Container name='InvoiceTable'>
       <DataTableHeader
         name='Invoices'
         slots={{
@@ -271,8 +271,8 @@ export const InvoicesTable = () => {
         paginationProps={paginationProps}
         componentName={COMPONENT_NAME}
         slots={{
-          EmptyState: InvoicesTableEmptyState,
-          ErrorState: InvoicesTableErrorState,
+          EmptyState: InvoiceTableEmptyState,
+          ErrorState: InvoiceTableErrorState,
         }}
       />
     </Container>

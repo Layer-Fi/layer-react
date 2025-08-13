@@ -19,7 +19,7 @@ import { type InvoiceFormState, flattenValidationErrors, EMPTY_LINE_ITEM } from 
 import { DataState, DataStateStatus } from '../../DataState'
 import { AlertTriangle } from 'lucide-react'
 import { TextSize } from '../../Typography'
-import { useInvoiceDetail } from '../../../providers/InvoicesProvider/InvoicesProvider'
+import { useInvoiceDetail } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
 
 const INVOICE_FORM_CSS_PREFIX = 'Layer__InvoiceForm'
 const INVOICE_FORM_FIELD_CSS_PREFIX = `${INVOICE_FORM_CSS_PREFIX}__Field`

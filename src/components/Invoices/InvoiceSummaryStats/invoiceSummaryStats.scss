@@ -1,6 +1,6 @@
 .Layer__InvoiceSummaryStats__Container {
   box-sizing: border-box;
-  max-width: 1406px;
+  width: clamp(48rem, 100%, 1406px);
 
   padding: var(--spacing-md) var(--spacing-lg);
 }

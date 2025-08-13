@@ -1,5 +1,5 @@
 import { View } from '../../components/View'
-import { InvoiceRoute, InvoiceStoreProvider, useInvoiceRouteState } from '../../providers/InvoicesProvider/InvoicesProvider'
+import { InvoiceRoute, InvoiceStoreProvider, useInvoiceRouteState } from '../../providers/InvoiceStore/InvoiceStoreProvider'
 import { InvoiceDetail } from './InvoiceDetail/InvoiceDetail'
 import { InvoiceOverview } from './InvoiceOverview/InvoiceOverview'
 

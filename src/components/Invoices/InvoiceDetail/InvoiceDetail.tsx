@@ -13,7 +13,7 @@ import { Button } from '../../ui/Button/Button'
 import { SquarePen } from 'lucide-react'
 import type { InvoiceFormState } from '../InvoiceForm/formUtils'
 import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
-import { useInvoiceNavigation, useInvoiceDetail } from '../../../providers/InvoicesProvider/InvoicesProvider'
+import { useInvoiceNavigation, useInvoiceDetail } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
 
 export const InvoiceDetail = () => {
   const viewState = useInvoiceDetail()

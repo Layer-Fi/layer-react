@@ -47,7 +47,7 @@ export const InvoiceSummaryStats = () => {
           </FallbackWithSkeletonLoader>
         </HStack>
       </VStack>
-      <VStack pbs='3xs' fluid>
+      <VStack gap='sm' fluid>
         <HStack gap='md' align='end'>
           <HStack align='center'>
             <Span size='sm' pbe='3xs'>Owed to you</Span>
@@ -60,7 +60,7 @@ export const InvoiceSummaryStats = () => {
             </Span>
           </FallbackWithSkeletonLoader>
         </HStack>
-        <HStack justify='space-between' pb='xs'>
+        <HStack justify='space-between'>
           <HStack gap='xs' align='center'>
             <FallbackWithSkeletonLoader isLoading={showSkeleton} height='17px' width='80px'>
               <Span size='md'>
