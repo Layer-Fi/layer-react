@@ -31,9 +31,10 @@
 @forward '../components/LinkedAccounts/BasicLinkedAccount/basicLinkedAccount';
 @forward '../components/BaseDetailView/baseDetailView';
 @forward '../components/Bills/bills';
-@forward '../components/Invoices/InvoicesTable/invoicesTable';
+@forward '../components/Invoices/InvoiceTable/invoiceTable';
 @forward '../components/Invoices/InvoiceDetail/invoiceDetail';
 @forward '../components/Invoices/InvoiceForm/invoiceForm';
+@forward '../components/Invoices/InvoiceSummaryStats/invoiceSummaryStats';
 @forward '../components/DataTable/dataTable';
 @forward '../components/LinkedAccounts/AccountFormBox/AccountFormBox';
 @forward '../components/PlatformOnboarding/linkAccounts';

@@ -32,7 +32,7 @@
     text-overflow: ellipsis;
   }
 
-  $sizes: xs sm md lg;
+  $sizes: xs sm md lg xl;
 
   @each $size in $sizes {
     &[data-size="#{$size}"] {
