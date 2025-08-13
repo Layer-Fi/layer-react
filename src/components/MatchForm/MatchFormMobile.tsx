@@ -6,6 +6,7 @@ import { MatchFormProps } from './MatchForm'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useMatchDetailsContext } from '../../contexts/MatchDetailsContext'
+import { HStack } from '../ui/Stack/Stack'
 
 export const MatchFormMobile = ({
   classNamePrefix,
@@ -58,8 +59,8 @@ export const MatchFormMobile = ({
                 </Text>
               </div>
               <div className={`${classNamePrefix}__match-item__details`}>
-                {sourceLink
-                  ? (
+                <HStack>
+                  {sourceLink && (
                     <a
                       href={sourceLink.href}
                       target={sourceLink.target}
@@ -70,8 +71,8 @@ export const MatchFormMobile = ({
                         {sourceLink.text}
                       </Text>
                     </a>
-                  )
-                  : <div></div>}
+                  )}
+                </HStack>
                 <Text
                   className={`${classNamePrefix}__match-item__date`}
                   size={TextSize.sm}

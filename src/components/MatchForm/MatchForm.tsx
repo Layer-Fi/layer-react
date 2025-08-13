@@ -56,7 +56,7 @@ export const MatchForm = ({
         { convertToSourceLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div> }
 
         { match && (
-          <div className={`${classNamePrefix}__match-table__status ${match ? '' : 'no-match'}`}>
+          <div className={`${classNamePrefix}__match-table__status`}>
           </div>
         )}
 

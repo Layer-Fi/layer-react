@@ -963,6 +963,13 @@
     text-align: center;
   }
 
+  .Layer__expanded-bank-transaction-row__match-table__link a {
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
   .Layer__expanded-bank-transaction-row__match-table__status {
     width: 100px;
     text-align: right;
@@ -1023,14 +1030,18 @@
     }
 
     &:nth-child(3):last-of-type,
-    &:nth-child(4):last-of-type,
-    &:nth-child(5) {
+    &:nth-child(4) {
       border-top-right-radius: var(--border-radius-2xs);
       border-bottom-right-radius: var(--border-radius-2xs);
       border-right: 1px solid var(--color-base-300);
     }
   }
-
+  
+  & > div:nth-child(5),
+  &:hover > div:nth-child(5) {
+    border-color: transparent;
+    background-color: transparent;
+  }
   &:hover > div {
     border-top: 1px solid var(--color-base-300);
     border-bottom: 1px solid var(--color-base-300);
@@ -1048,8 +1059,7 @@
     }
 
     &:nth-child(3):last-of-type,
-    &:nth-child(4):last-of-type,
-    &:nth-child(5) {
+    &:nth-child(4) {
       border-top-right-radius: var(--border-radius-2xs);
       border-bottom-right-radius: var(--border-radius-2xs);
       border-right: 1px solid var(--color-base-300);
@@ -1074,8 +1084,7 @@
   }
 
   & > div:nth-child(3):last-of-type,
-  & > div:nth-child(4):last-of-type,
-  & > div:nth-child(5) {
+  & > div:nth-child(4) {
     border-right: 1px solid var(--color-base-800);
   }
 }
@@ -1093,8 +1102,7 @@
   }
 
   & > div:nth-child(3):last-of-type,
-  & > div:nth-child(4):last-of-type,
-  & > div:nth-child(5) {
+  & > div:nth-child(4) {
     border-right: 1px solid var(--color-base-500);
   }
 }
@@ -1151,7 +1159,15 @@
     justify-content: space-between;
     color: var(--color-base-500);
     width: 100%;
-  }
+
+    .Layer__bank-transaction-mobile-list-item__match-item__link {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+    }
+}
 
   .Layer__bank-transaction-mobile-list-item__match-item__col-status {
     display: flex;
@@ -1201,13 +1217,11 @@
     & > div,
     & > div:first-child,
     & > div:nth-child(3):last-of-type,
-    & > div:nth-child(4):last-of-type,
-    & > div:nth-child(5),
+    & > div:nth-child(4),
     &:hover > div,
     &:hover > div:first-child,
     &:hover > div:nth-child(3):last-of-type,
-    &:hover > div:nth-child(4):last-of-type,
-    &:hover > div:nth-child(5) {
+    &:hover > div:nth-child(4) {
       border-width: 0;
     }
 

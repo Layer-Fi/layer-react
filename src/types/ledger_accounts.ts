@@ -60,7 +60,7 @@ export interface ApiCustomerData {
 }
 
 export interface LedgerEntrySource<TMetadata = unknown> {
-  type?: string
+  type: string
   external_id?: string
   display_description: string
   entity_name: string

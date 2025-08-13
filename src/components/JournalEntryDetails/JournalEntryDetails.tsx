@@ -119,7 +119,7 @@ export const JournalEntryDetails = () => {
               : entry?.source?.entity_name}
           </Badge>
         </DetailsListItem>
-        {entry?.source?.display_description && entry?.source && (
+        {entry?.source && (
           <SourceDetailView source={entry?.source} />
         )}
       </DetailsList>

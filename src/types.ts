@@ -24,7 +24,7 @@ export {
   ManualJournalEntryMatchDetails,
   RefundPaymentMatchDetails,
   VendorRefundPaymentMatchDetails,
-  // InvoicePaymentMatchDetails,
+  InvoicePaymentMatchDetails,
   PayoutMatchDetails,
   VendorPayoutMatchDetails,
   BillPaymentMatchDetails,
