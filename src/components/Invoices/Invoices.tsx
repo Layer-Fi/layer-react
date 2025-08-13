@@ -1,7 +1,7 @@
 import { View } from '../../components/View'
 import { InvoiceRoute, InvoiceStoreProvider, useInvoiceRouteState } from '../../providers/InvoicesProvider/InvoicesProvider'
 import { InvoiceDetail } from './InvoiceDetail/InvoiceDetail'
-import { InvoicesTable } from './InvoicesTable/InvoicesTable'
+import { InvoiceOverview } from './InvoiceOverview/InvoiceOverview'
 
 interface InvoicesStringOverrides {
   title?: string
@@ -27,5 +27,5 @@ const InvoicesContent = () => {
 
   return routeState.route === InvoiceRoute.Detail
     ? <InvoiceDetail />
-    : <InvoicesTable />
+    : <InvoiceOverview />
 }

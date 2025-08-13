@@ -1,0 +1,19 @@
+.Layer__Meter {
+  [slot='bar'] {
+    overflow: hidden;
+    height: 0.75rem;
+    border-radius: var(--border-radius-2xs);
+  }
+
+  &__svg {
+    width: 100%;
+  }
+
+  &__track {
+    fill: var(--color-base-300);
+  }
+
+  &__fill {
+    fill: var(--color-base-800);
+  }
+}

@@ -1,0 +1,26 @@
+.Layer__InvoiceSummaryStats__Container {
+  box-sizing: border-box;
+  max-width: 1406px;
+
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.Layer__InvoiceSummaryStats__Payments {
+  box-sizing: border-box;
+
+  min-width: 12rem;
+  padding: var(--spacing-md) var(--spacing-lg);
+
+  border-radius: var(--border-radius-2xs);
+  border: 1px solid var(--border-color);
+}
+
+.Layer__InvoiceSummaryStats__Meter {
+  &__track {
+    fill: var(--color-info-bg);
+  }
+
+  &__fill {
+    fill: var(--color-info-warning-bg);
+  }
+}
