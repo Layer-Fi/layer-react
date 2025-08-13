@@ -5,6 +5,7 @@ import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { ProfitAndLossDetailReport } from '../ProfitAndLossDetailReport'
+import { ProfitAndLossDetailLinesDownloadButton } from '../ProfitAndLossDetailLinesDownloadButton'
 import { View } from '../View'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 
@@ -62,12 +63,21 @@ export const ProfitAndLossReport = ({
               </>
             </HeaderCol>
             <HeaderCol>
-              <ProfitAndLoss.DownloadButton
-                stringOverrides={stringOverrides?.downloadButton}
-                useComparisonPnl={!!comparisonConfig}
-                moneyFormat={csvMoneyFormat}
-                view={view}
-              />
+              {selectedLineItem
+                ? (
+                  <ProfitAndLossDetailLinesDownloadButton
+                    pnlStructureLineItemName={selectedLineItem.lineItemName}
+                    iconOnly={view === 'mobile'}
+                  />
+                )
+                : (
+                  <ProfitAndLoss.DownloadButton
+                    stringOverrides={stringOverrides?.downloadButton}
+                    useComparisonPnl={!!comparisonConfig}
+                    moneyFormat={csvMoneyFormat}
+                    view={view}
+                  />
+                )}
             </HeaderCol>
           </HeaderRow>
           {view !== 'desktop'
