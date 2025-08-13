@@ -6,18 +6,7 @@ import { get } from '../../api/layer/authenticated_http'
 import type { S3PresignedUrl } from '../../types/general'
 import type { Awaitable } from '../../types/utility/promises'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
-import type { PnlDetailLinesBaseParams, PnlDetailLinesFilterParams } from './useProfitAndLossDetailLines'
-
-type GetProfitAndLossDetailLinesParams = {
-  businessId: string
-  startDate: Date
-  endDate: Date
-  pnlStructureLineItemName: string
-  tagKey?: string
-  tagValues?: string
-  reportingBasis?: string
-  pnlStructure?: string
-}
+import { GetProfitAndLossDetailLinesParams, PnlDetailLinesBaseParams, PnlDetailLinesFilterParams } from './useProfitAndLossDetailLines'
 
 const getProfitAndLossDetailLinesExcel = (apiUrl: string, accessToken: string | undefined, params: GetProfitAndLossDetailLinesParams) => {
   const { businessId, startDate, endDate, pnlStructureLineItemName, tagKey, tagValues, reportingBasis, pnlStructure } = params
@@ -114,7 +103,7 @@ export function useProfitAndLossDetailLinesExport({
           pnlStructure,
         },
       )().then(({ data }) => {
-        if (onSuccess) {
+        if (onSuccess && data) {
           return onSuccess(data)
         }
       }),
