@@ -8,7 +8,7 @@ import {
   collectRevenueItems,
   applyShare,
 } from '../../utils/profitAndLossUtils'
-import { useProfitAndLossQuery } from './useProfitAndLossQuery'
+import { useProfitAndLossReport } from './useProfitAndLossReport'
 import {
   useGlobalDateRange,
 } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -55,7 +55,7 @@ export const useProfitAndLoss = ({
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
 
   const { data, isLoading, isValidating, isError, mutate } =
-    useProfitAndLossQuery({
+    useProfitAndLossReport({
       startDate: start,
       endDate: end,
       tagKey: tagFilter?.key,

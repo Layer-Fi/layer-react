@@ -9,7 +9,7 @@ import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
 import { useProfitAndLossSummariesCacheActions } from '../useProfitAndLoss/useProfitAndLossSummaries'
-import { useProfitAndLossQueryCacheActions } from '../useProfitAndLoss/useProfitAndLossQuery'
+import { useProfitAndLossReportCacheActions } from '../useProfitAndLoss/useProfitAndLossReport'
 
 const MATCH_BANK_TRANSACTION_TAG = '#match-bank-transaction'
 
@@ -50,7 +50,7 @@ export function useMatchBankTransaction({
   const { mutate } = useSWRConfig()
 
   const { debouncedInvalidateProfitAndLossSummaries } = useProfitAndLossSummariesCacheActions()
-  const { debouncedInvalidateProfitAndLossQuery } = useProfitAndLossQueryCacheActions()
+  const { debouncedInvalidateProfitAndLossReport } = useProfitAndLossReportCacheActions()
 
   const mutationResponse = useSWRMutation(
     () => buildKey({
@@ -99,11 +99,11 @@ export function useMatchBankTransaction({
 
       void debouncedInvalidateProfitAndLossSummaries()
 
-      void debouncedInvalidateProfitAndLossQuery()
+      void debouncedInvalidateProfitAndLossReport()
 
       return triggerResult
     },
-    [originalTrigger, mutate, mutateBankTransactions, debouncedInvalidateProfitAndLossSummaries, debouncedInvalidateProfitAndLossQuery],
+    [originalTrigger, mutate, mutateBankTransactions, debouncedInvalidateProfitAndLossSummaries, debouncedInvalidateProfitAndLossReport],
   )
 
   return new Proxy(mutationResponse, {

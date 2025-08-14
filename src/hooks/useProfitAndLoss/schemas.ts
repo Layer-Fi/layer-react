@@ -411,17 +411,17 @@ export const ProfitAndLossSummariesRequestParamsSchema = Schema.Struct({
 export type ProfitAndLossSummariesRequestParams =
   typeof ProfitAndLossSummariesRequestParamsSchema.Type
 
-export const ProfitAndLossQueryRequestParamsSchema = Schema.Struct({
+export const ProfitAndLossReportRequestParamsSchema = Schema.Struct({
   ...profitAndLossBaseParams,
   startDate: Schema.Date,
   endDate: Schema.Date,
   includeUncategorized: Schema.optional(Schema.Boolean),
 })
 
-export type ProfitAndLossQueryRequestParams =
-  typeof ProfitAndLossQueryRequestParamsSchema.Type
+export type ProfitAndLossReportRequestParams =
+  typeof ProfitAndLossReportRequestParamsSchema.Type
 
-export const ProfitAndLossQuerySchema = Schema.Struct({
+export const ProfitAndLossReportSchema = Schema.Struct({
   businessId: pipe(
     Schema.propertySignature(Schema.UUID),
     Schema.fromKey('business_id'),
@@ -506,4 +506,4 @@ export const ProfitAndLossQuerySchema = Schema.Struct({
     Schema.fromKey('personal_expenses'),
   ),
 })
-export type ProfitAndLoss = typeof ProfitAndLossQuerySchema.Type
+export type ProfitAndLoss = typeof ProfitAndLossReportSchema.Type

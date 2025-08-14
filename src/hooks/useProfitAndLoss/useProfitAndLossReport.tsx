@@ -1,17 +1,17 @@
 import { useCallback, useMemo } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth } from '../useAuth'
 import { get } from '../../api/layer/authenticated_http'
 import useSWR, { type SWRResponse } from 'swr'
 import { Schema } from 'effect'
 import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
-import { ProfitAndLoss, type ProfitAndLossQueryRequestParams, ProfitAndLossQuerySchema } from './schemas'
+import { ProfitAndLoss, type ProfitAndLossReportRequestParams, ProfitAndLossReportSchema } from './schemas'
 import { debounce } from 'lodash'
 
-export const PNL_QUERY_TAG_KEY = '#profit-and-loss-query'
+export const PNL_REPORT_TAG_KEY = '#profit-and-loss-report'
 
-class ProfitAndLossQuerySWRResponse {
+class ProfitAndLossReportSWRResponse {
   private swrResponse: SWRResponse<ProfitAndLoss>
 
   constructor(swrResponse: SWRResponse<ProfitAndLoss>) {
@@ -52,7 +52,7 @@ function buildKey({
 }: {
   access_token?: string
   apiUrl?: string
-} & ProfitAndLossQueryRequestParams) {
+} & ProfitAndLossReportRequestParams) {
   if (accessToken && apiUrl) {
     return {
       accessToken,
@@ -64,14 +64,14 @@ function buildKey({
       tagValues,
       reportingBasis,
       includeUncategorized,
-      tags: [PNL_QUERY_TAG_KEY],
+      tags: [PNL_REPORT_TAG_KEY],
     } as const
   }
 }
 
 const getProfitAndLoss = get<
   { data: ProfitAndLoss },
-  ProfitAndLossQueryRequestParams
+  ProfitAndLossReportRequestParams
 >(
   ({
     businessId,
@@ -86,8 +86,8 @@ const getProfitAndLoss = get<
     return `/v1/businesses/${businessId}/reports/profit-and-loss?${parameters}`
   })
 
-type useProfitAndLossQueryProps = Omit<ProfitAndLossQueryRequestParams, 'businessId'>
-export function useProfitAndLossQuery({ startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized }: useProfitAndLossQueryProps) {
+type useProfitAndLossReportProps = Omit<ProfitAndLossReportRequestParams, 'businessId'>
+export function useProfitAndLossReport({ startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized }: useProfitAndLossReportProps) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -108,10 +108,10 @@ export function useProfitAndLossQuery({ startDate, endDate, tagKey, tagValues, r
       {
         params: { businessId, startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized },
       },
-    )().then(({ data }) => Schema.decodeUnknownPromise(ProfitAndLossQuerySchema)(data)),
+    )().then(({ data }) => Schema.decodeUnknownPromise(ProfitAndLossReportSchema)(data)),
   )
 
-  return new ProfitAndLossQuerySWRResponse(response)
+  return new ProfitAndLossReportSWRResponse(response)
 }
 
 const INVALIDATE_DEBOUNCE_OPTIONS = {
@@ -119,27 +119,27 @@ const INVALIDATE_DEBOUNCE_OPTIONS = {
   maxWait: 3000,
 }
 
-export const useProfitAndLossQueryCacheActions = () => {
+export const useProfitAndLossReportCacheActions = () => {
   const { invalidate } = useGlobalCacheActions()
 
-  const invalidateProfitAndLossQuery = useCallback(
+  const invalidateProfitAndLossReport = useCallback(
     () => invalidate(
-      tags => tags.includes(PNL_QUERY_TAG_KEY),
+      tags => tags.includes(PNL_REPORT_TAG_KEY),
     ),
     [invalidate],
   )
 
-  const debouncedInvalidateProfitAndLossQuery = useMemo(
+  const debouncedInvalidateProfitAndLossReport = useMemo(
     () => debounce(
-      invalidateProfitAndLossQuery,
+      invalidateProfitAndLossReport,
       INVALIDATE_DEBOUNCE_OPTIONS.wait,
       {
         maxWait: INVALIDATE_DEBOUNCE_OPTIONS.maxWait,
         trailing: true,
       },
     ),
-    [invalidateProfitAndLossQuery],
+    [invalidateProfitAndLossReport],
   )
 
-  return { invalidateProfitAndLossQuery, debouncedInvalidateProfitAndLossQuery }
+  return { invalidateProfitAndLossReport, debouncedInvalidateProfitAndLossReport }
 }
