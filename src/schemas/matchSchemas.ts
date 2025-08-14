@@ -19,10 +19,7 @@ export const FinancialEventIdentifiersSchema = Schema.Struct({
     Schema.optional(Schema.String),
     Schema.fromKey('reference_number'),
   ),
-  metadata: Schema.optional(Schema.Record({
-    key: Schema.String,
-    value: Schema.Unknown,
-  })),
+  metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
 })
 
 const BaseMatchDetailsSchema = Schema.Struct({

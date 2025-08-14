@@ -20,8 +20,8 @@ import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookke
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
-import { useMatchDetailsContext } from '../../contexts/MatchDetailsContext'
-import { SourceLink } from '../../types/utility/links'
+import { useMatchDetailsLinkContext } from '../../contexts/MatchDetailsContext'
+import { InAppLink } from '../../contexts/InAppLinkContext'
 import { MatchDetailsType } from '../../schemas/matchSchemas'
 
 export interface BankTransactionMobileListItemProps {
@@ -47,20 +47,22 @@ const DATE_FORMAT = 'LLL d'
 
 const getAssignedValue = (
   bankTransaction: BankTransaction,
-  convertToSourceLink?: (details: MatchDetailsType) => SourceLink,
+  convertToInAppLink?: (details: MatchDetailsType) => InAppLink | undefined,
 ) => {
   if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
     return extractDescriptionForSplit(bankTransaction.category)
   }
 
   if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
-    if (convertToSourceLink && bankTransaction.match?.details) {
-      const sourceLink = convertToSourceLink(bankTransaction.match.details)
-      return (
-        <a href={sourceLink.href} target={sourceLink.target}>
-          {sourceLink.text}
-        </a>
-      )
+    if (convertToInAppLink && bankTransaction.match?.details) {
+      const sourceLink = convertToInAppLink(bankTransaction.match.details)
+      if (sourceLink) {
+        return (
+          <a href={sourceLink.href} target={sourceLink.target}>
+            {sourceLink.text}
+          </a>
+        )
+      }
     }
     return bankTransaction.match?.details?.description
   }
@@ -87,7 +89,7 @@ export const BankTransactionMobileListItem = ({
   } = useContext(TransactionToOpenContext)
 
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
-  const { convertToSourceLink } = useMatchDetailsContext()
+  const { convertToInAppLink } = useMatchDetailsLinkContext()
 
   const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
     setHeight(height),
@@ -206,7 +208,7 @@ export const BankTransactionMobileListItem = ({
             </Text>
             <Text as='span' className={`${className}__heading__account-name`}>
               {categorized && bankTransaction.categorization_status
-                ? getAssignedValue(bankTransaction, convertToSourceLink)
+                ? getAssignedValue(bankTransaction, convertToInAppLink)
                 : null}
               <span>{!categorized && bankTransaction.account_name}</span>
               {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}

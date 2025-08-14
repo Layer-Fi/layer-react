@@ -6,7 +6,7 @@ import { JournalStringOverrides } from '../../components/Journal/Journal'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
-import { SourceLink } from '../../types/utility/links'
+import { InAppLink } from '../../contexts/InAppLinkContext'
 import { LedgerEntrySourceType } from '../../schemas/ledgerEntrySourceSchemas'
 
 export interface GeneralLedgerStringOverrides {
@@ -27,7 +27,7 @@ export interface GeneralLedgerProps {
   showTitle?: boolean
   stringOverrides?: GeneralLedgerStringOverrides
   chartOfAccountsOptions?: ChartOfAccountsOptions
-  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySourceType) => SourceLink | undefined
+  convertLedgerEntrySourceToInAppLink?: (source: LedgerEntrySourceType) => InAppLink | undefined
 }
 
 export const GeneralLedgerView = ({
@@ -35,7 +35,7 @@ export const GeneralLedgerView = ({
   showTitle = true,
   stringOverrides,
   chartOfAccountsOptions,
-  convertLedgerEntrySourceToSourceLink,
+  convertLedgerEntrySourceToInAppLink,
 }: GeneralLedgerProps) => {
   const [activeTab, setActiveTab] = useState('chartOfAccounts')
 
@@ -74,13 +74,13 @@ export const GeneralLedgerView = ({
                 chartOfAccountsOptions?.templateAccountsEditable
               }
               showReversalEntries={chartOfAccountsOptions?.showReversalEntries}
-              convertLedgerEntrySourceToSourceLink={convertLedgerEntrySourceToSourceLink}
+              convertLedgerEntrySourceToInAppLink={convertLedgerEntrySourceToInAppLink}
             />
           )
           : (
             <Journal
               stringOverrides={stringOverrides?.journal}
-              convertLedgerEntrySourceToSourceLink={convertLedgerEntrySourceToSourceLink}
+              convertLedgerEntrySourceToInAppLink={convertLedgerEntrySourceToInAppLink}
             />
           )}
       </View>

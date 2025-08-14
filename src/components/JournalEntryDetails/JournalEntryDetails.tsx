@@ -20,7 +20,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { Heading, HeadingSize } from '../Typography'
 import { VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
-import { useLedgerEntrySourceContext } from '../../contexts/LedgerEntrySourceContext'
+import { useLedgerEntrySourceLinkContext } from '../../contexts/LedgerEntrySourceContext'
 
 export const JournalEntryDetails = () => {
   const {
@@ -32,7 +32,7 @@ export const JournalEntryDetails = () => {
     reverseEntry,
     refetch,
   } = useContext(JournalContext)
-  const { convertToSourceLink } = useLedgerEntrySourceContext()
+  const { convertToInAppLink } = useLedgerEntrySourceLinkContext()
   const [reverseEntryProcessing, setReverseEntryProcessing] = useState(false)
   const [reverseEntryError, setReverseEntryError] = useState<string>()
 
@@ -45,12 +45,12 @@ export const JournalEntryDetails = () => {
   }, [data, selectedEntryId])
 
   const sourceLink = useMemo(() => {
-    if (convertToSourceLink && entry?.source) {
+    if (convertToInAppLink && entry?.source) {
       const decoded: LedgerEntrySourceType | null = decodeLedgerEntrySource(entry.source)
-      return decoded ? convertToSourceLink(decoded) : undefined
+      return decoded ? convertToInAppLink(decoded) : undefined
     }
     return undefined
-  }, [convertToSourceLink, entry?.source])
+  }, [convertToInAppLink, entry?.source])
 
   const sortedLineItems = useMemo(
     () =>

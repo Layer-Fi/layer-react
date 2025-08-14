@@ -7,7 +7,7 @@ import { MatchBadge } from '../BankTransactionRow/MatchBadge'
 import { Text, TextUseTooltip, ErrorText } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
-import { useMatchDetailsContext } from '../../contexts/MatchDetailsContext'
+import { useMatchDetailsLinkContext } from '../../contexts/MatchDetailsContext'
 
 export interface MatchFormProps {
   classNamePrefix: string
@@ -28,7 +28,7 @@ export const MatchForm = ({
 }: MatchFormProps) => {
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
-  const { convertToSourceLink } = useMatchDetailsContext()
+  const { convertToInAppLink } = useMatchDetailsLinkContext()
 
   const {
     suggested_matches: suggestedMatches = [],
@@ -53,7 +53,7 @@ export const MatchForm = ({
           Description
         </div>
         <div className={`${classNamePrefix}__match-table__amount`}>Amount</div>
-        { convertToSourceLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div> }
+        { convertToInAppLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div> }
 
         { match && (
           <div className={`${classNamePrefix}__match-table__status`}>
@@ -63,7 +63,7 @@ export const MatchForm = ({
       </div>
 
       {effectiveSuggestedMatches.map((suggestedMatch) => {
-        const sourceLink = convertToSourceLink ? convertToSourceLink(suggestedMatch.details) : null
+        const sourceLink = convertToInAppLink ? convertToInAppLink(suggestedMatch.details) : null
         return (
           <div
             key={suggestedMatch.id}

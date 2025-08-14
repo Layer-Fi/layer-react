@@ -21,7 +21,7 @@ import { TableRow } from '../TableRow'
 import { Heading, HeadingSize } from '../Typography'
 import { Span } from '../ui/Typography/Text'
 import { VStack } from '../ui/Stack/Stack'
-import { useLedgerEntrySourceContext } from '../../contexts/LedgerEntrySourceContext'
+import { useLedgerEntrySourceLinkContext } from '../../contexts/LedgerEntrySourceContext'
 
 interface SourceDetailStringOverrides {
   sourceLabel?: string
@@ -365,7 +365,7 @@ export const LedgerAccountEntryDetails = ({
 }) => {
   const { entryData, isLoadingEntry, closeSelectedEntry, errorEntry } =
     useContext(LedgerAccountsContext)
-  const { convertToSourceLink } = useLedgerEntrySourceContext()
+  const { convertToInAppLink } = useLedgerEntrySourceLinkContext()
 
   const { totalDebit, totalCredit } = useMemo(() => {
     let totalDebit = 0
@@ -383,12 +383,12 @@ export const LedgerAccountEntryDetails = ({
   }, [entryData])
 
   const sourceLink = useMemo(() => {
-    if (convertToSourceLink && entryData?.source) {
+    if (convertToInAppLink && entryData?.source) {
       const decoded: LedgerEntrySourceType | null = decodeLedgerEntrySource(entryData.source)
-      return decoded ? convertToSourceLink(decoded) : undefined
+      return decoded ? convertToInAppLink(decoded) : undefined
     }
     return undefined
-  }, [convertToSourceLink, entryData?.source])
+  }, [convertToInAppLink, entryData?.source])
 
   return (
     <div className='Layer__ledger-account__entry-details'>

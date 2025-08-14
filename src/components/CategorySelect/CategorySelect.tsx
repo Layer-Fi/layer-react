@@ -20,7 +20,7 @@ import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
-import { useMatchDetailsContext } from '../../contexts/MatchDetailsContext'
+import { useMatchDetailsLinkContext } from '../../contexts/MatchDetailsContext'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
 import { MatchDetailsType } from '../../schemas/matchSchemas'
 
@@ -143,7 +143,7 @@ const GroupHeading = (
 const Option = (
   props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
     showTooltips: boolean
-    convertToSourceLink?: (details: MatchDetailsType) => { href: string, text: string, target?: string }
+    convertToInAppLink?: (details: MatchDetailsType) => { href: string, text: string, target?: string } | undefined
   },
 ) => {
   if (props.data.payload.option_type === OptionActionType.HIDDEN) {
@@ -151,8 +151,8 @@ const Option = (
   }
 
   if (props.data.type === 'match') {
-    const sourceLink = props.convertToSourceLink && props.data.payload.details
-      ? props.convertToSourceLink(props.data.payload.details)
+    const sourceLink = props.convertToInAppLink && props.data.payload.details
+      ? props.convertToInAppLink(props.data.payload.details)
       : null
 
     return (
@@ -287,7 +287,7 @@ export const CategorySelect = ({
   asDrawer = false,
 }: Props) => {
   const { data: categories } = useCategories()
-  const { convertToSourceLink } = useMatchDetailsContext()
+  const { convertToInAppLink } = useMatchDetailsLinkContext()
 
   const matchOptions =
     !excludeMatches && bankTransaction?.suggested_matches
@@ -394,7 +394,7 @@ export const CategorySelect = ({
         DropdownIndicator,
         GroupHeading,
         Option: optionProps => (
-          <Option {...optionProps} showTooltips={showTooltips} convertToSourceLink={convertToSourceLink} />
+          <Option {...optionProps} showTooltips={showTooltips} convertToInAppLink={convertToInAppLink} />
         ),
       }}
       isDisabled={disabled}

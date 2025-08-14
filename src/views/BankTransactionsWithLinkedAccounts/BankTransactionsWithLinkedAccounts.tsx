@@ -6,7 +6,7 @@ import { BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyM
 import { MobileComponentType } from '../../components/BankTransactions/constants'
 import { LinkedAccounts } from '../../components/LinkedAccounts'
 import { View } from '../../components/View'
-import { SourceLink } from '../../types/utility/links'
+import { InAppLink } from '../../contexts/InAppLinkContext'
 import { MatchDetailsType } from '../../schemas/matchSchemas'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {
@@ -35,7 +35,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   mode?: BankTransactionsMode
   mobileComponent?: MobileComponentType
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
-  convertMatchDetailsToSourceLink?: (details: MatchDetailsType) => SourceLink
+  convertMatchDetailsToInAppLink?: (details: MatchDetailsType) => InAppLink
 }
 
 export const BankTransactionsWithLinkedAccounts = ({
@@ -56,7 +56,7 @@ export const BankTransactionsWithLinkedAccounts = ({
 
   mobileComponent,
   stringOverrides,
-  convertMatchDetailsToSourceLink,
+  convertMatchDetailsToInAppLink,
 }: BankTransactionsWithLinkedAccountsProps) => {
   return (
     <View
@@ -81,7 +81,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         mobileComponent={mobileComponent}
         mode={mode}
         stringOverrides={stringOverrides?.bankTransactions}
-        convertMatchDetailsToSourceLink={convertMatchDetailsToSourceLink}
+        convertMatchDetailsToInAppLink={convertMatchDetailsToInAppLink}
       />
     </View>
   )

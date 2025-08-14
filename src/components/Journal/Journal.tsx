@@ -6,8 +6,8 @@ import { useJournal } from '../../hooks/useJournal'
 import { Container } from '../Container'
 import { JournalTable } from '../JournalTable'
 import { JournalTableStringOverrides } from '../JournalTable/JournalTableWithPanel'
-import { SourceLink } from '../../types/utility/links'
-import { LedgerEntrySourceProvider } from '../../contexts/LedgerEntrySourceContext'
+import { InAppLink } from '../../contexts/InAppLinkContext'
+import { LedgerEntrySourceLinkProvider } from '../../contexts/LedgerEntrySourceContext'
 import { LedgerEntrySourceType } from '../../schemas/ledgerEntrySourceSchemas'
 
 export interface JournalConfig {
@@ -24,7 +24,7 @@ export interface JournalProps {
   asWidget?: boolean
   config?: JournalConfig
   stringOverrides?: JournalStringOverrides
-  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySourceType) => SourceLink | undefined
+  convertLedgerEntrySourceToInAppLink?: (source: LedgerEntrySourceType) => InAppLink | undefined
 }
 
 export const JOURNAL_CONFIG: JournalConfig = {
@@ -39,9 +39,9 @@ export const Journal = (props: JournalProps) => {
   return (
     <ChartOfAccountsContext.Provider value={AccountsContextData}>
       <JournalContext.Provider value={JournalContextData}>
-        <LedgerEntrySourceProvider convertToSourceLink={props.convertLedgerEntrySourceToSourceLink}>
+        <LedgerEntrySourceLinkProvider convertToInAppLink={props.convertLedgerEntrySourceToInAppLink}>
           <JournalContent {...props} />
-        </LedgerEntrySourceProvider>
+        </LedgerEntrySourceLinkProvider>
       </JournalContext.Provider>
     </ChartOfAccountsContext.Provider>
   )

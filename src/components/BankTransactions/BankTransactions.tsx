@@ -38,8 +38,8 @@ import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimension
 import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
 import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
-import { MatchDetailsProvider } from '../../contexts/MatchDetailsContext'
-import { SourceLink } from '../../types/utility/links'
+import { MatchDetailsLinkProvider } from '../../contexts/MatchDetailsContext'
+import { InAppLink } from '../../contexts/InAppLinkContext'
 import { MatchDetailsType } from '../../schemas/matchSchemas'
 
 const COMPONENT_NAME = 'bank-transactions'
@@ -75,7 +75,7 @@ export interface BankTransactionsProps {
   filters?: BankTransactionFilters
   hideHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
-  convertMatchDetailsToSourceLink?: (details: MatchDetailsType) => SourceLink
+  convertMatchDetailsToInAppLink?: (details: MatchDetailsType) => InAppLink
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -88,7 +88,7 @@ export const BankTransactions = ({
   showTags = false,
   showCustomerVendor = false,
   mode,
-  convertMatchDetailsToSourceLink,
+  convertMatchDetailsToInAppLink,
   ...props
 }: BankTransactionsWithErrorProps) => {
   usePreloadTagDimensions({ isEnabled: showTags })
@@ -103,9 +103,9 @@ export const BankTransactions = ({
         <LegacyModeProvider overrideMode={mode}>
           <BankTransactionTagVisibilityProvider showTags={showTags}>
             <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
-              <MatchDetailsProvider convertToSourceLink={convertMatchDetailsToSourceLink}>
+              <MatchDetailsLinkProvider convertToInAppLink={convertMatchDetailsToInAppLink}>
                 <BankTransactionsContent {...props} />
-              </MatchDetailsProvider>
+              </MatchDetailsLinkProvider>
             </BankTransactionCustomerVendorVisibilityProvider>
           </BankTransactionTagVisibilityProvider>
         </LegacyModeProvider>

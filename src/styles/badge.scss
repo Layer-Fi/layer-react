@@ -95,4 +95,12 @@
       color: var(--badge-bg-color-error);
     }
   }
+
+  a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+    display: block;
+  }
 }

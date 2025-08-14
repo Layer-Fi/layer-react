@@ -9,8 +9,8 @@ import { ChartOfAccountsTableStringOverrides } from '../ChartOfAccountsTable/Cha
 import { Container } from '../Container'
 import { LedgerAccount } from '../LedgerAccount'
 import { LedgerAccountStringOverrides } from '../LedgerAccount/LedgerAccountIndex'
-import { SourceLink } from '../../types/utility/links'
-import { LedgerEntrySourceProvider } from '../../contexts/LedgerEntrySourceContext'
+import { InAppLink } from '../../contexts/InAppLinkContext'
+import { LedgerEntrySourceLinkProvider } from '../../contexts/LedgerEntrySourceContext'
 import { LedgerEntrySourceType } from '../../schemas/ledgerEntrySourceSchemas'
 
 export interface ChartOfAccountsStringOverrides {
@@ -26,7 +26,7 @@ export interface ChartOfAccountsProps {
   showAddAccountButton?: boolean
   templateAccountsEditable?: boolean
   showReversalEntries?: boolean
-  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySourceType) => SourceLink | undefined
+  convertLedgerEntrySourceToInAppLink?: (source: LedgerEntrySourceType) => InAppLink | undefined
 }
 
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
@@ -39,9 +39,9 @@ export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
   return (
     <ChartOfAccountsContext.Provider value={chartOfAccountsContextData}>
       <LedgerAccountsContext.Provider value={ledgerAccountsContextData}>
-        <LedgerEntrySourceProvider convertToSourceLink={props.convertLedgerEntrySourceToSourceLink}>
+        <LedgerEntrySourceLinkProvider convertToInAppLink={props.convertLedgerEntrySourceToInAppLink}>
           <ChartOfAccountsContent {...props} />
-        </LedgerEntrySourceProvider>
+        </LedgerEntrySourceLinkProvider>
       </LedgerAccountsContext.Provider>
     </ChartOfAccountsContext.Provider>
   )
