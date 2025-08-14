@@ -98,7 +98,7 @@ function Internal_ProfitAndLossSummaries({
           onClick={actionable ? () => setSidebarScope('expenses') : undefined}
         >
           <ProfitAndLossSummariesSummary
-            label={stringOverrides?.revenueLabel || revenueLabel || 'Expenses'}
+            label={stringOverrides?.expensesLabel || 'Expenses'}
             amount={(effectiveData?.income?.value ?? 0) - effectiveData.netProfit}
             isLoading={isLoading}
             slots={{
