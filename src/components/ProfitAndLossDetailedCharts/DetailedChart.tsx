@@ -43,14 +43,12 @@ export const DetailedChart = ({
         ...x,
         name: x.displayName,
         value: 0,
-        type: x.type,
       }
     }
     return {
       ...x,
       name: x.displayName,
       value: x.value > 0 ? x.value : 0,
-      type: x.type,
     }
   }),
   [filteredData])
