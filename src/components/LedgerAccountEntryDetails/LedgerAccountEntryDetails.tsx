@@ -122,11 +122,11 @@ export const SourceDetailView = ({
         </>
       )
     }
-    case 'Refund_Ledger_Entry_Source': {
+    case 'Refund_Allocation_Ledger_Entry_Source': {
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.refundedToCustomerAmount)}`}
+            {`$${centsToDollars(source.amount)}`}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.recipientNameLabel || 'Recipient name'}
@@ -171,6 +171,156 @@ export const SourceDetailView = ({
             label={stringOverrides?.processorLabel || 'Processor'}
           >
             {source.processor}
+          </DetailsListItem>
+        </>
+      )
+    }
+
+    case 'Quickbooks_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem
+            label='Quickbooks ID'
+          >
+            {source.quickbooksId}
+          </DetailsListItem>
+          <DetailsListItem label='Import Date'>
+            <DateTime value={source.importDate} />
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Invoice_Write_Off_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem
+            label={stringOverrides?.invoiceNumberLabel || 'Invoice number'}
+          >
+            {source.invoiceNumber}
+          </DetailsListItem>
+          <DetailsListItem
+            label={stringOverrides?.recipientNameLabel || 'Recipient name'}
+          >
+            {source.recipientName}
+          </DetailsListItem>
+          <DetailsListItem label='Write-off Date'>
+            <DateTime value={source.date} />
+          </DetailsListItem>
+          <DetailsListItem label='Write-off Amount'>
+            {`$${centsToDollars(source.writeOffAmount)}`}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Vendor_Refund_Allocation_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {`$${centsToDollars(source.amount)}`}
+          </DetailsListItem>
+          <DetailsListItem label='Vendor Description'>
+            {source.vendorDescription}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Vendor_Refund_Payment_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label='Refunded Amount'>
+            {`$${centsToDollars(source.refundedByVendorAmount)}`}
+          </DetailsListItem>
+          <DetailsListItem label='Vendor Description'>
+            {source.vendorDescription}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Vendor_Payout_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {`$${centsToDollars(source.paidOutAmount)}`}
+          </DetailsListItem>
+          <DetailsListItem
+            label={stringOverrides?.processorLabel || 'Processor'}
+          >
+            {source.processor}
+          </DetailsListItem>
+          <DetailsListItem label='Completed At'>
+            <DateTime value={source.completedAt} />
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Payroll_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label='Payday'>
+            <DateTime value={source.payday} />
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Payroll_Payment_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {`$${centsToDollars(source.amount)}`}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Bill_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label='Bill Number'>
+            {source.billNumber}
+          </DetailsListItem>
+          <DetailsListItem label='Vendor Description'>
+            {source.vendorDescription}
+          </DetailsListItem>
+          <DetailsListItem label={stringOverrides?.dateLabel || 'Date'}>
+            <DateTime value={source.date} />
+          </DetailsListItem>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {`$${centsToDollars(source.amount)}`}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Bill_Payment_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label='Bill Number'>
+            {source.billNumber}
+          </DetailsListItem>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {`$${centsToDollars(source.amount)}`}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Vendor_Credit_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {`$${centsToDollars(source.amount)}`}
+          </DetailsListItem>
+          <DetailsListItem label='Vendor'>
+            {source.vendor.description}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Customer_Credit_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {`$${centsToDollars(source.amount)}`}
+          </DetailsListItem>
+          <DetailsListItem label='Customer'>
+            {source.customer.description}
           </DetailsListItem>
         </>
       )
