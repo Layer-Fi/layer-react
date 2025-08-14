@@ -1,13 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Layer } from '../../api/layer'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { useCallback, useMemo, useState } from 'react'
 import { ReportingBasis } from '../../types'
-import { DataModel, LoadedStatus } from '../../types/general'
-import { ProfitAndLossSummary } from '../../types/profit_and_loss'
 import { startOfMonth, sub } from 'date-fns'
-import useSWR from 'swr'
-import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import type { ProfitAndLossSummary } from './schemas'
+import { useProfitAndLossSummaries } from './useProfitAndLossSummaries'
 
 type UseProfitAndLossLTMProps = {
   currentDate: Date
@@ -24,11 +19,30 @@ export interface ProfitAndLossSummaryData extends ProfitAndLossSummary {
 
 type UseProfitAndLossLTMReturn = (props?: UseProfitAndLossLTMProps) => {
   data: ProfitAndLossSummaryData[]
-  isLoading?: boolean
-  loaded?: LoadedStatus
-  error?: unknown
-  pullData: (date: Date) => void
+  isLoading: boolean
+  isError: boolean
+  setDate: (date: Date) => void
   refetch: () => void
+}
+
+const getYearMonthKey = (y: number, m: number) => {
+  return `${y}-${m.toString().padStart(2, '0')}`
+}
+
+const BASE_PNL_SUMMARY: Omit<ProfitAndLossSummary, 'year' | 'month'> = {
+  income: 0,
+  costOfGoodsSold: 0,
+  grossProfit: 0,
+  operatingExpenses: 0,
+  profitBeforeTaxes: 0,
+  taxes: 0,
+  netProfit: 0,
+  fullyCategorized: false,
+  totalExpenses: 0,
+  uncategorizedInflows: 0,
+  uncategorizedOutflows: 0,
+  uncategorizedTransactions: 0,
+  categorizedTransactions: 0,
 }
 
 const buildDates = ({ currentDate }: { currentDate: Date }) => {
@@ -62,163 +76,68 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     currentDate: startOfMonth(Date.now()),
   },
 ) => {
-  const { businessId, syncTimestamps, read, hasBeenTouched } =
-    useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
-
   const [date, setDate] = useState(currentDate)
-  const [loaded, setLoaded] = useState<LoadedStatus>('initial')
-  const [data, setData] = useState<ProfitAndLossSummaryData[]>([])
 
   const { startYear, startMonth, endYear, endMonth } = useMemo(() => {
     return buildDates({ currentDate: date })
-  }, [date, businessId, tagFilter, reportingBasis])
+  }, [date])
 
-  const queryKey =
-    businessId
-    && Boolean(startYear)
-    && Boolean(startMonth)
-    && Boolean(endYear)
-    && Boolean(endMonth)
-    && auth?.access_token
-    && `profit-and-loss-summaries-${businessId}-${startYear.toString()}-${startMonth.toString()}-${tagFilter?.key}-${tagFilter?.values?.join(
-      ',',
-    )}-${reportingBasis}`
-
-  const {
-    data: rawData,
-    isLoading,
-    isValidating,
-    error,
-    mutate,
-  } = useSWR(
-    queryKey,
-    Layer.getProfitAndLossSummaries(apiUrl, auth?.access_token, {
-      params: {
-        businessId,
-        startYear: startYear.toString(),
-        startMonth: startMonth.toString(),
-        endYear: endYear.toString(),
-        endMonth: endMonth.toString(),
-        tagKey: tagFilter?.key,
-        tagValues: tagFilter?.values?.join(','),
-        reportingBasis,
-      },
-    }),
-  )
-
-  useEffect(() => {
-    // When new date range is set, populate 'data' with 'loading' items
-    const newData = data.slice()
-
-    const newPeriod = buildMonthsArray(sub(date, { years: 1 }), date)
-
-    if (newData && newPeriod) {
-      newPeriod.forEach((x) => {
-        if (
-          !newData?.find(
-            n => x.getMonth() + 1 === n.month && x.getFullYear() === n.year,
-          )
-        ) {
-          newData.push({
-            year: x.getFullYear(),
-            month: x.getMonth() + 1,
-            income: 0,
-            costOfGoodsSold: 0,
-            grossProfit: 0,
-            operatingExpenses: 0,
-            profitBeforeTaxes: 0,
-            taxes: 0,
-            netProfit: 0,
-            fullyCategorized: false,
-            totalExpenses: 0,
-            uncategorizedInflows: 0,
-            uncategorizedOutflows: 0,
-            uncategorized_transactions: 0,
-            isLoading: true,
-          } satisfies ProfitAndLossSummaryData)
-        }
-      })
-    }
-
-    if (newData) {
-      setData(
-        newData.sort(
-          (a, b) =>
-            Number(new Date(a.year, a.month, 1))
-            - Number(new Date(b.year, b.month, 1)),
-        ),
-      )
-    }
-  }, [startYear, startMonth, tagFilter])
-
-  useEffect(() => {
-    const newData = rawData?.data?.months?.slice()
-
-    if (data && newData) {
-      data.forEach((x) => {
-        if (!newData?.find(n => x.month === n.month && x.year === n.year)) {
-          newData.push({ ...x })
-        }
-      })
-    }
-
-    if (newData) {
-      setData(
-        newData.sort(
-          (a, b) =>
-            Number(new Date(a.year, a.month, 1))
-            - Number(new Date(b.year, b.month, 1)),
-        ),
-      )
-    }
-  }, [rawData])
-
-  useEffect(() => {
-    if (isLoading && loaded === 'initial') {
-      setLoaded('loading')
-      return
-    }
-
-    if (!isLoading && rawData) {
-      setLoaded('complete')
-    }
-  }, [data, isLoading])
-
-  const pullData = (date: Date) => setDate(date)
-
-  // Refetch data if related models has been changed since last fetch
-  useEffect(() => {
-    if (queryKey && (isLoading || isValidating)) {
-      read(DataModel.PROFIT_AND_LOSS, queryKey)
-    }
-  }, [isLoading, isValidating])
-
-  useEffect(() => {
-    if (queryKey && hasBeenTouched(queryKey)) {
-      void mutate()
-    }
-  }, [
-    syncTimestamps,
+  const { data, isLoading, isError, mutate } = useProfitAndLossSummaries({
     startYear,
     startMonth,
     endYear,
     endMonth,
-    tagFilter,
+    tagKey: tagFilter?.key,
+    tagValues: tagFilter?.values?.join(','),
     reportingBasis,
-  ])
+  })
 
-  const refetch = () => {
+  const augmentedData = useMemo(() => {
+    // 1) Build the 12-month period ending at `date`
+    const period = buildMonthsArray(sub(date, { years: 1 }), date)
+
+    // 2) Create placeholders for each period month
+    const map = new Map<string, ProfitAndLossSummaryData>()
+
+    for (const d of period) {
+      const y = d.getFullYear()
+      const m = d.getMonth() + 1
+      map.set(getYearMonthKey(y, m), {
+        year: y,
+        month: m,
+        isLoading: true,
+        ...BASE_PNL_SUMMARY,
+      })
+    }
+
+    // 3) Overlay API data (replacing placeholders; mark as loaded)
+    const monthsFromApi = data?.months ?? []
+    for (const m of monthsFromApi) {
+      const key = getYearMonthKey(m.year, m.month)
+      map.set(key, { ...m, isLoading: false })
+    }
+
+    // 4) Sorted array
+    const sorted = Array.from(map.values()).sort(
+      (a, b) =>
+        new Date(a.year, a.month - 1, 1).getTime()
+          - new Date(b.year, b.month - 1, 1).getTime(),
+    )
+
+    return sorted
+  }, [date, data?.months])
+
+  const updateDate = useCallback((date: Date) => setDate(date), [setDate])
+
+  const refetch = useCallback(() => {
     void mutate()
-  }
+  }, [mutate])
 
   return {
-    data,
+    data: augmentedData,
     isLoading,
-    loaded,
-    error,
-    pullData,
+    isError,
+    setDate: updateDate,
     refetch,
   }
 }

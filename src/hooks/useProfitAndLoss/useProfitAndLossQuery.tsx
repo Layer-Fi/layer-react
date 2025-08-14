@@ -1,100 +1,145 @@
-import { useEffect } from 'react'
-import { Layer } from '../../api/layer'
+import { useCallback, useMemo } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { ProfitAndLoss, ReportingBasis } from '../../types'
-import { DataModel } from '../../types/general'
-import { startOfMonth, endOfMonth } from 'date-fns'
-import useSWR from 'swr'
-import { useAuth } from '../useAuth'
-import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
+import { useAuth } from '../../hooks/useAuth'
+import { get } from '../../api/layer/authenticated_http'
+import useSWR, { type SWRResponse } from 'swr'
+import { Schema } from 'effect'
+import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
+import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
+import { ProfitAndLoss, type ProfitAndLossQueryRequestParams, ProfitAndLossQuerySchema } from './schemas'
+import { debounce } from 'lodash'
 
-type UseProfitAndLossQueryProps = {
-  startDate: Date
-  endDate: Date
-  tagFilter?: {
-    key: string
-    values: string[]
+export const PNL_QUERY_TAG_KEY = '#profit-and-loss-query'
+
+class ProfitAndLossQuerySWRResponse {
+  private swrResponse: SWRResponse<ProfitAndLoss>
+
+  constructor(swrResponse: SWRResponse<ProfitAndLoss>) {
+    this.swrResponse = swrResponse
   }
-  reportingBasis?: ReportingBasis
+
+  get data() {
+    return this.swrResponse.data
+  }
+
+  get isLoading() {
+    return this.swrResponse.isLoading
+  }
+
+  get isValidating() {
+    return this.swrResponse.isValidating
+  }
+
+  get isError() {
+    return this.swrResponse.error !== undefined
+  }
+
+  get mutate() {
+    return this.swrResponse.mutate
+  }
 }
 
-type UseProfitAndLossQueryReturn = (props?: UseProfitAndLossQueryProps) => {
-  data?: ProfitAndLoss
-  isLoading: boolean
-  isValidating: boolean
-  error: unknown
-  refetch: () => void
-  startDate: Date
-  endDate: Date
-}
-
-export const useProfitAndLossQuery: UseProfitAndLossQueryReturn = (
-  {
-    startDate,
-    endDate,
-    tagFilter,
-    reportingBasis,
-  }: UseProfitAndLossQueryProps = {
-    startDate: startOfMonth(new Date()),
-    endDate: endOfMonth(new Date()),
-  },
-) => {
-  const { businessId, syncTimestamps, read, hasBeenTouched } =
-    useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
-
-  const queryKey =
-    businessId
-    && startDate
-    && endDate
-    && auth?.access_token
-    && `profit-and-loss-${businessId}-${startDate.valueOf()}-${endDate.valueOf()}-${tagFilter?.key}-${tagFilter?.values?.join(
-      ',',
-    )}-${reportingBasis}`
-
-  const {
-    data: rawData,
-    isLoading,
-    isValidating,
-    error: rawError,
-    mutate,
-  } = useSWR(
-    queryKey,
-    Layer.getProfitAndLoss(apiUrl, auth?.access_token, {
+function buildKey({
+  access_token: accessToken,
+  apiUrl,
+  businessId,
+  startDate,
+  endDate,
+  tagKey,
+  tagValues,
+  reportingBasis,
+  includeUncategorized,
+}: {
+  access_token?: string
+  apiUrl?: string
+} & ProfitAndLossQueryRequestParams) {
+  if (accessToken && apiUrl) {
+    return {
+      accessToken,
+      apiUrl,
       businessId,
       startDate,
       endDate,
-      tagKey: tagFilter?.key,
-      tagValues: tagFilter?.values?.join(','),
+      tagKey,
+      tagValues,
       reportingBasis,
-    }),
-  )
-
-  const refetch = () => {
-    mutate()
+      includeUncategorized,
+      tags: [PNL_QUERY_TAG_KEY],
+    } as const
   }
+}
 
-  // Refetch data if related models has been changed since last fetch
-  useEffect(() => {
-    if (queryKey && (isLoading || isValidating)) {
-      read(DataModel.PROFIT_AND_LOSS, queryKey)
-    }
-  }, [isLoading, isValidating])
-
-  useEffect(() => {
-    if (queryKey && hasBeenTouched(queryKey)) {
-      refetch()
-    }
-  }, [syncTimestamps, startDate, endDate, tagFilter, reportingBasis])
-
-  return {
+const getProfitAndLoss = get<
+  { data: ProfitAndLoss },
+  ProfitAndLossQueryRequestParams
+>(
+  ({
+    businessId,
     startDate,
     endDate,
-    data: rawData?.data,
-    isLoading,
-    isValidating,
-    error: rawError,
-    refetch,
-  }
+    tagKey,
+    tagValues,
+    reportingBasis,
+    includeUncategorized,
+  }) => {
+    const parameters = toDefinedSearchParameters({ startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized })
+    return `/v1/businesses/${businessId}/reports/profit-and-loss?${parameters}`
+  })
+
+type useProfitAndLossQueryProps = Omit<ProfitAndLossQueryRequestParams, 'businessId'>
+export function useProfitAndLossQuery({ startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized }: useProfitAndLossQueryProps) {
+  const { data } = useAuth()
+  const { businessId } = useLayerContext()
+
+  const response = useSWR(
+    () => buildKey({
+      ...data,
+      businessId,
+      startDate,
+      endDate,
+      tagKey,
+      tagValues,
+      reportingBasis,
+      includeUncategorized,
+    }),
+    ({ accessToken, apiUrl, businessId }) => getProfitAndLoss(
+      apiUrl,
+      accessToken,
+      {
+        params: { businessId, startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized },
+      },
+    )().then(({ data }) => Schema.decodeUnknownPromise(ProfitAndLossQuerySchema)(data)),
+  )
+
+  return new ProfitAndLossQuerySWRResponse(response)
+}
+
+const INVALIDATE_DEBOUNCE_OPTIONS = {
+  wait: 1000,
+  maxWait: 3000,
+}
+
+export const useProfitAndLossQueryCacheActions = () => {
+  const { invalidate } = useGlobalCacheActions()
+
+  const invalidateProfitAndLossQuery = useCallback(
+    () => invalidate(
+      tags => tags.includes(PNL_QUERY_TAG_KEY),
+    ),
+    [invalidate],
+  )
+
+  const debouncedInvalidateProfitAndLossQuery = useMemo(
+    () => debounce(
+      invalidateProfitAndLossQuery,
+      INVALIDATE_DEBOUNCE_OPTIONS.wait,
+      {
+        maxWait: INVALIDATE_DEBOUNCE_OPTIONS.maxWait,
+        trailing: true,
+      },
+    ),
+    [invalidateProfitAndLossQuery],
+  )
+
+  return { invalidateProfitAndLossQuery, debouncedInvalidateProfitAndLossQuery }
 }
