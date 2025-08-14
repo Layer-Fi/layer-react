@@ -118,7 +118,7 @@ export const JournalEntryDetails = () => {
                   {sourceLink.text}
                 </a>
               )
-              : entry?.source?.entityName}
+              : entry?.source && decodeLedgerEntrySource(entry.source).entityName }
           </Badge>
         </DetailsListItem>
         {entry?.source && (

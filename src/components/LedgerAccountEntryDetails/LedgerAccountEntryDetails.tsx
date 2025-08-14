@@ -292,7 +292,7 @@ export const LedgerAccountEntryDetails = ({
                   {sourceLink.text}
                 </a>
               )
-              : entryData?.source?.entityName}
+              : entryData?.source && decodeLedgerEntrySource(entryData.source).entityName }
           </Badge>
         </DetailsListItem>
         {entryData?.source?.displayDescription && (
