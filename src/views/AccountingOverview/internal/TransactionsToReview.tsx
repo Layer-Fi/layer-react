@@ -43,7 +43,7 @@ export function TransactionsToReview({
   })
 
   const numTransactionsToReview = useMemo(() => {
-    if (!data || !dateRange) return
+    if (!data || !dateRange) return 0
     const { startDate } = dateRange
 
     const activeMonth = data.find(
@@ -76,7 +76,7 @@ export function TransactionsToReview({
       )
     }
 
-    if (numTransactionsToReview) {
+    if (numTransactionsToReview > 0) {
       return (
         <Badge
           variant={BadgeVariant.WARNING}

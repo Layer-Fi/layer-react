@@ -127,7 +127,7 @@ export const useProfitAndLossLTM: UseProfitAndLossLTMReturn = (
     return sorted
   }, [date, data?.months])
 
-  const updateDate = useCallback((date: Date) => setDate(date), [setDate])
+  const updateDate = useCallback((date: Date) => setDate(date), [])
 
   const refetch = useCallback(() => {
     void mutate()

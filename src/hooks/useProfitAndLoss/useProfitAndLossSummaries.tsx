@@ -89,8 +89,8 @@ const getProfitAndLossSummaries = get<
     return `/v1/businesses/${businessId}/reports/profit-and-loss-summaries?${parameters}`
   })
 
-type useProfitAndLossSummariesProps = Omit<ProfitAndLossSummariesRequestParams, 'businessId'>
-export function useProfitAndLossSummaries({ startYear, startMonth, endYear, endMonth, tagKey, tagValues, reportingBasis }: useProfitAndLossSummariesProps) {
+type UseProfitAndLossSummariesProps = Omit<ProfitAndLossSummariesRequestParams, 'businessId'>
+export function useProfitAndLossSummaries({ startYear, startMonth, endYear, endMonth, tagKey, tagValues, reportingBasis }: UseProfitAndLossSummariesProps) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
