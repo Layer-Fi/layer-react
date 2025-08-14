@@ -234,8 +234,8 @@ export const LedgerAccountEntryDetails = ({
 
   const sourceLink = useMemo(() => {
     if (convertToSourceLink && entryData?.source) {
-      const decoded: LedgerEntrySourceType = decodeLedgerEntrySource(entryData.source)
-      return convertToSourceLink(decoded)
+      const decoded: LedgerEntrySourceType | null = decodeLedgerEntrySource(entryData.source)
+      return decoded ? convertToSourceLink(decoded) : undefined
     }
     return undefined
   }, [convertToSourceLink, entryData?.source])
@@ -292,7 +292,7 @@ export const LedgerAccountEntryDetails = ({
                   {sourceLink.text}
                 </a>
               )
-              : entryData?.source && decodeLedgerEntrySource(entryData.source).entityName }
+              : (entryData?.source && decodeLedgerEntrySource(entryData.source)?.entityName) ?? entryData?.entry_type }
           </Badge>
         </DetailsListItem>
         {entryData?.source?.displayDescription && (

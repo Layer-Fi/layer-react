@@ -306,5 +306,12 @@ export const AccountSchema = Schema.Struct({
   ),
 })
 
-export const decodeLedgerEntrySource = Schema.decodeUnknownSync(LedgerEntrySourceSchema)
+export const decodeLedgerEntrySource = (data: unknown) => {
+  const result = Schema.decodeUnknownEither(LedgerEntrySourceSchema)(data)
+  if (result._tag === 'Left') {
+    console.warn('Failed to decode ledger entry source:', result.left)
+    return null
+  }
+  return result.right
+}
 export type LedgerEntrySourceType = typeof LedgerEntrySourceSchema.Type
