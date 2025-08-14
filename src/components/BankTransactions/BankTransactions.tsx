@@ -39,8 +39,8 @@ import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/
 import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
 import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
 import { MatchDetailsProvider } from '../../contexts/MatchDetailsContext'
-import { MatchDetails } from '../../types/match_details'
 import { SourceLink } from '../../types/utility/links'
+import { MatchDetailsType } from '../../schemas/matchSchemas'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -75,7 +75,7 @@ export interface BankTransactionsProps {
   filters?: BankTransactionFilters
   hideHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
-  convertMatchDetailsToSourceLink?: (details: MatchDetails) => SourceLink
+  convertMatchDetailsToSourceLink?: (details: MatchDetailsType) => SourceLink
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {

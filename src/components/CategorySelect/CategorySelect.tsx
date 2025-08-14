@@ -13,7 +13,6 @@ import MinimizeTwo from '../../icons/MinimizeTwo'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction, CategorizationType, Category } from '../../types'
 import { SuggestedMatch, type CategoryWithEntries } from '../../types/bank_transactions'
-import { MatchDetails } from '../../types/match_details'
 import { Badge } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
@@ -23,6 +22,7 @@ import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
 import { useMatchDetailsContext } from '../../contexts/MatchDetailsContext'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
+import { MatchDetailsType } from '../../schemas/matchSchemas'
 
 type Props = {
   name?: string
@@ -54,7 +54,7 @@ export interface CategoryOptionPayload {
   stable_name?: string
   entries?: CategoryWithEntries['entries']
   subCategories: Category[] | null
-  details?: MatchDetails
+  details?: MatchDetailsType
 }
 
 export interface CategoryOption {
@@ -143,7 +143,7 @@ const GroupHeading = (
 const Option = (
   props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
     showTooltips: boolean
-    convertToSourceLink?: (details: MatchDetails) => { href: string, text: string, target?: string }
+    convertToSourceLink?: (details: MatchDetailsType) => { href: string, text: string, target?: string }
   },
 ) => {
   if (props.data.payload.option_type === OptionActionType.HIDDEN) {

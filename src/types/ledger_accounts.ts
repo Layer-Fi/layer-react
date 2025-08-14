@@ -42,20 +42,3 @@ export interface LedgerAccountLineItem {
   entry_reversal_of?: string
   entry_reversed_by?: string
 }
-
-export interface FinancialEventIdentifiers {
-  id: string
-  external_id?: string
-  reference_number?: string
-  metadata?: Record<string, unknown>
-}
-
-export interface ApiVendorData {
-  vendor_external_id?: string
-  vendor_description: string
-}
-
-export interface ApiCustomerData {
-  customer_description: string
-  recipient_name?: string
-}

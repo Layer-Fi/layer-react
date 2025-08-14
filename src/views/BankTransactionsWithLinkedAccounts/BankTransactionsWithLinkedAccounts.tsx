@@ -6,8 +6,8 @@ import { BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyM
 import { MobileComponentType } from '../../components/BankTransactions/constants'
 import { LinkedAccounts } from '../../components/LinkedAccounts'
 import { View } from '../../components/View'
-import { MatchDetails } from '../../types/match_details'
 import { SourceLink } from '../../types/utility/links'
+import { MatchDetailsType } from '../../schemas/matchSchemas'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {
   title?: string
@@ -35,7 +35,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   mode?: BankTransactionsMode
   mobileComponent?: MobileComponentType
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
-  convertMatchDetailsToSourceLink?: (details: MatchDetails) => SourceLink
+  convertMatchDetailsToSourceLink?: (details: MatchDetailsType) => SourceLink
 }
 
 export const BankTransactionsWithLinkedAccounts = ({

@@ -1,9 +1,9 @@
 import { createContext, useContext, ReactNode } from 'react'
-import { MatchDetails } from '../types/match_details'
 import { SourceLink } from '../types/utility/links'
+import { MatchDetailsType } from '../schemas/matchSchemas'
 
 interface MatchDetailsContextType {
-  convertToSourceLink?: (details: MatchDetails) => SourceLink
+  convertToSourceLink?: (details: MatchDetailsType) => SourceLink
 }
 
 const MatchDetailsContext = createContext<MatchDetailsContextType>({})
@@ -13,7 +13,7 @@ export const useMatchDetailsContext = () => {
 }
 
 interface MatchDetailsProviderProps {
-  convertToSourceLink?: (details: MatchDetails) => SourceLink
+  convertToSourceLink?: (details: MatchDetailsType) => SourceLink
   children: ReactNode
 }
 

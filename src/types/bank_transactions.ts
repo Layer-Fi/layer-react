@@ -1,9 +1,9 @@
 import type { CustomerSchema } from '../features/customers/customersSchemas'
 import type { VendorSchema } from '../features/vendors/vendorsSchemas'
+import { MatchDetailsType } from '../schemas/matchSchemas'
 import { Categorization, CategorizationStatus, Category } from './categories'
 import { S3PresignedUrl } from './general'
 import type { TransactionTag } from './tags'
-import type { MatchDetails } from './match_details'
 
 export enum Direction {
   CREDIT = 'CREDIT',
@@ -62,14 +62,14 @@ export interface BankTransaction extends Record<string, unknown> {
 export interface SuggestedMatch {
   id: string
   matchType: string
-  details: MatchDetails
+  details: MatchDetailsType
 }
 
 export interface BankTransactionMatch {
   bank_transaction: BankTransaction
   id: string
   match_type: string
-  details: MatchDetails
+  details: MatchDetailsType
 }
 
 export interface BankTransactionMetadata {

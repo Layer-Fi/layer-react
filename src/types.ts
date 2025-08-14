@@ -20,20 +20,6 @@ export {
   BankTransactionMatch,
 } from './types/bank_transactions'
 export {
-  MatchDetails,
-  ManualJournalEntryMatchDetails,
-  RefundPaymentMatchDetails,
-  VendorRefundPaymentMatchDetails,
-  InvoicePaymentMatchDetails,
-  PayoutMatchDetails,
-  VendorPayoutMatchDetails,
-  BillPaymentMatchDetails,
-  PayrollPaymentMatchDetails,
-  TransferMatchDetails,
-  SuggestedMatchWithTransaction,
-  SuggestedMatchesWithTransactions,
-} from './types/match_details'
-export {
   CategorizationStatus,
   Category,
   CategorizationType,

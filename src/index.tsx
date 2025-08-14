@@ -63,6 +63,9 @@ export { useBankTransactionsContext } from './contexts/BankTransactionsContext'
 export { BankTransactionsProvider } from './providers/BankTransactionsProvider'
 export { useDataSync } from './hooks/useDataSync'
 
+/*
+======================= Schemas =======================
+*/
 export { DisplayState, Direction } from './types/bank_transactions'
-
+export type { MatchDetailsType } from './schemas/matchSchemas'
 export type { LedgerEntrySourceType } from './schemas/ledgerEntrySourceSchemas'
