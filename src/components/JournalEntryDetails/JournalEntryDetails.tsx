@@ -4,7 +4,8 @@ import AlertCircle from '../../icons/AlertCircle'
 import RefreshCcw from '../../icons/RefreshCcw'
 import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
-import { Direction } from '../../types'
+import { Direction, LedgerEntrySourceType } from '../../types'
+import { decodeLedgerEntrySource } from '../../schemas/ledgerEntrySourceSchemas'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
@@ -45,7 +46,8 @@ export const JournalEntryDetails = () => {
 
   const sourceLink = useMemo(() => {
     if (convertToSourceLink && entry?.source) {
-      return convertToSourceLink(entry.source)
+      const decoded: LedgerEntrySourceType = decodeLedgerEntrySource(entry.source)
+      return convertToSourceLink(decoded)
     }
     return undefined
   }, [convertToSourceLink, entry?.source])
@@ -116,7 +118,7 @@ export const JournalEntryDetails = () => {
                   {sourceLink.text}
                 </a>
               )
-              : entry?.source?.entity_name}
+              : entry?.source?.entityName}
           </Badge>
         </DetailsListItem>
         {entry?.source && (

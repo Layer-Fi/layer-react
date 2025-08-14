@@ -9,9 +9,9 @@ import { ChartOfAccountsTableStringOverrides } from '../ChartOfAccountsTable/Cha
 import { Container } from '../Container'
 import { LedgerAccount } from '../LedgerAccount'
 import { LedgerAccountStringOverrides } from '../LedgerAccount/LedgerAccountIndex'
-import { LedgerEntrySource } from '../../types/ledger_accounts'
 import { SourceLink } from '../../types/utility/links'
 import { LedgerEntrySourceProvider } from '../../contexts/LedgerEntrySourceContext'
+import { LedgerEntrySourceType } from '../../schemas/ledgerEntrySourceSchemas'
 
 export interface ChartOfAccountsStringOverrides {
   chartOfAccountsTable?: ChartOfAccountsTableStringOverrides
@@ -26,7 +26,7 @@ export interface ChartOfAccountsProps {
   showAddAccountButton?: boolean
   templateAccountsEditable?: boolean
   showReversalEntries?: boolean
-  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySource) => SourceLink | undefined
+  convertLedgerEntrySourceToSourceLink?: (source: LedgerEntrySourceType) => SourceLink | undefined
 }
 
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => {

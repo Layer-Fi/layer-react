@@ -1,9 +1,9 @@
 import { createContext, useContext, ReactNode } from 'react'
-import { LedgerEntrySource } from '../types/ledger_accounts'
 import { SourceLink } from '../types/utility/links'
+import { LedgerEntrySourceType } from '../schemas/ledgerEntrySourceSchemas'
 
 interface LedgerEntrySourceContextType {
-  convertToSourceLink?: (source: LedgerEntrySource) => SourceLink | undefined
+  convertToSourceLink?: (source: LedgerEntrySourceType) => SourceLink | undefined
 }
 
 const LedgerEntrySourceContext = createContext<LedgerEntrySourceContextType>({})
@@ -13,7 +13,7 @@ export const useLedgerEntrySourceContext = () => {
 }
 
 interface LedgerEntrySourceProviderProps {
-  convertToSourceLink?: (source: LedgerEntrySource) => SourceLink | undefined
+  convertToSourceLink?: (source: LedgerEntrySourceType) => SourceLink | undefined
   children: ReactNode
 }
 
