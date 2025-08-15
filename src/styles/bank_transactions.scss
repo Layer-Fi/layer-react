@@ -259,14 +259,9 @@
   transition: height var(--transition-speed) ease-in-out;
 }
 
-/* Allow wrapper to overflow when match form is active */
+/* Allow wrapper overflow when match panel is active */
 .Layer__expanded-bank-transaction-row:has(.Layer__expanded-bank-transaction-row__match.Layer__expanded-bank-transaction-row__content-panel--active) .Layer__expanded-bank-transaction-row__wrapper {
   overflow: visible;
-}
-
-/* Fallback for browsers without :has() support - use a more specific selector */
-.Layer__expanded-bank-transaction-row__wrapper:has(.Layer__expanded-bank-transaction-row__match.Layer__expanded-bank-transaction-row__content-panel--active) {
-  overflow-x: visible;
 }
 
 .Layer__bank-transaction-list-item__category-text,
@@ -307,78 +302,25 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   max-width: 680px;
-  overflow: visible;
 }
 
 .Layer__expanded-bank-transaction-row__content > .Layer__Stack {
   max-width: none;
 }
 
-.Layer__expanded-bank-transaction-row__content-panels {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  max-width: 680px;
-  overflow: visible;
-}
-
-/* Remove width constraint when match panel is active */
+/* Allow match form to expand horizontally */
 .Layer__expanded-bank-transaction-row__content:has(.Layer__expanded-bank-transaction-row__match.Layer__expanded-bank-transaction-row__content-panel--active) .Layer__expanded-bank-transaction-row__content-panels {
   max-width: none;
 }
 
-.Layer__expanded-bank-transaction-row__match.Layer__expanded-bank-transaction-row__content-panel--active {
-  overflow: visible;
-}
-
-.Layer__expanded-bank-transaction-row__match.Layer__expanded-bank-transaction-row__content-panel--active .Layer__expanded-bank-transaction-row__content-panel-container {
-  overflow: visible;
-}
-
-/* Make match table expand to full available width */
-.Layer__expanded-bank-transaction-row__match.Layer__expanded-bank-transaction-row__content-panel--active .Layer__expanded-bank-transaction-row__match-table {
-  width: 100%;
-}
-
-/* Make match rows expand to full width */
-.Layer__expanded-bank-transaction-row__match.Layer__expanded-bank-transaction-row__content-panel--active .Layer__expanded-bank-transaction-row__match-row {
-  width: 100%;
-}
-
-/* Allow description column to take more space when expanded */
+/* Make table columns flexible when match panel is active */
 .Layer__expanded-bank-transaction-row__match.Layer__expanded-bank-transaction-row__content-panel--active .Layer__expanded-bank-transaction-row__match-table__desc {
   flex: 2;
-  max-width: none;
-}
-
-/* Make all table columns flexible when match panel is active */
-.Layer__expanded-bank-transaction-row__match.Layer__expanded-bank-transaction-row__content-panel--active .Layer__expanded-bank-transaction-row__match-table__date {
-  flex: 0 0 120px;
-  min-width: 120px;
-}
-
-.Layer__expanded-bank-transaction-row__match.Layer__expanded-bank-transaction-row__content-panel--active .Layer__expanded-bank-transaction-row__match-table__amount {
-  flex: 0 0 100px;
-  min-width: 100px;
 }
 
 .Layer__expanded-bank-transaction-row__match.Layer__expanded-bank-transaction-row__content-panel--active .Layer__expanded-bank-transaction-row__match-table__link {
   flex: 1;
   min-width: 100px;
-  width: auto;
-}
-
-.Layer__expanded-bank-transaction-row__match.Layer__expanded-bank-transaction-row__content-panel--active .Layer__expanded-bank-transaction-row__match-table__status {
-  flex: 0 0 100px;
-  min-width: 100px;
-}
-
-.Layer__expanded-bank-transaction-row__match {
-  max-width: none;
-}
-
-.Layer__expanded-bank-transaction-row__match .Layer__expanded-bank-transaction-row__content-panel-container {
-  max-width: none;
 }
 
 .Layer__expanded-bank-transaction-row__content-panel {
