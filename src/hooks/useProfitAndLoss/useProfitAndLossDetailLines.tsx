@@ -9,7 +9,7 @@ import { Schema } from 'effect'
 import { ReportingBasis } from '../../types'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { LedgerEntrySourceSchema, PnlDetailLineSchema, PnlDetailLinesDataSchema } from './schemas'
-import { useGlobalInvalidator } from '@layerfi/components/utils/swr/useGlobalInvalidator'
+import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
 
 export const LIST_PNL_DETAIL_LINES_TAG_KEY = '#list-pnl-detail-lines'
 
@@ -160,7 +160,7 @@ const INVALIDATION_DEBOUNCE_OPTIONS = {
 }
 
 export function usePnlDetailLinesInvalidator() {
-  const { invalidate } = useGlobalInvalidator()
+  const { invalidate } = useGlobalCacheActions()
 
   const invalidatePnlDetailLines = useCallback(
     () => invalidate(tags => tags.includes(LIST_PNL_DETAIL_LINES_TAG_KEY)),

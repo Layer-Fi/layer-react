@@ -3,6 +3,7 @@ import { ProfitAndLoss } from '../ProfitAndLoss'
 import { useProfitAndLossDetailLines } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
+import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
 import { DetailReportBreadcrumb } from '../DetailReportBreadcrumb'
 import { DataTable, type ColumnConfig } from '../DataTable/DataTable'
 import { centsToDollars } from '../../models/Money'
@@ -136,7 +137,7 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Date]: {
       id: PnlDetailColumns.Date,
       header: stringOverrides?.dateColumnHeader || 'Date',
-      cell: row => <DateTime value={row.date} onlyDate size={TextSize.md} weight={TextWeight.normal} color='base-600' />,
+      cell: row => <DateTime value={row.date} onlyDate size={TextSize.md} weight={TextWeight.normal} variant='subtle' />,
     },
     [PnlDetailColumns.Type]: {
       id: PnlDetailColumns.Type,
@@ -201,16 +202,19 @@ export const ProfitAndLossDetailReport = ({
     },
   }), [stringOverrides, handleSourceClick])
 
+  const Header = useCallback(() => {
+    return (
+      <DetailReportBreadcrumb
+        breadcrumbs={dynamicBreadcrumbs}
+        subtitle={formatDateRange(dateRange.startDate, dateRange.endDate)}
+        onBreadcrumbClick={onBreadcrumbClick}
+      />
+    )
+  }, [dynamicBreadcrumbs, dateRange, onBreadcrumbClick])
+
   if (selectedSource) {
     return (
-      <div className='Layer__profit-and-loss-detail-report'>
-        <DetailReportBreadcrumb
-          breadcrumbs={dynamicBreadcrumbs}
-          subtitle={formatDateRange(dateRange.startDate, dateRange.endDate)}
-          onClose={handleBackToList}
-          onBreadcrumbClick={onBreadcrumbClick}
-          className='Layer__profit-and-loss-detail-report__header'
-        />
+      <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={handleBackToList} borderless>
         <div className='Layer__profit-and-loss-detail-report__content'>
           <DetailsList
             title={stringOverrides?.sourceDetailsTitle || 'Transaction source'}
@@ -221,44 +225,34 @@ export const ProfitAndLossDetailReport = ({
             <SourceDetailView source={convertSourceForDetailView(selectedSource)} />
           </DetailsList>
         </div>
-      </div>
+      </BaseDetailView>
     )
   }
 
   return (
-    <div className='Layer__profit-and-loss-detail-report'>
-      <DetailReportBreadcrumb
-        breadcrumbs={dynamicBreadcrumbs}
-        subtitle={formatDateRange(dateRange.startDate, dateRange.endDate)}
-        onClose={onClose}
-        onBreadcrumbClick={onBreadcrumbClick}
-        className='Layer__profit-and-loss-detail-report__header'
+    <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={onClose} borderless>
+      <DataTable<ProcessedPnlDetailLine, PnlDetailColumns>
+        componentName={COMPONENT_NAME}
+        ariaLabel={`${lineItemName} detail lines`}
+        columnConfig={columnConfig}
+        data={rowsWithRunningBalance.lines}
+        isLoading={isLoading}
+        isError={isError}
+        slots={{
+          EmptyState,
+          ErrorState,
+        }}
       />
-
-      <div className='Layer__profit-and-loss-detail-report__content'>
-        <DataTable<ProcessedPnlDetailLine, PnlDetailColumns>
-          componentName={COMPONENT_NAME}
-          ariaLabel={`${lineItemName} detail lines`}
-          columnConfig={columnConfig}
-          data={rowsWithRunningBalance.lines}
-          isLoading={isLoading}
-          isError={isError}
-          slots={{
-            EmptyState,
-            ErrorState,
-          }}
-        />
-        {rowsWithRunningBalance.lines.length > 0 && (
-          <div className='Layer__profit-and-loss-detail-report__total-row'>
-            <div className='Layer__profit-and-loss-detail-report__total-label'>Total</div>
-            <div className='Layer__profit-and-loss-detail-report__total-amount'>
-              {rowsWithRunningBalance.total < 0 ? '-' : ''}
-              $
-              {centsToDollars(Math.abs(rowsWithRunningBalance.total))}
-            </div>
+      {rowsWithRunningBalance.lines.length > 0 && (
+        <div className='Layer__profit-and-loss-detail-report__total-row'>
+          <div className='Layer__profit-and-loss-detail-report__total-label'>Total</div>
+          <div className='Layer__profit-and-loss-detail-report__total-amount'>
+            {rowsWithRunningBalance.total < 0 ? '-' : ''}
+            $
+            {centsToDollars(Math.abs(rowsWithRunningBalance.total))}
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </BaseDetailView>
   )
 }
