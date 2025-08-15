@@ -5,6 +5,8 @@ import { TableCellAlign } from '../../types/table'
 import { Loader } from '../Loader'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { Table, TableBody, TableCell, TableRow } from '../Table'
+import { Button } from '../ui/Button/Button'
+import { MoneySpan } from '../ui/Typography/MoneyText'
 import emptyPNL from './empty_profit_and_loss_report'
 import classNames from 'classnames'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
@@ -98,13 +100,22 @@ export const ProfitAndLossTableComponent = ({
             showValue
             && (
               <TableCell
-                isCurrency
+                isCurrency={variant === 'summation' || !onLineItemClick}
                 primary
                 align={TableCellAlign.RIGHT}
-                className={onLineItemClick && variant !== 'summation' ? 'Layer__profit-and-loss-table__clickable-cell' : undefined}
-                onClick={onLineItemClick && variant !== 'summation' ? () => onLineItemClick(lineItem.name, currentBreadcrumbs) : undefined}
               >
-                {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
+                {variant === 'summation' || !onLineItemClick
+                  ? (
+                    Number.isNaN(lineItem.value) ? 0 : lineItem.value
+                  )
+                  : (
+                    <Button
+                      variant='text'
+                      onPress={() => onLineItemClick(lineItem.name, currentBreadcrumbs)}
+                    >
+                      <MoneySpan bold amount={lineItem.value ?? 0} />
+                    </Button>
+                  )}
               </TableCell>
             )
           }

@@ -128,9 +128,10 @@ export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) 
     errors.push({ lineItems: 'Invoice requires at least one non-empty line item.' })
   }
 
+
   nonEmptyLineItems.some((item) => {
     if (item.product.trim() === '') {
-      errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field Product/Service.' })
+      errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field: Product/Service.' })
       return true
     }
   })

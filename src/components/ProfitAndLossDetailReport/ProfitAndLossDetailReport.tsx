@@ -3,20 +3,22 @@ import { ProfitAndLoss } from '../ProfitAndLoss'
 import { useProfitAndLossDetailLines } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
-import { DetailReportBreadcrumb } from '../DetailReportBreadcrumb'
 import { VirtualizedDataTable } from '../VirtualizedDataTable/VirtualizedDataTable'
-import type { ColumnConfig } from '../DataTable/DataTable'
-import { centsToDollars } from '../../models/Money'
+import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
+import { type ColumnConfig } from '../DataTable/DataTable'
 import { Badge } from '../Badge'
 import { DateTime } from '../DateTime'
 import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
+import { Button } from '../ui/Button/Button'
+import { VStack } from '../ui/Stack/Stack'
 import { format } from 'date-fns'
 import type { LedgerEntrySource } from '../../types/ledger_accounts'
 import { Direction } from '../../types'
-import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
+import { BreadcrumbItem, DetailReportBreadcrumb } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import type { PnlDetailLine, LedgerEntrySourceType } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
+import { MoneySpan } from '../ui/Typography/MoneyText'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 
@@ -68,6 +70,7 @@ const ErrorState = () => (
 
 const EmptyState = () => (
   <DataState
+    spacing={true}
     status={DataStateStatus.info}
     title='No detail lines found'
     description='There are no detail lines for this profit and loss item'
@@ -137,7 +140,7 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Date]: {
       id: PnlDetailColumns.Date,
       header: stringOverrides?.dateColumnHeader || 'Date',
-      cell: row => <DateTime value={row.date} onlyDate size={TextSize.md} weight={TextWeight.normal} color='base-600' />,
+      cell: row => <DateTime value={row.date} onlyDate size={TextSize.md} weight={TextWeight.normal} variant='subtle' />,
     },
     [PnlDetailColumns.Type]: {
       id: PnlDetailColumns.Type,
@@ -146,15 +149,12 @@ export const ProfitAndLossDetailReport = ({
         const { source } = row
         return source
           ? (
-            <button
-              type='button'
-              className='Layer__profit-and-loss-detail-report__type-button'
-              onClick={() => handleSourceClick(source)}
+            <Button
+              variant='text'
+              onPress={() => handleSourceClick(source)}
             >
-              <span>
-                {source.entityName}
-              </span>
-            </button>
+              {source.entityName}
+            </Button>
           )
           : '-'
       },
@@ -174,13 +174,9 @@ export const ProfitAndLossDetailReport = ({
       id: PnlDetailColumns.Amount,
       header: stringOverrides?.amountColumnHeader || 'Amount',
       cell: (row) => {
-        const amount = centsToDollars(Math.abs(row.signedAmount))
-        const isNegative = row.signedAmount < 0
         return (
           <span className='Layer__profit-and-loss-detail-report__amount'>
-            {isNegative ? '-' : ''}
-            $
-            {amount}
+            <MoneySpan amount={row.amount} />
           </span>
         )
       },
@@ -189,30 +185,29 @@ export const ProfitAndLossDetailReport = ({
       id: PnlDetailColumns.Balance,
       header: stringOverrides?.balanceColumnHeader || 'Balance',
       cell: (row) => {
-        const amount = centsToDollars(Math.abs(row.runningBalance))
-        const isNegative = row.runningBalance < 0
         return (
           <span className='Layer__profit-and-loss-detail-report__amount'>
-            {isNegative ? '-' : ''}
-            $
-            {amount}
+            <MoneySpan amount={row.runningBalance} />
           </span>
         )
       },
     },
   }), [stringOverrides, handleSourceClick])
 
+  const Header = useCallback(() => {
+    return (
+      <DetailReportBreadcrumb
+        breadcrumbs={dynamicBreadcrumbs}
+        subtitle={formatDateRange(dateRange.startDate, dateRange.endDate)}
+        onBreadcrumbClick={onBreadcrumbClick}
+      />
+    )
+  }, [dynamicBreadcrumbs, dateRange, onBreadcrumbClick])
+
   if (selectedSource) {
     return (
-      <div className='Layer__profit-and-loss-detail-report'>
-        <DetailReportBreadcrumb
-          breadcrumbs={dynamicBreadcrumbs}
-          subtitle={formatDateRange(dateRange.startDate, dateRange.endDate)}
-          onClose={handleBackToList}
-          onBreadcrumbClick={onBreadcrumbClick}
-          className='Layer__profit-and-loss-detail-report__header'
-        />
-        <div className='Layer__profit-and-loss-detail-report__content'>
+      <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={handleBackToList} borderless>
+        <VStack pi='md'>
           <DetailsList
             title={stringOverrides?.sourceDetailsTitle || 'Transaction source'}
           >
@@ -221,45 +216,33 @@ export const ProfitAndLossDetailReport = ({
             </DetailsListItem>
             <SourceDetailView source={convertSourceForDetailView(selectedSource)} />
           </DetailsList>
-        </div>
-      </div>
+        </VStack>
+      </BaseDetailView>
     )
   }
 
   return (
-    <div className='Layer__profit-and-loss-detail-report'>
-      <DetailReportBreadcrumb
-        breadcrumbs={dynamicBreadcrumbs}
-        subtitle={formatDateRange(dateRange.startDate, dateRange.endDate)}
-        onClose={onClose}
-        onBreadcrumbClick={onBreadcrumbClick}
-        className='Layer__profit-and-loss-detail-report__header'
+    <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={onClose} borderless>
+      <VirtualizedDataTable<ProcessedPnlDetailLine, PnlDetailColumns>
+        componentName={COMPONENT_NAME}
+        ariaLabel={`${lineItemName} detail lines`}
+        columnConfig={columnConfig}
+        data={rowsWithRunningBalance.lines}
+        isLoading={isLoading}
+        isError={isError}
+        slots={{
+          EmptyState,
+          ErrorState,
+        }}
       />
-
-      <div className='Layer__profit-and-loss-detail-report__content'>
-        <VirtualizedDataTable<ProcessedPnlDetailLine, PnlDetailColumns>
-          componentName={COMPONENT_NAME}
-          ariaLabel={`${lineItemName} detail lines`}
-          columnConfig={columnConfig}
-          data={rowsWithRunningBalance.lines}
-          isLoading={isLoading}
-          isError={isError}
-          slots={{
-            EmptyState,
-            ErrorState,
-          }}
-        />
-        {rowsWithRunningBalance.lines.length > 0 && (
-          <div className='Layer__profit-and-loss-detail-report__total-row'>
-            <div className='Layer__profit-and-loss-detail-report__total-label'>Total</div>
-            <div className='Layer__profit-and-loss-detail-report__total-amount'>
-              {rowsWithRunningBalance.total < 0 ? '-' : ''}
-              $
-              {centsToDollars(Math.abs(rowsWithRunningBalance.total))}
-            </div>
+      {rowsWithRunningBalance.lines.length > 0 && (
+        <div className='Layer__profit-and-loss-detail-report__total-row'>
+          <div className='Layer__profit-and-loss-detail-report__total-label'>Total</div>
+          <div className='Layer__profit-and-loss-detail-report__total-amount'>
+            <MoneySpan amount={rowsWithRunningBalance.total} />
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </BaseDetailView>
   )
 }

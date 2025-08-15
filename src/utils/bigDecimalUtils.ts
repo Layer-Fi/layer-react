@@ -34,12 +34,20 @@ export const convertBigDecimalToCents = (amount: BD.BigDecimal): number => {
   return Number(rounded.value)
 }
 
-export const convertCentsToBigDecimal = (cents: number): BD.BigDecimal => {
+export const convertBigIntCentsToBigDecimal = (cents: bigint): BD.BigDecimal => {
   // Create a BigDecimal representing the cents
-  const decimalCents = BD.fromBigInt(BigInt(cents))
+  const decimalCents = BD.fromBigInt(cents)
 
   // Divide by 100 to get the dollar amount
   return BD.unsafeDivide(decimalCents, BIG_DECIMAL_ONE_HUNDRED)
+}
+
+export const convertCentsToBigDecimal = (cents: number): BD.BigDecimal => {
+  return convertBigIntCentsToBigDecimal(BigInt(cents))
+}
+
+export const convertDecimalToPercent = (decimal: BD.BigDecimal): BD.BigDecimal => {
+  return BD.multiply(decimal, BIG_DECIMAL_ONE_HUNDRED)
 }
 
 export const convertPercentToDecimal = (percent: BD.BigDecimal): BD.BigDecimal => {
@@ -68,9 +76,9 @@ export const negate = (value: BD.BigDecimal): BD.BigDecimal => {
 export function formatBigDecimalToString(
   value: BD.BigDecimal,
   options: {
-    mode: 'percent' | 'currency' | 'decimal'
-    minDecimalPlaces: number
-    maxDecimalPlaces: number
+    mode?: 'percent' | 'currency' | 'decimal'
+    minDecimalPlaces?: number
+    maxDecimalPlaces?: number
   } = {
     mode: 'decimal',
     minDecimalPlaces: 0,
