@@ -6,6 +6,7 @@
   gap: var(--spacing-3xs);
   align-items: center;
   height: var(--size);
+  min-inline-size: fit-content;
 
   padding: var(--spacing-3xs) var(--spacing-xs);
   border-radius: var(--border-radius-5xl);

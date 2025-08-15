@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { BaseDetailView } from '../../BaseDetailView/BaseDetailView'
-import { InvoiceForm, type InvoiceFormMode } from '../InvoiceForm/InvoiceForm'
+import { InvoiceForm } from '../InvoiceForm/InvoiceForm'
 import { UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
 import { Heading } from '../../ui/Typography/Heading'
 import type { Invoice } from '../../../features/invoices/invoiceSchemas'
@@ -13,28 +13,25 @@ import { Button } from '../../ui/Button/Button'
 import { SquarePen } from 'lucide-react'
 import type { InvoiceFormState } from '../InvoiceForm/formUtils'
 import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
+import { useInvoiceNavigation, useInvoiceDetail } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
 
-export type InvoiceDetailProps = InvoiceFormMode & {
-  onGoBack: () => void
-}
-
-export const InvoiceDetail = (props: InvoiceDetailProps) => {
-  const { onGoBack, ...invoiceProps } = props
+export const InvoiceDetail = () => {
+  const viewState = useInvoiceDetail()
+  const { toViewInvoice, toInvoiceTable } = useInvoiceNavigation()
   const { addToast } = useLayerContext()
   const formRef = useRef<{ submit: () => Promise<void> }>(null)
 
-  const [invoiceState, setInvoiceState] = useState(invoiceProps)
-  const [isReadOnly, setIsReadOnly] = useState(props.mode === UpsertInvoiceMode.Update)
+  const [isReadOnly, setIsReadOnly] = useState(viewState.mode === UpsertInvoiceMode.Update)
 
   const onSuccess = useCallback((invoice: Invoice) => {
-    const toastContent = invoiceState.mode === UpsertInvoiceMode.Update
+    const toastContent = viewState.mode === UpsertInvoiceMode.Update
       ? 'Invoice updated successfully'
       : 'Invoice created successfully'
     addToast({ content: toastContent, type: 'success' })
 
-    setInvoiceState({ mode: UpsertInvoiceMode.Update, invoice })
+    toViewInvoice(invoice)
     setIsReadOnly(true)
-  }, [invoiceState.mode, addToast])
+  }, [viewState.mode, addToast, toViewInvoice])
 
   const onSubmit = useCallback(() => void formRef.current?.submit(), [])
   const [formState, setFormState] = useState<InvoiceFormState>({
@@ -54,36 +51,34 @@ export const InvoiceDetail = (props: InvoiceDetailProps) => {
         isReadOnly={isReadOnly}
         formState={formState}
         setIsReadOnly={setIsReadOnly}
-        {...invoiceState}
       />
     )
-  }, [onSubmit, isReadOnly, formState, invoiceState])
+  }, [onSubmit, isReadOnly, formState])
 
   return (
-    <BaseDetailView slots={{ Header }} name='Invoice Detail View' onGoBack={onGoBack}>
-      {invoiceState.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={invoiceState.invoice} />}
+    <BaseDetailView slots={{ Header }} name='Invoice Detail View' onGoBack={toInvoiceTable}>
+      {viewState.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={viewState.invoice} />}
       <InvoiceForm
         isReadOnly={isReadOnly}
         onSuccess={onSuccess}
         onChangeFormState={onChangeFormState}
-        {...invoiceState}
         ref={formRef}
       />
     </BaseDetailView>
   )
 }
 
-type InvoiceDetailHeaderProps = InvoiceFormMode & {
+type InvoiceDetailHeaderProps = {
   onSubmit: () => void
   isReadOnly: boolean
   formState: InvoiceFormState
   setIsReadOnly: (isReadOnly: boolean) => void
 }
-const InvoiceDetailHeader = (props: InvoiceDetailHeaderProps) => {
-  const { mode, onSubmit, formState, isReadOnly, setIsReadOnly } = props
+const InvoiceDetailHeader = ({ onSubmit, formState, isReadOnly, setIsReadOnly }: InvoiceDetailHeaderProps) => {
+  const viewState = useInvoiceDetail()
   const { isSubmitting } = formState
 
-  if (mode === UpsertInvoiceMode.Create) {
+  if (viewState.mode === UpsertInvoiceMode.Create) {
     return (
       <HStack justify='space-between' align='center' fluid pie='md'>
         <Heading>Create Invoice</Heading>
@@ -92,9 +87,7 @@ const InvoiceDetailHeader = (props: InvoiceDetailHeaderProps) => {
     )
   }
 
-  const invoice = props.invoice
-  const { invoiceNumber } = invoice
-
+  const invoiceNumber = viewState.invoice.invoiceNumber
   return (
     <HStack justify='space-between' align='center' fluid pie='md'>
       <Heading>{invoiceNumber ? `Invoice ${invoiceNumber}` : 'View Invoice'}</Heading>

@@ -7,6 +7,7 @@ import { useAuth } from '../../../hooks/useAuth'
 import { InvoiceSchema, type UpsertInvoiceSchema } from '../invoiceSchemas'
 import { Schema, Effect } from 'effect'
 import { useInvoicesGlobalCacheActions } from './useListInvoices'
+import { useInvoiceSummaryStatsCacheActions } from './useInvoiceSummaryStats'
 
 const UPSERT_INVOICES_TAG_KEY = '#upsert-invoice'
 
@@ -181,6 +182,7 @@ export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
   const mutationResponse = new UpsertInvoiceSWRResponse(rawMutationResponse)
 
   const { patchInvoiceByKey, forceReloadInvoices } = useInvoicesGlobalCacheActions()
+  const { forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 
@@ -195,9 +197,11 @@ export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
         void forceReloadInvoices()
       }
 
+      void forceReloadInvoiceSummaryStats()
+
       return triggerResult
     },
-    [mode, originalTrigger, patchInvoiceByKey, forceReloadInvoices],
+    [originalTrigger, mode, patchInvoiceByKey, forceReloadInvoices, forceReloadInvoiceSummaryStats],
   )
 
   return new Proxy(mutationResponse, {

@@ -15,7 +15,7 @@ type TextStyleProps = {
   pb?: Spacing
   pbe?: Spacing
   pbs?: Spacing
-  size?: 'xs' | 'sm' | 'md' | 'lg'
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   status?: 'error'
   variant?: 'placeholder' | 'subtle'
   weight?: 'normal' | 'bold'
