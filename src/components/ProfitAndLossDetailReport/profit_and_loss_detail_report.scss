@@ -1,43 +1,10 @@
-.Layer__profit-and-loss-table__clickable-cell {
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
-.Layer__profit-and-loss-detail-report {
-  width: 100%;
-
+:root {
   --pnl-detail-date-col-width: 12%;
   --pnl-detail-type-col-width: 12%;
   --pnl-detail-account-col-width: 18%;
   --pnl-detail-description-col-width: 28%;
   --pnl-detail-amount-col-width: 15%;
   --pnl-detail-balance-col-width: 15%;
-}
-
-
-.Layer__profit-and-loss-detail-report__error {
-  padding: var(--spacing-lg);
-  text-align: center;
-  color: var(--color-danger-600);
-}
-
-.Layer__profit-and-loss-detail-report__type-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &:focus {
-    outline: 2px solid var(--color-primary-500);
-    outline-offset: 2px;
-  }
 }
 
 .Layer__UI__Table__ProfitAndLossDetailReport {
@@ -127,7 +94,7 @@
   font-size: var(--text-md);
   line-height: 140%;
   text-align: left;
-  padding-left: var(--spacing-sm);
+  padding-left: var(--spacing-md);
   color: var(--color-base-800);
 }
 
@@ -138,19 +105,7 @@
   line-height: 140%;
   text-align: right;
   color: var(--color-base-900);
-  padding-right: var(--spacing-md);
+  padding-right: var(--spacing-sm);
 }
 
-.Layer__full-page-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--color-base-0);
-  z-index: var(--z-index-modal, 1000);
-  overflow-y: auto;
-}
 
