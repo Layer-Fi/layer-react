@@ -80,7 +80,7 @@ export function useCategorizeBankTransaction({
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = originalTrigger(...triggerParameters)
+      const triggerResult = await originalTrigger(...triggerParameters)
 
       void mutate(key => withSWRKeyTags(
         key,
@@ -93,9 +93,9 @@ export function useCategorizeBankTransaction({
        * @see https://github.com/vercel/swr/blob/main/src/_internal/utils/mutate.ts#L78
        */
       void mutateBankTransactions(undefined, { revalidate: true })
+      void invalidatePnlDetailLines()
 
-      return await triggerResult
-        .finally(() => { void invalidatePnlDetailLines() })
+      return triggerResult
     },
     [
       originalTrigger,

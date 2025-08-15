@@ -4,7 +4,6 @@ import { useProfitAndLossDetailLines } from '../../hooks/useProfitAndLoss/usePro
 import { useLayerContext } from '../../contexts/LayerContext'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
-import { DetailReportBreadcrumb } from '../DetailReportBreadcrumb'
 import { DataTable, type ColumnConfig } from '../DataTable/DataTable'
 import { Badge } from '../Badge'
 import { DateTime } from '../DateTime'
@@ -16,7 +15,7 @@ import { VStack } from '../ui/Stack/Stack'
 import { format } from 'date-fns'
 import type { LedgerEntrySource } from '../../types/ledger_accounts'
 import { Direction } from '../../types'
-import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
+import { BreadcrumbItem, DetailReportBreadcrumb } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import type { PnlDetailLine, LedgerEntrySourceType } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { MoneySpan } from '../ui/Typography/MoneyText'
 
@@ -70,6 +69,7 @@ const ErrorState = () => (
 
 const EmptyState = () => (
   <DataState
+    spacing={true}
     status={DataStateStatus.info}
     title='No detail lines found'
     description='There are no detail lines for this profit and loss item'
