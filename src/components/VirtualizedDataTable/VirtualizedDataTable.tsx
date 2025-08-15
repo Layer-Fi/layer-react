@@ -3,11 +3,13 @@ import classNames from 'classnames'
 import { useVirtualizer, VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 import { Loader } from '../Loader/Loader'
 import type { ColumnConfig, Column } from '../DataTable/DataTable'
+import { Table, TableBody, TableHeader, Column as TableColumn, Row, Cell } from '../ui/Table/Table'
 
-const DEFAULT_ROW_HEIGHT = 52
+const DEFAULT_ROW_HEIGHT = 34
 const DEFAULT_OVERSCAN = 5
-const DEFAULT_TABLE_HEIGHT = 500 // Shows ~9-10 rows at default row height
+const DEFAULT_NUM_ROWS = 10
 const HEADER_HEIGHT = 41
+const DEFAULT_TABLE_HEIGHT = (DEFAULT_ROW_HEIGHT * DEFAULT_NUM_ROWS) + HEADER_HEIGHT - 1
 
 export interface VirtualizedDataTableProps<TData extends { id: string }, TColumns extends string> {
   columnConfig: ColumnConfig<TData, TColumns>
@@ -95,26 +97,24 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
       role='table'
       aria-label={ariaLabel}
     >
-      <table className={classNames('Layer__table', `Layer__UI__Table__${componentName}`)}>
-        <thead className={`${CSS_PREFIX}__header`}>
-          <tr className={`${CSS_PREFIX}__header-row`} style={{ height: HEADER_HEIGHT }}>
-            {columns.map(col => (
-              <th
-                key={col.id}
-                className={classNames(
-                  'Layer__table-header',
-                  `${CSS_PREFIX}__header-cell`,
-                  `Layer__UI__Table-Column__${componentName}--${col.id}`,
-                )}
-                role='columnheader'
-              >
-                {col.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          <tr
+      <Table className='Layer__UI__Table__ProfitAndLossDetailReport'>
+
+        <TableHeader columns={columns}>
+          {({ id, header, isRowHeader }) => (
+            <TableColumn
+              key={id}
+              isRowHeader={isRowHeader}
+              className={classNames(
+                `${CSS_PREFIX}__header-cell`,
+                `Layer__UI__Table-Column__${componentName}--${id}`,
+              )}
+            >
+              {header}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody>
+          <Row
             className={`${CSS_PREFIX}__spacer`}
             style={{ height: totalSize }}
           />
@@ -132,8 +132,8 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
               />
             )
           })}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   )
 }
@@ -155,20 +155,19 @@ const VirtualizedDataTableRow = <TData extends { id: string }, TColumns extends 
   componentName,
   cssPrefix,
 }: VirtualizedDataTableRowProps<TData, TColumns>) => (
-  <tr
+  <Row
     className={classNames(
       'Layer__table-row',
       `${cssPrefix}__row`,
     )}
     data-index={virtualRow.index}
-    ref={node => rowVirtualizer.measureElement(node)}
+    ref={node => node && rowVirtualizer.measureElement(node)}
     style={{
       transform: `translateY(${virtualRow.start}px)`,
     }}
-    role='row'
   >
     {columns.map(col => (
-      <td
+      <Cell
         key={`${row.id}-${col.id}`}
         className={classNames(
           'Layer__table-cell',
@@ -176,10 +175,9 @@ const VirtualizedDataTableRow = <TData extends { id: string }, TColumns extends 
           `Layer__UI__Table-Cell__${componentName}--${col.id}`,
         )}
         style={{ ...(virtualRow.index === 0 && ({ borderTop: 'none' })) }}
-        role={col.isRowHeader ? 'rowheader' : 'cell'}
       >
         {col.cell(row)}
-      </td>
+      </Cell>
     ))}
-  </tr>
+  </Row>
 )
