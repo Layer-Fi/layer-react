@@ -56,7 +56,7 @@ export const LedgerAccountRow = ({
                 {lineEntryNumber(row)}
               </Text>
             </div>
-            <Text>{row.source?.display_description ?? ''}</Text>
+            <Text>{row.source?.displayDescription ?? ''}</Text>
             {nodeType !== LedgerAccountNodeType.Leaf
               && (
                 <Text weight={TextWeight.normal}>
@@ -116,7 +116,7 @@ export const LedgerAccountRow = ({
                 {lineEntryNumber(row)}
               </Text>
             </div>
-            <Text>{row.source?.display_description ?? ''}</Text>
+            <Text>{row.source?.displayDescription ?? ''}</Text>
             {nodeType !== LedgerAccountNodeType.Leaf
               && (
                 <Text weight={TextWeight.normal}>
@@ -184,7 +184,7 @@ export const LedgerAccountRow = ({
       </td>
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content'>
-          {row.source?.display_description ?? ''}
+          {row.source?.displayDescription ?? ''}
         </span>
       </td>
       {nodeType !== LedgerAccountNodeType.Leaf

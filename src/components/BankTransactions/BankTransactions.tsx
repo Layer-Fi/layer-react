@@ -1,5 +1,5 @@
 import { debounce } from 'lodash'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import {
   BankTransactionsContext,
@@ -38,6 +38,8 @@ import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimension
 import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
 import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
+import { MatchDetailsLinkProvider } from '../../contexts/MatchDetailsContext'
+import { MatchDetailsType } from '../../schemas/matchSchemas'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -72,6 +74,7 @@ export interface BankTransactionsProps {
   filters?: BankTransactionFilters
   hideHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
+  convertMatchDetailsToInAppLink?: (details: MatchDetailsType) => ReactNode
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
@@ -84,6 +87,7 @@ export const BankTransactions = ({
   showTags = false,
   showCustomerVendor = false,
   mode,
+  convertMatchDetailsToInAppLink,
   ...props
 }: BankTransactionsWithErrorProps) => {
   usePreloadTagDimensions({ isEnabled: showTags })
@@ -98,7 +102,9 @@ export const BankTransactions = ({
         <LegacyModeProvider overrideMode={mode}>
           <BankTransactionTagVisibilityProvider showTags={showTags}>
             <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
-              <BankTransactionsContent {...props} />
+              <MatchDetailsLinkProvider convertToInAppLink={convertMatchDetailsToInAppLink}>
+                <BankTransactionsContent {...props} />
+              </MatchDetailsLinkProvider>
             </BankTransactionCustomerVendorVisibilityProvider>
           </BankTransactionTagVisibilityProvider>
         </LegacyModeProvider>

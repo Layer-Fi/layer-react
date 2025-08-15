@@ -5,6 +5,8 @@ import { Text, ErrorText, TextSize } from '../Typography'
 import { MatchFormProps } from './MatchForm'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import { useMatchDetailsLinkContext } from '../../contexts/MatchDetailsContext'
+import { HStack } from '../ui/Stack/Stack'
 
 export const MatchFormMobile = ({
   classNamePrefix,
@@ -14,9 +16,11 @@ export const MatchFormMobile = ({
   matchFormError,
   readOnly,
 }: MatchFormProps) => {
+  const { convertToInAppLink } = useMatchDetailsLinkContext()
   return (
     <div className={`${classNamePrefix}__match-list`}>
       {bankTransaction.suggested_matches?.map((match, idx) => {
+        const inAppLink = convertToInAppLink ? convertToInAppLink(match.details) : null
         return (
           <div
             key={idx}
@@ -55,6 +59,9 @@ export const MatchFormMobile = ({
                 </Text>
               </div>
               <div className={`${classNamePrefix}__match-item__details`}>
+                <HStack>
+                  {inAppLink}
+                </HStack>
                 <Text
                   className={`${classNamePrefix}__match-item__date`}
                   size={TextSize.sm}

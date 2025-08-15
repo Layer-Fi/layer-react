@@ -16,6 +16,8 @@ export {
   Direction,
   BankTransaction,
   DisplayState,
+  SuggestedMatch,
+  BankTransactionMatch,
 } from './types/bank_transactions'
 export {
   CategorizationStatus,
@@ -68,3 +70,5 @@ type StrictReportingBasis = 'CASH' | 'CASH_COLLECTED' | 'ACCRUAL'
 export type ReportingBasis = EnumWithUnknownValues<StrictReportingBasis>
 
 export type MoneyFormat = 'CENTS' | 'DOLLAR_STRING'
+
+export type { LedgerEntrySourceType } from './schemas/ledgerEntrySourceSchemas'

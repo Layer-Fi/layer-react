@@ -17,10 +17,13 @@ import { Badge } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import { Text, TextSize } from '../Typography'
-import { CategorySelectDrawer } from './CategorySelectDrawer'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
+import { useMatchDetailsLinkContext } from '../../contexts/MatchDetailsContext'
+import { CategorySelectDrawer } from './CategorySelectDrawer'
+import { MatchDetailsType } from '../../schemas/matchSchemas'
+import { ReactNode } from 'react'
 
 type Props = {
   name?: string
@@ -52,6 +55,7 @@ export interface CategoryOptionPayload {
   stable_name?: string
   entries?: CategoryWithEntries['entries']
   subCategories: Category[] | null
+  details?: MatchDetailsType
 }
 
 export interface CategoryOption {
@@ -140,13 +144,18 @@ const GroupHeading = (
 const Option = (
   props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
     showTooltips: boolean
+    convertToInAppLink?: (details: MatchDetailsType) => ReactNode | undefined
   },
 ) => {
-  if (props.data.payload.option_type === 'hidden') {
+  if (props.data.payload.option_type === OptionActionType.HIDDEN) {
     return null
   }
 
   if (props.data.type === 'match') {
+    const inAppLink = props.convertToInAppLink && props.data.payload.details
+      ? props.convertToInAppLink(props.data.payload.details)
+      : null
+
     return (
       <components.Option
         {...props}
@@ -160,6 +169,7 @@ const Option = (
           <span className='Layer__select__option-content__match__description'>
             {props.data.payload.display_name}
           </span>
+          {inAppLink}
         </div>
         <div className='Layer__select__option-content__match__amount-row'>
           <span className='Layer__select__option-content__match__amount'>
@@ -248,14 +258,6 @@ function flattenCategories(
   })
 }
 
-function filterCategories(categories: Category[], hideMainCategories?: string[]) {
-  if (!hideMainCategories) {
-    return categories
-  }
-
-  return categories.filter(category => !hideMainCategories.includes(category.category))
-}
-
 export const CategorySelect = ({
   bankTransaction,
   name,
@@ -265,10 +267,10 @@ export const CategorySelect = ({
   className,
   showTooltips,
   excludeMatches = false,
-  hideMainCategories,
   asDrawer = false,
 }: Props) => {
   const { data: categories } = useCategories()
+  const { convertToInAppLink } = useMatchDetailsLinkContext()
 
   const matchOptions =
     !excludeMatches && bankTransaction?.suggested_matches
@@ -285,6 +287,7 @@ export const CategorySelect = ({
                   date: x.details.date,
                   amount: x.details.amount,
                   subCategories: null,
+                  details: x.details,
                 },
               } satisfies CategoryOption
             }),
@@ -374,7 +377,7 @@ export const CategorySelect = ({
         DropdownIndicator,
         GroupHeading,
         Option: optionProps => (
-          <Option {...optionProps} showTooltips={showTooltips} />
+          <Option {...optionProps} showTooltips={showTooltips} convertToInAppLink={convertToInAppLink} />
         ),
       }}
       isDisabled={disabled}

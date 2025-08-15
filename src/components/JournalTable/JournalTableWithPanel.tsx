@@ -1,4 +1,4 @@
-import { RefObject, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { RefObject, useContext, useMemo, useState } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import PlusIcon from '../../icons/PlusIcon'
 import { View } from '../../types/general'
@@ -42,7 +42,7 @@ export const JournalTableWithPanel = ({
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const [currentPage, setCurrentPage] = useState(1)
-  
+
   const {
     data: rawData,
     isLoading,
@@ -63,7 +63,7 @@ export const JournalTableWithPanel = ({
       const lastPageIndex = firstPageIndex + pageSize
       return rawData.slice(firstPageIndex, lastPageIndex)
     },
-    [rawData, currentPage, pageSize]
+    [rawData, currentPage, pageSize],
   )
 
   const handlePageChange = (page: number) => {

@@ -5,6 +5,7 @@ import RefreshCcw from '../../icons/RefreshCcw'
 import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
+import { decodeLedgerEntrySource } from '../../schemas/ledgerEntrySourceSchemas'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
@@ -19,6 +20,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { Heading, HeadingSize } from '../Typography'
 import { VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
+import { useLedgerEntrySourceLinkContext } from '../../contexts/LedgerEntrySourceContext'
 
 export const JournalEntryDetails = () => {
   const {
@@ -30,6 +32,7 @@ export const JournalEntryDetails = () => {
     reverseEntry,
     refetch,
   } = useContext(JournalContext)
+  const { convertToInAppLink } = useLedgerEntrySourceLinkContext()
   const [reverseEntryProcessing, setReverseEntryProcessing] = useState(false)
   const [reverseEntryError, setReverseEntryError] = useState<string>()
 
@@ -40,6 +43,16 @@ export const JournalEntryDetails = () => {
 
     return
   }, [data, selectedEntryId])
+
+  const badgeOrInAppLink = useMemo(() => {
+    const decoded = entry?.source ? decodeLedgerEntrySource(entry.source) : null
+    const badgeContent = decoded?.entityName ?? entry?.entry_type
+    const defaultBadge = <Badge>{badgeContent}</Badge>
+    if (!convertToInAppLink || !decoded) {
+      return defaultBadge
+    }
+    return convertToInAppLink(decoded) ?? defaultBadge
+  }, [convertToInAppLink, entry?.entry_type, entry?.source])
 
   const sortedLineItems = useMemo(
     () =>
@@ -57,7 +70,7 @@ export const JournalEntryDetails = () => {
       setReverseEntryProcessing(true)
       setReverseEntryError(undefined)
       await reverseEntry(entry.id)
-      await refetch()
+      refetch()
     }
     catch (_err) {
       setReverseEntryError('Failed')
@@ -97,9 +110,9 @@ export const JournalEntryDetails = () => {
         )}
       >
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
-          <Badge>{entry?.source?.entity_name}</Badge>
+          {badgeOrInAppLink}
         </DetailsListItem>
-        {entry?.source?.display_description && (
+        {entry?.source && (
           <SourceDetailView source={entry?.source} />
         )}
       </DetailsList>
@@ -195,7 +208,7 @@ export const JournalEntryDetails = () => {
                       align={TableCellAlign.RIGHT}
                     >
                       {entry?.line_items
-                        .filter(item => item.direction === 'DEBIT')
+                        .filter(item => item.direction === Direction.DEBIT)
                         .map(item => item.amount)
                         .reduce((a, b) => a + b, 0) || 0}
                     </TableCell>
@@ -206,7 +219,7 @@ export const JournalEntryDetails = () => {
                       align={TableCellAlign.RIGHT}
                     >
                       {entry?.line_items
-                        .filter(item => item.direction === 'CREDIT')
+                        .filter(item => item.direction === Direction.CREDIT)
                         .map(item => item.amount)
                         .reduce((a, b) => a + b, 0) || 0}
                     </TableCell>
