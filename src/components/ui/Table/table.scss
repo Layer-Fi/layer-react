@@ -47,6 +47,7 @@
   font-size: var(--text-md);
   font-weight: var(--font-weight-normal);
   color: var(--color-base-800);
+  height: inherit;
 
   &:first-child {
     padding-left: var(--spacing-md);

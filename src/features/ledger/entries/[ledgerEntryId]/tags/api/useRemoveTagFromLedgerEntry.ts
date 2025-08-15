@@ -113,6 +113,7 @@ export function useRemoveTagFromLedgerEntry({ ledgerEntryId }: RemoveTagFromLedg
       originalTrigger,
       optimisticallyUpdateLedgerEntries,
       debouncedInvalidateLedgerEntries,
+      invalidatePnlDetailLines,
     ],
   )
 
