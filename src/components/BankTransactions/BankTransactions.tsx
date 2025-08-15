@@ -1,5 +1,5 @@
 import { debounce } from 'lodash'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import {
   BankTransactionsContext,
@@ -39,7 +39,6 @@ import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/
 import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
 import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
 import { MatchDetailsLinkProvider } from '../../contexts/MatchDetailsContext'
-import { InAppLink } from '../../contexts/InAppLinkContext'
 import { MatchDetailsType } from '../../schemas/matchSchemas'
 
 const COMPONENT_NAME = 'bank-transactions'
@@ -75,7 +74,7 @@ export interface BankTransactionsProps {
   filters?: BankTransactionFilters
   hideHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
-  convertMatchDetailsToInAppLink?: (details: MatchDetailsType) => InAppLink
+  convertMatchDetailsToInAppLink?: (details: MatchDetailsType) => ReactNode
 }
 
 export interface BankTransactionsWithErrorProps extends BankTransactionsProps {

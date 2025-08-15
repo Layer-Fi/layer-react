@@ -90,20 +90,10 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-3xs);
-  max-width: 200px; /* or whatever width you want */
-  
-  a {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%; /* takes up available space within parent */
-    display: block;
-  }
 
   svg {
     padding-top: 1px;
     padding-left: 2px;
-    flex-shrink: 0;
   }
 }
 

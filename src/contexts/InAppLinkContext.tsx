@@ -1,17 +1,11 @@
 import { createContext, useContext, ReactNode } from 'react'
 
-export interface InAppLink {
-  href: string
-  text: string
-  target?: '_blank' | '_self' | '_parent' | '_top'
-}
-
 export interface InAppLinkContextType<T> {
-  convertToInAppLink?: (source: T) => InAppLink | undefined
+  convertToInAppLink?: (source: T) => ReactNode | undefined
 }
 
 export interface InAppLinkProviderProps<T> {
-  convertToInAppLink?: (source: T) => InAppLink | undefined
+  convertToInAppLink?: (source: T) => ReactNode | undefined
   children: ReactNode
 }
 

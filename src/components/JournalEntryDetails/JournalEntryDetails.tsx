@@ -4,7 +4,7 @@ import AlertCircle from '../../icons/AlertCircle'
 import RefreshCcw from '../../icons/RefreshCcw'
 import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
-import { Direction, LedgerEntrySourceType } from '../../types'
+import { Direction } from '../../types'
 import { decodeLedgerEntrySource } from '../../schemas/ledgerEntrySourceSchemas'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
@@ -44,13 +44,15 @@ export const JournalEntryDetails = () => {
     return
   }, [data, selectedEntryId])
 
-  const sourceLink = useMemo(() => {
-    if (convertToInAppLink && entry?.source) {
-      const decoded: LedgerEntrySourceType | null = decodeLedgerEntrySource(entry.source)
-      return decoded ? convertToInAppLink(decoded) : undefined
+  const badgeOrInAppLink = useMemo(() => {
+    const decoded = entry?.source ? decodeLedgerEntrySource(entry.source) : null
+    const badgeContent = decoded?.entityName ?? entry?.entry_type
+    const defaultBadge = <Badge>{badgeContent}</Badge>
+    if (!convertToInAppLink || !decoded) {
+      return defaultBadge
     }
-    return undefined
-  }, [convertToInAppLink, entry?.source])
+    return convertToInAppLink(decoded) ?? defaultBadge
+  }, [convertToInAppLink, entry?.entry_type, entry?.source])
 
   const sortedLineItems = useMemo(
     () =>
@@ -108,18 +110,7 @@ export const JournalEntryDetails = () => {
         )}
       >
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
-          <Badge>
-            {sourceLink
-              ? (
-                <a
-                  href={sourceLink.href}
-                  target={sourceLink.target}
-                >
-                  {sourceLink.text}
-                </a>
-              )
-              : (entry?.source && decodeLedgerEntrySource(entry.source)?.entityName) ?? entry?.entry_type }
-          </Badge>
+          {badgeOrInAppLink}
         </DetailsListItem>
         {entry?.source && (
           <SourceDetailView source={entry?.source} />

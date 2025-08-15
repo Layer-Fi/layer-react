@@ -6,9 +6,9 @@ import { useJournal } from '../../hooks/useJournal'
 import { Container } from '../Container'
 import { JournalTable } from '../JournalTable'
 import { JournalTableStringOverrides } from '../JournalTable/JournalTableWithPanel'
-import { InAppLink } from '../../contexts/InAppLinkContext'
 import { LedgerEntrySourceLinkProvider } from '../../contexts/LedgerEntrySourceContext'
 import { LedgerEntrySourceType } from '../../schemas/ledgerEntrySourceSchemas'
+import { ReactNode } from 'react'
 
 export interface JournalConfig {
   form: {
@@ -24,7 +24,7 @@ export interface JournalProps {
   asWidget?: boolean
   config?: JournalConfig
   stringOverrides?: JournalStringOverrides
-  convertLedgerEntrySourceToInAppLink?: (source: LedgerEntrySourceType) => InAppLink | undefined
+  convertLedgerEntrySourceToInAppLink?: (source: LedgerEntrySourceType) => ReactNode | undefined
 }
 
 export const JOURNAL_CONFIG: JournalConfig = {

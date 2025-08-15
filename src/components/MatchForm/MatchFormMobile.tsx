@@ -20,7 +20,7 @@ export const MatchFormMobile = ({
   return (
     <div className={`${classNamePrefix}__match-list`}>
       {bankTransaction.suggested_matches?.map((match, idx) => {
-        const sourceLink = convertToInAppLink ? convertToInAppLink(match.details) : null
+        const inAppLink = convertToInAppLink ? convertToInAppLink(match.details) : null
         return (
           <div
             key={idx}
@@ -60,18 +60,7 @@ export const MatchFormMobile = ({
               </div>
               <div className={`${classNamePrefix}__match-item__details`}>
                 <HStack>
-                  {sourceLink && (
-                    <a
-                      href={sourceLink.href}
-                      target={sourceLink.target}
-                      onClick={e => e.stopPropagation()}
-                      className={`${classNamePrefix}__match-item__link`}
-                    >
-                      <Text size={TextSize.sm} as='span'>
-                        {sourceLink.text}
-                      </Text>
-                    </a>
-                  )}
+                  {inAppLink}
                 </HStack>
                 <Text
                   className={`${classNamePrefix}__match-item__date`}

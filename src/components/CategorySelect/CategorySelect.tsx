@@ -23,6 +23,7 @@ import { useCategories } from '../../hooks/categories/useCategories'
 import { useMatchDetailsLinkContext } from '../../contexts/MatchDetailsContext'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
 import { MatchDetailsType } from '../../schemas/matchSchemas'
+import { ReactNode } from 'react'
 
 type Props = {
   name?: string
@@ -143,7 +144,7 @@ const GroupHeading = (
 const Option = (
   props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
     showTooltips: boolean
-    convertToInAppLink?: (details: MatchDetailsType) => { href: string, text: string, target?: string } | undefined
+    convertToInAppLink?: (details: MatchDetailsType) => ReactNode | undefined
   },
 ) => {
   if (props.data.payload.option_type === OptionActionType.HIDDEN) {
@@ -151,7 +152,7 @@ const Option = (
   }
 
   if (props.data.type === 'match') {
-    const sourceLink = props.convertToInAppLink && props.data.payload.details
+    const inAppLink = props.convertToInAppLink && props.data.payload.details
       ? props.convertToInAppLink(props.data.payload.details)
       : null
 
@@ -168,16 +169,7 @@ const Option = (
           <span className='Layer__select__option-content__match__description'>
             {props.data.payload.display_name}
           </span>
-          {sourceLink && (
-            <a
-              href={sourceLink.href}
-              target={sourceLink.target}
-              onClick={e => e.stopPropagation()}
-              className='Layer__select__option-content__match__link'
-            >
-              {sourceLink.text}
-            </a>
-          )}
+          {inAppLink}
         </div>
         <div className='Layer__select__option-content__match__amount-row'>
           <span className='Layer__select__option-content__match__amount'>
@@ -266,14 +258,6 @@ function flattenCategories(
   })
 }
 
-function filterCategories(categories: Category[], hideMainCategories?: string[]) {
-  if (!hideMainCategories) {
-    return categories
-  }
-
-  return categories.filter(category => !hideMainCategories.includes(category.category))
-}
-
 export const CategorySelect = ({
   bankTransaction,
   name,
@@ -283,7 +267,6 @@ export const CategorySelect = ({
   className,
   showTooltips,
   excludeMatches = false,
-  hideMainCategories,
   asDrawer = false,
 }: Props) => {
   const { data: categories } = useCategories()

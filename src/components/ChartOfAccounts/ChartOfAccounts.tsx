@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { ReactNode, useContext } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { useChartOfAccounts } from '../../hooks/useChartOfAccounts'
@@ -9,7 +9,6 @@ import { ChartOfAccountsTableStringOverrides } from '../ChartOfAccountsTable/Cha
 import { Container } from '../Container'
 import { LedgerAccount } from '../LedgerAccount'
 import { LedgerAccountStringOverrides } from '../LedgerAccount/LedgerAccountIndex'
-import { InAppLink } from '../../contexts/InAppLinkContext'
 import { LedgerEntrySourceLinkProvider } from '../../contexts/LedgerEntrySourceContext'
 import { LedgerEntrySourceType } from '../../schemas/ledgerEntrySourceSchemas'
 
@@ -26,7 +25,7 @@ export interface ChartOfAccountsProps {
   showAddAccountButton?: boolean
   templateAccountsEditable?: boolean
   showReversalEntries?: boolean
-  convertLedgerEntrySourceToInAppLink?: (source: LedgerEntrySourceType) => InAppLink | undefined
+  convertLedgerEntrySourceToInAppLink?: (source: LedgerEntrySourceType) => ReactNode | undefined
 }
 
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => {

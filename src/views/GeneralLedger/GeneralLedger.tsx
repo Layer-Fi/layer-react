@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { ChartOfAccounts } from '../../components/ChartOfAccounts'
 import { ChartOfAccountsStringOverrides } from '../../components/ChartOfAccounts/ChartOfAccounts'
 import { Journal } from '../../components/Journal'
@@ -6,7 +6,6 @@ import { JournalStringOverrides } from '../../components/Journal/Journal'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
-import { InAppLink } from '../../contexts/InAppLinkContext'
 import { LedgerEntrySourceType } from '../../schemas/ledgerEntrySourceSchemas'
 
 export interface GeneralLedgerStringOverrides {
@@ -27,7 +26,7 @@ export interface GeneralLedgerProps {
   showTitle?: boolean
   stringOverrides?: GeneralLedgerStringOverrides
   chartOfAccountsOptions?: ChartOfAccountsOptions
-  convertLedgerEntrySourceToInAppLink?: (source: LedgerEntrySourceType) => InAppLink | undefined
+  convertLedgerEntrySourceToInAppLink?: (source: LedgerEntrySourceType) => ReactNode | undefined
 }
 
 export const GeneralLedgerView = ({

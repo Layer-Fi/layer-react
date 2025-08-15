@@ -66,7 +66,6 @@ export { useDataSync } from './hooks/useDataSync'
 /*
 ======================= Schemas =======================
 */
-export { InAppLink } from './contexts/InAppLinkContext'
 export { DisplayState, Direction } from './types/bank_transactions'
 export type { MatchDetailsType } from './schemas/matchSchemas'
 export type { LedgerEntrySourceType } from './schemas/ledgerEntrySourceSchemas'

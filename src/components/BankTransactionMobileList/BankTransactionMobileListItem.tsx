@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState, type ChangeEvent } from 'react'
+import { ReactNode, useContext, useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useElementSize } from '../../hooks/useElementSize'
 import FileIcon from '../../icons/File'
@@ -21,7 +21,6 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { useMatchDetailsLinkContext } from '../../contexts/MatchDetailsContext'
-import { InAppLink } from '../../contexts/InAppLinkContext'
 import { MatchDetailsType } from '../../schemas/matchSchemas'
 
 export interface BankTransactionMobileListItemProps {
@@ -47,7 +46,7 @@ const DATE_FORMAT = 'LLL d'
 
 const getAssignedValue = (
   bankTransaction: BankTransaction,
-  convertToInAppLink?: (details: MatchDetailsType) => InAppLink | undefined,
+  convertToInAppLink?: (details: MatchDetailsType) => ReactNode | undefined,
 ) => {
   if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
     return extractDescriptionForSplit(bankTransaction.category)
@@ -55,14 +54,8 @@ const getAssignedValue = (
 
   if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
     if (convertToInAppLink && bankTransaction.match?.details) {
-      const sourceLink = convertToInAppLink(bankTransaction.match.details)
-      if (sourceLink) {
-        return (
-          <a href={sourceLink.href} target={sourceLink.target}>
-            {sourceLink.text}
-          </a>
-        )
-      }
+      const inAppLink = convertToInAppLink(bankTransaction.match.details)
+      if (inAppLink) return inAppLink
     }
     return bankTransaction.match?.details?.description
   }

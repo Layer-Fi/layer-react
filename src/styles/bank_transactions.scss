@@ -958,17 +958,8 @@
   }
 
   .Layer__expanded-bank-transaction-row__match-table__link {
-    width: 80px;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    text-align: center;
+    width: 100px;
   }
-
-  .Layer__expanded-bank-transaction-row__match-table__link a {
-    display: block;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-}
 
   .Layer__expanded-bank-transaction-row__match-table__status {
     width: 100px;
@@ -1159,14 +1150,6 @@
     justify-content: space-between;
     color: var(--color-base-500);
     width: 100%;
-
-    .Layer__bank-transaction-mobile-list-item__match-item__link {
-        max-width: 200px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: inline-block;
-    }
 }
 
   .Layer__bank-transaction-mobile-list-item__match-item__col-status {

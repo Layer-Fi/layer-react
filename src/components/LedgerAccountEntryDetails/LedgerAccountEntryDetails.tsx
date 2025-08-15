@@ -1,11 +1,10 @@
 import { useContext, useMemo } from 'react'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import XIcon from '../../icons/X'
-import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
 import { LedgerEntrySourceType, decodeLedgerEntrySource } from '../../schemas/ledgerEntrySourceSchemas'
 import { TableCellAlign } from '../../types/table'
-import { humanizeEnum } from '../../utils/format'
+import { convertCentsToCurrency, humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
 import { Badge, BadgeVariant } from '../Badge'
 import { BackButton, Button, ButtonVariant, CloseButton } from '../Button'
@@ -57,7 +56,7 @@ export const SourceDetailView = ({
             <DateTime value={source.date} />
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.directionLabel || 'Direction'}
@@ -89,7 +88,7 @@ export const SourceDetailView = ({
             <DateTime value={source.date} />
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
         </>
       )
@@ -117,7 +116,7 @@ export const SourceDetailView = ({
             {source.invoiceNumber}
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
         </>
       )
@@ -126,7 +125,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.recipientNameLabel || 'Recipient name'}
@@ -140,7 +139,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.refundedToCustomerAmount)}`}
+            {convertCentsToCurrency(source.refundedToCustomerAmount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.recipientNameLabel || 'Recipient name'}
@@ -152,20 +151,18 @@ export const SourceDetailView = ({
     }
     case 'Opening_Balance_Ledger_Entry_Source': {
       return (
-        <>
-          <DetailsListItem
-            label={stringOverrides?.accountNameLabel || 'Account name'}
-          >
-            {source.accountName}
-          </DetailsListItem>
-        </>
+        <DetailsListItem
+          label={stringOverrides?.accountNameLabel || 'Account name'}
+        >
+          {source.accountName}
+        </DetailsListItem>
       )
     }
     case 'Payout_Ledger_Entry_Source': {
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.paidOutAmount)}`}
+            {convertCentsToCurrency(source.paidOutAmount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.processorLabel || 'Processor'}
@@ -207,7 +204,7 @@ export const SourceDetailView = ({
             <DateTime value={source.date} />
           </DetailsListItem>
           <DetailsListItem label='Write-off Amount'>
-            {`$${centsToDollars(source.writeOffAmount)}`}
+            {convertCentsToCurrency(source.writeOffAmount)}
           </DetailsListItem>
         </>
       )
@@ -216,7 +213,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
           <DetailsListItem label='Vendor Description'>
             {source.vendorDescription}
@@ -228,7 +225,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label='Refunded Amount'>
-            {`$${centsToDollars(source.refundedByVendorAmount)}`}
+            {convertCentsToCurrency(source.refundedByVendorAmount)}
           </DetailsListItem>
           <DetailsListItem label='Vendor Description'>
             {source.vendorDescription}
@@ -240,7 +237,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.paidOutAmount)}`}
+            {convertCentsToCurrency(source.paidOutAmount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.processorLabel || 'Processor'}
@@ -255,20 +252,16 @@ export const SourceDetailView = ({
     }
     case 'Payroll_Ledger_Entry_Source': {
       return (
-        <>
-          <DetailsListItem label='Payday'>
-            <DateTime value={source.payday} />
-          </DetailsListItem>
-        </>
+        <DetailsListItem label='Payday'>
+          <DateTime value={source.payday} />
+        </DetailsListItem>
       )
     }
     case 'Payroll_Payment_Ledger_Entry_Source': {
       return (
-        <>
-          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.amount)}`}
-          </DetailsListItem>
-        </>
+        <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          {convertCentsToCurrency(source.amount)}
+        </DetailsListItem>
       )
     }
     case 'Bill_Ledger_Entry_Source': {
@@ -284,7 +277,7 @@ export const SourceDetailView = ({
             <DateTime value={source.date} />
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
         </>
       )
@@ -296,7 +289,7 @@ export const SourceDetailView = ({
             {source.billNumber}
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
         </>
       )
@@ -305,7 +298,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
           <DetailsListItem label='Vendor'>
             {source.vendor.description}
@@ -317,7 +310,7 @@ export const SourceDetailView = ({
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(source.amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
           <DetailsListItem label='Customer'>
             {source.customer.description}
@@ -382,13 +375,15 @@ export const LedgerAccountEntryDetails = ({
     return { totalDebit, totalCredit }
   }, [entryData])
 
-  const sourceLink = useMemo(() => {
-    if (convertToInAppLink && entryData?.source) {
-      const decoded: LedgerEntrySourceType | null = decodeLedgerEntrySource(entryData.source)
-      return decoded ? convertToInAppLink(decoded) : undefined
+  const badgeOrInAppLink = useMemo(() => {
+    const decoded = entryData?.source ? decodeLedgerEntrySource(entryData.source) : null
+    const badgeContent = decoded?.entityName ?? entryData?.entry_type
+    const defaultBadge = <Badge>{badgeContent}</Badge>
+    if (!convertToInAppLink || !decoded) {
+      return defaultBadge
     }
-    return undefined
-  }, [convertToInAppLink, entryData?.source])
+    return convertToInAppLink(decoded) ?? defaultBadge
+  }, [convertToInAppLink, entryData?.entry_type, entryData?.source])
 
   return (
     <div className='Layer__ledger-account__entry-details'>
@@ -432,18 +427,7 @@ export const LedgerAccountEntryDetails = ({
           }
           isLoading={isLoadingEntry}
         >
-          <Badge>
-            {sourceLink
-              ? (
-                <a
-                  href={sourceLink.href}
-                  target={sourceLink.target}
-                >
-                  {sourceLink.text}
-                </a>
-              )
-              : (entryData?.source && decodeLedgerEntrySource(entryData.source)?.entityName) ?? entryData?.entry_type }
-          </Badge>
+          {badgeOrInAppLink}
         </DetailsListItem>
         {entryData?.source?.displayDescription && (
           <SourceDetailView source={entryData?.source} />
@@ -536,16 +520,14 @@ export const LedgerAccountEntryDetails = ({
                       <TableCell align={TableCellAlign.RIGHT}>
                         {item.direction === Direction.DEBIT && (
                           <Badge variant={BadgeVariant.WARNING}>
-                            $
-                            {centsToDollars(item.amount || 0)}
+                            {convertCentsToCurrency(item.amount || 0)}
                           </Badge>
                         )}
                       </TableCell>
                       <TableCell align={TableCellAlign.RIGHT}>
                         {item.direction === Direction.CREDIT && (
                           <Badge variant={BadgeVariant.SUCCESS}>
-                            $
-                            {centsToDollars(item.amount || 0)}
+                            {convertCentsToCurrency(item.amount || 0)}
                           </Badge>
                         )}
                       </TableCell>
