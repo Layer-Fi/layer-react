@@ -6,17 +6,18 @@ import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntr
 import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
 import { DetailReportBreadcrumb } from '../DetailReportBreadcrumb'
 import { DataTable, type ColumnConfig } from '../DataTable/DataTable'
-import { centsToDollars } from '../../models/Money'
 import { Badge } from '../Badge'
 import { DateTime } from '../DateTime'
 import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
+import { Button } from '../ui/Button/Button'
 import { format } from 'date-fns'
 import type { LedgerEntrySource } from '../../types/ledger_accounts'
 import { Direction } from '../../types'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import type { PnlDetailLine, LedgerEntrySourceType } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
+import { MoneySpan } from '../ui/Typography/MoneyText'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 
@@ -146,15 +147,12 @@ export const ProfitAndLossDetailReport = ({
         const { source } = row
         return source
           ? (
-            <button
-              type='button'
-              className='Layer__profit-and-loss-detail-report__type-button'
-              onClick={() => handleSourceClick(source)}
+            <Button
+              variant='text'
+              onPress={() => handleSourceClick(source)}
             >
-              <span>
-                {source.entityName}
-              </span>
-            </button>
+              {source.entityName}
+            </Button>
           )
           : '-'
       },
@@ -174,13 +172,9 @@ export const ProfitAndLossDetailReport = ({
       id: PnlDetailColumns.Amount,
       header: stringOverrides?.amountColumnHeader || 'Amount',
       cell: (row) => {
-        const amount = centsToDollars(Math.abs(row.signedAmount))
-        const isNegative = row.signedAmount < 0
         return (
           <span className='Layer__profit-and-loss-detail-report__amount'>
-            {isNegative ? '-' : ''}
-            $
-            {amount}
+            <MoneySpan amount={row.amount} />
           </span>
         )
       },
@@ -189,13 +183,9 @@ export const ProfitAndLossDetailReport = ({
       id: PnlDetailColumns.Balance,
       header: stringOverrides?.balanceColumnHeader || 'Balance',
       cell: (row) => {
-        const amount = centsToDollars(Math.abs(row.runningBalance))
-        const isNegative = row.runningBalance < 0
         return (
           <span className='Layer__profit-and-loss-detail-report__amount'>
-            {isNegative ? '-' : ''}
-            $
-            {amount}
+            <MoneySpan amount={row.runningBalance} />
           </span>
         )
       },
@@ -247,9 +237,7 @@ export const ProfitAndLossDetailReport = ({
         <div className='Layer__profit-and-loss-detail-report__total-row'>
           <div className='Layer__profit-and-loss-detail-report__total-label'>Total</div>
           <div className='Layer__profit-and-loss-detail-report__total-amount'>
-            {rowsWithRunningBalance.total < 0 ? '-' : ''}
-            $
-            {centsToDollars(Math.abs(rowsWithRunningBalance.total))}
+            <MoneySpan amount={rowsWithRunningBalance.total} />
           </div>
         </div>
       )}

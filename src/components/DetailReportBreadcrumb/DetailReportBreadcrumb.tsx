@@ -1,4 +1,6 @@
 import { HeaderCol } from '../Header'
+import { Button } from '../ui/Button/Button'
+import { Span } from '../ui/Typography/Text'
 import ChevronRight from '../../icons/ChevronRight'
 
 export interface BreadcrumbItem {
@@ -32,13 +34,12 @@ export const DetailReportBreadcrumb = ({
                     </span>
                   )
                   : (
-                    <button
-                      className='Layer__detail-report-breadcrumb__segment'
-                      onClick={() => onBreadcrumbClick?.(crumb.name)}
-                      type='button'
+                    <Button
+                      variant='text'
+                      onPress={() => onBreadcrumbClick?.(crumb.name)}
                     >
-                      {crumb.display_name}
-                    </button>
+                      <Span variant='subtle'>{crumb.display_name}</Span>
+                    </Button>
                   )}
                 {index < breadcrumbs.length - 1 && (
                   <span className='Layer__detail-report-breadcrumb__separator'>
