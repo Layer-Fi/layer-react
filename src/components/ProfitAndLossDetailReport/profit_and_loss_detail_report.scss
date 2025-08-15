@@ -17,9 +17,6 @@
   --pnl-detail-balance-col-width: 15%;
 }
 
-.Layer__profit-and-loss-detail-report__content {
-  padding: var(--spacing-md);
-}
 
 .Layer__profit-and-loss-detail-report__error {
   padding: var(--spacing-lg);
@@ -119,7 +116,8 @@
     var(--pnl-detail-amount-col-width)
     var(--pnl-detail-balance-col-width);
   align-items: center;
-  padding-top: var(--spacing-md);
+  padding-top: var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
   border-top: 1px solid var(--color-base-300);
 }
 
@@ -140,7 +138,7 @@
   line-height: 140%;
   text-align: right;
   color: var(--color-base-900);
-  padding-right: var(--spacing-sm);
+  padding-right: var(--spacing-md);
 }
 
 .Layer__full-page-drawer {

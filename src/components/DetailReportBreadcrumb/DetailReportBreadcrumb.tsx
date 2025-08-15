@@ -1,6 +1,7 @@
 import { HeaderCol } from '../Header'
 import { Button } from '../ui/Button/Button'
 import { Span } from '../ui/Typography/Text'
+import { HStack, VStack } from '../ui/Stack/Stack'
 import ChevronRight from '../../icons/ChevronRight'
 
 export interface BreadcrumbItem {
@@ -21,17 +22,16 @@ export const DetailReportBreadcrumb = ({
 }: DetailReportBreadcrumbProps) => {
   return (
     <HeaderCol>
-      <div className='Layer__detail-report-breadcrumb'>
-        {/* <BackButton onClick={onClose} /> */}
-        <div className='Layer__detail-report-breadcrumb__content'>
-          <div className='Layer__detail-report-breadcrumb__path'>
+      <HStack align='center' pi='3xs' gap='md'>
+        <VStack gap='3xs'>
+          <HStack align='center'>
             {breadcrumbs.map((crumb, index) => (
-              <span key={crumb.name}>
+              <HStack key={crumb.name} align='center'>
                 {index === breadcrumbs.length - 1
                   ? (
-                    <span className='Layer__detail-report-breadcrumb__current'>
+                    <Span>
                       {crumb.display_name}
-                    </span>
+                    </Span>
                   )
                   : (
                     <Button
@@ -42,20 +42,18 @@ export const DetailReportBreadcrumb = ({
                     </Button>
                   )}
                 {index < breadcrumbs.length - 1 && (
-                  <span className='Layer__detail-report-breadcrumb__separator'>
-                    <ChevronRight size={10} />
-                  </span>
+                  <ChevronRight color='currentColor' size={8} />
                 )}
-              </span>
+              </HStack>
             ))}
-          </div>
+          </HStack>
           {subtitle && (
-            <div className='Layer__detail-report-breadcrumb__subtitle'>
+            <Span size='sm' variant='subtle'>
               {subtitle}
-            </div>
+            </Span>
           )}
-        </div>
-      </div>
+        </VStack>
+      </HStack>
     </HeaderCol>
   )
 }

@@ -12,6 +12,7 @@ import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { Button } from '../ui/Button/Button'
+import { VStack } from '../ui/Stack/Stack'
 import { format } from 'date-fns'
 import type { LedgerEntrySource } from '../../types/ledger_accounts'
 import { Direction } from '../../types'
@@ -205,7 +206,7 @@ export const ProfitAndLossDetailReport = ({
   if (selectedSource) {
     return (
       <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={handleBackToList} borderless>
-        <div className='Layer__profit-and-loss-detail-report__content'>
+        <VStack pi='md'>
           <DetailsList
             title={stringOverrides?.sourceDetailsTitle || 'Transaction source'}
           >
@@ -214,7 +215,7 @@ export const ProfitAndLossDetailReport = ({
             </DetailsListItem>
             <SourceDetailView source={convertSourceForDetailView(selectedSource)} />
           </DetailsList>
-        </div>
+        </VStack>
       </BaseDetailView>
     )
   }
