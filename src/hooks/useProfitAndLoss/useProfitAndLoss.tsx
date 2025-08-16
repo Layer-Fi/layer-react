@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   ReportingBasis,
   SortDirection,
@@ -8,8 +8,7 @@ import {
   collectRevenueItems,
   applyShare,
 } from '../../utils/profitAndLossUtils'
-import { useProfitAndLossLTM } from './useProfitAndLossLTM'
-import { useProfitAndLossQuery } from './useProfitAndLossQuery'
+import { useProfitAndLossReport } from './useProfitAndLossReport'
 import {
   useGlobalDateRange,
 } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -55,18 +54,15 @@ export const useProfitAndLoss = ({
 
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
 
-  const { data, isLoading, isValidating, error, refetch } =
-    useProfitAndLossQuery({
+  const { data, isLoading, isValidating, isError, mutate } =
+    useProfitAndLossReport({
       startDate: start,
       endDate: end,
-      tagFilter,
+      tagKey: tagFilter?.key,
+      tagValues: tagFilter?.values?.join(','),
       reportingBasis,
+      includeUncategorized: true,
     })
-
-  const { data: summaryData } = useProfitAndLossLTM({
-    currentDate: start,
-    tagFilter: tagFilter,
-  })
 
   const sortBy = (scope: Scope, field: string, direction?: SortDirection) => {
     setFilters({
@@ -96,12 +92,15 @@ export const useProfitAndLoss = ({
     if (!data) {
       return { filteredDataRevenue: [], filteredTotalRevenue: undefined }
     }
+
     const items = collectRevenueItems(data)
+    const revenueTypeFilters = filters['revenue']?.types
+
     const filtered = items.map((x) => {
       if (
-        filters['revenue']?.types
-        && filters['revenue'].types.length > 0
-        && !filters['revenue']?.types?.includes(x.type)
+        revenueTypeFilters
+        && revenueTypeFilters.length > 0
+        && !revenueTypeFilters.includes(x.type)
       ) {
         return {
           ...x,
@@ -111,28 +110,14 @@ export const useProfitAndLoss = ({
 
       return x
     })
-
-    const month = start.getMonth() + 1
-    const year = start.getFullYear()
-    const found = summaryData.find(x => x.month === month && x.year === year)
-    if (found && (found.uncategorizedInflows ?? 0) > 0) {
-      filtered.push({
-        name: 'uncategorized',
-        display_name: 'Uncategorized',
-        value: found.uncategorizedInflows,
-        type: 'Uncategorized',
-        share: 0,
-        hidden: false,
-      })
-    }
 
     const sorted = filtered.sort((a, b) => {
       switch (filters['revenue']?.sortBy) {
         case 'category':
           if (filters['revenue']?.sortDirection === 'asc') {
-            return a.display_name.localeCompare(b.display_name)
+            return a.displayName.localeCompare(b.displayName)
           }
-          return b.display_name.localeCompare(a.display_name)
+          return b.displayName.localeCompare(a.displayName)
 
         case 'type':
           if (filters['revenue']?.sortDirection === 'asc') {
@@ -148,23 +133,26 @@ export const useProfitAndLoss = ({
       }
     })
     const total = sorted
-      .filter(x => !x.hidden)
+      .filter(x => !x.isHidden)
       .reduce((x, { value }) => x + value, 0)
     const withShare = applyShare(sorted, total)
 
     return { filteredDataRevenue: withShare, filteredTotalRevenue: total }
-  }, [data, start, filters, summaryData])
+  }, [data, filters])
 
   const { filteredDataExpenses, filteredTotalExpenses } = useMemo(() => {
     if (!data) {
       return { filteredDataExpenses: [], filteredTotalExpenses: undefined }
     }
+
     const items = collectExpensesItems(data)
+    const expenseTypeFilters = filters['expenses']?.types
+
     const filtered = items.map((x) => {
       if (
-        filters['expenses']?.types
-        && filters['expenses'].types.length > 0
-        && !filters['expenses']?.types?.includes(x.type)
+        expenseTypeFilters
+        && expenseTypeFilters.length > 0
+        && !expenseTypeFilters.includes(x.type)
       ) {
         return {
           ...x,
@@ -175,27 +163,13 @@ export const useProfitAndLoss = ({
       return x
     })
 
-    const month = start.getMonth() + 1
-    const year = start.getFullYear()
-    const found = summaryData.find(x => x.month === month && x.year === year)
-    if (found && (found.uncategorizedOutflows ?? 0) > 0) {
-      filtered.push({
-        name: 'uncategorized',
-        display_name: 'Uncategorized',
-        value: found.uncategorizedOutflows,
-        type: 'Uncategorized',
-        share: 0,
-        hidden: false,
-      })
-    }
-
     const sorted = filtered.sort((a, b) => {
       switch (filters['expenses']?.sortBy) {
         case 'category':
           if (filters['expenses']?.sortDirection === 'asc') {
-            return a.display_name.localeCompare(b.display_name)
+            return a.displayName.localeCompare(b.displayName)
           }
-          return b.display_name.localeCompare(a.display_name)
+          return b.displayName.localeCompare(a.displayName)
 
         case 'type':
           if (filters['expenses']?.sortDirection === 'asc') {
@@ -211,12 +185,16 @@ export const useProfitAndLoss = ({
       }
     })
     const total = sorted
-      .filter(x => !x.hidden)
+      .filter(x => !x.isHidden)
       .reduce((x, { value }) => x + value, 0)
     const withShare = applyShare(sorted, total)
 
     return { filteredDataExpenses: withShare, filteredTotalExpenses: total }
-  }, [data, start, filters, summaryData])
+  }, [data, filters])
+
+  const refetch = useCallback(() => {
+    void mutate()
+  }, [mutate])
 
   return {
     data,
@@ -226,7 +204,7 @@ export const useProfitAndLoss = ({
     filteredTotalExpenses,
     isLoading,
     isValidating,
-    error: error,
+    isError,
     refetch,
     sidebarScope,
     setSidebarScope,

@@ -1,50 +1,49 @@
+import type { ProfitAndLoss } from '../hooks/useProfitAndLoss/schemas'
 import { SidebarScope } from '../hooks/useProfitAndLoss/useProfitAndLoss'
-import { LineItem, LineBaseItem } from '../types/line_item'
-import { ProfitAndLoss } from '../types/profit_and_loss'
+import type { LineItem } from './schema/utils'
 
-const doesLineItemQualifies = (item: LineItem) => {
-  return !(
-    item.value === undefined
-    || item.value === null
-    || isNaN(item.value)
-    || item.value === -Infinity
-    || item.value === Infinity
-  )
+export type PnlChartLineItem = LineItem & {
+  type: string
+  isHidden?: boolean
+  share?: number
 }
 
-const collectSubItems = (type: string, item?: LineItem | null) => {
-  if (!item) {
-    return []
+const collectSubItems = (item: LineItem): PnlChartLineItem[] => {
+  return item.lineItems.map(subItem => ({
+    ...subItem,
+    value: subItem.isContra ? -subItem.value : subItem.value,
+    type: item.displayName,
+  }))
+}
+
+export const collectExpensesItems = (data: ProfitAndLoss): PnlChartLineItem[] => {
+  const cogs = collectSubItems(data.costOfGoodsSold)
+  const expenses = collectSubItems(data.expenses)
+  const taxes = collectSubItems(data.taxes)
+
+  const expensesItems: PnlChartLineItem[] = [...cogs, ...expenses, ...taxes]
+
+  if (data.uncategorizedOutflows) {
+    expensesItems.push({
+      ...data.uncategorizedOutflows,
+      type: data.uncategorizedOutflows.displayName,
+    })
   }
 
-  const items: LineBaseItem[] = []
-
-  item?.line_items?.forEach((item) => {
-    if (doesLineItemQualifies(item)) {
-      items.push({
-        name: item.name,
-        display_name: item.display_name,
-        value: item.is_contra ? -(item.value || 0) : (item.value || 0),
-        type,
-      })
-    }
-  })
-
-  return items
+  return expensesItems
 }
 
-export const collectExpensesItems = (data: ProfitAndLoss) => {
-  const cogs = collectSubItems('Cost of Goods Sold', data.cost_of_goods_sold)
-  const expenses = collectSubItems('Operating Expenses', data.expenses)
-  const taxes = collectSubItems('Taxes & Licenses', data.taxes)
+export const collectRevenueItems = (data: ProfitAndLoss): PnlChartLineItem[] => {
+  const revenueItems: PnlChartLineItem[] = collectSubItems(data.income)
 
-  return ([] as LineBaseItem[]).concat(cogs).concat(expenses).concat(taxes)
-}
+  if (data.uncategorizedInflows) {
+    revenueItems.push({
+      ...data.uncategorizedInflows,
+      type: data.uncategorizedInflows.displayName,
+    })
+  }
 
-export const collectRevenueItems = (data: ProfitAndLoss) => {
-  const income = collectSubItems('Income', data.income)
-
-  return ([] as LineBaseItem[]).concat(income)
+  return revenueItems
 }
 
 export const humanizeTitle = (sidebarView: SidebarScope) => {
@@ -59,9 +58,9 @@ export const humanizeTitle = (sidebarView: SidebarScope) => {
 }
 
 export const applyShare = (
-  items: LineBaseItem[],
+  items: PnlChartLineItem[],
   total: number,
-): LineBaseItem[] => {
+): PnlChartLineItem[] => {
   return items.map((item) => {
     if (total === 0) {
       return item

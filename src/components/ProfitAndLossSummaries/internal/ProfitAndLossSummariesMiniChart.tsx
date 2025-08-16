@@ -1,23 +1,23 @@
+import type { ProfitAndLoss } from '../../../hooks/useProfitAndLoss/schemas'
 import type { Scope } from '../../../hooks/useProfitAndLoss/useProfitAndLoss'
-import type { ProfitAndLoss } from '../../../types'
-import type { LineBaseItem } from '../../../types/line_item'
 import {
   collectExpensesItems,
   collectRevenueItems,
+  type PnlChartLineItem,
 } from '../../../utils/profitAndLossUtils'
 import { Variants } from '../../../utils/styleUtils/sizeVariants'
 import { mapTypesToColors } from '../../ProfitAndLossDetailedCharts/DetailedTable'
 import { PieChart, Pie, Cell } from 'recharts'
 
-const CHART_PLACEHOLDER: Array<LineBaseItem> = [
-  {
-    name: 'placeholder',
-    display_name: 'placeholder',
-    value: 1,
-    type: 'placeholder',
-    share: 1,
-  },
-]
+const CHART_PLACEHOLDER: Array<PnlChartLineItem> = [{
+  name: 'placeholder',
+  displayName: 'placeholder',
+  isContra: false,
+  value: 1,
+  type: 'placeholder',
+  share: 1,
+  lineItems: [],
+}]
 
 export function toMiniChartData({
   scope,
@@ -30,7 +30,7 @@ export function toMiniChartData({
     return CHART_PLACEHOLDER
   }
 
-  let items: LineBaseItem[] = []
+  let items: PnlChartLineItem[] = []
 
   switch (scope) {
     case 'revenue':
@@ -52,7 +52,7 @@ export function toMiniChartData({
 }
 
 type ProfitAndLossMiniChartProps = {
-  data: LineBaseItem[]
+  data: PnlChartLineItem[]
   chartColorsList?: string[]
   variants?: Variants
 }

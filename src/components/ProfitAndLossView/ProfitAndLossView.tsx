@@ -71,11 +71,11 @@ const Components = ({
   hideTable = false,
   stringOverrides,
 }: ProfitAndLossViewProps) => {
-  const { error, isLoading, isValidating, refetch } = useContext(
+  const { isError, isLoading, isValidating, refetch } = useContext(
     ProfitAndLoss.Context,
   )
 
-  if (!isLoading && error) {
+  if (!isLoading && isError) {
     return (
       <div className='Layer__table-state-container'>
         <DataState

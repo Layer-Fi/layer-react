@@ -5,11 +5,11 @@ import {
   ProfitAndLossFilters,
 } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import ChevronDown from '../../icons/ChevronDown'
-import { LineBaseItem } from '../../types/line_item'
 import { Text, TextSize } from '../Typography'
+import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'
 
 export interface FiltersProps {
-  filteredData: LineBaseItem[]
+  filteredData: PnlChartLineItem[]
   sidebarScope: SidebarScope
   filters: ProfitAndLossFilters
   setFilterTypes: (scope: Scope, types: string[]) => void

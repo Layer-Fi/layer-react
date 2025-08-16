@@ -8,7 +8,6 @@ export {
   LayerContextHelpers,
 } from './types/layer_context'
 export { Metadata } from './types/api'
-export { ProfitAndLoss } from './types/profit_and_loss'
 export { LineItem } from './types/line_item'
 export { BalanceSheet } from './types/balance_sheet'
 export { StatementOfCashFlow } from './types/statement_of_cash_flow'

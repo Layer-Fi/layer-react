@@ -26,7 +26,7 @@ const PNLContext = createContext<PNLContextType>({
   filteredTotalExpenses: undefined,
   isLoading: true,
   isValidating: false,
-  error: undefined,
+  isError: false,
   dateRange: {
     startDate: startOfMonth(new Date()),
     endDate: endOfMonth(new Date()),

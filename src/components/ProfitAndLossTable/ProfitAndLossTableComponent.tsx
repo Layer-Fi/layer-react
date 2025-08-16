@@ -1,12 +1,11 @@
 import { Fragment, useContext, useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
-import { LineItem } from '../../types'
 import { TableCellAlign } from '../../types/table'
 import { Loader } from '../Loader'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { Table, TableBody, TableCell, TableRow } from '../Table'
-import emptyPNL from './empty_profit_and_loss_report'
 import classNames from 'classnames'
+import type { LineItem } from '../../utils/schema/utils'
 
 export interface ProfitAndLossTableStringOverrides {
   grossProfitLabel?: string
@@ -24,10 +23,7 @@ export const ProfitAndLossTableComponent = ({
   asContainer,
   stringOverrides,
 }: ProfitAndLossTableProps) => {
-  const {
-    data: actualData,
-    isLoading,
-  } = useContext(ProfitAndLoss.Context)
+  const { data, isLoading } = useContext(ProfitAndLoss.Context)
 
   const { isOpen, setIsOpen } = useTableExpandRow()
 
@@ -35,9 +31,7 @@ export const ProfitAndLossTableComponent = ({
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses', 'other_activity'])
   }, [])
 
-  const data = !actualData || isLoading ? emptyPNL : actualData
-
-  if (isLoading || actualData === undefined) {
+  if (isLoading || !data) {
     return (
       <div
         className={classNames(
@@ -58,14 +52,14 @@ export const ProfitAndLossTableComponent = ({
     variant,
     showValue = true,
   }: {
-    lineItem: LineItem
+    lineItem: Pick<LineItem, 'displayName' | 'value' | 'lineItems'>
     depth: number
     rowKey: string
     rowIndex: number
     variant?: 'default' | 'summation'
     showValue?: boolean
   }): React.ReactNode => {
-    const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
+    const expandable = lineItem.lineItems.length > 0
 
     const expanded = expandable ? isOpen(rowKey) : true
 
@@ -83,7 +77,7 @@ export const ProfitAndLossTableComponent = ({
             primary
             withExpandIcon={expandable}
           >
-            {lineItem.display_name}
+            {lineItem.displayName}
           </TableCell>
           {
             showValue
@@ -94,12 +88,12 @@ export const ProfitAndLossTableComponent = ({
             )
           }
         </TableRow>
-        {expanded && lineItem.line_items
-          ? lineItem.line_items.map((child, i) =>
+        {expanded && lineItem.lineItems
+          ? lineItem.lineItems.map((child, i) =>
             renderLineItem({
               lineItem: child,
               depth: depth + 1,
-              rowKey: child.display_name + '-' + rowIndex,
+              rowKey: child.displayName + '-' + rowIndex,
               rowIndex: i,
             }),
           )
@@ -118,17 +112,18 @@ export const ProfitAndLossTableComponent = ({
           rowIndex: 0,
         })}
 
-        {data.cost_of_goods_sold
+        {data.costOfGoodsSold
           && renderLineItem({
-            lineItem: data.cost_of_goods_sold,
+            lineItem: data.costOfGoodsSold,
             depth: 0,
             rowKey: 'cost_of_goods_sold',
             rowIndex: 1,
           })}
         {renderLineItem({
           lineItem: {
-            value: data.gross_profit,
-            display_name: stringOverrides?.grossProfitLabel || 'Gross Profit',
+            value: data.grossProfit,
+            displayName: stringOverrides?.grossProfitLabel || 'Gross Profit',
+            lineItems: [],
           },
           depth: 0,
           rowKey: 'gross_profit',
@@ -143,9 +138,10 @@ export const ProfitAndLossTableComponent = ({
         })}
         {renderLineItem({
           lineItem: {
-            value: data.profit_before_taxes,
-            display_name:
+            value: data.profitBeforeTaxes,
+            displayName:
               stringOverrides?.profitBeforeTaxesLabel || 'Profit Before Taxes',
+            lineItems: [],
           },
           depth: 0,
           rowKey: 'profit_before_taxes',
@@ -160,31 +156,32 @@ export const ProfitAndLossTableComponent = ({
         })}
         {renderLineItem({
           lineItem: {
-            value: data.net_profit,
-            display_name: stringOverrides?.netProfitLabel || 'Net Profit',
+            value: data.netProfit,
+            displayName: stringOverrides?.netProfitLabel || 'Net Profit',
+            lineItems: [],
           },
           depth: 0,
           rowKey: 'net_profit',
           rowIndex: 6,
           variant: 'summation',
         })}
-        {data.personal_expenses
+        {data.personalExpenses
           && renderLineItem({
-            lineItem: data.personal_expenses,
+            lineItem: data.personalExpenses,
             depth: 0,
             rowKey: 'personal_expenses',
             rowIndex: 7,
           })}
-        {data.other_outflows
+        {data.otherOutflows
           && renderLineItem({
-            lineItem: data.other_outflows,
+            lineItem: data.otherOutflows,
             depth: 0,
             rowKey: 'other_outflows',
             rowIndex: 8,
           })}
-        {data.custom_line_items
+        {data.customLineItems
           && renderLineItem({
-            lineItem: data.custom_line_items,
+            lineItem: data.customLineItems,
             depth: 0,
             rowKey: 'other_activity',
             rowIndex: 9,

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FunctionComponent } from 'react'
+import { useCallback, useEffect, useMemo, useState, type FunctionComponent } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import {
@@ -160,7 +160,6 @@ export const ProfitAndLossChart = ({
 
   const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
 
-  const [localDateRange, setLocalDateRange] = useState(dateRange)
   const [customCursorSize, setCustomCursorSize] = useState({
     width: 0,
     height: 0,
@@ -174,27 +173,19 @@ export const ProfitAndLossChart = ({
 
   const selectionMonth = useMemo(
     () => ({
-      year: localDateRange.startDate.getFullYear(),
-      month: localDateRange.startDate.getMonth(),
+      year: dateRange.startDate.getFullYear(),
+      month: dateRange.startDate.getMonth(),
     }),
-    [localDateRange],
+    [dateRange],
   )
 
-  useEffect(() => {
-    if (
-      Number(dateRange.startDate) !== Number(localDateRange.startDate)
-      || Number(dateRange.endDate) !== Number(localDateRange.endDate)
-    ) {
-      setLocalDateRange(dateRange)
-    }
-  }, [dateRange])
-
-  const { data, loaded, pullData } = useProfitAndLossLTM({
+  const { data, isLoading, setDate } = useProfitAndLossLTM({
     currentDate: startOfMonth(Date.now()),
     tagFilter: tagFilter,
   })
 
-  const anyData = useMemo(() => {
+  const hasLoadedData = !isLoading && data
+  const hasNonZeroData = useMemo(() => {
     return Boolean(
       data?.find(
         x =>
@@ -221,43 +212,43 @@ export const ProfitAndLossChart = ({
   const loadingValue = useMemo(() => getLoadingValue(data), [data])
 
   useEffect(() => {
-    if (loaded === 'complete' && data) {
+    if (hasLoadedData) {
       const foundCurrent = data.find(
         x =>
           Number(startOfMonth(new Date(x.year, x.month - 1, 1)))
-          >= Number(localDateRange.startDate)
+          >= Number(dateRange.startDate)
           && Number(startOfMonth(new Date(x.year, x.month - 1, 1)))
-          < Number(localDateRange.endDate),
+          < Number(dateRange.endDate),
       )
 
       if (!foundCurrent) {
-        const newDate = startOfMonth(localDateRange.startDate)
-        pullData(newDate)
+        const newDate = startOfMonth(dateRange.startDate)
+        setDate(newDate)
         return
       }
 
       const foundBefore = data.find(
         x =>
           Number(startOfMonth(new Date(x.year, x.month - 1, 1)))
-          >= Number(sub(localDateRange.startDate, { months: 1 }))
+          >= Number(sub(dateRange.startDate, { months: 1 }))
           && Number(startOfMonth(new Date(x.year, x.month - 1, 1)))
-          < Number(sub(localDateRange.endDate, { months: 1 })),
+          < Number(sub(dateRange.endDate, { months: 1 })),
       )
 
       if (!foundBefore) {
         const newDate = startOfMonth(
-          sub(localDateRange.startDate, { months: 1 }),
+          sub(dateRange.startDate, { months: 1 }),
         )
-        pullData(newDate)
+        setDate(newDate)
       }
     }
-  }, [localDateRange])
+  }, [data, dateRange, hasLoadedData, isLoading, setDate])
 
   useEffect(() => {
     const newChartWindow = getChartWindow({
       chartWindow,
-      currentYear: localDateRange.startDate.getFullYear(),
-      currentMonth: localDateRange.startDate.getMonth() + 1,
+      currentYear: dateRange.startDate.getFullYear(),
+      currentMonth: dateRange.startDate.getMonth() + 1,
     })
 
     if (
@@ -266,32 +257,30 @@ export const ProfitAndLossChart = ({
     ) {
       setChartWindow(newChartWindow)
     }
-  }, [localDateRange])
+  }, [chartWindow, dateRange])
 
   useEffect(() => {
-    if (loaded === 'complete') {
+    if (hasLoadedData) {
       setTimeout(() => {
         setBarAnimActive(false)
       }, 2000)
     }
-  }, [loaded])
+  }, [hasLoadedData])
 
-  const getMonthName = (pnl: ProfitAndLossSummaryData | undefined) =>
+  const getMonthName = useCallback((pnl: ProfitAndLossSummaryData | undefined) =>
     pnl
       ? format(
         new Date(pnl.year, pnl.month - 1, 1),
         compactView ? 'LLLLL' : 'LLL',
       )
-      : ''
+      : '', [compactView])
 
-  const summarizePnL = (pnl: ProfitAndLossSummaryData | undefined) => ({
+  const summarizePnL = useCallback((pnl: ProfitAndLossSummaryData | undefined) => ({
     name: getMonthName(pnl),
     revenue: pnl?.income || 0,
     revenueUncategorized: pnl?.uncategorizedInflows || 0,
     expenses: -(pnl?.totalExpenses || 0),
     expensesUncategorized: -(pnl?.uncategorizedOutflows || 0),
-    totalExpensesInverse: pnl?.totalExpensesInverse || 0,
-    uncategorizedOutflowsInverse: pnl?.uncategorizedOutflowsInverse || 0,
     netProfit: pnl?.netProfit || 0,
     selected:
       !!pnl
@@ -302,10 +291,10 @@ export const ProfitAndLossChart = ({
     base: 0,
     loading: pnl?.isLoading ? loadingValue : 0,
     loadingExpenses: pnl?.isLoading ? -loadingValue : 0,
-  })
+  }), [getMonthName, loadingValue, selectionMonth.month, selectionMonth.year])
 
-  const theData = useMemo(() => {
-    if (loaded !== 'complete' || (loaded === 'complete' && !anyData)) {
+  const dataOrPlaceholderData = useMemo(() => {
+    if (isLoading || !hasNonZeroData) {
       const loadingData = []
       const today = Date.now()
       for (let i = 11; i >= 0; i--) {
@@ -368,10 +357,10 @@ export const ProfitAndLossChart = ({
           ) <= 12,
       )
       .map(x => summarizePnL(x))
-  }, [selectionMonth, chartWindow, data, loaded, compactView])
+  }, [isLoading, hasNonZeroData, data, compactView, chartWindow, summarizePnL])
 
   const onClick: CategoricalChartFunc = ({ activePayload }) => {
-    if (loaded !== 'complete' || !anyData) {
+    if (!hasLoadedData || !hasNonZeroData) {
       return
     }
 
@@ -397,11 +386,11 @@ export const ProfitAndLossChart = ({
 
       return (
         <div className='Layer__chart__tooltip'>
-          {loaded !== 'complete'
+          {!hasLoadedData
             ? (
               <Text>Loading...</Text>
             )
-            : !anyData
+            : !hasNonZeroData
               ? (
                 <Text>No data yet</Text>
               )
@@ -571,10 +560,10 @@ export const ProfitAndLossChart = ({
   return (
     <div className='Layer__chart-wrapper'>
       <ResponsiveContainer
-        key={forceRerenderOnDataChange ? JSON.stringify(theData) : 'pnl-chart'}
+        key={forceRerenderOnDataChange ? JSON.stringify(dataOrPlaceholderData) : 'pnl-chart'}
         className={classNames(
           'Layer__chart-container',
-          loaded !== 'complete' && 'Layer__chart-container--loading',
+          !hasLoadedData && 'Layer__chart-container--loading',
         )}
         width='100%'
         height='100%'
@@ -592,7 +581,7 @@ export const ProfitAndLossChart = ({
       >
         <ComposedChart
           margin={{ left: 12, right: 12, bottom: 12 }}
-          data={theData}
+          data={dataOrPlaceholderData}
           onClick={onClick}
           className='Layer__profit-and-loss-chart'
         >
@@ -673,7 +662,7 @@ export const ProfitAndLossChart = ({
             radius={[2, 2, 0, 0]}
             className={classNames(
               'Layer__profit-and-loss-chart__bar--loading',
-              loaded !== 'complete'
+              !hasLoadedData
               && 'Layer__profit-and-loss-chart__bar--loading-anim',
             )}
             xAxisId='revenue'
@@ -687,7 +676,7 @@ export const ProfitAndLossChart = ({
             radius={[2, 2, 0, 0]}
             className={classNames(
               'Layer__profit-and-loss-chart__bar--loading',
-              loaded !== 'complete'
+              !hasLoadedData
               && 'Layer__profit-and-loss-chart__bar--loading-anim',
             )}
             xAxisId='expenses'
@@ -703,7 +692,7 @@ export const ProfitAndLossChart = ({
             xAxisId='revenue'
             stackId='revenue'
           >
-            {theData?.map((entry) => {
+            {dataOrPlaceholderData.map((entry) => {
               return (
                 <Cell
                   key={entry.name}
@@ -733,7 +722,7 @@ export const ProfitAndLossChart = ({
                 />
               )
               : null}
-            {theData?.map((entry) => {
+            {dataOrPlaceholderData.map((entry) => {
               return (
                 <Cell
                   key={entry.name}
@@ -756,7 +745,7 @@ export const ProfitAndLossChart = ({
             xAxisId='revenue'
             stackId='revenue'
           >
-            {theData?.map((entry) => {
+            {dataOrPlaceholderData.map((entry) => {
               return (
                 <Cell
                   key={entry.name}
@@ -775,7 +764,7 @@ export const ProfitAndLossChart = ({
             xAxisId='revenue'
             stackId='revenue'
           >
-            {theData?.map((entry) => {
+            {dataOrPlaceholderData.map((entry) => {
               return (
                 <Cell key={entry.name} fill='url(#layer-bar-stripe-pattern)' />
               )
@@ -790,7 +779,7 @@ export const ProfitAndLossChart = ({
             xAxisId='expenses'
             stackId='expenses'
           >
-            {theData.map(entry => (
+            {dataOrPlaceholderData.map(entry => (
               <Cell
                 key={entry.name}
                 className={
@@ -811,7 +800,7 @@ export const ProfitAndLossChart = ({
             xAxisId='expenses'
             stackId='expenses'
           >
-            {theData?.map((entry) => {
+            {dataOrPlaceholderData.map((entry) => {
               return (
                 <Cell
                   key={entry.name}
@@ -833,7 +822,7 @@ export const ProfitAndLossChart = ({
         </ComposedChart>
       </ResponsiveContainer>
 
-      {isSyncing && !anyData ? <ChartStateCard /> : null}
+      {isSyncing && !hasNonZeroData ? <ChartStateCard /> : null}
     </div>
   )
 }
