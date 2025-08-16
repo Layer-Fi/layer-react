@@ -9,6 +9,7 @@ import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
+import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 
@@ -73,6 +74,8 @@ export function useCategorizeBankTransaction({
     },
   )
 
+  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
@@ -90,6 +93,7 @@ export function useCategorizeBankTransaction({
        * @see https://github.com/vercel/swr/blob/main/src/_internal/utils/mutate.ts#L78
        */
       void mutateBankTransactions(undefined, { revalidate: true })
+      void invalidatePnlDetailLines()
 
       return triggerResult
     },
@@ -97,6 +101,7 @@ export function useCategorizeBankTransaction({
       originalTrigger,
       mutate,
       mutateBankTransactions,
+      invalidatePnlDetailLines,
     ],
   )
 

@@ -2,7 +2,6 @@ import useSWR, { type SWRResponse } from 'swr'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useGlobalInvalidator } from '../../utils/swr/useGlobalInvalidator'
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash'
 import { get } from '../../api/layer/authenticated_http'
@@ -10,6 +9,7 @@ import { Schema } from 'effect'
 import { ReportingBasis } from '../../types'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { LedgerEntrySourceSchema, PnlDetailLineSchema, PnlDetailLinesDataSchema } from './schemas'
+import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
 
 export const LIST_PNL_DETAIL_LINES_TAG_KEY = '#list-pnl-detail-lines'
 
@@ -35,7 +35,6 @@ type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParam
 
 export type PnlDetailLine = typeof PnlDetailLineSchema.Type
 export type LedgerEntrySourceType = typeof LedgerEntrySourceSchema.Type
-
 export type PnlDetailLinesReturn = typeof PnlDetailLinesDataSchema.Type
 
 class PnlDetailLinesSWRResponse {
@@ -161,7 +160,7 @@ const INVALIDATION_DEBOUNCE_OPTIONS = {
 }
 
 export function usePnlDetailLinesInvalidator() {
-  const { invalidate } = useGlobalInvalidator()
+  const { invalidate } = useGlobalCacheActions()
 
   const invalidatePnlDetailLines = useCallback(
     () => invalidate(tags => tags.includes(LIST_PNL_DETAIL_LINES_TAG_KEY)),

@@ -1,10 +1,12 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { View as ViewType } from '../../types/general'
 import { ReportsStringOverrides } from '../../views/Reports/Reports'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { View } from '../View'
+import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
+import { ProfitAndLossDetailReport } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -12,6 +14,11 @@ export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
   view?: ViewBreakpoint
 } & TimeRangePickerConfig
+
+type SelectedLineItem = {
+  lineItemName: string
+  breadcrumbPath: BreadcrumbItem[]
+}
 
 export const ProfitAndLossReport = ({
   stringOverrides,
@@ -23,6 +30,15 @@ export const ProfitAndLossReport = ({
   view,
 }: ProfitAndLossReportProps) => {
   const { comparisonConfig } = useContext(ProfitAndLoss.ComparisonContext)
+  const [selectedLineItem, setSelectedLineItem] = useState<SelectedLineItem | null>(null)
+
+  const handleLineItemClick = (lineItemName: string, breadcrumbPath: BreadcrumbItem[]) => {
+    setSelectedLineItem({ lineItemName, breadcrumbPath })
+  }
+
+  const handleCloseDetailReport = () => {
+    setSelectedLineItem(null)
+  }
 
   return (
     <View
@@ -66,10 +82,28 @@ export const ProfitAndLossReport = ({
         </Header>
       )}
     >
-      <ProfitAndLoss.Table
-        asContainer={false}
-        stringOverrides={stringOverrides?.profitAndLoss?.table}
-      />
+      {selectedLineItem
+        ? (
+          <ProfitAndLossDetailReport
+            lineItemName={selectedLineItem.lineItemName}
+            breadcrumbPath={selectedLineItem.breadcrumbPath}
+            onClose={handleCloseDetailReport}
+            onBreadcrumbClick={(lineItemName: string) => {
+              const clickedIndex = selectedLineItem.breadcrumbPath.findIndex(item => item.name === lineItemName)
+              if (clickedIndex !== -1) {
+                const newBreadcrumbPath = selectedLineItem.breadcrumbPath.slice(0, clickedIndex + 1)
+                handleLineItemClick(lineItemName, newBreadcrumbPath)
+              }
+            }}
+          />
+        )
+        : (
+          <ProfitAndLoss.Table
+            asContainer={false}
+            stringOverrides={stringOverrides?.profitAndLoss?.table}
+            onLineItemClick={handleLineItemClick}
+          />
+        )}
     </View>
   )
 }

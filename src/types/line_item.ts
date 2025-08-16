@@ -1,5 +1,5 @@
 export interface LineItem {
-  name?: string
+  name: string
   display_name: string
   value: number | undefined
   line_items?: LineItem[] | null
