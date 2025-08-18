@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useMemo } from 'react'
 import { Badge } from '../../../components/Badge'
 import { BadgeSize, BadgeVariant } from '../../../components/Badge/Badge'
 import { BadgeLoader } from '../../../components/BadgeLoader'
@@ -37,35 +37,69 @@ export function TransactionsToReview({
   const { dateRange: contextDateRange } = useContext(ProfitAndLoss.Context)
   const dateRange = usePnlDateRange ? contextDateRange : undefined
 
-  const [toReview, setToReview] = useState(0)
-
-  const { data, loaded, error, refetch } = useProfitAndLossLTM({
+  const { data, isLoading, isError, refetch } = useProfitAndLossLTM({
     currentDate: dateRange ? dateRange.startDate : startOfMonth(new Date()),
     tagFilter,
   })
 
-  useEffect(() => {
-    checkTransactionsToReview()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const numTransactionsToReview = useMemo(() => {
+    if (!data || !dateRange) return 0
+    const { startDate } = dateRange
 
-  useEffect(() => {
-    checkTransactionsToReview()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateRange, loaded])
+    const activeMonth = data.find(
+      summary =>
+        summary.month - 1 === getMonth(startDate)
+        && summary.year === getYear(startDate),
+    )
 
-  const checkTransactionsToReview = () => {
-    if (data && dateRange) {
-      const monthTx = data.filter(
-        x =>
-          x.month - 1 === getMonth(dateRange.startDate)
-          && x.year === getYear(dateRange.startDate),
-      )
-      if (monthTx.length > 0) {
-        setToReview(monthTx[0].uncategorized_transactions)
-      }
+    if (!activeMonth) return 0
+
+    return activeMonth.uncategorizedTransactions
+  }, [data, dateRange])
+
+  const hasLoadedData = !isLoading && data
+  const transactionsToReviewBadge = useMemo(() => {
+    if (!hasLoadedData) {
+      return <BadgeLoader />
     }
-  }
+
+    if (isError) {
+      return (
+        <Badge
+          variant={BadgeVariant.ERROR}
+          size={BadgeSize.SMALL}
+          icon={<RefreshCcw size={12} />}
+          onClick={() => refetch()}
+        >
+          Refresh
+        </Badge>
+      )
+    }
+
+    if (numTransactionsToReview > 0) {
+      return (
+        <Badge
+          variant={BadgeVariant.WARNING}
+          size={BadgeSize.SMALL}
+          icon={<BellIcon size={12} />}
+        >
+          {numTransactionsToReview}
+          {' '}
+          pending
+        </Badge>
+      )
+    }
+
+    return (
+      <Badge
+        variant={BadgeVariant.SUCCESS}
+        size={BadgeSize.SMALL}
+        icon={<CheckIcon size={12} />}
+      >
+        All done
+      </Badge>
+    )
+  }, [hasLoadedData, isError, numTransactionsToReview, refetch])
 
   let verticalGap: StackProps['gap'] = '3xs'
   switch (size) {
@@ -82,46 +116,7 @@ export function TransactionsToReview({
         <ProfitAndLossSummariesHeading variants={variants}>
           Transactions to review
         </ProfitAndLossSummariesHeading>
-        {loaded === 'initial' || loaded === 'loading' ? <BadgeLoader /> : null}
-
-        {loaded === 'complete' && error
-          ? (
-            <Badge
-              variant={BadgeVariant.ERROR}
-              size={BadgeSize.SMALL}
-              icon={<RefreshCcw size={12} />}
-              onClick={() => refetch()}
-            >
-              Refresh
-            </Badge>
-          )
-          : null}
-
-        {loaded === 'complete' && !error && toReview > 0
-          ? (
-            <Badge
-              variant={BadgeVariant.WARNING}
-              size={BadgeSize.SMALL}
-              icon={<BellIcon size={12} />}
-            >
-              {toReview}
-              {' '}
-              pending
-            </Badge>
-          )
-          : null}
-
-        {loaded === 'complete' && !error && toReview === 0
-          ? (
-            <Badge
-              variant={BadgeVariant.SUCCESS}
-              size={BadgeSize.SMALL}
-              icon={<CheckIcon size={12} />}
-            >
-              All done
-            </Badge>
-          )
-          : null}
+        {transactionsToReviewBadge}
       </VStack>
       <IconButton icon={<ChevronRight />} withBorder onClick={onClick} />
     </div>
