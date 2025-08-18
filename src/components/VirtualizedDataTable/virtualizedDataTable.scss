@@ -30,7 +30,7 @@
   position:absolute;
 }
 
-.Layer__table-row.Layer__UI__VirtualizedTable__row {
+.Layer__UI__VirtualizedTable__row {
   // Virtual rows use transform positioning like ValidateCsvTable
   // Position and transform are set via inline styles for performance
   position: absolute;
@@ -41,7 +41,7 @@
   box-sizing: border-box;
 }
 
-.Layer__table-cell.Layer__UI__VirtualizedTable__cell {
+.Layer__UI__VirtualizedTable__cell {
   box-sizing: border-box;
   flex: 0 0 auto;
   align-content: center;

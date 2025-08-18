@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useMemo } from 'react'
 import classNames from 'classnames'
 import { useVirtualizer, VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 import {
@@ -10,13 +10,15 @@ import {
 import { Loader } from '../Loader/Loader'
 import type { ColumnConfig, Column } from '../DataTable/DataTable'
 import { Table, TableBody, TableHeader, Column as TableColumn, Row, Cell } from '../ui/Table/Table'
+import { HStack } from '../ui/Stack/Stack'
 
-const DEFAULT_ROW_HEIGHT = 34
+const DEFAULT_ROW_HEIGHT = 52
 const DEFAULT_OVERSCAN = 5
-const DEFAULT_NUM_ROWS = 10
+const DEFAULT_NUM_ROWS = 20
 const HEADER_HEIGHT = 41
 const DEFAULT_TABLE_HEIGHT = (DEFAULT_ROW_HEIGHT * DEFAULT_NUM_ROWS) + HEADER_HEIGHT - 1
 
+const CSS_PREFIX = 'Layer__UI__VirtualizedTable'
 const EMPTY_ARRAY: never[] = []
 
 export interface VirtualizedDataTableProps<TData extends { id: string }, TColumns extends string> {
@@ -75,7 +77,7 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
   })
 
   const { rows } = table.getRowModel()
-  const processedData = rows.map(r => r.original)
+  const processedData = useMemo(() => rows.map(r => r.original), [rows])
 
   const isEmptyTable = processedData.length === 0
   const hasData = processedData.length > 0
@@ -94,28 +96,27 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
 
   const CSS_PREFIX = 'Layer__UI__VirtualizedTable'
 
-  // Handle loading, error, and empty states
   if (isError) {
     return (
-      <div className={`${CSS_PREFIX}__state-container`} style={{ height }}>
+      <HStack align='center' justify='center' className={`${CSS_PREFIX}__state-container`}>
         <ErrorState />
-      </div>
+      </HStack>
     )
   }
 
   if (isLoading) {
     return (
-      <div className={`${CSS_PREFIX}__state-container`} style={{ height }}>
+      <HStack align='center' justify='center' className={`${CSS_PREFIX}__state-container`}>
         <Loader />
-      </div>
+      </HStack>
     )
   }
 
   if (isEmptyTable) {
     return (
-      <div className={`${CSS_PREFIX}__state-container`} style={{ height }}>
+      <HStack align='center' justify='center' className={`${CSS_PREFIX}__state-container`}>
         <EmptyState />
-      </div>
+      </HStack>
     )
   }
 
@@ -130,7 +131,7 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
       role='table'
       aria-label={ariaLabel}
     >
-      <Table className='Layer__UI__Table__ProfitAndLossDetailReport'>
+      <Table className='Layer__UI__Table__ProfitAndLossDetailReport' aria-label={ariaLabel}>
 
         <TableHeader
           columns={columns.map(col => ({
@@ -166,7 +167,6 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
                 virtualRow={virtualRow}
                 rowVirtualizer={rowVirtualizer}
                 componentName={componentName}
-                cssPrefix={CSS_PREFIX}
                 columns={columns}
               />
             )
@@ -191,13 +191,11 @@ const VirtualizedDataTableRow = <TData extends { id: string }, TColumns extends 
   virtualRow,
   rowVirtualizer,
   componentName,
-  cssPrefix,
   columns,
 }: VirtualizedDataTableRowProps<TData, TColumns>) => (
   <Row
     className={classNames(
-      'Layer__table-row',
-      `${cssPrefix}__row`,
+      `${CSS_PREFIX}__row`,
     )}
     data-index={virtualRow.index}
     ref={node => node && rowVirtualizer.measureElement(node)}
@@ -209,8 +207,7 @@ const VirtualizedDataTableRow = <TData extends { id: string }, TColumns extends 
       <Cell
         key={column.id}
         className={classNames(
-          'Layer__table-cell',
-          `${cssPrefix}__cell`,
+          `${CSS_PREFIX}__cell`,
           `Layer__UI__Table-Cell__${componentName}--${column.id}`,
         )}
         style={{ ...(virtualRow.index === 0 && ({ borderTop: 'none' })) }}
