@@ -139,7 +139,15 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Date]: {
       id: PnlDetailColumns.Date,
       header: stringOverrides?.dateColumnHeader || 'Date',
-      cell: row => <DateTime value={row.date} onlyDate size={TextSize.md} weight={TextWeight.normal} variant='subtle' />,
+      cell: row => (
+        <DateTime
+          value={row.date}
+          onlyDate
+          slotProps={
+            { Date: { size: TextSize.md, weight: TextWeight.normal, variant: 'subtle' } }
+          }
+        />
+      ),
     },
     [PnlDetailColumns.Type]: {
       id: PnlDetailColumns.Type,
