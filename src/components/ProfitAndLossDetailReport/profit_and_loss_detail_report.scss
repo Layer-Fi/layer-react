@@ -51,8 +51,6 @@
     }
 
     &--Type {
-      font-size: var(--text-md);
-
       button {
         font-size: inherit;
         font-family: inherit;
@@ -63,12 +61,10 @@
 
     &--Amount {
       text-align: right;
-      color: var(--color-base-800);
     }
 
     &--Balance {
       text-align: right;
-      color: var(--color-base-800);
     }
   }
 }
@@ -82,30 +78,25 @@
     var(--pnl-detail-description-col-width)
     var(--pnl-detail-amount-col-width)
     var(--pnl-detail-balance-col-width);
-  align-items: center;
   padding-top: var(--spacing-sm);
   padding-bottom: var(--spacing-sm);
   border-top: 1px solid var(--color-base-300);
+  font-weight: var(--font-weight-bold);
 }
 
 .Layer__profit-and-loss-detail-report__total-label {
   grid-column: 1;
-  font-weight: 540;
   font-size: var(--text-md);
-  line-height: 140%;
-  text-align: left;
   padding-left: var(--spacing-md);
-  color: var(--color-base-800);
 }
 
 .Layer__profit-and-loss-detail-report__total-amount {
   grid-column: 5;
-  font-weight: 580;
   font-size: var(--text-md);
-  line-height: 140%;
   text-align: right;
-  color: var(--color-base-900);
   padding-right: var(--spacing-sm);
 }
+
+
 
 

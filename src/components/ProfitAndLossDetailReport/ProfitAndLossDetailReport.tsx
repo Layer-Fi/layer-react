@@ -40,6 +40,7 @@ enum PnlDetailColumns {
   Balance = 'Balance',
 }
 
+type ProcessedPnlDetailLine = PnlDetailLine & { signedAmount: number, runningBalance: number }
 export interface ProfitAndLossDetailReportStringOverrides {
   title?: string
   dateColumnHeader?: string
@@ -61,6 +62,7 @@ export interface ProfitAndLossDetailReportProps {
 
 const ErrorState = () => (
   <DataState
+    spacing
     status={DataStateStatus.failed}
     title='Error loading detail lines'
     description='There was an error loading the profit and loss detail lines'
@@ -69,7 +71,7 @@ const ErrorState = () => (
 
 const EmptyState = () => (
   <DataState
-    spacing={true}
+    spacing
     status={DataStateStatus.info}
     title='No detail lines found'
     description='There are no detail lines for this profit and loss item'
@@ -109,11 +111,9 @@ export const ProfitAndLossDetailReport = ({
     setSelectedSource(source)
   }, [])
 
-  const handleBackToList = () => {
+  const handleBackToList = useCallback(() => {
     setSelectedSource(null)
-  }
-
-  type ProcessedPnlDetailLine = PnlDetailLine & { signedAmount: number, runningBalance: number }
+  }, [])
 
   const rowsWithRunningBalance = useMemo(() => {
     if (!data?.lines) return { lines: [], total: 0 }
@@ -182,9 +182,7 @@ export const ProfitAndLossDetailReport = ({
       header: stringOverrides?.amountColumnHeader || 'Amount',
       cell: (row) => {
         return (
-          <span className='Layer__profit-and-loss-detail-report__amount'>
-            <MoneySpan amount={row.amount} />
-          </span>
+          <MoneySpan amount={row.amount} />
         )
       },
     },
@@ -193,9 +191,7 @@ export const ProfitAndLossDetailReport = ({
       header: stringOverrides?.balanceColumnHeader || 'Balance',
       cell: (row) => {
         return (
-          <span className='Layer__profit-and-loss-detail-report__amount'>
-            <MoneySpan amount={row.runningBalance} />
-          </span>
+          <MoneySpan amount={row.runningBalance} />
         )
       },
     },
