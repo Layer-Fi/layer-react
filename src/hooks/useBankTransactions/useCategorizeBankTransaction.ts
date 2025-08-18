@@ -10,6 +10,7 @@ import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
 import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
+import { useProfitAndLossGlobalInvalidator } from '../useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 
@@ -49,6 +50,9 @@ export function useCategorizeBankTransaction({
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
 
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
+  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+
   const mutationResponse = useSWRMutation(
     () => buildKey({
       access_token: auth?.access_token,
@@ -74,8 +78,6 @@ export function useCategorizeBankTransaction({
     },
   )
 
-  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
-
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
@@ -95,14 +97,11 @@ export function useCategorizeBankTransaction({
       void mutateBankTransactions(undefined, { revalidate: true })
       void invalidatePnlDetailLines()
 
+      void debouncedInvalidateProfitAndLoss()
+
       return triggerResult
     },
-    [
-      originalTrigger,
-      mutate,
-      mutateBankTransactions,
-      invalidatePnlDetailLines,
-    ],
+    [originalTrigger, mutate, mutateBankTransactions, debouncedInvalidateProfitAndLoss, invalidatePnlDetailLines],
   )
 
   return new Proxy(mutationResponse, {

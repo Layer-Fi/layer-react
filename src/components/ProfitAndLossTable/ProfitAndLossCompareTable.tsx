@@ -1,6 +1,5 @@
 import { Fragment, useContext, useEffect, useMemo } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
-import { LineItem } from '../../types'
 import { ProfitAndLossComparisonPnl } from '../../types/profit_and_loss'
 import {
   generateComparisonPeriods,
@@ -17,6 +16,7 @@ import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookke
 import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import { HStack } from '../ui/Stack/Stack'
 import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { LineItem } from '../../utils/schema/utils'
 
 interface ProfilAndLostCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides
@@ -104,7 +104,7 @@ export const ProfitAndLossCompareTable = ({
     }
 
     const expandable =
-      lineItem?.line_items && lineItem.line_items.length > 0 ? true : false
+      lineItem?.lineItems && lineItem.lineItems.length > 0 ? true : false
     const expanded = expandable ? isOpen(rowKey) : true
 
     return (
@@ -118,24 +118,24 @@ export const ProfitAndLossCompareTable = ({
           handleExpand={() => setIsOpen(rowKey)}
         >
           <TableCell primary withExpandIcon={expandable}>
-            {lineItem ? lineItem.display_name : rowDisplayName}
+            {lineItem ? lineItem.displayName : rowDisplayName}
           </TableCell>
           {rowData.map((cell, i) => (
             <TableCell key={'compare-value' + i} isCurrency>
               {getComparisonValue(
-                lineItem ? lineItem.display_name : rowDisplayName,
+                lineItem ? lineItem.displayName : rowDisplayName,
                 depth,
                 cell as string | number | LineItem,
               )}
             </TableCell>
           ))}
         </TableRow>
-        {expanded && lineItem?.line_items
-          ? lineItem.line_items.map(child =>
+        {expanded && lineItem?.lineItems
+          ? lineItem.lineItems.map(child =>
             renderRow(
-              child.display_name,
+              child.displayName,
               depth + 1,
-              child.display_name,
+              child.displayName,
               child,
               rowData as (string | number | LineItem)[],
             ),

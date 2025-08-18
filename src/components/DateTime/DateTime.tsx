@@ -1,7 +1,7 @@
 import { DATE_FORMAT, TIME_FORMAT } from '../../config/general'
-import { Text, TextSize, TextWeight } from '../Typography'
+import { Text } from '../Typography'
 import { parseISO, format as formatTime } from 'date-fns'
-import { Span } from '../ui/Typography/Text'
+import { Span, TextStyleProps } from '../ui/Typography/Text'
 
 interface DateTimeProps {
   value: string
@@ -10,9 +10,10 @@ interface DateTimeProps {
   timeFormat?: string
   onlyDate?: boolean
   onlyTime?: boolean
-  size?: TextSize
-  weight?: TextWeight
-  variant?: 'placeholder' | 'subtle'
+  slotProps?: {
+    Date?: TextStyleProps
+    Time?: TextStyleProps
+  }
 }
 
 export const DateTime = ({
@@ -22,9 +23,10 @@ export const DateTime = ({
   timeFormat,
   onlyDate,
   onlyTime,
-  size = TextSize.sm,
-  weight = TextWeight.bold,
-  variant = 'subtle',
+  slotProps = {
+    Date: { size: 'sm' },
+    Time: { size: 'sm', variant: 'subtle' },
+  },
 }: DateTimeProps) => {
   if (format) {
     return (
@@ -40,20 +42,12 @@ export const DateTime = ({
   return (
     <Text className='Layer__datetime'>
       {!onlyTime && (
-        <Span
-          weight={weight}
-          size={size}
-          variant={variant}
-        >
+        <Span {...slotProps.Date}>
           {date}
         </Span>
       )}
       {!onlyDate && (
-        <Span
-          weight={weight}
-          size={size}
-          variant={variant}
-        >
+        <Span {...slotProps.Time}>
           {time}
         </Span>
       )}

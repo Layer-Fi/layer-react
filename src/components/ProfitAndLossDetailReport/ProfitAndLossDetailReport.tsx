@@ -12,7 +12,8 @@ import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { Button } from '../ui/Button/Button'
-import { VStack } from '../ui/Stack/Stack'
+import { VStack, HStack } from '../ui/Stack/Stack'
+import { Label } from '../ui/Typography/Text'
 import { format } from 'date-fns'
 import type { LedgerEntrySource } from '../../types/ledger_accounts'
 import { Direction } from '../../types'
@@ -41,6 +42,7 @@ enum PnlDetailColumns {
   Balance = 'Balance',
 }
 
+type ProcessedPnlDetailLine = PnlDetailLine & { signedAmount: number, runningBalance: number }
 export interface ProfitAndLossDetailReportStringOverrides {
   title?: string
   dateColumnHeader?: string
@@ -62,6 +64,7 @@ export interface ProfitAndLossDetailReportProps {
 
 const ErrorState = () => (
   <DataState
+    spacing
     status={DataStateStatus.failed}
     title='Error loading detail lines'
     description='There was an error loading the profit and loss detail lines'
@@ -70,7 +73,7 @@ const ErrorState = () => (
 
 const EmptyState = () => (
   <DataState
-    spacing={true}
+    spacing
     status={DataStateStatus.info}
     title='No detail lines found'
     description='There are no detail lines for this profit and loss item'
@@ -110,11 +113,9 @@ export const ProfitAndLossDetailReport = ({
     setSelectedSource(source)
   }, [])
 
-  const handleBackToList = () => {
+  const handleBackToList = useCallback(() => {
     setSelectedSource(null)
-  }
-
-  type ProcessedPnlDetailLine = PnlDetailLine & { signedAmount: number, runningBalance: number }
+  }, [])
 
   const rowsWithRunningBalance = useMemo(() => {
     if (!data?.lines) return { lines: [], total: 0 }
@@ -140,7 +141,15 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Date]: {
       id: PnlDetailColumns.Date,
       header: stringOverrides?.dateColumnHeader || 'Date',
-      cell: row => <DateTime value={row.date} onlyDate size={TextSize.md} weight={TextWeight.normal} variant='subtle' />,
+      cell: row => (
+        <DateTime
+          value={row.date}
+          onlyDate
+          slotProps={
+            { Date: { size: TextSize.md, weight: TextWeight.normal, variant: 'subtle' } }
+          }
+        />
+      ),
     },
     [PnlDetailColumns.Type]: {
       id: PnlDetailColumns.Type,
@@ -175,9 +184,7 @@ export const ProfitAndLossDetailReport = ({
       header: stringOverrides?.amountColumnHeader || 'Amount',
       cell: (row) => {
         return (
-          <span className='Layer__profit-and-loss-detail-report__amount'>
-            <MoneySpan amount={row.amount} />
-          </span>
+          <MoneySpan amount={row.amount} />
         )
       },
     },
@@ -186,9 +193,7 @@ export const ProfitAndLossDetailReport = ({
       header: stringOverrides?.balanceColumnHeader || 'Balance',
       cell: (row) => {
         return (
-          <span className='Layer__profit-and-loss-detail-report__amount'>
-            <MoneySpan amount={row.runningBalance} />
-          </span>
+          <MoneySpan amount={row.runningBalance} />
         )
       },
     },
@@ -236,12 +241,14 @@ export const ProfitAndLossDetailReport = ({
         }}
       />
       {rowsWithRunningBalance.lines.length > 0 && (
-        <div className='Layer__profit-and-loss-detail-report__total-row'>
-          <div className='Layer__profit-and-loss-detail-report__total-label'>Total</div>
-          <div className='Layer__profit-and-loss-detail-report__total-amount'>
-            <MoneySpan amount={rowsWithRunningBalance.total} />
-          </div>
-        </div>
+        <HStack pb='sm' align='center' className='Layer__profit-and-loss-detail-report__total-row'>
+          <HStack className='Layer__profit-and-loss-detail-report__total-label'>
+            <Label weight='bold' size='md'>Total</Label>
+          </HStack>
+          <HStack className='Layer__profit-and-loss-detail-report__total-amount'>
+            <MoneySpan bold size='md' amount={rowsWithRunningBalance.total} />
+          </HStack>
+        </HStack>
       )}
     </BaseDetailView>
   )

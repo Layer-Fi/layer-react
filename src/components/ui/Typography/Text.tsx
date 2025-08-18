@@ -8,7 +8,7 @@ import {
   Text as ReactAriaText,
 } from 'react-aria-components'
 
-type TextStyleProps = {
+export type TextStyleProps = {
   align?: 'center' | 'right'
   ellipsis?: true
   noWrap?: true
