@@ -65,7 +65,7 @@ function Internal_ProfitAndLossSummaries({
     [data],
   )
 
-  const effectiveData = data ?? { income: { value: 0 }, net_profit: 0 }
+  const effectiveData = data ?? { income: { value: 0 }, netProfit: 0 }
 
   const { unstable_AdditionalListItems = [] } = slots ?? {}
   const listItemCount = unstable_AdditionalListItems.length + 3
@@ -98,8 +98,8 @@ function Internal_ProfitAndLossSummaries({
           onClick={actionable ? () => setSidebarScope('expenses') : undefined}
         >
           <ProfitAndLossSummariesSummary
-            label={stringOverrides?.revenueLabel || revenueLabel || 'Expenses'}
-            amount={(effectiveData?.income?.value ?? 0) - effectiveData.net_profit}
+            label={stringOverrides?.expensesLabel || 'Expenses'}
+            amount={(effectiveData?.income?.value ?? 0) - effectiveData.netProfit}
             isLoading={isLoading}
             slots={{
               Chart: (
@@ -116,7 +116,7 @@ function Internal_ProfitAndLossSummaries({
         <ProfitAndLossSummariesListItem>
           <ProfitAndLossSummariesSummary
             label={stringOverrides?.netProfitLabel || 'Net Profit'}
-            amount={data?.net_profit ?? 0}
+            amount={data?.netProfit ?? 0}
             variants={variants}
             isLoading={isLoading}
           />

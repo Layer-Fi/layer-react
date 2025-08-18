@@ -9,6 +9,7 @@ import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
+import { useProfitAndLossGlobalInvalidator } from '../useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 
@@ -47,6 +48,8 @@ export function useCategorizeBankTransaction({
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
+
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const mutationResponse = useSWRMutation(
     () => buildKey({
@@ -91,13 +94,11 @@ export function useCategorizeBankTransaction({
        */
       void mutateBankTransactions(undefined, { revalidate: true })
 
+      void debouncedInvalidateProfitAndLoss()
+
       return triggerResult
     },
-    [
-      originalTrigger,
-      mutate,
-      mutateBankTransactions,
-    ],
+    [originalTrigger, mutate, mutateBankTransactions, debouncedInvalidateProfitAndLoss],
   )
 
   return new Proxy(mutationResponse, {
