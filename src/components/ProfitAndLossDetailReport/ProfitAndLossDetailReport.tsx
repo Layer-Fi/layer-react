@@ -11,7 +11,8 @@ import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { Button } from '../ui/Button/Button'
-import { VStack } from '../ui/Stack/Stack'
+import { VStack, HStack } from '../ui/Stack/Stack'
+import { Label } from '../ui/Typography/Text'
 import { format } from 'date-fns'
 import type { LedgerEntrySource } from '../../types/ledger_accounts'
 import { Direction } from '../../types'
@@ -239,12 +240,14 @@ export const ProfitAndLossDetailReport = ({
         }}
       />
       {rowsWithRunningBalance.lines.length > 0 && (
-        <div className='Layer__profit-and-loss-detail-report__total-row'>
-          <div className='Layer__profit-and-loss-detail-report__total-label'>Total</div>
-          <div className='Layer__profit-and-loss-detail-report__total-amount'>
-            <MoneySpan amount={rowsWithRunningBalance.total} />
-          </div>
-        </div>
+        <HStack pb='sm' align='center' className='Layer__profit-and-loss-detail-report__total-row'>
+          <HStack className='Layer__profit-and-loss-detail-report__total-label'>
+            <Label weight='bold' size='md'>Total</Label>
+          </HStack>
+          <HStack className='Layer__profit-and-loss-detail-report__total-amount'>
+            <MoneySpan bold size='md' amount={rowsWithRunningBalance.total} />
+          </HStack>
+        </HStack>
       )}
     </BaseDetailView>
   )
