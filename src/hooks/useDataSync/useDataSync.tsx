@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { DataModel } from '../../types/general'
+import { useProfitAndLossGlobalInvalidator } from '../useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 
 type UseDataSync = () => {
   touch: (model: DataModel) => void
@@ -57,6 +58,7 @@ export const useDataSync: UseDataSync = () => {
   const [readTimestamps, setReadTimestamps] = useState<
     Partial<Record<string, { t: number, m: DataModel }>>
   >({})
+  const { invalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const touch = (model: DataModel) => {
     setSyncTimestamps({
@@ -97,6 +99,7 @@ export const useDataSync: UseDataSync = () => {
 
   const resetCaches = () => {
     const now = Date.now()
+    void invalidateProfitAndLoss()
     setSyncTimestamps({
       [DataModel.BALANCE_SHEET]: now,
       [DataModel.CHART_OF_ACCOUNTS]: now,

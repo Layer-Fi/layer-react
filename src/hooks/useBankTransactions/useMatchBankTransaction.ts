@@ -8,8 +8,7 @@ import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
-import { useProfitAndLossSummariesCacheActions } from '../useProfitAndLoss/useProfitAndLossSummaries'
-import { useProfitAndLossReportCacheActions } from '../useProfitAndLoss/useProfitAndLossReport'
+import { useProfitAndLossGlobalInvalidator } from '../useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 
 const MATCH_BANK_TRANSACTION_TAG = '#match-bank-transaction'
 
@@ -49,8 +48,7 @@ export function useMatchBankTransaction({
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
 
-  const { debouncedInvalidateProfitAndLossSummaries } = useProfitAndLossSummariesCacheActions()
-  const { debouncedInvalidateProfitAndLossReport } = useProfitAndLossReportCacheActions()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const mutationResponse = useSWRMutation(
     () => buildKey({
@@ -97,13 +95,11 @@ export function useMatchBankTransaction({
        */
       void mutateBankTransactions(undefined, { revalidate: true })
 
-      void debouncedInvalidateProfitAndLossSummaries()
-
-      void debouncedInvalidateProfitAndLossReport()
+      void debouncedInvalidateProfitAndLoss()
 
       return triggerResult
     },
-    [originalTrigger, mutate, mutateBankTransactions, debouncedInvalidateProfitAndLossSummaries, debouncedInvalidateProfitAndLossReport],
+    [originalTrigger, mutate, mutateBankTransactions, debouncedInvalidateProfitAndLoss],
   )
 
   return new Proxy(mutationResponse, {
