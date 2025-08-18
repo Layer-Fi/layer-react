@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useListInvoices } from '../../../features/invoices/api/useListInvoices'
 import { type Invoice, InvoiceStatus } from '../../../features/invoices/invoiceSchemas'
 import { convertCentsToCurrency, formatDate } from '../../../utils/format'
@@ -16,8 +16,9 @@ import { ComboBox } from '../../ui/ComboBox/ComboBox'
 import { startOfToday, endOfYesterday } from 'date-fns'
 import { InvoiceStatusCell } from '../InvoiceStatusCell/InvoiceStatusCell'
 import { Container } from '../../Container'
+import { useInvoiceTableQuery, useInvoiceNavigation } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
 
-const COMPONENT_NAME = 'InvoicesTable'
+const COMPONENT_NAME = 'InvoiceTable'
 
 enum InvoiceColumns {
   SentAt = 'SentAt',
@@ -38,7 +39,7 @@ enum InvoiceStatusFilter {
   Voided = 'Voided',
 }
 
-type InvoiceStatusOption = {
+export type InvoiceStatusOption = {
   label: string
   value: InvoiceStatusFilter
 }
@@ -51,7 +52,7 @@ const InvoiceStatusOptionConfig = {
   [InvoiceStatusFilter.Voided]: { label: 'Voided', value: InvoiceStatusFilter.Voided },
   [InvoiceStatusFilter.WrittenOff]: { label: 'Written Off', value: InvoiceStatusFilter.WrittenOff },
 }
-const ALL_OPTION = InvoiceStatusOptionConfig[InvoiceStatusFilter.All]
+export const ALL_OPTION = InvoiceStatusOptionConfig[InvoiceStatusFilter.All]
 
 const AmountCell = ({ invoice }: { invoice: Invoice }) => {
   const totalAmount = convertCentsToCurrency(invoice.totalAmount)
@@ -91,7 +92,7 @@ const getCustomerName = (invoice: Invoice) => {
   return customer?.individualName || customer?.companyName || recipientName
 }
 
-const getColumnConfig = (onSelectInvoice: InvoicesTableProps['onSelectInvoice']): ColumnConfig<Invoice, InvoiceColumns> => ({
+const getColumnConfig = (onSelectInvoice: (invoice: Invoice) => void): ColumnConfig<Invoice, InvoiceColumns> => ({
   [InvoiceColumns.SentAt]: {
     id: InvoiceColumns.SentAt,
     header: 'Sent Date',
@@ -129,8 +130,8 @@ const getColumnConfig = (onSelectInvoice: InvoicesTableProps['onSelectInvoice'])
 })
 
 const UNPAID_STATUSES = [InvoiceStatus.Sent, InvoiceStatus.PartiallyPaid]
-const getListInvoiceParams = ({ statusFilter }: { statusFilter: InvoiceStatusFilter | undefined }) => {
-  if (!statusFilter) return {}
+const getListInvoiceParams = ({ status }: { status: InvoiceStatusOption }) => {
+  const statusFilter = status.value
 
   switch (statusFilter) {
     case InvoiceStatusFilter.All:
@@ -162,17 +163,14 @@ const getListInvoiceParams = ({ statusFilter }: { statusFilter: InvoiceStatusFil
   }
 }
 
-interface InvoicesTableProps {
-  onCreateInvoice: () => void
-  onSelectInvoice: (invoice: Invoice) => void
-}
-
-export const InvoicesTable = ({ onCreateInvoice, onSelectInvoice }: InvoicesTableProps) => {
-  const [selectedInvoiceStatusOption, setSelectedInvoiceStatusOption] = useState<InvoiceStatusOption | null>(ALL_OPTION)
+export const InvoiceTable = () => {
+  const { toCreateInvoice, toViewInvoice } = useInvoiceNavigation()
+  const { query, setQuery } = useInvoiceTableQuery()
+  const selectedInvoiceStatusOption = query.status
 
   const listInvoiceParams = useMemo(
-    () => getListInvoiceParams({ statusFilter: selectedInvoiceStatusOption?.value }),
-    [selectedInvoiceStatusOption?.value],
+    () => getListInvoiceParams(query),
+    [query],
   )
 
   const { data, isLoading, isError, size, setSize, refetch } = useListInvoices({ ...listInvoiceParams })
@@ -198,15 +196,15 @@ export const InvoicesTable = ({ onCreateInvoice, onSelectInvoice }: InvoicesTabl
   const options: InvoiceStatusOption[] = useMemo(() => Object.values(InvoiceStatusOptionConfig), [])
 
   const SelectedValue = useMemo(() => {
-    const label = selectedInvoiceStatusOption?.label
+    const label = selectedInvoiceStatusOption.label
     return label ? `Status: ${label}` : 'Status'
-  }, [selectedInvoiceStatusOption?.label])
+  }, [selectedInvoiceStatusOption.label])
 
   const StatusFilter = useCallback(() => (
     <ComboBox
-      className='Layer__InvoicesTable__StatusFilter'
+      className='Layer__InvoiceTable__StatusFilter'
       options={options}
-      onSelectedValueChange={option => setSelectedInvoiceStatusOption(option)}
+      onSelectedValueChange={option => option && setQuery({ status: option })}
       selectedValue={selectedInvoiceStatusOption}
       isSearchable={false}
       isClearable={false}
@@ -215,17 +213,17 @@ export const InvoicesTable = ({ onCreateInvoice, onSelectInvoice }: InvoicesTabl
       aria-label='Status Filter'
     />
   ),
-  [SelectedValue, options, selectedInvoiceStatusOption])
+  [SelectedValue, options, selectedInvoiceStatusOption, setQuery])
 
   const CreateInvoiceButton = useCallback(() => (
-    <Button onPress={onCreateInvoice}>
+    <Button onPress={toCreateInvoice}>
       Create Invoice
       <Plus size={16} />
     </Button>
   ),
-  [onCreateInvoice])
+  [toCreateInvoice])
 
-  const InvoicesTableEmptyState = useCallback(() => {
+  const InvoiceTableEmptyState = useCallback(() => {
     const isFiltered = selectedInvoiceStatusOption && selectedInvoiceStatusOption !== ALL_OPTION
 
     return (
@@ -243,7 +241,7 @@ export const InvoicesTable = ({ onCreateInvoice, onSelectInvoice }: InvoicesTabl
     )
   }, [selectedInvoiceStatusOption])
 
-  const InvoicesTableErrorState = useCallback(() => (
+  const InvoiceTableErrorState = useCallback(() => (
     <DataState
       status={DataStateStatus.failed}
       title='We couldn’t load your invoices'
@@ -253,10 +251,10 @@ export const InvoicesTable = ({ onCreateInvoice, onSelectInvoice }: InvoicesTabl
     />
   ), [refetch])
 
-  const columnConfig = useMemo(() => getColumnConfig(onSelectInvoice), [onSelectInvoice])
+  const columnConfig = useMemo(() => getColumnConfig(toViewInvoice), [toViewInvoice])
 
   return (
-    <Container name='InvoicesTable'>
+    <Container name='InvoiceTable'>
       <DataTableHeader
         name='Invoices'
         slots={{
@@ -273,8 +271,8 @@ export const InvoicesTable = ({ onCreateInvoice, onSelectInvoice }: InvoicesTabl
         paginationProps={paginationProps}
         componentName={COMPONENT_NAME}
         slots={{
-          EmptyState: InvoicesTableEmptyState,
-          ErrorState: InvoicesTableErrorState,
+          EmptyState: InvoiceTableEmptyState,
+          ErrorState: InvoiceTableErrorState,
         }}
       />
     </Container>

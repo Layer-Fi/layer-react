@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useForm, FormValidateOrFn, FormAsyncValidateOrFn, useStore } from '@tanstack/react-form'
+import { useStore } from '@tanstack/react-form'
+import { useForm } from '../../features/forms/hooks/useForm'
 import { useCreateCustomAccount } from '../../hooks/customAccounts/useCreateCustomAccount'
 import { CustomAccount, CustomAccountSubtype, CustomAccountType } from '../../hooks/customAccounts/types'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
@@ -33,17 +34,7 @@ export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) =
 
   const { trigger: createCustomAccount } = useCreateCustomAccount()
 
-  const form = useForm<
-    CustomAccountFormData,
-    FormValidateOrFn<CustomAccountFormData>,
-    FormValidateOrFn<CustomAccountFormData>,
-    FormValidateOrFn<CustomAccountFormData>,
-    FormValidateOrFn<CustomAccountFormData>,
-    FormAsyncValidateOrFn<CustomAccountFormData>,
-    FormValidateOrFn<CustomAccountFormData>,
-    FormAsyncValidateOrFn<CustomAccountFormData>,
-    FormAsyncValidateOrFn<CustomAccountFormData>,
-    FormAsyncValidateOrFn<CustomAccountFormData>>({
+  const form = useForm<CustomAccountFormData>({
     defaultValues: {
       account_name: undefined,
       institution_name: undefined,

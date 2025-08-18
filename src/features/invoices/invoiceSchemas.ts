@@ -232,6 +232,7 @@ export const InvoiceFormLineItemSchema = Schema.Struct({
   isTaxable: Schema.Boolean,
 })
 export type InvoiceFormLineItem = typeof InvoiceFormLineItemSchema.Type
+export const InvoiceFormLineItemEquivalence = Schema.equivalence(InvoiceFormLineItemSchema)
 
 const InvoiceTermsValuesSchema = Schema.Enums(InvoiceTermsValues)
 export const InvoiceFormSchema = Schema.Struct({
@@ -261,3 +262,42 @@ export type InvoiceForm = Omit<typeof InvoiceFormSchema.Type, 'lineItems'> & {
   // Purposefully allow lineItems to be mutable for `field.pushValue` in the form
   lineItems: InvoiceFormLineItem[]
 }
+
+const InvoiceSummaryStatsSchema = Schema.Struct({
+  overdueCount: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('overdue_count'),
+  ),
+
+  overdueTotal: pipe(
+    Schema.propertySignature(Schema.BigIntFromNumber),
+    Schema.fromKey('overdue_total'),
+  ),
+
+  sentCount: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('sent_count'),
+  ),
+
+  sentTotal: pipe(
+    Schema.propertySignature(Schema.BigIntFromNumber),
+    Schema.fromKey('sent_total'),
+  ),
+})
+
+const InvoicePaymentsSummaryStatsSchema = Schema.Struct({
+  sumTotal: pipe(
+    Schema.propertySignature(Schema.BigIntFromNumber),
+    Schema.fromKey('sum_total'),
+  ),
+})
+
+export const InvoiceSummaryStatsResponseSchema = Schema.Struct({
+  invoices: InvoiceSummaryStatsSchema,
+
+  invoicePayments: pipe(
+    Schema.propertySignature(InvoicePaymentsSummaryStatsSchema),
+    Schema.fromKey('invoice_payments'),
+  ),
+})
+export type InvoiceSummaryStatsResponse = typeof InvoiceSummaryStatsResponseSchema.Type

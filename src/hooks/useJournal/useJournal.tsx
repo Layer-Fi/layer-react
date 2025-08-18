@@ -140,7 +140,6 @@ export const useJournal: UseJournal = () => {
     finally {
       setSendingForm(false)
       touch(DataModel.PROFIT_AND_LOSS)
-      touch(DataModel.PROFIT_AND_LOSS)
       void invalidatePnlDetailLines()
     }
   }

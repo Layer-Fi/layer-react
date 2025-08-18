@@ -128,8 +128,10 @@ export function useTagLedgerEntry({ ledgerEntryId }: TagLedgerEntryOptions) {
       })
 
       return triggerResultPromise
-        .finally(() => { void debouncedInvalidateLedgerEntries() })
-        .finally(() => { void invalidatePnlDetailLines() })
+        .finally(() => {
+          void debouncedInvalidateLedgerEntries()
+          void invalidatePnlDetailLines()
+        })
     },
     [
       ledgerEntryId,

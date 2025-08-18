@@ -31,10 +31,15 @@ const DECORATOR_CHARS_REGEX = /[,%$]/g
  *
  * Doing either the equality check or forced update to cause inequality is sufficient, but we do both to cover our bases.
  */
-export const withForceUpdate = (value: BD.BigDecimal): BD.BigDecimal => ({
-  ...value,
-  __forceUpdate: Symbol(),
-} as BD.BigDecimal)
+export const withForceUpdate = (value: BD.BigDecimal): BD.BigDecimal => {
+  // Define a new __forceUpdate property to ensure we still have access to the BigDecimal prototype.
+  return Object.defineProperty(value, '__forceUpdate', {
+    value: Symbol(),
+    enumerable: true,
+    configurable: true,
+    writable: false,
+  })
+}
 
 export function FormBigDecimalField({
   mode = 'decimal',
@@ -71,9 +76,11 @@ export function FormBigDecimalField({
       onSome: value => value,
     })
 
+    const rounded = BD.round(decimal, { scale: maxDecimalPlaces })
+
     const adjustedForPercent = mode === 'percent'
-      ? convertPercentToDecimal(decimal)
-      : decimal
+      ? convertPercentToDecimal(rounded)
+      : rounded
 
     const normalized = BD.normalize(adjustedForPercent)
     const clamped = BD.min(normalized, maxBigDecimalValue)
@@ -84,7 +91,7 @@ export function FormBigDecimalField({
     handleBlur()
 
     setInputValue(formatBigDecimalToString(clamped, formattingProps))
-  }, [inputValue, mode, maxBigDecimalValue, value, handleBlur, formattingProps, handleChange])
+  }, [inputValue, mode, maxBigDecimalValue, maxDecimalPlaces, value, handleBlur, formattingProps, handleChange])
 
   // Don't allow the user to type anything other than numeric characters, commas, decimals, etc
   const allowedChars = useMemo(() =>

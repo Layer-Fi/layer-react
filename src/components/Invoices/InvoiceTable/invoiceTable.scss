@@ -1,42 +1,46 @@
-.Layer__UI__Table__InvoicesTable {
+.Layer__InvoiceTable {
+  width: clamp(48rem, 100%, 1406px);
+}
+
+.Layer__UI__Table__InvoiceTable {
   table-layout: fixed;
 
-  .Layer__UI__Table-Column__InvoicesTable {
+  .Layer__UI__Table-Column__InvoiceTable {
     &--SentAt {
       width: 15%;
-      min-width: 6.25rem;
+      min-width: 8rem;
     }
 
     &--InvoiceNo {
       width: 10%;
-      min-width: 4rem;
+      min-width: 6.75rem;
     }
 
     &--Customer {
       width: 35%;
-      min-width: 10rem;
+      min-width: 11.75rem;
     }
 
     &--Total {
       width: 15%;
-      min-width: 6rem;
+      min-width: 7.75rem;
       border-right: 1px solid var(--color-base-300);
       text-align: end;
     }
 
     &--Status {
       width: 25%;
-      min-width: 8.25rem;
+      min-width: 10rem;
     }
   }
 
-  .Layer__UI__Table-Cell__InvoicesTable {
+  .Layer__UI__Table-Cell__InvoiceTable {
     &--Total {
       border-right: 1px solid var(--color-base-300);
     }
   }
 }
 
-.Layer__InvoicesTable__StatusFilter {
+.Layer__InvoiceTable__StatusFilter {
   width: 11rem;
 }

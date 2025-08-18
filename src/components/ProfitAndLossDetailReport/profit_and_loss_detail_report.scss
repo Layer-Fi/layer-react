@@ -1,46 +1,10 @@
-.Layer__profit-and-loss-table__clickable-cell {
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
-.Layer__profit-and-loss-detail-report {
-  width: 100%;
-
+:root {
   --pnl-detail-date-col-width: 12%;
   --pnl-detail-type-col-width: 12%;
   --pnl-detail-account-col-width: 18%;
   --pnl-detail-description-col-width: 28%;
   --pnl-detail-amount-col-width: 15%;
   --pnl-detail-balance-col-width: 15%;
-}
-
-.Layer__profit-and-loss-detail-report__content {
-  padding: var(--spacing-md);
-}
-
-.Layer__profit-and-loss-detail-report__error {
-  padding: var(--spacing-lg);
-  text-align: center;
-  color: var(--color-danger-600);
-}
-
-.Layer__profit-and-loss-detail-report__type-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &:focus {
-    outline: 2px solid var(--color-primary-500);
-    outline-offset: 2px;
-  }
 }
 
 .Layer__UI__Table__ProfitAndLossDetailReport {
@@ -72,22 +36,25 @@
       width: var(--pnl-detail-amount-col-width);
       min-width: 7.5rem;
       text-align: right;
+      justify-content: flex-end;
     }
 
     &--Balance {
       width: var(--pnl-detail-balance-col-width);
       min-width: 7.5rem;
       text-align: right;
+      justify-content: flex-end;
     }
   }
 
   .Layer__UI__Table-Cell__ProfitAndLossDetailReport {
-    &--Account {
-      color: var(--color-base-600);
+    &--Date {
+      width: var(--pnl-detail-date-col-width);
+      min-width: 7rem;
     }
 
     &--Type {
-      font-size: var(--text-md);
+      width: var(--pnl-detail-type-col-width);
 
       button {
         font-size: inherit;
@@ -97,14 +64,27 @@
       }
     }
 
+    &--Account {
+      width: var(--pnl-detail-account-col-width);
+      min-width: 10rem;
+      color: var(--color-base-600);
+    }
+
+    &--Description {
+      width: var(--pnl-detail-description-col-width);
+      min-width: 12rem;
+    }
+
     &--Amount {
+      width: var(--pnl-detail-amount-col-width);
+      min-width: 7.5rem;
       text-align: right;
-      color: var(--color-base-800);
     }
 
     &--Balance {
+      width: var(--pnl-detail-balance-col-width);
+      min-width: 7.5rem;
       text-align: right;
-      color: var(--color-base-800);
     }
   }
 }
@@ -118,41 +98,23 @@
     var(--pnl-detail-description-col-width)
     var(--pnl-detail-amount-col-width)
     var(--pnl-detail-balance-col-width);
-  align-items: center;
-  padding-top: var(--spacing-md);
+  padding-top: var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
+  padding-right: var(--spacing-md);
   border-top: 1px solid var(--color-base-300);
 }
 
 .Layer__profit-and-loss-detail-report__total-label {
   grid-column: 1;
-  font-weight: 540;
-  font-size: var(--text-sm);
-  line-height: 140%;
-  text-align: left;
-  padding-left: var(--spacing-sm);
-  color: var(--color-base-800);
+  padding-left: var(--spacing-md);
 }
 
 .Layer__profit-and-loss-detail-report__total-amount {
   grid-column: 5;
-  font-weight: 580;
-  font-size: var(--text-sm);
-  line-height: 140%;
-  text-align: right;
-  color: var(--color-base-900);
+  justify-content: right;
   padding-right: var(--spacing-sm);
 }
 
-.Layer__full-page-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--color-base-0);
-  z-index: var(--z-index-modal, 1000);
-  overflow-y: auto;
-}
+
+
 
