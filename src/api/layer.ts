@@ -39,8 +39,6 @@ import {
   updateOpeningBalance,
 } from './layer/linked_accounts'
 import {
-  getProfitAndLoss,
-  getProfitAndLossSummaries,
   getProfitAndLossCsv,
   getProfitAndLossExcel,
   compareProfitAndLoss,
@@ -80,8 +78,6 @@ export const Layer = {
   getLedgerAccountBalancesCSV,
   getLedgerAccountsLines,
   getLedgerAccountsEntry,
-  getProfitAndLoss,
-  getProfitAndLossSummaries,
   getProfitAndLossCsv,
   getProfitAndLossExcel,
   getJournalEntriesCSV,
