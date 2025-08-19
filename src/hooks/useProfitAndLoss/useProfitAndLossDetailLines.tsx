@@ -15,14 +15,14 @@ export const LIST_PNL_DETAIL_LINES_TAG_KEY = '#list-pnl-detail-lines'
 
 type PnlStructureLineItemName = string
 
-type PnlDetailLinesBaseParams = {
+export type PnlDetailLinesBaseParams = {
   businessId: string
   startDate: Date
   endDate: Date
   pnlStructureLineItemName: PnlStructureLineItemName
 }
 
-type PnlDetailLinesFilterParams = {
+export type PnlDetailLinesFilterParams = {
   tagFilter?: {
     key: string
     values: string[]
@@ -185,7 +185,7 @@ export function usePnlDetailLinesInvalidator() {
   }
 }
 
-type GetProfitAndLossDetailLinesParams = {
+export type GetProfitAndLossDetailLinesParams = {
   businessId: string
   startDate: Date
   endDate: Date

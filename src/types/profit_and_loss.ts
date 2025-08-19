@@ -1,7 +1,6 @@
 import type { ReportingBasis } from '../types'
 import { ReadonlyArrayWithAtLeastOne } from '../utils/array/getArrayWithAtLeastOneOrFallback'
 import { LineItem } from '../utils/schema/utils'
-import { } from './line_item'
 import { TagViewConfig } from './tags'
 
 export interface TagComparisonOption {

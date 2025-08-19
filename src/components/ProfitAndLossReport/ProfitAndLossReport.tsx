@@ -4,6 +4,7 @@ import { ReportsStringOverrides } from '../../views/Reports/Reports'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { ProfitAndLoss } from '../ProfitAndLoss'
+import { ProfitAndLossDetailLinesDownloadButton } from '../ProfitAndLossDetailLinesDownloadButton'
 import { View } from '../View'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import { ProfitAndLossDetailReport } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
@@ -32,18 +33,18 @@ export const ProfitAndLossReport = ({
   const { comparisonConfig } = useContext(ProfitAndLoss.ComparisonContext)
   const [selectedLineItem, setSelectedLineItem] = useState<SelectedLineItem | null>(null)
 
-  // Memoize breadcrumb index lookup for O(1) performance
   const breadcrumbIndexMap = useMemo(() => {
-    if (!selectedLineItem) return new Map<string, number>()
+    if (!selectedLineItem) return {}
 
-    return new Map(
-      selectedLineItem.breadcrumbPath.map((item, index) => [item.name, index]),
-    )
+    return selectedLineItem.breadcrumbPath.reduce((acc, item, index) => {
+      acc[item.name] = index
+      return acc
+    }, {} as Record<string, number>)
   }, [selectedLineItem])
 
   const handleLineItemClick = useCallback((lineItemName: string, breadcrumbPath?: BreadcrumbItem[]) => {
     if (!breadcrumbPath && selectedLineItem) {
-      const clickedIndex = breadcrumbIndexMap.get(lineItemName)
+      const clickedIndex = breadcrumbIndexMap[lineItemName]
       if (clickedIndex !== undefined) {
         breadcrumbPath = selectedLineItem.breadcrumbPath.slice(0, clickedIndex + 1)
       }
@@ -83,12 +84,21 @@ export const ProfitAndLossReport = ({
               </>
             </HeaderCol>
             <HeaderCol>
-              <ProfitAndLoss.DownloadButton
-                stringOverrides={stringOverrides?.downloadButton}
-                useComparisonPnl={!!comparisonConfig}
-                moneyFormat={csvMoneyFormat}
-                view={view}
-              />
+              {selectedLineItem
+                ? (
+                  <ProfitAndLossDetailLinesDownloadButton
+                    pnlStructureLineItemName={selectedLineItem.lineItemName}
+                    iconOnly={view === 'mobile'}
+                  />
+                )
+                : (
+                  <ProfitAndLoss.DownloadButton
+                    stringOverrides={stringOverrides?.downloadButton}
+                    useComparisonPnl={!!comparisonConfig}
+                    moneyFormat={csvMoneyFormat}
+                    view={view}
+                  />
+                )}
             </HeaderCol>
           </HeaderRow>
           {view !== 'desktop'
