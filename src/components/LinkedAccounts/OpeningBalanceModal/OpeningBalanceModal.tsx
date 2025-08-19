@@ -121,7 +121,7 @@ function LinkedAccountsOpeningBalanceModalContent({
     <>
       <ModalTitleWithClose
         heading={(
-          <ModalHeading pbe='lg' size='xl'>
+          <ModalHeading size='xl'>
             {stringOverrides?.title ?? 'Add opening balance'}
           </ModalHeading>
         )}

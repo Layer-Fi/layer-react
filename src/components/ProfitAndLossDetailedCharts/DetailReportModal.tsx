@@ -1,4 +1,4 @@
-import { forwardRef, type ComponentProps } from 'react'
+import { forwardRef } from 'react'
 import {
   Dialog as ReactAriaDialog,
   type DialogProps,
@@ -8,7 +8,7 @@ import {
 } from 'react-aria-components'
 import { ProfitAndLossDetailReport, type ProfitAndLossDetailReportProps } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
-import { LineBaseItem } from '../../types/line_item'
+import { LineBaseItem } from '@layerfi/components/types/line_item'
 
 const MODAL_OVERLAY_CLASS_NAME = 'Layer__DetailReportModalOverlay'
 const MODAL_OVERLAY_CLASS_NAMES = `Layer__Portal ${MODAL_OVERLAY_CLASS_NAME}`

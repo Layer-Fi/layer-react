@@ -9,6 +9,7 @@ import { type CustomAccountParseCsvResponse } from '../../hooks/customAccounts/u
 import { UploadTransactionsConfirmationStep } from './UploadTransactionsConfirmationStep'
 import { UploadTransactionsStep } from './types'
 import { BankTransaction } from '../../types'
+import { Separator } from '../Separator/Separator'
 
 type UploadTransactionsHeaderProps = {
   currentStep: UploadTransactionsStep
@@ -28,7 +29,7 @@ function UploadTransactionsHeader({ currentStep, isValid }: UploadTransactionsHe
             : 'Some transactions couldn\'t be parsed'
           )}
       </Heading>
-      <Heading level={2} pbe='xl' size='xs' variant='subtle' weight='normal'>
+      <Heading level={2} size='xs' pbe='md' variant='subtle' weight='normal'>
         {currentStep === UploadTransactionsStep.UploadCsv && 'Import a file of transactions from your bank account or credit card'}
         {currentStep === UploadTransactionsStep.ValidateCsv
           && (isValid
@@ -36,6 +37,7 @@ function UploadTransactionsHeader({ currentStep, isValid }: UploadTransactionsHe
             : 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.'
           )}
       </Heading>
+      <Separator mbe='xl' />
     </VStack>
   )
 }

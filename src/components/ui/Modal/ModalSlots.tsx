@@ -4,6 +4,7 @@ import { Button } from '../Button/Button'
 import { Heading } from '../Typography/Heading'
 import { P } from '../Typography/Text'
 import classNames from 'classnames'
+import { HStack } from '../Stack/Stack'
 
 const MODAL_CLOSE_BUTTON_CLASS_NAME = 'Layer__ModalCloseButton'
 
@@ -51,7 +52,7 @@ export const ModalTitleWithClose = forwardRef<
       <Button
         icon
         inset
-        variant='ghost'
+        variant='outlined'
         slot='close'
         onPress={onClose}
         aria-label='Close Modal'
@@ -95,12 +96,10 @@ export function ModalContent({ children }: PropsWithChildren) {
   return <div className={MODAL_CONTENT_CLASS_NAME}>{children}</div>
 }
 
-const MODAL_ACTIONS_CLASS_NAME = 'Layer__ModalActions'
-
 export function ModalActions({ children }: PropsWithChildren) {
   return (
-    <div className={MODAL_ACTIONS_CLASS_NAME}>
+    <HStack pbs='xl' justify='end'>
       {children}
-    </div>
+    </HStack>
   )
 }

@@ -1,11 +1,15 @@
 .Layer__DetailReportModalOverlay {
   position: fixed;
   z-index: 100;
-  inset: 0;
-  display: grid;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   background: rgb(0 0 0 / 50%);
-  place-items: center;
 
   &[data-entering] {
     animation-duration: 150ms;
@@ -17,11 +21,12 @@
 }
 
 .Layer__DetailReportModal {
-  // Full screen modal dimensions
-  block-size: 100vh;
-  inline-size: 100vw;
-  max-block-size: 100vh;
-  max-inline-size: 100vw;
+  // Modal dimensions - 90% width, 70% height of parent
+  block-size: 70%;
+  inline-size: 90%;
+  max-block-size: 70%;
+  max-inline-size: 90%;
+  margin: auto;
 
   &[data-entering] {
     animation-duration: 300ms;
