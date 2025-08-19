@@ -1,10 +1,12 @@
-import { useContext } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { View as ViewType } from '../../types/general'
 import { ReportsStringOverrides } from '../../views/Reports/Reports'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { View } from '../View'
+import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
+import { ProfitAndLossDetailReport } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -12,6 +14,11 @@ export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
   view?: ViewBreakpoint
 } & TimeRangePickerConfig
+
+type SelectedLineItem = {
+  lineItemName: string
+  breadcrumbPath: BreadcrumbItem[]
+}
 
 export const ProfitAndLossReport = ({
   stringOverrides,
@@ -23,6 +30,36 @@ export const ProfitAndLossReport = ({
   view,
 }: ProfitAndLossReportProps) => {
   const { comparisonConfig } = useContext(ProfitAndLoss.ComparisonContext)
+  const [selectedLineItem, setSelectedLineItem] = useState<SelectedLineItem | null>(null)
+
+  const breadcrumbIndexMap = useMemo(() => {
+    if (!selectedLineItem) return {}
+
+    return selectedLineItem.breadcrumbPath.reduce((acc, item, index) => {
+      acc[item.name] = index
+      return acc
+    }, {} as Record<string, number>)
+  }, [selectedLineItem])
+
+  const handleLineItemClick = useCallback((lineItemName: string, breadcrumbPath?: BreadcrumbItem[]) => {
+    if (!breadcrumbPath && selectedLineItem) {
+      const clickedIndex = breadcrumbIndexMap[lineItemName]
+      if (clickedIndex !== undefined) {
+        breadcrumbPath = selectedLineItem.breadcrumbPath.slice(0, clickedIndex + 1)
+      }
+      else {
+        return // Invalid breadcrumb click
+      }
+    }
+
+    if (breadcrumbPath) {
+      setSelectedLineItem({ lineItemName, breadcrumbPath })
+    }
+  }, [selectedLineItem, breadcrumbIndexMap])
+
+  const handleCloseDetailReport = useCallback(() => {
+    setSelectedLineItem(null)
+  }, [])
 
   return (
     <View
@@ -66,10 +103,22 @@ export const ProfitAndLossReport = ({
         </Header>
       )}
     >
-      <ProfitAndLoss.Table
-        asContainer={false}
-        stringOverrides={stringOverrides?.profitAndLoss?.table}
-      />
+      {selectedLineItem
+        ? (
+          <ProfitAndLossDetailReport
+            lineItemName={selectedLineItem.lineItemName}
+            breadcrumbPath={selectedLineItem.breadcrumbPath}
+            onClose={handleCloseDetailReport}
+            onBreadcrumbClick={handleLineItemClick}
+          />
+        )
+        : (
+          <ProfitAndLoss.Table
+            asContainer={false}
+            stringOverrides={stringOverrides?.profitAndLoss?.table}
+            onLineItemClick={handleLineItemClick}
+          />
+        )}
     </View>
   )
 }
