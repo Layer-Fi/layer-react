@@ -3,8 +3,9 @@ import { ProfitAndLoss } from '../ProfitAndLoss'
 import { useProfitAndLossDetailLines } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
+import { VirtualizedDataTable } from '../VirtualizedDataTable/VirtualizedDataTable'
 import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
-import { DataTable, type ColumnConfig } from '../DataTable/DataTable'
+import { type ColumnConfig } from '../DataTable/DataTable'
 import { Badge } from '../Badge'
 import { DateTime } from '../DateTime'
 import { TextSize, TextWeight } from '../Typography'
@@ -227,7 +228,7 @@ export const ProfitAndLossDetailReport = ({
 
   return (
     <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={onClose} borderless>
-      <DataTable<ProcessedPnlDetailLine, PnlDetailColumns>
+      <VirtualizedDataTable<ProcessedPnlDetailLine, PnlDetailColumns>
         componentName={COMPONENT_NAME}
         ariaLabel={`${lineItemName} detail lines`}
         columnConfig={columnConfig}
