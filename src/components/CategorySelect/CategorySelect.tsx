@@ -33,6 +33,7 @@ type Props = {
   excludeMatches?: boolean
   hideMainCategories?: string[]
   asDrawer?: boolean
+  externalSuggestions?: Category[]
 }
 
 export enum OptionActionType {
@@ -267,6 +268,7 @@ export const CategorySelect = ({
   excludeMatches = false,
   hideMainCategories,
   asDrawer = false,
+  externalSuggestions,
 }: Props) => {
   const { data: categories } = useCategories()
 
@@ -303,6 +305,13 @@ export const CategorySelect = ({
             ),
           } satisfies GroupBase<CategoryOption>,
       ]
+      : externalSuggestions && externalSuggestions.length > 0
+      ? [
+          {
+            label: 'Suggestions',
+            options: externalSuggestions.map(x => mapCategoryToOption(x)),
+          } satisfies GroupBase<CategoryOption>,
+      ]
       : []
 
   const categoryOptions = flattenCategories(categories ?? [])
@@ -325,7 +334,7 @@ export const CategorySelect = ({
   const placeholder =
     matchOptions?.length === 1 && matchOptions[0].options.length > 1
       ? `${matchOptions[0].options.length} possible matches...`
-      : 'Categorize or match...'
+      : 'Categorize'
 
   if (asDrawer) {
     return (
