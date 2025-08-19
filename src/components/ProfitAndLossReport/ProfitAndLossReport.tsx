@@ -32,18 +32,18 @@ export const ProfitAndLossReport = ({
   const { comparisonConfig } = useContext(ProfitAndLoss.ComparisonContext)
   const [selectedLineItem, setSelectedLineItem] = useState<SelectedLineItem | null>(null)
 
-  // Memoize breadcrumb index lookup for O(1) performance
   const breadcrumbIndexMap = useMemo(() => {
-    if (!selectedLineItem) return new Map<string, number>()
+    if (!selectedLineItem) return {}
 
-    return new Map(
-      selectedLineItem.breadcrumbPath.map((item, index) => [item.name, index]),
-    )
+    return selectedLineItem.breadcrumbPath.reduce((acc, item, index) => {
+      acc[item.name] = index
+      return acc
+    }, {} as Record<string, number>)
   }, [selectedLineItem])
 
   const handleLineItemClick = useCallback((lineItemName: string, breadcrumbPath?: BreadcrumbItem[]) => {
     if (!breadcrumbPath && selectedLineItem) {
-      const clickedIndex = breadcrumbIndexMap.get(lineItemName)
+      const clickedIndex = breadcrumbIndexMap[lineItemName]
       if (clickedIndex !== undefined) {
         breadcrumbPath = selectedLineItem.breadcrumbPath.slice(0, clickedIndex + 1)
       }
