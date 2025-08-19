@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { LineBaseItem } from '../../types/line_item'
 import { formatPercent } from '../../utils/format'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
 import { mapTypesToColors } from './DetailedTable'
@@ -15,9 +14,10 @@ import {
   Text as ChartText,
 } from 'recharts'
 import { PolarViewBox } from 'recharts/types/util/types'
+import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'
 
 interface DetailedChartProps {
-  filteredData: LineBaseItem[]
+  filteredData: PnlChartLineItem[]
   filteredTotal?: number
   hoveredItem?: string
   setHoveredItem: (name?: string) => void
@@ -37,27 +37,21 @@ export const DetailedChart = ({
   isLoading,
   showDatePicker = true,
 }: DetailedChartProps) => {
-  const chartData = useMemo(() => {
-    if (!filteredData) {
-      return []
-    }
-    return filteredData.map((x) => {
-      if (x.hidden) {
-        return {
-          ...x,
-          name: x.display_name,
-          value: 0,
-          type: x.type,
-        }
-      }
+  const chartData = useMemo(() => filteredData.map((x) => {
+    if (x.isHidden) {
       return {
         ...x,
-        name: x.display_name,
-        value: x.value > 0 ? x.value : 0,
-        type: x.type,
+        name: x.displayName,
+        value: 0,
       }
-    })
-  }, [filteredData, isLoading])
+    }
+    return {
+      ...x,
+      name: x.displayName,
+      value: x.value > 0 ? x.value : 0,
+    }
+  }),
+  [filteredData])
 
   const noValue = chartData.length === 0 || !chartData.find(x => x.value !== 0)
 
@@ -201,7 +195,7 @@ export const DetailedChart = ({
                       let value = filteredTotal
                       if (hoveredItem) {
                         value = filteredData.find(
-                          x => x.display_name === hoveredItem,
+                          x => x.displayName === hoveredItem,
                         )?.value
                       }
 
@@ -239,7 +233,7 @@ export const DetailedChart = ({
 
                       if (hoveredItem) {
                         const item = filteredData.find(
-                          x => x.display_name === hoveredItem,
+                          x => x.displayName === hoveredItem,
                         )
                         const positiveTotal = chartData.reduce((sum, x) => sum + x.value, 0)
 
@@ -337,7 +331,7 @@ export const DetailedChart = ({
                       let value = filteredTotal
                       if (hoveredItem) {
                         value = filteredData.find(
-                          x => x.display_name === hoveredItem,
+                          x => x.displayName === hoveredItem,
                         )?.value
                       }
 

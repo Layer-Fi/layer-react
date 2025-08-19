@@ -7,19 +7,21 @@ export interface BadgeLoaderProps {
   children?: ReactNode
   size?: number
   variant?: 'default' | 'info' | 'success' | 'error' | 'warning'
+  showLoading?: boolean
 }
 
-const BadgeLoaderIcon = ({ variant }: { variant: BadgeLoaderProps['variant'] }) => {
+const BadgeLoaderIcon = ({ variant, showLoading }: { variant: BadgeLoaderProps['variant'], showLoading?: boolean }) => {
+  if (showLoading) return <LoaderIcon size={12} className='Layer__anim--rotating' />
   if (variant === 'success') return <CheckIcon size={12} />
   if (variant === 'error') return <XIcon size={12} />
   if (variant === 'warning') return <AlertCircle size={12} />
   return <LoaderIcon size={12} className='Layer__anim--rotating' />
 }
 
-export const BadgeLoader = ({ children, variant = 'default' }: BadgeLoaderProps) => {
+export const BadgeLoader = ({ children, showLoading, variant = 'default' }: BadgeLoaderProps) => {
   return (
     <span className={`Layer__loader Layer__loader--as-badge Layer__loader--${variant}`}>
-      <BadgeLoaderIcon variant={variant} />
+      <BadgeLoaderIcon variant={variant} showLoading={showLoading} />
       {children}
     </span>
   )

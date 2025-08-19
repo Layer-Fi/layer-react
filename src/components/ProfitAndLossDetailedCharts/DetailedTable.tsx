@@ -7,9 +7,9 @@ import {
 import SortArrows from '../../icons/SortArrows'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { SortDirection } from '../../types'
-import { LineBaseItem } from '../../types/line_item'
 import { formatPercent } from '../../utils/format'
 import classNames from 'classnames'
+import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'
 
 export interface DetailedTableStringOverrides {
   categoryColumnHeader?: string
@@ -18,7 +18,7 @@ export interface DetailedTableStringOverrides {
 }
 
 export interface DetailedTableProps {
-  filteredData: LineBaseItem[]
+  filteredData: PnlChartLineItem[]
   hoveredItem?: string
   setHoveredItem: (name?: string) => void
   sidebarScope: SidebarScope
@@ -34,7 +34,7 @@ export interface TypeColorMapping {
 }
 
 export const mapTypesToColors = (
-  data: LineBaseItem[],
+  data: PnlChartLineItem[],
   colorList: string[] = DEFAULT_CHART_COLOR_TYPE,
 ): TypeColorMapping[] => {
   const typeToColor: Record<string, string> = {}
@@ -74,7 +74,7 @@ const ValueIcon = ({
   typeColorMapping,
   idx,
 }: {
-  item: LineBaseItem
+  item: PnlChartLineItem
   typeColorMapping: TypeColorMapping[]
   idx: number
 }) => {
@@ -145,7 +145,7 @@ export const DetailedTable = ({
 
   const typeColorMapping = mapTypesToColors(filteredData, chartColorsList)
   const positiveTotal = filteredData
-    .filter(x => !x.hidden && x.value > 0)
+    .filter(x => !x.isHidden && x.value > 0)
     .reduce((sum, x) => sum + x.value, 0)
 
   return (
@@ -183,7 +183,7 @@ export const DetailedTable = ({
           </thead>
           <tbody>
             {filteredData
-              .filter(x => !x.hidden)
+              .filter(x => !x.isHidden)
               .map((item, idx) => {
                 const share = item.value > 0 ? item.value / positiveTotal : 0
                 return (
@@ -191,14 +191,14 @@ export const DetailedTable = ({
                     key={`pl-side-table-item-${idx}`}
                     className={classNames(
                       'Layer__profit-and-loss-detailed-table__row',
-                      hoveredItem && hoveredItem === item.display_name
+                      hoveredItem && hoveredItem === item.displayName
                         ? 'active'
                         : '',
                     )}
-                    onMouseEnter={() => setHoveredItem(item.display_name)}
+                    onMouseEnter={() => setHoveredItem(item.displayName)}
                     onMouseLeave={() => setHoveredItem(undefined)}
                   >
-                    <td className='category-col'>{item.display_name}</td>
+                    <td className='category-col'>{item.displayName}</td>
                     <td className='type-col'>{item.type}</td>
                     <td className='value-col'>
                       $

@@ -1,6 +1,7 @@
 import { DATE_FORMAT, TIME_FORMAT } from '../../config/general'
-import { Text, TextSize, TextWeight } from '../Typography'
+import { Text } from '../Typography'
 import { parseISO, format as formatTime } from 'date-fns'
+import { Span, TextStyleProps } from '../ui/Typography/Text'
 
 interface DateTimeProps {
   value: string
@@ -9,9 +10,10 @@ interface DateTimeProps {
   timeFormat?: string
   onlyDate?: boolean
   onlyTime?: boolean
-  size?: TextSize
-  weight?: TextWeight
-  color?: string
+  slotProps?: {
+    Date?: TextStyleProps
+    Time?: TextStyleProps
+  }
 }
 
 export const DateTime = ({
@@ -21,9 +23,10 @@ export const DateTime = ({
   timeFormat,
   onlyDate,
   onlyTime,
-  size = TextSize.sm,
-  weight = TextWeight.bold,
-  color = 'base-800',
+  slotProps = {
+    Date: { size: 'sm' },
+    Time: { size: 'sm', variant: 'subtle' },
+  },
 }: DateTimeProps) => {
   if (format) {
     return (
@@ -39,26 +42,14 @@ export const DateTime = ({
   return (
     <Text className='Layer__datetime'>
       {!onlyTime && (
-        <Text
-          as='span'
-          weight={weight}
-          size={size}
-          className='Layer__datetime__date'
-          data-color={color}
-        >
+        <Span {...slotProps.Date}>
           {date}
-        </Text>
+        </Span>
       )}
       {!onlyDate && (
-        <Text
-          as='span'
-          weight={weight}
-          size={size}
-          className='Layer__datetime__time'
-          data-color={color}
-        >
+        <Span {...slotProps.Time}>
           {time}
-        </Text>
+        </Span>
       )}
     </Text>
   )
