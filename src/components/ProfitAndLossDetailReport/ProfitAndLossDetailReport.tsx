@@ -22,6 +22,8 @@ import type { PnlDetailLine, LedgerEntrySourceType } from '../../hooks/useProfit
 import { MoneySpan } from '../ui/Typography/MoneyText'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
+const DEFAULT_ROW_HEIGHT = 52
+const HEADER_HEIGHT = 41
 
 /* Our source detail component expects an old schema.
  * This converts for backwards compatibility until we switch that component to our new schemas with fixed variable types. */
@@ -60,6 +62,7 @@ export interface ProfitAndLossDetailReportProps {
   onClose: () => void
   onBreadcrumbClick?: (lineItemName: string) => void
   stringOverrides?: ProfitAndLossDetailReportStringOverrides
+  maxVisibleRows?: number
 }
 
 const ErrorState = () => (
@@ -86,6 +89,7 @@ export const ProfitAndLossDetailReport = ({
   onClose,
   onBreadcrumbClick,
   stringOverrides,
+  maxVisibleRows = 20,
 }: ProfitAndLossDetailReportProps) => {
   const { businessId } = useLayerContext()
   const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
@@ -235,6 +239,7 @@ export const ProfitAndLossDetailReport = ({
         data={rowsWithRunningBalance.lines}
         isLoading={isLoading}
         isError={isError}
+        height={(DEFAULT_ROW_HEIGHT * maxVisibleRows) + HEADER_HEIGHT - 1}
         slots={{
           EmptyState,
           ErrorState,

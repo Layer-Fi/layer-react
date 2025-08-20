@@ -79,7 +79,7 @@ export function DetailReportModal({
   }
 
   return (
-    <ReportModal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} size='4xl' aria-label='Profit and Loss Detail Report'>
+    <ReportModal isOpen={isOpen} onOpenChange={onOpenChange} size='4xl' aria-label='Profit and Loss Detail Report'>
       {selectedItem && selectedItem.lineItemName && (
         <ProfitAndLossDetailReport
           lineItemName={selectedItem.lineItemName}
@@ -87,6 +87,7 @@ export function DetailReportModal({
           onClose={handleClose}
           onBreadcrumbClick={onBreadcrumbClick}
           stringOverrides={stringOverrides}
+          maxVisibleRows={10}
         />
       )}
     </ReportModal>

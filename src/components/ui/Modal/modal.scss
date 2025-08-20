@@ -50,6 +50,9 @@
   }
   &[data-size='4xl'] {
     inline-size: min(80rem, 90%);
+    block-size: fit-content;
+    max-block-size: min(52rem, 90%);
+    overflow: auto;
   }
 }
 
