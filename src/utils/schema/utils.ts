@@ -29,7 +29,7 @@ export interface LineItem extends Schema.Struct.Type<typeof lineItemFields> {
   lineItems: ReadonlyArray<LineItem>
 }
 
-interface LineItemEncoded extends Schema.Struct.Encoded<typeof lineItemFields> {
+export interface LineItemEncoded extends Schema.Struct.Encoded<typeof lineItemFields> {
   readonly line_items: ReadonlyArray<LineItemEncoded>
 }
 
