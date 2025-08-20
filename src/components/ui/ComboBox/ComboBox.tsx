@@ -325,8 +325,6 @@ export function ComboBox<T extends ComboBoxOption>({
 
         placeholder={placeholder}
 
-        menuPortalTarget={document.body}
-
         unstyled
         className={className}
         classNames={{

@@ -9,16 +9,16 @@ export type BaseDetailViewProps = PropsWithChildren<{
   onGoBack: () => void
   slots: {
     Header: React.FC
+    BackIcon?: React.FC
   }
 }>
 
-export const BaseDetailView = ({ name, onGoBack, slots, children }: BaseDetailViewProps) => {
-  const { Header } = slots
-
+export const BaseDetailView = ({ name, slots, onGoBack, children }: BaseDetailViewProps) => {
+  const { Header, BackIcon } = slots
   return (
     <Container name={name} className='Layer__BaseDetailView'>
       <HStack align='center' gap='md' className='Layer__BaseDetailView__Header'>
-        <Button variant='outlined' icon onPress={onGoBack}><BackArrow /></Button>
+        <Button variant='outlined' icon onPress={onGoBack}>{BackIcon ? <BackIcon /> : <BackArrow />}</Button>
         <Header />
       </HStack>
       {children}

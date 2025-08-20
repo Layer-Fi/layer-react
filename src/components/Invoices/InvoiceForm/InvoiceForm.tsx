@@ -112,9 +112,8 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
           const validationErrors = flattenValidationErrors(errorMap)
           if (validationErrors.length > 0 || submitError) {
             return (
-              <HStack className='Layer__InvoiceForm__FormError'>
+              <HStack className={`${INVOICE_FORM_CSS_PREFIX}__FormError`}>
                 <DataState
-                  className='Layer__InvoiceForm__FormError__DataState'
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}

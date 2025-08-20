@@ -118,41 +118,43 @@ function LinkedAccountsOpeningBalanceModalContent({
   }
 
   return (
-    <>
+    <VStack gap='lg'>
       <ModalTitleWithClose
         heading={(
-          <ModalHeading pbe='lg' size='xl'>
+          <ModalHeading size='xl'>
             {stringOverrides?.title ?? 'Add opening balance'}
           </ModalHeading>
         )}
         onClose={handleDismiss}
       />
-      <ModalContent>
-        <VStack gap='md'>
-          {formsData.map(item => (
-            <AccountFormBox
-              key={item.account.id}
-              account={item.account}
-              value={item}
-              disableConfirmExclude={true}
-              isSaved={results[item.account.id]?.status === 'fulfilled'}
-              errors={extractErrors(results, item.account.id)}
-              onChange={v => setFormsData(formsData.map(
-                item => item.account.id === v.account.id ? v : item,
-              ))}
-            />
-          ),
-          )}
-        </VStack>
-      </ModalContent>
-      <ModalActions>
-        <VStack gap='md'>
-          <Button onPress={() => void trigger()} isPending={isMutating}>
-            {stringOverrides?.buttonText ?? 'Submit'}
-          </Button>
-        </VStack>
-      </ModalActions>
-    </>
+      <VStack>
+        <ModalContent>
+          <VStack gap='md'>
+            {formsData.map(item => (
+              <AccountFormBox
+                key={item.account.id}
+                account={item.account}
+                value={item}
+                disableConfirmExclude={true}
+                isSaved={results[item.account.id]?.status === 'fulfilled'}
+                errors={extractErrors(results, item.account.id)}
+                onChange={v => setFormsData(formsData.map(
+                  item => item.account.id === v.account.id ? v : item,
+                ))}
+              />
+            ),
+            )}
+          </VStack>
+        </ModalContent>
+        <ModalActions>
+          <VStack gap='md'>
+            <Button onPress={() => void trigger()} isPending={isMutating}>
+              {stringOverrides?.buttonText ?? 'Submit'}
+            </Button>
+          </VStack>
+        </ModalActions>
+      </VStack>
+    </VStack>
   )
 }
 

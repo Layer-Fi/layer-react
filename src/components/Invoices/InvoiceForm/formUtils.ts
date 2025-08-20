@@ -13,9 +13,8 @@ import { getInvoiceTermsFromDates, InvoiceTermsValues } from '../InvoiceTermsCom
 import { ValidationErrorMap } from '@tanstack/react-form'
 
 export type InvoiceFormState = {
-  isFormValid: boolean
+  isDirty: boolean
   isSubmitting: boolean
-  submitError: string | undefined
 }
 
 export const EMPTY_LINE_ITEM: InvoiceFormLineItem = {
@@ -127,7 +126,6 @@ export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) 
   if (nonEmptyLineItems.length === 0) {
     errors.push({ lineItems: 'Invoice requires at least one non-empty line item.' })
   }
-
 
   nonEmptyLineItems.some((item) => {
     if (item.product.trim() === '') {

@@ -9,7 +9,7 @@ import { Schema, Effect } from 'effect'
 import { useInvoicesGlobalCacheActions } from './useListInvoices'
 import { useInvoiceSummaryStatsCacheActions } from './useInvoiceSummaryStats'
 
-const UPSERT_INVOICES_TAG_KEY = '#upsert-invoice'
+const UPSERT_INVOICE_TAG_KEY = '#upsert-invoice'
 
 export enum UpsertInvoiceMode {
   Create = 'Create',
@@ -47,7 +47,7 @@ function buildKey({
       apiUrl,
       businessId,
       invoiceId,
-      tags: [UPSERT_INVOICES_TAG_KEY],
+      tags: [UPSERT_INVOICE_TAG_KEY],
     } as const
   }
 }

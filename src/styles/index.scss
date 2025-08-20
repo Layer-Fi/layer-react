@@ -34,7 +34,9 @@
 @forward '../components/Invoices/InvoiceTable/invoiceTable';
 @forward '../components/Invoices/InvoiceDetail/invoiceDetail';
 @forward '../components/Invoices/InvoiceForm/invoiceForm';
+@forward '../components/Invoices/InvoicePaymentForm/invoicePaymentForm';
 @forward '../components/Invoices/InvoiceSummaryStats/invoiceSummaryStats';
+@forward '../components/PaymentMethod/paymentMethodComboBox';
 @forward '../components/DataTable/dataTable';
 @forward '../components/LinkedAccounts/AccountFormBox/AccountFormBox';
 @forward '../components/PlatformOnboarding/linkAccounts';

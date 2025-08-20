@@ -9,8 +9,12 @@ import { HStack, VStack } from '../../ui/Stack/Stack'
 import { Span } from '../../ui/Typography/Text'
 import { BigDecimal as BD } from 'effect'
 
-const getPercentageOverdue = (total: bigint, overdueTotal: bigint): number => {
-  const totalAsBigDecimal = convertBigIntCentsToBigDecimal(total)
+const getPercentageOverdue = (sentTotal: bigint | undefined, overdueTotal: bigint | undefined): number => {
+  if (!sentTotal && !overdueTotal) return 50
+  if (!sentTotal) return 100
+  if (!overdueTotal) return 0
+
+  const totalAsBigDecimal = convertBigIntCentsToBigDecimal(sentTotal + overdueTotal)
   const overdueTotalAsBigDecimal = convertBigIntCentsToBigDecimal(overdueTotal)
 
   const decimalOverdue = safeDivide(overdueTotalAsBigDecimal, totalAsBigDecimal)
@@ -26,9 +30,9 @@ export const InvoiceSummaryStats = () => {
   const showSkeleton = !data || isLoading || isError
   const { sumTotal: invoicePaymentsTotal } = data?.invoicePayments ?? {}
   const { overdueCount, overdueTotal, sentCount, sentTotal } = data?.invoices ?? {}
-  const invoicesTotal = overdueTotal && sentTotal ? overdueTotal + sentTotal : BigInt(0)
 
-  const percentageOverdue = invoicesTotal && overdueTotal ? getPercentageOverdue(invoicesTotal, overdueTotal) : 50
+  const invoicesTotal = (overdueTotal || BigInt(0)) + (sentTotal || BigInt(0))
+  const percentageOverdue = getPercentageOverdue(sentTotal, overdueTotal)
 
   return (
     <HStack className='Layer__InvoiceSummaryStats__Container' gap='lg'>

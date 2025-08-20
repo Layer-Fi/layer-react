@@ -191,7 +191,7 @@ export const BusinessProvider = ({
       setTimeout(() => {
         setToastExit(newToast)
       }, 1000)
-    }, toast.duration || 2000)
+    }, toast.duration || 3000)
   }
 
   const setColors = (colors?: { dark?: ColorConfig, light?: ColorConfig }) =>
