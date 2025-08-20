@@ -15,6 +15,7 @@ import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useListLedgerEntries } from '../../features/ledger/entries/api/useListLedgerEntries'
+import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
 
 type UseJournal = () => {
   data?: ReadonlyArray<JournalEntry>
@@ -118,6 +119,8 @@ export const useJournal: UseJournal = () => {
     setSelectedEntryId(undefined)
   }
 
+  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+
   const create = async (newJournalEntry: NewApiJournalEntry) => {
     setSendingForm(true)
     setApiError(undefined)
@@ -136,7 +139,8 @@ export const useJournal: UseJournal = () => {
     }
     finally {
       setSendingForm(false)
-      touch(DataModel.BANK_TRANSACTIONS)
+      touch(DataModel.PROFIT_AND_LOSS)
+      void invalidatePnlDetailLines()
     }
   }
 

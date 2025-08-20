@@ -1,6 +1,6 @@
 import { DateRangePickerMode } from '../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { LineItem } from '../types'
 import { format, subMonths, subYears } from 'date-fns'
+import { LineItem } from './schema/utils'
 
 export const generateComparisonPeriods = (
   startDate: Date, numberOfPeriods: number, rangeDisplayMode: DateRangePickerMode,
@@ -49,9 +49,9 @@ export const getComparisonValue = (
   else if (
     typeof cellData === 'object'
     && cellData !== null
-    && 'line_items' in cellData
+    && 'lineItems' in cellData
   ) {
-    for (const item of cellData.line_items || []) {
+    for (const item of cellData.lineItems || []) {
       const result = getComparisonLineItemValue(item, name, depth)
       if (result !== '') {
         return result
@@ -68,12 +68,12 @@ const getComparisonLineItemValue = (
   depth: number,
 ): string | number => {
   if (depth === 1) {
-    if (lineItem.display_name === name) {
+    if (lineItem.displayName === name) {
       return lineItem.value !== undefined ? lineItem.value : ''
     }
   }
-  else if (lineItem.line_items && lineItem.line_items.length > 0) {
-    for (const childLineItem of lineItem.line_items) {
+  else if (lineItem.lineItems && lineItem.lineItems.length > 0) {
+    for (const childLineItem of lineItem.lineItems) {
       const result = getComparisonLineItemValue(childLineItem, name, depth - 1)
       if (result !== '') {
         return result
@@ -91,21 +91,21 @@ export const mergeComparisonLineItemsAtDepth = (
 
   const mergeItems = (items: LineItem[]) => {
     items.forEach((item) => {
-      if (!map.has(item.display_name)) {
-        map.set(item.display_name, { ...item, line_items: [] })
+      if (!map.has(item.displayName)) {
+        map.set(item.displayName, { ...item, lineItems: [] })
       }
 
-      const existingItem = map.get(item.display_name)!
+      const existingItem = map.get(item.displayName)!
 
-      if (item.line_items) {
-        existingItem.line_items = mergeComparisonLineItemsAtDepth([
-          ...(existingItem.line_items || []),
-          ...item.line_items,
+      if (item.lineItems) {
+        existingItem.lineItems = mergeComparisonLineItemsAtDepth([
+          ...(existingItem.lineItems || []),
+          ...item.lineItems,
         ])
       }
 
       if (item.value !== undefined) {
-        existingItem.value = item.value
+        map.set(item.displayName, { ...existingItem, value: item.value })
       }
     })
   }
