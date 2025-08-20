@@ -2,7 +2,7 @@ import { useContext, useMemo } from 'react'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import XIcon from '../../icons/X'
 import { Direction } from '../../types'
-import { LedgerEntrySourceType, decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/ledgerEntrySourceSchemas'
+import { LedgerEntrySourceType, decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/ledgerEntry'
 import { TableCellAlign } from '../../types/table'
 import { convertCentsToCurrency, humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
@@ -375,16 +375,19 @@ export const LedgerAccountEntryDetails = ({
     return { totalDebit, totalCredit }
   }, [entryData])
 
+  const ledgerEntrySource = useMemo(() => {
+    return entryData?.source ? decodeLedgerEntrySource(entryData.source) : undefined
+  }, [entryData?.source])
+
   const badgeOrInAppLink = useMemo(() => {
-    const decoded = entryData?.source ? decodeLedgerEntrySource(entryData.source) : null
-    const badgeContent = decoded?.entityName ?? entryData?.entry_type
+    const badgeContent = ledgerEntrySource?.entityName ?? entryData?.entry_type
     const defaultBadge = <Badge>{badgeContent}</Badge>
-    if (!convertToInAppLink || !decoded) {
+    if (!convertToInAppLink || !ledgerEntrySource) {
       return defaultBadge
     }
-    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(decoded)
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(ledgerEntrySource)
     return convertToInAppLink(linkingMetadata) ?? defaultBadge
-  }, [convertToInAppLink, entryData?.entry_type, entryData?.source])
+  }, [convertToInAppLink, entryData?.entry_type, ledgerEntrySource])
 
   return (
     <div className='Layer__ledger-account__entry-details'>
@@ -430,8 +433,8 @@ export const LedgerAccountEntryDetails = ({
         >
           {badgeOrInAppLink}
         </DetailsListItem>
-        {entryData?.source?.displayDescription && (
-          <SourceDetailView source={entryData?.source} />
+        {ledgerEntrySource && (
+          <SourceDetailView source={ledgerEntrySource} />
         )}
       </DetailsList>
 

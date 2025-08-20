@@ -8,7 +8,7 @@ import { Text, TextUseTooltip, ErrorText } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { convertMatchDetailsToLinkingMetadata } from '../../schemas/matchSchemas'
+import { convertMatchDetailsToLinkingMetadata } from '../../schemas/match'
 
 export interface MatchFormProps {
   classNamePrefix: string

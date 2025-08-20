@@ -21,7 +21,7 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { convertMatchDetailsToLinkingMetadata } from '../../schemas/matchSchemas'
+import { convertMatchDetailsToLinkingMetadata } from '../../schemas/match'
 
 export interface BankTransactionMobileListItemProps {
   index: number

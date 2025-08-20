@@ -1,6 +1,6 @@
 import type { CustomerSchema } from '../features/customers/customersSchemas'
 import type { VendorSchema } from '../features/vendors/vendorsSchemas'
-import { MatchDetailsType } from '../schemas/matchSchemas'
+import { MatchDetailsType } from '../schemas/match'
 import { Categorization, CategorizationStatus, Category } from './categories'
 import { S3PresignedUrl } from './general'
 import type { TransactionTag } from './tags'

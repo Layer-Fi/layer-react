@@ -6,7 +6,7 @@ import { MatchFormProps } from './MatchForm'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { convertMatchDetailsToLinkingMetadata } from '../../schemas/matchSchemas'
+import { convertMatchDetailsToLinkingMetadata } from '../../schemas/match'
 import { HStack } from '../ui/Stack/Stack'
 
 export const MatchFormMobile = ({

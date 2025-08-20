@@ -1,4 +1,4 @@
-import { LedgerEntrySourceType } from '../schemas/ledgerEntrySourceSchemas'
+import { LedgerEntrySourceType } from '../schemas/ledgerEntry'
 import { BankTransaction, Direction } from './bank_transactions'
 
 export type LedgerAccountLineItems = LedgerAccountLineItem[]

@@ -4,7 +4,7 @@ import { Direction } from '../../types'
 import {
   LedgerEntrySourceSchema,
   AccountSchema,
-} from '../../schemas/ledgerEntrySourceSchemas'
+} from '../../schemas/ledgerEntry'
 
 import { LineItemSchema } from '../../utils/schema/utils'
 

@@ -22,7 +22,7 @@ import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
 import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
-import { convertMatchDetailsToLinkingMetadata, MatchDetailsType } from '../../schemas/matchSchemas'
+import { convertMatchDetailsToLinkingMetadata, MatchDetailsType } from '../../schemas/match'
 import { ReactNode } from 'react'
 
 type Props = {

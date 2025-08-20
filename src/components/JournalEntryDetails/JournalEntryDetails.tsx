@@ -5,7 +5,7 @@ import RefreshCcw from '../../icons/RefreshCcw'
 import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
-import { decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/ledgerEntrySourceSchemas'
+import { decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/ledgerEntry'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
@@ -44,16 +44,19 @@ export const JournalEntryDetails = () => {
     return
   }, [data, selectedEntryId])
 
+  const ledgerEntrySource = useMemo(() => {
+    return entry?.source ? decodeLedgerEntrySource(entry.source) : undefined
+  }, [entry?.source])
+
   const badgeOrInAppLink = useMemo(() => {
-    const decoded = entry?.source ? decodeLedgerEntrySource(entry.source) : null
-    const badgeContent = decoded?.entityName ?? entry?.entry_type
+    const badgeContent = ledgerEntrySource?.entityName ?? entry?.entry_type
     const defaultBadge = <Badge>{badgeContent}</Badge>
-    if (!convertToInAppLink || !decoded) {
+    if (!convertToInAppLink || !ledgerEntrySource) {
       return defaultBadge
     }
-    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(decoded)
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(ledgerEntrySource)
     return convertToInAppLink(linkingMetadata) ?? defaultBadge
-  }, [convertToInAppLink, entry?.entry_type, entry?.source])
+  }, [convertToInAppLink, entry?.entry_type, ledgerEntrySource])
 
   const sortedLineItems = useMemo(
     () =>
@@ -113,8 +116,8 @@ export const JournalEntryDetails = () => {
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
           {badgeOrInAppLink}
         </DetailsListItem>
-        {entry?.source && (
-          <SourceDetailView source={entry?.source} />
+        {ledgerEntrySource && (
+          <SourceDetailView source={ledgerEntrySource} />
         )}
       </DetailsList>
       <DetailsList
