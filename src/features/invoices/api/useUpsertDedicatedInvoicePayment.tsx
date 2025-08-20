@@ -9,7 +9,7 @@ import { Schema, Effect } from 'effect'
 import { useInvoicesGlobalCacheActions } from './useListInvoices'
 import { useInvoiceSummaryStatsCacheActions } from './useInvoiceSummaryStats'
 
-const UPSERT_INVOICE_PAYMENT_TAG_KEY = '#upsert-invoice'
+const UPSERT_INVOICE_PAYMENT_TAG_KEY = '#upsert-dedicated-invoice-payment'
 
 export enum UpsertDedicatedInvoicePaymentMode {
   Create = 'Create',
