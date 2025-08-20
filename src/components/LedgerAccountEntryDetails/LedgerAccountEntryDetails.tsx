@@ -2,7 +2,7 @@ import { useContext, useMemo } from 'react'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import XIcon from '../../icons/X'
 import { Direction } from '../../types'
-import { LedgerEntrySourceType, decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/ledgerEntry'
+import { LedgerEntrySourceType, decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/ledgerEntrySource'
 import { TableCellAlign } from '../../types/table'
 import { convertCentsToCurrency, humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
@@ -295,26 +295,32 @@ export const SourceDetailView = ({
       )
     }
     case 'Vendor_Credit_Ledger_Entry_Source': {
+      const vendorDisplayName = source.vendor.individualName ?? source.vendor.companyName
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
             {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
-          <DetailsListItem label='Vendor'>
-            {source.vendor.description}
-          </DetailsListItem>
+          {vendorDisplayName && (
+            <DetailsListItem label='Vendor'>
+              {vendorDisplayName}
+            </DetailsListItem>
+          )}
         </>
       )
     }
     case 'Customer_Credit_Ledger_Entry_Source': {
+      const customerDisplayName = source.customer.individualName ?? source.customer.companyName
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
             {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
-          <DetailsListItem label='Customer'>
-            {source.customer.description}
-          </DetailsListItem>
+          {customerDisplayName && (
+            <DetailsListItem label='Customer'>
+              {customerDisplayName}
+            </DetailsListItem>
+          )}
         </>
       )
     }

@@ -1,5 +1,5 @@
 import { Schema, pipe } from 'effect'
-import { CustomerSchema } from '../customers/customersSchemas'
+import { CustomerSchema } from '../../schemas/customer'
 import { InvoiceTermsValues } from '../../components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { ZonedDateTimeFromSelf } from '../../utils/schema/utils'
 

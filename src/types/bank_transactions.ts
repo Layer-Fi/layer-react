@@ -1,5 +1,5 @@
-import type { CustomerSchema } from '../features/customers/customersSchemas'
-import type { VendorSchema } from '../features/vendors/vendorsSchemas'
+import type { CustomerSchema } from '../schemas/customer'
+import type { VendorSchema } from '../schemas/vendor'
 import { MatchDetailsType } from '../schemas/match'
 import { Categorization, CategorizationStatus, Category } from './categories'
 import { S3PresignedUrl } from './general'

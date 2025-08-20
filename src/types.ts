@@ -70,4 +70,4 @@ export type ReportingBasis = EnumWithUnknownValues<StrictReportingBasis>
 
 export type MoneyFormat = 'CENTS' | 'DOLLAR_STRING'
 
-export type { LedgerEntrySourceType } from './schemas/ledgerEntry'
+export type { LedgerEntrySourceType } from './schemas/ledgerEntrySource'

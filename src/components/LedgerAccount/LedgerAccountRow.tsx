@@ -9,7 +9,7 @@ import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { LedgerAccountNodeType } from '../../types/chart_of_accounts'
-import { decodeLedgerEntrySource } from '../../schemas/ledgerEntry'
+import { decodeLedgerEntrySource } from '../../schemas/ledgerEntrySource'
 
 export interface LedgerAccountRowProps {
   row: LedgerAccountLineItem

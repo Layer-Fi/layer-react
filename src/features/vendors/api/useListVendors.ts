@@ -4,7 +4,7 @@ import { useLayerContext } from '../../../contexts/LayerContext'
 import { get } from '../../../api/layer/authenticated_http'
 import { toDefinedSearchParameters } from '../../../utils/request/toDefinedSearchParameters'
 import { Schema, pipe } from 'effect'
-import { VendorSchema } from '../vendorsSchemas'
+import { VendorSchema } from '../../../schemas/vendor'
 
 const ListVendorsRawResultSchema = Schema.Struct({
   data: Schema.Array(VendorSchema),
