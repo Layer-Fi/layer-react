@@ -140,7 +140,7 @@ function getRequestFn(
 ): UpsertRequestFn {
   if (mode === UpsertDedicatedInvoicePaymentMode.Update) {
     if (!isParamsValidForMode(UpsertDedicatedInvoicePaymentMode.Update, params)) {
-      throw new Error('Invalid params for upsert mode')
+      throw new Error('Invalid params for update mode')
     }
 
     return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertDedicatedInvoicePaymentBody }) =>
@@ -184,7 +184,7 @@ export const useUpsertDedicatedInvoicePayment = (props: UseUpsertDedicatedInvoic
       { accessToken, apiUrl, businessId, invoiceId },
       { arg: body }: { arg: UpsertDedicatedInvoicePaymentBody },
     ) => {
-      const request = getRequestFn(mode, { businessId, invoiceId })
+      const request = getRequestFn(mode, { businessId, invoiceId, invoicePaymentId })
 
       return request({
         apiUrl,

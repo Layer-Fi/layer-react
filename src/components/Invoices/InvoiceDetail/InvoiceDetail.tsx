@@ -152,7 +152,7 @@ const InvoiceDetailHeader = ({ onSubmit, formState, isReadOnly, setIsReadOnly, o
   }, [])
 
   const saveButton = useMemo(() => (
-    <Button isPending={isSubmitting}onPress={onSubmit}>
+    <Button isPending={isSubmitting} onPress={onSubmit}>
       Save
       <Save size={14} />
     </Button>

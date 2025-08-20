@@ -10,7 +10,6 @@ import {
 import { startOfToday } from 'date-fns'
 import { getLocalTimeZone, fromDate, toCalendarDate } from '@internationalized/date'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { ValidationErrorMap } from '@tanstack/react-form'
 
 export type InvoiceFormState = {
   isDirty: boolean
@@ -140,19 +139,6 @@ export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) 
   }
 
   return errors.length > 0 ? errors : null
-}
-
-export function flattenValidationErrors(errors: ValidationErrorMap): string[] {
-  return Object.values(errors)
-    .filter((value): value is { [key: string]: string }[] =>
-      Array.isArray(value)
-      && value.every(entry => typeof entry === 'object' && entry !== null),
-    )
-    .flatMap(errorArray =>
-      errorArray.flatMap(entry =>
-        Object.values(entry),
-      ),
-    )
 }
 
 export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({

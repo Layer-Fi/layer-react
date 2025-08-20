@@ -3,7 +3,6 @@ import { BigDecimal as BD } from 'effect'
 import { convertBigDecimalToCents, convertCentsToBigDecimal } from '../../../utils/bigDecimalUtils'
 import { formatDate, startOfToday } from 'date-fns'
 import { getLocalTimeZone, fromDate, toCalendarDate } from '@internationalized/date'
-import { ValidationErrorMap } from '@tanstack/react-form'
 import { DATE_FORMAT_SHORT } from '../../../config/general'
 
 export const getInvoicePaymentFormDefaultValues = (invoice: Invoice): DedicatedInvoicePaymentForm => {
@@ -43,19 +42,6 @@ export const validateInvoicePaymentForm = ({ invoicePayment, invoice }: { invoic
   }
 
   return errors.length > 0 ? errors : null
-}
-
-export function flattenValidationErrors(errors: ValidationErrorMap): string[] {
-  return Object.values(errors)
-    .filter((value): value is { [key: string]: string }[] =>
-      Array.isArray(value)
-      && value.every(entry => typeof entry === 'object' && entry !== null),
-    )
-    .flatMap(errorArray =>
-      errorArray.flatMap(entry =>
-        Object.values(entry),
-      ),
-    )
 }
 
 export const convertInvoicePaymentFormToParams = (form: DedicatedInvoicePaymentForm): unknown => ({

@@ -2,7 +2,6 @@ import React, { useCallback } from 'react'
 import type { Invoice, InvoicePayment } from '../../../features/invoices/invoiceSchemas'
 import { Form } from '../../ui/Form/Form'
 import { HStack, VStack } from '../../ui/Stack/Stack'
-import { flattenValidationErrors } from './formUtils'
 import { DataState, DataStateStatus } from '../../DataState'
 import { AlertTriangle } from 'lucide-react'
 import { TextSize } from '../../Typography'
@@ -14,6 +13,7 @@ import { Button } from '../../ui/Button/Button'
 import { convertCentsToBigDecimal, formatBigDecimalToString } from '../../../utils/bigDecimalUtils'
 import { Heading } from '../../ui/Typography/Heading'
 import { BigDecimal as BD } from 'effect'
+import { flattenValidationErrors } from '../../../utils/form'
 
 const INVOICE_PAYMENT_FORM_CSS_PREFIX = 'Layer__InvoicePaymentForm'
 const INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX = `${INVOICE_PAYMENT_FORM_CSS_PREFIX}__Field`
@@ -24,7 +24,7 @@ export type InvoicePaymentFormMode =
 
 export type InvoicePaymentFormProps = InvoicePaymentFormMode & {
   isReadOnly?: boolean
-  onSuccess: (invoice: InvoicePayment) => void
+  onSuccess: (invoicePayment: InvoicePayment) => void
 }
 
 export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {

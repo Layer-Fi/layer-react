@@ -128,7 +128,7 @@ function getRequestFn(
 ): UpsertRequestFn {
   if (mode === UpsertInvoiceMode.Update) {
     if (!isParamsValidForMode(UpsertInvoiceMode.Update, params)) {
-      throw new Error('Invalid params for upsert mode')
+      throw new Error('Invalid params for update mode')
     }
 
     return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertInvoiceBody }) =>
