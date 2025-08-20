@@ -92,10 +92,10 @@ function useLinkedAccountsConfirmationModal() {
 
 function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose: () => void }) {
   return (
-    <>
+    <VStack gap='2xs'>
       <ModalTitleWithClose
         heading={(
-          <ModalHeading pbe='2xs' size='xl'>
+          <ModalHeading size='xl'>
             Loading Your Accounts...
           </ModalHeading>
         )}
@@ -109,7 +109,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
           </P>
         </VStack>
       </ModalContent>
-    </>
+    </VStack>
   )
 }
 

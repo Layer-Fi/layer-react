@@ -7,7 +7,7 @@ import {
   ModalTitleWithClose,
 } from '../ui/Modal/ModalSlots'
 import { Button, ButtonVariant } from '../Button/Button'
-import { HStack, Spacer } from '../ui/Stack/Stack'
+import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
 import { useCallback, useState } from 'react'
 import { SubmitButton } from '../Button'
 import { Awaitable } from '../../types/utility/promises'
@@ -64,34 +64,36 @@ export function BaseConfirmationModal({
   return (
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} role='alertdialog'>
       {({ close }) => (
-        <>
+        <VStack gap='2xs'>
           <ModalTitleWithClose
             heading={(
-              <ModalHeading pbe='2xs' size='lg'>
+              <ModalHeading size='lg'>
                 {title}
               </ModalHeading>
             )}
             onClose={close}
           />
-          <ModalDescription>{description}</ModalDescription>
-          <ModalActions>
-            <HStack gap='md'>
-              <Spacer />
-              <Button variant={ButtonVariant.secondary} onClick={close}>
-                {cancelLabel}
-              </Button>
-              <SubmitButton
-                onClick={() => onClickConfirm(close)}
-                processing={isProcessing}
-                error={getErrorMessage(error, errorText) ?? ''}
-                withRetry
-                noIcon={!isProcessing}
-              >
-                {error ? retryLabel : confirmLabel}
-              </SubmitButton>
-            </HStack>
-          </ModalActions>
-        </>
+          <VStack>
+            <ModalDescription>{description}</ModalDescription>
+            <ModalActions>
+              <HStack gap='md'>
+                <Spacer />
+                <Button variant={ButtonVariant.secondary} onClick={close}>
+                  {cancelLabel}
+                </Button>
+                <SubmitButton
+                  onClick={() => onClickConfirm(close)}
+                  processing={isProcessing}
+                  error={getErrorMessage(error, errorText) ?? ''}
+                  withRetry
+                  noIcon={!isProcessing}
+                >
+                  {error ? retryLabel : confirmLabel}
+                </SubmitButton>
+              </HStack>
+            </ModalActions>
+          </VStack>
+        </VStack>
       )}
     </Modal>
   )
