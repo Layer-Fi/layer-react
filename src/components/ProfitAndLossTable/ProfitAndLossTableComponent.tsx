@@ -4,7 +4,10 @@ import { TableCellAlign } from '../../types/table'
 import { Loader } from '../Loader'
 import { ProfitAndLoss } from '../ProfitAndLoss'
 import { Table, TableBody, TableCell, TableRow } from '../Table'
+import { Button } from '../ui/Button/Button'
+import { MoneySpan } from '../ui/Typography/MoneyText'
 import classNames from 'classnames'
+import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import type { LineItem } from '../../utils/schema/utils'
 
 export interface ProfitAndLossTableStringOverrides {
@@ -17,11 +20,13 @@ export type ProfitAndLossTableProps = {
   lockExpanded?: boolean
   asContainer?: boolean
   stringOverrides?: ProfitAndLossTableStringOverrides
+  onLineItemClick?: (lineItemName: string, breadcrumbPath: BreadcrumbItem[]) => void
 }
 
 export const ProfitAndLossTableComponent = ({
   asContainer,
   stringOverrides,
+  onLineItemClick,
 }: ProfitAndLossTableProps) => {
   const { data, isLoading } = useContext(ProfitAndLoss.Context)
 
@@ -51,17 +56,24 @@ export const ProfitAndLossTableComponent = ({
     rowIndex,
     variant,
     showValue = true,
+    parentBreadcrumbs = [],
   }: {
-    lineItem: Pick<LineItem, 'displayName' | 'value' | 'lineItems'>
+    lineItem: Pick<LineItem, 'name' | 'displayName' | 'value' | 'lineItems'>
     depth: number
     rowKey: string
     rowIndex: number
     variant?: 'default' | 'summation'
     showValue?: boolean
+    parentBreadcrumbs?: BreadcrumbItem[]
   }): React.ReactNode => {
     const expandable = lineItem.lineItems.length > 0
 
     const expanded = expandable ? isOpen(rowKey) : true
+
+    const currentBreadcrumbs: BreadcrumbItem[] = [
+      ...parentBreadcrumbs,
+      { name: lineItem.name, display_name: lineItem.displayName },
+    ]
 
     return (
       <Fragment key={rowKey + '-' + rowIndex}>
@@ -82,8 +94,23 @@ export const ProfitAndLossTableComponent = ({
           {
             showValue
             && (
-              <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-                {Number.isNaN(lineItem.value) ? 0 : lineItem.value}
+              <TableCell
+                isCurrency={variant === 'summation' || !onLineItemClick}
+                primary
+                align={TableCellAlign.RIGHT}
+              >
+                {variant === 'summation' || !onLineItemClick
+                  ? (
+                    Number.isNaN(lineItem.value) ? 0 : lineItem.value
+                  )
+                  : (
+                    <Button
+                      variant='text'
+                      onPress={() => onLineItemClick(lineItem.name, currentBreadcrumbs)}
+                    >
+                      <MoneySpan bold amount={lineItem.value ?? 0} />
+                    </Button>
+                  )}
               </TableCell>
             )
           }
@@ -95,6 +122,7 @@ export const ProfitAndLossTableComponent = ({
               depth: depth + 1,
               rowKey: child.displayName + '-' + rowIndex,
               rowIndex: i,
+              parentBreadcrumbs: currentBreadcrumbs,
             }),
           )
           : null}
@@ -118,9 +146,11 @@ export const ProfitAndLossTableComponent = ({
             depth: 0,
             rowKey: 'cost_of_goods_sold',
             rowIndex: 1,
+            variant: 'summation',
           })}
         {renderLineItem({
           lineItem: {
+            name: 'gross_profit',
             value: data.grossProfit,
             displayName: stringOverrides?.grossProfitLabel || 'Gross Profit',
             lineItems: [],
@@ -138,6 +168,7 @@ export const ProfitAndLossTableComponent = ({
         })}
         {renderLineItem({
           lineItem: {
+            name: 'profit_before_taxes',
             value: data.profitBeforeTaxes,
             displayName:
               stringOverrides?.profitBeforeTaxesLabel || 'Profit Before Taxes',
@@ -156,6 +187,7 @@ export const ProfitAndLossTableComponent = ({
         })}
         {renderLineItem({
           lineItem: {
+            name: 'net_profit',
             value: data.netProfit,
             displayName: stringOverrides?.netProfitLabel || 'Net Profit',
             lineItems: [],

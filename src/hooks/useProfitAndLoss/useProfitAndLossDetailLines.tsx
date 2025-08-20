@@ -2,7 +2,6 @@ import useSWR, { type SWRResponse } from 'swr'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash'
 import { get } from '../../api/layer/authenticated_http'
@@ -10,19 +9,20 @@ import { Schema } from 'effect'
 import { ReportingBasis } from '../../types'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { LedgerEntrySourceSchema, PnlDetailLineSchema, PnlDetailLinesDataSchema } from './schemas'
+import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
 
 export const LIST_PNL_DETAIL_LINES_TAG_KEY = '#list-pnl-detail-lines'
 
 type PnlStructureLineItemName = string
 
-type PnlDetailLinesBaseParams = {
+export type PnlDetailLinesBaseParams = {
   businessId: string
   startDate: Date
   endDate: Date
   pnlStructureLineItemName: PnlStructureLineItemName
 }
 
-type PnlDetailLinesFilterParams = {
+export type PnlDetailLinesFilterParams = {
   tagFilter?: {
     key: string
     values: string[]
@@ -35,7 +35,6 @@ type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParam
 
 export type PnlDetailLine = typeof PnlDetailLineSchema.Type
 export type LedgerEntrySourceType = typeof LedgerEntrySourceSchema.Type
-
 export type PnlDetailLinesReturn = typeof PnlDetailLinesDataSchema.Type
 
 class PnlDetailLinesSWRResponse {
@@ -186,7 +185,7 @@ export function usePnlDetailLinesInvalidator() {
   }
 }
 
-type GetProfitAndLossDetailLinesParams = {
+export type GetProfitAndLossDetailLinesParams = {
   businessId: string
   startDate: Date
   endDate: Date

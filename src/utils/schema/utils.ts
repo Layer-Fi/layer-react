@@ -26,7 +26,7 @@ const lineItemFields = {
 }
 
 export interface LineItem extends Schema.Struct.Type<typeof lineItemFields> {
-  readonly lineItems: ReadonlyArray<LineItem>
+  lineItems: ReadonlyArray<LineItem>
 }
 
 interface LineItemEncoded extends Schema.Struct.Encoded<typeof lineItemFields> {
