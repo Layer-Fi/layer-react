@@ -167,6 +167,7 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
                 virtualRow={virtualRow}
                 rowVirtualizer={rowVirtualizer}
                 componentName={componentName}
+                cssPrefix={CSS_PREFIX}
                 columns={columns}
               />
             )
