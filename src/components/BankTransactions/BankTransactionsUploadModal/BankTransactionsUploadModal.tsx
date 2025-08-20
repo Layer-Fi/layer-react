@@ -1,4 +1,4 @@
-import { Modal, ModalProps } from '../../ui/Modal/Modal'
+import { DialogModal as Modal, DialogModalProps as ModalProps } from '../../ui/Modal/DialogModal'
 import { ModalCloseButton } from '../../ui/Modal/ModalSlots'
 import { UploadTransactions } from '../../UploadTransactions/UploadTransactions'
 

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { ModalProps } from '../../ui/Modal/Modal'
+import { DialogModalProps as ModalProps } from '../../ui/Modal/DialogModal'
 import { QuickbooksContext } from '../../../contexts/QuickbooksContext/QuickbooksContext'
 import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
 

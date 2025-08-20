@@ -1,7 +1,5 @@
 import { forwardRef, type ComponentProps, type PropsWithChildren } from 'react'
 import {
-  Dialog as ReactAriaDialog,
-  type DialogProps,
   Modal as ReactAriaModal,
   ModalOverlay as ReactAriaModalOverlay,
   type ModalOverlayProps,
@@ -24,7 +22,7 @@ const ModalOverlay = forwardRef<
   />
 ),
 )
-ModalOverlay.displayName = 'ModalOverlay'
+ModalOverlay.displayName = 'ReportModalOverlay'
 
 const MODAL_CLASS_NAME = 'Layer__Modal'
 const InternalModal = forwardRef<
@@ -44,22 +42,7 @@ const InternalModal = forwardRef<
   )
 })
 
-InternalModal.displayName = 'Modal'
-
-const DIALOG_CLASS_NAME = 'Layer__Dialog'
-const Dialog = forwardRef<
-  HTMLElement,
-  Omit<DialogProps, 'className'>
->(({ ...props }, ref) => (
-  <ReactAriaDialog
-    {...props}
-    className={DIALOG_CLASS_NAME}
-    ref={ref}
-  />
-),
-)
-
-Dialog.displayName = 'Dialog'
+InternalModal.displayName = 'ReportModal'
 
 type AllowedModalOverlayProps = Pick<
   ComponentProps<typeof ModalOverlay>,
@@ -70,15 +53,15 @@ type AllowedInternalModalProps = Pick<
   'flexBlock' | 'size'
 >
 
-export type ModalProps = AllowedModalOverlayProps & AllowedInternalModalProps & { children: React.ReactNode }
+export type ReportModalProps = AllowedModalOverlayProps & AllowedInternalModalProps & PropsWithChildren
 
-export function Modal({
+export function ReportModal({
   isOpen,
-  size = 'md',
+  size = '4xl',
   flexBlock,
   onOpenChange,
   children,
-}: ModalProps) {
+}: ReportModalProps) {
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange}>
       <InternalModal flexBlock={flexBlock} size={size}>
@@ -87,5 +70,3 @@ export function Modal({
     </ModalOverlay>
   )
 }
-
-export { Dialog }

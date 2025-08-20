@@ -1,5 +1,5 @@
 import { useContext, useMemo } from 'react'
-import { ModalProps } from '../../ui/Modal/Modal'
+import { DialogModalProps as ModalProps } from '../../ui/Modal/DialogModal'
 import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext'
 import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
 import type { LinkedAccount } from '../../../types/linked_accounts'

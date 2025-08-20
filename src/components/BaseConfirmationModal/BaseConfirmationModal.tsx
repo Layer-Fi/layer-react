@@ -1,5 +1,5 @@
 // BaseConfirmationModal.tsx
-import { Modal, ModalProps } from '../ui/Modal/Modal'
+import { DialogModal as Modal, DialogModalProps as ModalProps } from '../ui/Modal/DialogModal'
 import {
   ModalHeading,
   ModalActions,

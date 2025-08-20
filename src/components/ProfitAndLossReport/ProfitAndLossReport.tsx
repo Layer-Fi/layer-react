@@ -16,7 +16,7 @@ export type ProfitAndLossReportProps = {
   view?: ViewBreakpoint
 } & TimeRangePickerConfig
 
-type SelectedLineItem = {
+export type SelectedLineItem = {
   lineItemName: string
   breadcrumbPath: BreadcrumbItem[]
 }

@@ -39,6 +39,18 @@
   &[data-size='lg'] {
     inline-size: min(42rem, 90%);
   }
+  &[data-size='xl'] {
+    inline-size: min(50rem, 90%);
+  }
+  &[data-size='2xl'] {
+    inline-size: min(60rem, 90%);
+  }
+  &[data-size='3xl'] {
+    inline-size: min(70rem, 90%);
+  }
+  &[data-size='4xl'] {
+    inline-size: min(80rem, 90%);
+  }
 }
 
 .Layer__Dialog {

@@ -11,8 +11,9 @@ import { DetailedTable, DetailedTableStringOverrides } from './DetailedTable'
 import { Filters } from './Filters'
 import { DetailReportModal } from './DetailReportModal'
 import { format } from 'date-fns'
-import { LineBaseItem } from '../../types/line_item'
 import type { ProfitAndLossDetailReportProps } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
+import { type SelectedLineItem } from '../ProfitAndLossReport/ProfitAndLossReport'
+import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'
 
 export interface ProfitAndLossDetailedChartsStringOverrides {
   detailedTableStringOverrides?: DetailedTableStringOverrides
@@ -53,11 +54,14 @@ export const ProfitAndLossDetailedCharts = ({
     theScope === 'revenue' ? filteredTotalRevenue : filteredTotalExpenses
 
   const [hoveredItem, setHoveredItem] = useState<string | undefined>()
-  const [selectedItem, setSelectedItem] = useState<LineBaseItem | null>(null)
+  const [selectedItem, setSelectedItem] = useState<SelectedLineItem | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const handleValueClick = (item: LineBaseItem) => {
-    setSelectedItem(item)
+  const handleValueClick = (item: PnlChartLineItem) => {
+    setSelectedItem({
+      lineItemName: item.name,
+      breadcrumbPath: [{ name: item.name, display_name: item.displayName }],
+    })
     setIsModalOpen(true)
   }
 

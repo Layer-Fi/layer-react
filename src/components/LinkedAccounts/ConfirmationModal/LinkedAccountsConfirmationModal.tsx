@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Modal } from '../../ui/Modal/Modal'
+import { DialogModal as Modal } from '../../ui/Modal/DialogModal'
 import { ModalHeading, ModalActions, ModalContent, ModalDescription, ModalTitleWithClose } from '../../ui/Modal/ModalSlots'
 import { Button } from '../../ui/Button/Button'
 import { VStack } from '../../ui/Stack/Stack'

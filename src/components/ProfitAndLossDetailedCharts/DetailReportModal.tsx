@@ -8,7 +8,8 @@ import {
 } from 'react-aria-components'
 import { ProfitAndLossDetailReport, type ProfitAndLossDetailReportProps } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
-import { LineBaseItem } from '@layerfi/components/types/line_item'
+import { ReportModal } from '../ui/Modal/ReportModal'
+import { type SelectedLineItem } from '../ProfitAndLossReport/ProfitAndLossReport'
 
 const MODAL_OVERLAY_CLASS_NAME = 'Layer__DetailReportModalOverlay'
 const MODAL_OVERLAY_CLASS_NAMES = `Layer__Portal ${MODAL_OVERLAY_CLASS_NAME}`
@@ -61,8 +62,7 @@ Dialog.displayName = 'DetailReportDialog'
 export interface DetailReportModalProps {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
-  selectedItem: LineBaseItem | null
-  breadcrumbPath?: BreadcrumbItem[]
+  selectedItem: SelectedLineItem | null
   onBreadcrumbClick?: (lineItemName: string) => void
   stringOverrides?: ProfitAndLossDetailReportProps['stringOverrides']
 }
@@ -71,7 +71,6 @@ export function DetailReportModal({
   isOpen,
   onOpenChange,
   selectedItem,
-  breadcrumbPath,
   onBreadcrumbClick,
   stringOverrides,
 }: DetailReportModalProps) {
@@ -80,20 +79,16 @@ export function DetailReportModal({
   }
 
   return (
-    <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange}>
-      <InternalModal>
-        <Dialog role='dialog' aria-label='Profit and Loss Detail Report'>
-          {selectedItem && selectedItem.name && (
-            <ProfitAndLossDetailReport
-              lineItemName={selectedItem.name}
-              breadcrumbPath={breadcrumbPath}
-              onClose={handleClose}
-              onBreadcrumbClick={onBreadcrumbClick}
-              stringOverrides={stringOverrides}
-            />
-          )}
-        </Dialog>
-      </InternalModal>
-    </ModalOverlay>
+    <ReportModal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} size='4xl' aria-label='Profit and Loss Detail Report'>
+      {selectedItem && selectedItem.lineItemName && (
+        <ProfitAndLossDetailReport
+          lineItemName={selectedItem.lineItemName}
+          breadcrumbPath={selectedItem.breadcrumbPath}
+          onClose={handleClose}
+          onBreadcrumbClick={onBreadcrumbClick}
+          stringOverrides={stringOverrides}
+        />
+      )}
+    </ReportModal>
   )
 }

@@ -26,7 +26,7 @@ export interface DetailedTableProps {
   sortBy: (scope: Scope, field: string, direction?: SortDirection) => void
   chartColorsList?: string[]
   stringOverrides?: DetailedTableStringOverrides
-  onValueClick?: (item: LineBaseItem) => void
+  onValueClick?: (item: PnlChartLineItem) => void
 }
 
 export interface TypeColorMapping {
