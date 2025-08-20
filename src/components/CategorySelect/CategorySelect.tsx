@@ -20,9 +20,9 @@ import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
-import { useMatchDetailsLinkContext } from '../../contexts/MatchDetailsContext'
+import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
-import { MatchDetailsType } from '../../schemas/matchSchemas'
+import { convertMatchDetailsToLinkingMetadata, MatchDetailsType } from '../../schemas/matchSchemas'
 import { ReactNode } from 'react'
 
 type Props = {
@@ -144,7 +144,7 @@ const GroupHeading = (
 const Option = (
   props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
     showTooltips: boolean
-    convertToInAppLink?: (details: MatchDetailsType) => ReactNode | undefined
+    convertToInAppLink?: (details: LinkingMetadata) => ReactNode | undefined
   },
 ) => {
   if (props.data.payload.option_type === OptionActionType.HIDDEN) {
@@ -153,7 +153,7 @@ const Option = (
 
   if (props.data.type === 'match') {
     const inAppLink = props.convertToInAppLink && props.data.payload.details
-      ? props.convertToInAppLink(props.data.payload.details)
+      ? props.convertToInAppLink(convertMatchDetailsToLinkingMetadata(props.data.payload.details))
       : null
 
     return (
@@ -270,7 +270,7 @@ export const CategorySelect = ({
   asDrawer = false,
 }: Props) => {
   const { data: categories } = useCategories()
-  const { convertToInAppLink } = useMatchDetailsLinkContext()
+  const { convertToInAppLink } = useInAppLinkContext()
 
   const matchOptions =
     !excludeMatches && bankTransaction?.suggested_matches

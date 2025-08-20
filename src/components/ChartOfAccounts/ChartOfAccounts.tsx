@@ -9,8 +9,7 @@ import { ChartOfAccountsTableStringOverrides } from '../ChartOfAccountsTable/Cha
 import { Container } from '../Container'
 import { LedgerAccount } from '../LedgerAccount'
 import { LedgerAccountStringOverrides } from '../LedgerAccount/LedgerAccountIndex'
-import { LedgerEntrySourceLinkProvider } from '../../contexts/LedgerEntrySourceContext'
-import { LedgerEntrySourceType } from '../../schemas/ledgerEntrySourceSchemas'
+import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
 
 export interface ChartOfAccountsStringOverrides {
   chartOfAccountsTable?: ChartOfAccountsTableStringOverrides
@@ -25,7 +24,7 @@ export interface ChartOfAccountsProps {
   showAddAccountButton?: boolean
   templateAccountsEditable?: boolean
   showReversalEntries?: boolean
-  convertLedgerEntrySourceToInAppLink?: (source: LedgerEntrySourceType) => ReactNode | undefined
+  getInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
 }
 
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
@@ -38,9 +37,9 @@ export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
   return (
     <ChartOfAccountsContext.Provider value={chartOfAccountsContextData}>
       <LedgerAccountsContext.Provider value={ledgerAccountsContextData}>
-        <LedgerEntrySourceLinkProvider convertToInAppLink={props.convertLedgerEntrySourceToInAppLink}>
+        <InAppLinkProvider convertToInAppLink={props.getInAppLink}>
           <ChartOfAccountsContent {...props} />
-        </LedgerEntrySourceLinkProvider>
+        </InAppLinkProvider>
       </LedgerAccountsContext.Provider>
     </ChartOfAccountsContext.Provider>
   )

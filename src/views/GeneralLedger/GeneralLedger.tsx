@@ -6,7 +6,7 @@ import { JournalStringOverrides } from '../../components/Journal/Journal'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
-import { LedgerEntrySourceType } from '../../schemas/ledgerEntrySourceSchemas'
+import { LinkingMetadata } from '../../contexts/InAppLinkContext'
 
 export interface GeneralLedgerStringOverrides {
   title?: string
@@ -26,7 +26,7 @@ export interface GeneralLedgerProps {
   showTitle?: boolean
   stringOverrides?: GeneralLedgerStringOverrides
   chartOfAccountsOptions?: ChartOfAccountsOptions
-  convertLedgerEntrySourceToInAppLink?: (source: LedgerEntrySourceType) => ReactNode | undefined
+  convertToInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
 }
 
 export const GeneralLedgerView = ({
@@ -34,7 +34,7 @@ export const GeneralLedgerView = ({
   showTitle = true,
   stringOverrides,
   chartOfAccountsOptions,
-  convertLedgerEntrySourceToInAppLink,
+  convertToInAppLink: convertToInAppLink,
 }: GeneralLedgerProps) => {
   const [activeTab, setActiveTab] = useState('chartOfAccounts')
 
@@ -73,13 +73,13 @@ export const GeneralLedgerView = ({
                 chartOfAccountsOptions?.templateAccountsEditable
               }
               showReversalEntries={chartOfAccountsOptions?.showReversalEntries}
-              convertLedgerEntrySourceToInAppLink={convertLedgerEntrySourceToInAppLink}
+              getInAppLink={convertToInAppLink}
             />
           )
           : (
             <Journal
               stringOverrides={stringOverrides?.journal}
-              convertLedgerEntrySourceToInAppLink={convertLedgerEntrySourceToInAppLink}
+              convertToInAppLink={convertToInAppLink}
             />
           )}
       </View>

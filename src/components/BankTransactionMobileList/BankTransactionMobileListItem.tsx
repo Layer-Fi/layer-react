@@ -20,8 +20,8 @@ import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookke
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
-import { useMatchDetailsLinkContext } from '../../contexts/MatchDetailsContext'
-import { MatchDetailsType } from '../../schemas/matchSchemas'
+import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
+import { convertMatchDetailsToLinkingMetadata } from '../../schemas/matchSchemas'
 
 export interface BankTransactionMobileListItemProps {
   index: number
@@ -46,7 +46,7 @@ const DATE_FORMAT = 'LLL d'
 
 const getAssignedValue = (
   bankTransaction: BankTransaction,
-  convertToInAppLink?: (details: MatchDetailsType) => ReactNode | undefined,
+  convertToInAppLink?: (details: LinkingMetadata) => ReactNode | undefined,
 ) => {
   if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
     return extractDescriptionForSplit(bankTransaction.category)
@@ -54,7 +54,7 @@ const getAssignedValue = (
 
   if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
     if (convertToInAppLink && bankTransaction.match?.details) {
-      const inAppLink = convertToInAppLink(bankTransaction.match.details)
+      const inAppLink = convertToInAppLink(convertMatchDetailsToLinkingMetadata(bankTransaction.match.details))
       if (inAppLink) return inAppLink
     }
     return bankTransaction.match?.details?.description
@@ -82,7 +82,7 @@ export const BankTransactionMobileListItem = ({
   } = useContext(TransactionToOpenContext)
 
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
-  const { convertToInAppLink } = useMatchDetailsLinkContext()
+  const { convertToInAppLink } = useInAppLinkContext()
 
   const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
     setHeight(height),

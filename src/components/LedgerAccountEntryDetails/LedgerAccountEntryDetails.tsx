@@ -2,7 +2,7 @@ import { useContext, useMemo } from 'react'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import XIcon from '../../icons/X'
 import { Direction } from '../../types'
-import { LedgerEntrySourceType, decodeLedgerEntrySource } from '../../schemas/ledgerEntrySourceSchemas'
+import { LedgerEntrySourceType, decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/ledgerEntrySourceSchemas'
 import { TableCellAlign } from '../../types/table'
 import { convertCentsToCurrency, humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
@@ -20,7 +20,7 @@ import { TableRow } from '../TableRow'
 import { Heading, HeadingSize } from '../Typography'
 import { Span } from '../ui/Typography/Text'
 import { VStack } from '../ui/Stack/Stack'
-import { useLedgerEntrySourceLinkContext } from '../../contexts/LedgerEntrySourceContext'
+import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
 
 interface SourceDetailStringOverrides {
   sourceLabel?: string
@@ -358,7 +358,7 @@ export const LedgerAccountEntryDetails = ({
 }) => {
   const { entryData, isLoadingEntry, closeSelectedEntry, errorEntry } =
     useContext(LedgerAccountsContext)
-  const { convertToInAppLink } = useLedgerEntrySourceLinkContext()
+  const { convertToInAppLink } = useInAppLinkContext()
 
   const { totalDebit, totalCredit } = useMemo(() => {
     let totalDebit = 0
@@ -382,7 +382,8 @@ export const LedgerAccountEntryDetails = ({
     if (!convertToInAppLink || !decoded) {
       return defaultBadge
     }
-    return convertToInAppLink(decoded) ?? defaultBadge
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(decoded)
+    return convertToInAppLink(linkingMetadata) ?? defaultBadge
   }, [convertToInAppLink, entryData?.entry_type, entryData?.source])
 
   return (

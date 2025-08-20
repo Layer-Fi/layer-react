@@ -5,7 +5,8 @@ import { Text, ErrorText, TextSize } from '../Typography'
 import { MatchFormProps } from './MatchForm'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
-import { useMatchDetailsLinkContext } from '../../contexts/MatchDetailsContext'
+import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
+import { convertMatchDetailsToLinkingMetadata } from '../../schemas/matchSchemas'
 import { HStack } from '../ui/Stack/Stack'
 
 export const MatchFormMobile = ({
@@ -16,11 +17,11 @@ export const MatchFormMobile = ({
   matchFormError,
   readOnly,
 }: MatchFormProps) => {
-  const { convertToInAppLink } = useMatchDetailsLinkContext()
+  const { convertToInAppLink } = useInAppLinkContext()
   return (
     <div className={`${classNamePrefix}__match-list`}>
       {bankTransaction.suggested_matches?.map((match, idx) => {
-        const inAppLink = convertToInAppLink ? convertToInAppLink(match.details) : null
+        const inAppLink = convertToInAppLink ? convertToInAppLink(convertMatchDetailsToLinkingMetadata(match.details)) : null
         return (
           <div
             key={idx}

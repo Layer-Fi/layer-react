@@ -7,7 +7,8 @@ import { MatchBadge } from '../BankTransactionRow/MatchBadge'
 import { Text, TextUseTooltip, ErrorText } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
-import { useMatchDetailsLinkContext } from '../../contexts/MatchDetailsContext'
+import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
+import { convertMatchDetailsToLinkingMetadata } from '../../schemas/matchSchemas'
 
 export interface MatchFormProps {
   classNamePrefix: string
@@ -28,7 +29,7 @@ export const MatchForm = ({
 }: MatchFormProps) => {
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
-  const { convertToInAppLink } = useMatchDetailsLinkContext()
+  const { convertToInAppLink } = useInAppLinkContext()
 
   const {
     suggested_matches: suggestedMatches = [],
@@ -63,7 +64,7 @@ export const MatchForm = ({
       </div>
 
       {effectiveSuggestedMatches.map((suggestedMatch) => {
-        const inAppLink = convertToInAppLink ? convertToInAppLink(suggestedMatch.details) : null
+        const inAppLink = convertToInAppLink ? convertToInAppLink(convertMatchDetailsToLinkingMetadata(suggestedMatch.details)) : null
         return (
           <div
             key={suggestedMatch.id}

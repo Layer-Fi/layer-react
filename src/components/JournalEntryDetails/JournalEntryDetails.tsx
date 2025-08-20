@@ -5,7 +5,7 @@ import RefreshCcw from '../../icons/RefreshCcw'
 import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
-import { decodeLedgerEntrySource } from '../../schemas/ledgerEntrySourceSchemas'
+import { decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/ledgerEntrySourceSchemas'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
@@ -20,7 +20,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { Heading, HeadingSize } from '../Typography'
 import { VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
-import { useLedgerEntrySourceLinkContext } from '../../contexts/LedgerEntrySourceContext'
+import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
 
 export const JournalEntryDetails = () => {
   const {
@@ -32,7 +32,7 @@ export const JournalEntryDetails = () => {
     reverseEntry,
     refetch,
   } = useContext(JournalContext)
-  const { convertToInAppLink } = useLedgerEntrySourceLinkContext()
+  const { convertToInAppLink } = useInAppLinkContext()
   const [reverseEntryProcessing, setReverseEntryProcessing] = useState(false)
   const [reverseEntryError, setReverseEntryError] = useState<string>()
 
@@ -51,7 +51,8 @@ export const JournalEntryDetails = () => {
     if (!convertToInAppLink || !decoded) {
       return defaultBadge
     }
-    return convertToInAppLink(decoded) ?? defaultBadge
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(decoded)
+    return convertToInAppLink(linkingMetadata) ?? defaultBadge
   }, [convertToInAppLink, entry?.entry_type, entry?.source])
 
   const sortedLineItems = useMemo(

@@ -1,4 +1,5 @@
 import { Schema, pipe } from 'effect'
+import { EntityName, LinkingMetadata } from '../contexts/InAppLinkContext'
 
 export const ApiMatchAdjustmentSchema = Schema.Struct({
   amount: Schema.Number,
@@ -157,6 +158,85 @@ export const SuggestedMatchesWithTransactionsSchema = Schema.Struct({
 })
 
 export const decodeMatchDetails = Schema.decodeUnknownSync(MatchDetailsSchema)
+
+export const convertMatchDetailsToLinkingMetadata = (matchDetails: MatchDetailsType): LinkingMetadata => {
+  const baseMetadata: LinkingMetadata = {
+    id: matchDetails.id,
+    entityName: EntityName.Unknown,
+    externalId: matchDetails.externalId || undefined,
+    referenceNumber: matchDetails.referenceNumber || undefined,
+    metadata: matchDetails.metadata || undefined,
+  }
+
+  switch (matchDetails.type) {
+    case 'Journal_Entry_Match':
+      baseMetadata.entityName = EntityName.CustomJournalEntry
+      break
+    case 'Refund_Payment_Match':
+      baseMetadata.entityName = EntityName.CustomerRefundPayment
+      if (matchDetails.customerRefundIdentifiers) {
+        baseMetadata.relatedEntityLinkingMetadata = [{
+          id: matchDetails.customerRefundIdentifiers.id,
+          entityName: EntityName.CustomerRefund,
+          externalId: matchDetails.customerRefundIdentifiers.externalId || undefined,
+          referenceNumber: matchDetails.customerRefundIdentifiers.referenceNumber || undefined,
+          metadata: matchDetails.customerRefundIdentifiers.metadata || undefined,
+        }]
+      }
+      break
+    case 'Vendor_Refund_Payment_Match':
+      baseMetadata.entityName = EntityName.VendorRefundPayment
+      if (matchDetails.vendorRefundIdentifiers) {
+        baseMetadata.relatedEntityLinkingMetadata = [{
+          id: matchDetails.vendorRefundIdentifiers.id,
+          entityName: EntityName.VendorRefundPayment,
+          externalId: matchDetails.vendorRefundIdentifiers.externalId || undefined,
+          referenceNumber: matchDetails.vendorRefundIdentifiers.referenceNumber || undefined,
+          metadata: matchDetails.vendorRefundIdentifiers.metadata || undefined,
+        }]
+      }
+      break
+    case 'Invoice_Match':
+      baseMetadata.entityName = EntityName.InvoicePayment
+      if (matchDetails.invoiceIdentifiers) {
+        baseMetadata.relatedEntityLinkingMetadata = matchDetails.invoiceIdentifiers.map(identifier => ({
+          id: identifier.id,
+          entityName: EntityName.Invoice,
+          externalId: identifier.externalId || undefined,
+          referenceNumber: identifier.referenceNumber || undefined,
+          metadata: identifier.metadata || undefined,
+        }))
+      }
+      break
+    case 'Payout_Match':
+      baseMetadata.entityName = EntityName.CustomerPayout
+      break
+    case 'Vendor_Payout_Match':
+      baseMetadata.entityName = EntityName.VendorPayout
+      break
+    case 'Bill_Match':
+      baseMetadata.entityName = EntityName.BillPayment
+      if (matchDetails.billIdentifiers) {
+        baseMetadata.relatedEntityLinkingMetadata = matchDetails.billIdentifiers.map(identifier => ({
+          id: identifier.id,
+          entityName: EntityName.Bill,
+          externalId: identifier.externalId || undefined,
+          referenceNumber: identifier.referenceNumber || undefined,
+          metadata: identifier.metadata || undefined,
+        }))
+      }
+      break
+    case 'Payroll_Match':
+      baseMetadata.entityName = EntityName.PayrollPayment
+      break
+    case 'Transfer_Match':
+      baseMetadata.entityName = EntityName.BankTransaction
+      break
+  }
+
+  return baseMetadata
+}
+
 export type MatchDetailsType = typeof MatchDetailsSchema.Type
 export type ApiMatchAdjustmentType = typeof ApiMatchAdjustmentSchema.Type
 export type FinancialEventIdentifiersType = typeof FinancialEventIdentifiersSchema.Type

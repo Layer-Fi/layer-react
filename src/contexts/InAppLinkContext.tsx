@@ -1,32 +1,67 @@
 import { createContext, useContext, ReactNode } from 'react'
 
-export interface InAppLinkContextType<T> {
-  convertToInAppLink?: (source: T) => ReactNode | undefined
+export enum EntityName {
+  Unknown = 'Unknown',
+  BankTransaction = 'Bank Transaction',
+  Invoice = 'Invoice',
+  InvoicePayment = 'Invoice Payment',
+  Bill = 'Bill',
+  BillPayment = 'Bill Payment',
+  CustomerRefund = 'Customer Refund',
+  CustomerRefundAllocation = 'Customer Refund Allocation',
+  CustomerRefundPayment = 'Customer Refund Payment',
+  VendorRefund = 'Vendor Refund',
+  VendorRefundAllocation = 'Vendor Refund Allocation',
+  VendorRefundPayment = 'Vendor Refund Payment',
+  CustomerPayout = 'Customer Payout',
+  VendorPayout = 'Vendor Payout',
+  QuickBooks = 'QuickBooks',
+  CustomJournalEntry = 'Custom Journal Entry',
+  Payroll = 'Payroll',
+  PayrollPayment = 'Payroll Payment',
+  OpeningBalance = 'Opening Balance',
+  InvoiceWriteOff = 'Invoice Write-Off',
+  VendorCredit = 'Vendor Credit',
+  CustomerCredit = 'Customer Credit',
 }
 
-export interface InAppLinkProviderProps<T> {
-  convertToInAppLink?: (source: T) => ReactNode | undefined
+export interface RelatedEntityLinkingMetadata {
+  id: string
+  entityName: EntityName
+  externalId?: string
+  referenceNumber?: string
+  metadata?: unknown
+}
+
+export interface LinkingMetadata {
+  id: string
+  entityName: EntityName
+  externalId?: string
+  referenceNumber?: string
+  metadata?: unknown
+  relatedEntityLinkingMetadata?: RelatedEntityLinkingMetadata[]
+}
+
+export interface InAppLinkContextType {
+  convertToInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
+}
+
+export interface InAppLinkProviderProps {
+  convertToInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
   children: ReactNode
 }
 
-export const createInAppLinkContext = <T,>() => {
-  const Context = createContext<InAppLinkContextType<T>>({})
+const InAppLinkContext = createContext<InAppLinkContextType>({})
 
-  const useInAppLinkContext = () => useContext(Context)
+export const useInAppLinkContext = () => useContext(InAppLinkContext)
 
-  const InAppLinkProvider = ({
-    convertToInAppLink,
-    children,
-  }: InAppLinkProviderProps<T>) => {
-    return (
-      <Context.Provider value={{ convertToInAppLink }}>
-        {children}
-      </Context.Provider>
-    )
-  }
-
-  return {
-    InAppLinkProvider,
-    useInAppLinkContext,
-  }
+export const InAppLinkProvider = ({
+  convertToInAppLink,
+  children,
+}: InAppLinkProviderProps) => {
+  return (
+    <InAppLinkContext.Provider value={{ convertToInAppLink }}>
+      {children}
+    </InAppLinkContext.Provider>
+  )
 }
