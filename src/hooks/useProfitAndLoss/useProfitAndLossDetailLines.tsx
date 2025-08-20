@@ -9,7 +9,6 @@ import { Schema } from 'effect'
 import { ReportingBasis } from '../../types'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { PnlDetailLineSchema, PnlDetailLinesDataSchema } from './schemas'
-import { LedgerEntrySourceSchema, PnlDetailLineSchema, PnlDetailLinesDataSchema } from './schemas'
 import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
 
 export const LIST_PNL_DETAIL_LINES_TAG_KEY = '#list-pnl-detail-lines'
@@ -35,7 +34,6 @@ export type PnlDetailLinesFilterParams = {
 type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParams
 
 export type PnlDetailLine = typeof PnlDetailLineSchema.Type
-export type LedgerEntrySourceType = typeof LedgerEntrySourceSchema.Type
 export type PnlDetailLinesReturn = typeof PnlDetailLinesDataSchema.Type
 
 class PnlDetailLinesSWRResponse {

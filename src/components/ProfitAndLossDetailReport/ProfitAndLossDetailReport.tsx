@@ -15,23 +15,13 @@ import { Button } from '../ui/Button/Button'
 import { VStack, HStack } from '../ui/Stack/Stack'
 import { Label } from '../ui/Typography/Text'
 import { format } from 'date-fns'
-import type { LedgerEntrySource } from '../../types/ledger_accounts'
+import { LedgerEntrySourceType } from '../../schemas/ledgerEntrySourceSchemas'
 import { Direction } from '../../types'
 import { BreadcrumbItem, DetailReportBreadcrumb } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
-import type { PnlDetailLine, LedgerEntrySourceType } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
+import type { PnlDetailLine } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { MoneySpan } from '../ui/Typography/MoneyText'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
-
-/* Our source detail component expects an old schema.
- * This converts for backwards compatibility until we switch that component to our new schemas with fixed variable types. */
-const convertSourceForDetailView = (source: LedgerEntrySourceType): LedgerEntrySource => {
-  return {
-    display_description: source.displayDescription,
-    entity_name: source.entityName,
-    type: source.type,
-  }
-}
 
 enum PnlDetailColumns {
   Date = 'Date',
@@ -219,7 +209,7 @@ export const ProfitAndLossDetailReport = ({
             <DetailsListItem label='Source'>
               <Badge>{selectedSource.entityName}</Badge>
             </DetailsListItem>
-            <SourceDetailView source={convertSourceForDetailView(selectedSource)} />
+            <SourceDetailView source={selectedSource} />
           </DetailsList>
         </VStack>
       </BaseDetailView>
