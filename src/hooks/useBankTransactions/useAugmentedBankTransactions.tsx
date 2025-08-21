@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { TagFilterInput } from '../../types/tags'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
@@ -15,7 +15,8 @@ import { DataModel } from '../../types/general'
 import { useLinkedAccounts } from '../useLinkedAccounts'
 import {
   BankTransactionFilters,
-  UseBankTransactionsParams,
+  BankTransactionsDateFilterMode,
+  UseAugmentedBankTransactionsParams,
 } from './types'
 import {
   applyAccountFilter,
@@ -27,6 +28,7 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 import { useBankTransactions, type UseBankTransactionsOptions } from './useBankTransactions'
 import { useCategorizeBankTransaction } from './useCategorizeBankTransaction'
 import { useMatchBankTransaction } from './useMatchBankTransaction'
+import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
@@ -81,30 +83,6 @@ const filtersSettingString = (filters?: BankTransactionFilters): string => {
   }`
 }
 
-const buildInitialFilters = ({
-  scope = undefined,
-  monthlyView = false,
-}: UseBankTransactionsParams) => {
-  let initialFilters = {}
-  if (monthlyView) {
-    initialFilters = {
-      dateRange: {
-        startDate: startOfMonth(new Date()),
-        endDate: endOfMonth(new Date()),
-      },
-    }
-  }
-
-  if (scope) {
-    initialFilters = {
-      ...initialFilters,
-      categorizationStatus: scope,
-    }
-  }
-
-  return initialFilters
-}
-
 export function bankTransactionFiltersToHookOptions(
   filters?: BankTransactionFilters,
 ): UseBankTransactionsOptions {
@@ -127,7 +105,7 @@ export function bankTransactionFiltersToHookOptions(
 }
 
 export const useAugmentedBankTransactions = (
-  params?: UseBankTransactionsParams,
+  params?: UseAugmentedBankTransactionsParams,
 ) => {
   const {
     addToast,
@@ -138,19 +116,36 @@ export const useAugmentedBankTransactions = (
     eventCallbacks,
   } = useLayerContext()
 
-  const [filters, setTheFilters] = useState<BankTransactionFilters | undefined>(
-    buildInitialFilters(params ?? {}),
-  )
-  const display = useMemo(() => {
-    if (filters?.categorizationStatus === DisplayState.review) {
-      return DisplayState.review
-    }
-    else if (filters?.categorizationStatus === DisplayState.all) {
-      return DisplayState.all
-    }
+  const dateFilterMode = params?.applyGlobalDateRange
+    ? BankTransactionsDateFilterMode.GlobalDateRange
+    : params?.monthlyView
+      ? BankTransactionsDateFilterMode.MonthlyView
+      : undefined
 
-    return DisplayState.categorized
-  }, [filters?.categorizationStatus])
+  const { start, end } = useGlobalDateRange({ displayMode: 'monthPicker' })
+  const globalDateRange = useMemo(() => ({
+    startDate: start,
+    endDate: end,
+  }), [start, end])
+
+  const defaultDateRange = {
+    startDate: startOfMonth(new Date()),
+    endDate: endOfMonth(new Date()),
+  }
+
+  const initialFilters: BankTransactionFilters = {
+    ...(params?.scope && { categorizationStatus: params?.scope }),
+    ...(dateFilterMode === BankTransactionsDateFilterMode.MonthlyView && { dateRange: defaultDateRange }),
+  }
+
+  const [baseFilters, setBaseFilters] = useState<BankTransactionFilters>(initialFilters)
+
+  const filters = useMemo(() => ({
+    ...baseFilters,
+    ...(dateFilterMode === BankTransactionsDateFilterMode.GlobalDateRange && { dateRange: globalDateRange }),
+  }), [dateFilterMode, baseFilters, globalDateRange])
+
+  const display = filters?.categorizationStatus ?? DisplayState.categorized
 
   const {
     data: rawResponseData,
@@ -200,12 +195,12 @@ export const useAugmentedBankTransactions = (
     [data],
   )
 
-  const setFilters = (value?: Partial<BankTransactionFilters>) => {
-    setTheFilters({
-      ...filters,
-      ...(value ?? {}),
-    })
-  }
+  const setFilters = useCallback((newFilters: BankTransactionFilters) => {
+    setBaseFilters((prevFilters: BankTransactionFilters) => ({
+      ...prevFilters,
+      ...newFilters,
+    }))
+  }, [])
 
   const filteredData = useMemo(() => {
     let filtered = data
@@ -390,19 +385,19 @@ export const useAugmentedBankTransactions = (
           data: page.data?.filter(bt => bt.id !== bankTransaction.id),
         }
       })
-      mutate(updatedData, { revalidate: false })
+      void mutate(updatedData, { revalidate: false })
     }
   }
 
   const refetch = () => {
-    mutate()
+    void mutate()
   }
 
-  const fetchMore = () => {
+  const fetchMore = useCallback(() => {
     if (hasMore) {
-      setSize(size + 1)
+      void setSize(size + 1)
     }
-  }
+  }, [hasMore, setSize, size])
 
   const getCacheKey = (txnFilters?: BankTransactionFilters) => {
     return filtersSettingString(txnFilters)
@@ -447,7 +442,7 @@ export const useAugmentedBankTransactions = (
   useEffect(() => {
     if (refreshTrigger !== -1) {
       refetch()
-      refetchAccounts()
+      void refetchAccounts()
     }
   }, [refreshTrigger])
 
@@ -491,6 +486,7 @@ export const useAugmentedBankTransactions = (
     removeAfterCategorize,
     filters,
     setFilters,
+    dateFilterMode,
     accountsList,
     display,
     fetchMore,
