@@ -8,6 +8,7 @@ import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
 import { type ColumnConfig } from '../DataTable/DataTable'
 import { Badge } from '../Badge'
 import { DateTime } from '../DateTime'
+import { Text, TextUseTooltip } from '../Typography/Text'
 import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
@@ -165,7 +166,15 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Description]: {
       id: PnlDetailColumns.Description,
       header: stringOverrides?.descriptionColumnHeader || 'Description',
-      cell: row => row.source?.displayDescription || row.account.accountSubtype.displayName || '-',
+      cell: row => (
+        <Text
+          as='span'
+          withTooltip={TextUseTooltip.whenTruncated}
+          ellipsis
+        >
+          {row.source?.displayDescription || row.account.accountSubtype.displayName || '-'}
+        </Text>
+      ),
       isRowHeader: true,
     },
     [PnlDetailColumns.Amount]: {
