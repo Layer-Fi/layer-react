@@ -46,4 +46,7 @@
   flex: 0 0 auto;
   align-content: center;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
