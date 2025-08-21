@@ -1,22 +1,31 @@
 import { useRef, useMemo } from 'react'
 import classNames from 'classnames'
-import { useVirtualizer, VirtualItem, Virtualizer } from '@tanstack/react-virtual'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import {
   useReactTable,
   getCoreRowModel,
   getSortedRowModel,
   createColumnHelper,
+  flexRender,
+  type RowData,
 } from '@tanstack/react-table'
 import { Loader } from '../Loader/Loader'
 import type { ColumnConfig, Column } from '../DataTable/DataTable'
 import { Table, TableBody, TableHeader, Column as TableColumn, Row, Cell } from '../ui/Table/Table'
 import { HStack } from '../ui/Stack/Stack'
 
+declare module '@tanstack/react-table' {
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  interface ColumnMeta<TData extends RowData, TValue> {
+    isRowHeader: boolean
+  }
+}
+
 const DEFAULT_ROW_HEIGHT = 52
 const DEFAULT_OVERSCAN = 5
-const DEFAULT_NUM_ROWS = 20
-const HEADER_HEIGHT = 41
-const DEFAULT_TABLE_HEIGHT = (DEFAULT_ROW_HEIGHT * DEFAULT_NUM_ROWS) + HEADER_HEIGHT - 1
+const DEFAULT_NUM_ROWS = 15
+const HEADER_HEIGHT = 52
+const DEFAULT_TABLE_HEIGHT = (DEFAULT_ROW_HEIGHT * DEFAULT_NUM_ROWS) + HEADER_HEIGHT - 2
 
 const CSS_PREFIX = 'Layer__UI__VirtualizedTable'
 const EMPTY_ARRAY: never[] = []
@@ -63,8 +72,7 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
       header: () => col.header,
       cell: ({ row }) => col.cell(row.original),
       meta: {
-        isRowHeader: col.isRowHeader,
-        originalColumn: col,
+        isRowHeader: col.isRowHeader || false,
       },
     })
   })
@@ -94,8 +102,6 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
     overscan,
   })
 
-  const CSS_PREFIX = 'Layer__UI__VirtualizedTable'
-
   if (isError) {
     return (
       <HStack align='center' justify='center' className={`${CSS_PREFIX}__state-container`}>
@@ -124,52 +130,47 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
   const totalSize = rowVirtualizer.getTotalSize()
 
   return (
-    <div
-      className={`${CSS_PREFIX}__container`}
-      ref={containerRef}
-      style={{ height }}
-      role='table'
-      aria-label={ariaLabel}
-    >
-      <Table className='Layer__UI__Table__ProfitAndLossDetailReport' aria-label={ariaLabel}>
-
-        <TableHeader
-          columns={columns.map(col => ({
-            id: col.id,
-            header: col.header,
-            isRowHeader: col.isRowHeader ?? false,
-          }))}
-        >
-          {({ id, header, isRowHeader }) => (
+    <div className={`${CSS_PREFIX}__container`} ref={containerRef} style={{ height }} aria-label={ariaLabel}>
+      <Table className={classNames(CSS_PREFIX, `Layer__UI__Table__${componentName}`)} aria-label={ariaLabel}>
+        <TableHeader className={`${CSS_PREFIX}__header`} style={{ height: HEADER_HEIGHT }}>
+          {table.getFlatHeaders().map(header => (
             <TableColumn
-              key={id}
-              isRowHeader={isRowHeader}
+              key={header.id}
+              isRowHeader={header.column.columnDef.meta?.isRowHeader}
               className={classNames(
                 `${CSS_PREFIX}__header-cell`,
-                `Layer__UI__Table-Column__${componentName}--${id}`,
+                `Layer__UI__Table-Column__${componentName}--${header.id}`,
               )}
             >
-              {header}
+              {flexRender(header.column.columnDef.header, header.getContext())}
             </TableColumn>
+          ),
           )}
         </TableHeader>
-        <TableBody>
-          <Row
-            className={`${CSS_PREFIX}__spacer`}
-            style={{ height: totalSize }}
-          />
+        <TableBody style={{ height: totalSize }}>
           {virtualItems.map((virtualRow) => {
-            const rowData = processedData[virtualRow.index]
+            const row = rows[virtualRow.index]
             return (
-              <VirtualizedDataTableRow
-                key={rowData.id}
-                rowData={rowData}
-                virtualRow={virtualRow}
-                rowVirtualizer={rowVirtualizer}
-                componentName={componentName}
-                cssPrefix={CSS_PREFIX}
-                columns={columns}
-              />
+              <Row
+                key={row.id}
+                className={`${CSS_PREFIX}__row`}
+                data-index={virtualRow.index}
+                ref={node => node && rowVirtualizer.measureElement(node)}
+                style={{ transform: `translateY(${virtualRow.start}px)` }}
+              >
+                {row.getVisibleCells().map(cell => (
+                  <Cell
+                    key={cell.id}
+                    className={classNames(
+                      `${CSS_PREFIX}__cell`,
+                      `Layer__UI__Table-Cell__${componentName}--${cell.column.id}`,
+                    )}
+                    style={{ ...(virtualRow.index === 0 && ({ borderTop: 'none' })) }}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Cell>
+                ))}
+              </Row>
             )
           })}
         </TableBody>
@@ -177,44 +178,3 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
     </div>
   )
 }
-
-interface VirtualizedDataTableRowProps<TData extends { id: string }, TColumns extends string> {
-  rowData: TData
-  virtualRow: VirtualItem
-  rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
-  componentName: string
-  cssPrefix: string
-  columns: Column<TData, TColumns>[]
-}
-
-const VirtualizedDataTableRow = <TData extends { id: string }, TColumns extends string>({
-  rowData,
-  virtualRow,
-  rowVirtualizer,
-  componentName,
-  columns,
-}: VirtualizedDataTableRowProps<TData, TColumns>) => (
-  <Row
-    className={classNames(
-      `${CSS_PREFIX}__row`,
-    )}
-    data-index={virtualRow.index}
-    ref={node => node && rowVirtualizer.measureElement(node)}
-    style={{
-      transform: `translateY(${virtualRow.start}px)`,
-    }}
-  >
-    {columns.map(column => (
-      <Cell
-        key={column.id}
-        className={classNames(
-          `${CSS_PREFIX}__cell`,
-          `Layer__UI__Table-Cell__${componentName}--${column.id}`,
-        )}
-        style={{ ...(virtualRow.index === 0 && ({ borderTop: 'none' })) }}
-      >
-        {column.cell(rowData)}
-      </Cell>
-    ))}
-  </Row>
-)
