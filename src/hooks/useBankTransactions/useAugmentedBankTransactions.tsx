@@ -138,7 +138,7 @@ export const useAugmentedBankTransactions = (
     ...(dateFilterMode === BankTransactionsDateFilterMode.MonthlyView && { dateRange: defaultDateRange }),
   }
 
-  const [baseFilters, setBaseFilters] = useState<BankTransactionFilters | undefined>(initialFilters)
+  const [baseFilters, setBaseFilters] = useState<BankTransactionFilters>(initialFilters)
 
   const filters = useMemo(() => ({
     ...baseFilters,
@@ -195,7 +195,7 @@ export const useAugmentedBankTransactions = (
     [data],
   )
 
-  const setFilters = useCallback((newFilters: Partial<BankTransactionFilters>) => {
+  const setFilters = useCallback((newFilters: BankTransactionFilters) => {
     setBaseFilters({
       ...baseFilters,
       ...newFilters,
