@@ -15,8 +15,8 @@ import { HStack } from '../ui/Stack/Stack'
 const DEFAULT_ROW_HEIGHT = 52
 const DEFAULT_OVERSCAN = 5
 const DEFAULT_NUM_ROWS = 20
-const HEADER_HEIGHT = 41
-const DEFAULT_TABLE_HEIGHT = (DEFAULT_ROW_HEIGHT * DEFAULT_NUM_ROWS) + HEADER_HEIGHT - 1
+const HEADER_HEIGHT = 52
+const DEFAULT_TABLE_HEIGHT = (DEFAULT_ROW_HEIGHT * DEFAULT_NUM_ROWS) + HEADER_HEIGHT
 
 const CSS_PREFIX = 'Layer__UI__VirtualizedTable'
 const EMPTY_ARRAY: never[] = []
@@ -52,6 +52,13 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
 }: VirtualizedDataTableProps<TData, TColumns>) => {
   const { EmptyState, ErrorState } = slots
   const containerRef = useRef<HTMLDivElement>(null)
+
+  const actualHeight = useMemo(() => {
+    if (!data) return height
+    const actualRowCount = data.length
+    const calculatedHeight = (actualRowCount * rowHeight) + HEADER_HEIGHT + 1
+    return Math.min(height, calculatedHeight)
+  }, [data, height, rowHeight])
 
   const columnHelper = createColumnHelper<TData>()
   const columns: Column<TData, TColumns>[] = Object.values(columnConfig)
@@ -127,7 +134,7 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
     <div
       className={`${CSS_PREFIX}__container`}
       ref={containerRef}
-      style={{ height }}
+      style={{ height: actualHeight }}
       role='table'
       aria-label={ariaLabel}
     >

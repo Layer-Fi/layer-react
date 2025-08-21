@@ -59,7 +59,7 @@ const InvoiceLedgerEntrySourceSchema = Schema.Struct({
     Schema.fromKey('invoice_number'),
   ),
   recipientName: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('recipient_name'),
   ),
   customerDescription: pipe(
@@ -156,7 +156,7 @@ const RefundLedgerEntrySourceSchema = Schema.Struct({
     Schema.fromKey('refunded_to_customer_amount'),
   ),
   recipientName: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('recipient_name'),
   ),
   memo: Schema.optional(Schema.NullOr(Schema.String)),
@@ -194,7 +194,7 @@ const RefundPaymentLedgerEntrySourceSchema = Schema.Struct({
     Schema.fromKey('refunded_to_customer_amount'),
   ),
   recipientName: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('recipient_name'),
   ),
   memo: Schema.optional(Schema.NullOr(Schema.String)),
