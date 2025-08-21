@@ -13,7 +13,7 @@ import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { Button } from '../ui/Button/Button'
 import { VStack, HStack } from '../ui/Stack/Stack'
-import { Label } from '../ui/Typography/Text'
+import { Label, Span } from '../ui/Typography/Text'
 import { format } from 'date-fns'
 import type { LedgerEntrySource } from '../../types/ledger_accounts'
 import { Direction } from '../../types'
@@ -176,7 +176,7 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Description]: {
       id: PnlDetailColumns.Description,
       header: stringOverrides?.descriptionColumnHeader || 'Description',
-      cell: row => row.source?.displayDescription || row.account.accountSubtype.displayName || '-',
+      cell: row => <Span ellipsis>{row.source?.displayDescription || row.account.accountSubtype.displayName || '-'}</Span>,
       isRowHeader: true,
     },
     [PnlDetailColumns.Amount]: {
@@ -228,28 +228,30 @@ export const ProfitAndLossDetailReport = ({
 
   return (
     <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={onClose} borderless>
-      <VirtualizedDataTable<ProcessedPnlDetailLine, PnlDetailColumns>
-        componentName={COMPONENT_NAME}
-        ariaLabel={`${lineItemName} detail lines`}
-        columnConfig={columnConfig}
-        data={rowsWithRunningBalance.lines}
-        isLoading={isLoading}
-        isError={isError}
-        slots={{
-          EmptyState,
-          ErrorState,
-        }}
-      />
-      {rowsWithRunningBalance.lines.length > 0 && (
-        <HStack pb='sm' align='center' className='Layer__profit-and-loss-detail-report__total-row'>
-          <HStack className='Layer__profit-and-loss-detail-report__total-label'>
-            <Label weight='bold' size='md'>Total</Label>
+      <VStack className='Layer__ProfitAndLossDetailReport'>
+        <VirtualizedDataTable<ProcessedPnlDetailLine, PnlDetailColumns>
+          componentName={COMPONENT_NAME}
+          ariaLabel={`${lineItemName} detail lines`}
+          columnConfig={columnConfig}
+          data={rowsWithRunningBalance.lines}
+          isLoading={isLoading}
+          isError={isError}
+          slots={{
+            EmptyState,
+            ErrorState,
+          }}
+        />
+        {rowsWithRunningBalance.lines.length > 0 && (
+          <HStack pb='sm' align='center' className='Layer__profit-and-loss-detail-report__total-row'>
+            <HStack className='Layer__profit-and-loss-detail-report__total-label'>
+              <Label weight='bold' size='md'>Total</Label>
+            </HStack>
+            <HStack className='Layer__profit-and-loss-detail-report__total-amount'>
+              <MoneySpan bold size='md' amount={rowsWithRunningBalance.total} />
+            </HStack>
           </HStack>
-          <HStack className='Layer__profit-and-loss-detail-report__total-amount'>
-            <MoneySpan bold size='md' amount={rowsWithRunningBalance.total} />
-          </HStack>
-        </HStack>
-      )}
+        )}
+      </VStack>
     </BaseDetailView>
   )
 }

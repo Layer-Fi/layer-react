@@ -1,120 +1,51 @@
-:root {
-  --pnl-detail-date-col-width: 12%;
-  --pnl-detail-type-col-width: 12%;
-  --pnl-detail-account-col-width: 18%;
-  --pnl-detail-description-col-width: 28%;
-  --pnl-detail-amount-col-width: 15%;
-  --pnl-detail-balance-col-width: 15%;
-}
+.Layer__ProfitAndLossDetailReport {
+  --pnl-detail-table-cols:
+    minmax(7rem, 12%)
+    minmax(7rem, 12%)
+    minmax(10rem, 18%)
+    minmax(12rem, 28%)
+    minmax(7.5rem, 15%)
+    minmax(7.5rem, 15%);
 
-.Layer__UI__Table__ProfitAndLossDetailReport {
-  table-layout: fixed;
-  width: 100%;
+  .Layer__UI__Table__ProfitAndLossDetailReport {
+    table-layout: fixed;
 
-  .Layer__UI__Table-Column__ProfitAndLossDetailReport {
-    &--Date {
-      width: var(--pnl-detail-date-col-width);
-      min-width: 7rem;
-      color: var(--color-base-600);
+    .Layer__UI__VirtualizedTable__row,
+    .Layer__UI__VirtualizedTable__header > tr {
+      display: grid;
+      grid-template-columns: var(--pnl-detail-table-cols);
     }
 
-    &--Type {
-      width: var(--pnl-detail-type-col-width);
-    }
+    .Layer__UI__Table-Column__ProfitAndLossDetailReport,
+    .Layer__UI__Table-Cell__ProfitAndLossDetailReport {
+      &--Date {
+        color: var(--color-base-600);
+      }
 
-    &--Account {
-      width: var(--pnl-detail-account-col-width);
-      min-width: 10rem;
-    }
+      &--Amount {
+        justify-content: right;
+      }
 
-    &--Description {
-      width: var(--pnl-detail-description-col-width);
-      min-width: 12rem;
-    }
-
-    &--Amount {
-      width: var(--pnl-detail-amount-col-width);
-      min-width: 7.5rem;
-      text-align: right;
-      justify-content: flex-end;
-    }
-
-    &--Balance {
-      width: var(--pnl-detail-balance-col-width);
-      min-width: 7.5rem;
-      text-align: right;
-      justify-content: flex-end;
-    }
-  }
-
-  .Layer__UI__Table-Cell__ProfitAndLossDetailReport {
-    &--Date {
-      width: var(--pnl-detail-date-col-width);
-      min-width: 7rem;
-    }
-
-    &--Type {
-      width: var(--pnl-detail-type-col-width);
-
-      button {
-        font-size: inherit;
-        font-family: inherit;
-        font-weight: inherit;
-        font-feature-settings: inherit;
+      &--Balance {
+        justify-content: right;
       }
     }
+  }
 
-    &--Account {
-      width: var(--pnl-detail-account-col-width);
-      min-width: 10rem;
-      color: var(--color-base-600);
-    }
+  .Layer__profit-and-loss-detail-report__total-row {
+    display: grid;
+    grid-template-columns: var(--pnl-detail-table-cols);
 
-    &--Description {
-      width: var(--pnl-detail-description-col-width);
-      min-width: 12rem;
-    }
+    padding: var(--spacing-sm)  var(--spacing-md);
+    border-top: 1px solid var(--color-base-300);
+  }
 
-    &--Amount {
-      width: var(--pnl-detail-amount-col-width);
-      min-width: 7.5rem;
-      text-align: right;
-    }
+  .Layer__profit-and-loss-detail-report__total-label {
+    grid-column: 1;
+  }
 
-    &--Balance {
-      width: var(--pnl-detail-balance-col-width);
-      min-width: 7.5rem;
-      text-align: right;
-    }
+  .Layer__profit-and-loss-detail-report__total-amount {
+    grid-column: 5;
+    justify-content: right;
   }
 }
-
-.Layer__profit-and-loss-detail-report__total-row {
-  display: grid;
-  grid-template-columns:
-    var(--pnl-detail-date-col-width)
-    var(--pnl-detail-type-col-width)
-    var(--pnl-detail-account-col-width)
-    var(--pnl-detail-description-col-width)
-    var(--pnl-detail-amount-col-width)
-    var(--pnl-detail-balance-col-width);
-  padding-top: var(--spacing-sm);
-  padding-bottom: var(--spacing-sm);
-  padding-right: var(--spacing-md);
-  border-top: 1px solid var(--color-base-300);
-}
-
-.Layer__profit-and-loss-detail-report__total-label {
-  grid-column: 1;
-  padding-left: var(--spacing-md);
-}
-
-.Layer__profit-and-loss-detail-report__total-amount {
-  grid-column: 5;
-  justify-content: right;
-  padding-right: var(--spacing-sm);
-}
-
-
-
-
