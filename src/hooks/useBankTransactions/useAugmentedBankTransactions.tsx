@@ -196,11 +196,11 @@ export const useAugmentedBankTransactions = (
   )
 
   const setFilters = useCallback((newFilters: BankTransactionFilters) => {
-    setBaseFilters({
-      ...baseFilters,
+    setBaseFilters((prevFilters: BankTransactionFilters) => ({
+      ...prevFilters,
       ...newFilters,
-    })
-  }, [baseFilters])
+    }))
+  }, [])
 
   const filteredData = useMemo(() => {
     let filtered = data
