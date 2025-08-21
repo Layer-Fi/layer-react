@@ -27,7 +27,7 @@ const TransactionLedgerEntrySourceSchema = Schema.Struct({
   date: Schema.String,
   amount: Schema.Number,
   direction: Schema.Enums(Direction),
-  counterparty: Schema.optional(Schema.String),
+  counterparty: Schema.optional(Schema.NullOr(Schema.String)),
   memo: Schema.optional(Schema.NullOr(Schema.String)),
   metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
   referenceNumber: pipe(
