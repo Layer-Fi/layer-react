@@ -27,7 +27,7 @@
       }
 
       &--Balance {
-        justify-content: right;
+        justify-content: flex-end;
       }
     }
   }
@@ -46,6 +46,6 @@
 
   .Layer__profit-and-loss-detail-report__total-amount {
     grid-column: 5;
-    justify-content: right;
+    justify-content: flex-end;
   }
 }
