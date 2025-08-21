@@ -14,6 +14,7 @@ export const BankTransactionsContext =
     match: () => Promise.resolve(undefined),
     filters: undefined,
     setFilters: () => {},
+    dateFilterMode: undefined,
     metadata: {
       pagination: {
         cursor: undefined,
