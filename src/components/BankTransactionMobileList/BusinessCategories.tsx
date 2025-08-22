@@ -62,7 +62,7 @@ export const BusinessCategories = ({
             ? (
               <Button variant='text' onClick={clearSelectedGroup}>
                 <ChevronLeft size={18} />
-                <Span size='lg'weight='bold' align='center'>
+                <Span size='lg' weight='bold' align='center'>
                   {selectedGroup}
                 </Span>
               </Button>
