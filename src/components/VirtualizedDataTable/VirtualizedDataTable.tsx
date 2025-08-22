@@ -41,7 +41,7 @@ export interface VirtualizedDataTableProps<TData extends { id: string }, TColumn
     EmptyState: React.FC
     ErrorState: React.FC
   }
-  shrinkHeightToFitRows: boolean
+  shrinkHeightToFitRows?: boolean
   // Virtualization-specific props
   height?: number
   rowHeight?: number
@@ -56,7 +56,7 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
   componentName,
   ariaLabel,
   slots,
-  shrinkHeightToFitRows = true,
+  shrinkHeightToFitRows = false,
   height = DEFAULT_TABLE_HEIGHT,
   rowHeight = DEFAULT_ROW_HEIGHT,
   overscan = DEFAULT_OVERSCAN,
