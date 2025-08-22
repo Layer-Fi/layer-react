@@ -17,6 +17,7 @@ interface ActionableListProps<T> {
   onClick: (item: ActionableListOption<T>) => void
   selectedId?: string
   showDescriptions?: boolean
+  className?: string
 }
 
 export const ActionableList = <T,>({
@@ -24,9 +25,10 @@ export const ActionableList = <T,>({
   onClick,
   selectedId,
   showDescriptions = false,
+  className,
 }: ActionableListProps<T>) => {
   return (
-    <ul className='Layer__actionable-list'>
+    <ul className={classNames('Layer__actionable-list', className)}>
       {options.map((x, idx) => (
         <li
           role='button'

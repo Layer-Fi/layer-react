@@ -1,11 +1,8 @@
 import { PropsWithChildren, useReducer, useEffect, Reducer } from 'react'
 import { Layer } from '../../api/layer'
-import { GlobalWidgets } from '../../components/GlobalWidgets'
-import { ToastProps } from '../../components/Toast/Toast'
-import { DrawerContext } from '../../contexts/DrawerContext'
+import { ToastProps, ToastsContainer } from '../../components/Toast/Toast'
 import { LayerContext } from '../../contexts/LayerContext'
 import { useDataSync } from '../../hooks/useDataSync'
-import { useDrawer } from '../../hooks/useDrawer'
 import { errorHandler, LayerError } from '../../models/ErrorHandler'
 import {
   LayerContextValues,
@@ -214,8 +211,6 @@ export const BusinessProvider = ({
       payload: { onboardingStep: value },
     })
 
-  const drawerContextData = useDrawer()
-
   return (
     <LayerContext.Provider
       value={{
@@ -239,10 +234,8 @@ export const BusinessProvider = ({
         eventCallbacks,
       }}
     >
-      <DrawerContext.Provider value={drawerContextData}>
-        {children}
-        <GlobalWidgets />
-      </DrawerContext.Provider>
+      {children}
+      <ToastsContainer />
     </LayerContext.Provider>
   )
 }
