@@ -6,7 +6,6 @@ import { Direction } from '../../types'
 import {
   InvoiceLedgerEntrySource,
   InvoicePaymentLedgerEntrySource,
-  LedgerEntrySource,
   ManualLedgerEntrySource,
   OpeningBalanceLedgerEntrySource,
   PayoutLedgerEntrySource,
@@ -14,6 +13,7 @@ import {
   RefundPaymentLedgerEntrySource,
   TransactionLedgerEntrySource,
 } from '../../types/ledger_accounts'
+import { AnyLedgerEntrySource, normalizeLedgerSource } from '../../utils/ledgerSourceConversion'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
@@ -60,12 +60,15 @@ export const SourceDetailView = ({
   source,
   stringOverrides,
 }: {
-  source: LedgerEntrySource
+  source: AnyLedgerEntrySource
   stringOverrides?: SourceDetailStringOverrides
 }) => {
-  switch (source.type) {
+  // Normalize to legacy format for consistent handling
+  const normalizedSource = normalizeLedgerSource(source)
+
+  switch (normalizedSource.type) {
     case 'Transaction_Ledger_Entry_Source': {
-      const transactionSource = source as TransactionLedgerEntrySource
+      const transactionSource = normalizedSource as TransactionLedgerEntrySource
       return (
         <>
           <DetailsListItem
@@ -94,7 +97,7 @@ export const SourceDetailView = ({
       )
     }
     case 'Invoice_Ledger_Entry_Source': {
-      const invoiceSource = source as InvoiceLedgerEntrySource
+      const invoiceSource = normalizedSource as InvoiceLedgerEntrySource
       return (
         <>
           <DetailsListItem
@@ -117,7 +120,7 @@ export const SourceDetailView = ({
       )
     }
     case 'Manual_Ledger_Entry_Source': {
-      const manualSource = source as ManualLedgerEntrySource
+      const manualSource = normalizedSource as ManualLedgerEntrySource
       return (
         <>
           <DetailsListItem label={stringOverrides?.memoLabel || 'Memo'}>
@@ -132,7 +135,7 @@ export const SourceDetailView = ({
       )
     }
     case 'Invoice_Payment_Ledger_Entry_Source': {
-      const invoicePaymentSource = source as InvoicePaymentLedgerEntrySource
+      const invoicePaymentSource = normalizedSource as InvoicePaymentLedgerEntrySource
       return (
         <>
           <DetailsListItem
@@ -147,7 +150,7 @@ export const SourceDetailView = ({
       )
     }
     case 'Refund_Ledger_Entry_Source': {
-      const refundSource = source as RefundLedgerEntrySource
+      const refundSource = normalizedSource as RefundLedgerEntrySource
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
@@ -162,7 +165,7 @@ export const SourceDetailView = ({
       )
     }
     case 'Refund_Payment_Ledger_Entry_Source': {
-      const refundSource = source as RefundPaymentLedgerEntrySource
+      const refundSource = normalizedSource as RefundPaymentLedgerEntrySource
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
@@ -177,7 +180,7 @@ export const SourceDetailView = ({
       )
     }
     case 'Opening_Balance_Ledger_Entry_Source': {
-      const openingBalanceSource = source as OpeningBalanceLedgerEntrySource
+      const openingBalanceSource = normalizedSource as OpeningBalanceLedgerEntrySource
       return (
         <>
           <DetailsListItem
@@ -189,7 +192,7 @@ export const SourceDetailView = ({
       )
     }
     case 'Payout_Ledger_Entry_Source': {
-      const payoutSource = source as PayoutLedgerEntrySource
+      const payoutSource = normalizedSource as PayoutLedgerEntrySource
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>

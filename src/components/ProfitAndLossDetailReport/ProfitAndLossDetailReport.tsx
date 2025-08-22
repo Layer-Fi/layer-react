@@ -8,30 +8,20 @@ import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
 import { type ColumnConfig } from '../DataTable/DataTable'
 import { Badge } from '../Badge'
 import { DateTime } from '../DateTime'
+import { Text, TextUseTooltip } from '../Typography/Text'
 import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { Button } from '../ui/Button/Button'
 import { VStack, HStack } from '../ui/Stack/Stack'
-import { Label, Span } from '../ui/Typography/Text'
+import { Label } from '../ui/Typography/Text'
 import { format } from 'date-fns'
-import type { LedgerEntrySource } from '../../types/ledger_accounts'
 import { Direction } from '../../types'
 import { BreadcrumbItem, DetailReportBreadcrumb } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import type { PnlDetailLine, LedgerEntrySourceType } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { MoneySpan } from '../ui/Typography/MoneyText'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
-
-/* Our source detail component expects an old schema.
- * This converts for backwards compatibility until we switch that component to our new schemas with fixed variable types. */
-const convertSourceForDetailView = (source: LedgerEntrySourceType): LedgerEntrySource => {
-  return {
-    display_description: source.displayDescription,
-    entity_name: source.entityName,
-    type: source.type,
-  }
-}
 
 enum PnlDetailColumns {
   Date = 'Date',
@@ -176,7 +166,15 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Description]: {
       id: PnlDetailColumns.Description,
       header: stringOverrides?.descriptionColumnHeader || 'Description',
-      cell: row => <Span ellipsis>{row.source?.displayDescription || row.account.accountSubtype.displayName || '-'}</Span>,
+      cell: row => (
+        <Text
+          as='span'
+          withTooltip={TextUseTooltip.whenTruncated}
+          ellipsis
+        >
+          {row.source?.displayDescription || row.account.accountSubtype.displayName || '-'}
+        </Text>
+      ),
       isRowHeader: true,
     },
     [PnlDetailColumns.Amount]: {
@@ -184,7 +182,7 @@ export const ProfitAndLossDetailReport = ({
       header: stringOverrides?.amountColumnHeader || 'Amount',
       cell: (row) => {
         return (
-          <MoneySpan amount={row.amount} />
+          <MoneySpan amount={row.direction === Direction.CREDIT ? row.amount : -row.amount} />
         )
       },
     },
@@ -219,7 +217,7 @@ export const ProfitAndLossDetailReport = ({
             <DetailsListItem label='Source'>
               <Badge>{selectedSource.entityName}</Badge>
             </DetailsListItem>
-            <SourceDetailView source={convertSourceForDetailView(selectedSource)} />
+            <SourceDetailView source={selectedSource} />
           </DetailsList>
         </VStack>
       </BaseDetailView>

@@ -32,8 +32,6 @@
 }
 
 .Layer__UI__VirtualizedTable__row {
-  // Virtual rows use transform positioning like ValidateCsvTable
-  // Position and transform are set via inline styles for performance
   position: absolute;
   display: grid;
   width: 100%;
