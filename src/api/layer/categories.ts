@@ -1,15 +1,12 @@
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
-import { Category } from '../../types'
 import { get } from './authenticated_http'
+import { CategoryList } from '../../schemas/categorization'
 
 export type CategoriesListMode = 'ALL' | 'EXPENSES' | 'DEFAULT'
 
 export const getCategories = get<
   {
-    data: {
-      type: 'Category_List'
-      categories: Category[]
-    }
+    data: CategoryList
   },
   {
     businessId: string

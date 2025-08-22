@@ -1,7 +1,6 @@
 import { Schema, pipe } from 'effect'
-import { AccountIdSchema, AccountStableNameSchema } from './generalLedger/ledgerAccount'
 
-export const BaseApiCategorizationSchema = Schema.Struct({
+export const BaseCategorizationSchema = Schema.Struct({
   id: Schema.String,
   category: Schema.String,
   displayName: pipe(
@@ -13,11 +12,11 @@ export const BaseApiCategorizationSchema = Schema.Struct({
 
 export const AccountCategorizationSchema = Schema.Struct({
   accountId: pipe(
-    Schema.propertySignature(AccountIdSchema),
+    Schema.propertySignature(Schema.String),
     Schema.fromKey('id'),
   ),
   stableName: pipe(
-    Schema.propertySignature(Schema.NullOr(AccountStableNameSchema)),
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('stable_name'),
   ),
   category: Schema.String,
@@ -62,16 +61,17 @@ export const SplitCategorizationSchema = Schema.Struct({
     Schema.fromKey('display_name'),
   ),
   description: Schema.NullOr(Schema.String),
-  entries: Schema.Array(SplitCategorizationEntrySchema),
+  entries: Schema.mutable(Schema.Array(SplitCategorizationEntrySchema)),
 })
 
 const nestedAccountCategorizationFields = {
+  type: Schema.Literal('AccountNested'),
   accountId: pipe(
-    Schema.propertySignature(AccountIdSchema),
+    Schema.propertySignature(Schema.String),
     Schema.fromKey('id'),
   ),
   stableName: pipe(
-    Schema.propertySignature(Schema.NullOr(AccountStableNameSchema)),
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('stable_name'),
   ),
   category: Schema.String,
@@ -84,8 +84,9 @@ const nestedAccountCategorizationFields = {
 }
 
 const nestedOptionalCategorizationFields = {
+  type: Schema.Literal('OptionalAccountNested'),
   stableName: pipe(
-    Schema.propertySignature(AccountStableNameSchema),
+    Schema.propertySignature(Schema.String),
     Schema.fromKey('stable_name'),
   ),
   category: Schema.String,
@@ -98,6 +99,7 @@ const nestedOptionalCategorizationFields = {
 }
 
 const nestedExclusionCategorizationFields = {
+  type: Schema.Literal('ExclusionNested'),
   id: Schema.String,
   category: Schema.String,
   displayName: pipe(
@@ -137,9 +139,9 @@ export type NestedApiCategorizationEncoded = NestedAccountCategorizationEncoded 
 export const NestedAccountCategorizationSchema = Schema.Struct({
   ...nestedAccountCategorizationFields,
   subCategories: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Array(
+    Schema.propertySignature(Schema.NullOr(Schema.mutable(Schema.Array(
       Schema.suspend((): Schema.Schema<NestedApiCategorization, NestedApiCategorizationEncoded> => NestedApiCategorizationSchema),
-    ))),
+    )))),
     Schema.fromKey('sub_categories'),
   ),
 })
@@ -147,9 +149,9 @@ export const NestedAccountCategorizationSchema = Schema.Struct({
 export const NestedOptionalCategorizationSchema = Schema.Struct({
   ...nestedOptionalCategorizationFields,
   subCategories: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Array(
+    Schema.propertySignature(Schema.NullOr(Schema.mutable(Schema.Array(
       Schema.suspend((): Schema.Schema<NestedApiCategorization, NestedApiCategorizationEncoded> => NestedApiCategorizationSchema),
-    ))),
+    )))),
     Schema.fromKey('sub_categories'),
   ),
 })
@@ -157,9 +159,9 @@ export const NestedOptionalCategorizationSchema = Schema.Struct({
 export const NestedExclusionCategorizationSchema = Schema.Struct({
   ...nestedExclusionCategorizationFields,
   subCategories: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Array(
+    Schema.propertySignature(Schema.NullOr(Schema.mutable(Schema.Array(
       Schema.suspend((): Schema.Schema<NestedApiCategorization, NestedApiCategorizationEncoded> => NestedApiCategorizationSchema),
-    ))),
+    )))),
     Schema.fromKey('sub_categories'),
   ),
 })
@@ -170,17 +172,23 @@ export const NestedApiCategorizationSchema = Schema.Union(
   NestedExclusionCategorizationSchema,
 )
 
-export const ApiCategorizationSchema = Schema.Union(
+export const CategorizationSchema = Schema.Union(
   AccountCategorizationSchema,
   ExclusionCategorizationSchema,
   SplitCategorizationSchema,
 )
 
-export type BaseApiCategorization = typeof BaseApiCategorizationSchema.Type
+export type BaseCategorization = typeof BaseCategorizationSchema.Type
 export type AccountCategorization = typeof AccountCategorizationSchema.Type
 export type ExclusionCategorization = typeof ExclusionCategorizationSchema.Type
 export type AccountSplitEntry = typeof AccountSplitEntrySchema.Type
 export type ExclusionSplitEntry = typeof ExclusionSplitEntrySchema.Type
 export type SplitCategorizationEntry = typeof SplitCategorizationEntrySchema.Type
 export type SplitCategorization = typeof SplitCategorizationSchema.Type
-export type ApiCategorization = typeof ApiCategorizationSchema.Type
+export type Categorization = typeof CategorizationSchema.Type
+
+export const CategoryListSchema = Schema.Struct({
+  categories: Schema.mutable(Schema.Array(NestedApiCategorizationSchema)),
+})
+
+export type CategoryList = typeof CategoryListSchema.Type

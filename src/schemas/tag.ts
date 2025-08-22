@@ -48,4 +48,11 @@ export const TagSchema = Schema.Struct({
   ),
 })
 
-export const Tag = typeof TagSchema.Type
+export type Tag = typeof TagSchema.Type
+
+export const TagKeyValueSchema = Schema.Struct({
+  key: Schema.String,
+  value: Schema.String,
+})
+
+export type TagKeyValue = Schema.Schema.Type<typeof TagKeyValueSchema>

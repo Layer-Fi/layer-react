@@ -96,7 +96,7 @@ export const JournalForm = ({
           <div className='Layer__journal__datepicker__wrapper'>
             <DatePicker
               selected={
-                form?.data.entry_at ? new Date(form?.data.entry_at) : new Date()
+                form?.data.entryAt ?? new Date()
               }
               onChange={(date) => {
                 if (!Array.isArray(date)) {

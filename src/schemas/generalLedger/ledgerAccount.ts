@@ -1,5 +1,4 @@
 import { Schema, pipe } from 'effect'
-import { NestedLedgerAccount } from './ledgerAccount'
 import { LedgerAccountNodeType } from '../../types/chart_of_accounts'
 
 export const AccountTypeSchema = Schema.Struct({
@@ -283,8 +282,8 @@ export const LedgerBalancesSchema = Schema.Struct({
 })
 
 export type ChartOfAccounts = typeof ChartOfAccountsSchema.Type
-export type LedgerBalances = typeof LedgerBalancesSchema.Typeexport type AugmentedNestedLedgerAccount = NestedLedgerAccount & { isMatching?: true} 
+export type LedgerBalances = typeof LedgerBalancesSchema.Type
+export type AugmentedNestedLedgerAccount = NestedLedgerAccount & { isMatching?: true }
 export type NestedLedgerAccountWithNodeType = NestedLedgerAccount & {
   nodeType: LedgerAccountNodeType
 }
-

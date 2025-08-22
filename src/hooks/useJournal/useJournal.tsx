@@ -3,7 +3,7 @@ import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { Direction, FormError, FormErrorWithId } from '../../types'
 import { BaseSelectOption, DataModel } from '../../types/general'
-import { NewApiJournalEntry, NewFormJournalEntry, JournalEntryLineItem } from '../../types/journal'
+import { NewApiJournalEntry, JournalEntryLineItem } from '../../types/journal'
 import { LedgerEntry } from '../../schemas/generalLedger/ledgerEntry'
 import { getAccountIdentifierPayload } from '../../utils/journal'
 import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
@@ -12,6 +12,7 @@ import { useEnvironment } from '../../providers/Environment/EnvironmentInputProv
 import { useListLedgerEntries } from '../../features/ledger/entries/api/useListLedgerEntries'
 import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
 import { LedgerAccount, LedgerEntryDirection, NestedLedgerAccount } from '../../schemas/generalLedger/ledgerAccount'
+import { CreateCustomJournalEntry } from '../../schemas/generalLedger/customJournalEntry'
 
 type UseJournal = () => {
   data?: ReadonlyArray<LedgerEntry>
@@ -48,7 +49,7 @@ type UseJournal = () => {
 
 export interface JournalFormTypes {
   action: string
-  data: NewFormJournalEntry
+  data: CreateCustomJournalEntry
   errors?:
     | {
       entry: FormError[]
@@ -190,7 +191,7 @@ export const useJournal: UseJournal = () => {
     let newFormData = form
 
     if (lineItemIndex !== undefined) {
-      const lineItems = form.data.line_items || []
+      const lineItems = form.data.lineItems || []
       const lineItem = lineItems[lineItemIndex]
 
       if (!lineItem) {
@@ -206,9 +207,9 @@ export const useJournal: UseJournal = () => {
         if (foundParent) {
           const newLineItem = {
             ...lineItem,
-            account_identifier: {
+            accountIdentifier: {
               id: foundParent.id,
-              stable_name: foundParent.stableName,
+              stableName: foundParent.stableName,
               type: foundParent.accountType.value,
               name: foundParent.name,
               subType: foundParent.accountSubtype
@@ -235,7 +236,7 @@ export const useJournal: UseJournal = () => {
         ...form,
         data: {
           ...form.data,
-          line_items: lineItems,
+          lineItems: lineItems,
         },
       }
     }
@@ -289,7 +290,7 @@ export const useJournal: UseJournal = () => {
       lineItems: [],
     }
 
-    const lineItems = validateLineItems(formData?.data.line_items)
+    const lineItems = validateLineItems(formData?.data.lineItems)
 
     if (lineItems) {
       errors = {

@@ -1,7 +1,6 @@
 import { useContext, useMemo } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import Trash from '../../icons/Trash'
-import { Direction, JournalEntryLineItem } from '../../types'
 import { BaseSelectOption } from '../../types/general'
 import {
   humanizeEnum,
@@ -14,7 +13,8 @@ import { useCategories } from '../../hooks/categories/useCategories'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { AmountInput } from '../Input/AmountInput'
 import { Badge, BadgeVariant } from '../Badge/Badge'
-import { LedgerEntryDirection, NestedLedgerAccount } from '../../schemas/generalLedger/ledgerAccount'
+import { LedgerAccountSubtype, LedgerAccountType, LedgerEntryDirection, NestedLedgerAccount } from '../../schemas/generalLedger/ledgerAccount'
+import { LedgerEntryLineItem } from '../../schemas/generalLedger/ledgerEntry'
 
 type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
 
@@ -37,8 +37,8 @@ export const JournalFormEntryLines = ({
   sendingForm,
   config,
 }: {
-  entrylineItems: JournalEntryLineItem[]
-  addEntryLine: (direction: Direction) => void
+  entrylineItems: LedgerEntryLineItem[]
+  addEntryLine: (direction: LedgerEntryDirection) => void
   removeEntryLine: (index: number) => void
   changeFormData: (
     name: string,
@@ -56,22 +56,22 @@ export const JournalFormEntryLines = ({
     const flattenedCategories = recursiveFlattenCategories(categories ?? [])
 
     const parentOptions = [...flattenedCategories]
-      .sort((a, b) => (a.display_name.localeCompare(b.display_name)))
+      .sort((a, b) => (a.displayName.localeCompare(b.displayName)))
       .map((account) => {
         switch (account.type) {
           case 'AccountNested':
             return {
-              label: account.display_name,
+              label: account.displayName,
               value: account.id,
             }
           case 'OptionalAccountNested':
             return {
-              label: account.display_name,
-              value: account.stable_name,
+              label: account.displayName,
+              value: account.stableName,
             }
           case 'ExclusionNested':
             return {
-              label: account.display_name,
+              label: account.displayName,
               value: account.id,
             }
           default:
@@ -94,7 +94,7 @@ export const JournalFormEntryLines = ({
         case 'AccountNested':
           return category.id === value.value
         case 'OptionalAccountNested':
-          return category.stable_name === value.value
+          return category.stableName === value.value
         case 'ExclusionNested':
           return category.id === value.value
         default:
@@ -109,23 +109,54 @@ export const JournalFormEntryLines = ({
       return
     }
 
-    const baseFields = relevantCategory.type === 'OptionalAccountNested'
-      ? {
-        id: relevantCategory.stable_name,
-        stableName: relevantCategory.stable_name,
-        accountType: {
-          value: relevantCategory.stable_name,
-          displayName: relevantCategory.display_name,
-        },
+    const baseFields = (() => {
+      switch (relevantCategory.type) {
+        case 'AccountNested':
+          return {
+            id: relevantCategory.id,
+            stableName: relevantCategory.stableName || '',
+            accountType: {
+              value: LedgerAccountType.Asset,
+              displayName: relevantCategory.displayName,
+            },
+            accountSubtype: {
+              value: LedgerAccountSubtype.FixedAsset,
+              displayName: relevantCategory.displayName,
+            },
+          }
+        case 'OptionalAccountNested':
+          return {
+            id: relevantCategory.stableName,
+            stableName: relevantCategory.stableName,
+            accountType: {
+              value: LedgerAccountType.Asset,
+              displayName: relevantCategory.displayName,
+            },
+            accountSubtype: {
+              value: LedgerAccountSubtype.FixedAsset,
+              displayName: relevantCategory.displayName,
+            },
+          }
+        case 'ExclusionNested':
+          return {
+            id: relevantCategory.id,
+            stableName: '',
+            accountType: {
+              value: LedgerAccountType.Asset,
+              displayName: relevantCategory.displayName,
+            },
+            accountSubtype: {
+              value: LedgerAccountSubtype.FixedAsset,
+              displayName: relevantCategory.displayName,
+            },
+          }
+        default:
+          unsafeAssertUnreachable({
+            value: relevantCategory,
+            message: 'Unexpected account type',
+          })
       }
-      : {
-        id: relevantCategory.id,
-        stableName: ('stable_name' in relevantCategory) ? relevantCategory.stable_name ?? '' : '',
-        accountType: {
-          value: relevantCategory.id,
-          display_name: relevantCategory.display_name,
-        },
-      }
+    })()
 
     return changeFormData(
       'parent',
@@ -135,7 +166,7 @@ export const JournalFormEntryLines = ({
         {
           ...baseFields,
           isDeletable: false,
-          name: relevantCategory.display_name,
+          name: relevantCategory.displayName,
           subAccounts: [],
           balance: 0,
           normality: LedgerEntryDirection.Debit,
@@ -146,7 +177,7 @@ export const JournalFormEntryLines = ({
 
   return (
     <>
-      {[Direction.DEBIT, Direction.CREDIT].map((direction, idx) => {
+      {[LedgerEntryDirection.Debit, LedgerEntryDirection.Credit].map((direction, idx) => {
         return (
           <div
             key={'Layer__journal__form__input-group-' + idx}
@@ -179,7 +210,7 @@ export const JournalFormEntryLines = ({
                       disabled={sendingForm}
                       allowNegativeValue={false}
                       badge={(
-                        <Badge variant={item.direction === Direction.CREDIT
+                        <Badge variant={item.direction === LedgerEntryDirection.Credit
                           ? BadgeVariant.SUCCESS
                           : BadgeVariant.WARNING}
                         >
@@ -206,8 +237,8 @@ export const JournalFormEntryLines = ({
                     <Select
                       options={parentOptions}
                       value={{
-                        value: item.account_identifier.id,
-                        label: item.account_identifier.name,
+                        value: item.account.id,
+                        label: item.account.name,
                       }}
                       onChange={value =>
                         handleChangeParent({
