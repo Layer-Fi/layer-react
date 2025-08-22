@@ -4,9 +4,9 @@ import { Option, flattenCategories, flattenOptionGroups } from './utils'
 import { useCategories } from '../../hooks/categories/useCategories'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { SearchField } from '../SearchField/SearchField'
-import { Span } from '../ui/Typography/Text'
 import { Button } from '../ui/Button/Button'
 import { ChevronLeft } from 'lucide-react'
+import { ModalHeading } from '../ui/Modal/ModalSlots'
 
 export interface BusinessCategoriesProps {
   select: (category: Option) => void
@@ -30,21 +30,25 @@ export const BusinessCategories = ({
   const [selectedGroup, setSelectedGroup] = useState<string>()
 
   const filteredOptions = useMemo(() => {
-    const sortedOptions = optionsToShow.sort((a, b) => a.label.localeCompare(b.label))
-    if (!query) return sortedOptions
+    let options = optionsToShow
 
-    const lower = query.toLowerCase()
-    const flattenedOptions = flattenOptionGroups(sortedOptions)
+    if (query) {
+      const lower = query.toLowerCase()
+      const flattenedOptions = flattenOptionGroups(options)
 
-    return flattenedOptions.filter(opt =>
-      opt.label.toLowerCase().includes(lower),
-    )
+      options = flattenedOptions.filter(opt =>
+        opt.label.toLowerCase().includes(lower),
+      )
+    }
+
+    return options.sort((a, b) => a.label.localeCompare(b.label))
   }, [optionsToShow, query])
 
   const onCategorySelect = (v: Option) => {
     if (v.value.type === 'GROUP' && v.value.items) {
       setOptionsToShow(v.value.items)
       setSelectedGroup(v.label)
+      setQuery('')
       return
     }
     select(v)
@@ -63,12 +67,12 @@ export const BusinessCategories = ({
             ? (
               <Button variant='text' onClick={clearSelectedGroup}>
                 <ChevronLeft size={18} />
-                <Span size='lg' weight='bold' align='center'>
+                <ModalHeading size='sm' weight='bold' align='center'>
                   {selectedGroup}
-                </Span>
+                </ModalHeading>
               </Button>
             )
-            : <Span size='lg'weight='bold'>Select category</Span>}
+            : <ModalHeading size='sm' weight='bold'>Select category</ModalHeading>}
         </HStack>
         <SearchField value={query} onChange={setQuery} label='Search categories...' />
       </VStack>
