@@ -30,10 +30,11 @@ export const BusinessCategories = ({
   const [selectedGroup, setSelectedGroup] = useState<string>()
 
   const filteredOptions = useMemo(() => {
-    if (!query) return optionsToShow
+    const sortedOptions = optionsToShow.sort((a, b) => a.label.localeCompare(b.label))
+    if (!query) return sortedOptions
 
     const lower = query.toLowerCase()
-    const flattenedOptions = flattenOptionGroups(optionsToShow)
+    const flattenedOptions = flattenOptionGroups(sortedOptions)
 
     return flattenedOptions.filter(opt =>
       opt.label.toLowerCase().includes(lower),
