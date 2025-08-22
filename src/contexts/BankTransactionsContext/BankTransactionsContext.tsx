@@ -12,8 +12,9 @@ export const BankTransactionsContext =
     refetch: () => {},
     categorize: () => Promise.resolve(undefined),
     match: () => Promise.resolve(undefined),
-    filters: undefined,
+    filters: {},
     setFilters: () => {},
+    dateFilterMode: undefined,
     metadata: {
       pagination: {
         cursor: undefined,

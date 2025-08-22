@@ -80,6 +80,7 @@ export function PaginatedTable<TData extends { id: string }, TColumns extends st
           totalCount={table.getRowCount()}
           hasMore={hasMore}
           fetchMore={fetchMore}
+          className='Layer__PaginatedDataTable__Pagination'
         />
       )}
     </VStack>

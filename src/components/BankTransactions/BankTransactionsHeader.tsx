@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { DateRange, DisplayState } from '../../types'
+import { DisplayState, type DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
 import { ButtonVariant, DownloadButton as DownloadButtonComponent } from '../Button'
 import { Header } from '../Container'
@@ -21,21 +21,18 @@ import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/use
 import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import { BankTransactionsUploadMenu } from './BankTransactionsUploadMenu'
+import { BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
   asWidget?: boolean
   categorizedOnly?: boolean
   categorizeView?: boolean
-  display?: DisplayState
   onCategorizationDisplayChange: (event: ChangeEvent<HTMLInputElement>) => void
   mobileComponent?: MobileComponentType
-  withDatePicker?: boolean
   listView?: boolean
-  dateRange?: DateRange
   isDataLoading?: boolean
   isSyncing?: boolean
-  setDateRange?: (value: DateRange) => void
   stringOverrides?: BankTransactionsHeaderStringOverrides
   withUploadMenu?: boolean
 }
@@ -115,18 +112,26 @@ export const BankTransactionsHeader = ({
   asWidget,
   categorizedOnly,
   categorizeView = true,
-  display,
   onCategorizationDisplayChange,
   mobileComponent,
-  withDatePicker,
   listView,
-  dateRange,
-  setDateRange,
   stringOverrides,
   isSyncing,
   withUploadMenu,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
+  const {
+    setFilters,
+    filters,
+    dateFilterMode,
+    display,
+  } = useBankTransactionsContext()
+
+  const withDatePicker = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
+  const dateRange = filters?.dateRange
+  const setDateRange = useCallback((newRange: DateRange) => {
+    setFilters({ dateRange: newRange })
+  }, [setFilters])
 
   return (
     <Header
@@ -155,7 +160,7 @@ export const BankTransactionsHeader = ({
             />
           )}
         </div>
-        {withDatePicker && dateRange && setDateRange
+        {withDatePicker && dateRange
           ? (
             <DatePicker
               displayMode='monthPicker'

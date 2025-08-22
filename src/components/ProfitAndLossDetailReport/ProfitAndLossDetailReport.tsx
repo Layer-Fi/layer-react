@@ -182,7 +182,7 @@ export const ProfitAndLossDetailReport = ({
       header: stringOverrides?.amountColumnHeader || 'Amount',
       cell: (row) => {
         return (
-          <MoneySpan amount={row.amount} />
+          <MoneySpan amount={row.direction === Direction.CREDIT ? row.amount : -row.amount} />
         )
       },
     },
@@ -226,28 +226,30 @@ export const ProfitAndLossDetailReport = ({
 
   return (
     <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={onClose} borderless>
-      <VirtualizedDataTable<ProcessedPnlDetailLine, PnlDetailColumns>
-        componentName={COMPONENT_NAME}
-        ariaLabel={`${lineItemName} detail lines`}
-        columnConfig={columnConfig}
-        data={rowsWithRunningBalance.lines}
-        isLoading={isLoading}
-        isError={isError}
-        slots={{
-          EmptyState,
-          ErrorState,
-        }}
-      />
-      {rowsWithRunningBalance.lines.length > 0 && (
-        <HStack pb='sm' align='center' className='Layer__profit-and-loss-detail-report__total-row'>
-          <HStack className='Layer__profit-and-loss-detail-report__total-label'>
-            <Label weight='bold' size='md'>Total</Label>
+      <VStack className='Layer__ProfitAndLossDetailReport'>
+        <VirtualizedDataTable<ProcessedPnlDetailLine, PnlDetailColumns>
+          componentName={COMPONENT_NAME}
+          ariaLabel={`${lineItemName} detail lines`}
+          columnConfig={columnConfig}
+          data={rowsWithRunningBalance.lines}
+          isLoading={isLoading}
+          isError={isError}
+          slots={{
+            EmptyState,
+            ErrorState,
+          }}
+        />
+        {rowsWithRunningBalance.lines.length > 0 && (
+          <HStack pb='sm' align='center' className='Layer__profit-and-loss-detail-report__total-row'>
+            <HStack className='Layer__profit-and-loss-detail-report__total-label'>
+              <Label weight='bold' size='md'>Total</Label>
+            </HStack>
+            <HStack className='Layer__profit-and-loss-detail-report__total-amount'>
+              <MoneySpan bold size='md' amount={rowsWithRunningBalance.total} />
+            </HStack>
           </HStack>
-          <HStack className='Layer__profit-and-loss-detail-report__total-amount'>
-            <MoneySpan bold size='md' amount={rowsWithRunningBalance.total} />
-          </HStack>
-        </HStack>
-      )}
+        )}
+      </VStack>
     </BaseDetailView>
   )
 }
