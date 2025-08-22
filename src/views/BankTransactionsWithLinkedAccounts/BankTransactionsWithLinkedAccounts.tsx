@@ -6,6 +6,8 @@ import { BankTransactionsMode } from '../../providers/LegacyModeProvider/LegacyM
 import { MobileComponentType } from '../../components/BankTransactions/constants'
 import { LinkedAccounts } from '../../components/LinkedAccounts'
 import { View } from '../../components/View'
+import { LinkingMetadata } from '../../contexts/InAppLinkContext'
+import { ReactNode } from 'react'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {
   title?: string
@@ -33,6 +35,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   mode?: BankTransactionsMode
   mobileComponent?: MobileComponentType
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
+  convertToInAppLink?: (details: LinkingMetadata) => ReactNode
 }
 
 export const BankTransactionsWithLinkedAccounts = ({
@@ -53,6 +56,7 @@ export const BankTransactionsWithLinkedAccounts = ({
 
   mobileComponent,
   stringOverrides,
+  convertToInAppLink,
 }: BankTransactionsWithLinkedAccountsProps) => {
   return (
     <View
@@ -77,6 +81,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         mobileComponent={mobileComponent}
         mode={mode}
         stringOverrides={stringOverrides?.bankTransactions}
+        convertToInAppLink={convertToInAppLink}
       />
     </View>
   )

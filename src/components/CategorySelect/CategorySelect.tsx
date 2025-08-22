@@ -20,8 +20,11 @@ import { Text, TextSize } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
-import { useCallback, useState } from 'react'
+import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
+import { convertMatchDetailsToLinkingMetadata, MatchDetailsType } from '../../schemas/match'
+import { ReactNode } from 'react'
+import { useCallback, useState } from 'react'
 import type { Option } from '../BankTransactionMobileList/utils'
 
 type Props = {
@@ -53,6 +56,7 @@ export interface CategoryOptionPayload {
   stable_name?: string
   entries?: CategoryWithEntries['entries']
   subCategories: Category[] | null
+  details?: MatchDetailsType
 }
 
 export interface CategoryOption {
@@ -141,13 +145,18 @@ const GroupHeading = (
 const Option = (
   props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
     showTooltips: boolean
+    convertToInAppLink?: (details: LinkingMetadata) => ReactNode | undefined
   },
 ) => {
-  if (props.data.payload.option_type === 'hidden') {
+  if (props.data.payload.option_type === OptionActionType.HIDDEN) {
     return null
   }
 
   if (props.data.type === 'match') {
+    const inAppLink = props.convertToInAppLink && props.data.payload.details
+      ? props.convertToInAppLink(convertMatchDetailsToLinkingMetadata(props.data.payload.details))
+      : null
+
     return (
       <components.Option
         {...props}
@@ -161,6 +170,7 @@ const Option = (
           <span className='Layer__select__option-content__match__description'>
             {props.data.payload.display_name}
           </span>
+          {inAppLink}
         </div>
         <div className='Layer__select__option-content__match__amount-row'>
           <span className='Layer__select__option-content__match__amount'>
@@ -261,6 +271,7 @@ export const CategorySelect = ({
   asDrawer = false,
 }: Props) => {
   const { data: categories } = useCategories()
+  const { convertToInAppLink } = useInAppLinkContext()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const onSelect = useCallback((option: Option) => {
@@ -289,6 +300,7 @@ export const CategorySelect = ({
                   date: x.details.date,
                   amount: x.details.amount,
                   subCategories: null,
+                  details: x.details,
                 },
               } satisfies CategoryOption
             }),
@@ -396,7 +408,7 @@ export const CategorySelect = ({
         DropdownIndicator,
         GroupHeading,
         Option: optionProps => (
-          <Option {...optionProps} showTooltips={showTooltips} />
+          <Option {...optionProps} showTooltips={showTooltips} convertToInAppLink={convertToInAppLink} />
         ),
       }}
       isDisabled={disabled}

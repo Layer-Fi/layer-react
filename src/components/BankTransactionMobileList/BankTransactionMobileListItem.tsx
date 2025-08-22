@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState, type ChangeEvent } from 'react'
+import { ReactNode, useContext, useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useElementSize } from '../../hooks/useElementSize'
 import FileIcon from '../../icons/File'
@@ -20,6 +20,8 @@ import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookke
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
+import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
+import { convertMatchDetailsToLinkingMetadata } from '../../schemas/match'
 
 export interface BankTransactionMobileListItemProps {
   index: number
@@ -42,12 +44,19 @@ export enum Purpose {
 
 const DATE_FORMAT = 'LLL d'
 
-const getAssignedValue = (bankTransaction: BankTransaction) => {
+const getAssignedValue = (
+  bankTransaction: BankTransaction,
+  convertToInAppLink?: (details: LinkingMetadata) => ReactNode | undefined,
+) => {
   if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
     return extractDescriptionForSplit(bankTransaction.category)
   }
 
   if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
+    if (convertToInAppLink && bankTransaction.match?.details) {
+      const inAppLink = convertToInAppLink(convertMatchDetailsToLinkingMetadata(bankTransaction.match.details))
+      if (inAppLink) return inAppLink
+    }
     return bankTransaction.match?.details?.description
   }
 
@@ -73,6 +82,7 @@ export const BankTransactionMobileListItem = ({
   } = useContext(TransactionToOpenContext)
 
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
+  const { convertToInAppLink } = useInAppLinkContext()
 
   const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
     setHeight(height),
@@ -191,7 +201,7 @@ export const BankTransactionMobileListItem = ({
             </Text>
             <Text as='span' className={`${className}__heading__account-name`}>
               {categorized && bankTransaction.categorization_status
-                ? getAssignedValue(bankTransaction)
+                ? getAssignedValue(bankTransaction, convertToInAppLink)
                 : null}
               <span>{!categorized && bankTransaction.account_name}</span>
               {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
