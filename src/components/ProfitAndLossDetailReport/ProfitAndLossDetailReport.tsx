@@ -8,12 +8,13 @@ import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
 import { type ColumnConfig } from '../DataTable/DataTable'
 import { Badge } from '../Badge'
 import { DateTime } from '../DateTime'
+import { Text, TextUseTooltip } from '../Typography/Text'
 import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { Button } from '../ui/Button/Button'
 import { VStack, HStack } from '../ui/Stack/Stack'
-import { Label, Span } from '../ui/Typography/Text'
+import { Label } from '../ui/Typography/Text'
 import { format } from 'date-fns'
 import { LedgerEntrySourceType } from '../../schemas/generalLedger/ledgerEntrySource'
 import { Direction } from '../../types'
@@ -166,7 +167,15 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Description]: {
       id: PnlDetailColumns.Description,
       header: stringOverrides?.descriptionColumnHeader || 'Description',
-      cell: row => <Span ellipsis>{row.source?.displayDescription || row.account.accountSubtype.displayName || '-'}</Span>,
+      cell: row => (
+        <Text
+          as='span'
+          withTooltip={TextUseTooltip.whenTruncated}
+          ellipsis
+        >
+          {row.source?.displayDescription || row.account.accountSubtype.displayName || '-'}
+        </Text>
+      ),
       isRowHeader: true,
     },
     [PnlDetailColumns.Amount]: {
@@ -174,7 +183,7 @@ export const ProfitAndLossDetailReport = ({
       header: stringOverrides?.amountColumnHeader || 'Amount',
       cell: (row) => {
         return (
-          <MoneySpan amount={row.amount} />
+          <MoneySpan amount={row.direction === Direction.CREDIT ? row.amount : -row.amount} />
         )
       },
     },
