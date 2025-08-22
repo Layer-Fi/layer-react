@@ -20,7 +20,7 @@ type GetLedgerEntriesParams = {
   show_total_count?: boolean
 }
 
-type ListLedgerEntriesReturn = {
+export type ListLedgerEntriesReturn = {
   data: ReadonlyArray<LedgerEntry>
   meta?: {
     pagination: {

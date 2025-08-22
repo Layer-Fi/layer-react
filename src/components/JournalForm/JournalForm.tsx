@@ -124,7 +124,7 @@ export const JournalForm = ({
         </InputGroup>
       </div>
       <JournalFormEntryLines
-        entrylineItems={form?.data.line_items || []}
+        entrylineItems={form?.data.lineItems || []}
         addEntryLine={addEntryLine}
         removeEntryLine={removeEntryLine}
         changeFormData={changeFormData}

@@ -184,6 +184,9 @@ export const LedgerAccountSchema = Schema.Struct({
   ),
 })
 
+export type AccountId = typeof AccountIdSchema.Type
+export type AccountStableName = typeof AccountStableNameSchema.Type
+
 export type AccountIdentifier = typeof AccountIdentifierSchema.Type
 export type LedgerAccount = typeof LedgerAccountSchema.Type
 

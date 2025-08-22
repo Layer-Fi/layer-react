@@ -14,7 +14,7 @@ import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { AmountInput } from '../Input/AmountInput'
 import { Badge, BadgeVariant } from '../Badge/Badge'
 import { LedgerAccountSubtype, LedgerAccountType, LedgerEntryDirection, NestedLedgerAccount } from '../../schemas/generalLedger/ledgerAccount'
-import { LedgerEntryLineItem } from '../../schemas/generalLedger/ledgerEntry'
+import { CreateCustomJournalEntryLineItem } from '../../schemas/generalLedger/customJournalEntry'
 
 type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
 
@@ -37,7 +37,7 @@ export const JournalFormEntryLines = ({
   sendingForm,
   config,
 }: {
-  entrylineItems: LedgerEntryLineItem[]
+  entrylineItems: CreateCustomJournalEntryLineItem[]
   addEntryLine: (direction: LedgerEntryDirection) => void
   removeEntryLine: (index: number) => void
   changeFormData: (

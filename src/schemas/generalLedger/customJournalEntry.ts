@@ -10,7 +10,10 @@ export const CreateCustomJournalEntryLineItemSchema = Schema.Struct({
     Schema.optional(Schema.NullOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
-  account: AccountIdentifierSchema,
+  accountIdentifier: pipe(
+    Schema.propertySignature(AccountIdentifierSchema),
+    Schema.fromKey('account_identifier'),
+  ),
   amount: Schema.Number,
   direction: LedgerEntryDirectionSchema,
   memo: Schema.optional(Schema.NullOr(Schema.String)),
@@ -53,7 +56,7 @@ export const CreateCustomJournalEntrySchema = Schema.Struct({
   ),
   memo: Schema.String,
   lineItems: pipe(
-    Schema.propertySignature(Schema.Array(CreateCustomJournalEntryLineItemSchema)),
+    Schema.propertySignature(Schema.mutable(Schema.Array(CreateCustomJournalEntryLineItemSchema))),
     Schema.fromKey('line_items'),
   ),
   tagKeyValues: pipe(
