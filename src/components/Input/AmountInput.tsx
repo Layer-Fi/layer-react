@@ -39,6 +39,7 @@ export const AmountInput = ({
       prefix='$'
       placeholder={placeholder}
       decimalScale={2}
+      decimalsLimit={2}
       disableAbbreviations
       allowDecimals={true}
       transformRawValue={(rawValue) => {
