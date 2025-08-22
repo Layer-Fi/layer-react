@@ -11,7 +11,7 @@ import { QuickbooksContext } from '../../../contexts/QuickbooksContext/Quickbook
 import { useLayerContext } from '../../../contexts/LayerContext'
 
 const MenuTriggerButton = () => (
-  <Button variant='ghost'>
+  <Button variant='outlined'>
     Manage
     <Cog size={16} />
   </Button>

@@ -17,10 +17,12 @@ import { Badge } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import { Text, TextSize } from '../Typography'
-import { CategorySelectDrawer } from './CategorySelectDrawer'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
+import { useCallback, useState } from 'react'
+import { CategorySelectDrawer } from './CategorySelectDrawer'
+import type { Option } from '../BankTransactionMobileList/utils'
 
 type Props = {
   name?: string
@@ -31,7 +33,6 @@ type Props = {
   className?: string
   showTooltips: boolean
   excludeMatches?: boolean
-  hideMainCategories?: string[]
   asDrawer?: boolean
 }
 
@@ -248,14 +249,6 @@ function flattenCategories(
   })
 }
 
-function filterCategories(categories: Category[], hideMainCategories?: string[]) {
-  if (!hideMainCategories) {
-    return categories
-  }
-
-  return categories.filter(category => !hideMainCategories.includes(category.category))
-}
-
 export const CategorySelect = ({
   bankTransaction,
   name,
@@ -265,10 +258,21 @@ export const CategorySelect = ({
   className,
   showTooltips,
   excludeMatches = false,
-  hideMainCategories,
   asDrawer = false,
 }: Props) => {
   const { data: categories } = useCategories()
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const onSelect = useCallback((option: Option) => {
+    if (option.value.payload) {
+      onChange({
+        type: OptionActionType.CATEGORY,
+        payload: {
+          ...option.value.payload,
+        },
+      })
+    }
+  }, [onChange])
 
   const matchOptions =
     !excludeMatches && bankTransaction?.suggested_matches
@@ -329,11 +333,29 @@ export const CategorySelect = ({
 
   if (asDrawer) {
     return (
-      <CategorySelectDrawer
-        onSelect={onChange}
-        selected={value}
-        showTooltips={showTooltips}
-      />
+      <>
+        <button
+          aria-label='Select category'
+          className={classNames(
+            'Layer__category-menu__drawer-btn',
+            selected && 'Layer__category-menu__drawer-btn--selected',
+          )}
+          onClick={() => { setIsDrawerOpen(true) }}
+        >
+          {selected?.payload?.display_name ?? 'Select...'}
+          <ChevronDown
+            size={16}
+            className='Layer__category-menu__drawer-btn__arrow'
+          />
+        </button>
+        <CategorySelectDrawer
+          onSelect={onSelect}
+          selectedId={selected?.payload?.id}
+          showTooltips={showTooltips}
+          isOpen={isDrawerOpen}
+          onOpenChange={setIsDrawerOpen}
+        />
+      </>
     )
   }
 

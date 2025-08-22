@@ -1,74 +1,34 @@
-import { useContext } from 'react'
-import { DrawerContext } from '../../contexts/DrawerContext'
-import ChevronDown from '../../icons/ChevronDown'
 import { BusinessCategories } from '../BankTransactionMobileList/BusinessCategories'
-import { CategoryOption, OptionActionType } from './CategorySelect'
-import classNames from 'classnames'
+import { Drawer } from '../ui/Modal/Modal'
+import type { Option } from '../BankTransactionMobileList/utils'
 
 interface CategorySelectDrawerProps {
-  onSelect: (value: CategoryOption) => void
-  selected?: CategoryOption
+  onSelect: (value: Option) => void
+  selectedId?: string
   showTooltips: boolean
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
 }
 
 export const CategorySelectDrawer = ({
   onSelect,
-  selected,
-  showTooltips: _showTooltips,
+  selectedId,
+  showTooltips,
+  isOpen,
+  onOpenChange,
 }: CategorySelectDrawerProps) => {
-  const { setContent, close } = useContext(DrawerContext)
-
-  const onDrawerCategorySelect = (value: CategoryOption) => {
-    close()
-    onSelect(value)
-  }
-
   return (
-    <button
-      aria-label='Select category'
-      className={classNames(
-        'Layer__category-menu__drawer-btn',
-        selected && 'Layer__category-menu__drawer-btn--selected',
+    <Drawer isOpen={isOpen} onOpenChange={onOpenChange} variant='mobile-drawer' isDismissable>
+      {({ close }) => (
+        <BusinessCategories
+          select={(option) => {
+            onSelect(option)
+            close()
+          }}
+          selectedId={selectedId}
+          showTooltips={showTooltips}
+        />
       )}
-      onClick={() =>
-        setContent(
-          <CategorySelectDrawerContent
-            selected={selected}
-            onSelect={onDrawerCategorySelect}
-            showTooltips
-          />,
-        )
-      }
-    >
-      {selected?.payload?.display_name ?? 'Select...'}
-      <ChevronDown
-        size={16}
-        className='Layer__category-menu__drawer-btn__arrow'
-      />
-    </button>
+    </Drawer>
   )
 }
-
-const CategorySelectDrawerContent = ({
-  onSelect,
-  selected,
-  showTooltips,
-}: {
-  onSelect: (value: CategoryOption) => void
-  selected?: CategoryOption
-  showTooltips: boolean
-}) => (
-  <BusinessCategories
-    select={option => {
-      option.value.payload &&
-        onSelect({
-          type: OptionActionType.CATEGORY,
-          payload: {
-            ...option.value.payload,
-          },
-        } satisfies CategoryOption)
-    }}
-    selectedId={selected?.payload?.id}
-    showTooltips={showTooltips}
-  />
-)

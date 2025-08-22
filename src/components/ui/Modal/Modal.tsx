@@ -9,7 +9,7 @@ import {
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 
 type ModalSize = 'md' | 'lg'
-type ModalVariant = 'center' | 'drawer'
+type ModalVariant = 'center' | 'drawer' | 'mobile-drawer'
 
 const BASE_MODAL_OVERLAY_CLASS_NAME = 'Layer__ModalOverlay'
 const MODAL_OVERLAY_CLASS_NAME = `Layer__Portal ${BASE_MODAL_OVERLAY_CLASS_NAME}`
@@ -76,7 +76,7 @@ Dialog.displayName = 'Dialog'
 
 type AllowedModalOverlayProps = Pick<
   ComponentProps<typeof ModalOverlay>,
-  'isOpen' | 'onOpenChange'
+  'isOpen' | 'onOpenChange' | 'isDismissable'
 >
 
 type AllowedInternalModalProps = Pick<
@@ -114,7 +114,7 @@ export function Modal({
 type AllowedInternalDrawerProps = Pick<
   ComponentProps<typeof InternalModal>,
   'size'
->
+> & { variant?: Exclude<ModalVariant, 'center'> }
 
 export type DrawerProps = AllowedModalOverlayProps &
   AllowedInternalDrawerProps &
@@ -126,12 +126,14 @@ export function Drawer({
   size = 'md',
   children,
   'aria-label': ariaLabel,
+  variant = 'drawer',
+  isDismissable = false,
   role,
 }: DrawerProps) {
   return (
-    <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant='drawer'>
-      <InternalModal size={size} variant='drawer'>
-        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant='drawer'>
+    <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
+      <InternalModal size={size} variant={variant}>
+        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
           {children}
         </Dialog>
       </InternalModal>
