@@ -64,7 +64,7 @@ export const flattenCategories = (categories: CategoryWithEntries[]): Option[] =
     return subCategories.flatMap(visit)
   }
 
-  return (categories).flatMap(visit)
+  return categories.flatMap(visit)
 }
 
 export const flattenOptionGroups = (options: Option[]): Option[] => {
