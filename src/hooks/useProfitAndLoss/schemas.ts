@@ -1,8 +1,8 @@
 import { Schema, pipe } from 'effect'
 import { Direction } from '../../types'
 
-import { LedgerEntrySourceSchema } from '../../schemas/ledgerEntrySource'
-import { AccountSchema } from '../../schemas/ledgerEntry'
+import { LedgerEntrySourceSchema } from '../../schemas/generalLedger/ledgerEntrySource'
+import { AccountSchema } from '../../schemas/generalLedger/ledgerAccount'
 
 import { LineItemSchema } from '../../utils/schema/utils'
 

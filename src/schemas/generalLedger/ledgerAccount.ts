@@ -1,7 +1,4 @@
 import { Schema, pipe } from 'effect'
-import { CustomerSchema } from './customer'
-import { VendorSchema } from './vendor'
-import { LedgerEntrySourceSchema } from './ledgerEntrySource'
 
 export const AccountTypeSchema = Schema.Struct({
   value: Schema.String,
@@ -36,16 +33,6 @@ export const AccountSchema = Schema.Struct({
     Schema.fromKey('account_subtype'),
   ),
 })
-
-export enum ClassifierAgent {
-  Api = 'API',
-}
-const ClassifierAgentSchema = Schema.Enums(ClassifierAgent)
-
-export enum EntryType {
-  Expense = 'EXPENSE',
-}
-const EntryTypeSchema = Schema.Enums(EntryType)
 
 export enum LedgerEntryDirection {
   Credit = 'CREDIT',
@@ -199,99 +186,96 @@ export const LedgerAccountSchema = Schema.Struct({
 export type AccountIdentifier = typeof AccountIdentifierSchema.Type
 export type LedgerAccount = typeof LedgerAccountSchema.Type
 
-export const LedgerAccountLineItemSchema = Schema.Struct({
-  id: Schema.String,
-  entryId: pipe(
+const nestedLedgerAccountFields = {
+  accountId: pipe(
     Schema.propertySignature(Schema.String),
-    Schema.fromKey('entry_id'),
+    Schema.fromKey('id'),
   ),
-  entryNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Number)),
-    Schema.fromKey('entry_number'),
-  ),
-  account: LedgerAccountSchema,
-  amount: Schema.Number,
-  direction: LedgerEntryDirectionSchema,
-  date: Schema.Date,
-  source: LedgerEntrySourceSchema,
-  entryReversalOf: pipe(
+  name: Schema.String,
+  stableName: pipe(
     Schema.propertySignature(Schema.NullOr(Schema.String)),
-    Schema.fromKey('entry_reversal_of'),
+    Schema.fromKey('stable_name'),
   ),
-  entryReversedBy: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
-    Schema.fromKey('entry_reversed_by'),
+  normality: LedgerEntryDirectionSchema,
+  accountType: pipe(
+    Schema.propertySignature(LedgerAccountTypeWithDisplayNameSchema),
+    Schema.fromKey('account_type'),
   ),
-  isReversed: pipe(
-    Schema.propertySignature(Schema.Boolean),
-    Schema.fromKey('is_reversed'),
+  accountSubtype: pipe(
+    Schema.propertySignature(LedgerAccountSubtypeWithDisplayNameSchema),
+    Schema.fromKey('account_subtype'),
   ),
-  runningBalance: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('running_balance'),
+  balance: Schema.Number,
+  isDeletable: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.Boolean)),
+    Schema.fromKey('is_deletable'),
+  ),
+}
+
+export interface NestedLedgerAccount extends Schema.Struct.Type<typeof nestedLedgerAccountFields> {
+  subAccounts: ReadonlyArray<NestedLedgerAccount>
+}
+
+export interface NestedLedgerAccountEncoded extends Schema.Struct.Encoded<typeof nestedLedgerAccountFields> {
+  readonly sub_accounts: ReadonlyArray<NestedLedgerAccountEncoded>
+}
+
+export const NestedLedgerAccountSchema = Schema.Struct({
+  ...nestedLedgerAccountFields,
+  subAccounts: pipe(
+    Schema.propertySignature(Schema.Array(
+      Schema.suspend((): Schema.Schema<NestedLedgerAccount, NestedLedgerAccountEncoded> => NestedLedgerAccountSchema),
+    )),
+    Schema.fromKey('sub_accounts'),
   ),
 })
 
-export const LedgerEntryLineItemSchema = Schema.Struct({
-  id: Schema.String,
-  entryId: pipe(
+const nestedChartAccountFields = {
+  accountId: pipe(
     Schema.propertySignature(Schema.String),
-    Schema.fromKey('entry_id'),
+    Schema.fromKey('id'),
   ),
-  account: LedgerAccountSchema,
-  amount: Schema.Number,
-  direction: LedgerEntryDirectionSchema,
-  entryAt: pipe(
-    Schema.propertySignature(Schema.Date),
-    Schema.fromKey('entry_at'),
+  name: Schema.String,
+  stableName: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('stable_name'),
   ),
-  customer: Schema.NullOr(CustomerSchema),
-  vendor: Schema.NullOr(VendorSchema),
+  normality: LedgerEntryDirectionSchema,
+  accountType: pipe(
+    Schema.propertySignature(LedgerAccountTypeWithDisplayNameSchema),
+    Schema.fromKey('account_type'),
+  ),
+  accountSubtype: pipe(
+    Schema.propertySignature(LedgerAccountSubtypeWithDisplayNameSchema),
+    Schema.fromKey('account_subtype'),
+  ),
+}
+
+export interface NestedChartAccount extends Schema.Struct.Type<typeof nestedChartAccountFields> {
+  subAccounts: ReadonlyArray<NestedChartAccount>
+}
+
+export interface NestedChartAccountEncoded extends Schema.Struct.Encoded<typeof nestedChartAccountFields> {
+  readonly sub_accounts: ReadonlyArray<NestedChartAccountEncoded>
+}
+
+export const NestedChartAccountSchema = Schema.Struct({
+  ...nestedChartAccountFields,
+  subAccounts: pipe(
+    Schema.propertySignature(Schema.Array(
+      Schema.suspend((): Schema.Schema<NestedChartAccount, NestedChartAccountEncoded> => NestedChartAccountSchema),
+    )),
+    Schema.fromKey('sub_accounts'),
+  ),
 })
 
-export const LedgerEntrySchema = Schema.Struct({
-  id: Schema.String,
-  businessId: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('business_id'),
-  ),
-  ledgerId: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('ledger_id'),
-  ),
-  agent: ClassifierAgentSchema,
-  entryType: pipe(
-    Schema.propertySignature(EntryTypeSchema),
-    Schema.fromKey('entry_type'),
-  ),
-  entryNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Number)),
-    Schema.fromKey('entry_number'),
-  ),
-  date: Schema.Date,
-  customer: Schema.NullOr(CustomerSchema),
-  vendor: Schema.NullOr(VendorSchema),
-  entryAt: pipe(
-    Schema.propertySignature(Schema.Date),
-    Schema.fromKey('entry_at'),
-  ),
-  reversalOfId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
-    Schema.fromKey('reversal_of_id'),
-  ),
-  reversalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
-    Schema.fromKey('reversal_id'),
-  ),
-  lineItems: pipe(
-    Schema.propertySignature(Schema.Array(LedgerEntryLineItemSchema)),
-    Schema.fromKey('line_items'),
-  ),
-  source: LedgerEntrySourceSchema,
-  memo: Schema.NullOr(Schema.String),
-  metadata: Schema.NullOr(Schema.Unknown),
-  referenceNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
-    Schema.fromKey('reference_number'),
-  ),
+export type NestedLedgerAccountType = typeof NestedLedgerAccountSchema.Type
+export type NestedChartAccountType = typeof NestedChartAccountSchema.Type
+
+export const ChartOfAccountsSchema = Schema.Struct({
+  accounts: Schema.Array(NestedChartAccountSchema),
+})
+
+export const LedgerBalancesSchema = Schema.Struct({
+  accounts: Schema.Array(NestedLedgerAccountSchema),
 })

@@ -1,4 +1,4 @@
-import { LedgerEntrySourceType } from '../schemas/ledgerEntrySource'
+import { LedgerEntrySourceType } from '../schemas/generalLedger/ledgerEntrySource'
 import { Account } from '../types'
 import { Direction } from './bank_transactions'
 import { AccountIdentifierPayloadObject } from './categories'
