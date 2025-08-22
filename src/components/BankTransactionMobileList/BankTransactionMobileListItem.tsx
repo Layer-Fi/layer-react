@@ -46,15 +46,15 @@ const DATE_FORMAT = 'LLL d'
 
 const getAssignedValue = (
   bankTransaction: BankTransaction,
-  convertToInAppLink?: (details: LinkingMetadata) => ReactNode | undefined,
+  renderInAppLink?: (details: LinkingMetadata) => ReactNode | undefined,
 ) => {
   if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
     return extractDescriptionForSplit(bankTransaction.category)
   }
 
   if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
-    if (convertToInAppLink && bankTransaction.match?.details) {
-      const inAppLink = convertToInAppLink(convertMatchDetailsToLinkingMetadata(bankTransaction.match.details))
+    if (renderInAppLink && bankTransaction.match?.details) {
+      const inAppLink = renderInAppLink(convertMatchDetailsToLinkingMetadata(bankTransaction.match.details))
       if (inAppLink) return inAppLink
     }
     return bankTransaction.match?.details?.description
@@ -82,7 +82,7 @@ export const BankTransactionMobileListItem = ({
   } = useContext(TransactionToOpenContext)
 
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
-  const { getInAppLink: convertToInAppLink } = useInAppLinkContext()
+  const { renderInAppLink } = useInAppLinkContext()
 
   const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
     setHeight(height),
@@ -201,7 +201,7 @@ export const BankTransactionMobileListItem = ({
             </Text>
             <Text as='span' className={`${className}__heading__account-name`}>
               {categorized && bankTransaction.categorization_status
-                ? getAssignedValue(bankTransaction, convertToInAppLink)
+                ? getAssignedValue(bankTransaction, renderInAppLink)
                 : null}
               <span>{!categorized && bankTransaction.account_name}</span>
               {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}

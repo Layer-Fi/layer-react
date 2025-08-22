@@ -40,7 +40,7 @@ export interface ReportsProps {
   comparisonConfig?: ProfitAndLossCompareConfig
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
-  getInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -51,7 +51,7 @@ export interface ReportsPanelProps {
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
   view: ViewBreakpoint
-  getInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
 }
 
 const getOptions = (enabledReports: ReportType[]) => {
@@ -85,7 +85,7 @@ export const Reports = ({
   comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
-  getInAppLink,
+  renderInAppLink,
 }: ReportsProps) => {
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
@@ -129,7 +129,7 @@ export const Reports = ({
               profitAndLossConfig={profitAndLossConfig}
               statementOfCashFlowConfig={statementOfCashFlowConfig}
               view={view}
-              getInAppLink={getInAppLink}
+              renderInAppLink={renderInAppLink}
             />
           </ProfitAndLoss>
         </ReportsModeStoreProvider>
@@ -144,7 +144,7 @@ const ReportsPanel = ({
   profitAndLossConfig,
   statementOfCashFlowConfig,
   view,
-  getInAppLink,
+  renderInAppLink,
 }: ReportsPanelProps) => {
   return (
     <>
@@ -152,7 +152,7 @@ const ReportsPanel = ({
         <EmbeddedProfitAndLossReport
           stringOverrides={stringOverrides}
           view={view}
-          getInAppLink={getInAppLink}
+          renderInAppLink={renderInAppLink}
           {...profitAndLossConfig}
         />
       )}

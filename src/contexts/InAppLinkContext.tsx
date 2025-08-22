@@ -43,11 +43,11 @@ export interface LinkingMetadata {
 }
 
 export interface InAppLinkContextType {
-  getInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
 }
 
 export interface InAppLinkProviderProps {
-  getInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
   children: ReactNode
 }
 
@@ -56,11 +56,11 @@ const InAppLinkContext = createContext<InAppLinkContextType>({})
 export const useInAppLinkContext = () => useContext(InAppLinkContext)
 
 export const InAppLinkProvider = ({
-  getInAppLink,
+  renderInAppLink,
   children,
 }: InAppLinkProviderProps) => {
   return (
-    <InAppLinkContext.Provider value={{ getInAppLink }}>
+    <InAppLinkContext.Provider value={{ renderInAppLink }}>
       {children}
     </InAppLinkContext.Provider>
   )

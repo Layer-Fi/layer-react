@@ -24,7 +24,7 @@ export interface ChartOfAccountsProps {
   showAddAccountButton?: boolean
   templateAccountsEditable?: boolean
   showReversalEntries?: boolean
-  getInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
 }
 
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
@@ -37,7 +37,7 @@ export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
   return (
     <ChartOfAccountsContext.Provider value={chartOfAccountsContextData}>
       <LedgerAccountsContext.Provider value={ledgerAccountsContextData}>
-        <InAppLinkProvider getInAppLink={props.getInAppLink}>
+        <InAppLinkProvider renderInAppLink={props.renderInAppLink}>
           <ChartOfAccountsContent {...props} />
         </InAppLinkProvider>
       </LedgerAccountsContext.Provider>

@@ -15,7 +15,7 @@ type ViewBreakpoint = ViewType | undefined
 export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
   view?: ViewBreakpoint
-  getInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
 } & TimeRangePickerConfig
 
 type SelectedLineItem = {
@@ -31,7 +31,7 @@ export const ProfitAndLossReport = ({
   customDateRanges,
   csvMoneyFormat,
   view,
-  getInAppLink,
+  renderInAppLink,
 }: ProfitAndLossReportProps) => {
   const { comparisonConfig } = useContext(ProfitAndLoss.ComparisonContext)
   const [selectedLineItem, setSelectedLineItem] = useState<SelectedLineItem | null>(null)
@@ -66,7 +66,7 @@ export const ProfitAndLossReport = ({
   }, [])
 
   return (
-    <InAppLinkProvider getInAppLink={getInAppLink}>
+    <InAppLinkProvider renderInAppLink={renderInAppLink}>
       <View
         type='panel'
         header={(

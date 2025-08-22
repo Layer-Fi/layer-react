@@ -83,16 +83,16 @@ export const ProfitAndLossDetailReport = ({
   const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
   const [selectedSource, setSelectedSource] = useState<LedgerEntrySourceType | null>(null)
 
-  const { getInAppLink: convertToInAppLink } = useInAppLinkContext()
+  const { renderInAppLink } = useInAppLinkContext()
   const badgeOrInAppLink = useMemo(() => {
     if (!selectedSource) return undefined
     const defaultBadge = <Badge>{selectedSource?.entityName}</Badge>
-    if (!convertToInAppLink) {
+    if (!renderInAppLink) {
       return defaultBadge
     }
     const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(selectedSource)
-    return convertToInAppLink(linkingMetadata) ?? defaultBadge
-  }, [convertToInAppLink, selectedSource])
+    return renderInAppLink(linkingMetadata) ?? defaultBadge
+  }, [renderInAppLink, selectedSource])
 
   const dynamicBreadcrumbs = useMemo(() => {
     return breadcrumbPath || [{ name: lineItemName, display_name: lineItemName }]

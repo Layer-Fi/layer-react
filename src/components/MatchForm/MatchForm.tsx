@@ -29,7 +29,7 @@ export const MatchForm = ({
 }: MatchFormProps) => {
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
-  const { getInAppLink: convertToInAppLink } = useInAppLinkContext()
+  const { renderInAppLink } = useInAppLinkContext()
 
   const {
     suggested_matches: suggestedMatches = [],
@@ -54,7 +54,7 @@ export const MatchForm = ({
           Description
         </div>
         <div className={`${classNamePrefix}__match-table__amount`}>Amount</div>
-        { convertToInAppLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div> }
+        { renderInAppLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div> }
 
         { match && (
           <div className={`${classNamePrefix}__match-table__status`}>
@@ -64,7 +64,7 @@ export const MatchForm = ({
       </div>
 
       {effectiveSuggestedMatches.map((suggestedMatch) => {
-        const inAppLink = convertToInAppLink ? convertToInAppLink(convertMatchDetailsToLinkingMetadata(suggestedMatch.details)) : null
+        const inAppLink = renderInAppLink ? renderInAppLink(convertMatchDetailsToLinkingMetadata(suggestedMatch.details)) : null
         return (
           <div
             key={suggestedMatch.id}
