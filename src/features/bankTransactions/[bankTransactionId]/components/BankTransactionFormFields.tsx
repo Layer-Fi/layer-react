@@ -26,7 +26,7 @@ export function BankTransactionFormFields({
   }
 
   return (
-    <VStack pi='md' gap='md'>
+    <VStack pbe='lg' gap='md'>
       {showCustomerVendor
         ? <BankTransactionCustomerVendorSelector bankTransaction={bankTransaction} />
         : null}

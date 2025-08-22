@@ -10,6 +10,7 @@
   grid-template-areas: 'title close';
   grid-template-columns: 1fr auto;
   gap: var(--spacing-sm);
+  align-items: center;
 
   > [slot='title'] {
     grid-area: title;
