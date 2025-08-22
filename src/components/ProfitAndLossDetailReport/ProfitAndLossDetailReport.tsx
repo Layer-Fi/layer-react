@@ -234,7 +234,7 @@ export const ProfitAndLossDetailReport = ({
           data={rowsWithRunningBalance.lines}
           isLoading={isLoading}
           isError={isError}
-          shrinkHeightToFitRows={true}
+          shrinkHeightToFitRows
           slots={{
             EmptyState,
             ErrorState,
