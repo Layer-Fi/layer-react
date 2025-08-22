@@ -82,7 +82,7 @@ export const BankTransactionMobileListItem = ({
   } = useContext(TransactionToOpenContext)
 
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
-  const { convertToInAppLink } = useInAppLinkContext()
+  const { getInAppLink: convertToInAppLink } = useInAppLinkContext()
 
   const formRowRef = useElementSize<HTMLDivElement>((_a, _b, { height }) =>
     setHeight(height),

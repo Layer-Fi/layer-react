@@ -37,7 +37,7 @@ export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
   return (
     <ChartOfAccountsContext.Provider value={chartOfAccountsContextData}>
       <LedgerAccountsContext.Provider value={ledgerAccountsContextData}>
-        <InAppLinkProvider convertToInAppLink={props.getInAppLink}>
+        <InAppLinkProvider getInAppLink={props.getInAppLink}>
           <ChartOfAccountsContent {...props} />
         </InAppLinkProvider>
       </LedgerAccountsContext.Provider>

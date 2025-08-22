@@ -364,7 +364,7 @@ export const LedgerAccountEntryDetails = ({
 }) => {
   const { entryData, isLoadingEntry, closeSelectedEntry, errorEntry } =
     useContext(LedgerAccountsContext)
-  const { convertToInAppLink } = useInAppLinkContext()
+  const { getInAppLink: convertToInAppLink } = useInAppLinkContext()
 
   const { totalDebit, totalCredit } = useMemo(() => {
     let totalDebit = 0

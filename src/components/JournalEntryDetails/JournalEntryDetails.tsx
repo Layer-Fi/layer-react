@@ -32,7 +32,7 @@ export const JournalEntryDetails = () => {
     reverseEntry,
     refetch,
   } = useContext(JournalContext)
-  const { convertToInAppLink } = useInAppLinkContext()
+  const { getInAppLink: convertToInAppLink } = useInAppLinkContext()
   const [reverseEntryProcessing, setReverseEntryProcessing] = useState(false)
   const [reverseEntryError, setReverseEntryError] = useState<string>()
 

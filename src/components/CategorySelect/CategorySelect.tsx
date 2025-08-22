@@ -271,7 +271,7 @@ export const CategorySelect = ({
   asDrawer = false,
 }: Props) => {
   const { data: categories } = useCategories()
-  const { convertToInAppLink } = useInAppLinkContext()
+  const { getInAppLink: convertToInAppLink } = useInAppLinkContext()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const onSelect = useCallback((option: Option) => {

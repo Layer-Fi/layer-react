@@ -17,7 +17,7 @@ export const MatchFormMobile = ({
   matchFormError,
   readOnly,
 }: MatchFormProps) => {
-  const { convertToInAppLink } = useInAppLinkContext()
+  const { getInAppLink: convertToInAppLink } = useInAppLinkContext()
   return (
     <div className={`${classNamePrefix}__match-list`}>
       {bankTransaction.suggested_matches?.map((match, idx) => {

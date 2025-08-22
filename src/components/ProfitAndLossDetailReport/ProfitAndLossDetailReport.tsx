@@ -16,11 +16,12 @@ import { Button } from '../ui/Button/Button'
 import { VStack, HStack } from '../ui/Stack/Stack'
 import { Label } from '../ui/Typography/Text'
 import { format } from 'date-fns'
-import { LedgerEntrySourceType } from '../../schemas/generalLedger/ledgerEntrySource'
+import { convertLedgerEntrySourceToLinkingMetadata, LedgerEntrySourceType } from '../../schemas/generalLedger/ledgerEntrySource'
 import { Direction } from '../../types'
 import { BreadcrumbItem, DetailReportBreadcrumb } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import type { PnlDetailLine } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { MoneySpan } from '../ui/Typography/MoneyText'
+import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 
@@ -81,6 +82,17 @@ export const ProfitAndLossDetailReport = ({
   const { businessId } = useLayerContext()
   const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
   const [selectedSource, setSelectedSource] = useState<LedgerEntrySourceType | null>(null)
+
+  const { getInAppLink: convertToInAppLink } = useInAppLinkContext()
+  const badgeOrInAppLink = useMemo(() => {
+    if (!selectedSource) return undefined
+    const defaultBadge = <Badge>{selectedSource?.entityName}</Badge>
+    if (!convertToInAppLink) {
+      return defaultBadge
+    }
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(selectedSource)
+    return convertToInAppLink(linkingMetadata) ?? defaultBadge
+  }, [convertToInAppLink, selectedSource])
 
   const dynamicBreadcrumbs = useMemo(() => {
     return breadcrumbPath || [{ name: lineItemName, display_name: lineItemName }]
@@ -216,7 +228,7 @@ export const ProfitAndLossDetailReport = ({
             title={stringOverrides?.sourceDetailsTitle || 'Transaction source'}
           >
             <DetailsListItem label='Source'>
-              <Badge>{selectedSource.entityName}</Badge>
+              {badgeOrInAppLink}
             </DetailsListItem>
             <SourceDetailView source={selectedSource} />
           </DetailsList>

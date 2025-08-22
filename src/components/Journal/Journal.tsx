@@ -38,7 +38,7 @@ export const Journal = (props: JournalProps) => {
   return (
     <ChartOfAccountsContext.Provider value={AccountsContextData}>
       <JournalContext.Provider value={JournalContextData}>
-        <InAppLinkProvider convertToInAppLink={props.convertToInAppLink}>
+        <InAppLinkProvider getInAppLink={props.convertToInAppLink}>
           <JournalContent {...props} />
         </InAppLinkProvider>
       </JournalContext.Provider>

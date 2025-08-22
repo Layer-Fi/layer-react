@@ -105,7 +105,7 @@ export const BankTransactions = ({
         <LegacyModeProvider overrideMode={mode}>
           <BankTransactionTagVisibilityProvider showTags={showTags}>
             <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
-              <InAppLinkProvider convertToInAppLink={convertToInAppLink}>
+              <InAppLinkProvider getInAppLink={convertToInAppLink}>
                 <BankTransactionsContent {...props} />
               </InAppLinkProvider>
             </BankTransactionCustomerVendorVisibilityProvider>

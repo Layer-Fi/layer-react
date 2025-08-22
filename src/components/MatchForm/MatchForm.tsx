@@ -29,7 +29,7 @@ export const MatchForm = ({
 }: MatchFormProps) => {
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
-  const { convertToInAppLink } = useInAppLinkContext()
+  const { getInAppLink: convertToInAppLink } = useInAppLinkContext()
 
   const {
     suggested_matches: suggestedMatches = [],

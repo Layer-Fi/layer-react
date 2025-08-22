@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { BalanceSheet as EmbeddedBalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Container } from '../../components/Container'
@@ -17,6 +17,7 @@ import { ProfitAndLossCompareConfig } from '../../types/profit_and_loss'
 import { ReportKey, ReportsModeStoreProvider, type ReportModes } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import { getInitialDateRangePickerMode } from '../../providers/GlobalDateStore/useGlobalDateRangePicker'
 import { ProfitAndLossReport as EmbeddedProfitAndLossReport } from '../../components/ProfitAndLossReport/ProfitAndLossReport'
+import { LinkingMetadata } from '../../contexts/InAppLinkContext'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -39,6 +40,7 @@ export interface ReportsProps {
   comparisonConfig?: ProfitAndLossCompareConfig
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
+  getInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
 }
 
 type ReportType = 'profitAndLoss' | 'balanceSheet' | 'statementOfCashFlow'
@@ -49,6 +51,7 @@ export interface ReportsPanelProps {
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
   view: ViewBreakpoint
+  getInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
 }
 
 const getOptions = (enabledReports: ReportType[]) => {
@@ -82,6 +85,7 @@ export const Reports = ({
   comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
+  getInAppLink,
 }: ReportsProps) => {
   const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
@@ -125,6 +129,7 @@ export const Reports = ({
               profitAndLossConfig={profitAndLossConfig}
               statementOfCashFlowConfig={statementOfCashFlowConfig}
               view={view}
+              getInAppLink={getInAppLink}
             />
           </ProfitAndLoss>
         </ReportsModeStoreProvider>
@@ -139,6 +144,7 @@ const ReportsPanel = ({
   profitAndLossConfig,
   statementOfCashFlowConfig,
   view,
+  getInAppLink,
 }: ReportsPanelProps) => {
   return (
     <>
@@ -146,6 +152,7 @@ const ReportsPanel = ({
         <EmbeddedProfitAndLossReport
           stringOverrides={stringOverrides}
           view={view}
+          getInAppLink={getInAppLink}
           {...profitAndLossConfig}
         />
       )}
