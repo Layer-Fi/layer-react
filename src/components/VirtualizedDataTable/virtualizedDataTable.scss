@@ -36,13 +36,3 @@
   display: grid;
   width: 100%;
 }
-
-.Layer__UI__VirtualizedTable__cell {
-  box-sizing: border-box;
-  flex: 0 0 auto;
-  align-content: center;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
