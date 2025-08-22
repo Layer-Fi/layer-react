@@ -41,30 +41,38 @@ export const mapCategoryToOption = (category: CategoryWithEntries): Option => ({
   },
 })
 
-export const flattenCategories = (categories: Array<CategoryWithEntries>): Option[] => {
-  const categoryOptions = (categories || []).flatMap((category) => {
-    if (category?.subCategories && category?.subCategories?.length > 0) {
-      if (category?.subCategories?.every(c => c.subCategories === undefined)) {
-        return [
-          {
-            label: category.display_name,
-            id: ('id' in category) ? category.id : category.stable_name,
-            value: {
-              type: 'GROUP',
-              items: category.subCategories.map(x => mapCategoryToOption(x)),
-            },
-            asLink: true,
-          } satisfies Option,
-        ]
-      }
-      return flattenCategories(category.subCategories)
+export const flattenCategories = (categories: CategoryWithEntries[]): Option[] => {
+  const visit = (cat: CategoryWithEntries): Option[] => {
+    const subCategories = cat.subCategories
+
+    if (!subCategories || subCategories.length === 0) return [mapCategoryToOption(cat)]
+
+    if (subCategories.every(subCategory => !subCategory.subCategories || subCategory.subCategories.length === 0)) {
+      return [
+        {
+          label: cat.display_name,
+          id: 'id' in cat ? cat.id : cat.stable_name,
+          asLink: true,
+          value: {
+            type: 'GROUP',
+            items: subCategories.flatMap(visit),
+          },
+        } satisfies Option,
+      ]
     }
 
-    const resultOption = mapCategoryToOption(category) satisfies Option
-    return [resultOption]
-  })
+    return subCategories.flatMap(visit)
+  }
 
-  return categoryOptions
+  return categories.flatMap(visit)
+}
+
+export const flattenOptionGroups = (options: Option[]): Option[] => {
+  return options.flatMap(opt =>
+    opt.value?.type === 'GROUP' && Array.isArray(opt.value.items)
+      ? flattenOptionGroups(opt.value.items)
+      : [opt],
+  )
 }
 
 export const getAssignedValue = (

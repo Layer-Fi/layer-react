@@ -17,13 +17,13 @@ export interface PaginationProps {
   className?: string
 }
 
-type PaginationButtonProps = ComponentProps<typeof Button>
-const PaginationButton = ({ children, ...buttonProps }: PaginationButtonProps) => {
+type PaginationButtonProps = ComponentProps<typeof Button> & { isSelected?: boolean }
+const PaginationButton = ({ children, isSelected, ...buttonProps }: PaginationButtonProps) => {
   return (
     <Button
       inset
       icon
-      variant='ghost'
+      variant={isSelected ? 'branded' : 'ghost'}
       {...buttonProps}
     >
       {children}
@@ -81,11 +81,9 @@ export const Pagination = ({
             }
 
             return (
-              <li
-                key={`page-${pageNumber}`}
-                className={classNames(pageNumber === currentPage && 'Layer__pagination__selected-item')}
-              >
+              <li key={`page-${pageNumber}`}>
                 <PaginationButton
+                  isSelected={pageNumber === currentPage}
                   onPress={() => onPageChange(Number(pageNumber))}
                   aria-label={`Go to page ${pageNumber}`}
                 >
