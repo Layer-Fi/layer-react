@@ -5,7 +5,6 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { FormError, DateRange, Direction, NewAccount } from '../../types'
 import {
   EditAccount,
-  LedgerAccountBalance,
 } from '../../types/chart_of_accounts'
 import { BaseSelectOption, DataModel } from '../../types/general'
 import { endOfMonth, formatISO, startOfMonth } from 'date-fns'
@@ -13,6 +12,7 @@ import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useDeleteAccountFromLedger } from '../../features/ledger/accounts/[ledgerAccountId]/api/useDeleteLedgerAccount'
+import { NestedLedgerAccount } from '../../schemas/generalLedger/ledgerAccount'
 
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []
@@ -131,10 +131,10 @@ type Props = {
 }
 
 export const flattenAccounts = (
-  accounts: LedgerAccountBalance[],
-): LedgerAccountBalance[] =>
+  accounts: readonly NestedLedgerAccount[],
+): readonly NestedLedgerAccount[] =>
   accounts
-    .flatMap(a => [a, flattenAccounts(a.sub_accounts || [])])
+    .flatMap(a => [a, flattenAccounts(a.subAccounts || [])])
     .flat()
     .filter(id => id)
 
@@ -314,7 +314,7 @@ export const useChartOfAccounts = (
     }
 
     const parent = allAccounts.find(x =>
-      x.sub_accounts?.find(el => el.id === found.id),
+      x.subAccounts?.find(el => el.id === found.id),
     )
 
     setForm({
@@ -327,17 +327,17 @@ export const useChartOfAccounts = (
             label: parent.name,
           }
           : undefined,
-        stable_name: found.stable_name,
+        stable_name: found.stableName || undefined,
         name: found.name,
         type: {
-          value: found.account_type.value,
-          label: found.account_type.display_name,
+          value: found.accountType.value,
+          label: found.accountType.displayName,
         },
 
-        subType: found.account_subtype
+        subType: found.accountSubtype
           ? {
-            value: found.account_subtype?.value,
-            label: found.account_subtype?.display_name,
+            value: found.accountSubtype?.value,
+            label: found.accountSubtype?.displayName,
           }
           : undefined,
         normality: NORMALITY_OPTIONS.find(
@@ -378,15 +378,15 @@ export const useChartOfAccounts = (
             ...newFormData.data,
             /* Inherit the parent's type */
             type: {
-              value: foundParent.account_type.value,
-              label: foundParent.account_type.display_name,
+              value: foundParent.accountType.value,
+              label: foundParent.accountType.displayName,
             },
 
             /* If the parent has a subtype, inherit it */
-            subType: foundParent.account_subtype
+            subType: foundParent.accountSubtype
               ? {
-                value: foundParent.account_subtype?.value,
-                label: foundParent.account_subtype?.display_name,
+                value: foundParent.accountSubtype?.value,
+                label: foundParent.accountSubtype?.displayName,
               }
               : undefined,
 

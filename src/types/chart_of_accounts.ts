@@ -57,8 +57,6 @@ export type LedgerAccountBalance = {
   sub_accounts: LedgerAccountBalance[]
 }
 
-export type AugmentedLedgerAccountBalance = LedgerAccountBalance & { isMatching?: true }
-
 export type NewAccount = {
   name: string
   normality: Direction
@@ -97,8 +95,4 @@ export enum LedgerAccountNodeType {
   Leaf = 'Leaf',
   Root = 'Root',
   Parent = 'Parent',
-}
-
-export type LedgerAccountBalanceWithNodeType = LedgerAccountBalance & {
-  nodeType: LedgerAccountNodeType
 }

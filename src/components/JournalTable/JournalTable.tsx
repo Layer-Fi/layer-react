@@ -3,30 +3,15 @@ import { DATE_FORMAT } from '../../config/general'
 import { JournalContext } from '../../contexts/JournalContext'
 import { TableProvider } from '../../contexts/TableContext'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
-import {
-  JournalEntry,
-  JournalEntryLine,
-  JournalEntryLineItem,
-} from '../../types'
+
+import { entryNumber, type LedgerEntry } from '../../schemas/generalLedger/ledgerEntry'
 import { View } from '../../types/general'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
-import { entryNumber } from '../../utils/journal'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { JournalTableStringOverrides } from './JournalTableWithPanel'
-import { parseISO, format as formatTime } from 'date-fns'
-
-const accountName = (
-  row: JournalEntry | JournalEntryLine | JournalEntryLineItem,
-) => {
-  if ('account' in row) {
-    return row.account.name
-  }
-  if ('account_identifier' in row) {
-    return row.account_identifier.name
-  }
-  return ''
-}
+import { format as formatTime } from 'date-fns'
+import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
 
 export const JournalTable = ({
   view,
@@ -34,7 +19,7 @@ export const JournalTable = ({
   stringOverrides,
 }: {
   view: View
-  data: JournalEntry[]
+  data: LedgerEntry[]
   stringOverrides?: JournalTableStringOverrides
 }) => (
   <TableProvider>
@@ -51,7 +36,7 @@ const JournalTableContent = ({
   stringOverrides,
 }: {
   view: View
-  data: JournalEntry[]
+  data: LedgerEntry[]
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
@@ -66,12 +51,12 @@ const JournalTableContent = ({
   }, [data])
 
   const renderJournalRow = (
-    row: JournalEntry,
+    row: LedgerEntry,
     index: number,
     rowKey: string,
     depth: number,
   ) => {
-    const expandable = !!row.line_items && row.line_items.length > 0
+    const expandable = !!row.lineItems && row.lineItems.length > 0
     const expanded = !expandable || isOpen(rowKey)
 
     return (
@@ -104,19 +89,19 @@ const JournalTableContent = ({
             {entryNumber(row)}
           </TableCell>
           <TableCell>
-            {row.entry_at && formatTime(parseISO(row.entry_at), DATE_FORMAT)}
+            {formatTime(row.entryAt, DATE_FORMAT)}
           </TableCell>
-          <TableCell>{humanizeEnum(row.entry_type)}</TableCell>
+          <TableCell>{humanizeEnum(row.entryType)}</TableCell>
           <TableCell>
             (
-            {row.line_items.length}
+            {row.lineItems.length}
             )
           </TableCell>
           <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
             {'line_items' in row
               && Math.abs(
-                row.line_items
-                  .filter(item => item.direction === 'DEBIT')
+                row.lineItems
+                  .filter(item => item.direction === LedgerEntryDirection.Debit)
                   .map(item => item.amount)
                   .reduce((a, b) => a + b, 0),
               )}
@@ -124,8 +109,8 @@ const JournalTableContent = ({
           <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
             {'line_items' in row
               && Math.abs(
-                row.line_items
-                  .filter(item => item.direction === 'CREDIT')
+                row.lineItems
+                  .filter(item => item.direction === LedgerEntryDirection.Credit)
                   .map(item => item.amount)
                   .reduce((a, b) => a + b, 0),
               )}
@@ -133,7 +118,7 @@ const JournalTableContent = ({
         </TableRow>
         {expandable
           && expanded
-          && row.line_items.map((subItem, subIdx) => (
+          && row.lineItems.map((subItem, subIdx) => (
             <TableRow
               key={rowKey + '-' + index + '-' + subIdx}
               rowKey={rowKey + '-' + index + '-' + subIdx}
@@ -143,8 +128,8 @@ const JournalTableContent = ({
               <TableCell />
               <TableCell />
               <TableCell />
-              <TableCell>{accountName(subItem)}</TableCell>
-              {subItem.direction === 'DEBIT' && subItem.amount >= 0
+              <TableCell>{subItem.account.name}</TableCell>
+              {subItem.direction === LedgerEntryDirection.Debit && subItem.amount >= 0
                 ? (
                   <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
                     {subItem.amount}
@@ -153,7 +138,7 @@ const JournalTableContent = ({
                 : (
                   <TableCell />
                 )}
-              {subItem.direction === 'CREDIT' && subItem.amount >= 0
+              {subItem.direction === LedgerEntryDirection.Credit && subItem.amount >= 0
                 ? (
                   <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
                     {subItem.amount}

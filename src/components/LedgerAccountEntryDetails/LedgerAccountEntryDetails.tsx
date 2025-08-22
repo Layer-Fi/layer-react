@@ -1,11 +1,10 @@
 import { useContext, useMemo } from 'react'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import XIcon from '../../icons/X'
-import { Direction } from '../../types'
-import { LedgerEntrySourceType, decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/generalLedger/ledgerEntrySource'
+import { entryNumber } from '../../schemas/generalLedger/ledgerEntry'
+import { LedgerEntrySourceType, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/generalLedger/ledgerEntrySource'
 import { TableCellAlign } from '../../types/table'
 import { convertCentsToCurrency, humanizeEnum } from '../../utils/format'
-import { entryNumber } from '../../utils/journal'
 import { Badge, BadgeVariant } from '../Badge'
 import { BackButton, Button, ButtonVariant, CloseButton } from '../Button'
 import { Card } from '../Card'
@@ -21,6 +20,7 @@ import { Heading, HeadingSize } from '../Typography'
 import { Span } from '../ui/Typography/Text'
 import { VStack } from '../ui/Stack/Stack'
 import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
+import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
 
 interface SourceDetailStringOverrides {
   sourceLabel?: string
@@ -369,11 +369,11 @@ export const LedgerAccountEntryDetails = ({
   const { totalDebit, totalCredit } = useMemo(() => {
     let totalDebit = 0
     let totalCredit = 0
-    entryData?.line_items?.forEach((item) => {
-      if (item.direction === Direction.CREDIT) {
+    entryData?.lineItems?.forEach((item) => {
+      if (item.direction === LedgerEntryDirection.Credit) {
         totalCredit += item.amount || 0
       }
-      else if (item.direction === Direction.DEBIT) {
+      else if (item.direction === LedgerEntryDirection.Debit) {
         totalDebit += item.amount || 0
       }
     })
@@ -381,19 +381,15 @@ export const LedgerAccountEntryDetails = ({
     return { totalDebit, totalCredit }
   }, [entryData])
 
-  const ledgerEntrySource = useMemo(() => {
-    return entryData?.source ? decodeLedgerEntrySource(entryData.source) : undefined
-  }, [entryData?.source])
-
   const badgeOrInAppLink = useMemo(() => {
-    const badgeContent = ledgerEntrySource?.entityName ?? entryData?.entry_type
+    const badgeContent = entryData?.source?.entityName ?? entryData?.entryType
     const defaultBadge = <Badge>{badgeContent}</Badge>
-    if (!convertToInAppLink || !ledgerEntrySource) {
+    if (!convertToInAppLink || !entryData?.source) {
       return defaultBadge
     }
-    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(ledgerEntrySource)
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(entryData?.source)
     return convertToInAppLink(linkingMetadata) ?? defaultBadge
-  }, [convertToInAppLink, entryData?.entry_type, ledgerEntrySource])
+  }, [convertToInAppLink, entryData?.entryType, entryData?.source])
 
   return (
     <div className='Layer__ledger-account__entry-details'>
@@ -439,8 +435,8 @@ export const LedgerAccountEntryDetails = ({
         >
           {badgeOrInAppLink}
         </DetailsListItem>
-        {ledgerEntrySource && (
-          <SourceDetailView source={ledgerEntrySource} />
+        {entryData?.source && (
+          <SourceDetailView source={entryData?.source} />
         )}
       </DetailsList>
 
@@ -466,13 +462,13 @@ export const LedgerAccountEntryDetails = ({
           }
           isLoading={isLoadingEntry}
         >
-          {humanizeEnum(entryData?.entry_type ?? '')}
+          {humanizeEnum(entryData?.entryType ?? '')}
         </DetailsListItem>
         <DetailsListItem
           label={stringOverrides?.journalEntry?.details?.dateLabel || 'Date'}
           isLoading={isLoadingEntry}
         >
-          {entryData?.entry_at && <DateTime value={entryData?.entry_at} />}
+          {entryData?.entryAt && <DateTime value={entryData?.entryAt?.toDateString()} />}
         </DetailsListItem>
         <DetailsListItem
           label={
@@ -481,9 +477,9 @@ export const LedgerAccountEntryDetails = ({
           }
           isLoading={isLoadingEntry}
         >
-          {entryData?.date && <DateTime value={entryData?.date} />}
+          {entryData?.date && <DateTime value={entryData?.date?.toDateString()} />}
         </DetailsListItem>
-        {entryData?.reversal_id && (
+        {entryData?.reversalId && (
           <DetailsListItem
             label={
               stringOverrides?.journalEntry?.details?.reversalLabel
@@ -491,7 +487,7 @@ export const LedgerAccountEntryDetails = ({
             }
             isLoading={isLoadingEntry}
           >
-            {entryData?.reversal_id.substring(0, 5)}
+            {entryData?.reversalId.substring(0, 5)}
           </DetailsListItem>
         )}
       </DetailsList>
@@ -521,21 +517,21 @@ export const LedgerAccountEntryDetails = ({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {entryData?.line_items?.map((item, index) => (
+                  {entryData?.lineItems?.map((item, index) => (
                     <TableRow
                       key={`ledger-line-item-${index}`}
                       rowKey={`ledger-line-item-${index}`}
                     >
                       <TableCell>{item.account?.name || ''}</TableCell>
                       <TableCell align={TableCellAlign.RIGHT}>
-                        {item.direction === Direction.DEBIT && (
+                        {item.direction === LedgerEntryDirection.Debit && (
                           <Badge variant={BadgeVariant.WARNING}>
                             {convertCentsToCurrency(item.amount || 0)}
                           </Badge>
                         )}
                       </TableCell>
                       <TableCell align={TableCellAlign.RIGHT}>
-                        {item.direction === Direction.CREDIT && (
+                        {item.direction === LedgerEntryDirection.Credit && (
                           <Badge variant={BadgeVariant.SUCCESS}>
                             {convertCentsToCurrency(item.amount || 0)}
                           </Badge>

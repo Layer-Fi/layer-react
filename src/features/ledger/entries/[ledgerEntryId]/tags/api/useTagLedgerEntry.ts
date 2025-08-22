@@ -108,7 +108,7 @@ export function useTagLedgerEntry({ ledgerEntryId }: TagLedgerEntryOptions) {
           return {
             ...ledgerEntry,
             transaction_tags: [
-              ...ledgerEntry.transaction_tags,
+              ...ledgerEntry.transacationTags,
               {
                 id: optimisticTagId,
                 key,

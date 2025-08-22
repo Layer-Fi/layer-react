@@ -4,11 +4,9 @@ import AlertCircle from '../../icons/AlertCircle'
 import RefreshCcw from '../../icons/RefreshCcw'
 import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
-import { Direction } from '../../types'
-import { decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/generalLedger/ledgerEntrySource'
+import { convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/generalLedger/ledgerEntrySource'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
-import { entryNumber } from '../../utils/journal'
 import { Badge, BadgeVariant } from '../Badge'
 import { BackButton, Button, ButtonVariant, CloseButton } from '../Button'
 import { Card } from '../Card'
@@ -21,6 +19,8 @@ import { Heading, HeadingSize } from '../Typography'
 import { VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
 import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
+import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
+import { entryNumber, EntryType as LedgerEntryType } from '../../schemas/generalLedger/ledgerEntry'
 
 export const JournalEntryDetails = () => {
   const {
@@ -44,26 +44,57 @@ export const JournalEntryDetails = () => {
     return
   }, [data, selectedEntryId])
 
-  const ledgerEntrySource = useMemo(() => {
-    return entry?.source ? decodeLedgerEntrySource(entry.source) : undefined
-  }, [entry?.source])
-
   const badgeOrInAppLink = useMemo(() => {
-    const badgeContent = ledgerEntrySource?.entityName ?? entry?.entry_type
+    const badgeContent = entry?.source?.entityName ?? entry?.entryType
     const defaultBadge = <Badge>{badgeContent}</Badge>
-    if (!convertToInAppLink || !ledgerEntrySource) {
+    if (!convertToInAppLink || !entry?.source) {
       return defaultBadge
     }
-    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(ledgerEntrySource)
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(entry?.source)
     return convertToInAppLink(linkingMetadata) ?? defaultBadge
-  }, [convertToInAppLink, entry?.entry_type, ledgerEntrySource])
+  }, [convertToInAppLink, entry?.entryType, entry?.source])
 
-  const sortedLineItems = useMemo(
-    () =>
-      entry?.line_items?.sort((a, b) =>
+  const lineItemRows = useMemo(
+    () => {
+      return entry?.lineItems.map((item) => {
+        return {
+          accountName: item.account.name,
+          direction: item.direction,
+          amount: item.amount,
+        }
+      }).sort((a, b) =>
         a.direction > b.direction ? -1 : a.direction < b.direction ? 1 : 0,
-      ),
-    [entry?.line_items],
+      )?.map((item, index) => (
+        <TableRow
+          key={`ledger-line-item-${index}`}
+          rowKey={`ledger-line-item-${index}`}
+        >
+          <TableCell>{item.accountName}</TableCell>
+          <TableCell
+            className='Layer__journal__debit-credit-col'
+            align={TableCellAlign.RIGHT}
+          >
+            {item.direction === LedgerEntryDirection.Debit && (
+              <Badge variant={BadgeVariant.WARNING}>
+                $
+                {centsToDollars(item.amount || 0)}
+              </Badge>
+            )}
+          </TableCell>
+          <TableCell
+            className='Layer__journal__debit-credit-col'
+            align={TableCellAlign.RIGHT}
+          >
+            {item.direction === LedgerEntryDirection.Credit && (
+              <Badge variant={BadgeVariant.SUCCESS}>
+                $
+                {centsToDollars(item.amount || 0)}
+              </Badge>
+            )}
+          </TableCell>
+        </TableRow>
+      ))
+    }, [entry?.lineItems],
   )
 
   const onReverseEntry = async () => {
@@ -116,8 +147,8 @@ export const JournalEntryDetails = () => {
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
           {badgeOrInAppLink}
         </DetailsListItem>
-        {ledgerEntrySource && (
-          <SourceDetailView source={ledgerEntrySource} />
+        {entry?.source && (
+          <SourceDetailView source={entry?.source} />
         )}
       </DetailsList>
       <DetailsList
@@ -130,17 +161,17 @@ export const JournalEntryDetails = () => {
         className='Layer__border-top'
       >
         <DetailsListItem label='Entry type' isLoading={isLoadingEntry}>
-          {humanizeEnum(entry?.entry_type ?? '')}
+          {humanizeEnum(entry?.entryType ?? '')}
         </DetailsListItem>
         <DetailsListItem label='Effective date' isLoading={isLoadingEntry}>
-          {entry?.entry_at && <DateTime value={entry?.entry_at} />}
+          {entry?.entryAt && <DateTime value={entry?.entryAt.toDateString()} />}
         </DetailsListItem>
         <DetailsListItem label='Creation date' isLoading={isLoadingEntry}>
-          {entry?.date && <DateTime value={entry?.date} />}
+          {entry?.date && <DateTime value={entry?.date.toDateString()} />}
         </DetailsListItem>
-        {entry?.reversal_id && (
+        {entry?.reversalId && (
           <DetailsListItem label='Reversal' isLoading={isLoadingEntry}>
-            {`Journal Entry #${entry?.reversal_id.substring(0, 5)}`}
+            {`Journal Entry #${entry?.reversalId.substring(0, 5)}`}
           </DetailsListItem>
         )}
       </DetailsList>
@@ -170,36 +201,7 @@ export const JournalEntryDetails = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {sortedLineItems?.map((item, index) => (
-                    <TableRow
-                      key={`ledger-line-item-${index}`}
-                      rowKey={`ledger-line-item-${index}`}
-                    >
-                      <TableCell>{item.account.name}</TableCell>
-                      <TableCell
-                        className='Layer__journal__debit-credit-col'
-                        align={TableCellAlign.RIGHT}
-                      >
-                        {item.direction === Direction.DEBIT && (
-                          <Badge variant={BadgeVariant.WARNING}>
-                            $
-                            {centsToDollars(item.amount || 0)}
-                          </Badge>
-                        )}
-                      </TableCell>
-                      <TableCell
-                        className='Layer__journal__debit-credit-col'
-                        align={TableCellAlign.RIGHT}
-                      >
-                        {item.direction === Direction.CREDIT && (
-                          <Badge variant={BadgeVariant.SUCCESS}>
-                            $
-                            {centsToDollars(item.amount || 0)}
-                          </Badge>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {lineItemRows}
                   <TableRow
                     rowKey='ledger-line-item-summation'
                     variant='summation'
@@ -211,8 +213,8 @@ export const JournalEntryDetails = () => {
                       className='Layer__journal__debit-credit-col'
                       align={TableCellAlign.RIGHT}
                     >
-                      {entry?.line_items
-                        .filter(item => item.direction === Direction.DEBIT)
+                      {entry?.lineItems
+                        .filter(item => item.direction === LedgerEntryDirection.Debit)
                         .map(item => item.amount)
                         .reduce((a, b) => a + b, 0) || 0}
                     </TableCell>
@@ -222,8 +224,8 @@ export const JournalEntryDetails = () => {
                       className='Layer__journal__debit-credit-col'
                       align={TableCellAlign.RIGHT}
                     >
-                      {entry?.line_items
-                        .filter(item => item.direction === Direction.CREDIT)
+                      {entry?.lineItems
+                        .filter(item => item.direction === LedgerEntryDirection.Credit)
                         .map(item => item.amount)
                         .reduce((a, b) => a + b, 0) || 0}
                     </TableCell>
@@ -232,7 +234,7 @@ export const JournalEntryDetails = () => {
               </Table>
             </Card>
 
-            {entry?.entry_type === 'MANUAL' && (
+            {entry?.entryType === LedgerEntryType.Manual && (
               <div className='Layer__journal__entry-details__reverse-btn-container'>
                 <Button
                   rightIcon={
@@ -248,11 +250,11 @@ export const JournalEntryDetails = () => {
                   onClick={reverseEntryProcessing ? () => {} : onReverseEntry}
                   isProcessing={reverseEntryProcessing}
                   tooltip={
-                    (Boolean(entry?.reversal_id)
+                    (Boolean(entry?.reversalId)
                       && 'This entry has already been reversed')
                     ?? (reverseEntryError && 'Operation failed. Try again.')
                   }
-                  disabled={Boolean(entry?.reversal_id)}
+                  disabled={Boolean(entry?.reversalId)}
                 >
                   Reverse entry
                 </Button>

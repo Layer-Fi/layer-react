@@ -2,7 +2,6 @@ import { useContext, useMemo } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import Trash from '../../icons/Trash'
 import { Direction, JournalEntryLineItem } from '../../types'
-import { LedgerAccountBalance } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
 import {
   humanizeEnum,
@@ -15,6 +14,7 @@ import { useCategories } from '../../hooks/categories/useCategories'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { AmountInput } from '../Input/AmountInput'
 import { Badge, BadgeVariant } from '../Badge/Badge'
+import { LedgerEntryDirection, NestedLedgerAccount } from '../../schemas/generalLedger/ledgerAccount'
 
 type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
 
@@ -44,7 +44,7 @@ export const JournalFormEntryLines = ({
     name: string,
     value: string | BaseSelectOption | number | undefined,
     lineItemIndex: number,
-    accounts?: LedgerAccountBalance[],
+    accounts?: NestedLedgerAccount[],
   ) => void
   sendingForm: boolean
   config: JournalConfig
@@ -112,16 +112,16 @@ export const JournalFormEntryLines = ({
     const baseFields = relevantCategory.type === 'OptionalAccountNested'
       ? {
         id: relevantCategory.stable_name,
-        stable_name: relevantCategory.stable_name,
-        account_type: {
+        stableName: relevantCategory.stable_name,
+        accountType: {
           value: relevantCategory.stable_name,
-          display_name: relevantCategory.display_name,
+          displayName: relevantCategory.display_name,
         },
       }
       : {
         id: relevantCategory.id,
-        stable_name: ('stable_name' in relevantCategory) ? relevantCategory.stable_name ?? '' : '',
-        account_type: {
+        stableName: ('stable_name' in relevantCategory) ? relevantCategory.stable_name ?? '' : '',
+        accountType: {
           value: relevantCategory.id,
           display_name: relevantCategory.display_name,
         },
@@ -134,11 +134,11 @@ export const JournalFormEntryLines = ({
       [
         {
           ...baseFields,
-          is_deletable: false,
+          isDeletable: false,
           name: relevantCategory.display_name,
-          sub_accounts: [],
+          subAccounts: [],
           balance: 0,
-          normality: Direction.DEBIT,
+          normality: LedgerEntryDirection.Debit,
         },
       ],
     )
@@ -146,7 +146,7 @@ export const JournalFormEntryLines = ({
 
   return (
     <>
-      {['DEBIT', 'CREDIT'].map((direction, idx) => {
+      {[Direction.DEBIT, Direction.CREDIT].map((direction, idx) => {
         return (
           <div
             key={'Layer__journal__form__input-group-' + idx}
@@ -179,7 +179,7 @@ export const JournalFormEntryLines = ({
                       disabled={sendingForm}
                       allowNegativeValue={false}
                       badge={(
-                        <Badge variant={item.direction === 'CREDIT'
+                        <Badge variant={item.direction === Direction.CREDIT
                           ? BadgeVariant.SUCCESS
                           : BadgeVariant.WARNING}
                         >
@@ -240,7 +240,7 @@ export const JournalFormEntryLines = ({
               || config.form.addEntryLinesLimit > entrylineItems?.length) && (
               <TextButton
                 className='Layer__journal__add-entry-line'
-                onClick={() => addEntryLine(direction as Direction)}
+                onClick={() => addEntryLine(direction)}
               >
                 Add next account
               </TextButton>

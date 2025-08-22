@@ -1,17 +1,17 @@
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { LedgerAccounts, LedgerAccountsEntry } from '../../types'
+import type { LedgerEntry, LedgerAccountLineItem } from '../../schemas/generalLedger/ledgerEntry'
 import { DataModel } from '../../types/general'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useListLedgerAccountLines } from '../../features/ledger/accounts/[ledgerAccountId]/api/useListLedgerAccountLines'
-import type { LedgerAccountBalanceWithNodeType } from '../../types/chart_of_accounts'
+import type { NestedLedgerAccountWithNodeType } from '../../schemas/generalLedger/ledgerAccount'
 
 type UseLedgerAccounts = (showReversalEntries: boolean) => {
-  data?: LedgerAccounts
-  entryData?: LedgerAccountsEntry
+  data?: LedgerAccountLineItem[]
+  entryData?: LedgerEntry
   isLoading?: boolean
   isLoadingEntry?: boolean
   isValidating?: boolean
@@ -19,8 +19,8 @@ type UseLedgerAccounts = (showReversalEntries: boolean) => {
   error?: unknown
   errorEntry?: unknown
   refetch: () => void
-  selectedAccount: LedgerAccountBalanceWithNodeType | undefined
-  setSelectedAccount: (account: LedgerAccountBalanceWithNodeType | undefined) => void
+  selectedAccount: NestedLedgerAccountWithNodeType | undefined
+  setSelectedAccount: (account: NestedLedgerAccountWithNodeType | undefined) => void
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void
   closeSelectedEntry: () => void
@@ -37,7 +37,7 @@ export const useLedgerAccounts: UseLedgerAccounts = (
   const { data: auth } = useAuth()
 
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
-  const [selectedAccount, setSelectedAccount] = useState<LedgerAccountBalanceWithNodeType | undefined>()
+  const [selectedAccount, setSelectedAccount] = useState<NestedLedgerAccountWithNodeType | undefined>()
   const selectedAccountId = selectedAccount?.id
 
   // Use the new paginated hook - always call it but with empty accountId when not available
@@ -62,8 +62,8 @@ export const useLedgerAccounts: UseLedgerAccounts = (
 
   const data = useMemo(() => {
     if (!paginatedData || !shouldFetch) return undefined
-    return paginatedData.flatMap(page => page.data) as LedgerAccounts
-  }, [paginatedData, shouldFetch, showReversalEntries])
+    return paginatedData.flatMap(page => page.data)
+  }, [paginatedData, shouldFetch])
 
   const hasMore = useMemo(() => {
     if (!shouldFetch || !paginatedData || paginatedData.length === 0) return false

@@ -1,4 +1,6 @@
 import { Schema, pipe } from 'effect'
+import { NestedLedgerAccount } from './ledgerAccount'
+import { LedgerAccountNodeType } from '../../types/chart_of_accounts'
 
 export const AccountTypeSchema = Schema.Struct({
   value: Schema.String,
@@ -187,7 +189,7 @@ export type AccountIdentifier = typeof AccountIdentifierSchema.Type
 export type LedgerAccount = typeof LedgerAccountSchema.Type
 
 const nestedLedgerAccountFields = {
-  accountId: pipe(
+  id: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('id'),
   ),
@@ -213,19 +215,19 @@ const nestedLedgerAccountFields = {
 }
 
 export interface NestedLedgerAccount extends Schema.Struct.Type<typeof nestedLedgerAccountFields> {
-  subAccounts: ReadonlyArray<NestedLedgerAccount>
+  subAccounts: NestedLedgerAccount[]
 }
 
 export interface NestedLedgerAccountEncoded extends Schema.Struct.Encoded<typeof nestedLedgerAccountFields> {
-  readonly sub_accounts: ReadonlyArray<NestedLedgerAccountEncoded>
+  sub_accounts: NestedLedgerAccountEncoded[]
 }
 
 export const NestedLedgerAccountSchema = Schema.Struct({
   ...nestedLedgerAccountFields,
   subAccounts: pipe(
-    Schema.propertySignature(Schema.Array(
+    Schema.propertySignature(Schema.mutable(Schema.Array(
       Schema.suspend((): Schema.Schema<NestedLedgerAccount, NestedLedgerAccountEncoded> => NestedLedgerAccountSchema),
-    )),
+    ))),
     Schema.fromKey('sub_accounts'),
   ),
 })
@@ -252,19 +254,19 @@ const nestedChartAccountFields = {
 }
 
 export interface NestedChartAccount extends Schema.Struct.Type<typeof nestedChartAccountFields> {
-  subAccounts: ReadonlyArray<NestedChartAccount>
+  subAccounts: NestedChartAccount[]
 }
 
 export interface NestedChartAccountEncoded extends Schema.Struct.Encoded<typeof nestedChartAccountFields> {
-  readonly sub_accounts: ReadonlyArray<NestedChartAccountEncoded>
+  sub_accounts: NestedChartAccountEncoded[]
 }
 
 export const NestedChartAccountSchema = Schema.Struct({
   ...nestedChartAccountFields,
   subAccounts: pipe(
-    Schema.propertySignature(Schema.Array(
+    Schema.propertySignature(Schema.mutable(Schema.Array(
       Schema.suspend((): Schema.Schema<NestedChartAccount, NestedChartAccountEncoded> => NestedChartAccountSchema),
-    )),
+    ))),
     Schema.fromKey('sub_accounts'),
   ),
 })
@@ -273,9 +275,16 @@ export type NestedLedgerAccountType = typeof NestedLedgerAccountSchema.Type
 export type NestedChartAccountType = typeof NestedChartAccountSchema.Type
 
 export const ChartOfAccountsSchema = Schema.Struct({
-  accounts: Schema.Array(NestedChartAccountSchema),
+  accounts: Schema.mutable(Schema.Array(NestedChartAccountSchema)),
 })
 
 export const LedgerBalancesSchema = Schema.Struct({
-  accounts: Schema.Array(NestedLedgerAccountSchema),
+  accounts: Schema.mutable(Schema.Array(NestedLedgerAccountSchema)),
 })
+
+export type ChartOfAccounts = typeof ChartOfAccountsSchema.Type
+export type LedgerBalances = typeof LedgerBalancesSchema.Typeexport type AugmentedNestedLedgerAccount = NestedLedgerAccount & { isMatching?: true} 
+export type NestedLedgerAccountWithNodeType = NestedLedgerAccount & {
+  nodeType: LedgerAccountNodeType
+}
+

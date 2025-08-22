@@ -2,23 +2,19 @@ import { useState, useMemo, useCallback } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { Direction, FormError, FormErrorWithId } from '../../types'
-import { LedgerAccountBalance } from '../../types/chart_of_accounts'
 import { BaseSelectOption, DataModel } from '../../types/general'
-import {
-  JournalEntry,
-  JournalEntryLineItem,
-  NewApiJournalEntry,
-  NewFormJournalEntry,
-} from '../../types/journal'
+import { NewApiJournalEntry, NewFormJournalEntry, JournalEntryLineItem } from '../../types/journal'
+import { LedgerEntry } from '../../schemas/generalLedger/ledgerEntry'
 import { getAccountIdentifierPayload } from '../../utils/journal'
 import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useListLedgerEntries } from '../../features/ledger/entries/api/useListLedgerEntries'
 import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
+import { LedgerAccount, LedgerEntryDirection, NestedLedgerAccount } from '../../schemas/generalLedger/ledgerAccount'
 
 type UseJournal = () => {
-  data?: ReadonlyArray<JournalEntry>
+  data?: ReadonlyArray<LedgerEntry>
   isLoading?: boolean
   isLoadingEntry?: boolean
   isValidating?: boolean
@@ -34,7 +30,7 @@ type UseJournal = () => {
     name: string,
     value: string | BaseSelectOption | undefined | number,
     lineItemIndex?: number,
-    accounts?: LedgerAccountBalance[],
+    accounts?: LedgerAccount[],
   ) => void
   submitForm: () => void
   cancelForm: () => void
@@ -43,7 +39,7 @@ type UseJournal = () => {
   form?: JournalFormTypes
   apiError?: string
   setForm: (form?: JournalFormTypes) => void
-  addEntryLine: (direction: Direction) => void
+  addEntryLine: (direction: LedgerEntryDirection) => void
   removeEntryLine: (index: number) => void
   reverseEntry: (entryId: string) => ReturnType<typeof Layer.reverseJournalEntry>
   hasMore: boolean
@@ -93,7 +89,7 @@ export const useJournal: UseJournal = () => {
   const data = useMemo(() => {
     if (!paginatedData) return undefined
 
-    return paginatedData.flatMap(page => page.data) as ReadonlyArray<JournalEntry>
+    return paginatedData.flatMap(page => page.data) as ReadonlyArray<LedgerEntry>
   }, [paginatedData])
 
   const hasMore = useMemo(() => {
@@ -185,7 +181,7 @@ export const useJournal: UseJournal = () => {
     fieldName: string,
     value: string | BaseSelectOption | undefined | number,
     lineItemIndex?: number,
-    accounts?: LedgerAccountBalance[],
+    accounts?: NestedLedgerAccount[],
   ) => {
     if (!form) {
       return null
@@ -212,13 +208,13 @@ export const useJournal: UseJournal = () => {
             ...lineItem,
             account_identifier: {
               id: foundParent.id,
-              stable_name: foundParent.stable_name,
-              type: foundParent.account_type.value,
+              stable_name: foundParent.stableName,
+              type: foundParent.accountType.value,
               name: foundParent.name,
-              subType: foundParent.account_subtype
+              subType: foundParent.accountSubtype
                 ? {
-                  value: foundParent.account_subtype.value,
-                  label: foundParent.account_subtype.display_name,
+                  value: foundParent.accountSubtype.value,
+                  label: foundParent.accountSubtype.displayName,
                 }
                 : undefined,
             },

@@ -4,11 +4,9 @@ import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { TableProvider } from '../../contexts/TableContext/TableContext'
 import Edit2 from '../../icons/Edit2'
 import {
-  ChartWithBalances,
-  LedgerAccountBalance,
   LedgerAccountNodeType,
-  type AugmentedLedgerAccountBalance,
 } from '../../types/chart_of_accounts'
+import { type AugmentedNestedLedgerAccount } from '../../schemas/generalLedger/ledgerAccount'
 import { View } from '../../types/general'
 import { Button, ButtonVariant } from '../Button'
 import { Button as UIButton } from '../ui/Button/Button'
@@ -28,6 +26,7 @@ import { Span } from '../ui/Typography/Text'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { filterAccounts, getMatchedTextIndices, sortAccountsRecursive } from './utils/utils'
 import { BaseConfirmationModal } from '../BaseConfirmationModal/BaseConfirmationModal'
+import { LedgerBalances, NestedLedgerAccount } from '../../schemas/generalLedger/ledgerAccount'
 
 const highlightMatch = ({ text, query, isMatching }: { text: string, query: string, isMatching?: boolean }): ReactNode => {
   const matchedTextIndices = getMatchedTextIndices({ text, query, isMatching })
@@ -57,7 +56,7 @@ export const ChartOfAccountsTable = ({
   templateAccountsEditable = true,
 }: {
   view: View
-  data: ChartWithBalances
+  data: LedgerBalances
   searchQuery: string
   stringOverrides?: ChartOfAccountsTableStringOverrides
   error?: unknown
@@ -86,7 +85,7 @@ export const ChartOfAccountsTableContent = ({
   templateAccountsEditable,
 }: {
   view: View
-  data: ChartWithBalances
+  data: LedgerBalances
   searchQuery: string
   stringOverrides?: ChartOfAccountsTableStringOverrides
   error?: unknown
@@ -96,19 +95,19 @@ export const ChartOfAccountsTableContent = ({
   const { setSelectedAccount } = useContext(LedgerAccountsContext)
   const { editAccount, deleteAccount } = useContext(ChartOfAccountsContext)
   const [toggledKeys, setToggledKeys] = useState<Record<string, boolean>>({})
-  const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
+  const [accountToDelete, setAccountToDelete] = useState<AugmentedNestedLedgerAccount | null>(null)
 
   const sortedAccounts = useMemo(() => sortAccountsRecursive(data.accounts), [data.accounts])
 
   const allRowKeys = useMemo(() => {
     const keys: string[] = []
 
-    const collect = (accounts: LedgerAccountBalance[]) => {
+    const collect = (accounts: NestedLedgerAccount[]) => {
       for (const account of accounts) {
         const key = `coa-row-${account.id}`
-        if (account.sub_accounts.length > 0) {
+        if (account.subAccounts.length > 0) {
           keys.push(key)
-          collect(account.sub_accounts)
+          collect(account.subAccounts)
         }
       }
     }
@@ -133,11 +132,11 @@ export const ChartOfAccountsTableContent = ({
     await deleteAccount(accountToDelete.id)
   }
 
-  const getDeleteButtonTooltip = (account: AugmentedLedgerAccountBalance) => {
-    if (account.is_deletable) {
+  const getDeleteButtonTooltip = (account: AugmentedNestedLedgerAccount) => {
+    if (account.isDeletable) {
       return undefined
     }
-    if (account.sub_accounts.length > 0) {
+    if (account.subAccounts.length > 0) {
       return 'This account cannot be deleted because it has child accounts'
     }
     if (account.balance !== 0) {
@@ -158,13 +157,13 @@ export const ChartOfAccountsTableContent = ({
   }, [searchQuery, sortedAccounts])
 
   const renderChartOfAccountsDesktopRow = ({ account, index, depth, searchQuery }: {
-    account: AugmentedLedgerAccountBalance
+    account: AugmentedNestedLedgerAccount
     index: number
     depth: number
     searchQuery: string
   }) => {
     const rowKey = `coa-row-${account.id}`
-    const hasSubAccounts = !!account.sub_accounts && account.sub_accounts.length > 0
+    const hasSubAccounts = !!account.subAccounts && account.subAccounts.length > 0
 
     const nodeType =
       depth === 0
@@ -180,8 +179,8 @@ export const ChartOfAccountsTableContent = ({
       || manuallyToggled === true
       || (manuallyToggled !== false && (account.isMatching || depth === 0))
 
-    const isNonEditable = !templateAccountsEditable && !!account.stable_name
-    const isDeleteDisabled = !account.is_deletable
+    const isNonEditable = !templateAccountsEditable && !!account.stableName
+    const isDeleteDisabled = !account.isDeletable
 
     const onClickRow = (e: React.MouseEvent) => {
       e.stopPropagation()
@@ -244,7 +243,7 @@ export const ChartOfAccountsTableContent = ({
           <TableCell>
             {depth != 0
               && highlightMatch({
-                text: account.account_type?.display_name || '',
+                text: account.accountType?.displayName || '',
                 query: searchQuery,
                 isMatching: account.isMatching,
               })}
@@ -252,7 +251,7 @@ export const ChartOfAccountsTableContent = ({
           <TableCell>
             {depth != 0
               && highlightMatch({
-                text: account.account_subtype?.display_name || '',
+                text: account.accountSubtype?.displayName || '',
                 query: searchQuery,
                 isMatching: account.isMatching,
               })}
@@ -300,7 +299,7 @@ export const ChartOfAccountsTableContent = ({
         </TableRow>
         {hasSubAccounts
           && isExpanded
-          && account.sub_accounts.map((subItem, subIdx) => {
+          && account.subAccounts.map((subItem, subIdx) => {
             return renderChartOfAccountsDesktopRow({
               account: subItem,
               index: subIdx,

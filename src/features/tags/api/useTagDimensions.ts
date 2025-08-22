@@ -4,7 +4,7 @@ import { useEnvironment } from '../../../providers/Environment/EnvironmentInputP
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { get } from '../../../api/layer/authenticated_http'
 import { Schema } from 'effect'
-import { TagDimensionSchema } from '../tagSchemas'
+import { TagDimensionSchema } from '../../../schemas/tag'
 
 export const TAG_DIMENSIONS_TAG_KEY = '#tag-dimensions'
 
