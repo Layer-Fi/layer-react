@@ -925,20 +925,35 @@
 }
 
 .Layer__expanded-bank-transaction-row__match-table {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2xs);
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) 100px max-content;
+  gap: 0;
   margin-bottom: var(--spacing-sm);
 
+  &:has(.Layer__expanded-bank-transaction-row__match-table__status) {
+    grid-template-columns: 120px minmax(0, 1fr) 100px max-content min-content;
+  }
+  
+  &:not(:has(.Layer__expanded-bank-transaction-row__match-table__link)) {
+    grid-template-columns: 120px 1fr 100px;
+  }
+  
+  &:not(:has(.Layer__expanded-bank-transaction-row__match-table__link)):has(.Layer__expanded-bank-transaction-row__match-table__status) {
+    grid-template-columns: 120px minmax(0, 1fr) 100px min-content;
+  }
+
   .Layer__expanded-bank-transaction-row__match-table__header {
-    display: flex;
-    width: 100%;
+    display: contents;
     background: transparent;
 
     & > div {
       padding: var(--spacing-xs) var(--spacing-sm);
       font-size: var(--text-sm);
       color: var(--color-base-500);
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 
@@ -958,7 +973,8 @@
   }
 
   .Layer__expanded-bank-transaction-row__match-table__link {
-    width: 100px;
+    overflow: visible;
+    white-space: nowrap;
   }
 
   .Layer__expanded-bank-transaction-row__match-table__status {
@@ -996,7 +1012,7 @@
 }
 
 .Layer__expanded-bank-transaction-row__match-row {
-  display: flex;
+  display: contents;
   align-items: stretch;
   overflow: hidden;
   cursor: pointer;
@@ -1013,6 +1029,9 @@
     border-bottom: 1px solid var(--color-base-300);
     font-size: var(--text-md);
     color: var(--color-base-500);
+
+    overflow: hidden;
+    // min-width: 0; 
 
     &:first-child {
       border-top-left-radius: var(--border-radius-2xs);

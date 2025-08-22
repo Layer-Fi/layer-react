@@ -40,6 +40,8 @@ import { usePreloadCustomers } from '../../features/customers/api/useListCustome
 import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
 import { HStack } from '../ui/Stack/Stack'
 
+
+
 const COMPONENT_NAME = 'bank-transactions'
 
 export interface BankTransactionsStringOverrides {
