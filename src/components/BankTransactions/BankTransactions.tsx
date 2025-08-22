@@ -6,7 +6,7 @@ import {
   useBankTransactionsContext,
 } from '../../contexts/BankTransactionsContext'
 import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
-import { BankTransactionFilters } from '../../hooks/useBankTransactions/types'
+import { BankTransactionFilters, BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useIsVisible } from '../../hooks/useIsVisible'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
@@ -27,7 +27,6 @@ import {
 } from './BankTransactionsHeader'
 import { BankTransactionsTableEmptyStates } from './BankTransactionsTableEmptyState'
 import { MobileComponentType } from './constants'
-import { endOfMonth, startOfMonth } from 'date-fns'
 import type { LayerError } from '../../models/ErrorHandler'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
@@ -39,6 +38,8 @@ import { BankTransactionCustomerVendorVisibilityProvider } from '../../features/
 import { usePreloadVendors } from '../../features/vendors/api/useListVendors'
 import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
 import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
+import { HStack } from '../ui/Stack/Stack'
+
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -66,6 +67,7 @@ export interface BankTransactionsProps {
   showReceiptUploads?: boolean
   showTooltips?: boolean
   showUploadOptions?: boolean
+  applyGlobalDateRange?: boolean
 
   monthlyView?: boolean
   categorizeView?: boolean
@@ -85,6 +87,8 @@ export const BankTransactions = ({
   onError,
   showTags = false,
   showCustomerVendor = false,
+  monthlyView = false,
+  applyGlobalDateRange = false,
   mode,
   convertToInAppLink: convertToInAppLink,
   ...props
@@ -93,7 +97,7 @@ export const BankTransactions = ({
   usePreloadCustomers({ isEnabled: showCustomerVendor })
   usePreloadVendors({ isEnabled: showCustomerVendor })
 
-  const contextData = useAugmentedBankTransactions({ monthlyView: props.monthlyView })
+  const contextData = useAugmentedBankTransactions({ monthlyView, applyGlobalDateRange })
 
   return (
     <ErrorBoundary onError={onError}>
@@ -121,18 +125,12 @@ const BankTransactionsContent = ({
   showTooltips = false,
   showUploadOptions = false,
 
-  monthlyView = false,
   categorizeView: categorizeViewProp,
   mobileComponent,
   filters: inputFilters,
   hideHeader = false,
   stringOverrides,
 }: BankTransactionsProps) => {
-  const [defaultDateRange] = useState(() => ({
-    startDate: startOfMonth(new Date()),
-    endDate: endOfMonth(new Date()),
-  }))
-
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
 
@@ -154,6 +152,7 @@ const BankTransactionsContent = ({
     hasMore,
     fetchMore,
     removeAfterCategorize,
+    dateFilterMode,
   } = useBankTransactionsContext()
 
   const { data: linkedAccounts } = useLinkedAccounts()
@@ -162,20 +161,21 @@ const BankTransactionsContent = ({
     () => Boolean(linkedAccounts?.some(item => item.is_syncing)),
     [linkedAccounts],
   )
+  const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
 
   useEffect(() => {
     // Reset date range when switching from monthly view to non-monthly view
-    if (!monthlyView && filters?.dateRange) {
+    if (!isMonthlyViewMode && filters?.dateRange) {
       setFilters({ ...filters, dateRange: undefined })
     }
-  }, [monthlyView])
+  }, [isMonthlyViewMode])
 
   useEffect(() => {
     // Fetch more when the user scrolls to the bottom of the page
-    if (monthlyView && isVisible && !isLoading && hasMore) {
+    if (isMonthlyViewMode && isVisible && !isLoading && hasMore) {
       fetchMore()
     }
-  }, [monthlyView, isVisible, isLoading, hasMore])
+  }, [isMonthlyViewMode, isVisible, isLoading, hasMore, fetchMore])
 
   useEffect(() => {
     if (JSON.stringify(inputFilters) !== JSON.stringify(filters)) {
@@ -227,14 +227,12 @@ const BankTransactionsContent = ({
   }, [filters])
 
   const bankTransactions = useMemo(() => {
-    if (monthlyView) {
-      return data
-    }
+    if (isMonthlyViewMode) return data
 
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
     return data?.slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, data, monthlyView, pageSize])
+  }, [currentPage, data, isMonthlyViewMode, pageSize])
 
   const onCategorizationDisplayChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -311,17 +309,9 @@ const BankTransactionsContent = ({
           asWidget={asWidget}
           categorizedOnly={!categorizationEnabled}
           categorizeView={categorizeView}
-          display={display}
           onCategorizationDisplayChange={onCategorizationDisplayChange}
           mobileComponent={mobileComponent}
-          withDatePicker={monthlyView}
           listView={listView}
-          dateRange={{ ...defaultDateRange, ...filters?.dateRange }}
-          setDateRange={(v) => {
-            if (monthlyView) {
-              setFilters({ ...filters, dateRange: v })
-            }
-          }}
           stringOverrides={stringOverrides?.bankTransactionsHeader}
           isDataLoading={isLoadingWithoutData}
           isSyncing={isSyncing}
@@ -401,18 +391,20 @@ const BankTransactionsContent = ({
         )
         : null}
 
-      {!monthlyView && (
-        <Pagination
-          currentPage={currentPage}
-          totalCount={data?.length || 0}
-          pageSize={pageSize}
-          onPageChange={page => setCurrentPage(page)}
-          fetchMore={fetchMore}
-          hasMore={hasMore}
-        />
+      {!isMonthlyViewMode && (
+        <HStack justify='end'>
+          <Pagination
+            currentPage={currentPage}
+            totalCount={data?.length || 0}
+            pageSize={pageSize}
+            onPageChange={page => setCurrentPage(page)}
+            fetchMore={fetchMore}
+            hasMore={hasMore}
+          />
+        </HStack>
       )}
 
-      {monthlyView ? <div ref={scrollPaginationRef} /> : null}
+      {isMonthlyViewMode ? <div ref={scrollPaginationRef} /> : null}
     </Container>
   )
 }

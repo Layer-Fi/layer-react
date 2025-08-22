@@ -14,6 +14,7 @@ export interface PaginationProps {
   siblingCount?: number
   hasMore?: boolean
   fetchMore?: () => void
+  className?: string
 }
 
 type PaginationButtonProps = ComponentProps<typeof Button>
@@ -38,6 +39,7 @@ export const Pagination = ({
   pageSize,
   hasMore,
   fetchMore,
+  className,
 }: PaginationProps) => {
   const paginationRange = usePaginationRange({
     currentPage,
@@ -52,8 +54,8 @@ export const Pagination = ({
   const lastPage = paginationRange[paginationRange.length - 1]
 
   return (
-    <VStack className='Layer__pagination-container'>
-      <nav aria-label='Pagination'>
+    <VStack className={classNames('Layer__pagination-container', className)} fluid>
+      <nav aria-label='Pagination' className='Layer__pagination-nav'>
         <ul className='Layer__pagination' role='list'>
           <li key='page-prev'>
             <PaginationButton

@@ -3,18 +3,18 @@ import { useFieldContext } from '../hooks/useForm'
 import { InputGroup } from '../../../components/ui/Input/InputGroup'
 import { BigDecimal as BD, Option } from 'effect'
 import { Input } from '../../../components/ui/Input/Input'
-import { BIG_DECIMAL_ZERO, buildDecimalCharRegex, convertPercentToDecimal, formatBigDecimalToString } from '../../../utils/bigDecimalUtils'
+import { BIG_DECIMAL_ONE, BIG_DECIMAL_ZERO, buildDecimalCharRegex, convertPercentToDecimal, formatBigDecimalToString } from '../../../utils/bigDecimalUtils'
 import { BaseFormTextField, type BaseFormTextFieldProps } from './BaseFormTextField'
 
 type FormBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode' | 'isTextArea'> & {
-  maxValue?: number
+  maxValue?: BD.BigDecimal
   minDecimalPlaces?: number
   maxDecimalPlaces?: number
   allowNegative?: boolean
   mode?: 'percent' | 'currency' | 'decimal'
 }
 
-const DEFAULT_MAX_VALUE = 10_000_000
+const DEFAULT_MAX_VALUE = BD.fromBigInt(BigInt(10_000_000))
 const DEFAULT_MIN_DECIMAL_PLACES = 0
 const DEFAULT_MAX_DECIMAL_PLACES = 3
 const DECORATOR_CHARS_REGEX = /[,%$]/g
@@ -44,7 +44,7 @@ export const withForceUpdate = (value: BD.BigDecimal): BD.BigDecimal => {
 export function FormBigDecimalField({
   mode = 'decimal',
   allowNegative = false,
-  maxValue = mode === 'percent' ? 1 : DEFAULT_MAX_VALUE,
+  maxValue = mode === 'percent' ? BIG_DECIMAL_ONE : DEFAULT_MAX_VALUE,
   minDecimalPlaces = mode === 'currency' ? 2 : DEFAULT_MIN_DECIMAL_PLACES,
   maxDecimalPlaces = mode === 'currency' ? 2 : DEFAULT_MAX_DECIMAL_PLACES,
   ...restProps
@@ -54,7 +54,6 @@ export function FormBigDecimalField({
   const { name, state, handleChange, handleBlur } = field
   const { value } = state
 
-  const maxBigDecimalValue = BD.unsafeFromNumber(maxValue)
   const formattingProps = useMemo(() => ({
     minDecimalPlaces,
     maxDecimalPlaces,
@@ -83,7 +82,7 @@ export function FormBigDecimalField({
       : rounded
 
     const normalized = BD.normalize(adjustedForPercent)
-    const clamped = BD.min(normalized, maxBigDecimalValue)
+    const clamped = BD.min(normalized, maxValue)
 
     if (!BD.equals(clamped, value)) {
       handleChange(withForceUpdate(clamped))
@@ -91,7 +90,7 @@ export function FormBigDecimalField({
     handleBlur()
 
     setInputValue(formatBigDecimalToString(clamped, formattingProps))
-  }, [inputValue, mode, maxBigDecimalValue, maxDecimalPlaces, value, handleBlur, formattingProps, handleChange])
+  }, [inputValue, mode, maxValue, maxDecimalPlaces, value, handleBlur, formattingProps, handleChange])
 
   // Don't allow the user to type anything other than numeric characters, commas, decimals, etc
   const allowedChars = useMemo(() =>
