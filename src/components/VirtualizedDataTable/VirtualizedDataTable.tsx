@@ -41,6 +41,7 @@ export interface VirtualizedDataTableProps<TData extends { id: string }, TColumn
     EmptyState: React.FC
     ErrorState: React.FC
   }
+  shrinkHeightToFitRows: boolean
   // Virtualization-specific props
   height?: number
   rowHeight?: number
@@ -55,6 +56,7 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
   componentName,
   ariaLabel,
   slots,
+  shrinkHeightToFitRows = true,
   height = DEFAULT_TABLE_HEIGHT,
   rowHeight = DEFAULT_ROW_HEIGHT,
   overscan = DEFAULT_OVERSCAN,
@@ -62,12 +64,13 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
   const { EmptyState, ErrorState } = slots
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const actualHeight = useMemo(() => {
+  const renderedTableHeight = useMemo(() => {
     if (!data) return height
+    if (!shrinkHeightToFitRows) return height
     const actualRowCount = data.length
     const calculatedHeight = (actualRowCount * rowHeight) + HEADER_HEIGHT + 1
     return Math.min(height, calculatedHeight)
-  }, [data, height, rowHeight])
+  }, [data, height, rowHeight, shrinkHeightToFitRows])
 
   const columnHelper = createColumnHelper<TData>()
   const columns: Column<TData, TColumns>[] = Object.values(columnConfig)
@@ -137,7 +140,7 @@ export const VirtualizedDataTable = <TData extends { id: string }, TColumns exte
   const totalSize = rowVirtualizer.getTotalSize()
 
   return (
-    <div className={`${CSS_PREFIX}__container`} ref={containerRef} style={{ height: actualHeight }} aria-label={ariaLabel}>
+    <div className={`${CSS_PREFIX}__container`} ref={containerRef} style={{ height: renderedTableHeight }} aria-label={ariaLabel}>
       <Table className={classNames(CSS_PREFIX, `Layer__UI__Table__${componentName}`)} aria-label={ariaLabel}>
         <TableHeader className={`${CSS_PREFIX}__header`} style={{ height: HEADER_HEIGHT }}>
           {table.getFlatHeaders().map(header => (
