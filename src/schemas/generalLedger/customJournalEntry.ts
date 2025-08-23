@@ -4,6 +4,7 @@ import { VendorSchema } from '../vendor'
 import { TagSchema, TagKeyValueSchema } from '../tag'
 import { AccountIdentifierSchema, LedgerEntryDirectionSchema } from './ledgerAccount'
 import { LedgerEntrySchema } from './ledgerEntry'
+import { ZonedDateTimeFromSelf } from '../../utils/schema/utils'
 
 export const CreateCustomJournalEntryLineItemSchema = Schema.Struct({
   externalId: pipe(
@@ -189,3 +190,28 @@ export const CustomJournalEntriesSchema = Schema.Struct({
 })
 
 export type CustomJournalEntries = Schema.Schema.Type<typeof CustomJournalEntriesSchema>
+
+// Form schemas for the custom journal entry form
+export const CustomJournalEntryFormLineItemSchema = Schema.Struct({
+  accountIdentifier: Schema.optional(Schema.NullOr(AccountIdentifierSchema)),
+  amount: Schema.Number,
+  direction: LedgerEntryDirectionSchema,
+  memo: Schema.optional(Schema.String),
+  customer: Schema.optional(Schema.NullOr(CustomerSchema)),
+  vendor: Schema.optional(Schema.NullOr(VendorSchema)),
+  tagKeyValues: Schema.optional(Schema.Array(TagKeyValueSchema)),
+})
+
+export type CustomJournalEntryFormLineItem = Schema.Schema.Type<typeof CustomJournalEntryFormLineItemSchema>
+
+export const CustomJournalEntryFormSchema = Schema.Struct({
+  entryAt: ZonedDateTimeFromSelf,
+  memo: Schema.String,
+  lineItems: Schema.mutable(Schema.Array(CustomJournalEntryFormLineItemSchema)),
+  customer: Schema.optional(Schema.NullOr(CustomerSchema)),
+  vendor: Schema.optional(Schema.NullOr(VendorSchema)),
+  tagKeyValues: Schema.optional(Schema.Array(TagKeyValueSchema)),
+  referenceNumber: Schema.optional(Schema.String),
+})
+
+export type CustomJournalEntryForm = Schema.Schema.Type<typeof CustomJournalEntryFormSchema>
