@@ -70,7 +70,7 @@ export const flattenCategories = (categories: CategoryWithEntries[]): Option[] =
 export const flattenOptionGroups = (options: Option[]): Option[] => {
   return options.flatMap(opt =>
     opt.value?.type === 'GROUP' && Array.isArray(opt.value.items)
-      ? flattenOptionGroups(opt.value.items)
+      ? [opt, ...flattenOptionGroups(opt.value.items)]
       : [opt],
   )
 }
