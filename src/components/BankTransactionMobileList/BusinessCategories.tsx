@@ -57,6 +57,7 @@ export const BusinessCategories = ({
   const clearSelectedGroup = useCallback(() => {
     setOptionsToShow(categoryOptions)
     setSelectedGroup(undefined)
+    setQuery('')
   }, [categoryOptions])
 
   return (
