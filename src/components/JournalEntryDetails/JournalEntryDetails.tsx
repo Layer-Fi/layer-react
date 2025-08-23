@@ -50,9 +50,9 @@ export const JournalEntryDetails = () => {
     if (!renderInAppLink || !entry?.source) {
       return defaultBadge
     }
-    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(ledgerEntrySource)
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(entry?.source)
     return renderInAppLink(linkingMetadata) ?? defaultBadge
-  }, [renderInAppLink, entry?.entryType,  entry?.source])
+  }, [renderInAppLink, entry?.entryType, entry?.source])
 
   const lineItemRows = useMemo(
     () => {

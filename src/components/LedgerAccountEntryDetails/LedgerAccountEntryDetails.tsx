@@ -387,9 +387,9 @@ export const LedgerAccountEntryDetails = ({
     if (!renderInAppLink || !entryData?.source) {
       return defaultBadge
     }
-    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(ledgerEntrySource)
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(entryData?.source)
     return renderInAppLink(linkingMetadata) ?? defaultBadge
-  }, [renderInAppLink, entryData?.entryType, entryData?.source]])
+  }, [renderInAppLink, entryData?.entryType, entryData?.source])
 
   return (
     <div className='Layer__ledger-account__entry-details'>

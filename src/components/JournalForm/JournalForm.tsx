@@ -109,7 +109,7 @@ export const JournalForm = ({
             />
             <DatePicker
               selected={
-                form?.data.entry_at ? new Date(form?.data.entry_at) : new Date()
+                form?.data.entryAt ? form?.data.entryAt : new Date()
               }
               onChange={(date) => {
                 if (!Array.isArray(date)) {
