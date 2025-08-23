@@ -26,7 +26,7 @@ export interface GeneralLedgerProps {
   showTitle?: boolean
   stringOverrides?: GeneralLedgerStringOverrides
   chartOfAccountsOptions?: ChartOfAccountsOptions
-  convertToInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode
 }
 
 export const GeneralLedgerView = ({
@@ -34,7 +34,7 @@ export const GeneralLedgerView = ({
   showTitle = true,
   stringOverrides,
   chartOfAccountsOptions,
-  convertToInAppLink: convertToInAppLink,
+  renderInAppLink,
 }: GeneralLedgerProps) => {
   const [activeTab, setActiveTab] = useState('chartOfAccounts')
 
@@ -73,13 +73,13 @@ export const GeneralLedgerView = ({
                 chartOfAccountsOptions?.templateAccountsEditable
               }
               showReversalEntries={chartOfAccountsOptions?.showReversalEntries}
-              getInAppLink={convertToInAppLink}
+              renderInAppLink={renderInAppLink}
             />
           )
           : (
             <Journal
               stringOverrides={stringOverrides?.journal}
-              convertToInAppLink={convertToInAppLink}
+              renderInAppLink={renderInAppLink}
             />
           )}
       </View>

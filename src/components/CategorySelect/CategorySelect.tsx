@@ -145,7 +145,7 @@ const GroupHeading = (
 const Option = (
   props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
     showTooltips: boolean
-    convertToInAppLink?: (details: LinkingMetadata) => ReactNode | undefined
+    renderInAppLink?: (details: LinkingMetadata) => ReactNode
   },
 ) => {
   if (props.data.payload.option_type === OptionActionType.HIDDEN) {
@@ -153,8 +153,8 @@ const Option = (
   }
 
   if (props.data.type === 'match') {
-    const inAppLink = props.convertToInAppLink && props.data.payload.details
-      ? props.convertToInAppLink(convertMatchDetailsToLinkingMetadata(props.data.payload.details))
+    const inAppLink = props.renderInAppLink && props.data.payload.details
+      ? props.renderInAppLink(convertMatchDetailsToLinkingMetadata(props.data.payload.details))
       : null
 
     return (
@@ -271,7 +271,7 @@ export const CategorySelect = ({
   asDrawer = false,
 }: Props) => {
   const { data: categories } = useCategories()
-  const { convertToInAppLink } = useInAppLinkContext()
+  const { renderInAppLink } = useInAppLinkContext()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const onSelect = useCallback((option: Option) => {
@@ -408,7 +408,7 @@ export const CategorySelect = ({
         DropdownIndicator,
         GroupHeading,
         Option: optionProps => (
-          <Option {...optionProps} showTooltips={showTooltips} convertToInAppLink={convertToInAppLink} />
+          <Option {...optionProps} showTooltips={showTooltips} renderInAppLink={renderInAppLink} />
         ),
       }}
       isDisabled={disabled}

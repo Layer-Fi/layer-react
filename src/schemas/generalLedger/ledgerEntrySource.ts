@@ -32,7 +32,7 @@ export const TransactionLedgerEntrySourceSchema = Schema.Struct({
     Schema.fromKey('transaction_id'),
   ),
   externalId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
   accountName: pipe(
@@ -67,7 +67,7 @@ export const InvoiceLedgerEntrySourceSchema = Schema.Struct({
     Schema.fromKey('invoice_id'),
   ),
   externalId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
   invoiceNumber: pipe(
@@ -133,7 +133,7 @@ export const InvoicePaymentLedgerEntrySourceSchema = Schema.Struct({
   ),
   type: Schema.Literal('Invoice_Payment_Ledger_Entry_Source'),
   externalId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
   invoiceId: pipe(
@@ -287,7 +287,7 @@ export const PayoutLedgerEntrySourceSchema = Schema.Struct({
     Schema.fromKey('payout_id'),
   ),
   externalId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
   paidOutAmount: pipe(

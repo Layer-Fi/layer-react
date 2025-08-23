@@ -364,7 +364,7 @@ export const LedgerAccountEntryDetails = ({
 }) => {
   const { entryData, isLoadingEntry, closeSelectedEntry, errorEntry } =
     useContext(LedgerAccountsContext)
-  const { convertToInAppLink } = useInAppLinkContext()
+  const { renderInAppLink } = useInAppLinkContext()
 
   const { totalDebit, totalCredit } = useMemo(() => {
     let totalDebit = 0
@@ -388,12 +388,12 @@ export const LedgerAccountEntryDetails = ({
   const badgeOrInAppLink = useMemo(() => {
     const badgeContent = ledgerEntrySource?.entityName ?? entryData?.entry_type
     const defaultBadge = <Badge>{badgeContent}</Badge>
-    if (!convertToInAppLink || !ledgerEntrySource) {
+    if (!renderInAppLink || !ledgerEntrySource) {
       return defaultBadge
     }
     const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(ledgerEntrySource)
-    return convertToInAppLink(linkingMetadata) ?? defaultBadge
-  }, [convertToInAppLink, entryData?.entry_type, ledgerEntrySource])
+    return renderInAppLink(linkingMetadata) ?? defaultBadge
+  }, [renderInAppLink, entryData?.entry_type, ledgerEntrySource])
 
   return (
     <div className='Layer__ledger-account__entry-details'>
