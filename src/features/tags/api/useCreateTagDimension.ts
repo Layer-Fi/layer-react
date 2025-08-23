@@ -1,6 +1,7 @@
 import useSWRMutation from 'swr/mutation'
 import { post } from '../../../api/layer/authenticated_http'
-import { TagDimensionSchema, TagDimensionStrictnessSchema } from '../tagSchemas'
+import { TagDimensionSchema } from '../../../schemas/tag'
+import { TagDimensionStrictnessSchema } from '../../../schemas/tag'
 import { useAuth } from '../../../hooks/useAuth'
 import { useEnvironment } from '../../../providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '../../../contexts/LayerContext'
