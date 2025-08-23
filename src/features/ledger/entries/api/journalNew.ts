@@ -1,7 +1,7 @@
-import { S3PresignedUrl } from '../../schemas/general'
-import { CreateCustomJournalEntry, CustomJournalEntry } from '../../schemas/generalLedger/customJournalEntry'
-import type { LedgerEntry } from '../../schemas/generalLedger/ledgerEntry'
-import { get, post } from './authenticated_http'
+import { S3PresignedUrl } from '../../../../schemas/general'
+import { CreateCustomJournalEntry, CustomJournalEntry } from '../../../../schemas/generalLedger/customJournalEntry'
+import type { LedgerEntry } from '../../../../schemas/generalLedger/ledgerEntry'
+import { get, post } from '../../../../api/layer/authenticated_http'
 
 export const createCustomJournalEntry = post<{ data: CustomJournalEntry }, CreateCustomJournalEntry>(
   ({ businessId }) => `/v1/businesses/${businessId}/custom-journal-entries`,
