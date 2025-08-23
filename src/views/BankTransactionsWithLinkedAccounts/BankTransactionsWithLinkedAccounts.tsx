@@ -35,7 +35,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   mode?: BankTransactionsMode
   mobileComponent?: MobileComponentType
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
-  convertToInAppLink?: (details: LinkingMetadata) => ReactNode
+  renderInAppLink?: (details: LinkingMetadata) => ReactNode
 }
 
 export const BankTransactionsWithLinkedAccounts = ({
@@ -56,7 +56,7 @@ export const BankTransactionsWithLinkedAccounts = ({
 
   mobileComponent,
   stringOverrides,
-  convertToInAppLink,
+  renderInAppLink,
 }: BankTransactionsWithLinkedAccountsProps) => {
   return (
     <View
@@ -81,7 +81,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         mobileComponent={mobileComponent}
         mode={mode}
         stringOverrides={stringOverrides?.bankTransactions}
-        convertToInAppLink={convertToInAppLink}
+        renderInAppLink={renderInAppLink}
       />
     </View>
   )

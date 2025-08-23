@@ -8,18 +8,20 @@ import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
 import { type ColumnConfig } from '../DataTable/DataTable'
 import { Badge } from '../Badge'
 import { DateTime } from '../DateTime'
+import { Text, TextUseTooltip } from '../Typography/Text'
 import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { Button } from '../ui/Button/Button'
 import { VStack, HStack } from '../ui/Stack/Stack'
-import { Label, Span } from '../ui/Typography/Text'
+import { Label } from '../ui/Typography/Text'
 import { format } from 'date-fns'
-import { LedgerEntrySourceType } from '../../schemas/generalLedger/ledgerEntrySource'
+import { convertLedgerEntrySourceToLinkingMetadata, LedgerEntrySourceType } from '../../schemas/generalLedger/ledgerEntrySource'
 import { Direction } from '../../types'
 import { BreadcrumbItem, DetailReportBreadcrumb } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import type { PnlDetailLine } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { MoneySpan } from '../ui/Typography/MoneyText'
+import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 
@@ -80,6 +82,17 @@ export const ProfitAndLossDetailReport = ({
   const { businessId } = useLayerContext()
   const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
   const [selectedSource, setSelectedSource] = useState<LedgerEntrySourceType | null>(null)
+
+  const { renderInAppLink } = useInAppLinkContext()
+  const badgeOrInAppLink = useMemo(() => {
+    if (!selectedSource) return undefined
+    const defaultBadge = <Badge>{selectedSource.entityName}</Badge>
+    if (!renderInAppLink) {
+      return defaultBadge
+    }
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(selectedSource)
+    return renderInAppLink(linkingMetadata) ?? defaultBadge
+  }, [renderInAppLink, selectedSource])
 
   const dynamicBreadcrumbs = useMemo(() => {
     return breadcrumbPath || [{ name: lineItemName, display_name: lineItemName }]
@@ -166,7 +179,15 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Description]: {
       id: PnlDetailColumns.Description,
       header: stringOverrides?.descriptionColumnHeader || 'Description',
-      cell: row => <Span ellipsis>{row.source?.displayDescription || row.account.accountSubtype.displayName || '-'}</Span>,
+      cell: row => (
+        <Text
+          as='span'
+          withTooltip={TextUseTooltip.whenTruncated}
+          ellipsis
+        >
+          {row.source?.displayDescription || row.account.accountSubtype.displayName || '-'}
+        </Text>
+      ),
       isRowHeader: true,
     },
     [PnlDetailColumns.Amount]: {
@@ -174,7 +195,7 @@ export const ProfitAndLossDetailReport = ({
       header: stringOverrides?.amountColumnHeader || 'Amount',
       cell: (row) => {
         return (
-          <MoneySpan amount={row.amount} />
+          <MoneySpan amount={row.direction === Direction.CREDIT ? row.amount : -row.amount} />
         )
       },
     },
@@ -207,7 +228,7 @@ export const ProfitAndLossDetailReport = ({
             title={stringOverrides?.sourceDetailsTitle || 'Transaction source'}
           >
             <DetailsListItem label='Source'>
-              <Badge>{selectedSource.entityName}</Badge>
+              {badgeOrInAppLink}
             </DetailsListItem>
             <SourceDetailView source={selectedSource} />
           </DetailsList>
@@ -226,6 +247,7 @@ export const ProfitAndLossDetailReport = ({
           data={rowsWithRunningBalance.lines}
           isLoading={isLoading}
           isError={isError}
+          shrinkHeightToFitRows
           slots={{
             EmptyState,
             ErrorState,

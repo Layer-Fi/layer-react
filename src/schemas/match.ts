@@ -170,71 +170,87 @@ export const convertMatchDetailsToLinkingMetadata = (matchDetails: MatchDetailsT
 
   switch (matchDetails.type) {
     case 'Journal_Entry_Match':
-      baseMetadata.entityName = EntityName.CustomJournalEntry
-      break
+      return {
+        ...baseMetadata,
+        entityName: EntityName.CustomJournalEntry,
+      }
     case 'Refund_Payment_Match':
-      baseMetadata.entityName = EntityName.CustomerRefundPayment
-      if (matchDetails.customerRefundIdentifiers) {
-        baseMetadata.relatedEntityLinkingMetadata = [{
-          id: matchDetails.customerRefundIdentifiers.id,
-          entityName: EntityName.CustomerRefund,
-          externalId: matchDetails.customerRefundIdentifiers.externalId || undefined,
-          referenceNumber: matchDetails.customerRefundIdentifiers.referenceNumber || undefined,
-          metadata: matchDetails.customerRefundIdentifiers.metadata || undefined,
-        }]
+      return {
+        ...baseMetadata,
+        entityName: EntityName.CustomerRefundPayment,
+        relatedEntityLinkingMetadata: matchDetails.customerRefundIdentifiers
+          ? [{
+            id: matchDetails.customerRefundIdentifiers.id,
+            entityName: EntityName.CustomerRefund,
+            externalId: matchDetails.customerRefundIdentifiers.externalId || undefined,
+            referenceNumber: matchDetails.customerRefundIdentifiers.referenceNumber || undefined,
+            metadata: matchDetails.customerRefundIdentifiers.metadata || undefined,
+          }]
+          : undefined,
       }
-      break
     case 'Vendor_Refund_Payment_Match':
-      baseMetadata.entityName = EntityName.VendorRefundPayment
-      if (matchDetails.vendorRefundIdentifiers) {
-        baseMetadata.relatedEntityLinkingMetadata = [{
-          id: matchDetails.vendorRefundIdentifiers.id,
-          entityName: EntityName.VendorRefundPayment,
-          externalId: matchDetails.vendorRefundIdentifiers.externalId || undefined,
-          referenceNumber: matchDetails.vendorRefundIdentifiers.referenceNumber || undefined,
-          metadata: matchDetails.vendorRefundIdentifiers.metadata || undefined,
-        }]
+      return {
+        ...baseMetadata,
+        entityName: EntityName.VendorRefundPayment,
+        relatedEntityLinkingMetadata: matchDetails.vendorRefundIdentifiers
+          ? [{
+            id: matchDetails.vendorRefundIdentifiers.id,
+            entityName: EntityName.VendorRefundPayment,
+            externalId: matchDetails.vendorRefundIdentifiers.externalId || undefined,
+            referenceNumber: matchDetails.vendorRefundIdentifiers.referenceNumber || undefined,
+            metadata: matchDetails.vendorRefundIdentifiers.metadata || undefined,
+          }]
+          : undefined,
       }
-      break
     case 'Invoice_Match':
-      baseMetadata.entityName = EntityName.InvoicePayment
-      if (matchDetails.invoiceIdentifiers) {
-        baseMetadata.relatedEntityLinkingMetadata = matchDetails.invoiceIdentifiers.map(identifier => ({
-          id: identifier.id,
-          entityName: EntityName.Invoice,
-          externalId: identifier.externalId || undefined,
-          referenceNumber: identifier.referenceNumber || undefined,
-          metadata: identifier.metadata || undefined,
-        }))
+      return {
+        ...baseMetadata,
+        entityName: EntityName.InvoicePayment,
+        relatedEntityLinkingMetadata: matchDetails.invoiceIdentifiers
+          ? matchDetails.invoiceIdentifiers.map(identifier => ({
+            id: identifier.id,
+            entityName: EntityName.Invoice,
+            externalId: identifier.externalId || undefined,
+            referenceNumber: identifier.referenceNumber || undefined,
+            metadata: identifier.metadata || undefined,
+          }))
+          : undefined,
       }
-      break
     case 'Payout_Match':
-      baseMetadata.entityName = EntityName.CustomerPayout
-      break
-    case 'Vendor_Payout_Match':
-      baseMetadata.entityName = EntityName.VendorPayout
-      break
-    case 'Bill_Match':
-      baseMetadata.entityName = EntityName.BillPayment
-      if (matchDetails.billIdentifiers) {
-        baseMetadata.relatedEntityLinkingMetadata = matchDetails.billIdentifiers.map(identifier => ({
-          id: identifier.id,
-          entityName: EntityName.Bill,
-          externalId: identifier.externalId || undefined,
-          referenceNumber: identifier.referenceNumber || undefined,
-          metadata: identifier.metadata || undefined,
-        }))
+      return {
+        ...baseMetadata,
+        entityName: EntityName.CustomerPayout,
       }
-      break
+    case 'Vendor_Payout_Match':
+      return {
+        ...baseMetadata,
+        entityName: EntityName.VendorPayout,
+      }
+    case 'Bill_Match':
+      return {
+        ...baseMetadata,
+        entityName: EntityName.BillPayment,
+        relatedEntityLinkingMetadata: matchDetails.billIdentifiers
+          ? matchDetails.billIdentifiers.map(identifier => ({
+            id: identifier.id,
+            entityName: EntityName.Bill,
+            externalId: identifier.externalId || undefined,
+            referenceNumber: identifier.referenceNumber || undefined,
+            metadata: identifier.metadata || undefined,
+          }))
+          : undefined,
+      }
     case 'Payroll_Match':
-      baseMetadata.entityName = EntityName.PayrollPayment
-      break
+      return {
+        ...baseMetadata,
+        entityName: EntityName.PayrollPayment,
+      }
     case 'Transfer_Match':
-      baseMetadata.entityName = EntityName.BankTransaction
-      break
+      return {
+        ...baseMetadata,
+        entityName: EntityName.BankTransaction,
+      }
   }
-
-  return baseMetadata
 }
 
 export type MatchDetailsType = typeof MatchDetailsSchema.Type

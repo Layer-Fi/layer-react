@@ -32,7 +32,7 @@ export const JournalEntryDetails = () => {
     reverseEntry,
     refetch,
   } = useContext(JournalContext)
-  const { convertToInAppLink } = useInAppLinkContext()
+  const { renderInAppLink } = useInAppLinkContext()
   const [reverseEntryProcessing, setReverseEntryProcessing] = useState(false)
   const [reverseEntryError, setReverseEntryError] = useState<string>()
 
@@ -47,12 +47,12 @@ export const JournalEntryDetails = () => {
   const badgeOrInAppLink = useMemo(() => {
     const badgeContent = entry?.source?.entityName ?? entry?.entryType
     const defaultBadge = <Badge>{badgeContent}</Badge>
-    if (!convertToInAppLink || !entry?.source) {
+    if (!renderInAppLink || !entry?.source) {
       return defaultBadge
     }
-    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(entry?.source)
-    return convertToInAppLink(linkingMetadata) ?? defaultBadge
-  }, [convertToInAppLink, entry?.entryType, entry?.source])
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(ledgerEntrySource)
+    return renderInAppLink(linkingMetadata) ?? defaultBadge
+  }, [renderInAppLink, entry?.entryType,  entry?.source])
 
   const lineItemRows = useMemo(
     () => {

@@ -4,6 +4,7 @@ import {
   Input as ReactAriaInput,
 } from 'react-aria-components'
 import { Button } from '../Button/Button'
+import X from '../../../icons/X'
 
 const CLASS_NAME = 'Layer__MinimalSearchField'
 
@@ -18,8 +19,8 @@ export function MinimalSearchField({
   return (
     <ReactAriaSearchField {...restProps} className={CLASS_NAME}>
       <ReactAriaInput slot='input' placeholder={placeholder} />
-      <Button slot='clear-button' inset variant='ghost'>
-        Clear
+      <Button slot='clear-button' inset icon variant='ghost' aria-label='Clear search'>
+        <X />
       </Button>
     </ReactAriaSearchField>
   )

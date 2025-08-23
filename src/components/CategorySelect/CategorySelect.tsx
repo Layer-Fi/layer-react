@@ -24,6 +24,8 @@ import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkCo
 import { CategorySelectDrawer } from './CategorySelectDrawer'
 import { convertMatchDetailsToLinkingMetadata, MatchDetailsType } from '../../schemas/match'
 import { ReactNode } from 'react'
+import { useCallback, useState } from 'react'
+import type { Option } from '../BankTransactionMobileList/utils'
 
 type Props = {
   name?: string
@@ -34,7 +36,6 @@ type Props = {
   className?: string
   showTooltips: boolean
   excludeMatches?: boolean
-  hideMainCategories?: string[]
   asDrawer?: boolean
 }
 
@@ -144,7 +145,7 @@ const GroupHeading = (
 const Option = (
   props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
     showTooltips: boolean
-    convertToInAppLink?: (details: LinkingMetadata) => ReactNode | undefined
+    renderInAppLink?: (details: LinkingMetadata) => ReactNode
   },
 ) => {
   if (props.data.payload.option_type === OptionActionType.HIDDEN) {
@@ -152,8 +153,8 @@ const Option = (
   }
 
   if (props.data.type === 'match') {
-    const inAppLink = props.convertToInAppLink && props.data.payload.details
-      ? props.convertToInAppLink(convertMatchDetailsToLinkingMetadata(props.data.payload.details))
+    const inAppLink = props.renderInAppLink && props.data.payload.details
+      ? props.renderInAppLink(convertMatchDetailsToLinkingMetadata(props.data.payload.details))
       : null
 
     return (
@@ -270,7 +271,19 @@ export const CategorySelect = ({
   asDrawer = false,
 }: Props) => {
   const { data: categories } = useCategories()
-  const { convertToInAppLink } = useInAppLinkContext()
+  const { renderInAppLink } = useInAppLinkContext()
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const onSelect = useCallback((option: Option) => {
+    if (option.value.payload) {
+      onChange({
+        type: OptionActionType.CATEGORY,
+        payload: {
+          ...option.value.payload,
+        },
+      })
+    }
+  }, [onChange])
 
   const matchOptions =
     !excludeMatches && bankTransaction?.suggested_matches
@@ -332,11 +345,29 @@ export const CategorySelect = ({
 
   if (asDrawer) {
     return (
-      <CategorySelectDrawer
-        onSelect={onChange}
-        selected={value}
-        showTooltips={showTooltips}
-      />
+      <>
+        <button
+          aria-label='Select category'
+          className={classNames(
+            'Layer__category-menu__drawer-btn',
+            selected && 'Layer__category-menu__drawer-btn--selected',
+          )}
+          onClick={() => { setIsDrawerOpen(true) }}
+        >
+          {selected?.payload?.display_name ?? 'Select...'}
+          <ChevronDown
+            size={16}
+            className='Layer__category-menu__drawer-btn__arrow'
+          />
+        </button>
+        <CategorySelectDrawer
+          onSelect={onSelect}
+          selectedId={selected?.payload?.id}
+          showTooltips={showTooltips}
+          isOpen={isDrawerOpen}
+          onOpenChange={setIsDrawerOpen}
+        />
+      </>
     )
   }
 
@@ -377,7 +408,7 @@ export const CategorySelect = ({
         DropdownIndicator,
         GroupHeading,
         Option: optionProps => (
-          <Option {...optionProps} showTooltips={showTooltips} convertToInAppLink={convertToInAppLink} />
+          <Option {...optionProps} showTooltips={showTooltips} renderInAppLink={renderInAppLink} />
         ),
       }}
       isDisabled={disabled}

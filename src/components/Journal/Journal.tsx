@@ -23,7 +23,7 @@ export interface JournalProps {
   asWidget?: boolean
   config?: JournalConfig
   stringOverrides?: JournalStringOverrides
-  convertToInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode
 }
 
 export const JOURNAL_CONFIG: JournalConfig = {
@@ -38,7 +38,7 @@ export const Journal = (props: JournalProps) => {
   return (
     <ChartOfAccountsContext.Provider value={AccountsContextData}>
       <JournalContext.Provider value={JournalContextData}>
-        <InAppLinkProvider convertToInAppLink={props.convertToInAppLink}>
+        <InAppLinkProvider renderInAppLink={props.renderInAppLink}>
           <JournalContent {...props} />
         </InAppLinkProvider>
       </JournalContext.Provider>

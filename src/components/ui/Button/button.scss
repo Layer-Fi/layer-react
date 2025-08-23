@@ -51,10 +51,6 @@
     outline: 1px auto -webkit-focus-ring-color;
   }
 
-  &[data-hovered]:not([data-pressed], [data-focus-visible]) {
-    outline: 1px solid var(--outline-default);
-  }
-
   &[data-disabled] {
     cursor: not-allowed;
   }
@@ -71,9 +67,12 @@
       color: var(--button-fg-disabled);
     }
 
+    &[data-hovered]:not([data-disabled], [data-pressed]) {
+      background-color: var(--button-bg-ghost-hovered);
+    }
+
     &[data-pressed]:not([data-focus-visible]) {
-      border-color: var(--button-border-color-ghost-active);
-      outline: 2px solid var(--outline-default);
+      background-color: var(--button-bg-ghost-pressed);
     }
   }
 
@@ -87,6 +86,10 @@
     &[data-disabled] {
       background-color: transparent;
       color: var(--button-fg-disabled);
+    }
+
+    &[data-hovered]:not([data-pressed], [data-focus-visible]) {
+      outline: 1px solid var(--outline-default);
     }
 
     &[data-pressed]:not([data-focus-visible]) {
@@ -105,7 +108,8 @@
       color: var(--button-fg-disabled);
     }
 
-    &[data-hovered]:not([data-pressed]) {
+    &[data-hovered]:not([data-disabled], [data-pressed]) {
+      outline: 1px solid var(--outline-default);
       background-color: var(--button-bg-active);
     }
 
@@ -116,20 +120,24 @@
   }
 
   &[data-variant='text'] {
-    --size: 1.75rem;
+    --size: inherit;
 
     padding-inline: 0;
     border: none;
     background-color: transparent;
 
     &[data-hovered]:not([data-disabled], [data-pressed]) {
-      outline: none;
       text-decoration: underline;
     }
 
     &[data-pressed]:not([data-focus-visible]) {
       text-decoration: none;
     }
+  }
+
+  &[data-variant='branded'] {
+    background-color: var(--bg-brand-accent, var(--color-accent));
+    color: var(--fg-brand-accent, var(--color-primary));
   }
 }
 
