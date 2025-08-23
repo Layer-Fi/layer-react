@@ -21,6 +21,11 @@ import {
   getLedgerAccountBalancesCSV,
 } from './layer/chart_of_accounts'
 import {
+  createCustomJournalEntry,
+  reverseJournalEntryNew,
+  getJournalEntriesCSVNew,
+} from './layer/journalNew'
+import {
   createJournalEntries,
   reverseJournalEntry,
   getJournalEntriesCSV,
@@ -82,6 +87,9 @@ export const Layer = {
   getProfitAndLossExcel,
   getJournalEntriesCSV,
   reverseJournalEntry,
+  createCustomJournalEntry,
+  reverseJournalEntryNew,
+  getJournalEntriesCSVNew,
   compareProfitAndLoss,
   profitAndLossComparisonCsv,
   createJournalEntries,

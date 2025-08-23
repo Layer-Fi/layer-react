@@ -3,7 +3,7 @@ import { useLayerContext } from '../../../../contexts/LayerContext'
 import { useAuth } from '../../../../hooks/useAuth'
 import { useEnvironment } from '../../../../providers/Environment/EnvironmentInputProvider'
 import { get } from '../../../../api/layer/authenticated_http'
-import type { JournalEntry } from '../../../../types'
+import type { LedgerEntry } from '../../../../schemas/generalLedger/ledgerEntry'
 import { useGlobalCacheActions } from '../../../../utils/swr/useGlobalCacheActions'
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash'
@@ -21,7 +21,7 @@ type GetLedgerEntriesParams = {
 }
 
 export type ListLedgerEntriesReturn = {
-  data: ReadonlyArray<JournalEntry>
+  data: ReadonlyArray<LedgerEntry>
   meta?: {
     pagination: {
       cursor?: string
@@ -178,7 +178,7 @@ export function useLedgerEntriesOptimisticUpdater() {
 
   const optimisticallyUpdateLedgerEntries = useCallback(
     (
-      transformJournalEntry: (entry: JournalEntry) => JournalEntry,
+      transformJournalEntry: (entry: LedgerEntry) => LedgerEntry,
     ) =>
       optimisticUpdate<ListLedgerEntriesReturn>(
         tags => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY),

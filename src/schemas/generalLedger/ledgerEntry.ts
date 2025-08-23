@@ -141,3 +141,8 @@ export const LedgerSchema = Schema.Struct({
   accounts: Schema.Array(NestedLedgerAccountSchema),
   enties: Schema.Array(LedgerEntrySchema),
 })
+
+export type LedgerAccountLineItem = typeof LedgerAccountLineItemSchema.Type
+export type LedgerEntryLineItem = typeof LedgerEntryLineItemSchema.Type
+export type LedgerEntry = typeof LedgerEntrySchema.Type
+export type Ledger = typeof LedgerSchema.Type
