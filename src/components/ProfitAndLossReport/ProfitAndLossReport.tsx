@@ -15,7 +15,7 @@ type ViewBreakpoint = ViewType | undefined
 export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
   view?: ViewBreakpoint
-  renderInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode
 } & TimeRangePickerConfig
 
 type SelectedLineItem = {

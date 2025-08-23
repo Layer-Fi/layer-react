@@ -86,7 +86,7 @@ export const ProfitAndLossDetailReport = ({
   const { renderInAppLink } = useInAppLinkContext()
   const badgeOrInAppLink = useMemo(() => {
     if (!selectedSource) return undefined
-    const defaultBadge = <Badge>{selectedSource?.entityName}</Badge>
+    const defaultBadge = <Badge>{selectedSource.entityName}</Badge>
     if (!renderInAppLink) {
       return defaultBadge
     }

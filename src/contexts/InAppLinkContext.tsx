@@ -43,11 +43,11 @@ export interface LinkingMetadata {
 }
 
 export interface InAppLinkContextType {
-  renderInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode
 }
 
 export interface InAppLinkProviderProps {
-  renderInAppLink?: (source: LinkingMetadata) => ReactNode | undefined
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode
   children: ReactNode
 }
 

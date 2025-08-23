@@ -46,7 +46,7 @@ const DATE_FORMAT = 'LLL d'
 
 const getAssignedValue = (
   bankTransaction: BankTransaction,
-  renderInAppLink?: (details: LinkingMetadata) => ReactNode | undefined,
+  renderInAppLink?: (details: LinkingMetadata) => ReactNode,
 ) => {
   if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
     return extractDescriptionForSplit(bankTransaction.category)

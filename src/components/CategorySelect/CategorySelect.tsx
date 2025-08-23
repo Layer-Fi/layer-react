@@ -145,7 +145,7 @@ const GroupHeading = (
 const Option = (
   props: OptionProps<CategoryOption, false, GroupBase<CategoryOption>> & {
     showTooltips: boolean
-    renderInAppLink?: (details: LinkingMetadata) => ReactNode | undefined
+    renderInAppLink?: (details: LinkingMetadata) => ReactNode
   },
 ) => {
   if (props.data.payload.option_type === OptionActionType.HIDDEN) {
