@@ -7,7 +7,10 @@ import {
 } from '../../schemas/generalLedger/customJournalEntry'
 import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
 import { getLocalTimeZone, fromDate } from '@internationalized/date'
-import { Schema } from 'effect'
+import { Schema, BigDecimal as BD } from 'effect'
+import { BIG_DECIMAL_ZERO, BIG_DECIMAL_ONE_HUNDRED, convertBigDecimalToCents } from '../../utils/bigDecimalUtils'
+
+const BIG_DECIMAL_ONE_CENT = BD.unsafeDivide(BD.fromBigInt(BigInt(1)), BIG_DECIMAL_ONE_HUNDRED)
 
 export type CustomJournalEntryFormState = {
   isDirty: boolean
@@ -16,7 +19,7 @@ export type CustomJournalEntryFormState = {
 
 export const EMPTY_DEBIT_LINE_ITEM: CustomJournalEntryFormLineItem = {
   accountIdentifier: null,
-  amount: 0,
+  amount: BIG_DECIMAL_ZERO,
   direction: LedgerEntryDirection.Debit,
   memo: '',
   customer: null,
@@ -26,7 +29,7 @@ export const EMPTY_DEBIT_LINE_ITEM: CustomJournalEntryFormLineItem = {
 
 export const EMPTY_CREDIT_LINE_ITEM: CustomJournalEntryFormLineItem = {
   accountIdentifier: null,
-  amount: 0,
+  amount: BIG_DECIMAL_ZERO,
   direction: LedgerEntryDirection.Credit,
   memo: '',
   customer: null,
@@ -56,10 +59,10 @@ export const getCustomJournalEntryFormInitialValues = (entry: CustomJournalEntry
 
 export const convertCustomJournalEntryFormToParams = (form: CustomJournalEntryForm, createdBy: string): CreateCustomJournalEntry => {
   const lineItems = form.lineItems
-    .filter(item => item.accountIdentifier && item.amount > 0)
+    .filter(item => item.accountIdentifier && BD.greaterThan(item.amount, BIG_DECIMAL_ZERO))
     .map(item => ({
       accountIdentifier: item.accountIdentifier!,
-      amount: item.amount,
+      amount: convertBigDecimalToCents(item.amount),
       direction: item.direction,
       memo: item.memo || null,
       customerId: item.customer?.id || null,
@@ -90,7 +93,7 @@ export const validateCustomJournalEntryForm = (form: CustomJournalEntryForm) => 
   const errors: Record<string, string> = {}
 
   // Check if we have at least two line items
-  const validLineItems = form.lineItems.filter(item => item.accountIdentifier && item.amount > 0)
+  const validLineItems = form.lineItems.filter(item => item.accountIdentifier && BD.greaterThan(item.amount, BIG_DECIMAL_ZERO))
   
   if (validLineItems.length < 2) {
     errors.lineItems = 'At least two line items with accounts and amounts are required'
@@ -99,13 +102,14 @@ export const validateCustomJournalEntryForm = (form: CustomJournalEntryForm) => 
   // Check debit/credit balance
   const totalDebits = validLineItems
     .filter(item => item.direction === LedgerEntryDirection.Debit)
-    .reduce((sum, item) => sum + item.amount, 0)
+    .reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
   
   const totalCredits = validLineItems
     .filter(item => item.direction === LedgerEntryDirection.Credit)
-    .reduce((sum, item) => sum + item.amount, 0)
+    .reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
 
-  if (Math.abs(totalDebits - totalCredits) > 0.01) {
+  const difference = BD.subtract(totalDebits, totalCredits)
+  if (BD.greaterThan(BD.abs(difference), BIG_DECIMAL_ONE_CENT)) {
     errors.balance = 'Total debits must equal total credits'
   }
 

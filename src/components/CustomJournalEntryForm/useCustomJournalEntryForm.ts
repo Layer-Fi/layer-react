@@ -10,6 +10,10 @@ import {
   validateCustomJournalEntryForm,
 } from './formUtils'
 import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
+import { BigDecimal as BD } from 'effect'
+import { BIG_DECIMAL_ZERO, BIG_DECIMAL_ONE_HUNDRED, convertBigDecimalToCents } from '../../utils/bigDecimalUtils'
+
+const BIG_DECIMAL_ONE_CENT = BD.unsafeDivide(BD.fromBigInt(BigInt(1)), BIG_DECIMAL_ONE_HUNDRED)
 
 type onSuccessFn = (entry: CustomJournalEntry) => void
 type UseCustomJournalEntryFormProps = {
@@ -74,19 +78,24 @@ export const useCustomJournalEntryForm = (props: UseCustomJournalEntryFormProps)
   // Calculate totals for debit/credit validation
   const { totalDebits, totalCredits, isBalanced } = useStore(form.store, (state) => {
     const lineItems = state.values.lineItems || []
-    const validLineItems = lineItems.filter(item => item.accountIdentifier && item.amount > 0)
+    const validLineItems = lineItems.filter(item => item.accountIdentifier && BD.greaterThan(item.amount, BIG_DECIMAL_ZERO))
 
     const totalDebits = validLineItems
       .filter(item => item.direction === LedgerEntryDirection.Debit)
-      .reduce((sum, item) => sum + item.amount, 0)
+      .reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
 
     const totalCredits = validLineItems
       .filter(item => item.direction === LedgerEntryDirection.Credit)
-      .reduce((sum, item) => sum + item.amount, 0)
+      .reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
 
-    const isBalanced = Math.abs(totalDebits - totalCredits) < 0.01
+    const difference = BD.subtract(totalDebits, totalCredits)
+    const isBalanced = BD.lessThanOrEqualTo(BD.abs(difference), BIG_DECIMAL_ONE_CENT)
 
-    return { totalDebits, totalCredits, isBalanced }
+    return { 
+      totalDebits: convertBigDecimalToCents(totalDebits),
+      totalCredits: convertBigDecimalToCents(totalCredits),
+      isBalanced 
+    }
   })
 
   const totals = useMemo(() => ({

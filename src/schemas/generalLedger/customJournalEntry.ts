@@ -194,7 +194,7 @@ export type CustomJournalEntries = Schema.Schema.Type<typeof CustomJournalEntrie
 // Form schemas for the custom journal entry form
 export const CustomJournalEntryFormLineItemSchema = Schema.Struct({
   accountIdentifier: Schema.optional(Schema.NullOr(AccountIdentifierSchema)),
-  amount: Schema.Number,
+  amount: Schema.BigDecimal,
   direction: LedgerEntryDirectionSchema,
   memo: Schema.optional(Schema.String),
   customer: Schema.optional(Schema.NullOr(CustomerSchema)),
