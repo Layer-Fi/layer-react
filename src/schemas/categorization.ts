@@ -192,3 +192,9 @@ export const CategoryListSchema = Schema.Struct({
 })
 
 export type CategoryList = typeof CategoryListSchema.Type
+
+export enum CategoriesListModeEnum {
+  All = 'ALL',
+  Expenses = 'EXPENSES',
+  Default = 'DEFAULT',
+}
