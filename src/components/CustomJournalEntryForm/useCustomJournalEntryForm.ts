@@ -91,10 +91,10 @@ export const useCustomJournalEntryForm = (props: UseCustomJournalEntryFormProps)
     const difference = BD.subtract(totalDebits, totalCredits)
     const isBalanced = BD.lessThanOrEqualTo(BD.abs(difference), BIG_DECIMAL_ONE_CENT)
 
-    return { 
+    return {
       totalDebits: convertBigDecimalToCents(totalDebits),
       totalCredits: convertBigDecimalToCents(totalCredits),
-      isBalanced 
+      isBalanced,
     }
   })
 

@@ -1,12 +1,10 @@
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { Category } from '../../types'
 import { get } from './authenticated_http'
-import { CategoryList, CategoriesListModeEnum } from '../../schemas/categorization'
+import { CategoriesListModeEnum } from '../../schemas/categorization'
 
 export const getCategoriesNew = get<
-  {
-    data: CategoryList
-  },
+  Record<string, unknown>,
   {
     businessId: string
     mode?: CategoriesListModeEnum

@@ -1,5 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, type PropsWithChildren } from 'react'
-import classNames from 'classnames'
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, type PropsWithChildren } from 'react'
 import { useCustomJournalEntryForm } from './useCustomJournalEntryForm'
 import type { CustomJournalEntry } from '../../schemas/generalLedger/customJournalEntry'
 import { Form } from '../ui/Form/Form'
@@ -13,6 +12,9 @@ import { flattenValidationErrors } from '../../utils/form'
 import { type CustomJournalEntryFormState, EMPTY_DEBIT_LINE_ITEM, EMPTY_CREDIT_LINE_ITEM } from './formUtils'
 import { Button } from '../ui/Button/Button'
 import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
+import { useCategoriesNew } from '../../hooks/categoriesNew/useCategoriesNew'
+import { CategoriesListModeEnum } from '../../schemas/categorization'
+import { Select } from '../Input/Select'
 
 const CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__CustomJournalEntryForm'
 const CUSTOM_JOURNAL_ENTRY_FORM_FIELD_CSS_PREFIX = `${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field`
@@ -23,10 +25,7 @@ type CustomJournalEntryFormTotalRowProps = PropsWithChildren<{
 }>
 
 const CustomJournalEntryFormTotalRow = ({ label, value, children }: CustomJournalEntryFormTotalRowProps) => {
-  const className = classNames(
-    `${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__TotalRow`,
-    children && `${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__TotalRow--withField`,
-  )
+  const className = `${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__TotalRow${children ? ` ${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__TotalRow--withField` : ''}`
 
   return (
     <HStack className={className} align='center' gap='md'>
@@ -40,7 +39,6 @@ const CustomJournalEntryFormTotalRow = ({ label, value, children }: CustomJourna
 }
 
 export type CustomJournalEntryFormProps = {
-  isReadOnly: boolean
   onSuccess: (entry: CustomJournalEntry) => void
   onChangeFormState?: (formState: CustomJournalEntryFormState) => void
   createdBy: string
@@ -50,12 +48,30 @@ export const CustomJournalEntryForm = forwardRef<
   { submit: () => void },
   CustomJournalEntryFormProps
 >((props, ref) => {
-      const { onSuccess, onChangeFormState, isReadOnly, createdBy } = props
+      const { onSuccess, onChangeFormState, createdBy } = props
       const { form, formState, totals, submitError } = useCustomJournalEntryForm({
         onSuccess,
         createdBy,
       })
       const { totalDebits, totalCredits, isBalanced } = totals
+
+      const { data: categories } = useCategoriesNew({ mode: CategoriesListModeEnum.All })
+
+      // Process categories into dropdown options
+      const categoryOptions = useMemo(() => {
+        if (!categories || categories.length === 0) {
+          console.log(categories)
+          return []
+        }
+
+        // Flatten and sort categories
+        return categories
+          .sort((a, b) => a.displayName.localeCompare(b.displayName))
+          .map(category => ({
+            label: category.displayName,
+            value: category.type === 'OptionalAccountNested' ? category.stableName : category.id,
+          }))
+      }, [categories])
 
       // Prevents default browser form submission behavior
       const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
@@ -99,7 +115,6 @@ export const CustomJournalEntryForm = forwardRef<
                 <field.FormDateField
                   label='Entry Date'
                   className={`${CUSTOM_JOURNAL_ENTRY_FORM_FIELD_CSS_PREFIX}__EntryAt`}
-                  isReadOnly={isReadOnly}
                 />
               )}
             </form.AppField>
@@ -121,27 +136,65 @@ export const CustomJournalEntryForm = forwardRef<
                           key={index}
                           gap='xs'
                           align='end'
-                          className={classNames(
-                            `${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItem`,
-                            isReadOnly && `${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItem--readonly`,
-                          )}
+                          className={`${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItem`}
                         >
-                          <form.AppField name={`lineItems[${index}].accountIdentifier`}>
-                            {innerField => (
-                              <innerField.FormTextField
-                                label='Account'
-                                showLabel={index === field.state.value.findIndex(item => item.direction === LedgerEntryDirection.Debit)}
-                                isReadOnly={isReadOnly}
-                              />
+                          <VStack gap='xs'>
+                            {index === field.state.value.findIndex(item => item.direction === LedgerEntryDirection.Debit) && (
+                              <Span>Account</Span>
                             )}
-                          </form.AppField>
+                            <form.Field name={`lineItems[${index}].accountIdentifier`}>
+                              {innerField => (
+                                <Select
+                                  options={categoryOptions}
+                                  value={innerField.state.value
+                                    ? {
+                                      label: categoryOptions.find((opt) => {
+                                        if (innerField.state.value?.type === 'AccountId') {
+                                          return opt.value === innerField.state.value.id
+                                        }
+                                        else if (innerField.state.value?.type === 'StableName') {
+                                          return opt.value === innerField.state.value.stableName
+                                        }
+                                        return false
+                                      })?.label || '',
+                                      value: innerField.state.value.type === 'AccountId' ? innerField.state.value.id : innerField.state.value.stableName,
+                                    }
+                                    : null}
+                                  onChange={(option) => {
+                                    if (option) {
+                                      // Determine if this is a stable name or account ID based on the selected category
+                                      const selectedCategory = categories?.find(cat =>
+                                        (cat.type === 'OptionalAccountNested' && cat.stableName === option.value)
+                                        || (cat.type !== 'OptionalAccountNested' && cat.id === option.value),
+                                      )
+
+                                      if (selectedCategory?.type === 'OptionalAccountNested') {
+                                        innerField.handleChange({
+                                          stableName: option.value,
+                                          type: 'StableName' as const,
+                                        })
+                                      }
+                                      else {
+                                        innerField.handleChange({
+                                          id: option.value,
+                                          type: 'AccountId' as const,
+                                        })
+                                      }
+                                    }
+                                    else {
+                                      innerField.handleChange(null)
+                                    }
+                                  }}
+                                />
+                              )}
+                            </form.Field>
+                          </VStack>
                           <form.AppField name={`lineItems[${index}].amount`}>
                             {innerField => (
                               <innerField.FormBigDecimalField
                                 label='Amount'
                                 mode='currency'
                                 showLabel={index === field.state.value.findIndex(item => item.direction === LedgerEntryDirection.Debit)}
-                                isReadOnly={isReadOnly}
                               />
                             )}
                           </form.AppField>
@@ -150,28 +203,23 @@ export const CustomJournalEntryForm = forwardRef<
                               <innerField.FormTextField
                                 label='Line Memo'
                                 showLabel={index === field.state.value.findIndex(item => item.direction === LedgerEntryDirection.Debit)}
-                                isReadOnly={isReadOnly}
                               />
                             )}
                           </form.AppField>
-                          {!isReadOnly && (
-                            <Button
-                              variant='outlined'
-                              icon
-                              aria-label='Delete debit line item'
-                              onClick={() => field.removeValue(index)}
-                            >
-                              <Trash size={16} />
-                            </Button>
-                          )}
+                          <Button
+                            variant='outlined'
+                            icon
+                            aria-label='Delete debit line item'
+                            onClick={() => field.removeValue(index)}
+                          >
+                            <Trash size={16} />
+                          </Button>
                         </HStack>
                       ))}
-                    {!isReadOnly && (
-                      <Button variant='outlined' onClick={() => field.pushValue(EMPTY_DEBIT_LINE_ITEM)}>
-                        Add debit entry
-                        <Plus size={16} />
-                      </Button>
-                    )}
+                    <Button variant='outlined' onClick={() => field.pushValue(EMPTY_DEBIT_LINE_ITEM)}>
+                      Add debit entry
+                      <Plus size={16} />
+                    </Button>
                   </VStack>
 
                   {/* Credit Entries */}
@@ -185,27 +233,65 @@ export const CustomJournalEntryForm = forwardRef<
                           key={index}
                           gap='xs'
                           align='end'
-                          className={classNames(
-                            `${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItem`,
-                            isReadOnly && `${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItem--readonly`,
-                          )}
+                          className={`${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItem`}
                         >
-                          <form.AppField name={`lineItems[${index}].accountIdentifier`}>
-                            {innerField => (
-                              <innerField.FormTextField
-                                label='Account'
-                                showLabel={index === field.state.value.findIndex(item => item.direction === LedgerEntryDirection.Credit)}
-                                isReadOnly={isReadOnly}
-                              />
+                          <VStack gap='xs'>
+                            {index === field.state.value.findIndex(item => item.direction === LedgerEntryDirection.Credit) && (
+                              <Span>Account</Span>
                             )}
-                          </form.AppField>
+                            <form.Field name={`lineItems[${index}].accountIdentifier`}>
+                              {innerField => (
+                                <Select
+                                  options={categoryOptions}
+                                  value={innerField.state.value
+                                    ? {
+                                      label: categoryOptions.find((opt) => {
+                                        if (innerField.state.value?.type === 'AccountId') {
+                                          return opt.value === innerField.state.value.id
+                                        }
+                                        else if (innerField.state.value?.type === 'StableName') {
+                                          return opt.value === innerField.state.value.stableName
+                                        }
+                                        return false
+                                      })?.label || '',
+                                      value: innerField.state.value.type === 'AccountId' ? innerField.state.value.id : innerField.state.value.stableName,
+                                    }
+                                    : null}
+                                  onChange={(option) => {
+                                    if (option) {
+                                      // Determine if this is a stable name or account ID based on the selected category
+                                      const selectedCategory = categories?.find(cat =>
+                                        (cat.type === 'OptionalAccountNested' && cat.stableName === option.value)
+                                        || (cat.type !== 'OptionalAccountNested' && cat.id === option.value),
+                                      )
+
+                                      if (selectedCategory?.type === 'OptionalAccountNested') {
+                                        innerField.handleChange({
+                                          stableName: option.value,
+                                          type: 'StableName' as const,
+                                        })
+                                      }
+                                      else {
+                                        innerField.handleChange({
+                                          id: option.value,
+                                          type: 'AccountId' as const,
+                                        })
+                                      }
+                                    }
+                                    else {
+                                      innerField.handleChange(null)
+                                    }
+                                  }}
+                                />
+                              )}
+                            </form.Field>
+                          </VStack>
                           <form.AppField name={`lineItems[${index}].amount`}>
                             {innerField => (
                               <innerField.FormBigDecimalField
                                 label='Amount'
                                 mode='currency'
                                 showLabel={index === field.state.value.findIndex(item => item.direction === LedgerEntryDirection.Credit)}
-                                isReadOnly={isReadOnly}
                               />
                             )}
                           </form.AppField>
@@ -214,28 +300,23 @@ export const CustomJournalEntryForm = forwardRef<
                               <innerField.FormTextField
                                 label='Line Memo'
                                 showLabel={index === field.state.value.findIndex(item => item.direction === LedgerEntryDirection.Credit)}
-                                isReadOnly={isReadOnly}
                               />
                             )}
                           </form.AppField>
-                          {!isReadOnly && (
-                            <Button
-                              variant='outlined'
-                              icon
-                              aria-label='Delete credit line item'
-                              onClick={() => field.removeValue(index)}
-                            >
-                              <Trash size={16} />
-                            </Button>
-                          )}
+                          <Button
+                            variant='outlined'
+                            icon
+                            aria-label='Delete credit line item'
+                            onClick={() => field.removeValue(index)}
+                          >
+                            <Trash size={16} />
+                          </Button>
                         </HStack>
                       ))}
-                    {!isReadOnly && (
-                      <Button variant='outlined' onClick={() => field.pushValue(EMPTY_CREDIT_LINE_ITEM)}>
-                        Add credit entry
-                        <Plus size={16} />
-                      </Button>
-                    )}
+                    <Button variant='outlined' onClick={() => field.pushValue(EMPTY_CREDIT_LINE_ITEM)}>
+                      Add credit entry
+                      <Plus size={16} />
+                    </Button>
                   </VStack>
                 </VStack>
               )}
@@ -247,10 +328,10 @@ export const CustomJournalEntryForm = forwardRef<
             <HStack justify='space-between' gap='xl'>
               <VStack className={`${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__AdditionalTextFields`}>
                 <form.AppField name='memo'>
-                  {field => <field.FormTextAreaField label='Memo' isReadOnly={isReadOnly} />}
+                  {field => <field.FormTextAreaField label='Memo' />}
                 </form.AppField>
                 <form.AppField name='referenceNumber'>
-                  {field => <field.FormTextField label='Reference Number' isReadOnly={isReadOnly} />}
+                  {field => <field.FormTextField label='Reference Number' />}
                 </form.AppField>
               </VStack>
               <VStack className={`${CUSTOM_JOURNAL_ENTRY_FORM_CSS_PREFIX}__TotalFields`} fluid>
