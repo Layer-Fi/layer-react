@@ -96,7 +96,7 @@ export const JournalForm = ({
           <div className='Layer__journal__datepicker__wrapper'>
             <DatePicker
               selected={
-                form?.data.entry_at ? new Date(form?.data.entry_at) : new Date()
+                form?.data.entryAt ?? new Date()
               }
               onChange={(date) => {
                 if (!Array.isArray(date)) {
@@ -109,7 +109,7 @@ export const JournalForm = ({
             />
             <DatePicker
               selected={
-                form?.data.entry_at ? new Date(form?.data.entry_at) : new Date()
+                form?.data.entryAt ? form?.data.entryAt : new Date()
               }
               onChange={(date) => {
                 if (!Array.isArray(date)) {
@@ -124,7 +124,7 @@ export const JournalForm = ({
         </InputGroup>
       </div>
       <JournalFormEntryLines
-        entrylineItems={form?.data.line_items || []}
+        entrylineItems={form?.data.lineItems || []}
         addEntryLine={addEntryLine}
         removeEntryLine={removeEntryLine}
         changeFormData={changeFormData}

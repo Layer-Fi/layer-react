@@ -3,6 +3,7 @@ import { CustomerSchema } from '../customer'
 import { VendorSchema } from '../vendor'
 import { LedgerEntrySourceSchema } from './ledgerEntrySource'
 import { LedgerAccountSchema, LedgerEntryDirectionSchema, NestedLedgerAccountSchema } from './ledgerAccount'
+import { TagSchema } from '../tag'
 
 export enum ClassifierAgent {
   Sms = 'SMS',
@@ -73,6 +74,8 @@ export const LedgerAccountLineItemSchema = Schema.Struct({
   ),
 })
 
+export type LedgerAccountLineItem = typeof LedgerAccountLineItemSchema.Type
+
 export const LedgerEntryLineItemSchema = Schema.Struct({
   id: Schema.String,
   entryId: pipe(
@@ -129,6 +132,7 @@ export const LedgerEntrySchema = Schema.Struct({
     Schema.fromKey('line_items'),
   ),
   source: LedgerEntrySourceSchema,
+  transacationTags: Schema.Array(TagSchema),
   memo: Schema.NullOr(Schema.String),
   metadata: Schema.NullOr(Schema.Unknown),
   referenceNumber: pipe(
@@ -137,7 +141,24 @@ export const LedgerEntrySchema = Schema.Struct({
   ),
 })
 
+export type LedgerEntryLineItem = typeof LedgerAccountLineItemSchema.Type
+export type LedgerEntry = typeof LedgerEntrySchema.Type
+
+export const entryNumber = (
+  entry: LedgerEntry,
+): string => {
+  return entry.entryNumber?.toString() ?? entry.id.substring(0, 5)
+}
+
+export const lineEntryNumber = (
+  ledgerEntryLine: LedgerEntryLineItem,
+): string => {
+  return ledgerEntryLine.entryNumber?.toString() ?? ledgerEntryLine.entryId.substring(0, 5)
+}
+
 export const LedgerSchema = Schema.Struct({
   accounts: Schema.Array(NestedLedgerAccountSchema),
   enties: Schema.Array(LedgerEntrySchema),
 })
+
+export type Ledger = typeof LedgerSchema

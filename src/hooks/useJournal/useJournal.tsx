@@ -1,58 +1,55 @@
 import { useState, useMemo, useCallback } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { Direction, FormError, FormErrorWithId } from '../../types'
-import { LedgerAccountBalance } from '../../types/chart_of_accounts'
+import { FormError, FormErrorWithId } from '../../types'
 import { BaseSelectOption, DataModel } from '../../types/general'
-import {
-  JournalEntry,
-  JournalEntryLineItem,
-  NewApiJournalEntry,
-  NewFormJournalEntry,
-} from '../../types/journal'
+import { LedgerEntry } from '../../schemas/generalLedger/ledgerEntry'
 import { getAccountIdentifierPayload } from '../../utils/journal'
 import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useListLedgerEntries } from '../../features/ledger/entries/api/useListLedgerEntries'
 import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
+import { LedgerAccount, LedgerEntryDirection, NestedLedgerAccount } from '../../schemas/generalLedger/ledgerAccount'
+import { CreateCustomJournalEntry, CreateCustomJournalEntryLineItem } from '../../schemas/generalLedger/customJournalEntry'
+import { ListLedgerEntriesReturn } from '../../features/ledger/entries/api/useListLedgerEntries'
 
 type UseJournal = () => {
-  data?: ReadonlyArray<JournalEntry>
+  data?: ReadonlyArray<LedgerEntry>
   isLoading?: boolean
   isLoadingEntry?: boolean
   isValidating?: boolean
   isValidatingEntry?: boolean
   error?: unknown
   errorEntry?: unknown
-  refetch: () => void
+  refetch: () => Promise<ListLedgerEntriesReturn[] | undefined>
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void
   closeSelectedEntry: () => void
-  create: (newJournalEntry: NewApiJournalEntry) => void
+  create: (newJournalEntry: CreateCustomJournalEntry) => void
   changeFormData: (
     name: string,
     value: string | BaseSelectOption | undefined | number,
     lineItemIndex?: number,
-    accounts?: LedgerAccountBalance[],
+    accounts?: LedgerAccount[],
   ) => void
-  submitForm: () => void
+  submitForm: () => Promise<null | undefined>
   cancelForm: () => void
   addEntry: () => void
   sendingForm: boolean
   form?: JournalFormTypes
   apiError?: string
   setForm: (form?: JournalFormTypes) => void
-  addEntryLine: (direction: Direction) => void
+  addEntryLine: (direction: LedgerEntryDirection) => void
   removeEntryLine: (index: number) => void
   reverseEntry: (entryId: string) => ReturnType<typeof Layer.reverseJournalEntry>
   hasMore: boolean
-  fetchMore: () => void
+  fetchMore: () => Promise<void>
 }
 
 export interface JournalFormTypes {
   action: string
-  data: NewFormJournalEntry
+  data: CreateCustomJournalEntry
   errors?:
     | {
       entry: FormError[]
@@ -93,7 +90,7 @@ export const useJournal: UseJournal = () => {
   const data = useMemo(() => {
     if (!paginatedData) return undefined
 
-    return paginatedData.flatMap(page => page.data) as ReadonlyArray<JournalEntry>
+    return paginatedData.flatMap(page => page.data) as ReadonlyArray<LedgerEntry>
   }, [paginatedData])
 
   const hasMore = useMemo(() => {
@@ -107,9 +104,9 @@ export const useJournal: UseJournal = () => {
     return false
   }, [paginatedData])
 
-  const fetchMore = useCallback(() => {
+  const fetchMore = useCallback(async () => {
     if (hasMore) {
-      setSize(size + 1)
+      await setSize(size + 1)
     }
   }, [hasMore, setSize, size])
 
@@ -121,7 +118,7 @@ export const useJournal: UseJournal = () => {
 
   const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
 
-  const create = async (newJournalEntry: NewApiJournalEntry) => {
+  const create = async (newJournalEntry: CreateCustomJournalEntry) => {
     setSendingForm(true)
     setApiError(undefined)
 
@@ -149,31 +146,25 @@ export const useJournal: UseJournal = () => {
     setForm({
       action: 'new',
       data: {
-        entry_at: (new Date()).toISOString(),
-        created_by: 'Test API Integration',
+        entryAt: (new Date()),
+        createdBy: 'Test API Integration',
         memo: '',
-        line_items: [
+        lineItems: [
           {
-            account_identifier: {
-              type: '',
-              stable_name: '',
-              id: '',
-              name: '',
-              subType: undefined,
+            accountIdentifier: {
+              type: 'StableName',
+              stableName: '',
             },
             amount: 0,
-            direction: Direction.CREDIT,
+            direction: LedgerEntryDirection.Credit,
           },
           {
-            account_identifier: {
-              type: '',
-              stable_name: '',
-              id: '',
-              name: '',
-              subType: undefined,
+            accountIdentifier: {
+              type: 'StableName',
+              stableName: '',
             },
             amount: 0,
-            direction: Direction.DEBIT,
+            direction: LedgerEntryDirection.Debit,
           },
         ],
       },
@@ -185,7 +176,7 @@ export const useJournal: UseJournal = () => {
     fieldName: string,
     value: string | BaseSelectOption | undefined | number,
     lineItemIndex?: number,
-    accounts?: LedgerAccountBalance[],
+    accounts?: NestedLedgerAccount[],
   ) => {
     if (!form) {
       return null
@@ -194,7 +185,7 @@ export const useJournal: UseJournal = () => {
     let newFormData = form
 
     if (lineItemIndex !== undefined) {
-      const lineItems = form.data.line_items || []
+      const lineItems = form.data.lineItems || []
       const lineItem = lineItems[lineItemIndex]
 
       if (!lineItem) {
@@ -210,17 +201,9 @@ export const useJournal: UseJournal = () => {
         if (foundParent) {
           const newLineItem = {
             ...lineItem,
-            account_identifier: {
+            accountIdentifier: {
+              type: 'AccountId' as const,
               id: foundParent.id,
-              stable_name: foundParent.stable_name,
-              type: foundParent.account_type.value,
-              name: foundParent.name,
-              subType: foundParent.account_subtype
-                ? {
-                  value: foundParent.account_subtype.value,
-                  label: foundParent.account_subtype.display_name,
-                }
-                : undefined,
             },
           }
           lineItems[lineItemIndex] = newLineItem
@@ -239,7 +222,7 @@ export const useJournal: UseJournal = () => {
         ...form,
         data: {
           ...form.data,
-          line_items: lineItems,
+          lineItems: lineItems,
         },
       }
     }
@@ -258,14 +241,14 @@ export const useJournal: UseJournal = () => {
     })
   }
 
-  const validateLineItems = (lineItems?: JournalEntryLineItem[]) => {
+  const validateLineItems = (lineItems?: CreateCustomJournalEntryLineItem[]) => {
     if (!lineItems) {
       return null
     }
     const errors: FormErrorWithId[] = []
 
     lineItems.map((lineItem, idx) => {
-      if (!lineItem.account_identifier.id) {
+      if (!lineItem.accountIdentifier) {
         errors.push({
           id: idx,
           field: 'account',
@@ -293,7 +276,7 @@ export const useJournal: UseJournal = () => {
       lineItems: [],
     }
 
-    const lineItems = validateLineItems(formData?.data.line_items)
+    const lineItems = validateLineItems(formData?.data.lineItems)
 
     if (lineItems) {
       errors = {
@@ -305,7 +288,7 @@ export const useJournal: UseJournal = () => {
     return errors
   }
 
-  const submitForm = () => {
+  const submitForm = async () => {
     if (!form || !form.action || addingEntry) {
       return null
     }
@@ -322,18 +305,18 @@ export const useJournal: UseJournal = () => {
     }
 
     if (form?.data) {
-      create({
+      await create({
         ...form.data,
-        line_items: form.data.line_items?.map(line => ({
+        lineItems: form.data.lineItems?.map(line => ({
           ...line,
           amount: line.amount * 100,
-          account_identifier: getAccountIdentifierPayload(line),
+          acc: getAccountIdentifierPayload(line),
         })),
-      } as NewApiJournalEntry)
+      })
     }
   }
 
-  const addEntryLine = (direction: Direction) => {
+  const addEntryLine = (direction: LedgerEntryDirection) => {
     if (!form) {
       return null
     }
@@ -341,25 +324,22 @@ export const useJournal: UseJournal = () => {
     setAddingEntry(true)
 
     const newEntryLine = {
-      account_identifier: {
-        type: '',
-        stable_name: '',
+      accountIdentifier: {
+        type: 'AccountId' as const,
         id: '',
-        name: '',
-        subType: undefined,
       },
       amount: 0,
       direction,
     }
 
-    const entryLines = form?.data.line_items || []
+    const entryLines = form?.data.lineItems || []
     entryLines.push(newEntryLine)
 
     setForm({
       ...form,
       data: {
         ...form.data,
-        line_items: entryLines,
+        lineItems: entryLines,
       },
     })
     setTimeout(() => setAddingEntry(false), 100)
@@ -370,14 +350,14 @@ export const useJournal: UseJournal = () => {
       return null
     }
 
-    const entryLines = form.data.line_items || []
+    const entryLines = form.data.lineItems || []
     entryLines.splice(index, 1)
 
     setForm({
       ...form,
       data: {
         ...form.data,
-        line_items: entryLines,
+        lineItems: entryLines,
       },
     })
   }

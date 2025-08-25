@@ -1,15 +1,14 @@
-import { useContext, useMemo } from 'react'
+import { useContext } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { centsToDollars } from '../../models/Money'
-import { Direction, LedgerAccountLineItem } from '../../types'
+import { LedgerAccountLineItem, lineEntryNumber } from '../../schemas/generalLedger/ledgerEntry'
+import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
 import { View } from '../../types/general'
-import { lineEntryNumber } from '../../utils/journal'
 import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
-import { parseISO, format as formatTime } from 'date-fns'
+import { format as formatTime } from 'date-fns'
 import { LedgerAccountNodeType } from '../../types/chart_of_accounts'
-import { decodeLedgerEntrySource } from '../../schemas/generalLedger/ledgerEntrySource'
 
 export interface LedgerAccountRowProps {
   row: LedgerAccountLineItem
@@ -26,24 +25,21 @@ export const LedgerAccountRow = ({
 }: LedgerAccountRowProps) => {
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
     useContext(LedgerAccountsContext)
-  const ledgerEntrySource = useMemo(() => {
-    return row.source ? decodeLedgerEntrySource(row.source) : undefined
-  }, [row.source])
 
   if (view === 'tablet') {
     return (
       <tr
         className={classNames(
           'Layer__table-row',
-          row.entry_id === selectedEntryId && 'Layer__table-row--active',
+          row.entryId === selectedEntryId && 'Layer__table-row--active',
         )}
         style={{ transitionDelay: `${15 * index}ms` }}
         onClick={() => {
-          if (selectedEntryId === row.entry_id) {
+          if (selectedEntryId === row.entryId) {
             closeSelectedEntry()
           }
           else {
-            setSelectedEntryId(row.entry_id)
+            setSelectedEntryId(row.entryId)
           }
         }}
       >
@@ -51,7 +47,7 @@ export const LedgerAccountRow = ({
           <span className='Layer__table-cell-content'>
             <div className='Layer__ledger-account-table__tablet-main-col__date'>
               <Text>
-                {row.date && formatTime(parseISO(row.date), DATE_FORMAT)}
+                {row.date && formatTime(row.date, DATE_FORMAT)}
               </Text>
               <Text
                 weight={TextWeight.normal}
@@ -60,7 +56,7 @@ export const LedgerAccountRow = ({
                 {lineEntryNumber(row)}
               </Text>
             </div>
-            <Text>{ledgerEntrySource?.displayDescription ?? ''}</Text>
+            <Text>{row?.source?.displayDescription ?? ''}</Text>
             {nodeType !== LedgerAccountNodeType.Leaf
               && (
                 <Text weight={TextWeight.normal}>
@@ -71,19 +67,19 @@ export const LedgerAccountRow = ({
         </td>
         <td className='Layer__table-cell Layer__table-cell--primary'>
           <span className='Layer__table-cell-content Layer__table-cell--amount'>
-            {row.direction === Direction.DEBIT
+            {row.direction === LedgerEntryDirection.Debit
               && `$${centsToDollars(row?.amount || 0)}`}
           </span>
         </td>
         <td className='Layer__table-cell Layer__table-cell--primary'>
           <span className='Layer__table-cell-content Layer__table-cell--amount'>
-            {row.direction === Direction.CREDIT
+            {row.direction === LedgerEntryDirection.Credit
               && `$${centsToDollars(row?.amount || 0)}`}
           </span>
         </td>
         <td className='Layer__table-cell Layer__table-cell--primary'>
           <span className='Layer__table-cell-content Layer__table-cell--amount'>
-            {`$${centsToDollars(row.running_balance)}`}
+            {`$${centsToDollars(row.runningBalance)}`}
           </span>
         </td>
       </tr>
@@ -95,15 +91,15 @@ export const LedgerAccountRow = ({
       <tr
         className={classNames(
           'Layer__table-row',
-          row.entry_id === selectedEntryId && 'Layer__table-row--active',
+          row.entryId === selectedEntryId && 'Layer__table-row--active',
         )}
         style={{ transitionDelay: `${15 * index}ms` }}
         onClick={() => {
-          if (selectedEntryId === row.entry_id) {
+          if (selectedEntryId === row.entryId) {
             closeSelectedEntry()
           }
           else {
-            setSelectedEntryId(row.entry_id)
+            setSelectedEntryId(row.entryId)
           }
         }}
       >
@@ -111,7 +107,7 @@ export const LedgerAccountRow = ({
           <span className='Layer__table-cell-content'>
             <div className='Layer__ledger-account-table__tablet-main-col__date'>
               <Text>
-                {row.date && formatTime(parseISO(row.date), DATE_FORMAT)}
+                {row.date && formatTime(row.date, DATE_FORMAT)}
               </Text>
               <Text
                 weight={TextWeight.normal}
@@ -120,7 +116,7 @@ export const LedgerAccountRow = ({
                 {lineEntryNumber(row)}
               </Text>
             </div>
-            <Text>{ledgerEntrySource?.displayDescription ?? ''}</Text>
+            <Text>{row?.source?.displayDescription ?? ''}</Text>
             {nodeType !== LedgerAccountNodeType.Leaf
               && (
                 <Text weight={TextWeight.normal}>
@@ -134,7 +130,7 @@ export const LedgerAccountRow = ({
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
                   {' '}
-                  {row.direction === Direction.DEBIT
+                  {row.direction === LedgerEntryDirection.Debit
                     && `$${centsToDollars(row?.amount || 0)}`}
                 </span>
               </div>
@@ -143,7 +139,7 @@ export const LedgerAccountRow = ({
                   Credit
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
-                  {row.direction === Direction.CREDIT
+                  {row.direction === LedgerEntryDirection.Credit
                     && `$${centsToDollars(row?.amount || 0)}`}
                 </span>
               </div>
@@ -152,7 +148,7 @@ export const LedgerAccountRow = ({
                   Running balance
                 </span>
                 <span className='Layer__ledger_account-table__balances-mobile__value'>
-                  {`$${centsToDollars(row.running_balance)}`}
+                  {`$${centsToDollars(row.runningBalance)}`}
                 </span>
               </div>
             </div>
@@ -166,21 +162,21 @@ export const LedgerAccountRow = ({
     <tr
       className={classNames(
         'Layer__table-row',
-        row.entry_id === selectedEntryId && 'Layer__table-row--active',
+        row.entryId === selectedEntryId && 'Layer__table-row--active',
       )}
       style={{ transitionDelay: `${15 * index}ms` }}
       onClick={() => {
-        if (selectedEntryId === row.entry_id) {
+        if (selectedEntryId === row.entryId) {
           closeSelectedEntry()
         }
         else {
-          setSelectedEntryId(row.entry_id)
+          setSelectedEntryId(row.entryId)
         }
       }}
     >
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content'>
-          {row.date && formatTime(parseISO(row.date), DATE_FORMAT)}
+          {row.date && formatTime(row.date, DATE_FORMAT)}
         </span>
       </td>
       <td className='Layer__table-cell'>
@@ -188,7 +184,7 @@ export const LedgerAccountRow = ({
       </td>
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content'>
-          {ledgerEntrySource?.displayDescription ?? ''}
+          {row?.source?.displayDescription ?? ''}
         </span>
       </td>
       {nodeType !== LedgerAccountNodeType.Leaf
@@ -201,19 +197,19 @@ export const LedgerAccountRow = ({
         )}
       <td className='Layer__table-cell Layer__table-cell--primary'>
         <span className='Layer__table-cell-content Layer__table-cell--amount'>
-          {row.direction === Direction.DEBIT
+          {row.direction === LedgerEntryDirection.Debit
             && `$${centsToDollars(row?.amount || 0)}`}
         </span>
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>
         <span className='Layer__table-cell-content Layer__table-cell--amount'>
-          {row.direction === Direction.CREDIT
+          {row.direction === LedgerEntryDirection.Credit
             && `$${centsToDollars(row?.amount || 0)}`}
         </span>
       </td>
       <td className='Layer__table-cell Layer__table-cell--primary'>
         <span className='Layer__table-cell-content Layer__table-cell--amount'>
-          {`$${centsToDollars(row.running_balance)}`}
+          {`$${centsToDollars(row.runningBalance)}`}
         </span>
       </td>
     </tr>

@@ -95,7 +95,7 @@ export function useRemoveTagFromLedgerEntry({ ledgerEntryId }: RemoveTagFromLedg
 
           return {
             ...ledgerEntry,
-            transaction_tags: ledgerEntry.transaction_tags.filter(
+            transaction_tags: ledgerEntry.transacationTags.filter(
               ({ id }) => id !== tagId,
             ),
           }

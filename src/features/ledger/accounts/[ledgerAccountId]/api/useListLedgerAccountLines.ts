@@ -3,7 +3,7 @@ import { useLayerContext } from '../../../../../contexts/LayerContext'
 import { useAuth } from '../../../../../hooks/useAuth'
 import { useEnvironment } from '../../../../../providers/Environment/EnvironmentInputProvider'
 import { get } from '../../../../../api/layer/authenticated_http'
-import { LedgerAccountLineItem, LedgerAccountLineItems } from '../../../../../types/ledger_accounts'
+import { LedgerAccountLineItem } from '../../../../../schemas/generalLedger/ledgerEntry'
 import { useGlobalCacheActions } from '../../../../../utils/swr/useGlobalCacheActions'
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash'
@@ -26,7 +26,7 @@ type GetLedgerAccountLinesParams = {
 }
 
 type ListLedgerAccountLinesReturn = {
-  data: LedgerAccountLineItems
+  data: LedgerAccountLineItem[]
   meta?: {
     pagination: {
       cursor?: string
