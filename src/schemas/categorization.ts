@@ -136,25 +136,25 @@ export type NestedApiCategorizationEncoded = NestedAccountCategorizationEncoded 
 export const NestedAccountCategorizationSchema = Schema.Struct({
   ...nestedAccountCategorizationFields,
   subCategories: Schema.optional(Schema.NullOr(Schema.mutable(Schema.Array(
-    Schema.suspend((): Schema.Schema<NestedApiCategorization, NestedApiCategorizationEncoded> => NestedApiCategorizationSchema),
+    Schema.suspend((): Schema.Schema<NestedApiCategorization, NestedApiCategorizationEncoded> => NestedCategorizationSchema),
   )))),
 })
 
 export const NestedOptionalCategorizationSchema = Schema.Struct({
   ...nestedOptionalCategorizationFields,
   subCategories: Schema.optional(Schema.NullOr(Schema.mutable(Schema.Array(
-    Schema.suspend((): Schema.Schema<NestedApiCategorization, NestedApiCategorizationEncoded> => NestedApiCategorizationSchema),
+    Schema.suspend((): Schema.Schema<NestedApiCategorization, NestedApiCategorizationEncoded> => NestedCategorizationSchema),
   )))),
 })
 
 export const NestedExclusionCategorizationSchema = Schema.Struct({
   ...nestedExclusionCategorizationFields,
   subCategories: Schema.optional(Schema.NullOr(Schema.mutable(Schema.Array(
-    Schema.suspend((): Schema.Schema<NestedApiCategorization, NestedApiCategorizationEncoded> => NestedApiCategorizationSchema),
+    Schema.suspend((): Schema.Schema<NestedApiCategorization, NestedApiCategorizationEncoded> => NestedCategorizationSchema),
   )))),
 })
 
-export const NestedApiCategorizationSchema = Schema.Union(
+export const NestedCategorizationSchema = Schema.Union(
   NestedAccountCategorizationSchema,
   NestedOptionalCategorizationSchema,
   NestedExclusionCategorizationSchema,
@@ -175,9 +175,11 @@ export type SplitCategorizationEntry = typeof SplitCategorizationEntrySchema.Typ
 export type SplitCategorization = typeof SplitCategorizationSchema.Type
 export type Categorization = typeof CategorizationSchema.Type
 
+export type NestedCategorization = typeof NestedCategorizationSchema
+
 export const CategoryListSchema = Schema.Struct({
   type: Schema.Literal('Category_List'),
-  categories: Schema.mutable(Schema.Array(NestedApiCategorizationSchema)),
+  categories: Schema.mutable(Schema.Array(NestedCategorizationSchema)),
 })
 
 export type CategoryList = typeof CategoryListSchema.Type

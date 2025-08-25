@@ -55,14 +55,15 @@ export const CustomJournalEntryForm = forwardRef<
       })
       const { totalDebits, totalCredits, isBalanced } = totals
 
-      const { data: categories } = useCategoriesNew({ mode: CategoriesListModeEnum.All })
+      const { data } = useCategoriesNew({ mode: CategoriesListModeEnum.All })
+      const categories = useMemo(() => data?.categories ?? [], [data])
 
       // Process categories into dropdown options
       const categoryOptions = useMemo(() => {
         if (!categories || categories.length === 0) {
-          console.log(categories)
           return []
         }
+        // this code is wrong since there are subcategories. we'll want something like categories.flatMap(category => category.subCategories?....sort()...)
 
         // Flatten and sort categories
         return categories

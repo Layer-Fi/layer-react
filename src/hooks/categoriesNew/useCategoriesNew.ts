@@ -1,19 +1,25 @@
-import useSWR, { SWRResponse } from 'swr'
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import useSWR from 'swr'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
-import {
-  getCategoriesNew,
-} from '../../api/layer/categories'
-import { CategoriesListModeEnum, CategoryListSchema } from '../../schemas/categorization'
+import { get } from '../../api/layer/authenticated_http'
+import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
+import { CategoriesListModeEnum, CategoryList, CategoryListSchema } from '../../schemas/categorization'
 import { Schema } from 'effect'
 
-export const CATEGORIES_TAG_KEY = '#categories'
+export const getCategoriesNew = get<
+  { data: CategoryList },
+  {
+    businessId: string
+    mode?: CategoriesListModeEnum
+  }
+>(({ businessId, mode }) => {
+  const parameters = toDefinedSearchParameters({ mode })
 
-const GetCategoriesRawResultSchema = Schema.Struct({
-  data: CategoryListSchema,
+  return `/v1/businesses/${businessId}/categories?${parameters}`
 })
 
-type GetCategoriesRawResult = typeof GetCategoriesRawResultSchema.Type
+export const CATEGORIES_TAG_KEY = '#categories'
 
 function buildKey({
   access_token: accessToken,
@@ -41,48 +47,28 @@ type UseCategoriesOptions = {
   mode?: CategoriesListModeEnum
 }
 
-class GetCategoriesSWRResponse {
-  private swrResponse: SWRResponse<GetCategoriesRawResult>
-
-  constructor(swrResponse: SWRResponse<GetCategoriesRawResult>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
-  }
-}
-
-export function useCategoriesNew({ mode }: UseCategoriesOptions = {}) {
-  const { data: auth } = useAuth()
+export function useCategoriesNew(
+  { mode }: UseCategoriesOptions = {},
+) {
+  const { data } = useAuth()
   const { businessId } = useLayerContext()
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
   return useSWR(
     () => buildKey({
-      ...auth,
+      access_token: data?.access_token,
+      apiUrl: data?.apiUrl,
       businessId,
       mode,
     }),
     ({ accessToken, apiUrl, businessId, mode }) => getCategoriesNew(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       apiUrl,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       accessToken,
       {
-        params: {
-          businessId,
-          mode,
-        },
-      })().then(Schema.decodeUnknownPromise(GetCategoriesRawResultSchema)).then(response => response?.data?.categories),
+        params: { businessId, mode },
+      },
+    )().then(({ data }) => Schema.decodeUnknownPromise(CategoryListSchema)(data)),
   )
 }
