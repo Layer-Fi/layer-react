@@ -323,6 +323,8 @@ export function ComboBox<T extends ComboBoxOption>({
         onInputChange={onInputValueChange}
         escapeClearsValue
 
+        menuPortalTarget={document.body}
+
         placeholder={placeholder}
 
         unstyled
@@ -347,6 +349,11 @@ export function ComboBox<T extends ComboBoxOption>({
           menuList: () => COMBO_BOX_CLASS_NAMES.MENU_LIST,
 
           group: () => COMBO_BOX_CLASS_NAMES.GROUP,
+        }}
+
+        styles={{
+          // Ensure the menu portal appears stacked above modals
+          menuPortal: base => ({ ...base, zIndex: 101 }),
         }}
 
         components={{

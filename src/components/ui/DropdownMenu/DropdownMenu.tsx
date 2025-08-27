@@ -1,6 +1,16 @@
-import React, { PropsWithChildren } from 'react'
-import { Menu, MenuItem as AriaMenuItem, MenuTrigger, Popover, Separator as AriaSeparator, Header, Dialog } from 'react-aria-components'
-import { Text, TextSize, TextWeight } from '../../Typography'
+import React, { type PropsWithChildren, createContext, useContext } from 'react'
+import { Menu as AriaMenu, MenuItem as AriaMenuItem, MenuTrigger, Popover, Dialog } from 'react-aria-components'
+import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+
+type DropdownMenuContextValue = {
+  variant?: 'compact'
+}
+
+const DropdownMenuContext = createContext<DropdownMenuContextValue>({})
+
+const useDropdownMenu = () => useContext(DropdownMenuContext)
+
+const DropdownMenuProvider = DropdownMenuContext.Provider
 
 type DropdownMenuProps = PropsWithChildren<{
   className?: string
@@ -13,6 +23,7 @@ type DropdownMenuProps = PropsWithChildren<{
       width?: number | string
     }
   }
+  variant?: 'compact'
 }>
 
 type MenuItemProps = PropsWithChildren<{
@@ -20,40 +31,46 @@ type MenuItemProps = PropsWithChildren<{
   onClick?: () => void
 }>
 
-export const Heading = ({ children }: PropsWithChildren) => (
-  <Header>
-    <Text size={TextSize.sm} weight={TextWeight.bold} className='Layer__dropdown-menu__menu-item__heading'>
+export const MenuItem = ({ children, onClick, isDisabled }: MenuItemProps) => {
+  const { variant } = useDropdownMenu()
+  const dataProps = toDataProperties({ variant })
+
+  return (
+    <AriaMenuItem
+      onAction={onClick}
+      isDisabled={isDisabled}
+      className='Layer__UI__DropdownMenu__MenuItem'
+      {...dataProps}
+    >
       {children}
-    </Text>
-  </Header>
-)
+    </AriaMenuItem>
+  )
+}
 
-export const Separator = () => (
-  <AriaSeparator className='Layer__dropdown-menu__separator Layer__variables' />
-)
+export const MenuList = ({ children }: PropsWithChildren) => {
+  const { variant } = useDropdownMenu()
+  const dataProps = toDataProperties({ variant })
 
-export const MenuItem = ({ children, onClick, isDisabled }: MenuItemProps) => (
-  <AriaMenuItem onAction={onClick} isDisabled={isDisabled} className='Layer__dropdown-menu__menu-item'>
-    {children}
-  </AriaMenuItem>
-)
+  return (
+    <AriaMenu className='Layer__UI__DropdownMenu__Menu' {...dataProps}>
+      {children}
+    </AriaMenu>
+  )
+}
 
-export const MenuList = ({ children }: { children: React.ReactNode | React.ReactNode[] }) => (
-  <Menu className='Layer__dropdown-menu__menu-list'>
-    {children}
-  </Menu>
-)
-
-export const DropdownMenu = ({ children, ariaLabel, slots, slotProps }: DropdownMenuProps) => {
+export const DropdownMenu = ({ children, ariaLabel, variant, slots, slotProps }: DropdownMenuProps) => {
   const { Trigger } = slots
   const width = slotProps?.Dialog?.width
+  const dataProps = toDataProperties({ variant })
 
   return (
     <MenuTrigger>
       <Trigger aria-label='Menu' />
-      <Popover placement='bottom right' className='Layer__dropdown-menu__popover Layer__variables'>
-        <Dialog className='Layer__dropdown-menu__menu' aria-label={ariaLabel} style={{ width }}>
-          {children}
+      <Popover placement='bottom right' className='Layer__UI__DropdownMenu__Popover Layer__variables'>
+        <Dialog className='Layer__UI__DropdownMenu__Dialog' aria-label={ariaLabel} style={{ width }} {...dataProps}>
+          <DropdownMenuProvider value={{ variant }}>
+            {children}
+          </DropdownMenuProvider>
         </Dialog>
       </Popover>
     </MenuTrigger>
