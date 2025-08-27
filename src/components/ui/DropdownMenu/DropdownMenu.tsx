@@ -3,7 +3,7 @@ import { Menu as AriaMenu, MenuItem as AriaMenuItem, MenuTrigger, Popover, Dialo
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 
 type DropdownMenuContextValue = {
-  variant?: string
+  variant?: 'compact'
 }
 
 const DropdownMenuContext = createContext<DropdownMenuContextValue>({})

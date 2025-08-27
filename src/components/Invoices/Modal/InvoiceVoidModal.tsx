@@ -13,7 +13,8 @@ export function InvoiceVoidModal({ isOpen, onOpenChange, invoiceId, onSuccess }:
   const { trigger: voidInvoice } = useVoidInvoice({ invoiceId })
 
   const onConfirm = useCallback(async () => {
-    await voidInvoice().then(({ data: invoice }) => onSuccess(invoice))
+    const { data: invoice } = await voidInvoice()
+    onSuccess(invoice)
   }, [onSuccess, voidInvoice])
 
   return (

@@ -11,9 +11,8 @@ import { useRefundInvoice } from '../../../features/invoices/api/useRefundInvoic
 type onSuccessFn = (refund: CustomerRefund) => void
 type UseInvoiceRefundFormProps = { onSuccess: onSuccessFn, invoice: Invoice }
 
-export const useInvoiceRefundForm = (props: UseInvoiceRefundFormProps) => {
+export const useInvoiceRefundForm = ({ onSuccess, invoice }: UseInvoiceRefundFormProps) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
-  const { onSuccess, invoice } = props
 
   const { trigger: refundInvoice } = useRefundInvoice({ invoiceId: invoice.id })
 

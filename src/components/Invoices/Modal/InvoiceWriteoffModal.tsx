@@ -16,7 +16,8 @@ export function InvoiceWriteoffModal({ isOpen, onOpenChange, invoice, onSuccess 
     await writeoffInvoice({
       writeOffAt: new Date(),
       amount: invoice.outstandingBalance,
-    }).then(() => onSuccess(updateInvoiceWithWriteoff(invoice)))
+    })
+    onSuccess(updateInvoiceWithWriteoff(invoice))
   }, [invoice, onSuccess, writeoffInvoice])
 
   return (
