@@ -2,7 +2,7 @@ import { type DedicatedInvoicePaymentForm, type Invoice } from '../../../feature
 import { BigDecimal as BD } from 'effect'
 import { convertBigDecimalToCents, convertCentsToBigDecimal } from '../../../utils/bigDecimalUtils'
 import { formatDate, startOfToday } from 'date-fns'
-import { getLocalTimeZone, fromDate, toCalendarDate } from '@internationalized/date'
+import { getLocalTimeZone, fromDate, toCalendarDate, today } from '@internationalized/date'
 import { DATE_FORMAT_SHORT } from '../../../config/general'
 
 export const getInvoicePaymentFormDefaultValues = (invoice: Invoice): DedicatedInvoicePaymentForm => {
@@ -33,8 +33,12 @@ export const validateInvoicePaymentForm = ({ invoicePayment, invoice }: { invoic
     errors.push({ paidAt: 'Payment date is a required field.' })
   }
 
-  if (invoice.sentAt && toCalendarDate(paidAt).compare(toCalendarDate(fromDate(invoice.sentAt, 'UTC'))) < 0) {
+  if (paidAt && invoice.sentAt && toCalendarDate(paidAt).compare(toCalendarDate(fromDate(invoice.sentAt, 'UTC'))) < 0) {
     errors.push({ paidAt: `Payment date cannot be before the invoice date (${formatDate(invoice.sentAt, DATE_FORMAT_SHORT)}).` })
+  }
+
+  if (paidAt && toCalendarDate(paidAt).compare(today(getLocalTimeZone())) > 0) {
+    errors.push({ paidAt: 'Payment date cannot be in the future.' })
   }
 
   if (method === null) {
@@ -47,7 +51,7 @@ export const validateInvoicePaymentForm = ({ invoicePayment, invoice }: { invoic
 export const convertInvoicePaymentFormToParams = (form: DedicatedInvoicePaymentForm): unknown => ({
   amount: convertBigDecimalToCents(form.amount),
   method: form.method,
-  paidAt: form.paidAt.toDate(),
+  paidAt: form.paidAt?.toDate(),
   referenceNumber: form.referenceNumber.trim() || undefined,
   memo: form.memo.trim() || undefined,
 })

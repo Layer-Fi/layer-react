@@ -6,7 +6,6 @@ import { FieldError } from '../../../components/ui/Form/Form'
 import type { CommonFormFieldProps } from '../types'
 import type { ZonedDateTime } from '@internationalized/date'
 import { InputGroup } from '../../../components/ui/Input/InputGroup'
-import { isZonedDateTime } from '../../../utils/time/timeUtils'
 
 export type FormDateFieldProps = CommonFormFieldProps
 export function FormDateField({
@@ -29,8 +28,7 @@ export function FormDateField({
   }, [value])
 
   const onBlur = useCallback(() => {
-    const nextDate = isZonedDateTime(localDate) ? localDate : null
-    handleChange(nextDate)
+    handleChange(localDate)
     handleBlur()
   }, [handleBlur, handleChange, localDate])
 

@@ -306,7 +306,8 @@ export const UpsertDedicatedInvoicePaymentSchema = Schema.Struct({
 
   method: PaymentMethodSchema,
 
-  paidAt: Schema.optional(Schema.Date).pipe(
+  paidAt: pipe(
+    Schema.propertySignature(Schema.Date),
     Schema.fromKey('paid_at'),
   ),
 
@@ -324,7 +325,7 @@ export const DedicatedInvoicePaymentFormSchema = Schema.Struct({
 
   method: Schema.NullOr(PaymentMethodSchema),
 
-  paidAt: ZonedDateTimeFromSelf,
+  paidAt: Schema.NullOr(ZonedDateTimeFromSelf),
 
   referenceNumber: Schema.String,
 
