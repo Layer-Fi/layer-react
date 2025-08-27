@@ -10,7 +10,7 @@ import { Span } from '../../ui/Typography/Text'
 import { convertCentsToCurrency } from '../../../utils/format'
 import { InvoiceStatusCell } from '../InvoiceStatusCell/InvoiceStatusCell'
 import { Button } from '../../ui/Button/Button'
-import { SquarePen, HandCoins, Menu as MenuIcon, Save } from 'lucide-react'
+import { HandCoins, Save } from 'lucide-react'
 import type { InvoiceFormState } from '../InvoiceForm/formUtils'
 import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import { useInvoiceNavigation, useInvoiceDetail } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
@@ -18,10 +18,10 @@ import { Drawer } from '../../ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '../../ui/Modal/ModalSlots'
 import { InvoicePaymentForm } from '../InvoicePaymentForm/InvoicePaymentForm'
 import { updateInvoiceWithPayment, UpsertDedicatedInvoicePaymentMode } from '../../../features/invoices/api/useUpsertDedicatedInvoicePayment'
-import { DropdownMenu, MenuItem, MenuList } from '../../ui/DropdownMenu/DropdownMenu'
 import X from '../../../icons/X'
 import BackArrow from '../../../icons/BackArrow'
 import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
+import { InvoiceDetailHeaderMenu } from './InvoiceDetailHeaderMenu'
 
 export const InvoiceDetail = () => {
   const viewState = useInvoiceDetail()
@@ -143,13 +143,9 @@ const InvoiceDetailHeader = ({ onSubmit, formState, isReadOnly, setIsReadOnly, o
   const viewState = useInvoiceDetail()
   const { isSubmitting } = formState
 
-  const MenuButton = useCallback(() => {
-    return (
-      <Button icon variant='outlined'>
-        <MenuIcon size={14} />
-      </Button>
-    )
-  }, [])
+  const onEditInvoice = useCallback(() => {
+    setIsReadOnly(false)
+  }, [setIsReadOnly])
 
   const saveButton = useMemo(() => (
     <Button isPending={isSubmitting} onPress={onSubmit}>
@@ -188,18 +184,7 @@ const InvoiceDetailHeader = ({ onSubmit, formState, isReadOnly, setIsReadOnly, o
                 <HandCoins size={14} />
               </Button>
             )}
-            <DropdownMenu
-              ariaLabel='Invoice actions'
-              slots={{ Trigger: MenuButton }}
-              slotProps={{ Dialog: { width: 280 } }}
-            >
-              <MenuList>
-                <MenuItem key='edit-invoice' onClick={() => { setIsReadOnly(false) }}>
-                  <SquarePen size={14} />
-                  <Span size='sm'>Edit invoice</Span>
-                </MenuItem>
-              </MenuList>
-            </DropdownMenu>
+            <InvoiceDetailHeaderMenu onEditInvoice={onEditInvoice} />
           </HStack>
         )
         : saveButton}

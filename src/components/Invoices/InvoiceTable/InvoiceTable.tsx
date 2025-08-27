@@ -37,6 +37,7 @@ enum InvoiceStatusFilter {
   Paid = 'Paid',
   WrittenOff = 'Written Off',
   Voided = 'Voided',
+  Refunded = 'Refunded',
 }
 
 export type InvoiceStatusOption = {
@@ -50,6 +51,7 @@ const InvoiceStatusOptionConfig = {
   [InvoiceStatusFilter.Sent]: { label: 'Sent', value: InvoiceStatusFilter.Sent },
   [InvoiceStatusFilter.Paid]: { label: 'Paid', value: InvoiceStatusFilter.Paid },
   [InvoiceStatusFilter.Voided]: { label: 'Voided', value: InvoiceStatusFilter.Voided },
+  [InvoiceStatusFilter.Refunded]: { label: 'Refunded', value: InvoiceStatusFilter.Refunded },
   [InvoiceStatusFilter.WrittenOff]: { label: 'Written Off', value: InvoiceStatusFilter.WrittenOff },
 }
 export const ALL_OPTION = InvoiceStatusOptionConfig[InvoiceStatusFilter.All]
@@ -63,6 +65,7 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
     case InvoiceStatus.PartiallyWrittenOff:
     case InvoiceStatus.WrittenOff:
     case InvoiceStatus.Voided:
+    case InvoiceStatus.Refunded:
     case InvoiceStatus.Sent: {
       return <VStack><Span align='right'>{totalAmount}</Span></VStack>
     }
@@ -154,6 +157,9 @@ const getListInvoiceParams = ({ status }: { status: InvoiceStatusOption }) => {
 
     case InvoiceStatusFilter.Voided:
       return { status: [InvoiceStatus.Voided] }
+
+    case InvoiceStatusFilter.Refunded:
+      return { status: [InvoiceStatus.Refunded] }
 
     default:
       unsafeAssertUnreachable({
