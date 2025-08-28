@@ -1,17 +1,18 @@
 import { useCallback, useContext, useState } from 'react'
-import { DropdownMenu, Heading, MenuList, MenuItem } from '../../ui/DropdownMenu/DropdownMenu'
+import { DropdownMenu, MenuList, MenuItem } from '../../ui/DropdownMenu/DropdownMenu'
 import QuickbooksIcon from '../../../icons/QuickbooksIcon'
 import LinkIcon from '../../../icons/Link'
-import { Text, TextSize } from '../../Typography'
 import CheckIcon from '../../../icons/Check'
 import Cog from '../../../icons/Cog'
 import { Button } from '../../ui/Button/Button'
 import { Spacer } from '../../ui/Stack/Stack'
 import { QuickbooksContext } from '../../../contexts/QuickbooksContext/QuickbooksContext'
 import { useLayerContext } from '../../../contexts/LayerContext'
+import { Span } from '../../ui/Typography/Text'
+import { Heading } from '../../ui/Typography/Heading'
 
 const MenuTriggerButton = () => (
-  <Button variant='ghost'>
+  <Button variant='outlined'>
     Manage
     <Cog size={16} />
   </Button>
@@ -40,15 +41,13 @@ export const IntegrationsConnectMenu = () => {
       slots={{ Trigger: MenuTriggerButton }}
       slotProps={{ Dialog: { width: 280 } }}
     >
-      <Heading>Integrations</Heading>
+      <Heading size='2xs' weight='bold'>Integrations</Heading>
       <MenuList>
         {quickbooksIsConnected
           ? (
             <MenuItem key='quickbooks-connected' isDisabled>
               <QuickbooksIcon size={20} />
-              <Text size={TextSize.sm}>
-                QuickBooks connected
-              </Text>
+              <Span size='sm'>QuickBooks connected</Span>
               <Spacer />
               <CheckIcon size={16} />
             </MenuItem>
@@ -56,9 +55,9 @@ export const IntegrationsConnectMenu = () => {
           : (
             <MenuItem key='connect-quickbooks' onClick={initiateQuickbooksOAuth}>
               <QuickbooksIcon size={20} />
-              <Text {...isLinkQuickbooksError && { status: 'error' }} size={TextSize.sm}>
+              <Span {...isLinkQuickbooksError && { status: 'error' }} size='sm'>
                 { isLinkQuickbooksError ? 'Retry Connect QuickBooks' : 'Connect QuickBooks' }
-              </Text>
+              </Span>
               <Spacer />
               <LinkIcon size={12} />
             </MenuItem>

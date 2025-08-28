@@ -1,11 +1,8 @@
 import { PropsWithChildren, useReducer, useEffect, Reducer } from 'react'
 import { Layer } from '../../api/layer'
-import { GlobalWidgets } from '../../components/GlobalWidgets'
-import { ToastProps } from '../../components/Toast/Toast'
-import { DrawerContext } from '../../contexts/DrawerContext'
+import { ToastProps, ToastsContainer } from '../../components/Toast/Toast'
 import { LayerContext } from '../../contexts/LayerContext'
 import { useDataSync } from '../../hooks/useDataSync'
-import { useDrawer } from '../../hooks/useDrawer'
 import { errorHandler, LayerError } from '../../models/ErrorHandler'
 import {
   LayerContextValues,
@@ -191,7 +188,7 @@ export const BusinessProvider = ({
       setTimeout(() => {
         setToastExit(newToast)
       }, 1000)
-    }, toast.duration || 2000)
+    }, toast.duration || 3000)
   }
 
   const setColors = (colors?: { dark?: ColorConfig, light?: ColorConfig }) =>
@@ -213,8 +210,6 @@ export const BusinessProvider = ({
       type: Action.setOnboardingStep,
       payload: { onboardingStep: value },
     })
-
-  const drawerContextData = useDrawer()
 
   return (
     <LayerContext.Provider
@@ -239,10 +234,8 @@ export const BusinessProvider = ({
         eventCallbacks,
       }}
     >
-      <DrawerContext.Provider value={drawerContextData}>
-        {children}
-        <GlobalWidgets />
-      </DrawerContext.Provider>
+      {children}
+      <ToastsContainer />
     </LayerContext.Provider>
   )
 }

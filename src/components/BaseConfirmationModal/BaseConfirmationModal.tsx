@@ -1,26 +1,28 @@
-// BaseConfirmationModal.tsx
 import { DialogModal as Modal, DialogModalProps as ModalProps } from '../ui/Modal/DialogModal'
 import {
   ModalHeading,
   ModalActions,
   ModalDescription,
   ModalTitleWithClose,
+  ModalContent,
 } from '../ui/Modal/ModalSlots'
 import { Button, ButtonVariant } from '../Button/Button'
-import { HStack, Spacer } from '../ui/Stack/Stack'
-import { useCallback, useState } from 'react'
+import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
+import { useCallback, useState, type ReactNode } from 'react'
 import { SubmitButton } from '../Button'
 import { Awaitable } from '../../types/utility/promises'
 import { APIError } from '../../models/APIError'
 
 export type BaseConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   title: string
-  description: string
+  description?: string
+  content?: ReactNode
   onConfirm: () => Awaitable<void>
   confirmLabel?: string
   retryLabel?: string
   cancelLabel?: string
   errorText?: string
+  closeOnConfirm?: boolean
 }
 
 export function BaseConfirmationModal({
@@ -28,11 +30,13 @@ export function BaseConfirmationModal({
   onOpenChange,
   title,
   description,
+  content,
   onConfirm,
   confirmLabel = 'Confirm',
   retryLabel = 'Retry',
   cancelLabel = 'Cancel',
   errorText,
+  closeOnConfirm = true,
 }: BaseConfirmationModalProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<APIError | Error | null>(null)
@@ -41,7 +45,7 @@ export function BaseConfirmationModal({
     setIsProcessing(true)
     void Promise.resolve(onConfirm())
       .then(() => {
-        close()
+        if (closeOnConfirm) close()
       })
       .catch((e: APIError | Error) => {
         setError(e)
@@ -49,7 +53,7 @@ export function BaseConfirmationModal({
       .finally(() => {
         setIsProcessing(false)
       })
-  }, [onConfirm])
+  }, [closeOnConfirm, onConfirm])
 
   const getErrorMessage = (error: APIError | Error | null, errorText?: string) => {
     if (error === null) return null
@@ -65,15 +69,18 @@ export function BaseConfirmationModal({
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} role='alertdialog'>
       {({ close }) => (
         <>
-          <ModalTitleWithClose
-            heading={(
-              <ModalHeading pbe='2xs' size='lg'>
-                {title}
-              </ModalHeading>
-            )}
-            onClose={close}
-          />
-          <ModalDescription>{description}</ModalDescription>
+          <VStack pbe='2xs'>
+            <ModalTitleWithClose
+              heading={(
+                <ModalHeading size='lg'>
+                  {title}
+                </ModalHeading>
+              )}
+              onClose={close}
+            />
+          </VStack>
+          {description && <ModalDescription>{description}</ModalDescription>}
+          {content && <ModalContent>{content}</ModalContent>}
           <ModalActions>
             <HStack gap='md'>
               <Spacer />

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 import { View as ViewType } from '../../types/general'
 import { ReportsStringOverrides } from '../../views/Reports/Reports'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
@@ -8,12 +8,14 @@ import { ProfitAndLossDetailLinesDownloadButton } from '../ProfitAndLossDetailLi
 import { View } from '../View'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import { ProfitAndLossDetailReport } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
+import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
 
 type ViewBreakpoint = ViewType | undefined
 
 export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
   view?: ViewBreakpoint
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode
 } & TimeRangePickerConfig
 
 export type SelectedLineItem = {
@@ -29,6 +31,7 @@ export const ProfitAndLossReport = ({
   customDateRanges,
   csvMoneyFormat,
   view,
+  renderInAppLink,
 }: ProfitAndLossReportProps) => {
   const { comparisonConfig } = useContext(ProfitAndLoss.ComparisonContext)
   const [selectedLineItem, setSelectedLineItem] = useState<SelectedLineItem | null>(null)
@@ -63,72 +66,74 @@ export const ProfitAndLossReport = ({
   }, [])
 
   return (
-    <View
-      type='panel'
-      header={(
-        <Header>
-          <HeaderRow>
-            <HeaderCol>
-              <>
-                <ProfitAndLoss.DatePicker
-                  allowedDatePickerModes={allowedDatePickerModes}
-                  datePickerMode={datePickerMode}
-                  defaultDatePickerMode={defaultDatePickerMode}
-                  customDateRanges={customDateRanges}
-                />
-                {view === 'desktop'
+    <InAppLinkProvider renderInAppLink={renderInAppLink}>
+      <View
+        type='panel'
+        header={(
+          <Header>
+            <HeaderRow>
+              <HeaderCol>
+                <>
+                  <ProfitAndLoss.DatePicker
+                    allowedDatePickerModes={allowedDatePickerModes}
+                    datePickerMode={datePickerMode}
+                    defaultDatePickerMode={defaultDatePickerMode}
+                    customDateRanges={customDateRanges}
+                  />
+                  {view === 'desktop'
+                    ? (
+                      <ProfitAndLoss.CompareOptions />
+                    )
+                    : null}
+                </>
+              </HeaderCol>
+              <HeaderCol>
+                {selectedLineItem
                   ? (
-                    <ProfitAndLoss.CompareOptions />
+                    <ProfitAndLossDetailLinesDownloadButton
+                      pnlStructureLineItemName={selectedLineItem.lineItemName}
+                      iconOnly={view === 'mobile'}
+                    />
                   )
-                  : null}
-              </>
-            </HeaderCol>
-            <HeaderCol>
-              {selectedLineItem
-                ? (
-                  <ProfitAndLossDetailLinesDownloadButton
-                    pnlStructureLineItemName={selectedLineItem.lineItemName}
-                    iconOnly={view === 'mobile'}
-                  />
-                )
-                : (
-                  <ProfitAndLoss.DownloadButton
-                    stringOverrides={stringOverrides?.downloadButton}
-                    useComparisonPnl={!!comparisonConfig}
-                    moneyFormat={csvMoneyFormat}
-                    view={view}
-                  />
-                )}
-            </HeaderCol>
-          </HeaderRow>
-          {view !== 'desktop'
-            ? (
-              <HeaderRow>
-                <HeaderCol>
-                  <ProfitAndLoss.CompareOptions />
-                </HeaderCol>
-              </HeaderRow>
-            )
-            : null}
-        </Header>
-      )}
-    >
-      {selectedLineItem
-        ? (
-          <ProfitAndLossDetailReport
-            lineItemName={selectedLineItem.lineItemName}
-            breadcrumbPath={selectedLineItem.breadcrumbPath}
-            onClose={handleCloseDetailReport}
-            onBreadcrumbClick={handleLineItemClick}
-          />
-        )
-        : (
-          <ProfitAndLoss.Table
-            asContainer={false}
-            stringOverrides={stringOverrides?.profitAndLoss?.table}
-            onLineItemClick={handleLineItemClick}
-          />
+                  : (
+                    <ProfitAndLoss.DownloadButton
+                      stringOverrides={stringOverrides?.downloadButton}
+                      useComparisonPnl={!!comparisonConfig}
+                      moneyFormat={csvMoneyFormat}
+                      view={view}
+                    />
+                  )}
+              </HeaderCol>
+            </HeaderRow>
+            {view !== 'desktop'
+              ? (
+                <HeaderRow>
+                  <HeaderCol>
+                    <ProfitAndLoss.CompareOptions />
+                  </HeaderCol>
+                </HeaderRow>
+              )
+              : null}
+          </Header>
         )}
-    </View>
+      >
+        {selectedLineItem
+          ? (
+            <ProfitAndLossDetailReport
+              lineItemName={selectedLineItem.lineItemName}
+              breadcrumbPath={selectedLineItem.breadcrumbPath}
+              onClose={handleCloseDetailReport}
+              onBreadcrumbClick={handleLineItemClick}
+            />
+          )
+          : (
+            <ProfitAndLoss.Table
+              asContainer={false}
+              stringOverrides={stringOverrides?.profitAndLoss?.table}
+              onLineItemClick={handleLineItemClick}
+            />
+          )}
+      </View>
+    </InAppLinkProvider>
   )
 }

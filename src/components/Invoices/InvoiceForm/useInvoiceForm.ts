@@ -69,14 +69,14 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
     }),
     canSubmitWhenInvalid: true,
   })
-  const isFormValid = useStore(form.store, state => state.isValid)
+
+  const isDirty = useStore(form.store, state => state.isDirty)
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
 
   const formState = useMemo(() => ({
-    isFormValid,
+    isDirty,
     isSubmitting,
-    submitError,
-  }), [isFormValid, isSubmitting, submitError])
+  }), [isDirty, isSubmitting])
 
   const discountRate = useStore(form.store, state => state.values.discountRate)
   const taxRate = useStore(form.store, state => state.values.taxRate)

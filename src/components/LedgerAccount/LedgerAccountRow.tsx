@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useMemo } from 'react'
 import { DATE_FORMAT } from '../../config/general'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { centsToDollars } from '../../models/Money'
@@ -9,6 +9,7 @@ import { Text, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { LedgerAccountNodeType } from '../../types/chart_of_accounts'
+import { decodeLedgerEntrySource } from '../../schemas/generalLedger/ledgerEntrySource'
 
 export interface LedgerAccountRowProps {
   row: LedgerAccountLineItem
@@ -25,6 +26,9 @@ export const LedgerAccountRow = ({
 }: LedgerAccountRowProps) => {
   const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
     useContext(LedgerAccountsContext)
+  const ledgerEntrySource = useMemo(() => {
+    return row.source ? decodeLedgerEntrySource(row.source) : undefined
+  }, [row.source])
 
   if (view === 'tablet') {
     return (
@@ -56,7 +60,7 @@ export const LedgerAccountRow = ({
                 {lineEntryNumber(row)}
               </Text>
             </div>
-            <Text>{row.source?.display_description ?? ''}</Text>
+            <Text>{ledgerEntrySource?.displayDescription ?? ''}</Text>
             {nodeType !== LedgerAccountNodeType.Leaf
               && (
                 <Text weight={TextWeight.normal}>
@@ -116,7 +120,7 @@ export const LedgerAccountRow = ({
                 {lineEntryNumber(row)}
               </Text>
             </div>
-            <Text>{row.source?.display_description ?? ''}</Text>
+            <Text>{ledgerEntrySource?.displayDescription ?? ''}</Text>
             {nodeType !== LedgerAccountNodeType.Leaf
               && (
                 <Text weight={TextWeight.normal}>
@@ -184,7 +188,7 @@ export const LedgerAccountRow = ({
       </td>
       <td className='Layer__table-cell'>
         <span className='Layer__table-cell-content'>
-          {row.source?.display_description ?? ''}
+          {ledgerEntrySource?.displayDescription ?? ''}
         </span>
       </td>
       {nodeType !== LedgerAccountNodeType.Leaf

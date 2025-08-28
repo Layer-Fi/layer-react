@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { ChartOfAccounts } from '../../components/ChartOfAccounts'
 import { ChartOfAccountsStringOverrides } from '../../components/ChartOfAccounts/ChartOfAccounts'
 import { Journal } from '../../components/Journal'
@@ -6,6 +6,7 @@ import { JournalStringOverrides } from '../../components/Journal/Journal'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
+import { LinkingMetadata } from '../../contexts/InAppLinkContext'
 
 export interface GeneralLedgerStringOverrides {
   title?: string
@@ -25,6 +26,7 @@ export interface GeneralLedgerProps {
   showTitle?: boolean
   stringOverrides?: GeneralLedgerStringOverrides
   chartOfAccountsOptions?: ChartOfAccountsOptions
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode
 }
 
 export const GeneralLedgerView = ({
@@ -32,6 +34,7 @@ export const GeneralLedgerView = ({
   showTitle = true,
   stringOverrides,
   chartOfAccountsOptions,
+  renderInAppLink,
 }: GeneralLedgerProps) => {
   const [activeTab, setActiveTab] = useState('chartOfAccounts')
 
@@ -70,10 +73,14 @@ export const GeneralLedgerView = ({
                 chartOfAccountsOptions?.templateAccountsEditable
               }
               showReversalEntries={chartOfAccountsOptions?.showReversalEntries}
+              renderInAppLink={renderInAppLink}
             />
           )
           : (
-            <Journal stringOverrides={stringOverrides?.journal} />
+            <Journal
+              stringOverrides={stringOverrides?.journal}
+              renderInAppLink={renderInAppLink}
+            />
           )}
       </View>
     </ProfitAndLoss>

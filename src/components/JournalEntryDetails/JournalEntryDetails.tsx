@@ -5,6 +5,7 @@ import RefreshCcw from '../../icons/RefreshCcw'
 import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
+import { decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/generalLedger/ledgerEntrySource'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
@@ -19,6 +20,7 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { Heading, HeadingSize } from '../Typography'
 import { VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
+import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
 
 export const JournalEntryDetails = () => {
   const {
@@ -30,6 +32,7 @@ export const JournalEntryDetails = () => {
     reverseEntry,
     refetch,
   } = useContext(JournalContext)
+  const { renderInAppLink } = useInAppLinkContext()
   const [reverseEntryProcessing, setReverseEntryProcessing] = useState(false)
   const [reverseEntryError, setReverseEntryError] = useState<string>()
 
@@ -40,6 +43,20 @@ export const JournalEntryDetails = () => {
 
     return
   }, [data, selectedEntryId])
+
+  const ledgerEntrySource = useMemo(() => {
+    return entry?.source ? decodeLedgerEntrySource(entry.source) : undefined
+  }, [entry?.source])
+
+  const badgeOrInAppLink = useMemo(() => {
+    const badgeContent = ledgerEntrySource?.entityName ?? entry?.entry_type
+    const defaultBadge = <Badge>{badgeContent}</Badge>
+    if (!renderInAppLink || !ledgerEntrySource) {
+      return defaultBadge
+    }
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(ledgerEntrySource)
+    return renderInAppLink(linkingMetadata) ?? defaultBadge
+  }, [renderInAppLink, entry?.entry_type, ledgerEntrySource])
 
   const sortedLineItems = useMemo(
     () =>
@@ -57,7 +74,7 @@ export const JournalEntryDetails = () => {
       setReverseEntryProcessing(true)
       setReverseEntryError(undefined)
       await reverseEntry(entry.id)
-      await refetch()
+      refetch()
     }
     catch (_err) {
       setReverseEntryError('Failed')
@@ -97,10 +114,10 @@ export const JournalEntryDetails = () => {
         )}
       >
         <DetailsListItem label='Source' isLoading={isLoadingEntry}>
-          <Badge>{entry?.source?.entity_name}</Badge>
+          {badgeOrInAppLink}
         </DetailsListItem>
-        {entry?.source?.display_description && (
-          <SourceDetailView source={entry?.source} />
+        {ledgerEntrySource && (
+          <SourceDetailView source={ledgerEntrySource} />
         )}
       </DetailsList>
       <DetailsList
@@ -195,7 +212,7 @@ export const JournalEntryDetails = () => {
                       align={TableCellAlign.RIGHT}
                     >
                       {entry?.line_items
-                        .filter(item => item.direction === 'DEBIT')
+                        .filter(item => item.direction === Direction.DEBIT)
                         .map(item => item.amount)
                         .reduce((a, b) => a + b, 0) || 0}
                     </TableCell>
@@ -206,7 +223,7 @@ export const JournalEntryDetails = () => {
                       align={TableCellAlign.RIGHT}
                     >
                       {entry?.line_items
-                        .filter(item => item.direction === 'CREDIT')
+                        .filter(item => item.direction === Direction.CREDIT)
                         .map(item => item.amount)
                         .reduce((a, b) => a + b, 0) || 0}
                     </TableCell>

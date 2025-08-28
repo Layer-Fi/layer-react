@@ -1,7 +1,8 @@
 import { Schema, pipe } from 'effect'
-import { CustomerSchema } from '../customers/customersSchemas'
+import { CustomerSchema } from '../../schemas/customer'
 import { InvoiceTermsValues } from '../../components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { ZonedDateTimeFromSelf } from '../../utils/schema/utils'
+import { PaymentMethodSchema, TransformedPaymentMethodSchema } from '../../components/PaymentMethod/schemas'
 
 export enum InvoiceStatus {
   Voided = 'VOIDED',
@@ -10,6 +11,7 @@ export enum InvoiceStatus {
   PartiallyWrittenOff = 'PARTIALLY_WRITTEN_OFF',
   PartiallyPaid = 'PARTIALLY_PAID',
   Sent = 'SENT',
+  Refunded = 'REFUNDED',
 }
 const InvoiceStatusSchema = Schema.Enums(InvoiceStatus)
 
@@ -176,8 +178,7 @@ export const UpsertInvoiceLineItemSchema = Schema.Struct({
 
   quantity: Schema.BigDecimal,
 
-  salesTaxes: pipe(
-    Schema.propertySignature(Schema.UndefinedOr(Schema.Array(UpsertInvoiceTaxLineItemSchema))),
+  salesTaxes: Schema.optional(Schema.Array(UpsertInvoiceTaxLineItemSchema)).pipe(
     Schema.fromKey('sales_taxes'),
   ),
 })
@@ -194,8 +195,7 @@ export const UpsertInvoiceSchema = Schema.Struct({
     Schema.fromKey('due_at'),
   ),
 
-  invoiceNumber: pipe(
-    Schema.propertySignature(Schema.UndefinedOr(Schema.String)),
+  invoiceNumber: Schema.optional(Schema.String).pipe(
     Schema.fromKey('invoice_number'),
   ),
 
@@ -204,15 +204,14 @@ export const UpsertInvoiceSchema = Schema.Struct({
     Schema.fromKey('customer_id'),
   ),
 
-  memo: Schema.NullOr(Schema.String),
+  memo: Schema.optional(Schema.String),
 
   lineItems: pipe(
     Schema.propertySignature(Schema.Array(UpsertInvoiceLineItemSchema)),
     Schema.fromKey('line_items'),
   ),
 
-  additionalDiscount: pipe(
-    Schema.propertySignature(Schema.UndefinedOr(Schema.Number)),
+  additionalDiscount: Schema.optional(Schema.Number).pipe(
     Schema.fromKey('additional_discount'),
   ),
 })
@@ -301,3 +300,51 @@ export const InvoiceSummaryStatsResponseSchema = Schema.Struct({
   ),
 })
 export type InvoiceSummaryStatsResponse = typeof InvoiceSummaryStatsResponseSchema.Type
+
+export const UpsertDedicatedInvoicePaymentSchema = Schema.Struct({
+  amount: Schema.Number,
+
+  method: PaymentMethodSchema,
+
+  paidAt: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('paid_at'),
+  ),
+
+  referenceNumber: Schema.optional(Schema.String).pipe(
+    Schema.fromKey('reference_number'),
+  ),
+
+  memo: Schema.optional(Schema.String),
+})
+
+export type UpsertDedicatedInvoicePayment = typeof UpsertDedicatedInvoicePaymentSchema.Type
+
+export const DedicatedInvoicePaymentFormSchema = Schema.Struct({
+  amount: Schema.BigDecimal,
+
+  method: Schema.NullOr(PaymentMethodSchema),
+
+  paidAt: Schema.NullOr(ZonedDateTimeFromSelf),
+
+  referenceNumber: Schema.String,
+
+  memo: Schema.String,
+})
+export type DedicatedInvoicePaymentForm = typeof DedicatedInvoicePaymentFormSchema.Type
+
+export const InvoicePaymentSchema = Schema.Struct({
+  amount: Schema.Number,
+
+  method: TransformedPaymentMethodSchema,
+
+  at: Schema.propertySignature(Schema.Date),
+
+  referenceNumber: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reference_number'),
+  ),
+
+  memo: Schema.NullOr(Schema.String),
+})
+export type InvoicePayment = typeof InvoicePaymentSchema.Type

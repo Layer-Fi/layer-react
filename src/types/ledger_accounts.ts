@@ -1,3 +1,4 @@
+import { LedgerEntrySourceType } from '../schemas/generalLedger/ledgerEntrySource'
 import { BankTransaction, Direction } from './bank_transactions'
 
 export type LedgerAccountLineItems = LedgerAccountLineItem[]
@@ -16,7 +17,7 @@ export interface LedgerAccountsEntry {
   reversal_of_id?: string
   type: string
   transaction?: BankTransaction
-  source?: LedgerEntrySource
+  source?: LedgerEntrySourceType
 }
 
 export interface LedgerAccountsAccount {
@@ -36,72 +37,8 @@ export interface LedgerAccountLineItem {
   amount: number
   direction: Direction
   date: string
-  source?: LedgerEntrySource
+  source?: LedgerEntrySourceType
   running_balance: number
   entry_reversal_of?: string
   entry_reversed_by?: string
-}
-
-export interface LedgerEntrySource {
-  display_description: string
-  entity_name: string
-  type: string
-}
-export interface TransactionLedgerEntrySource extends LedgerEntrySource {
-  transaction_id: string
-  external_id: string
-  account_name: string
-  date: string
-  amount: number
-  direction: Direction
-  counterparty?: string
-}
-
-export interface InvoiceLedgerEntrySource extends LedgerEntrySource {
-  invoice_id: string
-  external_id: string
-  invoice_number: string
-  recipient_name: string
-  date: string
-  amount: number
-}
-
-export interface ManualLedgerEntrySource extends LedgerEntrySource {
-  manual_entry_id: string
-  memo: string
-  created_by: string
-}
-
-export interface InvoicePaymentLedgerEntrySource extends LedgerEntrySource {
-  external_id: string
-  invoice_id: string
-  invoice_number: string
-  amount: number
-}
-
-export interface RefundLedgerEntrySource extends LedgerEntrySource {
-  external_id: string
-  refund_id: string
-  refunded_to_customer_amount: number
-  recipient_name: string
-}
-
-export interface RefundPaymentLedgerEntrySource extends LedgerEntrySource {
-  external_id: string
-  refund_id: string
-  refund_payment_id: string
-  refunded_to_customer_amount: number
-  recipient_name: string
-}
-
-export interface OpeningBalanceLedgerEntrySource extends LedgerEntrySource {
-  account_name: string
-}
-
-export interface PayoutLedgerEntrySource extends LedgerEntrySource {
-  payout_id: string
-  external_id: string
-  paid_out_amount: number
-  processor: string
-  completed_at: string
 }

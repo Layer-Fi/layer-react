@@ -10,12 +10,10 @@ import {
 import { startOfToday } from 'date-fns'
 import { getLocalTimeZone, fromDate, toCalendarDate } from '@internationalized/date'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { ValidationErrorMap } from '@tanstack/react-form'
 
 export type InvoiceFormState = {
-  isFormValid: boolean
+  isDirty: boolean
   isSubmitting: boolean
-  submitError: string | undefined
 }
 
 export const EMPTY_LINE_ITEM: InvoiceFormLineItem = {
@@ -128,7 +126,6 @@ export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) 
     errors.push({ lineItems: 'Invoice requires at least one non-empty line item.' })
   }
 
-
   nonEmptyLineItems.some((item) => {
     if (item.product.trim() === '') {
       errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field: Product/Service.' })
@@ -142,19 +139,6 @@ export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) 
   }
 
   return errors.length > 0 ? errors : null
-}
-
-export function flattenValidationErrors(errors: ValidationErrorMap): string[] {
-  return Object.values(errors)
-    .filter((value): value is { [key: string]: string }[] =>
-      Array.isArray(value)
-      && value.every(entry => typeof entry === 'object' && entry !== null),
-    )
-    .flatMap(errorArray =>
-      errorArray.flatMap(entry =>
-        Object.values(entry),
-      ),
-    )
 }
 
 export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({

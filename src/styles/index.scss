@@ -34,7 +34,10 @@
 @forward '../components/Invoices/InvoiceTable/invoiceTable';
 @forward '../components/Invoices/InvoiceDetail/invoiceDetail';
 @forward '../components/Invoices/InvoiceForm/invoiceForm';
+@forward '../components/Invoices/InvoicePaymentForm/invoicePaymentForm';
+@forward '../components/Invoices/InvoiceRefundForm/invoiceRefundForm';
 @forward '../components/Invoices/InvoiceSummaryStats/invoiceSummaryStats';
+@forward '../components/PaymentMethod/paymentMethodComboBox';
 @forward '../components/DataTable/dataTable';
 @forward '../components/VirtualizedDataTable/virtualizedDataTable';
 @forward '../components/LinkedAccounts/AccountFormBox/AccountFormBox';
@@ -64,7 +67,6 @@
 @forward './chart_of_accounts';
 @forward './journal';
 @forward './data_state';
-@forward './drawer';
 @forward './icons';
 @forward './linked_accounts';
 @forward './linked_account_pill';

@@ -8,6 +8,7 @@ import { BaseDetailView } from '../BaseDetailView/BaseDetailView'
 import { type ColumnConfig } from '../DataTable/DataTable'
 import { Badge } from '../Badge'
 import { DateTime } from '../DateTime'
+import { Text, TextUseTooltip } from '../Typography/Text'
 import { TextSize, TextWeight } from '../Typography'
 import { DetailsList, DetailsListItem } from '../DetailsList'
 import { DataState, DataStateStatus } from '../DataState/DataState'
@@ -15,25 +16,14 @@ import { Button } from '../ui/Button/Button'
 import { VStack, HStack } from '../ui/Stack/Stack'
 import { Label } from '../ui/Typography/Text'
 import { format } from 'date-fns'
-import type { LedgerEntrySource } from '../../types/ledger_accounts'
+import { convertLedgerEntrySourceToLinkingMetadata, LedgerEntrySourceType } from '../../schemas/generalLedger/ledgerEntrySource'
 import { Direction } from '../../types'
 import { BreadcrumbItem, DetailReportBreadcrumb } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
-import type { PnlDetailLine, LedgerEntrySourceType } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
+import type { PnlDetailLine } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { MoneySpan } from '../ui/Typography/MoneyText'
+import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
-const DEFAULT_ROW_HEIGHT = 52
-const HEADER_HEIGHT = 41
-
-/* Our source detail component expects an old schema.
- * This converts for backwards compatibility until we switch that component to our new schemas with fixed variable types. */
-const convertSourceForDetailView = (source: LedgerEntrySourceType): LedgerEntrySource => {
-  return {
-    display_description: source.displayDescription,
-    entity_name: source.entityName,
-    type: source.type,
-  }
-}
 
 enum PnlDetailColumns {
   Date = 'Date',
@@ -94,6 +84,17 @@ export const ProfitAndLossDetailReport = ({
   const { businessId } = useLayerContext()
   const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
   const [selectedSource, setSelectedSource] = useState<LedgerEntrySourceType | null>(null)
+
+  const { renderInAppLink } = useInAppLinkContext()
+  const badgeOrInAppLink = useMemo(() => {
+    if (!selectedSource) return undefined
+    const defaultBadge = <Badge>{selectedSource.entityName}</Badge>
+    if (!renderInAppLink) {
+      return defaultBadge
+    }
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(selectedSource)
+    return renderInAppLink(linkingMetadata) ?? defaultBadge
+  }, [renderInAppLink, selectedSource])
 
   const dynamicBreadcrumbs = useMemo(() => {
     return breadcrumbPath || [{ name: lineItemName, display_name: lineItemName }]
@@ -180,7 +181,15 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Description]: {
       id: PnlDetailColumns.Description,
       header: stringOverrides?.descriptionColumnHeader || 'Description',
-      cell: row => row.source?.displayDescription || row.account.accountSubtype.displayName || '-',
+      cell: row => (
+        <Text
+          as='span'
+          withTooltip={TextUseTooltip.whenTruncated}
+          ellipsis
+        >
+          {row.source?.displayDescription || row.account.accountSubtype.displayName || '-'}
+        </Text>
+      ),
       isRowHeader: true,
     },
     [PnlDetailColumns.Amount]: {
@@ -188,7 +197,7 @@ export const ProfitAndLossDetailReport = ({
       header: stringOverrides?.amountColumnHeader || 'Amount',
       cell: (row) => {
         return (
-          <MoneySpan amount={row.amount} />
+          <MoneySpan amount={row.direction === Direction.CREDIT ? row.amount : -row.amount} />
         )
       },
     },
@@ -221,9 +230,9 @@ export const ProfitAndLossDetailReport = ({
             title={stringOverrides?.sourceDetailsTitle || 'Transaction source'}
           >
             <DetailsListItem label='Source'>
-              <Badge>{selectedSource.entityName}</Badge>
+              {badgeOrInAppLink}
             </DetailsListItem>
-            <SourceDetailView source={convertSourceForDetailView(selectedSource)} />
+            <SourceDetailView source={selectedSource} />
           </DetailsList>
         </VStack>
       </BaseDetailView>
@@ -232,29 +241,31 @@ export const ProfitAndLossDetailReport = ({
 
   return (
     <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={onClose} borderless>
-      <VirtualizedDataTable<ProcessedPnlDetailLine, PnlDetailColumns>
-        componentName={COMPONENT_NAME}
-        ariaLabel={`${lineItemName} detail lines`}
-        columnConfig={columnConfig}
-        data={rowsWithRunningBalance.lines}
-        isLoading={isLoading}
-        isError={isError}
-        height={(DEFAULT_ROW_HEIGHT * maxVisibleRows) + HEADER_HEIGHT - 1}
-        slots={{
-          EmptyState,
-          ErrorState,
-        }}
-      />
-      {rowsWithRunningBalance.lines.length > 0 && (
-        <HStack pb='sm' align='center' className='Layer__profit-and-loss-detail-report__total-row'>
-          <HStack className='Layer__profit-and-loss-detail-report__total-label'>
-            <Label weight='bold' size='md'>Total</Label>
+      <VStack className='Layer__ProfitAndLossDetailReport'>
+        <VirtualizedDataTable<ProcessedPnlDetailLine, PnlDetailColumns>
+          componentName={COMPONENT_NAME}
+          ariaLabel={`${lineItemName} detail lines`}
+          columnConfig={columnConfig}
+          data={rowsWithRunningBalance.lines}
+          isLoading={isLoading}
+          isError={isError}
+          shrinkHeightToFitRows
+          slots={{
+            EmptyState,
+            ErrorState,
+          }}
+        />
+        {rowsWithRunningBalance.lines.length > 0 && (
+          <HStack pb='sm' align='center' className='Layer__profit-and-loss-detail-report__total-row'>
+            <HStack className='Layer__profit-and-loss-detail-report__total-label'>
+              <Label weight='bold' size='md'>Total</Label>
+            </HStack>
+            <HStack className='Layer__profit-and-loss-detail-report__total-amount'>
+              <MoneySpan bold size='md' amount={rowsWithRunningBalance.total} />
+            </HStack>
           </HStack>
-          <HStack className='Layer__profit-and-loss-detail-report__total-amount'>
-            <MoneySpan bold size='md' amount={rowsWithRunningBalance.total} />
-          </HStack>
-        </HStack>
-      )}
+        )}
+      </VStack>
     </BaseDetailView>
   )
 }

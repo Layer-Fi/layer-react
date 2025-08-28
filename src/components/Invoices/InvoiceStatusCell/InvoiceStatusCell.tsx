@@ -19,6 +19,9 @@ const getDueStatusConfig = (invoice: Invoice, { inline }: { inline: boolean }) =
     case InvoiceStatus.PartiallyWrittenOff: {
       return { text: 'Partially Written Off' }
     }
+    case InvoiceStatus.Refunded: {
+      return { text: 'Refunded' }
+    }
     case InvoiceStatus.Paid: {
       return {
         text: 'Paid',

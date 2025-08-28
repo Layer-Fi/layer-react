@@ -1,21 +1,10 @@
 import { useContext, useMemo } from 'react'
 import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import XIcon from '../../icons/X'
-import { centsToDollars } from '../../models/Money'
 import { Direction } from '../../types'
-import {
-  InvoiceLedgerEntrySource,
-  InvoicePaymentLedgerEntrySource,
-  LedgerEntrySource,
-  ManualLedgerEntrySource,
-  OpeningBalanceLedgerEntrySource,
-  PayoutLedgerEntrySource,
-  RefundLedgerEntrySource,
-  RefundPaymentLedgerEntrySource,
-  TransactionLedgerEntrySource,
-} from '../../types/ledger_accounts'
+import { LedgerEntrySourceType, decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/generalLedger/ledgerEntrySource'
 import { TableCellAlign } from '../../types/table'
-import { humanizeEnum } from '../../utils/format'
+import { convertCentsToCurrency, humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
 import { Badge, BadgeVariant } from '../Badge'
 import { BackButton, Button, ButtonVariant, CloseButton } from '../Button'
@@ -31,6 +20,7 @@ import { TableRow } from '../TableRow'
 import { Heading, HeadingSize } from '../Typography'
 import { Span } from '../ui/Typography/Text'
 import { VStack } from '../ui/Stack/Stack'
+import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
 
 interface SourceDetailStringOverrides {
   sourceLabel?: string
@@ -46,160 +36,291 @@ interface SourceDetailStringOverrides {
   processorLabel?: string
 }
 
-/*
-
-    @SerialName("Transaction_Ledger_Entry_Source")
-    @SerialName("Invoice_Ledger_Entry_Source")
-    @SerialName("Manual_Ledger_Entry_Source")
-    @SerialName("Invoice_Payment_Ledger_Entry_Source")
-    @SerialName("Refund_Ledger_Entry_Source")
-    @SerialName("Opening_Balance_Ledger_Entry_Source")
-    @SerialName("Payout_Ledger_Entry_Source")
-    */
 export const SourceDetailView = ({
   source,
   stringOverrides,
 }: {
-  source: LedgerEntrySource
+  source: LedgerEntrySourceType
   stringOverrides?: SourceDetailStringOverrides
 }) => {
   switch (source.type) {
     case 'Transaction_Ledger_Entry_Source': {
-      const transactionSource = source as TransactionLedgerEntrySource
       return (
         <>
           <DetailsListItem
             label={stringOverrides?.accountNameLabel || 'Account name'}
           >
-            {transactionSource.account_name}
+            {source.accountName}
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.dateLabel || 'Date'}>
-            <DateTime value={transactionSource.date} />
+            <DateTime value={source.date} />
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(transactionSource.amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.directionLabel || 'Direction'}
           >
-            {transactionSource.direction}
+            {source.direction}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.counterpartyLabel || 'Counterparty'}
           >
-            {transactionSource.counterparty
-              || transactionSource.display_description}
+            {source.counterparty || source.displayDescription}
           </DetailsListItem>
         </>
       )
     }
     case 'Invoice_Ledger_Entry_Source': {
-      const invoiceSource = source as InvoiceLedgerEntrySource
       return (
         <>
           <DetailsListItem
             label={stringOverrides?.invoiceNumberLabel || 'Invoice number'}
           >
-            {invoiceSource.invoice_number}
+            {source.invoiceNumber}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.recipientNameLabel || 'Recipient name'}
           >
-            {invoiceSource.recipient_name}
+            {source.recipientName}
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.dateLabel || 'Date'}>
-            <DateTime value={invoiceSource.date} />
+            <DateTime value={source.date} />
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(invoiceSource.amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
         </>
       )
     }
     case 'Manual_Ledger_Entry_Source': {
-      const manualSource = source as ManualLedgerEntrySource
       return (
         <>
           <DetailsListItem label={stringOverrides?.memoLabel || 'Memo'}>
-            {manualSource.memo}
+            {source.memo}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.createdByLabel || 'Created by'}
           >
-            {manualSource.created_by}
+            {source.createdBy}
           </DetailsListItem>
         </>
       )
     }
     case 'Invoice_Payment_Ledger_Entry_Source': {
-      const invoicePaymentSource = source as InvoicePaymentLedgerEntrySource
       return (
         <>
           <DetailsListItem
             label={stringOverrides?.invoiceNumberLabel || 'Invoice number'}
           >
-            {invoicePaymentSource.invoice_number}
+            {source.invoiceNumber}
           </DetailsListItem>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(invoicePaymentSource.amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
         </>
       )
     }
-    case 'Refund_Ledger_Entry_Source': {
-      const refundSource = source as RefundLedgerEntrySource
+    case 'Refund_Allocation_Ledger_Entry_Source': {
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(refundSource.refunded_to_customer_amount)}`}
+            {convertCentsToCurrency(source.amount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.recipientNameLabel || 'Recipient name'}
           >
-            {refundSource.recipient_name}
+            {source.recipientName}
           </DetailsListItem>
         </>
       )
     }
     case 'Refund_Payment_Ledger_Entry_Source': {
-      const refundSource = source as RefundPaymentLedgerEntrySource
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(refundSource.refunded_to_customer_amount)}`}
+            {convertCentsToCurrency(source.refundedToCustomerAmount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.recipientNameLabel || 'Recipient name'}
           >
-            {refundSource.recipient_name}
+            {source.recipientName}
           </DetailsListItem>
         </>
       )
     }
     case 'Opening_Balance_Ledger_Entry_Source': {
-      const openingBalanceSource = source as OpeningBalanceLedgerEntrySource
       return (
-        <>
-          <DetailsListItem
-            label={stringOverrides?.accountNameLabel || 'Account name'}
-          >
-            {openingBalanceSource.account_name}
-          </DetailsListItem>
-        </>
+        <DetailsListItem
+          label={stringOverrides?.accountNameLabel || 'Account name'}
+        >
+          {source.accountName}
+        </DetailsListItem>
       )
     }
     case 'Payout_Ledger_Entry_Source': {
-      const payoutSource = source as PayoutLedgerEntrySource
       return (
         <>
           <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
-            {`$${centsToDollars(payoutSource.paid_out_amount)}`}
+            {convertCentsToCurrency(source.paidOutAmount)}
           </DetailsListItem>
           <DetailsListItem
             label={stringOverrides?.processorLabel || 'Processor'}
           >
-            {payoutSource.processor}
+            {source.processor}
           </DetailsListItem>
+        </>
+      )
+    }
+
+    case 'Quickbooks_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem
+            label='Quickbooks ID'
+          >
+            {source.quickbooksId}
+          </DetailsListItem>
+          <DetailsListItem label='Import Date'>
+            <DateTime value={source.importDate} />
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Invoice_Write_Off_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem
+            label={stringOverrides?.invoiceNumberLabel || 'Invoice number'}
+          >
+            {source.invoiceNumber}
+          </DetailsListItem>
+          <DetailsListItem
+            label={stringOverrides?.recipientNameLabel || 'Recipient name'}
+          >
+            {source.recipientName}
+          </DetailsListItem>
+          <DetailsListItem label='Write-off Date'>
+            <DateTime value={source.date} />
+          </DetailsListItem>
+          <DetailsListItem label='Write-off Amount'>
+            {convertCentsToCurrency(source.writeOffAmount)}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Vendor_Refund_Allocation_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {convertCentsToCurrency(source.amount)}
+          </DetailsListItem>
+          <DetailsListItem label='Vendor Description'>
+            {source.vendorDescription}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Vendor_Refund_Payment_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label='Refunded Amount'>
+            {convertCentsToCurrency(source.refundedByVendorAmount)}
+          </DetailsListItem>
+          <DetailsListItem label='Vendor Description'>
+            {source.vendorDescription}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Vendor_Payout_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {convertCentsToCurrency(source.paidOutAmount)}
+          </DetailsListItem>
+          <DetailsListItem
+            label={stringOverrides?.processorLabel || 'Processor'}
+          >
+            {source.processor}
+          </DetailsListItem>
+          <DetailsListItem label='Completed At'>
+            <DateTime value={source.completedAt} />
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Payroll_Ledger_Entry_Source': {
+      return (
+        <DetailsListItem label='Payday'>
+          <DateTime value={source.payday} />
+        </DetailsListItem>
+      )
+    }
+    case 'Payroll_Payment_Ledger_Entry_Source': {
+      return (
+        <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+          {convertCentsToCurrency(source.amount)}
+        </DetailsListItem>
+      )
+    }
+    case 'Bill_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label='Bill Number'>
+            {source.billNumber}
+          </DetailsListItem>
+          <DetailsListItem label='Vendor Description'>
+            {source.vendorDescription}
+          </DetailsListItem>
+          <DetailsListItem label={stringOverrides?.dateLabel || 'Date'}>
+            <DateTime value={source.date} />
+          </DetailsListItem>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {convertCentsToCurrency(source.amount)}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Bill_Payment_Ledger_Entry_Source': {
+      return (
+        <>
+          <DetailsListItem label='Bill Number'>
+            {source.billNumber}
+          </DetailsListItem>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {convertCentsToCurrency(source.amount)}
+          </DetailsListItem>
+        </>
+      )
+    }
+    case 'Vendor_Credit_Ledger_Entry_Source': {
+      const vendorDisplayName = source.vendor.individualName ?? source.vendor.companyName
+      return (
+        <>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {convertCentsToCurrency(source.amount)}
+          </DetailsListItem>
+          {vendorDisplayName && (
+            <DetailsListItem label='Vendor'>
+              {vendorDisplayName}
+            </DetailsListItem>
+          )}
+        </>
+      )
+    }
+    case 'Customer_Credit_Ledger_Entry_Source': {
+      const customerDisplayName = source.customer.individualName ?? source.customer.companyName
+      return (
+        <>
+          <DetailsListItem label={stringOverrides?.amountLabel || 'Amount'}>
+            {convertCentsToCurrency(source.amount)}
+          </DetailsListItem>
+          {customerDisplayName && (
+            <DetailsListItem label='Customer'>
+              {customerDisplayName}
+            </DetailsListItem>
+          )}
         </>
       )
     }
@@ -243,6 +364,7 @@ export const LedgerAccountEntryDetails = ({
 }) => {
   const { entryData, isLoadingEntry, closeSelectedEntry, errorEntry } =
     useContext(LedgerAccountsContext)
+  const { renderInAppLink } = useInAppLinkContext()
 
   const { totalDebit, totalCredit } = useMemo(() => {
     let totalDebit = 0
@@ -258,6 +380,20 @@ export const LedgerAccountEntryDetails = ({
 
     return { totalDebit, totalCredit }
   }, [entryData])
+
+  const ledgerEntrySource = useMemo(() => {
+    return entryData?.source ? decodeLedgerEntrySource(entryData.source) : undefined
+  }, [entryData?.source])
+
+  const badgeOrInAppLink = useMemo(() => {
+    const badgeContent = ledgerEntrySource?.entityName ?? entryData?.entry_type
+    const defaultBadge = <Badge>{badgeContent}</Badge>
+    if (!renderInAppLink || !ledgerEntrySource) {
+      return defaultBadge
+    }
+    const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(ledgerEntrySource)
+    return renderInAppLink(linkingMetadata) ?? defaultBadge
+  }, [renderInAppLink, entryData?.entry_type, ledgerEntrySource])
 
   return (
     <div className='Layer__ledger-account__entry-details'>
@@ -301,10 +437,10 @@ export const LedgerAccountEntryDetails = ({
           }
           isLoading={isLoadingEntry}
         >
-          <Badge>{entryData?.source?.entity_name}</Badge>
+          {badgeOrInAppLink}
         </DetailsListItem>
-        {entryData?.source?.display_description && (
-          <SourceDetailView source={entryData?.source} />
+        {ledgerEntrySource && (
+          <SourceDetailView source={ledgerEntrySource} />
         )}
       </DetailsList>
 
@@ -394,16 +530,14 @@ export const LedgerAccountEntryDetails = ({
                       <TableCell align={TableCellAlign.RIGHT}>
                         {item.direction === Direction.DEBIT && (
                           <Badge variant={BadgeVariant.WARNING}>
-                            $
-                            {centsToDollars(item.amount || 0)}
+                            {convertCentsToCurrency(item.amount || 0)}
                           </Badge>
                         )}
                       </TableCell>
                       <TableCell align={TableCellAlign.RIGHT}>
                         {item.direction === Direction.CREDIT && (
                           <Badge variant={BadgeVariant.SUCCESS}>
-                            $
-                            {centsToDollars(item.amount || 0)}
+                            {convertCentsToCurrency(item.amount || 0)}
                           </Badge>
                         )}
                       </TableCell>

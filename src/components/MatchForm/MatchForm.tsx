@@ -7,6 +7,8 @@ import { MatchBadge } from '../BankTransactionRow/MatchBadge'
 import { Text, TextUseTooltip, ErrorText } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
+import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
+import { convertMatchDetailsToLinkingMetadata } from '../../schemas/match'
 
 export interface MatchFormProps {
   classNamePrefix: string
@@ -27,6 +29,7 @@ export const MatchForm = ({
 }: MatchFormProps) => {
   const bookkeepingStatus = useEffectiveBookkeepingStatus()
   const categorizationEnabled = isCategorizationEnabledForStatus(bookkeepingStatus)
+  const { renderInAppLink } = useInAppLinkContext()
 
   const {
     suggested_matches: suggestedMatches = [],
@@ -51,12 +54,17 @@ export const MatchForm = ({
           Description
         </div>
         <div className={`${classNamePrefix}__match-table__amount`}>Amount</div>
+        { renderInAppLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div> }
 
-        <div className={`${classNamePrefix}__match-table__status ${match ? '' : 'no-match'}`}>
-        </div>
+        { match && (
+          <div className={`${classNamePrefix}__match-table__status`}>
+          </div>
+        )}
+
       </div>
 
       {effectiveSuggestedMatches.map((suggestedMatch) => {
+        const inAppLink = renderInAppLink ? renderInAppLink(convertMatchDetailsToLinkingMetadata(suggestedMatch.details)) : null
         return (
           <div
             key={suggestedMatch.id}
@@ -111,21 +119,30 @@ export const MatchForm = ({
               $
               {formatMoney(suggestedMatch.details.amount)}
             </div>
+            { inAppLink && (
+              <div className={`${classNamePrefix}__match-table__link`}>
+                {inAppLink}
+              </div>
+            )}
 
-            <div
-              className={`${classNamePrefix}__match-table__status ${
-                bankTransaction.match ? '' : 'no-match'
-              }`}
-            >
-              {suggestedMatch.details.id === match?.details.id && (
-                <MatchBadge
-                  classNamePrefix={classNamePrefix}
-                  bankTransaction={bankTransaction}
-                  dateFormat={DATE_FORMAT}
-                  text='Matched'
-                />
-              )}
-            </div>
+            {
+              bankTransaction.match && (
+                <div
+                  className={`${classNamePrefix}__match-table__status ${
+                    bankTransaction.match ? '' : 'no-match'
+                  }`}
+                >
+                  {suggestedMatch.details.id === match?.details.id && (
+                    <MatchBadge
+                      classNamePrefix={classNamePrefix}
+                      bankTransaction={bankTransaction}
+                      dateFormat={DATE_FORMAT}
+                      text='Matched'
+                    />
+                  )}
+                </div>
+              )
+            }
           </div>
         )
       })}

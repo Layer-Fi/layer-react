@@ -5,7 +5,7 @@ import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
 import { P } from '../../../components/ui/Typography/Text'
 import { VStack } from '../../../components/ui/Stack/Stack'
 import { Label } from '../../../components/ui/Typography/Text'
-import { Customer } from '../customersSchemas'
+import { Customer } from '../../../schemas/customer'
 import classNames from 'classnames'
 
 function getCustomerName(

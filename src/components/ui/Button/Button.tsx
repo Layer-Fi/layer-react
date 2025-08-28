@@ -28,7 +28,7 @@ function ButtonTransparentContent({ children }: PropsWithChildren) {
   )
 }
 
-type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'text'
+type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'text' | 'branded'
 type ButtonSize = 'md'
 
 const Button = forwardRef<

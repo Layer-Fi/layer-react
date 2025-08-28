@@ -1,5 +1,6 @@
-import type { CustomerSchema } from '../features/customers/customersSchemas'
-import type { VendorSchema } from '../features/vendors/vendorsSchemas'
+import type { CustomerSchema } from '../schemas/customer'
+import type { VendorSchema } from '../schemas/vendor'
+import { MatchDetailsType } from '../schemas/match'
 import { Categorization, CategorizationStatus, Category } from './categories'
 import { S3PresignedUrl } from './general'
 import type { TransactionTag } from './tags'
@@ -61,26 +62,14 @@ export interface BankTransaction extends Record<string, unknown> {
 export interface SuggestedMatch {
   id: string
   matchType: string
-  details: {
-    amount: number
-    date: string
-    description: string
-    id: string
-    type: string
-  }
+  details: MatchDetailsType
 }
 
 export interface BankTransactionMatch {
   bank_transaction: BankTransaction
   id: string
-  match_type?: string
-  details: {
-    amount: number
-    date: string
-    description: string
-    id: string
-    type: string
-  }
+  match_type: string
+  details: MatchDetailsType
 }
 
 export interface BankTransactionMetadata {

@@ -20,12 +20,18 @@ export type BankTransactionFilters = {
   account?: string[]
   direction?: Direction[]
   categorizationStatus?: DisplayState
-  dateRange?: Partial<DateRange>
+  dateRange?: DateRange
   query?: string
   tagFilter?: TagFilterInput
 }
 
-export type UseBankTransactionsParams = {
+export enum BankTransactionsDateFilterMode {
+  MonthlyView = 'MonthlyView',
+  GlobalDateRange = 'GlobalDateRange',
+}
+
+export type UseAugmentedBankTransactionsParams = {
   scope?: DisplayState
   monthlyView?: boolean
+  applyGlobalDateRange?: boolean
 }

@@ -14,15 +14,16 @@ export interface PaginationProps {
   siblingCount?: number
   hasMore?: boolean
   fetchMore?: () => void
+  className?: string
 }
 
-type PaginationButtonProps = ComponentProps<typeof Button>
-const PaginationButton = ({ children, ...buttonProps }: PaginationButtonProps) => {
+type PaginationButtonProps = ComponentProps<typeof Button> & { isSelected?: boolean }
+const PaginationButton = ({ children, isSelected, ...buttonProps }: PaginationButtonProps) => {
   return (
     <Button
       inset
       icon
-      variant='ghost'
+      variant={isSelected ? 'branded' : 'ghost'}
       {...buttonProps}
     >
       {children}
@@ -38,6 +39,7 @@ export const Pagination = ({
   pageSize,
   hasMore,
   fetchMore,
+  className,
 }: PaginationProps) => {
   const paginationRange = usePaginationRange({
     currentPage,
@@ -52,8 +54,8 @@ export const Pagination = ({
   const lastPage = paginationRange[paginationRange.length - 1]
 
   return (
-    <VStack className='Layer__pagination-container'>
-      <nav aria-label='Pagination'>
+    <VStack className={classNames('Layer__pagination-container', className)} fluid>
+      <nav aria-label='Pagination' className='Layer__pagination-nav'>
         <ul className='Layer__pagination' role='list'>
           <li key='page-prev'>
             <PaginationButton
@@ -79,11 +81,9 @@ export const Pagination = ({
             }
 
             return (
-              <li
-                key={`page-${pageNumber}`}
-                className={classNames(pageNumber === currentPage && 'Layer__pagination__selected-item')}
-              >
+              <li key={`page-${pageNumber}`}>
                 <PaginationButton
+                  isSelected={pageNumber === currentPage}
                   onPress={() => onPageChange(Number(pageNumber))}
                   aria-label={`Go to page ${pageNumber}`}
                 >

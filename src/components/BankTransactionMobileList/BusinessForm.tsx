@@ -1,6 +1,5 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
-import { DrawerContext } from '../../contexts/DrawerContext'
 import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction, CategorizationType } from '../../types'
 import { hasReceipts } from '../../utils/bankTransactions'
@@ -10,10 +9,10 @@ import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTr
 import { Button, ButtonVariant } from '../Button'
 import { FileInput } from '../Input'
 import { ErrorText } from '../Typography'
-import { BusinessCategories } from './BusinessCategories'
 import { Option, mapCategoryToOption, getAssignedValue } from './utils'
 import classNames from 'classnames'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
+import { CategorySelectDrawer } from '../CategorySelect/CategorySelectDrawer'
 
 interface BusinessFormProps {
   bankTransaction: BankTransaction
@@ -32,13 +31,13 @@ export const BusinessForm = ({
 }: BusinessFormProps) => {
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
-  const { setContent, close } = useContext(DrawerContext)
   const { categorize: categorizeBankTransaction, isLoading } =
     useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState<Option | undefined>(
     getAssignedValue(bankTransaction),
   )
   const [showRetry, setShowRetry] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   useEffect(() => {
     if (bankTransaction.error) {
@@ -48,8 +47,7 @@ export const BusinessForm = ({
 
   const options = useMemo(() => {
     const options =
-      bankTransaction?.categorization_flow?.type
-      === CategorizationType.ASK_FROM_SUGGESTIONS
+      bankTransaction?.categorization_flow?.type === CategorizationType.ASK_FROM_SUGGESTIONS
         ? bankTransaction.categorization_flow.suggestions.map(x =>
           mapCategoryToOption(x),
         )
@@ -74,24 +72,9 @@ export const BusinessForm = ({
     return options
   }, [bankTransaction, selectedCategory])
 
-  const onDrawerCategorySelect = (value: Option) => {
-    close()
-    setSelectedCategory(value)
-  }
-
-  const openDrawer = () => {
-    setContent(
-      <BusinessCategories
-        selectedId={selectedCategory?.id}
-        select={onDrawerCategorySelect}
-        showTooltips={showTooltips}
-      />,
-    )
-  }
-
   const onCategorySelect = (category: Option) => {
     if (category.value.type === 'SELECT_CATEGORY') {
-      openDrawer()
+      setIsDrawerOpen(true)
     }
     else {
       if (
@@ -121,7 +104,7 @@ export const BusinessForm = ({
         stable_name: selectedCategory.value.payload?.stable_name || '',
       }
 
-    categorizeBankTransaction(
+    void categorizeBankTransaction(
       bankTransaction.id,
       {
         type: 'Category',
@@ -132,81 +115,90 @@ export const BusinessForm = ({
   }
 
   return (
-    <div className='Layer__bank-transaction-mobile-list-item__business-form'>
-      {showCategorization
-        ? (
-          <ActionableList<Option['value']>
-            options={options}
-            onClick={onCategorySelect}
-            selectedId={selectedCategory?.id}
-            showDescriptions={showTooltips}
-          />
-        )
-        : null}
-      <BankTransactionFormFields
-        bankTransaction={bankTransaction}
-        showDescriptions={showDescriptions}
+    <>
+      <div className='Layer__bank-transaction-mobile-list-item__business-form'>
+        {showCategorization
+          ? (
+            <ActionableList<Option['value']>
+              options={options}
+              onClick={onCategorySelect}
+              selectedId={selectedCategory?.id}
+              showDescriptions={showTooltips}
+            />
+          )
+          : null}
+        <BankTransactionFormFields
+          bankTransaction={bankTransaction}
+          showDescriptions={showDescriptions}
+        />
+        <div
+          className={classNames(
+            'Layer__bank-transaction-mobile-list-item__receipts',
+            hasReceipts(bankTransaction)
+              ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
+              : undefined,
+          )}
+        >
+          {showReceiptUploads && (
+            <BankTransactionReceipts
+              label='Receipts'
+              ref={receiptsRef}
+              floatingActions={false}
+              hideUploadButtons={true}
+            />
+          )}
+        </div>
+        <div className='Layer__bank-transaction-mobile-list-item__actions'>
+          {showReceiptUploads && (
+            <FileInput
+              onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
+              text='Upload receipt'
+              iconOnly={true}
+              icon={<PaperclipIcon />}
+            />
+          )}
+          {options.length === 0
+            ? (
+              <Button
+                onClick={() => { setIsDrawerOpen(true) }}
+                fullWidth={true}
+                variant={ButtonVariant.secondary}
+              >
+                Select category
+              </Button>
+            )
+            : null}
+          {showCategorization && options.length > 0
+            ? (
+              <Button
+                onClick={save}
+                disabled={
+                  !selectedCategory || isLoading || bankTransaction.processing
+                }
+                fullWidth={true}
+              >
+                {isLoading || bankTransaction.processing
+                  ? 'Confirming...'
+                  : 'Confirm'}
+              </Button>
+            )
+            : null}
+        </div>
+        {bankTransaction.error && showRetry
+          ? (
+            <ErrorText>
+              Approval failed. Check connection and retry in few seconds.
+            </ErrorText>
+          )
+          : null}
+      </div>
+      <CategorySelectDrawer
+        onSelect={setSelectedCategory}
+        selectedId={selectedCategory?.id}
+        showTooltips={showTooltips}
+        isOpen={isDrawerOpen}
+        onOpenChange={setIsDrawerOpen}
       />
-      <div
-        className={classNames(
-          'Layer__bank-transaction-mobile-list-item__receipts',
-          hasReceipts(bankTransaction)
-            ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
-            : undefined,
-        )}
-      >
-        {showReceiptUploads && (
-          <BankTransactionReceipts
-            label='Receipts'
-            ref={receiptsRef}
-            floatingActions={false}
-            hideUploadButtons={true}
-          />
-        )}
-      </div>
-      <div className='Layer__bank-transaction-mobile-list-item__actions'>
-        {showReceiptUploads && (
-          <FileInput
-            onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-            text='Upload receipt'
-            iconOnly={true}
-            icon={<PaperclipIcon />}
-          />
-        )}
-        {options.length === 0
-          ? (
-            <Button
-              onClick={openDrawer}
-              fullWidth={true}
-              variant={ButtonVariant.secondary}
-            >
-              Select category
-            </Button>
-          )
-          : null}
-        {showCategorization && options.length > 0
-          ? (
-            <Button
-              onClick={save}
-              disabled={
-                !selectedCategory || isLoading || bankTransaction.processing
-              }
-              fullWidth={true}
-            >
-              {isLoading || bankTransaction.processing
-                ? 'Confirming...'
-                : 'Confirm'}
-            </Button>
-          )
-          : null}
-      </div>
-      {bankTransaction.error && showRetry
-        ? (
-          <ErrorText>
-            Approval failed. Check connection and retry in few seconds.
-          </ErrorText>
-        )
-        : null}
-    </div>
+    </>
   )
 }

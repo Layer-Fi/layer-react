@@ -6,6 +6,8 @@ import { useJournal } from '../../hooks/useJournal'
 import { Container } from '../Container'
 import { JournalTable } from '../JournalTable'
 import { JournalTableStringOverrides } from '../JournalTable/JournalTableWithPanel'
+import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
+import { ReactNode } from 'react'
 
 export interface JournalConfig {
   form: {
@@ -21,6 +23,7 @@ export interface JournalProps {
   asWidget?: boolean
   config?: JournalConfig
   stringOverrides?: JournalStringOverrides
+  renderInAppLink?: (source: LinkingMetadata) => ReactNode
 }
 
 export const JOURNAL_CONFIG: JournalConfig = {
@@ -35,7 +38,9 @@ export const Journal = (props: JournalProps) => {
   return (
     <ChartOfAccountsContext.Provider value={AccountsContextData}>
       <JournalContext.Provider value={JournalContextData}>
-        <JournalContent {...props} />
+        <InAppLinkProvider renderInAppLink={props.renderInAppLink}>
+          <JournalContent {...props} />
+        </InAppLinkProvider>
       </JournalContext.Provider>
     </ChartOfAccountsContext.Provider>
   )

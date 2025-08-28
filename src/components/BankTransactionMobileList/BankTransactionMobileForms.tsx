@@ -43,6 +43,7 @@ export const BankTransactionMobileForms = ({
             bankTransaction={bankTransaction}
             showReceiptUploads={showReceiptUploads}
             showDescriptions={showDescriptions}
+            showCategorization={showCategorization}
           />
         )
       case Purpose.more:

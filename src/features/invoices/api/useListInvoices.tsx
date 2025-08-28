@@ -219,10 +219,27 @@ export function useInvoicesGlobalCacheActions() {
   [patchCache],
   )
 
+  const patchInvoiceWithTransformation = useCallback((transformation: (invoice: Invoice) => Invoice) =>
+    patchCache<ListInvoicesReturn[] | ListInvoicesReturn | undefined>(
+      tags => tags.includes(LIST_INVOICES_TAG_KEY),
+      (currentData) => {
+        const iterateOverPage = (page: ListInvoicesReturn): ListInvoicesReturn => ({
+          ...page,
+          data: page.data.map(transformation),
+        })
+
+        return Array.isArray(currentData)
+          ? currentData.map(iterateOverPage)
+          : currentData
+      },
+    ),
+  [patchCache],
+  )
+
   const forceReloadInvoices = useCallback(
     () => forceReload(tags => tags.includes(LIST_INVOICES_TAG_KEY)),
     [forceReload],
   )
 
-  return { patchInvoiceByKey, forceReloadInvoices }
+  return { patchInvoiceByKey, patchInvoiceWithTransformation, forceReloadInvoices }
 }

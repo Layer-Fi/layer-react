@@ -15,11 +15,12 @@ import { convertCentsToCurrency } from '../../../utils/format'
 import { getDurationInDaysFromTerms, InvoiceTermsComboBox, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { type ZonedDateTime, toCalendarDate, fromDate } from '@internationalized/date'
 import { withForceUpdate } from '../../../features/forms/components/FormBigDecimalField'
-import { type InvoiceFormState, flattenValidationErrors, EMPTY_LINE_ITEM } from './formUtils'
+import { type InvoiceFormState, EMPTY_LINE_ITEM } from './formUtils'
 import { DataState, DataStateStatus } from '../../DataState'
 import { AlertTriangle } from 'lucide-react'
 import { TextSize } from '../../Typography'
 import { useInvoiceDetail } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
+import { flattenValidationErrors } from '../../../utils/form'
 
 const INVOICE_FORM_CSS_PREFIX = 'Layer__InvoiceForm'
 const INVOICE_FORM_FIELD_CSS_PREFIX = `${INVOICE_FORM_CSS_PREFIX}__Field`
@@ -112,9 +113,8 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
           const validationErrors = flattenValidationErrors(errorMap)
           if (validationErrors.length > 0 || submitError) {
             return (
-              <HStack className='Layer__InvoiceForm__FormError'>
+              <HStack className={`${INVOICE_FORM_CSS_PREFIX}__FormError`}>
                 <DataState
-                  className='Layer__InvoiceForm__FormError__DataState'
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
