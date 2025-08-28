@@ -51,6 +51,9 @@
 }
 .Layer__Modal[data-variant='drawer'] .Layer__ProfitAndLossDetailReport {
   .Layer__UI__VirtualizedTable__container {
+    /* 4.75rem = header height from .Layer__BaseDetailView__Header,
+       52px = Table header height in VirtualizedDataTable
+     */
     max-height: calc(var(--visual-viewport-height) - calc(4.75rem + 52px));
   }
 }
