@@ -49,3 +49,8 @@
     justify-content: flex-end;
   }
 }
+.Layer__Modal[data-variant='drawer'] .Layer__ProfitAndLossDetailReport {
+  .Layer__UI__VirtualizedTable__container {
+    max-height: calc(var(--visual-viewport-height) - calc(4.75rem + 52px));
+  }
+}
