@@ -48,7 +48,44 @@
     grid-column: 5;
     justify-content: flex-end;
   }
+
+  @media (max-width: 768px) {
+    --pnl-detail-table-cols:
+      minmax(0, 1fr)        /* description */
+      minmax(4rem, 25%);    /* amount */
+
+    .Layer__UI__VirtualizedTable__row,
+    .Layer__UI__VirtualizedTable__header > tr {
+      grid-template-columns: var(--pnl-detail-table-cols);
+    }
+
+    /* hide all but description + amount */
+    .Layer__UI__Table-Column__ProfitAndLossDetailReport--Date,
+    .Layer__UI__Table-Column__ProfitAndLossDetailReport--Type,
+    .Layer__UI__Table-Column__ProfitAndLossDetailReport--Account,
+    .Layer__UI__Table-Column__ProfitAndLossDetailReport--Balance,
+    .Layer__UI__Table-Cell__ProfitAndLossDetailReport--Date,
+    .Layer__UI__Table-Cell__ProfitAndLossDetailReport--Type,
+    .Layer__UI__Table-Cell__ProfitAndLossDetailReport--Account,
+    .Layer__UI__Table-Cell__ProfitAndLossDetailReport--Balance {
+      display: none;
+      visibility: hidden;
+    }
+
+    .Layer__profit-and-loss-detail-report__total-row {
+      grid-template-columns: var(--pnl-detail-table-cols);
+    }
+
+    .Layer__profit-and-loss-detail-report__total-label {
+      grid-column: 1;
+    }
+
+    .Layer__profit-and-loss-detail-report__total-amount {
+      grid-column: 2;
+    }
+  }
 }
+
 .Layer__Modal[data-variant='drawer'] .Layer__ProfitAndLossDetailReport {
   .Layer__UI__VirtualizedTable__container {
     /* 4.75rem = header height from .Layer__BaseDetailView__Header,
