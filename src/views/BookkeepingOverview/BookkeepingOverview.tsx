@@ -69,18 +69,18 @@ export const BookkeepingOverview = ({
         )}
         showHeader={showTitle}
       >
-        <div
-          ref={upperContentRef}
-          onClick={() => (upperElementInFocus.current = true)}
-        >
-          {width <= 1100 && (
+        {width <= 1100 && (
+          <div
+            ref={upperContentRef}
+            onClick={() => (upperElementInFocus.current = true)}
+          >
             <Tasks
               mobile
               stringOverrides={stringOverrides?.tasks}
               onClickReconnectAccounts={onClickReconnectAccounts}
             />
-          )}
-        </div>
+          </div>
+        )}
         <div
           ref={targetElementRef}
           onClick={() => (upperElementInFocus.current = false)}
