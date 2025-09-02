@@ -1,13 +1,10 @@
 @forward './container/tasksEmptyContainer';
 
-.Layer__tasks-component {
+.Layer__tasks {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  height: 100%;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background-color: var(--color-base-0);
+  overflow: hidden;
+  max-height: calc(100vh - 2 * var(--spacing-lg));
 }
 
 .Layer__tasks-pending {
@@ -73,11 +70,9 @@
 }
 
 .Layer__tasks__content {
-  max-height: 1000px;
+  min-height: 0;
   opacity: 1;
-  transition:
-    max-height 0.18s ease-out,
-    opacity 0.2s ease-out;
+  transition: opacity 0.2s ease-out;
 }
 
 .Layer__tasks__content.Layer__tasks__content--collapsed {
@@ -86,8 +81,12 @@
 }
 
 .Layer__tasks-list {
-  box-shadow: 0 0 0 1px var(--color-base-300);
-  background-color: var(--color-base-0);
+  min-height: 0;
+  border-top: 1px solid var(--border-color);
+
+  .Layer__tasks-list-items {
+    overflow-y: auto;
+  }
 
   .Layer__tasks-list-item-wrapper {
     padding: var(--spacing-2xs);
@@ -191,7 +190,6 @@
 
         &.Layer__tasks-list-item__body--expanded {
           height: auto;
-          padding-bottom: var(--spacing-sm);
           opacity: 1;
         }
       }
@@ -215,6 +213,7 @@
   gap: var(--spacing-xs);
   align-items: center;
   justify-content: flex-end;
+  padding-bottom: var(--spacing-sm);
 }
 
 .Layer__tasks-icon {

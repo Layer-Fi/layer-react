@@ -1,48 +1,28 @@
 .Layer__tabs__container {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-base-200) var(--color-base-50);
-  max-width: 100%;
   overflow: auto hidden;
-
-  &::-webkit-scrollbar {
-    width: 2px;
-    height: 2px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: var(--color-base-50);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--color-base-200);
-    border-radius: 2px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: var(--color-base-300);
-  }
+  min-height: 50px;
 }
 
 .Layer__tabs {
-  display: flex;
-  width: 100%;
-  align-items: center;
   box-sizing: border-box;
-  padding: 0 var(--spacing-sm);
-  height: 42px;
-  cursor: pointer;
   position: relative;
-  isolation: isolate;
+  display: flex;
   gap: var(--spacing-xs);
+  align-items: center;
+  height: 42px;
+  width: 100%;
+  padding: 0 var(--spacing-sm);
+  border-bottom: 2px solid var(--color-base-100);
+  cursor: pointer;
+  user-select: none;
+  isolation: isolate;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
-  user-select: none;
-  border-bottom: 2px solid var(--color-base-100);
 
   .Layer__tabs-option-content {
     display: flex;
-    align-items: center;
     gap: var(--spacing-xs);
+    align-items: center;
   }
 }
 
@@ -52,8 +32,8 @@
 
 .Layer__tabs-option {
   position: relative;
-  cursor: pointer;
   z-index: 2;
+  cursor: pointer;
 
   & input {
     position: absolute;
@@ -63,35 +43,24 @@
 
   & input + span {
     box-sizing: border-box;
-    padding: var(--spacing-xs);
-    min-width: 40px;
-    height: 36px;
-    color: var(--text-color-secondary);
-    font-family: var(--font-family);
-    font-size: var(--btn-font-size);
-    font-weight: var(--font-weight-bold);
-    font-variation-settings: 'wght' 460;
-    cursor: pointer;
-    transition: color var(--transition-speed) ease-in-out,
-      background-color 150ms ease-in-out;
-    justify-content: center;
-    border-bottom: 2px solid transparent;
     position: relative;
+    justify-content: center;
+    height: 36px;
+    min-width: 40px;
+    padding: var(--spacing-xs);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: var(--btn-font-size);
+    font-family: var(--font-family);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-color-secondary);
+    font-variation-settings: 'wght' 460;
+    transition:
+      color var(--transition-speed) ease-in-out,
+      background-color 150ms ease-in-out;
 
     &:hover {
       color: var(--text-color-primary);
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      opacity: 0;
-      background-color: var(--color-base-300);
-      transition: opacity 120ms ease-out;
     }
   }
 
@@ -104,17 +73,9 @@
     color: var(--text-color-secondary);
   }
 
-  &:hover input + span::after {
-    opacity: 1;
-  }
-
   &:hover input:disabled + span,
   &:hover input:checked + span {
     background-color: transparent;
-
-    &::after {
-      display: none;
-    }
   }
 }
 
@@ -126,20 +87,21 @@
 }
 
 .Layer__tabs__thumb {
-  position: absolute;
-  width: 100px;
-  left: 0;
-  bottom: -2px;
-  z-index: 3;
   box-sizing: border-box;
+  position: absolute;
+  z-index: 3;
+  bottom: -2px;
+  left: 0;
   height: 2px;
+  width: 100px;
   border-radius: 2px;
   background: var(--color-base-900);
 }
 
 .Layer__tabs--initialized {
   .Layer__tabs__thumb {
-    transition: left 150ms ease,
+    transition:
+      left 150ms ease,
       width 150ms ease;
   }
 }

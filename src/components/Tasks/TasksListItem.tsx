@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import ChevronDownFill from '../../icons/ChevronDownFill'
 import { Button, ButtonVariant } from '../Button'
 import { FileInput } from '../Input'
@@ -12,13 +12,16 @@ import { useUploadDocumentsForTask } from '../../hooks/bookkeeping/periods/tasks
 import { useDeleteUploadsOnTask } from '../../hooks/bookkeeping/periods/tasks/useDeleteUploadsOnTask'
 import { useUpdateTaskUploadDescription } from '../../hooks/bookkeeping/periods/tasks/useUpdateTaskUploadDescription'
 
-export const TasksListItem = ({
-  task,
-  defaultOpen,
-}: {
+type TasksListsItemProps = {
   task: UserVisibleTask
   defaultOpen: boolean
-}) => {
+  onExpandTask?: (isOpen: boolean) => void
+}
+
+export const TasksListItem = forwardRef<HTMLDivElement, TasksListsItemProps>((
+  { task, defaultOpen, onExpandTask },
+  ref,
+) => {
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [userResponse, setUserResponse] = useState(task.user_response ?? '')
   const [selectedFiles, setSelectedFiles] = useState<File[]>()
@@ -64,6 +67,11 @@ export const TasksListItem = ({
     setIsOpen(false)
     setSelectedFiles(undefined)
   }
+
+  const onClickTaskItemHead = useCallback(() => {
+    setIsOpen(!isOpen)
+    onExpandTask?.(!isOpen)
+  }, [isOpen, onExpandTask])
 
   const uploadDocumentAction = useMemo(() => {
     if (task.user_response_type === 'UPLOAD_DOCUMENT') {
@@ -135,11 +143,11 @@ export const TasksListItem = ({
   }, [task, selectedFiles, userResponse])
 
   return (
-    <div className='Layer__tasks-list-item-wrapper'>
+    <div className='Layer__tasks-list-item-wrapper' ref={ref}>
       <div className={taskItemClassName}>
         <div
           className='Layer__tasks-list-item__head'
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={onClickTaskItemHead}
         >
           <div className={taskHeadClassName}>
             <div className='Layer__tasks-list-item__head-info__status'>
@@ -215,4 +223,6 @@ export const TasksListItem = ({
       </div>
     </div>
   )
-}
+})
+
+TasksListItem.displayName = 'TasksListItem'

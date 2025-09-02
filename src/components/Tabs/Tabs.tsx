@@ -2,6 +2,7 @@ import { ChangeEvent, ReactNode, useEffect, useState } from 'react'
 import { useElementSize } from '../../hooks/useElementSize'
 import { Tab } from './Tab'
 import classNames from 'classnames'
+import { HStack } from '../ui/Stack/Stack'
 
 const STARTING_PADDING = 12
 
@@ -98,7 +99,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
 
   return (
     <div className='Layer__tabs__container'>
-      <div className={baseClassName} ref={elementRef}>
+      <HStack className={baseClassName} ref={elementRef}>
         {options.map((option, index) => (
           <Tab
             {...option}
@@ -112,7 +113,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
           />
         ))}
         <span className='Layer__tabs__thumb' style={{ ...thumbPos }} />
-      </div>
+      </HStack>
     </div>
   )
 }

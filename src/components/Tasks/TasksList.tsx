@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import SmileIcon from '../../icons/SmileIcon'
 import { Text, TextSize } from '../Typography'
 import { TasksListItem } from './TasksListItem'
@@ -7,6 +7,7 @@ import { TasksListMobile } from './TasksListMobile'
 import { isCompletedTask, isIncompleteTask } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '../../hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
 import { usePaginatedList } from '../../hooks/array/usePaginatedList'
+import { VStack } from '../ui/Stack/Stack'
 
 const TasksEmptyState = () => (
   <div className='Layer__tasks-empty-state'>
@@ -29,6 +30,40 @@ type TasksListProps = {
 
 export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
   const { activePeriod } = useActiveBookkeepingPeriod()
+  const tasksListItemsContainerRef = useRef<HTMLDivElement | null>(null)
+  const taskListItemRefs = useRef<Record<string, HTMLDivElement | null>>({})
+  const rAFRef = useRef<number | null>(null)
+
+  const setItemRef = useCallback((id: string) => (el: HTMLDivElement | null) => {
+    taskListItemRefs.current[id] = el
+  }, [])
+
+  const onExpandTask = useCallback((taskId: string) => (isOpen: boolean) => {
+    if (!isOpen) return
+
+    if (rAFRef.current !== null) cancelAnimationFrame(rAFRef.current)
+
+    const scrollNow = () => {
+      const container = tasksListItemsContainerRef.current
+      const item = taskListItemRefs.current[taskId]
+      if (!container || !item) return
+
+      const itemRect = item.getBoundingClientRect()
+      const containerRect = container.getBoundingClientRect()
+
+      const targetTop = itemRect.top - containerRect.top + container.scrollTop
+      container.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' })
+      rAFRef.current = null
+    }
+
+    rAFRef.current = requestAnimationFrame(scrollNow)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (rAFRef.current != null) cancelAnimationFrame(rAFRef.current)
+    }
+  }, [])
 
   const sortedTasks = useMemo(() => {
     const tasksInPeriod = activePeriod?.tasks ?? []
@@ -51,6 +86,11 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
 
   const indexFirstIncomplete = pageItems?.findIndex(task => isIncompleteTask(task))
 
+  const onPageChange = useCallback((pageNumber: number) => {
+    set(pageNumber - 1)
+    tasksListItemsContainerRef?.current?.scrollTo({ top: 0, behavior: 'instant' })
+  }, [set])
+
   if (mobile) {
     return (
       <TasksListMobile
@@ -65,23 +105,27 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
   }
 
   return (
-    <div className='Layer__tasks-list'>
+    <VStack className='Layer__tasks-list'>
       {sortedTasks && sortedTasks.length > 0
         ? (
           <>
-            {pageItems.map((task, index) => (
-              <TasksListItem
-                key={task.id}
-                task={task}
-                defaultOpen={index === indexFirstIncomplete}
-              />
-            ))}
+            <VStack className='Layer__tasks-list-items' ref={tasksListItemsContainerRef}>
+              {pageItems.map((task, index) => (
+                <TasksListItem
+                  ref={setItemRef(task.id)}
+                  key={task.id}
+                  task={task}
+                  defaultOpen={index === indexFirstIncomplete}
+                  onExpandTask={onExpandTask(task.id)}
+                />
+              ))}
+            </VStack>
             {sortedTasks.length > pageSize && (
               <Pagination
                 currentPage={pageIndex + 1}
                 totalCount={sortedTasks.length}
                 pageSize={pageSize}
-                onPageChange={pageNumber => set(pageNumber - 1)}
+                onPageChange={onPageChange}
               />
             )}
           </>
@@ -89,6 +133,6 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
         : (
           <TasksEmptyState />
         )}
-    </div>
+    </VStack>
   )
 }
