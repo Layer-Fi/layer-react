@@ -56,9 +56,7 @@ export const MatchForm = ({
         <div className={`${classNamePrefix}__match-table__amount`}>Amount</div>
         {renderInAppLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div>}
         {match && <div className={`${classNamePrefix}__match-table__status`} />}
-
       </div>
-
       {effectiveSuggestedMatches.map((suggestedMatch) => {
         const inAppLink = renderInAppLink ? renderInAppLink(convertMatchDetailsToLinkingMetadata(suggestedMatch.details)) : null
         return (
@@ -81,9 +79,7 @@ export const MatchForm = ({
               setSelectedMatchId(suggestedMatch.id)
             }}
           >
-            <div
-              className={`Layer__nowrap ${classNamePrefix}__match-table__date`}
-            >
+            <div className={`Layer__nowrap ${classNamePrefix}__match-table__date`}>
               <span>
                 {formatTime(parseISO(suggestedMatch.details.date), DATE_FORMAT)}
               </span>
@@ -101,12 +97,11 @@ export const MatchForm = ({
               $
               {formatMoney(suggestedMatch.details.amount)}
             </div>
-            { inAppLink && (
+            {inAppLink && (
               <div className={`${classNamePrefix}__match-table__link`}>
                 {inAppLink}
               </div>
             )}
-
             {
               bankTransaction.match && (
                 <div
