@@ -54,12 +54,8 @@ export const MatchForm = ({
           Description
         </div>
         <div className={`${classNamePrefix}__match-table__amount`}>Amount</div>
-        { renderInAppLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div> }
-
-        { match && (
-          <div className={`${classNamePrefix}__match-table__status`}>
-          </div>
-        )}
+        {renderInAppLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div>}
+        {match && <div className={`${classNamePrefix}__match-table__status`} />}
 
       </div>
 
@@ -91,10 +87,6 @@ export const MatchForm = ({
               <span>
                 {formatTime(parseISO(suggestedMatch.details.date), DATE_FORMAT)}
               </span>
-              <span className='amount-next-to-date'>
-                $
-                {formatMoney(suggestedMatch.details.amount)}
-              </span>
             </div>
             <div className={`${classNamePrefix}__match-table__desc`}>
               <Text
@@ -104,16 +96,6 @@ export const MatchForm = ({
               >
                 {suggestedMatch.details.description}
               </Text>
-              {suggestedMatch.details.id === bankTransaction.match?.details.id && (
-                <span className='match-badge'>
-                  <MatchBadge
-                    classNamePrefix={classNamePrefix}
-                    bankTransaction={bankTransaction}
-                    dateFormat={DATE_FORMAT}
-                    text='Matched'
-                  />
-                </span>
-              )}
             </div>
             <div className={`${classNamePrefix}__match-table__amount`}>
               $
