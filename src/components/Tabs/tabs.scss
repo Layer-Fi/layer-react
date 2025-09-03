@@ -10,7 +10,8 @@
   gap: var(--spacing-xs);
   align-items: center;
   height: 42px;
-  width: 100%;
+  width: fit-content;
+  min-width: 100%;
   padding: 0 var(--spacing-sm);
   border-bottom: 2px solid var(--color-base-100);
   cursor: pointer;
