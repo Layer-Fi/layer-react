@@ -45,7 +45,7 @@ export const DataTableHeader = ({ name, count, slotProps = {}, slots = {} }: Dat
           </HStack>
           {HeaderFilters && <HeaderFilters />}
         </HStack>
-        <HStack pie='md' align='center' gap='3xs'>
+        <HStack pie='md' align='center' gap='xs'>
           {slotProps.SearchField && <SearchField {...slotProps.SearchField} />}
           {HeaderActions && <HeaderActions />}
         </HStack>
