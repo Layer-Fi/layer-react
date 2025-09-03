@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import SmileIcon from '../../icons/SmileIcon'
 import { Text, TextSize } from '../Typography'
 import { TasksListItem } from './TasksListItem'
@@ -7,6 +7,7 @@ import { TasksListMobile } from './TasksListMobile'
 import { isCompletedTask, isIncompleteTask } from '../../utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '../../hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
 import { usePaginatedList } from '../../hooks/array/usePaginatedList'
+import { VStack } from '../ui/Stack/Stack'
 
 const TasksEmptyState = () => (
   <div className='Layer__tasks-empty-state'>
@@ -27,8 +28,42 @@ type TasksListProps = {
   mobile?: boolean
 }
 
-export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
+export const TasksList = ({ pageSize = 8, mobile }: TasksListProps) => {
   const { activePeriod } = useActiveBookkeepingPeriod()
+  const taskListItemRefs = useRef<Record<string, HTMLDivElement | null>>({})
+  const requestAnimationFrameRef = useRef<number | null>(null)
+
+  const setItemRef = useCallback((id: string) => (el: HTMLDivElement | null) => {
+    taskListItemRefs.current[id] = el
+  }, [])
+
+  const onExpandTask = useCallback((taskId: string) => (isOpen: boolean) => {
+    if (!isOpen) return
+
+    if (requestAnimationFrameRef.current !== null) cancelAnimationFrame(requestAnimationFrameRef.current)
+
+    const scrollNow = () => {
+      const item = taskListItemRefs.current[taskId]
+
+      if (!item) return
+
+      item.scrollIntoView({
+        block: 'nearest',
+        inline: 'nearest',
+        behavior: 'smooth',
+      })
+
+      requestAnimationFrameRef.current = null
+    }
+
+    requestAnimationFrameRef.current = requestAnimationFrame(scrollNow)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (requestAnimationFrameRef.current !== null) cancelAnimationFrame(requestAnimationFrameRef.current)
+    }
+  }, [])
 
   const sortedTasks = useMemo(() => {
     const tasksInPeriod = activePeriod?.tasks ?? []
@@ -51,6 +86,10 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
 
   const indexFirstIncomplete = pageItems?.findIndex(task => isIncompleteTask(task))
 
+  const onPageChange = useCallback((pageNumber: number) => {
+    set(pageNumber - 1)
+  }, [set])
+
   if (mobile) {
     return (
       <TasksListMobile
@@ -65,15 +104,17 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
   }
 
   return (
-    <div className='Layer__tasks-list'>
+    <VStack className='Layer__tasks-list'>
       {sortedTasks && sortedTasks.length > 0
         ? (
           <>
             {pageItems.map((task, index) => (
               <TasksListItem
+                ref={setItemRef(task.id)}
                 key={task.id}
                 task={task}
                 defaultOpen={index === indexFirstIncomplete}
+                onExpandTask={onExpandTask(task.id)}
               />
             ))}
             {sortedTasks.length > pageSize && (
@@ -81,7 +122,7 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
                 currentPage={pageIndex + 1}
                 totalCount={sortedTasks.length}
                 pageSize={pageSize}
-                onPageChange={pageNumber => set(pageNumber - 1)}
+                onPageChange={onPageChange}
               />
             )}
           </>
@@ -89,6 +130,6 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
         : (
           <TasksEmptyState />
         )}
-    </div>
+    </VStack>
   )
 }
