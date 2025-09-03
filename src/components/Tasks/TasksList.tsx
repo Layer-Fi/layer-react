@@ -38,8 +38,6 @@ export const TasksList = ({ pageSize = 8, mobile }: TasksListProps) => {
   }, [])
 
   const onExpandTask = useCallback((taskId: string) => (isOpen: boolean) => {
-    console.error('hellow world')
-
     if (!isOpen) return
 
     if (requestAnimationFrameRef.current !== null) cancelAnimationFrame(requestAnimationFrameRef.current)
