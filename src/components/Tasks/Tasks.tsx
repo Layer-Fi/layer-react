@@ -12,7 +12,6 @@ import { Heading } from '../ui/Typography/Heading'
 import { VStack } from '../ui/Stack/Stack'
 import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
 import { Container } from '../Container'
-import { useRef } from 'react'
 
 export interface TasksStringOverrides {
   header?: string
@@ -35,10 +34,9 @@ export function Tasks({
   stringOverrides,
 }: TasksProps) {
   const { data, isLoading } = useBookkeepingPeriods()
-  const containerRef = useRef<HTMLDivElement>(null)
 
   return (
-    <Container name='tasks' ref={containerRef}>
+    <Container name='tasks'>
       <TasksPanelNotification
         onClickReconnectAccounts={onClickReconnectAccounts}
       />
@@ -68,7 +66,7 @@ export function Tasks({
               <TasksYearsTabs />
               <TasksMonthSelector />
               <TasksPending />
-              <TasksList mobile={mobile} containerRef={containerRef} />
+              <TasksList mobile={mobile} />
             </>
           )}
         </ConditionalBlock>

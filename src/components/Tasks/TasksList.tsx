@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, type RefObject } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import SmileIcon from '../../icons/SmileIcon'
 import { Text, TextSize } from '../Typography'
 import { TasksListItem } from './TasksListItem'
@@ -26,10 +26,9 @@ const TasksEmptyState = () => (
 type TasksListProps = {
   pageSize?: number
   mobile?: boolean
-  containerRef?: RefObject<HTMLDivElement>
 }
 
-export const TasksList = ({ pageSize = 8, mobile, containerRef }: TasksListProps) => {
+export const TasksList = ({ pageSize = 8, mobile }: TasksListProps) => {
   const { activePeriod } = useActiveBookkeepingPeriod()
   const taskListItemRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const requestAnimationFrameRef = useRef<number | null>(null)
@@ -39,36 +38,28 @@ export const TasksList = ({ pageSize = 8, mobile, containerRef }: TasksListProps
   }, [])
 
   const onExpandTask = useCallback((taskId: string) => (isOpen: boolean) => {
+    console.error('hellow world')
+
     if (!isOpen) return
 
     if (requestAnimationFrameRef.current !== null) cancelAnimationFrame(requestAnimationFrameRef.current)
 
     const scrollNow = () => {
       const item = taskListItemRefs.current[taskId]
-      const container = containerRef?.current
-      if (!item || !container) return
 
-      const itemRect = item.getBoundingClientRect()
-      const containerRect = container.getBoundingClientRect()
+      if (!item) return
 
-      const itemTop = itemRect.top - containerRect.top + container.scrollTop
-      const itemBottom = itemTop + itemRect.height
-
-      const containerTop = container.scrollTop
-      const containerBottom = containerTop + container.clientHeight
-
-      if (itemTop < containerTop) {
-        container.scrollTo({ top: Math.max(0, itemTop), behavior: 'smooth' })
-      }
-      else if (itemBottom > containerBottom) {
-        container.scrollTo({ top: Math.max(0, itemBottom - container.clientHeight), behavior: 'smooth' })
-      }
+      item.scrollIntoView({
+        block: 'nearest',
+        inline: 'nearest',
+        behavior: 'smooth',
+      })
 
       requestAnimationFrameRef.current = null
     }
 
     requestAnimationFrameRef.current = requestAnimationFrame(scrollNow)
-  }, [containerRef])
+  }, [])
 
   useEffect(() => {
     return () => {
