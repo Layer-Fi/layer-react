@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, type RefObject } from 'react'
 import SmileIcon from '../../icons/SmileIcon'
 import { Text, TextSize } from '../Typography'
 import { TasksListItem } from './TasksListItem'
@@ -26,11 +26,11 @@ const TasksEmptyState = () => (
 type TasksListProps = {
   pageSize?: number
   mobile?: boolean
+  containerRef?: RefObject<HTMLDivElement>
 }
 
-export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
+export const TasksList = ({ pageSize = 8, mobile, containerRef }: TasksListProps) => {
   const { activePeriod } = useActiveBookkeepingPeriod()
-  const tasksListItemsContainerRef = useRef<HTMLDivElement | null>(null)
   const taskListItemRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const requestAnimationFrameRef = useRef<number | null>(null)
 
@@ -44,20 +44,31 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
     if (requestAnimationFrameRef.current !== null) cancelAnimationFrame(requestAnimationFrameRef.current)
 
     const scrollNow = () => {
-      const container = tasksListItemsContainerRef.current
       const item = taskListItemRefs.current[taskId]
-      if (!container || !item) return
+      const container = containerRef?.current
+      if (!item || !container) return
 
       const itemRect = item.getBoundingClientRect()
       const containerRect = container.getBoundingClientRect()
 
-      const targetTop = itemRect.top - containerRect.top + container.scrollTop
-      container.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' })
+      const itemTop = itemRect.top - containerRect.top + container.scrollTop
+      const itemBottom = itemTop + itemRect.height
+
+      const containerTop = container.scrollTop
+      const containerBottom = containerTop + container.clientHeight
+
+      if (itemTop < containerTop) {
+        container.scrollTo({ top: Math.max(0, itemTop), behavior: 'smooth' })
+      }
+      else if (itemBottom > containerBottom) {
+        container.scrollTo({ top: Math.max(0, itemBottom - container.clientHeight), behavior: 'smooth' })
+      }
+
       requestAnimationFrameRef.current = null
     }
 
     requestAnimationFrameRef.current = requestAnimationFrame(scrollNow)
-  }, [])
+  }, [containerRef])
 
   useEffect(() => {
     return () => {
@@ -88,7 +99,6 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
 
   const onPageChange = useCallback((pageNumber: number) => {
     set(pageNumber - 1)
-    tasksListItemsContainerRef?.current?.scrollTo({ top: 0, behavior: 'instant' })
   }, [set])
 
   if (mobile) {
@@ -109,17 +119,15 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
       {sortedTasks && sortedTasks.length > 0
         ? (
           <>
-            <VStack className='Layer__tasks-list-items' ref={tasksListItemsContainerRef}>
-              {pageItems.map((task, index) => (
-                <TasksListItem
-                  ref={setItemRef(task.id)}
-                  key={task.id}
-                  task={task}
-                  defaultOpen={index === indexFirstIncomplete}
-                  onExpandTask={onExpandTask(task.id)}
-                />
-              ))}
-            </VStack>
+            {pageItems.map((task, index) => (
+              <TasksListItem
+                ref={setItemRef(task.id)}
+                key={task.id}
+                task={task}
+                defaultOpen={index === indexFirstIncomplete}
+                onExpandTask={onExpandTask(task.id)}
+              />
+            ))}
             {sortedTasks.length > pageSize && (
               <Pagination
                 currentPage={pageIndex + 1}

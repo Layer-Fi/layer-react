@@ -3,7 +3,7 @@
 .Layer__tasks {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: hidden auto;
   max-height: calc(100vh - 2 * var(--spacing-lg));
 }
 
@@ -76,12 +76,7 @@
 }
 
 .Layer__tasks-list {
-  min-height: 0;
   border-top: 1px solid var(--border-color);
-
-  .Layer__tasks-list-items {
-    overflow-y: auto;
-  }
 
   .Layer__tasks-list-item-wrapper {
     padding: var(--spacing-2xs);
