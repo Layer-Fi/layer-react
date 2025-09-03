@@ -75,11 +75,6 @@
   transition: opacity 0.2s ease-out;
 }
 
-.Layer__tasks__content.Layer__tasks__content--collapsed {
-  opacity: 0.3;
-  max-height: 0;
-}
-
 .Layer__tasks-list {
   min-height: 0;
   border-top: 1px solid var(--border-color);

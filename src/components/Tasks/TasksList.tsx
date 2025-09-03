@@ -61,7 +61,7 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
 
   useEffect(() => {
     return () => {
-      if (rAFRef.current != null) cancelAnimationFrame(rAFRef.current)
+      if (rAFRef.current !== null) cancelAnimationFrame(rAFRef.current)
     }
   }, [])
 

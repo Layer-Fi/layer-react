@@ -3,7 +3,6 @@ import { TasksHeader } from './TasksHeader'
 import { TasksList } from './TasksList'
 import { TasksPending } from './TasksPending'
 import { TasksMonthSelector } from './TasksMonthSelector'
-import classNames from 'classnames'
 import { TasksPanelNotification } from './TasksPanelNotification'
 import { TasksYearsTabs } from './TasksYearsTabs'
 import { ConditionalBlock } from '../utility/ConditionalBlock'
@@ -42,12 +41,7 @@ export function Tasks({
         onClickReconnectAccounts={onClickReconnectAccounts}
       />
       <TasksHeader tasksHeader={stringOverrides?.header || tasksHeader} />
-      <VStack
-        className={classNames(
-          'Layer__tasks__content',
-          !open && 'Layer__tasks__content--collapsed',
-        )}
-      >
+      <VStack className='Layer__tasks__content'>
         <ConditionalBlock
           data={data}
           isLoading={isLoading}

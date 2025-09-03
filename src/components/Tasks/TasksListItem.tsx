@@ -12,13 +12,13 @@ import { useUploadDocumentsForTask } from '../../hooks/bookkeeping/periods/tasks
 import { useDeleteUploadsOnTask } from '../../hooks/bookkeeping/periods/tasks/useDeleteUploadsOnTask'
 import { useUpdateTaskUploadDescription } from '../../hooks/bookkeeping/periods/tasks/useUpdateTaskUploadDescription'
 
-type TasksListsItemProps = {
+type TasksListItemProps = {
   task: UserVisibleTask
   defaultOpen: boolean
   onExpandTask?: (isOpen: boolean) => void
 }
 
-export const TasksListItem = forwardRef<HTMLDivElement, TasksListsItemProps>((
+export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   { task, defaultOpen, onExpandTask },
   ref,
 ) => {
