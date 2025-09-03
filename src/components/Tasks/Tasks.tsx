@@ -3,7 +3,6 @@ import { TasksHeader } from './TasksHeader'
 import { TasksList } from './TasksList'
 import { TasksPending } from './TasksPending'
 import { TasksMonthSelector } from './TasksMonthSelector'
-import classNames from 'classnames'
 import { TasksPanelNotification } from './TasksPanelNotification'
 import { TasksYearsTabs } from './TasksYearsTabs'
 import { ConditionalBlock } from '../utility/ConditionalBlock'
@@ -12,6 +11,7 @@ import { P } from '../ui/Typography/Text'
 import { Heading } from '../ui/Typography/Heading'
 import { VStack } from '../ui/Stack/Stack'
 import { useBookkeepingPeriods } from '../../hooks/bookkeeping/periods/useBookkeepingPeriods'
+import { Container } from '../Container'
 
 export interface TasksStringOverrides {
   header?: string
@@ -36,17 +36,12 @@ export function Tasks({
   const { data, isLoading } = useBookkeepingPeriods()
 
   return (
-    <div className='Layer__tasks-component'>
+    <Container name='tasks'>
       <TasksPanelNotification
         onClickReconnectAccounts={onClickReconnectAccounts}
       />
       <TasksHeader tasksHeader={stringOverrides?.header || tasksHeader} />
-      <div
-        className={classNames(
-          'Layer__tasks__content',
-          !open && 'Layer__tasks__content--collapsed',
-        )}
-      >
+      <VStack className='Layer__tasks__content'>
         <ConditionalBlock
           data={data}
           isLoading={isLoading}
@@ -75,7 +70,7 @@ export function Tasks({
             </>
           )}
         </ConditionalBlock>
-      </div>
-    </div>
+      </VStack>
+    </Container>
   )
 }

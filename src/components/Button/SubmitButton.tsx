@@ -65,18 +65,10 @@ const buildRightIcon = ({
   }
 
   if (action === SubmitAction.UPDATE) {
-    return (
-      <span className='Layer__pt-2'>
-        <CheckCircle size={14} />
-      </span>
-    )
+    return <CheckCircle size={14} />
   }
 
-  return (
-    <span>
-      <Save size={14} style={{ paddingTop: 4 }} />
-    </span>
-  )
+  return <Save size={16} />
 }
 
 export const SubmitButton = ({

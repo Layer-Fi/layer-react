@@ -1,5 +1,5 @@
-import { useCallback, useMemo } from 'react'
-import { useListInvoices } from '../../../features/invoices/api/useListInvoices'
+import { useCallback, useEffect, useMemo } from 'react'
+import { useListInvoices, type ListInvoicesFilterParams } from '../../../features/invoices/api/useListInvoices'
 import { type Invoice, InvoiceStatus } from '../../../features/invoices/invoiceSchemas'
 import { convertCentsToCurrency, formatDate } from '../../../utils/format'
 import { unsafeAssertUnreachable } from '../../../utils/switch/assertUnreachable'
@@ -16,7 +16,8 @@ import { ComboBox } from '../../ui/ComboBox/ComboBox'
 import { startOfToday, endOfYesterday } from 'date-fns'
 import { InvoiceStatusCell } from '../InvoiceStatusCell/InvoiceStatusCell'
 import { Container } from '../../Container'
-import { useInvoiceTableQuery, useInvoiceNavigation } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
+import { useInvoiceTableFilters, useInvoiceNavigation, type InvoiceTableFilters } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
+import { useDebouncedSearchInput } from '../../../hooks/search/useDebouncedSearchQuery'
 
 const COMPONENT_NAME = 'InvoiceTable'
 
@@ -133,9 +134,7 @@ const getColumnConfig = (onSelectInvoice: (invoice: Invoice) => void): ColumnCon
 })
 
 const UNPAID_STATUSES = [InvoiceStatus.Sent, InvoiceStatus.PartiallyPaid]
-const getListInvoiceParams = ({ status }: { status: InvoiceStatusOption }) => {
-  const statusFilter = status.value
-
+const getStatusFilterParams = (statusFilter: InvoiceStatusFilter) => {
   switch (statusFilter) {
     case InvoiceStatusFilter.All:
       return {}
@@ -169,14 +168,25 @@ const getListInvoiceParams = ({ status }: { status: InvoiceStatusOption }) => {
   }
 }
 
+const getListInvoiceParams = ({ status, query }: InvoiceTableFilters): ListInvoicesFilterParams => {
+  const statusFilterParams = getStatusFilterParams(status.value)
+  return { ...statusFilterParams, query }
+}
+
 export const InvoiceTable = () => {
   const { toCreateInvoice, toViewInvoice } = useInvoiceNavigation()
-  const { query, setQuery } = useInvoiceTableQuery()
-  const selectedInvoiceStatusOption = query.status
+  const { tableFilters, setTableFilters } = useInvoiceTableFilters()
+  const { status: selectedInvoiceStatusOption, query } = tableFilters
+
+  const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: query })
+
+  useEffect(() => {
+    setTableFilters({ query: searchQuery })
+  }, [searchQuery, setTableFilters])
 
   const listInvoiceParams = useMemo(
-    () => getListInvoiceParams(query),
-    [query],
+    () => getListInvoiceParams(tableFilters),
+    [tableFilters],
   )
 
   const { data, isLoading, isError, size, setSize, refetch } = useListInvoices({ ...listInvoiceParams })
@@ -210,7 +220,7 @@ export const InvoiceTable = () => {
     <ComboBox
       className='Layer__InvoiceTable__StatusFilter'
       options={options}
-      onSelectedValueChange={option => option && setQuery({ status: option })}
+      onSelectedValueChange={option => option && setTableFilters({ status: option })}
       selectedValue={selectedInvoiceStatusOption}
       isSearchable={false}
       isClearable={false}
@@ -219,7 +229,7 @@ export const InvoiceTable = () => {
       aria-label='Status Filter'
     />
   ),
-  [SelectedValue, options, selectedInvoiceStatusOption, setQuery])
+  [SelectedValue, options, selectedInvoiceStatusOption, setTableFilters])
 
   const CreateInvoiceButton = useCallback(() => (
     <Button onPress={toCreateInvoice}>
@@ -266,6 +276,13 @@ export const InvoiceTable = () => {
         slots={{
           HeaderActions: CreateInvoiceButton,
           HeaderFilters: StatusFilter,
+        }}
+        slotProps={{
+          SearchField: {
+            label: 'Search invoices',
+            value: inputValue,
+            onChange: handleInputChange,
+          },
         }}
       />
       <PaginatedTable

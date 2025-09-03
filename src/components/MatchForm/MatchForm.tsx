@@ -54,15 +54,9 @@ export const MatchForm = ({
           Description
         </div>
         <div className={`${classNamePrefix}__match-table__amount`}>Amount</div>
-        { renderInAppLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div> }
-
-        { match && (
-          <div className={`${classNamePrefix}__match-table__status`}>
-          </div>
-        )}
-
+        {renderInAppLink && <div className={`${classNamePrefix}__match-table__link`}>Link</div>}
+        {match && <div className={`${classNamePrefix}__match-table__status`} />}
       </div>
-
       {effectiveSuggestedMatches.map((suggestedMatch) => {
         const inAppLink = renderInAppLink ? renderInAppLink(convertMatchDetailsToLinkingMetadata(suggestedMatch.details)) : null
         return (
@@ -85,15 +79,9 @@ export const MatchForm = ({
               setSelectedMatchId(suggestedMatch.id)
             }}
           >
-            <div
-              className={`Layer__nowrap ${classNamePrefix}__match-table__date`}
-            >
+            <div className={`Layer__nowrap ${classNamePrefix}__match-table__date`}>
               <span>
                 {formatTime(parseISO(suggestedMatch.details.date), DATE_FORMAT)}
-              </span>
-              <span className='amount-next-to-date'>
-                $
-                {formatMoney(suggestedMatch.details.amount)}
               </span>
             </div>
             <div className={`${classNamePrefix}__match-table__desc`}>
@@ -104,27 +92,16 @@ export const MatchForm = ({
               >
                 {suggestedMatch.details.description}
               </Text>
-              {suggestedMatch.details.id === bankTransaction.match?.details.id && (
-                <span className='match-badge'>
-                  <MatchBadge
-                    classNamePrefix={classNamePrefix}
-                    bankTransaction={bankTransaction}
-                    dateFormat={DATE_FORMAT}
-                    text='Matched'
-                  />
-                </span>
-              )}
             </div>
             <div className={`${classNamePrefix}__match-table__amount`}>
               $
               {formatMoney(suggestedMatch.details.amount)}
             </div>
-            { inAppLink && (
+            {inAppLink && (
               <div className={`${classNamePrefix}__match-table__link`}>
                 {inAppLink}
               </div>
             )}
-
             {
               bankTransaction.match && (
                 <div
