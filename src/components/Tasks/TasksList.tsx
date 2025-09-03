@@ -32,7 +32,7 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
   const { activePeriod } = useActiveBookkeepingPeriod()
   const tasksListItemsContainerRef = useRef<HTMLDivElement | null>(null)
   const taskListItemRefs = useRef<Record<string, HTMLDivElement | null>>({})
-  const rAFRef = useRef<number | null>(null)
+  const requestAnimationFrameRef = useRef<number | null>(null)
 
   const setItemRef = useCallback((id: string) => (el: HTMLDivElement | null) => {
     taskListItemRefs.current[id] = el
@@ -41,7 +41,7 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
   const onExpandTask = useCallback((taskId: string) => (isOpen: boolean) => {
     if (!isOpen) return
 
-    if (rAFRef.current !== null) cancelAnimationFrame(rAFRef.current)
+    if (requestAnimationFrameRef.current !== null) cancelAnimationFrame(requestAnimationFrameRef.current)
 
     const scrollNow = () => {
       const container = tasksListItemsContainerRef.current
@@ -53,15 +53,15 @@ export function TasksList({ pageSize = 8, mobile }: TasksListProps) {
 
       const targetTop = itemRect.top - containerRect.top + container.scrollTop
       container.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' })
-      rAFRef.current = null
+      requestAnimationFrameRef.current = null
     }
 
-    rAFRef.current = requestAnimationFrame(scrollNow)
+    requestAnimationFrameRef.current = requestAnimationFrame(scrollNow)
   }, [])
 
   useEffect(() => {
     return () => {
-      if (rAFRef.current !== null) cancelAnimationFrame(rAFRef.current)
+      if (requestAnimationFrameRef.current !== null) cancelAnimationFrame(requestAnimationFrameRef.current)
     }
   }, [])
 
