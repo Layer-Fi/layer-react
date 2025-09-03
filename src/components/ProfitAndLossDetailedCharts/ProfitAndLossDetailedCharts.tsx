@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import XIcon from '../../icons/X'
 import { humanizeTitle } from '../../utils/profitAndLossUtils'
@@ -12,8 +12,8 @@ import { Filters } from './Filters'
 import { DetailReportModal } from './DetailReportModal'
 import { format } from 'date-fns'
 import type { ProfitAndLossDetailReportProps } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
-import { type SelectedLineItem } from '../ProfitAndLossReport/ProfitAndLossReport'
 import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'
+import { type SelectedLineItem } from '../ProfitAndLossReport/ProfitAndLossReport'
 
 export interface ProfitAndLossDetailedChartsStringOverrides {
   detailedTableStringOverrides?: DetailedTableStringOverrides
@@ -57,13 +57,13 @@ export const ProfitAndLossDetailedCharts = ({
   const [selectedItem, setSelectedItem] = useState<SelectedLineItem | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const handleValueClick = (item: PnlChartLineItem) => {
+  const handleValueClick = useCallback((item: PnlChartLineItem) => {
     setSelectedItem({
       lineItemName: item.name,
       breadcrumbPath: [{ name: item.name, display_name: item.displayName }],
     })
     setIsModalOpen(true)
-  }
+  }, [])
 
   return (
     <div className='Layer__profit-and-loss-detailed-charts'>

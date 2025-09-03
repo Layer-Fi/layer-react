@@ -33,15 +33,17 @@ export function DetailReportModal({
       aria-label='Profit and Loss Detail Report'
       variant={shouldUseMobileDrawer ? 'mobile-drawer' : 'drawer'}
     >
-      {selectedItem && selectedItem.lineItemName && (
-        <ProfitAndLossDetailReport
-          lineItemName={selectedItem.lineItemName}
-          breadcrumbPath={selectedItem.breadcrumbPath}
-          onClose={handleClose}
-          onBreadcrumbClick={onBreadcrumbClick}
-          stringOverrides={stringOverrides}
-        />
-      )}
+      <div className={shouldUseMobileDrawer ? 'Layer__ProfitAndLossReport__Modal--mobile' : 'Layer__ProfitAndLossReport__Modal--drawer'}>
+        {selectedItem && selectedItem.lineItemName && (
+          <ProfitAndLossDetailReport
+            lineItemName={selectedItem.lineItemName}
+            breadcrumbPath={selectedItem.breadcrumbPath}
+            onClose={handleClose}
+            onBreadcrumbClick={onBreadcrumbClick}
+            stringOverrides={stringOverrides}
+          />
+        )}
+      </div>
     </Drawer>
   )
 }

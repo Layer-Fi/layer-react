@@ -18,7 +18,7 @@ export type ProfitAndLossReportProps = {
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
 } & TimeRangePickerConfig
 
-type SelectedLineItem = {
+export type SelectedLineItem = {
   lineItemName: string
   breadcrumbPath: BreadcrumbItem[]
 }

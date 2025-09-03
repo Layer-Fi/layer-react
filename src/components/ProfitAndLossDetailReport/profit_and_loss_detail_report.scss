@@ -52,7 +52,7 @@
   @media (max-width: 768px) {
     --pnl-detail-table-cols:
       minmax(4rem, 25%)     /* date */
-      minmax(0, 1fr)        /* description */
+      minmax(8rem, 55%)     /* description */
       minmax(4rem, 20%);    /* amount */
 
     .Layer__UI__VirtualizedTable__row,
@@ -68,7 +68,6 @@
     .Layer__UI__Table-Cell__ProfitAndLossDetailReport--Account,
     .Layer__UI__Table-Cell__ProfitAndLossDetailReport--Balance {
       display: none;
-      visibility: hidden;
     }
 
     .Layer__profit-and-loss-detail-report__total-row {
@@ -85,7 +84,7 @@
   }
 }
 
-.Layer__Modal[data-variant='drawer'] .Layer__ProfitAndLossDetailReport {
+.Layer__ProfitAndLossReport__Modal--drawer .Layer__ProfitAndLossDetailReport {
   .Layer__UI__VirtualizedTable__container {
     /* 4.75rem = header height from .Layer__BaseDetailView__Header,
        42px = Table total row in VirtualizedDataTable
@@ -94,7 +93,7 @@
   }
 }
 
-.Layer__Modal[data-variant='mobile-drawer'] {
+.Layer__ProfitAndLossReport__Modal--mobile {
   .Layer__BaseDetailView {
     display: flex;
     flex-direction: column;
