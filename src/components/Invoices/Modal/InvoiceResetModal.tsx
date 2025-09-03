@@ -13,7 +13,8 @@ export function InvoiceResetModal({ isOpen, onOpenChange, invoice, onSuccess }: 
   const { trigger: resetInvoice } = useResetInvoice({ invoiceId: invoice.id })
 
   const onConfirm = useCallback(async () => {
-    const { data: invoice } = await resetInvoice()
+    const { data: updatedInvoice } = await resetInvoice()
+    onSuccess(updatedInvoice)
     onSuccess(invoice)
   }, [onSuccess, resetInvoice])
 
