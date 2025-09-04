@@ -18,6 +18,8 @@ export interface DetailedTableStringOverrides {
   valueColumnHeader?: string
 }
 
+const UNCATEGORIZED_TYPES = ['UNCATEGORIZED_INFLOWS', 'UNCATEGORIZED_OUTFLOWS']
+
 export interface DetailedTableProps {
   filteredData: PnlChartLineItem[]
   hoveredItem?: string
@@ -207,7 +209,7 @@ export const DetailedTable = ({
                       <Button
                         variant='text'
                         onPress={() => onValueClick?.(item)}
-                        isDisabled={!onValueClick}
+                        isDisabled={!onValueClick || UNCATEGORIZED_TYPES.includes(item.name)}
                       >
                         <MoneySpan size='sm' amount={item.value} />
                       </Button>
