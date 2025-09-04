@@ -7,6 +7,7 @@ import {
   collectExpensesItems,
   collectRevenueItems,
   applyShare,
+  type PnlChartLineItem,
 } from '../../utils/profitAndLossUtils'
 import { useProfitAndLossReport } from './useProfitAndLossReport'
 import {
@@ -96,16 +97,9 @@ export const useProfitAndLoss = ({
     const items = collectRevenueItems(data)
     const revenueTypeFilters = filters['revenue']?.types
 
-    const filtered = items.map((x) => {
-      if (
-        revenueTypeFilters
-        && revenueTypeFilters.length > 0
-        && !revenueTypeFilters.includes(x.type)
-      ) {
-        return {
-          ...x,
-          hidden: true,
-        }
+    const filtered: PnlChartLineItem[] = items.map((x) => {
+      if (revenueTypeFilters && revenueTypeFilters.length > 0 && !revenueTypeFilters.includes(x.type)) {
+        return { ...x, isHidden: true }
       }
 
       return x
@@ -149,15 +143,8 @@ export const useProfitAndLoss = ({
     const expenseTypeFilters = filters['expenses']?.types
 
     const filtered = items.map((x) => {
-      if (
-        expenseTypeFilters
-        && expenseTypeFilters.length > 0
-        && !expenseTypeFilters.includes(x.type)
-      ) {
-        return {
-          ...x,
-          hidden: true,
-        }
+      if (expenseTypeFilters && expenseTypeFilters.length > 0 && !expenseTypeFilters.includes(x.type)) {
+        return { ...x, isHidden: true }
       }
 
       return x
