@@ -158,18 +158,12 @@ export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({
         quantity: item.quantity,
       }
 
-      return !BD.equals(form.taxRate, BIG_DECIMAL_ZERO) && item.isTaxable
-        ? {
-          ...baseLineItem,
-          salesTaxes: [
-            {
-              amount: convertBigDecimalToCents(
-                BD.multiply(item.amount, form.taxRate),
-              ),
-            },
-          ],
-        }
-        : baseLineItem
+      if (!item.isTaxable || BD.equals(form.taxRate, BIG_DECIMAL_ZERO)) return baseLineItem
+
+      const itemAmountLessDiscount = BD.multiply(item.amount, BD.subtract(BIG_DECIMAL_ONE, form.discountRate))
+      const itemTaxes = convertBigDecimalToCents(BD.multiply(itemAmountLessDiscount, form.taxRate))
+
+      return { ...baseLineItem, salesTaxes: [{ amount: itemTaxes }] }
     }),
 
   ...(!BD.equals(form.discountRate, BIG_DECIMAL_ZERO) && {
