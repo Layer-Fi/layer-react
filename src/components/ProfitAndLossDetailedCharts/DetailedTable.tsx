@@ -5,17 +5,20 @@ import {
   ProfitAndLossFilters,
 } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import SortArrows from '../../icons/SortArrows'
-import { centsToDollars as formatMoney } from '../../models/Money'
 import { SortDirection } from '../../types'
 import { formatPercent } from '../../utils/format'
 import classNames from 'classnames'
 import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'
+import { Button } from '../ui/Button/Button'
+import { MoneySpan } from '../ui/Typography/MoneyText'
 
 export interface DetailedTableStringOverrides {
   categoryColumnHeader?: string
   typeColumnHeader?: string
   valueColumnHeader?: string
 }
+
+const UNCATEGORIZED_TYPES = ['UNCATEGORIZED_INFLOWS', 'UNCATEGORIZED_OUTFLOWS']
 
 export interface DetailedTableProps {
   filteredData: PnlChartLineItem[]
@@ -26,6 +29,7 @@ export interface DetailedTableProps {
   sortBy: (scope: Scope, field: string, direction?: SortDirection) => void
   chartColorsList?: string[]
   stringOverrides?: DetailedTableStringOverrides
+  onValueClick?: (item: PnlChartLineItem) => void
 }
 
 export interface TypeColorMapping {
@@ -131,6 +135,7 @@ export const DetailedTable = ({
   setHoveredItem,
   chartColorsList,
   stringOverrides,
+  onValueClick,
 }: DetailedTableProps) => {
   const buildColClass = (column: string) => {
     return classNames(
@@ -201,8 +206,13 @@ export const DetailedTable = ({
                     <td className='category-col'>{item.displayName}</td>
                     <td className='type-col'>{item.type}</td>
                     <td className='value-col'>
-                      $
-                      {formatMoney(item.value)}
+                      <Button
+                        variant='text'
+                        onPress={() => onValueClick?.(item)}
+                        isDisabled={!onValueClick || UNCATEGORIZED_TYPES.includes(item.name)}
+                      >
+                        <MoneySpan size='sm' amount={item.value} />
+                      </Button>
                     </td>
                     <td className='share-col'>
                       <span className='share-cell-content'>

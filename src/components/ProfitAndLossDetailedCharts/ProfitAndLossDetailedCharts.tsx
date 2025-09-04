@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import XIcon from '../../icons/X'
 import { humanizeTitle } from '../../utils/profitAndLossUtils'
@@ -9,10 +9,15 @@ import { Text, TextSize, TextWeight } from '../Typography'
 import { DetailedChart } from './DetailedChart'
 import { DetailedTable, DetailedTableStringOverrides } from './DetailedTable'
 import { Filters } from './Filters'
+import { DetailReportModal } from './DetailReportModal'
 import { format } from 'date-fns'
+import type { ProfitAndLossDetailReportProps } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
+import type { PnlChartLineItem } from '../../utils/profitAndLossUtils'
+import { type SelectedLineItem } from '../ProfitAndLossReport/ProfitAndLossReport'
 
 export interface ProfitAndLossDetailedChartsStringOverrides {
   detailedTableStringOverrides?: DetailedTableStringOverrides
+  detailReportStringOverrides?: ProfitAndLossDetailReportProps['stringOverrides']
 }
 
 export const ProfitAndLossDetailedCharts = ({
@@ -49,6 +54,16 @@ export const ProfitAndLossDetailedCharts = ({
     theScope === 'revenue' ? filteredTotalRevenue : filteredTotalExpenses
 
   const [hoveredItem, setHoveredItem] = useState<string | undefined>()
+  const [selectedItem, setSelectedItem] = useState<SelectedLineItem | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleValueClick = useCallback((item: PnlChartLineItem) => {
+    setSelectedItem({
+      lineItemName: item.name,
+      breadcrumbPath: [{ name: item.name, display_name: item.displayName }],
+    })
+    setIsModalOpen(true)
+  }, [])
 
   return (
     <div className='Layer__profit-and-loss-detailed-charts'>
@@ -116,9 +131,17 @@ export const ProfitAndLossDetailedCharts = ({
             setHoveredItem={setHoveredItem}
             chartColorsList={chartColorsList}
             stringOverrides={stringOverrides?.detailedTableStringOverrides}
+            onValueClick={handleValueClick}
           />
         </div>
       </div>
+
+      <DetailReportModal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        selectedItem={selectedItem}
+        stringOverrides={stringOverrides?.detailReportStringOverrides}
+      />
     </div>
   )
 }
