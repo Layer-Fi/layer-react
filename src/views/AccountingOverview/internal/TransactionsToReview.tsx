@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react'
+import { useContext, useEffect, useMemo } from 'react'
 import { Badge } from '../../../components/Badge'
 import { BadgeSize, BadgeVariant } from '../../../components/Badge/Badge'
 import { BadgeLoader } from '../../../components/BadgeLoader'
@@ -37,27 +37,38 @@ export function TransactionsToReview({
   const { dateRange: contextDateRange } = useContext(ProfitAndLoss.Context)
   const dateRange = usePnlDateRange ? contextDateRange : undefined
 
-  const { data, isLoading, isError, refetch } = useProfitAndLossLTM({
-    currentDate: dateRange ? dateRange.startDate : startOfMonth(new Date()),
+  const currentDate = useMemo(() => dateRange ? dateRange.startDate : startOfMonth(new Date()), [dateRange])
+
+  const { data, isLoading, isError, refetch, setDate } = useProfitAndLossLTM({
+    currentDate,
     tagFilter,
   })
 
-  const numTransactionsToReview = useMemo(() => {
-    if (!data || !dateRange) return 0
+  const activeMonth = useMemo(() => {
+    if (!data || !dateRange) return undefined
     const { startDate } = dateRange
 
-    const activeMonth = data.find(
+    return data.find(
       summary =>
         summary.month - 1 === getMonth(startDate)
         && summary.year === getYear(startDate),
     )
+  }, [data, dateRange])
 
+  const numTransactionsToReview = useMemo(() => {
     if (!activeMonth) return 0
 
     return activeMonth.uncategorizedTransactions
-  }, [data, dateRange])
+  }, [activeMonth])
 
-  const hasLoadedData = !isLoading && data
+  // If we haven't loaded the current month's P&L summary data, go fetch it.
+  useEffect(() => {
+    if (!activeMonth) {
+      setDate(currentDate)
+    }
+  }, [activeMonth, currentDate, setDate])
+
+  const hasLoadedData = !isLoading && activeMonth
   const transactionsToReviewBadge = useMemo(() => {
     if (!hasLoadedData) {
       return <BadgeLoader />
