@@ -6,7 +6,7 @@ import {
   startOfMonth,
   startOfYear,
 } from 'date-fns'
-import { useState, createContext, type PropsWithChildren, useContext } from 'react'
+import { useState, createContext, type PropsWithChildren, useContext, useMemo } from 'react'
 import { createStore, useStore } from 'zustand'
 import { safeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { useStoreWithDateSelected } from '../../utils/zustand/useStoreWithDateSelected'
@@ -221,12 +221,7 @@ export function useGlobalDateRange({ displayMode = 'monthPicker' }: { displayMod
   const rawStart = useStoreWithDateSelected(store, ({ start }) => start)
   const rawEnd = useStoreWithDateSelected(store, ({ end }) => end)
 
-  const { start, end } = getEffectiveDateRangeForMode(displayMode, { start: rawStart, end: rawEnd })
-
-  return {
-    start,
-    end,
-  }
+  return useMemo(() => getEffectiveDateRangeForMode(displayMode, { start: rawStart, end: rawEnd }), [displayMode, rawEnd, rawStart])
 }
 
 export function useGlobalDateRangeActions() {
