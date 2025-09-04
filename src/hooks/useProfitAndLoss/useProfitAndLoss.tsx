@@ -142,7 +142,7 @@ export const useProfitAndLoss = ({
     const items = collectExpensesItems(data)
     const expenseTypeFilters = filters['expenses']?.types
 
-    const filtered = items.map((x) => {
+    const filtered: PnlChartLineItem[] = items.map((x) => {
       if (expenseTypeFilters && expenseTypeFilters.length > 0 && !expenseTypeFilters.includes(x.type)) {
         return { ...x, isHidden: true }
       }
