@@ -55,12 +55,6 @@ export function TransactionsToReview({
     )
   }, [data, dateRange])
 
-  const numTransactionsToReview = useMemo(() => {
-    if (!activeMonth) return 0
-
-    return activeMonth.uncategorizedTransactions
-  }, [activeMonth])
-
   // If we haven't loaded the current month's P&L summary data, go fetch it.
   useEffect(() => {
     if (!activeMonth) {
@@ -69,6 +63,8 @@ export function TransactionsToReview({
   }, [activeMonth, currentDate, setDate])
 
   const hasLoadedData = !isLoading && activeMonth
+  const numTransactionsToReview = activeMonth?.uncategorizedTransactions ?? 0
+
   const transactionsToReviewBadge = useMemo(() => {
     if (!hasLoadedData) {
       return <BadgeLoader />
