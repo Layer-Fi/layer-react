@@ -11,6 +11,21 @@ export interface AmountInputProps extends Omit<CurrencyInputProps, 'onChange'> {
   badge?: ReactNode
 }
 
+const transformCurrencyValue = (rawValue: string): string => {
+  // Remove non-digit characters except decimal point
+  const cleaned = rawValue.replace(/[^\d.]/g, '')
+
+  // If there are more than 2 digits after decimal, shift them left
+  const parts = cleaned.split('.')
+  if (parts.length === 2 && parts[1].length > 2) {
+    const integerPart = parts[0] + parts[1].slice(0, -2)
+    const decimalPart = parts[1].slice(-2)
+    return `${integerPart}.${decimalPart}`
+  }
+
+  return cleaned
+}
+
 export const AmountInput = ({
   onChange,
   className,
@@ -41,21 +56,8 @@ export const AmountInput = ({
       decimalScale={2}
       decimalsLimit={2}
       disableAbbreviations
-      allowDecimals={true}
-      transformRawValue={(rawValue) => {
-        // Remove non-digit characters except decimal point
-        const cleaned = rawValue.replace(/[^\d.]/g, '')
-
-        // If there are more than 2 digits after decimal, shift them left
-        const parts = cleaned.split('.')
-        if (parts.length === 2 && parts[1].length > 2) {
-          const integerPart = parts[0] + parts[1].slice(0, -2)
-          const decimalPart = parts[1].slice(-2)
-          return `${integerPart}.${decimalPart}`
-        }
-
-        return cleaned
-      }}
+      allowDecimals
+      transformRawValue={transformCurrencyValue}
       onValueChange={onChange}
       className={baseClassName}
     />
