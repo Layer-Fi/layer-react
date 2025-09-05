@@ -11,12 +11,13 @@ import ChevronDown from '../../icons/ChevronDown'
 import InfoIcon from '../../icons/InfoIcon'
 import MinimizeTwo from '../../icons/MinimizeTwo'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, CategorizationType, Category } from '../../types'
+import { BankTransaction, CategorizationStatus, CategorizationType, Category } from '../../types'
 import { SuggestedMatch, type CategoryWithEntries } from '../../types/bank_transactions'
 import { Badge } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import { Text, TextSize } from '../Typography'
+import { LoadingSpinner } from '../ui/Loading/LoadingSpinner'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
@@ -26,6 +27,7 @@ import { convertMatchDetailsToLinkingMetadata, MatchDetailsType } from '../../sc
 import { ReactNode } from 'react'
 import { useCallback, useState } from 'react'
 import type { Option } from '../BankTransactionMobileList/utils'
+import { HStack } from '../ui/Stack/Stack'
 
 type Props = {
   name?: string
@@ -148,6 +150,20 @@ const Option = (
     renderInAppLink?: (details: LinkingMetadata) => ReactNode
   },
 ) => {
+  if (props.data.type === 'Loading suggestions') {
+    return (
+      <components.Option
+        {...props}
+        className={`${props.className} Layer__select__option-content__loading`}
+      >
+        <HStack justify='space-between'>
+          <span>Generating suggestions for transaction</span>
+          <LoadingSpinner size={16} />
+        </HStack>
+      </components.Option>
+    )
+  }
+
   if (props.data.payload.option_type === OptionActionType.HIDDEN) {
     return null
   }
@@ -308,6 +324,24 @@ export const CategorySelect = ({
       ]
       : []
 
+  const suggestionsPendingDivider: GroupBase<CategoryOption>[] = [
+    {
+      label: 'Loading suggestions',
+      options: [
+        {
+          type: 'Loading suggestions',
+          disabled: true,
+          payload: {
+            id: 'loading_suggestions',
+            option_type: OptionActionType.HIDDEN,
+            display_name: 'LOADING SUGGESTIONS',
+            subCategories: null,
+          },
+        } satisfies CategoryOption,
+      ],
+    },
+  ]
+
   const suggestedOptions =
     bankTransaction?.categorization_flow?.type
     === CategorizationType.ASK_FROM_SUGGESTIONS
@@ -319,7 +353,7 @@ export const CategorySelect = ({
             ),
           } satisfies GroupBase<CategoryOption>,
       ]
-      : []
+      : bankTransaction?.categorization_status === CategorizationStatus.PENDING ? suggestionsPendingDivider : []
 
   const categoryOptions = flattenCategories(categories ?? [])
 

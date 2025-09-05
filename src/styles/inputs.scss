@@ -463,6 +463,10 @@
   .Layer__select__option--hidden {
     display: none;
   }
+  
+  .Layer__select__option-content__loading {
+    cursor: default;
+  }
 
   .Layer__select__option-content__match {
     display: flex;

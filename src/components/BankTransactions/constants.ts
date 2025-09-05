@@ -12,4 +12,5 @@ export const CategorizedCategories = [
 export const ReviewCategories = [
   CategorizationStatus.READY_FOR_INPUT,
   CategorizationStatus.LAYER_REVIEW,
+  CategorizationStatus.PENDING,
 ]
