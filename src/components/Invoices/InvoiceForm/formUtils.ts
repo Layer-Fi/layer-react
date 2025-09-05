@@ -2,9 +2,11 @@ import { InvoiceFormLineItemEquivalence, type Invoice, type InvoiceForm, type In
 import { BigDecimal as BD } from 'effect'
 import { BIG_DECIMAL_ZERO, BIG_DECIMAL_ONE, convertCentsToBigDecimal, safeDivide, convertBigDecimalToCents } from '../../../utils/bigDecimalUtils'
 import {
+  computeAdditionalDiscount,
   computeRawTaxableSubtotal,
   computeSubtotal,
   computeTaxableSubtotal,
+  computeTaxes,
   getGrandTotalFromInvoice,
 } from './totalsUtils'
 import { startOfToday } from 'date-fns'
@@ -160,15 +162,15 @@ export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({
 
       if (!item.isTaxable || BD.equals(form.taxRate, BIG_DECIMAL_ZERO)) return baseLineItem
 
-      const itemAmountLessDiscount = BD.multiply(item.amount, BD.subtract(BIG_DECIMAL_ONE, form.discountRate))
-      const itemTaxes = convertBigDecimalToCents(BD.multiply(itemAmountLessDiscount, form.taxRate))
+      const itemTaxableSubtotal = computeTaxableSubtotal({ rawTaxableSubtotal: item.amount, discountRate: form.discountRate })
+      const itemTaxes = computeTaxes({ taxableSubtotal: itemTaxableSubtotal, taxRate: form.taxRate })
 
-      return { ...baseLineItem, salesTaxes: [{ amount: itemTaxes }] }
+      return { ...baseLineItem, salesTaxes: [{ amount: convertBigDecimalToCents(itemTaxes) }] }
     }),
 
   ...(!BD.equals(form.discountRate, BIG_DECIMAL_ZERO) && {
     additionalDiscount: convertBigDecimalToCents(
-      BD.multiply(computeSubtotal(form.lineItems), form.discountRate),
+      computeAdditionalDiscount({ subtotal: computeSubtotal(form.lineItems), discountRate: form.discountRate }),
     ),
   }),
 })

@@ -11,3 +11,12 @@
 .Layer__PaginatedDataTable__Pagination {
   border-top: 1px solid var(--border-color);
 }
+
+.Layer__DataTable__EmptyState__Row {
+  height: fit-content;
+}
+
+.Layer__DataTable__EmptyState__Cell {
+  grid-column: 1 / -1;
+  justify-content: center;
+}

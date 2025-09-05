@@ -174,7 +174,15 @@ export const ProfitAndLossDetailReport = ({
     [PnlDetailColumns.Account]: {
       id: PnlDetailColumns.Account,
       header: stringOverrides?.accountColumnHeader || 'Account',
-      cell: row => row.account.name || '-',
+      cell: row => (
+        <Text
+          as='span'
+          withTooltip={TextUseTooltip.whenTruncated}
+          ellipsis
+        >
+          {row.account.name || '-'}
+        </Text>
+      ),
     },
     [PnlDetailColumns.Description]: {
       id: PnlDetailColumns.Description,

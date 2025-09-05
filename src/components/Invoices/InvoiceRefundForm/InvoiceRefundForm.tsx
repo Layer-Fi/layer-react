@@ -57,7 +57,7 @@ export const InvoiceRefundForm = forwardRef(({ onSuccess, invoice }: InvoiceRefu
       <VStack className={`${INVOICE_REFUND_FORM_CSS_PREFIX}__Section`} gap='sm'>
         <HStack className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} gap='xs' align='center'>
           <Span size='sm'>Invoice</Span>
-          <Span size='md' weight='bold'>
+          <Span size='md' weight='bold' ellipsis>
             #
             {invoice.invoiceNumber}
           </Span>

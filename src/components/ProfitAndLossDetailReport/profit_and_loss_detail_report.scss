@@ -1,9 +1,9 @@
 .Layer__ProfitAndLossDetailReport {
   --pnl-detail-table-cols:
-    minmax(7rem, 12%)
-    minmax(7rem, 12%)
+    minmax(7.5rem, 8%)
+    minmax(7rem, 18%)
     minmax(10rem, 18%)
-    minmax(12rem, 38%)
+    minmax(12rem, 36%)
     minmax(7.5rem, 10%)
     minmax(7.5rem, 10%);
 
@@ -49,7 +49,7 @@
     justify-content: flex-end;
   }
 
-  @media (max-width: 768px) {
+  @container (width <= 840px) {
     --pnl-detail-table-cols:
       minmax(4rem, 25%)     /* date */
       minmax(8rem, 55%)     /* description */

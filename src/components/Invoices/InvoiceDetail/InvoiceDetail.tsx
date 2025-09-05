@@ -84,7 +84,7 @@ export const InvoiceDetail = () => {
 
   return (
     <>
-      <BaseDetailView slots={{ Header, BackIcon: hasChanges ? X : BackArrow }} name='Invoice Detail View' onGoBack={onGoBack}>
+      <BaseDetailView slots={{ Header, BackIcon: hasChanges ? X : BackArrow }} name='InvoiceDetail' onGoBack={onGoBack}>
         {viewState.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={viewState.invoice} />}
         <InvoiceForm
           isReadOnly={isReadOnly}
@@ -174,7 +174,7 @@ const InvoiceDetailHeader = ({ onSubmit, formState, isReadOnly, setIsReadOnly, o
 
   return (
     <HStack justify='space-between' align='center' fluid pie='md'>
-      <Heading>{headingContent}</Heading>
+      <Heading className='Layer__InvoiceDetail__Heading' ellipsis>{headingContent}</Heading>
       {isReadOnly
         ? (
           <HStack gap='xs'>
