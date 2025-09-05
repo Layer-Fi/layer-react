@@ -7,15 +7,7 @@ import { VStack } from '../../../components/ui/Stack/Stack'
 import { Label } from '../../../components/ui/Typography/Text'
 import { Customer } from '../../../schemas/customer'
 import classNames from 'classnames'
-
-function getCustomerName(
-  customer: Pick<Customer, 'individualName' | 'companyName' | 'externalId'>,
-) {
-  return customer.individualName
-    ?? customer.companyName
-    ?? customer.externalId
-    ?? 'Unknown Customer'
-}
+import { getCustomerName } from '../util'
 
 class CustomerAsOption {
   private internalCustomer: Customer

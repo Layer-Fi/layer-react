@@ -18,6 +18,7 @@ import { InvoiceStatusCell } from '../InvoiceStatusCell/InvoiceStatusCell'
 import { Container } from '../../Container'
 import { useInvoiceTableFilters, useInvoiceNavigation, type InvoiceTableFilters } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
 import { useDebouncedSearchInput } from '../../../hooks/search/useDebouncedSearchQuery'
+import { getCustomerName } from '../../../features/customers/util'
 
 const COMPONENT_NAME = 'InvoiceTable'
 
@@ -91,11 +92,6 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
   }
 }
 
-const getCustomerName = (invoice: Invoice) => {
-  const { recipientName, customer } = invoice
-  return customer?.individualName || customer?.companyName || customer?.externalId || recipientName
-}
-
 const getColumnConfig = (onSelectInvoice: (invoice: Invoice) => void): ColumnConfig<Invoice, InvoiceColumns> => ({
   [InvoiceColumns.SentAt]: {
     id: InvoiceColumns.SentAt,
@@ -111,7 +107,7 @@ const getColumnConfig = (onSelectInvoice: (invoice: Invoice) => void): ColumnCon
   [InvoiceColumns.Customer]: {
     id: InvoiceColumns.Customer,
     header: 'Customer',
-    cell: row => <Span ellipsis>{getCustomerName(row)}</Span>,
+    cell: row => <Span ellipsis>{getCustomerName(row.customer)}</Span>,
   },
   [InvoiceColumns.Total]: {
     id: InvoiceColumns.Total,
