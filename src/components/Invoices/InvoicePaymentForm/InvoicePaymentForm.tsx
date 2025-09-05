@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
-import type { Invoice, InvoicePayment } from '../../../features/invoices/invoiceSchemas'
+import type { Invoice } from '../../../features/invoices/invoiceSchemas'
+import type { InvoicePayment } from '../../../features/invoices/invoicePaymentSchemas'
 import { Form } from '../../ui/Form/Form'
 import { HStack, VStack } from '../../ui/Stack/Stack'
 import { DataState, DataStateStatus } from '../../DataState'
