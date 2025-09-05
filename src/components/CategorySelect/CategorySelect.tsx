@@ -11,7 +11,7 @@ import ChevronDown from '../../icons/ChevronDown'
 import InfoIcon from '../../icons/InfoIcon'
 import MinimizeTwo from '../../icons/MinimizeTwo'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, CategorizationType, Category } from '../../types'
+import { BankTransaction, CategorizationStatus, CategorizationType, Category } from '../../types'
 import { SuggestedMatch, type CategoryWithEntries } from '../../types/bank_transactions'
 import { Badge } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
@@ -333,7 +333,8 @@ export const CategorySelect = ({
         ? bankTransaction.categorization_flow.suggestions.map(x =>
           mapCategoryToOption(x),
         )
-        : [
+        : bankTransaction?.categorization_status === CategorizationStatus.PENDING
+          ? [
             {
               type: 'Loading suggestions',
               disabled: true,
@@ -344,7 +345,8 @@ export const CategorySelect = ({
                 subCategories: null,
               },
             } satisfies CategoryOption,
-        ],
+          ]
+          : [],
     } satisfies GroupBase<CategoryOption>,
   ]
 
