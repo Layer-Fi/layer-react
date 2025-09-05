@@ -4,38 +4,24 @@
 
 .Layer__UI__Table__InvoiceTable {
   table-layout: fixed;
+  width: 100%;
 
-  .Layer__UI__Table-Column__InvoiceTable {
-    &--SentAt {
-      width: 15%;
-      min-width: 8rem;
-    }
-
-    &--InvoiceNo {
-      width: 10%;
-      min-width: 6.75rem;
-    }
-
-    &--Customer {
-      width: 35%;
-      min-width: 11.75rem;
-    }
-
-    &--Total {
-      width: 15%;
-      min-width: 7.75rem;
-      border-right: 1px solid var(--color-base-300);
-      text-align: end;
-    }
-
-    &--Status {
-      width: 25%;
-      min-width: 10rem;
-    }
+  .Layer__UI__Table-Row,
+  .Layer__UI__Table-TableHeader > tr {
+    display: grid;
+    grid-template-columns:
+      minmax(8rem, 10%)
+      minmax(6.75rem, 15%)
+      minmax(11.75rem, 35%)
+      minmax(7.75rem, 15%)
+      minmax(10rem, 25%)
+      3.75rem;
   }
 
+  .Layer__UI__Table-Column__InvoiceTable,
   .Layer__UI__Table-Cell__InvoiceTable {
     &--Total {
+      justify-content: flex-end;
       border-right: 1px solid var(--color-base-300);
     }
   }

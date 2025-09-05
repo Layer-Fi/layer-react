@@ -56,8 +56,8 @@ export const DataTable = <TData extends { id: string }, TColumns extends string>
   const renderTableBody = useMemo(() => {
     if (isError) {
       return (
-        <Row>
-          <Cell colSpan={columns.length}>
+        <Row className='Layer__DataTable__EmptyState__Row'>
+          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={columns.length}>
             <ErrorState />
           </Cell>
         </Row>
@@ -66,8 +66,8 @@ export const DataTable = <TData extends { id: string }, TColumns extends string>
 
     if (isLoading) {
       return (
-        <Row>
-          <Cell colSpan={columns.length}>
+        <Row className='Layer__DataTable__EmptyState__Row'>
+          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={columns.length}>
             <Loader />
           </Cell>
         </Row>
@@ -76,8 +76,8 @@ export const DataTable = <TData extends { id: string }, TColumns extends string>
 
     if (isEmptyTable) {
       return (
-        <Row>
-          <Cell colSpan={columns.length}>
+        <Row className='Layer__DataTable__EmptyState__Row'>
+          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={columns.length}>
             <EmptyState />
           </Cell>
         </Row>

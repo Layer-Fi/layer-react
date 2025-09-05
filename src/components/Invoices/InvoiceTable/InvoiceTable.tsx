@@ -68,7 +68,7 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
     case InvoiceStatus.Voided:
     case InvoiceStatus.Refunded:
     case InvoiceStatus.Sent: {
-      return <VStack><Span align='right'>{totalAmount}</Span></VStack>
+      return <Span align='right'>{totalAmount}</Span>
     }
     case InvoiceStatus.PartiallyPaid: {
       return (
@@ -93,7 +93,7 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
 
 const getCustomerName = (invoice: Invoice) => {
   const { recipientName, customer } = invoice
-  return customer?.individualName || customer?.companyName || recipientName
+  return customer?.individualName || customer?.companyName || customer?.externalId || recipientName
 }
 
 const getColumnConfig = (onSelectInvoice: (invoice: Invoice) => void): ColumnConfig<Invoice, InvoiceColumns> => ({
@@ -105,13 +105,13 @@ const getColumnConfig = (onSelectInvoice: (invoice: Invoice) => void): ColumnCon
   [InvoiceColumns.InvoiceNo]: {
     id: InvoiceColumns.InvoiceNo,
     header: 'No.',
-    cell: row => row.invoiceNumber,
+    cell: row => <Span ellipsis>{row.invoiceNumber}</Span>,
     isRowHeader: true,
   },
   [InvoiceColumns.Customer]: {
     id: InvoiceColumns.Customer,
     header: 'Customer',
-    cell: row => getCustomerName(row),
+    cell: row => <Span ellipsis>{getCustomerName(row)}</Span>,
   },
   [InvoiceColumns.Total]: {
     id: InvoiceColumns.Total,

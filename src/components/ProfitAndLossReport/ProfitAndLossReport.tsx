@@ -65,6 +65,8 @@ export const ProfitAndLossReport = ({
     setSelectedLineItem(null)
   }, [])
 
+  const useComparisonPnl = !!comparisonConfig
+
   return (
     <InAppLinkProvider renderInAppLink={renderInAppLink}>
       <View
@@ -80,11 +82,7 @@ export const ProfitAndLossReport = ({
                     defaultDatePickerMode={defaultDatePickerMode}
                     customDateRanges={customDateRanges}
                   />
-                  {view === 'desktop'
-                    ? (
-                      <ProfitAndLoss.CompareOptions />
-                    )
-                    : null}
+                  {view === 'desktop' && useComparisonPnl && <ProfitAndLoss.CompareOptions />}
                 </>
               </HeaderCol>
               <HeaderCol>
@@ -98,22 +96,21 @@ export const ProfitAndLossReport = ({
                   : (
                     <ProfitAndLoss.DownloadButton
                       stringOverrides={stringOverrides?.downloadButton}
-                      useComparisonPnl={!!comparisonConfig}
+                      useComparisonPnl={useComparisonPnl}
                       moneyFormat={csvMoneyFormat}
                       view={view}
                     />
                   )}
               </HeaderCol>
             </HeaderRow>
-            {view !== 'desktop'
-              ? (
+            {view !== 'desktop' && useComparisonPnl
+              && (
                 <HeaderRow>
                   <HeaderCol>
                     <ProfitAndLoss.CompareOptions />
                   </HeaderCol>
                 </HeaderRow>
-              )
-              : null}
+              )}
           </Header>
         )}
       >

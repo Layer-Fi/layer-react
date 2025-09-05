@@ -20,13 +20,6 @@
   display: grid;
 }
 
-.Layer__UI__VirtualizedTable__cell,
-.Layer__UI__VirtualizedTable__header-cell {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: center;
-}
-
 .Layer__UI__VirtualizedTable__header-cell {
   background-color: var(--color-base-0);
 }
