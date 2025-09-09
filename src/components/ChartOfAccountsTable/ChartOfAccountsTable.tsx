@@ -344,7 +344,7 @@ export const ChartOfAccountsTableContent = ({
         <TableHead>
           <TableRow isHeadRow rowKey='charts-of-accounts-head-row'>
             <TableCell isHeaderCell>
-              {stringOverrides?.nameColumnHeader || 'Account Number'}
+              {stringOverrides?.numberColumnHeader || 'Account Number'}
             </TableCell>
             <TableCell isHeaderCell>
               {stringOverrides?.nameColumnHeader || 'Account Name'}

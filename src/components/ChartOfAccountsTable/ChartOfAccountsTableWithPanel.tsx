@@ -25,6 +25,7 @@ export interface ChartOfAccountsTableStringOverrides {
   addAccountButtonText?: string
   csvDownloadButtonText?: string
   nameColumnHeader?: string
+  numberColumnHeader?: string
   typeColumnHeader?: string
   balanceColumnHeader?: string
   subtypeColumnHeader?: string

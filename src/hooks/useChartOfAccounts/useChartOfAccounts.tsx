@@ -11,7 +11,7 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useDeleteAccountFromLedger } from '../../features/ledger/accounts/[ledgerAccountId]/api/useDeleteLedgerAccount'
-import { NestedLedgerAccountType } from '../../../src/schemas/generalLedger/ledgerAccount'
+import { NestedLedgerAccountType } from '../../schemas/generalLedger/ledgerAccount'
 import { useLedgerBalances } from '../useLedgerBalances/useLedgerBalances'
 
 const validate = (formData?: ChartOfAccountsForm) => {

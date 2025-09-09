@@ -101,7 +101,7 @@ export function useLedgerBalances(withDates?: boolean, startDate?: Date, endDate
   })
   const response = useSWR(
     () => queryKey,
-    ({ accessToken, apiUrl, businessId }) => getLedgerAccountBalances(
+    ({ accessToken, apiUrl, businessId, startDate, endDate }) => getLedgerAccountBalances(
       apiUrl,
       accessToken,
       {

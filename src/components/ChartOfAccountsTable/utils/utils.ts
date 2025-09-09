@@ -56,6 +56,7 @@ const accountMatchesQuery = (account: NestedLedgerAccountType, query: string) =>
   return [
     account.name,
     account.accountType.displayName,
+    account.accountNumber || '-----',
     account.accountSubtype?.displayName || '',
     centsToDollars(account.balance),
     centsToDollarsWithoutCommas(account.balance),
@@ -69,7 +70,7 @@ export const filterAccounts = (accounts: NestedLedgerAccountType[], query: strin
     const matchingChildren = filterAccounts(Array.from(account.subAccounts), query)
 
     if (matchingChildren.length > 0) {
-      return [{ ...account, sub_accounts: matchingChildren, isMatching: true }]
+      return [{ ...account, subAccounts: matchingChildren, isMatching: true }]
     }
 
     if (isMatching) {

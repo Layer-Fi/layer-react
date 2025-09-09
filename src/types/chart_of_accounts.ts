@@ -1,6 +1,6 @@
 import { Direction } from './bank_transactions'
 import { Category } from './categories'
-import { NestedLedgerAccountType } from '../../src/schemas/generalLedger/ledgerAccount'
+import { NestedLedgerAccountType } from '../schemas/generalLedger/ledgerAccount'
 
 export interface ChartOfAccounts {
   type: string
