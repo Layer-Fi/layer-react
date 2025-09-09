@@ -40,7 +40,7 @@ class LedgerBalancesSWRResponse {
     return this.swrResponse.error !== undefined
   }
 
-  get fancyMutate() {
+  get mutate() {
     return this.swrResponse.mutate
   }
 

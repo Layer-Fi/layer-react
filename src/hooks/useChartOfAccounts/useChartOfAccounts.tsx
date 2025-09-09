@@ -166,7 +166,7 @@ export const useChartOfAccounts = (
     initialEndDate ?? endOfMonth(Date.now()),
   )
   const { trigger: originalTrigger } = useDeleteAccountFromLedger()
-  const { data, isLoading, isValidating, isError, fancyMutate, fancyCacheKey } = useLedgerBalances(withDates, startDate, endDate)
+  const { data, isLoading, isValidating, isError, mutate, fancyCacheKey } = useLedgerBalances(withDates, startDate, endDate)
 
   const create = async (newAccount: NewAccount) => {
     setSendingForm(true)
@@ -404,7 +404,7 @@ export const useChartOfAccounts = (
     }
   }
 
-  const refetch = () => fancyMutate()
+  const refetch = () => mutate()
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {

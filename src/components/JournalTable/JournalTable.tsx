@@ -107,13 +107,13 @@ const JournalTableContent = ({
             {row.entry_at && formatTime(parseISO(row.entry_at), DATE_FORMAT)}
           </TableCell>
           <TableCell>{humanizeEnum(row.entry_type)}</TableCell>
+          {/* Empty cell for account name on Transaction level */}
+          <TableCell />
           <TableCell>
             (
             {row.line_items.length}
             )
           </TableCell>
-          {/* Empty cell for account name on Transaction level */}
-          <TableCell />
           <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
             {'line_items' in row
               && Math.abs(
@@ -145,8 +145,8 @@ const JournalTableContent = ({
               <TableCell />
               <TableCell />
               <TableCell />
-              <TableCell>{accountName(subItem)}</TableCell>
               <TableCell>{subItem.account.account_number}</TableCell>
+              <TableCell>{accountName(subItem)}</TableCell>
               {subItem.direction === 'DEBIT' && subItem.amount >= 0
                 ? (
                   <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
@@ -185,10 +185,10 @@ const JournalTableContent = ({
             {stringOverrides?.transactionColumnHeader || 'Transaction'}
           </TableCell>
           <TableCell isHeaderCell>
-            {stringOverrides?.accountColumnHeader || 'Account Name'}
+            {stringOverrides?.accountNumberColumnHeader || 'Account Number'}
           </TableCell>
           <TableCell isHeaderCell>
-            Account Number
+            {stringOverrides?.accountColumnHeader || 'Account Name'}
           </TableCell>
           <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
             {stringOverrides?.debitColumnHeader || 'Debit'}

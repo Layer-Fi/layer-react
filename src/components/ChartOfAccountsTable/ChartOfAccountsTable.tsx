@@ -232,7 +232,7 @@ export const ChartOfAccountsTableContent = ({
               <UIButton variant='text' ellipsis onClick={onClickAccountName}>
                 {
                   highlightMatch({
-                    text: account.name,
+                    text: account.accountNumber || '',
                     query: searchQuery,
                     isMatching: account.isMatching,
                   })
@@ -242,7 +242,7 @@ export const ChartOfAccountsTableContent = ({
           </TableCell>
           <TableCell>
             {highlightMatch({
-              text: account.accountNumber || '',
+              text: account.name,
               query: searchQuery,
               isMatching: account.isMatching,
             })}
@@ -344,10 +344,10 @@ export const ChartOfAccountsTableContent = ({
         <TableHead>
           <TableRow isHeadRow rowKey='charts-of-accounts-head-row'>
             <TableCell isHeaderCell>
-              {stringOverrides?.nameColumnHeader || 'Name'}
+              {stringOverrides?.nameColumnHeader || 'Account Number'}
             </TableCell>
             <TableCell isHeaderCell>
-              {stringOverrides?.nameColumnHeader || 'Account Number'}
+              {stringOverrides?.nameColumnHeader || 'Account Name'}
             </TableCell>
             <TableCell isHeaderCell>
               {stringOverrides?.typeColumnHeader || 'Type'}

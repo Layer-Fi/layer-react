@@ -23,6 +23,7 @@ export interface JournalTableStringOverrides {
   idColumnHeader?: string
   dateColumnHeader?: string
   transactionColumnHeader?: string
+  accountNumberColumnHeader?: string
   accountColumnHeader?: string
   debitColumnHeader?: string
   creditColumnHeader?: string
