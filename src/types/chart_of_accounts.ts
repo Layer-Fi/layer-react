@@ -1,5 +1,6 @@
 import { Direction } from './bank_transactions'
 import { Category } from './categories'
+import { NestedLedgerAccountType } from '../../src/schemas/generalLedger/ledgerAccount'
 
 export interface ChartOfAccounts {
   type: string
@@ -49,6 +50,7 @@ export type LedgerAccountBalance = {
   id: string
   name: string
   stable_name: string
+  account_number: string | null
   account_type: ApiAccountType
   account_subtype?: ApiAccountType
   normality: Direction
@@ -57,10 +59,11 @@ export type LedgerAccountBalance = {
   sub_accounts: LedgerAccountBalance[]
 }
 
-export type AugmentedLedgerAccountBalance = LedgerAccountBalance & { isMatching?: true }
+export type AugmentedLedgerAccountBalance = NestedLedgerAccountType & { isMatching?: true }
 
 export type NewAccount = {
   name: string
+  account_number?: string
   normality: Direction
   parent_id?: {
     type: 'AccountId'
@@ -76,6 +79,7 @@ export type EditAccount = {
     stable_name: string
   }
   name: string
+  account_number?: string
   normality: Direction
   parent_id?: {
     type: 'AccountId'
@@ -99,6 +103,6 @@ export enum LedgerAccountNodeType {
   Parent = 'Parent',
 }
 
-export type LedgerAccountBalanceWithNodeType = LedgerAccountBalance & {
+export type LedgerAccountBalanceWithNodeType = NestedLedgerAccountType & {
   nodeType: LedgerAccountNodeType
 }

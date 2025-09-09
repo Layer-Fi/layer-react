@@ -6,16 +6,16 @@ import {
   NewChildAccount,
   LedgerAccountsEntry,
 } from '../../types'
-import { ChartWithBalances } from '../../types/chart_of_accounts'
 import { S3PresignedUrl } from '../../types/general'
 import { LedgerAccountLineItems } from '../../types/ledger_accounts'
 import { get, post, put } from './authenticated_http'
+import { LedgerBalancesSchemaType } from '../../schemas/generalLedger/ledgerAccount'
 
 export const getChartOfAccounts = get<{ data: ChartOfAccounts }>(
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/accounts`,
 )
 
-export const getLedgerAccountBalances = get<{ data: ChartWithBalances }>(
+export const getLedgerAccountBalances = get<{ data: LedgerBalancesSchemaType }>(
   ({ businessId, startDate, endDate }) =>
     `/v1/businesses/${businessId}/ledger/balances?${
       startDate ? `&start_date=${encodeURIComponent(startDate)}` : ''

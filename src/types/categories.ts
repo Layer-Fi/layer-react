@@ -13,7 +13,9 @@ type BaseCategory = {
   category: string
   subCategories: Array<Category> | null
   description: string | null
+  account_number: string | null
 }
+
 type AccountNestedCategory = {
   type: 'AccountNested'
   id: string

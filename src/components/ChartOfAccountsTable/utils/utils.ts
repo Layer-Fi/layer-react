@@ -1,7 +1,8 @@
 import { centsToDollars, centsToDollarsWithoutCommas } from '../../../models/Money'
-import type { AugmentedLedgerAccountBalance, LedgerAccountBalance } from '../../../types/chart_of_accounts'
+import type { AugmentedLedgerAccountBalance } from '../../../types/chart_of_accounts'
 import { convertCentsToCurrency } from '../../../utils/format'
 import { LedgerAccountSubtypeOrderEnum, LedgerAccountTypeOrderEnum } from './types'
+import { NestedLedgerAccountType } from '../../../../src/schemas/generalLedger/ledgerAccount'
 
 const compareByEnum = (
   a: string | undefined,
@@ -17,54 +18,55 @@ const compareByEnum = (
   return 0
 }
 
-const compareAccounts = (a: LedgerAccountBalance, b: LedgerAccountBalance): number => {
+const compareAccounts = (a: NestedLedgerAccountType, b: NestedLedgerAccountType): number => {
   const typeComparison = compareByEnum(
-    a.account_type.value,
-    b.account_type.value,
+    a.accountType.value,
+    b.accountType.value,
     LedgerAccountTypeOrderEnum as unknown as Record<string, number>,
   )
   if (typeComparison !== 0) return typeComparison
 
   const subtypeComparison = compareByEnum(
-    a.account_subtype?.value,
-    b.account_subtype?.value,
+    a.accountSubtype?.value,
+    b.accountSubtype?.value,
     LedgerAccountSubtypeOrderEnum as unknown as Record<string, number>,
   )
   if (subtypeComparison !== 0) return subtypeComparison
 
-  const subtypeNameCompare = (a.account_subtype?.display_name ?? '')
-    .localeCompare(b.account_subtype?.display_name ?? '')
+  const subtypeNameCompare = (a.accountSubtype?.displayName ?? '')
+    .localeCompare(b.accountSubtype?.displayName ?? '')
   if (subtypeNameCompare !== 0) return subtypeNameCompare
 
   return a.name.localeCompare(b.name)
 }
 
-export const sortAccountsRecursive = (accounts: LedgerAccountBalance[]): LedgerAccountBalance[] => {
+export const sortAccountsRecursive = (accounts: NestedLedgerAccountType[]): NestedLedgerAccountType[] => {
   return accounts
     .map(account => ({
       ...account,
-      sub_accounts: account.sub_accounts
-        ? sortAccountsRecursive(account.sub_accounts)
+      subAccounts: account.subAccounts
+      // Questionable conversion from readOnly array to mutable array
+        ? sortAccountsRecursive(Array.from(account.subAccounts))
         : [],
     }))
     .sort(compareAccounts)
 }
 
-const accountMatchesQuery = (account: LedgerAccountBalance, query: string) => {
+const accountMatchesQuery = (account: NestedLedgerAccountType, query: string) => {
   return [
     account.name,
-    account.account_type.display_name,
-    account.account_subtype?.display_name || '',
+    account.accountType.displayName,
+    account.accountSubtype?.displayName || '',
     centsToDollars(account.balance),
     centsToDollarsWithoutCommas(account.balance),
     convertCentsToCurrency(account.balance) || '']
     .some(field => field.toLowerCase().includes(query))
 }
 
-export const filterAccounts = (accounts: LedgerAccountBalance[], query: string): AugmentedLedgerAccountBalance[] => {
+export const filterAccounts = (accounts: NestedLedgerAccountType[], query: string): AugmentedLedgerAccountBalance[] => {
   return accounts.flatMap((account) => {
     const isMatching = accountMatchesQuery(account, query)
-    const matchingChildren = filterAccounts(account.sub_accounts, query)
+    const matchingChildren = filterAccounts(Array.from(account.subAccounts), query)
 
     if (matchingChildren.length > 0) {
       return [{ ...account, sub_accounts: matchingChildren, isMatching: true }]

@@ -4,8 +4,6 @@ import { LedgerAccountsContext } from '../../contexts/LedgerAccountsContext'
 import { TableProvider } from '../../contexts/TableContext/TableContext'
 import Edit2 from '../../icons/Edit2'
 import {
-  ChartWithBalances,
-  LedgerAccountBalance,
   LedgerAccountNodeType,
   type AugmentedLedgerAccountBalance,
 } from '../../types/chart_of_accounts'
@@ -28,6 +26,7 @@ import { Span } from '../ui/Typography/Text'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import { filterAccounts, getMatchedTextIndices, sortAccountsRecursive } from './utils/utils'
 import { BaseConfirmationModal } from '../BaseConfirmationModal/BaseConfirmationModal'
+import { LedgerBalancesSchemaType, NestedLedgerAccountType } from '../../schemas/generalLedger/ledgerAccount'
 
 const highlightMatch = ({ text, query, isMatching }: { text: string, query: string, isMatching?: boolean }): ReactNode => {
   const matchedTextIndices = getMatchedTextIndices({ text, query, isMatching })
@@ -57,7 +56,7 @@ export const ChartOfAccountsTable = ({
   templateAccountsEditable = true,
 }: {
   view: View
-  data: ChartWithBalances
+  data: LedgerBalancesSchemaType
   searchQuery: string
   stringOverrides?: ChartOfAccountsTableStringOverrides
   error?: unknown
@@ -86,7 +85,7 @@ export const ChartOfAccountsTableContent = ({
   templateAccountsEditable,
 }: {
   view: View
-  data: ChartWithBalances
+  data: LedgerBalancesSchemaType
   searchQuery: string
   stringOverrides?: ChartOfAccountsTableStringOverrides
   error?: unknown
@@ -97,23 +96,23 @@ export const ChartOfAccountsTableContent = ({
   const { editAccount, deleteAccount } = useContext(ChartOfAccountsContext)
   const [toggledKeys, setToggledKeys] = useState<Record<string, boolean>>({})
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
-
-  const sortedAccounts = useMemo(() => sortAccountsRecursive(data.accounts), [data.accounts])
+  // Another questionable conversion from readOnly array to mutable array
+  const sortedAccounts = useMemo(() => sortAccountsRecursive(Array.from(data.accounts)), [data.accounts])
 
   const allRowKeys = useMemo(() => {
     const keys: string[] = []
 
-    const collect = (accounts: LedgerAccountBalance[]) => {
+    const collect = (accounts: NestedLedgerAccountType[]) => {
       for (const account of accounts) {
-        const key = `coa-row-${account.id}`
-        if (account.sub_accounts.length > 0) {
+        const key = `coa-row-${account.accountId}`
+        if (account.subAccounts.length > 0) {
           keys.push(key)
-          collect(account.sub_accounts)
+          collect(Array.from(account.subAccounts))
         }
       }
     }
 
-    collect(data.accounts)
+    collect(Array.from(data.accounts))
     return keys
   }, [data.accounts])
 
@@ -130,14 +129,14 @@ export const ChartOfAccountsTableContent = ({
 
   const onConfirmDelete = async () => {
     if (!accountToDelete) return
-    await deleteAccount(accountToDelete.id)
+    await deleteAccount(accountToDelete.accountId)
   }
 
   const getDeleteButtonTooltip = (account: AugmentedLedgerAccountBalance) => {
-    if (account.is_deletable) {
+    if (account.isDeletable) {
       return undefined
     }
-    if (account.sub_accounts.length > 0) {
+    if (account.subAccounts.length > 0) {
       return 'This account cannot be deleted because it has child accounts'
     }
     if (account.balance !== 0) {
@@ -163,8 +162,8 @@ export const ChartOfAccountsTableContent = ({
     depth: number
     searchQuery: string
   }) => {
-    const rowKey = `coa-row-${account.id}`
-    const hasSubAccounts = !!account.sub_accounts && account.sub_accounts.length > 0
+    const rowKey = `coa-row-${account.accountId}`
+    const hasSubAccounts = !!account.subAccounts && account.subAccounts.length > 0
 
     const nodeType =
       depth === 0
@@ -180,8 +179,8 @@ export const ChartOfAccountsTableContent = ({
       || manuallyToggled === true
       || (manuallyToggled !== false && (account.isMatching || depth === 0))
 
-    const isNonEditable = !templateAccountsEditable && !!account.stable_name
-    const isDeleteDisabled = !account.is_deletable
+    const isNonEditable = !templateAccountsEditable && !!account.stableName
+    const isDeleteDisabled = !account.isDeletable
 
     const onClickRow = (e: React.MouseEvent) => {
       e.stopPropagation()
@@ -201,7 +200,7 @@ export const ChartOfAccountsTableContent = ({
     const onClickEdit = (e: React.MouseEvent) => {
       e.preventDefault()
       e.stopPropagation()
-      editAccount(account.id)
+      editAccount(account.accountId)
     }
 
     const onClickView = (e: React.MouseEvent) => {
@@ -242,9 +241,16 @@ export const ChartOfAccountsTableContent = ({
             </HStack>
           </TableCell>
           <TableCell>
+            {highlightMatch({
+              text: account.accountNumber || '',
+              query: searchQuery,
+              isMatching: account.isMatching,
+            })}
+          </TableCell>
+          <TableCell>
             {depth != 0
               && highlightMatch({
-                text: account.account_type?.display_name || '',
+                text: account.accountType?.displayName || '',
                 query: searchQuery,
                 isMatching: account.isMatching,
               })}
@@ -252,7 +258,7 @@ export const ChartOfAccountsTableContent = ({
           <TableCell>
             {depth != 0
               && highlightMatch({
-                text: account.account_subtype?.display_name || '',
+                text: account.accountSubtype?.displayName || '',
                 query: searchQuery,
                 isMatching: account.isMatching,
               })}
@@ -300,7 +306,7 @@ export const ChartOfAccountsTableContent = ({
         </TableRow>
         {hasSubAccounts
           && isExpanded
-          && account.sub_accounts.map((subItem, subIdx) => {
+          && account.subAccounts.map((subItem, subIdx) => {
             return renderChartOfAccountsDesktopRow({
               account: subItem,
               index: subIdx,
@@ -329,6 +335,7 @@ export const ChartOfAccountsTableContent = ({
       <Table componentName='chart-of-accounts'>
         <colgroup>
           <col className='Layer__chart-of-accounts--name' />
+          <col className='Layer__chart-of-accounts--accountnumber' />
           <col className='Layer__chart-of-accounts--type' />
           <col className='Layer__chart-of-accounts--subtype' />
           <col className='Layer__chart-of-accounts--balance' />
@@ -338,6 +345,9 @@ export const ChartOfAccountsTableContent = ({
           <TableRow isHeadRow rowKey='charts-of-accounts-head-row'>
             <TableCell isHeaderCell>
               {stringOverrides?.nameColumnHeader || 'Name'}
+            </TableCell>
+            <TableCell isHeaderCell>
+              {stringOverrides?.nameColumnHeader || 'Account Number'}
             </TableCell>
             <TableCell isHeaderCell>
               {stringOverrides?.typeColumnHeader || 'Type'}

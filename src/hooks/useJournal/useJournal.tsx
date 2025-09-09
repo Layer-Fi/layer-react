@@ -322,7 +322,7 @@ export const useJournal: UseJournal = () => {
     }
 
     if (form?.data) {
-      create({
+      void create({
         ...form.data,
         line_items: form.data.line_items?.map(line => ({
           ...line,

@@ -1,5 +1,5 @@
 import { LedgerEntrySourceType } from '../schemas/generalLedger/ledgerEntrySource'
-import { Account } from '../types'
+import { SingleChartAccountEncodedType } from '../schemas/generalLedger/ledgerAccount'
 import { Direction } from './bank_transactions'
 import { AccountIdentifierPayloadObject } from './categories'
 import type { TransactionTag } from './tags'
@@ -22,7 +22,7 @@ export interface JournalEntry {
 export interface JournalEntryLine {
   id: string
   entry_id: string
-  account: Account
+  account: SingleChartAccountEncodedType
   amount: number
   direction: Direction
   entry_at: string

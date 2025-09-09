@@ -188,13 +188,17 @@ export type LedgerAccount = typeof LedgerAccountSchema.Type
 
 const nestedLedgerAccountFields = {
   accountId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('id'),
   ),
   name: Schema.String,
   stableName: pipe(
     Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('stable_name'),
+  ),
+  accountNumber: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('account_number'),
   ),
   normality: LedgerEntryDirectionSchema,
   accountType: pipe(
@@ -240,6 +244,10 @@ const nestedChartAccountFields = {
     Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('stable_name'),
   ),
+  accountNumber: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('account_number'),
+  ),
   normality: LedgerEntryDirectionSchema,
   accountType: pipe(
     Schema.propertySignature(LedgerAccountTypeWithDisplayNameSchema),
@@ -259,6 +267,8 @@ export interface NestedChartAccountEncoded extends Schema.Struct.Encoded<typeof 
   readonly sub_accounts: ReadonlyArray<NestedChartAccountEncoded>
 }
 
+export const SingleChartAccountSchema = Schema.Struct(nestedChartAccountFields)
+
 export const NestedChartAccountSchema = Schema.Struct({
   ...nestedChartAccountFields,
   subAccounts: pipe(
@@ -271,6 +281,8 @@ export const NestedChartAccountSchema = Schema.Struct({
 
 export type NestedLedgerAccountType = typeof NestedLedgerAccountSchema.Type
 export type NestedChartAccountType = typeof NestedChartAccountSchema.Type
+export type SingleChartAccountType = typeof SingleChartAccountSchema.Type
+export type SingleChartAccountEncodedType = typeof SingleChartAccountSchema.Encoded
 
 export const ChartOfAccountsSchema = Schema.Struct({
   accounts: Schema.Array(NestedChartAccountSchema),
@@ -279,3 +291,5 @@ export const ChartOfAccountsSchema = Schema.Struct({
 export const LedgerBalancesSchema = Schema.Struct({
   accounts: Schema.Array(NestedLedgerAccountSchema),
 })
+
+export type LedgerBalancesSchemaType = typeof LedgerBalancesSchema.Type

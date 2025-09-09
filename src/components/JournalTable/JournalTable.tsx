@@ -112,6 +112,8 @@ const JournalTableContent = ({
             {row.line_items.length}
             )
           </TableCell>
+          {/* Empty cell for account name on Transaction level */}
+          <TableCell />
           <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
             {'line_items' in row
               && Math.abs(
@@ -144,6 +146,7 @@ const JournalTableContent = ({
               <TableCell />
               <TableCell />
               <TableCell>{accountName(subItem)}</TableCell>
+              <TableCell>{subItem.account.account_number}</TableCell>
               {subItem.direction === 'DEBIT' && subItem.amount >= 0
                 ? (
                   <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
@@ -183,6 +186,9 @@ const JournalTableContent = ({
           </TableCell>
           <TableCell isHeaderCell>
             {stringOverrides?.accountColumnHeader || 'Account Name'}
+          </TableCell>
+          <TableCell isHeaderCell>
+            Account Number
           </TableCell>
           <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
             {stringOverrides?.debitColumnHeader || 'Debit'}

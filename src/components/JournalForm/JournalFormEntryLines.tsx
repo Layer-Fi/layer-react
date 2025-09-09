@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import Trash from '../../icons/Trash'
-import { Direction, JournalEntryLineItem } from '../../types'
+import { Direction } from '../../types'
 import { LedgerAccountBalance } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
 import {
@@ -15,6 +15,7 @@ import { useCategories } from '../../hooks/categories/useCategories'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { AmountInput } from '../Input/AmountInput'
 import { Badge, BadgeVariant } from '../Badge/Badge'
+import { NewApiJournalEntryLineItem } from '../../types/journal'
 
 type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
 
@@ -37,7 +38,7 @@ export const JournalFormEntryLines = ({
   sendingForm,
   config,
 }: {
-  entrylineItems: JournalEntryLineItem[]
+  entrylineItems: NewApiJournalEntryLineItem[]
   addEntryLine: (direction: Direction) => void
   removeEntryLine: (index: number) => void
   changeFormData: (
@@ -61,13 +62,14 @@ export const JournalFormEntryLines = ({
         switch (account.type) {
           case 'AccountNested':
             return {
-              label: account.display_name,
+              label: `${account.account_number} ${account.display_name}`,
               value: account.id,
             }
           case 'OptionalAccountNested':
             return {
               label: account.display_name,
               value: account.stable_name,
+              account_number: account.account_number,
             }
           case 'ExclusionNested':
             return {
@@ -134,6 +136,7 @@ export const JournalFormEntryLines = ({
       [
         {
           ...baseFields,
+          account_number: relevantCategory.account_number,
           is_deletable: false,
           name: relevantCategory.display_name,
           sub_accounts: [],
