@@ -2,8 +2,11 @@ import { RefObject, useContext } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import { JournalConfig } from '../Journal/Journal'
 import { JournalEntryDetails } from '../JournalEntryDetails'
-import { JournalForm } from '../JournalForm'
-import { JournalFormStringOverrides } from '../JournalForm/JournalForm'
+import {
+  JournalFormStringOverrides,
+  // JournalForm,
+} from '../JournalForm/JournalForm'
+import { CustomJournalEntryForm } from '../CustomJournalEntryForm/CustomJournalEntryForm'
 
 export const JournalSidebar = ({
   parentRef: _parentRef,
@@ -18,5 +21,6 @@ export const JournalSidebar = ({
   if (selectedEntryId !== 'new') {
     return <JournalEntryDetails />
   }
-  return <JournalForm config={config} stringOverrides={stringOverrides} />
+  return <CustomJournalEntryForm onSuccess={() => {}} createdBy='You' />
+  // return <JournalForm config={config} stringOverrides={stringOverrides} />
 }
