@@ -232,7 +232,7 @@ export const ChartOfAccountsTableContent = ({
               <UIButton variant='text' ellipsis onClick={onClickAccountName}>
                 {
                   highlightMatch({
-                    text: account.accountNumber || '',
+                    text: account.accountNumber || '-----',
                     query: searchQuery,
                     isMatching: account.isMatching,
                   })

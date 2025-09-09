@@ -1,10 +1,10 @@
-import { formatISO } from 'date-fns'
 import { LedgerBalancesSchemaType, LedgerBalancesSchema } from '../../schemas/generalLedger/ledgerAccount'
 import { get } from '../../api/layer/authenticated_http'
 import useSWR, { type SWRResponse } from 'swr'
 import { Schema } from 'effect/index'
 import { useAuth } from '../useAuth'
 import { useLayerContext } from '../../contexts/LayerContext'
+import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 
 class LedgerBalancesSWRResponse {
   private swrResponse: SWRResponse<LedgerBalancesSchemaType>
@@ -52,11 +52,18 @@ class LedgerBalancesSWRResponse {
   }
 }
 
-const getLedgerAccountBalances = get<{ data: LedgerBalancesSchemaType }>(
-  ({ businessId, startDate, endDate }) =>
-    `/v1/businesses/${businessId}/ledger/balances?${
-      startDate ? `&start_date=${encodeURIComponent(startDate)}` : ''
-    }${endDate ? `&end_date=${encodeURIComponent(endDate)}` : ''}`,
+type GetLedgerAccountBalancesParams = {
+  businessId: string
+  startDate?: Date
+  endDate?: Date
+}
+
+const getLedgerAccountBalances = get<{ data: LedgerBalancesSchemaType }, GetLedgerAccountBalancesParams>(
+  ({ businessId, startDate, endDate }) => {
+    const parameters = toDefinedSearchParameters({ startDate, endDate })
+
+    return `/v1/businesses/${businessId}/ledger/balances?${parameters}`
+  },
 )
 
 function buildKey({
@@ -100,10 +107,9 @@ export function useLedgerBalances(withDates?: boolean, startDate?: Date, endDate
       {
         params: {
           businessId,
-          startDate:
-         withDates && startDate ? formatISO(startDate.valueOf()) : undefined,
-          endDate:
-         withDates && endDate ? formatISO(endDate.valueOf()) : undefined },
+          startDate,
+          endDate,
+        },
       },
     )().then(({ data }) => Schema.decodeUnknownPromise(LedgerBalancesSchema)(data)),
   )
