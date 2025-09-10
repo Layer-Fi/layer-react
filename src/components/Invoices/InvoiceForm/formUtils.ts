@@ -12,9 +12,9 @@ import {
 import { startOfToday } from 'date-fns'
 import { getLocalTimeZone, fromDate, toCalendarDate } from '@internationalized/date'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
-import { makeTagFromTransactionTag, makeTagKeyValueFromTag } from '../../../features/tags/tagSchemas'
+import { makeTagFromTransactionTag, makeTagKeyValueFromTag, type Tag } from '../../../features/tags/tagSchemas'
 
-export const INVOICE_MECE_TAG_DIMENSION = 'job'
+export const INVOICE_MECE_TAG_DIMENSION = 'Job'
 
 export type InvoiceFormState = {
   isDirty: boolean
@@ -22,7 +22,6 @@ export type InvoiceFormState = {
 }
 
 export const EMPTY_LINE_ITEM: InvoiceFormLineItem = {
-  product: '',
   description: '',
   unitPrice: BIG_DECIMAL_ZERO,
   quantity: BIG_DECIMAL_ONE,
@@ -51,6 +50,14 @@ export const getInvoiceFormDefaultValues = (): InvoiceForm => {
   }
 }
 
+export const getAdditionalTags = (tags: readonly Tag[]): Tag[] => {
+  return tags.filter(obj => obj.dimensionLabel.toLowerCase() !== INVOICE_MECE_TAG_DIMENSION.toLowerCase())
+}
+
+export const getSelectedTag = (tags: readonly Tag[]): Tag | null => {
+  return tags.find(obj => obj.dimensionLabel.toLowerCase() === INVOICE_MECE_TAG_DIMENSION.toLowerCase()) ?? null
+}
+
 const getInvoiceLineItemAmount = (lineItem: InvoiceLineItem): BD.BigDecimal => {
   const { unitPrice, quantity } = lineItem
 
@@ -58,10 +65,9 @@ const getInvoiceLineItemAmount = (lineItem: InvoiceLineItem): BD.BigDecimal => {
 }
 
 const getInvoiceFormLineItem = (lineItem: InvoiceLineItem): InvoiceFormLineItem => {
-  const { product, description, unitPrice, quantity } = lineItem
+  const { description, unitPrice, quantity } = lineItem
 
   return {
-    product: product || '',
     description: description || '',
     quantity: BD.normalize(quantity),
     unitPrice: convertCentsToBigDecimal(unitPrice),
@@ -136,8 +142,18 @@ export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }) 
   }
 
   nonEmptyLineItems.some((item) => {
-    if (item.product.trim() === '') {
-      errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field: Product/Service.' })
+    if (item.accountIdentifier === null) {
+      errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field: Revenue account.' })
+      return true
+    }
+
+    if (getSelectedTag(item.tags) === null) {
+      errors.push({ lineItems: `Invoice has incomplete line items. Please include required field: ${INVOICE_MECE_TAG_DIMENSION}.` })
+      return true
+    }
+
+    if (item.description.trim() === '') {
+      errors.push({ lineItems: 'Invoice has incomplete line items. Please include required field: Description.' })
       return true
     }
   })
@@ -162,7 +178,6 @@ export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({
     .map((item) => {
       const baseLineItem = {
         description: item.description.trim(),
-        product: item.product.trim(),
         unitPrice: convertBigDecimalToCents(item.unitPrice),
         quantity: item.quantity,
         tags: item.tags.map(makeTagKeyValueFromTag),

@@ -15,7 +15,7 @@ import { convertCentsToCurrency } from '../../../utils/format'
 import { getDurationInDaysFromTerms, InvoiceTermsComboBox, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { type ZonedDateTime, toCalendarDate, fromDate } from '@internationalized/date'
 import { withForceUpdate } from '../../../features/forms/components/FormBigDecimalField'
-import { type InvoiceFormState, EMPTY_LINE_ITEM, INVOICE_MECE_TAG_DIMENSION } from './formUtils'
+import { type InvoiceFormState, EMPTY_LINE_ITEM, getAdditionalTags, getSelectedTag, INVOICE_MECE_TAG_DIMENSION } from './formUtils'
 import { DataState, DataStateStatus } from '../../DataState'
 import { AlertTriangle } from 'lucide-react'
 import { TextSize } from '../../Typography'
@@ -88,8 +88,8 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
         </form.Field>
         <form.Field name={`lineItems[${index}].tags`}>
           {(field) => {
-            const additionalTags = field.state.value.filter(obj => obj.dimensionLabel.toLowerCase() !== INVOICE_MECE_TAG_DIMENSION.toLowerCase())
-            const selectedTag = field.state.value.find(obj => obj.dimensionLabel.toLowerCase() === INVOICE_MECE_TAG_DIMENSION.toLowerCase()) ?? null
+            const additionalTags = getAdditionalTags(field.state.value)
+            const selectedTag = getSelectedTag(field.state.value)
 
             const onValueChange = (value: Tag | null) => {
               field.setValue(value ? [...additionalTags, value] : additionalTags)

@@ -45,8 +45,6 @@ export const InvoiceLineItemSchema = Schema.Struct({
 
   description: Schema.NullOr(Schema.String),
 
-  product: Schema.NullOr(Schema.String),
-
   unitPrice: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('unit_price'),
@@ -180,8 +178,6 @@ export const UpsertInvoiceTaxLineItemSchema = Schema.Struct({
 export const UpsertInvoiceLineItemSchema = Schema.Struct({
   description: Schema.String,
 
-  product: Schema.String,
-
   unitPrice: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('unit_price'),
@@ -236,8 +232,6 @@ export type UpsertInvoice = typeof UpsertInvoiceSchema.Type
 
 export const InvoiceFormLineItemSchema = Schema.Struct({
   description: Schema.String,
-
-  product: Schema.String,
 
   unitPrice: Schema.BigDecimal,
 

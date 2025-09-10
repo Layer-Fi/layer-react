@@ -33,11 +33,6 @@ export const TagKeyValueSchema = Schema.Struct({
 })
 export const makeTagKeyValue = Schema.decodeSync(TagKeyValueSchema)
 
-export const makeTagKeyValueFromTag = ({ dimensionLabel, valueLabel }: Tag) => makeTagKeyValue({
-  key: dimensionLabel,
-  value: valueLabel,
-})
-
 export const TagDimensionSchema = Schema.Struct({
   id: Schema.UUID,
   key: Schema.NonEmptyTrimmedString,
@@ -71,15 +66,6 @@ export const TagSchema = Schema.Data(
 export const makeTag = Schema.decodeSync(TagSchema)
 export type Tag = typeof TagSchema.Type
 
-export const makeTagFromTransactionTag = ({ id, key, value, _local }: TransactionTag) => makeTag({
-  id,
-  dimensionLabel: key,
-  valueLabel: value,
-  _local: {
-    isOptimistic: _local?.isOptimistic ?? false,
-  },
-})
-
 export const TransactionTagSchema = Schema.Struct({
   id: Schema.UUID,
   key: Schema.NonEmptyTrimmedString,
@@ -109,3 +95,17 @@ export const TransactionTagSchema = Schema.Struct({
 
 export type TransactionTag = typeof TransactionTagSchema.Type
 export type TransactionTagEncoded = typeof TransactionTagSchema.Encoded
+
+export const makeTagKeyValueFromTag = ({ dimensionLabel, valueLabel }: Tag) => makeTagKeyValue({
+  key: dimensionLabel,
+  value: valueLabel,
+})
+
+export const makeTagFromTransactionTag = ({ id, key, value, _local }: TransactionTag) => makeTag({
+  id,
+  dimensionLabel: key,
+  valueLabel: value,
+  _local: {
+    isOptimistic: _local?.isOptimistic ?? false,
+  },
+})
