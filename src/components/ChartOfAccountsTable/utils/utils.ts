@@ -45,7 +45,6 @@ export const sortAccountsRecursive = (accounts: NestedLedgerAccountType[]): Nest
     .map(account => ({
       ...account,
       subAccounts: account.subAccounts
-      // Questionable conversion from readOnly array to mutable array
         ? sortAccountsRecursive(Array.from(account.subAccounts))
         : [],
     }))

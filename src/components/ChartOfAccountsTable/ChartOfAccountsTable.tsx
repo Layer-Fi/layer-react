@@ -27,6 +27,7 @@ import { DataState, DataStateStatus } from '../DataState/DataState'
 import { filterAccounts, getMatchedTextIndices, sortAccountsRecursive } from './utils/utils'
 import { BaseConfirmationModal } from '../BaseConfirmationModal/BaseConfirmationModal'
 import { LedgerBalancesSchemaType, NestedLedgerAccountType } from '../../schemas/generalLedger/ledgerAccount'
+import { useLayerContext } from '../../contexts/LayerContext'
 
 const highlightMatch = ({ text, query, isMatching }: { text: string, query: string, isMatching?: boolean }): ReactNode => {
   const matchedTextIndices = getMatchedTextIndices({ text, query, isMatching })
@@ -96,10 +97,10 @@ export const ChartOfAccountsTableContent = ({
   const { editAccount, deleteAccount } = useContext(ChartOfAccountsContext)
   const [toggledKeys, setToggledKeys] = useState<Record<string, boolean>>({})
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
-  // Another questionable conversion from readOnly array to mutable array
   const sortedAccounts = useMemo(() => sortAccountsRecursive(Array.from(data.accounts)), [data.accounts])
-  // const enableAccountNumbers = useLayerContext().accountingConfiguration?.enableAccountNumbers
-  const enableAccountNumbers = true
+  const { accountingConfiguration } = useLayerContext()
+  const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
+
   const allRowKeys = useMemo(() => {
     const keys: string[] = []
 
@@ -231,45 +232,30 @@ export const ChartOfAccountsTableContent = ({
               withExpandIcon={hasSubAccounts}
             >
               <HStack {...(!hasSubAccounts && { pis: 'lg' })} overflow='hidden'>
-                <UIButton variant='text' ellipsis onClick={onClickAccountName}>
-                  {enableAccountNumbers
-                    && highlightMatch({
-                      text: account.accountNumber || '-----',
-                      query: searchQuery,
-                      isMatching: account.isMatching,
-                    })}
-                </UIButton>
+                {enableAccountNumbers
+                  && highlightMatch({
+                    text: account.accountNumber || '-----',
+                    query: searchQuery,
+                    isMatching: account.isMatching,
+                  })}
               </HStack>
             </TableCell>
           )}
-          {!enableAccountNumbers
-            && (
-              <TableCell
-                withExpandIcon={hasSubAccounts}
-              >
-                <HStack {...(!hasSubAccounts && { pis: 'lg' })} overflow='hidden'>
-                  <UIButton variant='text' ellipsis onClick={onClickAccountName}>
-                    {
-                      highlightMatch({
-                        text: account.name,
-                        query: searchQuery,
-                        isMatching: account.isMatching,
-                      })
-                    }
-                  </UIButton>
-                </HStack>
-              </TableCell>
-            )}
-          {enableAccountNumbers && (
-            <TableCell>
-              {depth != 0
-                && highlightMatch({
-                  text: account.name,
-                  query: searchQuery,
-                  isMatching: account.isMatching,
-                })}
-            </TableCell>
-          )}
+          <TableCell
+            withExpandIcon={hasSubAccounts && !enableAccountNumbers}
+          >
+            <HStack {...((!hasSubAccounts && !enableAccountNumbers) ? { pis: 'lg' } : {})} overflow='hidden'>
+              <UIButton variant='text' ellipsis onClick={onClickAccountName}>
+                {
+                  highlightMatch({
+                    text: account.name,
+                    query: searchQuery,
+                    isMatching: account.isMatching,
+                  })
+                }
+              </UIButton>
+            </HStack>
+          </TableCell>
           <TableCell>
             {depth != 0
               && highlightMatch({

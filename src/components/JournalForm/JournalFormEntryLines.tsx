@@ -62,14 +62,13 @@ export const JournalFormEntryLines = ({
         switch (account.type) {
           case 'AccountNested':
             return {
-              label: `${account.account_number} ${account.display_name}`,
+              label: `${account.display_name}`,
               value: account.id,
             }
           case 'OptionalAccountNested':
             return {
               label: account.display_name,
               value: account.stable_name,
-              account_number: account.account_number,
             }
           case 'ExclusionNested':
             return {
@@ -136,12 +135,13 @@ export const JournalFormEntryLines = ({
       [
         {
           ...baseFields,
-          account_number: relevantCategory.account_number,
           is_deletable: false,
           name: relevantCategory.display_name,
           sub_accounts: [],
           balance: 0,
           normality: Direction.DEBIT,
+          // We aren't exposing account numbers for categories yet so this is safe
+          account_number: null,
         },
       ],
     )
