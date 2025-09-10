@@ -37,7 +37,7 @@ export const AccountingConfigurationSchema = Schema.Struct({
     Schema.fromKey('disable_adjustment_match_suggestions'),
   ),
   enableAccountNumbers: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Boolean)),
+    Schema.propertySignature(Schema.Boolean),
     Schema.fromKey('enable_account_numbers'),
   ),
 })

@@ -206,7 +206,7 @@ export const BusinessProvider = ({
     return
   }
 
-  const accountingConfiguration = useAccountingConfiguration({ businessId })
+  const { data: accountingConfiguration } = useAccountingConfiguration({ businessId })
 
   const setOnboardingStep = (value: OnboardingStep) =>
     dispatch({
@@ -235,7 +235,7 @@ export const BusinessProvider = ({
         expireDataCaches: resetCaches,
         hasBeenTouched,
         eventCallbacks,
-        accountingConfiguration: accountingConfiguration.data,
+        accountingConfiguration,
       }}
     >
       {children}

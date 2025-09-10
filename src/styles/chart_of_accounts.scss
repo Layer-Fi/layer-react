@@ -39,7 +39,7 @@
 
   .Layer__chart-of-accounts {
     &--accountnumber {
-      width: 10rem;
+      width: clamp(10rem, fit-content, 14rem);
     }
     
     &--name {
