@@ -49,6 +49,8 @@ export function useAppForm<T extends Record<string, unknown>>(props: FormOptions
   return useInternalAppForm(props)
 }
 
+export type AppForm<T extends Record<string, unknown>> = ReturnType<typeof useAppForm<T>>
+
 export function useForm<T extends Record<string, unknown>>(props: FormOptions<
   T,
   FormValidateOrFn<T>,

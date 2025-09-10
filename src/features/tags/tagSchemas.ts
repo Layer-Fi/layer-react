@@ -1,4 +1,4 @@
-import { Schema } from 'effect'
+import { Schema, pipe } from 'effect'
 
 export const TagDimensionStrictnessSchema = Schema.Literal(
   'BALANCING',
@@ -25,6 +25,18 @@ export const TagValueDefinitionSchema = Schema.Struct({
   id: Schema.UUID,
   value: Schema.NonEmptyTrimmedString,
 })
+export type TagValueDefinition = typeof TagValueDefinitionSchema.Type
+
+export const TagKeyValueSchema = Schema.Struct({
+  key: Schema.NonEmptyTrimmedString,
+  value: Schema.NonEmptyTrimmedString,
+})
+export const makeTagKeyValue = Schema.decodeSync(TagKeyValueSchema)
+
+export const makeTagKeyValueFromTag = ({ dimensionLabel, valueLabel }: Tag) => makeTagKeyValue({
+  key: dimensionLabel,
+  value: valueLabel,
+})
 
 export const TagDimensionSchema = Schema.Struct({
   id: Schema.UUID,
@@ -33,3 +45,67 @@ export const TagDimensionSchema = Schema.Struct({
   definedValues: Schema.propertySignature(Schema.Array(TagValueDefinitionSchema))
     .pipe(Schema.fromKey('defined_values')),
 })
+export type TagDimension = typeof TagDimensionSchema.Type
+
+const TagValueSchema = Schema.Data(
+  Schema.Struct({
+    dimensionId: Schema.UUID,
+    dimensionLabel: Schema.NonEmptyTrimmedString,
+    valueId: Schema.UUID,
+    valueLabel: Schema.NonEmptyTrimmedString,
+  }),
+)
+export const makeTagValue = Schema.decodeSync(TagValueSchema)
+export type TagValue = typeof TagValueSchema.Type
+
+export const TagSchema = Schema.Data(
+  Schema.Struct({
+    id: Schema.UUID,
+    dimensionLabel: Schema.NonEmptyTrimmedString,
+    valueLabel: Schema.NonEmptyTrimmedString,
+    _local: Schema.Struct({
+      isOptimistic: Schema.Boolean,
+    }),
+  }),
+)
+export const makeTag = Schema.decodeSync(TagSchema)
+export type Tag = typeof TagSchema.Type
+
+export const makeTagFromTransactionTag = ({ id, key, value, _local }: TransactionTag) => makeTag({
+  id,
+  dimensionLabel: key,
+  valueLabel: value,
+  _local: {
+    isOptimistic: _local?.isOptimistic ?? false,
+  },
+})
+
+export const TransactionTagSchema = Schema.Struct({
+  id: Schema.UUID,
+  key: Schema.NonEmptyTrimmedString,
+  value: Schema.NonEmptyTrimmedString,
+
+  createdAt: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('created_at'),
+  ),
+
+  updatedAt: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('updated_at'),
+  ),
+
+  deletedAt: pipe(
+    Schema.optional(Schema.Date),
+    Schema.fromKey('deleted_at'),
+  ),
+
+  _local: Schema.optional(
+    Schema.Struct({
+      isOptimistic: Schema.Boolean,
+    }),
+  ),
+})
+
+export type TransactionTag = typeof TransactionTagSchema.Type
+export type TransactionTagEncoded = typeof TransactionTagSchema.Encoded

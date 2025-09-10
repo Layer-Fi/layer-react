@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, type PropsWithChildren } from 'react'
 import classNames from 'classnames'
 import { useInvoiceForm } from './useInvoiceForm'
-import type { Invoice } from '../../../features/invoices/invoiceSchemas'
+import type { Invoice, InvoiceForm as InvoiceFormType } from '../../../features/invoices/invoiceSchemas'
 import { UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
 import { Form } from '../../ui/Form/Form'
 import { HStack, VStack } from '../../ui/Stack/Stack'
@@ -15,25 +15,30 @@ import { convertCentsToCurrency } from '../../../utils/format'
 import { getDurationInDaysFromTerms, InvoiceTermsComboBox, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { type ZonedDateTime, toCalendarDate, fromDate } from '@internationalized/date'
 import { withForceUpdate } from '../../../features/forms/components/FormBigDecimalField'
-import { type InvoiceFormState, EMPTY_LINE_ITEM } from './formUtils'
+import { type InvoiceFormState, EMPTY_LINE_ITEM, INVOICE_MECE_TAG_DIMENSION } from './formUtils'
 import { DataState, DataStateStatus } from '../../DataState'
 import { AlertTriangle } from 'lucide-react'
 import { TextSize } from '../../Typography'
 import { useInvoiceDetail } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
 import { flattenValidationErrors } from '../../../utils/form'
+import type { AppForm } from '../../../features/forms/hooks/useForm'
+import { type Tag } from '../../../features/tags/tagSchemas'
+import { LedgerAccountCombobox } from '../../LedgerAccountCombobox/LedgerAccountCombobox'
+import { CategoriesListMode } from '../../../types/categories'
+import { TagDimensionCombobox } from '../../../features/tags/components/TagDimensionCombobox'
 
 const INVOICE_FORM_CSS_PREFIX = 'Layer__InvoiceForm'
 const INVOICE_FORM_FIELD_CSS_PREFIX = `${INVOICE_FORM_CSS_PREFIX}__Field`
-
-type InvoiceFormTotalRowProps = PropsWithChildren<{
-  label: string
-  value: BD.BigDecimal
-}>
 
 const getDueAtChanged = (dueAt: ZonedDateTime | null, previousDueAt: ZonedDateTime | null) =>
   (dueAt === null && previousDueAt !== null)
   || (dueAt !== null && previousDueAt === null)
   || (dueAt !== null && previousDueAt !== null && toCalendarDate(dueAt).compare(toCalendarDate(previousDueAt)) !== 0)
+
+type InvoiceFormTotalRowProps = PropsWithChildren<{
+  label: string
+  value: BD.BigDecimal
+}>
 
 const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProps) => {
   const className = classNames(
@@ -49,6 +54,118 @@ const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProp
         {convertCentsToCurrency(convertBigDecimalToCents(value))}
       </Span>
     </HStack>
+  )
+}
+
+type InvoiceFormLineItemRowProps = PropsWithChildren<{
+  form: AppForm<InvoiceFormType>
+  index: number
+  isReadOnly: boolean
+  onDeleteLine: () => void
+}>
+
+export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }: InvoiceFormLineItemRowProps) => {
+  return (
+    <VStack gap='xs'>
+      <HStack
+        gap='xs'
+        align='end'
+        className={classNames(`${INVOICE_FORM_CSS_PREFIX}__LineItem`, isReadOnly && `${INVOICE_FORM_CSS_PREFIX}__LineItem--readonly`)}
+      >
+        <form.Field name={`lineItems[${index}].accountIdentifier`}>
+          {(field) => {
+            return (
+              <LedgerAccountCombobox
+                label='Revenue account (hidden)'
+                value={field.state.value}
+                mode={CategoriesListMode.Revenue}
+                onValueChange={field.setValue}
+                isReadOnly={isReadOnly}
+                showLabel={index === 0}
+              />
+            )
+          }}
+        </form.Field>
+        <form.Field name={`lineItems[${index}].tags`}>
+          {(field) => {
+            const additionalTags = field.state.value.filter(obj => obj.dimensionLabel.toLowerCase() !== INVOICE_MECE_TAG_DIMENSION.toLowerCase())
+            const selectedTag = field.state.value.find(obj => obj.dimensionLabel.toLowerCase() === INVOICE_MECE_TAG_DIMENSION.toLowerCase()) ?? null
+
+            const onValueChange = (value: Tag | null) => {
+              field.setValue(value ? [...additionalTags, value] : additionalTags)
+            }
+
+            return (
+              <TagDimensionCombobox
+                dimensionKey={INVOICE_MECE_TAG_DIMENSION}
+                isReadOnly={isReadOnly}
+                value={selectedTag}
+                onValueChange={onValueChange}
+                showLabel={index === 0}
+              />
+            )
+          }}
+        </form.Field>
+        <form.AppField name={`lineItems[${index}].description`}>
+          {innerField =>
+            <innerField.FormTextField label='Description' showLabel={index === 0} isReadOnly={isReadOnly} />}
+        </form.AppField>
+        <form.AppField
+          name={`lineItems[${index}].quantity`}
+          listeners={{
+            onBlur: ({ value: quantity }) => {
+              const amount = form.getFieldValue(`lineItems[${index}].amount`)
+              const unitPrice = form.getFieldValue(`lineItems[${index}].unitPrice`)
+              const nextAmount = BD.round(BD.normalize(BD.multiply(unitPrice, quantity)), { scale: 2 })
+
+              if (!BD.equals(amount, nextAmount)) {
+                form.setFieldValue(`lineItems[${index}].amount`, withForceUpdate(nextAmount))
+              }
+            },
+          }}
+        >
+          {innerField => (
+            <innerField.FormBigDecimalField label='Quantity' showLabel={index === 0} isReadOnly={isReadOnly} />)}
+        </form.AppField>
+        <form.AppField
+          name={`lineItems[${index}].unitPrice`}
+          listeners={{
+            onBlur: ({ value: unitPrice }) => {
+              const amount = form.getFieldValue(`lineItems[${index}].amount`)
+              const quantity = form.getFieldValue(`lineItems[${index}].quantity`)
+              const nextAmount = BD.round(BD.normalize(BD.multiply(unitPrice, quantity)), { scale: 2 })
+
+              if (!BD.equals(amount, nextAmount)) {
+                form.setFieldValue(`lineItems[${index}].amount`, withForceUpdate(nextAmount))
+              }
+            },
+          }}
+        >
+          {innerField => <innerField.FormBigDecimalField label='Rate' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
+        </form.AppField>
+        <form.AppField
+          name={`lineItems[${index}].amount`}
+          listeners={{
+            onBlur: ({ value: amount }) => {
+              const unitPrice = form.getFieldValue(`lineItems[${index}].unitPrice`)
+              const quantity = form.getFieldValue(`lineItems[${index}].quantity`)
+              const nextUnitPrice = BD.round(BD.normalize(safeDivide(amount, quantity)), { scale: 2 })
+
+              if (!BD.equals(unitPrice, nextUnitPrice)) {
+                form.setFieldValue(`lineItems[${index}].unitPrice`, withForceUpdate(nextUnitPrice))
+              }
+            },
+          }}
+        >
+          {innerField => <innerField.FormBigDecimalField label='Amount' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
+        </form.AppField>
+        <form.AppField name={`lineItems[${index}].isTaxable`}>
+          {innerField => <innerField.FormCheckboxField label='Taxable' showLabel={index === 0} isReadOnly={isReadOnly} />}
+        </form.AppField>
+        {!isReadOnly
+          && <Button variant='outlined' icon inset aria-label='Delete line item' onPress={onDeleteLine}><Trash size={16} /></Button>}
+      </HStack>
+    </VStack>
   )
 }
 
@@ -223,81 +340,13 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
             <VStack gap='xs' align='baseline'>
               {field.state.value.map((_value, index) => (
                 /**
-                 * A more correct implementation would use a UUID as the key for this HStack. Specifically, it is an antipattern in
+                 * A better implementation would use a UUID as the key for this line item row. Specifically, it's an antipattern in
                  * React to use array indices as keys. However, there are some ongoing issues with @tanstack/react-form related to
                  * deleting an element from an array field. In particular, the form values for the remaining array items may become
                  * momentarily undefined as they re-render due to re-indexing. Thus, we use indices here for now.
                  * See here for more information: https://github.com/TanStack/form/issues/1518.
                  */
-                <HStack
-                  key={index}
-                  gap='xs'
-                  align='end'
-                  className={classNames(`${INVOICE_FORM_CSS_PREFIX}__LineItem`, isReadOnly && `${INVOICE_FORM_CSS_PREFIX}__LineItem--readonly`)}
-                >
-                  <form.AppField name={`lineItems[${index}].product`}>
-                    {innerField =>
-                      <innerField.FormTextField label='Product/Service' showLabel={index === 0} isReadOnly={isReadOnly} />}
-                  </form.AppField>
-                  <form.AppField name={`lineItems[${index}].description`}>
-                    {innerField =>
-                      <innerField.FormTextField label='Description' showLabel={index === 0} isReadOnly={isReadOnly} />}
-                  </form.AppField>
-                  <form.AppField
-                    name={`lineItems[${index}].quantity`}
-                    listeners={{
-                      onBlur: ({ value: quantity }) => {
-                        const amount = form.getFieldValue(`lineItems[${index}].amount`)
-                        const unitPrice = form.getFieldValue(`lineItems[${index}].unitPrice`)
-                        const nextAmount = BD.round(BD.normalize(BD.multiply(unitPrice, quantity)), { scale: 2 })
-
-                        if (!BD.equals(amount, nextAmount)) {
-                          form.setFieldValue(`lineItems[${index}].amount`, withForceUpdate(nextAmount))
-                        }
-                      },
-                    }}
-                  >
-                    {innerField => (
-                      <innerField.FormBigDecimalField label='Quantity' showLabel={index === 0} isReadOnly={isReadOnly} />)}
-                  </form.AppField>
-                  <form.AppField
-                    name={`lineItems[${index}].unitPrice`}
-                    listeners={{
-                      onBlur: ({ value: unitPrice }) => {
-                        const amount = form.getFieldValue(`lineItems[${index}].amount`)
-                        const quantity = form.getFieldValue(`lineItems[${index}].quantity`)
-                        const nextAmount = BD.round(BD.normalize(BD.multiply(unitPrice, quantity)), { scale: 2 })
-
-                        if (!BD.equals(amount, nextAmount)) {
-                          form.setFieldValue(`lineItems[${index}].amount`, withForceUpdate(nextAmount))
-                        }
-                      },
-                    }}
-                  >
-                    {innerField => <innerField.FormBigDecimalField label='Rate' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
-                  </form.AppField>
-                  <form.AppField
-                    name={`lineItems[${index}].amount`}
-                    listeners={{
-                      onBlur: ({ value: amount }) => {
-                        const unitPrice = form.getFieldValue(`lineItems[${index}].unitPrice`)
-                        const quantity = form.getFieldValue(`lineItems[${index}].quantity`)
-                        const nextUnitPrice = BD.round(BD.normalize(safeDivide(amount, quantity)), { scale: 2 })
-
-                        if (!BD.equals(unitPrice, nextUnitPrice)) {
-                          form.setFieldValue(`lineItems[${index}].unitPrice`, withForceUpdate(nextUnitPrice))
-                        }
-                      },
-                    }}
-                  >
-                    {innerField => <innerField.FormBigDecimalField label='Amount' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
-                  </form.AppField>
-                  <form.AppField name={`lineItems[${index}].isTaxable`}>
-                    {innerField => <innerField.FormCheckboxField label='Taxable' showLabel={index === 0} isReadOnly={isReadOnly} />}
-                  </form.AppField>
-                  {!isReadOnly
-                    && <Button variant='outlined' icon aria-label='Delete line item' onClick={() => field.removeValue(index)}><Trash size={16} /></Button>}
-                </HStack>
+                <InvoiceFormLineItemRow key={index} form={form} index={index} isReadOnly={isReadOnly} onDeleteLine={() => field.removeValue(index)} />
               ))}
               {!isReadOnly
                 && (

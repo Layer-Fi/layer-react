@@ -1,8 +1,8 @@
+import type { TransactionTagEncoded } from '../features/tags/tagSchemas'
 import { LedgerEntrySourceType } from '../schemas/generalLedger/ledgerEntrySource'
 import { Account } from '../types'
 import { Direction } from './bank_transactions'
 import { AccountIdentifierPayloadObject } from './categories'
-import type { TransactionTag } from './tags'
 
 export interface JournalEntry {
   id: string
@@ -16,7 +16,7 @@ export interface JournalEntry {
   reversal_id: string | null
   line_items: JournalEntryLine[]
   source?: LedgerEntrySourceType
-  transaction_tags: ReadonlyArray<TransactionTag>
+  transaction_tags: ReadonlyArray<TransactionTagEncoded>
 }
 
 export interface JournalEntryLine {

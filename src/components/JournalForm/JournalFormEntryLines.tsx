@@ -15,6 +15,7 @@ import { useCategories } from '../../hooks/categories/useCategories'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { AmountInput } from '../Input/AmountInput'
 import { Badge, BadgeVariant } from '../Badge/Badge'
+import { CategoriesListMode } from '../../types/categories'
 
 type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
 
@@ -49,7 +50,7 @@ export const JournalFormEntryLines = ({
   sendingForm: boolean
   config: JournalConfig
 }) => {
-  const { data: categories } = useCategories({ mode: 'ALL' })
+  const { data: categories } = useCategories({ mode: CategoriesListMode.All })
   const { form } = useContext(JournalContext)
 
   const { flattenedCategories, parentOptions } = useMemo(() => {

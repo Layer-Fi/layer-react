@@ -98,12 +98,10 @@ function buildCustomComboBoxOption({
         )}
       >
 
-        <HStack gap='2xs'>
-          <Check size={16} className={COMBO_BOX_CLASS_NAMES.OPTION_CHECK_ICON} />
-          <Span weight='bold'>
-            {children}
-          </Span>
-        </HStack>
+        <Check size={16} className={COMBO_BOX_CLASS_NAMES.OPTION_CHECK_ICON} />
+        <Span weight='bold'>
+          {children}
+        </Span>
       </components.Option>
     )
   }

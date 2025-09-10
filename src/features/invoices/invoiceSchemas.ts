@@ -2,6 +2,8 @@ import { Schema, pipe } from 'effect'
 import { CustomerSchema } from '../../schemas/customer'
 import { InvoiceTermsValues } from '../../components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { ZonedDateTimeFromSelf } from '../../utils/schema/utils'
+import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '../tags/tagSchemas'
+import { AccountIdentifierSchema } from '../../schemas/accountIdentifier'
 
 export enum InvoiceStatus {
   Voided = 'VOIDED',
@@ -70,6 +72,16 @@ export const InvoiceLineItemSchema = Schema.Struct({
   ),
 
   memo: Schema.NullOr(Schema.String),
+
+  transactionTags: pipe(
+    Schema.propertySignature(Schema.Array(TransactionTagSchema)),
+    Schema.fromKey('transaction_tags'),
+  ),
+
+  accountIdentifier: pipe(
+    Schema.propertySignature(Schema.NullOr(AccountIdentifierSchema)),
+    Schema.fromKey('account_identifier'),
+  ),
 })
 export type InvoiceLineItem = typeof InvoiceLineItemSchema.Type
 
@@ -180,6 +192,12 @@ export const UpsertInvoiceLineItemSchema = Schema.Struct({
   salesTaxes: Schema.optional(Schema.Array(UpsertInvoiceTaxLineItemSchema)).pipe(
     Schema.fromKey('sales_taxes'),
   ),
+
+  accountIdentifier: Schema.optional(AccountIdentifierSchema).pipe(
+    Schema.fromKey('account_identifier'),
+  ),
+
+  tags: Schema.optional(Schema.Array(TagKeyValueSchema)),
 })
 export type UpsertInvoiceLineItem = typeof UpsertInvoiceLineItemSchema.Type
 
@@ -228,6 +246,10 @@ export const InvoiceFormLineItemSchema = Schema.Struct({
   amount: Schema.BigDecimal,
 
   isTaxable: Schema.Boolean,
+
+  accountIdentifier: Schema.NullOr(AccountIdentifierSchema),
+
+  tags: Schema.Array(TagSchema),
 })
 export type InvoiceFormLineItem = typeof InvoiceFormLineItemSchema.Type
 export const InvoiceFormLineItemEquivalence = Schema.equivalence(InvoiceFormLineItemSchema)

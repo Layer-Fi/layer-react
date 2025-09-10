@@ -12,6 +12,9 @@ import {
 import { startOfToday } from 'date-fns'
 import { getLocalTimeZone, fromDate, toCalendarDate } from '@internationalized/date'
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
+import { makeTagFromTransactionTag, makeTagKeyValueFromTag } from '../../../features/tags/tagSchemas'
+
+export const INVOICE_MECE_TAG_DIMENSION = 'job'
 
 export type InvoiceFormState = {
   isDirty: boolean
@@ -25,6 +28,8 @@ export const EMPTY_LINE_ITEM: InvoiceFormLineItem = {
   quantity: BIG_DECIMAL_ONE,
   amount: BIG_DECIMAL_ZERO,
   isTaxable: false,
+  accountIdentifier: null,
+  tags: [],
 }
 
 export const getInvoiceFormDefaultValues = (): InvoiceForm => {
@@ -62,6 +67,8 @@ const getInvoiceFormLineItem = (lineItem: InvoiceLineItem): InvoiceFormLineItem 
     unitPrice: convertCentsToBigDecimal(unitPrice),
     amount: getInvoiceLineItemAmount(lineItem),
     isTaxable: lineItem.salesTaxTotal > 0,
+    accountIdentifier: lineItem.accountIdentifier,
+    tags: lineItem.transactionTags.map(makeTagFromTransactionTag),
   }
 }
 
@@ -158,6 +165,8 @@ export const convertInvoiceFormToParams = (form: InvoiceForm): unknown => ({
         product: item.product.trim(),
         unitPrice: convertBigDecimalToCents(item.unitPrice),
         quantity: item.quantity,
+        tags: item.tags.map(makeTagKeyValueFromTag),
+        ...(item.accountIdentifier && { accountIdentifier: item.accountIdentifier }),
       }
 
       if (!item.isTaxable || BD.equals(form.taxRate, BIG_DECIMAL_ZERO)) return baseLineItem

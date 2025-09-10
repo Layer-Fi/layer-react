@@ -147,24 +147,6 @@ export const LedgerAccountSubtypeWithDisplayNameSchema = Schema.Struct({
   ),
 })
 
-export const AccountIdSchema = Schema.Struct({
-  type: Schema.Literal('AccountId'),
-  id: Schema.String,
-})
-
-export const AccountStableNameSchema = Schema.Struct({
-  type: Schema.Literal('StableName'),
-  stableName: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('stable_name'),
-  ),
-})
-
-export const AccountIdentifierSchema = Schema.Union(
-  AccountIdSchema,
-  AccountStableNameSchema,
-)
-
 export const LedgerAccountSchema = Schema.Struct({
   id: Schema.String,
   name: Schema.String,
@@ -182,8 +164,6 @@ export const LedgerAccountSchema = Schema.Struct({
     Schema.fromKey('account_subtype'),
   ),
 })
-
-export type AccountIdentifier = typeof AccountIdentifierSchema.Type
 export type LedgerAccount = typeof LedgerAccountSchema.Type
 
 const nestedLedgerAccountFields = {
