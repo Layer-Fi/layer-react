@@ -21,6 +21,7 @@ import useSWR from 'swr'
 import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../Environment/EnvironmentInputProvider'
 import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
+import { useAccountingConfiguration } from '../../hooks/useAccountingConfiguration/useAccountingConfiguration'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -205,6 +206,8 @@ export const BusinessProvider = ({
     return
   }
 
+  const accountingConfiguration = useAccountingConfiguration({ businessId })
+
   const setOnboardingStep = (value: OnboardingStep) =>
     dispatch({
       type: Action.setOnboardingStep,
@@ -232,6 +235,7 @@ export const BusinessProvider = ({
         expireDataCaches: resetCaches,
         hasBeenTouched,
         eventCallbacks,
+        accountingConfiguration: accountingConfiguration.data,
       }}
     >
       {children}

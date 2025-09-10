@@ -6,6 +6,8 @@ import { useAuth } from '../useAuth'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 
+export const LEDGER_BALANCES_TAG_KEY = '#ledger-balances'
+
 class LedgerBalancesSWRResponse {
   private swrResponse: SWRResponse<LedgerBalancesSchemaType>
   private cacheKey: { readonly accessToken: string
@@ -86,6 +88,7 @@ function buildKey({
       businessId,
       startDate,
       endDate,
+      tags: [LEDGER_BALANCES_TAG_KEY],
     } as const
   }
 }

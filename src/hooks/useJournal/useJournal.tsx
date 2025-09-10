@@ -204,21 +204,21 @@ export const useJournal: UseJournal = () => {
       if (fieldName === 'parent' && accounts) {
         const allAccounts = flattenAccounts(accounts || [])
         const foundParent = allAccounts?.find(
-          x => x.id === (value as BaseSelectOption).value,
+          x => x.accountId === (value as BaseSelectOption).value,
         )
 
         if (foundParent) {
           const newLineItem = {
             ...lineItem,
             account_identifier: {
-              id: foundParent.id,
-              stable_name: foundParent.stable_name,
-              type: foundParent.account_type.value,
+              id: foundParent.accountId,
+              stable_name: foundParent.stableName,
+              type: foundParent.accountType.value,
               name: foundParent.name,
-              subType: foundParent.account_subtype
+              subType: foundParent.accountSubtype
                 ? {
-                  value: foundParent.account_subtype.value,
-                  label: foundParent.account_subtype.display_name,
+                  value: foundParent.accountSubtype.value,
+                  label: foundParent.accountSubtype.displayName,
                 }
                 : undefined,
             },

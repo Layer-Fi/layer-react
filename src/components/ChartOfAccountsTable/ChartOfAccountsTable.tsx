@@ -98,7 +98,8 @@ export const ChartOfAccountsTableContent = ({
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
   // Another questionable conversion from readOnly array to mutable array
   const sortedAccounts = useMemo(() => sortAccountsRecursive(Array.from(data.accounts)), [data.accounts])
-
+  // const enableAccountNumbers = useLayerContext().accountingConfiguration?.enableAccountNumbers
+  const enableAccountNumbers = true
   const allRowKeys = useMemo(() => {
     const keys: string[] = []
 
@@ -225,28 +226,50 @@ export const ChartOfAccountsTableContent = ({
           depth={depth}
           variant={depth === 0 ? 'expandable' : 'default'}
         >
-          <TableCell
-            withExpandIcon={hasSubAccounts}
-          >
-            <HStack {...(!hasSubAccounts && { pis: 'lg' })} overflow='hidden'>
-              <UIButton variant='text' ellipsis onClick={onClickAccountName}>
-                {
-                  highlightMatch({
-                    text: account.accountNumber || '-----',
-                    query: searchQuery,
-                    isMatching: account.isMatching,
-                  })
-                }
-              </UIButton>
-            </HStack>
-          </TableCell>
-          <TableCell>
-            {highlightMatch({
-              text: account.name,
-              query: searchQuery,
-              isMatching: account.isMatching,
-            })}
-          </TableCell>
+          {enableAccountNumbers && (
+            <TableCell
+              withExpandIcon={hasSubAccounts}
+            >
+              <HStack {...(!hasSubAccounts && { pis: 'lg' })} overflow='hidden'>
+                <UIButton variant='text' ellipsis onClick={onClickAccountName}>
+                  {enableAccountNumbers
+                    && highlightMatch({
+                      text: account.accountNumber || '-----',
+                      query: searchQuery,
+                      isMatching: account.isMatching,
+                    })}
+                </UIButton>
+              </HStack>
+            </TableCell>
+          )}
+          {!enableAccountNumbers
+            && (
+              <TableCell
+                withExpandIcon={hasSubAccounts}
+              >
+                <HStack {...(!hasSubAccounts && { pis: 'lg' })} overflow='hidden'>
+                  <UIButton variant='text' ellipsis onClick={onClickAccountName}>
+                    {
+                      highlightMatch({
+                        text: account.name,
+                        query: searchQuery,
+                        isMatching: account.isMatching,
+                      })
+                    }
+                  </UIButton>
+                </HStack>
+              </TableCell>
+            )}
+          {enableAccountNumbers && (
+            <TableCell>
+              {depth != 0
+                && highlightMatch({
+                  text: account.name,
+                  query: searchQuery,
+                  isMatching: account.isMatching,
+                })}
+            </TableCell>
+          )}
           <TableCell>
             {depth != 0
               && highlightMatch({
@@ -334,8 +357,8 @@ export const ChartOfAccountsTableContent = ({
     <>
       <Table componentName='chart-of-accounts'>
         <colgroup>
+          {enableAccountNumbers && <col className='Layer__chart-of-accounts--accountnumber' />}
           <col className='Layer__chart-of-accounts--name' />
-          <col className='Layer__chart-of-accounts--accountnumber' />
           <col className='Layer__chart-of-accounts--type' />
           <col className='Layer__chart-of-accounts--subtype' />
           <col className='Layer__chart-of-accounts--balance' />
@@ -343,9 +366,11 @@ export const ChartOfAccountsTableContent = ({
         </colgroup>
         <TableHead>
           <TableRow isHeadRow rowKey='charts-of-accounts-head-row'>
-            <TableCell isHeaderCell>
-              {stringOverrides?.numberColumnHeader || 'Account Number'}
-            </TableCell>
+            {enableAccountNumbers && (
+              <TableCell isHeaderCell>
+                {stringOverrides?.numberColumnHeader || 'Account Number'}
+              </TableCell>
+            )}
             <TableCell isHeaderCell>
               {stringOverrides?.nameColumnHeader || 'Account Name'}
             </TableCell>
