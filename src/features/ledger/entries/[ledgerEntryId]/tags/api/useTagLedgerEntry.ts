@@ -3,7 +3,7 @@ import { useAuth } from '../../../../../../hooks/useAuth'
 import { useLayerContext } from '../../../../../../contexts/LayerContext'
 import { useCallback } from 'react'
 import { post } from '../../../../../../api/layer/authenticated_http'
-import { useLedgerEntriesInvalidator, useLedgerEntriesOptimisticUpdater } from '../../../api/useListLedgerEntries'
+import { useLedgerEntriesCacheActions, useLedgerEntriesOptimisticUpdater } from '../../../api/useListLedgerEntries'
 import { v4 as uuidv4 } from 'uuid'
 import { usePnlDetailLinesInvalidator } from '../../../../../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 
@@ -86,7 +86,7 @@ export function useTagLedgerEntry({ ledgerEntryId }: TagLedgerEntryOptions) {
     },
   )
 
-  const { debouncedInvalidateLedgerEntries } = useLedgerEntriesInvalidator()
+  const { debouncedInvalidateLedgerEntries } = useLedgerEntriesCacheActions()
   const { optimisticallyUpdateLedgerEntries } = useLedgerEntriesOptimisticUpdater()
   const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
 
