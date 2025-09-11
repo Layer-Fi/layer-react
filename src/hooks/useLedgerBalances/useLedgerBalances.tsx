@@ -12,18 +12,11 @@ export const LEDGER_BALANCES_TAG_KEY = '#ledger-balances'
 
 class LedgerBalancesSWRResponse {
   private swrResponse: SWRResponse<LedgerBalancesSchemaType>
-  private cacheKey: { readonly accessToken: string
-    readonly apiUrl: string
-    readonly businessId: string
-    readonly startDate: Date | undefined
-    readonly endDate: Date | undefined } | undefined
 
   constructor(
     swrResponse: SWRResponse<LedgerBalancesSchemaType>,
-    key: ReturnType<typeof buildKey>,
   ) {
     this.swrResponse = swrResponse
-    this.cacheKey = key
   }
 
   get data() {
@@ -89,14 +82,13 @@ function buildKey({
 export function useLedgerBalances(withDates?: boolean, startDate?: Date, endDate?: Date) {
   const { data } = useAuth()
   const { businessId } = useLayerContext()
-  const queryKey = buildKey({
-    ...data,
-    businessId,
-    startDate: withDates ? startDate : undefined,
-    endDate: withDates ? endDate : undefined,
-  })
   const response = useSWR(
-    () => queryKey,
+    () => buildKey({
+      ...data,
+      businessId,
+      startDate: withDates ? startDate : undefined,
+      endDate: withDates ? endDate : undefined,
+    }),
     ({ accessToken, apiUrl, businessId, startDate, endDate }) => getLedgerAccountBalances(
       apiUrl,
       accessToken,
@@ -110,7 +102,7 @@ export function useLedgerBalances(withDates?: boolean, startDate?: Date, endDate
     )().then(({ data }) => Schema.decodeUnknownPromise(LedgerBalancesSchema)(data)),
   )
 
-  return new LedgerBalancesSWRResponse(response, queryKey)
+  return new LedgerBalancesSWRResponse(response)
 }
 
 export function useLedgerBalancesInvalidator() {
