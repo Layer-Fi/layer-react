@@ -1,7 +1,7 @@
 import { Schema, pipe } from 'effect'
 
 export enum ReportingBasis {
-  Accual = ('ACCRUAL'),
+  Accrual = ('ACCRUAL'),
   Cash = ('CASH'),
   DeprecatedCash = ('DEPRECATED_CASH'),
   MoneyMovementOnly = ('MONEY_MOVEMENT_ONLY'),
@@ -24,7 +24,7 @@ export const AccountingConfigurationSchema = Schema.Struct({
     Schema.propertySignature(Schema.NullOr(CategoryListModeSchema)),
     Schema.fromKey('category_list_mode'),
   ),
-  matchRoudingThreshold: pipe(
+  matchRoundingThreshold: pipe(
     Schema.propertySignature(Schema.NullOr(Schema.Number)),
     Schema.fromKey('match_rounding_threshold'),
   ),

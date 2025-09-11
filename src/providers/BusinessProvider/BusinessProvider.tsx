@@ -235,7 +235,7 @@ export const BusinessProvider = ({
         expireDataCaches: resetCaches,
         hasBeenTouched,
         eventCallbacks,
-        accountingConfiguration,
+        accountingConfiguration: accountingConfiguration,
       }}
     >
       {children}
