@@ -1,23 +1,5 @@
 import { Direction } from './bank_transactions'
-import { LedgerEntryDirection, NestedLedgerAccountType } from '../schemas/generalLedger/ledgerAccount'
-
-export type ApiAccountType = {
-  value: string
-  display_name: string
-}
-
-export type LedgerAccountBalance = {
-  id: string
-  name: string
-  stable_name: string
-  account_number: string | null
-  account_type: ApiAccountType
-  account_subtype?: ApiAccountType
-  normality: LedgerEntryDirection
-  balance: number
-  is_deletable: boolean
-  sub_accounts: LedgerAccountBalance[]
-}
+import { NestedLedgerAccountType } from '../schemas/generalLedger/ledgerAccount'
 
 export type AugmentedLedgerAccountBalance = NestedLedgerAccountType & { isMatching?: true }
 

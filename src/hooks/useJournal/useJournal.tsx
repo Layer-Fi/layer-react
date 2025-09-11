@@ -15,7 +15,7 @@ import { useEnvironment } from '../../providers/Environment/EnvironmentInputProv
 import { useListLedgerEntries } from '../../features/ledger/entries/api/useListLedgerEntries'
 import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
 import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
-import { LedgerAccountBalance } from '../../types/chart_of_accounts'
+import { LedgerAccountBalance } from '../../types/journal'
 
 type UseJournal = () => {
   data?: ReadonlyArray<JournalEntry>

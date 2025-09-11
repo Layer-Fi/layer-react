@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import Trash from '../../icons/Trash'
-import { LedgerAccountBalance } from '../../types/chart_of_accounts'
+import { LedgerAccountBalance } from '../../types/journal'
 import { BaseSelectOption } from '../../types/general'
 import {
   humanizeEnum,
