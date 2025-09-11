@@ -13,6 +13,7 @@ import { useEnvironment } from '../../providers/Environment/EnvironmentInputProv
 import { useDeleteAccountFromLedger } from '../../features/ledger/accounts/[ledgerAccountId]/api/useDeleteLedgerAccount'
 import { NestedLedgerAccountType } from '../../schemas/generalLedger/ledgerAccount'
 import { useLedgerBalances, useLedgerBalancesInvalidator } from '../useLedgerBalances/useLedgerBalances'
+import { useLedgerEntriesInvalidator } from '../../features/ledger/entries/api/useListLedgerEntries'
 
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []
@@ -162,6 +163,7 @@ export const useChartOfAccounts = (
   const { trigger: originalTrigger } = useDeleteAccountFromLedger()
   const { data, isLoading, isValidating, isError } = useLedgerBalances(withDates, startDate, endDate)
   const { invalidateLedgerBalances } = useLedgerBalancesInvalidator()
+  const { invalidateLedgerEntries } = useLedgerEntriesInvalidator()
 
   const create = async (newAccount: NewAccount) => {
     setSendingForm(true)
@@ -396,7 +398,10 @@ export const useChartOfAccounts = (
     }
   }
 
-  const refetch = () => invalidateLedgerBalances()
+  const refetch = async () => {
+    await invalidateLedgerBalances()
+    await invalidateLedgerEntries()
+  }
 
   return {
     data,

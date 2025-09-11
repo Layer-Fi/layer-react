@@ -122,7 +122,6 @@ export const ChartOfAccountsForm = ({
         <div className='Layer__chart-of-accounts__form-edit-entry'>
           <Text weight={TextWeight.bold}>{entry.name}</Text>
           <Text weight={TextWeight.bold}>
-            $
             {convertCentsToCurrency(entry.balance)}
           </Text>
         </div>
