@@ -1,3 +1,10 @@
+export enum CategoriesListMode {
+  All = 'ALL',
+  Expenses = 'EXPENSES',
+  Revenue = 'REVENUE',
+  Default = 'DEFAULT',
+}
+
 export enum CategorizationStatus {
   PENDING = 'PENDING',
   READY_FOR_INPUT = 'READY_FOR_INPUT',
@@ -32,6 +39,24 @@ export type Category =
   | AccountNestedCategory
   | OptionalAccountNestedCategory
   | ExclusionNestedCategory
+
+export function isAccountNestedCategory(
+  v: Category,
+): v is AccountNestedCategory {
+  return v.type === 'AccountNested'
+}
+
+export function isOptionalAccountNestedCategory(
+  v: Category,
+): v is OptionalAccountNestedCategory {
+  return v.type === 'OptionalAccountNested'
+}
+
+export function isExclusionNestedCategory(
+  v: Category,
+): v is ExclusionNestedCategory {
+  return v.type === 'ExclusionNested'
+}
 
 export enum CategorizationType {
   AUTO = 'AUTO',

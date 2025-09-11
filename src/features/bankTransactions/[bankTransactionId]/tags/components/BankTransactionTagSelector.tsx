@@ -1,12 +1,13 @@
 import { useCallback, useMemo } from 'react'
 import type { BankTransaction } from '../../../../../types'
-import { makeTag, TagSelector, type Tag, type TagValue } from '../../../../tags/components/TagSelector'
 import { useTagBankTransaction } from '../api/useTagBankTransaction'
 import { useRemoveTagFromBankTransaction } from '../api/useRemoveTagFromBankTransaction'
 import {
   useEffectiveBookkeepingStatus,
   BookkeepingStatus,
 } from '../../../../../hooks/bookkeeping/useBookkeepingStatus'
+import { makeTag, type Tag, type TagValue } from '../../../../tags/tagSchemas'
+import { TagSelector } from '../../../../tags/components/TagSelector'
 
 type BankTransactionTagSelectorProps = {
   bankTransaction: Pick<BankTransaction, 'id' | 'transaction_tags'>

@@ -1,4 +1,4 @@
-import { TransactionTag } from './tags'
+import type { TransactionTagEncoded } from '../features/tags/tagSchemas'
 import { Vendor } from './vendors'
 
 const UNPAID_STATUS_MAP = {
@@ -63,7 +63,7 @@ export type Bill = {
   subtotal: number
   terms: BillTerm
   total_amount: number
-  transaction_tags: TransactionTag[]
+  transaction_tags: TransactionTagEncoded[]
   type: 'Bill'
   updated_at: string
   voided_at: string | null
@@ -93,7 +93,7 @@ type BillPaymentAllocation = {
   bill_id: string
   payment_id: string
   amount: number
-  transaction_tags: TransactionTag[]
+  transaction_tags: TransactionTagEncoded[]
 }
 
 export type SalesTax = {

@@ -3,7 +3,7 @@ import type { VendorSchema } from '../schemas/vendor'
 import { MatchDetailsType } from '../schemas/match'
 import { Categorization, CategorizationStatus, Category } from './categories'
 import { S3PresignedUrl } from './general'
-import type { TransactionTag } from './tags'
+import type { TransactionTagEncoded } from '../features/tags/tagSchemas'
 
 export enum Direction {
   CREDIT = 'CREDIT',
@@ -53,7 +53,7 @@ export interface BankTransaction extends Record<string, unknown> {
   suggested_matches?: SuggestedMatch[]
   match?: BankTransactionMatch
   document_ids: string[]
-  transaction_tags: ReadonlyArray<TransactionTag>
+  transaction_tags: ReadonlyArray<TransactionTagEncoded>
 
   customer: typeof CustomerSchema.Encoded | null
   vendor: typeof VendorSchema.Encoded | null

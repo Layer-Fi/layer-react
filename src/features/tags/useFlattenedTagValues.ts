@@ -1,5 +1,4 @@
-import { TagDimensionSchema } from './tagSchemas'
-import { makeTagValue } from './components/TagSelector'
+import { makeTagValue, TagDimensionSchema } from './tagSchemas'
 import { useMemo } from 'react'
 import type { useTagDimensions } from './api/useTagDimensions'
 

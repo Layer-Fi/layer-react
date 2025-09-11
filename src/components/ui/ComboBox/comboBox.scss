@@ -121,6 +121,13 @@
     /*
      * This is intentionally done indirectly to increase specificity.
      *
+     * `react-select` explicitly sets 'block'
+     */
+    display: grid;
+
+    /*
+     * This is intentionally done indirectly to increase specificity.
+     *
      * `react-select` explicitly sets 'default'
      */
     cursor: pointer;
@@ -149,6 +156,9 @@
 }
 
 .Layer__ComboBoxOption {
+  grid-template-columns: 16px auto;
+  gap: var(--spacing-2xs);
+
   padding-block: var(--spacing-xs);
   padding-inline: var(--spacing-3xs);
 
