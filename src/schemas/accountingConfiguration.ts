@@ -1,16 +1,16 @@
 import { Schema, pipe } from 'effect'
 
 export enum ReportingBasis {
-  Accrual = ('ACCRUAL'),
-  Cash = ('CASH'),
-  DeprecatedCash = ('DEPRECATED_CASH'),
-  MoneyMovementOnly = ('MONEY_MOVEMENT_ONLY'),
+  Accrual = 'ACCRUAL',
+  Cash = 'CASH',
+  DeprecatedCash = 'DEPRECATED_CASH',
+  MoneyMovementOnly = 'MONEY_MOVEMENT_ONLY',
 }
 export const ReportingBasisSchema = Schema.Enums(ReportingBasis)
 
 export enum AccountingConfigurationCategoryListMode {
-  AllAccounts = ('ALL_ACCOUNTS'),
-  RevenuesAndExpenses = ('REVENUES_AND_EXPENSES'),
+  AllAccounts = 'ALL_ACCOUNTS',
+  RevenuesAndExpenses = 'REVENUES_AND_EXPENSES',
 }
 export const CategoryListModeSchema = Schema.Enums(AccountingConfigurationCategoryListMode)
 
