@@ -105,15 +105,20 @@ export function useLedgerBalances(withDates?: boolean, startDate?: Date, endDate
   return new LedgerBalancesSWRResponse(response)
 }
 
-export function useLedgerBalancesInvalidator() {
-  const { invalidate } = useGlobalCacheActions()
+export function useLedgerBalancesCacheActions() {
+  const { invalidate, forceReload } = useGlobalCacheActions()
 
   const invalidateLedgerBalances = useCallback(
     () => invalidate(tags => tags.includes(LEDGER_BALANCES_TAG_KEY)),
     [invalidate],
   )
 
+  const forceReloadLedgerBalances = useCallback(
+    () => forceReload(tags => tags.includes(LEDGER_BALANCES_TAG_KEY)),
+    [forceReload],
+  )
+
   return {
-    invalidateLedgerBalances,
+    invalidateLedgerBalances, forceReloadLedgerBalances,
   }
 }
