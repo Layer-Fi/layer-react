@@ -51,7 +51,7 @@ export const ChartOfAccountsTableWithPanel = ({
   stringOverrides?: ChartOfAccountsTableStringOverrides
   templateAccountsEditable?: boolean
 }) => {
-  const { data, isLoading, addAccount, error, isValidating, refetch, form } =
+  const { data, isLoading, addAccount, isError, isValidating, refetch, form } =
     useContext(ChartOfAccountsContext)
 
   const [expandAll, setExpandAll] = useState<ExpandActionState>()
@@ -134,14 +134,13 @@ export const ChartOfAccountsTableWithPanel = ({
           view={view}
           data={data}
           searchQuery={searchQuery}
-          error={error}
           stringOverrides={stringOverrides}
           expandAll={expandAll}
           templateAccountsEditable={templateAccountsEditable}
         />
       )}
 
-      {error
+      {isError
         ? (
           <div className='Layer__table-state-container'>
             <DataState
@@ -155,7 +154,7 @@ export const ChartOfAccountsTableWithPanel = ({
         )
         : null}
 
-      {(!data || isLoading) && !error
+      {(!data || isLoading) && !isError
         ? (
           <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
             <Loader />

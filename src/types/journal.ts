@@ -1,6 +1,5 @@
 import { LedgerEntrySourceType } from '../schemas/generalLedger/ledgerEntrySource'
-import { SingleChartAccountEncodedType } from '../schemas/generalLedger/ledgerAccount'
-import { Direction } from './bank_transactions'
+import { LedgerEntryDirection, SingleChartAccountEncodedType } from '../schemas/generalLedger/ledgerAccount'
 import { AccountIdentifierPayloadObject } from './categories'
 import type { TransactionTag } from './tags'
 
@@ -24,7 +23,7 @@ export interface JournalEntryLine {
   entry_id: string
   account: SingleChartAccountEncodedType
   amount: number
-  direction: Direction
+  direction: LedgerEntryDirection
   entry_at: string
   createdAt: string
 }
@@ -39,7 +38,7 @@ export type NewApiJournalEntry = {
 export type NewApiJournalEntryLineItem = {
   account_identifier: AccountIdentifierPayloadObject
   amount: number
-  direction: Direction
+  direction: LedgerEntryDirection
 }
 
 export type NewFormJournalEntry = {
@@ -52,7 +51,7 @@ export type NewFormJournalEntry = {
 export type JournalEntryLineItem = {
   account_identifier: {
     type: string
-    stable_name: string
+    stable_name: string | null
     id: string
     name: string
     subType:
@@ -63,5 +62,5 @@ export type JournalEntryLineItem = {
       | undefined
   }
   amount: number
-  direction: Direction
+  direction: LedgerEntryDirection
 }

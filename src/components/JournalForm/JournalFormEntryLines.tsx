@@ -1,7 +1,6 @@
 import { useContext, useMemo } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import Trash from '../../icons/Trash'
-import { Direction } from '../../types'
 import { LedgerAccountBalance } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
 import {
@@ -15,7 +14,8 @@ import { useCategories } from '../../hooks/categories/useCategories'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { AmountInput } from '../Input/AmountInput'
 import { Badge, BadgeVariant } from '../Badge/Badge'
-import { NewApiJournalEntryLineItem } from '../../types/journal'
+import { JournalEntryLineItem } from '../../types/journal'
+import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
 
 type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
 
@@ -38,8 +38,8 @@ export const JournalFormEntryLines = ({
   sendingForm,
   config,
 }: {
-  entrylineItems: NewApiJournalEntryLineItem[]
-  addEntryLine: (direction: Direction) => void
+  entrylineItems: JournalEntryLineItem[]
+  addEntryLine: (direction: LedgerEntryDirection) => void
   removeEntryLine: (index: number) => void
   changeFormData: (
     name: string,
@@ -139,7 +139,7 @@ export const JournalFormEntryLines = ({
           name: relevantCategory.display_name,
           sub_accounts: [],
           balance: 0,
-          normality: Direction.DEBIT,
+          normality: LedgerEntryDirection.Debit,
           // We aren't exposing account numbers for categories yet so this is safe
           account_number: null,
         },
@@ -243,7 +243,7 @@ export const JournalFormEntryLines = ({
               || config.form.addEntryLinesLimit > entrylineItems?.length) && (
               <TextButton
                 className='Layer__journal__add-entry-line'
-                onClick={() => addEntryLine(direction as Direction)}
+                onClick={() => addEntryLine(direction as LedgerEntryDirection)}
               >
                 Add next account
               </TextButton>

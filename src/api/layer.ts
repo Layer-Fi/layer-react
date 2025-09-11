@@ -11,7 +11,6 @@ import { getBills, getBill, updateBill, createBillPayment, createBill } from './
 import { getBusiness } from './layer/business'
 import { getCategories } from './layer/categories'
 import {
-  getChartOfAccounts,
   createAccount,
   updateAccount,
   createChildAccount,
@@ -72,7 +71,6 @@ export const Layer = {
   updateBill,
   createBillPayment,
   getCategories,
-  getChartOfAccounts,
   getLedgerAccountBalancesCSV,
   getLedgerAccountsLines,
   getLedgerAccountsEntry,

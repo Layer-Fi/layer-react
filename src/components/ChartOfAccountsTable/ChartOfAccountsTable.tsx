@@ -52,7 +52,6 @@ export const ChartOfAccountsTable = ({
   stringOverrides,
   data,
   searchQuery,
-  error,
   expandAll,
   templateAccountsEditable = true,
 }: {
@@ -60,7 +59,6 @@ export const ChartOfAccountsTable = ({
   data: LedgerBalancesSchemaType
   searchQuery: string
   stringOverrides?: ChartOfAccountsTableStringOverrides
-  error?: unknown
   expandAll?: ExpandActionState
   templateAccountsEditable?: boolean
 }) => (
@@ -70,7 +68,6 @@ export const ChartOfAccountsTable = ({
       data={data}
       searchQuery={searchQuery}
       stringOverrides={stringOverrides}
-      error={error}
       expandAll={expandAll}
       templateAccountsEditable={templateAccountsEditable}
     />
@@ -81,7 +78,6 @@ export const ChartOfAccountsTableContent = ({
   stringOverrides,
   data,
   searchQuery,
-  error,
   expandAll,
   templateAccountsEditable,
 }: {
@@ -89,12 +85,11 @@ export const ChartOfAccountsTableContent = ({
   data: LedgerBalancesSchemaType
   searchQuery: string
   stringOverrides?: ChartOfAccountsTableStringOverrides
-  error?: unknown
   expandAll?: ExpandActionState
   templateAccountsEditable: boolean
 }) => {
   const { setSelectedAccount } = useContext(LedgerAccountsContext)
-  const { editAccount, deleteAccount } = useContext(ChartOfAccountsContext)
+  const { editAccount, deleteAccount, isError } = useContext(ChartOfAccountsContext)
   const [toggledKeys, setToggledKeys] = useState<Record<string, boolean>>({})
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
   const sortedAccounts = useMemo(() => sortAccountsRecursive(Array.from(data.accounts)), [data.accounts])
@@ -373,7 +368,7 @@ export const ChartOfAccountsTableContent = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {!error
+          {!isError
             && filteredAccounts.map((account, index) =>
               renderChartOfAccountsDesktopRow({
                 account,
