@@ -132,10 +132,10 @@ type Props = {
 }
 
 export const flattenAccounts = (
-  accounts: NestedLedgerAccountType[],
+  accounts: readonly NestedLedgerAccountType[],
 ): NestedLedgerAccountType[] =>
-  Array.from(accounts)
-    .flatMap(a => [a, flattenAccounts(Array.from(a.subAccounts || []))])
+  accounts
+    .flatMap(a => [a, flattenAccounts(a.subAccounts || [])])
     .flat()
     .filter(id => id)
 
@@ -291,7 +291,7 @@ export const useChartOfAccounts = (
   }
 
   const editAccount = (id: string) => {
-    const allAccounts = flattenAccounts(Array.from(data?.accounts || []))
+    const allAccounts = flattenAccounts(data?.accounts || [])
     const found = allAccounts?.find(x => x.accountId === id)
 
     if (!found) {
@@ -352,7 +352,7 @@ export const useChartOfAccounts = (
 
     /* When setting the parent field, automatically inherit the parent's type & normality fields */
     if (fieldName === 'parent') {
-      const allAccounts = flattenAccounts(Array.from(data?.accounts || []))
+      const allAccounts = flattenAccounts(data?.accounts || [])
       const foundParent = allAccounts?.find(
         x => x.accountId === (value as BaseSelectOption).value,
       )

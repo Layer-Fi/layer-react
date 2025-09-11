@@ -1,7 +1,6 @@
 import { useContext, useMemo } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
-import { centsToDollars } from '../../models/Money'
 import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Input, InputGroup, Select } from '../Input'
@@ -13,6 +12,7 @@ import {
   NORMALITY_OPTIONS,
 } from './constants'
 import { useParentOptions } from './useParentOptions'
+import { convertCentsToCurrency } from '../../utils/format'
 
 export interface ChartOfAccountsFormStringOverrides {
   editModeHeader?: string
@@ -47,7 +47,7 @@ export const ChartOfAccountsForm = ({
 
   const entry = useMemo(() => {
     if (form?.action === 'edit' && form.accountId) {
-      return flattenAccounts(Array.from(data?.accounts || [])).find(
+      return flattenAccounts(data?.accounts || []).find(
         x => x.accountId === form.accountId,
       )
     }
@@ -123,7 +123,7 @@ export const ChartOfAccountsForm = ({
           <Text weight={TextWeight.bold}>{entry.name}</Text>
           <Text weight={TextWeight.bold}>
             $
-            {centsToDollars(entry.balance || 0)}
+            {convertCentsToCurrency(entry.balance)}
           </Text>
         </div>
       )}
@@ -144,7 +144,7 @@ export const ChartOfAccountsForm = ({
         <InputGroup
           name='name'
           label={stringOverrides?.nameLabel || 'Name'}
-          inline={true}
+          inline
         >
           <Input
             name='name'

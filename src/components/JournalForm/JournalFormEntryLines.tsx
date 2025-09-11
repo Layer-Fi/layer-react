@@ -62,7 +62,7 @@ export const JournalFormEntryLines = ({
         switch (account.type) {
           case 'AccountNested':
             return {
-              label: `${account.display_name}`,
+              label: account.display_name,
               value: account.id,
             }
           case 'OptionalAccountNested':

@@ -8,7 +8,7 @@ export const useParentOptions = (
 ): BaseSelectOption[] =>
   useMemo(
     () =>
-      flattenAccounts(Array.from(data?.accounts || []))
+      flattenAccounts(data?.accounts || [])
         .sort((a, b) => (a?.name && b?.name ? a.name.localeCompare(b.name) : 0))
         .map((x) => {
           return {

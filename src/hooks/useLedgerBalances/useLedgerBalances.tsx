@@ -16,12 +16,10 @@ class LedgerBalancesSWRResponse {
     readonly startDate: Date | undefined
     readonly endDate: Date | undefined } | undefined
 
-  constructor(swrResponse: SWRResponse<LedgerBalancesSchemaType>,
-    key: { readonly accessToken: string
-      readonly apiUrl: string
-      readonly businessId: string
-      readonly startDate: Date | undefined
-      readonly endDate: Date | undefined } | undefined) {
+  constructor(
+    swrResponse: SWRResponse<LedgerBalancesSchemaType>,
+    key: ReturnType<typeof buildKey>,
+  ) {
     this.swrResponse = swrResponse
     this.cacheKey = key
   }

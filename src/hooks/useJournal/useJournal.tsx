@@ -64,8 +64,8 @@ export interface JournalFormTypes {
 export const flattenAccounts = (
   accounts: LedgerAccountBalance[],
 ): LedgerAccountBalance[] =>
-  Array.from(accounts)
-    .flatMap(a => [a, flattenAccounts(Array.from(a.sub_accounts || []))])
+  accounts
+    .flatMap(a => [a, flattenAccounts(a.sub_accounts || [])])
     .flat()
     .filter(id => id)
 

@@ -99,17 +99,17 @@ export const ChartOfAccountsTableContent = ({
   const allRowKeys = useMemo(() => {
     const keys: string[] = []
 
-    const collect = (accounts: NestedLedgerAccountType[]) => {
+    const collect = (accounts: readonly NestedLedgerAccountType[]) => {
       for (const account of accounts) {
         const key = `coa-row-${account.accountId}`
         if (account.subAccounts.length > 0) {
           keys.push(key)
-          collect(Array.from(account.subAccounts))
+          collect(account.subAccounts)
         }
       }
     }
 
-    collect(Array.from(data.accounts))
+    collect(data.accounts)
     return keys
   }, [data.accounts])
 

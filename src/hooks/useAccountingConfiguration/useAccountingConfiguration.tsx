@@ -42,13 +42,6 @@ class AccountingConfigurationSWRResponse {
   get mutate() {
     return this.swrResponse.mutate
   }
-
-  get fancyCacheKey() {
-    if (!this.cacheKey) {
-      return undefined
-    }
-    return `accessToken:${this.cacheKey.accessToken}-apiUrl:${this.cacheKey.apiUrl}-businessId:${this.cacheKey.businessId}`
-  }
 }
 
 type GetAccountingConfigurationParams = {

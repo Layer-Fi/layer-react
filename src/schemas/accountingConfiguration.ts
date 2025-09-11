@@ -8,11 +8,11 @@ export enum ReportingBasis {
 }
 export const ReportingBasisSchema = Schema.Enums(ReportingBasis)
 
-export enum CategoryListMode {
+export enum AccountingConfigurationCategoryListMode {
   AllAccounts = ('ALL_ACCOUNTS'),
   RevenuesAndExpenses = ('REVENUES_AND_EXPENSES'),
 }
-export const CategoryListModeSchema = Schema.Enums(CategoryListMode)
+export const CategoryListModeSchema = Schema.Enums(AccountingConfigurationCategoryListMode)
 
 export const AccountingConfigurationSchema = Schema.Struct({
   id: Schema.UUID,
