@@ -5,6 +5,8 @@ import { Schema } from 'effect/index'
 import { useAuth } from '../useAuth'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
+import { useGlobalCacheActions } from '../../utils/swr/useGlobalCacheActions'
+import { useCallback } from 'react'
 
 export const LEDGER_BALANCES_TAG_KEY = '#ledger-balances'
 
@@ -42,13 +44,6 @@ class LedgerBalancesSWRResponse {
 
   get mutate() {
     return this.swrResponse.mutate
-  }
-
-  get fancyCacheKey() {
-    if (!this.cacheKey) {
-      return undefined
-    }
-    return `accessToken:${this.cacheKey.accessToken}-apiUrl:${this.cacheKey.apiUrl}-businessId:${this.cacheKey.businessId}-startDate:${this.cacheKey.startDate?.toISOString() ?? 'undefined'}-endDate:${this.cacheKey.endDate?.toISOString() ?? 'undefined'}`
   }
 }
 
@@ -116,4 +111,17 @@ export function useLedgerBalances(withDates?: boolean, startDate?: Date, endDate
   )
 
   return new LedgerBalancesSWRResponse(response, queryKey)
+}
+
+export function useLedgerBalancesInvalidator() {
+  const { invalidate } = useGlobalCacheActions()
+
+  const invalidateLedgerBalances = useCallback(
+    () => invalidate(tags => tags.includes(LEDGER_BALANCES_TAG_KEY)),
+    [invalidate],
+  )
+
+  return {
+    invalidateLedgerBalances,
+  }
 }

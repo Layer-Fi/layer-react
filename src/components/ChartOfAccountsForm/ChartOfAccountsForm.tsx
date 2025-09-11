@@ -160,7 +160,7 @@ export const ChartOfAccountsForm = ({
         <InputGroup
           name='accountNumber'
           label={stringOverrides?.accountNumberLabel || 'Account Number'}
-          inline={true}
+          inline
         >
           <Input
             name='accountNumber'

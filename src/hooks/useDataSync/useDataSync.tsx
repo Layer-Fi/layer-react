@@ -15,19 +15,16 @@ const ALL_TOUCHABLE = [
   DataModel.BUSINESS,
   DataModel.BANK_TRANSACTIONS,
   DataModel.LINKED_ACCOUNTS,
-  DataModel.CHART_OF_ACCOUNTS,
   DataModel.JOURNAL,
 ]
 
 const DEPENDENCIES: Partial<Record<DataModel, DataModel[]>> = {
   [DataModel.BALANCE_SHEET]: ALL_TOUCHABLE,
-  [DataModel.CHART_OF_ACCOUNTS]: ALL_TOUCHABLE,
   [DataModel.JOURNAL]: ALL_TOUCHABLE,
   [DataModel.LEDGER_ACCOUNTS]: ALL_TOUCHABLE,
   [DataModel.LINKED_ACCOUNTS]: [
     DataModel.BUSINESS,
     DataModel.LINKED_ACCOUNTS,
-    DataModel.CHART_OF_ACCOUNTS,
   ],
   [DataModel.PROFIT_AND_LOSS]: ALL_TOUCHABLE,
   [DataModel.STATEMENT_OF_CASH_FLOWS]: ALL_TOUCHABLE,
@@ -35,7 +32,6 @@ const DEPENDENCIES: Partial<Record<DataModel, DataModel[]>> = {
     DataModel.LINKED_ACCOUNTS,
     DataModel.BANK_TRANSACTIONS,
     DataModel.BUSINESS,
-    DataModel.CHART_OF_ACCOUNTS,
   ],
 }
 
@@ -47,7 +43,6 @@ export const useDataSync: UseDataSync = () => {
     Partial<Record<DataModel, number>>
   >({
     [DataModel.BALANCE_SHEET]: initialTimestamp,
-    [DataModel.CHART_OF_ACCOUNTS]: initialTimestamp,
     [DataModel.JOURNAL]: initialTimestamp,
     [DataModel.LEDGER_ACCOUNTS]: initialTimestamp,
     [DataModel.LINKED_ACCOUNTS]: initialTimestamp,
@@ -102,7 +97,6 @@ export const useDataSync: UseDataSync = () => {
     void invalidateProfitAndLoss()
     setSyncTimestamps({
       [DataModel.BALANCE_SHEET]: now,
-      [DataModel.CHART_OF_ACCOUNTS]: now,
       [DataModel.JOURNAL]: now,
       [DataModel.LEDGER_ACCOUNTS]: now,
       [DataModel.LINKED_ACCOUNTS]: now,

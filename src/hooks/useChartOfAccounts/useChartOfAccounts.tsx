@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Layer } from '../../api/layer'
 import { NORMALITY_OPTIONS } from '../../components/ChartOfAccountsForm/constants'
 import { useLayerContext } from '../../contexts/LayerContext'
@@ -6,13 +6,13 @@ import { FormError, DateRange, Direction, NewAccount } from '../../types'
 import {
   EditAccount,
 } from '../../types/chart_of_accounts'
-import { BaseSelectOption, DataModel } from '../../types/general'
+import { BaseSelectOption } from '../../types/general'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useDeleteAccountFromLedger } from '../../features/ledger/accounts/[ledgerAccountId]/api/useDeleteLedgerAccount'
 import { NestedLedgerAccountType } from '../../schemas/generalLedger/ledgerAccount'
-import { useLedgerBalances } from '../useLedgerBalances/useLedgerBalances'
+import { useLedgerBalances, useLedgerBalancesInvalidator } from '../useLedgerBalances/useLedgerBalances'
 
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []
@@ -146,13 +146,7 @@ export const useChartOfAccounts = (
     endDate: endOfMonth(new Date()),
   },
 ) => {
-  const {
-    businessId,
-    touch,
-    read,
-    syncTimestamps,
-    hasBeenTouched,
-  } = useLayerContext()
+  const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
@@ -166,7 +160,8 @@ export const useChartOfAccounts = (
     initialEndDate ?? endOfMonth(Date.now()),
   )
   const { trigger: originalTrigger } = useDeleteAccountFromLedger()
-  const { data, isLoading, isValidating, isError, mutate, fancyCacheKey } = useLedgerBalances(withDates, startDate, endDate)
+  const { data, isLoading, isValidating, isError } = useLedgerBalances(withDates, startDate, endDate)
+  const { invalidateLedgerBalances } = useLedgerBalancesInvalidator()
 
   const create = async (newAccount: NewAccount) => {
     setSendingForm(true)
@@ -185,7 +180,6 @@ export const useChartOfAccounts = (
     }
     finally {
       setSendingForm(false)
-      touch(DataModel.CHART_OF_ACCOUNTS)
     }
   }
 
@@ -210,7 +204,6 @@ export const useChartOfAccounts = (
     }
     finally {
       setSendingForm(false)
-      touch(DataModel.CHART_OF_ACCOUNTS)
     }
   }
 
@@ -281,7 +274,6 @@ export const useChartOfAccounts = (
     catch (_err) {
       throw new Error('This account could not be deleted. Please check your connection and try again.')
     }
-    touch(DataModel.CHART_OF_ACCOUNTS)
     try {
       await refetch()
     }
@@ -404,22 +396,7 @@ export const useChartOfAccounts = (
     }
   }
 
-  const refetch = () => mutate()
-
-  // Refetch data if related models has been changed since last fetch
-  useEffect(() => {
-    if (fancyCacheKey && (isLoading || isValidating)) {
-      read(DataModel.CHART_OF_ACCOUNTS, fancyCacheKey)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, isValidating])
-
-  useEffect(() => {
-    if (fancyCacheKey && hasBeenTouched(fancyCacheKey)) {
-      void refetch()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncTimestamps, startDate, endDate])
+  const refetch = () => invalidateLedgerBalances()
 
   return {
     data,
