@@ -107,8 +107,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
           }}
         </form.Field>
         <form.AppField name={`lineItems[${index}].description`}>
-          {innerField =>
-            <innerField.FormTextField label='Description' showLabel={index === 0} isReadOnly={isReadOnly} />}
+          {field => <field.FormTextField label='Description' showLabel={index === 0} isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField
           name={`lineItems[${index}].quantity`}
@@ -124,8 +123,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
             },
           }}
         >
-          {innerField => (
-            <innerField.FormBigDecimalField label='Quantity' showLabel={index === 0} isReadOnly={isReadOnly} />)}
+          {field => <field.FormBigDecimalField label='Quantity' showLabel={index === 0} isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField
           name={`lineItems[${index}].unitPrice`}
@@ -141,7 +139,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
             },
           }}
         >
-          {innerField => <innerField.FormBigDecimalField label='Rate' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
+          {field => <field.FormBigDecimalField label='Rate' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField
           name={`lineItems[${index}].amount`}
@@ -157,10 +155,10 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
             },
           }}
         >
-          {innerField => <innerField.FormBigDecimalField label='Amount' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
+          {field => <field.FormBigDecimalField label='Amount' mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField name={`lineItems[${index}].isTaxable`}>
-          {innerField => <innerField.FormCheckboxField label='Taxable' showLabel={index === 0} isReadOnly={isReadOnly} />}
+          {field => <field.FormCheckboxField label='Taxable' showLabel={index === 0} isReadOnly={isReadOnly} />}
         </form.AppField>
         {!isReadOnly
           && <Button variant='outlined' icon inset aria-label='Delete line item' onPress={onDeleteLine}><Trash size={16} /></Button>}
