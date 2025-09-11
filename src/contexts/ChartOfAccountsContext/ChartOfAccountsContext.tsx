@@ -9,7 +9,7 @@ export const ChartOfAccountsContext = createContext<ChartOfAccountsContextType>(
     isLoading: false,
     isValidating: false,
     isError: false,
-    refetch: () => Promise.resolve([]),
+    refetch: () => Promise.resolve(),
     create: () => Promise.resolve(undefined),
     form: undefined,
     sendingForm: false,
