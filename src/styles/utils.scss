@@ -1,3 +1,15 @@
+.Layer__justify--center {
+  justify-content: center;
+}
+
+.Layer__justify--start {
+  justify-content: flex-start;
+}
+
+.Layer__justify--end {
+  justify-content: flex-end;
+}
+
 .Layer__justify--space-between {
   justify-content: space-between;
 }
