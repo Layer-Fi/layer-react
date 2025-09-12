@@ -29,8 +29,6 @@ export {
   CategoryUpdate,
 } from './types/categories'
 export {
-  ChartOfAccounts,
-  Account,
   NewAccount,
   EditAccount,
   NewChildAccount,

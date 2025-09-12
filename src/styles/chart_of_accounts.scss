@@ -38,6 +38,10 @@
   table-layout: fixed;
 
   .Layer__chart-of-accounts {
+    &--accountnumber {
+      width: 13rem;
+    }
+    
     &--name {
       width: auto;
       min-width: 16rem;

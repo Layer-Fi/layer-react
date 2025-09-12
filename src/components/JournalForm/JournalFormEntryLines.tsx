@@ -1,8 +1,7 @@
 import { useContext, useMemo } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
 import Trash from '../../icons/Trash'
-import { Direction, JournalEntryLineItem } from '../../types'
-import { LedgerAccountBalance } from '../../types/chart_of_accounts'
+import { LedgerAccountBalance } from '../../types/journal'
 import { BaseSelectOption } from '../../types/general'
 import {
   humanizeEnum,
@@ -15,6 +14,8 @@ import { useCategories } from '../../hooks/categories/useCategories'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { AmountInput } from '../Input/AmountInput'
 import { Badge, BadgeVariant } from '../Badge/Badge'
+import { JournalEntryLineItem } from '../../types/journal'
+import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
 import { CategoriesListMode } from '../../types/categories'
 
 type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
@@ -39,7 +40,7 @@ export const JournalFormEntryLines = ({
   config,
 }: {
   entrylineItems: JournalEntryLineItem[]
-  addEntryLine: (direction: Direction) => void
+  addEntryLine: (direction: LedgerEntryDirection) => void
   removeEntryLine: (index: number) => void
   changeFormData: (
     name: string,
@@ -139,7 +140,9 @@ export const JournalFormEntryLines = ({
           name: relevantCategory.display_name,
           sub_accounts: [],
           balance: 0,
-          normality: Direction.DEBIT,
+          normality: LedgerEntryDirection.Debit,
+          // We aren't exposing account numbers for categories yet so this is safe
+          account_number: null,
         },
       ],
     )
@@ -241,7 +244,7 @@ export const JournalFormEntryLines = ({
               || config.form.addEntryLinesLimit > entrylineItems?.length) && (
               <TextButton
                 className='Layer__journal__add-entry-line'
-                onClick={() => addEntryLine(direction as Direction)}
+                onClick={() => addEntryLine(direction as LedgerEntryDirection)}
               >
                 Add next account
               </TextButton>

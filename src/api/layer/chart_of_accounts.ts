@@ -1,37 +1,24 @@
+import { SingleChartAccountEncodedType } from '../../schemas/generalLedger/ledgerAccount'
 import {
-  Account,
-  ChartOfAccounts,
   NewAccount,
   EditAccount,
   NewChildAccount,
   LedgerAccountsEntry,
 } from '../../types'
-import { ChartWithBalances } from '../../types/chart_of_accounts'
 import { S3PresignedUrl } from '../../types/general'
 import { LedgerAccountLineItems } from '../../types/ledger_accounts'
 import { get, post, put } from './authenticated_http'
 
-export const getChartOfAccounts = get<{ data: ChartOfAccounts }>(
+export const createAccount = post<{ data: SingleChartAccountEncodedType }, NewAccount>(
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/accounts`,
 )
 
-export const getLedgerAccountBalances = get<{ data: ChartWithBalances }>(
-  ({ businessId, startDate, endDate }) =>
-    `/v1/businesses/${businessId}/ledger/balances?${
-      startDate ? `&start_date=${encodeURIComponent(startDate)}` : ''
-    }${endDate ? `&end_date=${encodeURIComponent(endDate)}` : ''}`,
-)
-
-export const createAccount = post<{ data: Account }, NewAccount>(
-  ({ businessId }) => `/v1/businesses/${businessId}/ledger/accounts`,
-)
-
-export const updateAccount = put<{ data: Account }, EditAccount>(
+export const updateAccount = put<{ data: SingleChartAccountEncodedType }, EditAccount>(
   ({ businessId, accountId }) =>
     `/v1/businesses/${businessId}/ledger/accounts/${accountId}`,
 )
 
-export const createChildAccount = post<{ data: Account }, NewChildAccount>(
+export const createChildAccount = post<{ data: SingleChartAccountEncodedType }, NewChildAccount>(
   ({ businessId, accountId }) => `/v1/businesses/${businessId}/ledger/accounts/${accountId}/create-child-account`,
 )
 

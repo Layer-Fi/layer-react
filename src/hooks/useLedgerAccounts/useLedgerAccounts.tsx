@@ -38,7 +38,7 @@ export const useLedgerAccounts: UseLedgerAccounts = (
 
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
   const [selectedAccount, setSelectedAccount] = useState<LedgerAccountBalanceWithNodeType | undefined>()
-  const selectedAccountId = selectedAccount?.id
+  const selectedAccountId = selectedAccount?.accountId
 
   // Use the new paginated hook - always call it but with empty accountId when not available
   const {

@@ -4,7 +4,6 @@ import AlertCircle from '../../icons/AlertCircle'
 import RefreshCcw from '../../icons/RefreshCcw'
 import XIcon from '../../icons/X'
 import { centsToDollars } from '../../models/Money'
-import { Direction } from '../../types'
 import { decodeLedgerEntrySource, convertLedgerEntrySourceToLinkingMetadata } from '../../schemas/generalLedger/ledgerEntrySource'
 import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
@@ -21,6 +20,7 @@ import { Heading, HeadingSize } from '../Typography'
 import { VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
 import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
+import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
 
 export const JournalEntryDetails = () => {
   const {
@@ -180,7 +180,7 @@ export const JournalEntryDetails = () => {
                         className='Layer__journal__debit-credit-col'
                         align={TableCellAlign.RIGHT}
                       >
-                        {item.direction === Direction.DEBIT && (
+                        {item.direction === LedgerEntryDirection.Debit && (
                           <Badge variant={BadgeVariant.WARNING}>
                             $
                             {centsToDollars(item.amount || 0)}
@@ -191,7 +191,7 @@ export const JournalEntryDetails = () => {
                         className='Layer__journal__debit-credit-col'
                         align={TableCellAlign.RIGHT}
                       >
-                        {item.direction === Direction.CREDIT && (
+                        {item.direction === LedgerEntryDirection.Credit && (
                           <Badge variant={BadgeVariant.SUCCESS}>
                             $
                             {centsToDollars(item.amount || 0)}
@@ -212,7 +212,7 @@ export const JournalEntryDetails = () => {
                       align={TableCellAlign.RIGHT}
                     >
                       {entry?.line_items
-                        .filter(item => item.direction === Direction.DEBIT)
+                        .filter(item => item.direction === LedgerEntryDirection.Debit)
                         .map(item => item.amount)
                         .reduce((a, b) => a + b, 0) || 0}
                     </TableCell>
@@ -223,7 +223,7 @@ export const JournalEntryDetails = () => {
                       align={TableCellAlign.RIGHT}
                     >
                       {entry?.line_items
-                        .filter(item => item.direction === Direction.CREDIT)
+                        .filter(item => item.direction === LedgerEntryDirection.Credit)
                         .map(item => item.amount)
                         .reduce((a, b) => a + b, 0) || 0}
                     </TableCell>

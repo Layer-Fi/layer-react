@@ -1,7 +1,6 @@
 import { useContext, useMemo } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
-import { centsToDollars } from '../../models/Money'
 import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Input, InputGroup, Select } from '../Input'
@@ -13,6 +12,7 @@ import {
   NORMALITY_OPTIONS,
 } from './constants'
 import { useParentOptions } from './useParentOptions'
+import { convertCentsToCurrency } from '../../utils/format'
 
 export interface ChartOfAccountsFormStringOverrides {
   editModeHeader?: string
@@ -22,6 +22,7 @@ export interface ChartOfAccountsFormStringOverrides {
   saveButton?: string
   parentLabel?: string
   nameLabel?: string
+  accountNumberLabel?: string
   typeLabel?: string
   subTypeLabel?: string
   normalityLabel?: string
@@ -47,7 +48,7 @@ export const ChartOfAccountsForm = ({
   const entry = useMemo(() => {
     if (form?.action === 'edit' && form.accountId) {
       return flattenAccounts(data?.accounts || []).find(
-        x => x.id === form.accountId,
+        x => x.accountId === form.accountId,
       )
     }
 
@@ -61,7 +62,7 @@ export const ChartOfAccountsForm = ({
   return (
     <form
       className='Layer__form'
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault()
         submitForm()
       }}
@@ -88,7 +89,7 @@ export const ChartOfAccountsForm = ({
               <RetryButton
                 type='submit'
                 processing={sendingForm}
-                error={'Check connection and retry in few seconds.'}
+                error='Check connection and retry in few seconds.'
                 disabled={sendingForm}
               >
                 {stringOverrides?.retryButton || 'Retry'}
@@ -121,7 +122,7 @@ export const ChartOfAccountsForm = ({
         <div className='Layer__chart-of-accounts__form-edit-entry'>
           <Text weight={TextWeight.bold}>{entry.name}</Text>
           <Text weight={TextWeight.bold}>
-            ${centsToDollars(entry.balance || 0)}
+            {convertCentsToCurrency(entry.balance)}
           </Text>
         </div>
       )}
@@ -142,7 +143,7 @@ export const ChartOfAccountsForm = ({
         <InputGroup
           name='name'
           label={stringOverrides?.nameLabel || 'Name'}
-          inline={true}
+          inline
         >
           <Input
             name='name'
@@ -152,8 +153,23 @@ export const ChartOfAccountsForm = ({
             errorMessage={form?.errors?.find(x => x.field === 'name')?.message}
             disabled={sendingForm}
             onChange={e =>
-              changeFormData('name', (e.target as HTMLInputElement).value)
-            }
+              changeFormData('name', (e.target as HTMLInputElement).value)}
+          />
+        </InputGroup>
+        <InputGroup
+          name='accountNumber'
+          label={stringOverrides?.accountNumberLabel || 'Account Number'}
+          inline
+        >
+          <Input
+            name='accountNumber'
+            placeholder='Enter account number...'
+            value={form?.data.accountNumber}
+            isInvalid={Boolean(form?.errors?.find(x => x.field === 'accountNumber'))}
+            errorMessage={form?.errors?.find(x => x.field === 'accountNumber')?.message}
+            disabled={sendingForm}
+            onChange={e =>
+              changeFormData('accountNumber', (e.target as HTMLInputElement).value)}
           />
         </InputGroup>
         <InputGroup
@@ -168,9 +184,9 @@ export const ChartOfAccountsForm = ({
             isInvalid={Boolean(form?.errors?.find(x => x.field === 'type'))}
             errorMessage={form?.errors?.find(x => x.field === 'type')?.message}
             disabled={
-              sendingForm ||
-              form.action === 'edit' ||
-              form.data.parent !== undefined
+              sendingForm
+              || form.action === 'edit'
+              || form.data.parent !== undefined
             }
           />
         </InputGroup>
@@ -222,7 +238,7 @@ export const ChartOfAccountsForm = ({
             <RetryButton
               type='submit'
               processing={sendingForm}
-              error={'Check connection and retry in few seconds.'}
+              error='Check connection and retry in few seconds.'
               disabled={sendingForm}
             >
               {stringOverrides?.retryButton || 'Retry'}

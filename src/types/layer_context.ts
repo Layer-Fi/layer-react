@@ -1,6 +1,7 @@
 import { ToastProps } from '../components/Toast/Toast'
 import { LayerError } from '../models/ErrorHandler'
 import { EventCallbacks } from '../providers/LayerProvider/LayerProvider'
+import { AccountingConfigurationSchemaType } from '../schemas/accountingConfiguration'
 import { Business } from '../types'
 import { DataModel } from './general'
 
@@ -12,6 +13,7 @@ export type LayerContextValues = {
   onboardingStep?: OnboardingStep
   toasts: (ToastProps & { isExiting: boolean })[]
   eventCallbacks?: EventCallbacks
+  accountingConfiguration?: AccountingConfigurationSchemaType
 }
 
 export type LayerContextHelpers = {

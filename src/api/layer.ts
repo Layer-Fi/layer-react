@@ -10,8 +10,6 @@ import {
 import { getBills, getBill, updateBill, createBillPayment, createBill } from './layer/bills'
 import { getBusiness } from './layer/business'
 import {
-  getChartOfAccounts,
-  getLedgerAccountBalances,
   createAccount,
   updateAccount,
   createChildAccount,
@@ -71,8 +69,6 @@ export const Layer = {
   createBill,
   updateBill,
   createBillPayment,
-  getChartOfAccounts,
-  getLedgerAccountBalances,
   getLedgerAccountBalancesCSV,
   getLedgerAccountsLines,
   getLedgerAccountsEntry,

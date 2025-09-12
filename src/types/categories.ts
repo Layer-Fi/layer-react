@@ -21,6 +21,7 @@ type BaseCategory = {
   subCategories: Array<Category> | null
   description: string | null
 }
+
 type AccountNestedCategory = {
   type: 'AccountNested'
   id: string

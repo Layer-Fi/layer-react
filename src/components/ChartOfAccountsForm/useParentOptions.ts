@@ -1,19 +1,19 @@
 import { useMemo } from 'react'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
-import { ChartWithBalances } from '../../types/chart_of_accounts'
 import { BaseSelectOption } from '../../types/general'
+import { LedgerBalancesSchemaType } from '../../../src/schemas/generalLedger/ledgerAccount'
 
 export const useParentOptions = (
-  data?: ChartWithBalances,
+  data?: LedgerBalancesSchemaType,
 ): BaseSelectOption[] =>
   useMemo(
     () =>
       flattenAccounts(data?.accounts || [])
         .sort((a, b) => (a?.name && b?.name ? a.name.localeCompare(b.name) : 0))
-        .map(x => {
+        .map((x) => {
           return {
             label: x.name,
-            value: x.id,
+            value: x.accountId,
           }
         }),
     [data?.accounts?.length],

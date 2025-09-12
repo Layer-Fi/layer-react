@@ -1,8 +1,7 @@
 import { useState, useMemo, useCallback } from 'react'
 import { Layer } from '../../api/layer'
 import { useLayerContext } from '../../contexts/LayerContext'
-import { Direction, FormError, FormErrorWithId } from '../../types'
-import { LedgerAccountBalance } from '../../types/chart_of_accounts'
+import { FormError, FormErrorWithId } from '../../types'
 import { BaseSelectOption, DataModel } from '../../types/general'
 import {
   JournalEntry,
@@ -11,11 +10,12 @@ import {
   NewFormJournalEntry,
 } from '../../types/journal'
 import { getAccountIdentifierPayload } from '../../utils/journal'
-import { flattenAccounts } from '../useChartOfAccounts/useChartOfAccounts'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useListLedgerEntries } from '../../features/ledger/entries/api/useListLedgerEntries'
 import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
+import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
+import { LedgerAccountBalance } from '../../types/journal'
 
 type UseJournal = () => {
   data?: ReadonlyArray<JournalEntry>
@@ -43,7 +43,7 @@ type UseJournal = () => {
   form?: JournalFormTypes
   apiError?: string
   setForm: (form?: JournalFormTypes) => void
-  addEntryLine: (direction: Direction) => void
+  addEntryLine: (direction: LedgerEntryDirection) => void
   removeEntryLine: (index: number) => void
   reverseEntry: (entryId: string) => ReturnType<typeof Layer.reverseJournalEntry>
   hasMore: boolean
@@ -60,6 +60,14 @@ export interface JournalFormTypes {
     }
     | undefined
 }
+
+export const flattenAccounts = (
+  accounts: LedgerAccountBalance[],
+): LedgerAccountBalance[] =>
+  accounts
+    .flatMap(a => [a, flattenAccounts(a.sub_accounts || [])])
+    .flat()
+    .filter(id => id)
 
 export const useJournal: UseJournal = () => {
   const {
@@ -162,7 +170,7 @@ export const useJournal: UseJournal = () => {
               subType: undefined,
             },
             amount: 0,
-            direction: Direction.CREDIT,
+            direction: LedgerEntryDirection.Credit,
           },
           {
             account_identifier: {
@@ -173,7 +181,7 @@ export const useJournal: UseJournal = () => {
               subType: undefined,
             },
             amount: 0,
-            direction: Direction.DEBIT,
+            direction: LedgerEntryDirection.Debit,
           },
         ],
       },
@@ -202,7 +210,7 @@ export const useJournal: UseJournal = () => {
       }
 
       if (fieldName === 'parent' && accounts) {
-        const allAccounts = flattenAccounts(accounts || [])
+        const allAccounts = flattenAccounts(accounts)
         const foundParent = allAccounts?.find(
           x => x.id === (value as BaseSelectOption).value,
         )
@@ -322,7 +330,7 @@ export const useJournal: UseJournal = () => {
     }
 
     if (form?.data) {
-      create({
+      void create({
         ...form.data,
         line_items: form.data.line_items?.map(line => ({
           ...line,
@@ -333,7 +341,7 @@ export const useJournal: UseJournal = () => {
     }
   }
 
-  const addEntryLine = (direction: Direction) => {
+  const addEntryLine = (direction: LedgerEntryDirection) => {
     if (!form) {
       return null
     }

@@ -1,18 +1,19 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Layer } from '../../api/layer'
 import { NORMALITY_OPTIONS } from '../../components/ChartOfAccountsForm/constants'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { FormError, DateRange, Direction, NewAccount } from '../../types'
 import {
   EditAccount,
-  LedgerAccountBalance,
 } from '../../types/chart_of_accounts'
-import { BaseSelectOption, DataModel } from '../../types/general'
-import { endOfMonth, formatISO, startOfMonth } from 'date-fns'
-import useSWR from 'swr'
+import { BaseSelectOption } from '../../types/general'
+import { endOfMonth, startOfMonth } from 'date-fns'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
 import { useDeleteAccountFromLedger } from '../../features/ledger/accounts/[ledgerAccountId]/api/useDeleteLedgerAccount'
+import { NestedLedgerAccountType } from '../../schemas/generalLedger/ledgerAccount'
+import { useLedgerBalances, useLedgerBalancesCacheActions } from '../useLedgerBalances/useLedgerBalances'
+import { useLedgerEntriesCacheActions } from '../../features/ledger/entries/api/useListLedgerEntries'
 
 const validate = (formData?: ChartOfAccountsForm) => {
   const errors: FormError[] = []
@@ -117,6 +118,7 @@ export interface ChartOfAccountsForm {
     parent?: BaseSelectOption
     stable_name?: string
     name?: string
+    accountNumber?: string
     type?: BaseSelectOption
     subType?: BaseSelectOption
     normality?: BaseSelectOption
@@ -131,10 +133,10 @@ type Props = {
 }
 
 export const flattenAccounts = (
-  accounts: LedgerAccountBalance[],
-): LedgerAccountBalance[] =>
+  accounts: readonly NestedLedgerAccountType[],
+): NestedLedgerAccountType[] =>
   accounts
-    .flatMap(a => [a, flattenAccounts(a.sub_accounts || [])])
+    .flatMap(a => [a, flattenAccounts(a.subAccounts || [])])
     .flat()
     .filter(id => id)
 
@@ -145,13 +147,7 @@ export const useChartOfAccounts = (
     endDate: endOfMonth(new Date()),
   },
 ) => {
-  const {
-    businessId,
-    touch,
-    read,
-    syncTimestamps,
-    hasBeenTouched,
-  } = useLayerContext()
+  const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
@@ -165,24 +161,9 @@ export const useChartOfAccounts = (
     initialEndDate ?? endOfMonth(Date.now()),
   )
   const { trigger: originalTrigger } = useDeleteAccountFromLedger()
-
-  const queryKey =
-    businessId
-    && auth?.access_token
-    && `chart-of-accounts-${businessId}-${startDate?.valueOf()}-${endDate?.valueOf()}`
-
-  const { data, isLoading, isValidating, error, mutate } = useSWR(
-    queryKey,
-    Layer.getLedgerAccountBalances(apiUrl, auth?.access_token, {
-      params: {
-        businessId,
-        startDate:
-          withDates && startDate ? formatISO(startDate.valueOf()) : undefined,
-        endDate:
-          withDates && endDate ? formatISO(endDate.valueOf()) : undefined,
-      },
-    }),
-  )
+  const { data, isLoading, isValidating, isError, mutate } = useLedgerBalances(withDates, startDate, endDate)
+  const { invalidateLedgerBalances, forceReloadLedgerBalances } = useLedgerBalancesCacheActions()
+  const { forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
 
   const create = async (newAccount: NewAccount) => {
     setSendingForm(true)
@@ -201,7 +182,6 @@ export const useChartOfAccounts = (
     }
     finally {
       setSendingForm(false)
-      touch(DataModel.CHART_OF_ACCOUNTS)
     }
   }
 
@@ -226,7 +206,6 @@ export const useChartOfAccounts = (
     }
     finally {
       setSendingForm(false)
-      touch(DataModel.CHART_OF_ACCOUNTS)
     }
   }
 
@@ -263,6 +242,7 @@ export const useChartOfAccounts = (
       account_type: (form.data.type as BaseSelectOption).value.toString(),
       account_subtype: form.data.subType?.value.toString(),
       normality: form.data.normality?.value as Direction,
+      account_number: form.data.accountNumber ?? undefined,
     }
 
     if (form.action === 'new') {
@@ -296,7 +276,6 @@ export const useChartOfAccounts = (
     catch (_err) {
       throw new Error('This account could not be deleted. Please check your connection and try again.')
     }
-    touch(DataModel.CHART_OF_ACCOUNTS)
     try {
       await refetch()
     }
@@ -306,15 +285,15 @@ export const useChartOfAccounts = (
   }
 
   const editAccount = (id: string) => {
-    const allAccounts = flattenAccounts(data?.data?.accounts || [])
-    const found = allAccounts?.find(x => x.id === id)
+    const allAccounts = flattenAccounts(data?.accounts || [])
+    const found = allAccounts?.find(x => x.accountId === id)
 
     if (!found) {
       return
     }
 
     const parent = allAccounts.find(x =>
-      x.sub_accounts?.find(el => el.id === found.id),
+      x.subAccounts?.find(el => el.accountId === found.accountId),
     )
 
     setForm({
@@ -323,21 +302,21 @@ export const useChartOfAccounts = (
       data: {
         parent: parent
           ? {
-            value: parent.id,
+            value: parent.accountId,
             label: parent.name,
           }
           : undefined,
-        stable_name: found.stable_name,
+        stable_name: found.stableName ?? undefined,
         name: found.name,
         type: {
-          value: found.account_type.value,
-          label: found.account_type.display_name,
+          value: found.accountType.value,
+          label: found.accountType.displayName,
         },
-
-        subType: found.account_subtype
+        accountNumber: found.accountNumber ?? undefined,
+        subType: found.accountSubtype
           ? {
-            value: found.account_subtype?.value,
-            label: found.account_subtype?.display_name,
+            value: found.accountSubtype?.value,
+            label: found.accountSubtype?.displayName,
           }
           : undefined,
         normality: NORMALITY_OPTIONS.find(
@@ -367,9 +346,9 @@ export const useChartOfAccounts = (
 
     /* When setting the parent field, automatically inherit the parent's type & normality fields */
     if (fieldName === 'parent') {
-      const allAccounts = flattenAccounts(data?.data?.accounts || [])
+      const allAccounts = flattenAccounts(data?.accounts || [])
       const foundParent = allAccounts?.find(
-        x => x.id === (value as BaseSelectOption).value,
+        x => x.accountId === (value as BaseSelectOption).value,
       )
       if (foundParent) {
         newFormData = {
@@ -378,15 +357,15 @@ export const useChartOfAccounts = (
             ...newFormData.data,
             /* Inherit the parent's type */
             type: {
-              value: foundParent.account_type.value,
-              label: foundParent.account_type.display_name,
+              value: foundParent.accountType.value,
+              label: foundParent.accountType.displayName,
             },
 
             /* If the parent has a subtype, inherit it */
-            subType: foundParent.account_subtype
+            subType: foundParent.accountSubtype
               ? {
-                value: foundParent.account_subtype?.value,
-                label: foundParent.account_subtype?.display_name,
+                value: foundParent.accountSubtype?.value,
+                label: foundParent.accountSubtype?.displayName,
               }
               : undefined,
 
@@ -419,28 +398,17 @@ export const useChartOfAccounts = (
     }
   }
 
-  const refetch = () => mutate()
-
-  // Refetch data if related models has been changed since last fetch
-  useEffect(() => {
-    if (queryKey && (isLoading || isValidating)) {
-      read(DataModel.CHART_OF_ACCOUNTS, queryKey)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, isValidating])
-
-  useEffect(() => {
-    if (queryKey && hasBeenTouched(queryKey)) {
-      void refetch()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncTimestamps, startDate, endDate])
+  const refetch = async () => {
+    void invalidateLedgerBalances()
+    void forceReloadLedgerEntries()
+    await mutate()
+  }
 
   return {
-    data: data?.data,
+    data,
     isLoading,
     isValidating,
-    error,
+    isError,
     refetch,
     create,
     form,

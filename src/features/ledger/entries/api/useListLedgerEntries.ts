@@ -147,12 +147,17 @@ const INVALIDATION_DEBOUNCE_OPTIONS = {
   maxWait: 3000,
 }
 
-export function useLedgerEntriesInvalidator() {
-  const { invalidate } = useGlobalCacheActions()
+export function useLedgerEntriesCacheActions() {
+  const { invalidate, forceReload } = useGlobalCacheActions()
 
   const invalidateLedgerEntries = useCallback(
     () => invalidate(tags => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY)),
     [invalidate],
+  )
+
+  const forceReloadLedgerEntries = useCallback(
+    () => forceReload(tags => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY)),
+    [forceReload],
   )
 
   const debouncedInvalidateLedgerEntries = useMemo(
@@ -170,6 +175,7 @@ export function useLedgerEntriesInvalidator() {
   return {
     invalidateLedgerEntries,
     debouncedInvalidateLedgerEntries,
+    forceReloadLedgerEntries,
   }
 }
 
