@@ -16,8 +16,9 @@ type ListInvoicesBaseParams = {
   businessId: string
 }
 
-type ListInvoicesFilterParams = {
+export type ListInvoicesFilterParams = {
   status?: ReadonlyArray<InvoiceStatus>
+  query?: string
   dueAtStart?: Date
   dueAtEnd?: Date
 }
@@ -78,9 +79,10 @@ class ListInvoicesSWRResponse {
 export const listInvoices = get<
   ListInvoicesReturn,
   ListInvoicesParams
->(({ businessId, status, dueAtStart, dueAtEnd, sortBy, sortOrder, cursor, limit, showTotalCount }) => {
+>(({ businessId, status, query, dueAtStart, dueAtEnd, sortBy, sortOrder, cursor, limit, showTotalCount }) => {
   const parameters = toDefinedSearchParameters({
     status,
+    q: query,
     dueAtStart,
     dueAtEnd,
     sortBy,
@@ -101,6 +103,7 @@ function keyLoader(
     apiUrl,
     businessId,
     status,
+    query,
     dueAtStart,
     dueAtEnd,
     sortBy,
@@ -118,6 +121,7 @@ function keyLoader(
       apiUrl,
       businessId,
       status,
+      query,
       dueAtStart,
       dueAtEnd,
       cursor: previousPageData?.meta?.pagination.cursor,
@@ -132,6 +136,7 @@ function keyLoader(
 
 export function useListInvoices({
   status,
+  query,
   dueAtStart,
   dueAtEnd,
   sortBy = SortBy.SentAt,
@@ -151,6 +156,7 @@ export function useListInvoices({
         apiUrl,
         businessId,
         status,
+        query,
         dueAtStart,
         dueAtEnd,
         sortBy,
@@ -165,6 +171,9 @@ export function useListInvoices({
       businessId,
       cursor,
       status,
+      query,
+      dueAtStart,
+      dueAtEnd,
       sortBy,
       sortOrder,
       limit,
@@ -176,6 +185,7 @@ export function useListInvoices({
         params: {
           businessId,
           status,
+          query,
           dueAtStart,
           dueAtEnd,
           sortBy,

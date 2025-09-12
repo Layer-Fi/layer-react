@@ -1,4 +1,5 @@
-import { type DedicatedInvoicePaymentForm, type Invoice } from '../../../features/invoices/invoiceSchemas'
+import { type Invoice } from '../../../features/invoices/invoiceSchemas'
+import { type DedicatedInvoicePaymentForm } from '../../../features/invoices/invoicePaymentSchemas'
 import { BigDecimal as BD } from 'effect'
 import { convertBigDecimalToCents, convertCentsToBigDecimal } from '../../../utils/bigDecimalUtils'
 import { formatDate, startOfToday } from 'date-fns'

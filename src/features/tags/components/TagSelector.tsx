@@ -10,13 +10,13 @@ import { VStack } from '../../../components/ui/Stack/Stack'
 import { Button } from '../../../components/ui/Button/Button'
 import { X } from 'lucide-react'
 import { Tag, TagGroup, TagList } from '../../../components/ui/TagGroup/TagGroup'
-import { Schema } from 'effect'
 import { useFlattenedTagValues } from '../useFlattenedTagValues'
 import type { OneOf } from '../../../types/utility/oneOf'
 import { LoadingSpinner } from '../../../components/ui/Loading/LoadingSpinner'
 import { Square } from '../../../components/ui/Square/Square'
 import { Group } from 'react-aria-components'
 import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
+import type { Tag as TagType, TagValue } from '../tagSchemas'
 
 const TAG_SELECTOR_CLASS_NAMES = {
   LAYOUT_GROUP: 'Layer__TagSelectorLayoutGroup',
@@ -30,34 +30,10 @@ function TagSelectorLayoutGroup({ children }: PropsWithChildren) {
   )
 }
 
-const TagValueSchema = Schema.Data(
-  Schema.Struct({
-    dimensionId: Schema.UUID,
-    dimensionLabel: Schema.NonEmptyTrimmedString,
-    valueId: Schema.UUID,
-    valueLabel: Schema.NonEmptyTrimmedString,
-  }),
-)
-export const makeTagValue = Schema.decodeSync(TagValueSchema)
-export type TagValue = typeof TagValueSchema.Type
-
-const TagSchema = Schema.Data(
-  Schema.Struct({
-    id: Schema.UUID,
-    dimensionLabel: Schema.NonEmptyTrimmedString,
-    valueLabel: Schema.NonEmptyTrimmedString,
-    _local: Schema.Struct({
-      isOptimistic: Schema.Boolean,
-    }),
-  }),
-)
-export const makeTag = Schema.decodeSync(TagSchema)
-export type Tag = typeof TagSchema.Type
-
-type CommonTagSelectorSelectionProps = { selectedTags: ReadonlyArray<Tag> }
+type CommonTagSelectorSelectionProps = { selectedTags: ReadonlyArray<TagType> }
 type TagSelectorSelectionProps = OneOf<
   [
-    { onRemoveTag: (tag: Tag) => void } & CommonTagSelectorSelectionProps,
+    { onRemoveTag: (tag: TagType) => void } & CommonTagSelectorSelectionProps,
     { isReadOnly: true } & CommonTagSelectorSelectionProps,
   ]
 >
@@ -172,9 +148,9 @@ function LabeledTagSelectorContainer({
 }
 
 type TagSelectorProps = {
-  selectedTags: ReadonlyArray<Tag>
+  selectedTags: ReadonlyArray<TagType>
   onAddTag: (tagValue: TagValue) => void
-  onRemoveTag: (tag: Tag) => void
+  onRemoveTag: (tag: TagType) => void
 
   isReadOnly?: boolean
 }

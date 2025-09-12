@@ -9,18 +9,9 @@ export const ACCOUNTING_CONFIGURATION_TAG_KEY = '#accounting-configuration'
 
 class AccountingConfigurationSWRResponse {
   private swrResponse: SWRResponse<AccountingConfigurationSchemaType>
-  private cacheKey: { readonly accessToken: string
-    readonly apiUrl: string
-    readonly businessId: string
-  } | undefined
 
-  constructor(swrResponse: SWRResponse<AccountingConfigurationSchemaType>,
-    key: { readonly accessToken: string
-      readonly apiUrl: string
-      readonly businessId: string
-    } | undefined) {
+  constructor(swrResponse: SWRResponse<AccountingConfigurationSchemaType>) {
     this.swrResponse = swrResponse
-    this.cacheKey = key
   }
 
   get data() {
@@ -96,5 +87,5 @@ export function useAccountingConfiguration({ businessId }: GetAccountingConfigur
     )().then(({ data }) => Schema.decodeUnknownPromise(AccountingConfigurationSchema)(data)),
   )
 
-  return new AccountingConfigurationSWRResponse(response, queryKey)
+  return new AccountingConfigurationSWRResponse(response)
 }

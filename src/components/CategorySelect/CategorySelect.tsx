@@ -11,12 +11,13 @@ import ChevronDown from '../../icons/ChevronDown'
 import InfoIcon from '../../icons/InfoIcon'
 import MinimizeTwo from '../../icons/MinimizeTwo'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, CategorizationType, Category } from '../../types'
+import { BankTransaction, CategorizationStatus, CategorizationType, Category } from '../../types'
 import { SuggestedMatch, type CategoryWithEntries } from '../../types/bank_transactions'
 import { Badge } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../Tooltip'
 import { Text, TextSize } from '../Typography'
+import { LoadingSpinner } from '../ui/Loading/LoadingSpinner'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
@@ -26,6 +27,7 @@ import { convertMatchDetailsToLinkingMetadata, MatchDetailsType } from '../../sc
 import { ReactNode } from 'react'
 import { useCallback, useState } from 'react'
 import type { Option } from '../BankTransactionMobileList/utils'
+import { HStack } from '../ui/Stack/Stack'
 
 type Props = {
   name?: string
@@ -43,6 +45,7 @@ export enum OptionActionType {
   CATEGORY = 'category',
   MATCH = 'match',
   HIDDEN = 'hidden',
+  SUGGESTIONS_LOADING = 'suggestions loading',
 }
 
 export interface CategoryOptionPayload {
@@ -150,6 +153,20 @@ const Option = (
 ) => {
   if (props.data.payload.option_type === OptionActionType.HIDDEN) {
     return null
+  }
+
+  if (props.data.payload.option_type === OptionActionType.SUGGESTIONS_LOADING) {
+    return (
+      <components.Option
+        {...props}
+        className={`${props.className} Layer__select__option-content__loading`}
+      >
+        <HStack justify='space-between' align='center'>
+          <span>Generating suggestions for transaction</span>
+          <LoadingSpinner size={16} />
+        </HStack>
+      </components.Option>
+    )
   }
 
   if (props.data.type === 'match') {
@@ -308,18 +325,30 @@ export const CategorySelect = ({
       ]
       : []
 
-  const suggestedOptions =
-    bankTransaction?.categorization_flow?.type
-    === CategorizationType.ASK_FROM_SUGGESTIONS
-      ? [
-          {
-            label: 'Suggestions',
-            options: bankTransaction.categorization_flow.suggestions.map(x =>
-              mapCategoryToOption(x),
-            ),
-          } satisfies GroupBase<CategoryOption>,
-      ]
-      : []
+  const suggestedOptions = [
+    {
+      label: 'Suggestions',
+      options: bankTransaction?.categorization_flow?.type
+        === CategorizationType.ASK_FROM_SUGGESTIONS
+        ? bankTransaction.categorization_flow.suggestions.map(x =>
+          mapCategoryToOption(x),
+        )
+        : bankTransaction?.categorization_status === CategorizationStatus.PENDING
+          ? [
+            {
+              type: 'Loading suggestions',
+              disabled: true,
+              payload: {
+                id: 'loading_suggestions',
+                option_type: OptionActionType.SUGGESTIONS_LOADING,
+                display_name: 'SUGGESTIONS',
+                subCategories: null,
+              },
+            } satisfies CategoryOption,
+          ]
+          : [],
+    } satisfies GroupBase<CategoryOption>,
+  ]
 
   const categoryOptions = flattenCategories(categories ?? [])
 

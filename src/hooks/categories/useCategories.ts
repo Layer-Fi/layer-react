@@ -1,10 +1,10 @@
 import useSWR from 'swr'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
-import {
-  getCategories,
-  type CategoriesListMode,
-} from '../../api/layer/categories'
+import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
+import { Category } from '../../types'
+import { get } from '../../api/layer/authenticated_http'
+import type { CategoriesListMode } from '../../types/categories'
 
 export const CATEGORIES_TAG_KEY = '#categories'
 
@@ -30,6 +30,23 @@ function buildKey({
   }
 }
 
+export const getCategories = get<
+  {
+    data: {
+      type: 'Category_List'
+      categories: Category[]
+    }
+  },
+  {
+    businessId: string
+    mode?: CategoriesListMode
+  }
+>(({ businessId, mode }) => {
+  const parameters = toDefinedSearchParameters({ mode })
+
+  return `/v1/businesses/${businessId}/categories?${parameters}`
+})
+
 type UseCategoriesOptions = {
   mode?: CategoriesListMode
 }
@@ -54,4 +71,12 @@ export function useCategories({ mode }: UseCategoriesOptions = {}) {
         },
       })().then(({ data }) => data.categories),
   )
+}
+
+export function usePreloadCategories(options?: UseCategoriesOptions) {
+  /*
+   * This will initiate a network request to fill the cache, but will not
+   * cause a re-render when `data` changes.
+   */
+  useCategories(options)
 }

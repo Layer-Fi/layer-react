@@ -3,7 +3,8 @@ import { BaseDetailView } from '../../BaseDetailView/BaseDetailView'
 import { InvoiceForm } from '../InvoiceForm/InvoiceForm'
 import { UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
 import { Heading } from '../../ui/Typography/Heading'
-import { InvoiceStatus, type Invoice, type InvoicePayment } from '../../../features/invoices/invoiceSchemas'
+import { InvoiceStatus, type Invoice } from '../../../features/invoices/invoiceSchemas'
+import { type InvoicePayment } from '../../../features/invoices/invoicePaymentSchemas'
 import { HStack, VStack } from '../../ui/Stack/Stack'
 import { DataPoint } from '../../DataPoint/DataPoint'
 import { Span } from '../../ui/Typography/Text'
@@ -84,7 +85,7 @@ export const InvoiceDetail = () => {
 
   return (
     <>
-      <BaseDetailView slots={{ Header, BackIcon: hasChanges ? X : BackArrow }} name='Invoice Detail View' onGoBack={onGoBack}>
+      <BaseDetailView slots={{ Header, BackIcon: hasChanges ? X : BackArrow }} name='InvoiceDetail' onGoBack={onGoBack}>
         {viewState.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={viewState.invoice} />}
         <InvoiceForm
           isReadOnly={isReadOnly}
@@ -174,7 +175,7 @@ const InvoiceDetailHeader = ({ onSubmit, formState, isReadOnly, setIsReadOnly, o
 
   return (
     <HStack justify='space-between' align='center' fluid pie='md'>
-      <Heading>{headingContent}</Heading>
+      <Heading className='Layer__InvoiceDetail__Heading' ellipsis>{headingContent}</Heading>
       {isReadOnly
         ? (
           <HStack gap='xs'>

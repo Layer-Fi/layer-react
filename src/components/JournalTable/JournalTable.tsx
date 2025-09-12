@@ -15,6 +15,9 @@ import { entryNumber } from '../../utils/journal'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
 import { JournalTableStringOverrides } from './JournalTableWithPanel'
 import { parseISO, format as formatTime } from 'date-fns'
+import { useLayerContext } from '../../contexts/LayerContext'
+import { Span } from '../ui/Typography/Text'
+import { HStack } from '../ui/Stack/Stack'
 
 const accountName = (
   row: JournalEntry | JournalEntryLine | JournalEntryLineItem,
@@ -58,6 +61,8 @@ const JournalTableContent = ({
     useContext(JournalContext)
 
   const { isOpen, setIsOpen } = useTableExpandRow()
+  const { accountingConfiguration } = useLayerContext()
+  const enableAccountNumbers = !accountingConfiguration?.enableAccountNumbers
 
   useLayoutEffect(() => {
     if (data.length > 0) {
@@ -107,8 +112,8 @@ const JournalTableContent = ({
             {row.entry_at && formatTime(parseISO(row.entry_at), DATE_FORMAT)}
           </TableCell>
           <TableCell>{humanizeEnum(row.entry_type)}</TableCell>
-          {/* Empty cell for account name on Transaction level */}
-          <TableCell />
+          {/* Empty cell for account number on Transaction level */}
+          {enableAccountNumbers && <TableCell />}
           <TableCell>
             (
             {row.line_items.length}
@@ -145,7 +150,15 @@ const JournalTableContent = ({
               <TableCell />
               <TableCell />
               <TableCell />
-              <TableCell>{subItem.account.account_number}</TableCell>
+              {enableAccountNumbers && (
+                <TableCell>
+                  <HStack className='Layer__JournalTable__account-number-cell'>
+                    <Span ellipsis>
+                      {subItem.account.account_number}
+                    </Span>
+                  </HStack>
+                </TableCell>
+              )}
               <TableCell>{accountName(subItem)}</TableCell>
               {subItem.direction === 'DEBIT' && subItem.amount >= 0
                 ? (
@@ -172,7 +185,7 @@ const JournalTableContent = ({
   }
 
   return (
-    <Table borderCollapse='collapse'>
+    <Table borderCollapse='collapse' componentName='JournalTable'>
       <TableHead>
         <TableRow isHeadRow rowKey='journal-head-row'>
           <TableCell isHeaderCell>
@@ -184,9 +197,11 @@ const JournalTableContent = ({
           <TableCell isHeaderCell>
             {stringOverrides?.transactionColumnHeader || 'Transaction'}
           </TableCell>
-          <TableCell isHeaderCell>
-            {stringOverrides?.accountNumberColumnHeader || 'Account Number'}
-          </TableCell>
+          {enableAccountNumbers && (
+            <TableCell isHeaderCell>
+              {stringOverrides?.accountNumberColumnHeader || 'Account Number'}
+            </TableCell>
+          )}
           <TableCell isHeaderCell>
             {stringOverrides?.accountColumnHeader || 'Account Name'}
           </TableCell>

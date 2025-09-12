@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
-import type { Invoice, InvoicePayment } from '../../../features/invoices/invoiceSchemas'
+import type { Invoice } from '../../../features/invoices/invoiceSchemas'
+import type { InvoicePayment } from '../../../features/invoices/invoicePaymentSchemas'
 import { Form } from '../../ui/Form/Form'
 import { HStack, VStack } from '../../ui/Stack/Stack'
 import { DataState, DataStateStatus } from '../../DataState'
@@ -64,7 +65,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
       <VStack className={`${INVOICE_PAYMENT_FORM_CSS_PREFIX}__Section`} gap='sm'>
         <HStack className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} gap='xs' align='center'>
           <Span size='sm'>Invoice</Span>
-          <Span size='md' weight='bold'>
+          <Span size='md' weight='bold' ellipsis>
             #
             {invoice.invoiceNumber}
           </Span>

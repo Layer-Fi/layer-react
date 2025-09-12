@@ -35,7 +35,7 @@ const availableActions: Record<InvoiceStatus, InvoiceDetailHeaderMenuActions[]> 
     InvoiceDetailHeaderMenuActions.Refund,
     InvoiceDetailHeaderMenuActions.Reset,
   ],
-  [InvoiceStatus.Voided]: [],
+  [InvoiceStatus.Voided]: [InvoiceDetailHeaderMenuActions.Reset],
   [InvoiceStatus.PartiallyWrittenOff]: [InvoiceDetailHeaderMenuActions.Reset],
   [InvoiceStatus.WrittenOff]: [InvoiceDetailHeaderMenuActions.Reset],
   [InvoiceStatus.Refunded]: [InvoiceDetailHeaderMenuActions.Reset],
@@ -139,7 +139,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
       <InvoiceResetModal
         isOpen={openModal === InvoiceDetailHeaderMenuActions.Reset}
         onOpenChange={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Reset)}
-        invoiceId={invoice.id}
+        invoice={invoice}
         onSuccess={onSuccessUpdateInvoice}
       />
     </>

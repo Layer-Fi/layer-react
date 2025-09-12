@@ -219,6 +219,10 @@
   }
 }
 
+.Layer__JournalTable__account-number-cell {
+  max-width: 8rem;
+}
+
 @container (max-width: 760px) {
   .Layer__table-cell.Layer__journal__actions {
     width: 64px;

@@ -40,6 +40,10 @@
     inline-size: min(42rem, 90%);
   }
 
+  &[data-size='xl'] {
+    inline-size: min(70rem, 100%);
+  }
+
   &[data-variant='drawer'] {
     block-size: 100%;
 

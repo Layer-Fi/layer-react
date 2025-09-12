@@ -463,6 +463,20 @@
   .Layer__select__option--hidden {
     display: none;
   }
+  
+  .Layer__select__option-content__loading {
+    cursor: default;
+    &.Layer__select__option--is-focused,
+    &.Layer__select__option--is-selected,
+    &:hover,
+    &:focus,
+    &:active,
+    &:focus-visible,
+    &:focus-within {
+      background: transparent;
+      color: inherit;
+    }
+  }
 
   .Layer__select__option-content__match {
     display: flex;

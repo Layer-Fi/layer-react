@@ -16,6 +16,7 @@ import { AmountInput } from '../Input/AmountInput'
 import { Badge, BadgeVariant } from '../Badge/Badge'
 import { JournalEntryLineItem } from '../../types/journal'
 import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
+import { CategoriesListMode } from '../../types/categories'
 
 type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
 
@@ -50,7 +51,7 @@ export const JournalFormEntryLines = ({
   sendingForm: boolean
   config: JournalConfig
 }) => {
-  const { data: categories } = useCategories({ mode: 'ALL' })
+  const { data: categories } = useCategories({ mode: CategoriesListMode.All })
   const { form } = useContext(JournalContext)
 
   const { flattenedCategories, parentOptions } = useMemo(() => {

@@ -18,12 +18,13 @@
     display: grid;
 
     --grid-cols-base:
-      minmax(10rem, 1.5fr)
-      minmax(12rem, 2fr)
-      minmax(5rem, 0.75fr)
-      minmax(6rem, 0.75fr)
-      minmax(6rem, 0.75fr)
-      minmax(3rem, 0.25fr);
+      minmax(10rem, 3fr)
+      minmax(10rem, 3fr)
+      minmax(12rem, 4fr)
+      minmax(4rem, 1fr)
+      minmax(6rem, 2fr)
+      minmax(6rem, 2fr)
+      minmax(3rem, 0fr);
 
     grid-template-columns:
       var(--grid-cols-base)

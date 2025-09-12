@@ -2,7 +2,8 @@ import { Schema, pipe } from 'effect'
 import { CustomerSchema } from '../../schemas/customer'
 import { InvoiceTermsValues } from '../../components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { ZonedDateTimeFromSelf } from '../../utils/schema/utils'
-import { PaymentMethodSchema, TransformedPaymentMethodSchema } from '../../components/PaymentMethod/schemas'
+import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '../tags/tagSchemas'
+import { AccountIdentifierSchema } from '../../schemas/accountIdentifier'
 
 export enum InvoiceStatus {
   Voided = 'VOIDED',
@@ -44,8 +45,6 @@ export const InvoiceLineItemSchema = Schema.Struct({
 
   description: Schema.NullOr(Schema.String),
 
-  product: Schema.NullOr(Schema.String),
-
   unitPrice: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('unit_price'),
@@ -71,6 +70,16 @@ export const InvoiceLineItemSchema = Schema.Struct({
   ),
 
   memo: Schema.NullOr(Schema.String),
+
+  transactionTags: pipe(
+    Schema.propertySignature(Schema.Array(TransactionTagSchema)),
+    Schema.fromKey('transaction_tags'),
+  ),
+
+  accountIdentifier: pipe(
+    Schema.propertySignature(Schema.NullOr(AccountIdentifierSchema)),
+    Schema.fromKey('account_identifier'),
+  ),
 })
 export type InvoiceLineItem = typeof InvoiceLineItemSchema.Type
 
@@ -169,8 +178,6 @@ export const UpsertInvoiceTaxLineItemSchema = Schema.Struct({
 export const UpsertInvoiceLineItemSchema = Schema.Struct({
   description: Schema.String,
 
-  product: Schema.String,
-
   unitPrice: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('unit_price'),
@@ -181,6 +188,12 @@ export const UpsertInvoiceLineItemSchema = Schema.Struct({
   salesTaxes: Schema.optional(Schema.Array(UpsertInvoiceTaxLineItemSchema)).pipe(
     Schema.fromKey('sales_taxes'),
   ),
+
+  accountIdentifier: Schema.optional(AccountIdentifierSchema).pipe(
+    Schema.fromKey('account_identifier'),
+  ),
+
+  tags: Schema.optional(Schema.Array(TagKeyValueSchema)),
 })
 export type UpsertInvoiceLineItem = typeof UpsertInvoiceLineItemSchema.Type
 
@@ -220,8 +233,6 @@ export type UpsertInvoice = typeof UpsertInvoiceSchema.Type
 export const InvoiceFormLineItemSchema = Schema.Struct({
   description: Schema.String,
 
-  product: Schema.String,
-
   unitPrice: Schema.BigDecimal,
 
   quantity: Schema.BigDecimal,
@@ -229,6 +240,10 @@ export const InvoiceFormLineItemSchema = Schema.Struct({
   amount: Schema.BigDecimal,
 
   isTaxable: Schema.Boolean,
+
+  accountIdentifier: Schema.NullOr(AccountIdentifierSchema),
+
+  tags: Schema.Array(TagSchema),
 })
 export type InvoiceFormLineItem = typeof InvoiceFormLineItemSchema.Type
 export const InvoiceFormLineItemEquivalence = Schema.equivalence(InvoiceFormLineItemSchema)
@@ -300,51 +315,3 @@ export const InvoiceSummaryStatsResponseSchema = Schema.Struct({
   ),
 })
 export type InvoiceSummaryStatsResponse = typeof InvoiceSummaryStatsResponseSchema.Type
-
-export const UpsertDedicatedInvoicePaymentSchema = Schema.Struct({
-  amount: Schema.Number,
-
-  method: PaymentMethodSchema,
-
-  paidAt: pipe(
-    Schema.propertySignature(Schema.Date),
-    Schema.fromKey('paid_at'),
-  ),
-
-  referenceNumber: Schema.optional(Schema.String).pipe(
-    Schema.fromKey('reference_number'),
-  ),
-
-  memo: Schema.optional(Schema.String),
-})
-
-export type UpsertDedicatedInvoicePayment = typeof UpsertDedicatedInvoicePaymentSchema.Type
-
-export const DedicatedInvoicePaymentFormSchema = Schema.Struct({
-  amount: Schema.BigDecimal,
-
-  method: Schema.NullOr(PaymentMethodSchema),
-
-  paidAt: Schema.NullOr(ZonedDateTimeFromSelf),
-
-  referenceNumber: Schema.String,
-
-  memo: Schema.String,
-})
-export type DedicatedInvoicePaymentForm = typeof DedicatedInvoicePaymentFormSchema.Type
-
-export const InvoicePaymentSchema = Schema.Struct({
-  amount: Schema.Number,
-
-  method: TransformedPaymentMethodSchema,
-
-  at: Schema.propertySignature(Schema.Date),
-
-  referenceNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
-    Schema.fromKey('reference_number'),
-  ),
-
-  memo: Schema.NullOr(Schema.String),
-})
-export type InvoicePayment = typeof InvoicePaymentSchema.Type

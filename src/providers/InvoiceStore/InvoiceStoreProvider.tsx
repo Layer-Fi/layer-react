@@ -5,8 +5,9 @@ import { ALL_OPTION, type InvoiceStatusOption } from '../../components/Invoices/
 import type { InvoiceFormMode } from '../../components/Invoices/InvoiceForm/InvoiceForm'
 import { UpsertInvoiceMode } from '../../features/invoices/api/useUpsertInvoice'
 
-type InvoiceTableQuery = {
+export type InvoiceTableFilters = {
   status: InvoiceStatusOption
+  query: string
 }
 
 export enum InvoiceRoute {
@@ -20,8 +21,8 @@ type InvoiceRouteState = InvoiceDetailRouteState | InvoiceTableRouteState
 
 type InvoiceStoreShape = {
   routeState: InvoiceRouteState
-  tableQuery: InvoiceTableQuery
-  setTableQuery: (patchQuery: Partial<InvoiceTableQuery>) => void
+  tableFilters: InvoiceTableFilters
+  setTableFilters: (patchFilters: Partial<InvoiceTableFilters>) => void
   navigate: {
     toCreateInvoice: () => void
     toInvoiceTable: () => void
@@ -32,8 +33,8 @@ type InvoiceStoreShape = {
 const InvoiceStoreContext = createContext(
   createStore<InvoiceStoreShape>(() => ({
     routeState: { route: InvoiceRoute.Table },
-    tableQuery: { status: ALL_OPTION },
-    setTableQuery: () => {},
+    tableFilters: { status: ALL_OPTION, query: '' },
+    setTableFilters: () => {},
     navigate: {
       toCreateInvoice: () => {},
       toInvoiceTable: () => {},
@@ -59,12 +60,12 @@ export function useInvoiceDetail(): InvoiceFormMode {
   return invoiceDetail
 }
 
-export function useInvoiceTableQuery() {
+export function useInvoiceTableFilters() {
   const store = useContext(InvoiceStoreContext)
-  const query = useStore(store, state => state.tableQuery)
-  const setQuery = useStore(store, state => state.setTableQuery)
+  const tableFilters = useStore(store, state => state.tableFilters)
+  const setTableFilters = useStore(store, state => state.setTableFilters)
 
-  return useMemo(() => ({ query, setQuery }), [query, setQuery])
+  return useMemo(() => ({ tableFilters, setTableFilters }), [tableFilters, setTableFilters])
 }
 
 export function useInvoiceNavigation() {
@@ -76,12 +77,12 @@ export function InvoiceStoreProvider(props: PropsWithChildren) {
   const [store] = useState(() =>
     createStore<InvoiceStoreShape>(set => ({
       routeState: { route: InvoiceRoute.Table },
-      tableQuery: { status: ALL_OPTION },
-      setTableQuery: (patchQuery: Partial<InvoiceTableQuery>) => {
+      tableFilters: { status: ALL_OPTION, query: '' },
+      setTableFilters: (patchFilters: Partial<InvoiceTableFilters>) => {
         set(state => ({
-          tableQuery: {
-            ...state.tableQuery,
-            ...patchQuery,
+          tableFilters: {
+            ...state.tableFilters,
+            ...patchFilters,
           },
         }))
       },
