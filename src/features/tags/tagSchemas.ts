@@ -72,6 +72,15 @@ export const TransactionTagSchema = Schema.Struct({
   id: Schema.UUID,
   key: Schema.NonEmptyTrimmedString,
   value: Schema.NonEmptyTrimmedString,
+  dimensionDisplayName: pipe(
+    Schema.optional(Schema.NonEmptyTrimmedString),
+    Schema.fromKey('dimension_display_name'),
+  ),
+  
+  valueDisplayName: pipe(
+    Schema.optional(Schema.NonEmptyTrimmedString),
+    Schema.fromKey('value_display_name'),
+  ),
 
   createdAt: pipe(
     Schema.propertySignature(Schema.Date),
