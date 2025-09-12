@@ -10,7 +10,7 @@ import { VStack } from '../../../components/ui/Stack/Stack'
 import { Button } from '../../../components/ui/Button/Button'
 import { X } from 'lucide-react'
 import { Tag, TagGroup, TagList } from '../../../components/ui/TagGroup/TagGroup'
-import { useFlattenedTagValues } from '../useFlattenedTagValues'
+import { barbequeToCapitalCase, useFlattenedTagValues } from '../useFlattenedTagValues'
 import type { OneOf } from '../../../types/utility/oneOf'
 import { LoadingSpinner } from '../../../components/ui/Loading/LoadingSpinner'
 import { Square } from '../../../components/ui/Square/Square'
@@ -53,7 +53,7 @@ function TagSelectorSelection({
       selectionMode='none'
       onRemove={
         onRemoveTag
-          ? (keys) => {
+          ? (keys: Set<string | number>) => {
             keys.forEach((key) => {
               if (typeof key !== 'string') {
                 return
@@ -78,7 +78,7 @@ function TagSelectorSelection({
           dimensionLabel,
           valueLabel,
           _local,
-        }) => {
+        }: TagType) => {
           const isOptimistic = _local?.isOptimistic ?? false
 
           return (
@@ -159,18 +159,17 @@ export function TagSelector({
   selectedTags,
   onAddTag,
   onRemoveTag,
-
   isReadOnly,
 }: TagSelectorProps) {
   const { data, isLoading, isError } = useTagDimensions()
 
   const groups = useMemo(
     () => data
-      ?.map(({ key: dimensionLabel, definedValues }) => {
+      ?.map(({ key: dimensionLabel, definedValues, displayName: dimensionDisplayName }) => {
         return {
-          label: dimensionLabel,
-          options: definedValues.map(({ id: valueId, value: valueLabel }) => ({
-            label: valueLabel,
+          label: dimensionDisplayName ?? barbequeToCapitalCase(dimensionLabel) ?? dimensionLabel,
+          options: definedValues.map(({ id: valueId, value: valueLabel, displayName: valueDisplayName }) => ({
+            label: valueDisplayName ?? barbequeToCapitalCase(valueLabel) ?? valueLabel,
             value: valueId,
             isDisabled: selectedTags.some(
               tagValue =>

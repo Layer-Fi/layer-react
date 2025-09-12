@@ -32,7 +32,7 @@ function buildKey({
 
 const createTagValueDefinition = post<
   { data: typeof TagValueDefinitionSchema.Encoded },
-  { label: string },
+  { label: string, displayName: string },
   {
     businessId: string
     dimensionId: string
@@ -52,7 +52,7 @@ export function useCreateTagDimension() {
     }),
     (
       { accessToken, apiUrl, businessId },
-      { arg: { dimensionId, label } }: { arg: { dimensionId: string, label: string } },
+      { arg: { dimensionId, label, displayName } }: { arg: { dimensionId: string, label: string, displayName: string } },
     ) => createTagValueDefinition(
       apiUrl,
       accessToken,
@@ -61,7 +61,7 @@ export function useCreateTagDimension() {
           businessId,
           dimensionId,
         },
-        body: { label },
+        body: { label, displayName },
       },
     ),
   )

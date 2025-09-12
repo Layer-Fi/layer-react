@@ -24,6 +24,7 @@ const TransformedTagDimensionStrictnessSchema = Schema.transform(
 export const TagValueDefinitionSchema = Schema.Struct({
   id: Schema.UUID,
   value: Schema.NonEmptyTrimmedString,
+  displayName: Schema.optional(Schema.NonEmptyTrimmedString),
 })
 export type TagValueDefinition = typeof TagValueDefinitionSchema.Type
 
@@ -36,6 +37,7 @@ export const makeTagKeyValue = Schema.decodeSync(TagKeyValueSchema)
 export const TagDimensionSchema = Schema.Struct({
   id: Schema.UUID,
   key: Schema.NonEmptyTrimmedString,
+  displayName: Schema.optional(Schema.NonEmptyTrimmedString),
   strictness: TransformedTagDimensionStrictnessSchema,
   definedValues: Schema.propertySignature(Schema.Array(TagValueDefinitionSchema))
     .pipe(Schema.fromKey('defined_values')),
