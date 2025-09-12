@@ -31,6 +31,14 @@ export type TagValueDefinition = typeof TagValueDefinitionSchema.Type
 export const TagKeyValueSchema = Schema.Struct({
   key: Schema.NonEmptyTrimmedString,
   value: Schema.NonEmptyTrimmedString,
+  dimensionDisplayName: pipe(
+    Schema.optional(Schema.NonEmptyTrimmedString),
+    Schema.fromKey('dimension_display_name'),
+  ),
+  valueDisplayName: pipe(
+    Schema.optional(Schema.NonEmptyTrimmedString),
+    Schema.fromKey('value_display_name'),
+  ),
 })
 export const makeTagKeyValue = Schema.decodeSync(TagKeyValueSchema)
 
@@ -76,7 +84,7 @@ export const TransactionTagSchema = Schema.Struct({
     Schema.optional(Schema.NonEmptyTrimmedString),
     Schema.fromKey('dimension_display_name'),
   ),
-  
+
   valueDisplayName: pipe(
     Schema.optional(Schema.NonEmptyTrimmedString),
     Schema.fromKey('value_display_name'),
