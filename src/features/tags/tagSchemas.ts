@@ -66,7 +66,9 @@ export type TagValue = typeof TagValueSchema.Type
 export const TagSchema = Schema.Data(
   Schema.Struct({
     id: Schema.UUID,
+    key: Schema.NonEmptyTrimmedString,
     dimensionLabel: Schema.NonEmptyTrimmedString,
+    value: Schema.NonEmptyTrimmedString,
     valueLabel: Schema.NonEmptyTrimmedString,
     _local: Schema.Struct({
       isOptimistic: Schema.Boolean,
@@ -120,10 +122,12 @@ export const makeTagKeyValueFromTag = ({ dimensionLabel, valueLabel }: Tag) => m
   value: valueLabel,
 })
 
-export const makeTagFromTransactionTag = ({ id, key, value, _local }: TransactionTag) => makeTag({
+export const makeTagFromTransactionTag = ({ id, key, value, dimensionDisplayName, valueDisplayName, _local }: TransactionTag) => makeTag({
   id,
-  dimensionLabel: key,
-  valueLabel: value,
+  key,
+  value,
+  dimensionLabel: dimensionDisplayName ?? key,
+  valueLabel: valueDisplayName ?? value,
   _local: {
     isOptimistic: _local?.isOptimistic ?? false,
   },
