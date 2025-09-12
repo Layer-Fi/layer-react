@@ -94,7 +94,7 @@ export const ChartOfAccountsTableContent = ({
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
   const sortedAccounts = useMemo(() => sortAccountsRecursive(Array.from(data.accounts)), [data.accounts])
   const { accountingConfiguration } = useLayerContext()
-  const enableAccountNumbers = !accountingConfiguration?.enableAccountNumbers
+  const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
 
   const allRowKeys = useMemo(() => {
     const keys: string[] = []

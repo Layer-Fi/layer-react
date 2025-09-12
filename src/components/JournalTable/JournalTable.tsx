@@ -62,7 +62,7 @@ const JournalTableContent = ({
 
   const { isOpen, setIsOpen } = useTableExpandRow()
   const { accountingConfiguration } = useLayerContext()
-  const enableAccountNumbers = !accountingConfiguration?.enableAccountNumbers
+  const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
 
   useLayoutEffect(() => {
     if (data.length > 0) {
