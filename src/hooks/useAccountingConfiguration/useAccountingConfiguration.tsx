@@ -40,11 +40,11 @@ type GetAccountingConfigurationParams = {
 }
 
 function buildKey({
-  accessToken,
+  access_token: accessToken,
   apiUrl,
   businessId,
 }: {
-  accessToken?: string
+  access_token?: string
   apiUrl?: string
   businessId: string
 }) {
@@ -86,6 +86,5 @@ export function useAccountingConfiguration({ businessId }: GetAccountingConfigur
       },
     )().then(({ data }) => Schema.decodeUnknownPromise(AccountingConfigurationSchema)(data)),
   )
-
   return new AccountingConfigurationSWRResponse(response)
 }
