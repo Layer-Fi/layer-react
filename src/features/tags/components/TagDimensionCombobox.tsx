@@ -41,7 +41,9 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
   const options = useMemo(() => {
     if (!tagDimension) return []
 
-    return tagDimension.definedValues.map(value => new TagValueDefinitionAsOption(value))
+    return tagDimension.definedValues
+    .filter(({ archivedAt }) => archivedAt === null)
+    .map(value => new TagValueDefinitionAsOption(value))
   }, [tagDimension])
 
   const selectedOption = useMemo(() => {
