@@ -18,7 +18,7 @@ class TagValueDefinitionAsOption {
   }
 
   get label() {
-    const isArchived = this.tagValueDefinition.archivedAt !== null || true
+    const isArchived = this.tagValueDefinition.archivedAt !== undefined
     return isArchived ? `${this.tagValueDefinition.value} (Archived)` : this.tagValueDefinition.value
   }
 
@@ -42,7 +42,7 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
     if (!tagDimension) return []
 
     return tagDimension.definedValues
-    .filter(({ archivedAt }) => archivedAt === null)
+    .filter(({ archivedAt }) => archivedAt === undefined)
     .map(value => new TagValueDefinitionAsOption(value))
   }, [tagDimension])
 
@@ -55,7 +55,7 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
     let nextTag: Tag | null = null
 
     if (tagDimension && option) {
-      nextTag = makeTag({ id: option.id, dimensionLabel: tagDimension.key, valueLabel: option.label, _local: { isOptimistic: false } })
+      nextTag = makeTag({ id: option.id, dimensionLabel: tagDimension.key, valueLabel: option.value, _local: { isOptimistic: false } })
     }
 
     onValueChange(nextTag)

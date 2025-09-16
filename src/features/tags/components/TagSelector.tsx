@@ -170,8 +170,8 @@ export function TagSelector({
         return {
           label: dimensionLabel,
           options: definedValues
-          .filter(({ archivedAt }) => archivedAt === null)
-          .map(({ id: valueId, value: valueLabel, archivedAt }) => ({
+          .filter(({ archivedAt }) => archivedAt === undefined)
+          .map(({ id: valueId, value: valueLabel }) => ({
             label: valueLabel,
             value: valueId,
             isDisabled: selectedTags.some(
