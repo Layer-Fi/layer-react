@@ -168,8 +168,8 @@ export function TagSelector({
       ?.map(({ key: dimensionLabel, definedValues, displayName: dimensionDisplayName }) => {
         return {
           label: dimensionDisplayName ?? dimensionLabel,
-          options: definedValues.map(({ id: valueId, value: valueLabel, displayName: valueDisplayName }) => ({
-            label: valueDisplayName ?? valueLabel,
+          options: definedValues.map(({ id: valueId, value: valueLabel, displayName: valueDisplayName, archivedAt }) => ({
+            label: archivedAt !== null ? `${valueDisplayName ?? valueLabel} (Archived)` : valueDisplayName ?? valueLabel,
             value: valueId,
             isDisabled: selectedTags.some(
               tagValue =>
@@ -194,7 +194,7 @@ export function TagSelector({
       }
 
       const { value: valueId } = selectedValue
-      const tagValue = flattenedTagValues.find(({ valueId: id }) => id === valueId)
+      let tagValue = flattenedTagValues.find(({ valueId: id }) => id === valueId)
 
       if (tagValue === undefined) {
         return

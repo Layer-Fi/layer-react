@@ -13,11 +13,11 @@ export function barbequeToCapitalCase(input: string) {
 
 function flattenDimensionsToValues(dimensions: ReadonlyArray<typeof TagDimensionSchema.Type>) {
   return dimensions.flatMap(({ id: dimensionId, key: dimensionLabel, definedValues, displayName: dimensionDisplayName }) => {
-    const values = definedValues.map(({ id: valueId, value: valueLabel, displayName: valueDisplayName }) => makeTagValue({
+    const values = definedValues.map(({ id: valueId, value: valueLabel, displayName: valueDisplayName, archivedAt }) => makeTagValue({
       dimensionId,
       dimensionLabel: dimensionDisplayName ?? dimensionLabel,
       valueId,
-      valueLabel: valueDisplayName ?? valueLabel,
+      valueLabel: archivedAt !== null ? `${valueDisplayName ?? valueLabel} (Archived)` : (valueDisplayName ?? valueLabel),
     }))
 
     return values
