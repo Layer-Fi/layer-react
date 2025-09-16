@@ -26,7 +26,7 @@ export const TagValueDefinitionSchema = Schema.Struct({
   key: Schema.NonEmptyTrimmedString,
   value: Schema.NonEmptyTrimmedString,
   displayName: Schema.propertySignature(Schema.NullishOr(Schema.NonEmptyTrimmedString)).pipe(Schema.fromKey('display_name')),
-  archivedAt: Schema.optional(Schema.Date),
+  archivedAt: Schema.optional(Schema.Date).pipe(Schema.fromKey('archived_at')),
 })
 export type TagValueDefinition = typeof TagValueDefinitionSchema.Type
 
