@@ -18,7 +18,8 @@ class TagValueDefinitionAsOption {
   }
 
   get label() {
-    return this.tagValueDefinition.value
+    const isArchived = this.tagValueDefinition.archivedAt !== null || true
+    return isArchived ? `${this.tagValueDefinition.value} (Archived)` : this.tagValueDefinition.value
   }
 
   get value() {
@@ -45,7 +46,7 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
 
   const selectedOption = useMemo(() => {
     if (value === null) return null
-    return new TagValueDefinitionAsOption({ value: value.valueLabel, id: value.id })
+    return new TagValueDefinitionAsOption({ value: value.valueLabel, id: value.id, key: value.id })
   }, [value])
 
   const onSelectedValueChange = useCallback((option: TagValueDefinitionAsOption | null) => {
