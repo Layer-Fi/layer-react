@@ -7,7 +7,6 @@ import {
   mergeComparisonLineItemsAtDepth,
 } from '../../utils/profitAndLossComparisonUtils'
 import { Loader } from '../Loader'
-import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import { Table, TableBody, TableHead, TableRow, TableCell } from '../Table'
 import { ProfitAndLossTableStringOverrides } from './ProfitAndLossTableComponent'
 import classNames from 'classnames'
@@ -17,6 +16,7 @@ import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import { HStack } from '../ui/Stack/Stack'
 import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import { LineItem } from '../../utils/schema/utils'
+import { ProfitAndLossComparisonContext } from '../../contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 
 interface ProfilAndLostCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides
@@ -30,7 +30,7 @@ export const ProfitAndLossCompareTable = ({
     isLoading,
     comparePeriods,
     selectedCompareOptions,
-  } = useContext(ProfitAndLoss.ComparisonContext)
+  } = useContext(ProfitAndLossComparisonContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
   const { data: bookkeepingPeriods } = useBookkeepingPeriods()
 

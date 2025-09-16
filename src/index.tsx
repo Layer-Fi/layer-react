@@ -15,7 +15,7 @@ export { BankTransactions } from './components/BankTransactions/BankTransactions
 export { Integrations } from './components/Integrations/Integrations'
 
 /* ------------------ Reporting ------------------ */
-export { ProfitAndLoss } from './components/ProfitAndLoss'
+export { ProfitAndLoss } from './components/ProfitAndLoss/ProfitAndLoss'
 /* Profit and loss contains 6 sub-components:
  * - Chart
  * - Context

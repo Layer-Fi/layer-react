@@ -2,7 +2,7 @@ import { ReactNode, useState } from 'react'
 import { Container } from '../../components/Container'
 import { Header, HeaderCol, HeaderRow } from '../../components/Header'
 import { Onboarding } from '../../components/Onboarding'
-import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import {
   ProfitAndLossSummaries,
@@ -14,6 +14,7 @@ import { OnboardingStep } from '../../types/layer_context'
 import type { Variants } from '../../utils/styleUtils/sizeVariants'
 import { TagOption } from '../ProjectProfitability/ProjectProfitability'
 import classNames from 'classnames'
+import { ProfitAndLossDatePicker } from '../../components/ProfitAndLossDatePicker/ProfitAndLossDatePicker'
 
 interface AccountingOverviewStringOverrides {
   header?: string
@@ -77,7 +78,7 @@ export const AccountingOverview = ({
           <Header>
             <HeaderRow>
               <HeaderCol>
-                <ProfitAndLoss.DatePicker />
+                <ProfitAndLossDatePicker />
               </HeaderCol>
             </HeaderRow>
           </Header>

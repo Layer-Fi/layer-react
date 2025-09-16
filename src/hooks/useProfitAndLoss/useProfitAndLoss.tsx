@@ -14,10 +14,16 @@ import {
   useGlobalDateRange,
 } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import type { BreadcrumbItem } from '../../components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 
 export type Scope = 'expenses' | 'revenue'
 
 export type SidebarScope = Scope | undefined
+
+export type SelectedLineItem = {
+  lineItemName: string
+  breadcrumbPath: BreadcrumbItem[]
+}
 
 export type PnlTagFilter = {
   key: string
@@ -40,10 +46,7 @@ export type ProfitAndLossFilters = Record<
   ProfitAndLossFilter | undefined
 >
 
-export const useProfitAndLoss = ({
-  tagFilter,
-  reportingBasis,
-}: UseProfitAndLossOptions) => {
+export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLossOptions) => {
   const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
   const { start, end } = useGlobalDateRange({ displayMode: rangeDisplayMode })
   const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
@@ -54,6 +57,7 @@ export const useProfitAndLoss = ({
   })
 
   const [sidebarScope, setSidebarScope] = useState<SidebarScope>(undefined)
+  const [selectedLineItem, setSelectedLineItem] = useState<SelectedLineItem | null>(null)
 
   const { data, isLoading, isValidating, isError, mutate } =
     useProfitAndLossReport({
@@ -200,5 +204,7 @@ export const useProfitAndLoss = ({
     setFilterTypes,
     tagFilter,
     dateRange,
+    selectedLineItem,
+    setSelectedLineItem,
   }
 }
