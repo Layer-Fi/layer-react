@@ -32,7 +32,7 @@ const BaseMatchDetailsSchema = Schema.Struct({
   amount: Schema.Number,
   date: Schema.String,
   description: Schema.String,
-  adjustment: Schema.optional(Schema.NullOr(ApiMatchAdjustmentSchema)),
+  adjustment: Schema.NullOr(ApiMatchAdjustmentSchema),
   referenceNumber: pipe(
     Schema.optional(Schema.NullOr(Schema.String)),
     Schema.fromKey('reference_number'),
