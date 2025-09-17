@@ -6,7 +6,7 @@ import { MatchFormProps } from './MatchForm'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { convertMatchDetailsToLinkingMetadata } from '../../schemas/match'
+import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/match'
 import { HStack } from '../ui/Stack/Stack'
 
 export const MatchFormMobile = ({
@@ -21,7 +21,8 @@ export const MatchFormMobile = ({
   return (
     <div className={`${classNamePrefix}__match-list`}>
       {bankTransaction.suggested_matches?.map((match, idx) => {
-        const inAppLink = renderInAppLink ? renderInAppLink(convertMatchDetailsToLinkingMetadata(match.details)) : null
+        const matchDetails = match.details ? decodeMatchDetails(match.details) : undefined
+        const inAppLink = renderInAppLink && matchDetails ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails)) : null
         return (
           <div
             key={idx}

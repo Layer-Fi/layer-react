@@ -64,4 +64,4 @@ export { BankTransactionsProvider } from './providers/BankTransactionsProvider'
 export { useDataSync } from './hooks/useDataSync'
 
 export { DisplayState, Direction } from './types/bank_transactions'
-export { LinkingMetadata } from './contexts/InAppLinkContext'
+export { LinkingMetadata, EntityName } from './contexts/InAppLinkContext'

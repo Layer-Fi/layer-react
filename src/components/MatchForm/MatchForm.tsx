@@ -8,7 +8,7 @@ import { Text, TextUseTooltip, ErrorText } from '../Typography'
 import classNames from 'classnames'
 import { parseISO, format as formatTime } from 'date-fns'
 import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { convertMatchDetailsToLinkingMetadata } from '../../schemas/match'
+import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/match'
 
 export interface MatchFormProps {
   classNamePrefix: string
@@ -58,7 +58,8 @@ export const MatchForm = ({
         {match && <div className={`${classNamePrefix}__match-table__status`} />}
       </div>
       {effectiveSuggestedMatches.map((suggestedMatch) => {
-        const inAppLink = renderInAppLink ? renderInAppLink(convertMatchDetailsToLinkingMetadata(suggestedMatch.details)) : null
+        const matchDetails = suggestedMatch.details ? decodeMatchDetails(suggestedMatch.details) : undefined
+        const inAppLink = renderInAppLink && matchDetails ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails)) : null
         return (
           <div
             key={suggestedMatch.id}

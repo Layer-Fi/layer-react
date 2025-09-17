@@ -21,7 +21,7 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { convertMatchDetailsToLinkingMetadata } from '../../schemas/match'
+import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/match'
 
 export interface BankTransactionMobileListItemProps {
   index: number
@@ -54,7 +54,8 @@ const getAssignedValue = (
 
   if (bankTransaction.categorization_status === CategorizationStatus.MATCHED) {
     if (renderInAppLink && bankTransaction.match?.details) {
-      const inAppLink = renderInAppLink(convertMatchDetailsToLinkingMetadata(bankTransaction.match.details))
+      const matchDetails = bankTransaction.match.details ? decodeMatchDetails(bankTransaction.match.details) : undefined
+      const inAppLink = matchDetails ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails)) : undefined
       if (inAppLink) return inAppLink
     }
     return bankTransaction.match?.details?.description
