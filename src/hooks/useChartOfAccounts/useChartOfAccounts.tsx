@@ -162,7 +162,7 @@ export const useChartOfAccounts = (
   )
   const { trigger: originalTrigger } = useDeleteAccountFromLedger()
   const { data, isLoading, isValidating, isError, mutate } = useLedgerBalances(withDates, startDate, endDate)
-  const { invalidateLedgerBalances, forceReloadLedgerBalances } = useLedgerBalancesCacheActions()
+  const { invalidateLedgerBalances } = useLedgerBalancesCacheActions()
   const { forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
 
   const create = async (newAccount: NewAccount) => {
