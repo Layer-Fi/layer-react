@@ -170,16 +170,16 @@ export function TagSelector({
         return {
           label: dimensionLabel,
           options: definedValues
-          .filter(({ archivedAt }) => archivedAt === undefined)
-          .map(({ id: valueId, value: valueLabel }) => ({
-            label: valueLabel,
-            value: valueId,
-            isDisabled: selectedTags.some(
-              tagValue =>
-                tagValue.dimensionLabel === dimensionLabel
-                && tagValue.valueLabel === valueLabel,
-            ),
-          })),
+            .filter(({ archivedAt }) => !archivedAt)
+            .map(({ id: valueId, value: valueLabel }) => ({
+              label: valueLabel,
+              value: valueId,
+              isDisabled: selectedTags.some(
+                tagValue =>
+                  tagValue.dimensionLabel === dimensionLabel
+                  && tagValue.valueLabel === valueLabel,
+              ),
+            })),
         }
       }) ?? [],
     [
@@ -197,7 +197,7 @@ export function TagSelector({
       }
 
       const { value: valueId } = selectedValue
-      let tagValue = flattenedTagValues.find(({ valueId: id }) => id === valueId)
+      const tagValue = flattenedTagValues.find(({ valueId: id }) => id === valueId)
 
       if (tagValue === undefined) {
         return

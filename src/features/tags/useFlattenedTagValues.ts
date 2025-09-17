@@ -5,13 +5,13 @@ import type { useTagDimensions } from './api/useTagDimensions'
 function flattenDimensionsToValues(dimensions: ReadonlyArray<typeof TagDimensionSchema.Type>) {
   return dimensions.flatMap(({ id: dimensionId, key: dimensionLabel, definedValues }) =>
     definedValues
-  .filter(({ archivedAt }) => archivedAt === undefined)
-  .map(({ id: valueId, value: valueLabel }) => makeTagValue({
-      dimensionId,
-      dimensionLabel,
-      valueId,
-      valueLabel,
-    })),
+      .filter(({ archivedAt }) => !archivedAt)
+      .map(({ id: valueId, value: valueLabel }) => makeTagValue({
+        dimensionId,
+        dimensionLabel,
+        valueId,
+        valueLabel,
+      })),
   )
 }
 
