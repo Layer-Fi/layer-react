@@ -194,7 +194,7 @@ export function TagSelector({
       }
 
       const { value: valueId } = selectedValue
-      let tagValue = flattenedTagValues.find(({ valueId: id }) => id === valueId)
+      const tagValue = flattenedTagValues.find(({ valueId: id }) => id === valueId)
 
       if (tagValue === undefined) {
         return
