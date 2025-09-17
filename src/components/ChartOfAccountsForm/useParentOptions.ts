@@ -16,5 +16,5 @@ export const useParentOptions = (
             value: x.accountId,
           }
         }),
-    [data?.accounts?.length],
+    [data?.accounts],
   )
