@@ -23,7 +23,7 @@ import { parseISO, format as formatTime } from 'date-fns'
 import { useCategories } from '../../hooks/categories/useCategories'
 import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
 import { CategorySelectDrawer } from './CategorySelectDrawer'
-import { convertMatchDetailsToLinkingMetadata, MatchDetailsType } from '../../schemas/match'
+import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails, MatchDetailsType } from '../../schemas/match'
 import { ReactNode } from 'react'
 import { useCallback, useState } from 'react'
 import type { Option } from '../BankTransactionMobileList/utils'
@@ -170,8 +170,9 @@ const Option = (
   }
 
   if (props.data.type === 'match') {
-    const inAppLink = props.renderInAppLink && props.data.payload.details
-      ? props.renderInAppLink(convertMatchDetailsToLinkingMetadata(props.data.payload.details))
+    const matchDetails = props.data.payload.details ? decodeMatchDetails(props.data.payload.details) : undefined
+    const inAppLink = props.renderInAppLink && matchDetails
+      ? props.renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails))
       : null
 
     return (

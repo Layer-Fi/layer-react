@@ -13,11 +13,11 @@ export const ApiMatchAdjustmentSchema = Schema.Struct({
 export const FinancialEventIdentifiersSchema = Schema.Struct({
   id: Schema.String,
   externalId: pipe(
-    Schema.optional(Schema.String),
+    Schema.optional(Schema.NullOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
   referenceNumber: pipe(
-    Schema.optional(Schema.String),
+    Schema.optional(Schema.NullOr(Schema.String)),
     Schema.fromKey('reference_number'),
   ),
   metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
@@ -26,18 +26,18 @@ export const FinancialEventIdentifiersSchema = Schema.Struct({
 const BaseMatchDetailsSchema = Schema.Struct({
   id: Schema.String,
   externalId: pipe(
-    Schema.optional(Schema.String),
+    Schema.optional(Schema.NullOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
   amount: Schema.Number,
   date: Schema.String,
   description: Schema.String,
-  adjustment: Schema.optional(ApiMatchAdjustmentSchema),
+  adjustment: Schema.optional(Schema.NullOr(ApiMatchAdjustmentSchema)),
   referenceNumber: pipe(
-    Schema.optional(Schema.String),
+    Schema.optional(Schema.NullOr(Schema.String)),
     Schema.fromKey('reference_number'),
   ),
-  metadata: Schema.optional(Schema.Unknown),
+  metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
 })
 
 export const ManualJournalEntryMatchDetailsSchema = Schema.extend(
@@ -157,7 +157,14 @@ export const SuggestedMatchesWithTransactionsSchema = Schema.Struct({
   ),
 })
 
-export const decodeMatchDetails = Schema.decodeUnknownSync(MatchDetailsSchema)
+export const decodeMatchDetails = (data: unknown) => {
+  const result = Schema.decodeUnknownEither(MatchDetailsSchema)(data)
+  if (result._tag === 'Left') {
+    console.warn('Failed to decode match details:', result.left)
+    return null
+  }
+  return result.right
+}
 
 export const convertMatchDetailsToLinkingMetadata = (matchDetails: MatchDetailsType): LinkingMetadata => {
   const baseMetadata: LinkingMetadata = {
