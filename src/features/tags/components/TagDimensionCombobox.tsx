@@ -46,13 +46,13 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
     if (!tagDimension) return []
 
     return tagDimension.definedValues
-    .filter(({ archivedAt }) => archivedAt === undefined)
-    .map(value => new TagValueDefinitionAsOption(value))
+      .filter(({ archivedAt }) => archivedAt === undefined)
+      .map(value => new TagValueDefinitionAsOption(value))
   }, [tagDimension])
 
   const selectedOption = useMemo(() => {
     if (value === null) return null
-    return new TagValueDefinitionAsOption({ value: value.valueLabel, id: value.id, displayName: value.dimensionLabel, key: value.key })
+    return new TagValueDefinitionAsOption({ value: value.valueLabel, id: value.id, displayName: value.dimensionLabel, archivedAt: null })
   }, [value])
 
   const onSelectedValueChange = useCallback((option: TagValueDefinitionAsOption | null) => {

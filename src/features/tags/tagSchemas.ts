@@ -23,10 +23,12 @@ const TransformedTagDimensionStrictnessSchema = Schema.transform(
 
 export const TagValueDefinitionSchema = Schema.Struct({
   id: Schema.UUID,
-  key: Schema.NonEmptyTrimmedString,
   value: Schema.NonEmptyTrimmedString,
   displayName: Schema.propertySignature(Schema.NullishOr(Schema.NonEmptyTrimmedString)).pipe(Schema.fromKey('display_name')),
-  archivedAt: Schema.optional(Schema.Date).pipe(Schema.fromKey('archived_at')),
+  archivedAt: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.Date)),
+    Schema.fromKey('archived_at'),
+  )
 })
 export type TagValueDefinition = typeof TagValueDefinitionSchema.Type
 
