@@ -24,18 +24,28 @@ const TransformedTagDimensionStrictnessSchema = Schema.transform(
 export const TagValueDefinitionSchema = Schema.Struct({
   id: Schema.UUID,
   value: Schema.NonEmptyTrimmedString,
+  displayName: Schema.optional(Schema.NonEmptyTrimmedString),
 })
 export type TagValueDefinition = typeof TagValueDefinitionSchema.Type
 
 export const TagKeyValueSchema = Schema.Struct({
   key: Schema.NonEmptyTrimmedString,
   value: Schema.NonEmptyTrimmedString,
+  dimensionDisplayName: pipe(
+    Schema.optional(Schema.NonEmptyTrimmedString),
+    Schema.fromKey('dimension_display_name'),
+  ),
+  valueDisplayName: pipe(
+    Schema.optional(Schema.NonEmptyTrimmedString),
+    Schema.fromKey('value_display_name'),
+  ),
 })
 export const makeTagKeyValue = Schema.decodeSync(TagKeyValueSchema)
 
 export const TagDimensionSchema = Schema.Struct({
   id: Schema.UUID,
   key: Schema.NonEmptyTrimmedString,
+  displayName: Schema.optional(Schema.NonEmptyTrimmedString),
   strictness: TransformedTagDimensionStrictnessSchema,
   definedValues: Schema.propertySignature(Schema.Array(TagValueDefinitionSchema))
     .pipe(Schema.fromKey('defined_values')),
@@ -56,7 +66,9 @@ export type TagValue = typeof TagValueSchema.Type
 export const TagSchema = Schema.Data(
   Schema.Struct({
     id: Schema.UUID,
+    key: Schema.NonEmptyTrimmedString,
     dimensionLabel: Schema.NonEmptyTrimmedString,
+    value: Schema.NonEmptyTrimmedString,
     valueLabel: Schema.NonEmptyTrimmedString,
     _local: Schema.Struct({
       isOptimistic: Schema.Boolean,
@@ -70,6 +82,15 @@ export const TransactionTagSchema = Schema.Struct({
   id: Schema.UUID,
   key: Schema.NonEmptyTrimmedString,
   value: Schema.NonEmptyTrimmedString,
+  dimensionDisplayName: pipe(
+    Schema.optional(Schema.NonEmptyTrimmedString),
+    Schema.fromKey('dimension_display_name'),
+  ),
+
+  valueDisplayName: pipe(
+    Schema.optional(Schema.NonEmptyTrimmedString),
+    Schema.fromKey('value_display_name'),
+  ),
 
   createdAt: pipe(
     Schema.propertySignature(Schema.Date),
@@ -101,10 +122,12 @@ export const makeTagKeyValueFromTag = ({ dimensionLabel, valueLabel }: Tag) => m
   value: valueLabel,
 })
 
-export const makeTagFromTransactionTag = ({ id, key, value, _local }: TransactionTag) => makeTag({
+export const makeTagFromTransactionTag = ({ id, key, value, dimensionDisplayName, valueDisplayName, _local }: TransactionTag) => makeTag({
   id,
-  dimensionLabel: key,
-  valueLabel: value,
+  key,
+  value,
+  dimensionLabel: dimensionDisplayName ?? key,
+  valueLabel: valueDisplayName ?? value,
   _local: {
     isOptimistic: _local?.isOptimistic ?? false,
   },
