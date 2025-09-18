@@ -29,6 +29,14 @@ class TagValueDefinitionAsOption {
   get value() {
     return this.tagValueDefinition.value
   }
+
+  get isArchived() {
+    return !!this.tagValueDefinition.archivedAt
+  }
+
+  get archivedAt() {
+    return this.tagValueDefinition.archivedAt
+  }
 }
 
 type TagDimensionComboboxProps = {
@@ -62,6 +70,7 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
         id: option.id,
         dimensionLabel: tagDimension.displayName ?? null,
         valueLabel: option.label,
+        archivedAt: option.archivedAt?.toISOString() ?? null,
         _local: { isOptimistic: false },
         value: option.value,
         key: tagDimension.key,

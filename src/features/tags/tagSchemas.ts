@@ -26,9 +26,9 @@ export const TagValueDefinitionSchema = Schema.Struct({
   value: Schema.NonEmptyTrimmedString,
   displayName: Schema.propertySignature(Schema.NullishOr(Schema.NonEmptyTrimmedString)).pipe(Schema.fromKey('display_name')),
   archivedAt: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Date)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     Schema.fromKey('archived_at'),
-  )
+  ),
 })
 export type TagValueDefinition = typeof TagValueDefinitionSchema.Type
 
@@ -68,6 +68,7 @@ export const TagSchema = Schema.Data(
     dimensionLabel: Schema.NullishOr(Schema.NonEmptyTrimmedString),
     value: Schema.NonEmptyTrimmedString,
     valueLabel: Schema.NonEmptyTrimmedString,
+    archivedAt: Schema.propertySignature(Schema.NullOr(Schema.Date)),
     _local: Schema.Struct({
       isOptimistic: Schema.Boolean,
     }),
@@ -94,8 +95,12 @@ export const TransactionTagSchema = Schema.Struct({
   ),
 
   deletedAt: pipe(
-    Schema.optional(Schema.Date),
+    Schema.propertySignature(Schema.NullOr(Schema.Date)),
     Schema.fromKey('deleted_at'),
+  ),
+  archivedAt: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.Date)),
+    Schema.fromKey('archived_at'),
   ),
 
   _local: Schema.optional(
@@ -115,12 +120,13 @@ export const makeTagKeyValueFromTag = ({ key, value, dimensionLabel, valueLabel 
   value_display_name: valueLabel,
 })
 
-export const makeTagFromTransactionTag = ({ id, key, value, dimensionDisplayName, valueDisplayName, _local }: TransactionTag) => makeTag({
+export const makeTagFromTransactionTag = ({ id, key, value, dimensionDisplayName, valueDisplayName, archivedAt, _local }: TransactionTag) => makeTag({
   id,
   key,
   value,
   dimensionLabel: dimensionDisplayName ?? key,
   valueLabel: valueDisplayName ?? value,
+  archivedAt: archivedAt?.toISOString() ?? null,
   _local: {
     isOptimistic: _local?.isOptimistic ?? false,
   },

@@ -23,12 +23,13 @@ export function BankTransactionTagSelector({ bankTransaction }: BankTransactionT
   } = bankTransaction
 
   const selectedTags = useMemo(
-    () => transactionTags.map(({ id, key, value, dimension_display_name, value_display_name, _local }) => makeTag({
+    () => transactionTags.map(({ id, key, value, dimension_display_name, value_display_name, archived_at, _local }) => makeTag({
       id,
       key,
       value,
       dimensionLabel: dimension_display_name ?? key,
       valueLabel: value_display_name ?? value,
+      archivedAt: archived_at,
       _local: {
         isOptimistic: _local?.isOptimistic ?? false,
       },
