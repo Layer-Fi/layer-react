@@ -18,12 +18,19 @@ class TagValueDefinitionAsOption {
   }
 
   get label() {
-    const isArchived = !!this.tagValueDefinition.archivedAt
-    return isArchived ? `${this.tagValueDefinition.value} (Archived)` : this.tagValueDefinition.value
+    return this.isArchived ? `${this.tagValueDefinition.value} (Archived)` : this.tagValueDefinition.value
   }
 
   get value() {
     return this.tagValueDefinition.value
+  }
+
+  get isArchived() {
+    return !!this.tagValueDefinition.archivedAt
+  }
+
+  get archivedAt() {
+    return this.tagValueDefinition.archivedAt
   }
 }
 
@@ -47,14 +54,20 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
 
   const selectedOption = useMemo(() => {
     if (value === null) return null
-    return new TagValueDefinitionAsOption({ value: value.valueLabel, id: value.id, archivedAt: null })
+    return new TagValueDefinitionAsOption({ value: value.valueLabel, id: value.id, archivedAt: value.archivedAt })
   }, [value])
 
   const onSelectedValueChange = useCallback((option: TagValueDefinitionAsOption | null) => {
     let nextTag: Tag | null = null
 
     if (tagDimension && option) {
-      nextTag = makeTag({ id: option.id, dimensionLabel: tagDimension.key, valueLabel: option.value, _local: { isOptimistic: false } })
+      nextTag = makeTag({
+        id: option.id,
+        dimensionLabel: tagDimension.key,
+        valueLabel: option.value,
+        archivedAt: option.archivedAt?.toISOString() ?? null,
+        _local: { isOptimistic: false },
+      })
     }
 
     onValueChange(nextTag)

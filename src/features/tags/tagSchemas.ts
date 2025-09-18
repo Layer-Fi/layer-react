@@ -62,6 +62,7 @@ export const TagSchema = Schema.Data(
     id: Schema.UUID,
     dimensionLabel: Schema.NonEmptyTrimmedString,
     valueLabel: Schema.NonEmptyTrimmedString,
+    archivedAt: Schema.propertySignature(Schema.NullOr(Schema.Date)),
     _local: Schema.Struct({
       isOptimistic: Schema.Boolean,
     }),
@@ -86,8 +87,12 @@ export const TransactionTagSchema = Schema.Struct({
   ),
 
   deletedAt: pipe(
-    Schema.optional(Schema.Date),
+    Schema.propertySignature(Schema.NullOr(Schema.Date)),
     Schema.fromKey('deleted_at'),
+  ),
+  archivedAt: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.Date)),
+    Schema.fromKey('archived_at'),
   ),
 
   _local: Schema.optional(
@@ -105,10 +110,11 @@ export const makeTagKeyValueFromTag = ({ dimensionLabel, valueLabel }: Tag) => m
   value: valueLabel,
 })
 
-export const makeTagFromTransactionTag = ({ id, key, value, _local }: TransactionTag) => makeTag({
+export const makeTagFromTransactionTag = ({ id, key, value, _local, archivedAt }: TransactionTag) => makeTag({
   id,
   dimensionLabel: key,
   valueLabel: value,
+  archivedAt: archivedAt?.toISOString() ?? null,
   _local: {
     isOptimistic: _local?.isOptimistic ?? false,
   },
