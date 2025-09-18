@@ -88,7 +88,7 @@ type GlobalDateActions = {
 
   setDate: (options: { date: Date }) => DateRange
   setDateRange: (options: { startDate: Date, endDate: Date }) => DateRange
-  setMonth: (options: { startDate: Date }) => void
+  setMonth: (options: { startDate: Date }) => DateRange
   setMonthRange: (options: { startDate: Date, endDate: Date }) => DateRange
   setYear: (options: { startDate: Date }) => DateRange
 
