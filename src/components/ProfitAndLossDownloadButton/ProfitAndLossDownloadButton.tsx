@@ -6,7 +6,7 @@ import type { MoneyFormat } from '../../types'
 import { ProfitAndLossDetailLinesDownloadButton } from './ProfitAndLossDetailLinesDownloadButton'
 import { useSizeClass } from '../../hooks/useWindowSize'
 
-type ProfitAndLossDetailLinesDownloadButtonProps = {
+type ProfitAndLossDownloadButtonProps = {
   stringOverrides?: ProfitAndLossDownloadButtonStringOverrides
   moneyFormat?: MoneyFormat
 }
@@ -14,7 +14,7 @@ type ProfitAndLossDetailLinesDownloadButtonProps = {
 export function ProfitAndLossDownloadButton({
   stringOverrides,
   moneyFormat,
-}: ProfitAndLossDetailLinesDownloadButtonProps) {
+}: ProfitAndLossDownloadButtonProps) {
   const { selectedLineItem } = useContext(ProfitAndLossContext)
 
   const { value } = useSizeClass()

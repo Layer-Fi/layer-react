@@ -18,13 +18,13 @@ import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsMod
 import { LineItem } from '../../utils/schema/utils'
 import { ProfitAndLossComparisonContext } from '../../contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 
-interface ProfilAndLostCompareTableProps {
+interface ProfilAndLossCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides
 }
 
 export const ProfitAndLossCompareTable = ({
   stringOverrides,
-}: ProfilAndLostCompareTableProps) => {
+}: ProfilAndLossCompareTableProps) => {
   const {
     data: comparisonData,
     isLoading,
