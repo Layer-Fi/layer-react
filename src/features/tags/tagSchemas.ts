@@ -25,7 +25,7 @@ export const TagValueDefinitionSchema = Schema.Struct({
   id: Schema.UUID,
   value: Schema.NonEmptyTrimmedString,
   archivedAt: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Date)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     Schema.fromKey('archived_at'),
   ),
 })
@@ -62,7 +62,7 @@ export const TagSchema = Schema.Data(
     id: Schema.UUID,
     dimensionLabel: Schema.NonEmptyTrimmedString,
     valueLabel: Schema.NonEmptyTrimmedString,
-    archivedAt: Schema.propertySignature(Schema.NullOr(Schema.Date)),
+    archivedAt: Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     _local: Schema.Struct({
       isOptimistic: Schema.Boolean,
     }),
@@ -87,11 +87,11 @@ export const TransactionTagSchema = Schema.Struct({
   ),
 
   deletedAt: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Date)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     Schema.fromKey('deleted_at'),
   ),
   archivedAt: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Date)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     Schema.fromKey('archived_at'),
   ),
 
