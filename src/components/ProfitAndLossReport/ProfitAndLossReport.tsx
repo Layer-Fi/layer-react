@@ -20,7 +20,7 @@ export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
   view?: ViewBreakpoint
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
-  showHeader?: boolean
+  hideHeader?: boolean
 } & TimeRangePickerConfig
 
 export type SelectedLineItem = {
@@ -37,7 +37,7 @@ export const ProfitAndLossReport = ({
   csvMoneyFormat,
   view,
   renderInAppLink,
-  showHeader = true,
+  hideHeader,
 }: ProfitAndLossReportProps) => {
   const { selectedLineItem, setSelectedLineItem } = useContext(ProfitAndLossContext)
   const { comparisonConfig } = useContext(ProfitAndLossComparisonContext)
@@ -73,39 +73,53 @@ export const ProfitAndLossReport = ({
 
   const useComparisonPnl = !!comparisonConfig
 
-  const header = useMemo(() => (
-    <Header>
-      <HeaderRow>
-        <HeaderCol>
-          <ProfitAndLossDatePicker
-            allowedDatePickerModes={allowedDatePickerModes}
-            datePickerMode={datePickerMode}
-            defaultDatePickerMode={defaultDatePickerMode}
-            customDateRanges={customDateRanges}
-          />
-          {view === 'desktop' && useComparisonPnl && <ProfitAndLossCompareOptions />}
-        </HeaderCol>
-        <HeaderCol>
-          <ProfitAndLossDownloadButton
-            stringOverrides={stringOverrides?.downloadButton}
-            moneyFormat={csvMoneyFormat}
-          />
-        </HeaderCol>
-      </HeaderRow>
-      {view !== 'desktop' && useComparisonPnl
-        && (
-          <HeaderRow>
-            <HeaderCol>
-              <ProfitAndLossCompareOptions />
-            </HeaderCol>
-          </HeaderRow>
-        )}
-    </Header>
-  ), [allowedDatePickerModes, csvMoneyFormat, customDateRanges, datePickerMode, defaultDatePickerMode, stringOverrides?.downloadButton, useComparisonPnl, view])
+  const header = useMemo(() => {
+    if (hideHeader) return null
+
+    return (
+      <Header>
+        <HeaderRow>
+          <HeaderCol>
+            <ProfitAndLossDatePicker
+              allowedDatePickerModes={allowedDatePickerModes}
+              datePickerMode={datePickerMode}
+              defaultDatePickerMode={defaultDatePickerMode}
+              customDateRanges={customDateRanges}
+            />
+            {view === 'desktop' && useComparisonPnl && <ProfitAndLossCompareOptions />}
+          </HeaderCol>
+          <HeaderCol>
+            <ProfitAndLossDownloadButton
+              stringOverrides={stringOverrides?.downloadButton}
+              moneyFormat={csvMoneyFormat}
+            />
+          </HeaderCol>
+        </HeaderRow>
+        {view !== 'desktop' && useComparisonPnl
+          && (
+            <HeaderRow>
+              <HeaderCol>
+                <ProfitAndLossCompareOptions />
+              </HeaderCol>
+            </HeaderRow>
+          )}
+      </Header>
+    )
+  }, [
+    allowedDatePickerModes,
+    csvMoneyFormat,
+    customDateRanges,
+    datePickerMode,
+    defaultDatePickerMode,
+    hideHeader,
+    stringOverrides?.downloadButton,
+    useComparisonPnl,
+    view,
+  ])
 
   return (
     <InAppLinkProvider renderInAppLink={renderInAppLink}>
-      <View type='panel' header={showHeader && header}>
+      <View type='panel' header={header}>
         {selectedLineItem
           ? (
             <ProfitAndLossDetailReport
