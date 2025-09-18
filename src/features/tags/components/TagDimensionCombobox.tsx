@@ -46,7 +46,6 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
     if (!tagDimension) return []
 
     return tagDimension.definedValues
-      .filter(({ archivedAt }) => !archivedAt)
       .map(value => new TagValueDefinitionAsOption(value))
   }, [tagDimension])
 
