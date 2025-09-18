@@ -122,11 +122,7 @@ export const useAugmentedBankTransactions = (
       ? BankTransactionsDateFilterMode.MonthlyView
       : undefined
 
-  const { start, end } = useGlobalDateRange({ displayMode: 'monthPicker' })
-  const globalDateRange = useMemo(() => ({
-    startDate: start,
-    endDate: end,
-  }), [start, end])
+  const globalDateRange = useGlobalDateRange({ displayMode: 'monthPicker' })
 
   const defaultDateRange = {
     startDate: startOfMonth(new Date()),

@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useMemo } from 'react'
+import { Fragment, useContext, useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { ProfitAndLossComparisonPnl } from '../../types/profit_and_loss'
 import {
@@ -35,8 +35,7 @@ export const ProfitAndLossCompareTable = ({
   const { data: bookkeepingPeriods } = useBookkeepingPeriods()
 
   const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
-  const { start, end } = useGlobalDateRange({ displayMode: rangeDisplayMode })
-  const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
+  const dateRange = useGlobalDateRange({ displayMode: rangeDisplayMode })
 
   useEffect(() => {
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])

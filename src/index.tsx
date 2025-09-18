@@ -1,5 +1,3 @@
-export { LayerProvider } from './providers/LayerProvider'
-
 /*
 ==========================================================
 ======================= Components =======================
@@ -18,11 +16,10 @@ export { Integrations } from './components/Integrations/Integrations'
 export { ProfitAndLoss } from './components/ProfitAndLoss/ProfitAndLoss'
 /* Profit and loss contains 6 sub-components:
  * - Chart
- * - Context
  * - DatePicker
  * - Summaries
- * - Table
  * - DetailedCharts
+ * - Header
  * - Report
  */
 export { StandaloneBalanceSheet as BalanceSheet } from './components/BalanceSheet'
@@ -56,12 +53,10 @@ export { ProfitAndLossView } from './components/ProfitAndLossView'
 export { Invoices } from './components/Invoices/Invoices'
 
 /*
-======================= Hooks & Contexts =======================
+======================= Layer Provider & Context =======================
 */
+export { LayerProvider } from './providers/LayerProvider'
 export { useLayerContext } from './contexts/LayerContext'
-export { useBankTransactionsContext } from './contexts/BankTransactionsContext'
-export { BankTransactionsProvider } from './providers/BankTransactionsProvider'
-export { useDataSync } from './hooks/useDataSync'
 
 export { DisplayState, Direction } from './types/bank_transactions'
 export { LinkingMetadata } from './contexts/InAppLinkContext'

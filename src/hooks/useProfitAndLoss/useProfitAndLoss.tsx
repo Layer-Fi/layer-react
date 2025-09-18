@@ -48,8 +48,7 @@ export type ProfitAndLossFilters = Record<
 
 export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLossOptions) => {
   const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
-  const { start, end } = useGlobalDateRange({ displayMode: rangeDisplayMode })
-  const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
+  const dateRange = useGlobalDateRange({ displayMode: rangeDisplayMode })
 
   const [filters, setFilters] = useState<ProfitAndLossFilters>({
     expenses: undefined,
@@ -61,8 +60,7 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
 
   const { data, isLoading, isValidating, isError, mutate } =
     useProfitAndLossReport({
-      startDate: start,
-      endDate: end,
+      ...dateRange,
       tagKey: tagFilter?.key,
       tagValues: tagFilter?.values?.join(','),
       reportingBasis,
