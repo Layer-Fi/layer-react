@@ -169,15 +169,16 @@ export function TagSelector({
       ?.map(({ key: dimensionLabel, definedValues }) => {
         return {
           label: dimensionLabel,
-          options: definedValues.map(({ id: valueId, value: valueLabel }) => ({
-            label: valueLabel,
-            value: valueId,
-            isDisabled: selectedTags.some(
-              tagValue =>
-                tagValue.dimensionLabel === dimensionLabel
-                && tagValue.valueLabel === valueLabel,
-            ),
-          })),
+          options: definedValues
+            .map(({ id: valueId, value: valueLabel }) => ({
+              label: valueLabel,
+              value: valueId,
+              isDisabled: selectedTags.some(
+                tagValue =>
+                  tagValue.dimensionLabel === dimensionLabel
+                  && tagValue.valueLabel === valueLabel,
+              ),
+            })),
         }
       }) ?? [],
     [
