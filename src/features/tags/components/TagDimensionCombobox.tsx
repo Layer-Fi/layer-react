@@ -26,7 +26,7 @@ class TagValueDefinitionAsOption {
   }
 
   get isArchived() {
-    return !!this.tagValueDefinition.archivedAt
+    return !!this.archivedAt
   }
 
   get archivedAt() {
