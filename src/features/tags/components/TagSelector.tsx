@@ -170,7 +170,6 @@ export function TagSelector({
         return {
           label: dimensionLabel,
           options: definedValues
-            .filter(({ archivedAt }) => !archivedAt)
             .map(({ id: valueId, value: valueLabel }) => ({
               label: valueLabel,
               value: valueId,
