@@ -67,8 +67,7 @@ export function useProfitAndLossComparison({
   )
 
   const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
-  const { start, end } = useGlobalDateRange({ displayMode: rangeDisplayMode })
-  const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
+  const dateRange = useGlobalDateRange({ displayMode: rangeDisplayMode })
 
   const isPeriodsSelectEnabled = COMPARE_MODES_SUPPORTING_MULTI_PERIOD.includes(rangeDisplayMode)
   const effectiveComparePeriods = isPeriodsSelectEnabled

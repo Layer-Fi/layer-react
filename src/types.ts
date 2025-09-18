@@ -1,12 +1,6 @@
 import type { EnumWithUnknownValues } from './types/utility/enumWithUnknownValues'
 
 export { OAuthResponse } from './types/authentication'
-export {
-  LayerContextValues,
-  LayerContextActionName,
-  LayerContextAction,
-  LayerContextHelpers,
-} from './types/layer_context'
 export { Metadata } from './types/api'
 export { LineItem } from './types/line_item'
 export { BalanceSheet } from './types/balance_sheet'

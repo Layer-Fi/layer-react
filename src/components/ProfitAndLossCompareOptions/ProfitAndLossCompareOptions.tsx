@@ -1,10 +1,10 @@
 import { useContext, useMemo } from 'react'
 import { MultiSelect, Select } from '../Input'
-import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import type { StylesConfig } from 'react-select'
 import { DateRangePickerMode } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TagComparisonOption } from '../../types/profit_and_loss'
 import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
+import { ProfitAndLossComparisonContext } from '../../contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 
 const selectStyles = {
   valueContainer: (styles) => {
@@ -47,7 +47,7 @@ export const ProfitAndLossCompareOptions = () => {
     compareOptions,
     selectedCompareOptions,
     comparisonConfig,
-  } = useContext(ProfitAndLoss.ComparisonContext)
+  } = useContext(ProfitAndLossComparisonContext)
 
   const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
 

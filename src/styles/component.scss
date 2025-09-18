@@ -50,7 +50,7 @@
   gap: var(--spacing-md);
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-md);
+  padding: var(--spacing-lg);
 
   &.Layer__component-header--next-line-actions {
     flex-direction: column;
@@ -78,20 +78,6 @@
   gap: var(--spacing-sm);
   align-items: center;
   justify-content: space-between;
-}
-
-@container (max-width: 760px) {
-  .Layer__component-header {
-    padding: var(--spacing-md);
-  }
-}
-
-@container (min-width: 1023px) {
-  .Layer__component-header {
-    padding-top: var(--spacing-xl);
-    padding-right: var(--spacing-xl);
-    padding-left: var(--spacing-xl);
-  }
 }
 
 .Layer__error-boundary {

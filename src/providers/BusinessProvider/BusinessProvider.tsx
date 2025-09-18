@@ -1,19 +1,17 @@
-import { PropsWithChildren, useReducer, useEffect, Reducer } from 'react'
+import { PropsWithChildren, useReducer, useEffect, Reducer, useMemo } from 'react'
 import { Layer } from '../../api/layer'
 import { ToastProps, ToastsContainer } from '../../components/Toast/Toast'
 import { LayerContext } from '../../contexts/LayerContext'
 import { useDataSync } from '../../hooks/useDataSync'
 import { errorHandler, LayerError } from '../../models/ErrorHandler'
 import {
-  LayerContextValues,
-  LayerContextAction,
-  LayerContextActionName as Action,
-} from '../../types'
-import {
   ColorConfig,
   ColorsPaletteOption,
   LayerThemeConfig,
   OnboardingStep,
+  type LayerContextAction,
+  type LayerContextValues,
+  LayerContextActionName as Action,
 } from '../../types/layer_context'
 import { buildColorsPalette } from '../../utils/colors'
 import { LayerProviderProps } from '../LayerProvider/LayerProvider'
@@ -22,6 +20,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { useEnvironment } from '../Environment/EnvironmentInputProvider'
 import { DEFAULT_SWR_CONFIG } from '../../utils/swr/defaultSWRConfig'
 import { useAccountingConfiguration } from '../../hooks/useAccountingConfiguration/useAccountingConfiguration'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '../GlobalDateStore/GlobalDateStoreProvider'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -93,6 +92,14 @@ export const BusinessProvider = ({
     hasBeenTouched,
     resetCaches,
   } = useDataSync()
+
+  const globalDateRange = useGlobalDateRange({ displayMode: 'dayRangePicker' })
+  const { setDateRange } = useGlobalDateRangeActions()
+
+  const dateRange = useMemo(() => ({
+    range: globalDateRange,
+    setRange: setDateRange,
+  }), [globalDateRange, setDateRange])
 
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
@@ -236,6 +243,7 @@ export const BusinessProvider = ({
         hasBeenTouched,
         eventCallbacks,
         accountingConfiguration,
+        dateRange,
       }}
     >
       {children}

@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import { centsToDollars as formatMoney } from '../../models/Money'
 import { formatPercent } from '../../utils/format'
-import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker'
+import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker/ProfitAndLossDatePicker'
 import { mapTypesToColors } from './DetailedTable'
 import classNames from 'classnames'
 import {

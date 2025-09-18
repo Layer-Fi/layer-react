@@ -2,8 +2,7 @@ import { createContext } from 'react'
 import { useProfitAndLossComparison } from '../../hooks/useProfitAndLossComparison'
 import { S3PresignedUrl } from '../../types/general'
 
-type PNLComparisonContextType = ReturnType<typeof useProfitAndLossComparison>
-export const PNLComparisonContext = createContext<PNLComparisonContextType>({
+export const ProfitAndLossComparisonContext = createContext<ReturnType<typeof useProfitAndLossComparison>>({
   data: undefined,
   isLoading: true,
   isValidating: false,

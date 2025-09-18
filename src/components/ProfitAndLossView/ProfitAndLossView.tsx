@@ -2,11 +2,14 @@ import { RefObject, useContext, useRef } from 'react'
 import { Container } from '../Container'
 import { DataState, DataStateStatus } from '../DataState'
 import { Panel } from '../Panel'
-import { ProfitAndLoss } from '../ProfitAndLoss'
+import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedCharts } from '../ProfitAndLossDetailedCharts'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossTableStringOverrides } from '../ProfitAndLossTable/ProfitAndLossTableComponent'
+import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { ProfitAndLossTable } from '../ProfitAndLossTable'
+import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker/ProfitAndLossDatePicker'
 
 const COMPONENT_NAME = 'profit-and-loss'
 
@@ -43,7 +46,7 @@ const ProfitAndLossPanel = ({
   stringOverrides,
   ...props
 }: ProfitAndLossViewPanelProps) => {
-  const { sidebarScope } = useContext(ProfitAndLoss.Context)
+  const { sidebarScope } = useContext(ProfitAndLossContext)
 
   return (
     <Panel
@@ -71,9 +74,7 @@ const Components = ({
   hideTable = false,
   stringOverrides,
 }: ProfitAndLossViewProps) => {
-  const { isError, isLoading, isValidating, refetch } = useContext(
-    ProfitAndLoss.Context,
-  )
+  const { isError, isLoading, isValidating, refetch } = useContext(ProfitAndLossContext)
 
   if (!isLoading && isError) {
     return (
@@ -96,7 +97,7 @@ const Components = ({
           <div
             className={`Layer__${COMPONENT_NAME}__chart_with_summaries__summary-col`}
           >
-            <ProfitAndLoss.DatePicker />
+            <ProfitAndLossDatePicker />
             <ProfitAndLoss.Summaries
               actionable
               stringOverrides={stringOverrides?.profitAndLossSummaries}
@@ -110,7 +111,7 @@ const Components = ({
         </div>
       )}
       {!hideTable && (
-        <ProfitAndLoss.Table
+        <ProfitAndLossTable
           stringOverrides={stringOverrides?.profitAndLossTable}
         />
       )}

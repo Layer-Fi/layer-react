@@ -1,5 +1,4 @@
 import { useContext, useState, useMemo, useCallback } from 'react'
-import { ProfitAndLoss } from '../ProfitAndLoss'
 import { useProfitAndLossDetailLines } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { SourceDetailView } from '../LedgerAccountEntryDetails/LedgerAccountEntryDetails'
@@ -22,6 +21,7 @@ import { BreadcrumbItem, DetailReportBreadcrumb } from '../DetailReportBreadcrum
 import type { PnlDetailLine } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
 import { MoneySpan } from '../ui/Typography/MoneyText'
 import { useInAppLinkContext } from '../../contexts/InAppLinkContext'
+import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
 
 const COMPONENT_NAME = 'ProfitAndLossDetailReport'
 
@@ -80,7 +80,7 @@ export const ProfitAndLossDetailReport = ({
   stringOverrides,
 }: ProfitAndLossDetailReportProps) => {
   const { businessId } = useLayerContext()
-  const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
+  const { tagFilter, dateRange } = useContext(ProfitAndLossContext)
   const [selectedSource, setSelectedSource] = useState<LedgerEntrySourceType | null>(null)
 
   const { renderInAppLink } = useInAppLinkContext()

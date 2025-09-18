@@ -1,38 +1,16 @@
 import { createContext, useContext } from 'react'
-import { ToastProps } from '../../components/Toast/Toast'
-import { LayerContextValues } from '../../types'
 import {
+  LayerContextValues,
   LayerContextHelpers,
-  LayerThemeConfig,
+  type LayerContextDateRange,
 } from '../../types/layer_context'
 
-export const LayerContext = createContext<
-  LayerContextValues &
-  LayerContextHelpers & { setTheme: (theme: LayerThemeConfig) => void }
->({
-      businessId: '',
-      business: undefined,
-      theme: undefined,
-      colors: {},
-      setTheme: () => undefined,
-      getColor: _shade => undefined,
-      setLightColor: () => undefined,
-      setDarkColor: () => undefined,
-      setTextColor: () => undefined,
-      setColors: () => undefined,
-      onboardingStep: undefined,
-      setOnboardingStep: () => undefined,
-      toasts: [],
-      addToast: (_toast: ToastProps) => undefined,
-      removeToast: () => undefined,
-      onError: () => undefined,
-      touch: () => undefined,
-      read: () => undefined,
-      syncTimestamps: {},
-      readTimestamps: {},
-      hasBeenTouched: () => false,
-      expireDataCaches: () => undefined,
-      eventCallbacks: {},
-    })
+type LayerContextShape = LayerContextValues & LayerContextHelpers & LayerContextDateRange
 
-export const useLayerContext = () => useContext(LayerContext)
+export const LayerContext = createContext<LayerContextShape | undefined>(undefined)
+
+export const useLayerContext = () => {
+  const ctx = useContext(LayerContext)
+  if (!ctx) throw new Error('useLayerContext must be used within LayerProvider')
+  return ctx
+}

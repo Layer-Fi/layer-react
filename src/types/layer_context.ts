@@ -1,8 +1,8 @@
 import { ToastProps } from '../components/Toast/Toast'
+import type { EventCallbacks } from '../providers/LayerProvider/LayerProvider'
 import { LayerError } from '../models/ErrorHandler'
-import { EventCallbacks } from '../providers/LayerProvider/LayerProvider'
 import { AccountingConfigurationSchemaType } from '../schemas/accountingConfiguration'
-import { Business } from '../types'
+import { Business, type DateRange } from '../types'
 import { DataModel } from './general'
 
 export type LayerContextValues = {
@@ -14,6 +14,13 @@ export type LayerContextValues = {
   toasts: (ToastProps & { isExiting: boolean })[]
   eventCallbacks?: EventCallbacks
   accountingConfiguration?: AccountingConfigurationSchemaType
+}
+
+export type LayerContextDateRange = {
+  dateRange: {
+    range: DateRange
+    setRange: (dateRange: DateRange) => DateRange
+  }
 }
 
 export type LayerContextHelpers = {
@@ -32,6 +39,7 @@ export type LayerContextHelpers = {
   readTimestamps: Partial<Record<string, { t: number, m: DataModel }>>
   expireDataCaches: () => void
   hasBeenTouched: (cacheKey: string) => boolean
+  setTheme: (theme: LayerThemeConfig) => void
 }
 
 export interface ColorHSLConfig {
