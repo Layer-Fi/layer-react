@@ -1,69 +1,74 @@
-import { HTMLAttributes } from 'react'
+import { HTMLAttributes, ReactNode, useState } from 'react'
 import classNames from 'classnames'
-import { useLayerContext } from '../../contexts/LayerContext'
+import { InlineWidget } from 'react-calendly'
+import { ServiceOfferingOptions } from './ServiceOfferingOptions'
+import { Button } from '../ui/Button/Button'
 
 export enum ServiceOfferingType {
   ACCOUNTING_ONLY = 'account_only',
   WITH_BOOKKEEPING = 'accounting_and_bookkeeping',
 }
 
+export type OffersPosition = 'left' | 'bottom' | 'right' | 'none'
+
 export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
   calendlyLink: string
+  platformName: string
+  industry: string
+  offersPosition?: OffersPosition
+  onGetStartedAccounting?: () => void
+  onGetStartedBookkeeping?: () => void
 }
 
 export const ServiceOffering = ({
   calendlyLink,
+  platformName,
+  industry,
+  offersPosition = 'none',
+  onGetStartedAccounting,
+  onGetStartedBookkeeping,
   ...props
 }: ServiceOfferingProps) => {
+  const [isCalendlyVisible, setIsCalendlyVisible] = useState(false)
+
   const baseClassName = classNames(
     'Layer__service-offering',
+    {
+      'Layer__service-offering--with-left-offers': offersPosition === 'left',
+      'Layer__service-offering--with-right-offers': offersPosition === 'right',
+      'Layer__service-offering--with-bottom-offers': offersPosition === 'bottom',
+    },
   )
 
-  const { business } = useLayerContext()
-  
-  const features = [
-    {
-      icon: '📊',
-      title: 'All your finances in one place',
-      text: `Directly integrated with your ${business?.legal_name} data, so you can see your business performance and profit in real-time.`,
-    },
-    {
-      icon: '📋',
-      title: `Built for ${business?.legal_name}`,
-      text: `Track your expenses and get easy to understand reports designed specifically for ${business?.legal_name} businesses.`,
-    },
-  ]
+  const toggleCalendly = () => {
+    setIsCalendlyVisible(!isCalendlyVisible)
+  }
 
-  const valueProps = [
-    {
-      icon: '🏦',
-      title: 'Connect your business accounts',
-      text: `Connect your business bank accounts and credit cards right within ${business?.legal_name}.`,
-    },
-    {
-      icon: '📂',
-      title: 'Categorize expenses',
-      text: `Organize transactions into categories built for ${business?.legal_name}.`,
-    },
-    {
-      icon: '📈',
-      title: 'Get a clear picture of your business',
-      text: 'See your business profitability and stay organized for tax time.',
-    },
-  ]
+  const renderOfferingOptions = () => {
+    if (offersPosition === 'none') return null
+    return (
+      <ServiceOfferingOptions
+        platformName={platformName}
+        industry={industry}
+        onGetStartedAccounting={onGetStartedAccounting}
+        onGetStartedBookkeeping={onGetStartedBookkeeping}
+        className='Layer__service-offering__offers'
+      />
+    )
+  }
 
-  return (
-    <div className={baseClassName} {...props}>
+  const renderMainContent = () => (
+    <div className='Layer__service-offering__main'>
       <div className='Layer__service-offering__header'>
         <h1 className='Layer__service-offering__title'>
-          {business?.legal_name}
+          {platformName}
           {' '}
           Accounting
         </h1>
         <p className='Layer__service-offering__subtitle'>
           Track your business finances, right within
           {' '}
-          {business?.legal_name}
+          {platformName}
           .
         </p>
       </div>
@@ -72,25 +77,41 @@ export const ServiceOffering = ({
         {features.map((feature, index) => (
           <li key={index} className='Layer__service-offering__feature'>
             <div className='Layer__service-offering__feature-icon'>
-              {feature.icon}
+              <span>{feature.icon}</span>
             </div>
-            <h4 className='Layer__service-offering__feature-title'>
-              {feature.title}
-            </h4>
-            <p className='Layer__service-offering__feature-text'>
-              {feature.text}
-            </p>
+            <div className='Layer__service-offering__feature-side'>
+              <h4 className='Layer__service-offering__feature-title'>
+                {feature.title}
+              </h4>
+              <p className='Layer__service-offering__feature-text'>
+                {feature.text}
+              </p>
+            </div>
           </li>
         ))}
       </ul>
 
-      <div className='Layer__service-offering__actions'>
-        <button
-          className='Layer__service-offering__cta-button'
-          onClick={() => window.open(calendlyLink, '_blank')}
+      <div className={classNames(
+        'Layer__service-offering__actions',
+        { hiding: isCalendlyVisible },
+      )}
+      >
+        <Button
+          variant='solid'
+          style={{ color: 'white', margin: 'auto 0', fontWeight: 'medium' }}
+          onClick={toggleCalendly}
         >
           Learn more
-        </button>
+        </Button>
+      </div>
+
+      <div
+        className={classNames(
+          'Layer__service-offering__calendly-container',
+          { visible: isCalendlyVisible },
+        )}
+      >
+        <InlineWidget url={calendlyLink} />
       </div>
 
       <h3 className='Layer__service-offering__value-prop-heading'>
@@ -112,6 +133,54 @@ export const ServiceOffering = ({
           </div>
         ))}
       </div>
+    </div>
+  )
+
+  type OfferContent = {
+    icon: ReactNode
+    title: string
+    text: string
+  }
+
+  const features: OfferContent[] = [
+    {
+      icon: '📊',
+      title: 'All your finances in one place',
+      text: `Directly integrated with your ${platformName} data, so you can see your business performance and profit in real-time.`,
+    },
+    {
+      icon: '📋',
+      title: `Built for ${industry}`,
+      text: `Track your expenses and get easy to understand reports designed specifically for ${industry} businesses.`,
+    },
+  ]
+
+  const valueProps: OfferContent[] = [
+    {
+      icon: '🏦',
+      title: 'Connect your business accounts',
+      text: `Connect your business bank accounts and credit cards right within ${platformName}.`,
+    },
+    {
+      icon: '📂',
+      title: 'Categorize expenses',
+      text: `Organize transactions into categories built for ${industry}.`,
+    },
+    {
+      icon: '📈',
+      title: 'Get a clear picture of your business',
+      text: 'See your business profitability and stay organized for tax time.',
+    },
+  ]
+
+  return (
+    <div className={baseClassName} {...props}>
+      <div className='Layer__service-offering__content'>
+        {offersPosition === 'left' && renderOfferingOptions()}
+        {renderMainContent()}
+        {offersPosition === 'right' && renderOfferingOptions()}
+      </div>
+      {offersPosition === 'bottom' && renderOfferingOptions()}
     </div>
   )
 }

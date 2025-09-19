@@ -3,13 +3,12 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
-    padding: var(--spacing-xl) var(--spacing-lg);
     border: none;
     border-radius: var(--border-radius-sm);
     background: var(--color-white);
-    max-width: 1200px;
-    margin: 0 auto;
     min-height: 100vh;
+    width: 100%;
+    height: 100%;
     justify-content: flex-start;
 }
 
@@ -171,7 +170,7 @@
 
 .Layer__service-offering__feature {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     padding: var(--spacing-lg);
     background: var(--color-base-25);
@@ -185,15 +184,20 @@
     }
 }
 
+.Layer__service-offering__feature-side {
+    display: flex;
+    flex-direction: column;
+}
+
 .Layer__service-offering__feature-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
     background: #F3D23B;
     border-radius: var(--border-radius-xs);
-    margin-bottom: var(--spacing-sm);
     font-size: 1.5rem;
 }
 
@@ -216,6 +220,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
+    height: 100%;
 }
 
 .Layer__service-offering__subtitle {
@@ -234,6 +239,18 @@
     align-items: center;
     justify-content: center;
     margin: var(--spacing-lg) 0;
+    opacity: 1;
+    max-height: 100px;
+    overflow: hidden;
+    transition: opacity 0.2s ease-out, max-height 0.3s ease-out, margin 0.3s ease-out, transform 0.2s ease-out;
+    transform: translateY(0);
+
+    &.hiding {
+        opacity: 0;
+        max-height: 0;
+        margin: 0;
+        transform: translateY(-10px);
+    }
 
     .Layer__service-offering--small & {
         gap: var(--spacing-xs);
@@ -247,7 +264,7 @@
 }
 
 .Layer__service-offering__value-prop-heading {
-    margin: var(--spacing-xl) 0 var(--spacing-lg) 0;
+    margin: var(--spacing-lg) 0 var(--spacing-lg) 0;
     font-size: 2rem;
     font-weight: var(--font-weight-bold);
     color: var(--text-color-primary);
@@ -257,7 +274,7 @@
 
 .Layer__service-offering__value-props {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--spacing-xl);
     margin-top: var(--spacing-xl);
 
@@ -272,7 +289,6 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: var(--spacing-md);
 }
 
 .Layer__service-offering__value-prop-icon {
@@ -303,7 +319,7 @@
     border-radius: var(--border-radius-sm);
     padding: var(--spacing-md) var(--spacing-xl);
     font-size: 1rem;
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-bold);
     cursor: pointer;
     transition: background-color var(--transition-speed) ease-in-out;
 
@@ -322,6 +338,277 @@
     font-size: var(--text-md);
     color: var(--text-color-primary);
     line-height: 1.5;
+}
+
+.Layer__service-offering__calendly-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 0;
+
+    &.visible {
+        max-height: 800px;
+        margin: var(--spacing-lg) 0;
+    }
+
+    // Ensure the inner calendly widget has proper height
+    .calendly-inline-widget {
+        min-height: 630px;
+        transition: opacity 0.3s ease-in-out 0.8s;
+        margin-bottom: var(--spacing-lg);
+    }
+}
+
+// Service Offering Options Component
+.Layer__service-offering-options {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+.Layer__service-offering-options__header {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-color-primary);
+    text-align: center;
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.3;
+}
+
+.Layer__service-offering-options__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+}
+
+.Layer__service-offering-options__card {
+    border: 2px dashed var(--color-base-300);
+    border-radius: var(--border-radius-sm);
+    background: white;
+    padding: var(--spacing-md);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+
+    &--accounting {
+        border-color: var(--color-info);
+    }
+
+    &--bookkeeping {
+        border-color: var(--color-warning);
+    }
+}
+
+.Layer__service-offering-options__card-badge {
+    background-color: #FAD515;
+    width: fit-content;
+    color: var(--color-white);
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-bold);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius-full);
+    margin-bottom: var(--spacing-sm);
+    align-self: flex-start;
+    white-space: nowrap;
+    border-radius: 1em;
+}
+
+.Layer__service-offering-options__card-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-color-primary);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.Layer__service-offering-options__card-description {
+    font-size: var(--text-md);
+    color: var(--text-color-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.Layer__service-offering-options__features {
+    flex: 1;
+}
+
+.Layer__service-offering-options__features-title {
+    font-size: var(--text-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-color-primary);
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.Layer__service-offering-options__features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+
+    li {
+        font-size: var(--text-md);
+        color: var(--text-color-secondary);
+        line-height: 1.5;
+        padding-left: var(--spacing-lg);
+        position: relative;
+
+        &::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-success);
+            font-weight: var(--font-weight-bold);
+        }
+    }
+}
+
+.Layer__service-offering-options__footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+}
+
+.Layer__service-offering-options__pricing {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-xs);
+    margin: var(--spacing-md) 0;
+}
+
+.Layer__service-offering-options__price-label {
+    font-size: var(--text-sm);
+    color: var(--text-color-secondary);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.Layer__service-offering-options__price {
+    font-size: 2.5rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--text-color-primary);
+}
+
+.Layer__service-offering-options__price-period {
+    font-size: var(--text-lg);
+    color: var(--text-color-secondary);
+}
+
+.Layer__service-offering-options__cta-button {
+    margin-top: auto;
+    margin-bottom: auto;
+    width: fit-content;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--text-md);
+    font-weight: var(--font-weight-semibold);
+}
+
+// Layout configurations for different offer positions
+.Layer__service-offering__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+}
+
+.Layer__service-offering__offers {
+    background-color: #E3F7F5;
+    padding: 0 var(--spacing-lg);
+    height: 100%;
+}
+
+.Layer__service-offering--with-left-offers {
+    height: 100%;
+
+    .Layer__service-offering__content {
+        grid-template-columns: 420px 1fr;
+    }
+}
+
+.Layer__service-offering--with-right-offers {
+    height: 100%;
+
+    .Layer__service-offering__content {
+        grid-template-columns: 1fr 420px;
+    }
+}
+
+.Layer__service-offering--with-bottom-offers {
+    height: fit-content;
+
+
+    .Layer__service-offering__content {
+        height: fit-content;
+    }
+}
+
+.Layer__service-offering--with-left-offers,
+.Layer__service-offering--with-right-offers {
+    .Layer__service-offering__content {
+        display: grid;
+        gap: var(--spacing-xl);
+        align-items: start;
+
+        @media (max-width: 1024px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .Layer__service-offering-options__grid {
+        grid-template-columns: unset;
+        grid-template-rows: 1fr 1fr;
+    }
+}
+
+.Layer__service-offering--with-right-offers {
+    .Layer__service-offering__content {
+        .Layer__service-offering__main {
+            order: 1;
+        }
+
+        .Layer__service-offering__offers {
+            order: 2;
+        }
+    }
+}
+
+.Layer__service-offering--with-left-offers {
+    .Layer__service-offering__content {
+        .Layer__service-offering__main {
+            order: 2;
+        }
+
+        .Layer__service-offering__offers {
+            order: 1;
+        }
+    }
+}
+
+.Layer__service-offering--with-bottom-offers {
+    .Layer__service-offering__content {
+        margin-bottom: var(--spacing-xl);
+    }
+}
+
+.Layer__service-offering__main {
+    flex: 1;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: var(--spacing-md);
+}
+
+.Layer__service-offering__offers {
+    flex-shrink: 0;
+    min-width: 0;
 }
 
 // Responsive adjustments
