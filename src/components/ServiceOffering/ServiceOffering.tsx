@@ -25,16 +25,79 @@ interface CalendlyMessageData {
   payload?: CalendlyPayload
 }
 
+/**
+ * Props for the ServiceOffering component - a customizable landing page component
+ * that showcases accounting services with optional pricing options and booking integration.
+ */
 export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
+  /**
+   * Optional Calendly scheduling link. When provided, creates an embedded scheduling widget
+   * that expands/collapses when the CTA button is clicked.
+   */
   calendlyLink?: string
+
+  /**
+   * Optional external booking link. When provided (and no calendlyLink), opens in a new tab
+   * when the CTA button is clicked. Ignored if calendlyLink is also provided.
+   */
   bookingLink?: string
+
+  /**
+   * The platform/brand name displayed throughout the component (e.g., "Shopify", "WooCommerce").
+   * Used in titles, descriptions, and feature text to customize the content.
+   */
   platformName: string
+
+  /**
+   * The target industry for customization (e.g., "e-commerce", "SaaS", "retail").
+   * Used to tailor feature descriptions and messaging to the specific industry.
+   */
   industry: string
+
+  /**
+   * Controls the positioning of the service options panel.
+   * @default 'none'
+   * - 'left': Options panel appears on the left side
+   * - 'right': Options panel appears on the right side
+   * - 'bottom': Options panel appears below the main content
+   * - 'none': No options panel is displayed
+   */
   offersPosition?: OffersPosition
+
+  /**
+   * Text displayed on the main call-to-action button.
+   * @default 'Learn More'
+   */
   ctaText: string
+
+  /**
+   * Price displayed for the accounting software option (e.g., "$49", "Free", "Contact us").
+   * This is a string to allow for flexible pricing display including non-numeric values.
+   *
+   * You may leave this as a blank string to hide the price.
+   */
   accountingPrice: string
+
+  /**
+   * Price displayed for the bookkeeping service option (e.g., "$299", "Starting at $199").
+   * This is a string to allow for flexible pricing display including non-numeric values.
+   *
+   * You may leave this as a blank string to hide the price.
+   */
   bookkeepingPrice: string
+
+  /**
+   * Unit or period for the accounting price display.
+   * @default '/mo'
+   * Common values: '/mo', '/year', '/month', 'per user', etc.
+   */
   accountingPricingUnit?: string
+
+  /**
+   * Unit or period for the bookkeeping service price display.
+   * @default '/mo'
+   * Common values: '/mo', '/year', '/month', 'per user', etc.
+   */
   bookkeepingPricingUnit?: string
 }
 

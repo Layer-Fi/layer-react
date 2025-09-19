@@ -76,12 +76,14 @@ export const ServiceOfferingOptions = ({
           </div>
 
           <div className='Layer__service-offering-options__footer'>
-            <span className='Layer__service-offering-options__price-label'>Starting at</span>
+            { accountingPrice != '' && <span className='Layer__service-offering-options__price-label'>Starting at</span>}
             <div className='Layer__service-offering-options__pricing'>
               <span className='Layer__service-offering-options__price'>{accountingPrice}</span>
-              <span className='Layer__service-offering-options__price-period'>
-                {accountingPricingUnit}
-              </span>
+              { accountingPrice != '' && (
+                <span className='Layer__service-offering-options__price-period'>
+                  {accountingPricingUnit}
+                </span>
+              )}
             </div>
 
             <Button
@@ -118,13 +120,16 @@ export const ServiceOfferingOptions = ({
           </div>
 
           <div className='Layer__service-offering-options__footer'>
-            <span className='Layer__service-offering-options__price-label'>Starting at</span>
+            {bookkeepingPrice != '' && <span className='Layer__service-offering-options__price-label'>Starting at</span>}
             <div className='Layer__service-offering-options__pricing'>
               <div>
                 <span className='Layer__service-offering-options__price'>{bookkeepingPrice}</span>
-                <span className='Layer__service-offering-options__price-period'>
-                  {bookkeepingPricingUnit}
-                </span>
+                {bookkeepingPrice != ''
+                  && (
+                    <span className='Layer__service-offering-options__price-period'>
+                      {bookkeepingPricingUnit}
+                    </span>
+                  )}
               </div>
             </div>
 

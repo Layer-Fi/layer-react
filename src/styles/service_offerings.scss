@@ -243,6 +243,15 @@
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-xl);
 
+    .Layer__service-offering--with-bottom-offers & {
+        @media (min-width: 1025px) {
+            width: fit-content;
+            margin: 0 auto;
+            display: flex;
+            gap: var(--spacing-xl);
+        }
+    }
+
     @media (max-width: 768px) {
         grid-template-columns: 1fr;
         gap: var(--spacing-lg);
@@ -258,6 +267,9 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs);
+    max-width: 480px;
+    min-width: 320px;
+    margin: 0 auto;
 
 }
 
@@ -454,8 +466,15 @@
 }
 
 .Layer__service-offering--with-bottom-offers {
+    display: flex;
+    flex-direction: column;
+
     .Layer__service-offering__content {
         margin-bottom: var(--spacing-xl);
+    }
+
+    .Layer__service-offering__offers {
+        padding-bottom: var(--spacing-lg);
     }
 }
 
