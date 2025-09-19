@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode, useState } from 'react'
+import { HTMLAttributes, ReactNode, useEffect, useState } from 'react'
 import classNames from 'classnames'
 import { InlineWidget } from 'react-calendly'
 import { ServiceOfferingOptions } from './ServiceOfferingOptions'
@@ -11,25 +11,69 @@ export enum ServiceOfferingType {
 
 export type OffersPosition = 'left' | 'bottom' | 'right' | 'none'
 
+interface CalendlyPayload {
+  event: {
+    uri: string
+  }
+  invitee: {
+    uri: string
+  }
+}
+
+interface CalendlyMessageData {
+  event?: string
+  payload?: CalendlyPayload
+}
+
 export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
-  calendlyLink: string
+  calendlyLink?: string
+  bookingLink?: string
   platformName: string
   industry: string
   offersPosition?: OffersPosition
-  onGetStartedAccounting?: () => void
-  onGetStartedBookkeeping?: () => void
+  ctaText: string
+  accountingPrice: string
+  bookkeepingPrice: string
+  accountingPricingUnit?: string
+  bookkeepingPricingUnit?: string
 }
 
 export const ServiceOffering = ({
   calendlyLink,
+  bookingLink,
   platformName,
   industry,
   offersPosition = 'none',
-  onGetStartedAccounting,
-  onGetStartedBookkeeping,
+  ctaText = 'Learn More',
+  accountingPrice,
+  bookkeepingPrice,
+  accountingPricingUnit = '/mo',
+  bookkeepingPricingUnit = '/mo',
   ...props
 }: ServiceOfferingProps) => {
   const [isCalendlyVisible, setIsCalendlyVisible] = useState(false)
+  const isCalendlyLink = Boolean(calendlyLink)
+  const bookingUrl = calendlyLink || bookingLink
+
+  useEffect(() => {
+    const handleCalendlyMessage = (e: MessageEvent) => {
+      const data = e.data as CalendlyMessageData
+
+      if (data.event && typeof data.event === 'string' && data.event.indexOf('calendly') === 0) {
+        console.debug('Calendly event:', data.event)
+
+        if (data.event === 'calendly.event_scheduled') {
+          console.debug('Booking successful!', data.payload)
+        }
+      }
+    }
+
+    window.addEventListener('message', handleCalendlyMessage)
+
+    return () => {
+      window.removeEventListener('message', handleCalendlyMessage)
+    }
+  }, [])
 
   const baseClassName = classNames(
     'Layer__service-offering',
@@ -40,8 +84,13 @@ export const ServiceOffering = ({
     },
   )
 
-  const toggleCalendly = () => {
-    setIsCalendlyVisible(!isCalendlyVisible)
+  const handleLearnMore = () => {
+    if (isCalendlyLink) {
+      setIsCalendlyVisible(!isCalendlyVisible)
+    }
+    else if (bookingUrl) {
+      window.open(bookingUrl, '_blank')
+    }
   }
 
   const renderOfferingOptions = () => {
@@ -50,8 +99,13 @@ export const ServiceOffering = ({
       <ServiceOfferingOptions
         platformName={platformName}
         industry={industry}
-        onGetStartedAccounting={onGetStartedAccounting}
-        onGetStartedBookkeeping={onGetStartedBookkeeping}
+        ctaText={ctaText}
+        bookkeepingPrice={bookkeepingPrice}
+        accountingPrice={accountingPrice}
+        bookkeepingPricingUnit={bookkeepingPricingUnit}
+        accountingPricingUnit={accountingPricingUnit}
+        onGetStartedAccounting={handleLearnMore}
+        onGetStartedBookkeeping={handleLearnMore}
         className='Layer__service-offering__offers'
       />
     )
@@ -99,20 +153,22 @@ export const ServiceOffering = ({
         <Button
           variant='solid'
           style={{ color: 'white', margin: 'auto 0', fontWeight: 'medium' }}
-          onClick={toggleCalendly}
+          onClick={handleLearnMore}
         >
-          Learn more
+          {ctaText}
         </Button>
       </div>
 
-      <div
-        className={classNames(
-          'Layer__service-offering__calendly-container',
-          { visible: isCalendlyVisible },
-        )}
-      >
-        <InlineWidget url={calendlyLink} />
-      </div>
+      {calendlyLink && (
+        <div
+          className={classNames(
+            'Layer__service-offering__calendly-container',
+            { visible: isCalendlyVisible },
+          )}
+        >
+          <InlineWidget url={calendlyLink} />
+        </div>
+      )}
 
       <h3 className='Layer__service-offering__value-prop-heading'>
         The easiest way to manage your business finances

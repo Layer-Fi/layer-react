@@ -5,6 +5,11 @@ import { Button } from '../ui/Button/Button'
 export interface ServiceOfferingOptionsProps extends HTMLAttributes<HTMLDivElement> {
   platformName: string
   industry: string
+  ctaText: string
+  accountingPrice: string
+  bookkeepingPrice: string
+  accountingPricingUnit: string
+  bookkeepingPricingUnit: string
   onGetStartedAccounting?: () => void
   onGetStartedBookkeeping?: () => void
 }
@@ -12,6 +17,11 @@ export interface ServiceOfferingOptionsProps extends HTMLAttributes<HTMLDivEleme
 export const ServiceOfferingOptions = ({
   platformName,
   industry,
+  ctaText,
+  accountingPrice,
+  bookkeepingPrice,
+  accountingPricingUnit = '/mo',
+  bookkeepingPricingUnit = '/mo',
   onGetStartedAccounting,
   onGetStartedBookkeeping,
   ...props
@@ -66,9 +76,12 @@ export const ServiceOfferingOptions = ({
           </div>
 
           <div className='Layer__service-offering-options__footer'>
+            <span className='Layer__service-offering-options__price-label'>Starting at</span>
             <div className='Layer__service-offering-options__pricing'>
-              <span className='Layer__service-offering-options__price'>$XX</span>
-              <span className='Layer__service-offering-options__price-period'>/mo</span>
+              <span className='Layer__service-offering-options__price'>{accountingPrice}</span>
+              <span className='Layer__service-offering-options__price-period'>
+                {accountingPricingUnit}
+              </span>
             </div>
 
             <Button
@@ -76,7 +89,7 @@ export const ServiceOfferingOptions = ({
               style={{ color: 'white', margin: 'auto 0', fontWeight: 'medium' }}
               onClick={onGetStartedAccounting}
             >
-              Get Started
+              {ctaText}
             </Button>
           </div>
         </div>
@@ -108,8 +121,10 @@ export const ServiceOfferingOptions = ({
             <span className='Layer__service-offering-options__price-label'>Starting at</span>
             <div className='Layer__service-offering-options__pricing'>
               <div>
-                <span className='Layer__service-offering-options__price'>$XX</span>
-                <span className='Layer__service-offering-options__price-period'>/mo</span>
+                <span className='Layer__service-offering-options__price'>{bookkeepingPrice}</span>
+                <span className='Layer__service-offering-options__price-period'>
+                  {bookkeepingPricingUnit}
+                </span>
               </div>
             </div>
 
@@ -118,7 +133,7 @@ export const ServiceOfferingOptions = ({
               style={{ color: 'white', margin: 'auto 0', fontWeight: 'medium' }}
               onClick={onGetStartedBookkeeping}
             >
-              Get Started
+              {ctaText}
             </Button>
           </div>
         </div>
