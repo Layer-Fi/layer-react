@@ -87,14 +87,16 @@ export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
   bookkeepingPrice: string
 
   /**
-   * Unit or period for the accounting price display.
+   * Unit or period for the accounting price display. If the accounting price is an empty string,
+   * this will not be shown.
    * @default '/mo'
    * Common values: '/mo', '/year', '/month', 'per user', etc.
    */
   accountingPricingUnit?: string
 
   /**
-   * Unit or period for the bookkeeping service price display.
+   * Unit or period for the bookkeeping service price display. If the accounting price is an empty string,
+   * this will not be shown.
    * @default '/mo'
    * Common values: '/mo', '/year', '/month', 'per user', etc.
    */
