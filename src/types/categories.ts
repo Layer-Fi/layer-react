@@ -1,20 +1,3 @@
-export enum CategoriesListMode {
-  All = 'ALL',
-  Expenses = 'EXPENSES',
-  Revenue = 'REVENUE',
-  Default = 'DEFAULT',
-}
-
-export enum CategorizationStatus {
-  PENDING = 'PENDING',
-  READY_FOR_INPUT = 'READY_FOR_INPUT',
-  LAYER_REVIEW = 'LAYER_REVIEW',
-  CATEGORIZED = 'CATEGORIZED',
-  SPLIT = 'SPLIT',
-  JOURNALING = 'JOURNALING',
-  MATCHED = 'MATCHED',
-}
-
 type BaseCategory = {
   display_name: string
   category: string

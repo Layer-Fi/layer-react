@@ -1,10 +1,9 @@
-import { CategorizationStatus } from '../../types'
+import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 
 export type MobileComponentType = 'regularList' | 'mobileList'
 
 export const CategorizedCategories = [
   CategorizationStatus.CATEGORIZED,
-  CategorizationStatus.JOURNALING,
   CategorizationStatus.SPLIT,
   CategorizationStatus.MATCHED,
 ]

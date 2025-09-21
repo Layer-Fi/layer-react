@@ -1,6 +1,7 @@
 import { DATE_FORMAT } from '../../config/general'
 import Scissors from '../../icons/Scissors'
-import { BankTransaction, CategorizationStatus } from '../../types'
+import { BankTransaction } from '../../types'
+import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import { Badge } from '../Badge'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
 import { MatchBadge } from '../BankTransactionRow/MatchBadge'

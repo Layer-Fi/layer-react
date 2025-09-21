@@ -16,7 +16,7 @@ import { AmountInput } from '../Input/AmountInput'
 import { Badge, BadgeVariant } from '../Badge/Badge'
 import { JournalEntryLineItem } from '../../types/journal'
 import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
-import { CategoriesListMode } from '../../types/categories'
+import { CategoriesListMode } from "../../schemas/categorization"
 
 type WithSubCategories = { subCategories: ReadonlyArray<WithSubCategories> | null }
 
