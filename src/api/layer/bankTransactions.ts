@@ -1,7 +1,6 @@
 import { CategoryUpdate, BankTransaction } from '../../types'
 import {
   BankTransactionMatch,
-  BankTransactionMatchType,
   BankTransactionMetadata,
   DocumentS3Urls,
 } from '../../types/bank_transactions'
@@ -83,7 +82,7 @@ export const categorizeBankTransaction = put<
 
 export type MatchBankTransactionBody = {
   match_id: string
-  type: BankTransactionMatchType
+  type: 'Confirm_Match'
 }
 
 export const matchBankTransaction = put<
