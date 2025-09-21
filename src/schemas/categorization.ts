@@ -175,7 +175,7 @@ export type SplitCategorizationEntry = typeof SplitCategorizationEntrySchema.Typ
 export type SplitCategorization = typeof SplitCategorizationSchema.Type
 export type Categorization = typeof CategorizationSchema.Type
 
-export type NestedCategorization = typeof NestedCategorizationSchema
+export type NestedCategorization = typeof NestedCategorizationSchema.Type
 
 export const CategoryListSchema = Schema.Struct({
   type: Schema.Literal('Category_List'),
