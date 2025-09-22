@@ -112,7 +112,16 @@ export const ServiceOffering = ({
   ...props
 }: ServiceOfferingProps) => {
   const [isCalendlyVisible, setIsCalendlyVisible] = useState(false)
-  const isCalendlyLink = bookingLink?.includes('calendly.com')
+  const ALLOWED_CALENDLY_HOSTS = ['calendly.com', 'www.calendly.com'];
+  let isCalendlyLink = false;
+  if (bookingLink) {
+    try {
+      const hostname = new URL(bookingLink).hostname;
+      isCalendlyLink = (ALLOWED_CALENDLY_HOSTS.includes(hostname) || hostname.endsWith('.calendly.com')) 
+    } catch (e) {
+      isCalendlyLink = false;
+    }
+  }
 
   useEffect(() => {
     const handleCalendlyMessage = (e: MessageEvent) => {
