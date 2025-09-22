@@ -31,16 +31,12 @@ interface CalendlyMessageData {
  */
 export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
   /**
-   * Optional Calendly scheduling link. When provided, creates an embedded scheduling widget
-   * that expands/collapses when the CTA button is clicked.
-   */
-  calendlyLink?: string
-
-  /**
    * Optional external booking link. When provided (and no calendlyLink), opens in a new tab
-   * when the CTA button is clicked. Ignored if calendlyLink is also provided.
+   * when the CTA button is clicked.
+   *
+   * Embeds a calendly link if the link is from calendly.
    */
-  bookingLink?: string
+  bookingLink: string
 
   /**
    * The platform/brand name displayed throughout the component (e.g., "Shopify", "WooCommerce").
@@ -104,7 +100,6 @@ export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const ServiceOffering = ({
-  calendlyLink,
   bookingLink,
   platformName,
   industry,
@@ -117,8 +112,7 @@ export const ServiceOffering = ({
   ...props
 }: ServiceOfferingProps) => {
   const [isCalendlyVisible, setIsCalendlyVisible] = useState(false)
-  const isCalendlyLink = Boolean(calendlyLink)
-  const bookingUrl = calendlyLink || bookingLink
+  const isCalendlyLink = bookingLink?.includes('calendly.com')
 
   useEffect(() => {
     const handleCalendlyMessage = (e: MessageEvent) => {
@@ -153,8 +147,8 @@ export const ServiceOffering = ({
     if (isCalendlyLink) {
       setIsCalendlyVisible(!isCalendlyVisible)
     }
-    else if (bookingUrl) {
-      window.open(bookingUrl, '_blank')
+    else if (bookingLink) {
+      window.open(bookingLink, '_blank')
     }
   }
 
@@ -224,14 +218,14 @@ export const ServiceOffering = ({
         </Button>
       </div>
 
-      {calendlyLink && (
+      {isCalendlyLink && (
         <div
           className={classNames(
             'Layer__service-offering__calendly-container',
             { visible: isCalendlyVisible },
           )}
         >
-          <InlineWidget url={calendlyLink} />
+          <InlineWidget url={bookingLink} />
         </div>
       )}
 
