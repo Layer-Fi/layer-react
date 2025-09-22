@@ -1,7 +1,8 @@
 import type { CustomerSchema } from '../schemas/customer'
 import type { VendorSchema } from '../schemas/vendor'
-import { MatchDetailsType } from '../schemas/match'
-import { Categorization, CategorizationStatus, Category } from './categories'
+import { MatchDetailsType } from '../schemas/bankTransactions/match'
+import { Categorization, Category } from './categories'
+import { CategorizationStatus } from '../schemas/bankTransactions/bankTransaction'
 import { S3PresignedUrl } from './general'
 import type { TransactionTagEncoded } from '../features/tags/tagSchemas'
 

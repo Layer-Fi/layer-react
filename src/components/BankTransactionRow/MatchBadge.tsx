@@ -1,6 +1,7 @@
 import MinimizeTwo from '../../icons/MinimizeTwo'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, CategorizationStatus } from '../../types'
+import { BankTransaction } from '../../types'
+import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import { Badge } from '../Badge'
 import { parseISO, format as formatTime } from 'date-fns'
 

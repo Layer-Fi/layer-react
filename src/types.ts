@@ -19,7 +19,6 @@ export {
   BankTransactionMatch,
 } from './types/bank_transactions'
 export {
-  CategorizationStatus,
   Category,
   CategorizationType,
   AutoCategorization,
