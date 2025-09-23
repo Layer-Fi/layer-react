@@ -11,10 +11,7 @@ import businessAccounts from '../../assets/images/business-accounts.svg'
 import businessOverview from '../../assets/images/business-overview.svg'
 import categorizeExpenses from '../../assets/images/categorize-expenses.svg'
 
-export enum ServiceOfferingType {
-  ACCOUNTING_ONLY = 'account_only',
-  WITH_BOOKKEEPING = 'accounting_and_bookkeeping',
-}
+export type ServiceOfferingType = 'accounting_only' | 'accounting_and_bookkeeping'
 
 export type OffersPosition = 'left' | 'bottom' | 'right' | 'none'
 
@@ -117,6 +114,14 @@ export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
    * @example 'transparent', '#ffffff', 'rgba(255, 255, 255, 0.9)', 'var(--color-base-50)'
    */
   offersBackgroundColor?: string
+
+  /**
+   * The type of service offering to display. Controls which offerings are shown.
+   * @default ServiceOfferingType.WITH_BOOKKEEPING
+   * - ACCOUNTING_ONLY: Shows only the accounting software option
+   * - WITH_BOOKKEEPING: Shows both accounting and bookkeeping options
+   */
+  serviceOfferingType?: ServiceOfferingType
 }
 
 export const ServiceOffering = ({
@@ -131,6 +136,7 @@ export const ServiceOffering = ({
   accountingPricingUnit = '/mo',
   bookkeepingPricingUnit = '/mo',
   offersBackgroundColor,
+  serviceOfferingType = 'accounting_and_bookkeeping',
   ...props
 }: ServiceOfferingProps) => {
   const [isCalendlyVisible, setIsCalendlyVisible] = useState(false)
@@ -205,6 +211,7 @@ export const ServiceOffering = ({
         accountingPrice={accountingPrice}
         bookkeepingPricingUnit={bookkeepingPricingUnit}
         accountingPricingUnit={accountingPricingUnit}
+        serviceOfferingType={serviceOfferingType}
         onGetStartedAccounting={handleLearnMore}
         onGetStartedBookkeeping={handleLearnMore}
         className='Layer__service-offering__offers'

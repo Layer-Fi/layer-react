@@ -244,12 +244,23 @@
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-xl);
 
+    // Single card layout for accounting only
+    &:has(.Layer__service-offering-options__card:only-child) {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
     .Layer__service-offering--with-bottom-offers & {
         @media (min-width: 1025px) {
             width: fit-content;
             margin: 0 auto;
             display: flex;
             gap: var(--spacing-xl);
+        }
+
+        // Single card layout for accounting only in bottom offers
+        &:has(.Layer__service-offering-options__card:only-child) {
+            justify-content: center;
         }
     }
 
@@ -269,7 +280,6 @@
     flex-direction: column;
     gap: var(--spacing-xs);
     max-width: 480px;
-    min-width: 320px;
     margin: 0 auto;
     box-shadow: 0 100px 80px 0 rgba(3, 2, 2, 0.07), 0 30.15px 24.118px 0 rgba(3, 2, 2, 0.05), 0 12.52px 10.017px 0 rgba(3, 2, 2, 0.04), 0 4.53px 3.623px 0 rgba(3, 2, 2, 0.02);
 
@@ -448,7 +458,7 @@
     }
 
     .Layer__service-offering__offers {
-        padding: var(--spacing-lg);
+        padding: var(--spacing-3xl);
     }
 
     .Layer__service-offering-options__grid {
