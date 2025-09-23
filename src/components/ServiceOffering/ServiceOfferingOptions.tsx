@@ -9,32 +9,45 @@ import { Badge } from '../Badge'
 import { BadgeSize, BadgeVariant } from '../Badge/Badge'
 
 export interface ServiceOfferingOptionsProps extends HTMLAttributes<HTMLDivElement> {
-  platformName: string
-  industry: string
-  links: ServiceOfferingLinks
-  accountingPrice: string
-  bookkeepingPrice: string
-  accountingPricingUnit: string
-  bookkeepingPricingUnit: string
-  serviceOfferingType: ServiceOfferingType
+  config: {
+    /** Link configuration for various CTAs and actions */
+    links: ServiceOfferingLinks
+    /** Platform-specific branding and customization settings */
+    platform: {
+      platformName: string
+      industry: string
+    }
+    /** Content configuration for service offerings and pricing */
+    content: {
+      accountingPrice: string
+      bookkeepingPrice: string
+      accountingPricingUnit: string
+      bookkeepingPricingUnit: string
+      serviceOfferingType: ServiceOfferingType
+    }
+  }
   onGetStartedAccounting?: () => void
   onGetStartedBookkeeping?: () => void
 }
 
 const headingStyle = { maxWidth: '624px', margin: '0 auto' }
 export const ServiceOfferingOptions = ({
-  platformName,
-  industry,
-  links,
-  accountingPrice,
-  bookkeepingPrice,
-  accountingPricingUnit = '/mo',
-  bookkeepingPricingUnit = '/mo',
-  serviceOfferingType,
+  config,
   onGetStartedAccounting,
   onGetStartedBookkeeping,
   ...props
 }: ServiceOfferingOptionsProps) => {
+  const {
+    links,
+    platform: { platformName, industry },
+    content: {
+      accountingPrice,
+      bookkeepingPrice,
+      accountingPricingUnit = '/mo',
+      bookkeepingPricingUnit = '/mo',
+      serviceOfferingType,
+    },
+  } = config
   const baseClassName = classNames(
     'Layer__service-offering-options',
   )

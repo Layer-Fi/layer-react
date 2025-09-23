@@ -12,6 +12,7 @@ import businessOverview from '../../assets/images/business-overview.svg'
 import categorizeExpenses from '../../assets/images/categorize-expenses.svg'
 
 export type ServiceOfferingType = 'accounting_only' | 'accounting_and_bookkeeping'
+export type ServiceOfferingValuePropositionType = 'accounting_focused' | 'bookkeeping_focused' | 'none'
 
 export type OffersPosition = 'left' | 'bottom' | 'right' | 'none'
 
@@ -53,13 +54,7 @@ export type ServiceOfferingLinks = {
   bookBookkeeping?: Link
 }
 
-/**
- * Props for the ServiceOffering component - a customizable landing page component
- * that showcases accounting services with optional pricing options and booking integration.
- */
-export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
-  links: ServiceOfferingLinks
-
+export interface ServiceOfferingPlatformConfig {
   /**
    * The platform/brand name displayed throughout the component (e.g., "Shopify", "WooCommerce").
    * Used in titles, descriptions, and feature text to customize the content.
@@ -78,7 +73,9 @@ export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
    * Used to tailor feature descriptions and messaging to the specific industry.
    */
   industry: string
+}
 
+export interface ServiceOfferingContentConfig {
   /**
    * Controls the positioning of the service options panel.
    * @default 'none'
@@ -88,12 +85,6 @@ export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
    * - 'none': No options panel is displayed
    */
   offersPosition?: OffersPosition
-
-  /**
-   * Text displayed on the main call-to-action button.
-   * @default 'Learn More'
-   */
-  ctaText: string
 
   /**
    * Price displayed for the accounting software option (e.g., "$49", "Free", "Contact us").
@@ -128,18 +119,46 @@ export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
   bookkeepingPricingUnit?: string
 
   /**
-   * Background color for the service offerings panel. Can be any valid CSS color value.
-   * @example 'transparent', '#ffffff', 'rgba(255, 255, 255, 0.9)', 'var(--color-base-50)'
-   */
-  offersBackgroundColor?: string
-
-  /**
    * The type of service offering to display. Controls which offerings are shown.
    * @default ServiceOfferingType.WITH_BOOKKEEPING
    * - ACCOUNTING_ONLY: Shows only the accounting software option
    * - WITH_BOOKKEEPING: Shows both accounting and bookkeeping options
    */
   serviceOfferingType?: ServiceOfferingType
+
+  valuePropositionTitle?: string
+
+  /**
+   * Determines what to show for the value proposition.
+   *
+   * Defaults to accounting-focused value proposition.
+   */
+  valuePropositionType?: ServiceOfferingValuePropositionType
+}
+
+export interface ServiceOfferingStylingConfig {
+  /**
+   * Background color for the service offerings panel. Can be any valid CSS color value.
+   * @example 'transparent', '#ffffff', 'rgba(255, 255, 255, 0.9)', 'var(--color-base-50)'
+   */
+  offersBackgroundColor?: string
+}
+
+/**
+ * Props for the ServiceOffering component - a customizable landing page component
+ * that showcases accounting services with optional pricing options and booking integration.
+ */
+export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
+  config: {
+    /** Link configuration for various CTAs and actions */
+    links: ServiceOfferingLinks
+    /** Platform-specific branding and customization settings */
+    platform: ServiceOfferingPlatformConfig
+    /** Content configuration for service offerings and pricing */
+    content: ServiceOfferingContentConfig
+    /** Styling configuration for visual customization */
+    style: ServiceOfferingStylingConfig
+  }
 }
 const ALLOWED_CALENDLY_HOSTS = ['calendly.com', 'www.calendly.com']
 const isCalendlyLink = (link?: Link) => {
@@ -154,19 +173,24 @@ const isCalendlyLink = (link?: Link) => {
 }
 
 export const ServiceOffering = ({
-  links,
-  platformName,
-  imageUrl,
-  industry,
-  offersPosition = 'none',
-  accountingPrice,
-  bookkeepingPrice,
-  accountingPricingUnit = '/mo',
-  bookkeepingPricingUnit = '/mo',
-  offersBackgroundColor,
-  serviceOfferingType = 'accounting_and_bookkeeping',
+  config,
   ...props
 }: ServiceOfferingProps) => {
+  const {
+    links,
+    platform: { platformName, imageUrl, industry },
+    content: {
+      offersPosition = 'none',
+      accountingPrice,
+      bookkeepingPrice,
+      accountingPricingUnit = '/mo',
+      bookkeepingPricingUnit = '/mo',
+      serviceOfferingType = 'accounting_and_bookkeeping',
+      valuePropositionTitle = 'The easiest way to manage your business finances',
+      valuePropositionType = 'accounting_focused',
+    },
+    style: { offersBackgroundColor },
+  } = config
   const [isCalendlyVisible, setIsCalendlyVisible] = useState(false)
   const [calendlyLink, setCalendlyLink] = useState('')
   const calendlyRef = useRef<HTMLDivElement>(null)
@@ -222,14 +246,17 @@ export const ServiceOffering = ({
     if (offersPosition === 'none') return null
     return (
       <ServiceOfferingOptions
-        platformName={platformName}
-        industry={industry}
-        links={links}
-        bookkeepingPrice={bookkeepingPrice}
-        accountingPrice={accountingPrice}
-        bookkeepingPricingUnit={bookkeepingPricingUnit}
-        accountingPricingUnit={accountingPricingUnit}
-        serviceOfferingType={serviceOfferingType}
+        config={{
+          links,
+          platform: { platformName, industry },
+          content: {
+            accountingPrice,
+            bookkeepingPrice,
+            accountingPricingUnit,
+            bookkeepingPricingUnit,
+            serviceOfferingType,
+          },
+        }}
         onGetStartedAccounting={handleAccountingLink}
         onGetStartedBookkeeping={handleBookkeepingLink}
         className='Layer__service-offering__offers'
@@ -255,7 +282,6 @@ export const ServiceOffering = ({
             {platformName}
             .
           </Heading>
-
           <VStack>
             {features.map((feature, index) => (
               <HStack gap='lg' key={index} pb='xs'>
@@ -298,27 +324,29 @@ export const ServiceOffering = ({
           />
         </HStack>
       )}
-      <VStack gap='3xl' pb='5xl'>
-        <Heading size='lg' align='center'>
-          The easiest way to manage your business finances
-        </Heading>
+      {valuePropositionType != 'none' && (
+        <VStack gap='3xl' pb='5xl'>
+          <Heading size='lg' align='center'>
+            {valuePropositionTitle}
+          </Heading>
 
-        <div className='Layer__service-offering__value-props-responsive'>
-          {valueProps.map((valueProp, index) => (
-            <VStack key={index} className='Layer__feature-card'>
-              {valueProp.icon}
-              <VStack pb='2xl' pi='2xl'>
-                <Heading size='md'>
-                  {valueProp.title}
-                </Heading>
-                <Span variant='subtle' lineHeight='xl'>
-                  {valueProp.text}
-                </Span>
+          <div className='Layer__service-offering__value-props-responsive'>
+            {(valuePropositionType == 'accounting_focused' ? accountingValueProps : bookkeepingValueProps).map((valueProp, index) => (
+              <VStack key={index} className='Layer__feature-card'>
+                {valueProp.icon}
+                <VStack pb='2xl' pi='2xl'>
+                  <Heading size='md'>
+                    {valueProp.title}
+                  </Heading>
+                  <Span variant='subtle' lineHeight='xl'>
+                    {valueProp.text}
+                  </Span>
+                </VStack>
               </VStack>
-            </VStack>
-          ))}
-        </div>
-      </VStack>
+            ))}
+          </div>
+        </VStack>
+      )}
     </VStack>
   )
 
@@ -359,7 +387,7 @@ export const ServiceOffering = ({
     },
   ]
 
-  const valueProps: OfferContent[] = [
+  const accountingValueProps: OfferContent[] = [
     {
       icon: <img src={businessAccounts} alt='Connect your Business Accounts' />,
       title: 'Connect your business accounts',
@@ -373,6 +401,24 @@ export const ServiceOffering = ({
     {
       icon: <img src={businessOverview} alt='Get a clear picture of your business' />,
       title: 'Get a clear picture of your business',
+      text: 'See your business profitability and stay organized for tax time.',
+    },
+  ]
+
+  const bookkeepingValueProps: OfferContent[] = [
+    {
+      icon: <img src={businessAccounts} alt='Connect your Business Accounts' />,
+      title: 'Bookkeeping Value Prop 1',
+      text: `Connect your business bank accounts and credit cards right within ${platformName}.`,
+    },
+    {
+      icon: <img src={categorizeExpenses} alt='Categorize Expenses' />,
+      title: 'Bookkeeping Value Prop 2',
+      text: `Organize transactions into categories built for ${industry}.`,
+    },
+    {
+      icon: <img src={businessOverview} alt='Get a clear picture of your business' />,
+      title: 'Bookkeeping Value Prop 3',
       text: 'See your business profitability and stay organized for tax time.',
     },
   ]
