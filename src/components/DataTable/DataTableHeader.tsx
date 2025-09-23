@@ -37,7 +37,7 @@ export const DataTableHeader = ({ name, count, slotProps = {}, slots = {} }: Dat
       <HStack justify='space-between' align='center' className='Layer__DataTableHeader__Header'>
         <HStack pis='md' align='center' gap='xl'>
           <HStack align='center' gap='sm'>
-            <Span weight='bold' size='lg'>{name}</Span>
+            <Span weight='bold' size='md'>{name}</Span>
             {showCount && (totalCount
               ? <Badge variant={BadgeVariant.DEFAULT} size={BadgeSize.MEDIUM}>{totalCount}</Badge>
               : <BadgeLoader />

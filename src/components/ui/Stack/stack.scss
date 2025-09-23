@@ -37,7 +37,7 @@
     }
   }
 
-  $spacings: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 5xl;
+  $spacings: 3xs, 2xs, xs, sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl;
 
   @each $spacing in $spacings {
     &[data-gap="#{$spacing}"] {
@@ -47,9 +47,11 @@
     &[data-pb="#{$spacing}"] {
       padding-block: var(--spacing-#{$spacing});
     }
+
     &[data-pbe="#{$spacing}"] {
       padding-block-end: var(--spacing-#{$spacing});
     }
+
     &[data-pbs="#{$spacing}"] {
       padding-block-start: var(--spacing-#{$spacing});
     }
@@ -57,9 +59,11 @@
     &[data-pi="#{$spacing}"] {
       padding-inline: var(--spacing-#{$spacing});
     }
+
     &[data-pie="#{$spacing}"] {
       padding-inline-end: var(--spacing-#{$spacing});
     }
+
     &[data-pis="#{$spacing}"] {
       padding-inline-start: var(--spacing-#{$spacing});
     }

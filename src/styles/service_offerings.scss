@@ -1,3 +1,7 @@
+.Layer__service-offering--main {
+    padding: 0 180px;
+}
+
 .Layer__service-offering {
     box-sizing: border-box;
     display: flex;
@@ -11,8 +15,6 @@
     height: 100%;
     justify-content: flex-start;
 }
-
-
 
 .Layer__service-offering__header {
     display: flex;
@@ -102,12 +104,6 @@
     margin: 0;
 }
 
-.Layer__service-offering__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    height: 100%;
-}
 
 .Layer__service-offering__subtitle {
     margin: 0;
@@ -215,10 +211,15 @@
 
     // Ensure the inner calendly widget has proper height
     .calendly-inline-widget {
+        width: 100%;
         min-height: 630px;
         transition: opacity 0.3s ease-in-out 0.8s;
         margin-bottom: var(--spacing-lg);
     }
+}
+
+.Layer__feature-card {
+    width: 333px;
 }
 
 // Service Offering Options Component
@@ -270,13 +271,14 @@
     max-width: 480px;
     min-width: 320px;
     margin: 0 auto;
+    box-shadow: 0 100px 80px 0 rgba(3, 2, 2, 0.07), 0 30.15px 24.118px 0 rgba(3, 2, 2, 0.05), 0 12.52px 10.017px 0 rgba(3, 2, 2, 0.04), 0 4.53px 3.623px 0 rgba(3, 2, 2, 0.02);
 
 }
 
 .Layer__service-offering-options__card-badge {
-    background-color: #FAD515;
+    background-color: var(--bg-brand-accent);
     width: fit-content;
-    color: var(--color-white);
+    color: var(--color-primary);
     font-size: var(--text-sm);
     font-weight: var(--font-weight-bold);
     padding: 0.25rem 0.5rem;
@@ -389,7 +391,8 @@
 }
 
 .Layer__service-offering__offers {
-    background-color: #E3F7F5;
+    // background-color: #E3F7F5;
+    background-color: none;
     padding: 0 var(--spacing-lg);
     height: 100%;
 
@@ -411,6 +414,11 @@
 
     .Layer__service-offering__content {
         grid-template-columns: 1fr 420px;
+
+        @media (max-width: 1920px) {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto;
+        }
     }
 }
 
@@ -433,6 +441,14 @@
         @media (max-width: 1440px) {
             grid-template-columns: 1fr;
         }
+    }
+
+    .Layer__service-offering--main {
+        padding: 0 72px;
+    }
+
+    .Layer__service-offering__offers {
+        padding: var(--spacing-lg);
     }
 
     .Layer__service-offering-options__grid {
@@ -474,7 +490,7 @@
     }
 
     .Layer__service-offering__offers {
-        padding-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-5xl);
     }
 }
 
@@ -488,4 +504,10 @@
 .Layer__service-offering__offers {
     flex-shrink: 0;
     min-width: 0;
+}
+
+.Layer__service-offering-options__icon {
+    path {
+        stroke: var(--fg-subtle);
+    }
 }
