@@ -1,6 +1,6 @@
 import { HTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
-import { InlineWidget } from 'react-calendly'
+import { PopupModal } from 'react-calendly'
 import { ServiceOfferingOptions } from './ServiceOfferingOptions'
 import { Button } from '../ui/Button/Button'
 import { Heading } from '../ui/Typography/Heading'
@@ -186,14 +186,14 @@ export const ServiceOffering = ({
     if (isCalendlyLink) {
       setIsCalendlyVisible(!isCalendlyVisible)
       // Scroll to Calendly embed when it becomes visible
-      if (!isCalendlyVisible) {
-        setTimeout(() => {
-          calendlyRef.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-          })
-        }, 300) // Longer delay for slower scroll effect
-      }
+      // if (!isCalendlyVisible) {
+      //   setTimeout(() => {
+      //     calendlyRef.current?.scrollIntoView({
+      //       behavior: 'smooth',
+      //       block: 'start',
+      //     })
+      //   }, 300) // Longer delay for slower scroll effect
+      // }
     }
     else if (bookingLink) {
       window.open(bookingLink, '_blank')
@@ -274,7 +274,14 @@ export const ServiceOffering = ({
           className={classNames('Layer__service-offering__calendly-container', { visible: isCalendlyVisible },
           )}
         >
-          <InlineWidget url={bookingLink} />
+          <PopupModal
+            url={bookingLink}
+            onModalClose={() => {
+              setIsCalendlyVisible(false)
+            }}
+            open={isCalendlyVisible}
+            rootElement={document.getElementById('root')!}
+          />
         </HStack>
       )}
       <VStack gap='3xl' pb='5xl'>
