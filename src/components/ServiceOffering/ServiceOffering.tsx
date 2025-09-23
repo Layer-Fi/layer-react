@@ -274,8 +274,8 @@ export const ServiceOffering = ({
             ))}
           </VStack>
           <HStack gap='sm' justify='start' className={classNames({ hiding: isCalendlyVisible })}>
-            {links.learnMore && <Button rounded='md' onClick={handleLearnMore}>{links.learnMore.label}</Button>}
-            <Button rounded='md' onClick={handleMainCta}>{links.main.label}</Button>
+            {links.learnMore && <Button rounded='md' variant='outlined' onClick={handleLearnMore}>{links.learnMore.label}</Button>}
+            <Button rounded='md' variant='branded' onClick={handleMainCta}>{links.main.label}</Button>
           </HStack>
         </VStack>
         <VStack className='Layer__service-offering__responsive-image'>
