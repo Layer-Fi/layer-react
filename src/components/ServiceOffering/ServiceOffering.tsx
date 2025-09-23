@@ -29,18 +29,36 @@ interface CalendlyMessageData {
   payload?: CalendlyPayload
 }
 
+export type Link = {
+  label: string
+  url: string
+}
+
+export type ServiceOfferingLinks = {
+  /**
+   * Main CTA link on the top-of-fold component.
+   */
+  main: Link
+  /**
+   * Enables the learn more button, which allows a platform to link to a learn more page.
+   */
+  learnMore?: Link
+  /**
+   * Enables the accounting schedule a booking button.
+   */
+  bookAccounting?: Link
+  /**
+   * Enables the bookkeeping schedule a booking button.
+   */
+  bookBookkeeping?: Link
+}
+
 /**
  * Props for the ServiceOffering component - a customizable landing page component
  * that showcases accounting services with optional pricing options and booking integration.
  */
 export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
-  /**
-   * Optional external booking link. When provided (and no calendlyLink), opens in a new tab
-   * when the CTA button is clicked.
-   *
-   * Embeds a calendly link if the link is from calendly.
-   */
-  bookingLink: string
+  links: ServiceOfferingLinks
 
   /**
    * The platform/brand name displayed throughout the component (e.g., "Shopify", "WooCommerce").
@@ -123,14 +141,24 @@ export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
    */
   serviceOfferingType?: ServiceOfferingType
 }
+const ALLOWED_CALENDLY_HOSTS = ['calendly.com', 'www.calendly.com']
+const isCalendlyLink = (link?: Link) => {
+  try {
+    if (!link) return false
+    const hostname = new URL(link.url).hostname
+    return (ALLOWED_CALENDLY_HOSTS.includes(hostname) || hostname.endsWith('.calendly.com'))
+  }
+  catch (_) {
+    return false
+  }
+}
 
 export const ServiceOffering = ({
-  bookingLink,
+  links,
   platformName,
   imageUrl,
   industry,
   offersPosition = 'none',
-  ctaText = 'Learn More',
   accountingPrice,
   bookkeepingPrice,
   accountingPricingUnit = '/mo',
@@ -140,18 +168,8 @@ export const ServiceOffering = ({
   ...props
 }: ServiceOfferingProps) => {
   const [isCalendlyVisible, setIsCalendlyVisible] = useState(false)
+  const [calendlyLink, setCalendlyLink] = useState('')
   const calendlyRef = useRef<HTMLDivElement>(null)
-  const ALLOWED_CALENDLY_HOSTS = ['calendly.com', 'www.calendly.com']
-  let isCalendlyLink = false
-  if (bookingLink) {
-    try {
-      const hostname = new URL(bookingLink).hostname
-      isCalendlyLink = (ALLOWED_CALENDLY_HOSTS.includes(hostname) || hostname.endsWith('.calendly.com'))
-    }
-    catch (_) {
-      isCalendlyLink = false
-    }
-  }
 
   useEffect(() => {
     const handleCalendlyMessage = (e: MessageEvent) => {
@@ -182,22 +200,22 @@ export const ServiceOffering = ({
     },
   )
 
-  const handleLearnMore = () => {
-    if (isCalendlyLink) {
+  const handleLinkClick = (link?: Link) => {
+    if (isCalendlyLink(link)) {
+      setCalendlyLink(link!.url)
       setIsCalendlyVisible(!isCalendlyVisible)
-      // Scroll to Calendly embed when it becomes visible
-      // if (!isCalendlyVisible) {
-      //   setTimeout(() => {
-      //     calendlyRef.current?.scrollIntoView({
-      //       behavior: 'smooth',
-      //       block: 'start',
-      //     })
-      //   }, 300) // Longer delay for slower scroll effect
-      // }
     }
-    else if (bookingLink) {
-      window.open(bookingLink, '_blank')
+    else if (link) {
+      window.open(link.url, '_blank')
     }
+  }
+
+  const handleBookkeepingLink = () => handleLinkClick(links.bookBookkeeping)
+  const handleAccountingLink = () => handleLinkClick(links.bookAccounting)
+  const handleMainCta = () => handleLinkClick(links.main)
+
+  const handleLearnMore = () => {
+    if (links.learnMore) window.open(links.learnMore.url, '_blank')
   }
 
   const renderOfferingOptions = () => {
@@ -206,14 +224,14 @@ export const ServiceOffering = ({
       <ServiceOfferingOptions
         platformName={platformName}
         industry={industry}
-        ctaText={ctaText}
+        links={links}
         bookkeepingPrice={bookkeepingPrice}
         accountingPrice={accountingPrice}
         bookkeepingPricingUnit={bookkeepingPricingUnit}
         accountingPricingUnit={accountingPricingUnit}
         serviceOfferingType={serviceOfferingType}
-        onGetStartedAccounting={handleLearnMore}
-        onGetStartedBookkeeping={handleLearnMore}
+        onGetStartedAccounting={handleAccountingLink}
+        onGetStartedBookkeeping={handleBookkeepingLink}
         className='Layer__service-offering__offers'
         style={offersBackgroundColor ? { backgroundColor: offersBackgroundColor } : undefined}
       />
@@ -255,27 +273,23 @@ export const ServiceOffering = ({
               </HStack>
             ))}
           </VStack>
-          <HStack
-            justify='start'
-            className={classNames(
-              { hiding: isCalendlyVisible },
-            )}
-          >
-            <Button rounded='md' onClick={handleLearnMore}>{ctaText}</Button>
+          <HStack gap='sm' justify='start' className={classNames({ hiding: isCalendlyVisible })}>
+            {links.learnMore && <Button rounded='md' onClick={handleLearnMore}>{links.learnMore.label}</Button>}
+            <Button rounded='md' onClick={handleMainCta}>{links.main.label}</Button>
           </HStack>
         </VStack>
         <VStack className='Layer__service-offering__responsive-image'>
           <img src={imageUrl || partnerAccountingImage} alt={`${platformName} Accounting`} />
         </VStack>
       </div>
-      {isCalendlyLink && (
+      {isCalendlyVisible && (
         <HStack
           ref={calendlyRef}
           className={classNames('Layer__service-offering__calendly-container', { visible: isCalendlyVisible },
           )}
         >
           <PopupModal
-            url={bookingLink}
+            url={calendlyLink}
             onModalClose={() => {
               setIsCalendlyVisible(false)
             }}

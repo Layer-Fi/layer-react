@@ -4,14 +4,14 @@ import { Button } from '../ui/Button/Button'
 import { P, Span } from '../ui/Typography/Text'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { Heading } from '../ui/Typography/Heading'
-import { ServiceOfferingType } from './ServiceOffering'
+import { ServiceOfferingLinks, ServiceOfferingType } from './ServiceOffering'
 import { Badge } from '../Badge'
 import { BadgeSize, BadgeVariant } from '../Badge/Badge'
 
 export interface ServiceOfferingOptionsProps extends HTMLAttributes<HTMLDivElement> {
   platformName: string
   industry: string
-  ctaText: string
+  links: ServiceOfferingLinks
   accountingPrice: string
   bookkeepingPrice: string
   accountingPricingUnit: string
@@ -25,7 +25,7 @@ const headingStyle = { maxWidth: '624px', margin: '0 auto' }
 export const ServiceOfferingOptions = ({
   platformName,
   industry,
-  ctaText,
+  links,
   accountingPrice,
   bookkeepingPrice,
   accountingPricingUnit = '/mo',
@@ -131,7 +131,7 @@ export const ServiceOfferingOptions = ({
               rounded='md'
               onClick={onGetStartedAccounting}
             >
-              {ctaText}
+              {links.bookAccounting?.label}
             </Button>
           </HStack>
         </VStack>
@@ -223,7 +223,7 @@ export const ServiceOfferingOptions = ({
                 rounded='md'
                 onClick={onGetStartedBookkeeping}
               >
-                {ctaText}
+                {links.bookBookkeeping?.label}
               </Button>
             </HStack>
           </VStack>
