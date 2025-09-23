@@ -1,0 +1,38 @@
+.Layer__JournalEntryForm {
+  .Layer__JournalEntryForm__Field__EntryAt {
+    grid-template-columns: 8rem auto;
+    width: clamp(16rem, 100%, 24rem);
+  }
+
+  .Layer__JournalEntryForm__EntryDate {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 32rem;
+    padding: var(--spacing-lg) var(--spacing-2xl);
+  }
+
+  .Layer__JournalEntryForm__DebitSection,
+  .Layer__JournalEntryForm__CreditSection {
+    padding: var(--spacing-lg) var(--spacing-2xl);
+    background-color: var(--bg-subtle);
+  }
+
+  .Layer__JournalEntryForm__Metadata {
+    border-top: 1px solid var(--color-base-300);
+    padding: var(--spacing-lg) var(--spacing-2xl);
+  }
+
+  .Layer__JournalEntryForm__AdditionalTextFields {
+    flex: 1;
+    min-width: 20rem;
+    max-width: 32rem;
+  }
+
+  .Layer__JournalEntryForm__FormError {
+    height: 4rem;
+    padding-inline: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+  }
+
+  min-width: 54rem;
+}

@@ -1,5 +1,6 @@
 import { RefObject, useContext, useMemo, useState } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
+import { useJournalNavigation } from '../../providers/JournalStore'
 import PlusIcon from '../../icons/PlusIcon'
 import { View } from '../../types/general'
 import { Button } from '../Button'
@@ -43,6 +44,7 @@ export const JournalTableWithPanel = ({
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const [currentPage, setCurrentPage] = useState(1)
+  const { toCreateEntry } = useJournalNavigation()
 
   const {
     data: rawData,
@@ -51,7 +53,6 @@ export const JournalTableWithPanel = ({
     isValidating,
     refetch,
     selectedEntryId,
-    addEntry,
     hasMore,
     fetchMore,
   } = useContext(JournalContext)
@@ -81,8 +82,8 @@ export const JournalTableWithPanel = ({
   return (
     <Panel
       className={`Layer__${COMPONENT_NAME}`}
-      sidebar={<JournalSidebar parentRef={containerRef} config={config} />}
-      sidebarIsOpen={Boolean(selectedEntryId)}
+      sidebar={<JournalSidebar parentRef={containerRef} />}
+      sidebarIsOpen={Boolean(selectedEntryId && selectedEntryId !== 'new')}
       parentRef={containerRef}
     >
       <Header
@@ -117,7 +118,7 @@ export const JournalTableWithPanel = ({
               iconOnly={['mobile', 'tablet'].includes(view)}
             />
             <Button
-              onClick={() => addEntry()}
+              onClick={() => toCreateEntry()}
               disabled={isLoading}
               iconOnly={view === 'mobile'}
               leftIcon={view === 'mobile' && <PlusIcon size={14} />}

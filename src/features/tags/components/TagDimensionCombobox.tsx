@@ -75,6 +75,10 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
 
   const inputId = useId()
   const additionalAriaProps = !showLabel && { 'aria-label': tagDimension?.key }
+  if (tagDimension === undefined) {
+    return null
+  }
+
   return (
     <VStack gap='3xs'>
       {showLabel && (

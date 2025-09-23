@@ -7,7 +7,9 @@ import { Container } from '../Container'
 import { JournalTable } from '../JournalTable'
 import { JournalTableStringOverrides } from '../JournalTable/JournalTableWithPanel'
 import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
+import { JournalStoreProvider, useJournalRouteState, JournalRoute } from '../../providers/JournalStore'
 import { ReactNode } from 'react'
+import { JournalEntryDrawer } from './JournalEntryDrawer'
 
 export interface JournalConfig {
   form: {
@@ -39,7 +41,9 @@ export const Journal = (props: JournalProps) => {
     <ChartOfAccountsContext.Provider value={AccountsContextData}>
       <JournalContext.Provider value={JournalContextData}>
         <InAppLinkProvider renderInAppLink={props.renderInAppLink}>
-          <JournalContent {...props} />
+          <JournalStoreProvider>
+            <JournalContent {...props} />
+          </JournalStoreProvider>
         </InAppLinkProvider>
       </JournalContext.Provider>
     </ChartOfAccountsContext.Provider>
@@ -51,6 +55,22 @@ const JournalContent = ({
   config = JOURNAL_CONFIG,
   stringOverrides,
 }: JournalProps) => {
+  const routeState = useJournalRouteState()
+
+  return routeState.route === JournalRoute.EntryForm
+    ? <JournalEntryDrawer />
+    : <JournalTableView asWidget={asWidget} config={config} stringOverrides={stringOverrides} />
+}
+
+const JournalTableView = ({
+  asWidget,
+  config,
+  stringOverrides,
+}: {
+  asWidget?: boolean
+  config: JournalConfig
+  stringOverrides?: JournalStringOverrides
+}) => {
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (

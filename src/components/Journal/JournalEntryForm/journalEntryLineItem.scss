@@ -1,0 +1,19 @@
+.Layer__JournalEntryForm__LineItem {
+  display: grid;
+
+  --grid-cols-base:
+    minmax(12rem, 3fr)
+    minmax(8rem, 2fr)
+    minmax(8rem, 2fr)
+    minmax(12rem, 3fr);
+
+  grid-template-columns:
+    var(--grid-cols-base)
+    auto;
+
+  width: 100%;
+
+  &--readonly {
+    grid-template-columns: var(--grid-cols-base);
+  }
+}
