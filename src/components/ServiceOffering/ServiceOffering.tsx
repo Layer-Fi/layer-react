@@ -215,8 +215,8 @@ export const ServiceOffering = ({
 
   const renderMainContent = () => (
     <VStack className='Layer__service-offering--main'>
-      <HStack pb='5xl' justify='space-between'>
-        <VStack gap='2xl' pi='3xl' pb='3xl'>
+      <div className='Layer__service-offering__responsive-layout'>
+        <VStack gap='2xl' className='Layer__service-offering__responsive-content'>
           <VStack>
             <Heading size='3xl'>
               {platformName}
@@ -257,10 +257,10 @@ export const ServiceOffering = ({
             <Button rounded='md' onClick={handleLearnMore}>{ctaText}</Button>
           </HStack>
         </VStack>
-        <VStack>
+        <VStack className='Layer__service-offering__responsive-image'>
           <img src={imageUrl || partnerAccountingImage} alt={`${platformName} Accounting`} />
         </VStack>
-      </HStack>
+      </div>
       {isCalendlyLink && (
         <HStack
           ref={calendlyRef}
@@ -275,7 +275,7 @@ export const ServiceOffering = ({
           The easiest way to manage your business finances
         </Heading>
 
-        <HStack gap='lg' justify='center'>
+        <div className='Layer__service-offering__value-props-responsive'>
           {valueProps.map((valueProp, index) => (
             <VStack key={index} className='Layer__feature-card'>
               {valueProp.icon}
@@ -289,7 +289,7 @@ export const ServiceOffering = ({
               </VStack>
             </VStack>
           ))}
-        </HStack>
+        </div>
       </VStack>
     </VStack>
   )

@@ -511,3 +511,57 @@
         stroke: var(--fg-subtle);
     }
 }
+
+// Responsive layout for main service offering content
+.Layer__service-offering__responsive-layout {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: var(--spacing-5xl);
+
+    @media (max-width: 1440px) {
+        flex-direction: column;
+        gap: var(--spacing-xl);
+    }
+}
+
+.Layer__service-offering__responsive-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2xl);
+    padding: var(--spacing-3xl);
+    padding-bottom: var(--spacing-3xl);
+
+    @media (max-width: 1440px) {
+        padding: var(--spacing-xl);
+    }
+}
+
+.Layer__service-offering__responsive-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: 1440px) {
+        margin-top: var(--spacing-lg);
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+// Responsive value props layout
+.Layer__service-offering__value-props-responsive {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-lg);
+    justify-content: center;
+
+    @media (max-width: 1440px) {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-xl);
+    }
+}
