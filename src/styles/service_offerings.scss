@@ -163,15 +163,15 @@
 
 .Layer__service-offering__offers {
     background-color: transparent;
-    height: 100%;
 
     @media (max-width: 1440px) {
-        padding: var(--spacing-lg);
+        padding: 0 var(--spacing-lg);
     }
 }
 
 .Layer__service-offering--with-left-offers {
     height: 100%;
+
 
     .Layer__service-offering__content {
         grid-template-columns: 420px 1fr;
@@ -205,6 +205,8 @@
 
 .Layer__service-offering--with-left-offers,
 .Layer__service-offering--with-right-offers {
+    margin: var(--spacing-xl) 0;
+
     .Layer__service-offering__content {
         display: grid;
         gap: var(--spacing-xl);
@@ -216,11 +218,11 @@
     }
 
     .Layer__service-offering--main {
-        padding: 40px 72px 0 72px;
+        padding: 0 72px;
     }
 
     .Layer__service-offering__offers {
-        padding: var(--spacing-3xl);
+        padding: 0 var(--spacing-3xl);
     }
 
     .Layer__service-offering-options__grid {
@@ -240,7 +242,7 @@
             }
         }
 
-        .Layer__service-offering__offers {
+        .Layer__service-offering--offers {
             order: 2;
         }
     }
@@ -258,7 +260,7 @@
 
         }
 
-        .Layer__service-offering__offers {
+        .Layer__service-offering--offers {
             order: 0;
 
             @media (max-width: 1770px) {
@@ -279,6 +281,10 @@
             padding-bottom: var(--spacing-5xl);
         }
     }
+}
+
+.Layer__service-offering--offers {
+    margin-top: var(--spacing-5xl);
 }
 
 .Layer__service-offering__main {

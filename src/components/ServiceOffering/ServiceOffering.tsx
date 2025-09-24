@@ -162,11 +162,11 @@ export const ServiceOffering = ({
                   </Span>
                 </VStack>
               </VStack>
-            ))
+            )),
           )}
         </div>
       </VStack>
-    
+
     </VStack>
   )
 
@@ -211,15 +211,15 @@ export const ServiceOffering = ({
     <VStack className={baseClassName} {...props}>
       <div className='Layer__service-offering__content'>
         {renderMainContent()}
+        <VStack gap='3xl' {...props} className='Layer__service-offering--offers'>
+          <HStack align='center'>
+            <Heading size='md' align='center' style={{ maxWidth: '360px', margin: '0 auto' }}>
+              {makeDynamicText(ServiceOfferingContentID.offers_title, textContent, mainConfig)}
+            </Heading>
+          </HStack>
+          {mainConfig.content.config.map(renderOffer)}
+        </VStack>
       </div>
-      <VStack gap='3xl' className={baseClassName} {...props}>
-        <HStack align='center'>
-          <Heading size='md' align='center' style={{ maxWidth: '360px', margin: '0 auto' }}>
-            {makeDynamicText(ServiceOfferingContentID.offers_title, textContent, mainConfig)}
-          </Heading>
-        </HStack>
-        {mainConfig.content.config.map(renderOffer)}
-      </VStack>
     </VStack>
   )
 }
