@@ -108,7 +108,7 @@ const JournalEntryDrawerHeader = ({ onSubmit, formState }: JournalEntryDrawerHea
 
   return (
     <HStack justify='space-between' align='center' fluid pie='md'>
-      <Heading>Add new entry</Heading>
+      <Heading size='sm'>Add new entry</Heading>
       <HStack gap='xs'>
         {cancelButton}
         {saveButton}

@@ -9,6 +9,7 @@ import type { JournalEntryForm } from './journalEntryFormSchemas'
 import { JournalConfig } from '../Journal'
 import { Button } from '../../ui/Button/Button'
 import { Span } from '../../ui/Typography/Text'
+import { Separator } from '../../Separator/Separator'
 
 export interface JournalEntryLineItemsTableProps {
   form: AppForm<JournalEntryForm>
@@ -53,47 +54,50 @@ export const JournalEntryLineItemsTable = ({
   }, [])
 
   return (
-    <VStack gap='md' className='Layer__JournalEntryForm__LineItemsSection'>
-      {/* Header Section - Following Figma design */}
-      <HStack justify='space-between' align='center' className='Layer__JournalEntryForm__SectionHeader'>
-        <Heading size='sm'>{title}</Heading>
-      </HStack>
+    <>
+      <Separator />
+      <VStack gap='md' pbs='lg' className='Layer__JournalEntryForm__LineItemsSection'>
+        {/* Header Section - Following Figma design */}
+        <HStack justify='space-between' align='center' className='Layer__JournalEntryForm__SectionHeader'>
+          <Heading size='xs'>{title}</Heading>
+        </HStack>
 
-      {/* Line Items - Show filtered line items by direction with proper label logic */}
-      <VStack gap='xs'>
-        {displayLineItems.map((originalIndex, displayIndex) => (
-          <JournalEntryLineItem
-            key={originalIndex}
-            form={form}
-            index={originalIndex}
-            config={config}
-            isReadOnly={isReadOnly}
-            onDeleteLine={() => handleRemoveLineItem(originalIndex)}
-            showLabels={displayIndex === 0} // Show labels for first item in each section
-          />
-        ))}
-      </VStack>
-
-      {/* Empty State - Show when no line items exist for this direction */}
-      {displayLineItems.length === 0 && (
-        <VStack gap='md' align='center' className='empty-state' pbs='lg'>
-          <p style={{ color: 'var(--color-text-subtle)', textAlign: 'center' }}>
-            No
-            {' '}
-            {direction.toLowerCase()}
-            {' '}
-            line items added yet. Click &ldquo;Add Line Item&rdquo; to get started.
-          </p>
+        {/* Line Items - Show filtered line items by direction with proper label logic */}
+        <VStack gap='xs'>
+          {displayLineItems.map((originalIndex, displayIndex) => (
+            <JournalEntryLineItem
+              key={originalIndex}
+              form={form}
+              index={originalIndex}
+              config={config}
+              isReadOnly={isReadOnly}
+              onDeleteLine={() => handleRemoveLineItem(originalIndex)}
+              showLabels={displayIndex === 0} // Show labels for first item in each section
+            />
+          ))}
         </VStack>
-      )}
-      {!isReadOnly && (
-        <Button onPress={handleAddLineItem} variant='text'>
-          <Span weight='normal' size='sm' variant='subtle'>
-            Add next account
-          </Span>
-        </Button>
-      )}
 
-    </VStack>
+        {/* Empty State - Show when no line items exist for this direction */}
+        {displayLineItems.length === 0 && (
+          <VStack gap='md' align='center' className='empty-state' pbs='lg'>
+            <p style={{ color: 'var(--color-text-subtle)', textAlign: 'center' }}>
+              No
+              {' '}
+              {direction.toLowerCase()}
+              {' '}
+              line items added yet. Click &ldquo;Add Line Item&rdquo; to get started.
+            </p>
+          </VStack>
+        )}
+        {!isReadOnly && (
+          <Button onPress={handleAddLineItem} variant='text'>
+            <Span weight='normal' size='sm' variant='subtle'>
+              Add next account
+            </Span>
+          </Button>
+        )}
+
+      </VStack>
+    </>
   )
 }
