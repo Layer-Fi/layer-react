@@ -942,6 +942,16 @@ declare module '@layerfi/components/api/layer' {
   };
 
 }
+declare module '@layerfi/components/assets/images/index' {
+  export { default as imagePartnerAccountingImage } from '@layerfi/components/assets/images/partner-accounting.png/index';
+  export { default as imageBusinessAccounts } from '@layerfi/components/assets/images/business-accounts.svg/index';
+  export { default as imageBusinessOverview } from '@layerfi/components/assets/images/business-overview.svg/index';
+  export { default as imageCategorizeExpenses } from '@layerfi/components/assets/images/categorize-expenses.svg/index';
+  export { default as imageBookkeeperInquiries } from '@layerfi/components/assets/images/bookkeeper-inquiries.svg/index';
+  export { default as imageScheduleBookkeeperMeeting } from '@layerfi/components/assets/images/schedule-bookkeeper-meeting.svg/index';
+  export { default as imagePnlOverview } from '@layerfi/components/assets/images/pnl-overview.svg/index';
+
+}
 declare module '@layerfi/components/components/ActionableList/ActionableList' {
   export interface ActionableListOption<T> {
       label: string;
@@ -4930,20 +4940,158 @@ declare module '@layerfi/components/components/Separator/Separator' {
 }
 declare module '@layerfi/components/components/ServiceOffering/ServiceOffering' {
   import { HTMLAttributes } from 'react';
-  export enum ServiceOfferingType {
-      ACCOUNTING_ONLY = "account_only",
-      WITH_BOOKKEEPING = "accounting_and_bookkeeping"
+  import { ContentConfig } from '@layerfi/components/components/ServiceOffering/content';
+  import { PlatformConfig, ServiceOfferingLinks } from '@layerfi/components/components/ServiceOffering/types';
+  export type ServiceOfferingMainConfig = {
+      /** Link configuration for various CTAs and actions */
+      links: ServiceOfferingLinks;
+      /** Platform-specific branding and customization settings */
+      platform: PlatformConfig;
+      /** Content configuration for service offerings and pricing */
+      content: ContentConfig;
+  };
+  /**
+     * Props for the ServiceOffering component - a customizable landing page component
+     * that showcases accounting services with optional pricing options and booking integration.
+     */
+  export interface ServiceOfferingTypesProps extends HTMLAttributes<HTMLDivElement> {
+      config: ServiceOfferingMainConfig;
   }
-  export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
+  export const ServiceOffering: ({ config: mainConfig, ...props }: ServiceOfferingTypesProps) => import("react/jsx-runtime").JSX.Element;
+
+}
+declare module '@layerfi/components/components/ServiceOffering/ServiceOfferingOptions' {
+  import { HTMLAttributes } from 'react';
+  import { ServiceOfferingConfig } from '@layerfi/components/components/ServiceOffering/types';
+  export interface ServiceOfferingOptionsProps extends HTMLAttributes<HTMLDivElement> {
+      config: ServiceOfferingConfig;
+  }
+  export const ServiceOfferingOffer: ({ config, ...props }: ServiceOfferingOptionsProps) => import("react/jsx-runtime").JSX.Element;
+
+}
+declare module '@layerfi/components/components/ServiceOffering/calendly' {
+  import { Link } from '@layerfi/components/components/ServiceOffering/types';
+  interface CalendlyPayload {
+      event: {
+          uri: string;
+      };
+      invitee: {
+          uri: string;
+      };
+  }
+  export interface CalendlyMessageData {
+      event?: string;
+      payload?: CalendlyPayload;
+  }
+  export const isCalendlyLink: (link?: Link) => boolean;
+  export const useCalendly: () => {
+      isCalendlyVisible: boolean;
       calendlyLink: string;
-      platformName: string;
-      industry: string;
+      calendlyRef: import("react").RefObject<HTMLDivElement>;
+      openCalendly: (link: string) => void;
+      closeCalendly: () => void;
+  };
+  export {};
+
+}
+declare module '@layerfi/components/components/ServiceOffering/content' {
+  import { ServiceOfferingConfig, ServiceOfferingOfferLayout } from '@layerfi/components/components/ServiceOffering/types';
+  export type ServiceOfferingTypesTextContent = Record<ServiceOfferingContentID, string>;
+  export enum ServiceOfferingContentID {
+      subtitle = 0,
+      headline_1 = 1,
+      headline_1_desc = 2,
+      headline_2 = 3,
+      headline_2_desc = 4,
+      offers_title = 5
   }
-  export const ServiceOffering: ({ calendlyLink, platformName, industry, ...props }: ServiceOfferingProps) => import("react/jsx-runtime").JSX.Element;
+  export const ServiceOfferingDefaultTextContent: ServiceOfferingTypesTextContent;
+  export interface ContentConfig {
+      /**
+         * Allows you to optionally configure the text on the component.
+         */
+      textContent?: ServiceOfferingTypesTextContent;
+      /**
+         * Controls the positioning of the service options panel.
+         * @default 'none'
+         * - 'left': Options panel appears on the left side
+         * - 'right': Options panel appears on the right side
+         * - 'bottom': Options panel appears below the main content
+         * - 'none': No options panel is displayed
+         */
+      layout?: ServiceOfferingOfferLayout;
+      config: ServiceOfferingConfig[];
+  }
 
 }
 declare module '@layerfi/components/components/ServiceOffering/index' {
   export { ServiceOffering } from '@layerfi/components/components/ServiceOffering/ServiceOffering';
+  export { ServiceOfferingOffer as ServiceOfferingOptions } from '@layerfi/components/components/ServiceOffering/ServiceOfferingOptions';
+
+}
+declare module '@layerfi/components/components/ServiceOffering/offers' {
+  import { ServiceOfferingConfig } from '@layerfi/components/components/ServiceOffering/types';
+  export const ServiceOfferingAccounting: ServiceOfferingConfig;
+  export const ServiceOfferingBookkeeping: ServiceOfferingConfig;
+
+}
+declare module '@layerfi/components/components/ServiceOffering/types' {
+  import { ReactNode } from 'react';
+  export type ServiceOfferingOfferLayout = 'left' | 'bottom' | 'right' | 'none';
+  export type Link = {
+      label: string;
+      url: string;
+  };
+  export type ServiceOfferingFeature = string | {
+      description: string;
+      icon: ReactNode;
+  };
+  export type ServiceOfferingConfig = {
+      badge: string;
+      title: string;
+      description: string;
+      features: ServiceOfferingFeature[];
+      pricing: string;
+      unit: string;
+      cta: Link;
+  };
+  export type ServiceOfferingValueProposition = {
+      test: string;
+  };
+  export type ServiceOfferingLinks = {
+      /**
+         * Main CTA link on the top-of-fold component.
+         */
+      main: Link;
+      /**
+         * Enables the learn more button, which allows a platform to link to a learn more page.
+         */
+      learnMore?: Link;
+  };
+  export interface PlatformConfig {
+      /**
+         * The platform/brand name displayed throughout the component (e.g., "Shopify", "WooCommerce").
+         * Used in titles, descriptions, and feature text to customize the content.
+         */
+      platformName: string;
+      /**
+         * The image URL to be used for the top-of-the-fold image.
+         *
+         * If left blank, will use a default.
+         */
+      imageUrl?: string;
+      /**
+         * The target industry for customization (e.g., "e-commerce", "SaaS", "retail").
+         * Used to tailor feature descriptions and messaging to the specific industry.
+         */
+      industry: string;
+  }
+
+}
+declare module '@layerfi/components/components/ServiceOffering/utils' {
+  import { ServiceOfferingContentID, ServiceOfferingTypesTextContent } from '@layerfi/components/components/ServiceOffering/content';
+  import { ServiceOfferingTypesProps } from '@layerfi/components/components/ServiceOffering/ServiceOffering';
+  export function makeDynamicText(contentId: ServiceOfferingContentID, textContent: ServiceOfferingTypesTextContent, config: ServiceOfferingTypesProps['config']): string;
 
 }
 declare module '@layerfi/components/components/SkeletonLoader/SkeletonLoader' {
@@ -5781,10 +5929,12 @@ declare module '@layerfi/components/components/ui/Button/Button' {
   import { type ButtonProps } from 'react-aria-components';
   type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'text' | 'branded';
   type ButtonSize = 'md';
+  type ButtonRounding = 'sm' | 'md';
   const Button: import("react").ForwardRefExoticComponent<Omit<ButtonProps, "className"> & {
       ellipsis?: true;
       icon?: true;
       inset?: true;
+      rounded?: ButtonRounding;
       size?: ButtonSize;
       variant?: ButtonVariant;
   } & import("react").RefAttributes<HTMLButtonElement>>;
@@ -6030,7 +6180,7 @@ declare module '@layerfi/components/components/ui/Modal/ModalSlots' {
       align?: "center";
       pbe?: import("@layerfi/components/components/ui/sharedUITypes").Spacing;
       pie?: import("@layerfi/components/components/ui/sharedUITypes").Spacing;
-      size?: "2xs" | "xs" | "sm" | "lg" | "xl";
+      size?: "2xs" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
       variant?: "subtle";
       weight?: "normal" | "bold";
       ellipsis?: true;
@@ -6189,7 +6339,7 @@ declare module '@layerfi/components/components/ui/Typography/Heading' {
       align?: 'center';
       pbe?: Spacing;
       pie?: Spacing;
-      size?: '2xs' | 'xs' | 'sm' | 'lg' | 'xl';
+      size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
       variant?: 'subtle';
       weight?: 'normal' | 'bold';
       ellipsis?: true;
@@ -6216,10 +6366,11 @@ declare module '@layerfi/components/components/ui/Typography/Text' {
       pb?: Spacing;
       pbe?: Spacing;
       pbs?: Spacing;
-      size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+      size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
       status?: 'error';
       variant?: 'placeholder' | 'subtle';
       weight?: 'normal' | 'bold';
+      lineHeight?: 'md' | 'lg' | 'xl';
   };
   type TextRenderingProps = {
       nonAria?: true;
@@ -13440,6 +13591,7 @@ declare module '@layerfi/components/index' {
   export { Journal } from '@layerfi/components/components/Journal/index';
   export { Tasks } from '@layerfi/components/components/Tasks/Tasks';
   export { ServiceOffering } from '@layerfi/components/components/ServiceOffering/index';
+  export { ServiceOfferingAccounting, ServiceOfferingBookkeeping } from '@layerfi/components/components/ServiceOffering/offers';
   export { LinkAccounts } from '@layerfi/components/components/PlatformOnboarding/LinkAccounts';
   export { PlatformOnboarding } from '@layerfi/components/components/PlatformOnboarding/PlatformOnboarding';
   export { BookkeepingUpsellBar } from '@layerfi/components/components/UpsellBanner/index';

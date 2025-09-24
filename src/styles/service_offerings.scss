@@ -1,5 +1,47 @@
+/* Mobile responsive typography for service offering content */
+@media (max-width: 420px) {
+    .Layer__service-offering__content {
+        .Layer__heading {
+            font-size: var(--text-heading-sm);
+        }
+
+        .Layer__heading--3xl {
+            font-size: var(--text-heading);
+        }
+
+        .Layer__heading--2xl {
+            font-size: var(--text-heading-sm);
+        }
+
+        .Layer__heading--xl {
+            font-size: var(--text-lg);
+        }
+
+        .Layer__heading--lg {
+            font-size: var(--text-md);
+        }
+
+        .Layer__heading--md {
+            font-size: var(--text-sm);
+        }
+
+        .Layer__text--lg {
+            font-size: var(--text-md);
+        }
+
+        .Layer__text--md {
+            font-size: var(--text-sm);
+        }
+    }
+}
+
+
 .Layer__service-offering--main {
-    padding: 0 180px;
+    padding: 0 var(--spacing-lg);
+
+    @media (min-width: 1024px) {
+        padding: 0 180px;
+    }
 }
 
 .Layer__service-offering {
@@ -10,7 +52,6 @@
     border: none;
     border-radius: var(--border-radius-sm);
     background: var(--color-white);
-    min-height: 100vh;
     width: 100%;
     height: 100%;
     justify-content: flex-start;
@@ -121,9 +162,7 @@
 }
 
 .Layer__service-offering__offers {
-    // background-color: #E3F7F5;
-    background-color: none;
-    padding: 0 var(--spacing-lg);
+    background-color: transparent;
     height: 100%;
 
     @media (max-width: 1440px) {
@@ -234,7 +273,11 @@
     flex-direction: column;
 
     .Layer__service-offering__offers {
-        padding-bottom: var(--spacing-5xl);
+        padding-bottom: var(--spacing-lg);
+
+        @media (min-width: 1440px) {
+            padding-bottom: var(--spacing-5xl);
+        }
     }
 }
 
@@ -298,14 +341,17 @@
 
 // Responsive value props layout
 .Layer__service-offering__value-props-responsive {
-    display: flex;
-    flex-direction: row;
-    gap: var(--spacing-lg);
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-5xl);
+    justify-items: center;
 
     @media (max-width: 1440px) {
-        flex-direction: column;
-        align-items: center;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
         gap: var(--spacing-xl);
     }
 }

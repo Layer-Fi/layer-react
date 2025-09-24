@@ -37,6 +37,7 @@ export { Tasks } from './components/Tasks/Tasks'
 
 /* --------------------- Onboarding ------------------------ */
 export { ServiceOffering } from './components/ServiceOffering'
+export { ServiceOfferingAccounting, ServiceOfferingBookkeeping } from './components/ServiceOffering/offers'
 export { LinkAccounts } from './components/PlatformOnboarding/LinkAccounts'
 export { PlatformOnboarding } from './components/PlatformOnboarding/PlatformOnboarding'
 

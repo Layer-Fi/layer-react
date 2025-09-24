@@ -1,223 +1,49 @@
-import { HTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react'
+import { HTMLAttributes, ReactNode } from 'react'
 import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
-import { ServiceOfferingOptions } from './ServiceOfferingOptions'
+import { ServiceOfferingOffer } from './ServiceOfferingOptions'
 import { Button } from '../ui/Button/Button'
 import { Heading } from '../ui/Typography/Heading'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
-import imagePartnerAccountingImage from '../../assets/images/partner-accounting.png'
-import imageBusinessAccounts from '../../assets/images/business-accounts.svg'
-import imageBusinessOverview from '../../assets/images/business-overview.svg'
-import imageCategorizeExpenses from '../../assets/images/categorize-expenses.svg'
-import imageBookkeeperInquiries from '../../assets/images/bookkeeper-inquiries.svg'
-import imageScheduleBookkeeperMeeting from '../../assets/images/schedule-bookkeeper-meeting.svg'
-import imagePnlOverview from '../../assets/images/pnl-overview.svg'
-// import imagePnlKpis from '../../assets/images/pnl-kpis.svg'
+import {
+  imagePartnerAccountingImage,
+} from '../../assets/images'
+import { ContentConfig, ServiceOfferingContentID, ServiceOfferingDefaultTextContent } from './content'
+import { Link, PlatformConfig, ServiceOfferingConfig, ServiceOfferingLinks } from './types'
+import { makeDynamicText } from './utils'
+import { isCalendlyLink, useCalendly } from './calendly'
 
-export type ServiceOfferingType = 'accounting_only' | 'accounting_and_bookkeeping'
-export type ServiceOfferingValuePropositionType = 'accounting_focused' | 'bookkeeping_focused' | 'none'
-
-export type OffersPosition = 'left' | 'bottom' | 'right' | 'none'
-
-interface CalendlyPayload {
-  event: {
-    uri: string
-  }
-  invitee: {
-    uri: string
-  }
-}
-
-interface CalendlyMessageData {
-  event?: string
-  payload?: CalendlyPayload
-}
-
-export type Link = {
-  label: string
-  url: string
-}
-
-export type ServiceOfferingLinks = {
-  /**
-   * Main CTA link on the top-of-fold component.
-   */
-  main: Link
-  /**
-   * Enables the learn more button, which allows a platform to link to a learn more page.
-   */
-  learnMore?: Link
-  /**
-   * Enables the accounting schedule a booking button.
-   */
-  bookAccounting?: Link
-  /**
-   * Enables the bookkeeping schedule a booking button.
-   */
-  bookBookkeeping?: Link
-}
-
-export interface ServiceOfferingPlatformConfig {
-  /**
-   * The platform/brand name displayed throughout the component (e.g., "Shopify", "WooCommerce").
-   * Used in titles, descriptions, and feature text to customize the content.
-   */
-  platformName: string
-
-  /**
-   * The image URL to be used for the top-of-the-fold image.
-   *
-   * If left blank, will use a default.
-   */
-  imageUrl?: string
-
-  /**
-   * The target industry for customization (e.g., "e-commerce", "SaaS", "retail").
-   * Used to tailor feature descriptions and messaging to the specific industry.
-   */
-  industry: string
-}
-
-export interface ServiceOfferingContentConfig {
-  /**
-   * Controls the positioning of the service options panel.
-   * @default 'none'
-   * - 'left': Options panel appears on the left side
-   * - 'right': Options panel appears on the right side
-   * - 'bottom': Options panel appears below the main content
-   * - 'none': No options panel is displayed
-   */
-  offersPosition?: OffersPosition
-
-  /**
-   * Price displayed for the accounting software option (e.g., "$49", "Free", "Contact us").
-   * This is a string to allow for flexible pricing display including non-numeric values.
-   *
-   * You may leave this as a blank string to hide the price.
-   */
-  accountingPrice: string
-
-  /**
-   * Price displayed for the bookkeeping service option (e.g., "$299", "Starting at $199").
-   * This is a string to allow for flexible pricing display including non-numeric values.
-   *
-   * You may leave this as a blank string to hide the price.
-   */
-  bookkeepingPrice: string
-
-  /**
-   * Unit or period for the accounting price display. If the accounting price is an empty string,
-   * this will not be shown.
-   * @default '/mo'
-   * Common values: '/mo', '/year', '/month', 'per user', etc.
-   */
-  accountingPricingUnit?: string
-
-  /**
-   * Unit or period for the bookkeeping service price display. If the accounting price is an empty string,
-   * this will not be shown.
-   * @default '/mo'
-   * Common values: '/mo', '/year', '/month', 'per user', etc.
-   */
-  bookkeepingPricingUnit?: string
-
-  /**
-   * The type of service offering to display. Controls which offerings are shown.
-   * @default ServiceOfferingType.WITH_BOOKKEEPING
-   * - ACCOUNTING_ONLY: Shows only the accounting software option
-   * - WITH_BOOKKEEPING: Shows both accounting and bookkeeping options
-   */
-  serviceOfferingType?: ServiceOfferingType
-
-  valuePropositionTitle?: string
-
-  /**
-   * Determines what to show for the value proposition.
-   *
-   * Defaults to accounting-focused value proposition.
-   */
-  valuePropositionType?: ServiceOfferingValuePropositionType
-}
-
-export interface ServiceOfferingStylingConfig {
-  /**
-   * Background color for the service offerings panel. Can be any valid CSS color value.
-   * @example 'transparent', '#ffffff', 'rgba(255, 255, 255, 0.9)', 'var(--color-base-50)'
-   */
-  offersBackgroundColor?: string
+export type ServiceOfferingMainConfig = {
+  /** Link configuration for various CTAs and actions */
+  links: ServiceOfferingLinks
+  /** Platform-specific branding and customization settings */
+  platform: PlatformConfig
+  /** Content configuration for service offerings and pricing */
+  content: ContentConfig
 }
 
 /**
- * Props for the ServiceOffering component - a customizable landing page component
- * that showcases accounting services with optional pricing options and booking integration.
- */
-export interface ServiceOfferingProps extends HTMLAttributes<HTMLDivElement> {
-  config: {
-    /** Link configuration for various CTAs and actions */
-    links: ServiceOfferingLinks
-    /** Platform-specific branding and customization settings */
-    platform: ServiceOfferingPlatformConfig
-    /** Content configuration for service offerings and pricing */
-    content: ServiceOfferingContentConfig
-    /** Styling configuration for visual customization */
-    style: ServiceOfferingStylingConfig
-  }
-}
-const ALLOWED_CALENDLY_HOSTS = ['calendly.com', 'www.calendly.com']
-const isCalendlyLink = (link?: Link) => {
-  try {
-    if (!link) return false
-    const hostname = new URL(link.url).hostname
-    return (ALLOWED_CALENDLY_HOSTS.includes(hostname) || hostname.endsWith('.calendly.com'))
-  }
-  catch (_) {
-    return false
-  }
+   * Props for the ServiceOffering component - a customizable landing page component
+   * that showcases accounting services with optional pricing options and booking integration.
+   */
+export interface ServiceOfferingTypesProps extends HTMLAttributes<HTMLDivElement> {
+  config: ServiceOfferingMainConfig
 }
 
 export const ServiceOffering = ({
-  config,
+  config: mainConfig,
   ...props
-}: ServiceOfferingProps) => {
+}: ServiceOfferingTypesProps) => {
   const {
     links,
     platform: { platformName, imageUrl, industry },
     content: {
-      offersPosition = 'none',
-      accountingPrice,
-      bookkeepingPrice,
-      accountingPricingUnit = '/mo',
-      bookkeepingPricingUnit = '/mo',
-      serviceOfferingType = 'accounting_and_bookkeeping',
-      valuePropositionTitle = 'The easiest way to manage your business finances',
-      valuePropositionType = 'accounting_focused',
+      textContent = ServiceOfferingDefaultTextContent,
+      layout: offersPosition = 'none',
     },
-    style: { offersBackgroundColor },
-  } = config
-  const [isCalendlyVisible, setIsCalendlyVisible] = useState(false)
-  const [calendlyLink, setCalendlyLink] = useState('')
-  const calendlyRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const handleCalendlyMessage = (e: MessageEvent) => {
-      const data = e.data as CalendlyMessageData
-
-      if (data.event && typeof data.event === 'string' && data.event.indexOf('calendly') === 0) {
-        console.debug('Calendly event:', data.event)
-
-        if (data.event === 'calendly.event_scheduled') {
-          console.debug('Booking successful!', data.payload)
-        }
-      }
-    }
-
-    window.addEventListener('message', handleCalendlyMessage)
-
-    return () => {
-      window.removeEventListener('message', handleCalendlyMessage)
-    }
-  }, [])
+  } = mainConfig
+  const { isCalendlyVisible, calendlyLink, calendlyRef, openCalendly, closeCalendly } = useCalendly()
 
   const baseClassName = classNames(
     'Layer__service-offering',
@@ -230,61 +56,53 @@ export const ServiceOffering = ({
 
   const handleLinkClick = (link?: Link) => {
     if (isCalendlyLink(link)) {
-      setCalendlyLink(link!.url)
-      setIsCalendlyVisible(!isCalendlyVisible)
+      openCalendly(link!.url)
     }
     else if (link) {
       window.open(link.url, '_blank')
     }
   }
 
-  const handleBookkeepingLink = () => handleLinkClick(links.bookBookkeeping)
-  const handleAccountingLink = () => handleLinkClick(links.bookAccounting)
   const handleMainCta = () => handleLinkClick(links.main)
 
   const handleLearnMore = () => {
     if (links.learnMore) window.open(links.learnMore.url, '_blank')
   }
 
-  const renderOfferingOptions = () => {
+  const renderOffer = (offer: ServiceOfferingConfig) => {
     if (offersPosition === 'none') return null
     return (
-      <ServiceOfferingOptions
-        config={{
-          links,
-          platform: { platformName, industry },
-          content: {
-            accountingPrice,
-            bookkeepingPrice,
-            accountingPricingUnit,
-            bookkeepingPricingUnit,
-            serviceOfferingType,
-          },
-        }}
-        onGetStartedAccounting={handleAccountingLink}
-        onGetStartedBookkeeping={handleBookkeepingLink}
+      <ServiceOfferingOffer
+        key={offer.title}
+        config={offer}
         className='Layer__service-offering__offers'
-        style={offersBackgroundColor ? { backgroundColor: offersBackgroundColor } : undefined}
       />
     )
   }
-
   const renderMainContent = () => (
     <VStack className='Layer__service-offering--main'>
       <div className='Layer__service-offering__responsive-layout'>
         <VStack gap='2xl' className='Layer__service-offering__responsive-content'>
           <VStack>
-            <Heading size='3xl'>
-              {platformName}
-              <br />
-            </Heading>
-            <Heading size='3xl' variant='subtle' weight='normal'>Accounting</Heading>
+            {!!textContent[ServiceOfferingContentID.title] === false && (
+              <>
+                <Heading size='3xl'>
+                  {platformName}
+                  <br />
+                </Heading>
+                <Heading size='3xl' variant='subtle' weight='normal'>Accounting</Heading>
+              </>
+            )}
+            {textContent[ServiceOfferingContentID.title] != '' && (
+              <>
+                <Heading size='3xl'>
+                  {makeDynamicText(ServiceOfferingContentID.title, textContent, mainConfig)}
+                </Heading>
+              </>
+            )}
           </VStack>
           <Heading size='md'>
-            Track your business finances, right within
-            {' '}
-            {platformName}
-            .
+            {makeDynamicText(ServiceOfferingContentID.subtitle, textContent, mainConfig)}
           </Heading>
           <VStack>
             {features.map((feature, index) => (
@@ -320,23 +138,20 @@ export const ServiceOffering = ({
         >
           <PopupModal
             url={calendlyLink}
-            onModalClose={() => {
-              setIsCalendlyVisible(false)
-            }}
+            onModalClose={closeCalendly}
             open={isCalendlyVisible}
             rootElement={document.getElementById('root')!}
           />
         </HStack>
       )}
-      {valuePropositionType != 'none' && (
-        <VStack gap='3xl' pb='5xl'>
-          <Heading size='lg' align='center'>
-            {valuePropositionTitle}
-          </Heading>
-
-          <div className='Layer__service-offering__value-props-responsive'>
-            {(valuePropositionType == 'accounting_focused' ? accountingValueProps : bookkeepingValueProps).map((valueProp, index) => (
-              <VStack key={index} className='Layer__feature-card'>
+      <VStack gap='3xl' pb='5xl'>
+        <Heading size='lg' align='center'>
+          {makeDynamicText(ServiceOfferingContentID.value_proposition_title, textContent, mainConfig)}
+        </Heading>
+        <div className='Layer__service-offering__value-props-responsive'>
+          {mainConfig.content.config.flatMap(c =>
+            c.valueProposition.map((valueProp, index) => (
+              <VStack key={`${c.title}-${index}`} className='Layer__feature-card'>
                 {valueProp.icon}
                 <VStack pb='2xl' pi='2xl'>
                   <Heading size='md'>
@@ -347,20 +162,21 @@ export const ServiceOffering = ({
                   </Span>
                 </VStack>
               </VStack>
-            ))}
-          </div>
-        </VStack>
-      )}
+            ))
+          )}
+        </div>
+      </VStack>
+    
     </VStack>
   )
 
-  type OfferContent = {
+  type ValueProposition = {
     icon: ReactNode
     title: string
     text: string
   }
 
-  const features: OfferContent[] = [
+  const features: ValueProposition[] = [
     {
       icon: (
         <svg xmlns='http://www.w3.org/2000/svg' width='18' height='19' viewBox='0 0 18 19' fill='none'>
@@ -391,50 +207,19 @@ export const ServiceOffering = ({
     },
   ]
 
-  const accountingValueProps: OfferContent[] = [
-    {
-      icon: <img src={imageBusinessAccounts} alt='Business bank accounts and credit cards connection icon' />,
-      title: 'Connect your business accounts',
-      text: `Connect your business bank accounts and credit cards right within ${platformName}.`,
-    },
-    {
-      icon: <img src={imageCategorizeExpenses} alt='Expense categorization and organization icon' />,
-      title: 'Categorize expenses',
-      text: `Organize transactions into categories built for ${industry}.`,
-    },
-    {
-      icon: <img src={imageBusinessOverview} alt='Business overview dashboard with charts and financial metrics' />,
-      title: 'Get a clear picture of your business',
-      text: 'See your business profitability and stay organized for tax time.',
-    },
-  ]
-
-  const bookkeepingValueProps: OfferContent[] = [
-    {
-      icon: <img src={imageScheduleBookkeeperMeeting} alt='Calendar scheduling icon for bookkeeper consultation' />,
-      title: 'Schedule a call with your Bookkeeper',
-      text: 'Get personalized guidance from your dedicated bookkeeper to review your finances and answer questions.',
-    },
-    {
-      icon: <img src={imageBookkeeperInquiries} alt='Notification bell icon for bookkeeping task updates and clarifications' />,
-      title: 'Get notified on bookkeeping clarifications',
-      text: 'Receive clear notifications when your bookkeeper needs additional information or clarification on transactions.',
-    },
-    {
-      icon: <img src={imagePnlOverview} alt='Profit and loss statement chart for tax preparation and business analysis' />,
-      title: 'Get ready for tax season',
-      text: 'Your books will be organized and tax-ready with accurate categorization and financial statements prepared by professionals.',
-    },
-  ]
-
   return (
     <VStack className={baseClassName} {...props}>
       <div className='Layer__service-offering__content'>
-        {offersPosition === 'left' && renderOfferingOptions()}
         {renderMainContent()}
-        {offersPosition === 'right' && renderOfferingOptions()}
       </div>
-      {offersPosition === 'bottom' && renderOfferingOptions()}
+      <VStack gap='3xl' className={baseClassName} {...props}>
+        <HStack align='center'>
+          <Heading size='md' align='center' style={{ maxWidth: '360px', margin: '0 auto' }}>
+            {makeDynamicText(ServiceOfferingContentID.offers_title, textContent, mainConfig)}
+          </Heading>
+        </HStack>
+        {mainConfig.content.config.map(renderOffer)}
+      </VStack>
     </VStack>
   )
 }

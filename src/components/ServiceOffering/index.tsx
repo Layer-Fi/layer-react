@@ -1,2 +1,2 @@
 export { ServiceOffering } from './ServiceOffering'
-export { ServiceOfferingOptions } from './ServiceOfferingOptions'
+export { ServiceOfferingOffer as ServiceOfferingOptions } from './ServiceOfferingOptions'
