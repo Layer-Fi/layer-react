@@ -32,24 +32,26 @@ export const ProfitAndLossFullReportDownloadButton = ({
   const [requestFailed, setRequestFailed] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
 
+  const tagKey = tagFilter?.key && tagFilter.values.length > 0
+    ? tagFilter?.key
+    : undefined
+
+  const tagValues = tagFilter?.key && tagFilter.values.length > 0
+    ? tagFilter?.values.join(',')
+    : undefined
+
   const handleClick = async () => {
     setIsDownloading(true)
     const getProfitAndLossExcel = Layer.getProfitAndLossExcel(
       apiUrl,
       auth?.access_token,
       {
-        businessId: businessId,
+        businessId,
+        moneyFormat,
+        tagKey,
+        tagValues,
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
-        moneyFormat: moneyFormat,
-        tagKey:
-          tagFilter?.key && tagFilter.values.length > 0
-            ? tagFilter?.key
-            : undefined,
-        tagValues:
-          tagFilter?.key && tagFilter.values.length > 0
-            ? tagFilter?.values.join(',')
-            : undefined,
       },
     )
     try {
