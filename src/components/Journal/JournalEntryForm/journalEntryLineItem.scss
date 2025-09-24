@@ -28,18 +28,22 @@
     }
   }
 
-  // Mobile: stack vertically
-  @media (max-width: 768px) {
-    flex-direction: column;
-
-    .Layer__JournalEntryForm__Field {
-      flex: 1 1 auto;
-      max-width: none;
-    }
-  }
-
   // Hide remove button in readonly mode
   &--readonly .Layer__JournalEntryForm__Field--removeButton {
     display: none;
+  }
+}
+
+// Responsive behavior for smaller screens - following JournalEntryForm pattern
+@media (max-width: 768px) {
+  .Layer__JournalEntryForm__LineItem {
+    flex-direction: column;
+    align-items: stretch; // Override flex-end alignment for mobile
+    gap: var(--spacing-sm);
+
+    .Layer__JournalEntryForm__Field {
+      flex: 1 1 auto;
+      max-width: 16rem;
+    }
   }
 }

@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { X } from 'lucide-react'
-import { HStack, VStack } from '../../ui/Stack/Stack'
+import { VStack } from '../../ui/Stack/Stack'
 import { Button } from '../../ui/Button/Button'
 import type { AppForm } from '../../../features/forms/hooks/useForm'
 import type { JournalEntryForm } from './journalEntryFormSchemas'
@@ -25,9 +25,7 @@ export interface JournalEntryLineItemProps {
 export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, config, showLabels = false }: JournalEntryLineItemProps) => {
   return (
     <VStack gap='xs'>
-      <HStack
-        gap='xs'
-        align='end'
+      <div
         className={classNames(`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItem`, isReadOnly && `${JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItem--readonly`)}
       >
         {/* Account Name Field - Using form account identifier structure */}
@@ -106,7 +104,7 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, co
             </Button>
           </div>
         )}
-      </HStack>
+      </div>
     </VStack>
   )
 }
