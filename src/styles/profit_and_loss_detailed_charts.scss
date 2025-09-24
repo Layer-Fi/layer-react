@@ -1,25 +1,25 @@
 .Layer__profit-and-loss-detailed-charts__header--tablet,
 .Layer__profit-and-loss-detailed-charts__header {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-  padding: var(--spacing-xl);
+  justify-content: space-between;
+  padding: var(--spacing-lg);
   padding-bottom: var(--spacing-lg);
   box-shadow: 0 -1px 0 0 var(--color-base-300) inset;
 
   button.Layer__btn.Layer__btn--icon-only {
-    width: 32px;
     height: 32px;
     min-height: 32px;
+    width: 32px;
     padding: 0;
   }
 }
 
 header.Layer__profit-and-loss-detailed-charts__header--tablet {
   display: none;
-  justify-content: flex-start;
   gap: var(--spacing-md);
   align-items: center;
+  justify-content: flex-start;
 }
 
 @container (max-width: 1023px) and (min-width: 768px) {
@@ -56,21 +56,21 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 
 .Layer__profit-and-loss-detailed-charts {
   width: 100%;
-  background: var(--color-base-0);
   border-radius: var(--border-radius-sm);
+  background: var(--color-base-0);
 
   .chart-field {
     width: 100%;
   }
 
   .chart-container {
-    width: 100%;
+    box-sizing: border-box;
     height: 280px;
+    width: 100%;
     padding-top: var(--spacing-2xl);
+    padding-right: var(--spacing-md);
     padding-bottom: var(--spacing-lg);
     padding-left: var(--spacing-md);
-    padding-right: var(--spacing-md);
-    box-sizing: border-box;
 
     @container (max-width: 280px) {
       & {
@@ -102,37 +102,37 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
   .filters {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--spacing-xs);
 
     align-items: center;
-    margin: 0 var(--spacing-md);
     padding: var(--spacing-2xs) var(--spacing-xs);
-    gap: var(--spacing-xs);
     border-bottom: 1px solid var(--color-base-300);
+    margin: 0 var(--spacing-md);
   }
 
   .type-select {
-    border-color: transparent;
+    display: inline-flex;
     font-family: var(--font-family);
     font-weight: var(--font-weight-normal);
+    border-color: transparent;
     font-variant-numeric: lining-nums proportional-nums;
     font-feature-settings:
-      "cv10" on,
-      "cv05" on,
-      "cv08" on,
-      "ss03" on;
-    display: inline-flex;
+      'cv10' on,
+      'cv05' on,
+      'cv08' on,
+      'ss03' on;
 
     .Layer__select__control {
-      border-color: transparent;
+      box-shadow: none;
       font-family: var(--font-family);
       font-weight: var(--font-weight-normal);
+      border-color: transparent;
       font-variant-numeric: lining-nums proportional-nums;
       font-feature-settings:
-        "cv10" on,
-        "cv05" on,
-        "cv08" on,
-        "ss03" on;
-      box-shadow: none;
+        'cv10' on,
+        'cv05' on,
+        'cv08' on,
+        'ss03' on;
     }
 
     .Layer__select__placeholder {
@@ -141,10 +141,10 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       font-weight: var(--font-weight-normal);
       font-variant-numeric: lining-nums proportional-nums;
       font-feature-settings:
-        "cv10" on,
-        "cv05" on,
-        "cv08" on,
-        "ss03" on;
+        'cv10' on,
+        'cv05' on,
+        'cv08' on,
+        'ss03' on;
     }
 
     .Layer__select__indicator-separator {
@@ -153,17 +153,17 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
   }
 
   .Layer__select__menu {
+    z-index: 2;
     width: min-content;
     max-width: 300px;
-    z-index: 2;
 
     .Layer__select__option {
+      z-index: 999;
+      overflow: hidden;
       width: 100%;
       font-size: 12px;
       white-space: nowrap;
-      overflow: hidden;
       text-overflow: ellipsis;
-      z-index: 999;
 
       &.Layer__select__option--is-focused,
       &.Layer__select__option--is-selected,
@@ -172,8 +172,8 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       &:active,
       &:focus-visible,
       &:focus-within {
-        color: var(--text-color-primary);
         background: var(--color-base-100);
+        color: var(--text-color-primary);
       }
     }
   }
@@ -188,9 +188,9 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 
       th,
       td {
-        text-align: left;
-        font-size: 12px;
         padding: var(--spacing-2xs) var(--spacing-xs);
+        font-size: 12px;
+        text-align: left;
         transition: color 150ms ease-out;
 
         &:last-child,
@@ -200,11 +200,11 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
       }
 
       th {
+        padding-bottom: var(--spacing-sm);
+        border-bottom: 1px solid var(--color-base-300);
         cursor: pointer;
         color: var(--color-base-500);
-        border-bottom: 1px solid var(--color-base-300);
         transition: color 150ms ease-out;
-        padding-bottom: var(--spacing-sm);
 
         &:hover {
           color: var(--color-base-800);
@@ -224,13 +224,13 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 
     .share-cell-content {
       display: flex;
+      gap: var(--spacing-2xs);
       align-items: center;
       justify-content: flex-end;
-      gap: var(--spacing-2xs);
 
       .share-icon {
-        width: 12px;
         height: 12px;
+        width: 12px;
         border-radius: 2px;
       }
 
@@ -259,9 +259,9 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 }
 
 .Layer__profit-and-loss-detailed-table__row {
-  transition: background-color 300ms ease-out;
-  background: transparent;
   border-radius: 2px;
+  background: transparent;
+  transition: background-color 300ms ease-out;
 
   .category-col,
   .value-col {
@@ -299,8 +299,8 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 
 @container (max-width: 1023px) {
   .Layer__profit-and-loss-detailed-charts {
-    width: 100%;
     height: 100%;
+    width: 100%;
   }
 }
 
@@ -325,15 +325,15 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
 
     .Layer__profit-and-loss-detailed-charts__table-wrapper {
       display: flex;
-      flex-direction: column;
       flex: 1;
+      flex-direction: column;
     }
 
     .header--tablet {
       display: flex;
       flex-direction: column;
-      padding-left: var(--spacing-xl);
       padding-top: var(--spacing-lg);
+      padding-left: var(--spacing-xl);
 
       .Layer__text {
         margin: 0;

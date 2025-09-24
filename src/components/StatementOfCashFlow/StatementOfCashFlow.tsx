@@ -51,8 +51,8 @@ const StatementOfCashFlowView = ({
   customDateRanges,
 }: StatementOfCashFlowViewProps) => {
   const displayMode = useReportModeWithFallback(ReportKey.StatementOfCashFlows, 'monthPicker')
-  const { start, end } = useGlobalDateRange({ displayMode })
-  const { data, isLoading } = useStatementOfCashFlow({ startDate: start, endDate: end })
+  const dateRange = useGlobalDateRange({ displayMode })
+  const { data, isLoading } = useStatementOfCashFlow(dateRange)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
@@ -72,8 +72,8 @@ const StatementOfCashFlowView = ({
               </HeaderCol>
               <HeaderCol>
                 <CashflowStatementDownloadButton
-                  startDate={start}
-                  endDate={end}
+                  startDate={dateRange.startDate}
+                  endDate={dateRange.endDate}
                   iconOnly={view === 'mobile'}
                 />
               </HeaderCol>

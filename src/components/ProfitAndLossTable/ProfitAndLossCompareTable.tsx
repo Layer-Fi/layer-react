@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useMemo } from 'react'
+import { Fragment, useContext, useEffect } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { ProfitAndLossComparisonPnl } from '../../types/profit_and_loss'
 import {
@@ -7,7 +7,6 @@ import {
   mergeComparisonLineItemsAtDepth,
 } from '../../utils/profitAndLossComparisonUtils'
 import { Loader } from '../Loader'
-import { ProfitAndLoss } from '../ProfitAndLoss/ProfitAndLoss'
 import { Table, TableBody, TableHead, TableRow, TableCell } from '../Table'
 import { ProfitAndLossTableStringOverrides } from './ProfitAndLossTableComponent'
 import classNames from 'classnames'
@@ -17,26 +16,26 @@ import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import { HStack } from '../ui/Stack/Stack'
 import { ReportKey, useReportModeWithFallback } from '../../providers/ReportsModeStoreProvider/ReportsModeStoreProvider'
 import { LineItem } from '../../utils/schema/utils'
+import { ProfitAndLossComparisonContext } from '../../contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 
-interface ProfilAndLostCompareTableProps {
+interface ProfitAndLossCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides
 }
 
 export const ProfitAndLossCompareTable = ({
   stringOverrides,
-}: ProfilAndLostCompareTableProps) => {
+}: ProfitAndLossCompareTableProps) => {
   const {
     data: comparisonData,
     isLoading,
     comparePeriods,
     selectedCompareOptions,
-  } = useContext(ProfitAndLoss.ComparisonContext)
+  } = useContext(ProfitAndLossComparisonContext)
   const { isOpen, setIsOpen } = useTableExpandRow()
   const { data: bookkeepingPeriods } = useBookkeepingPeriods()
 
   const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
-  const { start, end } = useGlobalDateRange({ displayMode: rangeDisplayMode })
-  const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
+  const dateRange = useGlobalDateRange({ displayMode: rangeDisplayMode })
 
   useEffect(() => {
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses'])
