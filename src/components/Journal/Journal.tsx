@@ -10,10 +10,13 @@ import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkCont
 import { JournalStoreProvider, useJournalRouteState, JournalRoute } from '../../providers/JournalStore'
 import { ReactNode } from 'react'
 import { JournalEntryDrawer } from './JournalEntryDrawer'
+import { INVOICE_MECE_TAG_DIMENSION } from '../Invoices/InvoiceForm/formUtils'
 
 export interface JournalConfig {
   form: {
     addEntryLinesLimit?: number
+    tagDimensionKeysInUse?: string[]
+
   }
 }
 
@@ -31,6 +34,7 @@ export interface JournalProps {
 export const JOURNAL_CONFIG: JournalConfig = {
   form: {
     addEntryLinesLimit: 10,
+    tagDimensionKeysInUse: [INVOICE_MECE_TAG_DIMENSION],
   },
 }
 
@@ -58,7 +62,7 @@ const JournalContent = ({
   const routeState = useJournalRouteState()
 
   return routeState.route === JournalRoute.EntryForm
-    ? <JournalEntryDrawer />
+    ? <JournalEntryDrawer config={config} />
     : <JournalTableView asWidget={asWidget} config={config} stringOverrides={stringOverrides} />
 }
 

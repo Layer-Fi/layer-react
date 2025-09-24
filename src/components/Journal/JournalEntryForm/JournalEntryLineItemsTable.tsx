@@ -1,19 +1,21 @@
 import { useCallback, useMemo } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { VStack, HStack } from '../../ui/Stack/Stack'
-import { Button } from '../../ui/Button/Button'
-import { Plus } from 'lucide-react'
 import { Heading } from '../../ui/Typography/Heading'
 import { JournalEntryLineItem } from './JournalEntryLineItem'
 import { LedgerEntryDirection } from '../../../schemas/generalLedger/ledgerAccount'
 import type { AppForm } from '../../../features/forms/hooks/useForm'
 import type { JournalEntryForm } from './journalEntryFormSchemas'
+import { JournalConfig } from '../Journal'
+import { Button } from '../../ui/Button/Button'
+import { Span } from '../../ui/Typography/Text'
 
 export interface JournalEntryLineItemsTableProps {
   form: AppForm<JournalEntryForm>
   isReadOnly: boolean
   title: string
   direction: LedgerEntryDirection
+  config: JournalConfig
 }
 
 export const JournalEntryLineItemsTable = ({
@@ -21,6 +23,7 @@ export const JournalEntryLineItemsTable = ({
   isReadOnly,
   title,
   direction,
+  config,
 }: JournalEntryLineItemsTableProps) => {
   // Get line items from form state
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,27 +53,23 @@ export const JournalEntryLineItemsTable = ({
   }, [])
 
   return (
-    <VStack gap='md' className='journal-line-items-table'>
-      {/* Header Section */}
-      <HStack justify='space-between' align='center'>
-        <Heading size='lg'>{title}</Heading>
-        {!isReadOnly && (
-          <Button onPress={handleAddLineItem} variant='outlined'>
-            Add Line Item
-            <Plus size={16} />
-          </Button>
-        )}
+    <VStack gap='md' className='Layer__JournalEntryForm__LineItemsSection'>
+      {/* Header Section - Following Figma design */}
+      <HStack justify='space-between' align='center' className='Layer__JournalEntryForm__SectionHeader'>
+        <Heading size='sm'>{title}</Heading>
       </HStack>
 
-      {/* Line Items - Show filtered line items by direction */}
+      {/* Line Items - Show filtered line items by direction with proper label logic */}
       <VStack gap='xs'>
-        {displayLineItems.map(originalIndex => (
+        {displayLineItems.map((originalIndex, displayIndex) => (
           <JournalEntryLineItem
             key={originalIndex}
             form={form}
             index={originalIndex}
+            config={config}
             isReadOnly={isReadOnly}
             onDeleteLine={() => handleRemoveLineItem(originalIndex)}
+            showLabels={displayIndex === 0} // Show labels for first item in each section
           />
         ))}
       </VStack>
@@ -86,6 +85,13 @@ export const JournalEntryLineItemsTable = ({
             line items added yet. Click &ldquo;Add Line Item&rdquo; to get started.
           </p>
         </VStack>
+      )}
+      {!isReadOnly && (
+        <Button onPress={handleAddLineItem} variant='text'>
+          <Span weight='normal' size='sm' variant='subtle'>
+            Add next account
+          </Span>
+        </Button>
       )}
 
     </VStack>

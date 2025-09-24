@@ -1,19 +1,45 @@
 .Layer__JournalEntryForm__LineItem {
-  display: grid;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-xs);
 
-  --grid-cols-base:
-    minmax(12rem, 3fr)
-    minmax(8rem, 2fr)
-    minmax(8rem, 2fr)
-    minmax(12rem, 3fr);
+  .Layer__JournalEntryForm__Field {
+    &--accountName {
+      flex: 1 1 12rem;
+      max-width: 20rem;
+    }
 
-  grid-template-columns:
-    var(--grid-cols-base)
-    auto;
+    &--amount {
+      flex: 0 1 8rem;
+      max-width: 12rem;
+    }
 
-  width: 100%;
+    &--tag {
+      flex: 0 0 auto; // Fit content
+    }
 
-  &--readonly {
-    grid-template-columns: var(--grid-cols-base);
+    &--memo {
+      flex: 2 1 12rem; // Grows to fill remaining space
+    }
+
+    &--removeButton {
+      flex: 0 0 34px;
+      height: 34px;
+    }
+  }
+
+  // Mobile: stack vertically
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    .Layer__JournalEntryForm__Field {
+      flex: 1 1 auto;
+      max-width: none;
+    }
+  }
+
+  // Hide remove button in readonly mode
+  &--readonly .Layer__JournalEntryForm__Field--removeButton {
+    display: none;
   }
 }

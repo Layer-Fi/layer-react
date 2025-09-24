@@ -44,9 +44,10 @@ type LedgerAccountComboboxProps = {
   mode?: CategoriesListMode
   isReadOnly?: boolean
   showLabel?: boolean
+  className?: string
 }
 
-export const LedgerAccountCombobox = ({ label, value, mode, onValueChange, isReadOnly, showLabel }: LedgerAccountComboboxProps) => {
+export const LedgerAccountCombobox = ({ label, value, mode, onValueChange, isReadOnly, showLabel, className }: LedgerAccountComboboxProps) => {
   const { data: categories, isLoading } = useCategories({ mode })
 
   const options = useMemo(() => {
@@ -66,7 +67,7 @@ export const LedgerAccountCombobox = ({ label, value, mode, onValueChange, isRea
   const inputId = useId()
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   return (
-    <VStack gap='3xs'>
+    <VStack gap='3xs' className={className}>
       {showLabel && (
         <Label size='sm' htmlFor={inputId}>
           {label}

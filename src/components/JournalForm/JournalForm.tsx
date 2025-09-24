@@ -34,6 +34,8 @@ export const JournalForm = ({
     removeEntryLine,
   } = useContext(JournalContext)
 
+  const { data: tagDimension, isLoading } = useTagDimensionByKey({ dimensionKey })
+
   return (
     <form
       className='Layer__form'

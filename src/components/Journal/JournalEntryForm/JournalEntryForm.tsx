@@ -10,6 +10,7 @@ import { TextSize } from '../../Typography'
 import { LedgerEntryDirection } from '../../../schemas/generalLedger/ledgerAccount'
 import { UpsertJournalEntryMode } from './useUpsertJournalEntry'
 import './journalEntryForm.scss'
+import { JournalConfig } from '../Journal'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
 const JOURNAL_ENTRY_FORM_FIELD_CSS_PREFIX = `${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field`
@@ -20,6 +21,7 @@ export type JournalEntryFormState = {
 }
 
 export type JournalEntryFormProps = {
+  config: JournalConfig
   isReadOnly?: boolean
   onSuccess?: () => void
   onChangeFormState?: (formState: JournalEntryFormState) => void
@@ -28,7 +30,7 @@ export type JournalEntryFormProps = {
 export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, JournalEntryFormProps>((props, ref) => {
   const { toJournalTable } = useJournalNavigation()
 
-  const { isReadOnly = false, onSuccess, onChangeFormState } = props
+  const { config, isReadOnly = false, onSuccess, onChangeFormState } = props
   const { form, formState, submitError } = useJournalEntryForm({
     onSuccess: onSuccess || toJournalTable,
     mode: UpsertJournalEntryMode.Create, // For now, only support create mode
@@ -68,8 +70,8 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         </HStack>
       )}
 
-      {/* Entry Date Field - Top Left */}
-      <HStack gap='xl' className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__EntryDate`}>
+      {/* Entry Date Field - Following InvoiceForm Terms pattern */}
+      <HStack gap='xl' className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Terms`}>
         <VStack gap='xs'>
           <form.AppField name='entryAt'>
             {field => <field.FormDateField label='Entry date' inline className={`${JOURNAL_ENTRY_FORM_FIELD_CSS_PREFIX}__EntryAt`} isReadOnly={isReadOnly} />}
@@ -77,27 +79,32 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         </VStack>
       </HStack>
 
-      {/* Add Debit Account Section */}
-      <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__DebitSection`} gap='md'>
-        <JournalEntryLineItemsTable
-          form={form}
-          isReadOnly={isReadOnly}
-          title='Add Debit Account'
-          direction={LedgerEntryDirection.Debit}
-        />
+      {/* Line Items Section - Following InvoiceForm LineItems pattern */}
+      <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItems`} gap='md'>
+        {/* Add Debit Account Section */}
+        <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__DebitSection`} gap='md'>
+          <JournalEntryLineItemsTable
+            form={form}
+            isReadOnly={isReadOnly}
+            title='Add Debit Account'
+            direction={LedgerEntryDirection.Debit}
+            config={config}
+          />
+        </VStack>
+
+        {/* Add Credit Account Section */}
+        <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__CreditSection`} gap='md'>
+          <JournalEntryLineItemsTable
+            form={form}
+            isReadOnly={isReadOnly}
+            title='Add Credit Account'
+            direction={LedgerEntryDirection.Credit}
+            config={config}
+          />
+        </VStack>
       </VStack>
 
-      {/* Add Credit Account Section */}
-      <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__CreditSection`} gap='md'>
-        <JournalEntryLineItemsTable
-          form={form}
-          isReadOnly={isReadOnly}
-          title='Add Credit Account'
-          direction={LedgerEntryDirection.Credit}
-        />
-      </VStack>
-
-      {/* Memo Section */}
+      {/* Memo Section - Following InvoiceForm Metadata pattern */}
       <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Metadata`} pbs='md'>
         <HStack justify='space-between' gap='xl'>
           <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__AdditionalTextFields`}>

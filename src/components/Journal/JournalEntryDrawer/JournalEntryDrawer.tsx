@@ -10,8 +10,9 @@ import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import X from '../../../icons/X'
 import BackArrow from '../../../icons/BackArrow'
 import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
+import { JournalConfig } from '../Journal'
 
-export const JournalEntryDrawer = () => {
+export const JournalEntryDrawer = ({ config }: { config: JournalConfig }) => {
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
   const { toJournalTable } = useJournalNavigation()
   const { addToast } = useLayerContext()
@@ -64,6 +65,7 @@ export const JournalEntryDrawer = () => {
       >
         <JournalEntryForm
           isReadOnly={false}
+          config={config}
           onSuccess={onJournalEntrySuccess}
           onChangeFormState={onChangeFormState}
           ref={formRef}

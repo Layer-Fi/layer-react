@@ -40,9 +40,10 @@ type TagDimensionComboboxProps = {
   onValueChange: (tags: Tag | null) => void
   isReadOnly?: boolean
   showLabel?: boolean
+  className?: string
 }
 
-export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isReadOnly, showLabel }: TagDimensionComboboxProps) => {
+export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isReadOnly, showLabel, className }: TagDimensionComboboxProps) => {
   const { data: tagDimension, isLoading } = useTagDimensionByKey({ dimensionKey })
 
   const options = useMemo(() => {
@@ -75,14 +76,11 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
 
   const inputId = useId()
   const additionalAriaProps = !showLabel && { 'aria-label': tagDimension?.key }
-  if (tagDimension === undefined) {
-    return null
-  }
 
   return (
-    <VStack gap='3xs'>
+    <VStack gap='3xs' className={className}>
       {showLabel && (
-        <FallbackWithSkeletonLoader isLoading={!tagDimension} height='1rem' width='5rem'>
+        <FallbackWithSkeletonLoader isLoading={!tagDimension} height='1rem' width='8rem'>
           <Label size='sm' htmlFor={inputId}>
             {tagDimension?.key}
           </Label>

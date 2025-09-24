@@ -1,38 +1,64 @@
 .Layer__JournalEntryForm {
+  // Entry date field styling - following InvoiceForm field patterns
   .Layer__JournalEntryForm__Field__EntryAt {
     grid-template-columns: 8rem auto;
     width: clamp(16rem, 100%, 24rem);
   }
 
-  .Layer__JournalEntryForm__EntryDate {
+  // Terms section - following InvoiceForm Terms pattern
+  .Layer__JournalEntryForm__Terms {
     display: grid;
     grid-template-columns: 1fr;
-    max-width: 32rem;
+    max-width: 64rem;
     padding: var(--spacing-lg) var(--spacing-2xl);
   }
 
+  // Line items section - clean flat layout matching Figma
+  .Layer__JournalEntryForm__LineItems {
+    padding: var(--spacing-lg) var(--spacing-2xl);
+    // Remove background color for flat appearance
+  }
+
+  // Individual debit/credit sections - no visual separation
   .Layer__JournalEntryForm__DebitSection,
   .Layer__JournalEntryForm__CreditSection {
-    padding: var(--spacing-lg) var(--spacing-2xl);
-    background-color: var(--bg-subtle);
+    // Clean sections without subform appearance
+    // No background, borders, or padding
   }
 
+  // Line items section styling - clean and flat
+  .Layer__JournalEntryForm__LineItemsSection {
+    // Remove all visual containers - just spacing
+    margin-bottom: var(--spacing-lg);
+  }
+
+  // Section header styling - simple header only
+  .Layer__JournalEntryForm__SectionHeader {
+    margin-bottom: var(--spacing-md);
+    // Remove borders and padding for clean appearance
+  }
+
+  // Metadata section - following InvoiceForm Metadata pattern
   .Layer__JournalEntryForm__Metadata {
     border-top: 1px solid var(--color-base-300);
     padding: var(--spacing-lg) var(--spacing-2xl);
   }
 
+  // Additional text fields - following InvoiceForm pattern
   .Layer__JournalEntryForm__AdditionalTextFields {
     flex: 1;
     min-width: 20rem;
     max-width: 32rem;
   }
 
+  // Form error styling - following InvoiceForm pattern
   .Layer__JournalEntryForm__FormError {
     height: 4rem;
     padding-inline: var(--spacing-md);
     border-top: 1px solid var(--border-color);
   }
 
+
+  // Minimum width - following InvoiceForm pattern
   min-width: 54rem;
 }
