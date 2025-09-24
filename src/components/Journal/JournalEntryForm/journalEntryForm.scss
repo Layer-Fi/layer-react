@@ -5,12 +5,24 @@
     width: clamp(16rem, 100%, 24rem);
   }
 
+  // Reference Number field styling - text box aligned next to label, 12rem wide
+  .Layer__JournalEntryForm__Field__ReferenceNumber {
+    grid-template-columns: 8rem 16rem;
+    width: clamp(16rem, 100%, 24rem);
+  }
+
+  // Created By field styling - text box aligned next to label, 12rem wide
+  .Layer__JournalEntryForm__Field__CreatedBy {
+    grid-template-columns: 8rem 16rem;
+    width: clamp(16rem, 100%, 24rem);
+  }
+
   // Terms section - following InvoiceForm Terms pattern
   .Layer__JournalEntryForm__Terms {
     display: grid;
     grid-template-columns: 1fr;
     max-width: 64rem;
-    padding: var(--spacing-lg) var(--spacing-2xl);
+    padding: var(--spacing-sm) var(--spacing-2xl);
   }
 
   // Line items section - clean flat layout matching Figma

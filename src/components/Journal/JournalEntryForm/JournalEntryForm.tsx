@@ -71,10 +71,24 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
       )}
 
       {/* Entry Date Field - Following InvoiceForm Terms pattern */}
-      <HStack gap='xl' className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Terms`}>
+      <HStack gap='md' className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Terms`}>
         <VStack gap='xs'>
           <form.AppField name='entryAt'>
             {field => <field.FormDateField label='Entry date' inline className={`${JOURNAL_ENTRY_FORM_FIELD_CSS_PREFIX}__EntryAt`} isReadOnly={isReadOnly} />}
+          </form.AppField>
+        </VStack>
+
+        {/* Reference Number Field */}
+        <VStack gap='xs'>
+          <form.AppField name='referenceNumber'>
+            {field => <field.FormTextField label='Reference Number' inline className={`${JOURNAL_ENTRY_FORM_FIELD_CSS_PREFIX}__ReferenceNumber`} isReadOnly={isReadOnly} />}
+          </form.AppField>
+        </VStack>
+
+        {/* Created By Field */}
+        <VStack gap='xs'>
+          <form.AppField name='createdBy'>
+            {field => <field.FormTextField label='Created By' inline className={`${JOURNAL_ENTRY_FORM_FIELD_CSS_PREFIX}__CreatedBy`} isReadOnly={isReadOnly} />}
           </form.AppField>
         </VStack>
       </HStack>
