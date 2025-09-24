@@ -35,7 +35,7 @@ export function getJournalEntryFormDefaultValues(): JournalEntryForm {
     vendorExternalId: null,
     tags: [],
     metadata: null,
-    referenceNumber: null,
+    referenceNumber: '', // Changed from null to empty string to prevent input warning
     lineItems: [
       getJournalEntryLineItemFormDefaultValues(LedgerEntryDirection.Debit),
       getJournalEntryLineItemFormDefaultValues(LedgerEntryDirection.Credit),
@@ -55,7 +55,7 @@ export function getJournalEntryFormInitialValues(journalEntry: JournalEntry): Jo
     vendorExternalId: null,
     tags: [], // TODO: Extract from transaction_tags if available
     metadata: null,
-    referenceNumber: null, // TODO: Extract from journal entry if available
+    referenceNumber: '', // TODO: Extract from journal entry if available
     lineItems: journalEntry.line_items.map(lineItem => ({
       externalId: null,
       accountIdentifier: {

@@ -34,7 +34,7 @@ export interface JournalProps {
 export const JOURNAL_CONFIG: JournalConfig = {
   form: {
     addEntryLinesLimit: 10,
-    tagDimensionKeysInUse: [INVOICE_MECE_TAG_DIMENSION],
+    tagDimensionKeysInUse: [INVOICE_MECE_TAG_DIMENSION, 'entity'],
   },
 }
 

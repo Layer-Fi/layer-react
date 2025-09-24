@@ -11,9 +11,12 @@ import { LedgerEntryDirection } from '../../../schemas/generalLedger/ledgerAccou
 import { UpsertJournalEntryMode } from './useUpsertJournalEntry'
 import './journalEntryForm.scss'
 import { JournalConfig } from '../Journal'
+import { usePreloadCustomers } from '../../../features/customers/api/useListCustomers'
+import { usePreloadVendors } from '../../../features/vendors/api/useListVendors'
+import { CustomerVendorSelector } from '../../../features/customerVendor/components/CustomerVendorSelector'
+import { TagDimensionsGroup } from './TagDimensionsGroup'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
-const JOURNAL_ENTRY_FORM_FIELD_CSS_PREFIX = `${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field`
 
 export type JournalEntryFormState = {
   isDirty: boolean
@@ -31,6 +34,11 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
   const { toJournalTable } = useJournalNavigation()
 
   const { config, isReadOnly = false, onSuccess, onChangeFormState } = props
+
+  // Preload customers and vendors for the selector
+  usePreloadCustomers()
+  usePreloadVendors()
+
   const { form, formState, submitError } = useJournalEntryForm({
     onSuccess: onSuccess || toJournalTable,
     mode: UpsertJournalEntryMode.Create, // For now, only support create mode
@@ -71,27 +79,102 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
       )}
 
       {/* Entry Date Field - Following InvoiceForm Terms pattern */}
-      <HStack gap='md' className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Terms`}>
-        <VStack gap='xs'>
-          <form.AppField name='entryAt'>
-            {field => <field.FormDateField label='Entry date' inline className={`${JOURNAL_ENTRY_FORM_FIELD_CSS_PREFIX}__EntryAt`} isReadOnly={isReadOnly} />}
-          </form.AppField>
-        </VStack>
+      <VStack gap='sm'>
+        {/* Row 1: Entry Date Field (first column only) */}
+        <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
+          <VStack gap='xs'>
+            <form.AppField name='entryAt'>
+              {field => <field.FormDateField label='Entry date' isReadOnly={isReadOnly} />}
+            </form.AppField>
+          </VStack>
+          <div></div>
+          {' '}
+          {/* Empty space for second column */}
+        </div>
 
-        {/* Reference Number Field */}
-        <VStack gap='xs'>
-          <form.AppField name='referenceNumber'>
-            {field => <field.FormTextField label='Reference Number' inline className={`${JOURNAL_ENTRY_FORM_FIELD_CSS_PREFIX}__ReferenceNumber`} isReadOnly={isReadOnly} />}
-          </form.AppField>
-        </VStack>
+        {/* Row 2: Reference Number and Created By Fields */}
+        <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
+          <VStack gap='xs'>
+            <form.AppField name='referenceNumber'>
+              {field => (
+                <field.FormTextField
+                  label='Reference Number'
+                  isReadOnly={isReadOnly}
+                />
+              )}
+            </form.AppField>
+          </VStack>
 
-        {/* Created By Field */}
-        <VStack gap='xs'>
-          <form.AppField name='createdBy'>
-            {field => <field.FormTextField label='Created By' inline className={`${JOURNAL_ENTRY_FORM_FIELD_CSS_PREFIX}__CreatedBy`} isReadOnly={isReadOnly} />}
+          <VStack gap='xs'>
+            <form.AppField name='createdBy'>
+              {field => (
+                <field.FormTextField
+                  label='Created By'
+                  isReadOnly={isReadOnly}
+                />
+              )}
+            </form.AppField>
+          </VStack>
+        </div>
+
+        {/* Row 3: Customer/Vendor and TagDimensionsGroup */}
+        <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
+          <VStack gap='xs'>
+            <form.AppField name='customerId'>
+              {customerField => (
+                <form.AppField name='vendorId'>
+                  {(vendorField) => {
+                    // Determine current selection
+                    const currentCustomerVendor = customerField.state.value
+                      ? { customerVendorType: 'CUSTOMER' as const, id: customerField.state.value }
+                      : vendorField.state.value
+                        ? { customerVendorType: 'VENDOR' as const, id: vendorField.state.value }
+                        : null
+
+                    const handleSelectionChange = (selection: { customerVendorType: 'CUSTOMER' | 'VENDOR', id: string } | null) => {
+                      if (selection?.customerVendorType === 'CUSTOMER') {
+                        customerField.setValue(selection.id)
+                        vendorField.setValue(null)
+                      }
+                      else if (selection?.customerVendorType === 'VENDOR') {
+                        vendorField.setValue(selection.id)
+                        customerField.setValue(null)
+                      }
+                      else {
+                        customerField.setValue(null)
+                        vendorField.setValue(null)
+                      }
+                    }
+
+                    return (
+                      <CustomerVendorSelector
+                        selectedCustomerVendor={currentCustomerVendor}
+                        onSelectedCustomerVendorChange={handleSelectionChange}
+                        placeholder='Select customer or vendor'
+                        isReadOnly={isReadOnly}
+                      />
+                    )
+                  }}
+                </form.AppField>
+              )}
+            </form.AppField>
+          </VStack>
+        </div>
+
+        <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
+          <form.AppField name='tags'>
+            {field => (
+              <TagDimensionsGroup
+                dimensionKeys={config?.form?.tagDimensionKeysInUse}
+                value={field.state.value}
+                onChange={field.setValue}
+                showLabels={true}
+                isReadOnly={isReadOnly}
+              />
+            )}
           </form.AppField>
-        </VStack>
-      </HStack>
+        </div>
+      </VStack>
 
       {/* Line Items Section - Following InvoiceForm LineItems pattern */}
       <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItems`} gap='md'>

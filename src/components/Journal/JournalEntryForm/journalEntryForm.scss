@@ -1,33 +1,42 @@
 .Layer__JournalEntryForm {
-  // Entry date field styling - following InvoiceForm field patterns
-  .Layer__JournalEntryForm__Field__EntryAt {
-    grid-template-columns: 8rem auto;
-    width: clamp(16rem, 100%, 24rem);
+  padding: var(--spacing-md) var(--spacing-xl);
+  // EntryFields section - flexbox row layout
+
+    .Layer__JournalEntryForm__Row {
+      display: flex;
+      gap: var(--spacing-md);
+
+      > * {
+        flex: 0 0 16rem;
+      }
+    }
+
+    // Responsive behavior for smaller screens
+    @media (max-width: 768px) {
+      gap: var(--spacing-sm);
+
+      .Layer__JournalEntryForm__Row {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+
+        > * {
+          flex: 1;
+          max-width: 16rem;
+        }
+    }
   }
 
-  // Reference Number field styling - text box aligned next to label, 12rem wide
-  .Layer__JournalEntryForm__Field__ReferenceNumber {
-    grid-template-columns: 8rem 16rem;
-    width: clamp(16rem, 100%, 24rem);
-  }
-
-  // Created By field styling - text box aligned next to label, 12rem wide
-  .Layer__JournalEntryForm__Field__CreatedBy {
-    grid-template-columns: 8rem 16rem;
-    width: clamp(16rem, 100%, 24rem);
-  }
-
-  // Terms section - following InvoiceForm Terms pattern
-  .Layer__JournalEntryForm__Terms {
-    display: grid;
-    grid-template-columns: 1fr;
-    max-width: 64rem;
-    padding: var(--spacing-sm) var(--spacing-2xl);
+  // // Terms section - following InvoiceForm Terms pattern
+  .Layer__JournalEntryForm__EntryFields {
+    // display: grid;
+    // grid-template-columns: 1fr;
+    // max-width: 64rem;
+    // padding: var(--spacing-sm) var(--spacing-2xl);
   }
 
   // Line items section - clean flat layout matching Figma
   .Layer__JournalEntryForm__LineItems {
-    padding: var(--spacing-lg) var(--spacing-2xl);
+    padding: var(--spacing-lg) 0;
     // Remove background color for flat appearance
   }
 
@@ -53,7 +62,7 @@
   // Metadata section - following InvoiceForm Metadata pattern
   .Layer__JournalEntryForm__Metadata {
     border-top: 1px solid var(--color-base-300);
-    padding: var(--spacing-lg) var(--spacing-2xl);
+    padding: var(--spacing-lg) 0;//var(--spacing-2xl);
   }
 
   // Additional text fields - following InvoiceForm pattern
