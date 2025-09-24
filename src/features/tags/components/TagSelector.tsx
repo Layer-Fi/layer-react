@@ -165,18 +165,22 @@ export function TagSelector({
 
   const groups = useMemo(
     () => data
-      ?.map(({ key: dimensionLabel, definedValues, displayName: dimensionDisplayName }) => {
+      ?.map(({ key, definedValues, displayName: dimensionDisplayName }) => {
         return {
-          label: dimensionDisplayName ?? dimensionLabel,
-          options: definedValues.map(({ id: valueId, value: valueLabel, displayName: valueDisplayName, archivedAt }) => ({
-            label: archivedAt !== null ? `${valueDisplayName ?? valueLabel} (Archived)` : valueDisplayName ?? valueLabel,
-            value: valueId,
-            isDisabled: selectedTags.some(
-              tagValue =>
-                tagValue.dimensionLabel === dimensionLabel
-                && tagValue.valueLabel === valueLabel,
-            ),
-          })),
+          label: (dimensionDisplayName ?? key),
+          options: definedValues.map(({ id: valueId, value: value, displayName: valueDisplayName, archivedAt }) => {
+            const valueLabel = (valueDisplayName ?? value)
+            const isArchived = !!archivedAt
+            return ({
+              label: isArchived ? `${valueLabel} (Archived)` : valueLabel,
+              value: valueId,
+              isDisabled: selectedTags.some(
+                tagValue =>
+                  tagValue.key === key
+                  && tagValue.value === value,
+              ),
+            })
+          }),
         }
       }) ?? [],
     [
