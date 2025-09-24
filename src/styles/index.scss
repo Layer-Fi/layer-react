@@ -59,6 +59,7 @@
 @forward '../components/SearchField/searchField';
 @forward '../components/Journal/JournalEntryForm/journalEntryForm';
 @forward '../components/Journal/JournalEntryForm/journalEntryLineItem';
+@forward '../features/tags/components/tagDimensionCombobox';
 @forward '../features/features';
 @forward '../public/styles/publicReset';
 @forward './ledger_account';

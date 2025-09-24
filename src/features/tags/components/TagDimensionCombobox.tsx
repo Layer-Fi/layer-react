@@ -5,6 +5,8 @@ import { Label } from '../../../components//ui/Typography/Text'
 import { useTagDimensionByKey } from '../api/useTagDimensionByKey'
 import { type TagValueDefinition, makeTag, type Tag } from '../tagSchemas'
 import { FallbackWithSkeletonLoader } from '../../../components/SkeletonLoader/SkeletonLoader'
+import classNames from 'classnames'
+import './tagDimensionCombobox.scss'
 
 class TagValueDefinitionAsOption {
   private tagValueDefinition: TagValueDefinition
@@ -78,7 +80,7 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
   const additionalAriaProps = !showLabel && { 'aria-label': tagDimension?.key }
 
   return (
-    <VStack gap='3xs' className={className}>
+    <VStack gap='3xs' className={classNames('Layer__TagDimensionCombobox', className)}>
       {showLabel && (
         <FallbackWithSkeletonLoader isLoading={!tagDimension} height='1rem' width='8rem'>
           <Label size='sm' htmlFor={inputId}>
