@@ -13,15 +13,14 @@ export function barbequeToCapitalCase(input: string) {
 
 function flattenDimensionsToValues(dimensions: ReadonlyArray<typeof TagDimensionSchema.Type>) {
   return dimensions.flatMap(({ id: dimensionId, key: dimensionLabel, definedValues, displayName: dimensionDisplayName }) => {
-
     const values = definedValues.map(({ id: valueId, value: valueLabel, displayName: valueDisplayName }) => makeTagValue({
       dimensionId,
-      dimensionLabel: dimensionDisplayName ?? barbequeToCapitalCase(dimensionLabel) ?? dimensionLabel,
+      dimensionLabel: dimensionDisplayName ?? dimensionLabel,
       valueId,
-      valueLabel: valueDisplayName ?? barbequeToCapitalCase(valueLabel) ?? valueLabel,
-    }));
+      valueLabel: valueDisplayName ?? valueLabel,
+    }))
 
-    return values;
+    return values
   },
   )
 }

@@ -10,7 +10,7 @@ import { VStack } from '../../../components/ui/Stack/Stack'
 import { Button } from '../../../components/ui/Button/Button'
 import { X } from 'lucide-react'
 import { Tag, TagGroup, TagList } from '../../../components/ui/TagGroup/TagGroup'
-import { barbequeToCapitalCase, useFlattenedTagValues } from '../useFlattenedTagValues'
+import { useFlattenedTagValues } from '../useFlattenedTagValues'
 import type { OneOf } from '../../../types/utility/oneOf'
 import { LoadingSpinner } from '../../../components/ui/Loading/LoadingSpinner'
 import { Square } from '../../../components/ui/Square/Square'
@@ -167,9 +167,9 @@ export function TagSelector({
     () => data
       ?.map(({ key: dimensionLabel, definedValues, displayName: dimensionDisplayName }) => {
         return {
-          label: dimensionDisplayName ?? barbequeToCapitalCase(dimensionLabel) ?? dimensionLabel,
+          label: dimensionDisplayName ?? dimensionLabel,
           options: definedValues.map(({ id: valueId, value: valueLabel, displayName: valueDisplayName }) => ({
-            label: valueDisplayName ?? barbequeToCapitalCase(valueLabel) ?? valueLabel,
+            label: valueDisplayName ?? valueLabel,
             value: valueId,
             isDisabled: selectedTags.some(
               tagValue =>

@@ -24,20 +24,15 @@ const TransformedTagDimensionStrictnessSchema = Schema.transform(
 export const TagValueDefinitionSchema = Schema.Struct({
   id: Schema.UUID,
   value: Schema.NonEmptyTrimmedString,
-  displayName: Schema.optional(Schema.NonEmptyTrimmedString),
+  displayName: Schema.propertySignature(Schema.NullishOr(Schema.NonEmptyTrimmedString)).pipe(Schema.fromKey('display_name')),
 })
 export type TagValueDefinition = typeof TagValueDefinitionSchema.Type
 
 export const TagKeyValueSchema = Schema.Struct({
   key: Schema.NonEmptyTrimmedString,
   value: Schema.NonEmptyTrimmedString,
-  dimensionDisplayName: pipe(
-    Schema.optional(Schema.NonEmptyTrimmedString),
-    Schema.fromKey('dimension_display_name'),
-  ),
-  valueDisplayName: pipe(
-    Schema.optional(Schema.NonEmptyTrimmedString),
-    Schema.fromKey('value_display_name'),
+  dimensionDisplayName: Schema.propertySignature(Schema.NullishOr(Schema.NonEmptyTrimmedString)).pipe(Schema.fromKey('dimension_display_name')),
+  valueDisplayName: Schema.propertySignature(Schema.NullishOr(Schema.NonEmptyTrimmedString)).pipe(Schema.fromKey('value_display_name'),
   ),
 })
 export const makeTagKeyValue = Schema.decodeSync(TagKeyValueSchema)
@@ -45,10 +40,9 @@ export const makeTagKeyValue = Schema.decodeSync(TagKeyValueSchema)
 export const TagDimensionSchema = Schema.Struct({
   id: Schema.UUID,
   key: Schema.NonEmptyTrimmedString,
-  displayName: Schema.optional(Schema.NonEmptyTrimmedString),
+  displayName: Schema.propertySignature(Schema.NullishOr(Schema.NonEmptyTrimmedString)).pipe(Schema.fromKey('display_name')),
   strictness: TransformedTagDimensionStrictnessSchema,
-  definedValues: Schema.propertySignature(Schema.Array(TagValueDefinitionSchema))
-    .pipe(Schema.fromKey('defined_values')),
+  definedValues: Schema.propertySignature(Schema.Array(TagValueDefinitionSchema)).pipe(Schema.fromKey('defined_values')),
 })
 export type TagDimension = typeof TagDimensionSchema.Type
 
@@ -67,7 +61,7 @@ export const TagSchema = Schema.Data(
   Schema.Struct({
     id: Schema.UUID,
     key: Schema.NonEmptyTrimmedString,
-    dimensionLabel: Schema.NonEmptyTrimmedString,
+    dimensionLabel: Schema.NullishOr(Schema.NonEmptyTrimmedString),
     value: Schema.NonEmptyTrimmedString,
     valueLabel: Schema.NonEmptyTrimmedString,
     _local: Schema.Struct({
@@ -82,15 +76,8 @@ export const TransactionTagSchema = Schema.Struct({
   id: Schema.UUID,
   key: Schema.NonEmptyTrimmedString,
   value: Schema.NonEmptyTrimmedString,
-  dimensionDisplayName: pipe(
-    Schema.optional(Schema.NonEmptyTrimmedString),
-    Schema.fromKey('dimension_display_name'),
-  ),
-
-  valueDisplayName: pipe(
-    Schema.optional(Schema.NonEmptyTrimmedString),
-    Schema.fromKey('value_display_name'),
-  ),
+  dimensionDisplayName: Schema.propertySignature(Schema.NullishOr(Schema.NonEmptyTrimmedString)).pipe(Schema.fromKey('dimension_display_name')),
+  valueDisplayName: Schema.propertySignature(Schema.NullishOr(Schema.NonEmptyTrimmedString)).pipe(Schema.fromKey('value_display_name')),
 
   createdAt: pipe(
     Schema.propertySignature(Schema.Date),
@@ -117,9 +104,11 @@ export const TransactionTagSchema = Schema.Struct({
 export type TransactionTag = typeof TransactionTagSchema.Type
 export type TransactionTagEncoded = typeof TransactionTagSchema.Encoded
 
-export const makeTagKeyValueFromTag = ({ dimensionLabel, valueLabel }: Tag) => makeTagKeyValue({
-  key: dimensionLabel,
-  value: valueLabel,
+export const makeTagKeyValueFromTag = ({ key, value, dimensionLabel, valueLabel }: Tag) => makeTagKeyValue({
+  key: key,
+  value: value,
+  dimension_display_name: dimensionLabel,
+  value_display_name: valueLabel,
 })
 
 export const makeTagFromTransactionTag = ({ id, key, value, dimensionDisplayName, valueDisplayName, _local }: TransactionTag) => makeTag({
