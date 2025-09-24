@@ -6,10 +6,14 @@ import { Button } from '../ui/Button/Button'
 import { Heading } from '../ui/Typography/Heading'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
-import partnerAccountingImage from '../../assets/images/partner-accounting.png'
-import businessAccounts from '../../assets/images/business-accounts.svg'
-import businessOverview from '../../assets/images/business-overview.svg'
-import categorizeExpenses from '../../assets/images/categorize-expenses.svg'
+import imagePartnerAccountingImage from '../../assets/images/partner-accounting.png'
+import imageBusinessAccounts from '../../assets/images/business-accounts.svg'
+import imageBusinessOverview from '../../assets/images/business-overview.svg'
+import imageCategorizeExpenses from '../../assets/images/categorize-expenses.svg'
+import imageBookkeeperInquiries from '../../assets/images/bookkeeper-inquiries.svg'
+import imageScheduleBookkeeperMeeting from '../../assets/images/schedule-bookkeeper-meeting.svg'
+import imagePnlOverview from '../../assets/images/pnl-overview.svg'
+// import imagePnlKpis from '../../assets/images/pnl-kpis.svg'
 
 export type ServiceOfferingType = 'accounting_only' | 'accounting_and_bookkeeping'
 export type ServiceOfferingValuePropositionType = 'accounting_focused' | 'bookkeeping_focused' | 'none'
@@ -305,7 +309,7 @@ export const ServiceOffering = ({
           </HStack>
         </VStack>
         <VStack className='Layer__service-offering__responsive-image'>
-          <img src={imageUrl || partnerAccountingImage} alt={`${platformName} Accounting`} />
+          <img src={imageUrl || imagePartnerAccountingImage} alt={`${platformName} Accounting dashboard interface showing financial data and business insights`} />
         </VStack>
       </div>
       {isCalendlyVisible && (
@@ -389,17 +393,17 @@ export const ServiceOffering = ({
 
   const accountingValueProps: OfferContent[] = [
     {
-      icon: <img src={businessAccounts} alt='Connect your Business Accounts' />,
+      icon: <img src={imageBusinessAccounts} alt='Business bank accounts and credit cards connection icon' />,
       title: 'Connect your business accounts',
       text: `Connect your business bank accounts and credit cards right within ${platformName}.`,
     },
     {
-      icon: <img src={categorizeExpenses} alt='Categorize Expenses' />,
+      icon: <img src={imageCategorizeExpenses} alt='Expense categorization and organization icon' />,
       title: 'Categorize expenses',
       text: `Organize transactions into categories built for ${industry}.`,
     },
     {
-      icon: <img src={businessOverview} alt='Get a clear picture of your business' />,
+      icon: <img src={imageBusinessOverview} alt='Business overview dashboard with charts and financial metrics' />,
       title: 'Get a clear picture of your business',
       text: 'See your business profitability and stay organized for tax time.',
     },
@@ -407,19 +411,19 @@ export const ServiceOffering = ({
 
   const bookkeepingValueProps: OfferContent[] = [
     {
-      icon: <img src={businessAccounts} alt='Connect your Business Accounts' />,
-      title: 'Bookkeeping Value Prop 1',
-      text: `Connect your business bank accounts and credit cards right within ${platformName}.`,
+      icon: <img src={imageScheduleBookkeeperMeeting} alt='Calendar scheduling icon for bookkeeper consultation' />,
+      title: 'Schedule a call with your Bookkeeper',
+      text: 'Get personalized guidance from your dedicated bookkeeper to review your finances and answer questions.',
     },
     {
-      icon: <img src={categorizeExpenses} alt='Categorize Expenses' />,
-      title: 'Bookkeeping Value Prop 2',
-      text: `Organize transactions into categories built for ${industry}.`,
+      icon: <img src={imageBookkeeperInquiries} alt='Notification bell icon for bookkeeping task updates and clarifications' />,
+      title: 'Get notified on bookkeeping clarifications',
+      text: 'Receive clear notifications when your bookkeeper needs additional information or clarification on transactions.',
     },
     {
-      icon: <img src={businessOverview} alt='Get a clear picture of your business' />,
-      title: 'Bookkeeping Value Prop 3',
-      text: 'See your business profitability and stay organized for tax time.',
+      icon: <img src={imagePnlOverview} alt='Profit and loss statement chart for tax preparation and business analysis' />,
+      title: 'Get ready for tax season',
+      text: 'Your books will be organized and tax-ready with accurate categorization and financial statements prepared by professionals.',
     },
   ]
 

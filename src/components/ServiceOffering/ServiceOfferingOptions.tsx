@@ -141,6 +141,7 @@ export const ServiceOfferingOptions = ({
             </VStack>
 
             <Button
+              variant='outlined'
               rounded='md'
               onClick={onGetStartedAccounting}
             >
@@ -234,6 +235,7 @@ export const ServiceOfferingOptions = ({
 
               <Button
                 rounded='md'
+                variant='outlined'
                 onClick={onGetStartedBookkeeping}
               >
                 {links.bookBookkeeping?.label}
