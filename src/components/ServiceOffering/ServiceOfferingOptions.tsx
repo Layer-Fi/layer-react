@@ -6,18 +6,18 @@ import { Heading } from '../ui/Typography/Heading'
 import { Badge } from '../Badge'
 import { BadgeSize, BadgeVariant } from '../Badge/Badge'
 import { ServiceOfferingConfig } from './types'
-import { isCalendlyLink, useCalendly } from './calendly'
+import { isCalendlyLink } from './calendly'
 
 export interface ServiceOfferingOptionsProps extends HTMLAttributes<HTMLDivElement> {
   config: ServiceOfferingConfig
+  openCalendly: (link: string) => void
 }
 
 export const ServiceOfferingOffer = ({
   config,
+  openCalendly,
   ...props
 }: ServiceOfferingOptionsProps) => {
-  const { openCalendly } = useCalendly()
-
   const handleCtaClick = () => {
     if (isCalendlyLink(config.cta)) {
       openCalendly(config.cta.url)
