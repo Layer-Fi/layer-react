@@ -3,6 +3,8 @@ import { ZonedDateTimeFromSelf } from '../../../utils/schema/utils'
 import { LedgerEntryDirectionSchema } from '../../../schemas/generalLedger/ledgerAccount'
 import { AccountIdentifierSchema } from '../../../schemas/accountIdentifier'
 import { TagKeyValueSchema, TagSchema } from '../../../features/tags/tagSchemas'
+import { CustomerSchema } from '../../../schemas/customer'
+import { VendorSchema } from '../../../schemas/vendor'
 
 export const JournalEntryFormLineItemSchema = Schema.Struct({
   externalId: Schema.NullOr(Schema.String),
@@ -12,10 +14,8 @@ export const JournalEntryFormLineItemSchema = Schema.Struct({
   memo: Schema.NullOr(Schema.String),
   tags: Schema.Array(TagSchema),
 
-  customerId: Schema.NullOr(Schema.String),
-  customerExternalId: Schema.NullOr(Schema.String),
-  vendorId: Schema.NullOr(Schema.String),
-  vendorExternalId: Schema.NullOr(Schema.String),
+  customer: Schema.NullOr(CustomerSchema),
+  vendor: Schema.NullOr(VendorSchema),
 })
 
 // Main form schema (user-friendly representation)
@@ -29,10 +29,8 @@ export const JournalEntryFormSchema = Schema.Struct({
   referenceNumber: Schema.NullOr(Schema.String),
   lineItems: Schema.Array(JournalEntryFormLineItemSchema),
 
-  customerId: Schema.NullOr(Schema.String),
-  customerExternalId: Schema.NullOr(Schema.String),
-  vendorId: Schema.NullOr(Schema.String),
-  vendorExternalId: Schema.NullOr(Schema.String),
+  customer: Schema.NullOr(CustomerSchema),
+  vendor: Schema.NullOr(VendorSchema),
 })
 
 export type JournalEntryFormLineItem = typeof JournalEntryFormLineItemSchema.Type

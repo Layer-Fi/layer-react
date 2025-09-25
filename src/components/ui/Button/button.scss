@@ -10,6 +10,12 @@
   align-items: center;
   justify-content: center;
 
+  /* Use baseline alignment for buttons with mixed text and icon content */
+  // &:not([data-icon]) {
+  // svg {
+  //   align-items: baseline;
+  // }
+
   block-size: var(--size);
   min-inline-size: 0;
 

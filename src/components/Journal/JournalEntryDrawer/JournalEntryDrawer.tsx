@@ -89,7 +89,7 @@ const JournalEntryDrawerHeader = ({ onSubmit, formState }: JournalEntryDrawerHea
 
   const saveButton = useMemo(() => (
     <Button isPending={isSubmitting} onPress={onSubmit}>
-      Save
+      Post
       <Save size={14} />
     </Button>
   ), [isSubmitting, onSubmit])

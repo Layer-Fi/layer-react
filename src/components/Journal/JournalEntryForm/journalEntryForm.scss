@@ -1,5 +1,5 @@
 .Layer__JournalEntryForm {
-  padding: var(--spacing-xl) 0;
+  padding-top: var(--spacing-xl);
   // EntryFields section - flexbox row layout
 
     .Layer__JournalEntryForm__Row {
@@ -73,6 +73,7 @@
   .Layer__JournalEntryForm__Metadata {
     border-top: 1px solid var(--color-base-300);
     padding: var(--spacing-lg) var(--spacing-xl);
+    background-color: var(--color-base-50);
   }
 
   // Additional text fields - following InvoiceForm pattern

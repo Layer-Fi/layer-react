@@ -26,15 +26,6 @@ export const DebitCreditPill = ({
     onChange(newDirection)
   }, [value, onChange, isReadOnly])
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (isReadOnly) return
-
-    if (e.key === ' ' || e.key === 'Enter') {
-      e.preventDefault()
-      handleToggle()
-    }
-  }, [handleToggle, isReadOnly])
-
   const isDebit = value === LedgerEntryDirection.Debit
 
   const className = classNames(
@@ -51,7 +42,6 @@ export const DebitCreditPill = ({
     <button
       type='button'
       onClick={handleToggle}
-      onKeyDown={handleKeyDown}
       disabled={isReadOnly}
       className={className}
       aria-label={`Toggle between debit and credit. Currently ${value.toLowerCase()}`}

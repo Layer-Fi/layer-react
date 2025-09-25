@@ -16,10 +16,8 @@ export function getJournalEntryLineItemFormDefaultValues(direction: LedgerEntryD
     amount: BIG_DECIMAL_ZERO,
     direction,
     memo: null,
-    customerId: null,
-    customerExternalId: null,
-    vendorId: null,
-    vendorExternalId: null,
+    customer: null,
+    vendor: null,
     tags: [],
   }
 }
@@ -30,10 +28,8 @@ export function getJournalEntryFormDefaultValues(): JournalEntryForm {
     entryAt: fromDate(new Date(), getLocalTimeZone()),
     createdBy: '',
     memo: '',
-    customerId: null,
-    customerExternalId: null,
-    vendorId: null,
-    vendorExternalId: null,
+    customer: null,
+    vendor: null,
     tags: [],
     metadata: null,
     referenceNumber: '', // Changed from null to empty string to prevent input warning
@@ -50,10 +46,8 @@ export function getJournalEntryFormInitialValues(journalEntry: JournalEntry): Jo
     entryAt: fromDate(new Date(journalEntry.entry_at), getLocalTimeZone()),
     createdBy: 'Layer React Components', // TODO: Get from user context
     memo: journalEntry.source?.type === 'Manual_Ledger_Entry_Source' ? '' : '', // TODO: Extract memo from source if available
-    customerId: null, // TODO: Extract from journal entry if available
-    customerExternalId: null,
-    vendorId: null, // TODO: Extract from journal entry if available
-    vendorExternalId: null,
+    customer: null, // TODO: Extract from journal entry if available
+    vendor: null, // TODO: Extract from journal entry if available
     tags: [], // TODO: Extract from transaction_tags if available
     metadata: null,
     referenceNumber: '', // TODO: Extract from journal entry if available
@@ -63,20 +57,13 @@ export function getJournalEntryFormInitialValues(journalEntry: JournalEntry): Jo
         type: 'AccountId',
         id: lineItem.account.id,
       },
-      amount: lineItem.amount / 100, // Convert from cents
+      amount: BD.make(BigInt(lineItem.amount), 2), // Convert from cents to BigDecimal
       direction: lineItem.direction,
       memo: null, // TODO: Extract line item memo if available
-      customerId: null,
-      customerExternalId: null,
-      vendorId: null,
-      vendorExternalId: null,
+      customer: null, // TODO: Extract from line item if available
+      vendor: null, // TODO: Extract from line item if available
       tags: [], // TODO: Extract from line item tags if available
-      // Legacy fields for backward compatibility
-      job: null, // TODO: Extract job from transaction tags if available
-      description: '', // TODO: Extract description if available
     })),
-    // Legacy field for backward compatibility
-    notes: '', // TODO: Extract notes if available
   }
 }
 
@@ -86,10 +73,10 @@ export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateC
     entryAt: form.entryAt.toDate(), // Convert to Date - API expects date-time string
     createdBy: form.createdBy,
     memo: form.memo,
-    customerId: form.customerId,
-    customerExternalId: form.customerExternalId,
-    vendorId: form.vendorId,
-    vendorExternalId: form.vendorExternalId,
+    customerId: form.customer?.id ?? null,
+    customerExternalId: form.customer?.externalId ?? null,
+    vendorId: form.vendor?.id ?? null,
+    vendorExternalId: form.vendor?.externalId ?? null,
     tags: form.tags.map(makeTagKeyValueFromTag),
     metadata: form.metadata,
     referenceNumber: form.referenceNumber,
@@ -99,10 +86,10 @@ export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateC
       amount: convertBigDecimalToBigIntCents(lineItem.amount), // Convert to BigInt cents
       direction: lineItem.direction,
       memo: lineItem.memo,
-      customerId: lineItem.customerId,
-      customerExternalId: lineItem.customerExternalId,
-      vendorId: lineItem.vendorId,
-      vendorExternalId: lineItem.vendorExternalId,
+      customerId: lineItem.customer?.id ?? null,
+      customerExternalId: lineItem.customer?.externalId ?? null,
+      vendorId: lineItem.vendor?.id ?? null,
+      vendorExternalId: lineItem.vendor?.externalId ?? null,
       tags: lineItem.tags.map(makeTagKeyValueFromTag),
     })),
   }

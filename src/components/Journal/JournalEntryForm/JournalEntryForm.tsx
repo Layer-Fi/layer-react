@@ -16,6 +16,9 @@ import { usePreloadCustomers } from '../../../features/customers/api/useListCust
 import { usePreloadVendors } from '../../../features/vendors/api/useListVendors'
 import { CustomerVendorSelector } from '../../../features/customerVendor/components/CustomerVendorSelector'
 import { TagDimensionsGroup } from './TagDimensionsGroup'
+import type { CustomerVendorSchema } from '../../../features/customerVendor/customerVendorSchemas'
+
+type CustomerVendor = typeof CustomerVendorSchema.Type
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
 
@@ -128,24 +131,24 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         {/* Row 3: Customer/Vendor and TagDimensionsGroup */}
         <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
           <VStack gap='xs'>
-            <form.AppField name='customerId'>
+            <form.AppField name='customer'>
               {customerField => (
-                <form.AppField name='vendorId'>
+                <form.AppField name='vendor'>
                   {(vendorField) => {
                     // Determine current selection
                     const currentCustomerVendor = customerField.state.value
-                      ? { customerVendorType: 'CUSTOMER' as const, id: customerField.state.value }
+                      ? { ...customerField.state.value, customerVendorType: 'CUSTOMER' as const }
                       : vendorField.state.value
-                        ? { customerVendorType: 'VENDOR' as const, id: vendorField.state.value }
+                        ? { ...vendorField.state.value, customerVendorType: 'VENDOR' as const }
                         : null
 
-                    const handleSelectionChange = (selection: { customerVendorType: 'CUSTOMER' | 'VENDOR', id: string } | null) => {
+                    const handleSelectionChange = (selection: CustomerVendor | null) => {
                       if (selection?.customerVendorType === 'CUSTOMER') {
-                        customerField.setValue(selection.id)
+                        customerField.setValue(selection)
                         vendorField.setValue(null)
                       }
                       else if (selection?.customerVendorType === 'VENDOR') {
-                        vendorField.setValue(selection.id)
+                        vendorField.setValue(selection)
                         customerField.setValue(null)
                       }
                       else {
