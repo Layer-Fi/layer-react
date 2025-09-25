@@ -27,6 +27,9 @@ export const JournalEntryLineItemsTable = ({
   direction,
   config,
 }: JournalEntryLineItemsTableProps) => {
+  // HOOK RULES FIX: Move useStore to top level - MUST be called outside render functions
+  const lineItems = useStore(form.store, state => state.values.lineItems) || []
+
   // Check if there's a balance validation error
   const hasBalanceError = useStore(form.store, (state) => {
     const errorMap = state.errorMap
@@ -52,7 +55,7 @@ export const JournalEntryLineItemsTable = ({
       <VStack gap='md' pbs='lg' className='Layer__JournalEntryForm__LineItemsSection'>
         <form.Field name='lineItems' mode='array'>
           {(field) => {
-            const lineItems = field.state.value || []
+            // Use lineItems from top level (no more useStore inside render function!)
 
             // Filter line items by direction and get their indices in the original array
             const filteredIndices: number[] = []
@@ -110,14 +113,14 @@ export const JournalEntryLineItemsTable = ({
                       {' '}
                       {direction.toLowerCase()}
                       {' '}
-                      line items added yet. Click &ldquo;Add next account&rdquo; to get started.
+                      line items added yet. Click &ldquo;Add next line&rdquo; to get started.
                     </P>
                   </VStack>
                 )}
                 {!isReadOnly && (
                   <Button onPress={handleAddLineItem} variant='text'>
                     <Span weight='normal' size='sm' variant='subtle'>
-                      Add next account
+                      Add next line
                     </Span>
                   </Button>
                 )}

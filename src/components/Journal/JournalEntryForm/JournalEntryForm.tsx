@@ -191,7 +191,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           <JournalEntryLineItemsTable
             form={form}
             isReadOnly={isReadOnly}
-            title='Add Debit Account'
+            title='Add Debits'
             direction={LedgerEntryDirection.Debit}
             config={config}
           />
@@ -202,7 +202,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           <JournalEntryLineItemsTable
             form={form}
             isReadOnly={isReadOnly}
-            title='Add Credit Account'
+            title='Add Credits'
             direction={LedgerEntryDirection.Credit}
             config={config}
           />

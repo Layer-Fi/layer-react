@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useFieldContext } from '../hooks/useForm'
 import { InputGroup } from '../../../components/ui/Input/InputGroup'
 import { BigDecimal as BD, Option } from 'effect'
@@ -12,6 +12,7 @@ type FormBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode' | 'isTe
   maxDecimalPlaces?: number
   allowNegative?: boolean
   mode?: 'percent' | 'currency' | 'decimal'
+  rightSlot?: ReactNode
 }
 
 const DEFAULT_MAX_VALUE = BD.fromBigInt(BigInt(10_000_000))
@@ -47,6 +48,7 @@ export function FormBigDecimalField({
   maxValue = mode === 'percent' ? BIG_DECIMAL_ONE : DEFAULT_MAX_VALUE,
   minDecimalPlaces = mode === 'currency' ? 2 : DEFAULT_MIN_DECIMAL_PLACES,
   maxDecimalPlaces = mode === 'currency' ? 2 : DEFAULT_MAX_DECIMAL_PLACES,
+  rightSlot,
   ...restProps
 }: FormBigDecimalFieldProps) {
   const field = useFieldContext<BD.BigDecimal>()
@@ -118,7 +120,7 @@ export function FormBigDecimalField({
 
   return (
     <BaseFormTextField {...restProps} inputMode='decimal'>
-      <InputGroup slot='input'>
+      <InputGroup slot='input' style={{ position: 'relative' }}>
         <Input
           inset
           id={name}
@@ -128,7 +130,9 @@ export function FormBigDecimalField({
           onBlur={onInputBlur}
           onBeforeInput={onBeforeInput}
           onPaste={onPaste}
+          style={rightSlot ? { paddingRight: '60px' } : undefined}
         />
+        {rightSlot}
       </InputGroup>
     </BaseFormTextField>
   )

@@ -10,6 +10,7 @@ import { CategoriesListMode } from '../../../types/categories'
 import { AccountIdentifier } from '../../../schemas/accountIdentifier'
 import { JournalConfig } from '../Journal'
 import { TagDimensionsGroup } from './TagDimensionsGroup'
+import { DebitCreditPill } from '../../DebitCreditPill/DebitCreditPill'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
 
@@ -61,6 +62,17 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, co
               allowNegative={false}
               isReadOnly={isReadOnly}
               className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--amount`}
+              rightSlot={(
+                <form.AppField name={`lineItems[${index}].direction`}>
+                  {directionField => (
+                    <DebitCreditPill
+                      value={directionField.state.value}
+                      onChange={directionField.setValue}
+                      isReadOnly={isReadOnly}
+                    />
+                  )}
+                </form.AppField>
+              )}
             />
           )}
         </form.AppField>

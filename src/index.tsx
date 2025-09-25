@@ -31,6 +31,7 @@ export { StandaloneStatementOfCashFlow as StatementOfCashFlow } from './componen
 /* ------------------ Ledger ------------------ */
 export { ChartOfAccounts } from './components/ChartOfAccounts'
 export { Journal } from './components/Journal'
+export { DebitCreditPill } from './components/DebitCreditPill/DebitCreditPill'
 
 /* ------------------ Account Operations ------------------ */
 export { Tasks } from './components/Tasks/Tasks'
