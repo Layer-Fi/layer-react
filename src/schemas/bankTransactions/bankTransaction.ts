@@ -5,12 +5,7 @@ import { CustomerSchema } from '../customer'
 import { VendorSchema } from '../vendor'
 import { TransactionTagSchema } from '../../features/tags/tagSchemas'
 import { UpdateCategorizationRulesSuggestionSchema } from './categorizationRules/categorizationRule'
-
-export enum BankTransactionDirection {
-  Credit = 'CREDIT',
-  Debit = 'DEBIT',
-}
-export const BankTransactionDirectionSchema = Schema.Enums(BankTransactionDirection)
+import { BankTransactionDirectionSchema } from './base'
 
 export enum CategorizationStatus {
   PENDING = 'PENDING',
@@ -91,28 +86,4 @@ export const BankTransactionSchema = Schema.Struct({
     Schema.optional(Schema.NullOr(UpdateCategorizationRulesSuggestionSchema)),
     Schema.fromKey('update_categorization_rules_suggestion'),
   ),
-})
-
-// Maps onto the same object as BankTransactionSchema but minimal fields (for avoiding recursion for suggested rule updates)
-export const MinimalBankTransactionSchema = Schema.Struct({
-  id: Schema.String,
-  date: Schema.Date,
-  direction: BankTransactionDirectionSchema,
-  amount: Schema.Number,
-  counterpartyName: pipe(
-    Schema.optional(Schema.NullOr(Schema.String)),
-    Schema.fromKey('counterparty_name'),
-  ),
-  description: Schema.optional(Schema.NullOr(Schema.String)),
-})
-
-export const BankTransactionCounterpartySchema = Schema.Struct({
-  id: Schema.String,
-  externalId: Schema.optional(Schema.String).pipe(
-    Schema.fromKey('external_id'),
-  ),
-  name: Schema.optional(Schema.NullOr(Schema.String)),
-  website: Schema.optional(Schema.NullOr(Schema.String)),
-  logo: Schema.optional(Schema.NullOr(Schema.String)),
-  mccs: Schema.Array(Schema.String),
 })
