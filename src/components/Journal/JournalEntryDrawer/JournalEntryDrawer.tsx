@@ -6,7 +6,6 @@ import { HStack } from '../../ui/Stack/Stack'
 import { Button } from '../../ui/Button/Button'
 import { Save } from 'lucide-react'
 import { useJournalNavigation } from '../../../providers/JournalStore/JournalStoreProvider'
-import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
 import X from '../../../icons/X'
 import BackArrow from '../../../icons/BackArrow'
 import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
@@ -15,7 +14,6 @@ import { JournalConfig } from '../Journal'
 export const JournalEntryDrawer = ({ config }: { config: JournalConfig }) => {
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
   const { toJournalTable } = useJournalNavigation()
-  const { addToast } = useLayerContext()
   const formRef = useRef<{ submit: () => Promise<void> }>(null)
 
   const [formState, setFormState] = useState<JournalEntryFormState>({
@@ -30,12 +28,8 @@ export const JournalEntryDrawer = ({ config }: { config: JournalConfig }) => {
   const onSubmit = useCallback(() => void formRef.current?.submit(), [])
 
   const onJournalEntrySuccess = useCallback(() => {
-    addToast({
-      type: 'success',
-      title: 'Journal entry created successfully',
-    })
     toJournalTable()
-  }, [addToast, toJournalTable])
+  }, [toJournalTable])
 
   const Header = useCallback(() => {
     return (

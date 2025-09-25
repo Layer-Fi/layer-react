@@ -7,6 +7,7 @@ import { JournalEntryLineItemsTable } from './JournalEntryLineItemsTable'
 import { DataState, DataStateStatus } from '../../DataState'
 import { AlertTriangle } from 'lucide-react'
 import { TextSize } from '../../Typography'
+import { flattenValidationErrors } from '../../../utils/form'
 import { LedgerEntryDirection } from '../../../schemas/generalLedger/ledgerAccount'
 import { UpsertJournalEntryMode } from './useUpsertJournalEntry'
 import './journalEntryForm.scss'
@@ -66,17 +67,24 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
   return (
     <Form className={JOURNAL_ENTRY_FORM_CSS_PREFIX} onSubmit={blockNativeOnSubmit}>
       {/* Error Display */}
-      {submitError && (
-        <HStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__FormError`}>
-          <DataState
-            icon={<AlertTriangle size={16} />}
-            status={DataStateStatus.failed}
-            title={submitError}
-            titleSize={TextSize.md}
-            inline
-          />
-        </HStack>
-      )}
+      <form.Subscribe selector={state => state.errorMap}>
+        {(errorMap) => {
+          const validationErrors = flattenValidationErrors(errorMap)
+          if (validationErrors.length > 0 || submitError) {
+            return (
+              <HStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__FormError`} pis='xl' pbe='lg'>
+                <DataState
+                  icon={<AlertTriangle size={16} />}
+                  status={DataStateStatus.failed}
+                  title={validationErrors[0] || submitError}
+                  titleSize={TextSize.md}
+                  inline
+                />
+              </HStack>
+            )
+          }
+        }}
+      </form.Subscribe>
 
       {/* Entry Date Field - Following InvoiceForm Terms pattern */}
       <VStack gap='sm'>

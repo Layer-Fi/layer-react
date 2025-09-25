@@ -29,7 +29,7 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, co
         className={classNames(`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItem`, isReadOnly && `${JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItem--readonly`)}
       >
         {/* Account Name Field - Using form account identifier structure */}
-        <form.AppField name={`lineItems[${index}].accountIdentifier`}>
+        <form.Field name={`lineItems[${index}].accountIdentifier`}>
           {(field) => {
             const onValueChange = (value: AccountIdentifier | null) => {
               if (value === null) {
@@ -49,7 +49,7 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, co
               />
             )
           }}
-        </form.AppField>
+        </form.Field>
 
         {/* Amount Field */}
         <form.AppField name={`lineItems[${index}].amount`}>

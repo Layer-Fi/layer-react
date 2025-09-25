@@ -21,7 +21,7 @@ export const JournalEntryFormLineItemSchema = Schema.Struct({
 // Main form schema (user-friendly representation)
 export const JournalEntryFormSchema = Schema.Struct({
   externalId: Schema.NullOr(Schema.String), // Idempotency key
-  entryAt: Schema.NullOr(ZonedDateTimeFromSelf), // Changed from entry_at to camelCase
+  entryAt: ZonedDateTimeFromSelf, // Changed from entry_at to camelCase
   createdBy: Schema.String,
   memo: Schema.String,
   tags: Schema.Array(TagSchema),
@@ -80,7 +80,7 @@ export const CreateCustomJournalEntrySchema = Schema.Struct({
     Schema.fromKey('external_id'),
   ), // Idempotency key
   entryAt: pipe(
-    Schema.propertySignature(ZonedDateTimeFromSelf),
+    Schema.propertySignature(Schema.Date),
     Schema.fromKey('entry_at'),
   ), // date-time format
   createdBy: pipe(
@@ -116,9 +116,132 @@ export const CreateCustomJournalEntrySchema = Schema.Struct({
   ), // Required
 })
 
+// API Response Schemas (based on Kotlin data classes)
+
+// ApiCustomJournalEntryLineItem response schema
+export const ApiCustomJournalEntryLineItemSchema = Schema.Struct({
+  id: Schema.UUID,
+  externalId: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('external_id'),
+  ),
+  memo: Schema.optional(Schema.NullOr(Schema.String)),
+  lineItemId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('line_item_id'),
+  ),
+  customer: Schema.NullOr(Schema.Unknown), // ApiCustomerData
+  vendor: Schema.NullOr(Schema.Unknown), // ApiVendorData
+  transactionTags: pipe(
+    Schema.optional(Schema.Array(Schema.Unknown)),
+    Schema.fromKey('transaction_tags'),
+  ),
+})
+
+// ApiLedgerEntry response schema
+export const ApiLedgerEntrySchema = Schema.Struct({
+  entryId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('id'),
+  ),
+  businessId: pipe(
+    Schema.propertySignature(Schema.UUID),
+    Schema.fromKey('business_id'),
+  ),
+  ledgerId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('ledger_id'),
+  ),
+  entryNumber: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.Number)),
+    Schema.fromKey('entry_number'),
+  ),
+  agent: Schema.NullOr(Schema.String), // ClassifierAgent
+  entryType: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('entry_type'),
+  ),
+  customer: Schema.NullOr(Schema.Unknown), // ApiCustomerData
+  vendor: Schema.NullOr(Schema.Unknown), // ApiVendorData
+  createdAt: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('date'),
+  ),
+  entryAt: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('entry_at'),
+  ),
+  reversalOfId: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reversal_of_id'),
+  ),
+  reversalId: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reversal_id'),
+  ),
+  lineItems: pipe(
+    Schema.propertySignature(Schema.Array(Schema.Unknown)),
+    Schema.fromKey('line_items'),
+  ),
+  tags: Schema.Array(Schema.Unknown), // Deprecated field
+  transactionTags: pipe(
+    Schema.propertySignature(Schema.Array(Schema.Unknown)),
+    Schema.fromKey('transaction_tags'),
+  ),
+  memo: Schema.NullOr(Schema.String),
+  metadata: Schema.NullOr(Schema.Unknown),
+  referenceNumber: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reference_number'),
+  ),
+})
+
+// ApiCustomJournalEntryWithEntry response schema (main return type)
+export const ApiCustomJournalEntryWithEntrySchema = Schema.Struct({
+  id: Schema.UUID,
+  externalId: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('external_id'),
+  ),
+  createdBy: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('created_by'),
+  ),
+  memo: Schema.String,
+  entryId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('entry_id'),
+  ),
+  customer: Schema.NullOr(Schema.Unknown), // ApiCustomerData
+  vendor: Schema.NullOr(Schema.Unknown), // ApiVendorData
+  lineItems: pipe(
+    Schema.propertySignature(Schema.Array(ApiCustomJournalEntryLineItemSchema)),
+    Schema.fromKey('line_items'),
+  ),
+  entry: ApiLedgerEntrySchema,
+  transactionTags: pipe(
+    Schema.propertySignature(Schema.Array(Schema.Unknown)),
+    Schema.fromKey('transaction_tags'),
+  ),
+  metadata: Schema.NullOr(Schema.Unknown),
+  referenceNumber: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('reference_number'),
+  ),
+})
+
+// Journal Entry Return Schema (replaces the old one)
+export const JournalEntryReturnSchema = Schema.Struct({
+  data: ApiCustomJournalEntryWithEntrySchema,
+})
+
 // Legacy schema for backward compatibility
 export const UpsertJournalEntrySchema = CreateCustomJournalEntrySchema
 
 export type CreateCustomJournalEntry = typeof CreateCustomJournalEntrySchema.Type
 export type CreateCustomJournalEntryLineItem = typeof CreateCustomJournalEntryLineItemSchema.Type
 export type UpsertJournalEntry = typeof UpsertJournalEntrySchema.Type
+export type ApiCustomJournalEntryLineItem = typeof ApiCustomJournalEntryLineItemSchema.Type
+export type ApiLedgerEntry = typeof ApiLedgerEntrySchema.Type
+export type ApiCustomJournalEntryWithEntry = typeof ApiCustomJournalEntryWithEntrySchema.Type
+export type JournalEntryReturn = typeof JournalEntryReturnSchema.Type

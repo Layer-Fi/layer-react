@@ -3,9 +3,14 @@ import useSWRMutation from 'swr/mutation'
 import { post } from '../../../api/layer/authenticated_http'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { useAuth } from '../../../hooks/useAuth'
+import { UpsertJournalEntrySchema, JournalEntryReturnSchema, type JournalEntryReturn } from './journalEntryFormSchemas'
 import { Schema } from 'effect'
-import type { UpsertJournalEntry } from './journalEntryFormSchemas'
-import type { JournalEntry } from '../../../types/journal'
+import { useLedgerEntriesCacheActions } from '../../../features/ledger/entries/api/useListLedgerEntries'
+import { usePnlDetailLinesInvalidator } from '../../../hooks/useProfitAndLoss/useProfitAndLossDetailLines'
+import { useProfitAndLossReportCacheActions } from '../../../hooks/useProfitAndLoss/useProfitAndLossReport'
+import { useProfitAndLossSummariesCacheActions } from '../../../hooks/useProfitAndLoss/useProfitAndLossSummaries'
+import { useGlobalCacheActions } from '../../../utils/swr/useGlobalCacheActions'
+import { DataModel } from '../../../types/general'
 
 const UPSERT_JOURNAL_ENTRY_TAG_KEY = '#upsert-journal-entry'
 
@@ -14,21 +19,15 @@ export enum UpsertJournalEntryMode {
   Update = 'Update',
 }
 
-type UpsertJournalEntryBody = UpsertJournalEntry
+type UpsertJournalEntryBody = typeof UpsertJournalEntrySchema.Encoded
 
-const JournalEntryReturnSchema = Schema.Struct({
-  data: Schema.Array(Schema.Unknown), // The API returns an array of journal entries
-})
-
-type UpsertJournalEntryReturn = {
-  data: JournalEntry[]
-}
+type UpsertJournalEntryReturn = JournalEntryReturn
 
 const createJournalEntry = post<
   UpsertJournalEntryReturn,
   UpsertJournalEntryBody,
   { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/ledger/manual-entries`)
+>(({ businessId }) => `/v1/businesses/${businessId}/ledger/journal-entries`)
 
 function buildKey({
   access_token: accessToken,
@@ -49,19 +48,26 @@ function buildKey({
   }
 }
 
-type UseUpsertJournalEntryProps = 
+type UseUpsertJournalEntryProps =
   | { mode: UpsertJournalEntryMode.Create }
   | { mode: UpsertJournalEntryMode.Update, journalEntryId: string }
 
 export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
   const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { businessId, touch } = useLayerContext()
 
   const { mode } = props
   // For now, we only support create mode since the API doesn't have an update endpoint
   if (mode === UpsertJournalEntryMode.Update) {
     throw new Error('Update mode is not yet supported for journal entries')
   }
+
+  // Cache invalidation hooks
+  const { forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
+  const { debouncedInvalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+  const { debouncedInvalidateProfitAndLossReport } = useProfitAndLossReportCacheActions()
+  const { debouncedInvalidateProfitAndLossSummaries } = useProfitAndLossSummariesCacheActions()
+  const { invalidate } = useGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
     () => buildKey({
@@ -72,16 +78,10 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
       { accessToken, apiUrl, businessId },
       { arg: body }: { arg: UpsertJournalEntryBody },
     ) => {
-      return createJournalEntry({
-        apiUrl,
-        accessToken,
+      return createJournalEntry(apiUrl, accessToken, {
+        params: { businessId },
         body,
-      }).then(response => {
-        // Return the first journal entry from the array
-        return {
-          data: response.data[0] as JournalEntry,
-        }
-      })
+      }).then(Schema.decodeUnknownPromise(JournalEntryReturnSchema))
     },
     {
       revalidate: false,
@@ -91,9 +91,28 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
 
   const trigger = useCallback(
     async (body: UpsertJournalEntryBody) => {
-      return rawMutationResponse.trigger(body)
+      const result = await rawMutationResponse.trigger(body)
+
+      // Invalidate all relevant caches after successful journal entry creation
+      void forceReloadLedgerEntries()
+      void debouncedInvalidatePnlDetailLines()
+      void debouncedInvalidateProfitAndLossReport()
+      void debouncedInvalidateProfitAndLossSummaries()
+
+      // Invalidate balance sheet and cash flow statement caches
+      void invalidate(tags => tags.includes('#balance-sheet'))
+      void invalidate(tags => tags.includes('#statement-of-cash-flow'))
+
+      // Touch data models to trigger sync
+      touch(DataModel.PROFIT_AND_LOSS)
+      touch(DataModel.BALANCE_SHEET)
+      touch(DataModel.STATEMENT_OF_CASH_FLOWS)
+
+      return result
     },
-    [rawMutationResponse.trigger],
+    [rawMutationResponse.trigger, forceReloadLedgerEntries, debouncedInvalidatePnlDetailLines,
+      debouncedInvalidateProfitAndLossReport, debouncedInvalidateProfitAndLossSummaries,
+      invalidate, touch],
   )
 
   return {

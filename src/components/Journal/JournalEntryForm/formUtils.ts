@@ -2,8 +2,9 @@ import { fromDate, getLocalTimeZone } from '@internationalized/date'
 import { LedgerEntryDirection } from '../../../schemas/generalLedger/ledgerAccount'
 import type { JournalEntryForm, CreateCustomJournalEntry, JournalEntryFormLineItem } from './journalEntryFormSchemas'
 import type { JournalEntry } from '../../../types/journal'
-import { makeAccountId, makeStableName } from '../../../schemas/accountIdentifier'
-import { BIG_DECIMAL_ZERO } from '../../../utils/bigDecimalUtils'
+import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents } from '../../../utils/bigDecimalUtils'
+import { makeTagKeyValueFromTag } from '../../../features/tags/tagSchemas'
+import { BigDecimal as BD } from 'effect'
 
 export function getJournalEntryLineItemFormDefaultValues(direction: LedgerEntryDirection): JournalEntryFormLineItem {
   return {
@@ -59,16 +60,8 @@ export function getJournalEntryFormInitialValues(journalEntry: JournalEntry): Jo
     lineItems: journalEntry.line_items.map(lineItem => ({
       externalId: null,
       accountIdentifier: {
-        type: lineItem.account.type,
-        stable_name: lineItem.account.stable_name,
+        type: 'AccountId',
         id: lineItem.account.id,
-        name: lineItem.account.name,
-        subType: lineItem.account.subtype
-          ? {
-            value: lineItem.account.subtype.value,
-            label: lineItem.account.subtype.display_name,
-          }
-          : undefined,
       },
       amount: lineItem.amount / 100, // Convert from cents
       direction: lineItem.direction,
@@ -90,84 +83,65 @@ export function getJournalEntryFormInitialValues(journalEntry: JournalEntry): Jo
 export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateCustomJournalEntry {
   return {
     externalId: form.externalId,
-    entryAt: form.entryAt?.toAbsoluteString() || new Date().toISOString(),
+    entryAt: form.entryAt.toDate(), // Convert to Date - API expects date-time string
     createdBy: form.createdBy,
     memo: form.memo,
     customerId: form.customerId,
     customerExternalId: form.customerExternalId,
     vendorId: form.vendorId,
     vendorExternalId: form.vendorExternalId,
-    tags: form.tags,
+    tags: form.tags.map(makeTagKeyValueFromTag),
     metadata: form.metadata,
     referenceNumber: form.referenceNumber,
     lineItems: form.lineItems.map(lineItem => ({
       externalId: lineItem.externalId,
-      accountIdentifier: convertAccountIdentifier(lineItem.accountIdentifier),
-      amount: BigInt(Math.round(lineItem.amount * 100)), // Convert to BigInt cents
+      accountIdentifier: lineItem.accountIdentifier,
+      amount: convertBigDecimalToBigIntCents(lineItem.amount), // Convert to BigInt cents
       direction: lineItem.direction,
       memo: lineItem.memo,
       customerId: lineItem.customerId,
       customerExternalId: lineItem.customerExternalId,
       vendorId: lineItem.vendorId,
       vendorExternalId: lineItem.vendorExternalId,
-      tags: lineItem.tags,
+      tags: lineItem.tags.map(makeTagKeyValueFromTag),
     })),
   }
 }
 
-// Helper function to convert form account identifier to API AccountIdentifier schema
-function convertAccountIdentifier(formAccountIdentifier: JournalEntryFormLineItem['accountIdentifier']) {
-  if (formAccountIdentifier.type === 'StableName' && 'stableName' in formAccountIdentifier) {
-    return formAccountIdentifier
-  }
-  else if (formAccountIdentifier.type === 'AccountId' && 'id' in formAccountIdentifier) {
-    return formAccountIdentifier
-  }
-  else {
-    // Legacy support for the old form structure
-    if ((formAccountIdentifier as any).stable_name) {
-      return makeStableName((formAccountIdentifier as any).stable_name)
-    }
-    else {
-      return makeAccountId((formAccountIdentifier as any).id)
-    }
-  }
-}
-
 export function validateJournalEntryForm({ value }: { value: JournalEntryForm }) {
-  const errors: Record<string, string> = {}
+  const errors = []
 
   // Validate entry date
   if (!value.entryAt) {
-    errors.entryAt = 'Entry date is required'
+    errors.push({ entryAt: 'Entry date is a required field.' })
   }
 
   // Validate created_by
   if (!value.createdBy) {
-    errors.createdBy = 'Created by is required'
+    errors.push({ createdBy: 'Created by is a required field.' })
   }
 
   // Validate memo
   if (!value.memo) {
-    errors.memo = 'Memo is required'
+    errors.push({ memo: 'Memo is a required field.' })
   }
 
   // Validate line items
   if (!value.lineItems || value.lineItems.length === 0) {
-    errors.lineItems = 'At least one line item is required'
+    errors.push({ lineItems: 'At least one line item is required.' })
   }
   else {
     // Check for balanced entries
     const debitTotal = value.lineItems
       .filter(item => item.direction === LedgerEntryDirection.Debit)
-      .reduce((sum, item) => sum + item.amount, 0)
+      .reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
 
     const creditTotal = value.lineItems
       .filter(item => item.direction === LedgerEntryDirection.Credit)
-      .reduce((sum, item) => sum + item.amount, 0)
+      .reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
 
-    if (Math.abs(debitTotal - creditTotal) > 0.01) { // Allow for small rounding differences
-      errors.lineItems = 'Debit and credit amounts must be equal'
+    if (!BD.equals(debitTotal, creditTotal)) {
+      errors.push({ lineItems: 'Debit and credit amounts must be equal' })
     }
 
     // Validate individual line items
@@ -175,26 +149,22 @@ export function validateJournalEntryForm({ value }: { value: JournalEntryForm })
       const accountId = lineItem.accountIdentifier
       if (accountId.type === 'AccountId' && 'id' in accountId) {
         if (!accountId.id) {
-          errors[`lineItems.${index}.accountIdentifier`] = 'Account is required'
+          errors.push({ [`lineItems[${index}].accountIdentifier`]: 'Account is a required field.' })
         }
       }
       else if (accountId.type === 'StableName' && 'stableName' in accountId) {
         if (!accountId.stableName) {
-          errors[`lineItems.${index}.accountIdentifier`] = 'Account is required'
+          errors.push({ [`lineItems[${index}].accountIdentifier`]: 'Account is a required field.' })
         }
       }
       else {
-        // Legacy support
-        const legacyAccountId = accountId as any
-        if (!legacyAccountId.id && !legacyAccountId.stable_name) {
-          errors[`lineItems.${index}.accountIdentifier`] = 'Account is required'
-        }
+        errors.push({ [`lineItems[${index}].accountIdentifier`]: 'Account is a required field.' })
       }
-      if (lineItem.amount <= 0) {
-        errors[`lineItems.${index}.amount`] = 'Amount must be greater than zero'
+      if (BD.lessThan(lineItem.amount, BIG_DECIMAL_ZERO)) {
+        errors.push({ [`lineItems[${index}].amount`]: 'Amount must be greater than zero.' })
       }
     })
   }
 
-  return errors
+  return errors.length > 0 ? errors : null
 }

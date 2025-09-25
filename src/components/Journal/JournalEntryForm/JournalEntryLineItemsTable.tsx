@@ -9,6 +9,8 @@ import { Button } from '../../ui/Button/Button'
 import { P, Span } from '../../ui/Typography/Text'
 import { Separator } from '../../Separator/Separator'
 import { getJournalEntryLineItemFormDefaultValues } from './formUtils'
+import classNames from 'classnames'
+import { useStore } from '@tanstack/react-form'
 
 export interface JournalEntryLineItemsTableProps {
   form: AppForm<JournalEntryForm>
@@ -25,6 +27,25 @@ export const JournalEntryLineItemsTable = ({
   direction,
   config,
 }: JournalEntryLineItemsTableProps) => {
+  // Check if there's a balance validation error
+  const hasBalanceError = useStore(form.store, (state) => {
+    const errorMap = state.errorMap
+    const validationErrors = Object.values(errorMap)
+      .filter((value): value is { [key: string]: string }[] =>
+        Array.isArray(value)
+        && value.every(entry => typeof entry === 'object' && entry !== null),
+      )
+      .flatMap(errorArray =>
+        errorArray.flatMap(entry =>
+          Object.entries(entry),
+        ),
+      )
+
+    return validationErrors.some(([key, message]) =>
+      key === 'lineItems' && message.includes('Debit and credit amounts must be equal'),
+    )
+  })
+
   return (
     <>
       <Separator />
@@ -55,7 +76,14 @@ export const JournalEntryLineItemsTable = ({
             return (
               <>
                 {/* Header Section - Following Figma design */}
-                <HStack justify='space-between' align='center' className='Layer__JournalEntryForm__SectionHeader'>
+                <HStack
+                  justify='space-between'
+                  align='center'
+                  className={classNames(
+                    'Layer__JournalEntryForm__SectionHeader',
+                    hasBalanceError && 'Layer__JournalEntryForm__SectionHeader--error',
+                  )}
+                >
                   <Heading size='xs'>{title}</Heading>
                 </HStack>
 

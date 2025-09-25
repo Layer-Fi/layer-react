@@ -1,10 +1,13 @@
 import { useCallback, useMemo, useState, useRef } from 'react'
 import { useStore, revalidateLogic } from '@tanstack/react-form'
 import { useAppForm } from '../../../features/forms/hooks/useForm'
-import { UpsertJournalEntrySchema, type JournalEntry, type JournalEntryForm } from './journalEntryFormSchemas'
+import { UpsertJournalEntrySchema, type JournalEntryForm } from './journalEntryFormSchemas'
 import { useUpsertJournalEntry, UpsertJournalEntryMode } from './useUpsertJournalEntry'
 import { Schema } from 'effect'
 import { convertJournalEntryFormToParams, getJournalEntryFormDefaultValues, getJournalEntryFormInitialValues, validateJournalEntryForm } from './formUtils'
+import { useLayerContext } from '../../../contexts/LayerContext'
+import { entryNumber } from '../../../utils/journal'
+import type { JournalEntry } from '../../../types/journal'
 
 type onSuccessFn = (journalEntry: JournalEntry) => void
 type UseJournalEntryFormProps =
@@ -18,6 +21,7 @@ function isUpdateMode(props: UseJournalEntryFormProps): props is { onSuccess: on
 export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, mode } = props
+  const { addToast } = useLayerContext()
 
   const upsertJournalEntryProps = mode === UpsertJournalEntryMode.Update ? { mode, journalEntryId: props.journalEntry.id } : { mode }
   const { trigger: upsertJournalEntry } = useUpsertJournalEntry(upsertJournalEntryProps)
@@ -34,9 +38,17 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
       // Convert the `JournalEntryForm` schema to the request shape for `upsertJournalEntry`. This will
       // throw an error if the request shape is not valid.
       const upsertJournalEntryParams = convertJournalEntryFormToParams(value)
+      console.log('upsertJournalEntryParams', upsertJournalEntryParams)
       const upsertJournalEntryRequest = Schema.encodeUnknownSync(UpsertJournalEntrySchema)(upsertJournalEntryParams)
 
       const { data: journalEntry } = await upsertJournalEntry(upsertJournalEntryRequest)
+
+      // Show success toast with journal entry number
+      const journalEntryNumber = entryNumber(journalEntry)
+      addToast({
+        content: `Journal entry #${journalEntryNumber} posted`,
+        type: 'success',
+      })
 
       setSubmitError(undefined)
       onSuccess(journalEntry)
@@ -45,7 +57,7 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
       console.error(e)
       setSubmitError('Something went wrong. Please try again.')
     }
-  }, [onSuccess, upsertJournalEntry])
+  }, [onSuccess, upsertJournalEntry, addToast])
 
   const validators = useMemo(() => ({
     onDynamic: validateJournalEntryForm,

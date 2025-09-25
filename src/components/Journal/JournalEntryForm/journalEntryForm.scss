@@ -58,6 +58,15 @@
   .Layer__JournalEntryForm__SectionHeader {
     margin-bottom: var(--spacing-md);
     // Remove borders and padding for clean appearance
+
+    // Error state styling for balance validation
+    &--error {
+      border-left: 3px solid var(--color-error-500);
+      padding-left: var(--spacing-sm);
+      background-color: var(--color-error-50);
+      border-radius: var(--border-radius-sm);
+      padding: var(--spacing-xs) var(--spacing-sm);
+    }
   }
 
   // Metadata section - following InvoiceForm Metadata pattern
@@ -74,10 +83,10 @@
   }
 
   // Form error styling - following InvoiceForm pattern
-  .Layer__JournalEntryForm__FormError {
-    height: 4rem;
-    padding-inline: var(--spacing-md);
-    border-top: 1px solid var(--border-color);
-  }
+  // .Layer__JournalEntryForm__FormError {
+  //   height: 4rem;
+  //   padding-inline: var(--spacing-md);
+  //   border-top: 1px solid var(--border-color);
+  // }
 
 }

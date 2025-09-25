@@ -119,7 +119,6 @@ export const JournalTableWithPanel = ({
             />
             <Button
               onClick={() => toCreateEntry()}
-              disabled={isLoading}
               iconOnly={view === 'mobile'}
               leftIcon={view === 'mobile' && <PlusIcon size={14} />}
             >
