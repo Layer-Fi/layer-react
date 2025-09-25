@@ -52,30 +52,80 @@ export type TagDimension = typeof TagDimensionSchema.Type
 
 const TagValueSchema = Schema.Data(
   Schema.Struct({
+    // Backend UUID for this dimension
     dimensionId: Schema.UUID,
+    // Machine-readable key
+    dimensionKey: Schema.NonEmptyTrimmedString,
+    // Display name for the dimension
+    dimensionDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
+    // How it should be rendered on the UI, given all of its state
     dimensionLabel: Schema.NonEmptyTrimmedString,
+    // Backend UUID for this value
     valueId: Schema.UUID,
+    // Machine-readable value
+    value: Schema.NonEmptyTrimmedString,
+    // Display name for the value
+    valueDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
+    // How it should be rendered on the UI, given all of its state
     valueLabel: Schema.NonEmptyTrimmedString,
+    // Whether or not this value definition is archived
+    isArchived: Schema.Boolean,
   }),
 )
-export const makeTagValue = Schema.decodeSync(TagValueSchema)
+const internalMakeTagValue = Schema.decodeSync(TagValueSchema)
+
+export function makeTagValue(tagValue: Omit<TagValue, 'dimensionLabel' | 'valueLabel'>) {
+  const dimensionBaseLabel = tagValue.dimensionDisplayName ?? tagValue.dimensionKey
+
+  const valueBaseLabel = tagValue.valueDisplayName ?? tagValue.value
+  const archiveAwareLabel = tagValue.isArchived ? `${valueBaseLabel} (Archived)` : valueBaseLabel
+
+  return internalMakeTagValue({
+    ...tagValue,
+    dimensionLabel: dimensionBaseLabel,
+    valueLabel: archiveAwareLabel,
+  })
+}
+
 export type TagValue = typeof TagValueSchema.Type
 
 export const TagSchema = Schema.Data(
   Schema.Struct({
+    // transaction_tags ID, which refers to an ApiTag in the backend, but retrieved
+    // through a bank transaction.
     id: Schema.UUID,
+    // Machine-readable key for the dimension
     key: Schema.NonEmptyTrimmedString,
+    // Human-readable key for the dimension
+    dimensionDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
     dimensionLabel: Schema.NullishOr(Schema.NonEmptyTrimmedString),
+
+    // Machine-readable value
     value: Schema.NonEmptyTrimmedString,
-    valueLabel: Schema.NonEmptyTrimmedString,
+    // Human-readable value
+    valueDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
+    // What needs to be displayed for this specific value, given its state
+    valueLabel: Schema.NullishOr(Schema.NonEmptyTrimmedString),
+    // Archive state of this tag value
     archivedAt: Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     _local: Schema.Struct({
       isOptimistic: Schema.Boolean,
     }),
   }),
 )
-export const makeTag = Schema.decodeSync(TagSchema)
+export const internalMakeTag = Schema.decodeSync(TagSchema)
 export type Tag = typeof TagSchema.Type
+
+export function makeTag(tag: Omit<Tag, 'dimensionLabel' | 'valueLabel'>) {
+  return internalMakeTag({
+    ...tag,
+    dimensionLabel: tag.dimensionDisplayName ?? tag.key,
+    valueLabel: tag.valueDisplayName ?? tag.value,
+    archivedAt: tag.archivedAt instanceof Date
+      ? tag.archivedAt.toISOString()
+      : tag.archivedAt ?? null,
+  })
+}
 
 export const TransactionTagSchema = Schema.Struct({
   id: Schema.UUID,
@@ -124,9 +174,9 @@ export const makeTagFromTransactionTag = ({ id, key, value, dimensionDisplayName
   id,
   key,
   value,
-  dimensionLabel: dimensionDisplayName ?? key,
-  valueLabel: valueDisplayName ?? value,
-  archivedAt: archivedAt?.toISOString() ?? null,
+  dimensionDisplayName: dimensionDisplayName,
+  valueDisplayName: valueDisplayName,
+  archivedAt: archivedAt,
   _local: {
     isOptimistic: _local?.isOptimistic ?? false,
   },

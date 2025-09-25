@@ -27,9 +27,9 @@ export function BankTransactionTagSelector({ bankTransaction }: BankTransactionT
       id,
       key,
       value,
-      dimensionLabel: dimension_display_name ?? key,
-      valueLabel: value_display_name ?? value,
-      archivedAt: archived_at,
+      dimensionDisplayName: dimension_display_name,
+      valueDisplayName: value_display_name,
+      archivedAt: archived_at ? new Date(archived_at) : null,
       _local: {
         isOptimistic: _local?.isOptimistic ?? false,
       },

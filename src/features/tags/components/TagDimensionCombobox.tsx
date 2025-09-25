@@ -18,9 +18,8 @@ class TagValueDefinitionAsOption {
   }
 
   get label() {
-    const label = (this.tagValueDefinition.displayName ?? this.tagValueDefinition.value)
-    const isArchived = this.tagValueDefinition.archivedAt
-    if (isArchived) {
+    const label = (this.valueDisplayName ?? this.tagValueDefinition.value)
+    if (this.isArchived) {
       return `${label} (Archived)`
     }
     return label
@@ -28,6 +27,10 @@ class TagValueDefinitionAsOption {
 
   get value() {
     return this.tagValueDefinition.value
+  }
+
+  get valueDisplayName() {
+    return this.tagValueDefinition.displayName
   }
 
   get isArchived() {
@@ -66,15 +69,14 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
     let nextTag: Tag | null = null
 
     if (tagDimension && option) {
-      const dimensionLabel = (tagDimension.displayName ?? null) as string
       nextTag = makeTag({
         id: option.id,
-        dimensionLabel: dimensionLabel,
-        valueLabel: option.label,
-        archivedAt: option.archivedAt?.toISOString() ?? null,
-        _local: { isOptimistic: false },
-        value: option.value,
         key: tagDimension.key,
+        dimensionDisplayName: tagDimension.displayName,
+        value: option.value,
+        valueDisplayName: option.valueDisplayName,
+        archivedAt: option.archivedAt,
+        _local: { isOptimistic: false },
       })
     }
 

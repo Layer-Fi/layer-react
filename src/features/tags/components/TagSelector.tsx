@@ -53,7 +53,7 @@ function TagSelectorSelection({
       selectionMode='none'
       onRemove={
         onRemoveTag
-          ? (keys: Set<string | number>) => {
+          ? (keys) => {
             keys.forEach((key) => {
               if (typeof key !== 'string') {
                 return
@@ -167,7 +167,7 @@ export function TagSelector({
     () => data
       ?.map(({ key, definedValues, displayName: dimensionDisplayName }) => {
         return {
-          label: (dimensionDisplayName ?? key),
+          label: dimensionDisplayName ?? key,
           options: definedValues.map(({ id: valueId, value: value, displayName: valueDisplayName, archivedAt }) => {
             const valueLabel = (valueDisplayName ?? value)
             const isArchived = !!archivedAt
