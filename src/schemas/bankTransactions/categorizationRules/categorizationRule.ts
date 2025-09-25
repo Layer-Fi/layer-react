@@ -1,5 +1,5 @@
 import { pipe, Schema } from 'effect/index'
-import { BankTransactionCounterpartySchema, MinimalBankTransactionSchema } from '../bankTransaction'
+import { BankTransactionCounterpartySchema, MinimalBankTransactionSchema } from '../base'
 import { CategorizationSchema } from '../../categorization'
 
 export enum BankTransactionType {
