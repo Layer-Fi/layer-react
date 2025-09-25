@@ -72,7 +72,7 @@ export function BaseConfirmationModal({
           <VStack pbe='2xs'>
             <ModalTitleWithClose
               heading={(
-                <ModalHeading size='lg'>
+                <ModalHeading size='md'>
                   {title}
                 </ModalHeading>
               )}
