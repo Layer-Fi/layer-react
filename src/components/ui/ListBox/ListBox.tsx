@@ -52,7 +52,7 @@ function InternalListBoxSection<
    * a section.
   */
   const stopClickEventsRef = useStopClickEventsRefCallback()
-  const mergedRef = mergeRefs(stopClickEventsRef, ref)
+  const mergedRef = mergeRefs<HTMLDivElement>(stopClickEventsRef, ref)
 
   return (
     <ReactAriaListBoxSection

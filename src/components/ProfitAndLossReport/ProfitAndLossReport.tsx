@@ -1,14 +1,18 @@
-import { ReactNode, useCallback, useContext, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useContext, useMemo } from 'react'
 import { View as ViewType } from '../../types/general'
 import { ReportsStringOverrides } from '../../views/Reports/Reports'
 import type { TimeRangePickerConfig } from '../../views/Reports/reportTypes'
 import { Header, HeaderCol, HeaderRow } from '../Header'
-import { ProfitAndLoss } from '../ProfitAndLoss'
-import { ProfitAndLossDetailLinesDownloadButton } from '../ProfitAndLossDetailLinesDownloadButton'
 import { View } from '../View'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import { ProfitAndLossDetailReport } from '../ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
+import { ProfitAndLossTable } from '../ProfitAndLossTable'
+import { ProfitAndLossCompareOptions } from '../ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
+import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker/ProfitAndLossDatePicker'
+import { ProfitAndLossDownloadButton } from '../ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
+import { ProfitAndLossComparisonContext } from '../../contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
+import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
 
 type ViewBreakpoint = ViewType | undefined
 
@@ -16,6 +20,7 @@ export type ProfitAndLossReportProps = {
   stringOverrides?: ReportsStringOverrides
   view?: ViewBreakpoint
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
+  hideHeader?: boolean
 } & TimeRangePickerConfig
 
 export type SelectedLineItem = {
@@ -32,9 +37,10 @@ export const ProfitAndLossReport = ({
   csvMoneyFormat,
   view,
   renderInAppLink,
+  hideHeader,
 }: ProfitAndLossReportProps) => {
-  const { comparisonConfig } = useContext(ProfitAndLoss.ComparisonContext)
-  const [selectedLineItem, setSelectedLineItem] = useState<SelectedLineItem | null>(null)
+  const { selectedLineItem, setSelectedLineItem } = useContext(ProfitAndLossContext)
+  const { comparisonConfig } = useContext(ProfitAndLossComparisonContext)
 
   const breadcrumbIndexMap = useMemo(() => {
     if (!selectedLineItem) return {}
@@ -59,61 +65,61 @@ export const ProfitAndLossReport = ({
     if (breadcrumbPath) {
       setSelectedLineItem({ lineItemName, breadcrumbPath })
     }
-  }, [selectedLineItem, breadcrumbIndexMap])
+  }, [selectedLineItem, breadcrumbIndexMap, setSelectedLineItem])
 
   const handleCloseDetailReport = useCallback(() => {
     setSelectedLineItem(null)
-  }, [])
+  }, [setSelectedLineItem])
 
   const useComparisonPnl = !!comparisonConfig
 
-  return (
-    <InAppLinkProvider renderInAppLink={renderInAppLink}>
-      <View
-        type='panel'
-        header={(
-          <Header>
+  const header = useMemo(() => {
+    if (hideHeader) return null
+
+    return (
+      <Header>
+        <HeaderRow>
+          <HeaderCol>
+            <ProfitAndLossDatePicker
+              allowedDatePickerModes={allowedDatePickerModes}
+              datePickerMode={datePickerMode}
+              defaultDatePickerMode={defaultDatePickerMode}
+              customDateRanges={customDateRanges}
+            />
+            {view === 'desktop' && useComparisonPnl && <ProfitAndLossCompareOptions />}
+          </HeaderCol>
+          <HeaderCol>
+            <ProfitAndLossDownloadButton
+              stringOverrides={stringOverrides?.downloadButton}
+              moneyFormat={csvMoneyFormat}
+            />
+          </HeaderCol>
+        </HeaderRow>
+        {view !== 'desktop' && useComparisonPnl
+          && (
             <HeaderRow>
               <HeaderCol>
-                <>
-                  <ProfitAndLoss.DatePicker
-                    allowedDatePickerModes={allowedDatePickerModes}
-                    datePickerMode={datePickerMode}
-                    defaultDatePickerMode={defaultDatePickerMode}
-                    customDateRanges={customDateRanges}
-                  />
-                  {view === 'desktop' && useComparisonPnl && <ProfitAndLoss.CompareOptions />}
-                </>
-              </HeaderCol>
-              <HeaderCol>
-                {selectedLineItem
-                  ? (
-                    <ProfitAndLossDetailLinesDownloadButton
-                      pnlStructureLineItemName={selectedLineItem.lineItemName}
-                      iconOnly={view === 'mobile'}
-                    />
-                  )
-                  : (
-                    <ProfitAndLoss.DownloadButton
-                      stringOverrides={stringOverrides?.downloadButton}
-                      useComparisonPnl={useComparisonPnl}
-                      moneyFormat={csvMoneyFormat}
-                      view={view}
-                    />
-                  )}
+                <ProfitAndLossCompareOptions />
               </HeaderCol>
             </HeaderRow>
-            {view !== 'desktop' && useComparisonPnl
-              && (
-                <HeaderRow>
-                  <HeaderCol>
-                    <ProfitAndLoss.CompareOptions />
-                  </HeaderCol>
-                </HeaderRow>
-              )}
-          </Header>
-        )}
-      >
+          )}
+      </Header>
+    )
+  }, [
+    allowedDatePickerModes,
+    csvMoneyFormat,
+    customDateRanges,
+    datePickerMode,
+    defaultDatePickerMode,
+    hideHeader,
+    stringOverrides?.downloadButton,
+    useComparisonPnl,
+    view,
+  ])
+
+  return (
+    <InAppLinkProvider renderInAppLink={renderInAppLink}>
+      <View type='panel' header={header}>
         {selectedLineItem
           ? (
             <ProfitAndLossDetailReport
@@ -124,7 +130,7 @@ export const ProfitAndLossReport = ({
             />
           )
           : (
-            <ProfitAndLoss.Table
+            <ProfitAndLossTable
               asContainer={false}
               stringOverrides={stringOverrides?.profitAndLoss?.table}
               onLineItemClick={handleLineItemClick}

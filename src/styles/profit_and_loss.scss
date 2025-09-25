@@ -249,10 +249,7 @@
   display: flex;
   align-items: stretch;
   border-radius: var(--border-radius-sm);
-  box-shadow:
-    0 0 0 1px rgb(16 24 40 / 4%),
-    0 2px 4px 0 rgb(16 24 40 / 6%),
-    0 4px 12px 0 rgb(16 24 40 / 8%);
+  border: 1px solid var(--border-color);
   margin-right: var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
   margin-left: var(--spacing-xl);
@@ -411,7 +408,6 @@
 @container (max-width: 759px) and (min-width: 500px) {
   .Layer__profit-and-loss__chart_with_summaries {
     flex-direction: column;
-    box-shadow: none;
     margin-right: 0;
     margin-bottom: var(--spacing-md);
     margin-left: 0;
@@ -421,7 +417,6 @@
 @container (max-width: 500px) {
   .Layer__profit-and-loss__chart_with_summaries {
     flex-direction: column;
-    box-shadow: none;
     margin-right: 0;
     margin-bottom: var(--spacing-md);
     margin-left: 0;
@@ -506,4 +501,3 @@
     padding-right: var(--spacing-lg);
   }
 }
-

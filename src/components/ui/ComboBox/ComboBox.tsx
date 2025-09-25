@@ -12,13 +12,14 @@ import Select, {
 } from 'react-select'
 import { HStack, VStack } from '../Stack/Stack'
 import { Header, P, Span } from '../Typography/Text'
-import { useId, useMemo, useRef, type ReactNode } from 'react'
+import { useId, useMemo, useRef, type ComponentProps, type ReactNode } from 'react'
 import type { OneOf } from '../../../types/utility/oneOf'
 import classNames from 'classnames'
 import { PORTAL_CLASS_NAME } from '../Portal/Portal'
 import Check from '../../../icons/Check'
 import { ChevronDown, Lock, X } from 'lucide-react'
 import { LoadingSpinner } from '../Loading/LoadingSpinner'
+import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
 
 const COMBO_BOX_CLASS_NAMES = {
   CONTAINER: 'Layer__ComboBoxContainer',
@@ -210,6 +211,29 @@ function buildCustomSingleValue({ SelectedValue }: { SelectedValue: ReactNode })
     )
   }
 }
+
+function buildCustomMenuPortal() {
+  return function CustomMenu<T extends ComboBoxOption>({
+    children,
+    ...restProps
+  }: ComponentProps<typeof components.MenuPortal<T, false, GroupBase<T>>>) {
+    const dataProperties = toDataProperties({ 'react-aria-top-layer': true })
+
+    return (
+      <components.MenuPortal
+        {...restProps}
+        // We need to pass data-react-aria-top-layer to ensure that this is never made inert by
+        // react-aria-components if the ModalOverlay is on screen. We should approach this in a
+        // better way when this PR is merged: https://github.com/adobe/react-spectrum/pull/8796
+        // @ts-expect-error - see above
+        innerProps={dataProperties}
+      >
+        {children}
+      </components.MenuPortal>
+    )
+  }
+}
+
 type OptionsOrGroups<T> = OneOf<[
   { options: ReadonlyArray<T> },
   { groups: ReadonlyArray<{ label: string, options: ReadonlyArray<T> }> },
@@ -303,6 +327,8 @@ export function ComboBox<T extends ComboBoxOption>({
     [SelectedValue],
   )
 
+  const CustomMenuPortalRef = useRef(buildCustomMenuPortal())
+
   const CustomClearIndicatorRef = useRef(buildCustomClearIndicator())
   const CustomLoadingIndicatorRef = useRef(buildCustomLoadingIndicator())
   const CustomDropdownIndicatorRef = useRef(buildCustomDropdownIndicator())
@@ -366,6 +392,7 @@ export function ComboBox<T extends ComboBoxOption>({
           DropdownIndicator: CustomDropdownIndicatorRef.current,
 
           SingleValue: CustomSingleValue,
+          MenuPortal: CustomMenuPortalRef.current,
         }}
         isClearable={isClearable && !isReadOnly}
         isDisabled={isDisabled}

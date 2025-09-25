@@ -2,9 +2,9 @@ import { ReactNode, useState } from 'react'
 import { BalanceSheet as EmbeddedBalanceSheet } from '../../components/BalanceSheet'
 import { BalanceSheetStringOverrides } from '../../components/BalanceSheet/BalanceSheet'
 import { Container } from '../../components/Container'
-import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { PnLDownloadButtonStringOverrides } from '../../components/ProfitAndLossDownloadButton'
+import { ProfitAndLossDownloadButtonStringOverrides } from '../../components/ProfitAndLossDownloadButton/types'
 import { ProfitAndLossTableStringOverrides } from '../../components/ProfitAndLossTable'
 import { StatementOfCashFlow as EmbeddedStatementOfCashFlow } from '../../components/StatementOfCashFlow'
 import { StatementOfCashFlowStringOverrides } from '../../components/StatementOfCashFlow/StatementOfCashFlow'
@@ -23,7 +23,7 @@ type ViewBreakpoint = ViewType | undefined
 
 export interface ReportsStringOverrides {
   title?: string
-  downloadButton?: PnLDownloadButtonStringOverrides
+  downloadButton?: ProfitAndLossDownloadButtonStringOverrides
   profitAndLoss?: {
     detailedCharts?: ProfitAndLossDetailedChartsStringOverrides
     table?: ProfitAndLossTableStringOverrides
