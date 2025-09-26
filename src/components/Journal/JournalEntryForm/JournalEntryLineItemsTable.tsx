@@ -51,7 +51,7 @@ export const JournalEntryLineItemsTable = ({
   return (
     <>
       <Separator />
-      <VStack gap='md' pbs='lg' className='Layer__JournalEntryForm__LineItemsSection'>
+      <VStack gap='md' pi='xl'>
         <form.Field name='lineItems' mode='array'>
           {(field) => {
             // Use lineItems from top level (no more useStore inside render function!)

@@ -178,7 +178,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         </div>
       </VStack>
 
-      <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItems`} gap='md'>
+      <VStack gap='md' pbs='lg'>
         <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__DebitSection`} gap='md'>
           <JournalEntryLineItemsTable
             form={form}
@@ -189,7 +189,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           />
         </VStack>
 
-        <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__CreditSection`} gap='md'>
+        <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__CreditSection`} gap='md' pbe='lg'>
           <JournalEntryLineItemsTable
             form={form}
             isReadOnly={isReadOnly}

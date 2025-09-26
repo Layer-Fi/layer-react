@@ -2,38 +2,24 @@
   padding-top: var(--spacing-xl);
 
   .Layer__JournalEntryForm__Row {
-      padding: 0 var(--spacing-xl) ;
-      display: flex;
-      gap: var(--spacing-md);
+    padding: 0 var(--spacing-xl);
+    display: flex;
+    gap: var(--spacing-md);
+
+    > * {
+      flex: 0 0 clamp(16rem, 100%, 24rem);
+    }
+  }
+
+  @container (max-width: 760px) {
+    .Layer__JournalEntryForm__Row {
+      flex-direction: column;
 
       > * {
-        flex: 0 0 16rem;
+        flex: 1;
+        max-width: clamp(16rem, 100%, 24rem);
       }
     }
-
-  @media (max-width: 768px) {
-      gap: var(--spacing-sm);
-
-      .Layer__JournalEntryForm__Row {
-        flex-direction: column;
-        gap: var(--spacing-sm);
-
-        > * {
-          flex: 1;
-          max-width: 16rem;
-        }
-    }
-  }
-
-
-
-  .Layer__JournalEntryForm__LineItems {
-    padding: var(--spacing-lg) 0;
-  }
-
-  .Layer__JournalEntryForm__LineItemsSection {
-    padding: 0 var(--spacing-xl) ;
-    margin-bottom: var(--spacing-lg);
   }
 
   .Layer__JournalEntryForm__SectionHeader {
@@ -59,7 +45,4 @@
     min-width: 20rem;
     max-width: 32rem;
   }
-
-
-
 }

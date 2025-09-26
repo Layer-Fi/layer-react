@@ -137,7 +137,7 @@ export const ApiLineItemSchema = Schema.Struct({
   ),
   createdAt: pipe(
     Schema.propertySignature(Schema.Date),
-    Schema.fromKey('created_at'),
+    Schema.fromKey('createdAt'),
   ),
   entryReversalOf: pipe(
     Schema.propertySignature(Schema.NullOr(Schema.String)),

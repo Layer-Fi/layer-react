@@ -7,14 +7,12 @@ interface DebitCreditPillProps {
   value: LedgerEntryDirection
   onChange: (direction: LedgerEntryDirection) => void
   isReadOnly?: boolean
-  size?: 'sm' | 'md'
 }
 
 export const DebitCreditPill = ({
   value,
   onChange,
   isReadOnly = false,
-  size = 'md',
 }: DebitCreditPillProps) => {
   const handleToggle = useCallback(() => {
     if (isReadOnly) return
@@ -30,7 +28,6 @@ export const DebitCreditPill = ({
 
   const className = classNames(
     'Layer__DebitCreditPill',
-    `Layer__DebitCreditPill--${size}`,
     {
       'Layer__DebitCreditPill--debit': isDebit,
       'Layer__DebitCreditPill--credit': !isDebit,

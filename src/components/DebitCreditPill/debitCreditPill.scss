@@ -1,78 +1,25 @@
 .Layer__DebitCreditPill {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  
+
+  height: 20px;
+  font-size: 11px;
+  padding: 2px 6px;
+
   border: none;
   outline: none;
-  
   cursor: pointer;
-  user-select: none;
-  
-  font-family: inherit;
-  font-weight: 540;
-  white-space: nowrap;
-  
+
   border-radius: var(--border-radius-5xl);
-  transition: all var(--transition-speed) ease-in-out;
-  
-  // Size variants
-  &--sm {
-    height: 20px;
-    font-size: 11px;
-    padding: 2px 6px;
-  }
-  
-  &--md {
-    height: 24px;
-    font-size: 12px;
-    padding: 4px 8px;
-  }
-  
-  // Direction variants
+
+
   &--debit {
     background-color: var(--badge-bg-color-warning);
     color: var(--badge-fg-color-warning);
   }
-  
+
   &--credit {
     background-color: var(--badge-bg-color-success);
     color: var(--badge-fg-color-success);
-  }
-  
-  // Interactive states
-  &:not(:disabled) {
-    &:hover {
-      opacity: 0.8;
-      transform: translateY(-50%) scale(1.02);
-    }
-    
-    &:focus {
-      outline: none;
-    }
-    
-    &:active {
-      transform: translateY(-50%) scale(0.98);
-    }
-  }
-  
-  // Disabled/readonly state
-  &:disabled,
-  &--readonly {
-    cursor: default;
-    
-    &:hover {
-      opacity: 1;
-      transform: translateY(-50%);
-    }
-    
-    &:active {
-      transform: translateY(-50%);
-    }
   }
 }

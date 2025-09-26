@@ -5,8 +5,6 @@ import { Label } from '../../../components//ui/Typography/Text'
 import { useTagDimensionByKey } from '../api/useTagDimensionByKey'
 import { type TagValueDefinition, makeTag, type Tag } from '../tagSchemas'
 import { FallbackWithSkeletonLoader } from '../../../components/SkeletonLoader/SkeletonLoader'
-import classNames from 'classnames'
-import './tagDimensionCombobox.scss'
 
 class TagValueDefinitionAsOption {
   private tagValueDefinition: TagValueDefinition
@@ -80,24 +78,26 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
   const additionalAriaProps = !showLabel && { 'aria-label': tagDimension?.key }
 
   return (
-    <VStack gap='3xs' className={classNames('Layer__TagDimensionCombobox', className)}>
-      {showLabel && (
-        <FallbackWithSkeletonLoader isLoading={!tagDimension} height='1rem' width='8rem'>
-          <Label size='sm' htmlFor={inputId}>
-            {tagDimension?.key}
-          </Label>
-        </FallbackWithSkeletonLoader>
-      )}
-      <ComboBox
-        options={options}
-        onSelectedValueChange={onSelectedValueChange}
-        selectedValue={selectedOption}
-        inputId={inputId}
-        isReadOnly={isReadOnly}
-        isLoading={isLoading}
-        isClearable={false}
-        {...additionalAriaProps}
-      />
-    </VStack>
+    <div className={className} style={{ minWidth: '12rem' }}>
+      <VStack gap='3xs'>
+        {showLabel && (
+          <FallbackWithSkeletonLoader isLoading={!tagDimension} height='1rem' width='8rem'>
+            <Label size='sm' htmlFor={inputId}>
+              {tagDimension?.key}
+            </Label>
+          </FallbackWithSkeletonLoader>
+        )}
+        <ComboBox
+          options={options}
+          onSelectedValueChange={onSelectedValueChange}
+          selectedValue={selectedOption}
+          inputId={inputId}
+          isReadOnly={isReadOnly}
+          isLoading={isLoading}
+          isClearable={false}
+          {...additionalAriaProps}
+        />
+      </VStack>
+    </div>
   )
 }
