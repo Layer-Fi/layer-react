@@ -7,11 +7,17 @@ import { Container } from '../Container'
 import { JournalTable } from '../JournalTable'
 import { JournalTableStringOverrides } from '../JournalTable/JournalTableWithPanel'
 import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
+import { JournalStoreProvider, useJournalRouteState, JournalRoute } from '../../providers/JournalStore/JournalStoreProvider'
 import { ReactNode } from 'react'
+import { JournalEntryDrawer } from './JournalEntryDrawer/JournalEntryDrawer'
+import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimensions'
+import { INVOICE_MECE_TAG_DIMENSION } from '../Invoices/InvoiceForm/formUtils'
 
 export interface JournalConfig {
   form: {
     addEntryLinesLimit?: number
+    tagDimensionKeysInUse?: string[]
+
   }
 }
 
@@ -29,17 +35,22 @@ export interface JournalProps {
 export const JOURNAL_CONFIG: JournalConfig = {
   form: {
     addEntryLinesLimit: 10,
+    tagDimensionKeysInUse: [INVOICE_MECE_TAG_DIMENSION, 'entity'],
   },
 }
 
 export const Journal = (props: JournalProps) => {
+  usePreloadTagDimensions()
+
   const JournalContextData = useJournal()
   const AccountsContextData = useChartOfAccounts()
   return (
     <ChartOfAccountsContext.Provider value={AccountsContextData}>
       <JournalContext.Provider value={JournalContextData}>
         <InAppLinkProvider renderInAppLink={props.renderInAppLink}>
-          <JournalContent {...props} />
+          <JournalStoreProvider>
+            <JournalContent {...props} />
+          </JournalStoreProvider>
         </InAppLinkProvider>
       </JournalContext.Provider>
     </ChartOfAccountsContext.Provider>
@@ -51,6 +62,22 @@ const JournalContent = ({
   config = JOURNAL_CONFIG,
   stringOverrides,
 }: JournalProps) => {
+  const routeState = useJournalRouteState()
+
+  return routeState.route === JournalRoute.EntryForm
+    ? <JournalEntryDrawer config={config} />
+    : <JournalTableView asWidget={asWidget} config={config} stringOverrides={stringOverrides} />
+}
+
+const JournalTableView = ({
+  asWidget,
+  config,
+  stringOverrides,
+}: {
+  asWidget?: boolean
+  config: JournalConfig
+  stringOverrides?: JournalStringOverrides
+}) => {
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (

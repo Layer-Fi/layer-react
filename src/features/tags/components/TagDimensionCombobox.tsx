@@ -40,10 +40,11 @@ type TagDimensionComboboxProps = {
   onValueChange: (tags: Tag | null) => void
   isReadOnly?: boolean
   showLabel?: boolean
+  className?: string
 }
 
-export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isReadOnly, showLabel }: TagDimensionComboboxProps) => {
-  const { data: tagDimension, isLoading } = useTagDimensionByKey({ dimensionKey })
+export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isReadOnly, showLabel, className }: TagDimensionComboboxProps) => {
+  const { data: tagDimension, isLoading, isError } = useTagDimensionByKey({ dimensionKey })
 
   const options = useMemo(() => {
     if (!tagDimension) return []
@@ -75,25 +76,33 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
 
   const inputId = useId()
   const additionalAriaProps = !showLabel && { 'aria-label': tagDimension?.key }
+
+  /* Don't render anything if tag dimension can't be fetched, i.e. it doesn't exist for this business. */
+  if (isError) {
+    return null
+  }
+
   return (
-    <VStack gap='3xs'>
-      {showLabel && (
-        <FallbackWithSkeletonLoader isLoading={!tagDimension} height='1rem' width='5rem'>
-          <Label size='sm' htmlFor={inputId}>
-            {tagDimension?.key}
-          </Label>
-        </FallbackWithSkeletonLoader>
-      )}
-      <ComboBox
-        options={options}
-        onSelectedValueChange={onSelectedValueChange}
-        selectedValue={selectedOption}
-        inputId={inputId}
-        isReadOnly={isReadOnly}
-        isLoading={isLoading}
-        isClearable={false}
-        {...additionalAriaProps}
-      />
-    </VStack>
+    <div className={className}>
+      <VStack gap='3xs'>
+        {showLabel && (
+          <FallbackWithSkeletonLoader isLoading={!tagDimension} height='1rem' width='8rem'>
+            <Label size='sm' htmlFor={inputId}>
+              {tagDimension?.key}
+            </Label>
+          </FallbackWithSkeletonLoader>
+        )}
+        <ComboBox
+          options={options}
+          onSelectedValueChange={onSelectedValueChange}
+          selectedValue={selectedOption}
+          inputId={inputId}
+          isReadOnly={isReadOnly}
+          isLoading={isLoading}
+          isClearable={false}
+          {...additionalAriaProps}
+        />
+      </VStack>
+    </div>
   )
 }

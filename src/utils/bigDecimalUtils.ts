@@ -34,6 +34,10 @@ export const convertBigDecimalToCents = (amount: BD.BigDecimal): number => {
   return Number(rounded.value)
 }
 
+export const convertBigDecimalToBigIntCents = (amount: BD.BigDecimal): bigint => {
+  return BigInt(convertBigDecimalToCents(amount))
+}
+
 export const convertBigIntCentsToBigDecimal = (cents: bigint): BD.BigDecimal => {
   // Create a BigDecimal representing the cents
   const decimalCents = BD.fromBigInt(cents)

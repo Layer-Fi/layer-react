@@ -1,1 +1,0 @@
-export { JournalForm } from './JournalForm'

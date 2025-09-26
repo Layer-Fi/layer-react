@@ -1,0 +1,35 @@
+.Layer__JournalEntryForm {
+  padding-top: var(--spacing-xl);
+
+  .Layer__JournalEntryForm__Row {
+    padding: 0 var(--spacing-xl);
+    display: flex;
+    gap: var(--spacing-md);
+
+    > * {
+      flex: 0 0 clamp(16rem, 100%, 24rem);
+    }
+  }
+
+  @container (max-width: 760px) {
+    .Layer__JournalEntryForm__Row {
+      flex-direction: column;
+
+      > * {
+        flex: 1;
+        max-width: clamp(12rem, 100%, 16rem);
+      }
+    }
+  }
+
+  .Layer__JournalEntryForm__Metadata {
+    border-top: 1px solid var(--color-base-300);
+    background-color: var(--color-base-50);
+  }
+
+  .Layer__JournalEntryForm__AdditionalTextFields {
+    flex: 1;
+    min-width: 20rem;
+    max-width: 32rem;
+  }
+}

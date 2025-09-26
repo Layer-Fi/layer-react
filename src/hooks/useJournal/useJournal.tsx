@@ -43,7 +43,7 @@ type UseJournal = () => {
   form?: JournalFormTypes
   apiError?: string
   setForm: (form?: JournalFormTypes) => void
-  addEntryLine: (direction: LedgerEntryDirection) => void
+  addEntryLine: () => void
   removeEntryLine: (index: number) => void
   reverseEntry: (entryId: string) => ReturnType<typeof Layer.reverseJournalEntry>
   hasMore: boolean
@@ -171,6 +171,8 @@ export const useJournal: UseJournal = () => {
             },
             amount: 0,
             direction: LedgerEntryDirection.Credit,
+            job: null,
+            description: '',
           },
           {
             account_identifier: {
@@ -182,8 +184,11 @@ export const useJournal: UseJournal = () => {
             },
             amount: 0,
             direction: LedgerEntryDirection.Debit,
+            job: null,
+            description: '',
           },
         ],
+        notes: '',
       },
       errors: undefined,
     })
@@ -341,7 +346,7 @@ export const useJournal: UseJournal = () => {
     }
   }
 
-  const addEntryLine = (direction: LedgerEntryDirection) => {
+  const addEntryLine = () => {
     if (!form) {
       return null
     }
@@ -357,7 +362,9 @@ export const useJournal: UseJournal = () => {
         subType: undefined,
       },
       amount: 0,
-      direction,
+      direction: 'DEBIT' as LedgerEntryDirection,
+      job: null,
+      description: '',
     }
 
     const entryLines = form?.data.line_items || []

@@ -13,7 +13,6 @@ import { DatePicker } from '../DatePicker'
 import { HeaderRow, HeaderCol } from '../Header'
 import { InputGroup, Select } from '../Input'
 import { StaticValue } from '../Input/StaticValue'
-import { JournalFormStringOverrides } from '../JournalForm/JournalForm'
 import { Heading, HeadingSize, TextSize, Text, ErrorText } from '../Typography'
 import { Bill, BillPaymentMethod, BillPaymentMethods } from '../../types/bills'
 import CloseIcon from '../../icons/CloseIcon'
@@ -46,10 +45,14 @@ const buildLabel = (bill: Bill, amount?: string | null) => {
   )
 }
 
+export type BillsRecordPaymentStringOverrides = {
+  header?: string
+}
+
 export const BillsRecordPayment = ({
   stringOverrides,
 }: {
-  stringOverrides?: JournalFormStringOverrides
+  stringOverrides?: BillsRecordPaymentStringOverrides
 }) => {
   const {
     billsToPay,
