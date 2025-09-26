@@ -1,5 +1,7 @@
 import { TagDimensionCombobox } from '../../../features/tags/components/TagDimensionCombobox'
 import { Tag } from '../../../features/tags/tagSchemas'
+import { useAvailableTagDimensions } from '../../../features/tags/api/useAvailableTagDimensions'
+import { FallbackWithSkeletonLoader } from '../../../components/SkeletonLoader/SkeletonLoader'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
 
@@ -18,13 +20,15 @@ export const TagDimensionsGroup = ({
   showLabels = false,
   isReadOnly = false,
 }: TagDimensionsGroupProps) => {
-  const handleDimensionChange = (dimensionKey: string) => (newTag: Tag | null) => {
-    // Filter out any existing tags for this dimension
+  const { availableDimensions, isLoading, isError } = useAvailableTagDimensions({
+    desiredDimensionKeys: dimensionKeys,
+  })
+
+  const handleTagValueChange = (dimensionKey: string) => (newTag: Tag | null) => {
     const filteredTags = value.filter(tag =>
       tag.dimensionLabel.toLowerCase() !== dimensionKey.toLowerCase(),
     )
 
-    // Add the new tag if it exists, otherwise just use filtered tags
     const updatedTags = newTag ? [...filteredTags, newTag] : filteredTags
 
     onChange(updatedTags)
@@ -36,15 +40,38 @@ export const TagDimensionsGroup = ({
     ) ?? null
   }
 
+  /* Optimistically render skeleton loaders for each desired dimension while fetching */
+  if (isLoading) {
+    return (
+      <>
+        {dimensionKeys.map(dimensionKey => (
+          <div
+            key={dimensionKey}
+            className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--tag`}
+            style={{ minWidth: '12rem' }}
+          >
+            <FallbackWithSkeletonLoader isLoading={true} height='2.5rem' width='100%'>
+              <div />
+            </FallbackWithSkeletonLoader>
+          </div>
+        ))}
+      </>
+    )
+  }
+
+  if (isError) {
+    return null
+  }
+
   return (
     <>
-      {dimensionKeys.map(dimensionKey => (
+      {availableDimensions.map(dimension => (
         <TagDimensionCombobox
-          key={dimensionKey}
-          dimensionKey={dimensionKey}
+          key={dimension.key}
+          dimensionKey={dimension.key}
           isReadOnly={isReadOnly}
-          value={getSelectedTagForDimension(dimensionKey)}
-          onValueChange={handleDimensionChange(dimensionKey)}
+          value={getSelectedTagForDimension(dimension.key)}
+          onValueChange={handleTagValueChange(dimension.key)}
           showLabel={showLabels}
           className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--tag`}
         />

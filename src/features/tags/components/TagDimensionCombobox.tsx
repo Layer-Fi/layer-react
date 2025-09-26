@@ -44,7 +44,7 @@ type TagDimensionComboboxProps = {
 }
 
 export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isReadOnly, showLabel, className }: TagDimensionComboboxProps) => {
-  const { data: tagDimension, isLoading } = useTagDimensionByKey({ dimensionKey })
+  const { data: tagDimension, isLoading, isError } = useTagDimensionByKey({ dimensionKey })
 
   const options = useMemo(() => {
     if (!tagDimension) return []
@@ -76,6 +76,11 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
 
   const inputId = useId()
   const additionalAriaProps = !showLabel && { 'aria-label': tagDimension?.key }
+
+  /* Don't render anything if tag dimension can't be fetched, i.e. it doesn't exist for this business. */
+  if (isError) {
+    return null
+  }
 
   return (
     <div className={className} style={{ minWidth: '12rem' }}>

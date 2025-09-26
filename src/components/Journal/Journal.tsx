@@ -10,6 +10,8 @@ import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkCont
 import { JournalStoreProvider, useJournalRouteState, JournalRoute } from '../../providers/JournalStore'
 import { ReactNode } from 'react'
 import { JournalEntryDrawer } from './JournalEntryDrawer'
+import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimensions'
+import { INVOICE_MECE_TAG_DIMENSION } from '../Invoices/InvoiceForm/formUtils'
 
 export interface JournalConfig {
   form: {
@@ -33,11 +35,13 @@ export interface JournalProps {
 export const JOURNAL_CONFIG: JournalConfig = {
   form: {
     addEntryLinesLimit: 10,
-    tagDimensionKeysInUse: [], // [INVOICE_MECE_TAG_DIMENSION, 'entity'],
+    tagDimensionKeysInUse: [INVOICE_MECE_TAG_DIMENSION, 'entity'],
   },
 }
 
 export const Journal = (props: JournalProps) => {
+  usePreloadTagDimensions()
+
   const JournalContextData = useJournal()
   const AccountsContextData = useChartOfAccounts()
   return (
