@@ -39,8 +39,8 @@ export type NewApiJournalEntryLineItem = {
   account_identifier: AccountIdentifierPayloadObject
   amount: number
   direction: LedgerEntryDirection
-  job?: Tag | null  // New field for Job dimension
-  description?: string  // New field for line item description
+  job?: Tag | null
+  description?: string
 }
 
 export type NewFormJournalEntry = {
@@ -48,7 +48,7 @@ export type NewFormJournalEntry = {
   created_by: string
   memo: string
   line_items: JournalEntryLineItem[]
-  notes?: string  // New field for additional notes
+  notes?: string
 }
 
 export type JournalEntryLineItem = {
@@ -66,8 +66,8 @@ export type JournalEntryLineItem = {
   }
   amount: number
   direction: LedgerEntryDirection
-  job?: Tag | null  // New field for Job dimension
-  description?: string  // New field for line item description
+  job?: Tag | null
+  description?: string
 }
 
 export type ApiAccountType = {

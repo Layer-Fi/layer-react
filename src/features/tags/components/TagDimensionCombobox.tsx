@@ -83,7 +83,7 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
   }
 
   return (
-    <div className={className} style={{ minWidth: '12rem' }}>
+    <div className={className}>
       <VStack gap='3xs'>
         {showLabel && (
           <FallbackWithSkeletonLoader isLoading={!tagDimension} height='1rem' width='8rem'>

@@ -4,6 +4,7 @@ import {
   type GroupProps as ReactAriaGroupProps,
 } from 'react-aria-components'
 import { toDataProperties } from '../../../utils/styleUtils/toDataProperties'
+import { HStack } from '../Stack/Stack'
 
 const INPUT_GROUP_CLASS_NAME = 'Layer__InputGroup'
 
@@ -29,7 +30,7 @@ export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
         {renderProps => (
           <>
             {typeof children === 'function' ? children(renderProps) : children}
-            {rightSlot && <div className='Layer__InputGroup__rightSlot'>{rightSlot}</div>}
+            {rightSlot && <HStack justify='end'>{rightSlot}</HStack>}
           </>
         )}
       </ReactAriaGroup>

@@ -1,6 +1,6 @@
 import { RefObject, useContext, useMemo, useState } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
-import { useJournalNavigation } from '../../providers/JournalStore'
+import { useJournalNavigation } from '../../providers/JournalStore/JournalStoreProvider'
 import PlusIcon from '../../icons/PlusIcon'
 import { View } from '../../types/general'
 import { Button } from '../Button'

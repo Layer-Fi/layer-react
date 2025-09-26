@@ -29,17 +29,4 @@
   &[data-disabled] {
     cursor: not-allowed;
   }
-
-  &[data-has-right-slot] {
-    // Use the existing grid system to accommodate the right slot
-    // grid-template-columns: minmax(0, 1fr) auto;
-    // grid-template-columns: auto minmax(0, 1fr);
-  }
-}
-
-.Layer__InputGroup__rightSlot {
-  // Position within the grid, not absolutely
-  display: flex;
-  align-items: center;
-  justify-content: end;
 }
