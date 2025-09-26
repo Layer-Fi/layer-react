@@ -17,26 +17,13 @@
 
       > * {
         flex: 1;
-        max-width: clamp(16rem, 100%, 24rem);
+        max-width: clamp(12rem, 100%, 16rem);
       }
-    }
-  }
-
-  .Layer__JournalEntryForm__SectionHeader {
-    margin-bottom: var(--spacing-md);
-
-    &--error {
-      border-left: 3px solid var(--color-error-500);
-      padding-left: var(--spacing-sm);
-      background-color: var(--color-error-50);
-      border-radius: var(--border-radius-sm);
-      padding: var(--spacing-xs) var(--spacing-sm);
     }
   }
 
   .Layer__JournalEntryForm__Metadata {
     border-top: 1px solid var(--color-base-300);
-    padding: var(--spacing-lg) var(--spacing-xl);
     background-color: var(--color-base-50);
   }
 

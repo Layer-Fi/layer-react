@@ -70,7 +70,7 @@ export function getJournalEntryFormInitialValues(journalEntry: ApiCustomJournalE
 export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateCustomJournalEntry {
   return {
     externalId: form.externalId,
-    entryAt: form.entryAt.toDate(), // Convert to Date - API expects date-time string
+    entryAt: form.entryAt.toDate(),
     createdBy: form.createdBy,
     memo: form.memo,
     customerId: form.customer?.id ?? null,
@@ -83,7 +83,7 @@ export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateC
     lineItems: form.lineItems.map(lineItem => ({
       externalId: lineItem.externalId,
       accountIdentifier: lineItem.accountIdentifier,
-      amount: convertBigDecimalToBigIntCents(lineItem.amount), // Convert to BigInt cents
+      amount: convertBigDecimalToBigIntCents(lineItem.amount),
       direction: lineItem.direction,
       memo: lineItem.memo,
       customerId: lineItem.customer?.id ?? null,
@@ -98,27 +98,22 @@ export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateC
 export function validateJournalEntryForm({ value }: { value: JournalEntryForm }) {
   const errors = []
 
-  // Validate entry date
   if (!value.entryAt) {
     errors.push({ entryAt: 'Entry date is a required field.' })
   }
 
-  // Validate created_by
   if (!value.createdBy) {
     errors.push({ createdBy: 'Created by is a required field.' })
   }
 
-  // Validate memo
   if (!value.memo) {
     errors.push({ memo: 'Memo is a required field.' })
   }
 
-  // Validate line items
   if (!value.lineItems || value.lineItems.length === 0) {
     errors.push({ lineItems: 'At least one line item is required.' })
   }
   else {
-    // Check for balanced entries
     const debitTotal = value.lineItems
       .filter(item => item.direction === LedgerEntryDirection.Debit)
       .reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
@@ -131,7 +126,6 @@ export function validateJournalEntryForm({ value }: { value: JournalEntryForm })
       errors.push({ lineItems: 'Debit and credit amounts must be equal' })
     }
 
-    // Validate individual line items
     value.lineItems.forEach((lineItem, index) => {
       const accountId = lineItem.accountIdentifier
       if (accountId.type === 'AccountId' && 'id' in accountId) {

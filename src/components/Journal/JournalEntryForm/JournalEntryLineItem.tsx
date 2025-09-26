@@ -19,7 +19,7 @@ export interface JournalEntryLineItemProps {
   index: number
   isReadOnly: boolean
   onDeleteLine: () => void
-  showLabels?: boolean // Whether to show field labels for this line item
+  showLabels?: boolean
   config?: JournalConfig
 }
 
@@ -29,7 +29,6 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, co
       <div
         className={classNames(`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItem`, isReadOnly && `${JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItem--readonly`)}
       >
-        {/* Account Name Field - Using form account identifier structure */}
         <form.Field name={`lineItems[${index}].accountIdentifier`}>
           {(field) => {
             const onValueChange = (value: AccountIdentifier | null) => {
@@ -52,7 +51,6 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, co
           }}
         </form.Field>
 
-        {/* Amount Field */}
         <form.AppField name={`lineItems[${index}].amount`}>
           {field => (
             <field.FormBigDecimalField
@@ -77,7 +75,6 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, co
           )}
         </form.AppField>
 
-        {/* Tag/Job Dimension Fields - Single form field with custom component */}
         <form.AppField name={`lineItems[${index}].tags`}>
           {field => (
             <TagDimensionsGroup
@@ -90,7 +87,6 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, co
           )}
         </form.AppField>
 
-        {/* Memo Field */}
         <form.AppField name={`lineItems[${index}].memo`}>
           {field => (
             <field.FormTextField
@@ -102,7 +98,6 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, co
           )}
         </form.AppField>
 
-        {/* Remove Button - Updated to match Figma design with X icon */}
         {!isReadOnly && (
           <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--removeButton`}>
             <Button

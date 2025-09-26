@@ -17,6 +17,7 @@ import { usePreloadVendors } from '../../../features/vendors/api/useListVendors'
 import { CustomerVendorSelector } from '../../../features/customerVendor/components/CustomerVendorSelector'
 import { TagDimensionsGroup } from './TagDimensionsGroup'
 import type { CustomerVendorSchema } from '../../../features/customerVendor/customerVendorSchemas'
+import { Separator } from '../../Separator/Separator'
 
 type CustomerVendor = typeof CustomerVendorSchema.Type
 
@@ -180,6 +181,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
 
       <VStack gap='md' pbs='lg'>
         <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__DebitSection`} gap='md'>
+          <Separator />
           <JournalEntryLineItemsTable
             form={form}
             isReadOnly={isReadOnly}
@@ -190,6 +192,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         </VStack>
 
         <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__CreditSection`} gap='md' pbe='lg'>
+          <Separator />
           <JournalEntryLineItemsTable
             form={form}
             isReadOnly={isReadOnly}
@@ -200,7 +203,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         </VStack>
       </VStack>
 
-      <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Metadata`} pbs='md'>
+      <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Metadata`} pb='lg' pi='xl'>
         <HStack justify='space-between' gap='xl'>
           <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__AdditionalTextFields`}>
             <form.AppField name='memo'>

@@ -7,9 +7,7 @@ import type { JournalEntryForm } from './journalEntryFormSchemas'
 import { JournalConfig } from '../Journal'
 import { Button } from '../../ui/Button/Button'
 import { P, Span } from '../../ui/Typography/Text'
-import { Separator } from '../../Separator/Separator'
 import { getJournalEntryLineItemFormDefaultValues } from './formUtils'
-import classNames from 'classnames'
 import { useStore } from '@tanstack/react-form'
 
 export interface JournalEntryLineItemsTableProps {
@@ -29,105 +27,74 @@ export const JournalEntryLineItemsTable = ({
 }: JournalEntryLineItemsTableProps) => {
   const lineItems = useStore(form.store, state => state.values.lineItems) || []
 
-  // Check if there's a balance validation error
-  const hasBalanceError = useStore(form.store, (state) => {
-    const errorMap = state.errorMap
-    const validationErrors = Object.values(errorMap)
-      .filter((value): value is { [key: string]: string }[] =>
-        Array.isArray(value)
-        && value.every(entry => typeof entry === 'object' && entry !== null),
-      )
-      .flatMap(errorArray =>
-        errorArray.flatMap(entry =>
-          Object.entries(entry),
-        ),
-      )
-
-    return validationErrors.some(([key, message]) =>
-      key === 'lineItems' && message.includes('Debit and credit amounts must be equal'),
-    )
-  })
-
   return (
-    <>
-      <Separator />
-      <VStack gap='md' pi='xl'>
-        <form.Field name='lineItems' mode='array'>
-          {(field) => {
-            // Use lineItems from top level (no more useStore inside render function!)
-
-            // Filter line items by direction and get their indices in the original array
-            const filteredIndices: number[] = []
-            lineItems.forEach((item: unknown, index: number) => {
-              const lineItem = item as { direction: LedgerEntryDirection }
-              if (lineItem.direction === direction) {
-                filteredIndices.push(index)
-              }
-            })
-            const displayLineItems = filteredIndices
-
-            const handleAddLineItem = () => {
-              const newLineItem = getJournalEntryLineItemFormDefaultValues(direction)
-              field.pushValue(newLineItem)
+    <VStack gap='md' pi='xl'>
+      <form.Field name='lineItems' mode='array'>
+        {(field) => {
+          const filteredIndices: number[] = []
+          lineItems.forEach((item: unknown, index: number) => {
+            const lineItem = item as { direction: LedgerEntryDirection }
+            if (lineItem.direction === direction) {
+              filteredIndices.push(index)
             }
+          })
+          const displayLineItems = filteredIndices
 
-            const handleRemoveLineItem = (index: number) => {
-              field.removeValue(index)
-            }
+          const handleAddLineItem = () => {
+            const newLineItem = getJournalEntryLineItemFormDefaultValues(direction)
+            field.pushValue(newLineItem)
+          }
 
-            return (
-              <>
-                {/* Header Section - Following Figma design */}
-                <HStack
-                  justify='space-between'
-                  align='center'
-                  className={classNames(
-                    'Layer__JournalEntryForm__SectionHeader',
-                    hasBalanceError && 'Layer__JournalEntryForm__SectionHeader--error',
-                  )}
-                >
-                  <Heading size='xs'>{title}</Heading>
-                </HStack>
+          const handleRemoveLineItem = (index: number) => {
+            field.removeValue(index)
+          }
 
-                {/* Line Items - Show filtered line items by direction with proper label logic */}
-                <VStack gap='xs'>
-                  {displayLineItems.map((originalIndex, displayIndex) => (
-                    <JournalEntryLineItem
-                      key={originalIndex}
-                      form={form}
-                      index={originalIndex}
-                      config={config}
-                      isReadOnly={isReadOnly}
-                      onDeleteLine={() => handleRemoveLineItem(originalIndex)}
-                      showLabels={displayIndex === 0} // Show labels for first item in each section
-                    />
-                  ))}
+          return (
+            <>
+              <HStack
+                justify='space-between'
+                align='center'
+                pbe='md'
+              >
+                <Heading size='xs'>{title}</Heading>
+              </HStack>
+
+              <VStack gap='xs'>
+                {displayLineItems.map((originalIndex, displayIndex) => (
+                  <JournalEntryLineItem
+                    key={originalIndex}
+                    form={form}
+                    index={originalIndex}
+                    config={config}
+                    isReadOnly={isReadOnly}
+                    onDeleteLine={() => handleRemoveLineItem(originalIndex)}
+                    showLabels={displayIndex === 0} // Show labels for first item in each section
+                  />
+                ))}
+              </VStack>
+
+              {displayLineItems.length === 0 && (
+                <VStack gap='md' align='center' className='empty-state'>
+                  <P variant='subtle' align='center' size='sm'>
+                    No
+                    {' '}
+                    {direction.toLowerCase()}
+                    {' '}
+                    line items added yet. Click &ldquo;Add next line&rdquo; to get started.
+                  </P>
                 </VStack>
-
-                {/* Empty State - Show when no line items exist for this direction */}
-                {displayLineItems.length === 0 && (
-                  <VStack gap='md' align='center' className='empty-state'>
-                    <P variant='subtle' align='center' size='sm'>
-                      No
-                      {' '}
-                      {direction.toLowerCase()}
-                      {' '}
-                      line items added yet. Click &ldquo;Add next line&rdquo; to get started.
-                    </P>
-                  </VStack>
-                )}
-                {!isReadOnly && (
-                  <Button onPress={handleAddLineItem} variant='text'>
-                    <Span weight='normal' size='sm' variant='subtle'>
-                      Add next line
-                    </Span>
-                  </Button>
-                )}
-              </>
-            )
-          }}
-        </form.Field>
-      </VStack>
-    </>
+              )}
+              {!isReadOnly && (
+                <Button onPress={handleAddLineItem} variant='text'>
+                  <Span weight='normal' size='sm' variant='subtle'>
+                    Add next line
+                  </Span>
+                </Button>
+              )}
+            </>
+          )
+        }}
+      </form.Field>
+    </VStack>
   )
 }

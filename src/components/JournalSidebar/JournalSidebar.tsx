@@ -9,8 +9,6 @@ export const JournalSidebar = ({
 }) => {
   const { selectedEntryId } = useContext(JournalContext)
 
-  // Only render details for existing entries (not 'new')
-  // Creation is now handled by the full-page JournalEntryForm
   if (selectedEntryId && selectedEntryId !== 'new') {
     return <JournalEntryDetails />
   }

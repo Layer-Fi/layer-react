@@ -12,7 +12,10 @@ type UseJournalEntryFormProps =
   | { onSuccess: onSuccessFn, mode: UpsertJournalEntryMode.Create }
   | { onSuccess: onSuccessFn, mode: UpsertJournalEntryMode.Update, journalEntry: ApiCustomJournalEntryWithEntry }
 
-function isUpdateMode(props: UseJournalEntryFormProps): props is { onSuccess: onSuccessFn, mode: UpsertJournalEntryMode.Update, journalEntry: JournalEntry } {
+function isUpdateMode(props: UseJournalEntryFormProps): props is {
+  onSuccess: onSuccessFn
+  mode: UpsertJournalEntryMode.Update
+  journalEntry: ApiCustomJournalEntryWithEntry } {
   return props.mode === UpsertJournalEntryMode.Update
 }
 
@@ -33,14 +36,11 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
 
   const onSubmit = useCallback(async ({ value }: { value: JournalEntryForm }) => {
     try {
-      // Convert the `JournalEntryForm` schema to the request shape for `upsertJournalEntry`. This will
-      // throw an error if the request shape is not valid.
       const upsertJournalEntryParams = convertJournalEntryFormToParams(value)
       const upsertJournalEntryRequest = Schema.encodeUnknownSync(UpsertJournalEntrySchema)(upsertJournalEntryParams)
 
       const { data: journalEntry } = await upsertJournalEntry(upsertJournalEntryRequest)
 
-      // Show success toast with journal entry number
       const journalEntryNumber = journalEntry.entry.entryNumber
       addToast({
         content: `Journal entry #${journalEntryNumber} posted`,

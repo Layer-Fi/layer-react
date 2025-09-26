@@ -18,14 +18,13 @@ export const JournalEntryFormLineItemSchema = Schema.Struct({
   vendor: Schema.NullOr(VendorSchema),
 })
 
-// Main form schema (user-friendly representation)
 export const JournalEntryFormSchema = Schema.Struct({
-  externalId: Schema.NullOr(Schema.String), // Idempotency key
-  entryAt: ZonedDateTimeFromSelf, // Changed from entry_at to camelCase
+  externalId: Schema.NullOr(Schema.String),
+  entryAt: ZonedDateTimeFromSelf,
   createdBy: Schema.String,
   memo: Schema.String,
   tags: Schema.Array(TagSchema),
-  metadata: Schema.NullOr(Schema.Unknown), // JSON format with 10KB limit
+  metadata: Schema.NullOr(Schema.Unknown),
   referenceNumber: Schema.NullOr(Schema.String),
   lineItems: Schema.Array(JournalEntryFormLineItemSchema),
 
@@ -39,7 +38,6 @@ export type JournalEntryForm = Omit<typeof JournalEntryFormSchema.Type, 'lineIte
   lineItems: JournalEntryFormLineItem[]
 }
 
-// API Line Item Schema (matches OpenAPI CreateCustomJournalEntryLineItem)
 export const CreateCustomJournalEntryLineItemSchema = Schema.Struct({
   externalId: pipe(
     Schema.propertySignature(Schema.NullOr(Schema.String)),
@@ -49,7 +47,7 @@ export const CreateCustomJournalEntryLineItemSchema = Schema.Struct({
     Schema.propertySignature(AccountIdentifierSchema),
     Schema.fromKey('account_identifier'),
   ),
-  amount: Schema.BigInt, // int64 format representing cents
+  amount: Schema.BigInt,
   direction: LedgerEntryDirectionSchema,
   memo: Schema.NullOr(Schema.String),
   customerId: pipe(
@@ -71,21 +69,20 @@ export const CreateCustomJournalEntryLineItemSchema = Schema.Struct({
   tags: Schema.Array(TagKeyValueSchema),
 })
 
-// API Schema for submission (matches OpenAPI CreateCustomJournalEntry)
 export const CreateCustomJournalEntrySchema = Schema.Struct({
   externalId: pipe(
     Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('external_id'),
-  ), // Idempotency key
+  ),
   entryAt: pipe(
     Schema.propertySignature(Schema.Date),
     Schema.fromKey('entry_at'),
-  ), // date-time format
+  ),
   createdBy: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('created_by'),
-  ), // Required
-  memo: Schema.String, // Required
+  ),
+  memo: Schema.String,
   customerId: pipe(
     Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('customer_id'),
@@ -103,7 +100,7 @@ export const CreateCustomJournalEntrySchema = Schema.Struct({
     Schema.fromKey('vendor_external_id'),
   ),
   tags: Schema.Array(TagKeyValueSchema),
-  metadata: Schema.NullOr(Schema.Unknown), // JSON format with 10KB limit
+  metadata: Schema.NullOr(Schema.Unknown),
   referenceNumber: pipe(
     Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('reference_number'),
@@ -111,26 +108,23 @@ export const CreateCustomJournalEntrySchema = Schema.Struct({
   lineItems: pipe(
     Schema.propertySignature(Schema.Array(CreateCustomJournalEntryLineItemSchema)),
     Schema.fromKey('line_items'),
-  ), // Required
+  ),
 })
 
-// API Response Schemas (based on Kotlin data classes)
-
-// ApiLineItem schema (matches Kotlin ApiLineItem data class)
 export const ApiLineItemSchema = Schema.Struct({
   id: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('id'),
-  ), // lineItemId in Kotlin
+  ),
   entryId: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('entry_id'),
   ),
   account: SingleChartAccountSchema,
-  amount: Schema.Number, // Long in Kotlin representing cents
+  amount: Schema.Number,
   direction: LedgerEntryDirectionSchema,
-  customer: Schema.NullOr(CustomerSchema), // ApiCustomerData
-  vendor: Schema.NullOr(VendorSchema), // ApiVendorData
+  customer: Schema.NullOr(CustomerSchema),
+  vendor: Schema.NullOr(VendorSchema),
   entryAt: pipe(
     Schema.propertySignature(Schema.Date),
     Schema.fromKey('entry_at'),
@@ -149,7 +143,6 @@ export const ApiLineItemSchema = Schema.Struct({
   ),
 })
 
-// ApiCustomJournalEntryLineItem response schema
 export const ApiCustomJournalEntryLineItemSchema = Schema.Struct({
   id: Schema.UUID,
   externalId: pipe(
@@ -169,7 +162,6 @@ export const ApiCustomJournalEntryLineItemSchema = Schema.Struct({
   ),
 })
 
-// ApiLedgerEntry response schema
 export const ApiLedgerEntrySchema = Schema.Struct({
   entryId: pipe(
     Schema.propertySignature(Schema.String),
@@ -187,13 +179,13 @@ export const ApiLedgerEntrySchema = Schema.Struct({
     Schema.propertySignature(Schema.NullOr(Schema.Number)),
     Schema.fromKey('entry_number'),
   ),
-  agent: Schema.NullOr(Schema.String), // ClassifierAgent
+  agent: Schema.NullOr(Schema.String),
   entryType: pipe(
     Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('entry_type'),
   ),
-  customer: Schema.NullOr(Schema.Unknown), // ApiCustomerData
-  vendor: Schema.NullOr(Schema.Unknown), // ApiVendorData
+  customer: Schema.NullOr(Schema.Unknown),
+  vendor: Schema.NullOr(Schema.Unknown),
   createdAt: pipe(
     Schema.propertySignature(Schema.Date),
     Schema.fromKey('date'),
@@ -214,7 +206,6 @@ export const ApiLedgerEntrySchema = Schema.Struct({
     Schema.propertySignature(Schema.Array(ApiLineItemSchema)),
     Schema.fromKey('line_items'),
   ),
-  tags: Schema.Array(Schema.Unknown), // Deprecated field
   transactionTags: pipe(
     Schema.propertySignature(Schema.Array(Schema.Unknown)),
     Schema.fromKey('transaction_tags'),
@@ -227,7 +218,6 @@ export const ApiLedgerEntrySchema = Schema.Struct({
   ),
 })
 
-// ApiCustomJournalEntryWithEntry response schema (main return type)
 export const ApiCustomJournalEntryWithEntrySchema = Schema.Struct({
   id: Schema.UUID,
   externalId: pipe(
@@ -243,8 +233,8 @@ export const ApiCustomJournalEntryWithEntrySchema = Schema.Struct({
     Schema.propertySignature(Schema.String),
     Schema.fromKey('entry_id'),
   ),
-  customer: Schema.NullOr(CustomerSchema), // ApiCustomerData
-  vendor: Schema.NullOr(VendorSchema), // ApiVendorData
+  customer: Schema.NullOr(CustomerSchema),
+  vendor: Schema.NullOr(VendorSchema),
   lineItems: pipe(
     Schema.propertySignature(Schema.Array(ApiCustomJournalEntryLineItemSchema)),
     Schema.fromKey('line_items'),
@@ -261,12 +251,10 @@ export const ApiCustomJournalEntryWithEntrySchema = Schema.Struct({
   ),
 })
 
-// Journal Entry Return Schema (replaces the old one)
 export const JournalEntryReturnSchema = Schema.Struct({
   data: ApiCustomJournalEntryWithEntrySchema,
 })
 
-// Legacy schema for backward compatibility
 export const UpsertJournalEntrySchema = CreateCustomJournalEntrySchema
 
 export type CreateCustomJournalEntry = typeof CreateCustomJournalEntrySchema.Type

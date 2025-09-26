@@ -115,6 +115,8 @@ export function useTagLedgerEntry({ ledgerEntryId }: TagLedgerEntryOptions) {
                 value,
                 created_at: nowISOString,
                 updated_at: nowISOString,
+                archived_at: null,
+                deleted_at: null,
 
                 _local: {
                   isOptimistic: true,

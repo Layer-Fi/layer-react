@@ -9,7 +9,7 @@ import { JournalTableStringOverrides } from '../JournalTable/JournalTableWithPan
 import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
 import { JournalStoreProvider, useJournalRouteState, JournalRoute } from '../../providers/JournalStore'
 import { ReactNode } from 'react'
-import { JournalEntryDrawer } from './JournalEntryDrawer'
+import { JournalEntryDrawer } from './JournalEntryDrawer/JournalEntryDrawer'
 import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimensions'
 import { INVOICE_MECE_TAG_DIMENSION } from '../Invoices/InvoiceForm/formUtils'
 
