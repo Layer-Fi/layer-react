@@ -1,8 +1,7 @@
 import { fromDate, getLocalTimeZone } from '@internationalized/date'
 import { LedgerEntryDirection } from '../../../schemas/generalLedger/ledgerAccount'
-import type { JournalEntryForm, CreateCustomJournalEntry, JournalEntryFormLineItem } from './journalEntryFormSchemas'
-import type { JournalEntry } from '../../../types/journal'
-import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents } from '../../../utils/bigDecimalUtils'
+import type { JournalEntryForm, CreateCustomJournalEntry, JournalEntryFormLineItem, ApiCustomJournalEntryWithEntry } from './journalEntryFormSchemas'
+import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents, convertCentsToBigDecimal } from '../../../utils/bigDecimalUtils'
 import { makeTagKeyValueFromTag } from '../../../features/tags/tagSchemas'
 import { BigDecimal as BD } from 'effect'
 
@@ -40,28 +39,29 @@ export function getJournalEntryFormDefaultValues(): JournalEntryForm {
   }
 }
 
-export function getJournalEntryFormInitialValues(journalEntry: JournalEntry): JournalEntryForm {
+export function getJournalEntryFormInitialValues(journalEntry: ApiCustomJournalEntryWithEntry): JournalEntryForm {
+  const entryLineItemsById = new Map(journalEntry.entry.lineItems.map(lineItem => [lineItem.id, lineItem]))
   return {
     externalId: null, // TODO: Extract from journal entry if available
-    entryAt: fromDate(new Date(journalEntry.entry_at), getLocalTimeZone()),
+    entryAt: fromDate(new Date(journalEntry.entry.entryAt), getLocalTimeZone()),
     createdBy: 'Layer React Components', // TODO: Get from user context
-    memo: journalEntry.source?.type === 'Manual_Ledger_Entry_Source' ? '' : '', // TODO: Extract memo from source if available
-    customer: null, // TODO: Extract from journal entry if available
-    vendor: null, // TODO: Extract from journal entry if available
+    memo: journalEntry.memo,
+    customer: journalEntry.customer,
+    vendor: journalEntry.vendor,
     tags: [], // TODO: Extract from transaction_tags if available
     metadata: null,
-    referenceNumber: '', // TODO: Extract from journal entry if available
-    lineItems: journalEntry.line_items.map(lineItem => ({
-      externalId: null,
+    referenceNumber: '',
+    lineItems: journalEntry.lineItems.map(lineItem => ({
+      externalId: lineItem.externalId || null,
       accountIdentifier: {
         type: 'AccountId',
-        id: lineItem.account.id,
+        id: entryLineItemsById.get(lineItem.id)!.account.accountId,
       },
-      amount: BD.make(BigInt(lineItem.amount), 2), // Convert from cents to BigDecimal
-      direction: lineItem.direction,
-      memo: null, // TODO: Extract line item memo if available
-      customer: null, // TODO: Extract from line item if available
-      vendor: null, // TODO: Extract from line item if available
+      amount: convertCentsToBigDecimal(entryLineItemsById.get(lineItem.id)!.amount),
+      direction: entryLineItemsById.get(lineItem.id)!.direction,
+      memo: lineItem.memo ?? null,
+      customer: lineItem.customer,
+      vendor: lineItem.vendor,
       tags: [], // TODO: Extract from line item tags if available
     })),
   }

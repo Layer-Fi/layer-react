@@ -39,7 +39,6 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
 
   const { config, isReadOnly = false, onSuccess, onChangeFormState } = props
 
-  // Preload customers and vendors for the selector
   usePreloadCustomers()
   usePreloadVendors()
 
@@ -48,14 +47,12 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
     mode: UpsertJournalEntryMode.Create, // For now, only support create mode
   })
 
-  // Notify parent component of form state changes
   useEffect(() => {
     if (onChangeFormState) {
       onChangeFormState(formState)
     }
   }, [formState, onChangeFormState])
 
-  // Prevents default browser form submission behavior
   const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     e.stopPropagation()
@@ -69,7 +66,6 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
 
   return (
     <Form className={JOURNAL_ENTRY_FORM_CSS_PREFIX} onSubmit={blockNativeOnSubmit}>
-      {/* Error Display */}
       <form.Subscribe selector={state => state.errorMap}>
         {(errorMap) => {
           const validationErrors = flattenValidationErrors(errorMap)
@@ -89,9 +85,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         }}
       </form.Subscribe>
 
-      {/* Entry Date Field - Following InvoiceForm Terms pattern */}
       <VStack gap='sm'>
-        {/* Row 1: Entry Date Field (first column only) */}
         <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
           <VStack gap='xs'>
             <form.AppField name='entryAt'>
@@ -103,7 +97,6 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           {/* Empty space for second column */}
         </div>
 
-        {/* Row 2: Reference Number and Created By Fields */}
         <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
           <VStack gap='xs'>
             <form.AppField name='referenceNumber'>
@@ -128,14 +121,12 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           </VStack>
         </div>
 
-        {/* Row 3: Customer/Vendor and TagDimensionsGroup */}
         <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
           <VStack gap='xs'>
             <form.AppField name='customer'>
               {customerField => (
                 <form.AppField name='vendor'>
                   {(vendorField) => {
-                    // Determine current selection
                     const currentCustomerVendor = customerField.state.value
                       ? { ...customerField.state.value, customerVendorType: 'CUSTOMER' as const }
                       : vendorField.state.value
@@ -187,9 +178,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         </div>
       </VStack>
 
-      {/* Line Items Section - Following InvoiceForm LineItems pattern */}
       <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__LineItems`} gap='md'>
-        {/* Add Debit Account Section */}
         <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__DebitSection`} gap='md'>
           <JournalEntryLineItemsTable
             form={form}
@@ -200,7 +189,6 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           />
         </VStack>
 
-        {/* Add Credit Account Section */}
         <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__CreditSection`} gap='md'>
           <JournalEntryLineItemsTable
             form={form}
@@ -212,7 +200,6 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         </VStack>
       </VStack>
 
-      {/* Memo Section - Following InvoiceForm Metadata pattern */}
       <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Metadata`} pbs='md'>
         <HStack justify='space-between' gap='xl'>
           <VStack className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__AdditionalTextFields`}>

@@ -27,7 +27,6 @@ export const JournalEntryLineItemsTable = ({
   direction,
   config,
 }: JournalEntryLineItemsTableProps) => {
-  // HOOK RULES FIX: Move useStore to top level - MUST be called outside render functions
   const lineItems = useStore(form.store, state => state.values.lineItems) || []
 
   // Check if there's a balance validation error
