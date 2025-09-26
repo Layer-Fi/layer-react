@@ -120,7 +120,7 @@ export function FormBigDecimalField({
 
   return (
     <BaseFormTextField {...restProps} inputMode='decimal'>
-      <InputGroup slot='input' style={{ position: 'relative' }}>
+      <InputGroup slot='input' rightSlot={rightSlot}>
         <Input
           inset
           id={name}
@@ -130,9 +130,7 @@ export function FormBigDecimalField({
           onBlur={onInputBlur}
           onBeforeInput={onBeforeInput}
           onPaste={onPaste}
-          style={rightSlot ? { paddingRight: '60px' } : undefined}
         />
-        {rightSlot}
       </InputGroup>
     </BaseFormTextField>
   )
