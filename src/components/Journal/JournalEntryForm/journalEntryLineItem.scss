@@ -15,11 +15,11 @@
     }
 
     &--tag {
-      flex: 0 0 auto; // Fit content
+      flex: 0 0 auto;
     }
 
     &--memo {
-      flex: 2 1 12rem; // Grows to fill remaining space
+      flex: 2 1 12rem;
     }
 
     &--removeButton {
@@ -28,17 +28,15 @@
     }
   }
 
-  // Hide remove button in readonly mode
   &--readonly .Layer__JournalEntryForm__Field--removeButton {
     display: none;
   }
 }
 
-// Responsive behavior for smaller screens - following JournalEntryForm pattern
 @media (max-width: 768px) {
   .Layer__JournalEntryForm__LineItem {
     flex-direction: column;
-    align-items: stretch; // Override flex-end alignment for mobile
+    align-items: stretch;
     gap: var(--spacing-sm);
 
     .Layer__JournalEntryForm__Field {

@@ -42,13 +42,13 @@ export function getJournalEntryFormDefaultValues(): JournalEntryForm {
 export function getJournalEntryFormInitialValues(journalEntry: ApiCustomJournalEntryWithEntry): JournalEntryForm {
   const entryLineItemsById = new Map(journalEntry.entry.lineItems.map(lineItem => [lineItem.id, lineItem]))
   return {
-    externalId: null, // TODO: Extract from journal entry if available
+    externalId: null,
     entryAt: fromDate(new Date(journalEntry.entry.entryAt), getLocalTimeZone()),
-    createdBy: 'Layer React Components', // TODO: Get from user context
+    createdBy: 'Layer React Components',
     memo: journalEntry.memo,
     customer: journalEntry.customer,
     vendor: journalEntry.vendor,
-    tags: [], // TODO: Extract from transaction_tags if available
+    tags: [],
     metadata: null,
     referenceNumber: '',
     lineItems: journalEntry.lineItems.map(lineItem => ({
@@ -62,7 +62,7 @@ export function getJournalEntryFormInitialValues(journalEntry: ApiCustomJournalE
       memo: lineItem.memo ?? null,
       customer: lineItem.customer,
       vendor: lineItem.vendor,
-      tags: [], // TODO: Extract from line item tags if available
+      tags: [],
     })),
   }
 }
