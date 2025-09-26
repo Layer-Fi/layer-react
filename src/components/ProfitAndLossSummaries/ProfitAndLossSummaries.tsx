@@ -1,6 +1,5 @@
 import { useContext, useMemo, type ReactNode } from 'react'
 import type { Variants } from '../../utils/styleUtils/sizeVariants'
-import { ProfitAndLoss as PNL } from '../ProfitAndLoss'
 import {
   ProfitAndLossSummariesList,
   ProfitAndLossSummariesListItem,
@@ -11,6 +10,7 @@ import {
 } from './internal/ProfitAndLossSummariesMiniChart'
 import { ProfitAndLossSummariesSummary } from './internal/ProfitAndLossSummariesSummary'
 import { TransactionsToReview } from '../../views/AccountingOverview/internal/TransactionsToReview'
+import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
 
 export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string
@@ -55,7 +55,7 @@ function Internal_ProfitAndLossSummaries({
     isLoading,
     setSidebarScope,
     sidebarScope,
-  } = useContext(PNL.Context)
+  } = useContext(ProfitAndLossContext)
 
   const { revenueChartData, expensesChartData } = useMemo(
     () => ({

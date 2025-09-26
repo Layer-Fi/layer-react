@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Container } from '../../components/Container'
-import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossSummariesStringOverrides } from '../../components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { Tasks, TasksStringOverrides } from '../../components/Tasks/Tasks'

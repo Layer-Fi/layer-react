@@ -2,7 +2,8 @@ import { useCallback, useId, useMemo } from 'react'
 import { ComboBox } from '../ui/ComboBox/ComboBox'
 import { VStack } from '../ui/Stack/Stack'
 import { Label } from '../ui/Typography/Text'
-import { isOptionalAccountNestedCategory, type CategoriesListMode, type Category } from '../../types/categories'
+import { isOptionalAccountNestedCategory, type Category } from '../../types/categories'
+import { type CategoriesListMode } from "../../schemas/categorization"
 import { useCategories } from '../../hooks/categories/useCategories'
 import { AccountIdentifierEquivalence, makeAccountId, makeStableName, type AccountIdentifier } from '../../schemas/accountIdentifier'
 

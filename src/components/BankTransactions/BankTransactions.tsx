@@ -66,6 +66,7 @@ export interface BankTransactionsProps {
   showReceiptUploads?: boolean
   showTooltips?: boolean
   showUploadOptions?: boolean
+  showStatusToggle?: boolean
   applyGlobalDateRange?: boolean
 
   monthlyView?: boolean
@@ -73,6 +74,7 @@ export interface BankTransactionsProps {
   mobileComponent?: MobileComponentType
   filters?: BankTransactionFilters
   hideHeader?: boolean
+  collapseHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
 }
@@ -123,11 +125,13 @@ const BankTransactionsContent = ({
   showReceiptUploads = true,
   showTooltips = false,
   showUploadOptions = false,
+  showStatusToggle = true,
 
   categorizeView: categorizeViewProp,
   mobileComponent,
   filters: inputFilters,
   hideHeader = false,
+  collapseHeader = false,
   stringOverrides,
 }: BankTransactionsProps) => {
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
@@ -315,6 +319,8 @@ const BankTransactionsContent = ({
           isDataLoading={isLoadingWithoutData}
           isSyncing={isSyncing}
           withUploadMenu={showUploadOptions}
+          collapseHeader={collapseHeader}
+          showStatusToggle={showStatusToggle}
         />
       )}
 

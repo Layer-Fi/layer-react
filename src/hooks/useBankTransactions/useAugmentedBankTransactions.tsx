@@ -3,11 +3,10 @@ import { TagFilterInput } from '../../types/tags'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
   BankTransaction,
-  CategorizationStatus,
   CategoryUpdate,
 } from '../../types'
+import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import {
-  BankTransactionMatchType,
   Direction,
   DisplayState,
 } from '../../types/bank_transactions'
@@ -122,11 +121,7 @@ export const useAugmentedBankTransactions = (
       ? BankTransactionsDateFilterMode.MonthlyView
       : undefined
 
-  const { start, end } = useGlobalDateRange({ displayMode: 'monthPicker' })
-  const globalDateRange = useMemo(() => ({
-    startDate: start,
-    endDate: end,
-  }), [start, end])
+  const globalDateRange = useGlobalDateRange({ displayMode: 'monthPicker' })
 
   const defaultDateRange = {
     startDate: startOfMonth(new Date()),
@@ -321,7 +316,7 @@ export const useAugmentedBankTransactions = (
     return matchBankTransaction({
       bankTransactionId,
       match_id: suggestedMatchId,
-      type: BankTransactionMatchType.CONFIRM_MATCH,
+      type: 'Confirm_Match',
     })
       .then((match) => {
         const matchedTransaction = data?.find(({ id }) => id === match.bank_transaction.id)

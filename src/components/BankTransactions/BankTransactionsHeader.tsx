@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useState } from 'react'
+import { ChangeEvent, useCallback, useMemo, useState } from 'react'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { DisplayState, type DateRange } from '../../types'
 import { getEarliestDateToBrowse } from '../../utils/business'
@@ -16,7 +16,7 @@ import { useBankTransactionsContext } from '../../contexts/BankTransactionsConte
 import { useDebounce } from '../../hooks/useDebounce/useDebounce'
 import { SearchField } from '../SearchField/SearchField'
 import { TransactionsActions } from '../domain/transactions/actions/TransactionsActions'
-import { HStack, VStack } from '../ui/Stack/Stack'
+import { HStack } from '../ui/Stack/Stack'
 import { useBankTransactionsDownload } from '../../hooks/useBankTransactions/useBankTransactionsDownload'
 import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
 import { bankTransactionFiltersToHookOptions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
@@ -35,6 +35,8 @@ export interface BankTransactionsHeaderProps {
   isSyncing?: boolean
   stringOverrides?: BankTransactionsHeaderStringOverrides
   withUploadMenu?: boolean
+  showStatusToggle?: boolean
+  collapseHeader?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -118,6 +120,8 @@ export const BankTransactionsHeader = ({
   stringOverrides,
   isSyncing,
   withUploadMenu,
+  showStatusToggle,
+  collapseHeader,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
   const {
@@ -133,6 +137,43 @@ export const BankTransactionsHeader = ({
     setFilters({ dateRange: newRange })
   }, [setFilters])
 
+  const headerTopRow = useMemo(() => (
+    <div className='Layer__bank-transactions__header__content'>
+      <div className='Layer__bank-transactions__header__content-title'>
+        <Heading
+          className='Layer__bank-transactions__title'
+          size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
+        >
+          {stringOverrides?.header || 'Transactions'}
+        </Heading>
+        {isSyncing && (
+          <SyncingComponent
+            timeSync={5}
+            inProgress={true}
+            hideContent={listView}
+          />
+        )}
+      </div>
+      {withDatePicker && dateRange
+        ? (
+          <DatePicker
+            displayMode='monthPicker'
+            selected={dateRange.startDate}
+            onChange={(date) => {
+              if (!Array.isArray(date)) {
+                setDateRange({
+                  startDate: startOfMonth(date),
+                  endDate: endOfMonth(date),
+                })
+              }
+            }}
+            minDate={getEarliestDateToBrowse(business)}
+          />
+        )
+        : null}
+    </div>
+  ), [asWidget, business, dateRange, isSyncing, listView, setDateRange, stringOverrides?.header, withDatePicker])
+
   return (
     <Header
       className={classNames(
@@ -144,43 +185,11 @@ export const BankTransactionsHeader = ({
       )}
       style={{ top: shiftStickyHeader }}
     >
-      <div className='Layer__bank-transactions__header__content'>
-        <div className='Layer__bank-transactions__header__content-title'>
-          <Heading
-            className='Layer__bank-transactions__title'
-            size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
-          >
-            {stringOverrides?.header || 'Transactions'}
-          </Heading>
-          {isSyncing && (
-            <SyncingComponent
-              timeSync={5}
-              inProgress={true}
-              hideContent={listView}
-            />
-          )}
-        </div>
-        {withDatePicker && dateRange
-          ? (
-            <DatePicker
-              displayMode='monthPicker'
-              selected={dateRange.startDate}
-              onChange={(date) => {
-                if (!Array.isArray(date)) {
-                  setDateRange({
-                    startDate: startOfMonth(date),
-                    endDate: endOfMonth(date),
-                  })
-                }
-              }}
-              minDate={getEarliestDateToBrowse(business)}
-            />
-          )
-          : null}
-      </div>
+      {!collapseHeader && headerTopRow}
       <TransactionsActions>
-        {(!categorizedOnly && categorizeView) && (
-          <VStack slot='toggle' justify='center'>
+        <HStack slot='toggle' justify='center' gap='xs'>
+          {collapseHeader && headerTopRow}
+          {!categorizedOnly && categorizeView && showStatusToggle && (
             <Toggle
               name='bank-transaction-display'
               size={
@@ -195,8 +204,8 @@ export const BankTransactionsHeader = ({
               selected={display}
               onChange={onCategorizationDisplayChange}
             />
-          </VStack>
-        )}
+          )}
+        </HStack>
         <TransactionsSearch slot='search' />
         <HStack slot='download-upload' justify='center' gap='xs'>
           <DownloadButton
