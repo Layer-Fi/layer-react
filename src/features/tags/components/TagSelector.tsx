@@ -78,7 +78,7 @@ function TagSelectorSelection({
           dimensionLabel,
           valueLabel,
           _local,
-        }) => {
+        }: TagType) => {
           const isOptimistic = _local?.isOptimistic ?? false
 
           return (
@@ -159,26 +159,28 @@ export function TagSelector({
   selectedTags,
   onAddTag,
   onRemoveTag,
-
   isReadOnly,
 }: TagSelectorProps) {
   const { data, isLoading, isError } = useTagDimensions()
 
   const groups = useMemo(
     () => data
-      ?.map(({ key: dimensionLabel, definedValues }) => {
+      ?.map(({ key, definedValues, displayName: dimensionDisplayName }) => {
         return {
-          label: dimensionLabel,
-          options: definedValues
-            .map(({ id: valueId, value: valueLabel }) => ({
-              label: valueLabel,
+          label: dimensionDisplayName ?? key,
+          options: definedValues.map(({ id: valueId, value: value, displayName: valueDisplayName, archivedAt }) => {
+            const valueLabel = (valueDisplayName ?? value)
+            const isArchived = !!archivedAt
+            return ({
+              label: isArchived ? `${valueLabel} (Archived)` : valueLabel,
               value: valueId,
               isDisabled: selectedTags.some(
                 tagValue =>
-                  tagValue.dimensionLabel === dimensionLabel
-                  && tagValue.valueLabel === valueLabel,
+                  tagValue.key === key
+                  && tagValue.value === value,
               ),
-            })),
+            })
+          }),
         }
       }) ?? [],
     [

@@ -51,11 +51,11 @@ export const getInvoiceFormDefaultValues = (): InvoiceForm => {
 }
 
 export const getAdditionalTags = (tags: readonly Tag[]): Tag[] => {
-  return tags.filter(obj => obj.dimensionLabel.toLowerCase() !== INVOICE_MECE_TAG_DIMENSION.toLowerCase())
+  return tags.filter(obj => obj.key.toLowerCase() !== INVOICE_MECE_TAG_DIMENSION.toLowerCase())
 }
 
 export const getSelectedTag = (tags: readonly Tag[]): Tag | null => {
-  return tags.find(obj => obj.dimensionLabel.toLowerCase() === INVOICE_MECE_TAG_DIMENSION.toLowerCase()) ?? null
+  return tags.find(obj => obj.key.toLowerCase() === INVOICE_MECE_TAG_DIMENSION.toLowerCase()) ?? null
 }
 
 const getInvoiceLineItemAmount = (lineItem: InvoiceLineItem): BD.BigDecimal => {

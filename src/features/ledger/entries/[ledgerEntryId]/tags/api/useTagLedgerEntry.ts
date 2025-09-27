@@ -115,6 +115,11 @@ export function useTagLedgerEntry({ ledgerEntryId }: TagLedgerEntryOptions) {
                 value,
                 created_at: nowISOString,
                 updated_at: nowISOString,
+                // Need to ask Sarah about this, because this is optimistically updating
+                // ledger entries and tagging them, but the API doesn't have the display names
+                // for the key and value.
+                dimension_display_name: undefined,
+                value_display_name: undefined,
                 archived_at: null,
                 deleted_at: null,
                 _local: {
