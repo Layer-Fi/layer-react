@@ -31,7 +31,6 @@ export const DebitCreditPill = ({
     {
       'Layer__DebitCreditPill--debit': isDebit,
       'Layer__DebitCreditPill--credit': !isDebit,
-      'Layer__DebitCreditPill--readonly': isReadOnly,
     },
   )
 
