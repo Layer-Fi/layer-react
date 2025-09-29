@@ -15,7 +15,7 @@ import {
 import { getCategorizePayload, hasReceipts } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import type { Tag } from '../../features/tags/tagSchemas'
+import { Tag, makeTagKeyValueFromTag } from '../../features/tags/tagSchemas'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
 import {
@@ -223,6 +223,7 @@ export const SplitForm = ({
               ? getCategorizePayload(split.category)
               : '',
             amount: split.amount,
+            tag_key_values: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
           })),
         } as SplitCategoryUpdate),
       true,

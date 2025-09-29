@@ -17,7 +17,7 @@ import {
 import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, hasMatch } from '../../utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
-import type { Tag } from '../../features/tags/tagSchemas'
+import { Tag, makeTagKeyValueFromTag } from '../../features/tags/tagSchemas'
 import { TagDimensionsGroup } from '../Journal/JournalEntryForm/TagDimensionsGroup'
 
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
@@ -331,6 +331,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 ? getCategorizePayload(split.category)
                 : '',
               amount: split.amount,
+              tag_key_values: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
             })),
           } as SplitCategoryUpdate),
       )
