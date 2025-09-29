@@ -40,6 +40,7 @@ import { usePreloadCustomers } from '../../features/customers/api/useListCustome
 import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkContext'
 import { HStack } from '../ui/Stack/Stack'
 import { SuggestedCategorizationRuleUpdatesModal } from './SuggestedCategorizationRulesUpdatesModal/SuggestedCategorizationRulesUpdatesModal'
+import { SuggestedCategorizationRuleUpdatesDrawer } from '../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDrawer'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -245,6 +246,19 @@ const BankTransactionsContent = ({
     )
   }, [ruleSuggestion, setRuleSuggestion])
 
+  const rulesSuggestionDrawer = useMemo(() => {
+    if (!ruleSuggestion) return undefined
+    return (
+      <SuggestedCategorizationRuleUpdatesDrawer
+        isOpen={!!ruleSuggestion}
+        onOpenChange={(isOpen: boolean) => {
+          if (!isOpen) setRuleSuggestion(null)
+        }}
+        ruleSuggestion={ruleSuggestion}
+      />
+    )
+  }, [ruleSuggestion, setRuleSuggestion])
+
   const bankTransactions = useMemo(() => {
     if (isMonthlyViewMode) return data
 
@@ -384,15 +398,17 @@ const BankTransactionsContent = ({
 
       {!isLoadingWithoutData && listView && mobileComponent === 'mobileList'
         ? (
-          <BankTransactionMobileList
-            bankTransactions={bankTransactions}
-            editable={editable}
-            removeTransaction={removeTransaction}
-
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
-          />
+          <div className='Layer__bank-transactions__mobile-list-wrapper'>
+            <BankTransactionMobileList
+              bankTransactions={bankTransactions}
+              editable={editable}
+              removeTransaction={removeTransaction}
+              showDescriptions={showDescriptions}
+              showReceiptUploads={showReceiptUploads}
+              showTooltips={showTooltips}
+            />
+            {rulesSuggestionDrawer}
+          </div>
         )
         : null}
 

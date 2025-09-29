@@ -109,6 +109,7 @@ export const CreateCategorizationRuleSchema = Schema.Struct({
 })
 
 export const CreateCategorizationRuleForCounterpartySchema = Schema.Struct({
+  type: Schema.Literal('Create_Categorization_Rule_For_Counterparty'),
   newRule: pipe(
     Schema.propertySignature(CreateCategorizationRuleSchema),
     Schema.fromKey('new_rule'),
