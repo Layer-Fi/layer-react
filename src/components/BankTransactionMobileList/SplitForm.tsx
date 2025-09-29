@@ -15,6 +15,7 @@ import {
 import { getCategorizePayload, hasReceipts } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
+import type { Tag } from '../../features/tags/tagSchemas'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
 import {
@@ -31,6 +32,7 @@ type Split = {
   amount: number
   inputValue: string
   category: CategoryOption | undefined
+  tags: readonly Tag[]
 }
 
 type RowState = {
@@ -72,11 +74,13 @@ export const SplitForm = ({
             amount: c.amount || 0,
             inputValue: formatMoney(c.amount),
             category: mapCategoryToExclusionOption(c.category),
+            tags: [],
           }
           : {
             amount: c.amount || 0,
             inputValue: formatMoney(c.amount),
             category: mapCategoryToOption(c.category),
+            tags: [],
           }
       })
       : [
@@ -86,6 +90,7 @@ export const SplitForm = ({
           category: defaultCategory
             ? mapCategoryToOption(defaultCategory)
             : undefined,
+          tags: [],
         },
         {
           amount: 0,
@@ -93,6 +98,7 @@ export const SplitForm = ({
           category: defaultCategory
             ? mapCategoryToOption(defaultCategory)
             : undefined,
+          tags: [],
         },
       ],
     description: '',
@@ -168,6 +174,7 @@ export const SplitForm = ({
           category: defaultCategory
             ? mapCategoryToOption(defaultCategory)
             : undefined,
+          tags: [],
         },
       ],
     })

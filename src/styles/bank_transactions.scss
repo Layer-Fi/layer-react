@@ -373,7 +373,8 @@
     }
 
     .Layer__expanded-bank-transaction-row__table-cell--split-entry {
-      max-height: 38px;
+      align-items: end;
+      // max-height: 38px;
     }
 
     .Layer__expanded-bank-transaction-row__splits-buttons {
@@ -498,6 +499,15 @@
   display: flex;
   flex-direction: row;
   gap: var(--spacing-md);
+  align-items: flex-start;
+}
+
+.Layer__expanded-bank-transaction-row__table-cell--split-entry__tags {
+  display: flex;
+  flex: 1;
+  .Layer__JournalEntryForm__Field--tag {
+    width: 16rem;
+  }
 }
 
 .Layer__bank-transactions__list {

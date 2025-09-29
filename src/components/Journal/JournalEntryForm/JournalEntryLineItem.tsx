@@ -6,11 +6,11 @@ import type { AppForm } from '../../../features/forms/hooks/useForm'
 import type { JournalEntryForm } from './journalEntryFormSchemas'
 import './journalEntryLineItem.scss'
 import { LedgerAccountCombobox } from '../../LedgerAccountCombobox/LedgerAccountCombobox'
-import { CategoriesListMode } from '../../../types/categories'
 import { AccountIdentifier } from '../../../schemas/accountIdentifier'
 import { JournalConfig } from '../Journal'
 import { TagDimensionsGroup } from './TagDimensionsGroup'
 import { DebitCreditPill } from '../../DebitCreditPill/DebitCreditPill'
+import { CategoriesListMode } from '../../../schemas/categorization'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
 

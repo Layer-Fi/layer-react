@@ -12,11 +12,13 @@ type BankTransactionFormFieldProps = {
     'id' | 'transaction_tags' | 'customer' | 'vendor'
   >
   showDescriptions?: boolean
+  turnOffTags?: boolean
 }
 
 export function BankTransactionFormFields({
   bankTransaction,
   showDescriptions,
+  turnOffTags = false,
 }: BankTransactionFormFieldProps) {
   const { showTags } = useBankTransactionTagVisibility()
   const { showCustomerVendor } = useBankTransactionCustomerVendorVisibility()
@@ -30,7 +32,7 @@ export function BankTransactionFormFields({
       {showCustomerVendor
         ? <BankTransactionCustomerVendorSelector bankTransaction={bankTransaction} />
         : null}
-      {showTags
+      {showTags && !turnOffTags
         ? <BankTransactionTagSelector bankTransaction={bankTransaction} />
         : null}
       {showDescriptions

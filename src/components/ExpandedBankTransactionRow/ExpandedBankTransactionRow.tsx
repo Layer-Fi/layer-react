@@ -17,6 +17,8 @@ import {
 import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, hasMatch } from '../../utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
+import type { Tag } from '../../features/tags/tagSchemas'
+import { TagDimensionsGroup } from '../Journal/JournalEntryForm/TagDimensionsGroup'
 
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
@@ -49,12 +51,14 @@ type Props = {
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
+  tagDimensionKeysInUse?: string[]
 }
 
 type Split = {
   amount: number
   inputValue: string
   category: CategoryOption | undefined
+  tags: readonly Tag[]
 }
 
 type RowState = {
@@ -124,6 +128,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       showDescriptions,
       showReceiptUploads,
       showTooltips,
+      tagDimensionKeysInUse = [],
     },
     ref,
   ) => {
@@ -161,11 +166,13 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               amount: c.amount || 0,
               inputValue: formatMoney(c.amount),
               category: mapCategoryToExclusionOption(c.category),
+              tags: [],
             }
             : {
               amount: c.amount || 0,
               inputValue: formatMoney(c.amount),
               category: mapCategoryToOption(c.category),
+              tags: [],
             }
         })
         : [
@@ -173,6 +180,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
             amount: bankTransaction.amount,
             inputValue: formatMoney(bankTransaction.amount),
             category: defaultCategory ? mapCategoryToOption(defaultCategory) : undefined,
+            tags: [],
           },
         ],
       description: '',
@@ -188,6 +196,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
             amount: 0,
             inputValue: '0.00',
             category: defaultCategory ? mapCategoryToOption(defaultCategory) : undefined,
+            tags: [],
           },
         ],
       })
@@ -269,6 +278,12 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     const changeCategory = (index: number, newValue: CategoryOption) => {
       rowState.splits[index].category = newValue
+      updateRowState({ ...rowState })
+      setSplitFormError(undefined)
+    }
+
+    const changeTags = (index: number, newTags: readonly Tag[]) => {
+      rowState.splits[index].tags = newTags
       updateRowState({ ...rowState })
       setSplitFormError(undefined)
     }
@@ -432,6 +447,19 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                             className={`${className}__table-cell--split-entry`}
                             key={`split-${index}`}
                           >
+                            <CategorySelect
+                              bankTransaction={bankTransaction}
+                              name={`category-${bankTransaction.id}`}
+                              value={split.category}
+                              onChange={value => changeCategory(index, value)}
+                              className='Layer__category-menu--full'
+                              disabled={
+                                bankTransaction.processing
+                                || !categorizationEnabled
+                              }
+                              excludeMatches
+                              showTooltips={showTooltips}
+                            />
                             <Input
                               type='text'
                               name={`split-${index}${asListItem ? '-li' : ''}`}
@@ -445,32 +473,25 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               inputMode='numeric'
                               errorMessage='Negative values are not allowed'
                             />
-                            <div
-                              className={`${className}__table-cell--split-entry__right-col`}
-                            >
-                              <CategorySelect
-                                bankTransaction={bankTransaction}
-                                name={`category-${bankTransaction.id}`}
-                                value={split.category}
-                                onChange={value => changeCategory(index, value)}
-                                className='Layer__category-menu--full'
-                                disabled={
-                                  bankTransaction.processing
-                                  || !categorizationEnabled
-                                }
-                                excludeMatches
-                                showTooltips={showTooltips}
-                              />
-                              {index > 0 && (
-                                <Button
-                                  className={`${className}__table-cell--split-entry__merge-btn`}
-                                  onClick={() => removeSplit(index)}
-                                  rightIcon={<Trash size={18} />}
-                                  variant={ButtonVariant.secondary}
-                                  iconOnly={true}
+                            {tagDimensionKeysInUse.length > 0 && (
+                              <div className={`${className}__table-cell--split-entry__tags`}>
+                                <TagDimensionsGroup
+                                  dimensionKeys={tagDimensionKeysInUse}
+                                  value={split.tags}
+                                  onChange={tags => changeTags(index, tags)}
+                                  showLabels={index === 0}
+                                  isReadOnly={!categorizationEnabled}
                                 />
-                              )}
-                            </div>
+                              </div>
+                            )}
+                            <Button
+                              className={`${className}__table-cell--split-entry__merge-btn`}
+                              onClick={() => removeSplit(index)}
+                              rightIcon={<Trash size={18} />}
+                              variant={ButtonVariant.secondary}
+                              disabled={index == 0}
+                              iconOnly={true}
+                            />
                           </div>
                         ))}
                       </div>
@@ -522,6 +543,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 <BankTransactionFormFields
                   bankTransaction={bankTransaction}
                   showDescriptions={showDescriptions}
+                  turnOffTags={rowState.splits.length > 1}
                 />
 
                 {showReceiptUploads && (
