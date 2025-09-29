@@ -3,7 +3,7 @@ import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
 import { VStack } from '../../../components/ui/Stack/Stack'
 import { Label } from '../../../components//ui/Typography/Text'
 import { useTagDimensionByKey } from '../api/useTagDimensionByKey'
-import { type TagValueDefinition, makeTag, type Tag } from '../tagSchemas'
+import { type TagValueDefinition, type Tag } from '../tagSchemas'
 import { FallbackWithSkeletonLoader } from '../../../components/SkeletonLoader/SkeletonLoader'
 
 class TagValueDefinitionAsOption {
@@ -69,7 +69,7 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
     let nextTag: Tag | null = null
 
     if (tagDimension && option) {
-      nextTag = makeTag({
+      nextTag = {
         id: option.id,
         key: tagDimension.key,
         dimensionDisplayName: tagDimension.displayName,
@@ -77,7 +77,7 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
         valueDisplayName: option.valueDisplayName,
         archivedAt: option.archivedAt,
         _local: { isOptimistic: false },
-      })
+      } as Tag
     }
 
     onValueChange(nextTag)

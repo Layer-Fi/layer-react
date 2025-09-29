@@ -125,17 +125,8 @@ export function getTagValueDisplayName(tag: { value: string, displayName?: strin
   return archiveAwareLabel
 }
 
-export const internalMakeTag = Schema.decodeSync(TagSchema)
+export const makeTag = Schema.decodeSync(TagSchema)
 export type Tag = typeof TagSchema.Type
-
-export function makeTag(tag: Omit<Tag, 'dimensionLabel' | 'valueLabel'>) {
-  return internalMakeTag({
-    ...tag,
-    archivedAt: tag.archivedAt instanceof Date
-      ? tag.archivedAt.toISOString()
-      : tag.archivedAt ?? null,
-  })
-}
 
 export const TransactionTagSchema = Schema.Struct({
   id: Schema.UUID,
@@ -180,14 +171,16 @@ export const makeTagKeyValueFromTag = ({ key, value, dimensionDisplayName, value
   value_display_name: valueDisplayName,
 })
 
-export const makeTagFromTransactionTag = ({ id, key, value, dimensionDisplayName, valueDisplayName, archivedAt, _local }: TransactionTag) => makeTag({
-  id,
-  key,
-  value,
-  dimensionDisplayName: dimensionDisplayName,
-  valueDisplayName: valueDisplayName,
-  archivedAt: archivedAt,
-  _local: {
-    isOptimistic: _local?.isOptimistic ?? false,
-  },
-})
+export const makeTagFromTransactionTag = ({ id, key, value, dimensionDisplayName, valueDisplayName, archivedAt, _local }: TransactionTag) => {
+  return {
+    id,
+    key,
+    value,
+    dimensionDisplayName: dimensionDisplayName,
+    valueDisplayName: valueDisplayName,
+    archivedAt: archivedAt,
+    _local: {
+      isOptimistic: _local?.isOptimistic ?? false,
+    },
+  } as Tag
+}
