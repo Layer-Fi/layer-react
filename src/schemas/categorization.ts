@@ -1,4 +1,5 @@
 import { Schema, pipe } from 'effect'
+import { AccountIdentifierSchema } from './accountIdentifier'
 
 export const BaseCategorizationSchema = Schema.Struct({
   id: Schema.String,
@@ -190,3 +191,16 @@ export enum CategoriesListMode {
   Revenue = 'REVENUE',
   Default = 'DEFAULT',
 }
+
+export const ExclusionSchema = Schema.Struct({
+  type: Schema.Literal('Exclusion'),
+  exclusionType: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('exclusion_type'),
+  ),
+})
+
+export const ClassificationSchema = Schema.Union(
+  AccountIdentifierSchema,
+  ExclusionSchema,
+)

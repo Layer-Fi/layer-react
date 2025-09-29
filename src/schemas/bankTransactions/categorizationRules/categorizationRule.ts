@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect/index'
 import { BankTransactionCounterpartySchema, MinimalBankTransactionSchema } from '../base'
-import { CategorizationSchema } from '../../categorization'
+import { ClassificationSchema } from '../../categorization'
 
 export enum BankTransactionType {
   REVENUE = 'REVENUE',
@@ -49,17 +49,17 @@ export const CreateCategorizationRuleSchema = Schema.Struct({
     Schema.fromKey('external_id'),
   ),
   name: Schema.optional(Schema.NullOr(Schema.String)),
-  category: Schema.optional(Schema.NullOr(CategorizationSchema)),
+  category: Schema.optional(Schema.NullOr(ClassificationSchema)),
   suggestion1: pipe(
-    Schema.optional(Schema.NullOr(CategorizationSchema)),
+    Schema.optional(Schema.NullOr(ClassificationSchema)),
     Schema.fromKey('suggestion_1'),
   ),
   suggestion2: pipe(
-    Schema.optional(Schema.NullOr(CategorizationSchema)),
+    Schema.optional(Schema.NullOr(ClassificationSchema)),
     Schema.fromKey('suggestion_2'),
   ),
   suggestion3: pipe(
-    Schema.optional(Schema.NullOr(CategorizationSchema)),
+    Schema.optional(Schema.NullOr(ClassificationSchema)),
     Schema.fromKey('suggestion_3'),
   ),
   businessNameFilter: pipe(
@@ -118,8 +118,23 @@ export const CreateCategorizationRuleForCounterpartySchema = Schema.Struct({
     Schema.optional(Schema.NullOr(Schema.String)),
     Schema.fromKey('suggestion_prompt'),
   ),
-  transactionsThatWillBeAffected: Schema.Array(MinimalBankTransactionSchema),
+  transactionsThatWillBeAffected: pipe(
+    Schema.propertySignature(Schema.Array(MinimalBankTransactionSchema)),
+    Schema.fromKey('transactions_that_will_be_affected'),
+  ),
 })
+
 export const UpdateCategorizationRulesSuggestionSchema = Schema.Union(
   CreateCategorizationRuleForCounterpartySchema,
 )
+
+export type UpdateCategorizationRulesSuggestion = typeof UpdateCategorizationRulesSuggestionSchema.Type
+
+export const decodeRulesSuggestion = (data: unknown): UpdateCategorizationRulesSuggestion | null => {
+  const result = Schema.decodeUnknownEither(UpdateCategorizationRulesSuggestionSchema)(data)
+  if (result._tag === 'Left') {
+    console.warn('Failed to decode categorization rules update suggestion:', result.left)
+    return null
+  }
+  return result.right
+}

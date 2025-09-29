@@ -28,6 +28,7 @@ import { useBankTransactions, type UseBankTransactionsOptions } from './useBankT
 import { useCategorizeBankTransaction } from './useCategorizeBankTransaction'
 import { useMatchBankTransaction } from './useMatchBankTransaction'
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
+import { decodeRulesSuggestion, UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
@@ -114,6 +115,8 @@ export const useAugmentedBankTransactions = (
     hasBeenTouched,
     eventCallbacks,
   } = useLayerContext()
+
+  const [ruleSuggestion, setRuleSuggestion] = useState<UpdateCategorizationRulesSuggestion | null>(null)
 
   const dateFilterMode = params?.applyGlobalDateRange
     ? BankTransactionsDateFilterMode.GlobalDateRange
@@ -223,6 +226,10 @@ export const useAugmentedBankTransactions = (
   }, [filters, data])
 
   const updateOneLocal = (newBankTransaction: BankTransaction) => {
+    if (newBankTransaction.update_categorization_rules_suggestion) {
+      const decodedRuleSuggestion = decodeRulesSuggestion(newBankTransaction.update_categorization_rules_suggestion)
+      setRuleSuggestion(decodedRuleSuggestion)
+    }
     const updatedData = rawResponseData?.map((page) => {
       return {
         ...page,
@@ -247,7 +254,7 @@ export const useAugmentedBankTransactions = (
     const existingTransaction = data?.find(({ id }) => id === bankTransactionId)
 
     if (existingTransaction) {
-      updateOneLocal({ ...existingTransaction, processing: true, error: undefined })
+      updateOneLocal({ ...existingTransaction, update_categorization_rules_suggestion: undefined, processing: true, error: undefined })
     }
 
     return categorizeBankTransaction({
@@ -481,6 +488,8 @@ export const useAugmentedBankTransactions = (
     removeAfterCategorize,
     filters,
     setFilters,
+    ruleSuggestion,
+    setRuleSuggestion,
     dateFilterMode,
     accountsList,
     display,
