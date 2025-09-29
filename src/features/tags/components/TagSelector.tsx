@@ -16,7 +16,7 @@ import { LoadingSpinner } from '../../../components/ui/Loading/LoadingSpinner'
 import { Square } from '../../../components/ui/Square/Square'
 import { Group } from 'react-aria-components'
 import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
-import type { Tag as TagType, TagValue } from '../tagSchemas'
+import { getDimensionDisplayName, getTagDisplayNameForDimension, getTagDisplayNameForValue, getTagValueDisplayName, type Tag as TagType, type TagValue } from '../tagSchemas'
 
 const TAG_SELECTOR_CLASS_NAMES = {
   LAYOUT_GROUP: 'Layer__TagSelectorLayoutGroup',
@@ -73,13 +73,11 @@ function TagSelectorSelection({
         items={selectedTags}
         columnCount={isReadOnly ? 2 : undefined}
       >
-        {({
-          id,
-          dimensionLabel,
-          valueLabel,
-          _local,
-        }: TagType) => {
-          const isOptimistic = _local?.isOptimistic ?? false
+        {(tag) => {
+          const isOptimistic = tag._local?.isOptimistic ?? false
+          const dimensionLabel = getTagDisplayNameForDimension(tag)
+          const valueLabel = getTagDisplayNameForValue(tag)
+          const id = tag.id
 
           return (
             <Tag key={id} id={id} textValue={`${dimensionLabel}: ${valueLabel}`}>
@@ -165,14 +163,16 @@ export function TagSelector({
 
   const groups = useMemo(
     () => data
-      ?.map(({ key, definedValues, displayName: dimensionDisplayName }) => {
+      ?.map((tag) => {
+        const { key, definedValues } = tag
+        const dimensionLabel = getDimensionDisplayName(tag)
         return {
-          label: dimensionDisplayName ?? key,
-          options: definedValues.map(({ id: valueId, value: value, displayName: valueDisplayName, archivedAt }) => {
-            const valueLabel = (valueDisplayName ?? value)
-            const isArchived = !!archivedAt
+          label: dimensionLabel,
+          options: definedValues.map((tag) => {
+            const { id: valueId, value: value } = tag
+            const valueLabel = getTagValueDisplayName(tag)
             return ({
-              label: isArchived ? `${valueLabel} (Archived)` : valueLabel,
+              label: valueLabel,
               value: valueId,
               isDisabled: selectedTags.some(
                 tagValue =>

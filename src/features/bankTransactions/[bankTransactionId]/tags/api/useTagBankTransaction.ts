@@ -49,7 +49,9 @@ function buildKey({
 
 type TagBankTransactionArg = {
   key: string
+  dimensionDisplayName?: string | null
   value: string
+  valueDisplayName?: string | null
 }
 
 type TagBankTransactionOptions = {
@@ -97,7 +99,7 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
 
       void optimisticallyUpdateBankTransactions((bankTransaction) => {
         if (bankTransaction.id === bankTransactionId) {
-          const { key, value } = triggerParameters[0]
+          const { key, value, dimensionDisplayName, valueDisplayName } = triggerParameters[0]
 
           const optimisticTagId = uuidv4()
 
@@ -117,8 +119,8 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
                 // Need to ask Sarah about this, because this is optimistically updating
                 // ledger entries and tagging them, but the API doesn't have the display names
                 // for the key and value.
-                dimension_display_name: undefined,
-                value_display_name: undefined,
+                dimension_display_name: dimensionDisplayName,
+                value_display_name: valueDisplayName,
                 archived_at: null,
                 deleted_at: null,
 

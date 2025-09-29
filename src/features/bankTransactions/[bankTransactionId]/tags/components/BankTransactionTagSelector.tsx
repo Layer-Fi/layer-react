@@ -40,8 +40,10 @@ export function BankTransactionTagSelector({ bankTransaction }: BankTransactionT
   const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId })
   const handleAddTag = useCallback((tag: TagValue) => {
     void tagBankTransaction({
-      key: tag.dimensionLabel,
-      value: tag.valueLabel,
+      key: tag.dimensionKey,
+      dimensionDisplayName: tag.dimensionDisplayName,
+      value: tag.value,
+      valueDisplayName: tag.valueDisplayName,
     })
   }, [tagBankTransaction])
 

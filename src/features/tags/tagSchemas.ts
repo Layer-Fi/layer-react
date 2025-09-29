@@ -58,34 +58,17 @@ const TagValueSchema = Schema.Data(
     dimensionKey: Schema.NonEmptyTrimmedString,
     // Display name for the dimension
     dimensionDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
-    // How it should be rendered on the UI, given all of its state
-    dimensionLabel: Schema.NonEmptyTrimmedString,
     // Backend UUID for this value
     valueId: Schema.UUID,
     // Machine-readable value
     value: Schema.NonEmptyTrimmedString,
     // Display name for the value
     valueDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
-    // How it should be rendered on the UI, given all of its state
-    valueLabel: Schema.NonEmptyTrimmedString,
     // Whether or not this value definition is archived
     isArchived: Schema.Boolean,
   }),
 )
-const internalMakeTagValue = Schema.decodeSync(TagValueSchema)
-
-export function makeTagValue(tagValue: Omit<TagValue, 'dimensionLabel' | 'valueLabel'>) {
-  const dimensionBaseLabel = tagValue.dimensionDisplayName ?? tagValue.dimensionKey
-
-  const valueBaseLabel = tagValue.valueDisplayName ?? tagValue.value
-  const archiveAwareLabel = tagValue.isArchived ? `${valueBaseLabel} (Archived)` : valueBaseLabel
-
-  return internalMakeTagValue({
-    ...tagValue,
-    dimensionLabel: dimensionBaseLabel,
-    valueLabel: archiveAwareLabel,
-  })
-}
+export const makeTagValue = Schema.decodeSync(TagValueSchema)
 
 export type TagValue = typeof TagValueSchema.Type
 
@@ -98,14 +81,11 @@ export const TagSchema = Schema.Data(
     key: Schema.NonEmptyTrimmedString,
     // Human-readable key for the dimension
     dimensionDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
-    dimensionLabel: Schema.NullishOr(Schema.NonEmptyTrimmedString),
 
     // Machine-readable value
     value: Schema.NonEmptyTrimmedString,
     // Human-readable value
     valueDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
-    // What needs to be displayed for this specific value, given its state
-    valueLabel: Schema.NullishOr(Schema.NonEmptyTrimmedString),
     // Archive state of this tag value
     archivedAt: Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     _local: Schema.Struct({
@@ -113,14 +93,44 @@ export const TagSchema = Schema.Data(
     }),
   }),
 )
+
+export function getTagDisplayNameForValue(tag: Tag): string {
+  const valueBaseLabel = tag.valueDisplayName ?? tag.value
+  const archiveAwareLabel = tag.archivedAt ? `${valueBaseLabel} (Archived)` : valueBaseLabel
+  return archiveAwareLabel
+}
+
+export function getTagDisplayNameForDimension(tag: Tag): string {
+  return tag.dimensionDisplayName ?? tag.key
+}
+
+export function getTagValueDisplayNameForValue(tagValue: TagValue): string {
+  const valueBaseLabel = tagValue.valueDisplayName ?? tagValue.value
+  const archiveAwareLabel = tagValue.isArchived ? `${valueBaseLabel} (Archived)` : valueBaseLabel
+
+  return archiveAwareLabel
+}
+
+export function getTagValueDisplayNameForDimension(tagValue: TagValue): string {
+  return tagValue.dimensionDisplayName ?? tagValue.dimensionKey
+}
+
+export function getDimensionDisplayName(dimension: TagDimension): string {
+  return dimension.displayName ?? dimension.key
+}
+
+export function getTagValueDisplayName(tag: { value: string, displayName?: string | null, archivedAt?: Date | null }): string {
+  const valueBaseLabel = tag.displayName ?? tag.value
+  const archiveAwareLabel = tag.archivedAt ? `${valueBaseLabel} (Archived)` : valueBaseLabel
+  return archiveAwareLabel
+}
+
 export const internalMakeTag = Schema.decodeSync(TagSchema)
 export type Tag = typeof TagSchema.Type
 
 export function makeTag(tag: Omit<Tag, 'dimensionLabel' | 'valueLabel'>) {
   return internalMakeTag({
     ...tag,
-    dimensionLabel: tag.dimensionDisplayName ?? tag.key,
-    valueLabel: tag.valueDisplayName ?? tag.value,
     archivedAt: tag.archivedAt instanceof Date
       ? tag.archivedAt.toISOString()
       : tag.archivedAt ?? null,
@@ -163,11 +173,11 @@ export const TransactionTagSchema = Schema.Struct({
 export type TransactionTag = typeof TransactionTagSchema.Type
 export type TransactionTagEncoded = typeof TransactionTagSchema.Encoded
 
-export const makeTagKeyValueFromTag = ({ key, value, dimensionLabel, valueLabel }: Tag) => makeTagKeyValue({
+export const makeTagKeyValueFromTag = ({ key, value, dimensionDisplayName, valueDisplayName }: Tag) => makeTagKeyValue({
   key: key,
   value: value,
-  dimension_display_name: dimensionLabel,
-  value_display_name: valueLabel,
+  dimension_display_name: dimensionDisplayName,
+  value_display_name: valueDisplayName,
 })
 
 export const makeTagFromTransactionTag = ({ id, key, value, dimensionDisplayName, valueDisplayName, archivedAt, _local }: TransactionTag) => makeTag({

@@ -62,7 +62,7 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
 
   const selectedOption = useMemo(() => {
     if (value === null) return null
-    return new TagValueDefinitionAsOption({ id: value.id, value: value.value, displayName: value.valueLabel, archivedAt: value.archivedAt })
+    return new TagValueDefinitionAsOption({ id: value.id, value: value.value, displayName: value.valueDisplayName, archivedAt: value.archivedAt })
   }, [value])
 
   const onSelectedValueChange = useCallback((option: TagValueDefinitionAsOption | null) => {
