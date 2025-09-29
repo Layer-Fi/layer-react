@@ -12,7 +12,9 @@ const TAG_LEDGER_ENTRY_TAG_KEY = '#tag-ledger-entry'
 type TagLedgerEntryBody = {
   key_values: ReadonlyArray<{
     key: string
+    dimension_display_name?: string | null
     value: string
+    value_display_name?: string | null
   }>
   entity_ids: ReadonlyArray<string>
   entity_type: 'LEDGER_ENTRY'
@@ -48,7 +50,9 @@ function buildKey({
 
 type TagLedgerEntryArg = {
   key: string
+  dimensionDisplayName?: string | null
   value: string
+  valueDisplayName?: string | null
 }
 
 type TagLedgerEntryOptions = {
@@ -67,14 +71,14 @@ export function useTagLedgerEntry({ ledgerEntryId }: TagLedgerEntryOptions) {
     }),
     (
       { accessToken, apiUrl, businessId, ledgerEntryId },
-      { arg: { key, value } }: { arg: TagLedgerEntryArg },
+      { arg: { key, value, dimensionDisplayName, valueDisplayName } }: { arg: TagLedgerEntryArg },
     ) => tagLedgerEntry(
       apiUrl,
       accessToken,
       {
         params: { businessId },
         body: {
-          key_values: [{ key, value }],
+          key_values: [{ key, dimension_display_name: dimensionDisplayName, value, value_display_name: valueDisplayName }],
           entity_ids: [ledgerEntryId],
           entity_type: 'LEDGER_ENTRY',
         },
@@ -98,7 +102,7 @@ export function useTagLedgerEntry({ ledgerEntryId }: TagLedgerEntryOptions) {
 
       void optimisticallyUpdateLedgerEntries((ledgerEntry) => {
         if (ledgerEntry.id === ledgerEntryId) {
-          const { key, value } = triggerParameters[0]
+          const { key, dimensionDisplayName, value, valueDisplayName } = triggerParameters[0]
 
           const optimisticTagId = uuidv4()
 
@@ -115,11 +119,8 @@ export function useTagLedgerEntry({ ledgerEntryId }: TagLedgerEntryOptions) {
                 value,
                 created_at: nowISOString,
                 updated_at: nowISOString,
-                // Need to ask Sarah about this, because this is optimistically updating
-                // ledger entries and tagging them, but the API doesn't have the display names
-                // for the key and value.
-                dimension_display_name: undefined,
-                value_display_name: undefined,
+                dimension_display_name: dimensionDisplayName,
+                value_display_name: valueDisplayName,
                 archived_at: null,
                 deleted_at: null,
                 _local: {

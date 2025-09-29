@@ -14,7 +14,9 @@ const TAG_BANK_TRANSACTION_TAG_KEY = '#tag-bank-transaction'
 type TagBankTransactionBody = {
   key_values: ReadonlyArray<{
     key: string
+    dimension_display_name?: string | null
     value: string
+    value_display_name?: string | null
   }>
   transaction_ids: ReadonlyArray<string>
 }
@@ -70,14 +72,14 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
     }),
     (
       { accessToken, apiUrl, businessId, bankTransactionId },
-      { arg: { key, value } }: { arg: TagBankTransactionArg },
+      { arg: { key, value, dimensionDisplayName, valueDisplayName } }: { arg: TagBankTransactionArg },
     ) => tagBankTransaction(
       apiUrl,
       accessToken,
       {
         params: { businessId },
         body: {
-          key_values: [{ key, value }],
+          key_values: [{ key, dimension_display_name: dimensionDisplayName, value, value_display_name: valueDisplayName }],
           transaction_ids: [bankTransactionId],
         },
       },
@@ -116,9 +118,6 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
                 value,
                 created_at: nowISOString,
                 updated_at: nowISOString,
-                // Need to ask Sarah about this, because this is optimistically updating
-                // ledger entries and tagging them, but the API doesn't have the display names
-                // for the key and value.
                 dimension_display_name: dimensionDisplayName,
                 value_display_name: valueDisplayName,
                 archived_at: null,
