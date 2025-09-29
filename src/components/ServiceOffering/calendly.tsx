@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from './types'
 
 interface CalendlyPayload {
@@ -27,24 +27,24 @@ export const isCalendlyLink = (link?: Link) => {
   }
 }
 
+const handleCalendlyMessage = (e: MessageEvent) => {
+  const data = e.data as CalendlyMessageData
+
+  if (data.event && typeof data.event === 'string' && data.event.indexOf('calendly') === 0) {
+    console.debug('Calendly event:', data.event)
+
+    if (data.event === 'calendly.event_scheduled') {
+      console.debug('Booking successful!', data.payload)
+    }
+  }
+}
+
 export const useCalendly = () => {
   const [isCalendlyVisible, setIsCalendlyVisible] = useState(false)
   const [calendlyLink, setCalendlyLink] = useState('')
   const calendlyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleCalendlyMessage = (e: MessageEvent) => {
-      const data = e.data as CalendlyMessageData
-
-      if (data.event && typeof data.event === 'string' && data.event.indexOf('calendly') === 0) {
-        console.debug('Calendly event:', data.event)
-
-        if (data.event === 'calendly.event_scheduled') {
-          console.debug('Booking successful!', data.payload)
-        }
-      }
-    }
-
     window.addEventListener('message', handleCalendlyMessage)
 
     return () => {
@@ -52,14 +52,14 @@ export const useCalendly = () => {
     }
   }, [])
 
-  const openCalendly = (link: string) => {
+  const openCalendly = useCallback((link: string) => {
     setCalendlyLink(link)
     setIsCalendlyVisible(true)
-  }
+  }, [setCalendlyLink, setIsCalendlyVisible])
 
-  const closeCalendly = () => {
+  const closeCalendly = useCallback(() => {
     setIsCalendlyVisible(false)
-  }
+  }, [setIsCalendlyVisible])
 
   return {
     isCalendlyVisible,

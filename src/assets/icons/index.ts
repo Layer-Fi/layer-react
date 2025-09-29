@@ -1,0 +1,4 @@
+export { default as iconPeople } from './icon-people.svg'
+export { default as iconBook } from './icon-book.svg'
+export { default as iconBox } from './icon-box.svg'
+export { default as iconCheck } from './icon-check.svg'

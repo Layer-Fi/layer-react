@@ -1,0 +1,10 @@
+<svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg' className='Layer__service-offering-options__icon'>
+    <g clipPath='url(#clip0_9916_27714)'>
+        <path d='M2.5 12.2915C2.5 11.8771 2.66462 11.4797 2.95765 11.1866C3.25067 10.8936 3.6481 10.729 4.0625 10.729H12.5M2.5 12.2915C2.5 12.7059 2.66462 13.1033 2.95765 13.3964C3.25067 13.6894 3.6481 13.854 4.0625 13.854H12.5V1.354H4.0625C3.6481 1.354 3.25067 1.51862 2.95765 1.81165C2.66462 2.10468 2.5 2.5021 2.5 2.9165V12.2915Z' stroke='#333333' strokeLinecap='round' strokeLinejoin='round' />
+    </g>
+    <defs>
+        <clipPath id='clip0_9916_27714'>
+        <rect width='15' height='15' fill='white' transform='translate(0 0.104004)' />
+        </clipPath>
+    </defs>
+</svg>

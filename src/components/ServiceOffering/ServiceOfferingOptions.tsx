@@ -5,15 +5,18 @@ import { HStack, VStack } from '../ui/Stack/Stack'
 import { Heading } from '../ui/Typography/Heading'
 import { Badge } from '../Badge'
 import { BadgeSize, BadgeVariant } from '../Badge/Badge'
-import { ServiceOfferingConfig } from './types'
+import { PlatformConfig, ServiceOfferingConfig } from './types'
 import { isCalendlyLink } from './calendly'
+import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 
 export interface ServiceOfferingOptionsProps extends HTMLAttributes<HTMLDivElement> {
+  platformConfig: PlatformConfig
   config: ServiceOfferingConfig
   openCalendly: (link: string) => void
 }
 
 export const ServiceOfferingOffer = ({
+  platformConfig,
   config,
   openCalendly,
   ...props
@@ -32,14 +35,14 @@ export const ServiceOfferingOffer = ({
         <VStack gap='md'>
           <HStack>
             <Badge size={BadgeSize.SMALL} variant={BadgeVariant.DEFAULT}>
-              {config.badge}
+              {ServiceOfferingHelper.bindTextValues(config.badge, platformConfig)}
             </Badge>
           </HStack>
           <Heading size='sm'>
-            {config.title}
+            {ServiceOfferingHelper.bindTextValues(config.title, platformConfig)}
           </Heading>
           <P variant='subtle'>
-            {config.description}
+            {ServiceOfferingHelper.bindTextValues(config.description, platformConfig)}
           </P>
         </VStack>
 
@@ -53,8 +56,8 @@ export const ServiceOfferingOffer = ({
                     <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg' className='Layer__service-offering-options__icon'>
                       <path d='M14.375 3.92334L8.4375 9.86084L5.3125 6.73584L0.625 11.4233M14.375 3.92334H10.625M14.375 3.92334V7.67334' strokeLinecap='round' strokeLinejoin='round' />
                     </svg>
-                    <Span size='sm' variant='subtle' lineHeight='lg'>
-                      {f}
+                    <Span size='sm' variant='subtle'>
+                      {ServiceOfferingHelper.bindTextValues(f, platformConfig)}
                     </Span>
                   </HStack>
                 )
@@ -63,8 +66,8 @@ export const ServiceOfferingOffer = ({
               return (
                 <HStack key={i} gap='xs'>
                   {f.icon}
-                  <Span size='sm' variant='subtle' lineHeight='lg'>
-                    {f.description}
+                  <Span size='sm' variant='subtle'>
+                    {ServiceOfferingHelper.bindTextValues(f.description, platformConfig)}
                   </Span>
                 </HStack>
               )
@@ -87,7 +90,6 @@ export const ServiceOfferingOffer = ({
 
           <Button
             variant='outlined'
-            rounded='md'
             onClick={handleCtaClick}
           >
             {config.cta.label}

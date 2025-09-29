@@ -1,0 +1,13 @@
+<svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg' className='Layer__service-offering-options__icon'>
+    <g clipPath='url(#clip0_9916_27706)'>
+        <path d='M9.29199 11.3267V10.3267C9.29199 9.79623 9.08128 9.28752 8.70621 8.91245C8.33113 8.53737 7.82243 8.32666 7.29199 8.32666H3.29199C2.76156 8.32666 2.25285 8.53737 1.87778 8.91245C1.50271 9.28752 1.29199 9.79623 1.29199 10.3267V11.3267' stroke='#333333' strokeLinecap='round' strokeLinejoin='round' />
+        <path d='M5.29199 6.32666C6.39656 6.32666 7.29199 5.43123 7.29199 4.32666C7.29199 3.22209 6.39656 2.32666 5.29199 2.32666C4.18742 2.32666 3.29199 3.22209 3.29199 4.32666C3.29199 5.43123 4.18742 6.32666 5.29199 6.32666Z' stroke='#333333' strokeLinecap='round' strokeLinejoin='round' />
+        <path d='M12.292 11.3266V10.3266C12.2917 9.88347 12.1442 9.45299 11.8727 9.10276C11.6012 8.75253 11.2211 8.50239 10.792 8.3916' stroke='#333333' strokeLinecap='round' strokeLinejoin='round' />
+        <path d='M8.79199 2.3916C9.2222 2.50175 9.60351 2.75195 9.87581 3.10276C10.1481 3.45356 10.2959 3.88502 10.2959 4.3291C10.2959 4.77319 10.1481 5.20464 9.87581 5.55545C9.60351 5.90625 9.2222 6.15645 8.79199 6.2666' stroke='#333333' strokeLinecap='round' strokeLinejoin='round' />
+    </g>
+    <defs>
+        <clipPath id='clip0_9916_27706'>
+        <rect width='12' height='12' fill='white' transform='translate(0.791992 0.82666)' />
+        </clipPath>
+    </defs>
+</svg>

@@ -11,7 +11,7 @@ import {
 } from '../../assets/images'
 import { ContentConfig, ServiceOfferingContentID, ServiceOfferingDefaultTextContent, CoreValueProposition } from './content'
 import { Link, PlatformConfig, ServiceOfferingConfig, ServiceOfferingLinks } from './types'
-import { makeDynamicText } from './utils'
+import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { isCalendlyLink, useCalendly } from './calendly'
 
 export type ServiceOfferingMainConfig = {
@@ -77,6 +77,7 @@ export const ServiceOffering = ({
         key={offer.title}
         config={offer}
         openCalendly={openCalendly}
+        platformConfig={mainConfig.platform}
         className='Layer__service-offering__offers'
       />
     )
@@ -98,13 +99,13 @@ export const ServiceOffering = ({
             {textContent[ServiceOfferingContentID.title] != '' && (
               <>
                 <Heading size='3xl'>
-                  {makeDynamicText(ServiceOfferingContentID.title, textContent, mainConfig)}
+                  {ServiceOfferingHelper.makeDynamicText(ServiceOfferingContentID.title, textContent, mainConfig)}
                 </Heading>
               </>
             )}
           </VStack>
           <Heading size='md'>
-            {makeDynamicText(ServiceOfferingContentID.subtitle, textContent, mainConfig)}
+            {ServiceOfferingHelper.makeDynamicText(ServiceOfferingContentID.subtitle, textContent, mainConfig)}
           </Heading>
           <VStack>
             {(features ?? []).map((feature: CoreValueProposition, index) => (
@@ -116,7 +117,7 @@ export const ServiceOffering = ({
                   <Heading size='lg'>
                     {feature.title.replaceAll('{industry}', industry).replaceAll('{platformName}', platformName)}
                   </Heading>
-                  <Span size='md' variant='subtle' lineHeight='lg'>
+                  <Span size='md' variant='subtle'>
                     {feature.text.replaceAll('{industry}', industry).replaceAll('{platformName}', platformName)}
                   </Span>
                 </VStack>
@@ -124,8 +125,8 @@ export const ServiceOffering = ({
             ))}
           </VStack>
           <HStack gap='sm' justify='start' className={classNames({ hiding: isCalendlyVisible })}>
-            {links.learnMore && <Button rounded='md' variant='outlined' onClick={handleLearnMore}>{links.learnMore.label}</Button>}
-            <Button rounded='md' variant='branded' onClick={handleMainCta}>{links.main.label}</Button>
+            {links.learnMore && <Button variant='outlined' onClick={handleLearnMore}>{links.learnMore.label}</Button>}
+            <Button variant='branded' onClick={handleMainCta}>{links.main.label}</Button>
           </HStack>
         </VStack>
         <VStack className='Layer__service-offering__responsive-image'>
@@ -148,7 +149,7 @@ export const ServiceOffering = ({
       )}
       <VStack gap='3xl' pb='5xl'>
         <Heading size='lg' align='center'>
-          {makeDynamicText(ServiceOfferingContentID.value_proposition_title, textContent, mainConfig)}
+          {ServiceOfferingHelper.makeDynamicText(ServiceOfferingContentID.value_proposition_title, textContent, mainConfig)}
         </Heading>
         <div className='Layer__service-offering__value-props-responsive'>
           {mainConfig.content.config.flatMap(c =>
@@ -159,7 +160,7 @@ export const ServiceOffering = ({
                   <Heading size='md'>
                     {valueProp.title}
                   </Heading>
-                  <Span variant='subtle' lineHeight='xl'>
+                  <Span variant='subtle'>
                     {valueProp.text}
                   </Span>
                 </VStack>
@@ -179,7 +180,7 @@ export const ServiceOffering = ({
         <VStack gap='3xl' {...props} className='Layer__service-offering--offers'>
           <HStack align='center'>
             <Heading size='md' align='center' style={{ maxWidth: '360px', margin: '0 auto' }}>
-              {makeDynamicText(ServiceOfferingContentID.offers_title, textContent, mainConfig)}
+              {ServiceOfferingHelper.makeDynamicText(ServiceOfferingContentID.offers_title, textContent, mainConfig)}
             </Heading>
           </HStack>
           {mainConfig.content.config.map(renderOffer)}

@@ -1,5 +1,6 @@
-import { ReactNode } from 'react'
 import { ServiceOfferingConfig, ServiceOfferingOfferLayout } from './types'
+
+import { ReactNode } from 'react'
 
 export type CoreValueProposition = {
   icon: ReactNode
@@ -95,56 +96,4 @@ export const defaultContentConfig: Omit<ContentConfig, 'config'> = {
       text: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
     },
   ],
-}
-
-/**
- * Creates a ServiceOffering config with overrides applied to a base config
- * @param base - Base ServiceOffering config
- * @param overrides - Partial overrides to apply
- * @returns Complete ServiceOffering config with overrides applied
- */
-export function createServiceOfferingConfig(
-  defaults: ServiceOfferingConfig,
-  partial: Partial<ServiceOfferingConfig>,
-): ServiceOfferingConfig {
-  return {
-    badge: partial.badge ?? defaults.badge,
-    title: partial.title ?? defaults.title,
-    description: partial.description ?? defaults.description,
-    features: partial.features ?? defaults.features,
-    pricing: partial.pricing ?? defaults.pricing,
-    unit: partial.unit ?? defaults.unit,
-    cta: partial.cta ?? defaults.cta,
-    valueProposition: partial.valueProposition ?? defaults.valueProposition,
-  }
-}
-
-/**
- * Factory function to create ContentConfig with base defaults and user overrides
- * @param config - Partial configuration to override defaults
- * @returns Complete ContentConfig with   d defaults and overrides
- */
-export function createContentConfig(config: PartialContentConfig): ContentConfig {
-  // Process config array to handle partial configs
-  const processedConfig = config.config.map((item, index) => {
-    // If it's already a complete ServiceOfferingConfig, return as is
-    if ('badge' in item && 'title' in item && 'description' in item && 'features' in item
-      && 'pricing' in item && 'unit' in item && 'cta' in item && 'valueProposition' in item) {
-      return item as ServiceOfferingConfig
-    }
-
-    // If it's a partial config, we need defaults to merge with
-    // For now, throw an error if no defaults are available
-    throw new Error(`Partial ServiceOffering config at index ${index} requires a default config to merge with. Please provide complete ServiceOffering configs or use a merge helper.`)
-  })
-
-  return {
-    textContent: {
-      ...ServiceOfferingDefaultTextContent,
-      ...config.textContent,
-    },
-    layout: config.layout ?? defaultContentConfig.layout,
-    features: config.features ?? defaultContentConfig.features,
-    config: processedConfig,
-  }
 }
