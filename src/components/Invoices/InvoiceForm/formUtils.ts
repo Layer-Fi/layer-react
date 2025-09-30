@@ -14,7 +14,7 @@ import { getLocalTimeZone, fromDate, toCalendarDate } from '@internationalized/d
 import { getInvoiceTermsFromDates, InvoiceTermsValues } from '../InvoiceTermsComboBox/InvoiceTermsComboBox'
 import { makeTagFromTransactionTag, makeTagKeyValueFromTag, type Tag } from '../../../features/tags/tagSchemas'
 
-export const INVOICE_MECE_TAG_DIMENSION = 'Job'
+export const INVOICE_MECE_TAG_DIMENSION = 'Jobs'
 
 export type InvoiceFormState = {
   isDirty: boolean

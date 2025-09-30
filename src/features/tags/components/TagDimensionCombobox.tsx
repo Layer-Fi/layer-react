@@ -77,11 +77,6 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
   const inputId = useId()
   const additionalAriaProps = !showLabel && { 'aria-label': tagDimension?.key }
 
-  /* Don't render anything if tag dimension can't be fetched, i.e. it doesn't exist for this business. */
-  if (isError) {
-    return null
-  }
-
   return (
     <div className={className}>
       <VStack gap='3xs'>
