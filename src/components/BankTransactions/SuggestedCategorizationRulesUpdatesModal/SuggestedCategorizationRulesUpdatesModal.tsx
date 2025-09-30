@@ -3,12 +3,12 @@ import { ModalCloseButton } from '../../ui/Modal/ModalSlots'
 import { SuggestedCategorizationRuleUpdates } from '../../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdates'
 import { UpdateCategorizationRulesSuggestion } from '../../../schemas/bankTransactions/categorizationRules/categorizationRule'
 
-function SuggestedCategorizationRuleUpdatesModalContent({ onClose, ruleSuggestion }:
-{ onClose: () => void, ruleSuggestion: UpdateCategorizationRulesSuggestion }) {
+function SuggestedCategorizationRuleUpdatesModalContent({ close, ruleSuggestion }:
+{ close: () => void, ruleSuggestion: UpdateCategorizationRulesSuggestion }) {
   return (
     <>
-      <ModalCloseButton onClose={onClose} positionAbsolute />
-      <SuggestedCategorizationRuleUpdates onComplete={onClose} ruleSuggestion={ruleSuggestion} />
+      <ModalCloseButton onClose={close} positionAbsolute />
+      <SuggestedCategorizationRuleUpdates close={close} ruleSuggestion={ruleSuggestion} />
     </>
   )
 }
@@ -23,7 +23,7 @@ export function SuggestedCategorizationRuleUpdatesModal({
 }: SuggestedCategorizationRuleUpdatesModalProps) {
   return (
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} size='lg' aria-label='Update categorization rules'>
-      {({ close }) => <SuggestedCategorizationRuleUpdatesModalContent onClose={close} ruleSuggestion={ruleSuggestion} />}
+      {({ close }) => <SuggestedCategorizationRuleUpdatesModalContent close={close} ruleSuggestion={ruleSuggestion} />}
     </Modal>
   )
 }

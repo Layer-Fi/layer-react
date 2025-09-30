@@ -16,7 +16,7 @@ export const SuggestedCategorizationRuleUpdatesDrawer = ({
   return (
     <Drawer isOpen={isOpen} onOpenChange={onOpenChange} variant='mobile-drawer' isDismissable>
       {({ close }) => (
-        <SuggestedCategorizationRuleUpdates ruleSuggestion={ruleSuggestion} onComplete={close} />
+        <SuggestedCategorizationRuleUpdates ruleSuggestion={ruleSuggestion} close={close} />
       )}
     </Drawer>
   )

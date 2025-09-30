@@ -7,7 +7,7 @@ import { RuleUpdatesPromptStep } from './RuleUpdatesPromptStep'
 import { RuleUpdatesReviewStep } from './RuleUpdatesReviewStep'
 
 type SuggestedCategorizationRuleUpdatesProps = {
-  onComplete?: () => Awaitable<void>
+  close: () => Awaitable<void>
   ruleSuggestion: UpdateCategorizationRulesSuggestion
 }
 
@@ -28,16 +28,21 @@ const getHeaderForRule = (ruleSuggestion: UpdateCategorizationRulesSuggestion) =
   }
 }
 
-export function SuggestedCategorizationRuleUpdates({ onComplete, ruleSuggestion }: SuggestedCategorizationRuleUpdatesProps) {
+export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesProps) {
+  function onClose(dontAskAgain: boolean) {
+    console.log(dontAskAgain)
+    void close()
+  }
+
   return (
     <section className='Layer__component Layer__suggested-categorization-rule-updates'>
       <Wizard
         Header={getHeaderForRule(ruleSuggestion)}
         Footer={undefined}
-        onComplete={onComplete}
+        onComplete={close}
         onStepChange={undefined}
       >
-        <RuleUpdatesPromptStep ruleSuggestion={ruleSuggestion} />
+        <RuleUpdatesPromptStep ruleSuggestion={ruleSuggestion} onClose={onClose} />
         <RuleUpdatesReviewStep ruleSuggestion={ruleSuggestion} />
       </Wizard>
     </section>
