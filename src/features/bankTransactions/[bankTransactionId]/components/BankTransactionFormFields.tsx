@@ -6,11 +6,13 @@ import { BankTransactionCustomerVendorSelector } from '../customerVendor/compone
 import { useBankTransactionCustomerVendorVisibility } from '../customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 import { useBankTransactionTagVisibility } from '../tags/components/BankTransactionTagVisibilityProvider'
 import { TagDimensionsGroup } from '../../../../components/Journal/JournalEntryForm/TagDimensionsGroup'
-import { makeTag } from '../../../tags/tagSchemas'
+import { makeTag, Tag } from '../../../tags/tagSchemas'
 import {
   useEffectiveBookkeepingStatus,
   BookkeepingStatus,
 } from '../../../../hooks/bookkeeping/useBookkeepingStatus'
+import { useTagBankTransaction } from '../tags/api/useTagBankTransaction'
+import { useRemoveTagFromBankTransaction } from '../tags/api/useRemoveTagFromBankTransaction'
 
 type BankTransactionFormFieldProps = {
   bankTransaction: Pick<
@@ -33,6 +35,10 @@ export function BankTransactionFormFields({
   const status = useEffectiveBookkeepingStatus()
   const isReadOnly = status === BookkeepingStatus.ACTIVE
 
+  // Hooks for auto-saving tags
+  const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
+  const { trigger: removeTagFromBankTransaction } = useRemoveTagFromBankTransaction({ bankTransactionId: bankTransaction.id })
+
   const selectedTags = useMemo(
     () => bankTransaction.transaction_tags.map(({ id, key, value, dimension_display_name, value_display_name, archived_at, _local }) => makeTag({
       id,
@@ -48,6 +54,37 @@ export function BankTransactionFormFields({
     [bankTransaction.transaction_tags],
   )
 
+  const handleTagsChange = (newTags: readonly Tag[]) => {
+    const oldTags = selectedTags
+
+    // Find tags that were added
+    const addedTags = newTags.filter(newTag =>
+      !oldTags.some(oldTag => oldTag.key === newTag.key && oldTag.value === newTag.value),
+    )
+
+    // Find tags that were removed
+    const removedTags = oldTags.filter(oldTag =>
+      !newTags.some(newTag => newTag.key === oldTag.key && newTag.value === oldTag.value),
+    )
+
+    // Trigger API calls for added tags
+    addedTags.forEach((tag) => {
+      void tagBankTransaction({
+        key: tag.key,
+        value: tag.value,
+        dimensionDisplayName: tag.dimensionDisplayName,
+        valueDisplayName: tag.valueDisplayName,
+      })
+    })
+
+    // Trigger API calls for removed tags
+    removedTags.forEach((tag) => {
+      void removeTagFromBankTransaction({
+        tagId: tag.id,
+      })
+    })
+  }
+
   if (!showTags && !showCustomerVendor && !showDescriptions) {
     return null
   }
@@ -61,7 +98,7 @@ export function BankTransactionFormFields({
         ? (
           <TagDimensionsGroup
             value={selectedTags}
-            onChange={() => { /* Tags are read-only in this context */ }}
+            onChange={handleTagsChange}
             showLabels={true}
             isReadOnly={isReadOnly}
           />

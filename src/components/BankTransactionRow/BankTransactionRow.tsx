@@ -415,7 +415,6 @@ export const BankTransactionRow = ({
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
-            tagDimensionKeysInUse={['Job', 'entity']}
           />
         </td>
       </tr>
