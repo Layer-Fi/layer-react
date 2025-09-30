@@ -8,7 +8,7 @@ export const BankTransactionDirectionSchema = Schema.Enums(BankTransactionDirect
 
 export const MinimalBankTransactionSchema = Schema.Struct({
   id: Schema.String,
-  date: Schema.Date,
+  date: Schema.String, // Keep as ISO8601 since we get that from the backend
   direction: BankTransactionDirectionSchema,
   amount: Schema.Number,
   counterpartyName: pipe(
@@ -17,6 +17,8 @@ export const MinimalBankTransactionSchema = Schema.Struct({
   ),
   description: Schema.optional(Schema.NullOr(Schema.String)),
 })
+
+export type MinimalBankTransaction = typeof MinimalBankTransactionSchema.Type
 
 export const BankTransactionCounterpartySchema = Schema.Struct({
   id: Schema.String,
