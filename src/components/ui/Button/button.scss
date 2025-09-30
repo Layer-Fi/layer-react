@@ -18,14 +18,6 @@
   border-radius: var(--btn-border-radius);
   outline: none;
 
-  &[data-rounded='sm'] {
-    border-radius: 8px;
-  }
-
-  &[data-rounded='md'] {
-    border-radius: 16px;
-  }
-
   cursor: pointer;
   user-select: none;
 
