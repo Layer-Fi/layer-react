@@ -96,7 +96,6 @@ export default tsEslint.config([
         },
       ],
       'unused-imports/no-unused-imports': 'error',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
       'react/prop-types': 'off',
     },
   },
