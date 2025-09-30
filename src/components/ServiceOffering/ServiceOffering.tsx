@@ -9,31 +9,66 @@ import {
   imagePartnerAccountingImage,
 } from '../../assets/images'
 import { ContentConfig, ServiceOfferingContentID, ServiceOfferingDefaultTextContent, CoreValueProposition } from './content'
-import { Link, PlatformConfig, ServiceOfferingConfig, ServiceOfferingLinks } from './types'
+import { ServiceOfferingLink, PlatformConfig, ServiceOfferingConfig, ServiceOfferingLinks } from './types'
 import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { isCalendlyLink, useCalendly } from './calendly'
 import { View } from '../View'
 
+/**
+ * This config prepares the ServiceOffering component, enabling you to
+ * surface the Layer offerings: accounting and bookkeeping.
+ *
+ * This is the primary input for a ServiceOffering component.
+ */
 export type ServiceOfferingMainConfig = {
-  /** Link configuration for various CTAs and actions */
+  /**
+   * Allows you to configure the CTAs on the top-of-the-fold section of the
+   * service offering page component.
+   @see ServiceOfferingLink
+   */
   links: ServiceOfferingLinks
-  /** Platform-specific branding and customization settings */
+  /**
+   * Allows you to configure the platform name, industry, and top-of-fold image.
+   */
   platform: PlatformConfig
-  /** Content configuration for service offerings and pricing */
+  /**
+   * Allows you to configure textual and image content relating to the core value proposition
+   * and the service offerings.
+   *
+   * In general, there are 3 content sections on the ServiceOffering page component:
+   * (1) Top-of-the-fold main content section,
+   * (2) Core value proposition content section,
+   * (3) Service offering content section.
+   *
+   @see ServiceOfferingHelper.createBaseAccountingOffer
+   @see ServiceOfferingHelper.createBaseBookkeepingOffer
+   @see ServiceOfferingConfig
+   */
   content: ContentConfig
 }
 
 /**
-   * Props for the ServiceOffering component - a customizable landing page component
-   * that showcases accounting services with optional pricing options and booking integration.
-   */
-export interface ServiceOfferingTypesProps {
+ * Props for the ServiceOffering component.
+ *
+ * Requires only a single parameter, which is `config` which holds on to all the customizable
+ * settings for the service offering component such as textual content on the accounting and bookkeeping
+ * services, with varied pricing options and book-a-call calendly integration.
+ */
+export interface ServiceOfferingProps {
   config: ServiceOfferingMainConfig
 }
 
+/**
+ * The ServiceOffering component provides a page-level component that surfaces the Layer accounting
+ * and bookkeeping services. It acts as a landing page allowing platforms to showcase the core value proposition
+ * and offers/pricing for the platform's end users.
+ @see ServiceOfferingMainConfig
+ @param config Allows you to customize the page component.
+ @returns A React JSX component
+ */
 export const ServiceOffering = ({
   config: mainConfig,
-}: ServiceOfferingTypesProps) => {
+}: ServiceOfferingProps) => {
   const {
     links,
     platform: { platformName, imageUrl, industry },
@@ -54,7 +89,7 @@ export const ServiceOffering = ({
     },
   )
 
-  const handleLinkClick = (link?: Link) => {
+  const handleLinkClick = (link?: ServiceOfferingLink) => {
     if (isCalendlyLink(link)) {
       openCalendly(link!.url)
     }

@@ -13,9 +13,9 @@ import {
   ServiceOfferingDefaultTextContent,
   ContentConfig,
   PartialContentConfig,
-  defaultContentConfig,
+  serviceOfferingDefaultContentConfig,
 } from './content'
-import { ServiceOfferingTypesProps } from './ServiceOffering'
+import { ServiceOfferingProps } from './ServiceOffering'
 import { Check } from 'lucide-react'
 
 export class ServiceOfferingHelper {
@@ -25,7 +25,7 @@ export class ServiceOfferingHelper {
   static makeDynamicText(
     contentId: ServiceOfferingContentID,
     textContent: ServiceOfferingTypesTextContent,
-    config: ServiceOfferingTypesProps['config'],
+    config: ServiceOfferingProps['config'],
   ): string {
     const variableMap = {
       platformName: config.platform.platformName,
@@ -67,7 +67,14 @@ export class ServiceOfferingHelper {
   }
 
   /**
-   * Generates a complete accounting service offering configuration
+   * Generates a `ServiceOfferingConfig` with the default values for offering
+   * Layer's accounting service. Recommended when you want minimal changes for
+   * the standard accounting offer.
+   *
+   * Default settings are set to a base pricing of $299/month, which can be
+   * overwritten using `overwriteBaseOffer`.
+   *
+   * @see ServiceOfferingHelper.overwriteBaseOffer
    */
   static createBaseAccountingOffer(platformConfig: PlatformConfig): ServiceOfferingConfig {
     const accountingValueProps: ServiceOfferingValueProposition[] = [
@@ -111,7 +118,14 @@ export class ServiceOfferingHelper {
   }
 
   /**
-   * Generates a complete bookkeeping service offering configuration
+   * Generates a `ServiceOfferingConfig` with the default values for offering
+   * Layer's bookkeeping service. Recommended when you want minimal changes for
+   * the standard bookkeeping offer.
+   *
+   * Default settings are set to a base pricing of $599/month, which can be
+   * overwritten using `overwriteBaseOffer`.
+   *
+   * @see ServiceOfferingHelper.overwriteBaseOffer
    */
   static createBaseBookkeepingOffer(platformConfig: PlatformConfig): ServiceOfferingConfig {
     const bookkeepingValueProps: ServiceOfferingValueProposition[] = [
@@ -159,9 +173,9 @@ export class ServiceOfferingHelper {
    *
    * When you want to create your own config, you can create your own `ServiceOfferingConfig`.
    *
-   @see createBaseAccountingOffer
-   @see createBaseBookkeepingOffer
-   @see ServiceOfferingConfig
+   * @see ServiceOfferingHelper.createBaseAccountingOffer
+   * @see ServiceOfferingHelper.createBaseBookkeepingOffer
+   * @see ServiceOfferingConfig
    */
   static overwriteBaseOffer(
     defaults: ServiceOfferingConfig,
@@ -180,7 +194,10 @@ export class ServiceOfferingHelper {
   }
 
   /**
-   * Factory function to create ContentConfig with base defaults and user overrides
+   * Creates a ContentConfig with the default config content provided for Layer's
+   * accounting and bookkeeping offerings.
+   *
+   * @see serviceOfferingDefaultContentConfig - contains the default text content for the ServiceOffering component.
    */
   static createContentConfig(config: PartialContentConfig): ContentConfig {
     // Process config array to handle partial configs
@@ -201,8 +218,8 @@ export class ServiceOfferingHelper {
         ...ServiceOfferingDefaultTextContent,
         ...config.textContent,
       },
-      layout: config.layout ?? defaultContentConfig.layout,
-      features: config.features ?? defaultContentConfig.features,
+      layout: config.layout ?? serviceOfferingDefaultContentConfig.layout,
+      features: config.features ?? serviceOfferingDefaultContentConfig.features,
       config: processedConfig,
     }
   }

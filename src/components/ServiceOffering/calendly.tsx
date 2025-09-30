@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Link } from './types'
+import { ServiceOfferingLink } from './types'
 
 interface CalendlyPayload {
   event: {
@@ -16,7 +16,7 @@ export interface CalendlyMessageData {
 }
 
 const ALLOWED_CALENDLY_HOSTS = ['calendly.com', 'www.calendly.com']
-export const isCalendlyLink = (link?: Link) => {
+export const isCalendlyLink = (link?: ServiceOfferingLink) => {
   try {
     if (!link) return false
     const hostname = new URL(link.url).hostname
