@@ -62,35 +62,37 @@ export function getJournalEntryFormInitialValues(journalEntry: ApiCustomJournalE
       memo: lineItem.memo ?? null,
       customer: lineItem.customer,
       vendor: lineItem.vendor,
-      tags: [],
+      tags: lineItem?.transactionTags ?? [],
     })),
   }
 }
 
 export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateCustomJournalEntry {
+  const trimmedReferenceNumber = form.referenceNumber?.trim()
+
   return {
-    externalId: form.externalId,
+    ...(form.externalId && { externalId: form.externalId }),
     entryAt: form.entryAt.toDate(),
     createdBy: form.createdBy,
-    memo: form.memo,
-    customerId: form.customer?.id ?? null,
-    customerExternalId: form.customer?.externalId ?? null,
-    vendorId: form.vendor?.id ?? null,
-    vendorExternalId: form.vendor?.externalId ?? null,
-    tags: form.tags.map(makeTagKeyValueFromTag),
-    metadata: form.metadata,
-    referenceNumber: form.referenceNumber,
+    memo: form.memo.trim(),
+    ...(form.customer?.id && { customerId: form.customer.id }),
+    ...(form.customer?.externalId && { customerExternalId: form.customer.externalId }),
+    ...(form.vendor?.id && { vendorId: form.vendor.id }),
+    ...(form.vendor?.externalId && { vendorExternalId: form.vendor.externalId }),
+    ...(form.tags.length > 0 && { tags: form.tags.map(makeTagKeyValueFromTag) }),
+    ...(form.metadata !== null && { metadata: form.metadata }),
+    ...(trimmedReferenceNumber && { referenceNumber: trimmedReferenceNumber }),
     lineItems: form.lineItems.map(lineItem => ({
-      externalId: lineItem.externalId,
+      ...(lineItem.externalId && { externalId: lineItem.externalId }),
       accountIdentifier: lineItem.accountIdentifier,
       amount: convertBigDecimalToBigIntCents(lineItem.amount),
       direction: lineItem.direction,
-      memo: lineItem.memo,
-      customerId: lineItem.customer?.id ?? null,
-      customerExternalId: lineItem.customer?.externalId ?? null,
-      vendorId: lineItem.vendor?.id ?? null,
-      vendorExternalId: lineItem.vendor?.externalId ?? null,
-      tags: lineItem.tags.map(makeTagKeyValueFromTag),
+      ...(lineItem.memo?.trim() && { memo: lineItem.memo.trim() }),
+      ...(lineItem.customer?.id && { customerId: lineItem.customer.id }),
+      ...(lineItem.customer?.externalId && { customerExternalId: lineItem.customer.externalId }),
+      ...(lineItem.vendor?.id && { vendorId: lineItem.vendor.id }),
+      ...(lineItem.vendor?.externalId && { vendorExternalId: lineItem.vendor.externalId }),
+      ...(lineItem.tags.length > 0 && { tags: lineItem.tags.map(makeTagKeyValueFromTag) }),
     })),
   }
 }
