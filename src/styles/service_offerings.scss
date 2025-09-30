@@ -113,8 +113,8 @@
 }
 
 .Layer__service-offering-options__card {
-    border: 2px dashed var(--color-base-300);
-    border-radius: var(--border-radius-sm);
+    border: none;
+    border-radius: 16px;
     background: white;
     padding: var(--spacing-md);
     position: relative;
@@ -123,8 +123,7 @@
     gap: var(--spacing-xs);
     max-width: 480px;
     margin: 0 auto;
-    box-shadow: 0 100px 80px 0 rgba(3, 2, 2, 0.07), 0 30.15px 24.118px 0 rgba(3, 2, 2, 0.05), 0 12.52px 10.017px 0 rgba(3, 2, 2, 0.04), 0 4.53px 3.623px 0 rgba(3, 2, 2, 0.02);
-
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
 
@@ -349,6 +348,7 @@
 
 // Responsive override for left/right offers grid layout
 @media (max-width: 1770px) {
+
     .Layer__service-offering--with-left-offers .Layer__service-offering-options__grid,
     .Layer__service-offering--with-right-offers .Layer__service-offering-options__grid {
         grid-template-columns: 1fr 1fr;
@@ -357,6 +357,7 @@
 }
 
 @media (max-width: 768px) {
+
     .Layer__service-offering--with-left-offers .Layer__service-offering-options__grid,
     .Layer__service-offering--with-right-offers .Layer__service-offering-options__grid {
         grid-template-columns: 1fr;
