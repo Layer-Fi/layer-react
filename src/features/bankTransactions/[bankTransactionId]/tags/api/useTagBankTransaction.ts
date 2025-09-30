@@ -14,7 +14,9 @@ const TAG_BANK_TRANSACTION_TAG_KEY = '#tag-bank-transaction'
 type TagBankTransactionBody = {
   key_values: ReadonlyArray<{
     key: string
+    dimension_display_name?: string | null
     value: string
+    value_display_name?: string | null
   }>
   transaction_ids: ReadonlyArray<string>
 }
@@ -49,7 +51,9 @@ function buildKey({
 
 type TagBankTransactionArg = {
   key: string
+  dimensionDisplayName?: string | null
   value: string
+  valueDisplayName?: string | null
 }
 
 type TagBankTransactionOptions = {
@@ -68,14 +72,14 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
     }),
     (
       { accessToken, apiUrl, businessId, bankTransactionId },
-      { arg: { key, value } }: { arg: TagBankTransactionArg },
+      { arg: { key, value, dimensionDisplayName, valueDisplayName } }: { arg: TagBankTransactionArg },
     ) => tagBankTransaction(
       apiUrl,
       accessToken,
       {
         params: { businessId },
         body: {
-          key_values: [{ key, value }],
+          key_values: [{ key, dimension_display_name: dimensionDisplayName, value, value_display_name: valueDisplayName }],
           transaction_ids: [bankTransactionId],
         },
       },
@@ -97,7 +101,7 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
 
       void optimisticallyUpdateBankTransactions((bankTransaction) => {
         if (bankTransaction.id === bankTransactionId) {
-          const { key, value } = triggerParameters[0]
+          const { key, value, dimensionDisplayName, valueDisplayName } = triggerParameters[0]
 
           const optimisticTagId = uuidv4()
 
@@ -114,6 +118,8 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
                 value,
                 created_at: nowISOString,
                 updated_at: nowISOString,
+                dimension_display_name: dimensionDisplayName,
+                value_display_name: valueDisplayName,
                 archived_at: null,
                 deleted_at: null,
 

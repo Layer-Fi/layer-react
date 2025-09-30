@@ -3,7 +3,7 @@ import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
 import { VStack } from '../../../components/ui/Stack/Stack'
 import { Label } from '../../../components//ui/Typography/Text'
 import { useTagDimensionByKey } from '../api/useTagDimensionByKey'
-import { type TagValueDefinition, makeTag, type Tag } from '../tagSchemas'
+import { type TagValueDefinition, type Tag } from '../tagSchemas'
 import { FallbackWithSkeletonLoader } from '../../../components/SkeletonLoader/SkeletonLoader'
 
 class TagValueDefinitionAsOption {
@@ -18,11 +18,19 @@ class TagValueDefinitionAsOption {
   }
 
   get label() {
-    return this.isArchived ? `${this.tagValueDefinition.value} (Archived)` : this.tagValueDefinition.value
+    const label = (this.valueDisplayName ?? this.tagValueDefinition.value)
+    if (this.isArchived) {
+      return `${label} (Archived)`
+    }
+    return label
   }
 
   get value() {
     return this.tagValueDefinition.value
+  }
+
+  get valueDisplayName() {
+    return this.tagValueDefinition.displayName
   }
 
   get isArchived() {
@@ -55,20 +63,22 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
 
   const selectedOption = useMemo(() => {
     if (value === null) return null
-    return new TagValueDefinitionAsOption({ value: value.valueLabel, id: value.id, archivedAt: value.archivedAt })
+    return new TagValueDefinitionAsOption({ id: value.id, value: value.value, displayName: value.valueDisplayName, archivedAt: value.archivedAt })
   }, [value])
 
   const onSelectedValueChange = useCallback((option: TagValueDefinitionAsOption | null) => {
     let nextTag: Tag | null = null
 
     if (tagDimension && option) {
-      nextTag = makeTag({
+      nextTag = {
         id: option.id,
-        dimensionLabel: tagDimension.key,
-        valueLabel: option.value,
-        archivedAt: option.archivedAt?.toISOString() ?? null,
+        key: tagDimension.key,
+        dimensionDisplayName: tagDimension.displayName,
+        value: option.value,
+        valueDisplayName: option.valueDisplayName,
+        archivedAt: option.archivedAt,
         _local: { isOptimistic: false },
-      })
+      } as Tag
     }
 
     onValueChange(nextTag)
