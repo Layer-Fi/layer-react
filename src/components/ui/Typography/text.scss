@@ -71,18 +71,6 @@
       font-weight: var(--font-weight-#{$weight});
     }
   }
-
-  &[data-line-height='md'] {
-    line-height: 100%;
-  }
-
-  &[data-line-height='lg'] {
-    line-height: 140%;
-  }
-
-  &[data-line-height='xl'] {
-    line-height: 160%;
-  }
 }
 
 .Layer__Label {
