@@ -18,6 +18,13 @@ import {
 import { ServiceOfferingProps } from './ServiceOffering'
 import { Check } from 'lucide-react'
 
+/**
+ * Helper class to create defaults for the service offerings and override them, as well
+ * as generate the base content configs.
+ @see createBaseAccountingOffer
+ @see createBaseBookkeepingOffer
+ @see createContentConfig
+ */
 export class ServiceOfferingHelper {
   /**
    * Creates dynamic text by replacing template variables with platform config values
