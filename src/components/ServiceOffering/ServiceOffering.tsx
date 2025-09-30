@@ -9,7 +9,7 @@ import {
   imagePartnerAccountingImage,
 } from '../../assets/images'
 import { ContentConfig, ServiceOfferingContentID, ServiceOfferingDefaultTextContent, CoreValueProposition } from './content'
-import { ServiceOfferingLink, PlatformConfig, ServiceOfferingConfig, ServiceOfferingLinks } from './types'
+import { ServiceOfferingLink, ServiceOfferingPlatformConfig, ServiceOfferingConfig, ServiceOfferingLinks } from './types'
 import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { isCalendlyLink, useCalendly } from './calendly'
 import { View } from '../View'
@@ -30,7 +30,7 @@ export type ServiceOfferingMainConfig = {
   /**
    * Allows you to configure the platform name, industry, and top-of-fold image.
    */
-  platform: PlatformConfig
+  platform: ServiceOfferingPlatformConfig
   /**
    * Allows you to configure textual and image content relating to the core value proposition
    * and the service offerings.

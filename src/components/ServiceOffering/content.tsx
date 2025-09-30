@@ -24,6 +24,9 @@ export type ServiceOfferingTypesTextContent = Record<ServiceOfferingContentID, s
 export enum ServiceOfferingContentID {
   /**
    * The top most header text on section 1, top-of-the-fold main content section.
+   *
+   * When left blank, uses black color for the platform name, and a grayed out color on the word 'Accounting'.
+   * Otherwise, uses a purely black color for the title.
    */
   title,
   /**
@@ -57,7 +60,7 @@ export enum ServiceOfferingContentID {
 }
 
 export const ServiceOfferingDefaultTextContent: ServiceOfferingTypesTextContent = {
-  [ServiceOfferingContentID.title]: '{platformName} Accounting',
+  [ServiceOfferingContentID.title]: '', // When left blank, uses a dark and grayed out color
   [ServiceOfferingContentID.subtitle]: 'Track your business finances, right within {platformName}.',
   [ServiceOfferingContentID.headline_1]: 'All your finances in one place',
   [ServiceOfferingContentID.headline_1_desc]: 'Directly integrated with your {platformName} data, so you can see your business performance and profit in real-time.',

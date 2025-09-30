@@ -5,12 +5,12 @@ import { HStack, VStack } from '../ui/Stack/Stack'
 import { Heading } from '../ui/Typography/Heading'
 import { Badge } from '../Badge'
 import { BadgeSize, BadgeVariant } from '../Badge/Badge'
-import { PlatformConfig, ServiceOfferingConfig } from './types'
+import { ServiceOfferingPlatformConfig, ServiceOfferingConfig } from './types'
 import { isCalendlyLink } from './calendly'
 import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 
 export interface ServiceOfferingOptionsProps extends HTMLAttributes<HTMLDivElement> {
-  platformConfig: PlatformConfig
+  platformConfig: ServiceOfferingPlatformConfig
   config: ServiceOfferingConfig
   openCalendly: (link: string) => void
 }

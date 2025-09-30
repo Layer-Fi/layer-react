@@ -1,4 +1,4 @@
-import { PlatformConfig, ServiceOfferingConfig, ServiceOfferingValueProposition } from './types'
+import { ServiceOfferingPlatformConfig, ServiceOfferingConfig, ServiceOfferingValueProposition } from './types'
 import {
   imageBusinessAccounts,
   imageBusinessOverview,
@@ -48,11 +48,11 @@ export class ServiceOfferingHelper {
   /**
    * Binds template variables in a string with platform configuration values
    */
-  static bindTextValues(template: string, platformConfig: PlatformConfig): string
+  static bindTextValues(template: string, platformConfig: ServiceOfferingPlatformConfig): string
   static bindTextValues(template: string, variableMap: Record<string, string>): string
   static bindTextValues(
     template: string,
-    configOrMap: PlatformConfig | Record<string, string>,
+    configOrMap: ServiceOfferingPlatformConfig | Record<string, string>,
   ): string {
     let variableMap: Record<string, string>
 
@@ -83,7 +83,7 @@ export class ServiceOfferingHelper {
    *
    * @see ServiceOfferingHelper.overwriteBaseOffer
    */
-  static createBaseAccountingOffer(platformConfig: PlatformConfig): ServiceOfferingConfig {
+  static createBaseAccountingOffer(platformConfig: ServiceOfferingPlatformConfig): ServiceOfferingConfig {
     const accountingValueProps: ServiceOfferingValueProposition[] = [
       {
         icon: <img src={imageBusinessAccounts} alt='Business bank accounts and credit cards connection icon' />,
@@ -134,7 +134,7 @@ export class ServiceOfferingHelper {
    *
    * @see ServiceOfferingHelper.overwriteBaseOffer
    */
-  static createBaseBookkeepingOffer(platformConfig: PlatformConfig): ServiceOfferingConfig {
+  static createBaseBookkeepingOffer(platformConfig: ServiceOfferingPlatformConfig): ServiceOfferingConfig {
     const bookkeepingValueProps: ServiceOfferingValueProposition[] = [
       {
         icon: <img src={imageScheduleBookkeeperMeeting} alt='Calendar scheduling icon for bookkeeper consultation' />,

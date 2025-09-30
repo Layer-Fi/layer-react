@@ -89,7 +89,7 @@ export type ServiceOfferingLinks = {
  * niche or industry.
  @see ServiceOffering
  */
-export interface PlatformConfig {
+export interface ServiceOfferingPlatformConfig {
   /**
      * The platform/brand name displayed throughout the component (e.g., "Shopify", "WooCommerce").
      * Used in titles, descriptions, and feature text to customize the content.
