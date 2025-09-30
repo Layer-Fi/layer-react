@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import classNames from 'classnames'
 import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
-import './debitCreditPill.scss'
+import { Badge, BadgeVariant } from '../Badge'
+import { BadgeSize } from '../Badge/Badge'
 
 interface DebitCreditPillProps {
   value: LedgerEntryDirection
@@ -14,38 +14,23 @@ export const DebitCreditPill = ({
   onChange,
   isReadOnly = false,
 }: DebitCreditPillProps) => {
-  const handleToggle = useCallback(() => {
-    if (isReadOnly) return
-
+  const handleClick = useCallback(() => {
     const newDirection = value === LedgerEntryDirection.Debit
       ? LedgerEntryDirection.Credit
       : LedgerEntryDirection.Debit
 
     onChange(newDirection)
-  }, [value, onChange, isReadOnly])
+  }, [value, onChange])
 
   const isDebit = value === LedgerEntryDirection.Debit
 
-  const className = classNames(
-    'Layer__DebitCreditPill',
-    {
-      'Layer__DebitCreditPill--debit': isDebit,
-      'Layer__DebitCreditPill--credit': !isDebit,
-    },
-  )
-
   return (
-    <button
-      type='button'
-      onClick={handleToggle}
-      disabled={isReadOnly}
-      className={className}
-      aria-label={`Toggle between debit and credit. Currently ${value.toLowerCase()}`}
-      aria-pressed={isDebit}
-      role='switch'
-      tabIndex={isReadOnly ? -1 : 0}
+    <Badge
+      variant={isDebit ? BadgeVariant.WARNING : BadgeVariant.SUCCESS}
+      size={BadgeSize.SMALL}
+      onClick={isReadOnly ? undefined : handleClick}
     >
       {isDebit ? 'Debit' : 'Credit'}
-    </button>
+    </Badge>
   )
 }

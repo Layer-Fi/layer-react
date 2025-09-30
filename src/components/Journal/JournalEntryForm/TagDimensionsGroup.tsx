@@ -1,28 +1,26 @@
 import { TagDimensionCombobox } from '../../../features/tags/components/TagDimensionCombobox'
 import { Tag } from '../../../features/tags/tagSchemas'
-import { useAvailableTagDimensions } from '../../../features/tags/api/useAvailableTagDimensions'
 import { FallbackWithSkeletonLoader } from '../../../components/SkeletonLoader/SkeletonLoader'
+import { useTagDimensions } from '../../../features/tags/api/useTagDimensions'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
 
 export interface TagDimensionsGroupProps {
-  dimensionKeys?: string[]
   value: readonly Tag[]
   onChange: (tags: readonly Tag[]) => void
   showLabels?: boolean
   isReadOnly?: boolean
+  isEnabled?: boolean
 }
 
 export const TagDimensionsGroup = ({
-  dimensionKeys = [],
   value,
   onChange,
   showLabels = false,
   isReadOnly = false,
+  isEnabled = true,
 }: TagDimensionsGroupProps) => {
-  const { availableDimensions, isLoading, isError } = useAvailableTagDimensions({
-    desiredDimensionKeys: dimensionKeys,
-  })
+  const { data: tagDimensions, isLoading, isError } = useTagDimensions({ isEnabled })
 
   const handleTagValueChange = (dimensionKey: string) => (newTag: Tag | null) => {
     const filteredTags = value.filter(tag =>
@@ -40,21 +38,20 @@ export const TagDimensionsGroup = ({
     ) ?? null
   }
 
-  /* Optimistically render skeleton loaders for each desired dimension while fetching */
+  if (!isEnabled) {
+    return null
+  }
+
   if (isLoading) {
     return (
       <>
-        {dimensionKeys.map(dimensionKey => (
-          <div
-            key={dimensionKey}
-            className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--tag`}
-            style={{ minWidth: '12rem' }}
-          >
-            <FallbackWithSkeletonLoader isLoading={true} height='2.5rem' width='100%'>
-              <div />
-            </FallbackWithSkeletonLoader>
-          </div>
-        ))}
+        <div
+          key='loader'
+          className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--tag`}
+          style={{ minWidth: '12rem' }}
+        >
+          <FallbackWithSkeletonLoader isLoading={true} height='2.5rem' width='100%' />
+        </div>
       </>
     )
   }
@@ -65,7 +62,7 @@ export const TagDimensionsGroup = ({
 
   return (
     <>
-      {availableDimensions.map(dimension => (
+      {(tagDimensions ?? []).map(dimension => (
         <TagDimensionCombobox
           key={dimension.key}
           dimensionKey={dimension.key}

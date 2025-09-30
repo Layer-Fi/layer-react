@@ -2,7 +2,7 @@ import { Schema, pipe } from 'effect'
 import { ZonedDateTimeFromSelf } from '../../../utils/schema/utils'
 import { LedgerEntryDirectionSchema, SingleChartAccountSchema } from '../../../schemas/generalLedger/ledgerAccount'
 import { AccountIdentifierSchema } from '../../../schemas/accountIdentifier'
-import { TagKeyValueSchema, TagSchema } from '../../../features/tags/tagSchemas'
+import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '../../../features/tags/tagSchemas'
 import { CustomerSchema } from '../../../schemas/customer'
 import { VendorSchema } from '../../../schemas/vendor'
 
@@ -39,8 +39,7 @@ export type JournalEntryForm = Omit<typeof JournalEntryFormSchema.Type, 'lineIte
 }
 
 export const CreateCustomJournalEntryLineItemSchema = Schema.Struct({
-  externalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+  externalId: Schema.optional(Schema.String).pipe(
     Schema.fromKey('external_id'),
   ),
   accountIdentifier: pipe(
@@ -49,29 +48,24 @@ export const CreateCustomJournalEntryLineItemSchema = Schema.Struct({
   ),
   amount: Schema.BigInt,
   direction: LedgerEntryDirectionSchema,
-  memo: Schema.NullOr(Schema.String),
-  customerId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+  memo: Schema.optional(Schema.String),
+  customerId: Schema.optional(Schema.UUID).pipe(
     Schema.fromKey('customer_id'),
   ),
-  customerExternalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+  customerExternalId: Schema.optional(Schema.String).pipe(
     Schema.fromKey('customer_external_id'),
   ),
-  vendorId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+  vendorId: Schema.optional(Schema.UUID).pipe(
     Schema.fromKey('vendor_id'),
   ),
-  vendorExternalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+  vendorExternalId: Schema.optional(Schema.String).pipe(
     Schema.fromKey('vendor_external_id'),
   ),
-  tags: Schema.Array(TagKeyValueSchema),
+  tags: Schema.optional(Schema.Array(TagKeyValueSchema)),
 })
 
 export const CreateCustomJournalEntrySchema = Schema.Struct({
-  externalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+  externalId: Schema.optional(Schema.String).pipe(
     Schema.fromKey('external_id'),
   ),
   entryAt: pipe(
@@ -83,26 +77,21 @@ export const CreateCustomJournalEntrySchema = Schema.Struct({
     Schema.fromKey('created_by'),
   ),
   memo: Schema.String,
-  customerId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+  customerId: Schema.optional(Schema.UUID).pipe(
     Schema.fromKey('customer_id'),
   ),
-  customerExternalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+  customerExternalId: Schema.optional(Schema.String).pipe(
     Schema.fromKey('customer_external_id'),
   ),
-  vendorId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+  vendorId: Schema.optional(Schema.UUID).pipe(
     Schema.fromKey('vendor_id'),
   ),
-  vendorExternalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+  vendorExternalId: Schema.optional(Schema.String).pipe(
     Schema.fromKey('vendor_external_id'),
   ),
-  tags: Schema.Array(TagKeyValueSchema),
-  metadata: Schema.NullOr(Schema.Unknown),
-  referenceNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+  tags: Schema.optional(Schema.Array(TagKeyValueSchema)),
+  metadata: Schema.optional(Schema.Unknown),
+  referenceNumber: Schema.optional(Schema.String).pipe(
     Schema.fromKey('reference_number'),
   ),
   lineItems: pipe(
@@ -113,11 +102,11 @@ export const CreateCustomJournalEntrySchema = Schema.Struct({
 
 export const ApiLineItemSchema = Schema.Struct({
   id: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('id'),
   ),
   entryId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('entry_id'),
   ),
   account: SingleChartAccountSchema,
@@ -134,11 +123,11 @@ export const ApiLineItemSchema = Schema.Struct({
     Schema.fromKey('createdAt'),
   ),
   entryReversalOf: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.UUID)),
     Schema.fromKey('entry_reversal_of'),
   ),
   entryReversedBy: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.UUID)),
     Schema.fromKey('entry_reversed_by'),
   ),
 })
@@ -151,20 +140,20 @@ export const ApiCustomJournalEntryLineItemSchema = Schema.Struct({
   ),
   memo: Schema.optional(Schema.NullOr(Schema.String)),
   lineItemId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('line_item_id'),
   ),
   customer: Schema.NullOr(CustomerSchema),
   vendor: Schema.NullOr(VendorSchema),
   transactionTags: pipe(
-    Schema.optional(Schema.Array(Schema.Unknown)),
+    Schema.optional(Schema.Array(TransactionTagSchema)),
     Schema.fromKey('transaction_tags'),
   ),
 })
 
 export const ApiLedgerEntrySchema = Schema.Struct({
   entryId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('id'),
   ),
   businessId: pipe(
@@ -172,7 +161,7 @@ export const ApiLedgerEntrySchema = Schema.Struct({
     Schema.fromKey('business_id'),
   ),
   ledgerId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('ledger_id'),
   ),
   entryNumber: pipe(
@@ -195,11 +184,11 @@ export const ApiLedgerEntrySchema = Schema.Struct({
     Schema.fromKey('entry_at'),
   ),
   reversalOfId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.UUID)),
     Schema.fromKey('reversal_of_id'),
   ),
   reversalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.UUID)),
     Schema.fromKey('reversal_id'),
   ),
   lineItems: pipe(
@@ -230,7 +219,7 @@ export const ApiCustomJournalEntryWithEntrySchema = Schema.Struct({
   ),
   memo: Schema.String,
   entryId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('entry_id'),
   ),
   customer: Schema.NullOr(CustomerSchema),

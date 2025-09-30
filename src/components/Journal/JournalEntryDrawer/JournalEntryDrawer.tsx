@@ -9,9 +9,8 @@ import { useJournalNavigation } from '../../../providers/JournalStore/JournalSto
 import X from '../../../icons/X'
 import BackArrow from '../../../icons/BackArrow'
 import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
-import { JournalConfig } from '../Journal'
 
-export const JournalEntryDrawer = ({ config }: { config: JournalConfig }) => {
+export const JournalEntryDrawer = ({ showTags = true }: { showTags?: boolean }) => {
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
   const { toJournalTable } = useJournalNavigation()
   const formRef = useRef<{ submit: () => Promise<void> }>(null)
@@ -59,7 +58,7 @@ export const JournalEntryDrawer = ({ config }: { config: JournalConfig }) => {
       >
         <JournalEntryForm
           isReadOnly={false}
-          config={config}
+          showTags={showTags}
           onSuccess={onJournalEntrySuccess}
           onChangeFormState={onChangeFormState}
           ref={formRef}
