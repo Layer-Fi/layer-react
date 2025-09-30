@@ -17,10 +17,13 @@ import {
 import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, hasMatch } from '../../utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
-import { Tag, makeTagKeyValueFromTag } from '../../features/tags/tagSchemas'
+import { Tag, makeTagKeyValueFromTag, makeTag } from '../../features/tags/tagSchemas'
 import { TagDimensionsGroup } from '../Journal/JournalEntryForm/TagDimensionsGroup'
 import { CustomerVendorSelector } from '../../features/customerVendor/components/CustomerVendorSelector'
 import { decodeCustomerVendor, CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
+import { useTagBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/tags/api/useTagBankTransaction'
+import { useRemoveTagFromBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
+import { useSetMetadataOnBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
 
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
@@ -137,6 +140,12 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       categorize: categorizeBankTransaction,
       match: matchBankTransaction,
     } = useBankTransactionsContext()
+
+    // Hooks for auto-saving tags and customer/vendor in unsplit state
+    const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
+    const { trigger: removeTagFromBankTransaction } = useRemoveTagFromBankTransaction({ bankTransactionId: bankTransaction.id })
+    const { trigger: setMetadataOnBankTransaction } = useSetMetadataOnBankTransaction({ bankTransactionId: bankTransaction.id })
+
     const [purpose, setPurpose] = useState<Purpose>(
       bankTransaction.category
         ? Purpose.categorize
@@ -165,6 +174,18 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
         ? decodeCustomerVendor({ ...bankTransaction.vendor, customerVendorType: 'VENDOR' })
         : null
 
+    const initialTags = bankTransaction.transaction_tags.map(({ id, key, value, dimension_display_name, value_display_name, archived_at, _local }) => makeTag({
+      id,
+      key,
+      value,
+      dimensionDisplayName: dimension_display_name,
+      valueDisplayName: value_display_name,
+      archivedAt: archived_at,
+      _local: {
+        isOptimistic: _local?.isOptimistic ?? false,
+      },
+    }))
+
     const [rowState, updateRowState] = useState<RowState>({
       splits: bankTransaction.category?.entries
         ? bankTransaction.category?.entries.map((c) => {
@@ -173,14 +194,14 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               amount: c.amount || 0,
               inputValue: formatMoney(c.amount),
               category: mapCategoryToExclusionOption(c.category),
-              tags: [],
+              tags: initialTags,
               customerVendor: initialCustomerVendor,
             }
             : {
               amount: c.amount || 0,
               inputValue: formatMoney(c.amount),
               category: mapCategoryToOption(c.category),
-              tags: [],
+              tags: initialTags,
               customerVendor: initialCustomerVendor,
             }
         })
@@ -189,7 +210,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
             amount: bankTransaction.amount,
             inputValue: formatMoney(bankTransaction.amount),
             category: defaultCategory ? mapCategoryToOption(defaultCategory) : undefined,
-            tags: [],
+            tags: initialTags,
             customerVendor: initialCustomerVendor,
           },
         ],
@@ -294,15 +315,54 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     }
 
     const changeTags = (index: number, newTags: readonly Tag[]) => {
+      const oldTags = rowState.splits[index].tags
       rowState.splits[index].tags = newTags
       updateRowState({ ...rowState })
       setSplitFormError(undefined)
+
+      // Auto-save tags only when in unsplit state (single split entry)
+      if (rowState.splits.length === 1) {
+        // Find tags that were added
+        const addedTags = newTags.filter(newTag =>
+          !oldTags.some(oldTag => oldTag.key === newTag.key && oldTag.value === newTag.value),
+        )
+
+        // Find tags that were removed
+        const removedTags = oldTags.filter(oldTag =>
+          !newTags.some(newTag => newTag.key === oldTag.key && newTag.value === oldTag.value),
+        )
+
+        // Trigger API calls for added tags
+        addedTags.forEach((tag) => {
+          void tagBankTransaction({
+            key: tag.key,
+            value: tag.value,
+            dimensionDisplayName: tag.dimensionDisplayName,
+            valueDisplayName: tag.valueDisplayName,
+          })
+        })
+
+        // Trigger API calls for removed tags
+        removedTags.forEach((tag) => {
+          void removeTagFromBankTransaction({
+            tagId: tag.id,
+          })
+        })
+      }
     }
 
     const changeCustomerVendor = (index: number, newCustomerVendor: typeof CustomerVendorSchema.Type | null) => {
       rowState.splits[index].customerVendor = newCustomerVendor
       updateRowState({ ...rowState })
       setSplitFormError(undefined)
+
+      // Auto-save customer/vendor only when in unsplit state (single split entry)
+      if (rowState.splits.length === 1) {
+        void setMetadataOnBankTransaction({
+          customer: newCustomerVendor?.customerVendorType === 'CUSTOMER' ? newCustomerVendor : null,
+          vendor: newCustomerVendor?.customerVendorType === 'VENDOR' ? newCustomerVendor : null,
+        })
+      }
     }
 
     const save = async () => {
