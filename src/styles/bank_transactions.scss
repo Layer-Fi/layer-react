@@ -1,4 +1,6 @@
 .Layer__bank-transactions {
+  --content-max-width: 60rem; // Expanded row content width (960px)
+
   max-width: var(--max-component-width);
   padding-bottom: var(--spacing-lg);
 
@@ -296,14 +298,12 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
-  max-width: 680px;
 }
 
 .Layer__expanded-bank-transaction-row__content-panels {
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
-  max-width: 680px;
 }
 
 .Layer__expanded-bank-transaction-row__content-panel {
@@ -460,7 +460,7 @@
   & textarea {
     height: 100px;
     width: 100%;
-    max-width: 680px;
+    max-width: var(--content-max-width);
   }
 }
 
@@ -504,10 +504,16 @@
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry__tags {
   display: flex;
+  gap: var(--spacing-sm);
   flex: 1;
   .Layer__JournalEntryForm__Field--tag {
     width: 16rem;
   }
+}
+
+.Layer__expanded-bank-transaction-row__table-cell--split-entry__customer-vendor {
+  display: flex;
+  width: 16rem;
 }
 
 .Layer__bank-transactions__list {

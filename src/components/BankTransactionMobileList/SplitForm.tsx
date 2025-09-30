@@ -16,6 +16,8 @@ import { getCategorizePayload, hasReceipts } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Tag, makeTagKeyValueFromTag } from '../../features/tags/tagSchemas'
+import { CustomerVendorSelector } from '../../features/customerVendor/components/CustomerVendorSelector'
+import { decodeCustomerVendor, CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
 import {
@@ -33,6 +35,7 @@ type Split = {
   inputValue: string
   category: CategoryOption | undefined
   tags: readonly Tag[]
+  customerVendor: typeof CustomerVendorSchema.Type | null
 }
 
 type RowState = {
@@ -66,6 +69,12 @@ export const SplitForm = ({
     || (hasSuggestions(bankTransaction.categorization_flow)
       && bankTransaction.categorization_flow?.suggestions?.[0])
 
+  const initialCustomerVendor = bankTransaction.customer
+    ? decodeCustomerVendor({ ...bankTransaction.customer, customerVendorType: 'CUSTOMER' })
+    : bankTransaction.vendor
+      ? decodeCustomerVendor({ ...bankTransaction.vendor, customerVendorType: 'VENDOR' })
+      : null
+
   const [rowState, updateRowState] = useState<RowState>({
     splits: bankTransaction.category?.entries
       ? bankTransaction.category?.entries.map((c) => {
@@ -75,12 +84,14 @@ export const SplitForm = ({
             inputValue: formatMoney(c.amount),
             category: mapCategoryToExclusionOption(c.category),
             tags: [],
+            customerVendor: initialCustomerVendor,
           }
           : {
             amount: c.amount || 0,
             inputValue: formatMoney(c.amount),
             category: mapCategoryToOption(c.category),
             tags: [],
+            customerVendor: initialCustomerVendor,
           }
       })
       : [
@@ -91,6 +102,7 @@ export const SplitForm = ({
             ? mapCategoryToOption(defaultCategory)
             : undefined,
           tags: [],
+          customerVendor: initialCustomerVendor,
         },
         {
           amount: 0,
@@ -99,6 +111,7 @@ export const SplitForm = ({
             ? mapCategoryToOption(defaultCategory)
             : undefined,
           tags: [],
+          customerVendor: initialCustomerVendor,
         },
       ],
     description: '',
@@ -175,6 +188,7 @@ export const SplitForm = ({
             ? mapCategoryToOption(defaultCategory)
             : undefined,
           tags: [],
+          customerVendor: initialCustomerVendor,
         },
       ],
     })
@@ -224,6 +238,8 @@ export const SplitForm = ({
               : '',
             amount: split.amount,
             tag_key_values: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
+            customer_id: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : null,
+            vendor_id: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : null,
           })),
         } as SplitCategoryUpdate),
       true,

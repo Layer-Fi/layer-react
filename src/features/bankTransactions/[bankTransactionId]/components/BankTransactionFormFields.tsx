@@ -13,12 +13,14 @@ type BankTransactionFormFieldProps = {
   >
   showDescriptions?: boolean
   turnOffTags?: boolean
+  turnOffCustomerVendor?: boolean
 }
 
 export function BankTransactionFormFields({
   bankTransaction,
   showDescriptions,
   turnOffTags = false,
+  turnOffCustomerVendor = false,
 }: BankTransactionFormFieldProps) {
   const { showTags } = useBankTransactionTagVisibility()
   const { showCustomerVendor } = useBankTransactionCustomerVendorVisibility()
@@ -28,8 +30,8 @@ export function BankTransactionFormFields({
   }
 
   return (
-    <VStack pis='md' pbe='lg' gap='md'>
-      {showCustomerVendor
+    <VStack pi='md' pbe='lg' gap='md'>
+      {showCustomerVendor && !turnOffCustomerVendor
         ? <BankTransactionCustomerVendorSelector bankTransaction={bankTransaction} />
         : null}
       {showTags && !turnOffTags

@@ -19,6 +19,8 @@ import { getCategorizePayload, hasMatch } from '../../utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
 import { Tag, makeTagKeyValueFromTag } from '../../features/tags/tagSchemas'
 import { TagDimensionsGroup } from '../Journal/JournalEntryForm/TagDimensionsGroup'
+import { CustomerVendorSelector } from '../../features/customerVendor/components/CustomerVendorSelector'
+import { decodeCustomerVendor, CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
 
 import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
@@ -51,7 +53,6 @@ type Props = {
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
-  tagDimensionKeysInUse?: string[]
 }
 
 type Split = {
@@ -59,6 +60,7 @@ type Split = {
   inputValue: string
   category: CategoryOption | undefined
   tags: readonly Tag[]
+  customerVendor: typeof CustomerVendorSchema.Type | null
 }
 
 type RowState = {
@@ -128,7 +130,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       showDescriptions,
       showReceiptUploads,
       showTooltips,
-      tagDimensionKeysInUse = [],
     },
     ref,
   ) => {
@@ -158,6 +159,12 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
           ? bankTransaction.categorization_flow?.suggestions.at(0)
           : undefined
 
+    const initialCustomerVendor = bankTransaction.customer
+      ? decodeCustomerVendor({ ...bankTransaction.customer, customerVendorType: 'CUSTOMER' })
+      : bankTransaction.vendor
+        ? decodeCustomerVendor({ ...bankTransaction.vendor, customerVendorType: 'VENDOR' })
+        : null
+
     const [rowState, updateRowState] = useState<RowState>({
       splits: bankTransaction.category?.entries
         ? bankTransaction.category?.entries.map((c) => {
@@ -167,12 +174,14 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
               inputValue: formatMoney(c.amount),
               category: mapCategoryToExclusionOption(c.category),
               tags: [],
+              customerVendor: initialCustomerVendor,
             }
             : {
               amount: c.amount || 0,
               inputValue: formatMoney(c.amount),
               category: mapCategoryToOption(c.category),
               tags: [],
+              customerVendor: initialCustomerVendor,
             }
         })
         : [
@@ -181,6 +190,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
             inputValue: formatMoney(bankTransaction.amount),
             category: defaultCategory ? mapCategoryToOption(defaultCategory) : undefined,
             tags: [],
+            customerVendor: initialCustomerVendor,
           },
         ],
       description: '',
@@ -197,6 +207,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
             inputValue: '0.00',
             category: defaultCategory ? mapCategoryToOption(defaultCategory) : undefined,
             tags: [],
+            customerVendor: initialCustomerVendor,
           },
         ],
       })
@@ -288,6 +299,12 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       setSplitFormError(undefined)
     }
 
+    const changeCustomerVendor = (index: number, newCustomerVendor: typeof CustomerVendorSchema.Type | null) => {
+      rowState.splits[index].customerVendor = newCustomerVendor
+      updateRowState({ ...rowState })
+      setSplitFormError(undefined)
+    }
+
     const save = async () => {
       if (purpose === Purpose.match) {
         if (!selectedMatchId) {
@@ -332,6 +349,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 : '',
               amount: split.amount,
               tag_key_values: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
+              customer_id: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : null,
+              vendor_id: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : null,
             })),
           } as SplitCategoryUpdate),
       )
@@ -474,17 +493,22 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               inputMode='numeric'
                               errorMessage='Negative values are not allowed'
                             />
-                            {tagDimensionKeysInUse.length > 0 && (
-                              <div className={`${className}__table-cell--split-entry__tags`}>
-                                <TagDimensionsGroup
-                                  dimensionKeys={tagDimensionKeysInUse}
-                                  value={split.tags}
-                                  onChange={tags => changeTags(index, tags)}
-                                  showLabels={index === 0}
-                                  isReadOnly={!categorizationEnabled}
-                                />
-                              </div>
-                            )}
+                            <div className={`${className}__table-cell--split-entry__tags`}>
+                              <TagDimensionsGroup
+                                value={split.tags}
+                                onChange={tags => changeTags(index, tags)}
+                                showLabels={index === 0}
+                                isReadOnly={!categorizationEnabled}
+                              />
+                            </div>
+                            <div className={`${className}__table-cell--split-entry__customer-vendor`}>
+                              <CustomerVendorSelector
+                                selectedCustomerVendor={split.customerVendor}
+                                onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
+                                placeholder='Set customer or vendor...'
+                                isReadOnly={!categorizationEnabled}
+                              />
+                            </div>
                             <Button
                               className={`${className}__table-cell--split-entry__merge-btn`}
                               onClick={() => removeSplit(index)}
@@ -545,6 +569,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                   bankTransaction={bankTransaction}
                   showDescriptions={showDescriptions}
                   turnOffTags={rowState.splits.length > 1}
+                  turnOffCustomerVendor={rowState.splits.length > 1}
                 />
 
                 {showReceiptUploads && (
