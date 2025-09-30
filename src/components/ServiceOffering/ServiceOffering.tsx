@@ -1,4 +1,3 @@
-import { HTMLAttributes } from 'react'
 import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { ServiceOfferingOffer } from './ServiceOfferingOptions'
@@ -13,6 +12,7 @@ import { ContentConfig, ServiceOfferingContentID, ServiceOfferingDefaultTextCont
 import { Link, PlatformConfig, ServiceOfferingConfig, ServiceOfferingLinks } from './types'
 import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { isCalendlyLink, useCalendly } from './calendly'
+import { View } from '../View'
 
 export type ServiceOfferingMainConfig = {
   /** Link configuration for various CTAs and actions */
@@ -27,13 +27,12 @@ export type ServiceOfferingMainConfig = {
    * Props for the ServiceOffering component - a customizable landing page component
    * that showcases accounting services with optional pricing options and booking integration.
    */
-export interface ServiceOfferingTypesProps extends HTMLAttributes<HTMLDivElement> {
+export interface ServiceOfferingTypesProps {
   config: ServiceOfferingMainConfig
 }
 
 export const ServiceOffering = ({
   config: mainConfig,
-  ...props
 }: ServiceOfferingTypesProps) => {
   const {
     links,
@@ -147,7 +146,7 @@ export const ServiceOffering = ({
           />
         </HStack>
       )}
-      <VStack gap='3xl' pb='5xl'>
+      <VStack gap='3xl' pb='2xl'>
         <Heading size='lg' align='center'>
           {ServiceOfferingHelper.makeDynamicText(ServiceOfferingContentID.value_proposition_title, textContent, mainConfig)}
         </Heading>
@@ -174,18 +173,20 @@ export const ServiceOffering = ({
   )
 
   return (
-    <VStack className={baseClassName} {...props}>
+    <View viewClassName={baseClassName} showHeader={false}>
       <div className='Layer__service-offering__content'>
         {renderMainContent()}
-        <VStack gap='3xl' {...props} className='Layer__service-offering--offers'>
+        <VStack gap='3xl' className='Layer__service-offering--offers'>
           <HStack align='center'>
-            <Heading size='md' align='center' style={{ maxWidth: '360px', margin: '0 auto' }}>
+            <Heading size='md' align='center' style={{ maxWidth: '480px', margin: '0 auto' }}>
               {ServiceOfferingHelper.makeDynamicText(ServiceOfferingContentID.offers_title, textContent, mainConfig)}
             </Heading>
           </HStack>
-          {mainConfig.content.config.map(renderOffer)}
+          <div className='Layer__service-offering-options__grid'>
+            {mainConfig.content.config.map(renderOffer)}
+          </div>
         </VStack>
       </div>
-    </VStack>
+    </View>
   )
 }

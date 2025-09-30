@@ -35,15 +35,6 @@
     }
 }
 
-
-.Layer__service-offering--main {
-    padding: 0 var(--spacing-lg);
-
-    @media (min-width: 1024px) {
-        padding: 0 180px;
-    }
-}
-
 .Layer__service-offering {
     box-sizing: border-box;
     display: flex;
@@ -194,9 +185,9 @@
 .Layer__service-offering--with-bottom-offers {
     height: fit-content;
 
-    .Layer__service-offering__responsive-layout {
-        padding-top: var(--spacing-5xl)
-    }
+    // .Layer__service-offering__responsive-layout {
+    //     padding-top: var(--spacing-2xl)
+    // }
 
     .Layer__service-offering__content {
         height: fit-content;
@@ -205,7 +196,6 @@
 
 .Layer__service-offering--with-left-offers,
 .Layer__service-offering--with-right-offers {
-    margin: var(--spacing-xl) 0;
 
     .Layer__service-offering__content {
         display: grid;
@@ -215,10 +205,6 @@
         @media (max-width: 1770px) {
             grid-template-columns: 1fr;
         }
-    }
-
-    .Layer__service-offering--main {
-        padding: 0 72px;
     }
 
     .Layer__service-offering__offers {
@@ -284,7 +270,7 @@
 }
 
 .Layer__service-offering--offers {
-    margin-top: var(--spacing-5xl);
+    margin-top: var(--spacing-xl);
 }
 
 .Layer__service-offering__main {
@@ -310,7 +296,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding-bottom: var(--spacing-5xl);
 
     @media (max-width: 1440px) {
         flex-direction: column;
@@ -359,5 +344,22 @@
     @media (max-width: 768px) {
         grid-template-columns: 1fr;
         gap: var(--spacing-xl);
+    }
+}
+
+// Responsive override for left/right offers grid layout
+@media (max-width: 1770px) {
+    .Layer__service-offering--with-left-offers .Layer__service-offering-options__grid,
+    .Layer__service-offering--with-right-offers .Layer__service-offering-options__grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: unset;
+    }
+}
+
+@media (max-width: 768px) {
+    .Layer__service-offering--with-left-offers .Layer__service-offering-options__grid,
+    .Layer__service-offering--with-right-offers .Layer__service-offering-options__grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: unset;
     }
 }
