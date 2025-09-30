@@ -1,4 +1,3 @@
-import { iconCog, iconLayers } from '../../assets/icons'
 import { ServiceOfferingConfig, ServiceOfferingOfferLayout } from './types'
 
 import { ReactNode } from 'react'
@@ -69,14 +68,12 @@ export const defaultContentConfig: Omit<ContentConfig, 'config'> = {
   layout: 'none',
   features: [
     {
-      icon: <img src={iconLayers} />,
+      icon: <></>,
       title: 'All your finances in one place',
       text: 'Directly integrated with your {platformName} data, so you can see your business performance and profit in real-time.',
     },
     {
-      icon: (
-        <img src={iconCog} />
-      ),
+      icon: <></>,
       title: 'Built for {industry}',
       text: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
     },

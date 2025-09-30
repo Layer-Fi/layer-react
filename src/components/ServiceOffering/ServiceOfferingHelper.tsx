@@ -7,7 +7,6 @@ import {
   imageScheduleBookkeeperMeeting,
   imagePnlOverview,
 } from '../../assets/images'
-import { iconCheck } from '../../assets/icons'
 import {
   ServiceOfferingContentID,
   ServiceOfferingTypesTextContent,
@@ -17,6 +16,7 @@ import {
   defaultContentConfig,
 } from './content'
 import { ServiceOfferingTypesProps } from './ServiceOffering'
+import { Check } from 'lucide-react'
 
 export class ServiceOfferingHelper {
   /**
@@ -97,9 +97,9 @@ export class ServiceOfferingHelper {
       title: '{platformName} Accounting',
       description: 'The best accounting software for {industry} businesses. Fast to set up and easy to use.',
       features: [
-        { icon: <img src={iconCheck} alt='' />, description: 'Direct integration with {platformName}' },
-        { icon: <img src={iconCheck} alt='' />, description: 'Track expenses and receipts' },
-        { icon: <img src={iconCheck} alt='' />, description: 'Easy to understand profitability charts and reports' },
+        { icon: <Check size={14} />, description: 'Direct integration with {platformName}' },
+        { icon: <Check size={14} />, description: 'Track expenses and receipts' },
+        { icon: <Check size={14} />, description: 'Easy to understand profitability charts and reports' },
       ],
       unit: '/month',
       pricing: '$299',
@@ -141,9 +141,9 @@ export class ServiceOfferingHelper {
       title: 'Full-service Bookkeeping',
       description: 'Get a dedicated bookkeeper who will organize and manage your books for you.',
       features: [
-        { icon: <img src={iconCheck} alt='Personalized setup with your bookkeeper' />, description: 'Personalized setup with your bookkeeper' },
-        { icon: <img src={iconCheck} alt='Monthly books done for you' />, description: 'Monthly books done for you' },
-        { icon: <img src={iconCheck} alt='Complete financial reports and end of year tax packet' />, description: 'Complete financial reports and end of year tax packet' },
+        { icon: <Check size={14} />, description: 'Personalized setup with your bookkeeper' },
+        { icon: <Check size={14} />, description: 'Monthly books done for you' },
+        { icon: <Check size={14} />, description: 'Complete financial reports and end of year tax packet' },
       ],
       unit: '/month',
       pricing: '$599',
