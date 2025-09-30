@@ -50,9 +50,7 @@ export const TagDimensionsGroup = ({
             className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--tag`}
             style={{ minWidth: '12rem' }}
           >
-            <FallbackWithSkeletonLoader isLoading={true} height='2.5rem' width='100%'>
-              <div />
-            </FallbackWithSkeletonLoader>
+            <FallbackWithSkeletonLoader isLoading={true} height='2.5rem' width='100%' />
           </div>
         ))}
       </>

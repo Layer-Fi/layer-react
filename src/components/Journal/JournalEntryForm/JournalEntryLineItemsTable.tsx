@@ -9,6 +9,7 @@ import { Button } from '../../ui/Button/Button'
 import { P, Span } from '../../ui/Typography/Text'
 import { getJournalEntryLineItemFormDefaultValues } from './formUtils'
 import { useStore } from '@tanstack/react-form'
+import { useMemo } from 'react'
 
 export interface JournalEntryLineItemsTableProps {
   form: AppForm<JournalEntryForm>
@@ -27,27 +28,22 @@ export const JournalEntryLineItemsTable = ({
 }: JournalEntryLineItemsTableProps) => {
   const lineItems = useStore(form.store, state => state.values.lineItems) || []
 
+  const filteredIndices = useMemo(() => {
+    const indices: number[] = []
+    lineItems.forEach((item: unknown, index: number) => {
+      const lineItem = item as { direction: LedgerEntryDirection }
+      if (lineItem.direction === direction) {
+        indices.push(index)
+      }
+    })
+    return indices
+  }, [lineItems, direction])
+
   return (
     <VStack gap='md' pi='xl'>
       <form.Field name='lineItems' mode='array'>
         {(field) => {
-          const filteredIndices: number[] = []
-          lineItems.forEach((item: unknown, index: number) => {
-            const lineItem = item as { direction: LedgerEntryDirection }
-            if (lineItem.direction === direction) {
-              filteredIndices.push(index)
-            }
-          })
           const displayLineItems = filteredIndices
-
-          const handleAddLineItem = () => {
-            const newLineItem = getJournalEntryLineItemFormDefaultValues(direction)
-            field.pushValue(newLineItem)
-          }
-
-          const handleRemoveLineItem = (index: number) => {
-            field.removeValue(index)
-          }
 
           return (
             <>
@@ -67,8 +63,8 @@ export const JournalEntryLineItemsTable = ({
                     index={originalIndex}
                     config={config}
                     isReadOnly={isReadOnly}
-                    onDeleteLine={() => handleRemoveLineItem(originalIndex)}
-                    showLabels={displayIndex === 0} // Show labels for first item in each section
+                    onDeleteLine={() => field.removeValue(originalIndex)}
+                    showLabels={displayIndex === 0}
                   />
                 ))}
               </VStack>
@@ -85,7 +81,7 @@ export const JournalEntryLineItemsTable = ({
                 </VStack>
               )}
               {!isReadOnly && (
-                <Button onPress={handleAddLineItem} variant='text'>
+                <Button onPress={() => field.pushValue(getJournalEntryLineItemFormDefaultValues(direction))} variant='text'>
                   <Span weight='normal' size='sm' variant='subtle'>
                     Add next line
                   </Span>

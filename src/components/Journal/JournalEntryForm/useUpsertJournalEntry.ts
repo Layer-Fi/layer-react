@@ -110,9 +110,15 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
 
       return result
     },
-    [rawMutationResponse.trigger, forceReloadLedgerEntries, debouncedInvalidatePnlDetailLines,
-      debouncedInvalidateProfitAndLossReport, debouncedInvalidateProfitAndLossSummaries,
-      invalidate, touch],
+    [
+      forceReloadLedgerEntries,
+      debouncedInvalidatePnlDetailLines,
+      debouncedInvalidateProfitAndLossReport,
+      debouncedInvalidateProfitAndLossSummaries,
+      invalidate,
+      touch,
+      rawMutationResponse,
+    ],
   )
 
   return {

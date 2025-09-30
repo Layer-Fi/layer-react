@@ -2,7 +2,7 @@ import { fromDate, getLocalTimeZone } from '@internationalized/date'
 import { LedgerEntryDirection } from '../../../schemas/generalLedger/ledgerAccount'
 import type { JournalEntryForm, CreateCustomJournalEntry, JournalEntryFormLineItem, ApiCustomJournalEntryWithEntry } from './journalEntryFormSchemas'
 import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents, convertCentsToBigDecimal } from '../../../utils/bigDecimalUtils'
-import { makeTagKeyValueFromTag } from '../../../features/tags/tagSchemas'
+import { makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../../features/tags/tagSchemas'
 import { BigDecimal as BD } from 'effect'
 
 export function getJournalEntryLineItemFormDefaultValues(direction: LedgerEntryDirection): JournalEntryFormLineItem {
@@ -62,7 +62,7 @@ export function getJournalEntryFormInitialValues(journalEntry: ApiCustomJournalE
       memo: lineItem.memo ?? null,
       customer: lineItem.customer,
       vendor: lineItem.vendor,
-      tags: lineItem?.transactionTags ?? [],
+      tags: lineItem.transactionTags?.map(makeTagFromTransactionTag) ?? [],
     })),
   }
 }

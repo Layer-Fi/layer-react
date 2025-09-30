@@ -2,7 +2,7 @@ import { Schema, pipe } from 'effect'
 import { ZonedDateTimeFromSelf } from '../../../utils/schema/utils'
 import { LedgerEntryDirectionSchema, SingleChartAccountSchema } from '../../../schemas/generalLedger/ledgerAccount'
 import { AccountIdentifierSchema } from '../../../schemas/accountIdentifier'
-import { TagKeyValueSchema, TagSchema } from '../../../features/tags/tagSchemas'
+import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '../../../features/tags/tagSchemas'
 import { CustomerSchema } from '../../../schemas/customer'
 import { VendorSchema } from '../../../schemas/vendor'
 
@@ -102,11 +102,11 @@ export const CreateCustomJournalEntrySchema = Schema.Struct({
 
 export const ApiLineItemSchema = Schema.Struct({
   id: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('id'),
   ),
   entryId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('entry_id'),
   ),
   account: SingleChartAccountSchema,
@@ -123,11 +123,11 @@ export const ApiLineItemSchema = Schema.Struct({
     Schema.fromKey('createdAt'),
   ),
   entryReversalOf: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.UUID)),
     Schema.fromKey('entry_reversal_of'),
   ),
   entryReversedBy: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.UUID)),
     Schema.fromKey('entry_reversed_by'),
   ),
 })
@@ -140,20 +140,20 @@ export const ApiCustomJournalEntryLineItemSchema = Schema.Struct({
   ),
   memo: Schema.optional(Schema.NullOr(Schema.String)),
   lineItemId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('line_item_id'),
   ),
   customer: Schema.NullOr(CustomerSchema),
   vendor: Schema.NullOr(VendorSchema),
   transactionTags: pipe(
-    Schema.optional(Schema.Array(TagSchema)),
+    Schema.optional(Schema.Array(TransactionTagSchema)),
     Schema.fromKey('transaction_tags'),
   ),
 })
 
 export const ApiLedgerEntrySchema = Schema.Struct({
   entryId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('id'),
   ),
   businessId: pipe(
@@ -161,7 +161,7 @@ export const ApiLedgerEntrySchema = Schema.Struct({
     Schema.fromKey('business_id'),
   ),
   ledgerId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('ledger_id'),
   ),
   entryNumber: pipe(
@@ -184,11 +184,11 @@ export const ApiLedgerEntrySchema = Schema.Struct({
     Schema.fromKey('entry_at'),
   ),
   reversalOfId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.UUID)),
     Schema.fromKey('reversal_of_id'),
   ),
   reversalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullOr(Schema.UUID)),
     Schema.fromKey('reversal_id'),
   ),
   lineItems: pipe(
@@ -219,7 +219,7 @@ export const ApiCustomJournalEntryWithEntrySchema = Schema.Struct({
   ),
   memo: Schema.String,
   entryId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('entry_id'),
   ),
   customer: Schema.NullOr(CustomerSchema),
