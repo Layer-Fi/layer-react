@@ -16,7 +16,6 @@ import { getCategorizePayload, hasReceipts } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Tag, makeTagKeyValueFromTag } from '../../features/tags/tagSchemas'
-import { CustomerVendorSelector } from '../../features/customerVendor/components/CustomerVendorSelector'
 import { decodeCustomerVendor, CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
@@ -237,7 +236,7 @@ export const SplitForm = ({
               ? getCategorizePayload(split.category)
               : '',
             amount: split.amount,
-            tag_key_values: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
+            tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
             customer_id: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : null,
             vendor_id: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : null,
           })),

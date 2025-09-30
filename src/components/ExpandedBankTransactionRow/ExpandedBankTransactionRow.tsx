@@ -348,7 +348,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 ? getCategorizePayload(split.category)
                 : '',
               amount: split.amount,
-              tag_key_values: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
+              tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
               customer_id: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : null,
               vendor_id: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : null,
             })),
@@ -501,14 +501,13 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                                 isReadOnly={!categorizationEnabled}
                               />
                             </div>
-                            <div className={`${className}__table-cell--split-entry__customer-vendor`}>
-                              <CustomerVendorSelector
-                                selectedCustomerVendor={split.customerVendor}
-                                onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
-                                placeholder='Set customer or vendor...'
-                                isReadOnly={!categorizationEnabled}
-                              />
-                            </div>
+                            <CustomerVendorSelector
+                              selectedCustomerVendor={split.customerVendor}
+                              onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
+                              placeholder='Set customer or vendor...'
+                              isReadOnly={!categorizationEnabled}
+                              showLabel={index === 0}
+                            />
                             <Button
                               className={`${className}__table-cell--split-entry__merge-btn`}
                               onClick={() => removeSplit(index)}
@@ -568,8 +567,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 <BankTransactionFormFields
                   bankTransaction={bankTransaction}
                   showDescriptions={showDescriptions}
-                  turnOffTags={rowState.splits.length > 1}
-                  turnOffCustomerVendor={rowState.splits.length > 1}
+                  turnOffTags={purpose === Purpose.categorize || rowState.splits.length > 1}
+                  turnOffCustomerVendor={purpose === Purpose.categorize || rowState.splits.length > 1}
                 />
 
                 {showReceiptUploads && (

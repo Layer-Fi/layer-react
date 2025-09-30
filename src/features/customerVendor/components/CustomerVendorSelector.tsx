@@ -51,6 +51,7 @@ type CustomerVendorSelectorProps = {
 
   isMutating?: boolean
   isReadOnly?: boolean
+  showLabel?: boolean
 }
 
 export function CustomerVendorSelector({
@@ -61,6 +62,7 @@ export function CustomerVendorSelector({
 
   isMutating,
   isReadOnly,
+  showLabel = true,
 }: CustomerVendorSelectorProps) {
   const {
     searchQuery,
@@ -240,24 +242,26 @@ export function CustomerVendorSelector({
 
   return (
     <VStack gap='3xs'>
-      <HStack justify='space-between' align='baseline'>
-        <Label
-          htmlFor={inputId}
-          size='sm'
-        >
-          Customer or Vendor
-        </Label>
-        {isMutating
-          ? (
-            <P
-              size='xs'
-              variant='subtle'
-            >
-              Saving...
-            </P>
-          )
-          : null}
-      </HStack>
+      {showLabel && (
+        <HStack justify='space-between' align='baseline'>
+          <Label
+            htmlFor={inputId}
+            size='sm'
+          >
+            Customer or Vendor
+          </Label>
+          {isMutating
+            ? (
+              <P
+                size='xs'
+                variant='subtle'
+              >
+                Saving...
+              </P>
+            )
+            : null}
+        </HStack>
+      )}
       <ComboBox
         selectedValue={selectedCustomerVendorForComboBox}
         onSelectedValueChange={handleSelectionChange}

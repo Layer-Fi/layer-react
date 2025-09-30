@@ -104,6 +104,7 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
           inputId={inputId}
           isReadOnly={isReadOnly}
           isLoading={isLoading}
+          placeholder={`Select ${tagDimension?.displayName ?? dimensionKey}`}
           isClearable={false}
           {...additionalAriaProps}
         />

@@ -306,6 +306,26 @@
   flex-direction: row;
 }
 
+// Constrain individual form field widths in match view
+.Layer__bank-transaction-form-fields {
+  box-sizing: border-box;
+
+  // Limit CustomerVendor ComboBox width
+  .Layer__ComboBoxContainer {
+    max-width: 20rem;
+  }
+
+  // Limit TagDimensionsGroup width
+  .Layer__JournalEntryForm__Field--tag {
+    max-width: 25rem;
+  }
+
+  // Description/memo field can stay full width
+  textarea {
+    max-width: 40rem;
+  }
+}
+
 .Layer__expanded-bank-transaction-row__content-panel {
   box-sizing: border-box;
   display: flex;
@@ -500,20 +520,26 @@
   flex-direction: row;
   gap: var(--spacing-md);
   align-items: flex-start;
+
+  // Limit category dropdown width in splits
+  .Layer__category-menu--full {
+    max-width: 20rem;
+  }
 }
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry__tags {
   display: flex;
+  flex: 0 1 auto;
   gap: var(--spacing-sm);
-  flex: 1;
+
   .Layer__JournalEntryForm__Field--tag {
     width: 16rem;
   }
-}
 
-.Layer__expanded-bank-transaction-row__table-cell--split-entry__customer-vendor {
-  display: flex;
-  width: 16rem;
+  // Hide the tags container when it's empty so trash icon moves next to amount
+  &:not(:has(*)) {
+    display: none;
+  }
 }
 
 .Layer__bank-transactions__list {
