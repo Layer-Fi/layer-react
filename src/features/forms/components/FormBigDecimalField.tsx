@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useFieldContext } from '../hooks/useForm'
 import { InputGroup } from '../../../components/ui/Input/InputGroup'
 import { BigDecimal as BD, Option } from 'effect'
 import { Input } from '../../../components/ui/Input/Input'
 import { BIG_DECIMAL_ONE, BIG_DECIMAL_ZERO, buildDecimalCharRegex, convertPercentToDecimal, formatBigDecimalToString } from '../../../utils/bigDecimalUtils'
 import { BaseFormTextField, type BaseFormTextFieldProps } from './BaseFormTextField'
+import { HStack } from '../../../components/ui/Stack/Stack'
 
 type FormBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode' | 'isTextArea'> & {
   maxValue?: BD.BigDecimal
@@ -12,7 +13,7 @@ type FormBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode' | 'isTe
   maxDecimalPlaces?: number
   allowNegative?: boolean
   mode?: 'percent' | 'currency' | 'decimal'
-  rightSlot?: ReactNode
+  slots?: { badge?: ReactNode }
 }
 
 const DEFAULT_MAX_VALUE = BD.fromBigInt(BigInt(10_000_000))
@@ -48,7 +49,7 @@ export function FormBigDecimalField({
   maxValue = mode === 'percent' ? BIG_DECIMAL_ONE : DEFAULT_MAX_VALUE,
   minDecimalPlaces = mode === 'currency' ? 2 : DEFAULT_MIN_DECIMAL_PLACES,
   maxDecimalPlaces = mode === 'currency' ? 2 : DEFAULT_MAX_DECIMAL_PLACES,
-  rightSlot,
+  slots,
   ...restProps
 }: FormBigDecimalFieldProps) {
   const field = useFieldContext<BD.BigDecimal>()
@@ -120,7 +121,7 @@ export function FormBigDecimalField({
 
   return (
     <BaseFormTextField {...restProps} inputMode='decimal'>
-      <InputGroup slot='input' rightSlot={rightSlot}>
+      <InputGroup slot='input' actionCount={slots ? 2 : undefined}>
         <Input
           inset
           id={name}
@@ -131,6 +132,7 @@ export function FormBigDecimalField({
           onBeforeInput={onBeforeInput}
           onPaste={onPaste}
         />
+        {slots?.badge && <HStack>{slots.badge}</HStack>}
       </InputGroup>
     </BaseFormTextField>
   )

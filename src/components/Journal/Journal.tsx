@@ -11,13 +11,10 @@ import { JournalStoreProvider, useJournalRouteState, JournalRoute } from '../../
 import { ReactNode } from 'react'
 import { JournalEntryDrawer } from './JournalEntryDrawer/JournalEntryDrawer'
 import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimensions'
-import { INVOICE_MECE_TAG_DIMENSION } from '../Invoices/InvoiceForm/formUtils'
 
 export interface JournalConfig {
   form: {
     addEntryLinesLimit?: number
-    tagDimensionKeysInUse?: string[]
-
   }
 }
 
@@ -30,17 +27,18 @@ export interface JournalProps {
   config?: JournalConfig
   stringOverrides?: JournalStringOverrides
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
+  showTags?: boolean
 }
 
 export const JOURNAL_CONFIG: JournalConfig = {
   form: {
     addEntryLinesLimit: 10,
-    tagDimensionKeysInUse: [INVOICE_MECE_TAG_DIMENSION, 'entity'],
   },
 }
 
 export const Journal = (props: JournalProps) => {
-  usePreloadTagDimensions()
+  const { showTags = true } = props
+  usePreloadTagDimensions({ isEnabled: showTags })
 
   const JournalContextData = useJournal()
   const AccountsContextData = useChartOfAccounts()
@@ -61,11 +59,12 @@ const JournalContent = ({
   asWidget,
   config = JOURNAL_CONFIG,
   stringOverrides,
+  showTags = true,
 }: JournalProps) => {
   const routeState = useJournalRouteState()
 
   return routeState.route === JournalRoute.EntryForm
-    ? <JournalEntryDrawer config={config} />
+    ? <JournalEntryDrawer showTags={showTags} />
     : <JournalTableView asWidget={asWidget} config={config} stringOverrides={stringOverrides} />
 }
 

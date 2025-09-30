@@ -4,7 +4,6 @@ import { JournalEntryLineItem } from './JournalEntryLineItem'
 import { LedgerEntryDirection } from '../../../schemas/generalLedger/ledgerAccount'
 import type { AppForm } from '../../../features/forms/hooks/useForm'
 import type { JournalEntryForm } from './journalEntryFormSchemas'
-import { JournalConfig } from '../Journal'
 import { Button } from '../../ui/Button/Button'
 import { P, Span } from '../../ui/Typography/Text'
 import { getJournalEntryLineItemFormDefaultValues } from './formUtils'
@@ -16,7 +15,7 @@ export interface JournalEntryLineItemsTableProps {
   isReadOnly: boolean
   title: string
   direction: LedgerEntryDirection
-  config: JournalConfig
+  showTags?: boolean
 }
 
 export const JournalEntryLineItemsTable = ({
@@ -24,7 +23,7 @@ export const JournalEntryLineItemsTable = ({
   isReadOnly,
   title,
   direction,
-  config,
+  showTags = false,
 }: JournalEntryLineItemsTableProps) => {
   const lineItems = useStore(form.store, state => state.values.lineItems) || []
 
@@ -61,10 +60,10 @@ export const JournalEntryLineItemsTable = ({
                     key={originalIndex}
                     form={form}
                     index={originalIndex}
-                    config={config}
                     isReadOnly={isReadOnly}
                     onDeleteLine={() => field.removeValue(originalIndex)}
                     showLabels={displayIndex === 0}
+                    showTags={showTags}
                   />
                 ))}
               </VStack>

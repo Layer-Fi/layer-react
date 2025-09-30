@@ -11,7 +11,6 @@ import { flattenValidationErrors } from '../../../utils/form'
 import { LedgerEntryDirection } from '../../../schemas/generalLedger/ledgerAccount'
 import { UpsertJournalEntryMode } from './useUpsertJournalEntry'
 import './journalEntryForm.scss'
-import { JournalConfig } from '../Journal'
 import { usePreloadCustomers } from '../../../features/customers/api/useListCustomers'
 import { usePreloadVendors } from '../../../features/vendors/api/useListVendors'
 import { CustomerVendorSelector } from '../../../features/customerVendor/components/CustomerVendorSelector'
@@ -29,16 +28,18 @@ export type JournalEntryFormState = {
 }
 
 export type JournalEntryFormProps = {
-  config: JournalConfig
   isReadOnly?: boolean
   onSuccess?: () => void
   onChangeFormState?: (formState: JournalEntryFormState) => void
+  showTags?: boolean
 }
 
 export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, JournalEntryFormProps>((props, ref) => {
   const { toJournalTable } = useJournalNavigation()
 
-  const { config, isReadOnly = false, onSuccess, onChangeFormState } = props
+  const { isReadOnly = false, onSuccess, onChangeFormState, showTags = true } = props
+
+  console.log('JournalEntryForm', showTags)
 
   usePreloadCustomers()
   usePreloadVendors()
@@ -168,11 +169,11 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           <form.AppField name='tags'>
             {field => (
               <TagDimensionsGroup
-                dimensionKeys={config?.form?.tagDimensionKeysInUse}
                 value={field.state.value}
                 onChange={field.setValue}
                 showLabels={true}
                 isReadOnly={isReadOnly}
+                isEnabled={showTags}
               />
             )}
           </form.AppField>
@@ -187,7 +188,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
             isReadOnly={isReadOnly}
             title='Add Debits'
             direction={LedgerEntryDirection.Debit}
-            config={config}
+            showTags={showTags}
           />
         </VStack>
 
@@ -198,7 +199,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
             isReadOnly={isReadOnly}
             title='Add Credits'
             direction={LedgerEntryDirection.Credit}
-            config={config}
+            showTags={showTags}
           />
         </VStack>
       </VStack>

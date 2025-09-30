@@ -7,7 +7,6 @@ import type { JournalEntryForm } from './journalEntryFormSchemas'
 import './journalEntryLineItem.scss'
 import { LedgerAccountCombobox } from '../../LedgerAccountCombobox/LedgerAccountCombobox'
 import { AccountIdentifier } from '../../../schemas/accountIdentifier'
-import { JournalConfig } from '../Journal'
 import { TagDimensionsGroup } from './TagDimensionsGroup'
 import { DebitCreditPill } from '../../DebitCreditPill/DebitCreditPill'
 import { CategoriesListMode } from '../../../schemas/categorization'
@@ -20,10 +19,10 @@ export interface JournalEntryLineItemProps {
   isReadOnly: boolean
   onDeleteLine: () => void
   showLabels?: boolean
-  config?: JournalConfig
+  showTags?: boolean
 }
 
-export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, config, showLabels = false }: JournalEntryLineItemProps) => {
+export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, showLabels = false, showTags = false }: JournalEntryLineItemProps) => {
   return (
     <VStack gap='xs'>
       <div
@@ -60,7 +59,7 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, co
               allowNegative={false}
               isReadOnly={isReadOnly}
               className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--amount`}
-              rightSlot={(
+              slots={{ badge: (
                 <form.AppField name={`lineItems[${index}].direction`}>
                   {directionField => (
                     <DebitCreditPill
@@ -70,7 +69,8 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, co
                     />
                   )}
                 </form.AppField>
-              )}
+              ),
+              }}
             />
           )}
         </form.AppField>
@@ -78,11 +78,11 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, co
         <form.AppField name={`lineItems[${index}].tags`}>
           {field => (
             <TagDimensionsGroup
-              dimensionKeys={config?.form?.tagDimensionKeysInUse}
               value={field.state.value}
               onChange={field.setValue}
               showLabels={showLabels}
               isReadOnly={isReadOnly}
+              isEnabled={showTags}
             />
           )}
         </form.AppField>
