@@ -39,8 +39,6 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
 
   const { isReadOnly = false, onSuccess, onChangeFormState, showTags = true } = props
 
-  console.log('JournalEntryForm', showTags)
-
   usePreloadCustomers()
   usePreloadVendors()
 
