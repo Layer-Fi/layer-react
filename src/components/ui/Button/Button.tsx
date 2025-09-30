@@ -30,7 +30,6 @@ function ButtonTransparentContent({ children }: PropsWithChildren) {
 
 type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'text' | 'branded'
 type ButtonSize = 'md'
-type ButtonRounding = 'sm' | 'md'
 
 const Button = forwardRef<
   HTMLButtonElement,
@@ -38,7 +37,6 @@ const Button = forwardRef<
     ellipsis?: true
     icon?: true
     inset?: true
-    rounded?: ButtonRounding
     size?: ButtonSize
     variant?: ButtonVariant
   }
@@ -48,7 +46,6 @@ const Button = forwardRef<
     ellipsis,
     icon,
     inset,
-    rounded,
     size = 'md',
     variant = 'solid',
     ...restProps
@@ -60,7 +57,6 @@ const Button = forwardRef<
     ellipsis,
     icon,
     inset,
-    rounded,
     size,
     variant,
   })
