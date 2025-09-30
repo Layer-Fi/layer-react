@@ -192,7 +192,7 @@ export const BankTransactionListItem = ({
               ? stringOverrides?.updateButtonText || 'Update'
               : stringOverrides?.approveButtonText || 'Approve'
           }
-          tagDimensionKeysInUse={['Location', 'Vendor', 'Tag']}
+          tagDimensionKeysInUse={['entity', 'Job']}
           containerWidth={containerWidth}
 
           showDescriptions={showDescriptions}
