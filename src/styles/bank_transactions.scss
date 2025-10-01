@@ -505,9 +505,10 @@
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry {
   display: flex;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 
   .Layer__category-menu--full {
+    min-width: 12rem;
     max-width: 20rem;
   }
 }
@@ -1516,7 +1517,7 @@
   .Layer__expanded-bank-transaction-row__total-and-btns .Layer__input-tooltip,
   .Layer__expanded-bank-transaction-row__table-cell--split-entry .Layer__input-tooltip {
     flex: 1;
-    max-width: 200px;
+    max-width: 12rem;
 
     .Layer__input {
       width: 100%;
