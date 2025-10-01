@@ -60,7 +60,7 @@ export const Badge = ({
 
   content = onClick
     ? (
-      <button role='button' {...baseProps}>
+      <button type='button' role='button' {...baseProps}>
         {content}
       </button>
     )

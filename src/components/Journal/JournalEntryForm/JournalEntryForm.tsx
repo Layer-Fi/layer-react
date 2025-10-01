@@ -17,6 +17,7 @@ import { CustomerVendorSelector } from '../../../features/customerVendor/compone
 import { TagDimensionsGroup } from './TagDimensionsGroup'
 import type { CustomerVendorSchema } from '../../../features/customerVendor/customerVendorSchemas'
 import { Separator } from '../../Separator/Separator'
+import { usePreloadTagDimensions } from '../../../features/tags/api/useTagDimensions'
 
 type CustomerVendor = typeof CustomerVendorSchema.Type
 
@@ -32,15 +33,17 @@ export type JournalEntryFormProps = {
   onSuccess?: () => void
   onChangeFormState?: (formState: JournalEntryFormState) => void
   showTags?: boolean
+  showCustomerVendor?: boolean
 }
 
 export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, JournalEntryFormProps>((props, ref) => {
   const { toJournalTable } = useJournalNavigation()
 
-  const { isReadOnly = false, onSuccess, onChangeFormState, showTags = true } = props
+  const { isReadOnly = false, onSuccess, onChangeFormState, showTags = true, showCustomerVendor = true } = props
 
-  usePreloadCustomers()
-  usePreloadVendors()
+  usePreloadCustomers({ isEnabled: showCustomerVendor })
+  usePreloadVendors({ isEnabled: showCustomerVendor })
+  usePreloadTagDimensions({ isEnabled: showTags })
 
   const { form, formState, submitError } = useJournalEntryForm({
     onSuccess: onSuccess || toJournalTable,
@@ -121,47 +124,49 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           </VStack>
         </div>
 
-        <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
-          <VStack gap='xs'>
-            <form.AppField name='customer'>
-              {customerField => (
-                <form.AppField name='vendor'>
-                  {(vendorField) => {
-                    const currentCustomerVendor = customerField.state.value
-                      ? { ...customerField.state.value, customerVendorType: 'CUSTOMER' as const }
-                      : vendorField.state.value
-                        ? { ...vendorField.state.value, customerVendorType: 'VENDOR' as const }
-                        : null
+        {showCustomerVendor && (
+          <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
+            <VStack gap='xs'>
+              <form.AppField name='customer'>
+                {customerField => (
+                  <form.AppField name='vendor'>
+                    {(vendorField) => {
+                      const currentCustomerVendor = customerField.state.value
+                        ? { ...customerField.state.value, customerVendorType: 'CUSTOMER' as const }
+                        : vendorField.state.value
+                          ? { ...vendorField.state.value, customerVendorType: 'VENDOR' as const }
+                          : null
 
-                    const handleSelectionChange = (selection: CustomerVendor | null) => {
-                      if (selection?.customerVendorType === 'CUSTOMER') {
-                        customerField.setValue(selection)
-                        vendorField.setValue(null)
+                      const handleSelectionChange = (selection: CustomerVendor | null) => {
+                        if (selection?.customerVendorType === 'CUSTOMER') {
+                          customerField.setValue(selection)
+                          vendorField.setValue(null)
+                        }
+                        else if (selection?.customerVendorType === 'VENDOR') {
+                          vendorField.setValue(selection)
+                          customerField.setValue(null)
+                        }
+                        else {
+                          customerField.setValue(null)
+                          vendorField.setValue(null)
+                        }
                       }
-                      else if (selection?.customerVendorType === 'VENDOR') {
-                        vendorField.setValue(selection)
-                        customerField.setValue(null)
-                      }
-                      else {
-                        customerField.setValue(null)
-                        vendorField.setValue(null)
-                      }
-                    }
 
-                    return (
-                      <CustomerVendorSelector
-                        selectedCustomerVendor={currentCustomerVendor}
-                        onSelectedCustomerVendorChange={handleSelectionChange}
-                        placeholder='Select customer or vendor'
-                        isReadOnly={isReadOnly}
-                      />
-                    )
-                  }}
-                </form.AppField>
-              )}
-            </form.AppField>
-          </VStack>
-        </div>
+                      return (
+                        <CustomerVendorSelector
+                          selectedCustomerVendor={currentCustomerVendor}
+                          onSelectedCustomerVendorChange={handleSelectionChange}
+                          placeholder='Select customer or vendor'
+                          isReadOnly={isReadOnly}
+                        />
+                      )
+                    }}
+                  </form.AppField>
+                )}
+              </form.AppField>
+            </VStack>
+          </div>
+        )}
 
         <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
           <form.AppField name='tags'>
