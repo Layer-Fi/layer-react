@@ -125,6 +125,44 @@ export const CreateCategorizationRuleForCounterpartySchema = Schema.Struct({
   ),
 })
 
+export type CreateCategorizationRule = typeof CreateCategorizationRuleSchema.Type
+
+export const CategorizationRuleSchema = Schema.Struct({
+  id: Schema.String,
+  businessId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('business_id'),
+  ),
+  name: Schema.optional(Schema.NullOr(Schema.String)),
+  category: Schema.optional(Schema.NullOr(ClassificationSchema)),
+  suggestion1: pipe(
+    Schema.optional(Schema.NullOr(ClassificationSchema)),
+    Schema.fromKey('suggestion_1'),
+  ),
+  suggestion2: pipe(
+    Schema.optional(Schema.NullOr(ClassificationSchema)),
+    Schema.fromKey('suggestion_2'),
+  ),
+  suggestion3: pipe(
+    Schema.optional(Schema.NullOr(ClassificationSchema)),
+    Schema.fromKey('suggestion_3'),
+  ),
+  counterpartyFilter: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('counterparty_filter'),
+  ),
+  createdAt: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('created_at'),
+  ),
+  updatedAt: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('updated_at'),
+  ),
+})
+
+export type CategorizationRule = typeof CategorizationRuleSchema.Type
+
 export const UpdateCategorizationRulesSuggestionSchema = Schema.Union(
   CreateCategorizationRuleForCounterpartySchema,
 )

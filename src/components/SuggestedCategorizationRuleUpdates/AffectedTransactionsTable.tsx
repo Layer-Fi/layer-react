@@ -98,7 +98,6 @@ export const AffectedTransactionsTable = ({
       },
     },
   }), [])
-  console.log(4321)
 
   return (
     <VStack className='Layer__AffectedTransactionsTable'>

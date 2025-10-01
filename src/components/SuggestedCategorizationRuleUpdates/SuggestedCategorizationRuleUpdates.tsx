@@ -30,7 +30,9 @@ const getHeaderForRule = (ruleSuggestion: UpdateCategorizationRulesSuggestion) =
 
 export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesProps) {
   function onClose(dontAskAgain: boolean) {
-    console.log(dontAskAgain)
+    if (dontAskAgain) {
+      console.log(dontAskAgain)
+    }
     void close()
   }
 
