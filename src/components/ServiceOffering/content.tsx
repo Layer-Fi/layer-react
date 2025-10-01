@@ -1,4 +1,5 @@
-import { ServiceOfferingConfig, ServiceOfferingOfferLayout } from './types'
+import { imagePartnerAccountingImage } from '../../assets/images'
+import { HeroContentConfigOverridesResolved, ServiceOfferingConfig, ServiceOfferingConfigOverridesResolved, ServiceOfferingOfferLayout } from './types'
 
 import { ReactNode } from 'react'
 
@@ -158,4 +159,68 @@ export const serviceOfferingDefaultContentConfig: Omit<ContentConfig, 'config'> 
       text: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
     },
   ],
+}
+
+export const DefaultHeroContentConfig: HeroContentConfigOverridesResolved = {
+  stringOverrides: {
+    title: '{platformName} Accounting',
+    subtitle: 'Track your business finances, right within {platformName}',
+    heading_1: 'All your finances in one place',
+    heading_1_desc: 'Directly integrate with your {platformName} data, so you can see your business performance and profit in real-time.',
+    heading_2: 'Built for {industry}',
+    heading_2_desc: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
+  },
+  mediaUrls: {
+    top_of_fold_image: imagePartnerAccountingImage,
+  },
+  cta: {
+    primary: {
+      label: 'Book a call',
+      url: 'https://www.google.com',
+    },
+    secondary: {
+      label: 'Learn more',
+      url: 'https://www.google.com',
+    },
+  },
+}
+
+export const DefaultAccountingOfferingContentConfig: ServiceOfferingConfigOverridesResolved = {
+  offerType: 'accounting',
+  stringOverrides: {
+    badge: 'Easy to use software',
+    title: '{platformName} Accounting',
+    subtitle: 'The best accounting software for {industry} businesses. Fast to set up and easy to use.',
+    priceAmount: '',
+    priceUnit: '',
+  },
+  mediaUrls: {
+    offer_image: '',
+  },
+  cta: {
+    primary: {
+      label: '',
+      url: '',
+    },
+  },
+}
+
+export const DefaultBookkeepingOfferingContentConfig: ServiceOfferingConfigOverridesResolved = {
+  offerType: 'bookkeeping',
+  stringOverrides: {
+    badge: 'A complete bookkeeping service',
+    title: 'Full-service Bookkeeping',
+    subtitle: 'Get a dedicated bookkeeper who will organize and manage your books for you.',
+    priceAmount: '',
+    priceUnit: '',
+  },
+  mediaUrls: {
+    offer_image: '  ',
+  },
+  cta: {
+    primary: {
+      label: '',
+      url: '',
+    },
+  },
 }

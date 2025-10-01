@@ -37,10 +37,10 @@ export { Tasks } from './components/Tasks/Tasks'
 
 /* --------------------- Onboarding ------------------------ */
 export { ServiceOffering } from './components/ServiceOffering'
-export { ServiceOfferingMainConfig } from './components/ServiceOffering/ServiceOffering'
 export { ServiceOfferingContentID } from './components/ServiceOffering/content'
 export { ServiceOfferingHelper } from './components/ServiceOffering/ServiceOfferingHelper'
-export { ServiceOfferingLinks } from './components/ServiceOffering/types'
+export { ServiceOfferingLinks, ServiceOfferingProps } from './components/ServiceOffering/types'
+export { ServiceOfferingCarousel } from './components/ServiceOffering'
 export { LinkAccounts } from './components/PlatformOnboarding/LinkAccounts'
 export { PlatformOnboarding } from './components/PlatformOnboarding/PlatformOnboarding'
 

@@ -97,13 +97,6 @@ export interface ServiceOfferingPlatformConfig {
   platformName: string
 
   /**
-     * The image URL to be used for the top-of-the-fold image.
-     *
-     * If left blank, will use a default.
-     */
-  imageUrl?: string
-
-  /**
      * The target industry for customization (e.g., "e-commerce", "SaaS", "retail").
      * Used to tailor feature descriptions and messaging to the specific industry.
      *
@@ -113,4 +106,86 @@ export interface ServiceOfferingPlatformConfig {
     @see ServiceOfferingValueProposition
      */
   industry: string
+}
+
+export type ServiceOfferingType = 'accounting' | 'bookkeeping'
+
+export interface ServiceOfferingOverrides<StringOverrideKeys extends string, MediaUrlKeys extends string, CtaKeys extends string> {
+  stringOverrides?: Partial<Record<StringOverrideKeys, string>>
+  mediaUrls?: Partial<Record<MediaUrlKeys, string>>
+  cta?: Partial<Record<CtaKeys, ServiceOfferingLink>>
+}
+
+export interface ServiceOfferingOverridesResolved<StringOverrideKeys extends string, MediaUrlKeys extends string, CtaKeys extends string> {
+  stringOverrides: Record<StringOverrideKeys, string>
+  mediaUrls: Record<MediaUrlKeys, string>
+  cta: Record<CtaKeys, ServiceOfferingLink>
+}
+
+export type HeroContentStringOverrideKeys = 'title' | 'subtitle' | 'heading_1' | 'heading_1_desc' | 'heading_2' | 'heading_2_desc'
+export type HeroContentMediaUrlKeys = 'top_of_fold_image'
+export type HeroContentCtaKeys = 'primary' | 'secondary'
+export type HeroContentConfigOverrides = ServiceOfferingOverrides<HeroContentStringOverrideKeys, HeroContentMediaUrlKeys, HeroContentCtaKeys>
+export type HeroContentConfigOverridesResolved = ServiceOfferingOverridesResolved<HeroContentStringOverrideKeys, HeroContentMediaUrlKeys, HeroContentCtaKeys>
+
+export type ServiceOfferingStringOverrideKeys = 'badge' | 'title' | 'subtitle' | 'priceAmount' | 'priceUnit'
+export type ServiceOfferingMediaUrlKeys = 'offer_image'
+export type ServiceOfferingCtaKeys = 'primary'
+export type ServiceOfferingConfigOverrides = ServiceOfferingOverrides<ServiceOfferingStringOverrideKeys, ServiceOfferingMediaUrlKeys, ServiceOfferingCtaKeys>
+export type ServiceOfferingConfigOverridesResolved = ServiceOfferingOverridesResolved<
+  ServiceOfferingStringOverrideKeys, ServiceOfferingMediaUrlKeys, ServiceOfferingCtaKeys> & { offerType: ServiceOfferingType }
+
+/**
+ * Props for the ServiceOffering component.
+ *
+ * Requires only a single parameter, which is `config` which holds on to all the customizable
+ * settings for the service offering component such as textual content on the accounting and bookkeeping
+ * services, with varied pricing options and book-a-call calendly integration.
+ */
+export interface ServiceOfferingProps {
+  platform: ServiceOfferingPlatformConfig
+  availableOffers: ServiceOfferingType[]
+  heroOverrides: HeroContentConfigOverrides
+  offeringOverrides: {
+    stringOverrides?: {
+      sectionTitle: string
+    }
+    accounting: ServiceOfferingConfigOverrides
+    bookkeeping: ServiceOfferingConfigOverrides
+  }
+}
+
+/**
+ * Merges main content config overrides with defaults.
+ * @param defaults The default override values (must be complete)
+ * @param overrides The partial overrides to merge
+ * @returns A merged HeroContentConfigOverridesResolved object with all keys required
+ */
+export function mergeHeroContentOverrides(
+  defaults: HeroContentConfigOverridesResolved,
+  overrides: HeroContentConfigOverrides,
+): HeroContentConfigOverridesResolved {
+  return {
+    stringOverrides: { ...defaults.stringOverrides, ...overrides.stringOverrides },
+    mediaUrls: { ...defaults.mediaUrls, ...overrides.mediaUrls },
+    cta: { ...defaults.cta, ...overrides.cta },
+  }
+}
+
+/**
+ * Merges service offering config overrides with defaults.
+ * @param defaults The default override values (must be complete)
+ * @param overrides The partial overrides to merge
+ * @returns A merged ServiceOfferingConfigOverridesResolved object with all keys required
+ */
+export function mergeServiceOfferingOverrides(
+  defaults: ServiceOfferingConfigOverridesResolved,
+  overrides: ServiceOfferingConfigOverrides,
+): ServiceOfferingConfigOverridesResolved {
+  return {
+    offerType: defaults.offerType,
+    stringOverrides: { ...defaults.stringOverrides, ...overrides.stringOverrides },
+    mediaUrls: { ...defaults.mediaUrls, ...overrides.mediaUrls },
+    cta: { ...defaults.cta, ...overrides.cta },
+  }
 }

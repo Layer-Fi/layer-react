@@ -1,4 +1,4 @@
-import { ServiceOfferingPlatformConfig, ServiceOfferingConfig, ServiceOfferingValueProposition } from './types'
+import { ServiceOfferingPlatformConfig, ServiceOfferingConfig, ServiceOfferingValueProposition, ServiceOfferingProps } from './types'
 import {
   imageBusinessAccounts,
   imageBusinessOverview,
@@ -15,7 +15,6 @@ import {
   PartialContentConfig,
   serviceOfferingDefaultContentConfig,
 } from './content'
-import { ServiceOfferingProps } from './ServiceOffering'
 import { Check } from 'lucide-react'
 
 /**
@@ -32,11 +31,11 @@ export class ServiceOfferingHelper {
   static makeDynamicText(
     contentId: ServiceOfferingContentID,
     textContent: ServiceOfferingTypesTextContent,
-    config: ServiceOfferingProps['config'],
+    platformConfig: ServiceOfferingPlatformConfig,
   ): string {
     const variableMap = {
-      platformName: config.platform.platformName,
-      industry: config.platform.industry,
+      platformName: platformConfig.platformName,
+      industry: platformConfig.industry,
     }
 
     // Try to use the provided text content. If it doesn't exist, we'll use values from the default.
