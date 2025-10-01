@@ -5,6 +5,30 @@ import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents, convertCentsToBigDeci
 import { makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../../features/tags/tagSchemas'
 import { BigDecimal as BD } from 'effect'
 
+/**
+ * Determines if a line item is blank (empty).
+ * A line item is considered blank if:
+ * - It has no account selected (empty id)
+ * - Amount is 0
+ * - No other fields are populated (memo, customer, vendor, tags, externalId)
+ */
+export function isLineItemBlank(lineItem: JournalEntryFormLineItem): boolean {
+  const hasAccount = lineItem.accountIdentifier.type === 'AccountId'
+    ? Boolean(lineItem.accountIdentifier.id)
+    : lineItem.accountIdentifier.type === 'StableName'
+      ? Boolean(lineItem.accountIdentifier.stableName)
+      : false
+
+  const hasAmount = !BD.equals(lineItem.amount, BIG_DECIMAL_ZERO)
+  const hasMemo = Boolean(lineItem.memo?.trim())
+  const hasCustomer = Boolean(lineItem.customer)
+  const hasVendor = Boolean(lineItem.vendor)
+  const hasTags = lineItem.tags.length > 0
+  const hasExternalId = Boolean(lineItem.externalId)
+
+  return !hasAccount && !hasAmount && !hasMemo && !hasCustomer && !hasVendor && !hasTags && !hasExternalId
+}
+
 export function getJournalEntryLineItemFormDefaultValues(direction: LedgerEntryDirection): JournalEntryFormLineItem {
   return {
     externalId: null,
@@ -44,7 +68,7 @@ export function getJournalEntryFormInitialValues(journalEntry: ApiCustomJournalE
   return {
     externalId: null,
     entryAt: fromDate(new Date(journalEntry.entry.entryAt), getLocalTimeZone()),
-    createdBy: 'Layer React Components',
+    createdBy: '',
     memo: journalEntry.memo,
     customer: journalEntry.customer,
     vendor: journalEntry.vendor,
@@ -70,6 +94,9 @@ export function getJournalEntryFormInitialValues(journalEntry: ApiCustomJournalE
 export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateCustomJournalEntry {
   const trimmedReferenceNumber = form.referenceNumber?.trim()
 
+  // Filter out blank line items before converting
+  const nonBlankLineItems = form.lineItems.filter(lineItem => !isLineItemBlank(lineItem))
+
   return {
     ...(form.externalId && { externalId: form.externalId }),
     entryAt: form.entryAt.toDate(),
@@ -82,7 +109,7 @@ export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateC
     ...(form.tags.length > 0 && { tags: form.tags.map(makeTagKeyValueFromTag) }),
     ...(form.metadata !== null && { metadata: form.metadata }),
     ...(trimmedReferenceNumber && { referenceNumber: trimmedReferenceNumber }),
-    lineItems: form.lineItems.map(lineItem => ({
+    lineItems: nonBlankLineItems.map(lineItem => ({
       ...(lineItem.externalId && { externalId: lineItem.externalId }),
       accountIdentifier: lineItem.accountIdentifier,
       amount: convertBigDecimalToBigIntCents(lineItem.amount),
@@ -112,23 +139,37 @@ export function validateJournalEntryForm({ value }: { value: JournalEntryForm })
     errors.push({ memo: 'Memo is a required field.' })
   }
 
-  if (!value.lineItems || value.lineItems.length === 0) {
+  // Filter out blank line items for validation
+  const nonBlankLineItems = value.lineItems.filter(lineItem => !isLineItemBlank(lineItem))
+
+  if (!value.lineItems || nonBlankLineItems.length === 0) {
     errors.push({ lineItems: 'At least one line item is required.' })
   }
   else {
-    const debitTotal = value.lineItems
-      .filter(item => item.direction === LedgerEntryDirection.Debit)
-      .reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
+    const nonBlankDebits = nonBlankLineItems.filter(item => item.direction === LedgerEntryDirection.Debit)
+    const nonBlankCredits = nonBlankLineItems.filter(item => item.direction === LedgerEntryDirection.Credit)
 
-    const creditTotal = value.lineItems
-      .filter(item => item.direction === LedgerEntryDirection.Credit)
-      .reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
+    if (nonBlankDebits.length === 0) {
+      errors.push({ lineItems: 'At least one debit line item is required.' })
+    }
+
+    if (nonBlankCredits.length === 0) {
+      errors.push({ lineItems: 'At least one credit line item is required.' })
+    }
+
+    const debitTotal = nonBlankDebits.reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
+    const creditTotal = nonBlankCredits.reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
 
     if (!BD.equals(debitTotal, creditTotal)) {
       errors.push({ lineItems: 'Debit and credit amounts must be equal' })
     }
 
     value.lineItems.forEach((lineItem, index) => {
+      // Skip validation for blank line items
+      if (isLineItemBlank(lineItem)) {
+        return
+      }
+
       const accountId = lineItem.accountIdentifier
       if (accountId.type === 'AccountId' && 'id' in accountId) {
         if (!accountId.id) {

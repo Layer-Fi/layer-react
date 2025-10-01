@@ -10,7 +10,7 @@ import X from '../../../icons/X'
 import BackArrow from '../../../icons/BackArrow'
 import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
 
-export const JournalEntryDrawer = ({ showTags = true }: { showTags?: boolean }) => {
+export const JournalEntryDrawer = ({ showTags = true, showCustomerVendor = true }: { showTags?: boolean, showCustomerVendor?: boolean }) => {
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
   const { toJournalTable } = useJournalNavigation()
   const formRef = useRef<{ submit: () => Promise<void> }>(null)
@@ -59,6 +59,7 @@ export const JournalEntryDrawer = ({ showTags = true }: { showTags?: boolean }) 
         <JournalEntryForm
           isReadOnly={false}
           showTags={showTags}
+          showCustomerVendor={showCustomerVendor}
           onSuccess={onJournalEntrySuccess}
           onChangeFormState={onChangeFormState}
           ref={formRef}

@@ -102,8 +102,8 @@ export const JournalEntryLineItem = ({ form, index, isReadOnly, onDeleteLine, sh
           <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--removeButton`}>
             <Button
               variant='outlined'
-              icon
               inset
+              icon
               aria-label='Delete line item'
               onPress={onDeleteLine}
             >

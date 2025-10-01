@@ -28,6 +28,7 @@ export interface JournalProps {
   stringOverrides?: JournalStringOverrides
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
   showTags?: boolean
+  showCustomerVendor?: boolean
 }
 
 export const JOURNAL_CONFIG: JournalConfig = {
@@ -60,11 +61,12 @@ const JournalContent = ({
   config = JOURNAL_CONFIG,
   stringOverrides,
   showTags = true,
+  showCustomerVendor = true,
 }: JournalProps) => {
   const routeState = useJournalRouteState()
 
   return routeState.route === JournalRoute.EntryForm
-    ? <JournalEntryDrawer showTags={showTags} />
+    ? <JournalEntryDrawer showTags={showTags} showCustomerVendor={showCustomerVendor} />
     : <JournalTableView asWidget={asWidget} config={config} stringOverrides={stringOverrides} />
 }
 
