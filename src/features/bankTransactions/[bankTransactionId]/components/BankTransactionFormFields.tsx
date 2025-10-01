@@ -20,15 +20,15 @@ type BankTransactionFormFieldProps = {
     'id' | 'transaction_tags' | 'customer' | 'vendor'
   >
   showDescriptions?: boolean
-  turnOffTags?: boolean
-  turnOffCustomerVendor?: boolean
+  hideTags?: boolean
+  hideCustomerVendor?: boolean
 }
 
 export function BankTransactionFormFields({
   bankTransaction,
   showDescriptions,
-  turnOffTags = false,
-  turnOffCustomerVendor = false,
+  hideTags = false,
+  hideCustomerVendor = false,
 }: BankTransactionFormFieldProps) {
   const { showTags } = useBankTransactionTagVisibility()
   const { showCustomerVendor } = useBankTransactionCustomerVendorVisibility()
@@ -91,10 +91,10 @@ export function BankTransactionFormFields({
 
   return (
     <VStack pi='md' pbe='lg' gap='md' className='Layer__bank-transaction-form-fields'>
-      {showCustomerVendor && !turnOffCustomerVendor
+      {showCustomerVendor && !hideCustomerVendor
         ? <BankTransactionCustomerVendorSelector bankTransaction={bankTransaction} />
         : null}
-      {showTags && !turnOffTags
+      {showTags && !hideTags
         ? (
           <TagDimensionsGroup
             value={selectedTags}

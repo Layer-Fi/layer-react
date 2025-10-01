@@ -243,7 +243,7 @@ export function CustomerVendorSelector({
   return (
     <VStack gap='3xs' className='Layer__CustomerVendorSelector'>
       {showLabel && (
-        <HStack justify='space-between' align='baseline'>
+        <HStack justify='start' align='baseline' gap='lg'>
           <Label
             htmlFor={inputId}
             size='sm'
@@ -277,6 +277,7 @@ export function CustomerVendorSelector({
         isDisabled={isReadOnly || shouldDisableComboBox}
         isError={isError}
         isLoading={isLoadingWithoutFallback}
+        aria-label={showLabel ? undefined : 'Customer or Vendor'}
       />
     </VStack>
   )

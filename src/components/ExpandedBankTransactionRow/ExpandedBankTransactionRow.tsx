@@ -43,6 +43,8 @@ import classNames from 'classnames'
 import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookkeepingStatus'
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionFormFields } from '../../features/bankTransactions/[bankTransactionId]/components/BankTransactionFormFields'
+import { useBankTransactionTagVisibility } from '../../features/bankTransactions/[bankTransactionId]/tags/components/BankTransactionTagVisibilityProvider'
+import { useBankTransactionCustomerVendorVisibility } from '../../features/bankTransactions/[bankTransactionId]/customerVendor/components/BankTransactionCustomerVendorVisibilityProvider'
 
 type Props = {
   bankTransaction: BankTransaction
@@ -145,6 +147,10 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
     const { trigger: removeTagFromBankTransaction } = useRemoveTagFromBankTransaction({ bankTransactionId: bankTransaction.id })
     const { trigger: setMetadataOnBankTransaction } = useSetMetadataOnBankTransaction({ bankTransactionId: bankTransaction.id })
+
+    // Get visibility settings for tags and customer/vendor
+    const { showTags } = useBankTransactionTagVisibility()
+    const { showCustomerVendor } = useBankTransactionCustomerVendorVisibility()
 
     const [purpose, setPurpose] = useState<Purpose>(
       bankTransaction.category
@@ -568,21 +574,25 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               inputMode='numeric'
                               errorMessage='Negative values are not allowed'
                             />
-                            <div className={`${className}__table-cell--split-entry__tags`}>
-                              <TagDimensionsGroup
-                                value={split.tags}
-                                onChange={tags => changeTags(index, tags)}
-                                showLabels={index === 0}
+                            {showTags && (
+                              <div className={`${className}__table-cell--split-entry__tags`}>
+                                <TagDimensionsGroup
+                                  value={split.tags}
+                                  onChange={tags => changeTags(index, tags)}
+                                  showLabels={index === 0}
+                                  isReadOnly={!categorizationEnabled}
+                                />
+                              </div>
+                            )}
+                            {showCustomerVendor && (
+                              <CustomerVendorSelector
+                                selectedCustomerVendor={split.customerVendor}
+                                onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
+                                placeholder='Set customer or vendor'
                                 isReadOnly={!categorizationEnabled}
+                                showLabel={index === 0}
                               />
-                            </div>
-                            <CustomerVendorSelector
-                              selectedCustomerVendor={split.customerVendor}
-                              onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
-                              placeholder='Set customer or vendor'
-                              isReadOnly={!categorizationEnabled}
-                              showLabel={index === 0}
-                            />
+                            )}
                             <Button
                               className={`${className}__table-cell--split-entry__merge-btn`}
                               onClick={() => removeSplit(index)}
@@ -642,8 +652,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 <BankTransactionFormFields
                   bankTransaction={bankTransaction}
                   showDescriptions={showDescriptions}
-                  turnOffTags={purpose === Purpose.categorize || rowState.splits.length > 1}
-                  turnOffCustomerVendor={purpose === Purpose.categorize || rowState.splits.length > 1}
+                  hideTags={purpose === Purpose.categorize || rowState.splits.length > 1}
+                  hideCustomerVendor={purpose === Purpose.categorize || rowState.splits.length > 1}
                 />
 
                 {showReceiptUploads && (

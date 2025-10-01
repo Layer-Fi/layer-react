@@ -292,6 +292,7 @@
 
 .Layer__bank-transaction-list-item__content,
 .Layer__expanded-bank-transaction-row__content {
+  max-width: fit-content;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
