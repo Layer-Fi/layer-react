@@ -6,7 +6,7 @@ import { useSWRConfig } from 'swr'
 import { SWRInfiniteKeyedMutator } from 'swr/dist/infinite'
 import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
-import { CreateCategorizationRule, CategorizationRuleSchema } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
+import { CreateCategorizationRuleSchema, CategorizationRuleSchema } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
 import { useAuth } from '../useAuth'
 import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
@@ -46,8 +46,9 @@ const CreateCategorizationRuleReturnSchema = Schema.Struct({
 })
 
 type CreateCategorizationRuleReturn = typeof CreateCategorizationRuleReturnSchema.Type
+type CreateCategorizationRuleBody = typeof CreateCategorizationRuleSchema.Encoded
 
-export const createCategorizationRule = post<CreateCategorizationRuleReturn, CreateCategorizationRule>(
+export const createCategorizationRule = post<CreateCategorizationRuleReturn, CreateCategorizationRuleBody>(
   ({ businessId }) =>
     `/v1/businesses/${businessId}/categorization-rules`,
 )
@@ -70,7 +71,7 @@ export function useCreateCategorizationRule({
     }),
     (
       { accessToken, apiUrl, businessId },
-      { arg: { ...body } }: { arg: CreateCategorizationRule },
+      { arg: { ...body } }: { arg: CreateCategorizationRuleBody },
     ) => createCategorizationRule(
       apiUrl,
       accessToken,

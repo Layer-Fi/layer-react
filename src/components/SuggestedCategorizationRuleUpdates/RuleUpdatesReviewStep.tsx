@@ -8,6 +8,7 @@ import { useWizard } from '../Wizard/Wizard'
 import { Label } from '../ui/Typography/Text'
 import { AffectedTransactionsTable } from './AffectedTransactionsTable'
 import { MinimalBankTransaction } from '../../schemas/bankTransactions/base'
+import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 
 interface RuleUpdatesPromptReviewStepProps {
   ruleSuggestion: UpdateCategorizationRulesSuggestion
@@ -15,6 +16,7 @@ interface RuleUpdatesPromptReviewStepProps {
 
 export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptReviewStepProps) {
   const { next, previous } = useWizard()
+  const { createCategorizationRule } = useBankTransactionsContext()
   const [applyRule, setApplyRule] = useState(true)
   return (
     <VStack gap='lg'>
@@ -45,11 +47,11 @@ export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptRevie
             const ruleCreationParams = {
               ...ruleSuggestion,
               newRule: {
-                applyRetroactively: applyRule,
                 ...ruleSuggestion.newRule,
+                applyRetroactively: applyRule,
               },
             }
-            console.log(ruleCreationParams)
+            void createCategorizationRule(ruleCreationParams.newRule)
             void next()
           }}
         >
