@@ -292,7 +292,8 @@
 
 .Layer__bank-transaction-list-item__content,
 .Layer__expanded-bank-transaction-row__content {
-  max-width: fit-content;
+  max-width: 60rem;
+  min-width: 40rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -508,8 +509,8 @@
   gap: var(--spacing-sm);
 
   .Layer__category-menu--full {
-    min-width: 12rem;
-    max-width: 20rem;
+    min-width: 14rem;
+    max-width: 14rem;
   }
 }
 
