@@ -466,6 +466,7 @@
 
   .Layer__select__option-content__loading {
     cursor: default;
+
     &.Layer__select__option--is-focused,
     &.Layer__select__option--is-selected,
     &:hover,
@@ -664,12 +665,12 @@
     .Layer__textarea,
     .Layer__select__control,
     .Layer__input {
-      min-height: 36px;
+      height: 36px;
       font-size: 16px;
     }
 
     .Layer__bank-transaction-list-item__expanded-row .Layer__select .Layer__select__control {
-      min-height: 36px;
+      height: 36px;
     }
   }
 }
