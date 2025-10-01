@@ -947,6 +947,7 @@
   display: grid;
   grid-template-columns: 120px minmax(0, 1fr) 100px max-content;
   gap: 0;
+  max-width: 40rem;
   margin-bottom: var(--spacing-sm);
 
   &:has(.Layer__expanded-bank-transaction-row__match-table__status) {
@@ -954,7 +955,7 @@
   }
 
   &:not(:has(.Layer__expanded-bank-transaction-row__match-table__link)) {
-    grid-template-columns: 120px 1fr 100px;
+    grid-template-columns: 120px minmax(0, 1fr) 100px;
   }
 
   &:not(:has(.Layer__expanded-bank-transaction-row__match-table__link)):has(.Layer__expanded-bank-transaction-row__match-table__status) {
@@ -1249,16 +1250,12 @@
     width: 100% !important;
   }
 
-  .Layer__expanded-bank-transaction-row__match-table__amount {
-    display: none !important;
-  }
-
   .Layer__expanded-bank-transaction-row__match-table__desc {
     gap: var(--spacing-sm);
     justify-content: space-between;
 
     & > span:first-child {
-      width: calc(100% - 120px);
+      width: calc(100% - 220px);
     }
 
     & > span:nth-child(2) {
