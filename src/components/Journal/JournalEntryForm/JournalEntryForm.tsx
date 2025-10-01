@@ -17,6 +17,7 @@ import { CustomerVendorSelector } from '../../../features/customerVendor/compone
 import { TagDimensionsGroup } from './TagDimensionsGroup'
 import type { CustomerVendorSchema } from '../../../features/customerVendor/customerVendorSchemas'
 import { Separator } from '../../Separator/Separator'
+import { usePreloadTagDimensions } from '../../../features/tags/api/useTagDimensions'
 
 type CustomerVendor = typeof CustomerVendorSchema.Type
 
@@ -40,8 +41,9 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
 
   const { isReadOnly = false, onSuccess, onChangeFormState, showTags = true, showCustomerVendor = true } = props
 
-  usePreloadCustomers()
-  usePreloadVendors()
+  usePreloadCustomers({ isEnabled: showCustomerVendor })
+  usePreloadVendors({ isEnabled: showCustomerVendor })
+  usePreloadTagDimensions({ isEnabled: showTags })
 
   const { form, formState, submitError } = useJournalEntryForm({
     onSuccess: onSuccess || toJournalTable,
