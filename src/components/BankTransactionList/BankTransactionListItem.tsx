@@ -28,6 +28,7 @@ import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookke
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from './BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
+import { Span } from '../ui/Typography/Text'
 
 type Props = {
   index: number
@@ -141,9 +142,13 @@ export const BankTransactionListItem = ({
             {formatTime(parseISO(bankTransaction.date), dateFormat)}
           </span>
           <span className={`${className}__heading-separator`} />
-          <span className={`${className}__heading-account-name`}>
-            {bankTransaction.account_name ?? ''}
-          </span>
+          <Span ellipsis>
+            {[bankTransaction.account_institution?.name,
+              bankTransaction.account_name,
+              bankTransaction.account_mask]
+              .filter(Boolean)
+              .join(' ')}
+          </Span>
           {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
         </div>
         <div
