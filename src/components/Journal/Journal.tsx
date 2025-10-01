@@ -10,7 +10,6 @@ import { InAppLinkProvider, LinkingMetadata } from '../../contexts/InAppLinkCont
 import { JournalStoreProvider, useJournalRouteState, JournalRoute } from '../../providers/JournalStore/JournalStoreProvider'
 import { ReactNode } from 'react'
 import { JournalEntryDrawer } from './JournalEntryDrawer/JournalEntryDrawer'
-import { usePreloadTagDimensions } from '../../features/tags/api/useTagDimensions'
 
 export interface JournalConfig {
   form: {
@@ -38,9 +37,6 @@ export const JOURNAL_CONFIG: JournalConfig = {
 }
 
 export const Journal = (props: JournalProps) => {
-  const { showTags = true } = props
-  usePreloadTagDimensions({ isEnabled: showTags })
-
   const JournalContextData = useJournal()
   const AccountsContextData = useChartOfAccounts()
   return (

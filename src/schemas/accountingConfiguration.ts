@@ -1,4 +1,5 @@
 import { Schema, pipe } from 'effect'
+import { TagDimensionSchema } from '../features/tags/tagSchemas'
 
 export enum ReportingBasis {
   Accrual = 'ACCRUAL',
@@ -20,6 +21,11 @@ export const AccountingConfigurationSchema = Schema.Struct({
   enableAccountNumbers: pipe(
     Schema.propertySignature(Schema.Boolean),
     Schema.fromKey('enable_account_numbers'),
+  ),
+
+  platformDisplayTags: pipe(
+    Schema.propertySignature(Schema.Array(TagDimensionSchema)),
+    Schema.fromKey('platform_display_tags'),
   ),
 })
 
