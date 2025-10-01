@@ -5,6 +5,7 @@ import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransacti
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { RuleUpdatesPromptStep } from './RuleUpdatesPromptStep'
 import { RuleUpdatesReviewStep } from './RuleUpdatesReviewStep'
+import { useRejectCategorizationRulesUpdateSuggestion } from '../../hooks/useBankTransactions/useRejectCategorizationRulesUpdateSuggestion'
 
 type SuggestedCategorizationRuleUpdatesProps = {
   close: () => Awaitable<void>
@@ -29,9 +30,13 @@ const getHeaderForRule = (ruleSuggestion: UpdateCategorizationRulesSuggestion) =
 }
 
 export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesProps) {
+  const rejectRuleSuggestion = useRejectCategorizationRulesUpdateSuggestion()
   function onClose(dontAskAgain: boolean) {
     if (dontAskAgain) {
-      console.log(dontAskAgain)
+      const suggestionId = ruleSuggestion.newRule.createdBySuggestionId
+      if (suggestionId) {
+        rejectRuleSuggestion?.(suggestionId)
+      }
     }
     void close()
   }
