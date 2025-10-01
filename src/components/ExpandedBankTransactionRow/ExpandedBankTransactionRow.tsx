@@ -25,8 +25,9 @@ import { useTagBankTransaction } from '../../features/bankTransactions/[bankTran
 import { useRemoveTagFromBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/tags/api/useRemoveTagFromBankTransaction'
 import { useSetMetadataOnBankTransaction } from '../../features/bankTransactions/[bankTransactionId]/metadata/api/useSetMetadataOnBankTransaction'
 
-import { Button, SubmitButton, ButtonVariant, TextButton } from '../Button'
+import { SubmitButton, TextButton } from '../Button'
 import { SubmitAction } from '../Button/SubmitButton'
+import { Button } from '../ui/Button/Button'
 import { CategorySelect } from '../CategorySelect'
 import {
   CategoryOption,
@@ -548,19 +549,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                             className={`${className}__table-cell--split-entry`}
                             key={`split-${index}`}
                           >
-                            <CategorySelect
-                              bankTransaction={bankTransaction}
-                              name={`category-${bankTransaction.id}`}
-                              value={split.category}
-                              onChange={value => changeCategory(index, value)}
-                              className='Layer__category-menu--full'
-                              disabled={
-                                bankTransaction.processing
-                                || !categorizationEnabled
-                              }
-                              excludeMatches
-                              showTooltips={showTooltips}
-                            />
                             <Input
                               type='text'
                               name={`split-${index}${asListItem ? '-li' : ''}`}
@@ -573,6 +561,19 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               isInvalid={split.amount < 0}
                               inputMode='numeric'
                               errorMessage='Negative values are not allowed'
+                            />
+                            <CategorySelect
+                              bankTransaction={bankTransaction}
+                              name={`category-${bankTransaction.id}`}
+                              value={split.category}
+                              onChange={value => changeCategory(index, value)}
+                              className='Layer__category-menu--full'
+                              disabled={
+                                bankTransaction.processing
+                                || !categorizationEnabled
+                              }
+                              excludeMatches
+                              showTooltips={showTooltips}
                             />
                             {showTags && (
                               <div className={`${className}__table-cell--split-entry__tags`}>
@@ -594,13 +595,13 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               />
                             )}
                             <Button
-                              className={`${className}__table-cell--split-entry__merge-btn`}
-                              onClick={() => removeSplit(index)}
-                              rightIcon={<Trash size={18} />}
-                              variant={ButtonVariant.secondary}
-                              disabled={index == 0}
-                              iconOnly={true}
-                            />
+                              onPress={() => removeSplit(index)}
+                              variant='outlined'
+                              icon
+                              isDisabled={index == 0}
+                            >
+                              <Trash size={18} />
+                            </Button>
                           </div>
                         ))}
                       </div>
@@ -633,9 +634,9 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                                 : (
                                   <Button
                                     onClick={addSplit}
-                                    rightIcon={<Scissors size={14} />}
-                                    variant={ButtonVariant.secondary}
+                                    variant='outlined'
                                   >
+                                    <Scissors size={14} />
                                     Split
                                   </Button>
                                 )}
