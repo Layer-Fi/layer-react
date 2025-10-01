@@ -15,7 +15,7 @@ import {
 import { getCategorizePayload, hasReceipts } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { Tag, makeTagKeyValueFromTag } from '../../features/tags/tagSchemas'
+import { Tag, makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
 import { decodeCustomerVendor, CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
@@ -77,20 +77,39 @@ export const SplitForm = ({
   const [rowState, updateRowState] = useState<RowState>({
     splits: bankTransaction.category?.entries
       ? bankTransaction.category?.entries.map((c) => {
+        // Use split-specific tags/customer/vendor only (no fallback to transaction-level values when splits exist)
+        const splitTags = c.tags?.map(tag => makeTagFromTransactionTag({
+          id: tag.id,
+          key: tag.key,
+          value: tag.value,
+          dimensionDisplayName: tag.dimension_display_name,
+          valueDisplayName: tag.value_display_name,
+          createdAt: new Date(tag.created_at),
+          updatedAt: new Date(tag.updated_at),
+          deletedAt: tag.deleted_at ? new Date(tag.deleted_at) : null,
+          archivedAt: tag.archived_at ? new Date(tag.archived_at) : null,
+          _local: tag._local,
+        })) ?? []
+        const splitCustomerVendor = c.customer
+          ? decodeCustomerVendor({ ...c.customer, customerVendorType: 'CUSTOMER' })
+          : c.vendor
+            ? decodeCustomerVendor({ ...c.vendor, customerVendorType: 'VENDOR' })
+            : null
+
         return c.type === 'ExclusionSplitEntry' && c.category.type === 'ExclusionNested'
           ? {
             amount: c.amount || 0,
             inputValue: formatMoney(c.amount),
             category: mapCategoryToExclusionOption(c.category),
-            tags: [],
-            customerVendor: initialCustomerVendor,
+            tags: splitTags,
+            customerVendor: splitCustomerVendor,
           }
           : {
             amount: c.amount || 0,
             inputValue: formatMoney(c.amount),
             category: mapCategoryToOption(c.category),
-            tags: [],
-            customerVendor: initialCustomerVendor,
+            tags: splitTags,
+            customerVendor: splitCustomerVendor,
           }
       })
       : [

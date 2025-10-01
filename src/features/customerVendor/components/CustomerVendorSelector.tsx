@@ -241,7 +241,7 @@ export function CustomerVendorSelector({
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   return (
-    <VStack gap='3xs'>
+    <VStack gap='3xs' className='Layer__CustomerVendorSelector'>
       {showLabel && (
         <HStack justify='space-between' align='baseline'>
           <Label

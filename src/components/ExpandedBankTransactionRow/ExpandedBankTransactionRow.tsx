@@ -17,7 +17,7 @@ import {
 import { hasSuggestions } from '../../types/categories'
 import { getCategorizePayload, hasMatch } from '../../utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
-import { Tag, makeTagKeyValueFromTag, makeTag } from '../../features/tags/tagSchemas'
+import { Tag, makeTagKeyValueFromTag, makeTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
 import { TagDimensionsGroup } from '../Journal/JournalEntryForm/TagDimensionsGroup'
 import { CustomerVendorSelector } from '../../features/customerVendor/components/CustomerVendorSelector'
 import { decodeCustomerVendor, CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
@@ -189,20 +189,39 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
     const [rowState, updateRowState] = useState<RowState>({
       splits: bankTransaction.category?.entries
         ? bankTransaction.category?.entries.map((c) => {
+          // Use split-specific tags/customer/vendor only (no fallback to transaction-level values when splits exist)
+          const splitTags = c.tags?.map(tag => makeTagFromTransactionTag({
+            id: tag.id,
+            key: tag.key,
+            value: tag.value,
+            dimensionDisplayName: tag.dimension_display_name,
+            valueDisplayName: tag.value_display_name,
+            createdAt: new Date(tag.created_at),
+            updatedAt: new Date(tag.updated_at),
+            deletedAt: tag.deleted_at ? new Date(tag.deleted_at) : null,
+            archivedAt: tag.archived_at ? new Date(tag.archived_at) : null,
+            _local: tag._local,
+          })) ?? []
+          const splitCustomerVendor = c.customer
+            ? decodeCustomerVendor({ ...c.customer, customerVendorType: 'CUSTOMER' })
+            : c.vendor
+              ? decodeCustomerVendor({ ...c.vendor, customerVendorType: 'VENDOR' })
+              : null
+
           return c.type === 'ExclusionSplitEntry' && c.category.type === 'ExclusionNested'
             ? {
               amount: c.amount || 0,
               inputValue: formatMoney(c.amount),
               category: mapCategoryToExclusionOption(c.category),
-              tags: initialTags,
-              customerVendor: initialCustomerVendor,
+              tags: splitTags,
+              customerVendor: splitCustomerVendor,
             }
             : {
               amount: c.amount || 0,
               inputValue: formatMoney(c.amount),
               category: mapCategoryToOption(c.category),
-              tags: initialTags,
-              customerVendor: initialCustomerVendor,
+              tags: splitTags,
+              customerVendor: splitCustomerVendor,
             }
         })
         : [
@@ -322,17 +341,14 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
       // Auto-save tags only when in unsplit state (single split entry)
       if (rowState.splits.length === 1) {
-        // Find tags that were added
         const addedTags = newTags.filter(newTag =>
           !oldTags.some(oldTag => oldTag.key === newTag.key && oldTag.value === newTag.value),
         )
 
-        // Find tags that were removed
         const removedTags = oldTags.filter(oldTag =>
           !newTags.some(newTag => newTag.key === oldTag.key && newTag.value === oldTag.value),
         )
 
-        // Trigger API calls for added tags
         addedTags.forEach((tag) => {
           void tagBankTransaction({
             key: tag.key,
@@ -342,7 +358,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
           })
         })
 
-        // Trigger API calls for removed tags
         removedTags.forEach((tag) => {
           void removeTagFromBankTransaction({
             tagId: tag.id,
@@ -564,7 +579,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                             <CustomerVendorSelector
                               selectedCustomerVendor={split.customerVendor}
                               onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
-                              placeholder='Set customer or vendor...'
+                              placeholder='Set customer or vendor'
                               isReadOnly={!categorizationEnabled}
                               showLabel={index === 0}
                             />

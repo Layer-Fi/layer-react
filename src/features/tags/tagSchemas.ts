@@ -169,3 +169,19 @@ export const makeTagFromTransactionTag = ({ id, key, value, dimensionDisplayName
     },
   } as Tag
 }
+
+export type TagKeyValue = typeof TagKeyValueSchema.Type
+
+export const makeTagFromTagKeyValue = ({ key, value, dimensionDisplayName, valueDisplayName }: TagKeyValue): Tag => {
+  return makeTag({
+    id: crypto.randomUUID(),
+    key,
+    value,
+    dimensionDisplayName,
+    valueDisplayName,
+    archivedAt: null,
+    _local: {
+      isOptimistic: false,
+    },
+  })
+}

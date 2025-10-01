@@ -516,7 +516,13 @@
   gap: var(--spacing-sm);
 
   .Layer__JournalEntryForm__Field--tag {
-    width: 16rem;
+    width: 12rem;
+  }
+}
+
+.Layer__expanded-bank-transaction-row__table-cell--split-entry {
+  .Layer__CustomerVendorSelector {
+    width: 12rem;
   }
 }
 

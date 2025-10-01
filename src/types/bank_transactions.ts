@@ -26,6 +26,9 @@ type CategoryEntry = {
   type?: string
   amount?: number
   category: CategoryWithEntries
+  tags?: Array<TransactionTagEncoded>
+  customer?: typeof CustomerSchema.Encoded | null
+  vendor?: typeof VendorSchema.Encoded | null
 }
 
 // This isn't my favorite but BankTransaction contains much

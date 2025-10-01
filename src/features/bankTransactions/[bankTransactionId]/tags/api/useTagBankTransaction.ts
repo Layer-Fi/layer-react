@@ -8,6 +8,7 @@ import {
   useBankTransactionsOptimisticUpdater,
 } from '../../../../../hooks/useBankTransactions/useBankTransactions'
 import { v4 as uuidv4 } from 'uuid'
+import type { TransactionTagEncoded } from '../../../../tags/tagSchemas'
 
 const TAG_BANK_TRANSACTION_TAG_KEY = '#tag-bank-transaction'
 
@@ -21,8 +22,15 @@ type TagBankTransactionBody = {
   transaction_ids: ReadonlyArray<string>
 }
 
+type TagBankTransactionResponse = {
+  data: {
+    type: string
+    tags: ReadonlyArray<TransactionTagEncoded>
+  }
+}
+
 const tagBankTransaction = post<
-  Record<string, never>,
+  TagBankTransactionResponse,
   TagBankTransactionBody,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/tags`)
@@ -97,14 +105,12 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResultPromise = originalTrigger(...triggerParameters)
+      const { key, value, dimensionDisplayName, valueDisplayName } = triggerParameters[0]
+      const optimisticTagId = uuidv4()
 
+      // Add optimistic tag immediately
       void optimisticallyUpdateBankTransactions((bankTransaction) => {
         if (bankTransaction.id === bankTransactionId) {
-          const { key, value, dimensionDisplayName, valueDisplayName } = triggerParameters[0]
-
-          const optimisticTagId = uuidv4()
-
           const now = new Date()
           const nowISOString = now.toISOString()
 
@@ -134,12 +140,31 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
         return bankTransaction
       })
 
-      return triggerResultPromise
-        .finally(() => {
-          void debouncedInvalidateBankTransactions({
-            withPrecedingOptimisticUpdate: true,
-          })
+      // Wait for the API response and replace optimistic tag with real one
+      const response = await originalTrigger(...triggerParameters)
+
+      if (response?.data?.tags && response.data.tags.length > 0) {
+        const realTag = response.data.tags[0]
+
+        void optimisticallyUpdateBankTransactions((bankTransaction) => {
+          if (bankTransaction.id === bankTransactionId) {
+            return {
+              ...bankTransaction,
+              transaction_tags: bankTransaction.transaction_tags.map(tag =>
+                tag.id === optimisticTagId ? realTag : tag,
+              ),
+            }
+          }
+
+          return bankTransaction
         })
+      }
+
+      void debouncedInvalidateBankTransactions({
+        withPrecedingOptimisticUpdate: true,
+      })
+
+      return response
     },
     [
       bankTransactionId,

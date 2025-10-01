@@ -49,9 +49,18 @@ type TagDimensionComboboxProps = {
   isReadOnly?: boolean
   showLabel?: boolean
   className?: string
+  isClearable?: boolean
 }
 
-export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isReadOnly, showLabel, className }: TagDimensionComboboxProps) => {
+export const TagDimensionCombobox = ({
+  dimensionKey,
+  value,
+  onValueChange,
+  isReadOnly,
+  showLabel,
+  className,
+  isClearable = true,
+}: TagDimensionComboboxProps) => {
   const { data: tagDimension, isLoading, isError } = useTagDimensionByKey({ dimensionKey })
 
   const options = useMemo(() => {
@@ -105,7 +114,7 @@ export const TagDimensionCombobox = ({ dimensionKey, value, onValueChange, isRea
           isReadOnly={isReadOnly}
           isLoading={isLoading}
           placeholder={`Select ${tagDimension?.displayName ?? dimensionKey}`}
-          isClearable={false}
+          isClearable={isClearable}
           {...additionalAriaProps}
         />
       </VStack>

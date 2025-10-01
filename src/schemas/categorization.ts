@@ -1,4 +1,7 @@
 import { Schema, pipe } from 'effect'
+import { TransactionTagSchema } from '../features/tags/tagSchemas'
+import { CustomerSchema } from './customer'
+import { VendorSchema } from './vendor'
 
 export const BaseCategorizationSchema = Schema.Struct({
   id: Schema.String,
@@ -40,11 +43,23 @@ export const ExclusionCategorizationSchema = Schema.Struct({
 export const AccountSplitEntrySchema = Schema.Struct({
   amount: Schema.Number,
   category: AccountCategorizationSchema,
+  tags: pipe(
+    Schema.propertySignature(Schema.Array(TransactionTagSchema)),
+    Schema.fromKey('tags'),
+  ),
+  customer: Schema.optional(Schema.NullOr(CustomerSchema)),
+  vendor: Schema.optional(Schema.NullOr(VendorSchema)),
 })
 
 export const ExclusionSplitEntrySchema = Schema.Struct({
   amount: Schema.Number,
   category: ExclusionCategorizationSchema,
+  tags: pipe(
+    Schema.propertySignature(Schema.Array(TransactionTagSchema)),
+    Schema.fromKey('tags'),
+  ),
+  customer: Schema.optional(Schema.NullOr(CustomerSchema)),
+  vendor: Schema.optional(Schema.NullOr(VendorSchema)),
 })
 
 export const SplitCategorizationEntrySchema = Schema.Union(
