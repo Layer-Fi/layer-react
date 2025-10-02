@@ -154,7 +154,7 @@ export const BankTransactionListItem = ({
             {bankTransaction.account_name}
             {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
           </Span>
-          
+
           {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
 
         </div>

@@ -124,17 +124,17 @@ export const BankTransactionMobileListItem = ({
 
   const fullAccountName = useMemo(() => {
     return (
-            <Span ellipsis size='sm'>
-          {bankTransaction.account_institution?.name && `${bankTransaction.account_institution.name} — `}
-          {bankTransaction.account_name}
-          {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
-        </Span>
-    );
+      <Span ellipsis size='sm'>
+        {bankTransaction.account_institution?.name && `${bankTransaction.account_institution.name} — `}
+        {bankTransaction.account_name}
+        {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
+      </Span>
+    )
   }, [
     bankTransaction.account_institution?.name,
     bankTransaction.account_name,
-    bankTransaction.account_mask
-  ]);
+    bankTransaction.account_mask,
+  ])
 
   useEffect(() => {
     if (transactionIdToOpen && transactionIdToOpen === bankTransaction.id) {

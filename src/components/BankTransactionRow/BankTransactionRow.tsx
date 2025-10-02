@@ -224,7 +224,7 @@ export const BankTransactionRow = ({
           {...openRow}
         >
           <span className='Layer__table-cell-content'>
-            <VStack align="start">
+            <VStack align='start'>
               <Span ellipsis>
                 {bankTransaction.account_name}
                 {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
@@ -234,7 +234,7 @@ export const BankTransactionRow = ({
                   {bankTransaction.account_institution.name}
                 </Span>
               )}
-              </VStack>
+            </VStack>
           </span>
         </td>
         <td
@@ -245,8 +245,8 @@ export const BankTransactionRow = ({
           {...showReceiptDataProperties}
         >
           <span className='Layer__table-cell-content'>
-              {isCredit(bankTransaction) ? '+$' : ' $'}
-              {formatMoney(bankTransaction.amount)}
+            {isCredit(bankTransaction) ? '+$' : ' $'}
+            {formatMoney(bankTransaction.amount)}
           </span>
         </td>
         <td
