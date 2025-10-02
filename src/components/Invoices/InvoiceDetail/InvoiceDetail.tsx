@@ -162,19 +162,19 @@ const InvoiceDetailHeader = ({ onSubmit, formState, isReadOnly, setIsReadOnly, o
     </Button>
   ), [isSubmitting, onPressSave, onSendInvoice])
 
-  const onPressSaveAndSend = useCallback(() => {
+  const onPressSend = useCallback(() => {
     void onSubmit({ submitAction: 'send' })
   }, [onSubmit])
 
   const sendButton = useMemo(() => {
     if (!onSendInvoice) return null
     return (
-      <Button isDisabled={isSubmitting} onPress={onPressSaveAndSend}>
-        {viewState.mode === UpsertInvoiceMode.Create ? 'Save and Send' : 'Save and Resend'}
+      <Button isDisabled={isSubmitting} onPress={onPressSend}>
+        Save and Send
         <Send size={14} />
       </Button>
     )
-  }, [isSubmitting, onPressSaveAndSend, onSendInvoice, viewState.mode])
+  }, [isSubmitting, onPressSend, onSendInvoice])
 
   const saveAndSendButtons = useMemo(() => (
     <HStack gap='xs'>
