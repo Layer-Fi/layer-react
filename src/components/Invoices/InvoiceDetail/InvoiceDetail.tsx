@@ -11,10 +11,10 @@ import { Span } from '../../ui/Typography/Text'
 import { convertCentsToCurrency } from '../../../utils/format'
 import { InvoiceStatusCell } from '../InvoiceStatusCell/InvoiceStatusCell'
 import { Button } from '../../ui/Button/Button'
-import { HandCoins, Save } from 'lucide-react'
+import { HandCoins, Save, Send } from 'lucide-react'
 import type { InvoiceFormState } from '../InvoiceForm/formUtils'
 import { useLayerContext } from '../../../contexts/LayerContext/LayerContext'
-import { useInvoiceNavigation, useInvoiceDetail } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
+import { useInvoiceNavigation, useInvoiceDetail } from '../../../providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Drawer } from '../../ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '../../ui/Modal/ModalSlots'
 import { InvoicePaymentForm } from '../InvoicePaymentForm/InvoicePaymentForm'
@@ -23,6 +23,8 @@ import X from '../../../icons/X'
 import BackArrow from '../../../icons/BackArrow'
 import { BaseConfirmationModal } from '../../BaseConfirmationModal/BaseConfirmationModal'
 import { InvoiceDetailHeaderMenu } from './InvoiceDetailHeaderMenu'
+import type { Awaitable } from '../../../types/utility/promises'
+import { useInvoicesContext } from '../../../contexts/InvoicesContext/InvoicesContext'
 
 export const InvoiceDetail = () => {
   const viewState = useInvoiceDetail()
@@ -30,7 +32,7 @@ export const InvoiceDetail = () => {
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
   const { toViewInvoice, toInvoiceTable } = useInvoiceNavigation()
   const { addToast } = useLayerContext()
-  const formRef = useRef<{ submit: () => Promise<void> }>(null)
+  const formRef = useRef<{ submit: ({ submitAction }: { submitAction: 'send' | null }) => Promise<void> }>(null)
 
   const [isReadOnly, setIsReadOnly] = useState(viewState.mode === UpsertInvoiceMode.Update)
 
@@ -51,7 +53,7 @@ export const InvoiceDetail = () => {
     toViewInvoice(updatedInvoice)
   }, [addToast, toViewInvoice])
 
-  const onSubmit = useCallback(() => void formRef.current?.submit(), [])
+  const onSubmit = useCallback(({ submitAction }: { submitAction: 'send' | null }) => formRef.current?.submit({ submitAction }), [])
   const [formState, setFormState] = useState<InvoiceFormState>({
     isDirty: false,
     isSubmitting: false,
@@ -134,7 +136,7 @@ export const InvoiceDetail = () => {
 }
 
 type InvoiceDetailHeaderProps = {
-  onSubmit: () => void
+  onSubmit: ({ submitAction }: { submitAction: 'send' | null }) => Awaitable<void>
   isReadOnly: boolean
   formState: InvoiceFormState
   setIsReadOnly: (isReadOnly: boolean) => void
@@ -142,24 +144,50 @@ type InvoiceDetailHeaderProps = {
 }
 const InvoiceDetailHeader = ({ onSubmit, formState, isReadOnly, setIsReadOnly, openInvoicePaymentDrawer }: InvoiceDetailHeaderProps) => {
   const viewState = useInvoiceDetail()
+  const { onSendInvoice } = useInvoicesContext()
   const { isSubmitting } = formState
 
   const onEditInvoice = useCallback(() => {
     setIsReadOnly(false)
   }, [setIsReadOnly])
 
+  const onPressSave = useCallback(() => {
+    void onSubmit({ submitAction: null })
+  }, [onSubmit])
+
   const saveButton = useMemo(() => (
-    <Button isPending={isSubmitting} onPress={onSubmit}>
+    <Button variant={onSendInvoice ? 'outlined' : 'solid'} isDisabled={isSubmitting} onPress={onPressSave}>
       Save
       <Save size={14} />
     </Button>
-  ), [isSubmitting, onSubmit])
+  ), [isSubmitting, onPressSave, onSendInvoice])
+
+  const onPressSaveAndSend = useCallback(() => {
+    void onSubmit({ submitAction: 'send' })
+  }, [onSubmit])
+
+  const sendButton = useMemo(() => {
+    if (!onSendInvoice) return null
+    return (
+      <Button isDisabled={isSubmitting} onPress={onPressSaveAndSend}>
+        {viewState.mode === UpsertInvoiceMode.Create ? 'Save and Send' : 'Save and Resend'}
+        <Send size={14} />
+      </Button>
+    )
+  }, [isSubmitting, onPressSaveAndSend, onSendInvoice, viewState.mode])
+
+  const saveAndSendButtons = useMemo(() => (
+    <HStack gap='xs'>
+      {saveButton}
+      {sendButton}
+    </HStack>
+  ), [saveButton, sendButton])
 
   if (viewState.mode === UpsertInvoiceMode.Create) {
     return (
       <HStack justify='space-between' align='center' fluid pie='md'>
         <Heading>Create Invoice</Heading>
-        {saveButton}
+        {saveAndSendButtons}
       </HStack>
     )
   }
@@ -188,11 +216,10 @@ const InvoiceDetailHeader = ({ onSubmit, formState, isReadOnly, setIsReadOnly, o
             <InvoiceDetailHeaderMenu onEditInvoice={onEditInvoice} />
           </HStack>
         )
-        : saveButton}
+        : saveAndSendButtons}
     </HStack>
   )
 }
-
 type InvoiceDetailSubHeaderProps = {
   invoice: Invoice
 }
