@@ -219,7 +219,7 @@ export const BankTransactionMobileListItem = ({
               {categorized && bankTransaction.categorization_status
                 ? getAssignedValue(bankTransaction, renderInAppLink)
                 : null}
-              <span>{!categorized && fullAccountName }</span>
+              {!categorized && fullAccountName}
               {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
             </Text>
             {categorized && fullAccountName}
