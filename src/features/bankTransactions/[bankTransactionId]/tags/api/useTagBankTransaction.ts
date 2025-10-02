@@ -143,23 +143,6 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
       // Wait for the API response and replace optimistic tag with real one
       const response = await originalTrigger(...triggerParameters)
 
-      if (response?.data?.tags && response.data.tags.length > 0) {
-        const realTag = response.data.tags[0]
-
-        void optimisticallyUpdateBankTransactions((bankTransaction) => {
-          if (bankTransaction.id === bankTransactionId) {
-            return {
-              ...bankTransaction,
-              transaction_tags: bankTransaction.transaction_tags.map(tag =>
-                tag.id === optimisticTagId ? realTag : tag,
-              ),
-            }
-          }
-
-          return bankTransaction
-        })
-      }
-
       void debouncedInvalidateBankTransactions({
         withPrecedingOptimisticUpdate: true,
       })
