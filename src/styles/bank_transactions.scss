@@ -192,6 +192,10 @@
 }
 
 .Layer__bank-transaction-row .Layer__table-cell {
+  color: var(--text-color-primary);
+}
+
+.Layer__bank-transaction-row .Layer__table-cell {
   background-color: var(--table-bg);
   transition: background-color var(--transition-speed) ease-out;
 }
@@ -450,16 +454,12 @@
 .Layer__bank-transaction-row__table-cell--amount-debit,
 .Layer__bank-transaction-list-item__amount-debit {
   justify-content: flex-end;
-  color: var(--text-color-primary);
 
   .Layer__table-cell-content {
     justify-content: flex-end;
   }
 }
 
-.Layer__bank-transaction-list-item__amount-debit {
-  color: var(--text-color-primary);
-}
 
 .Layer__expanded-bank-transaction-row__description {
   padding: 0 var(--spacing-md);
@@ -773,9 +773,7 @@
   color: var(--color-base-1000);
 }
 
-.Layer__bank-transactions__tx-text {
-  max-width: 32ch;
-}
+
 
 .Layer__bank-transactions__account-col {
   box-sizing: border-box;
@@ -828,17 +826,6 @@
   .Layer__bank-transactions__account-col,
   .Layer__bank-transactions__tx-col {
     text-overflow: ellipsis;
-
-    .Layer__table-cell-content {
-      .Layer__bank-transactions__account-text,
-      .Layer__bank-transactions__tx-text {
-        box-sizing: border-box;
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
   }
 }
 
@@ -898,10 +885,6 @@
     padding-bottom: var(--spacing-2xs);
     box-shadow: none;
   }
-}
-
-.Layer__tooltip.Layer__bank-transactions__tx-tooltip {
-  max-width: 250px;
 }
 
 .Layer__bank-transaction-list-item__match-tooltip,

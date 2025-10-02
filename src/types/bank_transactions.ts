@@ -31,11 +31,18 @@ type CategoryEntry = {
   vendor?: typeof VendorSchema.Encoded | null
 }
 
+export interface AccountInstitution {
+  name: string
+  logo: string | null
+}
+
 // This isn't my favorite but BankTransaction contains much
 // more than we're using right now.
 export interface BankTransaction extends Record<string, unknown> {
   type: 'Bank_Transaction'
   account_name?: string
+  account_institution?: AccountInstitution
+  account_mask?: string
   business_id: string
   recently_categorized?: boolean
   id: string
