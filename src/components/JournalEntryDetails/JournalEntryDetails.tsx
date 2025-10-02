@@ -74,7 +74,7 @@ export const JournalEntryDetails = () => {
       setReverseEntryProcessing(true)
       setReverseEntryError(undefined)
       await reverseEntry(entry.id)
-      refetch()
+      void refetch()
     }
     catch (_err) {
       setReverseEntryError('Failed')

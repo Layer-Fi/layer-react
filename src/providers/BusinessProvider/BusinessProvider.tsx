@@ -1,4 +1,4 @@
-import { PropsWithChildren, useReducer, useEffect, Reducer, useMemo } from 'react'
+import { PropsWithChildren, useReducer, useEffect, Reducer, useMemo, useCallback } from 'react'
 import { Layer } from '../../api/layer'
 import { ToastProps, ToastsContainer } from '../../components/Toast/Toast'
 import { LayerContext } from '../../contexts/LayerContext'
@@ -215,11 +215,12 @@ export const BusinessProvider = ({
 
   const { data: accountingConfiguration } = useAccountingConfiguration({ businessId })
 
-  const setOnboardingStep = (value: OnboardingStep) =>
+  const setOnboardingStep = useCallback((value: OnboardingStep) =>
     dispatch({
       type: Action.setOnboardingStep,
       payload: { onboardingStep: value },
-    })
+    }),
+  [])
 
   return (
     <LayerContext.Provider

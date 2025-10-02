@@ -2,7 +2,7 @@
 export default {
   plugins: [
     'stylelint-order',
-    '@stylistic/stylelint-plugin'
+    '@stylistic/stylelint-plugin',
   ],
   extends: [
     'stylelint-config-standard',
@@ -30,17 +30,17 @@ export default {
     'declaration-empty-line-before': [
       'always',
       {
-        'except': ['first-nested'],
-        'ignore': ['after-comment', 'after-declaration']
-      }
+        except: ['first-nested'],
+        ignore: ['after-comment', 'after-declaration'],
+      },
     ],
     'custom-property-pattern': '^[a-z0-9-]+$',
     'custom-property-empty-line-before': [
       'always',
       {
-        'except': ['first-nested'],
-        'ignore': ['after-comment', 'after-custom-property']
-      }
+        except: ['first-nested'],
+        ignore: ['after-comment', 'after-custom-property'],
+      },
     ],
 
     'length-zero-no-unit': true,
@@ -54,13 +54,13 @@ export default {
       {
         groupName: 'all',
         properties: [
-          'all'
+          'all',
         ],
       },
       {
         groupName: 'box-sizing',
         properties: [
-          'box-sizing'
+          'box-sizing',
         ],
       },
       {
@@ -72,14 +72,14 @@ export default {
           'right',
           'bottom',
           'left',
-          'inset'
+          'inset',
         ],
       },
       {
         groupName: 'display',
         properties: [
           'display',
-          'visibility'
+          'visibility',
         ],
       },
       {
@@ -91,7 +91,7 @@ export default {
           'flex-flow',
           'flex-grow',
           'flex-shrink',
-          'flex-wrap'
+          'flex-wrap',
         ],
       },
       {
@@ -122,7 +122,7 @@ export default {
         properties: [
           'gap',
           'row-gap',
-          'column-gap'
+          'column-gap',
         ],
       },
       {
@@ -138,7 +138,7 @@ export default {
         properties: [
           'justify-content',
           'justify-items',
-          'justify-self'
+          'justify-self',
         ],
       },
       {
@@ -146,7 +146,7 @@ export default {
         properties: [
           'overflow',
           'overflow-x',
-          'overflow-y'
+          'overflow-y',
         ],
       },
       {
@@ -163,7 +163,7 @@ export default {
           'min-width',
           'min-inline-size',
           'max-width',
-          'max-inline-size'
+          'max-inline-size',
         ],
       },
       {
@@ -179,7 +179,7 @@ export default {
           'padding-top',
           'padding-right',
           'padding-bottom',
-          'padding-left'
+          'padding-left',
         ],
       },
       {
@@ -193,7 +193,7 @@ export default {
           'border-top-left-radius',
           'border-top-right-radius',
           'border-bottom-left-radius',
-          'border-bottom-right-radius'
+          'border-bottom-right-radius',
         ],
       },
       {
@@ -206,14 +206,14 @@ export default {
           'border-top',
           'border-right',
           'border-bottom',
-          'border-left'
+          'border-left',
         ],
       },
       {
         groupName: 'effects',
         properties: [
           'box-shadow',
-          'outline'
+          'outline',
         ],
       },
       {
@@ -229,7 +229,7 @@ export default {
           'margin-top',
           'margin-right',
           'margin-bottom',
-          'margin-left'
+          'margin-left',
         ],
       },
       {
@@ -243,14 +243,14 @@ export default {
           'background-size',
           'background-clip',
           'background-origin',
-          'background-attachment'
+          'background-attachment',
         ],
       },
       {
         groupName: 'cursor',
         properties: [
           'cursor',
-          'user-select'
+          'user-select',
         ],
       },
       {
@@ -264,9 +264,9 @@ export default {
           'text-align',
           'text-transform',
           'word-spacing',
-          'color'
+          'color',
         ],
-      }
+      },
     ],
 
     '@stylistic/declaration-colon-space-after': 'always-single-line',

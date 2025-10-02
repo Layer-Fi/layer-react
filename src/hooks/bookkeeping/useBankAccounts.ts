@@ -38,6 +38,7 @@ export const useBankAccounts = () => {
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { data, error, isLoading } = useSWR(
     () =>
       buildKey({
@@ -56,7 +57,7 @@ export const useBankAccounts = () => {
   return {
     bankAccounts: data?.data ?? [],
     isLoading,
-    error,
+    isError: !!error,
     disconnectedAccountsRequiringNotification,
   }
 }

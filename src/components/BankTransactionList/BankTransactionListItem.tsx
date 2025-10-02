@@ -95,9 +95,10 @@ export const BankTransactionListItem = ({
         removeTransaction(bankTransaction)
       }, 300)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
-  const save = () => {
+  const save = async () => {
     // Save using form from expanded row when row is open:
     if (open && expandedRowRef?.current) {
       expandedRowRef?.current?.save()
@@ -109,11 +110,11 @@ export const BankTransactionListItem = ({
     }
 
     if (selectedCategory.type === 'match') {
-      matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
+      await matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
       return
     }
 
-    categorizeBankTransaction(bankTransaction.id, {
+    await categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: getCategorizePayload(selectedCategory),
     })
@@ -233,7 +234,7 @@ export const BankTransactionListItem = ({
             <SubmitButton
               onClick={() => {
                 if (!bankTransaction.processing) {
-                  save()
+                  void save()
                 }
               }}
               className='Layer__bank-transaction__submit-btn'
@@ -251,7 +252,7 @@ export const BankTransactionListItem = ({
             <RetryButton
               onClick={() => {
                 if (!bankTransaction.processing) {
-                  save()
+                  void save()
                 }
               }}
               className='Layer__bank-transaction__retry-btn'

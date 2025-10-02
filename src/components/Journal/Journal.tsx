@@ -11,29 +11,16 @@ import { JournalStoreProvider, useJournalRouteState, JournalRoute } from '../../
 import { ReactNode } from 'react'
 import { JournalEntryDrawer } from './JournalEntryDrawer/JournalEntryDrawer'
 
-export interface JournalConfig {
-  form: {
-    addEntryLinesLimit?: number
-  }
-}
-
 export interface JournalStringOverrides {
   journalTable?: JournalTableStringOverrides
 }
 
 export interface JournalProps {
   asWidget?: boolean
-  config?: JournalConfig
   stringOverrides?: JournalStringOverrides
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
   showTags?: boolean
   showCustomerVendor?: boolean
-}
-
-export const JOURNAL_CONFIG: JournalConfig = {
-  form: {
-    addEntryLinesLimit: 10,
-  },
 }
 
 export const Journal = (props: JournalProps) => {
@@ -54,7 +41,6 @@ export const Journal = (props: JournalProps) => {
 
 const JournalContent = ({
   asWidget,
-  config = JOURNAL_CONFIG,
   stringOverrides,
   showTags = true,
   showCustomerVendor = true,
@@ -63,16 +49,14 @@ const JournalContent = ({
 
   return routeState.route === JournalRoute.EntryForm
     ? <JournalEntryDrawer showTags={showTags} showCustomerVendor={showCustomerVendor} />
-    : <JournalTableView asWidget={asWidget} config={config} stringOverrides={stringOverrides} />
+    : <JournalTableView asWidget={asWidget} stringOverrides={stringOverrides} />
 }
 
 const JournalTableView = ({
   asWidget,
-  config,
   stringOverrides,
 }: {
   asWidget?: boolean
-  config: JournalConfig
   stringOverrides?: JournalStringOverrides
 }) => {
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
@@ -82,7 +66,6 @@ const JournalTableView = ({
       <JournalTable
         view={view}
         containerRef={containerRef}
-        config={config}
         stringOverrides={stringOverrides?.journalTable}
       />
     </Container>

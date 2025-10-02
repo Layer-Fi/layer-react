@@ -6,7 +6,6 @@ import { View } from '../../types/general'
 import { Button } from '../Button'
 import { DataState, DataStateStatus } from '../DataState'
 import { Header, HeaderCol, HeaderRow } from '../Header'
-import { JournalConfig } from '../Journal/Journal'
 import { JournalSidebar } from '../JournalSidebar'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
@@ -33,14 +32,12 @@ export interface JournalTableStringOverrides {
 export const JournalTableWithPanel = ({
   containerRef,
   pageSize = 15,
-  config,
   stringOverrides,
   view,
 }: {
   view: View
   containerRef: RefObject<HTMLDivElement>
   pageSize?: number
-  config: JournalConfig
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const [currentPage, setCurrentPage] = useState(1)
@@ -158,7 +155,7 @@ export const JournalTableWithPanel = ({
               status={DataStateStatus.failed}
               title='Something went wrong'
               description='We couldn’t load your data.'
-              onRefresh={() => refetch()}
+              onRefresh={() => { void refetch() }}
               isLoading={isValidating || isLoading}
             />
           </div>

@@ -326,7 +326,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
 
     const onChangePurpose = (event: React.ChangeEvent<HTMLInputElement>) => {
       setPurpose(
-        event.target.value === Purpose.match
+        event.target.value === 'match'
           ? Purpose.match
           : Purpose.categorize,
       )

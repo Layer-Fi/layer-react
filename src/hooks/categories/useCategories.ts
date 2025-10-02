@@ -4,7 +4,7 @@ import { useAuth } from '../useAuth'
 import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import { Category } from '../../types'
 import { get } from '../../api/layer/authenticated_http'
-import type { CategoriesListMode } from "../../schemas/categorization"
+import type { CategoriesListMode } from '../../schemas/categorization'
 
 export const CATEGORIES_TAG_KEY = '#categories'
 

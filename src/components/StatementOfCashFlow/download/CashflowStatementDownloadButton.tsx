@@ -14,6 +14,7 @@ export function CashflowStatementDownloadButton({
   iconOnly,
 }: CashflowStatementDownloadButtonProps) {
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { trigger, isMutating, error } = useCashflowStatementDownload({
     startDate,
     endDate,
@@ -24,7 +25,7 @@ export function CashflowStatementDownloadButton({
     <>
       <DownloadButton
         iconOnly={iconOnly}
-        onClick={() => { trigger() }}
+        onClick={() => { void trigger() }}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
         text='Download'

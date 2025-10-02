@@ -82,12 +82,12 @@ export const LinkedAccountItemThumb = ({
               // TODO: trigger some sort of loading spinner here
               // An account is "broken" when its connection is broken
               if (account.reconnect_with_new_credentials) {
-                addConnection(
+                void addConnection(
                   account.external_account_source,
                 )
               }
               else {
-                repairConnection(
+                void repairConnection(
                   account.external_account_source,
                   account.connection_external_id,
                 )
