@@ -24,7 +24,7 @@ import { flattenValidationErrors } from '../../../utils/form'
 import type { AppForm } from '../../../features/forms/hooks/useForm'
 import { type Tag } from '../../../features/tags/tagSchemas'
 import { LedgerAccountCombobox } from '../../LedgerAccountCombobox/LedgerAccountCombobox'
-import { CategoriesListMode } from "../../../schemas/categorization"
+import { CategoriesListMode } from '../../../schemas/categorization'
 import { TagDimensionCombobox } from '../../../features/tags/components/TagDimensionCombobox'
 
 const INVOICE_FORM_CSS_PREFIX = 'Layer__InvoiceForm'
@@ -102,6 +102,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
                 value={selectedTag}
                 onValueChange={onValueChange}
                 showLabel={index === 0}
+                isClearable={false}
               />
             )
           }}

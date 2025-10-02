@@ -24,7 +24,7 @@ export const TagDimensionsGroup = ({
 
   const handleTagValueChange = (dimensionKey: string) => (newTag: Tag | null) => {
     const filteredTags = value.filter(tag =>
-      tag.dimensionLabel.toLowerCase() !== dimensionKey.toLowerCase(),
+      tag.key.toLowerCase() !== dimensionKey.toLowerCase(),
     )
 
     const updatedTags = newTag ? [...filteredTags, newTag] : filteredTags
@@ -34,7 +34,7 @@ export const TagDimensionsGroup = ({
 
   const getSelectedTagForDimension = (dimensionKey: string): Tag | null => {
     return value.find(tag =>
-      tag.dimensionLabel.toLowerCase() === dimensionKey.toLowerCase(),
+      tag.key.toLowerCase() === dimensionKey.toLowerCase(),
     ) ?? null
   }
 

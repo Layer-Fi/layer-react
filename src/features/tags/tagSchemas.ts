@@ -52,19 +52,12 @@ export type TagDimension = typeof TagDimensionSchema.Type
 
 const TagValueSchema = Schema.Data(
   Schema.Struct({
-    // Backend UUID for this dimension
     dimensionId: Schema.UUID,
-    // Machine-readable key
     dimensionKey: Schema.NonEmptyTrimmedString,
-    // Display name for the dimension
     dimensionDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
-    // Backend UUID for this value
     valueId: Schema.UUID,
-    // Machine-readable value
     value: Schema.NonEmptyTrimmedString,
-    // Display name for the value
     valueDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
-    // Whether or not this value definition is archived
     isArchived: Schema.Boolean,
   }),
 )
@@ -74,19 +67,11 @@ export type TagValue = typeof TagValueSchema.Type
 
 export const TagSchema = Schema.Data(
   Schema.Struct({
-    // transaction_tags ID, which refers to an ApiTag in the backend, but retrieved
-    // through a bank transaction.
     id: Schema.UUID,
-    // Machine-readable key for the dimension
     key: Schema.NonEmptyTrimmedString,
-    // Human-readable key for the dimension
     dimensionDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
-
-    // Machine-readable value
     value: Schema.NonEmptyTrimmedString,
-    // Human-readable value
     valueDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
-    // Archive state of this tag value
     archivedAt: Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     _local: Schema.Struct({
       isOptimistic: Schema.Boolean,
