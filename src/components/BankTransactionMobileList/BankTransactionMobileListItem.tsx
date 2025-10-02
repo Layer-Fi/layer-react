@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useEffect, useRef, useState, type ChangeEvent } from 'react'
+import { ReactNode, useContext, useEffect, useRef, useState, useMemo, type ChangeEvent } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useElementSize } from '../../hooks/useElementSize'
 import FileIcon from '../../icons/File'
@@ -122,6 +122,20 @@ export const BankTransactionMobileListItem = ({
     }
   }
 
+  const fullAccountName = useMemo(() => {
+    return (
+            <Span ellipsis size='sm'>
+          {bankTransaction.account_institution?.name && `${bankTransaction.account_institution.name} — `}
+          {bankTransaction.account_name}
+          {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
+        </Span>
+    );
+  }, [
+    bankTransaction.account_institution?.name,
+    bankTransaction.account_name,
+    bankTransaction.account_mask
+  ]);
+
   useEffect(() => {
     if (transactionIdToOpen && transactionIdToOpen === bankTransaction.id) {
       setOpen(true)
@@ -205,18 +219,10 @@ export const BankTransactionMobileListItem = ({
               {categorized && bankTransaction.categorization_status
                 ? getAssignedValue(bankTransaction, renderInAppLink)
                 : null}
-              <span>{!categorized && bankTransaction.account_name}</span>
+              <span>{!categorized && fullAccountName }</span>
               {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
             </Text>
-            {categorized && (
-              <Span ellipsis>
-                {[bankTransaction.account_institution?.name,
-                  bankTransaction.account_name,
-                  bankTransaction.account_mask]
-                  .filter(Boolean)
-                  .join(' ')}
-              </Span>
-            )}
+            {categorized && fullAccountName}
             {!categorizationEnabled && !categorized
               ? <BankTransactionProcessingInfo />
               : null}
