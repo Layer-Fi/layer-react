@@ -5,8 +5,8 @@
 
   &--sm {
     flex-direction: row;
-    align-items: center;
     gap: var(--spacing-3xs);
+    align-items: center;
   }
 
   &[data-status='overdue'] {

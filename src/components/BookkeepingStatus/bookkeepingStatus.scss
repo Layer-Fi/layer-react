@@ -1,39 +1,39 @@
 .Layer__bookkeeping-status {
-  white-space: nowrap;
   display: flex;
-  align-items: center;
   gap: var(--spacing-3xs);
+  align-items: center;
+  white-space: nowrap;
 
   .Layer__bookkeeping-status__icon-wrapper {
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-info-fg);
-    background: var(--color-info-bg);
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
     margin-top: -1px;
+    background: var(--color-info-bg);
+    color: var(--color-info-fg);
   }
 
   &[data-status='warning'] {
     .Layer__bookkeeping-status__icon-wrapper {
-      color: var(--color-info-warning-fg);
       background: var(--color-info-warning-bg);
+      color: var(--color-info-warning-fg);
     }
   }
 
   &[data-status='success'] {
     .Layer__bookkeeping-status__icon-wrapper {
-      color: var(--color-info-success-fg);
       background: var(--color-info-success-bg);
+      color: var(--color-info-success-fg);
     }
   }
 
   &[data-status='error'] {
     .Layer__bookkeeping-status__icon-wrapper {
-      color: var(--color-info-error-fg);
       background: var(--color-info-error-bg);
+      color: var(--color-info-error-fg);
     }
   }
 }
