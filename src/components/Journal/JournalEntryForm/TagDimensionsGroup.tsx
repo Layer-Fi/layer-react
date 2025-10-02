@@ -1,7 +1,6 @@
 import { TagDimensionCombobox } from '../../../features/tags/components/TagDimensionCombobox'
 import { Tag } from '../../../features/tags/tagSchemas'
-import { FallbackWithSkeletonLoader } from '../../../components/SkeletonLoader/SkeletonLoader'
-import { useTagDimensions } from '../../../features/tags/api/useTagDimensions'
+import { useLayerContext } from '../../../contexts/LayerContext'
 
 const JOURNAL_ENTRY_FORM_CSS_PREFIX = 'Layer__JournalEntryForm'
 
@@ -20,7 +19,7 @@ export const TagDimensionsGroup = ({
   isReadOnly = false,
   isEnabled = true,
 }: TagDimensionsGroupProps) => {
-  const { data: tagDimensions, isLoading, isError } = useTagDimensions({ isEnabled })
+  const { accountingConfiguration } = useLayerContext()
 
   const handleTagValueChange = (dimensionKey: string) => (newTag: Tag | null) => {
     const filteredTags = value.filter(tag =>
@@ -42,27 +41,9 @@ export const TagDimensionsGroup = ({
     return null
   }
 
-  if (isLoading) {
-    return (
-      <>
-        <div
-          key='loader'
-          className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field ${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Field--tag`}
-          style={{ minWidth: '12rem' }}
-        >
-          <FallbackWithSkeletonLoader isLoading={true} height='2.5rem' width='100%' />
-        </div>
-      </>
-    )
-  }
-
-  if (isError) {
-    return null
-  }
-
   return (
     <>
-      {(tagDimensions ?? []).map(dimension => (
+      {(accountingConfiguration?.platformDisplayTags ?? []).map(dimension => (
         <TagDimensionCombobox
           key={dimension.key}
           dimensionKey={dimension.key}
