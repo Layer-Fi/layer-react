@@ -191,7 +191,7 @@ function buildCustomPlaceholder({ placeholder }: { placeholder?: string }) {
         {...restProps}
         className={COMBO_BOX_CLASS_NAMES.PLACEHOLDER}
       >
-        <Span variant='placeholder'>{placeholder}</Span>
+        <Span variant='placeholder' ellipsis>{placeholder}</Span>
       </components.Placeholder>
     )
   }

@@ -561,6 +561,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                               isInvalid={split.amount < 0}
                               inputMode='numeric'
                               errorMessage='Negative values are not allowed'
+                              className={`${className}__table-cell--split-entry__amount`}
                             />
                             <CategorySelect
                               bankTransaction={bankTransaction}
@@ -580,28 +581,32 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                                 <TagDimensionsGroup
                                   value={split.tags}
                                   onChange={tags => changeTags(index, tags)}
-                                  showLabels={index === 0}
+                                  showLabels={false}
                                   isReadOnly={!categorizationEnabled}
                                 />
                               </div>
                             )}
                             {showCustomerVendor && (
-                              <CustomerVendorSelector
-                                selectedCustomerVendor={split.customerVendor}
-                                onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
-                                placeholder='Set customer or vendor'
-                                isReadOnly={!categorizationEnabled}
-                                showLabel={index === 0}
-                              />
+                              <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__customer'>
+                                <CustomerVendorSelector
+                                  selectedCustomerVendor={split.customerVendor}
+                                  onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
+                                  placeholder='Set customer or vendor'
+                                  isReadOnly={!categorizationEnabled}
+                                  showLabel={false}
+                                />
+                              </div>
                             )}
-                            <Button
-                              onPress={() => removeSplit(index)}
-                              variant='outlined'
-                              icon
-                              isDisabled={index == 0}
-                            >
-                              <Trash size={18} />
-                            </Button>
+                            <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__button'>
+                              <Button
+                                onPress={() => removeSplit(index)}
+                                variant='outlined'
+                                icon
+                                isDisabled={index == 0}
+                              >
+                                <Trash size={18} />
+                              </Button>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -653,8 +658,8 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                 <BankTransactionFormFields
                   bankTransaction={bankTransaction}
                   showDescriptions={showDescriptions}
-                  hideTags={purpose === Purpose.categorize || rowState.splits.length > 1}
-                  hideCustomerVendor={purpose === Purpose.categorize || rowState.splits.length > 1}
+                  hideTags={purpose === Purpose.categorize}
+                  hideCustomerVendor={purpose === Purpose.categorize}
                 />
 
                 {showReceiptUploads && (

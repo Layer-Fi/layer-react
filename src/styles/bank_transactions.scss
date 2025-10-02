@@ -297,7 +297,7 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   min-width: 40rem;
-  max-width: 60rem;
+  max-width: 64rem;
 }
 
 .Layer__expanded-bank-transaction-row__content-panels {
@@ -323,6 +323,7 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   overflow: hidden;
+  height: 0;
   max-width: 0;
   opacity: 0;
   transition:
@@ -335,6 +336,7 @@
   }
 
   &.Layer__expanded-bank-transaction-row__content-panel--active {
+    height: auto;
     max-width: 100%;
     opacity: 1;
   }
@@ -411,7 +413,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
   padding-top: 2px;
 }
 
@@ -500,18 +502,38 @@
 }
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry {
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: center;
+  display: grid;
+  grid-template-areas:
+    'amount category category button'
+    'customer tags tags .';
+  grid-template-columns: minmax(8rem, 12rem) minmax(12rem, 16rem) 1fr auto;
+
+  gap: var(--spacing-xs);
+
+  align-items: start;
+  max-width: 40rem;
 
   .Layer__category-menu--full {
-    min-width: 14rem;
-    max-width: 14rem;
+    grid-area: category;
+    width: 100%;
+  }
+
+  &__amount {
+    grid-area: amount;
+  }
+
+  &__customer {
+    grid-area: customer;
+  }
+
+  &__button {
+    grid-area: button;
   }
 }
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry__tags {
   display: flex;
+  grid-area: tags;
   gap: var(--spacing-sm);
 
   .Layer__JournalEntryForm__Field--tag {
@@ -946,7 +968,7 @@
 .Layer__expanded-bank-transaction-row__match-table {
   display: grid;
   grid-template-columns: 120px minmax(0, 1fr) 100px max-content;
-  gap: 0;
+  gap: var(--spacing-xs) 0;
   max-width: 40rem;
   margin-bottom: var(--spacing-sm);
 
@@ -1273,12 +1295,11 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
     width: 100%;
   }
 
   .Layer__expanded-bank-transaction-row__table-cell--split-entry {
-    gap: var(--spacing-sm);
     width: 100%;
 
     input {
