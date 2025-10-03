@@ -1,5 +1,5 @@
 import { pipe, Schema } from 'effect/index'
-import { CategorizationSchema } from '../categorization'
+import { ClassificationSchema } from '../categorization'
 import { MatchSchema, SuggestedMatchSchema } from './match'
 import { CustomerSchema } from '../customer'
 import { VendorSchema } from '../vendor'
@@ -26,8 +26,8 @@ export const InputStrategySchema = Schema.Enums(InputStrategy)
 
 export const CategorizationFlowSchema = Schema.Struct({
   type: InputStrategySchema,
-  category: Schema.optional(Schema.NullOr(CategorizationSchema)),
-  suggestions: Schema.Array(CategorizationSchema),
+  category: Schema.optional(Schema.NullOr(ClassificationSchema)),
+  suggestions: Schema.Array(ClassificationSchema),
 })
 
 export const BankTransactionSchema = Schema.Struct({
