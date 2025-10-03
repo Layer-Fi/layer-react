@@ -18,6 +18,7 @@ export interface JournalEntryLineItemsTableProps {
   showTags?: boolean
 }
 
+const EMPTY_ARRAY: never[] = []
 export const JournalEntryLineItemsTable = ({
   form,
   isReadOnly,
@@ -25,7 +26,7 @@ export const JournalEntryLineItemsTable = ({
   direction,
   showTags = false,
 }: JournalEntryLineItemsTableProps) => {
-  const lineItems = useStore(form.store, state => state.values.lineItems) || []
+  const lineItems = useStore(form.store, state => state.values.lineItems || EMPTY_ARRAY)
 
   const filteredIndices = useMemo(() => {
     const indices: number[] = []

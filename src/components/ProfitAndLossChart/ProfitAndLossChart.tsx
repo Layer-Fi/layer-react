@@ -363,8 +363,10 @@ export const ProfitAndLossChart = ({
     }
 
     if (activePayload && activePayload.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const { year, month } = activePayload[0].payload
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const selectedDate = new Date(year, month - 1, 1)
       const isMonthAllowed = isDateAllowedToBrowse(selectedDate, business)
 

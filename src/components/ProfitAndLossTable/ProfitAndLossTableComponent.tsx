@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect } from 'react'
+import { Fragment, useContext } from 'react'
 import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { TableCellAlign } from '../../types/table'
 import { Loader } from '../Loader'
@@ -9,6 +9,7 @@ import classNames from 'classnames'
 import { BreadcrumbItem } from '../DetailReportBreadcrumb/DetailReportBreadcrumb'
 import type { LineItem } from '../../utils/schema/utils'
 import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { useEffectOnMount } from '../../hooks/useEffectOnMount/useEffectOnMount'
 
 export interface ProfitAndLossTableStringOverrides {
   grossProfitLabel?: string
@@ -32,9 +33,9 @@ export const ProfitAndLossTableComponent = ({
 
   const { isOpen, setIsOpen } = useTableExpandRow()
 
-  useEffect(() => {
+  useEffectOnMount(() => {
     setIsOpen(['income', 'cost_of_goods_sold', 'expenses', 'other_activity'])
-  }, [])
+  })
 
   if (isLoading || !data) {
     return (

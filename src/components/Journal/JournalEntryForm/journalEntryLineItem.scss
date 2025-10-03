@@ -1,7 +1,7 @@
 .Layer__JournalEntryForm__LineItem {
   display: flex;
-  align-items: flex-end;
   gap: var(--spacing-xs);
+  align-items: flex-end;
 
   .Layer__JournalEntryForm__Field {
     &--accountName {
@@ -22,7 +22,6 @@
     &--memo {
       flex: 2 1 12rem;
     }
-
   }
 
   &--readonly .Layer__JournalEntryForm__Field--removeButton {
@@ -30,11 +29,11 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .Layer__JournalEntryForm__LineItem {
     flex-direction: column;
-    align-items: stretch;
     gap: var(--spacing-sm);
+    align-items: stretch;
 
     .Layer__JournalEntryForm__Field {
       flex: 1 1 auto;

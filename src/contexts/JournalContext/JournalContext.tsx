@@ -3,10 +3,10 @@ import { useJournal } from '../../hooks/useJournal'
 
 export type JournalContextType = ReturnType<typeof useJournal>
 export const JournalContext = createContext<JournalContextType>({
-  refetch: () => {},
+  refetch: () => Promise.resolve(undefined),
   setSelectedEntryId: () => {},
   closeSelectedEntry: () => {},
-  create: () => {},
+  create: () => Promise.resolve(undefined),
   changeFormData: () => {},
   submitForm: () => {},
   cancelForm: () => {},

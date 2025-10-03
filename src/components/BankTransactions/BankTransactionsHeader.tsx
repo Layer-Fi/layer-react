@@ -83,6 +83,7 @@ const DownloadButton = ({
   const { filters } = useBankTransactionsContext()
 
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { trigger, isMutating, error } = useBankTransactionsDownload()
 
   const handleClick = () => {

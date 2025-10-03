@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useCallback, useContext } from 'react'
 import { TableContext } from '../../contexts/TableContext'
 
 export const useTableExpandRow = () => {
@@ -10,17 +10,7 @@ export const useTableExpandRow = () => {
     setExpandedRows,
   } = useContext(TableContext)
 
-  const toggleAllRows = () => {
-    if (expandedAllRows) {
-      setIsOpen([])
-      return setExpandedAllRows(false)
-    }
-    else {
-      return setExpandedAllRows(true)
-    }
-  }
-
-  const setIsOpen = (
+  const setIsOpen = useCallback((
     rowKey: string | string[],
     withoutAllRowsUpdate?: boolean,
   ) => {
@@ -31,9 +21,19 @@ export const useTableExpandRow = () => {
       return expandAllRows(rowKey)
     }
     return setExpandedRows(rowKey)
-  }
+  }, [expandAllRows, expandedAllRows, setExpandedAllRows, setExpandedRows])
 
-  const isOpen = (rowKey: string) => expandedRows.includes(rowKey)
+  const toggleAllRows = useCallback(() => {
+    if (expandedAllRows) {
+      setIsOpen([])
+      return setExpandedAllRows(false)
+    }
+    else {
+      return setExpandedAllRows(true)
+    }
+  }, [expandedAllRows, setExpandedAllRows, setIsOpen])
+
+  const isOpen = useCallback((rowKey: string) => expandedRows.includes(rowKey), [expandedRows])
 
   return {
     isOpen,

@@ -61,7 +61,7 @@ export const TagDimensionCombobox = ({
   className,
   isClearable = true,
 }: TagDimensionComboboxProps) => {
-  const { data: tagDimension, isLoading, isError } = useTagDimensionByKey({ dimensionKey })
+  const { data: tagDimension, isLoading } = useTagDimensionByKey({ dimensionKey })
 
   const options = useMemo(() => {
     if (!tagDimension) return []

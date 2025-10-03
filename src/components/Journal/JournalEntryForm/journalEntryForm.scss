@@ -2,9 +2,9 @@
   padding-top: var(--spacing-xl);
 
   .Layer__JournalEntryForm__Row {
-    padding: 0 var(--spacing-xl);
     display: flex;
     gap: var(--spacing-md);
+    padding: 0 var(--spacing-xl);
 
     > * {
       flex: 0 0 clamp(16rem, 100%, 24rem);

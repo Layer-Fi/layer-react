@@ -83,7 +83,7 @@ export type SplitCategoryUpdate = {
   entries: {
     category: string | AccountIdentifierPayloadObject
     amount: number
-    tags?: Array<{ key: string; value: string }>
+    tags?: Array<{ key: string, value: string }>
     customer_id?: string | null
     vendor_id?: string | null
   }[]

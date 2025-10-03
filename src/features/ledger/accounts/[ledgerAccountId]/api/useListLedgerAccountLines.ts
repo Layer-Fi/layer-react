@@ -25,7 +25,7 @@ type GetLedgerAccountLinesParams = {
   show_total_count?: boolean
 }
 
-type ListLedgerAccountLinesReturn = {
+export type ListLedgerAccountLinesReturn = {
   data: LedgerAccountLineItems
   meta?: {
     pagination: {

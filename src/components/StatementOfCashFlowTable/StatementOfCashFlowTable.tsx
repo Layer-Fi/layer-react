@@ -59,15 +59,15 @@ export const StatementOfCashFlowTable = ({
           </TableCell>
         </TableRow>
         {expanded
-        && lineItem.line_items
-        && lineItem.line_items.map((subItem, subIdx) =>
-          renderLineItem(
-            subItem,
-            depth + 1,
-            rowKey + ':' + subItem.name,
-            subIdx,
-          ),
-        )}
+          && lineItem.line_items
+          && lineItem.line_items.map((subItem, subIdx) =>
+            renderLineItem(
+              subItem,
+              depth + 1,
+              rowKey + ':' + subItem.name,
+              subIdx,
+            ),
+          )}
         {expanded && expandable && (
           <TableRow
             rowKey={rowKey + '-' + rowIndex + '--summation'}
@@ -102,12 +102,12 @@ export const StatementOfCashFlowTable = ({
             return (
               <Fragment key={row.lineItem}>
                 {data[row.lineItem as keyof StatementOfCashFlow]
-                && renderLineItem(
-                  data[row.lineItem as keyof StatementOfCashFlow] as LineItem,
-                  0,
-                  row.lineItem ? row.lineItem : '',
-                  idx,
-                )}
+                  && renderLineItem(
+                    data[row.lineItem as keyof StatementOfCashFlow] as LineItem,
+                    0,
+                    row.lineItem ? row.lineItem : '',
+                    idx,
+                  )}
               </Fragment>
             )
           }

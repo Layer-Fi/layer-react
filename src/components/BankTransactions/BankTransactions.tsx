@@ -147,7 +147,7 @@ const BankTransactionsContent = ({
   const {
     data,
     isLoading,
-    error,
+    isError,
     refetch,
     setFilters,
     filters,
@@ -171,6 +171,7 @@ const BankTransactionsContent = ({
     if (!isMonthlyViewMode && filters?.dateRange) {
       setFilters({ ...filters, dateRange: undefined })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMonthlyViewMode])
 
   useEffect(() => {
@@ -223,6 +224,7 @@ const BankTransactionsContent = ({
         categorizationStatus: DisplayState.categorized,
       })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputFilters, categorizeView, categorizationEnabled])
 
   useEffect(() => {
@@ -242,9 +244,9 @@ const BankTransactionsContent = ({
   ) => {
     setFilters({
       categorizationStatus:
-        event.target.value === DisplayState.categorized
+        event.target.value === 'categorized'
           ? DisplayState.categorized
-          : event.target.value === DisplayState.all
+          : event.target.value === 'all'
             ? DisplayState.all
             : DisplayState.review,
     })
@@ -389,7 +391,7 @@ const BankTransactionsContent = ({
           <BankTransactionsTableEmptyStates
             hasVisibleTransactions={(bankTransactions?.length ?? 0) > 0}
             isCategorizationMode={editable}
-            isError={Boolean(error)}
+            isError={isError}
             isFiltered={Boolean(filters?.query)}
             isLoadingWithoutData={isLoadingWithoutData}
           />

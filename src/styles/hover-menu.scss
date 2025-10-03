@@ -6,7 +6,7 @@
   &.Layer__hover-menu--open {
     .Layer__hover-menu__list-wrapper {
       top: 100%;
-      right: 0px;
+      right: 0;
       opacity: 1;
       touch-action: auto;
       pointer-events: auto;
@@ -17,8 +17,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
     width: 100%;
+    cursor: pointer;
   }
 
   .Layer__hover-menu__list-wrapper {
@@ -26,60 +26,60 @@
     z-index: 99;
     top: 80%;
     right: -8px;
-    padding-top: var(--spacing-xs);
+    display: flex;
+    justify-content: stretch;
     min-width: 160px;
+    padding-top: var(--spacing-xs);
     touch-action: none;
     pointer-events: none;
     opacity: 0;
-    display: flex;
-    justify-content: stretch;
     transition: all 0.15s ease-out;
 
     .Layer__hover-menu__list {
-      flex: 1;
+      box-sizing: border-box;
       display: flex;
+      flex: 1;
       flex-direction: column;
       gap: var(--spacing-3xs);
-      border-radius: var(--spacing-xs);
-      background: var(--color-base-0);
-      box-shadow:
-        0px 0px 0px 1px rgba(25, 25, 25, 0.06),
-        0px 4px 12px 0px var(--base-transparent-1, rgba(16, 24, 40, 0.01)),
-        0px 2px 4px 0px rgba(25, 25, 25, 0.06);
-      box-sizing: border-box;
-      margin: 0;
       padding: var(--spacing-3xs);
+      border-radius: var(--spacing-xs);
+      box-shadow:
+        0 0 0 1px rgb(25 25 25 / 6%),
+        0 4px 12px 0 var(--base-transparent-1, rgb(16 24 40 / 1%)),
+        0 2px 4px 0 rgb(25 25 25 / 6%);
+      margin: 0;
+      background: var(--color-base-0);
       list-style: none;
 
       .Layer__hover-menu__list-item {
+        display: flex;
+        align-items: center;
         padding: var(--spacing-3xs);
         padding-left: var(--spacing-xs);
         border-radius: var(--spacing-2xs);
         color: var(--color-base-500);
         transition: all 0.2s ease-in-out;
-        display: flex;
-        align-items: center;
 
-      .Layer__hover-menu__list-item-button {
-          text-align: start;
-          background: none;
+        .Layer__hover-menu__list-item-button {
+          width: 100%;
           border: none;
           outline: none;
-          color: inherit;
-          font-size: var(--text-sm);
-          font-family: inherit;
-          font-feature-settings: inherit;
-          font-weight: 500;
-          width: 100%;
-          line-height: normal;
-          letter-spacing: -0.06px;
+          background: none;
           cursor: pointer;
+          font-size: var(--text-sm);
+          line-height: normal;
+          font-family: inherit;
+          font-weight: 500;
+          text-align: start;
+          color: inherit;
+          font-feature-settings: inherit;
+          letter-spacing: -0.06px;
         }
 
         &:hover {
           background: var(--color-base-50);
-          color: var(--color-base-800);
           font-weight: 540;
+          color: var(--color-base-800);
         }
       }
     }

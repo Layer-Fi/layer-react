@@ -12,7 +12,7 @@ import {
 import { getAccountIdentifierPayload } from '../../utils/journal'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useListLedgerEntries } from '../../features/ledger/entries/api/useListLedgerEntries'
+import { useListLedgerEntries, type ListLedgerEntriesReturn } from '../../features/ledger/entries/api/useListLedgerEntries'
 import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
 import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
 import { LedgerAccountBalance } from '../../types/journal'
@@ -25,11 +25,11 @@ type UseJournal = () => {
   isValidatingEntry?: boolean
   error?: unknown
   errorEntry?: unknown
-  refetch: () => void
+  refetch: () => Promise<ListLedgerEntriesReturn[] | undefined>
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void
   closeSelectedEntry: () => void
-  create: (newJournalEntry: NewApiJournalEntry) => void
+  create: (newJournalEntry: NewApiJournalEntry) => Promise<void>
   changeFormData: (
     name: string,
     value: string | BaseSelectOption | undefined | number,
@@ -135,6 +135,7 @@ export const useJournal: UseJournal = () => {
     data: paginatedData,
     isLoading,
     isValidating,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error,
     mutate,
     size,
@@ -164,7 +165,7 @@ export const useJournal: UseJournal = () => {
 
   const fetchMore = useCallback(() => {
     if (hasMore) {
-      setSize(size + 1)
+      void setSize(size + 1)
     }
   }, [hasMore, setSize, size])
 

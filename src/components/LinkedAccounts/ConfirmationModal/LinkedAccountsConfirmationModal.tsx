@@ -120,6 +120,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     accounts.map(({ id }) => [id, true]),
   ))
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { trigger, isMutating, error } = useConfirmAndExcludeMultiple({ onSuccess: refetchAccounts })
   const hasError = Boolean(error)
 

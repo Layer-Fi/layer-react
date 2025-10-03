@@ -53,7 +53,7 @@ export const ChartOfAccountsForm = ({
     }
 
     return
-  }, [data, form?.accountId])
+  }, [data?.accounts, form?.accountId, form?.action])
 
   if (!form) {
     return null

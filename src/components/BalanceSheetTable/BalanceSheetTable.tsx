@@ -3,6 +3,7 @@ import { useTableExpandRow } from '../../hooks/useTableExpandRow'
 import { BalanceSheet, LineItem } from '../../types'
 import { TableCellAlign } from '../../types/table'
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../Table'
+import { useEffectOnMount } from '../../hooks/useEffectOnMount/useEffectOnMount'
 
 export interface BalanceSheetTableStringOverrides {
   typeColumnHeader?: string
@@ -31,11 +32,12 @@ export const BalanceSheetTable = ({
     if (expandedAllRows) {
       setIsOpen(allRowKeys, true)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expandedAllRows])
 
-  useEffect(() => {
+  useEffectOnMount(() => {
     setIsOpen(['assets'])
-  }, [])
+  })
 
   const renderLineItem = (
     lineItem: LineItem,

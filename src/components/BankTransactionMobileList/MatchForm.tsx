@@ -62,7 +62,7 @@ export const MatchForm = ({
       selectedMatchId
       && selectedMatchId !== isAlreadyMatched(bankTransaction)
     ) {
-      onMatchSubmit(selectedMatchId)
+      await onMatchSubmit(selectedMatchId)
     }
     return
   }
@@ -121,7 +121,7 @@ export const MatchForm = ({
               || bankTransaction.processing
               || selectedMatchId === isAlreadyMatched(bankTransaction)
             }
-            onClick={save}
+            onClick={() => { void save() }}
           >
             {isLoading || bankTransaction.processing
               ? 'Saving...'
