@@ -1,4 +1,4 @@
-name: TypeScript Type Check
+name: TypeScript
 
 on:
   pull_request:
@@ -20,5 +20,5 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Run type check
+    - name: Run typecheck
       run: npm run typecheck
