@@ -20,18 +20,26 @@ export const buildDecimalCharRegex = ({
 }
 
 /**
- * Converts a BigDecimal dollar amount to its equivalent in cents as a number.
- * Example: 123.45 → 12345
+ * Converts a BigDecimal dollar amount to its equivalent in cents as a bigint.
+ * Example: 123.45 → 12345n
  */
-export const convertBigDecimalToCents = (amount: BD.BigDecimal): number => {
+export const convertBigDecimalToBigIntCents = (amount: BD.BigDecimal): bigint => {
   // Multiply the amount by 100 to get the value in cents
   const scaled = BD.multiply(amount, BIG_DECIMAL_ONE_HUNDRED)
 
   // Round to the nearest whole number (zero decimal places)
   const rounded = BD.round(scaled, { scale: 0 })
 
-  // Extract the value of the BigDecimal and convert from bigint to number
-  return Number(rounded.value)
+  // Extract the value of the BigDecimal as bigint
+  return rounded.value
+}
+
+/**
+ * Converts a BigDecimal dollar amount to its equivalent in cents as a number.
+ * Example: 123.45 → 12345
+ */
+export const convertBigDecimalToCents = (amount: BD.BigDecimal): number => {
+  return Number(convertBigDecimalToBigIntCents(amount))
 }
 
 export const convertBigIntCentsToBigDecimal = (cents: bigint): BD.BigDecimal => {

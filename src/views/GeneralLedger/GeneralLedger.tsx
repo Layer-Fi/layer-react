@@ -24,6 +24,8 @@ export interface ChartOfAccountsOptions {
 export interface GeneralLedgerProps {
   title?: string // deprecated
   showTitle?: boolean
+  showTags?: boolean
+  showCustomerVendor?: boolean
   stringOverrides?: GeneralLedgerStringOverrides
   chartOfAccountsOptions?: ChartOfAccountsOptions
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
@@ -32,6 +34,8 @@ export interface GeneralLedgerProps {
 export const GeneralLedgerView = ({
   title, // deprecated
   showTitle = true,
+  showTags = true,
+  showCustomerVendor = true,
   stringOverrides,
   chartOfAccountsOptions,
   renderInAppLink,
@@ -78,6 +82,8 @@ export const GeneralLedgerView = ({
           )
           : (
             <Journal
+              showTags={showTags}
+              showCustomerVendor={showCustomerVendor}
               stringOverrides={stringOverrides?.journal}
               renderInAppLink={renderInAppLink}
             />

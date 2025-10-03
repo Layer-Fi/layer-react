@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState, useRef } from 'react'
 import { useStore, revalidateLogic } from '@tanstack/react-form'
-import { useAppForm } from '../../../features/forms/hooks/useForm'
+import { useRawAppForm } from '../../../features/forms/hooks/useForm'
 import { UpsertInvoiceSchema, type Invoice, type InvoiceForm } from '../../../features/invoices/invoiceSchemas'
 import { useUpsertInvoice, UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
 import { Schema } from 'effect'
@@ -13,6 +13,11 @@ import {
   computeTaxes,
 } from './totalsUtils'
 import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, getInvoiceFormInitialValues, validateInvoiceForm } from './formUtils'
+import { useInvoicesContext } from '../../../contexts/InvoicesContext/InvoicesContext'
+import {
+  type FormValidateOrFn,
+  type FormAsyncValidateOrFn,
+} from '@tanstack/react-form'
 
 type onSuccessFn = (invoice: Invoice) => void
 type UseInvoiceFormProps =
@@ -23,9 +28,34 @@ function isUpdateMode(props: UseInvoiceFormProps): props is { onSuccess: onSucce
   return props.mode === UpsertInvoiceMode.Update
 }
 
+export type InvoiceFormMeta = {
+  submitAction: 'send' | null
+}
+
+export type InvoiceFormType = ReturnType<typeof useRawAppForm<
+  InvoiceForm,
+  FormValidateOrFn<InvoiceForm>,
+  FormValidateOrFn<InvoiceForm>,
+  FormAsyncValidateOrFn<InvoiceForm>,
+  FormValidateOrFn<InvoiceForm>,
+  FormAsyncValidateOrFn<InvoiceForm>,
+  FormValidateOrFn<InvoiceForm>,
+  FormAsyncValidateOrFn<InvoiceForm>,
+  FormValidateOrFn<InvoiceForm>,
+  FormAsyncValidateOrFn<InvoiceForm>,
+  FormAsyncValidateOrFn<InvoiceForm>,
+  InvoiceFormMeta
+>>
+
+const onSubmitMeta: InvoiceFormMeta = {
+  submitAction: null,
+}
+
 export const useInvoiceForm = (props: UseInvoiceFormProps) => {
-  const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, mode } = props
+
+  const [submitError, setSubmitError] = useState<string | undefined>(undefined)
+  const { onSendInvoice } = useInvoicesContext()
 
   const upsertInvoiceProps = mode === UpsertInvoiceMode.Update ? { mode, invoiceId: props.invoice.id } : { mode }
   const { trigger: upsertInvoice } = useUpsertInvoice(upsertInvoiceProps)
@@ -37,7 +67,7 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   )
   const defaultValues = defaultValuesRef.current
 
-  const onSubmit = useCallback(async ({ value }: { value: InvoiceForm }) => {
+  const onSubmit = useCallback(async ({ value, meta }: { value: InvoiceForm, meta: InvoiceFormMeta }) => {
     try {
       // Convert the `InvoiceForm` schema to the request shape for `upsertInvoice`. This will
       // throw an error if the request shape is not valid.
@@ -48,20 +78,38 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
 
       setSubmitError(undefined)
       onSuccess(invoice)
+
+      if (meta.submitAction === 'send' && onSendInvoice) {
+        await onSendInvoice(invoice.id)
+      }
     }
     catch (e) {
       console.error(e)
       setSubmitError('Something went wrong. Please try again.')
     }
-  }, [onSuccess, upsertInvoice])
+  }, [onSendInvoice, onSuccess, upsertInvoice])
 
   const validators = useMemo(() => ({
     onDynamic: validateInvoiceForm,
   }), [])
 
-  const form = useAppForm<InvoiceForm>({
+  const form = useRawAppForm<
+    InvoiceForm,
+    FormValidateOrFn<InvoiceForm>,
+    FormValidateOrFn<InvoiceForm>,
+    FormAsyncValidateOrFn<InvoiceForm>,
+    FormValidateOrFn<InvoiceForm>,
+    FormAsyncValidateOrFn<InvoiceForm>,
+    FormValidateOrFn<InvoiceForm>,
+    FormAsyncValidateOrFn<InvoiceForm>,
+    FormValidateOrFn<InvoiceForm>,
+    FormAsyncValidateOrFn<InvoiceForm>,
+    FormAsyncValidateOrFn<InvoiceForm>,
+    InvoiceFormMeta
+  >({
     defaultValues,
     onSubmit,
+    onSubmitMeta,
     validators,
     validationLogic: revalidateLogic({
       mode: 'submit',

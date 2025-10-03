@@ -8,19 +8,29 @@ import {
   useBankTransactionsOptimisticUpdater,
 } from '../../../../../hooks/useBankTransactions/useBankTransactions'
 import { v4 as uuidv4 } from 'uuid'
+import type { TransactionTagEncoded } from '../../../../tags/tagSchemas'
 
 const TAG_BANK_TRANSACTION_TAG_KEY = '#tag-bank-transaction'
 
 type TagBankTransactionBody = {
   key_values: ReadonlyArray<{
     key: string
+    dimension_display_name?: string | null
     value: string
+    value_display_name?: string | null
   }>
   transaction_ids: ReadonlyArray<string>
 }
 
+type TagBankTransactionResponse = {
+  data: {
+    type: string
+    tags: ReadonlyArray<TransactionTagEncoded>
+  }
+}
+
 const tagBankTransaction = post<
-  Record<string, never>,
+  TagBankTransactionResponse,
   TagBankTransactionBody,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/tags`)
@@ -49,7 +59,9 @@ function buildKey({
 
 type TagBankTransactionArg = {
   key: string
+  dimensionDisplayName?: string | null
   value: string
+  valueDisplayName?: string | null
 }
 
 type TagBankTransactionOptions = {
@@ -68,14 +80,14 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
     }),
     (
       { accessToken, apiUrl, businessId, bankTransactionId },
-      { arg: { key, value } }: { arg: TagBankTransactionArg },
+      { arg: { key, value, dimensionDisplayName, valueDisplayName } }: { arg: TagBankTransactionArg },
     ) => tagBankTransaction(
       apiUrl,
       accessToken,
       {
         params: { businessId },
         body: {
-          key_values: [{ key, value }],
+          key_values: [{ key, dimension_display_name: dimensionDisplayName, value, value_display_name: valueDisplayName }],
           transaction_ids: [bankTransactionId],
         },
       },
@@ -93,14 +105,12 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResultPromise = originalTrigger(...triggerParameters)
+      const { key, value, dimensionDisplayName, valueDisplayName } = triggerParameters[0]
+      const optimisticTagId = uuidv4()
 
+      // Add optimistic tag immediately
       void optimisticallyUpdateBankTransactions((bankTransaction) => {
         if (bankTransaction.id === bankTransactionId) {
-          const { key, value } = triggerParameters[0]
-
-          const optimisticTagId = uuidv4()
-
           const now = new Date()
           const nowISOString = now.toISOString()
 
@@ -114,6 +124,8 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
                 value,
                 created_at: nowISOString,
                 updated_at: nowISOString,
+                dimension_display_name: dimensionDisplayName,
+                value_display_name: valueDisplayName,
                 archived_at: null,
                 deleted_at: null,
 
@@ -128,12 +140,14 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
         return bankTransaction
       })
 
-      return triggerResultPromise
-        .finally(() => {
-          void debouncedInvalidateBankTransactions({
-            withPrecedingOptimisticUpdate: true,
-          })
-        })
+      // Wait for the API response and replace optimistic tag with real one
+      const response = await originalTrigger(...triggerParameters)
+
+      void debouncedInvalidateBankTransactions({
+        withPrecedingOptimisticUpdate: true,
+      })
+
+      return response
     },
     [
       bankTransactionId,

@@ -16,7 +16,7 @@ import { ComboBox } from '../../ui/ComboBox/ComboBox'
 import { startOfToday, endOfYesterday } from 'date-fns'
 import { InvoiceStatusCell } from '../InvoiceStatusCell/InvoiceStatusCell'
 import { Container } from '../../Container'
-import { useInvoiceTableFilters, useInvoiceNavigation, type InvoiceTableFilters } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
+import { useInvoiceTableFilters, useInvoiceNavigation, type InvoiceTableFilters } from '../../../providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useDebouncedSearchInput } from '../../../hooks/search/useDebouncedSearchQuery'
 import { getCustomerName } from '../../../features/customers/util'
 

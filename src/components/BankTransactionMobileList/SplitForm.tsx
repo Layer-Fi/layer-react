@@ -15,6 +15,8 @@ import {
 import { getCategorizePayload, hasReceipts } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
+import { Tag, makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
+import { decodeCustomerVendor, CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
 import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
 import {
@@ -31,6 +33,8 @@ type Split = {
   amount: number
   inputValue: string
   category: CategoryOption | undefined
+  tags: readonly Tag[]
+  customerVendor: typeof CustomerVendorSchema.Type | null
 }
 
 type RowState = {
@@ -64,19 +68,48 @@ export const SplitForm = ({
     || (hasSuggestions(bankTransaction.categorization_flow)
       && bankTransaction.categorization_flow?.suggestions?.[0])
 
+  const initialCustomerVendor = bankTransaction.customer
+    ? decodeCustomerVendor({ ...bankTransaction.customer, customerVendorType: 'CUSTOMER' })
+    : bankTransaction.vendor
+      ? decodeCustomerVendor({ ...bankTransaction.vendor, customerVendorType: 'VENDOR' })
+      : null
+
   const [rowState, updateRowState] = useState<RowState>({
     splits: bankTransaction.category?.entries
       ? bankTransaction.category?.entries.map((c) => {
+        // Use split-specific tags/customer/vendor only (no fallback to transaction-level values when splits exist)
+        const splitTags = c.tags?.map(tag => makeTagFromTransactionTag({
+          id: tag.id,
+          key: tag.key,
+          value: tag.value,
+          dimensionDisplayName: tag.dimension_display_name,
+          valueDisplayName: tag.value_display_name,
+          createdAt: new Date(tag.created_at),
+          updatedAt: new Date(tag.updated_at),
+          deletedAt: tag.deleted_at ? new Date(tag.deleted_at) : null,
+          archivedAt: tag.archived_at ? new Date(tag.archived_at) : null,
+          _local: tag._local,
+        })) ?? []
+        const splitCustomerVendor = c.customer
+          ? decodeCustomerVendor({ ...c.customer, customerVendorType: 'CUSTOMER' })
+          : c.vendor
+            ? decodeCustomerVendor({ ...c.vendor, customerVendorType: 'VENDOR' })
+            : null
+
         return c.type === 'ExclusionSplitEntry' && c.category.type === 'ExclusionNested'
           ? {
             amount: c.amount || 0,
             inputValue: formatMoney(c.amount),
             category: mapCategoryToExclusionOption(c.category),
+            tags: splitTags,
+            customerVendor: splitCustomerVendor,
           }
           : {
             amount: c.amount || 0,
             inputValue: formatMoney(c.amount),
             category: mapCategoryToOption(c.category),
+            tags: splitTags,
+            customerVendor: splitCustomerVendor,
           }
       })
       : [
@@ -86,6 +119,8 @@ export const SplitForm = ({
           category: defaultCategory
             ? mapCategoryToOption(defaultCategory)
             : undefined,
+          tags: [],
+          customerVendor: initialCustomerVendor,
         },
         {
           amount: 0,
@@ -93,6 +128,8 @@ export const SplitForm = ({
           category: defaultCategory
             ? mapCategoryToOption(defaultCategory)
             : undefined,
+          tags: [],
+          customerVendor: initialCustomerVendor,
         },
       ],
     description: '',
@@ -168,6 +205,8 @@ export const SplitForm = ({
           category: defaultCategory
             ? mapCategoryToOption(defaultCategory)
             : undefined,
+          tags: [],
+          customerVendor: initialCustomerVendor,
         },
       ],
     })
@@ -216,6 +255,9 @@ export const SplitForm = ({
               ? getCategorizePayload(split.category)
               : '',
             amount: split.amount,
+            tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
+            customer_id: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : null,
+            vendor_id: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : null,
           })),
         } as SplitCategoryUpdate),
       true,

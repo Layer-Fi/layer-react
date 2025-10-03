@@ -23,10 +23,12 @@ export function BankTransactionTagSelector({ bankTransaction }: BankTransactionT
   } = bankTransaction
 
   const selectedTags = useMemo(
-    () => transactionTags.map(({ id, key, value, archived_at, _local }) => makeTag({
+    () => transactionTags.map(({ id, key, value, dimension_display_name, value_display_name, archived_at, _local }) => makeTag({
       id,
-      dimensionLabel: key,
-      valueLabel: value,
+      key,
+      value,
+      dimensionDisplayName: dimension_display_name,
+      valueDisplayName: value_display_name,
       archivedAt: archived_at,
       _local: {
         isOptimistic: _local?.isOptimistic ?? false,
@@ -38,8 +40,10 @@ export function BankTransactionTagSelector({ bankTransaction }: BankTransactionT
   const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId })
   const handleAddTag = useCallback((tag: TagValue) => {
     void tagBankTransaction({
-      key: tag.dimensionLabel,
-      value: tag.valueLabel,
+      key: tag.dimensionKey,
+      dimensionDisplayName: tag.dimensionDisplayName,
+      value: tag.value,
+      valueDisplayName: tag.valueDisplayName,
     })
   }, [tagBankTransaction])
 
