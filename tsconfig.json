@@ -102,5 +102,8 @@
       "dom",
       "dom.iterable"
     ]
-  }
+  },
+  "include": [
+    "src/**/*"
+  ]
 }

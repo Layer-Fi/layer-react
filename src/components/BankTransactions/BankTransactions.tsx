@@ -244,9 +244,9 @@ const BankTransactionsContent = ({
   ) => {
     setFilters({
       categorizationStatus:
-        event.target.value === 'categorized'
+        event.target.value as keyof typeof DisplayState === DisplayState.categorized
           ? DisplayState.categorized
-          : event.target.value === 'all'
+          : event.target.value as keyof typeof DisplayState === DisplayState.all
             ? DisplayState.all
             : DisplayState.review,
     })

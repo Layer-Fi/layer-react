@@ -75,7 +75,6 @@ export default tsEslint.config(
         },
       ],
       'unused-imports/no-unused-imports': 'error',
-
       'react/prop-types': 'off',
     },
   },

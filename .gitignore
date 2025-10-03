@@ -3,3 +3,4 @@ node_modules/
 .vim_backups/
 .idea/
 .vscode/
+.DS_Store
