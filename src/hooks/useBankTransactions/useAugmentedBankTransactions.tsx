@@ -3,11 +3,10 @@ import { TagFilterInput } from '../../types/tags'
 import { useLayerContext } from '../../contexts/LayerContext'
 import {
   BankTransaction,
-  CategorizationStatus,
   CategoryUpdate,
 } from '../../types'
+import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import {
-  BankTransactionMatchType,
   Direction,
   DisplayState,
 } from '../../types/bank_transactions'
@@ -122,11 +121,7 @@ export const useAugmentedBankTransactions = (
       ? BankTransactionsDateFilterMode.MonthlyView
       : undefined
 
-  const { start, end } = useGlobalDateRange({ displayMode: 'monthPicker' })
-  const globalDateRange = useMemo(() => ({
-    startDate: start,
-    endDate: end,
-  }), [start, end])
+  const globalDateRange = useGlobalDateRange({ displayMode: 'monthPicker' })
 
   const defaultDateRange = {
     startDate: startOfMonth(new Date()),
@@ -151,6 +146,7 @@ export const useAugmentedBankTransactions = (
     data: rawResponseData,
     isLoading,
     isValidating,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error: responseError,
     mutate,
     size,
@@ -321,7 +317,7 @@ export const useAugmentedBankTransactions = (
     return matchBankTransaction({
       bankTransactionId,
       match_id: suggestedMatchId,
-      type: BankTransactionMatchType.CONFIRM_MATCH,
+      type: 'Confirm_Match',
     })
       .then((match) => {
         const matchedTransaction = data?.find(({ id }) => id === match.bank_transaction.id)
@@ -408,12 +404,14 @@ export const useAugmentedBankTransactions = (
     if (isLoading || isValidating) {
       read(DataModel.BANK_TRANSACTIONS, getCacheKey(filters))
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isValidating])
 
   useEffect(() => {
     if (hasBeenTouched(getCacheKey(filters))) {
       refetch()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncTimestamps, filters])
 
   const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
@@ -434,7 +432,7 @@ export const useAugmentedBankTransactions = (
     [data, anyAccountSyncing, isLoading],
   )
 
-  let intervalId: ReturnType<typeof setInterval> | undefined = undefined
+  const intervalIdRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
 
   // calling `refetch()` directly in the `setInterval` didn't trigger actual request to API.
   // But it works when called from `useEffect`
@@ -444,29 +442,30 @@ export const useAugmentedBankTransactions = (
       refetch()
       void refetchAccounts()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger])
 
   useEffect(() => {
     if (anyAccountSyncing) {
-      intervalId = setInterval(() => {
+      intervalIdRef.current = setInterval(() => {
         setRefreshTrigger(Math.random())
       }, pollIntervalMs)
     }
     else {
-      if (intervalId) {
-        clearInterval(intervalId)
+      if (intervalIdRef.current) {
+        clearInterval(intervalIdRef.current)
       }
     }
 
     return () => {
-      if (intervalId) {
-        clearInterval(intervalId)
+      if (intervalIdRef.current) {
+        clearInterval(intervalIdRef.current)
       }
     }
   }, [anyAccountSyncing, transactionsNotSynced, pollIntervalMs])
 
   useTriggerOnChange(data, anyAccountSyncing, (_) => {
-    clearInterval(intervalId)
+    clearInterval(intervalIdRef.current)
     setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
     eventCallbacks?.onTransactionsFetched?.()
     touch(DataModel.BANK_TRANSACTIONS)
@@ -478,7 +477,7 @@ export const useAugmentedBankTransactions = (
     isLoading,
     isValidating,
     refetch,
-    error: responseError,
+    isError: !!responseError,
     categorize: categorizeWithOptimisticUpdate,
     match: matchWithOptimisticUpdate,
     updateOneLocal,

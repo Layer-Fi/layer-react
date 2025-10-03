@@ -2,23 +2,27 @@ import { useContext } from 'react'
 import { DownloadButton } from '../Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '../utility/InvisibleDownload'
 import { useProfitAndLossDetailLinesExport } from '../../hooks/useProfitAndLoss/useProfitAndLossDetailLinesExport'
-import { ProfitAndLoss } from '../ProfitAndLoss'
 import { useLayerContext } from '../../contexts/LayerContext'
 import type { S3PresignedUrl } from '../../types/general'
+import { ProfitAndLossContext } from '../../contexts/ProfitAndLossContext/ProfitAndLossContext'
+import type { ProfitAndLossDownloadButtonStringOverrides } from './types'
 
 type ProfitAndLossDetailLinesDownloadButtonProps = {
   pnlStructureLineItemName: string
+  stringOverrides?: ProfitAndLossDownloadButtonStringOverrides
   iconOnly?: boolean
 }
 
 export function ProfitAndLossDetailLinesDownloadButton({
   pnlStructureLineItemName,
+  stringOverrides,
   iconOnly,
 }: ProfitAndLossDetailLinesDownloadButtonProps) {
   const { businessId } = useLayerContext()
-  const { tagFilter, dateRange } = useContext(ProfitAndLoss.Context)
+  const { tagFilter, dateRange } = useContext(ProfitAndLossContext)
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { trigger, isMutating, error } = useProfitAndLossDetailLinesExport({
     businessId,
     startDate: dateRange.startDate,
@@ -39,8 +43,8 @@ export function ProfitAndLossDetailLinesDownloadButton({
         onClick={() => { void trigger() }}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
-        text='Download'
-        retryText='Retry'
+        text={stringOverrides?.downloadButtonText || 'Download'}
+        retryText={stringOverrides?.retryButtonText || 'Retry'}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

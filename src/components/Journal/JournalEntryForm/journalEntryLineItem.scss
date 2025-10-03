@@ -1,0 +1,43 @@
+.Layer__JournalEntryForm__LineItem {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: flex-end;
+
+  .Layer__JournalEntryForm__Field {
+    &--accountName {
+      flex: 1 1 12rem;
+      max-width: 20rem;
+    }
+
+    &--amount {
+      flex: 0 1 12rem;
+      max-width: 12rem;
+    }
+
+    &--tag {
+      flex: 0 0 auto;
+      min-width: 12rem;
+    }
+
+    &--memo {
+      flex: 2 1 12rem;
+    }
+  }
+
+  &--readonly .Layer__JournalEntryForm__Field--removeButton {
+    display: none;
+  }
+}
+
+@media (width <= 768px) {
+  .Layer__JournalEntryForm__LineItem {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    align-items: stretch;
+
+    .Layer__JournalEntryForm__Field {
+      flex: 1 1 auto;
+      max-width: 16rem;
+    }
+  }
+}

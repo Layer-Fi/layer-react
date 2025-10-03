@@ -66,6 +66,7 @@ export interface BankTransactionsProps {
   showReceiptUploads?: boolean
   showTooltips?: boolean
   showUploadOptions?: boolean
+  showStatusToggle?: boolean
   applyGlobalDateRange?: boolean
 
   monthlyView?: boolean
@@ -73,6 +74,7 @@ export interface BankTransactionsProps {
   mobileComponent?: MobileComponentType
   filters?: BankTransactionFilters
   hideHeader?: boolean
+  collapseHeader?: boolean
   stringOverrides?: BankTransactionsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
 }
@@ -123,11 +125,13 @@ const BankTransactionsContent = ({
   showReceiptUploads = true,
   showTooltips = false,
   showUploadOptions = false,
+  showStatusToggle = true,
 
   categorizeView: categorizeViewProp,
   mobileComponent,
   filters: inputFilters,
   hideHeader = false,
+  collapseHeader = false,
   stringOverrides,
 }: BankTransactionsProps) => {
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
@@ -143,7 +147,7 @@ const BankTransactionsContent = ({
   const {
     data,
     isLoading,
-    error,
+    isError,
     refetch,
     setFilters,
     filters,
@@ -167,6 +171,7 @@ const BankTransactionsContent = ({
     if (!isMonthlyViewMode && filters?.dateRange) {
       setFilters({ ...filters, dateRange: undefined })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMonthlyViewMode])
 
   useEffect(() => {
@@ -219,6 +224,7 @@ const BankTransactionsContent = ({
         categorizationStatus: DisplayState.categorized,
       })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputFilters, categorizeView, categorizationEnabled])
 
   useEffect(() => {
@@ -315,6 +321,8 @@ const BankTransactionsContent = ({
           isDataLoading={isLoadingWithoutData}
           isSyncing={isSyncing}
           withUploadMenu={showUploadOptions}
+          collapseHeader={collapseHeader}
+          showStatusToggle={showStatusToggle}
         />
       )}
 
@@ -383,7 +391,7 @@ const BankTransactionsContent = ({
           <BankTransactionsTableEmptyStates
             hasVisibleTransactions={(bankTransactions?.length ?? 0) > 0}
             isCategorizationMode={editable}
-            isError={Boolean(error)}
+            isError={isError}
             isFiltered={Boolean(filters?.query)}
             isLoadingWithoutData={isLoadingWithoutData}
           />

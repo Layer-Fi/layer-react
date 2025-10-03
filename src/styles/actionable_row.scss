@@ -1,12 +1,12 @@
 .Layer__actionable_row {
   display: flex;
-  padding: var(--spacing-md);
+  gap: var(--spacing-md);
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-md);
-  border-radius: var(--XS, 8px);
+  padding: var(--spacing-md);
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px var(--color-base-300);
   background: var(--color-base-0);
-  box-shadow: 0px 0px 0px 1px var(--color-base-300);
   container-type: inline-size;
 
   /* Stack vertically when container is too narrow */
@@ -22,19 +22,19 @@
 
 .Layer__actionable_row__main {
   display: flex;
-  align-items: center;
   gap: var(--spacing-md);
+  align-items: center;
 }
 
 .Layer__actionable_row__icon {
   display: flex;
-  width: 32px;
-  height: 32px;
-  background-color: var(--color-base-100);
-  border-radius: var(--border-radius-3xs);
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 0px 3px 0px var(--base-transparent-4) inset;
+  height: 32px;
+  width: 32px;
+  border-radius: var(--border-radius-3xs);
+  box-shadow: 0 0 3px 0 var(--base-transparent-4) inset;
+  background-color: var(--color-base-100);
 }
 
 .Layer__actionable_row__action {
@@ -42,6 +42,6 @@
 }
 
 .Layer__actionable_row__description {
-  color: var(--color-base-500);
   font-size: var(--text-sm);
+  color: var(--color-base-500);
 }

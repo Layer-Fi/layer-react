@@ -28,6 +28,7 @@ import { useEffectiveBookkeepingStatus } from '../../hooks/bookkeeping/useBookke
 import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCategorizationEnabled'
 import { BankTransactionProcessingInfo } from './BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
+import { Span } from '../ui/Typography/Text'
 
 type Props = {
   index: number
@@ -94,9 +95,10 @@ export const BankTransactionListItem = ({
         removeTransaction(bankTransaction)
       }, 300)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
-  const save = () => {
+  const save = async () => {
     // Save using form from expanded row when row is open:
     if (open && expandedRowRef?.current) {
       expandedRowRef?.current?.save()
@@ -108,11 +110,11 @@ export const BankTransactionListItem = ({
     }
 
     if (selectedCategory.type === 'match') {
-      matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
+      await matchBankTransaction(bankTransaction.id, selectedCategory.payload.id)
       return
     }
 
-    categorizeBankTransaction(bankTransaction.id, {
+    await categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: getCategorizePayload(selectedCategory),
     })
@@ -137,14 +139,25 @@ export const BankTransactionListItem = ({
     <li className={rowClassName}>
       <span className={`${className}__heading`}>
         <div className={`${className}__heading__main`}>
-          <span className={`${className}__heading-date`}>
+          <span>
             {formatTime(parseISO(bankTransaction.date), dateFormat)}
           </span>
+
           <span className={`${className}__heading-separator`} />
-          <span className={`${className}__heading-account-name`}>
-            {bankTransaction.account_name ?? ''}
-          </span>
+
+          {bankTransaction.account_institution?.name && (
+            <Span ellipsis size='sm'>
+              {`${bankTransaction.account_institution.name} — `}
+            </Span>
+          )}
+
+          <Span ellipsis size='sm'>
+            {bankTransaction.account_name}
+            {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
+          </Span>
+
           {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
+
         </div>
         <div
           onClick={toggleOpen}
@@ -221,7 +234,7 @@ export const BankTransactionListItem = ({
             <SubmitButton
               onClick={() => {
                 if (!bankTransaction.processing) {
-                  save()
+                  void save()
                 }
               }}
               className='Layer__bank-transaction__submit-btn'
@@ -239,7 +252,7 @@ export const BankTransactionListItem = ({
             <RetryButton
               onClick={() => {
                 if (!bankTransaction.processing) {
-                  save()
+                  void save()
                 }
               }}
               className='Layer__bank-transaction__retry-btn'

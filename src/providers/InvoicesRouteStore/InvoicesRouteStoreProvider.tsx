@@ -19,7 +19,7 @@ type InvoiceDetailRouteState = { route: InvoiceRoute.Detail } & InvoiceFormMode
 type InvoiceTableRouteState = { route: InvoiceRoute.Table }
 type InvoiceRouteState = InvoiceDetailRouteState | InvoiceTableRouteState
 
-type InvoiceStoreShape = {
+type InvoicesRouteStoreShape = {
   routeState: InvoiceRouteState
   tableFilters: InvoiceTableFilters
   setTableFilters: (patchFilters: Partial<InvoiceTableFilters>) => void
@@ -30,8 +30,8 @@ type InvoiceStoreShape = {
   }
 }
 
-const InvoiceStoreContext = createContext(
-  createStore<InvoiceStoreShape>(() => ({
+const InvoicesRouteStoreContext = createContext(
+  createStore<InvoicesRouteStoreShape>(() => ({
     routeState: { route: InvoiceRoute.Table },
     tableFilters: { status: ALL_OPTION, query: '' },
     setTableFilters: () => {},
@@ -48,7 +48,7 @@ const isInvoiceDetail = (routeState: InvoiceRouteState): routeState is InvoiceDe
 }
 
 export function useInvoiceRouteState() {
-  const store = useContext(InvoiceStoreContext)
+  const store = useContext(InvoicesRouteStoreContext)
   return useStore(store, state => state.routeState)
 }
 
@@ -61,7 +61,7 @@ export function useInvoiceDetail(): InvoiceFormMode {
 }
 
 export function useInvoiceTableFilters() {
-  const store = useContext(InvoiceStoreContext)
+  const store = useContext(InvoicesRouteStoreContext)
   const tableFilters = useStore(store, state => state.tableFilters)
   const setTableFilters = useStore(store, state => state.setTableFilters)
 
@@ -69,13 +69,13 @@ export function useInvoiceTableFilters() {
 }
 
 export function useInvoiceNavigation() {
-  const store = useContext(InvoiceStoreContext)
+  const store = useContext(InvoicesRouteStoreContext)
   return useStore(store, state => state.navigate)
 }
 
-export function InvoiceStoreProvider(props: PropsWithChildren) {
+export function InvoicesRouteStoreProvider(props: PropsWithChildren) {
   const [store] = useState(() =>
-    createStore<InvoiceStoreShape>(set => ({
+    createStore<InvoicesRouteStoreShape>(set => ({
       routeState: { route: InvoiceRoute.Table },
       tableFilters: { status: ALL_OPTION, query: '' },
       setTableFilters: (patchFilters: Partial<InvoiceTableFilters>) => {
@@ -116,8 +116,8 @@ export function InvoiceStoreProvider(props: PropsWithChildren) {
   )
 
   return (
-    <InvoiceStoreContext.Provider value={store}>
+    <InvoicesRouteStoreContext.Provider value={store}>
       {props.children}
-    </InvoiceStoreContext.Provider>
+    </InvoicesRouteStoreContext.Provider>
   )
 }

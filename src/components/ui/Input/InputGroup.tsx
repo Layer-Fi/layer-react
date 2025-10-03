@@ -9,11 +9,14 @@ const INPUT_GROUP_CLASS_NAME = 'Layer__InputGroup'
 
 type InputGroupProps = ReactAriaGroupProps & {
   actionCount?: 1 | 2
+  slots?: { badge?: React.FC }
 }
 
 export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
-  function InputGroup({ actionCount, ...restProps }, ref) {
-    const dataProperties = toDataProperties({ 'action-count': actionCount })
+  function InputGroup({ actionCount, slots: slots, children, ...restProps }, ref) {
+    const dataProperties = toDataProperties({
+      'action-count': actionCount,
+    })
 
     return (
       <ReactAriaGroup
@@ -21,7 +24,10 @@ export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
         {...dataProperties}
         className={INPUT_GROUP_CLASS_NAME}
         ref={ref}
-      />
+      >
+        {children}
+
+      </ReactAriaGroup>
     )
   },
 )

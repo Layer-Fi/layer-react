@@ -2,16 +2,28 @@ import { useMemo } from 'react'
 import { Heading, HeadingSize } from '../../components/Typography'
 import { useLinkedAccounts } from '../../hooks/useLinkedAccounts'
 import { Header } from '../Container'
-import { ProfitAndLoss } from '../ProfitAndLoss'
 import { SyncingBadge } from '../SyncingBadge'
 import { BookkeepingStatus } from '../BookkeepingStatus/BookkeepingStatus'
 import { useActiveBookkeepingPeriod } from '../../hooks/bookkeeping/periods/useActiveBookkeepingPeriod'
+import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker/ProfitAndLossDatePicker'
+import { ProfitAndLossDownloadButton } from '../ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
+import { HStack } from '../ui/Stack/Stack'
+import type { ProfitAndLossDownloadButtonStringOverrides } from '../ProfitAndLossDownloadButton/types'
 
+interface ProfitAndLossHeaderStringOverrides {
+  title?: string
+  downloadButton?: ProfitAndLossDownloadButtonStringOverrides
+}
 export interface ProfitAndLossHeaderProps {
+  /**
+   * @deprecated Use `stringOverrides.title` instead
+   */
   text?: string
   className?: string
   headingClassName?: string
+  stringOverrides?: ProfitAndLossHeaderStringOverrides
   withDatePicker?: boolean
+  withDownloadButton?: boolean
   withStatus?: boolean
 }
 
@@ -20,7 +32,9 @@ export const ProfitAndLossHeader = ({
   className,
   headingClassName,
   withDatePicker,
+  withDownloadButton,
   withStatus = true,
+  stringOverrides,
 }: ProfitAndLossHeaderProps) => {
   const { data: linkedAccounts } = useLinkedAccounts()
 
@@ -36,7 +50,7 @@ export const ProfitAndLossHeader = ({
     <Header className={className}>
       <span className='Layer__component-header__title-wrapper Layer__profit-and-loss__header'>
         <Heading size={HeadingSize.secondary} className={headingClassName} align='left'>
-          {text || 'Profit & Loss'}
+          {stringOverrides?.title || text || 'Profit & Loss'}
         </Heading>
         {isSyncing && <SyncingBadge />}
         {withStatus && activePeriodStatus && (
@@ -45,7 +59,10 @@ export const ProfitAndLossHeader = ({
           </span>
         )}
       </span>
-      {withDatePicker && <ProfitAndLoss.DatePicker />}
+      <HStack gap='xs'>
+        {withDatePicker && <ProfitAndLossDatePicker />}
+        {withDownloadButton && <ProfitAndLossDownloadButton stringOverrides={stringOverrides?.downloadButton} />}
+      </HStack>
     </Header>
   )
 }

@@ -14,6 +14,7 @@ export function AccountBalancesDownloadButton({
   iconOnly,
 }: AccountBalancesDownloadButtonProps) {
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { trigger, isMutating, error } = useAccountBalancesDownload({
     startCutoff,
     endCutoff,

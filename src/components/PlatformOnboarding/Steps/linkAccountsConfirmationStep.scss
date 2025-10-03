@@ -2,7 +2,7 @@
   display: grid;
   min-block-size: 24rem;
 
-  > [slot=center] {
+  > [slot='center'] {
     align-self: center;
     justify-self: center;
   }

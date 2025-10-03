@@ -193,6 +193,7 @@
 
 .Layer__bank-transaction-row .Layer__table-cell {
   background-color: var(--table-bg);
+  color: var(--text-color-primary);
   transition: background-color var(--transition-speed) ease-out;
 }
 
@@ -296,14 +297,24 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
-  max-width: 680px;
+  min-width: 40rem;
+  max-width: 64rem;
 }
 
 .Layer__expanded-bank-transaction-row__content-panels {
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
-  max-width: 680px;
+}
+
+.Layer__bank-transaction-form-fields {
+  .Layer__ComboBoxContainer {
+    max-width: 20rem;
+  }
+
+  .Layer__bank-transaction-memo-input-group {
+    max-width: 40rem;
+  }
 }
 
 .Layer__expanded-bank-transaction-row__content-panel {
@@ -313,6 +324,7 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   overflow: hidden;
+  height: 0;
   max-width: 0;
   opacity: 0;
   transition:
@@ -325,6 +337,7 @@
   }
 
   &.Layer__expanded-bank-transaction-row__content-panel--active {
+    height: auto;
     max-width: 100%;
     opacity: 1;
   }
@@ -372,10 +385,6 @@
       opacity: 1;
     }
 
-    .Layer__expanded-bank-transaction-row__table-cell--split-entry {
-      max-height: 38px;
-    }
-
     .Layer__expanded-bank-transaction-row__splits-buttons {
       max-height: 38px;
       white-space: nowrap;
@@ -405,7 +414,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
   padding-top: 2px;
 }
 
@@ -442,15 +451,10 @@
 .Layer__bank-transaction-row__table-cell--amount-debit,
 .Layer__bank-transaction-list-item__amount-debit {
   justify-content: flex-end;
-  color: var(--text-color-primary);
 
   .Layer__table-cell-content {
     justify-content: flex-end;
   }
-}
-
-.Layer__bank-transaction-list-item__amount-debit {
-  color: var(--text-color-primary);
 }
 
 .Layer__expanded-bank-transaction-row__description {
@@ -459,7 +463,6 @@
   & textarea {
     height: 100px;
     width: 100%;
-    max-width: 680px;
   }
 }
 
@@ -495,9 +498,43 @@
 }
 
 .Layer__expanded-bank-transaction-row__table-cell--split-entry {
+  display: grid;
+  grid-template-areas:
+    'amount category category button'
+    'customer tags tags .';
+  grid-template-columns: minmax(8rem, 12rem) minmax(12rem, 16rem) 1fr auto;
+
+  gap: var(--spacing-xs);
+
+  align-items: start;
+  max-width: 40rem;
+
+  .Layer__category-menu--full {
+    grid-area: category;
+    width: 100%;
+  }
+
+  &__amount {
+    grid-area: amount;
+  }
+
+  &__customer {
+    grid-area: customer;
+  }
+
+  &__button {
+    grid-area: button;
+  }
+}
+
+.Layer__expanded-bank-transaction-row__table-cell--split-entry__tags {
   display: flex;
-  flex-direction: row;
-  gap: var(--spacing-md);
+  grid-area: tags;
+  gap: var(--spacing-sm);
+
+  .Layer__JournalEntryForm__Field--tag {
+    width: 12rem;
+  }
 }
 
 .Layer__bank-transactions__list {
@@ -732,10 +769,6 @@
   color: var(--color-base-1000);
 }
 
-.Layer__bank-transactions__tx-text {
-  max-width: 32ch;
-}
-
 .Layer__bank-transactions__account-col {
   box-sizing: border-box;
   width: 30ch;
@@ -787,17 +820,6 @@
   .Layer__bank-transactions__account-col,
   .Layer__bank-transactions__tx-col {
     text-overflow: ellipsis;
-
-    .Layer__table-cell-content {
-      .Layer__bank-transactions__account-text,
-      .Layer__bank-transactions__tx-text {
-        box-sizing: border-box;
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
   }
 }
 
@@ -857,10 +879,6 @@
     padding-bottom: var(--spacing-2xs);
     box-shadow: none;
   }
-}
-
-.Layer__tooltip.Layer__bank-transactions__tx-tooltip {
-  max-width: 250px;
 }
 
 .Layer__bank-transaction-list-item__match-tooltip,
@@ -927,7 +945,8 @@
 .Layer__expanded-bank-transaction-row__match-table {
   display: grid;
   grid-template-columns: 120px minmax(0, 1fr) 100px max-content;
-  gap: 0;
+  gap: var(--spacing-xs) 0;
+  max-width: 40rem;
   margin-bottom: var(--spacing-sm);
 
   &:has(.Layer__expanded-bank-transaction-row__match-table__status) {
@@ -935,7 +954,7 @@
   }
 
   &:not(:has(.Layer__expanded-bank-transaction-row__match-table__link)) {
-    grid-template-columns: 120px 1fr 100px;
+    grid-template-columns: 120px minmax(0, 1fr) 100px;
   }
 
   &:not(:has(.Layer__expanded-bank-transaction-row__match-table__link)):has(.Layer__expanded-bank-transaction-row__match-table__status) {
@@ -1230,16 +1249,12 @@
     width: 100% !important;
   }
 
-  .Layer__expanded-bank-transaction-row__match-table__amount {
-    display: none !important;
-  }
-
   .Layer__expanded-bank-transaction-row__match-table__desc {
     gap: var(--spacing-sm);
     justify-content: space-between;
 
     & > span:first-child {
-      width: calc(100% - 120px);
+      width: calc(100% - 220px);
     }
 
     & > span:nth-child(2) {
@@ -1257,12 +1272,11 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
     width: 100%;
   }
 
   .Layer__expanded-bank-transaction-row__table-cell--split-entry {
-    gap: var(--spacing-sm);
     width: 100%;
 
     input {
@@ -1489,7 +1503,7 @@
   .Layer__expanded-bank-transaction-row__total-and-btns .Layer__input-tooltip,
   .Layer__expanded-bank-transaction-row__table-cell--split-entry .Layer__input-tooltip {
     flex: 1;
-    max-width: 200px;
+    max-width: 12rem;
 
     .Layer__input {
       width: 100%;

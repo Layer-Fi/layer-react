@@ -1,7 +1,7 @@
 import { Schema, pipe } from 'effect'
-import { EntityName, LinkingMetadata } from '../contexts/InAppLinkContext'
+import { EntityName, LinkingMetadata } from '../../contexts/InAppLinkContext'
 
-export const ApiMatchAdjustmentSchema = Schema.Struct({
+export const MatchAdjustmentSchema = Schema.Struct({
   amount: Schema.Number,
   account: Schema.Struct({
     id: Schema.String,
@@ -32,7 +32,7 @@ const BaseMatchDetailsSchema = Schema.Struct({
   amount: Schema.Number,
   date: Schema.String,
   description: Schema.String,
-  adjustment: Schema.NullOr(ApiMatchAdjustmentSchema),
+  adjustment: Schema.NullOr(MatchAdjustmentSchema),
   referenceNumber: pipe(
     Schema.optional(Schema.NullOr(Schema.String)),
     Schema.fromKey('reference_number'),
@@ -261,5 +261,34 @@ export const convertMatchDetailsToLinkingMetadata = (matchDetails: MatchDetailsT
 }
 
 export type MatchDetailsType = typeof MatchDetailsSchema.Type
-export type ApiMatchAdjustmentType = typeof ApiMatchAdjustmentSchema.Type
+export type MatchAdjustmentType = typeof MatchAdjustmentSchema.Type
 export type FinancialEventIdentifiersType = typeof FinancialEventIdentifiersSchema.Type
+
+export enum MatchType {
+  TRANSFER = 'Transfer',
+  INVOICE_PAYMENT = 'Invoice Payment',
+  PAYOUT = 'Payout',
+  VENDOR_PAYOUT = 'Vendor Payout',
+  REFUND_PAYMENT = 'Refund Payment',
+  VENDOR_REFUND_PAYMENT = 'Vendor Refund Payment',
+  MANUAL_JOURNAL_ENTRY = 'Journal Entry',
+  BILL_PAYMENT = 'Bill Payment',
+  PAYROLL_PAYMENT = 'Payroll Payment',
+}
+export const MatchTypeSchema = Schema.Enums(MatchType)
+
+export const SuggestedMatchSchema = Schema.Struct({
+  id: Schema.String,
+  // omitting matchType since it is currently serialized as camelCase and we don't actually need it anywhere
+  details: MatchDetailsSchema,
+})
+
+export const MatchSchema = Schema.Struct({
+  id: Schema.String,
+  matchType: pipe(
+    Schema.propertySignature(MatchTypeSchema),
+    Schema.fromKey('match_type'),
+  ),
+  // Intentionally leaving out bank_transaction for now for simplicity. Add it later if necessary.
+  details: MatchDetailsSchema,
+})

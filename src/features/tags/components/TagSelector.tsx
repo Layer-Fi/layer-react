@@ -16,7 +16,7 @@ import { LoadingSpinner } from '../../../components/ui/Loading/LoadingSpinner'
 import { Square } from '../../../components/ui/Square/Square'
 import { Group } from 'react-aria-components'
 import { ComboBox } from '../../../components/ui/ComboBox/ComboBox'
-import type { Tag as TagType, TagValue } from '../tagSchemas'
+import { getDimensionDisplayName, getTagDisplayNameForDimension, getTagDisplayNameForValue, getTagValueDisplayName, type Tag as TagType, type TagValue } from '../tagSchemas'
 
 const TAG_SELECTOR_CLASS_NAMES = {
   LAYOUT_GROUP: 'Layer__TagSelectorLayoutGroup',
@@ -73,13 +73,11 @@ function TagSelectorSelection({
         items={selectedTags}
         columnCount={isReadOnly ? 2 : undefined}
       >
-        {({
-          id,
-          dimensionLabel,
-          valueLabel,
-          _local,
-        }) => {
-          const isOptimistic = _local?.isOptimistic ?? false
+        {(tag) => {
+          const isOptimistic = tag._local?.isOptimistic ?? false
+          const dimensionLabel = getTagDisplayNameForDimension(tag)
+          const valueLabel = getTagDisplayNameForValue(tag)
+          const id = tag.id
 
           return (
             <Tag key={id} id={id} textValue={`${dimensionLabel}: ${valueLabel}`}>
@@ -159,25 +157,30 @@ export function TagSelector({
   selectedTags,
   onAddTag,
   onRemoveTag,
-
   isReadOnly,
 }: TagSelectorProps) {
   const { data, isLoading, isError } = useTagDimensions()
 
   const groups = useMemo(
     () => data
-      ?.map(({ key: dimensionLabel, definedValues }) => {
+      ?.map((tag) => {
+        const { key, definedValues } = tag
+        const dimensionLabel = getDimensionDisplayName(tag)
         return {
           label: dimensionLabel,
-          options: definedValues.map(({ id: valueId, value: valueLabel }) => ({
-            label: valueLabel,
-            value: valueId,
-            isDisabled: selectedTags.some(
-              tagValue =>
-                tagValue.dimensionLabel === dimensionLabel
-                && tagValue.valueLabel === valueLabel,
-            ),
-          })),
+          options: definedValues.map((tag) => {
+            const { id: valueId, value: value } = tag
+            const valueLabel = getTagValueDisplayName(tag)
+            return ({
+              label: valueLabel,
+              value: valueId,
+              isDisabled: selectedTags.some(
+                tagValue =>
+                  tagValue.key === key
+                  && tagValue.value === value,
+              ),
+            })
+          }),
         }
       }) ?? [],
     [

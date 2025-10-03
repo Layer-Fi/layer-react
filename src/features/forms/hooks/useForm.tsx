@@ -16,7 +16,7 @@ import { FormTextField } from '../components/FormTextField'
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
   createFormHookContexts()
 
-const { useAppForm: useInternalAppForm } = createFormHook({
+const { useAppForm: useRawAppForm } = createFormHook({
   fieldComponents: {
     BaseFormTextField,
     FormBigDecimalField,
@@ -32,6 +32,8 @@ const { useAppForm: useInternalAppForm } = createFormHook({
   formContext,
 })
 
+export { useRawAppForm }
+
 export function useAppForm<T extends Record<string, unknown>>(props: FormOptions<
   T,
   FormValidateOrFn<T>,
@@ -46,7 +48,7 @@ export function useAppForm<T extends Record<string, unknown>>(props: FormOptions
   FormAsyncValidateOrFn<T>,
   unknown
 >) {
-  return useInternalAppForm(props)
+  return useRawAppForm(props)
 }
 
 export type AppForm<T extends Record<string, unknown>> = ReturnType<typeof useAppForm<T>>

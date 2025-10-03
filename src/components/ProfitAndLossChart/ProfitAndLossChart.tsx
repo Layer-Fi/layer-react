@@ -153,12 +153,10 @@ export const ProfitAndLossChart = ({
   const { getColor, business } = useLayerContext()
 
   const rangeDisplayMode = useReportModeWithFallback(ReportKey.ProfitAndLoss, 'monthPicker')
-  const { start, end } = useGlobalDateRange({ displayMode: rangeDisplayMode })
+  const dateRange = useGlobalDateRange({ displayMode: rangeDisplayMode })
   const { setMonth } = useGlobalDateRangeActions()
 
   const showIndicator = rangeDisplayMode === 'monthPicker'
-
-  const dateRange = useMemo(() => ({ startDate: start, endDate: end }), [start, end])
 
   const [customCursorSize, setCustomCursorSize] = useState({
     width: 0,
@@ -365,13 +363,15 @@ export const ProfitAndLossChart = ({
     }
 
     if (activePayload && activePayload.length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const { year, month } = activePayload[0].payload
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const selectedDate = new Date(year, month - 1, 1)
       const isMonthAllowed = isDateAllowedToBrowse(selectedDate, business)
 
       if (isMonthAllowed) {
-        setMonth({ start: selectedDate })
+        setMonth({ startDate: selectedDate })
       }
     }
   }

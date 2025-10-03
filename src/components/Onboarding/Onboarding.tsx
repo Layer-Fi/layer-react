@@ -42,7 +42,7 @@ export const OnboardingContent = ({
 
   useEffect(() => {
     setOnboardingStep(onboardingStepOverride)
-  }, [onboardingStepOverride])
+  }, [onboardingStepOverride, setOnboardingStep])
 
   const [style, setStyle] = useState(
     onboardingStep ? EXPANDED_STYLE : COLLAPSED_STYLE,
@@ -52,7 +52,7 @@ export const OnboardingContent = ({
   useEffect(() => {
     if (
       data
-      && data?.length === 0
+      && data.length === 0
       && loadingStatus === 'complete'
       && !onboardingStep
     ) {
@@ -68,7 +68,7 @@ export const OnboardingContent = ({
     ) {
       setOnboardingStep('complete')
     }
-  }, [data, loadingStatus])
+  }, [data, loadingStatus, onboardingStep, setOnboardingStep])
 
   useEffect(() => {
     if (onboardingStep && style.maxHeight !== 1000) {
@@ -76,7 +76,7 @@ export const OnboardingContent = ({
         setStyle(EXPANDED_STYLE)
       }, 500)
     }
-  }, [onboardingStep])
+  }, [onboardingStep, style.maxHeight])
 
   if (!onboardingStep) {
     return null

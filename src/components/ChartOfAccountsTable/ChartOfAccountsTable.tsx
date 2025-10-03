@@ -122,7 +122,7 @@ export const ChartOfAccountsTableContent = ({
         allRowKeys.map(key => [key, expandAll === 'expanded']),
       ),
     )
-  }, [expandAll])
+  }, [allRowKeys, expandAll])
 
   const onConfirmDelete = async () => {
     if (!accountToDelete) return

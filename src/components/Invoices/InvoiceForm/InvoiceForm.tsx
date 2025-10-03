@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, type PropsWithChildren } from 'react'
 import classNames from 'classnames'
-import { useInvoiceForm } from './useInvoiceForm'
-import type { Invoice, InvoiceForm as InvoiceFormType } from '../../../features/invoices/invoiceSchemas'
+import { useInvoiceForm, type InvoiceFormType } from './useInvoiceForm'
+import type { Invoice } from '../../../features/invoices/invoiceSchemas'
 import { UpsertInvoiceMode } from '../../../features/invoices/api/useUpsertInvoice'
 import { Form } from '../../ui/Form/Form'
 import { HStack, VStack } from '../../ui/Stack/Stack'
@@ -19,12 +19,11 @@ import { type InvoiceFormState, EMPTY_LINE_ITEM, getAdditionalTags, getSelectedT
 import { DataState, DataStateStatus } from '../../DataState'
 import { AlertTriangle } from 'lucide-react'
 import { TextSize } from '../../Typography'
-import { useInvoiceDetail } from '../../../providers/InvoiceStore/InvoiceStoreProvider'
+import { useInvoiceDetail } from '../../../providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { flattenValidationErrors } from '../../../utils/form'
-import type { AppForm } from '../../../features/forms/hooks/useForm'
 import { type Tag } from '../../../features/tags/tagSchemas'
 import { LedgerAccountCombobox } from '../../LedgerAccountCombobox/LedgerAccountCombobox'
-import { CategoriesListMode } from '../../../types/categories'
+import { CategoriesListMode } from '../../../schemas/categorization'
 import { TagDimensionCombobox } from '../../../features/tags/components/TagDimensionCombobox'
 
 const INVOICE_FORM_CSS_PREFIX = 'Layer__InvoiceForm'
@@ -58,7 +57,7 @@ const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProp
 }
 
 type InvoiceFormLineItemRowProps = PropsWithChildren<{
-  form: AppForm<InvoiceFormType>
+  form: InvoiceFormType
   index: number
   isReadOnly: boolean
   onDeleteLine: () => void
@@ -102,6 +101,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
                 value={selectedTag}
                 onValueChange={onValueChange}
                 showLabel={index === 0}
+                isClearable={false}
               />
             )
           }}
@@ -214,7 +214,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   }, [])
 
   useImperativeHandle(ref, () => ({
-    submit: () => form.handleSubmit(),
+    submit: ({ submitAction }: { submitAction: 'send' | null }) => form.handleSubmit({ submitAction }),
   }))
 
   useEffect(() => {

@@ -1,8 +1,8 @@
 .Layer__tooltip {
   box-sizing: border-box;
+  z-index: 100;
   width: max-content;
   max-width: calc(100vw - 10px);
-  z-index: 100;
 
   &[data-width='md'] {
     max-width: 256px;
@@ -10,19 +10,19 @@
 }
 
 .Layer__tooltip .Layer__tooltip-content {
-  background: var(--color-base-1000);
-  color: var(--color-base-300);
+  box-sizing: border-box;
   padding: var(--spacing-2xs) var(--spacing-sm);
   border-radius: var(--border-radius-2xs);
-  box-sizing: border-box;
+  background: var(--color-base-1000);
   font-size: var(--text-sm);
+  color: var(--color-base-300);
 }
 
 .Layer__tooltip-trigger {
   display: flex;
   flex: 1;
-  padding-top: 2px;
   max-width: 100%;
+  padding-top: 2px;
 }
 
 .Layer__actionable-list__tooltip-content {
@@ -33,10 +33,10 @@
   align-items: flex-start;
 
   .Layer__tooltip-content {
-    margin-right: auto;
     max-width: 220px;
-    border-radius: var(--border-radius-3xs);
     padding: var(--spacing-2xs) var(--spacing-sm);
+    border-radius: var(--border-radius-3xs);
+    margin-right: auto;
     background-color: var(--color-base-800);
     color: var(--color-base-0);
   }

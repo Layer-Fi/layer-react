@@ -1,12 +1,14 @@
 import { View } from '../../components/View'
-import { InvoiceRoute, InvoiceStoreProvider, useInvoiceRouteState } from '../../providers/InvoiceStore/InvoiceStoreProvider'
+import { InvoiceRoute, useInvoiceRouteState } from '../../providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { InvoiceDetail } from './InvoiceDetail/InvoiceDetail'
 import { InvoiceOverview } from './InvoiceOverview/InvoiceOverview'
 import { usePreloadCustomers } from '../../features/customers/api/useListCustomers'
 import { usePreloadCategories } from '../../hooks/categories/useCategories'
-import { CategoriesListMode } from '../../types/categories'
+import { CategoriesListMode } from '../../schemas/categorization'
 import { usePreloadTagDimensionByKey } from '../../features/tags/api/useTagDimensionByKey'
 import { INVOICE_MECE_TAG_DIMENSION } from './InvoiceForm/formUtils'
+import type { Awaitable } from '../../types/utility/promises'
+import { InvoicesProvider } from '../../contexts/InvoicesContext/InvoicesContext'
 interface InvoicesStringOverrides {
   title?: string
 }
@@ -14,19 +16,20 @@ interface InvoicesStringOverrides {
 export interface InvoicesProps {
   showTitle?: boolean
   stringOverrides?: InvoicesStringOverrides
+  onSendInvoice?: (invoiceId: string) => Awaitable<void>
 }
 
-export const Invoices = ({ showTitle = true, stringOverrides }: InvoicesProps) => {
+export const Invoices = ({ showTitle = true, stringOverrides, onSendInvoice }: InvoicesProps) => {
   usePreloadCustomers()
   usePreloadCategories({ mode: CategoriesListMode.Revenue })
   usePreloadTagDimensionByKey({ dimensionKey: INVOICE_MECE_TAG_DIMENSION })
 
   return (
-    <InvoiceStoreProvider>
+    <InvoicesProvider onSendInvoice={onSendInvoice}>
       <View title={stringOverrides?.title || 'Invoices'} showHeader={showTitle}>
         <InvoicesContent />
       </View>
-    </InvoiceStoreProvider>
+    </InvoicesProvider>
   )
 }
 

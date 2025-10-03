@@ -1,7 +1,8 @@
 import type { CustomerSchema } from '../schemas/customer'
 import type { VendorSchema } from '../schemas/vendor'
-import { MatchDetailsType } from '../schemas/match'
-import { Categorization, CategorizationStatus, Category } from './categories'
+import { MatchDetailsType } from '../schemas/bankTransactions/match'
+import { Categorization, Category } from './categories'
+import { CategorizationStatus } from '../schemas/bankTransactions/bankTransaction'
 import { S3PresignedUrl } from './general'
 import type { TransactionTagEncoded } from '../features/tags/tagSchemas'
 
@@ -25,6 +26,14 @@ type CategoryEntry = {
   type?: string
   amount?: number
   category: CategoryWithEntries
+  tags?: Array<TransactionTagEncoded>
+  customer?: typeof CustomerSchema.Encoded | null
+  vendor?: typeof VendorSchema.Encoded | null
+}
+
+export interface AccountInstitution {
+  name: string
+  logo: string | null
 }
 
 // This isn't my favorite but BankTransaction contains much
@@ -32,6 +41,8 @@ type CategoryEntry = {
 export interface BankTransaction extends Record<string, unknown> {
   type: 'Bank_Transaction'
   account_name?: string
+  account_institution?: AccountInstitution
+  account_mask?: string
   business_id: string
   recently_categorized?: boolean
   id: string

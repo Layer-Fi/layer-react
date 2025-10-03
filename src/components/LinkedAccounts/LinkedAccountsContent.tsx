@@ -46,7 +46,7 @@ export const LinkedAccountsContent = ({
           role='button'
           tabIndex={0}
           aria-label='new-account'
-          onClick={() => addConnection('PLAID')}
+          onClick={() => { void addConnection('PLAID') }}
           className={linkedAccountsNewAccountClassName}
         >
           <div className='Layer__linked-accounts__new-account-label'>

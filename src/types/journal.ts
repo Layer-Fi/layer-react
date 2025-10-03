@@ -1,4 +1,4 @@
-import type { TransactionTagEncoded } from '../features/tags/tagSchemas'
+import type { TransactionTagEncoded, Tag } from '../features/tags/tagSchemas'
 import { LedgerEntrySourceType } from '../schemas/generalLedger/ledgerEntrySource'
 import { LedgerEntryDirection, SingleChartAccountEncodedType } from '../schemas/generalLedger/ledgerAccount'
 import { AccountIdentifierPayloadObject } from './categories'
@@ -39,6 +39,8 @@ export type NewApiJournalEntryLineItem = {
   account_identifier: AccountIdentifierPayloadObject
   amount: number
   direction: LedgerEntryDirection
+  job?: Tag | null
+  description?: string
 }
 
 export type NewFormJournalEntry = {
@@ -46,6 +48,7 @@ export type NewFormJournalEntry = {
   created_by: string
   memo: string
   line_items: JournalEntryLineItem[]
+  notes?: string
 }
 
 export type JournalEntryLineItem = {
@@ -63,6 +66,8 @@ export type JournalEntryLineItem = {
   }
   amount: number
   direction: LedgerEntryDirection
+  job?: Tag | null
+  description?: string
 }
 
 export type ApiAccountType = {

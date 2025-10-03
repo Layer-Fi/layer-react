@@ -1,12 +1,12 @@
-import { ReactNode, useContext, useEffect, useRef, useState, type ChangeEvent } from 'react'
+import { ReactNode, useContext, useEffect, useRef, useState, useMemo, type ChangeEvent } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useElementSize } from '../../hooks/useElementSize'
 import FileIcon from '../../icons/File'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, CategorizationStatus } from '../../types'
+import { BankTransaction } from '../../types'
+import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import { hasMatch, hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { extractDescriptionForSplit } from '../BankTransactionRow/BankTransactionRow'
-
 import { isCategorized } from '../BankTransactions/utils'
 import { CloseButton } from '../Button'
 import { Toggle } from '../Toggle'
@@ -21,7 +21,8 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
 import { LinkingMetadata, useInAppLinkContext } from '../../contexts/InAppLinkContext'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/match'
+import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '../../schemas/bankTransactions/match'
+import { Span } from '../ui/Typography/Text'
 
 export interface BankTransactionMobileListItemProps {
   index: number
@@ -121,12 +122,26 @@ export const BankTransactionMobileListItem = ({
     }
   }
 
+  const fullAccountName = useMemo(() => {
+    return (
+      <Span ellipsis size='sm'>
+        {bankTransaction.account_institution?.name && `${bankTransaction.account_institution.name} — `}
+        {bankTransaction.account_name}
+        {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
+      </Span>
+    )
+  }, [
+    bankTransaction.account_institution?.name,
+    bankTransaction.account_name,
+    bankTransaction.account_mask,
+  ])
+
   useEffect(() => {
     if (transactionIdToOpen && transactionIdToOpen === bankTransaction.id) {
       setOpen(true)
       clearTransactionIdToOpen()
     }
-  }, [transactionIdToOpen])
+  }, [bankTransaction.id, clearTransactionIdToOpen, transactionIdToOpen])
 
   useEffect(() => {
     if (!removeAnim && bankTransaction.recently_categorized) {
@@ -138,6 +153,7 @@ export const BankTransactionMobileListItem = ({
         close()
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     bankTransaction.recently_categorized,
     bankTransaction.category,
@@ -166,6 +182,7 @@ export const BankTransactionMobileListItem = ({
         removeTransaction(bankTransaction)
       }, 300)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
   const onChangePurpose = (event: ChangeEvent<HTMLInputElement>) =>
@@ -204,14 +221,10 @@ export const BankTransactionMobileListItem = ({
               {categorized && bankTransaction.categorization_status
                 ? getAssignedValue(bankTransaction, renderInAppLink)
                 : null}
-              <span>{!categorized && bankTransaction.account_name}</span>
+              {!categorized && fullAccountName}
               {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
             </Text>
-            {categorized && (
-              <Text as='span' className={`${className}__categorized-name`}>
-                {bankTransaction.account_name}
-              </Text>
-            )}
+            {categorized && fullAccountName}
             {!categorizationEnabled && !categorized
               ? <BankTransactionProcessingInfo />
               : null}

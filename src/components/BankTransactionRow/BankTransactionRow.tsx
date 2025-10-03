@@ -5,8 +5,9 @@ import ChevronDownFill from '../../icons/ChevronDownFill'
 import FileIcon from '../../icons/File'
 import Scissors from '../../icons/Scissors'
 import { centsToDollars as formatMoney } from '../../models/Money'
-import { BankTransaction, CategorizationStatus } from '../../types'
+import { BankTransaction } from '../../types'
 import { hasSuggestions } from '../../types/categories'
+import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
 import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { Badge } from '../Badge'
@@ -25,7 +26,7 @@ import { ExpandedBankTransactionRow } from '../ExpandedBankTransactionRow'
 import { SaveHandle } from '../ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '../IconBox'
 import { Text } from '../Typography'
-import { TextSize, TextUseTooltip } from '../Typography/Text'
+import { TextSize } from '../Typography/Text'
 import { MatchBadge } from './MatchBadge'
 import { SplitTooltipDetails } from './SplitTooltipDetails'
 import classNames from 'classnames'
@@ -36,6 +37,7 @@ import { isCategorizationEnabledForStatus } from '../../utils/bookkeeping/isCate
 import { BankTransactionProcessingInfo } from '../BankTransactionList/BankTransactionProcessingInfo'
 import { VStack } from '../ui/Stack/Stack'
 import { useDelayedVisibility } from '../../hooks/visibility/useDelayedVisibility'
+import { Span } from '../ui/Typography/Text'
 
 type Props = {
   index: number
@@ -139,6 +141,7 @@ export const BankTransactionRow = ({
         removeTransaction(bankTransaction)
       }, 300)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bankTransaction.recently_categorized])
 
   const save = async () => {
@@ -198,11 +201,13 @@ export const BankTransactionRow = ({
     <>
       <tr className={rowClassName}>
         <td
-          className='Layer__table-cell  Layer__bank-transaction-table__date-col'
+          className='Layer__table-cell Layer__bank-transaction-table__date-col'
           {...openRow}
         >
           <span className='Layer__table-cell-content'>
-            {formatTime(parseISO(bankTransaction.date), dateFormat)}
+            <Span>
+              {formatTime(parseISO(bankTransaction.date), dateFormat)}
+            </Span>
           </span>
         </td>
         <td
@@ -210,16 +215,9 @@ export const BankTransactionRow = ({
           {...openRow}
         >
           <span className='Layer__table-cell-content'>
-            <Text
-              as='span'
-              className='Layer__bank-transactions__tx-text'
-              withTooltip={TextUseTooltip.whenTruncated}
-              tooltipOptions={{
-                contentClassName: 'Layer__bank-transactions__tx-tooltip',
-              }}
-            >
+            <Span>
               {bankTransaction.counterparty_name ?? bankTransaction.description}
-            </Text>
+            </Span>
           </span>
         </td>
         <td
@@ -227,13 +225,17 @@ export const BankTransactionRow = ({
           {...openRow}
         >
           <span className='Layer__table-cell-content'>
-            <Text
-              as='span'
-              className='Layer__bank-transactions__account-text'
-              withTooltip={TextUseTooltip.whenTruncated}
-            >
-              {bankTransaction.account_name ?? ''}
-            </Text>
+            <VStack align='start'>
+              <Span ellipsis>
+                {bankTransaction.account_name}
+                {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
+              </Span>
+              {bankTransaction.account_institution?.name && (
+                <Span ellipsis variant='subtle' size='sm'>
+                  {bankTransaction.account_institution.name}
+                </Span>
+              )}
+            </VStack>
           </span>
         </td>
         <td

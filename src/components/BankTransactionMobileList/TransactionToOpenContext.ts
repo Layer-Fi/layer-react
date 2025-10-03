@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react'
+import { createContext, useCallback, useState } from 'react'
 
 type UseTransactionToOpen = () => {
   transactionIdToOpen?: string
@@ -11,7 +11,7 @@ export const useTransactionToOpen: UseTransactionToOpen = () => {
     string | undefined
   >(undefined)
 
-  const clearTransactionIdToOpen = () => setTransactionIdToOpen(undefined)
+  const clearTransactionIdToOpen = useCallback(() => setTransactionIdToOpen(undefined), [])
 
   return {
     transactionIdToOpen,

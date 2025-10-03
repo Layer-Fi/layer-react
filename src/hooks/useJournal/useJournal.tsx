@@ -12,7 +12,7 @@ import {
 import { getAccountIdentifierPayload } from '../../utils/journal'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useListLedgerEntries } from '../../features/ledger/entries/api/useListLedgerEntries'
+import { useListLedgerEntries, type ListLedgerEntriesReturn } from '../../features/ledger/entries/api/useListLedgerEntries'
 import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
 import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
 import { LedgerAccountBalance } from '../../types/journal'
@@ -25,11 +25,11 @@ type UseJournal = () => {
   isValidatingEntry?: boolean
   error?: unknown
   errorEntry?: unknown
-  refetch: () => void
+  refetch: () => Promise<ListLedgerEntriesReturn[] | undefined>
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void
   closeSelectedEntry: () => void
-  create: (newJournalEntry: NewApiJournalEntry) => void
+  create: (newJournalEntry: NewApiJournalEntry) => Promise<void>
   changeFormData: (
     name: string,
     value: string | BaseSelectOption | undefined | number,
@@ -43,7 +43,7 @@ type UseJournal = () => {
   form?: JournalFormTypes
   apiError?: string
   setForm: (form?: JournalFormTypes) => void
-  addEntryLine: (direction: LedgerEntryDirection) => void
+  addEntryLine: () => void
   removeEntryLine: (index: number) => void
   reverseEntry: (entryId: string) => ReturnType<typeof Layer.reverseJournalEntry>
   hasMore: boolean
@@ -69,6 +69,53 @@ export const flattenAccounts = (
     .flat()
     .filter(id => id)
 
+const validateLineItems = (lineItems?: JournalEntryLineItem[]) => {
+  if (!lineItems) {
+    return null
+  }
+  const errors: FormErrorWithId[] = []
+
+  lineItems.map((lineItem, idx) => {
+    if (!lineItem.account_identifier.id) {
+      errors.push({
+        id: idx,
+        field: 'account',
+        message: 'Account is required',
+      })
+    }
+
+    if (!lineItem.amount) {
+      errors.push({
+        id: idx,
+        field: 'amount',
+        message: 'Amount cannot be empty or zero',
+      })
+    }
+  })
+  return errors
+}
+
+const validate = (formData?: JournalFormTypes) => {
+  let errors: {
+    entry: FormError[]
+    lineItems: FormErrorWithId[]
+  } = {
+    entry: [],
+    lineItems: [],
+  }
+
+  const lineItems = validateLineItems(formData?.data.line_items)
+
+  if (lineItems) {
+    errors = {
+      ...errors,
+      lineItems,
+    }
+  }
+
+  return errors
+}
+
 export const useJournal: UseJournal = () => {
   const {
     businessId,
@@ -88,6 +135,7 @@ export const useJournal: UseJournal = () => {
     data: paginatedData,
     isLoading,
     isValidating,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error,
     mutate,
     size,
@@ -117,19 +165,19 @@ export const useJournal: UseJournal = () => {
 
   const fetchMore = useCallback(() => {
     if (hasMore) {
-      setSize(size + 1)
+      void setSize(size + 1)
     }
   }, [hasMore, setSize, size])
 
-  const refetch = () => mutate()
+  const refetch = useCallback(() => mutate(), [mutate])
 
-  const closeSelectedEntry = () => {
+  const closeSelectedEntry = useCallback(() => {
     setSelectedEntryId(undefined)
-  }
+  }, [])
 
   const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
 
-  const create = async (newJournalEntry: NewApiJournalEntry) => {
+  const create = useCallback(async (newJournalEntry: NewApiJournalEntry) => {
     setSendingForm(true)
     setApiError(undefined)
 
@@ -150,9 +198,9 @@ export const useJournal: UseJournal = () => {
       touch(DataModel.PROFIT_AND_LOSS)
       void invalidatePnlDetailLines()
     }
-  }
+  }, [apiUrl, auth?.access_token, businessId, refetch, closeSelectedEntry, touch, invalidatePnlDetailLines])
 
-  const addEntry = () => {
+  const addEntry = useCallback(() => {
     setSelectedEntryId('new')
     setForm({
       action: 'new',
@@ -171,6 +219,8 @@ export const useJournal: UseJournal = () => {
             },
             amount: 0,
             direction: LedgerEntryDirection.Credit,
+            job: null,
+            description: '',
           },
           {
             account_identifier: {
@@ -182,14 +232,17 @@ export const useJournal: UseJournal = () => {
             },
             amount: 0,
             direction: LedgerEntryDirection.Debit,
+            job: null,
+            description: '',
           },
         ],
+        notes: '',
       },
       errors: undefined,
     })
-  }
+  }, [])
 
-  const changeFormData = (
+  const changeFormData = useCallback((
     fieldName: string,
     value: string | BaseSelectOption | undefined | number,
     lineItemIndex?: number,
@@ -264,56 +317,9 @@ export const useJournal: UseJournal = () => {
     setForm({
       ...newFormData,
     })
-  }
+  }, [form])
 
-  const validateLineItems = (lineItems?: JournalEntryLineItem[]) => {
-    if (!lineItems) {
-      return null
-    }
-    const errors: FormErrorWithId[] = []
-
-    lineItems.map((lineItem, idx) => {
-      if (!lineItem.account_identifier.id) {
-        errors.push({
-          id: idx,
-          field: 'account',
-          message: 'Account is required',
-        })
-      }
-
-      if (!lineItem.amount) {
-        errors.push({
-          id: idx,
-          field: 'amount',
-          message: 'Amount cannot be empty or zero',
-        })
-      }
-    })
-    return errors
-  }
-
-  const validate = (formData?: JournalFormTypes) => {
-    let errors: {
-      entry: FormError[]
-      lineItems: FormErrorWithId[]
-    } = {
-      entry: [],
-      lineItems: [],
-    }
-
-    const lineItems = validateLineItems(formData?.data.line_items)
-
-    if (lineItems) {
-      errors = {
-        ...errors,
-        lineItems,
-      }
-    }
-
-    return errors
-  }
-
-  const submitForm = () => {
+  const submitForm = useCallback(() => {
     if (!form || !form.action || addingEntry) {
       return null
     }
@@ -339,9 +345,9 @@ export const useJournal: UseJournal = () => {
         })),
       } as NewApiJournalEntry)
     }
-  }
+  }, [form, addingEntry, create])
 
-  const addEntryLine = (direction: LedgerEntryDirection) => {
+  const addEntryLine = useCallback(() => {
     if (!form) {
       return null
     }
@@ -357,7 +363,9 @@ export const useJournal: UseJournal = () => {
         subType: undefined,
       },
       amount: 0,
-      direction,
+      direction: 'DEBIT' as LedgerEntryDirection,
+      job: null,
+      description: '',
     }
 
     const entryLines = form?.data.line_items || []
@@ -371,9 +379,9 @@ export const useJournal: UseJournal = () => {
       },
     })
     setTimeout(() => setAddingEntry(false), 100)
-  }
+  }, [form])
 
-  const removeEntryLine = (index: number) => {
+  const removeEntryLine = useCallback((index: number) => {
     if (!form) {
       return null
     }
@@ -388,12 +396,17 @@ export const useJournal: UseJournal = () => {
         line_items: entryLines,
       },
     })
-  }
+  }, [form])
 
-  const reverseEntry = async (entryId: string) =>
+  const reverseEntry = useCallback(async (entryId: string) =>
     Layer.reverseJournalEntry(apiUrl, auth?.access_token, {
       params: { businessId, entryId },
-    })
+    }), [apiUrl, auth?.access_token, businessId])
+
+  const cancelForm = useCallback(() => {
+    setForm(undefined)
+    setSelectedEntryId(undefined)
+  }, [])
 
   return {
     data,
@@ -408,9 +421,7 @@ export const useJournal: UseJournal = () => {
     addEntry,
     changeFormData,
     submitForm,
-    cancelForm: () => {
-      setForm(undefined), setSelectedEntryId(undefined)
-    },
+    cancelForm,
     setForm,
     sendingForm,
     form,

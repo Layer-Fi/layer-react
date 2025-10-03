@@ -10,16 +10,17 @@ export const useKeepInMobileViewport = () => {
   const upperElementInFocus = useRef<boolean | null>(false)
 
   useEffect(() => {
-    if (!upperContentRef.current || !targetElementRef.current) return
+    const upperContent = upperContentRef.current
+    if (!upperContent || !targetElementRef.current) return
 
-    lastKnownSizeRef.current = upperContentRef.current.getBoundingClientRect().height
+    lastKnownSizeRef.current = upperContent.getBoundingClientRect().height
     lastKnownTargetPositionRef.current = targetElementRef.current.getBoundingClientRect().top
 
     // Use observer to detect upper element content changes
     const resizeObserver = new ResizeObserver(() => {
-      if (!upperContentRef.current || !targetElementRef.current) return
+      if (!upperContent || !targetElementRef.current) return
 
-      const currentSize = upperContentRef.current.getBoundingClientRect().height
+      const currentSize = upperContent.getBoundingClientRect().height
       const currentTargetPosition = targetElementRef.current.getBoundingClientRect().top
 
       if (lastKnownSizeRef.current !== null && lastKnownTargetPositionRef.current !== null) {
@@ -47,8 +48,8 @@ export const useKeepInMobileViewport = () => {
       lastKnownSizeRef.current = currentSize
     })
 
-    if (upperContentRef.current) {
-      resizeObserver.observe(upperContentRef.current)
+    if (upperContent) {
+      resizeObserver.observe(upperContent)
     }
 
     // Observe scroll events to update our target position reference
@@ -61,8 +62,8 @@ export const useKeepInMobileViewport = () => {
     window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => {
-      if (upperContentRef.current) {
-        resizeObserver.unobserve(upperContentRef.current)
+      if (upperContent) {
+        resizeObserver.unobserve(upperContent)
       }
       window.removeEventListener('scroll', handleScroll)
     }

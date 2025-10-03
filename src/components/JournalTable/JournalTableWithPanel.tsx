@@ -1,11 +1,11 @@
 import { RefObject, useContext, useMemo, useState } from 'react'
 import { JournalContext } from '../../contexts/JournalContext'
+import { useJournalNavigation } from '../../providers/JournalStore/JournalStoreProvider'
 import PlusIcon from '../../icons/PlusIcon'
 import { View } from '../../types/general'
 import { Button } from '../Button'
 import { DataState, DataStateStatus } from '../DataState'
 import { Header, HeaderCol, HeaderRow } from '../Header'
-import { JournalConfig } from '../Journal/Journal'
 import { JournalSidebar } from '../JournalSidebar'
 import { Loader } from '../Loader'
 import { Pagination } from '../Pagination'
@@ -32,17 +32,16 @@ export interface JournalTableStringOverrides {
 export const JournalTableWithPanel = ({
   containerRef,
   pageSize = 15,
-  config,
   stringOverrides,
   view,
 }: {
   view: View
   containerRef: RefObject<HTMLDivElement>
   pageSize?: number
-  config: JournalConfig
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const [currentPage, setCurrentPage] = useState(1)
+  const { toCreateEntry } = useJournalNavigation()
 
   const {
     data: rawData,
@@ -51,7 +50,6 @@ export const JournalTableWithPanel = ({
     isValidating,
     refetch,
     selectedEntryId,
-    addEntry,
     hasMore,
     fetchMore,
   } = useContext(JournalContext)
@@ -81,8 +79,8 @@ export const JournalTableWithPanel = ({
   return (
     <Panel
       className={`Layer__${COMPONENT_NAME}`}
-      sidebar={<JournalSidebar parentRef={containerRef} config={config} />}
-      sidebarIsOpen={Boolean(selectedEntryId)}
+      sidebar={<JournalSidebar parentRef={containerRef} />}
+      sidebarIsOpen={Boolean(selectedEntryId && selectedEntryId !== 'new')}
       parentRef={containerRef}
     >
       <Header
@@ -117,8 +115,7 @@ export const JournalTableWithPanel = ({
               iconOnly={['mobile', 'tablet'].includes(view)}
             />
             <Button
-              onClick={() => addEntry()}
-              disabled={isLoading}
+              onClick={() => toCreateEntry()}
               iconOnly={view === 'mobile'}
               leftIcon={view === 'mobile' && <PlusIcon size={14} />}
             >
@@ -158,7 +155,7 @@ export const JournalTableWithPanel = ({
               status={DataStateStatus.failed}
               title='Something went wrong'
               description='We couldn’t load your data.'
-              onRefresh={() => refetch()}
+              onRefresh={() => { void refetch() }}
               isLoading={isValidating || isLoading}
             />
           </div>

@@ -3,13 +3,19 @@ import { useMemo } from 'react'
 import type { useTagDimensions } from './api/useTagDimensions'
 
 function flattenDimensionsToValues(dimensions: ReadonlyArray<typeof TagDimensionSchema.Type>) {
-  return dimensions.flatMap(({ id: dimensionId, key: dimensionLabel, definedValues }) =>
-    definedValues.map(({ id: valueId, value: valueLabel }) => makeTagValue({
+  return dimensions.flatMap(({ id: dimensionId, key: dimensionKey, definedValues, displayName: dimensionDisplayName }) => {
+    const values = definedValues.map(({ id: valueId, value: value, displayName: valueDisplayName, archivedAt }) => makeTagValue({
       dimensionId,
-      dimensionLabel,
+      dimensionKey,
+      dimensionDisplayName: dimensionDisplayName,
       valueId,
-      valueLabel,
-    })),
+      value,
+      valueDisplayName: valueDisplayName,
+      isArchived: !!archivedAt,
+    }))
+
+    return values
+  },
   )
 }
 

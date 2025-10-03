@@ -3,7 +3,7 @@ import { ChartOfAccounts } from '../../components/ChartOfAccounts'
 import { ChartOfAccountsStringOverrides } from '../../components/ChartOfAccounts/ChartOfAccounts'
 import { Journal } from '../../components/Journal'
 import { JournalStringOverrides } from '../../components/Journal/Journal'
-import { ProfitAndLoss } from '../../components/ProfitAndLoss'
+import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
 import { Toggle } from '../../components/Toggle'
 import { View } from '../../components/View'
 import { LinkingMetadata } from '../../contexts/InAppLinkContext'
@@ -24,6 +24,8 @@ export interface ChartOfAccountsOptions {
 export interface GeneralLedgerProps {
   title?: string // deprecated
   showTitle?: boolean
+  showTags?: boolean
+  showCustomerVendor?: boolean
   stringOverrides?: GeneralLedgerStringOverrides
   chartOfAccountsOptions?: ChartOfAccountsOptions
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
@@ -32,6 +34,8 @@ export interface GeneralLedgerProps {
 export const GeneralLedgerView = ({
   title, // deprecated
   showTitle = true,
+  showTags = true,
+  showCustomerVendor = true,
   stringOverrides,
   chartOfAccountsOptions,
   renderInAppLink,
@@ -78,6 +82,8 @@ export const GeneralLedgerView = ({
           )
           : (
             <Journal
+              showTags={showTags}
+              showCustomerVendor={showCustomerVendor}
               stringOverrides={stringOverrides?.journal}
               renderInAppLink={renderInAppLink}
             />
