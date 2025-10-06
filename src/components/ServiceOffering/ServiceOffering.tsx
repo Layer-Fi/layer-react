@@ -164,20 +164,20 @@ export const ServiceOffering = ({
             <HStack gap='lg' pb='xs'>
               <VStack pb='xs'>
                 <Heading size='lg'>
-                  {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading_1, platform)}
+                  {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading1, platform)}
                 </Heading>
                 <Span size='md' variant='subtle'>
-                  {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading_1_desc, platform)}
+                  {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading1Desc, platform)}
                 </Span>
               </VStack>
             </HStack>
             <HStack gap='lg' pb='xs'>
               <VStack pb='xs'>
                 <Heading size='lg'>
-                  {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading_2, platform)}
+                  {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading2, platform)}
                 </Heading>
                 <Span size='md' variant='subtle'>
-                  {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading_2_desc, platform)}
+                  {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading2Desc, platform)}
                 </Span>
               </VStack>
             </HStack>

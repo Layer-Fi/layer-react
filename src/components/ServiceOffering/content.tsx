@@ -109,10 +109,10 @@ export const DefaultHeroContentConfig: HeroContentConfigOverridesResolved = {
   stringOverrides: {
     title: '{platformName} Accounting',
     subtitle: 'Track your business finances, right within {platformName}',
-    heading_1: 'All your finances in one place',
-    heading_1_desc: 'Directly integrate with your {platformName} data, so you can see your business performance and profit in real-time.',
-    heading_2: 'Built for {industry}',
-    heading_2_desc: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
+    heading1: 'All your finances in one place',
+    heading1Desc: 'Directly integrate with your {platformName} data, so you can see your business performance and profit in real-time.',
+    heading2: 'Built for {industry}',
+    heading2Desc: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
   },
   mediaUrls: {
     top_of_fold_image: imagePartnerAccountingImage,

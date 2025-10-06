@@ -116,7 +116,7 @@ export interface ServiceOfferingOverridesResolved<StringOverrideKeys extends str
   cta: Record<CtaKeys, ServiceOfferingLink>
 }
 
-export type HeroContentStringOverrideKeys = 'title' | 'subtitle' | 'heading_1' | 'heading_1_desc' | 'heading_2' | 'heading_2_desc'
+export type HeroContentStringOverrideKeys = 'title' | 'subtitle' | 'heading1' | 'heading1Desc' | 'heading2' | 'heading2Desc'
 export type HeroContentMediaUrlKeys = 'top_of_fold_image'
 export type HeroContentCtaKeys = 'primary' | 'secondary'
 export type HeroContentConfigOverrides = ServiceOfferingOverrides<HeroContentStringOverrideKeys, HeroContentMediaUrlKeys, HeroContentCtaKeys>
