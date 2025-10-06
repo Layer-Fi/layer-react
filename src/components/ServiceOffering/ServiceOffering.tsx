@@ -237,7 +237,7 @@ export const ServiceOffering = ({
                 platform,
               )}
             </Heading>
-            <VStack gap='md'>
+            <VStack gap='lg'>
               {bookkeepingFeatureCards.map((card, index) => renderFeatureCard(card, index, platform))}
             </VStack>
           </VStack>
@@ -267,7 +267,7 @@ export const ServiceOffering = ({
                 platform,
               )}
             </Heading>
-            <HStack>
+            <HStack gap='lg'>
               {bookkeepingFeatureCards.map((card, index) => renderFeatureCard(card, index, platform))}
             </HStack>
           </VStack>

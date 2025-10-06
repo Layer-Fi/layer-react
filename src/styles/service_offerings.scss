@@ -73,7 +73,7 @@
   flex-direction: column;
   gap: var(--spacing-md);
   margin: auto 0;
-
+  width: 33%;
   text-align: center;
 
   .img-container {
@@ -296,7 +296,7 @@
 .Layer__service-offering__responsive-layout {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
 
   @media (width <= 1440px) {
     flex-direction: column;
