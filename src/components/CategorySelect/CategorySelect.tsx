@@ -113,6 +113,7 @@ export const mapSuggestedMatchToOption = (
       display_name: record.details.description,
       amount: record.details.amount,
       subCategories: null,
+      details: record.details,
     },
   }
 }
@@ -137,7 +138,7 @@ const GroupHeading = (
     <components.GroupHeading
       className={classNames(
         props.className,
-        props.children === 'Match' || props.children === 'All categories'
+        props.children === 'Match' || props.children === 'Transfer' || props.children === 'All categories'
           ? 'Layer__select__group-heading--main'
           : '',
       )}
@@ -308,7 +309,7 @@ export const CategorySelect = ({
     !excludeMatches && bankTransaction?.suggested_matches
       ? [
           {
-            label: 'Match',
+            label: bankTransaction.suggested_matches.every(x => x.details.type === 'Transfer_Match') ? 'Transfer' : 'Match',
             options: bankTransaction.suggested_matches.map((x) => {
               return {
                 type: OptionActionType.MATCH,
@@ -421,7 +422,7 @@ export const CategorySelect = ({
         <div className='Layer__select__option-label'>
           {props.type === 'match' && (
             <Badge size={BadgeSize.SMALL} icon={<MinimizeTwo size={11} />}>
-              Match
+              {props.payload.details?.type === 'Transfer_Match' ? 'Transfer' : 'Match'}
             </Badge>
           )}
           <span>{props.payload.display_name}</span>
