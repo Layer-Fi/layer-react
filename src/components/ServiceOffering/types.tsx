@@ -1,12 +1,6 @@
 import { ReactNode } from 'react'
 
 /**
- * Determines the layout out the ServiceOffering component, allowing you to position
- * the service offerings in different positions.
- */
-export type ServiceOfferingOfferLayout = 'left' | 'bottom' | 'right' | 'none'
-
-/**
  * A Link acts as a call-to-action for users interacting with the ServiceOffering component.
  @see ServiceOffering
  */

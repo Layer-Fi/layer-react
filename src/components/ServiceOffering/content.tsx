@@ -1,5 +1,5 @@
 import { imagePartnerAccountingImage } from '../../assets/images'
-import { HeroContentConfigOverridesResolved, ServiceOfferingConfig, ServiceOfferingConfigOverridesResolved, ServiceOfferingOfferLayout } from './types'
+import { HeroContentConfigOverridesResolved, ServiceOfferingConfig, ServiceOfferingConfigOverridesResolved } from './types'
 
 import { ReactNode } from 'react'
 
@@ -78,16 +78,6 @@ export interface ContentConfig {
    */
   textContent?: ServiceOfferingTypesTextContent
 
-  /**
-     * Controls the positioning of the service options panel.
-     * @default 'none'
-     * - 'left': Options panel appears on the left side
-     * - 'right': Options panel appears on the right side
-     * - 'bottom': Options panel appears below the main content
-     * - 'none': No options panel is displayed
-     */
-  layout?: ServiceOfferingOfferLayout
-
   /** Core features displayed in the main content area showcasing key platform benefits */
   features?: CoreValueProposition[]
 
@@ -117,10 +107,7 @@ export type PartialContentConfig = {
    @see ServiceOfferingDefaultTextContent
    */
   textContent?: Partial<ServiceOfferingTypesTextContent>
-  /**
-   * Allows you to override the layout position for the service offerings.
-   */
-  layout?: ServiceOfferingOfferLayout
+
   /**
    * Allows you to configure the textual content on the second section of the ServiceOffering component: the core value propositions section.
    */
@@ -146,7 +133,6 @@ export type PartialContentConfig = {
  */
 export const serviceOfferingDefaultContentConfig: Omit<ContentConfig, 'config'> = {
   textContent: ServiceOfferingDefaultTextContent,
-  layout: 'none',
   features: [
     {
       icon: <></>,
