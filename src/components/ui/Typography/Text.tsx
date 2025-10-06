@@ -19,7 +19,6 @@ export type TextStyleProps = {
   status?: 'error'
   variant?: 'placeholder' | 'subtle'
   weight?: 'normal' | 'bold'
-  lineHeight?: 'md' | 'lg' | 'xl'
 }
 
 type TextRenderingProps = {
@@ -31,7 +30,6 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
     align,
     children,
     ellipsis,
-    lineHeight,
     nonAria,
     noWrap,
     pb,
@@ -49,7 +47,6 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
     dataProperties: toDataProperties({
       align,
       ellipsis,
-      'line-height': lineHeight,
       'no-wrap': noWrap,
       pb,
       pbe,
