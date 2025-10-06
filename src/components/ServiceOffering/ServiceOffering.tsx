@@ -8,7 +8,7 @@ import { Heading } from '../ui/Typography/Heading'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
 
-import { DefaultHeroContentConfig, DefaultAccountingOfferingContentConfig, DefaultBookkeepingOfferingContentConfig } from './content'
+import { DefaultHeroContentConfig, DefaultAccountingOfferingContentConfig, DefaultBookkeepingOfferingContentConfig, ServiceOfferingDefaultTextContent, ServiceOfferingContentID } from './content'
 import { HeroContentConfigOverrides, ServiceOfferingConfigOverrides, ServiceOfferingLink, ServiceOfferingPlatformConfig, ServiceOfferingType } from './types'
 import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { isCalendlyLink, useCalendly } from './calendly'
@@ -95,7 +95,7 @@ export const ServiceOffering = ({
   const hasBookkeepingEnabled = availableOffers.includes('bookkeeping')
 
   const heroConfig = mergeHeroContentOverrides(DefaultHeroContentConfig, heroOverrides)
-  const offeringSectionTitle = offeringOverrides.stringOverrides?.sectionTitle ?? 'Use {platformName} Accounting yourself, or let our team of expert handle bookkeeping for you'
+  const offeringSectionTitle = offeringOverrides.stringOverrides?.sectionTitle ?? ServiceOfferingDefaultTextContent[ServiceOfferingContentID.offersTitle]
   const accountingOfferingConfig = mergeServiceOfferingOverrides(DefaultAccountingOfferingContentConfig, offeringOverrides.accounting)
   const bookkeepingOfferingConfig = mergeServiceOfferingOverrides(DefaultBookkeepingOfferingContentConfig, offeringOverrides.bookkeeping)
 
