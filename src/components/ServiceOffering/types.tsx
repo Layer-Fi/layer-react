@@ -136,26 +136,6 @@ export type ServiceOfferingConfigOverridesResolved = ServiceOfferingOverridesRes
   ServiceOfferingStringOverrideKeys, ServiceOfferingMediaUrlKeys, ServiceOfferingCtaKeys> & { offerType: ServiceOfferingType }
 
 /**
- * Props for the ServiceOffering component.
- *
- * Requires only a single parameter, which is `config` which holds on to all the customizable
- * settings for the service offering component such as textual content on the accounting and bookkeeping
- * services, with varied pricing options and book-a-call calendly integration.
- */
-export interface ServiceOfferingProps {
-  platform: ServiceOfferingPlatformConfig
-  availableOffers: ServiceOfferingType[]
-  heroOverrides: HeroContentConfigOverrides
-  offeringOverrides: {
-    stringOverrides?: {
-      sectionTitle: string
-    }
-    accounting: ServiceOfferingConfigOverrides
-    bookkeeping: ServiceOfferingConfigOverrides
-  }
-}
-
-/**
  * Merges main content config overrides with defaults.
  * @param defaults The default override values (must be complete)
  * @param overrides The partial overrides to merge

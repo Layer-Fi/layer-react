@@ -9,7 +9,7 @@ import { HStack, VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
 
 import { DefaultHeroContentConfig, DefaultAccountingOfferingContentConfig, DefaultBookkeepingOfferingContentConfig } from './content'
-import { ServiceOfferingLink, ServiceOfferingProps, mergeHeroContentOverrides, mergeServiceOfferingOverrides } from './types'
+import { HeroContentConfigOverrides, ServiceOfferingConfigOverrides, ServiceOfferingLink, ServiceOfferingPlatformConfig, ServiceOfferingType, mergeHeroContentOverrides, mergeServiceOfferingOverrides } from './types'
 import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { isCalendlyLink, useCalendly } from './calendly'
 import { View } from '../View'
@@ -38,6 +38,26 @@ const useIsMobile = (breakpoint = 768) => {
   }, [breakpoint])
 
   return isMobile
+}
+
+/**
+ * Props for the ServiceOffering component.
+ *
+ * Requires only a single parameter, which is `config` which holds on to all the customizable
+ * settings for the service offering component such as textual content on the accounting and bookkeeping
+ * services, with varied pricing options and book-a-call calendly integration.
+ */
+export interface ServiceOfferingProps {
+  platform: ServiceOfferingPlatformConfig
+  availableOffers: ServiceOfferingType[]
+  heroOverrides: HeroContentConfigOverrides
+  offeringOverrides: {
+    stringOverrides?: {
+      sectionTitle: string
+    }
+    accounting: ServiceOfferingConfigOverrides
+    bookkeeping: ServiceOfferingConfigOverrides
+  }
 }
 
 export const ServiceOffering = ({
