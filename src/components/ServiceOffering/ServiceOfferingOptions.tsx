@@ -9,6 +9,7 @@ import { isCalendlyLink } from './calendly'
 import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { Check } from 'lucide-react'
 import classNames from 'classnames'
+import { useCallback, useMemo } from 'react'
 
 export interface ServiceOfferingOptionsProps {
   type: 'accounting' | 'bookkeeping'
@@ -25,16 +26,16 @@ export const ServiceOfferingOffer = ({
   openCalendly,
   className,
 }: ServiceOfferingOptionsProps) => {
-  const handleCtaClick = () => {
+  const handleCtaClick = useCallback(() => {
     if (isCalendlyLink(config.cta.primary)) {
       openCalendly(config.cta.primary.url)
     }
     else {
       window.open(config.cta.primary.url, '_blank')
     }
-  }
+  }, [config.cta.primary, openCalendly])
 
-  const features = type === 'bookkeeping'
+  const features = useMemo(() => type === 'bookkeeping'
     ? [
       'Personalized setup with your bookkeeper',
       'Monthly books done for you',
@@ -44,7 +45,7 @@ export const ServiceOfferingOffer = ({
       'Direct integration with {platformName}',
       'Track expenses and receipts',
       'Easy to understand profitability charts and reports',
-    ]
+    ], [type])
 
   const baseClassName = classNames(className)
   const badgeVariant = type === 'bookkeeping' ? BadgeVariant.SUCCESS : BadgeVariant.INFO
