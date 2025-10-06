@@ -17,19 +17,19 @@ new Generator({
   null,
   !watchModeEnabled
 )
-  .generate()
-  .catch(() => {
-    throw new Error(
-      [
-        "Failed to generate types:",
-        "  - Try running `npx npm-dts generate -L debug` for more information",
-      ].join('\n'),
-    )
-  })
+.generate()
+.catch(() => {
+  throw new Error(
+    [
+      "Failed to generate types:",
+      "  - Try running `npx npm-dts generate -L debug` for more information",
+    ].join('\n'),
+  )
+})
 
 /** @type {import('esbuild').BuildOptions} */
 const sharedConfig = {
-  entryPoints: ['src/index.tsx'],
+  entryPoints: [ 'src/index.tsx' ],
   bundle: true,
   minify: false,
   tsconfig: './tsconfig.json',
@@ -74,7 +74,7 @@ async function moveStyles(baseDir, { withMap = false } = {}) {
 /** @type {import('esbuild').BuildOptions} */
 const esmConfig = {
   ...sharedConfig,
-  entryPoints: [...sharedConfig.entryPoints, STYLE_ENTRY_POINT],
+  entryPoints: [ ...sharedConfig.entryPoints, STYLE_ENTRY_POINT ],
   platform: 'neutral',
   outdir: `${OUT_DIR}/esm`,
   outExtension: { '.js': '.mjs' },
