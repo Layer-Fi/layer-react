@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ServiceOfferingLink } from './types'
+import { ServiceOfferingLink } from '../../components/ServiceOffering/types'
 
 interface CalendlyPayload {
   event: {
