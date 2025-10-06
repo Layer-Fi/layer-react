@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useMemo, useCallback } from 'react'
 import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { ServiceOfferingOffer } from './ServiceOfferingOptions'
@@ -14,31 +14,43 @@ import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { isCalendlyLink, useCalendly } from './calendly'
 import { View } from '../View'
 import { imageBookkeeperInquiries, imageBusinessAccounts, imageBusinessOverview, imageCategorizeExpenses, imagePnlOverview, imageScheduleBookkeeperMeeting } from '../../assets/images'
+import { useSizeClass } from '../../hooks/useWindowSize'
 
-/**
- * The ServiceOffering component provides a page-level component that surfaces the Layer accounting
- * and bookkeeping services. It acts as a landing page allowing platforms to showcase the core value proposition
- * and offers/pricing for the platform's end users.
- @see ServiceOfferingMainConfig
- @param config Allows you to customize the page component.
- @returns A React JSX component
- */
-// Custom hook for responsive design
-const useIsMobile = (breakpoint = 768) => {
-  const [isMobile, setIsMobile] = useState(false)
+const featureCards = [
+  {
+    image: imageBusinessAccounts,
+    title: 'Connect your business accounts',
+    description: 'Connect your business bank accounts and credit cards right within {platformName}',
+  },
+  {
+    image: imageBusinessOverview,
+    title: 'Categorize expenses',
+    description: 'Organize transactions into categories built for {industry}',
+  },
+  {
+    image: imageCategorizeExpenses,
+    title: 'Get a clear picture of your business',
+    description: 'See your business profitability and stay organized for tax time',
+  },
+]
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= breakpoint)
-    }
-
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [breakpoint])
-
-  return isMobile
-}
+const bookkeepingFeatureCards = [
+  {
+    image: imageScheduleBookkeeperMeeting,
+    title: 'Schedule a call with your Bookkeeper',
+    description: 'Get personalized guidance from your dedicated bookkeeper to review your finances and answer questions.',
+  },
+  {
+    image: imageBookkeeperInquiries,
+    title: 'Get notified on bookkeeping clarifications',
+    description: 'Receive clear notifications when your bookkeeper needs additional information or clarification on transactions.',
+  },
+  {
+    image: imagePnlOverview,
+    title: 'Get ready for tax season',
+    description: 'Your books will be organized and tax-ready with accurate categorization and financial statements prepared by professionals.',
+  },
+]
 
 /**
  * Props for the ServiceOffering component.
@@ -60,6 +72,14 @@ export interface ServiceOfferingProps {
   }
 }
 
+/**
+ * The ServiceOffering component provides a page-level component that surfaces the Layer accounting
+ * and bookkeeping services. It acts as a landing page allowing platforms to showcase the core value proposition
+ * and offers/pricing for the platform's end users.
+ @see ServiceOfferingMainConfig
+ @param config Allows you to customize the page component.
+ @returns A React JSX component
+ */
 export const ServiceOffering = ({
   platform,
   availableOffers,
@@ -67,7 +87,8 @@ export const ServiceOffering = ({
   offeringOverrides,
 }: ServiceOfferingProps) => {
   const { isCalendlyVisible, calendlyLink, calendlyRef, openCalendly, closeCalendly } = useCalendly()
-  const isMobile = useIsMobile(768)
+  const { isDesktop } = useSizeClass()
+  const isMobile = !isDesktop
 
   const offersPosition: 'top' | 'bottom' | 'left' | 'right' | 'none' = 'top'
 
@@ -83,28 +104,41 @@ export const ServiceOffering = ({
     'Layer__service-offering',
     {
       'Layer__service-offering--with-top-offers': offersPosition === 'top',
-      // 'Layer__service-offering--with-left-offers': offersPosition === 'left',
-      // 'Layer__service-offering--with-right-offers': offersPosition === 'right',
-      // 'Layer__service-offering--with-bottom-offers': offersPosition === 'bottom',
     },
   )
 
-  const handleLinkClick = (link?: ServiceOfferingLink) => {
+  const handleLinkClick = useCallback((link?: ServiceOfferingLink) => {
     if (isCalendlyLink(link)) {
       openCalendly(link!.url)
     }
     else if (link) {
       window.open(link.url, '_blank')
     }
-  }
+  }, [openCalendly])
 
-  const handleMainCta = () => handleLinkClick(heroConfig.cta?.primary)
+  const handleMainCta = useCallback(() => handleLinkClick(heroConfig.cta?.primary), [heroConfig.cta?.primary, handleLinkClick])
 
-  const handleLearnMore = () => {
+  const handleLearnMore = useCallback(() => {
     if (heroConfig.cta?.secondary) window.open(heroConfig.cta?.secondary.url, '_blank')
-  }
+  }, [heroConfig.cta?.secondary])
 
-  const renderMainContent = () => (
+  const renderFeatureCard = useCallback((card: typeof featureCards[0], index: number, platform: ServiceOfferingPlatformConfig) => (
+    <VStack key={index} className='Layer__feature-card'>
+      <div className='img-container'>
+        <img src={card.image} alt={card.title} />
+      </div>
+      <VStack gap='md'>
+        <Heading size='md'>
+          {ServiceOfferingHelper.bindTextValues(card.title, platform)}
+        </Heading>
+        <Span variant='subtle'>
+          {ServiceOfferingHelper.bindTextValues(card.description, platform)}
+        </Span>
+      </VStack>
+    </VStack>
+  ), [])
+
+  const renderMainContent = useCallback(() => (
     <VStack className='Layer__service-offering--main'>
       <div className='Layer__service-offering__responsive-layout'>
         <VStack gap='2xl' className='Layer__service-offering__responsive-content'>
@@ -175,62 +209,9 @@ export const ServiceOffering = ({
         </HStack>
       )}
     </VStack>
-  )
+  ), [platform, heroConfig, isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly, handleLearnMore, handleMainCta])
 
-  // Feature card data structure
-  const featureCards = [
-    {
-      image: imageBusinessAccounts,
-      title: 'Connect your business accounts',
-      description: 'Connect your business bank accounts and credit cards right within {platformName}',
-    },
-    {
-      image: imageBusinessOverview,
-      title: 'Categorize expenses',
-      description: 'Organize transactions into categories built for {industry}',
-    },
-    {
-      image: imageCategorizeExpenses,
-      title: 'Get a clear picture of your business',
-      description: 'See your business profitability and stay organized for tax time',
-    },
-  ]
-
-  const bookkeepingFeatureCards = [
-    {
-      image: imageScheduleBookkeeperMeeting,
-      title: 'Schedule a call with your Bookkeeper',
-      description: 'Get personalized guidance from your dedicated bookkeeper to review your finances and answer questions.',
-    },
-    {
-      image: imageBookkeeperInquiries,
-      title: 'Get notified on bookkeeping clarifications',
-      description: 'Receive clear notifications when your bookkeeper needs additional information or clarification on transactions.',
-    },
-    {
-      image: imagePnlOverview,
-      title: 'Get ready for tax season',
-      description: 'Your books will be organized and tax-ready with accurate categorization and financial statements prepared by professionals.',
-    },
-  ]
-
-  const renderFeatureCard = (card: typeof featureCards[0], index: number) => (
-    <VStack key={index} className='Layer__feature-card'>
-      <div className='img-container'>
-        <img src={card.image} alt={card.title} />
-      </div>
-      <VStack gap='md'>
-        <Heading size='md'>
-          {ServiceOfferingHelper.bindTextValues(card.title, platform)}
-        </Heading>
-        <Span variant='subtle'>
-          {ServiceOfferingHelper.bindTextValues(card.description, platform)}
-        </Span>
-      </VStack>
-    </VStack>
-  )
-
-  const RenderCarousel = () => {
+  const RenderCarousel = useMemo(() => {
     if (isMobile) {
       // Mobile: Simple scrollable list (no carousel)
       return (
@@ -244,7 +225,7 @@ export const ServiceOffering = ({
               )}
             </Heading>
             <VStack gap='md'>
-              {featureCards.map((card, index) => renderFeatureCard(card, index))}
+              {featureCards.map((card, index) => renderFeatureCard(card, index, platform))}
             </VStack>
           </VStack>
 
@@ -257,7 +238,7 @@ export const ServiceOffering = ({
               )}
             </Heading>
             <VStack gap='md'>
-              {bookkeepingFeatureCards.map((card, index) => renderFeatureCard(card, index))}
+              {bookkeepingFeatureCards.map((card, index) => renderFeatureCard(card, index, platform))}
             </VStack>
           </VStack>
         </VStack>
@@ -276,7 +257,7 @@ export const ServiceOffering = ({
               )}
             </Heading>
             <HStack>
-              {featureCards.map((card, index) => renderFeatureCard(card, index))}
+              {featureCards.map((card, index) => renderFeatureCard(card, index, platform))}
             </HStack>
           </VStack>
           <VStack gap='lg'>
@@ -287,15 +268,15 @@ export const ServiceOffering = ({
               )}
             </Heading>
             <HStack>
-              {bookkeepingFeatureCards.map((card, index) => renderFeatureCard(card, index))}
+              {bookkeepingFeatureCards.map((card, index) => renderFeatureCard(card, index, platform))}
             </HStack>
           </VStack>
         </ServiceOfferingCarousel>
       </VStack>
     )
-  }
+  }, [isMobile, platform, renderFeatureCard])
 
-  const RenderOffers = () => (
+  const RenderOffers = useMemo(() => (
     <VStack gap='3xl' className='Layer__service-offering--offers'>
       <HStack align='center'>
         <Heading size='md' align='center' style={{ maxWidth: '480px', margin: '0 auto' }}>
@@ -323,14 +304,16 @@ export const ServiceOffering = ({
         )}
       </div>
     </VStack>
+  ),
+  [hasAccountingEnabled, hasBookkeepingEnabled, offeringSectionTitle, platform, accountingOfferingConfig, bookkeepingOfferingConfig, openCalendly],
   )
 
   return (
     <View viewClassName={baseClassName} showHeader={false}>
       <div className='Layer__service-offering__content'>
         {renderMainContent()}
-        <RenderOffers />
-        <RenderCarousel />
+        {RenderOffers}
+        {RenderCarousel}
       </div>
     </View>
   )
