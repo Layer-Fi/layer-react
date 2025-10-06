@@ -9,12 +9,13 @@ import { HStack, VStack } from '../ui/Stack/Stack'
 import { Span } from '../ui/Typography/Text'
 
 import { DefaultHeroContentConfig, DefaultAccountingOfferingContentConfig, DefaultBookkeepingOfferingContentConfig } from './content'
-import { HeroContentConfigOverrides, ServiceOfferingConfigOverrides, ServiceOfferingLink, ServiceOfferingPlatformConfig, ServiceOfferingType, mergeHeroContentOverrides, mergeServiceOfferingOverrides } from './types'
+import { HeroContentConfigOverrides, ServiceOfferingConfigOverrides, ServiceOfferingLink, ServiceOfferingPlatformConfig, ServiceOfferingType } from './types'
 import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { isCalendlyLink, useCalendly } from './calendly'
 import { View } from '../View'
 import { imageBookkeeperInquiries, imageBusinessAccounts, imageBusinessOverview, imageCategorizeExpenses, imagePnlOverview, imageScheduleBookkeeperMeeting } from '../../assets/images'
 import { useSizeClass } from '../../hooks/useWindowSize'
+import { mergeHeroContentOverrides, mergeServiceOfferingOverrides } from './utils'
 
 const featureCards = [
   {
