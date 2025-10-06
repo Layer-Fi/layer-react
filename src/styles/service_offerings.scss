@@ -1,496 +1,470 @@
 /* Mobile responsive typography for service offering content */
-@media (max-width: 420px) {
-    .Layer__service-offering__content {
-        .Layer__heading {
-            font-size: var(--text-heading-sm);
-        }
-
-        .Layer__heading--3xl {
-            font-size: var(--text-heading);
-        }
-
-        .Layer__heading--2xl {
-            font-size: var(--text-heading-sm);
-        }
-
-        .Layer__heading--xl {
-            font-size: var(--text-lg);
-        }
-
-        .Layer__heading--lg {
-            font-size: var(--text-md);
-        }
-
-        .Layer__heading--md {
-            font-size: var(--text-sm);
-        }
-
-        .Layer__text--lg {
-            font-size: var(--text-md);
-        }
-
-        .Layer__text--md {
-            font-size: var(--text-sm);
-        }
+@media (width <= 420px) {
+  .Layer__service-offering__content {
+    .Layer__heading {
+      font-size: var(--text-heading-sm);
     }
+
+    .Layer__heading--3xl {
+      font-size: var(--text-heading);
+    }
+
+    .Layer__heading--2xl {
+      font-size: var(--text-heading-sm);
+    }
+
+    .Layer__heading--xl {
+      font-size: var(--text-lg);
+    }
+
+    .Layer__heading--lg {
+      font-size: var(--text-md);
+    }
+
+    .Layer__heading--md {
+      font-size: var(--text-sm);
+    }
+
+    .Layer__text--lg {
+      font-size: var(--text-md);
+    }
+
+    .Layer__text--md {
+      font-size: var(--text-sm);
+    }
+  }
 }
 
 .Layer__service-offering {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-    border: none;
-    border-radius: var(--border-radius-sm);
-    background: var(--color-white);
-    width: 100%;
-    height: 100%;
-    justify-content: flex-start;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+  border-radius: var(--border-radius-sm);
+  border: none;
+  background: var(--color-white);
 }
 
-
 .Layer__service-offering__calendly-container {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    margin: 0;
+  overflow: hidden;
+  max-height: 0;
+  margin: 0;
+  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 
-    &.visible {
-        max-height: 800px;
-        margin: var(--spacing-lg) 0;
-    }
+  &.visible {
+    max-height: 800px;
+    margin: var(--spacing-lg) 0;
+  }
 
-    // Ensure the inner calendly widget has proper height
-    .calendly-inline-widget {
-        width: 100%;
-        min-height: 630px;
-        transition: opacity 0.3s ease-in-out 0.8s;
-        margin-bottom: var(--spacing-lg);
-    }
+  // Ensure the inner calendly widget has proper height
+  .calendly-inline-widget {
+    min-height: 630px;
+    width: 100%;
+    margin-bottom: var(--spacing-lg);
+    transition: opacity 0.3s ease-in-out 0.8s;
+  }
 }
 
 .Layer__feature-card {
-    margin: auto 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin: auto 0;
 
-    .img-container {
-        @media (max-width: 768px) {
-            height: 100%;
-            max-width: max(80%, 240px);
-            margin: var(--spacing-xl) auto;
-        }
+  text-align: center;
 
-        @media (max-width: 1024px) {
-            margin: var(--spacing-md) auto;
-        }
-
-
-        height: 320px;
-        width: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        img {
-            height: 100%;
-            width: auto;
-            max-width: 100%;
-            margin: 0 auto;
-            filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.2));
-        }
+  .img-container {
+    @media (width <= 768px) {
+      height: 100%;
+      max-width: max(80%, 240px);
+      margin: var(--spacing-xl) auto;
     }
 
-    text-align: center;
-
-}
-
-// Service Offering Options Component
-.Layer__service-offering-options {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: var(--spacing-xl) var(--spacing-lg);
-}
-
-
-.Layer__service-offering-options__grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-md);
-    justify-items: center;
-    width: fit-content;
-    margin: 0 auto;
-
-    .Layer__service-offering--with-bottom-offers & {
-        @media (min-width: 1025px) {
-            width: fit-content;
-            margin: 0 auto;
-            display: flex;
-            gap: var(--spacing-md);
-        }
-
-        // Single card layout for accounting only in bottom offers
-        &:has(.Layer__service-offering-options__card:only-child) {
-            justify-content: center;
-        }
+    @media (width <= 1024px) {
+      margin: var(--spacing-md) auto;
     }
 
-    @media (max-width: 768px) {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-lg);
-    }
-}
-
-.Layer__service-offering-options__card {
-    border: none;
-    border-radius: 16px;
-    background: white;
-    padding: var(--spacing-md);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-    max-width: 420px;
-    margin: 0;
-    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-}
-
-
-.Layer__service-offering-options__features {
-    flex: 1;
-    margin-bottom: var(--spacing-sm);
-}
-
-
-.Layer__service-offering-options__features-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-
-}
-
-
-// Layout configurations for different offer positions
-.Layer__service-offering__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xl);
-}
-
-.Layer__service-offering__offers {
-    background-color: transparent;
-
-    @media (max-width: 1440px) {
-        padding: 0 var(--spacing-lg);
-    }
-}
-
-.Layer__service-offering--with-left-offers {
-    height: 100%;
-
-
-    .Layer__service-offering__content {
-        grid-template-columns: 420px 1fr;
-    }
-}
-
-.Layer__service-offering--with-right-offers {
-    height: 100%;
-
-    .Layer__service-offering__content {
-        grid-template-columns: 1fr 420px;
-
-        @media (max-width: 1920px) {
-            grid-template-columns: 1fr;
-            grid-template-rows: auto auto;
-        }
-    }
-}
-
-.Layer__service-offering--with-bottom-offers {
-    height: fit-content;
-
-    // .Layer__service-offering__responsive-layout {
-    //     padding-top: var(--spacing-2xl)
-    // }
-
-    .Layer__service-offering__content {
-        height: fit-content;
-    }
-}
-
-.Layer__service-offering--with-left-offers,
-.Layer__service-offering--with-right-offers {
-
-    .Layer__service-offering__content {
-        display: grid;
-        gap: var(--spacing-xl);
-        align-items: start;
-
-        @media (max-width: 1770px) {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .Layer__service-offering__offers {
-        padding: 0 var(--spacing-3xl);
-    }
-
-    .Layer__service-offering-options__grid {
-        grid-template-columns: unset;
-        grid-template-rows: 1fr 1fr;
-    }
-}
-
-.Layer__service-offering--with-right-offers {
-    .Layer__service-offering__content {
-        .Layer__service-offering--main {
-            order: 1;
-
-            /* padding-right: unset;*/
-            @media (min-width: 1920px) {
-                padding-right: 0;
-            }
-        }
-
-        .Layer__service-offering--offers {
-            order: 2;
-        }
-    }
-}
-
-.Layer__service-offering--with-left-offers {
-    .Layer__service-offering__content {
-        .Layer__service-offering--main {
-            order: 1;
-
-            /* padding-left: unset;*/
-            @media (min-width: 768px) {
-                padding-left: 0;
-            }
-
-        }
-
-        .Layer__service-offering--offers {
-            order: 0;
-
-            @media (max-width: 1770px) {
-                order: 2;
-            }
-        }
-    }
-}
-
-.Layer__service-offering--with-bottom-offers {
-    display: flex;
-    flex-direction: column;
-
-    .Layer__service-offering__offers {
-        padding-bottom: var(--spacing-lg);
-
-        @media (min-width: 1440px) {
-            padding-bottom: var(--spacing-5xl);
-        }
-    }
-}
-
-.Layer__service-offering--offers {
-    margin-top: var(--spacing-xl);
-}
-
-.Layer__service-offering__main {
-    flex: 1;
-    margin-top: auto;
-    margin-bottom: auto;
-    padding: 0 var(--spacing-xl);
-}
-
-.Layer__service-offering__offers {
-    flex-shrink: 0;
-    min-width: 0;
-}
-
-.Layer__service-offering-options__icon {
-    path {
-        stroke: var(--fg-subtle);
-    }
-}
-
-// Responsive layout for main service offering content
-.Layer__service-offering__responsive-layout {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-    @media (max-width: 1440px) {
-        flex-direction: column;
-        gap: var(--spacing-xl);
-    }
-}
-
-.Layer__service-offering__responsive-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-2xl);
-    padding: var(--spacing-3xl);
-    padding-bottom: var(--spacing-3xl);
-
-    @media (max-width: 1440px) {
-        padding: var(--spacing-xl);
-    }
-}
-
-.Layer__service-offering__responsive-image {
     display: flex;
     align-items: center;
     justify-content: center;
 
-    @media (max-width: 1440px) {
-        margin-top: var(--spacing-lg);
-    }
+    height: 320px;
+    width: auto;
 
     img {
-        max-width: 100%;
-        height: auto;
+      height: 100%;
+      width: auto;
+      max-width: 100%;
+      margin: 0 auto;
+      filter: drop-shadow(0 12px 16px rgb(0 0 0 / 20%));
     }
+  }
+}
+
+// Service Offering Options Component
+.Layer__service-offering-options {
+  max-width: 1200px;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  margin: 0 auto;
+}
+
+.Layer__service-offering-options__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  justify-items: center;
+  width: fit-content;
+  margin: 0 auto;
+
+  .Layer__service-offering--with-bottom-offers & {
+    @media (width >= 1025px) {
+      display: flex;
+      gap: var(--spacing-md);
+      width: fit-content;
+      margin: 0 auto;
+    }
+
+    // Single card layout for accounting only in bottom offers
+    &:has(.Layer__service-offering-options__card:only-child) {
+      justify-content: center;
+    }
+  }
+
+  @media (width <= 768px) {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+}
+
+.Layer__service-offering-options__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  max-width: 420px;
+  padding: var(--spacing-md);
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 5px 10px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
+  margin: 0;
+  background: white;
+}
+
+.Layer__service-offering-options__features {
+  flex: 1;
+  margin-bottom: var(--spacing-sm);
+}
+
+.Layer__service-offering-options__features-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+// Layout configurations for different offer positions
+.Layer__service-offering__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.Layer__service-offering__offers {
+  flex-shrink: 0;
+  min-width: 0;
+  background-color: transparent;
+
+  @media (width <= 1440px) {
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+.Layer__service-offering--with-left-offers {
+  height: 100%;
+
+  .Layer__service-offering__content {
+    grid-template-columns: 420px 1fr;
+
+    .Layer__service-offering--main {
+      order: 1;
+
+      /* padding-left: unset; */
+      @media (width >= 768px) {
+        padding-left: 0;
+      }
+    }
+
+    .Layer__service-offering--offers {
+      order: 0;
+
+      @media (width <= 1770px) {
+        order: 2;
+      }
+    }
+  }
+}
+
+.Layer__service-offering--with-right-offers {
+  height: 100%;
+
+  .Layer__service-offering__content {
+    grid-template-columns: 1fr 420px;
+
+    @media (width <= 1920px) {
+      grid-template-rows: auto auto;
+      grid-template-columns: 1fr;
+    }
+
+    .Layer__service-offering--main {
+      order: 1;
+
+      /* padding-right: unset; */
+      @media (width >= 1920px) {
+        padding-right: 0;
+      }
+    }
+
+    .Layer__service-offering--offers {
+      order: 2;
+    }
+  }
+}
+
+.Layer__service-offering--with-bottom-offers {
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+
+  .Layer__service-offering__content {
+    height: fit-content;
+  }
+
+  .Layer__service-offering__offers {
+    padding-bottom: var(--spacing-lg);
+
+    @media (width >= 1440px) {
+      padding-bottom: var(--spacing-5xl);
+    }
+  }
+}
+
+.Layer__service-offering--with-left-offers,
+.Layer__service-offering--with-right-offers {
+  .Layer__service-offering__content {
+    display: grid;
+    gap: var(--spacing-xl);
+    align-items: start;
+
+    @media (width <= 1770px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .Layer__service-offering__offers {
+    padding: 0 var(--spacing-3xl);
+  }
+
+  .Layer__service-offering-options__grid {
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: unset;
+  }
+}
+
+.Layer__service-offering--offers {
+  margin-top: var(--spacing-xl);
+}
+
+.Layer__service-offering__main {
+  flex: 1;
+  padding: 0 var(--spacing-xl);
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.Layer__service-offering-options__icon {
+  path {
+    stroke: var(--fg-subtle);
+  }
+}
+
+// Responsive layout for main service offering content
+.Layer__service-offering__responsive-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  @media (width <= 1440px) {
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+}
+
+.Layer__service-offering__responsive-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+  padding: var(--spacing-3xl);
+  padding-bottom: var(--spacing-3xl);
+
+  @media (width <= 1440px) {
+    padding: var(--spacing-xl);
+  }
+}
+
+.Layer__service-offering__responsive-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (width <= 1440px) {
+    margin-top: var(--spacing-lg);
+  }
+
+  img {
+    height: auto;
+    max-width: 100%;
+  }
 }
 
 // Responsive value props layout
 .Layer__service-offering__value-props-responsive {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-5xl);
-    justify-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-5xl);
+  justify-items: center;
 
-    @media (max-width: 1440px) {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  @media (width <= 1440px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-    @media (max-width: 768px) {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-xl);
-    }
+  @media (width <= 768px) {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+  }
 }
 
 // Responsive override for left/right offers grid layout
-@media (max-width: 1770px) {
-
-    .Layer__service-offering--with-left-offers .Layer__service-offering-options__grid,
-    .Layer__service-offering--with-right-offers .Layer__service-offering-options__grid {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: unset;
-    }
+@media (width <= 1770px) {
+  .Layer__service-offering--with-left-offers .Layer__service-offering-options__grid,
+  .Layer__service-offering--with-right-offers .Layer__service-offering-options__grid {
+    grid-template-rows: unset;
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
-@media (max-width: 768px) {
-
-    .Layer__service-offering--with-left-offers .Layer__service-offering-options__grid,
-    .Layer__service-offering--with-right-offers .Layer__service-offering-options__grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: unset;
-    }
+@media (width <= 768px) {
+  .Layer__service-offering--with-left-offers .Layer__service-offering-options__grid,
+  .Layer__service-offering--with-right-offers .Layer__service-offering-options__grid {
+    grid-template-rows: unset;
+    grid-template-columns: 1fr;
+  }
 }
 
 // Custom carousel styles
 .Layer__service-offering-carousel {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    touch-action: pan-y; // Allow vertical scrolling while capturing horizontal swipes
-    user-select: none; // Prevent text selection during swipe
+  position: relative;
+  overflow: hidden;
+
+  // Allow vertical scrolling while capturing horizontal swipes
+  width: 100%;
+  touch-action: pan-y;
+
+  // Prevent text selection during swipe
+  user-select: none;
 }
 
 .Layer__carousel-track {
-    display: flex;
-    width: 100%;
-    cursor: grab;
+  display: flex;
+  width: 100%;
+  cursor: grab;
 
-    &:active {
-        cursor: grabbing;
-    }
+  &:active {
+    cursor: grabbing;
+  }
 }
 
 .Layer__carousel-slide {
-    min-width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  min-width: 100%;
+  max-width: 100%;
+
+  // Ensure content doesn't overflow
+  >* {
+    overflow: hidden;
     max-width: 100%;
-    flex-shrink: 0;
-    box-sizing: border-box;
+  }
 
-    // Ensure content doesn't overflow
-    >* {
-        max-width: 100%;
-        overflow: hidden;
+  // Make feature card grid responsive within carousel
+  .Layer__hstack {
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @media (width <= 1200px) {
+      .Layer__feature-card {
+        flex: 1 1 45%;
+        min-width: 280px;
+      }
     }
 
-    // Make feature card grid responsive within carousel
-    .Layer__hstack {
-        flex-wrap: wrap;
-        justify-content: center;
+    @media (width <= 768px) {
+      flex-direction: column;
 
-        @media (max-width: 1200px) {
-            .Layer__feature-card {
-                flex: 1 1 45%;
-                min-width: 280px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            flex-direction: column;
-
-            .Layer__feature-card {
-                width: 100%;
-                max-width: 400px;
-            }
-        }
+      .Layer__feature-card {
+        width: 100%;
+        max-width: 400px;
+      }
     }
+  }
 }
 
 .Layer__carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: var(--spacing-sm);
-    margin-top: var(--spacing-xl);
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin-top: var(--spacing-xl);
 }
 
 .Layer__carousel-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 1px solid var(--border-color);
-    background: transparent;
-    cursor: pointer;
-    padding: 0;
-    transition: all 300ms ease-in-out;
+  height: 12px;
+  width: 12px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  cursor: pointer;
+  transition: all 300ms ease-in-out;
 
-    &:hover {
-        background: var(--border-color-hover, rgba(0, 0, 0, 0.2));
-    }
+  &:hover {
+    background: var(--border-color-hover, rgb(0 0 0 / 20%));
+  }
 
-    &.Layer__carousel-dot--active {
-        background: var(--color-primary, #000);
-        border-color: var(--color-primary, #000);
-    }
+  &.Layer__carousel-dot--active {
+    background: var(--color-primary, #000);
+    border-color: var(--color-primary, #000);
+  }
 
-    @media (max-width: 768px) {
-        width: 10px;
-        height: 10px;
-    }
+  @media (width <= 768px) {
+    height: 10px;
+    width: 10px;
+  }
 }
 
 // Mobile feature sections (no carousel)
 .Layer__mobile-feature-section {
-    width: 100%;
-    padding: 0 var(--spacing-md);
-    box-sizing: border-box;
-    gap: var(--spacing-xl);
+  box-sizing: border-box;
+  gap: var(--spacing-xl);
+  width: 100%;
+  padding: 0 var(--spacing-md);
 
-    .Layer__feature-card {
-        width: 100%;
-        max-width: 100%;
-        margin: 0 auto;
-    }
+  .Layer__feature-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
 }
