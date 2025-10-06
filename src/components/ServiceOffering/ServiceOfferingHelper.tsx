@@ -1,4 +1,4 @@
-import { ServiceOfferingPlatformConfig, ServiceOfferingConfig, ServiceOfferingValueProposition, ServiceOfferingProps } from './types'
+import { ServiceOfferingPlatformConfig, ServiceOfferingConfig, ServiceOfferingValueProposition } from './types'
 import {
   imageBusinessAccounts,
   imageBusinessOverview,
