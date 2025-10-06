@@ -224,7 +224,6 @@ export class ServiceOfferingHelper {
         ...ServiceOfferingDefaultTextContent,
         ...config.textContent,
       },
-      layout: config.layout ?? serviceOfferingDefaultContentConfig.layout,
       features: config.features ?? serviceOfferingDefaultContentConfig.features,
       config: processedConfig,
     }
