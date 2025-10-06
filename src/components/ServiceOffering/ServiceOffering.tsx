@@ -91,8 +91,6 @@ export const ServiceOffering = ({
   const { isDesktop } = useSizeClass()
   const isMobile = !isDesktop
 
-  const offersPosition: 'top' | 'bottom' | 'left' | 'right' | 'none' = 'top'
-
   const hasAccountingEnabled = availableOffers.includes('accounting')
   const hasBookkeepingEnabled = availableOffers.includes('bookkeeping')
 
@@ -103,9 +101,7 @@ export const ServiceOffering = ({
 
   const baseClassName = classNames(
     'Layer__service-offering',
-    {
-      'Layer__service-offering--with-top-offers': offersPosition === 'top',
-    },
+    'Layer__service-offering--with-top-offers',
   )
 
   const handleLinkClick = useCallback((link?: ServiceOfferingLink) => {

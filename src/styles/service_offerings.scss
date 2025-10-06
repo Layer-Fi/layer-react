@@ -118,25 +118,6 @@
   justify-items: center;
   width: fit-content;
   margin: 0 auto;
-
-  .Layer__service-offering--with-bottom-offers & {
-    @media (width >= 1025px) {
-      display: flex;
-      gap: var(--spacing-md);
-      width: fit-content;
-      margin: 0 auto;
-    }
-
-    // Single card layout for accounting only in bottom offers
-    &:has(.Layer__service-offering-options__card:only-child) {
-      justify-content: center;
-    }
-  }
-
-  @media (width <= 768px) {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
-  }
 }
 
 .Layer__service-offering-options__card {
@@ -181,114 +162,6 @@
 
   @media (width <= 1440px) {
     padding: 0 var(--spacing-lg);
-  }
-}
-
-.Layer__service-offering--with-left-offers {
-  height: 100%;
-
-  .Layer__service-offering__content {
-    grid-template-columns: 420px 1fr;
-
-    .Layer__service-offering--main {
-      order: 1;
-
-      /* padding-left: unset; */
-      @media (width >= 768px) {
-        padding-left: 0;
-      }
-    }
-
-    .Layer__service-offering--offers {
-      order: 0;
-
-      @media (width <= 1770px) {
-        order: 2;
-      }
-    }
-  }
-}
-
-.Layer__service-offering--with-right-offers {
-  height: 100%;
-
-  .Layer__service-offering__content {
-    grid-template-columns: 1fr 420px;
-
-    @media (width <= 1920px) {
-      grid-template-rows: auto auto;
-      grid-template-columns: 1fr;
-    }
-
-    .Layer__service-offering--main {
-      order: 1;
-
-      /* padding-right: unset; */
-      @media (width >= 1920px) {
-        padding-right: 0;
-      }
-    }
-
-    .Layer__service-offering--offers {
-      order: 2;
-    }
-  }
-}
-
-.Layer__service-offering--with-bottom-offers {
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-
-  .Layer__service-offering__content {
-    height: fit-content;
-  }
-
-  .Layer__service-offering__offers {
-    padding-bottom: var(--spacing-lg);
-
-    @media (width >= 1440px) {
-      padding-bottom: var(--spacing-5xl);
-    }
-  }
-}
-
-.Layer__service-offering--with-left-offers,
-.Layer__service-offering--with-right-offers {
-  .Layer__service-offering__content {
-    display: grid;
-    gap: var(--spacing-xl);
-    align-items: start;
-
-    @media (width <= 1770px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .Layer__service-offering__offers {
-    padding: 0 var(--spacing-3xl);
-  }
-
-  .Layer__service-offering-options__grid {
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: unset;
-  }
-}
-
-.Layer__service-offering--offers {
-  margin-top: var(--spacing-xl);
-}
-
-.Layer__service-offering__main {
-  flex: 1;
-  padding: 0 var(--spacing-xl);
-  margin-top: auto;
-  margin-bottom: auto;
-}
-
-.Layer__service-offering-options__icon {
-  path {
-    stroke: var(--fg-subtle);
   }
 }
 
@@ -345,23 +218,6 @@
   @media (width <= 768px) {
     grid-template-columns: 1fr;
     gap: var(--spacing-xl);
-  }
-}
-
-// Responsive override for left/right offers grid layout
-@media (width <= 1770px) {
-  .Layer__service-offering--with-left-offers .Layer__service-offering-options__grid,
-  .Layer__service-offering--with-right-offers .Layer__service-offering-options__grid {
-    grid-template-rows: unset;
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (width <= 768px) {
-  .Layer__service-offering--with-left-offers .Layer__service-offering-options__grid,
-  .Layer__service-offering--with-right-offers .Layer__service-offering-options__grid {
-    grid-template-rows: unset;
-    grid-template-columns: 1fr;
   }
 }
 
