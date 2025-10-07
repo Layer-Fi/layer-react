@@ -1,9 +1,13 @@
 import { Schema } from 'effect'
+import { useCallback } from 'react'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { useAuth } from '../../../hooks/useAuth'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/dist/mutation'
-import { CALL_BOOKINGS_TAG_KEY } from './useCallBookings'
+import { CALL_BOOKINGS_TAG_KEY, CreateCallBookingBody } from './useCallBookings'
+import { post } from '../../../api/layer/authenticated_http'
+import { withSWRKeyTags } from '../../../utils/swr/withSWRKeyTags'
+import { CallBookingItemResponseSchema } from '../../../schemas/callBookings'
 
 function buildCreateKey({
   access_token: accessToken,
@@ -23,6 +27,12 @@ function buildCreateKey({
     } as const
   }
 }
+
+const createCallBooking = post<
+  Record<string, unknown>,
+  Record<string, unknown>,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/call-bookings`)
 
 export function useCreateCallBooking() {
   const { data } = useAuth()

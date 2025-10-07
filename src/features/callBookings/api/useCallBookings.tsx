@@ -1,20 +1,14 @@
 import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
-import useSWRMutation from 'swr/mutation'
-import { useSWRConfig } from 'swr'
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import { useLayerContext } from '../../../contexts/LayerContext'
 import { useAuth } from '../../../hooks/useAuth'
-import { get, post } from '../../../api/layer/authenticated_http'
-import { withSWRKeyTags } from '../../../utils/swr/withSWRKeyTags'
+import { get } from '../../../api/layer/authenticated_http'
 import { toDefinedSearchParameters } from '../../../utils/request/toDefinedSearchParameters'
 import {
   CallBookingState,
   CallBookingType,
   CallBookingPurpose,
-  CallBookingItemResponseSchema,
   ListCallBookingsResponseSchema,
-  CreateCallBookingBodySchema,
 } from '../../../schemas/callBookings'
 import type {
   CallBooking,
@@ -43,13 +37,29 @@ const listCallBookings = get<
   return `/v1/businesses/${businessId}/call-bookings?${parameters}`
 })
 
-const createCallBooking = post<
-  Record<string, unknown>,
-  Record<string, unknown>,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/call-bookings`)
+class ListCallBookingsSWRResponse {
+  private swrResponse: SWRInfiniteResponse<ListCallBookingsResponse>
 
-export const CALL_BOOKINGS_TAG_KEY = '#call-bookings'
+  constructor(swrResponse: SWRInfiniteResponse<ListCallBookingsResponse>) {
+    this.swrResponse = swrResponse
+  }
+
+  get data() {
+    return this.swrResponse.data
+  }
+
+  get isLoading() {
+    return this.swrResponse.isLoading
+  }
+
+  get isValidating() {
+    return this.swrResponse.isValidating
+  }
+
+  get isError() {
+    return this.swrResponse.error !== undefined
+  }
+}
 
 function keyLoader(
   previousPageData: ListCallBookingsResponse | null,
@@ -74,30 +84,6 @@ function keyLoader(
       limit,
       tags: [CALL_BOOKINGS_TAG_KEY],
     } as const
-  }
-}
-
-class ListCallBookingsSWRResponse {
-  private swrResponse: SWRInfiniteResponse<ListCallBookingsResponse>
-
-  constructor(swrResponse: SWRInfiniteResponse<ListCallBookingsResponse>) {
-    this.swrResponse = swrResponse
-  }
-
-  get data() {
-    return this.swrResponse.data
-  }
-
-  get isLoading() {
-    return this.swrResponse.isLoading
-  }
-
-  get isValidating() {
-    return this.swrResponse.isValidating
-  }
-
-  get isError() {
-    return this.swrResponse.error !== undefined
   }
 }
 
@@ -135,82 +121,4 @@ export function useCallBookings(limit?: number) {
   return new ListCallBookingsSWRResponse(swrResponse)
 }
 
-function buildCreateKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [`${CALL_BOOKINGS_TAG_KEY}:create`],
-    } as const
-  }
-}
-
-export function useCreateCallBooking() {
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-  const { mutate } = useSWRConfig()
-
-  const mutationResponse = useSWRMutation(
-    () => buildCreateKey({
-      ...data,
-      businessId,
-    }),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: body }: { arg: CreateCallBookingBody },
-    ) => createCallBooking(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-        // transforms from camelCase to snake_case for FE to BE
-        body: Schema.encodeSync(CreateCallBookingBodySchema)(body) as Record<string, unknown>,
-      },
-    )
-      .then(Schema.decodeUnknownPromise(CallBookingItemResponseSchema))
-      .then(({ data }) => data),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
-
-  const { trigger: originalTrigger } = mutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      void mutate(key => withSWRKeyTags(
-        key,
-        tags => tags.includes(CALL_BOOKINGS_TAG_KEY),
-      ))
-
-      return triggerResult
-    },
-    [
-      originalTrigger,
-      mutate,
-    ],
-  )
-
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
-}
+export const CALL_BOOKINGS_TAG_KEY = '#call-bookings'
