@@ -1,3 +1,4 @@
+import { PaginatedResponseMetaSchema } from '../types/utility/pagination'
 import { Schema, pipe } from 'effect'
 
 // Enums matching the frontend types
@@ -14,7 +15,7 @@ export enum CallBookingType {
 
 export enum CallBookingPurpose {
   BOOKKEEPING_ONBOARDING = 'BOOKKEEPING_ONBOARDING',
-  BOOKKEEPING = 'BOOKKEEPING',
+  ADHOC = 'ADHOC',
 }
 
 // Schema definitions for the enums
@@ -48,7 +49,7 @@ const TransformedCallBookingTypeSchema = Schema.transform(
       if (Object.values(CallBookingType).includes(input as CallBookingType)) {
         return input as CallBookingType
       }
-      return CallBookingType.ZOOM // Safe default for unknown values
+      return CallBookingType.GOOGLE_MEET // Safe default for unknown values
     },
     encode: input => input,
   },
@@ -62,7 +63,7 @@ const TransformedCallBookingPurposeSchema = Schema.transform(
       if (Object.values(CallBookingPurpose).includes(input as CallBookingPurpose)) {
         return input as CallBookingPurpose
       }
-      return CallBookingPurpose.BOOKKEEPING_ONBOARDING // Safe default for unknown values
+      return CallBookingPurpose.ADHOC // Safe default for unknown values
     },
     encode: input => input,
   },
@@ -70,10 +71,10 @@ const TransformedCallBookingPurposeSchema = Schema.transform(
 
 // Main CallBooking schema
 export const CallBookingSchema = Schema.Struct({
-  id: Schema.String,
+  id: Schema.UUID,
 
   businessId: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.UUID),
     Schema.fromKey('business_id'),
   ),
 
@@ -92,7 +93,7 @@ export const CallBookingSchema = Schema.Struct({
   ),
 
   eventStartAt: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.Date),
     Schema.fromKey('event_start_at'),
   ),
 
@@ -119,17 +120,17 @@ export const CallBookingSchema = Schema.Struct({
   ),
 
   createdAt: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.Date),
     Schema.fromKey('created_at'),
   ),
 
   updatedAt: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.propertySignature(Schema.Date),
     Schema.fromKey('updated_at'),
   ),
 
   deletedAt: pipe(
-    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.optional(Schema.NullOr(Schema.Date)),
     Schema.fromKey('deleted_at'),
   ),
 })
@@ -140,14 +141,7 @@ export type CallBooking = typeof CallBookingSchema.Type
 export const ListCallBookingsResponseSchema = Schema.Struct({
   data: Schema.Array(CallBookingSchema),
   meta: Schema.Struct({
-    pagination: Schema.Struct({
-      cursor: Schema.NullOr(Schema.String).pipe(Schema.optional),
-
-      hasMore: pipe(
-        Schema.propertySignature(Schema.Boolean),
-        Schema.fromKey('has_more'),
-      ),
-    }),
+    pagination: PaginatedResponseMetaSchema,
   }),
 })
 
@@ -175,7 +169,7 @@ const CreateCallBookingBodySchemaDefinition = Schema.Struct({
   ),
 
   eventStartAt: pipe(
-    Schema.optional(Schema.String),
+    Schema.optional(Schema.Date),
     Schema.fromKey('event_start_at'),
   ),
 
