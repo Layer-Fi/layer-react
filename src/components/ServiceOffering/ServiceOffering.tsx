@@ -80,22 +80,6 @@ export const ServiceOffering = ({
     if (heroConfig.cta?.secondary) window.open(heroConfig.cta?.secondary.url, '_blank')
   }, [heroConfig.cta?.secondary])
 
-  // const renderFeatureCard = useCallback((card: typeof featureCards[0], index: number, platform: ServiceOfferingPlatformConfig) => (
-  //   <VStack key={index} className='Layer__feature-card'>
-  //     <div className='img-container'>
-  //       <img src={card.image} alt={card.title} />
-  //     </div>
-  //     <VStack gap='md'>
-  //       <Heading size='md'>
-  //         {ServiceOfferingHelper.bindTextValues(card.title, platform)}
-  //       </Heading>
-  //       <Span variant='subtle'>
-  //         {ServiceOfferingHelper.bindTextValues(card.description, platform)}
-  //       </Span>
-  //     </VStack>
-  //   </VStack>
-  // ), [])
-
   const renderMainContent = useCallback(() => (
     <VStack className='Layer__service-offering--main'>
       <div className='Layer__service-offering__responsive-layout'>
