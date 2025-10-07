@@ -66,7 +66,7 @@ export const ServiceOfferingDefaultTextContent: ServiceOfferingTypesTextContent 
   [ServiceOfferingContentID.headline1]: 'All your finances in one place',
   [ServiceOfferingContentID.headline1Desc]: 'Directly integrated with your {platformName} data, so you can see your business performance and profit in real-time.',
   [ServiceOfferingContentID.headline2]: 'Built for {industry}',
-  [ServiceOfferingContentID.headline2Desc]: 'Track your expenses and get easy to understand reports designed specifically for Coffee Shop businesses.',
+  [ServiceOfferingContentID.headline2Desc]: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
   [ServiceOfferingContentID.valuePropositionTitle]: 'Self-service accounting to understand your business health',
   [ServiceOfferingContentID.offersTitle]: 'Use {platformName} Accounting yourself, or let our team of experts handle bookkeeping for you',
 }
