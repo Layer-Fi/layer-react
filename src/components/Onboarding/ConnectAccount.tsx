@@ -1,6 +1,6 @@
 import { useContext, useMemo } from 'react'
 import { LinkedAccountsContext } from '../../contexts/LinkedAccountsContext'
-import { useTransactionsFilters } from '../../contexts/TransactionsFiltersContext/useTransactionsFilters'
+import { useBankTransactionsFilters } from '../../contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'
 import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import BellIcon from '../../icons/Bell'
 import CreditCardIcon from '../../icons/CreditCard'
@@ -29,7 +29,7 @@ export const ConnectAccount = ({
   onTransactionsToReviewClick,
 }: ConnectAccountProps) => {
   const { addConnection } = useContext(LinkedAccountsContext)
-  const { filters } = useTransactionsFilters({
+  const { filters } = useBankTransactionsFilters({
     scope: DisplayState.review,
   })
   const { data } = useAugmentedBankTransactions({

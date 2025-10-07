@@ -4,7 +4,7 @@ import { BREAKPOINTS } from '../../config/general'
 import {
   useBankTransactionsContext,
 } from '../../contexts/BankTransactionsContext'
-import { useTransactionsFiltersContext } from '../../contexts/TransactionsFiltersContext'
+import { useBankTransactionsFiltersContext } from '../../contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { BankTransactionsProvider } from '../../providers/BankTransactionsProvider/BankTransactionsProvider'
 import { BankTransactionFilters, BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
@@ -160,7 +160,7 @@ const BankTransactionsContent = ({
     setFilters,
     filters,
     dateFilterMode,
-  } = useTransactionsFiltersContext()
+  } = useBankTransactionsFiltersContext()
 
   const { data: linkedAccounts } = useLinkedAccounts()
 

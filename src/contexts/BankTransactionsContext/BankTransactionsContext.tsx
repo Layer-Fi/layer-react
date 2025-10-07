@@ -1,36 +1,8 @@
 import { createContext, useContext } from 'react'
-import { BankTransaction, CategoryUpdate } from '../../types'
+import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import { DisplayState } from '../../types'
 
-export type BankTransactionsContextType = {
-  data: BankTransaction[] | undefined
-  isLoading: boolean
-  isValidating: boolean
-  isError: boolean
-  refetch: () => void
-  categorize: (
-    bankTransactionId: string,
-    newCategory: CategoryUpdate,
-    notify?: boolean,
-  ) => Promise<void | undefined>
-  match: (
-    bankTransactionId: string,
-    suggestedMatchId: string,
-    notify?: boolean,
-  ) => Promise<void | undefined>
-  metadata: {
-    pagination: {
-      cursor?: string
-      has_more: boolean
-    }
-  } | undefined
-  updateOneLocal: (newBankTransaction: BankTransaction) => void
-  shouldHideAfterCategorize: () => boolean
-  removeAfterCategorize: (bankTransaction: BankTransaction) => void
-  display: DisplayState
-  fetchMore: () => void
-  hasMore: boolean
-}
+export type BankTransactionsContextType = ReturnType<typeof useAugmentedBankTransactions>
 
 export const BankTransactionsContext =
   createContext<BankTransactionsContextType>({

@@ -7,14 +7,14 @@ import {
 import { DisplayState } from '../../types'
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
 
-export type UseTransactionsFiltersParams = {
+export type useBankTransactionsFiltersParams = {
   scope?: DisplayState
   monthlyView?: boolean
   applyGlobalDateRange?: boolean
 }
 
-export const useTransactionsFilters = (
-  params?: UseTransactionsFiltersParams,
+export const useBankTransactionsFilters = (
+  params?: useBankTransactionsFiltersParams,
 ) => {
   const dateFilterMode = params?.applyGlobalDateRange
     ? BankTransactionsDateFilterMode.GlobalDateRange
@@ -56,9 +56,14 @@ export const useTransactionsFilters = (
     }))
   }, [])
 
-  return {
-    filters,
-    setFilters,
-    dateFilterMode,
-  }
+  return useMemo(
+    () => ({
+      filters,
+      setFilters,
+      dateFilterMode,
+    }),
+    // setFilters and dateFilterMode are stable references
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filters],
+  )
 }

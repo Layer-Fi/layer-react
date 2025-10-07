@@ -3,22 +3,19 @@ import {
   BankTransactionFilters,
   BankTransactionsDateFilterMode,
 } from '../../hooks/useBankTransactions/types'
-import { AccountItem } from '../../hooks/useBankTransactions/types'
 
-export type TransactionsFiltersContextType = {
+export type BankTransactionsFiltersContextType = {
   filters: BankTransactionFilters
   setFilters: (filters: BankTransactionFilters) => void
   dateFilterMode?: BankTransactionsDateFilterMode
-  accountsList: AccountItem[]
 }
 
-export const TransactionsFiltersContext =
-  createContext<TransactionsFiltersContextType>({
+export const BankTransactionsFiltersContext =
+  createContext<BankTransactionsFiltersContextType>({
     filters: {},
     setFilters: () => {},
     dateFilterMode: undefined,
-    accountsList: [],
   })
 
-export const useTransactionsFiltersContext = () =>
-  useContext(TransactionsFiltersContext)
+export const useBankTransactionsFiltersContext = () =>
+  useContext(BankTransactionsFiltersContext)

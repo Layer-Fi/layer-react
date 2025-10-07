@@ -1,14 +1,12 @@
-import { ReactNode, useMemo } from 'react'
+import { ReactNode } from 'react'
 import { BankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import {
-  TransactionsFiltersContext,
-  useTransactionsFilters,
-  UseTransactionsFiltersParams,
-} from '../../contexts/TransactionsFiltersContext'
-import { collectAccounts } from '../../hooks/useBankTransactions/utils'
+  BankTransactionsFiltersContext,
+} from '../../contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { useBankTransactionsFilters, useBankTransactionsFiltersParams } from '../../contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'
 
-interface BankTransactionsProviderProps extends UseTransactionsFiltersParams {
+interface BankTransactionsProviderProps extends useBankTransactionsFiltersParams {
   children: ReactNode
 }
 
@@ -18,34 +16,19 @@ export const BankTransactionsProvider = ({
   monthlyView,
   applyGlobalDateRange,
 }: BankTransactionsProviderProps) => {
-  const { filters, setFilters, dateFilterMode } = useTransactionsFilters({
+  const filtersContextValue = useBankTransactionsFilters({
     scope,
     monthlyView,
     applyGlobalDateRange,
   })
 
-  const bankTransactionsContextData = useAugmentedBankTransactions({ filters })
-
-  const accountsList = useMemo(
-    () => (bankTransactionsContextData.data ? collectAccounts(bankTransactionsContextData.data) : []),
-    [bankTransactionsContextData.data],
-  )
-
-  const filtersContextValue = useMemo(
-    () => ({
-      filters,
-      setFilters,
-      dateFilterMode,
-      accountsList,
-    }),
-    [filters, setFilters, dateFilterMode, accountsList],
-  )
+  const bankTransactionsContextData = useAugmentedBankTransactions({ filters: filtersContextValue.filters })
 
   return (
-    <TransactionsFiltersContext.Provider value={filtersContextValue}>
+    <BankTransactionsFiltersContext.Provider value={filtersContextValue}>
       <BankTransactionsContext.Provider value={bankTransactionsContextData}>
         {children}
       </BankTransactionsContext.Provider>
-    </TransactionsFiltersContext.Provider>
+    </BankTransactionsFiltersContext.Provider>
   )
 }
