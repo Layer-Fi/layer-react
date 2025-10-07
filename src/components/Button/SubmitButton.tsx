@@ -4,7 +4,7 @@ import CheckCircle from '../../icons/CheckCircle'
 import Loader from '../../icons/Loader'
 import Save from '../../icons/Save'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
-import { Button, ButtonProps, ButtonVariant } from './Button'
+import { DeprecatedButton, DeprecatedButtonProps, ButtonVariant } from './Button'
 import classNames from 'classnames'
 import { RetryButton } from './RetryButton'
 import { UploadCloud } from 'lucide-react'
@@ -16,10 +16,10 @@ export interface SubmitButtonProps
   error?: boolean | string
   active?: boolean
   iconOnly?: boolean
-  variant?: ButtonProps['variant']
+  variant?: DeprecatedButtonProps['variant']
   action?: SubmitAction
   noIcon?: boolean
-  tooltip?: ButtonProps['tooltip']
+  tooltip?: DeprecatedButtonProps['tooltip']
   withRetry?: boolean
   iconAsPrimary?: boolean
 }
@@ -104,7 +104,7 @@ export const SubmitButton = ({
   }
 
   return (
-    <Button
+    <DeprecatedButton
       {...props}
       className={baseClassName}
       variant={variant}
@@ -113,6 +113,6 @@ export const SubmitButton = ({
       iconAsPrimary={iconAsPrimary}
     >
       {children}
-    </Button>
+    </DeprecatedButton>
   )
 }

@@ -6,17 +6,18 @@ import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { RuleUpdatesPromptStep } from './RuleUpdatesPromptStep'
 import { RuleUpdatesReviewStep } from './RuleUpdatesReviewStep'
 import { useRejectCategorizationRulesUpdateSuggestion } from '../../hooks/useBankTransactions/useRejectCategorizationRulesUpdateSuggestion'
+import { useCallback } from 'react'
 
 type SuggestedCategorizationRuleUpdatesProps = {
   close: () => Awaitable<void>
   ruleSuggestion: UpdateCategorizationRulesSuggestion
 }
 
-const getHeaderForRule = (ruleSuggestion: UpdateCategorizationRulesSuggestion) => {
+export const getHeaderForRule = (ruleSuggestion: UpdateCategorizationRulesSuggestion) => {
   switch (ruleSuggestion.type) {
     case 'Create_Categorization_Rule_For_Counterparty':
       return (
-        <Heading level={1} size='xl' pie='2xl'>
+        <Heading level={1} size='lg' pie='2xl'>
           Always use this category?
         </Heading>
       )
@@ -31,20 +32,22 @@ const getHeaderForRule = (ruleSuggestion: UpdateCategorizationRulesSuggestion) =
 
 export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesProps) {
   const rejectRuleSuggestion = useRejectCategorizationRulesUpdateSuggestion()
-  function onClose(dontAskAgain: boolean) {
-    if (dontAskAgain) {
-      const suggestionId = ruleSuggestion.newRule.createdBySuggestionId
-      if (suggestionId) {
-        rejectRuleSuggestion?.(suggestionId)
+  const onClose = useCallback(
+    (dontAskAgain: boolean) => {
+      if (dontAskAgain) {
+        const suggestionId = ruleSuggestion.newRule.createdBySuggestionId
+        if (suggestionId) {
+          rejectRuleSuggestion?.(suggestionId)
+        }
       }
-    }
-    void close()
-  }
+      void close()
+    }, [close, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId],
+  )
 
   return (
     <section className='Layer__component Layer__suggested-categorization-rule-updates'>
       <Wizard
-        Header={getHeaderForRule(ruleSuggestion)}
+        Header={undefined}
         Footer={undefined}
         onComplete={close}
         onStepChange={undefined}

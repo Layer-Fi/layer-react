@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { LinkAccounts } from './LinkAccounts'
 import { ProgressSteps } from '../ProgressSteps/ProgressSteps'
-import { Button, ButtonVariant } from '../Button/Button'
+import { DeprecatedButton, ButtonVariant } from '../Button/Button'
 import { WelcomeStep, WelcomeStepFooter } from './Steps/WelcomeStep'
 import { SummaryStep } from './Steps/SummaryStep'
 import { BusinessInfoStep } from './Steps/BusinessInfoStep'
@@ -81,12 +81,12 @@ export const PlatformOnboarding = ({ onComplete }: PlatformOnboardingProps) => {
       <div className='Layer__platform-onboarding-layout'>
         {!isFirstStep && (
           <div className='Layer__platform-onboarding__back-button-container'>
-            <Button
+            <DeprecatedButton
               onClick={previousStep}
               variant={ButtonVariant.secondary}
             >
               Back
-            </Button>
+            </DeprecatedButton>
           </div>
         )}
         <div className='Layer__platfom-onboarding-layout__box'>

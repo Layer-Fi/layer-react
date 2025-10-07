@@ -2,13 +2,13 @@ import { useMemo } from 'react'
 import { VirtualizedDataTable } from '../VirtualizedDataTable/VirtualizedDataTable'
 import { type ColumnConfig } from '../DataTable/DataTable'
 import { DateTime } from '../DateTime'
-import { Text, TextUseTooltip } from '../Typography/Text'
 import { TextSize, TextWeight } from '../Typography'
 import { MoneySpan } from '../ui/Typography/MoneyText'
 import { DataState, DataStateStatus } from '../DataState/DataState'
 import type { MinimalBankTransaction } from '../../schemas/bankTransactions/base'
 import { BankTransactionDirection } from '../../schemas/bankTransactions/base'
 import { VStack } from '../ui/Stack/Stack'
+import { Span } from '../ui/Typography/Text'
 
 const COMPONENT_NAME = 'AffectedTransactionsTable'
 
@@ -66,26 +66,22 @@ export const AffectedTransactionsTable = ({
       id: TransactionColumns.Counterparty,
       header: 'Counterparty',
       cell: row => (
-        <Text
-          as='span'
-          withTooltip={TextUseTooltip.whenTruncated}
+        <Span
           ellipsis
         >
           {row.counterpartyName || '-'}
-        </Text>
+        </Span>
       ),
     },
     [TransactionColumns.Description]: {
       id: TransactionColumns.Description,
       header: 'Description',
       cell: row => (
-        <Text
-          as='span'
-          withTooltip={TextUseTooltip.whenTruncated}
+        <Span
           ellipsis
         >
           {row.description || '-'}
-        </Text>
+        </Span>
       ),
       isRowHeader: true,
     },

@@ -239,7 +239,7 @@ const BankTransactionsContent = ({
     if (!ruleSuggestion) return undefined
     return (
       <SuggestedCategorizationRuleUpdatesModal
-        isOpen={!!ruleSuggestion}
+        isOpen={true}
         ruleSuggestion={ruleSuggestion}
         onOpenChange={(isOpen: boolean) => {
           if (!isOpen) setRuleSuggestion(null)
@@ -252,7 +252,7 @@ const BankTransactionsContent = ({
     if (!ruleSuggestion) return undefined
     return (
       <SuggestedCategorizationRuleUpdatesDrawer
-        isOpen={!!ruleSuggestion}
+        isOpen={true}
         onOpenChange={(isOpen: boolean) => {
           if (!isOpen) setRuleSuggestion(null)
         }}

@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
-import { Button, ButtonVariant } from '../Button/Button'
+import { DeprecatedButton, ButtonVariant } from '../Button/Button'
 import { useWizard } from '../Wizard/Wizard'
 import { UploadTransactionsStep } from './types'
 import { Separator } from '../Separator/Separator'
@@ -32,21 +32,21 @@ export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTran
       <Separator />
       <HStack gap='xs' className='Layer__upload-transactions__confirmation-step__button-row'>
         <Spacer />
-        <Button
+        <DeprecatedButton
           onClick={goRestartFlow}
           variant={ButtonVariant.secondary}
           rightIcon={<UploadCloud size={12} />}
           className='Layer__upload-transactions__confirmation-step__button-row-item'
         >
           Upload another file
-        </Button>
-        <Button
+        </DeprecatedButton>
+        <DeprecatedButton
           onClick={() => { void next() }}
           rightIcon={<ChevronRight />}
           className='Layer__upload-transactions__confirmation-step__button-row-item'
         >
           I’m done uploading transactions
-        </Button>
+        </DeprecatedButton>
       </HStack>
     </VStack>
   )

@@ -11,7 +11,7 @@ export enum ButtonVariant {
 
 export type ButtonJustify = 'center' | 'space-between' | 'start'
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface DeprecatedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
   leftIcon?: ReactNode
   rightIcon?: ReactNode
@@ -23,7 +23,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   tooltip?: ReactNode | string
 }
 
-export const Button = ({
+export const DeprecatedButton = ({
   className,
   children,
   variant = ButtonVariant.primary,
@@ -36,7 +36,7 @@ export const Button = ({
   isProcessing,
   tooltip,
   ...props
-}: ButtonProps) => {
+}: DeprecatedButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   let justifyContent = 'center'

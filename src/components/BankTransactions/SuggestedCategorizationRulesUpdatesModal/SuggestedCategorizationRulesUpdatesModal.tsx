@@ -1,13 +1,13 @@
 import { Modal, ModalProps } from '../../ui/Modal/Modal'
-import { ModalCloseButton } from '../../ui/Modal/ModalSlots'
-import { SuggestedCategorizationRuleUpdates } from '../../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdates'
+import { ModalTitleWithClose } from '../../ui/Modal/ModalSlots'
+import { getHeaderForRule, SuggestedCategorizationRuleUpdates } from '../../SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdates'
 import { UpdateCategorizationRulesSuggestion } from '../../../schemas/bankTransactions/categorizationRules/categorizationRule'
 
 function SuggestedCategorizationRuleUpdatesModalContent({ close, ruleSuggestion }:
 { close: () => void, ruleSuggestion: UpdateCategorizationRulesSuggestion }) {
   return (
     <>
-      <ModalCloseButton onClose={close} positionAbsolute />
+      <ModalTitleWithClose onClose={close} heading={getHeaderForRule(ruleSuggestion)} />
       <SuggestedCategorizationRuleUpdates close={close} ruleSuggestion={ruleSuggestion} />
     </>
   )

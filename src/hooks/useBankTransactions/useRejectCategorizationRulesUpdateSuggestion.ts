@@ -10,8 +10,8 @@ export const rejectCategorizationRulesUpdateSuggestion = del<never>(
 export function useRejectCategorizationRulesUpdateSuggestion() {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
-  if (auth?.apiUrl && auth?.access_token) {
-    return (suggestionId: string) => {
+  return (suggestionId: string) => {
+    if (auth?.apiUrl && auth?.access_token) {
       void rejectCategorizationRulesUpdateSuggestion(
         auth?.apiUrl,
         auth.access_token,

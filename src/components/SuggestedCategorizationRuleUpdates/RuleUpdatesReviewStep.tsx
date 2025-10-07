@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
-import { Button } from '../Button/Button'
+import { Button } from '../../components/ui/Button/Button'
 import { Separator } from '../Separator/Separator'
 import { CheckboxWithTooltip } from '../ui/Checkbox/Checkbox'
 import { HStack, VStack } from '../ui/Stack/Stack'
@@ -8,6 +8,7 @@ import { useWizard } from '../Wizard/Wizard'
 import { Label } from '../ui/Typography/Text'
 import { AffectedTransactionsTable } from './AffectedTransactionsTable'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import pluralize from 'pluralize'
 
 interface RuleUpdatesPromptReviewStepProps {
   ruleSuggestion: UpdateCategorizationRulesSuggestion
@@ -20,7 +21,7 @@ export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptRevie
   return (
     <VStack gap='lg'>
       <Label size='md'>
-        {`The following ${ruleSuggestion.transactionsThatWillBeAffected.length} transactions will be affected:`}
+        {`The following ${pluralize('transaction', Math.abs(ruleSuggestion.transactionsThatWillBeAffected.length), true)} will be affected:`}
       </Label>
       <AffectedTransactionsTable
         transactions={ruleSuggestion.transactionsThatWillBeAffected}

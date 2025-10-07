@@ -1,6 +1,6 @@
 import DocumentIcon from '../../../icons/Document'
 import TrendingUpIcon from '../../../icons/TrendingUp'
-import { Button } from '../../Button/Button'
+import { DeprecatedButton } from '../../Button/Button'
 import { Heading, HeadingSize, Text } from '../../Typography'
 import { HStack, VStack } from '../../ui/Stack/Stack'
 
@@ -41,7 +41,7 @@ export const WelcomeStep = ({ onNext, title = defaultTitle, description, stepsEn
         <Heading className='Layer__platform-onboarding__heading' align='left'>{title}</Heading>
         <Text status='disabled'>{buildDescription()}</Text>
       </div>
-      <Button onClick={onNext}>Get started</Button>
+      <DeprecatedButton onClick={onNext}>Get started</DeprecatedButton>
     </>
   )
 }

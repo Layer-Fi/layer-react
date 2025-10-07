@@ -1,5 +1,5 @@
 import DownloadCloud from '../../icons/DownloadCloud'
-import { Button, ButtonProps, ButtonVariant } from './Button'
+import { DeprecatedButton, DeprecatedButtonProps, ButtonVariant } from './Button'
 import { RetryButton } from './RetryButton'
 
 interface DownloadButtonProps {
@@ -10,7 +10,7 @@ interface DownloadButtonProps {
   text?: string
   retryText?: string
   errorText?: string
-  tooltip?: ButtonProps['tooltip']
+  tooltip?: DeprecatedButtonProps['tooltip']
   variant?: ButtonVariant
 }
 
@@ -39,7 +39,7 @@ export const DownloadButton = ({
     )
   }
   return (
-    <Button
+    <DeprecatedButton
       variant={variant}
       rightIcon={<DownloadCloud size={12} />}
       onClick={() => void onClick?.()}
@@ -50,6 +50,6 @@ export const DownloadButton = ({
       tooltip={tooltip}
     >
       {text}
-    </Button>
+    </DeprecatedButton>
   )
 }

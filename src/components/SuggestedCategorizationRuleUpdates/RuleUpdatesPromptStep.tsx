@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
-import { Button } from '../Button/Button'
+import { Button } from '../../components/ui/Button/Button'
 import { useWizard } from '../Wizard/Wizard'
 import { CheckboxWithTooltip } from '../ui/Checkbox/Checkbox'
 import { HStack, VStack } from '../ui/Stack/Stack'
@@ -32,7 +32,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, onClose }: RuleUpdatesPr
             <Label size='sm' htmlFor='dont_ask_again'>
               Don&apos;t ask again
             </Label>
-            <CheckboxWithTooltip isSelected={dontAskAgain} onChange={(isSelected) => { setDontAskAgain(isSelected) }} />
+            <CheckboxWithTooltip id='dont_ask_again' isSelected={dontAskAgain} onChange={(isSelected) => { setDontAskAgain(isSelected) }} />
           </HStack>
         </HStack>
 
