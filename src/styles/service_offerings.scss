@@ -40,6 +40,13 @@
   text-align: center;
 
   .img-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 320px;
+    width: auto;
+
     @media (width <= 768px) {
       height: 100%;
       max-width: max(80%, 240px);
@@ -49,13 +56,6 @@
     @media (width <= 1024px) {
       margin: var(--spacing-md) auto;
     }
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    height: 320px;
-    width: auto;
 
     img {
       height: 100%;
