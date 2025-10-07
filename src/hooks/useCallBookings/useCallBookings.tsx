@@ -1,102 +1,49 @@
 import useSWR from 'swr'
+import useSWRMutation from 'swr/mutation'
+import { useSWRConfig } from 'swr'
+import { useCallback } from 'react'
+import { Schema } from 'effect'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
-import { get } from '../../api/layer/authenticated_http'
-import type { EnumWithUnknownValues } from '../../types/utility/enumWithUnknownValues'
+import { get, post } from '../../api/layer/authenticated_http'
+import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
+import {
+  CallBookingState,
+  CallBookingType,
+  CallBookingPurpose,
+  CallBookingItemResponseSchema,
+  ListCallBookingsResponseSchema,
+} from '../../schemas/callBookings'
+import type { CallBooking } from '../../schemas/callBookings'
 
-export enum CallBookingState {
-  SCHEDULED = 'SCHEDULED',
-  CANCELLED = 'CANCELLED',
-  COMPLETED = 'COMPLETED',
-}
-export enum CallBookingType {
-  ZOOM = 'ZOOM',
-  GOOGLE_MEET = 'GOOGLE_MEET',
-}
-export enum CallBookingPurpose {
-  BOOKKEEPING_ONBOARDING = 'BOOKKEEPING_ONBOARDING',
-  BOOKKEEPING = 'BOOKKEEPING',
-}
-type RawCallBookingState = EnumWithUnknownValues<CallBookingState>
-type RawCallBookingType = EnumWithUnknownValues<CallBookingType>
-type RawCallBookingPurpose = EnumWithUnknownValues<CallBookingPurpose>
-
-const CALL_BOOKING_STATES: string[] = Object.values(CallBookingState)
-const CALL_BOOKING_TYPES: string[] = Object.values(CallBookingType)
-const CALL_BOOKING_PURPOSES: string[] = Object.values(CallBookingPurpose)
-
-function isCallBookingState(state: RawCallBookingState): state is CallBookingState {
-  return CALL_BOOKING_STATES.includes(state)
-}
-
-function constrainToKnownCallBookingState(state: RawCallBookingState): CallBookingState {
-  if (isCallBookingState(state)) {
-    return state
-  }
-
-  return CallBookingState.SCHEDULED
-}
-
-function isCallBookingType(type: RawCallBookingType): type is CallBookingType {
-  return CALL_BOOKING_TYPES.includes(type)
-}
-
-function constrainToKnownCallBookingType(type: RawCallBookingType): CallBookingType {
-  if (isCallBookingType(type)) {
-    return type
-  }
-
-  return CallBookingType.ZOOM
-}
-
-function isCallBookingPurpose(purpose: RawCallBookingPurpose): purpose is CallBookingPurpose {
-  return CALL_BOOKING_PURPOSES.includes(purpose)
-}
-
-function constrainToKnownCallBookingPurpose(purpose: RawCallBookingPurpose): CallBookingPurpose {
-  if (isCallBookingPurpose(purpose)) {
-    return purpose
-  }
-
-  return CallBookingPurpose.BOOKKEEPING_ONBOARDING
-}
-
-type CallBooking = {
-  id: string
-  business_id: string
-  external_id: string
-  purpose: string
-  state: string
-  call_type: string
-  event_start_at: string
-  location: string
-  cancellation_reason?: string
-  did_attend?: boolean
-  bookkeeper_name: string
-  bookkeeper_email: string
-  created_at: string
-  updated_at: string
-  deleted_at?: string
-}
+export type { CallBooking }
+export { CallBookingState, CallBookingType, CallBookingPurpose }
 
 const getCallBookings = get<
-  {
-    data: ReadonlyArray<CallBooking>
-    meta: {
-      pagination: {
-        cursor?: string
-        has_more: boolean
-      }
-    }
-  },
+  Record<string, unknown>,
   { businessId: string }
 >(({ businessId }) => {
   return `/v1/businesses/${businessId}/call-bookings`
 })
 
+type CreateCallBookingBody = {
+  external_id: string
+  purpose: CallBookingPurpose
+  call_type: CallBookingType
+  event_start_at?: string
+  location?: string
+  cancellation_reason?: string
+}
+
+const createCallBooking = post<
+  Record<string, unknown>,
+  CreateCallBookingBody,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/call-bookings`)
+
 export const CALL_BOOKINGS_TAG_KEY = '#call-bookings'
 
-function buildKey({
+function buildListKey({
   access_token: accessToken,
   apiUrl,
   businessId,
@@ -120,7 +67,7 @@ export function useCallBookings() {
   const { businessId } = useLayerContext()
 
   return useSWR(
-    () => buildKey({
+    () => buildListKey({
       ...auth,
       businessId,
     }),
@@ -129,13 +76,86 @@ export function useCallBookings() {
       accessToken,
       { params: { businessId } },
     )()
-      .then(({ data }) => {
-        return data.map(callBooking => ({
-          ...callBooking,
-          state: constrainToKnownCallBookingState(callBooking.state),
-          callType: constrainToKnownCallBookingType(callBooking.call_type),
-          purpose: constrainToKnownCallBookingPurpose(callBooking.purpose),
-        } as CallBooking))
-      }),
+      .then(Schema.decodeUnknownPromise(ListCallBookingsResponseSchema))
+      .then(({ data }) => data),
   )
+}
+
+function buildCreateKey({
+  access_token: accessToken,
+  apiUrl,
+  businessId,
+}: {
+  access_token?: string
+  apiUrl?: string
+  businessId: string
+}) {
+  if (accessToken && apiUrl) {
+    return {
+      accessToken,
+      apiUrl,
+      businessId,
+      tags: [`${CALL_BOOKINGS_TAG_KEY}:create`],
+    } as const
+  }
+}
+
+export function useCreateCallBooking() {
+  const { data } = useAuth()
+  const { businessId } = useLayerContext()
+  const { mutate } = useSWRConfig()
+
+  const mutationResponse = useSWRMutation(
+    () => buildCreateKey({
+      ...data,
+      businessId,
+    }),
+    (
+      { accessToken, apiUrl, businessId },
+      { arg: body }: { arg: CreateCallBookingBody },
+    ) => createCallBooking(
+      apiUrl,
+      accessToken,
+      {
+        params: { businessId },
+        body,
+      },
+    )
+      .then(Schema.decodeUnknownPromise(CallBookingItemResponseSchema))
+      .then(({ data }) => data),
+    {
+      revalidate: false,
+      throwOnError: false,
+    },
+  )
+
+  const { trigger: originalTrigger } = mutationResponse
+
+  const stableProxiedTrigger = useCallback(
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+      const triggerResult = await originalTrigger(...triggerParameters)
+
+      void mutate(key => withSWRKeyTags(
+        key,
+        tags => tags.includes(CALL_BOOKINGS_TAG_KEY),
+      ))
+
+      return triggerResult
+    },
+    [
+      originalTrigger,
+      mutate,
+    ],
+  )
+
+  return new Proxy(mutationResponse, {
+    get(target, prop) {
+      if (prop === 'trigger') {
+        return stableProxiedTrigger
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
 }
