@@ -9,7 +9,7 @@ export const BankTransactionsContext =
     data: undefined,
     isLoading: false,
     isValidating: false,
-    error: undefined,
+    isError: false,
     refetch: () => {},
     categorize: () => Promise.resolve(undefined),
     match: () => Promise.resolve(undefined),

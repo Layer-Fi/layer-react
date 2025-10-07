@@ -23,7 +23,7 @@ export const TableRow: React.FC<TableRowProps> = ({
     }
     else {
       if (variant === 'summation' || !expandable) return
-      handleExpand && handleExpand()
+      if (handleExpand) handleExpand()
     }
   }
 

@@ -112,7 +112,7 @@ export const InvoiceDetail = () => {
               <VStack pi='md'>
                 <ModalTitleWithClose
                   heading={(
-                    <ModalHeading size='lg'>
+                    <ModalHeading size='md'>
                       Record invoice payment
                     </ModalHeading>
                   )}

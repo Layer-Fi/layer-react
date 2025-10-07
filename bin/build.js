@@ -38,7 +38,15 @@ const sharedConfig = {
     ...Object.keys(peerDependencies || {}),
     ...Object.keys(dependencies || {}),
   ],
-  plugins: [ sassPlugin() ],
+  plugins: [sassPlugin()],
+  loader: {
+    '.png': 'dataurl',
+    '.jpg': 'dataurl',
+    '.jpeg': 'dataurl',
+    '.gif': 'dataurl',
+    '.svg': 'dataurl',
+    '.webp': 'dataurl',
+  },
 }
 
 /** @type {import('esbuild').BuildOptions} */

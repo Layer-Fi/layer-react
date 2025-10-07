@@ -64,6 +64,7 @@ export function UploadTransactionsUploadCsvStep(
   const {
     data: customAccounts,
     isLoading: isLoadingCustomAccounts,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error: customAccountsError,
   } = useCustomAccounts({ userCreated: true })
   const { trigger: parseCsv, isMutating: isParsingCsv, error: parseCsvError } = useCustomAccountParseCsv()

@@ -46,6 +46,7 @@ export const TooltipTrigger = forwardRef<
   if (asChild && isValidElement(children)) {
     return cloneElement(
       children,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       context.getReferenceProps({
         ref,
         ...props,

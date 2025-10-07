@@ -124,7 +124,7 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
   return {
     trigger,
     data: rawMutationResponse.data,
-    error: rawMutationResponse.error,
+    isError: !!rawMutationResponse.error,
     isMutating: rawMutationResponse.isMutating,
   }
 }

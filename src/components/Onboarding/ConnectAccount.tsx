@@ -28,13 +28,13 @@ export const ConnectAccount = ({
   onTransactionsToReviewClick,
 }: ConnectAccountProps) => {
   const { addConnection } = useContext(LinkedAccountsContext)
-  const { data, isLoading } = useAugmentedBankTransactions({
+  const { data } = useAugmentedBankTransactions({
     scope: DisplayState.review,
   })
 
   const transactionsToReview = useMemo(
     () => countTransactionsToReview({ transactions: data }),
-    [data, isLoading],
+    [data],
   )
 
   if (onboardingStep === 'connectAccount') {
@@ -52,7 +52,7 @@ export const ConnectAccount = ({
           description='Import data with one simple integration.'
           button={(
             <Button
-              onClick={() => addConnection('PLAID')}
+              onClick={() => { void addConnection('PLAID') }}
               rightIcon={<LinkIcon size={12} />}
             >
               Connect

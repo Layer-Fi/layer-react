@@ -91,6 +91,6 @@ export const useTooltip = ({
       ...interactions,
       ...data,
     }),
-    [open, setOpen, interactions, data, styles, disabled],
+    [open, setOpen, isMounted, styles, disabled, interactions, data],
   )
 }

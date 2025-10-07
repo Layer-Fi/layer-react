@@ -22,6 +22,7 @@ export function ProfitAndLossDetailLinesDownloadButton({
   const { tagFilter, dateRange } = useContext(ProfitAndLossContext)
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { trigger, isMutating, error } = useProfitAndLossDetailLinesExport({
     businessId,
     startDate: dateRange.startDate,

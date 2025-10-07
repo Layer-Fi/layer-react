@@ -151,6 +151,7 @@ export const useAugmentedBankTransactions = (
     data: rawResponseData,
     isLoading,
     isValidating,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error: responseError,
     mutate,
     size,
@@ -424,13 +425,15 @@ export const useAugmentedBankTransactions = (
     if (isLoading || isValidating) {
       read(DataModel.BANK_TRANSACTIONS, getCacheKey(filters))
     }
-  }, [filters, getCacheKey, isLoading, isValidating, read])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, isValidating])
 
   useEffect(() => {
     if (hasBeenTouched(getCacheKey(filters))) {
       refetch()
     }
-  }, [syncTimestamps, filters, hasBeenTouched, refetch, getCacheKey])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [syncTimestamps, filters])
 
   const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
   const anyAccountSyncing = useMemo(
@@ -452,7 +455,8 @@ export const useAugmentedBankTransactions = (
       refetch()
       void refetchAccounts()
     }
-  }, [refetch, refetchAccounts, refreshTrigger])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshTrigger])
 
   useEffect(() => {
     if (anyAccountSyncing) {
@@ -473,10 +477,8 @@ export const useAugmentedBankTransactions = (
     }
   }, [anyAccountSyncing, pollIntervalMs])
 
-  const handleTriggerOnChange = useCallback((_: BankTransaction[] | undefined) => {
-    if (intervalIdRef.current) {
-      clearInterval(intervalIdRef.current)
-    }
+  useTriggerOnChange(data, anyAccountSyncing, (_) => {
+    clearInterval(intervalIdRef.current)
     setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
     eventCallbacks?.onTransactionsFetched?.()
     touch(DataModel.BANK_TRANSACTIONS)
@@ -490,7 +492,7 @@ export const useAugmentedBankTransactions = (
     isLoading,
     isValidating,
     refetch,
-    error: responseError,
+    isError: !!responseError,
     categorize: categorizeWithOptimisticUpdate,
     match: matchWithOptimisticUpdate,
     createCategorizationRule: createCategorizationRuleWithTransactionsSWRInvalidation,

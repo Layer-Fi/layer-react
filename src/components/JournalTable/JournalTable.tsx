@@ -18,6 +18,7 @@ import { parseISO, format as formatTime } from 'date-fns'
 import { useLayerContext } from '../../contexts/LayerContext'
 import { Span } from '../ui/Typography/Text'
 import { HStack } from '../ui/Stack/Stack'
+import { LedgerEntryDirection } from '../../schemas/generalLedger/ledgerAccount'
 
 const accountName = (
   row: JournalEntry | JournalEntryLine | JournalEntryLineItem,
@@ -68,6 +69,7 @@ const JournalTableContent = ({
     if (data.length > 0) {
       setIsOpen(data.map(x => `journal-row-${x.id}`))
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   const renderJournalRow = (
@@ -123,7 +125,7 @@ const JournalTableContent = ({
             {'line_items' in row
               && Math.abs(
                 row.line_items
-                  .filter(item => item.direction === 'DEBIT')
+                  .filter(item => item.direction === LedgerEntryDirection.Debit)
                   .map(item => item.amount)
                   .reduce((a, b) => a + b, 0),
               )}
@@ -132,7 +134,7 @@ const JournalTableContent = ({
             {'line_items' in row
               && Math.abs(
                 row.line_items
-                  .filter(item => item.direction === 'CREDIT')
+                  .filter(item => item.direction === LedgerEntryDirection.Credit)
                   .map(item => item.amount)
                   .reduce((a, b) => a + b, 0),
               )}
@@ -160,7 +162,7 @@ const JournalTableContent = ({
                 </TableCell>
               )}
               <TableCell>{accountName(subItem)}</TableCell>
-              {subItem.direction === 'DEBIT' && subItem.amount >= 0
+              {subItem.direction === LedgerEntryDirection.Debit && subItem.amount >= 0
                 ? (
                   <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
                     {subItem.amount}
@@ -169,7 +171,7 @@ const JournalTableContent = ({
                 : (
                   <TableCell />
                 )}
-              {subItem.direction === 'CREDIT' && subItem.amount >= 0
+              {subItem.direction === LedgerEntryDirection.Credit && subItem.amount >= 0
                 ? (
                   <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
                     {subItem.amount}

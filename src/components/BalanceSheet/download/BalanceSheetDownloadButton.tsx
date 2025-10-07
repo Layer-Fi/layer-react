@@ -12,6 +12,7 @@ export function BalanceSheetDownloadButton({
   iconOnly,
 }: BalanceSheetDownloadButtonProps) {
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { trigger, isMutating, error } = useBalanceSheetDownload({
     effectiveDate,
     onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
@@ -21,7 +22,7 @@ export function BalanceSheetDownloadButton({
     <>
       <DownloadButton
         iconOnly={iconOnly}
-        onClick={() => { trigger() }}
+        onClick={() => { void trigger() }}
         isDownloading={isMutating}
         requestFailed={Boolean(error)}
         text='Download'

@@ -192,11 +192,8 @@
 }
 
 .Layer__bank-transaction-row .Layer__table-cell {
-  color: var(--text-color-primary);
-}
-
-.Layer__bank-transaction-row .Layer__table-cell {
   background-color: var(--table-bg);
+  color: var(--text-color-primary);
   transition: background-color var(--transition-speed) ease-out;
 }
 
@@ -459,7 +456,6 @@
     justify-content: flex-end;
   }
 }
-
 
 .Layer__expanded-bank-transaction-row__description {
   padding: 0 var(--spacing-md);
@@ -772,8 +768,6 @@
   box-sizing: border-box;
   color: var(--color-base-1000);
 }
-
-
 
 .Layer__bank-transactions__account-col {
   box-sizing: border-box;

@@ -11,7 +11,7 @@ export const LedgerAccountsContext = createContext<LedgerAccountsContextType>({
   isValidatingEntry: false,
   error: undefined,
   errorEntry: undefined,
-  refetch: () => {},
+  refetch: () => Promise.resolve(undefined),
   selectedAccount: undefined,
   setSelectedAccount: () => {},
   selectedEntryId: undefined,

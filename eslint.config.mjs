@@ -7,78 +7,57 @@ import stylisticPlugin from '@stylistic/eslint-plugin'
 import tsEslint from 'typescript-eslint'
 import unusedImportsPlugin from 'eslint-plugin-unused-imports'
 
-export default tsEslint.config([
+export default tsEslint.config(
   {
-    ignores: [
-      'build/*',
-      'dist/*',
-      'bin/*',
-    ],
+    ignores: ['build/**', 'dist/**', 'bin/**', 'node_modules/**'],
   },
   js.configs.recommended,
-  tsEslint.configs.recommendedTypeChecked,
+  ...tsEslint.configs.recommendedTypeChecked,
   stylisticPlugin.configs.recommended,
   reactPlugin.configs.flat.recommended,
   reactPlugin.configs.flat['jsx-runtime'],
   {
-    plugins: {
-      'react-hooks': reactHooksPlugin,
-    },
+    plugins: { 'react-hooks': reactHooksPlugin },
     rules: reactHooksPlugin.configs.recommended.rules,
   },
   {
-    plugins: {
-      'unused-imports': unusedImportsPlugin,
-    },
+    plugins: { 'unused-imports': unusedImportsPlugin },
   },
   {
     languageOptions: {
       globals: {
-        ...globals['browser'],
+        ...globals.browser,
       },
       parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-        ecmaFeatures: {
-          jsx: true,
+        projectService: {
+          allowDefaultProject: [
+            'eslint.config.mjs',
+            '*.js',
+            '*.cjs',
+            '*.mjs',
+          ],
         },
+        tsconfigRootDir: new URL('.', import.meta.url).pathname,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: { jsx: true },
       },
     },
     settings: {
-      react: {
-        version: 'detect',
-      },
+      react: { version: 'detect' },
     },
     rules: {
-      'no-console': [
-        'error',
-        {
-          allow: ['warn', 'error', 'debug'],
-        }
-      ],
+      'no-console': ['error', { allow: ['warn', 'error', 'debug'] }],
 
       '@stylistic/quotes': ['error', 'single', { avoidEscape: false }],
       '@stylistic/jsx-quotes': ['error', 'prefer-single'],
       '@stylistic/semi': ['error', 'never'],
       '@stylistic/eol-last': ['error', 'always'],
       '@stylistic/indent': ['error', 2],
-      '@stylistic/operator-linebreak': [
-        'error',
-        'before',
-        {
-          overrides: {
-            '=': 'after',
-          },
-        },
-      ],
+      '@stylistic/operator-linebreak': ['error', 'before', { overrides: { '=': 'after' } }],
       '@stylistic/max-len': [
         'error',
-        {
-          code: 160,
-          ignoreUrls: true,
-          ignoreStrings: true,
-          ignoreTemplateLiterals: true,
-        },
+        { code: 160, ignoreUrls: true, ignoreStrings: true, ignoreTemplateLiterals: true },
       ],
 
       'no-unused-vars': 'off',
@@ -96,14 +75,13 @@ export default tsEslint.config([
         },
       ],
       'unused-imports/no-unused-imports': 'error',
-
       'react/prop-types': 'off',
     },
   },
   {
-    files: ['**/*.tsx', '**/*.ts'],
+    files: ['**/*.ts', '**/*.tsx'],
     rules: {
       'no-restricted-imports': ['error', { patterns: ['*.css'] }],
     },
   },
-])
+)

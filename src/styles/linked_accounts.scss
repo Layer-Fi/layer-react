@@ -23,7 +23,7 @@
 .Layer__linked-accounts__header {
   position: sticky;
   left: 0;
-  padding: var(--spacing-md);
+  padding: var(--spacing-lg);
 }
 
 .Layer__linked-accounts__list {
@@ -31,7 +31,7 @@
   flex-wrap: wrap;
   gap: var(--spacing-md);
   align-items: stretch;
-  padding: var(--spacing-md);
+  padding: var(--spacing-lg);
 
   @media screen and (width <= 650px) {
     flex-wrap: nowrap;
@@ -46,14 +46,6 @@
 
 .Layer__linked-accounts__loader-container {
   min-height: 120px;
-}
-
-.Layer__linked-accounts__header {
-  padding: var(--spacing-lg);
-}
-
-.Layer__linked-accounts__list {
-  padding: var(--spacing-lg);
 }
 
 .Layer__linked-accounts__new-account {
@@ -104,6 +96,7 @@
   }
 }
 
+/* stylelint-disable-next-line keyframes-name-pattern */
 @keyframes skeletonSweep {
   100% {
     transform: translateX(100%);
@@ -132,7 +125,7 @@
       rgb(255 255 255 / 100%),
       transparent
     );
-  content: "";
+  content: '';
   transform: translateX(-100%);
   animation: skeletonSweep 1.5s infinite;
 }
@@ -168,8 +161,8 @@
     padding: var(--spacing-xs);
     border-top-left-radius: var(--border-radius-xs);
     border-top-right-radius: var(--border-radius-xs);
-    border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
     background: var(--color-base-50);
     color: var(--text-color-primary);
 
@@ -227,8 +220,8 @@
     padding: 0 var(--spacing-xs);
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    border-bottom-right-radius: var(--border-radius-xs);
     border-bottom-left-radius: var(--border-radius-xs);
+    border-bottom-right-radius: var(--border-radius-xs);
     background: var(--color-base-50);
 
     .account-balance-text {
@@ -243,8 +236,8 @@
     gap: var(--spacing-xs);
     align-items: center;
     padding: var(--spacing-xs);
-    border-bottom-right-radius: var(--border-radius-xs);
     border-bottom-left-radius: var(--border-radius-xs);
+    border-bottom-right-radius: var(--border-radius-xs);
 
     .loading-text {
       flex: 1;
@@ -286,8 +279,8 @@
     gap: var(--spacing-2xs);
 
     .topbar {
-      border-bottom-right-radius: var(--border-radius-xs);
       border-bottom-left-radius: var(--border-radius-xs);
+      border-bottom-right-radius: var(--border-radius-xs);
     }
 
     .account-number {

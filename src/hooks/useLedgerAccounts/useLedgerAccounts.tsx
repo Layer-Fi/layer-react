@@ -6,7 +6,7 @@ import { DataModel } from '../../types/general'
 import useSWR from 'swr'
 import { useAuth } from '../useAuth'
 import { useEnvironment } from '../../providers/Environment/EnvironmentInputProvider'
-import { useListLedgerAccountLines } from '../../features/ledger/accounts/[ledgerAccountId]/api/useListLedgerAccountLines'
+import { useListLedgerAccountLines, type ListLedgerAccountLinesReturn } from '../../features/ledger/accounts/[ledgerAccountId]/api/useListLedgerAccountLines'
 import type { LedgerAccountBalanceWithNodeType } from '../../types/chart_of_accounts'
 
 type UseLedgerAccounts = (showReversalEntries: boolean) => {
@@ -18,7 +18,7 @@ type UseLedgerAccounts = (showReversalEntries: boolean) => {
   isValidatingEntry?: boolean
   error?: unknown
   errorEntry?: unknown
-  refetch: () => void
+  refetch: () => Promise<ListLedgerAccountLinesReturn[] | undefined>
   selectedAccount: LedgerAccountBalanceWithNodeType | undefined
   setSelectedAccount: (account: LedgerAccountBalanceWithNodeType | undefined) => void
   selectedEntryId?: string
@@ -28,9 +28,7 @@ type UseLedgerAccounts = (showReversalEntries: boolean) => {
   fetchMore: () => void
 }
 
-export const useLedgerAccounts: UseLedgerAccounts = (
-  showReversalEntries: boolean = false,
-) => {
+export const useLedgerAccounts: UseLedgerAccounts = () => {
   const { businessId, read, syncTimestamps, hasBeenTouched } =
     useLayerContext()
   const { apiUrl } = useEnvironment()
@@ -45,6 +43,7 @@ export const useLedgerAccounts: UseLedgerAccounts = (
     data: paginatedData,
     isLoading: paginationIsLoading,
     isValidating: paginationIsValidating,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error: paginationError,
     mutate,
     size,
@@ -63,7 +62,7 @@ export const useLedgerAccounts: UseLedgerAccounts = (
   const data = useMemo(() => {
     if (!paginatedData || !shouldFetch) return undefined
     return paginatedData.flatMap(page => page.data) as LedgerAccounts
-  }, [paginatedData, shouldFetch, showReversalEntries])
+  }, [paginatedData, shouldFetch])
 
   const hasMore = useMemo(() => {
     if (!shouldFetch || !paginatedData || paginatedData.length === 0) return false
@@ -77,7 +76,7 @@ export const useLedgerAccounts: UseLedgerAccounts = (
 
   const fetchMore = useCallback(() => {
     if (hasMore && shouldFetch) {
-      setSize(size + 1)
+      void setSize(size + 1)
     }
   }, [hasMore, setSize, size, shouldFetch])
 
@@ -86,6 +85,7 @@ export const useLedgerAccounts: UseLedgerAccounts = (
     mutate: mutateEntryData,
     isLoading: isLoadingEntry,
     isValidating: isValdiatingEntry,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error: errorEntry,
   } = useSWR(
     businessId

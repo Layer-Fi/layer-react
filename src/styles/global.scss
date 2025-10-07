@@ -1,19 +1,19 @@
 .Layer__component * {
   &::-webkit-scrollbar {
-    width: 6px;
     height: 6px;
+    width: 6px;
   }
-  
+
   &::-webkit-scrollbar-track {
+    border-radius: 4px;
     background: #f1f1f1;
-    border-radius: 4px;
   }
-  
+
   &::-webkit-scrollbar-thumb {
-    background: #e2e2e2;
     border-radius: 4px;
+    background: #e2e2e2;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
     background: #999;
   }

@@ -39,7 +39,7 @@ export function LinkAccountsLinkStep() {
               Connect your bank accounts and credit cards to automatically import your business transactions.
             </Text>
             <Button
-              onClick={() => addConnection('PLAID')}
+              onClick={() => { void addConnection('PLAID') }}
               rightIcon={<LinkIcon size={12} />}
               disabled={loadingStatus !== 'complete'}
               fullWidth={false}
@@ -67,7 +67,7 @@ export function LinkAccountsLinkStep() {
                 title='Do you use any other bank accounts or credit cards for your business?'
                 button={(
                   <Button
-                    onClick={() => addConnection('PLAID')}
+                    onClick={() => { void addConnection('PLAID') }}
                     rightIcon={<LinkIcon size={12} />}
                     disabled={loadingStatus !== 'complete'}
                     fullWidth={false}
