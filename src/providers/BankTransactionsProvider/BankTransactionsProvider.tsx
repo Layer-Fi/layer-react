@@ -2,7 +2,7 @@ import { ReactNode, useMemo } from 'react'
 import { BankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import {
-  TransactionsFiltersProvider,
+  TransactionsFiltersContext,
   useTransactionsFilters,
   UseTransactionsFiltersParams,
 } from '../../contexts/TransactionsFiltersContext'
@@ -18,7 +18,7 @@ export const BankTransactionsProvider = ({
   monthlyView,
   applyGlobalDateRange,
 }: BankTransactionsProviderProps) => {
-  const { filters } = useTransactionsFilters({
+  const { filters, setFilters, dateFilterMode } = useTransactionsFilters({
     scope,
     monthlyView,
     applyGlobalDateRange,
@@ -31,16 +31,21 @@ export const BankTransactionsProvider = ({
     [bankTransactionsContextData.data],
   )
 
+  const filtersContextValue = useMemo(
+    () => ({
+      filters,
+      setFilters,
+      dateFilterMode,
+      accountsList,
+    }),
+    [filters, setFilters, dateFilterMode, accountsList],
+  )
+
   return (
-    <TransactionsFiltersProvider
-      accountsList={accountsList}
-      scope={scope}
-      monthlyView={monthlyView}
-      applyGlobalDateRange={applyGlobalDateRange}
-    >
+    <TransactionsFiltersContext.Provider value={filtersContextValue}>
       <BankTransactionsContext.Provider value={bankTransactionsContextData}>
         {children}
       </BankTransactionsContext.Provider>
-    </TransactionsFiltersProvider>
+    </TransactionsFiltersContext.Provider>
   )
 }
