@@ -3,21 +3,26 @@ import useSWRMutation from 'swr/mutation'
 import { useSWRConfig } from 'swr'
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import { useLayerContext } from '../../contexts/LayerContext'
-import { useAuth } from '../useAuth'
-import { get, post } from '../../api/layer/authenticated_http'
-import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
-import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
+import { useLayerContext } from '../../../contexts/LayerContext'
+import { useAuth } from '../../../hooks/useAuth'
+import { get, post } from '../../../api/layer/authenticated_http'
+import { withSWRKeyTags } from '../../../utils/swr/withSWRKeyTags'
+import { toDefinedSearchParameters } from '../../../utils/request/toDefinedSearchParameters'
 import {
   CallBookingState,
   CallBookingType,
   CallBookingPurpose,
   CallBookingItemResponseSchema,
   ListCallBookingsResponseSchema,
-} from '../../schemas/callBookings'
-import type { CallBooking, ListCallBookingsResponse } from '../../schemas/callBookings'
+  CreateCallBookingBodySchema,
+} from '../../../schemas/callBookings'
+import type {
+  CallBooking,
+  ListCallBookingsResponse,
+  CreateCallBookingBody,
+} from '../../../schemas/callBookings'
 
-export type { CallBooking }
+export type { CallBooking, CreateCallBookingBody }
 export { CallBookingState, CallBookingType, CallBookingPurpose }
 
 type ListCallBookingsParams = {
@@ -38,18 +43,9 @@ const listCallBookings = get<
   return `/v1/businesses/${businessId}/call-bookings?${parameters}`
 })
 
-type CreateCallBookingBody = {
-  external_id: string
-  purpose: CallBookingPurpose
-  call_type: CallBookingType
-  event_start_at?: string
-  location?: string
-  cancellation_reason?: string
-}
-
 const createCallBooking = post<
   Record<string, unknown>,
-  CreateCallBookingBody,
+  Record<string, unknown>,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/call-bookings`)
 
@@ -61,24 +57,21 @@ function keyLoader(
     access_token: accessToken,
     apiUrl,
     businessId,
-    isEnabled,
+    limit,
   }: {
     access_token?: string
     apiUrl?: string
     businessId: string
-    isEnabled?: boolean
+    limit?: number
   },
 ) {
-  if (!isEnabled) {
-    return
-  }
-
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
       cursor: previousPageData?.meta.pagination.cursor ?? undefined,
+      limit,
       tags: [CALL_BOOKINGS_TAG_KEY],
     } as const
   }
@@ -108,11 +101,7 @@ class ListCallBookingsSWRResponse {
   }
 }
 
-type UseCallBookingsParams = {
-  isEnabled?: boolean
-}
-
-export function useCallBookings({ isEnabled = true }: UseCallBookingsParams = {}) {
+export function useCallBookings(limit?: number) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
@@ -122,17 +111,17 @@ export function useCallBookings({ isEnabled = true }: UseCallBookingsParams = {}
       {
         ...auth,
         businessId,
-        isEnabled,
+        limit,
       },
     ),
-    ({ accessToken, apiUrl, businessId, cursor }) => listCallBookings(
+    ({ accessToken, apiUrl, businessId, cursor, limit }) => listCallBookings(
       apiUrl,
       accessToken,
       {
         params: {
           businessId,
           cursor,
-          limit: 5,
+          limit,
         },
       },
     )().then(Schema.decodeUnknownPromise(ListCallBookingsResponseSchema)),
@@ -144,14 +133,6 @@ export function useCallBookings({ isEnabled = true }: UseCallBookingsParams = {}
   )
 
   return new ListCallBookingsSWRResponse(swrResponse)
-}
-
-export function usePreloadCallBookings(parameters?: UseCallBookingsParams) {
-  /*
-   * This will initiate a network request to fill the cache, but will not
-   * cause a re-render when `data` changes.
-   */
-  useCallBookings(parameters)
 }
 
 function buildCreateKey({
@@ -191,7 +172,8 @@ export function useCreateCallBooking() {
       accessToken,
       {
         params: { businessId },
-        body,
+        // transforms from camelCase to snake_case for FE to BE
+        body: Schema.encodeSync(CreateCallBookingBodySchema)(body) as Record<string, unknown>,
       },
     )
       .then(Schema.decodeUnknownPromise(CallBookingItemResponseSchema))

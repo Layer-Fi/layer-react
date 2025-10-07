@@ -18,32 +18,23 @@ export enum CallBookingPurpose {
 }
 
 // Schema definitions for the enums
-const CallBookingStateSchema = Schema.Literal(
-  'SCHEDULED',
-  'CANCELLED',
-  'COMPLETED',
-)
+const CallBookingStateSchema = Schema.Enums(CallBookingState)
 
-const CallBookingTypeSchema = Schema.Literal(
-  'ZOOM',
-  'GOOGLE_MEET',
-)
+const CallBookingTypeSchema = Schema.Enums(CallBookingType)
 
-const CallBookingPurposeSchema = Schema.Literal(
-  'BOOKKEEPING_ONBOARDING',
-  'BOOKKEEPING',
-)
+const CallBookingPurposeSchema = Schema.Enums(CallBookingPurpose)
 
 // Transformed schemas with safe defaults for unknown values
 const TransformedCallBookingStateSchema = Schema.transform(
   Schema.NonEmptyTrimmedString,
   Schema.typeSchema(CallBookingStateSchema),
   {
+    strict: false,
     decode: (input) => {
-      if (CallBookingStateSchema.literals.includes(input as CallBookingState)) {
+      if (Object.values(CallBookingState).includes(input as CallBookingState)) {
         return input as CallBookingState
       }
-      return 'SCHEDULED' // Safe default for unknown values
+      return CallBookingState.SCHEDULED // Safe default for unknown values
     },
     encode: input => input,
   },
@@ -54,10 +45,10 @@ const TransformedCallBookingTypeSchema = Schema.transform(
   Schema.typeSchema(CallBookingTypeSchema),
   {
     decode: (input) => {
-      if (CallBookingTypeSchema.literals.includes(input as CallBookingType)) {
+      if (Object.values(CallBookingType).includes(input as CallBookingType)) {
         return input as CallBookingType
       }
-      return 'ZOOM' // Safe default for unknown values
+      return CallBookingType.ZOOM // Safe default for unknown values
     },
     encode: input => input,
   },
@@ -68,10 +59,10 @@ const TransformedCallBookingPurposeSchema = Schema.transform(
   Schema.typeSchema(CallBookingPurposeSchema),
   {
     decode: (input) => {
-      if (CallBookingPurposeSchema.literals.includes(input as CallBookingPurpose)) {
+      if (Object.values(CallBookingPurpose).includes(input as CallBookingPurpose)) {
         return input as CallBookingPurpose
       }
-      return 'BOOKKEEPING_ONBOARDING' // Safe default for unknown values
+      return CallBookingPurpose.BOOKKEEPING_ONBOARDING // Safe default for unknown values
     },
     encode: input => input,
   },
@@ -168,3 +159,34 @@ export const CallBookingItemResponseSchema = Schema.Struct({
 })
 
 export type CallBookingItemResponse = typeof CallBookingItemResponseSchema.Type
+
+// Create call booking request schema
+const CreateCallBookingBodySchemaDefinition = Schema.Struct({
+  externalId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('external_id'),
+  ),
+
+  purpose: CallBookingPurposeSchema,
+
+  callType: pipe(
+    Schema.propertySignature(CallBookingTypeSchema),
+    Schema.fromKey('call_type'),
+  ),
+
+  eventStartAt: pipe(
+    Schema.optional(Schema.String),
+    Schema.fromKey('event_start_at'),
+  ),
+
+  location: Schema.optional(Schema.String),
+
+  cancellationReason: pipe(
+    Schema.optional(Schema.String),
+    Schema.fromKey('cancellation_reason'),
+  ),
+})
+
+export const CreateCallBookingBodySchema = CreateCallBookingBodySchemaDefinition
+export const encodeCreateCallBookingBody = Schema.encodeSync(CreateCallBookingBodySchemaDefinition)
+export type CreateCallBookingBody = typeof CreateCallBookingBodySchemaDefinition.Type
