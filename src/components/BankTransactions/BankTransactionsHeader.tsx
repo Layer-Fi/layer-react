@@ -13,6 +13,7 @@ import { MobileComponentType } from './constants'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
+import { useTransactionsFiltersContext } from '../../contexts/TransactionsFiltersContext'
 import { useDebounce } from '../../hooks/useDebounce/useDebounce'
 import { SearchField } from '../SearchField/SearchField'
 import { TransactionsActions } from '../domain/transactions/actions/TransactionsActions'
@@ -49,7 +50,7 @@ type TransactionsSearchProps = {
 }
 
 function TransactionsSearch({ slot }: TransactionsSearchProps) {
-  const { filters, setFilters } = useBankTransactionsContext()
+  const { filters, setFilters } = useTransactionsFiltersContext()
 
   const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
 
@@ -80,7 +81,7 @@ const DownloadButton = ({
   downloadButtonTextOverride?: string
   iconOnly?: boolean
 }) => {
-  const { filters } = useBankTransactionsContext()
+  const { filters } = useTransactionsFiltersContext()
 
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -125,12 +126,12 @@ export const BankTransactionsHeader = ({
   collapseHeader,
 }: BankTransactionsHeaderProps) => {
   const { business } = useLayerContext()
+  const { display } = useBankTransactionsContext()
   const {
     setFilters,
     filters,
     dateFilterMode,
-    display,
-  } = useBankTransactionsContext()
+  } = useTransactionsFiltersContext()
 
   const withDatePicker = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
   const dateRange = filters?.dateRange

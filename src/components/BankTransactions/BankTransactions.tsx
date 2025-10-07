@@ -2,10 +2,10 @@ import { debounce } from 'lodash'
 import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { BREAKPOINTS } from '../../config/general'
 import {
-  BankTransactionsContext,
   useBankTransactionsContext,
 } from '../../contexts/BankTransactionsContext'
-import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
+import { useTransactionsFiltersContext } from '../../contexts/TransactionsFiltersContext'
+import { BankTransactionsProvider } from '../../providers/BankTransactionsProvider/BankTransactionsProvider'
 import { BankTransactionFilters, BankTransactionsDateFilterMode } from '../../hooks/useBankTransactions/types'
 import { useElementSize } from '../../hooks/useElementSize'
 import { useIsVisible } from '../../hooks/useIsVisible'
@@ -98,11 +98,12 @@ export const BankTransactions = ({
   usePreloadCustomers({ isEnabled: showCustomerVendor })
   usePreloadVendors({ isEnabled: showCustomerVendor })
 
-  const contextData = useAugmentedBankTransactions({ monthlyView, applyGlobalDateRange })
-
   return (
     <ErrorBoundary onError={onError}>
-      <BankTransactionsContext.Provider value={contextData}>
+      <BankTransactionsProvider
+        monthlyView={monthlyView}
+        applyGlobalDateRange={applyGlobalDateRange}
+      >
         <LegacyModeProvider overrideMode={mode}>
           <BankTransactionTagVisibilityProvider showTags={showTags}>
             <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
@@ -112,7 +113,7 @@ export const BankTransactions = ({
             </BankTransactionCustomerVendorVisibilityProvider>
           </BankTransactionTagVisibilityProvider>
         </LegacyModeProvider>
-      </BankTransactionsContext.Provider>
+      </BankTransactionsProvider>
     </ErrorBoundary>
   )
 }
@@ -149,14 +150,17 @@ const BankTransactionsContent = ({
     isLoading,
     isError,
     refetch,
-    setFilters,
-    filters,
     display,
     hasMore,
     fetchMore,
     removeAfterCategorize,
-    dateFilterMode,
   } = useBankTransactionsContext()
+
+  const {
+    setFilters,
+    filters,
+    dateFilterMode,
+  } = useTransactionsFiltersContext()
 
   const { data: linkedAccounts } = useLinkedAccounts()
 
