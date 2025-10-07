@@ -13,42 +13,7 @@ import { ServiceOfferingHelper } from './ServiceOfferingHelper'
 import { isCalendlyLink, useCalendly } from '../../hooks/useCalendly/useCalendly'
 import { View } from '../View'
 import { mergeHeroContentOverrides, mergeServiceOfferingOverrides } from './utils'
-
-// const featureCards = [
-//   {
-//     image: imageBusinessAccounts,
-//     title: 'Connect your business accounts',
-//     description: 'Connect your business bank accounts and credit cards right within {platformName}',
-//   },
-//   {
-//     image: imageBusinessOverview,
-//     title: 'Categorize expenses',
-//     description: 'Organize transactions into categories built for {industry}',
-//   },
-//   {
-//     image: imageCategorizeExpenses,
-//     title: 'Get a clear picture of your business',
-//     description: 'See your business profitability and stay organized for tax time',
-//   },
-// ]
-
-// const bookkeepingFeatureCards = [
-//   {
-//     image: imageScheduleBookkeeperMeeting,
-//     title: 'Schedule a call with your Bookkeeper',
-//     description: 'Get personalized guidance from your dedicated bookkeeper to review your finances and answer questions.',
-//   },
-//   {
-//     image: imageBookkeeperInquiries,
-//     title: 'Get notified on bookkeeping clarifications',
-//     description: 'Receive clear notifications when your bookkeeper needs additional information or clarification on transactions.',
-//   },
-//   {
-//     image: imagePnlOverview,
-//     title: 'Get ready for tax season',
-//     description: 'Your books will be organized and tax-ready with accurate categorization and financial statements prepared by professionals.',
-//   },
-// ]
+import { useSizeClass } from '../../hooks/useWindowSize/useWindowSize'
 
 /**
  * Props for the ServiceOffering component.
@@ -85,8 +50,7 @@ export const ServiceOffering = ({
   offeringOverrides,
 }: ServiceOfferingProps) => {
   const { isCalendlyVisible, calendlyLink, calendlyRef, openCalendly, closeCalendly } = useCalendly()
-  // const { isDesktop } = useSizeClass()
-  // const isMobile = !isDesktop
+  const { isMobile } = useSizeClass()
 
   const hasAccountingEnabled = availableOffers.includes('accounting')
   const hasBookkeepingEnabled = availableOffers.includes('bookkeeping')
@@ -139,41 +103,41 @@ export const ServiceOffering = ({
           <VStack>
             {!!heroConfig.stringOverrides?.title === false && (
               <>
-                <Heading size='3xl'>
+                <Heading size={isMobile ? '2xl' : '3xl'}>
                   {platform.platformName}
                   <br />
                 </Heading>
-                <Heading size='3xl' variant='subtle' weight='normal'>Accounting</Heading>
+                <Heading size={isMobile ? '2xl' : '3xl'} variant='subtle' weight='normal'>Accounting</Heading>
               </>
             )}
             {heroConfig.stringOverrides?.title != '' && (
               <>
-                <Heading size='3xl'>
+                <Heading size={isMobile ? '2xl' : '3xl'}>
                   {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.title, platform)}
                 </Heading>
               </>
             )}
           </VStack>
-          <Heading size='md'>
+          <Heading size={isMobile ? 'sm' : 'md'}>
             {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.subtitle, platform)}
           </Heading>
           <VStack>
             <HStack gap='lg' pb='xs'>
               <VStack pb='xs'>
-                <Heading size='lg'>
+                <Heading size={isMobile ? 'md' : 'lg'}>
                   {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading1, platform)}
                 </Heading>
-                <Span size='md' variant='subtle'>
+                <Span size={isMobile ? 'sm' : 'md'} variant='subtle'>
                   {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading1Desc, platform)}
                 </Span>
               </VStack>
             </HStack>
             <HStack gap='lg' pb='xs'>
               <VStack pb='xs'>
-                <Heading size='lg'>
+                <Heading size={isMobile ? 'md' : 'lg'}>
                   {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading2, platform)}
                 </Heading>
-                <Span size='md' variant='subtle'>
+                <Span size={isMobile ? 'sm' : 'md'} variant='subtle'>
                   {ServiceOfferingHelper.bindTextValues(heroConfig.stringOverrides.heading2Desc, platform)}
                 </Span>
               </VStack>
@@ -203,7 +167,7 @@ export const ServiceOffering = ({
         </HStack>
       )}
     </VStack>
-  ), [platform, heroConfig, isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly, handleLearnMore, handleMainCta])
+  ), [platform, heroConfig, isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly, handleLearnMore, handleMainCta, isMobile])
 
   // const RenderCarousel = useMemo(() => {
   //   if (isMobile) {
@@ -273,7 +237,7 @@ export const ServiceOffering = ({
   const RenderOffers = useMemo(() => (
     <VStack gap='3xl' className='Layer__service-offering--offers'>
       <HStack align='center'>
-        <Heading size='md' align='center' style={{ maxWidth: '480px', margin: '0 auto' }}>
+        <Heading size={isMobile ? 'sm' : 'md'} align='center' style={{ maxWidth: '480px', margin: '0 auto' }}>
           {ServiceOfferingHelper.bindTextValues(offeringSectionTitle, platform)}
         </Heading>
       </HStack>
@@ -299,7 +263,7 @@ export const ServiceOffering = ({
       </div>
     </VStack>
   ),
-  [hasAccountingEnabled, hasBookkeepingEnabled, offeringSectionTitle, platform, accountingOfferingConfig, bookkeepingOfferingConfig, openCalendly],
+  [hasAccountingEnabled, hasBookkeepingEnabled, offeringSectionTitle, platform, accountingOfferingConfig, bookkeepingOfferingConfig, openCalendly, isMobile],
   )
 
   return (
