@@ -227,7 +227,7 @@ export const useAugmentedBankTransactions = (
     return filtered
   }, [filters, data])
 
-  const updateOneLocal = (newBankTransaction: BankTransaction) => {
+  const updateOneLocal = useCallback((newBankTransaction: BankTransaction) => {
     if (newBankTransaction.update_categorization_rules_suggestion) {
       const decodedRuleSuggestion = decodeRulesSuggestion(newBankTransaction.update_categorization_rules_suggestion)
       setRuleSuggestion(decodedRuleSuggestion)
@@ -242,13 +242,13 @@ export const useAugmentedBankTransactions = (
     })
 
     void mutate(updatedData, { revalidate: false })
-  }
+  }, [mutate, rawResponseData])
 
   const { trigger: categorizeBankTransaction } = useCategorizeBankTransaction({
     mutateBankTransactions: mutate,
   })
 
-  const categorizeWithOptimisticUpdate = async (
+  const categorizeWithOptimisticUpdate = useCallback(async (
     bankTransactionId: BankTransaction['id'],
     newCategory: CategoryUpdate,
     notify?: boolean,
@@ -288,13 +288,13 @@ export const useAugmentedBankTransactions = (
       .finally(() => {
         eventCallbacks?.onTransactionCategorized?.(bankTransactionId)
       })
-  }
+  }, [data, updateOneLocal, categorizeBankTransaction, addToast, eventCallbacks])
 
   const { trigger: matchBankTransaction } = useMatchBankTransaction({
     mutateBankTransactions: mutate,
   })
 
-  const matchWithOptimisticUpdate = async (
+  const matchWithOptimisticUpdate = useCallback(async (
     bankTransactionId: BankTransaction['id'],
     suggestedMatchId: string,
     notify?: boolean,
@@ -375,22 +375,25 @@ export const useAugmentedBankTransactions = (
       .finally(() => {
         eventCallbacks?.onTransactionCategorized?.(bankTransactionId)
       })
-  }
+  }, [data, updateOneLocal, matchBankTransaction, addToast, eventCallbacks])
 
   const { trigger: createCategorizationRule } = useCreateCategorizationRule({
     mutateBankTransactions: mutate,
   })
 
-  const createCategorizationRuleWithTransactionsSWRInvalidation = async (newRule: CreateCategorizationRule) => {
-    const encodedRule = Schema.encodeUnknownSync(CreateCategorizationRuleSchema)(newRule)
-    return createCategorizationRule(encodedRule)
-  }
+  const createCategorizationRuleWithTransactionsSWRInvalidation = useCallback(
+    async (newRule: CreateCategorizationRule) => {
+      const encodedRule = Schema.encodeUnknownSync(CreateCategorizationRuleSchema)(newRule)
+      return createCategorizationRule(encodedRule)
+    },
+    [createCategorizationRule],
+  )
 
-  const shouldHideAfterCategorize = (): boolean => {
+  const shouldHideAfterCategorize = useCallback((): boolean => {
     return filters?.categorizationStatus === DisplayState.review
-  }
+  }, [filters?.categorizationStatus])
 
-  const removeAfterCategorize = (bankTransaction: BankTransaction) => {
+  const removeAfterCategorize = useCallback((bankTransaction: BankTransaction) => {
     if (shouldHideAfterCategorize()) {
       const updatedData = rawResponseData?.map((page) => {
         return {
@@ -400,11 +403,11 @@ export const useAugmentedBankTransactions = (
       })
       void mutate(updatedData, { revalidate: false })
     }
-  }
+  }, [shouldHideAfterCategorize, rawResponseData, mutate])
 
-  const refetch = () => {
+  const refetch = useCallback(() => {
     void mutate()
-  }
+  }, [mutate])
 
   const fetchMore = useCallback(() => {
     if (hasMore) {
@@ -412,22 +415,22 @@ export const useAugmentedBankTransactions = (
     }
   }, [hasMore, setSize, size])
 
-  const getCacheKey = (txnFilters?: BankTransactionFilters) => {
+  const getCacheKey = useCallback((txnFilters?: BankTransactionFilters) => {
     return filtersSettingString(txnFilters)
-  }
+  }, [])
 
   // Refetch data if related models has been changed since last fetch
   useEffect(() => {
     if (isLoading || isValidating) {
       read(DataModel.BANK_TRANSACTIONS, getCacheKey(filters))
     }
-  }, [isLoading, isValidating])
+  }, [filters, getCacheKey, isLoading, isValidating, read])
 
   useEffect(() => {
     if (hasBeenTouched(getCacheKey(filters))) {
       refetch()
     }
-  }, [syncTimestamps, filters])
+  }, [syncTimestamps, filters, hasBeenTouched, refetch, getCacheKey])
 
   const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
   const anyAccountSyncing = useMemo(
@@ -439,15 +442,7 @@ export const useAugmentedBankTransactions = (
     INITIAL_POLL_INTERVAL_MS,
   )
 
-  const transactionsNotSynced = useMemo(
-    () =>
-      isLoading === false
-      && anyAccountSyncing
-      && (!data || data?.length === 0),
-    [data, anyAccountSyncing, isLoading],
-  )
-
-  let intervalId: ReturnType<typeof setInterval> | undefined = undefined
+  const intervalIdRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
 
   // calling `refetch()` directly in the `setInterval` didn't trigger actual request to API.
   // But it works when called from `useEffect`
@@ -457,33 +452,37 @@ export const useAugmentedBankTransactions = (
       refetch()
       void refetchAccounts()
     }
-  }, [refreshTrigger])
+  }, [refetch, refetchAccounts, refreshTrigger])
 
   useEffect(() => {
     if (anyAccountSyncing) {
-      intervalId = setInterval(() => {
+      intervalIdRef.current = setInterval(() => {
         setRefreshTrigger(Math.random())
       }, pollIntervalMs)
     }
     else {
-      if (intervalId) {
-        clearInterval(intervalId)
+      if (intervalIdRef.current) {
+        clearInterval(intervalIdRef.current)
       }
     }
 
     return () => {
-      if (intervalId) {
-        clearInterval(intervalId)
+      if (intervalIdRef.current) {
+        clearInterval(intervalIdRef.current)
       }
     }
-  }, [anyAccountSyncing, transactionsNotSynced, pollIntervalMs])
+  }, [anyAccountSyncing, pollIntervalMs])
 
-  useTriggerOnChange(data, anyAccountSyncing, (_) => {
-    clearInterval(intervalId)
+  const handleTriggerOnChange = useCallback((_: BankTransaction[] | undefined) => {
+    if (intervalIdRef.current) {
+      clearInterval(intervalIdRef.current)
+    }
     setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
     eventCallbacks?.onTransactionsFetched?.()
     touch(DataModel.BANK_TRANSACTIONS)
-  })
+  }, [eventCallbacks, touch])
+
+  useTriggerOnChange(data, anyAccountSyncing, handleTriggerOnChange)
 
   return {
     data: filteredData,

@@ -3,8 +3,7 @@ import { Text } from '../Typography'
 import { parseISO, format as formatTime } from 'date-fns'
 import { Span, TextStyleProps } from '../ui/Typography/Text'
 
-interface DateTimeProps {
-  value: string
+interface BaseDateTimeProps {
   format?: string
   dateFormat?: string
   timeFormat?: string
@@ -16,8 +15,21 @@ interface DateTimeProps {
   }
 }
 
+interface DateTimeViaStringProps extends BaseDateTimeProps {
+  value: string
+  valueAsDate?: never
+}
+
+interface DateTimeViaDateProps extends BaseDateTimeProps {
+  value?: never
+  valueAsDate: Date
+}
+
+type DateTimeProps = DateTimeViaStringProps | DateTimeViaDateProps
+
 export const DateTime = ({
   value,
+  valueAsDate,
   format,
   dateFormat,
   timeFormat,
@@ -28,16 +40,18 @@ export const DateTime = ({
     Time: { size: 'sm', variant: 'subtle' },
   },
 }: DateTimeProps) => {
+  const dateValue = valueAsDate ?? parseISO(value)
+
   if (format) {
     return (
       <Text className='Layer__datetime'>
-        {formatTime(parseISO(value), format)}
+        {formatTime(dateValue, format)}
       </Text>
     )
   }
 
-  const date = formatTime(parseISO(value), dateFormat ?? DATE_FORMAT)
-  const time = formatTime(parseISO(value), timeFormat ?? TIME_FORMAT)
+  const date = formatTime(dateValue, dateFormat ?? DATE_FORMAT)
+  const time = formatTime(dateValue, timeFormat ?? TIME_FORMAT)
 
   return (
     <Text className='Layer__datetime'>

@@ -17,7 +17,6 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, onClose }: RuleUpdatesPr
   const [dontAskAgain, setDontAskAgain] = useState(false)
   return (
     <VStack gap='lg'>
-      <br />
       {ruleSuggestion.suggestionPrompt}
       <Separator />
       <HStack justify='space-between'>

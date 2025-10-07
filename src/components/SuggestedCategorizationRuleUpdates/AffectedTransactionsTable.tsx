@@ -54,7 +54,7 @@ export const AffectedTransactionsTable = ({
       header: 'Date',
       cell: row => (
         <DateTime
-          value={row.date}
+          valueAsDate={row.date}
           onlyDate
           slotProps={
             { Date: { size: TextSize.md, weight: TextWeight.normal, variant: 'subtle' } }

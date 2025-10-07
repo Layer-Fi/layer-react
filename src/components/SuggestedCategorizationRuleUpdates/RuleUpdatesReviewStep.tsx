@@ -7,7 +7,6 @@ import { HStack, VStack } from '../ui/Stack/Stack'
 import { useWizard } from '../Wizard/Wizard'
 import { Label } from '../ui/Typography/Text'
 import { AffectedTransactionsTable } from './AffectedTransactionsTable'
-import { MinimalBankTransaction } from '../../schemas/bankTransactions/base'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 
 interface RuleUpdatesPromptReviewStepProps {
@@ -20,12 +19,11 @@ export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptRevie
   const [applyRule, setApplyRule] = useState(true)
   return (
     <VStack gap='lg'>
-      <br />
       <Label size='md'>
         {`The following ${ruleSuggestion.transactionsThatWillBeAffected.length} transactions will be affected:`}
       </Label>
       <AffectedTransactionsTable
-        transactions={ruleSuggestion.transactionsThatWillBeAffected as MinimalBankTransaction[]}
+        transactions={ruleSuggestion.transactionsThatWillBeAffected}
       />
       <Separator />
       <HStack justify='space-between'>
