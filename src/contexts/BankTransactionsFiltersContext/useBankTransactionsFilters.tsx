@@ -62,8 +62,6 @@ export const useBankTransactionsFilters = (
       setFilters,
       dateFilterMode,
     }),
-    // setFilters and dateFilterMode are stable references
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [filters],
+    [filters, setFilters, dateFilterMode],
   )
 }
