@@ -118,6 +118,9 @@
   justify-items: center;
   width: fit-content;
   margin: 0 auto;
+  @media (width <= 720px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .Layer__service-offering-options__card {
