@@ -482,9 +482,7 @@ export const useAugmentedBankTransactions = (
     setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
     eventCallbacks?.onTransactionsFetched?.()
     touch(DataModel.BANK_TRANSACTIONS)
-  }, [eventCallbacks, touch])
-
-  useTriggerOnChange(data, anyAccountSyncing, handleTriggerOnChange)
+  })
 
   return {
     data: filteredData,
