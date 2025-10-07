@@ -123,7 +123,7 @@ export type HeroContentConfigOverrides = ServiceOfferingOverrides<HeroContentStr
 export type HeroContentConfigOverridesResolved = ServiceOfferingOverridesResolved<HeroContentStringOverrideKeys, HeroContentMediaUrlKeys, HeroContentCtaKeys>
 
 export type ServiceOfferingStringOverrideKeys = 'badge' | 'title' | 'subtitle' | 'priceAmount' | 'priceUnit'
-export type ServiceOfferingMediaUrlKeys = 'offer_image'
+export type ServiceOfferingMediaUrlKeys = 'offerImage'
 export type ServiceOfferingCtaKeys = 'primary'
 export type ServiceOfferingConfigOverrides = ServiceOfferingOverrides<ServiceOfferingStringOverrideKeys, ServiceOfferingMediaUrlKeys, ServiceOfferingCtaKeys>
 export type ServiceOfferingConfigOverridesResolved = ServiceOfferingOverridesResolved<

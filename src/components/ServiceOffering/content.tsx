@@ -139,7 +139,7 @@ export const DefaultAccountingOfferingContentConfig: ServiceOfferingConfigOverri
     priceUnit: '',
   },
   mediaUrls: {
-    offer_image: '',
+    offerImage: '',
   },
   cta: {
     primary: {
@@ -159,7 +159,7 @@ export const DefaultBookkeepingOfferingContentConfig: ServiceOfferingConfigOverr
     priceUnit: '',
   },
   mediaUrls: {
-    offer_image: '  ',
+    offerImage: '  ',
   },
   cta: {
     primary: {
