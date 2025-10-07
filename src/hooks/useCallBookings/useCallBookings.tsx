@@ -1,4 +1,4 @@
-import useSWR from 'swr'
+import useSWRInfinite, { type SWRInfiniteResponse } from 'swr/infinite'
 import useSWRMutation from 'swr/mutation'
 import { useSWRConfig } from 'swr'
 import { useCallback } from 'react'
@@ -7,6 +7,7 @@ import { useLayerContext } from '../../contexts/LayerContext'
 import { useAuth } from '../useAuth'
 import { get, post } from '../../api/layer/authenticated_http'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
+import { toDefinedSearchParameters } from '../../utils/request/toDefinedSearchParameters'
 import {
   CallBookingState,
   CallBookingType,
@@ -14,16 +15,27 @@ import {
   CallBookingItemResponseSchema,
   ListCallBookingsResponseSchema,
 } from '../../schemas/callBookings'
-import type { CallBooking } from '../../schemas/callBookings'
+import type { CallBooking, ListCallBookingsResponse } from '../../schemas/callBookings'
 
 export type { CallBooking }
 export { CallBookingState, CallBookingType, CallBookingPurpose }
 
-const getCallBookings = get<
+type ListCallBookingsParams = {
+  businessId: string
+  cursor?: string
+  limit?: number
+}
+
+const listCallBookings = get<
   Record<string, unknown>,
-  { businessId: string }
->(({ businessId }) => {
-  return `/v1/businesses/${businessId}/call-bookings`
+  ListCallBookingsParams
+>(({ businessId, cursor, limit }) => {
+  const parameters = toDefinedSearchParameters({
+    cursor,
+    limit,
+  })
+
+  return `/v1/businesses/${businessId}/call-bookings?${parameters}`
 })
 
 type CreateCallBookingBody = {
@@ -43,42 +55,103 @@ const createCallBooking = post<
 
 export const CALL_BOOKINGS_TAG_KEY = '#call-bookings'
 
-function buildListKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
+function keyLoader(
+  previousPageData: ListCallBookingsResponse | null,
+  {
+    access_token: accessToken,
+    apiUrl,
+    businessId,
+    isEnabled,
+  }: {
+    access_token?: string
+    apiUrl?: string
+    businessId: string
+    isEnabled?: boolean
+  },
+) {
+  if (!isEnabled) {
+    return
+  }
+
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
+      cursor: previousPageData?.meta.pagination.cursor ?? undefined,
       tags: [CALL_BOOKINGS_TAG_KEY],
     } as const
   }
 }
 
-export function useCallBookings() {
+class ListCallBookingsSWRResponse {
+  private swrResponse: SWRInfiniteResponse<ListCallBookingsResponse>
+
+  constructor(swrResponse: SWRInfiniteResponse<ListCallBookingsResponse>) {
+    this.swrResponse = swrResponse
+  }
+
+  get data() {
+    return this.swrResponse.data
+  }
+
+  get isLoading() {
+    return this.swrResponse.isLoading
+  }
+
+  get isValidating() {
+    return this.swrResponse.isValidating
+  }
+
+  get isError() {
+    return this.swrResponse.error !== undefined
+  }
+}
+
+type UseCallBookingsParams = {
+  isEnabled?: boolean
+}
+
+export function useCallBookings({ isEnabled = true }: UseCallBookingsParams = {}) {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
-  return useSWR(
-    () => buildListKey({
-      ...auth,
-      businessId,
-    }),
-    ({ accessToken, apiUrl, businessId }) => getCallBookings(
+  const swrResponse = useSWRInfinite(
+    (_index, previousPageData: ListCallBookingsResponse | null) => keyLoader(
+      previousPageData,
+      {
+        ...auth,
+        businessId,
+        isEnabled,
+      },
+    ),
+    ({ accessToken, apiUrl, businessId, cursor }) => listCallBookings(
       apiUrl,
       accessToken,
-      { params: { businessId } },
-    )()
-      .then(Schema.decodeUnknownPromise(ListCallBookingsResponseSchema))
-      .then(({ data }) => data),
+      {
+        params: {
+          businessId,
+          cursor,
+          limit: 5,
+        },
+      },
+    )().then(Schema.decodeUnknownPromise(ListCallBookingsResponseSchema)),
+    {
+      keepPreviousData: true,
+      revalidateFirstPage: false,
+      initialSize: 1,
+    },
   )
+
+  return new ListCallBookingsSWRResponse(swrResponse)
+}
+
+export function usePreloadCallBookings(parameters?: UseCallBookingsParams) {
+  /*
+   * This will initiate a network request to fill the cache, but will not
+   * cause a re-render when `data` changes.
+   */
+  useCallBookings(parameters)
 }
 
 function buildCreateKey({
