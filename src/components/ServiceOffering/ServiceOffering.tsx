@@ -149,7 +149,7 @@ export const ServiceOffering = ({
           </HStack>
         </VStack>
         <VStack className='Layer__service-offering__responsive-image'>
-          <img src={heroConfig.mediaUrls.top_of_fold_image} alt={`${platform.platformName} Accounting dashboard interface showing financial data and business insights`} />
+          <img src={heroConfig.mediaUrls.topOfFoldImage} alt={`${platform.platformName} Accounting dashboard interface showing financial data and business insights`} />
         </VStack>
       </div>
       {isCalendlyVisible && (

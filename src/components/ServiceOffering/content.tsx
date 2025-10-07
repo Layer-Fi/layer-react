@@ -115,7 +115,7 @@ export const DefaultHeroContentConfig: HeroContentConfigOverridesResolved = {
     heading2Desc: 'Track your expenses and get easy to understand reports designed specifically for {industry} businesses.',
   },
   mediaUrls: {
-    top_of_fold_image: imagePartnerAccountingImage,
+    topOfFoldImage: imagePartnerAccountingImage,
   },
   cta: {
     primary: {

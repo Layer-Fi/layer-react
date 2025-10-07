@@ -117,7 +117,7 @@ export interface ServiceOfferingOverridesResolved<StringOverrideKeys extends str
 }
 
 export type HeroContentStringOverrideKeys = 'title' | 'subtitle' | 'heading1' | 'heading1Desc' | 'heading2' | 'heading2Desc'
-export type HeroContentMediaUrlKeys = 'top_of_fold_image'
+export type HeroContentMediaUrlKeys = 'topOfFoldImage'
 export type HeroContentCtaKeys = 'primary' | 'secondary'
 export type HeroContentConfigOverrides = ServiceOfferingOverrides<HeroContentStringOverrideKeys, HeroContentMediaUrlKeys, HeroContentCtaKeys>
 export type HeroContentConfigOverridesResolved = ServiceOfferingOverridesResolved<HeroContentStringOverrideKeys, HeroContentMediaUrlKeys, HeroContentCtaKeys>
