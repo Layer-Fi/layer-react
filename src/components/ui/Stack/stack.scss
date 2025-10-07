@@ -47,9 +47,11 @@
     &[data-pb="#{$spacing}"] {
       padding-block: var(--spacing-#{$spacing});
     }
+
     &[data-pbe="#{$spacing}"] {
       padding-block-end: var(--spacing-#{$spacing});
     }
+
     &[data-pbs="#{$spacing}"] {
       padding-block-start: var(--spacing-#{$spacing});
     }
@@ -57,9 +59,11 @@
     &[data-pi="#{$spacing}"] {
       padding-inline: var(--spacing-#{$spacing});
     }
+
     &[data-pie="#{$spacing}"] {
       padding-inline-end: var(--spacing-#{$spacing});
     }
+
     &[data-pis="#{$spacing}"] {
       padding-inline-start: var(--spacing-#{$spacing});
     }

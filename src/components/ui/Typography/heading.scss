@@ -26,6 +26,7 @@
     &[data-pbe="#{$spacing}"] {
       padding-block-end: var(--spacing-#{$spacing});
     }
+
     &[data-pie="#{$spacing}"] {
       padding-inline-end: var(--spacing-#{$spacing});
     }
@@ -39,12 +40,24 @@
     }
   }
 
-  &[data-size='lg'] {
+  &[data-size='md'] {
     font-size: var(--text-heading-secondary);
   }
 
-  &[data-size='xl'] {
+  &[data-size='lg'] {
     font-size: var(--text-heading);
+  }
+
+  &[data-size='xl'] {
+    font-size: var(--text-heading-xl);
+  }
+
+  &[data-size='2xl'] {
+    font-size: var(--text-heading-2xl);
+  }
+
+  &[data-size='3xl'] {
+    font-size: var(--text-heading-3xl);
   }
 
   $alignments: left right justify;

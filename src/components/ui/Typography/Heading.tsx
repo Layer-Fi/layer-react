@@ -8,7 +8,7 @@ type HeadingDataProps = {
   align?: 'center'
   pbe?: Spacing
   pie?: Spacing
-  size?: '2xs' | 'xs' | 'sm' | 'lg' | 'xl'
+  size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
   variant?: 'subtle'
   weight?: 'normal' | 'bold'
   ellipsis?: true

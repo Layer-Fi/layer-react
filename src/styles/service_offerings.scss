@@ -1,0 +1,189 @@
+.Layer__service-offering {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+  border-radius: var(--border-radius-sm);
+  border: none;
+  background: var(--color-white);
+}
+
+.Layer__service-offering__calendly-container {
+  overflow: hidden;
+  max-height: 0;
+  margin: 0;
+  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.visible {
+    max-height: 800px;
+    margin: var(--spacing-lg) 0;
+  }
+
+  // Ensure the inner calendly widget has proper height
+  .calendly-inline-widget {
+    min-height: 630px;
+    width: 100%;
+    margin-bottom: var(--spacing-lg);
+    transition: opacity 0.3s ease-in-out 0.8s;
+  }
+}
+
+.Layer__feature-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  width: 33%;
+  margin: auto 0;
+  text-align: center;
+
+  .img-container {
+    @media (width <= 768px) {
+      height: 100%;
+      max-width: max(80%, 240px);
+      margin: var(--spacing-xl) auto;
+    }
+
+    @media (width <= 1024px) {
+      margin: var(--spacing-md) auto;
+    }
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 320px;
+    width: auto;
+
+    img {
+      height: 100%;
+      width: auto;
+      max-width: 100%;
+      margin: 0 auto;
+      filter: drop-shadow(0 12px 16px rgb(0 0 0 / 20%));
+    }
+  }
+}
+
+// Service Offering Options Component
+.Layer__service-offering-options {
+  max-width: 1200px;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  margin: 0 auto;
+}
+
+.Layer__service-offering-options__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  justify-items: center;
+  width: fit-content;
+  margin: 0 auto;
+
+  @media (width <= 720px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.Layer__service-offering-options__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  max-width: 420px;
+  padding: var(--spacing-md);
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 5px 10px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
+  margin: 0;
+  background: white;
+}
+
+// Layout configurations for different offer positions
+.Layer__service-offering__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.Layer__service-offering__offers {
+  flex-shrink: 0;
+  min-width: 0;
+  background-color: transparent;
+
+  @media (width <= 1440px) {
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+// Responsive layout for main service offering content
+.Layer__service-offering__responsive-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  @media (width <= 1440px) {
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+}
+
+.Layer__service-offering__responsive-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+  padding: var(--spacing-3xl);
+  padding-bottom: var(--spacing-3xl);
+
+  @media (width <= 1440px) {
+    padding: var(--spacing-xl);
+  }
+}
+
+.Layer__service-offering__responsive-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (width <= 1440px) {
+    margin-top: var(--spacing-lg);
+  }
+
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+}
+
+// Responsive value props layout
+.Layer__service-offering__value-props-responsive {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-5xl);
+  justify-items: center;
+
+  @media (width <= 1440px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (width <= 768px) {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+  }
+}
+
+// Mobile feature sections (no carousel)
+.Layer__mobile-feature-section {
+  box-sizing: border-box;
+  gap: var(--spacing-xl);
+  width: 100%;
+  padding: 0 var(--spacing-md);
+
+  .Layer__feature-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}

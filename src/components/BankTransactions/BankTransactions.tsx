@@ -244,9 +244,9 @@ const BankTransactionsContent = ({
   ) => {
     setFilters({
       categorizationStatus:
-        event.target.value === 'categorized'
+        event.target.value === 'categorized' // see DisplayState enum
           ? DisplayState.categorized
-          : event.target.value === 'all'
+          : event.target.value === 'all' // see DisplayState enum
             ? DisplayState.all
             : DisplayState.review,
     })
