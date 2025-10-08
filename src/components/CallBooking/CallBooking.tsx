@@ -65,7 +65,7 @@ const ScheduledCallState = ({
         </HStack>
         <HStack align='center' gap='sm'>
           <Link size={20} />
-          <Span size='md'>https://meet.google.com/abc123</Span>
+          <a href={callBooking.location} className='Layer__call-booking-link Layer__text-btn' target='_blank' rel='noopener noreferrer'>https://meet.google.com/abc123</a>
         </HStack>
       </VStack>
       <VStack gap='xs' className='Layer__call-booking-actions'>

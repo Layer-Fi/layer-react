@@ -85,7 +85,7 @@ export const BookkeepingOverview = ({
         sidebar={(
           <VStack gap='lg'>
             {slotProps?._showCallBookings && (
-              <CallBooking callBooking={callBooking} />
+              <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} />
             )}
             <Tasks
               stringOverrides={stringOverrides?.tasks}
@@ -100,11 +100,16 @@ export const BookkeepingOverview = ({
             ref={upperContentRef}
             onClick={() => (upperElementInFocus.current = true)}
           >
-            <Tasks
-              mobile
-              stringOverrides={stringOverrides?.tasks}
-              onClickReconnectAccounts={onClickReconnectAccounts}
-            />
+            <VStack gap='lg'>
+              {slotProps?._showCallBookings && (
+                <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} />
+              )}
+              <Tasks
+                mobile
+                stringOverrides={stringOverrides?.tasks}
+                onClickReconnectAccounts={onClickReconnectAccounts}
+              />
+            </VStack>
           </div>
         )}
         <div
