@@ -1,64 +1,64 @@
 import { createContext, type PropsWithChildren, useContext, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
-export type BulkSelectionState<TId extends string = string> = {
-  selected: Set<TId>
+export type BulkSelectionState = {
+  selected: Set<string>
 }
 
-type BulkSelectionActions<TId extends string = string> = {
-  add: (id: TId) => void
-  remove: (id: TId) => void
-  addMultiple: (ids: TId[]) => void
+type BulkSelectionActions = {
+  add: (id: string) => void
+  remove: (id: string) => void
+  addMultiple: (ids: string[]) => void
   clear: () => void
 }
 
-type BulkSelectionStore<TId extends string = string> = BulkSelectionState<TId> & {
-  actions: BulkSelectionActions<TId>
+type BulkSelectionStore = BulkSelectionState & {
+  actions: BulkSelectionActions
 }
 
-function buildStore<TId extends string = string>() {
-  return createStore<BulkSelectionStore<TId>>(set => ({
-    selected: new Set<TId>(),
+function buildStore() {
+  return createStore<BulkSelectionStore>(set => ({
+    selected: new Set<string>(),
 
     actions: {
-      add: (id: TId) =>
+      add: (id: string) =>
         set(state => ({
           selected: new Set(state.selected).add(id),
         })),
 
-      remove: (id: TId) =>
+      remove: (id: string) =>
         set((state) => {
           const newSet = new Set(state.selected)
           newSet.delete(id)
           return { selected: newSet }
         }),
 
-      addMultiple: (ids: TId[]) =>
+      addMultiple: (ids: string[]) =>
         set((state) => {
           const newSet = new Set(state.selected)
           ids.forEach(id => newSet.add(id))
           return { selected: newSet }
         }),
 
-      clear: () => set({ selected: new Set<TId>() }),
+      clear: () => set({ selected: new Set<string>() }),
     },
   }))
 }
 
 const BulkSelectionStoreContext = createContext<ReturnType<typeof buildStore> | null>(null)
 
-function useBulkSelectionStore<TId extends string = string>() {
+function useBulkSelectionStore() {
   const store = useContext(BulkSelectionStoreContext)
 
   if (!store) {
     throw new Error('useBulkSelectionStore must be used within BulkSelectionStoreProvider')
   }
 
-  return store as unknown as ReturnType<typeof buildStore<TId>>
+  return store
 }
 
-export function useBulkSelectionIds<TId extends string = string>() {
-  const store = useBulkSelectionStore<TId>()
+export function useBulkSelectionIds() {
+  const store = useBulkSelectionStore()
 
   const selectedIds = useStore(store, state => state.selected)
 
@@ -73,8 +73,8 @@ export function useBulkSelectionCount() {
   return { count }
 }
 
-export function useBulkSelectionActions<TId extends string = string>() {
-  const store = useBulkSelectionStore<TId>()
+export function useBulkSelectionActions() {
+  const store = useBulkSelectionStore()
 
   const add = useStore(store, state => state.actions.add)
   const remove = useStore(store, state => state.actions.remove)
