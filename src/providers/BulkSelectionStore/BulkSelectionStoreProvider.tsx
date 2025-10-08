@@ -57,7 +57,7 @@ function useBulkSelectionStore() {
   return store
 }
 
-export function useBulkSelectionIds() {
+export function useSelectedIds() {
   const store = useBulkSelectionStore()
 
   const selectedIds = useStore(store, state => state.selected)
