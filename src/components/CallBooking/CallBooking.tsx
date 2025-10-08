@@ -11,7 +11,7 @@ import { format as formatTime } from 'date-fns'
 import { DATE_FORMAT_WITH_TIME } from '../../config/general'
 
 const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => (
-  <VStack className='Layer__call-booking-state'>
+  <VStack gap='md' align='center'>
     <Heading size='sm'>Have any questions?</Heading>
     <Span variant='subtle'>
       Book a call with your bookkeeper
@@ -34,7 +34,7 @@ const ScheduledCallState = ({
   }, [callBooking, onAdd])
 
   return (
-    <VStack className='Layer__call-booking-state'>
+    <VStack gap='md' align='center'>
       <Users size={36} strokeWidth={1.5} />
       <Heading size='sm'>Confirmed</Heading>
       <Span variant='subtle'>
@@ -63,7 +63,7 @@ const ScheduledCallState = ({
           </a>
         </HStack>
       </VStack>
-      <VStack gap='xs' className='Layer__call-booking-actions'>
+      <VStack gap='xs' align='start' justify='start' className='Layer__call-booking-actions'>
         <Button variant={ButtonVariant.primary} onClick={onAddToCalendar}>Add to your calendar</Button>
       </VStack>
     </VStack>

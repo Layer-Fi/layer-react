@@ -32,8 +32,8 @@ export interface BookkeepingOverviewProps {
         variants?: Variants
       }
     }
-    _showCallBookings?: boolean
   }
+  _showBookACall?: boolean
   onClickReconnectAccounts?: () => void
   /**
    * @deprecated Use `stringOverrides.title` instead
@@ -49,6 +49,7 @@ export const BookkeepingOverview = ({
   onClickReconnectAccounts,
   stringOverrides,
   slotProps,
+  _showBookACall,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
@@ -59,7 +60,7 @@ export const BookkeepingOverview = ({
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
 
-  const callBooking: CallBookingData = {
+  const exampleCallBooking: CallBookingData = {
     id: '123',
     businessId: '123',
     externalId: '123',
@@ -84,8 +85,8 @@ export const BookkeepingOverview = ({
         withSidebar={width > 1100}
         sidebar={(
           <VStack gap='lg'>
-            {slotProps?._showCallBookings && (
-              <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} />
+            {_showBookACall && (
+              <CallBooking callBooking={exampleCallBooking} onAddToCalendar={() => {}} />
             )}
             <Tasks
               stringOverrides={stringOverrides?.tasks}
@@ -101,8 +102,8 @@ export const BookkeepingOverview = ({
             onClick={() => (upperElementInFocus.current = true)}
           >
             <VStack gap='lg'>
-              {slotProps?._showCallBookings && (
-                <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} />
+              {_showBookACall && (
+                <CallBooking callBooking={exampleCallBooking} onAddToCalendar={() => {}} />
               )}
               <Tasks
                 mobile
