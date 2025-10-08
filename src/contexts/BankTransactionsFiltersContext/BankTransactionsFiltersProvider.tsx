@@ -13,19 +13,10 @@ export const TransactionsFiltersProvider = ({
   children,
   ...params
 }: TransactionsFiltersProviderProps) => {
-  const { filters, setFilters, dateFilterMode } = useBankTransactionsFilters(params)
-
-  const value: BankTransactionsFiltersContextType = useMemo(
-    () => ({
-      filters,
-      setFilters,
-      dateFilterMode,
-    }),
-    [filters, setFilters, dateFilterMode],
-  )
+  const contextValue = useBankTransactionsFilters(params)
 
   return (
-    <BankTransactionsFiltersContext.Provider value={value}>
+    <BankTransactionsFiltersContext.Provider value={contextValue}>
       {children}
     </BankTransactionsFiltersContext.Provider>
   )
