@@ -84,7 +84,7 @@ export function useBulkSelectionActions() {
   return { select, deselect, selectMultiple, clearSelection }
 }
 
-export function useCheckIsSelected() {
+export function useIdIsSelected() {
   const store = useBulkSelectionStore()
 
   const selected = useStore(store, state => state.selected)
