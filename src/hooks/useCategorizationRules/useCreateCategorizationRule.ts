@@ -1,13 +1,9 @@
 import { useLayerContext } from '../../contexts/LayerContext'
-import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { useCallback } from 'react'
-import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
 import { CreateCategorizationRuleSchema, CategorizationRuleSchema } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
-import { BANK_ACCOUNTS_TAG_KEY } from '../bookkeeping/useBankAccounts'
 import { useAuth } from '../useAuth'
-import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalAccounts'
 import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
 import { useProfitAndLossGlobalInvalidator } from '../useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { Schema } from 'effect/index'
@@ -49,7 +45,6 @@ const createCategorizationRule = post<CreateCategorizationRuleReturn, CreateCate
 export function useCreateCategorizationRule() {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
-  const { mutate } = useSWRConfig()
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
@@ -84,17 +79,6 @@ export function useCreateCategorizationRule() {
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
-
-      void mutate(key => withSWRKeyTags(
-        key,
-        tags => tags.includes(BANK_ACCOUNTS_TAG_KEY)
-          || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY),
-      ))
-      /**
-       * SWR does not expose infinite queries through the matcher
-       *
-       * @see https://github.com/vercel/swr/blob/main/src/_internal/utils/mutate.ts#L78
-       */
       void forceReloadBankTransactions()
       void invalidatePnlDetailLines()
 
@@ -102,7 +86,7 @@ export function useCreateCategorizationRule() {
 
       return triggerResult
     },
-    [originalTrigger, mutate, forceReloadBankTransactions, invalidatePnlDetailLines, debouncedInvalidateProfitAndLoss],
+    [originalTrigger, forceReloadBankTransactions, invalidatePnlDetailLines, debouncedInvalidateProfitAndLoss],
   )
 
   return new Proxy(mutationResponse, {

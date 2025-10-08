@@ -5,8 +5,6 @@ import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransacti
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { RuleUpdatesPromptStep } from './RuleUpdatesPromptStep'
 import { RuleUpdatesReviewStep } from './RuleUpdatesReviewStep'
-import { useRejectCategorizationRulesUpdateSuggestion } from '../../hooks/useCategorizationRules/useRejectCategorizationRulesUpdateSuggestion'
-import { useCallback } from 'react'
 
 type SuggestedCategorizationRuleUpdatesProps = {
   close: () => Awaitable<void>
@@ -31,19 +29,6 @@ export const getHeaderForRule = (ruleSuggestion: UpdateCategorizationRulesSugges
 }
 
 export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: SuggestedCategorizationRuleUpdatesProps) {
-  const rejectRuleSuggestion = useRejectCategorizationRulesUpdateSuggestion()
-  const onClose = useCallback(
-    (dontAskAgain: boolean) => {
-      if (dontAskAgain) {
-        const suggestionId = ruleSuggestion.newRule.createdBySuggestionId
-        if (suggestionId) {
-          rejectRuleSuggestion?.(suggestionId)
-        }
-      }
-      void close()
-    }, [close, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId],
-  )
-
   const hasTransactions = ruleSuggestion.transactionsThatWillBeAffected.length > 0
 
   return (
@@ -54,7 +39,7 @@ export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: Su
         onComplete={close}
         onStepChange={undefined}
       >
-        <RuleUpdatesPromptStep ruleSuggestion={ruleSuggestion} onClose={onClose} />
+        <RuleUpdatesPromptStep ruleSuggestion={ruleSuggestion} close={close} />
         {hasTransactions && <RuleUpdatesReviewStep ruleSuggestion={ruleSuggestion} />}
       </Wizard>
     </section>

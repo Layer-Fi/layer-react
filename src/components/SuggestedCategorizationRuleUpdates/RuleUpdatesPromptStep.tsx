@@ -7,15 +7,19 @@ import { HStack, VStack } from '../ui/Stack/Stack'
 import { Label } from '../ui/Typography/Text'
 import { Separator } from '../Separator/Separator'
 import { CreateRuleButton } from './CreateRuleButton'
+import { useRejectCategorizationRulesUpdateSuggestion } from '../../hooks/useCategorizationRules/useRejectCategorizationRulesUpdateSuggestion'
+import { useLayerContext } from '../../contexts/LayerContext'
 
 interface RuleUpdatesPromptStepProps {
-  onClose: (dontAskAgain: boolean) => void
+  close: () => void
   ruleSuggestion: UpdateCategorizationRulesSuggestion
 }
 
-export function RuleUpdatesPromptStep({ ruleSuggestion, onClose }: RuleUpdatesPromptStepProps) {
+export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesPromptStepProps) {
   const { next } = useWizard()
+  const { addToast } = useLayerContext()
   const [dontAskAgain, setDontAskAgain] = useState(false)
+  const { trigger: rejectRuleSuggestion, isMutating } = useRejectCategorizationRulesUpdateSuggestion()
 
   return (
     <VStack gap='lg'>
@@ -25,8 +29,23 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, onClose }: RuleUpdatesPr
         <HStack gap='sm'>
           <Button
             onClick={() => {
-              onClose(dontAskAgain)
+              void (async () => {
+                if (dontAskAgain) {
+                  if (ruleSuggestion.newRule.createdBySuggestionId) {
+                    await rejectRuleSuggestion(ruleSuggestion.newRule.createdBySuggestionId)
+                      .then(() => {
+                        close()
+                      }).catch(() => {
+                        addToast({ content: 'Failed to reject rule suggestion', type: 'error' })
+                      })
+                  }
+                }
+                else {
+                  close()
+                }
+              })()
             }}
+            isPending={isMutating}
           >
             No
           </Button>
@@ -46,7 +65,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, onClose }: RuleUpdatesPr
           )
           : (
             <Button
-              onClick={() => {
+              onPress={() => {
                 void next()
               }}
             >
