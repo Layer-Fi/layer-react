@@ -11,6 +11,9 @@ import { Variants } from '../../utils/styleUtils/sizeVariants'
 import { BookkeepingProfitAndLossSummariesContainer } from './internal/BookkeepingProfitAndLossSummariesContainer'
 import classNames from 'classnames'
 import { useKeepInMobileViewport } from './useKeepInMobileViewport'
+import { VStack } from '../../components/ui/Stack/Stack'
+import { CallBooking } from '../../components/CallBooking/CallBooking'
+import { CallBookingPurpose, CallBookingState, CallBookingType, type CallBooking as CallBookingData } from '../../schemas/callBookings'
 
 export interface BookkeepingOverviewProps {
   showTitle?: boolean
@@ -30,6 +33,7 @@ export interface BookkeepingOverviewProps {
       }
     }
   }
+  _showBookACall?: boolean
   onClickReconnectAccounts?: () => void
   /**
    * @deprecated Use `stringOverrides.title` instead
@@ -45,6 +49,7 @@ export const BookkeepingOverview = ({
   onClickReconnectAccounts,
   stringOverrides,
   slotProps,
+  _showBookACall,
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
@@ -55,6 +60,23 @@ export const BookkeepingOverview = ({
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
 
+  const exampleCallBooking: CallBookingData = {
+    id: '123',
+    businessId: '123',
+    externalId: '123',
+    purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING,
+    state: CallBookingState.SCHEDULED,
+    callType: CallBookingType.GOOGLE_MEET,
+    eventStartAt: new Date(),
+    callLink: new URL('https://meet.google.com/123'),
+    cancellationReason: undefined,
+    didAttend: undefined,
+    bookkeeperName: 'John Doe',
+    bookkeeperEmail: 'john.doe@example.com',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
+
   return (
     <ProfitAndLoss asContainer={false}>
       <View
@@ -62,10 +84,15 @@ export const BookkeepingOverview = ({
         title={stringOverrides?.title || title || 'Bookkeeping overview'}
         withSidebar={width > 1100}
         sidebar={(
-          <Tasks
-            stringOverrides={stringOverrides?.tasks}
-            onClickReconnectAccounts={onClickReconnectAccounts}
-          />
+          <VStack gap='lg'>
+            {_showBookACall && (
+              <CallBooking callBooking={exampleCallBooking} onAddToCalendar={() => {}} />
+            )}
+            <Tasks
+              stringOverrides={stringOverrides?.tasks}
+              onClickReconnectAccounts={onClickReconnectAccounts}
+            />
+          </VStack>
         )}
         showHeader={showTitle}
       >
@@ -74,11 +101,16 @@ export const BookkeepingOverview = ({
             ref={upperContentRef}
             onClick={() => (upperElementInFocus.current = true)}
           >
-            <Tasks
-              mobile
-              stringOverrides={stringOverrides?.tasks}
-              onClickReconnectAccounts={onClickReconnectAccounts}
-            />
+            <VStack gap='lg'>
+              {_showBookACall && (
+                <CallBooking callBooking={exampleCallBooking} onAddToCalendar={() => {}} />
+              )}
+              <Tasks
+                mobile
+                stringOverrides={stringOverrides?.tasks}
+                onClickReconnectAccounts={onClickReconnectAccounts}
+              />
+            </VStack>
           </div>
         )}
         <div
