@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { PopupModal } from 'react-calendly'
+import classNames from 'classnames'
 import { Container } from '../../components/Container'
 import { ProfitAndLoss } from '../../components/ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedChartsStringOverrides } from '../../components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -9,11 +11,11 @@ import { View } from '../../components/View'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import { Variants } from '../../utils/styleUtils/sizeVariants'
 import { BookkeepingProfitAndLossSummariesContainer } from './internal/BookkeepingProfitAndLossSummariesContainer'
-import classNames from 'classnames'
 import { useKeepInMobileViewport } from './useKeepInMobileViewport'
 import { VStack } from '../../components/ui/Stack/Stack'
 import { CallBooking } from '../../components/CallBooking/CallBooking'
 import { CallBookingPurpose, CallBookingState, CallBookingType, type CallBooking as CallBookingData } from '../../schemas/callBookings'
+import { useCalendly } from '../../hooks/useCalendly/useCalendly'
 
 export interface BookkeepingOverviewProps {
   showTitle?: boolean
@@ -33,6 +35,7 @@ export interface BookkeepingOverviewProps {
       }
     }
     _showCallBookings?: boolean
+    calendlyUrl?: string
   }
   onClickReconnectAccounts?: () => void
   /**
@@ -52,12 +55,20 @@ export const BookkeepingOverview = ({
 }: BookkeepingOverviewProps) => {
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
   const [width] = useWindowSize()
+  const { isCalendlyVisible, calendlyLink, calendlyRef, openCalendly, closeCalendly } = useCalendly()
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
 
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
+
+  const handleBookCall = () => {
+    const calendlyUrl = slotProps?.calendlyUrl
+    if (calendlyUrl) {
+      openCalendly(calendlyUrl)
+    }
+  }
 
   const callBooking: CallBookingData = {
     id: '123',
@@ -85,7 +96,7 @@ export const BookkeepingOverview = ({
         sidebar={(
           <VStack gap='lg'>
             {slotProps?._showCallBookings && (
-              <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} />
+              <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} onBookCall={handleBookCall} />
             )}
             <Tasks
               stringOverrides={stringOverrides?.tasks}
@@ -102,7 +113,7 @@ export const BookkeepingOverview = ({
           >
             <VStack gap='lg'>
               {slotProps?._showCallBookings && (
-                <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} />
+                <CallBooking callBooking={callBooking} onAddToCalendar={() => {}} onBookCall={handleBookCall} />
               )}
               <Tasks
                 mobile
@@ -182,6 +193,19 @@ export const BookkeepingOverview = ({
           </Container>
         </div>
       </View>
+      {isCalendlyVisible && (
+        <div
+          ref={calendlyRef}
+          className={classNames('Layer__calendly-container', { visible: isCalendlyVisible })}
+        >
+          <PopupModal
+            url={calendlyLink}
+            onModalClose={closeCalendly}
+            open={isCalendlyVisible}
+            rootElement={document.getElementById('root')!}
+          />
+        </div>
+      )}
     </ProfitAndLoss>
   )
 }
