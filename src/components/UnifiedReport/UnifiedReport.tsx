@@ -20,20 +20,24 @@ enum UnifiedReportColumns {
 const COLUMN_CONFIG: ColumnConfig<Row<LineItemWithId>, UnifiedReportColumns> = ({
   [UnifiedReportColumns.DisplayName]: {
     id: UnifiedReportColumns.DisplayName,
-    header: 'Account',
+    header: 'Line Item',
     cell: row => (
       <Span weight={row.depth === 0 ? 'bold' : 'normal'} ellipsis>{row.original.displayName}</Span>
     ),
+    isRowHeader: true,
   },
   [UnifiedReportColumns.Value]: {
     id: UnifiedReportColumns.Value,
     header: 'Amount',
     cell: row => <MoneySpan amount={row.original.value} />,
-    isRowHeader: true,
   },
 })
 
-const getSubRows = (lineItem: LineItemWithId) => [...lineItem.lineItems]
+function asMutable<T>(a: readonly T[]): T[] {
+  return a as unknown as T[]
+}
+
+const getSubRows = (lineItem: LineItemWithId) => asMutable(lineItem.lineItems)
 type UnifiedReportProps = { report: ReportEnum }
 
 export const UnifiedReport = ({ report }: UnifiedReportProps) => {
@@ -64,7 +68,7 @@ export const UnifiedReport = ({ report }: UnifiedReportProps) => {
   return (
     <Container name='UnifiedReport'>
       <ExpandableDataTable
-        ariaLabel='Invoices'
+        ariaLabel='Report'
         data={mutableData}
         isLoading={data === undefined || isLoading}
         isError={isError}
