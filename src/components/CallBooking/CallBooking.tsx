@@ -10,15 +10,6 @@ import { CallBookingType, type CallBooking as CallBookingData } from '../../sche
 import { format as formatTime } from 'date-fns'
 import { DATE_FORMAT_WITH_TIME } from '../../config/general'
 
-export interface ScheduledCall {
-  id: string
-  title: string
-  date: Date
-  duration: number
-  meetingLink?: string
-  description?: string
-}
-
 const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => (
   <VStack className='Layer__call-booking-state'>
     <Heading size='sm'>Have any questions?</Heading>
