@@ -1,4 +1,4 @@
-import { ReactNode, useCallback } from 'react'
+import { useCallback } from 'react'
 import { Button, ButtonVariant } from '../Button/Button'
 import { Container } from '../Container'
 import { HStack, VStack } from '../ui/Stack/Stack'
@@ -6,7 +6,7 @@ import { Heading } from '../ui/Typography/Heading'
 import { Span } from '../ui/Typography/Text'
 import { Separator } from '../Separator/Separator'
 import { Clock, Link, Milestone, Users, Video } from 'lucide-react'
-import { type CallBooking as CallBookingData } from '../../schemas/callBookings'
+import { CallBookingType, type CallBooking as CallBookingData } from '../../schemas/callBookings'
 import { format as formatTime } from 'date-fns'
 import { DATE_FORMAT_WITH_TIME } from '../../config/general'
 
@@ -57,7 +57,7 @@ const ScheduledCallState = ({
         </HStack>
         <HStack align='center' gap='sm'>
           <Video size={20} />
-          <Span size='md'>Zoom</Span>
+          <Span size='md'>{callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'}</Span>
         </HStack>
         <HStack align='center' gap='sm'>
           <Clock size={20} />
@@ -65,7 +65,11 @@ const ScheduledCallState = ({
         </HStack>
         <HStack align='center' gap='sm'>
           <Link size={20} />
-          <a href={callBooking.location} className='Layer__call-booking-link Layer__text-btn' target='_blank' rel='noopener noreferrer'>https://meet.google.com/abc123</a>
+          <a href={callBooking.callLink.toString()} className='Layer__call-booking-link Layer__text-btn' target='_blank' rel='noopener noreferrer'>
+            <Span size='md'>
+              {callBooking.callLink.toString()}
+            </Span>
+          </a>
         </HStack>
       </VStack>
       <VStack gap='xs' className='Layer__call-booking-actions'>
@@ -86,19 +90,15 @@ export const CallBooking = ({
   onBookCall,
   onAddToCalendar,
 }: CallBookingProps) => {
-  const renderState = (): ReactNode => {
-    if (onAddToCalendar && callBooking) {
-      return (
-        <ScheduledCallState callBooking={callBooking} onAddToCalendar={onAddToCalendar} />
-      )
-    }
-
-    return <EmptyState onBookCall={onBookCall} />
-  }
-
   return (
     <Container name='call-booking'>
-      {renderState()}
+      {onAddToCalendar && callBooking
+        ? (
+          <ScheduledCallState callBooking={callBooking} onAddToCalendar={onAddToCalendar} />
+        )
+        : (
+          <EmptyState onBookCall={onBookCall} />
+        )}
     </Container>
   )
 }

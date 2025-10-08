@@ -97,7 +97,10 @@ export const CallBookingSchema = Schema.Struct({
     Schema.fromKey('event_start_at'),
   ),
 
-  location: Schema.String,
+  callLink: pipe(
+    Schema.propertySignature(Schema.URL),
+    Schema.fromKey('call_link'),
+  ),
 
   cancellationReason: pipe(
     Schema.optional(Schema.NullOr(Schema.String)),
