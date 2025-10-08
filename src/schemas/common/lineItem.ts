@@ -1,9 +1,4 @@
-import { Schema, pipe } from 'effect'
-import { ZonedDateTime } from '@internationalized/date'
-
-export const ZonedDateTimeFromSelf = Schema.declare(
-  (input: unknown): input is ZonedDateTime => input instanceof ZonedDateTime,
-)
+import { Schema, Effect, pipe, ParseResult } from 'effect'
 
 const lineItemFields = {
   name: Schema.String,
@@ -36,9 +31,27 @@ export interface LineItemEncoded extends Schema.Struct.Encoded<typeof lineItemFi
 export const LineItemSchema = Schema.Struct({
   ...lineItemFields,
   lineItems: pipe(
-    Schema.propertySignature(Schema.Array(
-      Schema.suspend((): Schema.Schema<LineItem, LineItemEncoded> => LineItemSchema),
-    )),
+    Schema.propertySignature(
+      Schema.Array(
+        Schema.suspend((): Schema.Schema<LineItem, LineItemEncoded> => LineItemSchema),
+      ),
+    ),
     Schema.fromKey('line_items'),
   ),
 })
+
+export type LineItemWithId = Omit<LineItem, 'lineItems'> & { readonly id: string, lineItems: ReadonlyArray<LineItemWithId> }
+
+const addId = (li: LineItem): LineItemWithId => ({
+  ...li,
+  id: li.name,
+  lineItems: li.lineItems.map(addId),
+})
+
+export const decodeLineItemWithId = (
+  input: unknown,
+): Effect.Effect<LineItemWithId, ParseResult.ParseError> =>
+  pipe(
+    Schema.decodeUnknown(LineItemSchema)(input),
+    Effect.map(addId),
+  )
