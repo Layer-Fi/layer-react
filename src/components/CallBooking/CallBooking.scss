@@ -22,7 +22,7 @@
 }
 
 // Responsive design for smaller screens
-@media (width <= 480px) {
+@media (max-width: 480px) {
   .Layer__call-booking {
     padding: var(--spacing-md);
   }
