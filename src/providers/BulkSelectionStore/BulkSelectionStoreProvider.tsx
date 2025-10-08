@@ -21,26 +21,26 @@ function buildStore() {
     selected: new Set<string>(),
 
     actions: {
-      add: (id: string) =>
+      select: (id: string) =>
         set(state => ({
           selected: new Set(state.selected).add(id),
         })),
 
-      remove: (id: string) =>
+      deselect: (id: string) =>
         set((state) => {
           const newSet = new Set(state.selected)
           newSet.delete(id)
           return { selected: newSet }
         }),
 
-      addMultiple: (ids: string[]) =>
+      selectMultiple: (ids: string[]) =>
         set((state) => {
           const newSet = new Set(state.selected)
           ids.forEach(id => newSet.add(id))
           return { selected: newSet }
         }),
 
-      clear: () => set({ selected: new Set<string>() }),
+      clearSelection: () => set({ selected: new Set<string>() }),
     },
   }))
 }
@@ -76,12 +76,20 @@ export function useCountSelectedIds() {
 export function useBulkSelectionActions() {
   const store = useBulkSelectionStore()
 
-  const add = useStore(store, state => state.actions.add)
-  const remove = useStore(store, state => state.actions.remove)
-  const addMultiple = useStore(store, state => state.actions.addMultiple)
-  const clear = useStore(store, state => state.actions.clear)
+  const select = useStore(store, state => state.actions.select)
+  const deselect = useStore(store, state => state.actions.deselect)
+  const selectMultiple = useStore(store, state => state.actions.selectMultiple)
+  const clearSelection = useStore(store, state => state.actions.clearSelection)
 
-  return { add, remove, addMultiple, clear }
+  return { select, deselect, selectMultiple, clearSelection }
+}
+
+export function useCheckIsSelected() {
+  const store = useBulkSelectionStore()
+
+  const selected = useStore(store, state => state.selected)
+
+  return (id: string) => selected.has(id)
 }
 
 type BulkSelectionStoreProviderProps = PropsWithChildren
