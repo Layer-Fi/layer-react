@@ -1,0 +1,29 @@
+.Layer__call-booking {
+  padding: var(--spacing-lg);
+  
+  .Layer__call-booking-details {
+    width: 100%;
+  }
+
+  .Layer__call-booking-actions {
+    width: 100%;
+    align-items: start;
+    justify-content: start;
+    margin-top: var(--spacing-md);
+  }
+
+  .Layer__call-booking-state {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: center;
+    text-align: center;
+  }
+}
+
+// Responsive design for smaller screens
+@media (width <= 480px) {
+  .Layer__call-booking {
+    padding: var(--spacing-md);
+  }
+}

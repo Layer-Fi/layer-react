@@ -11,6 +11,9 @@ import { Variants } from '../../utils/styleUtils/sizeVariants'
 import { BookkeepingProfitAndLossSummariesContainer } from './internal/BookkeepingProfitAndLossSummariesContainer'
 import classNames from 'classnames'
 import { useKeepInMobileViewport } from './useKeepInMobileViewport'
+import { VStack } from '../../components/ui/Stack/Stack'
+import { CallBooking } from '../../components/CallBooking/CallBooking'
+import { CallBookingPurpose, CallBookingState, CallBookingType, type CallBooking as CallBookingData } from '../../schemas/callBookings'
 
 export interface BookkeepingOverviewProps {
   showTitle?: boolean
@@ -29,6 +32,7 @@ export interface BookkeepingOverviewProps {
         variants?: Variants
       }
     }
+    _showCallBookings?: boolean
   }
   onClickReconnectAccounts?: () => void
   /**
@@ -55,6 +59,23 @@ export const BookkeepingOverview = ({
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
 
+  const callBooking: CallBookingData = {
+    id: '123',
+    businessId: '123',
+    externalId: '123',
+    purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING,
+    state: CallBookingState.SCHEDULED,
+    callType: CallBookingType.ZOOM,
+    eventStartAt: new Date(),
+    location: 'Zoom',
+    cancellationReason: undefined,
+    didAttend: undefined,
+    bookkeeperName: 'John Doe',
+    bookkeeperEmail: 'john.doe@example.com',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
+
   return (
     <ProfitAndLoss asContainer={false}>
       <View
@@ -62,10 +83,15 @@ export const BookkeepingOverview = ({
         title={stringOverrides?.title || title || 'Bookkeeping overview'}
         withSidebar={width > 1100}
         sidebar={(
-          <Tasks
-            stringOverrides={stringOverrides?.tasks}
-            onClickReconnectAccounts={onClickReconnectAccounts}
-          />
+          <VStack gap='lg'>
+            {slotProps?._showCallBookings && (
+              <CallBooking callBooking={undefined} />
+            )}
+            <Tasks
+              stringOverrides={stringOverrides?.tasks}
+              onClickReconnectAccounts={onClickReconnectAccounts}
+            />
+          </VStack>
         )}
         showHeader={showTitle}
       >
