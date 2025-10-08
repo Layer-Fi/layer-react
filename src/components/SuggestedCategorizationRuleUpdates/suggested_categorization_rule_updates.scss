@@ -1,0 +1,50 @@
+.Layer__suggested-categorization-rule-updates-drawer {
+  padding: var(--spacing-sm);
+}
+
+.Layer__AffectedTransactionsTable {
+  --affected-transactions-table-cols:
+    minmax(7.5rem, 15%)
+    minmax(10rem, 25%)
+    minmax(12rem, 45%)
+    minmax(7.5rem, 15%);
+
+  .Layer__UI__Table__AffectedTransactionsTable {
+    table-layout: fixed;
+
+    .Layer__UI__VirtualizedTable__row,
+    .Layer__UI__VirtualizedTable__header > tr {
+      display: grid;
+      grid-template-columns: var(--affected-transactions-table-cols);
+    }
+
+    .Layer__UI__Table-Column__AffectedTransactionsTable,
+    .Layer__UI__Table-Cell__AffectedTransactionsTable {
+      &--Date {
+        color: var(--color-base-600);
+      }
+
+      &--Amount {
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  @container (width <= 840px) {
+    --affected-transactions-table-cols:
+      minmax(4rem, 25%)     /* date */
+      minmax(8rem, 55%)     /* description */
+      minmax(4rem, 20%);    /* amount */
+
+    .Layer__UI__VirtualizedTable__row,
+    .Layer__UI__VirtualizedTable__header > tr {
+      grid-template-columns: var(--affected-transactions-table-cols);
+    }
+
+    /* hide all but date, description + amount */
+    .Layer__UI__Table-Column__AffectedTransactionsTable--Counterparty,
+    .Layer__UI__Table-Cell__AffectedTransactionsTable--Counterparty {
+      display: none;
+    }
+  }
+}
