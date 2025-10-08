@@ -7,16 +7,15 @@ import { HStack, VStack } from '../ui/Stack/Stack'
 import { useWizard } from '../Wizard/Wizard'
 import { Label } from '../ui/Typography/Text'
 import { AffectedTransactionsTable } from './AffectedTransactionsTable'
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import pluralize from 'pluralize'
+import { CreateRuleButton } from './CreateRuleButton'
 
 interface RuleUpdatesPromptReviewStepProps {
   ruleSuggestion: UpdateCategorizationRulesSuggestion
 }
 
 export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptReviewStepProps) {
-  const { next, previous } = useWizard()
-  const { createCategorizationRule } = useBankTransactionsContext()
+  const { previous } = useWizard()
   const [applyRule, setApplyRule] = useState(true)
   return (
     <VStack gap='lg'>
@@ -41,21 +40,7 @@ export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptRevie
           </Label>
           <CheckboxWithTooltip isSelected={applyRule} onChange={(isSelected) => { setApplyRule(isSelected) }} />
         </HStack>
-        <Button
-          onClick={() => {
-            const ruleCreationParams = {
-              ...ruleSuggestion,
-              newRule: {
-                ...ruleSuggestion.newRule,
-                applyRetroactively: applyRule,
-              },
-            }
-            void createCategorizationRule(ruleCreationParams.newRule)
-            void next()
-          }}
-        >
-          Submit
-        </Button>
+        <CreateRuleButton ruleSuggestion={ruleSuggestion} buttonText='Submit' applyRetroactively={applyRule} />
       </HStack>
     </VStack>
   )

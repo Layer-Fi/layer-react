@@ -44,6 +44,8 @@ export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: Su
     }, [close, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId],
   )
 
+  const hasTransactions = ruleSuggestion.transactionsThatWillBeAffected.length > 0
+
   return (
     <section className='Layer__component Layer__suggested-categorization-rule-updates'>
       <Wizard
@@ -53,7 +55,7 @@ export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion }: Su
         onStepChange={undefined}
       >
         <RuleUpdatesPromptStep ruleSuggestion={ruleSuggestion} onClose={onClose} />
-        <RuleUpdatesReviewStep ruleSuggestion={ruleSuggestion} />
+        {hasTransactions && <RuleUpdatesReviewStep ruleSuggestion={ruleSuggestion} />}
       </Wizard>
     </section>
   )

@@ -6,6 +6,7 @@ import { CheckboxWithTooltip } from '../ui/Checkbox/Checkbox'
 import { HStack, VStack } from '../ui/Stack/Stack'
 import { Label } from '../ui/Typography/Text'
 import { Separator } from '../Separator/Separator'
+import { CreateRuleButton } from './CreateRuleButton'
 
 interface RuleUpdatesPromptStepProps {
   onClose: (dontAskAgain: boolean) => void
@@ -15,6 +16,23 @@ interface RuleUpdatesPromptStepProps {
 export function RuleUpdatesPromptStep({ ruleSuggestion, onClose }: RuleUpdatesPromptStepProps) {
   const { next } = useWizard()
   const [dontAskAgain, setDontAskAgain] = useState(false)
+  const nextButton = ruleSuggestion.transactionsThatWillBeAffected.length == 0
+    ? (
+      <CreateRuleButton
+        ruleSuggestion={ruleSuggestion}
+        applyRetroactively={true}
+        buttonText='Yes'
+      />
+    )
+    : (
+      <Button
+        onClick={() => {
+          void next()
+        }}
+      >
+        Yes
+      </Button>
+    )
   return (
     <VStack gap='lg'>
       {ruleSuggestion.suggestionPrompt}
@@ -35,14 +53,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, onClose }: RuleUpdatesPr
             <CheckboxWithTooltip id='dont_ask_again' isSelected={dontAskAgain} onChange={(isSelected) => { setDontAskAgain(isSelected) }} />
           </HStack>
         </HStack>
-
-        <Button
-          onClick={() => {
-            void next()
-          }}
-        >
-          Yes
-        </Button>
+        {nextButton}
       </HStack>
 
     </VStack>
