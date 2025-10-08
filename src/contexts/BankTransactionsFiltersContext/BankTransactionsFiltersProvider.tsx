@@ -5,14 +5,14 @@ import {
 } from './BankTransactionsFiltersContext'
 import { useBankTransactionsFilters, useBankTransactionsFiltersParams } from './useBankTransactionsFilters'
 
-type TransactionsFiltersProviderProps = {
+type BankTransactionsFiltersProviderProps = {
   children: ReactNode
 } & useBankTransactionsFiltersParams
 
-export const TransactionsFiltersProvider = ({
+export const BankTransactionsFiltersProvider = ({
   children,
   ...params
-}: TransactionsFiltersProviderProps) => {
+}: BankTransactionsFiltersProviderProps) => {
   const { filters, setFilters, dateFilterMode } = useBankTransactionsFilters(params)
 
   const value: BankTransactionsFiltersContextType = useMemo(
