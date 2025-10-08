@@ -25,42 +25,35 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesProm
     <VStack gap='lg'>
       {ruleSuggestion.suggestionPrompt}
       <Separator />
-      <HStack justify='space-between'>
-        <HStack gap='sm'>
-          <Button
-            onClick={() => {
-              void (async () => {
-                if (dontAskAgain) {
-                  if (ruleSuggestion.newRule.createdBySuggestionId) {
-                    await rejectRuleSuggestion(ruleSuggestion.newRule.createdBySuggestionId)
-                      .then(() => {
-                        close()
-                      }).catch(() => {
-                        addToast({ content: 'Failed to reject rule suggestion', type: 'error' })
-                      })
-                  }
+      <HStack gap='sm'>
+        <Button
+          onClick={() => {
+            void (async () => {
+              if (dontAskAgain) {
+                if (ruleSuggestion.newRule.createdBySuggestionId) {
+                  await rejectRuleSuggestion(ruleSuggestion.newRule.createdBySuggestionId)
+                    .then(() => {
+                      close()
+                    }).catch(() => {
+                      addToast({ content: 'Failed to reject rule suggestion', type: 'error' })
+                    })
                 }
-                else {
-                  close()
-                }
-              })()
-            }}
-            isPending={isMutating}
-          >
-            No
-          </Button>
-          <HStack gap='3xs'>
-            <Label size='sm' htmlFor='dont_ask_again'>
-              Don&apos;t ask again
-            </Label>
-            <CheckboxWithTooltip id='dont_ask_again' isSelected={dontAskAgain} onChange={(isSelected) => { setDontAskAgain(isSelected) }} />
-          </HStack>
-        </HStack>
+              }
+              else {
+                close()
+              }
+            })()
+          }}
+          isPending={isMutating}
+          variant='outlined'
+        >
+          No, I&apos;ll decide each time
+        </Button>
         {ruleSuggestion.transactionsThatWillBeAffected.length == 0
           ? (
             <CreateRuleButton
               newRule={ruleSuggestion.newRule}
-              buttonText='Yes'
+              buttonText='Yes, always categorize'
             />
           )
           : (
@@ -69,9 +62,15 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close }: RuleUpdatesProm
                 void next()
               }}
             >
-              Yes
+              Yes, always categorize
             </Button>
           )}
+      </HStack>
+      <HStack gap='3xs' justify='center'>
+        <CheckboxWithTooltip id='dont_ask_again' isSelected={dontAskAgain} onChange={(isSelected) => { setDontAskAgain(isSelected) }} />
+        <Label size='sm' htmlFor='dont_ask_again'>
+          Don&apos;t ask me about this again
+        </Label>
       </HStack>
 
     </VStack>

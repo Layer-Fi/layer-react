@@ -14,7 +14,6 @@ const COMPONENT_NAME = 'AffectedTransactionsTable'
 
 enum TransactionColumns {
   Date = 'Date',
-  Counterparty = 'Counterparty',
   Description = 'Description',
   Amount = 'Amount',
 }
@@ -62,17 +61,6 @@ export const AffectedTransactionsTable = ({
         />
       ),
     },
-    [TransactionColumns.Counterparty]: {
-      id: TransactionColumns.Counterparty,
-      header: 'Counterparty',
-      cell: row => (
-        <Span
-          ellipsis
-        >
-          {row.counterpartyName || '-'}
-        </Span>
-      ),
-    },
     [TransactionColumns.Description]: {
       id: TransactionColumns.Description,
       header: 'Description',
@@ -80,7 +68,7 @@ export const AffectedTransactionsTable = ({
         <Span
           ellipsis
         >
-          {row.description || '-'}
+          {row.counterpartyName || row.description || '-'}
         </Span>
       ),
       isRowHeader: true,
@@ -104,7 +92,7 @@ export const AffectedTransactionsTable = ({
         data={transactions}
         isLoading={isLoading}
         isError={isError}
-        height={500}
+        shrinkHeightToFitRows
         slots={{
           EmptyState,
           ErrorState,

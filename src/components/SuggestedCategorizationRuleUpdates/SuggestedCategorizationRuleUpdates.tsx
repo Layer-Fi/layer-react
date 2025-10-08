@@ -15,7 +15,7 @@ export const getHeaderForRule = (ruleSuggestion: UpdateCategorizationRulesSugges
   switch (ruleSuggestion.type) {
     case 'Create_Categorization_Rule_For_Counterparty':
       return (
-        <Heading level={1} size='lg' pie='2xl'>
+        <Heading level={1} size='lg' pie='2xl' className='Layer__suggested-categorization-rule-updates-header'>
           Always use this category?
         </Heading>
       )

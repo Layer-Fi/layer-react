@@ -21,26 +21,21 @@ export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptRevie
   return (
     <VStack gap='lg'>
       <Label size='md'>
-        {`The following ${pluralize('transaction', Math.abs(ruleSuggestion.transactionsThatWillBeAffected.length), true)} will be affected:`}
+        {`The following ${pluralize('transaction', ruleSuggestion.transactionsThatWillBeAffected.length, ruleSuggestion.transactionsThatWillBeAffected.length != 1)} will be affected:`}
       </Label>
       <AffectedTransactionsTable
         transactions={ruleSuggestion.transactionsThatWillBeAffected}
       />
       <Separator />
-      <HStack justify='space-between'>
+      <HStack gap='sm'>
         <Button
           onClick={() => {
             previous()
           }}
+          variant='outlined'
         >
           Back
         </Button>
-        <HStack gap='3xs'>
-          <Label size='sm' htmlFor='apply_rule'>
-            Apply rule after creating?
-          </Label>
-          <CheckboxWithTooltip id='apply_rule' isSelected={applyRuleRetroactively} onChange={(isSelected) => { setApplyRuleRetroactively(isSelected) }} />
-        </HStack>
         <CreateRuleButton
           newRule={{
             ...ruleSuggestion.newRule,
@@ -48,6 +43,12 @@ export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptRevie
           }}
           buttonText='Submit'
         />
+      </HStack>
+      <HStack gap='3xs' justify='center'>
+        <CheckboxWithTooltip id='apply_rule' isSelected={applyRuleRetroactively} onChange={(isSelected) => { setApplyRuleRetroactively(isSelected) }} />
+        <Label size='sm' htmlFor='apply_rule'>
+          Apply rule after creating?
+        </Label>
       </HStack>
     </VStack>
   )
