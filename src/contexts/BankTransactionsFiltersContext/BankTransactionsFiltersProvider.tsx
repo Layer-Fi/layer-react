@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
 import {
   BankTransactionsFiltersContext,
-  BankTransactionsFiltersContextType,
 } from './BankTransactionsFiltersContext'
 import { useBankTransactionsFilters, useBankTransactionsFiltersParams } from './useBankTransactionsFilters'
 
