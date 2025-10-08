@@ -6,10 +6,10 @@ export type BulkSelectionState = {
 }
 
 type BulkSelectionActions = {
-  add: (id: string) => void
-  remove: (id: string) => void
-  addMultiple: (ids: string[]) => void
-  clear: () => void
+  select: (id: string) => void
+  deselect: (id: string) => void
+  selectMultiple: (ids: string[]) => void
+  clearSelection: () => void
 }
 
 type BulkSelectionStore = BulkSelectionState & {
