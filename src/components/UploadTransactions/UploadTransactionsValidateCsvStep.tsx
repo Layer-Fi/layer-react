@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { RefreshCcw } from 'lucide-react'
 import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
-import { DeprecatedButton, ButtonVariant } from '../Button/Button'
+import { Button, ButtonVariant } from '../Button/Button'
 import { Separator } from '../Separator/Separator'
 import { useCreateCustomAccountTransactions } from '../../hooks/customAccounts/useCreateCustomAccountTransactions'
 import type { CustomAccountParseCsvResponse } from '../../hooks/customAccounts/useCustomAccountParseCsv'
@@ -95,7 +95,7 @@ export function UploadTransactionsValidateCsvStep(
       </VStack>
       <Separator />
       <HStack gap='xs'>
-        <DeprecatedButton onClick={() => { void previous() }} variant={ButtonVariant.secondary}>Back</DeprecatedButton>
+        <Button onClick={() => { void previous() }} variant={ButtonVariant.secondary}>Back</Button>
         <Spacer />
         {isValidCsv
           ? (
@@ -111,13 +111,13 @@ export function UploadTransactionsValidateCsvStep(
             </SubmitButton>
           )
           : (
-            <DeprecatedButton
+            <Button
               onClick={onClickReupload}
               rightIcon={<RefreshCcw size={12} />}
               variant={ButtonVariant.primary}
             >
               Reupload
-            </DeprecatedButton>
+            </Button>
           )}
       </HStack>
     </VStack>

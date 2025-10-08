@@ -3,7 +3,7 @@ import { LinkedAccountsContext } from '../../../contexts/LinkedAccountsContext'
 import { Loader } from '../../Loader'
 import { DataState, DataStateStatus } from '../../DataState'
 import LinkIcon from '../../../icons/Link'
-import { DeprecatedButton } from '../../Button'
+import { Button } from '../../Button'
 import { ConditionalList } from '../../utility/ConditionalList'
 import { HStack, VStack } from '../../ui/Stack/Stack'
 import { useWizard } from '../../Wizard/Wizard'
@@ -38,7 +38,7 @@ export function LinkAccountsLinkStep() {
             <Text status='disabled'>
               Connect your bank accounts and credit cards to automatically import your business transactions.
             </Text>
-            <DeprecatedButton
+            <Button
               onClick={() => { void addConnection('PLAID') }}
               rightIcon={<LinkIcon size={12} />}
               disabled={loadingStatus !== 'complete'}
@@ -46,7 +46,7 @@ export function LinkAccountsLinkStep() {
               style={{ maxWidth: 'fit-content' }}
             >
               Connect my bank
-            </DeprecatedButton>
+            </Button>
           </VStack>
         )}
         Container={({ children }) => (
@@ -66,7 +66,7 @@ export function LinkAccountsLinkStep() {
               <ActionableRow
                 title='Do you use any other bank accounts or credit cards for your business?'
                 button={(
-                  <DeprecatedButton
+                  <Button
                     onClick={() => { void addConnection('PLAID') }}
                     rightIcon={<LinkIcon size={12} />}
                     disabled={loadingStatus !== 'complete'}
@@ -74,7 +74,7 @@ export function LinkAccountsLinkStep() {
                     style={{ width: 'auto', minWidth: 'fit-content' }}
                   >
                     Link another bank
-                  </DeprecatedButton>
+                  </Button>
                 )}
               />
             </VStack>
@@ -103,9 +103,9 @@ export function LinkAccountsLinkStep() {
           <>
             <Separator mbs='lg' mbe='lg' />
             <HStack justify='start' gap='sm'>
-              <DeprecatedButton onClick={() => { void next() }} rightIcon={<ChevronRight />}>
+              <Button onClick={() => { void next() }} rightIcon={<ChevronRight />}>
                 I’m done linking my banks
-              </DeprecatedButton>
+              </Button>
             </HStack>
           </>
         )

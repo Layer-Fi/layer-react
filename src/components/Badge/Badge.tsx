@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { DeprecatedButtonProps } from '../Button/Button'
+import { ButtonProps } from '../Button/Button'
 import { Tooltip, TooltipTrigger, TooltipContent } from '../Tooltip'
 import classNames from 'classnames'
 
@@ -20,7 +20,7 @@ export enum BadgeVariant {
 export interface BadgeProps {
   children?: ReactNode
   icon?: ReactNode
-  onClick?: DeprecatedButtonProps['onClick']
+  onClick?: ButtonProps['onClick']
   tooltip?: ReactNode
   size?: BadgeSize
   variant?: BadgeVariant

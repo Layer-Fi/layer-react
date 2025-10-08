@@ -1,4 +1,4 @@
-import { DeprecatedButton } from '../../Button/Button'
+import { Button } from '../../Button/Button'
 import { Heading, Text } from '../../Typography'
 
 type SummaryStepProps = {
@@ -19,7 +19,7 @@ export const SummaryStep = ({ onNext, title = defaultTitle, description = defaul
         <Heading className='Layer__platform-onboarding__heading' align='left'>{title}</Heading>
         <Text status='disabled'>{description}</Text>
       </div>
-      <DeprecatedButton onClick={onNext}>{nextBtnText}</DeprecatedButton>
+      <Button onClick={onNext}>{nextBtnText}</Button>
     </>
   )
 }

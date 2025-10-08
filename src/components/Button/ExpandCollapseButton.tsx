@@ -1,6 +1,6 @@
 import CollapseIcon from '../../icons/Collapse'
 import ExpandIcon from '../../icons/Expand'
-import { DeprecatedButton, ButtonVariant } from './Button'
+import { Button, ButtonVariant } from './Button'
 import classNames from 'classnames'
 
 export interface ExpandCollapseButtonProps {
@@ -20,7 +20,7 @@ export const ExpandCollapseButton = ({
 }: ExpandCollapseButtonProps) => {
   return (
     <>
-      <DeprecatedButton
+      <Button
         onClick={() => onClick(!expanded)}
         variant={
           variant
@@ -42,7 +42,7 @@ export const ExpandCollapseButton = ({
         iconOnly={iconOnly}
       >
         {iconOnly ? null : !expanded ? 'Expand all rows' : 'Collapse all rows'}
-      </DeprecatedButton>
+      </Button>
     </>
   )
 }

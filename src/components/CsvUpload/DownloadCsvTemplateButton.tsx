@@ -1,5 +1,5 @@
 import { type PropsWithChildren } from 'react'
-import { DeprecatedButton, ButtonVariant } from '../Button'
+import { Button, ButtonVariant } from '../Button'
 import { FileDownIcon } from 'lucide-react'
 
 interface DownloadCsvTemplateButtonProps<T> {
@@ -36,7 +36,7 @@ export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | n
   }
 
   return (
-    <DeprecatedButton
+    <Button
       className={className}
       variant={ButtonVariant.secondary}
       rightIcon={<FileDownIcon size={12} />}
@@ -44,6 +44,6 @@ export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | n
       tooltip='Need help? Download an example CSV'
     >
       {children}
-    </DeprecatedButton>
+    </Button>
   )
 }

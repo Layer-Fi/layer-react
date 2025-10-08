@@ -3,7 +3,7 @@ import AlertOctagon from '../../icons/AlertOctagon'
 import CheckCircle from '../../icons/CheckCircle'
 import Loader from '../../icons/Loader'
 import RefreshCcw from '../../icons/RefreshCcw'
-import { DeprecatedButton, ButtonVariant } from '../Button'
+import { Button, ButtonVariant } from '../Button'
 import { Text, TextSize, TextWeight } from '../Typography'
 import classNames from 'classnames'
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
@@ -100,7 +100,7 @@ export const DataState = ({
       </div>
       {onRefresh && (
         <span className='Layer__data-state__btn'>
-          <DeprecatedButton
+          <Button
             variant={ButtonVariant.secondary}
             rightIcon={
               isLoading
@@ -115,7 +115,7 @@ export const DataState = ({
             disabled={isLoading}
           >
             Refresh
-          </DeprecatedButton>
+          </Button>
         </span>
       )}
     </div>

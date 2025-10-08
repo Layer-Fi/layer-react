@@ -17,7 +17,7 @@ import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Tag, makeTagKeyValueFromTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
 import { decodeCustomerVendor, CustomerVendorSchema } from '../../features/customerVendor/customerVendorSchemas'
-import { DeprecatedButton, ButtonVariant, TextButton } from '../Button'
+import { Button, ButtonVariant, TextButton } from '../Button'
 import { CategorySelect } from '../CategorySelect'
 import {
   CategoryOption,
@@ -311,7 +311,7 @@ export const SplitForm = ({
                     inputMode='numeric'
                   />
                   {index > 0 && (
-                    <DeprecatedButton
+                    <Button
                       className='Layer__bank-transactions__table-cell--split-entry__merge-btn'
                       onClick={() => removeSplit(index)}
                       rightIcon={<Trash size={16} />}
@@ -363,13 +363,13 @@ export const SplitForm = ({
           />
         )}
         {showCategorization && (
-          <DeprecatedButton
+          <Button
             fullWidth={true}
             onClick={() => void save()}
             disabled={isLoading || bankTransaction.processing}
           >
             {isLoading || bankTransaction.processing ? 'Saving...' : 'Save'}
-          </DeprecatedButton>
+          </Button>
         )}
       </div>
       {formError && <ErrorText>{formError}</ErrorText>}

@@ -1,4 +1,4 @@
-export { DeprecatedButton, ButtonVariant } from './Button'
+export { Button, ButtonVariant } from './Button'
 export { IconButton } from './IconButton'
 export { RetryButton } from './RetryButton'
 export { SubmitButton } from './SubmitButton'

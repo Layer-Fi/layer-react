@@ -1,4 +1,4 @@
-import { DeprecatedButton } from '../Button/Button'
+import { Button } from '../Button/Button'
 import { MobilePanel } from '../MobilePanel/MobilePanel'
 import { TextButton } from '../Button'
 import { useState } from 'react'
@@ -48,11 +48,11 @@ export const TasksListMobile = ({
       {unresolvedTasks.length !== 0 && tasksCount > unresolvedTasks.length
         ? (
           <div style={{ textAlign: 'center', padding: '12px 24px' }}>
-            <DeprecatedButton onClick={() => setShowMobilePanel(true)} fullWidth>
+            <Button onClick={() => setShowMobilePanel(true)} fullWidth>
               Show all tasks (
               {tasksCount}
               )
-            </DeprecatedButton>
+            </Button>
           </div>
         )
         : null}

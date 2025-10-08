@@ -8,7 +8,7 @@ import {
   type AugmentedLedgerAccountBalance,
 } from '../../types/chart_of_accounts'
 import { View } from '../../types/general'
-import { DeprecatedButton, ButtonVariant } from '../Button'
+import { Button, ButtonVariant } from '../Button'
 import { Button as UIButton } from '../ui/Button/Button'
 import { Table, TableBody } from '../Table'
 import { TableCell } from '../TableCell'
@@ -277,15 +277,15 @@ export const ChartOfAccountsTableContent = ({
           <TableCell align={TableCellAlign.RIGHT}>
             <HStack className='Layer__coa__actions' gap='xs'>
 
-              <DeprecatedButton
+              <Button
                 variant={ButtonVariant.secondary}
                 rightIcon={<List size={14} />}
                 iconOnly
                 onClick={onClickView}
               >
                 View
-              </DeprecatedButton>
-              <DeprecatedButton
+              </Button>
+              <Button
                 variant={ButtonVariant.secondary}
                 rightIcon={<Edit2 size={14} />}
                 iconOnly
@@ -294,8 +294,8 @@ export const ChartOfAccountsTableContent = ({
                 tooltip={isNonEditable ? 'This account cannot be modified' : undefined}
               >
                 Edit
-              </DeprecatedButton>
-              <DeprecatedButton
+              </Button>
+              <Button
                 variant={ButtonVariant.secondary}
                 rightIcon={<Trash2 size={14} />}
                 iconOnly
@@ -304,7 +304,7 @@ export const ChartOfAccountsTableContent = ({
                 tooltip={getDeleteButtonTooltip(account)}
               >
                 Delete
-              </DeprecatedButton>
+              </Button>
             </HStack>
           </TableCell>
         </TableRow>

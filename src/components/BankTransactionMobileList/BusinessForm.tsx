@@ -6,7 +6,7 @@ import { hasReceipts } from '../../utils/bankTransactions'
 import { ActionableList } from '../ActionableList'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { DeprecatedButton, ButtonVariant } from '../Button'
+import { Button, ButtonVariant } from '../Button'
 import { FileInput } from '../Input'
 import { ErrorText } from '../Typography'
 import { Option, mapCategoryToOption, getAssignedValue } from './utils'
@@ -159,18 +159,18 @@ export const BusinessForm = ({
           )}
           {options.length === 0
             ? (
-              <DeprecatedButton
+              <Button
                 onClick={() => { setIsDrawerOpen(true) }}
                 fullWidth={true}
                 variant={ButtonVariant.secondary}
               >
                 Select category
-              </DeprecatedButton>
+              </Button>
             )
             : null}
           {showCategorization && options.length > 0
             ? (
-              <DeprecatedButton
+              <Button
                 onClick={save}
                 disabled={
                   !selectedCategory || isLoading || bankTransaction.processing
@@ -180,7 +180,7 @@ export const BusinessForm = ({
                 {isLoading || bankTransaction.processing
                   ? 'Confirming...'
                   : 'Confirm'}
-              </DeprecatedButton>
+              </Button>
             )
             : null}
         </div>

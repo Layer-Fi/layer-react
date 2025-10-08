@@ -2,7 +2,7 @@ import { useCallback, useEffect, FormEvent } from 'react'
 import { notEmpty } from '../../utils/form'
 import { Input, InputGroup, Select } from '../Input'
 import { useCustomAccountForm } from './useCustomAccountForm'
-import { DeprecatedButton, ButtonVariant, SubmitButton } from '../Button'
+import { Button, ButtonVariant, SubmitButton } from '../Button'
 import { ErrorText } from '../Typography'
 import { Spacer, HStack, VStack } from '../../components/ui/Stack/Stack'
 import { type CustomAccount, CustomAccountSubtype } from '../../hooks/customAccounts/types'
@@ -118,9 +118,9 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           )}
           <Spacer />
           {onCancel && (
-            <DeprecatedButton type='button' variant={ButtonVariant.secondary} onClick={onCancel}>
+            <Button type='button' variant={ButtonVariant.secondary} onClick={onCancel}>
               Cancel
-            </DeprecatedButton>
+            </Button>
           )}
           <SubmitButton
             type='submit'

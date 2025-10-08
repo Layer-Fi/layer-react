@@ -6,7 +6,7 @@ import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransac
 import { hasReceipts, isCredit } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { DeprecatedButton } from '../Button'
+import { Button } from '../Button'
 import { FileInput } from '../Input'
 import { ErrorText } from '../Typography'
 import { PersonalCategories } from './constants'
@@ -110,7 +110,7 @@ export const PersonalForm = ({
         )}
         {showCategorization
           ? (
-            <DeprecatedButton
+            <Button
               fullWidth={true}
               disabled={alreadyAssigned || isLoading || bankTransaction.processing}
               onClick={save}
@@ -120,7 +120,7 @@ export const PersonalForm = ({
                 : alreadyAssigned
                   ? 'Saved as Personal'
                   : 'Categorize as Personal'}
-            </DeprecatedButton>
+            </Button>
           )
           : null}
       </div>

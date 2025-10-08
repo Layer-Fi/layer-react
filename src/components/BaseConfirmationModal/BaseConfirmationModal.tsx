@@ -6,7 +6,7 @@ import {
   ModalTitleWithClose,
   ModalContent,
 } from '../ui/Modal/ModalSlots'
-import { DeprecatedButton, ButtonVariant } from '../Button/Button'
+import { Button, ButtonVariant } from '../Button/Button'
 import { HStack, Spacer, VStack } from '../ui/Stack/Stack'
 import { useCallback, useState, type ReactNode } from 'react'
 import { SubmitButton } from '../Button'
@@ -84,9 +84,9 @@ export function BaseConfirmationModal({
           <ModalActions>
             <HStack gap='md'>
               <Spacer />
-              <DeprecatedButton variant={ButtonVariant.secondary} onClick={close}>
+              <Button variant={ButtonVariant.secondary} onClick={close}>
                 {cancelLabel}
-              </DeprecatedButton>
+              </Button>
               <SubmitButton
                 onClick={() => onClickConfirm(close)}
                 processing={isProcessing}

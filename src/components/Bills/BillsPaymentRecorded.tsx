@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import Check from '../../icons/Check'
-import { DeprecatedButton, ButtonVariant, CloseButton } from '../Button'
+import { Button, ButtonVariant, CloseButton } from '../Button'
 import { Header } from '../Container'
 import { HeaderRow, HeaderCol } from '../Header'
 import { InputGroup } from '../Input'
@@ -106,13 +106,13 @@ export const BillsPaymentRecorded = ({
         </table>
         {anyUnpaid && (
           <div className='Layer__bills__payment-recorded__submit-container'>
-            <DeprecatedButton
+            <Button
               variant={ButtonVariant.secondary}
               className='Layer__bills__payment-recorded__record-balance'
               onClick={payRemainingBalance}
             >
               Record remaining balance
-            </DeprecatedButton>
+            </Button>
           </div>
         )}
       </div>

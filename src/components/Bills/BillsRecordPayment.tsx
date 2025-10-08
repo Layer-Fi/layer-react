@@ -2,7 +2,7 @@ import { FormEvent, useMemo } from 'react'
 import { DATE_FORMAT_SHORT } from '../../config/general'
 import { useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import {
-  DeprecatedButton,
+  Button,
   ButtonVariant,
   CloseButton,
   IconButton,
@@ -201,14 +201,14 @@ export const BillsRecordPayment = ({
             ))}
           </div>
 
-          <DeprecatedButton
+          <Button
             type='button'
             variant={ButtonVariant.secondary}
             className='Layer__bills__record-payment__add-bill'
             onClick={() => addBill()}
           >
             Add bill
-          </DeprecatedButton>
+          </Button>
 
           <div className='Layer__bills__record-payment__total'>
             <Text size={TextSize.md}>Total</Text>
@@ -234,13 +234,13 @@ export const BillsRecordPayment = ({
                 </>
               )
               : (
-                <DeprecatedButton
+                <Button
                   className='Layer__bills__record-payment__submit'
                   type='submit'
                   disabled={isLoading || totalAmount === 0}
                 >
                   Record payment
-                </DeprecatedButton>
+                </Button>
               )}
           </div>
         </div>

@@ -9,7 +9,7 @@ import { TableCellAlign } from '../../types/table'
 import { humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
 import { Badge, BadgeVariant } from '../Badge'
-import { BackButton, DeprecatedButton, ButtonVariant, CloseButton } from '../Button'
+import { BackButton, Button, ButtonVariant, CloseButton } from '../Button'
 import { Card } from '../Card'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
@@ -104,7 +104,7 @@ export const JournalEntryDetails = () => {
         title='Transaction source'
         titleClassName='Layer__hidden-lg Layer__hidden-xl'
         actions={(
-          <DeprecatedButton
+          <Button
             rightIcon={<XIcon />}
             iconOnly={true}
             onClick={closeSelectedEntry}
@@ -234,7 +234,7 @@ export const JournalEntryDetails = () => {
 
             {entry?.entry_type === 'MANUAL' && (
               <div className='Layer__journal__entry-details__reverse-btn-container'>
-                <DeprecatedButton
+                <Button
                   rightIcon={
                     reverseEntryError
                       ? (
@@ -255,7 +255,7 @@ export const JournalEntryDetails = () => {
                   disabled={Boolean(entry?.reversal_id)}
                 >
                   Reverse entry
-                </DeprecatedButton>
+                </Button>
               </div>
             )}
           </div>

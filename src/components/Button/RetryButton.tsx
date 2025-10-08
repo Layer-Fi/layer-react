@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from 'react'
 import RefreshCcw from '../../icons/RefreshCcw'
-import { DeprecatedButton, ButtonVariant } from './Button'
+import { Button, ButtonVariant } from './Button'
 import classNames from 'classnames'
 
 export interface RetryButtonProps
@@ -27,7 +27,7 @@ export const RetryButton = ({
   )
 
   return (
-    <DeprecatedButton
+    <Button
       {...props}
       className={baseClassName}
       variant={ButtonVariant.secondary}
@@ -37,6 +37,6 @@ export const RetryButton = ({
       tooltip={error}
     >
       {children}
-    </DeprecatedButton>
+    </Button>
   )
 }

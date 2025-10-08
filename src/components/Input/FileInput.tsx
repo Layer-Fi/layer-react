@@ -1,6 +1,6 @@
 import { useRef, ChangeEvent } from 'react'
 import UploadCloud from '../../icons/UploadCloud'
-import { DeprecatedButton, TextButton } from '../Button'
+import { Button, TextButton } from '../Button'
 import { ButtonVariant } from '../Button/Button'
 
 export interface FileInputProps {
@@ -56,7 +56,7 @@ export const FileInput = ({
 
   return (
     <>
-      <DeprecatedButton
+      <Button
         onClick={onClick}
         variant={ButtonVariant.secondary}
         rightIcon={icon ?? <UploadCloud />}
@@ -64,7 +64,7 @@ export const FileInput = ({
         iconOnly={iconOnly}
       >
         {!iconOnly && text}
-      </DeprecatedButton>
+      </Button>
       <input
         type='file'
         multiple={allowMultipleUploads}
