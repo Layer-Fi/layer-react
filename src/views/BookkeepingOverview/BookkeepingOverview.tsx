@@ -85,7 +85,7 @@ export const BookkeepingOverview = ({
         sidebar={(
           <VStack gap='lg'>
             {slotProps?._showCallBookings && (
-              <CallBooking callBooking={undefined} />
+              <CallBooking callBooking={callBooking} />
             )}
             <Tasks
               stringOverrides={stringOverrides?.tasks}

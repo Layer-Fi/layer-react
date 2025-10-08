@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useCallback } from 'react'
 import { Button, ButtonVariant } from '../Button/Button'
 import { Container } from '../Container'
 import { HStack, VStack } from '../ui/Stack/Stack'
@@ -19,12 +19,6 @@ export interface ScheduledCall {
   description?: string
 }
 
-export interface CallBookingProps {
-  callBooking?: CallBookingData
-  onBookCall?: () => void
-  onJoinCall?: () => void
-}
-
 const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => (
   <VStack className='Layer__call-booking-state'>
     <Heading size='sm'>Have any questions?</Heading>
@@ -39,59 +33,67 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => (
 
 const ScheduledCallState = ({
   callBooking,
-  onJoinCall,
+  onAddToCalendar: onAdd,
 }: {
   callBooking: CallBookingData
-  onJoinCall?: () => void
-}) => (
-  <VStack className='Layer__call-booking-state'>
-    <Users size={36} strokeWidth={1.5} />
-    <Heading size='sm'>Confirmed</Heading>
-    <Span variant='subtle'>
-      Your call with our bookkeeping team
-    </Span>
-    <Separator />
-    <VStack align='start' className='Layer__call-booking-details' gap='xs'>
-      <HStack align='center' gap='sm'>
-        <Milestone size={20} />
-        <Span size='lg' weight='bold'>Onboarding call</Span>
-      </HStack>
-      <HStack align='center' gap='sm'>
-        <Video size={20} />
-        <Span size='md'>Zoom</Span>
-      </HStack>
-      <HStack align='center' gap='sm'>
-        <Clock size={20} />
-        <Span size='md'>{callBooking.eventStartAt && formatTime(callBooking.eventStartAt, DATE_FORMAT_WITH_TIME)}</Span>
-      </HStack>
-      <HStack align='center' gap='sm'>
-        <Link size={20} />
-        <Span size='md'>https://meet.google.com/abc123</Span>
-      </HStack>
+  onAddToCalendar: (callBooking: CallBookingData) => void
+}) => {
+  const onAddToCalendar = useCallback(() => {
+    onAdd(callBooking)
+  }, [callBooking, onAdd])
+
+  return (
+    <VStack className='Layer__call-booking-state'>
+      <Users size={36} strokeWidth={1.5} />
+      <Heading size='sm'>Confirmed</Heading>
+      <Span variant='subtle'>
+        Your call with our bookkeeping team
+      </Span>
+      <Separator />
+      <VStack align='start' className='Layer__call-booking-details' gap='xs'>
+        <HStack align='center' gap='sm'>
+          <Milestone size={20} />
+          <Span size='lg' weight='bold'>Onboarding call</Span>
+        </HStack>
+        <HStack align='center' gap='sm'>
+          <Video size={20} />
+          <Span size='md'>Zoom</Span>
+        </HStack>
+        <HStack align='center' gap='sm'>
+          <Clock size={20} />
+          <Span size='md'>{callBooking.eventStartAt && formatTime(callBooking.eventStartAt, DATE_FORMAT_WITH_TIME)}</Span>
+        </HStack>
+        <HStack align='center' gap='sm'>
+          <Link size={20} />
+          <Span size='md'>https://meet.google.com/abc123</Span>
+        </HStack>
+      </VStack>
+      <VStack gap='xs' className='Layer__call-booking-actions'>
+        <Button variant={ButtonVariant.primary} onClick={onAddToCalendar}>Add to your calendar</Button>
+      </VStack>
     </VStack>
-    <VStack gap='xs' className='Layer__call-booking-actions'>
-      <Button variant={ButtonVariant.primary} onClick={onJoinCall}>Add to your calendar</Button>
-    </VStack>
-  </VStack>
-)
+  )
+}
+
+export interface CallBookingProps {
+  callBooking?: CallBookingData
+  onBookCall?: () => void
+  onAddToCalendar?: (callBooking: CallBookingData) => void
+}
 
 export const CallBooking = ({
   callBooking,
   onBookCall,
-  onJoinCall,
+  onAddToCalendar,
 }: CallBookingProps) => {
   const renderState = (): ReactNode => {
-    if (!callBooking) {
-      return <EmptyState onBookCall={onBookCall} />
+    if (onAddToCalendar && callBooking) {
+      return (
+        <ScheduledCallState callBooking={callBooking} onAddToCalendar={onAddToCalendar} />
+      )
     }
 
-    if (callBooking === null || callBooking === undefined) {
-      return <EmptyState onBookCall={onBookCall} />
-    }
-
-    return (
-      <ScheduledCallState callBooking={callBooking} onJoinCall={onJoinCall} />
-    )
+    return <EmptyState onBookCall={onBookCall} />
   }
 
   return (
