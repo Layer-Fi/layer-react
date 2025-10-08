@@ -65,7 +65,7 @@ export function useBulkSelectionIds() {
   return { selectedIds }
 }
 
-export function useBulkSelectionCount() {
+export function useCountSelectedIds() {
   const store = useBulkSelectionStore()
 
   const count = useStore(store, state => state.selected.size)
