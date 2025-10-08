@@ -29,9 +29,3 @@ export enum BankTransactionsDateFilterMode {
   MonthlyView = 'MonthlyView',
   GlobalDateRange = 'GlobalDateRange',
 }
-
-export type UseAugmentedBankTransactionsParams = {
-  scope?: DisplayState
-  monthlyView?: boolean
-  applyGlobalDateRange?: boolean
-}
