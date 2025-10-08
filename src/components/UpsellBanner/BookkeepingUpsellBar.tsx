@@ -1,5 +1,5 @@
 import CoffeeIcon from '../../icons/Coffee'
-import { Button, ButtonVariant, Link } from '../Button'
+import { DeprecatedButton, ButtonVariant, Link } from '../Button'
 import { IconBox } from '../IconBox'
 import { Text, TextSize, TextWeight } from '../Typography'
 
@@ -32,9 +32,9 @@ export const BookkeepingUpsellBar = ({
       </div>
       {onClick
         ? (
-          <Button variant={ButtonVariant.secondary} onClick={onClick}>
+          <DeprecatedButton variant={ButtonVariant.secondary} onClick={onClick}>
             Schedule a demo
-          </Button>
+          </DeprecatedButton>
         )
         : href
           ? (

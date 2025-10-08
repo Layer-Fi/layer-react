@@ -1,6 +1,6 @@
 import { RefObject } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
-import { BackButton, Button, ButtonVariant, IconButton, RetryButton, SubmitButton, TextButton } from '../Button'
+import { BackButton, DeprecatedButton, ButtonVariant, IconButton, RetryButton, SubmitButton, TextButton } from '../Button'
 import { DatePicker } from '../DatePicker/DatePicker'
 import { Header, HeaderRow, HeaderCol } from '../Header'
 import { Input, InputGroup } from '../Input'
@@ -115,9 +115,9 @@ export const BillsDetails = ({
             <HStack gap='sm' className='Layer__bill-details__action'>
               {bill && isBillUnpaid(bill.status) && !showRecordPaymentForm
                 ? (
-                  <Button type='button' onClick={() => recordPaymentForBill(bill)}>
+                  <DeprecatedButton type='button' onClick={() => recordPaymentForBill(bill)}>
                     Record payment
-                  </Button>
+                  </DeprecatedButton>
                 )
                 : null}
               {bill && isDirty && !showRecordPaymentForm
@@ -353,14 +353,14 @@ export const BillsDetails = ({
                       )
                     })}
                     <div className='Layer__bill-details__category__add-next'>
-                      <Button
+                      <DeprecatedButton
                         type='button'
                         variant={ButtonVariant.secondary}
                         onClick={() => field.pushValue({})}
                         disabled={disabled}
                       >
                         Add next
-                      </Button>
+                      </DeprecatedButton>
                     </div>
                   </div>
                 )

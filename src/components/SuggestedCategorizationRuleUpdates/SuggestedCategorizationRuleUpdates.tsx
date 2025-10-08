@@ -5,7 +5,7 @@ import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransacti
 import { unsafeAssertUnreachable } from '../../utils/switch/assertUnreachable'
 import { RuleUpdatesPromptStep } from './RuleUpdatesPromptStep'
 import { RuleUpdatesReviewStep } from './RuleUpdatesReviewStep'
-import { useRejectCategorizationRulesUpdateSuggestion } from '../../hooks/useBankTransactions/useRejectCategorizationRulesUpdateSuggestion'
+import { useRejectCategorizationRulesUpdateSuggestion } from '../../hooks/useCategorizationRules/useRejectCategorizationRulesUpdateSuggestion'
 import { useCallback } from 'react'
 
 type SuggestedCategorizationRuleUpdatesProps = {

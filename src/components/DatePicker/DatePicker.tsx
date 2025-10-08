@@ -3,7 +3,7 @@ import * as RDP from 'react-datepicker'
 import { useSizeClass } from '../../hooks/useWindowSize'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
-import { Button, ButtonVariant } from '../Button'
+import { DeprecatedButton, ButtonVariant } from '../Button'
 import { CustomDateRange, DatePickerOptions } from './DatePickerOptions'
 import type {
   UnifiedPickerMode,
@@ -419,7 +419,7 @@ export const DatePicker = ({
       </ReactDatePicker>
       {showNavigationArrows(navigateArrows, isDesktop) && (
         <>
-          <Button
+          <DeprecatedButton
             aria-label='Previous Date'
             className={classNames(
               'Layer__datepicker__prev-button',
@@ -437,8 +437,8 @@ export const DatePicker = ({
             }) && (
               <span className='Layer__datepicker__nav-arrow-highlight' />
             )}
-          </Button>
-          <Button
+          </DeprecatedButton>
+          <DeprecatedButton
             aria-label='Next Date'
             variant={ButtonVariant.secondary}
             className={classNames(
@@ -461,7 +461,7 @@ export const DatePicker = ({
             }) && (
               <span className='Layer__datepicker__nav-arrow-highlight' />
             )}
-          </Button>
+          </DeprecatedButton>
         </>
       )}
       {currentDateOption
@@ -471,14 +471,14 @@ export const DatePicker = ({
           || pickerMode === 'yearPicker'
         )
         && (
-          <Button
+          <DeprecatedButton
             className='Layer__datepicker__current-button'
             onClick={setCurrentDate}
             variant={ButtonVariant.secondary}
             disabled={isCurrentDate() || disabled}
           >
             {pickerMode === 'dayPicker' ? 'Today' : 'Current'}
-          </Button>
+          </DeprecatedButton>
         )}
     </div>
   )

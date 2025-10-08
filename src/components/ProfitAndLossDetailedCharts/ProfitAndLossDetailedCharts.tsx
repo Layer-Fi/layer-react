@@ -2,7 +2,7 @@ import { useCallback, useContext, useState } from 'react'
 import { SidebarScope } from '../../hooks/useProfitAndLoss/useProfitAndLoss'
 import XIcon from '../../icons/X'
 import { humanizeTitle } from '../../utils/profitAndLossUtils'
-import { Button, BackButton, ButtonVariant } from '../Button'
+import { DeprecatedButton, BackButton, ButtonVariant } from '../Button'
 import { ProfitAndLossDatePicker } from '../ProfitAndLossDatePicker/ProfitAndLossDatePicker'
 import { Text, TextSize, TextWeight } from '../Typography'
 import { DetailedChart } from './DetailedChart'
@@ -78,7 +78,7 @@ export const ProfitAndLossDetailedCharts = ({
           {showDatePicker && <ProfitAndLossDatePicker />}
         </div>
         {!hideClose && (
-          <Button
+          <DeprecatedButton
             rightIcon={<XIcon />}
             iconOnly={true}
             onClick={() => setSidebarScope(undefined)}

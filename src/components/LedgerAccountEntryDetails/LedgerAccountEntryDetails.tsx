@@ -7,7 +7,7 @@ import { TableCellAlign } from '../../types/table'
 import { convertCentsToCurrency, humanizeEnum } from '../../utils/format'
 import { entryNumber } from '../../utils/journal'
 import { Badge, BadgeVariant } from '../Badge'
-import { BackButton, Button, ButtonVariant, CloseButton } from '../Button'
+import { BackButton, DeprecatedButton, ButtonVariant, CloseButton } from '../Button'
 import { Card } from '../Card'
 import { DateTime } from '../DateTime'
 import { DetailsList, DetailsListItem } from '../DetailsList'
@@ -422,7 +422,7 @@ export const LedgerAccountEntryDetails = ({
         }
         titleClassName='Layer__hidden-lg Layer__hidden-xl'
         actions={(
-          <Button
+          <DeprecatedButton
             rightIcon={<XIcon />}
             iconOnly={true}
             onClick={closeSelectedEntry}

@@ -7,7 +7,7 @@ import { ConditionalList } from '../../utility/ConditionalList'
 import { LinkedAccountToConfirm } from '../../LinkedAccounts/ConfirmationModal/LinkedAccountToConfirm'
 import { useForm } from '@tanstack/react-form'
 import { getAccountsNeedingConfirmation } from '../../../hooks/useLinkedAccounts/useLinkedAccounts'
-import { Button, ButtonVariant } from '../../Button'
+import { DeprecatedButton, ButtonVariant } from '../../Button'
 import { useWizard } from '../../Wizard/Wizard'
 import { useConfirmAndExcludeMultiple } from '../../LinkedAccounts/ConfirmationModal/useConfirmAndExcludeMultiple'
 import { LinkAccountsListContainer } from '../Container/LinkAccountsListContainer'
@@ -111,9 +111,9 @@ export function LinkAccountsConfirmationStep() {
         )}
       </Field>
       <HStack pbs='lg' gap='sm'>
-        <Button variant={ButtonVariant.secondary} onClick={previous}>
+        <DeprecatedButton variant={ButtonVariant.secondary} onClick={previous}>
           Back
-        </Button>
+        </DeprecatedButton>
         <Subscribe
           selector={({ isSubmitting, values }) => ({
             isSubmitting,
@@ -122,7 +122,7 @@ export function LinkAccountsConfirmationStep() {
           })}
         >
           {({ isSubmitting, totalCount, selectedCount }) => (
-            <Button
+            <DeprecatedButton
               onClick={() => { void handleSubmit() }}
               disabled={isSubmitting || linkedAccountsLoadingStatus !== 'complete'}
             >
@@ -130,7 +130,7 @@ export function LinkAccountsConfirmationStep() {
                 totalCount,
                 confirmedCount: selectedCount,
               })}
-            </Button>
+            </DeprecatedButton>
           )}
         </Subscribe>
       </HStack>

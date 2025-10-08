@@ -1,9 +1,7 @@
 import { useLayerContext } from '../../contexts/LayerContext'
-import { GetBankTransactionsReturn } from '../../api/layer/bankTransactions'
 import { withSWRKeyTags } from '../../utils/swr/withSWRKeyTags'
 import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
-import { SWRInfiniteKeyedMutator } from 'swr/dist/infinite'
 import useSWRMutation from 'swr/mutation'
 import { post } from '../../api/layer/authenticated_http'
 import { CreateCategorizationRuleSchema, CategorizationRuleSchema } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
@@ -13,6 +11,7 @@ import { EXTERNAL_ACCOUNTS_TAG_KEY } from '../useLinkedAccounts/useListExternalA
 import { usePnlDetailLinesInvalidator } from '../useProfitAndLoss/useProfitAndLossDetailLines'
 import { useProfitAndLossGlobalInvalidator } from '../useProfitAndLoss/useProfitAndLossGlobalInvalidator'
 import { Schema } from 'effect/index'
+import { useBankTransactionsGlobalCacheActions } from '../useBankTransactions/useBankTransactions'
 
 const CREATE_CATEGORIZATION_RULE_TAG = '#create-categorization-rule'
 
@@ -35,12 +34,6 @@ function buildKey({
   }
 }
 
-type UseCreateCategorizationRuleOptions = {
-  mutateBankTransactions: SWRInfiniteKeyedMutator<
-    Array<GetBankTransactionsReturn>
-  >
-}
-
 const CreateCategorizationRuleReturnSchema = Schema.Struct({
   data: CategorizationRuleSchema,
 })
@@ -48,17 +41,16 @@ const CreateCategorizationRuleReturnSchema = Schema.Struct({
 type CreateCategorizationRuleReturn = typeof CreateCategorizationRuleReturnSchema.Type
 type CreateCategorizationRuleBody = typeof CreateCategorizationRuleSchema.Encoded
 
-export const createCategorizationRule = post<CreateCategorizationRuleReturn, CreateCategorizationRuleBody>(
+const createCategorizationRule = post<CreateCategorizationRuleReturn, CreateCategorizationRuleBody>(
   ({ businessId }) =>
     `/v1/businesses/${businessId}/categorization-rules`,
 )
 
-export function useCreateCategorizationRule({
-  mutateBankTransactions,
-}: UseCreateCategorizationRuleOptions) {
+export function useCreateCategorizationRule() {
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
   const { mutate } = useSWRConfig()
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
   const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
@@ -103,14 +95,14 @@ export function useCreateCategorizationRule({
        *
        * @see https://github.com/vercel/swr/blob/main/src/_internal/utils/mutate.ts#L78
        */
-      void mutateBankTransactions(undefined, { revalidate: true })
+      void forceReloadBankTransactions()
       void invalidatePnlDetailLines()
 
       void debouncedInvalidateProfitAndLoss()
 
       return triggerResult
     },
-    [originalTrigger, mutate, mutateBankTransactions, debouncedInvalidateProfitAndLoss, invalidatePnlDetailLines],
+    [originalTrigger, mutate, forceReloadBankTransactions, invalidatePnlDetailLines, debouncedInvalidateProfitAndLoss],
   )
 
   return new Proxy(mutationResponse, {

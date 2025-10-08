@@ -3,7 +3,7 @@ import { JournalContext } from '../../contexts/JournalContext'
 import { useJournalNavigation } from '../../providers/JournalStore/JournalStoreProvider'
 import PlusIcon from '../../icons/PlusIcon'
 import { View } from '../../types/general'
-import { Button } from '../Button'
+import { DeprecatedButton } from '../Button'
 import { DataState, DataStateStatus } from '../DataState'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { JournalSidebar } from '../JournalSidebar'
@@ -114,13 +114,13 @@ export const JournalTableWithPanel = ({
             <JournalEntriesDownloadButton
               iconOnly={['mobile', 'tablet'].includes(view)}
             />
-            <Button
+            <DeprecatedButton
               onClick={() => toCreateEntry()}
               iconOnly={view === 'mobile'}
               leftIcon={view === 'mobile' && <PlusIcon size={14} />}
             >
               {stringOverrides?.addEntryButton || 'Add Entry'}
-            </Button>
+            </DeprecatedButton>
           </HeaderCol>
         </HeaderRow>
       </Header>

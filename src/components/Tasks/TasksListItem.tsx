@@ -1,6 +1,6 @@
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import ChevronDownFill from '../../icons/ChevronDownFill'
-import { Button, ButtonVariant } from '../Button'
+import { DeprecatedButton, ButtonVariant } from '../Button'
 import { FileInput } from '../Input'
 import { Textarea } from '../Textarea'
 import { Text, TextSize } from '../Typography'
@@ -90,18 +90,18 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
         else {
           return (
             <>
-              <Button
+              <DeprecatedButton
                 variant={ButtonVariant.secondary}
                 onClick={() => setSelectedFiles(undefined)}
               >
                 Cancel
-              </Button>
-              <Button
+              </DeprecatedButton>
+              <DeprecatedButton
                 variant={ButtonVariant.primary}
                 onClick={() => void submit()}
               >
                 Submit
-              </Button>
+              </DeprecatedButton>
             </>
           )
         }
@@ -109,7 +109,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
       else if (task.status === 'USER_MARKED_COMPLETED') {
         if (task.user_response && task.user_response != userResponse) {
           return (
-            <Button
+            <DeprecatedButton
               variant={ButtonVariant.secondary}
               onClick={() => {
                 void handleUpdateTaskUploadDescription({
@@ -119,12 +119,12 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               }}
             >
               Update
-            </Button>
+            </DeprecatedButton>
           )
         }
         else {
           return (
-            <Button
+            <DeprecatedButton
               variant={ButtonVariant.secondary}
               onClick={() => {
                 void handleDeleteUploadsOnTask({
@@ -133,7 +133,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               }}
             >
               Delete Uploads
-            </Button>
+            </DeprecatedButton>
           )
         }
       }
@@ -199,7 +199,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               {task.user_response_type === 'UPLOAD_DOCUMENT'
                 ? uploadDocumentAction
                 : (
-                  <Button
+                  <DeprecatedButton
                     disabled={
                       userResponse.length === 0
                       || userResponse === task.user_response
@@ -215,7 +215,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                     {task.user_response && task.user_response !== userResponse
                       ? 'Update'
                       : 'Save'}
-                  </Button>
+                  </DeprecatedButton>
                 )}
             </div>
           </div>

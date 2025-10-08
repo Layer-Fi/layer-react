@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import { flattenAccounts } from '../../hooks/useChartOfAccounts/useChartOfAccounts'
-import { Button, ButtonVariant, RetryButton, SubmitButton } from '../Button'
+import { DeprecatedButton, ButtonVariant, RetryButton, SubmitButton } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Input, InputGroup, Select } from '../Input'
 import { Heading, HeadingSize, Text, TextSize, TextWeight } from '../Typography'
@@ -77,14 +77,14 @@ export const ChartOfAccountsForm = ({
             </Heading>
           </HeaderCol>
           <HeaderCol className='actions'>
-            <Button
+            <DeprecatedButton
               type='button'
               onClick={cancelForm}
               variant={ButtonVariant.secondary}
               disabled={sendingForm}
             >
               {stringOverrides?.cancelButton || 'Cancel'}
-            </Button>
+            </DeprecatedButton>
             {apiError && (
               <RetryButton
                 type='submit'
@@ -226,14 +226,14 @@ export const ChartOfAccountsForm = ({
         </InputGroup>
 
         <div className='actions'>
-          <Button
+          <DeprecatedButton
             type='button'
             onClick={cancelForm}
             variant={ButtonVariant.secondary}
             disabled={sendingForm}
           >
             {stringOverrides?.cancelButton || 'Cancel'}
-          </Button>
+          </DeprecatedButton>
           {apiError && (
             <RetryButton
               type='submit'

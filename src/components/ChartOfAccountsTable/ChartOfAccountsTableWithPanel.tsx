@@ -2,7 +2,7 @@ import { RefObject, useContext, useState } from 'react'
 import { ChartOfAccountsContext } from '../../contexts/ChartOfAccountsContext'
 import PlusIcon from '../../icons/Plus'
 import { View } from '../../types/general'
-import { Button, ButtonVariant, ExpandCollapseButton } from '../Button'
+import { DeprecatedButton, ButtonVariant, ExpandCollapseButton } from '../Button'
 import { ChartOfAccountsDatePicker } from '../ChartOfAccountsDatePicker'
 import { ChartOfAccountsFormStringOverrides } from '../ChartOfAccountsForm/ChartOfAccountsForm'
 import { ChartOfAccountsSidebar } from '../ChartOfAccountsSidebar'
@@ -115,7 +115,7 @@ export const ChartOfAccountsTableWithPanel = ({
               iconOnly={['mobile', 'tablet'].includes(view)}
             />
             {showAddAccountButton && (
-              <Button
+              <DeprecatedButton
                 onClick={() => addAccount()}
                 iconOnly={['mobile', 'tablet'].includes(view)}
                 leftIcon={
@@ -123,7 +123,7 @@ export const ChartOfAccountsTableWithPanel = ({
                 }
               >
                 {stringOverrides?.addAccountButtonText || 'Add Account'}
-              </Button>
+              </DeprecatedButton>
             )}
           </HeaderCol>
         </HeaderRow>

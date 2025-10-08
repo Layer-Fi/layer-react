@@ -16,23 +16,7 @@ interface RuleUpdatesPromptStepProps {
 export function RuleUpdatesPromptStep({ ruleSuggestion, onClose }: RuleUpdatesPromptStepProps) {
   const { next } = useWizard()
   const [dontAskAgain, setDontAskAgain] = useState(false)
-  const nextButton = ruleSuggestion.transactionsThatWillBeAffected.length == 0
-    ? (
-      <CreateRuleButton
-        ruleSuggestion={ruleSuggestion}
-        applyRetroactively={true}
-        buttonText='Yes'
-      />
-    )
-    : (
-      <Button
-        onClick={() => {
-          void next()
-        }}
-      >
-        Yes
-      </Button>
-    )
+
   return (
     <VStack gap='lg'>
       {ruleSuggestion.suggestionPrompt}
@@ -53,7 +37,22 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, onClose }: RuleUpdatesPr
             <CheckboxWithTooltip id='dont_ask_again' isSelected={dontAskAgain} onChange={(isSelected) => { setDontAskAgain(isSelected) }} />
           </HStack>
         </HStack>
-        {nextButton}
+        {ruleSuggestion.transactionsThatWillBeAffected.length == 0
+          ? (
+            <CreateRuleButton
+              newRule={ruleSuggestion.newRule}
+              buttonText='Yes'
+            />
+          )
+          : (
+            <Button
+              onClick={() => {
+                void next()
+              }}
+            >
+              Yes
+            </Button>
+          )}
       </HStack>
 
     </VStack>

@@ -5,7 +5,7 @@ import { BankTransaction } from '../../types'
 import { hasReceipts, isAlreadyMatched } from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
-import { Button } from '../Button'
+import { DeprecatedButton } from '../Button'
 import { FileInput } from '../Input'
 import { MatchFormMobile } from '../MatchForm'
 import { ErrorText, Text, TextSize, TextWeight } from '../Typography'
@@ -113,7 +113,7 @@ export const MatchForm = ({
           />
         )}
         {showCategorization && (
-          <Button
+          <DeprecatedButton
             fullWidth={true}
             disabled={
               !selectedMatchId
@@ -126,7 +126,7 @@ export const MatchForm = ({
             {isLoading || bankTransaction.processing
               ? 'Saving...'
               : 'Approve match'}
-          </Button>
+          </DeprecatedButton>
         )}
       </div>
       {formError && <ErrorText>{formError}</ErrorText>}

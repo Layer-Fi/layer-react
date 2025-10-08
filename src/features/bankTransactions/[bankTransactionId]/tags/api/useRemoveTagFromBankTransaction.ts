@@ -4,8 +4,7 @@ import { useLayerContext } from '../../../../../contexts/LayerContext'
 import { useCallback } from 'react'
 import { del } from '../../../../../api/layer/authenticated_http'
 import {
-  useBankTransactionsInvalidator,
-  useBankTransactionsOptimisticUpdater,
+  useBankTransactionsGlobalCacheActions,
 } from '../../../../../hooks/useBankTransactions/useBankTransactions'
 
 const REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY = '#remove-tag-from-bank-transaction'
@@ -79,8 +78,7 @@ export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTag
     },
   )
 
-  const { optimisticallyUpdateBankTransactions } = useBankTransactionsOptimisticUpdater()
-  const { debouncedInvalidateBankTransactions } = useBankTransactionsInvalidator()
+  const { optimisticallyUpdateBankTransactions, debouncedInvalidateBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const { trigger: originalTrigger } = mutationResponse
 

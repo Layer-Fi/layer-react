@@ -1,7 +1,7 @@
 import { RefObject, useMemo } from 'react'
 import { useBillsContext, useBillsRecordPaymentContext } from '../../contexts/BillsContext'
 import { BillsSidebar } from './BillsSidebar'
-import { Button, IconButton } from '../Button'
+import { DeprecatedButton, IconButton } from '../Button'
 import { Header, HeaderCol, HeaderRow } from '../Header'
 import { Panel } from '../Panel'
 import { Toggle } from '../Toggle'
@@ -136,24 +136,24 @@ export const BillsTableWithPanel = ({
                   </>
                 )
                 : (
-                  <Button onClick={openBulkSelection}>
+                  <DeprecatedButton onClick={openBulkSelection}>
                     Bulk record payments
-                  </Button>
+                  </DeprecatedButton>
                 )}
             </HeaderCol>
 
             <HeaderCol noPadding>
               {bulkSelectionActive
                 ? (
-                  <Button
+                  <DeprecatedButton
                     onClick={() => setShowRecordPaymentForm(true)}
                     disabled={!anyBillToPaySelected}
                   >
                     Record payment
-                  </Button>
+                  </DeprecatedButton>
                 )
                 : (
-                  <Button onClick={() => openBillDetails()}>New bill</Button>
+                  <DeprecatedButton onClick={() => openBillDetails()}>New bill</DeprecatedButton>
                 )}
             </HeaderCol>
 

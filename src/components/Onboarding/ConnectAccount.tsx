@@ -13,7 +13,7 @@ import { countTransactionsToReview } from '../../utils/bankTransactions'
 import { ActionableRow } from '../ActionableRow'
 import { Badge, BadgeVariant } from '../Badge'
 import { BadgeSize } from '../Badge/Badge'
-import { Button } from '../Button'
+import { DeprecatedButton } from '../Button'
 import { DataState, DataStateStatus } from '../DataState'
 import { Text } from '../Typography'
 
@@ -51,12 +51,12 @@ export const ConnectAccount = ({
           title='Connect accounts'
           description='Import data with one simple integration.'
           button={(
-            <Button
+            <DeprecatedButton
               onClick={() => { void addConnection('PLAID') }}
               rightIcon={<LinkIcon size={12} />}
             >
               Connect
-            </Button>
+            </DeprecatedButton>
           )}
         />
       </>

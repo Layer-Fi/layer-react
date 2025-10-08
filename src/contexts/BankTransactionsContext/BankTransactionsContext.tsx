@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react'
 import { useAugmentedBankTransactions } from '../../hooks/useBankTransactions/useAugmentedBankTransactions'
 import { DisplayState } from '../../types'
-import { CategorizationRule } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 
 export type BankTransactionsContextType = ReturnType<typeof useAugmentedBankTransactions>
 export const BankTransactionsContext =
@@ -13,7 +12,6 @@ export const BankTransactionsContext =
     refetch: () => {},
     categorize: () => Promise.resolve(undefined),
     match: () => Promise.resolve(undefined),
-    createCategorizationRule: () => Promise.resolve({ data: {} as CategorizationRule }),
     filters: {},
     setFilters: () => {},
     ruleSuggestion: null,

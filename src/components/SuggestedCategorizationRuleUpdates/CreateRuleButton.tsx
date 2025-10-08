@@ -1,31 +1,32 @@
-import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext/BankTransactionsContext'
-import { UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
-import { Button } from '../ui/Button/Button'
+import { Schema } from 'effect/index'
+import { Button } from '../../components/ui/Button/Button'
+import { useLayerContext } from '../../contexts/LayerContext'
+import { useCreateCategorizationRule } from '../../hooks/useCategorizationRules/useCreateCategorizationRule'
+import { CreateCategorizationRule, CreateCategorizationRuleSchema } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 import { useWizard } from '../Wizard/Wizard'
 
 interface CreateRuleButtonProps {
-  ruleSuggestion: UpdateCategorizationRulesSuggestion
-  applyRetroactively: boolean
+  newRule: CreateCategorizationRule
   buttonText: string
 }
 
-export const CreateRuleButton = ({ ruleSuggestion, applyRetroactively, buttonText }: CreateRuleButtonProps) => {
+export const CreateRuleButton = ({ newRule: ruleSuggestion, buttonText }: CreateRuleButtonProps) => {
   const { next } = useWizard()
-  const { createCategorizationRule } = useBankTransactionsContext()
-  const handleOnClick = () => {
-    const ruleCreationParams = {
-      ...ruleSuggestion,
-      newRule: {
-        ...ruleSuggestion.newRule,
-        applyRetroactively: applyRetroactively,
-      },
-    }
-    void createCategorizationRule(ruleCreationParams.newRule)
-    void next()
-  }
+  const { trigger: createCategorizationRule, isMutating } = useCreateCategorizationRule()
+  const { addToast } = useLayerContext()
   return (
     <Button
-      onClick={handleOnClick}
+      onPress={() => {
+        void (async () => {
+          const encodedRule = Schema.encodeUnknownSync(CreateCategorizationRuleSchema)(ruleSuggestion)
+          await createCategorizationRule(encodedRule).then(() => {
+            void next()
+          }).catch(() => {
+            addToast({ content: 'Failed to create categorization rule', type: 'error' })
+          })
+        })()
+      }}
+      isPending={isMutating}
     >
       {buttonText}
     </Button>

@@ -28,9 +28,7 @@ import { useBankTransactions, type UseBankTransactionsOptions } from './useBankT
 import { useCategorizeBankTransaction } from './useCategorizeBankTransaction'
 import { useMatchBankTransaction } from './useMatchBankTransaction'
 import { useGlobalDateRange } from '../../providers/GlobalDateStore/GlobalDateStoreProvider'
-import { CreateCategorizationRule, CreateCategorizationRuleSchema, decodeRulesSuggestion, UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
-import { useCreateCategorizationRule } from './useCreateCategorizationRule'
-import { Schema } from 'effect/index'
+import { decodeRulesSuggestion, UpdateCategorizationRulesSuggestion } from '../../schemas/bankTransactions/categorizationRules/categorizationRule'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
@@ -378,18 +376,6 @@ export const useAugmentedBankTransactions = (
       })
   }, [data, updateOneLocal, matchBankTransaction, addToast, eventCallbacks])
 
-  const { trigger: createCategorizationRule } = useCreateCategorizationRule({
-    mutateBankTransactions: mutate,
-  })
-
-  const createCategorizationRuleWithTransactionsSWRInvalidation = useCallback(
-    async (newRule: CreateCategorizationRule) => {
-      const encodedRule = Schema.encodeUnknownSync(CreateCategorizationRuleSchema)(newRule)
-      return createCategorizationRule(encodedRule)
-    },
-    [createCategorizationRule],
-  )
-
   const shouldHideAfterCategorize = useCallback((): boolean => {
     return filters?.categorizationStatus === DisplayState.review
   }, [filters?.categorizationStatus])
@@ -493,7 +479,6 @@ export const useAugmentedBankTransactions = (
     isError: !!responseError,
     categorize: categorizeWithOptimisticUpdate,
     match: matchWithOptimisticUpdate,
-    createCategorizationRule: createCategorizationRuleWithTransactionsSWRInvalidation,
     updateOneLocal,
     shouldHideAfterCategorize,
     removeAfterCategorize,

@@ -4,8 +4,7 @@ import { useLayerContext } from '../../../../../contexts/LayerContext'
 import { useCallback } from 'react'
 import { post } from '../../../../../api/layer/authenticated_http'
 import {
-  useBankTransactionsInvalidator,
-  useBankTransactionsOptimisticUpdater,
+  useBankTransactionsGlobalCacheActions,
 } from '../../../../../hooks/useBankTransactions/useBankTransactions'
 import { v4 as uuidv4 } from 'uuid'
 import type { TransactionTagEncoded } from '../../../../tags/tagSchemas'
@@ -98,8 +97,7 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
     },
   )
 
-  const { optimisticallyUpdateBankTransactions } = useBankTransactionsOptimisticUpdater()
-  const { debouncedInvalidateBankTransactions } = useBankTransactionsInvalidator()
+  const { optimisticallyUpdateBankTransactions, debouncedInvalidateBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const { trigger: originalTrigger } = mutationResponse
 

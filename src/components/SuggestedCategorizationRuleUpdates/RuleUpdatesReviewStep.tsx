@@ -16,7 +16,8 @@ interface RuleUpdatesPromptReviewStepProps {
 
 export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptReviewStepProps) {
   const { previous } = useWizard()
-  const [applyRule, setApplyRule] = useState(true)
+  const [applyRuleRetroactively, setApplyRuleRetroactively] = useState(true)
+
   return (
     <VStack gap='lg'>
       <Label size='md'>
@@ -38,9 +39,15 @@ export function RuleUpdatesReviewStep({ ruleSuggestion }: RuleUpdatesPromptRevie
           <Label size='sm' htmlFor='apply_rule'>
             Apply rule after creating?
           </Label>
-          <CheckboxWithTooltip isSelected={applyRule} onChange={(isSelected) => { setApplyRule(isSelected) }} />
+          <CheckboxWithTooltip id='apply_rule' isSelected={applyRuleRetroactively} onChange={(isSelected) => { setApplyRuleRetroactively(isSelected) }} />
         </HStack>
-        <CreateRuleButton ruleSuggestion={ruleSuggestion} buttonText='Submit' applyRetroactively={applyRule} />
+        <CreateRuleButton
+          newRule={{
+            ...ruleSuggestion.newRule,
+            applyRetroactively: applyRuleRetroactively,
+          }}
+          buttonText='Submit'
+        />
       </HStack>
     </VStack>
   )
