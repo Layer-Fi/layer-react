@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { BankTransaction } from '../../types'
-import { hasMatch } from '../../utils/bankTransactions'
+import { hasMatch, hasSuggestedTransferMatches } from '../../utils/bankTransactions'
 import { TextButton } from '../Button'
 import { MatchForm } from './MatchForm'
 import { SplitForm } from './SplitForm'
@@ -34,8 +34,6 @@ export const SplitAndMatchForm = ({
         : Purpose.categorize,
   )
 
-  const isTransfer = bankTransaction.suggested_matches?.every(x => x.details.type === 'Transfer_Match')
-
   return (
     <div className='Layer__bank-transaction-mobile-list-item__split-and-match-form'>
       {formType === Purpose.categorize && (
@@ -68,7 +66,7 @@ export const SplitAndMatchForm = ({
         ? (
           <div className='Layer__bank-transaction-mobile-list-item__switch-form-btns'>
             <TextButton onClick={() => setFormType(Purpose.match)}>
-              {isTransfer ? 'or find transfer' : 'or find match'}
+              {hasSuggestedTransferMatches(bankTransaction) ? 'or find transfer' : 'or find match'}
             </TextButton>
           </div>
         )

@@ -8,7 +8,11 @@ import { centsToDollars as formatMoney } from '../../models/Money'
 import { BankTransaction } from '../../types'
 import { hasSuggestions } from '../../types/categories'
 import { CategorizationStatus } from '../../schemas/bankTransactions/bankTransaction'
-import { getCategorizePayload, isCredit } from '../../utils/bankTransactions'
+import {
+  getCategorizePayload,
+  isCredit,
+  isTransferMatch,
+} from '../../utils/bankTransactions'
 import { toDataProperties } from '../../utils/styleUtils/toDataProperties'
 import { Badge } from '../Badge'
 import {
@@ -318,7 +322,7 @@ export const BankTransactionRow = ({
                         classNamePrefix={className}
                         bankTransaction={bankTransaction}
                         dateFormat={dateFormat}
-                        text={bankTransaction.match.details.type === 'Transfer_Match' ? 'Transfer' : 'Match'}
+                        text={isTransferMatch(bankTransaction) ? 'Transfer' : 'Match'}
                       />
                       <span className={`${className}__category-text__text`}>
                         {`${formatTime(

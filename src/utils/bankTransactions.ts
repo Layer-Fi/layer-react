@@ -84,3 +84,11 @@ export const getCategorizePayload = (category: CategoryOption) => {
 
 export const hasReceipts = (bankTransaction?: BankTransaction) =>
   bankTransaction?.document_ids && bankTransaction.document_ids.length > 0
+
+export const isTransferMatch = (bankTransaction?: BankTransaction) => {
+  return bankTransaction?.match?.details.type === 'Transfer_Match'
+}
+
+export const hasSuggestedTransferMatches = (bankTransaction?: BankTransaction) => {
+  return bankTransaction?.suggested_matches?.every(x => x.details.type === 'Transfer_Match')
+}

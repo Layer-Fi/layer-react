@@ -15,7 +15,11 @@ import {
   SingleCategoryUpdate,
 } from '../../types'
 import { hasSuggestions } from '../../types/categories'
-import { getCategorizePayload, hasMatch } from '../../utils/bankTransactions'
+import {
+  getCategorizePayload,
+  hasMatch,
+  hasSuggestedTransferMatches,
+} from '../../utils/bankTransactions'
 import { BankTransactionReceiptsWithProvider } from '../BankTransactionReceipts'
 import { Tag, makeTagKeyValueFromTag, makeTag, makeTagFromTransactionTag } from '../../features/tags/tagSchemas'
 import { TagDimensionsGroup } from '../Journal/JournalEntryForm/TagDimensionsGroup'
@@ -463,8 +467,6 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
       ? rowState.splits
       : []
 
-    const isTransfer = bankTransaction.suggested_matches?.every(x => x.details.type === 'Transfer_Match')
-
     const className = 'Layer__expanded-bank-transaction-row'
 
     return (
@@ -492,7 +494,7 @@ const ExpandedBankTransactionRow = forwardRef<SaveHandle, Props>(
                         },
                         {
                           value: 'match',
-                          label: isTransfer ? 'Transfer' : 'Match',
+                          label: hasSuggestedTransferMatches(bankTransaction) ? 'Transfer' : 'Match',
                           disabled: !hasMatch(bankTransaction),
                         },
                       ]}

@@ -2,7 +2,11 @@ import { useRef, useState } from 'react'
 import { useBankTransactionsContext } from '../../contexts/BankTransactionsContext'
 import PaperclipIcon from '../../icons/Paperclip'
 import { BankTransaction } from '../../types'
-import { hasReceipts, isAlreadyMatched } from '../../utils/bankTransactions'
+import {
+  hasReceipts,
+  isAlreadyMatched,
+  hasSuggestedTransferMatches,
+} from '../../utils/bankTransactions'
 import { BankTransactionReceipts } from '../BankTransactionReceipts'
 import { BankTransactionReceiptsHandle } from '../BankTransactionReceipts/BankTransactionReceipts'
 import { Button } from '../Button'
@@ -67,12 +71,10 @@ export const MatchForm = ({
     return
   }
 
-  const isTransfer = bankTransaction.suggested_matches?.every(x => x.details.type === 'Transfer_Match')
-
   return (
     <div>
       <Text weight={TextWeight.bold} size={TextSize.sm}>
-        {isTransfer ? 'Find transfer' : 'Find match'}
+        {hasSuggestedTransferMatches(bankTransaction) ? 'Find transfer' : 'Find match'}
       </Text>
       <MatchFormMobile
         classNamePrefix='Layer__bank-transaction-mobile-list-item'
@@ -127,7 +129,7 @@ export const MatchForm = ({
           >
             {isLoading || bankTransaction.processing
               ? 'Saving...'
-              : isTransfer ? 'Approve transfer' : 'Approve match'}
+              : hasSuggestedTransferMatches(bankTransaction) ? 'Approve transfer' : 'Approve match'}
           </Button>
         )}
       </div>
