@@ -107,8 +107,8 @@
 }
 
 .Layer__service-offering__offers {
-  background-color: transparent;
   width: 100%;
+  background-color: transparent;
 }
 
 .Layer__service-offering__responsive-layout {
@@ -126,10 +126,10 @@
   flex-direction: column;
   gap: var(--spacing-2xl);
   max-width: 420px;
+
   @media (width <= 1440px) {
     max-width: 100%;
   }
-
 }
 
 .Layer__service-offering__responsive-image {
@@ -144,19 +144,20 @@
 
   img {
     height: auto;
-    max-width: 100%;
     max-height: 480px;
+    max-width: 100%;
     object-fit: cover;
     opacity: 0;
-    animation: fadeInImage 0.4s ease-in forwards;
+    animation: fade-in-image 0.4s ease-in forwards;
     animation-delay: 0.1s;
   }
 }
 
-@keyframes fadeInImage {
+@keyframes fade-in-image {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
