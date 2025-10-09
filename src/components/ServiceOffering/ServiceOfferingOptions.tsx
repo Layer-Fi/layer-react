@@ -72,7 +72,7 @@ export const ServiceOfferingOffer = ({
             {features.map((f, i) => {
               return (
                 <HStack key={i} gap='xs'>
-                  <Check size={14} color='var(--color-base-500)' />
+                  <Check size={14} className='Layer__service-offering-options__feature-check' />
                   <Span size='sm' variant='subtle'>
                     {ServiceOfferingHelper.bindTextValues(f, platformConfig)}
                   </Span>

@@ -99,6 +99,10 @@
   overflow-wrap: break-word;
 }
 
+.Layer__service-offering-options__feature-check {
+  color: var(--fg-subtle);
+}
+
 // Layout configurations for different offer positions
 .Layer__service-offering__content {
   display: flex;
