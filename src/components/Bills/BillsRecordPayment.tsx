@@ -9,7 +9,7 @@ import {
   RetryButton,
 } from '../Button'
 import { Header } from '../Container'
-import { DatePicker } from '../DatePicker'
+import { DeprecatedDatePicker } from '../DeprecatedDatePicker/DeprecatedDatePicker'
 import { HeaderRow, HeaderCol } from '../Header'
 import { InputGroup, Select } from '../Input'
 import { StaticValue } from '../Input/StaticValue'
@@ -119,7 +119,7 @@ export const BillsRecordPayment = ({
             className='Layer__bills__record-payment__date'
             inline={true}
           >
-            <DatePicker
+            <DeprecatedDatePicker
               selected={paymentDate}
               onChange={date => setPaymentDate(date as Date)}
               displayMode='dayPicker'
