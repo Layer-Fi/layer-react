@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import type { ColumnConfig } from '../DataTable/DataTable'
 import { Span } from '../ui/Typography/Text'
 import { DataState, DataStateStatus } from '../DataState/DataState'
@@ -8,6 +8,7 @@ import { MoneySpan } from '../ui/Typography/MoneyText'
 import { useUnifiedReport } from '../../features/reports/api/useUnifiedReport'
 import type { ReportEnum } from '../../schemas/reports/unifiedReport'
 import type { Row } from '@tanstack/react-table'
+import { ExpandableDataTableContext } from '../ExpandableDataTable/ExpandableDataTableProvider'
 
 const COMPONENT_NAME = 'UnifiedReport'
 
@@ -41,7 +42,15 @@ type UnifiedReportTableProps = { report: ReportEnum }
 
 export const UnifiedReportTable = ({ report }: UnifiedReportTableProps) => {
   const { data, isLoading, isError, refetch } = useUnifiedReport({ report })
-  const mutableData = data ? asMutable(data?.lineItems) : undefined
+  const { setExpanded } = useContext(ExpandableDataTableContext)
+  const mutableLineItems = data ? asMutable(data?.lineItems) : undefined
+
+  useEffect(() => {
+    // Expand the top-level rows on initial data load
+    if (mutableLineItems !== undefined) {
+      setExpanded(Object.fromEntries(mutableLineItems.map(d => [d.id, true])))
+    }
+  }, [mutableLineItems, setExpanded])
 
   const UnifiedReportEmptyState = useCallback(() => {
     return (
@@ -67,7 +76,7 @@ export const UnifiedReportTable = ({ report }: UnifiedReportTableProps) => {
   return (
     <ExpandableDataTable
       ariaLabel='Report'
-      data={mutableData}
+      data={mutableLineItems}
       isLoading={data === undefined || isLoading}
       isError={isError}
       columnConfig={COLUMN_CONFIG}

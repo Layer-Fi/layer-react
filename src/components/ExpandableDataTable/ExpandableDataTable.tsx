@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
@@ -39,12 +39,6 @@ export function ExpandableDataTable<TData extends { id: string }, TColumns exten
       cell: ({ row }) => col.cell(row),
     })
   })
-
-  useEffect(() => {
-    if (data !== undefined) {
-      setExpanded(Object.fromEntries(data.map(d => [d.id, true])))
-    }
-  }, [data, setExpanded])
 
   const table = useReactTable<TData>({
     data: data ?? EMPTY_ARRAY,
